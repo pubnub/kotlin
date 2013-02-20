@@ -36,35 +36,32 @@ calls **disconnectAndResubscribe()** as needed.
 ```java
 
 public boolean haveInternet(Context ctx) {
-
     NetworkInfo info = (NetworkInfo) ((ConnectivityManager) ctx
             .getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
         
     return ( info != null && info.isConnected());
 }
 
-protected void onCreate(Bundle savedInstanceState) {
-    
+protected void onCreate(Bundle savedInstanceState) {    
     ...
-
     this.registerReceiver(new BroadcastReceiver() {
 
 	    @Override
 	    public void onReceive(Context arg0, Intent intent) {
-		    boolean haveInternet = haveInternet(arg0);
+		boolean haveInternet = haveInternet(arg0);
 			
-			    if ( haveInternet != networkConnected) {
-    			    Log.d("Receiver 1", "Network state changed from " + networkConnected + " to " + haveInternet);
+		if ( haveInternet != networkConnected) {
+    			Log.d("Receiver 1", "Net state changed from " + 
+    				networkConnected + " to " + haveInternet);
                 }
 				
-			    if (haveInternet && !networkConnected ) {
-				    pubnub.disconnectAndResubscribe();
-			    }
-				    networkConnected = haveInternet;			
-                    
-			    }         	
-            }, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION  ));
-        
+		if (haveInternet && !networkConnected ) {
+		    pubnub.disconnectAndResubscribe();
+		}
+		
+		networkConnected = haveInternet;			                    
+	    }         	
+        }, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION  ));        
     ....
     }
 ```
