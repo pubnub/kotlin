@@ -33,13 +33,59 @@ The demo application has examples of setting up a broadcast receiver for the **C
 The **onReceive()** method is where it checks for certain (or any) network change conditions, and 
 calls **disconnectAndResubscribe()** as needed.
 
+```java
+
+public boolean haveInternet(Context ctx) {
+
+    NetworkInfo info = (NetworkInfo) ((ConnectivityManager) ctx
+            .getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
+        
+    return ( info != null && info.isConnected());
+}
+
+protected void onCreate(Bundle savedInstanceState) {
+    
+    ...
+
+    this.registerReceiver(new BroadcastReceiver() {
+
+	    @Override
+	    public void onReceive(Context arg0, Intent intent) {
+		    boolean haveInternet = haveInternet(arg0);
+			
+			    if ( haveInternet != networkConnected) {
+    			    Log.d("Receiver 1", "Network state changed from " + networkConnected + " to " + haveInternet);
+                }
+				
+			    if (haveInternet && !networkConnected ) {
+				    pubnub.disconnectAndResubscribe();
+			    }
+				    networkConnected = haveInternet;			
+                    
+			    }         	
+            }, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION  ));
+        
+    ....
+    }
+```
+
 This logic has been purposely left out of the core and documented in the example application, so that if you wish to 
-add additional tests for monitoring of a zombied subscribe connection, it is very to add your custom logic within this
+add additional tests for monitoring a potential zombied subscribe connection, it is very easy to add your own custom logic within this
 given receiver template.
 
 When **disconnectAndResubscribe()** is called, either via the broadcast receiver or otherwise, it will retry maxRetries times
 to reconnect ever retryInterval seconds.  You can set these variables with the **setRetryInterval** and **setMaxRetries** 
 methods.
+
+If it **not able** to recover network within the given constraints, it will return an error response of [0, ERROR_MSG_STRING].
+
+**setResumeOnReconnect()** allows you to define the behaviour upon successful reconnect.
+
+If it **is able** to recover network, then the subscribe will "catchup", or resume where it left off before the interruption
+if isResumeOnReconnect() is true, otherwise, it will restart and grab only new messages since it reconnected. 
+
+
+
 
 ###Init
 ```java
