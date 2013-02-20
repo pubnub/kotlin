@@ -71,8 +71,7 @@ add additional tests for monitoring a potential zombied subscribe connection, it
 given receiver template.
 
 When **disconnectAndResubscribe()** is called, either via the broadcast receiver or otherwise, it will retry maxRetries times
-to reconnect ever retryInterval seconds.  You can set these variables with the **setRetryInterval** and **setMaxRetries** 
-methods.
+to reconnect ever retryInterval seconds.  You can set these variables with the **setRetryInterval(int milliseconds)** and **setMaxRetries** methods.
 
 If it **not able** to recover network within the given constraints, it will return an error response of [0, ERROR_MSG_STRING].
 
