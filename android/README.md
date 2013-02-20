@@ -5,7 +5,7 @@
 
 http://www.pubnub.com/account
 
-## PubNub 3.3 Real-time Cloud Push API - ANDROID
+## PubNub 3.4 Real-time Cloud Push API - ANDROID
 
 PubNub is a Massively Scalable Real-time Service for Web and Mobile Games.
 This is a cloud-based service for broadcasting Real-time messages
@@ -18,15 +18,13 @@ Use PubNub Instead!
 
 ##### PubNub Android Sample App
 
-This is a full android sample app with the ability to Subscribe and UnSubscribe from PubNub channels. By UnSubscribing from channels, you can save resources and ultimately save billing costs.
+This is a full android sample app with the ability to Subscribe and UnSubscribe from PubNub channels. 
+By UnSubscribing from channels, you can save resources and ultimately save billing costs.
 
-Checkout the example app and unit tests for examples on how to use the API!
+Checkout the example app for examples on how to use the API! 
+It can be found at in the 3.4/examples/PubnubExample directory.
 
-
--------------------------------------------------------------------------------
-Java: (Init)
--------------------------------------------------------------------------------
-
+###Init
 ```java
 Pubnub pubnub = new Pubnub(
     "demo",  // PUBLISH_KEY   (Optional, supply "" to disable)
@@ -37,165 +35,122 @@ Pubnub pubnub = new Pubnub(
 );
 ```
 
--------------------------------------------------------------------------------
-Java: (Publish)
--------------------------------------------------------------------------------
-
+###Publish
 ```java
-// Create JSON Message
-JSONObject message = new JSONObject();
-try { message.put( "some_key", "Hello World!" ); }
-catch (org.json.JSONException jsonError) {}
 
-// Create HashMap parameter
-HashMap<String, Object> args = new HashMap<String, Object>(2);
-args.put("channel", "hello_world");        // Channel Name
-args.put("message", message);              // JSON Message
+// Setup the argument Hash object to set the message and channel name
 
-// Publish Message
-JSONArray info = pubnub.publish( args );
+Hashtable args = new Hashtable(2);
 
-// Print Response from PubNub JSONP REST Service
-System.out.println(info);
-```
+String message = "Hello PubNub!";
+String message = "hello_world";
 
--------------------------------------------------------------------------------
-Java: Subscribe and Presence (see comment at channel set at end of snippet)
--------------------------------------------------------------------------------
+args.put("message", message);
+args.put("channel", channel); 
 
-```java
-    // Callback Interface when a Message is Received
-    class Receiver implements Callback {
-        public boolean subscribeCallback(String channel, Object message) {
-            try {
-                if (message instanceof JSONObject) {
-                    JSONObject obj = (JSONObject) message;
-                    @SuppressWarnings("rawtypes")
-                    Iterator keys = obj.keys();
-                    while (keys.hasNext()) {
-                        System.out.print(obj.get(keys.next().toString()) + " ");
-                    }
-                    System.out.println();
-                } else if (message instanceof String) {
-                    String obj = (String) message;
-                    System.out.print(obj + " ");
-                    System.out.println();
-                } else if (message instanceof JSONArray) {
-                    JSONArray obj = (JSONArray) message;
-                    System.out.print(obj.toString() + " ");
-                    System.out.println();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            // Continue Listening?
-            return true;
-        }
+// Publish It!
 
-        @Override
-        public void errorCallback(String channel, Object message) {
-            System.err.println("Channel:" + channel + "-" + message.toString());
-        }
-
-        @Override
-        public void presenceCallback(String channel, Object message) {
-            System.err.println("Channel:" + channel + "-" + message.toString());
-        }
-
-
-        @Override
-        public void connectCallback(String channel) {
-            System.out.println("Connected to channel :" + channel);
-        }
-
-        @Override
-        public void reconnectCallback(String channel) {
-            System.out.println("Reconnected to channel :" + channel);
-        }
-
-        @Override
-        public void disconnectCallback(String channel) {
-            System.out.println("Disconnected to channel :" + channel);
-        }
+pubnub.publish(args, new Callback() {
+    public void successCallback(String channel, Object message) {
+        notifyUser(message.toString());
     }
 
-    HashMap<String, Object> args = new HashMap<String, Object>(2);
-    args.put("channel", channel);              // for presence, channel-name is CHANNEL + "-pnpres"
-    args.put("callback", new Receiver());      // callback to get response and events
+    public void errorCallback(String channel, Object message) {
+    notifyUser(channel + " : " + message.toString());
+    }
+});
+
 ```
 
-------------------------------------------------------------------------------
-Java: (History - Deprecated, please use detailedHistory)
--------------------------------------------------------------------------------
-
+###Subscribe and Presence
 ```java
-    // Create HashMap parameter
-    HashMap<String, Object> args = new HashMap<String, Object>(2);
-    args.put("channel", "hello_world");        // Channel Name
-    args.put("limit", 5);                      // Limit
+
+// Regular Subscribe
+
+Hashtable args = new Hashtable(1);
+
+args.put("channel", channel);
+
+pubnub.subscribe(args, new Callback() {
+    public void connectCallback(String channel) {
+        notifyUser("CONNECT on channel:" + channel);
+    }
+
+    public void disconnectCallback(String channel) {
+        notifyUser("DISCONNECT on channel:" + channel);
+    }
     
-    // Get History
-    JSONArray response = pubnub.history( args );
+    public void reconnectCallback(String channel) {
+        notifyUser("RECONNECT on channel:" + channel);
+    }
 
-    // Print Response from PubNub JSONP REST Service
-    System.out.println(response);
-    System.out.println(response.optJSONObject(0).optString("some_key"));
+    public void successCallback(String channel, Object message) {
+        notifyUser(channel + " " + message.toString());
+    }
+    
+    public void errorCallback(String channel, Object message) {
+        notifyUser(channel + " " + message.toString());
+    }
+});
+
+// Presence
+
+pubnub.presence(channel, new Callback() {
+    public void successCallback(String channel, Object message) {
+        notifyUser(message.toString());
+    }
+
+    public void errorCallback(String channel, Object message) {
+        notifyUser(channel + " : " + message.toString());
+    }
+});
+                    
 ```
 
--------------------------------------------------------------------------------
-Java: (detailedHistory)
--------------------------------------------------------------------------------
+###History
 ```java
-    HashMap<String, Object> args = new HashMap<String, Object>();
-    args.put("channel", channel);
-    args.put("start", starttime);
-    args.put("end", endtime);
-    args.put("count", count);
-    JSONArray response = pubnub.detailedHistory(args);
-    JSONArray history = response.getJSONArray(0);
-```
--------------------------------------------------------------------------------
-Java: (Unsubscribe)
--------------------------------------------------------------------------------
+pubnub.detailedHistory(channel, 2, new Callback() {
+    public void successCallback(String channel, Object message) {
+        notifyUser(message.toString());
+    }
 
+    public void errorCallback(String channel, Object message) {
+        notifyUser(channel + " : " + message.toString());
+    }
+});
+```
+
+###Unsubscribe
 ```java
-    // Create HashMap parameter
-    HashMap<String, Object> args = new HashMap<String, Object>(1);
-    args.put("channel", "hello_world");        // Channel Name
-        
-    // Unsubscribe/Disconnect
-    pubnub.unsubscribe( args );
+String channel = "goodbye_world";
+pubnub.unsubscribe(channel);
 ```
 
--------------------------------------------------------------------------------
-Java: (Time)
--------------------------------------------------------------------------------
-
+###Time
 ```java
     // Get server time
     double time = pubnub.time();
     System.out.println("Time : "+time);
 ```
 
--------------------------------------------------------------------------------
-Java: (UUID)
--------------------------------------------------------------------------------
-
+###UUID
 ```java
     // Get UUID
     System.out.println("UUID : "+Pubnub.uuid());
 ```
 
--------------------------------------------------------------------------------
-Java: (here_now)
--------------------------------------------------------------------------------
+###Here Now
 
 ```java
-    // Who is currently on the channel?
-    HashMap<String, Object> args = new HashMap<String, Object>(1);
-    args.put("channel", channel);
-    myMessage = pubnub.here_now(args).toString();
+pubnub.hereNow(channel, new Callback() {
+    public void successCallback(String channel, Object message) {
+        notifyUser(message.toString());
+    }
 
+    public void errorCallback(String channel, Object message) {
+        notifyUser(channel + " : " + message.toString());
+    }
+});
 ```
 
 
