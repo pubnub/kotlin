@@ -24,6 +24,23 @@ By UnSubscribing from channels, you can save resources and ultimately save billi
 Checkout the example app for examples on how to use the API! 
 It can be found at in the 3.4/examples/PubnubExample directory.
 
+##Durability - Reconnecting / Resuming when a connection is lost or changed
+As the mobile device loses a connection, changes IP, etc, any current in-process subscribe operations can be forced
+to abort, then reconnect given that a change has occured in the network environment. This is done by calling the
+**disconnectAndResubscribe()** method on the PubNub instance.
+
+The demo application has examples of setting up a broadcast receiver for the **ConnectivityManager.CONNECTIVITY_ACTION**.
+The **onReceive()** method is where it checks for certain (or any) network change conditions, and 
+calls **disconnectAndResubscribe()** as needed.
+
+This logic has been purposely left out of the core and documented in the example application, so that if you wish to 
+add additional tests for monitoring of a zombied subscribe connection, it is very to add your custom logic within this
+given receiver template.
+
+When **disconnectAndResubscribe()** is called, either via the broadcast receiver or otherwise, it will retry maxRetries times
+to reconnect ever retryInterval seconds.  You can set these variables with the **setRetryInterval** and **setMaxRetries** 
+methods.
+
 ###Init
 ```java
 Pubnub pubnub = new Pubnub(
