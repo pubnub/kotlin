@@ -64,6 +64,7 @@ class Subscriptions {
 				if (_channel.connected == false) {
 					_channel.connected = true;
 					if (_channel.subscribed == false) {
+						_channel.subscribed = true;
 						_channel.callback.connectCallback(_channel.name);
 					} else {
 						_channel.subscribed = true;

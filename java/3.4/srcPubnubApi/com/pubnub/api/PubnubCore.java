@@ -415,7 +415,7 @@ abstract class PubnubCore {
 			public void handleError(String response) {
 				JSONArray jsarr;
 				jsarr = new JSONArray();
-				jsarr.put("0").put(response);
+				jsarr.put("0").put("publish " + response);
 				callback.errorCallback(channel, jsarr);
 				return;
 			}
@@ -474,7 +474,7 @@ abstract class PubnubCore {
 			public void handleError(String response) {
 				JSONArray jsarr;
 				jsarr = new JSONArray();
-				jsarr.put("0").put(response);
+				jsarr.put("0").put("hereNow " + response);
 
 				callback.errorCallback(channel, jsarr);
 				return;
@@ -540,7 +540,7 @@ abstract class PubnubCore {
 			public void handleError(String response) {
 				JSONArray jsarr;
 				jsarr = new JSONArray();
-				jsarr.put("0").put(response);
+				jsarr.put("0").put("history " + response);
 				callback.errorCallback(channel, jsarr);
 				return;
 			}
@@ -601,7 +601,7 @@ abstract class PubnubCore {
 			public void handleError(String response) {
 				JSONArray jsarr;
 				jsarr = new JSONArray();
-				jsarr.put("0").put(response);
+				jsarr.put("0").put("detailedHistory " + response);
 
 				callback.errorCallback(channel, jsarr);
 				return;
@@ -725,7 +725,7 @@ abstract class PubnubCore {
 			}
 
 			public void handleError(String response) {
-				cb.errorCallback(null, response);
+				cb.errorCallback(null, "time " +  response);
 			}
 
 		});
@@ -1050,7 +1050,6 @@ abstract class PubnubCore {
 
 			public void handleTimeout() {
 				JSONObject jsobj = new JSONObject();
-				subscriptions.invokeDisconnectCallbackOnChannels();
 				log.verbose("Timeout Occurred, Calling error callbacks on the channels");
 				try {
 					jsobj.put("error", "Network Timeout");
@@ -1059,6 +1058,7 @@ abstract class PubnubCore {
 					String timeoutTimetoken = (isResumeOnReconnect())?(_timetoken.equals("0"))?_saved_timetoken: _timetoken:"0";
 					jsobj.put("timetoken", timeoutTimetoken);
 					subscriptions.invokeErrorCallbackOnChannels(jsobj);
+					disconnectAndResubscribe();
 				} catch (JSONException e) {
 					subscriptions.invokeErrorCallbackOnChannels("Network Timeout");
 				}

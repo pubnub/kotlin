@@ -100,17 +100,16 @@ class NonSubscribeWorker extends Worker {
 
 	void process(HttpRequest hreq) {
 		HttpResponse hresp = null;
-			try {
-				String s = hreq.getUrl();
-				log.debug(hreq.getUrl());
-				hresp = httpclient.fetch(hreq.getUrl(), hreq.getHeaders());
-			} catch (Exception e) {
-				log.debug("Exception in Fetch : " + e.toString());
-				hreq.getResponseHandler().handleError("Network Error");
-				return;
-			}
+		try {
+			String s = hreq.getUrl();
+			log.debug(hreq.getUrl());
+			hresp = httpclient.fetch(hreq.getUrl(), hreq.getHeaders());
+		} catch (Exception e) {
+			log.debug("Exception in Fetch : " + e.toString());
+			hreq.getResponseHandler().handleError("Timed Out");
+			return;
+		}
 
-		//if (hresp == null || !httpclient.checkResponseSuccess(hresp.getStatusCode())) {
 		if (hresp == null) {
 			log.debug("Error in fetching url : " + hreq.getUrl());
 			hreq.getResponseHandler().handleError("Network Error");
@@ -154,7 +153,7 @@ abstract class RequestManager {
 
 		}
 	}
-	
+
 	public RequestManager(String name, int connectionTimeout, int requestTimeout) {
 		this.connectionTimeout = connectionTimeout;
 		this.requestTimeout = requestTimeout;
@@ -208,7 +207,7 @@ abstract class RequestManager {
 		_maxWorkers = count;
 	}
 
-	
+
 	public void stop() {
 		for (int i = 0; i < _maxWorkers; ++i) {
 			Worker w = _workers[i];
