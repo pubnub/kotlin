@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project basedir="." default="build" name="PubnubApi">
     <property environment="env"/>
+    <property name="pubnub_jar_file_name" value="Pubnub-Standardedition-3.4.jar"/>
     <property name="srcPubnubApi.link" value="srcPubnubApi"/>
     <property name="target" value="1.5"/>
     <property name="source" value="1.5"/>
@@ -19,13 +20,18 @@
             </fileset>
         </copy>
     </target>
-    <target name="clean">
+    <target name="clean_bin">
         <delete dir="bin"/>
     </target>
-    <target depends="clean" name="cleanall"/>
-    <target depends="create-jar,create-examples-jar, create-demo-console-jar, clean" name="build"/>
+    <target depends="clean_bin" name="clean">
+        <delete file="${pubnub_jar_file_name}"/>
+        <delete>
+			<fileset dir="jars" includes="**/*.jar"/>
+		</delete>
+    </target>
+    <target depends="create-jar,create-examples-jar, create-demo-console-jar, clean_bin" name="build"/>
 	<target depends="build-project" name="create-jar">
-		<jar destfile="Pubnub-Standardedition-3.4.jar"
+		<jar destfile="${pubnub_jar_file_name}"
 			basedir="bin"
 			includes="**/**"
 		/>
