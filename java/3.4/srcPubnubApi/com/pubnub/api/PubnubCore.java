@@ -76,10 +76,10 @@ abstract class PubnubCore {
 		return ORIGIN_STR;
 	}
 
-    public String getCurrentlySubscribedChannelNames() {
-        String currentChannels = subscriptions.getChannelString();
-        return currentChannels.equals("") ? "no channels." : currentChannels;
-    }
+	public String getCurrentlySubscribedChannelNames() {
+		String currentChannels = subscriptions.getChannelString();
+		return currentChannels.equals("") ? "no channels." : currentChannels;
+	}
 
 	public void setResumeOnReconnect(boolean resumeOnReconnect) {
 		this.resumeOnReconnect = resumeOnReconnect;
@@ -414,13 +414,8 @@ abstract class PubnubCore {
 
 			public void handleError(String response) {
 				JSONArray jsarr;
-				try {
-					jsarr = new JSONArray(response);
-				} catch (JSONException e) {
-					jsarr = new JSONArray();
-					jsarr.put("0").put(
-							"Error: Failed JSON HTTP PubnubRequest");
-				}
+				jsarr = new JSONArray();
+				jsarr.put("0").put(response);
 				callback.errorCallback(channel, jsarr);
 				return;
 			}
@@ -478,13 +473,9 @@ abstract class PubnubCore {
 
 			public void handleError(String response) {
 				JSONArray jsarr;
-				try {
-					jsarr = new JSONArray(response);
-				} catch (JSONException e) {
-					jsarr = new JSONArray();
-					jsarr.put("0").put(
-							"Error: Failed JSON HTTP PubnubRequest");
-				}
+				jsarr = new JSONArray();
+				jsarr.put("0").put(response);
+
 				callback.errorCallback(channel, jsarr);
 				return;
 			}
@@ -536,25 +527,20 @@ abstract class PubnubCore {
 		HttpRequest hreq = new HttpRequest(urlargs, new ResponseHandler() {
 
 			public void handleResponse(String response) {
-				JSONArray jsarr;
+				JSONArray respArr;
 				try {
-					jsarr = new JSONArray(response);
-				} catch (JSONException e) {
-					handleError(response);
-					return;
+					respArr = new JSONArray(response);
+					decryptJSONArray(respArr);
+					callback.successCallback(channel, respArr);
+				} catch (Exception e) {
+					callback.errorCallback(channel, "JSON processing/Decryption Error");
 				}
-				callback.successCallback(channel, jsarr);
 			}
 
 			public void handleError(String response) {
 				JSONArray jsarr;
-				try {
-					jsarr = new JSONArray(response);
-				} catch (JSONException e) {
-					jsarr = new JSONArray();
-					jsarr.put("0").put(
-							"Error: Failed JSON HTTP PubnubRequest");
-				}
+				jsarr = new JSONArray();
+				jsarr.put("0").put(response);
 				callback.errorCallback(channel, jsarr);
 				return;
 			}
@@ -601,25 +587,22 @@ abstract class PubnubCore {
 				new ResponseHandler() {
 
 			public void handleResponse(String response) {
-				JSONArray jsarr;
+				JSONArray respArr;
 				try {
-					jsarr = new JSONArray(response);
-				} catch (JSONException e) {
-					handleError(response);
-					return;
+					respArr = new JSONArray(response);
+					decryptJSONArray((JSONArray) respArr.get(0));
+					callback.successCallback(channel, respArr);
+				} catch (Exception e) {
+					callback.errorCallback(channel, "JSON processing/Decryption Error");
 				}
-				callback.successCallback(channel, jsarr);
+
 			}
 
 			public void handleError(String response) {
 				JSONArray jsarr;
-				try {
-					jsarr = new JSONArray(response);
-				} catch (JSONException e) {
-					jsarr = new JSONArray();
-					jsarr.put("0").put(
-							"Error: Failed JSON HTTP PubnubRequest");
-				}
+				jsarr = new JSONArray();
+				jsarr.put("0").put(response);
+
 				callback.errorCallback(channel, jsarr);
 				return;
 			}
@@ -890,6 +873,21 @@ abstract class PubnubCore {
 		}
 	}
 
+	private void decryptJSONArray(JSONArray messages) throws JSONException {
+
+		if (CIPHER_KEY.length() > 0) {
+			for (int i = 0; i < messages.length(); i++) {
+				PubnubCrypto pc = new PubnubCrypto(CIPHER_KEY);
+				try {
+					String message = pc.decrypt(messages.get(i).toString());
+					messages.put(i, stringToJSON(message));
+				} catch (Exception e) {
+					messages.put(i,messages.get(i).toString());
+				}
+			} 
+		}
+	}
+
 	/**
 	 * @param args
 	 *            Hashtable
@@ -1107,12 +1105,12 @@ abstract class PubnubCore {
 		_timetoken = "0";
 		_subscribe_base(true);
 	}
-	
+
 	public void disconnectAndResubscribe() {
 		log.verbose("Received disconnectAndResubscribe");
 		subscriptions.invokeDisconnectCallbackOnChannels();
 		resubscribe();
-		
+
 	}
 	public String[] getSubscribedChannelsArray() {
 		return subscriptions.getChannelNames();

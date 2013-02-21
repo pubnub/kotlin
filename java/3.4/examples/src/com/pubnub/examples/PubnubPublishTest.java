@@ -53,6 +53,8 @@ public class PubnubPublishTest {
 		} catch (InterruptedException e) {
 		}
 		ppt.runPublish();
+		ppt.runHistory();
+		ppt.runDetailedHistory();
 		try {
 			Thread.sleep(20000);
 		} catch (InterruptedException e) {
@@ -95,6 +97,16 @@ public class PubnubPublishTest {
 			publish(_pubnub_enc, channel_enc, messages[i]);
 		}
 	}
+	
+	public void runHistory() {
+		history(_pubnub, channel);
+		history(_pubnub_enc, channel_enc);
+	}
+	public void runDetailedHistory() {
+		detailedHistory(_pubnub, channel);
+		detailedHistory(_pubnub_enc, channel_enc);
+	}
+
 
 	private static void notifyUser(Object message) {
 		System.out.println(message.toString());
@@ -111,6 +123,30 @@ public class PubnubPublishTest {
 
 			public void errorCallback(String channel, Object message) {
 				notifyUser("SENT : " + channel + " : " + msg.getClass() + " : " + message.toString());
+			}
+		});
+	}
+	public void history(Pubnub pubnub, String channel) {
+
+		pubnub.history(channel, 10,  new Callback() {
+			public void successCallback(String channel, Object message) {
+				notifyUser("HISTORY : " + channel + " : " + message.getClass() + " : " + message.toString());
+			}
+
+			public void errorCallback(String channel, Object message) {
+				notifyUser("HISTORY : " + channel + " : " + message.getClass() + " : " + message.toString());
+			}
+		});
+	}
+	public void detailedHistory(Pubnub pubnub, String channel) {
+
+		pubnub.detailedHistory(channel, 10,  new Callback() {
+			public void successCallback(String channel, Object message) {
+				notifyUser("DETAILED HISTORY : " + channel + " : " + message.getClass() + " : " + message.toString());
+			}
+
+			public void errorCallback(String channel, Object message) {
+				notifyUser("DETAILED HISTORY : " + channel + " : " + message.getClass() + " : " + message.toString());
 			}
 		});
 	}

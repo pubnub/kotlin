@@ -106,7 +106,7 @@ class NonSubscribeWorker extends Worker {
 				hresp = httpclient.fetch(hreq.getUrl(), hreq.getHeaders());
 			} catch (Exception e) {
 				log.debug("Exception in Fetch : " + e.toString());
-				hreq.getResponseHandler().handleError("Network Error " + e.toString());
+				hreq.getResponseHandler().handleError("Network Error");
 				return;
 			}
 
