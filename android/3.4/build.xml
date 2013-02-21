@@ -28,7 +28,10 @@
         <delete file="Pubnub-Android-3.4-proguard.jar"/>
     </target>
     <target depends="clean" name="cleanall"/>
-    <target depends="proguard" name="build"/>
+    <target depends="copy_jars_to_examples" name="build"/>
+    <target depends="proguard" name="copy_jars_to_examples">
+    	<copy file="Pubnub-Android-3.4-proguard.jar" todir="./examples/PubnubExample/libs/"/>
+    </target>
 
 	<target depends="build-project" name="create-jar">
 		<jar destfile="Pubnub-Android-3.4.jar"
