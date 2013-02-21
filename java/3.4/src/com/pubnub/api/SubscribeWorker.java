@@ -9,8 +9,8 @@ import com.pubnub.httpclient.HttpResponse;
 
 class SubscribeWorker extends AbstractSubscribeWorker {
 
-	SubscribeWorker(Vector _requestQueue) {
-		super(_requestQueue);
+	SubscribeWorker(Vector _requestQueue, int connectionTimeout, int requestTimeout) {
+		super(_requestQueue, connectionTimeout, requestTimeout);
 	}
 
 	void process(HttpRequest hreq) {
@@ -25,21 +25,12 @@ class SubscribeWorker extends AbstractSubscribeWorker {
 					break;
 				}
 			}
-			catch (IllegalStateException e) {
-				log.trace("Exception in Fetch : " + e.toString());
-				return;
-			}
-			catch (SocketException e){
-				log.trace("Exception in Fetch : " + e.toString());
-				return;
-			}
 			catch (SocketTimeoutException e){
-				log.trace("Exception in Fetch : " + e.toString());
-				currentRetryAttempt = maxRetries + 1;
+				log.verbose("Exception in Fetch : " + e.toString());
 				break;
 			}
 			catch (Exception e) {
-				log.trace("Retry Attempt : " + currentRetryAttempt + " Exception in Fetch : " + e.toString());
+				log.verbose("Retry Attempt : " + currentRetryAttempt + " Exception in Fetch : " + e.toString());
 				currentRetryAttempt++;
 			}
 
@@ -51,10 +42,10 @@ class SubscribeWorker extends AbstractSubscribeWorker {
 		if (hresp == null) {
 			log.debug("Error in fetching url : " + hreq.getUrl());
 			if (currentRetryAttempt > maxRetries) {
-				log.trace("Exhausted number of retries");
+				log.verbose("Exhausted number of retries");
 				hreq.getResponseHandler().handleTimeout();
 			} else
-				hreq.getResponseHandler().handleError("Network Error");
+				hreq.getResponseHandler().handleError("Request Timeout");
 			return;
 		}
 		log.debug(hresp.getResponse());

@@ -12,6 +12,8 @@ abstract class Worker implements Runnable {
 	protected volatile boolean _die;
 	private Thread thread;
 	protected HttpClient httpclient;
+	protected int requestTimeout;
+	protected int connectionTimeout;
 
 	protected static Logger log = new Logger(
 			RequestManager.class);
@@ -36,9 +38,9 @@ abstract class Worker implements Runnable {
 		httpclient.reset();
 	}
 
-	Worker(Vector _requestQueue) {
+	Worker(Vector _requestQueue, int connectionTimeout, int requestTimeout) {
 		this._requestQueue = _requestQueue;
-		this.httpclient = HttpClient.getClient();
+		this.httpclient = HttpClient.getClient(connectionTimeout, requestTimeout);
 	}
 
 	void setConnectionTimeout(int timeout) {
@@ -92,8 +94,8 @@ abstract class Worker implements Runnable {
 
 class NonSubscribeWorker extends Worker {
 
-	NonSubscribeWorker(Vector _requestQueue) {
-		super(_requestQueue);
+	NonSubscribeWorker(Vector _requestQueue, int connectionTimeout, int requestTimeout) {
+		super(_requestQueue, connectionTimeout, requestTimeout);
 	}
 
 	void process(HttpRequest hreq) {
@@ -128,12 +130,14 @@ abstract class RequestManager {
 	protected Vector _waiting = new Vector();
 	protected Worker _workers[];
 	protected String name;
+	protected int connectionTimeout;
+	protected int requestTimeout;
 
 	public static int getWorkerCount() {
 		return _maxWorkers;
 	}
 
-	public abstract Worker getWorker();
+	public abstract Worker getWorker(int connectionTimeout, int requestTimeout);
 
 	private void initManager(int maxCalls, String name) {
 		if (maxCalls < 1) {
@@ -143,19 +147,17 @@ abstract class RequestManager {
 		_workers = new Worker[maxCalls];
 
 		for (int i = 0; i < maxCalls; ++i) {
-			Worker w = getWorker();
+			Worker w = getWorker(connectionTimeout, requestTimeout);
 			w.setThread(new Thread(w,name));
 			_workers[i] = w;
 			w.startWorker();
 
 		}
 	}
-
-	public static void init() {
-
-	}
-	public RequestManager(String name) {
-		init();
+	
+	public RequestManager(String name, int connectionTimeout, int requestTimeout) {
+		this.connectionTimeout = connectionTimeout;
+		this.requestTimeout = requestTimeout;
 		initManager(_maxWorkers, name);
 	}
 
@@ -165,9 +167,14 @@ abstract class RequestManager {
 		}
 	}
 
-	public void resetWorkersConnections() {
+	public void resetWorkers() {
 		for (int i = 0; i < _workers.length; i++){
-			_workers[i].resetConnection();
+			_workers[i].die();
+			_workers[i].interruptWorker();
+			Worker w = getWorker(connectionTimeout, requestTimeout);
+			w.setThread(new Thread(w,name));
+			_workers[i] = w;
+			w.startWorker();
 		}
 	}
 
@@ -182,7 +189,7 @@ abstract class RequestManager {
 
 	public void resetHttpManager() {
 		clearRequestQueue();
-		resetWorkersConnections();
+		resetWorkers();
 	}
 
 	public void abortClearAndQueue(HttpRequest hreq) {
@@ -201,18 +208,7 @@ abstract class RequestManager {
 		_maxWorkers = count;
 	}
 
-	public void setConnectionTimeout(int timeout) {
-		for (int i = 0; i < _workers.length; i++){
-			_workers[i].setConnectionTimeout(timeout);
-		}
-	}
-
-	public void setRequestTimeout(int timeout) {
-		for (int i = 0; i < _workers.length; i++){
-			_workers[i].setRequestTimeout(timeout);
-		}
-	}
-
+	
 	public void stop() {
 		for (int i = 0; i < _maxWorkers; ++i) {
 			Worker w = _workers[i];
@@ -224,12 +220,12 @@ abstract class RequestManager {
 
 abstract class  AbstractSubscribeManager extends RequestManager {
 
-	public AbstractSubscribeManager(String name) {
-		super(name);
+	public AbstractSubscribeManager(String name, int connectionTimeout, int requestTimeout) {
+		super(name, connectionTimeout, requestTimeout);
 	}
 
-	public Worker getWorker() {
-		return new SubscribeWorker(_waiting);
+	public Worker getWorker(int connectionTimeout, int requestTimeout) {
+		return new SubscribeWorker(_waiting, connectionTimeout, requestTimeout);
 	}
 
 	public void setMaxRetries(int maxRetries) {
@@ -243,25 +239,47 @@ abstract class  AbstractSubscribeManager extends RequestManager {
 			((SubscribeWorker)_workers[i]).setRetryInterval(retryInterval);
 		}
 	}
+	public void setConnectionTimeout(int timeout) {
+		this.connectionTimeout = timeout;
+	}
+
+	public void setRequestTimeout(int timeout) {
+		this.requestTimeout = timeout;
+	}
+
 
 }
 
 abstract class AbstractNonSubscribeManager extends RequestManager {
-	public AbstractNonSubscribeManager(String name) {
-		super(name);
+	public AbstractNonSubscribeManager(String name, int connectionTimeout, int requestTimeout) {
+		super(name, connectionTimeout, requestTimeout);
 	}
 
-	public Worker getWorker() {
-		return new NonSubscribeWorker(_waiting);
+	public Worker getWorker(int connectionTimeout, int requestTimeout) {
+		return new NonSubscribeWorker(_waiting, connectionTimeout, requestTimeout);
 	}
+	public void setConnectionTimeout(int timeout) {
+		this.connectionTimeout = timeout;
+		for (int i = 0; i < _workers.length; i++){
+			_workers[i].setConnectionTimeout(timeout);
+		}
+	}
+
+	public void setRequestTimeout(int timeout) {
+		this.requestTimeout = timeout;
+		for (int i = 0; i < _workers.length; i++){
+			_workers[i].setRequestTimeout(timeout);
+		}
+	}
+
 }
 
 abstract class AbstractSubscribeWorker extends Worker {
 	protected int maxRetries = 5;
 	protected int retryInterval = 5000;
 
-	AbstractSubscribeWorker(Vector _requestQueue) {
-		super(_requestQueue);
+	AbstractSubscribeWorker(Vector _requestQueue, int connectionTimeout, int requestTimeout) {
+		super(_requestQueue, connectionTimeout, requestTimeout);
 	}
 
 	public void setMaxRetries(int maxRetries) {

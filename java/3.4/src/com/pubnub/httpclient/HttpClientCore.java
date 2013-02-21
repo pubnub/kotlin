@@ -9,6 +9,7 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 
 
+
 import com.pubnub.api.PubnubException;
 
 
@@ -17,27 +18,14 @@ public class HttpClientCore extends HttpClient {
 	private int connectionTimeout = 5000;
 	HttpURLConnection connection;
 
-
-    public void abortCurrentRequest(){
-
-    }
-
     private void init() {
     	HttpURLConnection.setFollowRedirects(true);
     }
-	public HttpClientCore() {
+
+	public HttpClientCore(int connectionTimeout, int requestTimeout) {
 		init();
-	}
-
-	public HttpClientCore(int requestTimeout, int connTimeout) {
-		this();
 		this.setRequestTimeout(requestTimeout);
-		this.setConnectionTimeout(connTimeout);
-	}
-
-	public HttpClientCore(int requestTimeout) {
-		this();
-		this.setRequestTimeout(requestTimeout);
+		this.setConnectionTimeout(connectionTimeout);
 	}
 
 	public int getRequestTimeout() {

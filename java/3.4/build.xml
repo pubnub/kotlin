@@ -36,6 +36,7 @@
         <javac debug="true" destdir="bin" source="${source}" target="${target}">
             <src path="${srcPubnubApi.link}"/>
 			<src path="src"/>
+			<src path="srcLogging"/>
 			<src path="examples/src"/>
             <classpath refid="PubnubApi.classpath"/>
         </javac>

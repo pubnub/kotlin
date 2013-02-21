@@ -7,16 +7,9 @@ import com.pubnub.api.PubnubException;
 public abstract class HttpClient {
 
 	protected  Hashtable _headers;
-	public static HttpClient getClient() {
-			return new HttpClientCore();
-	}
-
-	public HttpClient getClient(int requestTimeout, int connTimeout) {
-		return new HttpClientCore(requestTimeout, connTimeout);
-	}
 	
-	public HttpClient getClient(int requestTimeout) {
-		return new HttpClientCore(requestTimeout);
+	public static HttpClient getClient(int connectionTimeout, int requestTimeout) {
+		return new HttpClientCore(connectionTimeout, requestTimeout);
 	}
 	
 	public void setHeader(String key, String value) {
@@ -35,8 +28,6 @@ public abstract class HttpClient {
 	public abstract int getConnectionTimeout();
 
 	public abstract void setConnectionTimeout(int connectionTimeout);
-
-	public abstract void abortCurrentRequest();
 	
 	public abstract boolean isRedirect(int rc);
 

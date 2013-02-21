@@ -215,14 +215,10 @@ abstract class PubnubCore {
 			subscriptions = new Subscriptions();
 
 		if (subscribeManager == null)
-			subscribeManager = new SubscribeManager("Subscribe Manager");
+			subscribeManager = new SubscribeManager("Subscribe Manager", 10000, 310000);
 
 		if (nonSubscribeManager == null)
-			nonSubscribeManager = new NonSubscribeManager("Non Subscribe Manager");
-
-		subscribeManager.setRequestTimeout(310000);
-		nonSubscribeManager.setRequestTimeout(15000);
-
+			nonSubscribeManager = new NonSubscribeManager("Non Subscribe Manager", 10000, 15000);
 
 		subscribeManager.setHeader("V", "3.4");
 		subscribeManager.setHeader("Accept-Encoding", "deflate");
@@ -235,12 +231,11 @@ abstract class PubnubCore {
 	}
 
 	public void setSubscribeTimeout(int timeout) {
-		subscribeManager.setConnectionTimeout(10000);
 		subscribeManager.setRequestTimeout(timeout);
+		this.disconnectAndResubscribe();
 	}
 
 	public void setNonSubscribeTimeout(int timeout) {
-		nonSubscribeManager.setConnectionTimeout(10000);
 		nonSubscribeManager.setRequestTimeout(timeout);
 	}
 
@@ -975,12 +970,12 @@ abstract class PubnubCore {
 				JSONArray jsa;
 				try {
 					jsa = new JSONArray(response);
-					log.trace("RESUME_ON_RECONNECT is : " + isResumeOnReconnect());
+					log.verbose("RESUME_ON_RECONNECT is : " + isResumeOnReconnect());
 					_timetoken = (!_saved_timetoken.equals("0") && isResumeOnReconnect())?
 							_saved_timetoken:jsa.get(1).toString();
-					log.trace("Saved Timetoken : " + _saved_timetoken);
-					log.trace("In sub 0 Response Timetoken : " + jsa.get(1).toString());
-					log.trace("Timetoken : " + _timetoken);
+					log.verbose("Saved Timetoken : " + _saved_timetoken);
+					log.verbose("In sub 0 Response Timetoken : " + jsa.get(1).toString());
+					log.verbose("Timetoken : " + _timetoken);
 					_saved_timetoken = "0";
 					JSONArray messages = new JSONArray(jsa.get(0)
 							.toString());
@@ -1052,18 +1047,17 @@ abstract class PubnubCore {
 			}
 
 			public void handleError(String response) {
-				subscriptions.invokeDisconnectCallbackOnChannels();
-				_subscribe_base(true);
+				resubscribe();
 			}
 
 			public void handleTimeout() {
 				JSONObject jsobj = new JSONObject();
 				subscriptions.invokeDisconnectCallbackOnChannels();
-				log.trace("Timeout Occurred, Calling error callbacks on the channels");
+				log.verbose("Timeout Occurred, Calling error callbacks on the channels");
 				try {
 					jsobj.put("error", "Network Timeout");
-					log.trace("timetoken : " + _timetoken);
-					log.trace("Saved Timetoken : " + _saved_timetoken);
+					log.verbose("timetoken : " + _timetoken);
+					log.verbose("Saved Timetoken : " + _saved_timetoken);
 					String timeoutTimetoken = (isResumeOnReconnect())?(_timetoken.equals("0"))?_saved_timetoken: _timetoken:"0";
 					jsobj.put("timetoken", timeoutTimetoken);
 					subscriptions.invokeErrorCallbackOnChannels(jsobj);
@@ -1071,7 +1065,7 @@ abstract class PubnubCore {
 					subscriptions.invokeErrorCallbackOnChannels("Network Timeout");
 				}
 
-				subscriptions.removeAllChannels();
+				//subscriptions.removeAllChannels();
 			}
 
 			public String getTimetoken() {
@@ -1106,15 +1100,19 @@ abstract class PubnubCore {
 		this.HOSTNAME_SUFFIX = (this.HOSTNAME_SUFFIX + 1) % 9 ;
 	}
 
-	public void disconnectAndResubscribe() {
-		log.trace("Received disconnectAndResubscribe");
-
-		subscriptions.invokeDisconnectCallbackOnChannels();
+	private void resubscribe() {
 		changeOrigin();
 		_saved_timetoken = _timetoken;
-		log.trace("Timetoken saved : " + _saved_timetoken);
+		log.verbose("Timetoken saved : " + _saved_timetoken);
 		_timetoken = "0";
 		_subscribe_base(true);
+	}
+	
+	public void disconnectAndResubscribe() {
+		log.verbose("Received disconnectAndResubscribe");
+		subscriptions.invokeDisconnectCallbackOnChannels();
+		resubscribe();
+		
 	}
 	public String[] getSubscribedChannelsArray() {
 		return subscriptions.getChannelNames();
