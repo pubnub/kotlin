@@ -760,7 +760,14 @@ abstract class PubnubCore {
 		for (int i = 0; i < channels.length; i++) {
 			subscriptions.removeChannel(channels[i]);
 		}
+		disconnectAndResubscribe();
 	}
+	
+	public void unsubscribeAll() {
+		subscriptions.removeAllChannels();
+		disconnectAndResubscribe();
+	}
+	
 	/**
 	 * Unsubscribe/Disconnect from presence channel.
 	 *

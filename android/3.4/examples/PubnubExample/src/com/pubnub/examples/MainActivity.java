@@ -35,358 +35,340 @@ import com.pubnub.api.Pubnub;
 import com.pubnub.api.PubnubException;
 
 public class MainActivity extends Activity {
-    /*//Noise Test
+	/*//Noise Test
     Pubnub pubnub = new Pubnub("pub-c-87f96934-8c44-4f8d-a35f-deaa2753f083", "sub-c-3a693cf8-7401-11e2-8b02-12313f022c90", "", false);
     String channel = "noise";
-    
+
     String channel = "a";*/
 
 
-    Pubnub pubnub = new Pubnub("demo", "demo", "", false);
-    String channel = "hello_world";
-    EditText ed;
-    protected int count;
-    
-    private boolean networkConnected = true;;
+	Pubnub pubnub = new Pubnub("demo", "demo", "", false);
+	String channel = "hello_world";
+	EditText ed;
+	protected int count;
 
-    private void notifyUser(Object message) {
-        try {
-            if (message instanceof JSONObject) {
-                final JSONObject obj = (JSONObject) message;
-                this.runOnUiThread(new Runnable() {
-                    public void run() {
-                        Toast.makeText(getApplicationContext(), obj.toString(),
-                                Toast.LENGTH_LONG).show();
+	private boolean networkConnected = true;;
 
-                        Log.e("Received msg : ", String.valueOf(obj));
-                    }
-                });
+	private void notifyUser(Object message) {
+		try {
+			if (message instanceof JSONObject) {
+				final JSONObject obj = (JSONObject) message;
+				this.runOnUiThread(new Runnable() {
+					public void run() {
+						Toast.makeText(getApplicationContext(), obj.toString(),
+								Toast.LENGTH_LONG).show();
 
-            } else if (message instanceof String) {
-                final String obj = (String) message;
-                this.runOnUiThread(new Runnable() {
-                    public void run() {
-                        Toast.makeText(getApplicationContext(), obj,
-                                Toast.LENGTH_LONG).show();
-                        Log.e("Received msg : ", obj.toString());
-                    }
-                });
+						Log.i("Received msg : ", String.valueOf(obj));
+					}
+				});
 
-            } else if (message instanceof JSONArray) {
-                final JSONArray obj = (JSONArray) message;
-                this.runOnUiThread(new Runnable() {
-                    public void run() {
-                        Toast.makeText(getApplicationContext(), obj.toString(),
-                                Toast.LENGTH_LONG).show();
-                        Log.e("Received msg : ", obj.toString());
-                    }
-                });
-            }
+			} else if (message instanceof String) {
+				final String obj = (String) message;
+				this.runOnUiThread(new Runnable() {
+					public void run() {
+						Toast.makeText(getApplicationContext(), obj,
+								Toast.LENGTH_LONG).show();
+						Log.i("Received msg : ", obj.toString());
+					}
+				});
+
+			} else if (message instanceof JSONArray) {
+				final JSONArray obj = (JSONArray) message;
+				this.runOnUiThread(new Runnable() {
+					public void run() {
+						Toast.makeText(getApplicationContext(), obj.toString(),
+								Toast.LENGTH_LONG).show();
+						Log.i("Received msg : ", obj.toString());
+					}
+				});
+			}
 
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-    
-    
-    public boolean haveInternet(Context ctx) {
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
-        NetworkInfo info = (NetworkInfo) ((ConnectivityManager) ctx
-                .getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
-        
-        return ( info != null && info.isConnected());
-    }
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main);
 
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        
-        pubnub.setSubscribeTimeout(15000);
-        
-        this.registerReceiver(new BroadcastReceiver() {
+		pubnub.setSubscribeTimeout(15000);
 
+		this.registerReceiver(new BroadcastReceiver() {
 			@Override
 			public void onReceive(Context arg0, Intent intent) {
-				boolean haveInternet = haveInternet(arg0);
-				
-				if ( haveInternet != networkConnected)
-					Log.d("Receiver 1", "Network state changed from " + networkConnected + " to " + haveInternet);
-				
-				if (haveInternet && !networkConnected ) {
-					pubnub.disconnectAndResubscribe();
-				}
-				networkConnected = haveInternet;
-				
+				pubnub.disconnectAndResubscribe();
+
 			} 
-        	
-        }, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION  ));
 
-        Button publishBtn = (Button) findViewById(R.id.btnPublish);
-        publishBtn.setOnClickListener(new OnClickListener() {
+		}, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION  ));
 
-            @Override
-            public void onClick(View arg0) {
-                Hashtable args = new Hashtable(2);
-                ed = (EditText) findViewById(R.id.editText1);
-                
-                String message = ed.getText().toString();
-                
-                if (args.get("message") == null ) {
-    				try {
-    					Integer i = Integer.parseInt(message);
-    					args.put("message", i);
-    				} catch (Exception e) {
+		Button publishBtn = (Button) findViewById(R.id.btnPublish);
+		publishBtn.setOnClickListener(new OnClickListener() {
 
-    				}
-    			}
-    			if (args.get("message") == null ) {
-    				try {
-    					Double d = Double.parseDouble(message);
-    					args.put("message", d);
-    				} catch (Exception e) {
+			@Override
+			public void onClick(View arg0) {
+				Hashtable args = new Hashtable(2);
+				ed = (EditText) findViewById(R.id.editText1);
 
-    				}
-    			}
-    			if (args.get("message") == null ) {
-    				try {
-    					JSONArray js = new JSONArray(message);
-    					args.put("message", js);
-    				} catch (Exception e) {
+				String message = ed.getText().toString();
 
-    				}
-    			}
-    			if (args.get("message") == null ) {
-    				try {
-    					JSONObject js = new JSONObject(message);
-    					args.put("message", js);
-    				} catch (Exception e) {
+				if (args.get("message") == null ) {
+					try {
+						Integer i = Integer.parseInt(message);
+						args.put("message", i);
+					} catch (Exception e) {
 
-    				}
-    			}
-    			if (args.get("message") == null ) {
-    				args.put("message", message);
-    			}
+					}
+				}
+				if (args.get("message") == null ) {
+					try {
+						Double d = Double.parseDouble(message);
+						args.put("message", d);
+					} catch (Exception e) {
 
-                // Publish Message
+					}
+				}
+				if (args.get("message") == null ) {
+					try {
+						JSONArray js = new JSONArray(message);
+						args.put("message", js);
+					} catch (Exception e) {
 
-                args.put("channel", channel); // Channel Name
+					}
+				}
+				if (args.get("message") == null ) {
+					try {
+						JSONObject js = new JSONObject(message);
+						args.put("message", js);
+					} catch (Exception e) {
 
-                pubnub.publish(args, new Callback() {
-                    public void successCallback(String channel, Object message) {
-                        notifyUser(message.toString());
-                    }
+					}
+				}
+				if (args.get("message") == null ) {
+					args.put("message", message);
+				}
 
-                    public void errorCallback(String channel, Object message) {
-                        notifyUser(channel + " : " + message.toString());
-                    }
-                });
-            }
-        });
+				// Publish Message
 
-        Button subscribeBtn = (Button) findViewById(R.id.btnSubscribe);
-        subscribeBtn.setOnClickListener(new OnClickListener() {
+				args.put("channel", channel); // Channel Name
 
-            @Override
-            public void onClick(View v) {
-                Hashtable args = new Hashtable(1);
-                args.put("channel", channel);
+				pubnub.publish(args, new Callback() {
+					public void successCallback(String channel, Object message) {
+						notifyUser(message.toString());
+					}
 
-                try {
-                    pubnub.subscribe(args, new Callback() {
-                        public void connectCallback(String channel) {
-                            notifyUser("CONNECT on channel:" + channel);
-                        }
+					public void errorCallback(String channel, Object message) {
+						notifyUser(channel + " : " + message.toString());
+					}
+				});
+			}
+		});
 
-                        public void disconnectCallback(String channel) {
-                            notifyUser("DISCONNECT on channel:" + channel);
-                        }
+		Button subscribeBtn = (Button) findViewById(R.id.btnSubscribe);
+		subscribeBtn.setOnClickListener(new OnClickListener() {
 
-                        public void reconnectCallback(String channel) {
-                            notifyUser("RECONNECT on channel:" + channel);
-                        }
+			@Override
+			public void onClick(View v) {
+				Hashtable args = new Hashtable(1);
+				args.put("channel", channel);
 
-                        public void successCallback(String channel,
-                                                    Object message) {
-                            notifyUser(channel + " " + message.toString());
-                        }
-                        public void errorCallback(String channel,
-                                Object message) {
-                        	notifyUser(channel + " " + message.toString());
-                        }
-                    });
+				try {
+					pubnub.subscribe(args, new Callback() {
+						public void connectCallback(String channel) {
+							notifyUser("CONNECT on channel:" + channel);
+						}
 
-                } catch (Exception e) {
+						public void disconnectCallback(String channel) {
+							notifyUser("DISCONNECT on channel:" + channel);
+						}
 
-                }
+						public void reconnectCallback(String channel) {
+							notifyUser("RECONNECT on channel:" + channel);
+						}
 
-            }
-        });
+						public void successCallback(String channel,
+								Object message) {
+							notifyUser(channel + " " + message.toString());
+						}
+						public void errorCallback(String channel,
+								Object message) {
+							notifyUser(channel + " " + message.toString());
+						}
+					});
 
-        Button presenceBtn = (Button) findViewById(R.id.btnPresence);
-        presenceBtn.setOnClickListener(new OnClickListener() {
+				} catch (Exception e) {
 
-            @Override
-            public void onClick(View v) {
-                try {
-                    pubnub.presence(channel, new Callback() {
-                        public void successCallback(String channel,
-                                                    Object message) {
-                            notifyUser(message.toString());
-                        }
+				}
 
-                        public void errorCallback(String channel, Object message) {
-                            notifyUser(channel + " : " + message.toString());
-                        }
-                    });
-                } catch (PubnubException e) {
+			}
+		});
 
-                }
+		Button presenceBtn = (Button) findViewById(R.id.btnPresence);
+		presenceBtn.setOnClickListener(new OnClickListener() {
 
-            }
-        });
+			@Override
+			public void onClick(View v) {
+				try {
+					pubnub.presence(channel, new Callback() {
+						public void successCallback(String channel,
+								Object message) {
+							notifyUser(message.toString());
+						}
 
+						public void errorCallback(String channel, Object message) {
+							notifyUser(channel + " : " + message.toString());
+						}
+					});
+				} catch (Exception e) {
 
-        Button toggleRoRBtn = (Button) findViewById(R.id.btnToggleRoR);
-        toggleRoRBtn.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Boolean previousState = pubnub.isResumeOnReconnect();
-                pubnub.setResumeOnReconnect(pubnub.isResumeOnReconnect() ? false : true);
-                Log.e("Resume on reconnect: ", String.format("Setting from: %s to %s", String.valueOf(previousState), String.valueOf(pubnub.isResumeOnReconnect())));
+				}
 
-            }
-        });
-
-        Button disconnectAndResubButton = (Button) findViewById(R.id.btnDisconnectAndResubscribe);
-        disconnectAndResubButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                pubnub.disconnectAndResubscribe();
-
-            }
-        });
-
-        Button detailedHistoryBtn = (Button) findViewById(R.id.btnDetailedHistory);
-        detailedHistoryBtn.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                pubnub.detailedHistory(channel, 2, new Callback() {
-                    public void successCallback(String channel, Object message) {
-                        notifyUser(message.toString());
-                    }
-
-                    public void errorCallback(String channel, Object message) {
-                        notifyUser(channel + " : " + message.toString());
-                    }
-                });
-
-            }
-        });
-        Button hereNowBtn = (Button) findViewById(R.id.btnHereNow);
-        hereNowBtn.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                pubnub.hereNow(channel, new Callback() {
-                    public void successCallback(String channel, Object message) {
-                        notifyUser(message.toString());
-                    }
-
-                    public void errorCallback(String channel, Object message) {
-                        notifyUser(channel + " : " + message.toString());
-                    }
-                });
-
-            }
-        });
-
-        Button pubSubBtn = (Button) findViewById(R.id.btnPubSubTest);
-        pubSubBtn.setOnClickListener(new OnClickListener() {
-            private int sub_succ = 0;
-            private int sub_fail = 0;
-            private int pub_succ = 0;
-            private int pub_fail = 0;
-            private int total = 100;
-            private String channel = "3.3-noise";
+			}
+		});
 
 
-            @Override
-            public void onClick(View v) {
-                Hashtable args = new Hashtable(1);
-                args.put("channel", channel);
-                System.out.println("debug PubSubTest");
-                notifyUser(channel);
+		Button toggleRoRBtn = (Button) findViewById(R.id.btnToggleRoR);
+		toggleRoRBtn.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Boolean previousState = pubnub.isResumeOnReconnect();
+				pubnub.setResumeOnReconnect(pubnub.isResumeOnReconnect() ? false : true);
+				Log.i("Resume on reconnect: ", String.format("Setting from: %s to %s", String.valueOf(previousState), String.valueOf(pubnub.isResumeOnReconnect())));
 
-                try {
-                    pubnub.subscribe(args, new Callback() {
-                        public void successCallback(String channel,
-                                                    Object message) {
-                            sub_succ++;
-                            notifyUser(" " + sub_succ);
-                            Log.e("Received count : ", String.valueOf(sub_succ));
-                        }
+			}
+		});
 
-                        public void errorCallback(String channel,
-                                                  Object message) {
-                            System.out.println(message);
-                            notifyUser("failed");
-                            sub_fail++;
-                        }
-                    });
-                    notifyUser("subscribed");
+		Button disconnectAndResubButton = (Button) findViewById(R.id.btnDisconnectAndResubscribe);
+		disconnectAndResubButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				pubnub.disconnectAndResubscribe();
 
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                for (int i = 0; i < total; i++) {
-                    // Publish Message
-                    Hashtable args1 = new Hashtable(2);
-                    args1.put("channel", channel); // Channel Name
-                    JSONObject message = new JSONObject();
-                    try {
-                        message.put("Message", "Testing Android Pub/Sub");
-                    } catch (org.json.JSONException jsonError) {
-                    }
-                    args1.put("message", message); // JSON Message
-                    pubnub.publish(args1, new Callback() {
-                        public void successCallback(String channel, Object message) {
-                            pub_succ++;
-                        }
+			}
+		});
 
-                        public void errorCallback(String channel, Object message) {
-                            System.out.println(message);
-                            pub_fail++;
-                        }
-                    });
-                }
-                try {
-                    Thread.sleep(60000);
-                } catch (InterruptedException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-                String result = "Publish Success : " + pub_succ + " , " +
-                        "Publish Failure : " + pub_fail + " , " +
-                        "Subscribe Success : " + sub_succ + " , " +
-                        "Subscribe Failure : " + sub_fail;
-                System.out.println(result);
-                notifyUser(result);
-                pub_succ = pub_fail = sub_succ = sub_fail = 0;
-            }
-        });
+		Button detailedHistoryBtn = (Button) findViewById(R.id.btnDetailedHistory);
+		detailedHistoryBtn.setOnClickListener(new OnClickListener() {
 
-    }
+			@Override
+			public void onClick(View v) {
+				pubnub.detailedHistory(channel, 2, new Callback() {
+					public void successCallback(String channel, Object message) {
+						notifyUser(message.toString());
+					}
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.activity_main, menu);
+					public void errorCallback(String channel, Object message) {
+						notifyUser(channel + " : " + message.toString());
+					}
+				});
 
-        return true;
-    }
+			}
+		});
+		Button hereNowBtn = (Button) findViewById(R.id.btnHereNow);
+		hereNowBtn.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				pubnub.hereNow(channel, new Callback() {
+					public void successCallback(String channel, Object message) {
+						notifyUser(message.toString());
+					}
+
+					public void errorCallback(String channel, Object message) {
+						notifyUser(channel + " : " + message.toString());
+					}
+				});
+
+			}
+		});
+
+		Button pubSubBtn = (Button) findViewById(R.id.btnPubSubTest);
+		pubSubBtn.setOnClickListener(new OnClickListener() {
+			private int sub_succ = 0;
+			private int sub_fail = 0;
+			private int pub_succ = 0;
+			private int pub_fail = 0;
+			private int total = 100;
+			private String channel = "3.3-noise";
+
+
+			@Override
+			public void onClick(View v) {
+				Hashtable args = new Hashtable(1);
+				args.put("channel", channel);
+				System.out.println("debug PubSubTest");
+				notifyUser(channel);
+
+				try {
+					pubnub.subscribe(args, new Callback() {
+						public void successCallback(String channel,
+								Object message) {
+							sub_succ++;
+							notifyUser(" " + sub_succ);
+							Log.i("Received count : ", String.valueOf(sub_succ));
+						}
+
+						public void errorCallback(String channel,
+								Object message) {
+							System.out.println(message);
+							notifyUser("failed");
+							sub_fail++;
+						}
+					});
+					notifyUser("subscribed");
+
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				for (int i = 0; i < total; i++) {
+					// Publish Message
+					Hashtable args1 = new Hashtable(2);
+					args1.put("channel", channel); // Channel Name
+					JSONObject message = new JSONObject();
+					try {
+						message.put("Message", "Testing Android Pub/Sub");
+					} catch (org.json.JSONException jsonError) {
+					}
+					args1.put("message", message); // JSON Message
+					pubnub.publish(args1, new Callback() {
+						public void successCallback(String channel, Object message) {
+							pub_succ++;
+						}
+
+						public void errorCallback(String channel, Object message) {
+							System.out.println(message);
+							pub_fail++;
+						}
+					});
+				}
+				try {
+					Thread.sleep(60000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				String result = "Publish Success : " + pub_succ + " , " +
+						"Publish Failure : " + pub_fail + " , " +
+						"Subscribe Success : " + sub_succ + " , " +
+						"Subscribe Failure : " + sub_fail;
+				System.out.println(result);
+				notifyUser(result);
+				pub_succ = pub_fail = sub_succ = sub_fail = 0;
+			}
+		});
+
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.activity_main, menu);
+
+		return true;
+	}
 
 }
