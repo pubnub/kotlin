@@ -29,7 +29,7 @@
 			<fileset dir="jars" includes="**/*.jar"/>
 		</delete>
     </target>
-    <target depends="create-jar,create-examples-jar, create-demo-console-jar, clean_bin" name="build"/>
+    <target depends="create-jar,create-examples-jar, create-demo-console-jar, clean_bin, doc" name="build"/>
 	<target depends="build-project" name="create-jar">
 		<jar destfile="${pubnub_jar_file_name}"
 			basedir="bin"
@@ -128,4 +128,7 @@
     <target name="create-demo-console-jar">
 		<create-jar jar.type="examples" jar.classname="com.pubnub.examples.PubnubDemoConsole" jar.filename="PubnubDemoConsole.jar" />
 	</target>
+    <target name="doc" depends="init" description="generate documentation">
+		<javadoc sourcepath="srcPubnubApi:src:srcLogging" destdir="doc" classpathref="PubnubApi.classpath"/>
+  	</target>
 </project>
