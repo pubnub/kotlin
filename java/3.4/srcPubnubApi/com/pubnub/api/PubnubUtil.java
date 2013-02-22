@@ -5,7 +5,7 @@ import java.util.Hashtable;
 import java.util.Vector;
 
 /**
- *
+ * 
  * @author PubnubCore
  */
 public class PubnubUtil {
@@ -13,7 +13,7 @@ public class PubnubUtil {
     /**
      * Takes source and delimiter string as inputs and returns splitted string
      * in form of tokens in String array
-     *
+     * 
      * @param source
      *            , input String
      * @param delimiter
@@ -60,7 +60,7 @@ public class PubnubUtil {
     /**
      * Takes String[] of tokens, and String delimiter as input and returns
      * joined String
-     *
+     * 
      * @param sourceArray
      *            , input tokens in String array
      * @param delimiter
@@ -80,7 +80,7 @@ public class PubnubUtil {
 
     /**
      * Returns encoded String
-     *
+     * 
      * @param sUrl
      *            , input string
      * @return , encoded string
@@ -127,7 +127,7 @@ public class PubnubUtil {
 
     /**
      * Returns string keys in a hashtable as array of string
-     *
+     * 
      * @param ht
      *            , Hashtable
      * @return , string array with hash keys string
@@ -152,7 +152,7 @@ public class PubnubUtil {
 
     /**
      * Returns string keys in a hashtable as delimited string
-     *
+     * 
      * @param ht
      *            , Hashtable
      * @param delimiter

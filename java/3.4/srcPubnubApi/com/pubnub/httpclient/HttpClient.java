@@ -6,41 +6,43 @@ import com.pubnub.api.PubnubException;
 
 public abstract class HttpClient {
 
-	protected  Hashtable _headers;
-	
-	public static HttpClient getClient(int connectionTimeout, int requestTimeout) {
-		return new HttpClientCore(connectionTimeout, requestTimeout);
-	}
-	
-	public void setHeader(String key, String value) {
-		if (_headers == null)
-			_headers = new Hashtable();
-		_headers.put(key, value);
-	}
-	
-	public void reset() {
-		shutdown();
-	}
-	public abstract int getRequestTimeout();
+    protected Hashtable _headers;
 
-	public abstract void setRequestTimeout(int requestTimeout);
+    public static HttpClient getClient(int connectionTimeout, int requestTimeout) {
+        return new HttpClientCore(connectionTimeout, requestTimeout);
+    }
 
-	public abstract int getConnectionTimeout();
+    public void setHeader(String key, String value) {
+        if (_headers == null)
+            _headers = new Hashtable();
+        _headers.put(key, value);
+    }
 
-	public abstract void setConnectionTimeout(int connectionTimeout);
-	
-	public abstract boolean isRedirect(int rc);
+    public void reset() {
+        shutdown();
+    }
 
-	public abstract boolean checkResponse(int rc);
-	
-	public abstract boolean checkResponseSuccess(int rc);
+    public abstract int getRequestTimeout();
 
-	public abstract boolean isOk(int rc);
-	
-	public abstract void shutdown();
+    public abstract void setRequestTimeout(int requestTimeout);
 
-	public abstract  HttpResponse fetch(String url) throws IOException, PubnubException;
+    public abstract int getConnectionTimeout();
 
-	public abstract HttpResponse fetch(String url, Hashtable headers)
-			throws IOException, PubnubException;
+    public abstract void setConnectionTimeout(int connectionTimeout);
+
+    public abstract boolean isRedirect(int rc);
+
+    public abstract boolean checkResponse(int rc);
+
+    public abstract boolean checkResponseSuccess(int rc);
+
+    public abstract boolean isOk(int rc);
+
+    public abstract void shutdown();
+
+    public abstract HttpResponse fetch(String url) throws IOException,
+            PubnubException;
+
+    public abstract HttpResponse fetch(String url, Hashtable headers)
+            throws IOException, PubnubException;
 }

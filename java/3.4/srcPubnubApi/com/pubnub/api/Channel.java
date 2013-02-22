@@ -2,7 +2,7 @@ package com.pubnub.api;
 
 /**
  * @author PubnubCore
- *
+ * 
  */
 class Channel {
     String name;

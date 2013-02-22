@@ -1,7 +1,7 @@
 package com.pubnub.api;
 
 /**
- *
+ * 
  * @author PubnubCore
  */
 public class PubnubException extends Exception {
@@ -9,7 +9,7 @@ public class PubnubException extends Exception {
 
     /**
      * Constructor for PubnubException Class with error message as argument
-     *
+     * 
      * @param s
      *            Error message
      */
@@ -19,7 +19,7 @@ public class PubnubException extends Exception {
 
     /**
      * Read the exception error message
-     *
+     * 
      * @return String
      */
     public String toString() {
