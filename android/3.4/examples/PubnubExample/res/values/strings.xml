@@ -15,5 +15,6 @@
     <string name="btnHereNowText">Here Now</string>
     <string name="editTextHint">Message to Publish</string>
     <string name="btnPubSubText">Publish/Subscribe Test</string>
+    <string name="btnUnsubscribeAllText">Unsubscribe All</string>
 
 </resources>

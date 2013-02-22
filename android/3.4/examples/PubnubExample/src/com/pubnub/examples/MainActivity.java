@@ -95,7 +95,7 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		pubnub.setSubscribeTimeout(15000);
+		//pubnub.setSubscribeTimeout(15000);
 
 		this.registerReceiver(new BroadcastReceiver() {
 			@Override
@@ -239,6 +239,14 @@ public class MainActivity extends Activity {
 				pubnub.setResumeOnReconnect(pubnub.isResumeOnReconnect() ? false : true);
 				Log.i("Resume on reconnect: ", String.format("Setting from: %s to %s", String.valueOf(previousState), String.valueOf(pubnub.isResumeOnReconnect())));
 
+			}
+		});
+		
+		Button unsubscribeAllBtn = (Button) findViewById(R.id.btnUnsubscribeAll );
+		unsubscribeAllBtn.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				pubnub.unsubscribeAll();
 			}
 		});
 

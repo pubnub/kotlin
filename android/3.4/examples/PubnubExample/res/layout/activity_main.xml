@@ -81,13 +81,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/btnDisconnectAndResubText" />
+        
+
+        
     </LinearLayout>
 
+    
+    
     <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="86dp"
             android:gravity="center_horizontal|fill_horizontal">
-
+		
         <Button
                 android:id="@+id/btnToggleRoR"
                 android:layout_width="wrap_content"
@@ -95,14 +100,29 @@
                 android:text="@string/btnToggleRoRText"/>
 
         <Button
+                android:id="@+id/btnUnsubscribeAll"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/btnUnsubscribeAllText"/>
+        
+        
+        
+    </LinearLayout>
+
+    
+    <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="86dp"
+            android:gravity="center_horizontal|fill_horizontal">
+
+		<Button
                 android:id="@+id/btnPubSubTest"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/btnPubSubText"/>
-
+        
 
     </LinearLayout>
-
 
     <LinearLayout
             android:layout_width="match_parent"
