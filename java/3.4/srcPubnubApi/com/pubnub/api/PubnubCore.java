@@ -354,7 +354,7 @@ abstract class PubnubCore {
 	public void publish(Hashtable args) {
 
 		final String channel = (String) args.get("channel");
-		Object message = args.get("message");
+		final Object message = args.get("message");
 		final Callback callback = (Callback) args.get("callback");
 		String msgStr = message.toString();
 
@@ -416,6 +416,7 @@ abstract class PubnubCore {
 				JSONArray jsarr;
 				jsarr = new JSONArray();
 				jsarr.put("0").put("publish " + response);
+				jsarr.put(channel).put(message);
 				callback.errorCallback(channel, jsarr);
 				return;
 			}
