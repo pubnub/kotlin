@@ -129,6 +129,6 @@
 		<create-jar jar.type="examples" jar.classname="com.pubnub.examples.PubnubDemoConsole" jar.filename="PubnubDemoConsole.jar" />
 	</target>
     <target name="doc" depends="init" description="generate documentation">
-		<javadoc sourcepath="srcPubnubApi:src:srcLogging" destdir="doc" classpathref="PubnubApi.classpath"/>
+		<javadoc access="public" sourcepath="srcPubnubApi:src:srcLogging" destdir="doc" classpathref="PubnubApi.classpath"/>
   	</target>
 </project>

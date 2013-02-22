@@ -1,7 +1,7 @@
 package com.pubnub.api;
 
 /**
- * 
+ * PubnubException is thrown by various Pubnub APIs
  * @author PubnubCore
  */
 public class PubnubException extends Exception {

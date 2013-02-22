@@ -1,10 +1,9 @@
 package com.pubnub.api;
 
 /**
- * Interface to be implemented by objects to be passed to subscribe/presence as
- * callback
- * 
- * @author PubnubCore
+ * Abstract class to be subclassed by objects being passed as callbacks to Pubnub APIs
+ * Default implementation for all methods is blank
+ * @author Pubnub
  * 
  */
 public abstract class Callback {
@@ -16,8 +15,7 @@ public abstract class Callback {
      *            Channel Name
      * @param message
      *            Message
-     * @return True to keep listening on channel, False to stop listening on
-     *         channel
+	 *
      */
     public void successCallback(String channel, Object message) {
     }

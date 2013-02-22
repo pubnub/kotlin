@@ -9,10 +9,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * PubnubCore object facilitates querying channels for messages and listening on
+ * Pubnub object facilitates querying channels for messages and listening on
  * channels for presence/message events
  * 
- * @author PubnubCore
+ * @author Pubnub
  * 
  */
 
@@ -29,7 +29,7 @@ abstract class PubnubCore {
     private boolean resumeOnReconnect;
 
     private boolean SSL = true;
-    private String UUID = null;
+    protected String UUID = null;
     private Subscriptions subscriptions;
 
     private SubscribeManager subscribeManager;
@@ -42,7 +42,7 @@ abstract class PubnubCore {
     private static Logger log = new Logger(PubnubCore.class);
 
     /**
-     * This method when called stops the Pubnub threads
+     * This method when called stops Pubnub threads
      */
     public void shutdown() {
         nonSubscribeManager.stop();
@@ -115,9 +115,9 @@ abstract class PubnubCore {
     /**
      * Convert input String to JSONObject, JSONArray, or String
      * 
-     * @param String
-     *            str
-     * @return Object
+     * @param str JSON data in string format
+     *            
+     * @return JSONArray or JSONObject or String 
      */
     static Object stringToJSON(String str) {
         Object obj = str;
@@ -134,11 +134,19 @@ abstract class PubnubCore {
         return obj;
     }
 
-    public abstract String uuid();
+    protected abstract String uuid();
+    
+    /**
+     * Sets value for UUID 
+     * @param uuid UUID value for Pubnub client
+     */
+    public void setUUID(String uuid) {
+    	this.UUID = uuid;
+    }
 
     /**
      * 
-     * Constructor for PubnubCore Class
+     * Constructor for Pubnub Class
      * 
      * @param publish_key
      *            Publish Key
@@ -159,7 +167,7 @@ abstract class PubnubCore {
 
     /**
      * 
-     * Constructor for PubnubCore Class
+     * Constructor for Pubnub Class
      * 
      * @param publish_key
      *            Publish Key
@@ -178,7 +186,7 @@ abstract class PubnubCore {
 
     /**
      * 
-     * Constructor for PubnubCore Class
+     * Constructor for Pubnub Class
      * 
      * @param publish_key
      *            Publish Key
@@ -192,7 +200,7 @@ abstract class PubnubCore {
 
     /**
      * 
-     * Constructor for PubnubCore Class
+     * Constructor for Pubnub Class
      * 
      * @param publish_key
      *            Publish Key
@@ -206,7 +214,7 @@ abstract class PubnubCore {
 
     /**
      * 
-     * Constructor for PubnubCore Class
+     * Constructor for Pubnub Class
      * 
      * @param publish_key
      *            Publish Key
@@ -291,7 +299,7 @@ abstract class PubnubCore {
      * @param message
      *            JSONObject to be published
      * @param callback
-     *            Callback
+     *            object of sub class of Callback class
      */
     public void publish(String channel, JSONObject message, Callback callback) {
         Hashtable args = new Hashtable();
@@ -309,7 +317,7 @@ abstract class PubnubCore {
      * @param message
      *            JSONOArray to be published
      * @param callback
-     *            Callback
+     *            object of sub class of Callback class
      */
     public void publish(String channel, JSONArray message, Callback callback) {
         Hashtable args = new Hashtable();
@@ -327,7 +335,7 @@ abstract class PubnubCore {
      * @param message
      *            String to be published
      * @param callback
-     *            Callback
+     *            object of sub class of Callback class
      */
     public void publish(String channel, String message, Callback callback) {
         Hashtable args = new Hashtable();
@@ -345,7 +353,7 @@ abstract class PubnubCore {
      * @param message
      *            Integer to be published
      * @param callback
-     *            Callback
+     *            object of sub class of Callback class
      */
     public void publish(String channel, Integer message, Callback callback) {
         Hashtable args = new Hashtable();
@@ -361,9 +369,9 @@ abstract class PubnubCore {
      * @param channel
      *            Channel name
      * @param message
-     *            JSONObject to be published
+     *            Double to be published
      * @param callback
-     *            Callback
+     *            object of sub class of Callback class
      */
     public void publish(String channel, Double message, Callback callback) {
         Hashtable args = new Hashtable();
@@ -379,7 +387,7 @@ abstract class PubnubCore {
      * @param args
      *            Hashtable containing channel name, message.
      * @param callback
-     *            Callback
+     *            object of sub class of Callback class
      */
     public void publish(Hashtable args, Callback callback) {
         args.put("callback", callback);
@@ -475,7 +483,7 @@ abstract class PubnubCore {
      *            Name of the channel on which to listen for join/leave i.e.
      *            presence events
      * @param callback
-     *            Callback
+     *            object of sub class of Callback class
      * @exception PubnubException
      *                Throws PubnubException if Callback is null
      */
@@ -491,8 +499,9 @@ abstract class PubnubCore {
 
     /**
      * Read presence information from a channel
-     * @param channel
-     * @param callback
+     * @param channel  Channel name 
+     * @param callback 
+     *            object of sub class of Callback class
      */
     public void hereNow(final String channel, final Callback callback) {
 
@@ -532,8 +541,7 @@ abstract class PubnubCore {
      *            Channel Name
      * @param limit
      *            Upper limit on number of messages in response
-     * @param requestTimeout
-     *            timeout in milliseconds for this request
+	 *
      */
     public void history(String channel, int limit, Callback callback) {
         Hashtable args = new Hashtable(2);
@@ -548,12 +556,9 @@ abstract class PubnubCore {
      * Read history from a channel.
      * 
      * @param args
-     *            HashMap of <String, Object> containing channel name, limit
-     *            history count
-     * @param requestTimeout
-     *            timeout in milliseconds for this request
+     *            Hashtable containing channel name, limit, Callback
      */
-    private void history(Hashtable args) {
+    public void history(Hashtable args) {
 
         final String channel = (String) args.get("channel");
         String limit = (String) args.get("limit");
@@ -602,6 +607,7 @@ abstract class PubnubCore {
      *            Upper limit on number of messages to be returned
      * @param reverse
      *            True if messages need to be in reverse order
+     * @param callback  Callback
      */
     public void detailedHistory(final String channel, long start, long end,
             int count, boolean reverse, final Callback callback) {
@@ -660,6 +666,7 @@ abstract class PubnubCore {
      *            Start time
      * @param reverse
      *            True if messages need to be in reverse order
+     * @param callback  Callback
      */
     public void detailedHistory(String channel, long start, boolean reverse,
             Callback callback) {
@@ -676,6 +683,7 @@ abstract class PubnubCore {
      *            Start time
      * @param end
      *            End time
+     * @param callback Callback
      */
     public void detailedHistory(String channel, long start, long end,
             Callback callback) {
@@ -694,6 +702,8 @@ abstract class PubnubCore {
      *            End time
      * @param reverse
      *            True if messages need to be in reverse order
+     *            
+     * @param callback  Callback
      */
     public void detailedHistory(String channel, long start, long end,
             boolean reverse, Callback callback) {
@@ -710,6 +720,7 @@ abstract class PubnubCore {
      *            Upper limit on number of messages to be returned
      * @param reverse
      *            True if messages need to be in reverse order
+     * @param callback Callback
      */
     public void detailedHistory(String channel, int count, boolean reverse,
             Callback callback) {
@@ -724,6 +735,7 @@ abstract class PubnubCore {
      *            Channel name for which detailed history is required
      * @param reverse
      *            True if messages need to be in reverse order
+     * @param callback  Callback
      */
     public void detailedHistory(String channel, boolean reverse,
             Callback callback) {
@@ -736,8 +748,7 @@ abstract class PubnubCore {
      * 
      * @param channel
      *            Channel name for which detailed history is required
-     * @param reverse
-     *            True if messages need to be in reverse order
+     * @param callback Callback
      */
     public void detailedHistory(String channel, int count, Callback callback) {
         detailedHistory(channel, -1, -1, count, false, callback);
@@ -745,19 +756,19 @@ abstract class PubnubCore {
 
     /**
      * Read current time from PubNub Cloud.
-     * 
+     * @param callback Callback
      */
-    public void time(final Callback cb) {
+    public void time(final Callback callback) {
 
         String[] url = { getOrigin(), "time", "0" };
         HttpRequest hreq = new HttpRequest(url, new ResponseHandler() {
 
             public void handleResponse(String response) {
-                cb.successCallback(null, response);
+                callback.successCallback(null, response);
             }
 
             public void handleError(String response) {
-                cb.errorCallback(null, "time " + response);
+                callback.errorCallback(null, "time " + response);
             }
 
         });
@@ -783,7 +794,7 @@ abstract class PubnubCore {
     }
 
     /**
-     * Unsubscribe/Disconnect from channel.
+     * Unsubscribe from channels.
      * 
      * @param channels
      *            String[] array containing channel names as string.
@@ -792,16 +803,20 @@ abstract class PubnubCore {
         for (int i = 0; i < channels.length; i++) {
             subscriptions.removeChannel(channels[i]);
         }
-        disconnectAndResubscribe();
+        resubscribe();
     }
 
+    /**
+     * Unsubscribe from all channel.
+     * 
+     */
     public void unsubscribeAll() {
         subscriptions.removeAllChannels();
         disconnectAndResubscribe();
     }
 
     /**
-     * Unsubscribe/Disconnect from presence channel.
+     * Unsubscribe from presence channel.
      * 
      * @param channel
      *            channel name as String.
@@ -968,10 +983,7 @@ abstract class PubnubCore {
         _subscribe_base(true);
     }
 
-    /**
-     * @param timetoken
-     *            , Timetoken to be used
-     */
+
     private void _subscribe_base(boolean fresh) {
         String channelString = subscriptions.getChannelString();
         String[] channelsArray = subscriptions.getChannelNames();
@@ -1172,7 +1184,7 @@ abstract class PubnubCore {
 
     private void changeOrigin() {
         this.ORIGIN_STR = null;
-        this.HOSTNAME_SUFFIX = (this.HOSTNAME_SUFFIX + 1) % 9;
+        this.HOSTNAME_SUFFIX = (int) Math.random();
     }
 
     private void resubscribe() {
@@ -1183,14 +1195,29 @@ abstract class PubnubCore {
         _subscribe_base(true);
     }
 
+    /** 
+     * Disconnect from all channels, and resubscribe
+     * 
+     */
     public void disconnectAndResubscribe() {
         log.verbose("Received disconnectAndResubscribe");
         subscriptions.invokeDisconnectCallbackOnChannels();
         resubscribe();
-
     }
 
+    /** 
+     * This method returns array of channel names, currently subscribed to
+     * @return Array of channel names
+     */
     public String[] getSubscribedChannelsArray() {
         return subscriptions.getChannelNames();
+    }
+    
+    /**
+     * Sets origin value, default is "pubsub"
+     * @param origin Origin value
+     */
+    public void setOrigin(String origin) {
+    	this.HOSTNAME = origin;
     }
 }
