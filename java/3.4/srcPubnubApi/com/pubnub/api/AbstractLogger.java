@@ -3,12 +3,27 @@ package com.pubnub.api;
 
 public abstract class AbstractLogger {
 	
-	public abstract void debug(String s);
+	private static boolean LOGGING = false;
 	
-	public abstract void verbose(String s);
+	protected abstract void nativeDebug(String s);
 	
-	public abstract void error(String s);
+	protected abstract void nativeVerbose(String s);
 	
-	public abstract void info(String s);
+	protected abstract void nativeError(String s);
+	
+	protected abstract void nativeInfo(String s);
+		
+	public void debug(String s) {
+		if(LOGGING) nativeDebug(s);
+	}
+	public void verbose(String s) {
+		if(LOGGING) nativeVerbose(s);
+	}
+	public void info(String s) {
+		if(LOGGING) nativeInfo(s);
+	}
+	public void error(String s) {
+		if(LOGGING) nativeError(s);
+	}
 	
 }

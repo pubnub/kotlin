@@ -4,7 +4,7 @@
     <property name="java_3.4_path" value="../../java/3.4"/>
     <property name="src_pubnub_api_path" value="${java_3.4_path}/srcPubnubApi"/>
     <property name="src_java_path" value="${java_3.4_path}/src"/>
-    <property name="src_logging_path" value="srcLogging"/>
+    <property name="src_logging_path" value="./srcLogging"/>
     <property name="android_jar_path" value="jars"/>
     <property name="target" value="1.5"/>
     <property name="source" value="1.5"/>
@@ -25,12 +25,11 @@
     <target name="clean">
         <delete dir="bin"/>
         <delete file="Pubnub-Android-3.4.jar"/>
-        <delete file="Pubnub-Android-3.4-proguard.jar"/>
     </target>
     <target depends="clean" name="cleanall"/>
     <target depends="copy_jars_to_examples" name="build"/>
-    <target depends="proguard" name="copy_jars_to_examples">
-    	<copy file="Pubnub-Android-3.4-proguard.jar" todir="./examples/PubnubExample/libs/"/>
+    <target depends="create-jar" name="copy_jars_to_examples">
+    	<copy file="Pubnub-Android-3.4.jar" todir="./examples/PubnubExample/libs/"/>
     </target>
 
 	<target depends="build-project" name="create-jar">
@@ -40,25 +39,9 @@
 		/>
 	</target>
 
-	<target depends="create-jar" name="proguard">
-		<taskdef resource="proguard/ant/task.properties" classpath="tools/proguard.jar" />
-			<proguard>
-  				-injars      Pubnub-Android-3.4.jar
-  				-outjars     Pubnub-Android-3.4-proguard.jar
-				-libraryjars ${java_3.4_path}/libs/bcprov-jdk15on-1.47.jar:libs/android-8.jar
-				-assumenosideeffects class android.util.Log {
- 				 	public static int v(...);
-				}
-			    -keep public class * {
-                	public protected *;
-                }	
-    			-dontoptimize 
-    			-dontobfuscate
-			</proguard>
-		</target>
     <target depends="init" name="build-project">
         <echo message="${ant.project.name}: ${ant.file}"/>
-        <javac debug="true" destdir="bin" source="${source}" target="${target}">
+        <javac destdir="bin" source="${source}" target="${target}">
             <src path="${src_pubnub_api_path}"/>
 			<src path="${src_java_path}"/>
 			<src path="${src_logging_path}"/>

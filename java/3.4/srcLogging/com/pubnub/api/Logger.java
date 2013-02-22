@@ -12,16 +12,27 @@ public class Logger extends AbstractLogger {
 		log = LogFactory.getLog(this._class);
 	}
 
-	public void debug(String s) {
+	@Override
+	protected void nativeDebug(String s) {
 		log.debug(s);
+		
 	}
-	public void verbose(String s) {
+
+	@Override
+	protected void nativeVerbose(String s) {
 		log.trace(s);
+		
 	}
-	public void error(String s) {
+
+	@Override
+	protected void nativeError(String s) {
 		log.error(s);
+		
 	}
-	public void info(String s) {
+
+	@Override
+	protected void nativeInfo(String s) {
 		log.info(s);
+		
 	}
 }

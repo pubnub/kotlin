@@ -9,16 +9,16 @@ public class Logger extends AbstractLogger {
 		this._class = _class;
 	}
 
-	public void debug(String s) {
+	protected void nativeDebug(String s) {
 		Log.d(_class.getName(), s);
 	}
-	public void verbose(String s) {
+	protected void nativeVerbose(String s) {
 		Log.v(_class.getName(), s);
 	}
-	public void error(String s) {
+	protected void nativeError(String s) {
 		Log.e(_class.getName(), s);
 	}
-	public void info(String s) {
+	protected void nativeInfo(String s) {
 		Log.i(_class.getName(), s );
 	}
 }
