@@ -3,15 +3,10 @@ package com.pubnub.api;
 import java.io.UnsupportedEncodingException;
 import java.util.Hashtable;
 
-import java.security.*;
 import org.bouncycastle.util.encoders.Hex;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import com.pubnub.crypto.PubnubCrypto;
-import com.pubnub.http.HttpRequest;
-import com.pubnub.http.ResponseHandler;
 
 /**
  * PubnubCore object facilitates querying channels for messages and listening on
@@ -46,19 +41,39 @@ abstract class PubnubCore {
 
     private static Logger log = new Logger(PubnubCore.class);
 
+    /**
+     * This method when called stops the Pubnub threads
+     */
     public void shutdown() {
         nonSubscribeManager.stop();
         subscribeManager.stop();
     }
 
+    /**
+     * This method returns the state of Resume on Reconnect setting
+     * @return Current state of Resume On Reconnect Setting
+     */
     public boolean isResumeOnReconnect() {
         return resumeOnReconnect;
     }
 
+    /** This method sets retry interval for subscribe.
+     *  Pubnub API will make maxRetries attempts to connect 
+     *  to pubnub servers. These attemtps will be made at an
+     *  interval of retryInterval milliseconds.
+     *  
+     * @param retryInterval Retry Interval in milliseconds
+     */
     public void setRetryInterval(int retryInterval) {
         subscribeManager.setRetryInterval(retryInterval);
     }
 
+    /**
+     * This methods sets maximum number of retries for subscribe.
+     * Pubnub API will make maxRetries attempts to connect to pubnub
+     * servers before timing out.
+     * @param maxRetries Max number of retries
+     */
     public void setMaxRetries(int maxRetries) {
         subscribeManager.setMaxRetries(maxRetries);
     }
@@ -77,11 +92,22 @@ abstract class PubnubCore {
         return ORIGIN_STR;
     }
 
+    /**
+     * This method returns all channel names currently subscribed to in form of a comma separated String
+	 *
+     * @return Comma separated string with all channel names currently subscribed 
+     */
     public String getCurrentlySubscribedChannelNames() {
         String currentChannels = subscriptions.getChannelString();
         return currentChannels.equals("") ? "no channels." : currentChannels;
     }
 
+    /**
+     * If Resume on Reconnect is set to true, then Pubnub catches up on reconnection after disconnection.
+     * If false, then messages sent on the channel between 
+     * disconnection and reconnection are not received. 
+     * @param resumeOnReconnect True or False setting for Resume on Reconnect
+     */
     public void setResumeOnReconnect(boolean resumeOnReconnect) {
         this.resumeOnReconnect = resumeOnReconnect;
     }
@@ -93,7 +119,7 @@ abstract class PubnubCore {
      *            str
      * @return Object
      */
-    public static Object stringToJSON(String str) {
+    static Object stringToJSON(String str) {
         Object obj = str;
         try {
             JSONArray jsarr = new JSONArray(str);
@@ -236,11 +262,23 @@ abstract class PubnubCore {
 
     }
 
+    /**
+     * This method sets timeout value for subscribe/presence.
+     * Default value is 310000 milliseconds i.e. 310 seconds
+     * 
+     * @param timeout Timeout value in milliseconds for subscribe/presence 
+     */
     public void setSubscribeTimeout(int timeout) {
         subscribeManager.setRequestTimeout(timeout);
         this.disconnectAndResubscribe();
     }
 
+    /**
+     *  This method set timeout value for non subscribe operations like publish, history, hereNow.
+     *  Default value is 15000 milliseconds i.e. 15 seconds.
+     * @param timeout Timeout value in milliseconds for Non subscribe operations
+     * like publish, history, hereNow
+     */
     public void setNonSubscribeTimeout(int timeout) {
         nonSubscribeManager.setRequestTimeout(timeout);
     }
@@ -449,14 +487,12 @@ abstract class PubnubCore {
         subscribe(args);
     }
 
+   
+
     /**
-     * 
      * Read presence information from a channel
-     * 
      * @param channel
-     *            Channel name
-     * @param requestTimeout
-     *            timeout in milliseconds for this request
+     * @param callback
      */
     public void hereNow(final String channel, final Callback callback) {
 
@@ -498,7 +534,6 @@ abstract class PubnubCore {
      *            Upper limit on number of messages in response
      * @param requestTimeout
      *            timeout in milliseconds for this request
-     * @return JSONArray of message history on a channel.
      */
     public void history(String channel, int limit, Callback callback) {
         Hashtable args = new Hashtable(2);
@@ -517,7 +552,6 @@ abstract class PubnubCore {
      *            history count
      * @param requestTimeout
      *            timeout in milliseconds for this request
-     * @return JSONArray of history.
      */
     private void history(Hashtable args) {
 
@@ -547,7 +581,7 @@ abstract class PubnubCore {
                 jsarr = new JSONArray();
                 jsarr.put("0").put("history " + response);
                 callback.errorCallback(channel, jsarr);
-                return;
+                return;    
             }
 
         });
@@ -568,7 +602,6 @@ abstract class PubnubCore {
      *            Upper limit on number of messages to be returned
      * @param reverse
      *            True if messages need to be in reverse order
-     * @return JSONArray of detailed history.
      */
     public void detailedHistory(final String channel, long start, long end,
             int count, boolean reverse, final Callback callback) {
@@ -627,7 +660,6 @@ abstract class PubnubCore {
      *            Start time
      * @param reverse
      *            True if messages need to be in reverse order
-     * @return JSONArray of detailed history.
      */
     public void detailedHistory(String channel, long start, boolean reverse,
             Callback callback) {
@@ -644,7 +676,6 @@ abstract class PubnubCore {
      *            Start time
      * @param end
      *            End time
-     * @return JSONArray of detailed history.
      */
     public void detailedHistory(String channel, long start, long end,
             Callback callback) {
@@ -663,7 +694,6 @@ abstract class PubnubCore {
      *            End time
      * @param reverse
      *            True if messages need to be in reverse order
-     * @return JSONArray of detailed history.
      */
     public void detailedHistory(String channel, long start, long end,
             boolean reverse, Callback callback) {
@@ -680,7 +710,6 @@ abstract class PubnubCore {
      *            Upper limit on number of messages to be returned
      * @param reverse
      *            True if messages need to be in reverse order
-     * @return JSONArray of detailed history.
      */
     public void detailedHistory(String channel, int count, boolean reverse,
             Callback callback) {
@@ -695,7 +724,6 @@ abstract class PubnubCore {
      *            Channel name for which detailed history is required
      * @param reverse
      *            True if messages need to be in reverse order
-     * @return JSONArray of detailed history.
      */
     public void detailedHistory(String channel, boolean reverse,
             Callback callback) {
@@ -710,7 +738,6 @@ abstract class PubnubCore {
      *            Channel name for which detailed history is required
      * @param reverse
      *            True if messages need to be in reverse order
-     * @return JSONArray of detailed history.
      */
     public void detailedHistory(String channel, int count, Callback callback) {
         detailedHistory(channel, -1, -1, count, false, callback);
@@ -719,7 +746,6 @@ abstract class PubnubCore {
     /**
      * Read current time from PubNub Cloud.
      * 
-     * @return current timestamp.
      */
     public void time(final Callback cb) {
 

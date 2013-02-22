@@ -1,4 +1,4 @@
-package com.pubnub.httpclient;
+package com.pubnub.api;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -10,7 +10,7 @@ import java.util.Hashtable;
 
 import com.pubnub.api.PubnubException;
 
-public class HttpClientCore extends HttpClient {
+class HttpClientCore extends HttpClient {
     private int requestTimeout = 310000;
     private int connectionTimeout = 5000;
     HttpURLConnection connection;

@@ -3,7 +3,7 @@ package com.pubnub.api;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-public class Logger extends AbstractLogger {
+class Logger extends AbstractLogger {
     private Class _class;
     private Log log;
 

@@ -1,6 +1,6 @@
 package com.pubnub.api;
 
-public abstract class AbstractLogger {
+abstract class AbstractLogger {
 
     private static boolean LOGGING = false;
 

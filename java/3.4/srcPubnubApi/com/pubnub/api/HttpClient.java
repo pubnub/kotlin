@@ -1,10 +1,10 @@
-package com.pubnub.httpclient;
+package com.pubnub.api;
 
 import java.io.IOException;
 import java.util.Hashtable;
 import com.pubnub.api.PubnubException;
 
-public abstract class HttpClient {
+abstract class HttpClient {
 
     protected Hashtable _headers;
 

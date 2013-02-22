@@ -1,10 +1,10 @@
-package com.pubnub.http;
+package com.pubnub.api;
 
 /**
  * @author PubnubCore
  */
 
-public abstract class ResponseHandler {
+abstract class ResponseHandler {
     public abstract void handleResponse(String response);
 
     public abstract void handleError(String response);

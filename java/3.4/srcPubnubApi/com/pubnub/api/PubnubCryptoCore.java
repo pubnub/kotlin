@@ -1,4 +1,4 @@
-package com.pubnub.crypto;
+package com.pubnub.api;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -23,7 +23,7 @@ import org.bouncycastle.util.encoders.Hex;
  * PubNub 3.1 Cryptography
  * 
  */
-public abstract class PubnubCryptoCore {
+abstract class PubnubCryptoCore {
 
     PaddedBufferedBlockCipher encryptCipher = null;
     PaddedBufferedBlockCipher decryptCipher = null;

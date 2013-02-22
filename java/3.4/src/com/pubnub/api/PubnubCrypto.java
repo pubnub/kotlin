@@ -1,6 +1,6 @@
-package com.pubnub.crypto;
+package com.pubnub.api;
 
-public class PubnubCrypto extends PubnubCryptoCore {
+class PubnubCrypto extends PubnubCryptoCore {
 
     public PubnubCrypto(String CIPHER_KEY) {
         super(CIPHER_KEY);

@@ -1,11 +1,11 @@
-package com.pubnub.http;
+package com.pubnub.api;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
 
 import com.pubnub.api.PubnubUtil;
 
-public class HttpRequest {
+class HttpRequest {
     private ResponseHandler responseHandler;
     private Hashtable headers;
     private String[] urlComponents;

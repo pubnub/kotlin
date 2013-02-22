@@ -1,10 +1,10 @@
-package com.pubnub.crypto;
+package com.pubnub.api;
 
 /**
  * Simple base64 encoder, can be implemented in other platforms.
  * 
  */
-public class Base64Encoder {
+class Base64Encoder {
 
     // Mapping table from 6-bit nibbles to Base64 characters.
     private static char[] map1 = new char[64];

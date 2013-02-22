@@ -1,11 +1,7 @@
 package com.pubnub.api;
 
-import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.Vector;
-
-import com.pubnub.http.HttpRequest;
-import com.pubnub.httpclient.HttpResponse;
 
 class SubscribeWorker extends AbstractSubscribeWorker {
 

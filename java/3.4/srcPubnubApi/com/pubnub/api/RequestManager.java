@@ -2,10 +2,6 @@ package com.pubnub.api;
 
 import java.util.Vector;
 
-import com.pubnub.http.HttpRequest;
-import com.pubnub.httpclient.HttpClient;
-import com.pubnub.httpclient.HttpResponse;
-
 abstract class Worker implements Runnable {
     private Vector _requestQueue;
     protected volatile boolean _die;
