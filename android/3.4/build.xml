@@ -30,6 +30,7 @@
     <target depends="copy_jars_to_examples" name="build"/>
     <target depends="create-jar" name="copy_jars_to_examples">
     	<copy file="Pubnub-Android-3.4.jar" todir="./examples/PubnubExample/libs/"/>
+    	<copy file="Pubnub-Android-3.4.jar" todir="./examples/SubscribeAtBoot/libs/"/>
     </target>
 
 	<target depends="build-project" name="create-jar">
