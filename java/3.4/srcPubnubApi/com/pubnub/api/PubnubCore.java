@@ -1000,7 +1000,7 @@ abstract class PubnubCore {
 
         Hashtable params = new Hashtable();
         params.put("uuid", UUID);
-        // log.trace("Subscribing with timetoken : " + _timetoken);
+        log.verbose("Subscribing with timetoken : " + _timetoken);
 
         HttpRequest hreq = new HttpRequest(urlComponents, params,
                 new ResponseHandler() {
@@ -1021,15 +1021,16 @@ abstract class PubnubCore {
                         JSONArray jsa;
                         try {
                             jsa = new JSONArray(response);
-                            log.verbose("RESUME_ON_RECONNECT is : "
-                                    + isResumeOnReconnect());
+
                             _timetoken = (!_saved_timetoken.equals("0") && isResumeOnReconnect()) ? _saved_timetoken
                                     : jsa.get(1).toString();
+                            log.verbose("Resume On Reconnect is " + isResumeOnReconnect());
                             log.verbose("Saved Timetoken : " + _saved_timetoken);
-                            log.verbose("In sub 0 Response Timetoken : "
-                                    + jsa.get(1).toString());
-                            log.verbose("Timetoken : " + _timetoken);
+                            log.verbose("In Response Timetoken : " + jsa.get(1).toString());
+                            log.verbose("Timetoken value set to " + _timetoken);
                             _saved_timetoken = "0";
+                            log.verbose("Saved Timetoken reset to 0");
+                            
                             JSONArray messages = new JSONArray(jsa.get(0)
                                     .toString());
 
@@ -1136,11 +1137,10 @@ abstract class PubnubCore {
                         log.verbose("Timeout Occurred, Calling error callbacks on the channels");
                         try {
                             jsobj.put("error", "Network Timeout");
-                            log.verbose("timetoken : " + _timetoken);
-                            log.verbose("Saved Timetoken : " + _saved_timetoken);
                             String timeoutTimetoken = (isResumeOnReconnect()) ? (_timetoken
                                     .equals("0")) ? _saved_timetoken
                                     : _timetoken : "0";
+                            log.verbose("Timeout Timetoken : " + timeoutTimetoken);
                             jsobj.put("timetoken", timeoutTimetoken);
                             subscriptions.invokeErrorCallbackOnChannels(jsobj);
                             disconnectAndResubscribe();
@@ -1190,8 +1190,9 @@ abstract class PubnubCore {
     private void resubscribe() {
         changeOrigin();
         _saved_timetoken = _timetoken;
-        log.verbose("Timetoken saved : " + _saved_timetoken);
         _timetoken = "0";
+        log.verbose("Before Resubscribe Timetoken : " + _timetoken);
+        log.verbose("Before Resubscribe Saved Timetoken : " + _saved_timetoken);
         _subscribe_base(true);
     }
 
