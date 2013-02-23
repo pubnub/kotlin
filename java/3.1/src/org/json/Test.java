@@ -10,7 +10,7 @@ import java.io.StringWriter;
  * It is just a casual test tool.
  */
 public class Test {
-	
+    
     /**
      * Entry point.
      * @param args
@@ -30,10 +30,10 @@ public class Test {
  *  a JSONObject with an array of names.
  */
         class Obj implements JSONString {
-        	public String aString;
-        	public double aNumber;
-        	public boolean aBoolean;
-        	
+            public String aString;
+            public double aNumber;
+            public boolean aBoolean;
+            
             public Obj(String string, double n, boolean b) {
                 this.aString = string;
                 this.aNumber = n;
@@ -41,37 +41,37 @@ public class Test {
             }
             
             public double getNumber() {
-            	return this.aNumber;
+                return this.aNumber;
             }
             
             public String getString() {
-            	return this.aString;
+                return this.aString;
             }
             
             public boolean isBoolean() {
-            	return this.aBoolean;
+                return this.aBoolean;
             }
             
             public String getBENT() {
-            	return "All uppercase key";
+                return "All uppercase key";
             }
             
             public String getX() {
-            	return "x";
+                return "x";
             }
             
             public String toJSONString() {
-            	return "{" + JSONObject.quote(this.aString) + ":" + 
-            	JSONObject.doubleToString(this.aNumber) + "}";
+                return "{" + JSONObject.quote(this.aString) + ":" + 
+                JSONObject.doubleToString(this.aNumber) + "}";
             }            
             public String toString() {
-            	return this.getString() + " " + this.getNumber() + " " + 
-            			this.isBoolean() + "." + this.getBENT() + " " + this.getX();
+                return this.getString() + " " + this.getNumber() + " " + 
+                        this.isBoolean() + "." + this.getBENT() + " " + this.getX();
             }
         }      
         
 
-    	Obj obj = new Obj("A beany object", 42, true);
+        Obj obj = new Obj("A beany object", 42, true);
         
         try {     
             s = "[0.1]";
@@ -147,33 +147,33 @@ public class Test {
 
             jj = new JSONStringer();
             s = jj
-	            .object()
-	                .key("single")
-	                .value("MARIE HAA'S")
-	                .key("Johnny")
-	                .value("MARIE HAA\\'S")
-	                .key("foo")
-	                .value("bar")
-	                .key("baz")
-	                .array()
-	                    .object()
-	                        .key("quux")
-	                        .value("Thanks, Josh!")
-	                    .endObject()
-	                .endArray()
-	                .key("obj keys")
-	                .value(JSONObject.getNames(obj))
-	            .endObject()
+                .object()
+                    .key("single")
+                    .value("MARIE HAA'S")
+                    .key("Johnny")
+                    .value("MARIE HAA\\'S")
+                    .key("foo")
+                    .value("bar")
+                    .key("baz")
+                    .array()
+                        .object()
+                            .key("quux")
+                            .value("Thanks, Josh!")
+                        .endObject()
+                    .endArray()
+                    .key("obj keys")
+                    .value(JSONObject.getNames(obj))
+                .endObject()
             .toString();
             System.out.println(s);
 
             System.out.println(new JSONStringer()
                 .object()
-                	.key("a")
-                	.array()
-                		.array()
-                			.array()
-                				.value("b")
+                    .key("a")
+                    .array()
+                        .array()
+                            .array()
+                                .value("b")
                             .endArray()
                         .endArray()
                     .endArray()
@@ -216,11 +216,11 @@ public class Test {
 
             System.out.println(new JSONArray(jj.toString()).toString(4));
 
-        	int ar[] = {1, 2, 3};
-        	JSONArray ja = new JSONArray(ar);
-        	System.out.println(ja.toString());
-        	
-        	String sa[] = {"aString", "aNumber", "aBoolean"};            
+            int ar[] = {1, 2, 3};
+            JSONArray ja = new JSONArray(ar);
+            System.out.println(ja.toString());
+            
+            String sa[] = {"aString", "aNumber", "aBoolean"};            
             j = new JSONObject(obj, sa);
             j.put("Testing JSONString interface", obj);
             System.out.println(j.toString(4));          
@@ -596,80 +596,80 @@ public class Test {
             }
             System.out.print("Exception: ");
             try {
-            	j = XML.toJSONObject("<a><b>    ");
+                j = XML.toJSONObject("<a><b>    ");
             } catch (Exception e) {
-            	System.out.println(e);
+                System.out.println(e);
             }            
             System.out.print("Exception: ");
             try {
-            	j = XML.toJSONObject("<a></b>    ");
+                j = XML.toJSONObject("<a></b>    ");
             } catch (Exception e) {
-            	System.out.println(e);
+                System.out.println(e);
             }            
             System.out.print("Exception: ");
             try {
-            	j = XML.toJSONObject("<a></a    ");
+                j = XML.toJSONObject("<a></a    ");
             } catch (Exception e) {
-            	System.out.println(e);
+                System.out.println(e);
             }
             System.out.print("Exception: ");
-            try {            	
-            	ja = new JSONArray(new Object());
-            	System.out.println(ja.toString());
+            try {                
+                ja = new JSONArray(new Object());
+                System.out.println(ja.toString());
             } catch (Exception e) {
-            	System.out.println(e);
-            }
-
-            System.out.print("Exception: ");
-            try {            	
-            	s = "[)";
-            	a = new JSONArray(s);
-            	System.out.println(a.toString());
-            } catch (Exception e) {
-            	System.out.println(e);
+                System.out.println(e);
             }
 
             System.out.print("Exception: ");
-            try {            	
+            try {                
+                s = "[)";
+                a = new JSONArray(s);
+                System.out.println(a.toString());
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+
+            System.out.print("Exception: ");
+            try {                
                 s = "<xml";
                 ja = JSONML.toJSONArray(s);
                 System.out.println(ja.toString(4));
             } catch (Exception e) {
-            	System.out.println(e);
+                System.out.println(e);
             }
 
             System.out.print("Exception: ");
-            try {            	
+            try {                
                 s = "<right></wrong>";
                 ja = JSONML.toJSONArray(s);
                 System.out.println(ja.toString(4));
             } catch (Exception e) {
-            	System.out.println(e);
+                System.out.println(e);
             }
 
             System.out.print("Exception: ");
-            try {            	
+            try {                
                 s = "{\"koda\": true, \"koda\": true}";
                 j = new JSONObject(s);
                 System.out.println(j.toString(4));
             } catch (Exception e) {
-            	System.out.println(e);
+                System.out.println(e);
             }
 
             System.out.print("Exception: ");
-            try {            	
+            try {                
                 jj = new JSONStringer();
                 s = jj
-    	            .object()
-    	                .key("bosanda")
-    	                .value("MARIE HAA'S")
-    	                .key("bosanda")
-    	                .value("MARIE HAA\\'S")
-    	            .endObject()
-    	            .toString();
+                    .object()
+                        .key("bosanda")
+                        .value("MARIE HAA'S")
+                        .key("bosanda")
+                        .value("MARIE HAA\\'S")
+                    .endObject()
+                    .toString();
                 System.out.println(j.toString(4));
             } catch (Exception e) {
-            	System.out.println(e);
+                System.out.println(e);
             }
         } catch (Exception e) {
             System.out.println(e.toString());

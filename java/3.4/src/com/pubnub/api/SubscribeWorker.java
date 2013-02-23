@@ -38,17 +38,19 @@ class SubscribeWorker extends AbstractSubscribeWorker {
             } catch (InterruptedException e) {
             }
         }
-        if (hresp == null) {
-            log.debug("Error in fetching url : " + hreq.getUrl());
-            if (currentRetryAttempt > maxRetries) {
-                log.verbose("Exhausted number of retries");
-                hreq.getResponseHandler().handleTimeout();
-            } else
-                hreq.getResponseHandler().handleError("Request Timeout");
-            return;
+        if (!_die) {
+            if (hresp == null) {
+                log.debug("Error in fetching url : " + hreq.getUrl());
+                if (currentRetryAttempt > maxRetries) {
+                    log.verbose("Exhausted number of retries");
+                    hreq.getResponseHandler().handleTimeout();
+                } else
+                    hreq.getResponseHandler().handleError("Request Timeout");
+                return;
+            }
+            log.debug(hresp.getResponse());
+            hreq.getResponseHandler().handleResponse(hresp.getResponse());
         }
-        log.debug(hresp.getResponse());
-        hreq.getResponseHandler().handleResponse(hresp.getResponse());
 
     }
 }

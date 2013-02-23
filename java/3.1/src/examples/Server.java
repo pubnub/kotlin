@@ -10,17 +10,17 @@ import pubnub.Pubnub;
 
 public class Server {
     @SuppressWarnings("static-access")
-	public static void main(String [] params) {
-    	Pubnub pn  = new Pubnub( "demo", "demo", "demo", "", true ); //(Cipher key is Optional)
+    public static void main(String [] params) {
+        Pubnub pn  = new Pubnub( "demo", "demo", "demo", "", true ); //(Cipher key is Optional)
         int count = 0;
 
         while (true) {
-        	count++;
-        	
+            count++;
+            
             System.out.print("sending message: " + count);
             JSONObject message = new JSONObject();
             try { 
-            	message.put( "some_val", "Hello World! --> ɂ顶@#$%^&*()!" + Integer.toString(count) ); 
+                message.put( "some_val", "Hello World! --> ɂ顶@#$%^&*()!" + Integer.toString(count) ); 
             }
             catch (org.json.JSONException jsonError) {
                 System.out.println(jsonError);

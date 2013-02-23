@@ -1,8 +1,9 @@
 package com.pubnub.api;
 
 /**
- * Abstract class to be subclassed by objects being passed as callbacks to Pubnub APIs
- * Default implementation for all methods is blank
+ * Abstract class to be subclassed by objects being passed as callbacks to
+ * Pubnub APIs Default implementation for all methods is blank
+ * 
  * @author Pubnub
  * 
  */
@@ -15,7 +16,7 @@ public abstract class Callback {
      *            Channel Name
      * @param message
      *            Message
-	 *
+     * 
      */
     public void successCallback(String channel, Object message) {
     }

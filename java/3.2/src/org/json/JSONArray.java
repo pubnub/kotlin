@@ -163,14 +163,14 @@ public class JSONArray {
      * @param collection     A Collection.
      */
     public JSONArray(Collection collection) {
-		this.myArrayList = new ArrayList();
-		if (collection != null) {
-			Iterator iter = collection.iterator();
-			while (iter.hasNext()) {
-			    Object o = iter.next();
+        this.myArrayList = new ArrayList();
+        if (collection != null) {
+            Iterator iter = collection.iterator();
+            while (iter.hasNext()) {
+                Object o = iter.next();
                 this.myArrayList.add(JSONObject.wrap(o));  
-			}
-		}
+            }
+        }
     }
 
     
@@ -773,7 +773,7 @@ public class JSONArray {
      * or null if there was no value.
      */
     public Object remove(int index) {
-    	Object o = opt(index);
+        Object o = opt(index);
         this.myArrayList.remove(index);
         return o;
     }

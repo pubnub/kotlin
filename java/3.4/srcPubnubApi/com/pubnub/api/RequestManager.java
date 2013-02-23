@@ -10,7 +10,7 @@ abstract class Worker implements Runnable {
     protected int requestTimeout;
     protected int connectionTimeout;
 
-    protected static Logger log = new Logger(RequestManager.class);
+    protected static Logger log = new Logger(Worker.class);
 
     public Thread getThread() {
         return thread;
@@ -102,16 +102,19 @@ class NonSubscribeWorker extends Worker {
             hresp = httpclient.fetch(hreq.getUrl(), hreq.getHeaders());
         } catch (Exception e) {
             log.debug("Exception in Fetch : " + e.toString());
-            hreq.getResponseHandler().handleError("Timed Out");
+            if (!_die)
+                hreq.getResponseHandler().handleError("Timed Out");
             return;
         }
 
-        if (hresp == null) {
-            log.debug("Error in fetching url : " + hreq.getUrl());
-            hreq.getResponseHandler().handleError("Network Error");
-            return;
+        if (!_die) {
+            if (hresp == null) {
+                log.debug("Error in fetching url : " + hreq.getUrl());
+                hreq.getResponseHandler().handleError("Network Error");
+                return;
+            }
+            hreq.getResponseHandler().handleResponse(hresp.getResponse());
         }
-        hreq.getResponseHandler().handleResponse(hresp.getResponse());
     }
 
 }
@@ -124,6 +127,8 @@ abstract class RequestManager {
     protected String name;
     protected int connectionTimeout;
     protected int requestTimeout;
+
+    protected static Logger log = new Logger(RequestManager.class);
 
     public static int getWorkerCount() {
         return _maxWorkers;
@@ -189,6 +194,7 @@ abstract class RequestManager {
     }
 
     public void queue(HttpRequest hreq) {
+        log.debug("Queued : " + hreq.getUrl());
         synchronized (_waiting) {
             _waiting.addElement(hreq);
             _waiting.notifyAll();

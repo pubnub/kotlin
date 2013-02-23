@@ -12,7 +12,7 @@ import pubnub.Pubnub;
 
 public class Client {
     public static void main(String [] params) {
-    	Pubnub pn  = new Pubnub( "demo", "demo", "demo", "", true );// (Cipher key is Optional)
+        Pubnub pn  = new Pubnub( "demo", "demo", "demo", "", true );// (Cipher key is Optional)
         Receiver rcv = new Receiver();
         System.out.println("Subscribed to 'hello_world' Channel ");
         
@@ -25,16 +25,16 @@ public class Client {
 }
 
 class Receiver implements Callback {
-	@Override
-	public boolean subscribeCallback(String channel, Object message) {
-    	// Print Received Message
+    @Override
+    public boolean subscribeCallback(String channel, Object message) {
+        // Print Received Message
         //System.out.println(message);
-    	try {
-    		 try {
+        try {
+             try {
                  if (message instanceof JSONObject) {
                      JSONObject obj = (JSONObject) message;
                      @SuppressWarnings("rawtypes")
-					Iterator keys = obj.keys();
+                    Iterator keys = obj.keys();
                      while (keys.hasNext()) {
                          System.out.print(obj.get(keys.next().toString()) + " ");
                      }
@@ -51,32 +51,32 @@ class Receiver implements Callback {
              } catch (Exception e) {
                  e.printStackTrace();
              }
-    	} catch (Exception e) {
-    		e.printStackTrace();
-    	}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-    	return true;
+        return true;
     }
 
 
-	@Override
-	public void errorCallback(String channel, Object message) {
-		System.err.println("Channel:" + channel + "-" + message.toString());
-	}
+    @Override
+    public void errorCallback(String channel, Object message) {
+        System.err.println("Channel:" + channel + "-" + message.toString());
+    }
 
-	@Override
-	public void connectCallback(String channel) {
-		System.out.println("Connected to channel :" + channel);
+    @Override
+    public void connectCallback(String channel) {
+        System.out.println("Connected to channel :" + channel);
 
-	}
+    }
 
-	@Override
-	public void reconnectCallback(String channel) {
-		System.out.println("Reconnected to channel :" + channel);
-	}
+    @Override
+    public void reconnectCallback(String channel) {
+        System.out.println("Reconnected to channel :" + channel);
+    }
 
-	@Override
-	public void disconnectCallback(String channel) {
-		System.out.println("Disconnected to channel :" + channel);
-	}
+    @Override
+    public void disconnectCallback(String channel) {
+        System.out.println("Disconnected to channel :" + channel);
+    }
 }

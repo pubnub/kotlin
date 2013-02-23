@@ -160,10 +160,10 @@ public class JSONObject {
     public JSONObject(JSONObject jo, String[] names) {
         this();
         for (int i = 0; i < names.length; i += 1) {
-        	try {
-        		putOnce(names[i], jo.opt(names[i]));
-        	} catch (Exception ignore) {
-        	}
+            try {
+                putOnce(names[i], jo.opt(names[i]));
+            } catch (Exception ignore) {
+            }
         }
     }
 
@@ -607,23 +607,23 @@ public class JSONObject {
      * that is not an Integer, Long, Double, or Float.
      */
     public JSONObject increment(String key) throws JSONException {
-    	Object value = opt(key);
-    	if (value == null) {
-    		put(key, 1);
-    	} else {
-    		if (value instanceof Integer) {
-    			put(key, ((Integer)value).intValue() + 1);
-    		} else if (value instanceof Long) {
-    			put(key, ((Long)value).longValue() + 1);    			
-    		} else if (value instanceof Double) {
-	    		put(key, ((Double)value).doubleValue() + 1);    			
-    		} else if (value instanceof Float) {
-	    		put(key, ((Float)value).floatValue() + 1);    			
-		    } else {
-		    	throw new JSONException("Unable to increment [" + key + "].");
-		    }
-	    }
-    	return this;
+        Object value = opt(key);
+        if (value == null) {
+            put(key, 1);
+        } else {
+            if (value instanceof Integer) {
+                put(key, ((Integer)value).intValue() + 1);
+            } else if (value instanceof Long) {
+                put(key, ((Long)value).longValue() + 1);                
+            } else if (value instanceof Double) {
+                put(key, ((Double)value).doubleValue() + 1);                
+            } else if (value instanceof Float) {
+                put(key, ((Float)value).floatValue() + 1);                
+            } else {
+                throw new JSONException("Unable to increment [" + key + "].");
+            }
+        }
+        return this;
     }
 
 
@@ -915,12 +915,12 @@ public class JSONObject {
                     String name = method.getName();
                     String key = "";
                     if (name.startsWith("get")) {
-                    	if (name.equals("getClass") || 
-                    			name.equals("getDeclaringClass")) {
-                    		key = "";
-                    	} else {
-                    		key = name.substring(3);
-                    	}
+                        if (name.equals("getClass") || 
+                                name.equals("getDeclaringClass")) {
+                            key = "";
+                        } else {
+                            key = name.substring(3);
+                        }
                     } else if (name.startsWith("is")) {
                         key = name.substring(2);
                     }
@@ -1217,7 +1217,7 @@ public class JSONObject {
             }
             try {
                 if (s.indexOf('.') > -1 || 
-                		s.indexOf('e') > -1 || s.indexOf('E') > -1) {
+                        s.indexOf('e') > -1 || s.indexOf('E') > -1) {
                     return Double.valueOf(s);
                 } else {
                     Long myLong = new Long(s);
@@ -1511,8 +1511,8 @@ public class JSONObject {
                  return NULL;
              }
              if (object instanceof JSONObject || object instanceof JSONArray || 
-            		 NULL.equals(object)      || object instanceof JSONString || 
-            		 object instanceof Byte   || object instanceof Character ||
+                     NULL.equals(object)      || object instanceof JSONString || 
+                     object instanceof Byte   || object instanceof Character ||
                      object instanceof Short  || object instanceof Integer   ||
                      object instanceof Long   || object instanceof Boolean   || 
                      object instanceof Float  || object instanceof Double    ||
@@ -1532,8 +1532,8 @@ public class JSONObject {
              Package objectPackage = object.getClass().getPackage();
              String objectPackageName = ( objectPackage != null ? objectPackage.getName() : "" );
              if (objectPackageName.startsWith("java.") ||
-            		 objectPackageName.startsWith("javax.") ||
-            		 object.getClass().getClassLoader() == null) {
+                     objectPackageName.startsWith("javax.") ||
+                     object.getClass().getClassLoader() == null) {
                  return object.toString();
              }
              return new JSONObject(object);

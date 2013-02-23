@@ -172,7 +172,7 @@ public class Pubnub {
                 PubnubCrypto pc = new PubnubCrypto(this.CIPHER_KEY);
                 message = pc.encrypt(obj);
             } else {
-            	message=obj;
+                message=obj;
             }
             //System.out.println();
         } else if(message instanceof String) {
@@ -198,7 +198,7 @@ public class Pubnub {
                 PubnubCrypto pc = new PubnubCrypto(this.CIPHER_KEY);
                 message = pc.encryptJSONArray(obj);
             } else {
-            	message=obj;
+                message=obj;
             }
             System.out.println();
         }
@@ -285,7 +285,7 @@ public class Pubnub {
         }
 
         if (channel == null || channel.equals("")) {
-        	callback.errorCallback(channel,"Invalid Channel.");
+            callback.errorCallback(channel,"Invalid Channel.");
             return;
         }
 
@@ -304,7 +304,7 @@ public class Pubnub {
                 cs.connected = true;
                 subscriptions.add(cs);
             } else {
-            	callback.errorCallback(channel,"Already Connected");
+                callback.errorCallback(channel,"Already Connected");
                 return;
             }
         } else {
@@ -328,7 +328,7 @@ public class Pubnub {
                 for (ChannelStatus it : subscriptions) {
                     if (it.channel.equals(channel)) {
                         if(!it.connected) {
-                        	subscriptions.remove(it);
+                            subscriptions.remove(it);
                             callback.disconnectCallback(channel);
                             is_disconnect = true;
                             break;
@@ -345,8 +345,8 @@ public class Pubnub {
                 for (ChannelStatus it : subscriptions) {
                     if (it.channel.equals(channel)) {
                         if (!it.connected) {
-                        	subscriptions.remove(it);
-                        	callback.disconnectCallback(channel);
+                            subscriptions.remove(it);
+                            callback.disconnectCallback(channel);
                             is_disconnect = true;
                             break;
                         }
@@ -358,9 +358,9 @@ public class Pubnub {
 
                 // Problem?
                 if (response == null || response.optInt(1) == 0) {
-                	for (ChannelStatus it : subscriptions) {
+                    for (ChannelStatus it : subscriptions) {
                         if (it.channel.equals(channel)) {
-                        	 if(it.connected && it.first){
+                             if(it.connected && it.first){
                                  subscriptions.remove(it);
                                  callback.disconnectCallback(channel);
                              }else{
@@ -371,25 +371,25 @@ public class Pubnub {
                        
                     }
                     // Ensure Connected (Call Time Function)
-                	boolean is_reconnected = false;
+                    boolean is_reconnected = false;
                     while(true) {
-                    	double time_token = this.time();
-                    	if (time_token == 0.0) {
+                        double time_token = this.time();
+                        if (time_token == 0.0) {
                           
                             Thread.sleep(5000);
                         } else {
-                        	  // Reconnect Callback
-                        	 callback.reconnectCallback(channel);
-                        	//this._subscribe(args);
-                        	is_reconnected = true;
-                        	break;
+                              // Reconnect Callback
+                             callback.reconnectCallback(channel);
+                            //this._subscribe(args);
+                            is_reconnected = true;
+                            break;
                         }
                     }
                     if(is_reconnected) {
-                    	continue;
+                        continue;
                     }
                 } else {
-                	for (ChannelStatus it : subscriptions) {
+                    for (ChannelStatus it : subscriptions) {
                         if (it.channel.equals(channel)) {
                             // Connect Callback
                             if (!it.first) {
@@ -598,15 +598,15 @@ public class Pubnub {
 
                     if (ce != null && ce.equalsIgnoreCase("gzip")) {
                         // Decoding using 'gzip'
-                    	
+                        
                         try {
-							resulting_is = new GZIPInputStream(is);
-						}catch (IOException e) {
-							  resulting_is = is;
-						}
+                            resulting_is = new GZIPInputStream(is);
+                        }catch (IOException e) {
+                              resulting_is = is;
+                        }
                         catch (Exception e) {
-                        	  resulting_is = is;
-						}
+                              resulting_is = is;
+                        }
                     }
                     else {
                         // Default (encoding is null OR 'identity')
@@ -629,22 +629,22 @@ public class Pubnub {
 
         } catch (Exception e) {
 
-        	// Response If Failed JSONP HTTP Request. 
+            // Response If Failed JSONP HTTP Request. 
             JSONArray jsono = new JSONArray();
             try {
-            	if(request_for != null) {
-            		if(request_for.equals("time")) {
-            			jsono.put("0");
-            		} else if(request_for.equals("history")) {
-            			jsono.put("Error: Failed JSONP HTTP Request.");
-            		} else if(request_for.equals("publish")) {
-            			jsono.put("0");
-            			jsono.put("Error: Failed JSONP HTTP Request.");
-            		} else if(request_for.equals("subscribe")) {
-            			jsono.put("0");
-            			jsono.put("0");
-            		} 
-            	}
+                if(request_for != null) {
+                    if(request_for.equals("time")) {
+                        jsono.put("0");
+                    } else if(request_for.equals("history")) {
+                        jsono.put("Error: Failed JSONP HTTP Request.");
+                    } else if(request_for.equals("publish")) {
+                        jsono.put("0");
+                        jsono.put("Error: Failed JSONP HTTP Request.");
+                    } else if(request_for.equals("subscribe")) {
+                        jsono.put("0");
+                        jsono.put("0");
+                    } 
+                }
             }
             catch (Exception jsone) {}
 

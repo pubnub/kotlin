@@ -34,7 +34,7 @@ public class HistoryExample {
                     JSONObject jsono = response.optJSONObject(i);
                     if (jsono != null) {
                         @SuppressWarnings("rawtypes")
-						Iterator keys = jsono.keys();
+                        Iterator keys = jsono.keys();
                         while (keys.hasNext()) {
                             System.out.print(jsono.get(keys.next().toString())
                                     + " ");

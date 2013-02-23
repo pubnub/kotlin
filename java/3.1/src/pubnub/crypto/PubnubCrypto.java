@@ -26,8 +26,8 @@ import org.json.JSONObject;
 
 public class PubnubCrypto {
 
-	private final String CIPHER_KEY;  
-	  
+    private final String CIPHER_KEY;  
+      
     public PubnubCrypto(String CIPHER_KEY) {
         this.CIPHER_KEY = CIPHER_KEY;  
     }  
@@ -39,19 +39,19 @@ public class PubnubCrypto {
      * @return JSONObject as Encrypted message
      */
     @SuppressWarnings("unchecked")
-	public JSONObject encrypt(JSONObject message) {
-    	try {
-    		JSONObject message_encrypted = new JSONObject();
-        	Iterator<String> it = message.keys();
-        	
-	    	while(it.hasNext()) {
-	    		String key = it.next();
-	    		String val = message.getString(key);
-	    		message_encrypted.put(key, encrypt(val));
-	    	}
-	    	return message_encrypted;
+    public JSONObject encrypt(JSONObject message) {
+        try {
+            JSONObject message_encrypted = new JSONObject();
+            Iterator<String> it = message.keys();
+            
+            while(it.hasNext()) {
+                String key = it.next();
+                String val = message.getString(key);
+                message_encrypted.put(key, encrypt(val));
+            }
+            return message_encrypted;
 
-    	} catch (Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
@@ -63,21 +63,21 @@ public class PubnubCrypto {
      * @return JSONObject Message decrypted
      */
     @SuppressWarnings("unchecked")
-	public JSONObject decrypt(JSONObject message_encrypted) {
-    	try {
-    		JSONObject message_decrypted = new JSONObject();
-        	Iterator<String> it = message_encrypted.keys();
-        	
-	    	while(it.hasNext()) {
-	    		String key = it.next();
-	    		String encrypted_str = message_encrypted.getString(key);
-	    		String decrypted_str = decrypt(encrypted_str);
-	    		message_decrypted.put(key, decrypted_str);
-	    	}
-	    	return message_decrypted;
-    	} catch(Exception e) {
-    		throw new RuntimeException(e);
-    	}
+    public JSONObject decrypt(JSONObject message_encrypted) {
+        try {
+            JSONObject message_decrypted = new JSONObject();
+            Iterator<String> it = message_encrypted.keys();
+            
+            while(it.hasNext()) {
+                String key = it.next();
+                String encrypted_str = message_encrypted.getString(key);
+                String decrypted_str = decrypt(encrypted_str);
+                message_decrypted.put(key, decrypted_str);
+            }
+            return message_decrypted;
+        } catch(Exception e) {
+            throw new RuntimeException(e);
+        }
     }
     
     /**
@@ -87,27 +87,27 @@ public class PubnubCrypto {
      * @return JSONArray - Decrypted JSONArray
      */
     public JSONArray encryptJSONArray(JSONArray jsona_arry) {
-    	try {
-    		JSONArray jsona_decrypted = new JSONArray();
-    		
-    		for (int i = 0; i < jsona_arry.length(); i++) {
-				 Object o = jsona_arry.get(i);
-				 if(o != null) {
-					 if(o instanceof JSONObject) {
-						 jsona_decrypted.put(i, encrypt((JSONObject)o));
-					 } else if(o instanceof JSONArray) {
-						 jsona_decrypted.put(i, encryptJSONArray((JSONArray)o));
-					 } else if(o instanceof String) {
-						 jsona_decrypted.put(i, encrypt(o.toString()));
-					 }
-				 }
-			}
-    		
-    		return jsona_decrypted;
-    		
-    	} catch(Exception e) {
-    		throw new RuntimeException(e);
-    	}
+        try {
+            JSONArray jsona_decrypted = new JSONArray();
+            
+            for (int i = 0; i < jsona_arry.length(); i++) {
+                 Object o = jsona_arry.get(i);
+                 if(o != null) {
+                     if(o instanceof JSONObject) {
+                         jsona_decrypted.put(i, encrypt((JSONObject)o));
+                     } else if(o instanceof JSONArray) {
+                         jsona_decrypted.put(i, encryptJSONArray((JSONArray)o));
+                     } else if(o instanceof String) {
+                         jsona_decrypted.put(i, encrypt(o.toString()));
+                     }
+                 }
+            }
+            
+            return jsona_decrypted;
+            
+        } catch(Exception e) {
+            throw new RuntimeException(e);
+        }
     }
     
     /**
@@ -117,27 +117,27 @@ public class PubnubCrypto {
      * @return JSONArray - Decrypted JSONArray
      */
     public JSONArray decryptJSONArray(JSONArray jsona_encrypted) {
-    	try {
-    		JSONArray jsona_decrypted = new JSONArray();
-    		
-    		for (int i = 0; i < jsona_encrypted.length(); i++) {
-				 Object o = jsona_encrypted.get(i);
-				 if(o != null) {
-					 if(o instanceof JSONObject) {
-						 jsona_decrypted.put(i, decrypt((JSONObject)o));
-					 } else if(o instanceof JSONArray) {
-						 jsona_decrypted.put(i, decryptJSONArray((JSONArray)o));
-					 } else if(o instanceof String) {
-						 jsona_decrypted.put(i, decrypt(o.toString()));
-					 }
-				 }
-			}
-    		
-    		return jsona_decrypted;
-    		
-    	} catch(Exception e) {
-    		throw new RuntimeException(e);
-    	}
+        try {
+            JSONArray jsona_decrypted = new JSONArray();
+            
+            for (int i = 0; i < jsona_encrypted.length(); i++) {
+                 Object o = jsona_encrypted.get(i);
+                 if(o != null) {
+                     if(o instanceof JSONObject) {
+                         jsona_decrypted.put(i, decrypt((JSONObject)o));
+                     } else if(o instanceof JSONArray) {
+                         jsona_decrypted.put(i, decryptJSONArray((JSONArray)o));
+                     } else if(o instanceof String) {
+                         jsona_decrypted.put(i, decrypt(o.toString()));
+                     }
+                 }
+            }
+            
+            return jsona_decrypted;
+            
+        } catch(Exception e) {
+            throw new RuntimeException(e);
+        }
     }
     
     /**
@@ -160,7 +160,7 @@ public class PubnubCrypto {
      * @throws Exception
      */
     public String decrypt(String cipher_text) throws Exception {
-    	byte[] out = transform(false, Base64Encoder.decode(cipher_text));
+        byte[] out = transform(false, Base64Encoder.decode(cipher_text));
         return new String(out).trim();
     }  
   
@@ -173,27 +173,27 @@ public class PubnubCrypto {
      * @throws Exception
      */
     private byte[] transform(boolean encrypt_or_decrypt, byte[] input_bytes) throws Exception {  
-    	ByteArrayOutputStream output = new ByteArrayOutputStream();
-    	byte[] iv_bytes = "0123456789012345".getBytes();
-    	byte[] key_bytes = md5(this.CIPHER_KEY);
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        byte[] iv_bytes = "0123456789012345".getBytes();
+        byte[] key_bytes = md5(this.CIPHER_KEY);
 
-    	SecretKeySpec key = new SecretKeySpec(key_bytes, "AES");
+        SecretKeySpec key = new SecretKeySpec(key_bytes, "AES");
         IvParameterSpec ivSpec = new IvParameterSpec(iv_bytes);
         Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
 
         if(encrypt_or_decrypt) {
-	        cipher.init(Cipher.ENCRYPT_MODE, key, ivSpec);
-	    	ByteArrayInputStream b_in = new ByteArrayInputStream(input_bytes);
-	        CipherInputStream c_in = new CipherInputStream(b_in, cipher);
-	        int ch;
-	        while ((ch = c_in.read()) >= 0) {
-	        	output.write(ch);
-	        }
+            cipher.init(Cipher.ENCRYPT_MODE, key, ivSpec);
+            ByteArrayInputStream b_in = new ByteArrayInputStream(input_bytes);
+            CipherInputStream c_in = new CipherInputStream(b_in, cipher);
+            int ch;
+            while ((ch = c_in.read()) >= 0) {
+                output.write(ch);
+            }
         } else {
-        	cipher.init(Cipher.DECRYPT_MODE, key, ivSpec);
-        	CipherOutputStream c_out = new CipherOutputStream(output, cipher);
-        	c_out.write(input_bytes);
-        	c_out.close();
+            cipher.init(Cipher.DECRYPT_MODE, key, ivSpec);
+            CipherOutputStream c_out = new CipherOutputStream(output, cipher);
+            c_out.write(input_bytes);
+            c_out.close();
         }
         return output.toByteArray();  
     }
@@ -204,47 +204,47 @@ public class PubnubCrypto {
      * @param String input
      * @return String as HashText
      */
-	public static String getHMacSHA256(String secret_key, String input) {
-		try {
-			Key KEY = new SecretKeySpec(input.getBytes("UTF-8"), "HmacSHA256");
-			Mac sha256_HMAC = Mac.getInstance("HMACSHA256");
-	    	
-			sha256_HMAC.init(KEY);
-			byte[] mac_data = sha256_HMAC.doFinal(secret_key.getBytes());
-	    	
-	    	BigInteger number = new BigInteger(1, mac_data);
-	    	String hashtext = number.toString(16);
+    public static String getHMacSHA256(String secret_key, String input) {
+        try {
+            Key KEY = new SecretKeySpec(input.getBytes("UTF-8"), "HmacSHA256");
+            Mac sha256_HMAC = Mac.getInstance("HMACSHA256");
+            
+            sha256_HMAC.init(KEY);
+            byte[] mac_data = sha256_HMAC.doFinal(secret_key.getBytes());
+            
+            BigInteger number = new BigInteger(1, mac_data);
+            String hashtext = number.toString(16);
             
             return hashtext;
-		} catch (Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
-	}
-	/**
-	 * Get MD5
-	 * @param string
-	 * @return
-	 */
-	public static byte[] md5(String string) { 
-	    byte[] hash; 
-	 
-	    try { 
-	        hash = MessageDigest.getInstance("MD5").digest(string.getBytes("UTF-8")); 
-	    } catch (NoSuchAlgorithmException e) { 
-	        throw new RuntimeException("MD5 should be supported!", e); 
-	    } catch (UnsupportedEncodingException e) { 
-	        throw new RuntimeException("UTF-8 should be supported!", e); 
-	    } 
-	 
-	    StringBuilder hex = new StringBuilder(hash.length * 2); 
-	    for (byte b : hash) { 
-	        if ((b & 0xFF) < 0x10) hex.append("0"); 
-	        hex.append(Integer.toHexString(b & 0xFF)); 
-	    }
-	    return hexStringToByteArray(hex.toString());
-	}
-	
-	public static byte[] hexStringToByteArray(String s) {
+    }
+    /**
+     * Get MD5
+     * @param string
+     * @return
+     */
+    public static byte[] md5(String string) { 
+        byte[] hash; 
+     
+        try { 
+            hash = MessageDigest.getInstance("MD5").digest(string.getBytes("UTF-8")); 
+        } catch (NoSuchAlgorithmException e) { 
+            throw new RuntimeException("MD5 should be supported!", e); 
+        } catch (UnsupportedEncodingException e) { 
+            throw new RuntimeException("UTF-8 should be supported!", e); 
+        } 
+     
+        StringBuilder hex = new StringBuilder(hash.length * 2); 
+        for (byte b : hash) { 
+            if ((b & 0xFF) < 0x10) hex.append("0"); 
+            hex.append(Integer.toHexString(b & 0xFF)); 
+        }
+        return hexStringToByteArray(hex.toString());
+    }
+    
+    public static byte[] hexStringToByteArray(String s) {
         int len = s.length();
         byte[] data = new byte[len / 2];
         for (int i = 0; i < len; i += 2) {

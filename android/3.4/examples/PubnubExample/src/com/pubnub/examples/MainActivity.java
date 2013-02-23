@@ -95,7 +95,8 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		//pubnub.setSubscribeTimeout(15000);
+		//pubnub.setSubscribeTimeout(1000);
+		//pubnub.setMaxRetries(3);
 
 		this.registerReceiver(new BroadcastReceiver() {
 			@Override

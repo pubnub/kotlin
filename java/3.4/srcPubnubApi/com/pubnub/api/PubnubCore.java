@@ -51,28 +51,32 @@ abstract class PubnubCore {
 
     /**
      * This method returns the state of Resume on Reconnect setting
+     * 
      * @return Current state of Resume On Reconnect Setting
      */
     public boolean isResumeOnReconnect() {
         return resumeOnReconnect;
     }
 
-    /** This method sets retry interval for subscribe.
-     *  Pubnub API will make maxRetries attempts to connect 
-     *  to pubnub servers. These attemtps will be made at an
-     *  interval of retryInterval milliseconds.
-     *  
-     * @param retryInterval Retry Interval in milliseconds
+    /**
+     * This method sets retry interval for subscribe. Pubnub API will make
+     * maxRetries attempts to connect to pubnub servers. These attemtps will be
+     * made at an interval of retryInterval milliseconds.
+     * 
+     * @param retryInterval
+     *            Retry Interval in milliseconds
      */
     public void setRetryInterval(int retryInterval) {
         subscribeManager.setRetryInterval(retryInterval);
     }
 
     /**
-     * This methods sets maximum number of retries for subscribe.
-     * Pubnub API will make maxRetries attempts to connect to pubnub
-     * servers before timing out.
-     * @param maxRetries Max number of retries
+     * This methods sets maximum number of retries for subscribe. Pubnub API
+     * will make maxRetries attempts to connect to pubnub servers before timing
+     * out.
+     * 
+     * @param maxRetries
+     *            Max number of retries
      */
     public void setMaxRetries(int maxRetries) {
         subscribeManager.setMaxRetries(maxRetries);
@@ -93,9 +97,11 @@ abstract class PubnubCore {
     }
 
     /**
-     * This method returns all channel names currently subscribed to in form of a comma separated String
-	 *
-     * @return Comma separated string with all channel names currently subscribed 
+     * This method returns all channel names currently subscribed to in form of
+     * a comma separated String
+     * 
+     * @return Comma separated string with all channel names currently
+     *         subscribed
      */
     public String getCurrentlySubscribedChannelNames() {
         String currentChannels = subscriptions.getChannelString();
@@ -103,10 +109,12 @@ abstract class PubnubCore {
     }
 
     /**
-     * If Resume on Reconnect is set to true, then Pubnub catches up on reconnection after disconnection.
-     * If false, then messages sent on the channel between 
-     * disconnection and reconnection are not received. 
-     * @param resumeOnReconnect True or False setting for Resume on Reconnect
+     * If Resume on Reconnect is set to true, then Pubnub catches up on
+     * reconnection after disconnection. If false, then messages sent on the
+     * channel between disconnection and reconnection are not received.
+     * 
+     * @param resumeOnReconnect
+     *            True or False setting for Resume on Reconnect
      */
     public void setResumeOnReconnect(boolean resumeOnReconnect) {
         this.resumeOnReconnect = resumeOnReconnect;
@@ -115,9 +123,10 @@ abstract class PubnubCore {
     /**
      * Convert input String to JSONObject, JSONArray, or String
      * 
-     * @param str JSON data in string format
-     *            
-     * @return JSONArray or JSONObject or String 
+     * @param str
+     *            JSON data in string format
+     * 
+     * @return JSONArray or JSONObject or String
      */
     static Object stringToJSON(String str) {
         Object obj = str;
@@ -135,13 +144,15 @@ abstract class PubnubCore {
     }
 
     protected abstract String uuid();
-    
+
     /**
-     * Sets value for UUID 
-     * @param uuid UUID value for Pubnub client
+     * Sets value for UUID
+     * 
+     * @param uuid
+     *            UUID value for Pubnub client
      */
     public void setUUID(String uuid) {
-    	this.UUID = uuid;
+        this.UUID = uuid;
     }
 
     /**
@@ -271,10 +282,11 @@ abstract class PubnubCore {
     }
 
     /**
-     * This method sets timeout value for subscribe/presence.
-     * Default value is 310000 milliseconds i.e. 310 seconds
+     * This method sets timeout value for subscribe/presence. Default value is
+     * 310000 milliseconds i.e. 310 seconds
      * 
-     * @param timeout Timeout value in milliseconds for subscribe/presence 
+     * @param timeout
+     *            Timeout value in milliseconds for subscribe/presence
      */
     public void setSubscribeTimeout(int timeout) {
         subscribeManager.setRequestTimeout(timeout);
@@ -282,10 +294,12 @@ abstract class PubnubCore {
     }
 
     /**
-     *  This method set timeout value for non subscribe operations like publish, history, hereNow.
-     *  Default value is 15000 milliseconds i.e. 15 seconds.
-     * @param timeout Timeout value in milliseconds for Non subscribe operations
-     * like publish, history, hereNow
+     * This method set timeout value for non subscribe operations like publish,
+     * history, hereNow. Default value is 15000 milliseconds i.e. 15 seconds.
+     * 
+     * @param timeout
+     *            Timeout value in milliseconds for Non subscribe operations
+     *            like publish, history, hereNow
      */
     public void setNonSubscribeTimeout(int timeout) {
         nonSubscribeManager.setRequestTimeout(timeout);
@@ -495,12 +509,12 @@ abstract class PubnubCore {
         subscribe(args);
     }
 
-   
-
     /**
      * Read presence information from a channel
-     * @param channel  Channel name 
-     * @param callback 
+     * 
+     * @param channel
+     *            Channel name
+     * @param callback
      *            object of sub class of Callback class
      */
     public void hereNow(final String channel, final Callback callback) {
@@ -541,7 +555,7 @@ abstract class PubnubCore {
      *            Channel Name
      * @param limit
      *            Upper limit on number of messages in response
-	 *
+     * 
      */
     public void history(String channel, int limit, Callback callback) {
         Hashtable args = new Hashtable(2);
@@ -586,7 +600,7 @@ abstract class PubnubCore {
                 jsarr = new JSONArray();
                 jsarr.put("0").put("history " + response);
                 callback.errorCallback(channel, jsarr);
-                return;    
+                return;
             }
 
         });
@@ -607,7 +621,8 @@ abstract class PubnubCore {
      *            Upper limit on number of messages to be returned
      * @param reverse
      *            True if messages need to be in reverse order
-     * @param callback  Callback
+     * @param callback
+     *            Callback
      */
     public void detailedHistory(final String channel, long start, long end,
             int count, boolean reverse, final Callback callback) {
@@ -666,7 +681,8 @@ abstract class PubnubCore {
      *            Start time
      * @param reverse
      *            True if messages need to be in reverse order
-     * @param callback  Callback
+     * @param callback
+     *            Callback
      */
     public void detailedHistory(String channel, long start, boolean reverse,
             Callback callback) {
@@ -683,7 +699,8 @@ abstract class PubnubCore {
      *            Start time
      * @param end
      *            End time
-     * @param callback Callback
+     * @param callback
+     *            Callback
      */
     public void detailedHistory(String channel, long start, long end,
             Callback callback) {
@@ -702,8 +719,9 @@ abstract class PubnubCore {
      *            End time
      * @param reverse
      *            True if messages need to be in reverse order
-     *            
-     * @param callback  Callback
+     * 
+     * @param callback
+     *            Callback
      */
     public void detailedHistory(String channel, long start, long end,
             boolean reverse, Callback callback) {
@@ -720,7 +738,8 @@ abstract class PubnubCore {
      *            Upper limit on number of messages to be returned
      * @param reverse
      *            True if messages need to be in reverse order
-     * @param callback Callback
+     * @param callback
+     *            Callback
      */
     public void detailedHistory(String channel, int count, boolean reverse,
             Callback callback) {
@@ -735,7 +754,8 @@ abstract class PubnubCore {
      *            Channel name for which detailed history is required
      * @param reverse
      *            True if messages need to be in reverse order
-     * @param callback  Callback
+     * @param callback
+     *            Callback
      */
     public void detailedHistory(String channel, boolean reverse,
             Callback callback) {
@@ -748,7 +768,8 @@ abstract class PubnubCore {
      * 
      * @param channel
      *            Channel name for which detailed history is required
-     * @param callback Callback
+     * @param callback
+     *            Callback
      */
     public void detailedHistory(String channel, int count, Callback callback) {
         detailedHistory(channel, -1, -1, count, false, callback);
@@ -756,7 +777,9 @@ abstract class PubnubCore {
 
     /**
      * Read current time from PubNub Cloud.
-     * @param callback Callback
+     * 
+     * @param callback
+     *            Callback
      */
     public void time(final Callback callback) {
 
@@ -983,7 +1006,6 @@ abstract class PubnubCore {
         _subscribe_base(true);
     }
 
-
     private void _subscribe_base(boolean fresh) {
         String channelString = subscriptions.getChannelString();
         String[] channelsArray = subscriptions.getChannelNames();
@@ -1024,13 +1046,15 @@ abstract class PubnubCore {
 
                             _timetoken = (!_saved_timetoken.equals("0") && isResumeOnReconnect()) ? _saved_timetoken
                                     : jsa.get(1).toString();
-                            log.verbose("Resume On Reconnect is " + isResumeOnReconnect());
+                            log.verbose("Resume On Reconnect is "
+                                    + isResumeOnReconnect());
                             log.verbose("Saved Timetoken : " + _saved_timetoken);
-                            log.verbose("In Response Timetoken : " + jsa.get(1).toString());
+                            log.verbose("In Response Timetoken : "
+                                    + jsa.get(1).toString());
                             log.verbose("Timetoken value set to " + _timetoken);
                             _saved_timetoken = "0";
                             log.verbose("Saved Timetoken reset to 0");
-                            
+
                             JSONArray messages = new JSONArray(jsa.get(0)
                                     .toString());
 
@@ -1140,7 +1164,8 @@ abstract class PubnubCore {
                             String timeoutTimetoken = (isResumeOnReconnect()) ? (_timetoken
                                     .equals("0")) ? _saved_timetoken
                                     : _timetoken : "0";
-                            log.verbose("Timeout Timetoken : " + timeoutTimetoken);
+                            log.verbose("Timeout Timetoken : "
+                                    + timeoutTimetoken);
                             jsobj.put("timetoken", timeoutTimetoken);
                             subscriptions.invokeErrorCallbackOnChannels(jsobj);
                             disconnectAndResubscribe();
@@ -1196,7 +1221,7 @@ abstract class PubnubCore {
         _subscribe_base(true);
     }
 
-    /** 
+    /**
      * Disconnect from all channels, and resubscribe
      * 
      */
@@ -1206,19 +1231,22 @@ abstract class PubnubCore {
         resubscribe();
     }
 
-    /** 
+    /**
      * This method returns array of channel names, currently subscribed to
+     * 
      * @return Array of channel names
      */
     public String[] getSubscribedChannelsArray() {
         return subscriptions.getChannelNames();
     }
-    
+
     /**
      * Sets origin value, default is "pubsub"
-     * @param origin Origin value
+     * 
+     * @param origin
+     *            Origin value
      */
     public void setOrigin(String origin) {
-    	this.HOSTNAME = origin;
+        this.HOSTNAME = origin;
     }
 }

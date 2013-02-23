@@ -6,6 +6,7 @@ import java.util.Vector;
 
 /**
  * Class providing static utility functions
+ * 
  * @author PubnubCore
  */
 public class PubnubUtil {
