@@ -1161,7 +1161,7 @@ abstract class PubnubCore {
                     }
 
                     public void handleTimeout() {
-                        log.verbose("Timeout Occurred, Calling error callbacks on the channels");
+                        log.verbose("Timeout Occurred, Calling disconnect callbacks on the channels");
                         String timeoutTimetoken = (isResumeOnReconnect()) ? (_timetoken
 						        .equals("0")) ? _saved_timetoken
 						        : _timetoken : "0";

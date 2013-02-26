@@ -7,8 +7,8 @@ abstract class Worker implements Runnable {
     protected volatile boolean _die;
     private Thread thread;
     protected HttpClient httpclient;
-    protected int requestTimeout;
-    protected int connectionTimeout;
+    protected volatile int requestTimeout;
+    protected volatile int connectionTimeout;
 
     protected static Logger log = new Logger(Worker.class);
 
@@ -125,8 +125,8 @@ abstract class RequestManager {
     protected Vector _waiting = new Vector();
     protected Worker _workers[];
     protected String name;
-    protected int connectionTimeout;
-    protected int requestTimeout;
+    protected volatile int connectionTimeout;
+    protected volatile int requestTimeout;
 
     protected static Logger log = new Logger(RequestManager.class);
 
@@ -134,7 +134,7 @@ abstract class RequestManager {
         return _maxWorkers;
     }
 
-    public abstract Worker getWorker(int connectionTimeout, int requestTimeout);
+    public abstract Worker getWorker();
 
     private void initManager(int maxCalls, String name) {
         if (maxCalls < 1) {
@@ -144,7 +144,7 @@ abstract class RequestManager {
         _workers = new Worker[maxCalls];
 
         for (int i = 0; i < maxCalls; ++i) {
-            Worker w = getWorker(connectionTimeout, requestTimeout);
+            Worker w = getWorker();
             w.setThread(new Thread(w, name));
             _workers[i] = w;
             w.startWorker();
@@ -168,7 +168,7 @@ abstract class RequestManager {
         for (int i = 0; i < _workers.length; i++) {
             _workers[i].die();
             _workers[i].interruptWorker();
-            Worker w = getWorker(connectionTimeout, requestTimeout);
+            Worker w = getWorker();
             w.setThread(new Thread(w, name));
             _workers[i] = w;
             w.startWorker();
@@ -214,24 +214,30 @@ abstract class RequestManager {
 }
 
 abstract class AbstractSubscribeManager extends RequestManager {
+	
+    protected volatile int maxRetries = 5;
+    protected volatile int retryInterval = 5000;
 
     public AbstractSubscribeManager(String name, int connectionTimeout,
             int requestTimeout) {
         super(name, connectionTimeout, requestTimeout);
     }
 
-    public Worker getWorker(int connectionTimeout, int requestTimeout) {
-        return new SubscribeWorker(_waiting, connectionTimeout, requestTimeout);
+    public Worker getWorker() {
+        return new SubscribeWorker(_waiting, 
+        		connectionTimeout, requestTimeout, maxRetries, retryInterval);
     }
 
     public void setMaxRetries(int maxRetries) {
+    	this.maxRetries = maxRetries;
         for (int i = 0; i < _workers.length; i++) {
             ((SubscribeWorker) _workers[i]).setMaxRetries(maxRetries);
         }
     }
 
     public void setRetryInterval(int retryInterval) {
-        for (int i = 0; i < _workers.length; i++) {
+    	this.retryInterval = retryInterval;
+    	for (int i = 0; i < _workers.length; i++) {
             ((SubscribeWorker) _workers[i]).setRetryInterval(retryInterval);
         }
     }
@@ -252,7 +258,7 @@ abstract class AbstractNonSubscribeManager extends RequestManager {
         super(name, connectionTimeout, requestTimeout);
     }
 
-    public Worker getWorker(int connectionTimeout, int requestTimeout) {
+    public Worker getWorker() {
         return new NonSubscribeWorker(_waiting, connectionTimeout,
                 requestTimeout);
     }
@@ -274,12 +280,14 @@ abstract class AbstractNonSubscribeManager extends RequestManager {
 }
 
 abstract class AbstractSubscribeWorker extends Worker {
-    protected int maxRetries = 5;
-    protected int retryInterval = 5000;
+    protected volatile int maxRetries = 5;
+    protected volatile int retryInterval = 5000;
 
     AbstractSubscribeWorker(Vector _requestQueue, int connectionTimeout,
-            int requestTimeout) {
+            int requestTimeout, int maxRetries, int retryInterval) {
         super(_requestQueue, connectionTimeout, requestTimeout);
+        this.maxRetries = maxRetries;
+        this.retryInterval= retryInterval;
     }
 
     public void setMaxRetries(int maxRetries) {

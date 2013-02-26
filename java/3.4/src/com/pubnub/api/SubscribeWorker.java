@@ -6,8 +6,9 @@ import java.util.Vector;
 class SubscribeWorker extends AbstractSubscribeWorker {
 
     SubscribeWorker(Vector _requestQueue, int connectionTimeout,
-            int requestTimeout) {
-        super(_requestQueue, connectionTimeout, requestTimeout);
+            int requestTimeout, int maxRetries, int retryInterval) {
+        super(_requestQueue, connectionTimeout, requestTimeout,
+        		maxRetries, retryInterval);
     }
 
     void process(HttpRequest hreq) {
