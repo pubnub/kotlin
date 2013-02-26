@@ -8,14 +8,8 @@ abstract class HttpClient {
 
     protected Hashtable _headers;
 
-    public static HttpClient getClient(int connectionTimeout, int requestTimeout) {
-        return new HttpClientCore(connectionTimeout, requestTimeout);
-    }
-
-    public void setHeader(String key, String value) {
-        if (_headers == null)
-            _headers = new Hashtable();
-        _headers.put(key, value);
+    public static HttpClient getClient(int connectionTimeout, int requestTimeout, Hashtable headers) {
+    	return new HttpClientCore(connectionTimeout, requestTimeout, headers);
     }
 
     public void reset() {

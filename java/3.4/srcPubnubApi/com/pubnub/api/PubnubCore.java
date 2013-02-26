@@ -273,11 +273,11 @@ abstract class PubnubCore {
                     "Non Subscribe Manager", 10000, 15000);
 
         subscribeManager.setHeader("V", "3.4");
-        subscribeManager.setHeader("Accept-Encoding", "deflate");
+        subscribeManager.setHeader("Accept-Encoding", "gzip");
         subscribeManager.setHeader("User-Agent", "JAVA");
 
         nonSubscribeManager.setHeader("V", "3.4");
-        nonSubscribeManager.setHeader("Accept-Encoding", "deflate");
+        nonSubscribeManager.setHeader("Accept-Encoding", "gzip");
         nonSubscribeManager.setHeader("User-Agent", "JAVA");
 
     }

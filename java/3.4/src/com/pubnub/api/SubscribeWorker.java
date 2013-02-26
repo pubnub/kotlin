@@ -1,14 +1,15 @@
 package com.pubnub.api;
 
 import java.net.SocketTimeoutException;
+import java.util.Hashtable;
 import java.util.Vector;
 
 class SubscribeWorker extends AbstractSubscribeWorker {
 
     SubscribeWorker(Vector _requestQueue, int connectionTimeout,
-            int requestTimeout, int maxRetries, int retryInterval) {
+            int requestTimeout, int maxRetries, int retryInterval, Hashtable headers) {
         super(_requestQueue, connectionTimeout, requestTimeout,
-        		maxRetries, retryInterval);
+        		maxRetries, retryInterval, headers);
     }
 
     void process(HttpRequest hreq) {

@@ -1,5 +1,6 @@
 package com.pubnub.api;
 
+import java.util.Hashtable;
 import java.util.Vector;
 
 abstract class Worker implements Runnable {
@@ -7,8 +8,6 @@ abstract class Worker implements Runnable {
     protected volatile boolean _die;
     private Thread thread;
     protected HttpClient httpclient;
-    protected volatile int requestTimeout;
-    protected volatile int connectionTimeout;
 
     protected static Logger log = new Logger(Worker.class);
 
@@ -32,20 +31,16 @@ abstract class Worker implements Runnable {
         httpclient.reset();
     }
 
-    Worker(Vector _requestQueue, int connectionTimeout, int requestTimeout) {
-        this._requestQueue = _requestQueue;
+    Worker(Vector _requestQueue, int connectionTimeout, int requestTimeout, Hashtable headers) {
+    	this._requestQueue = _requestQueue;
         this.httpclient = HttpClient.getClient(connectionTimeout,
-                requestTimeout);
+                requestTimeout, headers);
     }
 
     void setConnectionTimeout(int timeout) {
         if (httpclient != null) {
             httpclient.setConnectionTimeout(timeout);
         }
-    }
-
-    public void setHeader(String key, String value) {
-        httpclient.setHeader(key, value);
     }
 
     void setRequestTimeout(int timeout) {
@@ -90,8 +85,8 @@ abstract class Worker implements Runnable {
 class NonSubscribeWorker extends Worker {
 
     NonSubscribeWorker(Vector _requestQueue, int connectionTimeout,
-            int requestTimeout) {
-        super(_requestQueue, connectionTimeout, requestTimeout);
+            int requestTimeout, Hashtable headers) {
+        super(_requestQueue, connectionTimeout, requestTimeout, headers);
     }
 
     void process(HttpRequest hreq) {
@@ -127,6 +122,7 @@ abstract class RequestManager {
     protected String name;
     protected volatile int connectionTimeout;
     protected volatile int requestTimeout;
+    protected Hashtable headers; 
 
     protected static Logger log = new Logger(RequestManager.class);
 
@@ -141,6 +137,7 @@ abstract class RequestManager {
             maxCalls = 1;
         }
         this.name = name;
+        this.headers = new Hashtable();
         _workers = new Worker[maxCalls];
 
         for (int i = 0; i < maxCalls; ++i) {
@@ -176,9 +173,7 @@ abstract class RequestManager {
     }
 
     public void setHeader(String key, String value) {
-        for (int i = 0; i < _workers.length; i++) {
-            _workers[i].setHeader(key, value);
-        }
+    	this.headers.put(key, value);
     }
 
     public abstract void clearRequestQueue();
@@ -225,7 +220,8 @@ abstract class AbstractSubscribeManager extends RequestManager {
 
     public Worker getWorker() {
         return new SubscribeWorker(_waiting, 
-        		connectionTimeout, requestTimeout, maxRetries, retryInterval);
+        		connectionTimeout, requestTimeout, 
+        		maxRetries, retryInterval, headers);
     }
 
     public void setMaxRetries(int maxRetries) {
@@ -260,7 +256,7 @@ abstract class AbstractNonSubscribeManager extends RequestManager {
 
     public Worker getWorker() {
         return new NonSubscribeWorker(_waiting, connectionTimeout,
-                requestTimeout);
+                requestTimeout, headers);
     }
 
     public void setConnectionTimeout(int timeout) {
@@ -284,8 +280,8 @@ abstract class AbstractSubscribeWorker extends Worker {
     protected volatile int retryInterval = 5000;
 
     AbstractSubscribeWorker(Vector _requestQueue, int connectionTimeout,
-            int requestTimeout, int maxRetries, int retryInterval) {
-        super(_requestQueue, connectionTimeout, requestTimeout);
+            int requestTimeout, int maxRetries, int retryInterval, Hashtable headers) {
+        super(_requestQueue, connectionTimeout, requestTimeout, headers);
         this.maxRetries = maxRetries;
         this.retryInterval= retryInterval;
     }

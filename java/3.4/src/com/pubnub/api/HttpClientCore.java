@@ -1,6 +1,7 @@
 package com.pubnub.api;
 
 import java.io.ByteArrayOutputStream;
+import java.util.zip.GZIPInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -19,10 +20,11 @@ class HttpClientCore extends HttpClient {
         HttpURLConnection.setFollowRedirects(true);
     }
 
-    public HttpClientCore(int connectionTimeout, int requestTimeout) {
+    public HttpClientCore(int connectionTimeout, int requestTimeout, Hashtable headers) {
         init();
         this.setRequestTimeout(requestTimeout);
         this.setConnectionTimeout(connectionTimeout);
+        this._headers = headers;
     }
 
     public int getRequestTimeout() {
@@ -96,9 +98,13 @@ class HttpClientCore extends HttpClient {
         connection.setReadTimeout(requestTimeout);
         connection.setConnectTimeout(connectionTimeout);
         connection.connect();
-
-        String page = readInput(connection.getInputStream());
-
+        InputStream is;
+        if(connection.getContentEncoding().equals("gzip")) {
+        	is = new GZIPInputStream(connection.getInputStream());
+        } else {
+        	is = connection.getInputStream();
+        }
+        String page = readInput(is);
         return new HttpResponse(connection.getResponseCode(), page);
     }
 
