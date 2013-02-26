@@ -3,6 +3,8 @@ package com.pubnub.api;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
+import org.json.JSONArray;
+
 /**
  * @author PubnubCore
  * 
@@ -51,46 +53,12 @@ class Subscriptions {
 
     }
 
-    public void invokeConnectCallbackOnChannels() {
-        /*
-         * Iterate over all the channels and call connect callback for channels
-         * which were in disconnected state. Nothing to do for channels already
-         * connected
-         */
-        synchronized (channels) {
-            Enumeration ch = channels.elements();
-            while (ch.hasMoreElements()) {
-                Channel _channel = (Channel) ch.nextElement();
-                if (_channel.connected == false) {
-                    _channel.connected = true;
-                    if (_channel.subscribed == false) {
-                        _channel.subscribed = true;
-                        _channel.callback.connectCallback(_channel.name);
-                    } else {
-                        _channel.subscribed = true;
-                        _channel.callback.reconnectCallback(_channel.name);
-                    }
-                }
-            }
-        }
+    public void invokeConnectCallbackOnChannels(Object message) {
+        invokeConnectCallbackOnChannels(getChannelNames(), message);
     }
 
-    public void invokeDisconnectCallbackOnChannels() {
-        /*
-         * Iterate over all the channels and call connect callback for channels
-         * which were in disconnected state. Nothing to do for channels already
-         * connected
-         */
-        synchronized (channels) {
-            Enumeration ch = channels.elements();
-            while (ch.hasMoreElements()) {
-                Channel _channel = (Channel) ch.nextElement();
-                if (_channel.connected == true) {
-                    _channel.connected = false;
-                    _channel.callback.disconnectCallback(_channel.name);
-                }
-            }
-        }
+    public void invokeDisconnectCallbackOnChannels(Object message) {
+    	invokeDisconnectCallbackOnChannels(getChannelNames(), message);
     }
 
     public void invokeErrorCallbackOnChannels(Object message) {
@@ -106,30 +74,47 @@ class Subscriptions {
         }
     }
 
-    public void invokeConnectCallbackOnChannels(String[] channels) {
+    public void invokeConnectCallbackOnChannels(String[] channels, Object message) {
         synchronized (channels) {
             for (int i = 0; i < channels.length; i++) {
                 Channel _channel = (Channel) this.channels.get(channels[i]);
                 if (_channel.connected == false) {
                     _channel.connected = true;
                     if (_channel.subscribed == false) {
-                        _channel.callback.connectCallback(_channel.name);
+                        _channel.callback.connectCallback(_channel.name, 
+                        		new JSONArray().put(1).put("Subscribe connected").put(message));
                     } else {
                         _channel.subscribed = true;
-                        _channel.callback.reconnectCallback(_channel.name);
+                        _channel.callback.reconnectCallback(_channel.name, 
+                        		new JSONArray().put(1).put("Subscribe reconnected").put(message));
                     }
                 }
             }
         }
     }
+    
+    public void invokeReconnectCallbackOnChannels(Object message) {
+        invokeReconnectCallbackOnChannels(getChannelNames(), message);
+    }
+    
+    public void invokeReconnectCallbackOnChannels(String[] channels, Object message) {
+        synchronized (channels) {
+            for (int i = 0; i < channels.length; i++) {
+                Channel _channel = (Channel) this.channels.get(channels[i]);
+                _channel.callback.reconnectCallback(_channel.name, 
+                		new JSONArray().put(1).put("Subscribe reconnected").put(message));
+            }
+        }
+    }
 
-    public void invokeDisconnectCallbackOnChannels(String[] channels) {
+    public void invokeDisconnectCallbackOnChannels(String[] channels, Object message) {
         synchronized (channels) {
             for (int i = 0; i < channels.length; i++) {
                 Channel _channel = (Channel) this.channels.get(channels[i]);
                 if (_channel.connected == true) {
                     _channel.connected = false;
-                    _channel.callback.disconnectCallback(_channel.name);
+                    _channel.callback.disconnectCallback(_channel.name, 
+                    		new JSONArray().put(0).put("Subscribe unable to connect").put(message));
                 }
             }
         }

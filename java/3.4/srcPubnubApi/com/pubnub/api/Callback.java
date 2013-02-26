@@ -38,7 +38,7 @@ public abstract class Callback {
      * @param channel
      *            Channel Name
      */
-    public void connectCallback(String channel) {
+    public void connectCallback(String channel, Object message) {
     }
 
     /**
@@ -48,7 +48,7 @@ public abstract class Callback {
      * @param channel
      *            Channel Name
      */
-    public void reconnectCallback(String channel) {
+    public void reconnectCallback(String channel, Object message) {
     }
 
     /**
@@ -57,7 +57,7 @@ public abstract class Callback {
      * @param channel
      *            Channel Name
      */
-    public void disconnectCallback(String channel) {
+    public void disconnectCallback(String channel, Object message) {
     }
 
 }

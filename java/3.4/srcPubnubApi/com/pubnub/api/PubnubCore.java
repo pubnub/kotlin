@@ -36,6 +36,7 @@ abstract class PubnubCore {
     private NonSubscribeManager nonSubscribeManager;
     private String _timetoken = "0";
     private String _saved_timetoken = "0";
+    private boolean backFromDar = false;
 
     private String PRESENCE_SUFFIX = "-pnpres";
 
@@ -1029,8 +1030,6 @@ abstract class PubnubCore {
 
                     public void handleResponse(String response) {
 
-                        subscriptions.invokeConnectCallbackOnChannels();
-
                         /*
                          * Check if response has channel names. A JSON response
                          * with more than 2 items means the response contains
@@ -1043,7 +1042,7 @@ abstract class PubnubCore {
                         JSONArray jsa;
                         try {
                             jsa = new JSONArray(response);
-
+                            
                             _timetoken = (!_saved_timetoken.equals("0") && isResumeOnReconnect()) ? _saved_timetoken
                                     : jsa.get(1).toString();
                             log.verbose("Resume On Reconnect is "
@@ -1054,7 +1053,12 @@ abstract class PubnubCore {
                             log.verbose("Timetoken value set to " + _timetoken);
                             _saved_timetoken = "0";
                             log.verbose("Saved Timetoken reset to 0");
-
+                            if (!backFromDar) {
+                            	subscriptions.invokeConnectCallbackOnChannels(_timetoken);
+                            } else {
+                            	subscriptions.invokeReconnectCallbackOnChannels(_timetoken);
+                            	backFromDar = false;
+                            }
                             JSONArray messages = new JSONArray(jsa.get(0)
                                     .toString());
 
@@ -1157,22 +1161,14 @@ abstract class PubnubCore {
                     }
 
                     public void handleTimeout() {
-                        JSONObject jsobj = new JSONObject();
                         log.verbose("Timeout Occurred, Calling error callbacks on the channels");
-                        try {
-                            jsobj.put("error", "Network Timeout");
-                            String timeoutTimetoken = (isResumeOnReconnect()) ? (_timetoken
-                                    .equals("0")) ? _saved_timetoken
-                                    : _timetoken : "0";
-                            log.verbose("Timeout Timetoken : "
-                                    + timeoutTimetoken);
-                            jsobj.put("timetoken", timeoutTimetoken);
-                            subscriptions.invokeErrorCallbackOnChannels(jsobj);
-                            disconnectAndResubscribe();
-                        } catch (JSONException e) {
-                            subscriptions
-                                    .invokeErrorCallbackOnChannels("Network Timeout");
-                        }
+                        String timeoutTimetoken = (isResumeOnReconnect()) ? (_timetoken
+						        .equals("0")) ? _saved_timetoken
+						        : _timetoken : "0";
+						log.verbose("Timeout Timetoken : "
+						        + timeoutTimetoken);
+						subscriptions.invokeDisconnectCallbackOnChannels(timeoutTimetoken);
+						//disconnectAndResubscribe();
 
                         // subscriptions.removeAllChannels();
                     }
@@ -1226,8 +1222,17 @@ abstract class PubnubCore {
      * 
      */
     public void disconnectAndResubscribe() {
+		disconnectAndResubscribe("");
+    }
+    
+    /**
+     * Disconnect from all channels, and resubscribe
+     * 
+     */
+    public void disconnectAndResubscribe(String errorMessage) {
         log.verbose("Received disconnectAndResubscribe");
-        subscriptions.invokeDisconnectCallbackOnChannels();
+        backFromDar = true;
+        subscriptions.invokeErrorCallbackOnChannels(errorMessage);
         resubscribe();
     }
 

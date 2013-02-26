@@ -23,11 +23,11 @@ class SubscribeWorker extends AbstractSubscribeWorker {
                     currentRetryAttempt = 1;
                     break;
                 }
-            } catch (SocketTimeoutException e) {
+            } /*catch (SocketTimeoutException e) {
                 log.verbose("Exception in Fetch : " + e.toString());
                 currentRetryAttempt = maxRetries + 1;
                 break;
-            } catch (Exception e) {
+            } */catch (Exception e) {
                 log.verbose("Retry Attempt : " + currentRetryAttempt
                         + " Exception in Fetch : " + e.toString());
                 currentRetryAttempt++;

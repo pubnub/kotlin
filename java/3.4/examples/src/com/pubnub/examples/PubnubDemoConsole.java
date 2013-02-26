@@ -90,16 +90,22 @@ public class PubnubDemoConsole {
 
         try {
             pubnub.subscribe(args, new Callback() {
-                public void connectCallback(String channel) {
-                    notifyUser("SUBSCRIBE : CONNECT on channel:" + channel);
+                public void connectCallback(String channel, Object message) {
+                    notifyUser("SUBSCRIBE : CONNECT on channel:" + channel 
+                    		+ " : " + message.getClass() + " : "
+                            + message.toString());
                 }
 
-                public void disconnectCallback(String channel) {
-                    notifyUser("SUBSCRIBE : DISCONNECT on channel:" + channel);
+                public void disconnectCallback(String channel, Object message) {
+                    notifyUser("SUBSCRIBE : DISCONNECT on channel:"
+                    		+ channel + " : " + message.getClass() + " : "
+                            + message.toString());
                 }
 
-                public void reconnectCallback(String channel) {
-                    notifyUser("SUBSCRIBE : RECONNECT on channel:" + channel);
+                public void reconnectCallback(String channel, Object message) {
+                    notifyUser("SUBSCRIBE : RECONNECT on channel:" + channel 
+                    		+ " : " + message.getClass() + " : "
+                            + message.toString());
                 }
 
                 public void successCallback(String channel, Object message) {
@@ -108,14 +114,13 @@ public class PubnubDemoConsole {
                 }
 
                 public void errorCallback(String channel, Object message) {
-                    notifyUser("SUBSCRIBE : Unsubscribed from " + channel
+                    notifyUser("SUBSCRIBE : ERROR on channel " + channel
                             + " : " + message.getClass() + " : "
                             + message.toString());
                 }
             });
 
         } catch (Exception e) {
-
         }
     }
 
@@ -180,7 +185,7 @@ public class PubnubDemoConsole {
     }
 
     private void disconnectAndResubscribe() {
-        pubnub.disconnectAndResubscribe();
+        pubnub.disconnectAndResubscribe("Disconnect and Resubscribe Sent from Demo Console");
 
     }
 
@@ -286,6 +291,18 @@ public class PubnubDemoConsole {
                 reader.nextLine();
                 setRetryInterval(retryInterval);
                 break;
+            case 14:
+                System.out.println("Set Subscribe Timeout: Enter subscribe timeout in milliseconds");
+                int subscribeTimeout = reader.nextInt();
+                reader.nextLine();
+                setSubscribeTimeout(subscribeTimeout);
+                break;
+            case 15:
+                System.out.println("Set Non subscribe Timeout: Enter non subscribe timeout in milliseconds");
+                int nonSubscribeTimeout = reader.nextInt();
+                reader.nextLine();
+                setNonSubscribeTimeout(nonSubscribeTimeout);
+                break;
             default:
                 System.out.println("Invalid Input");
             }
@@ -302,6 +319,14 @@ public class PubnubDemoConsole {
 
     private void setRetryInterval(int retryInterval) {
         pubnub.setRetryInterval(retryInterval);
+    }
+    
+    private void setSubscribeTimeout(int subscribeTimeout) {
+        pubnub.setSubscribeTimeout(subscribeTimeout);
+    }
+    
+    private void setNonSubscribeTimeout(int nonSubscribeTimeout) {
+        pubnub.setNonSubscribeTimeout(nonSubscribeTimeout);
     }
 
     private void displayMenuOptions() {
@@ -320,6 +345,8 @@ public class PubnubDemoConsole {
         System.out.println("ENTER 11 FOR Toggle Resume On Reconnect");
         System.out.println("ENTER 12 FOR Setting MAX Retries");
         System.out.println("ENTER 13 FOR Setting Retry Interval");
+        System.out.println("ENTER 14 FOR Setting Subscribe Timeout");
+        System.out.println("ENTER 15 FOR Setting Non Subscribe Timeout");
         System.out.println("\nENTER 0 to display this menu");
     }
 

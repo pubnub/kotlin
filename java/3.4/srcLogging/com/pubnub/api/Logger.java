@@ -1,15 +1,14 @@
 package com.pubnub.api;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
 
 class Logger extends AbstractLogger {
     private Class _class;
-    private Log log;
+    private org.apache.log4j.Logger log;
 
     public Logger(Class _class) {
         this._class = _class;
-        log = LogFactory.getLog(this._class);
+        this.log = org.apache.log4j.Logger.getLogger(this._class);
     }
 
     @Override
@@ -21,7 +20,6 @@ class Logger extends AbstractLogger {
     @Override
     protected void nativeVerbose(String s) {
         log.trace(s);
-
     }
 
     @Override
