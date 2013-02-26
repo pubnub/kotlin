@@ -101,6 +101,7 @@ class Subscriptions {
         synchronized (channels) {
             for (int i = 0; i < channels.length; i++) {
                 Channel _channel = (Channel) this.channels.get(channels[i]);
+                _channel.connected = true;
                 _channel.callback.reconnectCallback(_channel.name, 
                 		new JSONArray().put(1).put("Subscribe reconnected").put(message));
             }

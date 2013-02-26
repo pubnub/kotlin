@@ -1216,6 +1216,33 @@ abstract class PubnubCore {
         log.verbose("Before Resubscribe Saved Timetoken : " + _saved_timetoken);
         _subscribe_base(true);
     }
+    
+    private void resubscribe(String timetoken) {
+        changeOrigin();
+        _saved_timetoken = timetoken;
+        _timetoken = "0";
+        log.verbose("Before Resubscribe Timetoken : " + _timetoken);
+        log.verbose("Before Resubscribe Saved Timetoken : " + _saved_timetoken);
+        _subscribe_base(true);
+    }
+    /**
+     * Disconnect from all channels, and resubscribe
+     * 
+     */
+    public void disconnectAndResubscribeWithTimetoken(String timetoken) {
+		disconnectAndResubscribeWithTimetoken(timetoken, "");
+    }
+    
+    /**
+     * Disconnect from all channels, and resubscribe
+     * 
+     */
+    public void disconnectAndResubscribeWithTimetoken(String timetoken, String errorMessage) {
+        log.verbose("Received disconnectAndResubscribeWithTimetoken");
+        backFromDar = true;
+        subscriptions.invokeErrorCallbackOnChannels(errorMessage);
+        resubscribe(timetoken);
+    }
 
     /**
      * Disconnect from all channels, and resubscribe

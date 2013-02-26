@@ -188,6 +188,11 @@ public class PubnubDemoConsole {
         pubnub.disconnectAndResubscribe("Disconnect and Resubscribe Sent from Demo Console");
 
     }
+    
+    private void disconnectAndResubscribeWithTimetoken(String timetoken) {
+        pubnub.disconnectAndResubscribeWithTimetoken(timetoken, "Disconnect and Resubscribe Sent from Demo Console");
+
+    }
 
     public void startDemo() {
         reader = new Scanner(System.in);
@@ -274,30 +279,35 @@ public class PubnubDemoConsole {
                 disconnectAndResubscribe();
                 break;
             case 11:
+                System.out.println("Disconnect and Resubscribe with timetoken : Enter timetoken");
+                String timetoken = reader.nextLine();
+                disconnectAndResubscribeWithTimetoken(timetoken);
+                break;
+            case 12:
                 pubnub.setResumeOnReconnect(pubnub.isResumeOnReconnect() ? false
                         : true);
                 System.out.println("RESUME ON RECONNECT : "
                         + pubnub.isResumeOnReconnect());
                 break;
-            case 12:
+            case 13:
                 System.out.println("Set Max Retries: Enter max retries");
                 int maxRetries = reader.nextInt();
                 reader.nextLine();
                 setMaxRetries(maxRetries);
                 break;
-            case 13:
+            case 14:
                 System.out.println("Set Retry Interval: Enter retry interval");
                 int retryInterval = reader.nextInt();
                 reader.nextLine();
                 setRetryInterval(retryInterval);
                 break;
-            case 14:
+            case 15:
                 System.out.println("Set Subscribe Timeout: Enter subscribe timeout in milliseconds");
                 int subscribeTimeout = reader.nextInt();
                 reader.nextLine();
                 setSubscribeTimeout(subscribeTimeout);
                 break;
-            case 15:
+            case 16:
                 System.out.println("Set Non subscribe Timeout: Enter non subscribe timeout in milliseconds");
                 int nonSubscribeTimeout = reader.nextInt();
                 reader.nextLine();
@@ -342,11 +352,12 @@ public class PubnubDemoConsole {
         System.out.println("ENTER 8  FOR Time");
         System.out.println("ENTER 9  FOR EXIT OR QUIT");
         System.out.println("ENTER 10 FOR Disconnect-And-Resubscribe");
-        System.out.println("ENTER 11 FOR Toggle Resume On Reconnect");
-        System.out.println("ENTER 12 FOR Setting MAX Retries");
-        System.out.println("ENTER 13 FOR Setting Retry Interval");
-        System.out.println("ENTER 14 FOR Setting Subscribe Timeout");
-        System.out.println("ENTER 15 FOR Setting Non Subscribe Timeout");
+        System.out.println("ENTER 11 FOR Disconnect-And-Resubscribe with timetoken");
+        System.out.println("ENTER 12 FOR Toggle Resume On Reconnect");
+        System.out.println("ENTER 13 FOR Setting MAX Retries");
+        System.out.println("ENTER 14 FOR Setting Retry Interval");
+        System.out.println("ENTER 15 FOR Setting Subscribe Timeout");
+        System.out.println("ENTER 16 FOR Setting Non Subscribe Timeout");
         System.out.println("\nENTER 0 to display this menu");
     }
 
