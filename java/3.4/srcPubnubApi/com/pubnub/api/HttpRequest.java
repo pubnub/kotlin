@@ -11,8 +11,26 @@ class HttpRequest {
     private String[] urlComponents;
     private Hashtable params;
     private String url;
+    private boolean dar;
+    private boolean subzero;
 
-    public HttpRequest(String[] urlComponents, Hashtable params,
+    public boolean isSubzero() {
+		return subzero;
+	}
+
+	public void setSubzero(boolean subzero) {
+		this.subzero = subzero;
+	}
+
+	public boolean isDar() {
+		return dar;
+	}
+
+	public void setDar(boolean dar) {
+		this.dar = dar;
+	}
+
+	public HttpRequest(String[] urlComponents, Hashtable params,
             Hashtable headers, ResponseHandler rh) {
         this.setUrlComponents(urlComponents);
         this.setParams(params);

@@ -14,7 +14,8 @@ class SubscribeWorker extends AbstractSubscribeWorker {
 
     void process(HttpRequest hreq) {
         HttpResponse hresp = null;
-        int currentRetryAttempt = 1;
+        int currentRetryAttempt = (hreq.isDar())?1:maxRetries;
+        log.verbose("disconnectAndResubscribe is " + hreq.isDar());
         while (currentRetryAttempt <= maxRetries) {
             try {
                 log.debug(hreq.getUrl());
@@ -30,7 +31,7 @@ class SubscribeWorker extends AbstractSubscribeWorker {
                 currentRetryAttempt = maxRetries + 1;
                 break;
             } */catch (Exception e) {
-                log.verbose("Retry Attempt : " + currentRetryAttempt
+                log.verbose("Retry Attempt : " + ((currentRetryAttempt == maxRetries)?"last":currentRetryAttempt)
                         + " Exception in Fetch : " + e.toString());
                 currentRetryAttempt++;
             }
@@ -43,15 +44,16 @@ class SubscribeWorker extends AbstractSubscribeWorker {
         if (!_die) {
             if (hresp == null) {
                 log.debug("Error in fetching url : " + hreq.getUrl());
-                if (currentRetryAttempt > maxRetries) {
+                if (hreq.isDar()) {
                     log.verbose("Exhausted number of retries");
-                    hreq.getResponseHandler().handleTimeout();
-                } else
-                    hreq.getResponseHandler().handleError("Request Timeout");
+                    hreq.getResponseHandler().handleTimeout(hreq);
+                } else {
+                    hreq.getResponseHandler().handleError(hreq, "Request Timeout");
+                }
                 return;
             }
             log.debug(hresp.getResponse());
-            hreq.getResponseHandler().handleResponse(hresp.getResponse());
+            hreq.getResponseHandler().handleResponse(hreq, hresp.getResponse());
         }
 
     }

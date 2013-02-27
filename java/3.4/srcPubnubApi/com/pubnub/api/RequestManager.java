@@ -98,17 +98,17 @@ class NonSubscribeWorker extends Worker {
         } catch (Exception e) {
             log.debug("Exception in Fetch : " + e.toString());
             if (!_die)
-                hreq.getResponseHandler().handleError("Timed Out");
+                hreq.getResponseHandler().handleError(hreq, "Timed Out");
             return;
         }
 
         if (!_die) {
             if (hresp == null) {
                 log.debug("Error in fetching url : " + hreq.getUrl());
-                hreq.getResponseHandler().handleError("Network Error");
+                hreq.getResponseHandler().handleError(hreq, "Network Error");
                 return;
             }
-            hreq.getResponseHandler().handleResponse(hresp.getResponse());
+            hreq.getResponseHandler().handleResponse(hreq, hresp.getResponse());
         }
     }
 

@@ -36,7 +36,6 @@ abstract class PubnubCore {
     private NonSubscribeManager nonSubscribeManager;
     private String _timetoken = "0";
     private String _saved_timetoken = "0";
-    private boolean backFromDar = false;
 
     private String PRESENCE_SUFFIX = "-pnpres";
 
@@ -466,18 +465,18 @@ abstract class PubnubCore {
 
         HttpRequest hreq = new HttpRequest(urlComponents,
                 new ResponseHandler() {
-                    public void handleResponse(String response) {
+                    public void handleResponse(HttpRequest hreq, String response) {
                         JSONArray jsarr;
                         try {
                             jsarr = new JSONArray(response);
                         } catch (JSONException e) {
-                            handleError(response);
+                            handleError(hreq, response);
                             return;
                         }
                         callback.successCallback(channel, jsarr);
                     }
 
-                    public void handleError(String response) {
+                    public void handleError(HttpRequest hreq, String response) {
                         JSONArray jsarr;
                         jsarr = new JSONArray();
                         jsarr.put("0").put("publish " + response);
@@ -524,18 +523,18 @@ abstract class PubnubCore {
                 this.SUBSCRIBE_KEY, "channel", channel };
 
         HttpRequest hreq = new HttpRequest(urlargs, new ResponseHandler() {
-            public void handleResponse(String response) {
+            public void handleResponse(HttpRequest hreq, String response) {
                 JSONObject jsobj;
                 try {
                     jsobj = new JSONObject(response);
                 } catch (JSONException e) {
-                    handleError(response);
+                    handleError(hreq, response);
                     return;
                 }
                 callback.successCallback(channel, jsobj);
             }
 
-            public void handleError(String response) {
+            public void handleError(HttpRequest hreq, String response) {
                 JSONArray jsarr;
                 jsarr = new JSONArray();
                 jsarr.put("0").put("hereNow " + response);
@@ -584,7 +583,7 @@ abstract class PubnubCore {
 
         HttpRequest hreq = new HttpRequest(urlargs, new ResponseHandler() {
 
-            public void handleResponse(String response) {
+            public void handleResponse(HttpRequest hreq, String response) {
                 JSONArray respArr;
                 try {
                     respArr = new JSONArray(response);
@@ -596,7 +595,7 @@ abstract class PubnubCore {
                 }
             }
 
-            public void handleError(String response) {
+            public void handleError(HttpRequest hreq, String response) {
                 JSONArray jsarr;
                 jsarr = new JSONArray();
                 jsarr.put("0").put("history " + response);
@@ -646,7 +645,7 @@ abstract class PubnubCore {
         HttpRequest hreq = new HttpRequest(urlargs, parameters,
                 new ResponseHandler() {
 
-                    public void handleResponse(String response) {
+                    public void handleResponse(HttpRequest hreq, String response) {
                         JSONArray respArr;
                         try {
                             respArr = new JSONArray(response);
@@ -659,7 +658,7 @@ abstract class PubnubCore {
 
                     }
 
-                    public void handleError(String response) {
+                    public void handleError(HttpRequest hreq, String response) {
                         JSONArray jsarr;
                         jsarr = new JSONArray();
                         jsarr.put("0").put("detailedHistory " + response);
@@ -787,11 +786,11 @@ abstract class PubnubCore {
         String[] url = { getOrigin(), "time", "0" };
         HttpRequest hreq = new HttpRequest(url, new ResponseHandler() {
 
-            public void handleResponse(String response) {
+            public void handleResponse(HttpRequest hreq, String response) {
                 callback.successCallback(null, response);
             }
 
-            public void handleError(String response) {
+            public void handleError(HttpRequest hreq, String response) {
                 callback.errorCallback(null, "time " + response);
             }
 
@@ -1008,6 +1007,9 @@ abstract class PubnubCore {
     }
 
     private void _subscribe_base(boolean fresh) {
+    	_subscribe_base(fresh, false);
+    }
+    private void _subscribe_base(boolean fresh, boolean dar) {
         String channelString = subscriptions.getChannelString();
         String[] channelsArray = subscriptions.getChannelNames();
         if (channelsArray.length <= 0)
@@ -1028,7 +1030,7 @@ abstract class PubnubCore {
         HttpRequest hreq = new HttpRequest(urlComponents, params,
                 new ResponseHandler() {
 
-                    public void handleResponse(String response) {
+                    public void handleResponse(HttpRequest hreq, String response) {
 
                         /*
                          * Check if response has channel names. A JSON response
@@ -1053,11 +1055,10 @@ abstract class PubnubCore {
                             log.verbose("Timetoken value set to " + _timetoken);
                             _saved_timetoken = "0";
                             log.verbose("Saved Timetoken reset to 0");
-                            if (!backFromDar) {
+                            if (!hreq.isDar()) {
                             	subscriptions.invokeConnectCallbackOnChannels(_timetoken);
                             } else {
                             	subscriptions.invokeReconnectCallbackOnChannels(_timetoken);
-                            	backFromDar = false;
                             }
                             JSONArray messages = new JSONArray(jsa.get(0)
                                     .toString());
@@ -1149,18 +1150,26 @@ abstract class PubnubCore {
                                 }
 
                             }
-                            _subscribe_base(false);
+                            if (hreq.isSubzero()) {
+                            	log.verbose("Response of subscribe 0 request. Need to do dAr process again");
+                            	_subscribe_base(false, hreq.isDar());                          	
+                            } else 
+                            	_subscribe_base(false);
                         } catch (JSONException e) {
-                            _subscribe_base(false);
+                        	if (hreq.isSubzero()) {
+                        		log.verbose("Response of subscribe 0 request. Need to do dAr process again");
+                            	_subscribe_base(false, hreq.isDar());
+                        	} else 
+                            	_subscribe_base(false);
                         }
 
                     }
 
-                    public void handleError(String response) {
-                        resubscribe();
+                    public void handleError(HttpRequest hreq, String response) {
+                    	disconnectAndResubscribe();
                     }
 
-                    public void handleTimeout() {
+                    public void handleTimeout(HttpRequest hreq) {
                         log.verbose("Timeout Occurred, Calling disconnect callbacks on the channels");
                         String timeoutTimetoken = (isResumeOnReconnect()) ? (_timetoken
 						        .equals("0")) ? _saved_timetoken
@@ -1177,7 +1186,11 @@ abstract class PubnubCore {
                         return _timetoken;
                     }
                 });
-
+        if (_timetoken.equals("0")) {
+        	hreq.setSubzero(true);
+        	log.verbose("This is a subscribe 0 request");
+        }
+        hreq.setDar(dar);
         _request(hreq, subscribeManager, fresh);
     }
 
@@ -1214,7 +1227,7 @@ abstract class PubnubCore {
         _timetoken = "0";
         log.verbose("Before Resubscribe Timetoken : " + _timetoken);
         log.verbose("Before Resubscribe Saved Timetoken : " + _saved_timetoken);
-        _subscribe_base(true);
+        _subscribe_base(true, true);
     }
     
     private void resubscribe(String timetoken) {
@@ -1223,7 +1236,7 @@ abstract class PubnubCore {
         _timetoken = "0";
         log.verbose("Before Resubscribe Timetoken : " + _timetoken);
         log.verbose("Before Resubscribe Saved Timetoken : " + _saved_timetoken);
-        _subscribe_base(true);
+        _subscribe_base(true, true);
     }
     /**
      * Disconnect from all channels, and resubscribe
@@ -1239,7 +1252,6 @@ abstract class PubnubCore {
      */
     public void disconnectAndResubscribeWithTimetoken(String timetoken, String errorMessage) {
         log.verbose("Received disconnectAndResubscribeWithTimetoken");
-        backFromDar = true;
         subscriptions.invokeErrorCallbackOnChannels(errorMessage);
         resubscribe(timetoken);
     }
@@ -1258,7 +1270,6 @@ abstract class PubnubCore {
      */
     public void disconnectAndResubscribe(String errorMessage) {
         log.verbose("Received disconnectAndResubscribe");
-        backFromDar = true;
         subscriptions.invokeErrorCallbackOnChannels(errorMessage);
         resubscribe();
     }
