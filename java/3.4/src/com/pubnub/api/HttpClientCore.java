@@ -99,7 +99,7 @@ class HttpClientCore extends HttpClient {
         connection.setConnectTimeout(connectionTimeout);
         connection.connect();
         InputStream is;
-        if(connection.getContentEncoding().equals("gzip")) {
+        if(connection.getContentEncoding() == null || connection.getContentEncoding().equals("gzip")) {
         	is = new GZIPInputStream(connection.getInputStream());
         } else {
         	is = connection.getInputStream();

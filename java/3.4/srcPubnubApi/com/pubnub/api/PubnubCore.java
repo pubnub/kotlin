@@ -1164,7 +1164,11 @@ abstract class PubnubCore {
                         }
 
                     }
-
+                    
+                    public void handleBackFromDar(HttpRequest hreq) {
+                    	_subscribe_base(false);
+                    }
+                    
                     public void handleError(HttpRequest hreq, String response) {
                     	disconnectAndResubscribe();
                     }

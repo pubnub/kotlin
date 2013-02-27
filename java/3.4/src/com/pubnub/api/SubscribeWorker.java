@@ -26,11 +26,16 @@ class SubscribeWorker extends AbstractSubscribeWorker {
                     currentRetryAttempt = 1;
                     break;
                 }
-            } /*catch (SocketTimeoutException e) {
-                log.verbose("Exception in Fetch : " + e.toString());
-                currentRetryAttempt = maxRetries + 1;
+            } catch (SocketTimeoutException e) {
+                log.verbose("No Traffic , Read Timeout Exception in Fetch : " + e.toString());
+                if (hreq.isDar()) {
+                	hreq.getResponseHandler().handleBackFromDar(hreq);
+                	return;
+                }
                 break;
-            } */catch (Exception e) {
+                
+            } catch (Exception e) {
+            	e.printStackTrace();
                 log.verbose("Retry Attempt : " + ((currentRetryAttempt == maxRetries)?"last":currentRetryAttempt)
                         + " Exception in Fetch : " + e.toString());
                 currentRetryAttempt++;
