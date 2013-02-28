@@ -16,30 +16,24 @@ C2DM is hard to implement, and it imposes artificial limits for you to reach you
 C2DM is not recommended as it is a "broadcast" mechanism according to Google.  C2DM is Slow, and limited to 1 message at a time.
 Use PubNub Instead!
 
-##### Getting started with Pubnub in your app
-To use Pubnub, you need to place Pubnub-Android-3.4.jar and bcprov-jdk15on-1.47.jar in libs directory under the android app 
-project directory. 
+### Getting started with Pubnub in your app
+To use Pubnub, simply copy the Pubnub-Android-3.4.jar and bcprov-jdk15on-1.47.jar files in to your project's libs directory.
+These files can be found at pubnub/java/android/3.4/Pubnub-Android-3.4.jar and pubnub/java/java/3.4/libs/bcprov-jdk15on-1.47.jar.
 
-Pubnub-Android-3.4.jar is available at pubnub/java/android/3.4/Pubnub-Android-3.4.jar 
-and bcprov-jdk15on-1.47.jar is available at pubnub/java/java/3.4/libs/bcprov-jdk15on-1.47.jar.
+## Checkout the demo apps for examples on how to use the Android API! 
 
-##### PubNub Android Sample App
+### PubNub Android Sample App
 
-This is a full android sample app with the ability to Subscribe and UnSubscribe from PubNub channels. 
-By UnSubscribing from channels, you can save resources and ultimately save billing costs.
+This app demonstrates all PubNub features and functionality.  It can be found in 3.4/examples/PubnubExample directory.
 
-Checkout the example app for examples on how to use the API! 
-It can be found in 3.4/examples/PubnubExample directory.
+### Pubnub Auto-subscribing, Auto-startup App
+This is a sample app which subscribes to channel **"hello_world"** on receiving the **android.intent.action.BOOT_COMPLETED** intent.
+The user is alerted about events like connect, message received etc. via notifications.
 
+Code for this app can be found in the 3.4/examples/SubscribeAtBoot directory.
 
-##### Pubnub Android Sample App ( Subscribes at Boot )
-This is a sample app which subscribes to channel **"hello_world"** on receiving **android.intent.action.BOOT_COMPLETED** .
-The user is alerted about events like connect, message received etc. by notifications.
+## Building the Pubnub library jar
 
-Code for the app can be found in 3.4/examples/SubscribeAtBoot directory.
-
-
-### Building Pubnub library jar :
 Pubnub library jar can be built by running following commands. ( Jar is already present in repository )
 ```
 $ ant clean
@@ -52,9 +46,10 @@ $ ant clean
 $ and debug-build
 ```
 
-##Durability - Reconnecting / Resuming when a connection is lost or changed
-As the mobile device loses a connection, changes IP, etc, any current in-process subscribe operations can be forced
-to abort, then reconnect given that a change has occured in the network environment. This is done by calling the
+##Connection Durability: Reconnecting & Resuming when a connection is lost or changed
+
+As a mobile device may lose its connection under many different circumstances (IP change, roaming, etc), any current in-process subscribe operations can be forced
+to reconnect (and optionally catchup where left off) when any change has occured in the network environment. This is done by calling the
 **disconnectAndResubscribe()** method on the PubNub instance.
 
 The demo application has examples of setting up a broadcast receiver for the **ConnectivityManager.CONNECTIVITY_ACTION**.
@@ -92,7 +87,7 @@ If it **is able** to recover network, then the subscribe will "catchup", or resu
 if isResumeOnReconnect() is true, otherwise, it will restart and grab only new messages since it reconnected. 
 
 
-
+##Client API Summary
 
 ###Init
 ```java
