@@ -16,6 +16,12 @@ C2DM is hard to implement, and it imposes artificial limits for you to reach you
 C2DM is not recommended as it is a "broadcast" mechanism according to Google.  C2DM is Slow, and limited to 1 message at a time.
 Use PubNub Instead!
 
+##### Getting started with Pubnub in your app
+To use Pubnub, you need to place Pubnub-Android-3.4.jar and bcprov-jdk15on-1.47.jar in libs directory under the android app 
+project directory. 
+
+**Pubnub-Android-3.4.jar** is available at **pubnub/java/android/3.4/Pubnub-Android-3.4.jar** 
+and **bcprov-jdk15on-1.47.jar** is available at **pubnub/java/java/3.4/libs/bcprov-jdk15on-1.47.jar**.
 
 ##### PubNub Android Sample App
 
