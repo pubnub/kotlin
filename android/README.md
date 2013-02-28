@@ -20,8 +20,8 @@ Use PubNub Instead!
 To use Pubnub, you need to place Pubnub-Android-3.4.jar and bcprov-jdk15on-1.47.jar in libs directory under the android app 
 project directory. 
 
-**Pubnub-Android-3.4.jar** is available at **pubnub/java/android/3.4/Pubnub-Android-3.4.jar** 
-and **bcprov-jdk15on-1.47.jar** is available at **pubnub/java/java/3.4/libs/bcprov-jdk15on-1.47.jar**.
+Pubnub-Android-3.4.jar is available at pubnub/java/android/3.4/Pubnub-Android-3.4.jar 
+and bcprov-jdk15on-1.47.jar is available at pubnub/java/java/3.4/libs/bcprov-jdk15on-1.47.jar.
 
 ##### PubNub Android Sample App
 
