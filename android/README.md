@@ -34,36 +34,19 @@ The **onReceive()** method is where it checks for certain (or any) network chang
 calls **disconnectAndResubscribe()** as needed.
 
 ```java
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
 
-public boolean haveInternet(Context ctx) {
-    NetworkInfo info = (NetworkInfo) ((ConnectivityManager) ctx
-            .getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
-        
-    return ( info != null && info.isConnected());
-}
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main);
 
-protected void onCreate(Bundle savedInstanceState) {    
-    ...
-    this.registerReceiver(new BroadcastReceiver() {
+		this.registerReceiver(new BroadcastReceiver() {
+			@Override
+			public void onReceive(Context arg0, Intent intent) {
+				pubnub.disconnectAndResubscribe();
+			} 
 
-	    @Override
-	    public void onReceive(Context arg0, Intent intent) {
-		boolean haveInternet = haveInternet(arg0);
-			
-		if ( haveInternet != networkConnected) {
-    			Log.d("Receiver 1", "Net state changed from " + 
-    				networkConnected + " to " + haveInternet);
-                }
-				
-		if (haveInternet && !networkConnected ) {
-		    pubnub.disconnectAndResubscribe();
-		}
-		
-		networkConnected = haveInternet;			                    
-	    }         	
-        }, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION  ));        
-    ....
-    }
+		}, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION  ));		
 ```
 
 This logic has been purposely left out of the core and documented in the example application, so that if you wish to 
