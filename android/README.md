@@ -16,13 +16,35 @@ C2DM is hard to implement, and it imposes artificial limits for you to reach you
 C2DM is not recommended as it is a "broadcast" mechanism according to Google.  C2DM is Slow, and limited to 1 message at a time.
 Use PubNub Instead!
 
+
 ##### PubNub Android Sample App
 
 This is a full android sample app with the ability to Subscribe and UnSubscribe from PubNub channels. 
 By UnSubscribing from channels, you can save resources and ultimately save billing costs.
 
 Checkout the example app for examples on how to use the API! 
-It can be found at in the 3.4/examples/PubnubExample directory.
+It can be found in 3.4/examples/PubnubExample directory.
+
+
+##### Pubnub Android Sample App ( Subscribes at Boot )
+This is a sample app which subscribes to channel **"hello_world"** on receiving **android.intent.action.BOOT_COMPLETED** .
+The user is alerted about events like connect, message received etc. by notifications.
+
+Code for the app can be found in 3.4/examples/SubscribeAtBoot directory.
+
+
+### Building Pubnub library jar :
+Pubnub library jar can be built by running following commands. ( Jar is already present in repository )
+```
+$ ant clean
+$ ant
+```
+
+Pubnub library jar with debug messages enabled can be built by running following commands
+```
+$ ant clean
+$ and debug-build
+```
 
 ##Durability - Reconnecting / Resuming when a connection is lost or changed
 As the mobile device loses a connection, changes IP, etc, any current in-process subscribe operations can be forced
