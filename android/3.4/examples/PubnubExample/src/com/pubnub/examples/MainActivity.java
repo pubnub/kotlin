@@ -1,53 +1,39 @@
 package com.pubnub.examples;
 
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.util.Collections;
 import java.util.Hashtable;
-import java.util.List;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
-import android.widget.TextView;
-import com.example.PubnubExample.R;
-import org.apache.http.conn.util.InetAddressUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
+import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.PubnubExample.R;
 import com.pubnub.api.Callback;
 import com.pubnub.api.Pubnub;
-import com.pubnub.api.PubnubException;
 
 public class MainActivity extends Activity {
-	/*//Noise Test
-    Pubnub pubnub = new Pubnub("pub-c-87f96934-8c44-4f8d-a35f-deaa2753f083", "sub-c-3a693cf8-7401-11e2-8b02-12313f022c90", "", false);
-    String channel = "noise";
-
-    String channel = "a";*/
-
+	/*
+	 * //Noise Test Pubnub pubnub = new
+	 * Pubnub("pub-c-87f96934-8c44-4f8d-a35f-deaa2753f083",
+	 * "sub-c-3a693cf8-7401-11e2-8b02-12313f022c90", "", false); String channel
+	 * = "noise"; String channel = "a";
+	 */
 
 	Pubnub pubnub = new Pubnub("demo", "demo", "", false);
-	String channel = "hello_world";
-	EditText ed;
-	protected int count;
-
-	private boolean networkConnected = true;;
 
 	private void notifyUser(Object message) {
 		try {
@@ -83,7 +69,6 @@ public class MainActivity extends Activity {
 				});
 			}
 
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -93,282 +78,16 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
 
-		//pubnub.setSubscribeTimeout(1000);
-		//pubnub.setMaxRetries(3);
-
+		setContentView(R.layout.usage);
 		this.registerReceiver(new BroadcastReceiver() {
 			@Override
 			public void onReceive(Context arg0, Intent intent) {
 				pubnub.disconnectAndResubscribe();
 
-			} 
-
-		}, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION  ));
-
-		Button publishBtn = (Button) findViewById(R.id.btnPublish);
-		publishBtn.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				Hashtable args = new Hashtable(2);
-				ed = (EditText) findViewById(R.id.editText1);
-
-				String message = ed.getText().toString();
-
-				if (args.get("message") == null ) {
-					try {
-						Integer i = Integer.parseInt(message);
-						args.put("message", i);
-					} catch (Exception e) {
-
-					}
-				}
-				if (args.get("message") == null ) {
-					try {
-						Double d = Double.parseDouble(message);
-						args.put("message", d);
-					} catch (Exception e) {
-
-					}
-				}
-				if (args.get("message") == null ) {
-					try {
-						JSONArray js = new JSONArray(message);
-						args.put("message", js);
-					} catch (Exception e) {
-
-					}
-				}
-				if (args.get("message") == null ) {
-					try {
-						JSONObject js = new JSONObject(message);
-						args.put("message", js);
-					} catch (Exception e) {
-
-					}
-				}
-				if (args.get("message") == null ) {
-					args.put("message", message);
-				}
-
-				// Publish Message
-
-				args.put("channel", channel); // Channel Name
-
-				pubnub.publish(args, new Callback() {
-					public void successCallback(String channel, Object message) {
-						notifyUser(message.toString());
-					}
-
-					public void errorCallback(String channel, Object message) {
-						notifyUser(channel + " : " + message.toString());
-					}
-				});
 			}
-		});
 
-		Button subscribeBtn = (Button) findViewById(R.id.btnSubscribe);
-		subscribeBtn.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				Hashtable args = new Hashtable(1);
-				args.put("channel", channel);
-
-				try {
-					pubnub.subscribe(args, new Callback() {
-						public void connectCallback(String channel) {
-							notifyUser("CONNECT on channel:" + channel);
-						}
-
-						public void disconnectCallback(String channel) {
-							notifyUser("DISCONNECT on channel:" + channel);
-						}
-
-						public void reconnectCallback(String channel) {
-							notifyUser("RECONNECT on channel:" + channel);
-						}
-
-						public void successCallback(String channel,
-								Object message) {
-							notifyUser(channel + " " + message.toString());
-						}
-						public void errorCallback(String channel,
-								Object message) {
-							notifyUser(channel + " " + message.toString());
-						}
-					});
-
-				} catch (Exception e) {
-
-				}
-
-			}
-		});
-
-		Button presenceBtn = (Button) findViewById(R.id.btnPresence);
-		presenceBtn.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				try {
-					pubnub.presence(channel, new Callback() {
-						public void successCallback(String channel,
-								Object message) {
-							notifyUser(message.toString());
-						}
-
-						public void errorCallback(String channel, Object message) {
-							notifyUser(channel + " : " + message.toString());
-						}
-					});
-				} catch (Exception e) {
-
-				}
-
-			}
-		});
-
-
-		Button toggleRoRBtn = (Button) findViewById(R.id.btnToggleRoR);
-		toggleRoRBtn.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Boolean previousState = pubnub.isResumeOnReconnect();
-				pubnub.setResumeOnReconnect(pubnub.isResumeOnReconnect() ? false : true);
-				Log.i("Resume on reconnect: ", String.format("Setting from: %s to %s", String.valueOf(previousState), String.valueOf(pubnub.isResumeOnReconnect())));
-
-			}
-		});
-		
-		Button unsubscribeAllBtn = (Button) findViewById(R.id.btnUnsubscribeAll );
-		unsubscribeAllBtn.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				pubnub.unsubscribeAll();
-			}
-		});
-
-		Button disconnectAndResubButton = (Button) findViewById(R.id.btnDisconnectAndResubscribe);
-		disconnectAndResubButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				pubnub.disconnectAndResubscribe();
-
-			}
-		});
-
-		Button detailedHistoryBtn = (Button) findViewById(R.id.btnDetailedHistory);
-		detailedHistoryBtn.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				pubnub.detailedHistory(channel, 2, new Callback() {
-					public void successCallback(String channel, Object message) {
-						notifyUser(message.toString());
-					}
-
-					public void errorCallback(String channel, Object message) {
-						notifyUser(channel + " : " + message.toString());
-					}
-				});
-
-			}
-		});
-		Button hereNowBtn = (Button) findViewById(R.id.btnHereNow);
-		hereNowBtn.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				pubnub.hereNow(channel, new Callback() {
-					public void successCallback(String channel, Object message) {
-						notifyUser(message.toString());
-					}
-
-					public void errorCallback(String channel, Object message) {
-						notifyUser(channel + " : " + message.toString());
-					}
-				});
-
-			}
-		});
-
-		Button pubSubBtn = (Button) findViewById(R.id.btnPubSubTest);
-		pubSubBtn.setOnClickListener(new OnClickListener() {
-			private int sub_succ = 0;
-			private int sub_fail = 0;
-			private int pub_succ = 0;
-			private int pub_fail = 0;
-			private int total = 100;
-			private String channel = "3.3-noise";
-
-
-			@Override
-			public void onClick(View v) {
-				Hashtable args = new Hashtable(1);
-				args.put("channel", channel);
-				System.out.println("debug PubSubTest");
-				notifyUser(channel);
-
-				try {
-					pubnub.subscribe(args, new Callback() {
-						public void successCallback(String channel,
-								Object message) {
-							sub_succ++;
-							notifyUser(" " + sub_succ);
-							Log.i("Received count : ", String.valueOf(sub_succ));
-						}
-
-						public void errorCallback(String channel,
-								Object message) {
-							System.out.println(message);
-							notifyUser("failed");
-							sub_fail++;
-						}
-					});
-					notifyUser("subscribed");
-
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				for (int i = 0; i < total; i++) {
-					// Publish Message
-					Hashtable args1 = new Hashtable(2);
-					args1.put("channel", channel); // Channel Name
-					JSONObject message = new JSONObject();
-					try {
-						message.put("Message", "Testing Android Pub/Sub");
-					} catch (org.json.JSONException jsonError) {
-					}
-					args1.put("message", message); // JSON Message
-					pubnub.publish(args1, new Callback() {
-						public void successCallback(String channel, Object message) {
-							pub_succ++;
-						}
-
-						public void errorCallback(String channel, Object message) {
-							System.out.println(message);
-							pub_fail++;
-						}
-					});
-				}
-				try {
-					Thread.sleep(60000);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				String result = "Publish Success : " + pub_succ + " , " +
-						"Publish Failure : " + pub_fail + " , " +
-						"Subscribe Success : " + sub_succ + " , " +
-						"Subscribe Failure : " + sub_fail;
-				System.out.println(result);
-				notifyUser(result);
-				pub_succ = pub_fail = sub_succ = sub_fail = 0;
-			}
-		});
+		}, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
 
 	}
 
@@ -380,4 +99,509 @@ public class MainActivity extends Activity {
 		return true;
 	}
 
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle item selection
+		switch (item.getItemId()) {
+
+		case R.id.option1:
+			subscribe();
+			return true;
+
+		case R.id.option2:
+			publish();
+			return true;
+
+		case R.id.option3:
+			presence();
+			return true;
+
+		case R.id.option4:
+			detailedHistory();
+			return true;
+
+		case R.id.option5:
+			hereNow();
+			return true;
+
+		case R.id.option6:
+			unsubscribe();
+			return true;
+
+		case R.id.option7:
+			presenceUnsubscribe();
+			return true;
+
+		case R.id.option8:
+			time();
+			return true;
+
+		case R.id.option9:
+			disconnectAndResubscribe();
+			return true;
+
+		case R.id.option10:
+			disconnectAndResubscribeWithTimetoken();
+			return true;
+
+		case R.id.option11:
+			toggleResumeOnReconnect();
+			return true;
+
+		case R.id.option12:
+			setMaxRetries();
+			return true;
+
+		case R.id.option13:
+			setRetryInterval();
+			return true;
+
+		case R.id.option14:
+			setSubscribeTimeout();
+			return true;
+
+		case R.id.option15:
+			setNonSubscribeTimeout();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+
+	private void setNonSubscribeTimeout() {
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle("Set Non Subscribe Timeout");
+		builder.setMessage("Enter timeout value in milliseconds");
+		final EditText edTimeout = new EditText(this);
+		edTimeout.setInputType(InputType.TYPE_CLASS_NUMBER);
+		builder.setView(edTimeout);
+		builder.setPositiveButton("Done",
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						pubnub.setNonSubscribeTimeout(Integer
+								.parseInt(edTimeout.getText().toString()));
+					}
+				});
+		AlertDialog alert = builder.create();
+		alert.show();
+	}
+
+	private void subscribe() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle("Subscribe");
+		builder.setMessage("Enter channel name");
+		final EditText input = new EditText(this);
+		builder.setView(input);
+		builder.setPositiveButton("Subscribe",
+				new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+
+						Hashtable args = new Hashtable(1);
+
+						String message = input.getText().toString();
+						args.put("channel", message);
+
+						try {
+							pubnub.subscribe(args, new Callback() {
+								public void connectCallback(String channel,
+										Object message) {
+									notifyUser("SUBSCRIBE : CONNECT on channel:"
+											+ channel
+											+ " : "
+											+ message.getClass()
+											+ " : "
+											+ message.toString());
+								}
+
+								public void disconnectCallback(String channel,
+										Object message) {
+									notifyUser("SUBSCRIBE : DISCONNECT on channel:"
+											+ channel
+											+ " : "
+											+ message.getClass()
+											+ " : "
+											+ message.toString());
+								}
+
+								@Override
+								public void reconnectCallback(String channel,
+										Object message) {
+									notifyUser("SUBSCRIBE : RECONNECT on channel:"
+											+ channel
+											+ " : "
+											+ message.getClass()
+											+ " : "
+											+ message.toString());
+								}
+
+								public void successCallback(String channel,
+										Object message) {
+									notifyUser("SUBSCRIBE : " + channel + " : "
+											+ message.getClass() + " : "
+											+ message.toString());
+								}
+
+								public void errorCallback(String channel,
+										Object message) {
+									notifyUser("SUBSCRIBE : ERROR on channel "
+											+ channel + " : "
+											+ message.getClass() + " : "
+											+ message.toString());
+								}
+							});
+
+						} catch (Exception e) {
+
+						}
+					}
+
+				});
+		AlertDialog alert = builder.create();
+		alert.show();
+
+	}
+
+	private void _publish(final String channel) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle("Publish");
+		builder.setMessage("Enter message");
+		final EditText etMessage = new EditText(this);
+		builder.setView(etMessage);
+		builder.setPositiveButton("Publish",
+				new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						Hashtable args = new Hashtable(2);
+
+						String message = etMessage.getText().toString();
+
+						if (args.get("message") == null) {
+							try {
+								Integer i = Integer.parseInt(message);
+								args.put("message", i);
+							} catch (Exception e) {
+
+							}
+						}
+						if (args.get("message") == null) {
+							try {
+								Double d = Double.parseDouble(message);
+								args.put("message", d);
+							} catch (Exception e) {
+
+							}
+						}
+						if (args.get("message") == null) {
+							try {
+								JSONArray js = new JSONArray(message);
+								args.put("message", js);
+							} catch (Exception e) {
+
+							}
+						}
+						if (args.get("message") == null) {
+							try {
+								JSONObject js = new JSONObject(message);
+								args.put("message", js);
+							} catch (Exception e) {
+
+							}
+						}
+						if (args.get("message") == null) {
+							args.put("message", message);
+						}
+
+						// Publish Message
+
+						args.put("channel", channel); // Channel Name
+
+						pubnub.publish(args, new Callback() {
+							public void successCallback(String channel,
+									Object message) {
+								notifyUser("PUBLISH : " + message);
+							}
+
+							public void errorCallback(String channel,
+									Object message) {
+								notifyUser("PUBLISH : " + message);
+							}
+						});
+					}
+
+				});
+		AlertDialog alert = builder.create();
+		alert.show();
+
+	}
+
+	private void publish() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle("Publish ");
+		builder.setMessage("Enter channel name");
+		final EditText etChannel = new EditText(this);
+		builder.setView(etChannel);
+		builder.setPositiveButton("Done",
+				new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						_publish(etChannel.getText().toString());
+					}
+
+				});
+		AlertDialog alert = builder.create();
+		alert.show();
+	}
+
+	private void presence() {
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle("Presence");
+		builder.setMessage("Enter channel name");
+		final EditText input = new EditText(this);
+		builder.setView(input);
+		builder.setPositiveButton("Subscribe For Presence",
+				new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						String channel = input.getText().toString();
+
+						try {
+							pubnub.presence(channel, new Callback() {
+
+								public void successCallback(String channel,
+										Object message) {
+									notifyUser("PRESENCE : " + channel + " : "
+											+ message.getClass() + " : "
+											+ message.toString());
+								}
+
+								public void errorCallback(String channel,
+										Object message) {
+									notifyUser("PRESENCE : ERROR on channel "
+											+ channel + " : "
+											+ message.getClass() + " : "
+											+ message.toString());
+								}
+							});
+
+						} catch (Exception e) {
+
+						}
+					}
+
+				});
+		AlertDialog alert = builder.create();
+		alert.show();
+	}
+
+	private void detailedHistory() {
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle("Detailed History");
+		builder.setMessage("Enter channel name");
+		final EditText input = new EditText(this);
+		builder.setView(input);
+		builder.setPositiveButton("Get detailed history",
+				new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						String channel = input.getText().toString();
+						pubnub.detailedHistory(channel, 2, new Callback() {
+							public void successCallback(String channel,
+									Object message) {
+								notifyUser("DETAILED HISTORY : " + message);
+							}
+
+							public void errorCallback(String channel,
+									Object message) {
+								notifyUser("DETAILED HISTORY : " + message);
+							}
+						});
+					}
+
+				});
+		AlertDialog alert = builder.create();
+		alert.show();
+	}
+
+	private void hereNow() {
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle("Here Now");
+		builder.setMessage("Enter channel name");
+		final EditText input = new EditText(this);
+		builder.setView(input);
+		builder.setPositiveButton("Get Here Now",
+				new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						String channel = input.getText().toString();
+						pubnub.hereNow(channel, new Callback() {
+							public void successCallback(String channel,
+									Object message) {
+								notifyUser("HERE NOW : " + message);
+							}
+
+							public void errorCallback(String channel,
+									Object message) {
+								notifyUser("HERE NOW : " + message);
+							}
+						});
+					}
+
+				});
+		AlertDialog alert = builder.create();
+		alert.show();
+	}
+
+	private void presenceUnsubscribe() {
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle("Unsubscribe");
+		builder.setMessage("Enter channel name");
+		final EditText input = new EditText(this);
+		builder.setView(input);
+		builder.setPositiveButton("Unsubscribe",
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						String channel = input.getText().toString();
+						pubnub.unsubscribePresence(channel);
+					}
+				});
+		AlertDialog alert = builder.create();
+		alert.show();
+	}
+
+	private void unsubscribe() {
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle("Unsubscribe Presence");
+		builder.setMessage("Enter channel name");
+		final EditText input = new EditText(this);
+		builder.setView(input);
+		builder.setPositiveButton("Unsubscribe Presence",
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						String channel = input.getText().toString();
+						pubnub.unsubscribe(channel);
+					}
+				});
+		AlertDialog alert = builder.create();
+		alert.show();
+	}
+
+	private void time() {
+		pubnub.time(new Callback() {
+			public void successCallback(String channel, Object message) {
+				notifyUser("TIME : " + message);
+			}
+
+			public void errorCallback(String channel, Object message) {
+				notifyUser("TIME : " + message);
+			}
+		});
+
+	}
+
+	private void disconnectAndResubscribe() {
+		pubnub.disconnectAndResubscribe("Disconnect and Resubscribe Sent from Demo Console");
+
+	}
+
+	private void setSubscribeTimeout() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle("Set Subscribe Timeout");
+		builder.setMessage("Enter timeout value in milliseconds");
+		final EditText edTimeout = new EditText(this);
+		edTimeout.setInputType(InputType.TYPE_CLASS_NUMBER);
+		builder.setView(edTimeout);
+		builder.setPositiveButton("Done",
+				new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						pubnub.setSubscribeTimeout(Integer.parseInt(edTimeout
+								.getText().toString()));
+					}
+
+				});
+		AlertDialog alert = builder.create();
+		alert.show();
+
+	}
+
+	private void setRetryInterval() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle("Set Retry Interval");
+		builder.setMessage("Enter retry interval in milliseconds");
+		final EditText edInterval = new EditText(this);
+		edInterval.setInputType(InputType.TYPE_CLASS_NUMBER);
+		builder.setView(edInterval);
+		builder.setPositiveButton("Done",
+				new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						pubnub.setRetryInterval(Integer.parseInt(edInterval
+								.getText().toString()));
+					}
+
+				});
+		AlertDialog alert = builder.create();
+		alert.show();
+	}
+
+	private void toggleResumeOnReconnect() {
+		pubnub.setResumeOnReconnect(pubnub.isResumeOnReconnect() ? false : true);
+		notifyUser("RESUME ON RECONNECT : " + pubnub.isResumeOnReconnect());
+	}
+
+	private void setMaxRetries() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle("Set Max Retries");
+		builder.setMessage("Enter Max Retries");
+		final EditText edRetries = new EditText(this);
+		edRetries.setInputType(InputType.TYPE_CLASS_NUMBER);
+		builder.setView(edRetries);
+		builder.setPositiveButton("Done",
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						pubnub.setMaxRetries(Integer.parseInt(edRetries
+								.getText().toString()));
+					}
+				});
+		AlertDialog alert = builder.create();
+		alert.show();
+	}
+
+	private void disconnectAndResubscribeWithTimetoken() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle("Disconnect and Resubscribe with timetoken");
+		builder.setMessage("Enter Timetoken");
+		final EditText edTimetoken = new EditText(this);
+		builder.setView(edTimetoken);
+		builder.setPositiveButton("Done",
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						pubnub.disconnectAndResubscribeWithTimetoken(
+								edTimetoken.getText().toString(),
+								"Disconnect and Resubscribe Sent from Demo Console");
+					}
+				});
+		AlertDialog alert = builder.create();
+		alert.show();
+	}
 }

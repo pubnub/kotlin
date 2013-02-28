@@ -35,7 +35,6 @@ class SubscribeWorker extends AbstractSubscribeWorker {
                 break;
                 
             } catch (Exception e) {
-            	e.printStackTrace();
                 log.verbose("Retry Attempt : " + ((currentRetryAttempt == maxRetries)?"last":currentRetryAttempt)
                         + " Exception in Fetch : " + e.toString());
                 currentRetryAttempt++;

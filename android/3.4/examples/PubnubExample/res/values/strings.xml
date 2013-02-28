@@ -16,5 +16,23 @@
     <string name="editTextHint">Message to Publish</string>
     <string name="btnPubSubText">Publish/Subscribe Test</string>
     <string name="btnUnsubscribeAllText">Unsubscribe All</string>
+	<string name="welcome">Welcome to Pubnub Demo App</string>
+	<string name="hint">Go to Menu to perform any of following actions</string>
+    <string name="option1">Subscribe</string>
+    <string name="option2">Publish</string>
+    <string name="option3">Presence</string>
+    <string name="option4">Detailed History</string>
+    <string name="option5">Here Now</string>
+    <string name="option6">Unsubscribe</string>
+    <string name="option7">Presence-Unsubscribe</string>
+    <string name="option8">Time</string>
+    <string name="option9">Disconnect-And-Resubscribe</string>
+    <string name="option10">Disconnect-And-Resubscribe with timetoken</string>
+    <string name="option11">Toggle Resume On Reconnect</string>
+    <string name="option12">Set MAX Retries</string>
+    <string name="option13">Set Retry Interval</string>
+    <string name="option14">Set Subscribe Timeout</string>
+    <string name="option15">Set Non Subscribe Timeout</string>
+
 
 </resources>

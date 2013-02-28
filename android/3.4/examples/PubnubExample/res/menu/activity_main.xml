@@ -1,9 +1,18 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
-
-    <item
-        android:id="@+id/menu_settings"
-        android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="@string/menu_settings"/>
-
+    <item android:id="@+id/option1" android:title="@string/option1"></item>
+    <item android:id="@+id/option2" android:title="@string/option2"></item>
+    <item android:id="@+id/option3" android:title="@string/option3"></item>
+    <item android:id="@+id/option4" android:title="@string/option4"></item>
+    <item android:id="@+id/option5" android:title="@string/option5"></item>
+    <item android:id="@+id/option6" android:title="@string/option6"></item>
+    <item android:id="@+id/option7" android:title="@string/option7"></item>
+    <item android:id="@+id/option8" android:title="@string/option8"></item>
+    <item android:id="@+id/option9" android:title="@string/option9"></item>
+    <item android:id="@+id/option10" android:title="@string/option10"></item>
+    <item android:id="@+id/option11" android:title="@string/option11"></item>
+    <item android:id="@+id/option12" android:title="@string/option12"></item>
+    <item android:id="@+id/option13" android:title="@string/option13"></item>
+    <item android:id="@+id/option14" android:title="@string/option14"></item>
+    <item android:id="@+id/option15" android:title="@string/option15"></item>
+   
 </menu>

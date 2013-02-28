@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_vertical"
+    android:layout_marginLeft="@dimen/marginleft"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/welcome"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/welcome"
+            android:textSize="@dimen/welcome_size" />
+
+        <TextView
+            android:id="@+id/hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/hint" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/optionmarginleft"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/option1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/option1" />
+
+        <TextView
+            android:id="@+id/option2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/option2" />
+
+        <TextView
+            android:id="@+id/option3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/option3" />
+
+        <TextView
+            android:id="@+id/option4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/option4" />
+
+        <TextView
+            android:id="@+id/option5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/option5" />
+
+        <TextView
+            android:id="@+id/option6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/option6" />
+
+        <TextView
+            android:id="@+id/option7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/option7" />
+
+        <TextView
+            android:id="@+id/option8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/option8" />
+
+        <TextView
+            android:id="@+id/option9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/option9" />
+
+        <TextView
+            android:id="@+id/option10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/option10" />
+
+        <TextView
+            android:id="@+id/option11"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/option11" />
+
+        <TextView
+            android:id="@+id/option12"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/option12" />
+
+        <TextView
+            android:id="@+id/option13"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/option13" />
+
+        <TextView
+            android:id="@+id/option14"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/option14" />
+
+        <TextView
+            android:id="@+id/option15"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/option15" />
+    </LinearLayout>
+
+</LinearLayout>

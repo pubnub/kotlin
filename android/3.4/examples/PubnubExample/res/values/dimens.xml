@@ -3,4 +3,7 @@
     <dimen name="btn1">300dip</dimen>
     <dimen name="btn2">150dip</dimen>
     <dimen name="paddingTop">100dip</dimen>
+    <dimen name="marginleft">20dip</dimen>
+    <dimen name="optionmarginleft">50dip</dimen>
+    <dimen name="welcome_size">20dip</dimen>
 </resources>

@@ -26,7 +26,7 @@ abstract class PubnubCore {
     private String SUBSCRIBE_KEY = "";
     private String SECRET_KEY = "";
     private String CIPHER_KEY = "";
-    private boolean resumeOnReconnect;
+    private volatile boolean resumeOnReconnect;
 
     private boolean SSL = true;
     protected String UUID = null;
@@ -34,8 +34,8 @@ abstract class PubnubCore {
 
     private SubscribeManager subscribeManager;
     private NonSubscribeManager nonSubscribeManager;
-    private String _timetoken = "0";
-    private String _saved_timetoken = "0";
+    private volatile String _timetoken = "0";
+    private volatile String _saved_timetoken = "0";
 
     private String PRESENCE_SUFFIX = "-pnpres";
 
@@ -1227,7 +1227,8 @@ abstract class PubnubCore {
 
     private void resubscribe() {
         changeOrigin();
-        _saved_timetoken = _timetoken;
+        if (!_timetoken.equals("0"))
+        	_saved_timetoken = _timetoken;
         _timetoken = "0";
         log.verbose("Before Resubscribe Timetoken : " + _timetoken);
         log.verbose("Before Resubscribe Saved Timetoken : " + _saved_timetoken);
@@ -1236,7 +1237,8 @@ abstract class PubnubCore {
     
     private void resubscribe(String timetoken) {
         changeOrigin();
-        _saved_timetoken = timetoken;
+        if (!timetoken.equals("0"))
+        	_saved_timetoken = timetoken;
         _timetoken = "0";
         log.verbose("Before Resubscribe Timetoken : " + _timetoken);
         log.verbose("Before Resubscribe Saved Timetoken : " + _saved_timetoken);
