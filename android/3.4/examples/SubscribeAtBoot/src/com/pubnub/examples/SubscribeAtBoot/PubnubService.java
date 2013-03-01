@@ -1,4 +1,4 @@
-package com.pubnub.examples.subscribeatboot;
+package com.pubnub.examples.SubscribeAtBoot;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -24,7 +24,7 @@ public class PubnubService extends Service {
 
 	private void showNotification(String s) {
 		NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-		Notification notification = new Notification(R.drawable.ic_launcher, s,
+		Notification notification = new Notification(R.drawable.icon, s,
 				System.currentTimeMillis());
 		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
 				new Intent(this, PubnubService.class), 0);

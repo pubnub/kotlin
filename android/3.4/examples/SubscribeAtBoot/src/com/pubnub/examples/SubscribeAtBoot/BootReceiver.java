@@ -1,4 +1,4 @@
-package com.pubnub.examples.subscribeatboot;
+package com.pubnub.examples.SubscribeAtBoot;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -9,9 +9,10 @@ public class BootReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent arg1) {
-		Intent intent = new Intent(context, PubnubService.class);
+        Log.i("PubnubService", "PubNub BootReceiver Starting");
+        Intent intent = new Intent(context, PubnubService.class);
 		context.startService(intent);
-		Log.i("PubnubService", "started");
+		Log.i("PubnubService", "PubNub BootReceiver Started");
 	}
 
 }
