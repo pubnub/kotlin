@@ -2,9 +2,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center_vertical"
     android:layout_marginLeft="@dimen/marginleft"
+    android:gravity="center_horizontal"
     android:orientation="vertical" >
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/titileimagepadding"
+        android:src="@drawable/pubnub_large" android:contentDescription="@string/pubnub"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -13,16 +20,20 @@
 
         <TextView
             android:id="@+id/welcome"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center_vertical|center_horizontal"
             android:text="@string/welcome"
             android:textSize="@dimen/welcome_size" />
 
         <TextView
             android:id="@+id/hint"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/hint" />
+            android:gravity="center_horizontal"
+            android:text="@string/hint"
+            android:textSize="@dimen/hint_size" />
+
     </LinearLayout>
 
     <LinearLayout
@@ -35,91 +46,107 @@
             android:id="@+id/option1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/option1" />
+            android:text="@string/option1"
+            android:textSize="@dimen/options_size" />
 
         <TextView
             android:id="@+id/option2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/option2" />
+            android:text="@string/option2"
+            android:textSize="@dimen/options_size" />
 
         <TextView
             android:id="@+id/option3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/option3" />
+            android:text="@string/option3" 
+            android:textSize="@dimen/options_size"/>
 
         <TextView
             android:id="@+id/option4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/option4" />
+            android:text="@string/option4" 
+            android:textSize="@dimen/options_size"/>
 
         <TextView
             android:id="@+id/option5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/option5" />
+            android:text="@string/option5" 
+            android:textSize="@dimen/options_size"/>
 
         <TextView
             android:id="@+id/option6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/option6" />
+            android:text="@string/option6" 
+            android:textSize="@dimen/options_size" />
 
         <TextView
             android:id="@+id/option7"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/option7" />
+            android:text="@string/option7" 
+            android:textSize="@dimen/options_size"/>
 
         <TextView
             android:id="@+id/option8"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/option8" />
+            android:text="@string/option8" 
+            android:textSize="@dimen/options_size"/>
 
         <TextView
             android:id="@+id/option9"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/option9" />
+            android:text="@string/option9"
+            android:textSize="@dimen/options_size" 
+            />
 
         <TextView
             android:id="@+id/option10"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/option10" />
+            android:text="@string/option10" 
+            android:textSize="@dimen/options_size"/>
 
         <TextView
             android:id="@+id/option11"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/option11" />
+            android:text="@string/option11" 
+            android:textSize="@dimen/options_size"/>
 
         <TextView
             android:id="@+id/option12"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/option12" />
+            android:text="@string/option12" 
+            android:textSize="@dimen/options_size"/>
 
         <TextView
             android:id="@+id/option13"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/option13" />
+            android:text="@string/option13" 
+            android:textSize="@dimen/options_size"/>
 
         <TextView
             android:id="@+id/option14"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/option14" />
+            android:text="@string/option14" 
+            android:textSize="@dimen/options_size"/>
 
         <TextView
             android:id="@+id/option15"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/option15" />
+            android:text="@string/option15" 
+            android:textSize="@dimen/options_size"/>
     </LinearLayout>
 
 </LinearLayout>

@@ -463,7 +463,7 @@ public class MainActivity extends Activity {
 		alert.show();
 	}
 
-	private void presenceUnsubscribe() {
+	private void unsubscribe() {
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle("Unsubscribe");
@@ -475,14 +475,14 @@ public class MainActivity extends Activity {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						String channel = input.getText().toString();
-						pubnub.unsubscribePresence(channel);
+						pubnub.unsubscribe(channel);
 					}
 				});
 		AlertDialog alert = builder.create();
 		alert.show();
 	}
 
-	private void unsubscribe() {
+	private void presenceUnsubscribe() {
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle("Unsubscribe Presence");
@@ -494,7 +494,7 @@ public class MainActivity extends Activity {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						String channel = input.getText().toString();
-						pubnub.unsubscribe(channel);
+						pubnub.unsubscribePresence(channel);
 					}
 				});
 		AlertDialog alert = builder.create();
