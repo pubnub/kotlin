@@ -1,4 +1,4 @@
-package com.pubnub.examples;
+package com.pubnub.examples.pubnubExample;
 
 import java.util.Hashtable;
 
