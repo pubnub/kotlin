@@ -1,4 +1,4 @@
-package com.pubnub.examples.SubscribeAtBoot;
+package com.pubnub.examples.subscribeAtBoot;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

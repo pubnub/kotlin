@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.pubnub.examples.SubscribeAtBoot"
+          package="com.pubnub.examples.subscribeAtBoot"
           android:permission="android.permission.RECEIVE_BOOT_COMPLETED"
 
           android:versionCode="1"

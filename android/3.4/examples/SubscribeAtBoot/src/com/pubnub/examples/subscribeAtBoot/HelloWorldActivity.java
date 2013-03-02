@@ -1,4 +1,4 @@
-package com.pubnub.examples.SubscribeAtBoot;
+package com.pubnub.examples.subscribeAtBoot;
 
 import android.app.Activity;
 import android.content.Intent;

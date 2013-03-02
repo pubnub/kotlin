@@ -1,10 +1,7 @@
-package com.pubnub.examples.SubscribeAtBoot;
+package com.pubnub.examples.subscribeAtBoot;
 
-import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import com.pubnub.api.Callback;
 import com.pubnub.api.Pubnub;
