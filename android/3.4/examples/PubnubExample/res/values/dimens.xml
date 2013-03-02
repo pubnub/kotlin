@@ -4,6 +4,9 @@
     <dimen name="btn2">150dip</dimen>
     <dimen name="paddingTop">100dip</dimen>
     <dimen name="marginleft">20dip</dimen>
-    <dimen name="optionmarginleft">50dip</dimen>
-    <dimen name="welcome_size">20dip</dimen>
+    <dimen name="optionmarginleft">30dip</dimen>
+    <dimen name="welcome_size">15dip</dimen>
+    <dimen name="hint_size">11dip</dimen>
+    <dimen name="options_size">10dip</dimen>
+    <dimen name="titileimagepadding">20dip</dimen>
 </resources>
