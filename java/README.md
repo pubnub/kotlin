@@ -105,3 +105,4 @@ SUBSCRIBE : hello_world : class java.lang.String : hello, world!
 SUBSCRIBE : hello_world : class java.lang.String : 3ZoxkVMB97lf09jpFU9gtw==
 SUBSCRIBE : hello_world : class java.lang.String : 3ZoxkVMB97lf09jpFU9gtw==
 ```
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/pubnub/java/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
