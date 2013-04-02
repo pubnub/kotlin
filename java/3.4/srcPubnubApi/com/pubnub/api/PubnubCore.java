@@ -815,6 +815,27 @@ abstract class PubnubCore {
         }
         return true;
     }
+    
+    private void leave(final String channel) {
+
+        String[] urlargs = { getOrigin(), "v2/presence/sub_key", this.SUBSCRIBE_KEY, "channel"
+                , PubnubUtil.urlEncode(channel), "leave" };
+        Hashtable params = new Hashtable();
+        params.put("uuid", UUID);
+
+        HttpRequest hreq = new HttpRequest(urlargs, params, new ResponseHandler() {
+
+            public void handleResponse(HttpRequest hreq, String response) {
+
+            }
+
+            public void handleError(HttpRequest hreq, String response) {
+            	
+            }
+
+        });
+        _request(hreq, nonSubscribeManager);
+    }
 
     /**
      * Unsubscribe from channels.
@@ -825,6 +846,7 @@ abstract class PubnubCore {
     public void unsubscribe(String[] channels) {
         for (int i = 0; i < channels.length; i++) {
             subscriptions.removeChannel(channels[i]);
+            leave(channels[i]);
         }
         resubscribe();
     }
