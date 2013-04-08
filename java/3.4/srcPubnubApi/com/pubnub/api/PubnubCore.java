@@ -2,6 +2,7 @@ package com.pubnub.api;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Hashtable;
+import java.util.Random;
 
 import org.bouncycastle.util.encoders.Hex;
 import org.json.JSONArray;
@@ -38,6 +39,7 @@ abstract class PubnubCore {
     private volatile String _saved_timetoken = "0";
 
     private String PRESENCE_SUFFIX = "-pnpres";
+    private Random generator = new Random();
 
     private static Logger log = new Logger(PubnubCore.class);
 
@@ -264,12 +266,10 @@ abstract class PubnubCore {
             subscriptions = new Subscriptions();
 
         if (subscribeManager == null)
-            subscribeManager = new SubscribeManager("Subscribe Manager", 10000,
-                    310000);
+            subscribeManager = new SubscribeManager("Subscribe Manager", 10000,310000);
 
         if (nonSubscribeManager == null)
-            nonSubscribeManager = new NonSubscribeManager(
-                    "Non Subscribe Manager", 10000, 15000);
+            nonSubscribeManager = new NonSubscribeManager("Non Subscribe Manager", 10000, 15000);
 
         subscribeManager.setHeader("V", "3.4");
         subscribeManager.setHeader("Accept-Encoding", "gzip");
@@ -1219,10 +1219,14 @@ abstract class PubnubCore {
             RequestManager simpleConnManager) {
         _request(hreq, simpleConnManager, false);
     }
+    
+    private int getRandom() {
+    	return this.generator.nextInt();
+    }
 
     private void changeOrigin() {
         this.ORIGIN_STR = null;
-        this.HOSTNAME_SUFFIX = (int) Math.random();
+        this.HOSTNAME_SUFFIX = getRandom();
     }
 
     private void resubscribe() {
