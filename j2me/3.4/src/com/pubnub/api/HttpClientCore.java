@@ -9,6 +9,8 @@ import java.util.Hashtable;
 import javax.microedition.io.Connector;
 import javax.microedition.io.HttpConnection;
 
+import com.tinyline.util.GZIPInputStream;
+
 public class HttpClientCore extends HttpClient {
 	private int requestTimeout = 310000;
 	private int connectionTimeout = 5000;
@@ -42,6 +44,8 @@ public class HttpClientCore extends HttpClient {
 			int ch;
 			b.append(prefix);
 			in = hconn.openInputStream();
+			 if ("gzip".equals(hconn.getEncoding())) 
+                 in= new GZIPInputStream(in);
 
 			byte[] data = null;
 			ByteArrayOutputStream tmp = new ByteArrayOutputStream();
@@ -92,6 +96,7 @@ public class HttpClientCore extends HttpClient {
 	public HttpResponse fetch(String url, Hashtable headers) throws IOException {
 		if (url == null)
 			throw new IOException("Invalid Url");
+		System.out.println(url);
 
 		int follow = 5;
 		int rc = 0;
@@ -121,6 +126,7 @@ public class HttpClientCore extends HttpClient {
 	        }
 
 			rc = hc.getResponseCode();
+			
 
 			if (!checkResponse(rc)) {
 				break;
@@ -153,6 +159,7 @@ public class HttpClientCore extends HttpClient {
 		}
 
 		response = readResponse(hc);
+		System.out.println(response);
 		hc.close();
 		return new HttpResponse(rc, response);
 	}
