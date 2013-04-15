@@ -16,7 +16,7 @@ public class PubnubUtil extends PubnubUtilCore {
      */
     public static String urlEncode(String sUrl) {
         try {
-            return encode(sUrl, "UTF-8");
+            return encode(sUrl, "UTF-8").replace("+", "%20");
         } catch (UnsupportedEncodingException e) {
             return null;
         }
