@@ -16,17 +16,17 @@ import com.pubnub.api.Pubnub;
 
 public abstract class PubnubCommand {
 
-	protected Pubnub _pubnub;
-	
-	protected MainScreen screen;
-	
-	private UiApplication uiapp;
-	
-	private MenuItem menuItem;
+    protected Pubnub _pubnub;
 
-	
-	
-	/**
+    protected MainScreen screen;
+
+    private UiApplication uiapp;
+
+    private MenuItem menuItem;
+
+
+
+    /**
      * Presents a dialog to the user with a given message
      *
      * @param message
@@ -39,53 +39,53 @@ public abstract class PubnubCommand {
             }
         });
     }
-	
-	public PubnubCommand(Pubnub pubnub, String command) {
-		this._pubnub = pubnub;
-		this.uiapp = UiApplication.getUiApplication();
-		this.menuItem = new MenuItem(new StringProvider(command), 0x230010, 0);
+
+    public PubnubCommand(Pubnub pubnub, String command) {
+        this._pubnub = pubnub;
+        this.uiapp = UiApplication.getUiApplication();
+        this.menuItem = new MenuItem(new StringProvider(command), 0x230010, 0);
         this.menuItem.setCommand(new Command(new CommandHandler()
         {
             public void execute(ReadOnlyCommandMetadata metadata, Object context)
-            {   
-            	handler();
+            {
+                handler();
             }
         }));
-	}
-	
-	protected void notifyUser(Object message) {
-		try {
-			if (message instanceof JSONObject) {
-				JSONObject obj = (JSONObject) message;
-				alertDialog(obj.toString());
-			} else if (message instanceof String) {
-				String obj = (String) message;
-				alertDialog(obj.toString());
-			} else if (message instanceof JSONArray) {
-				JSONArray obj = (JSONArray) message;
-				alertDialog(obj.toString());
-			}
-		} catch (Exception e) {
+    }
 
-		}
+    protected void notifyUser(Object message) {
+        try {
+            if (message instanceof JSONObject) {
+                JSONObject obj = (JSONObject) message;
+                alertDialog(obj.toString());
+            } else if (message instanceof String) {
+                String obj = (String) message;
+                alertDialog(obj.toString());
+            } else if (message instanceof JSONArray) {
+                JSONArray obj = (JSONArray) message;
+                alertDialog(obj.toString());
+            }
+        } catch (Exception e) {
 
-	}
-	
-	protected abstract void initScreen();
+        }
 
-	public void handler() {
+    }
 
-		if (screen == null)
-			initScreen();
-		uiapp.pushScreen(screen);
+    protected abstract void initScreen();
 
-	}
+    public void handler() {
 
-	public MenuItem getMenuItem() {
-		return menuItem;
-	}
-	
-	protected void close() {
-		this.uiapp.popScreen(screen);
-	}
+        if (screen == null)
+            initScreen();
+        uiapp.pushScreen(screen);
+
+    }
+
+    public MenuItem getMenuItem() {
+        return menuItem;
+    }
+
+    protected void close() {
+        this.uiapp.popScreen(screen);
+    }
 }

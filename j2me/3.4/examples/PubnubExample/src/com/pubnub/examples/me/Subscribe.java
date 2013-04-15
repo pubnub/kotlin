@@ -14,51 +14,51 @@ import com.pubnub.api.Pubnub;
 
 public class Subscribe extends PubnubCommand {
 
-	public Subscribe(Pubnub pubnub, Display display, Form menu) {
-		super(pubnub, display, menu, "Subscribe");
-	}
+    public Subscribe(Pubnub pubnub, Display display, Form menu) {
+        super(pubnub, display, menu, "Subscribe");
+    }
 
-	protected void initForm() {
-		final TextField txtChannel = new TextField("Channel: ", "", 255, TextField.ANY);
-		form = new Form("Subscribe");
-		form.append(txtChannel);
-		form.addCommand(new Command("Subscribe", Command.OK, 2));
-		
-		form.setCommandListener(new CommandListener() {
-			public void commandAction(Command arg0, Displayable arg1) {
-				Hashtable args = new Hashtable();
-				args.put("channel", txtChannel.getString());
+    protected void initForm() {
+        final TextField txtChannel = new TextField("Channel: ", "", 255, TextField.ANY);
+        form = new Form("Subscribe");
+        form.append(txtChannel);
+        form.addCommand(new Command("Subscribe", Command.OK, 2));
 
-				try {
-					_pubnub.subscribe(args, new Callback() {
-						public void connectCallback(String channel) {
-							notifyUser("CONNECT on channel:" + channel);
-						}
+        form.setCommandListener(new CommandListener() {
+            public void commandAction(Command arg0, Displayable arg1) {
+                Hashtable args = new Hashtable();
+                args.put("channel", txtChannel.getString());
 
-						public void disconnectCallback(String channel) {
-							notifyUser("DISCONNECT on channel:" + channel);
-						}
+                try {
+                    _pubnub.subscribe(args, new Callback() {
+                        public void connectCallback(String channel) {
+                            notifyUser("CONNECT on channel:" + channel);
+                        }
 
-						public void reconnectCallback(String channel) {
-							notifyUser("RECONNECT on channel:" + channel);
-						}
+                        public void disconnectCallback(String channel) {
+                            notifyUser("DISCONNECT on channel:" + channel);
+                        }
 
-						public void successCallback(String channel, Object message) {
-							notifyUser("Channel " + channel + " : " + message.toString());
-						}
-						public void errorCallback(String channel, Object message) {
-							notifyUser("Channel " + channel + " : " + message.toString());
-						}
-					});
-					display.setCurrent(menu);
+                        public void reconnectCallback(String channel) {
+                            notifyUser("RECONNECT on channel:" + channel);
+                        }
 
-				} catch (Exception e) {
+                        public void successCallback(String channel, Object message) {
+                            notifyUser("Channel " + channel + " : " + message.toString());
+                        }
+                        public void errorCallback(String channel, Object message) {
+                            notifyUser("Channel " + channel + " : " + message.toString());
+                        }
+                    });
+                    display.setCurrent(menu);
 
-				}
+                } catch (Exception e) {
 
-			}});
+                }
+
+            }});
 
 
-	}
+    }
 
 }

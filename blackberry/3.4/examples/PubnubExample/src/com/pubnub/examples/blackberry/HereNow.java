@@ -11,33 +11,33 @@ import com.pubnub.api.Pubnub;
 
 public class HereNow extends PubnubCommand {
 
-	public HereNow(Pubnub pubnub) {
-		super(pubnub, "Here Now");
-	}
+    public HereNow(Pubnub pubnub) {
+        super(pubnub, "Here Now");
+    }
 
-	protected void initScreen() {
-		final BasicEditField txtChannel = new BasicEditField("Channel : ", "", 256, BasicEditField.FILTER_DEFAULT);
-		screen = new MainScreen();
-		screen.add(txtChannel);
-		
-		ButtonField btn = new ButtonField();
-		btn.setLabel("Get Here Now Data");
-		screen.add(btn);
-		
-		btn.setChangeListener(new FieldChangeListener() {
+    protected void initScreen() {
+        final BasicEditField txtChannel = new BasicEditField("Channel : ", "", 256, BasicEditField.FILTER_DEFAULT);
+        screen = new MainScreen();
+        screen.add(txtChannel);
 
-			public void fieldChanged(Field field, int context) {
-				_pubnub.hereNow(txtChannel.toString(), new Callback() {
-					public void successCallback(String channel, Object message) {
-						notifyUser(message.toString());
-					}
+        ButtonField btn = new ButtonField();
+        btn.setLabel("Get Here Now Data");
+        screen.add(btn);
 
-					public void errorCallback(String channel, Object message) {
-						notifyUser(channel + " : " + message.toString());
-					}
-				});
-				close();
-			}});
-	}
+        btn.setChangeListener(new FieldChangeListener() {
+
+            public void fieldChanged(Field field, int context) {
+                _pubnub.hereNow(txtChannel.toString(), new Callback() {
+                    public void successCallback(String channel, Object message) {
+                        notifyUser(message.toString());
+                    }
+
+                    public void errorCallback(String channel, Object message) {
+                        notifyUser(channel + " : " + message.toString());
+                    }
+                });
+                close();
+            }});
+    }
 
 }

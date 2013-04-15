@@ -11,41 +11,41 @@ import com.pubnub.api.Pubnub;
 
 public class Presence extends PubnubCommand {
 
-	public Presence(Pubnub pubnub) {
-		super(pubnub, "Presence");
-		// TODO Auto-generated constructor stub
-	}
+    public Presence(Pubnub pubnub) {
+        super(pubnub, "Presence");
+        // TODO Auto-generated constructor stub
+    }
 
-	protected void initScreen() {
-		final BasicEditField txtChannel = new BasicEditField("Channel : ", "", 256, BasicEditField.FILTER_DEFAULT);
-		screen = new MainScreen();
-		screen.add(txtChannel);
+    protected void initScreen() {
+        final BasicEditField txtChannel = new BasicEditField("Channel : ", "", 256, BasicEditField.FILTER_DEFAULT);
+        screen = new MainScreen();
+        screen.add(txtChannel);
 
-		ButtonField btn = new ButtonField();
-		btn.setLabel("Subscribe");
-		screen.add(btn);
+        ButtonField btn = new ButtonField();
+        btn.setLabel("Subscribe");
+        screen.add(btn);
 
-		btn.setChangeListener(new FieldChangeListener() {
+        btn.setChangeListener(new FieldChangeListener() {
 
-			public void fieldChanged(Field field, int context) {
+            public void fieldChanged(Field field, int context) {
 
-				try {
-					_pubnub.presence(txtChannel.toString(), new Callback() {
+                try {
+                    _pubnub.presence(txtChannel.toString(), new Callback() {
 
-						public void successCallback(String channel, Object message) {
-							notifyUser("Channel " + channel + " : " + message.toString());
-						}
-						public void errorCallback(String channel, Object message) {
-							notifyUser("Channel " + channel + " : " + message.toString());
-						}
-					});
-					close();
+                        public void successCallback(String channel, Object message) {
+                            notifyUser("Channel " + channel + " : " + message.toString());
+                        }
+                        public void errorCallback(String channel, Object message) {
+                            notifyUser("Channel " + channel + " : " + message.toString());
+                        }
+                    });
+                    close();
 
-				} catch (Exception e) {
+                } catch (Exception e) {
 
-				}
-			}});	
-		}
+                }
+            }});
+        }
 
 
 }

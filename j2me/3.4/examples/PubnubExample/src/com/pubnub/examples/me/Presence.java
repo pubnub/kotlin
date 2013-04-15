@@ -14,36 +14,36 @@ import com.pubnub.api.Pubnub;
 
 public class Presence extends PubnubCommand {
 
-	public Presence(Pubnub pubnub, Display display, Form menu) {
-		super(pubnub, display, menu, "Presence");
-	}
+    public Presence(Pubnub pubnub, Display display, Form menu) {
+        super(pubnub, display, menu, "Presence");
+    }
 
-	protected void initForm() {
-		final TextField txtChannel = new TextField("Channel: ", "", 255, TextField.ANY);
-		form = new Form("Subscribe");
-		form.append(txtChannel);
-		form.addCommand(new Command("Subscribe", Command.OK, 2));
-		
-		form.setCommandListener(new CommandListener() {
-			public void commandAction(Command arg0, Displayable arg1) {
+    protected void initForm() {
+        final TextField txtChannel = new TextField("Channel: ", "", 255, TextField.ANY);
+        form = new Form("Subscribe");
+        form.append(txtChannel);
+        form.addCommand(new Command("Subscribe", Command.OK, 2));
 
-				try {
-					_pubnub.presence(txtChannel.getString(), new Callback() {
-						public void successCallback(String channel, Object message) {
-							notifyUser("Channel " + channel + " : " + message.toString());
-						}
-						public void errorCallback(String channel, Object message) {
-							notifyUser("Channel " + channel + " : " + message.toString());
-						}
-					});
-					display.setCurrent(menu);
+        form.setCommandListener(new CommandListener() {
+            public void commandAction(Command arg0, Displayable arg1) {
 
-				} catch (Exception e) {
+                try {
+                    _pubnub.presence(txtChannel.getString(), new Callback() {
+                        public void successCallback(String channel, Object message) {
+                            notifyUser("Channel " + channel + " : " + message.toString());
+                        }
+                        public void errorCallback(String channel, Object message) {
+                            notifyUser("Channel " + channel + " : " + message.toString());
+                        }
+                    });
+                    display.setCurrent(menu);
 
-				}
+                } catch (Exception e) {
 
-			}});
+                }
 
-	}
+            }});
+
+    }
 
 }

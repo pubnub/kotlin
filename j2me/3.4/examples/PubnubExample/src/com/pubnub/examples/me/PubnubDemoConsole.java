@@ -16,24 +16,24 @@ import org.json.me.JSONObject;
 
 public class PubnubDemoConsole extends MIDlet {
 
-	private boolean midletPaused = false;
+    private boolean midletPaused = false;
 
-	Pubnub _pubnub;
-	Display display;
-	
-	PubnubMenu menu;
+    Pubnub _pubnub;
+    Display display;
 
-	public PubnubDemoConsole() {
-	}
+    PubnubMenu menu;
+
+    public PubnubDemoConsole() {
+    }
 
 
-	
+
 
 
 private void init() {
-	_pubnub = new Pubnub("demo", "demo", "demo", false);
-	display = Display.getDisplay(this);
-	menu = new PubnubMenu(_pubnub, display, this);
+    _pubnub = new Pubnub("demo", "demo", "demo", false);
+    display = Display.getDisplay(this);
+    menu = new PubnubMenu(_pubnub, display, this);
 
 }
 
@@ -41,9 +41,9 @@ private void init() {
  * Performs an action assigned to the Mobile Device - MIDlet Started point.
  */
 public void startMIDlet() {
-	init();
-	switchDisplayable(null, menu.getMenu());
-	_pubnub.setResumeOnReconnect(true);
+    init();
+    switchDisplayable(null, menu.getMenu());
+    _pubnub.setResumeOnReconnect(true);
 }
 
 /**
@@ -53,21 +53,21 @@ public void resumeMIDlet() {
 }
 
 public void switchDisplayable(Alert alert, Displayable nextDisplayable) {
-	Display display = this.display;
-	if (alert == null) {
-		display.setCurrent(nextDisplayable);
-	} else {
-		display.setCurrent(alert, nextDisplayable);
-	}
+    Display display = this.display;
+    if (alert == null) {
+        display.setCurrent(nextDisplayable);
+    } else {
+        display.setCurrent(alert, nextDisplayable);
+    }
 }
 
 /**
  * Exits MIDlet.
  */
 public void exitMIDlet() {
-	switchDisplayable(null, null);
-	destroyApp(true);
-	notifyDestroyed();
+    switchDisplayable(null, null);
+    destroyApp(true);
+    notifyDestroyed();
 }
 
 /**
@@ -76,20 +76,20 @@ public void exitMIDlet() {
  */
 public void startApp() {
 
-	if (midletPaused) {
-		resumeMIDlet();
-	} else {
+    if (midletPaused) {
+        resumeMIDlet();
+    } else {
 
-		startMIDlet();
-	}
-	midletPaused = false;
+        startMIDlet();
+    }
+    midletPaused = false;
 }
 
 /**
  * Called when MIDlet is paused.
  */
 public void pauseApp() {
-	midletPaused = true;
+    midletPaused = true;
 }
 
 /**

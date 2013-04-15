@@ -21,7 +21,7 @@ import org.bouncycastle.util.encoders.Hex;
 
 /**
  * PubNub 3.1 Cryptography
- * 
+ *
  */
 abstract class PubnubCryptoCore {
 
@@ -83,7 +83,7 @@ abstract class PubnubCryptoCore {
 
     /**
      * Decrypt
-     * 
+     *
      * @param String
      *            cipherText
      * @return String
@@ -137,7 +137,7 @@ abstract class PubnubCryptoCore {
 
     /**
      * Get MD5
-     * 
+     *
      * @param string
      * @return
      */
@@ -160,7 +160,7 @@ abstract class PubnubCryptoCore {
 
     /**
      * Get SHA256
-     * 
+     *
      * @param string
      * @return
      */

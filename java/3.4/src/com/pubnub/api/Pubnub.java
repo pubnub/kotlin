@@ -5,15 +5,15 @@ import java.util.UUID;
 /**
  * Pubnub object facilitates querying channels for messages and listening on
  * channels for presence/message events
- * 
+ *
  * @author Pubnub
- * 
+ *
  */
 
 public class Pubnub extends PubnubCore {
     /**
      * Pubnub Constructor
-     * 
+     *
      * @param publish_key
      *            Publish Key
      * @param subscribe_key
@@ -32,7 +32,7 @@ public class Pubnub extends PubnubCore {
 
     /**
      * Pubnub Constructor
-     * 
+     *
      * @param publish_key
      *            Publish key
      * @param subscribe_key
@@ -49,7 +49,7 @@ public class Pubnub extends PubnubCore {
 
     /**
      * Pubnub Constructor
-     * 
+     *
      * @param publish_key
      *            Publish Key
      * @param subscribe_key
@@ -81,7 +81,7 @@ public class Pubnub extends PubnubCore {
 
     /**
      * Sets value for UUID
-     * 
+     *
      * @param uuid
      *            UUID value for Pubnub client
      */

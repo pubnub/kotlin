@@ -11,34 +11,34 @@ import com.pubnub.api.Pubnub;
 
 public class History extends PubnubCommand {
 
-	public History(Pubnub pubnub) {
-		super(pubnub, "History");
-	}
+    public History(Pubnub pubnub) {
+        super(pubnub, "History");
+    }
 
-	protected void initScreen() {
-		final BasicEditField txtChannel = new BasicEditField("Channel : ", "", 256, BasicEditField.FILTER_DEFAULT);
-		final BasicEditField txtCount = new BasicEditField("Count : ", "",20, BasicEditField.FILTER_INTEGER);
-		screen = new MainScreen();
-		screen.add(txtChannel);
-		screen.add(txtCount);
-		
-		ButtonField btn = new ButtonField();
-		btn.setLabel("Get History");
-		screen.add(btn);
-		
-		btn.setChangeListener(new FieldChangeListener() {
+    protected void initScreen() {
+        final BasicEditField txtChannel = new BasicEditField("Channel : ", "", 256, BasicEditField.FILTER_DEFAULT);
+        final BasicEditField txtCount = new BasicEditField("Count : ", "",20, BasicEditField.FILTER_INTEGER);
+        screen = new MainScreen();
+        screen.add(txtChannel);
+        screen.add(txtCount);
 
-			public void fieldChanged(Field field, int context) {
-				_pubnub.history(txtChannel.toString(), Integer.parseInt(txtCount.toString()), new Callback() {
-					public void successCallback(String channel, Object message) {
-						notifyUser(message.toString());
-					}
+        ButtonField btn = new ButtonField();
+        btn.setLabel("Get History");
+        screen.add(btn);
 
-					public void errorCallback(String channel, Object message) {
-						notifyUser(channel + " : " + message.toString());
-					}
-				});
-				close();
-			}});
-	}
+        btn.setChangeListener(new FieldChangeListener() {
+
+            public void fieldChanged(Field field, int context) {
+                _pubnub.history(txtChannel.toString(), Integer.parseInt(txtCount.toString()), new Callback() {
+                    public void successCallback(String channel, Object message) {
+                        notifyUser(message.toString());
+                    }
+
+                    public void errorCallback(String channel, Object message) {
+                        notifyUser(channel + " : " + message.toString());
+                    }
+                });
+                close();
+            }});
+    }
 }

@@ -7,16 +7,16 @@ import com.pubnub.api.Pubnub;
 
 public class ToggleResumeOnReconnect extends PubnubCommand {
 
-	public ToggleResumeOnReconnect(Pubnub pubnub, Display display, Form menu) {
-		super(pubnub, display, menu, "Toggle Resume on Reconnect");
-	}
+    public ToggleResumeOnReconnect(Pubnub pubnub, Display display, Form menu) {
+        super(pubnub, display, menu, "Toggle Resume on Reconnect");
+    }
 
-	public void handler() {
-		_pubnub.setResumeOnReconnect((_pubnub.isResumeOnReconnect())?false:true);
-	}
+    public void handler() {
+        _pubnub.setResumeOnReconnect((_pubnub.isResumeOnReconnect())?false:true);
+    }
 
-	protected void initForm() {
-		
-	}
+    protected void initForm() {
+
+    }
 
 }

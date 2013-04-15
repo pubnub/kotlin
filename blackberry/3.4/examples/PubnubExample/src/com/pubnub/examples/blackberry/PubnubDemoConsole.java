@@ -28,7 +28,7 @@ public class PubnubDemoConsole extends UiApplication
      */
     public PubnubDemoConsole()
     {
-    	Screen sc = new PubnubDemoConsoleScreen();
+        Screen sc = new PubnubDemoConsoleScreen();
         // Push a screen onto the UI stack for rendering.
         pushScreen(sc);
     }

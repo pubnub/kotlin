@@ -7,15 +7,15 @@ import com.pubnub.api.Pubnub;
 
 public class DisconnectAndResubscribe extends PubnubCommand {
 
-	public DisconnectAndResubscribe(Pubnub pubnub, Display display, Form menu) {
-		super(pubnub, display, menu, "Disconnect & Resub");
-	}
+    public DisconnectAndResubscribe(Pubnub pubnub, Display display, Form menu) {
+        super(pubnub, display, menu, "Disconnect & Resub");
+    }
 
-	public void handler() {
-		_pubnub.disconnectAndResubscribe();
-	}
-	protected void initForm() {
+    public void handler() {
+        _pubnub.disconnectAndResubscribe();
+    }
+    protected void initForm() {
 
-	}
+    }
 
 }

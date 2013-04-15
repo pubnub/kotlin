@@ -10,25 +10,25 @@ import com.pubnub.api.Pubnub;
 
 public class Unsubscribe extends PubnubCommand {
 
-	public Unsubscribe(Pubnub pubnub) {
-		super(pubnub, "Unsubscribe");
-	}
+    public Unsubscribe(Pubnub pubnub) {
+        super(pubnub, "Unsubscribe");
+    }
 
-	protected void initScreen() {
-		final BasicEditField txtChannel = new BasicEditField("Channel : ", "", 256, BasicEditField.FILTER_DEFAULT);
-		screen = new MainScreen();
-		screen.add(txtChannel);
-		
-		ButtonField btn = new ButtonField();
-		btn.setLabel("Unsubscribe");
-		screen.add(btn);
-		
-		btn.setChangeListener(new FieldChangeListener() {
+    protected void initScreen() {
+        final BasicEditField txtChannel = new BasicEditField("Channel : ", "", 256, BasicEditField.FILTER_DEFAULT);
+        screen = new MainScreen();
+        screen.add(txtChannel);
 
-			public void fieldChanged(Field field, int context) {
-				_pubnub.unsubscribe(txtChannel.toString());
-				close();
-			}});
-	}
+        ButtonField btn = new ButtonField();
+        btn.setLabel("Unsubscribe");
+        screen.add(btn);
+
+        btn.setChangeListener(new FieldChangeListener() {
+
+            public void fieldChanged(Field field, int context) {
+                _pubnub.unsubscribe(txtChannel.toString());
+                close();
+            }});
+    }
 
 }

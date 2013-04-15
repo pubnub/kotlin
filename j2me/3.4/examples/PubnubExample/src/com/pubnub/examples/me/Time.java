@@ -8,21 +8,21 @@ import com.pubnub.api.Pubnub;
 
 public class Time extends PubnubCommand {
 
-	public Time(Pubnub pubnub, Display display, Form menu) {
-		super(pubnub, display, menu, "Time");
-	}
+    public Time(Pubnub pubnub, Display display, Form menu) {
+        super(pubnub, display, menu, "Time");
+    }
 
-	protected void initForm() {
-	}
-	public void handler() {
-		_pubnub.time( new Callback() {
-			public void successCallback(String channel, Object message) {
-				notifyUser(message.toString());
-			}
+    protected void initForm() {
+    }
+    public void handler() {
+        _pubnub.time( new Callback() {
+            public void successCallback(String channel, Object message) {
+                notifyUser(message.toString());
+            }
 
-			public void errorCallback(String channel, Object message) {
-				notifyUser(message.toString());
-			}
-		});
-	}
+            public void errorCallback(String channel, Object message) {
+                notifyUser(message.toString());
+            }
+        });
+    }
 }

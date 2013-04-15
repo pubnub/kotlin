@@ -13,51 +13,51 @@ import com.pubnub.api.Pubnub;
 
 public class Subscribe extends PubnubCommand {
 
-	public Subscribe(Pubnub pubnub) {
-		super(pubnub, "Subscribe");
-	}
+    public Subscribe(Pubnub pubnub) {
+        super(pubnub, "Subscribe");
+    }
 
-	protected void initScreen() {
-		final BasicEditField txtChannel = new BasicEditField("Channel : ", "", 256, BasicEditField.FILTER_DEFAULT);
-		screen = new MainScreen();
-		screen.add(txtChannel);
-		
-		ButtonField btn = new ButtonField();
-		btn.setLabel("Subscribe");
-		screen.add(btn);
-		
-		btn.setChangeListener(new FieldChangeListener() {
+    protected void initScreen() {
+        final BasicEditField txtChannel = new BasicEditField("Channel : ", "", 256, BasicEditField.FILTER_DEFAULT);
+        screen = new MainScreen();
+        screen.add(txtChannel);
 
-			public void fieldChanged(Field field, int context) {
-				Hashtable args = new Hashtable();
-				args.put("channel", txtChannel.toString());
+        ButtonField btn = new ButtonField();
+        btn.setLabel("Subscribe");
+        screen.add(btn);
 
-				try {
-					_pubnub.subscribe(args, new Callback() {
-						public void connectCallback(String channel) {
-							notifyUser("CONNECT on channel:" + channel);
-						}
+        btn.setChangeListener(new FieldChangeListener() {
 
-						public void disconnectCallback(String channel) {
-							notifyUser("DISCONNECT on channel:" + channel);
-						}
+            public void fieldChanged(Field field, int context) {
+                Hashtable args = new Hashtable();
+                args.put("channel", txtChannel.toString());
 
-						public void reconnectCallback(String channel) {
-							notifyUser("RECONNECT on channel:" + channel);
-						}
+                try {
+                    _pubnub.subscribe(args, new Callback() {
+                        public void connectCallback(String channel) {
+                            notifyUser("CONNECT on channel:" + channel);
+                        }
 
-						public void successCallback(String channel, Object message) {
-							notifyUser("Channel " + channel + " : " + message.toString());
-						}
-						public void errorCallback(String channel, Object message) {
-							notifyUser("Channel " + channel + " : " + message.toString());
-						}
-					});
-					close();
+                        public void disconnectCallback(String channel) {
+                            notifyUser("DISCONNECT on channel:" + channel);
+                        }
 
-				} catch (Exception e) {
+                        public void reconnectCallback(String channel) {
+                            notifyUser("RECONNECT on channel:" + channel);
+                        }
 
-				}
-			}});	}
+                        public void successCallback(String channel, Object message) {
+                            notifyUser("Channel " + channel + " : " + message.toString());
+                        }
+                        public void errorCallback(String channel, Object message) {
+                            notifyUser("Channel " + channel + " : " + message.toString());
+                        }
+                    });
+                    close();
+
+                } catch (Exception e) {
+
+                }
+            }});    }
 
 }

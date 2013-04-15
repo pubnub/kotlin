@@ -32,7 +32,7 @@ abstract class Worker implements Runnable {
     }
 
     Worker(Vector _requestQueue, int connectionTimeout, int requestTimeout, Hashtable headers) {
-    	this._requestQueue = _requestQueue;
+        this._requestQueue = _requestQueue;
         this.httpclient = HttpClient.getClient(connectionTimeout,
                 requestTimeout, headers);
     }
@@ -121,7 +121,7 @@ abstract class RequestManager {
     protected String name;
     protected volatile int connectionTimeout;
     protected volatile int requestTimeout;
-    protected Hashtable headers; 
+    protected Hashtable headers;
 
     protected static Logger log = new Logger(RequestManager.class);
 
@@ -172,7 +172,7 @@ abstract class RequestManager {
     }
 
     public void setHeader(String key, String value) {
-    	this.headers.put(key, value);
+        this.headers.put(key, value);
     }
 
     public abstract void clearRequestQueue();
@@ -208,7 +208,7 @@ abstract class RequestManager {
 }
 
 abstract class AbstractSubscribeManager extends RequestManager {
-	
+
     protected volatile int maxRetries = 5;
     protected volatile int retryInterval = 5000;
 
@@ -218,21 +218,21 @@ abstract class AbstractSubscribeManager extends RequestManager {
     }
 
     public Worker getWorker() {
-        return new SubscribeWorker(_waiting, 
-        		connectionTimeout, requestTimeout, 
-        		maxRetries, retryInterval, headers);
+        return new SubscribeWorker(_waiting,
+                connectionTimeout, requestTimeout,
+                maxRetries, retryInterval, headers);
     }
 
     public void setMaxRetries(int maxRetries) {
-    	this.maxRetries = maxRetries;
+        this.maxRetries = maxRetries;
         for (int i = 0; i < _workers.length; i++) {
             ((SubscribeWorker) _workers[i]).setMaxRetries(maxRetries);
         }
     }
 
     public void setRetryInterval(int retryInterval) {
-    	this.retryInterval = retryInterval;
-    	for (int i = 0; i < _workers.length; i++) {
+        this.retryInterval = retryInterval;
+        for (int i = 0; i < _workers.length; i++) {
             ((SubscribeWorker) _workers[i]).setRetryInterval(retryInterval);
         }
     }

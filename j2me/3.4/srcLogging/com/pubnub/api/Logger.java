@@ -15,18 +15,18 @@ class Logger extends AbstractLogger {
     }
 
     protected void nativeVerbose(String s) {
-    	System.out.println("["+Thread.activeCount()+ "]  Thread ID : " + Thread.currentThread().hashCode() + "  " + s);
+        System.out.println("["+Thread.activeCount()+ "]  Thread ID : " + Thread.currentThread().hashCode() + "  " + s);
     }
 
- 
+
     protected void nativeError(String s) {
-    	System.out.println("["+Thread.activeCount()+ "]  Thread ID : " + Thread.currentThread().hashCode() + "  " + s);
+        System.out.println("["+Thread.activeCount()+ "]  Thread ID : " + Thread.currentThread().hashCode() + "  " + s);
 
     }
 
     protected void nativeInfo(String s) {
-    	System.out.println("["+Thread.activeCount()+ "]  Thread ID : " + Thread.currentThread().hashCode() + "  " + s);
+        System.out.println("["+Thread.activeCount()+ "]  Thread ID : " + Thread.currentThread().hashCode() + "  " + s);
 
     }
-    
+
 }

@@ -11,24 +11,24 @@ import com.pubnub.api.Pubnub;
 
 public class Unsubscribe extends PubnubCommand {
 
-	public Unsubscribe(Pubnub pubnub, Display display, Form menu) {
-		super(pubnub, display, menu, "Unsubscribe");
-	}
+    public Unsubscribe(Pubnub pubnub, Display display, Form menu) {
+        super(pubnub, display, menu, "Unsubscribe");
+    }
 
-	protected void initForm() {
-		final TextField txtChannel = new TextField("Channel: ", "", 255, TextField.ANY);
-		form = new Form("Unsubscribe");
-		form.append(txtChannel);
-		form.addCommand(new Command("Unsubscribe", Command.OK, 2));
+    protected void initForm() {
+        final TextField txtChannel = new TextField("Channel: ", "", 255, TextField.ANY);
+        form = new Form("Unsubscribe");
+        form.append(txtChannel);
+        form.addCommand(new Command("Unsubscribe", Command.OK, 2));
 
-		form.setCommandListener(new CommandListener() {
-			public void commandAction(Command arg0, Displayable arg1) {
-				_pubnub.unsubscribe(txtChannel.getString());
-				display.setCurrent(menu);
+        form.setCommandListener(new CommandListener() {
+            public void commandAction(Command arg0, Displayable arg1) {
+                _pubnub.unsubscribe(txtChannel.getString());
+                display.setCurrent(menu);
 
-			}});
+            }});
 
 
-	}
+    }
 
 }

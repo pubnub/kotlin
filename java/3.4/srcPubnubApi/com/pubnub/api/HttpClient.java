@@ -9,7 +9,7 @@ abstract class HttpClient {
     protected Hashtable _headers;
 
     public static HttpClient getClient(int connectionTimeout, int requestTimeout, Hashtable headers) {
-    	return new HttpClientCore(connectionTimeout, requestTimeout, headers);
+        return new HttpClientCore(connectionTimeout, requestTimeout, headers);
     }
 
     public void reset() {
