@@ -9,6 +9,8 @@ Please reference the demo app in 3.4/jars/PubnubDemoConsole.jar for an example o
 Asyncronously in your applications!
 
 Additional Java docs are available at 3.4/doc/index.html
+###To browse source
+Checkout [3.4/srcPubnubApi](3.4/srcPubnubApi)
 
 ###To setup with your IDE:
 
