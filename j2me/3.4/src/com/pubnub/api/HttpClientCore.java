@@ -127,6 +127,7 @@ public class HttpClientCore extends HttpClient {
 
 			rc = hc.getResponseCode();
 			
+			
 
 			if (!checkResponse(rc)) {
 				break;

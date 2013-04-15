@@ -33,7 +33,7 @@ class SubscribeWorker extends AbstractSubscribeWorker {
                 }
                 break;
                 
-            }*/ catch (Exception e) {
+            } */catch (Exception e) {
                 log.verbose("Retry Attempt : " + ((currentRetryAttempt == maxRetries)?"last":String.valueOf(currentRetryAttempt))
                         + " Exception in Fetch : " + e.toString());
                 currentRetryAttempt++;

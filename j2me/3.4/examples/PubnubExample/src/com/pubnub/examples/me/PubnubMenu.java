@@ -94,7 +94,7 @@ public class PubnubMenu {
 					} else if (command == subscribeCommand) {
 						subscribe.handler();
 					} else if (command == timeCommand) {
-						//time.handler();
+						time.handler();
 					} else if (command == unsubscribeCommand) {
 						unsubscribe.handler();
 					} else if (command == hereNowCommand) {
@@ -104,9 +104,9 @@ public class PubnubMenu {
 					} else if (command == detailedHistoryCommand) {
 						detailedHistory.handler();
 					} else if (command == disconnectAndResubscribeCommand) {
-						//disconnectAndResubscribe();
+						disconnectAndResubscribe.handler();
 					} else if (command == toggleResumeOnReconnectCommand) {
-						//toggleResumeOnReconnect();
+						toggleResumeOnReconnect.handler();
 					}
 
 				}});

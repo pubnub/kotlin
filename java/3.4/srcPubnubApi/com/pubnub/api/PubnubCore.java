@@ -5,9 +5,9 @@ import java.util.Hashtable;
 import java.util.Random;
 
 import org.bouncycastle.util.encoders.Hex;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.json.me.JSONArray;
+import org.json.me.JSONException;
+import org.json.me.JSONObject;
 
 /**
  * Pubnub object facilitates querying channels for messages and listening on
