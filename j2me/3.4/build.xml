@@ -11,6 +11,7 @@
         <pathelement location="libs/midp_2.0.jar"/>
         <pathelement location="libs/bouncycastle.jar"/>
         <pathelement location="libs/jsonme.jar"/>
+        <pathelement location="libs/tinylinegzip.jar"/>
     </path>
 	<target name="setJsonMeJar" >
 		<replace dir="${srcPubnubApi.link}" token="org.json" value="org.json.me">

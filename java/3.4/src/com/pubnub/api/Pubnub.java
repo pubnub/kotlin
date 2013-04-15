@@ -92,4 +92,27 @@ public class Pubnub extends PubnubCore {
     protected String uuid() {
         return java.util.UUID.randomUUID().toString();
     }
+    
+    /**
+     * This method sets timeout value for subscribe/presence. Default value is
+     * 310000 milliseconds i.e. 310 seconds
+     *
+     * @param timeout
+     *            Timeout value in milliseconds for subscribe/presence
+     */
+    public void setSubscribeTimeout(int timeout) {
+    	super.setSubscribeTimeout(timeout);
+    }
+
+    /**
+     * This method set timeout value for non subscribe operations like publish,
+     * history, hereNow. Default value is 15000 milliseconds i.e. 15 seconds.
+     *
+     * @param timeout
+     *            Timeout value in milliseconds for Non subscribe operations
+     *            like publish, history, hereNow
+     */
+    public void setNonSubscribeTimeout(int timeout) {
+    	super.setNonSubscribeTimeout(timeout);
+    }
 }

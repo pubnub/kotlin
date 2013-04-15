@@ -288,7 +288,7 @@ abstract class PubnubCore {
      * @param timeout
      *            Timeout value in milliseconds for subscribe/presence
      */
-    public void setSubscribeTimeout(int timeout) {
+    protected void setSubscribeTimeout(int timeout) {
         subscribeManager.setRequestTimeout(timeout);
         this.disconnectAndResubscribe();
     }
@@ -301,7 +301,7 @@ abstract class PubnubCore {
      *            Timeout value in milliseconds for Non subscribe operations
      *            like publish, history, hereNow
      */
-    public void setNonSubscribeTimeout(int timeout) {
+    protected void setNonSubscribeTimeout(int timeout) {
         nonSubscribeManager.setRequestTimeout(timeout);
     }
 
