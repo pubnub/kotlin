@@ -157,8 +157,6 @@
 	<property name="maven-javadoc-jar" value="${dist}/lib/${artifactId}-${version}-javadoc.jar" />
 	<property name="maven-sources-jar" value="${dist}/lib/${artifactId}-${version}-sources.jar" />
 
-	<property name="maven-snapshots-repository-id" value="sonatype-nexus-snapshots" />
-	<property name="maven-snapshots-repository-url" value="https://oss.sonatype.org/content/repositories/snapshots/" />
 	<property name="maven-staging-repository-id" value="sonatype-nexus-staging" />
 	<property name="maven-staging-repository-url" value="https://oss.sonatype.org/service/local/staging/deploy/maven2/" />
 
@@ -196,16 +194,6 @@
 			<fileset dir="${maven}/src" />
 		</jar>
 	</target>
-
-    <target name="deploy" depends="dist" description="deploy snapshot version to Maven snapshot repository">
-		<artifact:mvn>
-			<arg value="org.apache.maven.plugins:maven-deploy-plugin:2.6:deploy-file" />
-			<arg value="-Durl=${maven-snapshots-repository-url}" />
-			<arg value="-DrepositoryId=${maven-snapshots-repository-id}" />
-			<arg value="-DpomFile=pom.xml" />
-			<arg value="-Dfile=${maven-jar}" />
-		</artifact:mvn>
-    </target>
 
 	<target name="stage" depends="dist" description="deploy release version to Maven staging repository">
 		<artifact:mvn>
