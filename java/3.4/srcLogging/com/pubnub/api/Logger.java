@@ -1,14 +1,15 @@
 package com.pubnub.api;
 
+import org.slf4j.LoggerFactory;
 
 
 class Logger extends AbstractLogger {
     private Class _class;
-    private org.apache.log4j.Logger log;
+    private org.slf4j.Logger log;
 
     public Logger(Class _class) {
         this._class = _class;
-        this.log = org.apache.log4j.Logger.getLogger(this._class);
+        this.log = LoggerFactory.getLogger(this._class);
     }
 
     @Override
