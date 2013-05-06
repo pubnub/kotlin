@@ -8,5 +8,6 @@ class Channel {
     String name;
     boolean connected;
     boolean subscribed;
+    boolean error;
     Callback callback;
 }

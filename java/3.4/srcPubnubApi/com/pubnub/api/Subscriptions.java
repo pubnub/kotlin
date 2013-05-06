@@ -69,6 +69,7 @@ class Subscriptions {
             Enumeration ch = channels.elements();
             while (ch.hasMoreElements()) {
                 Channel _channel = (Channel) ch.nextElement();
+                _channel.error = true;
                 _channel.callback.errorCallback(_channel.name, message);
             }
         }
@@ -102,8 +103,11 @@ class Subscriptions {
             for (int i = 0; i < channels.length; i++) {
                 Channel _channel = (Channel) this.channels.get(channels[i]);
                 _channel.connected = true;
-                _channel.callback.reconnectCallback(_channel.name,
+                if ( _channel.error ) {
+                    _channel.callback.reconnectCallback(_channel.name,
                         new JSONArray().put(1).put("Subscribe reconnected").put(message));
+                    _channel.error = false;
+                }
             }
         }
     }
