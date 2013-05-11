@@ -31,7 +31,7 @@ import pubnub.PubnubCrypto;
 
 /**
  * PubNub 3.1 Real-time Push Cloud API
- * 
+ *
  * @author Stephen Blum
  * @package pubnub
  */
@@ -43,7 +43,7 @@ public class Pubnub {
     private String CIPHER_KEY    = "";
     private boolean SSL          = false;
     private class ChannelStatus {
-        String channel; 
+        String channel;
         boolean connected, first;
     }
     private List<ChannelStatus> subscriptions;
@@ -52,7 +52,7 @@ public class Pubnub {
      * PubNub 3.1 with Cipher Key
      *
      * Prepare PubNub State.
-     * 
+     *
      * @param String Publish Key.
      * @param String Subscribe Key.
      * @param String Secret Key.
@@ -180,7 +180,7 @@ public class Pubnub {
 
         String channel = (String) args.get("channel");
         Object message= args.get("message");
-        
+
         if(message instanceof JSONObject) {
             JSONObject obj=(JSONObject)message;
             if(this.CIPHER_KEY.length() > 0){
@@ -411,7 +411,7 @@ public class Pubnub {
                             if (!it.first) {
                                 it.first = true;
                                 callback.connectCallback(channel);
-                             
+
                                 break;
                             }
                         }
@@ -449,7 +449,7 @@ public class Pubnub {
                             String msgs=messages.getString(0);
                             if(this.CIPHER_KEY.length() > 0) {
                                 PubnubCrypto pc = new PubnubCrypto(this.CIPHER_KEY);
-                                msgs=pc.decrypt(msgs); 
+                                msgs=pc.decrypt(msgs);
                             }
                             if(callback !=null)
                                 callback.subscribeCallback(channel,msgs);
@@ -578,15 +578,15 @@ public class Pubnub {
                 e.printStackTrace();
                 JSONArray jsono = new JSONArray();
                 try {
-                	jsono.put(0);
-                	jsono.put("Failed UTF-8 Encoding URL."); }
+                    jsono.put(0);
+                    jsono.put("Failed UTF-8 Encoding URL."); }
                 catch (Exception jsone) {}
                 return jsono;
             }
         }
 
         try {
-            
+
             PubnubHttpRequest request = new PubnubHttpRequest(url.toString());
             FutureTask<String> task = new FutureTask<String>(request);
             Thread t = new Thread(task);
@@ -597,7 +597,7 @@ public class Pubnub {
                 JSONArray jsono = new JSONArray();
 
                 try {
-                	jsono.put(0);
+                    jsono.put(0);
                     jsono.put("Request failed due to missing Internet connection.");
                 } catch (Exception jsone) {
                 }
@@ -612,8 +612,8 @@ public class Pubnub {
             JSONArray jsono = new JSONArray();
 
             try {
-            	jsono.put(0);
-            	jsono.put("Failed JSONP HTTP Request."); }
+                jsono.put(0);
+                jsono.put("Failed JSONP HTTP Request."); }
             catch (Exception jsone) {}
 
             System.out.println(e.getMessage());
@@ -627,8 +627,8 @@ public class Pubnub {
             JSONArray jsono = new JSONArray();
 
             try {
-            	jsono.put(0);
-            	jsono.put("Failed JSON Parsing."); }
+                jsono.put(0);
+                jsono.put("Failed JSON Parsing."); }
             catch (Exception jsone) {}
 
             System.out.println(e.getMessage());
@@ -690,7 +690,7 @@ public class Pubnub {
     }
 
     private String _encodeToUTF8(String s) throws UnsupportedEncodingException {
-    	String enc = URLEncoder.encode(s, "UTF-8").replace("+", "%20");
-    	return enc;
+        String enc = URLEncoder.encode(s, "UTF-8").replace("+", "%20");
+        return enc;
     }
 }

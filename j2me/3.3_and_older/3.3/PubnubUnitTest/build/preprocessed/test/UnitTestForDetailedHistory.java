@@ -37,7 +37,7 @@ StringItem stringItem;
         midtime = getBigDecimal(pubnub.time());
 
         PublishMessage(0, total_msg / 2, total_msg / 2);
-        
+
          }
 
     private String getBigDecimal(long time) {

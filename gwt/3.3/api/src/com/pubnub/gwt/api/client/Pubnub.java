@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.pubnub.gwt.api.client;
 
@@ -62,23 +62,23 @@ public class Pubnub extends JavaScriptObject {
             "callback" : function(message){
                 cb.@com.pubnub.gwt.api.client.Callback::callback(Ljava/lang/String;Ljava/lang/Object;)(channel, message);
             }
-        });    
+        });
     }-*/;
 
     private final native void _publishStr(String channel, String obj, Callback cb) /*-{
             this.publish({
             "channel" : channel,
-            "message" : obj, 
+            "message" : obj,
             "callback" : function(message){
                 cb.@com.pubnub.gwt.api.client.Callback::callback(Ljava/lang/String;Ljava/lang/Object;)(channel, message);
             }
-        });    
+        });
 
 }-*/;
 
     private final native void _subscribe(String channel, Callback cb)/*-{
         this.subscribe({
-            "channel" : channel, 
+            "channel" : channel,
             "callback" :   function(message){
                 cb.@com.pubnub.gwt.api.client.Callback::callback(Ljava/lang/String;Ljava/lang/Object;)(channel, message);
             },
@@ -115,7 +115,7 @@ public class Pubnub extends JavaScriptObject {
 
     private native final void _here_now(String channel, Callback cb) /*-{
         this.here_now({
-            "channel" : channel, 
+            "channel" : channel,
             "callback" : function(message){
                 cb.@com.pubnub.gwt.api.client.Callback::callback(Ljava/lang/String;Ljava/lang/Object;)(channel, message);
             }
@@ -124,9 +124,9 @@ public class Pubnub extends JavaScriptObject {
 
     private native final void _detailedHistory(String channel, String start, String end, int count, boolean reverse, Callback cb) /*-{
         param = {"channel" : channel};
-        if ( start != "-1") 
+        if ( start != "-1")
             param["start"] = start;
-        if ( end != "-1") 
+        if ( end != "-1")
             param["end"] = end;
 
         if (count > -1)

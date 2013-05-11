@@ -28,14 +28,14 @@ import java.util.Iterator;
 
 
 /**
- * This provides static methods to convert an XML text into a JSONArray or 
- * JSONObject, and to covert a JSONArray or JSONObject into an XML text using 
+ * This provides static methods to convert an XML text into a JSONArray or
+ * JSONObject, and to covert a JSONArray or JSONObject into an XML text using
  * the JsonML transform.
  * @author JSON.org
  * @version 2010-02-12
  */
 public class JSONML {
-        
+
     /**
      * Parse XML values and store them in a JSONArray.
      * @param x       The XMLTokener containing the source string.
@@ -45,7 +45,7 @@ public class JSONML {
      * @return A JSONArray if the value is the outermost tag, otherwise null.
      * @throws JSONException
      */
-    private static Object parse(XMLTokener x, boolean arrayForm, 
+    private static Object parse(XMLTokener x, boolean arrayForm,
             JSONArray ja) throws JSONException {
         String     attribute;
         char       c;
@@ -55,13 +55,13 @@ public class JSONML {
         JSONObject newjo = null;
         Object     token;
         String       tagName = null;
-        
+
 // Test for and skip past these forms:
 //      <!-- ... -->
 //      <![  ... ]]>
 //      <!   ...   >
 //      <?   ...  ?>
-        
+
         while (true) {
             token = x.nextContent();
             if (token == XML.LT) {
@@ -74,7 +74,7 @@ public class JSONML {
                         token = x.nextToken();
                         if (!(token instanceof String)) {
                             throw new JSONException(
-                                    "Expected a closing name instead of '" + 
+                                    "Expected a closing name instead of '" +
                                     token + "'.");
                         }
                         if (x.nextToken() != XML.GT) {
@@ -82,9 +82,9 @@ public class JSONML {
                         }
                         return token;
                     } else if (token == XML.BANG) {
-                
+
 // <!
-            
+
                         c = x.next();
                         if (c == '-') {
                             if (x.next() == '-') {
@@ -126,10 +126,10 @@ public class JSONML {
 
                 } else {
                     if (!(token instanceof String)) {
-                        throw x.syntaxError("Bad tagName '" + token + "'.");                        
+                        throw x.syntaxError("Bad tagName '" + token + "'.");
                     }
                     tagName = (String)token;
-                    newja = new JSONArray();        
+                    newja = new JSONArray();
                     newjo = new JSONObject();
                     if (arrayForm) {
                         newja.put(tagName);
@@ -158,7 +158,7 @@ public class JSONML {
 
                         attribute = (String)token;
                         if (!arrayForm && (attribute == "tagName" || attribute == "childNode")) {
-                            throw x.syntaxError("Reserved attribute.");                            
+                            throw x.syntaxError("Reserved attribute.");
                         }
                         token = x.nextToken();
                         if (token == XML.EQ) {
@@ -199,7 +199,7 @@ public class JSONML {
                         closeTag = (String)parse(x, arrayForm, newja);
                         if (closeTag != null) {
                             if (!closeTag.equals(tagName)) {
-                                throw x.syntaxError("Mismatched '" + tagName + 
+                                throw x.syntaxError("Mismatched '" + tagName +
                                         "' and '" + closeTag + "'");
                             }
                             tagName = null;
@@ -218,7 +218,7 @@ public class JSONML {
                 }
             } else {
                 if (ja != null) {
-                    ja.put(token instanceof String ? 
+                    ja.put(token instanceof String ?
                             JSONObject.stringToValue((String)token) : token);
                 }
             }
@@ -260,13 +260,13 @@ public class JSONML {
     }
 
 
-    
+
     /**
      * Convert a well-formed (but not necessarily valid) XML string into a
      * JSONObject using the JsonML transform. Each XML tag is represented as
-     * a JSONObject with a "tagName" property. If the tag has attributes, then 
-     * the attributes will be in the JSONObject as properties. If the tag 
-     * contains children, the object will have a "childNodes" property which 
+     * a JSONObject with a "tagName" property. If the tag has attributes, then
+     * the attributes will be in the JSONObject as properties. If the tag
+     * contains children, the object will have a "childNodes" property which
      * will be an array of strings and JsonML JSONObjects.
 
      * Comments, prologs, DTDs, and <code>&lt;[ [ ]]></code> are ignored.
@@ -280,9 +280,9 @@ public class JSONML {
     /**
      * Convert a well-formed (but not necessarily valid) XML string into a
      * JSONObject using the JsonML transform. Each XML tag is represented as
-     * a JSONObject with a "tagName" property. If the tag has attributes, then 
-     * the attributes will be in the JSONObject as properties. If the tag 
-     * contains children, the object will have a "childNodes" property which 
+     * a JSONObject with a "tagName" property. If the tag has attributes, then
+     * the attributes will be in the JSONObject as properties. If the tag
+     * contains children, the object will have a "childNodes" property which
      * will be an array of strings and JsonML JSONObjects.
 
      * Comments, prologs, DTDs, and <code>&lt;[ [ ]]></code> are ignored.
@@ -311,22 +311,22 @@ public class JSONML {
         StringBuffer sb = new StringBuffer();
         String       tagName;
         String       v;
-        
-// Emit <tagName        
-        
+
+// Emit <tagName
+
         tagName = ja.getString(0);
         XML.noSpace(tagName);
         tagName = XML.escape(tagName);
         sb.append('<');
         sb.append(tagName);
-        
+
         e = ja.opt(1);
         if (e instanceof JSONObject) {
             i = 2;
             jo = (JSONObject)e;
-            
+
 // Emit the attributes
-            
+
             keys = jo.keys();
             while (keys.hasNext()) {
                 k = keys.next().toString();
@@ -340,13 +340,13 @@ public class JSONML {
                     sb.append(XML.escape(v));
                     sb.append('"');
                 }
-            }  
+            }
         } else {
             i = 1;
         }
-             
+
 //Emit content in body
-            
+
         length = ja.length();
         if (i >= length) {
             sb.append('/');
@@ -373,11 +373,11 @@ public class JSONML {
         }
         return sb.toString();
     }
-    
+
     /**
      * Reverse the JSONML transformation, making an XML text from a JSONObject.
-     * The JSONObject must contain a "tagName" property. If it has children, 
-     * then it must have a "childNodes" property containing an array of objects. 
+     * The JSONObject must contain a "tagName" property. If it has children,
+     * then it must have a "childNodes" property containing an array of objects.
      * The other properties are attributes with string values.
      * @param jo A JSONObject.
      * @return An XML string.
@@ -393,9 +393,9 @@ public class JSONML {
         int          len;
         String       tagName;
         String       v;
-    
+
 //Emit <tagName
-    
+
         tagName = jo.optString("tagName");
         if (tagName == null) {
             return XML.escape(jo.toString());
@@ -404,9 +404,9 @@ public class JSONML {
         tagName = XML.escape(tagName);
         sb.append('<');
         sb.append(tagName);
-    
+
 //Emit the attributes
-    
+
         keys = jo.keys();
         while (keys.hasNext()) {
             k = keys.next().toString();
@@ -422,10 +422,10 @@ public class JSONML {
                     sb.append('"');
                 }
             }
-        }    
-                 
+        }
+
 //Emit content in body
-    
+
         ja = jo.optJSONArray("childNodes");
         if (ja == null) {
             sb.append('/');

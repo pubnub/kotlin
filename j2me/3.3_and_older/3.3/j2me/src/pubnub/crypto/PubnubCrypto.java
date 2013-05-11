@@ -354,7 +354,7 @@ public class PubnubCrypto {
             m.doFinal(mac, 0);
             BigInteger number = new BigInteger(1, mac);
             String hashtext = number.toString(16);
-            signature = hashtext;	
+            signature = hashtext;
         } catch (java.io.UnsupportedEncodingException e) {
             e.printStackTrace();
         } catch (Exception e) {

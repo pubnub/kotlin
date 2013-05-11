@@ -23,14 +23,14 @@ public class ItemDetailFragment extends Fragment {
     TextView text;
     public ItemDetailFragment() {
     }
-    
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments().containsKey(ARG_ITEM_ID)) {
             mItem = MenuItemContent.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
-           
+
         }
     }
 
@@ -45,56 +45,56 @@ public class ItemDetailFragment extends Fragment {
         }
         return rootView;
     }
-    
+
     Handler handler= new Handler()
     {
-    	@Override
-    	public void handleMessage(Message msg) {
-    		// TODO Auto-generated method stub
-    		super.handleMessage(msg);
-    		String message=msg.getData().getString("MESSAGE");
-    		text.setText(text.getText()+"\n"+message);
-    	}
-    	
+        @Override
+        public void handleMessage(Message msg) {
+            // TODO Auto-generated method stub
+            super.handleMessage(msg);
+            String message=msg.getData().getString("MESSAGE");
+            text.setText(text.getText()+"\n"+message);
+        }
+
     };
     public void onDestroy() {
-    	
-    	if(exicute !=null)
-    	{
-    		exicute.cancel(true);
-    	}
-    	super.onDestroy();
+
+        if(exicute !=null)
+        {
+            exicute.cancel(true);
+        }
+        super.onDestroy();
     };
-    
+
     class UnitTestExicute extends AsyncTask<String, Void, Boolean> {
 
         @Override
         protected Boolean doInBackground(String... params) {
-           
-        	int id=Integer.parseInt(params[0]);
-        	
-        	switch (id) {
-			case 1:
-				CL_155 ut= new  CL_155();
-	        	ut.RunUnitTest(handler);
-				break;
-			case 2:
-				CL_165 cl165= new CL_165();
-				cl165.RunUnitTest(handler);
-				break;
-			case 3:
-				CL_216 cl216= new CL_216();
-				cl216.RunUnitTest(handler);
-				break;
-			case 4:
-				CL_259 cl259= new CL_259();
-				cl259.RunUnitTest(handler);
-				break;
-			default:
-				break;
-			}
-        
-              
+
+            int id=Integer.parseInt(params[0]);
+
+            switch (id) {
+            case 1:
+                CL_155 ut= new  CL_155();
+                ut.RunUnitTest(handler);
+                break;
+            case 2:
+                CL_165 cl165= new CL_165();
+                cl165.RunUnitTest(handler);
+                break;
+            case 3:
+                CL_216 cl216= new CL_216();
+                cl216.RunUnitTest(handler);
+                break;
+            case 4:
+                CL_259 cl259= new CL_259();
+                cl259.RunUnitTest(handler);
+                break;
+            default:
+                break;
+            }
+
+
             return Boolean.TRUE;
         }
 
@@ -105,5 +105,5 @@ public class ItemDetailFragment extends Fragment {
         protected void onPostExecute(Boolean result) {
         }
     }
-    
+
 }

@@ -25,7 +25,7 @@ public class ItemDetailActivity extends FragmentActivity {
                     .add(R.id.item_detail_container, fragment)
                     .commit();
         }
-        
+
         setTitle(""+MenuItemContent.ITEM_MAP.get(getIntent().getStringExtra(ItemDetailFragment.ARG_ITEM_ID)));
     }
 

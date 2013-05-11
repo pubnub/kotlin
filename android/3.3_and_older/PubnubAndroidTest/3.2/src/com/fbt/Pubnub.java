@@ -33,7 +33,7 @@ import pubnub.PubnubCrypto;
 
 /**
  * PubNub 3.1 Real-time Push Cloud API
- * 
+ *
  * @author Stephen Blum
  * @package pubnub
  */
@@ -46,7 +46,7 @@ public class Pubnub {
     private boolean SSL          = false;
     private String UUIDs          = null;
     private class ChannelStatus {
-        String channel; 
+        String channel;
         boolean connected, first;
     }
     private List<ChannelStatus> subscriptions;
@@ -55,7 +55,7 @@ public class Pubnub {
      * PubNub 3.2 with Presence
      *
      * Prepare PubNub State.
-     * 
+     *
      * @param String Publish Key.
      * @param String Subscribe Key.
      * @param String Secret Key.
@@ -184,7 +184,7 @@ public class Pubnub {
 
         String channel = (String) args.get("channel");
         Object message= args.get("message");
-        
+
         if(message instanceof JSONObject) {
             JSONObject obj=(JSONObject)message;
             if(this.CIPHER_KEY.length() > 0){
@@ -415,7 +415,7 @@ public class Pubnub {
                             if (!it.first) {
                                 it.first = true;
                                 callback.connectCallback(channel);
-                             
+
                                 break;
                             }
                         }
@@ -453,7 +453,7 @@ public class Pubnub {
                             String msgs=messages.getString(0);
                             if(this.CIPHER_KEY.length() > 0) {
                                 PubnubCrypto pc = new PubnubCrypto(this.CIPHER_KEY);
-                                msgs=pc.decrypt(msgs); 
+                                msgs=pc.decrypt(msgs);
                             }
                             if(callback !=null)
                                 callback.subscribeCallback(channel,msgs);
@@ -515,9 +515,9 @@ public class Pubnub {
 
     /**
      * Here Now
-     * 
+     *
      * Load current occupancy from a channel
-     * 
+     *
      * @param HashMap
      *            <String, Object> args with channel.
      */
@@ -548,7 +548,7 @@ public class Pubnub {
         return _request(url);
 
     }
-    
+
     /**
      * Time
      *
@@ -628,7 +628,7 @@ public class Pubnub {
             url.append("/").append("?uuid=" + UUIDs);
         }
         try {
-            
+
             PubnubHttpRequest request = new PubnubHttpRequest(url.toString());
             FutureTask<String> task = new FutureTask<String>(request);
             Thread t = new Thread(task);

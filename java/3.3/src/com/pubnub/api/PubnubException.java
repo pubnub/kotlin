@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.pubnub.api;
 
@@ -11,7 +11,7 @@ package com.pubnub.api;
 public class PubnubException extends Exception {
     private static final long serialVersionUID = 1L;
     private String errormsg = "Pubnub Exception Occurred";
-    
+
     /**
      * Constructor for PubnubException Class with error message as argument
      * @param s Error message
@@ -19,7 +19,7 @@ public class PubnubException extends Exception {
     public PubnubException(String s){
         this.errormsg = s;
     }
-    
+
     /** Read the exception error message
      *  @return String
      */

@@ -5,7 +5,7 @@ public interface Callback {
     public abstract boolean subscribeCallback(String channel, Object message);
 
     public abstract boolean presenceCallback(String channel, Object message);
-    
+
     public abstract void errorCallback(String channel, Object message);
 
     public abstract void connectCallback(String channel);

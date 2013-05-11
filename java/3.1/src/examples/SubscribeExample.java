@@ -51,7 +51,7 @@ public class SubscribeExample {
             @Override
             public void errorCallback(String channel, Object message) {
                 System.err.println("Channel:" + channel + "-" + message.toString());
-                
+
             }
 
             @Override

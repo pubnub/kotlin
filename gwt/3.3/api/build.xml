@@ -13,11 +13,11 @@
     </path>
     <target name="clean">
         <delete file="PubnubGwt.jar">
-			<fileset dir="src" includes="**/*.class"/>
+            <fileset dir="src" includes="**/*.class"/>
         </delete>
     </target>
     <target depends="build" name="build-jar">
-    	<jar basedir="src" destfile="PubnubGwt.jar" filesonly="true"/>
+        <jar basedir="src" destfile="PubnubGwt.jar" filesonly="true"/>
     </target>
     <target name="build">
         <echo message="${ant.project.name}: ${ant.file}"/>

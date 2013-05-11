@@ -73,7 +73,7 @@ import java.util.Map;
  *     <code>false</code>, or <code>null</code>.</li>
  * <li>Values can be separated by <code>;</code> <small>(semicolon)</small> as
  *     well as by <code>,</code> <small>(comma)</small>.</li>
- * <li>Numbers may have the 
+ * <li>Numbers may have the
  *     <code>0x-</code> <small>(hex)</small> prefix.</li>
  * </ul>
 
@@ -168,12 +168,12 @@ public class JSONArray {
             Iterator iter = collection.iterator();
             while (iter.hasNext()) {
                 Object o = iter.next();
-                this.myArrayList.add(JSONObject.wrap(o));  
+                this.myArrayList.add(JSONObject.wrap(o));
             }
         }
     }
 
-    
+
     /**
      * Construct a JSONArray from an array
      * @throws JSONException If not an array.
@@ -191,7 +191,7 @@ public class JSONArray {
         }
     }
 
-     
+
     /**
      * Get the object value associated with an index.
      * @param index
@@ -764,8 +764,8 @@ public class JSONArray {
         }
         return this;
     }
-    
-    
+
+
     /**
      * Remove an index and close the hole.
      * @param index The index of the element to be removed.

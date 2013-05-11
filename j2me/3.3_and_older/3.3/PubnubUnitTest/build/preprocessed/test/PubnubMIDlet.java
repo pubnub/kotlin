@@ -11,7 +11,7 @@ import javax.microedition.lcdui.*;
  * @author tanaji
  */
 public class PubnubMIDlet extends MIDlet implements CommandListener {
-    
+
     private boolean midletPaused = false;
 //<editor-fold defaultstate="collapsed" desc=" Generated Fields ">//GEN-BEGIN:|fields|0|
     private Command exitCommand;

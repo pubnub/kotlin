@@ -59,13 +59,13 @@ public class UnsubscribeExample {
             @Override
             public void connectCallback(String channel) {
                 System.out.println("Connected to channel :" + channel);
-                
+
                 String msg = "Hello World!!!";
                 HashMap<String, Object> args = new HashMap<String, Object>(2);
                 args.put("channel", channel);
                 args.put("message", msg);
                 pubnub.publish(args);
-                
+
             }
 
             @Override

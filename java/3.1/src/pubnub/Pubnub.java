@@ -26,7 +26,7 @@ public class Pubnub {
     private String CIPHER_KEY    = "";
     private boolean SSL          = false;
     private class ChannelStatus {
-        String channel; 
+        String channel;
         boolean connected, first;
     }
     private List<ChannelStatus> subscriptions;
@@ -35,7 +35,7 @@ public class Pubnub {
      * PubNub 3.1 with Cipher Key
      *
      * Prepare PubNub State.
-     * 
+     *
      * @param String Publish Key.
      * @param String Subscribe Key.
      * @param String Secret Key.
@@ -164,7 +164,7 @@ public class Pubnub {
 
         String channel = (String) args.get("channel");
         Object message= args.get("message");
-        
+
         if(message instanceof JSONObject) {
             JSONObject obj=(JSONObject)message;
             if(this.CIPHER_KEY.length() > 0) {
@@ -189,10 +189,10 @@ public class Pubnub {
                 message=obj;
             }
             message="\""+message+"\"";
-            
+
         }else if(message instanceof JSONArray) {
             JSONArray obj=(JSONArray)message;
-            
+
             if(this.CIPHER_KEY.length() > 0) {
                 // Encrypt Message
                 PubnubCrypto pc = new PubnubCrypto(this.CIPHER_KEY);
@@ -232,7 +232,7 @@ public class Pubnub {
         url.add(channel);
         url.add("0");
         url.add(message.toString());
-    
+
         return _request(url);
     }
 
@@ -368,14 +368,14 @@ public class Pubnub {
                                  callback.errorCallback(channel,"Lost Network Connection");
                              }
                         }
-                       
+
                     }
                     // Ensure Connected (Call Time Function)
                     boolean is_reconnected = false;
                     while(true) {
                         double time_token = this.time();
                         if (time_token == 0.0) {
-                          
+
                             Thread.sleep(5000);
                         } else {
                               // Reconnect Callback
@@ -395,7 +395,7 @@ public class Pubnub {
                             if (!it.first) {
                                 it.first = true;
                                 callback.connectCallback(channel);
-                             
+
                                 break;
                             }
                         }
@@ -433,7 +433,7 @@ public class Pubnub {
                             String msgs=messages.getString(0);
                             if(this.CIPHER_KEY.length() > 0) {
                                 PubnubCrypto pc = new PubnubCrypto(this.CIPHER_KEY);
-                                msgs=pc.decrypt(msgs); 
+                                msgs=pc.decrypt(msgs);
                             }
                             if(callback !=null)
                                 callback.subscribeCallback(channel,msgs);
@@ -485,7 +485,7 @@ public class Pubnub {
         url.add(Integer.toString(limit));
 
         JSONArray response = _request(url);
-        
+
         if (this.CIPHER_KEY.length() > 0) {
             // Decrpyt Messages
             PubnubCrypto pc = new PubnubCrypto(this.CIPHER_KEY);
@@ -509,7 +509,7 @@ public class Pubnub {
         url.add("0");
 
         JSONArray response = _request(url);
-        
+
         return response.optDouble(0);
     }
 
@@ -554,7 +554,7 @@ public class Pubnub {
         StringBuilder url     = new StringBuilder();
         Iterator<String> url_iterator = url_components.iterator();
         String request_for = url_components.get(0);
-        
+
         url.append(this.ORIGIN);
 
         // Generate URL with UTF-8 Encoding
@@ -571,7 +571,7 @@ public class Pubnub {
                 return jsono;
             }
         }
-        
+
         AsyncHttpClient ahc = null;
         try {
             // Prepare Asynchronous HTTP Request
@@ -598,7 +598,7 @@ public class Pubnub {
 
                     if (ce != null && ce.equalsIgnoreCase("gzip")) {
                         // Decoding using 'gzip'
-                        
+
                         try {
                             resulting_is = new GZIPInputStream(is);
                         }catch (IOException e) {
@@ -629,7 +629,7 @@ public class Pubnub {
 
         } catch (Exception e) {
 
-            // Response If Failed JSONP HTTP Request. 
+            // Response If Failed JSONP HTTP Request.
             JSONArray jsono = new JSONArray();
             try {
                 if(request_for != null) {
@@ -643,7 +643,7 @@ public class Pubnub {
                     } else if(request_for.equals("subscribe")) {
                         jsono.put("0");
                         jsono.put("0");
-                    } 
+                    }
                 }
             }
             catch (Exception jsone) {}
@@ -666,7 +666,7 @@ public class Pubnub {
             return jsono;
         }
     }
-    
+
     private String _encodeURIcomponent(String s) {
         StringBuilder o = new StringBuilder();
         for (Character ch : s.toCharArray()) {

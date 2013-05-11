@@ -290,8 +290,8 @@ public class XMLTokener extends JSONTokener {
             }
         }
     }
-    
-    
+
+
     /**
      * Skip characters until past the requested string.
      * If it is not found, we are left at the end of the source with a result of false.
@@ -306,12 +306,12 @@ public class XMLTokener extends JSONTokener {
         int offset = 0;
         int n = to.length();
         char[] circle = new char[n];
-        
+
         /*
          * First fill the circle buffer with as many characters as are in the
          * to string. If we reach an early end, bail.
          */
-        
+
         for (i = 0; i < n; i += 1) {
             c = next();
             if (c == 0) {
@@ -326,7 +326,7 @@ public class XMLTokener extends JSONTokener {
             j = offset;
             b = true;
             /*
-             * Compare the circle buffer with the to string. 
+             * Compare the circle buffer with the to string.
              */
             for (i = 0; i < n; i += 1) {
                 if (circle[j] != to.charAt(i)) {
@@ -352,7 +352,7 @@ public class XMLTokener extends JSONTokener {
                 return false;
             }
             /*
-             * Shove the character in the circle buffer and advance the 
+             * Shove the character in the circle buffer and advance the
              * circle offset. The offset is mod n.
              */
             circle[offset] = c;

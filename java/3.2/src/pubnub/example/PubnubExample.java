@@ -14,36 +14,36 @@ public class PubnubExample {
      * @param params
      */
     public static void main(String[] params) {
-        
+
         System.out.println("\nRunning publish()");
         PublishExample();
-        
+
         System.out.println("\nRunning history()");
         HistoryExample();
-        
+
         System.out.println("\nRunning timestamp()");
         TimestampExample();
-        
+
         System.out.println("\nRunning here_now()");
         HereNowExample();
-                
+
         System.out.println("\nRunning presence()");
-        PresenceExample();    
-        
+        PresenceExample();
+
         System.out.println("\nRunning subscribe()");
         SubscribeExample();
 
     }
-    
+
     private static void PublishExample() {
         String publish_key = "demo";
         String subscribe_key = "demo";
         String secret_key = "demo";
         String cipher_key = ""; // (Cipher key is optional)
         String channel = "hello_world";
-        
+
         int publish_message_count = 1;
-        
+
         Pubnub pubnub = new Pubnub(
                 publish_key,
                 subscribe_key,
@@ -55,7 +55,7 @@ public class PubnubExample {
         while (true) {
             if (count >= publish_message_count) break;
             count ++;
-            
+
             // Create JSON Message
             JSONObject message = new JSONObject();
             try {
@@ -67,7 +67,7 @@ public class PubnubExample {
                  */
             } catch (org.json.JSONException jsonError) {
             }
-            
+
             // Publish
             HashMap<String, Object> args = new HashMap<String, Object>(2);
             args.put("channel", channel);
@@ -75,13 +75,13 @@ public class PubnubExample {
             JSONArray response = null;
             response = pubnub.publish(args);
             System.out.println(response);
-            
+
             args = new HashMap<String, Object>(2);
             args.put("channel", channel);
             args.put("message", "Hello World");
             response = pubnub.publish(args);
             System.out.println(response);
-            
+
             JSONArray array = new JSONArray();
             array.put("Sunday");
             array.put("Monday");
@@ -90,14 +90,14 @@ public class PubnubExample {
             array.put("Thursday");
             array.put("Friday");
             array.put("Saturday");
-            
+
             args = new HashMap<String, Object>(2);
             args.put("channel", channel);
             args.put("message", array);
-            
+
             response = pubnub.publish(args);
             System.out.println(response);
-            
+
             // Pause
             try {
                 Thread.currentThread().sleep(100);
@@ -105,7 +105,7 @@ public class PubnubExample {
             }
         }
     }
-    
+
     private static void HistoryExample() {
         String publish_key = "demo";
         String subscribe_key = "demo";
@@ -113,7 +113,7 @@ public class PubnubExample {
         String cipher_key = ""; // (Cipher key is optional)
         String channel = "hello_world";
         int limit = 4;
-        
+
         Pubnub pubnub = new Pubnub(
                 publish_key,
                 subscribe_key,
@@ -121,17 +121,17 @@ public class PubnubExample {
                 cipher_key,
                 true
         );
-        
+
         HashMap<String, Object> args = new HashMap<String, Object>(2);
         args.put("channel", channel);
         args.put("limit", limit);
-        
+
         // Get History
         JSONArray response = pubnub.history(args);
-        
+
         // Print Response from PubNub JSONP REST Service
         System.out.println(response);
-        
+
         try {
             if (response != null) {
                 for (int i = 0; i < response.length(); i ++) {
@@ -149,13 +149,13 @@ public class PubnubExample {
             e.printStackTrace();
         }
     }
-    
+
     private static void TimestampExample() {
         String publish_key = "demo";
         String subscribe_key = "demo";
         String secret_key = "demo";
         String cipher_key = ""; // (Cipher key is optional)
-        
+
         Pubnub pubnub = new Pubnub(
                 publish_key,
                 subscribe_key,
@@ -163,18 +163,18 @@ public class PubnubExample {
                 cipher_key,
                 true
         );
-        
+
         // Print Server Time
         System.out.println("Time: " + Double.toString(pubnub.time()));
     }
-    
+
     private static void SubscribeExample() {
         String publish_key = "demo";
         String subscribe_key = "demo";
         String secret_key = "demo";
         String cipher_key = ""; // (Cipher key is optional)
         String channel = "hello_world";
-        
+
         Pubnub pubnub = new Pubnub(
                 publish_key,
                 subscribe_key,
@@ -182,7 +182,7 @@ public class PubnubExample {
                 cipher_key,
                 true
         );
-        
+
         // Callback Interface when a Message is Received
         class Receiver implements Callback {
 
@@ -216,7 +216,7 @@ public class PubnubExample {
             @Override
             public void errorCallback(String channel, Object message) {
                 System.err.println("Channel:" + channel + "-" + message.toString());
-                
+
             }
 
             @Override
@@ -248,14 +248,14 @@ public class PubnubExample {
         // Listen for Messages (Subscribe)
         pubnub.subscribe(args);
     }
-    
+
     private static void PresenceExample() {
         String publish_key = "demo";
         String subscribe_key = "demo";
         String secret_key = "demo";
         String cipher_key = ""; // (Cipher key is optional)
         String channel = "hello_world";
-        
+
         Pubnub pubnub = new Pubnub(
                 publish_key,
                 subscribe_key,
@@ -263,7 +263,7 @@ public class PubnubExample {
                 cipher_key,
                 true
         );
-        
+
         // Callback Interface when a Message is Received
         class Receiver implements Callback {
 
@@ -297,7 +297,7 @@ public class PubnubExample {
             @Override
             public void errorCallback(String channel, Object message) {
                 System.err.println("Channel:" + channel + "-" + message.toString());
-                
+
             }
 
             @Override
@@ -329,14 +329,14 @@ public class PubnubExample {
         // Listen for Messages (Presence)
         pubnub.presence(args);
     }
-    
+
     private static void HereNowExample() {
         String publish_key = "demo";
         String subscribe_key = "demo";
         String secret_key = "demo";
         String cipher_key = ""; // (Cipher key is optional)
         String channel = "hello_world";
-        
+
         Pubnub pubnub = new Pubnub(
                 publish_key,
                 subscribe_key,
@@ -344,13 +344,13 @@ public class PubnubExample {
                 cipher_key,
                 true
         );
-        
+
         // Get Here Now
         JSONArray response = pubnub.here_now(channel);
-        
+
         // Print Response from PubNub JSONP REST Service
         System.out.println(response);
-        
+
         try {
             if (response != null) {
                 for (int i = 0; i < response.length(); i ++) {

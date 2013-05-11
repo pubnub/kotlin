@@ -25,7 +25,7 @@ import android.widget.Toast;
 import android.content.Context;
 /**
  * PubnubTestActivity
- * 
+ *
  */
 public class PubnubTestActivity extends Activity {
 
@@ -319,7 +319,7 @@ public class PubnubTestActivity extends Activity {
         System.out.println(response);
     }
 
-    
+
     public void  DetailedHistoryClick(View v)
     {
          HashMap<String, Object> args = new HashMap<String, Object>(2);
@@ -329,7 +329,7 @@ public class PubnubTestActivity extends Activity {
          r.sendEmptyMessage(0);
          Log.e("Detailed History", myMessage);
     }
-    
+
     public void UnitTestDetailedHistoryClick(View v)
     {
         UnitTestForDetailedHistory unitTest= new UnitTestForDetailedHistory();
@@ -465,7 +465,7 @@ public class PubnubTestActivity extends Activity {
         protected Boolean doInBackground(String... params) {
             try {
                 // Android: (Subscribe)
-                
+
                 class Receiver implements Callback {
                     public boolean subscribeCallback(String channel,
                             Object message) {

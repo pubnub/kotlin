@@ -32,7 +32,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 /**
  * PubNub 3.2 Real-time Push Cloud API
- * 
+ *
  * @author Stephen Blum 3.1
  * @author Leonardo Redmond 3.2 Revision
  * @package pubnub.api
@@ -45,7 +45,7 @@ public class Pubnub {
     private String CIPHER_KEY = "";
     private boolean SSL = false;
     private String sessionUUID = "";
-    
+
     private class ChannelStatus {
         String channel;
         boolean connected, first;
@@ -55,9 +55,9 @@ public class Pubnub {
 
     /**
      * PubNub 3.1 with Cipher Key
-     * 
+     *
      * Prepare PubNub State.
-     * 
+     *
      * @param String
      *            Publish Key.
      * @param String
@@ -75,9 +75,9 @@ public class Pubnub {
 
     /**
      * PubNub 3.0
-     * 
+     *
      * Prepare PubNub Class State.
-     * 
+     *
      * @param String
      *            Publish Key.
      * @param String
@@ -93,9 +93,9 @@ public class Pubnub {
 
     /**
      * PubNub 2.0 Compatibility
-     * 
+     *
      * Prepare PubNub Class State.
-     * 
+     *
      * @param String
      *            Publish Key.
      * @param String
@@ -107,9 +107,9 @@ public class Pubnub {
 
     /**
      * PubNub 3.0 without SSL
-     * 
+     *
      * Prepare PubNub Class State.
-     * 
+     *
      * @param String
      *            Publish Key.
      * @param String
@@ -123,9 +123,9 @@ public class Pubnub {
 
     /**
      * Init
-     * 
+     *
      * Prepare PubNub Class State.
-     * 
+     *
      * @param String
      *            Publish Key.
      * @param String
@@ -156,9 +156,9 @@ public class Pubnub {
 
     /**
      * Publish
-     * 
+     *
      * Send a message to a channel.
-     * 
+     *
      * @param String
      *            channel name.
      * @param JSONObject
@@ -174,9 +174,9 @@ public class Pubnub {
 
     /**
      * Publish
-     * 
+     *
      * Send a message to a channel.
-     * 
+     *
      * @param HashMap
      *            <String, Object> containing channel name, message.
      * @return JSONArray.
@@ -254,9 +254,9 @@ public class Pubnub {
 
     /**
      * Subscribe
-     * 
+     *
      * Listen for a message on a channel.
-     * 
+     *
      * @param String
      *            channel name.
      * @param Callback
@@ -271,9 +271,9 @@ public class Pubnub {
 
     /**
      * Subscribe
-     * 
+     *
      * Listen for a message on a channel.
-     * 
+     *
      * @param HashMap
      *            <String, Object> containing channel name, function callback.
      */
@@ -284,9 +284,9 @@ public class Pubnub {
 
     /**
      * Subscribe - Private Interface
-     * 
+     *
      * Patch provided by petereddy on GitHub
-     * 
+     *
      * @param HashMap
      *            <String, Object> containing channel name, function callback,
      *            timetoken.
@@ -475,9 +475,9 @@ public class Pubnub {
 
     /**
      * Presence
-     * 
+     *
      * Listen for a message on a channel & add presence info.
-     * 
+     *
      * @param String
      *            channel name.
      * @param Callback
@@ -492,9 +492,9 @@ public class Pubnub {
 
     /**
      * Presence
-     * 
+     *
      * Listen for a message on a channel & add presence info.
-     * 
+     *
      * @param HashMap
      *            <String, Object> containing channel name, function callback.
      */
@@ -505,9 +505,9 @@ public class Pubnub {
 
     /**
      * Presence - Private Interface
-     * 
+     *
      * Implemented by Leonardo Redmond on GitHub
-     * 
+     *
      * @param HashMap
      *            <String, Object> containing channel name, function callback,
      *            timetoken.
@@ -696,9 +696,9 @@ public class Pubnub {
 
     /**
      * Here Now
-     * 
+     *
      * Load presence information from a channel
-     * 
+     *
      * @param String channel name.
      * @return JSONObject of here_now
      */
@@ -711,7 +711,7 @@ public class Pubnub {
         url.add(this.SUBSCRIBE_KEY);
         url.add("channel");
         url.add(channel);
-        
+
         JSONArray response = _request(url);
 
         if (this.CIPHER_KEY.length() > 0) {
@@ -724,9 +724,9 @@ public class Pubnub {
     }
     /**
      * History
-     * 
+     *
      * Load history from a channel.
-     * 
+     *
      * @param String
      *            channel name.
      * @param int limit history count response.
@@ -741,9 +741,9 @@ public class Pubnub {
 
     /**
      * History
-     * 
+     *
      * Load history from a channel.
-     * 
+     *
      * @param HashMap
      *            <String, Object> containing channel name, limit history count
      *            response.
@@ -775,9 +775,9 @@ public class Pubnub {
 
     /**
      * Time
-     * 
+     *
      * Timestamp from PubNub Cloud.
-     * 
+     *
      * @return double timestamp.
      */
     public double time() {
@@ -793,9 +793,9 @@ public class Pubnub {
 
     /**
      * UUID
-     * 
+     *
      * 32 digit UUID generation at client side.
-     * 
+     *
      * @return String uuid.
      */
     public static String uuid() {
@@ -805,9 +805,9 @@ public class Pubnub {
 
     /**
      * Unsubscribe
-     * 
+     *
      * Unsubscribe/Disconnect to channel.
-     * 
+     *
      * @param HashMap
      *            <String, Object> containing channel name.
      */
@@ -824,7 +824,7 @@ public class Pubnub {
 
     /**
      * Request URL
-     * 
+     *
      * @param List
      *            <String> request of url directories.
      * @return JSONArray from JSON response.
@@ -854,7 +854,7 @@ public class Pubnub {
         }
         if (request_for.equals("subscribe") || request_for.equals("presence"))
             url.append("?uuid=").append(this.sessionUUID);
-        
+
         AsyncHttpClient ahc = null;
         try {
             // Prepare Asynchronous HTTP Request
@@ -1002,42 +1002,42 @@ class Base64Encoder {
           for (char c='A'; c<='Z'; c++) map1[i++] = c;
           for (char c='a'; c<='z'; c++) map1[i++] = c;
           for (char c='0'; c<='9'; c++) map1[i++] = c;
-          map1[i++] = '+'; map1[i++] = '/'; 
+          map1[i++] = '+'; map1[i++] = '/';
        }
 
     // Mapping table from Base64 characters to 6-bit nibbles.
     private static byte[]    map2 = new byte[128];
        static {
           for (int i=0; i<map2.length; i++) map2[i] = -1;
-          for (int i=0; i<64; i++) map2[map1[i]] = (byte)i; 
+          for (int i=0; i<64; i++) map2[map1[i]] = (byte)i;
        }
 
     /**
     * Encodes a string into Base64 format.
     * No blanks or line breaks are inserted.
-    * 
+    *
     * @param s  a String to be encoded.
     * @return   A String with the Base64 encoded data.
     */
     public static String encodeString (String s) {
-       return new String(encode(s.getBytes())); 
+       return new String(encode(s.getBytes()));
     }
 
     /**
     * Encodes a byte array into Base64 format.
     * No blanks or line breaks are inserted.
-    * 
+    *
     * @param in  an array containing the data bytes to be encoded.
     * @return    A character array with the Base64 encoded data.
     */
     public static char[] encode (byte[] in) {
-       return encode(in,in.length); 
+       return encode(in,in.length);
     }
 
     /**
     * Encodes a byte array into Base64 format.
     * No blanks or line breaks are inserted.
-    * 
+    *
     * @param in   an array containing the data bytes to be encoded.
     * @param iLen number of bytes to process in <code>in</code>.
     * @return     A character array with the Base64 encoded data.
@@ -1060,35 +1060,35 @@ class Base64Encoder {
           out[op++] = map1[o1];
           out[op] = op < oDataLen ? map1[o2] : '='; op++;
           out[op] = op < oDataLen ? map1[o3] : '='; op++; }
-       return out; 
+       return out;
     }
 
     /**
     * Decodes a string from Base64 format.
-    * 
+    *
     * @param s  a Base64 String to be decoded.
     * @return   A String containing the decoded data.
     * @throws   IllegalArgumentException if the input is not valid Base64 encoded data.
     */
     public static String decodeString (String s) {
-       return new String(decode(s)); 
+       return new String(decode(s));
     }
 
     /**
     * Decodes a byte array from Base64 format.
-    * 
+    *
     * @param s  a Base64 String to be decoded.
     * @return   An array containing the decoded data bytes.
     * @throws   IllegalArgumentException if the input is not valid Base64 encoded data.
     */
     public static byte[] decode (String s) {
-       return decode(s.toCharArray()); 
+       return decode(s.toCharArray());
     }
 
     /**
     * Decodes a byte array from Base64 format.
     * No blanks or line breaks are allowed within the Base64 encoded data.
-    * 
+    *
     * @param in  a character array containing the Base64 encoded data.
     * @return    An array containing the decoded data bytes.
     * @throws    IllegalArgumentException if the input is not valid Base64 encoded data.
@@ -1120,7 +1120,7 @@ class Base64Encoder {
           out[op++] = (byte)o0;
           if (op<oLen) out[op++] = (byte)o1;
           if (op<oLen) out[op++] = (byte)o2; }
-       return out; 
+       return out;
     }
 
     /**
@@ -1131,20 +1131,20 @@ class Base64Encoder {
 
 /**
  * PubNub 3.2 Cryptography
- * 
+ *
  */
 
 class PubnubCrypto {
 
-    private final String CIPHER_KEY;  
-      
+    private final String CIPHER_KEY;
+
     public PubnubCrypto(String CIPHER_KEY) {
-        this.CIPHER_KEY = CIPHER_KEY;  
-    }  
-  
+        this.CIPHER_KEY = CIPHER_KEY;
+    }
+
     /**
      * Encrypt
-     * 
+     *
      * @param JSONObject Message to encrypt
      * @return JSONObject as Encrypted message
      */
@@ -1153,7 +1153,7 @@ class PubnubCrypto {
         try {
             JSONObject message_encrypted = new JSONObject();
             Iterator<String> it = message.keys();
-            
+
             while(it.hasNext()) {
                 String key = it.next();
                 String val = message.getString(key);
@@ -1165,10 +1165,10 @@ class PubnubCrypto {
             throw new RuntimeException(e);
         }
     }
-    
+
     /**
      * Decrypt
-     * 
+     *
      * @param JSONObject Encrypted message
      * @return JSONObject Message decrypted
      */
@@ -1177,7 +1177,7 @@ class PubnubCrypto {
         try {
             JSONObject message_decrypted = new JSONObject();
             Iterator<String> it = message_encrypted.keys();
-            
+
             while(it.hasNext()) {
                 String key = it.next();
                 String encrypted_str = message_encrypted.getString(key);
@@ -1189,17 +1189,17 @@ class PubnubCrypto {
             throw new RuntimeException(e);
         }
     }
-    
+
     /**
      * Encrypt JSONArray
-     * 
+     *
      * @param JSONArray - Encrypted JSONArray
      * @return JSONArray - Decrypted JSONArray
      */
     public JSONArray encryptJSONArray(JSONArray jsona_arry) {
         try {
             JSONArray jsona_decrypted = new JSONArray();
-            
+
             for (int i = 0; i < jsona_arry.length(); i++) {
                  Object o = jsona_arry.get(i);
                  if(o != null) {
@@ -1212,24 +1212,24 @@ class PubnubCrypto {
                      }
                  }
             }
-            
+
             return jsona_decrypted;
-            
+
         } catch(Exception e) {
             throw new RuntimeException(e);
         }
     }
-    
+
     /**
      * Decrypt JSONArray
-     * 
+     *
      * @param JSONArray - Encrypted JSONArray
      * @return JSONArray - Decrypted JSONArray
      */
     public JSONArray decryptJSONArray(JSONArray jsona_encrypted) {
         try {
             JSONArray jsona_decrypted = new JSONArray();
-            
+
             for (int i = 0; i < jsona_encrypted.length(); i++) {
                  Object o = jsona_encrypted.get(i);
                  if(o != null) {
@@ -1242,17 +1242,17 @@ class PubnubCrypto {
                      }
                  }
             }
-            
+
             return jsona_decrypted;
-            
+
         } catch(Exception e) {
             throw new RuntimeException(e);
         }
     }
-    
+
     /**
      * Encrypt
-     * 
+     *
      * @param String plain text to encrypt
      * @return String cipher text
      * @throws Exception
@@ -1260,11 +1260,11 @@ class PubnubCrypto {
     public String encrypt(String plain_text) throws Exception {
         byte[] out = transform(true, plain_text.getBytes());
         return new String(Base64Encoder.encode(out));
-    }  
-  
+    }
+
     /**
      * Decrypt
-     * 
+     *
      * @param String cipherText
      * @return String
      * @throws Exception
@@ -1272,17 +1272,17 @@ class PubnubCrypto {
     public String decrypt(String cipher_text) throws Exception {
         byte[] out = transform(false, Base64Encoder.decode(cipher_text));
         return new String(out).trim();
-    }  
-  
+    }
+
     /**
      * AES Encryption
-     * 
+     *
      * @param boolean encrypt_or_decrypt ENCRYPT/DECRYPT mode
      * @param ByteArray input_bytes
      * @return ByteArray
      * @throws Exception
      */
-    private byte[] transform(boolean encrypt_or_decrypt, byte[] input_bytes) throws Exception {  
+    private byte[] transform(boolean encrypt_or_decrypt, byte[] input_bytes) throws Exception {
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         byte[] iv_bytes = "0123456789012345".getBytes();
         byte[] key_bytes = md5(this.CIPHER_KEY);
@@ -1306,12 +1306,12 @@ class PubnubCrypto {
             c_out.write(input_bytes);
             c_out.close();
         }
-        return output.toByteArray();  
+        return output.toByteArray();
     }
-    
+
     /**
      * Sign Message
-     * 
+     *
      * @param String input
      * @return String as HashText
      */
@@ -1319,13 +1319,13 @@ class PubnubCrypto {
         try {
             Key KEY = new SecretKeySpec(input.getBytes("UTF-8"), "HmacSHA256");
             Mac sha256_HMAC = Mac.getInstance("HMACSHA256");
-            
+
             sha256_HMAC.init(KEY);
             byte[] mac_data = sha256_HMAC.doFinal(secret_key.getBytes());
-            
+
             BigInteger number = new BigInteger(1, mac_data);
             String hashtext = number.toString(16);
-            
+
             return hashtext;
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -1336,25 +1336,25 @@ class PubnubCrypto {
      * @param string
      * @return
      */
-    public static byte[] md5(String string) { 
-        byte[] hash; 
-     
-        try { 
-            hash = MessageDigest.getInstance("MD5").digest(string.getBytes("UTF-8")); 
-        } catch (NoSuchAlgorithmException e) { 
-            throw new RuntimeException("MD5 should be supported!", e); 
-        } catch (UnsupportedEncodingException e) { 
-            throw new RuntimeException("UTF-8 should be supported!", e); 
-        } 
-     
-        StringBuilder hex = new StringBuilder(hash.length * 2); 
-        for (byte b : hash) { 
-            if ((b & 0xFF) < 0x10) hex.append("0"); 
-            hex.append(Integer.toHexString(b & 0xFF)); 
+    public static byte[] md5(String string) {
+        byte[] hash;
+
+        try {
+            hash = MessageDigest.getInstance("MD5").digest(string.getBytes("UTF-8"));
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("MD5 should be supported!", e);
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException("UTF-8 should be supported!", e);
+        }
+
+        StringBuilder hex = new StringBuilder(hash.length * 2);
+        for (byte b : hash) {
+            if ((b & 0xFF) < 0x10) hex.append("0");
+            hex.append(Integer.toHexString(b & 0xFF));
         }
         return hexStringToByteArray(hex.toString());
     }
-    
+
     public static byte[] hexStringToByteArray(String s) {
         int len = s.length();
         byte[] data = new byte[len / 2];
