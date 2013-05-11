@@ -117,6 +117,8 @@ public class Pubnub extends PubnubCore {
     }
 
     protected String getUserAgent() {
-        return "Android/3.4";
+        return "(Android " + android.os.Build.VERSION.RELEASE +
+                "; " + android.os.Build.MODEL +
+                " Build) PubNub-Java/Android/3.4.0";
     }
 }
