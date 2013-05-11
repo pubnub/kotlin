@@ -5,15 +5,15 @@ import java.util.UUID;
 /**
  * Pubnub object facilitates querying channels for messages and listening on
  * channels for presence/message events
- * 
+ *
  * @author Pubnub
- * 
+ *
  */
 
 public class Pubnub extends PubnubCore {
     /**
      * Pubnub Constructor
-     * 
+     *
      * @param publish_key
      *            Publish Key
      * @param subscribe_key
@@ -32,7 +32,7 @@ public class Pubnub extends PubnubCore {
 
     /**
      * Pubnub Constructor
-     * 
+     *
      * @param publish_key
      *            Publish key
      * @param subscribe_key
@@ -49,7 +49,7 @@ public class Pubnub extends PubnubCore {
 
     /**
      * Pubnub Constructor
-     * 
+     *
      * @param publish_key
      *            Publish Key
      * @param subscribe_key
@@ -81,7 +81,7 @@ public class Pubnub extends PubnubCore {
 
     /**
      * Sets value for UUID
-     * 
+     *
      * @param uuid
      *            UUID value for Pubnub client
      */
@@ -91,5 +91,28 @@ public class Pubnub extends PubnubCore {
 
     protected String uuid() {
         return java.util.UUID.randomUUID().toString();
+    }
+
+    /**
+     * This method sets timeout value for subscribe/presence. Default value is
+     * 310000 milliseconds i.e. 310 seconds
+     *
+     * @param timeout
+     *            Timeout value in milliseconds for subscribe/presence
+     */
+    public void setSubscribeTimeout(int timeout) {
+        super.setSubscribeTimeout(timeout);
+    }
+
+    /**
+     * This method set timeout value for non subscribe operations like publish,
+     * history, hereNow. Default value is 15000 milliseconds i.e. 15 seconds.
+     *
+     * @param timeout
+     *            Timeout value in milliseconds for Non subscribe operations
+     *            like publish, history, hereNow
+     */
+    public void setNonSubscribeTimeout(int timeout) {
+        super.setNonSubscribeTimeout(timeout);
     }
 }

@@ -100,10 +100,10 @@ class HttpClientCore extends HttpClient {
         connection.connect();
         InputStream is;
         if(connection.getContentEncoding() == null || !connection.getContentEncoding().equals("gzip")) {
-        	is = connection.getInputStream();
-        	
+            is = connection.getInputStream();
+
         } else {
-        	is = new GZIPInputStream(connection.getInputStream());
+            is = new GZIPInputStream(connection.getInputStream());
         }
         String page = readInput(is);
         return new HttpResponse(connection.getResponseCode(), page);

@@ -1,15 +1,13 @@
 package com.pubnub.examples.blackberry;
 
+import net.rim.device.api.ui.Screen;
 import net.rim.device.api.ui.UiApplication;
-import net.rim.device.api.ui.component.Dialog;
-
-import com.pubnub.api.Pubnub;
 
 /**
  * This class extends the UiApplication class, providing a
  * graphical user interface.
  */
-public class PubnubExample extends UiApplication
+public class PubnubDemoConsole extends UiApplication
 {
     /**
      * Entry point for application
@@ -20,7 +18,7 @@ public class PubnubExample extends UiApplication
 
         // Create a new instance of the application and make the currently
         // running thread the application's event dispatch thread.
-        PubnubExample theApp = new PubnubExample();
+        PubnubDemoConsole theApp = new PubnubDemoConsole();
         theApp.enterEventDispatcher();
     }
 
@@ -28,23 +26,11 @@ public class PubnubExample extends UiApplication
     /**
      * Creates a new PubnubExample object
      */
-    public PubnubExample()
+    public PubnubDemoConsole()
     {
+        Screen sc = new PubnubDemoConsoleScreen();
         // Push a screen onto the UI stack for rendering.
-        pushScreen(new PubnubExampleScreen());
+        pushScreen(sc);
     }
 
-    /**
-     * Presents a dialog to the user with a given message
-     *
-     * @param message
-     *            The text to display
-     */
-    public static void alertDialog(final String message) {
-        UiApplication.getUiApplication().invokeLater(new Runnable() {
-            public void run() {
-                Dialog.alert(message);
-            }
-        });
-    }
 }

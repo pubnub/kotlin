@@ -2,7 +2,7 @@ package com.pubnub.api;
 
 /**
  * Simple base64 encoder, can be implemented in other platforms.
- * 
+ *
  */
 class Base64Encoder {
 
@@ -32,7 +32,7 @@ class Base64Encoder {
     /**
      * Encodes a string into Base64 format. No blanks or line breaks are
      * inserted.
-     * 
+     *
      * @param s
      *            a String to be encoded.
      * @return A String with the Base64 encoded data.
@@ -44,7 +44,7 @@ class Base64Encoder {
     /**
      * Encodes a byte array into Base64 format. No blanks or line breaks are
      * inserted.
-     * 
+     *
      * @param in
      *            an array containing the data bytes to be encoded.
      * @return A character array with the Base64 encoded data.
@@ -56,7 +56,7 @@ class Base64Encoder {
     /**
      * Encodes a byte array into Base64 format. No blanks or line breaks are
      * inserted.
-     * 
+     *
      * @param in
      *            an array containing the data bytes to be encoded.
      * @param iLen
@@ -89,7 +89,7 @@ class Base64Encoder {
 
     /**
      * Decodes a string from Base64 format.
-     * 
+     *
      * @param s
      *            a Base64 String to be decoded.
      * @return A String containing the decoded data.
@@ -102,7 +102,7 @@ class Base64Encoder {
 
     /**
      * Decodes a byte array from Base64 format.
-     * 
+     *
      * @param s
      *            a Base64 String to be decoded.
      * @return An array containing the decoded data bytes.
@@ -116,7 +116,7 @@ class Base64Encoder {
     /**
      * Decodes a byte array from Base64 format. No blanks or line breaks are
      * allowed within the Base64 encoded data.
-     * 
+     *
      * @param in
      *            a character array containing the Base64 encoded data.
      * @return An array containing the decoded data bytes.

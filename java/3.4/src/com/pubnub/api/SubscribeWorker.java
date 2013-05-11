@@ -9,7 +9,7 @@ class SubscribeWorker extends AbstractSubscribeWorker {
     SubscribeWorker(Vector _requestQueue, int connectionTimeout,
             int requestTimeout, int maxRetries, int retryInterval, Hashtable headers) {
         super(_requestQueue, connectionTimeout, requestTimeout,
-        		maxRetries, retryInterval, headers);
+                maxRetries, retryInterval, headers);
     }
 
     void process(HttpRequest hreq) {
@@ -29,11 +29,11 @@ class SubscribeWorker extends AbstractSubscribeWorker {
             } catch (SocketTimeoutException e) {
                 log.verbose("No Traffic , Read Timeout Exception in Fetch : " + e.toString());
                 if (hreq.isDar()) {
-                	hreq.getResponseHandler().handleBackFromDar(hreq);
-                	return;
+                    hreq.getResponseHandler().handleBackFromDar(hreq);
+                    return;
                 }
                 break;
-                
+
             } catch (Exception e) {
                 log.verbose("Retry Attempt : " + ((currentRetryAttempt == maxRetries)?"last":currentRetryAttempt)
                         + " Exception in Fetch : " + e.toString());

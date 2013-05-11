@@ -15,22 +15,22 @@ class HttpRequest {
     private boolean subzero;
 
     public boolean isSubzero() {
-		return subzero;
-	}
+        return subzero;
+    }
 
-	public void setSubzero(boolean subzero) {
-		this.subzero = subzero;
-	}
+    public void setSubzero(boolean subzero) {
+        this.subzero = subzero;
+    }
 
-	public boolean isDar() {
-		return dar;
-	}
+    public boolean isDar() {
+        return dar;
+    }
 
-	public void setDar(boolean dar) {
-		this.dar = dar;
-	}
+    public void setDar(boolean dar) {
+        this.dar = dar;
+    }
 
-	public HttpRequest(String[] urlComponents, Hashtable params,
+    public HttpRequest(String[] urlComponents, Hashtable params,
             Hashtable headers, ResponseHandler rh) {
         this.setUrlComponents(urlComponents);
         this.setParams(params);

@@ -91,20 +91,20 @@ public class PubnubDemoConsole {
         try {
             pubnub.subscribe(args, new Callback() {
                 public void connectCallback(String channel, Object message) {
-                    notifyUser("SUBSCRIBE : CONNECT on channel:" + channel 
-                    		+ " : " + message.getClass() + " : "
+                    notifyUser("SUBSCRIBE : CONNECT on channel:" + channel
+                            + " : " + message.getClass() + " : "
                             + message.toString());
                 }
 
                 public void disconnectCallback(String channel, Object message) {
                     notifyUser("SUBSCRIBE : DISCONNECT on channel:"
-                    		+ channel + " : " + message.getClass() + " : "
+                            + channel + " : " + message.getClass() + " : "
                             + message.toString());
                 }
 
                 public void reconnectCallback(String channel, Object message) {
-                    notifyUser("SUBSCRIBE : RECONNECT on channel:" + channel 
-                    		+ " : " + message.getClass() + " : "
+                    notifyUser("SUBSCRIBE : RECONNECT on channel:" + channel
+                            + " : " + message.getClass() + " : "
                             + message.toString());
                 }
 
@@ -188,7 +188,7 @@ public class PubnubDemoConsole {
         pubnub.disconnectAndResubscribe("Disconnect and Resubscribe Sent from Demo Console");
 
     }
-    
+
     private void disconnectAndResubscribeWithTimetoken(String timetoken) {
         pubnub.disconnectAndResubscribeWithTimetoken(timetoken, "Disconnect and Resubscribe Sent from Demo Console");
 
@@ -330,11 +330,11 @@ public class PubnubDemoConsole {
     private void setRetryInterval(int retryInterval) {
         pubnub.setRetryInterval(retryInterval);
     }
-    
+
     private void setSubscribeTimeout(int subscribeTimeout) {
         pubnub.setSubscribeTimeout(subscribeTimeout);
     }
-    
+
     private void setNonSubscribeTimeout(int nonSubscribeTimeout) {
         pubnub.setNonSubscribeTimeout(nonSubscribeTimeout);
     }
