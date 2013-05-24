@@ -27,6 +27,8 @@ abstract class PubnubCore {
     private String SUBSCRIBE_KEY = "";
     private String SECRET_KEY = "";
     private String CIPHER_KEY = "";
+    private volatile String AUTH_STR = null;
+    private Hashtable params;
     private volatile boolean resumeOnReconnect;
 
     private boolean SSL = true;
@@ -273,6 +275,9 @@ abstract class PubnubCore {
         if (nonSubscribeManager == null)
             nonSubscribeManager = new NonSubscribeManager("Non Subscribe Manager", 10000, 15000);
 
+        if ( params == null )
+            params = new Hashtable();
+
         subscribeManager.setHeader("V", "3.4");
         subscribeManager.setHeader("Accept-Encoding", "gzip");
         subscribeManager.setHeader("User-Agent", getUserAgent());
@@ -465,7 +470,7 @@ abstract class PubnubCore {
                 PubnubUtil.urlEncode(channel), "0",
                 PubnubUtil.urlEncode(msgStr) };
 
-        HttpRequest hreq = new HttpRequest(urlComponents,
+        HttpRequest hreq = new HttpRequest(urlComponents, params,
                 new ResponseHandler() {
                     public void handleResponse(HttpRequest hreq, String response) {
                         JSONArray jsarr;
@@ -524,7 +529,7 @@ abstract class PubnubCore {
         String[] urlargs = { getOrigin(), "v2", "presence", "sub_key",
                 this.SUBSCRIBE_KEY, "channel", channel };
 
-        HttpRequest hreq = new HttpRequest(urlargs, new ResponseHandler() {
+        HttpRequest hreq = new HttpRequest(urlargs, params, new ResponseHandler() {
             public void handleResponse(HttpRequest hreq, String response) {
                 JSONObject jsobj;
                 try {
@@ -583,7 +588,7 @@ abstract class PubnubCore {
         String[] urlargs = { getOrigin(), "history", this.SUBSCRIBE_KEY,
                 PubnubUtil.urlEncode(channel), "0", limit };
 
-        HttpRequest hreq = new HttpRequest(urlargs, new ResponseHandler() {
+        HttpRequest hreq = new HttpRequest(urlargs, params, new ResponseHandler() {
 
             public void handleResponse(HttpRequest hreq, String response) {
                 JSONArray respArr;
@@ -628,7 +633,7 @@ abstract class PubnubCore {
      */
     public void detailedHistory(final String channel, long start, long end,
             int count, boolean reverse, final Callback callback) {
-        Hashtable parameters = new Hashtable();
+        Hashtable parameters = (Hashtable)params.clone();
         if (count == -1)
             count = 100;
 
@@ -786,7 +791,7 @@ abstract class PubnubCore {
     public void time(final Callback callback) {
 
         String[] url = { getOrigin(), "time", "0" };
-        HttpRequest hreq = new HttpRequest(url, new ResponseHandler() {
+        HttpRequest hreq = new HttpRequest(url, params, new ResponseHandler() {
 
             public void handleResponse(HttpRequest hreq, String response) {
                 callback.successCallback(null, response);
@@ -1047,7 +1052,7 @@ abstract class PubnubCore {
                 PubnubCore.this.SUBSCRIBE_KEY,
                 PubnubUtil.urlEncode(channelString), "0", _timetoken };
 
-        Hashtable params = new Hashtable();
+        Hashtable params = (Hashtable)this.params.clone();
         params.put("uuid", UUID);
         log.verbose("Subscribing with timetoken : " + _timetoken);
 
@@ -1325,5 +1330,38 @@ abstract class PubnubCore {
      */
     public void setOrigin(String origin) {
         this.HOSTNAME = origin;
+    }
+
+    /**
+     * This method return auth key. Return null if not set
+     *
+     * @return Auth Key. null if auth key not set
+     */
+    public String getAuthKey() {
+        return this.AUTH_STR;
+    }
+
+    /**
+     * This method sets auth key.
+     *
+     * @param authKey . 0 length string or null unsets auth key
+     */
+    public void setAuthKey(String authKey) {
+
+        this.AUTH_STR = authKey;
+        if ( authKey == null || authKey.length() == 0 ) {
+            params.remove("auth");
+        } else {
+            params.put("auth", this.AUTH_STR);
+        }
+    }
+
+    /**
+     * This method unsets auth key.
+     *
+     */
+    public void unsetAuthKey() {
+        this.AUTH_STR = null;
+        params.remove("auth");
     }
 }

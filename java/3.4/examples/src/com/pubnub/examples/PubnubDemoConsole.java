@@ -313,6 +313,11 @@ public class PubnubDemoConsole {
                 reader.nextLine();
                 setNonSubscribeTimeout(nonSubscribeTimeout);
                 break;
+            case 17:
+                System.out.println("Set/Unset Auth Key: Enter auth key string. Enter blank for unsetting key");
+                String authKey = reader.nextLine();
+                pubnub.setAuthKey(authKey);
+                break;
             default:
                 System.out.println("Invalid Input");
             }
@@ -358,6 +363,7 @@ public class PubnubDemoConsole {
         System.out.println("ENTER 14 FOR Setting Retry Interval");
         System.out.println("ENTER 15 FOR Setting Subscribe Timeout");
         System.out.println("ENTER 16 FOR Setting Non Subscribe Timeout");
+        System.out.println("ENTER 17 FOR Setting/Unsetting auth key1");
         System.out.println("\nENTER 0 to display this menu");
     }
 
