@@ -17,8 +17,8 @@
     <string name="editTextHint">Message to Publish</string>
     <string name="btnPubSubText">Publish/Subscribe Test</string>
     <string name="btnUnsubscribeAllText">Unsubscribe All</string>
-	<string name="welcome">Welcome to the Pubnub Demo Console</string>
-	<string name="hint">Click Menu and select an action: </string>
+    <string name="welcome">Welcome to the Pubnub Demo Console</string>
+    <string name="hint">Click Menu and select an action: </string>
     <string name="option1">Subscribe</string>
     <string name="option2">Publish</string>
     <string name="option3">Presence</string>

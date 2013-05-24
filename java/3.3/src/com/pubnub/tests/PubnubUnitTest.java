@@ -124,70 +124,70 @@ public class PubnubUnitTest {
         return;
     }
 
- 
+
     /**
-     * 
+     *
      */
     @Ignore
     public void testPresenceHashMapOfStringObject() {
 
-        Pubnub pubnub_p = new Pubnub(publish_key, subscribe_key, secret_key,"", true); 
+        Pubnub pubnub_p = new Pubnub(publish_key, subscribe_key, secret_key,"", true);
         final Pubnub pubnub_s = new Pubnub(publish_key,subscribe_key, secret_key, "", true);
 
         class SubscribeReceiver extends Receiver {
-            @Override 
+            @Override
             public void connectCallback(String channel) {
             }
-            @Override 
-            public boolean successCallback(String channel, Object     message) { 
-                return false; 
-            } 
+            @Override
+            public boolean successCallback(String channel, Object     message) {
+                return false;
+            }
         }
 
 
         // Callback Interface when a Message is Received
         class PresenceReceiver extends Receiver {
-            @Override 
-            public void connectCallback(String channel) { 
+            @Override
+            public void connectCallback(String channel) {
                 try {
                     pubnub_s.subscribe(PubnubUnitTest.channel, new SubscribeReceiver());
-                } catch (PubnubException e) { 
+                } catch (PubnubException e) {
                     fail("TestPresence : PubnubException");
-                    return; 
+                    return;
                 }
             }
 
-            @Override 
-            public boolean successCallback(String channel, Object message) { 
+            @Override
+            public boolean successCallback(String channel, Object message) {
                 assertNull(message);
-                JSONArray jsona = (JSONArray) message; JSONArray jsona0 = null; 
+                JSONArray jsona = (JSONArray) message; JSONArray jsona0 = null;
                 try {
-                    jsona0 = (JSONArray) jsona.get(0); 
+                    jsona0 = (JSONArray) jsona.get(0);
                 } catch (JSONException e1) {
-                    fail("FAIL: TestPresence, publish"); return false; 
+                    fail("FAIL: TestPresence, publish"); return false;
                 }
                 if (jsona0.length() == 0 ) {
 
                 }
 
-                // false, do not continue to subscribe 
+                // false, do not continue to subscribe
                 try {
-                    pubnub_s.publish(channel, new JSONObject("{'text': 'hi'}")); 
-                } catch (JSONException e) { 
-                    fail("FAIL: TestPresence, publish"); 
-                } 
-                return false; 
+                    pubnub_s.publish(channel, new JSONObject("{'text': 'hi'}"));
+                } catch (JSONException e) {
+                    fail("FAIL: TestPresence, publish");
+                }
+                return false;
 
-            } 
+            }
 
         }
 
-        // Listen for Messages (Presence) 
-        try { 
-            pubnub_p.presence(channel, new PresenceReceiver()); 
+        // Listen for Messages (Presence)
+        try {
+            pubnub_p.presence(channel, new PresenceReceiver());
         } catch (PubnubException e) {
-            fail("TestPresence : PubnubException"); 
-            return; 
+            fail("TestPresence : PubnubException");
+            return;
         }
     }
 
@@ -314,13 +314,13 @@ public class PubnubUnitTest {
         long midtime = (long) pubnub.time();
         publishForDetailedHistory(channel, total_msg / 2, total_msg / 2, inputs);
         long endtime = (long) pubnub.time();
-        
+
         try {
             Thread.sleep(3000);
         } catch (InterruptedException e1) {
             e1.printStackTrace();
         }
-        
+
         JSONArray response = null;
 
         response = pubnub.detailedHistory(channel, starttime, endtime);
@@ -340,7 +340,7 @@ public class PubnubUnitTest {
 
         response = pubnub.detailedHistory(channel,(int)1, false);
         try {
-            assertTrue(response != null && 
+            assertTrue(response != null &&
                     Integer.parseInt((String)((JSONObject)((JSONArray) response.get(0)).get(0)).get("text")) == total_msg -1);
         } catch (JSONException e) {
             fail("JSONException");
@@ -348,7 +348,7 @@ public class PubnubUnitTest {
 
         response = pubnub.detailedHistory(channel,(int)1, true);
         try {
-            assertTrue(response != null && 
+            assertTrue(response != null &&
                     Integer.parseInt((String)((JSONObject)((JSONArray) response.get(0)).get(0)).get("text")) == 0);
         } catch (JSONException e) {
             fail("JSONException");

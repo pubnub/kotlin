@@ -294,7 +294,7 @@ public class JSONWriter {
 //#         return this.value(new Double(d));
 //#     }
 //#endif
-    
+
     /**
      * Append a long value.
      * @param l A long.

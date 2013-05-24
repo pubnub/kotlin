@@ -372,14 +372,14 @@ public class Pubnub {
             String res = getViaHttpsConnection(getURL(url));
             JSONArray response = new JSONArray(res);
             try {
-              
+
                 return Long.parseLong(response.get(0).toString());
             } catch (JSONException ex) {
                 ex.printStackTrace();
             }
         } catch (Exception ex) {
             //ex.printStackTrace();
-        } 
+        }
         return 0;
     }
 

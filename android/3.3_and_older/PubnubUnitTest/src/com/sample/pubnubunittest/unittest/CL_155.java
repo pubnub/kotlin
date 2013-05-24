@@ -16,7 +16,7 @@ import android.util.Log;
 import com.sample.pubnubunittest.pubnub.Pubnub;
 
 /**
- * Unit test for detailed history 
+ * Unit test for detailed history
  *
  *
  */
@@ -36,17 +36,17 @@ import com.sample.pubnubunittest.pubnub.Pubnub;
         String endtime = null;
         String midtime = null;
 
-        
-       
-        
+
+
+
         public void RunUnitTest( Handler handler) {
-        	
-        	CommonUtil.setHandler(handler);
+
+            CommonUtil.setHandler(handler);
             pubnub = new Pubnub(publish_key, subscribe_key, secret_key, ssl_on);
             channel = CommonUtil.getBigDecimal(pubnub.time());
             Log.e("Message",
                     "Setting up context for Detailed History tests. Please wait ...");
-            CommonUtil.PrintLog("Setting up context for Detailed History tests. Please wait ...");        
+            CommonUtil.PrintLog("Setting up context for Detailed History tests. Please wait ...");
             starttime = CommonUtil.getBigDecimal(pubnub.time());
             PublishMessage(0, total_msg / 2, 0);
             midtime = CommonUtil.getBigDecimal(pubnub.time());
@@ -54,11 +54,11 @@ import com.sample.pubnubunittest.pubnub.Pubnub;
             endtime = CommonUtil.getBigDecimal(pubnub.time());
             Log.e("Messahe",
                     "Context setup for Detailed History tests. Now running tests");
-            CommonUtil.PrintLog("Context setup for Detailed History tests. Now running tests"); 
+            CommonUtil.PrintLog("Context setup for Detailed History tests. Now running tests");
             test_begin_to_end_count();
             test_end_to_begin_count();
             test_start_reverse_true();
-            
+
             test_start_reverse_false();
             test_end_reverse_true();
             test_end_reverse_false();
@@ -66,18 +66,18 @@ import com.sample.pubnubunittest.pubnub.Pubnub;
             test_count();
         }
 
-      
 
-       
 
-        
-        
+
+
+
+
         private void PublishMessage(int start, int end, int offset) {
             try {
                 Log.e("PublishMessage", "Publishing messages");
                 CommonUtil.PrintLog("Publishing messages");
                 for (int i = start + offset; i < end + offset; i++) {
-                    
+
                     JSONObject message= new JSONObject();
                     message.put("message",  i + "  " + crazy);
                     HashMap<String, Object> args = new HashMap<String, Object>();
@@ -95,7 +95,7 @@ import com.sample.pubnubunittest.pubnub.Pubnub;
                     }
                 }
             } catch (Exception e) {
-            	 e.printStackTrace();
+                 e.printStackTrace();
             }
         }
 
@@ -138,10 +138,10 @@ import com.sample.pubnubunittest.pubnub.Pubnub;
                 e.printStackTrace();
             }
         }
-        
+
         private void test_start_reverse_true() {
             try {
-                
+
                 HashMap<String, Object> args = new HashMap<String, Object>();
                 args.put("channel", channel);
                 args.put("start", midtime);
@@ -157,10 +157,10 @@ import com.sample.pubnubunittest.pubnub.Pubnub;
                 e.printStackTrace();
             }
         }
-        
+
         private void test_start_reverse_false() {
             try {
-                
+
                 HashMap<String, Object> args = new HashMap<String, Object>();
                 args.put("channel", channel);
                 args.put("start", midtime);
@@ -177,7 +177,7 @@ import com.sample.pubnubunittest.pubnub.Pubnub;
 
         private void test_end_reverse_true() {
             try {
-                
+
                 HashMap<String, Object> args = new HashMap<String, Object>();
                 args.put("channel", channel);
                 args.put("end", midtime);
@@ -192,11 +192,11 @@ import com.sample.pubnubunittest.pubnub.Pubnub;
                 e.printStackTrace();
             }
         }
-        
-        
+
+
         private void test_end_reverse_false() {
             try {
-                
+
                 HashMap<String, Object> args = new HashMap<String, Object>();
                 args.put("channel", channel);
                 args.put("end", midtime);
@@ -207,16 +207,16 @@ import com.sample.pubnubunittest.pubnub.Pubnub;
                 CommonUtil.LogPass(history.length() == total_msg / 2
                         && history.getString(history.length() - 1).equals(
                                 inputs.get(total_msg - 1).get("message").toString()),"test_end_reverse_true");
-            
-                
+
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
-        
+
         private void test_count() {
             try {
-                
+
                 HashMap<String, Object> args = new HashMap<String, Object>();
                 args.put("channel", channel);
                 args.put("count", 5);
@@ -225,7 +225,7 @@ import com.sample.pubnubunittest.pubnub.Pubnub;
                 JSONArray history = responce.getJSONArray(0);
 
                 CommonUtil.LogPass(history.length() == 5,"test_count");
-                
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -233,7 +233,7 @@ import com.sample.pubnubunittest.pubnub.Pubnub;
 
         private void test_count_zero() {
             try {
-                
+
                 HashMap<String, Object> args = new HashMap<String, Object>();
                 args.put("channel", channel);
                 args.put("count", 0);
@@ -242,12 +242,11 @@ import com.sample.pubnubunittest.pubnub.Pubnub;
                 JSONArray history = responce.getJSONArray(0);
 
                 CommonUtil.LogPass(history.length() == 0,"test_count_zero");
-                
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
 
-        
+
     }
-    

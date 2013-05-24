@@ -17,7 +17,7 @@
             post-preprocess:          called after text preprocessing of sources
             pre-compile:              called before source compilation
             post-compile:             called after source compilation
-            pre-obfuscate:            called before obfuscation 
+            pre-obfuscate:            called before obfuscation
             post-obfuscate:           called after obfuscation
             pre-preverify:            called before preverification
             post-preverify:           called after preverification
@@ -60,20 +60,20 @@
             <my-special-exec jadfile="${dist.dir}/${dist.jad}"/>
             </target>
 
-            Be careful about correct dependencies when overriding original target. 
-            Again, for list of available properties which you can use check the target 
+            Be careful about correct dependencies when overriding original target.
+            Again, for list of available properties which you can use check the target
             you are overriding in nbproject/build-impl.xml file.
 
             A special target for-all-configs can be used to run some specific targets for
-            all project configurations in a sequence. File nbproject/build-impl.xml 
+            all project configurations in a sequence. File nbproject/build-impl.xml
             already contains some "for-all" targets:
-    
+
             jar-all
             javadoc-all
             clean-all
-      
+
             Example of definition of target iterating over all project configurations:
-    
+
             <target name="jar-all">
             <property name="target.to.call" value="jar"/>
             <antcall target="for-all-configs"/>

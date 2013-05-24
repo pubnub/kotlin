@@ -11,6 +11,7 @@ import java.util.UUID;
  */
 
 public class Pubnub extends PubnubCore {
+
     /**
      * Pubnub Constructor
      *
@@ -114,5 +115,9 @@ public class Pubnub extends PubnubCore {
      */
     public void setNonSubscribeTimeout(int timeout) {
         super.setNonSubscribeTimeout(timeout);
+    }
+
+    protected String getUserAgent() {
+        return "Java/3.4";
     }
 }

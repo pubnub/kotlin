@@ -13,16 +13,16 @@
         <pathelement location="libs/jsonme.jar"/>
         <pathelement location="libs/tinylinegzip.jar"/>
     </path>
-	<target name="setJsonMeJar" >
-		<replace dir="${srcPubnubApi.link}" token="org.json" value="org.json.me">
-			<include name="**/*.java"/>
-		</replace>
-	</target>
-	<target name="unsetJsonMeJar" >
-		<replace dir="${srcPubnubApi.link}" token="org.json.me" value="org.json">
-			<include name="**/*.java"/>
-		</replace>
-	</target>
+    <target name="setJsonMeJar" >
+        <replace dir="${srcPubnubApi.link}" token="org.json" value="org.json.me">
+            <include name="**/*.java"/>
+        </replace>
+    </target>
+    <target name="unsetJsonMeJar" >
+        <replace dir="${srcPubnubApi.link}" token="org.json.me" value="org.json">
+            <include name="**/*.java"/>
+        </replace>
+    </target>
     <target depends="setJsonMeJar" name="init">
         <mkdir dir="bin"/>
         <copy includeemptydirs="false" todir="bin">
@@ -37,19 +37,20 @@
     </target>
     <target depends="clean" name="cleanall"/>
     <target depends="create-jar, clean" name="build"/>
-	<target depends="build-project" name="create-jar">
-		<jar destfile="Pubnub-Microedition-3.4.jar"
-			basedir="bin"
-			includes="**/**"
-		/>
-	</target>
-	
+    <target depends="build-project" name="create-jar">
+        <jar destfile="Pubnub-Microedition-3.4.jar"
+            basedir="bin"
+            includes="**/**"
+        />
+    </target>
+
     <target depends="init" name="build-project">
         <echo message="${ant.project.name}: ${ant.file}"/>
         <javac debug="true" debuglevel="${debuglevel}" destdir="bin" source="${source}" target="${target}">
             <src path="${srcPubnubApi.link}"/>
-			<src path="src"/>
-			<src path="srcLogging"/>
+            <src path="src"/>
+            <src path="src1"/>
+            <src path="srcLogging"/>
             <classpath refid="PubnubApi.classpath"/>
         </javac>
     </target>

@@ -368,7 +368,7 @@ public class JSONArray {
     public boolean optBoolean(int index)  {
         return optBoolean(index, false);
     }
-    
+
     /**
      * Get the optional boolean value associated with an index.
      * It returns the defaultValue if there is no value at that index or if
@@ -553,14 +553,14 @@ public class JSONArray {
     /**
      * Put a value in the JSONArray, where the value will be a
      * JSONArray which is produced from a Collection.
-     * @param value	A Collection value.
-     * @return		this.
+     * @param value    A Collection value.
+     * @return        this.
      */
     public JSONArray put(Vector value) {
         put(new JSONArray(value));
         return this;
     }
-    
+
 
 //#if CLDC!="1.0"
     /**
@@ -606,15 +606,15 @@ public class JSONArray {
 //#     /**
 //#      * Put a value in the JSONArray, where the value will be a
 //#      * JSONObject which is produced from a Map.
-//#      * @param value	A Map value.
-//#      * @return		this.
+//#      * @param value    A Map value.
+//#      * @return        this.
 //#      */
 //#     public JSONArray put(Hashtable value) {
 //#         put(new JSONObject(value));
 //#         return this;
 //#     }
-//#endif    
-    
+//#endif
+
     /**
      * Append an object value. This increases the array's length by one.
      * @param value An object value.  The value should be a
@@ -645,13 +645,13 @@ public class JSONArray {
 //#endif
         return this;
     }
-    
+
     /**
      * Put a value in the JSONArray, where the value will be a
      * JSONArray which is produced from a Collection.
      * @param index The subscript.
-     * @param value	A Collection value.
-     * @return		this.
+     * @param value    A Collection value.
+     * @return        this.
      * @throws JSONException If the index is negative or if the value is
      * not finite.
      */
@@ -660,7 +660,7 @@ public class JSONArray {
         return this;
     }
 
-    
+
 //#if CLDC!="1.0"
     /**
      * Put or replace a double value. If the index is greater than the length of
@@ -713,8 +713,8 @@ public class JSONArray {
 //#      * Put a value in the JSONArray, where the value will be a
 //#      * JSONObject which is produced from a Map.
 //#      * @param index The subscript.
-//#      * @param value	The Map value.
-//#      * @return		this.
+//#      * @param value    The Map value.
+//#      * @return        this.
 //#      * @throws JSONException If the index is negative or if the the value is
 //#      *  an invalid number.
 //#      */
@@ -722,8 +722,8 @@ public class JSONArray {
 //#         put(index, new JSONObject(value));
 //#         return this;
 //#     }
-//#endif    
-    
+//#endif
+
     /**
      * Put or replace an object value in the JSONArray. If the index is greater
      *  than the length of the JSONArray, then null elements will be added as

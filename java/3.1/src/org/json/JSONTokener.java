@@ -53,7 +53,7 @@ public class JSONTokener {
      * @param reader     A reader.
      */
     public JSONTokener(Reader reader) {
-        this.reader = reader.markSupported() ? 
+        this.reader = reader.markSupported() ?
                 reader : new BufferedReader(reader);
         this.eof = false;
         this.usePrevious = false;
@@ -108,9 +108,9 @@ public class JSONTokener {
         }
         return -1;
     }
-    
+
     public boolean end() {
-        return eof && !usePrevious;        
+        return eof && !usePrevious;
     }
 
 
@@ -123,7 +123,7 @@ public class JSONTokener {
         next();
         if (end()) {
             return false;
-        } 
+        }
         back();
         return true;
     }
@@ -145,11 +145,11 @@ public class JSONTokener {
             } catch (IOException exception) {
                 throw new JSONException(exception);
             }
-    
+
             if (c <= 0) { // End of stream
                 this.eof = true;
                 c = 0;
-            } 
+            }
         }
         this.index += 1;
         if (this.previous == '\r') {
@@ -203,7 +203,7 @@ public class JSONTokener {
          while (pos < n) {
              buffer[pos] = next();
              if (end()) {
-                 throw syntaxError("Substring bounds error");                 
+                 throw syntaxError("Substring bounds error");
              }
              pos += 1;
          }
@@ -411,7 +411,7 @@ public class JSONTokener {
         back();
         return c;
     }
-    
+
 
     /**
      * Make a JSONException to signal a syntax error.

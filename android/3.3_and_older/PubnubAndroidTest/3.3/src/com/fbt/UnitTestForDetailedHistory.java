@@ -38,11 +38,11 @@ public class UnitTestForDetailedHistory {
         endtime = getBigDecimal(pubnub.time());
         Log.e("Messahe",
                 "Context setup for Detailed History tests. Now running tests");
-        
+
         test_begin_to_end_count();
         test_end_to_begin_count();
         test_start_reverse_true();
-        
+
         test_start_reverse_false();
         test_end_reverse_true();
         test_end_reverse_false();
@@ -68,7 +68,7 @@ public class UnitTestForDetailedHistory {
         try {
             Log.e("PublishMessage", "Publishing messages");
             for (int i = start + offset; i < end + offset; i++) {
-                
+
                 JSONObject message= new JSONObject();
                 message.put("message",  i + "  " + crazy);
                 HashMap<String, Object> args = new HashMap<String, Object>();
@@ -129,10 +129,10 @@ public class UnitTestForDetailedHistory {
             e.printStackTrace();
         }
     }
-    
+
     private void test_start_reverse_true() {
         try {
-            
+
             HashMap<String, Object> args = new HashMap<String, Object>();
             args.put("channel", channel);
             args.put("start", midtime);
@@ -148,10 +148,10 @@ public class UnitTestForDetailedHistory {
             e.printStackTrace();
         }
     }
-    
+
     private void test_start_reverse_false() {
         try {
-            
+
             HashMap<String, Object> args = new HashMap<String, Object>();
             args.put("channel", channel);
             args.put("start", midtime);
@@ -168,7 +168,7 @@ public class UnitTestForDetailedHistory {
 
     private void test_end_reverse_true() {
         try {
-            
+
             HashMap<String, Object> args = new HashMap<String, Object>();
             args.put("channel", channel);
             args.put("end", midtime);
@@ -183,11 +183,11 @@ public class UnitTestForDetailedHistory {
             e.printStackTrace();
         }
     }
-    
-    
+
+
     private void test_end_reverse_false() {
         try {
-            
+
             HashMap<String, Object> args = new HashMap<String, Object>();
             args.put("channel", channel);
             args.put("end", midtime);
@@ -198,16 +198,16 @@ public class UnitTestForDetailedHistory {
             LogPass(history.length() == total_msg / 2
                     && history.getString(history.length() - 1).equals(
                             inputs.get(total_msg - 1).get("message").toString()),"test_end_reverse_true");
-        
-            
+
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
-    
+
     private void test_count() {
         try {
-            
+
             HashMap<String, Object> args = new HashMap<String, Object>();
             args.put("channel", channel);
             args.put("count", 5);
@@ -216,7 +216,7 @@ public class UnitTestForDetailedHistory {
             JSONArray history = responce.getJSONArray(0);
 
             LogPass(history.length() == 5,"test_count");
-            
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -224,7 +224,7 @@ public class UnitTestForDetailedHistory {
 
     private void test_count_zero() {
         try {
-            
+
             HashMap<String, Object> args = new HashMap<String, Object>();
             args.put("channel", channel);
             args.put("count", 0);
@@ -233,11 +233,11 @@ public class UnitTestForDetailedHistory {
             JSONArray history = responce.getJSONArray(0);
 
             LogPass(history.length() == 0,"test_count_zero");
-            
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
-    
+
 }

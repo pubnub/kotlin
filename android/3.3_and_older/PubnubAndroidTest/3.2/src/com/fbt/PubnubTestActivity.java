@@ -22,7 +22,7 @@ import android.widget.Toast;
 
 /**
  * PubnubTestActivity
- * 
+ *
  */
 public class PubnubTestActivity extends Activity {
 
@@ -362,7 +362,7 @@ public class PubnubTestActivity extends Activity {
         protected Boolean doInBackground(String... params) {
             try {
                 // Android: (Subscribe)
-                
+
                 class Receiver implements Callback {
                     public boolean subscribeCallback(String channel,
                             Object message) {

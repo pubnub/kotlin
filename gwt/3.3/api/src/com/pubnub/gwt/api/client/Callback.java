@@ -1,10 +1,10 @@
 /**
- * 
+ *
  */
 package com.pubnub.gwt.api.client;
 
 /**
- * @author Pubnub 
+ * @author Pubnub
  *
  */
 public abstract class Callback {

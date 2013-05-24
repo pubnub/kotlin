@@ -33,8 +33,8 @@ abstract class PubnubCore {
     protected String UUID = null;
     private Subscriptions subscriptions;
 
-    private SubscribeManager subscribeManager;
-    private NonSubscribeManager nonSubscribeManager;
+    protected SubscribeManager subscribeManager;
+    protected NonSubscribeManager nonSubscribeManager;
     private volatile String _timetoken = "0";
     private volatile String _saved_timetoken = "0";
 
@@ -42,6 +42,8 @@ abstract class PubnubCore {
     private Random generator = new Random();
 
     private static Logger log = new Logger(PubnubCore.class);
+
+    protected abstract String getUserAgent();
 
     /**
      * This method when called stops Pubnub threads
@@ -273,11 +275,11 @@ abstract class PubnubCore {
 
         subscribeManager.setHeader("V", "3.4");
         subscribeManager.setHeader("Accept-Encoding", "gzip");
-        subscribeManager.setHeader("User-Agent", "JAVA");
+        subscribeManager.setHeader("User-Agent", getUserAgent());
 
         nonSubscribeManager.setHeader("V", "3.4");
         nonSubscribeManager.setHeader("Accept-Encoding", "gzip");
-        nonSubscribeManager.setHeader("User-Agent", "JAVA");
+        nonSubscribeManager.setHeader("User-Agent", getUserAgent());
 
     }
 

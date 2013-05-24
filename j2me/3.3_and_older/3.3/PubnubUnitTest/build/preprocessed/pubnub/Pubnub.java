@@ -667,8 +667,8 @@ public class Pubnub {
         if (request_for.equals("subscribe")) {
             current_timetoken = (String) url_components.elementAt(4);
         }
-        
-        
+
+
 
         if (request_for.endsWith("v2")) {
             request_for = (String) url_components.elementAt(1);
@@ -687,7 +687,7 @@ public class Pubnub {
         _headers.put("Accept-Encoding", "gzip");
         _headers.put("Connection", "close");
 
-      
+
 
         HttpCallback callback = new HttpCallback(url.toString(), _headers, request_for) {
 
@@ -974,7 +974,7 @@ public class Pubnub {
             callback.setChannel(channel1);
 
         }
-        
+
         if (request_for.equals("publish")) {
             callback.setMessage(message);
         }

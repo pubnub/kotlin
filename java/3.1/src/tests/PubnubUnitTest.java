@@ -72,9 +72,9 @@ class PubnubUnitTest {
         many_channels = new ArrayList<String>();
         status = new LinkedHashMap<String, Object>();
         threads = new LinkedHashMap<String, Object>();
-        
+
         _pubnub = pubnub;
-        
+
         for (int i = 0; i < max_retries; i++) {
             many_channels.add("channel_" + i);
         }

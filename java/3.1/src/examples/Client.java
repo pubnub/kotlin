@@ -15,7 +15,7 @@ public class Client {
         Pubnub pn  = new Pubnub( "demo", "demo", "demo", "", true );// (Cipher key is Optional)
         Receiver rcv = new Receiver();
         System.out.println("Subscribed to 'hello_world' Channel ");
-        
+
         HashMap<String, Object> args = new HashMap<String, Object>(2);
         args.put("channel", "hello_world");
         args.put("callback", rcv);

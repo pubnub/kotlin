@@ -16,11 +16,11 @@ public class Server {
 
         while (true) {
             count++;
-            
+
             System.out.print("sending message: " + count);
             JSONObject message = new JSONObject();
-            try { 
-                message.put( "some_val", "Hello World! --> ɂ顶@#$%^&*()!" + Integer.toString(count) ); 
+            try {
+                message.put( "some_val", "Hello World! --> ɂ顶@#$%^&*()!" + Integer.toString(count) );
             }
             catch (org.json.JSONException jsonError) {
                 System.out.println(jsonError);
@@ -29,13 +29,13 @@ public class Server {
             HashMap<String, Object> args = new HashMap<String, Object>(2);
             args.put("channel", "hello_world");
             args.put("message", message);
-            
+
             JSONArray info = pn.publish( args );
             System.out.println(", info: " + info);
             try { Thread.currentThread().sleep(1000); }
             catch ( Exception ex ) {}
-            
-            
+
+
         }
     }
 }

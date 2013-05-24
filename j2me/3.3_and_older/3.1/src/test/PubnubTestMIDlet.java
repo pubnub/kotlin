@@ -50,7 +50,7 @@ public class PubnubTestMIDlet extends MIDlet implements CommandListener,Callback
      * Switches a current displayable in a display. The <code>display</code>
      * instance is taken from <code>getDisplay</code> method. This method is
      * used by all actions in the design for switching displayable.
-     * 
+     *
      * @param alert
      *            the Alert which is temporarily set to the display; if
      *            <code>null</code>, then <code>nextDisplayable</code> is set
@@ -70,7 +70,7 @@ public class PubnubTestMIDlet extends MIDlet implements CommandListener,Callback
     /**
      * Called by a system to indicated that a command has been invoked on a
      * particular displayable.
-     * 
+     *
      * @param command
      *            the Command that was invoked
      * @param displayable
@@ -97,7 +97,7 @@ public class PubnubTestMIDlet extends MIDlet implements CommandListener,Callback
 
     /**
      * Returns an initiliazed instance of exitCommand component.
-     * 
+     *
      * @return the initialized component instance
      */
     public Command getExitCommand() {
@@ -109,7 +109,7 @@ public class PubnubTestMIDlet extends MIDlet implements CommandListener,Callback
 
     /**
      * Returns an initiliazed instance of form component.
-     * 
+     *
      * @return the initialized component instance
      */
     public Form getForm() {
@@ -128,7 +128,7 @@ public class PubnubTestMIDlet extends MIDlet implements CommandListener,Callback
 
     /**
      * Returns an initiliazed instance of stringItem component.
-     * 
+     *
      * @return the initialized component instance
      */
     public StringItem getStringItem() {
@@ -140,7 +140,7 @@ public class PubnubTestMIDlet extends MIDlet implements CommandListener,Callback
 
     /**
      * Returns an initiliazed instance of publishCommand component.
-     * 
+     *
      * @return the initialized component instance
      */
     public Command getPublishCommand() {
@@ -152,7 +152,7 @@ public class PubnubTestMIDlet extends MIDlet implements CommandListener,Callback
 
     /**
      * Returns an initiliazed instance of timeCommand component.
-     * 
+     *
      * @return the initialized component instance
      */
     public Command getTimeCommand() {
@@ -165,7 +165,7 @@ public class PubnubTestMIDlet extends MIDlet implements CommandListener,Callback
 
     /**
      * Returns an initiliazed instance of historyCommand component.
-     * 
+     *
      * @return the initialized component instance
      */
     public Command getHistoryCommand() {
@@ -177,7 +177,7 @@ public class PubnubTestMIDlet extends MIDlet implements CommandListener,Callback
 
     /**
      * Returns an initiliazed instance of unsubscribeCommand component.
-     * 
+     *
      * @return the initialized component instance
      */
     public Command getUnsubscribeCommand() {
@@ -189,7 +189,7 @@ public class PubnubTestMIDlet extends MIDlet implements CommandListener,Callback
 
      /**
      * Returns an initiliazed instance of subscribeCommand component.
-     * 
+     *
      * @return the initialized component instance
      */
     public Command getSubscribeCommand() {
@@ -198,10 +198,10 @@ public class PubnubTestMIDlet extends MIDlet implements CommandListener,Callback
         }
         return subscribeCommand;
     }
-    
+
     /**
      * Returns a display instance.
-     * 
+     *
      * @return the display instance.
      */
     public Display getDisplay() {
@@ -240,7 +240,7 @@ public class PubnubTestMIDlet extends MIDlet implements CommandListener,Callback
 
     /**
      * Called to signal the MIDlet to terminate.
-     * 
+     *
      * @param unconditional
      *            if true, then the MIDlet has to be unconditionally terminated
      *            and all resources has to be released.
@@ -254,7 +254,7 @@ public class PubnubTestMIDlet extends MIDlet implements CommandListener,Callback
             JSONObject message = new JSONObject();
             // Create HashMap parameter
             message.put("some_key", "Hello World!");
-           
+
             Hashtable args = new Hashtable(2);
             args.put("channel", Channel); // Channel Name
             args.put("message", message); // JSON Message
