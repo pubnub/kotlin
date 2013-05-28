@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project basedir="." default="build" name="PubnubApi" xmlns:artifact="antlib:org.apache.maven.artifact.ant">
+    <loadfile property="VERSION" srcFile="../../VERSION"><filterchain><striplinebreaks/></filterchain></loadfile>
     <property environment="env"/>
-    <property name="pubnub_jar_file_name" value="Pubnub-Standardedition-3.4.jar"/>
+    <property name="pubnub_jar_file_name" value="Pubnub-Standardedition-${VERSION}.jar"/>
     <property name="srcPubnubApi.link" value="srcPubnubApi"/>
     <property name="sources_pubnub_api" value="${srcPubnubApi.link}/com/pubnub/api"/>
     <property name="sources_pubnub_logging" value="srcLogging/com/pubnub/api"/>
@@ -14,6 +15,8 @@
         <pathelement location="libs/bcprov-jdk15on-1.47.jar"/>
         <pathelement location="libs/json-20090211.jar"/>
         <pathelement location="libs/slf4j-api-1.7.5.jar"/>
+        <pathelement location="libs/slf4j-log4j12-1.7.5.jar"/>
+        <pathelement location="libs/log4j-1.2.17.jar"/>
     </path>
     <target name="setDebugTrue" >
         <replace dir="${srcPubnubApi.link}" token="boolean LOGGING = false" value="boolean LOGGING = true">
@@ -95,7 +98,7 @@
 				<attribute name="Company" value="Pubnub" />
 				<attribute name="Project" value="pubnub-api" />
 				<attribute name="Java-Version" value="${java.version}" />
-				<attribute name="Rsrc-Class-Path" value="./ bcprov-jdk15on-1.47.jar json-20090211.jar slf4j-api-1.7.5.jar" />
+				<attribute name="Rsrc-Class-Path" value="./ bcprov-jdk15on-1.47.jar json-20090211.jar slf4j-api-1.7.5.jar slf4j-log4j12-1.7.5.jar log4j-1.2.17.jar" />
 				<attribute name="Class-Path" value="." />
 				<attribute name="Rsrc-Main-Class" value="@{jar.classname}" />
 				<attribute name="Main-Class" value="org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader" />

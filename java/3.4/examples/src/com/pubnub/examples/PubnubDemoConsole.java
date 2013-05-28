@@ -14,7 +14,9 @@ import com.pubnub.api.PubnubUtil;
 public class PubnubDemoConsole {
 
     Pubnub pubnub;
-
+    String publish_key = "demo";
+    String subscribe_key = "demo";
+    String secret_key = "demo";
     String cipher_key = "";
     boolean SSL;
     Scanner reader;
@@ -217,10 +219,10 @@ public class PubnubDemoConsole {
         this.cipher_key = reader.nextLine();
         if (this.cipher_key.length() == 0) {
             System.out.println("No Cipher key provided");
-            pubnub = new Pubnub("demo", "demo", "demo", this.SSL);
+            pubnub = new Pubnub(this.publish_key, this.subscribe_key, this.secret_key, this.SSL);
         } else {
             System.out.println("Cipher Key = " + this.cipher_key);
-            pubnub = new Pubnub("demo", "demo", "demo", this.cipher_key,
+            pubnub = new Pubnub(this.publish_key, this.subscribe_key, this.secret_key, this.cipher_key,
                     this.SSL);
         }
 

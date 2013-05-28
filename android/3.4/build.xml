@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project basedir="." default="build" name="PubnubApi">
     <property environment="env"/>
+    <loadfile property="VERSION" srcFile="../../VERSION"><filterchain><striplinebreaks/></filterchain></loadfile>
+    <property name="pubnub_lib_jar" value="Pubnub-Android-${VERSION}.jar"/>
     <property name="java_3.4_path" value="../../java/3.4"/>
     <property name="src_pubnub_api_path" value="${java_3.4_path}/srcPubnubApi"/>
     <property name="src_java_path" value="${java_3.4_path}/src1"/>
@@ -36,17 +38,17 @@
     </target>
     <target name="clean">
         <delete dir="bin"/>
-        <delete file="Pubnub-Android-3.4.jar"/>
+        <delete file="${pubnub_lib_jar}"/>
     </target>
     <target depends="clean" name="cleanall"/>
     <target depends="copy_jars_to_examples" name="build"/>
     <target depends="create-jar" name="copy_jars_to_examples">
-        <copy file="Pubnub-Android-3.4.jar" todir="./examples/PubnubExample/libs/"/>
-        <copy file="Pubnub-Android-3.4.jar" todir="./examples/SubscribeAtBoot/libs/"/>
+        <copy file="${pubnub_lib_jar}" todir="./examples/PubnubExample/libs/"/>
+        <copy file="${pubnub_lib_jar}" todir="./examples/SubscribeAtBoot/libs/"/>
     </target>
 
     <target depends="build-project" name="create-jar">
-        <jar destfile="Pubnub-Android-3.4.jar"
+        <jar destfile="${pubnub_lib_jar}"
             basedir="bin"
             includes="**/**"
         />

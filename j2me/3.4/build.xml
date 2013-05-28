@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project basedir="." default="build" name="PubnubApi">
     <property environment="env"/>
+    <loadfile property="VERSION" srcFile="../../VERSION"><filterchain><striplinebreaks/></filterchain></loadfile>
+    <property name="pubnub_lib_jar" value="Pubnub-Microedition-${VERSION}.jar"/>
     <property name="srcPubnubApi.link" value="../../java/3.4/srcPubnubApi"/>
     <property name="target" value="1.1"/>
     <property name="source" value="1.3"/>
@@ -38,7 +40,7 @@
     <target depends="clean" name="cleanall"/>
     <target depends="create-jar, clean" name="build"/>
     <target depends="build-project" name="create-jar">
-        <jar destfile="Pubnub-Microedition-3.4.jar"
+        <jar destfile="${pubnub_lib_jar}"
             basedir="bin"
             includes="**/**"
         />
