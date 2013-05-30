@@ -82,7 +82,6 @@ class HttpClientCore extends HttpClient {
 
     public synchronized HttpResponse fetch(String url, Hashtable headers)
             throws PubnubException, SocketTimeoutException {
-        System.out.println(url);
         URL urlobj = null;
         try {
             urlobj = new URL(url);
@@ -197,6 +196,6 @@ class HttpClientCore extends HttpClient {
     }
 
     public void shutdown() {
-        connection.disconnect();
+        if (connection != null) connection.disconnect();
     }
 }

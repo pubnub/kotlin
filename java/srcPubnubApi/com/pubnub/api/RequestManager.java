@@ -49,8 +49,11 @@ abstract class Worker implements Runnable {
         }
     }
 
+    public abstract void shutdown();
+
     void die() {
         _die = true;
+        shutdown();
     }
 
     abstract void process(HttpRequest hreq);
@@ -116,6 +119,10 @@ class NonSubscribeWorker extends Worker {
             }
             hreq.getResponseHandler().handleResponse(hreq, hresp.getResponse());
         }
+    }
+
+    public void shutdown() {
+        if (httpclient != null) httpclient.shutdown();
     }
 
 }
@@ -210,6 +217,9 @@ abstract class RequestManager {
         for (int i = 0; i < _maxWorkers; ++i) {
             Worker w = _workers[i];
             w.die();
+        }
+        synchronized (_waiting) {
+            _waiting.notifyAll();
         }
     }
 }

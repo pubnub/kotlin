@@ -60,5 +60,8 @@ class SubscribeWorker extends AbstractSubscribeWorker {
         }
 
     }
+    public void shutdown() {
+
+    }
 
 }
