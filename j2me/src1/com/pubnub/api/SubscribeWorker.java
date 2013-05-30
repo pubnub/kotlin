@@ -61,7 +61,7 @@ class SubscribeWorker extends AbstractSubscribeWorker {
 
     }
     public void shutdown() {
-
+        if (httpclient != null) httpclient.shutdown();
     }
 
 }

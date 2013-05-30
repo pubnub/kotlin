@@ -185,7 +185,6 @@ public class HttpClientCore extends HttpClient {
     public void shutdown() {
         try {
             if (hc != null) {
-                System.out.println("hc close");
                 hc.close();
             }
 
