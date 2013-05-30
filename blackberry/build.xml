@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project basedir="." default="build" name="PubnubApi">
     <property environment="env"/>
-    <loadfile property="VERSION" srcFile="../../VERSION"><filterchain><striplinebreaks/></filterchain></loadfile>
+    <loadfile property="VERSION" srcFile="../VERSION"><filterchain><striplinebreaks/></filterchain></loadfile>
     <property name="pubnub_lib_jar" value="Pubnub-Blackberry-${VERSION}.jar"/>
-    <property name="srcPubnubApi.link" value="../../java/3.4/srcPubnubApi"/>
-    <property name="j2me.link" value="../../j2me/3.4"/>
+    <property name="srcPubnubApi.link" value="../java/3.4/srcPubnubApi"/>
+    <property name="j2me.link" value="../j2me/3.4"/>
     <property name="target" value="1.1"/>
     <property name="source" value="1.3"/>
     <path id="PubnubApi.classpath">
