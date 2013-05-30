@@ -822,7 +822,7 @@ abstract class PubnubCore {
         }
         return true;
     }
-    
+
     private void leave(final String channel) {
 
         String[] urlargs = { getOrigin(), "v2/presence/sub_key", this.SUBSCRIBE_KEY, "channel"
@@ -837,7 +837,7 @@ abstract class PubnubCore {
             }
 
             public void handleError(HttpRequest hreq, String response) {
-            	
+
             }
 
         });
