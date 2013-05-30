@@ -1045,7 +1045,7 @@ abstract class PubnubCore {
             return;
 
         if (channelString == null) {
-            callErrorCallbacks(channelsArray, "Parsing Error");
+            callErrorCallbacks(channelsArray, PubnubError.PNERR_5026_PARSING_ERROR.toString());
             return;
         }
         String[] urlComponents = { getOrigin(), "subscribe",
@@ -1123,7 +1123,7 @@ abstract class PubnubCore {
                                                 _channel.callback
                                                         .errorCallback(
                                                                 _channel.name,
-                                                                "Message Decryption Error : "
+                                                                PubnubError.PNERR_5024_DECRYPTION_ERROR + " : "
                                                                         + messages
                                                                                 .get(i)
                                                                                 .toString());
@@ -1164,7 +1164,7 @@ abstract class PubnubCore {
                                                 _channel.callback
                                                         .errorCallback(
                                                                 _channel.name,
-                                                                "Message Decryption Error : "
+                                                                PubnubError.PNERR_5025_DECRYPTION_ERROR + " : "
                                                                         + messages
                                                                                 .get(i)
                                                                                 .toString());

@@ -177,7 +177,14 @@ class HttpClientCore extends HttpClient {
             } catch (JSONException e) {
                 throw new PubnubException(PubnubError.PNERR_5015_INVALID_JSON);
             }
-
+        case HttpURLConnection.HTTP_BAD_GATEWAY:
+            throw new PubnubException(PubnubError.PNERR_5020_BAD_GATEWAY);
+        case HttpURLConnection.HTTP_CLIENT_TIMEOUT:
+            throw new PubnubException(PubnubError.PNERR_5021_CLIENT_TIMEOUT);
+        case HttpURLConnection.HTTP_GATEWAY_TIMEOUT:
+            throw new PubnubException(PubnubError.PNERR_5022_GATEWAY_TIMEOUT);
+        case HttpURLConnection.HTTP_INTERNAL_ERROR:
+            throw new PubnubException(PubnubError.PNERR_5023_INTERNAL_ERROR);
         default:
             break;
         }

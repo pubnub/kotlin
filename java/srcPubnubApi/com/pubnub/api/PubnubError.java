@@ -14,14 +14,21 @@ public class PubnubError {
     public static final PubnubError PNERR_5009_PROTOCOL_EXCEPTION    =       new PubnubError( 5009 , "Protocol Exception"          );
     public static final PubnubError PNERR_5010_CONNECT_EXCEPTION     =       new PubnubError( 5010 , "Connect Exception"           );
     public static final PubnubError PNERR_5011_HTTP_RC_ERROR         =       new PubnubError( 5011 , "Unable to get Response Code" );
-    public static final PubnubError PNERR_5012_GETINPUTSTREAM         =       new PubnubError( 5012 , "Unable to get Input Stream"  );
-    public static final PubnubError PNERR_5013_GETINPUTSTREAM         =       new PubnubError( 5013 , "Unable to get Input Stream"  );
+    public static final PubnubError PNERR_5012_GETINPUTSTREAM        =       new PubnubError( 5012 , "Unable to get Input Stream"  );
+    public static final PubnubError PNERR_5013_GETINPUTSTREAM        =       new PubnubError( 5013 , "Unable to get Input Stream"  );
     public static final PubnubError PNERR_5014_READINPUT             =       new PubnubError( 5014 , "Unable to read Input Stream" );
-    public static final PubnubError PNERR_5015_INVALID_JSON             =       new PubnubError( 5015 , "Invalid Json"                );
-    public static final PubnubError PNERR_5016_BAD_REQUEST             =       new PubnubError( 5016 , "Bad request"                 );
-    public static final PubnubError PNERR_5017_HTTP_ERROR             =       new PubnubError( 5017 , "HTTP Error"                  );
-    public static final PubnubError PNERR_5018_HTTP_ERROR             =       new PubnubError( 5018 , "HTTP Error"                  );
-    public static final PubnubError PNERR_5019_HTTP_ERROR             =       new PubnubError( 5019 , "HTTP Error"                  );
+    public static final PubnubError PNERR_5015_INVALID_JSON          =       new PubnubError( 5015 , "Invalid Json"                );
+    public static final PubnubError PNERR_5016_BAD_REQUEST           =       new PubnubError( 5016 , "Bad request"                 );
+    public static final PubnubError PNERR_5017_HTTP_ERROR            =       new PubnubError( 5017 , "HTTP Error"                  );
+    public static final PubnubError PNERR_5018_HTTP_ERROR            =       new PubnubError( 5018 , "HTTP Error"                  );
+    public static final PubnubError PNERR_5019_HTTP_ERROR            =       new PubnubError( 5019 , "HTTP Error"                  );
+    public static final PubnubError PNERR_5020_BAD_GATEWAY           =       new PubnubError( 5020 , "Bad Gateway"                 );
+    public static final PubnubError PNERR_5021_CLIENT_TIMEOUT        =       new PubnubError( 5021 , "Client Timeout"              );
+    public static final PubnubError PNERR_5022_GATEWAY_TIMEOUT       =       new PubnubError( 5022 , "Gateway Timeout"             );
+    public static final PubnubError PNERR_5023_INTERNAL_ERROR        =       new PubnubError( 5023 , "Internal Server Error"       );
+    public static final PubnubError PNERR_5024_DECRYPTION_ERROR      =       new PubnubError( 5024 , "Decryption Error"            );
+    public static final PubnubError PNERR_5025_DECRYPTION_ERROR      =       new PubnubError( 5025 , "Decryption Error"            );
+    public static final PubnubError PNERR_5026_PARSING_ERROR         =       new PubnubError( 5026 , "Parsing Error"               );
 
     private final int errorCode;
     private final String errorString;
