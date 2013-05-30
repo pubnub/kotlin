@@ -5,9 +5,15 @@ import java.util.zip.GZIPInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.Hashtable;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import com.pubnub.api.PubnubException;
 
@@ -70,15 +76,29 @@ class HttpClientCore extends HttpClient {
         return new String(out.toString());
     }
 
-    public HttpResponse fetch(String url) throws IOException, PubnubException {
+    public HttpResponse fetch(String url) throws PubnubException, SocketTimeoutException {
         return fetch(url, null);
     }
 
     public synchronized HttpResponse fetch(String url, Hashtable headers)
-            throws IOException, PubnubException {
-        URL urlobj = new URL(url);
-        connection = (HttpURLConnection) urlobj.openConnection();
-        connection.setRequestMethod("GET");
+            throws PubnubException, SocketTimeoutException {
+        System.out.println(url);
+        URL urlobj = null;
+        try {
+            urlobj = new URL(url);
+        } catch (MalformedURLException e3) {
+            throw new PubnubException(PubnubError.PNERR_5006_MALFORMED_URL);
+        }
+        try {
+            connection = (HttpURLConnection) urlobj.openConnection();
+        } catch (IOException e2) {
+            throw new PubnubException(PubnubError.PNERR_5008_URL_OPEN);
+        }
+        try {
+            connection.setRequestMethod("GET");
+        } catch (ProtocolException e1) {
+            throw new PubnubException(PubnubError.PNERR_5009_PROTOCOL_EXCEPTION);
+        }
         if (_headers != null) {
             Enumeration en = _headers.keys();
             while (en.hasMoreElements()) {
@@ -97,20 +117,72 @@ class HttpClientCore extends HttpClient {
         }
         connection.setReadTimeout(requestTimeout);
         connection.setConnectTimeout(connectionTimeout);
-        connection.connect();
 
-        if (connection.getResponseCode() == HttpURLConnection.HTTP_FORBIDDEN)
-            return new HttpResponse(connection.getResponseCode(), "");
 
-        InputStream is;
-        if(connection.getContentEncoding() == null || !connection.getContentEncoding().equals("gzip")) {
-            is = connection.getInputStream();
+        try {
+            connection.connect();
+        }
+        catch (SocketTimeoutException  e) {
+            throw e;
+        }
+        catch (IOException e) {
+            throw new PubnubException(PubnubError.PNERR_5010_CONNECT_EXCEPTION);
+        }
+
+        int rc = HttpURLConnection.HTTP_CLIENT_TIMEOUT;
+        try {
+            rc = connection.getResponseCode();
+        } catch (IOException e) {
+            throw new PubnubException(PubnubError.PNERR_5011_HTTP_RC_ERROR);
+        }
+
+
+        InputStream is = null;
+        String encoding = connection.getContentEncoding();
+
+        if(encoding == null || !encoding.equals("gzip")) {
+            try {
+                is = connection.getInputStream();
+            } catch (IOException e) {
+                if (rc == HttpURLConnection.HTTP_OK)
+                    throw new PubnubException(PubnubError.PNERR_5012_GETINPUTSTREAM);
+                is = connection.getErrorStream();
+            }
 
         } else {
-            is = new GZIPInputStream(connection.getInputStream());
+            try {
+                is = new GZIPInputStream(connection.getInputStream());
+            } catch (IOException e) {
+                if (rc == HttpURLConnection.HTTP_OK)
+                    throw new PubnubException(PubnubError.PNERR_5013_GETINPUTSTREAM);
+                is = connection.getErrorStream();
+            }
         }
-        String page = readInput(is);
-        return new HttpResponse(connection.getResponseCode(), page);
+
+        String page = null;
+        try {
+            page = readInput(is);
+        } catch (IOException e) {
+            throw new PubnubException(PubnubError.PNERR_5014_READINPUT);
+        }
+
+        switch (rc) {
+        case HttpURLConnection.HTTP_FORBIDDEN:
+            return new HttpResponse( rc, "");
+        case HttpURLConnection.HTTP_BAD_REQUEST:
+            try {
+                JSONArray jsarr = new JSONArray(page);
+                String error = jsarr.get(1).toString();
+                throw new PubnubException(PubnubError.PNERR_5016_BAD_REQUEST, error);
+            } catch (JSONException e) {
+                throw new PubnubException(PubnubError.PNERR_5015_INVALID_JSON);
+            }
+
+        default:
+            break;
+        }
+
+        return new HttpResponse(rc, page);
     }
 
     public boolean isOk(int rc) {

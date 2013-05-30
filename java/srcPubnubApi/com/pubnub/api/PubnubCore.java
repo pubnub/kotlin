@@ -437,7 +437,7 @@ abstract class PubnubCore {
             } catch (Exception e) {
                 JSONArray jsarr;
                 jsarr = new JSONArray();
-                jsarr.put("0").put("Error: Encryption Failure");
+                jsarr.put("0").put(PubnubError.PNERR_5001_ENCRYPTION_ERROR);
                 callback.errorCallback(channel, jsarr);
                 return;
             }
@@ -598,7 +598,7 @@ abstract class PubnubCore {
                     callback.successCallback(channel, respArr);
                 } catch (Exception e) {
                     callback.errorCallback(channel,
-                            "JSON processing/Decryption Error");
+                            PubnubError.PNERR_5004_JSON_ERROR);
                 }
             }
 
@@ -660,7 +660,7 @@ abstract class PubnubCore {
                             callback.successCallback(channel, respArr);
                         } catch (Exception e) {
                             callback.errorCallback(channel,
-                                    "JSON processing/Decryption Error");
+                                    PubnubError.PNERR_5005_JSON_ERROR);
                         }
 
                     }
