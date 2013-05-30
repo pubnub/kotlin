@@ -99,8 +99,8 @@ class HttpClientCore extends HttpClient {
         connection.setConnectTimeout(connectionTimeout);
         connection.connect();
 
-           if (connection.getResponseCode() == HttpURLConnection.HTTP_FORBIDDEN)
-               return new HttpResponse(connection.getResponseCode(), "");
+        if (connection.getResponseCode() == HttpURLConnection.HTTP_FORBIDDEN)
+            return new HttpResponse(connection.getResponseCode(), "");
 
         InputStream is;
         if(connection.getContentEncoding() == null || !connection.getContentEncoding().equals("gzip")) {
