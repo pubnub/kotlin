@@ -3,7 +3,7 @@
     <property environment="env"/>
     <loadfile property="VERSION" srcFile="../VERSION"><filterchain><striplinebreaks/></filterchain></loadfile>
     <property name="pubnub_lib_jar" value="Pubnub-Microedition-${VERSION}.jar"/>
-    <property name="srcPubnubApi.link" value="../java/3.4/srcPubnubApi"/>
+    <property name="srcPubnubApi.link" value="../java/srcPubnubApi"/>
     <property name="target" value="1.1"/>
     <property name="source" value="1.3"/>
     <path id="PubnubApi.classpath">

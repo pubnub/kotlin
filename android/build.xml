@@ -3,9 +3,9 @@
     <property environment="env"/>
     <loadfile property="VERSION" srcFile="../VERSION"><filterchain><striplinebreaks/></filterchain></loadfile>
     <property name="pubnub_lib_jar" value="Pubnub-Android-${VERSION}.jar"/>
-    <property name="java_3.4_path" value="../java/3.4"/>
-    <property name="src_pubnub_api_path" value="${java_3.4_path}/srcPubnubApi"/>
-    <property name="src_java_path" value="${java_3.4_path}/src1"/>
+    <property name="java_core_path" value="../java"/>
+    <property name="src_pubnub_api_path" value="${java_core_path}/srcPubnubApi"/>
+    <property name="src_java_path" value="${java_core_path}/src1"/>
     <property name="src_logging_path" value="./srcLogging"/>
     <property name="src_android_path" value="./src"/>
     <property name="android_jar_path" value="jars"/>
@@ -13,7 +13,7 @@
     <property name="source" value="1.5"/>
     <path id="classpath">
         <pathelement location="bin"/>
-        <pathelement location="${java_3.4_path}/libs/bcprov-jdk15on-1.47.jar"/>
+        <pathelement location="${java_core_path}/libs/bcprov-jdk15on-1.47.jar"/>
         <pathelement location="libs/android-8.jar"/>
     </path>
     <target name="setDebugTrue" >
