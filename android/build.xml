@@ -1,13 +1,67 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project basedir="." default="build">
-    <target name="build">
-        <subant target="build">
-            <fileset dir="." includes="*/build.xml" />
-        </subant>
+<project basedir="." default="build" name="PubnubApi">
+    <property environment="env"/>
+    <loadfile property="VERSION" srcFile="../VERSION"><filterchain><striplinebreaks/></filterchain></loadfile>
+    <property name="pubnub_lib_jar" value="Pubnub-Android-${VERSION}.jar"/>
+    <property name="java_3.4_path" value="../java/3.4"/>
+    <property name="src_pubnub_api_path" value="${java_3.4_path}/srcPubnubApi"/>
+    <property name="src_java_path" value="${java_3.4_path}/src1"/>
+    <property name="src_logging_path" value="./srcLogging"/>
+    <property name="src_android_path" value="./src"/>
+    <property name="android_jar_path" value="jars"/>
+    <property name="target" value="1.5"/>
+    <property name="source" value="1.5"/>
+    <path id="classpath">
+        <pathelement location="bin"/>
+        <pathelement location="${java_3.4_path}/libs/bcprov-jdk15on-1.47.jar"/>
+        <pathelement location="libs/android-8.jar"/>
+    </path>
+    <target name="setDebugTrue" >
+        <replace dir="${src_pubnub_api_path}" token="boolean LOGGING = false" value="boolean LOGGING = true">
+            <include name="**/*.java"/>
+        </replace>
+    </target>
+    <target name="unsetDebugTrue" >
+        <replace dir="${src_pubnub_api_path}" token="boolean LOGGING = true" value="boolean LOGGING = false">
+            <include name="**/*.java"/>
+        </replace>
+    </target>
+    <target depends="setDebugTrue,build,unsetDebugTrue" name="debug-build"/>
+    <target name="init">
+        <mkdir dir="bin"/>
+        <copy includeemptydirs="false" todir="bin">
+            <fileset dir="${src_pubnub_api_path}">
+                <exclude name="**/*.launch"/>
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
     </target>
     <target name="clean">
-        <subant target="clean">
-            <fileset dir="." includes="*/build.xml" />
-        </subant>
+        <delete dir="bin"/>
+        <delete file="${pubnub_lib_jar}"/>
+    </target>
+    <target depends="clean" name="cleanall"/>
+    <target depends="copy_jars_to_examples" name="build"/>
+    <target depends="create-jar" name="copy_jars_to_examples">
+        <copy file="${pubnub_lib_jar}" todir="./examples/PubnubExample/libs/"/>
+        <copy file="${pubnub_lib_jar}" todir="./examples/SubscribeAtBoot/libs/"/>
+    </target>
+
+    <target depends="build-project" name="create-jar">
+        <jar destfile="${pubnub_lib_jar}"
+            basedir="bin"
+            includes="**/**"
+        />
+    </target>
+
+    <target depends="init" name="build-project">
+        <echo message="${ant.project.name}: ${ant.file}"/>
+        <javac destdir="bin" source="${source}" target="${target}">
+            <src path="${src_pubnub_api_path}"/>
+            <src path="${src_java_path}"/>
+            <src path="${src_logging_path}"/>
+            <src path="${src_android_path}"/>
+            <classpath refid="classpath"/>
+        </javac>
     </target>
 </project>
