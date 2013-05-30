@@ -1354,6 +1354,7 @@ abstract class PubnubCore {
         } else {
             params.put("auth", this.AUTH_STR);
         }
+        resubscribe();
     }
 
     /**
@@ -1363,5 +1364,6 @@ abstract class PubnubCore {
     public void unsetAuthKey() {
         this.AUTH_STR = null;
         params.remove("auth");
+        resubscribe();
     }
 }
