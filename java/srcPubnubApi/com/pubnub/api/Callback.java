@@ -18,8 +18,7 @@ public abstract class Callback {
      *            Message
      *
      */
-    public void successCallback(String channel, Object message) {
-    }
+    public abstract void successCallback(String channel, Object message);
 
     /**
      * This callback will be invoked when an error occurs
@@ -29,8 +28,7 @@ public abstract class Callback {
      * @param message
      *            Message
      */
-    public void errorCallback(String channel, Object message) {
-    }
+    public abstract void errorCallback(String channel, Object message);
 
     /**
      * This callback will be invoked on getting connected to a channel
