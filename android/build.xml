@@ -16,6 +16,7 @@
         <pathelement location="${java_core_path}/libs/bcprov-jdk15on-1.47.jar"/>
         <pathelement location="libs/android-8.jar"/>
     </path>
+    <target name="test" />
     <target name="setDebugTrue" >
         <replace dir="${src_pubnub_api_path}" token="boolean LOGGING = false" value="boolean LOGGING = true">
             <include name="**/*.java"/>

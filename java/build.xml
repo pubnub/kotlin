@@ -19,6 +19,11 @@
         <pathelement location="libs/slf4j-log4j12-1.7.5.jar"/>
         <pathelement location="libs/log4j-1.2.17.jar"/>
         <pathelement location="libs/junit-4.11.jar"/>
+        <pathelement location="jars/Pubnub-UnitTests-${VERSION}.jar"/>
+    </path>
+    <path id="PubnubTests.classpath">
+        <pathelement location="${pubnub_jar_file_name}"/>
+        <pathelement location="libs/hamcrest-all-1.3.jar"/>
     </path>
     <target name="setDebugTrue" >
         <replace dir="${srcPubnubApi.link}" token="boolean LOGGING = false" value="boolean LOGGING = true">
@@ -29,6 +34,16 @@
         <replace dir="${srcPubnubApi.link}" token="boolean LOGGING = true" value="boolean LOGGING = false">
             <include name="**/*.java"/>
         </replace>
+    </target>
+    <target name="test" >
+       <junit>
+            <classpath refid="PubnubApi.classpath" />
+            <classpath refid="PubnubTests.classpath" />
+            <formatter type="brief" usefile="false" />
+            <batchtest>
+                <zipfileset src="jars/${pubnub_unittests_jar_file_name}" includes="**/PubnubTest.class" />
+            </batchtest>
+       </junit>
     </target>
     <target name="init">
         <mkdir dir="bin"/>
@@ -78,52 +93,52 @@
         </javac>
     </target>
 
-	<macrodef name="delete_old_jar">
-		<attribute name="jar.filename" />
-		<sequential>
-			<delete file="@{jar.filename}">
-			</delete>
-		</sequential>
-	</macrodef>
+    <macrodef name="delete_old_jar">
+        <attribute name="jar.filename" />
+        <sequential>
+            <delete file="@{jar.filename}">
+            </delete>
+        </sequential>
+    </macrodef>
 
-	<macrodef name="create_dirs">
-		<sequential>
-			<mkdir dir="jar_temp" />
-			<mkdir dir="jar_temp/META-INF" />
-		</sequential>
-	</macrodef>
+    <macrodef name="create_dirs">
+        <sequential>
+            <mkdir dir="jar_temp" />
+            <mkdir dir="jar_temp/META-INF" />
+        </sequential>
+    </macrodef>
 
-	<macrodef name="delete_temp_dirs">
-		<sequential>
-			<delete dir="jar_temp">
-			</delete>
-		</sequential>
-	</macrodef>
+    <macrodef name="delete_temp_dirs">
+        <sequential>
+            <delete dir="jar_temp">
+            </delete>
+        </sequential>
+    </macrodef>
 
-	<macrodef name="create_manifest">
-		<attribute name="jar.classname" />
-		<sequential>
-			<manifest file="jar_temp/META-INF/MANIFEST.MF">
-				<attribute name="Manifest-Version" value="1.0" />
-				<attribute name="Version" value="3.4" />
-				<attribute name="Company" value="Pubnub" />
-				<attribute name="Project" value="pubnub-api" />
-				<attribute name="Java-Version" value="${java.version}" />
-				<attribute name="Rsrc-Class-Path" value="./ bcprov-jdk15on-1.47.jar json-20090211.jar slf4j-api-1.7.5.jar slf4j-log4j12-1.7.5.jar log4j-1.2.17.jar" />
-				<attribute name="Class-Path" value="." />
-				<attribute name="Rsrc-Main-Class" value="@{jar.classname}" />
-				<attribute name="Main-Class" value="org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader" />
-			</manifest>
-		</sequential>
-	</macrodef>
+    <macrodef name="create_manifest">
+        <attribute name="jar.classname" />
+        <sequential>
+            <manifest file="jar_temp/META-INF/MANIFEST.MF">
+                <attribute name="Manifest-Version" value="1.0" />
+                <attribute name="Version" value="3.4" />
+                <attribute name="Company" value="Pubnub" />
+                <attribute name="Project" value="pubnub-api" />
+                <attribute name="Java-Version" value="${java.version}" />
+                <attribute name="Rsrc-Class-Path" value="./ bcprov-jdk15on-1.47.jar json-20090211.jar slf4j-api-1.7.5.jar slf4j-log4j12-1.7.5.jar log4j-1.2.17.jar" />
+                <attribute name="Class-Path" value="." />
+                <attribute name="Rsrc-Main-Class" value="@{jar.classname}" />
+                <attribute name="Main-Class" value="org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader" />
+            </manifest>
+        </sequential>
+    </macrodef>
 
-	<macrodef name="create_jar">
-		<attribute name="jar.filename" />
-		<sequential>
-			<jar destfile="jars/@{jar.filename}" manifest="jar_temp/META-INF/MANIFEST.MF" basedir="jar_temp">
-			</jar>
-		</sequential>
-	</macrodef>
+    <macrodef name="create_jar">
+        <attribute name="jar.filename" />
+        <sequential>
+            <jar destfile="jars/@{jar.filename}" manifest="jar_temp/META-INF/MANIFEST.MF" basedir="jar_temp">
+            </jar>
+        </sequential>
+    </macrodef>
 
     <macrodef name="copy_class_files">
         <sequential>

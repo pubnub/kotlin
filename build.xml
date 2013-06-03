@@ -6,6 +6,11 @@
             <fileset dir="." includes="*/build.xml" />
         </subant>
     </target>
+    <target name="test">
+        <subant target="test" >
+            <fileset dir="." includes="*/build.xml" />
+        </subant>
+    </target>
     <target name="clean" >
         <subant target="clean">
             <fileset dir="." includes="*/build.xml" />

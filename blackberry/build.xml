@@ -16,6 +16,7 @@
         <pathelement location="${j2me.link}/libs/jsonme.jar"/>
         <pathelement location="${j2me.link}/libs/tinylinegzip.jar"/>
     </path>
+    <target name="test" />
     <target name="setJsonMeJar" >
         <replace dir="${srcPubnubApi.link}" token="org.json" value="org.json.me">
             <include name="**/*.java"/>
