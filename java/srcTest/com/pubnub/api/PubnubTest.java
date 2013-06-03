@@ -135,6 +135,47 @@ public class PubnubTest {
         }
 
     }
+    class PresenceCallback extends Callback {
+
+        private String uuid;
+        private CountDownLatch latch;
+
+        public String getUUID() {
+            return uuid;
+        }
+
+        public PresenceCallback(CountDownLatch latch) {
+            this.latch = latch;
+        }
+
+        public PresenceCallback() {
+
+        }
+
+        @Override
+        public void successCallback(String channel, Object message) {
+            JSONObject resp = null;
+            try {
+                resp = new JSONObject(message.toString());
+            } catch (JSONException e1) {
+                e1.printStackTrace();
+            }
+            if (resp != null) {
+                try {
+                    uuid = (String) resp.get("uuid");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (latch != null) latch.countDown();
+        }
+
+        @Override
+        public void errorCallback(String channel, Object message) {
+            if (latch != null) latch.countDown();
+        }
+
+    }
 
     class HistoryCallback extends Callback {
 
@@ -491,6 +532,34 @@ public class PubnubTest {
             e.printStackTrace();
         }
         assertEquals(2, hCb.getCount());
+    }
+
+
+    @Test
+    public void testPresence() {
+        String channel = "java-unittest-" + Math.random();
+        CountDownLatch latch = new CountDownLatch(2);
+
+        PresenceCallback presenceCb = new PresenceCallback(latch);
+
+        try {
+            pubnub.presence(channel, presenceCb);
+
+            Pubnub pubnub2 = new Pubnub("demo", "demo");
+
+            Hashtable args = new Hashtable();
+            args.put("channel", channel);
+            args.put("callback", new SubscribeCallback(latch));
+
+            pubnub2.subscribe(args);
+
+            latch.await(10, TimeUnit.SECONDS);
+            assertEquals(pubnub2.UUID, presenceCb.getUUID());
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            assertTrue(false);
+        }
     }
 
 }
