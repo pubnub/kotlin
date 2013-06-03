@@ -2,7 +2,7 @@
 <project basedir="." default="build" name="PubnubApi">
     <property environment="env"/>
     <loadfile property="VERSION" srcFile="../VERSION"><filterchain><striplinebreaks/></filterchain></loadfile>
-    <property name="pubnub_lib_jar" value="Pubnub-Blackberry-${VERSION}.jar"/>
+    <property name="pubnub_lib_jar" value="Pubnub-BlackBerry-${VERSION}.jar"/>
     <property name="srcPubnubApi.link" value="../java/srcPubnubApi"/>
     <property name="j2me.link" value="../j2me"/>
     <property name="target" value="1.1"/>

@@ -2,7 +2,8 @@
 <project basedir="." default="build" name="PubnubApi" xmlns:artifact="antlib:org.apache.maven.artifact.ant">
     <loadfile property="VERSION" srcFile="../VERSION"><filterchain><striplinebreaks/></filterchain></loadfile>
     <property environment="env"/>
-    <property name="pubnub_jar_file_name" value="Pubnub-Standardedition-${VERSION}.jar"/>
+    <property name="pubnub_jar_file_name" value="Pubnub-StandardEdition-${VERSION}.jar"/>
+    <property name="pubnub_unittests_jar_file_name" value="Pubnub-UnitTests-${VERSION}.jar"/>
     <property name="srcPubnubApi.link" value="srcPubnubApi"/>
     <property name="sources_pubnub_api" value="${srcPubnubApi.link}/com/pubnub/api"/>
     <property name="sources_pubnub_logging" value="srcLogging/com/pubnub/api"/>
@@ -17,6 +18,7 @@
         <pathelement location="libs/slf4j-api-1.7.5.jar"/>
         <pathelement location="libs/slf4j-log4j12-1.7.5.jar"/>
         <pathelement location="libs/log4j-1.2.17.jar"/>
+        <pathelement location="libs/junit-4.11.jar"/>
     </path>
     <target name="setDebugTrue" >
         <replace dir="${srcPubnubApi.link}" token="boolean LOGGING = false" value="boolean LOGGING = true">
@@ -47,11 +49,19 @@
             <fileset dir="jars" includes="**/*.jar"/>
         </delete>
     </target>
-    <target depends="create-jar,create-examples-jar, create-demo-console-jar, clean_bin, doc" name="build"/>
+    <target depends="create-jar, create-test-jar, create-examples-jar, create-demo-console-jar, clean_bin, doc" name="build"/>
     <target depends="build-project" name="create-jar">
         <jar destfile="${pubnub_jar_file_name}"
             basedir="bin"
             includes="**/**"
+            excludes="**/*Test*.class"
+        />
+    </target>
+
+    <target depends="build-project" name="create-test-jar">
+        <jar destfile="jars/${pubnub_unittests_jar_file_name}"
+            basedir="bin"
+            includes="**/*Test*.class"
         />
     </target>
 
@@ -62,6 +72,7 @@
             <src path="src"/>
             <src path="src1"/>
             <src path="srcLogging"/>
+            <src path="srcTest"/>
             <src path="examples/src"/>
             <classpath refid="PubnubApi.classpath"/>
         </javac>
