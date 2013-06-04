@@ -36,7 +36,7 @@
         </replace>
     </target>
     <target name="test" >
-       <junit>
+       <junit haltonfailure="yes" >
             <classpath refid="PubnubApi.classpath" />
             <classpath refid="PubnubTests.classpath" />
             <formatter type="brief" usefile="false" />
