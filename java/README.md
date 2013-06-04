@@ -21,15 +21,19 @@ Checkout [srcPubnubApi](/java/srcPubnubApi)
 
 ###To build from the CL, run:
 ```
-$ ant clean
+$ ant clean build
 $ ant
 ```
 
 ###To test from the CL, run:
+```
 $ ant test
+```
 
 ###To be really cool and clean, build, and test at once!
+```
 $ ant clean build test
+```
 
 ###To run the DemoConsole:
 ```
