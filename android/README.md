@@ -5,7 +5,7 @@
 
 http://www.pubnub.com/account
 
-## PubNub 3.4 Real-time Cloud Push API - ANDROID
+## PubNub 3.5 Real-time Cloud Push API - ANDROID
 
 PubNub is a Massively Scalable Real-time Service for Web and Mobile Games.
 This is a cloud-based service for broadcasting Real-time messages
