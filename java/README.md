@@ -1,7 +1,7 @@
 ##### YOU MUST HAVE A PUBNUB ACCOUNT TO USE THE API.
 ##### http://www.pubnub.com/account
 
-## PubNub 3.4 Real-time Cloud Push API - JAVA
+## PubNub 3.5 Real-time Cloud Push API - JAVA
 
 www.pubnub.com - PubNub Real-time Push Service in the Cloud. 
 
@@ -10,13 +10,13 @@ Asyncronously in your applications!
 
 Additional Java docs are available at 3.4/doc/index.html
 ###To browse source
-Checkout [3.4/srcPubnubApi](3.4/srcPubnubApi)
+Checkout [srcPubnubApi](/java/srcPubnubApi)
 
 ###To setup with your IDE:
 
-1. Add new project with 3.4/ as the root
-2. Set the new project source as 3.4/srcPubnubApi
-3. Add 3.4/Pubnub-Standardedition-3.4.jar and 3.4/libs/*.jar as project libaries
+1. Add new project with java/ as the root
+2. Set the new project source as java/srcPubnubApi
+3. Add java/Pubnub-Standardedition-3.5.jar and 3.5/libs/*.jar as project libaries
 4. You should be able to run PubnubDemoConsole and PubnubExample via your IDE
 
 ###To build from the CL, run:
@@ -24,6 +24,13 @@ Checkout [3.4/srcPubnubApi](3.4/srcPubnubApi)
 $ ant clean
 $ ant
 ```
+
+###To test from the CL, run:
+$ ant test
+
+###To be really cool and clean, build, and test at once!
+$ ant clean build test
+
 ###To run the DemoConsole:
 ```
 $ cd jars
@@ -33,7 +40,7 @@ $ java -jar PubnubDemoConsole.jar
 ###Heres an example of running PubnubDemoConsole:
 
 ```
-$~/pubnub-api/java/3.4/jars$ java -jar PubnubDemoConsole.jar 
+$~/pubnub/java/java/jars$ java -jar PubnubDemoConsole.jar 
 HINT:  To test Re-connect and catch-up
 	Disconnect your machine from network/internet and
 	re-connect your machine after sometime
