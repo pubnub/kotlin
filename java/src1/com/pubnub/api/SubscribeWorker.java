@@ -28,6 +28,10 @@ class SubscribeWorker extends AbstractSubscribeWorker {
                 }
             } catch (SocketTimeoutException e) {
                 log.verbose("No Traffic , Read Timeout Exception in Fetch : " + e.toString());
+                if (_die) {
+                    log.verbose("Asked to Die, Don't do back from DAR processing");
+                    break;
+                }
                 if (hreq.isDar()) {
                     hreq.getResponseHandler().handleBackFromDar(hreq);
                     return;
