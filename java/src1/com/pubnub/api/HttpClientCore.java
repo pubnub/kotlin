@@ -21,6 +21,7 @@ class HttpClientCore extends HttpClient {
     private int requestTimeout = 310000;
     private int connectionTimeout = 5000;
     HttpURLConnection connection;
+	protected static Logger log = new Logger(Worker.class);
 
     private void init() {
         HttpURLConnection.setFollowRedirects(true);
@@ -187,7 +188,7 @@ class HttpClientCore extends HttpClient {
         default:
             break;
         }
-
+        log.verbose("URL = " + url + " : RESPONSE = " + page);
         return new HttpResponse(rc, page);
     }
 

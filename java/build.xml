@@ -16,8 +16,6 @@
         <pathelement location="libs/bcprov-jdk15on-1.47.jar"/>
         <pathelement location="libs/json-20090211.jar"/>
         <pathelement location="libs/slf4j-api-1.7.5.jar"/>
-        <pathelement location="libs/slf4j-log4j12-1.7.5.jar"/>
-        <pathelement location="libs/log4j-1.2.17.jar"/>
         <pathelement location="libs/junit-4.11.jar"/>
         <pathelement location="jars/Pubnub-UnitTests-${VERSION}.jar"/>
     </path>
@@ -82,6 +80,9 @@
 
     <target depends="init" name="build-project">
         <echo message="${ant.project.name}: ${ant.file}"/>
+        <replace dir="${srcPubnubApi.link}" token='private static String VERSION = ""' value='private static String VERSION = "${VERSION}"' >
+            <include name="**/*.java"/>
+        </replace>
         <javac destdir="bin" source="${source}" target="${target}">
             <src path="${srcPubnubApi.link}"/>
             <src path="src"/>
@@ -91,6 +92,9 @@
             <src path="examples/src"/>
             <classpath refid="PubnubApi.classpath"/>
         </javac>
+        <replace dir="${srcPubnubApi.link}" token='private static String VERSION = "${VERSION}"' value='private static String VERSION = ""'>
+            <include name="**/*.java"/>
+        </replace>
     </target>
 
     <macrodef name="delete_old_jar">
@@ -124,7 +128,7 @@
                 <attribute name="Company" value="Pubnub" />
                 <attribute name="Project" value="pubnub-api" />
                 <attribute name="Java-Version" value="${java.version}" />
-                <attribute name="Rsrc-Class-Path" value="./ bcprov-jdk15on-1.47.jar json-20090211.jar slf4j-api-1.7.5.jar slf4j-log4j12-1.7.5.jar log4j-1.2.17.jar" />
+                <attribute name="Rsrc-Class-Path" value="./ bcprov-jdk15on-1.47.jar json-20090211.jar slf4j-api-1.7.5.jar slf4j-simple-1.7.5.jar" />
                 <attribute name="Class-Path" value="." />
                 <attribute name="Rsrc-Main-Class" value="@{jar.classname}" />
                 <attribute name="Main-Class" value="org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader" />
