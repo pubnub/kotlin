@@ -41,6 +41,7 @@ abstract class PubnubCore {
     private volatile String _saved_timetoken = "0";
 
     private String PRESENCE_SUFFIX = "-pnpres";
+    private static String VERSION = "";
     private Random generator = new Random();
 
     private static Logger log = new Logger(PubnubCore.class);
@@ -270,19 +271,19 @@ abstract class PubnubCore {
             subscriptions = new Subscriptions();
 
         if (subscribeManager == null)
-            subscribeManager = new SubscribeManager("Subscribe Manager", 10000,310000);
+            subscribeManager = new SubscribeManager("Subscribe-Manager-" + System.identityHashCode(this) , 10000,310000);
 
         if (nonSubscribeManager == null)
-            nonSubscribeManager = new NonSubscribeManager("Non Subscribe Manager", 10000, 15000);
+            nonSubscribeManager = new NonSubscribeManager("Non-Subscribe-Manager-" + System.identityHashCode(this), 10000, 15000);
 
         if ( params == null )
             params = new Hashtable();
 
-        subscribeManager.setHeader("V", "3.4");
+        subscribeManager.setHeader("V", VERSION);
         subscribeManager.setHeader("Accept-Encoding", "gzip");
         subscribeManager.setHeader("User-Agent", getUserAgent());
 
-        nonSubscribeManager.setHeader("V", "3.4");
+        nonSubscribeManager.setHeader("V", VERSION);
         nonSubscribeManager.setHeader("Accept-Encoding", "gzip");
         nonSubscribeManager.setHeader("User-Agent", getUserAgent());
 

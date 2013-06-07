@@ -14,24 +14,21 @@ class Logger extends AbstractLogger {
 
     @Override
     protected void nativeDebug(String s) {
-        log.debug("["+Thread.activeCount()+ "]  Thread ID : " + Thread.currentThread().getId() + "  " + s);
-
+        log.debug(s);
     }
 
     @Override
     protected void nativeVerbose(String s) {
-        log.trace("["+Thread.activeCount()+ "]  Thread ID : " + Thread.currentThread().getId() + "  " + s);
+        log.trace(s);
     }
 
     @Override
     protected void nativeError(String s) {
-        log.error("["+Thread.activeCount()+ "]  Thread ID : " + Thread.currentThread().getId() + "  " + s);
-
+        log.error(s);
     }
 
     @Override
     protected void nativeInfo(String s) {
-        log.info("["+Thread.activeCount()+ "]  Thread ID : " + Thread.currentThread().getId() + "  " + s);
-
+        log.info(s);
     }
 }
