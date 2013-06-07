@@ -51,7 +51,7 @@
             <arg line="-d output"/>
             <arg line="${pubnub_lib_jar}"/>
         </exec>
-        <copy file="output/${pubnub_lib_jar}" tofile="${pubnub_lib_jar}"/>
+        <move verbose="true" file="output/${pubnub_lib_jar}" tofile="${pubnub_lib_jar}"/>
         <delete dir="output"/>
     </target>
 
