@@ -1,6 +1,7 @@
 package com.pubnub.api;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Random;
 
@@ -102,6 +103,21 @@ abstract class PubnubCore {
         }
         return ORIGIN_STR;
     }
+    
+    private Hashtable hashtableClone(Hashtable ht) {
+    	if (ht == null)
+    		return null;
+    	
+    	Hashtable htresp = new Hashtable();
+    	Enumeration e = ht.keys();
+    	   
+        while(e.hasMoreElements()) {
+          Object element = e.nextElement();
+          htresp.put(element,ht.get(element));
+        }
+    	return htresp;
+    }
+    
 
     /**
      * This method returns all channel names currently subscribed to in form of
@@ -634,7 +650,7 @@ abstract class PubnubCore {
      */
     public void detailedHistory(final String channel, long start, long end,
             int count, boolean reverse, final Callback callback) {
-        Hashtable parameters = (Hashtable)params.clone();
+        Hashtable parameters = hashtableClone(params);
         if (count == -1)
             count = 100;
 
@@ -1053,7 +1069,7 @@ abstract class PubnubCore {
                 PubnubCore.this.SUBSCRIBE_KEY,
                 PubnubUtil.urlEncode(channelString), "0", _timetoken };
 
-        Hashtable params = (Hashtable)this.params.clone();
+        Hashtable params = hashtableClone(this.params);
         params.put("uuid", UUID);
         log.verbose("Subscribing with timetoken : " + _timetoken);
 

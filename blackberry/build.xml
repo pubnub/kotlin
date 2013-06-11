@@ -46,6 +46,13 @@
             basedir="bin"
             includes="**/**"
         />
+        <exec failonerror="true" executable="tools/preverify">
+            <arg line="-classpath libs/net_rim_api.jar:libs/bouncycastle.jar:../j2me/libs/tinylinegzip.jar"/>
+            <arg line="-d output"/>
+            <arg line="${pubnub_lib_jar}"/>
+        </exec>
+        <move verbose="true" file="output/${pubnub_lib_jar}" tofile="${pubnub_lib_jar}"/>
+        <delete dir="output"/>
     </target>
 
     <target depends="init" name="build-project">
