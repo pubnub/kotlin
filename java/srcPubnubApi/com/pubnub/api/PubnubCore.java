@@ -780,8 +780,10 @@ abstract class PubnubCore {
      *
      * @param channel
      *            Channel name for which detailed history is required
+     * @param count
+     *            Maximum number of messages
      * @param callback
-     *            Callback
+     *            Callback object
      */
     public void detailedHistory(String channel, int count, Callback callback) {
         detailedHistory(channel, -1, -1, count, false, callback);
@@ -791,7 +793,7 @@ abstract class PubnubCore {
      * Read current time from PubNub Cloud.
      *
      * @param callback
-     *            Callback
+     *            Callback object
      */
     public void time(final Callback callback) {
 
@@ -855,7 +857,7 @@ abstract class PubnubCore {
      * Unsubscribe from channels.
      *
      * @param channels
-     *            String[] array containing channel names as string.
+     *            String array containing channel names
      */
     public void unsubscribe(String[] channels) {
         for (int i = 0; i < channels.length; i++) {
@@ -1172,7 +1174,7 @@ abstract class PubnubCore {
                                                 _channel.callback
                                                         .errorCallback(
                                                                 _channel.name,
-                                                                PubnubError.PNERR_5025_DECRYPTION_ERROR);
+                                                                new PubnubError(PubnubError.PNERR_5025_DECRYPTION_ERROR, "Verify your Cipher Key"));
                                             }
                                         } else {
                                             _channel.callback.successCallback(

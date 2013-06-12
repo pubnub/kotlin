@@ -12,7 +12,7 @@ import java.util.Vector;
  *
  * @author PubnubCore
  */
-public class PubnubUtilCore {
+class PubnubUtilCore {
 
     /**
      * Takes source and delimiter string as inputs and returns splitted string

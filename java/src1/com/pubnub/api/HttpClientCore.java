@@ -168,7 +168,7 @@ class HttpClientCore extends HttpClient {
 
         switch (rc) {
         case HttpURLConnection.HTTP_FORBIDDEN:
-            return new HttpResponse( rc, "");
+            throw new PubnubException(PubnubError.PNERR_5031_FORBIDDEN);
         case HttpURLConnection.HTTP_BAD_REQUEST:
             try {
                 JSONArray jsarr = new JSONArray(page);

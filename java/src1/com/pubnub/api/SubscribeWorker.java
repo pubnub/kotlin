@@ -38,6 +38,20 @@ class SubscribeWorker extends AbstractSubscribeWorker {
                 }
                 break;
 
+            } catch (PubnubException e) {
+
+                switch(e.getPubnubError().errorCode) {
+                case PubnubError.PNERR_5031_FORBIDDEN_CODE:
+                    log.verbose("Authentication Failure : " + e.toString());
+                    currentRetryAttempt = 1;
+                    break;
+                default:
+                    log.verbose("Retry Attempt : " + ((currentRetryAttempt == maxRetries)?"last":currentRetryAttempt)
+                            + " Exception in Fetch : " + e.toString());
+                    currentRetryAttempt++;
+                    break;
+                }
+
             } catch (Exception e) {
                 log.verbose("Retry Attempt : " + ((currentRetryAttempt == maxRetries)?"last":currentRetryAttempt)
                         + " Exception in Fetch : " + e.toString());

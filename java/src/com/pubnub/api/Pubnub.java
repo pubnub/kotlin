@@ -1,6 +1,14 @@
 package com.pubnub.api;
 
+import java.io.UnsupportedEncodingException;
+import java.util.Enumeration;
+import java.util.Hashtable;
 import java.util.UUID;
+
+import org.bouncycastle.util.encoders.Hex;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Pubnub object facilitates querying channels for messages and listening on
@@ -120,4 +128,357 @@ public class Pubnub extends PubnubCore {
     protected String getUserAgent() {
         return "Java/3.4";
     }
+
+    /**
+     * Send a message to a channel.
+     *
+     * @param args
+     *            Hashtable containing channel name, message.
+     * @param callback
+     *            object of sub class of Callback class
+     */
+    @Deprecated @Override
+    public void publish(Hashtable args, Callback callback) {
+        super.publish(args, callback);
+    }
+
+    /**
+     * Send a message to a channel.
+     *
+     * @param args
+     *            Hashtable containing channel name, message, callback
+     */
+    @Deprecated @Override
+    public void publish(Hashtable args) {
+        super.publish(args);
+    }
+
+    /**
+     *
+     * Read DetailedHistory for a channel.
+     *
+     * @param channel
+     *            Channel name for which detailed history is required
+     * @param start
+     *            Start time
+     * @param end
+     *            End time
+     * @param count
+     *            Upper limit on number of messages to be returned
+     * @param reverse
+     *            True if messages need to be in reverse order
+     * @param callback
+     *            Callback
+     * @deprecated
+     *            Renamed as history
+     */
+    @Deprecated @Override
+    public void detailedHistory(final String channel, long start, long end,
+            int count, boolean reverse, final Callback callback) {
+        super.detailedHistory(channel, start, end, count, reverse, callback);
+    }
+    /**
+     *
+     * Read History for a channel.
+     *
+     * @param channel
+     *            Channel name for which detailed history is required
+     * @param start
+     *            Start time
+     * @param end
+     *            End time
+     * @param count
+     *            Upper limit on number of messages to be returned
+     * @param reverse
+     *            True if messages need to be in reverse order
+     * @param callback
+     *            Callback
+     */
+    public void history(final String channel, long start, long end,
+            int count, boolean reverse, final Callback callback) {
+        super.detailedHistory(channel, start, end, count, reverse, callback);
+    }
+
+    /**
+     *
+     * Read DetailedHistory for a channel.
+     *
+     * @param channel
+     *            Channel name for which detailed history is required
+     * @param start
+     *            Start time
+     * @param reverse
+     *            True if messages need to be in reverse order
+     * @param callback
+     *            Callback
+     * @deprecated
+     *            Renamed as history
+     */
+    @Deprecated @Override
+    public void detailedHistory(String channel, long start, boolean reverse,
+            Callback callback) {
+        super.detailedHistory(channel, start, reverse, callback);
+    }
+
+    /**
+     *
+     * Read history for a channel.
+     *
+     * @param channel
+     *            Channel name for which detailed history is required
+     * @param start
+     *            Start time
+     * @param reverse
+     *            True if messages need to be in reverse order
+     * @param callback
+     *            Callback
+     */
+    public void history(String channel, long start, boolean reverse,
+            Callback callback) {
+        super.detailedHistory(channel, start, reverse, callback);
+    }
+
+    /**
+     *
+     * Read DetailedHistory for a channel.
+     *
+     * @param channel
+     *            Channel name for which detailed history is required
+     * @param start
+     *            Start time
+     * @param end
+     *            End time
+     * @param callback
+     *            Callback
+     * @deprecated
+     *            Renamed as history
+     */
+    @Deprecated @Override
+    public void detailedHistory(String channel, long start, long end,
+            Callback callback) {
+        super.detailedHistory(channel, start, end, callback);
+    }
+    /**
+     *
+     * Read History for a channel.
+     *
+     * @param channel
+     *            Channel name for which detailed history is required
+     * @param start
+     *            Start time
+     * @param end
+     *            End time
+     * @param callback
+     *            Callback
+     */
+
+    public void history(String channel, long start, long end,
+            Callback callback) {
+        super.detailedHistory(channel, start, end, callback);
+    }
+
+
+
+    /**
+     *
+     * Read DetailedHistory for a channel.
+     *
+     * @param channel
+     *            Channel name for which detailed history is required
+     * @param start
+     *            Start time
+     * @param end
+     *            End time
+     * @param reverse
+     *            True if messages need to be in reverse order
+     * @param callback
+     *            Callback
+     * @deprecated
+     *            Renamed as history
+     */
+    @Deprecated @Override
+    public void detailedHistory(String channel, long start, long end,
+            boolean reverse, Callback callback) {
+        super.detailedHistory(channel, start, end, reverse, callback);
+    }
+
+    /**
+     *
+     * Read History for a channel.
+     *
+     * @param channel
+     *            Channel name for which detailed history is required
+     * @param start
+     *            Start time
+     * @param end
+     *            End time
+     * @param reverse
+     *            True if messages need to be in reverse order
+     * @param callback
+     *            Callback
+     */
+    public void history(String channel, long start, long end,
+            boolean reverse, Callback callback) {
+        super.detailedHistory(channel, start, end, reverse, callback);
+    }
+
+
+    /**
+     *
+     * Read DetailedHistory for a channel.
+     *
+     * @param channel
+     *            Channel name for which detailed history is required
+     * @param count
+     *            Upper limit on number of messages to be returned
+     * @param reverse
+     *            True if messages need to be in reverse order
+     * @param callback
+     *            Callback
+     * @deprecated
+     *            Renamed as history
+     */
+    @Deprecated @Override
+    public void detailedHistory(String channel, int count, boolean reverse,
+            Callback callback) {
+        super.detailedHistory(channel, count, reverse, callback);
+    }
+
+    /**
+     *
+     * Read History for a channel.
+     *
+     * @param channel
+     *            Channel name for which detailed history is required
+     * @param count
+     *            Upper limit on number of messages to be returned
+     * @param reverse
+     *            True if messages need to be in reverse order
+     * @param callback
+     *            Callback
+     */
+    public void history(String channel, int count, boolean reverse,
+            Callback callback) {
+        super.detailedHistory(channel, count, reverse, callback);
+    }
+
+
+    /**
+     *
+     * Read DetailedHistory for a channel.
+     *
+     * @param channel
+     *            Channel name for which detailed history is required
+     * @param reverse
+     *            True if messages need to be in reverse order
+     * @param callback
+     *            Callback
+     * @deprecated
+     *            Renamed as history
+     */
+    @Deprecated
+    public void detailedHistory(String channel, boolean reverse,
+            Callback callback) {
+        super.detailedHistory(channel, reverse, callback);
+    }
+
+    /**
+     *
+     * Read History for a channel.
+     *
+     * @param channel
+     *            Channel name for which detailed history is required
+     * @param reverse
+     *            True if messages need to be in reverse order
+     * @param callback
+     *            Callback
+     */
+
+    public void history(String channel, boolean reverse,
+            Callback callback) {
+        super.detailedHistory(channel, reverse, callback);
+    }
+
+    /**
+     *
+     * Read DetailedHistory for a channel.
+     *
+     * @param channel
+     *            Channel name for which detailed history is required
+     * @param count
+     *            Maximum number of messages
+     * @param callback
+     *            Callback object
+     * @deprecated
+     *            Renamed as history
+     */
+    @Deprecated
+    public void detailedHistory(String channel, int count, Callback callback) {
+        super.detailedHistory(channel, count, callback);
+    }
+
+    /**
+     *
+     * Read History for a channel.
+     *
+     * @param channel
+     *            Channel name for which detailed history is required
+     * @param count
+     *            Maximum number of messages
+     * @param callback
+     *            Callback object
+     */
+    @Override
+    public void history(String channel, int count, Callback callback) {
+        super.detailedHistory(channel, count, callback);
+    }
+
+
+    /**
+     * Unsubscribe/Disconnect from channel.
+     *
+     * @param args
+     *            Hashtable containing channel name.
+     */
+    @Deprecated
+    public void unsubscribe(Hashtable args) {
+        String[] channelList = (String[]) args.get("channels");
+        if (channelList == null) {
+            channelList = new String[] { (String) args.get("channel") };
+        }
+        unsubscribe(channelList);
+    }
+
+    /**
+     *
+     * Listen for a message on a channel.
+     *
+     * @param args
+     *            Hashtable containing channel name
+     * @param callback
+     *            Callback
+     * @exception PubnubException
+     *                Throws PubnubException if Callback is null
+     */
+    @Deprecated
+    public void subscribe(Hashtable args, Callback callback)
+            throws PubnubException {
+        args.put("callback", callback);
+        super.subscribe(args);
+    }
+
+    /**
+     *
+     * Listen for a message on a channel.
+     *
+     * @param args
+     *            Hashtable containing channel name, callback
+     * @exception PubnubException
+     *                Throws PubnubException if Callback is null
+     */
+    @Deprecated
+    public void subscribe(Hashtable args) throws PubnubException {
+        super.subscribe(args);
+    }
+
 }
