@@ -11,9 +11,9 @@ import com.pubnub.api.*;
 public class PubnubDemoConsole {
 
     Pubnub pubnub;
-    String publish_key = "pub-c-a2650a22-deb1-44f5-aa87-1517049411d5";
-    String subscribe_key = "sub-c-a478dd2a-c33d-11e2-883f-02ee2ddab7fe";
-    String secret_key = "sec-c-YjFmNzYzMGMtYmI3NC00NzJkLTlkYzYtY2MwMzI4YTJhNDVh";
+    String publish_key = "demo";
+    String subscribe_key = "demo";
+    String secret_key = "";
     String cipher_key = "";
     boolean SSL;
     Scanner reader;

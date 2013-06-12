@@ -91,8 +91,6 @@ abstract class PubnubCore {
     }
 
     private String getOrigin() {
-        return "http://uls-test.pubnub.co";
-        /*
         if (ORIGIN_STR == null) {
             // SSL On?
             if (this.SSL) {
@@ -104,7 +102,6 @@ abstract class PubnubCore {
             }
         }
         return ORIGIN_STR;
-       */
     }
 
     private Hashtable hashtableClone(Hashtable ht) {
