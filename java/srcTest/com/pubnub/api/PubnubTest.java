@@ -44,8 +44,8 @@ public class PubnubTest {
         }
 
         @Override
-        public void errorCallback(String channel, Object message) {
-            response = message;
+        public void errorCallback(String channel, PubnubError error) {
+            response = error;
             if (latch != null) latch.countDown();
         }
     }
@@ -79,15 +79,9 @@ public class PubnubTest {
             if (latch != null) latch.countDown();
         }
 
-        public void errorCallback(String channel, Object message) {
+        public void errorCallback(String channel, PubnubError error) {
             JSONArray jsarr;
-            try {
-                jsarr = new JSONArray(message);
-                System.out.println(message.toString());
-                result = (Integer) jsarr.get(0);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            result = 0;
             if (latch != null) latch.countDown();
         }
 
@@ -130,7 +124,7 @@ public class PubnubTest {
         }
 
         @Override
-        public void errorCallback(String channel, Object message) {
+        public void errorCallback(String channel, PubnubError error) {
             if (latch != null) latch.countDown();
         }
 
@@ -171,7 +165,7 @@ public class PubnubTest {
         }
 
         @Override
-        public void errorCallback(String channel, Object message) {
+        public void errorCallback(String channel, PubnubError error) {
             if (latch != null) latch.countDown();
         }
 
@@ -210,7 +204,7 @@ public class PubnubTest {
         }
 
         @Override
-        public void errorCallback(String channel, Object message) {
+        public void errorCallback(String channel, PubnubError error) {
             if (latch != null) latch.countDown();
         }
 

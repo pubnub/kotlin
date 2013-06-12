@@ -11,9 +11,9 @@ import com.pubnub.api.*;
 public class PubnubDemoConsole {
 
     Pubnub pubnub;
-    String publish_key = "demo";
-    String subscribe_key = "demo";
-    String secret_key = "demo";
+    String publish_key = "pub-c-a2650a22-deb1-44f5-aa87-1517049411d5";
+    String subscribe_key = "sub-c-a478dd2a-c33d-11e2-883f-02ee2ddab7fe";
+    String secret_key = "sec-c-YjFmNzYzMGMtYmI3NC00NzJkLTlkYzYtY2MwMzI4YTJhNDVh";
     String cipher_key = "";
     boolean SSL;
     Scanner reader;
@@ -71,11 +71,13 @@ public class PubnubDemoConsole {
 
             args.put("channel", channel); // Channel Name
             pubnub.publish(args, new Callback() {
-                public void successCallback(Object message) {
+                @Override
+                public void successCallback(String channel, Object message) {
                     notifyUser("PUBLISH : " + message);
                 }
 
-                public void errorCallback(PubnubError error) {
+                @Override
+                public void errorCallback(String channel, PubnubError error) {
                     notifyUser("PUBLISH : " + error);
                 }
             });
@@ -89,17 +91,18 @@ public class PubnubDemoConsole {
 
         try {
             pubnub.subscribe(args, new Callback() {
-            	
-            	@Override
-                public void connectCallback(Object message) {
+
+                @Override
+                public void connectCallback(String channel, Object message) {
                     notifyUser("SUBSCRIBE : CONNECT on channel:" + channel
                             + " : " + message.getClass() + " : "
                             + message.toString());
                 }
-            	@Override
-                public void disconnectCallback(Object message) {
-                    notifyUser("SUBSCRIBE : DISCONNECT on channel:"
-                            + channel + " : " + message.getClass() + " : "
+
+                @Override
+                public void disconnectCallback(String channel, Object message) {
+                    notifyUser("SUBSCRIBE : DISCONNECT on channel:" + channel
+                            + " : " + message.getClass() + " : "
                             + message.toString());
                 }
 
@@ -108,16 +111,17 @@ public class PubnubDemoConsole {
                             + " : " + message.getClass() + " : "
                             + message.toString());
                 }
-            	@Override
-                public void successCallback(Object message) {
+
+                @Override
+                public void successCallback(String channel, Object message) {
                     notifyUser("SUBSCRIBE : " + channel + " : "
                             + message.getClass() + " : " + message.toString());
                 }
-            	@Override
-                public void errorCallback(PubnubError error) {
+
+                @Override
+                public void errorCallback(String channel, PubnubError error) {
                     notifyUser("SUBSCRIBE : ERROR on channel " + channel
-                            + " : " 
-                            + error.toString());
+                            + " : " + error.toString());
                 }
             });
 
@@ -128,12 +132,13 @@ public class PubnubDemoConsole {
     private void presence(String channel) {
         try {
             pubnub.presence(channel, new Callback() {
-            	@Override
-                public void successCallback(Object message) {
+                @Override
+                public void successCallback(String channel, Object message) {
                     notifyUser("PRESENCE : " + message);
                 }
-            	@Override
-                public void errorCallback(PubnubError error) {
+
+                @Override
+                public void errorCallback(String channel, PubnubError error) {
                     notifyUser("PRESENCE : " + error);
                 }
             });
@@ -144,12 +149,13 @@ public class PubnubDemoConsole {
 
     private void detailedHistory(String channel) {
         pubnub.detailedHistory(channel, 2, new Callback() {
-        	@Override
-            public void successCallback(Object message) {
+            @Override
+            public void successCallback(String channel, Object message) {
                 notifyUser("DETAILED HISTORY : " + message);
             }
-        	@Override
-            public void errorCallback(PubnubError error) {
+
+            @Override
+            public void errorCallback(String channel, PubnubError error) {
                 notifyUser("DETAILED HISTORY : " + error);
             }
         });
@@ -157,12 +163,13 @@ public class PubnubDemoConsole {
 
     private void hereNow(String channel) {
         pubnub.hereNow(channel, new Callback() {
-        	@Override
-            public void successCallback(Object message) {
+            @Override
+            public void successCallback(String channel, Object message) {
                 notifyUser("HERE NOW : " + message);
             }
-        	@Override
-            public void errorCallback(PubnubError error) {
+
+            @Override
+            public void errorCallback(String channel, PubnubError error) {
                 notifyUser("HERE NOW : " + error);
             }
         });
@@ -178,24 +185,25 @@ public class PubnubDemoConsole {
 
     private void time() {
         pubnub.time(new Callback() {
-        	@Override
-            public void successCallback(Object message) {
+            @Override
+            public void successCallback(String channel, Object message) {
                 notifyUser("TIME : " + message);
             }
-        	@Override
-            public void errorCallback(PubnubError error) {
+
+            @Override
+            public void errorCallback(String channel, PubnubError error) {
                 notifyUser("TIME : " + error);
             }
         });
     }
 
     private void disconnectAndResubscribe() {
-        pubnub.disconnectAndResubscribe("Disconnect and Resubscribe Sent from Demo Console");
+        pubnub.disconnectAndResubscribe();
 
     }
 
     private void disconnectAndResubscribeWithTimetoken(String timetoken) {
-        pubnub.disconnectAndResubscribeWithTimetoken(timetoken, "Disconnect and Resubscribe Sent from Demo Console");
+        pubnub.disconnectAndResubscribeWithTimetoken(timetoken);
 
     }
 
@@ -222,11 +230,12 @@ public class PubnubDemoConsole {
         this.cipher_key = reader.nextLine();
         if (this.cipher_key.length() == 0) {
             System.out.println("No Cipher key provided");
-            pubnub = new Pubnub(this.publish_key, this.subscribe_key, this.secret_key, this.SSL);
+            pubnub = new Pubnub(this.publish_key, this.subscribe_key,
+                    this.secret_key, this.SSL);
         } else {
             System.out.println("Cipher Key = " + this.cipher_key);
-            pubnub = new Pubnub(this.publish_key, this.subscribe_key, this.secret_key, this.cipher_key,
-                    this.SSL);
+            pubnub = new Pubnub(this.publish_key, this.subscribe_key,
+                    this.secret_key, this.cipher_key, this.SSL);
         }
 
         displayMenuOptions();
@@ -284,7 +293,8 @@ public class PubnubDemoConsole {
                 disconnectAndResubscribe();
                 break;
             case 11:
-                System.out.println("Disconnect and Resubscribe with timetoken : Enter timetoken");
+                System.out
+                        .println("Disconnect and Resubscribe with timetoken : Enter timetoken");
                 String timetoken = reader.nextLine();
                 disconnectAndResubscribeWithTimetoken(timetoken);
                 break;
@@ -307,19 +317,22 @@ public class PubnubDemoConsole {
                 setRetryInterval(retryInterval);
                 break;
             case 15:
-                System.out.println("Set Subscribe Timeout: Enter subscribe timeout in milliseconds");
+                System.out
+                        .println("Set Subscribe Timeout: Enter subscribe timeout in milliseconds");
                 int subscribeTimeout = reader.nextInt();
                 reader.nextLine();
                 setSubscribeTimeout(subscribeTimeout);
                 break;
             case 16:
-                System.out.println("Set Non subscribe Timeout: Enter non subscribe timeout in milliseconds");
+                System.out
+                        .println("Set Non subscribe Timeout: Enter non subscribe timeout in milliseconds");
                 int nonSubscribeTimeout = reader.nextInt();
                 reader.nextLine();
                 setNonSubscribeTimeout(nonSubscribeTimeout);
                 break;
             case 17:
-                System.out.println("Set/Unset Auth Key: Enter auth key string. Enter blank for unsetting key");
+                System.out
+                        .println("Set/Unset Auth Key: Enter auth key string. Enter blank for unsetting key");
                 String authKey = reader.nextLine();
                 pubnub.setAuthKey(authKey);
                 break;
@@ -362,7 +375,8 @@ public class PubnubDemoConsole {
         System.out.println("ENTER 8  FOR Time");
         System.out.println("ENTER 9  FOR EXIT OR QUIT");
         System.out.println("ENTER 10 FOR Disconnect-And-Resubscribe");
-        System.out.println("ENTER 11 FOR Disconnect-And-Resubscribe with timetoken");
+        System.out
+                .println("ENTER 11 FOR Disconnect-And-Resubscribe with timetoken");
         System.out.println("ENTER 12 FOR Toggle Resume On Reconnect");
         System.out.println("ENTER 13 FOR Setting MAX Retries");
         System.out.println("ENTER 14 FOR Setting Retry Interval");

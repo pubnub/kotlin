@@ -8,6 +8,7 @@ import net.rim.device.api.ui.container.MainScreen;
 
 import com.pubnub.api.Callback;
 import com.pubnub.api.Pubnub;
+import com.pubnub.api.PubnubError;
 
 public class HereNow extends PubnubCommand {
 
@@ -32,8 +33,8 @@ public class HereNow extends PubnubCommand {
                         notifyUser(message.toString());
                     }
 
-                    public void errorCallback(String channel, Object message) {
-                        notifyUser(channel + " : " + message.toString());
+                    public void errorCallback(String channel, PubnubError message) {
+                        notifyUser(channel + " : " + error.toString());
                     }
                 });
                 close();

@@ -5,6 +5,7 @@ import javax.microedition.lcdui.Form;
 
 import com.pubnub.api.Callback;
 import com.pubnub.api.Pubnub;
+import com.pubnub.api.PubnubError;
 
 public class Time extends PubnubCommand {
 
@@ -20,8 +21,8 @@ public class Time extends PubnubCommand {
                 notifyUser(message.toString());
             }
 
-            public void errorCallback(String channel, Object message) {
-                notifyUser(message.toString());
+            public void errorCallback(String channel, PubnubError error) {
+                notifyUser(error.toString());
             }
         });
     }

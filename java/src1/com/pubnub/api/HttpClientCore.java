@@ -21,7 +21,7 @@ class HttpClientCore extends HttpClient {
     private int requestTimeout = 310000;
     private int connectionTimeout = 5000;
     HttpURLConnection connection;
-	protected static Logger log = new Logger(Worker.class);
+    protected static Logger log = new Logger(Worker.class);
 
     private void init() {
         HttpURLConnection.setFollowRedirects(true);
@@ -173,7 +173,7 @@ class HttpClientCore extends HttpClient {
             try {
                 JSONArray jsarr = new JSONArray(page);
                 String error = jsarr.get(1).toString();
-                throw new PubnubException(PubnubError.PNERR_5016_BAD_REQUEST, error);
+                throw new PubnubException(new PubnubError(PubnubError.PNERR_5016_BAD_REQUEST, error));
             } catch (JSONException e) {
                 throw new PubnubException(PubnubError.PNERR_5015_INVALID_JSON);
             }

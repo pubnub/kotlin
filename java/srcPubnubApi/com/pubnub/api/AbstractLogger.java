@@ -3,7 +3,7 @@ package com.pubnub.api;
 abstract class AbstractLogger {
 
     private static boolean LOGGING = false;
-    
+
     private static String VERSION = "";
 
     protected abstract void nativeDebug(String s);
@@ -13,12 +13,12 @@ abstract class AbstractLogger {
     protected abstract void nativeError(String s);
 
     protected abstract void nativeInfo(String s);
-    
+
     private String prepareString(String s) {
-    	return  "[" + VERSION + "] : " + "[" + System.currentTimeMillis() + "] : " +
-                "["+Thread.activeCount() + 
+        return  "[" + VERSION + "] : " + "[" + System.currentTimeMillis() + "] : " +
+                "["+Thread.activeCount() +
                 "]  Thread ID : " + Thread.currentThread().getId() +
-                ",  Thread Name : " + Thread.currentThread().getName() + 
+                ",  Thread Name : " + Thread.currentThread().getName() +
                 ",  " + s;
     }
 

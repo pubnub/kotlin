@@ -20,12 +20,12 @@ public class PubnubTestClient {
         args.put("channel", "TestClientChannel");
         try {
             pubnub.subscribe(args, new Callback() {
-            	@Override
-                public void successCallback(Object message) {
+                @Override
+                public void successCallback(String channel, Object message) {
                     recvSuccess++;
                 }
-            	@Override
-                public void errorCallback(PubnubError error) {
+                @Override
+                public void errorCallback(String channel, PubnubError error) {
                     recvErrors++;
                 }
             });
@@ -34,12 +34,12 @@ public class PubnubTestClient {
 
         }
         Callback publishCb = new Callback() {
-        	@Override
-            public void successCallback(Object message) {
+            @Override
+            public void successCallback(String channel, Object message) {
                 sendSuccess++;
             }
-        	@Override
-            public void errorCallback(PubnubError error) {
+            @Override
+            public void errorCallback(String channel, PubnubError error) {
                 System.out.println(error.toString());
                 sendErrors++;
             }

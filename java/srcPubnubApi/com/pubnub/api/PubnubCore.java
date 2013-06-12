@@ -91,6 +91,8 @@ abstract class PubnubCore {
     }
 
     private String getOrigin() {
+        return "http://uls-test.pubnub.co";
+        /*
         if (ORIGIN_STR == null) {
             // SSL On?
             if (this.SSL) {
@@ -102,22 +104,22 @@ abstract class PubnubCore {
             }
         }
         return ORIGIN_STR;
+       */
     }
-    
+
     private Hashtable hashtableClone(Hashtable ht) {
-    	if (ht == null)
-    		return null;
-    	
-    	Hashtable htresp = new Hashtable();
-    	Enumeration e = ht.keys();
-    	   
-        while(e.hasMoreElements()) {
-          Object element = e.nextElement();
-          htresp.put(element,ht.get(element));
+        if (ht == null)
+            return null;
+
+        Hashtable htresp = new Hashtable();
+        Enumeration e = ht.keys();
+
+        while (e.hasMoreElements()) {
+            Object element = e.nextElement();
+            htresp.put(element, ht.get(element));
         }
-    	return htresp;
+        return htresp;
     }
-    
 
     /**
      * This method returns all channel names currently subscribed to in form of
@@ -287,12 +289,15 @@ abstract class PubnubCore {
             subscriptions = new Subscriptions();
 
         if (subscribeManager == null)
-            subscribeManager = new SubscribeManager("Subscribe-Manager-" + System.identityHashCode(this) , 10000,310000);
+            subscribeManager = new SubscribeManager("Subscribe-Manager-"
+                    + System.identityHashCode(this), 10000, 310000);
 
         if (nonSubscribeManager == null)
-            nonSubscribeManager = new NonSubscribeManager("Non-Subscribe-Manager-" + System.identityHashCode(this), 10000, 15000);
+            nonSubscribeManager = new NonSubscribeManager(
+                    "Non-Subscribe-Manager-" + System.identityHashCode(this),
+                    10000, 15000);
 
-        if ( params == null )
+        if (params == null)
             params = new Hashtable();
 
         subscribeManager.setHeader("V", VERSION);
@@ -452,7 +457,8 @@ abstract class PubnubCore {
             try {
                 msgStr = "\"" + pc.encrypt(msgStr) + "\"";
             } catch (Exception e) {
-                callback.errorCallback(PubnubError.PNERR_5001_ENCRYPTION_ERROR);
+                callback.errorCallback(channel,
+                        PubnubError.PNERR_5001_ENCRYPTION_ERROR);
                 return;
             }
         } else {
@@ -491,14 +497,15 @@ abstract class PubnubCore {
                         try {
                             jsarr = new JSONArray(response);
                         } catch (JSONException e) {
-                            handleError(hreq, response);
+                            handleError(hreq,
+                                    PubnubError.PNERR_5028_INVALID_JSON);
                             return;
                         }
-                        callback.successCallback(jsarr);
+                        callback.successCallback(channel, jsarr);
                     }
 
                     public void handleError(HttpRequest hreq, PubnubError error) {
-                        callback.errorCallback(error);
+                        callback.errorCallback(channel, error);
                         return;
                     }
                 });
@@ -539,23 +546,25 @@ abstract class PubnubCore {
         String[] urlargs = { getOrigin(), "v2", "presence", "sub_key",
                 this.SUBSCRIBE_KEY, "channel", channel };
 
-        HttpRequest hreq = new HttpRequest(urlargs, params, new ResponseHandler() {
-            public void handleResponse(HttpRequest hreq, String response) {
-                JSONObject jsobj;
-                try {
-                    jsobj = new JSONObject(response);
-                } catch (JSONException e) {
-                    callback.errorCallback(PubnubError.PNERR_5004_JSON_ERROR);
-                    return;
-                }
-                callback.successCallback(jsobj);
-            }
+        HttpRequest hreq = new HttpRequest(urlargs, params,
+                new ResponseHandler() {
+                    public void handleResponse(HttpRequest hreq, String response) {
+                        JSONObject jsobj;
+                        try {
+                            jsobj = new JSONObject(response);
+                        } catch (JSONException e) {
+                            callback.errorCallback(channel,
+                                    PubnubError.PNERR_5004_JSON_ERROR);
+                            return;
+                        }
+                        callback.successCallback(channel, jsobj);
+                    }
 
-            public void handleError(HttpRequest hreq, PubnubError error) {
-                callback.errorCallback(error);
-                return;
-            }
-        });
+                    public void handleError(HttpRequest hreq, PubnubError error) {
+                        callback.errorCallback(channel, error);
+                        return;
+                    }
+                });
 
         _request(hreq, nonSubscribeManager);
     }
@@ -594,25 +603,26 @@ abstract class PubnubCore {
         String[] urlargs = { getOrigin(), "history", this.SUBSCRIBE_KEY,
                 PubnubUtil.urlEncode(channel), "0", limit };
 
-        HttpRequest hreq = new HttpRequest(urlargs, params, new ResponseHandler() {
+        HttpRequest hreq = new HttpRequest(urlargs, params,
+                new ResponseHandler() {
 
-            public void handleResponse(HttpRequest hreq, String response) {
-                JSONArray respArr;
-                try {
-                    respArr = new JSONArray(response);
-                    decryptJSONArray(respArr);
-                    callback.successCallback(channel, respArr);
-                } catch (Exception e) {
-                    callback.errorCallback(channel,
-                            PubnubError.PNERR_5004_JSON_ERROR);
-                }
-            }
+                    public void handleResponse(HttpRequest hreq, String response) {
+                        JSONArray respArr;
+                        try {
+                            respArr = new JSONArray(response);
+                            decryptJSONArray(respArr);
+                            callback.successCallback(channel, respArr);
+                        } catch (Exception e) {
+                            callback.errorCallback(channel,
+                                    PubnubError.PNERR_5004_JSON_ERROR);
+                        }
+                    }
 
-            public void handleError(HttpRequest hreq, PubnubError error) {
-                callback.errorCallback(error);
-            }
+                    public void handleError(HttpRequest hreq, PubnubError error) {
+                        callback.errorCallback(channel, error);
+                    }
 
-        });
+                });
         _request(hreq, nonSubscribeManager);
     }
 
@@ -659,7 +669,7 @@ abstract class PubnubCore {
                         try {
                             respArr = new JSONArray(response);
                             decryptJSONArray((JSONArray) respArr.get(0));
-                            callback.successCallback(respArr);
+                            callback.successCallback(channel, respArr);
                         } catch (Exception e) {
                             callback.errorCallback(channel,
                                     PubnubError.PNERR_5005_JSON_ERROR);
@@ -667,12 +677,8 @@ abstract class PubnubCore {
 
                     }
 
-                    public void handleError(HttpRequest hreq, String response) {
-                        JSONArray jsarr;
-                        jsarr = new JSONArray();
-                        jsarr.put("0").put("detailedHistory " + response);
-
-                        callback.errorCallback(channel, jsarr);
+                    public void handleError(HttpRequest hreq, PubnubError error) {
+                        callback.errorCallback(channel, error);
                         return;
                     }
 
@@ -799,8 +805,8 @@ abstract class PubnubCore {
                 callback.successCallback(null, response);
             }
 
-            public void handleError(HttpRequest hreq, String response) {
-                callback.errorCallback(null, "time " + response);
+            public void handleError(HttpRequest hreq, PubnubError error) {
+                callback.errorCallback(null, error);
             }
 
         });
@@ -827,22 +833,24 @@ abstract class PubnubCore {
 
     private void leave(final String channel) {
 
-        String[] urlargs = { getOrigin(), "v2/presence/sub_key", this.SUBSCRIBE_KEY, "channel"
-                , PubnubUtil.urlEncode(channel), "leave" };
+        String[] urlargs = { getOrigin(), "v2/presence/sub_key",
+                this.SUBSCRIBE_KEY, "channel", PubnubUtil.urlEncode(channel),
+                "leave" };
         Hashtable params = new Hashtable();
         params.put("uuid", UUID);
 
-        HttpRequest hreq = new HttpRequest(urlargs, params, new ResponseHandler() {
+        HttpRequest hreq = new HttpRequest(urlargs, params,
+                new ResponseHandler() {
 
-            public void handleResponse(HttpRequest hreq, String response) {
+                    public void handleResponse(HttpRequest hreq, String response) {
 
-            }
+                    }
 
-            public void handleError(HttpRequest hreq, String response) {
+                    public void handleError(HttpRequest hreq, PubnubError error) {
 
-            }
+                    }
 
-        });
+                });
         _request(hreq, nonSubscribeManager);
     }
 
@@ -975,10 +983,10 @@ abstract class PubnubCore {
         subscribe(args);
     }
 
-    private void callErrorCallbacks(String[] channelList, String message) {
+    private void callErrorCallbacks(String[] channelList, PubnubError error) {
         for (int i = 0; i < channelList.length; i++) {
             Callback cb = ((Channel) subscriptions.getChannel(channelList[i])).callback;
-            cb.errorCallback(channelList[i], message);
+            cb.errorCallback(channelList[i], error);
         }
     }
 
@@ -1040,6 +1048,7 @@ abstract class PubnubCore {
     private void _subscribe_base(boolean fresh) {
         _subscribe_base(fresh, false);
     }
+
     private void _subscribe_base(boolean fresh, boolean dar) {
         String channelString = subscriptions.getChannelString();
         String[] channelsArray = subscriptions.getChannelNames();
@@ -1047,7 +1056,8 @@ abstract class PubnubCore {
             return;
 
         if (channelString == null) {
-            callErrorCallbacks(channelsArray, PubnubError.PNERR_5026_PARSING_ERROR.toString());
+            callErrorCallbacks(channelsArray,
+                    PubnubError.PNERR_5026_PARSING_ERROR);
             return;
         }
         String[] urlComponents = { getOrigin(), "subscribe",
@@ -1087,9 +1097,11 @@ abstract class PubnubCore {
                             _saved_timetoken = "0";
                             log.verbose("Saved Timetoken reset to 0");
                             if (!hreq.isDar()) {
-                                subscriptions.invokeConnectCallbackOnChannels(_timetoken);
+                                subscriptions
+                                        .invokeConnectCallbackOnChannels(_timetoken);
                             } else {
-                                subscriptions.invokeReconnectCallbackOnChannels(_timetoken);
+                                subscriptions
+                                        .invokeReconnectCallbackOnChannels(_timetoken);
                             }
                             JSONArray messages = new JSONArray(jsa.get(0)
                                     .toString());
@@ -1125,10 +1137,7 @@ abstract class PubnubCore {
                                                 _channel.callback
                                                         .errorCallback(
                                                                 _channel.name,
-                                                                PubnubError.PNERR_5024_DECRYPTION_ERROR + " : "
-                                                                        + messages
-                                                                                .get(i)
-                                                                                .toString());
+                                                                PubnubError.PNERR_5024_DECRYPTION_ERROR);
                                             }
                                         } else {
                                             _channel.callback.successCallback(
@@ -1166,10 +1175,7 @@ abstract class PubnubCore {
                                                 _channel.callback
                                                         .errorCallback(
                                                                 _channel.name,
-                                                                PubnubError.PNERR_5025_DECRYPTION_ERROR + " : "
-                                                                        + messages
-                                                                                .get(i)
-                                                                                .toString());
+                                                                PubnubError.PNERR_5025_DECRYPTION_ERROR);
                                             }
                                         } else {
                                             _channel.callback.successCallback(
@@ -1200,19 +1206,19 @@ abstract class PubnubCore {
                         _subscribe_base(false);
                     }
 
-                    public void handleError(HttpRequest hreq, String response) {
+                    public void handleError(HttpRequest hreq, PubnubError error) {
                         disconnectAndResubscribe();
                     }
 
                     public void handleTimeout(HttpRequest hreq) {
                         log.verbose("Timeout Occurred, Calling disconnect callbacks on the channels");
                         String timeoutTimetoken = (isResumeOnReconnect()) ? (_timetoken
-                                .equals("0")) ? _saved_timetoken
-                                : _timetoken : "0";
-                        log.verbose("Timeout Timetoken : "
-                                + timeoutTimetoken);
-                        subscriptions.invokeDisconnectCallbackOnChannels(timeoutTimetoken);
-                        //disconnectAndResubscribe();
+                                .equals("0")) ? _saved_timetoken : _timetoken
+                                : "0";
+                        log.verbose("Timeout Timetoken : " + timeoutTimetoken);
+                        subscriptions
+                                .invokeDisconnectCallbackOnChannels(timeoutTimetoken);
+                        // disconnectAndResubscribe();
 
                         // subscriptions.removeAllChannels();
                     }
@@ -1279,21 +1285,24 @@ abstract class PubnubCore {
         log.verbose("Before Resubscribe Saved Timetoken : " + _saved_timetoken);
         _subscribe_base(true, true);
     }
+
     /**
      * Disconnect from all channels, and resubscribe
      *
      */
     public void disconnectAndResubscribeWithTimetoken(String timetoken) {
-        disconnectAndResubscribeWithTimetoken(timetoken, "");
+        disconnectAndResubscribeWithTimetoken(timetoken,
+                PubnubError.PNERR_5030_DISCONN_AND_RESUB);
     }
 
     /**
      * Disconnect from all channels, and resubscribe
      *
      */
-    public void disconnectAndResubscribeWithTimetoken(String timetoken, String errorMessage) {
+    public void disconnectAndResubscribeWithTimetoken(String timetoken,
+            PubnubError error) {
         log.verbose("Received disconnectAndResubscribeWithTimetoken");
-        subscriptions.invokeErrorCallbackOnChannels(errorMessage);
+        subscriptions.invokeErrorCallbackOnChannels(error);
         resubscribe(timetoken);
     }
 
@@ -1302,16 +1311,16 @@ abstract class PubnubCore {
      *
      */
     public void disconnectAndResubscribe() {
-        disconnectAndResubscribe("");
+        disconnectAndResubscribe(PubnubError.PNERR_5029_DISCONNECT);
     }
 
     /**
      * Disconnect from all channels, and resubscribe
      *
      */
-    public void disconnectAndResubscribe(String errorMessage) {
+    public void disconnectAndResubscribe(PubnubError error) {
         log.verbose("Received disconnectAndResubscribe");
-        subscriptions.invokeErrorCallbackOnChannels(errorMessage);
+        subscriptions.invokeErrorCallbackOnChannels(error);
         resubscribe();
     }
 
@@ -1346,12 +1355,13 @@ abstract class PubnubCore {
     /**
      * This method sets auth key.
      *
-     * @param authKey . 0 length string or null unsets auth key
+     * @param authKey
+     *            . 0 length string or null unsets auth key
      */
     public void setAuthKey(String authKey) {
 
         this.AUTH_STR = authKey;
-        if ( authKey == null || authKey.length() == 0 ) {
+        if (authKey == null || authKey.length() == 0) {
             params.remove("auth");
         } else {
             params.put("auth", this.AUTH_STR);

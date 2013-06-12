@@ -10,6 +10,7 @@ import net.rim.device.api.ui.container.MainScreen;
 
 import com.pubnub.api.Callback;
 import com.pubnub.api.Pubnub;
+import com.pubnub.api.PubnubError;
 
 public class Subscribe extends PubnubCommand {
 
@@ -49,8 +50,8 @@ public class Subscribe extends PubnubCommand {
                         public void successCallback(String channel, Object message) {
                             notifyUser("Channel " + channel + " : " + message.toString());
                         }
-                        public void errorCallback(String channel, Object message) {
-                            notifyUser("Channel " + channel + " : " + message.toString());
+                        public void errorCallback(String channel, PubnubError error) {
+                            notifyUser("Channel " + channel + " : " + error.toString());
                         }
                     });
                     close();

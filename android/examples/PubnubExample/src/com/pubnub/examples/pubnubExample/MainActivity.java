@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.pubnub.api.Callback;
 import com.pubnub.api.Pubnub;
+import com.pubnub.api.PubnubError;
 
 public class MainActivity extends Activity {
     /*
@@ -206,6 +207,7 @@ public class MainActivity extends Activity {
 
                         try {
                             pubnub.subscribe(args, new Callback() {
+                                @Override
                                 public void connectCallback(String channel,
                                         Object message) {
                                     notifyUser("SUBSCRIBE : CONNECT on channel:"
@@ -215,7 +217,7 @@ public class MainActivity extends Activity {
                                             + " : "
                                             + message.toString());
                                 }
-
+                                @Override
                                 public void disconnectCallback(String channel,
                                         Object message) {
                                     notifyUser("SUBSCRIBE : DISCONNECT on channel:"
@@ -236,20 +238,19 @@ public class MainActivity extends Activity {
                                             + " : "
                                             + message.toString());
                                 }
-
+                                @Override
                                 public void successCallback(String channel,
                                         Object message) {
                                     notifyUser("SUBSCRIBE : " + channel + " : "
                                             + message.getClass() + " : "
                                             + message.toString());
                                 }
-
+                                @Override
                                 public void errorCallback(String channel,
-                                        Object message) {
+                                        PubnubError error) {
                                     notifyUser("SUBSCRIBE : ERROR on channel "
                                             + channel + " : "
-                                            + message.getClass() + " : "
-                                            + message.toString());
+                                            + error.toString());
                                 }
                             });
 
@@ -320,14 +321,15 @@ public class MainActivity extends Activity {
                         args.put("channel", channel); // Channel Name
 
                         pubnub.publish(args, new Callback() {
+                            @Override
                             public void successCallback(String channel,
                                     Object message) {
                                 notifyUser("PUBLISH : " + message);
                             }
-
+                            @Override
                             public void errorCallback(String channel,
-                                    Object message) {
-                                notifyUser("PUBLISH : " + message);
+                                    PubnubError error) {
+                                notifyUser("PUBLISH : " + error);
                             }
                         });
                     }
@@ -373,20 +375,19 @@ public class MainActivity extends Activity {
 
                         try {
                             pubnub.presence(channel, new Callback() {
-
+                                @Override
                                 public void successCallback(String channel,
                                         Object message) {
                                     notifyUser("PRESENCE : " + channel + " : "
                                             + message.getClass() + " : "
                                             + message.toString());
                                 }
-
+                                @Override
                                 public void errorCallback(String channel,
-                                        Object message) {
+                                        PubnubError error) {
                                     notifyUser("PRESENCE : ERROR on channel "
                                             + channel + " : "
-                                            + message.getClass() + " : "
-                                            + message.toString());
+                                            + error.toString());
                                 }
                             });
 
@@ -414,14 +415,15 @@ public class MainActivity extends Activity {
                     public void onClick(DialogInterface dialog, int which) {
                         String channel = input.getText().toString();
                         pubnub.detailedHistory(channel, 2, new Callback() {
+                            @Override
                             public void successCallback(String channel,
                                     Object message) {
                                 notifyUser("DETAILED HISTORY : " + message);
                             }
-
+                            @Override
                             public void errorCallback(String channel,
-                                    Object message) {
-                                notifyUser("DETAILED HISTORY : " + message);
+                                    PubnubError error) {
+                                notifyUser("DETAILED HISTORY : " + error);
                             }
                         });
                     }
@@ -445,14 +447,15 @@ public class MainActivity extends Activity {
                     public void onClick(DialogInterface dialog, int which) {
                         String channel = input.getText().toString();
                         pubnub.hereNow(channel, new Callback() {
+                            @Override
                             public void successCallback(String channel,
                                     Object message) {
                                 notifyUser("HERE NOW : " + message);
                             }
-
+                            @Override
                             public void errorCallback(String channel,
-                                    Object message) {
-                                notifyUser("HERE NOW : " + message);
+                                    PubnubError error) {
+                                notifyUser("HERE NOW : " + error);
                             }
                         });
                     }
@@ -502,19 +505,20 @@ public class MainActivity extends Activity {
 
     private void time() {
         pubnub.time(new Callback() {
+            @Override
             public void successCallback(String channel, Object message) {
                 notifyUser("TIME : " + message);
             }
-
-            public void errorCallback(String channel, Object message) {
-                notifyUser("TIME : " + message);
+            @Override
+            public void errorCallback(String channel, PubnubError error) {
+                notifyUser("TIME : " + error);
             }
         });
 
     }
 
     private void disconnectAndResubscribe() {
-        pubnub.disconnectAndResubscribe("Disconnect and Resubscribe Sent from Demo Console");
+        pubnub.disconnectAndResubscribe();
 
     }
 
@@ -596,8 +600,7 @@ public class MainActivity extends Activity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         pubnub.disconnectAndResubscribeWithTimetoken(
-                                edTimetoken.getText().toString(),
-                                "Disconnect and Resubscribe Sent from Demo Console");
+                                edTimetoken.getText().toString());
                     }
                 });
         AlertDialog alert = builder.create();

@@ -62,26 +62,26 @@ public class PubnubPublishTest {
     public void runSubscribe() {
         try {
             _pubnub.subscribe(new String[] { channel }, new Callback() {
-            	@Override
-                public void successCallback(Object message) {
+                @Override
+                public void successCallback(String channel, Object message) {
                     notifyUser("RECV : " + channel + " : " + message.getClass()
                             + " : " + message.toString());
                 }
-            	@Override
-                public void errorCallback(PubnubError error) {
+                @Override
+                public void errorCallback(String channel, PubnubError error) {
                     notifyUser("RECV : " + channel + " : "
                             + " : " + error.toString());
                 }
 
             });
             _pubnub_enc.subscribe(new String[] { channel_enc }, new Callback() {
-            	@Override
-                public void successCallback(Object message) {
+                @Override
+                public void successCallback(String channel, Object message) {
                     notifyUser("RECV : " + channel + " : " + message.getClass()
                             + " : " + message.toString());
                 }
-            	@Override
-                public void errorCallback(PubnubError error) {
+                @Override
+                public void errorCallback(String channel, PubnubError error) {
                     notifyUser("RECV : " + channel + " : "
                             + " : " + error.toString());
                 }
@@ -119,13 +119,13 @@ public class PubnubPublishTest {
         args.put("channel", channel); // Channel Name
         args.put("message", msg); // JSON Message
         pubnub.publish(args, new Callback() {
-        	@Override
-            public void successCallback(Object message) {
+            @Override
+            public void successCallback(String channel, Object message) {
                 notifyUser("SENT : " + channel + " : " + msg.getClass() + " : "
                         + message.toString());
             }
-        	@Override
-            public void errorCallback(PubnubError error) {
+            @Override
+            public void errorCallback(String channel, PubnubError error) {
                 notifyUser("SENT : " + channel + " : "
                         + error.toString());
             }
@@ -135,13 +135,13 @@ public class PubnubPublishTest {
     public void history(Pubnub pubnub, final String channel) {
 
         pubnub.history(channel, 10, new Callback() {
-        	@Override
-            public void successCallback(Object message) {
+            @Override
+            public void successCallback(String channel, Object message) {
                 notifyUser("HISTORY : " + channel + " : " + message.getClass()
                         + " : " + message.toString());
             }
-        	@Override
-            public void errorCallback(PubnubError error) {
+            @Override
+            public void errorCallback(String channel, PubnubError error) {
                 notifyUser("HISTORY : " + channel
                         + " : " + error.toString());
             }
@@ -151,13 +151,13 @@ public class PubnubPublishTest {
     public void detailedHistory(Pubnub pubnub, final String channel) {
 
         pubnub.detailedHistory(channel, 10, new Callback() {
-        	@Override
-            public void successCallback(Object message) {
+            @Override
+            public void successCallback(String channel, Object message) {
                 notifyUser("DETAILED HISTORY : " + channel + " : "
                         + message.getClass() + " : " + message.toString());
             }
-        	@Override
-            public void errorCallback(PubnubError error) {
+            @Override
+            public void errorCallback(String channel, PubnubError error) {
                 notifyUser("DETAILED HISTORY : " + channel + " : "
                         + " : " + error.toString());
             }

@@ -11,6 +11,7 @@ import javax.microedition.lcdui.TextField;
 
 import com.pubnub.api.Callback;
 import com.pubnub.api.Pubnub;
+import com.pubnub.api.PubnubError;
 
 public class Presence extends PubnubCommand {
 
@@ -32,8 +33,8 @@ public class Presence extends PubnubCommand {
                         public void successCallback(String channel, Object message) {
                             notifyUser("Channel " + channel + " : " + message.toString());
                         }
-                        public void errorCallback(String channel, Object message) {
-                            notifyUser("Channel " + channel + " : " + message.toString());
+                        public void errorCallback(String channel, PubnubError error) {
+                            notifyUser("Channel " + channel + " : " + error.toString());
                         }
                     });
                     display.setCurrent(menu);
