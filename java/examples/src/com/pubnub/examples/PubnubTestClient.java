@@ -2,8 +2,7 @@ package com.pubnub.examples;
 
 import java.util.Hashtable;
 
-import com.pubnub.api.Callback;
-import com.pubnub.api.Pubnub;
+import com.pubnub.api.*;
 
 public class PubnubTestClient {
     Pubnub pubnub;
@@ -21,12 +20,12 @@ public class PubnubTestClient {
         args.put("channel", "TestClientChannel");
         try {
             pubnub.subscribe(args, new Callback() {
-
-                public void successCallback(String channel, Object message) {
+            	@Override
+                public void successCallback(Object message) {
                     recvSuccess++;
                 }
-
-                public void errorCallback(String channel, Object message) {
+            	@Override
+                public void errorCallback(PubnubError error) {
                     recvErrors++;
                 }
             });
@@ -35,12 +34,13 @@ public class PubnubTestClient {
 
         }
         Callback publishCb = new Callback() {
-            public void successCallback(String channel, Object message) {
+        	@Override
+            public void successCallback(Object message) {
                 sendSuccess++;
             }
-
-            public void errorCallback(String channel, Object message) {
-                System.out.println(message.toString());
+        	@Override
+            public void errorCallback(PubnubError error) {
+                System.out.println(error.toString());
                 sendErrors++;
             }
         };

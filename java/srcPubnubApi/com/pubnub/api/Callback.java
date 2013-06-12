@@ -18,7 +18,7 @@ public abstract class Callback {
      *            Message
      *
      */
-    public abstract void successCallback(String channel, Object message);
+    public abstract void successCallback(Object message);
 
     /**
      * This callback will be invoked when an error occurs
@@ -28,7 +28,7 @@ public abstract class Callback {
      * @param message
      *            Message
      */
-    public abstract void errorCallback(String channel, Object message);
+    public abstract void errorCallback(PubnubError error);
 
     /**
      * This callback will be invoked on getting connected to a channel
@@ -36,7 +36,7 @@ public abstract class Callback {
      * @param channel
      *            Channel Name
      */
-    public void connectCallback(String channel, Object message) {
+    public void connectCallback(Object message) {
     }
 
     /**
@@ -46,7 +46,7 @@ public abstract class Callback {
      * @param channel
      *            Channel Name
      */
-    public void reconnectCallback(String channel, Object message) {
+    public void reconnectCallback(Object message) {
     }
 
     /**
@@ -55,7 +55,7 @@ public abstract class Callback {
      * @param channel
      *            Channel Name
      */
-    public void disconnectCallback(String channel, Object message) {
+    public void disconnectCallback(Object message) {
     }
 
 }

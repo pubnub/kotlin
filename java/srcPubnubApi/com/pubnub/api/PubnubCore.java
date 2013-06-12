@@ -452,10 +452,7 @@ abstract class PubnubCore {
             try {
                 msgStr = "\"" + pc.encrypt(msgStr) + "\"";
             } catch (Exception e) {
-                JSONArray jsarr;
-                jsarr = new JSONArray();
-                jsarr.put("0").put(PubnubError.PNERR_5001_ENCRYPTION_ERROR);
-                callback.errorCallback(channel, jsarr);
+                callback.errorCallback(PubnubError.PNERR_5001_ENCRYPTION_ERROR);
                 return;
             }
         } else {
@@ -497,15 +494,11 @@ abstract class PubnubCore {
                             handleError(hreq, response);
                             return;
                         }
-                        callback.successCallback(channel, jsarr);
+                        callback.successCallback(jsarr);
                     }
 
-                    public void handleError(HttpRequest hreq, String response) {
-                        JSONArray jsarr;
-                        jsarr = new JSONArray();
-                        jsarr.put("0").put("publish " + response);
-                        jsarr.put(channel).put(message);
-                        callback.errorCallback(channel, jsarr);
+                    public void handleError(HttpRequest hreq, PubnubError error) {
+                        callback.errorCallback(error);
                         return;
                     }
                 });
@@ -552,18 +545,14 @@ abstract class PubnubCore {
                 try {
                     jsobj = new JSONObject(response);
                 } catch (JSONException e) {
-                    handleError(hreq, response);
+                    callback.errorCallback(PubnubError.PNERR_5004_JSON_ERROR);
                     return;
                 }
-                callback.successCallback(channel, jsobj);
+                callback.successCallback(jsobj);
             }
 
-            public void handleError(HttpRequest hreq, String response) {
-                JSONArray jsarr;
-                jsarr = new JSONArray();
-                jsarr.put("0").put("hereNow " + response);
-
-                callback.errorCallback(channel, jsarr);
+            public void handleError(HttpRequest hreq, PubnubError error) {
+                callback.errorCallback(error);
                 return;
             }
         });
@@ -619,12 +608,8 @@ abstract class PubnubCore {
                 }
             }
 
-            public void handleError(HttpRequest hreq, String response) {
-                JSONArray jsarr;
-                jsarr = new JSONArray();
-                jsarr.put("0").put("history " + response);
-                callback.errorCallback(channel, jsarr);
-                return;
+            public void handleError(HttpRequest hreq, PubnubError error) {
+                callback.errorCallback(error);
             }
 
         });
@@ -674,7 +659,7 @@ abstract class PubnubCore {
                         try {
                             respArr = new JSONArray(response);
                             decryptJSONArray((JSONArray) respArr.get(0));
-                            callback.successCallback(channel, respArr);
+                            callback.successCallback(respArr);
                         } catch (Exception e) {
                             callback.errorCallback(channel,
                                     PubnubError.PNERR_5005_JSON_ERROR);

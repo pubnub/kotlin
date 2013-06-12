@@ -6,10 +6,7 @@ import java.util.Scanner;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import com.pubnub.api.Callback;
-import com.pubnub.api.Pubnub;
-import com.pubnub.api.PubnubException;
-import com.pubnub.api.PubnubUtil;
+import com.pubnub.api.*;
 
 public class PubnubDemoConsole {
 
@@ -74,31 +71,33 @@ public class PubnubDemoConsole {
 
             args.put("channel", channel); // Channel Name
             pubnub.publish(args, new Callback() {
-                public void successCallback(String channel, Object message) {
+                public void successCallback(Object message) {
                     notifyUser("PUBLISH : " + message);
                 }
 
-                public void errorCallback(String channel, Object message) {
-                    notifyUser("PUBLISH : " + message);
+                public void errorCallback(PubnubError error) {
+                    notifyUser("PUBLISH : " + error);
                 }
             });
         }
 
     }
 
-    private void subscribe(String channel) {
+    private void subscribe(final String channel) {
         Hashtable args = new Hashtable(6);
         args.put("channel", channel);
 
         try {
             pubnub.subscribe(args, new Callback() {
-                public void connectCallback(String channel, Object message) {
+            	
+            	@Override
+                public void connectCallback(Object message) {
                     notifyUser("SUBSCRIBE : CONNECT on channel:" + channel
                             + " : " + message.getClass() + " : "
                             + message.toString());
                 }
-
-                public void disconnectCallback(String channel, Object message) {
+            	@Override
+                public void disconnectCallback(Object message) {
                     notifyUser("SUBSCRIBE : DISCONNECT on channel:"
                             + channel + " : " + message.getClass() + " : "
                             + message.toString());
@@ -109,16 +108,16 @@ public class PubnubDemoConsole {
                             + " : " + message.getClass() + " : "
                             + message.toString());
                 }
-
-                public void successCallback(String channel, Object message) {
+            	@Override
+                public void successCallback(Object message) {
                     notifyUser("SUBSCRIBE : " + channel + " : "
                             + message.getClass() + " : " + message.toString());
                 }
-
-                public void errorCallback(String channel, Object message) {
+            	@Override
+                public void errorCallback(PubnubError error) {
                     notifyUser("SUBSCRIBE : ERROR on channel " + channel
-                            + " : " + message.getClass() + " : "
-                            + message.toString());
+                            + " : " 
+                            + error.toString());
                 }
             });
 
@@ -129,12 +128,13 @@ public class PubnubDemoConsole {
     private void presence(String channel) {
         try {
             pubnub.presence(channel, new Callback() {
-                public void successCallback(String channel, Object message) {
+            	@Override
+                public void successCallback(Object message) {
                     notifyUser("PRESENCE : " + message);
                 }
-
-                public void errorCallback(String channel, Object message) {
-                    notifyUser("PRESENCE : " + message);
+            	@Override
+                public void errorCallback(PubnubError error) {
+                    notifyUser("PRESENCE : " + error);
                 }
             });
         } catch (PubnubException e) {
@@ -144,24 +144,26 @@ public class PubnubDemoConsole {
 
     private void detailedHistory(String channel) {
         pubnub.detailedHistory(channel, 2, new Callback() {
-            public void successCallback(String channel, Object message) {
+        	@Override
+            public void successCallback(Object message) {
                 notifyUser("DETAILED HISTORY : " + message);
             }
-
-            public void errorCallback(String channel, Object message) {
-                notifyUser("DETAILED HISTORY : " + message);
+        	@Override
+            public void errorCallback(PubnubError error) {
+                notifyUser("DETAILED HISTORY : " + error);
             }
         });
     }
 
     private void hereNow(String channel) {
         pubnub.hereNow(channel, new Callback() {
-            public void successCallback(String channel, Object message) {
+        	@Override
+            public void successCallback(Object message) {
                 notifyUser("HERE NOW : " + message);
             }
-
-            public void errorCallback(String channel, Object message) {
-                notifyUser("HERE NOW : " + message);
+        	@Override
+            public void errorCallback(PubnubError error) {
+                notifyUser("HERE NOW : " + error);
             }
         });
     }
@@ -176,12 +178,13 @@ public class PubnubDemoConsole {
 
     private void time() {
         pubnub.time(new Callback() {
-            public void successCallback(String channel, Object message) {
+        	@Override
+            public void successCallback(Object message) {
                 notifyUser("TIME : " + message);
             }
-
-            public void errorCallback(String channel, Object message) {
-                notifyUser("TIME : " + message);
+        	@Override
+            public void errorCallback(PubnubError error) {
+                notifyUser("TIME : " + error);
             }
         });
     }

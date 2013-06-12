@@ -61,7 +61,7 @@ class Subscriptions {
         invokeDisconnectCallbackOnChannels(getChannelNames(), message);
     }
 
-    public void invokeErrorCallbackOnChannels(Object message) {
+    public void invokeErrorCallbackOnChannels(PubnubError error) {
         /*
          * Iterate over all the channels and call error callback for channels
          */
@@ -70,7 +70,7 @@ class Subscriptions {
             while (ch.hasMoreElements()) {
                 Channel _channel = (Channel) ch.nextElement();
                 _channel.error = true;
-                _channel.callback.errorCallback(_channel.name, message);
+                _channel.callback.errorCallback(_channel.name, error);
             }
         }
     }
