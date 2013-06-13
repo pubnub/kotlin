@@ -1,5 +1,12 @@
 package com.pubnub.api;
 
+/**
+ * PubnubError object is passed to errorCallback. It contains details of error, like 
+ * error code, error string, and optional message
+ * 
+ * @author Pubnub
+ *
+ */
 public class PubnubError {
     public static final int         PNERR_5000_TIMEOUT_CODE                  =       5000;
     public static final PubnubError PNERR_5000_TIMEOUT                       =

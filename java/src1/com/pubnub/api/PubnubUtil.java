@@ -6,6 +6,11 @@ import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
+/**
+ * PubnubUtil class provides utility methods like urlEncode etc
+ * @author Pubnub
+ *
+ */
 public class PubnubUtil extends PubnubUtilCore {
 
     /**

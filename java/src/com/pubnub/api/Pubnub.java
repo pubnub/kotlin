@@ -169,8 +169,9 @@ public class Pubnub extends PubnubCore {
      *            True if messages need to be in reverse order
      * @param callback
      *            Callback
-     * @deprecated
-     *            Renamed as history
+     * @deprecated As of release 3.5.2
+     *            replaced by {@link #history(String channel, long start, long end, 
+     *            int count, boolean reverse, Callback callback)}
      */
     @Deprecated @Override
     public void detailedHistory(final String channel, long start, long end,
@@ -211,8 +212,8 @@ public class Pubnub extends PubnubCore {
      *            True if messages need to be in reverse order
      * @param callback
      *            Callback
-     * @deprecated
-     *            Renamed as history
+     * @deprecated As of release 3.5.2
+     *            replaced by {@link #history(String channel, long start, boolean reverse, Callback callback)}
      */
     @Deprecated @Override
     public void detailedHistory(String channel, long start, boolean reverse,
@@ -250,8 +251,8 @@ public class Pubnub extends PubnubCore {
      *            End time
      * @param callback
      *            Callback
-     * @deprecated
-     *            Renamed as history
+     * @deprecated As of release 3.5.2
+     *            replaced by {@link #history(String channel, long start, long end, Callback callback)}
      */
     @Deprecated @Override
     public void detailedHistory(String channel, long start, long end,
@@ -293,8 +294,8 @@ public class Pubnub extends PubnubCore {
      *            True if messages need to be in reverse order
      * @param callback
      *            Callback
-     * @deprecated
-     *            Renamed as history
+     * @deprecated As of release 3.5.2
+     *            replaced by {@link #history(String channel, long start, long end, boolean reverse, Callback callback)}
      */
     @Deprecated @Override
     public void detailedHistory(String channel, long start, long end,
@@ -335,8 +336,9 @@ public class Pubnub extends PubnubCore {
      *            True if messages need to be in reverse order
      * @param callback
      *            Callback
-     * @deprecated
-     *            Renamed as history
+     * @deprecated As of release 3.5.2
+     *            replaced by {@link #history(String channel,
+     *            int count, boolean reverse, Callback callback)}
      */
     @Deprecated @Override
     public void detailedHistory(String channel, int count, boolean reverse,
@@ -373,8 +375,8 @@ public class Pubnub extends PubnubCore {
      *            True if messages need to be in reverse order
      * @param callback
      *            Callback
-     * @deprecated
-     *            Renamed as history
+     * @deprecated As of release 3.5.2
+     *            replaced by {@link #history(String channel, boolean reverse, Callback callback)}
      */
     @Deprecated
     public void detailedHistory(String channel, boolean reverse,
@@ -409,8 +411,9 @@ public class Pubnub extends PubnubCore {
      *            Maximum number of messages
      * @param callback
      *            Callback object
-     * @deprecated
-     *            Renamed as history
+     * @deprecated As of release 3.5.2
+     *            replaced by {@link #history(String channel,
+     *            int count, Callback callback)}
      */
     @Deprecated
     public void detailedHistory(String channel, int count, Callback callback) {
