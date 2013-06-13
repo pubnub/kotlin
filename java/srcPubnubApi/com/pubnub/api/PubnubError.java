@@ -127,7 +127,11 @@ public class PubnubError {
 
     public static final int         PNERR_5031_FORBIDDEN_CODE                =       5031;
     public static final PubnubError PNERR_5031_FORBIDDEN                     =
-            new PubnubError( PNERR_5031_FORBIDDEN_CODE , "Authentication Failure");
+            new PubnubError( PNERR_5031_FORBIDDEN_CODE , "Authentication Failure", "Incorrect Authentication Key");
+
+    public static final int         PNERR_5032_UNAUTHORIZED_CODE             =       5032;
+    public static final PubnubError PNERR_5032_UNAUTHORIZED                  =
+            new PubnubError( PNERR_5032_UNAUTHORIZED_CODE , "Authentication Failure", "Authentication Key Missing");
 
 
     public  final int errorCode;
@@ -138,13 +142,18 @@ public class PubnubError {
         this.errorCode = errorCode;
         this.errorString = errorString;
     }
+    private PubnubError(int errorCode, String errorString, String message) {
+        this.errorCode = errorCode;
+        this.errorString = errorString;
+        this.message = message;
+    }
     public PubnubError(PubnubError error, String message) {
         this.errorCode = error.errorCode;
         this.errorString = error.errorString;
         this.message = message;
     }
     public String toString() {
-        String value = "[" + errorCode + "] : " + errorString;
+        String value = "[Error: " + errorCode + "] : " + errorString;
         if (message != null && message.length() > 0) {
             value += " : " + message;
         }

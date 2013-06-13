@@ -42,6 +42,7 @@ class SubscribeWorker extends AbstractSubscribeWorker {
 
                 switch(e.getPubnubError().errorCode) {
                 case PubnubError.PNERR_5031_FORBIDDEN_CODE:
+                case PubnubError.PNERR_5032_UNAUTHORIZED_CODE:
                     log.verbose("Authentication Failure : " + e.toString());
                     currentRetryAttempt = 1;
                     break;
