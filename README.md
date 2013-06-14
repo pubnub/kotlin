@@ -18,3 +18,6 @@ Client for the Blackberry Mobile Platform
 
 ### Java 
 Everything else! Java development for POJOs, J2EE, J2SE, etc.
+
+### Java for Google App Engine
+See the Java subdir, and the GAE_3.3 tag
