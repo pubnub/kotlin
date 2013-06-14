@@ -136,6 +136,7 @@ public class Pubnub extends PubnubCore {
      *            Hashtable containing channel name, message.
      * @param callback
      *            object of sub class of Callback class
+     * @deprecated As of version 3.5.2 .           
      */
     @Deprecated @Override
     public void publish(Hashtable args, Callback callback) {
@@ -147,6 +148,7 @@ public class Pubnub extends PubnubCore {
      *
      * @param args
      *            Hashtable containing channel name, message, callback
+     * @deprecated As of version 3.5.2 .
      */
     @Deprecated @Override
     public void publish(Hashtable args) {
@@ -169,7 +171,7 @@ public class Pubnub extends PubnubCore {
      *            True if messages need to be in reverse order
      * @param callback
      *            Callback
-     * @deprecated As of release 3.5.2
+     * @deprecated As of version 3.5.2 .
      *            replaced by {@link #history(String channel, long start, long end, 
      *            int count, boolean reverse, Callback callback)}
      */
@@ -212,7 +214,7 @@ public class Pubnub extends PubnubCore {
      *            True if messages need to be in reverse order
      * @param callback
      *            Callback
-     * @deprecated As of release 3.5.2
+     * @deprecated As of version 3.5.2 .
      *            replaced by {@link #history(String channel, long start, boolean reverse, Callback callback)}
      */
     @Deprecated @Override
@@ -251,7 +253,7 @@ public class Pubnub extends PubnubCore {
      *            End time
      * @param callback
      *            Callback
-     * @deprecated As of release 3.5.2
+     * @deprecated As of version 3.5.2 .
      *            replaced by {@link #history(String channel, long start, long end, Callback callback)}
      */
     @Deprecated @Override
@@ -294,7 +296,7 @@ public class Pubnub extends PubnubCore {
      *            True if messages need to be in reverse order
      * @param callback
      *            Callback
-     * @deprecated As of release 3.5.2
+     * @deprecated As of version 3.5.2 .
      *            replaced by {@link #history(String channel, long start, long end, boolean reverse, Callback callback)}
      */
     @Deprecated @Override
@@ -336,7 +338,7 @@ public class Pubnub extends PubnubCore {
      *            True if messages need to be in reverse order
      * @param callback
      *            Callback
-     * @deprecated As of release 3.5.2
+     * @deprecated As of version 3.5.2 .
      *            replaced by {@link #history(String channel,
      *            int count, boolean reverse, Callback callback)}
      */
@@ -375,7 +377,7 @@ public class Pubnub extends PubnubCore {
      *            True if messages need to be in reverse order
      * @param callback
      *            Callback
-     * @deprecated As of release 3.5.2
+     * @deprecated As of version 3.5.2 .
      *            replaced by {@link #history(String channel, boolean reverse, Callback callback)}
      */
     @Deprecated
@@ -411,7 +413,7 @@ public class Pubnub extends PubnubCore {
      *            Maximum number of messages
      * @param callback
      *            Callback object
-     * @deprecated As of release 3.5.2
+     * @deprecated As of version 3.5.2 .
      *            replaced by {@link #history(String channel,
      *            int count, Callback callback)}
      */
@@ -442,6 +444,7 @@ public class Pubnub extends PubnubCore {
      *
      * @param args
      *            Hashtable containing channel name.
+     * @deprecated As of version 3.5.2 .
      */
     @Deprecated
     public void unsubscribe(Hashtable args) {
@@ -462,6 +465,7 @@ public class Pubnub extends PubnubCore {
      *            Callback
      * @exception PubnubException
      *                Throws PubnubException if Callback is null
+     * @deprecated As of version 3.5.2 .
      */
     @Deprecated
     public void subscribe(Hashtable args, Callback callback)
@@ -478,6 +482,7 @@ public class Pubnub extends PubnubCore {
      *            Hashtable containing channel name, callback
      * @exception PubnubException
      *                Throws PubnubException if Callback is null
+     * @deprecated As of version 3.5.2 .
      */
     @Deprecated
     public void subscribe(Hashtable args) throws PubnubException {
