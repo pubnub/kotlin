@@ -455,7 +455,7 @@ abstract class PubnubCore {
                 msgStr = "\"" + pc.encrypt(msgStr) + "\"";
             } catch (Exception e) {
                 callback.errorCallback(channel,
-                        PubnubError.PNERR_5001_ENCRYPTION_ERROR);
+                        PubnubError.PNERROBJ_5001_ENCRYPTION_ERROR);
                 return;
             }
         } else {
@@ -495,7 +495,7 @@ abstract class PubnubCore {
                             jsarr = new JSONArray(response);
                         } catch (JSONException e) {
                             handleError(hreq,
-                                    PubnubError.PNERR_5028_INVALID_JSON);
+                                    PubnubError.PNERROBJ_5028_INVALID_JSON);
                             return;
                         }
                         callback.successCallback(channel, jsarr);
@@ -551,7 +551,7 @@ abstract class PubnubCore {
                             jsobj = new JSONObject(response);
                         } catch (JSONException e) {
                             callback.errorCallback(channel,
-                                    PubnubError.PNERR_5004_JSON_ERROR);
+                                    PubnubError.PNERROBJ_5004_JSON_ERROR);
                             return;
                         }
                         callback.successCallback(channel, jsobj);
@@ -611,7 +611,7 @@ abstract class PubnubCore {
                             callback.successCallback(channel, respArr);
                         } catch (Exception e) {
                             callback.errorCallback(channel,
-                                    PubnubError.PNERR_5004_JSON_ERROR);
+                                    PubnubError.PNERROBJ_5004_JSON_ERROR);
                         }
                     }
 
@@ -669,7 +669,7 @@ abstract class PubnubCore {
                             callback.successCallback(channel, respArr);
                         } catch (Exception e) {
                             callback.errorCallback(channel,
-                                    PubnubError.PNERR_5005_JSON_ERROR);
+                                    PubnubError.PNERROBJ_5005_JSON_ERROR);
                         }
 
                     }
@@ -1056,7 +1056,7 @@ abstract class PubnubCore {
 
         if (channelString == null) {
             callErrorCallbacks(channelsArray,
-                    PubnubError.PNERR_5026_PARSING_ERROR);
+                    PubnubError.PNERROBJ_5026_PARSING_ERROR);
             return;
         }
         String[] urlComponents = { getOrigin(), "subscribe",
@@ -1136,7 +1136,7 @@ abstract class PubnubCore {
                                                 _channel.callback
                                                         .errorCallback(
                                                                 _channel.name,
-                                                                PubnubError.PNERR_5024_DECRYPTION_ERROR);
+                                                                PubnubError.PNERROBJ_5024_DECRYPTION_ERROR);
                                             }
                                         } else {
                                             _channel.callback.successCallback(
@@ -1174,7 +1174,7 @@ abstract class PubnubCore {
                                                 _channel.callback
                                                         .errorCallback(
                                                                 _channel.name,
-                                                                new PubnubError(PubnubError.PNERR_5025_DECRYPTION_ERROR, "Verify your Cipher Key"));
+                                                                PubnubError.getErrorObject(PubnubError.PNERROBJ_5025_DECRYPTION_ERROR, "Verify your Cipher Key"));
                                             }
                                         } else {
                                             _channel.callback.successCallback(
@@ -1291,7 +1291,7 @@ abstract class PubnubCore {
      */
     public void disconnectAndResubscribeWithTimetoken(String timetoken) {
         disconnectAndResubscribeWithTimetoken(timetoken,
-                PubnubError.PNERR_5030_DISCONN_AND_RESUB);
+                PubnubError.PNERROBJ_5030_DISCONN_AND_RESUB);
     }
 
     /**
@@ -1310,7 +1310,7 @@ abstract class PubnubCore {
      *
      */
     public void disconnectAndResubscribe() {
-        disconnectAndResubscribe(PubnubError.PNERR_5029_DISCONNECT);
+        disconnectAndResubscribe(PubnubError.PNERROBJ_5029_DISCONNECT);
     }
 
     /**

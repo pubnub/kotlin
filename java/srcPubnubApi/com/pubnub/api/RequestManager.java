@@ -107,14 +107,14 @@ class NonSubscribeWorker extends Worker {
         catch (Exception e) {
             log.debug("Exception in Fetch : " + e.toString());
             if (!_die)
-                hreq.getResponseHandler().handleError(hreq, PubnubError.PNERR_5017_HTTP_ERROR);
+                hreq.getResponseHandler().handleError(hreq, PubnubError.PNERROBJ_5017_HTTP_ERROR);
             return;
         }
 
         if (!_die) {
             if (hresp == null) {
                 log.debug("Error in fetching url : " + hreq.getUrl());
-                hreq.getResponseHandler().handleError(hreq, PubnubError.PNERR_5018_HTTP_ERROR);
+                hreq.getResponseHandler().handleError(hreq, PubnubError.PNERROBJ_5018_HTTP_ERROR);
                 return;
             }
             hreq.getResponseHandler().handleResponse(hreq, hresp.getResponse());

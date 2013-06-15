@@ -51,7 +51,7 @@ class SubscribeWorker extends AbstractSubscribeWorker {
                     log.verbose("Exhausted number of retries");
                     hreq.getResponseHandler().handleTimeout(hreq);
                 } else {
-                    hreq.getResponseHandler().handleError(hreq, PubnubError.PNERR_5021_CLIENT_TIMEOUT);
+                    hreq.getResponseHandler().handleError(hreq, PubnubError.PNERROBJ_5021_CLIENT_TIMEOUT);
                 }
                 return;
             }
