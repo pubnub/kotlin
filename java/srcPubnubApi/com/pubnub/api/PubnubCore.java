@@ -1017,7 +1017,8 @@ abstract class PubnubCore {
         Callback callback = (Callback) args.get("callback");
         String timetoken = (String) args.get("timetoken");
 
-        _saved_timetoken = _timetoken;
+        if (!_timetoken.equals("0"))
+            _saved_timetoken = _timetoken;
         _timetoken = (timetoken == null) ? "0" : timetoken;
 
         /*

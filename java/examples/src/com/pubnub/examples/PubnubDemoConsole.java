@@ -267,7 +267,7 @@ public class PubnubDemoConsole {
                 presence(channelName);
                 break;
             case 4:
-                System.out.println("Detailed History: Enter Channel name");
+                System.out.println("History: Enter Channel name");
                 channelName = reader.nextLine();
                 detailedHistory(channelName);
                 break;

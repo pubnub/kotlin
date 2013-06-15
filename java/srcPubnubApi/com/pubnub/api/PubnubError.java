@@ -134,11 +134,11 @@ public class PubnubError {
 
     public static final int         PNERR_5031_FORBIDDEN                =       5031;
     public static final PubnubError PNERROBJ_5031_FORBIDDEN                     =
-            new PubnubError( PNERR_5031_FORBIDDEN , "Authentication Failure", "Incorrect Authentication Key");
+            new PubnubError( PNERR_5031_FORBIDDEN , "Authentication Failure");
 
     public static final int         PNERR_5032_UNAUTHORIZED             =       5032;
     public static final PubnubError PNERROBJ_5032_UNAUTHORIZED                  =
-            new PubnubError( PNERR_5032_UNAUTHORIZED , "Authentication Failure", "Authentication Key Missing");
+            new PubnubError( PNERR_5032_UNAUTHORIZED , "Authentication Failure");
 
 
     public  final int errorCode;

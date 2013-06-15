@@ -88,12 +88,12 @@ class HttpClientCore extends HttpClient {
         try {
             urlobj = new URL(url);
         } catch (MalformedURLException e3) {
-            throw new PubnubException(PNERROBJ_5006_MALFORMED_URL);
+            throw new PubnubException(getErrorObject(PNERROBJ_5006_MALFORMED_URL,url));
         }
         try {
             connection = (HttpURLConnection) urlobj.openConnection();
         } catch (IOException e2) {
-            throw new PubnubException(PNERROBJ_5008_URL_OPEN);
+            throw new PubnubException(getErrorObject(PNERROBJ_5008_URL_OPEN, url));
         }
         try {
             connection.setRequestMethod("GET");
@@ -169,9 +169,9 @@ class HttpClientCore extends HttpClient {
 
         switch (rc) {
         case HttpURLConnection.HTTP_FORBIDDEN:
-            throw new PubnubException(PNERROBJ_5031_FORBIDDEN);
+            throw new PubnubException(getErrorObject(PNERROBJ_5031_FORBIDDEN, page));
         case HttpURLConnection.HTTP_UNAUTHORIZED:
-            throw new PubnubException(PNERROBJ_5032_UNAUTHORIZED);
+            throw new PubnubException(getErrorObject(PNERROBJ_5032_UNAUTHORIZED, page));
         case HttpURLConnection.HTTP_BAD_REQUEST:
             try {
                 JSONArray jsarr = new JSONArray(page);
