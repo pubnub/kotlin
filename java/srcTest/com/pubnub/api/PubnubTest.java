@@ -974,12 +974,13 @@ public class PubnubTest {
         final CountDownLatch latch = new CountDownLatch(100);
         final Hashtable results = new Hashtable();
         final Hashtable inputs = new Hashtable();
+        final Hashtable stats = new Hashtable();
         final int count = 100;
         final Random rand = new Random();
-        results.put("connects", 0);
-        results.put("count", 0);
-        results.put("duplicate", false);
-        results.put("wrong", false);
+        stats.put("connects", 0);
+        stats.put("count", 0);
+        stats.put("duplicate", false);
+        stats.put("wrong", false);
 
         class SubscribeThread implements Runnable {
 
@@ -1040,9 +1041,9 @@ public class PubnubTest {
                     @Override
                     public void connectCallback(String channel, Object message) {
 
-                        results.put("connects",
-                                (Integer) (results.get("connects")) + 1);
-                        if ((Integer) results.get("connects") >= count)
+                        stats.put("connects",
+                                (Integer) (stats.get("connects")) + 1);
+                        if ((Integer) stats.get("connects") >= count)
                             startPublish();
                     }
 
@@ -1053,13 +1054,13 @@ public class PubnubTest {
                         int d = (inputs.get(channel) == null) ? 0
                                 : (Integer) inputs.get(channel);
                         if (((Integer) c).equals((Integer) message))
-                            results.put("duplicate", true);
+                            stats.put("duplicate", true);
                         if (!(((Integer) d).equals((Integer) message)))
-                            results.put("wrong", true);
+                            stats.put("wrong", true);
 
                         assertEquals((Integer) d, (Integer) message);
                         results.put(channel, message);
-                        results.put("count", (Integer) results.get("count") + 1);
+                        stats.put("count", (Integer) stats.get("count") + 1);
                     }
 
                     @Override
@@ -1084,9 +1085,9 @@ public class PubnubTest {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        assertFalse((Boolean) results.get("duplicate").equals(true));
-        assertFalse((Boolean) results.get("wrong").equals(true));
-        assertEquals((Integer) count, (Integer) results.get("count"));
+        assertFalse((Boolean) stats.get("duplicate").equals(true));
+        assertFalse((Boolean) stats.get("wrong").equals(true));
+        assertEquals((Integer) count, (Integer) stats.get("count"));
 
     }
 
@@ -1096,12 +1097,13 @@ public class PubnubTest {
         final CountDownLatch latch = new CountDownLatch(100);
         final Hashtable results = new Hashtable();
         final Hashtable inputs = new Hashtable();
+        final Hashtable stats = new Hashtable();
         final int count = 100;
         final Random rand = new Random();
-        results.put("connects", 0);
-        results.put("count", 0);
-        results.put("duplicate", false);
-        results.put("wrong", false);
+        stats.put("connects", 0);
+        stats.put("count", 0);
+        stats.put("duplicate", false);
+        stats.put("wrong", false);
 
         class PublishThread implements Runnable {
             private String ch;
@@ -1166,12 +1168,12 @@ public class PubnubTest {
                         int d = (inputs.get(channel) == null) ? 0
                                 : (Integer) inputs.get(channel);
                         if (((Integer) c).equals((Integer) message))
-                            results.put("duplicate", true);
+                            stats.put("duplicate", true);
                         if (!(((Integer) d).equals((Integer) message)))
-                            results.put("wrong", true);
+                            stats.put("wrong", true);
                         assertEquals((Integer) d, (Integer) message);
                         results.put(channel, message);
-                        results.put("count", (Integer) results.get("count") + 1);
+                        stats.put("count", (Integer) stats.get("count") + 1);
                     }
 
                     @Override
@@ -1200,8 +1202,8 @@ public class PubnubTest {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        assertFalse((Boolean) results.get("duplicate").equals(true));
-        assertFalse((Boolean) results.get("wrong").equals(true));
+        assertFalse((Boolean) stats.get("duplicate").equals(true));
+        assertFalse((Boolean) stats.get("wrong").equals(true));
         // assertEquals((Integer)count,(Integer)results.get("count"));
 
     }
@@ -1212,12 +1214,13 @@ public class PubnubTest {
         final CountDownLatch latch = new CountDownLatch(100);
         final Hashtable results = new Hashtable();
         final Hashtable inputs = new Hashtable();
+        final Hashtable stats = new Hashtable();
         final int count = 100;
         final Random rand = new Random();
-        results.put("connects", 0);
-        results.put("count", 0);
-        results.put("duplicate", false);
-        results.put("wrong", false);
+        stats.put("connects", 0);
+        stats.put("count", 0);
+        stats.put("duplicate", false);
+        stats.put("wrong", false);
 
         class PublishThread implements Runnable {
             private String ch;
@@ -1282,12 +1285,12 @@ public class PubnubTest {
                         int d = (inputs.get(channel) == null) ? 0
                                 : (Integer) inputs.get(channel);
                         if (((Integer) c).equals((Integer) message))
-                            results.put("duplicate", true);
+                            stats.put("duplicate", true);
                         if (!(((Integer) d).equals((Integer) message)))
-                            results.put("wrong", true);
+                            stats.put("wrong", true);
                         assertEquals((Integer) d, (Integer) message);
                         results.put(channel, message);
-                        results.put("count", (Integer) results.get("count") + 1);
+                        stats.put("count", (Integer) stats.get("count") + 1);
                         try {
                             Thread.sleep(5000);
                         } catch (InterruptedException e) {
@@ -1321,8 +1324,8 @@ public class PubnubTest {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        assertFalse((Boolean) results.get("duplicate").equals(true));
-        assertFalse((Boolean) results.get("wrong").equals(true));
+        assertFalse((Boolean) stats.get("duplicate").equals(true));
+        assertFalse((Boolean) stats.get("wrong").equals(true));
         // assertEquals((Integer)count,(Integer)results.get("count"));
 
     }
@@ -1333,12 +1336,13 @@ public class PubnubTest {
         final CountDownLatch latch = new CountDownLatch(100);
         final Hashtable results = new Hashtable();
         final Hashtable inputs = new Hashtable();
+        final Hashtable stats = new Hashtable();
         final int count = 125;
         final Random rand = new Random();
-        results.put("connects", 0);
-        results.put("count", 0);
-        results.put("duplicate", false);
-        results.put("wrong", false);
+        stats.put("connects", 0);
+        stats.put("count", 0);
+        stats.put("duplicate", false);
+        stats.put("wrong", false);
 
         pubnub.setResumeOnReconnect(true);
 
@@ -1420,9 +1424,9 @@ public class PubnubTest {
                     @Override
                     public void connectCallback(String channel, Object message) {
 
-                        results.put("connects",
-                                (Integer) (results.get("connects")) + 1);
-                        if ((Integer) results.get("connects") >= count) {
+                        stats.put("connects",
+                                (Integer) (stats.get("connects")) + 1);
+                        if ((Integer) stats.get("connects") >= count) {
                             startPublish();
                             new Thread(new DarThread()).start();
                         }
@@ -1435,12 +1439,12 @@ public class PubnubTest {
                         int d = (inputs.get(channel) == null) ? 0
                                 : (Integer) inputs.get(channel);
                         if (((Integer) c).equals((Integer) message)) {
-                            results.put("duplicate", true);
+                            stats.put("duplicate", true);
                         }
                         if (!(((Integer) d).equals((Integer) message)))
-                            results.put("wrong", true);
+                            stats.put("wrong", true);
                         results.put(channel, message);
-                        results.put("count", (Integer) results.get("count") + 1);
+                        stats.put("count", (Integer) stats.get("count") + 1);
                     }
 
                     @Override
@@ -1465,9 +1469,9 @@ public class PubnubTest {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        assertFalse((Boolean) results.get("duplicate").equals(true));
-        assertFalse((Boolean) results.get("wrong").equals(true));
-        assertEquals((Integer) count, (Integer) results.get("count"));
+        assertFalse((Boolean) stats.get("duplicate").equals(true));
+        assertFalse((Boolean) stats.get("wrong").equals(true));
+        assertEquals((Integer) count, (Integer) stats.get("count"));
 
     }
 
@@ -1477,12 +1481,13 @@ public class PubnubTest {
         final CountDownLatch latch = new CountDownLatch(100);
         final Hashtable results = new Hashtable();
         final Hashtable inputs = new Hashtable();
+        final Hashtable stats = new Hashtable();
         final int count = 125;
         final Random rand = new Random();
-        results.put("connects", 0);
-        results.put("count", 0);
-        results.put("duplicate", false);
-        results.put("wrong", false);
+        stats.put("connects", 0);
+        stats.put("count", 0);
+        stats.put("duplicate", false);
+        stats.put("wrong", false);
 
         pubnub.setResumeOnReconnect(false);
 
@@ -1564,9 +1569,9 @@ public class PubnubTest {
                     @Override
                     public void connectCallback(String channel, Object message) {
 
-                        results.put("connects",
-                                (Integer) (results.get("connects")) + 1);
-                        if ((Integer) results.get("connects") >= count) {
+                        stats.put("connects",
+                                (Integer) (stats.get("connects")) + 1);
+                        if ((Integer) stats.get("connects") >= count) {
                             startPublish();
                             new Thread(new DarThread()).start();
                         }
@@ -1579,14 +1584,12 @@ public class PubnubTest {
                         int d = (inputs.get(channel) == null) ? 0
                                 : (Integer) inputs.get(channel);
                         if (((Integer) c).equals((Integer) message)) {
-                            System.out.println(channel + " " + c + " "
-                                    + message);
-                            results.put("duplicate", true);
+                            stats.put("duplicate", true);
                         }
                         if (!(((Integer) d).equals((Integer) message)))
-                            results.put("wrong", true);
+                            stats.put("wrong", true);
                         results.put(channel, message);
-                        results.put("count", (Integer) results.get("count") + 1);
+                        stats.put("count", (Integer) stats.get("count") + 1);
                     }
 
                     @Override
@@ -1611,8 +1614,8 @@ public class PubnubTest {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        assertFalse((Boolean) results.get("duplicate").equals(true));
-        assertFalse((Boolean) results.get("wrong").equals(true));
+        assertFalse((Boolean) stats.get("duplicate").equals(true));
+        assertFalse((Boolean) stats.get("wrong").equals(true));
         // assertEquals((Integer)count,(Integer)results.get("count"));
     }
 }
