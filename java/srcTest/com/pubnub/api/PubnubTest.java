@@ -1333,7 +1333,7 @@ public class PubnubTest {
         final CountDownLatch latch = new CountDownLatch(100);
         final Hashtable results = new Hashtable();
         final Hashtable inputs = new Hashtable();
-        final int count = 150;
+        final int count = 125;
         final Random rand = new Random();
         results.put("connects", 0);
         results.put("count", 0);
@@ -1435,8 +1435,6 @@ public class PubnubTest {
                         int d = (inputs.get(channel) == null) ? 0
                                 : (Integer) inputs.get(channel);
                         if (((Integer) c).equals((Integer) message)) {
-                            System.out.println(channel + " " + c + " "
-                                    + message);
                             results.put("duplicate", true);
                         }
                         if (!(((Integer) d).equals((Integer) message)))
@@ -1479,7 +1477,7 @@ public class PubnubTest {
         final CountDownLatch latch = new CountDownLatch(100);
         final Hashtable results = new Hashtable();
         final Hashtable inputs = new Hashtable();
-        final int count = 150;
+        final int count = 125;
         final Random rand = new Random();
         results.put("connects", 0);
         results.put("count", 0);
