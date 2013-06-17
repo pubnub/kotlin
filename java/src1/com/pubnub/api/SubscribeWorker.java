@@ -17,6 +17,14 @@ class SubscribeWorker extends AbstractSubscribeWorker {
         HttpResponse hresp = null;
         int currentRetryAttempt = (hreq.isDar())?1:maxRetries;
         log.verbose("disconnectAndResubscribe is " + hreq.isDar());
+        if (hreq.getWorker() != null) {
+            log.verbose("Request placed by worker " + hreq.getWorker().getThread().getName());
+            if (hreq.getWorker()._die) {
+                log.verbose("The thread which placed the request has died, so ignore the request : " + hreq.getWorker().getThread().getName());
+                return;
+            }
+        }
+        hreq.setWorker(this);
         while (!_die && currentRetryAttempt <= maxRetries) {
             try {
                 log.debug(hreq.getUrl());
