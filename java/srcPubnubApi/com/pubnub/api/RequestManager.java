@@ -273,6 +273,10 @@ abstract class AbstractSubscribeManager extends RequestManager {
         this.requestTimeout = timeout;
     }
 
+    public void queue(HttpRequest hreq) {
+        clearRequestQueue();
+        super.queue(hreq);
+    }
 }
 
 abstract class AbstractNonSubscribeManager extends RequestManager {

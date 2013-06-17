@@ -203,3 +203,4 @@ class HttpClientCore extends HttpClient {
         if (connection != null) connection.disconnect();
     }
 }
+
