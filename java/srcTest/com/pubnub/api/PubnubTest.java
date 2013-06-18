@@ -1007,6 +1007,7 @@ public class PubnubTest {
                         @Override
                         public void successCallback(String channel,
                                 Object message) {
+                        	stats.put("count", (Integer) stats.get("count") + 1);
                         }
 
                         @Override
@@ -1060,7 +1061,7 @@ public class PubnubTest {
 
                         assertEquals((Integer) d, (Integer) message);
                         results.put(channel, message);
-                        stats.put("count", (Integer) stats.get("count") + 1);
+                        stats.put("count", (Integer) stats.get("count") - 1);
                     }
 
                     @Override
@@ -1087,7 +1088,7 @@ public class PubnubTest {
         }
         assertFalse((Boolean) stats.get("duplicate").equals(true));
         assertFalse((Boolean) stats.get("wrong").equals(true));
-        assertEquals((Integer) count, (Integer) stats.get("count"));
+        assertEquals((Integer)0,(Integer) stats.get("count"));
 
     }
 
@@ -1127,6 +1128,7 @@ public class PubnubTest {
 
                     @Override
                     public void successCallback(String channel, Object message) {
+                    	stats.put("count", (Integer) stats.get("count") + 1);
                     }
 
                     @Override
@@ -1173,7 +1175,7 @@ public class PubnubTest {
                             stats.put("wrong", true);
                         assertEquals((Integer) d, (Integer) message);
                         results.put(channel, message);
-                        stats.put("count", (Integer) stats.get("count") + 1);
+                        stats.put("count", (Integer) stats.get("count") - 1);
                     }
 
                     @Override
@@ -1193,7 +1195,6 @@ public class PubnubTest {
             new Thread(new SubscribeThread(channel + "-" + i)).start();
         }
         for (int i = 1; i <= count; i++) {
-            inputs.put(channel + "-" + i, i);
             new Thread(new PublishThread(channel + "-" + i, i)).start();
         }
 
@@ -1244,6 +1245,7 @@ public class PubnubTest {
 
                     @Override
                     public void successCallback(String channel, Object message) {
+                    	stats.put("count", (Integer) stats.get("count") + 1);
                     }
 
                     @Override
@@ -1290,7 +1292,7 @@ public class PubnubTest {
                             stats.put("wrong", true);
                         assertEquals((Integer) d, (Integer) message);
                         results.put(channel, message);
-                        stats.put("count", (Integer) stats.get("count") + 1);
+                        stats.put("count", (Integer) stats.get("count") - 1);
                         try {
                             Thread.sleep(5000);
                         } catch (InterruptedException e) {
@@ -1315,7 +1317,6 @@ public class PubnubTest {
             new Thread(new SubscribeThread(channel + "-" + i)).start();
         }
         for (int i = 1; i <= count; i++) {
-            inputs.put(channel + "-" + i, i);
             new Thread(new PublishThread(channel + "-" + i, i)).start();
         }
 
@@ -1390,6 +1391,7 @@ public class PubnubTest {
                         @Override
                         public void successCallback(String channel,
                                 Object message) {
+                        	stats.put("count", (Integer) stats.get("count") + 1);
                         }
 
                         @Override
@@ -1444,7 +1446,7 @@ public class PubnubTest {
                         if (!(((Integer) d).equals((Integer) message)))
                             stats.put("wrong", true);
                         results.put(channel, message);
-                        stats.put("count", (Integer) stats.get("count") + 1);
+                        stats.put("count", (Integer) stats.get("count") - 1);
                     }
 
                     @Override
@@ -1471,7 +1473,7 @@ public class PubnubTest {
         }
         assertFalse((Boolean) stats.get("duplicate").equals(true));
         assertFalse((Boolean) stats.get("wrong").equals(true));
-        assertEquals((Integer) count, (Integer) stats.get("count"));
+        assertEquals((Integer)0, (Integer) stats.get("count"));
 
     }
 
@@ -1535,6 +1537,7 @@ public class PubnubTest {
                         @Override
                         public void successCallback(String channel,
                                 Object message) {
+                        	stats.put("count", (Integer) stats.get("count") + 1);
                         }
 
                         @Override
@@ -1589,7 +1592,7 @@ public class PubnubTest {
                         if (!(((Integer) d).equals((Integer) message)))
                             stats.put("wrong", true);
                         results.put(channel, message);
-                        stats.put("count", (Integer) stats.get("count") + 1);
+                        stats.put("count", (Integer) stats.get("count") - 1);
                     }
 
                     @Override
