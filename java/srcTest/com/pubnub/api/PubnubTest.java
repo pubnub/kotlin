@@ -245,7 +245,7 @@ public class PubnubTest {
         }
 
         try {
-            latch.await(5, TimeUnit.SECONDS);
+            latch.await(30, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
 
         }
@@ -279,7 +279,7 @@ public class PubnubTest {
         }
 
         try {
-            latch.await(5, TimeUnit.SECONDS);
+            latch.await(30, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
 
         }
@@ -312,7 +312,7 @@ public class PubnubTest {
 
             pubnub.subscribe(args);
 
-            latch.await(5, TimeUnit.SECONDS);
+            latch.await(30, TimeUnit.SECONDS);
             assertEquals(1, pbCb.getResult());
             assertEquals(sendMessage.toString(), sbCb.getResponse().toString());
         } catch (Exception e) {
@@ -346,7 +346,7 @@ public class PubnubTest {
         }
 
         try {
-            latch.await(10, TimeUnit.SECONDS);
+            latch.await(30, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
 
         }
@@ -380,7 +380,7 @@ public class PubnubTest {
         }
 
         try {
-            latch.await(10, TimeUnit.SECONDS);
+            latch.await(30, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
 
         }
@@ -413,7 +413,7 @@ public class PubnubTest {
 
             pubnub_enc.subscribe(args);
 
-            latch.await(10, TimeUnit.SECONDS);
+            latch.await(30, TimeUnit.SECONDS);
             assertEquals(1, pbCb.getResult());
             assertEquals(sendMessage.toString(), sbCb.getResponse().toString());
         } catch (Exception e) {
@@ -455,7 +455,7 @@ public class PubnubTest {
 
             pubnub.subscribe(args);
 
-            latch.await(10, TimeUnit.SECONDS);
+            latch.await(30, TimeUnit.SECONDS);
             assertEquals(1, hnCb.getOccupancy());
         } catch (Exception e) {
 
@@ -491,7 +491,7 @@ public class PubnubTest {
             }
         });
         try {
-            latch.await(15, TimeUnit.SECONDS);
+            latch.await(30, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -527,7 +527,7 @@ public class PubnubTest {
             }
         });
         try {
-            latch.await(15, TimeUnit.SECONDS);
+            latch.await(30, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -552,7 +552,7 @@ public class PubnubTest {
 
             pubnub2.subscribe(args);
 
-            latch.await(10, TimeUnit.SECONDS);
+            latch.await(30, TimeUnit.SECONDS);
             assertEquals(pubnub2.UUID, presenceCb.getUUID());
         } catch (Exception e) {
             e.printStackTrace();
@@ -599,7 +599,7 @@ public class PubnubTest {
                 }
             });
             pubnub.subscribe(args);
-            latch.await(30, TimeUnit.SECONDS);
+            latch.await(60, TimeUnit.SECONDS);
             assertEquals(10, subscribeCb.getResponse());
 
         } catch (Exception e) {
@@ -653,7 +653,7 @@ public class PubnubTest {
                 }
             });
             pubnub.subscribe(args);
-            latch.await(30, TimeUnit.SECONDS);
+            latch.await(60, TimeUnit.SECONDS);
             assertEquals(20, subscribeCb.getResponse());
 
         } catch (Exception e) {
@@ -700,7 +700,7 @@ public class PubnubTest {
                 }
             });
             pubnub.subscribe(args);
-            latch.await(30, TimeUnit.SECONDS);
+            latch.await(60, TimeUnit.SECONDS);
             assertEquals(10, subscribeCb.getResponse());
 
         } catch (Exception e) {
@@ -755,7 +755,7 @@ public class PubnubTest {
                 }
             });
             pubnub.subscribe(args);
-            latch.await(60, TimeUnit.SECONDS);
+            latch.await(90, TimeUnit.SECONDS);
             assertEquals(20, subscribeCb.getResponse());
 
         } catch (Exception e) {
@@ -803,7 +803,7 @@ public class PubnubTest {
                 }
             });
             pubnub.subscribe(args);
-            latch.await(60, TimeUnit.SECONDS);
+            latch.await(90, TimeUnit.SECONDS);
             assertNotEquals(10, subscribeCb.getResponse());
 
         } catch (Exception e) {
@@ -851,7 +851,7 @@ public class PubnubTest {
 
             });
             pubnub.subscribe(args);
-            latch.await(60, TimeUnit.SECONDS);
+            latch.await(90, TimeUnit.SECONDS);
             assertNotEquals(10, subscribeCb.getResponse());
 
         } catch (Exception e) {
@@ -905,7 +905,7 @@ public class PubnubTest {
                 }
             });
             pubnub.subscribe(args);
-            latch.await(60, TimeUnit.SECONDS);
+            latch.await(90, TimeUnit.SECONDS);
             assertNotEquals(20, subscribeCb.getResponse());
 
         } catch (Exception e) {
@@ -959,7 +959,7 @@ public class PubnubTest {
                 }
             });
             pubnub.subscribe(args);
-            latch.await(60, TimeUnit.SECONDS);
+            latch.await(90, TimeUnit.SECONDS);
             assertNotEquals(20, subscribeCb.getResponse());
 
         } catch (Exception e) {
