@@ -28,7 +28,23 @@ public abstract class Callback {
      * @param error
      *            error
      */
-    public abstract void errorCallback(String channel, PubnubError error);
+    public void errorCallback(String channel, PubnubError error) {
+        errorCallback(channel,error.toString());
+    }
+
+    /**
+     * This callback will be invoked when an error occurs
+     *
+     * @param channel
+     *            Channel Name
+     * @param message
+     *            Message
+     *@deprecated as of version 3.5.2 and will be removed with 3.6.0 .
+     *            Replaced by {@link #errorCallback(String channel, PubnubError error)}
+     */
+    public void errorCallback(String channel, Object message) {
+
+    }
 
     /**
      * This callback will be invoked on getting connected to a channel

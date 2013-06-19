@@ -274,10 +274,10 @@ abstract class AbstractSubscribeManager extends RequestManager {
     }
 
     public void queue(HttpRequest hreq) {
-    	synchronized(_waiting) {
+        synchronized(_waiting) {
             clearRequestQueue();
             super.queue(hreq);
-    	}
+        }
     }
 }
 
