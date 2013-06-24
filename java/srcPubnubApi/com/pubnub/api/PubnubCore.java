@@ -13,6 +13,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+
 /**
  * Pubnub object facilitates querying channels for messages and listening on
  * channels for presence/message events
@@ -459,17 +460,22 @@ abstract class PubnubCore {
             }
             catch (DataLengthException e) {
                 callback.errorCallback(channel,
-                        PubnubError.PNERROBJ_5033_ENCRYPTION_ERROR);
+                		PubnubError.getErrorObject(PubnubError.PNERROBJ_5033_ENCRYPTION_ERROR, msgStr));
                 return;
             }
             catch (IllegalStateException e) {
                 callback.errorCallback(channel,
-                        PubnubError.PNERROBJ_5034_ENCRYPTION_ERROR);
+                		PubnubError.getErrorObject(PubnubError.PNERROBJ_5034_ENCRYPTION_ERROR, msgStr));
                 return;
             }
             catch (InvalidCipherTextException e) {
                 callback.errorCallback(channel,
-                        PubnubError.PNERROBJ_5035_ENCRYPTION_ERROR);
+                		PubnubError.getErrorObject(PubnubError.PNERROBJ_5035_ENCRYPTION_ERROR, msgStr));
+                return;
+            }
+            catch (Exception e) {
+                callback.errorCallback(channel,
+                		PubnubError.getErrorObject(PubnubError.PNERROBJ_5058_ENCRYPTION_ERROR, msgStr + " : " + e.toString()));
                 return;
             }
         } else {
@@ -509,7 +515,7 @@ abstract class PubnubCore {
                     jsarr = new JSONArray(response);
                 } catch (JSONException e) {
                     handleError(hreq,
-                            PubnubError.PNERROBJ_5028_INVALID_JSON);
+                    		PubnubError.getErrorObject(PubnubError.PNERROBJ_5028_INVALID_JSON, response));
                     return;
                 }
                 callback.successCallback(channel, jsarr);
@@ -565,7 +571,7 @@ abstract class PubnubCore {
                     jsobj = new JSONObject(response);
                 } catch (JSONException e) {
                     callback.errorCallback(channel,
-                            PubnubError.PNERROBJ_5004_JSON_ERROR);
+                    		PubnubError.getErrorObject(PubnubError.PNERROBJ_5004_JSON_ERROR, response));
                     return;
                 }
                 callback.successCallback(channel, jsobj);
@@ -625,16 +631,23 @@ abstract class PubnubCore {
                         callback.successCallback(channel, respArr);
                     } catch (JSONException e) {
                         callback.errorCallback(channel,
-                            PubnubError.PNERROBJ_5004_JSON_ERROR);
+                        		PubnubError.getErrorObject(PubnubError.PNERROBJ_5004_JSON_ERROR, response));
                     }catch (DataLengthException e) {
-
+                        callback.errorCallback(channel,
+                        		PubnubError.getErrorObject(PubnubError.PNERROBJ_5052_DECRYPTION_ERROR, response));
                     } catch (IllegalStateException e) {
-
+                        callback.errorCallback(channel,
+                        		PubnubError.getErrorObject(PubnubError.PNERROBJ_5053_DECRYPTION_ERROR, response));
                     } catch (InvalidCipherTextException e) {
-
+                        callback.errorCallback(channel,
+                        		PubnubError.getErrorObject(PubnubError.PNERROBJ_5054_DECRYPTION_ERROR, response));
                     }catch (IOException e) {
-
-                    }
+                        callback.errorCallback(channel,
+                        		PubnubError.getErrorObject(PubnubError.PNERROBJ_5055_DECRYPTION_ERROR, response));
+		            }catch (Exception e) {
+		                callback.errorCallback(channel,
+		                		PubnubError.getErrorObject(PubnubError.PNERROBJ_5059_DECRYPTION_ERROR, response + " : " + e.toString()));
+		            }
 
             }
 
@@ -695,16 +708,19 @@ abstract class PubnubCore {
                             PubnubError.PNERROBJ_5005_JSON_ERROR);
                 } catch (DataLengthException e) {
                     callback.errorCallback(channel,
-                            PubnubError.PNERROBJ_5040_DECRYPTION_ERROR);
+                    		PubnubError.getErrorObject(PubnubError.PNERROBJ_5040_DECRYPTION_ERROR, response));
                 } catch (IllegalStateException e) {
                     callback.errorCallback(channel,
-                            PubnubError.PNERROBJ_5041_DECRYPTION_ERROR);
+                    		PubnubError.getErrorObject(PubnubError.PNERROBJ_5041_DECRYPTION_ERROR, response));
                 } catch (InvalidCipherTextException e) {
                     callback.errorCallback(channel,
-                            PubnubError.PNERROBJ_5042_DECRYPTION_ERROR);
+                    		PubnubError.getErrorObject(PubnubError.PNERROBJ_5042_DECRYPTION_ERROR, response));
                 } catch (IOException e) {
                     callback.errorCallback(channel,
-                            PubnubError.PNERROBJ_5043_DECRYPTION_ERROR);
+                    		PubnubError.getErrorObject(PubnubError.PNERROBJ_5043_DECRYPTION_ERROR, response));
+                } catch (Exception e) {
+                    callback.errorCallback(channel,
+                    		PubnubError.getErrorObject(PubnubError.PNERROBJ_5060_DECRYPTION_ERROR, response + " : " + e.toString()));
                 }
 
             }
@@ -1272,23 +1288,40 @@ abstract class PubnubCore {
                                         if(!isWorkerDead(hreq)) _channel.callback
                                         .errorCallback(
                                                 _channel.name,
-                                                PubnubError.PNERROBJ_5044_DECRYPTION_ERROR);
+                                                PubnubError.getErrorObject(
+                                                		PubnubError.PNERROBJ_5044_DECRYPTION_ERROR, 
+                                                		messages.get(i).toString()));
                                     } catch (IllegalStateException e) {
                                         if(!isWorkerDead(hreq)) _channel.callback
                                         .errorCallback(
                                                 _channel.name,
-                                                PubnubError.PNERROBJ_5045_DECRYPTION_ERROR);
+                                                PubnubError.getErrorObject(
+		                                        		PubnubError.PNERROBJ_5045_DECRYPTION_ERROR, 
+		                                        		messages.get(i).toString()));		                                        
                                     } catch (InvalidCipherTextException e) {
                                         if(!isWorkerDead(hreq)) _channel.callback
                                         .errorCallback(
                                                 _channel.name,
-                                                PubnubError.PNERROBJ_5046_DECRYPTION_ERROR);
+                                                PubnubError.getErrorObject(
+		                                        		PubnubError.PNERROBJ_5046_DECRYPTION_ERROR, 
+		                                        		messages.get(i).toString()));	
                                     } catch (IOException e) {
                                         if(!isWorkerDead(hreq)) _channel.callback
                                         .errorCallback(
                                                 _channel.name,
-                                                PubnubError.PNERROBJ_5047_DECRYPTION_ERROR);
+                                                PubnubError.getErrorObject(
+		                                        		PubnubError.PNERROBJ_5047_DECRYPTION_ERROR, 
+		                                        		messages.get(i).toString()));	
                                     }
+                                    catch (Exception e) {
+                                        if(!isWorkerDead(hreq)) _channel.callback
+                                        .errorCallback(
+                                                _channel.name,
+                                                PubnubError.getErrorObject(
+		                                        		PubnubError.PNERROBJ_5056_DECRYPTION_ERROR, 
+		                                        		messages.get(i).toString() + " : " + e.toString()));	
+                                    }
+                                    
 
                                 } else {
                                     if(!isWorkerDead(hreq)) _channel.callback.successCallback(
@@ -1326,22 +1359,38 @@ abstract class PubnubCore {
                                         if(!isWorkerDead(hreq)) _channel.callback
                                         .errorCallback(
                                                 _channel.name,
-                                                PubnubError.PNERROBJ_5048_DECRYPTION_ERROR);
+                                                PubnubError.getErrorObject(
+                                                		PubnubError.PNERROBJ_5048_DECRYPTION_ERROR, 
+                                                		messages.get(i).toString()));
                                     } catch (IllegalStateException e) {
                                         if(!isWorkerDead(hreq)) _channel.callback
                                         .errorCallback(
                                                 _channel.name,
-                                                PubnubError.PNERROBJ_5049_DECRYPTION_ERROR);
+                                                PubnubError.getErrorObject(
+		                                        		PubnubError.PNERROBJ_5049_DECRYPTION_ERROR, 
+		                                        		messages.get(i).toString()));		                                        
                                     } catch (InvalidCipherTextException e) {
                                         if(!isWorkerDead(hreq)) _channel.callback
                                         .errorCallback(
                                                 _channel.name,
-                                                PubnubError.PNERROBJ_5050_DECRYPTION_ERROR);
+                                                PubnubError.getErrorObject(
+		                                        		PubnubError.PNERROBJ_5050_DECRYPTION_ERROR, 
+		                                        		messages.get(i).toString()));	
                                     } catch (IOException e) {
                                         if(!isWorkerDead(hreq)) _channel.callback
                                         .errorCallback(
                                                 _channel.name,
-                                                PubnubError.PNERROBJ_5051_DECRYPTION_ERROR);
+                                                PubnubError.getErrorObject(
+		                                        		PubnubError.PNERROBJ_5051_DECRYPTION_ERROR, 
+		                                        		messages.get(i).toString()));	
+                                    }
+                                    catch (Exception e) {
+                                        if(!isWorkerDead(hreq)) _channel.callback
+                                        .errorCallback(
+                                                _channel.name,
+                                                PubnubError.getErrorObject(
+		                                        		PubnubError.PNERROBJ_5057_DECRYPTION_ERROR, 
+		                                        		messages.get(i).toString() + " : " + e.toString()));	
                                     }
                                 } else {
                                     if(!isWorkerDead(hreq)) _channel.callback.successCallback(

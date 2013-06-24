@@ -127,14 +127,14 @@ class HttpClientCore extends HttpClient {
             throw e;
         }
         catch (IOException e) {
-            throw new PubnubException(PNERROBJ_5010_CONNECT_EXCEPTION);
+            throw new PubnubException(getErrorObject(PNERROBJ_5010_CONNECT_EXCEPTION, url));
         }
 
         int rc = HttpURLConnection.HTTP_CLIENT_TIMEOUT;
         try {
             rc = connection.getResponseCode();
         } catch (IOException e) {
-            throw new PubnubException(PNERROBJ_5011_HTTP_RC_ERROR);
+            throw new PubnubException(getErrorObject(PNERROBJ_5011_HTTP_RC_ERROR, url));
         }
 
 
@@ -146,7 +146,7 @@ class HttpClientCore extends HttpClient {
                 is = connection.getInputStream();
             } catch (IOException e) {
                 if (rc == HttpURLConnection.HTTP_OK)
-                    throw new PubnubException(PNERROBJ_5012_GETINPUTSTREAM);
+                    throw new PubnubException(getErrorObject(PNERROBJ_5012_GETINPUTSTREAM, url));
                 is = connection.getErrorStream();
             }
 
@@ -155,7 +155,7 @@ class HttpClientCore extends HttpClient {
                 is = new GZIPInputStream(connection.getInputStream());
             } catch (IOException e) {
                 if (rc == HttpURLConnection.HTTP_OK)
-                    throw new PubnubException(PNERROBJ_5013_GETINPUTSTREAM);
+                    throw new PubnubException(getErrorObject(PNERROBJ_5013_GETINPUTSTREAM, url));
                 is = connection.getErrorStream();
             }
         }
@@ -164,7 +164,7 @@ class HttpClientCore extends HttpClient {
         try {
             page = readInput(is);
         } catch (IOException e) {
-            throw new PubnubException(PNERROBJ_5014_READINPUT);
+            throw new PubnubException(getErrorObject(PNERROBJ_5014_READINPUT, url));
         }
 
         switch (rc) {
@@ -181,13 +181,13 @@ class HttpClientCore extends HttpClient {
                 throw new PubnubException(PNERROBJ_5015_INVALID_JSON);
             }
         case HttpURLConnection.HTTP_BAD_GATEWAY:
-            throw new PubnubException(PNERROBJ_5020_BAD_GATEWAY);
+            throw new PubnubException(getErrorObject(PNERROBJ_5020_BAD_GATEWAY, url));
         case HttpURLConnection.HTTP_CLIENT_TIMEOUT:
-            throw new PubnubException(PNERROBJ_5021_CLIENT_TIMEOUT);
+            throw new PubnubException(getErrorObject(PNERROBJ_5021_CLIENT_TIMEOUT, url));
         case HttpURLConnection.HTTP_GATEWAY_TIMEOUT:
-            throw new PubnubException(PNERROBJ_5022_GATEWAY_TIMEOUT);
+            throw new PubnubException(getErrorObject(PNERROBJ_5022_GATEWAY_TIMEOUT, url));
         case HttpURLConnection.HTTP_INTERNAL_ERROR:
-            throw new PubnubException(PNERROBJ_5023_INTERNAL_ERROR);
+            throw new PubnubException(getErrorObject(PNERROBJ_5023_INTERNAL_ERROR, url));
         default:
             break;
         }
