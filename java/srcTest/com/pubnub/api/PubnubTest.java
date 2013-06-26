@@ -85,6 +85,44 @@ public class PubnubTest {
 
     }
 
+    class UlsCallback extends Callback {
+
+        private CountDownLatch latch;
+        private int result = 0;
+
+        public int getResult() {
+            return result;
+        }
+
+        public UlsCallback(CountDownLatch latch) {
+            this.latch = latch;
+        }
+
+        public UlsCallback() {
+
+        }
+
+        public void successCallback(String channel, Object message) {
+            JSONObject jso;
+            try {
+                jso = (JSONObject) message;
+                result = (Integer) jso.get("status");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            if (latch != null)
+                latch.countDown();
+        }
+
+        public void errorCallback(String channel, PubnubError error) {
+            JSONArray jso;
+            result = 0;
+            if (latch != null)
+                latch.countDown();
+        }
+
+    }
+
     class HereNowCallback extends Callback {
 
         private int occupancy;
@@ -1620,5 +1658,106 @@ public class PubnubTest {
         assertFalse((Boolean) stats.get("duplicate").equals(true));
         assertFalse((Boolean) stats.get("wrong").equals(true));
         // assertEquals((Integer)count,(Integer)results.get("count"));
+    }
+
+    @Test
+    public void testUlsGrantRW() {
+        final CountDownLatch latch = new CountDownLatch(1);
+        UlsCallback ulscb = new UlsCallback(latch);
+        Pubnub pubnub = new Pubnub("pub-c-a2650a22-deb1-44f5-aa87-1517049411d5",
+                "sub-c-a478dd2a-c33d-11e2-883f-02ee2ddab7fe",
+                "sec-c-YjFmNzYzMGMtYmI3NC00NzJkLTlkYzYtY2MwMzI4YTJhNDVh");
+        pubnub.setDomain("pubnub.co");
+        pubnub.setOrigin("uls-test");
+        pubnub.setSuffix(0);
+        pubnub.ulsGrant("hello-uls", "abcd", true, true, ulscb);
+
+        try {
+            latch.await(10, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        assertEquals(200, ulscb.getResult());
+    }
+    @Test
+    public void testUlsAuditSubKey() {
+        final CountDownLatch latch = new CountDownLatch(1);
+        UlsCallback ulscb = new UlsCallback(latch);
+        Pubnub pubnub = new Pubnub("pub-c-a2650a22-deb1-44f5-aa87-1517049411d5",
+                "sub-c-a478dd2a-c33d-11e2-883f-02ee2ddab7fe",
+                "sec-c-YjFmNzYzMGMtYmI3NC00NzJkLTlkYzYtY2MwMzI4YTJhNDVh");
+        pubnub.setDomain("pubnub.co");
+        pubnub.setOrigin("uls-test");
+        pubnub.setSuffix(0);
+        pubnub.ulsAudit(ulscb);
+
+        try {
+            latch.await(10, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        assertEquals(200, ulscb.getResult());
+    }
+    @Test
+    public void testUlsAuditChannel() {
+        final CountDownLatch latch = new CountDownLatch(1);
+        UlsCallback ulscb = new UlsCallback(latch);
+        Pubnub pubnub = new Pubnub("pub-c-a2650a22-deb1-44f5-aa87-1517049411d5",
+                "sub-c-a478dd2a-c33d-11e2-883f-02ee2ddab7fe",
+                "sec-c-YjFmNzYzMGMtYmI3NC00NzJkLTlkYzYtY2MwMzI4YTJhNDVh");
+        pubnub.setDomain("pubnub.co");
+        pubnub.setOrigin("uls-test");
+        pubnub.setSuffix(0);
+        pubnub.ulsAudit("hello-uls", ulscb);
+
+        try {
+            latch.await(10, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        assertEquals(200, ulscb.getResult());
+    }
+    @Test
+    public void testUlsAuditAuth() {
+        final CountDownLatch latch = new CountDownLatch(1);
+        UlsCallback ulscb = new UlsCallback(latch);
+        Pubnub pubnub = new Pubnub("pub-c-a2650a22-deb1-44f5-aa87-1517049411d5",
+                "sub-c-a478dd2a-c33d-11e2-883f-02ee2ddab7fe",
+                "sec-c-YjFmNzYzMGMtYmI3NC00NzJkLTlkYzYtY2MwMzI4YTJhNDVh");
+        pubnub.setDomain("pubnub.co");
+        pubnub.setOrigin("uls-test");
+        pubnub.setSuffix(0);
+        pubnub.ulsAudit("hello-uls", "abcd", ulscb);
+
+        try {
+            latch.await(10, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        assertEquals(200, ulscb.getResult());
+    }
+    @Test
+    public void testUlsAuditRevoke() {
+        final CountDownLatch latch = new CountDownLatch(1);
+        UlsCallback ulscb = new UlsCallback(latch);
+        Pubnub pubnub = new Pubnub("pub-c-a2650a22-deb1-44f5-aa87-1517049411d5",
+                "sub-c-a478dd2a-c33d-11e2-883f-02ee2ddab7fe",
+                "sec-c-YjFmNzYzMGMtYmI3NC00NzJkLTlkYzYtY2MwMzI4YTJhNDVh");
+        pubnub.setDomain("pubnub.co");
+        pubnub.setOrigin("uls-test");
+        pubnub.setSuffix(0);
+        pubnub.ulsRevoke("hello-uls", "abcd", ulscb);
+
+        try {
+            latch.await(10, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        assertEquals(200, ulscb.getResult());
     }
 }

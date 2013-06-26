@@ -21,7 +21,7 @@ public class PubnubError {
      * Error while encrypting message to be published to Pubnub Cloud .
      * Please contact support with error details.
      */
-    public static final int         PNERR_5001_ENCRYPTION_ERROR             =       5001;
+    static final int         PNERR_5001_ENCRYPTION_ERROR             =       5001;
     public static final PubnubError PNERROBJ_5001_ENCRYPTION_ERROR          =
             new PubnubError     (
                                     PNERR_5001_ENCRYPTION_ERROR ,
@@ -33,7 +33,7 @@ public class PubnubError {
      * Decryption Error .
      * Please contact support with error details.
      */
-    public static final int         PNERR_5002_DECRYPTION_ERROR             =       5002;
+    static final int         PNERR_5002_DECRYPTION_ERROR             =       5002;
     public static final PubnubError PNERROBJ_5002_DECRYPTION_ERROR          =
             new PubnubError     (
                                     PNERR_5002_DECRYPTION_ERROR ,
@@ -45,7 +45,7 @@ public class PubnubError {
      * Invalid Json .
      * Please contact support with error details.
      */
-    public static final int         PNERR_5003_INVALID_JSON                 =       5003;
+    static final int         PNERR_5003_INVALID_JSON                 =       5003;
     public static final PubnubError PNERROBJ_5003_INVALID_JSON                 =
             new PubnubError     (
                                     PNERR_5003_INVALID_JSON ,
@@ -57,11 +57,11 @@ public class PubnubError {
      * JSON Error while processing API response.
      * Please contact support with error details.
      */
-    public static final int         PNERR_5004_JSON_ERROR                   =       5004;
+    static final int         PNERR_5004_JSON_ERROR                   =       5004;
     public static final PubnubError PNERROBJ_5004_JSON_ERROR                =
             new PubnubError     (
                                     PNERR_5004_JSON_ERROR ,
-                                    "JSON Error while processing API response." +
+                                    "JSON Error while processing API response. " +
                                     "Please contact support with error details."
                                 );
 
@@ -69,18 +69,19 @@ public class PubnubError {
      * A JSON error occurred .
      * Please contact support with error details.
      */
-    public static final int         PNERR_5005_JSON_ERROR                   =       5005;
+    static final int         PNERR_5005_JSON_ERROR                   =       5005;
     public static final PubnubError PNERROBJ_5005_JSON_ERROR                =
             new PubnubError     (
                                     PNERR_5005_JSON_ERROR ,
-                                    "JSON Processing Error"
+                                    "JSON Processing Error. " +
+                                    "Please contact support with error details."
                                 );
 
     /**
      * Malformed URL .
      * Please contact support with error details .
      */
-    public static final int         PNERR_5006_MALFORMED_URL                =       5006;
+    static final int         PNERR_5006_MALFORMED_URL                =       5006;
     public static final PubnubError PNERROBJ_5006_MALFORMED_URL             =
             new PubnubError     (
                                     PNERR_5006_MALFORMED_URL ,
@@ -102,7 +103,7 @@ public class PubnubError {
      * Error in opening URL .
      * Please contact support with error details.
      */
-    public static final int         PNERR_5008_URL_OPEN                     =       5008;
+    static final int         PNERR_5008_URL_OPEN                     =       5008;
     public static final PubnubError PNERROBJ_5008_URL_OPEN                  =
             new PubnubError     (
                                     PNERR_5008_URL_OPEN ,
@@ -114,7 +115,7 @@ public class PubnubError {
      * Protocol Exception .
      * Please contact support with error details.
      */
-    public static final int         PNERR_5009_PROTOCOL_EXCEPTION           =       5009;
+    static final int         PNERR_5009_PROTOCOL_EXCEPTION           =       5009;
     public static final PubnubError PNERROBJ_5009_PROTOCOL_EXCEPTION        =
             new PubnubError     (
                                     PNERR_5009_PROTOCOL_EXCEPTION ,
@@ -124,14 +125,14 @@ public class PubnubError {
 
     /**
      * Connect Exception .
-     * Please contact support with error details.
+     * Network Unreachable.
      */
     public static final int         PNERR_5010_CONNECT_EXCEPTION            =       5010;
     public static final PubnubError PNERROBJ_5010_CONNECT_EXCEPTION         =
             new PubnubError     (
                                     PNERR_5010_CONNECT_EXCEPTION ,
                                     "Connect Exception. " +
-                                    "Please contact support with error details."
+                                    "Please verify if network is reachable. "
                                 );
 
     /**
@@ -208,14 +209,16 @@ public class PubnubError {
                                 );
 
     /**
-     * Please contact support with error details.
+     * Please check network connectivity.
+     * Please contact support with error details if issue persists.
      */
     public static final int         PNERR_5017_HTTP_ERROR                   =       5017;
     public static final PubnubError PNERROBJ_5017_HTTP_ERROR                =
             new PubnubError     (
                                     PNERR_5017_HTTP_ERROR ,
                                     "HTTP Error. " +
-                                    "Please contact support with error details."
+                                    "Please check network connectivity. " +
+                                    "Please contact support with error details if issue persists."
                                 );
 
     /**
@@ -314,7 +317,7 @@ public class PubnubError {
     /**
      * Parsing Error .
      */
-    public static final int         PNERR_5026_PARSING_ERROR                =       5026;
+    static final int         PNERR_5026_PARSING_ERROR                =       5026;
     public static final PubnubError PNERROBJ_5026_PARSING_ERROR             =
             new PubnubError     (
                                     PNERR_5026_PARSING_ERROR ,
@@ -389,7 +392,7 @@ public class PubnubError {
      * Error while encrypting message to be published to Pubnub Cloud .
      * Please contact support with error details.
      */
-    public static final int         PNERR_5033_ENCRYPTION_ERROR             =       5033;
+    static final int         PNERR_5033_ENCRYPTION_ERROR             =       5033;
     public static final PubnubError PNERROBJ_5033_ENCRYPTION_ERROR          =
             new PubnubError     (
                                     PNERR_5033_ENCRYPTION_ERROR ,
@@ -402,7 +405,7 @@ public class PubnubError {
      * Error while encrypting message to be published to Pubnub Cloud .
      * Please contact support with error details.
      */
-    public static final int         PNERR_5034_ENCRYPTION_ERROR             =       5034;
+    static final int         PNERR_5034_ENCRYPTION_ERROR             =       5034;
     public static final PubnubError PNERROBJ_5034_ENCRYPTION_ERROR          =
             new PubnubError     (
                                     PNERR_5034_ENCRYPTION_ERROR ,
@@ -715,6 +718,157 @@ public class PubnubError {
                                     "Decryption Error. " +
                                     "Please contact support with error details."
                                 );
+    /**
+     * An JSON error occurred .
+     * Please contact support with error details.
+     */
+    public static final int         PNERR_5061_INVALID_JSON                 =       5061;
+    public static final PubnubError PNERROBJ_5061_INVALID_JSON              =
+            new PubnubError     (
+                                    PNERR_5061_INVALID_JSON ,
+                                    "Invalid JSON . " +
+                                    "Please contact support with error details."
+                                );
+
+    /**
+     * Secret key not configured
+     */
+    public static final int         PNERR_5062_SECRET_KEY_MISSING            =       5062;
+    public static final PubnubError PNERROBJ_5062_SECRET_KEY_MISSING         =
+            new PubnubError     (
+                                    PNERR_5062_SECRET_KEY_MISSING ,
+                                    "ULS configuration failed. Secret Key not configured. "
+                                );
+    /**
+     * Secret key not configured
+     */
+    public static final int         PNERR_5063_SECRET_KEY_MISSING            =       5063;
+    public static final PubnubError PNERROBJ_5063_SECRET_KEY_MISSING         =
+            new PubnubError     (
+                                    PNERR_5062_SECRET_KEY_MISSING ,
+                                    "ULS configuration failed. Secret Key not configured. "
+                                );
+
+    /**
+     * Secret key not configured
+     */
+    public static final int         PNERR_5064_SECRET_KEY_MISSING            =       5064;
+    public static final PubnubError PNERROBJ_5064_SECRET_KEY_MISSING         =
+            new PubnubError     (
+                                    PNERR_5062_SECRET_KEY_MISSING ,
+                                    "ULS configuration failed. Secret Key not configured. "
+                                );
+    /**
+     * Secret key not configured
+     */
+    public static final int         PNERR_5065_SECRET_KEY_MISSING            =       5065;
+    public static final PubnubError PNERROBJ_5065_SECRET_KEY_MISSING         =
+            new PubnubError     (
+                                    PNERR_5065_SECRET_KEY_MISSING ,
+                                    "ULS configuration failed. Secret Key not configured. "
+                                );
+    /**
+     * An JSON error occurred .
+     * Please contact support with error details.
+     */
+    public static final int         PNERR_5066_INVALID_JSON                 =       5066;
+    public static final PubnubError PNERROBJ_5066_INVALID_JSON              =
+            new PubnubError     (
+                                    PNERR_5066_INVALID_JSON ,
+                                    "Invalid JSON . " +
+                                    "Please contact support with error details."
+                                );
+    /**
+     * An JSON error occurred .
+     * Please contact support with error details.
+     */
+    public static final int         PNERR_5067_INVALID_JSON                 =       5067;
+    public static final PubnubError PNERROBJ_5067_INVALID_JSON              =
+            new PubnubError     (
+                                    PNERR_5061_INVALID_JSON ,
+                                    "Invalid JSON . " +
+                                    "Please contact support with error details."
+                                );
+    /**
+     * An JSON error occurred .
+     * Please contact support with error details.
+     */
+    public static final int         PNERR_5068_INVALID_JSON                 =       5068;
+    public static final PubnubError PNERROBJ_5068_INVALID_JSON              =
+            new PubnubError     (
+                                    PNERR_5068_INVALID_JSON ,
+                                    "Invalid JSON . " +
+                                    "Please contact support with error details."
+                                );
+
+    /**
+     * An JSON error occurred .
+     * Please contact support with error details.
+     */
+    public static final int         PNERR_5069_INVALID_JSON                 =       5069;
+    public static final PubnubError PNERROBJ_5069_INVALID_JSON              =
+            new PubnubError     (
+                                    PNERR_5068_INVALID_JSON ,
+                                    "Invalid JSON . " +
+                                    "Please contact support with error details."
+                                );
+    /**
+     * An ULS singature error occurred .
+     * Please contact support with error details.
+     */
+    public static final int         PNERR_5071_ULSSIGN_ERROR                =       5071;
+    public static final PubnubError PNERROBJ_5071_ULSSIGN_ERROR             =
+            new PubnubError     (
+                                    PNERR_5071_ULSSIGN_ERROR ,
+                                    "Invalid Signature . " +
+                                    "Please contact support with error details."
+                                );
+    /**
+     * An ULS singature error occurred .
+     * Please contact support with error details.
+     */
+    public static final int         PNERR_5072_ULSSIGN_ERROR                =       5072;
+    public static final PubnubError PNERROBJ_5072_ULSSIGN_ERROR             =
+            new PubnubError     (
+                                    PNERR_5072_ULSSIGN_ERROR ,
+                                    "Invalid Signature . " +
+                                    "Please contact support with error details."
+                                );
+
+    /**
+     * An ULS singature error occurred .
+     * Please contact support with error details.
+     */
+    public static final int         PNERR_5073_ULSSIGN_ERROR                =       5073;
+    public static final PubnubError PNERROBJ_5073_ULSSIGN_ERROR             =
+            new PubnubError     (
+                                    PNERR_5073_ULSSIGN_ERROR ,
+                                    "Invalid Signature . " +
+                                    "Please contact support with error details."
+                                );
+    /**
+     * An ULS singature error occurred .
+     * Please contact support with error details.
+     */
+    public static final int         PNERR_5074_ULSSIGN_ERROR                =       5074;
+    public static final PubnubError PNERROBJ_5074_ULSSIGN_ERROR             =
+            new PubnubError     (
+                                    PNERR_5074_ULSSIGN_ERROR ,
+                                    "Invalid Signature . " +
+                                    "Please contact support with error details."
+                                );
+
+    /**
+     * Please verify if network is reachable
+     */
+    public static final int         PNERR_5075_NETWORK_ERROR                 =       5075;
+    public static final PubnubError PNERROBJ_5075_NETWORK_ERROR              =
+            new PubnubError     (
+                                    PNERR_5075_NETWORK_ERROR ,
+                                    "Netowork Error. " +
+                                    "Please verify if network is reachable."
+                                );
+
 
     public  final int errorCode;
     private final String errorString;

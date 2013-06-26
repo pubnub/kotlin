@@ -98,7 +98,7 @@ class HttpRequest {
 
         String url = PubnubUtil.joinString(urlComponents, "/");
 
-        if (this.params != null) {
+        if (this.params != null && this.params.size() > 0) {
             StringBuffer sb = new StringBuffer();
             sb.append(url).append("?");
 

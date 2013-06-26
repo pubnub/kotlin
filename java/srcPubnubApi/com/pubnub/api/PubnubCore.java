@@ -2,6 +2,7 @@ package com.pubnub.api;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Random;
@@ -28,12 +29,12 @@ abstract class PubnubCore {
     private int HOSTNAME_SUFFIX = 1;
     private String DOMAIN = "pubnub.com";
     private String ORIGIN_STR = null;
-    private String PUBLISH_KEY = "";
-    private String SUBSCRIBE_KEY = "";
-    private String SECRET_KEY = "";
+    protected String PUBLISH_KEY = "";
+    protected String SUBSCRIBE_KEY = "";
+    protected String SECRET_KEY = "";
     private String CIPHER_KEY = "";
     private volatile String AUTH_STR = null;
-    private Hashtable params;
+    protected Hashtable params;
     private volatile boolean resumeOnReconnect;
 
     private boolean SSL = true;
@@ -94,21 +95,23 @@ abstract class PubnubCore {
         subscribeManager.setMaxRetries(maxRetries);
     }
 
-    private String getOrigin() {
+    protected String getOrigin() {
+
         if (ORIGIN_STR == null) {
             // SSL On?
             if (this.SSL) {
-                ORIGIN_STR = "https://" + HOSTNAME + "-"
-                        + String.valueOf(HOSTNAME_SUFFIX) + "." + DOMAIN;
+                ORIGIN_STR = "https://";
             } else {
-                ORIGIN_STR = "http://" + HOSTNAME + "-"
-                        + String.valueOf(HOSTNAME_SUFFIX) + "." + DOMAIN;
+                ORIGIN_STR = "http://";
             }
+            ORIGIN_STR += HOSTNAME +
+                    ((HOSTNAME_SUFFIX == 0 )?"":"-" + String.valueOf(HOSTNAME_SUFFIX)) +
+                    "." + DOMAIN;
         }
         return ORIGIN_STR;
     }
 
-    private Hashtable hashtableClone(Hashtable ht) {
+    protected Hashtable hashtableClone(Hashtable ht) {
         if (ht == null)
             return null;
 
@@ -1469,7 +1472,7 @@ abstract class PubnubCore {
      * @param req
      * @param simpleConnManager2
      */
-    private void _request(final HttpRequest hreq,
+    protected void _request(final HttpRequest hreq,
             RequestManager simpleConnManager) {
         _request(hreq, simpleConnManager, false);
     }
@@ -1558,6 +1561,26 @@ abstract class PubnubCore {
      */
     public void setOrigin(String origin) {
         this.HOSTNAME = origin;
+    }
+
+    /**
+     * Sets domain value, default is "pubnub.com"
+     *
+     * @param domain
+     *            Domain value
+     */
+    void setDomain(String domain) {
+        this.DOMAIN = domain;
+    }
+
+    /**
+     * Sets suffix value, default is 1
+     *
+     * @param suffix
+     *            Suffix Value
+     */
+    void setSuffix(int suffix) {
+        this.HOSTNAME_SUFFIX = 0;
     }
 
     /**

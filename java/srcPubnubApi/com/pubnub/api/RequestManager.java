@@ -1,5 +1,6 @@
 package com.pubnub.api;
 
+import java.net.SocketTimeoutException;
 import java.util.Hashtable;
 import java.util.Vector;
 
@@ -107,7 +108,7 @@ class NonSubscribeWorker extends Worker {
         catch (Exception e) {
             log.debug("Exception in Fetch : " + e.toString());
             if (!_die)
-                hreq.getResponseHandler().handleError(hreq, PubnubError.PNERROBJ_5017_HTTP_ERROR);
+                hreq.getResponseHandler().handleError(hreq, PubnubError.getErrorObject(PubnubError.PNERROBJ_5017_HTTP_ERROR, e.toString()));
             return;
         }
 

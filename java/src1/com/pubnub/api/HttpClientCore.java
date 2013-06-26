@@ -14,6 +14,7 @@ import java.util.Hashtable;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.pubnub.api.PubnubException;
 import static com.pubnub.api.PubnubError.*;
@@ -178,7 +179,13 @@ class HttpClientCore extends HttpClient {
                 String error = jsarr.get(1).toString();
                 throw new PubnubException(getErrorObject(PNERROBJ_5016_BAD_REQUEST, error));
             } catch (JSONException e) {
-                throw new PubnubException(PNERROBJ_5015_INVALID_JSON);
+                JSONObject jso;
+                try {
+                    jso = new JSONObject(page);
+                    throw new PubnubException(getErrorObject(PNERROBJ_5016_BAD_REQUEST, jso.toString()));
+                } catch (JSONException e1) {
+                    throw new PubnubException(PNERROBJ_5015_INVALID_JSON);
+                }
             }
         case HttpURLConnection.HTTP_BAD_GATEWAY:
             throw new PubnubException(getErrorObject(PNERROBJ_5020_BAD_GATEWAY, url));
