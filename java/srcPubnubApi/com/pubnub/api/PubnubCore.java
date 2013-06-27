@@ -1569,7 +1569,7 @@ abstract class PubnubCore {
      * @param domain
      *            Domain value
      */
-    void setDomain(String domain) {
+    public void setDomain(String domain) {
         this.DOMAIN = domain;
     }
 
@@ -1579,8 +1579,8 @@ abstract class PubnubCore {
      * @param suffix
      *            Suffix Value
      */
-    void setSuffix(int suffix) {
-        this.HOSTNAME_SUFFIX = 0;
+    public void setSuffix(int suffix) {
+        this.HOSTNAME_SUFFIX = suffix;
     }
 
     /**

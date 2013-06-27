@@ -7,6 +7,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.pubnub.api.*;
+import static java.lang.System.out;
 
 public class PubnubDemoConsole {
 
@@ -18,13 +19,24 @@ public class PubnubDemoConsole {
     boolean SSL;
     Scanner reader;
 
+    public PubnubDemoConsole(String publish_key, String subscribe_key, String secret_key,
+            String cipher_key) {
+        this.publish_key = publish_key;
+        this.subscribe_key = subscribe_key;
+        this.secret_key = secret_key;
+        this.cipher_key = cipher_key;
+    }
+
+    public PubnubDemoConsole() {
+        
+    }
+
     private void notifyUser(Object message) {
-        System.out.println(message.toString());
+        out.println(message.toString());
     }
 
     private void publish(String channel) {
-        System.out
-                .println("Enter the message for publish. To exit loop enter QUIT");
+        notifyUser("Enter the message for publish. To exit loop enter QUIT");
         String message = "";
 
         while (true) {
@@ -209,34 +221,25 @@ public class PubnubDemoConsole {
 
     public void startDemo() {
         reader = new Scanner(System.in);
-        System.out.println("HINT:\tTo test Re-connect and catch-up");
-        System.out
-                .println("\tDisconnect your machine from network/internet and");
-        System.out.println("\tre-connect your machine after sometime");
+        notifyUser("HINT:\tTo test Re-connect and catch-up");
+        notifyUser("\tDisconnect your machine from network/internet and");
+        notifyUser("\tre-connect your machine after sometime");
 
-        System.out.println("Enable SSL ? Enter Y for Yes, else N");
-        String sslOn = reader.nextLine();
-        System.out.println(sslOn);
-        this.SSL = (sslOn.equalsIgnoreCase("y")) ? true : false;
-        if (this.SSL) {
-            System.out.println("SSL enabled");
-        } else {
-            System.out.println("SSL not enabled");
-        }
+        this.SSL = getBooleanFromConsole("SSL");
 
-        System.out.println("Enter cipher key for encryption feature");
-        System.out
-                .println("If you don't want to avail at this time, press ENTER");
-        this.cipher_key = reader.nextLine();
-        if (this.cipher_key.length() == 0) {
-            System.out.println("No Cipher key provided");
-            pubnub = new Pubnub(this.publish_key, this.subscribe_key,
-                    this.secret_key, this.SSL);
-        } else {
-            System.out.println("Cipher Key = " + this.cipher_key);
-            pubnub = new Pubnub(this.publish_key, this.subscribe_key,
-                    this.secret_key, this.cipher_key, this.SSL);
-        }
+        if (this.publish_key.length() == 0) this.publish_key = getStringFromConsole("Publish Key");
+
+        if (this.subscribe_key.length() == 0)  this.subscribe_key = getStringFromConsole("Subscribe Key");
+
+        if (this.secret_key.length() == 0) this.secret_key = getStringFromConsole("Secret Key", true);
+
+        if (this.cipher_key.length() == 0)  this.cipher_key = getStringFromConsole("Cipher Key", true);
+
+
+        pubnub = new Pubnub(this.publish_key, this.subscribe_key, this.secret_key, this.cipher_key, this.SSL);
+        pubnub.setSuffix(0);
+        pubnub.setDomain("pubnub.co");
+        pubnub.setOrigin("uls-test");
 
         displayMenuOptions();
 
@@ -249,41 +252,35 @@ public class PubnubDemoConsole {
             case 0:
                 displayMenuOptions();
             case 1:
-                System.out.println("Subscribe: Enter Channel name");
-                channelName = reader.nextLine();
+                channelName = getStringFromConsole("Subscribe: Enter Channel name");
                 subscribe(channelName);
-                System.out.println("Subscribed to following channels: ");
-                System.out.println(PubnubUtil.joinString(
+
+                notifyUser("Subscribed to following channels: ");
+                notifyUser(PubnubUtil.joinString(
                         pubnub.getSubscribedChannelsArray(), " : "));
                 break;
             case 2:
-                System.out.println("Publish: Enter Channel name");
-                channelName = reader.nextLine();
+                channelName = getStringFromConsole("Channel Name");
                 publish(channelName);
                 break;
             case 3:
-                System.out.println("Presence: Enter Channel name");
-                channelName = reader.nextLine();
+                channelName = getStringFromConsole("Channel Name");
                 presence(channelName);
                 break;
             case 4:
-                System.out.println("History: Enter Channel name");
-                channelName = reader.nextLine();
+                channelName = getStringFromConsole("Channel Name");
                 detailedHistory(channelName);
                 break;
             case 5:
-                System.out.println("Here Now : Enter Channel name");
-                channelName = reader.nextLine();
+                channelName = getStringFromConsole("Channel Name");
                 hereNow(channelName);
                 break;
             case 6:
-                System.out.println("Unsubscribe: Enter Channel name");
-                channelName = reader.nextLine();
+                channelName = getStringFromConsole("Channel Name");
                 unsubscribe(channelName);
                 break;
             case 7:
-                System.out.println("UnsubscribePresence : Enter Channel name");
-                channelName = reader.nextLine();
+                channelName = getStringFromConsole("Channel Name");
                 unsubscribePresence(channelName);
                 break;
             case 8:
@@ -293,57 +290,186 @@ public class PubnubDemoConsole {
                 disconnectAndResubscribe();
                 break;
             case 11:
-                System.out
-                        .println("Disconnect and Resubscribe with timetoken : Enter timetoken");
-                String timetoken = reader.nextLine();
+                notifyUser("Disconnect and Resubscribe with timetoken : Enter timetoken");
+                String timetoken = getStringFromConsole("Timetoken");
                 disconnectAndResubscribeWithTimetoken(timetoken);
                 break;
             case 12:
                 pubnub.setResumeOnReconnect(pubnub.isResumeOnReconnect() ? false
                         : true);
-                System.out.println("RESUME ON RECONNECT : "
-                        + pubnub.isResumeOnReconnect());
+                notifyUser("RESUME ON RECONNECT : " + pubnub.isResumeOnReconnect());
                 break;
             case 13:
-                System.out.println("Set Max Retries: Enter max retries");
-                int maxRetries = reader.nextInt();
-                reader.nextLine();
+                int maxRetries = getIntFromConsole("Max Retries");
                 setMaxRetries(maxRetries);
                 break;
             case 14:
-                System.out.println("Set Retry Interval: Enter retry interval");
-                int retryInterval = reader.nextInt();
-                reader.nextLine();
+                int retryInterval = getIntFromConsole("Retry Interval");
                 setRetryInterval(retryInterval);
                 break;
             case 15:
-                System.out
-                        .println("Set Subscribe Timeout: Enter subscribe timeout in milliseconds");
-                int subscribeTimeout = reader.nextInt();
-                reader.nextLine();
+                int subscribeTimeout = getIntFromConsole("Subscribe Timeout ( in milliseconds) ");
                 setSubscribeTimeout(subscribeTimeout);
                 break;
             case 16:
-                System.out
-                        .println("Set Non subscribe Timeout: Enter non subscribe timeout in milliseconds");
-                int nonSubscribeTimeout = reader.nextInt();
-                reader.nextLine();
+                int nonSubscribeTimeout = getIntFromConsole("Non Subscribe Timeout ( in milliseconds) ");
                 setNonSubscribeTimeout(nonSubscribeTimeout);
                 break;
             case 17:
-                System.out
-                        .println("Set/Unset Auth Key: Enter auth key string. Enter blank for unsetting key");
-                String authKey = reader.nextLine();
+                notifyUser("Set/Unset Auth Key: Enter blank for unsetting key");
+                String authKey = getStringFromConsole("Auth Key");
                 pubnub.setAuthKey(authKey);
                 break;
+            case 18:
+                ulsGrant();
+                break;
+            case 19:
+                ulsRevoke();
+                break;
+            case 20:
+                ulsAudit();
+                break;
             default:
-                System.out.println("Invalid Input");
+                notifyUser("Invalid Input");
             }
             displayMenuOptions();
         }
-        System.out.println("Exiting");
+        notifyUser("Exiting");
         pubnub.shutdown();
 
+    }
+
+    private String getStringFromConsole(String message, boolean optional) {
+
+        int attempt_count = 0;
+        String input = null;
+        do {
+            if (attempt_count > 0) System.out.print("Invalid input. ");
+            String message1 = "Enter " + message ;
+            message1 = (optional)?message1+" ( Optional input. You can skip by pressing enter )":message1;
+            notifyUser(message1);
+            input = reader.nextLine();
+            attempt_count++;
+        } while ((input == null || input.length() == 0) && !optional);
+        notifyUser(message + " : " + input);
+        return input;
+    }
+
+    private String getStringFromConsole(String message) {
+        return getStringFromConsole(message, false);
+    }
+    private int getIntFromConsole(String message, boolean optional) {
+
+        int attempt_count = 0;
+        String input = null;
+        int returnVal = -1;
+        do {
+            if (attempt_count > 0) notifyUser("Invalid input. ");
+            String message1 = "Enter " + message;
+            message1 = (optional)?message1+" ( Optional input. You can skip by pressing enter ) ":message1;
+            notifyUser(message1);
+            input = reader.nextLine();
+            attempt_count++;
+            returnVal = Integer.parseInt(input);
+        } while ((input == null || input.length() == 0 || returnVal == -1) && !optional);
+        notifyUser(message + " : " + returnVal);
+        return returnVal;
+    }
+
+    private int getIntFromConsole(String message) {
+        return getIntFromConsole(message, false);
+    }
+
+    private boolean getBooleanFromConsole(String message, boolean optional) {
+
+        int attempt_count = 0;
+        String input = null;
+        boolean returnVal = false;
+        do {
+            if (attempt_count > 0) notifyUser("Invalid input. ");
+            String message1 = message + " ? ( Enter Yes/No or Y/N )";
+            message1 = (optional)?message1+" ( Optional input. You can skip by pressing enter ) ":message1;
+            notifyUser(message1);
+            input = reader.nextLine();
+            attempt_count++;
+        } while ((input == null || input.length() == 0 ||
+                ( !input.equalsIgnoreCase("yes") && !input.equalsIgnoreCase("no") &&
+                        !input.equalsIgnoreCase("y") && !input.equalsIgnoreCase("n"))) && !optional);
+        returnVal =  (input.equalsIgnoreCase("y") || input.equalsIgnoreCase("yes"))?true:false;
+        notifyUser(message + " : " + returnVal);
+        return returnVal;
+    }
+
+    private boolean getBooleanFromConsole(String message) {
+        return getBooleanFromConsole(message, false);
+    }
+
+    private void ulsGrant() {
+        String channel = getStringFromConsole("Channel");
+        String auth_key = getStringFromConsole("Auth Key");
+        boolean read = getBooleanFromConsole("Read");
+        boolean write = getBooleanFromConsole("Write");
+
+        pubnub.ulsGrant(channel, auth_key, read, write, new Callback() {
+
+            @Override
+            public void successCallback(String channel, Object message) {
+                notifyUser("CHANNEL : " + channel + " , " + message.toString());
+
+            }
+            @Override
+            public void errorCallback(String channel, PubnubError error) {
+                notifyUser("CHANNEL : " + channel + " , " + error.toString());
+            }
+
+        });
+    }
+
+    private void ulsAudit() {
+        String channel = getStringFromConsole("Channel", true);
+        String auth_key = getStringFromConsole("Auth Key", true);
+
+        Callback cb = new Callback() {
+            @Override
+            public void successCallback(String channel, Object message) {
+                notifyUser("CHANNEL : " + channel + " , " + message.toString());
+
+            }
+            @Override
+            public void errorCallback(String channel, PubnubError error) {
+                notifyUser("CHANNEL : " + channel + " , " + error.toString());
+            }
+        };
+
+        if (channel != null && channel.length() > 0) {
+            if (auth_key != null && auth_key.length() != 0) {
+                pubnub.ulsAudit(channel, auth_key, cb);
+            } else {
+                pubnub.ulsAudit(channel, cb);
+            }
+        } else {
+            pubnub.ulsAudit(cb);
+        }
+
+    }
+
+    private void ulsRevoke() {
+        String channel = getStringFromConsole("Enter Channel");
+        String auth_key = getStringFromConsole("Auth Key");
+
+        pubnub.ulsRevoke(channel, auth_key, new Callback() {
+
+            @Override
+            public void successCallback(String channel, Object message) {
+                notifyUser("CHANNEL : " + channel + " , " + message.toString());
+
+            }
+            @Override
+            public void errorCallback(String channel, PubnubError error) {
+                notifyUser("CHANNEL : " + channel + " , " + error.toString());
+            }
+
+        });
     }
 
     private void setMaxRetries(int maxRetries) {
@@ -363,34 +489,41 @@ public class PubnubDemoConsole {
     }
 
     private void displayMenuOptions() {
-        System.out.println("ENTER 1  FOR Subscribe "
+        notifyUser("ENTER 1  FOR Subscribe "
                 + "(Currently subscribed to "
                 + this.pubnub.getCurrentlySubscribedChannelNames() + ")");
-        System.out.println("ENTER 2  FOR Publish");
-        System.out.println("ENTER 3  FOR Presence");
-        System.out.println("ENTER 4  FOR Detailed History");
-        System.out.println("ENTER 5  FOR Here_Now");
-        System.out.println("ENTER 6  FOR Unsubscribe");
-        System.out.println("ENTER 7  FOR Presence-Unsubscribe");
-        System.out.println("ENTER 8  FOR Time");
-        System.out.println("ENTER 9  FOR EXIT OR QUIT");
-        System.out.println("ENTER 10 FOR Disconnect-And-Resubscribe");
-        System.out
-                .println("ENTER 11 FOR Disconnect-And-Resubscribe with timetoken");
-        System.out.println("ENTER 12 FOR Toggle Resume On Reconnect");
-        System.out.println("ENTER 13 FOR Setting MAX Retries");
-        System.out.println("ENTER 14 FOR Setting Retry Interval");
-        System.out.println("ENTER 15 FOR Setting Subscribe Timeout");
-        System.out.println("ENTER 16 FOR Setting Non Subscribe Timeout");
-        System.out.println("ENTER 17 FOR Setting/Unsetting auth key1");
-        System.out.println("\nENTER 0 to display this menu");
+        notifyUser("ENTER 2  FOR Publish");
+        notifyUser("ENTER 3  FOR Presence");
+        notifyUser("ENTER 4  FOR Detailed History");
+        notifyUser("ENTER 5  FOR Here_Now");
+        notifyUser("ENTER 6  FOR Unsubscribe");
+        notifyUser("ENTER 7  FOR Presence-Unsubscribe");
+        notifyUser("ENTER 8  FOR Time");
+        notifyUser("ENTER 9  FOR EXIT OR QUIT");
+        notifyUser("ENTER 10 FOR Disconnect-And-Resubscribe");
+        notifyUser("ENTER 11 FOR Disconnect-And-Resubscribe with timetoken");
+        notifyUser("ENTER 12 FOR Toggle Resume On Reconnect");
+        notifyUser("ENTER 13 FOR Setting MAX Retries");
+        notifyUser("ENTER 14 FOR Setting Retry Interval");
+        notifyUser("ENTER 15 FOR Setting Subscribe Timeout");
+        notifyUser("ENTER 16 FOR Setting Non Subscribe Timeout");
+        notifyUser("ENTER 17 FOR Setting/Unsetting auth key1");
+        notifyUser("ENTER 18 FOR ULS grant");
+        notifyUser("ENTER 19 FOR ULS revoke");
+        notifyUser("ENTER 20 FOR ULS Audit");
+        notifyUser("\nENTER 0 to display this menu");
     }
 
     /**
      * @param args
      */
     public static void main(String[] args) {
-        new PubnubDemoConsole().startDemo();
+        PubnubDemoConsole pdc;
+        if (args.length == 4) {
+            pdc = new PubnubDemoConsole(args[0], args[1], args[2], args[3]);
+        } else
+            pdc = new PubnubDemoConsole();
+        pdc.startDemo();
     }
 
 }
