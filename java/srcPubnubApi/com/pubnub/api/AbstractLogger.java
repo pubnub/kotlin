@@ -4,7 +4,7 @@ abstract class AbstractLogger {
 
     private static boolean LOGGING = false;
     
-    private static String VERSION = "3.5.1";
+    private static String VERSION = "";
 
     protected abstract void nativeDebug(String s);
 

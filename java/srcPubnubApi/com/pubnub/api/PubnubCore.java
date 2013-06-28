@@ -1,14 +1,14 @@
 package com.pubnub.api;
 
+import org.bouncycastle.util.encoders.Hex;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.UnsupportedEncodingException;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Random;
-
-import org.bouncycastle.util.encoders.Hex;
-import org.json.me.me.JSONArray;
-import org.json.me.me.JSONException;
-import org.json.me.me.JSONObject;
 
 /**
  * Pubnub object facilitates querying channels for messages and listening on
@@ -43,7 +43,7 @@ abstract class PubnubCore {
     private volatile String _saved_timetoken = "0";
 
     private String PRESENCE_SUFFIX = "-pnpres";
-    private static String VERSION = "3.5.1";
+    private static String VERSION = "";
     private Random generator = new Random();
 
     private static Logger log = new Logger(PubnubCore.class);
