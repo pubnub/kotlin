@@ -43,7 +43,6 @@ public class PubnubExample {
         String subscribe_key = "demo";
         String secret_key = "demo";
         String cipher_key = "enigma"; // (Cipher key is optional)
-        String initialization_vector = "ultra"; // (IV is optional)
         String channel = "hello_world";
 
         int publish_message_count = 1;
@@ -53,8 +52,7 @@ public class PubnubExample {
                 subscribe_key,
                 secret_key,
                 cipher_key,
-                true,
-                initialization_vector
+                true
         );
         int count = 0;
         while (true) {
@@ -110,8 +108,6 @@ public class PubnubExample {
         String subscribe_key = "demo";
         String secret_key = "demo";
         String cipher_key = "enigma"; // (Cipher key is optional)
-        String initialization_vector = "ultra"; // (IV is optional)
-
         String channel = "hello_world";
         int limit = 1;
 
@@ -120,8 +116,7 @@ public class PubnubExample {
                 subscribe_key,
                 secret_key,
                 cipher_key,
-                true,
-                initialization_vector
+                true
         );
 
         HashMap<String, Object> args = new HashMap<String, Object>(2);
@@ -157,8 +152,6 @@ public class PubnubExample {
         String subscribe_key = "demo";
         String secret_key = "demo";
         String cipher_key = "enigma"; // (Cipher key is optional)
-        String initialization_vector = "ultra"; // (IV is optional)
-
         String channel = "hello_world";
         int    count = 1;
 
@@ -167,8 +160,7 @@ public class PubnubExample {
                 subscribe_key,
                 secret_key,
                 cipher_key,
-                true,
-                initialization_vector
+                true
         );
 
         // Get History
@@ -200,15 +192,13 @@ public class PubnubExample {
         String subscribe_key = "demo";
         String secret_key = "demo";
         String cipher_key = ""; // (Cipher key is optional)
-        String initialization_vector = ""; // (IV is optional)
 
         Pubnub pubnub = new Pubnub(
                 publish_key,
                 subscribe_key,
                 secret_key,
                 cipher_key,
-                true,
-                initialization_vector
+                true
         );
 
         // Print Server Time
@@ -220,8 +210,6 @@ public class PubnubExample {
         String subscribe_key = "demo";
         String secret_key = "demo";
         String cipher_key = ""; // (Cipher key is optional)
-        String initialization_vector = ""; // (IV is optional)
-
         String channel = "hello_world";
 
         Pubnub pubnub = new Pubnub(
@@ -229,8 +217,7 @@ public class PubnubExample {
                 subscribe_key,
                 secret_key,
                 cipher_key,
-                true,
-                initialization_vector
+                true
         );
 
         // Callback Interface when a Message is Received
@@ -304,8 +291,6 @@ public class PubnubExample {
         String subscribe_key = "demo";
         String secret_key = "demo";
         String cipher_key = ""; // (Cipher key is optional)
-        String initialization_vector = ""; // (IV is optional)
-
         String channel = "hello_world";
 
         Pubnub pubnub = new Pubnub(
@@ -313,8 +298,7 @@ public class PubnubExample {
                 subscribe_key,
                 secret_key,
                 cipher_key,
-                true,
-                initialization_vector
+                true
         );
 
         // Callback Interface when a Message is Received
@@ -388,8 +372,6 @@ public class PubnubExample {
         String subscribe_key = "demo";
         String secret_key = "demo";
         String cipher_key = ""; // (Cipher key is optional)
-        String initialization_vector = ""; // (IV is optional)
-
         String channel = "hello_world";
 
         Pubnub pubnub = new Pubnub(
@@ -397,8 +379,7 @@ public class PubnubExample {
                 subscribe_key,
                 secret_key,
                 cipher_key,
-                true,
-                ""
+                true
         );
 
         // Get Here Now
