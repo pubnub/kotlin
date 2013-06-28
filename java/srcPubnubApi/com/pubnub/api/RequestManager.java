@@ -9,6 +9,7 @@ abstract class Worker implements Runnable {
     protected volatile boolean _die;
     private Thread thread;
     protected HttpClient httpclient;
+    protected volatile HttpRequest httpReq;
 
     protected static Logger log = new Logger(Worker.class);
 
@@ -53,6 +54,19 @@ abstract class Worker implements Runnable {
     public abstract void shutdown();
 
     void die() {
+    	if (httpReq != null) {
+    		httpReq.setResponseHandler(new ResponseHandler(){
+
+				public void handleResponse(HttpRequest hreq, String response) {
+
+				}
+
+				public void handleError(HttpRequest hreq, PubnubError error) {
+
+				}
+    			
+    		});
+    	}
         _die = true;
         shutdown();
     }
@@ -68,6 +82,7 @@ abstract class Worker implements Runnable {
 
                     if (_requestQueue.size() != 0) {
                         hreq = (HttpRequest) _requestQueue.firstElement();
+                        httpReq = hreq;
                         _requestQueue.removeElementAt(0);
                         break;
                     }

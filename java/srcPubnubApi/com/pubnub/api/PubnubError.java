@@ -12,7 +12,7 @@ public class PubnubError {
      * Timeout Error .
      */
     public static final int         PNERR_5000_TIMEOUT                      =       5000;
-    public static final PubnubError PNERROBJ_5000_TIMEOUT                   =
+    static final PubnubError 		PNERROBJ_5000_TIMEOUT                   =
             new PubnubError     (
                                        PNERR_5000_TIMEOUT , "Timeout Occurred"
                                 );
@@ -22,7 +22,7 @@ public class PubnubError {
      * Please contact support with error details.
      */
     static final int         PNERR_5001_ENCRYPTION_ERROR             =       5001;
-    public static final PubnubError PNERROBJ_5001_ENCRYPTION_ERROR          =
+    static final PubnubError PNERROBJ_5001_ENCRYPTION_ERROR          =
             new PubnubError     (
                                     PNERR_5001_ENCRYPTION_ERROR ,
                                     "Error while encrypting message to be published to Pubnub Cloud ." +
@@ -34,7 +34,7 @@ public class PubnubError {
      * Please contact support with error details.
      */
     static final int         PNERR_5002_DECRYPTION_ERROR             =       5002;
-    public static final PubnubError PNERROBJ_5002_DECRYPTION_ERROR          =
+    static final PubnubError PNERROBJ_5002_DECRYPTION_ERROR          =
             new PubnubError     (
                                     PNERR_5002_DECRYPTION_ERROR ,
                                     "Decryption Error. " +
@@ -46,7 +46,7 @@ public class PubnubError {
      * Please contact support with error details.
      */
     static final int         PNERR_5003_INVALID_JSON                 =       5003;
-    public static final PubnubError PNERROBJ_5003_INVALID_JSON                 =
+    static final PubnubError PNERROBJ_5003_INVALID_JSON              =
             new PubnubError     (
                                     PNERR_5003_INVALID_JSON ,
                                     "Invalid Json. " +
@@ -58,7 +58,7 @@ public class PubnubError {
      * Please contact support with error details.
      */
     static final int         PNERR_5004_JSON_ERROR                   =       5004;
-    public static final PubnubError PNERROBJ_5004_JSON_ERROR                =
+    static final PubnubError PNERROBJ_5004_JSON_ERROR                =
             new PubnubError     (
                                     PNERR_5004_JSON_ERROR ,
                                     "JSON Error while processing API response. " +
@@ -70,7 +70,7 @@ public class PubnubError {
      * Please contact support with error details.
      */
     static final int         PNERR_5005_JSON_ERROR                   =       5005;
-    public static final PubnubError PNERROBJ_5005_JSON_ERROR                =
+    static final PubnubError PNERROBJ_5005_JSON_ERROR                =
             new PubnubError     (
                                     PNERR_5005_JSON_ERROR ,
                                     "JSON Processing Error. " +
@@ -82,7 +82,7 @@ public class PubnubError {
      * Please contact support with error details .
      */
     static final int         PNERR_5006_MALFORMED_URL                =       5006;
-    public static final PubnubError PNERROBJ_5006_MALFORMED_URL             =
+    static final PubnubError PNERROBJ_5006_MALFORMED_URL             =
             new PubnubError     (
                                     PNERR_5006_MALFORMED_URL ,
                                     "Malformed URL ." +
@@ -104,7 +104,7 @@ public class PubnubError {
      * Please contact support with error details.
      */
     static final int         PNERR_5008_URL_OPEN                     =       5008;
-    public static final PubnubError PNERROBJ_5008_URL_OPEN                  =
+    static final PubnubError PNERROBJ_5008_URL_OPEN                  =
             new PubnubError     (
                                     PNERR_5008_URL_OPEN ,
                                     "Error opening url. "   +
@@ -116,7 +116,7 @@ public class PubnubError {
      * Please contact support with error details.
      */
     static final int         PNERR_5009_PROTOCOL_EXCEPTION           =       5009;
-    public static final PubnubError PNERROBJ_5009_PROTOCOL_EXCEPTION        =
+    static final PubnubError PNERROBJ_5009_PROTOCOL_EXCEPTION        =
             new PubnubError     (
                                     PNERR_5009_PROTOCOL_EXCEPTION ,
                                     "Protocol Exception. " +
@@ -139,8 +139,8 @@ public class PubnubError {
      * Unable to get response code .
      * Please contact support with error details.
      */
-    public static final int         PNERR_5011_HTTP_RC_ERROR                =       5011;
-    public static final PubnubError PNERROBJ_5011_HTTP_RC_ERROR             =
+    static final int         PNERR_5011_HTTP_RC_ERROR                =       5011;
+    static final PubnubError PNERROBJ_5011_HTTP_RC_ERROR             =
             new PubnubError     (
                                     PNERR_5011_HTTP_RC_ERROR ,
                                     "Unable to get Response Code. " +
@@ -151,8 +151,8 @@ public class PubnubError {
      * Unable to open input stream .
      * Please contact support with error details.
      */
-    public static final int         PNERR_5012_GETINPUTSTREAM               =       5012;
-    public static final PubnubError PNERROBJ_5012_GETINPUTSTREAM            =
+    static final int         PNERR_5012_GETINPUTSTREAM               =       5012;
+    static final PubnubError PNERROBJ_5012_GETINPUTSTREAM            =
             new PubnubError     (
                                     PNERR_5012_GETINPUTSTREAM ,
                                     "Unable to get Input Stream. " +
@@ -163,8 +163,8 @@ public class PubnubError {
      * Unable to open input stream .
      * Please contact support with error details.
      */
-    public static final int         PNERR_5013_GETINPUTSTREAM               =       5013;
-    public static final PubnubError PNERROBJ_5013_GETINPUTSTREAM            =
+    static final int         PNERR_5013_GETINPUTSTREAM               =       5013;
+    static final PubnubError PNERROBJ_5013_GETINPUTSTREAM            =
             new PubnubError     (
                                     PNERR_5013_GETINPUTSTREAM ,
                                     "Unable to get Input Stream" +
@@ -175,8 +175,8 @@ public class PubnubError {
      * Unable to read input stream .
      * Please contact support with error details.
      */
-    public static final int         PNERR_5014_READINPUT                    =       5014;
-    public static final PubnubError PNERROBJ_5014_READINPUT                 =
+    static final int         PNERR_5014_READINPUT                    =       5014;
+    static final PubnubError PNERROBJ_5014_READINPUT                 =
             new PubnubError     (
                                     PNERR_5014_READINPUT ,
                                     "Unable to read Input Stream. " +

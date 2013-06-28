@@ -6,7 +6,7 @@ import java.util.Hashtable;
 import com.pubnub.api.PubnubUtil;
 
 class HttpRequest {
-    private ResponseHandler responseHandler;
+    private volatile ResponseHandler responseHandler;
     private Hashtable headers;
     private String[] urlComponents;
     private Hashtable params;
