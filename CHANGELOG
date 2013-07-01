@@ -1,3 +1,7 @@
+07-01-13 3.5.2
+. Introduced PubnubError class object passing to errorCallback
+. ULS APIs
+
 06-07-13
 . better handling in multithreaded environments
 . better debug log handling
