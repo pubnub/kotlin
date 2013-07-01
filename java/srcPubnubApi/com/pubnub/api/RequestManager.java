@@ -54,19 +54,19 @@ abstract class Worker implements Runnable {
     public abstract void shutdown();
 
     void die() {
-    	if (httpReq != null) {
-    		httpReq.setResponseHandler(new ResponseHandler(){
+        if (httpReq != null) {
+            httpReq.setResponseHandler(new ResponseHandler(){
 
-				public void handleResponse(HttpRequest hreq, String response) {
+                public void handleResponse(HttpRequest hreq, String response) {
 
-				}
+                }
 
-				public void handleError(HttpRequest hreq, PubnubError error) {
+                public void handleError(HttpRequest hreq, PubnubError error) {
 
-				}
-    			
-    		});
-    	}
+                }
+
+            });
+        }
         _die = true;
         shutdown();
     }
@@ -123,14 +123,14 @@ class NonSubscribeWorker extends Worker {
         catch (Exception e) {
             log.debug("Exception in Fetch : " + e.toString());
             if (!_die)
-                hreq.getResponseHandler().handleError(hreq, PubnubError.getErrorObject(PubnubError.PNERROBJ_5017_HTTP_ERROR, e.toString()));
+                hreq.getResponseHandler().handleError(hreq, PubnubError.getErrorObject(PubnubError.PNERROBJ_HTTP_ERROR, 2, e.toString()));
             return;
         }
 
         if (!_die) {
             if (hresp == null) {
                 log.debug("Error in fetching url : " + hreq.getUrl());
-                hreq.getResponseHandler().handleError(hreq, PubnubError.PNERROBJ_5018_HTTP_ERROR);
+                hreq.getResponseHandler().handleError(hreq, PubnubError.getErrorObject(PubnubError.PNERROBJ_HTTP_ERROR , 3));
                 return;
             }
             hreq.getResponseHandler().handleResponse(hreq, hresp.getResponse());

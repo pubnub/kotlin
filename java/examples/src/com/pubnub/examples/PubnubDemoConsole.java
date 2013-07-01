@@ -28,7 +28,7 @@ public class PubnubDemoConsole {
     }
 
     public PubnubDemoConsole() {
-        
+
     }
 
     private void notifyUser(Object message) {
@@ -237,9 +237,9 @@ public class PubnubDemoConsole {
 
 
         pubnub = new Pubnub(this.publish_key, this.subscribe_key, this.secret_key, this.cipher_key, this.SSL);
-        pubnub.setSuffix(0);
-        pubnub.setDomain("pubnub.co");
-        pubnub.setOrigin("uls-test");
+        //pubnub.setSuffix(0);
+        //pubnub.setDomain("pubnub.co");
+        //pubnub.setOrigin("uls-test");
 
         displayMenuOptions();
 
