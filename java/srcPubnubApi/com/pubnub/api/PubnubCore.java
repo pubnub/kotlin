@@ -1456,7 +1456,7 @@ abstract class PubnubCore {
     }
 
     /**
-     * @param req
+     * @param hreq
      * @param connManager
      * @param abortExisting
      */
@@ -1469,8 +1469,8 @@ abstract class PubnubCore {
     }
 
     /**
-     * @param req
-     * @param simpleConnManager2
+     * @param hreq
+     * @param simpleConnManager
      */
     protected void _request(final HttpRequest hreq,
             RequestManager simpleConnManager) {
