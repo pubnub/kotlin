@@ -80,6 +80,6 @@ public class Pubnub extends PubnubCore {
     }
 
     protected String getUserAgent() {
-        return "J2me/3.4";
+        return "J2me/" + VERSION;
     }
 }

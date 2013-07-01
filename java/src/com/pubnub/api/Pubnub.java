@@ -133,7 +133,7 @@ public class Pubnub extends PubnubCore {
     }
 
     protected String getUserAgent() {
-        return "Java/3.4";
+        return "Java/" + VERSION;
     }
 
     /**

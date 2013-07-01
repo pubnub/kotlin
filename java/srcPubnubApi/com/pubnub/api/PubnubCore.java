@@ -47,7 +47,7 @@ abstract class PubnubCore {
     private volatile String _saved_timetoken = "0";
 
     private String PRESENCE_SUFFIX = "-pnpres";
-    private static String VERSION = "";
+    protected static String VERSION = "";
     private Random generator = new Random();
 
     private static Logger log = new Logger(PubnubCore.class);
