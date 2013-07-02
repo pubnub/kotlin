@@ -85,6 +85,14 @@ abstract class PubnubCore {
     }
 
     /**
+     * Returns current retry interval for subscribe
+     * @return Current Retry Interval in milliseconds
+     */
+    public int getRetryInterval() {
+        return subscribeManager.retryInterval;
+    }
+
+    /**
      * This methods sets maximum number of retries for subscribe. Pubnub API
      * will make maxRetries attempts to connect to pubnub servers before timing
      * out.
@@ -96,7 +104,15 @@ abstract class PubnubCore {
         subscribeManager.setMaxRetries(maxRetries);
     }
 
-    protected String getOrigin() {
+    /**
+     * Returns current max retries for Subscribe
+     * @return Current max retries
+     */
+    public int getMaxRetries() {
+        return subscribeManager.maxRetries;
+    }
+
+    protected String getPubnubUrl() {
 
         if (ORIGIN_STR == null) {
             // SSL On?
@@ -111,22 +127,22 @@ abstract class PubnubCore {
         }
         return ORIGIN_STR;
     }
-    
-    /** 
+
+    /**
      * Enable/Disable Cache Busting
-     * 
+     *
      * @param cacheBusting
      */
     public void setCacheBusting(boolean cacheBusting) {
-    	this.CACHE_BUSTING = cacheBusting;
+        this.CACHE_BUSTING = cacheBusting;
     }
-    
+
     /**
      * Get Cache Busting value
      * @return current cache busting setting
      */
     public boolean getCacheBusting() {
-    	return this.CACHE_BUSTING;
+        return this.CACHE_BUSTING;
     }
 
     protected Hashtable hashtableClone(Hashtable ht) {
@@ -165,6 +181,14 @@ abstract class PubnubCore {
      */
     public void setResumeOnReconnect(boolean resumeOnReconnect) {
         this.resumeOnReconnect = resumeOnReconnect;
+    }
+
+    /**
+     * Returns Resume on Reconnect current setting
+     * @return Resume on Reconnect setting
+     */
+    public boolean getResumeOnReconnect() {
+        return this.resumeOnReconnect;
     }
 
     /**
@@ -344,6 +368,10 @@ abstract class PubnubCore {
         this.disconnectAndResubscribe();
     }
 
+    protected int getSubscribeTimeout() {
+        return subscribeManager.requestTimeout;
+    }
+
     /**
      * This method set timeout value for non subscribe operations like publish,
      * history, hereNow. Default value is 15000 milliseconds i.e. 15 seconds.
@@ -354,6 +382,10 @@ abstract class PubnubCore {
      */
     protected void setNonSubscribeTimeout(int timeout) {
         nonSubscribeManager.setRequestTimeout(timeout);
+    }
+
+    protected int getNonSubscribeTimeout() {
+        return nonSubscribeManager.requestTimeout;
     }
 
     /**
@@ -523,7 +555,7 @@ abstract class PubnubCore {
 
             }
         }
-        String[] urlComponents = { getOrigin(), "publish", this.PUBLISH_KEY,
+        String[] urlComponents = { getPubnubUrl(), "publish", this.PUBLISH_KEY,
                 this.SUBSCRIBE_KEY, PubnubUtil.urlEncode(signature),
                 PubnubUtil.urlEncode(channel), "0",
                 PubnubUtil.urlEncode(msgStr) };
@@ -581,7 +613,7 @@ abstract class PubnubCore {
      */
     public void hereNow(final String channel, final Callback callback) {
 
-        String[] urlargs = { getOrigin(), "v2", "presence", "sub_key",
+        String[] urlargs = { getPubnubUrl(), "v2", "presence", "sub_key",
                 this.SUBSCRIBE_KEY, "channel", channel };
 
         HttpRequest hreq = new HttpRequest(urlargs, params,
@@ -638,7 +670,7 @@ abstract class PubnubCore {
         String limit = (String) args.get("limit");
         final Callback callback = (Callback) args.get("callback");
 
-        String[] urlargs = { getOrigin(), "history", this.SUBSCRIBE_KEY,
+        String[] urlargs = { getPubnubUrl(), "history", this.SUBSCRIBE_KEY,
                 PubnubUtil.urlEncode(channel), "0", limit };
 
         HttpRequest hreq = new HttpRequest(urlargs, params,
@@ -712,7 +744,7 @@ abstract class PubnubCore {
         if (end != -1)
             parameters.put("end", Long.toString(end).toLowerCase());
 
-        String[] urlargs = { getOrigin(), "v2", "history", "sub-key",
+        String[] urlargs = { getPubnubUrl(), "v2", "history", "sub-key",
                 this.SUBSCRIBE_KEY, "channel", PubnubUtil.urlEncode(channel) };
 
         HttpRequest hreq = new HttpRequest(urlargs, parameters,
@@ -869,7 +901,7 @@ abstract class PubnubCore {
      */
     public void time(final Callback callback) {
 
-        String[] url = { getOrigin(), "time", "0" };
+        String[] url = { getPubnubUrl(), "time", "0" };
         HttpRequest hreq = new HttpRequest(url, params, new ResponseHandler() {
 
             public void handleResponse(HttpRequest hreq, String response) {
@@ -904,7 +936,7 @@ abstract class PubnubCore {
 
     private void leave(final String channel) {
 
-        String[] urlargs = { getOrigin(), "v2/presence/sub_key",
+        String[] urlargs = { getPubnubUrl(), "v2/presence/sub_key",
                 this.SUBSCRIBE_KEY, "channel", PubnubUtil.urlEncode(channel),
         "leave" };
         Hashtable params = new Hashtable();
@@ -1231,7 +1263,7 @@ abstract class PubnubCore {
                     PubnubError.PNERROBJ_PARSING_ERROR);
             return;
         }
-        String[] urlComponents = { getOrigin(), "subscribe",
+        String[] urlComponents = { getPubnubUrl(), "subscribe",
                 PubnubCore.this.SUBSCRIBE_KEY,
                 PubnubUtil.urlEncode(channelString), "0", _timetoken };
 
@@ -1582,6 +1614,14 @@ abstract class PubnubCore {
     }
 
     /**
+     * Returns origin
+     * @return origin
+     */
+    public String getOrigin() {
+        return this.HOSTNAME;
+    }
+
+    /**
      * Sets domain value, default is "pubnub.com"
      *
      * @param domain
@@ -1592,7 +1632,15 @@ abstract class PubnubCore {
     }
 
     /**
-     * This method return auth key. Return null if not set
+     * Returns domain
+     * @return domain
+     */
+    public String getDomain() {
+        return this.DOMAIN;
+    }
+
+    /**
+     * This method returns auth key. Return null if not set
      *
      * @return Auth Key. null if auth key not set
      */

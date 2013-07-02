@@ -327,17 +327,17 @@ public class PubnubDemoConsole {
                 ulsAudit();
                 break;
             case 21:
-            	pubnub.setOrigin(getStringFromConsole("Origin"));
-            	break;
+                pubnub.setOrigin(getStringFromConsole("Origin"));
+                break;
             case 22:
-            	pubnub.setDomain(getStringFromConsole("Domain"));
-            	break;
+                pubnub.setDomain(getStringFromConsole("Domain"));
+                break;
             case 23:
-            	pubnub.setCacheBusting(true);
-            	break;
+                pubnub.setCacheBusting(true);
+                break;
             case 24:
-            	pubnub.setCacheBusting(false);
-            	break;
+                pubnub.setCacheBusting(false);
+                break;
             default:
                 notifyUser("Invalid Input");
             }
@@ -511,19 +511,19 @@ public class PubnubDemoConsole {
         notifyUser("ENTER 9  FOR EXIT OR QUIT");
         notifyUser("ENTER 10 FOR Disconnect-And-Resubscribe");
         notifyUser("ENTER 11 FOR Disconnect-And-Resubscribe with timetoken");
-        notifyUser("ENTER 12 FOR Toggle Resume On Reconnect");
-        notifyUser("ENTER 13 FOR Setting MAX Retries");
-        notifyUser("ENTER 14 FOR Setting Retry Interval");
-        notifyUser("ENTER 15 FOR Setting Subscribe Timeout");
-        notifyUser("ENTER 16 FOR Setting Non Subscribe Timeout");
-        notifyUser("ENTER 17 FOR Setting/Unsetting auth key1");
+        notifyUser("ENTER 12 FOR Toggle Resume On Reconnect ( current: " + pubnub.getResumeOnReconnect() + " )");
+        notifyUser("ENTER 13 FOR Setting MAX Retries ( current: " + pubnub.getMaxRetries() + " )");
+        notifyUser("ENTER 14 FOR Setting Retry Interval ( current: " + pubnub.getRetryInterval() + " milliseconds )");
+        notifyUser("ENTER 15 FOR Setting Subscribe Timeout ( current: " + pubnub.getSubscribeTimeout() + " milliseconds )");
+        notifyUser("ENTER 16 FOR Setting Non Subscribe Timeout ( current: " + pubnub.getNonSubscribeTimeout() + " milliseconds )");
+        notifyUser("ENTER 17 FOR Setting/Unsetting auth key ( current: " + pubnub.getAuthKey() + " )");
         notifyUser("ENTER 18 FOR ULS grant");
         notifyUser("ENTER 19 FOR ULS revoke");
         notifyUser("ENTER 20 FOR ULS Audit");
-        notifyUser("ENTER 21 FOR Setting Origin ( default: pubsub )");
-        notifyUser("ENTER 22 FOR Setting Domain ( default: pubnub.com )");
-        notifyUser("Enter 23 FOR Enabling Cache Busting");
-        notifyUser("Enter 24 FOR Disabling Cache Busting");
+        notifyUser("ENTER 21 FOR Setting Origin ( current: " + pubnub.getOrigin() + " )");
+        notifyUser("ENTER 22 FOR Setting Domain ( current: "+ pubnub.getDomain() + " )");
+        notifyUser("ENTER 23 FOR Enabling Cache Busting  ( current: " + pubnub.getCacheBusting() + " )");
+        notifyUser("ENTER 24 FOR Disabling Cache Busting ( current: " + pubnub.getCacheBusting() + " )");
         notifyUser("\nENTER 0 to display this menu");
     }
 

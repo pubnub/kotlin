@@ -121,6 +121,15 @@ public class Pubnub extends PubnubCore {
     }
 
     /**
+     * This method returns timeout value for subscribe/presence.
+     *
+     * @return Timeout value in milliseconds for subscribe/presence
+     */
+    public int getSubscribeTimeout() {
+        return super.getSubscribeTimeout();
+    }
+
+    /**
      * This method set timeout value for non subscribe operations like publish,
      * history, hereNow. Default value is 15000 milliseconds i.e. 15 seconds.
      *
@@ -130,6 +139,14 @@ public class Pubnub extends PubnubCore {
      */
     public void setNonSubscribeTimeout(int timeout) {
         super.setNonSubscribeTimeout(timeout);
+    }
+    /**
+     * This method returns timeout value for non subscribe operations like publish, history, hereNow
+     *
+     * @return Timeout value in milliseconds for for Non subscribe operations like publish, history, hereNow
+     */
+    public int getNonSubscribeTimeout() {
+        return super.getNonSubscribeTimeout();
     }
 
     protected String getUserAgent() {
