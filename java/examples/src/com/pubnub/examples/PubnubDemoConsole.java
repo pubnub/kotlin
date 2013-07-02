@@ -521,7 +521,7 @@ public class PubnubDemoConsole {
         notifyUser("ENTER 19 FOR ULS revoke");
         notifyUser("ENTER 20 FOR ULS Audit");
         notifyUser("ENTER 21 FOR Setting Origin ( default: pubsub )");
-        notifyUser("ENTER 22 FOR Setting Domain ( default: punub.com )");
+        notifyUser("ENTER 22 FOR Setting Domain ( default: pubnub.com )");
         notifyUser("Enter 23 FOR Enabling Cache Busting");
         notifyUser("Enter 24 FOR Disabling Cache Busting");
         notifyUser("\nENTER 0 to display this menu");
