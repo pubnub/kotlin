@@ -593,7 +593,7 @@ public class Pubnub extends PubnubCore {
         parameters.put("channel", channel);
         parameters.put("auth", auth_key);
 
-        String[] urlComponents = { getOrigin(), "v2", "grant", "sub-key",
+        String[] urlComponents = { getPubnubUrl(), "v2", "grant", "sub-key",
                 this.SUBSCRIBE_KEY };
 
         HttpRequest hreq = new HttpRequest(urlComponents, parameters,
@@ -654,7 +654,7 @@ public class Pubnub extends PubnubCore {
         parameters.put("timestamp", String.valueOf(timestamp));
         parameters.put("signature", signature);
 
-        String[] urlComponents = { getOrigin(), "v2", "audit", "sub-key",
+        String[] urlComponents = { getPubnubUrl(), "v2", "audit", "sub-key",
                 this.SUBSCRIBE_KEY };
 
         HttpRequest hreq = new HttpRequest(urlComponents, parameters,
@@ -717,7 +717,7 @@ public class Pubnub extends PubnubCore {
         parameters.put("signature", signature);
         parameters.put("channel", channel);
 
-        String[] urlComponents = { getOrigin(), "v2", "audit", "sub-key",
+        String[] urlComponents = { getPubnubUrl(), "v2", "audit", "sub-key",
                 this.SUBSCRIBE_KEY };
 
         HttpRequest hreq = new HttpRequest(urlComponents, parameters,
@@ -783,7 +783,7 @@ public class Pubnub extends PubnubCore {
         parameters.put("channel", channel);
         parameters.put("auth", auth_key);
 
-        String[] urlComponents = { getOrigin(), "v2", "audit", "sub-key",
+        String[] urlComponents = { getPubnubUrl(), "v2", "audit", "sub-key",
                 this.SUBSCRIBE_KEY };
 
         HttpRequest hreq = new HttpRequest(urlComponents, parameters,

@@ -121,9 +121,9 @@ abstract class PubnubCore {
             } else {
                 ORIGIN_STR = "http://";
             }
-            ORIGIN_STR += HOSTNAME +
-                    ((!this.CACHE_BUSTING)?"":"-" + String.valueOf(HOSTNAME_SUFFIX)) +
-                    "." + DOMAIN;
+            ORIGIN_STR  += HOSTNAME;
+            ORIGIN_STR  += ((!this.CACHE_BUSTING)?"":"-" + String.valueOf(HOSTNAME_SUFFIX));
+            ORIGIN_STR  += "." + DOMAIN;
         }
         return ORIGIN_STR;
     }

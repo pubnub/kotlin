@@ -1741,7 +1741,7 @@ public class PubnubTest {
         assertEquals(200, ulscb.getResult());
     }
     @Test
-    public void testUlsAuditRevoke() {
+    public void testUlsRevoke() {
         final CountDownLatch latch = new CountDownLatch(1);
         UlsCallback ulscb = new UlsCallback(latch);
         Pubnub pubnub = new Pubnub("pub-c-a2650a22-deb1-44f5-aa87-1517049411d5",
