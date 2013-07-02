@@ -326,6 +326,18 @@ public class PubnubDemoConsole {
             case 20:
                 ulsAudit();
                 break;
+            case 21:
+            	pubnub.setOrigin(getStringFromConsole("Origin"));
+            	break;
+            case 22:
+            	pubnub.setDomain(getStringFromConsole("Domain"));
+            	break;
+            case 23:
+            	pubnub.setCacheBusting(true);
+            	break;
+            case 24:
+            	pubnub.setCacheBusting(false);
+            	break;
             default:
                 notifyUser("Invalid Input");
             }
@@ -508,6 +520,10 @@ public class PubnubDemoConsole {
         notifyUser("ENTER 18 FOR ULS grant");
         notifyUser("ENTER 19 FOR ULS revoke");
         notifyUser("ENTER 20 FOR ULS Audit");
+        notifyUser("ENTER 21 FOR Setting Origin ( default: pubsub )");
+        notifyUser("ENTER 22 FOR Setting Domain ( default: punub.com )");
+        notifyUser("Enter 23 FOR Enabling Cache Busting");
+        notifyUser("Enter 24 FOR Disabling Cache Busting");
         notifyUser("\nENTER 0 to display this menu");
     }
 

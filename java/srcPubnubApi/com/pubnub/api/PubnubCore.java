@@ -34,6 +34,7 @@ abstract class PubnubCore {
     protected String SECRET_KEY = "";
     private String CIPHER_KEY = "";
     private volatile String AUTH_STR = null;
+    private volatile boolean CACHE_BUSTING = true;
     protected Hashtable params;
     private volatile boolean resumeOnReconnect;
 
@@ -105,10 +106,27 @@ abstract class PubnubCore {
                 ORIGIN_STR = "http://";
             }
             ORIGIN_STR += HOSTNAME +
-                    ((HOSTNAME_SUFFIX == 0 )?"":"-" + String.valueOf(HOSTNAME_SUFFIX)) +
+                    ((!this.CACHE_BUSTING)?"":"-" + String.valueOf(HOSTNAME_SUFFIX)) +
                     "." + DOMAIN;
         }
         return ORIGIN_STR;
+    }
+    
+    /** 
+     * Enable/Disable Cache Busting
+     * 
+     * @param cacheBusting
+     */
+    public void setCacheBusting(boolean cacheBusting) {
+    	this.CACHE_BUSTING = cacheBusting;
+    }
+    
+    /**
+     * Get Cache Busting value
+     * @return current cache busting setting
+     */
+    public boolean getCacheBusting() {
+    	return this.CACHE_BUSTING;
     }
 
     protected Hashtable hashtableClone(Hashtable ht) {
@@ -1478,7 +1496,7 @@ abstract class PubnubCore {
     }
 
     private int getRandom() {
-        return this.generator.nextInt();
+        return Math.abs(this.generator.nextInt());
     }
 
     private void changeOrigin() {
@@ -1571,16 +1589,6 @@ abstract class PubnubCore {
      */
     public void setDomain(String domain) {
         this.DOMAIN = domain;
-    }
-
-    /**
-     * Sets suffix value, default is 1
-     *
-     * @param suffix
-     *            Suffix Value
-     */
-    public void setSuffix(int suffix) {
-        this.HOSTNAME_SUFFIX = suffix;
     }
 
     /**
