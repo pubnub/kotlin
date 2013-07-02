@@ -516,7 +516,7 @@ public class PubnubDemoConsole {
         notifyUser("ENTER 14 FOR Setting Retry Interval ( current: " + pubnub.getRetryInterval() + " milliseconds )");
         notifyUser("ENTER 15 FOR Setting Subscribe Timeout ( current: " + pubnub.getSubscribeTimeout() + " milliseconds )");
         notifyUser("ENTER 16 FOR Setting Non Subscribe Timeout ( current: " + pubnub.getNonSubscribeTimeout() + " milliseconds )");
-        notifyUser("ENTER 17 FOR Setting/Unsetting auth key1 ( current: " + pubnub.getAuthKey() + " )");
+        notifyUser("ENTER 17 FOR Setting/Unsetting auth key ( current: " + pubnub.getAuthKey() + " )");
         notifyUser("ENTER 18 FOR ULS grant");
         notifyUser("ENTER 19 FOR ULS revoke");
         notifyUser("ENTER 20 FOR ULS Audit");
