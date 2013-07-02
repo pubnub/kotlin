@@ -50,8 +50,8 @@ class SubscribeWorker extends AbstractSubscribeWorker {
             } catch (PubnubException e) {
 
                 switch(e.getPubnubError().errorCode) {
-                case PNERR_5031_FORBIDDEN:
-                case PNERR_5032_UNAUTHORIZED:
+                case PNERR_FORBIDDEN:
+                case PNERR_UNAUTHORIZED:
                     log.verbose("Authentication Failure : " + e.toString());
                     currentRetryAttempt = 1;
                     break;
@@ -80,7 +80,7 @@ class SubscribeWorker extends AbstractSubscribeWorker {
                     log.verbose("Exhausted number of retries");
                     hreq.getResponseHandler().handleTimeout(hreq);
                 } else {
-                    hreq.getResponseHandler().handleError(hreq, PNERROBJ_5019_HTTP_ERROR);
+                    hreq.getResponseHandler().handleError(hreq, getErrorObject(PNERROBJ_HTTP_ERROR, 1));
                 }
                 return;
             }

@@ -89,17 +89,17 @@ class HttpClientCore extends HttpClient {
         try {
             urlobj = new URL(url);
         } catch (MalformedURLException e3) {
-            throw new PubnubException(getErrorObject(PNERROBJ_5006_MALFORMED_URL,url));
+            throw new PubnubException(getErrorObject(PNERROBJ_MALFORMED_URL,url));
         }
         try {
             connection = (HttpURLConnection) urlobj.openConnection();
         } catch (IOException e2) {
-            throw new PubnubException(getErrorObject(PNERROBJ_5008_URL_OPEN, url));
+            throw new PubnubException(getErrorObject(PNERROBJ_URL_OPEN, url));
         }
         try {
             connection.setRequestMethod("GET");
         } catch (ProtocolException e1) {
-            throw new PubnubException(PNERROBJ_5009_PROTOCOL_EXCEPTION);
+            throw new PubnubException(PNERROBJ_PROTOCOL_EXCEPTION);
         }
         if (_headers != null) {
             Enumeration en = _headers.keys();
@@ -128,14 +128,14 @@ class HttpClientCore extends HttpClient {
             throw e;
         }
         catch (IOException e) {
-            throw new PubnubException(getErrorObject(PNERROBJ_5010_CONNECT_EXCEPTION, url));
+            throw new PubnubException(getErrorObject(PNERROBJ_CONNECT_EXCEPTION, url));
         }
 
         int rc = HttpURLConnection.HTTP_CLIENT_TIMEOUT;
         try {
             rc = connection.getResponseCode();
         } catch (IOException e) {
-            throw new PubnubException(getErrorObject(PNERROBJ_5011_HTTP_RC_ERROR, url));
+            throw new PubnubException(getErrorObject(PNERROBJ_HTTP_RC_ERROR, url));
         }
 
 
@@ -147,7 +147,7 @@ class HttpClientCore extends HttpClient {
                 is = connection.getInputStream();
             } catch (IOException e) {
                 if (rc == HttpURLConnection.HTTP_OK)
-                    throw new PubnubException(getErrorObject(PNERROBJ_5012_GETINPUTSTREAM, url));
+                    throw new PubnubException(getErrorObject(PNERROBJ_GETINPUTSTREAM, 1, url));
                 is = connection.getErrorStream();
             }
 
@@ -156,7 +156,7 @@ class HttpClientCore extends HttpClient {
                 is = new GZIPInputStream(connection.getInputStream());
             } catch (IOException e) {
                 if (rc == HttpURLConnection.HTTP_OK)
-                    throw new PubnubException(getErrorObject(PNERROBJ_5013_GETINPUTSTREAM, url));
+                    throw new PubnubException(getErrorObject(PNERROBJ_GETINPUTSTREAM, 2, url));
                 is = connection.getErrorStream();
             }
         }
@@ -165,36 +165,36 @@ class HttpClientCore extends HttpClient {
         try {
             page = readInput(is);
         } catch (IOException e) {
-            throw new PubnubException(getErrorObject(PNERROBJ_5014_READINPUT, url));
+            throw new PubnubException(getErrorObject(PNERROBJ_READINPUT, url));
         }
 
         switch (rc) {
         case HttpURLConnection.HTTP_FORBIDDEN:
-            throw new PubnubException(getErrorObject(PNERROBJ_5031_FORBIDDEN, page));
+            throw new PubnubException(getErrorObject(PNERROBJ_FORBIDDEN, page));
         case HttpURLConnection.HTTP_UNAUTHORIZED:
-            throw new PubnubException(getErrorObject(PNERROBJ_5032_UNAUTHORIZED, page));
+            throw new PubnubException(getErrorObject(PNERROBJ_UNAUTHORIZED, page));
         case HttpURLConnection.HTTP_BAD_REQUEST:
             try {
                 JSONArray jsarr = new JSONArray(page);
                 String error = jsarr.get(1).toString();
-                throw new PubnubException(getErrorObject(PNERROBJ_5016_BAD_REQUEST, error));
+                throw new PubnubException(getErrorObject(PNERROBJ_BAD_REQUEST, 1, error));
             } catch (JSONException e) {
                 JSONObject jso;
                 try {
                     jso = new JSONObject(page);
-                    throw new PubnubException(getErrorObject(PNERROBJ_5016_BAD_REQUEST, jso.toString()));
+                    throw new PubnubException(getErrorObject(PNERROBJ_BAD_REQUEST, 2, jso.toString()));
                 } catch (JSONException e1) {
-                    throw new PubnubException(PNERROBJ_5015_INVALID_JSON);
+                    throw new PubnubException(getErrorObject(PNERROBJ_INVALID_JSON, 2));
                 }
             }
         case HttpURLConnection.HTTP_BAD_GATEWAY:
-            throw new PubnubException(getErrorObject(PNERROBJ_5020_BAD_GATEWAY, url));
+            throw new PubnubException(getErrorObject(PNERROBJ_BAD_GATEWAY, url));
         case HttpURLConnection.HTTP_CLIENT_TIMEOUT:
-            throw new PubnubException(getErrorObject(PNERROBJ_5021_CLIENT_TIMEOUT, url));
+            throw new PubnubException(getErrorObject(PNERROBJ_CLIENT_TIMEOUT, url));
         case HttpURLConnection.HTTP_GATEWAY_TIMEOUT:
-            throw new PubnubException(getErrorObject(PNERROBJ_5022_GATEWAY_TIMEOUT, url));
+            throw new PubnubException(getErrorObject(PNERROBJ_GATEWAY_TIMEOUT, url));
         case HttpURLConnection.HTTP_INTERNAL_ERROR:
-            throw new PubnubException(getErrorObject(PNERROBJ_5023_INTERNAL_ERROR, url));
+            throw new PubnubException(getErrorObject(PNERROBJ_INTERNAL_ERROR, url));
         default:
             break;
         }

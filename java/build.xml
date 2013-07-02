@@ -81,7 +81,7 @@
 
     <target depends="init" name="build-project">
         <echo message="${ant.project.name}: ${ant.file}"/>
-        <replace dir="${srcPubnubApi.link}" token='private static String VERSION = ""' value='private static String VERSION = "${VERSION}"' >
+        <replace dir="${srcPubnubApi.link}" token='protected static String VERSION = ""' value='protected static String VERSION = "${VERSION}"' >
             <include name="**/*.java"/>
         </replace>
         <javac destdir="bin" debug="${debug}" source="${source}" target="${target}">
@@ -93,7 +93,7 @@
             <src path="examples/src"/>
             <classpath refid="PubnubApi.classpath"/>
         </javac>
-        <replace dir="${srcPubnubApi.link}" token='private static String VERSION = "${VERSION}"' value='private static String VERSION = ""'>
+        <replace dir="${srcPubnubApi.link}" token='protected static String VERSION = "${VERSION}"' value='protected static String VERSION = ""'>
             <include name="**/*.java"/>
         </replace>
     </target>

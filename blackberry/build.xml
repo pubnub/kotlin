@@ -57,6 +57,9 @@
 
     <target depends="init" name="build-project">
         <echo message="${ant.project.name}: ${ant.file}"/>
+        <replace dir="${srcPubnubApi.link}" token='protected static String VERSION = ""' value='protected static String VERSION = "${VERSION}"' >
+            <include name="**/*.java"/>
+        </replace>
         <javac debug="true" debuglevel="${debuglevel}" destdir="bin" source="${source}" target="${target}">
             <src path="${srcPubnubApi.link}"/>
             <src path="src"/>
@@ -64,5 +67,8 @@
             <src path="${j2me.link}/srcLogging"/>
             <classpath refid="PubnubApi.classpath"/>
         </javac>
+        <replace dir="${srcPubnubApi.link}" token='protected static String VERSION = "${VERSION}"' value='protected static String VERSION = ""'>
+            <include name="**/*.java"/>
+        </replace>
     </target>
 </project>

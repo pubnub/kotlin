@@ -133,7 +133,7 @@ public class Pubnub extends PubnubCore {
     }
 
     protected String getUserAgent() {
-        return "Java/3.4";
+        return "Java/" + VERSION;
     }
 
     /**
@@ -519,13 +519,13 @@ public class Pubnub extends PubnubCore {
         return new String(Base64Encoder.encode(hmacData)).replace('+', '-')
                 .replace('/', '_');
         } catch (InvalidKeyException e1) {
-            throw new PubnubException(getErrorObject(PubnubError.PNERROBJ_5071_ULSSIGN_ERROR, "Invalid Key : " + e1.toString()));
+            throw new PubnubException(getErrorObject(PubnubError.PNERROBJ_ULSSIGN_ERROR, 1, "Invalid Key : " + e1.toString()));
         } catch (NoSuchAlgorithmException e1) {
-            throw new PubnubException(getErrorObject(PubnubError.PNERROBJ_5072_ULSSIGN_ERROR, "Invalid Algorithm : " + e1.toString()));
+            throw new PubnubException(getErrorObject(PubnubError.PNERROBJ_ULSSIGN_ERROR, 2, "Invalid Algorithm : " + e1.toString()));
         } catch (IllegalStateException e1) {
-            throw new PubnubException(getErrorObject(PubnubError.PNERROBJ_5073_ULSSIGN_ERROR, "Invalid State : " + e1.toString()));
+            throw new PubnubException(getErrorObject(PubnubError.PNERROBJ_ULSSIGN_ERROR, 3, "Invalid State : " + e1.toString()));
         } catch (UnsupportedEncodingException e1) {
-            throw new PubnubException(getErrorObject(PubnubError.PNERROBJ_5074_ULSSIGN_ERROR, "Unsupported encoding : " + e1.toString()));
+            throw new PubnubException(getErrorObject(PubnubError.PNERROBJ_ULSSIGN_ERROR, 4, "Unsupported encoding : " + e1.toString()));
         }
     }
 
@@ -550,7 +550,7 @@ public class Pubnub extends PubnubCore {
 
         if (this.SECRET_KEY.length() == 0) {
             callback.errorCallback(channel,
-                    PubnubError.PNERROBJ_5062_SECRET_KEY_MISSING);
+                    getErrorObject(PNERROBJ_SECRET_KEY_MISSING, 1));
             return;
         }
 
@@ -586,8 +586,8 @@ public class Pubnub extends PubnubCore {
                 try {
                     jso = new JSONObject(response);
                 } catch (JSONException e) {
-                    handleError(hreq, PubnubError.getErrorObject(
-                            PubnubError.PNERROBJ_5066_INVALID_JSON,
+                    handleError(hreq, getErrorObject(
+                            PNERROBJ_INVALID_JSON, 4,
                             response));
                     return;
                 }
@@ -617,7 +617,7 @@ public class Pubnub extends PubnubCore {
 
         if (this.SECRET_KEY.length() == 0) {
             callback.errorCallback("",
-                    PubnubError.PNERROBJ_5063_SECRET_KEY_MISSING);
+                    getErrorObject(PNERROBJ_SECRET_KEY_MISSING, 2));
             return;
         }
 
@@ -647,8 +647,8 @@ public class Pubnub extends PubnubCore {
                 try {
                     jso = new JSONObject(response);
                 } catch (JSONException e) {
-                    handleError(hreq, PubnubError.getErrorObject(
-                            PubnubError.PNERROBJ_5067_INVALID_JSON,
+                    handleError(hreq, getErrorObject(
+                            PNERROBJ_INVALID_JSON, 5,
                             response));
                     return;
                 }
@@ -680,7 +680,7 @@ public class Pubnub extends PubnubCore {
 
         if (this.SECRET_KEY.length() == 0) {
             callback.errorCallback(channel,
-                    PubnubError.PNERROBJ_5064_SECRET_KEY_MISSING);
+                    getErrorObject(PNERROBJ_SECRET_KEY_MISSING , 3));
             return;
         }
 
@@ -710,8 +710,8 @@ public class Pubnub extends PubnubCore {
                 try {
                     jso = new JSONObject(response);
                 } catch (JSONException e) {
-                    handleError(hreq, PubnubError.getErrorObject(
-                            PubnubError.PNERROBJ_5068_INVALID_JSON,
+                    handleError(hreq, getErrorObject(
+                            PNERROBJ_INVALID_JSON, 6,
                             response));
                     return;
                 }
@@ -744,7 +744,7 @@ public class Pubnub extends PubnubCore {
 
         if (this.SECRET_KEY.length() == 0) {
             callback.errorCallback(channel,
-                    PubnubError.PNERROBJ_5065_SECRET_KEY_MISSING);
+                    getErrorObject(PNERROBJ_SECRET_KEY_MISSING, 4));
             return;
         }
 
@@ -777,7 +777,7 @@ public class Pubnub extends PubnubCore {
                     jso = new JSONObject(response);
                 } catch (JSONException e) {
                     handleError(hreq, PubnubError.getErrorObject(
-                            PubnubError.PNERROBJ_5069_INVALID_JSON,
+                            PubnubError.PNERROBJ_INVALID_JSON, 2,
                             response));
                     return;
                 }

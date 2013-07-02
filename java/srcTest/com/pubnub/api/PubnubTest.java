@@ -1669,7 +1669,7 @@ public class PubnubTest {
                 "sec-c-YjFmNzYzMGMtYmI3NC00NzJkLTlkYzYtY2MwMzI4YTJhNDVh");
         pubnub.setDomain("pubnub.co");
         pubnub.setOrigin("uls-test");
-        pubnub.setSuffix(0);
+        pubnub.setCacheBusting(false);
         pubnub.ulsGrant("hello-uls", "abcd", true, true, ulscb);
 
         try {
@@ -1689,7 +1689,7 @@ public class PubnubTest {
                 "sec-c-YjFmNzYzMGMtYmI3NC00NzJkLTlkYzYtY2MwMzI4YTJhNDVh");
         pubnub.setDomain("pubnub.co");
         pubnub.setOrigin("uls-test");
-        pubnub.setSuffix(0);
+        pubnub.setCacheBusting(false);
         pubnub.ulsAudit(ulscb);
 
         try {
@@ -1709,7 +1709,7 @@ public class PubnubTest {
                 "sec-c-YjFmNzYzMGMtYmI3NC00NzJkLTlkYzYtY2MwMzI4YTJhNDVh");
         pubnub.setDomain("pubnub.co");
         pubnub.setOrigin("uls-test");
-        pubnub.setSuffix(0);
+        pubnub.setCacheBusting(false);
         pubnub.ulsAudit("hello-uls", ulscb);
 
         try {
@@ -1729,7 +1729,7 @@ public class PubnubTest {
                 "sec-c-YjFmNzYzMGMtYmI3NC00NzJkLTlkYzYtY2MwMzI4YTJhNDVh");
         pubnub.setDomain("pubnub.co");
         pubnub.setOrigin("uls-test");
-        pubnub.setSuffix(0);
+        pubnub.setCacheBusting(false);
         pubnub.ulsAudit("hello-uls", "abcd", ulscb);
 
         try {
@@ -1749,7 +1749,7 @@ public class PubnubTest {
                 "sec-c-YjFmNzYzMGMtYmI3NC00NzJkLTlkYzYtY2MwMzI4YTJhNDVh");
         pubnub.setDomain("pubnub.co");
         pubnub.setOrigin("uls-test");
-        pubnub.setSuffix(0);
+        pubnub.setCacheBusting(false);
         pubnub.ulsRevoke("hello-uls", "abcd", ulscb);
 
         try {

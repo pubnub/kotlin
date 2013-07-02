@@ -80,7 +80,7 @@ public class Pubnub extends PubnubCore {
     }
 
     protected String getUserAgent() {
-        return "Blackberry/3.4";
+        return "Blackberry/" + VERSION;
     }
 
 }
