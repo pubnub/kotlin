@@ -48,8 +48,8 @@ class HttpClientCore extends HttpClient {
     public boolean isRedirect(int rc) {
        /* return (rc == HttpURLConnection.HTTP_MOVED_PERM
                 || rc == HttpURLConnection.HTTP_MOVED_TEMP || rc == HttpURLConnection.HTTP_SEE_OTHER);
-    	*/
-    	return true;
+        */
+        return true;
     }
 
     public boolean checkResponse(int rc) {
@@ -70,7 +70,7 @@ class HttpClientCore extends HttpClient {
 
     public boolean isOk(int rc) {
         //return (rc == HttpURLConnection.HTTP_OK);
-    	return true;
+        return true;
     }
 
     public void shutdown() {

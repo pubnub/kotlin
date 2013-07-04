@@ -553,8 +553,8 @@ public class JSONArray {
     /**
      * Put a value in the JSONArray, where the value will be a
      * JSONArray which is produced from a Collection.
-     * @param value	A Collection value.
-     * @return		this.
+     * @param value    A Collection value.
+     * @return        this.
      */
     public JSONArray put(Vector value) {
         put(new JSONArray(value));
@@ -606,8 +606,8 @@ public class JSONArray {
 //#     /**
 //#      * Put a value in the JSONArray, where the value will be a
 //#      * JSONObject which is produced from a Map.
-//#      * @param value	A Map value.
-//#      * @return		this.
+//#      * @param value    A Map value.
+//#      * @return        this.
 //#      */
 //#     public JSONArray put(Hashtable value) {
 //#         put(new JSONObject(value));
@@ -650,8 +650,8 @@ public class JSONArray {
      * Put a value in the JSONArray, where the value will be a
      * JSONArray which is produced from a Collection.
      * @param index The subscript.
-     * @param value	A Collection value.
-     * @return		this.
+     * @param value    A Collection value.
+     * @return        this.
      * @throws JSONException If the index is negative or if the value is
      * not finite.
      */
@@ -713,8 +713,8 @@ public class JSONArray {
 //#      * Put a value in the JSONArray, where the value will be a
 //#      * JSONObject which is produced from a Map.
 //#      * @param index The subscript.
-//#      * @param value	The Map value.
-//#      * @return		this.
+//#      * @param value    The Map value.
+//#      * @return        this.
 //#      * @throws JSONException If the index is negative or if the the value is
 //#      *  an invalid number.
 //#      */

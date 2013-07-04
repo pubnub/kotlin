@@ -31,19 +31,19 @@ import java.io.Writer;
  * A simple StringBuffer-based implementation of StringWriter
  */
 public class StringWriter extends Writer {
-    
+
     final private StringBuffer buf;
-    
+
     public StringWriter() {
         super();
         buf = new StringBuffer();
     }
-    
+
     public StringWriter(int initialSize) {
         super();
         buf = new StringBuffer(initialSize);
     }
-    
+
     public void write(char[] cbuf, int off, int len) throws IOException {
         buf.append(cbuf, off, len);
     }

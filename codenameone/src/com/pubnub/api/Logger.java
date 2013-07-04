@@ -3,22 +3,22 @@ package com.pubnub.api;
 //import org.slf4j.LoggerFactory;
 
 class Cn1Logger {
-	
-	public Cn1Logger(Class c) {
-		
-	}
-	public void debug(String s) {
-		
-	}
-	public void trace(String s) {
-		
-	}
-	public void error(String s) {
-		
-	}
-	public void info(String s) {
-		
-	}
+
+    public Cn1Logger(Class c) {
+
+    }
+    public void debug(String s) {
+
+    }
+    public void trace(String s) {
+
+    }
+    public void error(String s) {
+
+    }
+    public void info(String s) {
+
+    }
 }
 
 
