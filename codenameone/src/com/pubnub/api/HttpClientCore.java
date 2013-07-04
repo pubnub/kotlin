@@ -23,7 +23,6 @@ class HttpClientCore extends HttpClient {
     protected static Logger log = new Logger(Worker.class);
 
     private void init() {
-        //HttpURLConnection.setFollowRedirects(true);
     	connection = new PubnubCn1Connection();
     }
 
@@ -58,7 +57,7 @@ class HttpClientCore extends HttpClient {
             throws PubnubException, IOException {
         System.out.println(url);
         PubnubCn1Response pcr = connection.fetch(url, requestTimeout, headers);
-    	return new HttpResponse(pcr.getResponseStatusCode(), pcr.getResponse());//new HttpResponse(rc, page);
+    	return new HttpResponse(pcr.getResponseStatusCode(), pcr.getResponse());
     }
 
     public void shutdown() {
