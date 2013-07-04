@@ -25,7 +25,7 @@
     </target>
 
 
-    <target depends="create-src, default, delete-src, copy-lib, clean" name="build">
+    <target depends="default, delete-src, copy-lib, clean" name="build">
     </target>
     
     <target depends="init,compile,jar" name="compile-test">
@@ -38,7 +38,7 @@
         <echo>Currently testing a library project isn't supported</echo>
     </target>
 
-    <target name="-pre-compile">
+    <target depends="create-src" name="-pre-compile">
         <echo>Compile is forcing compliance to the supported API's/features for maximum device compatibility. This allows smaller
         code size and wider device support</echo>
         <mkdir dir="build/tmp"/>
