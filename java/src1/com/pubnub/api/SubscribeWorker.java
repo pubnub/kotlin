@@ -55,7 +55,7 @@ class SubscribeWorker extends AbstractSubscribeWorker {
                 case PNERR_FORBIDDEN:
                 case PNERR_UNAUTHORIZED:
                     log.verbose("Authentication Failure : " + e.toString());
-                    currentRetryAttempt = 1;
+                    currentRetryAttempt++;
                     break;
                 default:
                     log.verbose("Retry Attempt : " + ((currentRetryAttempt == maxRetries)?"last":currentRetryAttempt)
