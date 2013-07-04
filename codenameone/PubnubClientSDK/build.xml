@@ -11,7 +11,6 @@
     <target name="create-src">
         <mkdir dir="src"/>
         <copy includeemptydirs="true" todir="src">
-            <fileset dir="../srcJson"/>
             <fileset dir="../../java/srcPubnubApi"/>
         </copy>
         <copy includeemptydirs="true" todir="src/com/codename1">
@@ -72,7 +71,7 @@
     <target name="Stubs">
         <delete dir="build/stubs"/>
         <javadoc sourcepath="src"
-            classpath="lib/CodenameOne.jar:lib/CLDC11.jar:lib/bccn1/main.zip"
+            classpath="lib/CodenameOne.jar:lib/CLDC11.jar:lib/bccn1/bouncycastle.zip:lib/json/json.zip"
             docletpath="Stubber.jar"
             doclet="com.codename1.build.client.StubGenerator"> 
             <fileset dir="${src.dir}" excludes="*.java,${excludes}" includes="${includes}">
