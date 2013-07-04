@@ -29,16 +29,7 @@ public class StateMachine extends StateMachineBase {
      * the constructor/class scope to avoid race conditions
      */
     protected void initVars(Resources res) {
-        //pubnub = new Pubnub("demo", "demo");
-        pubnub = new Pubnub("pub-c-a2650a22-deb1-44f5-aa87-1517049411d5",
-                "sub-c-a478dd2a-c33d-11e2-883f-02ee2ddab7fe","sec-c-YjFmNzYzMGMtYmI3NC00NzJkLTlkYzYtY2MwMzI4YTJhNDVh","", false);
-        pubnub.setSubscribeTimeout(5000);
-        pubnub.setRetryInterval(1000);
-        pubnub.setMaxRetries(2);
-        pubnub.setCacheBusting(false);
-        pubnub.setOrigin("uls-test");
-        pubnub.setDomain("pubnub.co");
-        pubnub.setAuthKey("abcd");
+        pubnub = new Pubnub("demo", "demo");
     }
 
 
