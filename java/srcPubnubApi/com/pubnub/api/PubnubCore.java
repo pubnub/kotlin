@@ -1475,7 +1475,7 @@ abstract class PubnubCore {
             }
 
             public void handleError(HttpRequest hreq, PubnubError error) {
-                disconnectAndResubscribe();
+                disconnectAndResubscribe(error);
             }
 
             public void handleTimeout(HttpRequest hreq) {

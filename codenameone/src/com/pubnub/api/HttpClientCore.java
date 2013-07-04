@@ -1,6 +1,6 @@
 package com.pubnub.api;
 
-import static com.pubnub.api.PubnubError.PNERROBJ_READINPUT;
+import static com.pubnub.api.PubnubError.*;
 import static com.pubnub.api.PubnubError.getErrorObject;
 
 import java.io.ByteArrayOutputStream;
@@ -11,6 +11,7 @@ import java.util.Hashtable;
 
 import com.codename1.impl.CodenameOneImplementation;
 import com.codename1.io.*;
+import org.json.*;
 
 class HttpClientCore extends HttpClient {
 	
@@ -55,8 +56,45 @@ class HttpClientCore extends HttpClient {
 
     public synchronized HttpResponse fetch(String url, Hashtable headers)
             throws PubnubException, IOException {
-        System.out.println(url);
-        PubnubCn1Response pcr = connection.fetch(url, requestTimeout, headers);
+        IOException excp = null;
+        PubnubCn1Response pcr = null;
+        try {
+           pcr = connection.fetch(url, requestTimeout, headers);
+        } catch (IOException ex) {
+            excp = ex;
+        }
+        String page = pcr.getResponse();
+        switch (pcr.getResponseStatusCode()) {
+        case HttpUtil.HTTP_FORBIDDEN:
+            throw new PubnubException(getErrorObject(PNERROBJ_FORBIDDEN, page));
+        case HttpUtil.HTTP_UNAUTHORIZED:
+            throw new PubnubException(getErrorObject(PNERROBJ_UNAUTHORIZED, page));
+        case HttpUtil.HTTP_BAD_REQUEST:
+            try {
+                JSONArray jsarr = new JSONArray(page);
+                String error = jsarr.get(1).toString();
+                throw new PubnubException(getErrorObject(PNERROBJ_BAD_REQUEST, 1, error));
+            } catch (JSONException e) {
+                JSONObject jso;
+                try {
+                    jso = new JSONObject(page);
+                    throw new PubnubException(getErrorObject(PNERROBJ_BAD_REQUEST, 2, jso.toString()));
+                } catch (JSONException e1) {
+                    throw new PubnubException(getErrorObject(PNERROBJ_INVALID_JSON, 2));
+                }
+            }
+        case HttpUtil.HTTP_BAD_GATEWAY:
+            throw new PubnubException(getErrorObject(PNERROBJ_BAD_GATEWAY, url));
+        case HttpUtil.HTTP_CLIENT_TIMEOUT:
+            throw new PubnubException(getErrorObject(PNERROBJ_CLIENT_TIMEOUT, url));
+        case HttpUtil.HTTP_GATEWAY_TIMEOUT:
+            throw new PubnubException(getErrorObject(PNERROBJ_GATEWAY_TIMEOUT, url));
+        case HttpUtil.HTTP_INTERNAL_ERROR:
+            throw new PubnubException(getErrorObject(PNERROBJ_INTERNAL_ERROR, url));
+        default:
+            if (excp != null) throw excp;
+            break;
+        }
     	return new HttpResponse(pcr.getResponseStatusCode(), pcr.getResponse());
     }
 
