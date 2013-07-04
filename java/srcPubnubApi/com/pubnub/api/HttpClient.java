@@ -24,14 +24,6 @@ abstract class HttpClient {
 
     public abstract void setConnectionTimeout(int connectionTimeout);
 
-    public abstract boolean isRedirect(int rc);
-
-    public abstract boolean checkResponse(int rc);
-
-    public abstract boolean checkResponseSuccess(int rc);
-
-    public abstract boolean isOk(int rc);
-
     public abstract void shutdown();
 
     public abstract HttpResponse fetch(String url) throws IOException,

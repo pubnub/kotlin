@@ -5,6 +5,7 @@
 <project name="PubnubClientSDK" default="build" basedir=".">
     <description>Builds, tests, and runs the project PubnubClientSDK.</description>
     <import file="nbproject/build-impl.xml"/>
+    <loadfile property="VERSION" srcFile="../../VERSION"><filterchain><striplinebreaks/></filterchain></loadfile>
     <property file="codenameone_settings.properties"/>
 
     <target name="create-src">
@@ -12,6 +13,9 @@
         <copy includeemptydirs="true" todir="src">
             <fileset dir="../srcJson"/>
             <fileset dir="../../java/srcPubnubApi"/>
+        </copy>
+        <copy includeemptydirs="true" todir="src/com/codename1">
+            <fileset dir="../src/com/codename1"/>
         </copy>
         <copy includeemptydirs="true" todir="src/com/pubnub/api">
             <fileset dir="../src/com/pubnub/api/"/>
@@ -21,11 +25,11 @@
         <delete dir="src"/>
     </target>
     <target name="copy-lib">
-        <copy file="dist/PubnubClientSDK.cn1lib" tofile="../pubnub.cn1lib"/>
+        <copy file="dist/PubnubClientSDK.cn1lib" tofile="../pubnub-codenameone-${VERSION}.cn1lib"/>
     </target>
 
 
-    <target depends="default, delete-src, copy-lib, clean" name="build">
+    <target depends="create-src, default, delete-src, copy-lib, clean" name="build">
     </target>
     
     <target depends="init,compile,jar" name="compile-test">
@@ -68,7 +72,7 @@
     <target name="Stubs">
         <delete dir="build/stubs"/>
         <javadoc sourcepath="src"
-            classpath="lib/CodenameOne.jar:lib/CLDC11.jar"
+            classpath="lib/CodenameOne.jar:lib/CLDC11.jar:lib/bccn1/main.zip"
             docletpath="Stubber.jar"
             doclet="com.codename1.build.client.StubGenerator"> 
             <fileset dir="${src.dir}" excludes="*.java,${excludes}" includes="${includes}">
@@ -77,16 +81,16 @@
          </javadoc>
     </target>
 
-    <target name="jar" depends="compile,Stubs">
+    <target name="jar" depends="compile, Stubs">
         <mkdir dir="build/lib" />
         <zip basedir="${build.classes.dir}" compress="false" destfile="build/lib/main.zip" />
         <zip basedir="build/stubs" compress="false" destfile="build/lib/stubs.zip" />
         <copy file="manifest.properties" todir="build/lib" />
-        <antcall target="buildNativeIOS" />        
+        <!--<antcall target="buildNativeIOS" />        
         <antcall target="buildNativeRIM" />        
         <antcall target="buildNativeAND" />        
         <antcall target="buildNativeWIN" />        
-        <antcall target="buildNativeME" />       
+        <antcall target="buildNativeME" />    -->   
         <mkdir dir="dist" />
         <zip basedir="build/lib" compress="true" destfile="dist/${application.title}.cn1lib" />
     </target>

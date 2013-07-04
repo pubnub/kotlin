@@ -10,16 +10,21 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 
 import com.codename1.impl.CodenameOneImplementation;
-import com.codename1.io.Util;
+import com.codename1.io.*;
 
 class HttpClientCore extends HttpClient {
+	
+	
+    PubnubCn1Connection connection;
     private int requestTimeout = 310000;
     private int connectionTimeout = 5000;
-    //HttpURLConnection connection;
+    
+    
     protected static Logger log = new Logger(Worker.class);
 
     private void init() {
         //HttpURLConnection.setFollowRedirects(true);
+    	connection = new PubnubCn1Connection();
     }
 
     public HttpClientCore(int connectionTimeout, int requestTimeout, Hashtable headers) {
@@ -45,36 +50,19 @@ class HttpClientCore extends HttpClient {
         this.connectionTimeout = connectionTimeout;
     }
 
-    public boolean isRedirect(int rc) {
-       /* return (rc == HttpURLConnection.HTTP_MOVED_PERM
-                || rc == HttpURLConnection.HTTP_MOVED_TEMP || rc == HttpURLConnection.HTTP_SEE_OTHER);
-        */
-        return true;
-    }
-
-    public boolean checkResponse(int rc) {
-        return true; //return (rc == HttpURLConnection.HTTP_OK || isRedirect(rc));
-    }
-
-    public boolean checkResponseSuccess(int rc) {
-        return true; //return (rc == HttpURLConnection.HTTP_OK);
-    }
-    public HttpResponse fetch(String url) throws PubnubException { //, SocketTimeoutException {
+    public HttpResponse fetch(String url) throws PubnubException, IOException {
         return fetch(url, null);
     }
 
     public synchronized HttpResponse fetch(String url, Hashtable headers)
-            throws PubnubException {     //    log.verbose("URL = " + url + " : RESPONSE = " + page);
-        return null;//new HttpResponse(rc, page);
-    }
-
-    public boolean isOk(int rc) {
-        //return (rc == HttpURLConnection.HTTP_OK);
-        return true;
+            throws PubnubException, IOException {
+        System.out.println(url);
+        PubnubCn1Response pcr = connection.fetch(url, requestTimeout, headers);
+    	return new HttpResponse(pcr.getResponseStatusCode(), pcr.getResponse());//new HttpResponse(rc, page);
     }
 
     public void shutdown() {
-        //if (connection != null) connection.disconnect();
+        if (connection != null) connection.disconnect();
     }
 }
 
