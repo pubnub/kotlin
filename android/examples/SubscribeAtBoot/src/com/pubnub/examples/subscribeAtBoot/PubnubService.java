@@ -57,7 +57,7 @@ public class PubnubService extends Service {
         Toast.makeText(this, "PubnubService created...", Toast.LENGTH_LONG).show();
         Log.i("PUBNUB", "PubnubService created...");
         try {
-            pubnub.subscribe(new String[]{channel}, new Callback() {
+            pubnub.subscribe(new String[] {channel}, new Callback() {
                 @Override
                 public void connectCallback(String channel) {
                     notifyUser("CONNECT on channel:" + channel);

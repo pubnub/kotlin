@@ -38,7 +38,8 @@ public class History extends PubnubCommand {
                 });
                 display.setCurrent(menu);
 
-            }});
+            }
+        });
 
     }
 

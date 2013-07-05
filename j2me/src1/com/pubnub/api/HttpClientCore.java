@@ -44,8 +44,8 @@ public class HttpClientCore extends HttpClient {
             int ch;
             b.append(prefix);
             in = hconn.openInputStream();
-             if ("gzip".equals(hconn.getEncoding()))
-                 in= new GZIPInputStream(in);
+            if ("gzip".equals(hconn.getEncoding()))
+                in= new GZIPInputStream(in);
 
             byte[] data = null;
             ByteArrayOutputStream tmp = new ByteArrayOutputStream();
@@ -105,7 +105,7 @@ public class HttpClientCore extends HttpClient {
         while (follow-- > 0) {
 
             hc = (HttpConnection) Connector.open(url, Connector.READ_WRITE,
-                    true);
+                                                 true);
             hc.setRequestMethod(HttpConnection.GET);
             if (_headers != null) {
                 Enumeration en = _headers.keys();

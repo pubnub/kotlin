@@ -187,7 +187,7 @@ public class JSONArray {
             }
         } else {
             throw new JSONException(
-"JSONArray initial value should be a string or collection or array.");
+                "JSONArray initial value should be a string or collection or array.");
         }
     }
 
@@ -221,11 +221,11 @@ public class JSONArray {
         Object o = get(index);
         if (o.equals(Boolean.FALSE) ||
                 (o instanceof String &&
-                ((String)o).equalsIgnoreCase("false"))) {
+                 ((String)o).equalsIgnoreCase("false"))) {
             return false;
         } else if (o.equals(Boolean.TRUE) ||
-                (o instanceof String &&
-                ((String)o).equalsIgnoreCase("true"))) {
+                   (o instanceof String &&
+                    ((String)o).equalsIgnoreCase("true"))) {
             return true;
         }
         throw new JSONException("JSONArray[" + index + "] is not a Boolean.");
@@ -244,11 +244,11 @@ public class JSONArray {
         Object o = get(index);
         try {
             return o instanceof Number ?
-                ((Number)o).doubleValue() :
-                Double.valueOf((String)o).doubleValue();
+                   ((Number)o).doubleValue() :
+                   Double.valueOf((String)o).doubleValue();
         } catch (Exception e) {
             throw new JSONException("JSONArray[" + index +
-                "] is not a number.");
+                                    "] is not a number.");
         }
     }
 
@@ -265,7 +265,7 @@ public class JSONArray {
     public int getInt(int index) throws JSONException {
         Object o = get(index);
         return o instanceof Number ?
-                ((Number)o).intValue() : (int)getDouble(index);
+               ((Number)o).intValue() : (int)getDouble(index);
     }
 
 
@@ -282,7 +282,7 @@ public class JSONArray {
             return (JSONArray)o;
         }
         throw new JSONException("JSONArray[" + index +
-                "] is not a JSONArray.");
+                                "] is not a JSONArray.");
     }
 
 
@@ -299,7 +299,7 @@ public class JSONArray {
             return (JSONObject)o;
         }
         throw new JSONException("JSONArray[" + index +
-            "] is not a JSONObject.");
+                                "] is not a JSONObject.");
     }
 
 
@@ -314,7 +314,7 @@ public class JSONArray {
     public long getLong(int index) throws JSONException {
         Object o = get(index);
         return o instanceof Number ?
-                ((Number)o).longValue() : (long)getDouble(index);
+               ((Number)o).longValue() : (long)getDouble(index);
     }
 
 
@@ -379,7 +379,7 @@ public class JSONArray {
      */
     public Object opt(int index) {
         return (index < 0 || index >= length()) ?
-            null : this.myArrayList.get(index);
+               null : this.myArrayList.get(index);
     }
 
 
@@ -855,7 +855,7 @@ public class JSONArray {
         StringBuffer sb = new StringBuffer("[");
         if (len == 1) {
             sb.append(JSONObject.valueToString(this.myArrayList.get(0),
-                    indentFactor, indent));
+                                               indentFactor, indent));
         } else {
             int newindent = indent + indentFactor;
             sb.append('\n');
@@ -867,7 +867,7 @@ public class JSONArray {
                     sb.append(' ');
                 }
                 sb.append(JSONObject.valueToString(this.myArrayList.get(i),
-                        indentFactor, newindent));
+                                                   indentFactor, newindent));
             }
             sb.append('\n');
             for (i = 0; i < indent; i += 1) {
@@ -912,7 +912,7 @@ public class JSONArray {
             writer.write(']');
             return writer;
         } catch (IOException e) {
-           throw new JSONException(e);
+            throw new JSONException(e);
         }
     }
 }

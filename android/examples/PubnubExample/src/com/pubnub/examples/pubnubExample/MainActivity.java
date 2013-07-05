@@ -42,7 +42,7 @@ public class MainActivity extends Activity {
                 this.runOnUiThread(new Runnable() {
                     public void run() {
                         Toast.makeText(getApplicationContext(), obj.toString(),
-                                Toast.LENGTH_LONG).show();
+                                       Toast.LENGTH_LONG).show();
 
                         Log.i("Received msg : ", String.valueOf(obj));
                     }
@@ -53,7 +53,7 @@ public class MainActivity extends Activity {
                 this.runOnUiThread(new Runnable() {
                     public void run() {
                         Toast.makeText(getApplicationContext(), obj,
-                                Toast.LENGTH_LONG).show();
+                                       Toast.LENGTH_LONG).show();
                         Log.i("Received msg : ", obj.toString());
                     }
                 });
@@ -63,7 +63,7 @@ public class MainActivity extends Activity {
                 this.runOnUiThread(new Runnable() {
                     public void run() {
                         Toast.makeText(getApplicationContext(), obj.toString(),
-                                Toast.LENGTH_LONG).show();
+                                       Toast.LENGTH_LONG).show();
                         Log.i("Received msg : ", obj.toString());
                     }
                 });
@@ -177,13 +177,13 @@ public class MainActivity extends Activity {
         edTimeout.setInputType(InputType.TYPE_CLASS_NUMBER);
         builder.setView(edTimeout);
         builder.setPositiveButton("Done",
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        pubnub.setNonSubscribeTimeout(Integer
-                                .parseInt(edTimeout.getText().toString()));
-                    }
-                });
+        new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                pubnub.setNonSubscribeTimeout(Integer
+                                              .parseInt(edTimeout.getText().toString()));
+            }
+        });
         AlertDialog alert = builder.create();
         alert.show();
     }
@@ -195,71 +195,71 @@ public class MainActivity extends Activity {
         final EditText input = new EditText(this);
         builder.setView(input);
         builder.setPositiveButton("Subscribe",
-                new DialogInterface.OnClickListener() {
+        new DialogInterface.OnClickListener() {
 
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
 
-                        Hashtable args = new Hashtable(1);
+                Hashtable args = new Hashtable(1);
 
-                        String message = input.getText().toString();
-                        args.put("channel", message);
+                String message = input.getText().toString();
+                args.put("channel", message);
 
-                        try {
-                            pubnub.subscribe(args, new Callback() {
-                                @Override
-                                public void connectCallback(String channel,
-                                        Object message) {
-                                    notifyUser("SUBSCRIBE : CONNECT on channel:"
-                                            + channel
-                                            + " : "
-                                            + message.getClass()
-                                            + " : "
-                                            + message.toString());
-                                }
-                                @Override
-                                public void disconnectCallback(String channel,
-                                        Object message) {
-                                    notifyUser("SUBSCRIBE : DISCONNECT on channel:"
-                                            + channel
-                                            + " : "
-                                            + message.getClass()
-                                            + " : "
-                                            + message.toString());
-                                }
-
-                                @Override
-                                public void reconnectCallback(String channel,
-                                        Object message) {
-                                    notifyUser("SUBSCRIBE : RECONNECT on channel:"
-                                            + channel
-                                            + " : "
-                                            + message.getClass()
-                                            + " : "
-                                            + message.toString());
-                                }
-                                @Override
-                                public void successCallback(String channel,
-                                        Object message) {
-                                    notifyUser("SUBSCRIBE : " + channel + " : "
-                                            + message.getClass() + " : "
-                                            + message.toString());
-                                }
-                                @Override
-                                public void errorCallback(String channel,
-                                        PubnubError error) {
-                                    notifyUser("SUBSCRIBE : ERROR on channel "
-                                            + channel + " : "
-                                            + error.toString());
-                                }
-                            });
-
-                        } catch (Exception e) {
-
+                try {
+                    pubnub.subscribe(args, new Callback() {
+                        @Override
+                        public void connectCallback(String channel,
+                        Object message) {
+                            notifyUser("SUBSCRIBE : CONNECT on channel:"
+                                       + channel
+                                       + " : "
+                                       + message.getClass()
+                                       + " : "
+                                       + message.toString());
                         }
-                    }
+                        @Override
+                        public void disconnectCallback(String channel,
+                        Object message) {
+                            notifyUser("SUBSCRIBE : DISCONNECT on channel:"
+                                       + channel
+                                       + " : "
+                                       + message.getClass()
+                                       + " : "
+                                       + message.toString());
+                        }
 
-                });
+                        @Override
+                        public void reconnectCallback(String channel,
+                        Object message) {
+                            notifyUser("SUBSCRIBE : RECONNECT on channel:"
+                                       + channel
+                                       + " : "
+                                       + message.getClass()
+                                       + " : "
+                                       + message.toString());
+                        }
+                        @Override
+                        public void successCallback(String channel,
+                        Object message) {
+                            notifyUser("SUBSCRIBE : " + channel + " : "
+                                       + message.getClass() + " : "
+                                       + message.toString());
+                        }
+                        @Override
+                        public void errorCallback(String channel,
+                        PubnubError error) {
+                            notifyUser("SUBSCRIBE : ERROR on channel "
+                                       + channel + " : "
+                                       + error.toString());
+                        }
+                    });
+
+                } catch (Exception e) {
+
+                }
+            }
+
+        });
         AlertDialog alert = builder.create();
         alert.show();
 
@@ -272,69 +272,69 @@ public class MainActivity extends Activity {
         final EditText etMessage = new EditText(this);
         builder.setView(etMessage);
         builder.setPositiveButton("Publish",
-                new DialogInterface.OnClickListener() {
+        new DialogInterface.OnClickListener() {
 
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Hashtable args = new Hashtable(2);
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Hashtable args = new Hashtable(2);
 
-                        String message = etMessage.getText().toString();
+                String message = etMessage.getText().toString();
 
-                        if (args.get("message") == null) {
-                            try {
-                                Integer i = Integer.parseInt(message);
-                                args.put("message", i);
-                            } catch (Exception e) {
+                if (args.get("message") == null) {
+                    try {
+                        Integer i = Integer.parseInt(message);
+                        args.put("message", i);
+                    } catch (Exception e) {
 
-                            }
-                        }
-                        if (args.get("message") == null) {
-                            try {
-                                Double d = Double.parseDouble(message);
-                                args.put("message", d);
-                            } catch (Exception e) {
-
-                            }
-                        }
-                        if (args.get("message") == null) {
-                            try {
-                                JSONArray js = new JSONArray(message);
-                                args.put("message", js);
-                            } catch (Exception e) {
-
-                            }
-                        }
-                        if (args.get("message") == null) {
-                            try {
-                                JSONObject js = new JSONObject(message);
-                                args.put("message", js);
-                            } catch (Exception e) {
-
-                            }
-                        }
-                        if (args.get("message") == null) {
-                            args.put("message", message);
-                        }
-
-                        // Publish Message
-
-                        args.put("channel", channel); // Channel Name
-
-                        pubnub.publish(args, new Callback() {
-                            @Override
-                            public void successCallback(String channel,
-                                    Object message) {
-                                notifyUser("PUBLISH : " + message);
-                            }
-                            @Override
-                            public void errorCallback(String channel,
-                                    PubnubError error) {
-                                notifyUser("PUBLISH : " + error);
-                            }
-                        });
                     }
+                }
+                if (args.get("message") == null) {
+                    try {
+                        Double d = Double.parseDouble(message);
+                        args.put("message", d);
+                    } catch (Exception e) {
 
+                    }
+                }
+                if (args.get("message") == null) {
+                    try {
+                        JSONArray js = new JSONArray(message);
+                        args.put("message", js);
+                    } catch (Exception e) {
+
+                    }
+                }
+                if (args.get("message") == null) {
+                    try {
+                        JSONObject js = new JSONObject(message);
+                        args.put("message", js);
+                    } catch (Exception e) {
+
+                    }
+                }
+                if (args.get("message") == null) {
+                    args.put("message", message);
+                }
+
+                // Publish Message
+
+                args.put("channel", channel); // Channel Name
+
+                pubnub.publish(args, new Callback() {
+                    @Override
+                    public void successCallback(String channel,
+                    Object message) {
+                        notifyUser("PUBLISH : " + message);
+                    }
+                    @Override
+                    public void errorCallback(String channel,
+                    PubnubError error) {
+                        notifyUser("PUBLISH : " + error);
+                    }
                 });
+            }
+
+        });
         AlertDialog alert = builder.create();
         alert.show();
 
@@ -347,14 +347,14 @@ public class MainActivity extends Activity {
         final EditText etChannel = new EditText(this);
         builder.setView(etChannel);
         builder.setPositiveButton("Done",
-                new DialogInterface.OnClickListener() {
+        new DialogInterface.OnClickListener() {
 
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        _publish(etChannel.getText().toString());
-                    }
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                _publish(etChannel.getText().toString());
+            }
 
-                });
+        });
         AlertDialog alert = builder.create();
         alert.show();
     }
@@ -367,36 +367,36 @@ public class MainActivity extends Activity {
         final EditText input = new EditText(this);
         builder.setView(input);
         builder.setPositiveButton("Subscribe For Presence",
-                new DialogInterface.OnClickListener() {
+        new DialogInterface.OnClickListener() {
 
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String channel = input.getText().toString();
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String channel = input.getText().toString();
 
-                        try {
-                            pubnub.presence(channel, new Callback() {
-                                @Override
-                                public void successCallback(String channel,
-                                        Object message) {
-                                    notifyUser("PRESENCE : " + channel + " : "
-                                            + message.getClass() + " : "
-                                            + message.toString());
-                                }
-                                @Override
-                                public void errorCallback(String channel,
-                                        PubnubError error) {
-                                    notifyUser("PRESENCE : ERROR on channel "
-                                            + channel + " : "
-                                            + error.toString());
-                                }
-                            });
-
-                        } catch (Exception e) {
-
+                try {
+                    pubnub.presence(channel, new Callback() {
+                        @Override
+                        public void successCallback(String channel,
+                        Object message) {
+                            notifyUser("PRESENCE : " + channel + " : "
+                                       + message.getClass() + " : "
+                                       + message.toString());
                         }
-                    }
+                        @Override
+                        public void errorCallback(String channel,
+                        PubnubError error) {
+                            notifyUser("PRESENCE : ERROR on channel "
+                                       + channel + " : "
+                                       + error.toString());
+                        }
+                    });
 
-                });
+                } catch (Exception e) {
+
+                }
+            }
+
+        });
         AlertDialog alert = builder.create();
         alert.show();
     }
@@ -409,26 +409,26 @@ public class MainActivity extends Activity {
         final EditText input = new EditText(this);
         builder.setView(input);
         builder.setPositiveButton("Get detailed history",
-                new DialogInterface.OnClickListener() {
+        new DialogInterface.OnClickListener() {
 
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String channel = input.getText().toString();
+                pubnub.detailedHistory(channel, 2, new Callback() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String channel = input.getText().toString();
-                        pubnub.detailedHistory(channel, 2, new Callback() {
-                            @Override
-                            public void successCallback(String channel,
-                                    Object message) {
-                                notifyUser("DETAILED HISTORY : " + message);
-                            }
-                            @Override
-                            public void errorCallback(String channel,
-                                    PubnubError error) {
-                                notifyUser("DETAILED HISTORY : " + error);
-                            }
-                        });
+                    public void successCallback(String channel,
+                    Object message) {
+                        notifyUser("DETAILED HISTORY : " + message);
                     }
-
+                    @Override
+                    public void errorCallback(String channel,
+                    PubnubError error) {
+                        notifyUser("DETAILED HISTORY : " + error);
+                    }
                 });
+            }
+
+        });
         AlertDialog alert = builder.create();
         alert.show();
     }
@@ -441,26 +441,26 @@ public class MainActivity extends Activity {
         final EditText input = new EditText(this);
         builder.setView(input);
         builder.setPositiveButton("Get Here Now",
-                new DialogInterface.OnClickListener() {
+        new DialogInterface.OnClickListener() {
 
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String channel = input.getText().toString();
+                pubnub.hereNow(channel, new Callback() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String channel = input.getText().toString();
-                        pubnub.hereNow(channel, new Callback() {
-                            @Override
-                            public void successCallback(String channel,
-                                    Object message) {
-                                notifyUser("HERE NOW : " + message);
-                            }
-                            @Override
-                            public void errorCallback(String channel,
-                                    PubnubError error) {
-                                notifyUser("HERE NOW : " + error);
-                            }
-                        });
+                    public void successCallback(String channel,
+                    Object message) {
+                        notifyUser("HERE NOW : " + message);
                     }
-
+                    @Override
+                    public void errorCallback(String channel,
+                    PubnubError error) {
+                        notifyUser("HERE NOW : " + error);
+                    }
                 });
+            }
+
+        });
         AlertDialog alert = builder.create();
         alert.show();
     }
@@ -473,13 +473,13 @@ public class MainActivity extends Activity {
         final EditText input = new EditText(this);
         builder.setView(input);
         builder.setPositiveButton("Unsubscribe",
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String channel = input.getText().toString();
-                        pubnub.unsubscribe(channel);
-                    }
-                });
+        new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String channel = input.getText().toString();
+                pubnub.unsubscribe(channel);
+            }
+        });
         AlertDialog alert = builder.create();
         alert.show();
     }
@@ -492,13 +492,13 @@ public class MainActivity extends Activity {
         final EditText input = new EditText(this);
         builder.setView(input);
         builder.setPositiveButton("Unsubscribe Presence",
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String channel = input.getText().toString();
-                        pubnub.unsubscribePresence(channel);
-                    }
-                });
+        new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String channel = input.getText().toString();
+                pubnub.unsubscribePresence(channel);
+            }
+        });
         AlertDialog alert = builder.create();
         alert.show();
     }
@@ -530,15 +530,15 @@ public class MainActivity extends Activity {
         edTimeout.setInputType(InputType.TYPE_CLASS_NUMBER);
         builder.setView(edTimeout);
         builder.setPositiveButton("Done",
-                new DialogInterface.OnClickListener() {
+        new DialogInterface.OnClickListener() {
 
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        pubnub.setSubscribeTimeout(Integer.parseInt(edTimeout
-                                .getText().toString()));
-                    }
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                pubnub.setSubscribeTimeout(Integer.parseInt(edTimeout
+                                           .getText().toString()));
+            }
 
-                });
+        });
         AlertDialog alert = builder.create();
         alert.show();
 
@@ -552,15 +552,15 @@ public class MainActivity extends Activity {
         edInterval.setInputType(InputType.TYPE_CLASS_NUMBER);
         builder.setView(edInterval);
         builder.setPositiveButton("Done",
-                new DialogInterface.OnClickListener() {
+        new DialogInterface.OnClickListener() {
 
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        pubnub.setRetryInterval(Integer.parseInt(edInterval
-                                .getText().toString()));
-                    }
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                pubnub.setRetryInterval(Integer.parseInt(edInterval
+                                        .getText().toString()));
+            }
 
-                });
+        });
         AlertDialog alert = builder.create();
         alert.show();
     }
@@ -578,13 +578,13 @@ public class MainActivity extends Activity {
         edRetries.setInputType(InputType.TYPE_CLASS_NUMBER);
         builder.setView(edRetries);
         builder.setPositiveButton("Done",
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        pubnub.setMaxRetries(Integer.parseInt(edRetries
-                                .getText().toString()));
-                    }
-                });
+        new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                pubnub.setMaxRetries(Integer.parseInt(edRetries
+                                                      .getText().toString()));
+            }
+        });
         AlertDialog alert = builder.create();
         alert.show();
     }
@@ -596,13 +596,13 @@ public class MainActivity extends Activity {
         final EditText edTimetoken = new EditText(this);
         builder.setView(edTimetoken);
         builder.setPositiveButton("Done",
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        pubnub.disconnectAndResubscribeWithTimetoken(
-                                edTimetoken.getText().toString());
-                    }
-                });
+        new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                pubnub.disconnectAndResubscribeWithTimetoken(
+                    edTimetoken.getText().toString());
+            }
+        });
         AlertDialog alert = builder.create();
         alert.show();
     }

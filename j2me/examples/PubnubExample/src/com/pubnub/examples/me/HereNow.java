@@ -36,7 +36,8 @@ public class HereNow extends PubnubCommand {
                 });
                 display.setCurrent(menu);
 
-            }});
+            }
+        });
 
     }
 

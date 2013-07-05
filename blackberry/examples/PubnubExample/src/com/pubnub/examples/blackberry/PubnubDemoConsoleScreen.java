@@ -8,17 +8,16 @@ import com.pubnub.api.Pubnub;
  * A class extending the MainScreen class, which provides default standard
  * behavior for BlackBerry GUI applications.
  */
-public final class PubnubDemoConsoleScreen extends MainScreen
-{
+public final class PubnubDemoConsoleScreen extends MainScreen {
     String channel = "hello_world";
     String[] channels = { "hello_world1", "hello_world2", "hello_world3",
-            "hello_world4" };
+                          "hello_world4"
+                        };
     Pubnub _pubnub = new Pubnub("demo","demo","demo", false);
     /**
      * Creates a new PubnubExampleScreen object
      */
-    public PubnubDemoConsoleScreen()
-    {
+    public PubnubDemoConsoleScreen() {
         // Set the displayed title of the screen
         setTitle("Pubnub Demo Console");
         addMenuItem(new Publish(_pubnub).getMenuItem());

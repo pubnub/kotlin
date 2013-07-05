@@ -109,10 +109,11 @@ public class PubnubMenu {
                         toggleResumeOnReconnect.handler();
                     }
 
-                }});
+                }
+            });
         }
 
         return menu;
 
-}
+    }
 }

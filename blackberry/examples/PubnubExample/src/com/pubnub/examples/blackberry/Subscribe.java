@@ -59,6 +59,7 @@ public class Subscribe extends PubnubCommand {
                 } catch (Exception e) {
 
                 }
-            }});    }
+            }});
+    }
 
 }

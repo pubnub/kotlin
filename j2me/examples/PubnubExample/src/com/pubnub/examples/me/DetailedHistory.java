@@ -38,9 +38,9 @@ public class DetailedHistory extends PubnubCommand {
 
 
                 _pubnub.detailedHistory(txtChannel.getString(),
-                        Integer.parseInt(txtCount.getString()),
-                        cg.isSelected(0)?true:false,
-                        new Callback() {
+                                        Integer.parseInt(txtCount.getString()),
+                                        cg.isSelected(0)?true:false,
+                new Callback() {
                     public void successCallback(String channel, Object message) {
                         notifyUser(message.toString());
                     }
@@ -51,7 +51,8 @@ public class DetailedHistory extends PubnubCommand {
                 });
                 display.setCurrent(menu);
 
-            }});
+            }
+        });
 
 
     }

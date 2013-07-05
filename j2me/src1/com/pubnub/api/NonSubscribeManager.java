@@ -3,7 +3,7 @@ package com.pubnub.api;
 class NonSubscribeManager extends AbstractNonSubscribeManager {
 
     public NonSubscribeManager(String name, int connectionTimeout,
-            int requestTimeout) {
+                               int requestTimeout) {
         super(name, connectionTimeout, requestTimeout);
     }
 

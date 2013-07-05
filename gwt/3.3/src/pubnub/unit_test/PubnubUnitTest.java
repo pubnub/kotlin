@@ -17,11 +17,11 @@ public class PubnubUnitTest {
 
     private static boolean deliveryStatus = false;
     private Pubnub pubnub = new Pubnub(
-            "demo",
-            "demo",
-            "",
-            "",
-            true
+        "demo",
+        "demo",
+        "",
+        "",
+        true
     );
     private String channel = "hello_world";
     private int limit = 1;
@@ -126,7 +126,7 @@ public class PubnubUnitTest {
             e.printStackTrace();
         }
         pubnub.publish(channel, json);
-        while(!deliveryStatus);
+        while (!deliveryStatus);
         assertTrue(deliveryStatus);
         System.out.println("PASS: TestSubscribe");
     }
@@ -199,7 +199,7 @@ public class PubnubUnitTest {
         deliveryStatus = false;
         // Listen for Messages (Presence)
         pubnub.presence(args);
-        while(!deliveryStatus);
+        while (!deliveryStatus);
         assertTrue(deliveryStatus);
         System.out.println("PASS: TestPresence");
     }
@@ -285,15 +285,13 @@ public class PubnubUnitTest {
     }
 
     @Test
-    public void testUnencryptedDetailedHistory()
-    {
+    public void testUnencryptedDetailedHistory() {
         // Context setup for Detailed History
         pubnub.CIPHER_KEY = "";
         int total_msg = 10;
         long starttime = (long) pubnub.time();
         HashMap<Long, String> inputs = new HashMap<Long, String>();
-        for (int i = 0; i < total_msg / 2; i++)
-        {
+        for (int i = 0; i < total_msg / 2; i++) {
             String msg = Integer.toString(i);
             JSONObject json = new JSONObject();
             try {
@@ -308,8 +306,7 @@ public class PubnubUnitTest {
         }
 
         long midtime = (long) pubnub.time();
-        for (int i = total_msg / 2; i < total_msg; i++)
-        {
+        for (int i = total_msg / 2; i < total_msg; i++) {
             String msg = Integer.toString(i);
             JSONObject json = new JSONObject();
             try {
@@ -326,29 +323,27 @@ public class PubnubUnitTest {
         long endtime = (long)pubnub.time();
 
         // Get History
-         JSONArray response = pubnub.detailedHistory(channel, total_msg);
+        JSONArray response = pubnub.detailedHistory(channel, total_msg);
 
-         // Print Response from PubNub JSONP REST Service
-         System.out.println(response);
+        // Print Response from PubNub JSONP REST Service
+        System.out.println(response);
 
-         try {
-             assertNotNull(response);
-             System.out.println("PASS: TestUnencryptedDetailedHistory");
-         } catch (Exception e) {
-             fail("FAIL: TestUnencryptedDetailedHistory");
-         }
+        try {
+            assertNotNull(response);
+            System.out.println("PASS: TestUnencryptedDetailedHistory");
+        } catch (Exception e) {
+            fail("FAIL: TestUnencryptedDetailedHistory");
+        }
     }
 
     @Test
-    public void testEncryptedDetailedHistory()
-    {
+    public void testEncryptedDetailedHistory() {
         // Context setup for Detailed History
         pubnub.CIPHER_KEY = "enigma";
         int total_msg = 10;
         long starttime = (long) pubnub.time();
         HashMap<Long, String> inputs = new HashMap<Long, String>();
-        for (int i = 0; i < total_msg / 2; i++)
-        {
+        for (int i = 0; i < total_msg / 2; i++) {
             String msg = Integer.toString(i);
             JSONObject json = new JSONObject();
             try {
@@ -363,8 +358,7 @@ public class PubnubUnitTest {
         }
 
         long midtime = (long) pubnub.time();
-        for (int i = total_msg / 2; i < total_msg; i++)
-        {
+        for (int i = total_msg / 2; i < total_msg; i++) {
             String msg = Integer.toString(i);
             JSONObject json = new JSONObject();
             try {
@@ -381,29 +375,27 @@ public class PubnubUnitTest {
         long endtime = (long)pubnub.time();
 
         // Get History
-         JSONArray response = pubnub.detailedHistory(channel, total_msg);
+        JSONArray response = pubnub.detailedHistory(channel, total_msg);
 
-         // Print Response from PubNub JSONP REST Service
-         System.out.println(response);
+        // Print Response from PubNub JSONP REST Service
+        System.out.println(response);
 
-         try {
-             assertNotNull(response);
-             System.out.println("PASS: TestEncryptedDetailedHistory");
-         } catch (Exception e) {
-             fail("FAIL: TestEncryptedDetailedHistory");
-         }
+        try {
+            assertNotNull(response);
+            System.out.println("PASS: TestEncryptedDetailedHistory");
+        } catch (Exception e) {
+            fail("FAIL: TestEncryptedDetailedHistory");
+        }
     }
 
     @Test
-    public void testUnencryptedDetailedHistoryParams()
-    {
+    public void testUnencryptedDetailedHistoryParams() {
         // Context setup for Detailed History
         pubnub.CIPHER_KEY = "";
         int total_msg = 10;
         long starttime = (long) pubnub.time();
         HashMap<Long, String> inputs = new HashMap<Long, String>();
-        for (int i = 0; i < total_msg / 2; i++)
-        {
+        for (int i = 0; i < total_msg / 2; i++) {
             String msg = Integer.toString(i);
             JSONObject json = new JSONObject();
             try {
@@ -418,8 +410,7 @@ public class PubnubUnitTest {
         }
 
         long midtime = (long) pubnub.time();
-        for (int i = total_msg / 2; i < total_msg; i++)
-        {
+        for (int i = total_msg / 2; i < total_msg; i++) {
             String msg = Integer.toString(i);
             JSONObject json = new JSONObject();
             try {
@@ -441,41 +432,39 @@ public class PubnubUnitTest {
         response = pubnub.detailedHistory(channel, starttime, midtime, total_msg / 2, true);
         System.out.println(response);
         try {
-             assertNotNull(response);
-         } catch (Exception e) {
-             fail("FAIL: TestUnencryptedDetailedHistoryParams");
-         }
+            assertNotNull(response);
+        } catch (Exception e) {
+            fail("FAIL: TestUnencryptedDetailedHistoryParams");
+        }
 
         System.out.println("DetailedHistory with start & reverse = true");
         response = pubnub.detailedHistory(channel, midtime, -1, total_msg / 2, true);
         System.out.println(response);
         try {
-             assertNotNull(response);
-         } catch (Exception e) {
-             fail("FAIL: TestUnencryptedDetailedHistoryParams");
-         }
+            assertNotNull(response);
+        } catch (Exception e) {
+            fail("FAIL: TestUnencryptedDetailedHistoryParams");
+        }
 
         System.out.println("DetailedHistory with start & reverse = false");
         response = pubnub.detailedHistory(channel, midtime, -1, total_msg / 2, false);
         System.out.println(response);
         try {
-             assertNotNull(response);
-             System.out.println("PASS: TestUnencryptedDetailedHistoryParams");
-         } catch (Exception e) {
-             fail("FAIL: TestUnencryptedDetailedHistoryParams");
-         }
+            assertNotNull(response);
+            System.out.println("PASS: TestUnencryptedDetailedHistoryParams");
+        } catch (Exception e) {
+            fail("FAIL: TestUnencryptedDetailedHistoryParams");
+        }
     }
 
     @Test
-    public void testEncryptedDetailedHistoryParams()
-    {
+    public void testEncryptedDetailedHistoryParams() {
         // Context setup for Detailed History
         pubnub.CIPHER_KEY = "enigma";
         int total_msg = 10;
         long starttime = (long) pubnub.time();
         HashMap<Long, String> inputs = new HashMap<Long, String>();
-        for (int i = 0; i < total_msg / 2; i++)
-        {
+        for (int i = 0; i < total_msg / 2; i++) {
             String msg = Integer.toString(i);
             JSONObject json = new JSONObject();
             try {
@@ -490,8 +479,7 @@ public class PubnubUnitTest {
         }
 
         long midtime = (long) pubnub.time();
-        for (int i = total_msg / 2; i < total_msg; i++)
-        {
+        for (int i = total_msg / 2; i < total_msg; i++) {
             String msg = Integer.toString(i);
             JSONObject json = new JSONObject();
             try {
@@ -513,29 +501,29 @@ public class PubnubUnitTest {
         response = pubnub.detailedHistory(channel, starttime, midtime, total_msg / 2, true);
         System.out.println(response);
         try {
-             assertNotNull(response);
-         } catch (Exception e) {
-             fail("FAIL: TestEncryptedDetailedHistoryParams");
-         }
+            assertNotNull(response);
+        } catch (Exception e) {
+            fail("FAIL: TestEncryptedDetailedHistoryParams");
+        }
 
         System.out.println("DetailedHistory with start & reverse = true");
         response = pubnub.detailedHistory(channel, midtime, -1, total_msg / 2, true);
         System.out.println(response);
         try {
-             assertNotNull(response);
-         } catch (Exception e) {
-             fail("FAIL: TestEncryptedDetailedHistoryParams");
-         }
+            assertNotNull(response);
+        } catch (Exception e) {
+            fail("FAIL: TestEncryptedDetailedHistoryParams");
+        }
 
         System.out.println("DetailedHistory with start & reverse = false");
         response = pubnub.detailedHistory(channel, midtime, -1, total_msg / 2, false);
         System.out.println(response);
         try {
-             assertNotNull(response);
-             System.out.println("PASS: TestEncryptedDetailedHistoryParams");
-         } catch (Exception e) {
-             fail("FAIL: TestEncryptedDetailedHistoryParams");
-         }
+            assertNotNull(response);
+            System.out.println("PASS: TestEncryptedDetailedHistoryParams");
+        } catch (Exception e) {
+            fail("FAIL: TestEncryptedDetailedHistoryParams");
+        }
     }
 
     @Test

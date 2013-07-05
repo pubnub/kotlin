@@ -512,19 +512,19 @@ public class PubnubTest {
             @Override
             public void successCallback(String channel, Object message) {
                 pubnub.publish(channel, sendMessage,
-                        new PublishCallback(latch) {
-                            @Override
-                            public void successCallback(String channel,
-                                    Object message) {
-                                try {
-                                    Thread.sleep(5000);
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
-                                }
-                                pubnub.detailedHistory(channel, limit, hCb);
-                                super.successCallback(channel, message);
-                            }
-                        });
+                new PublishCallback(latch) {
+                    @Override
+                    public void successCallback(String channel,
+                    Object message) {
+                        try {
+                            Thread.sleep(5000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        pubnub.detailedHistory(channel, limit, hCb);
+                        super.successCallback(channel, message);
+                    }
+                });
                 super.successCallback(channel, message);
             }
         });
@@ -548,19 +548,19 @@ public class PubnubTest {
             @Override
             public void successCallback(String channel, Object message) {
                 pubnub.publish(channel, sendMessage,
-                        new PublishCallback(latch) {
-                            @Override
-                            public void successCallback(String channel,
-                                    Object message) {
-                                try {
-                                    Thread.sleep(5000);
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
-                                }
-                                pubnub.detailedHistory(channel, 100, hCb);
-                                super.successCallback(channel, message);
-                            }
-                        });
+                new PublishCallback(latch) {
+                    @Override
+                    public void successCallback(String channel,
+                    Object message) {
+                        try {
+                            Thread.sleep(5000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        pubnub.detailedHistory(channel, 100, hCb);
+                        super.successCallback(channel, message);
+                    }
+                });
                 super.successCallback(channel, message);
             }
         });
@@ -615,7 +615,7 @@ public class PubnubTest {
                     pubnub.unsubscribe(channel);
                     pubnub.publish(channel, 10, new PublishCallback(latch) {
                         public void successCallback(String channel,
-                                Object message) {
+                        Object message) {
                             try {
                                 Thread.sleep(2000);
                             } catch (InterruptedException e1) {
@@ -661,12 +661,12 @@ public class PubnubTest {
                 public void connectCallback(String channel, Object message) {
                     pubnub.publish(channel, 10, new PublishCallback(latch) {
                         public void successCallback(String channel,
-                                Object message) {
+                        Object message) {
                             pubnub.unsubscribe(channel);
                             pubnub.publish(channel, 20, new PublishCallback(
-                                    latch) {
+                            latch) {
                                 public void successCallback(String channel,
-                                        Object message) {
+                                Object message) {
                                     try {
                                         Thread.sleep(2000);
                                     } catch (InterruptedException e1) {
@@ -716,7 +716,7 @@ public class PubnubTest {
                     pubnub.unsubscribe(channel);
                     pubnub.publish(channel, 10, new PublishCallback(latch) {
                         public void successCallback(String channel,
-                                Object message) {
+                        Object message) {
                             try {
                                 Thread.sleep(5000);
                             } catch (InterruptedException e1) {
@@ -762,12 +762,12 @@ public class PubnubTest {
                 public void connectCallback(String channel, Object message) {
                     pubnub.publish(channel, 10, new PublishCallback(latch) {
                         public void successCallback(String channel,
-                                Object message) {
+                        Object message) {
                             pubnub.unsubscribe(channel);
                             pubnub.publish(channel, 20, new PublishCallback(
-                                    latch) {
+                            latch) {
                                 public void successCallback(String channel,
-                                        Object message) {
+                                Object message) {
                                     try {
                                         Thread.sleep(5000);
                                     } catch (InterruptedException e1) {
@@ -819,7 +819,7 @@ public class PubnubTest {
                     pubnub.unsubscribe(channel);
                     pubnub.publish(channel, 10, new PublishCallback(latch) {
                         public void successCallback(String channel,
-                                Object message) {
+                        Object message) {
                             try {
                                 Thread.sleep(2000);
                             } catch (InterruptedException e1) {
@@ -866,7 +866,7 @@ public class PubnubTest {
                     pubnub.unsubscribe(channel);
                     pubnub.publish(channel, 10, new PublishCallback(latch) {
                         public void successCallback(String channel,
-                                Object message) {
+                        Object message) {
                             try {
                                 Thread.sleep(2000);
                             } catch (InterruptedException e1) {
@@ -913,12 +913,12 @@ public class PubnubTest {
                 public void connectCallback(String channel, Object message) {
                     pubnub.publish(channel, 10, new PublishCallback(latch) {
                         public void successCallback(String channel,
-                                Object message) {
+                        Object message) {
                             pubnub.unsubscribe(channel);
                             pubnub.publish(channel, 20, new PublishCallback(
-                                    latch) {
+                            latch) {
                                 public void successCallback(String channel,
-                                        Object message) {
+                                Object message) {
                                     try {
                                         Thread.sleep(2000);
                                     } catch (InterruptedException e1) {
@@ -967,12 +967,12 @@ public class PubnubTest {
                 public void connectCallback(String channel, Object message) {
                     pubnub.publish(channel, 10, new PublishCallback(latch) {
                         public void successCallback(String channel,
-                                Object message) {
+                        Object message) {
                             pubnub.unsubscribe(channel);
                             pubnub.publish(channel, 20, new PublishCallback(
-                                    latch) {
+                            latch) {
                                 public void successCallback(String channel,
-                                        Object message) {
+                                Object message) {
                                     try {
                                         Thread.sleep(2000);
                                     } catch (InterruptedException e1) {
@@ -1044,13 +1044,13 @@ public class PubnubTest {
 
                         @Override
                         public void successCallback(String channel,
-                                Object message) {
+                        Object message) {
                             stats.put("count", (Integer) stats.get("count") + 1);
                         }
 
                         @Override
                         public void errorCallback(String channel,
-                                PubnubError error) {
+                        PubnubError error) {
 
                         }
                     });
@@ -1081,7 +1081,7 @@ public class PubnubTest {
                     public void connectCallback(String channel, Object message) {
 
                         stats.put("connects",
-                                (Integer) (stats.get("connects")) + 1);
+                                  (Integer) (stats.get("connects")) + 1);
                         if ((Integer) stats.get("connects") >= count)
                             startPublish();
                     }
@@ -1428,13 +1428,13 @@ public class PubnubTest {
 
                         @Override
                         public void successCallback(String channel,
-                                Object message) {
+                        Object message) {
                             stats.put("count", (Integer) stats.get("count") + 1);
                         }
 
                         @Override
                         public void errorCallback(String channel,
-                                PubnubError error) {
+                        PubnubError error) {
 
                         }
                     });
@@ -1465,7 +1465,7 @@ public class PubnubTest {
                     public void connectCallback(String channel, Object message) {
 
                         stats.put("connects",
-                                (Integer) (stats.get("connects")) + 1);
+                                  (Integer) (stats.get("connects")) + 1);
                         if ((Integer) stats.get("connects") >= count) {
                             startPublish();
                             new Thread(new DarThread()).start();
@@ -1574,13 +1574,13 @@ public class PubnubTest {
 
                         @Override
                         public void successCallback(String channel,
-                                Object message) {
+                        Object message) {
                             stats.put("count", (Integer) stats.get("count") + 1);
                         }
 
                         @Override
                         public void errorCallback(String channel,
-                                PubnubError error) {
+                        PubnubError error) {
 
                         }
                     });
@@ -1611,7 +1611,7 @@ public class PubnubTest {
                     public void connectCallback(String channel, Object message) {
 
                         stats.put("connects",
-                                (Integer) (stats.get("connects")) + 1);
+                                  (Integer) (stats.get("connects")) + 1);
                         if ((Integer) stats.get("connects") >= count) {
                             startPublish();
                             new Thread(new DarThread()).start();
@@ -1665,8 +1665,8 @@ public class PubnubTest {
         final CountDownLatch latch = new CountDownLatch(1);
         UlsCallback ulscb = new UlsCallback(latch);
         Pubnub pubnub = new Pubnub("pub-c-a2650a22-deb1-44f5-aa87-1517049411d5",
-                "sub-c-a478dd2a-c33d-11e2-883f-02ee2ddab7fe",
-                "sec-c-YjFmNzYzMGMtYmI3NC00NzJkLTlkYzYtY2MwMzI4YTJhNDVh");
+                                   "sub-c-a478dd2a-c33d-11e2-883f-02ee2ddab7fe",
+                                   "sec-c-YjFmNzYzMGMtYmI3NC00NzJkLTlkYzYtY2MwMzI4YTJhNDVh");
         pubnub.setDomain("pubnub.co");
         pubnub.setOrigin("uls-test");
         pubnub.setCacheBusting(false);
@@ -1685,8 +1685,8 @@ public class PubnubTest {
         final CountDownLatch latch = new CountDownLatch(1);
         UlsCallback ulscb = new UlsCallback(latch);
         Pubnub pubnub = new Pubnub("pub-c-a2650a22-deb1-44f5-aa87-1517049411d5",
-                "sub-c-a478dd2a-c33d-11e2-883f-02ee2ddab7fe",
-                "sec-c-YjFmNzYzMGMtYmI3NC00NzJkLTlkYzYtY2MwMzI4YTJhNDVh");
+                                   "sub-c-a478dd2a-c33d-11e2-883f-02ee2ddab7fe",
+                                   "sec-c-YjFmNzYzMGMtYmI3NC00NzJkLTlkYzYtY2MwMzI4YTJhNDVh");
         pubnub.setDomain("pubnub.co");
         pubnub.setOrigin("uls-test");
         pubnub.setCacheBusting(false);
@@ -1705,8 +1705,8 @@ public class PubnubTest {
         final CountDownLatch latch = new CountDownLatch(1);
         UlsCallback ulscb = new UlsCallback(latch);
         Pubnub pubnub = new Pubnub("pub-c-a2650a22-deb1-44f5-aa87-1517049411d5",
-                "sub-c-a478dd2a-c33d-11e2-883f-02ee2ddab7fe",
-                "sec-c-YjFmNzYzMGMtYmI3NC00NzJkLTlkYzYtY2MwMzI4YTJhNDVh");
+                                   "sub-c-a478dd2a-c33d-11e2-883f-02ee2ddab7fe",
+                                   "sec-c-YjFmNzYzMGMtYmI3NC00NzJkLTlkYzYtY2MwMzI4YTJhNDVh");
         pubnub.setDomain("pubnub.co");
         pubnub.setOrigin("uls-test");
         pubnub.setCacheBusting(false);
@@ -1725,8 +1725,8 @@ public class PubnubTest {
         final CountDownLatch latch = new CountDownLatch(1);
         UlsCallback ulscb = new UlsCallback(latch);
         Pubnub pubnub = new Pubnub("pub-c-a2650a22-deb1-44f5-aa87-1517049411d5",
-                "sub-c-a478dd2a-c33d-11e2-883f-02ee2ddab7fe",
-                "sec-c-YjFmNzYzMGMtYmI3NC00NzJkLTlkYzYtY2MwMzI4YTJhNDVh");
+                                   "sub-c-a478dd2a-c33d-11e2-883f-02ee2ddab7fe",
+                                   "sec-c-YjFmNzYzMGMtYmI3NC00NzJkLTlkYzYtY2MwMzI4YTJhNDVh");
         pubnub.setDomain("pubnub.co");
         pubnub.setOrigin("uls-test");
         pubnub.setCacheBusting(false);
@@ -1745,8 +1745,8 @@ public class PubnubTest {
         final CountDownLatch latch = new CountDownLatch(1);
         UlsCallback ulscb = new UlsCallback(latch);
         Pubnub pubnub = new Pubnub("pub-c-a2650a22-deb1-44f5-aa87-1517049411d5",
-                "sub-c-a478dd2a-c33d-11e2-883f-02ee2ddab7fe",
-                "sec-c-YjFmNzYzMGMtYmI3NC00NzJkLTlkYzYtY2MwMzI4YTJhNDVh");
+                                   "sub-c-a478dd2a-c33d-11e2-883f-02ee2ddab7fe",
+                                   "sec-c-YjFmNzYzMGMtYmI3NC00NzJkLTlkYzYtY2MwMzI4YTJhNDVh");
         pubnub.setDomain("pubnub.co");
         pubnub.setOrigin("uls-test");
         pubnub.setCacheBusting(false);

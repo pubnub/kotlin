@@ -65,12 +65,12 @@ public class PubnubPublishTest {
                 @Override
                 public void successCallback(String channel, Object message) {
                     notifyUser("RECV : " + channel + " : " + message.getClass()
-                            + " : " + message.toString());
+                               + " : " + message.toString());
                 }
                 @Override
                 public void errorCallback(String channel, PubnubError error) {
                     notifyUser("RECV : " + channel + " : "
-                            + " : " + error.toString());
+                               + " : " + error.toString());
                 }
 
             });
@@ -78,12 +78,12 @@ public class PubnubPublishTest {
                 @Override
                 public void successCallback(String channel, Object message) {
                     notifyUser("RECV : " + channel + " : " + message.getClass()
-                            + " : " + message.toString());
+                               + " : " + message.toString());
                 }
                 @Override
                 public void errorCallback(String channel, PubnubError error) {
                     notifyUser("RECV : " + channel + " : "
-                            + " : " + error.toString());
+                               + " : " + error.toString());
                 }
             });
 
@@ -122,12 +122,12 @@ public class PubnubPublishTest {
             @Override
             public void successCallback(String channel, Object message) {
                 notifyUser("SENT : " + channel + " : " + msg.getClass() + " : "
-                        + message.toString());
+                           + message.toString());
             }
             @Override
             public void errorCallback(String channel, PubnubError error) {
                 notifyUser("SENT : " + channel + " : "
-                        + error.toString());
+                           + error.toString());
             }
         });
     }
@@ -138,12 +138,12 @@ public class PubnubPublishTest {
             @Override
             public void successCallback(String channel, Object message) {
                 notifyUser("HISTORY : " + channel + " : " + message.getClass()
-                        + " : " + message.toString());
+                           + " : " + message.toString());
             }
             @Override
             public void errorCallback(String channel, PubnubError error) {
                 notifyUser("HISTORY : " + channel
-                        + " : " + error.toString());
+                           + " : " + error.toString());
             }
         });
     }
@@ -154,12 +154,12 @@ public class PubnubPublishTest {
             @Override
             public void successCallback(String channel, Object message) {
                 notifyUser("DETAILED HISTORY : " + channel + " : "
-                        + message.getClass() + " : " + message.toString());
+                           + message.getClass() + " : " + message.toString());
             }
             @Override
             public void errorCallback(String channel, PubnubError error) {
                 notifyUser("DETAILED HISTORY : " + channel + " : "
-                        + " : " + error.toString());
+                           + " : " + error.toString());
             }
         });
     }

@@ -46,7 +46,7 @@ public class JSONML {
      * @throws JSONException
      */
     private static Object parse(XMLTokener x, boolean arrayForm,
-            JSONArray ja) throws JSONException {
+                                JSONArray ja) throws JSONException {
         String     attribute;
         char       c;
         String       closeTag = null;
@@ -74,8 +74,8 @@ public class JSONML {
                         token = x.nextToken();
                         if (!(token instanceof String)) {
                             throw new JSONException(
-                                    "Expected a closing name instead of '" +
-                                    token + "'.");
+                                "Expected a closing name instead of '" +
+                                token + "'.");
                         }
                         if (x.nextToken() != XML.GT) {
                             throw x.syntaxError("Misshaped close tag");
@@ -200,7 +200,7 @@ public class JSONML {
                         if (closeTag != null) {
                             if (!closeTag.equals(tagName)) {
                                 throw x.syntaxError("Mismatched '" + tagName +
-                                        "' and '" + closeTag + "'");
+                                                    "' and '" + closeTag + "'");
                             }
                             tagName = null;
                             if (!arrayForm && newja.length() > 0) {
@@ -219,7 +219,7 @@ public class JSONML {
             } else {
                 if (ja != null) {
                     ja.put(token instanceof String ?
-                            JSONObject.stringToValue((String)token) : token);
+                           JSONObject.stringToValue((String)token) : token);
                 }
             }
         }
@@ -275,7 +275,7 @@ public class JSONML {
      * @throws JSONException
      */
     public static JSONObject toJSONObject(XMLTokener x) throws JSONException {
-           return (JSONObject)parse(x, false, null);
+        return (JSONObject)parse(x, false, null);
     }
     /**
      * Convert a well-formed (but not necessarily valid) XML string into a

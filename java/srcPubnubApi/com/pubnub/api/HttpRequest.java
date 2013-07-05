@@ -39,7 +39,7 @@ class HttpRequest {
     }
 
     public HttpRequest(String[] urlComponents, Hashtable params,
-            Hashtable headers, ResponseHandler rh) {
+                       Hashtable headers, ResponseHandler rh) {
         this.setUrlComponents(urlComponents);
         this.setParams(params);
         this.setHeaders(headers);
@@ -47,7 +47,7 @@ class HttpRequest {
     }
 
     public HttpRequest(String[] urlComponents, Hashtable params,
-            ResponseHandler rh) {
+                       ResponseHandler rh) {
         this.setUrlComponents(urlComponents);
         this.setParams(params);
         this.setResponseHandler(rh);
@@ -112,9 +112,9 @@ class HttpRequest {
 
                 String key = (String) paramsKeys.nextElement();
                 sb.append(PubnubUtil.urlEncode((String) key))
-                        .append("=")
-                        .append(PubnubUtil.urlEncode((String) this.params
-                                .get(key)));
+                .append("=")
+                .append(PubnubUtil.urlEncode((String) this.params
+                                             .get(key)));
             }
 
             url = sb.toString();

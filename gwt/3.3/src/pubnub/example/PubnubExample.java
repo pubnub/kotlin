@@ -48,11 +48,11 @@ public class PubnubExample {
         int publish_message_count = 1;
 
         Pubnub pubnub = new Pubnub(
-                publish_key,
-                subscribe_key,
-                secret_key,
-                cipher_key,
-                true
+            publish_key,
+            subscribe_key,
+            secret_key,
+            cipher_key,
+            true
         );
         int count = 0;
         while (true) {
@@ -112,11 +112,11 @@ public class PubnubExample {
         int limit = 1;
 
         Pubnub pubnub = new Pubnub(
-                publish_key,
-                subscribe_key,
-                secret_key,
-                cipher_key,
-                true
+            publish_key,
+            subscribe_key,
+            secret_key,
+            cipher_key,
+            true
         );
 
         HashMap<String, Object> args = new HashMap<String, Object>(2);
@@ -156,11 +156,11 @@ public class PubnubExample {
         int    count = 1;
 
         Pubnub pubnub = new Pubnub(
-                publish_key,
-                subscribe_key,
-                secret_key,
-                cipher_key,
-                true
+            publish_key,
+            subscribe_key,
+            secret_key,
+            cipher_key,
+            true
         );
 
         // Get History
@@ -194,11 +194,11 @@ public class PubnubExample {
         String cipher_key = ""; // (Cipher key is optional)
 
         Pubnub pubnub = new Pubnub(
-                publish_key,
-                subscribe_key,
-                secret_key,
-                cipher_key,
-                true
+            publish_key,
+            subscribe_key,
+            secret_key,
+            cipher_key,
+            true
         );
 
         // Print Server Time
@@ -213,11 +213,11 @@ public class PubnubExample {
         String channel = "hello_world";
 
         Pubnub pubnub = new Pubnub(
-                publish_key,
-                subscribe_key,
-                secret_key,
-                cipher_key,
-                true
+            publish_key,
+            subscribe_key,
+            secret_key,
+            cipher_key,
+            true
         );
 
         // Callback Interface when a Message is Received
@@ -247,7 +247,7 @@ public class PubnubExample {
                     e.printStackTrace();
                 }
                 // Continue Listening?
-              return true;
+                return true;
             }
 
             @Override
@@ -294,11 +294,11 @@ public class PubnubExample {
         String channel = "hello_world";
 
         Pubnub pubnub = new Pubnub(
-                publish_key,
-                subscribe_key,
-                secret_key,
-                cipher_key,
-                true
+            publish_key,
+            subscribe_key,
+            secret_key,
+            cipher_key,
+            true
         );
 
         // Callback Interface when a Message is Received
@@ -328,7 +328,7 @@ public class PubnubExample {
                     e.printStackTrace();
                 }
                 // Continue Listening?
-              return true;
+                return true;
             }
 
             @Override
@@ -375,11 +375,11 @@ public class PubnubExample {
         String channel = "hello_world";
 
         Pubnub pubnub = new Pubnub(
-                publish_key,
-                subscribe_key,
-                secret_key,
-                cipher_key,
-                true
+            publish_key,
+            subscribe_key,
+            secret_key,
+            cipher_key,
+            true
         );
 
         // Get Here Now

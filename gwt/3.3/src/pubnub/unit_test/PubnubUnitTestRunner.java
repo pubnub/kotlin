@@ -11,12 +11,9 @@ public class PubnubUnitTestRunner {
         for (Failure failure : result.getFailures()) {
             System.out.println(failure.toString());
         }
-        if (result.getFailureCount() != 0)
-        {
+        if (result.getFailureCount() != 0) {
             System.out.println("Pubnub Unit Test Failed: # of failures - " + result.getFailureCount());
-        }
-        else
-        {
+        } else {
             System.out.println("Pubnub Unit Test Completed Successfully.");
         }
     }

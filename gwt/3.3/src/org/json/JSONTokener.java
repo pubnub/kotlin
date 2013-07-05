@@ -54,7 +54,7 @@ public class JSONTokener {
      */
     public JSONTokener(Reader reader) {
         this.reader = reader.markSupported() ?
-                reader : new BufferedReader(reader);
+                      reader : new BufferedReader(reader);
         this.eof = false;
         this.usePrevious = false;
         this.previous = 0;
@@ -177,7 +177,7 @@ public class JSONTokener {
         char n = next();
         if (n != c) {
             throw syntaxError("Expected '" + c + "' and instead saw '" +
-                    n + "'");
+                              n + "'");
         }
         return n;
     }
@@ -192,23 +192,23 @@ public class JSONTokener {
      *   Substring bounds error if there are not
      *   n characters remaining in the source string.
      */
-     public String next(int n) throws JSONException {
-         if (n == 0) {
-             return "";
-         }
+    public String next(int n) throws JSONException {
+        if (n == 0) {
+            return "";
+        }
 
-         char[] buffer = new char[n];
-         int pos = 0;
+        char[] buffer = new char[n];
+        int pos = 0;
 
-         while (pos < n) {
-             buffer[pos] = next();
-             if (end()) {
-                 throw syntaxError("Substring bounds error");
-             }
-             pos += 1;
-         }
-         return new String(buffer);
-     }
+        while (pos < n) {
+            buffer[pos] = next();
+            if (end()) {
+                throw syntaxError("Substring bounds error");
+            }
+            pos += 1;
+        }
+        return new String(buffer);
+    }
 
 
     /**
@@ -344,16 +344,16 @@ public class JSONTokener {
         String s;
 
         switch (c) {
-            case '"':
-            case '\'':
-                return nextString(c);
-            case '{':
-                back();
-                return new JSONObject(this);
-            case '[':
-            case '(':
-                back();
-                return new JSONArray(this);
+        case '"':
+        case '\'':
+            return nextString(c);
+        case '{':
+            back();
+            return new JSONObject(this);
+        case '[':
+        case '(':
+            back();
+            return new JSONArray(this);
         }
 
         /*

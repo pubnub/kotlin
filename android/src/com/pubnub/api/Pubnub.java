@@ -26,7 +26,7 @@ public class Pubnub extends PubnubCore {
      *            SSL on ?
      */
     public Pubnub(String publish_key, String subscribe_key, String secret_key,
-            String cipher_key, boolean ssl_on) {
+                  String cipher_key, boolean ssl_on) {
         super(publish_key, subscribe_key, secret_key, cipher_key, ssl_on);
     }
 
@@ -43,7 +43,7 @@ public class Pubnub extends PubnubCore {
      *            SSL on ?
      */
     public Pubnub(String publish_key, String subscribe_key, String secret_key,
-            boolean ssl_on) {
+                  boolean ssl_on) {
         super(publish_key, subscribe_key, secret_key, "", ssl_on);
     }
 
@@ -118,7 +118,7 @@ public class Pubnub extends PubnubCore {
 
     protected String getUserAgent() {
         return "(Android " + android.os.Build.VERSION.RELEASE +
-                "; " + android.os.Build.MODEL +
-                " Build) PubNub-Java/Android/" + VERSION;
+               "; " + android.os.Build.MODEL +
+               " Build) PubNub-Java/Android/" + VERSION;
     }
 }
