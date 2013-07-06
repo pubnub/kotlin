@@ -33,6 +33,7 @@ abstract class PubnubCore {
     protected String SUBSCRIBE_KEY = "";
     protected String SECRET_KEY = "";
     private String CIPHER_KEY = "";
+    private String IV = null;
     private volatile String AUTH_STR = null;
     private volatile boolean CACHE_BUSTING = true;
     protected Hashtable params;
@@ -191,29 +192,6 @@ abstract class PubnubCore {
         return this.resumeOnReconnect;
     }
 
-    /**
-     * Convert input String to JSONObject, JSONArray, or String
-     *
-     * @param str
-     *            JSON data in string format
-     *
-     * @return JSONArray or JSONObject or String
-     */
-    static Object stringToJSON(String str) {
-        Object obj = str;
-        try {
-            JSONArray jsarr = new JSONArray(str);
-            obj = jsarr;
-        } catch (JSONException e) {
-            try {
-                JSONObject jsobj = new JSONObject(str);
-                obj = jsobj;
-            } catch (JSONException ex) {
-            }
-        }
-        return obj;
-    }
-
     protected abstract String uuid();
 
     /**
@@ -224,6 +202,29 @@ abstract class PubnubCore {
      */
     public void setUUID(String uuid) {
         this.UUID = uuid;
+    }
+
+    /**
+    *
+    * Constructor for Pubnub Class
+    *
+    * @param publish_key
+    *            Publish Key
+    * @param subscribe_key
+    *            Subscribe Key
+    * @param secret_key
+    *            Secret Key
+    * @param cipher_key
+    *            Cipher Key
+    * @param ssl_on
+    *            SSL enabled ?
+    * @param initializatoin_vector
+    *            Initialization vector
+    */
+
+    public PubnubCore(String publish_key, String subscribe_key,
+                      String secret_key, String cipher_key, boolean ssl_on, String initialization_vector) {
+        this.init(publish_key, subscribe_key, secret_key, cipher_key, ssl_on, initialization_vector);
     }
 
     /**
@@ -311,6 +312,22 @@ abstract class PubnubCore {
     }
 
     /**
+    *
+    * Initialize PubNub Object State.
+    *
+    * @param publish_key
+    * @param subscribe_key
+    * @param secret_key
+    * @param cipher_key
+    * @param ssl_on
+    */
+    private void init(String publish_key, String subscribe_key,
+                      String secret_key, String cipher_key, boolean ssl_on) {
+        this.init(publish_key, subscribe_key, secret_key, cipher_key, ssl_on, null);
+    }
+
+
+    /**
      *
      * Initialize PubNub Object State.
      *
@@ -321,7 +338,7 @@ abstract class PubnubCore {
      * @param ssl_on
      */
     private void init(String publish_key, String subscribe_key,
-                      String secret_key, String cipher_key, boolean ssl_on) {
+                      String secret_key, String cipher_key, boolean ssl_on, String initialization_vector) {
         this.PUBLISH_KEY = publish_key;
         this.SUBSCRIBE_KEY = subscribe_key;
         this.SECRET_KEY = secret_key;
@@ -507,7 +524,7 @@ abstract class PubnubCore {
 
         if (this.CIPHER_KEY.length() > 0) {
             // Encrypt Message
-            PubnubCrypto pc = new PubnubCrypto(this.CIPHER_KEY);
+            PubnubCrypto pc = new PubnubCrypto(this.CIPHER_KEY, this.IV);
             try {
                 msgStr = "\"" + pc.encrypt(msgStr) + "\"";
             } catch (DataLengthException e) {
@@ -1186,11 +1203,11 @@ abstract class PubnubCore {
 
         if (CIPHER_KEY.length() > 0) {
             for (int i = 0; i < messages.length(); i++) {
-                PubnubCrypto pc = new PubnubCrypto(CIPHER_KEY);
+                PubnubCrypto pc = new PubnubCrypto(CIPHER_KEY, IV);
 
                 String message;
                 message = pc.decrypt(messages.get(i).toString());
-                messages.put(i, stringToJSON(message));
+                messages.put(i, PubnubUtil.stringToJSON(message));
             }
         }
     }
@@ -1330,7 +1347,7 @@ abstract class PubnubCore {
                                         && !_channel.name
                                 .endsWith(PRESENCE_SUFFIX)) {
                                     PubnubCrypto pc = new PubnubCrypto(
-                                        CIPHER_KEY);
+                                        CIPHER_KEY, IV);
                                     try {
                                         String message = pc
                                                          .decrypt(messages
@@ -1339,7 +1356,7 @@ abstract class PubnubCore {
                                         if (!isWorkerDead(hreq))  _channel.callback
                                             .successCallback(
                                                 _channel.name,
-                                                stringToJSON(message));
+                                                PubnubUtil.stringToJSON(message));
                                     } catch (DataLengthException e) {
                                         if (!isWorkerDead(hreq)) _channel.callback
                                             .errorCallback(
@@ -1400,7 +1417,7 @@ abstract class PubnubCore {
                                         && !_channel.name
                                 .endsWith(PRESENCE_SUFFIX)) {
                                     PubnubCrypto pc = new PubnubCrypto(
-                                        CIPHER_KEY);
+                                        CIPHER_KEY, IV);
                                     try {
                                         String message = pc
                                                          .decrypt(messages
@@ -1409,7 +1426,7 @@ abstract class PubnubCore {
                                         if (!isWorkerDead(hreq)) _channel.callback
                                             .successCallback(
                                                 _channel.name,
-                                                stringToJSON(message));
+                                                PubnubUtil.stringToJSON(message));
                                     } catch (DataLengthException e) {
                                         if (!isWorkerDead(hreq)) _channel.callback
                                             .errorCallback(

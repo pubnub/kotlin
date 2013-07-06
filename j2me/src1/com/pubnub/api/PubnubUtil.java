@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
+import org.json.me.*;
 
 public class PubnubUtil extends PubnubUtilCore {
 
@@ -121,6 +122,26 @@ public class PubnubUtil extends PubnubUtilCore {
         }
 
         return en;
+    }
+
+    /**
+     * Convert input String to JSONObject, JSONArray, or String
+     *
+     * @param str
+     *            JSON data in string format
+     *
+     * @return JSONArray or JSONObject or String
+     */
+    static Object stringToJSON(String str) {
+        try {
+            return new JSONArray(str);
+        } catch (JSONException e) {
+        }
+        try {
+            return new JSONObject(str);
+        } catch (JSONException ex) {
+        }
+        return str;
     }
     private static String _dontNeedEncoding = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ -_.*";
 }

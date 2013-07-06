@@ -39,60 +39,54 @@ public class PubnubDemoConsole {
         notifyUser("Enter the message for publish. To exit loop enter QUIT");
         String message = "";
 
+        Callback cb = new Callback() {
+            @Override
+            public void successCallback(String channel, Object message) {
+                notifyUser("PUBLISH : " + message);
+            }
+
+            @Override
+            public void errorCallback(String channel, PubnubError error) {
+                notifyUser("PUBLISH : " + error);
+            }
+        };
+
         while (true) {
             Hashtable args = new Hashtable(2);
             message = reader.nextLine();
             if (message.equalsIgnoreCase("QUIT")) {
                 break;
             }
-            if (args.get("message") == null) {
-                try {
-                    Integer i = Integer.parseInt(message);
-                    args.put("message", i);
-                } catch (Exception e) {
 
-                }
+            try {
+                Integer i = Integer.parseInt(message);
+                pubnub.publish(channel, i, cb);
+                continue;
+            } catch (Exception e) {
+
             }
-            if (args.get("message") == null) {
-                try {
-                    Double d = Double.parseDouble(message);
-                    args.put("message", d);
-                } catch (Exception e) {
+            try {
+                Double d = Double.parseDouble(message);
+                pubnub.publish(channel, d, cb);
+                continue;
+            } catch (Exception e) {
 
-                }
             }
-            if (args.get("message") == null) {
-                try {
-                    JSONArray js = new JSONArray(message);
-                    args.put("message", js);
-                } catch (Exception e) {
+            try {
+                JSONArray js = new JSONArray(message);
+                pubnub.publish(channel, js, cb);
+                continue;
+            } catch (Exception e) {
 
-                }
             }
-            if (args.get("message") == null) {
-                try {
-                    JSONObject js = new JSONObject(message);
-                    args.put("message", js);
-                } catch (Exception e) {
+            try {
+                JSONObject js = new JSONObject(message);
+                pubnub.publish(channel, js, cb);
+                continue;
+            } catch (Exception e) {
 
-                }
             }
-            if (args.get("message") == null) {
-                args.put("message", message);
-            }
-
-            args.put("channel", channel); // Channel Name
-            pubnub.publish(args, new Callback() {
-                @Override
-                public void successCallback(String channel, Object message) {
-                    notifyUser("PUBLISH : " + message);
-                }
-
-                @Override
-                public void errorCallback(String channel, PubnubError error) {
-                    notifyUser("PUBLISH : " + error);
-                }
-            });
+            pubnub.publish(channel, message, cb);
         }
 
     }
