@@ -23,12 +23,12 @@ public class Test {
         Object o;
         String s;
 
-/**
- *  Obj is a typical class that implements JSONString. It also
- *  provides some beanie methods that can be used to
- *  construct a JSONObject. It also demonstrates constructing
- *  a JSONObject with an array of names.
- */
+        /**
+         *  Obj is a typical class that implements JSONString. It also
+         *  provides some beanie methods that can be used to
+         *  construct a JSONObject. It also demonstrates constructing
+         *  a JSONObject with an array of names.
+         */
         class Obj implements JSONString {
             public String aString;
             public double aNumber;
@@ -62,11 +62,11 @@ public class Test {
 
             public String toJSONString() {
                 return "{" + JSONObject.quote(this.aString) + ":" +
-                JSONObject.doubleToString(this.aNumber) + "}";
+                       JSONObject.doubleToString(this.aNumber) + "}";
             }
             public String toString() {
                 return this.getString() + " " + this.getNumber() + " " +
-                        this.isBoolean() + "." + this.getBENT() + " " + this.getX();
+                       this.isBoolean() + "." + this.getBENT() + " " + this.getX();
             }
         }
 
@@ -148,37 +148,37 @@ public class Test {
             jj = new JSONStringer();
             s = jj
                 .object()
-                    .key("single")
-                    .value("MARIE HAA'S")
-                    .key("Johnny")
-                    .value("MARIE HAA\\'S")
-                    .key("foo")
-                    .value("bar")
-                    .key("baz")
-                    .array()
-                        .object()
-                            .key("quux")
-                            .value("Thanks, Josh!")
-                        .endObject()
-                    .endArray()
-                    .key("obj keys")
-                    .value(JSONObject.getNames(obj))
+                .key("single")
+                .value("MARIE HAA'S")
+                .key("Johnny")
+                .value("MARIE HAA\\'S")
+                .key("foo")
+                .value("bar")
+                .key("baz")
+                .array()
+                .object()
+                .key("quux")
+                .value("Thanks, Josh!")
                 .endObject()
-            .toString();
+                .endArray()
+                .key("obj keys")
+                .value(JSONObject.getNames(obj))
+                .endObject()
+                .toString();
             System.out.println(s);
 
             System.out.println(new JSONStringer()
-                .object()
-                    .key("a")
-                    .array()
-                        .array()
-                            .array()
-                                .value("b")
-                            .endArray()
-                        .endArray()
-                    .endArray()
-                .endObject()
-                .toString());
+                               .object()
+                               .key("a")
+                               .array()
+                               .array()
+                               .array()
+                               .value("b")
+                               .endArray()
+                               .endArray()
+                               .endArray()
+                               .endObject()
+                               .toString());
 
             jj = new JSONStringer();
             jj.array();
@@ -341,24 +341,24 @@ public class Test {
             System.out.println("");
 
             j = XML.toJSONObject("<?xml version='1.0' encoding='UTF-8'?>"+"\n\n"+"<SOAP-ENV:Envelope"+
-              " xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\""+
-              " xmlns:xsi=\"http://www.w3.org/1999/XMLSchema-instance\""+
-              " xmlns:xsd=\"http://www.w3.org/1999/XMLSchema\">"+
-              "<SOAP-ENV:Body><ns1:doGoogleSearch"+
-              " xmlns:ns1=\"urn:GoogleSearch\""+
-              " SOAP-ENV:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">"+
-              "<key xsi:type=\"xsd:string\">GOOGLEKEY</key> <q"+
-              " xsi:type=\"xsd:string\">'+search+'</q> <start"+
-              " xsi:type=\"xsd:int\">0</start> <maxResults"+
-              " xsi:type=\"xsd:int\">10</maxResults> <filter"+
-              " xsi:type=\"xsd:boolean\">true</filter> <restrict"+
-              " xsi:type=\"xsd:string\"></restrict> <safeSearch"+
-              " xsi:type=\"xsd:boolean\">false</safeSearch> <lr"+
-              " xsi:type=\"xsd:string\"></lr> <ie"+
-              " xsi:type=\"xsd:string\">latin1</ie> <oe"+
-              " xsi:type=\"xsd:string\">latin1</oe>"+
-              "</ns1:doGoogleSearch>"+
-              "</SOAP-ENV:Body></SOAP-ENV:Envelope>");
+                                 " xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\""+
+                                 " xmlns:xsi=\"http://www.w3.org/1999/XMLSchema-instance\""+
+                                 " xmlns:xsd=\"http://www.w3.org/1999/XMLSchema\">"+
+                                 "<SOAP-ENV:Body><ns1:doGoogleSearch"+
+                                 " xmlns:ns1=\"urn:GoogleSearch\""+
+                                 " SOAP-ENV:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">"+
+                                 "<key xsi:type=\"xsd:string\">GOOGLEKEY</key> <q"+
+                                 " xsi:type=\"xsd:string\">'+search+'</q> <start"+
+                                 " xsi:type=\"xsd:int\">0</start> <maxResults"+
+                                 " xsi:type=\"xsd:int\">10</maxResults> <filter"+
+                                 " xsi:type=\"xsd:boolean\">true</filter> <restrict"+
+                                 " xsi:type=\"xsd:string\"></restrict> <safeSearch"+
+                                 " xsi:type=\"xsd:boolean\">false</safeSearch> <lr"+
+                                 " xsi:type=\"xsd:string\"></lr> <ie"+
+                                 " xsi:type=\"xsd:string\">latin1</ie> <oe"+
+                                 " xsi:type=\"xsd:string\">latin1</oe>"+
+                                 "</ns1:doGoogleSearch>"+
+                                 "</SOAP-ENV:Body></SOAP-ENV:Envelope>");
             System.out.println(j.toString(2));
             System.out.println(XML.toString(j));
             System.out.println("");
@@ -417,7 +417,7 @@ public class Test {
             }
 
             System.out.println("");
-            j = new JSONObject(j, new String[]{"dec", "oct", "hex", "missing"});
+            j = new JSONObject(j, new String[] {"dec", "oct", "hex", "missing"});
             System.out.println(j.toString(4));
 
             System.out.println("");
@@ -661,10 +661,10 @@ public class Test {
                 jj = new JSONStringer();
                 s = jj
                     .object()
-                        .key("bosanda")
-                        .value("MARIE HAA'S")
-                        .key("bosanda")
-                        .value("MARIE HAA\\'S")
+                    .key("bosanda")
+                    .value("MARIE HAA'S")
+                    .key("bosanda")
+                    .value("MARIE HAA\\'S")
                     .endObject()
                     .toString();
                 System.out.println(j.toString(4));

@@ -84,7 +84,7 @@ class HttpClientCore extends HttpClient {
     }
 
     public synchronized HttpResponse fetch(String url, Hashtable headers)
-            throws PubnubException, SocketTimeoutException {
+    throws PubnubException, SocketTimeoutException {
         URL urlobj = null;
         try {
             urlobj = new URL(url);
@@ -123,11 +123,9 @@ class HttpClientCore extends HttpClient {
 
         try {
             connection.connect();
-        }
-        catch (SocketTimeoutException  e) {
+        } catch (SocketTimeoutException  e) {
             throw e;
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new PubnubException(getErrorObject(PNERROBJ_CONNECT_EXCEPTION, url));
         }
 
@@ -142,7 +140,7 @@ class HttpClientCore extends HttpClient {
         InputStream is = null;
         String encoding = connection.getContentEncoding();
 
-        if(encoding == null || !encoding.equals("gzip")) {
+        if (encoding == null || !encoding.equals("gzip")) {
             try {
                 is = connection.getInputStream();
             } catch (IOException e) {

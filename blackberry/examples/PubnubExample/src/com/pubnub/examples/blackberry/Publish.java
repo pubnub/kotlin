@@ -41,7 +41,8 @@ public class Publish extends PubnubCommand {
                     }
                 });
                 close();
-            }});
+            }
+        });
     }
 
 }

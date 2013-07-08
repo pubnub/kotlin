@@ -20,7 +20,7 @@ public class PubnubDemoConsole {
     Scanner reader;
 
     public PubnubDemoConsole(String publish_key, String subscribe_key, String secret_key,
-            String cipher_key) {
+                             String cipher_key) {
         this.publish_key = publish_key;
         this.subscribe_key = subscribe_key;
         this.secret_key = secret_key;
@@ -39,60 +39,54 @@ public class PubnubDemoConsole {
         notifyUser("Enter the message for publish. To exit loop enter QUIT");
         String message = "";
 
+        Callback cb = new Callback() {
+            @Override
+            public void successCallback(String channel, Object message) {
+                notifyUser("PUBLISH : " + message);
+            }
+
+            @Override
+            public void errorCallback(String channel, PubnubError error) {
+                notifyUser("PUBLISH : " + error);
+            }
+        };
+
         while (true) {
             Hashtable args = new Hashtable(2);
             message = reader.nextLine();
             if (message.equalsIgnoreCase("QUIT")) {
                 break;
             }
-            if (args.get("message") == null) {
-                try {
-                    Integer i = Integer.parseInt(message);
-                    args.put("message", i);
-                } catch (Exception e) {
 
-                }
+            try {
+                Integer i = Integer.parseInt(message);
+                pubnub.publish(channel, i, cb);
+                continue;
+            } catch (Exception e) {
+
             }
-            if (args.get("message") == null) {
-                try {
-                    Double d = Double.parseDouble(message);
-                    args.put("message", d);
-                } catch (Exception e) {
+            try {
+                Double d = Double.parseDouble(message);
+                pubnub.publish(channel, d, cb);
+                continue;
+            } catch (Exception e) {
 
-                }
             }
-            if (args.get("message") == null) {
-                try {
-                    JSONArray js = new JSONArray(message);
-                    args.put("message", js);
-                } catch (Exception e) {
+            try {
+                JSONArray js = new JSONArray(message);
+                pubnub.publish(channel, js, cb);
+                continue;
+            } catch (Exception e) {
 
-                }
             }
-            if (args.get("message") == null) {
-                try {
-                    JSONObject js = new JSONObject(message);
-                    args.put("message", js);
-                } catch (Exception e) {
+            try {
+                JSONObject js = new JSONObject(message);
+                pubnub.publish(channel, js, cb);
+                continue;
+            } catch (Exception e) {
 
-                }
             }
-            if (args.get("message") == null) {
-                args.put("message", message);
-            }
-
-            args.put("channel", channel); // Channel Name
-            pubnub.publish(args, new Callback() {
-                @Override
-                public void successCallback(String channel, Object message) {
-                    notifyUser("PUBLISH : " + message);
-                }
-
-                @Override
-                public void errorCallback(String channel, PubnubError error) {
-                    notifyUser("PUBLISH : " + error);
-                }
-            });
+            pubnub.publish(channel, message, cb);
         }
 
     }
@@ -107,33 +101,33 @@ public class PubnubDemoConsole {
                 @Override
                 public void connectCallback(String channel, Object message) {
                     notifyUser("SUBSCRIBE : CONNECT on channel:" + channel
-                            + " : " + message.getClass() + " : "
-                            + message.toString());
+                               + " : " + message.getClass() + " : "
+                               + message.toString());
                 }
 
                 @Override
                 public void disconnectCallback(String channel, Object message) {
                     notifyUser("SUBSCRIBE : DISCONNECT on channel:" + channel
-                            + " : " + message.getClass() + " : "
-                            + message.toString());
+                               + " : " + message.getClass() + " : "
+                               + message.toString());
                 }
 
                 public void reconnectCallback(String channel, Object message) {
                     notifyUser("SUBSCRIBE : RECONNECT on channel:" + channel
-                            + " : " + message.getClass() + " : "
-                            + message.toString());
+                               + " : " + message.getClass() + " : "
+                               + message.toString());
                 }
 
                 @Override
                 public void successCallback(String channel, Object message) {
                     notifyUser("SUBSCRIBE : " + channel + " : "
-                            + message.getClass() + " : " + message.toString());
+                               + message.getClass() + " : " + message.toString());
                 }
 
                 @Override
                 public void errorCallback(String channel, PubnubError error) {
                     notifyUser("SUBSCRIBE : ERROR on channel " + channel
-                            + " : " + error.toString());
+                               + " : " + error.toString());
                 }
             });
 
@@ -254,7 +248,7 @@ public class PubnubDemoConsole {
 
                 notifyUser("Subscribed to following channels: ");
                 notifyUser(PubnubUtil.joinString(
-                        pubnub.getSubscribedChannelsArray(), " : "));
+                               pubnub.getSubscribedChannelsArray(), " : "));
                 break;
             case 2:
                 channelName = getStringFromConsole("Channel Name");
@@ -293,7 +287,7 @@ public class PubnubDemoConsole {
                 break;
             case 12:
                 pubnub.setResumeOnReconnect(pubnub.isResumeOnReconnect() ? false
-                        : true);
+                                            : true);
                 notifyUser("RESUME ON RECONNECT : " + pubnub.isResumeOnReconnect());
                 break;
             case 13:
@@ -402,8 +396,8 @@ public class PubnubDemoConsole {
             input = reader.nextLine();
             attempt_count++;
         } while ((input == null || input.length() == 0 ||
-                ( !input.equalsIgnoreCase("yes") && !input.equalsIgnoreCase("no") &&
-                        !input.equalsIgnoreCase("y") && !input.equalsIgnoreCase("n"))) && !optional);
+                  ( !input.equalsIgnoreCase("yes") && !input.equalsIgnoreCase("no") &&
+                    !input.equalsIgnoreCase("y") && !input.equalsIgnoreCase("n"))) && !optional);
         returnVal =  (input.equalsIgnoreCase("y") || input.equalsIgnoreCase("yes"))?true:false;
         notifyUser(message + " : " + returnVal);
         return returnVal;
@@ -499,8 +493,8 @@ public class PubnubDemoConsole {
 
     private void displayMenuOptions() {
         notifyUser("ENTER 1  FOR Subscribe "
-                + "(Currently subscribed to "
-                + this.pubnub.getCurrentlySubscribedChannelNames() + ")");
+                   + "(Currently subscribed to "
+                   + this.pubnub.getCurrentlySubscribedChannelNames() + ")");
         notifyUser("ENTER 2  FOR Publish");
         notifyUser("ENTER 3  FOR Presence");
         notifyUser("ENTER 4  FOR Detailed History");

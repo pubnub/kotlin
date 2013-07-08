@@ -7,10 +7,12 @@ import static com.pubnub.api.PubnubError.*;
 
 class SubscribeWorker extends AbstractSubscribeWorker {
 
+    private Exception excp = null;
+
     SubscribeWorker(Vector _requestQueue, int connectionTimeout,
-            int requestTimeout, int maxRetries, int retryInterval, Hashtable headers) {
+                    int requestTimeout, int maxRetries, int retryInterval, Hashtable headers) {
         super(_requestQueue, connectionTimeout, requestTimeout,
-                maxRetries, retryInterval, headers);
+              maxRetries, retryInterval, headers);
     }
 
     void process(HttpRequest hreq) {
@@ -31,7 +33,7 @@ class SubscribeWorker extends AbstractSubscribeWorker {
                 hresp = httpclient.fetch(hreq.getUrl(), hreq.getHeaders());
                 if (hresp != null
                         && httpclient.checkResponseSuccess(hresp
-                                .getStatusCode())) {
+                                                           .getStatusCode())) {
                     currentRetryAttempt = 1;
                     break;
                 }
@@ -48,23 +50,24 @@ class SubscribeWorker extends AbstractSubscribeWorker {
                 break;
 
             } catch (PubnubException e) {
-
-                switch(e.getPubnubError().errorCode) {
+                excp = e;
+                switch (e.getPubnubError().errorCode) {
                 case PNERR_FORBIDDEN:
                 case PNERR_UNAUTHORIZED:
                     log.verbose("Authentication Failure : " + e.toString());
-                    currentRetryAttempt = 1;
+                    currentRetryAttempt++;
                     break;
                 default:
                     log.verbose("Retry Attempt : " + ((currentRetryAttempt == maxRetries)?"last":currentRetryAttempt)
-                            + " Exception in Fetch : " + e.toString());
+                                + " Exception in Fetch : " + e.toString());
                     currentRetryAttempt++;
                     break;
                 }
 
             } catch (Exception e) {
+                excp = e;
                 log.verbose("Retry Attempt : " + ((currentRetryAttempt == maxRetries)?"last":currentRetryAttempt)
-                        + " Exception in Fetch : " + e.toString());
+                            + " Exception in Fetch : " + e.toString());
                 currentRetryAttempt++;
             }
 
@@ -80,7 +83,11 @@ class SubscribeWorker extends AbstractSubscribeWorker {
                     log.verbose("Exhausted number of retries");
                     hreq.getResponseHandler().handleTimeout(hreq);
                 } else {
-                    hreq.getResponseHandler().handleError(hreq, getErrorObject(PNERROBJ_HTTP_ERROR, 1));
+                    if (excp != null && excp instanceof PubnubException && ((PubnubException) excp).getPubnubError() != null) {
+                        hreq.getResponseHandler().handleError(hreq, ((PubnubException) excp).getPubnubError());
+                    } else {
+                        hreq.getResponseHandler().handleError(hreq, getErrorObject(PNERROBJ_HTTP_ERROR, 1));
+                    }
                 }
                 return;
             }

@@ -11,6 +11,10 @@ public class PubnubCrypto extends PubnubCryptoCore {
         super(CIPHER_KEY);
     }
 
+    public PubnubCrypto(String CIPHER_KEY, String IV) {
+        super(CIPHER_KEY, IV);
+    }
+
     /**
      * Sign Message
      *

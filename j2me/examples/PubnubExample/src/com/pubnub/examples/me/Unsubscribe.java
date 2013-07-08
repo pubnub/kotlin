@@ -26,7 +26,8 @@ public class Unsubscribe extends PubnubCommand {
                 _pubnub.unsubscribe(txtChannel.getString());
                 display.setCurrent(menu);
 
-            }});
+            }
+        });
 
 
     }

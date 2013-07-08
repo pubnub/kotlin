@@ -5,14 +5,15 @@
 
 www.pubnub.com - PubNub Real-time Push Service in the Cloud. 
 
-Please reference the demo app in 3.4/jars/PubnubDemoConsole.jar for an example of using PubNub
+Please reference the demo app in jars/PubnubDemoConsole.jar for an example of using PubNub
 Asyncronously in your applications!
 
-Additional Java docs are available at 3.4/doc/index.html
+Additional Java docs are available at [doc/index.html](doc/index.html)
 ###To browse source
 Checkout [srcPubnubApi](/java/srcPubnubApi)
 
 ###To setup with your IDE:
+[Check out the Eclipse walkthrough here!](https://vimeo.com/69587309)
 
 1. Add new project with java/ as the root
 2. Set the new project source as java/srcPubnubApi

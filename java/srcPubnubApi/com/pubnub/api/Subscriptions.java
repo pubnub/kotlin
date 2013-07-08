@@ -84,11 +84,11 @@ class Subscriptions {
                         _channel.connected = true;
                         if (_channel.subscribed == false) {
                             _channel.callback.connectCallback(_channel.name,
-                                    new JSONArray().put(1).put("Subscribe connected").put(message));
+                                                              new JSONArray().put(1).put("Subscribe connected").put(message));
                         } else {
                             _channel.subscribed = true;
                             _channel.callback.reconnectCallback(_channel.name,
-                                    new JSONArray().put(1).put("Subscribe reconnected").put(message));
+                                                                new JSONArray().put(1).put("Subscribe reconnected").put(message));
                         }
                     }
                 }
@@ -108,7 +108,7 @@ class Subscriptions {
                     _channel.connected = true;
                     if ( _channel.error ) {
                         _channel.callback.reconnectCallback(_channel.name,
-                                new JSONArray().put(1).put("Subscribe reconnected").put(message));
+                                                            new JSONArray().put(1).put("Subscribe reconnected").put(message));
                         _channel.error = false;
                     }
                 }
@@ -124,7 +124,7 @@ class Subscriptions {
                     if (_channel.connected == true) {
                         _channel.connected = false;
                         _channel.callback.disconnectCallback(_channel.name,
-                                new JSONArray().put(0).put("Subscribe unable to connect").put(message));
+                                                             new JSONArray().put(0).put("Subscribe unable to connect").put(message));
                     }
                 }
             }

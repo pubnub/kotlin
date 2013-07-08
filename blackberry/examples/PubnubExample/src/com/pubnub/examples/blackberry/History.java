@@ -40,6 +40,7 @@ public class History extends PubnubCommand {
                     }
                 });
                 close();
-            }});
+            }
+        });
     }
 }

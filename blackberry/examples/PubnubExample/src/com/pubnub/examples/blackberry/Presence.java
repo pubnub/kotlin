@@ -46,7 +46,7 @@ public class Presence extends PubnubCommand {
 
                 }
             }});
-        }
+    }
 
 
 }

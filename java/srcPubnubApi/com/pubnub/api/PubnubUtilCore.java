@@ -48,12 +48,12 @@ class PubnubUtilCore {
 
             if (nextIndex != -1) {
                 splittedList[counter++] = tmpStr.substring(
-                        index + delimiter.length(), nextIndex);
+                                              index + delimiter.length(), nextIndex);
                 tmpStr = tmpStr.substring(nextIndex);
 
             } else {
                 splittedList[counter++] = tmpStr.substring(index
-                        + delimiter.length());
+                                          + delimiter.length());
                 tmpStr = tmpStr.substring(index + 1);
             }
         } while ((index = tmpStr.indexOf(delimiter)) != -1);
@@ -117,7 +117,7 @@ class PubnubUtilCore {
      * @return , string array with hash keys string
      */
     public static synchronized String hashTableKeysToDelimitedString(
-            Hashtable ht, String delimiter) {
+        Hashtable ht, String delimiter) {
 
         StringBuffer sb = new StringBuffer();
         boolean first = true;

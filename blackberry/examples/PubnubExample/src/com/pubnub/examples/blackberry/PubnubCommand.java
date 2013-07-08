@@ -33,7 +33,7 @@ public abstract class PubnubCommand {
      *            The text to display
      */
     private void alertDialog(final String message) {
-       uiapp.invokeLater(new Runnable() {
+        uiapp.invokeLater(new Runnable() {
             public void run() {
                 Dialog.alert(message);
             }
@@ -44,10 +44,8 @@ public abstract class PubnubCommand {
         this._pubnub = pubnub;
         this.uiapp = UiApplication.getUiApplication();
         this.menuItem = new MenuItem(new StringProvider(command), 0x230010, 0);
-        this.menuItem.setCommand(new Command(new CommandHandler()
-        {
-            public void execute(ReadOnlyCommandMetadata metadata, Object context)
-            {
+        this.menuItem.setCommand(new Command(new CommandHandler() {
+            public void execute(ReadOnlyCommandMetadata metadata, Object context) {
                 handler();
             }
         }));

@@ -6,9 +6,9 @@ import java.util.Vector;
 class SubscribeWorker extends AbstractSubscribeWorker {
 
     SubscribeWorker(Vector _requestQueue, int connectionTimeout,
-            int requestTimeout, int maxRetries, int retryInterval, Hashtable headers) {
+                    int requestTimeout, int maxRetries, int retryInterval, Hashtable headers) {
         super(_requestQueue, connectionTimeout, requestTimeout,
-                maxRetries, retryInterval, headers);
+              maxRetries, retryInterval, headers);
     }
 
     void process(HttpRequest hreq) {
@@ -21,7 +21,7 @@ class SubscribeWorker extends AbstractSubscribeWorker {
                 hresp = httpclient.fetch(hreq.getUrl(), hreq.getHeaders());
                 if (hresp != null
                         && httpclient.checkResponseSuccess(hresp
-                                .getStatusCode())) {
+                                                           .getStatusCode())) {
                     currentRetryAttempt = 1;
                     break;
                 }
@@ -35,7 +35,7 @@ class SubscribeWorker extends AbstractSubscribeWorker {
 
             } */catch (Exception e) {
                 log.verbose("Retry Attempt : " + ((currentRetryAttempt == maxRetries)?"last":String.valueOf(currentRetryAttempt))
-                        + " Exception in Fetch : " + e.toString());
+                            + " Exception in Fetch : " + e.toString());
                 currentRetryAttempt++;
             }
 

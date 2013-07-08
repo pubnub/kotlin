@@ -111,7 +111,7 @@ public class XML {
         for (i = 0; i < length; i += 1) {
             if (Character.isWhitespace(string.charAt(i))) {
                 throw new JSONException("'" + string +
-                        "' contains a space character.");
+                                        "' contains a space character.");
             }
         }
     }
@@ -268,7 +268,7 @@ public class XML {
                                 if (o.length() == 0) {
                                     context.accumulate(n, "");
                                 } else if (o.length() == 1 &&
-                                       o.opt("content") != null) {
+                                           o.opt("content") != null) {
                                     context.accumulate(n, o.opt("content"));
                                 } else {
                                     context.accumulate(n, o);
@@ -328,7 +328,7 @@ public class XML {
      * @throws JSONException
      */
     public static String toString(Object o, String tagName)
-            throws JSONException {
+    throws JSONException {
         StringBuffer b = new StringBuffer();
         int          i;
         JSONArray    ja;
@@ -434,8 +434,8 @@ public class XML {
         } else {
             s = (o == null) ? "null" : escape(o.toString());
             return (tagName == null) ? "\"" + s + "\"" :
-                (s.length() == 0) ? "<" + tagName + "/>" :
-                "<" + tagName + ">" + s + "</" + tagName + ">";
+                   (s.length() == 0) ? "<" + tagName + "/>" :
+                   "<" + tagName + ">" + s + "</" + tagName + ">";
         }
     }
 }

@@ -44,7 +44,7 @@ class ExamplePanel extends VerticalPanel {
             return JSON.stringify(message);
         }-*/;
         @Override
-        public void callback(String channel, Object message){
+        public void callback(String channel, Object message) {
             html.setHTML("");
             responses.offer(toStr(message));
             if (noOfLines <= 4)
@@ -59,7 +59,7 @@ class ExamplePanel extends VerticalPanel {
 
     }
 
-    public ExamplePanel(HTML html){
+    public ExamplePanel(HTML html) {
         super();
         this.html = html;
         this.add(html);
@@ -68,7 +68,7 @@ class ExamplePanel extends VerticalPanel {
         html.setWidth("750px");
 
     }
-    public void clearHTML(){
+    public void clearHTML() {
         html.setHTML("");
         responses.clear();
         noOfLines = 0;
@@ -167,7 +167,7 @@ public class PubnubExample implements EntryPoint {
         tabPanel.selectTab(0);
 
     }
-    private void setupTimeUuidPanel(final Pubnub pubnub, final ExamplePanel panel, final TextBox txtChannel){
+    private void setupTimeUuidPanel(final Pubnub pubnub, final ExamplePanel panel, final TextBox txtChannel) {
         HorizontalPanel horizontalPanel = new HorizontalPanel();
         horizontalPanel.setSpacing(10);
         panel.add(horizontalPanel);
@@ -189,7 +189,7 @@ public class PubnubExample implements EntryPoint {
 
     }
 
-    private void setupHereNowPanel(final Pubnub pubnub, final ExamplePanel panel, final TextBox txtChannel){
+    private void setupHereNowPanel(final Pubnub pubnub, final ExamplePanel panel, final TextBox txtChannel) {
         HorizontalPanel horizontalPanel = new HorizontalPanel();
         horizontalPanel.setSpacing(10);
         panel.add(horizontalPanel);
@@ -212,7 +212,7 @@ public class PubnubExample implements EntryPoint {
     }
 
 
-    private void setupDetailedHistoryPanel(final Pubnub pubnub, final ExamplePanel panel, final TextBox txtChannel){
+    private void setupDetailedHistoryPanel(final Pubnub pubnub, final ExamplePanel panel, final TextBox txtChannel) {
         HorizontalPanel horizontalPanel = new HorizontalPanel();
         horizontalPanel.setSpacing(10);
         panel.add(horizontalPanel);
@@ -297,7 +297,7 @@ public class PubnubExample implements EntryPoint {
         btn.addClickHandler(new Handler());
     }
 
-    private void setupHistoryPanel(final Pubnub pubnub, final ExamplePanel panel, final TextBox txtChannel){
+    private void setupHistoryPanel(final Pubnub pubnub, final ExamplePanel panel, final TextBox txtChannel) {
 
         HorizontalPanel horizontalPanel = new HorizontalPanel();
         horizontalPanel.setSpacing(10);
@@ -330,7 +330,7 @@ public class PubnubExample implements EntryPoint {
         btn.addClickHandler(new Handler());
     }
 
-    private void setupPublishPanel(final Pubnub pubnub, final ExamplePanel panel, final TextBox txtChannel){
+    private void setupPublishPanel(final Pubnub pubnub, final ExamplePanel panel, final TextBox txtChannel) {
 
         HorizontalPanel horizontalPanel = new HorizontalPanel();
         horizontalPanel.setSpacing(10);

@@ -30,29 +30,32 @@ abstract class PubnubCryptoCore {
     byte[] buf = new byte[16]; // input buffer
     byte[] obuf = new byte[512]; // output buffer
     byte[] key = null;
-    byte[] IV = null;
+    String IV = "0123456789012345";
     public static int blockSize = 16;
     String CIPHER_KEY;
 
     public PubnubCryptoCore(String CIPHER_KEY) {
         this.CIPHER_KEY = CIPHER_KEY;
     }
+    public PubnubCryptoCore(String CIPHER_KEY, String initialization_vector) {
+        if (initialization_vector != null) this.IV = initialization_vector;
+        this.CIPHER_KEY = CIPHER_KEY;
+    }
 
     public void InitCiphers() throws UnsupportedEncodingException {
 
         key = new String(Hex.encode(sha256(this.CIPHER_KEY.getBytes("UTF-8"))),
-                "UTF-8").substring(0, 32).toLowerCase().getBytes("UTF-8");
-        IV = "0123456789012345".getBytes("UTF-8");
+                         "UTF-8").substring(0, 32).toLowerCase().getBytes("UTF-8");
 
         encryptCipher = new PaddedBufferedBlockCipher(new CBCBlockCipher(
-                new AESEngine()));
+                    new AESEngine()));
 
         decryptCipher = new PaddedBufferedBlockCipher(new CBCBlockCipher(
-                new AESEngine()));
+                    new AESEngine()));
 
         // create the IV parameter
         ParametersWithIV parameterIV = new ParametersWithIV(new KeyParameter(
-                key), IV);
+                    key), IV.getBytes("UTF-8"));
 
         encryptCipher.init(true, parameterIV);
         decryptCipher.init(false, parameterIV);
@@ -68,7 +71,7 @@ abstract class PubnubCryptoCore {
     }
 
     public String encrypt(String input) throws DataLengthException,
-            IllegalStateException, InvalidCipherTextException {
+                IllegalStateException, InvalidCipherTextException {
         try {
             InputStream st = new ByteArrayInputStream(input.getBytes("UTF-8"));
             ByteArrayOutputStream ou = new ByteArrayOutputStream();
@@ -90,7 +93,7 @@ abstract class PubnubCryptoCore {
      * @throws Exception
      */
     public String decrypt(String cipher_text) throws DataLengthException,
-            IllegalStateException, InvalidCipherTextException, IOException, IllegalArgumentException {
+                IllegalStateException, InvalidCipherTextException, IOException, IllegalArgumentException {
 
         byte[] cipher = Base64Encoder.decode(cipher_text);
         InputStream st = new ByteArrayInputStream(cipher);
@@ -102,19 +105,19 @@ abstract class PubnubCryptoCore {
     }
 
     public void CBCEncryptOrDecrypt(InputStream in, OutputStream out,
-            boolean encrypt) throws DataLengthException, IllegalStateException,
-            InvalidCipherTextException, IOException {
+                                    boolean encrypt) throws DataLengthException, IllegalStateException,
+                InvalidCipherTextException, IOException {
         if (encryptCipher == null || decryptCipher == null) {
             InitCiphers();
         }
         PaddedBufferedBlockCipher cipher = (encrypt) ? encryptCipher
-                : decryptCipher;
+                                           : decryptCipher;
         int noBytesRead = 0; // number of bytes read from input
         int noBytesProcessed = 0; // number of bytes processed
 
         while ((noBytesRead = in.read(buf)) >= 0) {
             noBytesProcessed = cipher
-                    .processBytes(buf, 0, noBytesRead, obuf, 0);
+                               .processBytes(buf, 0, noBytesRead, obuf, 0);
             out.write(obuf, 0, noBytesProcessed);
         }
 
@@ -130,7 +133,7 @@ abstract class PubnubCryptoCore {
         byte[] data = new byte[len / 2];
         for (int i = 0; i < len; i += 2) {
             data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4) + Character
-                    .digit(s.charAt(i + 1), 16));
+                                  .digit(s.charAt(i + 1), 16));
         }
         return data;
     }

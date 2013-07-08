@@ -35,7 +35,7 @@ abstract class Worker implements Runnable {
     Worker(Vector _requestQueue, int connectionTimeout, int requestTimeout, Hashtable headers) {
         this._requestQueue = _requestQueue;
         this.httpclient = HttpClient.getClient(connectionTimeout,
-                requestTimeout, headers);
+                                               requestTimeout, headers);
     }
 
     void setConnectionTimeout(int timeout) {
@@ -89,7 +89,7 @@ abstract class Worker implements Runnable {
 class NonSubscribeWorker extends Worker {
 
     NonSubscribeWorker(Vector _requestQueue, int connectionTimeout,
-            int requestTimeout, Hashtable headers) {
+                       int requestTimeout, Hashtable headers) {
         super(_requestQueue, connectionTimeout, requestTimeout, headers);
     }
 
@@ -98,14 +98,12 @@ class NonSubscribeWorker extends Worker {
         try {
             log.debug(hreq.getUrl());
             hresp = httpclient.fetch(hreq.getUrl(), hreq.getHeaders());
-        }
-        catch (PubnubException pe) {
+        } catch (PubnubException pe) {
             log.debug("Pubnub Exception in Fetch : " + pe.getPubnubError());
             if (!_die)
                 hreq.getResponseHandler().handleError(hreq, pe.getPubnubError());
             return;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             log.debug("Exception in Fetch : " + e.toString());
             if (!_die)
                 hreq.getResponseHandler().handleError(hreq, PubnubError.getErrorObject(PubnubError.PNERROBJ_HTTP_ERROR, 2, e.toString()));
@@ -155,7 +153,7 @@ abstract class RequestManager {
         this.headers = new Hashtable();
         _workers = new Worker[maxCalls];
 
-        synchronized(_workers) {
+        synchronized (_workers) {
             for (int i = 0; i < maxCalls; ++i) {
                 Worker w = getWorker();
                 w.setThread(new Thread(w, name + "-" + ++count));
@@ -173,7 +171,7 @@ abstract class RequestManager {
     }
 
     private void interruptWorkers() {
-        synchronized(_workers) {
+        synchronized (_workers) {
             for (int i = 0; i < _workers.length; i++) {
                 _workers[i].interruptWorker();
             }
@@ -181,7 +179,7 @@ abstract class RequestManager {
     }
 
     public void resetWorkers() {
-        synchronized(_workers) {
+        synchronized (_workers) {
             for (int i = 0; i < _workers.length; i++) {
                 log.verbose("Sending DIE to " + _workers[i].getThread().getName());
                 _workers[i].die();
@@ -224,7 +222,7 @@ abstract class RequestManager {
     }
 
     public void stop() {
-        synchronized(_workers) {
+        synchronized (_workers) {
             for (int i = 0; i < _maxWorkers; ++i) {
                 Worker w = _workers[i];
                 w.die();
@@ -242,14 +240,14 @@ abstract class AbstractSubscribeManager extends RequestManager {
     protected volatile int retryInterval = 5000;
 
     public AbstractSubscribeManager(String name, int connectionTimeout,
-            int requestTimeout) {
+                                    int requestTimeout) {
         super(name, connectionTimeout, requestTimeout);
     }
 
     public Worker getWorker() {
         return new SubscribeWorker(_waiting,
-                connectionTimeout, requestTimeout,
-                maxRetries, retryInterval, headers);
+                                   connectionTimeout, requestTimeout,
+                                   maxRetries, retryInterval, headers);
     }
 
     public void setMaxRetries(int maxRetries) {
@@ -275,7 +273,7 @@ abstract class AbstractSubscribeManager extends RequestManager {
     }
 
     public void queue(HttpRequest hreq) {
-        synchronized(_waiting) {
+        synchronized (_waiting) {
             clearRequestQueue();
             super.queue(hreq);
         }
@@ -284,13 +282,13 @@ abstract class AbstractSubscribeManager extends RequestManager {
 
 abstract class AbstractNonSubscribeManager extends RequestManager {
     public AbstractNonSubscribeManager(String name, int connectionTimeout,
-            int requestTimeout) {
+                                       int requestTimeout) {
         super(name, connectionTimeout, requestTimeout);
     }
 
     public Worker getWorker() {
         return new NonSubscribeWorker(_waiting, connectionTimeout,
-                requestTimeout, headers);
+                                      requestTimeout, headers);
     }
 
     public void setConnectionTimeout(int timeout) {
@@ -314,7 +312,7 @@ abstract class AbstractSubscribeWorker extends Worker {
     protected volatile int retryInterval = 5000;
 
     AbstractSubscribeWorker(Vector _requestQueue, int connectionTimeout,
-            int requestTimeout, int maxRetries, int retryInterval, Hashtable headers) {
+                            int requestTimeout, int maxRetries, int retryInterval, Hashtable headers) {
         super(_requestQueue, connectionTimeout, requestTimeout, headers);
         this.maxRetries = maxRetries;
         this.retryInterval= retryInterval;

@@ -40,7 +40,8 @@ public class DetailedHistory extends PubnubCommand {
                     }
                 });
                 close();
-            }});
+            }
+        });
     }
 
 }

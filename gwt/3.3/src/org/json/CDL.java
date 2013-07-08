@@ -111,7 +111,7 @@ public class CDL {
                         return ja;
                     }
                     throw x.syntaxError("Bad character '" + c + "' (" +
-                            (int)c + ").");
+                                        (int)c + ").");
                 }
                 c = x.next();
             }
@@ -129,7 +129,7 @@ public class CDL {
      * @throws JSONException
      */
     public static JSONObject rowToJSONObject(JSONArray names, JSONTokener x)
-            throws JSONException {
+    throws JSONException {
         JSONArray ja = rowToJSONArray(x);
         return ja != null ? ja.toJSONObject(names) :  null;
     }
@@ -165,7 +165,7 @@ public class CDL {
      * @throws JSONException
      */
     public static JSONArray toJSONArray(JSONArray names, String string)
-            throws JSONException {
+    throws JSONException {
         return toJSONArray(names, new JSONTokener(string));
     }
 
@@ -178,7 +178,7 @@ public class CDL {
      * @throws JSONException
      */
     public static JSONArray toJSONArray(JSONArray names, JSONTokener x)
-            throws JSONException {
+    throws JSONException {
         if (names == null || names.length() == 0) {
             return null;
         }
@@ -214,8 +214,8 @@ public class CDL {
             if (o != null) {
                 String s = o.toString();
                 if (s.length() > 0 && (s.indexOf(',') >= 0 || s.indexOf('\n') >= 0 ||
-                        s.indexOf('\r') >= 0 || s.indexOf(0) >= 0 ||
-                        s.charAt(0) == '"')) {
+                                       s.indexOf('\r') >= 0 || s.indexOf(0) >= 0 ||
+                                       s.charAt(0) == '"')) {
                     sb.append('"');
                     int length = s.length();
                     for (int j = 0; j < length; j += 1) {
@@ -263,7 +263,7 @@ public class CDL {
      * @throws JSONException
      */
     public static String toString(JSONArray names, JSONArray ja)
-            throws JSONException {
+    throws JSONException {
         if (names == null || names.length() == 0) {
             return null;
         }

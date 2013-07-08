@@ -42,7 +42,7 @@ public class Pubnub extends PubnubCore {
      *            SSL on ?
      */
     public Pubnub(String publish_key, String subscribe_key, String secret_key,
-            String cipher_key, boolean ssl_on) {
+                  String cipher_key, boolean ssl_on) {
         super(publish_key, subscribe_key, secret_key, cipher_key, ssl_on);
     }
 
@@ -59,7 +59,7 @@ public class Pubnub extends PubnubCore {
      *            SSL on ?
      */
     public Pubnub(String publish_key, String subscribe_key, String secret_key,
-            boolean ssl_on) {
+                  boolean ssl_on) {
         super(publish_key, subscribe_key, secret_key, "", ssl_on);
     }
 
@@ -207,7 +207,7 @@ public class Pubnub extends PubnubCore {
     @Deprecated
     @Override
     public void detailedHistory(final String channel, long start, long end,
-            int count, boolean reverse, final Callback callback) {
+                                int count, boolean reverse, final Callback callback) {
         super.detailedHistory(channel, start, end, count, reverse, callback);
     }
 
@@ -229,7 +229,7 @@ public class Pubnub extends PubnubCore {
      *            Callback
      */
     public void history(final String channel, long start, long end, int count,
-            boolean reverse, final Callback callback) {
+                        boolean reverse, final Callback callback) {
         super.detailedHistory(channel, start, end, count, reverse, callback);
     }
 
@@ -252,7 +252,7 @@ public class Pubnub extends PubnubCore {
     @Deprecated
     @Override
     public void detailedHistory(String channel, long start, boolean reverse,
-            Callback callback) {
+                                Callback callback) {
         super.detailedHistory(channel, start, reverse, callback);
     }
 
@@ -270,7 +270,7 @@ public class Pubnub extends PubnubCore {
      *            Callback
      */
     public void history(String channel, long start, boolean reverse,
-            Callback callback) {
+                        Callback callback) {
         super.detailedHistory(channel, start, reverse, callback);
     }
 
@@ -293,7 +293,7 @@ public class Pubnub extends PubnubCore {
     @Deprecated
     @Override
     public void detailedHistory(String channel, long start, long end,
-            Callback callback) {
+                                Callback callback) {
         super.detailedHistory(channel, start, end, callback);
     }
 
@@ -336,7 +336,7 @@ public class Pubnub extends PubnubCore {
     @Deprecated
     @Override
     public void detailedHistory(String channel, long start, long end,
-            boolean reverse, Callback callback) {
+                                boolean reverse, Callback callback) {
         super.detailedHistory(channel, start, end, reverse, callback);
     }
 
@@ -356,7 +356,7 @@ public class Pubnub extends PubnubCore {
      *            Callback
      */
     public void history(String channel, long start, long end, boolean reverse,
-            Callback callback) {
+                        Callback callback) {
         super.detailedHistory(channel, start, end, reverse, callback);
     }
 
@@ -379,7 +379,7 @@ public class Pubnub extends PubnubCore {
     @Deprecated
     @Override
     public void detailedHistory(String channel, int count, boolean reverse,
-            Callback callback) {
+                                Callback callback) {
         super.detailedHistory(channel, count, reverse, callback);
     }
 
@@ -397,7 +397,7 @@ public class Pubnub extends PubnubCore {
      *            Callback
      */
     public void history(String channel, int count, boolean reverse,
-            Callback callback) {
+                        Callback callback) {
         super.detailedHistory(channel, count, reverse, callback);
     }
 
@@ -417,7 +417,7 @@ public class Pubnub extends PubnubCore {
      */
     @Deprecated
     public void detailedHistory(String channel, boolean reverse,
-            Callback callback) {
+                                Callback callback) {
         super.detailedHistory(channel, reverse, callback);
     }
 
@@ -503,7 +503,7 @@ public class Pubnub extends PubnubCore {
      */
     @Deprecated
     public void subscribe(Hashtable args, Callback callback)
-            throws PubnubException {
+    throws PubnubException {
         args.put("callback", callback);
         super.subscribe(args);
     }
@@ -528,13 +528,13 @@ public class Pubnub extends PubnubCore {
         Mac sha256_HMAC;
 
         try {
-        sha256_HMAC = Mac.getInstance("HmacSHA256");
-        SecretKeySpec secret_key = new SecretKeySpec(key.getBytes(),
-                "HmacSHA256");
-        sha256_HMAC.init(secret_key);
-        byte[] hmacData = sha256_HMAC.doFinal(data.getBytes("UTF-8"));
-        return new String(Base64Encoder.encode(hmacData)).replace('+', '-')
-                .replace('/', '_');
+            sha256_HMAC = Mac.getInstance("HmacSHA256");
+            SecretKeySpec secret_key = new SecretKeySpec(key.getBytes(),
+                    "HmacSHA256");
+            sha256_HMAC.init(secret_key);
+            byte[] hmacData = sha256_HMAC.doFinal(data.getBytes("UTF-8"));
+            return new String(Base64Encoder.encode(hmacData)).replace('+', '-')
+                   .replace('/', '_');
         } catch (InvalidKeyException e1) {
             throw new PubnubException(getErrorObject(PubnubError.PNERROBJ_ULSSIGN_ERROR, 1, "Invalid Key : " + e1.toString()));
         } catch (NoSuchAlgorithmException e1) {
@@ -554,7 +554,7 @@ public class Pubnub extends PubnubCore {
      * @param callback
      */
     public void ulsGrant(final String channel, String auth_key, boolean read,
-            boolean write, final Callback callback) {
+                         boolean write, final Callback callback) {
 
         Hashtable parameters = hashtableClone(params);
 
@@ -567,21 +567,21 @@ public class Pubnub extends PubnubCore {
 
         if (this.SECRET_KEY.length() == 0) {
             callback.errorCallback(channel,
-                    getErrorObject(PNERROBJ_SECRET_KEY_MISSING, 1));
+                                   getErrorObject(PNERROBJ_SECRET_KEY_MISSING, 1));
             return;
         }
 
         String sign_input = this.SUBSCRIBE_KEY + "\n" + this.PUBLISH_KEY + "\n"
-                + "grant" + "\n" + "auth=" + auth_key + "&" + "channel="
-                + channel + "&" + "r=" + r + "&" + "timestamp=" + timestamp
-                + "&" + "w=" + w;
+                            + "grant" + "\n" + "auth=" + auth_key + "&" + "channel="
+                            + channel + "&" + "r=" + r + "&" + "timestamp=" + timestamp
+                            + "&" + "w=" + w;
 
 
         try {
             signature = ulsSign(this.SECRET_KEY, sign_input);
         } catch (PubnubException e1) {
             callback.errorCallback(channel,
-                    e1.getPubnubError());
+                                   e1.getPubnubError());
             return;
         }
 
@@ -593,19 +593,20 @@ public class Pubnub extends PubnubCore {
         parameters.put("channel", channel);
         parameters.put("auth", auth_key);
 
-        String[] urlComponents = { getOrigin(), "v2", "grant", "sub-key",
-                this.SUBSCRIBE_KEY };
+        String[] urlComponents = { getPubnubUrl(), "v2", "grant", "sub-key",
+                                   this.SUBSCRIBE_KEY
+                                 };
 
         HttpRequest hreq = new HttpRequest(urlComponents, parameters,
-                new ResponseHandler() {
+        new ResponseHandler() {
             public void handleResponse(HttpRequest hreq, String response) {
                 JSONObject jso;
                 try {
                     jso = new JSONObject(response);
                 } catch (JSONException e) {
                     handleError(hreq, getErrorObject(
-                            PNERROBJ_INVALID_JSON, 4,
-                            response));
+                                    PNERROBJ_INVALID_JSON, 4,
+                                    response));
                     return;
                 }
                 callback.successCallback(channel, jso);
@@ -634,39 +635,40 @@ public class Pubnub extends PubnubCore {
 
         if (this.SECRET_KEY.length() == 0) {
             callback.errorCallback("",
-                    getErrorObject(PNERROBJ_SECRET_KEY_MISSING, 2));
+                                   getErrorObject(PNERROBJ_SECRET_KEY_MISSING, 2));
             return;
         }
 
         String sign_input = this.SUBSCRIBE_KEY + "\n" + this.PUBLISH_KEY + "\n"
-                + "audit" + "\n"
-                + "timestamp=" + timestamp;
+                            + "audit" + "\n"
+                            + "timestamp=" + timestamp;
 
 
         try {
             signature = ulsSign(this.SECRET_KEY, sign_input);
         } catch (PubnubException e1) {
             callback.errorCallback("",
-                    e1.getPubnubError());
+                                   e1.getPubnubError());
             return;
         }
 
         parameters.put("timestamp", String.valueOf(timestamp));
         parameters.put("signature", signature);
 
-        String[] urlComponents = { getOrigin(), "v2", "audit", "sub-key",
-                this.SUBSCRIBE_KEY };
+        String[] urlComponents = { getPubnubUrl(), "v2", "audit", "sub-key",
+                                   this.SUBSCRIBE_KEY
+                                 };
 
         HttpRequest hreq = new HttpRequest(urlComponents, parameters,
-                new ResponseHandler() {
+        new ResponseHandler() {
             public void handleResponse(HttpRequest hreq, String response) {
                 JSONObject jso;
                 try {
                     jso = new JSONObject(response);
                 } catch (JSONException e) {
                     handleError(hreq, getErrorObject(
-                            PNERROBJ_INVALID_JSON, 5,
-                            response));
+                                    PNERROBJ_INVALID_JSON, 5,
+                                    response));
                     return;
                 }
                 callback.successCallback("", jso);
@@ -687,7 +689,7 @@ public class Pubnub extends PubnubCore {
      * @param callback
      */
     public void ulsAudit(final String channel,
-            final Callback callback) {
+                         final Callback callback) {
 
         Hashtable parameters = hashtableClone(params);
 
@@ -697,19 +699,19 @@ public class Pubnub extends PubnubCore {
 
         if (this.SECRET_KEY.length() == 0) {
             callback.errorCallback(channel,
-                    getErrorObject(PNERROBJ_SECRET_KEY_MISSING , 3));
+                                   getErrorObject(PNERROBJ_SECRET_KEY_MISSING , 3));
             return;
         }
 
         String sign_input = this.SUBSCRIBE_KEY + "\n" + this.PUBLISH_KEY + "\n"
-                + "audit" + "\n" + "channel="
-                + channel + "&" + "timestamp=" + timestamp;
+                            + "audit" + "\n" + "channel="
+                            + channel + "&" + "timestamp=" + timestamp;
 
         try {
             signature = ulsSign(this.SECRET_KEY, sign_input);
         } catch (PubnubException e1) {
             callback.errorCallback(channel,
-                    e1.getPubnubError());
+                                   e1.getPubnubError());
             return;
         }
 
@@ -717,19 +719,20 @@ public class Pubnub extends PubnubCore {
         parameters.put("signature", signature);
         parameters.put("channel", channel);
 
-        String[] urlComponents = { getOrigin(), "v2", "audit", "sub-key",
-                this.SUBSCRIBE_KEY };
+        String[] urlComponents = { getPubnubUrl(), "v2", "audit", "sub-key",
+                                   this.SUBSCRIBE_KEY
+                                 };
 
         HttpRequest hreq = new HttpRequest(urlComponents, parameters,
-                new ResponseHandler() {
+        new ResponseHandler() {
             public void handleResponse(HttpRequest hreq, String response) {
                 JSONObject jso;
                 try {
                     jso = new JSONObject(response);
                 } catch (JSONException e) {
                     handleError(hreq, getErrorObject(
-                            PNERROBJ_INVALID_JSON, 6,
-                            response));
+                                    PNERROBJ_INVALID_JSON, 6,
+                                    response));
                     return;
                 }
                 callback.successCallback(channel, jso);
@@ -751,7 +754,7 @@ public class Pubnub extends PubnubCore {
      * @param callback
      */
     public void ulsAudit(final String channel, String auth_key,
-            final Callback callback) {
+                         final Callback callback) {
 
         Hashtable parameters = hashtableClone(params);
 
@@ -761,20 +764,20 @@ public class Pubnub extends PubnubCore {
 
         if (this.SECRET_KEY.length() == 0) {
             callback.errorCallback(channel,
-                    getErrorObject(PNERROBJ_SECRET_KEY_MISSING, 4));
+                                   getErrorObject(PNERROBJ_SECRET_KEY_MISSING, 4));
             return;
         }
 
         String sign_input = this.SUBSCRIBE_KEY + "\n" + this.PUBLISH_KEY + "\n"
-                + "audit" + "\n" + "auth=" + auth_key + "&" + "channel="
-                + channel + "&" + "timestamp=" + timestamp;
+                            + "audit" + "\n" + "auth=" + auth_key + "&" + "channel="
+                            + channel + "&" + "timestamp=" + timestamp;
 
 
         try {
             signature = ulsSign(this.SECRET_KEY, sign_input);
         } catch (PubnubException e1) {
             callback.errorCallback(channel,
-                    e1.getPubnubError());
+                                   e1.getPubnubError());
             return;
         }
 
@@ -783,19 +786,20 @@ public class Pubnub extends PubnubCore {
         parameters.put("channel", channel);
         parameters.put("auth", auth_key);
 
-        String[] urlComponents = { getOrigin(), "v2", "audit", "sub-key",
-                this.SUBSCRIBE_KEY };
+        String[] urlComponents = { getPubnubUrl(), "v2", "audit", "sub-key",
+                                   this.SUBSCRIBE_KEY
+                                 };
 
         HttpRequest hreq = new HttpRequest(urlComponents, parameters,
-                new ResponseHandler() {
+        new ResponseHandler() {
             public void handleResponse(HttpRequest hreq, String response) {
                 JSONObject jso;
                 try {
                     jso = new JSONObject(response);
                 } catch (JSONException e) {
                     handleError(hreq, PubnubError.getErrorObject(
-                            PubnubError.PNERROBJ_INVALID_JSON, 2,
-                            response));
+                                    PubnubError.PNERROBJ_INVALID_JSON, 2,
+                                    response));
                     return;
                 }
                 callback.successCallback(channel, jso);

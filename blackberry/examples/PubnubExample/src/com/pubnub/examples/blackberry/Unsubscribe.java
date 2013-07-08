@@ -28,7 +28,8 @@ public class Unsubscribe extends PubnubCommand {
             public void fieldChanged(Field field, int context) {
                 _pubnub.unsubscribe(txtChannel.toString());
                 close();
-            }});
+            }
+        });
     }
 
 }
