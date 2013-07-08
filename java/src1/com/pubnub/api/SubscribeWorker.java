@@ -27,12 +27,14 @@ class SubscribeWorker extends AbstractSubscribeWorker {
             }
         }
         hreq.setWorker(this);
+        boolean sleep = false;
         while (!_die && currentRetryAttempt <= maxRetries) {
-            if ( currentRetryAttempt > 1 ) {
+            if (sleep) {
                 try {
                     Thread.sleep(retryInterval);
                 } catch (InterruptedException e) {
                 }
+                sleep = true;
             }
             try {
                 log.debug(hreq.getUrl());

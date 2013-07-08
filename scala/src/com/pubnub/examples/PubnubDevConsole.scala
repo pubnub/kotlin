@@ -12,7 +12,7 @@ object PubnubDevConsole {
   var cip_key = ""
   var SSL = false
   var reader: Scanner = null
-  var pubnub = new Pubnub(pub_key, sub_key)
+  var pubnub: Pubnub = null 
 
   def getStringFromConsole(message: String, optional: Boolean = false): String = {
 
@@ -109,6 +109,7 @@ object PubnubDevConsole {
           error.errorCode match {
               case PubnubError.PNERR_FORBIDDEN => { pubnub.unsubscribe(channel);}
               case PubnubError.PNERR_UNAUTHORIZED => {pubnub.unsubscribe(channel);}
+              case _ => {}
           } 
         }
       })
