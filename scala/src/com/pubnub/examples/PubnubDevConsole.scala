@@ -107,8 +107,8 @@ object PubnubDevConsole {
           notifyUser("SUBSCRIBE : ERROR on channel " + channel
             + " : " + error.toString())
           error.errorCode match {
-              case PubnubError.PNERR_FORBIDDEN => { pubnub.unsubscribe(channel); println("forbidden");}
-              case PubnubError.PNERR_UNAUTHORIZED => {pubnub.unsubscribe(channel); println("unauthorized");}
+              case PubnubError.PNERR_FORBIDDEN => { pubnub.unsubscribe(channel);}
+              case PubnubError.PNERR_UNAUTHORIZED => {pubnub.unsubscribe(channel);}
           } 
         }
       })
