@@ -1,8 +1,9 @@
-package com.pubnub.examples
+//package com.pubnub.examples
 
 import com.pubnub.api._
 import java.util._
 import org.json._
+import java.lang.Integer
 
 object PubnubDevConsole {
   var pub_key = ""
@@ -105,6 +106,10 @@ object PubnubDevConsole {
         override def errorCallback(channel: String, error: PubnubError) {
           notifyUser("SUBSCRIBE : ERROR on channel " + channel
             + " : " + error.toString())
+          error.errorCode match {
+              case PubnubError.PNERR_FORBIDDEN => { pubnub.unsubscribe(channel); println("forbidden");}
+              case PubnubError.PNERR_UNAUTHORIZED => {pubnub.unsubscribe(channel); println("unauthorized");}
+          } 
         }
       })
 
@@ -198,9 +203,9 @@ object PubnubDevConsole {
 
     }
   }
-  def detailedHistory(channel: String) {
+  def history(channel: String) {
 
-    pubnub.detailedHistory(channel, 2, new Callback() {
+    pubnub.history(channel, 2, new Callback() {
       override def successCallback(channel: String, message: Object) {
         notifyUser("DETAILED HISTORY : " + message)
       }
@@ -312,7 +317,7 @@ object PubnubDevConsole {
     if (sec_key.length() == 0)
       sec_key = getStringFromConsole("Secret Key", true)
 
-    if (cip_key.length() == 0)
+    if (cip_key.trim().length() == 0)
       cip_key = getStringFromConsole("Cipher Key", true)
 
     pubnub = new Pubnub(pub_key, sub_key, sec_key, cip_key, SSL)
@@ -342,7 +347,7 @@ object PubnubDevConsole {
           presence(channelName)
         case 4 =>
           channelName = getStringFromConsole("Channel Name")
-          detailedHistory(channelName)
+          history(channelName)
         case 5 =>
           channelName = getStringFromConsole("Channel Name")
           hereNow(channelName)
@@ -408,7 +413,7 @@ object PubnubDevConsole {
       + pubnub.getCurrentlySubscribedChannelNames() + ")")
     println("ENTER 2  FOR Publish")
     println("ENTER 3  FOR Presence")
-    println("ENTER 4  FOR Detailed History")
+    println("ENTER 4  FOR History")
     println("ENTER 5  FOR Here_Now")
     println("ENTER 6  FOR Unsubscribe")
     println("ENTER 7  FOR Presence-Unsubscribe")

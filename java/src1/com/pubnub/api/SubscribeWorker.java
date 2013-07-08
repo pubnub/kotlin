@@ -28,6 +28,12 @@ class SubscribeWorker extends AbstractSubscribeWorker {
         }
         hreq.setWorker(this);
         while (!_die && currentRetryAttempt <= maxRetries) {
+            if ( currentRetryAttempt > 1 ) {
+                try {
+                    Thread.sleep(retryInterval);
+                } catch (InterruptedException e) {
+                }
+            }
             try {
                 log.debug(hreq.getUrl());
                 hresp = httpclient.fetch(hreq.getUrl(), hreq.getHeaders());
@@ -55,7 +61,7 @@ class SubscribeWorker extends AbstractSubscribeWorker {
                 case PNERR_FORBIDDEN:
                 case PNERR_UNAUTHORIZED:
                     log.verbose("Authentication Failure : " + e.toString());
-                    currentRetryAttempt++;
+                    currentRetryAttempt = maxRetries + 1;
                     break;
                 default:
                     log.verbose("Retry Attempt : " + ((currentRetryAttempt == maxRetries)?"last":currentRetryAttempt)
@@ -71,10 +77,6 @@ class SubscribeWorker extends AbstractSubscribeWorker {
                 currentRetryAttempt++;
             }
 
-            try {
-                Thread.sleep(retryInterval);
-            } catch (InterruptedException e) {
-            }
         }
         if (!_die) {
             if (hresp == null) {
