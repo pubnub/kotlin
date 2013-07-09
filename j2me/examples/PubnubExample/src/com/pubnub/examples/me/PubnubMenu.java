@@ -31,6 +31,7 @@ public class PubnubMenu {
         final ToggleResumeOnReconnect toggleResumeOnReconnect;
         final Time time;
         final DisconnectAndResubscribe disconnectAndResubscribe;
+        final AuthKeyConfig authKeyConfig;
         if (menu == null) {
             final Command exitCommand;
             final Command publishCommand;
@@ -45,6 +46,7 @@ public class PubnubMenu {
             final Command detailedHistoryCommand;
             final Command disconnectAndResubscribeCommand;
             final Command toggleResumeOnReconnectCommand;
+            final Command authKeyConfigCommand;
 
             menu = new Form("Pubnub Demo Console");
             publish = new Publish(pubnub, display, menu);
@@ -56,6 +58,7 @@ public class PubnubMenu {
             unsubscribe = new Unsubscribe(pubnub,display,menu);
             toggleResumeOnReconnect = new ToggleResumeOnReconnect(pubnub,display,menu);
             disconnectAndResubscribe = new DisconnectAndResubscribe(pubnub,display,menu);
+            authKeyConfig = new AuthKeyConfig(pubnub,display,menu);
             time = new Time(pubnub,display,menu);
 
 
@@ -82,6 +85,9 @@ public class PubnubMenu {
             menu.addCommand(hereNowCommand);
             exitCommand = new Command("Exit", Command.EXIT, 0);
             menu.addCommand(exitCommand);
+            authKeyConfigCommand = new Command("Set Auth Key", Command.ITEM, 0);
+            menu.addCommand(authKeyConfigCommand);
+            
             menu.setCommandListener(new CommandListener() {
 
                 public void commandAction(Command command, Displayable displayable) {
@@ -107,7 +113,10 @@ public class PubnubMenu {
                         disconnectAndResubscribe.handler();
                     } else if (command == toggleResumeOnReconnectCommand) {
                         toggleResumeOnReconnect.handler();
+                    } else if (command == authKeyConfigCommand) {
+                        authKeyConfig.handler();
                     }
+
 
                 }
             });

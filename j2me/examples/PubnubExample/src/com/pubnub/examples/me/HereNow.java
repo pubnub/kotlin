@@ -30,7 +30,7 @@ public class HereNow extends PubnubCommand {
                         notifyUser(message.toString());
                     }
 
-                    public void errorCallback(String channel, PubnubError message) {
+                    public void errorCallback(String channel, PubnubError error) {
                         notifyUser(channel + " : " + error.toString());
                     }
                 });
