@@ -39,6 +39,17 @@
         <delete dir="bin"/>
     </target>
     <target depends="clean" name="cleanall"/>
+    <target name="setDebugTrue" >
+        <replace dir="${srcPubnubApi.link}" token="boolean LOGGING = false" value="boolean LOGGING = true">
+            <include name="**/*.java"/>
+        </replace>
+    </target>
+    <target name="unsetDebugTrue" >
+        <replace dir="${srcPubnubApi.link}" token="boolean LOGGING = true" value="boolean LOGGING = false">
+            <include name="**/*.java"/>
+        </replace>
+    </target>
+    <target depends="setDebugTrue,build,unsetDebugTrue" name="debug-build"/>
     <target depends="create-jar, clean" name="build"/>
     <target depends="build-project" name="create-jar">
         <jar destfile="${pubnub_lib_jar}"

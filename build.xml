@@ -5,6 +5,11 @@
             <fileset dir="." includes="*/build.xml" />
         </subant>
     </target>
+    <target name="debug-build">
+        <subant target="debug-build" >
+            <fileset dir="." includes="*/build.xml" />
+        </subant>
+    </target>
     <target name="test">
         <subant target="test" >
             <fileset dir="." includes="*/build.xml" />
