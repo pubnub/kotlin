@@ -17,7 +17,15 @@ class SubscribeWorker extends AbstractSubscribeWorker {
         HttpResponse hresp = null;
         int currentRetryAttempt = (hreq.isDar())?1:maxRetries;
         log.verbose("disconnectAndResubscribe is " + hreq.isDar());
+        boolean sleep = false;
         while (!_die && currentRetryAttempt <= maxRetries) {
+        	if (sleep) {
+                try {
+                    Thread.sleep(retryInterval);
+                } catch (InterruptedException e) {
+                }
+                sleep = true;
+        	}
             try {
                 log.debug(hreq.getUrl());
                 hresp = httpclient.fetch(hreq.getUrl(), hreq.getHeaders());
@@ -56,10 +64,7 @@ class SubscribeWorker extends AbstractSubscribeWorker {
                 currentRetryAttempt++;
             }
 
-            try {
-                Thread.sleep(retryInterval);
-            } catch (InterruptedException e) {
-            }
+
         }
         if (!_die) {
             if (hresp == null) {
