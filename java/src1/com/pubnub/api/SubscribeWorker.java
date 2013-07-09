@@ -40,8 +40,8 @@ class SubscribeWorker extends AbstractSubscribeWorker {
                 log.debug(hreq.getUrl());
                 hresp = httpclient.fetch(hreq.getUrl(), hreq.getHeaders());
                 if (hresp != null
-                        && httpclient.checkResponseSuccess(hresp
-                                                           .getStatusCode())) {
+                        && HttpUtil.checkResponseSuccess(hresp
+                                                         .getStatusCode())) {
                     currentRetryAttempt = 1;
                     break;
                 }

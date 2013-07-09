@@ -17,7 +17,7 @@ abstract class AbstractLogger {
     private String prepareString(String s) {
         return  "[" + VERSION + "] : " + "[" + System.currentTimeMillis() + "] : " +
                 "["+Thread.activeCount() +
-                "]  Thread ID : " + Thread.currentThread().getId() +
+                "]  Thread HashCode : " + Thread.currentThread().hashCode() +
                 ",  Thread Name : " + Thread.currentThread().getName() +
                 ",  " + s;
     }
