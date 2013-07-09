@@ -27,6 +27,7 @@ public final class PubnubDemoConsoleScreen extends MainScreen {
         addMenuItem(new History(_pubnub).getMenuItem());
         addMenuItem(new DetailedHistory(_pubnub).getMenuItem());
         addMenuItem(new HereNow(_pubnub).getMenuItem());
+        addMenuItem(new AuthKeyConfig(_pubnub).getMenuItem());
         addMenuItem(new DisconnectAndResubscribe(_pubnub).getMenuItem());
         addMenuItem(new ToggleResumeOnReconnect(_pubnub).getMenuItem());
         addMenuItem(new Time(_pubnub).getMenuItem());
