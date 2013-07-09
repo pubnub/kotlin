@@ -5,6 +5,8 @@ import java.util.Vector;
 
 class SubscribeWorker extends AbstractSubscribeWorker {
 
+    private Exception excp = null;
+
     SubscribeWorker(Vector _requestQueue, int connectionTimeout,
                     int requestTimeout, int maxRetries, int retryInterval, Hashtable headers) {
         super(_requestQueue, connectionTimeout, requestTimeout,
@@ -33,7 +35,22 @@ class SubscribeWorker extends AbstractSubscribeWorker {
                 }
                 break;
 
-            } */catch (Exception e) {
+            }*/catch (PubnubException e) {
+                excp = e;
+                switch (e.getPubnubError().errorCode) {
+                case PubnubError.PNERR_FORBIDDEN:
+                case PubnubError.PNERR_UNAUTHORIZED:
+                    log.verbose("Authentication Failure : " + e.toString());
+                    currentRetryAttempt = maxRetries + 1;
+                    break;
+                default:
+                    log.verbose("Retry Attempt : " + ((currentRetryAttempt == maxRetries)?"last":String.valueOf(currentRetryAttempt))
+                                + " Exception in Fetch : " + e.toString());
+                    currentRetryAttempt++;
+                    break;
+                }
+
+            } catch (Exception e) {
                 log.verbose("Retry Attempt : " + ((currentRetryAttempt == maxRetries)?"last":String.valueOf(currentRetryAttempt))
                             + " Exception in Fetch : " + e.toString());
                 currentRetryAttempt++;

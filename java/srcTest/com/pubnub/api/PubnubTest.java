@@ -1670,7 +1670,7 @@ public class PubnubTest {
         pubnub.setDomain("pubnub.co");
         pubnub.setOrigin("uls-test");
         pubnub.setCacheBusting(false);
-        pubnub.ulsGrant("hello-uls", "abcd", true, true, ulscb);
+        pubnub.pamGrant("hello-uls", "abcd", true, true, 1400, ulscb);
 
         try {
             latch.await(10, TimeUnit.SECONDS);
@@ -1690,7 +1690,7 @@ public class PubnubTest {
         pubnub.setDomain("pubnub.co");
         pubnub.setOrigin("uls-test");
         pubnub.setCacheBusting(false);
-        pubnub.ulsAudit(ulscb);
+        pubnub.pamAudit(ulscb);
 
         try {
             latch.await(10, TimeUnit.SECONDS);
@@ -1710,7 +1710,7 @@ public class PubnubTest {
         pubnub.setDomain("pubnub.co");
         pubnub.setOrigin("uls-test");
         pubnub.setCacheBusting(false);
-        pubnub.ulsAudit("hello-uls", ulscb);
+        pubnub.pamAudit("hello-uls", ulscb);
 
         try {
             latch.await(10, TimeUnit.SECONDS);
@@ -1730,7 +1730,7 @@ public class PubnubTest {
         pubnub.setDomain("pubnub.co");
         pubnub.setOrigin("uls-test");
         pubnub.setCacheBusting(false);
-        pubnub.ulsAudit("hello-uls", "abcd", ulscb);
+        pubnub.pamAudit("hello-uls", "abcd", ulscb);
 
         try {
             latch.await(10, TimeUnit.SECONDS);
@@ -1750,7 +1750,7 @@ public class PubnubTest {
         pubnub.setDomain("pubnub.co");
         pubnub.setOrigin("uls-test");
         pubnub.setCacheBusting(false);
-        pubnub.ulsRevoke("hello-uls", "abcd", ulscb);
+        pubnub.pamRevoke("hello-uls", "abcd", ulscb);
 
         try {
             latch.await(10, TimeUnit.SECONDS);

@@ -237,14 +237,14 @@ object PubnubDevConsole {
     pubnub.unsubscribePresence(channel)
   }
 
-  def ulsGrant() {
+  def pamGrant() {
 
     var channel = getStringFromConsole("Channel")
     var auth_key = getStringFromConsole("Auth Key")
     var read = getBooleanFromConsole("Read")
     var write = getBooleanFromConsole("Write")
 
-    pubnub.ulsGrant(channel, auth_key, read, write, new Callback() {
+    pubnub.pamGrant(channel, auth_key, read, write, new Callback() {
 
       override def successCallback(channel: String, message: Object) {
         notifyUser("CHANNEL : " + channel + " , " + message.toString())
@@ -257,11 +257,11 @@ object PubnubDevConsole {
 
     })
   }
-  def ulsRevoke() {
+  def pamRevoke() {
     var channel = getStringFromConsole("Enter Channel")
     var auth_key = getStringFromConsole("Auth Key")
 
-    pubnub.ulsRevoke(channel, auth_key, new Callback() {
+    pubnub.pamRevoke(channel, auth_key, new Callback() {
 
       override def successCallback(channel: String, message: Object) {
         notifyUser("CHANNEL : " + channel + " , " + message.toString())
@@ -274,7 +274,7 @@ object PubnubDevConsole {
     })
   }
 
-  def ulsAudit() {
+  def pamAudit() {
     var channel = getStringFromConsole("Channel", true)
     var auth_key = getStringFromConsole("Auth Key", true)
 
@@ -292,12 +292,12 @@ object PubnubDevConsole {
 
     if (channel != null && channel.length() > 0) {
       if (auth_key != null && auth_key.length() != 0) {
-        pubnub.ulsAudit(channel, auth_key, cb)
+        pubnub.pamAudit(channel, auth_key, cb)
       } else {
-        pubnub.ulsAudit(channel, cb)
+        pubnub.pamAudit(channel, cb)
       }
     } else {
-      pubnub.ulsAudit(cb)
+      pubnub.pamAudit(cb)
     }
   }
   def startDemo() {
@@ -387,11 +387,11 @@ object PubnubDevConsole {
           var authKey = getStringFromConsole("Auth Key")
           pubnub.setAuthKey(authKey)
         case 18 =>
-          ulsGrant()
+          pamGrant()
         case 19 =>
-          ulsRevoke()
+          pamRevoke()
         case 20 =>
-          ulsAudit()
+          pamAudit()
         case 21 =>
           pubnub.setOrigin(getStringFromConsole("Origin"))
         case 22 =>
@@ -428,9 +428,9 @@ object PubnubDevConsole {
     println("ENTER 15 FOR Setting Subscribe Timeout ( current: " + pubnub.getSubscribeTimeout() + " milliseconds )")
     println("ENTER 16 FOR Setting Non Subscribe Timeout ( current: " + pubnub.getNonSubscribeTimeout() + " milliseconds )")
     println("ENTER 17 FOR Setting/Unsetting auth key ( current: " + pubnub.getAuthKey() + " )")
-    println("ENTER 18 FOR ULS grant")
-    println("ENTER 19 FOR ULS revoke")
-    println("ENTER 20 FOR ULS Audit")
+    println("ENTER 18 FOR PAM grant")
+    println("ENTER 19 FOR PAM revoke")
+    println("ENTER 20 FOR PAM Audit")
     println("ENTER 21 FOR setting origin ( current: " + pubnub.getOrigin() + " )")
     println("ENTER 22 FOR setting domain ( current: "+ pubnub.getDomain() + " )")
     println("ENTER 23 FOR enabling Cache Busting  ( current: " + pubnub.getCacheBusting() + " )")

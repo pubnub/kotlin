@@ -312,13 +312,13 @@ public class PubnubDemoConsole {
                 pubnub.setAuthKey(authKey);
                 break;
             case 18:
-                ulsGrant();
+                pamGrant();
                 break;
             case 19:
-                ulsRevoke();
+                pamRevoke();
                 break;
             case 20:
-                ulsAudit();
+                pamAudit();
                 break;
             case 21:
                 pubnub.setOrigin(getStringFromConsole("Origin"));
@@ -407,13 +407,14 @@ public class PubnubDemoConsole {
         return getBooleanFromConsole(message, false);
     }
 
-    private void ulsGrant() {
+    private void pamGrant() {
         String channel = getStringFromConsole("Channel");
         String auth_key = getStringFromConsole("Auth Key");
         boolean read = getBooleanFromConsole("Read");
         boolean write = getBooleanFromConsole("Write");
+        int ttl = getIntFromConsole("TTL");
 
-        pubnub.ulsGrant(channel, auth_key, read, write, new Callback() {
+        pubnub.pamGrant(channel, auth_key, read, write, ttl, new Callback() {
 
             @Override
             public void successCallback(String channel, Object message) {
@@ -428,7 +429,7 @@ public class PubnubDemoConsole {
         });
     }
 
-    private void ulsAudit() {
+    private void pamAudit() {
         String channel = getStringFromConsole("Channel", true);
         String auth_key = getStringFromConsole("Auth Key", true);
 
@@ -446,21 +447,21 @@ public class PubnubDemoConsole {
 
         if (channel != null && channel.length() > 0) {
             if (auth_key != null && auth_key.length() != 0) {
-                pubnub.ulsAudit(channel, auth_key, cb);
+                pubnub.pamAudit(channel, auth_key, cb);
             } else {
-                pubnub.ulsAudit(channel, cb);
+                pubnub.pamAudit(channel, cb);
             }
         } else {
-            pubnub.ulsAudit(cb);
+            pubnub.pamAudit(cb);
         }
 
     }
 
-    private void ulsRevoke() {
+    private void pamRevoke() {
         String channel = getStringFromConsole("Enter Channel");
         String auth_key = getStringFromConsole("Auth Key");
 
-        pubnub.ulsRevoke(channel, auth_key, new Callback() {
+        pubnub.pamRevoke(channel, auth_key, new Callback() {
 
             @Override
             public void successCallback(String channel, Object message) {
@@ -511,9 +512,9 @@ public class PubnubDemoConsole {
         notifyUser("ENTER 15 FOR Setting Subscribe Timeout ( current: " + pubnub.getSubscribeTimeout() + " milliseconds )");
         notifyUser("ENTER 16 FOR Setting Non Subscribe Timeout ( current: " + pubnub.getNonSubscribeTimeout() + " milliseconds )");
         notifyUser("ENTER 17 FOR Setting/Unsetting auth key ( current: " + pubnub.getAuthKey() + " )");
-        notifyUser("ENTER 18 FOR ULS grant");
-        notifyUser("ENTER 19 FOR ULS revoke");
-        notifyUser("ENTER 20 FOR ULS Audit");
+        notifyUser("ENTER 18 FOR PAM grant");
+        notifyUser("ENTER 19 FOR PAM revoke");
+        notifyUser("ENTER 20 FOR PAM Audit");
         notifyUser("ENTER 21 FOR Setting Origin ( current: " + pubnub.getOrigin() + " )");
         notifyUser("ENTER 22 FOR Setting Domain ( current: "+ pubnub.getDomain() + " )");
         notifyUser("ENTER 23 FOR Enabling Cache Busting  ( current: " + pubnub.getCacheBusting() + " )");

@@ -11,6 +11,8 @@ import javax.microedition.io.HttpConnection;
 
 import com.tinyline.util.GZIPInputStream;
 
+import org.json.me.*;
+
 public class HttpClientCore extends HttpClient {
     private int requestTimeout = 310000;
     private int connectionTimeout = 5000;
@@ -89,11 +91,11 @@ public class HttpClientCore extends HttpClient {
         return (rc == HttpConnection.HTTP_OK || isRedirect(rc));
     }
 
-    public HttpResponse fetch(String url) throws IOException {
+    public HttpResponse fetch(String url) throws PubnubException, IOException {
         return fetch(url, null);
     }
 
-    public HttpResponse fetch(String url, Hashtable headers) throws IOException {
+    public HttpResponse fetch(String url, Hashtable headers) throws PubnubException, IOException {
         if (url == null)
             throw new IOException("Invalid Url");
 
@@ -159,6 +161,37 @@ public class HttpClientCore extends HttpClient {
         }
 
         response = readResponse(hc);
+        switch (rc) {
+        case HttpUtil.HTTP_FORBIDDEN:
+            throw new PubnubException(PubnubError.getErrorObject(PubnubError.PNERROBJ_FORBIDDEN, response));
+        case HttpUtil.HTTP_UNAUTHORIZED:
+            throw new PubnubException(PubnubError.getErrorObject(PubnubError.PNERROBJ_UNAUTHORIZED, response));
+        case HttpUtil.HTTP_BAD_REQUEST:
+            try {
+                JSONArray jsarr = new JSONArray(response);
+                String error = jsarr.get(1).toString();
+                throw new PubnubException(PubnubError.getErrorObject(PubnubError.PNERROBJ_BAD_REQUEST, 1, error));
+            } catch (JSONException e) {
+                JSONObject jso;
+                try {
+                    jso = new JSONObject(response);
+                    throw new PubnubException(PubnubError.getErrorObject(PubnubError.PNERROBJ_BAD_REQUEST, 2, jso.toString()));
+                } catch (JSONException e1) {
+                    throw new PubnubException(PubnubError.getErrorObject(PubnubError.PNERROBJ_INVALID_JSON, 2));
+                }
+            }
+        case HttpUtil.HTTP_BAD_GATEWAY:
+            throw new PubnubException(PubnubError.getErrorObject(PubnubError.PNERROBJ_BAD_GATEWAY, url));
+        case HttpUtil.HTTP_CLIENT_TIMEOUT:
+            throw new PubnubException(PubnubError.getErrorObject(PubnubError.PNERROBJ_CLIENT_TIMEOUT, url));
+        case HttpUtil.HTTP_GATEWAY_TIMEOUT:
+            throw new PubnubException(PubnubError.getErrorObject(PubnubError.PNERROBJ_GATEWAY_TIMEOUT, url));
+        case HttpUtil.HTTP_INTERNAL_ERROR:
+            throw new PubnubException(PubnubError.getErrorObject(PubnubError.PNERROBJ_INTERNAL_ERROR, url));
+        default:
+            break;
+        }
+
         hc.close();
         return new HttpResponse(rc, response);
     }

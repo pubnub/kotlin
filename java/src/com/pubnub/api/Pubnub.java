@@ -524,7 +524,7 @@ public class Pubnub extends PubnubCore {
         super.subscribe(args);
     }
 
-    private String ulsSign(String key, String data) throws PubnubException {
+    private String pamSign(String key, String data) throws PubnubException {
         Mac sha256_HMAC;
 
         try {
@@ -553,8 +553,20 @@ public class Pubnub extends PubnubCore {
      * @param write
      * @param callback
      */
-    public void ulsGrant(final String channel, String auth_key, boolean read,
+    public void pamGrant(final String channel, String auth_key, boolean read,
                          boolean write, final Callback callback) {
+        pamGrant(channel, auth_key, read, write, 0, callback);
+    }
+
+    /** Grant r/w access based on channel and auth key
+     * @param channel
+     * @param auth_key
+     * @param read
+     * @param write
+     * @param callback
+     */
+    public void pamGrant(final String channel, String auth_key, boolean read,
+                         boolean write, int ttl, final Callback callback) {
 
         Hashtable parameters = hashtableClone(params);
 
@@ -574,11 +586,12 @@ public class Pubnub extends PubnubCore {
         String sign_input = this.SUBSCRIBE_KEY + "\n" + this.PUBLISH_KEY + "\n"
                             + "grant" + "\n" + "auth=" + auth_key + "&" + "channel="
                             + channel + "&" + "r=" + r + "&" + "timestamp=" + timestamp
+                            + ((ttl > 0)?"&" + "ttl=" + ttl:"")
                             + "&" + "w=" + w;
 
 
         try {
-            signature = ulsSign(this.SECRET_KEY, sign_input);
+            signature = pamSign(this.SECRET_KEY, sign_input);
         } catch (PubnubException e1) {
             callback.errorCallback(channel,
                                    e1.getPubnubError());
@@ -592,8 +605,9 @@ public class Pubnub extends PubnubCore {
         parameters.put("r", r);
         parameters.put("channel", channel);
         parameters.put("auth", auth_key);
+        if (ttl > 0) parameters.put("ttl", String.valueOf(ttl));
 
-        String[] urlComponents = { getPubnubUrl(), "v2", "grant", "sub-key",
+        String[] urlComponents = { getPubnubUrl(), "v1", "auth", "grant", "sub-key",
                                    this.SUBSCRIBE_KEY
                                  };
 
@@ -625,7 +639,7 @@ public class Pubnub extends PubnubCore {
     /** ULS Audit
      * @param callback
      */
-    public void ulsAudit(final Callback callback) {
+    public void pamAudit(final Callback callback) {
 
         Hashtable parameters = hashtableClone(params);
 
@@ -645,7 +659,7 @@ public class Pubnub extends PubnubCore {
 
 
         try {
-            signature = ulsSign(this.SECRET_KEY, sign_input);
+            signature = pamSign(this.SECRET_KEY, sign_input);
         } catch (PubnubException e1) {
             callback.errorCallback("",
                                    e1.getPubnubError());
@@ -655,7 +669,7 @@ public class Pubnub extends PubnubCore {
         parameters.put("timestamp", String.valueOf(timestamp));
         parameters.put("signature", signature);
 
-        String[] urlComponents = { getPubnubUrl(), "v2", "audit", "sub-key",
+        String[] urlComponents = { getPubnubUrl(), "v1", "auth", "audit", "sub-key",
                                    this.SUBSCRIBE_KEY
                                  };
 
@@ -688,7 +702,7 @@ public class Pubnub extends PubnubCore {
      * @param channel
      * @param callback
      */
-    public void ulsAudit(final String channel,
+    public void pamAudit(final String channel,
                          final Callback callback) {
 
         Hashtable parameters = hashtableClone(params);
@@ -708,7 +722,7 @@ public class Pubnub extends PubnubCore {
                             + channel + "&" + "timestamp=" + timestamp;
 
         try {
-            signature = ulsSign(this.SECRET_KEY, sign_input);
+            signature = pamSign(this.SECRET_KEY, sign_input);
         } catch (PubnubException e1) {
             callback.errorCallback(channel,
                                    e1.getPubnubError());
@@ -719,7 +733,7 @@ public class Pubnub extends PubnubCore {
         parameters.put("signature", signature);
         parameters.put("channel", channel);
 
-        String[] urlComponents = { getPubnubUrl(), "v2", "audit", "sub-key",
+        String[] urlComponents = { getPubnubUrl(), "v1", "auth", "audit", "sub-key",
                                    this.SUBSCRIBE_KEY
                                  };
 
@@ -753,7 +767,7 @@ public class Pubnub extends PubnubCore {
      * @param auth_key
      * @param callback
      */
-    public void ulsAudit(final String channel, String auth_key,
+    public void pamAudit(final String channel, String auth_key,
                          final Callback callback) {
 
         Hashtable parameters = hashtableClone(params);
@@ -774,7 +788,7 @@ public class Pubnub extends PubnubCore {
 
 
         try {
-            signature = ulsSign(this.SECRET_KEY, sign_input);
+            signature = pamSign(this.SECRET_KEY, sign_input);
         } catch (PubnubException e1) {
             callback.errorCallback(channel,
                                    e1.getPubnubError());
@@ -786,7 +800,7 @@ public class Pubnub extends PubnubCore {
         parameters.put("channel", channel);
         parameters.put("auth", auth_key);
 
-        String[] urlComponents = { getPubnubUrl(), "v2", "audit", "sub-key",
+        String[] urlComponents = { getPubnubUrl(), "v1", "auth", "audit", "sub-key",
                                    this.SUBSCRIBE_KEY
                                  };
 
@@ -820,8 +834,8 @@ public class Pubnub extends PubnubCore {
      * @param auth_key
      * @param callback
      */
-    public void ulsRevoke(String channel, String auth_key, Callback callback) {
-        ulsGrant(channel, auth_key, false, false, callback);
+    public void pamRevoke(String channel, String auth_key, Callback callback) {
+        pamGrant(channel, auth_key, false, false, callback);
     }
 
 }
