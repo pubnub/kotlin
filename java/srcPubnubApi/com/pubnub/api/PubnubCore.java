@@ -218,7 +218,7 @@ abstract class PubnubCore {
     *            Cipher Key
     * @param ssl_on
     *            SSL enabled ?
-    * @param initializatoin_vector
+    * @param initialization_vector
     *            Initialization vector
     */
 
