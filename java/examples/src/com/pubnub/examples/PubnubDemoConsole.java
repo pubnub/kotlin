@@ -1,12 +1,12 @@
 package com.pubnub.examples;
 
-import java.util.Hashtable;
-import java.util.Scanner;
-
+import com.pubnub.api.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import com.pubnub.api.*;
+import java.util.Hashtable;
+import java.util.Scanner;
+
 import static java.lang.System.out;
 
 public class PubnubDemoConsole {
@@ -126,6 +126,21 @@ public class PubnubDemoConsole {
 
                 @Override
                 public void errorCallback(String channel, PubnubError error) {
+
+                    /*
+
+                    # Switch on error code, see PubnubError.java
+
+                    if (error.errorCode == 112) {
+                        # Bad Auth Key!
+                        unsubscribe, get a new auth key, subscribe, etc...
+                    } else if (error.errorCode == 113) {
+                        # Need to set Auth Key !
+                        unsubscribe, set auth, resubscribe
+                    }
+
+                    */
+
                     notifyUser("SUBSCRIBE : ERROR on channel " + channel
                                + " : " + error.toString());
                 }
