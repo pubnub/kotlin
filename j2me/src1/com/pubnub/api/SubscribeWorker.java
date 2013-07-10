@@ -19,13 +19,13 @@ class SubscribeWorker extends AbstractSubscribeWorker {
         log.verbose("disconnectAndResubscribe is " + hreq.isDar());
         boolean sleep = false;
         while (!_die && currentRetryAttempt <= maxRetries) {
-        	if (sleep) {
+            if (sleep) {
                 try {
                     Thread.sleep(retryInterval);
                 } catch (InterruptedException e) {
                 }
                 sleep = true;
-        	}
+            }
             try {
                 log.debug(hreq.getUrl());
                 hresp = httpclient.fetch(hreq.getUrl(), hreq.getHeaders());

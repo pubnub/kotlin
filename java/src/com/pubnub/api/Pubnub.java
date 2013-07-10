@@ -95,6 +95,30 @@ public class Pubnub extends PubnubCore {
         super(publish_key, subscribe_key, secret_key, "", false);
     }
 
+
+    /**
+    *
+    * Constructor for Pubnub Class
+    *
+    * @param publish_key
+    *            Publish Key
+    * @param subscribe_key
+    *            Subscribe Key
+    * @param secret_key
+    *            Secret Key
+    * @param cipher_key
+    *            Cipher Key
+    * @param ssl_on
+    *            SSL enabled ?
+    * @param initialization_vector
+    *            Initialization vector
+    */
+
+    public Pubnub(String publish_key, String subscribe_key,
+                  String secret_key, String cipher_key, boolean ssl_on, String initialization_vector) {
+        super(publish_key, subscribe_key, secret_key, cipher_key, ssl_on, initialization_vector);
+    }
+
     /**
      * Sets value for UUID
      *

@@ -87,7 +87,7 @@ public class PubnubMenu {
             menu.addCommand(exitCommand);
             authKeyConfigCommand = new Command("Set Auth Key", Command.ITEM, 0);
             menu.addCommand(authKeyConfigCommand);
-            
+
             menu.setCommandListener(new CommandListener() {
 
                 public void commandAction(Command command, Displayable displayable) {
