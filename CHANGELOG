@@ -1,3 +1,11 @@
+07-09-13 3.5.3
+. added constructor for setting iv
+. beta1 of CN1 port
+. added constructor for setting PAM grant TTL (minutes)
+. migrate ULS* methods to PAM* methods
+. first version of scala console
+. fix ant debug-build from any source path
+
 07-01-13 3.5.2
 . Introduced PubnubError class object passing to errorCallback
 . ULS APIs
