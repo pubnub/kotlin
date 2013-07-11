@@ -146,20 +146,6 @@ abstract class PubnubCore {
         return this.CACHE_BUSTING;
     }
 
-    protected Hashtable hashtableClone(Hashtable ht) {
-        if (ht == null)
-            return null;
-
-        Hashtable htresp = new Hashtable();
-        Enumeration e = ht.keys();
-
-        while (e.hasMoreElements()) {
-            Object element = e.nextElement();
-            htresp.put(element, ht.get(element));
-        }
-        return htresp;
-    }
-
     /**
      * This method returns all channel names currently subscribed to in form of
      * a comma separated String
@@ -747,7 +733,7 @@ abstract class PubnubCore {
      */
     public void detailedHistory(final String channel, long start, long end,
                                 int count, boolean reverse, final Callback callback) {
-        Hashtable parameters = hashtableClone(params);
+        Hashtable parameters = PubnubUtil.hashtableClone(params);
         if (count == -1)
             count = 100;
 
@@ -1288,7 +1274,7 @@ abstract class PubnubCore {
                                  };
 
 
-        Hashtable params = hashtableClone(this.params);
+        Hashtable params = PubnubUtil.hashtableClone(this.params);
         params.put("uuid", UUID);
         log.verbose("Subscribing with timetoken : " + _timetoken);
 

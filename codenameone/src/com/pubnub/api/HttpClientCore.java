@@ -59,7 +59,7 @@ class HttpClientCore extends HttpClient {
         IOException excp = null;
         PubnubCn1Response pcr = null;
         try {
-            pcr = connection.fetch(url, requestTimeout, headers);
+            pcr = connection.fetch(url, requestTimeout, PubnubUtil.hashtableClone(headers,_headers));
         } catch (IOException ex) {
             excp = ex;
         }

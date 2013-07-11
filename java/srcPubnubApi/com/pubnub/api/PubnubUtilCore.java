@@ -138,4 +138,55 @@ class PubnubUtilCore {
 
     }
 
+    static Hashtable hashtableClone(Hashtable ht) {
+        if (ht == null)
+            return null;
+
+        Hashtable htresp = new Hashtable();
+        Enumeration e = ht.keys();
+
+        while (e.hasMoreElements()) {
+            Object element = e.nextElement();
+            htresp.put(element, ht.get(element));
+        }
+        return htresp;
+    }
+
+    static Hashtable hashtableClone(Hashtable ht1, Hashtable ht2) {
+        if (ht1 == null && ht2 == null)
+            return null;
+
+        Hashtable htresp = new Hashtable();
+
+        if (ht1 != null) {
+            Enumeration e = ht1.keys();
+            while (e.hasMoreElements()) {
+                Object element = e.nextElement();
+                htresp.put(element, ht1.get(element));
+            }
+        }
+        if (ht2 != null) {
+            Enumeration e = ht2.keys();
+            while (e.hasMoreElements()) {
+                Object element = e.nextElement();
+                htresp.put(element, ht2.get(element));
+            }
+        }
+        return htresp;
+    }
+
+    static Hashtable hashtableMerge(Hashtable dst, Hashtable src) {
+        if (dst == null)
+            return src;
+        if (src == null)
+            return dst;
+
+        Enumeration e = src.keys();
+
+        while (e.hasMoreElements()) {
+            Object element = e.nextElement();
+            dst.put(element, src.get(element));
+        }
+        return dst;
+    }
 }

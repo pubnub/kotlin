@@ -1,3 +1,8 @@
+07-11-13 3.5.4
+. fixed issue with PAM audit when auth key is set
+. fixed issue in cn1 where global headers were not getting added
+. fixed issue in PAM, where ttl 0 was being considered invalid
+
 07-09-13 3.5.3
 . added constructor for setting iv
 . beta1 of CN1 port

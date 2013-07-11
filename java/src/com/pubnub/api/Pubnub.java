@@ -579,7 +579,7 @@ public class Pubnub extends PubnubCore {
      */
     public void pamGrant(final String channel, String auth_key, boolean read,
                          boolean write, final Callback callback) {
-        pamGrant(channel, auth_key, read, write, 0, callback);
+        pamGrant(channel, auth_key, read, write, -1, callback);
     }
 
     /** Grant r/w access based on channel and auth key
@@ -592,7 +592,7 @@ public class Pubnub extends PubnubCore {
     public void pamGrant(final String channel, String auth_key, boolean read,
                          boolean write, int ttl, final Callback callback) {
 
-        Hashtable parameters = hashtableClone(params);
+        Hashtable parameters = PubnubUtil.hashtableClone(params);
 
         String r = (read) ? "1" : "0";
         String w = (write) ? "1" : "0";
@@ -610,7 +610,7 @@ public class Pubnub extends PubnubCore {
         String sign_input = this.SUBSCRIBE_KEY + "\n" + this.PUBLISH_KEY + "\n"
                             + "grant" + "\n" + "auth=" + auth_key + "&" + "channel="
                             + channel + "&" + "r=" + r + "&" + "timestamp=" + timestamp
-                            + ((ttl > 0)?"&" + "ttl=" + ttl:"")
+                            + ((ttl > -1)?"&" + "ttl=" + ttl:"")
                             + "&" + "w=" + w;
 
 
@@ -665,7 +665,8 @@ public class Pubnub extends PubnubCore {
      */
     public void pamAudit(final Callback callback) {
 
-        Hashtable parameters = hashtableClone(params);
+        Hashtable parameters = PubnubUtil.hashtableClone(params);
+        parameters.remove("auth");
 
         String signature = "0";
 
@@ -729,7 +730,8 @@ public class Pubnub extends PubnubCore {
     public void pamAudit(final String channel,
                          final Callback callback) {
 
-        Hashtable parameters = hashtableClone(params);
+        Hashtable parameters = PubnubUtil.hashtableClone(params);
+        parameters.remove("auth");
 
         String signature = "0";
 
@@ -794,7 +796,7 @@ public class Pubnub extends PubnubCore {
     public void pamAudit(final String channel, String auth_key,
                          final Callback callback) {
 
-        Hashtable parameters = hashtableClone(params);
+        Hashtable parameters = PubnubUtil.hashtableClone(params);
 
         String signature = "0";
 
