@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project basedir="." default="build" name="PubnubApi" xmlns:artifact="antlib:org.apache.maven.artifact.ant">
+<project basedir="." default="build-all" name="PubnubApi" xmlns:artifact="antlib:org.apache.maven.artifact.ant">
     <loadfile property="VERSION" srcFile="../VERSION"><filterchain><striplinebreaks/></filterchain></loadfile>
     <property environment="env"/>
     <property name="pubnub_jar_file_name" value="Pubnub-StandardEdition-${VERSION}.jar"/>
+    <property name="pubnub_debug_jar_file_name" value="Pubnub-StandardEdition-Debug-${VERSION}.jar"/>
     <property name="pubnub_unittests_jar_file_name" value="Pubnub-UnitTests-${VERSION}.jar"/>
     <property name="srcPubnubApi.link" value="srcPubnubApi"/>
     <property name="sources_pubnub_api" value="${srcPubnubApi.link}/com/pubnub/api"/>
@@ -20,6 +21,7 @@
         <pathelement location="libs/junit-4.11.jar"/>
         <pathelement location="jars/Pubnub-UnitTests-${VERSION}.jar"/>
     </path>
+    <target name="build-all" depends="debug-build, build" />
     <path id="PubnubTests.classpath">
         <pathelement location="${pubnub_jar_file_name}"/>
         <pathelement location="libs/hamcrest-all-1.3.jar"/>
@@ -53,7 +55,6 @@
             </fileset>
         </copy>
     </target>
-    <target depends="setDebugTrue,build,unsetDebugTrue" name="debug-build"/>
     <target name="clean_bin">
         <delete dir="bin"/>
     </target>
@@ -63,9 +64,26 @@
             <fileset dir="jars" includes="**/*.jar"/>
         </delete>
     </target>
-    <target depends="create-jar, create-test-jar, create-examples-jar, create-demo-console-jar, clean_bin, doc" name="build"/>
+    <target name="build">
+        <delete file="${pubnub_jar_file_name}"/>
+        <antcall target="build-jar">
+            <param name="jar_name" value="${pubnub_jar_file_name}" />
+            <param name="debug" value="false" />
+        </antcall>
+    </target>
+    <target name="debug-build">
+        <delete file="${pubnub_debug_jar_file_name}"/>
+        <antcall target="setDebugTrue" />
+        <antcall target="build-jar">
+            <param name="jar_name" value="${pubnub_debug_jar_file_name}" />
+            <param name="debug" value="true" />
+        </antcall>
+        <antcall target="unsetDebugTrue" />
+    </target>
+
+    <target depends="create-jar, create-test-jar, create-examples-jar, create-demo-console-jar, clean_bin, doc" name="build-jar"/>
     <target depends="build-project" name="create-jar">
-        <jar destfile="${pubnub_jar_file_name}"
+        <jar destfile="${jar_name}"
             basedir="bin"
             includes="**/**"
             excludes="**/*Test*.class"
@@ -81,7 +99,7 @@
 
     <target depends="init" name="build-project">
         <echo message="${ant.project.name}: ${ant.file}"/>
-        <replace dir="${srcPubnubApi.link}" token='protected static String VERSION = ""' value='protected static String VERSION = "${VERSION}"' >
+        <replace dir="${srcPubnubApi.link}" token='static String VERSION = ""' value='static String VERSION = "${VERSION}"' >
             <include name="**/*.java"/>
         </replace>
         <javac destdir="bin" debug="${debug}" source="${source}" target="${target}">
@@ -93,7 +111,7 @@
             <src path="examples/src"/>
             <classpath refid="PubnubApi.classpath"/>
         </javac>
-        <replace dir="${srcPubnubApi.link}" token='protected static String VERSION = "${VERSION}"' value='protected static String VERSION = ""'>
+        <replace dir="${srcPubnubApi.link}" token='static String VERSION = "${VERSION}"' value='static String VERSION = ""'>
             <include name="**/*.java"/>
         </replace>
     </target>
@@ -196,24 +214,21 @@
     <property name="maven-staging-repository-id" value="sonatype-nexus-staging" />
     <property name="maven-staging-repository-url" value="https://oss.sonatype.org/service/local/staging/deploy/maven2/" />
 
-
-    <target name="maven_init">
-        <mkdir dir="${build}" />
-        <mkdir dir="${maven}/src/com/pubnub/api" />
-        <copy todir="${maven}/src/com/pubnub/api" >
-            <fileset dir="${sources_pubnub_java}" />
-            <fileset dir="${sources_pubnub_java1}" />
-            <fileset dir="${sources_pubnub_logging}" />
-            <fileset dir="${sources_pubnub_api}" />
-        </copy>
-        <mkdir dir="${dist}/lib" />
-    </target>
-
-    <target name="compile" depends="maven_init" description="compile the source ">
-        <javac srcdir="${maven}/src" destdir="${build}" >
+    <target name="debug-compile" description="compile the source with logging and debug">
+        <replace dir="${maven}/src" token="boolean LOGGING = false" value="boolean LOGGING = true">
+            <include name="**/*.java"/>
+        </replace>
+        <javac debug="${debug}" srcdir="${maven}/src" destdir="${build}" >
             <classpath refid="PubnubApi.classpath"/>
         </javac>
-
+        <replace dir="${maven}/src" token="boolean LOGGING = true" value="boolean LOGGING = false">
+            <include name="**/*.java"/>
+        </replace>
+    </target>
+    <target name="compile" description="compile the source ">
+        <javac debug="${debug}" srcdir="${maven}/src" destdir="${build}" >
+            <classpath refid="PubnubApi.classpath"/>
+        </javac>
     </target>
 
     <target name="dist" depends="compile" description="generate the distribution">
@@ -270,6 +285,43 @@
         <delete file="pom.xml.asc" />
     </target>
 
-    <target name="push_to_maven_central" depends="stage, maven_clean" />
+    <target name="push_to_maven_central" >
+        <mkdir dir="${build}" />
+        <mkdir dir="${maven}/src/com/pubnub/api" />
+        <copy todir="${maven}/src/com/pubnub/api" >
+            <fileset dir="${sources_pubnub_java}" />
+            <fileset dir="${sources_pubnub_java1}" />
+            <fileset dir="${sources_pubnub_logging}" />
+            <fileset dir="${sources_pubnub_api}" />
+        </copy>
+        <mkdir dir="${dist}/lib" />
+        <antcall target="stage"/>
+        <antcall target="maven_clean"/>
+    </target>
+
+    <target name="push_debug_to_maven_central" >
+        <mkdir dir="${build}" />
+        <mkdir dir="${maven}/src/com/pubnub/api" />
+        <copy todir="${maven}/src/com/pubnub/api" >
+            <fileset dir="${sources_pubnub_java}" />
+            <fileset dir="${sources_pubnub_java1}" />
+            <fileset dir="${sources_pubnub_logging}" />
+            <fileset dir="${sources_pubnub_api}" />
+        </copy>
+        <replace dir="${maven}/src" token="boolean LOGGING = false" value="boolean LOGGING = true">
+            <include name="**/*.java"/>
+        </replace>
+        <replace dir="." token="artifactId>pubnub" value="artifactId>pubnub-debug">
+            <include name="**/pom.xml"/>
+        </replace>
+        <mkdir dir="${dist}/lib" />
+        <antcall target="stage">
+            <param name="debug" value="true" />
+        </antcall>
+        <antcall target="maven_clean"/>
+        <replace dir="." token="artifactId>pubnub-debug" value="artifactId>pubnub">
+            <include name="**/pom.xml"/>
+        </replace>
+    </target>
 
 </project>
