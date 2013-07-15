@@ -64,14 +64,14 @@
             <fileset dir="jars" includes="**/*.jar"/>
         </delete>
     </target>
-    <target name="build">
+    <target name="build" depends="clean">
         <delete file="${pubnub_jar_file_name}"/>
         <antcall target="build-jar">
             <param name="jar_name" value="${pubnub_jar_file_name}" />
             <param name="debug" value="false" />
         </antcall>
     </target>
-    <target name="debug-build">
+    <target name="debug-build" depends="clean">
         <delete file="${pubnub_debug_jar_file_name}"/>
         <antcall target="setDebugTrue" />
         <antcall target="build-jar">

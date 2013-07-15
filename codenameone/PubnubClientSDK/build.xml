@@ -40,13 +40,13 @@
         </replace>
     </target>
 
-    <target name="debug-build">
+    <target name="debug-build" depends="clean">
         <delete file="${pubnub_debug_cn1lib_file_name}"/>
         <antcall target="build-lib">
             <param name="jar_name" value="${pubnub_debug_cn1lib_file_name}" />
         </antcall>
     </target>
-    <target name="build">
+    <target name="build" depends="clean">
         <delete file="${pubnub_cn1lib_file_name}"/>
         <antcall target="build-lib">
             <param name="jar_name" value="${pubnub_cn1lib_file_name}" />
