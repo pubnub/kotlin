@@ -7,6 +7,9 @@ www.pubnub.com - PubNub Real-time Push Service in the Cloud.
 
 Please reference the demo app source code for examples of supercharging your Blackberry app with PubNub!
 
+## Video Walkthrough
+Checkout the [video walkthrough](https://vimeo.com/70973189) before proceeding to get an idea of how it works.
+
 ## Hello PubNub Demo App HOWTO
 
 Follow this HOWTO step-by-step to setup the demo PubNub app for Blackberry from within Eclipse.
