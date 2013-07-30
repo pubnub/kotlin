@@ -10,14 +10,11 @@ Asyncronously in your applications!
 
 Additional Java docs are available at [doc/index.html](doc/index.html)
 
-###Checkout the screencasts!
-A walkthrough on how to setup in Eclipse, configuring custom loggers, and more [is available here!](https://vimeo.com/pubnub/videos/search:java/sort:date)
-
 ###To browse source
 Checkout [srcPubnubApi](/java/srcPubnubApi)
 
 ###To setup with your IDE:
-[Check out the Eclipse walkthrough here!](https://vimeo.com/69587309)
+[Check out the Eclipse video walkthrough here!](https://vimeo.com/69587309)
 
 1. Add new project with java/ as the root
 2. Set the new project source as java/srcPubnubApi
@@ -41,6 +38,9 @@ $ ant clean build test
 ```
 
 ###Configuring Logging
+
+[Check out the logging video walkthrough here!](https://vimeo.com/71309975)
+
 Pubnub implements swappable logging using SLF4J, which allows you to switch different logging frameworks easily. All the logging calls using SLF4J API will be delegated to the underlying logging framework.
 
 Before you enable logging, you need to create a "debug-build" version of the Pubnub-StandardEdition.jar.
