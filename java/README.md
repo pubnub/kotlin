@@ -9,6 +9,10 @@ Please reference the demo app in jars/PubnubDemoConsole.jar for an example of us
 Asyncronously in your applications!
 
 Additional Java docs are available at [doc/index.html](doc/index.html)
+
+###Checkout the screencasts!
+A walkthrough on how to setup in Eclipse, configuring custom loggers, and more [is available here!](https://vimeo.com/pubnub/videos/search:java/sort:date)
+
 ###To browse source
 Checkout [srcPubnubApi](/java/srcPubnubApi)
 
