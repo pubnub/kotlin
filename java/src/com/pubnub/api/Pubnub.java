@@ -16,6 +16,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import static com.pubnub.api.PubnubError.*;
+import static com.pubnub.api.PubnubUtil.*;
 
 /**
  * Pubnub object facilitates querying channels for messages and listening on
@@ -608,8 +609,8 @@ public class Pubnub extends PubnubCore {
         }
 
         String sign_input = this.SUBSCRIBE_KEY + "\n" + this.PUBLISH_KEY + "\n"
-                            + "grant" + "\n" + "auth=" + auth_key + "&" + "channel="
-                            + channel + "&" + "r=" + r + "&" + "timestamp=" + timestamp
+                            + "grant" + "\n" + "auth=" + urlEncode(auth_key) + "&" + "channel="
+                            + urlEncode(channel) + "&" + "r=" + r + "&" + "timestamp=" + timestamp
                             + ((ttl > -1)?"&" + "ttl=" + ttl:"")
                             + "&" + "w=" + w;
 
@@ -627,8 +628,8 @@ public class Pubnub extends PubnubCore {
         parameters.put("timestamp", String.valueOf(timestamp));
         parameters.put("signature", signature);
         parameters.put("r", r);
-        parameters.put("channel", channel);
-        parameters.put("auth", auth_key);
+        parameters.put("channel", urlEncode(channel));
+        parameters.put("auth", urlEncode(auth_key));
         if (ttl > 0) parameters.put("ttl", String.valueOf(ttl));
 
         String[] urlComponents = { getPubnubUrl(), "v1", "auth", "grant", "sub-key",
@@ -745,7 +746,7 @@ public class Pubnub extends PubnubCore {
 
         String sign_input = this.SUBSCRIBE_KEY + "\n" + this.PUBLISH_KEY + "\n"
                             + "audit" + "\n" + "channel="
-                            + channel + "&" + "timestamp=" + timestamp;
+                            + urlEncode(channel) + "&" + "timestamp=" + timestamp;
 
         try {
             signature = pamSign(this.SECRET_KEY, sign_input);
@@ -757,7 +758,7 @@ public class Pubnub extends PubnubCore {
 
         parameters.put("timestamp", String.valueOf(timestamp));
         parameters.put("signature", signature);
-        parameters.put("channel", channel);
+        parameters.put("channel", urlEncode(channel));
 
         String[] urlComponents = { getPubnubUrl(), "v1", "auth", "audit", "sub-key",
                                    this.SUBSCRIBE_KEY
@@ -809,8 +810,8 @@ public class Pubnub extends PubnubCore {
         }
 
         String sign_input = this.SUBSCRIBE_KEY + "\n" + this.PUBLISH_KEY + "\n"
-                            + "audit" + "\n" + "auth=" + auth_key + "&" + "channel="
-                            + channel + "&" + "timestamp=" + timestamp;
+                            + "audit" + "\n" + "auth=" + urlEncode(auth_key) + "&" + "channel="
+                            + urlEncode(channel) + "&" + "timestamp=" + timestamp;
 
 
         try {
@@ -823,8 +824,8 @@ public class Pubnub extends PubnubCore {
 
         parameters.put("timestamp", String.valueOf(timestamp));
         parameters.put("signature", signature);
-        parameters.put("channel", channel);
-        parameters.put("auth", auth_key);
+        parameters.put("channel", urlEncode(channel));
+        parameters.put("auth", urlEncode(auth_key));
 
         String[] urlComponents = { getPubnubUrl(), "v1", "auth", "audit", "sub-key",
                                    this.SUBSCRIBE_KEY
