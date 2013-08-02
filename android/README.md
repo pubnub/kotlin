@@ -1,7 +1,4 @@
-##### VIDEO - ANDROID + PUBNUB
-[http://www.youtube.com/watch?v=pkxUYYhwb04](http://www.youtube.com/watch?v=pkxUYYhwb04)
-
-##### YOU MUST HAVE A PUBNUB ACCOUNT TO USE THE API.
+### YOU MUST HAVE A PUBNUB ACCOUNT TO USE THE API.
 
 http://www.pubnub.com/account
 
@@ -16,11 +13,12 @@ C2DM is hard to implement, and it imposes artificial limits for you to reach you
 C2DM is not recommended as it is a "broadcast" mechanism according to Google.  C2DM is Slow, and limited to 1 message at a time.
 Use PubNub Instead!
 
-### Getting started with Pubnub in your app
+## Getting started with Pubnub in your app
+
+Checkout the [walkthrough video](https://vimeo.com/71554109) first!
+
 To use Pubnub, simply copy the Pubnub-Android-3.4.jar and bcprov-jdk15on-1.47.jar files in to your project's libs directory.
 These files can be found at pubnub/java/android/3.4/Pubnub-Android-3.4.jar and pubnub/java/java/3.4/libs/bcprov-jdk15on-1.47.jar.
-
-## Checkout the demo apps for examples on how to use the Android API! 
 
 ### PubNub Android Sample App
 
