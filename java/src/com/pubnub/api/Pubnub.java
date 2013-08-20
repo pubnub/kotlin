@@ -582,11 +582,35 @@ public class Pubnub extends PubnubCore {
         pamGrant(channel, auth_key, read, write, -1, callback);
     }
 
+    /** Grant r/w access based on channel
+     * @param channel
+     * @param read
+     * @param write
+     * @param callback
+     */
+    public void pamGrant(final String channel, boolean read,
+                         boolean write, final Callback callback) {
+        pamGrant(channel, null, read, write, -1, callback);
+    }
+
+    /** Grant r/w access based on channel
+     * @param channel
+     * @param read
+     * @param write
+     * @param ttl
+     * @param callback
+     */
+    public void pamGrant(final String channel, boolean read,
+                         boolean write, int ttl, final Callback callback) {
+        pamGrant(channel, null, read, write, ttl, callback);
+    }
+
     /** Grant r/w access based on channel and auth key
      * @param channel
      * @param auth_key
      * @param read
      * @param write
+     * @param ttl
      * @param callback
      */
     public void pamGrant(final String channel, String auth_key, boolean read,
@@ -607,9 +631,12 @@ public class Pubnub extends PubnubCore {
             return;
         }
 
-        String sign_input = this.SUBSCRIBE_KEY + "\n" + this.PUBLISH_KEY + "\n"
-                            + "grant" + "\n" + "auth=" + auth_key + "&" + "channel="
-                            + channel + "&" + "r=" + r + "&" + "timestamp=" + timestamp
+        String sign_input = this.SUBSCRIBE_KEY + "\n" + this.PUBLISH_KEY + "\n" + "grant" + "\n" ;
+
+        if (auth_key != null && auth_key.length() > 0)
+            sign_input += "auth=" + auth_key + "&"  ;
+
+        sign_input += "channel=" + channel + "&" + "r=" + r + "&" + "timestamp=" + timestamp
                             + ((ttl > -1)?"&" + "ttl=" + ttl:"")
                             + "&" + "w=" + w;
 
@@ -628,7 +655,8 @@ public class Pubnub extends PubnubCore {
         parameters.put("signature", signature);
         parameters.put("r", r);
         parameters.put("channel", channel);
-        parameters.put("auth", auth_key);
+
+        if (auth_key != null && auth_key.length() > 0 ) parameters.put("auth", auth_key);
         if (ttl > 0) parameters.put("ttl", String.valueOf(ttl));
 
         String[] urlComponents = { getPubnubUrl(), "v1", "auth", "grant", "sub-key",
@@ -862,6 +890,15 @@ public class Pubnub extends PubnubCore {
      */
     public void pamRevoke(String channel, String auth_key, Callback callback) {
         pamGrant(channel, auth_key, false, false, callback);
+    }
+
+
+    /** ULS revoke by channel
+     * @param channel
+     * @param callback
+     */
+    public void pamRevoke(String channel, Callback callback) {
+        pamGrant(channel, null, false, false, callback);
     }
 
 }
