@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project basedir="." default="build" name="PubnubApi">
+<project basedir="." default="build-all" name="PubnubApi">
     <property environment="env"/>
     <loadfile property="VERSION" srcFile="../VERSION"><filterchain><striplinebreaks/></filterchain></loadfile>
     <property name="pubnub_lib_jar" value="Pubnub-Android-${VERSION}.jar"/>
+    <property name="pubnub_debug_lib_jar" value="Pubnub-Android-Debug-${VERSION}.jar"/>
     <property name="java_core_path" value="../java"/>
     <property name="src_pubnub_api_path" value="${java_core_path}/srcPubnubApi"/>
     <property name="src_java_path" value="${java_core_path}/src1"/>
@@ -17,6 +18,7 @@
         <pathelement location="libs/android-8.jar"/>
     </path>
     <target name="test" />
+    <target name="build-all" depends="debug-build, clean, build" />
     <target name="setDebugTrue" >
         <replace dir="${src_pubnub_api_path}" token="boolean LOGGING = false" value="boolean LOGGING = true">
             <include name="**/*.java"/>
@@ -27,7 +29,6 @@
             <include name="**/*.java"/>
         </replace>
     </target>
-    <target depends="setDebugTrue,build,unsetDebugTrue" name="debug-build"/>
     <target name="init">
         <mkdir dir="bin"/>
         <copy includeemptydirs="false" todir="bin">
@@ -39,17 +40,34 @@
     </target>
     <target name="clean">
         <delete dir="bin"/>
-        <delete file="${pubnub_lib_jar}"/>
     </target>
     <target depends="clean" name="cleanall"/>
-    <target depends="copy_jars_to_examples" name="build"/>
+    <target depends="copy_jars_to_examples" name="build-jar"/>
     <target depends="create-jar" name="copy_jars_to_examples">
         <copy file="${pubnub_lib_jar}" todir="./examples/PubnubExample/libs/"/>
         <copy file="${pubnub_lib_jar}" todir="./examples/SubscribeAtBoot/libs/"/>
     </target>
 
+
+    <target name="build" depends="clean">
+        <delete file="${pubnub_lib_jar}"/>
+        <antcall target="build-jar">
+            <param name="jar_name" value="${pubnub_lib_jar}" />
+            <param name="debug" value="false" />
+        </antcall>
+    </target>
+    <target name="debug-build" depends="clean">
+        <delete file="${pubnub_debug_lib_jar}"/>
+        <antcall target="setDebugTrue" />
+        <antcall target="build-jar">
+            <param name="jar_name" value="${pubnub_debug_lib_jar}" />
+            <param name="debug" value="true" />
+        </antcall>
+        <antcall target="unsetDebugTrue" />
+    </target>
+
     <target depends="build-project" name="create-jar">
-        <jar destfile="${pubnub_lib_jar}"
+        <jar destfile="${jar_name}"
             basedir="bin"
             includes="**/**"
         />
@@ -57,17 +75,17 @@
 
     <target depends="init" name="build-project">
         <echo message="${ant.project.name}: ${ant.file}"/>
-        <replace dir="${src_pubnub_api_path}" token='protected static String VERSION = ""' value='protected static String VERSION = "${VERSION}"' >
+        <replace dir="${src_pubnub_api_path}" token='static String VERSION = ""' value='static String VERSION = "${VERSION}"' >
             <include name="**/*.java"/>
         </replace>
-        <javac destdir="bin" source="${source}" target="${target}">
+        <javac debug="${debug}" destdir="bin" source="${source}" target="${target}">
             <src path="${src_pubnub_api_path}"/>
             <src path="${src_java_path}"/>
             <src path="${src_logging_path}"/>
             <src path="${src_android_path}"/>
             <classpath refid="classpath"/>
         </javac>
-        <replace dir="${src_pubnub_api_path}" token='protected static String VERSION = "${VERSION}"' value='protected static String VERSION = ""'>
+        <replace dir="${src_pubnub_api_path}" token='static String VERSION = "${VERSION}"' value='static String VERSION = ""'>
             <include name="**/*.java"/>
         </replace>
     </target>

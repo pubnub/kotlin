@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project basedir="." default="build">
+<project basedir="." default="build-all">
+    <target name="build-all">
+        <antcall target="build"/>
+        <antcall target="clean"/>
+        <antcall target="debug-build"/>
+    </target>
     <target name="build">
         <subant target="build" >
             <fileset dir="." includes="*/build.xml" />

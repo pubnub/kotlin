@@ -86,6 +86,7 @@ class HttpClientCore extends HttpClient {
     public synchronized HttpResponse fetch(String url, Hashtable headers)
     throws PubnubException, SocketTimeoutException {
         URL urlobj = null;
+        log.verbose("FETCHING URL : " + url);
         try {
             urlobj = new URL(url);
         } catch (MalformedURLException e3) {
@@ -120,20 +121,21 @@ class HttpClientCore extends HttpClient {
         connection.setReadTimeout(requestTimeout);
         connection.setConnectTimeout(connectionTimeout);
 
-
+        /*
         try {
             connection.connect();
         } catch (SocketTimeoutException  e) {
             throw e;
         } catch (IOException e) {
-            throw new PubnubException(getErrorObject(PNERROBJ_CONNECT_EXCEPTION, url));
+            throw new PubnubException(getErrorObject(PNERROBJ_CONNECT_EXCEPTION, url + " : " + e.toString()));
         }
+        */
 
-        int rc = HttpURLConnection.HTTP_CLIENT_TIMEOUT;
+        int rc = HttpURLConnection.HTTP_INTERNAL_ERROR;
         try {
             rc = connection.getResponseCode();
         } catch (IOException e) {
-            throw new PubnubException(getErrorObject(PNERROBJ_HTTP_RC_ERROR, url));
+            throw new PubnubException(getErrorObject(PNERROBJ_HTTP_RC_ERROR, url + " : " + e.toString()));
         }
 
 
@@ -166,6 +168,7 @@ class HttpClientCore extends HttpClient {
             throw new PubnubException(getErrorObject(PNERROBJ_READINPUT, url));
         }
 
+        log.verbose("URL = " + url + " : RESPONSE = " + page);
         switch (rc) {
         case HttpURLConnection.HTTP_FORBIDDEN:
             throw new PubnubException(getErrorObject(PNERROBJ_FORBIDDEN, page));
@@ -192,11 +195,10 @@ class HttpClientCore extends HttpClient {
         case HttpURLConnection.HTTP_GATEWAY_TIMEOUT:
             throw new PubnubException(getErrorObject(PNERROBJ_GATEWAY_TIMEOUT, url));
         case HttpURLConnection.HTTP_INTERNAL_ERROR:
-            throw new PubnubException(getErrorObject(PNERROBJ_INTERNAL_ERROR, url));
+            throw new PubnubException(getErrorObject(PNERROBJ_INTERNAL_ERROR, url + " : " + rc));
         default:
             break;
         }
-        log.verbose("URL = " + url + " : RESPONSE = " + page);
         return new HttpResponse(rc, page);
     }
 
