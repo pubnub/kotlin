@@ -189,4 +189,19 @@ class PubnubUtilCore {
         }
         return dst;
     }
+    /**
+     * Parse Json, change json string to string
+     *
+     * @param obj
+     *            JSON data in string format
+     *
+     * @return JSONArray or JSONObject or String
+     */
+    static Object parseJSON(Object obj) {
+    	if (obj instanceof String) {
+    		if (((String) obj).endsWith("\"") && ((String) obj).startsWith("\""))
+    			obj = ((String) obj).substring(1, ((String) obj).length() -1);
+    	}
+        return obj;
+    }
 }

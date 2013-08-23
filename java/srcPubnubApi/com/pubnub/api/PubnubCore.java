@@ -512,6 +512,9 @@ abstract class PubnubCore {
             // Encrypt Message
             PubnubCrypto pc = new PubnubCrypto(this.CIPHER_KEY, this.IV);
             try {
+                if (message instanceof String) {
+                    msgStr = "\"" + msgStr + "\"";
+                }
                 msgStr = "\"" + pc.encrypt(msgStr) + "\"";
             } catch (DataLengthException e) {
                 callback.errorCallback(channel,
@@ -1342,7 +1345,7 @@ abstract class PubnubCore {
                                         if (!isWorkerDead(hreq))  _channel.callback
                                             .successCallback(
                                                 _channel.name,
-                                                PubnubUtil.stringToJSON(message));
+                                                PubnubUtil.parseJSON(PubnubUtil.stringToJSON(message)));
                                     } catch (DataLengthException e) {
                                         if (!isWorkerDead(hreq)) _channel.callback
                                             .errorCallback(
@@ -1384,7 +1387,7 @@ abstract class PubnubCore {
                                 } else {
                                     if (!isWorkerDead(hreq)) _channel.callback.successCallback(
                                             _channel.name,
-                                            messages.get(i));
+                                            PubnubUtil.parseJSON(messages.get(i)));
                                 }
                             }
                         }
@@ -1412,7 +1415,7 @@ abstract class PubnubCore {
                                         if (!isWorkerDead(hreq)) _channel.callback
                                             .successCallback(
                                                 _channel.name,
-                                                PubnubUtil.stringToJSON(message));
+                                                PubnubUtil.parseJSON(PubnubUtil.stringToJSON(message)));
                                     } catch (DataLengthException e) {
                                         if (!isWorkerDead(hreq)) _channel.callback
                                             .errorCallback(
@@ -1452,7 +1455,7 @@ abstract class PubnubCore {
                                 } else {
                                     if (!isWorkerDead(hreq)) _channel.callback.successCallback(
                                             _channel.name,
-                                            messages.get(i));
+                                            PubnubUtil.parseJSON(messages.get(i)));
                                 }
 
                             }
