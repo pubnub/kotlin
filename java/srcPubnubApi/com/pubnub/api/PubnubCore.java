@@ -191,6 +191,16 @@ abstract class PubnubCore {
     }
 
     /**
+     * Gets current UUID
+     *
+     * @return uuid
+     *            current UUID value for Pubnub client
+     */
+    public String getUUID() {
+        return this.UUID;
+    }
+
+    /**
     *
     * Constructor for Pubnub Class
     *
