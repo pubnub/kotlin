@@ -2,7 +2,7 @@ package com.pubnub.api;
 
 abstract class AbstractLogger {
 
-    private static boolean LOGGING = false;
+    private static boolean LOGGING = true;
 
     private static String VERSION = "";
 
