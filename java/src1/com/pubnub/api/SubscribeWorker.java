@@ -34,8 +34,8 @@ class SubscribeWorker extends AbstractSubscribeWorker {
                     Thread.sleep(retryInterval);
                 } catch (InterruptedException e) {
                 }
-                sleep = true;
             }
+            sleep = true;
             try {
                 log.debug(hreq.getUrl());
                 hresp = httpclient.fetch(hreq.getUrl(), hreq.getHeaders());

@@ -1503,6 +1503,8 @@ abstract class PubnubCore {
                 log.verbose("Timeout Timetoken : " + timeoutTimetoken);
                 subscriptions
                 .invokeDisconnectCallbackOnChannels(timeoutTimetoken);
+                subscriptions
+                .invokeErrorCallbackOnChannels(PubnubError.getErrorObject(PubnubError.PNERROBJ_TIMEOUT, 1) );
                 // disconnectAndResubscribe();
 
                 // subscriptions.removeAllChannels();
