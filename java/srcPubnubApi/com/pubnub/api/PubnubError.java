@@ -177,6 +177,11 @@ public class PubnubError {
 
     static final int                PNERR_HTTP_RC_ERROR                        =       128;
 
+    /**
+     * Subscribe Timeout .
+     */
+    static final int                PNERR_HTTP_SUBSCRIBE_TIMEOUT               =       129;
+
 
 
     // Error Objects
@@ -371,6 +376,12 @@ public class PubnubError {
         PNERR_NETWORK_ERROR ,
         "Netowork Error. " +
         "Please verify if network is reachable."
+    );
+
+    static final PubnubError PNERROBJ_SUBSCRIBE_TIMEOUT                       =
+            new PubnubError     (
+            PNERR_HTTP_SUBSCRIBE_TIMEOUT ,
+            "Subscribe Timeout ."
     );
 
 

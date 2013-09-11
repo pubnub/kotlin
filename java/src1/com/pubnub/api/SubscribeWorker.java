@@ -55,7 +55,8 @@ class SubscribeWorker extends AbstractSubscribeWorker {
                     hreq.getResponseHandler().handleBackFromDar(hreq);
                     return;
                 }
-                break;
+                hreq.getResponseHandler().handleError(hreq, getErrorObject(PNERROBJ_SUBSCRIBE_TIMEOUT, 1));
+                return;
 
             } catch (PubnubException e) {
                 excp = e;

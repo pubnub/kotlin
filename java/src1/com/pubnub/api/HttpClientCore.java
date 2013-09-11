@@ -134,7 +134,11 @@ class HttpClientCore extends HttpClient {
         int rc = HttpURLConnection.HTTP_INTERNAL_ERROR;
         try {
             rc = connection.getResponseCode();
-        } catch (IOException e) {
+        }
+        catch (SocketTimeoutException e) {
+            throw e;
+        }
+        catch (IOException e) {
             throw new PubnubException(getErrorObject(PNERROBJ_HTTP_RC_ERROR, url + " : " + e.toString()));
         }
 
