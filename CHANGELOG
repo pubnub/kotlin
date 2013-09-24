@@ -1,3 +1,9 @@
+08-27-13 3.5.5
+. better handling of double quoted strings
+. make auth key optional for audit
+. update encoding parameters for signature generation
+. debug jar and maven deployment
+
 07-11-13 3.5.4
 . fixed issue with PAM audit when auth key is set
 . fixed issue in cn1 where global headers were not getting added
