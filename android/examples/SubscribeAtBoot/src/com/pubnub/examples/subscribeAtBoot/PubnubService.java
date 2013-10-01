@@ -58,15 +58,12 @@ public class PubnubService extends Service {
         Log.i("PUBNUB", "PubnubService created...");
         try {
             pubnub.subscribe(new String[] {channel}, new Callback() {
-                @Override
                 public void connectCallback(String channel) {
                     notifyUser("CONNECT on channel:" + channel);
                 }
-                @Override
                 public void disconnectCallback(String channel) {
                     notifyUser("DISCONNECT on channel:" + channel);
                 }
-                @Override
                 public void reconnectCallback(String channel) {
                     notifyUser("RECONNECT on channel:" + channel);
                 }
