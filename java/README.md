@@ -37,6 +37,7 @@ $ ant test
 $ ant clean build test
 ```
 
+[A quick video demo of building with ant from the command line can be viewed here](https://vimeo.com/76488749).
 ###Configuring Logging
 
 [Check out the logging video walkthrough here!](https://vimeo.com/71309975)
