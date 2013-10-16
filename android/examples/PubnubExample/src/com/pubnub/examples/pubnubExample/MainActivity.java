@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
@@ -34,6 +35,7 @@ public class MainActivity extends Activity {
      */
 
     Pubnub pubnub = new Pubnub("demo", "demo", "", false);
+    PowerManager.WakeLock wl = null;
 
     private void notifyUser(Object message) {
         try {
@@ -88,6 +90,8 @@ public class MainActivity extends Activity {
             }
 
         }, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "PubnubDemoConsole");
 
     }
 
@@ -163,9 +167,35 @@ public class MainActivity extends Activity {
         case R.id.option15:
             setNonSubscribeTimeout();
             return true;
+
+        case R.id.option16:
+            acquirePartialWakeLock();
+            return true;
+
+        case R.id.option17:
+            releasePartialWakeLock();
+            return true;
+
+        case R.id.option18:
+            checkWakeLockStatus();
+            return true;
         default:
             return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void checkWakeLockStatus() {
+        notifyUser("Partial Wake Lock : " + wl.isHeld());
+    }
+
+    private void releasePartialWakeLock() {
+        if (wl != null) wl.release();
+        notifyUser("Partial Wake Lock : " + wl.isHeld());
+    }
+
+    private void acquirePartialWakeLock() {
+        if (wl != null) wl.acquire();
+        notifyUser("Partial Wake Lock : " + wl.isHeld());
     }
 
     private void setNonSubscribeTimeout() {

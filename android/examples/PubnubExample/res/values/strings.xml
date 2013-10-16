@@ -34,6 +34,9 @@
     <string name="option13">Set Retry Interval</string>
     <string name="option14">Set Subscribe Timeout</string>
     <string name="option15">Set Non Subscribe Timeout</string>
+    <string name="option16">Acquire Partial Wake Lock</string>
+    <string name="option17">Release Partial Wake Lock</string>
+    <string name="option18">Check Wake Lock Status</string>
 
 
 </resources>
