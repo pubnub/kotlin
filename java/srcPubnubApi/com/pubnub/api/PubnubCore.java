@@ -84,6 +84,16 @@ abstract class PubnubCore {
     public void setRetryInterval(int retryInterval) {
         subscribeManager.setRetryInterval(retryInterval);
     }
+    
+    /**
+     * This method sets window interval for subscribe. 
+     *
+     * @param windowInterval
+     *            Window Interval in milliseconds
+     */
+    public void setWindowInterval(int windowInterval) {
+        subscribeManager.setWindowInterval(windowInterval);
+    }
 
     /**
      * Returns current retry interval for subscribe
@@ -91,6 +101,14 @@ abstract class PubnubCore {
      */
     public int getRetryInterval() {
         return subscribeManager.retryInterval;
+    }
+    
+    /**
+     * Returns current window interval for subscribe
+     * @return Current Window Interval in milliseconds
+     */
+    public int getWindowInterval() {
+        return subscribeManager.windowInterval;
     }
 
     /**
@@ -1285,7 +1303,6 @@ abstract class PubnubCore {
                                    PubnubCore.this.SUBSCRIBE_KEY,
                                    PubnubUtil.urlEncode(channelString), "0", _timetoken
                                  };
-
 
         Hashtable params = PubnubUtil.hashtableClone(this.params);
         params.put("uuid", UUID);

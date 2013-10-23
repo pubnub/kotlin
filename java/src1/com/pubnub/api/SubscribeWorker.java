@@ -10,9 +10,9 @@ class SubscribeWorker extends AbstractSubscribeWorker {
     private Exception excp = null;
 
     SubscribeWorker(Vector _requestQueue, int connectionTimeout,
-                    int requestTimeout, int maxRetries, int retryInterval, Hashtable headers) {
+                    int requestTimeout, int maxRetries, int retryInterval, int windowInterval, Hashtable headers) {
         super(_requestQueue, connectionTimeout, requestTimeout,
-              maxRetries, retryInterval, headers);
+              maxRetries, retryInterval, windowInterval, headers);
     }
 
     void process(HttpRequest hreq) {
@@ -27,6 +27,12 @@ class SubscribeWorker extends AbstractSubscribeWorker {
             }
         }
         hreq.setWorker(this);
+        if (!hreq.isSubzero() && windowInterval != 0) {
+            try {
+                Thread.sleep(windowInterval);
+            } catch (InterruptedException e) {
+            }
+        }
         boolean sleep = false;
         while (!_die && currentRetryAttempt <= maxRetries) {
             if (sleep) {

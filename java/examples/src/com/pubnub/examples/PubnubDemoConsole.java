@@ -316,37 +316,41 @@ public class PubnubDemoConsole {
                 setRetryInterval(retryInterval);
                 break;
             case 15:
+                int windowInterval = getIntFromConsole("Window Interval");
+                setWindowInterval(windowInterval);
+                break;
+            case 16:
                 int subscribeTimeout = getIntFromConsole("Subscribe Timeout ( in milliseconds) ");
                 setSubscribeTimeout(subscribeTimeout);
                 break;
-            case 16:
+            case 17:
                 int nonSubscribeTimeout = getIntFromConsole("Non Subscribe Timeout ( in milliseconds) ");
                 setNonSubscribeTimeout(nonSubscribeTimeout);
                 break;
-            case 17:
+            case 18:
                 notifyUser("Set/Unset Auth Key: Enter blank for unsetting key");
                 String authKey = getStringFromConsole("Auth Key");
                 pubnub.setAuthKey(authKey);
                 break;
-            case 18:
+            case 19:
                 pamGrant();
                 break;
-            case 19:
+            case 20:
                 pamRevoke();
                 break;
-            case 20:
+            case 21:
                 pamAudit();
                 break;
-            case 21:
+            case 22:
                 pubnub.setOrigin(getStringFromConsole("Origin"));
                 break;
-            case 22:
+            case 23:
                 pubnub.setDomain(getStringFromConsole("Domain"));
                 break;
-            case 23:
+            case 24:
                 pubnub.setCacheBusting(true);
                 break;
-            case 24:
+            case 25:
                 pubnub.setCacheBusting(false);
                 break;
             default:
@@ -500,6 +504,10 @@ public class PubnubDemoConsole {
     private void setRetryInterval(int retryInterval) {
         pubnub.setRetryInterval(retryInterval);
     }
+    
+    private void setWindowInterval(int windowInterval) {
+        pubnub.setWindowInterval(windowInterval);
+    }
 
     private void setSubscribeTimeout(int subscribeTimeout) {
         pubnub.setSubscribeTimeout(subscribeTimeout);
@@ -526,16 +534,17 @@ public class PubnubDemoConsole {
         notifyUser("ENTER 12 FOR Toggle Resume On Reconnect ( current: " + pubnub.getResumeOnReconnect() + " )");
         notifyUser("ENTER 13 FOR Setting MAX Retries ( current: " + pubnub.getMaxRetries() + " )");
         notifyUser("ENTER 14 FOR Setting Retry Interval ( current: " + pubnub.getRetryInterval() + " milliseconds )");
-        notifyUser("ENTER 15 FOR Setting Subscribe Timeout ( current: " + pubnub.getSubscribeTimeout() + " milliseconds )");
-        notifyUser("ENTER 16 FOR Setting Non Subscribe Timeout ( current: " + pubnub.getNonSubscribeTimeout() + " milliseconds )");
-        notifyUser("ENTER 17 FOR Setting/Unsetting auth key ( current: " + pubnub.getAuthKey() + " )");
-        notifyUser("ENTER 18 FOR PAM grant");
-        notifyUser("ENTER 19 FOR PAM revoke");
-        notifyUser("ENTER 20 FOR PAM Audit");
-        notifyUser("ENTER 21 FOR Setting Origin ( current: " + pubnub.getOrigin() + " )");
-        notifyUser("ENTER 22 FOR Setting Domain ( current: "+ pubnub.getDomain() + " )");
-        notifyUser("ENTER 23 FOR Enabling Cache Busting  ( current: " + pubnub.getCacheBusting() + " )");
-        notifyUser("ENTER 24 FOR Disabling Cache Busting ( current: " + pubnub.getCacheBusting() + " )");
+        notifyUser("ENTER 15 FOR Setting Window Interval ( current: " + pubnub.getWindowInterval() + " milliseconds )");
+        notifyUser("ENTER 16 FOR Setting Subscribe Timeout ( current: " + pubnub.getSubscribeTimeout() + " milliseconds )");
+        notifyUser("ENTER 17 FOR Setting Non Subscribe Timeout ( current: " + pubnub.getNonSubscribeTimeout() + " milliseconds )");
+        notifyUser("ENTER 18 FOR Setting/Unsetting auth key ( current: " + pubnub.getAuthKey() + " )");
+        notifyUser("ENTER 19 FOR PAM grant");
+        notifyUser("ENTER 20 FOR PAM revoke");
+        notifyUser("ENTER 21 FOR PAM Audit");
+        notifyUser("ENTER 22 FOR Setting Origin ( current: " + pubnub.getOrigin() + " )");
+        notifyUser("ENTER 23 FOR Setting Domain ( current: "+ pubnub.getDomain() + " )");
+        notifyUser("ENTER 24 FOR Enabling Cache Busting  ( current: " + pubnub.getCacheBusting() + " )");
+        notifyUser("ENTER 25 FOR Disabling Cache Busting ( current: " + pubnub.getCacheBusting() + " )");
         notifyUser("\nENTER 0 to display this menu");
     }
 

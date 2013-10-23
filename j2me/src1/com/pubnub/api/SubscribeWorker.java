@@ -13,11 +13,23 @@ class SubscribeWorker extends AbstractSubscribeWorker {
               maxRetries, retryInterval, headers);
     }
 
+    SubscribeWorker(Vector _requestQueue, int connectionTimeout,
+                    int requestTimeout, int maxRetries, int retryInterval, int windowInterval, Hashtable headers) {
+        super(_requestQueue, connectionTimeout, requestTimeout,
+              maxRetries, retryInterval, windowInterval, headers);
+    }
+
     void process(HttpRequest hreq) {
         HttpResponse hresp = null;
         int currentRetryAttempt = (hreq.isDar())?1:maxRetries;
         log.verbose("disconnectAndResubscribe is " + hreq.isDar());
         boolean sleep = false;
+        if (!hreq.isSubzero() && windowInterval != 0) {
+            try {
+                Thread.sleep(windowInterval);
+            } catch (InterruptedException e) {
+            }
+        }
         while (!_die && currentRetryAttempt <= maxRetries) {
             if (sleep) {
                 try {

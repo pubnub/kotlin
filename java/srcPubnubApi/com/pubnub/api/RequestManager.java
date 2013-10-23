@@ -237,6 +237,7 @@ abstract class AbstractSubscribeManager extends RequestManager {
 
     protected volatile int maxRetries = 5;
     protected volatile int retryInterval = 5000;
+    protected volatile int windowInterval = 0;
 
     public AbstractSubscribeManager(String name, int connectionTimeout,
                                     int requestTimeout) {
@@ -246,7 +247,7 @@ abstract class AbstractSubscribeManager extends RequestManager {
     public Worker getWorker() {
         return new SubscribeWorker(_waiting,
                                    connectionTimeout, requestTimeout,
-                                   maxRetries, retryInterval, headers);
+                                   maxRetries, retryInterval, windowInterval, headers);
     }
 
     public void setMaxRetries(int maxRetries) {
@@ -260,6 +261,13 @@ abstract class AbstractSubscribeManager extends RequestManager {
         this.retryInterval = retryInterval;
         for (int i = 0; i < _workers.length; i++) {
             ((SubscribeWorker) _workers[i]).setRetryInterval(retryInterval);
+        }
+    }
+    
+    public void setWindowInterval(int windowInterval) {
+        this.windowInterval = windowInterval;
+        for (int i = 0; i < _workers.length; i++) {
+            ((SubscribeWorker) _workers[i]).setWindowInterval(windowInterval);
         }
     }
 
@@ -309,6 +317,7 @@ abstract class AbstractNonSubscribeManager extends RequestManager {
 abstract class AbstractSubscribeWorker extends Worker {
     protected volatile int maxRetries = 5;
     protected volatile int retryInterval = 5000;
+    protected volatile int windowInterval = 0;
 
     AbstractSubscribeWorker(Vector _requestQueue, int connectionTimeout,
                             int requestTimeout, int maxRetries, int retryInterval, Hashtable headers) {
@@ -316,6 +325,14 @@ abstract class AbstractSubscribeWorker extends Worker {
         this.maxRetries = maxRetries;
         this.retryInterval= retryInterval;
     }
+    
+    AbstractSubscribeWorker(Vector _requestQueue, int connectionTimeout,
+            int requestTimeout, int maxRetries, int retryInterval, int windowInterval, Hashtable headers) {
+		super(_requestQueue, connectionTimeout, requestTimeout, headers);
+		this.maxRetries = maxRetries;
+		this.retryInterval= retryInterval;
+		this.windowInterval = windowInterval;
+	}
 
     public void setMaxRetries(int maxRetries) {
         this.maxRetries = maxRetries;
@@ -323,6 +340,10 @@ abstract class AbstractSubscribeWorker extends Worker {
 
     public void setRetryInterval(int retryInterval) {
         this.retryInterval = retryInterval;
+    }
+    
+    public void setWindowInterval(int windowInterval) {
+        this.windowInterval = windowInterval;
     }
 
 }
