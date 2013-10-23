@@ -163,6 +163,10 @@ public class MainActivity extends Activity {
         case R.id.option15:
             setNonSubscribeTimeout();
             return true;
+
+        case R.id.option16:
+            setWindowInterval();
+            return true;
         default:
             return super.onOptionsItemSelected(item);
         }
@@ -557,6 +561,26 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 pubnub.setRetryInterval(Integer.parseInt(edInterval
+                                        .getText().toString()));
+            }
+
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+    private void setWindowInterval() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Set Window Interval");
+        builder.setMessage("Enter Window interval in milliseconds");
+        final EditText edInterval = new EditText(this);
+        edInterval.setInputType(InputType.TYPE_CLASS_NUMBER);
+        builder.setView(edInterval);
+        builder.setPositiveButton("Done",
+        new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                pubnub.setWindowInterval(Integer.parseInt(edInterval
                                         .getText().toString()));
             }
 

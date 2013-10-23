@@ -504,7 +504,7 @@ public class PubnubDemoConsole {
     private void setRetryInterval(int retryInterval) {
         pubnub.setRetryInterval(retryInterval);
     }
-    
+
     private void setWindowInterval(int windowInterval) {
         pubnub.setWindowInterval(windowInterval);
     }

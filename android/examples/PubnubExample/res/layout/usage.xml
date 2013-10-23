@@ -120,6 +120,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/option15" />
+        <TextView
+            android:id="@+id/option16"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/option16" />
     </LinearLayout>
 
 </LinearLayout>

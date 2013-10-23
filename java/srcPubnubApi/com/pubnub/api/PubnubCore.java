@@ -84,9 +84,9 @@ abstract class PubnubCore {
     public void setRetryInterval(int retryInterval) {
         subscribeManager.setRetryInterval(retryInterval);
     }
-    
+
     /**
-     * This method sets window interval for subscribe. 
+     * This method sets window interval for subscribe.
      *
      * @param windowInterval
      *            Window Interval in milliseconds
@@ -102,7 +102,7 @@ abstract class PubnubCore {
     public int getRetryInterval() {
         return subscribeManager.retryInterval;
     }
-    
+
     /**
      * Returns current window interval for subscribe
      * @return Current Window Interval in milliseconds

@@ -263,7 +263,7 @@ abstract class AbstractSubscribeManager extends RequestManager {
             ((SubscribeWorker) _workers[i]).setRetryInterval(retryInterval);
         }
     }
-    
+
     public void setWindowInterval(int windowInterval) {
         this.windowInterval = windowInterval;
         for (int i = 0; i < _workers.length; i++) {
@@ -325,14 +325,14 @@ abstract class AbstractSubscribeWorker extends Worker {
         this.maxRetries = maxRetries;
         this.retryInterval= retryInterval;
     }
-    
+
     AbstractSubscribeWorker(Vector _requestQueue, int connectionTimeout,
             int requestTimeout, int maxRetries, int retryInterval, int windowInterval, Hashtable headers) {
-		super(_requestQueue, connectionTimeout, requestTimeout, headers);
-		this.maxRetries = maxRetries;
-		this.retryInterval= retryInterval;
-		this.windowInterval = windowInterval;
-	}
+        super(_requestQueue, connectionTimeout, requestTimeout, headers);
+        this.maxRetries = maxRetries;
+        this.retryInterval= retryInterval;
+        this.windowInterval = windowInterval;
+    }
 
     public void setMaxRetries(int maxRetries) {
         this.maxRetries = maxRetries;
@@ -341,7 +341,7 @@ abstract class AbstractSubscribeWorker extends Worker {
     public void setRetryInterval(int retryInterval) {
         this.retryInterval = retryInterval;
     }
-    
+
     public void setWindowInterval(int windowInterval) {
         this.windowInterval = windowInterval;
     }
