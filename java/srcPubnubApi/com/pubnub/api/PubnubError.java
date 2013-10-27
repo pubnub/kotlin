@@ -175,7 +175,7 @@ public class PubnubError {
     static final int                PNERR_BAD_REQUEST                          =       127;
 
 
-    static final int                PNERR_HTTP_RC_ERROR                        =       128;
+    public static final int                PNERR_HTTP_RC_ERROR                        =       128;
 
 
 
