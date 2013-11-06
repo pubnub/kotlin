@@ -1,3 +1,11 @@
+11-06-13 3.5.6
+. fixed socket timeout exception handling
+. make PNERR_HTTP_RC_ERROR public
+. encryption logic is made public for developers to integrate with their own logic
+. always honor retry interval
+. backwards compatible (3.1) encryption support
+. adding windowing feature to java clients
+
 08-27-13 3.5.5
 . better handling of double quoted strings
 . make auth key optional for audit
