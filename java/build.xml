@@ -59,7 +59,7 @@
         <delete dir="bin"/>
     </target>
     <target depends="clean_bin" name="clean">
-        <delete file="${pubnub_jar_file_name}"/>
+        <!--<delete file="${pubnub_jar_file_name}"/>-->
         <delete>
             <fileset dir="jars" includes="**/*.jar"/>
         </delete>
