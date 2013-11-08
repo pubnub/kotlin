@@ -53,7 +53,6 @@ abstract class Worker implements Runnable {
 
     void die() {
         _die = true;
-        shutdown();
     }
 
     abstract void process(HttpRequest hreq);
@@ -82,6 +81,7 @@ abstract class Worker implements Runnable {
                 }
             }
         } while (!_die);
+        shutdown();
     }
 }
 
