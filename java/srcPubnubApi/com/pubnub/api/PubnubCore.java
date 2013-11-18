@@ -1018,18 +1018,36 @@ abstract class PubnubCore {
     *            Channel name for which detailed history is required
     * @param start
     *            Start time
-    * @param end
-    *            End time
+    * @param count
+    *            Upper limit on number of messages to be returned
     * @param reverse
     *            True if messages need to be in reverse order
     *
     * @param callback
     *            Callback
     */
-   public void history(String channel, long start, long end,
+   public void history(String channel, long start, int count,
                                boolean reverse, Callback callback) {
-       this.detailedHistory(channel, start, end, -1, reverse, callback);
+       this.detailedHistory(channel, start, -1, count, reverse, callback);
    }
+   
+   /**
+   *
+   * Read History for a channel.
+   *
+   * @param channel
+   *            Channel name for which detailed history is required
+   * @param start
+   *            Start time
+   * @param count
+   *            Upper limit on number of messages to be returned
+   * @param callback
+   *            Callback
+   */
+  public void history(String channel, long start, int count,
+                              Callback callback) {
+      this.detailedHistory(channel, start, -1, count, false, callback);
+  }
 
    /**
     *
