@@ -319,7 +319,7 @@ public class MainActivity extends Activity {
                 if (args.get("message") == null) {
                     args.put("message", message);
                 }
-
+                
                 // Publish Message
 
                 args.put("channel", channel); // Channel Name
@@ -501,6 +501,7 @@ public class MainActivity extends Activity {
             public void onClick(DialogInterface dialog, int which) {
                 String channel = input.getText().toString();
                 pubnub.unsubscribePresence(channel);
+                
             }
         });
         AlertDialog alert = builder.create();

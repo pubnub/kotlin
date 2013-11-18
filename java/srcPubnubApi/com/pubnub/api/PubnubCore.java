@@ -196,7 +196,11 @@ abstract class PubnubCore {
         return this.resumeOnReconnect;
     }
 
-    protected abstract String uuid();
+    /**
+     * This method returns unique identifier.
+     * @return Unique Identifier .
+     */
+    abstract String uuid();
 
     /**
      * Sets value for UUID
@@ -744,6 +748,28 @@ abstract class PubnubCore {
         });
         _request(hreq, nonSubscribeManager);
     }
+    
+    /**
+    *
+    * Read History for a channel.
+    *
+    * @param channel
+    *            Channel name for which detailed history is required
+    * @param start
+    *            Start time
+    * @param end
+    *            End time
+    * @param count
+    *            Upper limit on number of messages to be returned
+    * @param reverse
+    *            True if messages need to be in reverse order
+    * @param callback
+    *            Callback
+    */
+   public void history(final String channel, long start, long end,
+                               int count, boolean reverse, final Callback callback) {
+	   detailedHistory(channel, start, end, count, reverse, callback);
+   }
 
     /**
      *
@@ -926,6 +952,118 @@ abstract class PubnubCore {
     public void detailedHistory(String channel, int count, Callback callback) {
         detailedHistory(channel, -1, -1, count, false, callback);
     }
+    
+    
+   /**
+    *
+    * Read History for a channel.
+    *
+    * @param channel
+    *            Channel name for which detailed history is required
+    * @param start
+    *            Start time
+    * @param reverse
+    *            True if messages need to be in reverse order
+    * @param callback
+    *            Callback
+    */
+   public void history(String channel, long start, boolean reverse,
+                               Callback callback) {
+       this.detailedHistory(channel, start, -1, -1, reverse, callback);
+   }
+
+   /**
+    *
+    * Read History for a channel.
+    *
+    * @param channel
+    *            Channel name for which detailed history is required
+    * @param start
+    *            Start time
+    * @param end
+    *            End time
+    * @param callback
+    *            Callback
+    */
+   public void history(String channel, long start, long end,
+                               Callback callback) {
+       this.detailedHistory(channel, start, end, -1, false, callback);
+   }
+   
+   /**
+   *
+   * Read History for a channel.
+   *
+   * @param channel
+   *            Channel name for which detailed history is required
+   * @param start
+   *            Start time
+   * @param end
+   *            End time
+   * @param count
+   *            Upper limit on number of messages to be returned
+   * @param callback
+   *            Callback
+   */
+   public void history(String channel, long start, long end, int count,
+                              Callback callback) {
+      this.detailedHistory(channel, start, end, count, false, callback);
+   }
+
+   /**
+    *
+    * Read History for a channel.
+    *
+    * @param channel
+    *            Channel name for which detailed history is required
+    * @param start
+    *            Start time
+    * @param end
+    *            End time
+    * @param reverse
+    *            True if messages need to be in reverse order
+    *
+    * @param callback
+    *            Callback
+    */
+   public void history(String channel, long start, long end,
+                               boolean reverse, Callback callback) {
+       this.detailedHistory(channel, start, end, -1, reverse, callback);
+   }
+
+   /**
+    *
+    * Read History for a channel.
+    *
+    * @param channel
+    *            Channel name for which detailed history is required
+    * @param count
+    *            Upper limit on number of messages to be returned
+    * @param reverse
+    *            True if messages need to be in reverse order
+    * @param callback
+    *            Callback
+    */
+   public void history(String channel, int count, boolean reverse,
+                               Callback callback) {
+       this.detailedHistory(channel, -1, -1, count, reverse, callback);
+   }
+
+   /**
+    *
+    * Read History for a channel.
+    *
+    * @param channel
+    *            Channel name for which detailed history is required
+    * @param reverse
+    *            True if messages need to be in reverse order
+    * @param callback
+    *            Callback
+    */
+   public void history(String channel, boolean reverse,
+                               Callback callback) {
+       this.detailedHistory(channel, -1, -1, -1, reverse, callback);
+   }
 
     /**
      * Read current time from PubNub Cloud.
@@ -1708,4 +1846,5 @@ abstract class PubnubCore {
         params.remove("auth");
         resubscribe();
     }
+    
 }
