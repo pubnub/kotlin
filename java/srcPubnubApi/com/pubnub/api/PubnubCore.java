@@ -1011,7 +1011,11 @@ abstract class PubnubCore {
      *
      */
     public void unsubscribeAll() {
-        subscriptions.removeAllChannels();
+    	String[] channels = subscriptions.getChannelNames();
+        for (int i = 0; i < channels.length; i++) {
+            subscriptions.removeChannel(channels[i]);
+            leave(channels[i]);
+        }
         disconnectAndResubscribe();
     }
 
