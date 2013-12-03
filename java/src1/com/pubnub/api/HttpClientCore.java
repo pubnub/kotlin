@@ -171,7 +171,7 @@ class HttpClientCore extends HttpClient {
             throw new PubnubException(getErrorObject(PNERROBJ_READINPUT, url));
         }
 
-        log.verbose("URL = " + url + " : RESPONSE = " + page);
+        log.verbose("URL = " + url + ", Status Code : "  + rc + ", : RESPONSE = " + page);
         switch (rc) {
         case HttpURLConnection.HTTP_FORBIDDEN:
             throw new PubnubException(getErrorObject(PNERROBJ_FORBIDDEN, page));
@@ -199,6 +199,8 @@ class HttpClientCore extends HttpClient {
             throw new PubnubException(getErrorObject(PNERROBJ_GATEWAY_TIMEOUT, url));
         case HttpURLConnection.HTTP_INTERNAL_ERROR:
             throw new PubnubException(getErrorObject(PNERROBJ_INTERNAL_ERROR, url + " : " + rc));
+        case HttpURLConnection.HTTP_NOT_FOUND:
+            throw new PubnubException(getErrorObject(PNERROBJ_NOT_FOUND_ERROR, url + " : " + rc));
         default:
             break;
         }

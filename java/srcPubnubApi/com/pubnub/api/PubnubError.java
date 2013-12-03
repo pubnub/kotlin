@@ -176,7 +176,11 @@ public class PubnubError {
 
 
     public static final int                PNERR_HTTP_RC_ERROR                        =       128;
-
+    /**
+     * Pubnub server or intermediate server returned HTTP 404 unauthorized status code
+     * 
+     */
+    public static final int         PNERR_NOT_FOUND                         =       129;
 
 
     // Error Objects
@@ -369,9 +373,16 @@ public class PubnubError {
     static final PubnubError PNERROBJ_5075_NETWORK_ERROR                       =
         new PubnubError     (
         PNERR_NETWORK_ERROR ,
-        "Netowork Error. " +
+        "Network Error. " +
         "Please verify if network is reachable."
     );
+    static final PubnubError PNERROBJ_NOT_FOUND_ERROR                       =
+            new PubnubError     (
+            PNERR_NOT_FOUND ,
+            "Page Not Found" +
+            "Please verify if network is reachable." +
+            "Please contact support with error details."
+        );
 
 
     public  final int errorCode;
