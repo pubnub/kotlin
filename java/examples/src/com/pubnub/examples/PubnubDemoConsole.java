@@ -143,6 +143,8 @@ public class PubnubDemoConsole {
 
                     notifyUser("SUBSCRIBE : ERROR on channel " + channel
                                + " : " + error.toString());
+                    if (error.errorCode == PubnubError.PNERR_TIMEOUT)
+                        pubnub.disconnectAndResubscribe();
                 }
             });
 
