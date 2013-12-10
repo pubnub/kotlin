@@ -2,6 +2,7 @@ package com.pubnub.examples.subscribeAtBoot;
 
 import android.os.Handler;
 import android.os.Message;
+import android.os.PowerManager;
 
 import com.pubnub.api.Callback;
 import com.pubnub.api.Pubnub;
@@ -9,6 +10,7 @@ import com.pubnub.api.PubnubException;
 
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
@@ -18,6 +20,7 @@ public class PubnubService extends Service {
 
     String channel = "hello_world";
     Pubnub pubnub = new Pubnub("demo", "demo", false);
+    PowerManager.WakeLock wl = null;
 
     private final Handler handler = new Handler() {
         public void handleMessage(Message msg) {
@@ -55,6 +58,14 @@ public class PubnubService extends Service {
     public void onCreate() {
         super.onCreate();
         Toast.makeText(this, "PubnubService created...", Toast.LENGTH_LONG).show();
+        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "SubscribeAtBoot");
+        if (wl != null) {
+            wl.acquire();
+            Log.i("PUBNUB", "Partial Wake Lock : " + wl.isHeld());
+            Toast.makeText(this, "Partial Wake Lock : " + wl.isHeld(), Toast.LENGTH_LONG).show();
+        }
+
         Log.i("PUBNUB", "PubnubService created...");
         try {
             pubnub.subscribe(new String[] {channel}, new Callback() {
@@ -84,6 +95,12 @@ public class PubnubService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        if (wl != null) {
+            wl.release();
+            Log.i("PUBNUB", "Partial Wake Lock : " + wl.isHeld());
+            Toast.makeText(this, "Partial Wake Lock : " + wl.isHeld(), Toast.LENGTH_LONG).show();
+            wl = null;
+        }
         Toast.makeText(this, "PubnubService destroyed...", Toast.LENGTH_LONG).show();
     }
 

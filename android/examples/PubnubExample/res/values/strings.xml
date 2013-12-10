@@ -35,6 +35,9 @@
     <string name="option14">Set Subscribe Timeout</string>
     <string name="option15">Set Non Subscribe Timeout</string>
     <string name="option16">Set Window Interval</string>
+    <string name="option17">Acquire Partial Wake Lock</string>
+    <string name="option18">Release Partial Wake Lock</string>
+    <string name="option19">Check Wake Lock Status</string>
 
 
 </resources>
