@@ -134,8 +134,14 @@ class HttpClientCore extends HttpClient {
         int rc = HttpURLConnection.HTTP_INTERNAL_ERROR;
         try {
             rc = connection.getResponseCode();
+<<<<<<< HEAD
         } catch (SocketTimeoutException ste) {
         	throw ste;
+=======
+        }
+        catch (SocketTimeoutException e) {
+            throw e;
+>>>>>>> ZD-2982
         }
         catch (IOException e) {
             throw new PubnubException(getErrorObject(PNERROBJ_HTTP_RC_ERROR, url + " : " + e.toString()));

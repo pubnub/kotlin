@@ -175,12 +175,22 @@ public class PubnubError {
     static final int                PNERR_BAD_REQUEST                          =       127;
 
 
+<<<<<<< HEAD
     public static final int                PNERR_HTTP_RC_ERROR                        =       128;
     /**
      * Pubnub server or intermediate server returned HTTP 404 unauthorized status code
      * 
      */
     public static final int         PNERR_NOT_FOUND                         =       129;
+=======
+    static final int                PNERR_HTTP_RC_ERROR                        =       128;
+
+    /**
+     * Subscribe Timeout .
+     */
+    static final int                PNERR_HTTP_SUBSCRIBE_TIMEOUT               =       129;
+
+>>>>>>> ZD-2982
 
 
     // Error Objects
@@ -383,6 +393,12 @@ public class PubnubError {
             "Please verify if network is reachable." +
             "Please contact support with error details."
         );
+
+    static final PubnubError PNERROBJ_SUBSCRIBE_TIMEOUT                       =
+            new PubnubError     (
+            PNERR_HTTP_SUBSCRIBE_TIMEOUT ,
+            "Subscribe Timeout ."
+    );
 
 
     public  final int errorCode;
