@@ -87,8 +87,7 @@ abstract class PubnubCryptoCore {
     /**
      * Decrypt
      *
-     * @param String
-     *            cipherText
+     * @param cipher_text
      * @return String
      * @throws Exception
      */
@@ -141,12 +140,12 @@ abstract class PubnubCryptoCore {
     /**
      * Get MD5
      *
-     * @param string
-     * @return
+     * @param input
+     * @return byte[]
      */
-    public static byte[] md5(String myString) {
+    public static byte[] md5(String input) {
         MD5Digest digest = new MD5Digest();
-        byte[] bytes = myString.getBytes();
+        byte[] bytes = input.getBytes();
         digest.update(bytes, 0, bytes.length);
         byte[] md5 = new byte[digest.getDigestSize()];
         digest.doFinal(md5, 0);
@@ -164,8 +163,8 @@ abstract class PubnubCryptoCore {
     /**
      * Get SHA256
      *
-     * @param string
-     * @return
+     * @param input
+     * @return byte[]
      */
     public static byte[] sha256(byte[] input) {
 
