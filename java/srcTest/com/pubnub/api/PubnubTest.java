@@ -1667,8 +1667,7 @@ public class PubnubTest {
         Pubnub pubnub = new Pubnub("pub-c-a2650a22-deb1-44f5-aa87-1517049411d5",
                                    "sub-c-a478dd2a-c33d-11e2-883f-02ee2ddab7fe",
                                    "sec-c-YjFmNzYzMGMtYmI3NC00NzJkLTlkYzYtY2MwMzI4YTJhNDVh");
-        pubnub.setDomain("pubnub.co");
-        pubnub.setOrigin("uls-test");
+        pubnub.setOrigin("pam-beta");
         pubnub.setCacheBusting(false);
         pubnub.pamGrant("hello-uls", "abcd", true, true, 1400, ulscb);
 
@@ -1687,8 +1686,7 @@ public class PubnubTest {
         Pubnub pubnub = new Pubnub("pub-c-a2650a22-deb1-44f5-aa87-1517049411d5",
                                    "sub-c-a478dd2a-c33d-11e2-883f-02ee2ddab7fe",
                                    "sec-c-YjFmNzYzMGMtYmI3NC00NzJkLTlkYzYtY2MwMzI4YTJhNDVh");
-        pubnub.setDomain("pubnub.co");
-        pubnub.setOrigin("uls-test");
+        pubnub.setOrigin("pam-beta");
         pubnub.setCacheBusting(false);
         pubnub.pamAudit(ulscb);
 
@@ -1707,8 +1705,7 @@ public class PubnubTest {
         Pubnub pubnub = new Pubnub("pub-c-a2650a22-deb1-44f5-aa87-1517049411d5",
                                    "sub-c-a478dd2a-c33d-11e2-883f-02ee2ddab7fe",
                                    "sec-c-YjFmNzYzMGMtYmI3NC00NzJkLTlkYzYtY2MwMzI4YTJhNDVh");
-        pubnub.setDomain("pubnub.co");
-        pubnub.setOrigin("uls-test");
+        pubnub.setOrigin("pam-beta");
         pubnub.setCacheBusting(false);
         pubnub.pamAudit("hello-uls", ulscb);
 
@@ -1727,8 +1724,7 @@ public class PubnubTest {
         Pubnub pubnub = new Pubnub("pub-c-a2650a22-deb1-44f5-aa87-1517049411d5",
                                    "sub-c-a478dd2a-c33d-11e2-883f-02ee2ddab7fe",
                                    "sec-c-YjFmNzYzMGMtYmI3NC00NzJkLTlkYzYtY2MwMzI4YTJhNDVh");
-        pubnub.setDomain("pubnub.co");
-        pubnub.setOrigin("uls-test");
+        pubnub.setOrigin("pam-beta");
         pubnub.setCacheBusting(false);
         pubnub.pamAudit("hello-uls", "abcd", ulscb);
 
@@ -1747,8 +1743,7 @@ public class PubnubTest {
         Pubnub pubnub = new Pubnub("pub-c-a2650a22-deb1-44f5-aa87-1517049411d5",
                                    "sub-c-a478dd2a-c33d-11e2-883f-02ee2ddab7fe",
                                    "sec-c-YjFmNzYzMGMtYmI3NC00NzJkLTlkYzYtY2MwMzI4YTJhNDVh");
-        pubnub.setDomain("pubnub.co");
-        pubnub.setOrigin("uls-test");
+        pubnub.setOrigin("pam-beta");
         pubnub.setCacheBusting(false);
         pubnub.pamRevoke("hello-uls", "abcd", ulscb);
 

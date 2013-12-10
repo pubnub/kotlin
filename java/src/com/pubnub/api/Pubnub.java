@@ -16,6 +16,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import static com.pubnub.api.PubnubError.*;
+import static com.pubnub.api.PubnubUtil.*;
 
 /**
  * Pubnub object facilitates querying channels for messages and listening on
@@ -122,5 +123,4 @@ public class Pubnub extends PubnubCoreShared {
     protected String getUserAgent() {
         return "Java/" + VERSION;
     }
-
 }
