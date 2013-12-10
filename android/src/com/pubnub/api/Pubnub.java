@@ -10,7 +10,7 @@ import java.util.UUID;
  *
  */
 
-public class Pubnub extends PubnubCore {
+public class Pubnub extends PubnubCoreShared {
     /**
      * Pubnub Constructor
      *
@@ -100,43 +100,6 @@ public class Pubnub extends PubnubCore {
     public Pubnub(String publish_key, String subscribe_key,
                   String secret_key, String cipher_key, boolean ssl_on, String initialization_vector) {
         super(publish_key, subscribe_key, secret_key, cipher_key, ssl_on, initialization_vector);
-    }
-
-    /**
-     * Sets value for UUID
-     *
-     * @param uuid
-     *            UUID value for Pubnub client
-     */
-    public void setUUID(UUID uuid) {
-        this.UUID = uuid.toString();
-    }
-
-    protected String uuid() {
-        return java.util.UUID.randomUUID().toString();
-    }
-
-    /**
-     * This method sets timeout value for subscribe/presence. Default value is
-     * 310000 milliseconds i.e. 310 seconds
-     *
-     * @param timeout
-     *            Timeout value in milliseconds for subscribe/presence
-     */
-    public void setSubscribeTimeout(int timeout) {
-        super.setSubscribeTimeout(timeout);
-    }
-
-    /**
-     * This method set timeout value for non subscribe operations like publish,
-     * history, hereNow. Default value is 15000 milliseconds i.e. 15 seconds.
-     *
-     * @param timeout
-     *            Timeout value in milliseconds for Non subscribe operations
-     *            like publish, history, hereNow
-     */
-    public void setNonSubscribeTimeout(int timeout) {
-        super.setNonSubscribeTimeout(timeout);
     }
 
     protected String getUserAgent() {
