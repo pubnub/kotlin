@@ -353,6 +353,11 @@ public class PubnubDemoConsole {
             case 25:
                 pubnub.setCacheBusting(false);
                 break;
+            case 26:
+                notifyUser("Set UUID");
+                String uuid = getStringFromConsole("UUID");
+                pubnub.setUUID(uuid);
+                break;
             default:
                 notifyUser("Invalid Input");
             }
@@ -545,6 +550,7 @@ public class PubnubDemoConsole {
         notifyUser("ENTER 23 FOR Setting Domain ( current: "+ pubnub.getDomain() + " )");
         notifyUser("ENTER 24 FOR Enabling Cache Busting  ( current: " + pubnub.getCacheBusting() + " )");
         notifyUser("ENTER 25 FOR Disabling Cache Busting ( current: " + pubnub.getCacheBusting() + " )");
+        notifyUser("ENTER 26 FOR Setting UUID ( current: " + pubnub.getUUID() + " )");
         notifyUser("\nENTER 0 to display this menu");
     }
 
