@@ -14,7 +14,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
-import android.os.PowerManager;
 import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
@@ -35,7 +34,6 @@ public class MainActivity extends Activity {
      */
 
     Pubnub pubnub = new Pubnub("demo", "demo", "", false);
-    PowerManager.WakeLock wl = null;
 
     private void notifyUser(Object message) {
         try {
@@ -90,8 +88,6 @@ public class MainActivity extends Activity {
             }
 
         }, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
-        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-        wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "PubnubDemoConsole");
 
     }
 
@@ -170,36 +166,105 @@ public class MainActivity extends Activity {
 
         case R.id.option16:
             setWindowInterval();
-            acquirePartialWakeLock();
             return true;
-
         case R.id.option17:
-            releasePartialWakeLock();
+            setOrigin();
             return true;
-
         case R.id.option18:
-            checkWakeLockStatus();
+            setDomain();
+            return true;
+        case R.id.option19:
+            toggleCacheBusting();
+            return true;
+        case R.id.option20:
+            setPnExpires();
+            return true;
+        case R.id.option21:
+            setUUID();
             return true;
         default:
             return super.onOptionsItemSelected(item);
         }
     }
 
-    private void checkWakeLockStatus() {
-        notifyUser("Partial Wake Lock : " + wl.isHeld());
-    }
+    private void setPnExpires() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Set Presence Expiry");
+        builder.setMessage("Enter timeout value in seconds");
+        final EditText edTimeout = new EditText(this);
+        edTimeout.setInputType(InputType.TYPE_CLASS_NUMBER);
+        builder.setView(edTimeout);
+        builder.setPositiveButton("Done",
+        new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                pubnub.setPnExpires(Integer.parseInt(edTimeout.getText().toString()));
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
+		
+	}
 
-    private void releasePartialWakeLock() {
-        if (wl != null) wl.release();
-        notifyUser("Partial Wake Lock : " + wl.isHeld());
-    }
+	private void toggleCacheBusting() {
+        pubnub.setCacheBusting(pubnub.getCacheBusting() ? false : true);
+        notifyUser("CACHE BUSTING : " + pubnub.getCacheBusting());
+		
+	}
 
-    private void acquirePartialWakeLock() {
-        if (wl != null) wl.acquire();
-        notifyUser("Partial Wake Lock : " + wl.isHeld());
-    }
+	private void setOrigin() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Set Origin");
+        builder.setMessage("Enter Origin");
+        final EditText edTimetoken = new EditText(this);
+        builder.setView(edTimetoken);
+        builder.setPositiveButton("Done",
+        new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                pubnub.setOrigin(
+                    edTimetoken.getText().toString());
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
+	}
+	private void setDomain() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Set Domain");
+        builder.setMessage("Enter Domain");
+        final EditText edTimetoken = new EditText(this);
+        builder.setView(edTimetoken);
+        builder.setPositiveButton("Done",
+        new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                pubnub.setDomain(
+                    edTimetoken.getText().toString());
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
+	}
+	private void setUUID() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Set UUID");
+        builder.setMessage("Enter UUID");
+        final EditText edTimetoken = new EditText(this);
+        builder.setView(edTimetoken);
+        builder.setPositiveButton("Done",
+        new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                pubnub.setUUID(
+                    edTimetoken.getText().toString());
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
+	}
 
-    private void setNonSubscribeTimeout() {
+	private void setNonSubscribeTimeout() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Set Non Subscribe Timeout");
@@ -346,7 +411,7 @@ public class MainActivity extends Activity {
                 if (args.get("message") == null) {
                     args.put("message", message);
                 }
-                
+
                 // Publish Message
 
                 args.put("channel", channel); // Channel Name
@@ -528,7 +593,6 @@ public class MainActivity extends Activity {
             public void onClick(DialogInterface dialog, int which) {
                 String channel = input.getText().toString();
                 pubnub.unsubscribePresence(channel);
-                
             }
         });
         AlertDialog alert = builder.create();

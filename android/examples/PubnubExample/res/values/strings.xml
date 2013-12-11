@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="app_name">PubnubExample</string>
     <string name="pubnub">Pubnub</string>
     <string name="hello_world">Hello world!</string>
@@ -35,9 +34,9 @@
     <string name="option14">Set Subscribe Timeout</string>
     <string name="option15">Set Non Subscribe Timeout</string>
     <string name="option16">Set Window Interval</string>
-    <string name="option17">Acquire Partial Wake Lock</string>
-    <string name="option18">Release Partial Wake Lock</string>
-    <string name="option19">Check Wake Lock Status</string>
-
-
+    <string name="option17">Set Origin</string>
+    <string name="option18">Set Domain</string>
+    <string name="option19">Toggle Cache Busting</string>
+    <string name="option20">Set Presence Expiry</string>
+    <string name="option21">Set UUID</string>
 </resources>

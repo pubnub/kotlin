@@ -87,6 +87,7 @@ class HttpClientCore extends HttpClient {
     throws PubnubException, SocketTimeoutException {
         URL urlobj = null;
         log.verbose("FETCHING URL : " + url);
+        System.out.println(url);
         try {
             urlobj = new URL(url);
         } catch (MalformedURLException e3) {
@@ -134,14 +135,8 @@ class HttpClientCore extends HttpClient {
         int rc = HttpURLConnection.HTTP_INTERNAL_ERROR;
         try {
             rc = connection.getResponseCode();
-<<<<<<< HEAD
         } catch (SocketTimeoutException ste) {
         	throw ste;
-=======
-        }
-        catch (SocketTimeoutException e) {
-            throw e;
->>>>>>> ZD-2982
         }
         catch (IOException e) {
             throw new PubnubException(getErrorObject(PNERROBJ_HTTP_RC_ERROR, url + " : " + e.toString()));
@@ -176,7 +171,7 @@ class HttpClientCore extends HttpClient {
         } catch (IOException e) {
             throw new PubnubException(getErrorObject(PNERROBJ_READINPUT, url));
         }
-
+        System.out.println("URL = " + url + ", Status Code : "  + rc + ", : RESPONSE = " + page);
         log.verbose("URL = " + url + ", Status Code : "  + rc + ", : RESPONSE = " + page);
         switch (rc) {
         case HttpURLConnection.HTTP_FORBIDDEN:

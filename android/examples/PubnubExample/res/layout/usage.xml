@@ -125,6 +125,31 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/option16" />
+        <TextView
+            android:id="@+id/option17"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/option17" />
+        <TextView
+            android:id="@+id/option18"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/option18" />
+        <TextView
+            android:id="@+id/option19"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/option19" />
+        <TextView
+            android:id="@+id/option20"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/option20" />
+        <TextView
+            android:id="@+id/option21"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/option21" />
     </LinearLayout>
 
 </LinearLayout>

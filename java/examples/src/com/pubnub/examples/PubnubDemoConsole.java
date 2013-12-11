@@ -360,6 +360,21 @@ public class PubnubDemoConsole {
                 String uuid = getStringFromConsole("UUID");
                 pubnub.setUUID(uuid);
                 break;
+            case 27:
+                int pnexpires = getIntFromConsole("Pubnub Presence Expiry ( in seconds ), Current value : " + pubnub.getPnExpires());
+            	pubnub.setPnExpires(pnexpires, new Callback(){
+
+					@Override
+					public void successCallback(String channel, Object message) {
+						System.out.println(System.currentTimeMillis() / 1000 + " : " + message);
+					}
+					@Override
+					public void errorCallback(String channel, PubnubError error) {
+						System.out.println(System.currentTimeMillis() / 1000 + " : " + error);
+					}
+            		
+            	});
+            	break;
             default:
                 notifyUser("Invalid Input");
             }
@@ -553,6 +568,7 @@ public class PubnubDemoConsole {
         notifyUser("ENTER 24 FOR Enabling Cache Busting  ( current: " + pubnub.getCacheBusting() + " )");
         notifyUser("ENTER 25 FOR Disabling Cache Busting ( current: " + pubnub.getCacheBusting() + " )");
         notifyUser("ENTER 26 FOR Setting UUID ( current: " + pubnub.getUUID() + " )");
+        notifyUser("ENTER 27 FOR Setting Presence Expiry ( current: " + pubnub.getPnExpires() + " )");
         notifyUser("\nENTER 0 to display this menu");
     }
 

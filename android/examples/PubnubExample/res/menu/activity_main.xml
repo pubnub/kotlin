@@ -14,7 +14,10 @@
     <item android:id="@+id/option13" android:title="@string/option13" android:titleCondensed="@string/option13"></item>
     <item android:id="@+id/option14" android:title="@string/option14" android:titleCondensed="@string/option14"></item>
     <item android:id="@+id/option15" android:title="@string/option15" android:titleCondensed="@string/option15"></item>
-	<item android:id="@+id/option16" android:title="@string/option16" android:titleCondensed="@string/option16"></item>
-	<item android:id="@+id/option17" android:title="@string/option17" android:titleCondensed="@string/option17"></item>
-	<item android:id="@+id/option18" android:title="@string/option18" android:titleCondensed="@string/option18"></item>
+    <item android:id="@+id/option16" android:title="@string/option16" android:titleCondensed="@string/option16"></item>
+    <item android:id="@+id/option17" android:title="@string/option17" android:titleCondensed="@string/option17"></item>
+    <item android:id="@+id/option18" android:title="@string/option18" android:titleCondensed="@string/option18"></item>
+    <item android:id="@+id/option19" android:title="@string/option19" android:titleCondensed="@string/option19"></item>
+    <item android:id="@+id/option20" android:title="@string/option20" android:titleCondensed="@string/option20"></item>
+    <item android:id="@+id/option21" android:title="@string/option21" android:titleCondensed="@string/option21"></item>    
 </menu>
