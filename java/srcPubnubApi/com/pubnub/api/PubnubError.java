@@ -1,5 +1,7 @@
 package com.pubnub.api;
 
+import org.json.JSONObject;
+
 /**
  * PubnubError object is passed to errorCallback. It contains details of error, like
  * error code, error string, and optional message
@@ -411,41 +413,57 @@ public class PubnubError {
 
     public  final int errorCode;
     public  final int errorCodeExtended;
+    public  final JSONObject errorObject;
     private final String errorString;
     private String message;
 
-    private PubnubError(int errorCode, int errorCodeExtended, String errorString) {
+    private PubnubError(int errorCode, int errorCodeExtended, String errorString, JSONObject errorObject, String message) {
         this.errorCodeExtended = errorCodeExtended;
         this.errorCode = errorCode;
         this.errorString = errorString;
+        this.errorObject = errorObject;
+        this.message = message;
     }
+    
+    private PubnubError(int errorCode, int errorCodeExtended, String errorString) {
+    	this(errorCode, errorCodeExtended, errorString, null, null);
+    }
+    private PubnubError(int errorCode, int errorCodeExtended, String errorString, JSONObject errorObject) {
+    	this(errorCode, errorCodeExtended, errorString, errorObject, null);
+    }
+    
     private PubnubError(int errorCode, String errorString) {
-        this.errorCodeExtended = 0;
-        this.errorCode = errorCode;
-        this.errorString = errorString;
+    	this(errorCode, 0, errorString, null, null);       
     }
     private PubnubError(int errorCode, int errorCodeExtended, String errorString, String message) {
-        this.errorCodeExtended = errorCodeExtended;
-        this.errorCode = errorCode;
-        this.errorString = errorString;
-        this.message = message;
+    	this(errorCode, errorCodeExtended, errorString, null, message);
     }
     public PubnubError(PubnubError error, String message) {
-        this.errorCode = error.errorCode;
-        this.errorCodeExtended = error.errorCodeExtended;
-        this.errorString = error.errorString;
-        this.message = message;
+    	this(error.errorCode, error.errorCodeExtended, error.errorString, null, message);
+    }
+    public PubnubError(PubnubError error, JSONObject errorObject) {
+    	this(error.errorCode, error.errorCodeExtended, error.errorString, errorObject, null);
     }
     public String toString() {
         String value = "[Error: " + errorCode + "-" + errorCodeExtended + "] : " + errorString;
+        if (errorObject != null) {
+            value += " : " + errorObject;	
+        }
         if (message != null && message.length() > 0) {
             value += " : " + message;
         }
+        
         return value;
     }
 
     static PubnubError getErrorObject(PubnubError error, String message) {
         return new PubnubError(error.errorCode, error.errorCodeExtended, error.errorString, message);
+    }
+    static PubnubError getErrorObject(PubnubError error, String message, JSONObject errorObject) {
+        return new PubnubError(error.errorCode, error.errorCodeExtended, error.errorString, errorObject, message);
+    }
+    static PubnubError getErrorObject(PubnubError error, int errorCodeExtended, JSONObject errorObject) {
+        return new PubnubError(error.errorCode, errorCodeExtended, error.errorString, errorObject);
     }
     static PubnubError getErrorObject(PubnubError error, int errorCodeExtended) {
         return new PubnubError(error.errorCode, errorCodeExtended, error.errorString);

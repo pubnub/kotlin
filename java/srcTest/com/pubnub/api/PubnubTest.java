@@ -88,9 +88,9 @@ public class PubnubTest {
     class UlsCallback extends Callback {
 
         private CountDownLatch latch;
-        private int result = 0;
+        private JSONObject result = null;
 
-        public int getResult() {
+        public JSONObject getResult() {
             return result;
         }
 
@@ -104,15 +104,14 @@ public class PubnubTest {
 
         public void successCallback(String channel, Object message) {
 
-            result = 200;
+            result = (JSONObject) message;
 
             if (latch != null)
                 latch.countDown();
         }
 
         public void errorCallback(String channel, PubnubError error) {
-            JSONArray jso;
-            result = 0;
+            result = null;
             if (latch != null)
                 latch.countDown();
         }

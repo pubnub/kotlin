@@ -174,9 +174,23 @@ class HttpClientCore extends HttpClient {
         log.verbose("URL = " + url + ", Status Code : "  + rc + ", : RESPONSE = " + page);
         switch (rc) {
         case HttpURLConnection.HTTP_FORBIDDEN:
-            throw new PubnubException(getErrorObject(PNERROBJ_FORBIDDEN, page));
+        	{
+	        	JSONObject errorObject = null;
+	        	try {
+					errorObject = (JSONObject) new JSONObject(page).get("error");
+				} catch (JSONException e2) {}
+	        	
+	            throw new PubnubException(getErrorObject(PNERROBJ_FORBIDDEN, page));
+        	}
         case HttpURLConnection.HTTP_UNAUTHORIZED:
-            throw new PubnubException(getErrorObject(PNERROBJ_UNAUTHORIZED, page));
+        	{
+	        	JSONObject errorObject = null;
+	        	try {
+					errorObject = (JSONObject) new JSONObject(page).get("error");
+				} catch (JSONException e2) {}
+	        	
+	            throw new PubnubException(getErrorObject(PNERROBJ_UNAUTHORIZED, page, errorObject));
+        	}
         case HttpURLConnection.HTTP_BAD_REQUEST:
             try {
                 JSONArray jsarr = new JSONArray(page);
