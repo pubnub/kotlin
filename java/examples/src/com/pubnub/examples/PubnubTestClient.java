@@ -16,10 +16,8 @@ public class PubnubTestClient {
     }
 
     public void runTest() {
-        Hashtable args = new Hashtable();
-        args.put("channel", "TestClientChannel");
         try {
-            pubnub.subscribe(args, new Callback() {
+            pubnub.subscribe("TestClientChannel", new Callback() {
                 @Override
                 public void successCallback(String channel, Object message) {
                     recvSuccess++;
@@ -44,9 +42,9 @@ public class PubnubTestClient {
                 sendErrors++;
             }
         };
-        args.put("message", "Test Client Message");
+
         for (int i = 0; i < 10; i++) {
-            pubnub.publish(args, publishCb);
+            pubnub.publish("TestClientChannel", "Test Client Message", publishCb);
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {

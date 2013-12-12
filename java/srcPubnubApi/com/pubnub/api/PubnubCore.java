@@ -643,7 +643,7 @@ abstract class PubnubCore {
 	 * @param callback
 	 *            object of sub class of Callback class
 	 */
-	public void publish(Hashtable args, Callback callback) {
+	protected void publish(Hashtable args, Callback callback) {
 		args.put("callback", callback);
 		publish(args);
 	}
@@ -655,7 +655,7 @@ abstract class PubnubCore {
 	 *            Hashtable containing channel name, message, callback
 	 */
 
-	public void publish(Hashtable args) {
+	protected void publish(Hashtable args) {
 
 		final String channel = (String) args.get("channel");
 		final Object message = args.get("message");
@@ -927,17 +927,6 @@ abstract class PubnubCore {
 				new ResponseHandler() {
 			public void handleResponse(HttpRequest hreq, String response) {
 				invokeCallback(channel, response, "payload",cb, 1);
-				/*
-				JSONObject jsobj;
-				try {
-					jsobj = new JSONObject(response);
-				} catch (JSONException e) {
-					cb.errorCallback(channel,
-							PubnubError.getErrorObject(PubnubError.PNERROBJ_JSON_ERROR, 1, response));
-					return;
-				}
-				cb.successCallback(channel , jsobj);
-				*/
 			}
 
 			public void handleError(HttpRequest hreq, PubnubError error) {
@@ -973,7 +962,7 @@ abstract class PubnubCore {
 	 * @param args
 	 *            Hashtable containing channel name, limit, Callback
 	 */
-	public void history(Hashtable args) {
+	protected void history(Hashtable args) {
 
 		final String channel = (String) args.get("channel");
 		String limit = (String) args.get("limit");
@@ -1061,7 +1050,7 @@ abstract class PubnubCore {
 	 * @param callback
 	 *            Callback
 	 */
-	public void detailedHistory(final String channel, long start, long end,
+	protected void detailedHistory(final String channel, long start, long end,
 			int count, boolean reverse, Callback callback) {
 		final Callback cb = getWrappedCallback(callback);
 		Hashtable parameters = PubnubUtil.hashtableClone(params);
@@ -1134,7 +1123,7 @@ abstract class PubnubCore {
 	 * @param callback
 	 *            Callback
 	 */
-	public void detailedHistory(String channel, long start, boolean reverse,
+	protected void detailedHistory(String channel, long start, boolean reverse,
 			Callback callback) {
 		detailedHistory(channel, start, -1, -1, reverse, callback);
 	}
@@ -1152,7 +1141,7 @@ abstract class PubnubCore {
 	 * @param callback
 	 *            Callback
 	 */
-	public void detailedHistory(String channel, long start, long end,
+	protected void detailedHistory(String channel, long start, long end,
 			Callback callback) {
 		detailedHistory(channel, start, end, -1, false, callback);
 	}
@@ -1173,7 +1162,7 @@ abstract class PubnubCore {
 	 * @param callback
 	 *            Callback
 	 */
-	public void detailedHistory(String channel, long start, long end,
+	protected void detailedHistory(String channel, long start, long end,
 			boolean reverse, Callback callback) {
 		detailedHistory(channel, start, end, -1, reverse, callback);
 	}
@@ -1191,7 +1180,7 @@ abstract class PubnubCore {
 	 * @param callback
 	 *            Callback
 	 */
-	public void detailedHistory(String channel, int count, boolean reverse,
+	protected void detailedHistory(String channel, int count, boolean reverse,
 			Callback callback) {
 		detailedHistory(channel, -1, -1, count, reverse, callback);
 	}
@@ -1207,7 +1196,7 @@ abstract class PubnubCore {
 	 * @param callback
 	 *            Callback
 	 */
-	public void detailedHistory(String channel, boolean reverse,
+	protected void detailedHistory(String channel, boolean reverse,
 			Callback callback) {
 		detailedHistory(channel, -1, -1, -1, reverse, callback);
 	}
@@ -1223,7 +1212,7 @@ abstract class PubnubCore {
 	 * @param callback
 	 *            Callback object
 	 */
-	public void detailedHistory(String channel, int count, Callback callback) {
+	protected void detailedHistory(String channel, int count, Callback callback) {
 		detailedHistory(channel, -1, -1, count, false, callback);
 	}
 
@@ -1476,7 +1465,7 @@ abstract class PubnubCore {
 	 * @param args
 	 *            Hashtable containing channel name.
 	 */
-	public void unsubscribe(Hashtable args) {
+	protected void unsubscribe(Hashtable args) {
 		String[] channelList = (String[]) args.get("channels");
 		if (channelList == null) {
 			channelList = new String[] { (String) args.get("channel") };
@@ -1495,7 +1484,7 @@ abstract class PubnubCore {
 	 * @exception PubnubException
 	 *                Throws PubnubException if Callback is null
 	 */
-	public void subscribe(Hashtable args, Callback callback)
+	protected void subscribe(Hashtable args, Callback callback)
 			throws PubnubException {
 		args.put("callback", callback);
 		subscribe(args);
@@ -1510,7 +1499,7 @@ abstract class PubnubCore {
 	 * @exception PubnubException
 	 *                Throws PubnubException if Callback is null
 	 */
-	public void subscribe(Hashtable args) throws PubnubException {
+	protected void subscribe(Hashtable args) throws PubnubException {
 
 		if (!inputsValid(args)) {
 			return;

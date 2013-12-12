@@ -173,262 +173,6 @@ abstract class PubnubCoreShared extends PubnubCore {
         return super.getNonSubscribeTimeout();
     }
 
-    /**
-     * Send a message to a channel.
-     *
-     * @param args
-     *            Hashtable containing channel name, message.
-     * @param callback
-     *            object of sub class of Callback class
-     * @deprecated as of version 3.5.2 and will be removed with 3.6.0 . Methods
-     *             accepting Hashtable as arguments have been deprecated.
-     */
-    @Deprecated
-    @Override
-    public void publish(Hashtable args, Callback callback) {
-        super.publish(args, callback);
-    }
-
-    /**
-     * Send a message to a channel.
-     *
-     * @param args
-     *            Hashtable containing channel name, message, callback
-     * @deprecated As of version 3.5.2 . Will be removed in 3.6.0 . Methods
-     *             accepting Hashtable as arguments have been deprecated.
-     *
-     */
-    @Deprecated
-    @Override
-    public void publish(Hashtable args) {
-        super.publish(args);
-    }
-    
-    /**
-    *
-    * Read History for a channel.
-    * @param args
-    *            Hashtable
-    * @deprecated as of version 3.5.2 and will be removed with 3.6.0 . Replaced
-    *             by
-    *             {@link #history(String channel, long start, long end, int count, boolean reverse, Callback callback)}
-    */
-   @Deprecated
-   @Override
-   public void history(Hashtable args) {
-       super.history(args);
-   }
-
-    /**
-     *
-     * Read DetailedHistory for a channel.
-     *
-     * @param channel
-     *            Channel name for which detailed history is required
-     * @param start
-     *            Start time
-     * @param end
-     *            End time
-     * @param count
-     *            Upper limit on number of messages to be returned
-     * @param reverse
-     *            True if messages need to be in reverse order
-     * @param callback
-     *            Callback
-     * @deprecated as of version 3.5.2 and will be removed with 3.6.0 . Replaced
-     *             by
-     *             {@link #history(String channel, long start, long end, int count, boolean reverse, Callback callback)}
-     */
-    @Deprecated
-    @Override
-    public void detailedHistory(final String channel, long start, long end,
-                                int count, boolean reverse, final Callback callback) {
-        super.detailedHistory(channel, start, end, count, reverse, callback);
-    }
-
-    /**
-     *
-     * Read DetailedHistory for a channel.
-     *
-     * @param channel
-     *            Channel name for which detailed history is required
-     * @param start
-     *            Start time
-     * @param reverse
-     *            True if messages need to be in reverse order
-     * @param callback
-     *            Callback
-     * @deprecated as of version 3.5.2 and will be removed with 3.6.0 . Replaced
-     *             by
-     *             {@link #history(String channel, long start, boolean reverse, Callback callback)}
-     */
-    @Deprecated
-    @Override
-    public void detailedHistory(String channel, long start, boolean reverse,
-                                Callback callback) {
-        super.detailedHistory(channel, start, reverse, callback);
-    }
-
-    /**
-     *
-     * Read DetailedHistory for a channel.
-     *
-     * @param channel
-     *            Channel name for which detailed history is required
-     * @param start
-     *            Start time
-     * @param end
-     *            End time
-     * @param callback
-     *            Callback
-     * @deprecated as of version 3.5.2 and will be removed with 3.6.0 . Replaced
-     *             by
-     *             {@link #history(String channel, long start, long end, Callback callback)}
-     */
-    @Deprecated
-    @Override
-    public void detailedHistory(String channel, long start, long end,
-                                Callback callback) {
-        super.detailedHistory(channel, start, end, callback);
-    }
-
-    /**
-     *
-     * Read DetailedHistory for a channel.
-     *
-     * @param channel
-     *            Channel name for which detailed history is required
-     * @param start
-     *            Start time
-     * @param end
-     *            End time
-     * @param reverse
-     *            True if messages need to be in reverse order
-     * @param callback
-     *            Callback
-     * @deprecated as of version 3.5.2 and will be removed with 3.6.0 .
-     */
-    @Deprecated
-    @Override
-    public void detailedHistory(String channel, long start, long end,
-                                boolean reverse, Callback callback) {
-        super.detailedHistory(channel, start, end, reverse, callback);
-    }
-
-    /**
-     *
-     * Read DetailedHistory for a channel.
-     *
-     * @param channel
-     *            Channel name for which detailed history is required
-     * @param count
-     *            Upper limit on number of messages to be returned
-     * @param reverse
-     *            True if messages need to be in reverse order
-     * @param callback
-     *            Callback
-     * @deprecated as of version 3.5.2 and will be removed with 3.6.0 . Replaced
-     *             by
-     *             {@link #history(String channel, int count, boolean reverse, Callback callback)}
-     */
-    @Deprecated
-    @Override
-    public void detailedHistory(String channel, int count, boolean reverse,
-                                Callback callback) {
-        super.detailedHistory(channel, count, reverse, callback);
-    }
-
-    /**
-     *
-     * Read DetailedHistory for a channel.
-     *
-     * @param channel
-     *            Channel name for which detailed history is required
-     * @param reverse
-     *            True if messages need to be in reverse order
-     * @param callback
-     *            Callback
-     * @deprecated as of version 3.5.2 and will be removed with 3.6.0 . Replaced
-     *             by
-     *             {@link #history(String channel, boolean reverse, Callback callback)}
-     */
-    @Deprecated
-    public void detailedHistory(String channel, boolean reverse,
-                                Callback callback) {
-        super.detailedHistory(channel, reverse, callback);
-    }
-
-    /**
-     *
-     * Read DetailedHistory for a channel.
-     *
-     * @param channel
-     *            Channel name for which detailed history is required
-     * @param count
-     *            Maximum number of messages
-     * @param callback
-     *            Callback object
-     * @deprecated as of version 3.5.2 and will be removed with 3.6.0 . Replaced
-     *             by
-     *             {@link #history(String channel, int count, Callback callback)}
-     */
-    @Deprecated
-    public void detailedHistory(String channel, int count, Callback callback) {
-        super.detailedHistory(channel, count, callback);
-    }
-
-    /**
-     * Unsubscribe/Disconnect from channel.
-     *
-     * @param args
-     *            Hashtable containing channel name.
-     * @deprecated as of version 3.5.2 and will be removed with 3.6.0 . Methods
-     *             accepting Hashtable as arguments have been deprecated.
-     */
-    @Deprecated
-    public void unsubscribe(Hashtable args) {
-        String[] channelList = (String[]) args.get("channels");
-        if (channelList == null) {
-            channelList = new String[] { (String) args.get("channel") };
-        }
-        unsubscribe(channelList);
-    }
-
-    /**
-     *
-     * Listen for a message on a channel.
-     *
-     * @param args
-     *            Hashtable containing channel name
-     * @param callback
-     *            Callback
-     * @exception PubnubException
-     *                Throws PubnubException if Callback is null
-     * @deprecated as of version 3.5.2 and will be removed with 3.6.0 .
-     */
-    @Deprecated
-    public void subscribe(Hashtable args, Callback callback)
-    throws PubnubException {
-        args.put("callback", callback);
-        super.subscribe(args);
-    }
-
-    /**
-     *
-     * Listen for a message on a channel.
-     *
-     * @param args
-     *            Hashtable containing channel name, callback
-     * @exception PubnubException
-     *                Throws PubnubException if Callback is null
-     * @deprecated as of version 3.5.2 and will be removed with 3.6.0 . Methods
-     *             accepting Hashtable as arguments have been deprecated.
-     */
-    @Deprecated
-    public void subscribe(Hashtable args) throws PubnubException {
-        super.subscribe(args);
-    }
-
     private String pamSign(String key, String data) throws PubnubException {
         Mac sha256_HMAC;
 
@@ -548,18 +292,6 @@ abstract class PubnubCoreShared extends PubnubCore {
         new ResponseHandler() {
             public void handleResponse(HttpRequest hreq, String response) {
             	invokeCallback(channel, response, "payload", cb, 4);
-            	/*
-                JSONObject jso;
-                try {
-                    jso = new JSONObject(response);
-                } catch (JSONException e) {
-                    handleError(hreq, getErrorObject(
-                                    PNERROBJ_INVALID_JSON, 4,
-                                    response));
-                    return;
-                }
-                callback.successCallback(channel, jso);
-                */
             }
 
             public void handleError(HttpRequest hreq, PubnubError error) {
@@ -616,18 +348,6 @@ abstract class PubnubCoreShared extends PubnubCore {
         new ResponseHandler() {
             public void handleResponse(HttpRequest hreq, String response) {
             	invokeCallback("", response, "payload", cb, 5 );
-            	/*
-                JSONObject jso;
-                try {
-                    jso = new JSONObject(response);
-                } catch (JSONException e) {
-                    handleError(hreq, getErrorObject(
-                                    PNERROBJ_INVALID_JSON, 5,
-                                    response));
-                    return;
-                }
-                callback.successCallback("", jso);
-                */
             }
 
             public void handleError(HttpRequest hreq, PubnubError error) {
@@ -686,17 +406,6 @@ abstract class PubnubCoreShared extends PubnubCore {
         new ResponseHandler() {
             public void handleResponse(HttpRequest hreq, String response) {
             	invokeCallback(channel, response, "payload", cb, 6);
-            	/*
-                JSONObject jso;
-                try {
-                    jso = new JSONObject(response);
-                } catch (JSONException e) {
-                    handleError(hreq, getErrorObject(
-                                    PNERROBJ_INVALID_JSON, 6,
-                                    response));
-                    return;
-                }
-                callback.successCallback(channel, jso); */
             }
 
             public void handleError(HttpRequest hreq, PubnubError error) {
@@ -756,18 +465,6 @@ abstract class PubnubCoreShared extends PubnubCore {
         new ResponseHandler() {
             public void handleResponse(HttpRequest hreq, String response) {
             	invokeCallback(channel, response, "payload", cb, 2);
-            	/*
-                JSONObject jso;
-                try {
-                    jso = new JSONObject(response);
-                } catch (JSONException e) {
-                    handleError(hreq, PubnubError.getErrorObject(
-                                    PubnubError.PNERROBJ_INVALID_JSON, 2,
-                                    response));
-                    return;
-                }
-                callback.successCallback(channel, jso);
-                */
             }
 
             public void handleError(HttpRequest hreq, PubnubError error) {

@@ -106,8 +106,8 @@ public class PubnubPublishTest {
     }
 
     public void runDetailedHistory() {
-        detailedHistory(_pubnub, channel);
-        detailedHistory(_pubnub_enc, channel_enc);
+        history(_pubnub, channel);
+        history(_pubnub_enc, channel_enc);
     }
 
     private static void notifyUser(Object message) {
@@ -116,9 +116,8 @@ public class PubnubPublishTest {
 
     public void publish(Pubnub pubnub, final String channel, final Object msg) {
         Hashtable args = new Hashtable(2);
-        args.put("channel", channel); // Channel Name
-        args.put("message", msg); // JSON Message
-        pubnub.publish(args, new Callback() {
+
+        pubnub.publish(channel, msg.toString(), new Callback() {
             @Override
             public void successCallback(String channel, Object message) {
                 notifyUser("SENT : " + channel + " : " + msg.getClass() + " : "
@@ -137,28 +136,12 @@ public class PubnubPublishTest {
         pubnub.history(channel, 10, new Callback() {
             @Override
             public void successCallback(String channel, Object message) {
-                notifyUser("HISTORY : " + channel + " : " + message.getClass()
-                           + " : " + message.toString());
-            }
-            @Override
-            public void errorCallback(String channel, PubnubError error) {
-                notifyUser("HISTORY : " + channel
-                           + " : " + error.toString());
-            }
-        });
-    }
-
-    public void detailedHistory(Pubnub pubnub, final String channel) {
-
-        pubnub.detailedHistory(channel, 10, new Callback() {
-            @Override
-            public void successCallback(String channel, Object message) {
-                notifyUser("DETAILED HISTORY : " + channel + " : "
+                notifyUser("HISTORY : " + channel + " : "
                            + message.getClass() + " : " + message.toString());
             }
             @Override
             public void errorCallback(String channel, PubnubError error) {
-                notifyUser("DETAILED HISTORY : " + channel + " : "
+                notifyUser("HISTORY : " + channel + " : "
                            + " : " + error.toString());
             }
         });

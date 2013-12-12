@@ -92,11 +92,9 @@ public class PubnubDemoConsole {
     }
 
     private void subscribe(final String channel) {
-        Hashtable args = new Hashtable(6);
-        args.put("channel", channel);
 
         try {
-            pubnub.subscribe(args, new Callback() {
+            pubnub.subscribe(channel, new Callback() {
 
                 @Override
                 public void connectCallback(String channel, Object message) {
@@ -170,16 +168,16 @@ public class PubnubDemoConsole {
         }
     }
 
-    private void detailedHistory(String channel) {
-        pubnub.detailedHistory(channel, 2, new Callback() {
+    private void history(String channel) {
+        pubnub.history(channel, 2, new Callback() {
             @Override
             public void successCallback(String channel, Object message) {
-                notifyUser("DETAILED HISTORY : " + message);
+                notifyUser("HISTORY : " + message);
             }
 
             @Override
             public void errorCallback(String channel, PubnubError error) {
-                notifyUser("DETAILED HISTORY : " + error);
+                notifyUser("HISTORY : " + error);
             }
         });
     }
@@ -282,7 +280,7 @@ public class PubnubDemoConsole {
                 break;
             case 4:
                 channelName = getStringFromConsole("Channel Name");
-                detailedHistory(channelName);
+                history(channelName);
                 break;
             case 5:
                 channelName = getStringFromConsole("Channel Name", true);
