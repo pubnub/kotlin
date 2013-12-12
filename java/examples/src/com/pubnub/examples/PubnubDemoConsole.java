@@ -185,7 +185,10 @@ public class PubnubDemoConsole {
     }
 
     private void hereNow(String channel) {
-        pubnub.hereNow(channel, new Callback() {
+    	boolean metadata = getBooleanFromConsole("Metadata");
+    	boolean disable_uuids = getBooleanFromConsole("Disable UUIDs");
+    	
+        pubnub.hereNow(channel, metadata, disable_uuids, new Callback() {
             @Override
             public void successCallback(String channel, Object message) {
                 notifyUser("HERE NOW : " + message);
@@ -282,7 +285,7 @@ public class PubnubDemoConsole {
                 detailedHistory(channelName);
                 break;
             case 5:
-                channelName = getStringFromConsole("Channel Name");
+                channelName = getStringFromConsole("Channel Name", true);
                 hereNow(channelName);
                 break;
             case 6:
@@ -375,6 +378,17 @@ public class PubnubDemoConsole {
             		
             	});
             	break;
+            case 28:
+            	getSubscriberState();
+            	break;
+            case 29:
+            	setSubscriberState();
+            	break;
+            case 30:
+            	String uid = getStringFromConsole("UUID", true);
+            	if (uid == null || uid.length() == 0) uid = pubnub.getUUID();
+            	whereNow(uid);
+            	break;
             default:
                 notifyUser("Invalid Input");
             }
@@ -385,7 +399,58 @@ public class PubnubDemoConsole {
 
     }
 
-    private String getStringFromConsole(String message, boolean optional) {
+    private void whereNow(String uuid) {
+        pubnub.whereNow(uuid, new Callback() {
+            @Override
+            public void successCallback(String channel, Object message) {
+                notifyUser("WHERE NOW : " + message);
+            }
+
+            @Override
+            public void errorCallback(String channel, PubnubError error) {
+                notifyUser("WHERE NOW : " + error);
+            }
+        });
+	}
+
+	private void setSubscriberState() {
+		String channel = getStringFromConsole("Channel");
+		String uuid = getStringFromConsole("UUID", true);
+		if (uuid == null || uuid.length() == 0) uuid = pubnub.getUUID();
+		JSONObject metadata = getJSONObjectFromConsole("Metadata");
+
+        pubnub.subscriberSetState(channel, uuid, metadata, new Callback() {
+            @Override
+            public void successCallback(String channel, Object message) {
+                notifyUser("SUBSCRIBER SET STATE : " + message);
+            }
+
+            @Override
+            public void errorCallback(String channel, PubnubError error) {
+                notifyUser("SUBSCRIBER SET STATE : " + error);
+            }
+        });
+	}
+
+	private void getSubscriberState() {
+		String channel = getStringFromConsole("Channel");
+		String uuid = getStringFromConsole("UUID", true);
+		if (uuid == null || uuid.length() == 0) uuid = pubnub.getUUID();
+		
+        pubnub.subscriberGetState(channel, uuid, new Callback() {
+            @Override
+            public void successCallback(String channel, Object message) {
+                notifyUser("SUBSCRIBER GET STATE : " + message);
+            }
+
+            @Override
+            public void errorCallback(String channel, PubnubError error) {
+                notifyUser("SUBSCRIBER GET STATE : " + error);
+            }
+        });
+	}
+
+	private String getStringFromConsole(String message, boolean optional) {
 
         int attempt_count = 0;
         String input = null;
@@ -400,7 +465,29 @@ public class PubnubDemoConsole {
         notifyUser(message + " : " + input);
         return input;
     }
+	
+	private JSONObject getJSONObjectFromConsole(String message, boolean optional) {
 
+        int attempt_count = 0;
+        String input = null;
+        JSONObject input_jso = null;
+        do {
+            if (attempt_count > 0) System.out.print("Invalid input. ");
+            String message1 = "Enter " + message ;
+            message1 = (optional)?message1+" ( Optional input. You can skip by pressing enter )":message1;
+            notifyUser(message1);
+            input = reader.nextLine();
+            try {
+            	input_jso = new JSONObject(input);
+            } catch (Exception e) {input_jso = null;}
+            attempt_count++;
+        } while ((input_jso == null || input_jso.length() == 0) && !optional);
+        notifyUser(message + " : " + input_jso);
+        return input_jso;
+    }
+	private JSONObject getJSONObjectFromConsole(String message) {
+		return getJSONObjectFromConsole(message, false);
+	}
     private String getStringFromConsole(String message) {
         return getStringFromConsole(message, false);
     }
@@ -546,7 +633,7 @@ public class PubnubDemoConsole {
         notifyUser("ENTER 2  FOR Publish");
         notifyUser("ENTER 3  FOR Presence");
         notifyUser("ENTER 4  FOR Detailed History");
-        notifyUser("ENTER 5  FOR Here_Now");
+        notifyUser("ENTER 5  FOR Here Now");
         notifyUser("ENTER 6  FOR Unsubscribe");
         notifyUser("ENTER 7  FOR Presence-Unsubscribe");
         notifyUser("ENTER 8  FOR Time");
@@ -569,6 +656,9 @@ public class PubnubDemoConsole {
         notifyUser("ENTER 25 FOR Disabling Cache Busting ( current: " + pubnub.getCacheBusting() + " )");
         notifyUser("ENTER 26 FOR Setting UUID ( current: " + pubnub.getUUID() + " )");
         notifyUser("ENTER 27 FOR Setting Presence Expiry ( current: " + pubnub.getPnExpires() + " )");
+        notifyUser("ENTER 28 FOR Getting Subscriber State");
+        notifyUser("ENTER 29 FOR Setting Subscriber State");
+        notifyUser("ENTER 30 FOR Where Now");
         notifyUser("\nENTER 0 to display this menu");
     }
 

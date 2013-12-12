@@ -495,8 +495,8 @@ abstract class PubnubCoreShared extends PubnubCore {
      * @param callback
      */
     public void pamGrant(final String channel, String auth_key, boolean read,
-                         boolean write, int ttl, final Callback callback) {
-
+                         boolean write, int ttl, Callback callback) {
+    	final Callback cb = getWrappedCallback(callback);
         Hashtable parameters = PubnubUtil.hashtableClone(params);
 
         String r = (read) ? "1" : "0";
@@ -547,6 +547,8 @@ abstract class PubnubCoreShared extends PubnubCore {
         HttpRequest hreq = new HttpRequest(urlComponents, parameters,
         new ResponseHandler() {
             public void handleResponse(HttpRequest hreq, String response) {
+            	invokeCallback(channel, response, "payload", cb, 4);
+            	/*
                 JSONObject jso;
                 try {
                     jso = new JSONObject(response);
@@ -557,10 +559,11 @@ abstract class PubnubCoreShared extends PubnubCore {
                     return;
                 }
                 callback.successCallback(channel, jso);
+                */
             }
 
             public void handleError(HttpRequest hreq, PubnubError error) {
-                callback.errorCallback(channel, error);
+                cb.errorCallback(channel, error);
                 return;
             }
         });
@@ -572,8 +575,10 @@ abstract class PubnubCoreShared extends PubnubCore {
     /** ULS Audit
      * @param callback
      */
-    public void pamAudit(final Callback callback) {
+    public void pamAudit(Callback callback) {
 
+    	final Callback cb = getWrappedCallback(callback);
+    	
         Hashtable parameters = PubnubUtil.hashtableClone(params);
         parameters.remove("auth");
 
@@ -610,6 +615,8 @@ abstract class PubnubCoreShared extends PubnubCore {
         HttpRequest hreq = new HttpRequest(urlComponents, parameters,
         new ResponseHandler() {
             public void handleResponse(HttpRequest hreq, String response) {
+            	invokeCallback("", response, "payload", cb, 5 );
+            	/*
                 JSONObject jso;
                 try {
                     jso = new JSONObject(response);
@@ -620,10 +627,11 @@ abstract class PubnubCoreShared extends PubnubCore {
                     return;
                 }
                 callback.successCallback("", jso);
+                */
             }
 
             public void handleError(HttpRequest hreq, PubnubError error) {
-                callback.errorCallback("", error);
+                cb.errorCallback("", error);
                 return;
             }
         });
@@ -637,8 +645,10 @@ abstract class PubnubCoreShared extends PubnubCore {
      * @param callback
      */
     public void pamAudit(final String channel,
-                         final Callback callback) {
+                         Callback callback) {
 
+    	final Callback cb = getWrappedCallback(callback);
+    	
         Hashtable parameters = PubnubUtil.hashtableClone(params);
         parameters.remove("auth");
 
@@ -675,6 +685,8 @@ abstract class PubnubCoreShared extends PubnubCore {
         HttpRequest hreq = new HttpRequest(urlComponents, parameters,
         new ResponseHandler() {
             public void handleResponse(HttpRequest hreq, String response) {
+            	invokeCallback(channel, response, "payload", cb, 6);
+            	/*
                 JSONObject jso;
                 try {
                     jso = new JSONObject(response);
@@ -684,11 +696,11 @@ abstract class PubnubCoreShared extends PubnubCore {
                                     response));
                     return;
                 }
-                callback.successCallback(channel, jso);
+                callback.successCallback(channel, jso); */
             }
 
             public void handleError(HttpRequest hreq, PubnubError error) {
-                callback.errorCallback(channel, error);
+                cb.errorCallback(channel, error);
                 return;
             }
         });
@@ -703,8 +715,9 @@ abstract class PubnubCoreShared extends PubnubCore {
      * @param callback
      */
     public void pamAudit(final String channel, String auth_key,
-                         final Callback callback) {
+                         Callback callback) {
 
+    	final Callback cb = getWrappedCallback(callback);
         Hashtable parameters = PubnubUtil.hashtableClone(params);
 
         String signature = "0";
@@ -742,6 +755,8 @@ abstract class PubnubCoreShared extends PubnubCore {
         HttpRequest hreq = new HttpRequest(urlComponents, parameters,
         new ResponseHandler() {
             public void handleResponse(HttpRequest hreq, String response) {
+            	invokeCallback(channel, response, "payload", cb, 2);
+            	/*
                 JSONObject jso;
                 try {
                     jso = new JSONObject(response);
@@ -752,10 +767,11 @@ abstract class PubnubCoreShared extends PubnubCore {
                     return;
                 }
                 callback.successCallback(channel, jso);
+                */
             }
 
             public void handleError(HttpRequest hreq, PubnubError error) {
-                callback.errorCallback(channel, error);
+                cb.errorCallback(channel, error);
                 return;
             }
         });

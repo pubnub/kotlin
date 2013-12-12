@@ -103,13 +103,9 @@ public class PubnubTest {
         }
 
         public void successCallback(String channel, Object message) {
-            JSONObject jso;
-            try {
-                jso = (JSONObject) message;
-                result = (Integer) jso.get("status");
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+
+            result = 200;
+
             if (latch != null)
                 latch.countDown();
         }
@@ -499,7 +495,7 @@ public class PubnubTest {
 
         }
     }
-
+    
     @Test
     public void testHistoryCountOne() {
         String channel = "java-unittest-" + Math.random();

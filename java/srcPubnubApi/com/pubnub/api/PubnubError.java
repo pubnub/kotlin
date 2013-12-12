@@ -188,7 +188,11 @@ public class PubnubError {
      */
     static final int                PNERR_HTTP_SUBSCRIBE_TIMEOUT               =       130;
 
-
+    /**
+     * Invalid arguments provided to API
+     * 
+     */
+    public static final int         PNERR_INVALID_ARGUMENTS                     =       131;
 
 
     // Error Objects
@@ -395,7 +399,13 @@ public class PubnubError {
     static final PubnubError PNERROBJ_SUBSCRIBE_TIMEOUT                       =
             new PubnubError     (
             PNERR_HTTP_SUBSCRIBE_TIMEOUT ,
-            "Subscribe Timeout ."
+            "Subscribe Timeout."
+    );
+    
+    static final PubnubError PNERROBJ_INVALID_ARGUMENTS                       =
+            new PubnubError     (
+            PNERR_INVALID_ARGUMENTS ,
+            "INVALID ARGUMENTS."
     );
 
 
