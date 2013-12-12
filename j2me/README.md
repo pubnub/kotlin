@@ -39,7 +39,7 @@ Set Callback when pubnub object create.
 	    public abstract void disconnectCallback(String channel);
 	    public abstract void hereNowCallback(String channel,Object message);
 	    public abstract void presenceCallback(String channel,Object message);
-	    public abstract void detailedHistoryCallback(String channel,Object message);
+	    public abstract void historyCallback(String channel,Object message);
 	}
 ```
 ####Publish
@@ -154,28 +154,7 @@ Pass result to Publish Callback
 
 ```
 
-####History
-###DEPRECATED! Please use / migrate existing to detailedHistory() (see below)
-
-```java
-    // Create HashMap parameter
-    Hashtable args = new Hashtable(2);
-    args.put("channel", "hello_world");
-    args.put("limit", new Integer(2));     // Limit
-    
-    // Get History
-    _pubnub.history(args);
-
-     public void historyCallback(String channel, Object message) {
-        JSONArray meg = (JSONArray) message;
-        System.out.println("History recevie on channel:" + channel + " Message:" + meg.toString());
-
-        stringItem.setLabel("History");
-        stringItem.setText("History recevie on channel:" + channel + "\n" + meg.toString());
-    }
-```
-
-####Detailed History
+#### History
 Retrieve published messages.
 #####Required Parameters
 'channel'- Channel name
@@ -189,10 +168,10 @@ Retrieve published messages.
       Hashtable args = new Hashtable();
                 args.put("channel", Channel);
                 args.put("count", 2+"");
-      _pubnub.detailedHistory(args);
+      _pubnub.history(args);
 
     //Callback
-     public void detailedHistoryCallback(String channel, Object message) {
+     public void historyCallback(String channel, Object message) {
          stringItem.setLabel("DetailedHistory");
         stringItem.setText("channel:" + channel + "\n" + message);
     }

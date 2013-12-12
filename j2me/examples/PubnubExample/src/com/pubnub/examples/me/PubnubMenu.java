@@ -23,7 +23,6 @@ public class PubnubMenu {
         final Publish publish;
         final History history;
         final Subscribe subscribe;
-        final DetailedHistory detailedHistory;
         final HereNow hereNow;
         final Presence presence;
         final Unsubscribe unsubscribe;
@@ -43,17 +42,15 @@ public class PubnubMenu {
 
             final Command hereNowCommand;
             final Command presenceCommand;
-            final Command detailedHistoryCommand;
             final Command disconnectAndResubscribeCommand;
             final Command toggleResumeOnReconnectCommand;
             final Command authKeyConfigCommand;
 
             menu = new Form("Pubnub Demo Console");
             publish = new Publish(pubnub, display, menu);
-            history = new History(pubnub, display, menu);
             subscribe = new Subscribe(pubnub,display,menu);
             presence = new Presence(pubnub,display,menu);
-            detailedHistory = new DetailedHistory(pubnub,display,menu);
+            history = new History(pubnub,display,menu);
             hereNow = new HereNow(pubnub,display,menu);
             unsubscribe = new Unsubscribe(pubnub,display,menu);
             toggleResumeOnReconnect = new ToggleResumeOnReconnect(pubnub,display,menu);
@@ -66,16 +63,14 @@ public class PubnubMenu {
             menu.addCommand(toggleResumeOnReconnectCommand);
             disconnectAndResubscribeCommand = new Command("DisconnectAndResubscribe",Command.ITEM, 0);
             menu.addCommand(disconnectAndResubscribeCommand);
-            detailedHistoryCommand = new Command("DetailedHistory",    Command.ITEM, 0);
-            menu.addCommand(detailedHistoryCommand);
+            historyCommand = new Command("History",    Command.ITEM, 0);
+            menu.addCommand(historyCommand);
             presenceCommand = new Command("Presence", Command.ITEM, 0);
             menu.addCommand(presenceCommand);
             publishCommand = publish.getCommand();
             menu.addCommand(publishCommand);
             timeCommand = new Command("Time", Command.ITEM, 2);
             menu.addCommand(timeCommand);
-            historyCommand = new Command("History", Command.ITEM, 1);
-            menu.addCommand(historyCommand);
             subscribeCommand = new Command("Subscribe", Command.ITEM, 0);
             menu.addCommand(subscribeCommand);
             unsubscribeCommand = new Command("Unsubscribe", Command.ITEM, 0);
@@ -107,8 +102,6 @@ public class PubnubMenu {
                         hereNow.handler();
                     } else if (command == presenceCommand) {
                         presence.handler();
-                    } else if (command == detailedHistoryCommand) {
-                        detailedHistory.handler();
                     } else if (command == disconnectAndResubscribeCommand) {
                         disconnectAndResubscribe.handler();
                     } else if (command == toggleResumeOnReconnectCommand) {

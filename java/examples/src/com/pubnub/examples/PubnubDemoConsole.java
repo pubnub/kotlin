@@ -630,7 +630,7 @@ public class PubnubDemoConsole {
                    + this.pubnub.getCurrentlySubscribedChannelNames() + ")");
         notifyUser("ENTER 2  FOR Publish");
         notifyUser("ENTER 3  FOR Presence");
-        notifyUser("ENTER 4  FOR Detailed History");
+        notifyUser("ENTER 4  FOR History");
         notifyUser("ENTER 5  FOR Here Now");
         notifyUser("ENTER 6  FOR Unsubscribe");
         notifyUser("ENTER 7  FOR Presence-Unsubscribe");

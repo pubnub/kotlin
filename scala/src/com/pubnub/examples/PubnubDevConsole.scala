@@ -208,11 +208,11 @@ object PubnubDevConsole {
 
     pubnub.history(channel, 2, new Callback() {
       override def successCallback(channel: String, message: Object) {
-        notifyUser("DETAILED HISTORY : " + message)
+        notifyUser("HISTORY : " + message)
       }
 
       override def errorCallback(channel: String, error: PubnubError) {
-        notifyUser("DETAILED HISTORY : " + error)
+        notifyUser("HISTORY : " + error)
       }
     })
   }

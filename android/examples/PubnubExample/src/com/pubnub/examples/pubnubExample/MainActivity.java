@@ -117,7 +117,7 @@ public class MainActivity extends Activity {
             return true;
 
         case R.id.option4:
-            detailedHistory();
+            history();
             return true;
 
         case R.id.option5:
@@ -296,13 +296,10 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                Hashtable args = new Hashtable(1);
-
-                String message = input.getText().toString();
-                args.put("channel", message);
+                String channel = input.getText().toString();
 
                 try {
-                    pubnub.subscribe(args, new Callback() {
+                    pubnub.subscribe(channel, new Callback() {
                         @Override
                         public void connectCallback(String channel,
                         Object message) {
@@ -372,51 +369,7 @@ public class MainActivity extends Activity {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Hashtable args = new Hashtable(2);
-
-                String message = etMessage.getText().toString();
-
-                if (args.get("message") == null) {
-                    try {
-                        Integer i = Integer.parseInt(message);
-                        args.put("message", i);
-                    } catch (Exception e) {
-
-                    }
-                }
-                if (args.get("message") == null) {
-                    try {
-                        Double d = Double.parseDouble(message);
-                        args.put("message", d);
-                    } catch (Exception e) {
-
-                    }
-                }
-                if (args.get("message") == null) {
-                    try {
-                        JSONArray js = new JSONArray(message);
-                        args.put("message", js);
-                    } catch (Exception e) {
-
-                    }
-                }
-                if (args.get("message") == null) {
-                    try {
-                        JSONObject js = new JSONObject(message);
-                        args.put("message", js);
-                    } catch (Exception e) {
-
-                    }
-                }
-                if (args.get("message") == null) {
-                    args.put("message", message);
-                }
-
-                // Publish Message
-
-                args.put("channel", channel); // Channel Name
-
-                pubnub.publish(args, new Callback() {
+            	Callback publishCallback = new Callback() {
                     @Override
                     public void successCallback(String channel,
                     Object message) {
@@ -427,13 +380,41 @@ public class MainActivity extends Activity {
                     PubnubError error) {
                         notifyUser("PUBLISH : " + error);
                     }
-                });
+                };
+
+                String message = etMessage.getText().toString();
+
+                try {
+                    Integer i = Integer.parseInt(message);
+                    pubnub.publish(channel, i, publishCallback);
+                    return;
+                } catch (Exception e) {}
+
+                try {
+                    Double d = Double.parseDouble(message);
+                    pubnub.publish(channel, d, publishCallback);
+                    return;
+                } catch (Exception e) {}
+            
+
+                try {
+                    JSONArray js = new JSONArray(message);
+                    pubnub.publish(channel, js, publishCallback);
+                    return;
+                } catch (Exception e) {}
+
+                try {
+                    JSONObject js = new JSONObject(message);
+                    pubnub.publish(channel, js, publishCallback);
+                    return;
+                } catch (Exception e) {}
+
+                pubnub.publish(channel, message, publishCallback);
             }
 
         });
         AlertDialog alert = builder.create();
         alert.show();
-
     }
 
     private void publish() {
@@ -497,29 +478,29 @@ public class MainActivity extends Activity {
         alert.show();
     }
 
-    private void detailedHistory() {
+    private void history() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Detailed History");
+        builder.setTitle("History");
         builder.setMessage("Enter channel name");
         final EditText input = new EditText(this);
         builder.setView(input);
-        builder.setPositiveButton("Get detailed history",
+        builder.setPositiveButton("Get history",
         new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String channel = input.getText().toString();
-                pubnub.detailedHistory(channel, 2, new Callback() {
+                pubnub.history(channel, 2, new Callback() {
                     @Override
                     public void successCallback(String channel,
                     Object message) {
-                        notifyUser("DETAILED HISTORY : " + message);
+                        notifyUser("HISTORY : " + message);
                     }
                     @Override
                     public void errorCallback(String channel,
                     PubnubError error) {
-                        notifyUser("DETAILED HISTORY : " + error);
+                        notifyUser("HISTORY : " + error);
                     }
                 });
             }

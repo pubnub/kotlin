@@ -4,7 +4,6 @@
     <string name="pubnub">Pubnub</string>
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
-    <string name="btnDetailedHistoryText">History</string>
     <string name="btnPresenceText">Presence</string>
     <string name="btnSubscribeText">Subscribe</string>
     <string name="btnPublishText">Publish</string>
@@ -21,7 +20,7 @@
     <string name="option1">Subscribe</string>
     <string name="option2">Publish</string>
     <string name="option3">Presence</string>
-    <string name="option4">Detailed History</string>
+    <string name="option4">History</string>
     <string name="option5">Here Now</string>
     <string name="option6">Unsubscribe</string>
     <string name="option7">Presence-Unsubscribe</string>

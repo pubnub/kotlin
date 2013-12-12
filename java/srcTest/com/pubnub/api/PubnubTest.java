@@ -517,7 +517,7 @@ public class PubnubTest {
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
-                        pubnub.detailedHistory(channel, limit, hCb);
+                        pubnub.history(channel, limit, hCb);
                         super.successCallback(channel, message);
                     }
                 });
@@ -553,7 +553,7 @@ public class PubnubTest {
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
-                        pubnub.detailedHistory(channel, 100, hCb);
+                        pubnub.history(channel, 100, hCb);
                         super.successCallback(channel, message);
                     }
                 });

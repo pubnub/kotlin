@@ -50,7 +50,6 @@ public class PubnubPublishTest {
         }
         ppt.runPublish();
         ppt.runHistory();
-        ppt.runDetailedHistory();
         try {
             Thread.sleep(20000);
         } catch (InterruptedException e) {
@@ -101,11 +100,6 @@ public class PubnubPublishTest {
     }
 
     public void runHistory() {
-        history(_pubnub, channel);
-        history(_pubnub_enc, channel_enc);
-    }
-
-    public void runDetailedHistory() {
         history(_pubnub, channel);
         history(_pubnub_enc, channel_enc);
     }
