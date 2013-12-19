@@ -794,7 +794,7 @@ abstract class PubnubCore {
 		whereNow(this.UUID,callback);
 	}
 	
-	public void subscriberSetState(String channel, String uuid, JSONObject metadata, Callback callback) {
+	public void setState(String channel, String uuid, JSONObject metadata, Callback callback) {
 		
 		final Callback cb = getWrappedCallback(callback);
 		
@@ -856,7 +856,7 @@ abstract class PubnubCore {
 	}
 
 	
-	public void subscriberGetState(String channel, String uuid, Callback callback) {
+	public void getState(String channel, String uuid, Callback callback) {
 		final Callback cb = getWrappedCallback(callback);
 		String[] urlargs = { getPubnubUrl(), "v2", "presence", "sub-key",
 				this.SUBSCRIBE_KEY, "channel", PubnubUtil.urlEncode(channel), "uuid", PubnubUtil.urlEncode(uuid)

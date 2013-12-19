@@ -377,10 +377,10 @@ public class PubnubDemoConsole {
             	});
             	break;
             case 28:
-            	getSubscriberState();
+            	getState();
             	break;
             case 29:
-            	setSubscriberState();
+            	setState();
             	break;
             case 30:
             	String uid = getStringFromConsole("UUID", true);
@@ -411,13 +411,13 @@ public class PubnubDemoConsole {
         });
 	}
 
-	private void setSubscriberState() {
+	private void setState() {
 		String channel = getStringFromConsole("Channel");
 		String uuid = getStringFromConsole("UUID", true);
 		if (uuid == null || uuid.length() == 0) uuid = pubnub.getUUID();
 		JSONObject metadata = getJSONObjectFromConsole("Metadata");
 
-        pubnub.subscriberSetState(channel, uuid, metadata, new Callback() {
+        pubnub.setState(channel, uuid, metadata, new Callback() {
             @Override
             public void successCallback(String channel, Object message) {
                 notifyUser("SUBSCRIBER SET STATE : " + message);
@@ -430,12 +430,12 @@ public class PubnubDemoConsole {
         });
 	}
 
-	private void getSubscriberState() {
+	private void getState() {
 		String channel = getStringFromConsole("Channel");
 		String uuid = getStringFromConsole("UUID", true);
 		if (uuid == null || uuid.length() == 0) uuid = pubnub.getUUID();
 		
-        pubnub.subscriberGetState(channel, uuid, new Callback() {
+        pubnub.getState(channel, uuid, new Callback() {
             @Override
             public void successCallback(String channel, Object message) {
                 notifyUser("SUBSCRIBER GET STATE : " + message);
