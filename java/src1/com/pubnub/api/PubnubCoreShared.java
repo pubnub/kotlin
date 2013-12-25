@@ -240,7 +240,7 @@ abstract class PubnubCoreShared extends PubnubCore {
      */
     public void pamGrant(final String channel, String auth_key, boolean read,
                          boolean write, int ttl, Callback callback) {
-    	final Callback cb = getWrappedCallback(callback);
+        final Callback cb = getWrappedCallback(callback);
         Hashtable parameters = PubnubUtil.hashtableClone(params);
 
         String r = (read) ? "1" : "0";
@@ -291,7 +291,7 @@ abstract class PubnubCoreShared extends PubnubCore {
         HttpRequest hreq = new HttpRequest(urlComponents, parameters,
         new ResponseHandler() {
             public void handleResponse(HttpRequest hreq, String response) {
-            	invokeCallback(channel, response, "payload", cb, 4);
+                invokeCallback(channel, response, "payload", cb, 4);
             }
 
             public void handleError(HttpRequest hreq, PubnubError error) {
@@ -309,8 +309,8 @@ abstract class PubnubCoreShared extends PubnubCore {
      */
     public void pamAudit(Callback callback) {
 
-    	final Callback cb = getWrappedCallback(callback);
-    	
+        final Callback cb = getWrappedCallback(callback);
+
         Hashtable parameters = PubnubUtil.hashtableClone(params);
         parameters.remove("auth");
 
@@ -347,7 +347,7 @@ abstract class PubnubCoreShared extends PubnubCore {
         HttpRequest hreq = new HttpRequest(urlComponents, parameters,
         new ResponseHandler() {
             public void handleResponse(HttpRequest hreq, String response) {
-            	invokeCallback("", response, "payload", cb, 5 );
+                invokeCallback("", response, "payload", cb, 5 );
             }
 
             public void handleError(HttpRequest hreq, PubnubError error) {
@@ -367,8 +367,8 @@ abstract class PubnubCoreShared extends PubnubCore {
     public void pamAudit(final String channel,
                          Callback callback) {
 
-    	final Callback cb = getWrappedCallback(callback);
-    	
+        final Callback cb = getWrappedCallback(callback);
+
         Hashtable parameters = PubnubUtil.hashtableClone(params);
         parameters.remove("auth");
 
@@ -405,7 +405,7 @@ abstract class PubnubCoreShared extends PubnubCore {
         HttpRequest hreq = new HttpRequest(urlComponents, parameters,
         new ResponseHandler() {
             public void handleResponse(HttpRequest hreq, String response) {
-            	invokeCallback(channel, response, "payload", cb, 6);
+                invokeCallback(channel, response, "payload", cb, 6);
             }
 
             public void handleError(HttpRequest hreq, PubnubError error) {
@@ -426,7 +426,7 @@ abstract class PubnubCoreShared extends PubnubCore {
     public void pamAudit(final String channel, String auth_key,
                          Callback callback) {
 
-    	final Callback cb = getWrappedCallback(callback);
+        final Callback cb = getWrappedCallback(callback);
         Hashtable parameters = PubnubUtil.hashtableClone(params);
 
         String signature = "0";
@@ -464,7 +464,7 @@ abstract class PubnubCoreShared extends PubnubCore {
         HttpRequest hreq = new HttpRequest(urlComponents, parameters,
         new ResponseHandler() {
             public void handleResponse(HttpRequest hreq, String response) {
-            	invokeCallback(channel, response, "payload", cb, 2);
+                invokeCallback(channel, response, "payload", cb, 2);
             }
 
             public void handleError(HttpRequest hreq, PubnubError error) {

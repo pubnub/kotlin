@@ -183,9 +183,9 @@ public class PubnubDemoConsole {
     }
 
     private void hereNow(String channel) {
-    	boolean metadata = getBooleanFromConsole("Metadata");
-    	boolean disable_uuids = getBooleanFromConsole("Disable UUIDs");
-    	
+        boolean metadata = getBooleanFromConsole("Metadata");
+        boolean disable_uuids = getBooleanFromConsole("Disable UUIDs");
+
         pubnub.hereNow(channel, metadata, disable_uuids, new Callback() {
             @Override
             public void successCallback(String channel, Object message) {
@@ -363,30 +363,30 @@ public class PubnubDemoConsole {
                 break;
             case 27:
                 int pnexpires = getIntFromConsole("Pubnub Presence Expiry ( in seconds ), Current value : " + pubnub.getPnExpires());
-            	pubnub.setPnExpires(pnexpires, new Callback(){
+                pubnub.setPnExpires(pnexpires, new Callback(){
 
-					@Override
-					public void successCallback(String channel, Object message) {
-						System.out.println(System.currentTimeMillis() / 1000 + " : " + message);
-					}
-					@Override
-					public void errorCallback(String channel, PubnubError error) {
-						System.out.println(System.currentTimeMillis() / 1000 + " : " + error);
-					}
-            		
-            	});
-            	break;
+                    @Override
+                    public void successCallback(String channel, Object message) {
+                        System.out.println(System.currentTimeMillis() / 1000 + " : " + message);
+                    }
+                    @Override
+                    public void errorCallback(String channel, PubnubError error) {
+                        System.out.println(System.currentTimeMillis() / 1000 + " : " + error);
+                    }
+
+                });
+                break;
             case 28:
-            	getState();
-            	break;
+                getState();
+                break;
             case 29:
-            	setState();
-            	break;
+                setState();
+                break;
             case 30:
-            	String uid = getStringFromConsole("UUID", true);
-            	if (uid == null || uid.length() == 0) uid = pubnub.getUUID();
-            	whereNow(uid);
-            	break;
+                String uid = getStringFromConsole("UUID", true);
+                if (uid == null || uid.length() == 0) uid = pubnub.getUUID();
+                whereNow(uid);
+                break;
             default:
                 notifyUser("Invalid Input");
             }
@@ -409,13 +409,13 @@ public class PubnubDemoConsole {
                 notifyUser("WHERE NOW : " + error);
             }
         });
-	}
+    }
 
-	private void setState() {
-		String channel = getStringFromConsole("Channel");
-		String uuid = getStringFromConsole("UUID", true);
-		if (uuid == null || uuid.length() == 0) uuid = pubnub.getUUID();
-		JSONObject metadata = getJSONObjectFromConsole("Metadata");
+    private void setState() {
+        String channel = getStringFromConsole("Channel");
+        String uuid = getStringFromConsole("UUID", true);
+        if (uuid == null || uuid.length() == 0) uuid = pubnub.getUUID();
+        JSONObject metadata = getJSONObjectFromConsole("Metadata");
 
         pubnub.setState(channel, uuid, metadata, new Callback() {
             @Override
@@ -428,13 +428,13 @@ public class PubnubDemoConsole {
                 notifyUser("SUBSCRIBER SET STATE : " + error);
             }
         });
-	}
+    }
 
-	private void getState() {
-		String channel = getStringFromConsole("Channel");
-		String uuid = getStringFromConsole("UUID", true);
-		if (uuid == null || uuid.length() == 0) uuid = pubnub.getUUID();
-		
+    private void getState() {
+        String channel = getStringFromConsole("Channel");
+        String uuid = getStringFromConsole("UUID", true);
+        if (uuid == null || uuid.length() == 0) uuid = pubnub.getUUID();
+
         pubnub.getState(channel, uuid, new Callback() {
             @Override
             public void successCallback(String channel, Object message) {
@@ -446,9 +446,9 @@ public class PubnubDemoConsole {
                 notifyUser("SUBSCRIBER GET STATE : " + error);
             }
         });
-	}
+    }
 
-	private String getStringFromConsole(String message, boolean optional) {
+    private String getStringFromConsole(String message, boolean optional) {
 
         int attempt_count = 0;
         String input = null;
@@ -463,8 +463,8 @@ public class PubnubDemoConsole {
         notifyUser(message + " : " + input);
         return input;
     }
-	
-	private JSONObject getJSONObjectFromConsole(String message, boolean optional) {
+
+    private JSONObject getJSONObjectFromConsole(String message, boolean optional) {
 
         int attempt_count = 0;
         String input = null;
@@ -476,16 +476,16 @@ public class PubnubDemoConsole {
             notifyUser(message1);
             input = reader.nextLine();
             try {
-            	input_jso = new JSONObject(input);
+                input_jso = new JSONObject(input);
             } catch (Exception e) {input_jso = null;}
             attempt_count++;
         } while ((input_jso == null || input_jso.length() == 0) && !optional);
         notifyUser(message + " : " + input_jso);
         return input_jso;
     }
-	private JSONObject getJSONObjectFromConsole(String message) {
-		return getJSONObjectFromConsole(message, false);
-	}
+    private JSONObject getJSONObjectFromConsole(String message) {
+        return getJSONObjectFromConsole(message, false);
+    }
     private String getStringFromConsole(String message) {
         return getStringFromConsole(message, false);
     }

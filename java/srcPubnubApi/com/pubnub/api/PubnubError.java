@@ -180,7 +180,7 @@ public class PubnubError {
     public static final int                PNERR_HTTP_RC_ERROR                        =       128;
     /**
      * Pubnub server or intermediate server returned HTTP 404 unauthorized status code
-     * 
+     *
      */
     public static final int         PNERR_NOT_FOUND                         =       129;
 
@@ -192,7 +192,7 @@ public class PubnubError {
 
     /**
      * Invalid arguments provided to API
-     * 
+     *
      */
     public static final int         PNERR_INVALID_ARGUMENTS                     =       131;
 
@@ -403,7 +403,7 @@ public class PubnubError {
             PNERR_HTTP_SUBSCRIBE_TIMEOUT ,
             "Subscribe Timeout."
     );
-    
+
     static final PubnubError PNERROBJ_INVALID_ARGUMENTS                       =
             new PubnubError     (
             PNERR_INVALID_ARGUMENTS ,
@@ -424,35 +424,35 @@ public class PubnubError {
         this.errorObject = errorObject;
         this.message = message;
     }
-    
+
     private PubnubError(int errorCode, int errorCodeExtended, String errorString) {
-    	this(errorCode, errorCodeExtended, errorString, null, null);
+        this(errorCode, errorCodeExtended, errorString, null, null);
     }
     private PubnubError(int errorCode, int errorCodeExtended, String errorString, JSONObject errorObject) {
-    	this(errorCode, errorCodeExtended, errorString, errorObject, null);
+        this(errorCode, errorCodeExtended, errorString, errorObject, null);
     }
-    
+
     private PubnubError(int errorCode, String errorString) {
-    	this(errorCode, 0, errorString, null, null);       
+        this(errorCode, 0, errorString, null, null);
     }
     private PubnubError(int errorCode, int errorCodeExtended, String errorString, String message) {
-    	this(errorCode, errorCodeExtended, errorString, null, message);
+        this(errorCode, errorCodeExtended, errorString, null, message);
     }
     public PubnubError(PubnubError error, String message) {
-    	this(error.errorCode, error.errorCodeExtended, error.errorString, null, message);
+        this(error.errorCode, error.errorCodeExtended, error.errorString, null, message);
     }
     public PubnubError(PubnubError error, JSONObject errorObject) {
-    	this(error.errorCode, error.errorCodeExtended, error.errorString, errorObject, null);
+        this(error.errorCode, error.errorCodeExtended, error.errorString, errorObject, null);
     }
     public String toString() {
         String value = "[Error: " + errorCode + "-" + errorCodeExtended + "] : " + errorString;
         if (errorObject != null) {
-            value += " : " + errorObject;	
+            value += " : " + errorObject;
         }
         if (message != null && message.length() > 0) {
             value += " : " + message;
         }
-        
+
         return value;
     }
 

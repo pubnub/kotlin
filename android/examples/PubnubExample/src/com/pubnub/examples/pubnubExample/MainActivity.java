@@ -203,16 +203,16 @@ public class MainActivity extends Activity {
         });
         AlertDialog alert = builder.create();
         alert.show();
-		
-	}
 
-	private void toggleCacheBusting() {
+    }
+
+    private void toggleCacheBusting() {
         pubnub.setCacheBusting(pubnub.getCacheBusting() ? false : true);
         notifyUser("CACHE BUSTING : " + pubnub.getCacheBusting());
-		
-	}
 
-	private void setOrigin() {
+    }
+
+    private void setOrigin() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Set Origin");
         builder.setMessage("Enter Origin");
@@ -228,8 +228,8 @@ public class MainActivity extends Activity {
         });
         AlertDialog alert = builder.create();
         alert.show();
-	}
-	private void setDomain() {
+    }
+    private void setDomain() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Set Domain");
         builder.setMessage("Enter Domain");
@@ -245,8 +245,8 @@ public class MainActivity extends Activity {
         });
         AlertDialog alert = builder.create();
         alert.show();
-	}
-	private void setUUID() {
+    }
+    private void setUUID() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Set UUID");
         builder.setMessage("Enter UUID");
@@ -262,9 +262,9 @@ public class MainActivity extends Activity {
         });
         AlertDialog alert = builder.create();
         alert.show();
-	}
+    }
 
-	private void setNonSubscribeTimeout() {
+    private void setNonSubscribeTimeout() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Set Non Subscribe Timeout");
@@ -369,7 +369,7 @@ public class MainActivity extends Activity {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
-            	Callback publishCallback = new Callback() {
+                Callback publishCallback = new Callback() {
                     @Override
                     public void successCallback(String channel,
                     Object message) {
@@ -395,7 +395,7 @@ public class MainActivity extends Activity {
                     pubnub.publish(channel, d, publishCallback);
                     return;
                 } catch (Exception e) {}
-            
+
 
                 try {
                     JSONArray js = new JSONArray(message);

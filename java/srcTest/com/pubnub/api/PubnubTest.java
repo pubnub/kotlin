@@ -494,7 +494,7 @@ public class PubnubTest {
 
         }
     }
-    
+
     @Test
     public void testHistoryCountOne() {
         String channel = "java-unittest-" + Math.random();
@@ -1673,10 +1673,10 @@ public class PubnubTest {
         }
 
         try {
-			assertEquals("sub-c-a478dd2a-c33d-11e2-883f-02ee2ddab7fe", ulscb.getResult().getString("subscribe_key"));
-		} catch (JSONException e) {
-			assertTrue(false);
-		}
+            assertEquals("sub-c-a478dd2a-c33d-11e2-883f-02ee2ddab7fe", ulscb.getResult().getString("subscribe_key"));
+        } catch (JSONException e) {
+            assertTrue(false);
+        }
     }
     @Test
     public void testUlsAuditSubKey() {
@@ -1696,10 +1696,10 @@ public class PubnubTest {
         }
 
         try {
-			assertEquals("sub-c-a478dd2a-c33d-11e2-883f-02ee2ddab7fe", ulscb.getResult().getString("subscribe_key"));
-		} catch (JSONException e) {
-			assertTrue(false);
-		}
+            assertEquals("sub-c-a478dd2a-c33d-11e2-883f-02ee2ddab7fe", ulscb.getResult().getString("subscribe_key"));
+        } catch (JSONException e) {
+            assertTrue(false);
+        }
     }
     @Test
     public void testUlsAuditChannel() {
@@ -1717,12 +1717,12 @@ public class PubnubTest {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        
+
         try {
-			assertTrue(ulscb.getResult().getJSONObject("channels").getJSONObject("hello-uls") != null);
-		} catch (JSONException e) {
-			assertTrue(false);
-		}
+            assertTrue(ulscb.getResult().getJSONObject("channels").getJSONObject("hello-uls") != null);
+        } catch (JSONException e) {
+            assertTrue(false);
+        }
     }
     @Test
     public void testUlsAuditAuth() {
@@ -1742,10 +1742,10 @@ public class PubnubTest {
         }
 
         try {
-			assertEquals("hello-uls", ulscb.getResult().getString("channel"));
-		} catch (JSONException e) {
-			assertTrue(false);
-		}
+            assertEquals("hello-uls", ulscb.getResult().getString("channel"));
+        } catch (JSONException e) {
+            assertTrue(false);
+        }
     }
     @Test
     public void testUlsRevoke() {
@@ -1765,9 +1765,9 @@ public class PubnubTest {
         }
 
         try {
-			assertEquals("hello-uls", ulscb.getResult().getString("channel"));
-		} catch (JSONException e) {
-			assertTrue(false);
-		}
+            assertEquals("hello-uls", ulscb.getResult().getString("channel"));
+        } catch (JSONException e) {
+            assertTrue(false);
+        }
     }
 }
