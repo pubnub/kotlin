@@ -506,6 +506,7 @@ abstract class PubnubCore {
         if (params == null)
             params = new Hashtable();
 
+        params.put("pnsdk", getUserAgent());
         subscribeManager.setHeader("V", VERSION);
         subscribeManager.setHeader("Accept-Encoding", "gzip");
         subscribeManager.setHeader("User-Agent", getUserAgent());
