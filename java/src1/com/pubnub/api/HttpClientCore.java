@@ -170,6 +170,12 @@ class HttpClientCore extends HttpClient {
         } catch (IOException e) {
             throw new PubnubException(getErrorObject(PNERROBJ_READINPUT, url));
         }
+        if (is != null) {
+        	try {
+				is.close();
+			} catch (IOException e) {
+			}
+        }
 
         log.verbose("URL = " + url + ", Status Code : "  + rc + ", : RESPONSE = " + page);
         switch (rc) {

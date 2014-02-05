@@ -129,6 +129,10 @@ abstract class PubnubCore {
         };
     }
 
+    private String getMetadata() {
+    	return (subscriptions.metadata.length() > 0)?subscriptions.metadata.toString():null;
+    }
+    
     class PresenceHeartbeatTask extends TimedTask {
         private Callback callback;
 
@@ -143,9 +147,14 @@ abstract class PubnubCore {
             if (urlComponents == null)
                 return;
             //String[] urlComponents = { getPubnubUrl(), "time", "0"};
+            
             Hashtable parameters = PubnubUtil.hashtableClone(params);
             if (parameters.get("uuid") == null)
                 parameters.put("uuid", UUID);
+            
+            String md  = getMetadata();
+            if (md != null) parameters.put("metadata", md);
+            
             HttpRequest hreq = new HttpRequest(urlComponents, parameters,
                     new ResponseHandler() {
                 public void handleResponse(HttpRequest hreq, String response) {
@@ -808,6 +817,15 @@ abstract class PubnubCore {
                 "data"
         };
         if (metadata != null) parameters.put("metadata", metadata.toString());
+        Channel ch = subscriptions.getChannel(channel);
+        if (ch != null) {
+        	System.out.println("Setting metadata : " + metadata);
+        	try {
+				subscriptions.metadata.put(channel, metadata);
+			} catch (JSONException e) {
+
+			}
+        }
         HttpRequest hreq = new HttpRequest(urlargs, parameters,
                 new ResponseHandler() {
             public void handleResponse(HttpRequest hreq, String response) {
@@ -1259,6 +1277,7 @@ abstract class PubnubCore {
     public void unsubscribe(String[] channels) {
         for (int i = 0; i < channels.length; i++) {
             subscriptions.removeChannel(channels[i]);
+            subscriptions.metadata.remove(channels[i]);
             leave(channels[i]);
         }
         resubscribe();
@@ -1568,6 +1587,10 @@ abstract class PubnubCore {
 
         Hashtable params = PubnubUtil.hashtableClone(this.params);
         params.put("uuid", UUID);
+        
+        String md  = getMetadata();
+        if (md != null) params.put("metadata", md);
+        
         if (PNEXPIRES > 5 && PNEXPIRES < 320) params.put("pnexpires", String.valueOf(PNEXPIRES));
         log.verbose("Subscribing with timetoken : " + _timetoken);
 

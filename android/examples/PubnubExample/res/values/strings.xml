@@ -38,4 +38,5 @@
     <string name="option19">Toggle Cache Busting</string>
     <string name="option20">Set Presence Expiry</string>
     <string name="option21">Set UUID</string>
+    <string name="option22">Set State</string>
 </resources>

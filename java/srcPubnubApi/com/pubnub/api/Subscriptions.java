@@ -4,6 +4,7 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 /**
  * @author PubnubCore
@@ -11,9 +12,10 @@ import org.json.JSONArray;
  */
 class Subscriptions {
     private Hashtable channels;
-
+    JSONObject metadata;
     public Subscriptions() {
         channels = new Hashtable();
+        metadata = new JSONObject();
     }
 
     public void addChannel(Channel channel) {

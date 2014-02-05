@@ -357,6 +357,45 @@ public class MainActivity extends Activity {
         alert.show();
 
     }
+    
+    private void _metadata(final String channel) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Set Metadata");
+        builder.setMessage("Enter message");
+        final EditText etMessage = new EditText(this);
+        builder.setView(etMessage);
+        builder.setPositiveButton("Submit",
+        new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Callback setMetaDataCallback = new Callback() {
+                    @Override
+                    public void successCallback(String channel,
+                    Object message) {
+                        notifyUser("SET METADATA : " + message);
+                    }
+                    @Override
+                    public void errorCallback(String channel,
+                    PubnubError error) {
+                        notifyUser("SET METADATA : " + error);
+                    }
+                };
+
+                String message = etMessage.getText().toString();
+                try {
+                    JSONObject js = new JSONObject(message);
+                    pubnub.setState(channel, pubnub.getUUID(), js, setMetaDataCallback);
+                    return;
+                } catch (Exception e) {}
+
+                pubnub.publish(channel, message, setMetaDataCallback);
+            }
+
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
 
     private void _publish(final String channel) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -429,6 +468,25 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 _publish(etChannel.getText().toString());
+            }
+
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+    
+    private void setState() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Set Metadata ");
+        builder.setMessage("Enter channel name");
+        final EditText etChannel = new EditText(this);
+        builder.setView(etChannel);
+        builder.setPositiveButton("Done",
+        new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                _metadata(etChannel.getText().toString());
             }
 
         });
