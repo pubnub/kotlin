@@ -12,10 +12,10 @@ import org.json.JSONObject;
  */
 class Subscriptions {
     private Hashtable channels;
-    JSONObject metadata;
+    JSONObject state;
     public Subscriptions() {
         channels = new Hashtable();
-        metadata = new JSONObject();
+        state    = new JSONObject();
     }
 
     public void addChannel(Channel channel) {

@@ -177,7 +177,7 @@ public class MainActivity extends Activity {
             toggleCacheBusting();
             return true;
         case R.id.option20:
-            setPnExpires();
+            setHeartbeat();
             return true;
         case R.id.option21:
             setUUID();
@@ -187,10 +187,10 @@ public class MainActivity extends Activity {
         }
     }
 
-    private void setPnExpires() {
+    private void setHeartbeat() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Set Presence Expiry");
-        builder.setMessage("Enter timeout value in seconds");
+        builder.setTitle("Set Presence Heartbeat");
+        builder.setMessage("Enter heartbeat value in seconds");
         final EditText edTimeout = new EditText(this);
         edTimeout.setInputType(InputType.TYPE_CLASS_NUMBER);
         builder.setView(edTimeout);
@@ -198,7 +198,7 @@ public class MainActivity extends Activity {
         new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                pubnub.setPnExpires(Integer.parseInt(edTimeout.getText().toString()));
+                pubnub.setHeartbeat(Integer.parseInt(edTimeout.getText().toString()));
             }
         });
         AlertDialog alert = builder.create();
@@ -358,10 +358,10 @@ public class MainActivity extends Activity {
 
     }
     
-    private void _metadata(final String channel) {
+    private void _state(final String channel) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Set Metadata");
-        builder.setMessage("Enter message");
+        builder.setTitle("Set STATE");
+        builder.setMessage("Enter state (JSON Object)");
         final EditText etMessage = new EditText(this);
         builder.setView(etMessage);
         builder.setPositiveButton("Submit",
@@ -373,23 +373,23 @@ public class MainActivity extends Activity {
                     @Override
                     public void successCallback(String channel,
                     Object message) {
-                        notifyUser("SET METADATA : " + message);
+                        notifyUser("SET STATE : " + message);
                     }
                     @Override
                     public void errorCallback(String channel,
                     PubnubError error) {
-                        notifyUser("SET METADATA : " + error);
+                        notifyUser("SET STATE : " + error);
                     }
                 };
 
                 String message = etMessage.getText().toString();
+                JSONObject js = null;
                 try {
-                    JSONObject js = new JSONObject(message);
+                    js = new JSONObject(message);
                     pubnub.setState(channel, pubnub.getUUID(), js, setMetaDataCallback);
                     return;
                 } catch (Exception e) {}
 
-                pubnub.publish(channel, message, setMetaDataCallback);
             }
 
         });
@@ -477,7 +477,7 @@ public class MainActivity extends Activity {
     
     private void setState() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Set Metadata ");
+        builder.setTitle("Set State ");
         builder.setMessage("Enter channel name");
         final EditText etChannel = new EditText(this);
         builder.setView(etChannel);
@@ -486,7 +486,7 @@ public class MainActivity extends Activity {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                _metadata(etChannel.getText().toString());
+                _state(etChannel.getText().toString());
             }
 
         });

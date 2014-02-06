@@ -59,7 +59,7 @@ abstract class PubnubCore {
     protected abstract String getUserAgent();
 
     int PRESENCE_HEARTBEAT_TASK = 0;
-    int PNEXPIRES = 320;
+    int HEARTBEAT = 320;
 
     /**
      * This method when called stops Pubnub threads
@@ -129,8 +129,8 @@ abstract class PubnubCore {
         };
     }
 
-    private String getMetadata() {
-    	return (subscriptions.metadata.length() > 0)?subscriptions.metadata.toString():null;
+    private String getState() {
+    	return (subscriptions.state.length() > 0)?subscriptions.state.toString():null;
     }
     
     class PresenceHeartbeatTask extends TimedTask {
@@ -152,8 +152,8 @@ abstract class PubnubCore {
             if (parameters.get("uuid") == null)
                 parameters.put("uuid", UUID);
             
-            String md  = getMetadata();
-            if (md != null) parameters.put("metadata", md);
+            String st  = getState();
+            if (st != null) parameters.put("metadata", st);
             
             HttpRequest hreq = new HttpRequest(urlComponents, parameters,
                     new ResponseHandler() {
@@ -185,34 +185,34 @@ abstract class PubnubCore {
     /**
      * This method sets presence expiry timeout.
      *
-     * @param pnexpires
-     *            Presence Expiry value in seconds
+     * @param heartbeat
+     *            Presence Heartbeat value in seconds
      */
-    public void setPnExpires(int pnexpires, Callback callback) {
+    public void setHeartbeat(int heartbeat, Callback callback) {
         Callback cb = getWrappedCallback(callback);
 
-        PRESENCE_HB_INTERVAL = (pnexpires > 0 && pnexpires < 5)?5:pnexpires;
+        PRESENCE_HB_INTERVAL = (heartbeat > 0 && heartbeat < 5)?5:heartbeat;
         if (PRESENCE_HEARTBEAT_TASK == 0) {
             PRESENCE_HEARTBEAT_TASK = timedTaskManager.addTask("Presence-Heartbeat",
-                    new PresenceHeartbeatTask(pnexpires - 3, cb));
-        } else if (pnexpires == 0 || pnexpires > 320) {
+                    new PresenceHeartbeatTask(heartbeat - 3, cb));
+        } else if (heartbeat == 0 || heartbeat > 320) {
             timedTaskManager.removeTask(PRESENCE_HEARTBEAT_TASK);
         } else {
-            timedTaskManager.updateTask(PRESENCE_HEARTBEAT_TASK, pnexpires - 3);
+            timedTaskManager.updateTask(PRESENCE_HEARTBEAT_TASK, heartbeat - 3);
         }
-        PNEXPIRES = pnexpires;
+        HEARTBEAT = heartbeat;
         disconnectAndResubscribe();
     }
 
-    public void setPnExpires(int pnexpires) {
-        setPnExpires(pnexpires, null);
+    public void setHeartbeat(int heartbeat) {
+        setHeartbeat(heartbeat, null);
     }
 
     /**
      * Returns presence expiry timeout value
      * @return Current presence expiry timeout value
      */
-    public int getPnExpires() {
+    public int getHeartbeat() {
         return PRESENCE_HB_INTERVAL;
     }
 
@@ -807,7 +807,7 @@ abstract class PubnubCore {
         whereNow(this.UUID,callback);
     }
 
-    public void setState(String channel, String uuid, JSONObject metadata, Callback callback) {
+    public void setState(String channel, String uuid, JSONObject state, Callback callback) {
 
         final Callback cb = getWrappedCallback(callback);
 
@@ -816,12 +816,11 @@ abstract class PubnubCore {
                 this.SUBSCRIBE_KEY, "channel", PubnubUtil.urlEncode(channel), "uuid", PubnubUtil.urlEncode(uuid),
                 "data"
         };
-        if (metadata != null) parameters.put("metadata", metadata.toString());
+        if (state != null) parameters.put("metadata", state.toString());
         Channel ch = subscriptions.getChannel(channel);
         if (ch != null) {
-        	System.out.println("Setting metadata : " + metadata);
         	try {
-				subscriptions.metadata.put(channel, metadata);
+				subscriptions.state.put(channel, state);
 			} catch (JSONException e) {
 
 			}
@@ -907,11 +906,11 @@ abstract class PubnubCore {
      *            object of sub class of Callback class
      */
     public void hereNow(final String channel, Callback callback) {
-        hereNow(channel,false,false,callback);
+        hereNow(channel,false,true,callback);
     }
 
-    public void hereNow(boolean metadata, boolean disable_uuids, Callback callback) {
-        hereNow(null, metadata, disable_uuids, callback);
+    public void hereNow(boolean state, boolean uuids, Callback callback) {
+        hereNow(null, state, uuids, callback);
     }
 
     /**
@@ -919,14 +918,14 @@ abstract class PubnubCore {
      *
      * @param channel
      *            Channel name
-     * @param metadata
-     *            metadata enabled ?
-     * @param disable_uuids
-     *            disable returning uuids in response ?
+     * @param state 
+     *            state enabled ?
+     * @param uuids
+     *            enable / disable returning uuids in response ?
      * @param callback
      *            object of sub class of Callback class
      */
-    public void hereNow(final String channel, boolean metadata, boolean disable_uuids, Callback callback) {
+    public void hereNow(final String channel, boolean state, boolean uuids, Callback callback) {
 
         final Callback cb = getWrappedCallback(callback);
 
@@ -942,8 +941,8 @@ abstract class PubnubCore {
             };
         }
 
-        if (metadata) parameters.put("metadata", "1");
-        if (disable_uuids) parameters.put("disable_uuids", "1");
+        if (state) parameters.put("metadata", "1");
+        if (!uuids) parameters.put("disable_uuids", "1");
 
         HttpRequest hreq = new HttpRequest(urlargs, parameters,
                 new ResponseHandler() {
@@ -1277,7 +1276,7 @@ abstract class PubnubCore {
     public void unsubscribe(String[] channels) {
         for (int i = 0; i < channels.length; i++) {
             subscriptions.removeChannel(channels[i]);
-            subscriptions.metadata.remove(channels[i]);
+            subscriptions.state.remove(channels[i]);
             leave(channels[i]);
         }
         resubscribe();
@@ -1588,10 +1587,10 @@ abstract class PubnubCore {
         Hashtable params = PubnubUtil.hashtableClone(this.params);
         params.put("uuid", UUID);
         
-        String md  = getMetadata();
-        if (md != null) params.put("metadata", md);
+        String st  = getState();
+        if (st != null) params.put("metadata", st);
         
-        if (PNEXPIRES > 5 && PNEXPIRES < 320) params.put("pnexpires", String.valueOf(PNEXPIRES));
+        if (HEARTBEAT > 5 && HEARTBEAT < 320) params.put("pnexpires", String.valueOf(HEARTBEAT));
         log.verbose("Subscribing with timetoken : " + _timetoken);
 
         HttpRequest hreq = new HttpRequest(urlComponents, params,

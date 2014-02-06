@@ -362,8 +362,8 @@ public class PubnubDemoConsole {
                 pubnub.setUUID(uuid);
                 break;
             case 27:
-                int pnexpires = getIntFromConsole("Pubnub Presence Expiry ( in seconds ), Current value : " + pubnub.getPnExpires());
-                pubnub.setPnExpires(pnexpires, new Callback(){
+                int heartbeat = getIntFromConsole("Pubnub Presence Heartbeat ( in seconds ), Current value : " + pubnub.getHeartbeat());
+                pubnub.setHeartbeat(heartbeat, new Callback(){
 
                     @Override
                     public void successCallback(String channel, Object message) {
@@ -653,7 +653,7 @@ public class PubnubDemoConsole {
         notifyUser("ENTER 24 FOR Enabling Cache Busting  ( current: " + pubnub.getCacheBusting() + " )");
         notifyUser("ENTER 25 FOR Disabling Cache Busting ( current: " + pubnub.getCacheBusting() + " )");
         notifyUser("ENTER 26 FOR Setting UUID ( current: " + pubnub.getUUID() + " )");
-        notifyUser("ENTER 27 FOR Setting Presence Expiry ( current: " + pubnub.getPnExpires() + " )");
+        notifyUser("ENTER 27 FOR Setting Presence Heartbeat ( current: " + pubnub.getHeartbeat() + " )");
         notifyUser("ENTER 28 FOR Getting Subscriber State");
         notifyUser("ENTER 29 FOR Setting Subscriber State");
         notifyUser("ENTER 30 FOR Where Now");
