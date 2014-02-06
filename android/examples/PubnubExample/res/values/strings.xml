@@ -36,7 +36,7 @@
     <string name="option17">Set Origin</string>
     <string name="option18">Set Domain</string>
     <string name="option19">Toggle Cache Busting</string>
-    <string name="option20">Set Presence Expiry</string>
+    <string name="option20">Set Presence Heartbeat ( in seconds )</string>
     <string name="option21">Set UUID</string>
     <string name="option22">Set State</string>
 </resources>
