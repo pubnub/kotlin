@@ -185,6 +185,16 @@ abstract class PubnubCore {
     /**
      * This method sets presence expiry timeout.
      *
+     * @param pnexpires
+     *            Presence Expiry timeout in seconds
+     */
+    public void setPnExpires(int pnexpires, Callback callback) {
+    	setHeartbeat(pnexpires,callback);
+    }
+    
+    /**
+     * This method sets presence expiry timeout.
+     *
      * @param heartbeat
      *            Presence Heartbeat value in seconds
      */
@@ -204,13 +214,26 @@ abstract class PubnubCore {
         disconnectAndResubscribe();
     }
 
+    public void setPnExpires(int pnexpires) {
+        setPnExpires(pnexpires, null);
+    }
+    
     public void setHeartbeat(int heartbeat) {
         setHeartbeat(heartbeat, null);
     }
 
+    
     /**
      * Returns presence expiry timeout value
      * @return Current presence expiry timeout value
+     */
+    public int getPnExpires() {
+        return getHeartbeat();
+    }
+    
+    /**
+     * Returns presence heartbeat value
+     * @return Current presence heartbeat value
      */
     public int getHeartbeat() {
         return PRESENCE_HB_INTERVAL;
