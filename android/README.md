@@ -41,7 +41,7 @@ $ ant
 Pubnub library jar with debug messages enabled can be built by running following commands
 ```
 $ ant clean
-$ and debug-build
+$ ant debug-build
 ```
 
 ##Connection Durability: Reconnecting & Resuming when a connection is lost or changed
