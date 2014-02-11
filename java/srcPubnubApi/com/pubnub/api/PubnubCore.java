@@ -754,8 +754,7 @@ abstract class PubnubCore {
                 PubnubUtil.urlEncode(msgStr)
         };
 
-        HttpRequest hreq = new HttpRequest(urlComponents, params,
-                new ResponseHandler() {
+        class PublishResponseHandler extends ResponseHandler {
             public void handleResponse(HttpRequest hreq, String response) {
                 JSONArray jsarr;
                 try {
@@ -772,7 +771,8 @@ abstract class PubnubCore {
                 callback.errorCallback(channel, error);
                 return;
             }
-        });
+        }
+        HttpRequest hreq = new HttpRequest(urlComponents, params, new PublishResponseHandler());
 
         _request(hreq, nonSubscribeManager);
     }
@@ -1018,8 +1018,7 @@ abstract class PubnubCore {
                 this.SUBSCRIBE_KEY, "channel", PubnubUtil.urlEncode(channel)
         };
 
-        HttpRequest hreq = new HttpRequest(urlargs, parameters,
-                new ResponseHandler() {
+        class HistoryResponseHandler extends ResponseHandler {
 
             public void handleResponse(HttpRequest hreq, String response) {
                 JSONArray respArr;
@@ -1053,8 +1052,9 @@ abstract class PubnubCore {
                 cb.errorCallback(channel, error);
                 return;
             }
-
-        });
+        }
+        
+        HttpRequest hreq = new HttpRequest(urlargs, parameters, new HistoryResponseHandler());
         _request(hreq, nonSubscribeManager);
     }
 

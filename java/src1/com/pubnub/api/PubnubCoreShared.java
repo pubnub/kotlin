@@ -262,7 +262,7 @@ abstract class PubnubCoreShared extends PubnubCore {
             sign_input += "auth=" + auth_key + "&"  ;
 
         sign_input += "channel=" + channel + "&" + "r=" + r + "&" + "timestamp=" + timestamp
-                            + ((ttl > -1)?"&" + "ttl=" + ttl:"")
+                            + ((ttl >= -1)?"&" + "ttl=" + ttl:"")
                             + "&" + "w=" + w;
 
 
@@ -282,7 +282,7 @@ abstract class PubnubCoreShared extends PubnubCore {
         parameters.put("channel", channel);
 
         if (auth_key != null && auth_key.length() > 0 ) parameters.put("auth", auth_key);
-        if (ttl > 0) parameters.put("ttl", String.valueOf(ttl));
+        if (ttl >= -1) parameters.put("ttl", String.valueOf(ttl));
 
         String[] urlComponents = { getPubnubUrl(), "v1", "auth", "grant", "sub-key",
                                    this.SUBSCRIBE_KEY

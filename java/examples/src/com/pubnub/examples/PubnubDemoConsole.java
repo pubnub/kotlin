@@ -2,6 +2,7 @@ package com.pubnub.examples;
 
 import com.pubnub.api.*;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Hashtable;
@@ -118,8 +119,25 @@ public class PubnubDemoConsole {
 
                 @Override
                 public void successCallback(String channel, Object message) {
-                    notifyUser("SUBSCRIBE : " + channel + " : "
-                               + message.getClass() + " : " + message.toString());
+                    //notifyUser("SUBSCRIBE : " + channel + " : "
+                     //          + message.getClass() + " : " + message.toString());
+                    if ( message instanceof JSONObject) {
+                        notifyUser("SUBSCRIBE : " + channel + " : "
+                                + message.getClass() + " : " + message.toString());
+                         try {
+							notifyUser( ((JSONObject)message).getString("data")) ;
+							notifyUser( ((JSONObject)message).getString("data2")) ;
+							notifyUser( ((JSONObject)message).getString("data3")) ;
+						} catch (JSONException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+                          
+                    } else {
+                    	System.out.println("Message not a json object Discarding message :" + message);
+                    }
+                    		
+                    
                 }
 
                 @Override
