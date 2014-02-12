@@ -155,6 +155,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/option22" />
+        <TextView
+            android:id="@+id/option23"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/option23" />
     </LinearLayout>
 
 </LinearLayout>
