@@ -182,11 +182,36 @@ public class MainActivity extends Activity {
         case R.id.option21:
             setUUID();
             return true;
+        case R.id.option22:
+            setState();
+            return true;
+        case R.id.option23:
+            setHeartbeatInterval();
+            return true;
         default:
             return super.onOptionsItemSelected(item);
         }
     }
 
+    private void setHeartbeatInterval() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Set Presence Heartbeat Interval");
+        builder.setMessage("Enter heartbeat value in seconds");
+        final EditText edTimeout = new EditText(this);
+        edTimeout.setInputType(InputType.TYPE_CLASS_NUMBER);
+        builder.setView(edTimeout);
+        builder.setPositiveButton("Done",
+        new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                pubnub.setHeartbeatInterval(Integer.parseInt(edTimeout.getText().toString()));
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
+
+    }
+    
     private void setHeartbeat() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Set Presence Heartbeat");

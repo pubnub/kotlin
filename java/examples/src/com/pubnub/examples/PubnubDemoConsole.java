@@ -395,12 +395,16 @@ public class PubnubDemoConsole {
                 });
                 break;
             case 28:
-                getState();
+                int heartbeatInterval = getIntFromConsole("Pubnub Presence Heartbeat Interval ( in seconds ), Current value : " + pubnub.getHeartbeatInterval());
+                pubnub.setHeartbeatInterval(heartbeatInterval);
                 break;
             case 29:
-                setState();
+                getState();
                 break;
             case 30:
+                setState();
+                break;
+            case 31:
                 String uid = getStringFromConsole("UUID", true);
                 if (uid == null || uid.length() == 0) uid = pubnub.getUUID();
                 whereNow(uid);
@@ -672,9 +676,10 @@ public class PubnubDemoConsole {
         notifyUser("ENTER 25 FOR Disabling Cache Busting ( current: " + pubnub.getCacheBusting() + " )");
         notifyUser("ENTER 26 FOR Setting UUID ( current: " + pubnub.getUUID() + " )");
         notifyUser("ENTER 27 FOR Setting Presence Heartbeat ( current: " + pubnub.getHeartbeat() + " )");
-        notifyUser("ENTER 28 FOR Getting Subscriber State");
-        notifyUser("ENTER 29 FOR Setting Subscriber State");
-        notifyUser("ENTER 30 FOR Where Now");
+        notifyUser("ENTER 28 FOR Setting Presence Heartbeat Interval ( current: " + pubnub.getHeartbeatInterval() + " )");
+        notifyUser("ENTER 29 FOR Getting Subscriber State");
+        notifyUser("ENTER 30 FOR Setting Subscriber State");
+        notifyUser("ENTER 31 FOR Where Now");
         notifyUser("\nENTER 0 to display this menu");
     }
 

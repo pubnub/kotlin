@@ -34,7 +34,6 @@ abstract class PubnubCore {
     protected String SECRET_KEY = "";
     private String CIPHER_KEY = "";
     private String IV = null;
-    private int PRESENCE_HB_INTERVAL = 0;
     private volatile String AUTH_STR = null;
     private volatile boolean CACHE_BUSTING = true;
     protected Hashtable params;
@@ -58,8 +57,9 @@ abstract class PubnubCore {
 
     protected abstract String getUserAgent();
 
-    int PRESENCE_HEARTBEAT_TASK = 0;
-    int HEARTBEAT = 320;
+    private int PRESENCE_HEARTBEAT_TASK = 0;
+    private int HEARTBEAT = 320;
+    private volatile int PRESENCE_HB_INTERVAL = 0;
 
     /**
      * This method when called stops Pubnub threads
@@ -202,13 +202,15 @@ abstract class PubnubCore {
         Callback cb = getWrappedCallback(callback);
 
         PRESENCE_HB_INTERVAL = (heartbeat > 0 && heartbeat < 5)?5:heartbeat;
+        PRESENCE_HB_INTERVAL = (PRESENCE_HB_INTERVAL - 3 >= 1)?PRESENCE_HB_INTERVAL:1;
+        
         if (PRESENCE_HEARTBEAT_TASK == 0) {
             PRESENCE_HEARTBEAT_TASK = timedTaskManager.addTask("Presence-Heartbeat",
-                    new PresenceHeartbeatTask(heartbeat - 3, cb));
-        } else if (heartbeat == 0 || heartbeat > 320) {
+                    new PresenceHeartbeatTask(PRESENCE_HB_INTERVAL, cb));
+        } else if (PRESENCE_HB_INTERVAL == 0 || PRESENCE_HB_INTERVAL > 320) {
             timedTaskManager.removeTask(PRESENCE_HEARTBEAT_TASK);
         } else {
-            timedTaskManager.updateTask(PRESENCE_HEARTBEAT_TASK, heartbeat - 3);
+            timedTaskManager.updateTask(PRESENCE_HEARTBEAT_TASK, PRESENCE_HB_INTERVAL);
         }
         HEARTBEAT = heartbeat;
         disconnectAndResubscribe();
@@ -220,6 +222,25 @@ abstract class PubnubCore {
     
     public void setHeartbeat(int heartbeat) {
         setHeartbeat(heartbeat, null);
+    }
+    
+    public void setHeartbeatInterval(int heartbeatInterval) {
+    	
+        Callback cb = getWrappedCallback(null);
+    	PRESENCE_HB_INTERVAL = heartbeatInterval;
+        if (PRESENCE_HEARTBEAT_TASK == 0) {
+            PRESENCE_HEARTBEAT_TASK = timedTaskManager.addTask("Presence-Heartbeat",
+                    new PresenceHeartbeatTask(PRESENCE_HB_INTERVAL, cb));
+        } else if (PRESENCE_HB_INTERVAL == 0 || PRESENCE_HB_INTERVAL > 320) {
+            timedTaskManager.removeTask(PRESENCE_HEARTBEAT_TASK);
+        } else {
+            timedTaskManager.updateTask(PRESENCE_HEARTBEAT_TASK, PRESENCE_HB_INTERVAL);
+        }
+    	
+    }
+    
+    public int getHeartbeatInterval() {
+    	return PRESENCE_HB_INTERVAL;
     }
 
     
