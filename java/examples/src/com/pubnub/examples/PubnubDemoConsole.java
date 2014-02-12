@@ -524,7 +524,7 @@ public class PubnubDemoConsole {
             input = reader.nextLine();
             attempt_count++;
             returnVal = Integer.parseInt(input);
-        } while ((input == null || input.length() == 0 || returnVal == -1) && !optional);
+        } while ((input == null || input.length() == 0 || returnVal < -1) && !optional);
         notifyUser(message + " : " + returnVal);
         return returnVal;
     }
