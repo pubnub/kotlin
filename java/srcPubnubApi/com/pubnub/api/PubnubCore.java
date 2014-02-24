@@ -155,6 +155,8 @@ abstract class PubnubCore {
             String st  = getState();
             if (st != null) parameters.put("metadata", st);
             
+            if (HEARTBEAT > 0 && HEARTBEAT < 320 ) parameters.put("heartbeat", String.valueOf(HEARTBEAT));
+            
             HttpRequest hreq = new HttpRequest(urlComponents, parameters,
                     new ResponseHandler() {
                 public void handleResponse(HttpRequest hreq, String response) {
