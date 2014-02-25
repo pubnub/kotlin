@@ -153,7 +153,7 @@ abstract class PubnubCore {
                 parameters.put("uuid", UUID);
             
             String st  = getState();
-            if (st != null) parameters.put("metadata", st);
+            if (st != null) parameters.put("state", st);
             
             if (HEARTBEAT > 0 && HEARTBEAT < 320 ) parameters.put("heartbeat", String.valueOf(HEARTBEAT));
             
@@ -862,7 +862,7 @@ abstract class PubnubCore {
                 this.SUBSCRIBE_KEY, "channel", PubnubUtil.urlEncode(channel), "uuid", PubnubUtil.urlEncode(uuid),
                 "data"
         };
-        if (state != null) parameters.put("metadata", state.toString());
+        if (state != null) parameters.put("state", state.toString());
         Channel ch = subscriptions.getChannel(channel);
         if (ch != null) {
         	try {
@@ -987,7 +987,7 @@ abstract class PubnubCore {
             };
         }
 
-        if (state) parameters.put("metadata", "1");
+        if (state) parameters.put("state", "1");
         if (!uuids) parameters.put("disable_uuids", "1");
 
         HttpRequest hreq = new HttpRequest(urlargs, parameters,
@@ -1634,9 +1634,9 @@ abstract class PubnubCore {
         params.put("uuid", UUID);
         
         String st  = getState();
-        if (st != null) params.put("metadata", st);
+        if (st != null) params.put("state", st);
         
-        if (HEARTBEAT > 5 && HEARTBEAT < 320) params.put("pnexpires", String.valueOf(HEARTBEAT));
+        if (HEARTBEAT > 5 && HEARTBEAT < 320) params.put("heartbeat", String.valueOf(HEARTBEAT));
         log.verbose("Subscribing with timetoken : " + _timetoken);
 
         HttpRequest hreq = new HttpRequest(urlComponents, params,
