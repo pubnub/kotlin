@@ -250,7 +250,6 @@ class HttpClientCore extends HttpClient {
     }
 
     public void shutdown() {
-        System.out.println("shutdown");
         if (connection != null) connection.disconnect();
     }
 }
