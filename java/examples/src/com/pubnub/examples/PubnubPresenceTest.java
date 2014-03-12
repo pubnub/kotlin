@@ -285,7 +285,7 @@ public class PubnubPresenceTest {
 	        		System.out.println("Skipping Test Due to Client Mismatch : " + clientStr);
 	        		continue;
 	        	}
-	        	String origin = (server.equals("3.6"))?"presence-beta":"pubsub";
+	        	String origin = "pubsub";
 	        	String subkey = (String) ((JSONObject)(keysets.get(common.get("keyset")))).get("subKey") ;
 	        	long time = new Date().getTime();
 	        	String channelA = "A-java-" + i + 1 + "-" + time;
