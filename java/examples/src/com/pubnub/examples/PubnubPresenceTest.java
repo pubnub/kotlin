@@ -149,6 +149,7 @@ class Test {
 						e.printStackTrace();
 					}
 					jso.put("channel", channel.split("-pnpres")[0]);
+					jso.put("time", Calendar.getInstance().getTime());
 					JSONObject step =  (JSONObject)steps.get(String.valueOf(currentStep));
 					JSONArray events = (JSONArray) step.get("events");
 					if (events == null) {
@@ -177,6 +178,7 @@ class Test {
 						e.printStackTrace();
 					}
 					jso.put("channel", channel.split("-pnpres")[0]);
+					jso.put("time", Calendar.getInstance().getTime());
 					
 					JSONObject step =  (JSONObject)steps.get(String.valueOf(currentStep));
 					JSONArray events = (JSONArray) step.get("events");
