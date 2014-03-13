@@ -1,4 +1,4 @@
-#PubNub Java-based APIs for core Java, Android, J2ME, BlackBerry version 3.6.0
+#PubNub Java-based APIs for core Java, Android, J2ME, BlackBerry version 3.6
 Learn more at http://www.pubnub.com
 
 ## Migrating from 3.5.1 and older...
@@ -6,10 +6,6 @@ Learn more at http://www.pubnub.com
 3.5.2+ is backward compatible with 3.5.1. Some of the methods have been deprecated.
 You will see compiler warnings for the same. Please refer to java docs for alternate
 methods to be used. 
-
-Its recommended to remove the usage of Deprecated methods as they will be removed in 
-3.6.0 . 
-
 
 ## Subdirectory Description
 This repo contains the following platform-specific subdirectories:
