@@ -1,4 +1,4 @@
-#PubNub Java-based APIs for core Java, Android, J2ME, BlackBerry.
+#PubNub Java-based APIs for core Java, Android, J2ME, BlackBerry version 3.6.0
 Learn more at http://www.pubnub.com
 
 ## Migrating from 3.5.1 and older...
