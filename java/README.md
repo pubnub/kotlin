@@ -1,7 +1,7 @@
 ##### YOU MUST HAVE A PUBNUB ACCOUNT TO USE THE API.
 ##### http://www.pubnub.com/account
 
-## PubNub 3.5 Real-time Cloud Push API - JAVA
+## PubNub 3.6 Real-time Cloud Push API - JAVA
 
 www.pubnub.com - PubNub Real-time Push Service in the Cloud. 
 
