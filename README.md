@@ -1,6 +1,9 @@
 #PubNub Java-based APIs for core Java, Android, J2ME, BlackBerry version 3.6
 Learn more at http://www.pubnub.com
 
+## Complete Documentation
+Available at [http://www.pubnub.com/docs/java/javase/javase-sdk.html](http://www.pubnub.com/docs/java/javase/javase-sdk.html)
+
 ## Migrating from 3.5.1 and older...
 
 3.5.2+ is backward compatible with 3.5.1. Some of the methods have been deprecated.
