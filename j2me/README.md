@@ -1,4 +1,4 @@
-## PubNub 3.3 Real-time Cloud Push API - J2ME
+## PubNub 3.6 Real-time Cloud Push API - J2ME
 ### YOU MUST HAVE A PUBNUB ACCOUNT TO USE THE API.
 ### http://www.pubnub.com/account
 
