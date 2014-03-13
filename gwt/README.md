@@ -11,5 +11,3 @@ including presence(), here_now(), and detailedHistory().
 
 To run the example app, copy the pubnubexample.war in gwt/3.3/examples/PubnubExample/ to the webapps dir of tomcat,
 and restart tomcat. Then visit <tomcat url>:<port>/pubnubexample/PubnubExample.html
-
-You can find a running demo of the example app running here: http://geremy.pubnub.com:8080/pubnubexample/PubnubExample.html
