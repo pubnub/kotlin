@@ -1062,7 +1062,7 @@ abstract class PubnubCore {
         if (end != -1)
             parameters.put("end", Long.toString(end).toLowerCase());
         
-        if(includeTimetoken)
+        if (includeTimetoken)
             parameters.put("include_token", "true");
 
         String[] urlargs = { getPubnubUrl(), "v2", "history", "sub-key",
