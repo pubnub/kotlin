@@ -1005,6 +1005,29 @@ abstract class PubnubCore {
     }
 
     /**
+    *
+    * Read History for a channel.
+    *
+    * @param channel
+    *            Channel name for which history is required
+    * @param start
+    *            Start time
+    * @param end
+    *            End time
+    * @param count
+    *            Upper limit on number of messages to be returned
+    * @param reverse
+    *            True if messages need to be in reverse order
+    * @param callback
+    *            Callback
+    */
+   public void history(final String channel, long start, long end,
+           int count, boolean reverse, Callback callback) {
+	   history(channel, start, end, count, reverse, false, callback);
+   }
+   
+    
+    /**
      *
      * Read History for a channel.
      *
@@ -1018,11 +1041,13 @@ abstract class PubnubCore {
      *            Upper limit on number of messages to be returned
      * @param reverse
      *            True if messages need to be in reverse order
+     * @param includeTimetoken
+     *            True if timetoken needs to be included with messages
      * @param callback
      *            Callback
      */
     public void history(final String channel, long start, long end,
-            int count, boolean reverse, Callback callback) {
+            int count, boolean reverse, boolean includeTimetoken, Callback callback) {
         final Callback cb = getWrappedCallback(callback);
         Hashtable parameters = PubnubUtil.hashtableClone(params);
         if (count == -1)
@@ -1036,6 +1061,9 @@ abstract class PubnubCore {
 
         if (end != -1)
             parameters.put("end", Long.toString(end).toLowerCase());
+        
+        if(includeTimetoken)
+            parameters.put("include_token", "true");
 
         String[] urlargs = { getPubnubUrl(), "v2", "history", "sub-key",
                 this.SUBSCRIBE_KEY, "channel", PubnubUtil.urlEncode(channel)
