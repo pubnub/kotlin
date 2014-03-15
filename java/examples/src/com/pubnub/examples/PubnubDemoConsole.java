@@ -118,23 +118,23 @@ public class PubnubDemoConsole {
                 }
 
                 @Override
-                public void successCallback(String channel, Object message) {
+                public void successCallback(String channel, Object message, String timetoken) {
                     //notifyUser("SUBSCRIBE : " + channel + " : "
                      //          + message.getClass() + " : " + message.toString());
                     if ( message instanceof JSONObject) {
                         notifyUser("SUBSCRIBE : " + channel + " : "
                                 + message.getClass() + " : " + message.toString());
                          try {
-							notifyUser( ((JSONObject)message).getString("data")) ;
-							notifyUser( ((JSONObject)message).getString("data2")) ;
-							notifyUser( ((JSONObject)message).getString("data3")) ;
+							notifyUser( "TIMETOKEN: " + timetoken  + ", "+  ((JSONObject)message).getString("data")) ;
+							notifyUser( "TIMETOKEN: " + timetoken  + ", "+  ((JSONObject)message).getString("data2")) ;
+							notifyUser( "TIMETOKEN: " + timetoken  + ", "+  ((JSONObject)message).getString("data3")) ;
 						} catch (JSONException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
                           
                     } else {
-                    	System.out.println("Message not a json object Discarding message :" + message);
+                    	System.out.println("TIMETOKEN: " + timetoken  + ", "+  "Message not a json object : " + message);
                     }
                     		
                     

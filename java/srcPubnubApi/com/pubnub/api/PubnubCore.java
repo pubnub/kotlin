@@ -1687,6 +1687,7 @@ abstract class PubnubCore {
 
                     _timetoken = (!_saved_timetoken.equals("0") && isResumeOnReconnect()) ? _saved_timetoken
                             : jsa.get(1).toString();
+                    String response_timetoken = jsa.get(1).toString();
                     log.verbose("Resume On Reconnect is "
                             + isResumeOnReconnect());
                     log.verbose("Saved Timetoken : " + _saved_timetoken);
@@ -1729,9 +1730,9 @@ abstract class PubnubCore {
                                                         .get(i)
                                                         .toString());
                                         if (!isWorkerDead(hreq))  _channel.callback
-                                        .successCallback(
+                                        .successWrapperCallback(
                                                 _channel.name,
-                                                PubnubUtil.parseJSON(PubnubUtil.stringToJSON(message)));
+                                                PubnubUtil.parseJSON(PubnubUtil.stringToJSON(message)), response_timetoken);
                                     } catch (DataLengthException e) {
                                         if (!isWorkerDead(hreq)) _channel.callback
                                         .errorCallback(
@@ -1771,9 +1772,9 @@ abstract class PubnubCore {
 
 
                                 } else {
-                                    if (!isWorkerDead(hreq)) _channel.callback.successCallback(
+                                    if (!isWorkerDead(hreq)) _channel.callback.successWrapperCallback(
                                             _channel.name,
-                                            PubnubUtil.parseJSON(messages.get(i)));
+                                            PubnubUtil.parseJSON(messages.get(i)), response_timetoken);
                                 }
                             }
                         }
@@ -1799,9 +1800,9 @@ abstract class PubnubCore {
                                                         .get(i)
                                                         .toString());
                                         if (!isWorkerDead(hreq)) _channel.callback
-                                        .successCallback(
+                                        .successWrapperCallback(
                                                 _channel.name,
-                                                PubnubUtil.parseJSON(PubnubUtil.stringToJSON(message)));
+                                                PubnubUtil.parseJSON(PubnubUtil.stringToJSON(message)), response_timetoken);
                                     } catch (DataLengthException e) {
                                         if (!isWorkerDead(hreq)) _channel.callback
                                         .errorCallback(
@@ -1839,9 +1840,9 @@ abstract class PubnubCore {
                                                         messages.get(i).toString() + " : " + e.toString()));
                                     }
                                 } else {
-                                    if (!isWorkerDead(hreq)) _channel.callback.successCallback(
+                                    if (!isWorkerDead(hreq)) _channel.callback.successWrapperCallback(
                                             _channel.name,
-                                            PubnubUtil.parseJSON(messages.get(i)));
+                                            PubnubUtil.parseJSON(messages.get(i)), response_timetoken);
                                 }
 
                             }
