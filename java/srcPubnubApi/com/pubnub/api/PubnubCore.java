@@ -2035,6 +2035,15 @@ abstract class PubnubCore {
     }
 
     /**
+     * This method returns last received timetoken. Return 0 if not set.
+     *
+     * @return timetoken. 0 if timetoken not set
+     */
+    public String getTimetoken() {
+        return this._timetoken;
+    }
+
+    /**
      * This method returns auth key. Return null if not set
      *
      * @return Auth Key. null if auth key not set
