@@ -186,8 +186,8 @@ public class PubnubDemoConsole {
         }
     }
 
-    private void history(String channel) {
-        pubnub.history(channel, 2, new Callback() {
+    private void history(String channel, int count, boolean includeToken) {
+        pubnub.history(channel, includeToken, count, new Callback() {
             @Override
             public void successCallback(String channel, Object message) {
                 notifyUser("HISTORY : " + message);
@@ -298,7 +298,9 @@ public class PubnubDemoConsole {
                 break;
             case 4:
                 channelName = getStringFromConsole("Channel Name");
-                history(channelName);
+                int count = getIntFromConsole("Count");
+                boolean includeToken = getBooleanFromConsole("Include Timetokens");
+                history(channelName, count, includeToken);
                 break;
             case 5:
                 channelName = getStringFromConsole("Channel Name", true);

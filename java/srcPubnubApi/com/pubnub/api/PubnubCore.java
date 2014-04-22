@@ -1027,6 +1027,7 @@ abstract class PubnubCore {
    }
    
     
+    
     /**
      *
      * Read History for a channel.
@@ -1042,7 +1043,7 @@ abstract class PubnubCore {
      * @param reverse
      *            True if messages need to be in reverse order
      * @param includeTimetoken
-     *            True if timetoken needs to be included with messages
+     *            True/False whether to include timetokens in response
      * @param callback
      *            Callback
      */
@@ -1055,15 +1056,13 @@ abstract class PubnubCore {
 
         parameters.put("count", String.valueOf(count));
         parameters.put("reverse", String.valueOf(reverse));
-
+        parameters.put("include_token", String.valueOf(includeTimetoken));
+        
         if (start != -1)
             parameters.put("start", Long.toString(start).toLowerCase());
 
         if (end != -1)
             parameters.put("end", Long.toString(end).toLowerCase());
-        
-        if (includeTimetoken)
-            parameters.put("include_token", "true");
 
         String[] urlargs = { getPubnubUrl(), "v2", "history", "sub-key",
                 this.SUBSCRIBE_KEY, "channel", PubnubUtil.urlEncode(channel)
@@ -1145,6 +1144,23 @@ abstract class PubnubCore {
         history(channel, -1, -1, count, false, callback);
     }
 
+    /**
+    *
+    * Read History for a channel.
+    *
+    * @param channel
+    *            Channel name for which history is required
+    * @param includeTimetoken
+    *            True/False whether to include timetokens in response
+    * @param count
+    *            Maximum number of messages
+    * @param callback
+    *            Callback object
+    */
+   public void history(String channel, boolean includeTimetoken, int count, Callback callback) {
+       history(channel, -1, -1, count, false, includeTimetoken, callback);
+   }
+    
 
     /**
      *
@@ -1687,7 +1703,6 @@ abstract class PubnubCore {
 
                     _timetoken = (!_saved_timetoken.equals("0") && isResumeOnReconnect()) ? _saved_timetoken
                             : jsa.get(1).toString();
-                    String response_timetoken = jsa.get(1).toString();
                     log.verbose("Resume On Reconnect is "
                             + isResumeOnReconnect());
                     log.verbose("Saved Timetoken : " + _saved_timetoken);
@@ -1730,9 +1745,9 @@ abstract class PubnubCore {
                                                         .get(i)
                                                         .toString());
                                         if (!isWorkerDead(hreq))  _channel.callback
-                                        .successWrapperCallback(
+                                        .successCallback(
                                                 _channel.name,
-                                                PubnubUtil.parseJSON(PubnubUtil.stringToJSON(message)), response_timetoken);
+                                                PubnubUtil.parseJSON(PubnubUtil.stringToJSON(message)));
                                     } catch (DataLengthException e) {
                                         if (!isWorkerDead(hreq)) _channel.callback
                                         .errorCallback(
@@ -1772,9 +1787,9 @@ abstract class PubnubCore {
 
 
                                 } else {
-                                    if (!isWorkerDead(hreq)) _channel.callback.successWrapperCallback(
+                                    if (!isWorkerDead(hreq)) _channel.callback.successCallback(
                                             _channel.name,
-                                            PubnubUtil.parseJSON(messages.get(i)), response_timetoken);
+                                            PubnubUtil.parseJSON(messages.get(i)));
                                 }
                             }
                         }
@@ -1800,9 +1815,9 @@ abstract class PubnubCore {
                                                         .get(i)
                                                         .toString());
                                         if (!isWorkerDead(hreq)) _channel.callback
-                                        .successWrapperCallback(
+                                        .successCallback(
                                                 _channel.name,
-                                                PubnubUtil.parseJSON(PubnubUtil.stringToJSON(message)), response_timetoken);
+                                                PubnubUtil.parseJSON(PubnubUtil.stringToJSON(message)));
                                     } catch (DataLengthException e) {
                                         if (!isWorkerDead(hreq)) _channel.callback
                                         .errorCallback(
@@ -1840,9 +1855,9 @@ abstract class PubnubCore {
                                                         messages.get(i).toString() + " : " + e.toString()));
                                     }
                                 } else {
-                                    if (!isWorkerDead(hreq)) _channel.callback.successWrapperCallback(
+                                    if (!isWorkerDead(hreq)) _channel.callback.successCallback(
                                             _channel.name,
-                                            PubnubUtil.parseJSON(messages.get(i)), response_timetoken);
+                                            PubnubUtil.parseJSON(messages.get(i)));
                                 }
 
                             }
@@ -2033,15 +2048,6 @@ abstract class PubnubCore {
      */
     public String getDomain() {
         return this.DOMAIN;
-    }
-
-    /**
-     * This method returns last received timetoken. Return 0 if not set.
-     *
-     * @return timetoken. 0 if timetoken not set
-     */
-    public String getTimetoken() {
-        return this._timetoken;
     }
 
     /**
