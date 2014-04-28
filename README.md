@@ -1,4 +1,6 @@
-#PubNub Java-based APIs for core Java, Android, J2ME, BlackBerry version 3.6
+# Please direct all Support Questions and Concerns to Support@PubNub.com
+
+###PubNub Java-based APIs for core Java, Android, J2ME, BlackBerry version 3.6
 Learn more at http://www.pubnub.com
 
 ## Complete Documentation
@@ -34,3 +36,5 @@ See the Java subdir, and the GAE_3.3 tag
 ### Codename One
 Easy amazing, fast, native mobile app development using Java™ for all platforms
 See the [codenameone](codenameone) subdir for client and example code.
+
+# Please direct all Support Questions and Concerns to Support@PubNub.com
