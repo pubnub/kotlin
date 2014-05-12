@@ -2,6 +2,8 @@ package com.pubnub.examples.pubnubExample;
 
 import java.util.Hashtable;
 
+import android.view.View;
+import android.widget.LinearLayout;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -20,6 +22,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
+import android.view.View.OnClickListener;
 
 import com.pubnub.api.Callback;
 import com.pubnub.api.Pubnub;
@@ -88,6 +91,13 @@ public class MainActivity extends Activity {
             }
 
         }, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+
+        LinearLayout clicklayout = (LinearLayout) findViewById(R.id.clicklayout);
+        clicklayout.setOnClickListener(new LinearLayout.OnClickListener() {
+            public void onClick(View v) {
+                openOptionsMenu();
+            }
+        });
 
     }
 
