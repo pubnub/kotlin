@@ -36,7 +36,7 @@ public class PubnubDemoConsole {
         out.println(message.toString());
     }
 
-    private void publish(String channel) {
+    private void publish(String channel, boolean store) {
         notifyUser("Enter the message for publish. To exit loop enter QUIT");
         String message = "";
 
@@ -61,33 +61,33 @@ public class PubnubDemoConsole {
 
             try {
                 Integer i = Integer.parseInt(message);
-                pubnub.publish(channel, i, cb);
+                pubnub.publish(channel, i, store, cb);
                 continue;
             } catch (Exception e) {
 
             }
             try {
                 Double d = Double.parseDouble(message);
-                pubnub.publish(channel, d, cb);
+                pubnub.publish(channel, d, store, cb);
                 continue;
             } catch (Exception e) {
 
             }
             try {
                 JSONArray js = new JSONArray(message);
-                pubnub.publish(channel, js, cb);
+                pubnub.publish(channel, js, store, cb);
                 continue;
             } catch (Exception e) {
 
             }
             try {
                 JSONObject js = new JSONObject(message);
-                pubnub.publish(channel, js, cb);
+                pubnub.publish(channel, js, store, cb);
                 continue;
             } catch (Exception e) {
 
             }
-            pubnub.publish(channel, message, cb);
+            pubnub.publish(channel, message, store, cb);
         }
 
     }
@@ -290,7 +290,8 @@ public class PubnubDemoConsole {
                 break;
             case 2:
                 channelName = getStringFromConsole("Channel Name");
-                publish(channelName);
+                boolean store = getBooleanFromConsole("Store", true);
+                publish(channelName, store);
                 break;
             case 3:
                 channelName = getStringFromConsole("Channel Name");

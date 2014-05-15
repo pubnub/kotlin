@@ -614,6 +614,101 @@ abstract class PubnubCore {
      * @param callback
      *            object of sub class of Callback class
      */
+    public void publish(String channel, JSONObject message, boolean storeInHistory, Callback callback) {
+        Hashtable args = new Hashtable();
+        args.put("channel", channel);
+        args.put("message", message);
+        args.put("storeInHistory", (storeInHistory)?"":"0");
+        publish(args);
+    }
+
+    /**
+     * Send a message to a channel.
+     *
+     * @param channel
+     *            Channel name
+     * @param message
+     *            JSONOArray to be published
+     * @param callback
+     *            object of sub class of Callback class
+     */
+    public void publish(String channel, JSONArray message, boolean storeInHistory, Callback callback) {
+        Hashtable args = new Hashtable();
+        args.put("channel", channel);
+        args.put("message", message);
+        args.put("callback", callback);
+        args.put("storeInHistory", (storeInHistory)?"":"0");
+        publish(args);
+    }
+
+    /**
+     * Send a message to a channel.
+     *
+     * @param channel
+     *            Channel name
+     * @param message
+     *            String to be published
+     * @param callback
+     *            object of sub class of Callback class
+     */
+    public void publish(String channel, String message, boolean storeInHistory, Callback callback) {
+        Hashtable args = new Hashtable();
+        args.put("channel", channel);
+        args.put("message", message);
+        args.put("callback", callback);
+        args.put("storeInHistory", (storeInHistory)?"":"0");
+        publish(args);
+    }
+
+    /**
+     * Send a message to a channel.
+     *
+     * @param channel
+     *            Channel name
+     * @param message
+     *            Integer to be published
+     * @param callback
+     *            object of sub class of Callback class
+     */
+    public void publish(String channel, Integer message, boolean storeInHistory, Callback callback) {
+        Hashtable args = new Hashtable();
+        args.put("channel", channel);
+        args.put("message", message);
+        args.put("callback", callback);
+        args.put("storeInHistory", (storeInHistory)?"":"0");
+        publish(args);
+    }
+
+    /**
+     * Send a message to a channel.
+     *
+     * @param channel
+     *            Channel name
+     * @param message
+     *            Double to be published
+     * @param callback
+     *            object of sub class of Callback class
+     */
+    public void publish(String channel, Double message, boolean storeInHistory, Callback callback) {
+        Hashtable args = new Hashtable();
+        args.put("channel", channel);
+        args.put("message", message);
+        args.put("callback", callback);
+        args.put("storeInHistory", (storeInHistory)?"":"0");
+        publish(args);
+    }
+    
+    
+    /**
+     * Send a message to a channel.
+     *
+     * @param channel
+     *            Channel name
+     * @param message
+     *            JSONObject to be published
+     * @param callback
+     *            object of sub class of Callback class
+     */
     public void publish(String channel, JSONObject message, Callback callback) {
         Hashtable args = new Hashtable();
         args.put("channel", channel);
@@ -719,9 +814,12 @@ abstract class PubnubCore {
         final String channel = (String) args.get("channel");
         final Object message = args.get("message");
         final Callback callback = getWrappedCallback((Callback) args.get("callback"));
+        String storeInHistory = (String) args.get("storeInHistory");
         String msgStr = message.toString();
+        Hashtable parameters = PubnubUtil.hashtableClone(params);
 
-
+        if (storeInHistory != null && storeInHistory.length() > 0) parameters.put("store", storeInHistory);
+        
         if (this.CIPHER_KEY.length() > 0) {
             // Encrypt Message
             PubnubCrypto pc = new PubnubCrypto(this.CIPHER_KEY, this.IV);
@@ -795,7 +893,7 @@ abstract class PubnubCore {
                 return;
             }
         }
-        HttpRequest hreq = new HttpRequest(urlComponents, params, new PublishResponseHandler());
+        HttpRequest hreq = new HttpRequest(urlComponents, parameters, new PublishResponseHandler());
 
         _request(hreq, nonSubscribeManager);
     }
