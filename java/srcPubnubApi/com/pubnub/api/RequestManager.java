@@ -193,8 +193,8 @@ abstract class RequestManager {
         synchronized (_workers) {
             for (int i = 0; i < _workers.length; i++) {
                 log.verbose("Sending DIE to " + _workers[i].getThread().getName());
-                new Thread(new ConnectionResetter(_workers[i])).start();
                 _workers[i].die();
+                new Thread(new ConnectionResetter(_workers[i])).start();
                 _workers[i].interruptWorker();
                 Worker w = getWorker();
                 w.setThread(new Thread(w, name + "-" + ++count));
