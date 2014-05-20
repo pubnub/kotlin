@@ -1,9 +1,7 @@
 package com.pubnub.examples.pubnubExample;
 
-import java.util.Hashtable;
+import java.io.IOException;
 
-import android.view.View;
-import android.widget.LinearLayout;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -14,19 +12,31 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.ConnectivityManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.InputType;
+import android.text.TextUtils;
+import android.util.Config;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
-import android.view.View.OnClickListener;
 
 import com.pubnub.api.Callback;
 import com.pubnub.api.Pubnub;
 import com.pubnub.api.PubnubError;
+import com.pubnub.api.PubnubException;
+import com.pubnub.api.PubnubGcmRegistrationIdMissingException;
+
+import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 public class MainActivity extends Activity {
     /*
@@ -37,7 +47,15 @@ public class MainActivity extends Activity {
      */
 
     Pubnub pubnub = new Pubnub("demo", "demo", "", false);
-
+    GoogleCloudMessaging gcm;
+    Context context;
+    String regId;
+    public static final String SENDER_ID = "750222044802";
+    public static final String REG_ID = "regId";
+    private static final String APP_VERSION = "appVersion";
+   
+    static final String TAG = "Register Activity";
+    
     private void notifyUser(Object message) {
         try {
             if (message instanceof JSONObject) {
@@ -198,12 +216,216 @@ public class MainActivity extends Activity {
         case R.id.option23:
             setHeartbeatInterval();
             return true;
+        case R.id.option24:
+        	gcmRegister();
+            return true;
+        case R.id.option25:
+        	gcmUnregister();
+            return true;
+        case R.id.option26:
+        	gcmAddChannel();
+            return true;
+        case R.id.option27:
+        	gcmRemoveChannel();
+            return true;
+        case R.id.option28:
+            gcmRemoveAllChannels();
+            return true;
         default:
             return super.onOptionsItemSelected(item);
         }
     }
 
-    private void setHeartbeatInterval() {
+	private void gcmRemoveAllChannels() {
+        pubnub.unregisterAllChannelsForDevice(new Callback() {
+            @Override
+            public void successCallback(String channel,
+            Object message) {
+                notifyUser("GCM REMOVE ALL : " + message);
+            }
+            @Override
+            public void errorCallback(String channel,
+            PubnubError error) {
+                notifyUser("GCM REMOVE ALL : " + error);
+            }
+        });
+		
+	}
+
+	private void gcmRemoveChannel() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Remove Channel from GCM");
+        builder.setMessage("Enter Channel Name");
+        final EditText edChannelName = new EditText(this);
+        edChannelName.setInputType(InputType.TYPE_CLASS_TEXT);
+        builder.setView(edChannelName);
+        builder.setPositiveButton("Remove",
+        new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String channel = edChannelName.getText().toString();
+                try {
+					pubnub.unregisterDeviceFromChannel(channel, new Callback() {
+					    @Override
+					    public void successCallback(String channel,
+					    Object message) {
+					        notifyUser("GCM REMOVE : " + message);
+					    }
+					    @Override
+					    public void errorCallback(String channel,
+					    PubnubError error) {
+					        notifyUser("GCM REMOVE : " + error);
+					    }
+					});
+				} catch (PubnubGcmRegistrationIdMissingException e) {
+					gcmRegister();
+				}
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
+		
+	}
+
+	private void gcmAddChannel() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Add Channel to GCM");
+        builder.setMessage("Enter Channel Name");
+        final EditText edChannelName = new EditText(this);
+        edChannelName.setInputType(InputType.TYPE_CLASS_TEXT);
+        builder.setView(edChannelName);
+        builder.setPositiveButton("Add",
+        new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String channel = edChannelName.getText().toString();
+                try {
+					pubnub.registerDeviceOnChannel(channel, new Callback() {
+					    @Override
+					    public void successCallback(String channel,
+					    Object message) {
+					        notifyUser("GCM ADD : " + message);
+					    }
+					    @Override
+					    public void errorCallback(String channel,
+					    PubnubError error) {
+					        notifyUser("GCM ADD : " + error);
+					    }
+					});
+				} catch (PubnubGcmRegistrationIdMissingException e) {
+					gcmRegister();
+				}
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
+		
+	}
+
+	private void gcmUnregister() {
+		pubnub.setGcmRegistrationId("");
+	}
+
+	
+	
+	
+	private  String gcmRegister() {
+		pubnub.setCacheBusting(false);
+		pubnub.setOrigin("dara11.devbuild");
+		context = getApplicationContext();
+		gcm = GoogleCloudMessaging.getInstance(this);
+	    String regId = getRegistrationId(context);
+	 
+	    if (TextUtils.isEmpty(regId)) {
+	 
+	      registerInBackground();
+	 
+	      Log.d("RegisterActivity",
+	          "registerGCM - successfully registered with GCM server - regId: "
+	              + regId);
+	    } else {
+	      Toast.makeText(getApplicationContext(),
+	          "RegId already available. RegId: " + regId,
+	          Toast.LENGTH_LONG).show();
+	    }
+	    return regId;
+	  }
+	 
+	  private String getRegistrationId(Context context) {
+	    final SharedPreferences prefs = getSharedPreferences(
+	        MainActivity.class.getSimpleName(), Context.MODE_PRIVATE);
+	    String registrationId = prefs.getString(REG_ID, "");
+	    if (registrationId.length() <= 0) {
+	      Log.i(TAG, "Registration not found.");
+	      return "";
+	    }
+	    int registeredVersion = prefs.getInt(APP_VERSION, Integer.MIN_VALUE);
+	    int currentVersion = getAppVersion(context);
+	    if (registeredVersion != currentVersion) {
+	      Log.i(TAG, "App version changed.");
+	      return "";
+	    }
+	    return registrationId;
+	  }
+	 
+	  private static int getAppVersion(Context context) {
+	    try {
+	      PackageInfo packageInfo = context.getPackageManager()
+	          .getPackageInfo(context.getPackageName(), 0);
+	      return packageInfo.versionCode;
+	    } catch (NameNotFoundException e) {
+	      Log.d("RegisterActivity",
+	          "I never expected this! Going down, going down!" + e);
+	      throw new RuntimeException(e);
+	    }
+	  }
+	 
+	  private void registerInBackground() {
+	    new AsyncTask<Void, Void, String>() {
+	      @Override
+	      protected String doInBackground(Void... params) {
+	        String msg = "";
+	        try {
+	          if (gcm == null) {
+	            gcm = GoogleCloudMessaging.getInstance(context);
+	          }
+	          regId = gcm.register(SENDER_ID);
+	          Log.d("RegisterActivity", "registerInBackground - regId: "
+	              + regId);
+	          msg = "Device registered, registration ID=" + regId;
+	 
+	          storeRegistrationId(context, regId);
+	        } catch (IOException ex) {
+	          msg = "Error :" + ex.getMessage();
+	          Log.d("RegisterActivity", "Error: " + msg);
+	        }
+	        Log.d("RegisterActivity", "AsyncTask completed: " + msg);
+	        return msg;
+	      }
+	 
+	      @Override
+	      protected void onPostExecute(String msg) {
+	        Toast.makeText(getApplicationContext(),
+	            "Registered with GCM Server." + msg, Toast.LENGTH_LONG)
+	            .show();
+	      }
+	    }.execute(null, null, null);
+	  }
+	 
+	  private void storeRegistrationId(Context context, String regId) {
+	    final SharedPreferences prefs = getSharedPreferences(
+	        MainActivity.class.getSimpleName(), Context.MODE_PRIVATE);
+	    int appVersion = getAppVersion(context);
+	    Log.i(TAG, "Saving regId on app version " + appVersion);
+	    SharedPreferences.Editor editor = prefs.edit();
+	    editor.putString(REG_ID, regId);
+	    editor.putInt(APP_VERSION, appVersion);
+	    editor.commit();
+	  }
+
+	private void setHeartbeatInterval() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Set Presence Heartbeat Interval");
         builder.setMessage("Enter heartbeat value in seconds");
