@@ -1,6 +1,9 @@
 package com.pubnub.api;
 
+import java.util.Hashtable;
 import java.util.UUID;
+
+import android.content.Context;
 
 /**
  * Pubnub object facilitates querying channels for messages and listening on
@@ -11,6 +14,8 @@ import java.util.UUID;
  */
 
 public class Pubnub extends PubnubCoreShared {
+	
+	String gcmRegistrationId = null;
     /**
      * Pubnub Constructor
      *
@@ -106,5 +111,112 @@ public class Pubnub extends PubnubCoreShared {
         return "(Android " + android.os.Build.VERSION.RELEASE +
                "; " + android.os.Build.MODEL +
                " Build) PubNub-Java/Android/" + VERSION;
+    }
+    
+    public void setGcmRegistrationId(String registrationId) {
+    	this.gcmRegistrationId = registrationId;
+    }
+    
+    public void registerDeviceOnChannel(final String channel, Callback callback) throws PubnubGcmRegistrationIdMissingException {
+    	final Callback cb = getWrappedCallback(callback);
+
+    	if (this.gcmRegistrationId == null || this.gcmRegistrationId.length() <= 0)
+    		throw new PubnubGcmRegistrationIdMissingException("Registration Id Missing");
+    	
+        Hashtable parameters = PubnubUtil.hashtableClone(params);
+        String[] urlargs = null;
+        urlargs = new String[]{ getPubnubUrl(), "v1", "push", "sub-key",
+                this.SUBSCRIBE_KEY, "devices", this.gcmRegistrationId
+        };
+        
+
+        parameters.put("type", "gcm");
+        parameters.put("add", channel);
+
+        HttpRequest hreq = new HttpRequest(urlargs, parameters,
+                new ResponseHandler() {
+            public void handleResponse(HttpRequest hreq, String response) {
+                invokeCallback(channel, response, "payload",cb, 1);
+            }
+
+            public void handleError(HttpRequest hreq, PubnubError error) {
+                cb.errorCallback(channel, error);
+            }
+        });
+
+        _request(hreq, nonSubscribeManager);
+    }
+    public void unregisterDeviceFromChannel(final String channel, Callback callback) throws PubnubGcmRegistrationIdMissingException {
+    	final Callback cb = getWrappedCallback(callback);
+
+    	if (this.gcmRegistrationId == null || this.gcmRegistrationId.length() <= 0)
+    		throw new PubnubGcmRegistrationIdMissingException("Registration Id Missing");
+    	
+        Hashtable parameters = PubnubUtil.hashtableClone(params);
+        String[] urlargs = null;
+        urlargs = new String[]{ getPubnubUrl(), "v1", "push", "sub-key",
+                this.SUBSCRIBE_KEY, "devices", this.gcmRegistrationId
+        };
+        
+
+        parameters.put("type", "gcm");
+        parameters.put("remove", channel);
+
+        HttpRequest hreq = new HttpRequest(urlargs, parameters,
+                new ResponseHandler() {
+            public void handleResponse(HttpRequest hreq, String response) {
+                invokeCallback(channel, response, "payload",cb, 1);
+            }
+
+            public void handleError(HttpRequest hreq, PubnubError error) {
+                cb.errorCallback(channel, error);
+            }
+        });
+
+        _request(hreq, nonSubscribeManager);
+    }
+    public void getChannelListforDevice(Callback callback) {
+    	final Callback cb = getWrappedCallback(callback);
+        Hashtable parameters = PubnubUtil.hashtableClone(params);
+        String[] urlargs = null;
+        urlargs = new String[]{ getPubnubUrl(), "v1", "push", "sub-key",
+                this.SUBSCRIBE_KEY, "devices", this.gcmRegistrationId
+        };
+        
+
+        parameters.put("type", "gcm");
+
+        HttpRequest hreq = new HttpRequest(urlargs, parameters,
+                new ResponseHandler() {
+            public void handleResponse(HttpRequest hreq, String response) {
+                invokeCallback("", response, "payload",cb, 1);
+            }
+
+            public void handleError(HttpRequest hreq, PubnubError error) {
+                cb.errorCallback("", error);
+            }
+        });
+    }
+    public void unregisterAllChannelsForDevice(Callback callback) {
+    	final Callback cb = getWrappedCallback(callback);
+        Hashtable parameters = PubnubUtil.hashtableClone(params);
+        String[] urlargs = null;
+        urlargs = new String[]{ getPubnubUrl(), "v1", "push", "sub-key",
+                this.SUBSCRIBE_KEY, "devices", this.gcmRegistrationId, "remove"
+        };
+        
+
+        parameters.put("type", "gcm");
+
+        HttpRequest hreq = new HttpRequest(urlargs, parameters,
+                new ResponseHandler() {
+            public void handleResponse(HttpRequest hreq, String response) {
+                invokeCallback("", response, "payload",cb, 1);
+            }
+
+            public void handleError(HttpRequest hreq, PubnubError error) {
+                cb.errorCallback("", error);
+            }
+        });
     }
 }
