@@ -118,7 +118,7 @@ abstract class PubnubCore {
     }
 
     String[] getPresenceHeartbeatUrl() {
-        String channelString = subscriptions.getChannelString();
+        String channelString = subscriptions.getChannelStringNoPresence();
 
         if (channelString.length() <= 0) {
             return null;
@@ -169,11 +169,11 @@ abstract class PubnubCore {
                                 PubnubError.getErrorObject(PubnubError.PNERROBJ_INVALID_JSON, 1, response));
                         return;
                     }
-                    callback.successCallback(subscriptions.getChannelString(), response);
+                    callback.successCallback(subscriptions.getChannelStringNoPresence(), response);
                 }
 
                 public void handleError(HttpRequest hreq, PubnubError error) {
-                    callback.errorCallback(subscriptions.getChannelString(), error);
+                    callback.errorCallback(subscriptions.getChannelStringNoPresence(), error);
                     return;
                 }
             });
