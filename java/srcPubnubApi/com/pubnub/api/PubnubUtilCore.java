@@ -130,7 +130,7 @@ class PubnubUtilCore {
             String s = (String) e.nextElement();
             
             if (exclude != null) {
-            	if (s.contains(exclude)) {
+            	if (s.indexOf(exclude) != -1) {
             		continue;
             	}
             }
