@@ -117,7 +117,7 @@ class PubnubUtilCore {
      * @return , string array with hash keys string
      */
     public static synchronized String hashTableKeysToDelimitedString(
-        Hashtable ht, String delimiter) {
+        Hashtable ht, String delimiter, String exclude) {
 
         StringBuffer sb = new StringBuffer();
         boolean first = true;
@@ -126,7 +126,12 @@ class PubnubUtilCore {
         while (e.hasMoreElements()) {
 
             String s = (String) e.nextElement();
-
+            
+            if (exclude != null) {
+            	if (s.indexOf(exclude) != -1) {
+            		continue;
+            	}
+            }
             if (first) {
                 sb.append(s);
                 first = false;
@@ -135,6 +140,22 @@ class PubnubUtilCore {
             }
         }
         return sb.toString();
+
+    }
+    
+    /**
+     * Returns string keys in a hashtable as delimited string
+     *
+     * @param ht
+     *            , Hashtable
+     * @param delimiter
+     *            , String
+     * @return , string array with hash keys string
+     */
+    public static String hashTableKeysToDelimitedString(
+        Hashtable ht, String delimiter) {
+
+        return hashTableKeysToDelimitedString(ht, delimiter, null);
 
     }
 

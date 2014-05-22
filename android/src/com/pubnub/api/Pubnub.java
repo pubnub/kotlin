@@ -3,6 +3,9 @@ package com.pubnub.api;
 import java.util.Hashtable;
 import java.util.UUID;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import android.content.Context;
 
 /**
@@ -117,7 +120,7 @@ public class Pubnub extends PubnubCoreShared {
     	this.gcmRegistrationId = registrationId;
     }
     
-    public void registerDeviceOnChannel(final String channel, Callback callback) throws PubnubGcmRegistrationIdMissingException {
+    public void registerDeviceOnChannel(final String channel, final Callback callback) throws PubnubGcmRegistrationIdMissingException {
     	final Callback cb = getWrappedCallback(callback);
 
     	if (this.gcmRegistrationId == null || this.gcmRegistrationId.length() <= 0)
@@ -136,17 +139,26 @@ public class Pubnub extends PubnubCoreShared {
         HttpRequest hreq = new HttpRequest(urlargs, parameters,
                 new ResponseHandler() {
             public void handleResponse(HttpRequest hreq, String response) {
-                invokeCallback(channel, response, "payload",cb, 1);
+                JSONArray jsarr;
+                try {
+                    jsarr = new JSONArray(response);
+                } catch (JSONException e) {
+                    handleError(hreq,
+                            PubnubError.getErrorObject(PubnubError.PNERROBJ_INVALID_JSON, 1, response));
+                    return;
+                }
+                callback.successCallback("", jsarr);
             }
 
             public void handleError(HttpRequest hreq, PubnubError error) {
-                cb.errorCallback(channel, error);
+                callback.errorCallback("", error);
+                return;
             }
         });
 
         _request(hreq, nonSubscribeManager);
     }
-    public void unregisterDeviceFromChannel(final String channel, Callback callback) throws PubnubGcmRegistrationIdMissingException {
+    public void unregisterDeviceFromChannel(final String channel, final Callback callback) throws PubnubGcmRegistrationIdMissingException {
     	final Callback cb = getWrappedCallback(callback);
 
     	if (this.gcmRegistrationId == null || this.gcmRegistrationId.length() <= 0)
@@ -165,17 +177,26 @@ public class Pubnub extends PubnubCoreShared {
         HttpRequest hreq = new HttpRequest(urlargs, parameters,
                 new ResponseHandler() {
             public void handleResponse(HttpRequest hreq, String response) {
-                invokeCallback(channel, response, "payload",cb, 1);
+                JSONArray jsarr;
+                try {
+                    jsarr = new JSONArray(response);
+                } catch (JSONException e) {
+                    handleError(hreq,
+                            PubnubError.getErrorObject(PubnubError.PNERROBJ_INVALID_JSON, 1, response));
+                    return;
+                }
+                callback.successCallback("", jsarr);
             }
 
             public void handleError(HttpRequest hreq, PubnubError error) {
-                cb.errorCallback(channel, error);
+                callback.errorCallback("", error);
+                return;
             }
         });
 
         _request(hreq, nonSubscribeManager);
     }
-    public void getChannelListforDevice(Callback callback) {
+    public void getChannelListforDevice(final Callback callback) {
     	final Callback cb = getWrappedCallback(callback);
         Hashtable parameters = PubnubUtil.hashtableClone(params);
         String[] urlargs = null;
@@ -189,15 +210,24 @@ public class Pubnub extends PubnubCoreShared {
         HttpRequest hreq = new HttpRequest(urlargs, parameters,
                 new ResponseHandler() {
             public void handleResponse(HttpRequest hreq, String response) {
-                invokeCallback("", response, "payload",cb, 1);
+                JSONArray jsarr;
+                try {
+                    jsarr = new JSONArray(response);
+                } catch (JSONException e) {
+                    handleError(hreq,
+                            PubnubError.getErrorObject(PubnubError.PNERROBJ_INVALID_JSON, 1, response));
+                    return;
+                }
+                callback.successCallback("", jsarr);
             }
 
             public void handleError(HttpRequest hreq, PubnubError error) {
-                cb.errorCallback("", error);
+                callback.errorCallback("", error);
+                return;
             }
         });
     }
-    public void unregisterAllChannelsForDevice(Callback callback) {
+    public void unregisterAllChannelsForDevice(final Callback callback) {
     	final Callback cb = getWrappedCallback(callback);
         Hashtable parameters = PubnubUtil.hashtableClone(params);
         String[] urlargs = null;
@@ -211,11 +241,20 @@ public class Pubnub extends PubnubCoreShared {
         HttpRequest hreq = new HttpRequest(urlargs, parameters,
                 new ResponseHandler() {
             public void handleResponse(HttpRequest hreq, String response) {
-                invokeCallback("", response, "payload",cb, 1);
+                JSONArray jsarr;
+                try {
+                    jsarr = new JSONArray(response);
+                } catch (JSONException e) {
+                    handleError(hreq,
+                            PubnubError.getErrorObject(PubnubError.PNERROBJ_INVALID_JSON, 1, response));
+                    return;
+                }
+                callback.successCallback("", jsarr);
             }
 
             public void handleError(HttpRequest hreq, PubnubError error) {
-                cb.errorCallback("", error);
+                callback.errorCallback("", error);
+                return;
             }
         });
     }

@@ -39,10 +39,13 @@
     <string name="option20">Set Presence Heartbeat ( in seconds )</string>
     <string name="option21">Set UUID</string>
     <string name="option22">Set State</string>
-    <string name="option23">Set Presence Heartbeat Interval ( in seconds )</string>
-    <string name="option24">Register on GCM</string>
-    <string name="option25">Unregister on GCM</string>
-    <string name="option26">Add channel to GCM</string>
-    <string name="option27">Remove channel from GCM</string>
-    <string name="option28">Remove all channels from GCM</string>
+    <string name="option23">Set Auth Key</string>
+    <string name="option24">Init</string>
+    <string name="option25">Set Presence Heartbeat Interval ( in seconds )</string>
+    <string name="option26">Set GCM Sender ID</string>
+    <string name="option27">Register on GCM</string>
+    <string name="option28">Unregister on GCM</string>
+    <string name="option29">Add channel to GCM</string>
+    <string name="option30">Remove channel from GCM</string>
+    <string name="option31">Remove all channels from GCM</string>
 </resources>
