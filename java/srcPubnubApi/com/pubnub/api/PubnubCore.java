@@ -259,7 +259,7 @@ abstract class PubnubCore {
      * @return Current presence heartbeat value
      */
     public int getHeartbeat() {
-        return PRESENCE_HB_INTERVAL;
+        return HEARTBEAT;
     }
 
     /**
