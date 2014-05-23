@@ -203,9 +203,10 @@ abstract class PubnubCore {
     public void setHeartbeat(int heartbeat, Callback callback) {
         Callback cb = getWrappedCallback(callback);
 
-        PRESENCE_HB_INTERVAL = (heartbeat > 0 && heartbeat < 5)?5:heartbeat;
-        PRESENCE_HB_INTERVAL = (PRESENCE_HB_INTERVAL - 3 >= 1)?PRESENCE_HB_INTERVAL:1;
-        
+        HEARTBEAT = (heartbeat > 0 && heartbeat < 5)?5:heartbeat;
+        if (PRESENCE_HB_INTERVAL == 0) {
+            PRESENCE_HB_INTERVAL = (HEARTBEAT - 3 >= 1)?HEARTBEAT - 3:1;
+        }
         if (PRESENCE_HEARTBEAT_TASK == 0) {
             PRESENCE_HEARTBEAT_TASK = timedTaskManager.addTask("Presence-Heartbeat",
                     new PresenceHeartbeatTask(PRESENCE_HB_INTERVAL, cb));
@@ -214,7 +215,6 @@ abstract class PubnubCore {
         } else {
             timedTaskManager.updateTask(PRESENCE_HEARTBEAT_TASK, PRESENCE_HB_INTERVAL);
         }
-        HEARTBEAT = heartbeat;
         disconnectAndResubscribe();
     }
 
@@ -225,10 +225,13 @@ abstract class PubnubCore {
     public void setHeartbeat(int heartbeat) {
         setHeartbeat(heartbeat, null);
     }
-    
+   
     public void setHeartbeatInterval(int heartbeatInterval) {
+		setHeartbeatInterval(heartbeatInterval, null);
+    } 
+    public void setHeartbeatInterval(int heartbeatInterval, Callback callback) {
     	
-        Callback cb = getWrappedCallback(null);
+        Callback cb = getWrappedCallback(callback);
     	PRESENCE_HB_INTERVAL = heartbeatInterval;
         if (PRESENCE_HEARTBEAT_TASK == 0) {
             PRESENCE_HEARTBEAT_TASK = timedTaskManager.addTask("Presence-Heartbeat",

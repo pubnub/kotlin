@@ -399,7 +399,18 @@ public class PubnubDemoConsole {
                 break;
             case 28:
                 int heartbeatInterval = getIntFromConsole("Pubnub Presence Heartbeat Interval ( in seconds ), Current value : " + pubnub.getHeartbeatInterval());
-                pubnub.setHeartbeatInterval(heartbeatInterval);
+                pubnub.setHeartbeatInterval(heartbeatInterval, new Callback(){
+
+                    @Override
+                    public void successCallback(String channel, Object message) {
+                        System.out.println(System.currentTimeMillis() / 1000 + " : " + message);
+                    }
+                    @Override
+                    public void errorCallback(String channel, PubnubError error) {
+                        System.out.println(System.currentTimeMillis() / 1000 + " : " + error);
+                    }
+
+                });
                 break;
             case 29:
                 getState();
