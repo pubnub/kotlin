@@ -88,6 +88,16 @@ public class Pubnub extends PubnubCoreShared {
     }
 
     /**
+     * @param publish_key
+     * @param subscribe_key
+     * @param secret_key
+     * @param cipher_key
+     */
+    public Pubnub(String publish_key, String subscribe_key, String secret_key, String cipher_key) {
+        super(publish_key, subscribe_key, secret_key, cipher_key, false);
+    }
+
+    /**
     *
     * Constructor for Pubnub Class
     *
