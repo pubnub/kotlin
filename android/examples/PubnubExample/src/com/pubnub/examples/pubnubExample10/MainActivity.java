@@ -428,6 +428,8 @@ public class MainActivity extends Activity {
 		SENDER_ID = map.get("SENDER_ID");
 		AUTH_KEY = map.get("AUTH_KEY");
 		ORIGIN = map.get("ORIGIN");
+		REG_ID = map.get("REG_ID");
+
 		
 		pubnub = new Pubnub(
 				PUBLISH_KEY,
@@ -436,6 +438,7 @@ public class MainActivity extends Activity {
 				CIPHER_KEY,
 				SSL
 				);
+		pubnub.setGcmRegistrationId(REG_ID);
 		pubnub.setCacheBusting(false);
 		pubnub.setOrigin(ORIGIN);
 		pubnub.setAuthKey(AUTH_KEY);
@@ -514,6 +517,9 @@ public class MainActivity extends Activity {
 					});
 				} catch (PubnubGcmRegistrationIdMissingException e) {
 					gcmRegister();
+				    Toast.makeText(getApplicationContext(),
+					          "GCM registration ID was not set. Auto registering. Try removing channel again.",
+					          Toast.LENGTH_LONG).show();
 				}
             }
         });
@@ -550,6 +556,9 @@ public class MainActivity extends Activity {
 					});
 				} catch (PubnubGcmRegistrationIdMissingException e) {
 					gcmRegister();
+				    Toast.makeText(getApplicationContext(),
+				          "GCM registration ID was not set. Auto registering. Try adding channel again.",
+				          Toast.LENGTH_LONG).show();
 				}
             }
         });
@@ -595,7 +604,7 @@ public class MainActivity extends Activity {
 	  }
 	 
 	  private String getRegistrationId(Context context) {
-	    String registrationId = prefs.getString(REG_ID, "");
+	    String registrationId = prefs.getString("REG_ID", "");
 	    if (registrationId.length() <= 0) {
 	      Log.i(TAG, "Registration not found.");
 	      return "";
@@ -647,9 +656,9 @@ public class MainActivity extends Activity {
 	 
 	      @Override
 	      protected void onPostExecute(String msg) {
-	        Toast.makeText(getApplicationContext(),
+	        /*Toast.makeText(getApplicationContext(),
 	            "Registered with GCM Server." + msg, Toast.LENGTH_LONG)
-	            .show();
+	            .show();*/
 	      }
 	    }.execute(null, null, null);
 	  }
@@ -658,7 +667,7 @@ public class MainActivity extends Activity {
 	    int appVersion = getAppVersion(context);
 	    Log.i(TAG, "Saving regId on app version " + appVersion);
 	    SharedPreferences.Editor editor = prefs.edit();
-	    editor.putString(REG_ID, regId);
+	    editor.putString("REG_ID", regId);
 	    editor.putInt(APP_VERSION, appVersion);
 	    editor.commit();
 	  }
