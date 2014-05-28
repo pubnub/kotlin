@@ -47,14 +47,13 @@ public class MainActivity extends Activity {
     GoogleCloudMessaging gcm;
     SharedPreferences prefs;
     Context context;
-    String regId;
     public static String SENDER_ID;
     public static String REG_ID ;
     private static final String APP_VERSION = "3.6.1";
     
     String PUBLISH_KEY = "demo";
     String SUBSCRIBE_KEY = "demo";
-    String CIPHER_KEY = "demo";
+    String CIPHER_KEY = "";
     String SECRET_KEY = "demo";
     String ORIGIN = "pubsub";
     String AUTH_KEY;
@@ -237,6 +236,7 @@ public class MainActivity extends Activity {
             return true;        	
         case R.id.option27:
         	gcmRegister();
+        	pubnub.setGcmRegistrationId(REG_ID);
             return true;
         case R.id.option28:
         	gcmUnregister();
@@ -461,7 +461,7 @@ public class MainActivity extends Activity {
 		map.put("PUBLISH_KEY", prefs.getString("PUBLISH_KEY", "demo"));
 		map.put("SUBSCRIBE_KEY", prefs.getString("SUBSCRIBE_KEY", "demo"));
 		map.put("SECRET_KEY", prefs.getString("SECRET_KEY", "demo"));
-		map.put("CIPHER_KEY", prefs.getString("CIPHER_KEY", null));
+		map.put("CIPHER_KEY", prefs.getString("CIPHER_KEY", ""));
 		map.put("AUTH_KEY", prefs.getString("AUTH_KEY", null));
 		map.put("ORIGIN", prefs.getString("ORIGIN", "pubsub"));
 		map.put("UUID",  prefs.getString("UUID", null));
@@ -577,21 +577,21 @@ public class MainActivity extends Activity {
 		      return null;
 		}
 		
-	    String regId = getRegistrationId(context);
-	 
-	    if (TextUtils.isEmpty(regId)) {
+	    String REG_ID = getRegistrationId(context);
+	    pubnub.setGcmRegistrationId(REG_ID);
+	    if (TextUtils.isEmpty(REG_ID)) {
 	 
 	      registerInBackground();
 	 
 	      Log.d("RegisterActivity",
 	          "registerGCM - successfully registered with GCM server - regId: "
-	              + regId);
+	              + REG_ID);
 	    } else {
-	      Toast.makeText(getApplicationContext(),
-	          "RegId already available. RegId: " + regId,
-	          Toast.LENGTH_LONG).show();
+	      //Toast.makeText(getApplicationContext(),
+	      //    "RegId already available. RegId: " + REG_ID,
+	      //    Toast.LENGTH_LONG).show();
 	    }
-	    return regId;
+	    return REG_ID;
 	  }
 	 
 	  private String getRegistrationId(Context context) {
@@ -631,12 +631,12 @@ public class MainActivity extends Activity {
 	          if (gcm == null) {
 	            gcm = GoogleCloudMessaging.getInstance(context);
 	          }
-	          regId = gcm.register(SENDER_ID);
+	          REG_ID = gcm.register(SENDER_ID);
 	          Log.d("RegisterActivity", "registerInBackground - regId: "
-	              + regId);
-	          msg = "Device registered, registration ID=" + regId;
+	              + REG_ID);
+	          msg = "Device registered, registration ID=" + REG_ID;
 	 
-	          storeRegistrationId(context, regId);
+	          storeRegistrationId(context, REG_ID);
 	        } catch (IOException ex) {
 	          msg = "Error :" + ex.getMessage();
 	          Log.d("RegisterActivity", "Error: " + msg);
