@@ -82,7 +82,7 @@
         <antcall target="unsetDebugTrue" />
     </target>
 
-    <target depends="create-jar, create-test-jar, create-examples-jar, create-demo-console-jar, create-presence-test-jar, clean_bin, doc" name="build-jar"/>
+    <target depends="create-jar, create-test-jar, create-examples-jar, create-demo-console-jar, create-push-test-jar, create-presence-test-jar, clean_bin, doc" name="build-jar"/>
     <target depends="build-project" name="create-jar">
         <jar destfile="${jar_name}"
             basedir="bin"
@@ -196,6 +196,9 @@
     </target>
     <target name="create-demo-console-jar">
         <create-jar jar.type="examples" jar.classname="com.pubnub.examples.PubnubDemoConsole" jar.filename="PubnubDemoConsole.jar" />
+    </target>
+    <target name="create-push-test-jar">
+        <create-jar jar.type="examples" jar.classname="com.pubnub.examples.PubnubPushSampleCode" jar.filename="PubnubPushTest.jar" />
     </target>
     <target name="create-presence-test-jar">
         <create-jar jar.type="examples" jar.classname="com.pubnub.examples.PubnubPresenceTest" jar.filename="PubnubPresenceTest.jar" />
