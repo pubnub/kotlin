@@ -6,8 +6,6 @@ import java.util.UUID;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import android.content.Context;
-
 /**
  * Pubnub object facilitates querying channels for messages and listening on
  * channels for presence/message events
