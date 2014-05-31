@@ -588,7 +588,7 @@ public class MainActivity extends Activity {
 		      return null;
 		}
 		
-	    String REG_ID = getRegistrationId(context);
+	    REG_ID = getRegistrationId(context);
 
 	    if (TextUtils.isEmpty(REG_ID)) {
 	 
@@ -598,9 +598,9 @@ public class MainActivity extends Activity {
 	          "registerGCM - successfully registered with GCM server - regId: "
 	              + REG_ID);
 	    } else {
-	      //Toast.makeText(getApplicationContext(),
-	      //    "RegId already available. RegId: " + REG_ID,
-	      //    Toast.LENGTH_LONG).show();
+	      Toast.makeText(getApplicationContext(),
+	          "RegId already available. RegId: " + REG_ID,
+	          Toast.LENGTH_LONG).show();
 	    }
 	    return REG_ID;
 	  }
@@ -658,9 +658,9 @@ public class MainActivity extends Activity {
 	 
 	      @Override
 	      protected void onPostExecute(String msg) {
-	        /*Toast.makeText(getApplicationContext(),
+	        Toast.makeText(getApplicationContext(),
 	            "Registered with GCM Server." + msg, Toast.LENGTH_LONG)
-	            .show();*/
+	            .show();
 	      }
 	    }.execute(null, null, null);
 	  }
