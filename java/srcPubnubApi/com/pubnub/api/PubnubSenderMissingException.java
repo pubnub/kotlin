@@ -17,6 +17,7 @@ public class PubnubSenderMissingException extends PubnubException {
 	/**
 	 * PubnubSenderMissingException constructor
 	 * @param message
+	 * 		Error message
 	 */
 	public PubnubSenderMissingException(String message) {
 		super(message);
@@ -25,6 +26,7 @@ public class PubnubSenderMissingException extends PubnubException {
 	/**
 	 * PubnubSenderMissingException constructor
 	 * @param error
+	 * 		Error object
 	 */
 	public PubnubSenderMissingException(PubnubError error) {
 		super(error);
@@ -33,7 +35,9 @@ public class PubnubSenderMissingException extends PubnubException {
 	/**
 	 * PubnubSenderMissingException constructor
 	 * @param error
+	 * 		Error object
 	 * @param message
+	 * 		Error message
 	 */
 	public PubnubSenderMissingException(PubnubError error, String message) {
 		super(error, message);

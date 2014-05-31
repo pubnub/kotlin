@@ -20,6 +20,7 @@ public class PnGcmMessage extends JSONObject {
 	/**
 	 * Constructor for PnGcmMessage
 	 * @param json
+	 * 		json object to be set as data for GCM message
 	 */
 	public PnGcmMessage(JSONObject json) {
 		super();
@@ -29,6 +30,7 @@ public class PnGcmMessage extends JSONObject {
 	/**
 	 * Set Data for PnGcmMessage
 	 * @param json
+	 * 		json object to be set as data for GCM message
 	 */
 	public void setData(JSONObject json) {
 		try {

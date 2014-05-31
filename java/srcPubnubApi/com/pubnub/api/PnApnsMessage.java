@@ -38,6 +38,7 @@ public class PnApnsMessage extends JSONObject {
  	/**
  	 * Set value of APS alert
  	 * @param alert
+ 	 * 		String to be set as alert value for APNS message
  	 */
  	public void setApsAlert(String alert) {
 
@@ -52,6 +53,7 @@ public class PnApnsMessage extends JSONObject {
 	/**
 	 * Set value of APS badge
 	 * @param badge
+	 * 		int to be set as badge value for APNS message
 	 */
 	public void setApsBadge(int badge) {
 		try {

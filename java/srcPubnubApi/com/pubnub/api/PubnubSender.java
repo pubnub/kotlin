@@ -12,7 +12,7 @@ public class PubnubSender implements Sender {
 	/**
 	 * Get callback associated with this Sender Object
 	 * @return
-	 * 		Callback
+	 * 		Callback object attached to this sender object
 	 */
 	public Callback getCallback() {
 		return callback;
@@ -21,6 +21,7 @@ public class PubnubSender implements Sender {
 	/**
 	 * Associate callback with this sender object
 	 * @param callback
+	 * 			Callback object
 	 */
 	public void setCallback(Callback callback) {
 		this.callback = callback;
@@ -41,6 +42,7 @@ public class PubnubSender implements Sender {
 	/**
 	 * Attach Pubnub Connection Object to this sender
 	 * @param pubnub
+	 * 			Pubnub object
 	 */
 	public void setPubnub(Pubnub pubnub) {
 		this.pubnub = pubnub;
@@ -51,7 +53,7 @@ public class PubnubSender implements Sender {
 	/**
 	 * Get channel
 	 * @return
-	 * 		Get channel
+	 * 		Channel
 	 */
 	public String getChannel() {
 		return channel;
@@ -60,6 +62,7 @@ public class PubnubSender implements Sender {
 	/**
 	 * Set channel
 	 * @param channel
+	 * 			Channel
 	 */
 	public void setChannel(String channel) {
 		this.channel = channel;
@@ -68,8 +71,11 @@ public class PubnubSender implements Sender {
 	/**
 	 * PubnubSender constructor
 	 * @param channel
+	 * 			Channel
 	 * @param pubnub
+	 * 			Pubnub object
 	 * @param callback
+	 * 			Callback object
 	 */
 	public PubnubSender(String channel, Pubnub pubnub, Callback callback) {
 		super();
@@ -81,6 +87,7 @@ public class PubnubSender implements Sender {
 	/**
 	 * PubnubSender constructor
 	 * @param sender
+	 * 			Sender to be used as reference to create new sender
 	 */
 	public PubnubSender(PubnubSender sender) {
 		this.callback = sender.getCallback();
@@ -91,6 +98,7 @@ public class PubnubSender implements Sender {
 	/**
 	 * Publish the method to pubnub cloud
 	 * @param message
+	 * 			Message to be sent
 	 */
 	public void send(PnMessage message) {
 		if (pubnub == null ) {

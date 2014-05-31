@@ -25,6 +25,7 @@ public class PnMessage extends JSONObject {
 	/**
 	 * Associate Sender Object with this Pubnub Message
 	 * @param sender
+	 * 		Sender object
 	 */
 	public void setSender(Sender sender) {
 		this.sender = sender;
@@ -33,6 +34,7 @@ public class PnMessage extends JSONObject {
 	/**
 	 * Constructor for Pubnub Message Class
 	 * @param sender
+	 * 		Sender object
 	 */
 	public PnMessage(Sender sender) {
 		super();
@@ -42,8 +44,11 @@ public class PnMessage extends JSONObject {
 	/**
 	 * Constructor for Pubnub Message Class
 	 * @param sender
+	 * 		Sender object
 	 * @param apnsMsg
+	 * 		Pubnub APNS message object
 	 * @param gcmMsg
+	 * 		Pubnub GCM message object
 	 */
 	public PnMessage(Sender sender, PnApnsMessage apnsMsg, PnGcmMessage gcmMsg) {
 		super();
@@ -63,7 +68,9 @@ public class PnMessage extends JSONObject {
 	/**
 	 * Constructor for Pubnub Message Class
 	 * @param sender
+	 * 		Sender object
 	 * @param gcmMsg
+	 * 		Pubnub GCM message object
 	 */
 	public PnMessage(Sender sender, PnGcmMessage gcmMsg) {
 		super();
@@ -80,7 +87,9 @@ public class PnMessage extends JSONObject {
 	/**
 	 * Constructor for Pubnub Message Class
 	 * @param sender
+	 * 		Sender object
 	 * @param apnsMsg
+	 * 		Pubnub APNS message object
 	 */
 	public PnMessage(Sender sender, PnApnsMessage apnsMsg) {
 		super();
@@ -97,7 +106,9 @@ public class PnMessage extends JSONObject {
 	/**
 	 * Publish Message
 	 * @param sender
-	 * @throws PubnubException
+	 * 		Sender object
+	 * @throws PubnubSenderMissingException
+	 * 		Exception since Sender object null
 	 */
 	public void publish(Sender sender) throws PubnubSenderMissingException {
 		this.sender = sender;
@@ -110,6 +121,7 @@ public class PnMessage extends JSONObject {
 	/**
 	 * Publish Message
 	 * @throws PubnubSenderMissingException
+	 * 		Exception since sender object not set
 	 */
 	public void publish() throws PubnubSenderMissingException {
 		if (this.sender == null) {

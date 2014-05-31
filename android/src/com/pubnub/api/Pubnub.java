@@ -127,7 +127,9 @@ public class Pubnub extends PubnubCoreShared {
     /**
      * Enable Push Notifications (Google Cloud Messaging)
      * @param channel
+     * 			Channel for which to enable push notifications
      * @param gcmRegistrationId
+     * 			Google Cloud Messaging registration id
      */
     public void enablePushNotificationsOnChannel(String channel, String gcmRegistrationId) {
     	enablePushNotificationsOnChannels(new String[]{channel}, gcmRegistrationId, null);
@@ -136,7 +138,9 @@ public class Pubnub extends PubnubCoreShared {
     /**
      * Enable Push Notifications (Google Cloud Messaging)
      * @param channels
+     * 			Channels for which to enable push notifications
      * @param gcmRegistrationId
+     * 			Google Cloud Messaging registration id
      */
     public void enablePushNotificationsOnChannels(String[] channels, String gcmRegistrationId) {
     	enablePushNotificationsOnChannels(channels, gcmRegistrationId, null);
@@ -145,8 +149,11 @@ public class Pubnub extends PubnubCoreShared {
     /**
      * Enable Push Notifications (Google Cloud Messaging)
      * @param channel
+     * 			Channel for which to enable push notifications
      * @param gcmRegistrationId
+     * 			Google Cloud Messaging registration id
      * @param callback
+     * 			Callback object
      */
     public void enablePushNotificationsOnChannel(String channel, String gcmRegistrationId, Callback callback) {
     	enablePushNotificationsOnChannels(new String[]{channel}, gcmRegistrationId, callback);
@@ -156,8 +163,11 @@ public class Pubnub extends PubnubCoreShared {
     /**
      * Enable Push Notifications (Google Cloud Messaging)
      * @param channels
+     * 			Channels for which to enable push notifications
      * @param gcmRegistrationId
+     * 			Google Cloud Messaging registration id
      * @param callback
+     * 			Callback object
      */
     public void enablePushNotificationsOnChannels(final String[] channels, String gcmRegistrationId, final Callback callback) {
     	final Callback cb = getWrappedCallback(callback);
@@ -197,7 +207,9 @@ public class Pubnub extends PubnubCoreShared {
     /**
      * Disable Push Notifications (Google Cloud Messaging)
      * @param channel
+     * 			Channel for which to disable push notifications
      * @param gcmRegistrationId
+     * 			Google Cloud Messaging registration id
      */
     public void disablePushNotificationsOnChannel(String channel, String gcmRegistrationId) {
     	disablePushNotificationsOnChannels(new String[]{channel}, gcmRegistrationId, null);
@@ -206,7 +218,9 @@ public class Pubnub extends PubnubCoreShared {
     /**
      * Disable Push Notifications (Google Cloud Messaging)
      * @param channels
+     * 			Channels for which to disable push notifications
      * @param gcmRegistrationId
+     * 			Google Cloud Messaging registration id 
      */
     public void disablePushNotificationsOnChannels(String[] channels, String gcmRegistrationId) {
     	disablePushNotificationsOnChannels(channels, gcmRegistrationId, null);
@@ -229,8 +243,11 @@ public class Pubnub extends PubnubCoreShared {
      */
     /**
      * @param channels
+     * 			Channels for which to disable push notifications
      * @param gcmRegistrationId
+     * 			Google Cloud Messaging registration id 
      * @param callback
+     * 			Callback object
      */
     public void disablePushNotificationsOnChannels(final String[] channels, String gcmRegistrationId, final Callback callback) {
     	final Callback cb = getWrappedCallback(callback);
@@ -273,7 +290,9 @@ public class Pubnub extends PubnubCoreShared {
     /**
      * Get channels for which push notification is enabled (Google Cloud Messaging)
      * @param gcmRegistrationId
+     * 			Google Cloud Messaging registration id
      * @param callback
+     * 			Callback object
      */
     public void requestPushNotificationEnabledChannelsForDeviceRegistrationId(String gcmRegistrationId, final Callback callback) {
     	final Callback cb = getWrappedCallback(callback);
@@ -310,6 +329,7 @@ public class Pubnub extends PubnubCoreShared {
     /**
      * Disable push notifications for all channels (Google Cloud Messaging)
      * @param gcmRegistrationId
+     * 			Google Cloud Messaging registration id
      */
     public void removeAllPushNotificationsForDeviceRegistrationId(String gcmRegistrationId) {
     	removeAllPushNotificationsForDeviceRegistrationId(gcmRegistrationId, null);
@@ -318,7 +338,9 @@ public class Pubnub extends PubnubCoreShared {
     /**
      * Disable push notifications for all channels (Google Cloud Messaging)
      * @param gcmRegistrationId
+     * 			Google Cloud Messaging registration id
      * @param callback
+     * 			Callback object
      */
     public void removeAllPushNotificationsForDeviceRegistrationId(String gcmRegistrationId, final Callback callback) {
     	final Callback cb = getWrappedCallback(callback);
