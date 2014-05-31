@@ -12,6 +12,7 @@ import com.pubnub.api.Pubnub;
 import com.pubnub.api.PubnubError;
 import com.pubnub.api.PubnubException;
 import com.pubnub.api.PubnubSender;
+import com.pubnub.api.PubnubSenderMissingException;
 
 public class PubnubPushSampleCode {
 
@@ -28,10 +29,10 @@ public class PubnubPushSampleCode {
 		Pubnub pubnub = new Pubnub(publish_key, subscribe_key);
 		pubnub.setAuthKey("abcd");
 		pubnub.setCacheBusting(false);
-		pubnub.setOrigin("dara11.devbuild");
+		pubnub.setOrigin("dara20.devbuild");
 		
 		// Create APNS message
-		/*
+		
 		PnApnsMessage apnsMessage = new PnApnsMessage();
 		apnsMessage.setApsAlert("Game update 49ers touchdown");
 		apnsMessage.setApsBadge(2);
@@ -56,7 +57,7 @@ public class PubnubPushSampleCode {
 		}
 
 		gcmMessage.setData(jso);
-		*/
+		
 		
 		Callback callback = new Callback() {
 			@Override
@@ -71,16 +72,50 @@ public class PubnubPushSampleCode {
 		
 		PubnubSender sender = new PubnubSender(channel, pubnub, callback);
 		
-		// Create PnMessage 
+		// Create message1 with apns, gcm and normal data  
 		
-		//PnMessage message = new PnMessage(sender, apnsMessage, gcmMessage);
-		PnMessage message = new PnMessage(sender);
-
+		PnMessage message1 = new PnMessage(sender, apnsMessage, gcmMessage);
 		try {
-			message.put("test", "hi");
-			message.publish();
-		} catch (Exception e) {
+			message1.put("test","hi");
+		} catch (JSONException e1) {
 
+		}
+		
+		
+		// Create message2 with only apns payload
+		
+		PnMessage message2 = new PnMessage(sender, apnsMessage);
+
+		
+		
+		// Create message3 with only gcm payload
+		
+		PnMessage message3 = new PnMessage(sender, gcmMessage);
+
+		
+		// Create message4 with only no gcm or apns data
+		
+		PnMessage message4 = new PnMessage(sender);
+		try {
+			message4.put("data","mydata");
+		} catch (JSONException e1) {
+
+		}
+		
+		
+		// Create message4 with only gcm and apns data
+		
+		PnMessage message5 = new PnMessage(sender, apnsMessage, gcmMessage);
+
+		
+		try {
+			message1.publish();
+			message2.publish();
+			message3.publish();
+			message4.publish();
+			message5.publish();
+		} catch (PubnubSenderMissingException e) {
+			System.out.println("Set Sender");
 		}
 		
 	}

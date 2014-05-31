@@ -3,8 +3,16 @@ package com.pubnub.api;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+/**
+ * Message object for APNS
+ * @author Pubnub
+ *
+ */
 public class PnApnsMessage extends JSONObject {
 
+	/**
+	 * Constructor for APNS message object
+	 */
 	public PnApnsMessage() {
 		super();
 	}
@@ -27,6 +35,10 @@ public class PnApnsMessage extends JSONObject {
 		}
 		return aps;
 	}
+ 	/**
+ 	 * Set value of APS alert
+ 	 * @param alert
+ 	 */
  	public void setApsAlert(String alert) {
 
 		try {
@@ -37,6 +49,10 @@ public class PnApnsMessage extends JSONObject {
 		}
 		
 	}
+	/**
+	 * Set value of APS badge
+	 * @param badge
+	 */
 	public void setApsBadge(int badge) {
 		try {
 			JSONObject aps = (JSONObject) (JSONObject) getAps();

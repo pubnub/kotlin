@@ -72,6 +72,10 @@ class PubnubUtilCore {
      * @return String , string of tokens joined by delimiter
      */
     public static String joinString(String[] sourceArray, String delimiter) {
+    	
+    	if (sourceArray == null || delimiter == null) {
+    		return "";
+    	}
         StringBuffer sb = new StringBuffer();
 
         for (int i = 0; i < sourceArray.length - 1; i++) {

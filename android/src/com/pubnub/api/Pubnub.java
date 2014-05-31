@@ -18,7 +18,6 @@ import android.content.Context;
 
 public class Pubnub extends PubnubCoreShared {
 	
-	String gcmRegistrationId = null;
     /**
      * Pubnub Constructor
      *
@@ -126,25 +125,53 @@ public class Pubnub extends PubnubCoreShared {
                " Build) PubNub-Java/Android/" + VERSION;
     }
     
-    public void setGcmRegistrationId(String registrationId) {
-    	this.gcmRegistrationId = registrationId;
+    
+    /**
+     * Enable Push Notifications (Google Cloud Messaging)
+     * @param channel
+     * @param gcmRegistrationId
+     */
+    public void enablePushNotificationsOnChannel(String channel, String gcmRegistrationId) {
+    	enablePushNotificationsOnChannels(new String[]{channel}, gcmRegistrationId, null);
     }
     
-    public void registerDeviceOnChannel(final String channel, final Callback callback) throws PubnubGcmRegistrationIdMissingException {
-    	final Callback cb = getWrappedCallback(callback);
+    /**
+     * Enable Push Notifications (Google Cloud Messaging)
+     * @param channels
+     * @param gcmRegistrationId
+     */
+    public void enablePushNotificationsOnChannels(String[] channels, String gcmRegistrationId) {
+    	enablePushNotificationsOnChannels(channels, gcmRegistrationId, null);
+    }
+    
+    /**
+     * Enable Push Notifications (Google Cloud Messaging)
+     * @param channel
+     * @param gcmRegistrationId
+     * @param callback
+     */
+    public void enablePushNotificationsOnChannel(String channel, String gcmRegistrationId, Callback callback) {
+    	enablePushNotificationsOnChannels(new String[]{channel}, gcmRegistrationId, callback);
+    }
+    
 
-    	if (this.gcmRegistrationId == null || this.gcmRegistrationId.length() <= 0)
-    		throw new PubnubGcmRegistrationIdMissingException("Registration Id Missing");
+    /**
+     * Enable Push Notifications (Google Cloud Messaging)
+     * @param channels
+     * @param gcmRegistrationId
+     * @param callback
+     */
+    public void enablePushNotificationsOnChannels(final String[] channels, String gcmRegistrationId, final Callback callback) {
+    	final Callback cb = getWrappedCallback(callback);
     	
         Hashtable parameters = PubnubUtil.hashtableClone(params);
         String[] urlargs = null;
         urlargs = new String[]{ getPubnubUrl(), "v1", "push", "sub-key",
-                this.SUBSCRIBE_KEY, "devices", this.gcmRegistrationId
+                this.SUBSCRIBE_KEY, "devices", gcmRegistrationId
         };
         
-
         parameters.put("type", "gcm");
-        parameters.put("add", channel);
+        parameters.put("add", PubnubUtil.joinString(channels, ","));
 
         HttpRequest hreq = new HttpRequest(urlargs, parameters,
                 new ResponseHandler() {
@@ -168,21 +195,58 @@ public class Pubnub extends PubnubCoreShared {
 
         _request(hreq, nonSubscribeManager);
     }
-    public void unregisterDeviceFromChannel(final String channel, final Callback callback) throws PubnubGcmRegistrationIdMissingException {
+    
+    /**
+     * Disable Push Notifications (Google Cloud Messaging)
+     * @param channel
+     * @param gcmRegistrationId
+     */
+    public void disablePushNotificationsOnChannel(String channel, String gcmRegistrationId) {
+    	disablePushNotificationsOnChannels(new String[]{channel}, gcmRegistrationId, null);
+    }
+    
+    /**
+     * Disable Push Notifications (Google Cloud Messaging)
+     * @param channels
+     * @param gcmRegistrationId
+     */
+    public void disablePushNotificationsOnChannels(String[] channels, String gcmRegistrationId) {
+    	disablePushNotificationsOnChannels(channels, gcmRegistrationId, null);
+    }
+    
+    /**
+     * Disable Push Notifications (Google Cloud Messaging)
+     * @param channel
+     * @param gcmRegistrationId
+     * @param callback
+     */
+    public void disablePushNotificationsOnChannel(String channel, String gcmRegistrationId, Callback callback) {
+    	disablePushNotificationsOnChannels(new String[]{channel}, gcmRegistrationId, callback);
+    }
+    
+    /**
+     * Disable Push Notifications (Google Cloud Messaging)
+     * @param channel
+     * @param callback
+     */
+    /**
+     * @param channels
+     * @param gcmRegistrationId
+     * @param callback
+     */
+    public void disablePushNotificationsOnChannels(final String[] channels, String gcmRegistrationId, final Callback callback) {
     	final Callback cb = getWrappedCallback(callback);
 
-    	if (this.gcmRegistrationId == null || this.gcmRegistrationId.length() <= 0)
-    		throw new PubnubGcmRegistrationIdMissingException("Registration Id Missing");
     	
         Hashtable parameters = PubnubUtil.hashtableClone(params);
         String[] urlargs = null;
         urlargs = new String[]{ getPubnubUrl(), "v1", "push", "sub-key",
-                this.SUBSCRIBE_KEY, "devices", this.gcmRegistrationId
+                this.SUBSCRIBE_KEY, "devices", gcmRegistrationId
         };
         
 
         parameters.put("type", "gcm");
-        parameters.put("remove", channel);
+        parameters.put("remove", PubnubUtil.joinString(channels, ","));
 
         HttpRequest hreq = new HttpRequest(urlargs, parameters,
                 new ResponseHandler() {
@@ -206,12 +270,19 @@ public class Pubnub extends PubnubCoreShared {
 
         _request(hreq, nonSubscribeManager);
     }
-    public void getChannelListforDevice(final Callback callback) {
+
+    
+    /**
+     * Get channels for which push notification is enabled (Google Cloud Messaging)
+     * @param gcmRegistrationId
+     * @param callback
+     */
+    public void requestPushNotificationEnabledChannelsForDeviceRegistrationId(String gcmRegistrationId, final Callback callback) {
     	final Callback cb = getWrappedCallback(callback);
         Hashtable parameters = PubnubUtil.hashtableClone(params);
         String[] urlargs = null;
         urlargs = new String[]{ getPubnubUrl(), "v1", "push", "sub-key",
-                this.SUBSCRIBE_KEY, "devices", this.gcmRegistrationId
+                this.SUBSCRIBE_KEY, "devices", gcmRegistrationId
         };
         
 
@@ -237,12 +308,26 @@ public class Pubnub extends PubnubCoreShared {
             }
         });
     }
-    public void unregisterAllChannelsForDevice(final Callback callback) {
+    
+    /**
+     * Disable push notifications for all channels (Google Cloud Messaging)
+     * @param gcmRegistrationId
+     */
+    public void removeAllPushNotificationsForDeviceRegistrationId(String gcmRegistrationId) {
+    	removeAllPushNotificationsForDeviceRegistrationId(gcmRegistrationId, null);
+    }
+
+    /**
+     * Disable push notifications for all channels (Google Cloud Messaging)
+     * @param gcmRegistrationId
+     * @param callback
+     */
+    public void removeAllPushNotificationsForDeviceRegistrationId(String gcmRegistrationId, final Callback callback) {
     	final Callback cb = getWrappedCallback(callback);
         Hashtable parameters = PubnubUtil.hashtableClone(params);
         String[] urlargs = null;
         urlargs = new String[]{ getPubnubUrl(), "v1", "push", "sub-key",
-                this.SUBSCRIBE_KEY, "devices", this.gcmRegistrationId, "remove"
+                this.SUBSCRIBE_KEY, "devices", gcmRegistrationId, "remove"
         };
         
 

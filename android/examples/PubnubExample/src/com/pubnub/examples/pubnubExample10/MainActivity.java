@@ -36,7 +36,6 @@ import com.pubnub.api.Callback;
 import com.pubnub.api.Pubnub;
 import com.pubnub.api.PubnubError;
 import com.pubnub.api.PubnubException;
-import com.pubnub.api.PubnubGcmRegistrationIdMissingException;
 import com.pubnub.examples.pubnubExample10.R;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -236,7 +235,6 @@ public class MainActivity extends Activity {
             return true;        	
         case R.id.option27:
         	gcmRegister();
-        	pubnub.setGcmRegistrationId(REG_ID);
             return true;
         case R.id.option28:
         	gcmUnregister();
@@ -438,7 +436,6 @@ public class MainActivity extends Activity {
 				CIPHER_KEY,
 				SSL
 				);
-		pubnub.setGcmRegistrationId(REG_ID);
 		pubnub.setCacheBusting(false);
 		pubnub.setOrigin(ORIGIN);
 		pubnub.setAuthKey(AUTH_KEY);
@@ -474,7 +471,13 @@ public class MainActivity extends Activity {
 	}
 
 	private void gcmRemoveAllChannels() {
-        pubnub.unregisterAllChannelsForDevice(new Callback() {
+		if (TextUtils.isEmpty(REG_ID)) {
+		      Toast.makeText(getApplicationContext(),
+			          "GCM Registration id not set. Register to GCM and try again.",
+			          Toast.LENGTH_LONG).show();
+		      return ;
+		}
+        pubnub.removeAllPushNotificationsForDeviceRegistrationId(REG_ID, new Callback() {
             @Override
             public void successCallback(String channel,
             Object message) {
@@ -501,26 +504,25 @@ public class MainActivity extends Activity {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
+        		if (TextUtils.isEmpty(REG_ID)) {
+      		      Toast.makeText(getApplicationContext(),
+      			          "GCM Registration id not set. Register to GCM and try again.",
+      			          Toast.LENGTH_LONG).show();
+      		      return ;
+        		}
                 String channel = edChannelName.getText().toString();
-                try {
-					pubnub.unregisterDeviceFromChannel(channel, new Callback() {
-					    @Override
-					    public void successCallback(String channel,
-					    Object message) {
-					        notifyUser("GCM REMOVE : " + message);
-					    }
-					    @Override
-					    public void errorCallback(String channel,
-					    PubnubError error) {
-					        notifyUser("GCM REMOVE : " + error);
-					    }
-					});
-				} catch (PubnubGcmRegistrationIdMissingException e) {
-					gcmRegister();
-				    Toast.makeText(getApplicationContext(),
-					          "GCM registration ID was not set. Auto registering. Try removing channel again.",
-					          Toast.LENGTH_LONG).show();
-				}
+				pubnub.disablePushNotificationsOnChannel(channel, REG_ID, new Callback() {
+				    @Override
+				    public void successCallback(String channel,
+				    Object message) {
+				        notifyUser("GCM REMOVE : " + message);
+				    }
+				    @Override
+				    public void errorCallback(String channel,
+				    PubnubError error) {
+				        notifyUser("GCM REMOVE : " + error);
+				    }
+				});
             }
         });
         AlertDialog alert = builder.create();
@@ -540,26 +542,26 @@ public class MainActivity extends Activity {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
+            	   		
+        		if (TextUtils.isEmpty(REG_ID)) {
+        		      Toast.makeText(getApplicationContext(),
+        			          "GCM Registration id not set. Register to GCM and try again.",
+        			          Toast.LENGTH_LONG).show();
+        		      return ;
+        		}
                 String channel = edChannelName.getText().toString();
-                try {
-					pubnub.registerDeviceOnChannel(channel, new Callback() {
-					    @Override
-					    public void successCallback(String channel,
-					    Object message) {
-					        notifyUser("GCM ADD : " + message);
-					    }
-					    @Override
-					    public void errorCallback(String channel,
-					    PubnubError error) {
-					        notifyUser("GCM ADD : " + error);
-					    }
-					});
-				} catch (PubnubGcmRegistrationIdMissingException e) {
-					gcmRegister();
-				    Toast.makeText(getApplicationContext(),
-				          "GCM registration ID was not set. Auto registering. Try adding channel again.",
-				          Toast.LENGTH_LONG).show();
-				}
+				pubnub.disablePushNotificationsOnChannel(channel, REG_ID, new Callback() {
+				    @Override
+				    public void successCallback(String channel,
+				    Object message) {
+				        notifyUser("GCM ADD : " + message);
+				    }
+				    @Override
+				    public void errorCallback(String channel,
+				    PubnubError error) {
+				        notifyUser("GCM ADD : " + error);
+				    }
+				});
             }
         });
         AlertDialog alert = builder.create();
@@ -568,7 +570,7 @@ public class MainActivity extends Activity {
 	}
 
 	private void gcmUnregister() {
-		pubnub.setGcmRegistrationId("");
+		//TODO add unregister code
 	}
 
 	
@@ -587,7 +589,7 @@ public class MainActivity extends Activity {
 		}
 		
 	    String REG_ID = getRegistrationId(context);
-	    pubnub.setGcmRegistrationId(REG_ID);
+
 	    if (TextUtils.isEmpty(REG_ID)) {
 	 
 	      registerInBackground();
