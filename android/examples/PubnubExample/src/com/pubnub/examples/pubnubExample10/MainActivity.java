@@ -418,18 +418,31 @@ public class MainActivity extends Activity {
 
 		Map<String,String> map = getCredentials();
 		
-		PUBLISH_KEY = map.get("PUBLISH_KEY");
-		SUBSCRIBE_KEY = map.get("SUBSCRIBE_KEY");
-		SECRET_KEY = map.get("SECRET_KEY");
+//		PUBLISH_KEY = map.get("PUBLISH_KEY");
+//		SUBSCRIBE_KEY = map.get("SUBSCRIBE_KEY");
+//		SECRET_KEY = map.get("SECRET_KEY");
+//		CIPHER_KEY = map.get("CIPHER_KEY");
+//		SSL = (map.get("SSL") == "true")?true:false;
+//		SENDER_ID = map.get("SENDER_ID");
+//		AUTH_KEY = map.get("AUTH_KEY");
+//		ORIGIN = map.get("ORIGIN");
+//		REG_ID = map.get("REG_ID");
+
+
+		PUBLISH_KEY = "demo-36";
+		SUBSCRIBE_KEY = "demo-36";
+		SECRET_KEY = "demo-36";
 		CIPHER_KEY = map.get("CIPHER_KEY");
 		SSL = (map.get("SSL") == "true")?true:false;
 		SENDER_ID = map.get("SENDER_ID");
 		AUTH_KEY = map.get("AUTH_KEY");
-		ORIGIN = map.get("ORIGIN");
+		ORIGIN = "dara20.devbuild";
 		REG_ID = map.get("REG_ID");
+        SENDER_ID = "506053237730";
 
-		
-		pubnub = new Pubnub(
+
+
+        pubnub = new Pubnub(
 				PUBLISH_KEY,
 				SUBSCRIBE_KEY,
 				SECRET_KEY,
@@ -550,7 +563,7 @@ public class MainActivity extends Activity {
         		      return ;
         		}
                 String channel = edChannelName.getText().toString();
-				pubnub.disablePushNotificationsOnChannel(channel, REG_ID, new Callback() {
+				pubnub.enablePushNotificationsOnChannel(channel, REG_ID, new Callback() {
 				    @Override
 				    public void successCallback(String channel,
 				    Object message) {
