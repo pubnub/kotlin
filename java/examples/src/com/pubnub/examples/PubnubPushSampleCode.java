@@ -33,8 +33,8 @@ public class PubnubPushSampleCode {
 	 */
 	public static void main(String[] args) {
 		Options options = new Options();
-		String publish_key = "demo";
-		String subscribe_key = "demo";
+		String publish_key = "demo-36";
+		String subscribe_key = "demo-36";
 		boolean nativ = false;
 		boolean gcm = false;
 		boolean apns = false;
@@ -48,10 +48,10 @@ public class PubnubPushSampleCode {
 		CommandLine cmd = null;
 		
 		options.addOption(OptionBuilder.hasArg().withArgName("String").withLongOpt("publish_key").
-				withType(String.class).withDescription("Publish Key ( default: 'demo' )").create());
+				withType(String.class).withDescription("Publish Key ( default: 'demo-36' )").create());
 
 		options.addOption(OptionBuilder.hasArg().withArgName("String").withLongOpt("subscribe_key").
-				withType(String.class).withDescription("Subscribe Key ( default: 'demo' )").create());
+				withType(String.class).withDescription("Subscribe Key ( default: 'demo-36' )").create());
 		
 		options.addOption(OptionBuilder.hasArg().withArgName("String").withLongOpt("origin").
 				withType(String.class).withDescription("Origin ( Ex. pubsub )").create());
