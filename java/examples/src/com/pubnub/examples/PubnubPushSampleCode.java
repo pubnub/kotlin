@@ -60,7 +60,7 @@ public class PubnubPushSampleCode {
 				withType(String.class).withDescription("Auth Key").create());
 		
 		options.addOption(OptionBuilder.hasArg().withArgName("String").withLongOpt("channel").
-				withType(String.class).withDescription("Secret Key ( default: 'my_channel' )").create());
+				withType(String.class).withDescription("Channel ( default: 'my_channel' )").create());
 		
 		options.addOption(OptionBuilder.withLongOpt("apns").withDescription("APNS message").create());
 		
