@@ -572,31 +572,31 @@ public class MainActivity extends Activity {
         builder.setPositiveButton("Add",
                 new DialogInterface.OnClickListener() {
 
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            	   		
+        		if (TextUtils.isEmpty(REG_ID)) {
+        		      Toast.makeText(getApplicationContext(),
+        			          "GCM Registration id not set. Register to GCM and try again.",
+        			          Toast.LENGTH_LONG).show();
+        		      return ;
+        		}
+                String channel = edChannelName.getText().toString();
+				pubnub.enablePushNotificationsOnChannel(channel, REG_ID, new Callback() {
+				    @Override
+				    public void successCallback(String channel,
+				    Object message) {
+				        notifyUser("GCM ADD : " + message);
+				    }
+				    @Override
+				    public void errorCallback(String channel,
+				    PubnubError error) {
+				        notifyUser("GCM ADD : " + error);
+				    }
+				});
+            }
+        });
 
-                        if (TextUtils.isEmpty(REG_ID)) {
-                            Toast.makeText(getApplicationContext(),
-                                    "GCM Registration id not set. Register to GCM and try again.",
-                                    Toast.LENGTH_LONG).show();
-                            return;
-                        }
-                        String channel = edChannelName.getText().toString();
-                        pubnub.enablePushNotificationsOnChannel(channel, REG_ID, new Callback() {
-                            @Override
-                            public void successCallback(String channel,
-                                                        Object message) {
-                                notifyUser("GCM ADD : " + message);
-                            }
-
-                            @Override
-                            public void errorCallback(String channel,
-                                                      PubnubError error) {
-                                notifyUser("GCM ADD : " + error);
-                            }
-                        });
-                    }
-                });
         AlertDialog alert = builder.create();
         alert.show();
 
