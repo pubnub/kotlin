@@ -550,7 +550,7 @@ public class MainActivity extends Activity {
         		      return ;
         		}
                 String channel = edChannelName.getText().toString();
-				pubnub.disablePushNotificationsOnChannel(channel, REG_ID, new Callback() {
+				pubnub.enablePushNotificationsOnChannel(channel, REG_ID, new Callback() {
 				    @Override
 				    public void successCallback(String channel,
 				    Object message) {
