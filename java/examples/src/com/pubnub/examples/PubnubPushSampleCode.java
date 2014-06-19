@@ -197,13 +197,11 @@ public class PubnubPushSampleCode {
             @Override
             public void successCallback(String channel, Object response) {
                 System.out.println(response);
-                pubnub.shutdown();
             }
 
             @Override
             public void errorCallback(String channel, PubnubError error) {
                 System.out.println(error);
-                pubnub.shutdown();
             }
         };
 
@@ -232,8 +230,20 @@ public class PubnubPushSampleCode {
         } catch (PubnubSenderMissingException e) {
             System.out.println("Set Sender");
         }
-
-
+        
+        
+        // alternate way without creating sender 
+        /*
+        if (apns && gcm) {
+            message = new PnMessage(apnsMessage, gcmMessage);
+        } else if (apns) {
+            message = new PnMessage(apnsMessage);
+        } else if (gcm) {
+            message = new PnMessage(gcmMessage);
+        }
+        
+        pubnub.publish(channel, message, callback);
+		*/
     }
 
 }

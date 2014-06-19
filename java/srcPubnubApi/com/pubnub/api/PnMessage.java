@@ -43,6 +43,34 @@ public class PnMessage extends JSONObject {
 	
 	/**
 	 * Constructor for Pubnub Message Class
+	 */
+	public PnMessage() {
+		super();
+	}
+	
+	/**
+	 * Constructor for Pubnub Message Class
+	 * @param apnsMsg
+	 * 		Pubnub APNS message object
+	 * @param gcmMsg
+	 * 		Pubnub GCM message object
+	 */
+	public PnMessage(PnApnsMessage apnsMsg, PnGcmMessage gcmMsg) {
+		super();
+		try {
+			if (apnsMsg != null) {
+				this.put("pn_apns", apnsMsg);
+			}
+			if (gcmMsg != null) {
+				this.put("pn_gcm", gcmMsg);
+			}
+		} catch (JSONException e) {
+
+		}
+	}
+	
+	/**
+	 * Constructor for Pubnub Message Class
 	 * @param sender
 	 * 		Sender object
 	 * @param apnsMsg
@@ -64,6 +92,22 @@ public class PnMessage extends JSONObject {
 
 		}
 	}
+
+	/**
+	 * Constructor for Pubnub Message Class
+	 * @param gcmMsg
+	 * 		Pubnub GCM message object
+	 */
+	public PnMessage(PnGcmMessage gcmMsg) {
+		super();
+		try {
+			if (gcmMsg != null) {
+				this.put("pn_gcm", gcmMsg);
+			}
+		} catch (JSONException e) {
+
+		}
+	}
 	
 	/**
 	 * Constructor for Pubnub Message Class
@@ -78,6 +122,22 @@ public class PnMessage extends JSONObject {
 		try {
 			if (gcmMsg != null) {
 				this.put("pn_gcm", gcmMsg);
+			}
+		} catch (JSONException e) {
+
+		}
+	}
+
+	/**
+	 * Constructor for Pubnub Message Class
+	 * @param apnsMsg
+	 * 		Pubnub APNS message object
+	 */
+	public PnMessage(PnApnsMessage apnsMsg) {
+		super();
+		try {
+			if (apnsMsg != null) {
+				this.put("pn_apns", apnsMsg);
 			}
 		} catch (JSONException e) {
 
