@@ -12,33 +12,25 @@ import org.json.JSONObject;
  *
  */
 public class PnMessage extends JSONObject {
-	private Sender sender;
+	private String channel;
+	private Callback callback;
+	private Pubnub pubnub;
 	
-	/**
-	 * Get Sender Object Associated with this Pubnub Message
-	 * @return
-	 * 		Sender
-	 */
-	public Sender getSender() {
-		return sender;
-	}
-	/**
-	 * Associate Sender Object with this Pubnub Message
-	 * @param sender
-	 * 		Sender object
-	 */
-	public void setSender(Sender sender) {
-		this.sender = sender;
-	}
 	
 	/**
 	 * Constructor for Pubnub Message Class
-	 * @param sender
-	 * 		Sender object
+	 * @param pubnub
+	 * 		Pubnub object
+	 * @param channel
+	 * 		Channel name
+	 * @param callback
+	 * 		Callback object
 	 */
-	public PnMessage(Sender sender) {
+	public PnMessage(Pubnub pubnub, String channel, Callback callback) {
 		super();
-		this.sender = sender;
+		this.channel  = channel;
+		this.callback = callback;
+		this.pubnub = pubnub;
 	}
 	
 	/**
@@ -71,16 +63,20 @@ public class PnMessage extends JSONObject {
 	
 	/**
 	 * Constructor for Pubnub Message Class
-	 * @param sender
-	 * 		Sender object
+	 * @param pubnub
+	 * 		Pubnub object
+	 * @param callback
+	 * 		Callback object
 	 * @param apnsMsg
 	 * 		Pubnub APNS message object
 	 * @param gcmMsg
 	 * 		Pubnub GCM message object
 	 */
-	public PnMessage(Sender sender, PnApnsMessage apnsMsg, PnGcmMessage gcmMsg) {
+	public PnMessage(Pubnub pubnub, String channel, Callback callback, PnApnsMessage apnsMsg, PnGcmMessage gcmMsg) {
 		super();
-		this.sender = sender;
+		this.channel = channel;
+		this.callback = callback;
+		this.pubnub = pubnub;
 		try {
 			if (apnsMsg != null) {
 				this.put("pn_apns", apnsMsg);
@@ -91,6 +87,58 @@ public class PnMessage extends JSONObject {
 		} catch (JSONException e) {
 
 		}
+	}
+
+	/**
+	 * Getter for channel set on PnMessage Object
+	 * @return channel
+	 */
+	public String getChannel() {
+		return channel;
+	}
+
+	/**
+	 * Setter for channel on PnMessage Object
+	 * @param channel
+	 * 			Channel name
+	 */
+	public void setChannel(String channel) {
+		this.channel = channel;
+	}
+
+	/**
+	 * Getter for callback set on PnMessage object
+	 * @return  callback
+	 * 		
+	 */
+	public Callback getCallback() {
+		return callback;
+	}
+
+	/**
+	 * Setter for callback on PnMessage object
+	 * @param callback
+	 * 			Callback
+	 */
+	public void setCallback(Callback callback) {
+		this.callback = callback;
+	}
+
+	/**
+	 * Getter for pubnub set on PnMessage object
+	 * @return pubnub
+	 */
+	public Pubnub getPubnub() {
+		return pubnub;
+	}
+
+	/**
+	 * Setter for pubnub on PnMessage object
+	 * @param pubnub
+	 *           Pubnub object
+	 */
+	public void setPubnub(Pubnub pubnub) {
+		this.pubnub = pubnub;
 	}
 
 	/**
@@ -111,14 +159,20 @@ public class PnMessage extends JSONObject {
 	
 	/**
 	 * Constructor for Pubnub Message Class
-	 * @param sender
-	 * 		Sender object
+	 * @param pubnub
+	 * 		Pubnub
+	 * @param channel
+	 * 		Channel
+	 * @param callback
+	 * 		Callback object
 	 * @param gcmMsg
 	 * 		Pubnub GCM message object
 	 */
-	public PnMessage(Sender sender, PnGcmMessage gcmMsg) {
+	public PnMessage(Pubnub pubnub, String channel, Callback callback, PnGcmMessage gcmMsg) {
 		super();
-		this.sender = sender;
+		this.channel = channel;
+		this.callback = callback;
+		this.pubnub = pubnub;
 		try {
 			if (gcmMsg != null) {
 				this.put("pn_gcm", gcmMsg);
@@ -146,14 +200,20 @@ public class PnMessage extends JSONObject {
 	
 	/**
 	 * Constructor for Pubnub Message Class
-	 * @param sender
-	 * 		Sender object
+	 * @param pubnub
+	 * 		Pubnub
+	 * @param channel
+	 * 		Channel
+	 * @param callback
+	 * 		Callback object
 	 * @param apnsMsg
 	 * 		Pubnub APNS message object
 	 */
-	public PnMessage(Sender sender, PnApnsMessage apnsMsg) {
+	public PnMessage(Pubnub pubnub, String channel, Callback callback, PnApnsMessage apnsMsg) {
 		super();
-		this.sender = sender;
+		this.channel = channel;
+		this.callback = callback;
+		this.pubnub = pubnub;
 		try {
 			if (apnsMsg != null) {
 				this.put("pn_apns", apnsMsg);
@@ -165,29 +225,41 @@ public class PnMessage extends JSONObject {
 	
 	/**
 	 * Publish Message
-	 * @param sender
-	 * 		Sender object
-	 * @throws PubnubSenderMissingException
-	 * 		Exception since Sender object null
+	 * @param pubnub
+	 * 		Pubnub object
+	 * @param channel
+	 * 		Channel
+	 * @param callback
+	 * 		Callback object
+	 * @throws PubnubException
+	 * 		Exception if either channel or pubnub object is not set
 	 */
-	public void publish(Sender sender) throws PubnubSenderMissingException {
-		this.sender = sender;
-		if (this.sender == null) {
-			throw new PubnubSenderMissingException("Sender is null");
+	public void publish(Pubnub pubnub, String channel, Callback callback) throws PubnubException  {
+		this.channel = channel;
+		this.callback = callback;
+		this.pubnub = pubnub;
+		if (this.channel == null) {
+			throw new PubnubException(PubnubError.PNERROBJ_CHANNEL_MISSING);
 		}
-		sender.send(this);
+		if (this.pubnub == null) {
+			throw new PubnubException(PubnubError.PNERROBJ_CONNECTION_NOT_SET);
+		}
+		pubnub.publish(channel, this, callback);
 	}
 	
 	/**
 	 * Publish Message
-	 * @throws PubnubSenderMissingException
-	 * 		Exception since sender object not set
+	 * @throws PubnubException
+	 * 		Exception if either channel or pubnub object is not set
 	 */
-	public void publish() throws PubnubSenderMissingException {
-		if (this.sender == null) {
-			throw new PubnubSenderMissingException("Sender is null");
+	public void publish() throws PubnubException {
+		if (this.channel == null) {
+			throw new PubnubException(PubnubError.PNERROBJ_CHANNEL_MISSING);
 		}
-		sender.send(this);
+		if (this.pubnub == null) {
+			throw new PubnubException(PubnubError.PNERROBJ_CONNECTION_NOT_SET);
+		}
+		pubnub.publish(channel, this, callback);
 	}
 	
 }

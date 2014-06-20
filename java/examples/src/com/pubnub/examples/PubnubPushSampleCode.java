@@ -14,8 +14,7 @@ import com.pubnub.api.PnMessage;
 import com.pubnub.api.Pubnub;
 import com.pubnub.api.PubnubError;
 import com.pubnub.api.PubnubException;
-import com.pubnub.api.PubnubSender;
-import com.pubnub.api.PubnubSenderMissingException;
+import com.pubnub.api.PubnubException;
 
 public class PubnubPushSampleCode {
 
@@ -205,18 +204,17 @@ public class PubnubPushSampleCode {
             }
         };
 
-        PubnubSender sender = new PubnubSender(channel, pubnub, callback);
 
         PnMessage message = null;
 
         if (apns && gcm) {
-            message = new PnMessage(sender, apnsMessage, gcmMessage);
+            message = new PnMessage(pubnub, channel, callback, apnsMessage, gcmMessage);
         } else if (apns) {
-            message = new PnMessage(sender, apnsMessage);
+            message = new PnMessage(pubnub, channel, callback, apnsMessage);
         } else if (gcm) {
-            message = new PnMessage(sender, gcmMessage);
+            message = new PnMessage(pubnub, channel, callback, gcmMessage);
         }
-        if (message == null) message = new PnMessage(sender);
+        if (message == null) message = new PnMessage(pubnub, channel, callback);
         if (nativ) {
             try {
                 message.put("test", "hi");
@@ -227,13 +225,21 @@ public class PubnubPushSampleCode {
 
         try {
             message.publish();
-        } catch (PubnubSenderMissingException e) {
-            System.out.println("Set Sender");
+        } catch (PubnubException e) {
+        	switch(e.getPubnubError().errorCode) {
+        	case PubnubError.PNERR_CHANNEL_MISSING:
+        		System.out.println("Channel name not set");
+        		break;
+        	case PubnubError.PNERR_CONNECTION_NOT_SET:
+        		System.out.println("Pubnub object not set");
+        		break;
+        	}
+            
         }
         
         
-        // alternate way without creating sender 
-        /*
+        // alternate way 
+        
         if (apns && gcm) {
             message = new PnMessage(apnsMessage, gcmMessage);
         } else if (apns) {
@@ -243,7 +249,37 @@ public class PubnubPushSampleCode {
         }
         
         pubnub.publish(channel, message, callback);
-		*/
+		
+        
+        // Another way
+        
+        PnMessage pnm = new PnMessage();
+        
+        try {
+			pnm.put("hello world", "foo");
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        pnm.setCallback(callback);
+        pnm.setChannel(channel);
+        pnm.setPubnub(pubnub);
+        
+        try {
+            message.publish();
+        } catch (PubnubException e) {
+        	switch(e.getPubnubError().errorCode) {
+        	case PubnubError.PNERR_CHANNEL_MISSING:
+        		System.out.println("Channel name not set");
+        		break;
+        	case PubnubError.PNERR_CONNECTION_NOT_SET:
+        		System.out.println("Pubnub object not set");
+        		break;
+        	}
+            
+        }
+        
+        
     }
 
 }
