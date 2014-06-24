@@ -1,3 +1,5 @@
+# Please direct all Support Questions and Concerns to Support@PubNub.com
+
 ### YOU MUST HAVE A PUBNUB ACCOUNT TO USE THE API.
 
 http://www.pubnub.com/account
@@ -216,4 +218,5 @@ pubnub.hereNow(channel, new Callback() {
 });
 ```
 
+# Please direct all Support Questions and Concerns to Support@PubNub.com
 
