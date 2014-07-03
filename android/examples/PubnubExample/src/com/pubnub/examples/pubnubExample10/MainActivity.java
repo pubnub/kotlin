@@ -288,6 +288,11 @@ public class MainActivity extends Activity {
                     @Override
                     public void onClick(DialogInterface arg0, int arg1) {
                         SENDER_ID = edSenderId.getEditableText().toString();
+                        int appVersion = getAppVersion(context);
+                        SharedPreferences.Editor editor = prefs.edit();
+                        editor.putString("REG_ID", "");
+                        editor.putInt(APP_VERSION, appVersion);
+                        editor.commit();
                         saveCredentials();
                     }
 
