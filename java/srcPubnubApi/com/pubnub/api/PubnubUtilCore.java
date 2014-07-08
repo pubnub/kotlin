@@ -72,6 +72,10 @@ class PubnubUtilCore {
      * @return String , string of tokens joined by delimiter
      */
     public static String joinString(String[] sourceArray, String delimiter) {
+    	
+    	if (sourceArray == null || delimiter == null) {
+    		return "";
+    	}
         StringBuffer sb = new StringBuffer();
 
         for (int i = 0; i < sourceArray.length - 1; i++) {
@@ -160,7 +164,6 @@ class PubnubUtilCore {
         return hashTableKeysToDelimitedString(ht, delimiter, null);
 
     }
-
 
     static Hashtable hashtableClone(Hashtable ht) {
         if (ht == null)
