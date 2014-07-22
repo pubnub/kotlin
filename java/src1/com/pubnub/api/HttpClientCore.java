@@ -130,7 +130,6 @@ class HttpClientCore extends HttpClient {
             throw new PubnubException(getErrorObject(PNERROBJ_CONNECT_EXCEPTION, url + " : " + e.toString()));
         }
         */
-
         int rc = HttpURLConnection.HTTP_INTERNAL_ERROR;
         try {
             rc = connection.getResponseCode();
@@ -140,7 +139,6 @@ class HttpClientCore extends HttpClient {
         catch (IOException e) {
             throw new PubnubException(getErrorObject(PNERROBJ_HTTP_RC_ERROR, url + " : " + e.toString()));
         }
-
 
         InputStream is = null;
         String encoding = connection.getContentEncoding();
@@ -250,7 +248,12 @@ class HttpClientCore extends HttpClient {
     }
 
     public void shutdown() {
-        if (connection != null) connection.disconnect();
+        if (connection != null) {
+        	try {
+        		connection.disconnect();
+        	} catch (Exception e) {
+        	}
+        }
     }
 }
 
