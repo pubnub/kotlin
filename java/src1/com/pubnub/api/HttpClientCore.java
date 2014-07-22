@@ -169,10 +169,10 @@ class HttpClientCore extends HttpClient {
             throw new PubnubException(getErrorObject(PNERROBJ_READINPUT, url));
         }
         if (is != null) {
-        	try {
-				is.close();
-			} catch (IOException e) {
-			}
+            try {
+                is.close();
+            } catch (IOException e) {
+            }
         }
 
         log.verbose("URL = " + url + ", Status Code : "  + rc + ", : RESPONSE = " + page);
@@ -249,10 +249,10 @@ class HttpClientCore extends HttpClient {
 
     public void shutdown() {
         if (connection != null) {
-        	try {
-        		connection.disconnect();
-        	} catch (Exception e) {
-        	}
+            try {
+                connection.disconnect();
+            } catch (Exception e) {
+            }
         }
     }
 }

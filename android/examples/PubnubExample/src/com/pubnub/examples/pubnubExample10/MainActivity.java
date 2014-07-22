@@ -423,27 +423,27 @@ public class MainActivity extends Activity {
 
         Map<String, String> map = getCredentials();
 
-//		PUBLISH_KEY = map.get("PUBLISH_KEY");
-//		SUBSCRIBE_KEY = map.get("SUBSCRIBE_KEY");
-//		SECRET_KEY = map.get("SECRET_KEY");
-//		CIPHER_KEY = map.get("CIPHER_KEY");
-//		SSL = (map.get("SSL") == "true")?true:false;
-//		SENDER_ID = map.get("SENDER_ID");
-//		AUTH_KEY = map.get("AUTH_KEY");
-//		ORIGIN = map.get("ORIGIN");
-//		REG_ID = map.get("REG_ID");
+//        PUBLISH_KEY = map.get("PUBLISH_KEY");
+//        SUBSCRIBE_KEY = map.get("SUBSCRIBE_KEY");
+//        SECRET_KEY = map.get("SECRET_KEY");
+//        CIPHER_KEY = map.get("CIPHER_KEY");
+//        SSL = (map.get("SSL") == "true")?true:false;
+//        SENDER_ID = map.get("SENDER_ID");
+//        AUTH_KEY = map.get("AUTH_KEY");
+//        ORIGIN = map.get("ORIGIN");
+//        REG_ID = map.get("REG_ID");
 
         // The following hardcodes this demo app to run against our beta environment and config.
 
         PUBLISH_KEY = "demo-36";
         SUBSCRIBE_KEY = "demo-36";
         SECRET_KEY = "demo-36";
-		CIPHER_KEY = map.get("CIPHER_KEY");
-		SSL = (map.get("SSL") == "true")?true:false;
-		SENDER_ID = map.get("SENDER_ID");
-		AUTH_KEY = map.get("AUTH_KEY");
-		ORIGIN = "gcm-beta";
-		REG_ID = map.get("REG_ID");
+        CIPHER_KEY = map.get("CIPHER_KEY");
+        SSL = (map.get("SSL") == "true")?true:false;
+        SENDER_ID = map.get("SENDER_ID");
+        AUTH_KEY = map.get("AUTH_KEY");
+        ORIGIN = "gcm-beta";
+        REG_ID = map.get("REG_ID");
         SENDER_ID = "506053237730";
 
 
@@ -456,8 +456,8 @@ public class MainActivity extends Activity {
                 SSL
         );
         pubnub.setCacheBusting(false);
-		pubnub.setOrigin(ORIGIN);
-		pubnub.setAuthKey(AUTH_KEY);
+        pubnub.setOrigin(ORIGIN);
+        pubnub.setAuthKey(AUTH_KEY);
 
         // A SENDER_ID corresponds with a Server API Key with GCM.
         // The above Sender ID (506053237730) corresponds to this Server API Key:
@@ -579,26 +579,26 @@ public class MainActivity extends Activity {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
-            	   		
-        		if (TextUtils.isEmpty(REG_ID)) {
-        		      Toast.makeText(getApplicationContext(),
-        			          "GCM Registration id not set. Register to GCM and try again.",
-        			          Toast.LENGTH_LONG).show();
-        		      return ;
-        		}
+
+                if (TextUtils.isEmpty(REG_ID)) {
+                      Toast.makeText(getApplicationContext(),
+                              "GCM Registration id not set. Register to GCM and try again.",
+                              Toast.LENGTH_LONG).show();
+                      return ;
+                }
                 String channel = edChannelName.getText().toString();
-				pubnub.enablePushNotificationsOnChannel(channel, REG_ID, new Callback() {
-				    @Override
-				    public void successCallback(String channel,
-				    Object message) {
-				        notifyUser("GCM ADD : " + message);
-				    }
-				    @Override
-				    public void errorCallback(String channel,
-				    PubnubError error) {
-				        notifyUser("GCM ADD : " + error);
-				    }
-				});
+                pubnub.enablePushNotificationsOnChannel(channel, REG_ID, new Callback() {
+                    @Override
+                    public void successCallback(String channel,
+                    Object message) {
+                        notifyUser("GCM ADD : " + message);
+                    }
+                    @Override
+                    public void errorCallback(String channel,
+                    PubnubError error) {
+                        notifyUser("GCM ADD : " + error);
+                    }
+                });
             }
         });
 

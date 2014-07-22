@@ -15,7 +15,7 @@ import android.util.Log;
 
 public class GcmIntentService extends IntentService {
     public static final int NOTIFICATION_ID = 1;
-	private static final String TAG = "PubnubGcm";
+    private static final String TAG = "PubnubGcm";
     private NotificationManager mNotificationManager;
     NotificationCompat.Builder builder;
 
@@ -31,7 +31,7 @@ public class GcmIntentService extends IntentService {
         String messageType = gcm.getMessageType(intent);
 
         if (!extras.isEmpty()) {
-        	
+
             if (GoogleCloudMessaging.
                     MESSAGE_TYPE_SEND_ERROR.equals(messageType)) {
                 sendNotification("Send error: " + extras.toString());
@@ -42,9 +42,9 @@ public class GcmIntentService extends IntentService {
             } else if (GoogleCloudMessaging.
                     MESSAGE_TYPE_MESSAGE.equals(messageType)) {
                 Log.i(TAG, "Completed work @ " + SystemClock.elapsedRealtime());
-                
+
                 sendNotification(extras.toString());
-                
+
                 Log.i(TAG, "Received: " + extras.toString());
             }
         }

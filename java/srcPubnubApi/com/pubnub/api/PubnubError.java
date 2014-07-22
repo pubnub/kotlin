@@ -201,7 +201,7 @@ public class PubnubError {
      *
      */
     public static final int         PNERR_CHANNEL_MISSING                     =       132;
-    
+
     /**
      * Pubnub connection not set on sender
      *
@@ -426,13 +426,13 @@ public class PubnubError {
             PNERR_CHANNEL_MISSING ,
             "Channel Missing."
     );
-    
+
     static final PubnubError PNERROBJ_CONNECTION_NOT_SET                       =
             new PubnubError     (
             PNERR_CONNECTION_NOT_SET ,
             "Pubnub Connection not set"
     );
-    
+
 
     public  final int errorCode;
     public  final int errorCodeExtended;

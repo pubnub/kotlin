@@ -10,33 +10,33 @@ import org.json.JSONObject;
  */
 public class PnGcmMessage extends JSONObject {
 
-	/**
-	 * Constructor for PnGcmMessage
-	 */
-	public PnGcmMessage() {
-		super();
-	}
+    /**
+     * Constructor for PnGcmMessage
+     */
+    public PnGcmMessage() {
+        super();
+    }
 
-	/**
-	 * Constructor for PnGcmMessage
-	 * @param json
-	 * 		json object to be set as data for GCM message
-	 */
-	public PnGcmMessage(JSONObject json) {
-		super();
-		setData(json);
-	}
-	
-	/**
-	 * Set Data for PnGcmMessage
-	 * @param json
-	 * 		json object to be set as data for GCM message
-	 */
-	public void setData(JSONObject json) {
-		try {
-			this.put("data", json);
-		} catch (JSONException e) {
+    /**
+     * Constructor for PnGcmMessage
+     * @param json
+     *         json object to be set as data for GCM message
+     */
+    public PnGcmMessage(JSONObject json) {
+        super();
+        setData(json);
+    }
 
-		}
-	}
+    /**
+     * Set Data for PnGcmMessage
+     * @param json
+     *         json object to be set as data for GCM message
+     */
+    public void setData(JSONObject json) {
+        try {
+            this.put("data", json);
+        } catch (JSONException e) {
+
+        }
+    }
 }

@@ -72,10 +72,10 @@ class PubnubUtilCore {
      * @return String , string of tokens joined by delimiter
      */
     public static String joinString(String[] sourceArray, String delimiter) {
-    	
-    	if (sourceArray == null || delimiter == null) {
-    		return "";
-    	}
+
+        if (sourceArray == null || delimiter == null) {
+            return "";
+        }
         StringBuffer sb = new StringBuffer();
 
         for (int i = 0; i < sourceArray.length - 1; i++) {
@@ -132,11 +132,11 @@ class PubnubUtilCore {
         while (e.hasMoreElements()) {
 
             String s = (String) e.nextElement();
-            
+
             if (exclude != null) {
-            	if (s.indexOf(exclude) != -1) {
-            		continue;
-            	}
+                if (s.indexOf(exclude) != -1) {
+                    continue;
+                }
             }
             if (first) {
                 sb.append(s);
@@ -148,7 +148,7 @@ class PubnubUtilCore {
         return sb.toString();
 
     }
-    
+
     /**
      * Returns string keys in a hashtable as delimited string
      *

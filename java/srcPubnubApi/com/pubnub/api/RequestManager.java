@@ -176,17 +176,17 @@ abstract class RequestManager {
             }
         }
     }
-    
+
     class ConnectionResetter implements Runnable {
-    	Worker worker;
-    	ConnectionResetter(Worker w) {
-    		this.worker = w;
-    	}
-		public void run() {
-			if (this.worker != null) {
-				worker.resetConnection();
-			}
-		}
+        Worker worker;
+        ConnectionResetter(Worker w) {
+            this.worker = w;
+        }
+        public void run() {
+            if (this.worker != null) {
+                worker.resetConnection();
+            }
+        }
     }
 
     public void resetWorkers() {

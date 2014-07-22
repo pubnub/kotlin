@@ -19,9 +19,9 @@ public abstract class Callback {
      *
      */
     public void successCallback(String channel, Object message) {
-    	
+
     }
-    
+
     /**
      * This callback will be invoked when a message is received on the channel
      *
@@ -33,12 +33,12 @@ public abstract class Callback {
      *            Timetoken
      */
     public void successCallback(String channel, Object message, String timetoken) {
-    	
+
     }
-    
+
     void successWrapperCallback(String channel, Object message, String timetoken) {
-    	successCallback(channel, message);
-    	successCallback(channel, message, timetoken);
+        successCallback(channel, message);
+        successCallback(channel, message, timetoken);
     }
 
     /**
