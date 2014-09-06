@@ -1440,10 +1440,11 @@ abstract class PubnubCore {
                 this.SUBSCRIBE_KEY, "channel", PubnubUtil.urlEncode(channel),
                 "leave"
         };
-        Hashtable params = new Hashtable();
-        params.put("uuid", UUID);
+        Hashtable parameters = PubnubUtil.hashtableClone(params);
 
-        HttpRequest hreq = new HttpRequest(urlargs, params,
+        parameters.put("uuid", UUID);
+        
+        HttpRequest hreq = new HttpRequest(urlargs, parameters,
                 new ResponseHandler() {
 
             public void handleResponse(HttpRequest hreq, String response) {
