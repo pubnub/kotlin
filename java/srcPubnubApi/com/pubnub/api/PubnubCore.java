@@ -1,18 +1,16 @@
 package com.pubnub.api;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Random;
-
 import org.bouncycastle.crypto.DataLengthException;
 import org.bouncycastle.crypto.InvalidCipherTextException;
 import org.bouncycastle.util.encoders.Hex;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.Hashtable;
+import java.util.Random;
 
 
 /**
@@ -951,7 +949,7 @@ abstract class PubnubCore {
     }
 
     public void whereNow(Callback callback) {
-        whereNow(this.UUID,callback);
+        whereNow(this.UUID, callback);
     }
 
     public void setState(String channel, String uuid, JSONObject state, Callback callback) {
@@ -1023,6 +1021,148 @@ abstract class PubnubCore {
         }
     }
 
+    protected void invokeJSONArrayCallback(String response, Callback callback) {
+        JSONArray responseJSON;
+
+        try {
+            responseJSON = new JSONArray(response);
+            callback.successCallback(null, responseJSON);
+        } catch (JSONException e) {
+            callback.errorCallback(
+                    null,
+                    PubnubError.getErrorObject(PubnubError.PNERROBJ_JSON_ERROR, 0, response)
+            );
+        }
+    }
+
+    public void group(Callback callback) {
+        group(null, callback);
+    }
+
+    public void group(String namespace, Callback callback) {
+        final Callback cb = getWrappedCallback(callback);
+        String[] url;
+
+        if (namespace != null) {
+            url = new String[]{getPubnubUrl(), "v1", "channel-registration", "sub-key",
+                    this.SUBSCRIBE_KEY, "namespace", namespace, "channel-group"};
+        } else {
+            url = new String[]{getPubnubUrl(), "v1", "channel-registration", "sub-key",
+                    this.SUBSCRIBE_KEY, "channel-group"};
+        }
+
+        Hashtable parameters = PubnubUtil.hashtableClone(params);
+
+        HttpRequest hreq = new HttpRequest(url, parameters, new ResponseHandler() {
+
+            public void handleResponse(HttpRequest hreq, String response) {
+                invokeJSONArrayCallback(response, cb);
+             }
+
+            public void handleError(HttpRequest hreq, PubnubError error) {
+                cb.errorCallback(null, error);
+            }
+        });
+
+        _request(hreq, nonSubscribeManager);
+    }
+
+    public void channelGroup(String groupId, Callback callback) {
+        channelGroup(null, groupId, callback);
+    }
+
+    public void channelGroup(String namespace, String groupId, Callback callback) {
+        final Callback cb = getWrappedCallback(callback);
+        String[] url;
+
+        if (namespace != null) {
+            url = new String[]{getPubnubUrl(), "v1", "channel-registration", "sub-key",
+                    this.SUBSCRIBE_KEY, "namespace", namespace, "channel-group", groupId};
+        } else {
+            url = new String[]{getPubnubUrl(), "v1", "channel-registration", "sub-key",
+                    this.SUBSCRIBE_KEY, "channel-group", groupId};
+        }
+
+        Hashtable parameters = PubnubUtil.hashtableClone(params);
+
+        HttpRequest hreq = new HttpRequest(url, parameters, new ResponseHandler() {
+
+            public void handleResponse(HttpRequest hreq, String response) {
+                invokeJSONArrayCallback(response, cb);
+            }
+
+            public void handleError(HttpRequest hreq, PubnubError error) {
+                cb.errorCallback(null, error);
+            }
+        });
+
+        _request(hreq, nonSubscribeManager);
+    }
+
+    public void addChannelToGroup(String groupId, String channel, Callback callback) {
+        updateChannelGroup("add", null, groupId, new String[] {channel}, callback);
+    }
+
+    public void addChannelToGroup(String groupId, String[] channels, Callback callback) {
+        updateChannelGroup("add", null, groupId, channels, callback);
+    }
+
+    public void addChannelToGroup(String namespace, String groupId, String channel, Callback callback) {
+        updateChannelGroup("add", namespace, groupId, new String[] {channel}, callback);
+    }
+
+    public void addChannelToGroup(String namespace, String groupId, String[] channels, Callback callback) {
+        updateChannelGroup("add", namespace, groupId, channels, callback);
+    }
+
+    public void removeChannelFromGroup(String groupId, String channel, Callback callback) {
+        updateChannelGroup("remove", null, groupId, new String[]{channel}, callback);
+    }
+
+    public void removeChannelFromGroup(String groupId, String[] channels, Callback callback) {
+        updateChannelGroup("remove", null, groupId, channels, callback);
+    }
+
+    public void removeChannelFromGroup(String namespace, String groupId, String channel, Callback callback) {
+        updateChannelGroup("remove", namespace, groupId, new String[]{channel}, callback);
+    }
+
+    public void removeChannelFromGroup(String namespace, String groupId, String[] channels, Callback callback) {
+        updateChannelGroup("remove", namespace, groupId, channels, callback);
+    }
+
+    public void updateChannelGroup(String action, String namespace, String groupId, String[] channels, Callback callback) {
+        final Callback cb = getWrappedCallback(callback);
+        String[] url;
+
+        if (namespace != null) {
+            url = new String[]{getPubnubUrl(), "v1", "channel-registration", "sub-key",
+                    this.SUBSCRIBE_KEY, "namespace", namespace, "channel-group", groupId};
+        } else {
+            url = new String[]{getPubnubUrl(), "v1", "channel-registration", "sub-key",
+                    this.SUBSCRIBE_KEY, "channel-group", groupId};
+        }
+
+        Hashtable parameters = PubnubUtil.hashtableClone(params);
+
+        if (channels.length > 0) {
+            parameters.put(action, PubnubUtil.joinString(channels, ","));
+        }
+
+        HttpRequest hreq = new HttpRequest(url, parameters, new ResponseHandler() {
+
+            public void handleResponse(HttpRequest hreq, String response) {
+                cb.successCallback(null, PubnubUtil.parseJSON(response));
+            }
+
+            public void handleError(HttpRequest hreq, PubnubError error) {
+                cb.errorCallback(null, error);
+            }
+
+        });
+
+        _request(hreq, nonSubscribeManager);
+    }
 
     public void getState(String channel, String uuid, Callback callback) {
         final Callback cb = getWrappedCallback(callback);
@@ -1053,7 +1193,7 @@ abstract class PubnubCore {
      *            object of sub class of Callback class
      */
     public void hereNow(final String channel, Callback callback) {
-        hereNow(channel,false,true,callback);
+        hereNow(channel, false, true, callback);
     }
 
     public void hereNow(boolean state, boolean uuids, Callback callback) {
@@ -1493,7 +1633,7 @@ abstract class PubnubCore {
      *            channel name as String.
      */
     public void unsubscribePresence(String channel) {
-        unsubscribe(new String[] { channel + PRESENCE_SUFFIX });
+        unsubscribe(new String[]{channel + PRESENCE_SUFFIX});
     }
 
     /**
@@ -1503,7 +1643,7 @@ abstract class PubnubCore {
      *            channel name as String.
      */
     public void unsubscribe(String channel) {
-        unsubscribe(new String[] { channel });
+        unsubscribe(new String[]{channel});
     }
 
     /**
