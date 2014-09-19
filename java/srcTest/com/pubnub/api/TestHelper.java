@@ -5,7 +5,7 @@ import java.util.concurrent.CountDownLatch;
 public class TestHelper {
     static class SimpleCallback extends Callback {
 
-        private CountDownLatch latch;
+        protected CountDownLatch latch;
         Object response;
         Boolean error;
 
@@ -25,14 +25,17 @@ public class TestHelper {
         public void successCallback(String channel, Object message) {
             this.response = message;
             this.error = false;
-            this.latch.countDown();
+            if (this.latch != null) {
+                this.latch.countDown();
+            }
         }
-
 
         @Override
         public void errorCallback(String channel, PubnubError error) {
             this.error = true;
-            this.latch.countDown();
+            if (this.latch != null) {
+                this.latch.countDown();
+            }
         }
     }
 }
