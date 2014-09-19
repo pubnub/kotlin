@@ -253,7 +253,7 @@ public class PubnubTest {
     String testSuccessMessage = "";
 
     @Test
-    public void testPublishString() {
+    public void testPublishString() throws PubnubException, InterruptedException {
         String channel = "java-unittest-" + Math.random();
         final String sendMessage = "Test Message " + Math.random();
 
@@ -267,27 +267,16 @@ public class PubnubTest {
             }
         };
 
-        Hashtable args = new Hashtable();
-        args.put("channel", channel);
-        args.put("callback", sbCb);
+        pubnub.subscribe(channel, sbCb);
 
-        try {
-            pubnub.subscribe(args);
-        } catch (PubnubException e1) {
+        latch.await(10, TimeUnit.SECONDS);
 
-        }
-
-        try {
-            latch.await(30, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-
-        }
         assertEquals(1, pbCb.getResult());
         assertEquals(sendMessage, sbCb.getResponse());
     }
 
     @Test
-    public void testPublishJSONArray() {
+    public void testPublishJSONArray() throws PubnubException, InterruptedException {
         String channel = "java-unittest-" + Math.random();
         final JSONArray sendMessage = new JSONArray().put(1).put("Test");
 
@@ -301,60 +290,41 @@ public class PubnubTest {
             }
         };
 
-        Hashtable args = new Hashtable();
-        args.put("channel", channel);
-        args.put("callback", sbCb);
+        pubnub.subscribe(channel, sbCb);
+        latch.await(10, TimeUnit.SECONDS);
 
-        try {
-            pubnub.subscribe(args);
-        } catch (PubnubException e1) {
-
-        }
-
-        try {
-            latch.await(30, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-
-        }
         assertEquals(1, pbCb.getResult());
         assertEquals(sendMessage.toString(), sbCb.getResponse().toString());
     }
 
     @Test
-    public void testPublishJSONObject() {
+    public void testPublishJSONObject() throws InterruptedException, PubnubException, JSONException {
         String channel = "java-unittest-" + Math.random();
 
-        try {
-            final JSONObject sendMessage;
+        final JSONObject sendMessage;
 
-            sendMessage = new JSONObject().put("1", "Test");
+        sendMessage = new JSONObject().put("1", "Test");
 
-            final CountDownLatch latch = new CountDownLatch(2);
+        final CountDownLatch latch = new CountDownLatch(2);
 
-            final PublishCallback pbCb = new PublishCallback(latch);
-            SubscribeCallback sbCb = new SubscribeCallback(latch) {
-                @Override
-                public void connectCallback(String channel, Object message) {
-                    pubnub.publish(channel, sendMessage, pbCb);
-                }
-            };
+        final PublishCallback pbCb = new PublishCallback(latch);
+        SubscribeCallback sbCb = new SubscribeCallback(latch) {
+            @Override
+            public void connectCallback(String channel, Object message) {
+                pubnub.publish(channel, sendMessage, pbCb);
+            }
+        };
 
-            Hashtable args = new Hashtable();
-            args.put("channel", channel);
-            args.put("callback", sbCb);
+        pubnub.subscribe(channel, sbCb);
 
-            pubnub.subscribe(args);
+        latch.await(10, TimeUnit.SECONDS);
 
-            latch.await(30, TimeUnit.SECONDS);
-            assertEquals(1, pbCb.getResult());
-            assertEquals(sendMessage.toString(), sbCb.getResponse().toString());
-        } catch (Exception e) {
-
-        }
+        assertEquals(1, pbCb.getResult());
+        assertEquals(sendMessage.toString(), sbCb.getResponse().toString());
     }
 
     @Test
-    public void testPublishStringWithEncryption() {
+    public void testPublishStringWithEncryption() throws InterruptedException, PubnubException {
         String channel = "java-unittest-" + Math.random();
         final String sendMessage = "Test Message " + Math.random();
 
@@ -368,27 +338,15 @@ public class PubnubTest {
             }
         };
 
-        Hashtable args = new Hashtable();
-        args.put("channel", channel);
-        args.put("callback", sbCb);
+        pubnub_enc.subscribe(channel, sbCb);
+        latch.await(10, TimeUnit.SECONDS);
 
-        try {
-            pubnub_enc.subscribe(args);
-        } catch (PubnubException e1) {
-
-        }
-
-        try {
-            latch.await(30, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-
-        }
         assertEquals(1, pbCb.getResult());
         assertEquals(sendMessage, sbCb.getResponse());
     }
 
     @Test
-    public void testPublishJSONArrayWithEncryption() {
+    public void testPublishJSONArrayWithEncryption() throws PubnubException, InterruptedException {
         String channel = "java-unittest-" + Math.random();
         final JSONArray sendMessage = new JSONArray().put(1).put("Test");
 
@@ -402,97 +360,65 @@ public class PubnubTest {
             }
         };
 
-        Hashtable args = new Hashtable();
-        args.put("channel", channel);
-        args.put("callback", sbCb);
+        pubnub_enc.subscribe(channel, sbCb);
+        latch.await(10, TimeUnit.SECONDS);
 
-        try {
-            pubnub_enc.subscribe(args);
-        } catch (PubnubException e1) {
-
-        }
-
-        try {
-            latch.await(30, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-
-        }
         assertEquals(1, pbCb.getResult());
         assertEquals(sendMessage.toString(), sbCb.getResponse().toString());
     }
 
     @Test
-    public void testPublishJSONObjectWithEncryption() {
+    public void testPublishJSONObjectWithEncryption() throws InterruptedException, PubnubException, JSONException {
         String channel = "java-unittest-" + Math.random();
 
-        try {
-            final JSONObject sendMessage;
+        final JSONObject sendMessage;
 
-            sendMessage = new JSONObject().put("1", "Test");
+        sendMessage = new JSONObject().put("1", "Test");
 
-            final CountDownLatch latch = new CountDownLatch(2);
+        final CountDownLatch latch = new CountDownLatch(2);
 
-            final PublishCallback pbCb = new PublishCallback(latch);
-            SubscribeCallback sbCb = new SubscribeCallback(latch) {
-                @Override
-                public void connectCallback(String channel, Object message) {
-                    pubnub_enc.publish(channel, sendMessage, pbCb);
-                }
-            };
+        final PublishCallback pbCb = new PublishCallback(latch);
+        SubscribeCallback sbCb = new SubscribeCallback(latch) {
+            @Override
+            public void connectCallback(String channel, Object message) {
+                pubnub_enc.publish(channel, sendMessage, pbCb);
+            }
+        };
 
-            Hashtable args = new Hashtable();
-            args.put("channel", channel);
-            args.put("callback", sbCb);
+        pubnub_enc.subscribe(channel, sbCb);
+        latch.await(10, TimeUnit.SECONDS);
 
-            pubnub_enc.subscribe(args);
-
-            latch.await(30, TimeUnit.SECONDS);
-            assertEquals(1, pbCb.getResult());
-            assertEquals(sendMessage.toString(), sbCb.getResponse().toString());
-        } catch (Exception e) {
-
-        }
+        assertEquals(1, pbCb.getResult());
+        assertEquals(sendMessage.toString(), sbCb.getResponse().toString());
     }
 
     @Test
-    public void testHereNowOneUser() {
+    public void testHereNowOneUser() throws InterruptedException, PubnubException {
         String channel = "java-unittest-" + Math.random();
 
-        try {
-            final JSONObject sendMessage;
+        final CountDownLatch latch = new CountDownLatch(2);
 
-            sendMessage = new JSONObject().put("1", "Test");
+        final HereNowCallback hnCb = new HereNowCallback(latch);
 
-            final CountDownLatch latch = new CountDownLatch(2);
+        SubscribeCallback sbCb = new SubscribeCallback(latch) {
+            @Override
+            public void connectCallback(String channel, Object message) {
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
 
-            final HereNowCallback hnCb = new HereNowCallback(latch);
-
-            SubscribeCallback sbCb = new SubscribeCallback(latch) {
-                @Override
-                public void connectCallback(String channel, Object message) {
-                    try {
-                        Thread.sleep(5000);
-                    } catch (InterruptedException e) {
-
-                    }
-                    pubnub.hereNow(channel, hnCb);
-                    pubnub.unsubscribe(channel);
-                    if (latch != null)
-                        latch.countDown();
                 }
-            };
+                pubnub.hereNow(channel, hnCb);
+                pubnub.unsubscribe(channel);
+                if (latch != null)
+                    latch.countDown();
+            }
+        };
 
-            Hashtable args = new Hashtable();
-            args.put("channel", channel);
-            args.put("callback", sbCb);
+        pubnub.subscribe(channel, sbCb);
+        latch.await(10, TimeUnit.SECONDS);
 
-            pubnub.subscribe(args);
-
-            latch.await(30, TimeUnit.SECONDS);
-            assertEquals(1, hnCb.getOccupancy());
-        } catch (Exception e) {
-
-        }
+        assertEquals(1, hnCb.getOccupancy());
     }
 
     @Test
@@ -524,7 +450,7 @@ public class PubnubTest {
             }
         });
         try {
-            latch.await(30, TimeUnit.SECONDS);
+            latch.await(10, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -560,7 +486,7 @@ public class PubnubTest {
             }
         });
         try {
-            latch.await(30, TimeUnit.SECONDS);
+            latch.await(10, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -568,446 +494,361 @@ public class PubnubTest {
     }
 
     @Test
-    public void testPresence() {
+    public void testPresence() throws InterruptedException, PubnubException {
         String channel = "java-unittest-" + Math.random();
-        CountDownLatch latch = new CountDownLatch(2);
+        Pubnub pubnub2 = new Pubnub("demo", "demo");
+        CountDownLatch latch = new CountDownLatch(1);
 
         PresenceCallback presenceCb = new PresenceCallback(latch);
 
-        try {
-            pubnub.presence(channel, presenceCb);
+        pubnub.presence(channel, presenceCb);
 
-            Pubnub pubnub2 = new Pubnub("demo", "demo");
+        pubnub2.subscribe(channel, new SubscribeCallback());
 
-            Hashtable args = new Hashtable();
-            args.put("channel", channel);
-            args.put("callback", new SubscribeCallback(latch));
+        latch.await(10, TimeUnit.SECONDS);
 
-            pubnub2.subscribe(args);
-
-            latch.await(30, TimeUnit.SECONDS);
-            assertEquals(pubnub2.UUID, presenceCb.getUUID());
-        } catch (Exception e) {
-            e.printStackTrace();
-            assertTrue(false);
-        }
+        assertEquals(pubnub2.UUID, presenceCb.getUUID());
     }
 
     @Test
-    public void testConnectionRestore() {
+    public void testConnectionRestore() throws PubnubException, InterruptedException {
         String channel = "java-unittest-" + Math.random();
-        final CountDownLatch latch = new CountDownLatch(3);
 
+        final CountDownLatch latch = new CountDownLatch(3);
         final SubscribeCallback subscribeCb = new SubscribeCallback(latch);
 
-        try {
-            pubnub.setResumeOnReconnect(true);
-            final Hashtable args = new Hashtable();
-            // args.put("channels", new String[]{channel, "b"});
-            args.put("channel", channel);
-            args.put("callback", new SubscribeCallback(latch) {
-                public void connectCallback(String channel, Object message) {
-                    pubnub.unsubscribe(channel);
-                    pubnub.publish(channel, 10, new PublishCallback(latch) {
-                        public void successCallback(String channel,
-                        Object message) {
-                            try {
-                                Thread.sleep(2000);
-                            } catch (InterruptedException e1) {
-                                // TODO Auto-generated catch block
-                                e1.printStackTrace();
-                            }
-                            Hashtable args = new Hashtable();
-                            args.put("channel", channel);
-                            args.put("callback", subscribeCb);
-                            try {
-                                pubnub.subscribe(args);
-                            } catch (PubnubException e) {
-                                e.printStackTrace();
-                            }
-                            latch.countDown();
-                        }
-                    });
-                    latch.countDown();
-                }
-            });
-            pubnub.subscribe(args);
-            latch.await(60, TimeUnit.SECONDS);
-            assertEquals(10, subscribeCb.getResponse());
+        pubnub.setResumeOnReconnect(true);
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            assertTrue(false);
-        }
+        pubnub.subscribe(channel, new SubscribeCallback(latch) {
+            public void connectCallback(String channel, Object message) {
+                pubnub.unsubscribe(channel);
+                pubnub.publish(channel, 10, new PublishCallback(latch) {
+                    public void successCallback(String channel, Object message) {
+                        try {
+                            Thread.sleep(2000);
+                        } catch (InterruptedException e1) {
+                            // TODO Auto-generated catch block
+                            e1.printStackTrace();
+                        }
+
+                        try {
+                            pubnub.subscribe(channel, subscribeCb);
+                        } catch (PubnubException e) {
+                            e.printStackTrace();
+                        }
+
+                        latch.countDown();
+                    }
+                });
+                latch.countDown();
+            }
+        });
+
+        latch.await(10, TimeUnit.SECONDS);
+
+        assertEquals(10, subscribeCb.getResponse());
     }
 
     @Test
-    public void testConnectionRestoreUnsubInSuccessCallback() {
+    public void testConnectionRestoreUnsubInSuccessCallback() throws PubnubException, InterruptedException {
         String channel = "java-unittest-" + Math.random();
+
         final CountDownLatch latch = new CountDownLatch(5);
-
         final SubscribeCallback subscribeCb = new SubscribeCallback(latch);
 
-        try {
-            pubnub.setResumeOnReconnect(true);
-            final Hashtable args = new Hashtable();
-            args.put("channel", channel);
-            args.put("callback", new SubscribeCallback(latch) {
-                public void connectCallback(String channel, Object message) {
-                    pubnub.publish(channel, 10, new PublishCallback(latch) {
-                        public void successCallback(String channel,
-                        Object message) {
-                            pubnub.unsubscribe(channel);
-                            pubnub.publish(channel, 20, new PublishCallback(
-                            latch) {
-                                public void successCallback(String channel,
-                                Object message) {
-                                    try {
-                                        Thread.sleep(2000);
-                                    } catch (InterruptedException e1) {
-                                        // TODO Auto-generated catch block
-                                        e1.printStackTrace();
-                                    }
-                                    Hashtable args = new Hashtable();
-                                    args.put("channel", channel);
-                                    args.put("callback", subscribeCb);
-                                    try {
-                                        pubnub.subscribe(args);
-                                    } catch (PubnubException e) {
-                                        e.printStackTrace();
-                                    }
-                                    latch.countDown();
+        pubnub.setResumeOnReconnect(true);
+
+        pubnub.subscribe(channel, new SubscribeCallback(latch) {
+            public void connectCallback(String channel, Object message) {
+                pubnub.publish(channel, 10, new PublishCallback(latch) {
+                    public void successCallback(String channel, Object message) {
+                        pubnub.unsubscribe(channel);
+                        pubnub.publish(channel, 20, new PublishCallback(latch) {
+                            public void successCallback(String channel, Object message) {
+                                try {
+                                    Thread.sleep(2000);
+                                } catch (InterruptedException e1) {
+                                    // TODO Auto-generated catch block
+                                    e1.printStackTrace();
                                 }
-                            });
-                            latch.countDown();
-                        }
-                    });
-                    latch.countDown();
-                }
-            });
-            pubnub.subscribe(args);
-            latch.await(60, TimeUnit.SECONDS);
-            assertEquals(20, subscribeCb.getResponse());
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            assertTrue(false);
-        }
-    }
-
-    @Test
-    public void testConnectionRestoreMultipleChannels() {
-        String channel = "java-unittest-" + Math.random();
-        final CountDownLatch latch = new CountDownLatch(4);
-
-        final SubscribeCallback subscribeCb = new SubscribeCallback(latch);
-
-        try {
-            pubnub.setResumeOnReconnect(true);
-            final Hashtable args = new Hashtable();
-            args.put("channels", new String[] { channel, "b" });
-            args.put("callback", new SubscribeCallback(latch) {
-                public void connectCallback(String channel, Object message) {
-                    pubnub.unsubscribe(channel);
-                    pubnub.publish(channel, 10, new PublishCallback(latch) {
-                        public void successCallback(String channel,
-                        Object message) {
-                            try {
-                                Thread.sleep(5000);
-                            } catch (InterruptedException e1) {
-                                // TODO Auto-generated catch block
-                                e1.printStackTrace();
-                            }
-                            Hashtable args = new Hashtable();
-                            args.put("channel", channel);
-                            args.put("callback", subscribeCb);
-                            try {
-                                pubnub.subscribe(args);
-                            } catch (PubnubException e) {
-                                e.printStackTrace();
-                            }
-                            latch.countDown();
-                        }
-                    });
-                    latch.countDown();
-                }
-            });
-            pubnub.subscribe(args);
-            latch.await(60, TimeUnit.SECONDS);
-            assertEquals(10, subscribeCb.getResponse());
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            assertTrue(false);
-        }
-    }
-
-    @Test
-    public void testConnectionRestoreMultipleChannelsUnsubInSuccessCallback() {
-        String channel = "java-unittest-" + Math.random();
-        final CountDownLatch latch = new CountDownLatch(6);
-
-        final SubscribeCallback subscribeCb = new SubscribeCallback(latch);
-
-        try {
-            pubnub.setResumeOnReconnect(true);
-            final Hashtable args = new Hashtable();
-            args.put("channels", new String[] { channel, "b" });
-            args.put("callback", new SubscribeCallback(latch) {
-                public void connectCallback(String channel, Object message) {
-                    pubnub.publish(channel, 10, new PublishCallback(latch) {
-                        public void successCallback(String channel,
-                        Object message) {
-                            pubnub.unsubscribe(channel);
-                            pubnub.publish(channel, 20, new PublishCallback(
-                            latch) {
-                                public void successCallback(String channel,
-                                Object message) {
-                                    try {
-                                        Thread.sleep(5000);
-                                    } catch (InterruptedException e1) {
-                                        // TODO Auto-generated catch block
-                                        e1.printStackTrace();
-                                    }
-                                    Hashtable args = new Hashtable();
-                                    args.put("channel", channel);
-                                    args.put("callback", subscribeCb);
-                                    try {
-                                        pubnub.subscribe(args);
-                                    } catch (PubnubException e) {
-                                        e.printStackTrace();
-                                    }
-                                    latch.countDown();
+                                try {
+                                    pubnub.subscribe(channel, subscribeCb);
+                                } catch (PubnubException e) {
+                                    e.printStackTrace();
                                 }
-                            });
-                            latch.countDown();
 
-                        }
-                    });
-                    latch.countDown();
-                }
-            });
-            pubnub.subscribe(args);
-            latch.await(90, TimeUnit.SECONDS);
-            assertEquals(20, subscribeCb.getResponse());
+                                latch.countDown();
+                            }
+                        });
+                        latch.countDown();
+                    }
+                });
+                latch.countDown();
+            }
+        });
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            assertTrue(false);
-        }
+        latch.await(10, TimeUnit.SECONDS);
+
+        assertEquals(20, subscribeCb.getResponse());
     }
 
     @Test
-    public void testConnectionRestoreFalse() {
+    public void testConnectionRestoreMultipleChannels() throws PubnubException, InterruptedException {
+        String channel = "java-unittest-" + Math.random();
+
+        final CountDownLatch latch = new CountDownLatch(3);
+        final SubscribeCallback subscribeCb = new SubscribeCallback(latch);
+
+        pubnub.setResumeOnReconnect(true);
+
+        pubnub.subscribe(channel, new SubscribeCallback(latch) {
+            public void connectCallback(String channel, Object message) {
+                pubnub.unsubscribe(channel);
+                pubnub.publish(channel, 10, new PublishCallback(latch) {
+                    public void successCallback(String channel, Object message) {
+                        try {
+                            Thread.sleep(5000);
+                        } catch (InterruptedException e1) {
+                            // TODO Auto-generated catch block
+                            e1.printStackTrace();
+                        }
+
+                        try {
+                            pubnub.subscribe(channel, subscribeCb);
+                        } catch (PubnubException e) {
+                            e.printStackTrace();
+                        }
+
+                        latch.countDown();
+                    }
+                });
+                latch.countDown();
+            }
+        });
+
+        latch.await(10, TimeUnit.SECONDS);
+
+        assertEquals(10, subscribeCb.getResponse());
+    }
+
+    @Test
+    public void testConnectionRestoreMultipleChannelsUnsubInSuccessCallback() throws InterruptedException, PubnubException {
+        String channel = "java-unittest-" + Math.random();
+
+        final CountDownLatch latch = new CountDownLatch(5);
+        final SubscribeCallback subscribeCb = new SubscribeCallback(latch);
+
+        pubnub.setResumeOnReconnect(true);
+
+        pubnub.subscribe(channel, new SubscribeCallback(latch) {
+            public void connectCallback(String channel, Object message) {
+                pubnub.publish(channel, 10, new PublishCallback(latch) {
+                    public void successCallback(String channel, Object message) {
+                        pubnub.unsubscribe(channel);
+                        pubnub.publish(channel, 20, new PublishCallback(latch) {
+                            public void successCallback(String channel, Object message) {
+                                try {
+                                    Thread.sleep(5000);
+                                } catch (InterruptedException e1) {
+                                    // TODO Auto-generated catch block
+                                    e1.printStackTrace();
+                                }
+
+                                try {
+                                    pubnub.subscribe(channel, subscribeCb);
+                                } catch (PubnubException e) {
+                                    e.printStackTrace();
+                                }
+
+                                latch.countDown();
+                            }
+                        });
+                        latch.countDown();
+                    }
+                });
+                latch.countDown();
+            }
+        });
+
+        latch.await(10, TimeUnit.SECONDS);
+
+        assertEquals(20, subscribeCb.getResponse());
+    }
+
+    @Test
+    public void testConnectionRestoreFalse() throws InterruptedException, PubnubException {
+        String channel = "java-unittest-" + Math.random();
+
+        final CountDownLatch latch = new CountDownLatch(2);
+        final SubscribeCallback subscribeCb = new SubscribeCallback(latch);
+
+        pubnub.setResumeOnReconnect(false);
+
+        pubnub.subscribe(channel, new SubscribeCallback(latch) {
+            public void connectCallback(String channel, Object message) {
+                pubnub.unsubscribe(channel);
+                pubnub.publish(channel, 10, new PublishCallback(latch) {
+                    public void successCallback(String channel, Object message) {
+                        try {
+                            Thread.sleep(2000);
+                        } catch (InterruptedException e1) {
+                            // TODO Auto-generated catch block
+                            e1.printStackTrace();
+                        }
+
+                        try {
+                            pubnub.subscribe(channel, subscribeCb);
+                        } catch (PubnubException e) {
+                            e.printStackTrace();
+                        }
+
+                        latch.countDown();
+                    }
+                });
+                latch.countDown();
+            }
+        });
+
+        latch.await(10, TimeUnit.SECONDS);
+
+        assertNull(subscribeCb.getResponse());
+    }
+
+    @Test
+    public void testConnectionRestoreFalseMultipleChannels() throws InterruptedException, PubnubException {
         String channel = "java-unittest-" + Math.random();
         final CountDownLatch latch = new CountDownLatch(3);
 
         final SubscribeCallback subscribeCb = new SubscribeCallback(latch);
 
-        try {
-            pubnub.setResumeOnReconnect(false);
-            final Hashtable args = new Hashtable();
-            // args.put("channels", new String[]{channel, "b"});
-            args.put("channel", channel);
-            args.put("callback", new SubscribeCallback(latch) {
-                public void connectCallback(String channel, Object message) {
-                    pubnub.unsubscribe(channel);
-                    pubnub.publish(channel, 10, new PublishCallback(latch) {
-                        public void successCallback(String channel,
-                        Object message) {
-                            try {
-                                Thread.sleep(2000);
-                            } catch (InterruptedException e1) {
-                                // TODO Auto-generated catch block
-                                e1.printStackTrace();
-                            }
-                            Hashtable args = new Hashtable();
-                            args.put("channel", channel);
-                            args.put("callback", subscribeCb);
-                            try {
-                                pubnub.subscribe(args);
-                            } catch (PubnubException e) {
-                                e.printStackTrace();
-                            }
-                            latch.countDown();
-                        }
-                    });
-                    latch.countDown();
-                }
-            });
-            pubnub.subscribe(args);
-            latch.await(90, TimeUnit.SECONDS);
-            assertNotEquals(10, subscribeCb.getResponse());
+        pubnub.setResumeOnReconnect(false);
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            assertTrue(false);
-        }
+        pubnub.subscribe(new String[]{channel, "b"}, new SubscribeCallback(latch) {
+            public void connectCallback(String channel, Object message) {
+                pubnub.unsubscribe(channel);
+                pubnub.publish(channel, 10, new PublishCallback(latch) {
+                    public void successCallback(String channel, Object message) {
+                        try {
+                            Thread.sleep(2000);
+                        } catch (InterruptedException e1) {
+                            // TODO Auto-generated catch block
+                            e1.printStackTrace();
+                        }
+
+                        try {
+                            pubnub.subscribe(channel, subscribeCb);
+                        } catch (PubnubException e) {
+                            e.printStackTrace();
+                        }
+
+                        latch.countDown();
+                    }
+                });
+                latch.countDown();
+            }
+        });
+
+        latch.await(10, TimeUnit.SECONDS);
+
+        assertNull(subscribeCb.getResponse());
     }
 
     @Test
-    public void testConnectionRestoreFalseMultipleChannels() {
+    public void testConnectionRestoreFalseUnsubInSuccessCallback() throws InterruptedException, PubnubException {
         String channel = "java-unittest-" + Math.random();
+
         final CountDownLatch latch = new CountDownLatch(3);
-
         final SubscribeCallback subscribeCb = new SubscribeCallback(latch);
 
-        try {
-            pubnub.setResumeOnReconnect(false);
-            final Hashtable args = new Hashtable();
-            args.put("channels", new String[] { channel, "b" });
-            args.put("callback", new SubscribeCallback(latch) {
-                public void connectCallback(String channel, Object message) {
-                    pubnub.unsubscribe(channel);
-                    pubnub.publish(channel, 10, new PublishCallback(latch) {
-                        public void successCallback(String channel,
-                        Object message) {
-                            try {
-                                Thread.sleep(2000);
-                            } catch (InterruptedException e1) {
-                                // TODO Auto-generated catch block
-                                e1.printStackTrace();
-                            }
-                            Hashtable args = new Hashtable();
-                            args.put("channel", channel);
-                            args.put("callback", subscribeCb);
-                            try {
-                                pubnub.subscribe(args);
-                            } catch (PubnubException e) {
-                                e.printStackTrace();
-                            }
-                            latch.countDown();
-                        }
-                    });
-                    latch.countDown();
-                }
+        pubnub.setResumeOnReconnect(false);
 
-            });
-            pubnub.subscribe(args);
-            latch.await(90, TimeUnit.SECONDS);
-            assertNotEquals(10, subscribeCb.getResponse());
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            assertTrue(false);
-        }
-    }
-
-    @Test
-    public void testConnectionRestoreFalseUnsubInSuccessCallback() {
-        String channel = "java-unittest-" + Math.random();
-        final CountDownLatch latch = new CountDownLatch(4);
-
-        final SubscribeCallback subscribeCb = new SubscribeCallback(latch);
-
-        try {
-            pubnub.setResumeOnReconnect(false);
-            final Hashtable args = new Hashtable();
-            args.put("channel", channel);
-            args.put("callback", new SubscribeCallback(latch) {
-                public void connectCallback(String channel, Object message) {
-                    pubnub.publish(channel, 10, new PublishCallback(latch) {
-                        public void successCallback(String channel,
-                        Object message) {
-                            pubnub.unsubscribe(channel);
-                            pubnub.publish(channel, 20, new PublishCallback(
-                            latch) {
-                                public void successCallback(String channel,
-                                Object message) {
-                                    try {
-                                        Thread.sleep(2000);
-                                    } catch (InterruptedException e1) {
-                                        // TODO Auto-generated catch block
-                                        e1.printStackTrace();
-                                    }
-                                    Hashtable args = new Hashtable();
-                                    args.put("channel", channel);
-                                    args.put("callback", subscribeCb);
-                                    try {
-                                        pubnub.subscribe(args);
-                                    } catch (PubnubException e) {
-                                        e.printStackTrace();
-                                    }
-                                    latch.countDown();
+        pubnub.subscribe(channel, new SubscribeCallback(latch) {
+            public void connectCallback(String channel, Object message) {
+                pubnub.publish(channel, 10, new PublishCallback(latch) {
+                    public void successCallback(String channel, Object message) {
+                        pubnub.unsubscribe(channel);
+                        pubnub.publish(channel, 20, new PublishCallback(latch) {
+                            public void successCallback(String channel, Object message) {
+                                try {
+                                    Thread.sleep(2000);
+                                } catch (InterruptedException e1) {
+                                    // TODO Auto-generated catch block
+                                    e1.printStackTrace();
                                 }
-                            });
-                            latch.countDown();
-                        }
-                    });
-                    latch.countDown();
-                }
-            });
-            pubnub.subscribe(args);
-            latch.await(90, TimeUnit.SECONDS);
-            assertNotEquals(20, subscribeCb.getResponse());
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            assertTrue(false);
-        }
+                                try {
+                                    pubnub.subscribe(channel, subscribeCb);
+                                } catch (PubnubException e) {
+                                    e.printStackTrace();
+                                }
+
+                                latch.countDown();
+                            }
+                        });
+                        latch.countDown();
+                    }
+                });
+                latch.countDown();
+            }
+        });
+
+        latch.await(10, TimeUnit.SECONDS);
+
+        assertNull(subscribeCb.getResponse());
     }
 
     @Test
-    public void testConnectionRestoreFalseMultipleChannelsUnsubInSuccessCallback() {
+    public void testConnectionRestoreFalseMultipleChannelsUnsubInSuccessCallback() throws InterruptedException, PubnubException {
         String channel = "java-unittest-" + Math.random();
-        final CountDownLatch latch = new CountDownLatch(4);
 
+        final CountDownLatch latch = new CountDownLatch(3);
         final SubscribeCallback subscribeCb = new SubscribeCallback(latch);
 
-        try {
-            pubnub.setResumeOnReconnect(false);
-            final Hashtable args = new Hashtable();
-            args.put("channels", new String[] { channel, "b" });
-            args.put("callback", new SubscribeCallback(latch) {
-                public void connectCallback(String channel, Object message) {
-                    pubnub.publish(channel, 10, new PublishCallback(latch) {
-                        public void successCallback(String channel,
-                        Object message) {
-                            pubnub.unsubscribe(channel);
-                            pubnub.publish(channel, 20, new PublishCallback(
-                            latch) {
-                                public void successCallback(String channel,
-                                Object message) {
-                                    try {
-                                        Thread.sleep(2000);
-                                    } catch (InterruptedException e1) {
-                                        // TODO Auto-generated catch block
-                                        e1.printStackTrace();
-                                    }
-                                    Hashtable args = new Hashtable();
-                                    args.put("channel", channel);
-                                    args.put("callback", subscribeCb);
-                                    try {
-                                        pubnub.subscribe(args);
-                                    } catch (PubnubException e) {
-                                        e.printStackTrace();
-                                    }
-                                    latch.countDown();
-                                }
-                            });
-                            latch.countDown();
-                        }
-                    });
-                    latch.countDown();
-                }
-            });
-            pubnub.subscribe(args);
-            latch.await(90, TimeUnit.SECONDS);
-            assertNotEquals(20, subscribeCb.getResponse());
+        pubnub.setResumeOnReconnect(false);
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            assertTrue(false);
-        }
+        pubnub.subscribe(new String[]{channel, "b"}, new SubscribeCallback(latch) {
+            public void connectCallback(String channel, Object message) {
+                pubnub.publish(channel, 10, new PublishCallback(latch) {
+                    public void successCallback(String channel, Object message) {
+                        pubnub.unsubscribe(channel);
+                        pubnub.publish(channel, 20, new PublishCallback(latch) {
+                            public void successCallback(String channel, Object message) {
+                                try {
+                                    Thread.sleep(2000);
+                                } catch (InterruptedException e1) {
+                                    // TODO Auto-generated catch block
+                                    e1.printStackTrace();
+                                }
+
+                                try {
+                                    pubnub.subscribe(channel, subscribeCb);
+                                } catch (PubnubException e) {
+                                    e.printStackTrace();
+                                }
+
+                                latch.countDown();
+                            }
+                        });
+                        latch.countDown();
+                    }
+                });
+                latch.countDown();
+            }
+        });
+
+        latch.await(10, TimeUnit.SECONDS);
+
+        assertNull(subscribeCb.getResponse());
     }
 
     @Test
-    public void testSubscribeInMultipleThreads() {
+    public void testSubscribeInMultipleThreads() throws InterruptedException {
         final String channel = "java-unittest-" + Math.random();
         final CountDownLatch latch = new CountDownLatch(100);
-        final Hashtable results = new Hashtable();
-        final Hashtable inputs = new Hashtable();
-        final Hashtable stats = new Hashtable();
+        final Hashtable<String, Object> results = new Hashtable<String, Object>();
+        final Hashtable<String, Object> inputs = new Hashtable<String, Object>();
+        final Hashtable<String, Object> stats = new Hashtable<String, Object>();
         final int count = 100;
         final Random rand = new Random();
         stats.put("connects", 0);
@@ -1032,10 +873,8 @@ public class PubnubTest {
                     } catch (InterruptedException e1) {
                         e1.printStackTrace();
                     }
-                    Hashtable args = new Hashtable();
-                    args.put("channel", ch);
-                    args.put("message", message);
-                    args.put("callback", new Callback() {
+
+                    pubnub.publish(ch, message, new Callback() {
 
                         @Override
                         public void successCallback(String channel,
@@ -1049,7 +888,6 @@ public class PubnubTest {
 
                         }
                     });
-                    pubnub.publish(args);
                 }
             }
 
@@ -1068,15 +906,16 @@ public class PubnubTest {
 
             public void run() {
 
-                Hashtable args = new Hashtable();
-                args.put("channel", ch);
+                Hashtable<String, Object> args = new Hashtable<String, Object>();
+
+                args.put("channels", new String[]{ch});
                 args.put("callback", new Callback() {
 
                     @Override
                     public void connectCallback(String channel, Object message) {
 
-                        stats.put("connects",
-                                  (Integer) (stats.get("connects")) + 1);
+                        stats.put("connects", (Integer) (stats.get("connects")) + 1);
+
                         if ((Integer) stats.get("connects") >= count)
                             startPublish();
                     }
@@ -1114,19 +953,15 @@ public class PubnubTest {
             new Thread(new SubscribeThread(channel + "-" + i)).start();
         }
 
-        try {
-            latch.await(90, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        latch.await(30, TimeUnit.SECONDS);
+
         assertFalse((Boolean) stats.get("duplicate").equals(true));
         assertFalse((Boolean) stats.get("wrong").equals(true));
         assertEquals((Integer)0,(Integer) stats.get("count"));
-
     }
 
     @Test
-    public void testSubscribeInMultipleThreads3() {
+    public void testSubscribeInMultipleThreads3() throws InterruptedException {
         final String channel = "java-unittest-" + Math.random();
         final CountDownLatch latch = new CountDownLatch(100);
         final Hashtable results = new Hashtable();
@@ -1192,8 +1027,10 @@ public class PubnubTest {
                 } catch (InterruptedException e1) {
                     e1.printStackTrace();
                 }
+
                 Hashtable args = new Hashtable();
-                args.put("channel", ch);
+
+                args.put("channels", new String[]{ch});
                 args.put("callback", new Callback() {
 
                     @Override
@@ -1231,11 +1068,8 @@ public class PubnubTest {
             new Thread(new PublishThread(channel + "-" + i, i)).start();
         }
 
-        try {
-            latch.await(90, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        latch.await(30, TimeUnit.SECONDS);
+
         assertFalse((Boolean) stats.get("duplicate").equals(true));
         assertFalse((Boolean) stats.get("wrong").equals(true));
         // assertEquals((Integer)count,(Integer)results.get("count"));
@@ -1310,7 +1144,7 @@ public class PubnubTest {
                     e1.printStackTrace();
                 }
                 Hashtable args = new Hashtable();
-                args.put("channel", ch);
+                args.put("channels", new String[]{ch});
                 args.put("callback", new Callback() {
 
                     @Override
@@ -1354,7 +1188,7 @@ public class PubnubTest {
         }
 
         try {
-            latch.await(90, TimeUnit.SECONDS);
+            latch.await(30, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -1500,7 +1334,7 @@ public class PubnubTest {
         }
 
         try {
-            latch.await(120, TimeUnit.SECONDS);
+            latch.await(30, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -1599,7 +1433,7 @@ public class PubnubTest {
             public void run() {
 
                 Hashtable args = new Hashtable();
-                args.put("channel", ch);
+                args.put("channels", new String[]{ch});
                 args.put("callback", new Callback() {
 
                     @Override
@@ -1646,7 +1480,7 @@ public class PubnubTest {
         }
 
         try {
-            latch.await(150, TimeUnit.SECONDS);
+            latch.await(30, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -1662,7 +1496,7 @@ public class PubnubTest {
         Pubnub pubnub = new Pubnub("pub-c-a2650a22-deb1-44f5-aa87-1517049411d5",
                                    "sub-c-a478dd2a-c33d-11e2-883f-02ee2ddab7fe",
                                    "sec-c-YjFmNzYzMGMtYmI3NC00NzJkLTlkYzYtY2MwMzI4YTJhNDVh");
-        pubnub.setOrigin("pam-beta");
+
         pubnub.setCacheBusting(false);
         pubnub.pamGrant("hello-uls", "abcd", true, true, 1400, ulscb);
 
@@ -1685,7 +1519,7 @@ public class PubnubTest {
         Pubnub pubnub = new Pubnub("pub-c-a2650a22-deb1-44f5-aa87-1517049411d5",
                                    "sub-c-a478dd2a-c33d-11e2-883f-02ee2ddab7fe",
                                    "sec-c-YjFmNzYzMGMtYmI3NC00NzJkLTlkYzYtY2MwMzI4YTJhNDVh");
-        pubnub.setOrigin("pam-beta");
+
         pubnub.setCacheBusting(false);
         pubnub.pamAudit(ulscb);
 
@@ -1708,7 +1542,7 @@ public class PubnubTest {
         Pubnub pubnub = new Pubnub("pub-c-a2650a22-deb1-44f5-aa87-1517049411d5",
                                    "sub-c-a478dd2a-c33d-11e2-883f-02ee2ddab7fe",
                                    "sec-c-YjFmNzYzMGMtYmI3NC00NzJkLTlkYzYtY2MwMzI4YTJhNDVh");
-        pubnub.setOrigin("pam-beta");
+
         pubnub.setCacheBusting(false);
         pubnub.pamAudit("hello-uls", ulscb);
 
@@ -1731,7 +1565,7 @@ public class PubnubTest {
         Pubnub pubnub = new Pubnub("pub-c-a2650a22-deb1-44f5-aa87-1517049411d5",
                                    "sub-c-a478dd2a-c33d-11e2-883f-02ee2ddab7fe",
                                    "sec-c-YjFmNzYzMGMtYmI3NC00NzJkLTlkYzYtY2MwMzI4YTJhNDVh");
-        pubnub.setOrigin("pam-beta");
+
         pubnub.setCacheBusting(false);
         pubnub.pamAudit("hello-uls", "abcd", ulscb);
 
@@ -1754,7 +1588,7 @@ public class PubnubTest {
         Pubnub pubnub = new Pubnub("pub-c-a2650a22-deb1-44f5-aa87-1517049411d5",
                                    "sub-c-a478dd2a-c33d-11e2-883f-02ee2ddab7fe",
                                    "sec-c-YjFmNzYzMGMtYmI3NC00NzJkLTlkYzYtY2MwMzI4YTJhNDVh");
-        pubnub.setOrigin("pam-beta");
+
         pubnub.setCacheBusting(false);
         pubnub.pamRevoke("hello-uls", "abcd", ulscb);
 

@@ -924,9 +924,11 @@ abstract class PubnubCore {
      */
     public void presence(String channel, Callback callback)
             throws PubnubException {
-        Hashtable args = new Hashtable(2);
-        args.put("channel", channel + PRESENCE_SUFFIX);
+        Hashtable<String, Object> args = new Hashtable<String, Object>(2);
+
+        args.put("channels", new String[] {channel + PRESENCE_SUFFIX});
         args.put("callback", callback);
+
         subscribe(args);
     }
 
