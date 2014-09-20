@@ -1177,6 +1177,40 @@ abstract class PubnubCore {
         _request(hreq, nonSubscribeManager);
     }
 
+    public void removeGroup(String groupId, Callback callback) {
+        removeGroup(null, groupId, callback);
+    }
+
+    public void removeGroup(String namespace, String groupId, Callback callback) {
+        final Callback cb = getWrappedCallback(callback);
+        String[] url;
+
+        if (namespace != null) {
+            url = new String[]{getPubnubUrl(), "v1", "channel-registration", "sub-key",
+                    this.SUBSCRIBE_KEY, "namespace",
+                    namespace, "channel-group", groupId, "remove"};
+        } else {
+            url = new String[]{getPubnubUrl(), "v1", "channel-registration", "sub-key",
+                    this.SUBSCRIBE_KEY, "channel-group", groupId, "remove"};
+        }
+
+        Hashtable parameters = PubnubUtil.hashtableClone(params);
+
+        HttpRequest hreq = new HttpRequest(url, parameters, new ResponseHandler() {
+
+            public void handleResponse(HttpRequest hreq, String response) {
+                cb.successCallback(null, PubnubUtil.parseJSON(response));
+            }
+
+            public void handleError(HttpRequest hreq, PubnubError error) {
+                cb.errorCallback(null, error);
+            }
+
+        });
+
+        _request(hreq, nonSubscribeManager);
+    }
+
     public void getState(String channel, String uuid, Callback callback) {
         final Callback cb = getWrappedCallback(callback);
         String[] urlargs = { getPubnubUrl(), "v2", "presence", "sub-key",

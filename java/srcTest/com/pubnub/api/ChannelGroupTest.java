@@ -285,4 +285,64 @@ public class ChannelGroupTest {
         assertJSONArrayHas("jtest_group2", result);
         assertJSONArrayHasNo("jtest_group3", result);
     }
+
+    @Test
+    public void testRemoveGroup() throws InterruptedException {
+        final CountDownLatch latch1 = new CountDownLatch(1);
+        final CountDownLatch latch2 = new CountDownLatch(1);
+        final CountDownLatch latch3 = new CountDownLatch(1);
+        final CountDownLatch latch4 = new CountDownLatch(1);
+        final TestHelper.SimpleCallback cb1 = new TestHelper.SimpleCallback(latch1);
+        final TestHelper.SimpleCallback cb2 = new TestHelper.SimpleCallback(latch2);
+        final TestHelper.SimpleCallback cb3 = new TestHelper.SimpleCallback(latch3);
+        final TestHelper.SimpleCallback cb4 = new TestHelper.SimpleCallback(latch4);
+
+        pubnub.addChannelToGroup("jtest_group1", "ch1", cb1);
+        latch1.await(10, TimeUnit.SECONDS);
+
+        pubnub.group(cb2);
+        latch2.await(10, TimeUnit.SECONDS);
+
+        JSONArray result = (JSONArray) cb2.getResponse();
+        assertJSONArrayHas("jtest_group1", result);
+
+        pubnub.removeGroup("jtest_group1", cb3);
+        latch3.await(10, TimeUnit.SECONDS);
+
+        pubnub.group(cb4);
+        latch4.await(10, TimeUnit.SECONDS);
+
+        result = (JSONArray) cb4.getResponse();
+        assertJSONArrayHasNo("jtest_group1", result);
+    }
+
+    @Test
+    public void testRemoveNamespacedGroup() throws InterruptedException {
+        final CountDownLatch latch1 = new CountDownLatch(1);
+        final CountDownLatch latch2 = new CountDownLatch(1);
+        final CountDownLatch latch3 = new CountDownLatch(1);
+        final CountDownLatch latch4 = new CountDownLatch(1);
+        final TestHelper.SimpleCallback cb1 = new TestHelper.SimpleCallback(latch1);
+        final TestHelper.SimpleCallback cb2 = new TestHelper.SimpleCallback(latch2);
+        final TestHelper.SimpleCallback cb3 = new TestHelper.SimpleCallback(latch3);
+        final TestHelper.SimpleCallback cb4 = new TestHelper.SimpleCallback(latch4);
+
+        pubnub.addChannelToGroup(channelNamespace, "jtest_group1", "ch1", cb1);
+        latch1.await(10, TimeUnit.SECONDS);
+
+        pubnub.group(channelNamespace, cb2);
+        latch2.await(10, TimeUnit.SECONDS);
+
+        JSONArray result = (JSONArray) cb2.getResponse();
+        assertJSONArrayHas("jtest_group1", result);
+
+        pubnub.removeGroup(channelNamespace, "jtest_group1", cb3);
+        latch3.await(10, TimeUnit.SECONDS);
+
+        pubnub.group(channelNamespace, cb4);
+        latch4.await(10, TimeUnit.SECONDS);
+
+        result = (JSONArray) cb4.getResponse();
+        assertJSONArrayHasNo("jtest_group1", result);
+    }
 }
