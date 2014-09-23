@@ -2215,62 +2215,9 @@ abstract class PubnubCore {
 
                         if (_channel != null) {
                             for (int i = 0; i < messages.length(); i++) {
-                                if (CIPHER_KEY.length() > 0
-                                        && !_channel.name
-                                        .endsWith(PRESENCE_SUFFIX)) {
-                                    PubnubCrypto pc = new PubnubCrypto(
-                                            CIPHER_KEY, IV);
-                                    try {
-                                        String message = pc
-                                                .decrypt(messages
-                                                        .get(i)
-                                                        .toString());
-                                        if (!isWorkerDead(hreq)) _channel.callback
-                                        .successCallback(
-                                                _channel.name,
-                                                PubnubUtil.parseJSON(PubnubUtil.stringToJSON(message)));
-                                    } catch (DataLengthException e) {
-                                        if (!isWorkerDead(hreq)) _channel.callback
-                                        .errorCallback(
-                                                _channel.name,
-                                                PubnubError.getErrorObject(
-                                                        PubnubError.PNERROBJ_DECRYPTION_ERROR, 16,
-                                                        messages.get(i).toString()));
-                                    } catch (IllegalStateException e) {
-                                        if (!isWorkerDead(hreq)) _channel.callback
-                                        .errorCallback(
-                                                _channel.name,
-                                                PubnubError.getErrorObject(
-                                                        PubnubError.PNERROBJ_DECRYPTION_ERROR, 17,
-                                                        messages.get(i).toString()));
-                                    } catch (InvalidCipherTextException e) {
-                                        if (!isWorkerDead(hreq)) _channel.callback
-                                        .errorCallback(
-                                                _channel.name,
-                                                PubnubError.getErrorObject(
-                                                        PubnubError.PNERROBJ_DECRYPTION_ERROR, 18,
-                                                        messages.get(i).toString()));
-                                    } catch (IOException e) {
-                                        if (!isWorkerDead(hreq)) _channel.callback
-                                        .errorCallback(
-                                                _channel.name,
-                                                PubnubError.getErrorObject(
-                                                        PubnubError.PNERROBJ_DECRYPTION_ERROR, 19,
-                                                        messages.get(i).toString()));
-                                    } catch (Exception e) {
-                                        if (!isWorkerDead(hreq)) _channel.callback
-                                        .errorCallback(
-                                                _channel.name,
-                                                PubnubError.getErrorObject(
-                                                        PubnubError.PNERROBJ_DECRYPTION_ERROR, 20,
-                                                        messages.get(i).toString() + " : " + e.toString()));
-                                    }
-                                } else {
-                                    if (!isWorkerDead(hreq)) _channel.callback.successCallback(
-                                            _channel.name,
-                                            PubnubUtil.parseJSON(messages.get(i)));
-                                }
-
+                                Object message = messages.get(i);
+                                invokeSubscribeCallback(_channel.name, _channel.callback,
+                                        message, hreq);
                             }
                         }
 
