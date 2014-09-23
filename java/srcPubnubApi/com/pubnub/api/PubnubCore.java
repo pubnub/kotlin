@@ -975,7 +975,7 @@ abstract class PubnubCore {
                 "data"
         };
         if (state != null) parameters.put("state", state.toString());
-        SubscriptionItem ch = (SubscriptionItem) channelSubscriptions.getItem(channel);
+        SubscriptionItem ch = channelSubscriptions.getItem(channel);
         if (ch != null) {
             try {
                 channelSubscriptions.state.put(channel, state);
@@ -1993,7 +1993,7 @@ abstract class PubnubCore {
 
     private void callErrorCallbacks(String[] channelList, PubnubError error) {
         for (String channel : channelList) {
-            Callback cb = ((SubscriptionItem) channelSubscriptions.getItem(channel)).callback;
+            Callback cb = channelSubscriptions.getItem(channel).callback;
             cb.errorCallback(channel, error);
         }
     }
@@ -2042,7 +2042,7 @@ abstract class PubnubCore {
          */
 
         for (String channel : channelList) {
-            SubscriptionItem channelObj = channelSubscriptions.getItem(channel);
+            Channel channelObj = (Channel) channelSubscriptions.getItem(channel);
 
             if (channelObj == null) {
                 Channel ch = new Channel(channel, callback);
@@ -2052,7 +2052,7 @@ abstract class PubnubCore {
         }
 
         for (String group : groupList) {
-            SubscriptionItem channelGroupObj = channelGroupSubscriptions.getItem(group);
+            ChannelGroup channelGroupObj = (ChannelGroup) channelGroupSubscriptions.getItem(group);
 
             if (channelGroupObj == null) {
                 ChannelGroup chg = new ChannelGroup(group, callback, this);
