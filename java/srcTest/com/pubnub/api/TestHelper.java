@@ -12,6 +12,7 @@ public class TestHelper {
         public SimpleCallback(CountDownLatch latch) {
             this.latch = latch;
         }
+        public SimpleCallback() {}
 
         public Object getResponse() {
             return response;
