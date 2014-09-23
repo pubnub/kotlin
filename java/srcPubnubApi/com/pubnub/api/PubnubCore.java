@@ -1752,30 +1752,24 @@ abstract class PubnubCore {
     }
 
     /**
-     *
      * Listen for a message on a channel.
      *
-     * @param args
-     *            Hashtable containing channel name
-     * @param callback
-     *            Callback
-     * @exception PubnubException
-     *                Throws PubnubException if Callback is null
+     * @param args     hashtable
+     * @param callback to call
+     * @throws PubnubException
      */
     protected void subscribe(Hashtable<String, Object> args, Callback callback)
             throws PubnubException {
         args.put("callback", callback);
+
         subscribe(args);
     }
 
     /**
-     *
      * Listen for a message on a channel.
      *
-     * @param args
-     *            Hashtable containing channel name, callback
-     * @exception PubnubException
-     *                Throws PubnubException if Callback is null
+     * @param args hashtable
+     * @throws PubnubException
      */
     protected void subscribe(Hashtable<String, Object> args) throws PubnubException {
 
@@ -1789,79 +1783,56 @@ abstract class PubnubCore {
     }
 
     /**
-     *
      * Listen for a message on a channel.
      *
-     * @param channelsArr
-     *            Array of channel names (string) to listen on
-     * @param callback
-     *            Callback
-     * @exception PubnubException
-     *                Throws PubnubException if Callback is null
+     * @param channels array to listen on
+     * @param callback to call
+     * @throws PubnubException
      */
-    public void subscribe(String[] channelsArr, Callback callback)
+    public void subscribe(String[] channels, Callback callback)
             throws PubnubException {
-        subscribe(channelsArr, callback, "0");
+        subscribe(channels, callback, "0");
     }
 
     /**
-     *
      * Listen for a message on a channel.
      *
-     * @param channelsArr
-     *            Array of channel names (string) to listen on
-     * @param callback
-     *            Callback
-     * @param timetoken
-     *        Timetoken to use for subscribing
-     * @exception PubnubException
-     *                Throws PubnubException if Callback is null
+     * @param channels  array to listen on
+     * @param callback  to call
+     * @param timetoken to use for subscribing
+     * @throws PubnubException
      */
-    public void subscribe(String[] channelsArr, Callback callback,
-            String timetoken) throws PubnubException {
+    public void subscribe(String[] channels, Callback callback, String timetoken)
+            throws PubnubException {
 
-        Hashtable args = new Hashtable();
+        Hashtable<String, Object> args = new Hashtable<String, Object>();
 
-        args.put("channels", channelsArr);
+        args.put("channels", channels);
         args.put("callback", callback);
         args.put("timetoken", timetoken);
+
         subscribe(args);
     }
 
     /**
-     *
      * Listen for a message on a channel.
      *
-     * @param channelsArr
-     *            Array of channel names (string) to listen on
-     * @param callback
-     *            Callback
-     * @param timetoken
-     *        Timetoken to use for subscribing
-     * @exception PubnubException
-     *                Throws PubnubException if Callback is null
+     * @param channels  array to listen on
+     * @param callback  to call
+     * @param timetoken to use for subscribing
+     * @throws PubnubException Throws PubnubException if Callback is null
      */
-    public void subscribe(String[] channelsArr, Callback callback,
-            long timetoken) throws PubnubException {
-
-        Hashtable args = new Hashtable();
-
-        args.put("channels", channelsArr);
-        args.put("callback", callback);
-        args.put("timetoken", String.valueOf(timetoken));
-        subscribe(args);
+    public void subscribe(String[] channels, Callback callback, long timetoken)
+            throws PubnubException {
+        subscribe(channels, callback, String.valueOf(timetoken));
     }
 
     /**
-     *
      * Listen for a message on a channel.
      *
-     * @param channel
-     *            Name of the channel
-     * @param callback
-     *            Callback
-     * @exception PubnubException
-     *                Throws PubnubException if Callback is null
+     * @param channel  name
+     * @param callback to call
+     * @throws PubnubException
      */
     public void subscribe(String channel, Callback callback)
             throws PubnubException {
@@ -1869,82 +1840,192 @@ abstract class PubnubCore {
     }
 
     /**
-     *
      * Listen for a message on a channel.
      *
-     * @param channel
-     *            Name of the channel
-     * @param callback
-     *            Callback
-     * @exception PubnubException
-     *                Throws PubnubException if Callback is null
+     * @param channel  name
+     * @param callback to call
+     * @throws PubnubException
      */
-    public void subscribe(String channel, Callback callback,
-            String timetoken) throws PubnubException {
-
-        Hashtable args = new Hashtable();
-
-        args.put("channels", new String[] {channel});
-        args.put("callback", callback);
-        args.put("timetoken", timetoken);
-        subscribe(args);
+    public void subscribe(String channel, Callback callback, String timetoken)
+            throws PubnubException {
+        subscribe(new String[]{channel}, callback, timetoken);
     }
 
     /**
-     *
      * Listen for a message on a channel.
      *
-     * @param channel
-     *            Name of the channel
-     * @param callback
-     *            Callback
-     * @param timetoken
-     *        Timetoken to use for subscribing
-     * @exception PubnubException
-     *                Throws PubnubException if Callback is null
+     * @param channel   name
+     * @param callback  to call
+     * @param timetoken to use for subscribing
+     * @throws PubnubException
      */
-    public void subscribe(String channel, Callback callback,
-            long timetoken) throws PubnubException {
-
-        Hashtable args = new Hashtable();
-
-        args.put("channels", new String[] {channel});
-        args.put("callback", callback);
-        args.put("timetoken", String.valueOf(timetoken));
-
-        subscribe(args);
+    public void subscribe(String channel, Callback callback, long timetoken)
+            throws PubnubException {
+        subscribe(channel, callback, String.valueOf(timetoken));
     }
 
+    /**
+     * Listen for a message on a channel and on a channel group.
+     *
+     * @param channel  name
+     * @param group    name
+     * @param callback to call
+     * @throws PubnubException
+     */
     public void subscribe(String channel, String group, Callback callback)
             throws PubnubException {
-        subscribe(new String[] {channel}, new String[] {group}, callback);
+        subscribe(channel, group, callback, "0");
     }
 
+    /**
+     * Listen for a message on a channel and on a channel group.
+     *
+     * @param channel   name
+     * @param group     name
+     * @param callback  to call
+     * @param timetoken to use for subscribing
+     * @throws PubnubException
+     */
+    public void subscribe(String channel, String group, Callback callback, long timetoken)
+            throws PubnubException {
+        subscribe(channel, group, callback, String.valueOf(timetoken));
+    }
+
+    /**
+     * Listen for a message on a channel and on a channel group.
+     *
+     * @param channel   name
+     * @param group     name
+     * @param callback  to call
+     * @param timetoken to use for subscribing
+     * @throws PubnubException
+     */
+    public void subscribe(String channel, String group, Callback callback, String timetoken)
+            throws PubnubException {
+        subscribe(new String[]{channel}, new String[]{group}, callback, timetoken);
+    }
+
+    /**
+     * Listen for a message on a multiple channels and a single channel group.
+     *
+     * @param channels array to listen on
+     * @param group    name
+     * @param callback to call
+     * @throws PubnubException
+     */
     public void subscribe(String[] channels, String group, Callback callback)
             throws PubnubException {
-        subscribe(channels, new String[] {group}, callback);
+        subscribe(channels, group, callback, "0");
     }
 
+    /**
+     * Listen for a message on a multiple channels and a single channel group.
+     *
+     * @param channels  array to listen on
+     * @param group     name
+     * @param callback  to call
+     * @param timetoken to use for subscribing
+     * @throws PubnubException
+     */
+    public void subscribe(String[] channels, String group, Callback callback, long timetoken)
+            throws PubnubException {
+        subscribe(channels, group, callback, String.valueOf(timetoken));
+    }
+
+    /**
+     * Listen for a message on a multiple channels and a single channel group.
+     *
+     * @param channels  array to listen on
+     * @param group     name
+     * @param callback  to call
+     * @param timetoken to use for subscribing
+     * @throws PubnubException
+     */
+    public void subscribe(String[] channels, String group, Callback callback, String timetoken)
+            throws PubnubException {
+        subscribe(channels, new String[]{group}, callback, timetoken);
+    }
+
+    /**
+     * Listen for a message on a channel and a multiple channel groups.
+     *
+     * @param channel  name
+     * @param groups   array to listen on
+     * @param callback to call
+     * @throws PubnubException
+     */
     public void subscribe(String channel, String[] groups, Callback callback)
             throws PubnubException {
-        subscribe(new String[] {channel}, groups, callback);
+        subscribe(channel, groups, callback, "0");
     }
 
+    /**
+     * Listen for a message on a channel and a multiple channel groups.
+     *
+     * @param channel   name
+     * @param groups    array to listen on
+     * @param callback  to call
+     * @param timetoken to use for subscribing
+     * @throws PubnubException
+     */
+    public void subscribe(String channel, String[] groups, Callback callback, long timetoken)
+            throws PubnubException {
+        subscribe(channel, groups, callback, String.valueOf(timetoken));
+    }
+
+    /**
+     * Listen for a message on a channel and a multiple channel groups.
+     *
+     * @param channel   name
+     * @param groups    array to listen on
+     * @param callback  to call
+     * @param timetoken to use for subscribing
+     * @throws PubnubException
+     */
+    public void subscribe(String channel, String[] groups, Callback callback, String timetoken)
+            throws PubnubException {
+        subscribe(new String[]{channel}, groups, callback, timetoken);
+    }
+
+    /**
+     * Listen for a message on a multiple channels and a multiple channel groups
+     *
+     * @param channels array to listen on
+     * @param groups   array to listen on
+     * @param callback to call
+     * @throws PubnubException
+     */
     public void subscribe(String[] channels, String[] groups, Callback callback)
             throws PubnubException {
-        Hashtable args = new Hashtable();
-
-        args.put("channels", channels);
-        args.put("groups", groups);
-        args.put("callback", callback);
-
-        subscribe(args);
+        subscribe(channels, groups, callback, "0");
     }
 
-    public void subscribe(String[] channels, String[] groups, Callback callback,
-                          String timetoken)
+    /**
+     * Listen for a message on a multiple channels and a multiple channel groups
+     *
+     * @param channels  array to listen on
+     * @param groups    array to listen on
+     * @param callback  to call
+     * @param timetoken to use for subscribing
+     * @throws PubnubException
+     */
+    public void subscribe(String[] channels, String[] groups, Callback callback, long timetoken)
             throws PubnubException {
-        Hashtable args = new Hashtable();
+        subscribe(channels, groups, callback, String.valueOf(timetoken));
+    }
+
+    /**
+     * Listen for a message on a multiple channels and a multiple channel groups
+     *
+     * @param channels  array to listen on
+     * @param groups    array to listen on
+     * @param callback  to call
+     * @param timetoken to use for subscribing
+     * @throws PubnubException
+     */
+    public void subscribe(String[] channels, String[] groups, Callback callback, String timetoken)
+            throws PubnubException {
+        Hashtable<String, Object> args = new Hashtable<String, Object>();
 
         args.put("channels", channels);
         args.put("groups", groups);
@@ -1953,14 +2034,13 @@ abstract class PubnubCore {
 
         subscribe(args);
     }
+
     /**
+     * Listen for a message on a channel group.
      *
-     * Listen for a message on a channel and group.
-     *
-     * @param callback
-     *            Callback
-     * @exception PubnubException
-     *                Throws PubnubException if Callback is null
+     * @param group    name to subscribe
+     * @param callback to call
+     * @throws PubnubException
      */
     public void subscribeGroup(String group, Callback callback)
             throws PubnubException {
@@ -1968,47 +2048,72 @@ abstract class PubnubCore {
     }
 
     /**
+     * Listen for a message on multiple channel groups.
      *
-     * Listen for a message on a channel.
-     *
-     * @param group
-     *            Name of the channel
-     * @param callback
-     *            Callback
-     * @exception PubnubException
-     *                Throws PubnubException if Callback is null
+     * @param groups   to subscribe
+     * @param callback to call
+     * @throws PubnubException if Callback is null
      */
-    public void subscribeGroup(String group, Callback callback,
-                               String timetoken) throws PubnubException {
-
-        Hashtable args = new Hashtable();
-
-        args.put("group", group);
-        args.put("callback", callback);
-        args.put("timetoken", timetoken);
-
-        subscribe(args);
+    public void subscribeGroup(String[] groups, Callback callback)
+            throws PubnubException {
+        subscribeGroup(groups, callback, "0");
     }
 
     /**
+     * Listen for a message on a channel group.
      *
-     * Listen for a message on a channel.
-     *
-     * @param callback
-     *            Callback
-     * @param timetoken
-     *        Timetoken to use for subscribing
-     * @exception PubnubException
-     *                Throws PubnubException if Callback is null
+     * @param group     name to subscribe
+     * @param callback  to call
+     * @param timetoken to use for subscribing
+     * @throws PubnubException
      */
-    public void subscribeGroup(String group, Callback callback,
-                               long timetoken) throws PubnubException {
+    public void subscribeGroup(String group, Callback callback, long timetoken)
+            throws PubnubException {
+        subscribeGroup(group, callback, String.valueOf(timetoken));
+    }
 
-        Hashtable args = new Hashtable();
+    /**
+     * Listen for a message on a channel group.
+     *
+     * @param group     name to subscribe
+     * @param callback  to call
+     * @param timetoken to use for subscribing
+     * @throws PubnubException
+     */
+    public void subscribeGroup(String group, Callback callback, String timetoken)
+            throws PubnubException {
+        subscribeGroup(new String[]{group}, callback, timetoken);
+    }
 
-        args.put("group", group);
+    /**
+     * Listen for a message on multiple channel group.
+     *
+     * @param groups    to subscribe
+     * @param callback  to call
+     * @param timetoken to use for subscribing
+     * @throws PubnubException
+     */
+    public void subscribeGroup(String[] groups, Callback callback, long timetoken)
+            throws PubnubException {
+        subscribeGroup(groups, callback, String.valueOf(timetoken));
+    }
+
+    /**
+     * Listen for a message on multiple channel group.
+     *
+     * @param groups    to subscribe
+     * @param callback  to call
+     * @param timetoken to use for subscribing
+     * @throws PubnubException
+     */
+    public void subscribeGroup(String[] groups, Callback callback, String timetoken)
+            throws PubnubException {
+
+        Hashtable<String, Object> args = new Hashtable<String, Object>();
+
+        args.put("groups", groups);
         args.put("callback", callback);
-        args.put("timetoken", String.valueOf(timetoken));
+        args.put("timetoken", timetoken);
 
         subscribe(args);
     }
