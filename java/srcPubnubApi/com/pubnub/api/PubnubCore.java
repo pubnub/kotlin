@@ -1048,6 +1048,61 @@ abstract class PubnubCore {
         }
     }
 
+    /**
+     * Get all namespaces
+     *
+     * @param callback to invoke
+     */
+    public void namespaces(Callback callback) {
+        final Callback cb = getWrappedCallback(callback);
+
+        String[] url = new String[]{getPubnubUrl(), "v1", "channel-registration", "sub-key",
+                    this.SUBSCRIBE_KEY, "namespace"};
+
+        Hashtable parameters = PubnubUtil.hashtableClone(params);
+
+        HttpRequest hreq = new HttpRequest(url, parameters, new ResponseHandler() {
+
+            public void handleResponse(HttpRequest hreq, String response) {
+                invokeJSONArrayCallback(response, cb);
+            }
+
+            public void handleError(HttpRequest hreq, PubnubError error) {
+                cb.errorCallback(null, error);
+            }
+        });
+
+        _request(hreq, nonSubscribeManager);
+    }
+
+    /**
+     * Remove namespace
+     *
+     * @param namespace to remove
+     * @param callback to invoke
+     */
+    public void removeNamespace(String namespace, Callback callback) {
+        final Callback cb = getWrappedCallback(callback);
+
+        String[] url = new String[]{getPubnubUrl(), "v1", "channel-registration", "sub-key",
+                this.SUBSCRIBE_KEY, "namespace", namespace, "remove"};
+
+        Hashtable parameters = PubnubUtil.hashtableClone(params);
+
+        HttpRequest hreq = new HttpRequest(url, parameters, new ResponseHandler() {
+
+            public void handleResponse(HttpRequest hreq, String response) {
+                cb.successCallback(null, PubnubUtil.parseJSON(response));
+            }
+
+            public void handleError(HttpRequest hreq, PubnubError error) {
+                cb.errorCallback(null, error);
+            }
+        });
+
+        _request(hreq, nonSubscribeManager);
+    }
+
     public void group(Callback callback) {
         group(null, callback);
     }
