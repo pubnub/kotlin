@@ -2377,7 +2377,11 @@ abstract class PubnubCore {
                                 : "0";
                 log.verbose("Timeout Timetoken : " + timeoutTimetoken);
                 channelSubscriptions.invokeDisconnectCallbackOnItems(timeoutTimetoken);
+                channelGroupSubscriptions.invokeDisconnectCallbackOnItems(timeoutTimetoken);
                 channelSubscriptions.invokeErrorCallbackOnItems(
+                        PubnubError.getErrorObject(PubnubError.PNERROBJ_TIMEOUT, 1)
+                );
+                channelGroupSubscriptions.invokeErrorCallbackOnItems(
                         PubnubError.getErrorObject(PubnubError.PNERROBJ_TIMEOUT, 1)
                 );
                 // disconnectAndResubscribe();
@@ -2523,6 +2527,7 @@ abstract class PubnubCore {
             PubnubError error) {
         log.verbose("Received disconnectAndResubscribeWithTimetoken");
         channelSubscriptions.invokeErrorCallbackOnItems(error);
+        channelGroupSubscriptions.invokeErrorCallbackOnItems(error);
         resubscribe(timetoken);
     }
 
@@ -2541,6 +2546,7 @@ abstract class PubnubCore {
     public void disconnectAndResubscribe(PubnubError error) {
         log.verbose("Received disconnectAndResubscribe");
         channelSubscriptions.invokeErrorCallbackOnItems(error);
+        channelGroupSubscriptions.invokeErrorCallbackOnItems(error);
         resubscribe();
     }
 
