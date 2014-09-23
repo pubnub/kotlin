@@ -1696,6 +1696,28 @@ abstract class PubnubCore {
     }
 
     /**
+     * Unsubscribe from channel group
+     *
+     * @param group to unsubscribe
+     */
+    public void unsubscribeGroup(String group) {
+        unsubscribeGroup(new String[]{group});
+    }
+
+    /**
+     * Unsubscribe from multiple channel groups
+     *
+     * @param groups to unsubscribe
+     */
+    public void unsubscribeGroup(String[] groups) {
+        for (String group : groups) {
+            channelGroupSubscriptions.removeItem(group);
+        }
+
+        resubscribe();
+    }
+
+    /**
      * Unsubscribe from presence channel.
      *
      * @param channel
@@ -2163,8 +2185,6 @@ abstract class PubnubCore {
                          */
                         String[] _groups = PubnubUtil.splitString(jsa.getString(2), ",");
                         String[] _channels = PubnubUtil.splitString(jsa.getString(3), ",");
-
-                        // TODO: handle cases, when both channel and group has the same name
 
                         for (int i = 0; i < _channels.length; i++) {
                             String _groupName = _groups[i];

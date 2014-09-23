@@ -163,50 +163,6 @@ public class PubnubTest {
 
     }
 
-    class PresenceCallback extends Callback {
-
-        private String uuid;
-        private CountDownLatch latch;
-
-        public String getUUID() {
-            return uuid;
-        }
-
-        public PresenceCallback(CountDownLatch latch) {
-            this.latch = latch;
-        }
-
-        public PresenceCallback() {
-
-        }
-
-        @Override
-        public void successCallback(String channel, Object message) {
-            JSONObject resp = null;
-            try {
-                resp = new JSONObject(message.toString());
-            } catch (JSONException e1) {
-                e1.printStackTrace();
-            }
-            if (resp != null) {
-                try {
-                    uuid = (String) resp.get("uuid");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-            if (latch != null)
-                latch.countDown();
-        }
-
-        @Override
-        public void errorCallback(String channel, PubnubError error) {
-            if (latch != null)
-                latch.countDown();
-        }
-
-    }
-
     class HistoryCallback extends Callback {
 
         private int count;
@@ -499,7 +455,7 @@ public class PubnubTest {
         Pubnub pubnub2 = new Pubnub("demo", "demo");
         CountDownLatch latch = new CountDownLatch(1);
 
-        PresenceCallback presenceCb = new PresenceCallback(latch);
+        TestHelper.PresenceCallback presenceCb = new TestHelper.PresenceCallback(latch);
 
         pubnub.presence(channel, presenceCb);
 
