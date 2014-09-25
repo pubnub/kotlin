@@ -1,21 +1,16 @@
 package com.pubnub.api;
 
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
-import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.UUID;
 
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import static com.pubnub.api.PubnubError.*;
+import static com.pubnub.api.PubnubError.PNERROBJ_SECRET_KEY_MISSING;
+import static com.pubnub.api.PubnubError.getErrorObject;
 
 /**
  * Pubnub object facilitates querying channels for messages and listening on
@@ -284,8 +279,6 @@ abstract class PubnubCoreShared extends PubnubCore {
         if (auth_key != null && auth_key.length() > 0 ) parameters.put("auth", auth_key);
         if (ttl >= -1) parameters.put("ttl", String.valueOf(ttl));
 
-        System.out.println(parameters);
-
         String[] urlComponents = { getPubnubUrl(), "v1", "auth", "grant", "sub-key",
                                    this.SUBSCRIBE_KEY
                                  };
@@ -304,6 +297,150 @@ abstract class PubnubCoreShared extends PubnubCore {
 
         _request(hreq, nonSubscribeManager);
 
+    }
+
+    public void pamGrantGlobalNamespace(boolean read, boolean management, Callback callback) {
+        pamGrantGlobalNamespace(read, management, -1, callback);
+    }
+
+    public void pamGrantGlobalNamespace(boolean read, boolean management,
+                                        int ttl, Callback callback) {
+        pamGrantGlobalNamespace(read, management, null, ttl, callback);
+    }
+
+    public void pamGrantGlobalNamespace(boolean read, boolean management, String auth_key,
+                                        Callback callback) {
+        pamGrantGlobalNamespace(read, management, auth_key, -1, callback);
+    }
+
+    public void pamGrantGlobalNamespace(boolean read, boolean management, String auth_key,
+                                        int ttl, Callback callback) {
+        pamGrantNamespace(null, auth_key, read, management, ttl, callback);
+    }
+
+
+    public void pamGrantNamespace(final String namespace, boolean read,
+                                  boolean management, Callback callback) {
+        pamGrantNamespace(namespace, read, management, -1, callback);
+    }
+
+    public void pamGrantNamespace(final String namespace, boolean read,
+                                  boolean management, int ttl, Callback callback) {
+        pamGrantNamespace(namespace, null, read, management, ttl, callback);
+    }
+
+    public void pamGrantNamespace(final String namespace, String auth_key, boolean read,
+                                  boolean management, Callback callback) {
+        pamGrantNamespace(namespace, auth_key, read, management, -1, callback);
+    }
+
+    public void pamGrantNamespace(final String namespace, String auth_key, boolean read,
+                                  boolean management, int ttl, Callback callback) {
+        pamGrantNamespacedChannelGroup(namespace, null, auth_key, read, management, ttl, callback);
+    }
+
+
+    public void pamGrantChannelGroup(final String group, boolean read,
+                                     boolean management, Callback callback) {
+        pamGrantChannelGroup(group, read, management, -1, callback);
+    }
+
+    public void pamGrantChannelGroup(final String group, boolean read,
+                                     boolean management, int ttl, Callback callback) {
+        pamGrantChannelGroup(group, null, read, management, ttl, callback);
+    }
+
+    public void pamGrantChannelGroup(final String group, String auth_key, boolean read,
+                                     boolean management, Callback callback) {
+        pamGrantNamespacedChannelGroup(null, group, auth_key, read, management, -1, callback);
+    }
+
+    public void pamGrantChannelGroup(final String group, String auth_key, boolean read,
+                                     boolean management, int ttl, Callback callback) {
+        pamGrantNamespacedChannelGroup(null, group, auth_key, read, management, ttl, callback);
+    }
+
+
+    public void pamGrantNamespacedChannelGroup(String namespace, final String group,
+                                               boolean read, boolean management, Callback callback) {
+        pamGrantNamespacedChannelGroup(namespace, group, read, management, -1, callback);
+    }
+
+    public void pamGrantNamespacedChannelGroup(String namespace, final String group, boolean read,
+                                               boolean management, int ttl, Callback callback) {
+        pamGrantNamespacedChannelGroup(namespace, group, null, read, management, ttl, callback);
+    }
+
+    public void pamGrantNamespacedChannelGroup(String namespace, final String group, String auth_key,
+                                               boolean read, boolean management, Callback callback) {
+        pamGrantNamespacedChannelGroup(namespace, group, auth_key, read, management, -1, callback);
+    }
+
+    public void pamGrantNamespacedChannelGroup(String namespace, final String group, String auth_key,
+                                               boolean read, boolean management, int ttl,
+                                               Callback callback) {
+        String signature;
+        final Callback cb = getWrappedCallback(callback);
+        Hashtable parameters = PubnubUtil.hashtableClone(params);
+
+        String r = (read) ? "1" : "0";
+        String m = (management) ? "1" : "0";
+
+        String namespacedGroup =
+                (namespace == null ? "" : namespace)
+                        + (group == null ? ":" : (namespace == null ? group : ":" + group));
+
+        int timestamp = (int) ((new Date().getTime()) / 1000);
+
+        if (this.SECRET_KEY.length() == 0) {
+            callback.errorCallback(group, getErrorObject(PNERROBJ_SECRET_KEY_MISSING, 1));
+            return;
+        }
+
+        String sign_input = this.SUBSCRIBE_KEY + "\n" + this.PUBLISH_KEY + "\n" + "grant" + "\n";
+
+        if (auth_key != null && auth_key.length() > 0)
+            sign_input += "auth=" + auth_key + "&"  ;
+
+        sign_input += "channel-group=" + PubnubUtil.urlEncode(namespacedGroup) + "&"
+                + "m=" + m + "&"
+                + "pnsdk=" + PubnubUtil.urlEncode(getUserAgent()) + "&"
+                + "r=" + r + "&"
+                + "timestamp=" + timestamp
+                + ((ttl >= -1)?"&" + "ttl=" + ttl:"");
+
+        try {
+            signature = pamSign(this.SECRET_KEY, sign_input);
+        } catch (PubnubException e1) {
+            callback.errorCallback(group, e1.getPubnubError());
+            return;
+        }
+
+        parameters.put("timestamp", String.valueOf(timestamp));
+        parameters.put("signature", signature);
+        parameters.put("r", r);
+        parameters.put("m", m);
+        parameters.put("channel-group", namespacedGroup);
+
+        if (ttl >= -1) parameters.put("ttl", String.valueOf(ttl));
+        if (auth_key != null && auth_key.length() > 0 ) parameters.put("auth", auth_key);
+
+        String[] urlComponents = { getPubnubUrl(), "v1", "auth", "grant", "sub-key",
+                this.SUBSCRIBE_KEY
+        };
+
+        HttpRequest hreq = new HttpRequest(urlComponents, parameters,
+                new ResponseHandler() {
+                    public void handleResponse(HttpRequest hreq, String response) {
+                        invokeCallback(group, response, "payload", cb, 4);
+                    }
+
+                    public void handleError(HttpRequest hreq, PubnubError error) {
+                        cb.errorCallback(group, error);
+                    }
+                });
+
+        _request(hreq, nonSubscribeManager);
     }
 
     /** ULS Audit
@@ -479,6 +616,103 @@ abstract class PubnubCoreShared extends PubnubCore {
 
     }
 
+    public void pamAuditGlobalNamespace(Callback callback) {
+        pamAuditGlobalNamespace(null, callback);
+    }
+
+    public void pamAuditGlobalNamespace(String auth_key, Callback callback) {
+        pamAuditNamespace(null, auth_key, callback);
+    }
+
+
+    public void pamAuditNamespace(String namespace, Callback callback) {
+        pamAuditNamespace(namespace, null, callback);
+    }
+
+    public void pamAuditNamespace(String namespace, String auth_key,Callback callback) {
+        pamAuditChannelGroup(namespace, null, auth_key, callback);
+    }
+
+
+    public void pamAuditChannelGroup(final String group, Callback callback) {
+        pamAuditChannelGroup(group, null, callback);
+    }
+
+    public void pamAuditChannelGroup(final String group, String auth_key, Callback callback) {
+        pamAuditChannelGroup(null, group, auth_key, callback);
+    }
+
+
+    public void pamAuditNamespacedChannelGroup(String namespace, final String group,
+                                               Callback callback) {
+        pamAuditNamespacedChannelGroup(namespace, group, null, callback);
+    }
+
+    public void pamAuditNamespacedChannelGroup(String namespace, final String group,
+                                               String auth_key, Callback callback) {
+        pamAuditChannelGroup(namespace, group, auth_key, callback);
+    }
+
+
+    public void pamAuditChannelGroup(String namespace, final String group, String auth_key,
+                                     Callback callback) {
+        String signature;
+        final Callback cb = getWrappedCallback(callback);
+
+        Hashtable parameters = PubnubUtil.hashtableClone(params);
+        parameters.remove("auth");
+
+        String namespacedGroup =
+                (namespace == null ? "" : namespace)
+                        + (group == null ? ":" : (namespace == null ? group : ":" + group));
+
+        int timestamp = (int) ((new Date().getTime()) / 1000);
+
+        if (this.SECRET_KEY.length() == 0) {
+            callback.errorCallback(group, getErrorObject(PNERROBJ_SECRET_KEY_MISSING, 3));
+            return;
+        }
+
+        String sign_input = this.SUBSCRIBE_KEY + "\n" + this.PUBLISH_KEY + "\n" + "audit" + "\n";
+
+        if (auth_key != null && auth_key.length() > 0)
+            sign_input += "auth=" + auth_key + "&"  ;
+
+        sign_input += "channel-group=" + PubnubUtil.urlEncode(namespacedGroup) + "&"
+                + "pnsdk=" + PubnubUtil.urlEncode(getUserAgent()) + "&"
+                + "timestamp=" + timestamp;
+
+        try {
+            signature = pamSign(this.SECRET_KEY, sign_input);
+        } catch (PubnubException e1) {
+            callback.errorCallback(group, e1.getPubnubError());
+            return;
+        }
+
+        parameters.put("timestamp", String.valueOf(timestamp));
+        parameters.put("signature", signature);
+        parameters.put("channel-group", namespacedGroup);
+
+        if (auth_key != null && auth_key.length() > 0 ) parameters.put("auth", auth_key);
+
+        String[] urlComponents = {getPubnubUrl(), "v1", "auth", "audit", "sub-key",
+                this.SUBSCRIBE_KEY
+        };
+
+        HttpRequest hreq = new HttpRequest(urlComponents, parameters,
+                new ResponseHandler() {
+                    public void handleResponse(HttpRequest hreq, String response) {
+                        invokeCallback(group, response, "payload", cb, 6);
+                    }
+
+                    public void handleError(HttpRequest hreq, PubnubError error) {
+                        cb.errorCallback(group, error);
+                    }
+                });
+
+        _request(hreq, nonSubscribeManager);
+    }
+
     /** ULS revoke by channel and auth key
      * @param channel
      * @param auth_key
@@ -488,7 +722,6 @@ abstract class PubnubCoreShared extends PubnubCore {
         pamGrant(channel, auth_key, false, false, callback);
     }
 
-
     /** ULS revoke by channel
      * @param channel
      * @param callback
@@ -497,4 +730,41 @@ abstract class PubnubCoreShared extends PubnubCore {
         pamGrant(channel, null, false, false, callback);
     }
 
+
+    public void pamRevokeGlobalNamespace(Callback callback) {
+        pamRevokeGlobalNamespace(null, callback);
+    }
+
+    public void pamRevokeGlobalNamespace(String auth_key, Callback callback) {
+        pamGrantGlobalNamespace(false, false, auth_key, callback);
+    }
+
+
+    public void pamRevokeNamespace(String namespace, Callback callback) {
+        pamGrantNamespace(namespace, false, false, callback);
+    }
+
+    public void pamRevokeNamespace(String namespace, String auth_key, Callback callback) {
+        pamGrantNamespace(namespace, auth_key, false, false, callback);
+    }
+
+
+    public void pamRevokeChannelGroup(String group, Callback callback) {
+        pamRevokeChannelGroup(group, null, callback);
+    }
+
+    public void pamRevokeChannelGroup(String group, String auth_key,
+                                                Callback callback) {
+        pamGrantNamespacedChannelGroup(null, group, auth_key, false, false, -1, callback);
+    }
+
+
+    public void pamRevokeNamespacedChannelGroup(String namespace, String group, Callback callback) {
+        pamRevokeNamespacedChannelGroup(namespace, group, null, callback);
+    }
+
+    public void pamRevokeNamespacedChannelGroup(String namespace, String group, String auth_key,
+                                                Callback callback) {
+        pamGrantNamespacedChannelGroup(namespace, group, auth_key, false, false, -1, callback);
+    }
 }
