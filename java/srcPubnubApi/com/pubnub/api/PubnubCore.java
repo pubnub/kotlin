@@ -9,6 +9,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Random;
 
@@ -1296,54 +1297,79 @@ abstract class PubnubCore {
      *            object of sub class of Callback class
      */
     public void hereNow(final String channel, Callback callback) {
-        hereNow(channel, false, true, callback);
+        hereNow(new String[]{channel}, null, false, true, callback);
     }
 
     public void hereNow(boolean state, boolean uuids, Callback callback) {
-        hereNow(null, state, uuids, callback);
+        hereNow(null, null, state, uuids, callback);
+    }
+
+    public void hereNow(final String channel, boolean state, boolean uuids, Callback callback) {
+        hereNow(new String[]{channel}, null, state, uuids, callback);
+    }
+
+    public void hereNowGroup(String group, Callback callback) {
+        hereNowGroup(group, false, true, callback);
+    }
+
+    public void hereNowGroup(String group, boolean state, boolean uuids, Callback callback) {
+        hereNowGroup(new String[]{group}, state, uuids, callback);
+    }
+
+    public void hereNowGroup(String[] groups, boolean state, boolean uuids, Callback callback) {
+        hereNow(null, groups, state, uuids, callback);
     }
 
     /**
-     * Read presence information from a channel
+     * Read presence information from a channel or a channel group
      *
-     * @param channel
-     *            Channel name
-     * @param state
-     *            state enabled ?
-     * @param uuids
-     *            enable / disable returning uuids in response ?
-     * @param callback
-     *            object of sub class of Callback class
+     * @param channels      array
+     * @param channelGroups array
+     * @param state         state enabled ?
+     * @param uuids         enable / disable returning uuids in response ?
+     * @param callback      object of sub class of Callback class
      */
-    public void hereNow(final String channel, boolean state, boolean uuids, Callback callback) {
+    public void hereNow(String[] channels, String[] channelGroups, boolean state,
+                        boolean uuids, Callback callback) {
 
         final Callback cb = getWrappedCallback(callback);
-
         Hashtable parameters = PubnubUtil.hashtableClone(params);
-        String[] urlargs = null;
-        if (channel != null && channel.length() > 0) {
-            urlargs = new String[]{ getPubnubUrl(), "v2", "presence", "sub_key",
-                    this.SUBSCRIBE_KEY, "channel", PubnubUtil.urlEncode(channel)
-            };
-        } else {
-            urlargs = new String[]{ getPubnubUrl(), "v2", "presence", "sub_key",
-                    this.SUBSCRIBE_KEY
-            };
+        ArrayList<String> urlArgs = new ArrayList<String>();
+
+        urlArgs.add(getPubnubUrl());
+        urlArgs.add("v2");
+        urlArgs.add("presence");
+        urlArgs.add("sub_key");
+        urlArgs.add(this.SUBSCRIBE_KEY);
+
+        if (channels != null || channelGroups != null) {
+            String channelsString = PubnubUtil.joinString(channels, ",");
+            if ("".equals(channelsString)) {
+                channelsString = ",";
+            } else {
+                channelsString = PubnubUtil.urlEncode(channelsString);
+            }
+
+            urlArgs.add("channel");
+            urlArgs.add(channelsString);
         }
 
         if (state) parameters.put("state", "1");
         if (!uuids) parameters.put("disable_uuids", "1");
+        if (channelGroups != null && channelGroups.length > 0) {
+            parameters.put("channel-group", PubnubUtil.joinString(channelGroups, ","));
+        }
 
-        HttpRequest hreq = new HttpRequest(urlargs, parameters,
+        HttpRequest hreq = new HttpRequest(urlArgs.toArray(new String[urlArgs.size()]), parameters,
                 new ResponseHandler() {
-            public void handleResponse(HttpRequest hreq, String response) {
-                invokeCallback(channel, response, "payload",cb, 1);
-            }
+                    public void handleResponse(HttpRequest hreq, String response) {
+                        invokeCallback(null, response, "payload", cb, 1);
+                    }
 
-            public void handleError(HttpRequest hreq, PubnubError error) {
-                cb.errorCallback(channel, error);
-            }
-        });
+                    public void handleError(HttpRequest hreq, PubnubError error) {
+                        cb.errorCallback(null, error);
+                    }
+                });
 
         _request(hreq, nonSubscribeManager);
     }
