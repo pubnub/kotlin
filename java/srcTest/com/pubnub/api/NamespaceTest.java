@@ -1,6 +1,8 @@
 package com.pubnub.api;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -25,7 +27,10 @@ public class NamespaceTest {
     }
 
     @Test
-    public void testGetAllNamespacesAndRemoveThem() throws InterruptedException {
+    public void testGetAllNamespacesAndRemoveThem() throws InterruptedException, JSONException {
+        JSONObject result;
+        JSONArray resultNamespaces;
+
         final CountDownLatch latch1 = new CountDownLatch(3);
         final CountDownLatch latch2 = new CountDownLatch(1);
         final CountDownLatch latch3 = new CountDownLatch(3);
@@ -53,14 +58,15 @@ public class NamespaceTest {
         pubnub.namespaces(cb2);
         latch2.await(10, TimeUnit.SECONDS);
 
-        JSONArray result = (JSONArray) cb2.getResponse();
+        result = (JSONObject) cb2.getResponse();
+        resultNamespaces = result.getJSONArray("namespaces");
 
         assertFalse("Error is thrown", cb1.responseIsError());
         assertEquals("OK", cb1.getResponse());
 
-        assertJSONArrayHas(namespaces[0], result);
-        assertJSONArrayHas(namespaces[1], result);
-        assertJSONArrayHas(namespaces[2], result);
+        assertJSONArrayHas(namespaces[0], resultNamespaces);
+        assertJSONArrayHas(namespaces[1], resultNamespaces);
+        assertJSONArrayHas(namespaces[2], resultNamespaces);
 
         // remove
         pubnub.removeNamespace(namespaces[0], cb3);
@@ -73,13 +79,14 @@ public class NamespaceTest {
         pubnub.namespaces(cb4);
         latch4.await(10, TimeUnit.SECONDS);
 
-        result = (JSONArray) cb4.getResponse();
+        result = (JSONObject) cb4.getResponse();
+        resultNamespaces = result.getJSONArray("namespaces");
 
         assertFalse("Error is thrown", cb3.responseIsError());
         assertEquals("OK", cb3.getResponse());
 
-        assertJSONArrayHasNo(namespaces[0], result);
-        assertJSONArrayHasNo(namespaces[1], result);
-        assertJSONArrayHasNo(namespaces[2], result);
+        assertJSONArrayHasNo(namespaces[0], resultNamespaces);
+        assertJSONArrayHasNo(namespaces[1], resultNamespaces);
+        assertJSONArrayHasNo(namespaces[2], resultNamespaces);
     }
 }

@@ -1034,11 +1034,11 @@ abstract class PubnubCore {
         }
     }
 
-    protected void invokeJSONArrayCallback(String response, Callback callback) {
-        JSONArray responseJSON;
+    protected void invokeJSONStringCallback(String response, String key, Callback callback) {
+        String responseJSON;
 
         try {
-            responseJSON = new JSONArray(response);
+            responseJSON = (new JSONObject(response)).getString(key);
             callback.successCallback(null, responseJSON);
         } catch (JSONException e) {
             callback.errorCallback(
@@ -1064,7 +1064,7 @@ abstract class PubnubCore {
         HttpRequest hreq = new HttpRequest(url, parameters, new ResponseHandler() {
 
             public void handleResponse(HttpRequest hreq, String response) {
-                invokeJSONArrayCallback(response, cb);
+                invokeCallback("", response, "payload", cb, 0);
             }
 
             public void handleError(HttpRequest hreq, PubnubError error) {
@@ -1092,7 +1092,7 @@ abstract class PubnubCore {
         HttpRequest hreq = new HttpRequest(url, parameters, new ResponseHandler() {
 
             public void handleResponse(HttpRequest hreq, String response) {
-                cb.successCallback(null, PubnubUtil.parseJSON(response));
+                invokeJSONStringCallback(response, "message", cb);
             }
 
             public void handleError(HttpRequest hreq, PubnubError error) {
@@ -1124,7 +1124,7 @@ abstract class PubnubCore {
         HttpRequest hreq = new HttpRequest(url, parameters, new ResponseHandler() {
 
             public void handleResponse(HttpRequest hreq, String response) {
-                invokeJSONArrayCallback(response, cb);
+                invokeCallback("", response, "payload", cb, 0);
              }
 
             public void handleError(HttpRequest hreq, PubnubError error) {
@@ -1156,7 +1156,7 @@ abstract class PubnubCore {
         HttpRequest hreq = new HttpRequest(url, parameters, new ResponseHandler() {
 
             public void handleResponse(HttpRequest hreq, String response) {
-                invokeJSONArrayCallback(response, cb);
+                invokeCallback("", response, "payload", cb, 0);
             }
 
             public void handleError(HttpRequest hreq, PubnubError error) {
@@ -1199,7 +1199,8 @@ abstract class PubnubCore {
         updateChannelGroup("remove", namespace, groupId, channels, callback);
     }
 
-    public void updateChannelGroup(String action, String namespace, String groupId, String[] channels, Callback callback) {
+    public void updateChannelGroup(String action, String namespace, String groupId,
+                                   String[] channels, final Callback callback) {
         final Callback cb = getWrappedCallback(callback);
         String[] url;
 
@@ -1220,7 +1221,7 @@ abstract class PubnubCore {
         HttpRequest hreq = new HttpRequest(url, parameters, new ResponseHandler() {
 
             public void handleResponse(HttpRequest hreq, String response) {
-                cb.successCallback(null, PubnubUtil.parseJSON(response));
+                invokeJSONStringCallback(response, "message", cb);
             }
 
             public void handleError(HttpRequest hreq, PubnubError error) {
@@ -1254,7 +1255,7 @@ abstract class PubnubCore {
         HttpRequest hreq = new HttpRequest(url, parameters, new ResponseHandler() {
 
             public void handleResponse(HttpRequest hreq, String response) {
-                cb.successCallback(null, PubnubUtil.parseJSON(response));
+                invokeJSONStringCallback(response, "message", cb);
             }
 
             public void handleError(HttpRequest hreq, PubnubError error) {

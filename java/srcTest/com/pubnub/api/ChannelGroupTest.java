@@ -2,6 +2,8 @@ package com.pubnub.api;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -129,7 +131,11 @@ public class ChannelGroupTest {
         String expectedJSONString = (new JSONArray(new String[]{"ch1", "ch2", "ch3", "ch4", "ch5"}))
                 .toString();
 
-        assertEquals(expectedJSONString, cb4.getResponse().toString());
+        JSONObject result = (JSONObject) cb4.getResponse();
+        JSONArray channels = result.getJSONArray("channels");
+
+        assertEquals(expectedJSONString, channels.toString());
+        assertEquals(channelGroup, result.getString("group"));
     }
 
     @Test
@@ -159,7 +165,11 @@ public class ChannelGroupTest {
         String expectedJSONString = (new JSONArray(new String[]{"ch1", "ch2", "ch3", "ch4", "ch5"}))
                 .toString();
 
-        assertEquals(expectedJSONString, cb4.getResponse().toString());
+        JSONObject result = (JSONObject) cb4.getResponse();
+        JSONArray channels = result.getJSONArray("channels");
+
+        assertEquals(expectedJSONString, channels.toString());
+        assertEquals(channelGroup, result.getString("group"));
     }
 
     @Test
@@ -195,7 +205,12 @@ public class ChannelGroupTest {
 
         String expectedJSONString = (new JSONArray(new String[]{"ch2", "ch3"}))
                 .toString();
-        assertEquals(expectedJSONString, cb4.getResponse().toString());
+
+        JSONObject result = (JSONObject) cb4.getResponse();
+        JSONArray channels = result.getJSONArray("channels");
+
+        assertEquals(expectedJSONString, channels.toString());
+        assertEquals(channelGroup, result.getString("group"));
     }
 
     @Test
@@ -231,11 +246,22 @@ public class ChannelGroupTest {
 
         String expectedJSONString = (new JSONArray(new String[]{"ch2", "ch3"}))
                 .toString();
-        assertEquals(expectedJSONString, cb4.getResponse().toString());
+
+        JSONObject result = (JSONObject) cb4.getResponse();
+        JSONArray channels = result.getJSONArray("channels");
+
+        assertEquals(expectedJSONString, channels.toString());
+        assertEquals(channelGroup, result.getString("group"));
     }
 
     @Test
     public void testGetAllChannelGroupNames() throws InterruptedException, JSONException {
+        String group1 = "jtest_group1";
+        String group2 = "jtest_group2";
+
+        JSONObject result;
+        JSONArray groups;
+
         final CountDownLatch latch1 = new CountDownLatch(1);
         final CountDownLatch latch2 = new CountDownLatch(1);
         final CountDownLatch latch3 = new CountDownLatch(1);
@@ -243,8 +269,8 @@ public class ChannelGroupTest {
         final TestHelper.SimpleCallback cb2 = new TestHelper.SimpleCallback(latch2);
         final TestHelper.SimpleCallback cb3 = new TestHelper.SimpleCallback(latch3);
 
-        pubnub.addChannelToGroup("jtest_group1", "ch1", cb1);
-        pubnub.addChannelToGroup("jtest_group2", "ch2", cb2);
+        pubnub.addChannelToGroup(group1, "ch1", cb1);
+        pubnub.addChannelToGroup(group2, "ch2", cb2);
 
         latch1.await(10, TimeUnit.SECONDS);
         latch2.await(10, TimeUnit.SECONDS);
@@ -253,15 +279,22 @@ public class ChannelGroupTest {
 
         latch3.await(10, TimeUnit.SECONDS);
 
-        JSONArray result = (JSONArray) cb3.getResponse();
+        result = (JSONObject) cb3.getResponse();
+        groups = result.getJSONArray("groups");
 
-        assertJSONArrayHas("jtest_group1", result);
-        assertJSONArrayHas("jtest_group2", result);
-        assertJSONArrayHasNo("jtest_group3", result);
+        assertJSONArrayHas(group1, groups);
+        assertJSONArrayHas(group2, groups);
+        assertJSONArrayHasNo("jtest_group3", groups);
     }
 
     @Test
     public void testGetAllChannelGroupNamesNamespace() throws InterruptedException, JSONException {
+        String group1 = "jtest_group1";
+        String group2 = "jtest_group2";
+
+        JSONObject result;
+        JSONArray groups;
+
         final CountDownLatch latch1 = new CountDownLatch(1);
         final CountDownLatch latch2 = new CountDownLatch(1);
         final CountDownLatch latch3 = new CountDownLatch(1);
@@ -269,8 +302,8 @@ public class ChannelGroupTest {
         final TestHelper.SimpleCallback cb2 = new TestHelper.SimpleCallback(latch2);
         final TestHelper.SimpleCallback cb3 = new TestHelper.SimpleCallback(latch3);
 
-        pubnub.addChannelToGroup(channelNamespace, "jtest_group1", "ch1", cb1);
-        pubnub.addChannelToGroup(channelNamespace, "jtest_group2", "ch2", cb2);
+        pubnub.addChannelToGroup(channelNamespace, group1, "ch1", cb1);
+        pubnub.addChannelToGroup(channelNamespace, group2, "ch2", cb2);
 
         latch1.await(10, TimeUnit.SECONDS);
         latch2.await(10, TimeUnit.SECONDS);
@@ -279,15 +312,21 @@ public class ChannelGroupTest {
 
         latch3.await(10, TimeUnit.SECONDS);
 
-        JSONArray result = (JSONArray) cb3.getResponse();
+        result = (JSONObject) cb3.getResponse();
+        groups = result.getJSONArray("groups");
 
-        assertJSONArrayHas("jtest_group1", result);
-        assertJSONArrayHas("jtest_group2", result);
-        assertJSONArrayHasNo("jtest_group3", result);
+        assertJSONArrayHas(group1, groups);
+        assertJSONArrayHas(group2, groups);
+        assertJSONArrayHasNo("jtest_group3", groups);
+        assertEquals(channelNamespace, result.getString("namespace"));
     }
 
     @Test
-    public void testRemoveGroup() throws InterruptedException {
+    public void testRemoveGroup() throws InterruptedException, JSONException {
+        String group = "jtest_group1";
+        JSONObject result;
+        JSONArray groups;
+
         final CountDownLatch latch1 = new CountDownLatch(1);
         final CountDownLatch latch2 = new CountDownLatch(1);
         final CountDownLatch latch3 = new CountDownLatch(1);
@@ -297,27 +336,35 @@ public class ChannelGroupTest {
         final TestHelper.SimpleCallback cb3 = new TestHelper.SimpleCallback(latch3);
         final TestHelper.SimpleCallback cb4 = new TestHelper.SimpleCallback(latch4);
 
-        pubnub.addChannelToGroup("jtest_group1", "ch1", cb1);
+        pubnub.addChannelToGroup(group, "ch1", cb1);
         latch1.await(10, TimeUnit.SECONDS);
 
         pubnub.group(cb2);
         latch2.await(10, TimeUnit.SECONDS);
 
-        JSONArray result = (JSONArray) cb2.getResponse();
-        assertJSONArrayHas("jtest_group1", result);
+        result = (JSONObject) cb2.getResponse();
+        groups = result.getJSONArray("groups");
+        assertJSONArrayHas(group, groups);
 
-        pubnub.removeGroup("jtest_group1", cb3);
+        pubnub.removeGroup(group, cb3);
         latch3.await(10, TimeUnit.SECONDS);
 
         pubnub.group(cb4);
         latch4.await(10, TimeUnit.SECONDS);
 
-        result = (JSONArray) cb4.getResponse();
-        assertJSONArrayHasNo("jtest_group1", result);
+        result = (JSONObject) cb4.getResponse();
+        groups = result.getJSONArray("groups");
+
+        assertEquals("OK", cb3.getResponse().toString());
+        assertJSONArrayHasNo(group, groups);
     }
 
     @Test
-    public void testRemoveNamespacedGroup() throws InterruptedException {
+    public void testRemoveNamespacedGroup() throws InterruptedException, JSONException {
+        String group = "jtest_group1";
+        JSONObject result;
+        JSONArray groups;
+
         final CountDownLatch latch1 = new CountDownLatch(1);
         final CountDownLatch latch2 = new CountDownLatch(1);
         final CountDownLatch latch3 = new CountDownLatch(1);
@@ -327,22 +374,59 @@ public class ChannelGroupTest {
         final TestHelper.SimpleCallback cb3 = new TestHelper.SimpleCallback(latch3);
         final TestHelper.SimpleCallback cb4 = new TestHelper.SimpleCallback(latch4);
 
-        pubnub.addChannelToGroup(channelNamespace, "jtest_group1", "ch1", cb1);
+        pubnub.addChannelToGroup(channelNamespace, group, "ch1", cb1);
         latch1.await(10, TimeUnit.SECONDS);
 
         pubnub.group(channelNamespace, cb2);
         latch2.await(10, TimeUnit.SECONDS);
 
-        JSONArray result = (JSONArray) cb2.getResponse();
-        assertJSONArrayHas("jtest_group1", result);
+        result = (JSONObject) cb2.getResponse();
+        groups = result.getJSONArray("groups");
+        assertJSONArrayHas(group, groups);
+        assertEquals(channelNamespace, result.getString("namespace"));
 
-        pubnub.removeGroup(channelNamespace, "jtest_group1", cb3);
+        pubnub.removeGroup(channelNamespace, group, cb3);
         latch3.await(10, TimeUnit.SECONDS);
 
         pubnub.group(channelNamespace, cb4);
         latch4.await(10, TimeUnit.SECONDS);
 
-        result = (JSONArray) cb4.getResponse();
-        assertJSONArrayHasNo("jtest_group1", result);
+        result = (JSONObject) cb4.getResponse();
+        groups = result.getJSONArray("groups");
+        assertJSONArrayHasNo(group, groups);
+        assertEquals(channelNamespace, result.getString("namespace"));
+    }
+
+    @AfterClass
+    public static void tearDown() throws InterruptedException, JSONException {
+        Pubnub pubnub = new Pubnub("demo", "demo");
+        pubnub.setOrigin("dara24.devbuild");
+        pubnub.setCacheBusting(false);
+
+        final CountDownLatch latch1 = new CountDownLatch(1);
+        final TestHelper.SimpleCallback cb1 = new TestHelper.SimpleCallback(latch1);
+
+        pubnub.group(cb1);
+        latch1.await(10, TimeUnit.SECONDS);
+
+        JSONObject result = (JSONObject) cb1.getResponse();
+        JSONArray groups = result.getJSONArray("groups");
+
+        for (int i = 0; i < groups.length(); i++) {
+            final String group = groups.getString(i);
+
+            if (group.startsWith("jtest")) {
+                CountDownLatch latch = new CountDownLatch(1);
+                pubnub.removeGroup(group, new TestHelper.SimpleCallback(latch) {
+                    @Override
+                    public void successCallback(String channel, Object message) {
+                        System.out.println("Successfully removed group " + group);
+                        super.successCallback(channel, message);
+                    }
+                });
+                latch.await(10, TimeUnit.SECONDS);
+            }
+
+        }
     }
 }

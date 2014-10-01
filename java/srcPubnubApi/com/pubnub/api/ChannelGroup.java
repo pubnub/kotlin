@@ -2,6 +2,7 @@ package com.pubnub.api;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
@@ -19,7 +20,11 @@ public class ChannelGroup extends SubscriptionItem{
 
         @Override
         public void successCallback(String channel, Object channels) {
-            this.channels = (JSONArray) channels;
+            try {
+                this.channels = ((JSONObject) channels).getJSONArray("channels");
+            } catch (JSONException e) {
+                this.channels = new JSONArray();
+            }
             this.latch.countDown();
         }
 
