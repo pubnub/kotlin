@@ -1723,34 +1723,39 @@ abstract class PubnubCore {
     }
 
     private void leave(final String channel) {
+        _leave(PubnubUtil.urlEncode(channel), new Hashtable<String, String>());
+    }
 
-        String[] urlargs = { getPubnubUrl(), "v2/presence/sub_key",
-                this.SUBSCRIBE_KEY, "channel", PubnubUtil.urlEncode(channel),
-                "leave"
+    private void leaveGroup(String group) {
+        Hashtable<String, String> params = new Hashtable<String, String>();
+        params.put("channel-group", group);
+
+        _leave(",", params);
+    }
+
+    private void _leave(String channel, Hashtable<String, String> params) {
+        String[] urlArgs = {getPubnubUrl(), "v2/presence/sub_key",
+                this.SUBSCRIBE_KEY, "channel", channel, "leave"
         };
-        Hashtable params = new Hashtable();
+
         params.put("uuid", UUID);
 
-        HttpRequest hreq = new HttpRequest(urlargs, params,
+        HttpRequest hreq = new HttpRequest(urlArgs, params,
                 new ResponseHandler() {
+                    public void handleResponse(HttpRequest hreq, String response) {
+                    }
 
-            public void handleResponse(HttpRequest hreq, String response) {
+                    public void handleError(HttpRequest hreq, PubnubError error) {
+                    }
+                });
 
-            }
-
-            public void handleError(HttpRequest hreq, PubnubError error) {
-
-            }
-
-        });
         _request(hreq, nonSubscribeManager);
     }
 
     /**
      * Unsubscribe from channels.
      *
-     * @param channels
-     *            String array containing channel names
+     * @param channels String array containing channel names
      */
     public void unsubscribe(String[] channels) {
         for (String channel : channels) {
@@ -1763,18 +1768,26 @@ abstract class PubnubCore {
     }
 
     /**
-     * Unsubscribe from all channel.
+     * Unsubscribe/Disconnect from channel.
      *
+     * @param channel channel name as String.
      */
-    public void unsubscribeAll() {
-        String[] channels = channelSubscriptions.getItemNames();
+    public void unsubscribe(String channel) {
+        unsubscribe(new String[]{channel});
+    }
 
-        for (String channel : channels) {
-            channelSubscriptions.removeItem(channel);
-            leave(channel);
+    /**
+     * Unsubscribe/Disconnect from channel.
+     *
+     * @param args Hashtable containing channel name.
+     */
+    protected void unsubscribe(Hashtable args) {
+        String[] channelList = (String[]) args.get("channels");
+        if (channelList == null) {
+            channelList = new String[]{(String) args.get("channel")};
         }
 
-        disconnectAndResubscribe();
+        unsubscribe(channelList);
     }
 
     /**
@@ -1794,6 +1807,7 @@ abstract class PubnubCore {
     public void unsubscribeGroup(String[] groups) {
         for (String group : groups) {
             channelGroupSubscriptions.removeItem(group);
+            leaveGroup(group);
         }
 
         resubscribe();
@@ -1802,35 +1816,58 @@ abstract class PubnubCore {
     /**
      * Unsubscribe from presence channel.
      *
-     * @param channel
-     *            channel name as String.
+     * @param channel channel name as String.
      */
     public void unsubscribePresence(String channel) {
         unsubscribe(new String[]{channel + PRESENCE_SUFFIX});
     }
 
     /**
-     * Unsubscribe/Disconnect from channel.
-     *
-     * @param channel
-     *            channel name as String.
+     * Unsubscribe from all channel and channel groups.
      */
-    public void unsubscribe(String channel) {
-        unsubscribe(new String[]{channel});
+    public void unsubscribeAll() {
+        String[] channels = channelSubscriptions.getItemNames();
+        String[] groups = channelGroupSubscriptions.getItemNames();
+
+        for (String channel : channels) {
+            channelSubscriptions.removeItem(channel);
+            leave(channel);
+        }
+
+        for (String group : groups) {
+            channelGroupSubscriptions.removeItem(group);
+            leaveGroup(group);
+        }
+
+        disconnectAndResubscribe();
     }
 
     /**
-     * Unsubscribe/Disconnect from channel.
-     *
-     * @param args
-     *            Hashtable containing channel name.
+     * Unsubscribe from all channel.
      */
-    protected void unsubscribe(Hashtable args) {
-        String[] channelList = (String[]) args.get("channels");
-        if (channelList == null) {
-            channelList = new String[] { (String) args.get("channel") };
+    public void unsubscribeAllChannels() {
+        String[] channels = channelSubscriptions.getItemNames();
+
+        for (String channel : channels) {
+            channelSubscriptions.removeItem(channel);
+            leave(channel);
         }
-        unsubscribe(channelList);
+
+        disconnectAndResubscribe();
+    }
+
+    /**
+     * Unsubscribe from all channel groups.
+     */
+    public void unsubscribeAllGroups() {
+        String[] groups = channelGroupSubscriptions.getItemNames();
+
+        for (String group : groups) {
+            channelGroupSubscriptions.removeItem(group);
+            leaveGroup(group);
+        }
+
+        disconnectAndResubscribe();
     }
 
     /**

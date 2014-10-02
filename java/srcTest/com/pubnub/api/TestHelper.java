@@ -43,6 +43,18 @@ public class TestHelper {
         }
     }
 
+    static class SubscribeCallback extends SimpleCallback {
+        public SubscribeCallback(CountDownLatch latch) {
+            this.latch = latch;
+        }
+
+        @Override
+        public void connectCallback(String channel, Object message) {
+            if (this.latch != null) {
+                this.latch.countDown();
+            }
+        }
+    }
 
     static class PresenceCallback extends Callback {
 
