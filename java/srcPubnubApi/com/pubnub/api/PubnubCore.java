@@ -967,24 +967,35 @@ abstract class PubnubCore {
     }
 
     public void setState(String channel, String uuid, JSONObject state, Callback callback) {
+        _setState(channelSubscriptions, PubnubUtil.urlEncode(channel), null, uuid, state, callback);
+    }
 
+    public void setStateGroup(String group, String uuid, JSONObject state, Callback callback) {
+        _setState(channelSubscriptions, ".", group, uuid, state, callback);
+    }
+
+    protected void _setState(Subscriptions sub, String channel, String group, String uuid, JSONObject state, Callback callback) {
+        SubscriptionItem item = sub.getItem(channel);
         final Callback cb = getWrappedCallback(callback);
-
         Hashtable parameters = PubnubUtil.hashtableClone(params);
-        String[] urlargs = { getPubnubUrl(), "v2", "presence", "sub-key",
-                this.SUBSCRIBE_KEY, "channel", PubnubUtil.urlEncode(channel), "uuid", PubnubUtil.urlEncode(uuid),
+
+        String[] urlArgs = { getPubnubUrl(), "v2", "presence", "sub-key",
+                this.SUBSCRIBE_KEY, "channel", channel, "uuid", PubnubUtil.urlEncode(uuid),
                 "data"
         };
+
         if (state != null) parameters.put("state", state.toString());
-        SubscriptionItem ch = channelSubscriptions.getItem(channel);
-        if (ch != null) {
+        if (group != null) parameters.put("channel-group", group);
+
+        if (item != null) {
             try {
-                channelSubscriptions.state.put(channel, state);
+                sub.state.put(channel, state);
             } catch (JSONException e) {
 
             }
         }
-        HttpRequest hreq = new HttpRequest(urlargs, parameters,
+
+        HttpRequest hreq = new HttpRequest(urlArgs, parameters,
                 new ResponseHandler() {
             public void handleResponse(HttpRequest hreq, String response) {
                 invokeCallback("", response, "payload", cb, 2 );
@@ -992,9 +1003,31 @@ abstract class PubnubCore {
 
             public void handleError(HttpRequest hreq, PubnubError error) {
                 cb.errorCallback("", error);
-                return;
             }
         });
+
+        _request(hreq, nonSubscribeManager);
+    }
+
+    protected void getState(String channel, String uuid, Callback callback) {
+        final Callback cb = getWrappedCallback(callback);
+        Hashtable parameters = PubnubUtil.hashtableClone(params);
+
+        String[] urlArgs = { getPubnubUrl(), "v2", "presence", "sub-key",
+                this.SUBSCRIBE_KEY, "channel", PubnubUtil.urlEncode(channel),
+                "uuid", PubnubUtil.urlEncode(uuid)
+        };
+
+        HttpRequest hreq = new HttpRequest(urlArgs, parameters,
+                new ResponseHandler() {
+                    public void handleResponse(HttpRequest hreq, String response) {
+                        invokeCallback("", response, "payload", cb, 1 );
+                    }
+
+                    public void handleError(HttpRequest hreq, PubnubError error) {
+                        cb.errorCallback("", error);
+                    }
+                });
 
         _request(hreq, nonSubscribeManager);
     }
@@ -1268,26 +1301,6 @@ abstract class PubnubCore {
         _request(hreq, nonSubscribeManager);
     }
 
-    public void getState(String channel, String uuid, Callback callback) {
-        final Callback cb = getWrappedCallback(callback);
-        String[] urlargs = { getPubnubUrl(), "v2", "presence", "sub-key",
-                this.SUBSCRIBE_KEY, "channel", PubnubUtil.urlEncode(channel), "uuid", PubnubUtil.urlEncode(uuid)
-        };
-
-        HttpRequest hreq = new HttpRequest(urlargs, params,
-                new ResponseHandler() {
-            public void handleResponse(HttpRequest hreq, String response) {
-                invokeCallback("", response, "payload", cb, 1 );
-            }
-
-            public void handleError(HttpRequest hreq, PubnubError error) {
-                cb.errorCallback("", error);
-                return;
-            }
-        });
-
-        _request(hreq, nonSubscribeManager);
-    }
     /**
      * Read presence information from a channel
      *
