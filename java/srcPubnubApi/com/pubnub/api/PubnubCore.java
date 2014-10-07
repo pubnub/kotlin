@@ -2325,7 +2325,7 @@ abstract class PubnubCore {
             ChannelGroup channelGroupObj = (ChannelGroup) channelGroupSubscriptions.getItem(group);
 
             if (channelGroupObj == null) {
-                ChannelGroup chg = new ChannelGroup(group, callback, this);
+                ChannelGroup chg = new ChannelGroup(group, callback);
 
                 channelGroupSubscriptions.addItem(chg);
             }
