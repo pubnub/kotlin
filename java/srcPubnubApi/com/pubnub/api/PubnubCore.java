@@ -1009,7 +1009,7 @@ abstract class PubnubCore {
         _request(hreq, nonSubscribeManager);
     }
 
-    protected void getState(String channel, String uuid, Callback callback) {
+    public void getState(String channel, String uuid, Callback callback) {
         final Callback cb = getWrappedCallback(callback);
         Hashtable parameters = PubnubUtil.hashtableClone(params);
 

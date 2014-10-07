@@ -20,6 +20,7 @@
         <pathelement location="libs/json-simple-1.1.1.jar"/>
         <pathelement location="libs/slf4j-api-1.7.5.jar"/>
         <pathelement location="libs/junit-4.11.jar"/>
+        <pathelement location="libs/hamcrest-all-1.3.jar" />
         <pathelement location="libs/commons-cli-1.2.jar"/>
         <pathelement location="jars/Pubnub-UnitTests-${VERSION}.jar"/>
     </path>
