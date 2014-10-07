@@ -1137,11 +1137,22 @@ abstract class PubnubCore {
         _request(hreq, nonSubscribeManager);
     }
 
-    public void group(Callback callback) {
-        group(null, callback);
+    /**
+     * Get the list of groups in the global namespace
+     *
+     * @param callback to invoke
+     */
+    public void namespaceGroups(Callback callback) {
+        namespaceGroups(null, callback);
     }
 
-    public void group(String namespace, Callback callback) {
+    /**
+     * Get the list of groups in the namespace
+     *
+     * @param namespace name
+     * @param callback to invoke
+     */
+    public void namespaceGroups(String namespace, Callback callback) {
         final Callback cb = getWrappedCallback(callback);
         String[] url;
 
@@ -1169,20 +1180,33 @@ abstract class PubnubCore {
         _request(hreq, nonSubscribeManager);
     }
 
-    public void channelGroup(String groupId, Callback callback) {
-        channelGroup(null, groupId, callback);
+    /**
+     * Get the list of channels in the group
+     *
+     * @param group name
+     * @param callback to invoke
+     */
+    public void groupChannels(String group, Callback callback) {
+        groupChannels(null, group, callback);
     }
 
-    public void channelGroup(String namespace, String groupId, Callback callback) {
+    /**
+     * Get the list of channels in the namespaced group
+     *
+     * @param namespace name
+     * @param group name
+     * @param callback to invoke
+     */
+    public void groupChannels(String namespace, String group, Callback callback) {
         final Callback cb = getWrappedCallback(callback);
         String[] url;
 
         if (namespace != null) {
             url = new String[]{getPubnubUrl(), "v1", "channel-registration", "sub-key",
-                    this.SUBSCRIBE_KEY, "namespace", namespace, "channel-group", groupId};
+                    this.SUBSCRIBE_KEY, "namespace", namespace, "channel-group", group};
         } else {
             url = new String[]{getPubnubUrl(), "v1", "channel-registration", "sub-key",
-                    this.SUBSCRIBE_KEY, "channel-group", groupId};
+                    this.SUBSCRIBE_KEY, "channel-group", group};
         }
 
         Hashtable parameters = PubnubUtil.hashtableClone(params);

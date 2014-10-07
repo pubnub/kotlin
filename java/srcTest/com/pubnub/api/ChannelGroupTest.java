@@ -124,7 +124,7 @@ public class ChannelGroupTest {
         latch2.await(10, TimeUnit.SECONDS);
         latch3.await(10, TimeUnit.SECONDS);
 
-        pubnub.channelGroup(channelGroup, cb4);
+        pubnub.groupChannels(channelGroup, cb4);
 
         latch4.await(10, TimeUnit.SECONDS);
 
@@ -158,7 +158,7 @@ public class ChannelGroupTest {
         latch2.await(10, TimeUnit.SECONDS);
         latch3.await(10, TimeUnit.SECONDS);
 
-        pubnub.channelGroup(channelNamespace, channelGroup, cb4);
+        pubnub.groupChannels(channelNamespace, channelGroup, cb4);
 
         latch4.await(10, TimeUnit.SECONDS);
 
@@ -199,7 +199,7 @@ public class ChannelGroupTest {
         assertEquals("OK", cb2.getResponse());
         assertEquals("OK", cb3.getResponse());
 
-        pubnub.channelGroup(channelGroup, cb4);
+        pubnub.groupChannels(channelGroup, cb4);
 
         latch4.await(10, TimeUnit.SECONDS);
 
@@ -240,7 +240,7 @@ public class ChannelGroupTest {
         assertEquals("OK", cb2.getResponse());
         assertEquals("OK", cb3.getResponse());
 
-        pubnub.channelGroup(channelNamespace, channelGroup, cb4);
+        pubnub.groupChannels(channelNamespace, channelGroup, cb4);
 
         latch4.await(10, TimeUnit.SECONDS);
 
@@ -275,7 +275,7 @@ public class ChannelGroupTest {
         latch1.await(10, TimeUnit.SECONDS);
         latch2.await(10, TimeUnit.SECONDS);
 
-        pubnub.group(cb3);
+        pubnub.namespaceGroups(cb3);
 
         latch3.await(10, TimeUnit.SECONDS);
 
@@ -308,7 +308,7 @@ public class ChannelGroupTest {
         latch1.await(10, TimeUnit.SECONDS);
         latch2.await(10, TimeUnit.SECONDS);
 
-        pubnub.group(channelNamespace, cb3);
+        pubnub.namespaceGroups(channelNamespace, cb3);
 
         latch3.await(10, TimeUnit.SECONDS);
 
@@ -339,7 +339,7 @@ public class ChannelGroupTest {
         pubnub.addChannelToGroup(group, "ch1", cb1);
         latch1.await(10, TimeUnit.SECONDS);
 
-        pubnub.group(cb2);
+        pubnub.namespaceGroups(cb2);
         latch2.await(10, TimeUnit.SECONDS);
 
         result = (JSONObject) cb2.getResponse();
@@ -349,7 +349,7 @@ public class ChannelGroupTest {
         pubnub.removeGroup(group, cb3);
         latch3.await(10, TimeUnit.SECONDS);
 
-        pubnub.group(cb4);
+        pubnub.namespaceGroups(cb4);
         latch4.await(10, TimeUnit.SECONDS);
 
         result = (JSONObject) cb4.getResponse();
@@ -377,7 +377,7 @@ public class ChannelGroupTest {
         pubnub.addChannelToGroup(channelNamespace, group, "ch1", cb1);
         latch1.await(10, TimeUnit.SECONDS);
 
-        pubnub.group(channelNamespace, cb2);
+        pubnub.namespaceGroups(channelNamespace, cb2);
         latch2.await(10, TimeUnit.SECONDS);
 
         result = (JSONObject) cb2.getResponse();
@@ -388,7 +388,7 @@ public class ChannelGroupTest {
         pubnub.removeGroup(channelNamespace, group, cb3);
         latch3.await(10, TimeUnit.SECONDS);
 
-        pubnub.group(channelNamespace, cb4);
+        pubnub.namespaceGroups(channelNamespace, cb4);
         latch4.await(10, TimeUnit.SECONDS);
 
         result = (JSONObject) cb4.getResponse();
@@ -406,7 +406,7 @@ public class ChannelGroupTest {
         final CountDownLatch latch1 = new CountDownLatch(1);
         final TestHelper.SimpleCallback cb1 = new TestHelper.SimpleCallback(latch1);
 
-        pubnub.group(cb1);
+        pubnub.namespaceGroups(cb1);
         latch1.await(10, TimeUnit.SECONDS);
 
         JSONObject result = (JSONObject) cb1.getResponse();
