@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
 
 public class ChannelGroup extends SubscriptionItem{
-    ArrayList<String> channels = new ArrayList<String>();
+    ArrayList channels = new ArrayList();
 
     public static class RetrieveChannelsCallback extends Callback {
         private CountDownLatch latch;
@@ -18,7 +18,6 @@ public class ChannelGroup extends SubscriptionItem{
             this.latch = latch;
         }
 
-        @Override
         public void successCallback(String channel, Object channels) {
             try {
                 this.channels = ((JSONObject) channels).getJSONArray("channels");
@@ -28,7 +27,6 @@ public class ChannelGroup extends SubscriptionItem{
             this.latch.countDown();
         }
 
-        @Override
         public void errorCallback(String channel, PubnubError error) {
             this.channels = new JSONArray();
             this.latch.countDown();
@@ -82,7 +80,7 @@ public class ChannelGroup extends SubscriptionItem{
         }
     }
 
-    public ArrayList<String> getChannels() {
+    public ArrayList getChannels() {
         return channels;
     }
 

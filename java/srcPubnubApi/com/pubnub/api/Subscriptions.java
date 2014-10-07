@@ -11,12 +11,12 @@ import java.util.Hashtable;
  *
  */
 class Subscriptions {
-    private Hashtable<String, SubscriptionItem> items;
+    private Hashtable items;
 
     JSONObject state;
 
     public Subscriptions() {
-        items    = new Hashtable<String, SubscriptionItem>();
+        items    = new Hashtable();
         state    = new JSONObject();
     }
 
@@ -36,14 +36,14 @@ class Subscriptions {
         SubscriptionItem ch = null;
         synchronized (items) {
             if (items.size() > 0) {
-                ch = items.elements().nextElement();
+                ch = (SubscriptionItem) items.elements().nextElement();
             }
         }
         return ch;
     }
 
     public SubscriptionItem getItem(String name) {
-        return items.get(name);
+        return (SubscriptionItem) items.get(name);
     }
 
     public String[] getItemNames() {
@@ -84,7 +84,7 @@ class Subscriptions {
     public void invokeConnectCallbackOnItems(String[] items, Object message) {
         synchronized (items) {
             for (int i = 0; i < items.length; i++) {
-                SubscriptionItem _item = this.items.get(items[i]);
+                SubscriptionItem _item = (SubscriptionItem) this.items.get(items[i]);
                 if (_item != null) {
                     if (_item.connected == false) {
                         _item.connected = true;
@@ -109,7 +109,7 @@ class Subscriptions {
     public void invokeReconnectCallbackOnItems(String[] items, Object message) {
         synchronized (items) {
             for (int i = 0; i < items.length; i++) {
-                SubscriptionItem _item = this.items.get(items[i]);
+                SubscriptionItem _item = (SubscriptionItem) this.items.get(items[i]);
                 if (_item != null) {
                     _item.connected = true;
                     if ( _item.error ) {
@@ -125,7 +125,7 @@ class Subscriptions {
     public void invokeDisconnectCallbackOnItems(String[] items, Object message) {
         synchronized (items) {
             for (int i = 0; i < items.length; i++) {
-                SubscriptionItem _item = this.items.get(items[i]);
+                SubscriptionItem _item = (SubscriptionItem) this.items.get(items[i]);
                 if (_item != null) {
                     if (_item.connected == true) {
                         _item.connected = false;

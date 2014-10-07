@@ -925,7 +925,7 @@ abstract class PubnubCore {
      */
     public void presence(String channel, Callback callback)
             throws PubnubException {
-        Hashtable<String, Object> args = new Hashtable<String, Object>(2);
+        Hashtable args = new Hashtable(2);
 
         args.put("channels", new String[] {channel + PRESENCE_SUFFIX});
         args.put("callback", callback);
@@ -1347,7 +1347,7 @@ abstract class PubnubCore {
 
         final Callback cb = getWrappedCallback(callback);
         Hashtable parameters = PubnubUtil.hashtableClone(params);
-        ArrayList<String> urlArgs = new ArrayList<String>();
+        ArrayList urlArgs = new ArrayList();
 
         urlArgs.add(getPubnubUrl());
         urlArgs.add("v2");
@@ -1373,7 +1373,9 @@ abstract class PubnubCore {
             parameters.put("channel-group", PubnubUtil.joinString(channelGroups, ","));
         }
 
-        HttpRequest hreq = new HttpRequest(urlArgs.toArray(new String[urlArgs.size()]), parameters,
+        String[] path = (String[]) urlArgs.toArray(new String[urlArgs.size()]);
+
+        HttpRequest hreq = new HttpRequest(path, parameters,
                 new ResponseHandler() {
                     public void handleResponse(HttpRequest hreq, String response) {
                         invokeCallback(null, response, "payload", cb, 1);
@@ -1699,7 +1701,7 @@ abstract class PubnubCore {
         _request(hreq, nonSubscribeManager);
     }
 
-    private void keepOnlyPluralSubscriptionItems(Hashtable<String, Object> args) {
+    private void keepOnlyPluralSubscriptionItems(Hashtable args) {
         String _channel = (String) args.get("channel");
         String _group = (String) args.get("group");
 
@@ -1736,17 +1738,17 @@ abstract class PubnubCore {
     }
 
     private void leave(final String channel) {
-        _leave(PubnubUtil.urlEncode(channel), new Hashtable<String, String>());
+        _leave(PubnubUtil.urlEncode(channel), new Hashtable());
     }
 
     private void leaveGroup(String group) {
-        Hashtable<String, String> params = new Hashtable<String, String>();
+        Hashtable params = new Hashtable();
         params.put("channel-group", group);
 
         _leave(",", params);
     }
 
-    private void _leave(String channel, Hashtable<String, String> params) {
+    private void _leave(String channel, Hashtable params) {
         String[] urlArgs = {getPubnubUrl(), "v2/presence/sub_key",
                 this.SUBSCRIBE_KEY, "channel", channel, "leave"
         };
@@ -1771,7 +1773,8 @@ abstract class PubnubCore {
      * @param channels String array containing channel names
      */
     public void unsubscribe(String[] channels) {
-        for (String channel : channels) {
+        for (int i = 0; i < channels.length; i++) {
+            String channel = channels[i];
             channelSubscriptions.removeItem(channel);
             channelSubscriptions.state.remove(channel);
             leave(channel);
@@ -1818,7 +1821,8 @@ abstract class PubnubCore {
      * @param groups to unsubscribe
      */
     public void unsubscribeGroup(String[] groups) {
-        for (String group : groups) {
+        for (int i = 0; i < groups.length; i++) {
+            String group = groups[i];
             channelGroupSubscriptions.removeItem(group);
             leaveGroup(group);
         }
@@ -1842,12 +1846,14 @@ abstract class PubnubCore {
         String[] channels = channelSubscriptions.getItemNames();
         String[] groups = channelGroupSubscriptions.getItemNames();
 
-        for (String channel : channels) {
+        for (int i = 0; i < channels.length; i++) {
+            String channel = channels[i];
             channelSubscriptions.removeItem(channel);
             leave(channel);
         }
 
-        for (String group : groups) {
+        for (int i = 0; i < groups.length; i++) {
+            String group = groups[i];
             channelGroupSubscriptions.removeItem(group);
             leaveGroup(group);
         }
@@ -1861,7 +1867,8 @@ abstract class PubnubCore {
     public void unsubscribeAllChannels() {
         String[] channels = channelSubscriptions.getItemNames();
 
-        for (String channel : channels) {
+        for (int i = 0; i < channels.length; i++) {
+            String channel = channels[i];
             channelSubscriptions.removeItem(channel);
             leave(channel);
         }
@@ -1875,7 +1882,8 @@ abstract class PubnubCore {
     public void unsubscribeAllGroups() {
         String[] groups = channelGroupSubscriptions.getItemNames();
 
-        for (String group : groups) {
+        for (int i = 0; i < groups.length; i++) {
+            String group = groups[i];
             channelGroupSubscriptions.removeItem(group);
             leaveGroup(group);
         }
@@ -1890,7 +1898,7 @@ abstract class PubnubCore {
      * @param callback to call
      * @throws PubnubException
      */
-    protected void subscribe(Hashtable<String, Object> args, Callback callback)
+    protected void subscribe(Hashtable args, Callback callback)
             throws PubnubException {
         args.put("callback", callback);
 
@@ -1903,7 +1911,7 @@ abstract class PubnubCore {
      * @param args hashtable
      * @throws PubnubException
      */
-    protected void subscribe(Hashtable<String, Object> args) throws PubnubException {
+    protected void subscribe(Hashtable args) throws PubnubException {
 
         keepOnlyPluralSubscriptionItems(args);
 
@@ -1937,7 +1945,7 @@ abstract class PubnubCore {
     public void subscribe(String[] channels, Callback callback, String timetoken)
             throws PubnubException {
 
-        Hashtable<String, Object> args = new Hashtable<String, Object>();
+        Hashtable args = new Hashtable();
 
         args.put("channels", channels);
         args.put("callback", callback);
@@ -2157,7 +2165,7 @@ abstract class PubnubCore {
      */
     public void subscribe(String[] channels, String[] groups, Callback callback, String timetoken)
             throws PubnubException {
-        Hashtable<String, Object> args = new Hashtable<String, Object>();
+        Hashtable args = new Hashtable();
 
         args.put("channels", channels);
         args.put("groups", groups);
@@ -2241,7 +2249,7 @@ abstract class PubnubCore {
     public void subscribeGroup(String[] groups, Callback callback, String timetoken)
             throws PubnubException {
 
-        Hashtable<String, Object> args = new Hashtable<String, Object>();
+        Hashtable args = new Hashtable();
 
         args.put("groups", groups);
         args.put("callback", callback);
@@ -2251,7 +2259,8 @@ abstract class PubnubCore {
     }
 
     private void callErrorCallbacks(String[] channelList, PubnubError error) {
-        for (String channel : channelList) {
+        for (int i = 0; i < channelList.length; i++) {
+            String channel = channelList[i];
             Callback cb = channelSubscriptions.getItem(channel).callback;
             cb.errorCallback(channel, error);
         }
@@ -2300,7 +2309,8 @@ abstract class PubnubCore {
          * and connected, then return
          */
 
-        for (String channel : channelList) {
+        for (int i = 0; i < channelList.length; i++) {
+            String channel = channelList[i];
             Channel channelObj = (Channel) channelSubscriptions.getItem(channel);
 
             if (channelObj == null) {
@@ -2310,7 +2320,8 @@ abstract class PubnubCore {
             }
         }
 
-        for (String group : groupList) {
+        for (int i = 0; i < groupList.length; i++) {
+            String group = groupList[i];
             ChannelGroup channelGroupObj = (ChannelGroup) channelGroupSubscriptions.getItem(group);
 
             if (channelGroupObj == null) {
