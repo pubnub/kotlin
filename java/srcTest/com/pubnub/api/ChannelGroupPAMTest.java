@@ -131,10 +131,10 @@ public class ChannelGroupPAMTest {
         TestHelper.SimpleCallback cb3 = new TestHelper.SimpleCallback(latch3);
         TestHelper.SimpleCallback cb4 = new TestHelper.SimpleCallback(latch4);
 
-        pubnub.pamRevokeNamespacedChannelGroup(namespace, group, cb1);
+        pubnub.pamRevokeChannelGroup(namespace + ":" + group, cb1);
         latch1.await(10, TimeUnit.SECONDS);
 
-        pubnub.pamAuditNamespacedChannelGroup(namespace, group, cb2);
+        pubnub.pamAuditChannelGroup(namespace + ":" + group, cb2);
         latch2.await(10, TimeUnit.SECONDS);
 
         JSONObject permissions = ((JSONObject) cb2.getResponse());
@@ -147,10 +147,10 @@ public class ChannelGroupPAMTest {
         assertEquals(0, auths.getInt("r"));
         assertEquals(0, auths.getInt("m"));
 
-        pubnub.pamGrantNamespacedChannelGroup(namespace, group, true, true, cb3);
+        pubnub.pamGrantChannelGroup(namespace + ":" + group, true, true, cb3);
         latch3.await(10, TimeUnit.SECONDS);
 
-        pubnub.pamAuditNamespacedChannelGroup(namespace, group, cb4);
+        pubnub.pamAuditChannelGroup(namespace + ":" + group, cb4);
         latch4.await(10, TimeUnit.SECONDS);
 
         permissions = ((JSONObject) cb4.getResponse());
@@ -177,10 +177,10 @@ public class ChannelGroupPAMTest {
         TestHelper.SimpleCallback cb3 = new TestHelper.SimpleCallback(latch3);
         TestHelper.SimpleCallback cb4 = new TestHelper.SimpleCallback(latch4);
 
-        pubnub.pamRevokeNamespacedChannelGroup(namespace, group, auth_key, cb1);
+        pubnub.pamRevokeChannelGroup(namespace + ":" + group, auth_key, cb1);
         latch1.await(10, TimeUnit.SECONDS);
 
-        pubnub.pamAuditNamespacedChannelGroup(namespace, group, auth_key, cb2);
+        pubnub.pamAuditChannelGroup(namespace + ":" + group, auth_key, cb2);
         latch2.await(10, TimeUnit.SECONDS);
 
         JSONObject permissions = ((JSONObject) cb2.getResponse());
@@ -192,10 +192,10 @@ public class ChannelGroupPAMTest {
         assertEquals(0, auths.getInt("r"));
         assertEquals(0, auths.getInt("m"));
 
-        pubnub.pamGrantNamespacedChannelGroup(namespace, group, auth_key, true, true, cb3);
+        pubnub.pamGrantChannelGroup(namespace + ":" + group, auth_key, true, true, cb3);
         latch3.await(10, TimeUnit.SECONDS);
 
-        pubnub.pamAuditNamespacedChannelGroup(namespace, group, auth_key, cb4);
+        pubnub.pamAuditChannelGroup(namespace + ":" + group, auth_key, cb4);
         latch4.await(10, TimeUnit.SECONDS);
 
         permissions = ((JSONObject) cb4.getResponse());
@@ -221,10 +221,10 @@ public class ChannelGroupPAMTest {
         TestHelper.SimpleCallback cb3 = new TestHelper.SimpleCallback(latch3);
         TestHelper.SimpleCallback cb4 = new TestHelper.SimpleCallback(latch4);
 
-        pubnub.pamRevokeNamespace(namespace, cb1);
+        pubnub.pamRevokeChannelGroup(namespace + ":", cb1);
         latch1.await(10, TimeUnit.SECONDS);
 
-        pubnub.pamAuditNamespace(namespace, cb2);
+        pubnub.pamAuditChannelGroup(namespace + ":", cb2);
         latch2.await(10, TimeUnit.SECONDS);
 
         JSONObject permissions = ((JSONObject) cb2.getResponse());
@@ -237,10 +237,10 @@ public class ChannelGroupPAMTest {
         assertEquals(0, auths.getInt("r"));
         assertEquals(0, auths.getInt("m"));
 
-        pubnub.pamGrantNamespace(namespace, true, true, cb3);
+        pubnub.pamGrantChannelGroup(namespace + ":", true, true, cb3);
         latch3.await(10, TimeUnit.SECONDS);
 
-        pubnub.pamAuditNamespace(namespace, cb4);
+        pubnub.pamAuditChannelGroup(namespace + ":", cb4);
         latch4.await(10, TimeUnit.SECONDS);
 
         permissions = ((JSONObject) cb4.getResponse());
@@ -267,10 +267,10 @@ public class ChannelGroupPAMTest {
         TestHelper.SimpleCallback cb3 = new TestHelper.SimpleCallback(latch3);
         TestHelper.SimpleCallback cb4 = new TestHelper.SimpleCallback(latch4);
 
-        pubnub.pamRevokeNamespace(namespace, auth_key, cb1);
+        pubnub.pamRevokeChannelGroup(namespace + ":", auth_key, cb1);
         latch1.await(10, TimeUnit.SECONDS);
 
-        pubnub.pamAuditNamespace(namespace, auth_key, cb2);
+        pubnub.pamAuditChannelGroup(namespace + ":", auth_key, cb2);
         latch2.await(10, TimeUnit.SECONDS);
 
         JSONObject permissions = ((JSONObject) cb2.getResponse());
@@ -282,10 +282,10 @@ public class ChannelGroupPAMTest {
         assertEquals(0, auths.getInt("r"));
         assertEquals(0, auths.getInt("m"));
 
-        pubnub.pamGrantNamespace(namespace, auth_key, true, true, cb3);
+        pubnub.pamGrantChannelGroup(namespace + ":", auth_key, true, true, cb3);
         latch3.await(10, TimeUnit.SECONDS);
 
-        pubnub.pamAuditNamespace(namespace, auth_key, cb4);
+        pubnub.pamAuditChannelGroup(namespace + ":", auth_key, cb4);
         latch4.await(10, TimeUnit.SECONDS);
 
         permissions = ((JSONObject) cb4.getResponse());
@@ -311,10 +311,10 @@ public class ChannelGroupPAMTest {
         TestHelper.SimpleCallback cb3 = new TestHelper.SimpleCallback(latch3);
         TestHelper.SimpleCallback cb4 = new TestHelper.SimpleCallback(latch4);
 
-        pubnub.pamRevokeGlobalNamespace(cb1);
+        pubnub.pamRevokeChannelGroup(":", cb1);
         latch1.await(10, TimeUnit.SECONDS);
 
-        pubnub.pamAuditGlobalNamespace(cb2);
+        pubnub.pamAuditChannelGroup(":", cb2);
         latch2.await(10, TimeUnit.SECONDS);
 
         JSONObject permissions = ((JSONObject) cb2.getResponse())
@@ -325,10 +325,10 @@ public class ChannelGroupPAMTest {
         assertEquals(0, permissions.getInt("r"));
         assertEquals(0, permissions.getInt("m"));
 
-        pubnub.pamGrantGlobalNamespace(true, true, cb3);
+        pubnub.pamGrantChannelGroup(":", true, true, cb3);
         latch3.await(10, TimeUnit.SECONDS);
 
-        pubnub.pamAuditGlobalNamespace(cb4);
+        pubnub.pamAuditChannelGroup(":", cb4);
         latch4.await(10, TimeUnit.SECONDS);
 
         permissions = ((JSONObject) cb4.getResponse())
@@ -353,10 +353,10 @@ public class ChannelGroupPAMTest {
         TestHelper.SimpleCallback cb3 = new TestHelper.SimpleCallback(latch3);
         TestHelper.SimpleCallback cb4 = new TestHelper.SimpleCallback(latch4);
 
-        pubnub.pamRevokeGlobalNamespace(auth_key, cb1);
+        pubnub.pamRevokeChannelGroup(":", auth_key, cb1);
         latch1.await(10, TimeUnit.SECONDS);
 
-        pubnub.pamAuditGlobalNamespace(auth_key, cb2);
+        pubnub.pamAuditChannelGroup(":", auth_key, cb2);
         latch2.await(10, TimeUnit.SECONDS);
 
         JSONObject permissions = ((JSONObject) cb2.getResponse());
@@ -368,10 +368,10 @@ public class ChannelGroupPAMTest {
         assertEquals(0, auths.getInt("r"));
         assertEquals(0, auths.getInt("m"));
 
-        pubnub.pamGrantGlobalNamespace(true, true, auth_key, cb3);
+        pubnub.pamGrantChannelGroup(":", auth_key, true, true, cb3);
         latch3.await(10, TimeUnit.SECONDS);
 
-        pubnub.pamAuditGlobalNamespace(auth_key, cb4);
+        pubnub.pamAuditChannelGroup(":", auth_key, cb4);
         latch4.await(10, TimeUnit.SECONDS);
 
         permissions = ((JSONObject) cb4.getResponse());
