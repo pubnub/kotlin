@@ -4,7 +4,7 @@ package com.pubnub.api;
  * @author PubnubCore
  *
  */
-abstract class SubscriptionItem {
+class SubscriptionItem {
     String name;
     boolean connected;
     boolean subscribed;

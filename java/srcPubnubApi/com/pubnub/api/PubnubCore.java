@@ -1181,32 +1181,22 @@ abstract class PubnubCore {
     }
 
     /**
-     * Get the list of channels in the group
-     *
-     * @param group name
-     * @param callback to invoke
-     */
-    public void groupChannels(String group, Callback callback) {
-        groupChannels(null, group, callback);
-    }
-
-    /**
      * Get the list of channels in the namespaced group
      *
-     * @param namespace name
      * @param group name
      * @param callback to invoke
      */
-    public void groupChannels(String namespace, String group, Callback callback) {
+    public void groupChannels(String group, Callback callback) throws PubnubException {
         final Callback cb = getWrappedCallback(callback);
+        ChannelGroup channelGroup = new ChannelGroup(group);
         String[] url;
 
-        if (namespace != null) {
+        if (channelGroup.namespace != null) {
             url = new String[]{getPubnubUrl(), "v1", "channel-registration", "sub-key",
-                    this.SUBSCRIBE_KEY, "namespace", namespace, "channel-group", group};
+                    this.SUBSCRIBE_KEY, "namespace", channelGroup.namespace, "channel-group", channelGroup.group};
         } else {
             url = new String[]{getPubnubUrl(), "v1", "channel-registration", "sub-key",
-                    this.SUBSCRIBE_KEY, "channel-group", group};
+                    this.SUBSCRIBE_KEY, "channel-group", channelGroup.group};
         }
 
         Hashtable parameters = PubnubUtil.hashtableClone(params);
@@ -1225,49 +1215,34 @@ abstract class PubnubCore {
         _request(hreq, nonSubscribeManager);
     }
 
-    public void addChannelToGroup(String groupId, String channel, Callback callback) {
-        updateChannelGroup("add", null, groupId, new String[] {channel}, callback);
+    public void addChannelToGroup(String group, String channel, Callback callback) throws PubnubException {
+        updateChannelGroup("add", group, new String[] {channel}, callback);
     }
 
-    public void addChannelToGroup(String groupId, String[] channels, Callback callback) {
-        updateChannelGroup("add", null, groupId, channels, callback);
+    public void addChannelToGroup(String group, String[] channels, Callback callback) throws PubnubException {
+        updateChannelGroup("add", group, channels, callback);
     }
 
-    public void addChannelToGroup(String namespace, String groupId, String channel, Callback callback) {
-        updateChannelGroup("add", namespace, groupId, new String[] {channel}, callback);
+    public void removeChannelFromGroup(String group, String channel, Callback callback) throws PubnubException {
+        updateChannelGroup("remove", group, new String[]{channel}, callback);
     }
 
-    public void addChannelToGroup(String namespace, String groupId, String[] channels, Callback callback) {
-        updateChannelGroup("add", namespace, groupId, channels, callback);
+    public void removeChannelFromGroup(String group, String[] channels, Callback callback) throws PubnubException {
+        updateChannelGroup("remove", group, channels, callback);
     }
 
-    public void removeChannelFromGroup(String groupId, String channel, Callback callback) {
-        updateChannelGroup("remove", null, groupId, new String[]{channel}, callback);
-    }
-
-    public void removeChannelFromGroup(String groupId, String[] channels, Callback callback) {
-        updateChannelGroup("remove", null, groupId, channels, callback);
-    }
-
-    public void removeChannelFromGroup(String namespace, String groupId, String channel, Callback callback) {
-        updateChannelGroup("remove", namespace, groupId, new String[]{channel}, callback);
-    }
-
-    public void removeChannelFromGroup(String namespace, String groupId, String[] channels, Callback callback) {
-        updateChannelGroup("remove", namespace, groupId, channels, callback);
-    }
-
-    public void updateChannelGroup(String action, String namespace, String groupId,
-                                   String[] channels, final Callback callback) {
+    public void updateChannelGroup(String action, String group,
+                                   String[] channels, final Callback callback) throws PubnubException {
         final Callback cb = getWrappedCallback(callback);
+        ChannelGroup channelGroup = new ChannelGroup(group);
         String[] url;
 
-        if (namespace != null) {
+        if (channelGroup.namespace != null) {
             url = new String[]{getPubnubUrl(), "v1", "channel-registration", "sub-key",
-                    this.SUBSCRIBE_KEY, "namespace", namespace, "channel-group", groupId};
+                    this.SUBSCRIBE_KEY, "namespace", channelGroup.namespace, "channel-group", channelGroup.group};
         } else {
             url = new String[]{getPubnubUrl(), "v1", "channel-registration", "sub-key",
-                    this.SUBSCRIBE_KEY, "channel-group", groupId};
+                    this.SUBSCRIBE_KEY, "channel-group", channelGroup.group};
         }
 
         Hashtable parameters = PubnubUtil.hashtableClone(params);
@@ -1291,21 +1266,18 @@ abstract class PubnubCore {
         _request(hreq, nonSubscribeManager);
     }
 
-    public void removeGroup(String groupId, Callback callback) {
-        removeGroup(null, groupId, callback);
-    }
-
-    public void removeGroup(String namespace, String groupId, Callback callback) {
+    public void removeGroup(String group, Callback callback) throws PubnubException {
         final Callback cb = getWrappedCallback(callback);
+        ChannelGroup channelGroup = new ChannelGroup(group);
         String[] url;
 
-        if (namespace != null) {
+        if (channelGroup.namespace != null) {
             url = new String[]{getPubnubUrl(), "v1", "channel-registration", "sub-key",
                     this.SUBSCRIBE_KEY, "namespace",
-                    namespace, "channel-group", groupId, "remove"};
+                    channelGroup.namespace, "channel-group", channelGroup.group, "remove"};
         } else {
             url = new String[]{getPubnubUrl(), "v1", "channel-registration", "sub-key",
-                    this.SUBSCRIBE_KEY, "channel-group", groupId, "remove"};
+                    this.SUBSCRIBE_KEY, "channel-group", channelGroup.group, "remove"};
         }
 
         Hashtable parameters = PubnubUtil.hashtableClone(params);
@@ -2335,10 +2307,10 @@ abstract class PubnubCore {
 
         for (int i = 0; i < channelList.length; i++) {
             String channel = channelList[i];
-            Channel channelObj = (Channel) channelSubscriptions.getItem(channel);
+            SubscriptionItem channelObj = (SubscriptionItem) channelSubscriptions.getItem(channel);
 
             if (channelObj == null) {
-                Channel ch = new Channel(channel, callback);
+                SubscriptionItem ch = new SubscriptionItem(channel, callback);
 
                 channelSubscriptions.addItem(ch);
             }
@@ -2346,10 +2318,10 @@ abstract class PubnubCore {
 
         for (int i = 0; i < groupList.length; i++) {
             String group = groupList[i];
-            ChannelGroup channelGroupObj = (ChannelGroup) channelGroupSubscriptions.getItem(group);
+            SubscriptionItem channelGroupObj = (SubscriptionItem) channelGroupSubscriptions.getItem(group);
 
             if (channelGroupObj == null) {
-                ChannelGroup chg = new ChannelGroup(group, callback);
+                SubscriptionItem chg = new SubscriptionItem(group, callback);
 
                 channelGroupSubscriptions.addItem(chg);
             }
@@ -2463,10 +2435,8 @@ abstract class PubnubCore {
                             String _channelName = _channels[i];
                             Object message = messages.get(i);
 
-                            ChannelGroup _group =
-                                    (ChannelGroup) channelGroupSubscriptions.getItem(_groups[i]);
-                            Channel _channel =
-                                    (Channel) channelSubscriptions.getItem(_groups[i]);
+                            SubscriptionItem _group = channelGroupSubscriptions.getItem(_groups[i]);
+                            SubscriptionItem _channel = channelSubscriptions.getItem(_groups[i]);
 
                             if (_groupName.equals(_channelName)
                                 && _channel != null

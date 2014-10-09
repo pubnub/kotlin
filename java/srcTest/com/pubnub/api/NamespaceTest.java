@@ -27,7 +27,7 @@ public class NamespaceTest {
     }
 
     @Test
-    public void testGetAllNamespacesAndRemoveThem() throws InterruptedException, JSONException {
+    public void testGetAllNamespacesAndRemoveThem() throws InterruptedException, JSONException, PubnubException {
         JSONObject result;
         JSONArray resultNamespaces;
 
@@ -49,7 +49,7 @@ public class NamespaceTest {
             String group = groups[i];
             String namespace = namespaces[i];
 
-            pubnub.addChannelToGroup(namespace, group, "ch1", cb1);
+            pubnub.addChannelToGroup(namespace + ":" + group, "ch1", cb1);
         }
 
         latch1.await(10, TimeUnit.SECONDS);
