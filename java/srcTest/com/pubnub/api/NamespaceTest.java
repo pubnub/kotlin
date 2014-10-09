@@ -49,13 +49,13 @@ public class NamespaceTest {
             String group = groups[i];
             String namespace = namespaces[i];
 
-            pubnub.addChannelToGroup(namespace + ":" + group, "ch1", cb1);
+            pubnub.channelGroupAddChannel(namespace + ":" + group, "ch1", cb1);
         }
 
         latch1.await(10, TimeUnit.SECONDS);
 
         // get
-        pubnub.namespaces(cb2);
+        pubnub.channelGroupListNamespaces(cb2);
         latch2.await(10, TimeUnit.SECONDS);
 
         result = (JSONObject) cb2.getResponse();
@@ -69,14 +69,14 @@ public class NamespaceTest {
         assertJSONArrayHas(namespaces[2], resultNamespaces);
 
         // remove
-        pubnub.removeNamespace(namespaces[0], cb3);
-        pubnub.removeNamespace(namespaces[1], cb3);
-        pubnub.removeNamespace(namespaces[2], cb3);
+        pubnub.channelGroupRemoveNamespace(namespaces[0], cb3);
+        pubnub.channelGroupRemoveNamespace(namespaces[1], cb3);
+        pubnub.channelGroupRemoveNamespace(namespaces[2], cb3);
 
         latch3.await(10, TimeUnit.SECONDS);
 
         // get again
-        pubnub.namespaces(cb4);
+        pubnub.channelGroupListNamespaces(cb4);
         latch4.await(10, TimeUnit.SECONDS);
 
         result = (JSONObject) cb4.getResponse();

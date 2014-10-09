@@ -81,7 +81,7 @@ public class UnsubscribeTest {
         pubnub2.unsubscribeAll();
         Thread.sleep(1000);
 
-        pubnub.hereNowGroup(group, cb1);
+        pubnub.channelGroupHereNow(group, cb1);
         latch1.await(10, TimeUnit.SECONDS);
 
         result = (JSONObject) cb1.getResponse();
@@ -99,10 +99,10 @@ public class UnsubscribeTest {
         connectToGroup();
 
         // check offline
-        pubnub2.unsubscribeAllGroups();
+        pubnub2.channelGroupUnsubscribeAllGroups();
         Thread.sleep(1000);
 
-        pubnub.hereNowGroup(group, cb1);
+        pubnub.channelGroupHereNow(group, cb1);
         latch1.await(10, TimeUnit.SECONDS);
 
         result = (JSONObject) cb1.getResponse();
@@ -121,10 +121,10 @@ public class UnsubscribeTest {
         connectToGroup();
 
         // check offline
-        pubnub2.unsubscribeGroup(group);
+        pubnub2.channelGroupUnsubscribe(group);
         Thread.sleep(1000);
 
-        pubnub.hereNowGroup(group, cb1);
+        pubnub.channelGroupHereNow(group, cb1);
         latch1.await(10, TimeUnit.SECONDS);
 
         result = (JSONObject) cb1.getResponse();
@@ -143,10 +143,10 @@ public class UnsubscribeTest {
         connectToGroup();
 
         // check offline
-        pubnub2.unsubscribeGroup(new String[]{group});
+        pubnub2.channelGroupUnsubscribe(new String[]{group});
         Thread.sleep(1000);
 
-        pubnub.hereNowGroup(group, cb1);
+        pubnub.channelGroupHereNow(group, cb1);
         latch1.await(10, TimeUnit.SECONDS);
 
         result = (JSONObject) cb1.getResponse();
@@ -163,15 +163,15 @@ public class UnsubscribeTest {
         TestHelper.SubscribeCallback cb2 = new TestHelper.SubscribeCallback(latch2);
         TestHelper.SimpleCallback cb3 = new TestHelper.SimpleCallback(latch3);
 
-        pubnub.addChannelToGroup(group, channel, cb1);
+        pubnub.channelGroupAddChannel(group, channel, cb1);
         latch1.await(10, TimeUnit.SECONDS);
 
         // check online
-        pubnub2.subscribeGroup(group, cb2);
+        pubnub2.channelGroupSubscribe(group, cb2);
         latch2.await(10, TimeUnit.SECONDS);
         Thread.sleep(1000);
 
-        pubnub.hereNowGroup(group, cb3);
+        pubnub.channelGroupHereNow(group, cb3);
         latch3.await(10, TimeUnit.SECONDS);
 
         JSONObject result = (JSONObject) cb3.getResponse();

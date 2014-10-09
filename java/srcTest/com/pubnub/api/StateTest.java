@@ -85,13 +85,13 @@ public class StateTest {
 
         pubnub.setHeartbeat(6);
 
-        pubnub.addChannelToGroup(group, channel, cb1);
+        pubnub.channelGroupAddChannel(group, channel, cb1);
         latch1.await(10, TimeUnit.SECONDS);
 
-        pubnub.subscribeGroup(group, cb2);
+        pubnub.channelGroupSubscribe(group, cb2);
         latch2.await(10, TimeUnit.SECONDS);
 
-        pubnub.setStateGroup(group, pubnub.getUUID(), state, cb3);
+        pubnub.channelGroupSetState(group, pubnub.getUUID(), state, cb3);
         latch3.await(10, TimeUnit.SECONDS);
 
         pubnub.getState(channel, pubnub.getUUID(), cb4);

@@ -18,21 +18,21 @@ public class SubscribeGroupTest {
     public ExpectedException thrown = ExpectedException.none();
 
     @Before
-    public void setUp() {
+    public void setUp() throws PubnubException {
         pubnub.setOrigin("dara24.devbuild");
         pubnub.setCacheBusting(false);
 
-        pubnub.removeGroup("jtest", new TestHelper.SimpleCallback());
-        pubnub.removeGroup("jtest1", new TestHelper.SimpleCallback());
-        pubnub.removeGroup("jtest2", new TestHelper.SimpleCallback());
-        pubnub.removeGroup("jtest3", new TestHelper.SimpleCallback());
+        pubnub.channelGroupRemoveGroup("jtest", new TestHelper.SimpleCallback());
+        pubnub.channelGroupRemoveGroup("jtest1", new TestHelper.SimpleCallback());
+        pubnub.channelGroupRemoveGroup("jtest2", new TestHelper.SimpleCallback());
+        pubnub.channelGroupRemoveGroup("jtest3", new TestHelper.SimpleCallback());
 
         random = Math.random();
     }
 
     @Test
     public void testSubscribeMultipleChannelsAndMultipleChannelGroups()
-            throws InterruptedException {
+            throws InterruptedException, PubnubException {
         final String[] channels = new String[]{"ch1" + random, "ch2" + random, "ch3" + random};
         final String[] groups = new String[]{"jtest1" + random, "jtest2" + random, "jtest3" + random};
 
@@ -63,7 +63,7 @@ public class SubscribeGroupTest {
             }
         };
 
-        pubnub.addChannelToGroup(groups[0], testChannel, cb1);
+        pubnub.channelGroupAddChannel(groups[0], testChannel, cb1);
         latch1.await(10, TimeUnit.SECONDS);
 
         try {
@@ -80,7 +80,7 @@ public class SubscribeGroupTest {
 
     @Test
     public void testSubscribeMultipleChannelsAndOneChannelGroup()
-            throws InterruptedException {
+            throws InterruptedException, PubnubException {
         final String[] channels = new String[]{"ch1", "ch2", "ch3"};
         final String group = "jtest" + random;
         final String ch4 = "ch4-" + random;
@@ -113,7 +113,7 @@ public class SubscribeGroupTest {
             }
         };
 
-        pubnub.addChannelToGroup(group, ch4, cb1);
+        pubnub.channelGroupAddChannel(group, ch4, cb1);
 
         latch1.await(10, TimeUnit.SECONDS);
 
@@ -132,7 +132,7 @@ public class SubscribeGroupTest {
 
     @Test
     public void testSubscribeOneChannelAndMultipleChannelGroups()
-            throws InterruptedException {
+            throws InterruptedException, PubnubException {
         final String channel = "ch1";
         final String[] groups = new String[]{"jtest1" + random, "jtest2" + random, "jtest3" + random};
         final String ch4 = "ch4-" + random;
@@ -162,7 +162,7 @@ public class SubscribeGroupTest {
             }
         };
 
-        pubnub.addChannelToGroup(groups[0], ch4, cb1);
+        pubnub.channelGroupAddChannel(groups[0], ch4, cb1);
 
         latch1.await(10, TimeUnit.SECONDS);
 
@@ -181,7 +181,7 @@ public class SubscribeGroupTest {
 
     @Test
     public void testSubscribeOneChannelAndOneChannelGroup()
-            throws InterruptedException {
+            throws InterruptedException, PubnubException {
         String channel = "ch1";
         final String group = "jtest" + random;
         final String ch4 = "ch4" + random;
@@ -211,7 +211,7 @@ public class SubscribeGroupTest {
             }
         };
 
-        pubnub.addChannelToGroup(group, ch4, cb1);
+        pubnub.channelGroupAddChannel(group, ch4, cb1);
 
         latch1.await(10, TimeUnit.SECONDS);
 
@@ -272,7 +272,7 @@ public class SubscribeGroupTest {
 
     @Test
     public void testSubscribeNoChannelAndOneChannelGroup()
-            throws InterruptedException {
+            throws InterruptedException, PubnubException {
         final String group = "jtest-" + random;
         final String ch4 = "ch4-" + random;
 
@@ -303,11 +303,11 @@ public class SubscribeGroupTest {
             }
         };
 
-        pubnub.addChannelToGroup(group, ch4, cb1);
+        pubnub.channelGroupAddChannel(group, ch4, cb1);
         latch1.await(10, TimeUnit.SECONDS);
 
         try {
-            pubnub.subscribeGroup(group, cb4);
+            pubnub.channelGroupSubscribe(group, cb4);
         } catch (PubnubException e) {
             fail(e.getMessage());
         }
@@ -344,10 +344,10 @@ public class SubscribeGroupTest {
     }
 
     @After
-    public void tearDown() {
-        pubnub.removeGroup("jtest" + random, new TestHelper.SimpleCallback());
-        pubnub.removeGroup("jtest1" + random, new TestHelper.SimpleCallback());
-        pubnub.removeGroup("jtest2" + random, new TestHelper.SimpleCallback());
-        pubnub.removeGroup("jtest3" + random, new TestHelper.SimpleCallback());
+    public void tearDown() throws PubnubException {
+        pubnub.channelGroupRemoveGroup("jtest" + random, new TestHelper.SimpleCallback());
+        pubnub.channelGroupRemoveGroup("jtest1" + random, new TestHelper.SimpleCallback());
+        pubnub.channelGroupRemoveGroup("jtest2" + random, new TestHelper.SimpleCallback());
+        pubnub.channelGroupRemoveGroup("jtest3" + random, new TestHelper.SimpleCallback());
     }
 }

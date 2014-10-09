@@ -970,7 +970,7 @@ abstract class PubnubCore {
         _setState(channelSubscriptions, PubnubUtil.urlEncode(channel), null, uuid, state, callback);
     }
 
-    public void setStateGroup(String group, String uuid, JSONObject state, Callback callback) {
+    public void channelGroupSetState(String group, String uuid, JSONObject state, Callback callback) {
         _setState(channelSubscriptions, ".", group, uuid, state, callback);
     }
 
@@ -1087,7 +1087,7 @@ abstract class PubnubCore {
      *
      * @param callback to invoke
      */
-    public void namespaces(Callback callback) {
+    public void channelGroupListNamespaces(Callback callback) {
         final Callback cb = getWrappedCallback(callback);
 
         String[] url = new String[]{getPubnubUrl(), "v1", "channel-registration", "sub-key",
@@ -1115,7 +1115,7 @@ abstract class PubnubCore {
      * @param namespace to remove
      * @param callback to invoke
      */
-    public void removeNamespace(String namespace, Callback callback) {
+    public void channelGroupRemoveNamespace(String namespace, Callback callback) {
         final Callback cb = getWrappedCallback(callback);
 
         String[] url = new String[]{getPubnubUrl(), "v1", "channel-registration", "sub-key",
@@ -1142,8 +1142,8 @@ abstract class PubnubCore {
      *
      * @param callback to invoke
      */
-    public void namespaceGroups(Callback callback) {
-        namespaceGroups(null, callback);
+    public void channelGroupListGroups(Callback callback) {
+        channelGroupListGroups(null, callback);
     }
 
     /**
@@ -1152,7 +1152,7 @@ abstract class PubnubCore {
      * @param namespace name
      * @param callback to invoke
      */
-    public void namespaceGroups(String namespace, Callback callback) {
+    public void channelGroupListGroups(String namespace, Callback callback) {
         final Callback cb = getWrappedCallback(callback);
         String[] url;
 
@@ -1186,7 +1186,7 @@ abstract class PubnubCore {
      * @param group name
      * @param callback to invoke
      */
-    public void groupChannels(String group, Callback callback) throws PubnubException {
+    public void channelGroupListChannels(String group, Callback callback) throws PubnubException {
         final Callback cb = getWrappedCallback(callback);
         ChannelGroup channelGroup = new ChannelGroup(group);
         String[] url;
@@ -1215,23 +1215,23 @@ abstract class PubnubCore {
         _request(hreq, nonSubscribeManager);
     }
 
-    public void addChannelToGroup(String group, String channel, Callback callback) throws PubnubException {
-        updateChannelGroup("add", group, new String[] {channel}, callback);
+    public void channelGroupAddChannel(String group, String channel, Callback callback) throws PubnubException {
+        channelGroupUpdate("add", group, new String[]{channel}, callback);
     }
 
-    public void addChannelToGroup(String group, String[] channels, Callback callback) throws PubnubException {
-        updateChannelGroup("add", group, channels, callback);
+    public void channelGroupAddChannel(String group, String[] channels, Callback callback) throws PubnubException {
+        channelGroupUpdate("add", group, channels, callback);
     }
 
-    public void removeChannelFromGroup(String group, String channel, Callback callback) throws PubnubException {
-        updateChannelGroup("remove", group, new String[]{channel}, callback);
+    public void channelGroupRemoveChannel(String group, String channel, Callback callback) throws PubnubException {
+        channelGroupUpdate("remove", group, new String[]{channel}, callback);
     }
 
-    public void removeChannelFromGroup(String group, String[] channels, Callback callback) throws PubnubException {
-        updateChannelGroup("remove", group, channels, callback);
+    public void channelGroupRemoveChannel(String group, String[] channels, Callback callback) throws PubnubException {
+        channelGroupUpdate("remove", group, channels, callback);
     }
 
-    public void updateChannelGroup(String action, String group,
+    public void channelGroupUpdate(String action, String group,
                                    String[] channels, final Callback callback) throws PubnubException {
         final Callback cb = getWrappedCallback(callback);
         ChannelGroup channelGroup = new ChannelGroup(group);
@@ -1266,7 +1266,7 @@ abstract class PubnubCore {
         _request(hreq, nonSubscribeManager);
     }
 
-    public void removeGroup(String group, Callback callback) throws PubnubException {
+    public void channelGroupRemoveGroup(String group, Callback callback) throws PubnubException {
         final Callback cb = getWrappedCallback(callback);
         ChannelGroup channelGroup = new ChannelGroup(group);
         String[] url;
@@ -1317,15 +1317,15 @@ abstract class PubnubCore {
         hereNow(new String[]{channel}, null, state, uuids, callback);
     }
 
-    public void hereNowGroup(String group, Callback callback) {
-        hereNowGroup(group, false, true, callback);
+    public void channelGroupHereNow(String group, Callback callback) {
+        channelGroupHereNow(group, false, true, callback);
     }
 
-    public void hereNowGroup(String group, boolean state, boolean uuids, Callback callback) {
-        hereNowGroup(new String[]{group}, state, uuids, callback);
+    public void channelGroupHereNow(String group, boolean state, boolean uuids, Callback callback) {
+        channelGroupHereNow(new String[]{group}, state, uuids, callback);
     }
 
-    public void hereNowGroup(String[] groups, boolean state, boolean uuids, Callback callback) {
+    public void channelGroupHereNow(String[] groups, boolean state, boolean uuids, Callback callback) {
         hereNow(null, groups, state, uuids, callback);
     }
 
@@ -1737,7 +1737,7 @@ abstract class PubnubCore {
         _leave(PubnubUtil.urlEncode(channel), new Hashtable());
     }
 
-    private void leaveGroup(String group) {
+    private void channelGroupLeave(String group) {
         Hashtable params = new Hashtable();
         params.put("channel-group", group);
 
@@ -1807,8 +1807,8 @@ abstract class PubnubCore {
      *
      * @param group to unsubscribe
      */
-    public void unsubscribeGroup(String group) {
-        unsubscribeGroup(new String[]{group});
+    public void channelGroupUnsubscribe(String group) {
+        channelGroupUnsubscribe(new String[]{group});
     }
 
     /**
@@ -1816,11 +1816,11 @@ abstract class PubnubCore {
      *
      * @param groups to unsubscribe
      */
-    public void unsubscribeGroup(String[] groups) {
+    public void channelGroupUnsubscribe(String[] groups) {
         for (int i = 0; i < groups.length; i++) {
             String group = groups[i];
             channelGroupSubscriptions.removeItem(group);
-            leaveGroup(group);
+            channelGroupLeave(group);
         }
 
         resubscribe();
@@ -1851,7 +1851,7 @@ abstract class PubnubCore {
         for (int i = 0; i < groups.length; i++) {
             String group = groups[i];
             channelGroupSubscriptions.removeItem(group);
-            leaveGroup(group);
+            channelGroupLeave(group);
         }
 
         disconnectAndResubscribe();
@@ -1875,13 +1875,13 @@ abstract class PubnubCore {
     /**
      * Unsubscribe from all channel groups.
      */
-    public void unsubscribeAllGroups() {
+    public void channelGroupUnsubscribeAllGroups() {
         String[] groups = channelGroupSubscriptions.getItemNames();
 
         for (int i = 0; i < groups.length; i++) {
             String group = groups[i];
             channelGroupSubscriptions.removeItem(group);
-            leaveGroup(group);
+            channelGroupLeave(group);
         }
 
         disconnectAndResubscribe();
@@ -2178,9 +2178,9 @@ abstract class PubnubCore {
      * @param callback to call
      * @throws PubnubException
      */
-    public void subscribeGroup(String group, Callback callback)
+    public void channelGroupSubscribe(String group, Callback callback)
             throws PubnubException {
-        subscribeGroup(group, callback, "0");
+        channelGroupSubscribe(group, callback, "0");
     }
 
     /**
@@ -2190,9 +2190,9 @@ abstract class PubnubCore {
      * @param callback to call
      * @throws PubnubException if Callback is null
      */
-    public void subscribeGroup(String[] groups, Callback callback)
+    public void channelGroupSubscribe(String[] groups, Callback callback)
             throws PubnubException {
-        subscribeGroup(groups, callback, "0");
+        channelGroupSubscribe(groups, callback, "0");
     }
 
     /**
@@ -2203,9 +2203,9 @@ abstract class PubnubCore {
      * @param timetoken to use for subscribing
      * @throws PubnubException
      */
-    public void subscribeGroup(String group, Callback callback, long timetoken)
+    public void channelGroupSubscribe(String group, Callback callback, long timetoken)
             throws PubnubException {
-        subscribeGroup(group, callback, String.valueOf(timetoken));
+        channelGroupSubscribe(group, callback, String.valueOf(timetoken));
     }
 
     /**
@@ -2216,9 +2216,9 @@ abstract class PubnubCore {
      * @param timetoken to use for subscribing
      * @throws PubnubException
      */
-    public void subscribeGroup(String group, Callback callback, String timetoken)
+    public void channelGroupSubscribe(String group, Callback callback, String timetoken)
             throws PubnubException {
-        subscribeGroup(new String[]{group}, callback, timetoken);
+        channelGroupSubscribe(new String[]{group}, callback, timetoken);
     }
 
     /**
@@ -2229,9 +2229,9 @@ abstract class PubnubCore {
      * @param timetoken to use for subscribing
      * @throws PubnubException
      */
-    public void subscribeGroup(String[] groups, Callback callback, long timetoken)
+    public void channelGroupSubscribe(String[] groups, Callback callback, long timetoken)
             throws PubnubException {
-        subscribeGroup(groups, callback, String.valueOf(timetoken));
+        channelGroupSubscribe(groups, callback, String.valueOf(timetoken));
     }
 
     /**
@@ -2242,7 +2242,7 @@ abstract class PubnubCore {
      * @param timetoken to use for subscribing
      * @throws PubnubException
      */
-    public void subscribeGroup(String[] groups, Callback callback, String timetoken)
+    public void channelGroupSubscribe(String[] groups, Callback callback, String timetoken)
             throws PubnubException {
 
         Hashtable args = new Hashtable();

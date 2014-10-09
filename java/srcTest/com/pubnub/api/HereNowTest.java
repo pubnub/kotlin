@@ -80,14 +80,14 @@ public class HereNowTest {
 
         final TestHelper.SimpleCallback cb3 = new TestHelper.SimpleCallback(latch3);
 
-        pubnub.addChannelToGroup(group, channels, cb1);
+        pubnub.channelGroupAddChannel(group, channels, cb1);
         latch1.await(10, TimeUnit.SECONDS);
 
         pubnub.subscribe(channels[0], cb2);
         latch2.await(10, TimeUnit.SECONDS);
         Thread.sleep(1000);
 
-        pubnub.hereNowGroup(group, cb3);
+        pubnub.channelGroupHereNow(group, cb3);
         latch3.await(10, TimeUnit.SECONDS);
 
         JSONObject response = (JSONObject) cb3.getResponse();
@@ -123,8 +123,8 @@ public class HereNowTest {
 
         final TestHelper.SimpleCallback cb4 = new TestHelper.SimpleCallback(latch4);
 
-        pubnub.addChannelToGroup(groups[0], channels, cb1);
-        pubnub.addChannelToGroup(groups[1], channels, cb2);
+        pubnub.channelGroupAddChannel(groups[0], channels, cb1);
+        pubnub.channelGroupAddChannel(groups[1], channels, cb2);
         latch1.await(10, TimeUnit.SECONDS);
         latch2.await(10, TimeUnit.SECONDS);
 
@@ -132,7 +132,7 @@ public class HereNowTest {
         latch3.await(10, TimeUnit.SECONDS);
         Thread.sleep(1000);
 
-        pubnub.hereNowGroup(group, cb4);
+        pubnub.channelGroupHereNow(group, cb4);
         latch4.await(10, TimeUnit.SECONDS);
 
         JSONObject response = (JSONObject) cb4.getResponse();
