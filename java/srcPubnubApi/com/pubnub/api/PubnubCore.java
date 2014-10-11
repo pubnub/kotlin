@@ -1186,10 +1186,17 @@ abstract class PubnubCore {
      * @param group name
      * @param callback to invoke
      */
-    public void channelGroupListChannels(String group, Callback callback) throws PubnubException {
+    public void channelGroupListChannels(String group, Callback callback) {
         final Callback cb = getWrappedCallback(callback);
-        ChannelGroup channelGroup = new ChannelGroup(group);
+        ChannelGroup channelGroup;
         String[] url;
+
+        try {
+            channelGroup =  new ChannelGroup(group);
+        } catch (PubnubException e) {
+            cb.errorCallback(null, PubnubError.PNERROBJ_CHANNEL_GROUP_PARSING_ERROR);
+            return;
+        }
 
         if (channelGroup.namespace != null) {
             url = new String[]{getPubnubUrl(), "v1", "channel-registration", "sub-key",
@@ -1215,27 +1222,33 @@ abstract class PubnubCore {
         _request(hreq, nonSubscribeManager);
     }
 
-    public void channelGroupAddChannel(String group, String channel, Callback callback) throws PubnubException {
+    public void channelGroupAddChannel(String group, String channel, Callback callback) {
         channelGroupUpdate("add", group, new String[]{channel}, callback);
     }
 
-    public void channelGroupAddChannel(String group, String[] channels, Callback callback) throws PubnubException {
+    public void channelGroupAddChannel(String group, String[] channels, Callback callback) {
         channelGroupUpdate("add", group, channels, callback);
     }
 
-    public void channelGroupRemoveChannel(String group, String channel, Callback callback) throws PubnubException {
+    public void channelGroupRemoveChannel(String group, String channel, Callback callback) {
         channelGroupUpdate("remove", group, new String[]{channel}, callback);
     }
 
-    public void channelGroupRemoveChannel(String group, String[] channels, Callback callback) throws PubnubException {
+    public void channelGroupRemoveChannel(String group, String[] channels, Callback callback) {
         channelGroupUpdate("remove", group, channels, callback);
     }
 
-    public void channelGroupUpdate(String action, String group,
-                                   String[] channels, final Callback callback) throws PubnubException {
+    public void channelGroupUpdate(String action, String group, String[] channels, final Callback callback) {
         final Callback cb = getWrappedCallback(callback);
-        ChannelGroup channelGroup = new ChannelGroup(group);
+        ChannelGroup channelGroup;
         String[] url;
+
+        try {
+            channelGroup =  new ChannelGroup(group);
+        } catch (PubnubException e) {
+            cb.errorCallback(null, PubnubError.PNERROBJ_CHANNEL_GROUP_PARSING_ERROR);
+            return;
+        }
 
         if (channelGroup.namespace != null) {
             url = new String[]{getPubnubUrl(), "v1", "channel-registration", "sub-key",
@@ -1266,10 +1279,17 @@ abstract class PubnubCore {
         _request(hreq, nonSubscribeManager);
     }
 
-    public void channelGroupRemoveGroup(String group, Callback callback) throws PubnubException {
+    public void channelGroupRemoveGroup(String group, Callback callback) {
         final Callback cb = getWrappedCallback(callback);
-        ChannelGroup channelGroup = new ChannelGroup(group);
+        ChannelGroup channelGroup;
         String[] url;
+
+        try {
+            channelGroup =  new ChannelGroup(group);
+        } catch (PubnubException e) {
+            cb.errorCallback(null, PubnubError.PNERROBJ_CHANNEL_GROUP_PARSING_ERROR);
+            return;
+        }
 
         if (channelGroup.namespace != null) {
             url = new String[]{getPubnubUrl(), "v1", "channel-registration", "sub-key",

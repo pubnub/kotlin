@@ -29,7 +29,7 @@ public class ChannelGroupTest {
     }
 
     @Test
-    public void testAddChannelToNonNameSpacedGroup() throws PubnubException {
+    public void testAddChannelToNonNameSpacedGroup() {
         final CountDownLatch latch = new CountDownLatch(1);
 
         final TestHelper.SimpleCallback cb = new TestHelper.SimpleCallback(latch) {
@@ -48,7 +48,7 @@ public class ChannelGroupTest {
     }
 
     @Test
-    public void testAddChannelToNameSpacedGroup() throws PubnubException {
+    public void testAddChannelToNameSpacedGroup() {
         final CountDownLatch latch = new CountDownLatch(1);
 
         final TestHelper.SimpleCallback cb = new TestHelper.SimpleCallback(latch) {
@@ -67,7 +67,7 @@ public class ChannelGroupTest {
     }
 
     @Test
-    public void testAddChannelsToNonNameSpacedGroup() throws PubnubException {
+    public void testAddChannelsToNonNameSpacedGroup() {
         final CountDownLatch latch = new CountDownLatch(1);
 
         final TestHelper.SimpleCallback cb = new TestHelper.SimpleCallback(latch) {
@@ -86,7 +86,7 @@ public class ChannelGroupTest {
     }
 
     @Test
-    public void testAddChannelsToNameSpacedGroup() throws PubnubException {
+    public void testAddChannelsToNameSpacedGroup() {
         final CountDownLatch latch = new CountDownLatch(1);
 
         final TestHelper.SimpleCallback cb = new TestHelper.SimpleCallback(latch) {
@@ -105,7 +105,7 @@ public class ChannelGroupTest {
     }
 
     @Test
-    public void testGetChannelsOnNonNameSpacedGroup() throws InterruptedException, JSONException, PubnubException {
+    public void testGetChannelsOnNonNameSpacedGroup() throws InterruptedException, JSONException {
         final CountDownLatch latch1 = new CountDownLatch(1);
         final CountDownLatch latch2 = new CountDownLatch(1);
         final CountDownLatch latch3 = new CountDownLatch(1);
@@ -139,7 +139,7 @@ public class ChannelGroupTest {
     }
 
     @Test
-    public void testGetChannelsOnNameSpacedGroup() throws InterruptedException, JSONException, PubnubException {
+    public void testGetChannelsOnNameSpacedGroup() throws InterruptedException, JSONException {
         final CountDownLatch latch1 = new CountDownLatch(1);
         final CountDownLatch latch2 = new CountDownLatch(1);
         final CountDownLatch latch3 = new CountDownLatch(1);
@@ -173,7 +173,7 @@ public class ChannelGroupTest {
     }
 
     @Test
-    public void testRemoveChannelsFromNonNameSpacedGroup() throws InterruptedException, JSONException, PubnubException {
+    public void testRemoveChannelsFromNonNameSpacedGroup() throws InterruptedException, JSONException {
         final CountDownLatch latch1 = new CountDownLatch(1);
         final CountDownLatch latch2 = new CountDownLatch(1);
         final CountDownLatch latch3 = new CountDownLatch(1);
@@ -214,7 +214,7 @@ public class ChannelGroupTest {
     }
 
     @Test
-    public void testRemoveChannelsFromNameSpacedGroup() throws InterruptedException, JSONException, PubnubException {
+    public void testRemoveChannelsFromNameSpacedGroup() throws InterruptedException, JSONException {
         final CountDownLatch latch1 = new CountDownLatch(1);
         final CountDownLatch latch2 = new CountDownLatch(1);
         final CountDownLatch latch3 = new CountDownLatch(1);
@@ -255,7 +255,7 @@ public class ChannelGroupTest {
     }
 
     @Test
-    public void testGetAllChannelGroupNames() throws InterruptedException, JSONException, PubnubException {
+    public void testGetAllChannelGroupNames() throws InterruptedException, JSONException {
         String group1 = "jtest_group1";
         String group2 = "jtest_group2";
 
@@ -288,7 +288,7 @@ public class ChannelGroupTest {
     }
 
     @Test
-    public void testGetAllChannelGroupNamesNamespace() throws InterruptedException, JSONException, PubnubException {
+    public void testGetAllChannelGroupNamesNamespace() throws InterruptedException, JSONException {
         String group1 = "jtest_group1";
         String group2 = "jtest_group2";
 
@@ -322,7 +322,7 @@ public class ChannelGroupTest {
     }
 
     @Test
-    public void testRemoveGroup() throws InterruptedException, JSONException, PubnubException {
+    public void testRemoveGroup() throws InterruptedException, JSONException {
         String group = "jtest_group1";
         JSONObject result;
         JSONArray groups;
@@ -360,7 +360,7 @@ public class ChannelGroupTest {
     }
 
     @Test
-    public void testRemoveNamespacedGroup() throws InterruptedException, JSONException, PubnubException {
+    public void testRemoveNamespacedGroup() throws InterruptedException, JSONException {
         String group = "jtest_group1";
         JSONObject result;
         JSONArray groups;
@@ -398,7 +398,7 @@ public class ChannelGroupTest {
     }
 
     @AfterClass
-    public static void tearDown() throws InterruptedException, JSONException, PubnubException {
+    public static void tearDown() throws InterruptedException, JSONException {
         Pubnub pubnub = new Pubnub("demo", "demo");
         pubnub.setOrigin("dara24.devbuild");
         pubnub.setCacheBusting(false);

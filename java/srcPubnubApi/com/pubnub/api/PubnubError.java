@@ -208,6 +208,10 @@ public class PubnubError {
      */
     public static final int         PNERR_CONNECTION_NOT_SET                     =       133;
 
+    /**
+     * Error while parsing group name
+     */
+    public static final int         PNERR_CHANNEL_GROUP_PARSING_ERROR            =       134;
     // Error Objects
 
     static final PubnubError        PNERROBJ_TIMEOUT                           =
@@ -433,6 +437,11 @@ public class PubnubError {
             "Pubnub Connection not set"
     );
 
+    static final PubnubError PNERROBJ_CHANNEL_GROUP_PARSING_ERROR              =
+            new PubnubError     (
+            PNERR_CHANNEL_GROUP_PARSING_ERROR ,
+            "Channel group name is invalid"
+    );
 
     public  final int errorCode;
     public  final int errorCodeExtended;
