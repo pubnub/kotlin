@@ -5,18 +5,13 @@ public class ChannelGroup {
     String namespace;
 
     ChannelGroup(String name) throws PubnubException {
-        String[] parts = name.split(":", 2);
+        int index = name.indexOf(":");
 
-        switch (parts.length) {
-            case 2:
-                setNamespace(parts[0]);
-                setGroup(parts[1]);
-                break;
-            case 1:
-                group = name;
-                break;
-            default:
-                throw new PubnubException("Invalid channel group string");
+        if (index == -1) {
+            setGroup(name);
+        } else {
+            setNamespace(name.substring(0, index));
+            setGroup(name.substring(index + 1));
         }
     }
 
