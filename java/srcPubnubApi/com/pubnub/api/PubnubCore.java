@@ -1238,7 +1238,7 @@ abstract class PubnubCore {
         channelGroupUpdate("remove", group, channels, callback);
     }
 
-    public void channelGroupUpdate(String action, String group, String[] channels, final Callback callback) {
+    private void channelGroupUpdate(String action, String group, String[] channels, final Callback callback) {
         final Callback cb = getWrappedCallback(callback);
         ChannelGroup channelGroup;
         String[] url;
