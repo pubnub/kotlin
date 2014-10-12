@@ -600,21 +600,17 @@ public class PubnubDemoConsole {
 	}
 
 	private void removeGroup(String group) {
-		try {
-			pubnub.channelGroupRemoveGroup(group, new Callback() {
-			    @Override
-			    public void successCallback(String channel, Object message) {
-			        notifyUser("(CHANNEL GROUP) REMOVE GROUP  : " + message);
-			    }
+		pubnub.channelGroupRemoveGroup(group, new Callback() {
+		    @Override
+		    public void successCallback(String channel, Object message) {
+		        notifyUser("(CHANNEL GROUP) REMOVE GROUP  : " + message);
+		    }
 
-			    @Override
-			    public void errorCallback(String channel, PubnubError error) {
-			        notifyUser("(CHANNEL GROUP) REMOVE GROUP  : " + error);
-			    }
-			});
-		} catch (PubnubException e) {
-			e.printStackTrace();
-		}
+		    @Override
+		    public void errorCallback(String channel, PubnubError error) {
+		        notifyUser("(CHANNEL GROUP) REMOVE GROUP  : " + error);
+		    }
+		});
 		
 	}
 
@@ -639,60 +635,48 @@ public class PubnubDemoConsole {
 	}
 
 	private void listChannelsForGroup(String group) {
-		try {
-			pubnub.channelGroupListChannels(group,  new Callback() {
-			    @Override
-			    public void successCallback(String channel, Object message) {
-			        notifyUser("(CHANNEL GROUP) LIST CHANNELS  : " + message);
-			    }
+		pubnub.channelGroupListChannels(group,  new Callback() {
+		    @Override
+		    public void successCallback(String channel, Object message) {
+		        notifyUser("(CHANNEL GROUP) LIST CHANNELS  : " + message);
+		    }
 
-			    @Override
-			    public void errorCallback(String channel, PubnubError error) {
-			        notifyUser("(CHANNEL GROUP) LIST CHANNELS  : " + error);
-			    }
-			});
-		} catch (PubnubException e) {
-			e.printStackTrace();
-		}
+		    @Override
+		    public void errorCallback(String channel, PubnubError error) {
+		        notifyUser("(CHANNEL GROUP) LIST CHANNELS  : " + error);
+		    }
+		});
 		
 	}
 
 	private void removeChannelFromGroup(String group, String channel) {
-		try {
-			pubnub.channelGroupRemoveChannel(group, channel,  new Callback() {
-			    @Override
-			    public void successCallback(String channel, Object message) {
-			        notifyUser("(CHANNEL GROUP) REMOVE CHANNEL  : " + message);
-			    }
+		pubnub.channelGroupRemoveChannel(group, channel,  new Callback() {
+		    @Override
+		    public void successCallback(String channel, Object message) {
+		        notifyUser("(CHANNEL GROUP) REMOVE CHANNEL  : " + message);
+		    }
 
-			    @Override
-			    public void errorCallback(String channel, PubnubError error) {
-			        notifyUser("(CHANNEL GROUP) REMOVE CHANNEL  : " + error);
-			    }
-			});
-		} catch (PubnubException e) {
-			e.printStackTrace();
-		}
+		    @Override
+		    public void errorCallback(String channel, PubnubError error) {
+		        notifyUser("(CHANNEL GROUP) REMOVE CHANNEL  : " + error);
+		    }
+		});
 		
 		
 	}
 
 	private void addChannelToGroup(String group, String channel) {
-		try {
-			pubnub.channelGroupAddChannel(group, channel,  new Callback() {
-			    @Override
-			    public void successCallback(String channel, Object message) {
-			        notifyUser("(CHANNEL GROUP) ADD CHANNEL  : " + message);
-			    }
+		pubnub.channelGroupAddChannel(group, channel,  new Callback() {
+		    @Override
+		    public void successCallback(String channel, Object message) {
+		        notifyUser("(CHANNEL GROUP) ADD CHANNEL  : " + message);
+		    }
 
-			    @Override
-			    public void errorCallback(String channel, PubnubError error) {
-			        notifyUser("(CHANNEL GROUP) ADD CHANNEL  : " + error);
-			    }
-			});
-		} catch (PubnubException e) {
-			e.printStackTrace();
-		}
+		    @Override
+		    public void errorCallback(String channel, PubnubError error) {
+		        notifyUser("(CHANNEL GROUP) ADD CHANNEL  : " + error);
+		    }
+		});
 		
 	}
 
