@@ -163,7 +163,7 @@ public class MainActivity extends Activity {
             case R.id.option6:
                 unsubscribe();
                 return true;
-
+                
             case R.id.option7:
                 presenceUnsubscribe();
                 return true;
@@ -203,57 +203,116 @@ public class MainActivity extends Activity {
             case R.id.option16:
                 setWindowInterval();
                 return true;
+                
             case R.id.option17:
                 setOrigin();
                 return true;
+            
             case R.id.option18:
                 setDomain();
                 return true;
+            
             case R.id.option19:
                 toggleCacheBusting();
                 return true;
+            
             case R.id.option20:
                 setHeartbeat();
                 return true;
+            
             case R.id.option21:
                 setHeartbeatInterval();
                 return true;
+            
             case R.id.option22:
                 setUUID();
                 return true;
+            
             case R.id.option23:
                 setState();
                 return true;
+
             case R.id.option24:
                 setAuthKey();
                 return true;
+            
             case R.id.option25:
                 getInitData();
                 return true;
+            
             case R.id.option26:
                 setSenderId();
                 return true;
+            
             case R.id.option27:
                 gcmRegister();
                 return true;
+            
             case R.id.option28:
                 gcmUnregister();
                 return true;
+            
             case R.id.option29:
                 gcmAddChannel();
                 return true;
+            
             case R.id.option30:
                 gcmRemoveChannel();
                 return true;
+            
             case R.id.option31:
                 gcmRemoveAllChannels();
+                return true;
+                
+            case R.id.option32:
+            	subscribeToGroup();
+                return true;
+            
+            case R.id.option33:
+            	unsubscribeFromGroup();
+                return true;                
+            
+            case R.id.option34:
+            	channelGroupHereNow();
+                return true;
+            
+            case R.id.option35:
+            	channelGroupSetState();
+                return true;
+                
+            case R.id.option36:
+            	channelGroupAddChannel();
+                return true;            
+            
+            case R.id.option37:
+            	channelGroupRemoveChannel();
+                return true;
+                
+            case R.id.option38:
+            	channelGroupListChannel();
+                return true;
+            
+            case R.id.option39:
+            	channelGroupListGroups();
+                return true;
+            
+            case R.id.option40:
+            	channelGroupRemoveGroup();
+                return true;
+            
+            case R.id.option41:
+            	channelGroupListNamespaces();
+                return true;
+            
+            case R.id.option42:
+            	channelGroupRemoveNamespace();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    private void setAuthKey() {
+	private void setAuthKey() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Set Auth Key");
         builder.setMessage("Enter Auth Key");
@@ -442,7 +501,7 @@ public class MainActivity extends Activity {
         SSL = (map.get("SSL") == "true")?true:false;
         SENDER_ID = map.get("SENDER_ID");
         AUTH_KEY = map.get("AUTH_KEY");
-        ORIGIN = "gcm-beta";
+        ORIGIN = "dara24.devbuild";
         REG_ID = map.get("REG_ID");
         SENDER_ID = "506053237730";
 
@@ -829,7 +888,83 @@ public class MainActivity extends Activity {
         AlertDialog alert = builder.create();
         alert.show();
     }
+    private void subscribeToGroup() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Subscribe");
+        builder.setMessage("Enter Group name");
+        final EditText input = new EditText(this);
+        builder.setView(input);
+        builder.setPositiveButton("Subscribe",
+                new DialogInterface.OnClickListener() {
 
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        String groupName = input.getText().toString();
+
+                        try {
+                            pubnub.channelGroupSubscribe(groupName, new Callback() {
+                                @Override
+                                public void connectCallback(String channel,
+                                                            Object message) {
+                                    notifyUser("SUBSCRIBE : CONNECT on channel:"
+                                            + channel
+                                            + " : "
+                                            + message.getClass()
+                                            + " : "
+                                            + message.toString());
+                                }
+
+                                @Override
+                                public void disconnectCallback(String channel,
+                                                               Object message) {
+                                    notifyUser("SUBSCRIBE : DISCONNECT on channel:"
+                                            + channel
+                                            + " : "
+                                            + message.getClass()
+                                            + " : "
+                                            + message.toString());
+                                }
+
+                                @Override
+                                public void reconnectCallback(String channel,
+                                                              Object message) {
+                                    notifyUser("SUBSCRIBE : RECONNECT on channel:"
+                                            + channel
+                                            + " : "
+                                            + message.getClass()
+                                            + " : "
+                                            + message.toString());
+                                }
+
+                                @Override
+                                public void successCallback(String channel,
+                                                            Object message) {
+                                    notifyUser("SUBSCRIBE : " + channel + " : "
+                                            + message.getClass() + " : "
+                                            + message.toString());
+                                }
+
+                                @Override
+                                public void errorCallback(String channel,
+                                                          PubnubError error) {
+                                    notifyUser("SUBSCRIBE : ERROR on channel "
+                                            + channel + " : "
+                                            + error.toString());
+                                }
+                            });
+
+                        } catch (Exception e) {
+
+                        }
+                    }
+
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+
+    }
+    
     private void subscribe() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Subscribe");
@@ -947,6 +1082,46 @@ public class MainActivity extends Activity {
         AlertDialog alert = builder.create();
         alert.show();
     }
+    private void _stateGroup(final String groupName) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Set STATE");
+        builder.setMessage("Enter state (JSON Object)");
+        final EditText etMessage = new EditText(this);
+        builder.setView(etMessage);
+        builder.setPositiveButton("Submit",
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Callback setMetaDataCallback = new Callback() {
+                            @Override
+                            public void successCallback(String channel,
+                                                        Object message) {
+                                notifyUser("SET STATE : " + message);
+                            }
+
+                            @Override
+                            public void errorCallback(String channel,
+                                                      PubnubError error) {
+                                notifyUser("SET STATE : " + error);
+                            }
+                        };
+
+                        String message = etMessage.getText().toString();
+                        JSONObject js = null;
+                        try {
+                            js = new JSONObject(message);
+                            pubnub.channelGroupSetState(groupName, pubnub.getUUID(), js, setMetaDataCallback);
+                            return;
+                        } catch (Exception e) {
+                        }
+
+                    }
+
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
 
     private void _publish(final String channel) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -1031,6 +1206,312 @@ public class MainActivity extends Activity {
         alert.show();
     }
 
+    private void _channelGroupRemoveChannel(final String groupName) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Remove channel from Group");
+        builder.setMessage("Enter channel name");
+        final EditText etChannel = new EditText(this);
+        builder.setView(etChannel);
+        builder.setPositiveButton("Add",
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Callback cb = new Callback() {
+                            @Override
+                            public void successCallback(String channel,
+                                                        Object message) {
+                                notifyUser("REMOVE CHANNEL : " + message);
+                            }
+
+                            @Override
+                            public void errorCallback(String channel,
+                                                      PubnubError error) {
+                                notifyUser("REMOVE CHANNEL : " + error);
+                            }
+                        };
+
+                        String channel = etChannel.getText().toString();
+
+
+                        try {
+							pubnub.channelGroupRemoveChannel(groupName, channel, cb);
+						} catch (PubnubException e) {
+
+						}
+                    }
+
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    private void channelGroupRemoveChannel() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Remove channel from group ");
+        builder.setMessage("Enter group name");
+        final EditText etGroup = new EditText(this);
+        builder.setView(etGroup);
+        builder.setPositiveButton("Done",
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        _channelGroupRemoveChannel(etGroup.getText().toString());
+                    }
+
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+    
+    private void channelGroupListChannel() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("List channel from group ");
+        builder.setMessage("Enter group name");
+        final EditText etGroup = new EditText(this);
+        builder.setView(etGroup);
+        builder.setPositiveButton("Done",
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Callback cb = new Callback() {
+                            @Override
+                            public void successCallback(String channel,
+                                                        Object message) {
+                                notifyUser("LIST CHANNELS : " + message);
+                            }
+
+                            @Override
+                            public void errorCallback(String channel,
+                                                      PubnubError error) {
+                                notifyUser("LIST CHANNELS : " + error);
+                            }
+                        };
+
+                        String groupName = etGroup.getText().toString();
+
+
+                        try {
+							pubnub.channelGroupListChannels(groupName, cb);
+						} catch (PubnubException e) {
+
+						}
+                    }
+
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+    
+    private void _channelGroupAddChannel(final String groupName) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Add channel to Group");
+        builder.setMessage("Enter channel name");
+        final EditText etChannel = new EditText(this);
+        builder.setView(etChannel);
+        builder.setPositiveButton("Add",
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Callback cb = new Callback() {
+                            @Override
+                            public void successCallback(String channel,
+                                                        Object message) {
+                                notifyUser("ADD CHANNEL : " + message);
+                            }
+
+                            @Override
+                            public void errorCallback(String channel,
+                                                      PubnubError error) {
+                                notifyUser("ADD CHANNEL : " + error);
+                            }
+                        };
+
+                        String channel = etChannel.getText().toString();
+
+
+                        try {
+							pubnub.channelGroupAddChannel(groupName, channel, cb);
+						} catch (PubnubException e) {
+
+						}
+                    }
+
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    private void channelGroupAddChannel() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Add channel to group ");
+        builder.setMessage("Enter group name");
+        final EditText etGroup = new EditText(this);
+        builder.setView(etGroup);
+        builder.setPositiveButton("Done",
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        _channelGroupAddChannel(etGroup.getText().toString());
+                    }
+
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+    
+
+    private void channelGroupRemoveNamespace() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Remove Namespace ");
+        builder.setMessage("Enter namespace");
+        final EditText etGroupName = new EditText(this);
+        builder.setView(etGroupName);
+        builder.setPositiveButton("Done",
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Callback cb = new Callback() {
+                            @Override
+                            public void successCallback(String channel,
+                                                        Object message) {
+                                notifyUser("REMOVE NAMESPACE : " + message);
+                            }
+
+                            @Override
+                            public void errorCallback(String channel,
+                                                      PubnubError error) {
+                                notifyUser("REMOVE NAMESPACE : " + error);
+                            }
+                        };
+
+                        String groupName = etGroupName.getText().toString();
+
+
+                        try {
+							pubnub.channelGroupRemoveGroup(groupName, cb);
+						} catch (PubnubException e) {
+
+						}
+                    }
+
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+	}
+
+	private void channelGroupListNamespaces() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("List namespaces ");
+
+        builder.setPositiveButton("Done",
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Callback cb = new Callback() {
+                            @Override
+                            public void successCallback(String channel,
+                                                        Object message) {
+                                notifyUser("LIST NAMESPACES : " + message);
+                            }
+
+                            @Override
+                            public void errorCallback(String channel,
+                                                      PubnubError error) {
+                                notifyUser("LIST NAMESPACES : " + error);
+                            }
+                        };
+
+                        pubnub.channelGroupListNamespaces(cb);
+                    }
+
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+	}
+
+	private void channelGroupRemoveGroup() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Remove Group ");
+        builder.setMessage("Enter group name");
+        final EditText etGroupName = new EditText(this);
+        builder.setView(etGroupName);
+        builder.setPositiveButton("Done",
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Callback cb = new Callback() {
+                            @Override
+                            public void successCallback(String channel,
+                                                        Object message) {
+                                notifyUser("REMOVE GROUP : " + message);
+                            }
+
+                            @Override
+                            public void errorCallback(String channel,
+                                                      PubnubError error) {
+                                notifyUser("REMOVE GROUP : " + error);
+                            }
+                        };
+
+                        String groupName = etGroupName.getText().toString();
+
+
+                        try {
+							pubnub.channelGroupRemoveGroup(groupName, cb);
+						} catch (PubnubException e) {
+
+						}
+                    }
+
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+	}
+
+	private void channelGroupListGroups() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("List groups by namespace ");
+        builder.setMessage("Enter namespace");
+        final EditText etNamespace = new EditText(this);
+        builder.setView(etNamespace);
+        builder.setPositiveButton("Done",
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Callback cb = new Callback() {
+                            @Override
+                            public void successCallback(String channel,
+                                                        Object message) {
+                                notifyUser("LIST GROUPS : " + message);
+                            }
+
+                            @Override
+                            public void errorCallback(String channel,
+                                                      PubnubError error) {
+                                notifyUser("LIST GROUPS : " + error);
+                            }
+                        };
+
+                        String namespace = etNamespace.getText().toString();
+
+
+                        pubnub.channelGroupListGroups(namespace, cb);
+                    }
+
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+	}
+    
     private void setState() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Set State ");
@@ -1043,6 +1524,25 @@ public class MainActivity extends Activity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         _state(etChannel.getText().toString());
+                    }
+
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+    
+    private void channelGroupSetState() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Set State ");
+        builder.setMessage("Enter group name");
+        final EditText etGroup = new EditText(this);
+        builder.setView(etGroup);
+        builder.setPositiveButton("Done",
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        _stateGroup(etGroup.getText().toString());
                     }
 
                 });
@@ -1158,6 +1658,39 @@ public class MainActivity extends Activity {
         AlertDialog alert = builder.create();
         alert.show();
     }
+    
+    private void channelGroupHereNow() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Here Now");
+        builder.setMessage("Enter group name");
+        final EditText input = new EditText(this);
+        builder.setView(input);
+        builder.setPositiveButton("Get Here Now",
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String group = input.getText().toString();
+                        pubnub.channelGroupHereNow(group, new Callback() {
+                            @Override
+                            public void successCallback(String channel,
+                                                        Object message) {
+                                notifyUser("HERE NOW : " + message);
+                            }
+
+                            @Override
+                            public void errorCallback(String channel,
+                                                      PubnubError error) {
+                                notifyUser("HERE NOW : " + error);
+                            }
+                        });
+                    }
+
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
 
     private void unsubscribe() {
 
@@ -1172,6 +1705,25 @@ public class MainActivity extends Activity {
                     public void onClick(DialogInterface dialog, int which) {
                         String channel = input.getText().toString();
                         pubnub.unsubscribe(channel);
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+    
+    private void unsubscribeFromGroup() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Unsubscribe From Group");
+        builder.setMessage("Enter group name");
+        final EditText input = new EditText(this);
+        builder.setView(input);
+        builder.setPositiveButton("Unsubscribe",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String groupName = input.getText().toString();
+                        pubnub.channelGroupUnsubscribe(groupName);
                     }
                 });
         AlertDialog alert = builder.create();

@@ -24,10 +24,33 @@
     <item android:id="@+id/option23" android:title="@string/option23" android:titleCondensed="@string/option23"></item>
     <item android:id="@+id/option24" android:title="@string/option24" android:titleCondensed="@string/option24"></item>
     <item android:id="@+id/option25" android:title="@string/option25" android:titleCondensed="@string/option25"></item> 
-    <item android:id="@+id/option26" android:title="@string/option26" android:titleCondensed="@string/option26"></item> 
-    <item android:id="@+id/option27" android:title="@string/option27" android:titleCondensed="@string/option27"></item> 
-    <item android:id="@+id/option28" android:title="@string/option28" android:titleCondensed="@string/option28"></item>
-    <item android:id="@+id/option29" android:title="@string/option29" android:titleCondensed="@string/option29"></item>
-    <item android:id="@+id/option30" android:title="@string/option30" android:titleCondensed="@string/option30"></item>
-    <item android:id="@+id/option31" android:title="@string/option31" android:titleCondensed="@string/option31"></item>      
+    
+    <item android:id="@+id/gcm" android:title="@string/gcm" android:titleCondensed="@string/gcm">
+	    <menu>
+    
+		    <item android:id="@+id/option26" android:title="@string/option26" android:titleCondensed="@string/option26"></item> 
+		    <item android:id="@+id/option27" android:title="@string/option27" android:titleCondensed="@string/option27"></item> 
+		    <item android:id="@+id/option28" android:title="@string/option28" android:titleCondensed="@string/option28"></item>
+		    <item android:id="@+id/option29" android:title="@string/option29" android:titleCondensed="@string/option29"></item>
+		    <item android:id="@+id/option30" android:title="@string/option30" android:titleCondensed="@string/option30"></item>
+		    <item android:id="@+id/option31" android:title="@string/option31" android:titleCondensed="@string/option31"></item>
+    	</menu>
+	</item>
+    
+    <item android:id="@+id/channelgroup" android:title="@string/channelgroup" android:titleCondensed="@string/channelgroup">
+	    <menu>
+		    <item android:id="@+id/option32" android:title="@string/option32" android:titleCondensed="@string/option32"></item>
+		    <item android:id="@+id/option33" android:title="@string/option33" android:titleCondensed="@string/option33"></item>
+		    <item android:id="@+id/option34" android:title="@string/option34" android:titleCondensed="@string/option34"></item>
+		    <item android:id="@+id/option35" android:title="@string/option35" android:titleCondensed="@string/option35"></item>  
+		    <item android:id="@+id/option36" android:title="@string/option36" android:titleCondensed="@string/option36"></item>  
+		    <item android:id="@+id/option37" android:title="@string/option37" android:titleCondensed="@string/option37"></item>
+		    <item android:id="@+id/option38" android:title="@string/option38" android:titleCondensed="@string/option38"></item>
+		    <item android:id="@+id/option39" android:title="@string/option39" android:titleCondensed="@string/option39"></item>
+		    <item android:id="@+id/option40" android:title="@string/option40" android:titleCondensed="@string/option40"></item>
+		    <item android:id="@+id/option41" android:title="@string/option41" android:titleCondensed="@string/option41"></item>  
+		    <item android:id="@+id/option42" android:title="@string/option42" android:titleCondensed="@string/option42"></item>
+	    </menu>
+	</item>
+    
 </menu>

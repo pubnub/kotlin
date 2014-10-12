@@ -42,10 +42,28 @@
     <string name="option23">Set State</string>
     <string name="option24">Set Auth Key</string>
     <string name="option25">Init</string>
+    
     <string name="option26">Set GCM Sender ID</string>
     <string name="option27">Register on GCM</string>
     <string name="option28">Unregister on GCM</string>
     <string name="option29">Add channel to GCM</string>
     <string name="option30">Remove channel from GCM</string>
     <string name="option31">Remove all channels from GCM</string>
+    
+    <string name="option32">Channel Group Subscribe</string>
+    <string name="option33">Channel Group Unsubscribe</string>
+    <string name="option34">Channel Group Here Now</string>
+    <string name="option35">Channel Group Set  State</string>
+    <string name="option36">Channel Group Add Channel</string>
+    <string name="option37">Channel Group Remove Channel</string>
+    <string name="option38">Channel Group List Channels</string>
+    <string name="option39">Channel Group List Groups</string>
+    <string name="option40">Channel Group Remove Group</string>
+    <string name="option41">Channel Group List Namespaces</string>
+    <string name="option42">Channel Group Remove Namespace</string>
+    
+    <string name="channelgroup">Channel Group</string>
+    <string name="gcm">GCM</string>
+    
+    
 </resources>
