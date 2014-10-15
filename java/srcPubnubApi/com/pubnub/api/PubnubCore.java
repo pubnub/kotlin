@@ -1763,8 +1763,10 @@ abstract class PubnubCore {
     private void _subscribe_base(boolean fresh, boolean dar, Worker worker) {
         String channelString = subscriptions.getChannelString();
         String[] channelsArray = subscriptions.getChannelNames();
-        if (channelsArray.length <= 0)
+        if (channelsArray.length <= 0) {
+            subscribeManager.resetHttpManager();
             return;
+		}
 
         if (channelString == null) {
             callErrorCallbacks(channelsArray,
