@@ -1,21 +1,16 @@
 package com.pubnub.api;
 
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
-import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.UUID;
 
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import static com.pubnub.api.PubnubError.*;
+import static com.pubnub.api.PubnubError.PNERROBJ_SECRET_KEY_MISSING;
+import static com.pubnub.api.PubnubError.getErrorObject;
 
 /**
  * Pubnub object facilitates querying channels for messages and listening on
@@ -284,8 +279,6 @@ abstract class PubnubCoreShared extends PubnubCore {
         if (auth_key != null && auth_key.length() > 0 ) parameters.put("auth", auth_key);
         if (ttl >= -1) parameters.put("ttl", String.valueOf(ttl));
 
-        System.out.println(parameters);
-
         String[] urlComponents = { getPubnubUrl(), "v1", "auth", "grant", "sub-key",
                                    this.SUBSCRIBE_KEY
                                  };
@@ -304,6 +297,83 @@ abstract class PubnubCoreShared extends PubnubCore {
 
         _request(hreq, nonSubscribeManager);
 
+    }
+
+    public void pamGrantChannelGroup(final String group, boolean read,
+                                     boolean management, Callback callback) {
+        pamGrantChannelGroup(group, read, management, -1, callback);
+    }
+
+    public void pamGrantChannelGroup(final String group, boolean read,
+                                     boolean management, int ttl, Callback callback) {
+        pamGrantChannelGroup(group, null, read, management, ttl, callback);
+    }
+
+    public void pamGrantChannelGroup(final String group, String auth_key, boolean read,
+                                     boolean management, Callback callback) {
+        pamGrantChannelGroup(group, auth_key, read, management, -1, callback);
+    }
+
+    public void pamGrantChannelGroup(final String group, String auth_key, boolean read, boolean management, int ttl,
+                                               Callback callback) {
+        String signature;
+        final Callback cb = getWrappedCallback(callback);
+        Hashtable parameters = PubnubUtil.hashtableClone(params);
+
+        String r = (read) ? "1" : "0";
+        String m = (management) ? "1" : "0";
+
+        int timestamp = (int) ((new Date().getTime()) / 1000);
+
+        if (this.SECRET_KEY.length() == 0) {
+            callback.errorCallback(group, getErrorObject(PNERROBJ_SECRET_KEY_MISSING, 1));
+            return;
+        }
+
+        String sign_input = this.SUBSCRIBE_KEY + "\n" + this.PUBLISH_KEY + "\n" + "grant" + "\n";
+
+        if (auth_key != null && auth_key.length() > 0)
+            sign_input += "auth=" + auth_key + "&"  ;
+
+        sign_input += "channel-group=" + PubnubUtil.urlEncode(group) + "&"
+                + "m=" + m + "&"
+                + "pnsdk=" + PubnubUtil.urlEncode(getUserAgent()) + "&"
+                + "r=" + r + "&"
+                + "timestamp=" + timestamp
+                + ((ttl >= -1)?"&" + "ttl=" + ttl:"");
+
+        try {
+            signature = pamSign(this.SECRET_KEY, sign_input);
+        } catch (PubnubException e1) {
+            callback.errorCallback(group, e1.getPubnubError());
+            return;
+        }
+
+        parameters.put("timestamp", String.valueOf(timestamp));
+        parameters.put("signature", signature);
+        parameters.put("r", r);
+        parameters.put("m", m);
+        parameters.put("channel-group", group);
+
+        if (ttl >= -1) parameters.put("ttl", String.valueOf(ttl));
+        if (auth_key != null && auth_key.length() > 0 ) parameters.put("auth", auth_key);
+
+        String[] urlComponents = { getPubnubUrl(), "v1", "auth", "grant", "sub-key",
+                this.SUBSCRIBE_KEY
+        };
+
+        HttpRequest hreq = new HttpRequest(urlComponents, parameters,
+                new ResponseHandler() {
+                    public void handleResponse(HttpRequest hreq, String response) {
+                        invokeCallback(group, response, "payload", cb, 4);
+                    }
+
+                    public void handleError(HttpRequest hreq, PubnubError error) {
+                        cb.errorCallback(group, error);
+                    }
+                });
+
+        _request(hreq, nonSubscribeManager);
     }
 
     /** ULS Audit
@@ -479,6 +549,64 @@ abstract class PubnubCoreShared extends PubnubCore {
 
     }
 
+    public void pamAuditChannelGroup(final String group, Callback callback) {
+        pamAuditChannelGroup(group, null, callback);
+    }
+
+    public void pamAuditChannelGroup(final String group, String auth_key, Callback callback) {
+        String signature;
+        final Callback cb = getWrappedCallback(callback);
+
+        Hashtable parameters = PubnubUtil.hashtableClone(params);
+        parameters.remove("auth");
+
+        int timestamp = (int) ((new Date().getTime()) / 1000);
+
+        if (this.SECRET_KEY.length() == 0) {
+            callback.errorCallback(group, getErrorObject(PNERROBJ_SECRET_KEY_MISSING, 3));
+            return;
+        }
+
+        String sign_input = this.SUBSCRIBE_KEY + "\n" + this.PUBLISH_KEY + "\n" + "audit" + "\n";
+
+        if (auth_key != null && auth_key.length() > 0)
+            sign_input += "auth=" + auth_key + "&"  ;
+
+        sign_input += "channel-group=" + PubnubUtil.urlEncode(group) + "&"
+                + "pnsdk=" + PubnubUtil.urlEncode(getUserAgent()) + "&"
+                + "timestamp=" + timestamp;
+
+        try {
+            signature = pamSign(this.SECRET_KEY, sign_input);
+        } catch (PubnubException e1) {
+            callback.errorCallback(group, e1.getPubnubError());
+            return;
+        }
+
+        parameters.put("timestamp", String.valueOf(timestamp));
+        parameters.put("signature", signature);
+        parameters.put("channel-group", group);
+
+        if (auth_key != null && auth_key.length() > 0 ) parameters.put("auth", auth_key);
+
+        String[] urlComponents = {getPubnubUrl(), "v1", "auth", "audit", "sub-key",
+                this.SUBSCRIBE_KEY
+        };
+
+        HttpRequest hreq = new HttpRequest(urlComponents, parameters,
+                new ResponseHandler() {
+                    public void handleResponse(HttpRequest hreq, String response) {
+                        invokeCallback(group, response, "payload", cb, 6);
+                    }
+
+                    public void handleError(HttpRequest hreq, PubnubError error) {
+                        cb.errorCallback(group, error);
+                    }
+                });
+
+        _request(hreq, nonSubscribeManager);
+    }
+
     /** ULS revoke by channel and auth key
      * @param channel
      * @param auth_key
@@ -488,7 +616,6 @@ abstract class PubnubCoreShared extends PubnubCore {
         pamGrant(channel, auth_key, false, false, callback);
     }
 
-
     /** ULS revoke by channel
      * @param channel
      * @param callback
@@ -497,4 +624,11 @@ abstract class PubnubCoreShared extends PubnubCore {
         pamGrant(channel, null, false, false, callback);
     }
 
+    public void pamRevokeChannelGroup(String group, Callback callback) {
+        pamRevokeChannelGroup(group, null, callback);
+    }
+
+    public void pamRevokeChannelGroup(String group, String auth_key, Callback callback) {
+        pamGrantChannelGroup(group, auth_key, false, false, -1, callback);
+    }
 }

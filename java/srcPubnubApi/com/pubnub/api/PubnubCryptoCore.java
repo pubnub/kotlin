@@ -1,12 +1,5 @@
 package com.pubnub.api;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
-
 import org.bouncycastle.crypto.DataLengthException;
 import org.bouncycastle.crypto.Digest;
 import org.bouncycastle.crypto.InvalidCipherTextException;
@@ -18,6 +11,8 @@ import org.bouncycastle.crypto.paddings.PaddedBufferedBlockCipher;
 import org.bouncycastle.crypto.params.KeyParameter;
 import org.bouncycastle.crypto.params.ParametersWithIV;
 import org.bouncycastle.util.encoders.Hex;
+
+import java.io.*;
 
 /**
  * PubNub 3.1 Cryptography
@@ -89,7 +84,11 @@ abstract class PubnubCryptoCore {
      *
      * @param cipher_text
      * @return String
-     * @throws Exception
+     * @throws DataLengthException
+     * @throws IllegalStateException
+     * @throws InvalidCipherTextException
+     * @throws IOException
+     * @throws IllegalArgumentException
      */
     public String decrypt(String cipher_text) throws DataLengthException,
                 IllegalStateException, InvalidCipherTextException, IOException, IllegalArgumentException {

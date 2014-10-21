@@ -1,99 +1,100 @@
 package com.pubnub.api;
 
-import java.util.Enumeration;
-import java.util.Hashtable;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.util.Enumeration;
+import java.util.Hashtable;
 
 /**
  * @author PubnubCore
  *
  */
 class Subscriptions {
-    private Hashtable channels;
+    private Hashtable items;
+
     JSONObject state;
+
     public Subscriptions() {
-        channels = new Hashtable();
+        items    = new Hashtable();
         state    = new JSONObject();
     }
 
-    public void addChannel(Channel channel) {
-        channels.put(channel.name, channel);
+    public void addItem(SubscriptionItem item) {
+        items.put(item.name, item);
     }
 
-    public void removeChannel(String name) {
-        channels.remove(name);
+    public void removeItem(String name) {
+        items.remove(name);
     }
 
-    public void removeAllChannels() {
-        channels.clear();
+    public void removeAllItems() {
+        items.clear();
     }
 
-    public Channel getFirstChannel() {
-        Channel ch = null;
-        synchronized (channels) {
-            if (channels.size() > 0) {
-                ch = (Channel) channels.elements().nextElement();
+    public SubscriptionItem getFirstItem() {
+        SubscriptionItem ch = null;
+        synchronized (items) {
+            if (items.size() > 0) {
+                ch = (SubscriptionItem) items.elements().nextElement();
             }
         }
         return ch;
-
     }
 
-    public Channel getChannel(String name) {
-        return (Channel) channels.get(name);
+    public SubscriptionItem getItem(String name) {
+        return (SubscriptionItem) items.get(name);
     }
 
-    public String[] getChannelNames() {
+    public String[] getItemNames() {
 
-        return PubnubUtil.hashtableKeysToArray(channels);
+        return PubnubUtil.hashtableKeysToArray(items);
     }
 
-    public String getChannelStringNoPresence() {
-        return PubnubUtil.hashTableKeysToDelimitedString(channels, ",", "-pnpres");
+    public String getItemStringNoPresence() {
+        return PubnubUtil.hashTableKeysToDelimitedString(items, ",", "-pnpres");
     }
 
-    public String getChannelString() {
-        return PubnubUtil.hashTableKeysToDelimitedString(channels, ",");
+    public String getItemString() {
+        return PubnubUtil.hashTableKeysToDelimitedString(items, ",");
     }
 
-    public void invokeConnectCallbackOnChannels(Object message) {
-        invokeConnectCallbackOnChannels(getChannelNames(), message);
+    public void invokeConnectCallbackOnItems(Object message) {
+        invokeConnectCallbackOnItems(getItemNames(), message);
     }
 
-    public void invokeDisconnectCallbackOnChannels(Object message) {
-        invokeDisconnectCallbackOnChannels(getChannelNames(), message);
+    public void invokeDisconnectCallbackOnItems(Object message) {
+        invokeDisconnectCallbackOnItems(getItemNames(), message);
     }
 
-    public void invokeErrorCallbackOnChannels(PubnubError error) {
+    public void invokeErrorCallbackOnItems(PubnubError error) {
         /*
-         * Iterate over all the channels and call error callback for channels
+         * Iterate over all the items and call error callback for items
          */
-        synchronized (channels) {
-            Enumeration ch = channels.elements();
-            while (ch.hasMoreElements()) {
-                Channel _channel = (Channel) ch.nextElement();
-                _channel.error = true;
-                _channel.callback.errorCallback(_channel.name, error);
+        synchronized (items) {
+            Enumeration itemsElements = items.elements();
+            while (itemsElements.hasMoreElements()) {
+                SubscriptionItem _item = (SubscriptionItem) itemsElements.nextElement();
+                _item.error = true;
+                _item.callback.errorCallback(_item.name, error);
             }
         }
     }
 
-    public void invokeConnectCallbackOnChannels(String[] channels, Object message) {
-        synchronized (channels) {
-            for (int i = 0; i < channels.length; i++) {
-                Channel _channel = (Channel) this.channels.get(channels[i]);
-                if (_channel != null) {
-                    if (_channel.connected == false) {
-                        _channel.connected = true;
-                        if (_channel.subscribed == false) {
-                            _channel.callback.connectCallback(_channel.name,
-                                                              new JSONArray().put(1).put("Subscribe connected").put(message));
+    public void invokeConnectCallbackOnItems(String[] items, Object message) {
+        synchronized (items) {
+            for (int i = 0; i < items.length; i++) {
+                SubscriptionItem _item = (SubscriptionItem) this.items.get(items[i]);
+                if (_item != null) {
+                    if (_item.connected == false) {
+                        _item.connected = true;
+                        if (_item.subscribed == false) {
+                            _item.callback.connectCallback(_item.name,
+                                    new JSONArray().put(1).put("Subscribe connected").put(message));
                         } else {
-                            _channel.subscribed = true;
-                            _channel.callback.reconnectCallback(_channel.name,
-                                                                new JSONArray().put(1).put("Subscribe reconnected").put(message));
+                            _item.subscribed = true;
+                            _item.callback.reconnectCallback(_item.name,
+                                    new JSONArray().put(1).put("Subscribe reconnected").put(message));
                         }
                     }
                 }
@@ -101,35 +102,35 @@ class Subscriptions {
         }
     }
 
-    public void invokeReconnectCallbackOnChannels(Object message) {
-        invokeReconnectCallbackOnChannels(getChannelNames(), message);
+    public void invokeReconnectCallbackOnItems(Object message) {
+        invokeReconnectCallbackOnItems(getItemNames(), message);
     }
 
-    public void invokeReconnectCallbackOnChannels(String[] channels, Object message) {
-        synchronized (channels) {
-            for (int i = 0; i < channels.length; i++) {
-                Channel _channel = (Channel) this.channels.get(channels[i]);
-                if (_channel != null) {
-                    _channel.connected = true;
-                    if ( _channel.error ) {
-                        _channel.callback.reconnectCallback(_channel.name,
-                                                            new JSONArray().put(1).put("Subscribe reconnected").put(message));
-                        _channel.error = false;
+    public void invokeReconnectCallbackOnItems(String[] items, Object message) {
+        synchronized (items) {
+            for (int i = 0; i < items.length; i++) {
+                SubscriptionItem _item = (SubscriptionItem) this.items.get(items[i]);
+                if (_item != null) {
+                    _item.connected = true;
+                    if ( _item.error ) {
+                        _item.callback.reconnectCallback(_item.name,
+                                new JSONArray().put(1).put("Subscribe reconnected").put(message));
+                        _item.error = false;
                     }
                 }
             }
         }
     }
 
-    public void invokeDisconnectCallbackOnChannels(String[] channels, Object message) {
-        synchronized (channels) {
-            for (int i = 0; i < channels.length; i++) {
-                Channel _channel = (Channel) this.channels.get(channels[i]);
-                if (_channel != null) {
-                    if (_channel.connected == true) {
-                        _channel.connected = false;
-                        _channel.callback.disconnectCallback(_channel.name,
-                                                             new JSONArray().put(0).put("Subscribe unable to connect").put(message));
+    public void invokeDisconnectCallbackOnItems(String[] items, Object message) {
+        synchronized (items) {
+            for (int i = 0; i < items.length; i++) {
+                SubscriptionItem _item = (SubscriptionItem) this.items.get(items[i]);
+                if (_item != null) {
+                    if (_item.connected == true) {
+                        _item.connected = false;
+                        _item.callback.disconnectCallback(_item.name,
+                                new JSONArray().put(0).put("Subscribe unable to connect").put(message));
                     }
                 }
             }
