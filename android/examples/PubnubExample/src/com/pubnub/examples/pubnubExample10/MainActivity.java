@@ -494,16 +494,16 @@ public class MainActivity extends Activity {
 
         // The following hardcodes this demo app to run against our beta environment and config.
 
-        PUBLISH_KEY = "demo-36";
-        SUBSCRIBE_KEY = "demo-36";
-        SECRET_KEY = "demo-36";
-        CIPHER_KEY = map.get("CIPHER_KEY");
-        SSL = (map.get("SSL") == "true")?true:false;
-        SENDER_ID = map.get("SENDER_ID");
-        AUTH_KEY = map.get("AUTH_KEY");
-        ORIGIN = "dara24.devbuild";
-        REG_ID = map.get("REG_ID");
-        SENDER_ID = "506053237730";
+//        PUBLISH_KEY = "demo-36";
+//        SUBSCRIBE_KEY = "demo-36";
+//        SECRET_KEY = "demo-36";
+//        CIPHER_KEY = map.get("CIPHER_KEY");
+//        SSL = (map.get("SSL") == "true")?true:false;
+//        SENDER_ID = map.get("SENDER_ID");
+//        AUTH_KEY = map.get("AUTH_KEY");
+//        ORIGIN = "dara24.devbuild";
+//        REG_ID = map.get("REG_ID");
+//        SENDER_ID = "506053237730";
 
 
 
@@ -1234,11 +1234,7 @@ public class MainActivity extends Activity {
                         String channel = etChannel.getText().toString();
 
 
-                        try {
 							pubnub.channelGroupRemoveChannel(groupName, channel, cb);
-						} catch (PubnubException e) {
-
-						}
                     }
 
                 });
@@ -1257,7 +1253,8 @@ public class MainActivity extends Activity {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        _channelGroupRemoveChannel(etGroup.getText().toString());
+                        String channel = etGroup.getText().toString();
+                        _channelGroupRemoveChannel(channel);
                     }
 
                 });
@@ -1267,7 +1264,7 @@ public class MainActivity extends Activity {
     
     private void channelGroupListChannel() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("List channel from group ");
+        builder.setTitle("List channels in group");
         builder.setMessage("Enter group name");
         final EditText etGroup = new EditText(this);
         builder.setView(etGroup);
@@ -1292,12 +1289,9 @@ public class MainActivity extends Activity {
 
                         String groupName = etGroup.getText().toString();
 
-
-                        try {
-							pubnub.channelGroupListChannels(groupName, cb);
-						} catch (PubnubException e) {
-
-						}
+                            if (groupName.length() > 0) {
+                                pubnub.channelGroupListChannels(groupName, cb);
+                            }
                     }
 
                 });
@@ -1333,11 +1327,7 @@ public class MainActivity extends Activity {
                         String channel = etChannel.getText().toString();
 
 
-                        try {
 							pubnub.channelGroupAddChannel(groupName, channel, cb);
-						} catch (PubnubException e) {
-
-						}
                     }
 
                 });
@@ -1369,8 +1359,8 @@ public class MainActivity extends Activity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Remove Namespace ");
         builder.setMessage("Enter namespace");
-        final EditText etGroupName = new EditText(this);
-        builder.setView(etGroupName);
+        final EditText etNamespaceName = new EditText(this);
+        builder.setView(etNamespaceName);
         builder.setPositiveButton("Done",
                 new DialogInterface.OnClickListener() {
 
@@ -1390,14 +1380,12 @@ public class MainActivity extends Activity {
                             }
                         };
 
-                        String groupName = etGroupName.getText().toString();
+                        String nsName = etNamespaceName.getText().toString();
 
+                        if (nsName.length() > 0) {
+                            pubnub.channelGroupRemoveNamespace(nsName, cb);
+                        }
 
-                        try {
-							pubnub.channelGroupRemoveGroup(groupName, cb);
-						} catch (PubnubException e) {
-
-						}
                     }
 
                 });
@@ -1409,7 +1397,7 @@ public class MainActivity extends Activity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("List namespaces ");
 
-        builder.setPositiveButton("Done",
+        builder.setPositiveButton("Click To List",
                 new DialogInterface.OnClickListener() {
 
                     @Override
@@ -1464,11 +1452,7 @@ public class MainActivity extends Activity {
                         String groupName = etGroupName.getText().toString();
 
 
-                        try {
 							pubnub.channelGroupRemoveGroup(groupName, cb);
-						} catch (PubnubException e) {
-
-						}
                     }
 
                 });
@@ -1478,8 +1462,8 @@ public class MainActivity extends Activity {
 
 	private void channelGroupListGroups() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("List groups by namespace ");
-        builder.setMessage("Enter namespace");
+        builder.setTitle("List groups");
+        builder.setMessage("Enter namespace (leave blank for none)");
         final EditText etNamespace = new EditText(this);
         builder.setView(etNamespace);
         builder.setPositiveButton("Done",
@@ -1503,11 +1487,15 @@ public class MainActivity extends Activity {
 
                         String namespace = etNamespace.getText().toString();
 
-
-                        pubnub.channelGroupListGroups(namespace, cb);
+                        if (namespace.length() == 0) {
+                            pubnub.channelGroupListGroups(cb);
+                        } else {
+                            pubnub.channelGroupListGroups(namespace, cb);
+                        }
                     }
 
                 });
+
         AlertDialog alert = builder.create();
         alert.show();
 	}
