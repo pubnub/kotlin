@@ -4,6 +4,7 @@ import org.junit.*;
 import org.junit.rules.ExpectedException;
 
 import java.util.Hashtable;
+import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -12,7 +13,7 @@ import static org.junit.Assert.fail;
 
 public class SubscribeGroupTest {
     Pubnub pubnub = new Pubnub("demo", "demo");
-    double random;
+    String random;
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -27,7 +28,7 @@ public class SubscribeGroupTest {
         pubnub.channelGroupRemoveGroup("jtest2", new TestHelper.SimpleCallback());
         pubnub.channelGroupRemoveGroup("jtest3", new TestHelper.SimpleCallback());
 
-        random = Math.random();
+        random = UUID.randomUUID().toString().substring(0, 8);
     }
 
     @Test

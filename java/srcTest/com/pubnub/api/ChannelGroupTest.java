@@ -3,10 +3,11 @@ package com.pubnub.api;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -20,11 +21,17 @@ public class ChannelGroupTest {
     String channelGroup;
     String channelNamespace;
 
+
+    @BeforeClass
+    public static void cleanup() throws InterruptedException, JSONException {
+        TestHelper.cleanup();
+    }
+
     @Before
     public void setUp() {
         pubnub.setOrigin("dara24.devbuild");
         pubnub.setCacheBusting(false);
-        channelGroup = "jtest-" + Math.random();
+        channelGroup = UUID.randomUUID().toString().substring(0, 8);
         channelNamespace = "jtest-namespace";
     }
 
@@ -395,38 +402,5 @@ public class ChannelGroupTest {
         groups = result.getJSONArray("groups");
         assertJSONArrayHasNo(group, groups);
         assertEquals(channelNamespace, result.getString("namespace"));
-    }
-
-    @AfterClass
-    public static void tearDown() throws InterruptedException, JSONException {
-        Pubnub pubnub = new Pubnub("demo", "demo");
-        pubnub.setOrigin("dara24.devbuild");
-        pubnub.setCacheBusting(false);
-
-        final CountDownLatch latch1 = new CountDownLatch(1);
-        final TestHelper.SimpleCallback cb1 = new TestHelper.SimpleCallback(latch1);
-
-        pubnub.channelGroupListGroups(cb1);
-        latch1.await(10, TimeUnit.SECONDS);
-
-        JSONObject result = (JSONObject) cb1.getResponse();
-        JSONArray groups = result.getJSONArray("groups");
-
-        for (int i = 0; i < groups.length(); i++) {
-            final String group = groups.getString(i);
-
-            if (group.startsWith("jtest")) {
-                CountDownLatch latch = new CountDownLatch(1);
-                pubnub.channelGroupRemoveGroup(group, new TestHelper.SimpleCallback(latch) {
-                    @Override
-                    public void successCallback(String channel, Object message) {
-                        System.out.println("Successfully removed group " + group);
-                        super.successCallback(channel, message);
-                    }
-                });
-                latch.await(10, TimeUnit.SECONDS);
-            }
-
-        }
     }
 }

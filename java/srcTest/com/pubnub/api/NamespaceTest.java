@@ -6,6 +6,7 @@ import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -16,14 +17,14 @@ import static org.junit.Assert.assertFalse;
 
 public class NamespaceTest {
     Pubnub pubnub = new Pubnub("demo", "demo");
-    double random;
+    String random;
 
     @Before
     public void setUp() {
         pubnub.setOrigin("dara24.devbuild");
         pubnub.setCacheBusting(false);
 
-        random = Math.random();
+        random = UUID.randomUUID().toString().substring(0, 8);
     }
 
     @Test

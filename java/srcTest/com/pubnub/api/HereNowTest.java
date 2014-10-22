@@ -6,6 +6,7 @@ import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -15,13 +16,12 @@ import static org.junit.Assert.assertEquals;
 public class HereNowTest {
     Pubnub pubnub;
     String group;
-    String auth_key;
 
-    double random;
+    String random;
 
     @Before
     public void setUp() throws InterruptedException {
-        random = Math.random();
+        random = UUID.randomUUID().toString().substring(0, 8);
 
         pubnub = new Pubnub("demo", "demo", "demo");
         pubnub.setOrigin("dara24.devbuild");

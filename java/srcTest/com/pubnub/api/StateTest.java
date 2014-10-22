@@ -5,6 +5,7 @@ import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -14,13 +15,12 @@ public class StateTest {
     Pubnub pubnub;
     String channel;
     String group;
-    String auth_key;
 
-    double random;
+    String random;
 
     @Before
     public void setUp() throws InterruptedException {
-        random = Math.random();
+        random = UUID.randomUUID().toString().substring(0, 8);
 
         pubnub = new Pubnub("demo", "demo");
         pubnub.setOrigin("dara24.devbuild");
@@ -74,12 +74,10 @@ public class StateTest {
         state.put("age", 32);
 
         final CountDownLatch latch1 = new CountDownLatch(1);
-        final CountDownLatch latch2 = new CountDownLatch(1);
         final CountDownLatch latch3 = new CountDownLatch(1);
         final CountDownLatch latch4 = new CountDownLatch(1);
 
         final TestHelper.SimpleCallback cb1 = new TestHelper.SimpleCallback(latch1);
-        final TestHelper.SubscribeCallback cb2 = new TestHelper.SubscribeCallback(latch2);
         final TestHelper.SimpleCallback cb3 = new TestHelper.SimpleCallback(latch3);
         final TestHelper.SimpleCallback cb4 = new TestHelper.SimpleCallback(latch4);
 
@@ -87,9 +85,6 @@ public class StateTest {
 
         pubnub.channelGroupAddChannel(group, channel, cb1);
         latch1.await(10, TimeUnit.SECONDS);
-
-        pubnub.channelGroupSubscribe(group, cb2);
-        latch2.await(10, TimeUnit.SECONDS);
 
         pubnub.channelGroupSetState(group, pubnub.getUUID(), state, cb3);
         latch3.await(10, TimeUnit.SECONDS);

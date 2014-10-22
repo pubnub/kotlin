@@ -8,6 +8,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -21,7 +22,7 @@ public class UnsubscribeTest {
     String channel;
     String group;
 
-    double random;
+    String random;
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -36,7 +37,7 @@ public class UnsubscribeTest {
         pubnub2.setOrigin("dara24.devbuild");
         pubnub2.setCacheBusting(false);
 
-        random = Math.random();
+        random = UUID.randomUUID().toString().substring(0, 8);
         channel = "ch6-" + random;
         group = "jtest-" + random;
     }
