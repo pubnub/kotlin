@@ -1,7 +1,7 @@
 ##### YOU MUST HAVE A PUBNUB ACCOUNT TO USE THE API.
 ##### http://www.pubnub.com/account
 
-## PubNub 3.6 Real-time Cloud Push API - JAVA
+## PubNub 3.7 Real-time Cloud Push API - JAVA
 
 www.pubnub.com - PubNub Real-time Push Service in the Cloud. 
 
@@ -18,7 +18,7 @@ Checkout [srcPubnubApi](/java/srcPubnubApi)
 
 1. Add new project with java/ as the root
 2. Set the new project source as java/srcPubnubApi
-3. Add java/Pubnub-Standardedition-3.5.jar and 3.5/libs/*.jar as project libaries
+3. Add java/Pubnub-Standardedition-3.7.x.jar and libs/*.jar as project libaries
 4. You should be able to run PubnubDemoConsole and PubnubExample via your IDE
 
 ###To build from the CL, run:
