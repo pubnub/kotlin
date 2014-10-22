@@ -1,6 +1,6 @@
 # Please direct all Support Questions and Concerns to Support@PubNub.com
 
-###PubNub Java-based APIs for core Java, Android, J2ME, BlackBerry version 3.6
+###PubNub Java-based APIs for core Java, Android, J2ME, BlackBerry version 3.7
 Learn more at http://www.pubnub.com
 
 ## Complete Documentation
