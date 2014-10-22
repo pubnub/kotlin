@@ -1,7 +1,7 @@
 ##### YOU MUST HAVE A PUBNUB ACCOUNT TO USE THE API.
 ##### http://www.pubnub.com/account
 
-## PubNub 3.6 Real-time Cloud Push API - BlackBerry
+## PubNub 3.7 Real-time Cloud Push API - BlackBerry
 
 www.pubnub.com - PubNub Real-time Push Service in the Cloud. 
 
@@ -42,7 +42,7 @@ g. Select the Libraries tab
 
 h. Click "Add External JARs"
 
-i. Select ```bouncycastle.jar``` and ```Pubnub-Microedition-3.4.jar``` from ```pubnub-api/blackberry/3.4/libs```
+i. Select ```bouncycastle.jar``` and ```Pubnub-Microedition-3.7.x.jar``` from ```libs```
 
 ![File New](https://s3.amazonaws.com/pubnub-readme/blackberry/5.png)
 
@@ -50,7 +50,7 @@ Your screen should look similar to:
 
 ![File New](https://s3.amazonaws.com/pubnub-readme/blackberry/6.png)
 
-j. Go to the "Order and Export" tab and check the boxes against **bouncycastle.jar** and **Pubnub-Microedition-3.4.jar**.
+j. Go to the "Order and Export" tab and check the boxes against **bouncycastle.jar** and **Pubnub-Microedition-3.7.x.jar**.
 
 k. Click "Finish"
 
