@@ -495,8 +495,12 @@ public class PubnubDemoConsole {
 		            listNamespaces();
 	            }
             	break;
-            case 39:
-            	// 
+            case 38:
+            	// remove namespace
+	            {
+	            	String namespace = getStringFromConsole("Namespace");
+	            	removeNamespace(namespace);
+	            }
             	break;
             default:
                 notifyUser("Invalid Input");
@@ -585,6 +589,21 @@ public class PubnubDemoConsole {
 		
 	}
 
+	private void removeNamespace(String namespace) {
+		pubnub.channelGroupRemoveNamespace(namespace, new Callback() {
+		    @Override
+		    public void successCallback(String channel, Object message) {
+		        notifyUser("(CHANNEL GROUP) REMOVE NAMESPACE  : " + message);
+		    }
+
+		    @Override
+		    public void errorCallback(String channel, PubnubError error) {
+		        notifyUser("(CHANNEL GROUP) REMOVE NAMESPACE  : " + error);
+		    }
+		});
+		
+	}
+    
 	private void listNamespaces() {
 		pubnub.channelGroupListNamespaces(new Callback() {
 		    @Override
@@ -961,6 +980,13 @@ public class PubnubDemoConsole {
         notifyUser("ENTER 29 FOR Getting Subscriber State");
         notifyUser("ENTER 30 FOR Setting Subscriber State");
         notifyUser("ENTER 31 FOR Where Now");
+        notifyUser("ENTER 32 FOR [Channel Group] Add Channel");
+        notifyUser("ENTER 33 FOR [Channel Group] Remove Channel");
+        notifyUser("ENTER 34 FOR [Channel Group] List Channels");
+        notifyUser("ENTER 35 FOR [Channel Group] List Groups");
+        notifyUser("ENTER 36 FOR [Channel Group] Remove Group");
+        notifyUser("ENTER 37 FOR [Channel Group] List Namespaces");
+        notifyUser("ENTER 38 FOR [Channel Group] Remove Namespace");
         notifyUser("\nENTER 0 to display this menu");
     }
 
