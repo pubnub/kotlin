@@ -203,9 +203,9 @@ public class PubnubDemoConsole {
 
     private void hereNow(String channel) {
         boolean metadata = getBooleanFromConsole("Metadata");
-        boolean disable_uuids = getBooleanFromConsole("Disable UUIDs");
+        boolean uuids = getBooleanFromConsole("Return UUIDs");
 
-        pubnub.hereNow(channel, metadata, disable_uuids, new Callback() {
+        pubnub.hereNow(channel, metadata, uuids, new Callback() {
             @Override
             public void successCallback(String channel, Object message) {
                 notifyUser("HERE NOW : " + message);
@@ -715,7 +715,7 @@ public class PubnubDemoConsole {
 
     private void setState() {
     	boolean isGroup = getBooleanFromConsole("Group");
-    	if (isGroup) {
+    	if (!isGroup) {
 	        String channel = getStringFromConsole("Channel");
 	        String uuid = getStringFromConsole("UUID", true);
 	        if (uuid == null || uuid.length() == 0) uuid = pubnub.getUUID();
