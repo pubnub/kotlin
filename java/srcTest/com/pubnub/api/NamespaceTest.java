@@ -21,7 +21,6 @@ public class NamespaceTest {
 
     @Before
     public void setUp() {
-        pubnub.setOrigin("dara24.devbuild");
         pubnub.setCacheBusting(false);
 
         random = UUID.randomUUID().toString().substring(0, 8);

@@ -29,7 +29,6 @@ public class ChannelGroupTest {
 
     @Before
     public void setUp() {
-        pubnub.setOrigin("dara24.devbuild");
         pubnub.setCacheBusting(false);
         channelGroup = UUID.randomUUID().toString().substring(0, 8);
         channelNamespace = "jtest-namespace";

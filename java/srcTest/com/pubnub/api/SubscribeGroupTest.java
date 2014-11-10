@@ -20,7 +20,6 @@ public class SubscribeGroupTest {
 
     @Before
     public void setUp() throws PubnubException {
-        pubnub.setOrigin("dara24.devbuild");
         pubnub.setCacheBusting(false);
 
         pubnub.channelGroupRemoveGroup("jtest", new TestHelper.SimpleCallback());

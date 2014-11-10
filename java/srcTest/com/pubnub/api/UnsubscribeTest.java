@@ -30,11 +30,9 @@ public class UnsubscribeTest {
     @Before
     public void setUp() {
         pubnub = new Pubnub("demo", "demo");
-        pubnub.setOrigin("dara24.devbuild");
         pubnub.setCacheBusting(false);
 
         pubnub2 = new Pubnub("demo", "demo");
-        pubnub2.setOrigin("dara24.devbuild");
         pubnub2.setCacheBusting(false);
 
         random = UUID.randomUUID().toString().substring(0, 8);

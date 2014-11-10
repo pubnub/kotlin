@@ -24,7 +24,6 @@ public class HereNowTest {
         random = UUID.randomUUID().toString().substring(0, 8);
 
         pubnub = new Pubnub("demo", "demo", "demo");
-        pubnub.setOrigin("dara24.devbuild");
         pubnub.setCacheBusting(false);
 
         group = "jtest-" + random;
@@ -158,7 +157,6 @@ public class HereNowTest {
         final String[] channels = new String[]{"ch1-" + random, "ch2-" + random};
 
         Pubnub pubnub2 = new Pubnub("demo", "demo");
-        pubnub2.setOrigin("dara24.devbuild");
         pubnub2.setCacheBusting(false);
 
         final CountDownLatch latch3 = new CountDownLatch(1);
