@@ -2374,10 +2374,11 @@ abstract class PubnubCore {
         String[] channelsArray = channelSubscriptions.getItemNames();
         String[] groupsArray = channelGroupSubscriptions.getItemNames();
 
-        if (channelsArray.length <= 0) {
+        if (channelsArray.length <= 0 && groupsArray.length <= 0) {
             subscribeManager.resetHttpManager();
             return;
-		}
+        }
+
         if (channelString == null) {
             callErrorCallbacks(channelsArray,
                     PubnubError.PNERROBJ_PARSING_ERROR);
