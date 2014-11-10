@@ -4,7 +4,7 @@
 
 http://www.pubnub.com/account
 
-## PubNub 3.6 Real-time Cloud Push API - ANDROID
+## PubNub 3.7 Real-time Cloud Push API - ANDROID
 
 PubNub is a Massively Scalable Real-time Service for Web and Mobile Games.
 This is a cloud-based service for broadcasting Real-time messages
@@ -19,18 +19,18 @@ Use PubNub Instead!
 
 Checkout the [walkthrough video](https://vimeo.com/71554109) first!
 
-To use Pubnub, simply copy the Pubnub-Android-3.4.jar and bcprov-jdk15on-1.47.jar files in to your project's libs directory.
-These files can be found at pubnub/java/android/3.4/Pubnub-Android-3.4.jar and pubnub/java/java/3.4/libs/bcprov-jdk15on-1.47.jar.
+To use Pubnub, simply copy the Pubnub-Android-3.7.x.jar and bcprov-jdk15on-1.47.jar files in to your project's libs directory.
 
 ### PubNub Android Sample App
 
-This app demonstrates all PubNub features and functionality.  It can be found in 3.4/examples/PubnubExample directory.
+This app demonstrates all PubNub features and functionality.  It can be found in the examples/PubnubExample directory.
 
 ### Pubnub Auto-subscribing, Auto-startup App
+
 This is a sample app which subscribes to channel **"hello_world"** on receiving the **android.intent.action.BOOT_COMPLETED** intent.
 The user is alerted about events like connect, message received etc. via notifications.
 
-Code for this app can be found in the 3.4/examples/SubscribeAtBoot directory.
+Code for this app can be found in the examples/SubscribeAtBoot directory.
 
 ## Building the Pubnub library jar
 
