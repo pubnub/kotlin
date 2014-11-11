@@ -75,6 +75,8 @@ public class NamespaceTest {
 
         latch3.await(10, TimeUnit.SECONDS);
 
+        Thread.sleep(1000);
+
         // get again
         pubnub.channelGroupListNamespaces(cb4);
         latch4.await(10, TimeUnit.SECONDS);
