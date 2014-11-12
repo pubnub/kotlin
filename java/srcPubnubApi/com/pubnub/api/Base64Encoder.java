@@ -110,7 +110,7 @@ class Base64Encoder {
      *             if the input is not valid Base64 encoded data.
      */
     public static byte[] decode(String s) {
-        return decode(s.toCharArray());
+        return decode(s.replace(" ",  "").replace("\n", "").toCharArray());
     }
 
     /**
