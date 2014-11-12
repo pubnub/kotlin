@@ -119,25 +119,9 @@ public class PubnubDemoConsole {
                 }
 
                 @Override
-                public void successCallback(String channel, Object message, String timetoken) {
-                    //notifyUser("SUBSCRIBE : " + channel + " : "
-                     //          + message.getClass() + " : " + message.toString());
-                    if ( message instanceof JSONObject) {
-                        notifyUser("SUBSCRIBE : " + channel + " : "
-                                + message.getClass() + " : " + message.toString());
-                         try {
-                            notifyUser( "TIMETOKEN: " + timetoken  + ", "+  ((JSONObject)message).getString("data")) ;
-                            notifyUser( "TIMETOKEN: " + timetoken  + ", "+  ((JSONObject)message).getString("data2")) ;
-                            notifyUser( "TIMETOKEN: " + timetoken  + ", "+  ((JSONObject)message).getString("data3")) ;
-                        } catch (JSONException e) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
-                        }
-
-                    } else {
-                        System.out.println("TIMETOKEN: " + timetoken  + ", "+  "Message not a json object : " + message);
-                    }
-
+                public void successCallback(String channel, Object message) {
+                    notifyUser("SUBSCRIBE : " + channel + " : "
+                               + message.getClass() + " : " + message.toString());
 
                 }
 
@@ -273,7 +257,6 @@ public class PubnubDemoConsole {
 
         pubnub = new Pubnub(this.publish_key, this.subscribe_key, this.secret_key, this.cipher_key, this.SSL);
         pubnub.setCacheBusting(false);
-        pubnub.setOrigin("dara24.devbuild");
         displayMenuOptions();
 
         String channelName = null;
@@ -538,44 +521,14 @@ public class PubnubDemoConsole {
                 }
 
                 @Override
-                public void successCallback(String channel, Object message, String timetoken) {
-                    //notifyUser("SUBSCRIBE : " + channel + " : "
-                     //          + message.getClass() + " : " + message.toString());
-                    if ( message instanceof JSONObject) {
-                        notifyUser("SUBSCRIBE : " + channel + " : "
-                                + message.getClass() + " : " + message.toString());
-                         try {
-                            notifyUser( "TIMETOKEN: " + timetoken  + ", "+  ((JSONObject)message).getString("data")) ;
-                            notifyUser( "TIMETOKEN: " + timetoken  + ", "+  ((JSONObject)message).getString("data2")) ;
-                            notifyUser( "TIMETOKEN: " + timetoken  + ", "+  ((JSONObject)message).getString("data3")) ;
-                        } catch (JSONException e) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
-                        }
-
-                    } else {
-                        System.out.println("TIMETOKEN: " + timetoken  + ", "+  "Message not a json object : " + message);
-                    }
-
+                public void successCallback(String channel, Object message) {
+                    notifyUser("SUBSCRIBE : " + channel + " : "
+                               + message.getClass() + " : " + message.toString());
 
                 }
 
                 @Override
                 public void errorCallback(String channel, PubnubError error) {
-
-                    /*
-
-                    # Switch on error code, see PubnubError.java
-
-                    if (error.errorCode == 112) {
-                        # Bad Auth Key!
-                        unsubscribe, get a new auth key, subscribe, etc...
-                    } else if (error.errorCode == 113) {
-                        # Need to set Auth Key !
-                        unsubscribe, set auth, resubscribe
-                    }
-
-                    */
 
                     notifyUser("SUBSCRIBE : ERROR on channel " + channel
                                + " : " + error.toString());
