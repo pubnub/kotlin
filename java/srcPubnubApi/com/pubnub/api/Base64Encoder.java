@@ -87,6 +87,18 @@ class Base64Encoder {
         return out;
     }
 
+    private static String removeNewLine(String s) {
+    	char[] sa 	= new char[s.length()];
+    	int j 		= 0;
+    	
+    	for (int i = 0; i < s.length(); i++) {
+    		if (s.charAt(i) != '\n' && s.charAt(i) != ' ') {
+    			sa[j++] = s.charAt(i); 
+    		}
+    	}
+    	return new String(sa).trim();
+    }
+    
     /**
      * Decodes a string from Base64 format.
      *
@@ -110,7 +122,7 @@ class Base64Encoder {
      *             if the input is not valid Base64 encoded data.
      */
     public static byte[] decode(String s) {
-        return decode(s.replace(" ",  "").replace("\n", "").toCharArray());
+        return decode(removeNewLine(s).toCharArray());
     }
 
     /**
