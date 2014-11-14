@@ -192,11 +192,11 @@ public class Pubnub extends PubnubCoreShared {
                             PubnubError.getErrorObject(PubnubError.PNERROBJ_INVALID_JSON, 1, response));
                     return;
                 }
-                callback.successCallback("", jsarr);
+                cb.successCallback("", jsarr);
             }
 
             public void handleError(HttpRequest hreq, PubnubError error) {
-                callback.errorCallback("", error);
+                cb.errorCallback("", error);
                 return;
             }
         });
@@ -274,11 +274,11 @@ public class Pubnub extends PubnubCoreShared {
                             PubnubError.getErrorObject(PubnubError.PNERROBJ_INVALID_JSON, 1, response));
                     return;
                 }
-                callback.successCallback("", jsarr);
+                cb.successCallback("", jsarr);
             }
 
             public void handleError(HttpRequest hreq, PubnubError error) {
-                callback.errorCallback("", error);
+                cb.errorCallback("", error);
                 return;
             }
         });
@@ -316,14 +316,15 @@ public class Pubnub extends PubnubCoreShared {
                             PubnubError.getErrorObject(PubnubError.PNERROBJ_INVALID_JSON, 1, response));
                     return;
                 }
-                callback.successCallback("", jsarr);
+                cb.successCallback("", jsarr);
             }
 
             public void handleError(HttpRequest hreq, PubnubError error) {
-                callback.errorCallback("", error);
+                cb.errorCallback("", error);
                 return;
             }
         });
+        _request(hreq, nonSubscribeManager);
     }
 
     /**
@@ -364,13 +365,14 @@ public class Pubnub extends PubnubCoreShared {
                             PubnubError.getErrorObject(PubnubError.PNERROBJ_INVALID_JSON, 1, response));
                     return;
                 }
-                callback.successCallback("", jsarr);
+                cb.successCallback("", jsarr);
             }
 
             public void handleError(HttpRequest hreq, PubnubError error) {
-                callback.errorCallback("", error);
+                cb.errorCallback("", error);
                 return;
             }
         });
+        _request(hreq, nonSubscribeManager);
     }
 }
