@@ -17,7 +17,7 @@ Use PubNub Instead!
 
 ## Getting started with Pubnub in your app
 
-Checkout the [walkthrough video](https://vimeo.com/71554109) first!
+Checkout the [walkthrough video](http://vimeo.com/95542286) first!
 
 To use Pubnub, simply copy the Pubnub-Android-3.7.x.jar and bcprov-jdk15on-1.47.jar files in to your project's libs directory.
 
