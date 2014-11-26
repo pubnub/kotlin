@@ -631,6 +631,7 @@ abstract class PubnubCore {
         Hashtable args = new Hashtable();
         args.put("channel", channel);
         args.put("message", message);
+        args.put("callback", callback);
         args.put("storeInHistory", (storeInHistory)?"":"0");
         publish(args);
     }
@@ -2374,10 +2375,11 @@ abstract class PubnubCore {
         String[] channelsArray = channelSubscriptions.getItemNames();
         String[] groupsArray = channelGroupSubscriptions.getItemNames();
 
-        if (channelsArray.length <= 0) {
+        if (channelsArray.length <= 0 && groupsArray.length <= 0) {
             subscribeManager.resetHttpManager();
             return;
-		}
+        }
+
         if (channelString == null) {
             callErrorCallbacks(channelsArray,
                     PubnubError.PNERROBJ_PARSING_ERROR);

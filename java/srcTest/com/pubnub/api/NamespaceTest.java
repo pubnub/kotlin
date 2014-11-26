@@ -21,7 +21,6 @@ public class NamespaceTest {
 
     @Before
     public void setUp() {
-        pubnub.setOrigin("dara24.devbuild");
         pubnub.setCacheBusting(false);
 
         random = UUID.randomUUID().toString().substring(0, 8);
@@ -75,6 +74,8 @@ public class NamespaceTest {
         pubnub.channelGroupRemoveNamespace(namespaces[2], cb3);
 
         latch3.await(10, TimeUnit.SECONDS);
+
+        Thread.sleep(1000);
 
         // get again
         pubnub.channelGroupListNamespaces(cb4);

@@ -29,7 +29,6 @@ public class ChannelGroupTest {
 
     @Before
     public void setUp() {
-        pubnub.setOrigin("dara24.devbuild");
         pubnub.setCacheBusting(false);
         channelGroup = UUID.randomUUID().toString().substring(0, 8);
         channelNamespace = "jtest-namespace";
@@ -345,6 +344,7 @@ public class ChannelGroupTest {
 
         pubnub.channelGroupAddChannel(group, "ch1", cb1);
         latch1.await(10, TimeUnit.SECONDS);
+        Thread.sleep(1000);
 
         pubnub.channelGroupListGroups(cb2);
         latch2.await(10, TimeUnit.SECONDS);
@@ -355,6 +355,7 @@ public class ChannelGroupTest {
 
         pubnub.channelGroupRemoveGroup(group, cb3);
         latch3.await(10, TimeUnit.SECONDS);
+        Thread.sleep(1000);
 
         pubnub.channelGroupListGroups(cb4);
         latch4.await(10, TimeUnit.SECONDS);
@@ -383,6 +384,7 @@ public class ChannelGroupTest {
 
         pubnub.channelGroupAddChannel(channelNamespace + ":" + group, "ch1", cb1);
         latch1.await(10, TimeUnit.SECONDS);
+        Thread.sleep(1000);
 
         pubnub.channelGroupListGroups(channelNamespace, cb2);
         latch2.await(10, TimeUnit.SECONDS);
@@ -394,6 +396,7 @@ public class ChannelGroupTest {
 
         pubnub.channelGroupRemoveGroup(channelNamespace + ":" + group, cb3);
         latch3.await(10, TimeUnit.SECONDS);
+        Thread.sleep(1000);
 
         pubnub.channelGroupListGroups(channelNamespace, cb4);
         latch4.await(10, TimeUnit.SECONDS);

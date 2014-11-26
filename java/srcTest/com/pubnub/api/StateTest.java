@@ -23,7 +23,6 @@ public class StateTest {
         random = UUID.randomUUID().toString().substring(0, 8);
 
         pubnub = new Pubnub("demo", "demo");
-        pubnub.setOrigin("dara24.devbuild");
         pubnub.setCacheBusting(false);
 
         group = "jtest-" + random;
