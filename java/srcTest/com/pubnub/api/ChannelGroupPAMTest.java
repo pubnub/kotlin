@@ -24,7 +24,6 @@ public class ChannelGroupPAMTest {
         auth_key = "user-ak";
 
         pubnub = new Pubnub("demo-36", "demo-36", "demo-36");
-        pubnub.setOrigin("dara24.devbuild");
         pubnub.setCacheBusting(false);
     }
 
@@ -60,6 +59,7 @@ public class ChannelGroupPAMTest {
         pubnub.pamGrantChannelGroup(group, true, true, cb3);
         latch3.await(10, TimeUnit.SECONDS);
 
+        Thread.sleep(5000);
         pubnub.pamAuditChannelGroup(group, cb4);
         latch4.await(10, TimeUnit.SECONDS);
 
@@ -105,6 +105,7 @@ public class ChannelGroupPAMTest {
         pubnub.pamGrantChannelGroup(group, auth_key, true, true, cb3);
         latch3.await(10, TimeUnit.SECONDS);
 
+        Thread.sleep(5000);
         pubnub.pamAuditChannelGroup(group, auth_key, cb4);
         latch4.await(10, TimeUnit.SECONDS);
 
@@ -150,6 +151,7 @@ public class ChannelGroupPAMTest {
         pubnub.pamGrantChannelGroup(namespace + ":" + group, true, true, cb3);
         latch3.await(10, TimeUnit.SECONDS);
 
+        Thread.sleep(5000);
         pubnub.pamAuditChannelGroup(namespace + ":" + group, cb4);
         latch4.await(10, TimeUnit.SECONDS);
 
@@ -195,6 +197,7 @@ public class ChannelGroupPAMTest {
         pubnub.pamGrantChannelGroup(namespace + ":" + group, auth_key, true, true, cb3);
         latch3.await(10, TimeUnit.SECONDS);
 
+        Thread.sleep(5000);
         pubnub.pamAuditChannelGroup(namespace + ":" + group, auth_key, cb4);
         latch4.await(10, TimeUnit.SECONDS);
 
@@ -240,6 +243,7 @@ public class ChannelGroupPAMTest {
         pubnub.pamGrantChannelGroup(namespace + ":", true, true, cb3);
         latch3.await(10, TimeUnit.SECONDS);
 
+        Thread.sleep(5000);
         pubnub.pamAuditChannelGroup(namespace + ":", cb4);
         latch4.await(10, TimeUnit.SECONDS);
 
@@ -285,6 +289,7 @@ public class ChannelGroupPAMTest {
         pubnub.pamGrantChannelGroup(namespace + ":", auth_key, true, true, cb3);
         latch3.await(10, TimeUnit.SECONDS);
 
+        Thread.sleep(5000);
         pubnub.pamAuditChannelGroup(namespace + ":", auth_key, cb4);
         latch4.await(10, TimeUnit.SECONDS);
 
@@ -328,6 +333,7 @@ public class ChannelGroupPAMTest {
         pubnub.pamGrantChannelGroup(":", true, true, cb3);
         latch3.await(10, TimeUnit.SECONDS);
 
+        Thread.sleep(5000);
         pubnub.pamAuditChannelGroup(":", cb4);
         latch4.await(10, TimeUnit.SECONDS);
 
@@ -371,6 +377,7 @@ public class ChannelGroupPAMTest {
         pubnub.pamGrantChannelGroup(":", auth_key, true, true, cb3);
         latch3.await(10, TimeUnit.SECONDS);
 
+        Thread.sleep(5000);
         pubnub.pamAuditChannelGroup(":", auth_key, cb4);
         latch4.await(10, TimeUnit.SECONDS);
 
