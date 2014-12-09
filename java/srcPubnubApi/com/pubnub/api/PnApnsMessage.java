@@ -64,4 +64,21 @@ public class PnApnsMessage extends JSONObject {
         }
 
     }
+    
+    /**
+     * Set value of APS sound
+     * @param sound
+     *         String to be set as sound value for APNS message
+     */
+    public void setApsSound(String sound) {
+
+       try {
+           JSONObject aps = (JSONObject) getAps();
+           aps.put("sound", sound);
+       } catch (JSONException e) {
+
+       }
+
+   }
+    
 }
