@@ -115,7 +115,6 @@ public class TestHelper {
 
     public static void cleanup() throws InterruptedException, JSONException {
         Pubnub pubnub = new Pubnub("demo", "demo");
-        pubnub.setOrigin("dara24.devbuild");
         pubnub.setCacheBusting(false);
 
         final CountDownLatch latch1 = new CountDownLatch(1);

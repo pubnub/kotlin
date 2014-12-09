@@ -30,11 +30,9 @@ public class UnsubscribeTest {
     @Before
     public void setUp() {
         pubnub = new Pubnub("demo", "demo");
-        pubnub.setOrigin("dara24.devbuild");
         pubnub.setCacheBusting(false);
 
         pubnub2 = new Pubnub("demo", "demo");
-        pubnub2.setOrigin("dara24.devbuild");
         pubnub2.setCacheBusting(false);
 
         random = UUID.randomUUID().toString().substring(0, 8);
@@ -80,7 +78,7 @@ public class UnsubscribeTest {
 
         // check offline
         pubnub2.unsubscribeAll();
-        Thread.sleep(1000);
+        Thread.sleep(3000);
 
         pubnub.channelGroupHereNow(group, cb1);
         latch1.await(10, TimeUnit.SECONDS);
@@ -101,7 +99,7 @@ public class UnsubscribeTest {
 
         // check offline
         pubnub2.channelGroupUnsubscribeAllGroups();
-        Thread.sleep(1000);
+        Thread.sleep(3000);
 
         pubnub.channelGroupHereNow(group, cb1);
         latch1.await(10, TimeUnit.SECONDS);
@@ -123,7 +121,7 @@ public class UnsubscribeTest {
 
         // check offline
         pubnub2.channelGroupUnsubscribe(group);
-        Thread.sleep(1000);
+        Thread.sleep(3000);
 
         pubnub.channelGroupHereNow(group, cb1);
         latch1.await(10, TimeUnit.SECONDS);
@@ -145,7 +143,7 @@ public class UnsubscribeTest {
 
         // check offline
         pubnub2.channelGroupUnsubscribe(new String[]{group});
-        Thread.sleep(1000);
+        Thread.sleep(3000);
 
         pubnub.channelGroupHereNow(group, cb1);
         latch1.await(10, TimeUnit.SECONDS);
