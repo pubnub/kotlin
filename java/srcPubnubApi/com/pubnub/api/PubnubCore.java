@@ -2469,13 +2469,13 @@ abstract class PubnubCore {
                                 && !isWorkerDead(hreq)
                             ) {
                                 invokeSubscribeCallback(_channelName, _channel.callback,
-                                        message, hreq);
+                                        message, _timetoken, hreq);
                             } else if (!_groupName.equals(_channelName)
                                     && _group != null
                                     && !isWorkerDead(hreq)
                             ) {
                                 invokeSubscribeCallback(_channelName, _group.callback,
-                                        message, hreq);
+                                        message, _timetoken, hreq);
                             }
                         }
                     } else if(jsa.length() == 3) {
@@ -2491,7 +2491,7 @@ abstract class PubnubCore {
 
                             if (_channel != null) {
                                 invokeSubscribeCallback(_channel.name, _channel.callback,
-                                        message, hreq);
+                                        message, _timetoken, hreq);
                             }
                         }
                     } else if(jsa.length() < 3) {
@@ -2505,7 +2505,7 @@ abstract class PubnubCore {
                             for (int i = 0; i < messages.length(); i++) {
                                 Object message = messages.get(i);
                                 invokeSubscribeCallback(_channel.name, _channel.callback,
-                                        message, hreq);
+                                        message, _timetoken, hreq);
                             }
                         }
 
@@ -2566,7 +2566,7 @@ abstract class PubnubCore {
         _request(hreq, subscribeManager, fresh);
     }
 
-    private void invokeSubscribeCallback(String channel, Callback callback, Object message,
+    private void invokeSubscribeCallback(String channel, Callback callback, Object message, String timetoken,
                                          HttpRequest hreq) throws JSONException {
         if (CIPHER_KEY.length() > 0
                 && !channel
@@ -2576,9 +2576,9 @@ abstract class PubnubCore {
             try {
                 message = pc.decrypt(message.toString());
                 if (!isWorkerDead(hreq)) callback
-                        .successCallback(
+                        .successWrapperCallback(
                                 channel,
-                                PubnubUtil.parseJSON(PubnubUtil.stringToJSON(message.toString())));
+                                PubnubUtil.parseJSON(PubnubUtil.stringToJSON(message.toString())), timetoken);
             } catch (DataLengthException e) {
                 if (!isWorkerDead(hreq)) callback
                         .errorCallback(
@@ -2616,9 +2616,9 @@ abstract class PubnubCore {
                                         message.toString() + " : " + e.toString()));
             }
         } else {
-            if (!isWorkerDead(hreq)) callback.successCallback(
+            if (!isWorkerDead(hreq)) callback.successWrapperCallback(
                     channel,
-                    PubnubUtil.parseJSON(message));
+                    PubnubUtil.parseJSON(message), timetoken);
         }
     }
 

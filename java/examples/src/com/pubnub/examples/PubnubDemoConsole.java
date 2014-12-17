@@ -124,6 +124,13 @@ public class PubnubDemoConsole {
                                + message.getClass() + " : " + message.toString());
 
                 }
+                
+                @Override
+                public void successCallback(String channel, Object message, String timetoken) {
+                    notifyUser("SUBSCRIBE : [TT - " + timetoken + "] " + channel + " : "
+                               + message.getClass() + " : " + message.toString());
+
+                }
 
                 @Override
                 public void errorCallback(String channel, PubnubError error) {
