@@ -864,11 +864,11 @@ abstract class PubnubCore {
                 signature = new String(PubnubCrypto.hexEncode(PubnubCrypto
                         .md5(string_to_sign.toString())), "UTF-8");
             } catch (UnsupportedEncodingException e) {
-            	PubnubError pe = PubnubError.getErrorObject(PubnubError.PNERROBJ_ENCRYPTION_ERROR, 6, msgStr + " : " + e.toString());
+                PubnubError pe = PubnubError.getErrorObject(PubnubError.PNERROBJ_ENCRYPTION_ERROR, 6, msgStr + " : " + e.toString());
                 callback.errorCallback(channel, pe);
             } catch (PubnubException e) {
                 callback.errorCallback(channel, getPubnubError(e, PubnubError.PNERROBJ_ENCRYPTION_ERROR, 5, msgStr + " : " + e.toString()));
-			}
+            }
         }
         String[] urlComponents = { getPubnubUrl(), "publish", this.PUBLISH_KEY,
                 this.SUBSCRIBE_KEY, PubnubUtil.urlEncode(signature),
@@ -1416,11 +1416,11 @@ abstract class PubnubCore {
    }
 
    private PubnubError getPubnubError(PubnubException px, PubnubError error, int code, String message) {
-	   PubnubError pe = px.getPubnubError();
-	   if (pe == null) {
-		   pe = PubnubError.getErrorObject(error, code, message);
-	   }
-	   return pe;
+       PubnubError pe = px.getPubnubError();
+       if (pe == null) {
+           pe = PubnubError.getErrorObject(error, code, message);
+       }
+       return pe;
    }
 
     /**
@@ -1463,7 +1463,7 @@ abstract class PubnubCore {
                 this.SUBSCRIBE_KEY, "channel", PubnubUtil.urlEncode(channel)
         };
 
-        
+
         class HistoryResponseHandler extends ResponseHandler {
 
             public void handleResponse(HttpRequest hreq, String response) {

@@ -163,7 +163,7 @@ public class MainActivity extends Activity {
             case R.id.option6:
                 unsubscribe();
                 return true;
-                
+
             case R.id.option7:
                 presenceUnsubscribe();
                 return true;
@@ -203,31 +203,31 @@ public class MainActivity extends Activity {
             case R.id.option16:
                 setWindowInterval();
                 return true;
-                
+
             case R.id.option17:
                 setOrigin();
                 return true;
-            
+
             case R.id.option18:
                 setDomain();
                 return true;
-            
+
             case R.id.option19:
                 toggleCacheBusting();
                 return true;
-            
+
             case R.id.option20:
                 setHeartbeat();
                 return true;
-            
+
             case R.id.option21:
                 setHeartbeatInterval();
                 return true;
-            
+
             case R.id.option22:
                 setUUID();
                 return true;
-            
+
             case R.id.option23:
                 setState();
                 return true;
@@ -235,84 +235,84 @@ public class MainActivity extends Activity {
             case R.id.option24:
                 setAuthKey();
                 return true;
-            
+
             case R.id.option25:
                 getInitData();
                 return true;
-            
+
             case R.id.option26:
                 setSenderId();
                 return true;
-            
+
             case R.id.option27:
                 gcmRegister();
                 return true;
-            
+
             case R.id.option28:
                 gcmUnregister();
                 return true;
-            
+
             case R.id.option29:
                 gcmAddChannel();
                 return true;
-            
+
             case R.id.option30:
                 gcmRemoveChannel();
                 return true;
-            
+
             case R.id.option31:
                 gcmRemoveAllChannels();
                 return true;
-                
+
             case R.id.option32:
-            	subscribeToGroup();
+                subscribeToGroup();
                 return true;
-            
+
             case R.id.option33:
-            	unsubscribeFromGroup();
-                return true;                
-            
+                unsubscribeFromGroup();
+                return true;
+
             case R.id.option34:
-            	channelGroupHereNow();
+                channelGroupHereNow();
                 return true;
-            
+
             case R.id.option35:
-            	channelGroupSetState();
+                channelGroupSetState();
                 return true;
-                
+
             case R.id.option36:
-            	channelGroupAddChannel();
-                return true;            
-            
+                channelGroupAddChannel();
+                return true;
+
             case R.id.option37:
-            	channelGroupRemoveChannel();
+                channelGroupRemoveChannel();
                 return true;
-                
+
             case R.id.option38:
-            	channelGroupListChannel();
+                channelGroupListChannel();
                 return true;
-            
+
             case R.id.option39:
-            	channelGroupListGroups();
+                channelGroupListGroups();
                 return true;
-            
+
             case R.id.option40:
-            	channelGroupRemoveGroup();
+                channelGroupRemoveGroup();
                 return true;
-            
+
             case R.id.option41:
-            	channelGroupListNamespaces();
+                channelGroupListNamespaces();
                 return true;
-            
+
             case R.id.option42:
-            	channelGroupRemoveNamespace();
+                channelGroupRemoveNamespace();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-	private void setAuthKey() {
+    private void setAuthKey() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Set Auth Key");
         builder.setMessage("Enter Auth Key");
@@ -964,7 +964,7 @@ public class MainActivity extends Activity {
         alert.show();
 
     }
-    
+
     private void subscribe() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Subscribe");
@@ -1234,7 +1234,7 @@ public class MainActivity extends Activity {
                         String channel = etChannel.getText().toString();
 
 
-							pubnub.channelGroupRemoveChannel(groupName, channel, cb);
+                            pubnub.channelGroupRemoveChannel(groupName, channel, cb);
                     }
 
                 });
@@ -1261,7 +1261,7 @@ public class MainActivity extends Activity {
         AlertDialog alert = builder.create();
         alert.show();
     }
-    
+
     private void channelGroupListChannel() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("List channels in group");
@@ -1298,7 +1298,7 @@ public class MainActivity extends Activity {
         AlertDialog alert = builder.create();
         alert.show();
     }
-    
+
     private void _channelGroupAddChannel(final String groupName) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Add channel to Group");
@@ -1327,7 +1327,7 @@ public class MainActivity extends Activity {
                         String channel = etChannel.getText().toString();
 
 
-							pubnub.channelGroupAddChannel(groupName, channel, cb);
+                            pubnub.channelGroupAddChannel(groupName, channel, cb);
                     }
 
                 });
@@ -1353,7 +1353,7 @@ public class MainActivity extends Activity {
         AlertDialog alert = builder.create();
         alert.show();
     }
-    
+
 
     private void channelGroupRemoveNamespace() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -1391,9 +1391,9 @@ public class MainActivity extends Activity {
                 });
         AlertDialog alert = builder.create();
         alert.show();
-	}
+    }
 
-	private void channelGroupListNamespaces() {
+    private void channelGroupListNamespaces() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("List namespaces ");
 
@@ -1422,9 +1422,9 @@ public class MainActivity extends Activity {
                 });
         AlertDialog alert = builder.create();
         alert.show();
-	}
+    }
 
-	private void channelGroupRemoveGroup() {
+    private void channelGroupRemoveGroup() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Remove Group ");
         builder.setMessage("Enter group name");
@@ -1452,15 +1452,15 @@ public class MainActivity extends Activity {
                         String groupName = etGroupName.getText().toString();
 
 
-							pubnub.channelGroupRemoveGroup(groupName, cb);
+                            pubnub.channelGroupRemoveGroup(groupName, cb);
                     }
 
                 });
         AlertDialog alert = builder.create();
         alert.show();
-	}
+    }
 
-	private void channelGroupListGroups() {
+    private void channelGroupListGroups() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("List groups");
         builder.setMessage("Enter namespace (leave blank for none)");
@@ -1498,8 +1498,8 @@ public class MainActivity extends Activity {
 
         AlertDialog alert = builder.create();
         alert.show();
-	}
-    
+    }
+
     private void setState() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Set State ");
@@ -1518,7 +1518,7 @@ public class MainActivity extends Activity {
         AlertDialog alert = builder.create();
         alert.show();
     }
-    
+
     private void channelGroupSetState() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Set State ");
@@ -1646,7 +1646,7 @@ public class MainActivity extends Activity {
         AlertDialog alert = builder.create();
         alert.show();
     }
-    
+
     private void channelGroupHereNow() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -1698,7 +1698,7 @@ public class MainActivity extends Activity {
         AlertDialog alert = builder.create();
         alert.show();
     }
-    
+
     private void unsubscribeFromGroup() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);

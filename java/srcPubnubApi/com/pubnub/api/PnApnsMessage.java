@@ -64,7 +64,7 @@ public class PnApnsMessage extends JSONObject {
         }
 
     }
-    
+
     /**
      * Set value of APS sound
      * @param sound
@@ -80,5 +80,5 @@ public class PnApnsMessage extends JSONObject {
        }
 
    }
-    
+
 }

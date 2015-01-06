@@ -38,35 +38,35 @@ abstract class PubnubCryptoCore {
     }
 
     private static PubnubError newCryptoError(int code, String message) {
-    	return PubnubError.getErrorObject(PubnubError.PNERROBJ_CRYPTO_ERROR, code, message);
+        return PubnubError.getErrorObject(PubnubError.PNERROBJ_CRYPTO_ERROR, code, message);
     }
-    
-    
+
+
     public void InitCiphers() throws PubnubException {
 
         try {
-    		System.out.println(this.CIPHER_KEY);
-    		System.out.println(new String(hexEncode(sha256(this.CIPHER_KEY.getBytes("UTF-8")))));
-    		
-        	System.out.println(new String(Hex.encode(sha256(this.CIPHER_KEY.getBytes("UTF-8"))),
-	                 "UTF-8").substring(0, 32).toLowerCase());
-			key = new String(Hex.encode(sha256(this.CIPHER_KEY.getBytes("UTF-8"))),
-			                 "UTF-8").substring(0, 32).toLowerCase().getBytes("UTF-8");
-	        encryptCipher = new PaddedBufferedBlockCipher(new CBCBlockCipher(
+            System.out.println(this.CIPHER_KEY);
+            System.out.println(new String(hexEncode(sha256(this.CIPHER_KEY.getBytes("UTF-8")))));
+
+            System.out.println(new String(Hex.encode(sha256(this.CIPHER_KEY.getBytes("UTF-8"))),
+                     "UTF-8").substring(0, 32).toLowerCase());
+            key = new String(Hex.encode(sha256(this.CIPHER_KEY.getBytes("UTF-8"))),
+                             "UTF-8").substring(0, 32).toLowerCase().getBytes("UTF-8");
+            encryptCipher = new PaddedBufferedBlockCipher(new CBCBlockCipher(
                     new AESEngine()));
-	
-	        decryptCipher = new PaddedBufferedBlockCipher(new CBCBlockCipher(
-	                    new AESEngine()));
-	
-	        // create the IV parameter
-	        ParametersWithIV parameterIV = new ParametersWithIV(new KeyParameter(
-	                    key), IV.getBytes("UTF-8"));
-	
-	        encryptCipher.init(true, parameterIV);
-	        decryptCipher.init(false, parameterIV);
-		} catch (UnsupportedEncodingException e) {
-			throw new PubnubException(newCryptoError(1, e.toString()));
-		}
+
+            decryptCipher = new PaddedBufferedBlockCipher(new CBCBlockCipher(
+                        new AESEngine()));
+
+            // create the IV parameter
+            ParametersWithIV parameterIV = new ParametersWithIV(new KeyParameter(
+                        key), IV.getBytes("UTF-8"));
+
+            encryptCipher.init(true, parameterIV);
+            decryptCipher.init(false, parameterIV);
+        } catch (UnsupportedEncodingException e) {
+            throw new PubnubException(newCryptoError(1, e.toString()));
+        }
 
     }
 
@@ -87,7 +87,7 @@ abstract class PubnubCryptoCore {
             String s = new String(Base64Encoder.encode(ou.toByteArray()));
             return s;
         } catch (IOException e) {
-        	throw new PubnubException(newCryptoError(2, e.toString()));
+            throw new PubnubException(newCryptoError(2, e.toString()));
         }
     }
 
@@ -96,7 +96,7 @@ abstract class PubnubCryptoCore {
      *
      * @param cipher_text
      * @return String
-     * @throws PubnubException 
+     * @throws PubnubException
      */
     public String decrypt(String cipher_text) throws PubnubException {
 
@@ -119,25 +119,25 @@ abstract class PubnubCryptoCore {
         int noBytesProcessed = 0; // number of bytes processed
 
         try {
-			while ((noBytesRead = in.read(buf)) >= 0) {
-			    noBytesProcessed = cipher
-			                       .processBytes(buf, 0, noBytesRead, obuf, 0);
-			    out.write(obuf, 0, noBytesProcessed);
-			}
-	        noBytesProcessed = cipher.doFinal(obuf, 0);
-	        out.write(obuf, 0, noBytesProcessed);
-	        out.flush();
-	        in.close();
-	        out.close();
-		} catch (DataLengthException e) {
-			throw new PubnubException(newCryptoError(3, e.toString()));
-		} catch (IllegalStateException e) {
-			throw new PubnubException(newCryptoError(4, e.toString()));
-		} catch (IOException e) {
-			throw new PubnubException(newCryptoError(5, e.toString()));
-		} catch (InvalidCipherTextException e) {
-			throw new PubnubException(newCryptoError(6, e.toString()));
-		}
+            while ((noBytesRead = in.read(buf)) >= 0) {
+                noBytesProcessed = cipher
+                                   .processBytes(buf, 0, noBytesRead, obuf, 0);
+                out.write(obuf, 0, noBytesProcessed);
+            }
+            noBytesProcessed = cipher.doFinal(obuf, 0);
+            out.write(obuf, 0, noBytesProcessed);
+            out.flush();
+            in.close();
+            out.close();
+        } catch (DataLengthException e) {
+            throw new PubnubException(newCryptoError(3, e.toString()));
+        } catch (IllegalStateException e) {
+            throw new PubnubException(newCryptoError(4, e.toString()));
+        } catch (IOException e) {
+            throw new PubnubException(newCryptoError(5, e.toString()));
+        } catch (InvalidCipherTextException e) {
+            throw new PubnubException(newCryptoError(6, e.toString()));
+        }
 
     }
 
@@ -189,9 +189,9 @@ abstract class PubnubCryptoCore {
         digest.doFinal(resBuf, 0);
         return resBuf;
     }
-    
+
     public static byte[] hexEncode(byte[] input) throws PubnubException {
-    	return Hex.encode(input);
+        return Hex.encode(input);
     }
-    
+
 }
