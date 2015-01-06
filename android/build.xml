@@ -217,6 +217,7 @@
         <mkdir dir="${maven}/src/com/pubnub/api" />
         <copy todir="${maven}/src/com/pubnub/api" >
             <fileset dir="${sources_pubnub_java}" />
+            <fileset dir="${sources_pubnub_crypto}" />
             <fileset dir="${sources_pubnub_java1}" />
             <fileset dir="${sources_pubnub_logging}" />
             <fileset dir="${sources_pubnub_api}" />
