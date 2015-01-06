@@ -1,8 +1,5 @@
 package com.pubnub.api;
 
-import org.bouncycastle.crypto.DataLengthException;
-import org.bouncycastle.crypto.InvalidCipherTextException;
-import org.bouncycastle.util.encoders.Hex;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -842,21 +839,8 @@ abstract class PubnubCore {
                     msgStr = "\"" + msgStr + "\"";
                 }
                 msgStr = "\"" + pc.encrypt(msgStr) + "\"";
-            } catch (DataLengthException e) {
-                callback.errorCallback(channel,
-                        PubnubError.getErrorObject(PubnubError.PNERROBJ_ENCRYPTION_ERROR, 1, msgStr));
-                return;
-            } catch (IllegalStateException e) {
-                callback.errorCallback(channel,
-                        PubnubError.getErrorObject(PubnubError.PNERROBJ_ENCRYPTION_ERROR, 2, msgStr));
-                return;
-            } catch (InvalidCipherTextException e) {
-                callback.errorCallback(channel,
-                        PubnubError.getErrorObject(PubnubError.PNERROBJ_ENCRYPTION_ERROR, 3, msgStr));
-                return;
-            } catch (Exception e) {
-                callback.errorCallback(channel,
-                        PubnubError.getErrorObject(PubnubError.PNERROBJ_ENCRYPTION_ERROR, 4, msgStr + " : " + e.toString()));
+            } catch (PubnubException e) {
+                callback.errorCallback(channel, getPubnubError(e, PubnubError.PNERROBJ_ENCRYPTION_ERROR, 4, msgStr + " : " + e.toString()));
                 return;
             }
         } else {
@@ -877,11 +861,14 @@ abstract class PubnubCore {
 
             // Sign Message
             try {
-                signature = new String(Hex.encode(PubnubCrypto
+                signature = new String(PubnubCrypto.hexEncode(PubnubCrypto
                         .md5(string_to_sign.toString())), "UTF-8");
             } catch (UnsupportedEncodingException e) {
-
-            }
+            	PubnubError pe = PubnubError.getErrorObject(PubnubError.PNERROBJ_ENCRYPTION_ERROR, 6, msgStr + " : " + e.toString());
+                callback.errorCallback(channel, pe);
+            } catch (PubnubException e) {
+                callback.errorCallback(channel, getPubnubError(e, PubnubError.PNERROBJ_ENCRYPTION_ERROR, 5, msgStr + " : " + e.toString()));
+			}
         }
         String[] urlComponents = { getPubnubUrl(), "publish", this.PUBLISH_KEY,
                 this.SUBSCRIBE_KEY, PubnubUtil.urlEncode(signature),
@@ -1428,7 +1415,13 @@ abstract class PubnubCore {
        history(channel, start, end, count, reverse, false, callback);
    }
 
-
+   private PubnubError getPubnubError(PubnubException px, PubnubError error, int code, String message) {
+	   PubnubError pe = px.getPubnubError();
+	   if (pe == null) {
+		   pe = PubnubError.getErrorObject(error, code, message);
+	   }
+	   return pe;
+   }
 
     /**
      *
@@ -1470,6 +1463,7 @@ abstract class PubnubCore {
                 this.SUBSCRIBE_KEY, "channel", PubnubUtil.urlEncode(channel)
         };
 
+        
         class HistoryResponseHandler extends ResponseHandler {
 
             public void handleResponse(HttpRequest hreq, String response) {
@@ -1481,21 +1475,14 @@ abstract class PubnubCore {
                 } catch (JSONException e) {
                     cb.errorCallback(channel,
                             PubnubError.getErrorObject(PubnubError.PNERROBJ_JSON_ERROR, 3));
-                } catch (DataLengthException e) {
-                    cb.errorCallback(channel,
-                            PubnubError.getErrorObject(PubnubError.PNERROBJ_DECRYPTION_ERROR, 6, response));
-                } catch (IllegalStateException e) {
-                    cb.errorCallback(channel,
-                            PubnubError.getErrorObject(PubnubError.PNERROBJ_DECRYPTION_ERROR, 7, response));
-                } catch (InvalidCipherTextException e) {
-                    cb.errorCallback(channel,
-                            PubnubError.getErrorObject(PubnubError.PNERROBJ_DECRYPTION_ERROR, 8, response));
                 } catch (IOException e) {
                     cb.errorCallback(channel,
                             PubnubError.getErrorObject(PubnubError.PNERROBJ_DECRYPTION_ERROR, 9, response));
+                } catch (PubnubException e) {
+                    cb.errorCallback(channel, getPubnubError(e, PubnubError.PNERROBJ_DECRYPTION_ERROR, 10, response + " : " + e.toString()));
                 } catch (Exception e) {
                     cb.errorCallback(channel,
-                            PubnubError.getErrorObject(PubnubError.PNERROBJ_DECRYPTION_ERROR, 10, response + " : " + e.toString()));
+                            PubnubError.getErrorObject(PubnubError.PNERROBJ_DECRYPTION_ERROR, 11, response + " : " + e.toString()));
                 }
 
             }
@@ -2283,7 +2270,7 @@ abstract class PubnubCore {
         }
     }
 
-    private void decryptJSONArray(JSONArray messages) throws JSONException, DataLengthException, IllegalStateException, InvalidCipherTextException, IOException {
+    private void decryptJSONArray(JSONArray messages) throws JSONException, IllegalStateException, IOException, PubnubException {
 
         if (CIPHER_KEY.length() > 0) {
             for (int i = 0; i < messages.length(); i++) {
@@ -2579,13 +2566,6 @@ abstract class PubnubCore {
                         .successWrapperCallback(
                                 channel,
                                 PubnubUtil.parseJSON(PubnubUtil.stringToJSON(message.toString())), timetoken);
-            } catch (DataLengthException e) {
-                if (!isWorkerDead(hreq)) callback
-                        .errorCallback(
-                                channel,
-                                PubnubError.getErrorObject(
-                                        PubnubError.PNERROBJ_DECRYPTION_ERROR, 11,
-                                        message.toString()));
             } catch (IllegalStateException e) {
                 if (!isWorkerDead(hreq)) callback
                         .errorCallback(
@@ -2593,20 +2573,12 @@ abstract class PubnubCore {
                                 PubnubError.getErrorObject(
                                         PubnubError.PNERROBJ_DECRYPTION_ERROR, 12,
                                         message.toString()));
-            } catch (InvalidCipherTextException e) {
+            } catch (PubnubException e) {
                 if (!isWorkerDead(hreq)) callback
                         .errorCallback(
                                 channel,
-                                PubnubError.getErrorObject(
-                                        PubnubError.PNERROBJ_DECRYPTION_ERROR, 13,
-                                        message.toString()));
-            } catch (IOException e) {
-                if (!isWorkerDead(hreq)) callback
-                        .errorCallback(
-                                channel,
-                                PubnubError.getErrorObject(
-                                        PubnubError.PNERROBJ_DECRYPTION_ERROR, 14,
-                                        message.toString()));
+                                getPubnubError(e, PubnubError.PNERROBJ_DECRYPTION_ERROR, 16,
+                            message.toString() + " : " + e.toString()));
             } catch (Exception e) {
                 if (!isWorkerDead(hreq)) callback
                         .errorCallback(

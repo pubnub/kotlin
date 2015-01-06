@@ -10,6 +10,7 @@
     <property name="sources_pubnub_logging" value="srcLogging/com/pubnub/api"/>
     <property name="sources_pubnub_java1" value="src1/com/pubnub/api"/>
     <property name="sources_pubnub_java" value="src/com/pubnub/api"/>
+    <property name="sources_pubnub_crypto" value="srcCrypto/com/pubnub/api"/>
     <property name="target" value="1.5"/>
     <property name="source" value="1.5"/>
     <property name="debug" value="false"/>
@@ -111,6 +112,7 @@
             <src path="src1"/>
             <src path="srcLogging"/>
             <src path="srcTest"/>
+            <src path="srcCrypto"/>
             <src path="examples/src"/>
             <classpath refid="PubnubApi.classpath"/>
         </javac>
@@ -206,7 +208,7 @@
         <create-jar jar.type="examples" jar.classname="com.pubnub.examples.PubnubPresenceTest" jar.filename="PubnubPresenceTest.jar" />
     </target>
     <target name="doc" depends="init" description="generate documentation">
-        <javadoc access="public" sourcepath="srcPubnubApi:src:srcLogging:src1" destdir="doc" classpathref="PubnubApi.classpath"/>
+        <javadoc access="public" sourcepath="srcPubnubApi:src:srcLogging:src1:srcCrypto" destdir="doc" classpathref="PubnubApi.classpath"/>
       </target>
 
       <property name="src" location="src" />
@@ -302,6 +304,7 @@
             <fileset dir="${sources_pubnub_java1}" />
             <fileset dir="${sources_pubnub_logging}" />
             <fileset dir="${sources_pubnub_api}" />
+            <fileset dir="${sources_pubnub_crypto}" />
         </copy>
         <mkdir dir="${dist}/lib" />
         <antcall target="stage"/>
@@ -316,6 +319,7 @@
             <fileset dir="${sources_pubnub_java1}" />
             <fileset dir="${sources_pubnub_logging}" />
             <fileset dir="${sources_pubnub_api}" />
+            <fileset dir="${sources_pubnub_crypto}" />
         </copy>
         <replace dir="${maven}/src" token="boolean LOGGING = false" value="boolean LOGGING = true">
             <include name="**/*.java"/>

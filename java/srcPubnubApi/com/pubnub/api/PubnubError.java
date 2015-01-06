@@ -212,8 +212,13 @@ public class PubnubError {
      * Error while parsing group name
      */
     public static final int         PNERR_CHANNEL_GROUP_PARSING_ERROR            =       134;
+    
+    /**
+     * Crypto Error
+     */
+    public static final int         PNERR_CRYPTO_ERROR            =       135;
     // Error Objects
-
+    
     static final PubnubError        PNERROBJ_TIMEOUT                           =
         new PubnubError     (
         PNERR_TIMEOUT,  "Timeout Occurred"
@@ -443,6 +448,13 @@ public class PubnubError {
             "Channel group name is invalid"
     );
 
+    static final PubnubError        PNERROBJ_CRYPTO_ERROR                  =
+            new PubnubError     (
+            PNERR_CRYPTO_ERROR ,
+            "Error while encrypting/decrypting message." +
+            "Please contact support with error details."
+        );
+    
     public  final int errorCode;
     public  final int errorCodeExtended;
     public  final JSONObject errorObject;

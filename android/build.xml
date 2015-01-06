@@ -8,6 +8,7 @@
     <property name="src_pubnub_api_path" value="${java_core_path}/srcPubnubApi"/>
     <property name="src_java_path" value="${java_core_path}/src1"/>
     <property name="src_logging_path" value="./srcLogging"/>
+    <property name="src_crypto_path" value="./srcCrypto"/>
     <property name="src_android_path" value="./src"/>
     <property name="android_jar_path" value="jars"/>
 
@@ -16,6 +17,7 @@
     <property name="sources_pubnub_logging" value="srcLogging/com/pubnub/api"/>
     <property name="sources_pubnub_java1" value="../java/src1/com/pubnub/api"/>
     <property name="sources_pubnub_java" value="src/com/pubnub/api"/>
+    <property name="sources_pubnub_crypto" value="srcCrypto/com/pubnub/api"/>
 
     <path id="PubnubApi.classpath">
         <pathelement location="bin"/>
@@ -98,6 +100,7 @@
             <src path="${src_java_path}"/>
             <src path="${src_logging_path}"/>
             <src path="${src_android_path}"/>
+            <src path="${src_crypto_path}"/>
             <classpath refid="classpath"/>
         </javac>
         <replace dir="${src_pubnub_api_path}" token='static String VERSION = "${VERSION}"' value='static String VERSION = ""'>
@@ -202,6 +205,7 @@
             <fileset dir="${sources_pubnub_java1}" />
             <fileset dir="${sources_pubnub_logging}" />
             <fileset dir="${sources_pubnub_api}" />
+            <fileset dir="${sources_pubnub_crypto}" />
         </copy>
         <mkdir dir="${dist}/lib" />
         <antcall target="stage"/>

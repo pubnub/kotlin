@@ -85,6 +85,7 @@
             <src path="src"/>
             <src path="src1"/>
             <src path="srcLogging"/>
+            <src path="../java/srcCrypto"/>
             <classpath refid="PubnubApi.classpath"/>
         </javac>
         <replace dir="${srcPubnubApi.link}" token='static String VERSION = "${VERSION}"' value='static String VERSION = ""'>

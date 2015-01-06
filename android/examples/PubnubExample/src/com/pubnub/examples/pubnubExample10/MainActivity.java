@@ -53,7 +53,7 @@ public class MainActivity extends Activity {
     String PUBLISH_KEY = "demo";
     String SUBSCRIBE_KEY = "demo";
     String CIPHER_KEY = "";
-    String SECRET_KEY = "demo";
+    String SECRET_KEY = "";
     String ORIGIN = "pubsub";
     String AUTH_KEY;
     String UUID;
