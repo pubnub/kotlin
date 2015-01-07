@@ -10,6 +10,8 @@
     <property name="pubnub_debug_cn1lib_file_name" value="../Pubnub-CodeNameOne-Debug-${VERSION}.cn1lib"/>
     <property file="codenameone_settings.properties"/>
 
+    <target name="build-all" depends="clean, debug-build, clean, build" />
+    <target name="deploy-all" />
     <target name="create-src">
         <mkdir dir="src"/>
         <copy includeemptydirs="true" todir="src">

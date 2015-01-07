@@ -35,7 +35,8 @@
         <pathelement location="libs/android-8.jar"/>
     </path>
     <target name="test" />
-    <target name="build-all" depends="debug-build, clean, build" />
+    <target name="build-all" depends="clean, debug-build, clean, build" />
+    <target name="deploy-all" depends="clean, push_to_maven_central, clean, push_debug_to_maven_central" />
     <target name="setDebugTrue" >
         <replace dir="${src_pubnub_api_path}" token="boolean LOGGING = false" value="boolean LOGGING = true">
             <include name="**/*.java"/>
@@ -115,7 +116,7 @@
     <property name="build" location="build" />
     <property name="dist" location="dist" />
 
-    <xmlproperty file="pom.xml" keepRoot="false" semanticAttributes="true"/>
+    <xmlproperty file="${basedir}/pom.xml" keepRoot="false" semanticAttributes="true"/>
 
     <property name="maven-jar" value="${dist}/lib/${artifactId}-${version}.jar" />
     <property name="maven-javadoc-jar" value="${dist}/lib/${artifactId}-${version}-javadoc.jar" />
@@ -164,7 +165,7 @@
             <arg value="org.apache.maven.plugins:maven-gpg-plugin:1.3:sign-and-deploy-file" />
             <arg value="-Durl=${maven-staging-repository-url}" />
             <arg value="-DrepositoryId=${maven-staging-repository-id}" />
-            <arg value="-DpomFile=pom.xml" />
+            <arg value="-DpomFile=${basedir}/pom.xml" />
             <arg value="-Dfile=${maven-jar}" />
                         <arg value="-Pgpg" />
         </artifact:mvn>
@@ -173,7 +174,7 @@
             <arg value="org.apache.maven.plugins:maven-gpg-plugin:1.3:sign-and-deploy-file" />
             <arg value="-Durl=${maven-staging-repository-url}" />
             <arg value="-DrepositoryId=${maven-staging-repository-id}" />
-            <arg value="-DpomFile=pom.xml" />
+            <arg value="-DpomFile=${basedir}/pom.xml" />
             <arg value="-Dfile=${maven-sources-jar}" />
             <arg value="-Dclassifier=sources" />
                         <arg value="-Pgpg" />
@@ -183,7 +184,7 @@
             <arg value="org.apache.maven.plugins:maven-gpg-plugin:1.3:sign-and-deploy-file" />
             <arg value="-Durl=${maven-staging-repository-url}" />
             <arg value="-DrepositoryId=${maven-staging-repository-id}" />
-            <arg value="-DpomFile=pom.xml" />
+            <arg value="-DpomFile=${basedir}/pom.xml" />
             <arg value="-Dfile=${maven-javadoc-jar}" />
             <arg value="-Dclassifier=javadoc" />
                         <arg value="-Pgpg" />

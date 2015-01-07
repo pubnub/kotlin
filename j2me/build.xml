@@ -17,7 +17,8 @@
         <pathelement location="libs/tinylinegzip.jar"/>
     </path>
     <target name="test" />
-    <target name="build-all" depends="debug-build, build" />
+    <target name="build-all" depends="clean, debug-build, clean, build" />
+    <target name="deploy-all" />
     <target name="setJsonMeJar" >
         <replace dir="${srcPubnubApi.link}" token="org.json" value="org.json.me">
             <include name="**/*.java"/>

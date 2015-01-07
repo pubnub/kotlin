@@ -5,6 +5,7 @@
         <antcall target="clean"/>
         <antcall target="debug-build"/>
     </target>
+    <target name="deploy-all"  />
     <target name="build">
         <subant target="build" >
             <fileset dir="." includes="*/build.xml" />
