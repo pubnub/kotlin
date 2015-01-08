@@ -99,15 +99,15 @@ abstract class PubnubCryptoCore {
      * @throws PubnubException
      */
     public String decrypt(String cipher_text) throws PubnubException {
-    	try {
-	        byte[] cipher = Base64Encoder.decode(cipher_text);
-	        InputStream st = new ByteArrayInputStream(cipher);
-	        ByteArrayOutputStream ou = new ByteArrayOutputStream();
-	        CBCEncryptOrDecrypt(st, ou, false);
-	        return new String(ou.toByteArray());
-    	} catch (IllegalArgumentException e) {
-    		throw new PubnubException(newCryptoError(3, e.toString()));
-    	}
+        try {
+            byte[] cipher = Base64Encoder.decode(cipher_text);
+            InputStream st = new ByteArrayInputStream(cipher);
+            ByteArrayOutputStream ou = new ByteArrayOutputStream();
+            CBCEncryptOrDecrypt(st, ou, false);
+            return new String(ou.toByteArray());
+        } catch (IllegalArgumentException e) {
+            throw new PubnubException(newCryptoError(3, e.toString()));
+        }
     }
 
     public void CBCEncryptOrDecrypt(InputStream in, OutputStream out,
