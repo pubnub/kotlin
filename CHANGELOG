@@ -1,3 +1,6 @@
+1-26-14 - 3.7.2 - 3003ef
+. removed bouncycastle dependency for Android
+
 12-09-14 - 3.7.1 - d61f23
 . setApsSound() setter added for PnApnsMessage instance
 . fix for NPE when calling removeAllPushNotificationsForDeviceRegistrationId
