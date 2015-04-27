@@ -1742,11 +1742,11 @@ abstract class PubnubCore {
     }
 
     private void leave(final String channel) {
-        _leave(PubnubUtil.urlEncode(channel), new Hashtable());
+        _leave(PubnubUtil.urlEncode(channel), PubnubUtil.hashtableClone(this.params));
     }
 
     private void channelGroupLeave(String group) {
-        Hashtable params = new Hashtable();
+        Hashtable params = PubnubUtil.hashtableClone(this.params);
         params.put("channel-group", group);
 
         _leave(",", params);
