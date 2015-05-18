@@ -406,4 +406,36 @@ public class ChannelGroupTest {
         assertJSONArrayHasNo(group, groups);
         assertEquals(channelNamespace, result.getString("namespace"));
     }
+
+    @Test
+    public void testPresence() throws InterruptedException, JSONException, PubnubException {
+        String group = "jtest_group3";
+        JSONObject result;
+
+        final CountDownLatch latch1 = new CountDownLatch(1);
+        final CountDownLatch latch2 = new CountDownLatch(1);
+        final CountDownLatch latch3 = new CountDownLatch(1);
+        final TestHelper.SimpleCallback cb1 = new TestHelper.SimpleCallback(latch1);
+        final TestHelper.SimpleCallback cb2 = new TestHelper.SimpleCallback(latch2) {
+            @Override
+            public void connectCallback(String channel, Object message) {
+                latch3.countDown();
+            }
+        };
+
+        pubnub.channelGroupAddChannel(group, "ch1", cb1);
+        latch1.await(10, TimeUnit.SECONDS);
+
+        pubnub.channelGroupSubscribe(group + "-pnpres", cb2);
+        latch3.await(10, TimeUnit.SECONDS);
+
+        pubnub.subscribe("ch1", new Callback() {
+        });
+
+        latch2.await(10, TimeUnit.SECONDS);
+
+        result = (JSONObject) cb2.getResponse();
+
+        assertEquals(pubnub.getUUID(), result.getString("uuid"));
+    }
 }
