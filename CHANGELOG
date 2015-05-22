@@ -1,3 +1,8 @@
+5-18-15 - 3.7.3 - 692d25
+. fix for case where auth key was not being sent with leave request
+. fix for proper encoding of auth key with grant api
+. added storeInHistory parameter to publish method of pnMessage class
+
 1-26-15 - 3.7.2 - 3003ef
 . removed bouncycastle dependency for Android
 
