@@ -2451,7 +2451,7 @@ abstract class PubnubCore {
                             SubscriptionItem _group = channelGroupSubscriptions.getItem(_groups[i]);
                             SubscriptionItem _channel = channelSubscriptions.getItem(_groups[i]);
 
-                            if (_groupName.equals(_channelName)
+                            if ((_groupName.equals(_channelName) || _groupName.endsWith("*"))
                                 && _channel != null
                                 && !isWorkerDead(hreq)
                             ) {
