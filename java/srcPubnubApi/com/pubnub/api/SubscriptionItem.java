@@ -18,5 +18,9 @@ class SubscriptionItem {
         this.callback = callback;
         this.connected = false;
     }
+
+    public String toString() {
+        return this.name;
+    }
 }
 

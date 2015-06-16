@@ -450,23 +450,6 @@ public class PubnubTest {
     }
 
     @Test
-    public void testPresence() throws InterruptedException, PubnubException {
-        String channel = "java-unittest-" + Math.random();
-        Pubnub pubnub2 = new Pubnub("demo", "demo");
-        CountDownLatch latch = new CountDownLatch(1);
-
-        TestHelper.PresenceCallback presenceCb = new TestHelper.PresenceCallback(latch);
-
-        pubnub.presence(channel, presenceCb);
-
-        pubnub2.subscribe(channel, new SubscribeCallback());
-
-        latch.await(10, TimeUnit.SECONDS);
-
-        assertEquals(pubnub2.UUID, presenceCb.getUUID());
-    }
-
-    @Test
     public void testConnectionRestore() throws PubnubException, InterruptedException {
         String channel = "java-unittest-" + Math.random();
 

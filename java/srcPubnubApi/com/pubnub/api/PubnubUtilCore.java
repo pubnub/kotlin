@@ -146,7 +146,47 @@ class PubnubUtilCore {
             }
         }
         return sb.toString();
+    }
 
+    public static synchronized String hashTableKeysToSortedSuffixString(
+            Hashtable ht, String delimiter, String lastSuffix) {
+
+        StringBuffer sb = new StringBuffer();
+        StringBuffer sbPresence = new StringBuffer();
+        boolean first = true;
+        boolean firstPresence = true;
+        Enumeration e = ht.keys();
+
+        while (e.hasMoreElements()) {
+
+            String s = (String) e.nextElement();
+
+            if (s.endsWith(lastSuffix)) {
+                if (firstPresence) {
+                    sbPresence.append(s);
+                    firstPresence = false;
+                } else {
+                    sbPresence.append(delimiter).append(s);
+                }
+            } else {
+                if (first) {
+                    sb.append(s);
+                    first = false;
+                } else {
+                    sb.append(delimiter).append(s);
+                }
+            }
+        }
+
+        if (sb.length() > 0 && sbPresence.length() > 0) {
+            return sb.toString() + delimiter + sbPresence.toString();
+        } else if (sb.length() > 0 && sbPresence.length() == 0) {
+            return sb.toString();
+        } else if (sb.length() ==  0 && sbPresence.length() > 0) {
+            return sbPresence.toString();
+        } else {
+            return "";
+        }
     }
 
     /**
@@ -158,11 +198,8 @@ class PubnubUtilCore {
      *            , String
      * @return , string array with hash keys string
      */
-    public static String hashTableKeysToDelimitedString(
-        Hashtable ht, String delimiter) {
-
+    public static String hashTableKeysToDelimitedString(Hashtable ht, String delimiter) {
         return hashTableKeysToDelimitedString(ht, delimiter, null);
-
     }
 
     static Hashtable hashtableClone(Hashtable ht) {

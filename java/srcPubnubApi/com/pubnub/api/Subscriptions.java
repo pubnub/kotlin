@@ -55,6 +55,10 @@ class Subscriptions {
         return PubnubUtil.hashTableKeysToDelimitedString(items, ",", "-pnpres");
     }
 
+    public String getItemStringSorted() {
+        return PubnubUtil.hashTableKeysToSortedSuffixString(items, ",", "-pnpres");
+    }
+
     public String getItemString() {
         return PubnubUtil.hashTableKeysToDelimitedString(items, ",");
     }

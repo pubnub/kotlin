@@ -47,7 +47,8 @@ abstract class PubnubCore {
     private volatile String _timetoken = "0";
     private volatile String _saved_timetoken = "0";
 
-    private String PRESENCE_SUFFIX = "-pnpres";
+    protected static String PRESENCE_SUFFIX = "-pnpres";
+    protected static String WILDCARD_SUFFIX = "*";
     protected static String VERSION = "";
     private Random generator = new Random();
 
@@ -195,7 +196,7 @@ abstract class PubnubCore {
      *            Presence Expiry timeout in seconds
      */
     public void setPnExpires(int pnexpires, Callback callback) {
-        setHeartbeat(pnexpires,callback);
+        setHeartbeat(pnexpires, callback);
     }
 
     /**
@@ -2315,12 +2316,33 @@ abstract class PubnubCore {
 
         for (int i = 0; i < channelList.length; i++) {
             String channel = channelList[i];
-            SubscriptionItem channelObj = (SubscriptionItem) channelSubscriptions.getItem(channel);
 
-            if (channelObj == null) {
-                SubscriptionItem ch = new SubscriptionItem(channel, callback);
+            // HACK: wrap '*-pnpres' channels with cutted-off suffix
+            if (channel.endsWith(WILDCARD_SUFFIX + PRESENCE_SUFFIX)) {
+                String messagesChannel = channel.substring(0, channel.indexOf(PRESENCE_SUFFIX));
 
-                channelSubscriptions.addItem(ch);
+                SubscriptionItem wildcardMessagesObj = (SubscriptionItem) channelSubscriptions.getItem(messagesChannel);
+                SubscriptionItem wildcardPresenceObj = (SubscriptionItem) channelSubscriptions.getItem(channel);
+
+                if (wildcardMessagesObj == null) {
+                    SubscriptionItem ch = new SubscriptionItem(messagesChannel, callback);
+
+                    channelSubscriptions.addItem(ch);
+                }
+
+                if (wildcardPresenceObj == null) {
+                    SubscriptionItem pr = new SubscriptionItem(channel, callback);
+
+                    channelSubscriptions.addItem(pr);
+                }
+            } else {
+                SubscriptionItem channelObj = (SubscriptionItem) channelSubscriptions.getItem(channel);
+
+                if (channelObj == null) {
+                    SubscriptionItem ch = new SubscriptionItem(channel, callback);
+
+                    channelSubscriptions.addItem(ch);
+                }
             }
         }
 
@@ -2357,7 +2379,7 @@ abstract class PubnubCore {
         return (hreq == null || hreq.getWorker() == null)?false:hreq.getWorker()._die;
     }
     private void _subscribe_base(boolean fresh, boolean dar, Worker worker) {
-        String channelString = channelSubscriptions.getItemString();
+        String channelString = channelSubscriptions.getItemStringSorted();
         String groupString = channelGroupSubscriptions.getItemString();
         String[] channelsArray = channelSubscriptions.getItemNames();
         String[] groupsArray = channelGroupSubscriptions.getItemNames();
@@ -2444,26 +2466,8 @@ abstract class PubnubCore {
                         String[] _channels = PubnubUtil.splitString(jsa.getString(3), ",");
 
                         for (int i = 0; i < _channels.length; i++) {
-                            String _groupName = _groups[i];
-                            String _channelName = _channels[i];
-                            Object message = messages.get(i);
-
-                            SubscriptionItem _group = channelGroupSubscriptions.getItem(_groups[i]);
-                            SubscriptionItem _channel = channelSubscriptions.getItem(_groups[i]);
-
-                            if ((_groupName.equals(_channelName) || _groupName.endsWith("*"))
-                                && _channel != null
-                                && !isWorkerDead(hreq)
-                            ) {
-                                invokeSubscribeCallback(_channelName, _channel.callback,
-                                        message, _timetoken, hreq);
-                            } else if (!_groupName.equals(_channelName)
-                                    && _group != null
-                                    && !isWorkerDead(hreq)
-                            ) {
-                                invokeSubscribeCallback(_channelName, _group.callback,
-                                        message, _timetoken, hreq);
-                            }
+                            handleFourElementsSubscribeResponse(_groups[i], _channels[i], messages.get(i),
+                                    _timetoken, hreq);
                         }
                     } else if(jsa.length() == 3) {
                         /*
@@ -2551,6 +2555,45 @@ abstract class PubnubCore {
         if ( worker != null && worker instanceof Worker )
             hreq.setWorker(worker);
         _request(hreq, subscribeManager, fresh);
+    }
+
+    /**
+     * Logic of 4-elements success response is to complex, so it's excluded into separate method
+     *
+     * @param thirdString element of JSON response
+     * @param fourthString element of JSON response
+     * @param message from JSON response
+     * @param timetoken from response
+     * @param hreq request
+     * @throws JSONException
+     */
+    private void handleFourElementsSubscribeResponse(String thirdString, String fourthString, Object message,
+                                            String timetoken, HttpRequest hreq) throws JSONException {
+
+        SubscriptionItem thirdChannelGroup = channelGroupSubscriptions.getItem(thirdString);
+        SubscriptionItem thirdChannel = channelSubscriptions.getItem(thirdString);
+        SubscriptionItem fourthChannel = channelSubscriptions.getItem(fourthString);
+
+        if (isWorkerDead(hreq)) return;
+
+        if (thirdString.equals(fourthString) && fourthChannel != null) {
+            invokeSubscribeCallback(fourthString, fourthChannel.callback, message, timetoken, hreq);
+        } else if (thirdString.endsWith("*")) {
+            if (fourthChannel != null && fourthString.endsWith(PRESENCE_SUFFIX)) {
+                invokeSubscribeCallback(fourthString, fourthChannel.callback, message, timetoken, hreq);
+            } else if (thirdChannelGroup != null && !fourthString.endsWith(PRESENCE_SUFFIX)) {
+                invokeSubscribeCallback(fourthString, thirdChannelGroup.callback, message, timetoken, hreq);
+            } else if (thirdChannel != null && thirdString.endsWith(WILDCARD_SUFFIX)) {
+                invokeSubscribeCallback(fourthString, thirdChannel.callback, message, timetoken, hreq);
+            } else {
+                System.out.println("ERROR: Unable to handle wildcard response: " + message);
+            }
+        } else if (!thirdString.equals(fourthString) && thirdChannelGroup != null) {
+            invokeSubscribeCallback(fourthString, thirdChannelGroup.callback,
+                    message, timetoken, hreq);
+        } else {
+            System.out.println("ERROR: Unable to handle response: " + message);
+        }
     }
 
     private void invokeSubscribeCallback(String channel, Callback callback, Object message, String timetoken,
