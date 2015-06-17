@@ -153,8 +153,6 @@ public class WildcardSubscribeTest {
         assertEquals(0, latch2.getCount());
     }
 
-    // TODO: add testPresenceAndSubscribeToWildcardChannel here and implement this feature
-
     @Test
     public void testSubscribeToChannelChannelGroupWildcardChannel() throws PubnubException, InterruptedException {
         final CountDownLatch latch1 = new CountDownLatch(1);
