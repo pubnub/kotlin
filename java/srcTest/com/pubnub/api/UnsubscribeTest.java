@@ -31,9 +31,11 @@ public class UnsubscribeTest {
     public void setUp() {
         pubnub = new Pubnub("demo", "demo");
         pubnub.setCacheBusting(false);
+        pubnub.setUUID("client#1");
 
         pubnub2 = new Pubnub("demo", "demo");
         pubnub2.setCacheBusting(false);
+        pubnub2.setUUID("client#2");
 
         random = UUID.randomUUID().toString().substring(0, 8);
         channel = "ch6-" + random;
