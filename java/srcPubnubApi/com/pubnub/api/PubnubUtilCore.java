@@ -94,6 +94,10 @@ class PubnubUtilCore {
      * @return , string array with hash keys string
      */
     public static synchronized String[] hashtableKeysToArray(Hashtable ht) {
+        return hashtableKeysToArray(ht, null);
+    }
+
+    public static synchronized String[] hashtableKeysToArray(Hashtable ht, String exclude) {
         Vector v = new Vector();
         String[] sa = null;
         int count = 0;
@@ -101,6 +105,11 @@ class PubnubUtilCore {
         Enumeration e = ht.keys();
         while (e.hasMoreElements()) {
             String s = (String) e.nextElement();
+
+            if (exclude != null && s.indexOf(exclude) != -1) {
+                continue;
+            }
+
             v.addElement(s);
             count++;
         }

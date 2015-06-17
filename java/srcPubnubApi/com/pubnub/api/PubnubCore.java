@@ -49,6 +49,7 @@ abstract class PubnubCore {
 
     protected static String PRESENCE_SUFFIX = "-pnpres";
     protected static String WILDCARD_SUFFIX = "*";
+    protected static String WILDCARD_PRESENCE_SUFFIX = WILDCARD_SUFFIX + PRESENCE_SUFFIX;
     protected static String VERSION = "";
     private Random generator = new Random();
 
@@ -2317,7 +2318,6 @@ abstract class PubnubCore {
         for (int i = 0; i < channelList.length; i++) {
             String channel = channelList[i];
 
-            // HACK: wrap '*-pnpres' channels with cutted-off suffix
             if (channel.endsWith(WILDCARD_SUFFIX + PRESENCE_SUFFIX)) {
                 String messagesChannel = channel.substring(0, channel.indexOf(PRESENCE_SUFFIX));
 
@@ -2379,9 +2379,9 @@ abstract class PubnubCore {
         return (hreq == null || hreq.getWorker() == null)?false:hreq.getWorker()._die;
     }
     private void _subscribe_base(boolean fresh, boolean dar, Worker worker) {
-        String channelString = channelSubscriptions.getItemStringSorted();
+        String channelString = channelSubscriptions.getItemString(WILDCARD_PRESENCE_SUFFIX);
         String groupString = channelGroupSubscriptions.getItemString();
-        String[] channelsArray = channelSubscriptions.getItemNames();
+        String[] channelsArray = channelSubscriptions.getItemNames(WILDCARD_PRESENCE_SUFFIX);
         String[] groupsArray = channelGroupSubscriptions.getItemNames();
 
         if (channelsArray.length <= 0 && groupsArray.length <= 0) {
@@ -2558,7 +2558,7 @@ abstract class PubnubCore {
     }
 
     /**
-     * Logic of 4-elements success response is to complex, so it's excluded into separate method
+     * Handle 4-elements success response
      *
      * @param thirdString element of JSON response
      * @param fourthString element of JSON response

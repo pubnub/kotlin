@@ -125,6 +125,8 @@ public class WildcardSubscribeTest {
         // subscribe#connect event will not be triggered, because presence event already implicitly added it to the list
         TestHelper.SimpleCallback cb2 = new TestHelper.SimpleCallback(latch4) {};
 
+        Thread.sleep(1000);
+
         pubnub.subscribe(channel + ".*", cb2);
         pubnub.presence(channel + ".*", cb);
 

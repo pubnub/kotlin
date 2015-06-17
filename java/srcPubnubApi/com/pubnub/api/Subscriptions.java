@@ -47,20 +47,28 @@ class Subscriptions {
     }
 
     public String[] getItemNames() {
+        return getItemNames(null);
+    }
 
-        return PubnubUtil.hashtableKeysToArray(items);
+    public String[] getItemNames(String filter) {
+        return PubnubUtil.hashtableKeysToArray(items, filter);
     }
 
     public String getItemStringNoPresence() {
-        return PubnubUtil.hashTableKeysToDelimitedString(items, ",", "-pnpres");
+        return PubnubUtil.hashTableKeysToDelimitedString(items, ",", Pubnub.PRESENCE_SUFFIX);
     }
 
+    // TODO: review & remove
     public String getItemStringSorted() {
-        return PubnubUtil.hashTableKeysToSortedSuffixString(items, ",", "-pnpres");
+        return PubnubUtil.hashTableKeysToSortedSuffixString(items, ",", Pubnub.PRESENCE_SUFFIX);
     }
 
     public String getItemString() {
-        return PubnubUtil.hashTableKeysToDelimitedString(items, ",");
+        return getItemString(null);
+    }
+
+    public String getItemString(String filter) {
+        return PubnubUtil.hashTableKeysToDelimitedString(items, ",", filter);
     }
 
     public void invokeConnectCallbackOnItems(Object message) {
