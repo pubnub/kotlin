@@ -30,7 +30,7 @@ public class ChannelGroupTest {
     @Before
     public void setUp() {
         pubnub.setCacheBusting(false);
-        channelGroup = UUID.randomUUID().toString().substring(0, 8);
+        channelGroup = "jtest-" + UUID.randomUUID().toString().substring(0, 8);
         channelNamespace = "jtest-namespace";
     }
 
@@ -290,7 +290,6 @@ public class ChannelGroupTest {
 
         assertJSONArrayHas(group1, groups);
         assertJSONArrayHas(group2, groups);
-        assertJSONArrayHasNo("jtest_group3", groups);
     }
 
     @Test
