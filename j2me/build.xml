@@ -1,7 +1,25 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project basedir="." default="build-all" name="PubnubApi">
+    <exec executable="git" outputproperty="git.branch"
+        failifexecutionfails="false">
+        <arg line="rev-parse --abbrev-ref HEAD"/>
+    </exec>
+    <exec executable="git" outputproperty="git.revision" failifexecutionfails="false" errorproperty="">
+        <arg value="rev-parse"/>
+        <arg value="--short"/>
+        <arg value="HEAD"/>
+    </exec>
+    <loadfile property="VERSION1" srcFile="../VERSION"><filterchain><striplinebreaks/></filterchain></loadfile>
+
+    <condition property="isMaster">
+      <equals arg1="${git.branch}" arg2="master" />
+    </condition>
+    <condition property="VERSION" value="${VERSION1}" else="${VERSION1}-${git.branch}-${git.revision}">
+        <isset property="isMaster"/>
+    </condition>
+
     <property environment="env"/>
-    <loadfile property="VERSION" srcFile="../VERSION"><filterchain><striplinebreaks/></filterchain></loadfile>
+    <property name="VERSION" value="${VERSION1}-${git.branch}"/>
     <property name="pubnub_lib_jar" value="Pubnub-MicroEdition-${VERSION}.jar"/>
     <property name="pubnub_debug_lib_jar" value="Pubnub-MicroEdition-Debug-${VERSION}.jar"/>
     <property name="srcPubnubApi.link" value="../java/srcPubnubApi"/>
