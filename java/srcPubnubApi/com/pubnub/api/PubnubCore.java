@@ -923,6 +923,16 @@ abstract class PubnubCore {
         subscribe(args);
     }
 
+    public void channelGroupPresence(String group, Callback callback)
+            throws PubnubException {
+        Hashtable args = new Hashtable(2);
+
+        args.put("groups", new String[] {group + PRESENCE_SUFFIX});
+        args.put("callback", callback);
+
+        subscribe(args);
+    }
+
     /**
      * Read presence information for uuid
      *
