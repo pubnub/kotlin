@@ -12,7 +12,7 @@ import java.util.Random;
  *
  */
 
-public class Pubnub extends PubnubCore {
+public class Pubnub extends PubnubCoreAsync {
 
     /**
      * Pubnub Constructor

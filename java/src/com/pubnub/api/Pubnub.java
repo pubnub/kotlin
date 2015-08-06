@@ -26,7 +26,7 @@ import static com.pubnub.api.PubnubUtil.*;
  *
  */
 
-public class Pubnub extends PubnubCoreShared {
+public class Pubnub extends PubnubCoreShared implements PubnubAsyncInterface, PubnubInterface {
 
     /**
      * Pubnub Constructor
