@@ -8,49 +8,67 @@ interface PubnubSyncInterface {
 	/**
 	 *
 	 * @param group
+     *      Channel Group
 	 * @param channels
+     *      Array of Channels
 	 * @return
+     *      Response of method call. Can also be an error response.
 	 */
 	 public JSONObject 	channelGroupAddChannel(String group, String[] channels);
 
 	/**
 	 *
 	 * @param group
+     *      Channel Group
 	 * @param channel
+     *      Channel
 	 * @return
+     *      Response of method call. Can also be an error response.
 	 */
 	 public JSONObject	channelGroupAddChannel(String group, String channel);
 
 	/**
 	 *
 	 * @param groups
+     *      Array of Channel Groups
 	 * @param state
+     *      Return state ?
 	 * @param uuids
+     *      Return uuids ?
 	 * @return
+     *      Response of method call. Can also be an error response.
 	 */
 	 public JSONObject	channelGroupHereNow(String[] groups, boolean state, boolean uuids);
 
 	/**
 	 *
 	 * @param group
+     *      Channel Group
 	 * @param state
+     *      Return state ?
 	 * @param uuids
+     *      Return uuids ?
 	 * @return
+     *      Response of method call. Can also be an error response.
 	 */
 	 public JSONObject	channelGroupHereNow(String group, boolean state, boolean uuids);
 
 	/**
 	 *
 	 * @param group
+     *      Channel Group
 	 * @return
+     *      Response of method call. Can also be an error response.
 	 */
 	 public JSONObject	channelGroupHereNow(String group);
 
 	/**
 	 * Get the list of channels in the namespaced group
 	 *
-	 * @param group    name
+	 * @param group
+     *      Channel Group
 	 * @return
+     *      Response of method call. Can also be an error response.
 	 */
 	 public JSONObject	channelGroupListChannels(String group);
 
@@ -58,14 +76,17 @@ interface PubnubSyncInterface {
 	 * Get the list of groups in the global namespace
 	 *
 	 * @return
+     *      Response of method call. Can also be an error response.
 	 */
 	 public JSONObject	channelGroupListGroups();
 
 	/**
 	 * Get the list of groups in the namespace
 	 *
-	 * @param namespace name
+	 * @param namespace
+     *      Namespace
 	 * @return
+     *      Response of method call. Can also be an error response.
 	 */
 	 public JSONObject	channelGroupListGroups(String namespace);
 
@@ -73,6 +94,7 @@ interface PubnubSyncInterface {
 	 * Get all namespaces
 	 *
 	 * @return
+     *      Response of method call. Can also be an error response.
 	 */
 	 public JSONObject	channelGroupListNamespaces();
 

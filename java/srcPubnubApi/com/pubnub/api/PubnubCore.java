@@ -446,7 +446,7 @@ abstract class PubnubCore {
         return _request(hreq, (sync)?null:nonSubscribeManager);
     }
 
-    public Object _hereNow(String[] channels, String[] channelGroups, boolean state,
+    protected Object _hereNow(String[] channels, String[] channelGroups, boolean state,
                            boolean uuids, Callback callback, boolean sync) {
 
         final Callback cb = getWrappedCallback(callback);
@@ -625,7 +625,7 @@ abstract class PubnubCore {
         }
     }
 
-    public Object _channelGroupRemoveNamespace(String namespace, Callback callback, boolean sync) {
+    protected Object _channelGroupRemoveNamespace(String namespace, Callback callback, boolean sync) {
         final Callback cb = getWrappedCallback(callback);
 
         String[] url = new String[]{getPubnubUrl(), "v1", "channel-registration", "sub-key",
@@ -647,7 +647,7 @@ abstract class PubnubCore {
         return _request(hreq, (sync)?null:nonSubscribeManager);
     }
 
-    public Object _channelGroupListGroups(String namespace, Callback callback, boolean sync) {
+    protected Object _channelGroupListGroups(String namespace, Callback callback, boolean sync) {
         final Callback cb = getWrappedCallback(callback);
         String[] url;
 
@@ -675,7 +675,7 @@ abstract class PubnubCore {
         return _request(hreq, (sync)?null:nonSubscribeManager);
     }
 
-    public Object _channelGroupListChannels(String group, Callback callback, boolean sync) {
+    protected Object _channelGroupListChannels(String group, Callback callback, boolean sync) {
         final Callback cb = getWrappedCallback(callback);
         ChannelGroup channelGroup;
         String[] url;
@@ -791,7 +791,7 @@ abstract class PubnubCore {
         return _request(hreq, (sync)?null:nonSubscribeManager);
     }
 
-    public Object _channelGroupListNamespaces(Callback callback, boolean sync) {
+    protected Object _channelGroupListNamespaces(Callback callback, boolean sync) {
         final Callback cb = getWrappedCallback(callback);
 
         String[] url = new String[]{getPubnubUrl(), "v1", "channel-registration", "sub-key",
