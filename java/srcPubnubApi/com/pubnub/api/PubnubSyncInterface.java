@@ -5,93 +5,402 @@ import org.json.JSONObject;
 
 interface PubnubSyncInterface {
 
-
+	/**
+	 *
+	 * @param group
+	 * @param channels
+	 * @return
+	 */
 	 public JSONObject 	channelGroupAddChannel(String group, String[] channels);
-   
-	 public JSONObject	channelGroupAddChannel(String group, String channel);
-	           
-	 public JSONObject	channelGroupHereNow(String[] groups, boolean state, boolean uuids); 
-	           
-	 public JSONObject	channelGroupHereNow(String group, boolean state, boolean uuids); 
-	           
-	 public JSONObject	channelGroupHereNow(String group); 
-	           
-	 public JSONObject	channelGroupListChannels(String group); 
 
+	/**
+	 *
+	 * @param group
+	 * @param channel
+	 * @return
+	 */
+	 public JSONObject	channelGroupAddChannel(String group, String channel);
+
+	/**
+	 *
+	 * @param groups
+	 * @param state
+	 * @param uuids
+	 * @return
+	 */
+	 public JSONObject	channelGroupHereNow(String[] groups, boolean state, boolean uuids);
+
+	/**
+	 *
+	 * @param group
+	 * @param state
+	 * @param uuids
+	 * @return
+	 */
+	 public JSONObject	channelGroupHereNow(String group, boolean state, boolean uuids);
+
+	/**
+	 *
+	 * @param group
+	 * @return
+	 */
+	 public JSONObject	channelGroupHereNow(String group);
+
+	/**
+	 * Get the list of channels in the namespaced group
+	 *
+	 * @param group    name
+	 * @return
+	 */
+	 public JSONObject	channelGroupListChannels(String group);
+
+	/**
+	 * Get the list of groups in the global namespace
+	 *
+	 * @return
+	 */
 	 public JSONObject	channelGroupListGroups();
 
-	 public JSONObject	channelGroupListGroups(String namespace); 
+	/**
+	 * Get the list of groups in the namespace
+	 *
+	 * @param namespace name
+	 * @return
+	 */
+	 public JSONObject	channelGroupListGroups(String namespace);
 
+	/**
+	 * Get all namespaces
+	 *
+	 * @return
+	 */
 	 public JSONObject	channelGroupListNamespaces();
 
-	 public JSONObject	channelGroupRemoveChannel(String group, String[] channels); 
-	           
-	 public JSONObject	channelGroupRemoveChannel(String group, String channel); 
-	           
-	 public JSONObject	channelGroupRemoveGroup(String group); 
-	           
-	 public JSONObject	channelGroupRemoveNamespace(String namespace); 
+	/**
+	 *
+	 * @param group
+	 * @param channels
+	 * @return
+	 */
+	 public JSONObject	channelGroupRemoveChannel(String group, String[] channels);
 
-	 public JSONObject	getState(String channel, String uuid); 
+	/**
+	 *
+ 	 * @param group
+	 * @param channel
+	 * @return
+	 */
+	 public JSONObject	channelGroupRemoveChannel(String group, String channel);
 
-	 public JSONObject	hereNow(boolean state, boolean uuids); 
-	           
-	 public JSONObject	hereNow(String[] channels, String[] channelGroups, boolean state, boolean uuids); 
+	/**
+	 *
+ 	 * @param group
+	 * @return
+	 */
+	 public JSONObject	channelGroupRemoveGroup(String group);
 
-	 public JSONObject	hereNow(String channel, boolean state, boolean uuids); 
-	           
-	 public JSONObject	hereNow(String channel); 
+	/**
+	 * Remove namespace
+	 *
+	 * @param namespace to remove
+	 * @return
+	 */
+	 public JSONObject	channelGroupRemoveNamespace(String namespace);
 
-	 public Object		history(String channel, boolean reverse); 
+	/**
+	 *
+	 * @param channel
+	 * @param uuid
+	 * @return
+	 */
+	 public JSONObject	getState(String channel, String uuid);
 
-	 public Object		history(String channel, boolean includeTimetoken, int count); 
+	/**
+	 *
+	 * @param state
+	 * @param uuids
+	 * @return
+	 */
+	 public JSONObject	hereNow(boolean state, boolean uuids);
 
-	 public Object		history(String channel, int count, boolean reverse); 
+	/**
+	 * Read presence information from a channel or a channel group
+	 *
+	 * @param channels      array
+	 * @param channelGroups array
+	 * @param state         state enabled ?
+	 * @param uuids         enable / disable returning uuids in response ?
+	 * @return
+	 */
+	 public JSONObject	hereNow(String[] channels, String[] channelGroups, boolean state, boolean uuids);
 
-	 public Object		history(String channel, int count); 
+	/**
+	 *
+	 * @param channel
+	 * @param state
+	 * @param uuids
+	 * @return
+	 */
+	 public JSONObject	hereNow(String channel, boolean state, boolean uuids);
 
-	 public Object		history(String channel, long start, boolean reverse); 
+	/**
+	 * Read presence information from a channel
+	 *
+	 * @param channel  Channel name
+	 * @return
+	 */
+	 public JSONObject	hereNow(String channel);
 
-	 public Object		history(String channel, long start, int count, boolean reverse); 
+	/**
+	 * Read History for a channel.
+	 *
+	 * @param channel  Channel name for which history is required
+	 * @param reverse  True if messages need to be in reverse order
+	 * @return
+	 */
+	 public Object		history(String channel, boolean reverse);
 
-	 public Object		history(String channel, long start, int count); 
+	/**
+	 * Read History for a channel.
+	 *
+	 * @param channel          Channel name for which history is required
+	 * @param includeTimetoken True/False whether to include timetokens in response
+	 * @param count            Maximum number of messages
+	 * @return
+	 */
+	 public Object		history(String channel, boolean includeTimetoken, int count);
 
-	 public Object		history(String channel, long start, long end, boolean reverse); 
+	/**
+	 * Read History for a channel.
+	 *
+	 * @param channel  Channel name for which history is required
+	 * @param count    Upper limit on number of messages to be returned
+	 * @param reverse  True if messages need to be in reverse order
+	 * @return
+	 */
+	 public Object		history(String channel, int count, boolean reverse);
 
-	 public Object		history(String channel, long start, long end); 
+	/**
+	 * Read History for a channel.
+	 *
+	 * @param channel  Channel name for which history is required
+	 * @param count    Maximum number of messages
+	 * @return
+	 */
+	 public Object		history(String channel, int count);
 
-	 public Object		history(String channel, long start, long end, int count, boolean reverse, boolean includeTimetoken); 
+	/**
+	 * Read History for a channel.
+	 *
+	 * @param channel  Channel name for which history is required
+	 * @param start    Start time
+	 * @param reverse  True if messages need to be in reverse order
+	 * @return
+	 */
+	 public Object		history(String channel, long start, boolean reverse);
 
-	 public Object		history(String channel, long start, long end, int count, boolean reverse); 
+	/**
+	 * Read History for a channel.
+	 *
+	 * @param channel  Channel name for which history is required
+	 * @param start    Start time
+	 * @param count    Upper limit on number of messages to be returned
+	 * @param reverse  True if messages need to be in reverse order
+	 * @return
+	 */
+	 public Object		history(String channel, long start, int count, boolean reverse);
 
+	/**
+	 * Read History for a channel.
+	 *
+	 * @param channel  Channel name for which history is required
+	 * @param start    Start time
+	 * @param count    Upper limit on number of messages to be returned
+	 * @return
+	 */
+	 public Object		history(String channel, long start, int count);
+
+	/**
+	 * Read History for a channel.
+	 *
+	 * @param channel  Channel name for which history is required
+	 * @param start    Start time
+	 * @param end      End time
+	 * @param reverse  True if messages need to be in reverse order
+	 * @return
+	 */
+	 public Object		history(String channel, long start, long end, boolean reverse);
+
+	/**
+	 * Read History for a channel.
+	 *
+	 * @param channel  Channel name for which history is required
+	 * @param start    Start time
+	 * @param end      End time
+	 * @return
+	 */
+	 public Object		history(String channel, long start, long end);
+
+	/**
+	 * Read History for a channel.
+	 *
+	 * @param channel          Channel name for which history is required
+	 * @param start            Start time
+	 * @param end              End time
+	 * @param count            Upper limit on number of messages to be returned
+	 * @param reverse          True if messages need to be in reverse order
+	 * @param includeTimetoken True/False whether to include timetokens in response
+	 * @return
+	 */
+	 public Object		history(String channel, long start, long end, int count, boolean reverse, boolean includeTimetoken);
+
+	/**
+	 * Read History for a channel.
+	 *
+	 * @param channel  Channel name for which history is required
+	 * @param start    Start time
+	 * @param end      End time
+	 * @param count    Upper limit on number of messages to be returned
+	 * @param reverse  True if messages need to be in reverse order
+	 * @return
+	 */
+	 public Object		history(String channel, long start, long end, int count, boolean reverse);
+
+	/**
+	 * Read History for a channel.
+	 *
+	 * @param channel  Channel name for which history is required
+	 * @param start    Start time
+	 * @param end      End time
+	 * @param count    Upper limit on number of messages to be returned
+	 * @return
+	 */
 	 public Object		history(String channel, long start, long end, int count);
 
-	 public Object		publish(String channel, Double message, boolean storeInHistory); 
+	/**
+	 * Send a message to a channel.
+	 *
+	 * @param channel        Channel name
+	 * @param message        Double to be published
+	 * @param storeInHistory Store in History ?
+	 * @return
+	 */
+	 public Object		publish(String channel, Double message, boolean storeInHistory);
 
-	 public Object		publish(String channel, Double message); 
+	/**
+	 * Send a message to a channel.
+	 *
+	 * @param channel  Channel name
+	 * @param message  Double to be published
+	 * @return
+	 */
+	 public Object		publish(String channel, Double message);
 
-	 public Object		publish(String channel, Integer message, boolean storeInHistory); 
+	/**
+	 * Send a message to a channel.
+	 *
+	 * @param channel        Channel name
+	 * @param message        Integer to be published
+	 * @param storeInHistory Store in History ?
+	 * @return
+	 */
+	 public Object		publish(String channel, Integer message, boolean storeInHistory);
 
-	 public Object		publish(String channel, Integer message); 
+	/**
+	 * Send a message to a channel.
+	 *
+	 * @param channel  Channel name
+	 * @param message  Integer to be published
+	 * @return
+	 */
+	 public Object		publish(String channel, Integer message);
 
-	 public Object		publish(String channel, JSONArray message, boolean storeInHistory); 
+	/**
+	 * Send a message to a channel.
+	 *
+	 * @param channel        Channel name
+	 * @param message        JSONArray to be published
+	 * @param storeInHistory Store in History ?
+	 * @return
+	 */
+	 public Object		publish(String channel, JSONArray message, boolean storeInHistory);
 
-	 public Object		publish(String channel, JSONArray message); 
+	/**
+	 * Send a message to a channel.
+	 *
+	 * @param channel  Channel name
+	 * @param message  JSONOArray to be published
+	 * @return
+	 */
+	 public Object		publish(String channel, JSONArray message);
 
-	 public Object		publish(String channel, JSONObject message, boolean storeInHistory); 
+	/**
+	 * Send a message to a channel.
+	 *
+	 * @param channel        Channel name
+	 * @param message        JSONObject to be published
+	 * @param storeInHistory Store in History ?
+	 * @return
+	 */
+	 public Object		publish(String channel, JSONObject message, boolean storeInHistory);
 
-	 public Object		publish(String channel, JSONObject message); 
+	/**
+	 * Send a message to a channel.
+	 *
+	 * @param channel  Channel name
+	 * @param message  JSONObject to be published
+	 * @return
+	 */
+	 public Object		publish(String channel, JSONObject message);
 
-	 public Object		publish(String channel, String message, boolean storeInHistory); 
+	/**
+	 * Send a message to a channel.
+	 *
+	 * @param channel        Channel name
+	 * @param message        String to be published
+	 * @param storeInHistory Store in History ?
+	 * @return
+	 */
+	 public Object		publish(String channel, String message, boolean storeInHistory);
 
-	 public Object		publish(String channel, String message); 
+	/**
+	 * Send a message to a channel.
+	 *
+	 * @param channel  Channel name
+	 * @param message  String to be published
+	 * @return
+	 */
+	 public Object		publish(String channel, String message);
 
-	 public JSONObject	setState(String channel, String uuid, JSONObject state); 
+	/**
+	 *
+	 * @param channel
+	 * @param uuid
+	 * @param state
+	 * @return
+	 */
+	 public JSONObject	setState(String channel, String uuid, JSONObject state);
 
-	 public JSONArray	time(); 
+	/**
+	 * Read current time from PubNub Cloud.
+	 *
+	 * @return
+	 */
+	 public JSONArray	time();
 
-	 public JSONObject	whereNow(); 
-	           
+	/**
+	 * Read presence information for Pubnub Object uuid
+	 *
+	 * @return
+	 */
+	 public JSONObject	whereNow();
+
+	/**
+	 * Read presence information for uuid
+	 *
+	 * @param uuid     UUID
+	 * @return
+	 */
 	 public JSONObject	whereNow(String uuid);
 
 }

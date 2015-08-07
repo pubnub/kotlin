@@ -569,8 +569,17 @@ interface PubnubAsyncInterface {
      */
     public void setHeartbeat(int heartbeat, Callback callback);
 
+    /**
+     *
+     * @param heartbeatInterval
+     */
     public void setHeartbeatInterval(int heartbeatInterval);
 
+    /**
+     *
+     * @param heartbeatInterval
+     * @param callback
+     */
     public void setHeartbeatInterval(int heartbeatInterval, Callback callback);
 
     /**
@@ -582,6 +591,10 @@ interface PubnubAsyncInterface {
      */
     public void setMaxRetries(int maxRetries);
 
+    /**
+     *
+     * @param pnexpires
+     */
     public void setPnExpires(int pnexpires);
 
     /**
@@ -609,6 +622,13 @@ interface PubnubAsyncInterface {
      */
     public void setRetryInterval(int retryInterval);
 
+    /**
+     *
+     * @param channel
+     * @param uuid
+     * @param state
+     * @param callback
+     */
     public void setState(String channel, String uuid, JSONObject state, Callback callback);
 
     /**
