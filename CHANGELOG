@@ -1,3 +1,7 @@
+8-17-15 - 3.7.5 - ecb437e
+. fix for wildcard audit and grant
+. channel group presence
+
 6-22-15 - 3.7.4 - cf9bb76
 . wildcard subscribe support
 
