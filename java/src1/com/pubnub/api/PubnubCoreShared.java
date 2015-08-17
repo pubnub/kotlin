@@ -258,12 +258,11 @@ abstract class PubnubCoreShared extends PubnubCore {
         String sign_input = this.SUBSCRIBE_KEY + "\n" + this.PUBLISH_KEY + "\n" + "grant" + "\n" ;
 
         if (auth_key != null && auth_key.length() > 0)
-            sign_input += "auth=" + PubnubUtil.urlEncode(auth_key) + "&"  ;
+            sign_input += "auth=" + PubnubUtil.pamEncode(auth_key) + "&"  ;
 
-        sign_input += "channel=" + PubnubUtil.urlEncode(channel) + "&" + "pnsdk=" + PubnubUtil.urlEncode(getUserAgent()) + "&" + "r=" + r + "&" + "timestamp=" + timestamp
+        sign_input += "channel=" + PubnubUtil.pamEncode(channel) + "&" + "pnsdk=" + PubnubUtil.pamEncode(getUserAgent()) + "&" + "r=" + r + "&" + "timestamp=" + timestamp
                             + ((ttl >= -1)?"&" + "ttl=" + ttl:"")
                             + "&" + "w=" + w;
-
 
         try {
             signature = pamSign(this.SECRET_KEY, sign_input);
@@ -337,11 +336,11 @@ abstract class PubnubCoreShared extends PubnubCore {
         String sign_input = this.SUBSCRIBE_KEY + "\n" + this.PUBLISH_KEY + "\n" + "grant" + "\n";
 
         if (auth_key != null && auth_key.length() > 0)
-            sign_input += "auth=" + PubnubUtil.urlEncode(auth_key) + "&"  ;
+            sign_input += "auth=" + PubnubUtil.pamEncode(auth_key) + "&"  ;
 
-        sign_input += "channel-group=" + PubnubUtil.urlEncode(group) + "&"
+        sign_input += "channel-group=" + PubnubUtil.pamEncode(group) + "&"
                 + "m=" + m + "&"
-                + "pnsdk=" + PubnubUtil.urlEncode(getUserAgent()) + "&"
+                + "pnsdk=" + PubnubUtil.pamEncode(getUserAgent()) + "&"
                 + "r=" + r + "&"
                 + "timestamp=" + timestamp
                 + ((ttl >= -1)?"&" + "ttl=" + ttl:"");
@@ -401,7 +400,7 @@ abstract class PubnubCoreShared extends PubnubCore {
         }
 
         String sign_input = this.SUBSCRIBE_KEY + "\n" + this.PUBLISH_KEY + "\n"
-                            + "audit" + "\n" + "pnsdk=" + PubnubUtil.urlEncode(getUserAgent()) + "&"
+                            + "audit" + "\n" + "pnsdk=" + PubnubUtil.pamEncode(getUserAgent()) + "&"
                             + "timestamp=" + timestamp;
 
 
@@ -460,7 +459,7 @@ abstract class PubnubCoreShared extends PubnubCore {
 
         String sign_input = this.SUBSCRIBE_KEY + "\n" + this.PUBLISH_KEY + "\n"
                             + "audit" + "\n" + "channel="
-                            + PubnubUtil.urlEncode(channel) + "&" + "pnsdk=" + PubnubUtil.urlEncode(getUserAgent()) + "&" + "timestamp=" + timestamp;
+                            + PubnubUtil.pamEncode(channel) + "&" + "pnsdk=" + PubnubUtil.pamEncode(getUserAgent()) + "&" + "timestamp=" + timestamp;
 
         try {
             signature = pamSign(this.SECRET_KEY, sign_input);
@@ -516,8 +515,8 @@ abstract class PubnubCoreShared extends PubnubCore {
         }
 
         String sign_input = this.SUBSCRIBE_KEY + "\n" + this.PUBLISH_KEY + "\n"
-                            + "audit" + "\n" + "auth=" + PubnubUtil.urlEncode(auth_key) + "&" + "channel="
-                            + PubnubUtil.urlEncode(channel) + "&" + "pnsdk=" + PubnubUtil.urlEncode(getUserAgent()) + "&" + "timestamp=" + timestamp;
+                            + "audit" + "\n" + "auth=" + PubnubUtil.pamEncode(auth_key) + "&" + "channel="
+                            + PubnubUtil.pamEncode(channel) + "&" + "pnsdk=" + PubnubUtil.pamEncode(getUserAgent()) + "&" + "timestamp=" + timestamp;
 
 
         try {
@@ -576,8 +575,8 @@ abstract class PubnubCoreShared extends PubnubCore {
         if (auth_key != null && auth_key.length() > 0)
             sign_input += "auth=" + auth_key + "&"  ;
 
-        sign_input += "channel-group=" + PubnubUtil.urlEncode(group) + "&"
-                + "pnsdk=" + PubnubUtil.urlEncode(getUserAgent()) + "&"
+        sign_input += "channel-group=" + PubnubUtil.pamEncode(group) + "&"
+                + "pnsdk=" + PubnubUtil.pamEncode(getUserAgent()) + "&"
                 + "timestamp=" + timestamp;
 
         try {
