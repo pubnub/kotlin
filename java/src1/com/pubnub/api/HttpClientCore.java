@@ -185,10 +185,12 @@ class HttpClientCore extends HttpClient {
                     JSONObject pageJso = new JSONObject(page);
                     message            = pageJso.getString("message");
                     payload            = pageJso.getJSONObject("payload");
-                    throw new PubnubException(getErrorObject(PNERROBJ_FORBIDDEN, message, payload));
+                    throw new PubnubException(
+                    		getErrorObject(PNERROBJ_FORBIDDEN, message, payload)
+                    		, page, pageJso);
                 } catch (JSONException e2) {}
 
-                throw new PubnubException(getErrorObject(PNERROBJ_FORBIDDEN, page));
+                throw new PubnubException(getErrorObject(PNERROBJ_FORBIDDEN, page), page);
             }
         case HttpURLConnection.HTTP_UNAUTHORIZED:
             {

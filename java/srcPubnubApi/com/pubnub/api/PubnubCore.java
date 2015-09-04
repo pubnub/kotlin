@@ -322,9 +322,10 @@ abstract class PubnubCore {
             } catch (IOException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
+                return null;
             } catch (PubnubException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+            	//System.out.println(e);
+            	return e.getErrorJsonObject();
             }
         }
         connManager.queue(hreq);

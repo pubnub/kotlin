@@ -1,5 +1,7 @@
 package com.pubnub.api;
 
+import org.json.JSONObject;
+
 /**
  * PubnubException is thrown by various Pubnub APIs
  *
@@ -8,6 +10,8 @@ package com.pubnub.api;
 public class PubnubException extends Exception {
     private String errormsg = "";
     private PubnubError pubnubError = PubnubError.PNERROBJ_PUBNUB_ERROR;
+    private JSONObject jso;
+    private String response;
 
 
     /**
@@ -41,7 +45,36 @@ public class PubnubException extends Exception {
         this.pubnubError = pubnubError;
     }
 
+    /**
+     * Constructor for PubnubException Class with error message as argument
+     *
+     * @param pubnubError
+     * @param s
+     *            Error message
+     * @param response
+     * @param jso
+     */
+    public PubnubException(PubnubError pubnubError, String s, String response, JSONObject jso) {
+        this.errormsg = s;
+        this.pubnubError = pubnubError;
+        this.jso = jso;
+        this.response = response;
+    }
 
+    /**
+     * Constructor for PubnubException Class with error message as argument
+     *
+     * @param pubnubError
+     * @param response
+     * @param jso
+     */
+    public PubnubException(PubnubError pubnubError, String response, JSONObject jso) {
+        this.pubnubError = pubnubError;
+        this.jso = jso;
+        this.response = response;
+    }
+    
+    
     /**
      * Read the exception error message
      *
@@ -57,5 +90,12 @@ public class PubnubException extends Exception {
     public PubnubError getPubnubError() {
         return pubnubError;
     }
-
+    
+    public String getErrorResponse() {
+    	return response;
+    }
+    public JSONObject getErrorJsonObject() {
+    	return jso;
+    }
+    
 }
