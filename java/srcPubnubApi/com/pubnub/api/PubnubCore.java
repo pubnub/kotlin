@@ -1769,11 +1769,20 @@ abstract class PubnubCore {
     private void channelGroupLeave(String group, Callback callback) {
         _leave(null, group, PubnubUtil.hashtableClone(this.params), callback);
     }
+   
+    private void _leave(String[] channels, String[] channelGroups, Hashtable params) {
+    	_leave(channels, channelGroups, params, null);
+    }
     
     private void _leave(String[] channels, String[] channelGroups, Hashtable params, Callback callback) {
     	_leave(PubnubUtil.joinString(channels, ","),
     			PubnubUtil.joinString(channelGroups, ","), params, callback);
     }
+    
+    private void _leave(String[] channels, String[] channelGroups) {
+    	_leave(channels, channelGroups, PubnubUtil.hashtableClone(this.params), null);
+    } 
+    
     
     private void _leave(String[] channels, String[] channelGroups, Callback callback) {
     	_leave(PubnubUtil.joinString(channels, ","),
@@ -1828,7 +1837,6 @@ abstract class PubnubCore {
             String channel = channels[i];
             channelSubscriptions.removeItem(channel);
             channelSubscriptions.state.remove(channel);
-            //leave(channel);
         }
         _leave(channels, null, callback);
         resubscribe();
@@ -1841,16 +1849,6 @@ abstract class PubnubCore {
      */
     public void unsubscribe(String[] channels) {
     	unsubscribe(channels, null);
-    	/*
-        for (int i = 0; i < channels.length; i++) {
-            String channel = channels[i];
-            channelSubscriptions.removeItem(channel);
-            channelSubscriptions.state.remove(channel);
-            //leave(channel);
-        }
-        leave(PubnubUtil.joinString(channels, ","), null);
-        resubscribe();
-        */
     }
 
     /**
@@ -1915,7 +1913,6 @@ abstract class PubnubCore {
         for (int i = 0; i < groups.length; i++) {
             String group = groups[i];
             channelGroupSubscriptions.removeItem(group);
-            //channelGroupLeave(group);
         }
         _leave(null, groups, callback);
         resubscribe();
@@ -1962,13 +1959,11 @@ abstract class PubnubCore {
         for (int i = 0; i < channels.length; i++) {
             String channel = channels[i];
             channelSubscriptions.removeItem(channel);
-            //leave(channel);
         }
 
         for (int i = 0; i < groups.length; i++) {
             String group = groups[i];
             channelGroupSubscriptions.removeItem(group);
-            //channelGroupLeave(group);
         }
         _leave(channels, groups, callback);
         disconnectAndResubscribe();
@@ -1999,7 +1994,6 @@ abstract class PubnubCore {
         for (int i = 0; i < channels.length; i++) {
             String channel = channels[i];
             channelSubscriptions.removeItem(channel);
-            //leave(channel);
         }
         _leave(channels, null, callback);
 

@@ -254,7 +254,14 @@ public class UnsubscribeCheck {
 
 			pubnub.unsubscribeAll();
 			
+			Thread.sleep(5000);
+			System.out.println();		
+			pubnub.subscribe("cd", new SubscribeCallback());
 			
+			
+			Thread.sleep(5000);
+
+			pubnub.unsubscribeAll();		
 			
 			
 			
