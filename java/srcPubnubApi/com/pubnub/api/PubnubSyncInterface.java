@@ -103,6 +103,7 @@ interface PubnubSyncInterface {
 	 * @param group
 	 * @param channels
 	 * @return
+     *      Response of method call. Can also be an error response.
 	 */
 	 public JSONObject	channelGroupRemoveChannel(String group, String[] channels);
 
@@ -111,6 +112,7 @@ interface PubnubSyncInterface {
  	 * @param group
 	 * @param channel
 	 * @return
+     *      Response of method call. Can also be an error response.
 	 */
 	 public JSONObject	channelGroupRemoveChannel(String group, String channel);
 
@@ -118,6 +120,7 @@ interface PubnubSyncInterface {
 	 *
  	 * @param group
 	 * @return
+     *      Response of method call. Can also be an error response.
 	 */
 	 public JSONObject	channelGroupRemoveGroup(String group);
 
@@ -126,6 +129,7 @@ interface PubnubSyncInterface {
 	 *
 	 * @param namespace to remove
 	 * @return
+     *      Response of method call. Can also be an error response.
 	 */
 	 public JSONObject	channelGroupRemoveNamespace(String namespace);
 
@@ -134,6 +138,7 @@ interface PubnubSyncInterface {
 	 * @param channel
 	 * @param uuid
 	 * @return
+     *      Response of method call. Can also be an error response.
 	 */
 	 public JSONObject	getState(String channel, String uuid);
 
@@ -142,6 +147,7 @@ interface PubnubSyncInterface {
 	 * @param state
 	 * @param uuids
 	 * @return
+     *      Response of method call. Can also be an error response.
 	 */
 	 public JSONObject	hereNow(boolean state, boolean uuids);
 
@@ -153,6 +159,7 @@ interface PubnubSyncInterface {
 	 * @param state         state enabled ?
 	 * @param uuids         enable / disable returning uuids in response ?
 	 * @return
+     *      Response of method call. Can also be an error response.
 	 */
 	 public JSONObject	hereNow(String[] channels, String[] channelGroups, boolean state, boolean uuids);
 
@@ -162,6 +169,7 @@ interface PubnubSyncInterface {
 	 * @param state
 	 * @param uuids
 	 * @return
+     *      Response of method call. Can also be an error response.
 	 */
 	 public JSONObject	hereNow(String channel, boolean state, boolean uuids);
 
@@ -170,6 +178,7 @@ interface PubnubSyncInterface {
 	 *
 	 * @param channel  Channel name
 	 * @return
+     *      Response of method call. Can also be an error response.
 	 */
 	 public JSONObject	hereNow(String channel);
 
@@ -179,6 +188,7 @@ interface PubnubSyncInterface {
 	 * @param channel  Channel name for which history is required
 	 * @param reverse  True if messages need to be in reverse order
 	 * @return
+     *      Response of method call. Can also be an error response.
 	 */
 	 public Object		history(String channel, boolean reverse);
 
@@ -189,6 +199,7 @@ interface PubnubSyncInterface {
 	 * @param includeTimetoken True/False whether to include timetokens in response
 	 * @param count            Maximum number of messages
 	 * @return
+     *      Response of method call. Can also be an error response.
 	 */
 	 public Object		history(String channel, boolean includeTimetoken, int count);
 
@@ -199,6 +210,7 @@ interface PubnubSyncInterface {
 	 * @param count    Upper limit on number of messages to be returned
 	 * @param reverse  True if messages need to be in reverse order
 	 * @return
+     *      Response of method call. Can also be an error response.
 	 */
 	 public Object		history(String channel, int count, boolean reverse);
 
@@ -208,6 +220,7 @@ interface PubnubSyncInterface {
 	 * @param channel  Channel name for which history is required
 	 * @param count    Maximum number of messages
 	 * @return
+     *      Response of method call. Can also be an error response.
 	 */
 	 public Object		history(String channel, int count);
 
@@ -218,6 +231,7 @@ interface PubnubSyncInterface {
 	 * @param start    Start time
 	 * @param reverse  True if messages need to be in reverse order
 	 * @return
+     *      Response of method call. Can also be an error response.
 	 */
 	 public Object		history(String channel, long start, boolean reverse);
 
@@ -229,6 +243,7 @@ interface PubnubSyncInterface {
 	 * @param count    Upper limit on number of messages to be returned
 	 * @param reverse  True if messages need to be in reverse order
 	 * @return
+     *      Response of method call. Can also be an error response.
 	 */
 	 public Object		history(String channel, long start, int count, boolean reverse);
 
@@ -239,6 +254,7 @@ interface PubnubSyncInterface {
 	 * @param start    Start time
 	 * @param count    Upper limit on number of messages to be returned
 	 * @return
+     *      Response of method call. Can also be an error response.
 	 */
 	 public Object		history(String channel, long start, int count);
 
@@ -250,6 +266,7 @@ interface PubnubSyncInterface {
 	 * @param end      End time
 	 * @param reverse  True if messages need to be in reverse order
 	 * @return
+     *      Response of method call. Can also be an error response.
 	 */
 	 public Object		history(String channel, long start, long end, boolean reverse);
 
@@ -260,6 +277,7 @@ interface PubnubSyncInterface {
 	 * @param start    Start time
 	 * @param end      End time
 	 * @return
+     *      Response of method call. Can also be an error response.
 	 */
 	 public Object		history(String channel, long start, long end);
 
@@ -273,6 +291,7 @@ interface PubnubSyncInterface {
 	 * @param reverse          True if messages need to be in reverse order
 	 * @param includeTimetoken True/False whether to include timetokens in response
 	 * @return
+     *      Response of method call. Can also be an error response.
 	 */
 	 public Object		history(String channel, long start, long end, int count, boolean reverse, boolean includeTimetoken);
 
@@ -285,6 +304,7 @@ interface PubnubSyncInterface {
 	 * @param count    Upper limit on number of messages to be returned
 	 * @param reverse  True if messages need to be in reverse order
 	 * @return
+     *      Response of method call. Can also be an error response.
 	 */
 	 public Object		history(String channel, long start, long end, int count, boolean reverse);
 
@@ -296,6 +316,7 @@ interface PubnubSyncInterface {
 	 * @param end      End time
 	 * @param count    Upper limit on number of messages to be returned
 	 * @return
+     *      Response of method call. Can also be an error response.
 	 */
 	 public Object		history(String channel, long start, long end, int count);
 
@@ -306,6 +327,7 @@ interface PubnubSyncInterface {
 	 * @param message        Double to be published
 	 * @param storeInHistory Store in History ?
 	 * @return
+     *      Response of method call. Can also be an error response.
 	 */
 	 public Object		publish(String channel, Double message, boolean storeInHistory);
 
@@ -315,6 +337,7 @@ interface PubnubSyncInterface {
 	 * @param channel  Channel name
 	 * @param message  Double to be published
 	 * @return
+     *      Response of method call. Can also be an error response.
 	 */
 	 public Object		publish(String channel, Double message);
 
@@ -325,6 +348,7 @@ interface PubnubSyncInterface {
 	 * @param message        Integer to be published
 	 * @param storeInHistory Store in History ?
 	 * @return
+     *      Response of method call. Can also be an error response.
 	 */
 	 public Object		publish(String channel, Integer message, boolean storeInHistory);
 
@@ -334,6 +358,7 @@ interface PubnubSyncInterface {
 	 * @param channel  Channel name
 	 * @param message  Integer to be published
 	 * @return
+     *      Response of method call. Can also be an error response.
 	 */
 	 public Object		publish(String channel, Integer message);
 
@@ -344,6 +369,7 @@ interface PubnubSyncInterface {
 	 * @param message        JSONArray to be published
 	 * @param storeInHistory Store in History ?
 	 * @return
+     *      Response of method call. Can also be an error response.
 	 */
 	 public Object		publish(String channel, JSONArray message, boolean storeInHistory);
 
@@ -353,6 +379,7 @@ interface PubnubSyncInterface {
 	 * @param channel  Channel name
 	 * @param message  JSONOArray to be published
 	 * @return
+     *      Response of method call. Can also be an error response.
 	 */
 	 public Object		publish(String channel, JSONArray message);
 
@@ -363,6 +390,7 @@ interface PubnubSyncInterface {
 	 * @param message        JSONObject to be published
 	 * @param storeInHistory Store in History ?
 	 * @return
+     *      Response of method call. Can also be an error response.
 	 */
 	 public Object		publish(String channel, JSONObject message, boolean storeInHistory);
 
@@ -372,6 +400,7 @@ interface PubnubSyncInterface {
 	 * @param channel  Channel name
 	 * @param message  JSONObject to be published
 	 * @return
+     *      Response of method call. Can also be an error response.
 	 */
 	 public Object		publish(String channel, JSONObject message);
 
@@ -382,6 +411,7 @@ interface PubnubSyncInterface {
 	 * @param message        String to be published
 	 * @param storeInHistory Store in History ?
 	 * @return
+     *      Response of method call. Can also be an error response.
 	 */
 	 public Object		publish(String channel, String message, boolean storeInHistory);
 
@@ -391,6 +421,7 @@ interface PubnubSyncInterface {
 	 * @param channel  Channel name
 	 * @param message  String to be published
 	 * @return
+     *      Response of method call. Can also be an error response.
 	 */
 	 public Object		publish(String channel, String message);
 
@@ -400,13 +431,15 @@ interface PubnubSyncInterface {
 	 * @param uuid
 	 * @param state
 	 * @return
+     *      Response of method call. Can also be an error response.
 	 */
-	 public JSONObject	setState(String channel, String uuid, JSONObject state);
+	 //public JSONObject	setState(String channel, String uuid, JSONObject state);
 
 	/**
 	 * Read current time from PubNub Cloud.
 	 *
 	 * @return
+     *      Response of method call. Can also be an error response.
 	 */
 	 public JSONArray	time();
 
@@ -414,6 +447,7 @@ interface PubnubSyncInterface {
 	 * Read presence information for Pubnub Object uuid
 	 *
 	 * @return
+     *      Response of method call. Can also be an error response.
 	 */
 	 public JSONObject	whereNow();
 
@@ -422,6 +456,7 @@ interface PubnubSyncInterface {
 	 *
 	 * @param uuid     UUID
 	 * @return
+     *      Response of method call. Can also be an error response.
 	 */
 	 public JSONObject	whereNow(String uuid);
 

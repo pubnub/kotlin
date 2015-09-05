@@ -12,7 +12,7 @@ import java.util.*;
 //import static com.pubnub.api.PubnubError.getErrorObject;
 
 
-abstract class PubnubCore {
+abstract class PubnubCore implements PubnubInterface {
 
     protected static String VERSION = "";
     protected volatile boolean CACHE_BUSTING = true;
@@ -44,7 +44,7 @@ abstract class PubnubCore {
     }
 
 
-    abstract String uuid();
+    //abstract String uuid();
 
 
     protected String getPubnubUrl() {

@@ -11,7 +11,8 @@ import java.util.UUID;
  * @author Pubnub
  *
  */
-public class PubnubSync extends PubnubCoreSync implements PubnubSyncInterface, PubnubInterface, PubnubSyncInterfacePam, PubnubSyncInterfacePush {
+public class PubnubSync extends PubnubCoreSync implements 
+	PubnubSyncInterfacePam, PubnubSyncInterfacePush {
 
     /**
      * Pubnub Constructor
@@ -107,11 +108,6 @@ public class PubnubSync extends PubnubCoreSync implements PubnubSyncInterface, P
 
 
     @Override
-    public JSONObject setState(String channel, String uuid, JSONObject state) {
-        return null;
-    }
-
-    @Override
     public Object enablePushNotificationsOnChannel(String channel, String gcmRegistrationId) {
         return _enablePushNotificationsOnChannels(new String[]{channel}, gcmRegistrationId,null, true);
     }
@@ -148,5 +144,6 @@ public class PubnubSync extends PubnubCoreSync implements PubnubSyncInterface, P
     public String uuid() {
         return java.util.UUID.randomUUID().toString();
     }
+
 
 }

@@ -8,7 +8,8 @@ interface PubnubSyncInterfacePush {
      *
      * @param channel
      * @param gcmRegistrationId
-     * @return
+	 * @return
+     *      Response of method call. Can also be an error response.
      */
     Object	enablePushNotificationsOnChannel(String channel, String gcmRegistrationId);
 
@@ -16,7 +17,8 @@ interface PubnubSyncInterfacePush {
      *
      * @param channels
      * @param gcmRegistrationId
-     * @return
+	 * @return
+     *      Response of method call. Can also be an error response.
      */
     Object	enablePushNotificationsOnChannels(String[] channels, String gcmRegistrationId);
 
@@ -24,7 +26,8 @@ interface PubnubSyncInterfacePush {
      *
      * @param channel
      * @param gcmRegistrationId
-     * @return
+	 * @return
+     *      Response of method call. Can also be an error response.
      */
     Object	disablePushNotificationsOnChannel(String channel, String gcmRegistrationId);
 
@@ -32,7 +35,8 @@ interface PubnubSyncInterfacePush {
      *
      * @param channels
      * @param gcmRegistrationId
-     * @return
+	 * @return
+     *      Response of method call. Can also be an error response.
      */
     Object	disablePushNotificationsOnChannels(String[] channels, String gcmRegistrationId);
 

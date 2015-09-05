@@ -6,7 +6,7 @@ import java.util.Hashtable;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-abstract class PubnubCoreSync extends PubnubCore implements PubnubSyncInterface, PubnubInterface {
+abstract class PubnubCoreSync extends PubnubCore implements PubnubSyncInterface {
 
 
 	private HttpClient httpClient;

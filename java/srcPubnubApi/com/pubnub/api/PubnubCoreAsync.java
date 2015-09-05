@@ -476,7 +476,7 @@ abstract class PubnubCoreAsync extends PubnubCore implements PubnubAsyncInterfac
     public void channelGroupAddChannel(String group, String channel, Callback callback) {
         channelGroupUpdate("add", group, new String[]{channel}, callback);
     }
-
+    
     public void channelGroupAddChannel(String group, String[] channels, Callback callback) {
         channelGroupUpdate("add", group, channels, callback);
     }
