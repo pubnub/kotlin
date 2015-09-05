@@ -72,8 +72,7 @@ class PubnubUtilCore {
      * @return String , string of tokens joined by delimiter
      */
     public static String joinString(String[] sourceArray, String delimiter) {
-
-        if (sourceArray == null || delimiter == null) {
+        if (sourceArray == null || delimiter == null || sourceArray.length <= 0) {
             return "";
         }
         StringBuffer sb = new StringBuffer();
@@ -276,5 +275,9 @@ class PubnubUtilCore {
                 obj = ((String) obj).substring(1, ((String) obj).length() -1);
         }
         return obj;
+    }
+    
+    static boolean isEmptyString(String s) {
+    	return (s == null || s.length() == 0);
     }
 }
