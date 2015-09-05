@@ -590,121 +590,272 @@ abstract class PubnubCoreAsync extends PubnubCore implements PubnubAsyncInterfac
         _time(callback, false);
     }
 
-    private void leave(final String channel) {
-        _leave(PubnubUtil.urlEncode(channel), PubnubUtil.hashtableClone(this.params));
+    private void _leave(String channel, Callback callback) {
+        _leave(channel, null, PubnubUtil.hashtableClone(this.params), callback);
     }
 
+    private void _leave(String channel) {
+        _leave(channel, null);
+    }
+    
     private void channelGroupLeave(String group) {
-        Hashtable params = PubnubUtil.hashtableClone(this.params);
-        params.put("channel-group", group);
-
-        _leave(",", params);
+    	channelGroupLeave(group, null);
     }
 
-    private void _leave(String channel, Hashtable params) {
+    private void channelGroupLeave(String group, Callback callback) {
+        _leave(null, group, PubnubUtil.hashtableClone(this.params), callback);
+    }
+   
+    private void _leave(String[] channels, String[] channelGroups, Hashtable params) {
+    	_leave(channels, channelGroups, params, null);
+    }
+    
+    private void _leave(String[] channels, String[] channelGroups, Hashtable params, Callback callback) {
+    	_leave(PubnubUtil.joinString(channels, ","),
+    			PubnubUtil.joinString(channelGroups, ","), params, callback);
+    }
+    
+    private void _leave(String[] channels, String[] channelGroups) {
+    	_leave(channels, channelGroups, PubnubUtil.hashtableClone(this.params), null);
+    } 
+    
+    
+    private void _leave(String[] channels, String[] channelGroups, Callback callback) {
+    	_leave(PubnubUtil.joinString(channels, ","),
+    			PubnubUtil.joinString(channelGroups, ","), PubnubUtil.hashtableClone(this.params), callback);
+    }    
+    
+    private void _leave(String channel, String channelGroup, Callback callback) {
+    	_leave(channel, channelGroup, PubnubUtil.hashtableClone(this.params), callback);
+    }
+    
+    private void _leave(String channel, String channelGroup, Hashtable params, Callback callback) {
+    	
+    	final Callback cb = getWrappedCallback(callback);
+    	
+    	if (PubnubUtil.isEmptyString(channel) &&
+    			PubnubUtil.isEmptyString(channelGroup))
+    		return;
+    	
+    	if (PubnubUtil.isEmptyString(channel)) channel = ",";
+    	
         String[] urlArgs = {getPubnubUrl(), "v2/presence/sub_key",
-                this.SUBSCRIBE_KEY, "channel", channel, "leave"
+                this.SUBSCRIBE_KEY, "channel", PubnubUtil.urlEncode(channel), "leave"
         };
 
         params.put("uuid", UUID);
+        
+
+        if (!PubnubUtil.isEmptyString(channelGroup))
+        	params.put("channel-group", channelGroup);
 
         HttpRequest hreq = new HttpRequest(urlArgs, params,
                 new ResponseHandler() {
                     public void handleResponse(HttpRequest hreq, String response) {
+                    	cb.successCallback(null, response);
                     }
 
                     public void handleError(HttpRequest hreq, PubnubError error) {
+                    	cb.errorCallback(null, error);
                     }
                 });
 
         _request(hreq, nonSubscribeManager);
     }
 
-    public void unsubscribe(String[] channels) {
+    /**
+     * Unsubscribe from channels.
+     *
+     * @param channels String array containing channel names
+     */
+    public void unsubscribe(String[] channels, Callback callback) {
         for (int i = 0; i < channels.length; i++) {
             String channel = channels[i];
             channelSubscriptions.removeItem(channel);
             channelSubscriptions.state.remove(channel);
-            leave(channel);
         }
-
+        _leave(channels, null, callback);
         resubscribe();
     }
-
-    public void unsubscribe(String channel) {
-        unsubscribe(new String[]{channel});
+    
+    /**
+     * Unsubscribe from channels.
+     *
+     * @param channels String array containing channel names
+     */
+    public void unsubscribe(String[] channels) {
+    	unsubscribe(channels, null);
     }
 
+    /**
+     * Unsubscribe/Disconnect from channel.
+     *
+     * @param channel channel name as String.
+     */
+    public void unsubscribe(String channel) {
+        unsubscribe(channel, null);
+    }
 
+    
+    /**
+     * Unsubscribe/Disconnect from channel.
+     *
+     * @param channel channel name as String.
+     */
+    public void unsubscribe(String channel, Callback callback) {
+        unsubscribe(new String[]{channel}, callback);
+    }
+    
+    /**
+     * Unsubscribe/Disconnect from channel.
+     *
+     * @param args Hashtable containing channel name.
+     */
     protected void unsubscribe(Hashtable args) {
         String[] channelList = (String[]) args.get("channels");
         if (channelList == null) {
             channelList = new String[]{(String) args.get("channel")};
         }
-
         unsubscribe(channelList);
     }
 
-
+    /**
+     * Unsubscribe from channel group
+     *
+     * @param group to unsubscribe
+     */
     public void channelGroupUnsubscribe(String group) {
-        channelGroupUnsubscribe(new String[]{group});
+        channelGroupUnsubscribe(group, null);
     }
 
-
-    public void channelGroupUnsubscribe(String[] groups) {
+    /**
+     * Unsubscribe from channel group
+     *
+     * @param group to unsubscribe
+     * @param callback Callback
+     */
+    public void channelGroupUnsubscribe(String group, Callback callback) {
+        channelGroupUnsubscribe(new String[]{group}, callback);
+    }
+    
+    
+    /**
+     * Unsubscribe from multiple channel groups
+     *
+     * @param groups to unsubscribe
+     * @param callback Callback
+     */
+    public void channelGroupUnsubscribe(String[] groups, Callback callback) {
         for (int i = 0; i < groups.length; i++) {
             String group = groups[i];
             channelGroupSubscriptions.removeItem(group);
-            channelGroupLeave(group);
         }
-
+        _leave(null, groups, callback);
         resubscribe();
     }
+    
+    /**
+     * Unsubscribe from multiple channel groups
+     *
+     * @param groups to unsubscribe
+     */
+    public void channelGroupUnsubscribe(String[] groups) {
+    	channelGroupUnsubscribe(groups, null);
+    }
+    
 
+    /**
+     * Unsubscribe from presence channel.
+     *
+     * @param channel channel name as String.
+     * @param callback Callback
+     */
+    public void unsubscribePresence(String channel, Callback callback) {
+        unsubscribe(new String[]{channel + PRESENCE_SUFFIX}, callback);
+    }
 
+    /**
+     * Unsubscribe from presence channel.
+     *
+     * @param channel channel name as String.
+     */
     public void unsubscribePresence(String channel) {
-        unsubscribe(new String[]{channel + PRESENCE_SUFFIX});
+    	unsubscribePresence(channel, null);
     }
+    
+    /**
+     * Unsubscribe from all channels and channel groups.
+     * 
+     * @param callback
+     */
+    public void unsubscribeAll(Callback callback) {
+        String[] channels = channelSubscriptions.getItemNames();
+        String[] groups = channelGroupSubscriptions.getItemNames();
 
+        for (int i = 0; i < channels.length; i++) {
+            String channel = channels[i];
+            channelSubscriptions.removeItem(channel);
+        }
+
+        for (int i = 0; i < groups.length; i++) {
+            String group = groups[i];
+            channelGroupSubscriptions.removeItem(group);
+        }
+        _leave(channels, groups, callback);
+        disconnectAndResubscribe();
+    }
+    
+    /**
+     * Unsubscribe from all channels and channel groups.
+     */    
     public void unsubscribeAll() {
-        String[] channels = channelSubscriptions.getItemNames();
-        String[] groups = channelGroupSubscriptions.getItemNames();
-
-        for (int i = 0; i < channels.length; i++) {
-            String channel = channels[i];
-            channelSubscriptions.removeItem(channel);
-            leave(channel);
-        }
-
-        for (int i = 0; i < groups.length; i++) {
-            String group = groups[i];
-            channelGroupSubscriptions.removeItem(group);
-            channelGroupLeave(group);
-        }
-
-        disconnectAndResubscribe();
+    	unsubscribeAll(null);
     }
 
+    /**
+     * Unsubscribe from all channels.
+     */
     public void unsubscribeAllChannels() {
+    	unsubscribeAllChannels(null);
+    }
+    
+    /**
+     * Unsubscribe from all channels.
+     * 
+     * @param callback Callback
+     */
+    public void unsubscribeAllChannels(Callback callback) {
         String[] channels = channelSubscriptions.getItemNames();
 
         for (int i = 0; i < channels.length; i++) {
             String channel = channels[i];
             channelSubscriptions.removeItem(channel);
-            leave(channel);
         }
+        _leave(channels, null, callback);
 
         disconnectAndResubscribe();
     }
 
+    /**
+     * Unsubscribe from all channel groups.
+     */
     public void channelGroupUnsubscribeAllGroups() {
+    	channelGroupUnsubscribeAllGroups(null);
+    }
+    
+    /**
+     * Unsubscribe from all channel groups.
+     * 
+     * @param callback Callback
+     */
+    public void channelGroupUnsubscribeAllGroups(Callback callback) {
         String[] groups = channelGroupSubscriptions.getItemNames();
 
         for (int i = 0; i < groups.length; i++) {
             String group = groups[i];
             channelGroupSubscriptions.removeItem(group);
-            channelGroupLeave(group);
         }
+        _leave(null, groups, callback);
 
         disconnectAndResubscribe();
     }

@@ -175,20 +175,6 @@ interface PubnubAsyncInterface {
     public void channelGroupSubscribe(String group, Callback callback, String timetoken) throws PubnubException;
 
     /**
-     * Unsubscribe from channel group
-     *
-     * @param group to unsubscribe
-     */
-    public void channelGroupUnsubscribe(String group);
-
-    /**
-     * Unsubscribe from multiple channel groups
-     *
-     * @param groups to unsubscribe
-     */
-    public void channelGroupUnsubscribe(String[] groups);
-
-    /**
      * Unsubscribe from all channel groups.
      */
     public void channelGroupUnsubscribeAllGroups();
@@ -855,13 +841,14 @@ interface PubnubAsyncInterface {
      */
     public void time(Callback callback);
 
-    /**
-     * Unsubscribe/Disconnect from channel.
-     *
-     * @param channel channel name as String.
-     */
-    public void unsubscribe(String channel);
 
+    /**
+     * Unsubscribe from channels.
+     *
+     * @param channels String array containing channel names
+     */
+    public void unsubscribe(String[] channels, Callback callback);
+    
     /**
      * Unsubscribe from channels.
      *
@@ -870,15 +857,59 @@ interface PubnubAsyncInterface {
     public void unsubscribe(String[] channels);
 
     /**
-     * Unsubscribe from all channel and channel groups.
+     * Unsubscribe/Disconnect from channel.
+     *
+     * @param channel channel name as String.
      */
-    public void unsubscribeAll();
+    public void unsubscribe(String channel);
+
+    
+    /**
+     * Unsubscribe/Disconnect from channel.
+     *
+     * @param channel channel name as String.
+     */
+    public void unsubscribe(String channel, Callback callback);
+    
 
     /**
-     * Unsubscribe from all channel.
+     * Unsubscribe from channel group
+     *
+     * @param group to unsubscribe
      */
-    public void unsubscribeAllChannels();
+    public void channelGroupUnsubscribe(String group);
 
+    /**
+     * Unsubscribe from channel group
+     *
+     * @param group to unsubscribe
+     * @param callback Callback
+     */
+    public void channelGroupUnsubscribe(String group, Callback callback);
+    
+    
+    /**
+     * Unsubscribe from multiple channel groups
+     *
+     * @param groups to unsubscribe
+     * @param callback Callback
+     */
+    public void channelGroupUnsubscribe(String[] groups, Callback callback);
+    
+    /**
+     * Unsubscribe from multiple channel groups
+     *
+     * @param groups to unsubscribe
+     */
+    public void channelGroupUnsubscribe(String[] groups);
+
+    /**
+     * Unsubscribe from presence channel.
+     *
+     * @param channel channel name as String.
+     * @param callback Callback
+     */
+    public void unsubscribePresence(String channel, Callback callback);
 
     /**
      * Unsubscribe from presence channel.
@@ -886,7 +917,39 @@ interface PubnubAsyncInterface {
      * @param channel channel name as String.
      */
     public void unsubscribePresence(String channel);
+    
+    /**
+     * Unsubscribe from all channels and channel groups.
+     * 
+     * @param callback
+     */
+    public void unsubscribeAll(Callback callback);
+    
+    /**
+     * Unsubscribe from all channels and channel groups.
+     */    
+    public void unsubscribeAll();
 
+    /**
+     * Unsubscribe from all channels.
+     */
+    public void unsubscribeAllChannels();
+    
+    /**
+     * Unsubscribe from all channels.
+     * 
+     * @param callback Callback
+     */
+    public void unsubscribeAllChannels(Callback callback);
+
+    
+    /**
+     * Unsubscribe from all channel groups.
+     * 
+     * @param callback Callback
+     */
+    public void channelGroupUnsubscribeAllGroups(Callback callback);
+    
     /**
      * Read presence information for Pubnub Object uuid
      *

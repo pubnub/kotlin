@@ -8,8 +8,6 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.*;
 
-//import com.pubnub.api.PubnubError.PNERROBJ_SECRET_KEY_MISSING;
-//import static com.pubnub.api.PubnubError.getErrorObject;
 
 
 abstract class PubnubCore implements PubnubInterface {
@@ -1089,10 +1087,10 @@ abstract class PubnubCore implements PubnubInterface {
         if (channel != null) {
             sign_input = this.SUBSCRIBE_KEY + "\n" + this.PUBLISH_KEY + "\n"
                     + "audit" + "\n" + "channel="
-                    + PubnubUtil.urlEncode(channel) + "&" + "pnsdk=" + PubnubUtil.urlEncode(getUserAgent()) + "&" + "timestamp=" + timestamp;
+                    + PubnubUtil.pamEncode(channel) + "&" + "pnsdk=" + PubnubUtil.pamEncode(getUserAgent()) + "&" + "timestamp=" + timestamp;
         } else {
             sign_input = this.SUBSCRIBE_KEY + "\n" + this.PUBLISH_KEY + "\n"
-                    + "audit" + "\n" + "pnsdk=" + PubnubUtil.urlEncode(getUserAgent()) + "&"
+                    + "audit" + "\n" + "pnsdk=" + PubnubUtil.pamEncode(getUserAgent()) + "&"
                     + "timestamp=" + timestamp;
         }
 
@@ -1147,11 +1145,11 @@ abstract class PubnubCore implements PubnubInterface {
         String sign_input = this.SUBSCRIBE_KEY + "\n" + this.PUBLISH_KEY + "\n" + "grant" + "\n";
 
         if (auth_key != null && auth_key.length() > 0)
-            sign_input += "auth=" + PubnubUtil.urlEncode(auth_key) + "&"  ;
+            sign_input += "auth=" + PubnubUtil.pamEncode(auth_key) + "&"  ;
 
-        sign_input += "channel-group=" + PubnubUtil.urlEncode(group) + "&"
+        sign_input += "channel-group=" + PubnubUtil.pamEncode(group) + "&"
                 + "m=" + m + "&"
-                + "pnsdk=" + PubnubUtil.urlEncode(getUserAgent()) + "&"
+                + "pnsdk=" + PubnubUtil.pamEncode(getUserAgent()) + "&"
                 + "r=" + r + "&"
                 + "timestamp=" + timestamp
                 + ((ttl >= -1)?"&" + "ttl=" + ttl:"");
@@ -1211,9 +1209,9 @@ abstract class PubnubCore implements PubnubInterface {
         String sign_input = this.SUBSCRIBE_KEY + "\n" + this.PUBLISH_KEY + "\n" + "grant" + "\n" ;
 
         if (auth_key != null && auth_key.length() > 0)
-            sign_input += "auth=" + PubnubUtil.urlEncode(auth_key) + "&"  ;
+            sign_input += "auth=" + PubnubUtil.pamEncode(auth_key) + "&"  ;
 
-        sign_input += "channel=" + PubnubUtil.urlEncode(channel) + "&" + "pnsdk=" + PubnubUtil.urlEncode(getUserAgent()) + "&" + "r=" + r + "&" + "timestamp=" + timestamp
+        sign_input += "channel=" + PubnubUtil.pamEncode(channel) + "&" + "pnsdk=" + PubnubUtil.pamEncode(getUserAgent()) + "&" + "r=" + r + "&" + "timestamp=" + timestamp
                 + ((ttl >= -1)?"&" + "ttl=" + ttl:"")
                 + "&" + "w=" + w;
 
