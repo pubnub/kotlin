@@ -92,7 +92,7 @@ public class Pubnub extends PubnubCoreAsync {
         this.UUID = uuid.toString();
     }
 
-    protected String uuid() {
+    public String uuid() {
 
         String valueBeforeMD5;
         String valueAfterMD5;
