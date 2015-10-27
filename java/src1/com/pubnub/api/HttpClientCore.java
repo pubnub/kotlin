@@ -87,7 +87,6 @@ class HttpClientCore extends HttpClient {
     throws PubnubException, SocketTimeoutException {
         URL urlobj = null;
         log.verbose("FETCHING URL : " + url);
-        //System.out.println(url);
         try {
             urlobj = new URL(url);
         } catch (MalformedURLException e3) {
@@ -262,8 +261,10 @@ class HttpClientCore extends HttpClient {
     public void shutdown() {
         if (connection != null) {
             try {
+                log.verbose("Connection Abort : " + connection.getURL());
                 connection.disconnect();
             } catch (Exception e) {
+                log.verbose("Exception in connection abort : " + e.toString() + " : " + connection.getURL());
             }
         }
     }

@@ -210,7 +210,14 @@ public class PubnubDemoConsole {
     }
 
     private void unsubscribe(String channel) {
-        pubnub.unsubscribe(channel);
+        pubnub.unsubscribe(channel, new Callback(){
+			public void successCallback(String channel, Object message) {
+				System.out.println(message);
+			}
+			public void errorCallback(String channel, PubnubError error) {
+				System.out.println(error);
+			}
+		});
     }
 
     private void unsubscribeFromGroup(String groupName) {
