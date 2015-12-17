@@ -37,6 +37,8 @@ abstract class PubnubCoreAsync extends PubnubCore implements PubnubAsyncInterfac
     private int PRESENCE_HEARTBEAT_TASK = 0;
     private int HEARTBEAT = 320;
     private volatile int PRESENCE_HB_INTERVAL = 0;
+    
+    private String connectionid;
 
 
     public void shutdown() {
@@ -263,6 +265,11 @@ abstract class PubnubCoreAsync extends PubnubCore implements PubnubAsyncInterfac
         this.initAsync();
     }
 
+    Random random = new Random();
+    private String getNewConnectionId() {
+    	return "conn" + random.nextInt();
+    }
+    
     private void initAsync() {
 
 
@@ -292,6 +299,8 @@ abstract class PubnubCoreAsync extends PubnubCore implements PubnubAsyncInterfac
         nonSubscribeManager.setHeader("V", VERSION);
         nonSubscribeManager.setHeader("Accept-Encoding", "gzip");
         nonSubscribeManager.setHeader("User-Agent", getUserAgent());
+        
+        this.connectionid = getNewConnectionId();
 
     }
 
@@ -648,6 +657,9 @@ abstract class PubnubCoreAsync extends PubnubCore implements PubnubAsyncInterfac
 
         if (!PubnubUtil.isEmptyString(channelGroup))
         	params.put("channel-group", channelGroup);
+       
+        //params.put("connectionid", this.connectionid);
+        this.connectionid = getNewConnectionId();
 
         HttpRequest hreq = new HttpRequest(urlArgs, params,
                 new ResponseHandler() {
@@ -1158,6 +1170,11 @@ abstract class PubnubCoreAsync extends PubnubCore implements PubnubAsyncInterfac
 
         if (HEARTBEAT > 5 && HEARTBEAT < 320) params.put("heartbeat", String.valueOf(HEARTBEAT));
         log.verbose("Subscribing with timetoken : " + _timetoken);
+        
+        // add connection id
+        
+        //params.put("connectionid",this.connectionid);
+        
 
         HttpRequest hreq = new HttpRequest(urlComponents, params,
                 new ResponseHandler() {
