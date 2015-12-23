@@ -2,7 +2,6 @@ package com.pubnub.api;
 
 import org.slf4j.LoggerFactory;
 
-
 class Logger extends AbstractLogger {
     private Class _class;
     private org.slf4j.Logger log;

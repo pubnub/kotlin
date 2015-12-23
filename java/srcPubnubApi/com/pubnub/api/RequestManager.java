@@ -135,6 +135,7 @@ abstract class RequestManager {
     protected volatile int requestTimeout;
     protected Hashtable headers;
     private static int count = 0;
+    private boolean daemonThreads = false;
 
     protected static Logger log = new Logger(RequestManager.class);
 
@@ -155,7 +156,9 @@ abstract class RequestManager {
         synchronized (_workers) {
             for (int i = 0; i < maxCalls; ++i) {
                 Worker w = getWorker();
-                w.setThread(new Thread(w, name + "-" + ++count));
+                Thread thread = new Thread(w, name + "-" + ++count);
+                thread.setDaemon(daemonThreads);
+                w.setThread(thread);
                 _workers[i] = w;
                 log.verbose("Starting new worker " + _workers[i].getThread().getName());
                 w.startWorker();
@@ -163,9 +166,10 @@ abstract class RequestManager {
         }
     }
 
-    public RequestManager(String name, int connectionTimeout, int requestTimeout) {
+    public RequestManager(String name, int connectionTimeout, int requestTimeout, boolean daemonThreads) {
         this.connectionTimeout = connectionTimeout;
         this.requestTimeout = requestTimeout;
+        this.daemonThreads = daemonThreads;
         initManager(_maxWorkers, name);
     }
 
@@ -194,10 +198,18 @@ abstract class RequestManager {
             for (int i = 0; i < _workers.length; i++) {
                 log.verbose("Sending DIE to " + _workers[i].getThread().getName());
                 _workers[i].die();
-                new Thread(new ConnectionResetter(_workers[i])).start();
+
+                Thread resetter = new Thread(new ConnectionResetter(_workers[i]));
+                resetter.setDaemon(daemonThreads);
+                resetter.start();
+
                 _workers[i].interruptWorker();
                 Worker w = getWorker();
-                w.setThread(new Thread(w, name + "-" + ++count));
+
+                Thread thread = new Thread(w, name + "-" + ++count);
+                thread.setDaemon(daemonThreads);
+                w.setThread(thread);
+
                 _workers[i] = w;
                 log.verbose("Starting new worker " + _workers[i].getThread().getName());
                 w.startWorker();
@@ -253,8 +265,8 @@ abstract class AbstractSubscribeManager extends RequestManager {
     protected volatile int windowInterval = 0;
 
     public AbstractSubscribeManager(String name, int connectionTimeout,
-                                    int requestTimeout) {
-        super(name, connectionTimeout, requestTimeout);
+                                    int requestTimeout, boolean daemonThreads) {
+        super(name, connectionTimeout, requestTimeout, daemonThreads);
     }
 
     public Worker getWorker() {
@@ -302,8 +314,8 @@ abstract class AbstractSubscribeManager extends RequestManager {
 
 abstract class AbstractNonSubscribeManager extends RequestManager {
     public AbstractNonSubscribeManager(String name, int connectionTimeout,
-                                       int requestTimeout) {
-        super(name, connectionTimeout, requestTimeout);
+                                       int requestTimeout, boolean daemonThreads) {
+        super(name, connectionTimeout, requestTimeout, daemonThreads);
     }
 
     public Worker getWorker() {
