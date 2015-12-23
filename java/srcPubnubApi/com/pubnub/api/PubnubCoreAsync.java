@@ -658,7 +658,7 @@ abstract class PubnubCoreAsync extends PubnubCore implements PubnubAsyncInterfac
         if (!PubnubUtil.isEmptyString(channelGroup))
         	params.put("channel-group", channelGroup);
        
-        //params.put("connectionid", this.connectionid);
+        params.put("connectionid", this.connectionid);
         this.connectionid = getNewConnectionId();
 
         HttpRequest hreq = new HttpRequest(urlArgs, params,
@@ -1173,7 +1173,7 @@ abstract class PubnubCoreAsync extends PubnubCore implements PubnubAsyncInterfac
         
         // add connection id
         
-        //params.put("connectionid",this.connectionid);
+        params.put("connectionid",this.connectionid);
         
 
         HttpRequest hreq = new HttpRequest(urlComponents, params,
