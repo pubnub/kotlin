@@ -3,7 +3,7 @@ package com.pubnub.api;
 import org.bouncycastle.util.SecureRandom;
 
 
-public class Pubnub extends PubnubCore {
+public class Pubnub extends PubnubCoreAsync {
 
     public Pubnub(String publish_key, String subscribe_key, String secret_key,
                   String cipher_key, boolean ssl_on) {

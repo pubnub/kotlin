@@ -225,6 +225,9 @@
     <property name="maven-staging-repository-url" value="https://oss.sonatype.org/service/local/staging/deploy/maven2/" />
 
     <target name="debug-compile" description="compile the source with logging and debug">
+        <replace dir="${maven}/src" token='static String VERSION = ""' value='static String VERSION = "${VERSION}"' >
+            <include name="**/*.java"/>
+        </replace>
         <replace dir="${maven}/src" token="boolean LOGGING = false" value="boolean LOGGING = true">
             <include name="**/*.java"/>
         </replace>
@@ -236,6 +239,9 @@
         </replace>
     </target>
     <target name="compile" description="compile the source ">
+        <replace dir="${maven}/src" token='static String VERSION = ""' value='static String VERSION = "${VERSION}"' >
+            <include name="**/*.java"/>
+        </replace>
         <javac debug="${debug}" srcdir="${maven}/src" destdir="${build}" >
             <classpath refid="PubnubApi.classpath"/>
         </javac>

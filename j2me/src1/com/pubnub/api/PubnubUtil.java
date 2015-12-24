@@ -23,6 +23,29 @@ public class PubnubUtil extends PubnubUtilCore {
         return result.toString();
     }
 
+	/**
+	 * Returns encoded String
+	 * 
+	 * @param sUrl
+	 *            , input string
+	 * @return , encoded string
+	 */
+    public static String pamEncode(String sUrl) {
+		/* !'()*~ */
+
+		String encoded = urlEncode(sUrl);
+		if (encoded != null) {
+			encoded = replace(encoded, "*", "%2A");
+            encoded = replace(encoded, "!", "%21");
+			encoded	= replace(encoded, "'", "%27");
+            encoded = replace(encoded, "(", "%28");
+			encoded = replace(encoded, ")", "%29");
+            encoded = replace(encoded, "[", "%5B");
+			encoded = replace(encoded, "]", "%5D");
+            encoded = replace(encoded, "~", "%7E");
+		}
+		return encoded;
+    }
     /**
      * Returns encoded String
      *

@@ -3,8 +3,8 @@ package com.pubnub.api;
 class SubscribeManager extends AbstractSubscribeManager {
 
     public SubscribeManager(String name, int connectionTimeout,
-                            int requestTimeout) {
-        super(name, connectionTimeout, requestTimeout);
+                            int requestTimeout, boolean daemonThreads) {
+        super(name, connectionTimeout, requestTimeout, daemonThreads);
     }
 
     public void clearRequestQueue() {
