@@ -31,6 +31,9 @@ import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import scala.util.Random
 import scala.util.Try
+import org.scalatest.Tag
+
+object ErrorTest extends Tag("com.pubnub.api.tests.ErrorTest")
 
 
 @RunWith(classOf[JUnitRunner])
@@ -42,6 +45,7 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
   var CIPHER_KEY    = ""
   var SSL           = false
   var RANDOM        = new Random()
+  var TIMEOUT       = 15000
 
 
 
@@ -71,7 +75,7 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
 
 
     it("should receive message when subscribed with filtering attribute foo==bar " +
-      "when message published with metadata foo:bar") { pubnubTestConfig =>
+      " when message published with metadata foo:bar") { pubnubTestConfig =>
 
       var pubnub  = pubnubTestConfig.pubnub
       var channel = "channel-" + getRandom()
@@ -102,12 +106,12 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
         }
       });
 
-      await atMost(5000, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
     }
 
 
     it("should be able to receive message successfully when subscribed with no filtering attribute" +
-      "when message published with no metadata") { pubnubTestConfig =>
+      " when message published with no metadata") { pubnubTestConfig =>
 
       var pubnub  = pubnubTestConfig.pubnub
       var channel = "channel-" + getRandom()
@@ -138,12 +142,12 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
         }
       });
 
-      await atMost(5000, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
 
     }
 
     it("should be able to receive message successfully when subscribed with no filtering attribute" +
-      "when message published with metadata foo:bar") { pubnubTestConfig =>
+      " when message published with metadata foo:bar") { pubnubTestConfig =>
 
       var pubnub  = pubnubTestConfig.pubnub
       var channel = "channel-" + getRandom()
@@ -174,11 +178,11 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
         }
       });
 
-      await atMost(5000, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
 
     }
     ignore("should not receive message when subscribed with filtering attribute foo==bar" +
-      "when message published with no metadata") { pubnubTestConfig =>
+      " when message published with no metadata") { pubnubTestConfig =>
 
       var pubnub  = pubnubTestConfig.pubnub
       var channel = "channel-" + getRandom()
@@ -207,12 +211,12 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
         }
       });
 
-      await atMost(5000, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
 
 
     }
     ignore("should not receive message when subscribed with filtering attribute a==b" +
-      "when message published with metadata foo:bar") { pubnubTestConfig =>
+      " when message published with metadata foo:bar") { pubnubTestConfig =>
 
       var pubnub  = pubnubTestConfig.pubnub
       var channel = "channel-" + getRandom()
@@ -241,12 +245,12 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
         }
       });
 
-      await atMost(5000, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
 
 
     }
     ignore("should not receive message when subscribed with filtering attribute foo==b" +
-      "when message published with metadata foo:bar") { pubnubTestConfig =>
+      " when message published with metadata foo:bar") { pubnubTestConfig =>
 
       var pubnub  = pubnubTestConfig.pubnub
       var channel = "channel-" + getRandom()
@@ -275,12 +279,12 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
         }
       });
 
-      await atMost(5000, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
 
 
     }
     ignore("should not receive message when subscribed with filtering attribute bar==foo" +
-      "when message published with metadata foo:bar") { pubnubTestConfig =>
+      " when message published with metadata foo:bar") { pubnubTestConfig =>
 
       var pubnub  = pubnubTestConfig.pubnub
       var channel = "channel-" + getRandom()
@@ -309,10 +313,1326 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
         }
       });
 
+      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+
+
+    }
+
+
+    it("should receive message when subscribed to wildcard channel with filtering attribute foo==bar " +
+      " when message published with metadata foo:bar") { pubnubTestConfig =>
+
+      var pubnub  = pubnubTestConfig.pubnub
+      var channel = "channel-" + getRandom()
+      var channel_wildcard = channel + ".*"
+      var channel_wildcard_c = channel + ".a"
+      var message = "message-" + getRandom()
+      var testObj = new PnTest(4)
+
+      pubnub.subscribe(channel_wildcard, new Callback {
+        override def connectCallback(channel: String, message1: Object) {
+          testObj.test(true)
+          pubnub.publish(channel_wildcard_c, message, new Callback {
+
+            override def successCallback(channel: String, message: Object) {
+              testObj.test(true)
+            }
+
+            override def errorCallback(channel: String, error: PubnubError) {
+              assert(false)
+              testObj.test(false)
+            }
+          })
+
+        }
+        override def successCallback(channel: String, message1: Object) {
+          pubnub.unsubscribe(channel)
+          testObj.test(true)
+          testObj.test(message1.equals(message))
+
+        }
+      });
+
+      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+    }
+
+
+    it("should be able to receive message successfully when subscribed to wildcard channel with no filtering attribute" +
+      " when message published with no metadata") { pubnubTestConfig =>
+
+      var pubnub  = pubnubTestConfig.pubnub
+      var channel = "channel-" + getRandom()
+      var channel_wildcard = channel + ".*"
+      var channel_wildcard_c = channel + ".a"
+      var message = "message-" + getRandom()
+      var testObj = new PnTest(4)
+
+      pubnub.subscribe(channel_wildcard, new Callback {
+        override def connectCallback(channel: String, message1: Object) {
+          testObj.test(true)
+          pubnub.publish(channel_wildcard_c, message, new Callback {
+
+            override def successCallback(channel: String, message: Object) {
+              testObj.test(true)
+            }
+
+            override def errorCallback(channel: String, error: PubnubError) {
+              assert(false)
+              testObj.test(false)
+            }
+          })
+
+        }
+        override def successCallback(channel: String, message1: Object) {
+          pubnub.unsubscribe(channel)
+          testObj.test(true)
+          testObj.test(message1.equals(message))
+
+        }
+      });
+
+      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+
+    }
+
+    it("should be able to receive message successfully when subscribed to wildcard channel with no filtering attribute" +
+      " when message published with metadata foo:bar") { pubnubTestConfig =>
+
+      var pubnub  = pubnubTestConfig.pubnub
+      var channel = "channel-" + getRandom()
+      var channel_wildcard = channel + ".*"
+      var channel_wildcard_c = channel + ".a"
+      var message = "message-" + getRandom()
+      var testObj = new PnTest(4)
+
+      pubnub.subscribe(channel_wildcard, new Callback {
+        override def connectCallback(channel: String, message1: Object) {
+          testObj.test(true)
+          pubnub.publish(channel_wildcard_c, message, new Callback {
+
+            override def successCallback(channel: String, message: Object) {
+              testObj.test(true)
+            }
+
+            override def errorCallback(channel: String, error: PubnubError) {
+              assert(false)
+              testObj.test(false)
+            }
+          })
+
+        }
+        override def successCallback(channel: String, message1: Object) {
+          pubnub.unsubscribe(channel)
+          testObj.test(true)
+          testObj.test(message1.equals(message))
+
+        }
+      });
+
+      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+
+    }
+    ignore("should not receive message when subscribed to wildcard channel with filtering attribute foo==bar" +
+      " when message published with no metadata") { pubnubTestConfig =>
+
+      var pubnub  = pubnubTestConfig.pubnub
+      var channel = "channel-" + getRandom()
+      var channel_wildcard = channel + ".*"
+      var channel_wildcard_c = channel + ".a"
+      var message = "message-" + getRandom()
+      var testObj = new PnTest(2)
+
+      pubnub.subscribe(channel_wildcard, new Callback {
+        override def connectCallback(channel: String, message1: Object) {
+          testObj.test(true)
+          pubnub.publish(channel_wildcard_c, message, new Callback {
+
+            override def successCallback(channel: String, message: Object) {
+              testObj.test(true)
+            }
+
+            override def errorCallback(channel: String, error: PubnubError) {
+              assert(false)
+              testObj.test(false)
+            }
+          })
+
+        }
+        override def successCallback(channel: String, message1: Object) {
+          pubnub.unsubscribe(channel)
+          assertTrue(false)
+        }
+      });
+
+      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+
+
+    }
+    ignore("should not receive message when subscribed to wildcard channel with filtering attribute a==b" +
+      " when message published with metadata foo:bar") { pubnubTestConfig =>
+
+      var pubnub  = pubnubTestConfig.pubnub
+      var channel = "channel-" + getRandom()
+      var channel_wildcard = channel + ".*"
+      var channel_wildcard_c = channel + ".a"
+      var message = "message-" + getRandom()
+      var testObj = new PnTest(2)
+
+      pubnub.subscribe(channel_wildcard, new Callback {
+        override def connectCallback(channel: String, message1: Object) {
+          testObj.test(true)
+          pubnub.publish(channel_wildcard_c, message, new Callback {
+
+            override def successCallback(channel: String, message: Object) {
+              testObj.test(true)
+            }
+
+            override def errorCallback(channel: String, error: PubnubError) {
+              assert(false)
+              testObj.test(false)
+            }
+          })
+
+        }
+        override def successCallback(channel: String, message1: Object) {
+          pubnub.unsubscribe(channel)
+          assertTrue(false)
+        }
+      });
+
+      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+
+
+    }
+    ignore("should not receive message when subscribed to wildcard channel with filtering attribute foo==b" +
+      " when message published with metadata foo:bar") { pubnubTestConfig =>
+
+      var pubnub  = pubnubTestConfig.pubnub
+      var channel = "channel-" + getRandom()
+      var channel_wildcard = channel + ".*"
+      var channel_wildcard_c = channel + ".a"
+      var message = "message-" + getRandom()
+      var testObj = new PnTest(2)
+
+      pubnub.subscribe(channel_wildcard, new Callback {
+        override def connectCallback(channel: String, message1: Object) {
+          testObj.test(true)
+          pubnub.publish(channel_wildcard_c, message, new Callback {
+
+            override def successCallback(channel: String, message: Object) {
+              testObj.test(true)
+            }
+
+            override def errorCallback(channel: String, error: PubnubError) {
+              assert(false)
+              testObj.test(false)
+            }
+          })
+
+        }
+        override def successCallback(channel: String, message1: Object) {
+          pubnub.unsubscribe(channel)
+          assertTrue(false)
+        }
+      });
+
+      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+
+
+    }
+    ignore("should not receive message when subscribed to wildcard channel with filtering attribute bar==foo" +
+      " when message published with metadata foo:bar") { pubnubTestConfig =>
+
+      var pubnub  = pubnubTestConfig.pubnub
+      var channel = "channel-" + getRandom()
+      var channel_wildcard = channel + ".*"
+      var channel_wildcard_c = channel + ".a"
+      var message = "message-" + getRandom()
+      var testObj = new PnTest(4)
+
+      pubnub.subscribe(channel_wildcard, new Callback {
+        override def connectCallback(channel: String, message1: Object) {
+          testObj.test(true)
+          pubnub.publish(channel_wildcard_c, message, new Callback {
+
+            override def successCallback(channel: String, message: Object) {
+              testObj.test(true)
+            }
+
+            override def errorCallback(channel: String, error: PubnubError) {
+              assert(false)
+              testObj.test(false)
+            }
+          })
+
+        }
+        override def successCallback(channel: String, message1: Object) {
+          pubnub.unsubscribe(channel)
+          assertTrue(false)
+        }
+      });
+
+      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+
+
+    }
+
+    /*********/
+
+    it("should receive message when subscribed to channel and wildcard channel with filtering attribute foo==bar " +
+      " when message published with metadata foo:bar", ErrorTest) { pubnubTestConfig =>
+
+      var pubnub  = pubnubTestConfig.pubnub
+      var channel = "channel-" + getRandom()
+      var channel_wildcard = channel + ".*"
+      var channel_wildcard_c = channel + ".a"
+      var message = "message-" + getRandom()
+      var testObj = new PnTest(4)
+
+      pubnub.subscribe(Array(channel, channel_wildcard), new Callback {
+        override def connectCallback(channel: String, message1: Object) {
+          testObj.test(true)
+          pubnub.publish(channel_wildcard_c, message, new Callback {
+
+            override def successCallback(channel: String, message: Object) {
+              testObj.test(true)
+            }
+
+            override def errorCallback(channel: String, error: PubnubError) {
+              assert(false)
+              testObj.test(false)
+            }
+          })
+
+        }
+        override def successCallback(channel: String, message1: Object) {
+          pubnub.unsubscribe(channel)
+          testObj.test(true)
+          testObj.test(message1.equals(message))
+
+        }
+      });
+
+      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+    }
+
+
+    it("should be able to receive message successfully when subscribed to channel and wildcard channel with no filtering attribute" +
+      " when message published with no metadata") { pubnubTestConfig =>
+
+      var pubnub  = pubnubTestConfig.pubnub
+      var channel = "channel-" + getRandom()
+      var channel_wildcard = channel + ".*"
+      var channel_wildcard_c = channel + ".a"
+      var message = "message-" + getRandom()
+      var testObj = new PnTest(4)
+
+      pubnub.subscribe(Array(channel, channel_wildcard), new Callback {
+        override def connectCallback(channel: String, message1: Object) {
+          testObj.test(true)
+          pubnub.publish(channel_wildcard_c, message, new Callback {
+
+            override def successCallback(channel: String, message: Object) {
+              testObj.test(true)
+            }
+
+            override def errorCallback(channel: String, error: PubnubError) {
+              assert(false)
+              testObj.test(false)
+            }
+          })
+
+        }
+        override def successCallback(channel: String, message1: Object) {
+          pubnub.unsubscribe(channel)
+          testObj.test(true)
+          testObj.test(message1.equals(message))
+
+        }
+      });
+
+      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+
+    }
+
+    it("should be able to receive message successfully when subscribed to channel and wildcard channel with no filtering attribute" +
+      " when message published with metadata foo:bar") { pubnubTestConfig =>
+
+      var pubnub  = pubnubTestConfig.pubnub
+      var channel = "channel-" + getRandom()
+      var channel_wildcard = channel + ".*"
+      var channel_wildcard_c = channel + ".a"
+      var message = "message-" + getRandom()
+      var testObj = new PnTest(4)
+
+      pubnub.subscribe(Array(channel, channel_wildcard), new Callback {
+        override def connectCallback(channel: String, message1: Object) {
+          testObj.test(true)
+          pubnub.publish(channel_wildcard_c, message, new Callback {
+
+            override def successCallback(channel: String, message: Object) {
+              testObj.test(true)
+            }
+
+            override def errorCallback(channel: String, error: PubnubError) {
+              assert(false)
+              testObj.test(false)
+            }
+          })
+
+        }
+        override def successCallback(channel: String, message1: Object) {
+          pubnub.unsubscribe(channel)
+          testObj.test(true)
+          testObj.test(message1.equals(message))
+
+        }
+      });
+
+      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+
+    }
+    ignore("should not receive message when subscribed to channel and wildcard channel with filtering attribute foo==bar" +
+      " when message published with no metadata") { pubnubTestConfig =>
+
+      var pubnub  = pubnubTestConfig.pubnub
+      var channel = "channel-" + getRandom()
+      var channel_wildcard = channel + ".*"
+      var channel_wildcard_c = channel + ".a"
+      var message = "message-" + getRandom()
+      var testObj = new PnTest(2)
+
+      pubnub.subscribe(Array(channel, channel_wildcard), new Callback {
+        override def connectCallback(channel: String, message1: Object) {
+          testObj.test(true)
+          pubnub.publish(channel_wildcard_c, message, new Callback {
+
+            override def successCallback(channel: String, message: Object) {
+              testObj.test(true)
+            }
+
+            override def errorCallback(channel: String, error: PubnubError) {
+              assert(false)
+              testObj.test(false)
+            }
+          })
+
+        }
+        override def successCallback(channel: String, message1: Object) {
+          pubnub.unsubscribe(channel)
+          assertTrue(false)
+        }
+      });
+
+      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+
+
+    }
+    ignore("should not receive message when subscribed to channel and wildcard channel with filtering attribute a==b" +
+      " when message published with metadata foo:bar") { pubnubTestConfig =>
+
+      var pubnub  = pubnubTestConfig.pubnub
+      var channel = "channel-" + getRandom()
+      var channel_wildcard = channel + ".*"
+      var channel_wildcard_c = channel + ".a"
+      var message = "message-" + getRandom()
+      var testObj = new PnTest(2)
+
+      pubnub.subscribe(Array(channel, channel_wildcard), new Callback {
+        override def connectCallback(channel: String, message1: Object) {
+          testObj.test(true)
+          pubnub.publish(channel_wildcard_c, message, new Callback {
+
+            override def successCallback(channel: String, message: Object) {
+              testObj.test(true)
+            }
+
+            override def errorCallback(channel: String, error: PubnubError) {
+              assert(false)
+              testObj.test(false)
+            }
+          })
+
+        }
+        override def successCallback(channel: String, message1: Object) {
+          pubnub.unsubscribe(channel)
+          assertTrue(false)
+        }
+      });
+
+      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+
+
+    }
+    ignore("should not receive message when subscribed to channel and wildcard channel with filtering attribute foo==b" +
+      " when message published with metadata foo:bar") { pubnubTestConfig =>
+
+      var pubnub  = pubnubTestConfig.pubnub
+      var channel = "channel-" + getRandom()
+      var channel_wildcard = channel + ".*"
+      var channel_wildcard_c = channel + ".a"
+      var message = "message-" + getRandom()
+      var testObj = new PnTest(2)
+
+      pubnub.subscribe(Array(channel, channel_wildcard), new Callback {
+        override def connectCallback(channel: String, message1: Object) {
+          testObj.test(true)
+          pubnub.publish(channel_wildcard_c, message, new Callback {
+
+            override def successCallback(channel: String, message: Object) {
+              testObj.test(true)
+            }
+
+            override def errorCallback(channel: String, error: PubnubError) {
+              assert(false)
+              testObj.test(false)
+            }
+          })
+
+        }
+        override def successCallback(channel: String, message1: Object) {
+          pubnub.unsubscribe(channel)
+          assertTrue(false)
+        }
+      });
+
+      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+
+
+    }
+    ignore("should not receive message when subscribed to channel and wildcard channel with filtering attribute bar==foo" +
+      " when message published with metadata foo:bar") { pubnubTestConfig =>
+
+      var pubnub  = pubnubTestConfig.pubnub
+      var channel = "channel-" + getRandom()
+      var channel_wildcard = channel + ".*"
+      var channel_wildcard_c = channel + ".a"
+      var message = "message-" + getRandom()
+      var testObj = new PnTest(4)
+
+      pubnub.subscribe(Array(channel, channel_wildcard), new Callback {
+        override def connectCallback(channel: String, message1: Object) {
+          testObj.test(true)
+          pubnub.publish(channel_wildcard_c, message, new Callback {
+
+            override def successCallback(channel: String, message: Object) {
+              testObj.test(true)
+            }
+
+            override def errorCallback(channel: String, error: PubnubError) {
+              assert(false)
+              testObj.test(false)
+            }
+          })
+
+        }
+        override def successCallback(channel: String, message1: Object) {
+          pubnub.unsubscribe(channel)
+          assertTrue(false)
+        }
+      });
+
+      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+
+
+    }
+
+
+    /*********/
+
+
+    ignore("should receive message when subscribed to channel group with filtering attribute foo==bar " +
+      " when message published with metadata foo:bar") { pubnubTestConfig =>
+
+      var pubnub  = pubnubTestConfig.pubnub
+      var channel = "channel-" + getRandom()
+      var channel_wildcard = channel + ".*"
+      var channel_wildcard_c = channel + ".a"
+      var message = "message-" + getRandom()
+      var testObj = new PnTest(4)
+
+      pubnub.subscribe(channel_wildcard, new Callback {
+        override def connectCallback(channel: String, message1: Object) {
+          testObj.test(true)
+          pubnub.publish(channel_wildcard_c, message, new Callback {
+
+            override def successCallback(channel: String, message: Object) {
+              testObj.test(true)
+            }
+
+            override def errorCallback(channel: String, error: PubnubError) {
+              assert(false)
+              testObj.test(false)
+            }
+          })
+
+        }
+        override def successCallback(channel: String, message1: Object) {
+          pubnub.unsubscribe(channel)
+          testObj.test(true)
+          testObj.test(message1.equals(message))
+
+        }
+      });
+
+      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+    }
+
+
+    ignore("should be able to receive message successfully when subscribed to channel group with no filtering attribute" +
+      " when message published with no metadata") { pubnubTestConfig =>
+
+      var pubnub  = pubnubTestConfig.pubnub
+      var channel = "channel-" + getRandom()
+      var channel_wildcard = channel + ".*"
+      var channel_wildcard_c = channel + ".a"
+      var message = "message-" + getRandom()
+      var testObj = new PnTest(4)
+
+      pubnub.subscribe(channel_wildcard, new Callback {
+        override def connectCallback(channel: String, message1: Object) {
+          testObj.test(true)
+          pubnub.publish(channel_wildcard_c, message, new Callback {
+
+            override def successCallback(channel: String, message: Object) {
+              testObj.test(true)
+            }
+
+            override def errorCallback(channel: String, error: PubnubError) {
+              assert(false)
+              testObj.test(false)
+            }
+          })
+
+        }
+        override def successCallback(channel: String, message1: Object) {
+          pubnub.unsubscribe(channel)
+          testObj.test(true)
+          testObj.test(message1.equals(message))
+
+        }
+      });
+
+      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+
+    }
+
+    ignore("should be able to receive message successfully when subscribed to channel group with no filtering attribute" +
+      " when message published with metadata foo:bar") { pubnubTestConfig =>
+
+      var pubnub  = pubnubTestConfig.pubnub
+      var channel = "channel-" + getRandom()
+      var channel_wildcard = channel + ".*"
+      var channel_wildcard_c = channel + ".a"
+      var message = "message-" + getRandom()
+      var testObj = new PnTest(4)
+
+      pubnub.subscribe(channel_wildcard, new Callback {
+        override def connectCallback(channel: String, message1: Object) {
+          testObj.test(true)
+          pubnub.publish(channel_wildcard_c, message, new Callback {
+
+            override def successCallback(channel: String, message: Object) {
+              testObj.test(true)
+            }
+
+            override def errorCallback(channel: String, error: PubnubError) {
+              assert(false)
+              testObj.test(false)
+            }
+          })
+
+        }
+        override def successCallback(channel: String, message1: Object) {
+          pubnub.unsubscribe(channel)
+          testObj.test(true)
+          testObj.test(message1.equals(message))
+
+        }
+      });
+
+      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+
+    }
+    ignore("should not receive message when subscribed to channel group  with filtering attribute foo==bar" +
+      " when message published with no metadata") { pubnubTestConfig =>
+
+      var pubnub  = pubnubTestConfig.pubnub
+      var channel = "channel-" + getRandom()
+      var channel_wildcard = channel + ".*"
+      var channel_wildcard_c = channel + ".a"
+      var message = "message-" + getRandom()
+      var testObj = new PnTest(2)
+
+      pubnub.subscribe(channel_wildcard, new Callback {
+        override def connectCallback(channel: String, message1: Object) {
+          testObj.test(true)
+          pubnub.publish(channel_wildcard_c, message, new Callback {
+
+            override def successCallback(channel: String, message: Object) {
+              testObj.test(true)
+            }
+
+            override def errorCallback(channel: String, error: PubnubError) {
+              assert(false)
+              testObj.test(false)
+            }
+          })
+
+        }
+        override def successCallback(channel: String, message1: Object) {
+          pubnub.unsubscribe(channel)
+          assertTrue(false)
+        }
+      });
+
+      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+
+
+    }
+    ignore("should not receive message when subscribed to channel group with filtering attribute a==b" +
+      " when message published with metadata foo:bar") { pubnubTestConfig =>
+
+      var pubnub  = pubnubTestConfig.pubnub
+      var channel = "channel-" + getRandom()
+      var channel_wildcard = channel + ".*"
+      var channel_wildcard_c = channel + ".a"
+      var message = "message-" + getRandom()
+      var testObj = new PnTest(2)
+
+      pubnub.subscribe(channel_wildcard, new Callback {
+        override def connectCallback(channel: String, message1: Object) {
+          testObj.test(true)
+          pubnub.publish(channel_wildcard_c, message, new Callback {
+
+            override def successCallback(channel: String, message: Object) {
+              testObj.test(true)
+            }
+
+            override def errorCallback(channel: String, error: PubnubError) {
+              assert(false)
+              testObj.test(false)
+            }
+          })
+
+        }
+        override def successCallback(channel: String, message1: Object) {
+          pubnub.unsubscribe(channel)
+          assertTrue(false)
+        }
+      });
+
+      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+
+
+    }
+    ignore("should not receive message when subscribed to channel group with filtering attribute foo==b" +
+      " when message published with metadata foo:bar") { pubnubTestConfig =>
+
+      var pubnub  = pubnubTestConfig.pubnub
+      var channel = "channel-" + getRandom()
+      var channel_wildcard = channel + ".*"
+      var channel_wildcard_c = channel + ".a"
+      var message = "message-" + getRandom()
+      var testObj = new PnTest(2)
+
+      pubnub.subscribe(channel_wildcard, new Callback {
+        override def connectCallback(channel: String, message1: Object) {
+          testObj.test(true)
+          pubnub.publish(channel_wildcard_c, message, new Callback {
+
+            override def successCallback(channel: String, message: Object) {
+              testObj.test(true)
+            }
+
+            override def errorCallback(channel: String, error: PubnubError) {
+              assert(false)
+              testObj.test(false)
+            }
+          })
+
+        }
+        override def successCallback(channel: String, message1: Object) {
+          pubnub.unsubscribe(channel)
+          assertTrue(false)
+        }
+      });
+
+      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+
+
+    }
+    ignore("should not receive message when subscribed to channel group with filtering attribute bar==foo" +
+      " when message published with metadata foo:bar") { pubnubTestConfig =>
+
+      var pubnub  = pubnubTestConfig.pubnub
+      var channel = "channel-" + getRandom()
+      var channel_wildcard = channel + ".*"
+      var channel_wildcard_c = channel + ".a"
+      var message = "message-" + getRandom()
+      var testObj = new PnTest(4)
+
+      pubnub.subscribe(channel_wildcard, new Callback {
+        override def connectCallback(channel: String, message1: Object) {
+          testObj.test(true)
+          pubnub.publish(channel_wildcard_c, message, new Callback {
+
+            override def successCallback(channel: String, message: Object) {
+              testObj.test(true)
+            }
+
+            override def errorCallback(channel: String, error: PubnubError) {
+              assert(false)
+              testObj.test(false)
+            }
+          })
+
+        }
+        override def successCallback(channel: String, message1: Object) {
+          pubnub.unsubscribe(channel)
+          assertTrue(false)
+        }
+      });
+
+      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+
+
+    }
+
+    /**************/
+
+
+
+    ignore("should receive message when subscribed to channel and channel group with filtering attribute foo==bar " +
+      " when message published with metadata foo:bar") { pubnubTestConfig =>
+
+      var pubnub  = pubnubTestConfig.pubnub
+      var channel = "channel-" + getRandom()
+      var channel_wildcard = channel + ".*"
+      var channel_wildcard_c = channel + ".a"
+      var message = "message-" + getRandom()
+      var testObj = new PnTest(4)
+
+      pubnub.subscribe(channel_wildcard, new Callback {
+        override def connectCallback(channel: String, message1: Object) {
+          testObj.test(true)
+          pubnub.publish(channel_wildcard_c, message, new Callback {
+
+            override def successCallback(channel: String, message: Object) {
+              testObj.test(true)
+            }
+
+            override def errorCallback(channel: String, error: PubnubError) {
+              assert(false)
+              testObj.test(false)
+            }
+          })
+
+        }
+        override def successCallback(channel: String, message1: Object) {
+          pubnub.unsubscribe(channel)
+          testObj.test(true)
+          testObj.test(message1.equals(message))
+
+        }
+      });
+
+      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+    }
+
+
+    ignore("should be able to receive message successfully when subscribed to channel and channel group with no filtering attribute" +
+      " when message published with no metadata") { pubnubTestConfig =>
+
+      var pubnub  = pubnubTestConfig.pubnub
+      var channel = "channel-" + getRandom()
+      var channel_wildcard = channel + ".*"
+      var channel_wildcard_c = channel + ".a"
+      var message = "message-" + getRandom()
+      var testObj = new PnTest(4)
+
+      pubnub.subscribe(channel_wildcard, new Callback {
+        override def connectCallback(channel: String, message1: Object) {
+          testObj.test(true)
+          pubnub.publish(channel_wildcard_c, message, new Callback {
+
+            override def successCallback(channel: String, message: Object) {
+              testObj.test(true)
+            }
+
+            override def errorCallback(channel: String, error: PubnubError) {
+              assert(false)
+              testObj.test(false)
+            }
+          })
+
+        }
+        override def successCallback(channel: String, message1: Object) {
+          pubnub.unsubscribe(channel)
+          testObj.test(true)
+          testObj.test(message1.equals(message))
+
+        }
+      });
+
+      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+
+    }
+
+    ignore("should be able to receive message successfully when subscribed to channel and channel group with no filtering attribute" +
+      " when message published with metadata foo:bar") { pubnubTestConfig =>
+
+      var pubnub  = pubnubTestConfig.pubnub
+      var channel = "channel-" + getRandom()
+      var channel_wildcard = channel + ".*"
+      var channel_wildcard_c = channel + ".a"
+      var message = "message-" + getRandom()
+      var testObj = new PnTest(4)
+
+      pubnub.subscribe(channel_wildcard, new Callback {
+        override def connectCallback(channel: String, message1: Object) {
+          testObj.test(true)
+          pubnub.publish(channel_wildcard_c, message, new Callback {
+
+            override def successCallback(channel: String, message: Object) {
+              testObj.test(true)
+            }
+
+            override def errorCallback(channel: String, error: PubnubError) {
+              assert(false)
+              testObj.test(false)
+            }
+          })
+
+        }
+        override def successCallback(channel: String, message1: Object) {
+          pubnub.unsubscribe(channel)
+          testObj.test(true)
+          testObj.test(message1.equals(message))
+
+        }
+      });
+
+      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+
+    }
+    ignore("should not receive message when subscribed to channel and channel group  with filtering attribute foo==bar" +
+      " when message published with no metadata") { pubnubTestConfig =>
+
+      var pubnub  = pubnubTestConfig.pubnub
+      var channel = "channel-" + getRandom()
+      var channel_wildcard = channel + ".*"
+      var channel_wildcard_c = channel + ".a"
+      var message = "message-" + getRandom()
+      var testObj = new PnTest(2)
+
+      pubnub.subscribe(channel_wildcard, new Callback {
+        override def connectCallback(channel: String, message1: Object) {
+          testObj.test(true)
+          pubnub.publish(channel_wildcard_c, message, new Callback {
+
+            override def successCallback(channel: String, message: Object) {
+              testObj.test(true)
+            }
+
+            override def errorCallback(channel: String, error: PubnubError) {
+              assert(false)
+              testObj.test(false)
+            }
+          })
+
+        }
+        override def successCallback(channel: String, message1: Object) {
+          pubnub.unsubscribe(channel)
+          assertTrue(false)
+        }
+      });
+
+      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+
+
+    }
+    ignore("should not receive message when subscribed to channel and channel group with filtering attribute a==b" +
+      " when message published with metadata foo:bar") { pubnubTestConfig =>
+
+      var pubnub  = pubnubTestConfig.pubnub
+      var channel = "channel-" + getRandom()
+      var channel_wildcard = channel + ".*"
+      var channel_wildcard_c = channel + ".a"
+      var message = "message-" + getRandom()
+      var testObj = new PnTest(2)
+
+      pubnub.subscribe(channel_wildcard, new Callback {
+        override def connectCallback(channel: String, message1: Object) {
+          testObj.test(true)
+          pubnub.publish(channel_wildcard_c, message, new Callback {
+
+            override def successCallback(channel: String, message: Object) {
+              testObj.test(true)
+            }
+
+            override def errorCallback(channel: String, error: PubnubError) {
+              assert(false)
+              testObj.test(false)
+            }
+          })
+
+        }
+        override def successCallback(channel: String, message1: Object) {
+          pubnub.unsubscribe(channel)
+          assertTrue(false)
+        }
+      });
+
+      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+
+
+    }
+    ignore("should not receive message when subscribed to channel and channel group with filtering attribute foo==b" +
+      " when message published with metadata foo:bar") { pubnubTestConfig =>
+
+      var pubnub  = pubnubTestConfig.pubnub
+      var channel = "channel-" + getRandom()
+      var channel_wildcard = channel + ".*"
+      var channel_wildcard_c = channel + ".a"
+      var message = "message-" + getRandom()
+      var testObj = new PnTest(2)
+
+      pubnub.subscribe(channel_wildcard, new Callback {
+        override def connectCallback(channel: String, message1: Object) {
+          testObj.test(true)
+          pubnub.publish(channel_wildcard_c, message, new Callback {
+
+            override def successCallback(channel: String, message: Object) {
+              testObj.test(true)
+            }
+
+            override def errorCallback(channel: String, error: PubnubError) {
+              assert(false)
+              testObj.test(false)
+            }
+          })
+
+        }
+        override def successCallback(channel: String, message1: Object) {
+          pubnub.unsubscribe(channel)
+          assertTrue(false)
+        }
+      });
+
+      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+
+
+    }
+    ignore("should not receive message when subscribed to channel and channel group with filtering attribute bar==foo" +
+      " when message published with metadata foo:bar") { pubnubTestConfig =>
+
+      var pubnub  = pubnubTestConfig.pubnub
+      var channel = "channel-" + getRandom()
+      var channel_wildcard = channel + ".*"
+      var channel_wildcard_c = channel + ".a"
+      var message = "message-" + getRandom()
+      var testObj = new PnTest(4)
+
+      pubnub.subscribe(channel_wildcard, new Callback {
+        override def connectCallback(channel: String, message1: Object) {
+          testObj.test(true)
+          pubnub.publish(channel_wildcard_c, message, new Callback {
+
+            override def successCallback(channel: String, message: Object) {
+              testObj.test(true)
+            }
+
+            override def errorCallback(channel: String, error: PubnubError) {
+              assert(false)
+              testObj.test(false)
+            }
+          })
+
+        }
+        override def successCallback(channel: String, message1: Object) {
+          pubnub.unsubscribe(channel)
+          assertTrue(false)
+        }
+      });
+
+      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+
+
+    }
+
+
+
+    /**************/
+
+
+
+    ignore("should receive message when subscribed to channel, wildcard channel" +
+      " and channel group with filtering attribute foo==bar " +
+      " when message published with metadata foo:bar") { pubnubTestConfig =>
+
+      var pubnub  = pubnubTestConfig.pubnub
+      var channel = "channel-" + getRandom()
+      var channel_wildcard = channel + ".*"
+      var channel_wildcard_c = channel + ".a"
+      var message = "message-" + getRandom()
+      var testObj = new PnTest(4)
+
+      pubnub.subscribe(channel_wildcard, new Callback {
+        override def connectCallback(channel: String, message1: Object) {
+          testObj.test(true)
+          pubnub.publish(channel_wildcard_c, message, new Callback {
+
+            override def successCallback(channel: String, message: Object) {
+              testObj.test(true)
+            }
+
+            override def errorCallback(channel: String, error: PubnubError) {
+              assert(false)
+              testObj.test(false)
+            }
+          })
+
+        }
+        override def successCallback(channel: String, message1: Object) {
+          pubnub.unsubscribe(channel)
+          testObj.test(true)
+          testObj.test(message1.equals(message))
+
+        }
+      });
+
+      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+    }
+
+
+    ignore("should be able to receive message successfully when subscribed to channel, wildcard channel" +
+      " and channel group with no filtering attribute" +
+      " when message published with no metadata") { pubnubTestConfig =>
+
+      var pubnub  = pubnubTestConfig.pubnub
+      var channel = "channel-" + getRandom()
+      var channel_wildcard = channel + ".*"
+      var channel_wildcard_c = channel + ".a"
+      var message = "message-" + getRandom()
+      var testObj = new PnTest(4)
+
+      pubnub.subscribe(channel_wildcard, new Callback {
+        override def connectCallback(channel: String, message1: Object) {
+          testObj.test(true)
+          pubnub.publish(channel_wildcard_c, message, new Callback {
+
+            override def successCallback(channel: String, message: Object) {
+              testObj.test(true)
+            }
+
+            override def errorCallback(channel: String, error: PubnubError) {
+              assert(false)
+              testObj.test(false)
+            }
+          })
+
+        }
+        override def successCallback(channel: String, message1: Object) {
+          pubnub.unsubscribe(channel)
+          testObj.test(true)
+          testObj.test(message1.equals(message))
+
+        }
+      });
+
+      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+
+    }
+
+    ignore("should be able to receive message successfully when subscribed to channel, wildcard channel" +
+      " and channel group with no filtering attribute" +
+      " when message published with metadata foo:bar") { pubnubTestConfig =>
+
+      var pubnub  = pubnubTestConfig.pubnub
+      var channel = "channel-" + getRandom()
+      var channel_wildcard = channel + ".*"
+      var channel_wildcard_c = channel + ".a"
+      var message = "message-" + getRandom()
+      var testObj = new PnTest(4)
+
+      pubnub.subscribe(channel_wildcard, new Callback {
+        override def connectCallback(channel: String, message1: Object) {
+          testObj.test(true)
+          pubnub.publish(channel_wildcard_c, message, new Callback {
+
+            override def successCallback(channel: String, message: Object) {
+              testObj.test(true)
+            }
+
+            override def errorCallback(channel: String, error: PubnubError) {
+              assert(false)
+              testObj.test(false)
+            }
+          })
+
+        }
+        override def successCallback(channel: String, message1: Object) {
+          pubnub.unsubscribe(channel)
+          testObj.test(true)
+          testObj.test(message1.equals(message))
+
+        }
+      });
+
+      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+
+    }
+    ignore("should not receive message when subscribed to channel, wildcard channel" +
+      " and channel group  with filtering attribute foo==bar" +
+      " when message published with no metadata") { pubnubTestConfig =>
+
+      var pubnub  = pubnubTestConfig.pubnub
+      var channel = "channel-" + getRandom()
+      var channel_wildcard = channel + ".*"
+      var channel_wildcard_c = channel + ".a"
+      var message = "message-" + getRandom()
+      var testObj = new PnTest(2)
+
+      pubnub.subscribe(channel_wildcard, new Callback {
+        override def connectCallback(channel: String, message1: Object) {
+          testObj.test(true)
+          pubnub.publish(channel_wildcard_c, message, new Callback {
+
+            override def successCallback(channel: String, message: Object) {
+              testObj.test(true)
+            }
+
+            override def errorCallback(channel: String, error: PubnubError) {
+              assert(false)
+              testObj.test(false)
+            }
+          })
+
+        }
+        override def successCallback(channel: String, message1: Object) {
+          pubnub.unsubscribe(channel)
+          assertTrue(false)
+        }
+      });
+
+      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+
+
+    }
+    ignore("should not receive message when subscribed to channel, wildcard channel" +
+      " and channel group with filtering attribute a==b" +
+      " when message published with metadata foo:bar") { pubnubTestConfig =>
+
+      var pubnub  = pubnubTestConfig.pubnub
+      var channel = "channel-" + getRandom()
+      var channel_wildcard = channel + ".*"
+      var channel_wildcard_c = channel + ".a"
+      var message = "message-" + getRandom()
+      var testObj = new PnTest(2)
+
+      pubnub.subscribe(channel_wildcard, new Callback {
+        override def connectCallback(channel: String, message1: Object) {
+          testObj.test(true)
+          pubnub.publish(channel_wildcard_c, message, new Callback {
+
+            override def successCallback(channel: String, message: Object) {
+              testObj.test(true)
+            }
+
+            override def errorCallback(channel: String, error: PubnubError) {
+              assert(false)
+              testObj.test(false)
+            }
+          })
+
+        }
+        override def successCallback(channel: String, message1: Object) {
+          pubnub.unsubscribe(channel)
+          assertTrue(false)
+        }
+      });
+
+      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+
+
+    }
+    ignore("should not receive message when subscribed to channel, wildcard channel" +
+      " and channel group with filtering attribute foo==b" +
+      " when message published with metadata foo:bar") { pubnubTestConfig =>
+
+      var pubnub  = pubnubTestConfig.pubnub
+      var channel = "channel-" + getRandom()
+      var channel_wildcard = channel + ".*"
+      var channel_wildcard_c = channel + ".a"
+      var message = "message-" + getRandom()
+      var testObj = new PnTest(2)
+
+      pubnub.subscribe(channel_wildcard, new Callback {
+        override def connectCallback(channel: String, message1: Object) {
+          testObj.test(true)
+          pubnub.publish(channel_wildcard_c, message, new Callback {
+
+            override def successCallback(channel: String, message: Object) {
+              testObj.test(true)
+            }
+
+            override def errorCallback(channel: String, error: PubnubError) {
+              assert(false)
+              testObj.test(false)
+            }
+          })
+
+        }
+        override def successCallback(channel: String, message1: Object) {
+          pubnub.unsubscribe(channel)
+          assertTrue(false)
+        }
+      });
+
+      await atMost(5000, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+
+
+    }
+    ignore("should not receive message when subscribed to channel, wildcard channel " +
+      "and channel group with filtering attribute bar==foo" +
+      " when message published with metadata foo:bar") { pubnubTestConfig =>
+
+      var pubnub  = pubnubTestConfig.pubnub
+      var channel = "channel-" + getRandom()
+      var channel_wildcard = channel + ".*"
+      var channel_wildcard_c = channel + ".a"
+      var message = "message-" + getRandom()
+      var testObj = new PnTest(4)
+
+      pubnub.subscribe(channel_wildcard, new Callback {
+        override def connectCallback(channel: String, message1: Object) {
+          testObj.test(true)
+          pubnub.publish(channel_wildcard_c, message, new Callback {
+
+            override def successCallback(channel: String, message: Object) {
+              testObj.test(true)
+            }
+
+            override def errorCallback(channel: String, error: PubnubError) {
+              assert(false)
+              testObj.test(false)
+            }
+          })
+
+        }
+        override def successCallback(channel: String, message1: Object) {
+          pubnub.unsubscribe(channel)
+          assertTrue(false)
+        }
+      });
+
       await atMost(5000, MILLISECONDS) until { testObj.checksRemaining() == 0 }
 
 
     }
 
+
+    /**************/
   }
 }
