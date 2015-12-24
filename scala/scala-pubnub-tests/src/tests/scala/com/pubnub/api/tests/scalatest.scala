@@ -26,7 +26,7 @@ import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 @RunWith(classOf[JUnitRunner])
 class PublishSpec extends FunSpec with AwaitilitySupport {
-
+  /*
   describe("Publish()") {
 
     it("should be able to publish message successfully") {
@@ -72,4 +72,5 @@ class PublishSpec extends FunSpec with AwaitilitySupport {
 
     }
   }
+  */
 }

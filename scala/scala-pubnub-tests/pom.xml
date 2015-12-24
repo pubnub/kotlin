@@ -164,13 +164,44 @@
         </configuration>
         <executions>
           <execution>
-            <id>test</id>
+            <id>SSL=FALSE</id>
             <goals>
               <goal>test</goal>
             </goals>
+            <configuration>
+              <config>publish_key=ds,subscribe_key=ds,secret_key=ds,ssl=false</config>
+            </configuration>
+          </execution>
+          <execution>
+            <id>SSL=TRUE</id>
+            <goals>
+              <goal>test</goal>
+            </goals>
+            <configuration>
+              <config>publish_key=ds,subscribe_key=ds,secret_key=ds,ssl=true</config>
+            </configuration>
+          </execution>
+          <execution>
+            <id>ENCRYPTION=TRUE,SSL=FALSE</id>
+            <goals>
+              <goal>test</goal>
+            </goals>
+            <configuration>
+              <config>publish_key=ds,subscribe_key=ds,secret_key=ds,cipher_key=enigma,ssl=false</config>
+            </configuration>
+          </execution>
+          <execution>
+            <id>ENCRYPTION=TRUE,SSL=TRUE</id>
+            <goals>
+              <goal>test</goal>
+            </goals>
+            <configuration>
+              <config>publish_key=ds,subscribe_key=ds,secret_key=ds,cipher_key=enigma,ssl=true</config>
+            </configuration>
           </execution>
         </executions>
       </plugin>
+
     </plugins>
   </build>
 </project>
