@@ -386,6 +386,103 @@ abstract class PubnubCoreAsync extends PubnubCore implements PubnubAsyncInterfac
         _publish(args, false);
     }
 
+    
+    
+    public void publish(String channel, JSONObject message, boolean storeInHistory, JSONObject metadata, Callback callback) {
+        Hashtable args = new Hashtable();
+        args.put("channel", channel);
+        args.put("message", message);
+        args.put("callback", callback);
+        args.put("meta", metadata);
+        args.put("storeInHistory", (storeInHistory) ? "" : "0");
+        _publish(args, false);
+    }
+
+    public void publish(String channel, JSONArray message, boolean storeInHistory, JSONObject metadata, Callback callback) {
+        Hashtable args = new Hashtable();
+        args.put("channel", channel);
+        args.put("message", message);
+        args.put("callback", callback);
+        args.put("meta", metadata);
+        args.put("storeInHistory", (storeInHistory) ? "" : "0");
+        _publish(args, false);
+    }
+
+    public void publish(String channel, String message, boolean storeInHistory, JSONObject metadata, Callback callback) {
+        Hashtable args = new Hashtable();
+        args.put("channel", channel);
+        args.put("message", message);
+        args.put("callback", callback);
+        args.put("meta", metadata);
+        args.put("storeInHistory", (storeInHistory) ? "" : "0");
+        _publish(args, false);
+    }
+
+    public void publish(String channel, Integer message, boolean storeInHistory, JSONObject metadata, Callback callback) {
+        Hashtable args = new Hashtable();
+        args.put("channel", channel);
+        args.put("message", message);
+        args.put("callback", callback);
+        args.put("meta", metadata);
+        args.put("storeInHistory", (storeInHistory) ? "" : "0");
+        _publish(args, false);
+    }
+
+    public void publish(String channel, Double message, boolean storeInHistory, JSONObject metadata, Callback callback) {
+        Hashtable args = new Hashtable();
+        args.put("channel", channel);
+        args.put("message", message);
+        args.put("callback", callback);
+        args.put("meta", metadata);
+        args.put("storeInHistory", (storeInHistory) ? "" : "0");
+        _publish(args, false);
+    }
+
+    public void publish(String channel, JSONObject message, JSONObject metadata, Callback callback) {
+        Hashtable args = new Hashtable();
+        args.put("channel", channel);
+        args.put("message", message);
+        args.put("meta", metadata);
+        args.put("callback", callback);
+        _publish(args, false);
+    }
+
+    public void publish(String channel, JSONArray message, JSONObject metadata, Callback callback) {
+        Hashtable args = new Hashtable();
+        args.put("channel", channel);
+        args.put("message", message);
+        args.put("meta", metadata);
+        args.put("callback", callback);
+        _publish(args, false);
+    }
+
+    public void publish(String channel, String message, JSONObject metadata, Callback callback) {
+        Hashtable args = new Hashtable();
+        args.put("channel", channel);
+        args.put("message", message);
+        args.put("meta", metadata);
+        args.put("callback", callback);
+        _publish(args, false);
+    }
+
+    public void publish(String channel, Integer message, JSONObject metadata, Callback callback) {
+        Hashtable args = new Hashtable();
+        args.put("channel", channel);
+        args.put("message", message);
+        args.put("meta", metadata);
+        args.put("callback", callback);
+        _publish(args, false);
+    }
+
+    public void publish(String channel, Double message, JSONObject metadata, Callback callback) {
+        Hashtable args = new Hashtable();
+        args.put("channel", channel);
+        args.put("message", message);
+        args.put("meta", metadata);
+        args.put("callback", callback);
+        _publish(args, false);
+    }
+    
     protected void publish(Hashtable args, Callback callback) {
         args.put("callback", callback);
         _publish(args, false);
@@ -988,6 +1085,11 @@ abstract class PubnubCoreAsync extends PubnubCore implements PubnubAsyncInterfac
 
         String[] channelList = (String[]) args.get("channels");
         String[] groupList = (String[]) args.get("groups");
+        String filter = (String) args.get("filter");
+        
+        if (filter != null && filter.length() > 0) {
+            channelSubscriptions.setFilter(filter);
+        }
 
         if (channelList == null) {
             channelList = new String[0];
@@ -1117,6 +1219,11 @@ abstract class PubnubCoreAsync extends PubnubCore implements PubnubAsyncInterfac
         // add connection id
 
         params.put("connectionid", this.connectionid);
+        
+        if (channelSubscriptions.getFilter() != null && 
+                channelSubscriptions.getFilter().length() > 0) {
+            params.put("filter", channelSubscriptions.getFilter());
+        }
 
         HttpRequest hreq = new HttpRequest(urlComponents, params, new ResponseHandler() {
 
@@ -1365,4 +1472,10 @@ abstract class PubnubCoreAsync extends PubnubCore implements PubnubAsyncInterfac
         resubscribe();
     }
 
+    public String getFilter() {
+        return channelSubscriptions.getFilter();
+    }
+    public void setFilter(String filter) {
+        channelSubscriptions.setFilter(filter);
+    }
 }

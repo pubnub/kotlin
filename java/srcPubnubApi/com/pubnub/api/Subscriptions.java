@@ -14,7 +14,50 @@ class Subscriptions {
     private Hashtable items;
 
     JSONObject state;
+    
+    String filter;
 
+    public String getFilter() {
+        return filter;
+    }
+
+    public void setFilter(String filter) {
+        this.filter = filter;
+    }
+    
+    void runConnectOnNewThread(final Callback callback, final String name, final JSONArray jsa) {
+        Runnable r = new Runnable(){
+          public void run() {
+              callback.connectCallback(name, jsa);
+          }
+        };
+        Thread thread = new Thread(r);
+        thread.setDaemon(Pubnub.daemonThreads);
+        thread.start();
+    }
+
+    void runReconnectOnNewThread(final Callback callback, final String name, final JSONArray jsa) {
+        Runnable r = new Runnable(){
+          public void run() {
+              callback.disconnectCallback(name, jsa);
+          }
+        };
+        Thread thread = new Thread(r);
+        thread.setDaemon(Pubnub.daemonThreads);
+        thread.start();
+    }
+    
+    void runDisconnectOnNewThread(final Callback callback, final String name, final JSONArray jsa) {
+        Runnable r = new Runnable(){
+          public void run() {
+              callback.reconnectCallback(name, jsa);
+          }
+        };
+        Thread thread = new Thread(r);
+        thread.setDaemon(Pubnub.daemonThreads);
+        thread.start();
+    }
+    
     public Subscriptions() {
         items    = new Hashtable();
         state    = new JSONObject();
@@ -101,11 +144,11 @@ class Subscriptions {
                     if (_item.connected == false) {
                         _item.connected = true;
                         if (_item.subscribed == false) {
-                            _item.callback.connectCallback(_item.name,
+                            runConnectOnNewThread(_item.callback, _item.name,
                                     new JSONArray().put(1).put("Subscribe connected").put(message));
                         } else {
                             _item.subscribed = true;
-                            _item.callback.reconnectCallback(_item.name,
+                            runReconnectOnNewThread(_item.callback, _item.name,
                                     new JSONArray().put(1).put("Subscribe reconnected").put(message));
                         }
                     }
@@ -125,7 +168,7 @@ class Subscriptions {
                 if (_item != null) {
                     _item.connected = true;
                     if ( _item.error ) {
-                        _item.callback.reconnectCallback(_item.name,
+                        runReconnectOnNewThread(_item.callback, _item.name,
                                 new JSONArray().put(1).put("Subscribe reconnected").put(message));
                         _item.error = false;
                     }
@@ -141,8 +184,8 @@ class Subscriptions {
                 if (_item != null) {
                     if (_item.connected == true) {
                         _item.connected = false;
-                        _item.callback.disconnectCallback(_item.name,
-                                new JSONArray().put(0).put("Subscribe unable to connect").put(message));
+                        runDisconnectOnNewThread(_item.callback, _item.name,
+                                new JSONArray().put(1).put("Subscribe unable to connect").put(message));
                     }
                 }
             }

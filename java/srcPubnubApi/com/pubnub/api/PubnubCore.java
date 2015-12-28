@@ -214,7 +214,9 @@ abstract class PubnubCore implements PubnubInterface {
 
         if (storeInHistory != null && storeInHistory.length() > 0) parameters.put("store", storeInHistory);
 
-
+        
+        JSONObject meta = (JSONObject) args.get("meta");
+        if (meta != null && meta.length() > 0) parameters.put("meta", meta.toString());
 
         final Callback callback = getWrappedCallback(cb);
 

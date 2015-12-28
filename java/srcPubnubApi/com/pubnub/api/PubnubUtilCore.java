@@ -14,7 +14,11 @@ import java.util.Vector;
  */
 class PubnubUtilCore {
 
-	
+    static void addToHash(Hashtable h, String name, Object object) {
+        if (object != null) {
+            h.put(name, object);
+        }
+    }
 	
     /**
      * Takes source and delimiter string as inputs and returns splitted string
