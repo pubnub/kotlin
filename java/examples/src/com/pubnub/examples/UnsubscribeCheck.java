@@ -5,278 +5,242 @@ import com.pubnub.api.Pubnub;
 import com.pubnub.api.PubnubError;
 import com.pubnub.api.PubnubException;
 
-
 class SubscribeCallback extends Callback {
-	@Override
-	public void successCallback(String channel, Object message) {
-		System.out.println("Message : " + message + ", on " + channel);
-	}
-	@Override
-	public void connectCallback(String channel, Object message) {
-		System.out.println("Connect  on : " + channel);
-	}
-	@Override
-	public void errorCallback(String channel, PubnubError message) {
-		System.out.println("Message : " + message + ", on " + channel);
-	}
+    @Override
+    public void successCallback(String channel, Object message) {
+        System.out.println("Message : " + message + ", on " + channel);
+    }
+
+    @Override
+    public void connectCallback(String channel, Object message) {
+        System.out.println("Connect  on : " + channel);
+    }
+
+    @Override
+    public void errorCallback(String channel, PubnubError message) {
+        System.out.println("Message : " + message + ", on " + channel);
+    }
 }
 
 class GenericCallback extends Callback {
-	@Override
-	public void successCallback(String channel, Object message) {
-		System.out.println("CALLBACK : " + message );
-	}
-	@Override
-	public void errorCallback(String channel, PubnubError error) {
-		System.out.println("ERROR : " + error);
-	}
+    @Override
+    public void successCallback(String channel, Object message) {
+        System.out.println("CALLBACK : " + message);
+    }
+
+    @Override
+    public void errorCallback(String channel, PubnubError error) {
+        System.out.println("ERROR : " + error);
+    }
 }
 
 public class UnsubscribeCheck {
 
-	public static void main(String[] args) {
-		Pubnub pubnub = new Pubnub("ds", "ds");
-		
-		try {
-			pubnub.subscribe("a", new SubscribeCallback());
-			
-			Thread.sleep(5000);
-			
-			pubnub.unsubscribeAll(new GenericCallback());
-			
-			Thread.sleep(5000);
-			
-			System.out.println();
-			
-			pubnub.subscribe("a", new SubscribeCallback());
-			
-			Thread.sleep(5000);
-			pubnub.unsubscribe("a", new GenericCallback());
-			
-			Thread.sleep(5000);
-			
-			pubnub.channelGroupSubscribe("ab", new SubscribeCallback());
-			
-			
-			Thread.sleep(5000);
+    public static void main(String[] args) {
+        Pubnub pubnub = new Pubnub("ds", "ds");
 
-			pubnub.channelGroupUnsubscribe("ab", new GenericCallback());
-			
-			Thread.sleep(5000);
-			
-			System.out.println();
-			
-			
-			
-			pubnub.channelGroupSubscribe("ab", new SubscribeCallback());
-			
-			
-			Thread.sleep(5000);
+        try {
+            pubnub.subscribe("a", new SubscribeCallback());
 
-			pubnub.channelGroupUnsubscribe("ab");
-			
-			
-			Thread.sleep(5000);
-			
-			pubnub.channelGroupSubscribe("ab", new SubscribeCallback());
-			pubnub.subscribe("a", new SubscribeCallback());
-			
-			
-			Thread.sleep(5000);
+            Thread.sleep(5000);
 
-			pubnub.unsubscribeAll(new GenericCallback());
-			
-			
-			
-			Thread.sleep(5000);
-			System.out.println();			
-			pubnub.channelGroupSubscribe("ab", new SubscribeCallback());
-			pubnub.channelGroupSubscribe("cd", new SubscribeCallback());
-			pubnub.subscribe("a", new SubscribeCallback());
-			pubnub.subscribe("b", new SubscribeCallback());
-			
-			
-			Thread.sleep(5000);
+            pubnub.unsubscribeAll(new GenericCallback());
 
-			pubnub.unsubscribeAll(new GenericCallback());
-			
-			
-			
-			Thread.sleep(5000);
-			
-			System.out.println();
-			pubnub.channelGroupSubscribe("cd", new SubscribeCallback());
-			pubnub.subscribe("a", new SubscribeCallback());
-			pubnub.subscribe("b", new SubscribeCallback());
-			
-			
-			Thread.sleep(5000);
+            Thread.sleep(5000);
 
-			pubnub.unsubscribeAll(new GenericCallback());
-			
-			
-			Thread.sleep(5000);
-			
-			System.out.println();
-			pubnub.channelGroupSubscribe("cd", new SubscribeCallback());
-			pubnub.subscribe("a", new SubscribeCallback());
-			
-			
-			Thread.sleep(5000);
+            System.out.println();
 
-			pubnub.unsubscribeAll(new GenericCallback());
-			
-			Thread.sleep(5000);
-			System.out.println();			
-			pubnub.channelGroupSubscribe("cd", new SubscribeCallback());
-			
-			
-			Thread.sleep(5000);
+            pubnub.subscribe("a", new SubscribeCallback());
 
-			pubnub.unsubscribeAll(new GenericCallback());
-			
-			Thread.sleep(5000);
-			System.out.println();		
-			pubnub.channelGroupSubscribe("cd", new SubscribeCallback());
-			
-			
-			Thread.sleep(5000);
+            Thread.sleep(5000);
+            pubnub.unsubscribe("a", new GenericCallback());
 
-			pubnub.unsubscribeAll(new GenericCallback());
-			
-			Thread.sleep(5000);
-			
-		
-			
-			pubnub.subscribe("a", new SubscribeCallback());
-			
-			Thread.sleep(5000);
-			
-			pubnub.unsubscribeAll();
-			
-			Thread.sleep(5000);
-			
-			System.out.println();
-			
-			pubnub.subscribe("a", new SubscribeCallback());
-			
-			Thread.sleep(5000);
-			pubnub.unsubscribe("a", new GenericCallback());
-			
-			Thread.sleep(5000);
-			
-			pubnub.channelGroupSubscribe("ab", new SubscribeCallback());
-			
-			
-			Thread.sleep(5000);
+            Thread.sleep(5000);
 
-			pubnub.channelGroupUnsubscribe("ab");
-			
-			Thread.sleep(5000);
-			
-			System.out.println();
-			
-			
-			
-			pubnub.channelGroupSubscribe("ab", new SubscribeCallback());
-			
-			
-			Thread.sleep(5000);
+            pubnub.channelGroupSubscribe("ab", new SubscribeCallback());
 
-			pubnub.channelGroupUnsubscribe("ab");
-			
-			
-			Thread.sleep(5000);
-			
-			pubnub.channelGroupSubscribe("ab", new SubscribeCallback());
-			pubnub.subscribe("a", new SubscribeCallback());
-			
-			
-			Thread.sleep(5000);
+            Thread.sleep(5000);
 
-			pubnub.unsubscribeAll();
-			
-			
-			
-			Thread.sleep(5000);
-			System.out.println();			
-			pubnub.channelGroupSubscribe("ab", new SubscribeCallback());
-			pubnub.channelGroupSubscribe("cd", new SubscribeCallback());
-			pubnub.subscribe("a", new SubscribeCallback());
-			pubnub.subscribe("b", new SubscribeCallback());
-			
-			
-			Thread.sleep(5000);
+            pubnub.channelGroupUnsubscribe("ab", new GenericCallback());
 
-			pubnub.unsubscribeAll();
-			
-			
-			
-			Thread.sleep(5000);
-			
-			System.out.println();
-			pubnub.channelGroupSubscribe("cd", new SubscribeCallback());
-			pubnub.subscribe("a", new SubscribeCallback());
-			pubnub.subscribe("b", new SubscribeCallback());
-			
-			
-			Thread.sleep(5000);
+            Thread.sleep(5000);
 
-			pubnub.unsubscribeAll();
-			
-			
-			Thread.sleep(5000);
-			
-			System.out.println();
-			pubnub.channelGroupSubscribe("cd", new SubscribeCallback());
-			pubnub.subscribe("a", new SubscribeCallback());
-			
-			
-			Thread.sleep(5000);
+            System.out.println();
 
-			pubnub.unsubscribeAll();
-			
-			Thread.sleep(5000);
-			System.out.println();			
-			pubnub.channelGroupSubscribe("cd", new SubscribeCallback());
-			
-			
-			Thread.sleep(5000);
+            pubnub.channelGroupSubscribe("ab", new SubscribeCallback());
 
-			pubnub.unsubscribeAll();
-			
-			Thread.sleep(5000);
-			System.out.println();		
-			pubnub.channelGroupSubscribe("cd", new SubscribeCallback());
-			
-			
-			Thread.sleep(5000);
+            Thread.sleep(5000);
 
-			pubnub.unsubscribeAll();
-			
-			Thread.sleep(5000);
-			System.out.println();		
-			pubnub.subscribe("cd", new SubscribeCallback());
-			
-			
-			Thread.sleep(5000);
+            pubnub.channelGroupUnsubscribe("ab");
 
-			pubnub.unsubscribeAll();		
-			
-			
-			
-			Thread.sleep(5000);
-			pubnub.shutdown();
-			
-		} catch (PubnubException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
+            Thread.sleep(5000);
 
-	}
+            pubnub.channelGroupSubscribe("ab", new SubscribeCallback());
+            pubnub.subscribe("a", new SubscribeCallback());
+
+            Thread.sleep(5000);
+
+            pubnub.unsubscribeAll(new GenericCallback());
+
+            Thread.sleep(5000);
+            System.out.println();
+            pubnub.channelGroupSubscribe("ab", new SubscribeCallback());
+            pubnub.channelGroupSubscribe("cd", new SubscribeCallback());
+            pubnub.subscribe("a", new SubscribeCallback());
+            pubnub.subscribe("b", new SubscribeCallback());
+
+            Thread.sleep(5000);
+
+            pubnub.unsubscribeAll(new GenericCallback());
+
+            Thread.sleep(5000);
+
+            System.out.println();
+            pubnub.channelGroupSubscribe("cd", new SubscribeCallback());
+            pubnub.subscribe("a", new SubscribeCallback());
+            pubnub.subscribe("b", new SubscribeCallback());
+
+            Thread.sleep(5000);
+
+            pubnub.unsubscribeAll(new GenericCallback());
+
+            Thread.sleep(5000);
+
+            System.out.println();
+            pubnub.channelGroupSubscribe("cd", new SubscribeCallback());
+            pubnub.subscribe("a", new SubscribeCallback());
+
+            Thread.sleep(5000);
+
+            pubnub.unsubscribeAll(new GenericCallback());
+
+            Thread.sleep(5000);
+            System.out.println();
+            pubnub.channelGroupSubscribe("cd", new SubscribeCallback());
+
+            Thread.sleep(5000);
+
+            pubnub.unsubscribeAll(new GenericCallback());
+
+            Thread.sleep(5000);
+            System.out.println();
+            pubnub.channelGroupSubscribe("cd", new SubscribeCallback());
+
+            Thread.sleep(5000);
+
+            pubnub.unsubscribeAll(new GenericCallback());
+
+            Thread.sleep(5000);
+
+            pubnub.subscribe("a", new SubscribeCallback());
+
+            Thread.sleep(5000);
+
+            pubnub.unsubscribeAll();
+
+            Thread.sleep(5000);
+
+            System.out.println();
+
+            pubnub.subscribe("a", new SubscribeCallback());
+
+            Thread.sleep(5000);
+            pubnub.unsubscribe("a", new GenericCallback());
+
+            Thread.sleep(5000);
+
+            pubnub.channelGroupSubscribe("ab", new SubscribeCallback());
+
+            Thread.sleep(5000);
+
+            pubnub.channelGroupUnsubscribe("ab");
+
+            Thread.sleep(5000);
+
+            System.out.println();
+
+            pubnub.channelGroupSubscribe("ab", new SubscribeCallback());
+
+            Thread.sleep(5000);
+
+            pubnub.channelGroupUnsubscribe("ab");
+
+            Thread.sleep(5000);
+
+            pubnub.channelGroupSubscribe("ab", new SubscribeCallback());
+            pubnub.subscribe("a", new SubscribeCallback());
+
+            Thread.sleep(5000);
+
+            pubnub.unsubscribeAll();
+
+            Thread.sleep(5000);
+            System.out.println();
+            pubnub.channelGroupSubscribe("ab", new SubscribeCallback());
+            pubnub.channelGroupSubscribe("cd", new SubscribeCallback());
+            pubnub.subscribe("a", new SubscribeCallback());
+            pubnub.subscribe("b", new SubscribeCallback());
+
+            Thread.sleep(5000);
+
+            pubnub.unsubscribeAll();
+
+            Thread.sleep(5000);
+
+            System.out.println();
+            pubnub.channelGroupSubscribe("cd", new SubscribeCallback());
+            pubnub.subscribe("a", new SubscribeCallback());
+            pubnub.subscribe("b", new SubscribeCallback());
+
+            Thread.sleep(5000);
+
+            pubnub.unsubscribeAll();
+
+            Thread.sleep(5000);
+
+            System.out.println();
+            pubnub.channelGroupSubscribe("cd", new SubscribeCallback());
+            pubnub.subscribe("a", new SubscribeCallback());
+
+            Thread.sleep(5000);
+
+            pubnub.unsubscribeAll();
+
+            Thread.sleep(5000);
+            System.out.println();
+            pubnub.channelGroupSubscribe("cd", new SubscribeCallback());
+
+            Thread.sleep(5000);
+
+            pubnub.unsubscribeAll();
+
+            Thread.sleep(5000);
+            System.out.println();
+            pubnub.channelGroupSubscribe("cd", new SubscribeCallback());
+
+            Thread.sleep(5000);
+
+            pubnub.unsubscribeAll();
+
+            Thread.sleep(5000);
+            System.out.println();
+            pubnub.subscribe("cd", new SubscribeCallback());
+
+            Thread.sleep(5000);
+
+            pubnub.unsubscribeAll();
+
+            Thread.sleep(5000);
+            pubnub.shutdown();
+
+        } catch (PubnubException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+    }
 
 }

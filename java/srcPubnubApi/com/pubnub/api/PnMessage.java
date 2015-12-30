@@ -3,11 +3,9 @@ package com.pubnub.api;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-
-
-
 /**
  * Pubnub Message Object
+ * 
  * @author Pubnub
  *
  */
@@ -16,19 +14,19 @@ public class PnMessage extends JSONObject {
     private Callback callback;
     private Pubnub pubnub;
 
-
     /**
      * Constructor for Pubnub Message Class
+     * 
      * @param pubnub
-     *         Pubnub object
+     *            Pubnub object
      * @param channel
-     *         Channel name
+     *            Channel name
      * @param callback
-     *         Callback object
+     *            Callback object
      */
     public PnMessage(Pubnub pubnub, String channel, Callback callback) {
         super();
-        this.channel  = channel;
+        this.channel = channel;
         this.callback = callback;
         this.pubnub = pubnub;
     }
@@ -42,10 +40,11 @@ public class PnMessage extends JSONObject {
 
     /**
      * Constructor for Pubnub Message Class
+     * 
      * @param apnsMsg
-     *         Pubnub APNS message object
+     *            Pubnub APNS message object
      * @param gcmMsg
-     *         Pubnub GCM message object
+     *            Pubnub GCM message object
      */
     public PnMessage(PnApnsMessage apnsMsg, PnGcmMessage gcmMsg) {
         super();
@@ -63,14 +62,15 @@ public class PnMessage extends JSONObject {
 
     /**
      * Constructor for Pubnub Message Class
+     * 
      * @param pubnub
-     *         Pubnub object
+     *            Pubnub object
      * @param callback
-     *         Callback object
+     *            Callback object
      * @param apnsMsg
-     *         Pubnub APNS message object
+     *            Pubnub APNS message object
      * @param gcmMsg
-     *         Pubnub GCM message object
+     *            Pubnub GCM message object
      */
     public PnMessage(Pubnub pubnub, String channel, Callback callback, PnApnsMessage apnsMsg, PnGcmMessage gcmMsg) {
         super();
@@ -91,6 +91,7 @@ public class PnMessage extends JSONObject {
 
     /**
      * Getter for channel set on PnMessage Object
+     * 
      * @return channel
      */
     public String getChannel() {
@@ -99,8 +100,9 @@ public class PnMessage extends JSONObject {
 
     /**
      * Setter for channel on PnMessage Object
+     * 
      * @param channel
-     *             Channel name
+     *            Channel name
      */
     public void setChannel(String channel) {
         this.channel = channel;
@@ -108,7 +110,8 @@ public class PnMessage extends JSONObject {
 
     /**
      * Getter for callback set on PnMessage object
-     * @return  callback
+     * 
+     * @return callback
      *
      */
     public Callback getCallback() {
@@ -117,8 +120,9 @@ public class PnMessage extends JSONObject {
 
     /**
      * Setter for callback on PnMessage object
+     * 
      * @param callback
-     *             Callback
+     *            Callback
      */
     public void setCallback(Callback callback) {
         this.callback = callback;
@@ -126,6 +130,7 @@ public class PnMessage extends JSONObject {
 
     /**
      * Getter for pubnub set on PnMessage object
+     * 
      * @return pubnub
      */
     public Pubnub getPubnub() {
@@ -134,8 +139,9 @@ public class PnMessage extends JSONObject {
 
     /**
      * Setter for pubnub on PnMessage object
+     * 
      * @param pubnub
-     *           Pubnub object
+     *            Pubnub object
      */
     public void setPubnub(Pubnub pubnub) {
         this.pubnub = pubnub;
@@ -143,8 +149,9 @@ public class PnMessage extends JSONObject {
 
     /**
      * Constructor for Pubnub Message Class
+     * 
      * @param gcmMsg
-     *         Pubnub GCM message object
+     *            Pubnub GCM message object
      */
     public PnMessage(PnGcmMessage gcmMsg) {
         super();
@@ -159,14 +166,15 @@ public class PnMessage extends JSONObject {
 
     /**
      * Constructor for Pubnub Message Class
+     * 
      * @param pubnub
-     *         Pubnub
+     *            Pubnub
      * @param channel
-     *         Channel
+     *            Channel
      * @param callback
-     *         Callback object
+     *            Callback object
      * @param gcmMsg
-     *         Pubnub GCM message object
+     *            Pubnub GCM message object
      */
     public PnMessage(Pubnub pubnub, String channel, Callback callback, PnGcmMessage gcmMsg) {
         super();
@@ -184,8 +192,9 @@ public class PnMessage extends JSONObject {
 
     /**
      * Constructor for Pubnub Message Class
+     * 
      * @param apnsMsg
-     *         Pubnub APNS message object
+     *            Pubnub APNS message object
      */
     public PnMessage(PnApnsMessage apnsMsg) {
         super();
@@ -200,14 +209,15 @@ public class PnMessage extends JSONObject {
 
     /**
      * Constructor for Pubnub Message Class
+     * 
      * @param pubnub
-     *         Pubnub
+     *            Pubnub
      * @param channel
-     *         Channel
+     *            Channel
      * @param callback
-     *         Callback object
+     *            Callback object
      * @param apnsMsg
-     *         Pubnub APNS message object
+     *            Pubnub APNS message object
      */
     public PnMessage(Pubnub pubnub, String channel, Callback callback, PnApnsMessage apnsMsg) {
         super();
@@ -225,16 +235,17 @@ public class PnMessage extends JSONObject {
 
     /**
      * Publish Message
+     * 
      * @param pubnub
-     *         Pubnub object
+     *            Pubnub object
      * @param channel
-     *         Channel
+     *            Channel
      * @param callback
-     *         Callback object
+     *            Callback object
      * @throws PubnubException
-     *         Exception if either channel or pubnub object is not set
+     *             Exception if either channel or pubnub object is not set
      */
-    public void publish(Pubnub pubnub, String channel, Callback callback) throws PubnubException  {
+    public void publish(Pubnub pubnub, String channel, Callback callback) throws PubnubException {
         this.channel = channel;
         this.callback = callback;
         this.pubnub = pubnub;
@@ -249,18 +260,20 @@ public class PnMessage extends JSONObject {
 
     /**
      * Publish Message
+     * 
      * @param pubnub
-     *         Pubnub object
+     *            Pubnub object
      * @param channel
-     *         Channel
+     *            Channel
      * @param storeInHistory
-         	  Store in History
+     *            Store in History
      * @param callback
-     *         Callback object
+     *            Callback object
      * @throws PubnubException
-     *         Exception if either channel or pubnub object is not set
+     *             Exception if either channel or pubnub object is not set
      */
-    public void publish(Pubnub pubnub, String channel, boolean storeInHistory, Callback callback) throws PubnubException  {
+    public void publish(Pubnub pubnub, String channel, boolean storeInHistory, Callback callback)
+            throws PubnubException {
         this.channel = channel;
         this.callback = callback;
         this.pubnub = pubnub;
@@ -275,8 +288,9 @@ public class PnMessage extends JSONObject {
 
     /**
      * Publish Message
+     * 
      * @throws PubnubException
-     *         Exception if either channel or pubnub object is not set
+     *             Exception if either channel or pubnub object is not set
      */
     public void publish() throws PubnubException {
         if (this.channel == null) {
@@ -287,13 +301,14 @@ public class PnMessage extends JSONObject {
         }
         pubnub.publish(channel, this, callback);
     }
-    
+
     /**
      * Publish Message
+     * 
      * @param storeInHistory
-         	  Store in History
+     *            Store in History
      * @throws PubnubException
-     *         Exception if either channel or pubnub object is not set
+     *             Exception if either channel or pubnub object is not set
      */
     public void publish(boolean storeInHistory) throws PubnubException {
         if (this.channel == null) {

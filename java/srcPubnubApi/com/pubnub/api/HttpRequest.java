@@ -26,6 +26,7 @@ class HttpRequest {
     public Worker getWorker() {
         return this._worker;
     }
+
     public void setSubzero(boolean subzero) {
         this.subzero = subzero;
     }
@@ -38,16 +39,14 @@ class HttpRequest {
         this.dar = dar;
     }
 
-    public HttpRequest(String[] urlComponents, Hashtable params,
-                       Hashtable headers, ResponseHandler rh) {
+    public HttpRequest(String[] urlComponents, Hashtable params, Hashtable headers, ResponseHandler rh) {
         this.setUrlComponents(urlComponents);
         this.setParams(params);
         this.setHeaders(headers);
         this.setResponseHandler(rh);
     }
 
-    public HttpRequest(String[] urlComponents, Hashtable params,
-                       ResponseHandler rh) {
+    public HttpRequest(String[] urlComponents, Hashtable params, ResponseHandler rh) {
         this.setUrlComponents(urlComponents);
         this.setParams(params);
         this.setResponseHandler(rh);
@@ -111,10 +110,8 @@ class HttpRequest {
                     first = false;
 
                 String key = (String) paramsKeys.nextElement();
-                sb.append(PubnubUtil.urlEncode((String) key))
-                .append("=")
-                .append(PubnubUtil.urlEncode((String) this.params
-                                             .get(key)));
+                sb.append(PubnubUtil.urlEncode((String) key)).append("=")
+                        .append(PubnubUtil.urlEncode((String) this.params.get(key)));
             }
 
             url = sb.toString();

@@ -48,7 +48,6 @@ public abstract class Callback {
 
     }
 
-
     void successWrapperCallback(String channel, Object message, String timetoken) {
         successCallback(channel, message);
         successCallback(channel, message, timetoken);
@@ -69,7 +68,7 @@ public abstract class Callback {
      *            error
      */
     public void errorCallback(String channel, PubnubError error) {
-        errorCallback(channel,error.toString());
+        errorCallback(channel, error.toString());
     }
 
     /**
@@ -79,8 +78,8 @@ public abstract class Callback {
      *            Channel Name
      * @param message
      *            Message
-     *@deprecated as of version 3.5.2 and will be removed with 3.6.0 .
-     *            Replaced by {@link #errorCallback(String channel, PubnubError error)}
+     * @deprecated as of version 3.5.2 and will be removed with 3.6.0 . Replaced
+     *             by {@link #errorCallback(String channel, PubnubError error)}
      */
     public void errorCallback(String channel, Object message) {
 

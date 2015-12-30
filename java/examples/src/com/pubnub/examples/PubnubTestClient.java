@@ -22,6 +22,7 @@ public class PubnubTestClient {
                 public void successCallback(String channel, Object message) {
                     recvSuccess++;
                 }
+
                 @Override
                 public void errorCallback(String channel, PubnubError error) {
                     recvErrors++;
@@ -36,6 +37,7 @@ public class PubnubTestClient {
             public void successCallback(String channel, Object message) {
                 sendSuccess++;
             }
+
             @Override
             public void errorCallback(String channel, PubnubError error) {
                 System.out.println(error.toString());

@@ -30,8 +30,7 @@ public class StateTest {
     }
 
     @Test
-    public void testStateForChannel()
-            throws InterruptedException, PubnubException, JSONException {
+    public void testStateForChannel() throws InterruptedException, PubnubException, JSONException {
 
         JSONObject state = new JSONObject();
         state.put("nickname", "jtester");
@@ -64,8 +63,7 @@ public class StateTest {
     }
 
     @Test
-    public void testStateForChannelGroup()
-            throws InterruptedException, PubnubException, JSONException {
+    public void testStateForChannelGroup() throws InterruptedException, PubnubException, JSONException {
 
         JSONObject state = new JSONObject();
         state.put("nickname", "jtester");

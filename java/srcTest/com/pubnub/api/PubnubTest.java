@@ -232,7 +232,9 @@ public class PubnubTest {
     }
 
     /**
-     * It is need to run JVM with option -Dfile.encoding=windows-1251(or something else latin incompatible encoding) in order to reproduce issue which covered by this test
+     * It is need to run JVM with option -Dfile.encoding=windows-1251(or
+     * something else latin incompatible encoding) in order to reproduce issue
+     * which covered by this test
      */
     @Test
     public void testPublishNonLatinString() throws PubnubException, InterruptedException {
@@ -414,11 +416,9 @@ public class PubnubTest {
         pubnub.publish(channel, sendMessage, new PublishCallback(latch) {
             @Override
             public void successCallback(String channel, Object message) {
-                pubnub.publish(channel, sendMessage,
-                new PublishCallback(latch) {
+                pubnub.publish(channel, sendMessage, new PublishCallback(latch) {
                     @Override
-                    public void successCallback(String channel,
-                    Object message) {
+                    public void successCallback(String channel, Object message) {
                         try {
                             Thread.sleep(5000);
                         } catch (InterruptedException e) {
@@ -450,11 +450,9 @@ public class PubnubTest {
         pubnub.publish(channel, sendMessage, new PublishCallback(latch) {
             @Override
             public void successCallback(String channel, Object message) {
-                pubnub.publish(channel, sendMessage,
-                new PublishCallback(latch) {
+                pubnub.publish(channel, sendMessage, new PublishCallback(latch) {
                     @Override
-                    public void successCallback(String channel,
-                    Object message) {
+                    public void successCallback(String channel, Object message) {
                         try {
                             Thread.sleep(5000);
                         } catch (InterruptedException e) {
@@ -598,7 +596,8 @@ public class PubnubTest {
     }
 
     @Test
-    public void testConnectionRestoreMultipleChannelsUnsubInSuccessCallback() throws InterruptedException, PubnubException {
+    public void testConnectionRestoreMultipleChannelsUnsubInSuccessCallback() throws InterruptedException,
+            PubnubException {
         String channel = "java-unittest-" + Math.random();
 
         final CountDownLatch latch = new CountDownLatch(5);
@@ -689,7 +688,7 @@ public class PubnubTest {
 
         pubnub.setResumeOnReconnect(false);
 
-        pubnub.subscribe(new String[]{channel, "b"}, new SubscribeCallback(latch) {
+        pubnub.subscribe(new String[] { channel, "b" }, new SubscribeCallback(latch) {
             public void connectCallback(String channel, Object message) {
                 pubnub.unsubscribe(channel);
                 pubnub.publish(channel, 10, new PublishCallback(latch) {
@@ -764,7 +763,8 @@ public class PubnubTest {
     }
 
     @Test
-    public void testConnectionRestoreFalseMultipleChannelsUnsubInSuccessCallback() throws InterruptedException, PubnubException {
+    public void testConnectionRestoreFalseMultipleChannelsUnsubInSuccessCallback() throws InterruptedException,
+            PubnubException {
         String channel = "java-unittest-" + Math.random();
 
         final CountDownLatch latch = new CountDownLatch(3);
@@ -772,7 +772,7 @@ public class PubnubTest {
 
         pubnub.setResumeOnReconnect(false);
 
-        pubnub.subscribe(new String[]{channel, "b"}, new SubscribeCallback(latch) {
+        pubnub.subscribe(new String[] { channel, "b" }, new SubscribeCallback(latch) {
             public void connectCallback(String channel, Object message) {
                 pubnub.publish(channel, 10, new PublishCallback(latch) {
                     public void successCallback(String channel, Object message) {
@@ -842,14 +842,12 @@ public class PubnubTest {
                     pubnub.publish(ch, message, new Callback() {
 
                         @Override
-                        public void successCallback(String channel,
-                        Object message) {
+                        public void successCallback(String channel, Object message) {
                             stats.put("count", (Integer) stats.get("count") + 1);
                         }
 
                         @Override
-                        public void errorCallback(String channel,
-                        PubnubError error) {
+                        public void errorCallback(String channel, PubnubError error) {
 
                         }
                     });
@@ -873,7 +871,7 @@ public class PubnubTest {
 
                 Hashtable<String, Object> args = new Hashtable<String, Object>();
 
-                args.put("channels", new String[]{ch});
+                args.put("channels", new String[] { ch });
                 args.put("callback", new Callback() {
 
                     @Override
@@ -887,10 +885,8 @@ public class PubnubTest {
 
                     @Override
                     public void successCallback(String channel, Object message) {
-                        int c = (results.get(channel) == null) ? 0
-                                : (Integer) results.get(channel);
-                        int d = (inputs.get(channel) == null) ? 0
-                                : (Integer) inputs.get(channel);
+                        int c = (results.get(channel) == null) ? 0 : (Integer) results.get(channel);
+                        int d = (inputs.get(channel) == null) ? 0 : (Integer) inputs.get(channel);
                         if (((Integer) c).equals((Integer) message))
                             stats.put("duplicate", true);
                         if (!(((Integer) d).equals((Integer) message)))
@@ -922,7 +918,7 @@ public class PubnubTest {
 
         assertFalse((Boolean) stats.get("duplicate").equals(true));
         assertFalse((Boolean) stats.get("wrong").equals(true));
-        assertEquals((Integer)0,(Integer) stats.get("count"));
+        assertEquals((Integer) 0, (Integer) stats.get("count"));
     }
 
     @Test
@@ -969,7 +965,8 @@ public class PubnubTest {
 
                     }
                 });
-                pubnub.publish(args, new Callback() {});
+                pubnub.publish(args, new Callback() {
+                });
             }
         }
         class SubscribeThread implements Runnable {
@@ -995,15 +992,13 @@ public class PubnubTest {
 
                 Hashtable args = new Hashtable();
 
-                args.put("channels", new String[]{ch});
+                args.put("channels", new String[] { ch });
                 args.put("callback", new Callback() {
 
                     @Override
                     public void successCallback(String channel, Object message) {
-                        int c = (results.get(channel) == null) ? 0
-                                : (Integer) results.get(channel);
-                        int d = (inputs.get(channel) == null) ? 0
-                                : (Integer) inputs.get(channel);
+                        int c = (results.get(channel) == null) ? 0 : (Integer) results.get(channel);
+                        int d = (inputs.get(channel) == null) ? 0 : (Integer) inputs.get(channel);
                         if (((Integer) c).equals((Integer) message))
                             stats.put("duplicate", true);
                         if (!(((Integer) d).equals((Integer) message)))
@@ -1085,7 +1080,8 @@ public class PubnubTest {
 
                     }
                 });
-                pubnub.publish(args, new Callback() {});
+                pubnub.publish(args, new Callback() {
+                });
             }
         }
         class SubscribeThread implements Runnable {
@@ -1109,15 +1105,13 @@ public class PubnubTest {
                     e1.printStackTrace();
                 }
                 Hashtable args = new Hashtable();
-                args.put("channels", new String[]{ch});
+                args.put("channels", new String[] { ch });
                 args.put("callback", new Callback() {
 
                     @Override
                     public void successCallback(String channel, Object message) {
-                        int c = (results.get(channel) == null) ? 0
-                                : (Integer) results.get(channel);
-                        int d = (inputs.get(channel) == null) ? 0
-                                : (Integer) inputs.get(channel);
+                        int c = (results.get(channel) == null) ? 0 : (Integer) results.get(channel);
+                        int d = (inputs.get(channel) == null) ? 0 : (Integer) inputs.get(channel);
                         if (((Integer) c).equals((Integer) message))
                             stats.put("duplicate", true);
                         if (!(((Integer) d).equals((Integer) message)))
@@ -1221,18 +1215,17 @@ public class PubnubTest {
                     args.put("callback", new Callback() {
 
                         @Override
-                        public void successCallback(String channel,
-                        Object message) {
+                        public void successCallback(String channel, Object message) {
                             stats.put("count", (Integer) stats.get("count") + 1);
                         }
 
                         @Override
-                        public void errorCallback(String channel,
-                        PubnubError error) {
+                        public void errorCallback(String channel, PubnubError error) {
 
                         }
                     });
-                    pubnub.publish(args, new Callback() {});
+                    pubnub.publish(args, new Callback() {
+                    });
                 }
             }
 
@@ -1258,8 +1251,7 @@ public class PubnubTest {
                     @Override
                     public void connectCallback(String channel, Object message) {
 
-                        stats.put("connects",
-                                  (Integer) (stats.get("connects")) + 1);
+                        stats.put("connects", (Integer) (stats.get("connects")) + 1);
                         if ((Integer) stats.get("connects") >= count) {
                             startPublish();
                             new Thread(new DarThread()).start();
@@ -1268,10 +1260,8 @@ public class PubnubTest {
 
                     @Override
                     public void successCallback(String channel, Object message) {
-                        int c = (results.get(channel) == null) ? 0
-                                : (Integer) results.get(channel);
-                        int d = (inputs.get(channel) == null) ? 0
-                                : (Integer) inputs.get(channel);
+                        int c = (results.get(channel) == null) ? 0 : (Integer) results.get(channel);
+                        int d = (inputs.get(channel) == null) ? 0 : (Integer) inputs.get(channel);
                         if (((Integer) c).equals((Integer) message)) {
                             stats.put("duplicate", true);
                         }
@@ -1305,7 +1295,7 @@ public class PubnubTest {
         }
         assertFalse((Boolean) stats.get("duplicate").equals(true));
         assertFalse((Boolean) stats.get("wrong").equals(true));
-        assertEquals((Integer)0, (Integer) stats.get("count"));
+        assertEquals((Integer) 0, (Integer) stats.get("count"));
 
     }
 
@@ -1367,18 +1357,17 @@ public class PubnubTest {
                     args.put("callback", new Callback() {
 
                         @Override
-                        public void successCallback(String channel,
-                        Object message) {
+                        public void successCallback(String channel, Object message) {
                             stats.put("count", (Integer) stats.get("count") + 1);
                         }
 
                         @Override
-                        public void errorCallback(String channel,
-                        PubnubError error) {
+                        public void errorCallback(String channel, PubnubError error) {
 
                         }
                     });
-                    pubnub.publish(args, new Callback() {});
+                    pubnub.publish(args, new Callback() {
+                    });
                 }
             }
 
@@ -1398,14 +1387,13 @@ public class PubnubTest {
             public void run() {
 
                 Hashtable args = new Hashtable();
-                args.put("channels", new String[]{ch});
+                args.put("channels", new String[] { ch });
                 args.put("callback", new Callback() {
 
                     @Override
                     public void connectCallback(String channel, Object message) {
 
-                        stats.put("connects",
-                                  (Integer) (stats.get("connects")) + 1);
+                        stats.put("connects", (Integer) (stats.get("connects")) + 1);
                         if ((Integer) stats.get("connects") >= count) {
                             startPublish();
                             new Thread(new DarThread()).start();
@@ -1414,10 +1402,8 @@ public class PubnubTest {
 
                     @Override
                     public void successCallback(String channel, Object message) {
-                        int c = (results.get(channel) == null) ? 0
-                                : (Integer) results.get(channel);
-                        int d = (inputs.get(channel) == null) ? 0
-                                : (Integer) inputs.get(channel);
+                        int c = (results.get(channel) == null) ? 0 : (Integer) results.get(channel);
+                        int d = (inputs.get(channel) == null) ? 0 : (Integer) inputs.get(channel);
                         if (((Integer) c).equals((Integer) message)) {
                             stats.put("duplicate", true);
                         }
@@ -1459,8 +1445,7 @@ public class PubnubTest {
         final CountDownLatch latch = new CountDownLatch(1);
         UlsCallback ulscb = new UlsCallback(latch);
         Pubnub pubnub = new Pubnub("pub-c-a2650a22-deb1-44f5-aa87-1517049411d5",
-                                   "sub-c-a478dd2a-c33d-11e2-883f-02ee2ddab7fe",
-                                   "sec-c-YjFmNzYzMGMtYmI3NC00NzJkLTlkYzYtY2MwMzI4YTJhNDVh");
+                "sub-c-a478dd2a-c33d-11e2-883f-02ee2ddab7fe", "sec-c-YjFmNzYzMGMtYmI3NC00NzJkLTlkYzYtY2MwMzI4YTJhNDVh");
 
         pubnub.setCacheBusting(false);
         pubnub.pamGrant("hello-uls", "abcd", true, true, 1400, ulscb);
@@ -1477,13 +1462,13 @@ public class PubnubTest {
             assertTrue(false);
         }
     }
+
     @Test
     public void testUlsAuditSubKey() {
         final CountDownLatch latch = new CountDownLatch(1);
         UlsCallback ulscb = new UlsCallback(latch);
         Pubnub pubnub = new Pubnub("pub-c-a2650a22-deb1-44f5-aa87-1517049411d5",
-                                   "sub-c-a478dd2a-c33d-11e2-883f-02ee2ddab7fe",
-                                   "sec-c-YjFmNzYzMGMtYmI3NC00NzJkLTlkYzYtY2MwMzI4YTJhNDVh");
+                "sub-c-a478dd2a-c33d-11e2-883f-02ee2ddab7fe", "sec-c-YjFmNzYzMGMtYmI3NC00NzJkLTlkYzYtY2MwMzI4YTJhNDVh");
 
         pubnub.setCacheBusting(false);
         pubnub.pamAudit(ulscb);
@@ -1500,13 +1485,13 @@ public class PubnubTest {
             assertTrue(false);
         }
     }
+
     @Test
     public void testUlsAuditChannel() {
         final CountDownLatch latch = new CountDownLatch(1);
         UlsCallback ulscb = new UlsCallback(latch);
         Pubnub pubnub = new Pubnub("pub-c-a2650a22-deb1-44f5-aa87-1517049411d5",
-                                   "sub-c-a478dd2a-c33d-11e2-883f-02ee2ddab7fe",
-                                   "sec-c-YjFmNzYzMGMtYmI3NC00NzJkLTlkYzYtY2MwMzI4YTJhNDVh");
+                "sub-c-a478dd2a-c33d-11e2-883f-02ee2ddab7fe", "sec-c-YjFmNzYzMGMtYmI3NC00NzJkLTlkYzYtY2MwMzI4YTJhNDVh");
 
         pubnub.setCacheBusting(false);
         pubnub.pamAudit("hello-uls", ulscb);
@@ -1523,13 +1508,13 @@ public class PubnubTest {
             assertTrue(false);
         }
     }
+
     @Test
     public void testUlsAuditAuth() {
         final CountDownLatch latch = new CountDownLatch(1);
         UlsCallback ulscb = new UlsCallback(latch);
         Pubnub pubnub = new Pubnub("pub-c-a2650a22-deb1-44f5-aa87-1517049411d5",
-                                   "sub-c-a478dd2a-c33d-11e2-883f-02ee2ddab7fe",
-                                   "sec-c-YjFmNzYzMGMtYmI3NC00NzJkLTlkYzYtY2MwMzI4YTJhNDVh");
+                "sub-c-a478dd2a-c33d-11e2-883f-02ee2ddab7fe", "sec-c-YjFmNzYzMGMtYmI3NC00NzJkLTlkYzYtY2MwMzI4YTJhNDVh");
 
         pubnub.setCacheBusting(false);
         pubnub.pamAudit("hello-uls", "abcd", ulscb);
@@ -1546,13 +1531,13 @@ public class PubnubTest {
             assertTrue(false);
         }
     }
+
     @Test
     public void testUlsRevoke() {
         final CountDownLatch latch = new CountDownLatch(1);
         UlsCallback ulscb = new UlsCallback(latch);
         Pubnub pubnub = new Pubnub("pub-c-a2650a22-deb1-44f5-aa87-1517049411d5",
-                                   "sub-c-a478dd2a-c33d-11e2-883f-02ee2ddab7fe",
-                                   "sec-c-YjFmNzYzMGMtYmI3NC00NzJkLTlkYzYtY2MwMzI4YTJhNDVh");
+                "sub-c-a478dd2a-c33d-11e2-883f-02ee2ddab7fe", "sec-c-YjFmNzYzMGMtYmI3NC00NzJkLTlkYzYtY2MwMzI4YTJhNDVh");
 
         pubnub.setCacheBusting(false);
         pubnub.pamRevoke("hello-uls", "abcd", ulscb);

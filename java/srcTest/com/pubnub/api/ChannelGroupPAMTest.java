@@ -28,8 +28,7 @@ public class ChannelGroupPAMTest {
     }
 
     @Test
-    public void testGrantAllNonNamespacedChannelGroup()
-            throws InterruptedException, PubnubException, JSONException {
+    public void testGrantAllNonNamespacedChannelGroup() throws InterruptedException, PubnubException, JSONException {
         final CountDownLatch latch1 = new CountDownLatch(1);
         final CountDownLatch latch2 = new CountDownLatch(1);
         final CountDownLatch latch3 = new CountDownLatch(1);
@@ -47,9 +46,7 @@ public class ChannelGroupPAMTest {
         latch2.await(10, TimeUnit.SECONDS);
 
         JSONObject permissions = ((JSONObject) cb2.getResponse());
-        JSONObject auths = permissions
-                .getJSONObject("channel-groups")
-                .getJSONObject(group);
+        JSONObject auths = permissions.getJSONObject("channel-groups").getJSONObject(group);
 
         assertEquals("channel-group", permissions.getString("level"));
         assertEquals(0, auths.getInt("w"));
@@ -64,9 +61,7 @@ public class ChannelGroupPAMTest {
         latch4.await(10, TimeUnit.SECONDS);
 
         permissions = ((JSONObject) cb4.getResponse());
-        auths = permissions
-                .getJSONObject("channel-groups")
-                .getJSONObject(group);
+        auths = permissions.getJSONObject("channel-groups").getJSONObject(group);
 
         assertEquals("channel-group", permissions.getString("level"));
         assertEquals(0, auths.getInt("w"));
@@ -75,8 +70,7 @@ public class ChannelGroupPAMTest {
     }
 
     @Test
-    public void testGrantUserNonNamespacedChannelGroup()
-            throws InterruptedException, PubnubException, JSONException {
+    public void testGrantUserNonNamespacedChannelGroup() throws InterruptedException, PubnubException, JSONException {
         final CountDownLatch latch1 = new CountDownLatch(1);
         final CountDownLatch latch2 = new CountDownLatch(1);
         final CountDownLatch latch3 = new CountDownLatch(1);
@@ -120,8 +114,7 @@ public class ChannelGroupPAMTest {
     }
 
     @Test
-    public void testGrantAllNamespacedChannelGroup()
-            throws InterruptedException, PubnubException, JSONException {
+    public void testGrantAllNamespacedChannelGroup() throws InterruptedException, PubnubException, JSONException {
         final CountDownLatch latch1 = new CountDownLatch(1);
         final CountDownLatch latch2 = new CountDownLatch(1);
         final CountDownLatch latch3 = new CountDownLatch(1);
@@ -139,9 +132,7 @@ public class ChannelGroupPAMTest {
         latch2.await(10, TimeUnit.SECONDS);
 
         JSONObject permissions = ((JSONObject) cb2.getResponse());
-        JSONObject auths = permissions
-                .getJSONObject("channel-groups")
-                .getJSONObject(namespace + ":" + group);
+        JSONObject auths = permissions.getJSONObject("channel-groups").getJSONObject(namespace + ":" + group);
 
         assertEquals("channel-group", permissions.getString("level"));
         assertEquals(0, auths.getInt("w"));
@@ -156,9 +147,7 @@ public class ChannelGroupPAMTest {
         latch4.await(10, TimeUnit.SECONDS);
 
         permissions = ((JSONObject) cb4.getResponse());
-        auths = permissions
-                .getJSONObject("channel-groups")
-                .getJSONObject(namespace + ":" + group);
+        auths = permissions.getJSONObject("channel-groups").getJSONObject(namespace + ":" + group);
 
         assertEquals("channel-group", permissions.getString("level"));
         assertEquals(0, auths.getInt("w"));
@@ -167,8 +156,7 @@ public class ChannelGroupPAMTest {
     }
 
     @Test
-    public void testGrantUserNamespacedChannelGroup()
-            throws InterruptedException, PubnubException, JSONException {
+    public void testGrantUserNamespacedChannelGroup() throws InterruptedException, PubnubException, JSONException {
         final CountDownLatch latch1 = new CountDownLatch(1);
         final CountDownLatch latch2 = new CountDownLatch(1);
         final CountDownLatch latch3 = new CountDownLatch(1);
@@ -212,8 +200,7 @@ public class ChannelGroupPAMTest {
     }
 
     @Test
-    public void testGrantAllNamespace()
-            throws InterruptedException, PubnubException, JSONException {
+    public void testGrantAllNamespace() throws InterruptedException, PubnubException, JSONException {
         final CountDownLatch latch1 = new CountDownLatch(1);
         final CountDownLatch latch2 = new CountDownLatch(1);
         final CountDownLatch latch3 = new CountDownLatch(1);
@@ -231,9 +218,7 @@ public class ChannelGroupPAMTest {
         latch2.await(10, TimeUnit.SECONDS);
 
         JSONObject permissions = ((JSONObject) cb2.getResponse());
-        JSONObject auths = permissions
-                .getJSONObject("channel-groups")
-                .getJSONObject(namespace + ":");
+        JSONObject auths = permissions.getJSONObject("channel-groups").getJSONObject(namespace + ":");
 
         assertEquals("channel-group", permissions.getString("level"));
         assertEquals(0, auths.getInt("w"));
@@ -248,9 +233,7 @@ public class ChannelGroupPAMTest {
         latch4.await(10, TimeUnit.SECONDS);
 
         permissions = ((JSONObject) cb4.getResponse());
-        auths = permissions
-                .getJSONObject("channel-groups")
-                .getJSONObject(namespace + ":");
+        auths = permissions.getJSONObject("channel-groups").getJSONObject(namespace + ":");
 
         assertEquals("channel-group", permissions.getString("level"));
         assertEquals(0, auths.getInt("w"));
@@ -259,8 +242,7 @@ public class ChannelGroupPAMTest {
     }
 
     @Test
-    public void testGrantUserNamespace()
-            throws InterruptedException, PubnubException, JSONException {
+    public void testGrantUserNamespace() throws InterruptedException, PubnubException, JSONException {
         final CountDownLatch latch1 = new CountDownLatch(1);
         final CountDownLatch latch2 = new CountDownLatch(1);
         final CountDownLatch latch3 = new CountDownLatch(1);
@@ -304,8 +286,7 @@ public class ChannelGroupPAMTest {
     }
 
     @Test
-    public void testGrantAllGlobalNamespace()
-            throws InterruptedException, PubnubException, JSONException {
+    public void testGrantAllGlobalNamespace() throws InterruptedException, PubnubException, JSONException {
         final CountDownLatch latch1 = new CountDownLatch(1);
         final CountDownLatch latch2 = new CountDownLatch(1);
         final CountDownLatch latch3 = new CountDownLatch(1);
@@ -322,9 +303,7 @@ public class ChannelGroupPAMTest {
         pubnub.pamAuditChannelGroup(":", cb2);
         latch2.await(10, TimeUnit.SECONDS);
 
-        JSONObject permissions = ((JSONObject) cb2.getResponse())
-                .getJSONObject("channel-groups")
-                .getJSONObject(":");
+        JSONObject permissions = ((JSONObject) cb2.getResponse()).getJSONObject("channel-groups").getJSONObject(":");
 
         assertEquals(0, permissions.getInt("w"));
         assertEquals(0, permissions.getInt("r"));
@@ -337,9 +316,7 @@ public class ChannelGroupPAMTest {
         pubnub.pamAuditChannelGroup(":", cb4);
         latch4.await(10, TimeUnit.SECONDS);
 
-        permissions = ((JSONObject) cb4.getResponse())
-                .getJSONObject("channel-groups")
-                .getJSONObject(":");
+        permissions = ((JSONObject) cb4.getResponse()).getJSONObject("channel-groups").getJSONObject(":");
 
         assertEquals(0, permissions.getInt("w"));
         assertEquals(1, permissions.getInt("r"));
@@ -347,8 +324,7 @@ public class ChannelGroupPAMTest {
     }
 
     @Test
-    public void testGrantUserGlobalNamespace()
-            throws InterruptedException, PubnubException, JSONException {
+    public void testGrantUserGlobalNamespace() throws InterruptedException, PubnubException, JSONException {
         final CountDownLatch latch1 = new CountDownLatch(1);
         final CountDownLatch latch2 = new CountDownLatch(1);
         final CountDownLatch latch3 = new CountDownLatch(1);

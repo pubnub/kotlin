@@ -11,7 +11,8 @@ class SubscriptionItem {
     boolean error;
     Callback callback;
 
-    SubscriptionItem() {}
+    SubscriptionItem() {
+    }
 
     SubscriptionItem(String name, Callback callback) {
         this.name = name;
@@ -23,4 +24,3 @@ class SubscriptionItem {
         return this.name;
     }
 }
-

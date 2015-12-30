@@ -20,14 +20,12 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-
 import com.pubnub.api.Callback;
 import com.pubnub.api.Pubnub;
 import com.pubnub.api.PubnubException;
 
 enum Status {
-    PASS,
-    FAIL
+    PASS, FAIL
 };
 
 class Test {
@@ -44,17 +42,18 @@ class Test {
     private boolean ssl;
     private int currentStep = -1;
 
-    Test(int id, String description, String subkey, String origin, String channelA, String channelB, boolean ssl, JSONObject steps) {
-       this.id = id;
-       this.description = description;
-       this.subkey = subkey;
-       this.origin = origin;
-       this.channels = new LinkedHashMap<String,String>();
-       channels.put("channelA", channelA);
-       channels.put("channelB", channelB);
-       this.ssl = ssl;
-       this.result = Status.FAIL;
-       this.steps = steps;
+    Test(int id, String description, String subkey, String origin, String channelA, String channelB, boolean ssl,
+            JSONObject steps) {
+        this.id = id;
+        this.description = description;
+        this.subkey = subkey;
+        this.origin = origin;
+        this.channels = new LinkedHashMap<String, String>();
+        channels.put("channelA", channelA);
+        channels.put("channelB", channelB);
+        this.ssl = ssl;
+        this.result = Status.FAIL;
+        this.steps = steps;
     }
 
     void updateStatus() {
@@ -71,14 +70,14 @@ class Test {
 
             if (expectedEvents.size() <= 2) {
                 for (int j = 0; j < expectedEvents.size(); j++) {
-                    String expectedEventChannel = channels.get((String)((JSONArray)expectedEvents.get(j)).get(1));
-                    String expectedEventAction = (String)((JSONArray)expectedEvents.get(j)).get(0);
+                    String expectedEventChannel = channels.get((String) ((JSONArray) expectedEvents.get(j)).get(1));
+                    String expectedEventAction = (String) ((JSONArray) expectedEvents.get(j)).get(0);
 
-                    String observedEventChannel = (String)((JSONObject)observedEvents.get(j)).get("channel");
-                    String observedEventAction = (String)((JSONObject)observedEvents.get(j)).get("action");
+                    String observedEventChannel = (String) ((JSONObject) observedEvents.get(j)).get("channel");
+                    String observedEventAction = (String) ((JSONObject) observedEvents.get(j)).get("action");
 
-                    if ( !expectedEventChannel.equals(observedEventChannel) ||
-                            !expectedEventAction.equals(observedEventAction)) {
+                    if (!expectedEventChannel.equals(observedEventChannel)
+                            || !expectedEventAction.equals(observedEventAction)) {
                         result = Status.FAIL;
                         return;
                     }
@@ -87,11 +86,11 @@ class Test {
                 Set expected = new LinkedHashSet();
                 Set observed = new LinkedHashSet();
                 for (int j = 0; j < expectedEvents.size(); j++) {
-                    String expectedEventChannel = channels.get((String)((JSONArray)expectedEvents.get(j)).get(1));
-                    String expectedEventAction = (String)((JSONArray)expectedEvents.get(j)).get(0);
+                    String expectedEventChannel = channels.get((String) ((JSONArray) expectedEvents.get(j)).get(1));
+                    String expectedEventAction = (String) ((JSONArray) expectedEvents.get(j)).get(0);
 
-                    String observedEventChannel = (String)((JSONObject)observedEvents.get(j)).get("channel");
-                    String observedEventAction = (String)((JSONObject)observedEvents.get(j)).get("action");
+                    String observedEventChannel = (String) ((JSONObject) observedEvents.get(j)).get("channel");
+                    String observedEventAction = (String) ((JSONObject) observedEvents.get(j)).get("action");
 
                     expected.add(expectedEventChannel + "," + expectedEventAction);
                     observed.add(observedEventChannel + "," + observedEventAction);
@@ -105,7 +104,8 @@ class Test {
             result = Status.PASS;
         }
     }
-    void printResult () {
+
+    void printResult() {
         updateStatus();
         System.out.println();
         System.out.println("-----------------");
@@ -116,7 +116,7 @@ class Test {
         System.out.println("Sub Key : " + subkey);
         System.out.println();
 
-        for (int i = 0 ; i < steps.size() ; i++) {
+        for (int i = 0; i < steps.size(); i++) {
             JSONObject jso = (JSONObject) steps.get(String.valueOf(i));
             jso.toJSONString();
             System.out.println(jso.toJSONString());
@@ -128,24 +128,24 @@ class Test {
     void run() {
 
         Pubnub listener = new Pubnub("", subkey);
-        Pubnub actor = new Pubnub("",subkey, ssl);
+        Pubnub actor = new Pubnub("", subkey, ssl);
 
         try {
-            listener.presence(channels.get("channelA"), new Callback(){
+            listener.presence(channels.get("channelA"), new Callback() {
 
                 @Override
                 public void successCallback(String channel, Object message) {
                     System.out.println(channel + " : " + message);
                     JSONObject jso = null;
                     try {
-                        jso = (JSONObject)new JSONParser().parse(message.toString());
+                        jso = (JSONObject) new JSONParser().parse(message.toString());
                     } catch (ParseException e) {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
                     }
                     jso.put("channel", channel.split("-pnpres")[0]);
                     jso.put("time", Calendar.getInstance().getTime());
-                    JSONObject step =  (JSONObject)steps.get(String.valueOf(currentStep));
+                    JSONObject step = (JSONObject) steps.get(String.valueOf(currentStep));
                     JSONArray events = (JSONArray) step.get("events");
                     if (events == null) {
                         step.put("events", new JSONArray());
@@ -160,14 +160,14 @@ class Test {
             e1.printStackTrace();
         }
         try {
-            listener.presence(channels.get("channelB"), new Callback(){
+            listener.presence(channels.get("channelB"), new Callback() {
 
                 @Override
                 public void successCallback(String channel, Object message) {
                     System.out.println(channel + " : " + message);
                     JSONObject jso = null;
                     try {
-                        jso = (JSONObject)new JSONParser().parse(message.toString());
+                        jso = (JSONObject) new JSONParser().parse(message.toString());
                     } catch (ParseException e) {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
@@ -175,7 +175,7 @@ class Test {
                     jso.put("channel", channel.split("-pnpres")[0]);
                     jso.put("time", Calendar.getInstance().getTime());
 
-                    JSONObject step =  (JSONObject)steps.get(String.valueOf(currentStep));
+                    JSONObject step = (JSONObject) steps.get(String.valueOf(currentStep));
                     JSONArray events = (JSONArray) step.get("events");
                     if (events == null) {
                         step.put("events", new JSONArray());
@@ -198,20 +198,18 @@ class Test {
             e1.printStackTrace();
         }
 
-
-        for (int i = 0 ; i < steps.size(); i++) {
+        for (int i = 0; i < steps.size(); i++) {
             currentStep++;
             JSONObject step = (JSONObject) steps.get(String.valueOf(i));
             JSONArray actorStep = (JSONArray) step.get("actor");
 
             if (actorStep.get(0).equals("subscribe")) {
-                System.out.println("SUBSCRIBE : " +  channels.get(actorStep.get(1)));
+                System.out.println("SUBSCRIBE : " + channels.get(actorStep.get(1)));
                 try {
-                    actor.subscribe(channels.get(actorStep.get(1)), new Callback(){
+                    actor.subscribe(channels.get(actorStep.get(1)), new Callback() {
 
                         @Override
-                        public void successCallback(String channel,
-                                Object message) {
+                        public void successCallback(String channel, Object message) {
 
                         }
 
@@ -221,20 +219,22 @@ class Test {
                     e.printStackTrace();
                 }
             } else {
-                System.out.println("UNSUBSCRIBE : " +  channels.get(actorStep.get(1)));
+                System.out.println("UNSUBSCRIBE : " + channels.get(actorStep.get(1)));
                 actor.unsubscribe(channels.get(actorStep.get(1)));
 
             }
-            JSONArray listenerStep = (JSONArray)step.get("listener");
+            JSONArray listenerStep = (JSONArray) step.get("listener");
 
             Long stepDelay = 0L;
 
             for (int k = 0; k < listenerStep.size(); k++) {
-                Long delay = (Long) ((JSONArray)listenerStep.get(k)).get(2);
-                if (delay > stepDelay) stepDelay = delay;
+                Long delay = (Long) ((JSONArray) listenerStep.get(k)).get(2);
+                if (delay > stepDelay)
+                    stepDelay = delay;
             }
 
-            System.out.println("[" + Calendar.getInstance().getTime() + "] :  wait for " + (stepDelay/1000.00) + " seconds");
+            System.out.println("[" + Calendar.getInstance().getTime() + "] :  wait for " + (stepDelay / 1000.00)
+                    + " seconds");
             try {
                 Thread.sleep(stepDelay);
             } catch (InterruptedException e) {
@@ -242,14 +242,11 @@ class Test {
                 e.printStackTrace();
             }
 
-
         }
 
     }
 
-
 }
-
 
 public class PubnubPresenceTest {
     static List<Test> testsList = new ArrayList<Test>();
@@ -259,16 +256,14 @@ public class PubnubPresenceTest {
 
         JSONParser parser = new JSONParser();
 
-
-
         try {
 
             Object obj = parser.parse(new FileReader("./tests.json"));
 
-            JSONArray tests =  (JSONArray) obj;
+            JSONArray tests = (JSONArray) obj;
             obj = parser.parse(new FileReader("./keysets.json"));
             JSONObject keysets = (JSONObject) obj;
-            for (int i = 0 ; i < tests.size();i++) {
+            for (int i = 0; i < tests.size(); i++) {
                 JSONObject jso = (JSONObject) tests.get(i);
                 JSONObject common = (JSONObject) jso.get("common");
                 String description = (String) common.get("description");
@@ -281,16 +276,14 @@ public class PubnubPresenceTest {
                     continue;
                 }
                 String origin = "pubsub";
-                String subkey = (String) ((JSONObject)(keysets.get(common.get("keyset")))).get("subKey") ;
+                String subkey = (String) ((JSONObject) (keysets.get(common.get("keyset")))).get("subKey");
                 long time = new Date().getTime();
                 String channelA = "A-java-" + i + 1 + "-" + time;
-                String channelB = "B-java-" + i + 1 + "-"+ time;
-
+                String channelB = "B-java-" + i + 1 + "-" + time;
 
                 Test t = new Test(i + 1, description, subkey, origin, channelA, channelB, ssl, steps);
                 testsList.add(t);
             }
-
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();

@@ -41,8 +41,8 @@ public class NamespaceTest {
         final TestHelper.SimpleCallback cb3 = new TestHelper.SimpleCallback(latch3);
         final TestHelper.SimpleCallback cb4 = new TestHelper.SimpleCallback(latch4);
 
-        String[] groups = new String[]{"jtest1" + random, "jtest2" + random, "jtest3" + random};
-        String[] namespaces = new String[]{"jspace1" + random, "jspace2" + random, "jspace13" + random};
+        String[] groups = new String[] { "jtest1" + random, "jtest2" + random, "jtest3" + random };
+        String[] namespaces = new String[] { "jspace1" + random, "jspace2" + random, "jspace13" + random };
 
         // add
         for (int i = 0; i < groups.length; i++) {

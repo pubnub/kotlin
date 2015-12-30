@@ -32,8 +32,10 @@ abstract class PubnubCryptoCore {
     public PubnubCryptoCore(String CIPHER_KEY) {
         this.CIPHER_KEY = CIPHER_KEY;
     }
+
     public PubnubCryptoCore(String CIPHER_KEY, String initialization_vector) {
-        if (initialization_vector != null) this.IV = initialization_vector;
+        if (initialization_vector != null)
+            this.IV = initialization_vector;
         this.CIPHER_KEY = CIPHER_KEY;
     }
 
@@ -41,22 +43,18 @@ abstract class PubnubCryptoCore {
         return PubnubError.getErrorObject(PubnubError.PNERROBJ_CRYPTO_ERROR, code, message);
     }
 
-
     public void InitCiphers() throws PubnubException {
 
         try {
 
-            key = new String(Hex.encode(sha256(this.CIPHER_KEY.getBytes("UTF-8"))),
-                             "UTF-8").substring(0, 32).toLowerCase().getBytes("UTF-8");
-            encryptCipher = new PaddedBufferedBlockCipher(new CBCBlockCipher(
-                    new AESEngine()));
+            key = new String(Hex.encode(sha256(this.CIPHER_KEY.getBytes("UTF-8"))), "UTF-8").substring(0, 32)
+                    .toLowerCase().getBytes("UTF-8");
+            encryptCipher = new PaddedBufferedBlockCipher(new CBCBlockCipher(new AESEngine()));
 
-            decryptCipher = new PaddedBufferedBlockCipher(new CBCBlockCipher(
-                        new AESEngine()));
+            decryptCipher = new PaddedBufferedBlockCipher(new CBCBlockCipher(new AESEngine()));
 
             // create the IV parameter
-            ParametersWithIV parameterIV = new ParametersWithIV(new KeyParameter(
-                        key), IV.getBytes("UTF-8"));
+            ParametersWithIV parameterIV = new ParametersWithIV(new KeyParameter(key), IV.getBytes("UTF-8"));
 
             encryptCipher.init(true, parameterIV);
             decryptCipher.init(false, parameterIV);
@@ -106,20 +104,17 @@ abstract class PubnubCryptoCore {
         }
     }
 
-    public void CBCEncryptOrDecrypt(InputStream in, OutputStream out,
-                                    boolean encrypt) throws PubnubException {
+    public void CBCEncryptOrDecrypt(InputStream in, OutputStream out, boolean encrypt) throws PubnubException {
         if (encryptCipher == null || decryptCipher == null) {
             InitCiphers();
         }
-        PaddedBufferedBlockCipher cipher = (encrypt) ? encryptCipher
-                                           : decryptCipher;
+        PaddedBufferedBlockCipher cipher = (encrypt) ? encryptCipher : decryptCipher;
         int noBytesRead = 0; // number of bytes read from input
         int noBytesProcessed = 0; // number of bytes processed
 
         try {
             while ((noBytesRead = in.read(buf)) >= 0) {
-                noBytesProcessed = cipher
-                                   .processBytes(buf, 0, noBytesRead, obuf, 0);
+                noBytesProcessed = cipher.processBytes(buf, 0, noBytesRead, obuf, 0);
                 out.write(obuf, 0, noBytesProcessed);
             }
             noBytesProcessed = cipher.doFinal(obuf, 0);
@@ -143,8 +138,7 @@ abstract class PubnubCryptoCore {
         int len = s.length();
         byte[] data = new byte[len / 2];
         for (int i = 0; i < len; i += 2) {
-            data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4) + Character
-                                  .digit(s.charAt(i + 1), 16));
+            data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4) + Character.digit(s.charAt(i + 1), 16));
         }
         return data;
     }

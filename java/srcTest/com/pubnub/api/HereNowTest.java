@@ -30,8 +30,7 @@ public class HereNowTest {
     }
 
     @Test
-    public void testHereNowForOneChannel()
-            throws InterruptedException, PubnubException, JSONException {
+    public void testHereNowForOneChannel() throws InterruptedException, PubnubException, JSONException {
 
         final String channel = "ch1" + random;
 
@@ -41,7 +40,8 @@ public class HereNowTest {
         final TestHelper.SimpleCallback cb1 = new TestHelper.SimpleCallback(latch1) {
             @Override
             public void connectCallback(String item, Object message) {
-                if (item.equals(channel)) latch.countDown();
+                if (item.equals(channel))
+                    latch.countDown();
             }
         };
 
@@ -60,10 +60,9 @@ public class HereNowTest {
     }
 
     @Test
-    public void testHereNowForOneChannelGroup()
-            throws InterruptedException, PubnubException, JSONException {
+    public void testHereNowForOneChannelGroup() throws InterruptedException, PubnubException, JSONException {
 
-        final String[] channels = new String[]{"ch1" + random, "ch2" + random};
+        final String[] channels = new String[] { "ch1" + random, "ch2" + random };
 
         final CountDownLatch latch1 = new CountDownLatch(1);
         final CountDownLatch latch2 = new CountDownLatch(1);
@@ -90,10 +89,7 @@ public class HereNowTest {
         latch3.await(10, TimeUnit.SECONDS);
 
         JSONObject response = (JSONObject) cb3.getResponse();
-        JSONArray uuids = response
-                .getJSONObject("channels")
-                .getJSONObject(channels[0])
-                .getJSONArray("uuids");
+        JSONArray uuids = response.getJSONObject("channels").getJSONObject(channels[0]).getJSONArray("uuids");
 
         assertEquals(1, response.getInt("total_occupancy"));
         assertEquals(1, response.getInt("total_channels"));
@@ -103,8 +99,8 @@ public class HereNowTest {
 
     @Test
     public void testHereNowForMultipleChannels() throws InterruptedException, PubnubException, JSONException {
-        final String[] channels = new String[]{"ch1" + random, "ch2" + random};
-        final String[] groups = new String[]{group, "jtest2-" + random};
+        final String[] channels = new String[] { "ch1" + random, "ch2" + random };
+        final String[] groups = new String[] { group, "jtest2-" + random };
 
         final CountDownLatch latch1 = new CountDownLatch(1);
         final CountDownLatch latch2 = new CountDownLatch(1);
@@ -135,15 +131,9 @@ public class HereNowTest {
         latch4.await(10, TimeUnit.SECONDS);
 
         JSONObject response = (JSONObject) cb4.getResponse();
-        JSONArray uuids1 = response
-                .getJSONObject("channels")
-                .getJSONObject(channels[0])
-                .getJSONArray("uuids");
+        JSONArray uuids1 = response.getJSONObject("channels").getJSONObject(channels[0]).getJSONArray("uuids");
 
-        JSONArray uuids2 = response
-                .getJSONObject("channels")
-                .getJSONObject(channels[1])
-                .getJSONArray("uuids");
+        JSONArray uuids2 = response.getJSONObject("channels").getJSONObject(channels[1]).getJSONArray("uuids");
 
         assertEquals(2, response.getInt("total_occupancy"));
         assertEquals(2, response.getInt("total_channels"));
@@ -154,7 +144,7 @@ public class HereNowTest {
 
     @Test
     public void testHereNowGlobal() throws JSONException, InterruptedException, PubnubException {
-        final String[] channels = new String[]{"ch1-" + random, "ch2-" + random};
+        final String[] channels = new String[] { "ch1-" + random, "ch2-" + random };
 
         Pubnub pubnub2 = new Pubnub("demo", "demo");
         pubnub2.setCacheBusting(false);
@@ -190,19 +180,11 @@ public class HereNowTest {
 
         JSONObject response = (JSONObject) cb5.getResponse();
 
-        String uuid1 = response
-                .getJSONObject("channels")
-                .getJSONObject(channels[0])
-                .getJSONArray("uuids")
-                .getJSONObject(0)
-                .getString("uuid");
+        String uuid1 = response.getJSONObject("channels").getJSONObject(channels[0]).getJSONArray("uuids")
+                .getJSONObject(0).getString("uuid");
 
-        String uuid2 = response
-                .getJSONObject("channels")
-                .getJSONObject(channels[1])
-                .getJSONArray("uuids")
-                .getJSONObject(0)
-                .getString("uuid");
+        String uuid2 = response.getJSONObject("channels").getJSONObject(channels[1]).getJSONArray("uuids")
+                .getJSONObject(0).getString("uuid");
 
         assertEquals(pubnub.getUUID(), uuid1);
         assertEquals(pubnub2.getUUID(), uuid2);

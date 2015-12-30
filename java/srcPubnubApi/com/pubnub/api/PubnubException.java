@@ -13,7 +13,6 @@ public class PubnubException extends Exception {
     private JSONObject jso;
     private String response;
 
-
     /**
      * Constructor for PubnubException Class with error message as argument
      *
@@ -73,8 +72,7 @@ public class PubnubException extends Exception {
         this.jso = jso;
         this.response = response;
     }
-    
-    
+
     /**
      * Read the exception error message
      *
@@ -82,7 +80,7 @@ public class PubnubException extends Exception {
      */
     public String toString() {
         String msg = pubnubError.toString();
-        if (errormsg.length() > 0 )
+        if (errormsg.length() > 0)
             msg = msg + " . " + errormsg;
         return msg;
     }
@@ -90,12 +88,13 @@ public class PubnubException extends Exception {
     public PubnubError getPubnubError() {
         return pubnubError;
     }
-    
+
     public String getErrorResponse() {
-    	return response;
+        return response;
     }
+
     public JSONObject getErrorJsonObject() {
-    	return jso;
+        return jso;
     }
-    
+
 }

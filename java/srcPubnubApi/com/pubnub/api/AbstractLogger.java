@@ -15,11 +15,9 @@ abstract class AbstractLogger {
     protected abstract void nativeInfo(String s);
 
     private String prepareString(String s) {
-        return  "[" + VERSION + "] : " + "[" + System.currentTimeMillis() + "] : " +
-                "["+Thread.activeCount() +
-                "]  Thread HashCode : " + Thread.currentThread().hashCode() +
-                ",  Thread Name : " + Thread.currentThread().getName() +
-                ",  " + s;
+        return "[" + VERSION + "] : " + "[" + System.currentTimeMillis() + "] : " + "[" + Thread.activeCount()
+                + "]  Thread HashCode : " + Thread.currentThread().hashCode() + ",  Thread Name : "
+                + Thread.currentThread().getName() + ",  " + s;
     }
 
     public void debug(String s) {

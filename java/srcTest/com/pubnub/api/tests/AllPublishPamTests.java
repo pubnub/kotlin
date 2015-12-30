@@ -6,7 +6,7 @@ import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
 @SuiteClasses({ PublishPamEncSslTest.class, PublishPamEncTest.class, PublishPamSslTest.class, PublishPamTest.class,
-		PublishTest.class })
+        PublishTest.class })
 public class AllPublishPamTests {
 
 }

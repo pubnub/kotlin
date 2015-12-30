@@ -12,6 +12,7 @@ public class JSONAssert {
     public static void assertJSONArrayHasNo(String item, JSONArray jArray) {
         assertFalse("JSONArray should not contain item \"" + item + "\"", listData(jArray).contains(item));
     }
+
     public static void assertJSONArrayHas(String item, JSONArray jArray) {
         assertTrue("JSONArray should contain item \"" + item + "\"", listData(jArray).contains(item));
     }

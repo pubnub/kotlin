@@ -109,8 +109,7 @@ public class WildcardSubscribeTest {
     }
 
     @Test
-    public void testSubscribeAndPresenceToWildcardChannel()
-            throws PubnubException, InterruptedException, JSONException {
+    public void testSubscribeAndPresenceToWildcardChannel() throws PubnubException, InterruptedException, JSONException {
         final CountDownLatch latch1 = new CountDownLatch(1);
         final CountDownLatch latch2 = new CountDownLatch(1);
         final CountDownLatch latch4 = new CountDownLatch(1);
@@ -122,8 +121,10 @@ public class WildcardSubscribeTest {
             }
         };
 
-        // subscribe#connect event will not be triggered, because presence event already implicitly added it to the list
-        TestHelper.SimpleCallback cb2 = new TestHelper.SimpleCallback(latch4) {};
+        // subscribe#connect event will not be triggered, because presence event
+        // already implicitly added it to the list
+        TestHelper.SimpleCallback cb2 = new TestHelper.SimpleCallback(latch4) {
+        };
 
         Thread.sleep(1000);
 
@@ -190,7 +191,7 @@ public class WildcardSubscribeTest {
 
         TestHelper.SimpleCallback cb3 = new TestHelper.SimpleCallback(latch3);
 
-        pubnub.subscribe(new String[] {"stream", "news.*"}, cb);
+        pubnub.subscribe(new String[] { "stream", "news.*" }, cb);
         pubnub.channelGroupSubscribe("blog", cb2);
         pubnub.channelGroupAddChannel("blog", "user1", cb3);
 
@@ -205,7 +206,8 @@ public class WildcardSubscribeTest {
         assertEquals(0, latch3.getCount());
 
         // publish #1
-        pubnub.publish("stream", "hey", new Callback() {});
+        pubnub.publish("stream", "hey", new Callback() {
+        });
         latch2.await(3, TimeUnit.SECONDS);
         assertEquals(0, latch2.getCount());
 
@@ -215,7 +217,8 @@ public class WildcardSubscribeTest {
         assertEquals("hey", result);
 
         // publish #2
-        pubnub.publish("news.music", "hey2", new Callback() {});
+        pubnub.publish("news.music", "hey2", new Callback() {
+        });
         latch10.await(3, TimeUnit.SECONDS);
         assertEquals(0, latch10.getCount());
 
@@ -225,7 +228,8 @@ public class WildcardSubscribeTest {
         assertEquals("hey2", result2);
 
         // publish #3
-        pubnub.publish("user1", "hey3", new Callback() {});
+        pubnub.publish("user1", "hey3", new Callback() {
+        });
         latch20.await(3, TimeUnit.SECONDS);
         assertEquals(0, latch20.getCount());
 

@@ -6,13 +6,14 @@ interface PubnubInterface {
      * This method unsets auth key.
      *
      */
-	 public void	unsetAuthKey();
+    public void unsetAuthKey();
 
     /**
      * This method returns unique identifier.
+     * 
      * @return Unique Identifier .
      */
-	 public String	uuid();
+    public String uuid();
 
     /**
      * This method sets auth key.
@@ -20,7 +21,7 @@ interface PubnubInterface {
      * @param authKey
      *            . 0 length string or null unsets auth key
      */
-	 public void	setAuthKey(String authKey);
+    public void setAuthKey(String authKey);
 
     /**
      * Sets domain value, default is "pubnub.com"
@@ -28,7 +29,7 @@ interface PubnubInterface {
      * @param domain
      *            Domain value
      */
-	 public void	setDomain(String domain);
+    public void setDomain(String domain);
 
     /**
      * Sets origin value, default is "pubsub"
@@ -36,31 +37,28 @@ interface PubnubInterface {
      * @param origin
      *            Origin value
      */
-	 public void	setOrigin(String origin);
+    public void setOrigin(String origin);
 
     /**
      * Gets current UUID
      *
-     * @return uuid
-     *            current UUID value for Pubnub client
+     * @return uuid current UUID value for Pubnub client
      */
-	 public String	getUUID();
-
+    public String getUUID();
 
     /**
      * Returns domain
+     * 
      * @return domain
      */
-	 public String	getDomain();
-
+    public String getDomain();
 
     /**
      * This method returns auth key. Return null if not set
      *
      * @return Auth Key. null if auth key not set
      */
-	 public String	getAuthKey();
-
+    public String getAuthKey();
 
     /**
      * Sets value for UUID
@@ -68,6 +66,6 @@ interface PubnubInterface {
      * @param uuid
      *            UUID value for Pubnub client
      */
-	 public void	setUUID(String uuid);
+    public void setUUID(String uuid);
 
 }

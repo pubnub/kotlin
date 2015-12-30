@@ -26,9 +26,7 @@ abstract class HttpClient {
 
     public abstract void shutdown();
 
-    public abstract HttpResponse fetch(String url) throws IOException,
-                PubnubException;
+    public abstract HttpResponse fetch(String url) throws IOException, PubnubException;
 
-    public abstract HttpResponse fetch(String url, Hashtable headers)
-    throws IOException, PubnubException;
+    public abstract HttpResponse fetch(String url, Hashtable headers) throws IOException, PubnubException;
 }

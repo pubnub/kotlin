@@ -31,10 +31,9 @@ public class SubscribeGroupTest {
     }
 
     @Test
-    public void testSubscribeMultipleChannelsAndMultipleChannelGroups()
-            throws InterruptedException, PubnubException {
-        final String[] channels = new String[]{"ch1" + random, "ch2" + random, "ch3" + random};
-        final String[] groups = new String[]{"jtest1" + random, "jtest2" + random, "jtest3" + random};
+    public void testSubscribeMultipleChannelsAndMultipleChannelGroups() throws InterruptedException, PubnubException {
+        final String[] channels = new String[] { "ch1" + random, "ch2" + random, "ch3" + random };
+        final String[] groups = new String[] { "jtest1" + random, "jtest2" + random, "jtest3" + random };
 
         final String testChannel = "ch4" + random;
         final String sendMessage = "Test Message-" + Math.random();
@@ -79,9 +78,8 @@ public class SubscribeGroupTest {
     }
 
     @Test
-    public void testSubscribeMultipleChannelsAndOneChannelGroup()
-            throws InterruptedException, PubnubException {
-        final String[] channels = new String[]{"ch1", "ch2", "ch3"};
+    public void testSubscribeMultipleChannelsAndOneChannelGroup() throws InterruptedException, PubnubException {
+        final String[] channels = new String[] { "ch1", "ch2", "ch3" };
         final String group = "jtest" + random;
         final String ch4 = "ch4-" + random;
 
@@ -131,10 +129,9 @@ public class SubscribeGroupTest {
     }
 
     @Test
-    public void testSubscribeOneChannelAndMultipleChannelGroups()
-            throws InterruptedException, PubnubException {
+    public void testSubscribeOneChannelAndMultipleChannelGroups() throws InterruptedException, PubnubException {
         final String channel = "ch1";
-        final String[] groups = new String[]{"jtest1" + random, "jtest2" + random, "jtest3" + random};
+        final String[] groups = new String[] { "jtest1" + random, "jtest2" + random, "jtest3" + random };
         final String ch4 = "ch4-" + random;
         final String sendMessage = "Test Message " + Math.random();
 
@@ -180,8 +177,7 @@ public class SubscribeGroupTest {
     }
 
     @Test
-    public void testSubscribeOneChannelAndOneChannelGroup()
-            throws InterruptedException, PubnubException {
+    public void testSubscribeOneChannelAndOneChannelGroup() throws InterruptedException, PubnubException {
         String channel = "ch1";
         final String group = "jtest" + random;
         final String ch4 = "ch4" + random;
@@ -229,8 +225,7 @@ public class SubscribeGroupTest {
     }
 
     @Test
-    public void testSubscribeOneChannelAndNoChannelGroup()
-            throws InterruptedException {
+    public void testSubscribeOneChannelAndNoChannelGroup() throws InterruptedException {
         final String channel = "ch1" + random;
 
         final String sendMessage = "Test Message " + Math.random();
@@ -271,8 +266,7 @@ public class SubscribeGroupTest {
     }
 
     @Test
-    public void testSubscribeNoChannelAndOneChannelGroup()
-            throws InterruptedException, PubnubException {
+    public void testSubscribeNoChannelAndOneChannelGroup() throws InterruptedException, PubnubException {
         final String group = "jtest-" + random;
         final String ch4 = "ch4-" + random;
 
@@ -320,8 +314,7 @@ public class SubscribeGroupTest {
     }
 
     @Test
-    public void testSubscribeNoChannelAndNoChannelGroup()
-            throws InterruptedException, PubnubException {
+    public void testSubscribeNoChannelAndNoChannelGroup() throws InterruptedException, PubnubException {
 
         final TestHelper.SimpleCallback callback = new TestHelper.SimpleCallback() {
             @Override

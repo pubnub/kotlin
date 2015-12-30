@@ -21,7 +21,6 @@ public class ChannelGroupTest {
     String channelGroup;
     String channelNamespace;
 
-
     @BeforeClass
     public static void cleanup() throws InterruptedException, JSONException {
         TestHelper.cleanup();
@@ -79,7 +78,7 @@ public class ChannelGroupTest {
         final TestHelper.SimpleCallback cb = new TestHelper.SimpleCallback(latch) {
         };
 
-        pubnub.channelGroupAddChannel(channelGroup, new String[]{"ch1", "ch2"}, cb);
+        pubnub.channelGroupAddChannel(channelGroup, new String[] { "ch1", "ch2" }, cb);
 
         try {
             latch.await(10, TimeUnit.SECONDS);
@@ -98,7 +97,7 @@ public class ChannelGroupTest {
         final TestHelper.SimpleCallback cb = new TestHelper.SimpleCallback(latch) {
         };
 
-        pubnub.channelGroupAddChannel(channelNamespace + ":" + channelGroup, new String[]{"ch1", "ch2"}, cb);
+        pubnub.channelGroupAddChannel(channelNamespace + ":" + channelGroup, new String[] { "ch1", "ch2" }, cb);
 
         try {
             latch.await(10, TimeUnit.SECONDS);
@@ -123,8 +122,8 @@ public class ChannelGroupTest {
         final TestHelper.SimpleCallback cb4 = new TestHelper.SimpleCallback(latch4);
 
         pubnub.channelGroupAddChannel(channelGroup, "ch1", cb1);
-        pubnub.channelGroupAddChannel(channelGroup, new String[]{"ch2"}, cb2);
-        pubnub.channelGroupAddChannel(channelGroup, new String[]{"ch3", "ch4", "ch5"}, cb3);
+        pubnub.channelGroupAddChannel(channelGroup, new String[] { "ch2" }, cb2);
+        pubnub.channelGroupAddChannel(channelGroup, new String[] { "ch3", "ch4", "ch5" }, cb3);
 
         latch1.await(10, TimeUnit.SECONDS);
         latch2.await(10, TimeUnit.SECONDS);
@@ -134,8 +133,7 @@ public class ChannelGroupTest {
 
         latch4.await(10, TimeUnit.SECONDS);
 
-        String expectedJSONString = (new JSONArray(new String[]{"ch1", "ch2", "ch3", "ch4", "ch5"}))
-                .toString();
+        String expectedJSONString = (new JSONArray(new String[] { "ch1", "ch2", "ch3", "ch4", "ch5" })).toString();
 
         JSONObject result = (JSONObject) cb4.getResponse();
         JSONArray channels = result.getJSONArray("channels");
@@ -157,8 +155,8 @@ public class ChannelGroupTest {
         final TestHelper.SimpleCallback cb4 = new TestHelper.SimpleCallback(latch4);
 
         pubnub.channelGroupAddChannel(channelNamespace + ":" + channelGroup, "ch1", cb1);
-        pubnub.channelGroupAddChannel(channelNamespace + ":" + channelGroup, new String[]{"ch2"}, cb2);
-        pubnub.channelGroupAddChannel(channelNamespace + ":" + channelGroup, new String[]{"ch3", "ch4", "ch5"}, cb3);
+        pubnub.channelGroupAddChannel(channelNamespace + ":" + channelGroup, new String[] { "ch2" }, cb2);
+        pubnub.channelGroupAddChannel(channelNamespace + ":" + channelGroup, new String[] { "ch3", "ch4", "ch5" }, cb3);
 
         latch1.await(10, TimeUnit.SECONDS);
         latch2.await(10, TimeUnit.SECONDS);
@@ -168,8 +166,7 @@ public class ChannelGroupTest {
 
         latch4.await(10, TimeUnit.SECONDS);
 
-        String expectedJSONString = (new JSONArray(new String[]{"ch1", "ch2", "ch3", "ch4", "ch5"}))
-                .toString();
+        String expectedJSONString = (new JSONArray(new String[] { "ch1", "ch2", "ch3", "ch4", "ch5" })).toString();
 
         JSONObject result = (JSONObject) cb4.getResponse();
         JSONArray channels = result.getJSONArray("channels");
@@ -190,12 +187,12 @@ public class ChannelGroupTest {
         final TestHelper.SimpleCallback cb3 = new TestHelper.SimpleCallback(latch3);
         final TestHelper.SimpleCallback cb4 = new TestHelper.SimpleCallback(latch4);
 
-        pubnub.channelGroupAddChannel(channelGroup, new String[]{"ch1", "ch2", "ch3", "ch4", "ch5"}, cb1);
+        pubnub.channelGroupAddChannel(channelGroup, new String[] { "ch1", "ch2", "ch3", "ch4", "ch5" }, cb1);
 
         latch1.await(10, TimeUnit.SECONDS);
 
         pubnub.channelGroupRemoveChannel(channelGroup, "ch1", cb2);
-        pubnub.channelGroupRemoveChannel(channelGroup, new String[]{"ch4", "ch5"}, cb3);
+        pubnub.channelGroupRemoveChannel(channelGroup, new String[] { "ch4", "ch5" }, cb3);
 
         latch2.await(10, TimeUnit.SECONDS);
         latch3.await(10, TimeUnit.SECONDS);
@@ -209,8 +206,7 @@ public class ChannelGroupTest {
 
         latch4.await(10, TimeUnit.SECONDS);
 
-        String expectedJSONString = (new JSONArray(new String[]{"ch2", "ch3"}))
-                .toString();
+        String expectedJSONString = (new JSONArray(new String[] { "ch2", "ch3" })).toString();
 
         JSONObject result = (JSONObject) cb4.getResponse();
         JSONArray channels = result.getJSONArray("channels");
@@ -231,12 +227,13 @@ public class ChannelGroupTest {
         final TestHelper.SimpleCallback cb3 = new TestHelper.SimpleCallback(latch3);
         final TestHelper.SimpleCallback cb4 = new TestHelper.SimpleCallback(latch4);
 
-        pubnub.channelGroupAddChannel(channelNamespace + ":" + channelGroup, new String[]{"ch1", "ch2", "ch3", "ch4", "ch5"}, cb1);
+        pubnub.channelGroupAddChannel(channelNamespace + ":" + channelGroup, new String[] { "ch1", "ch2", "ch3", "ch4",
+                "ch5" }, cb1);
 
         latch1.await(10, TimeUnit.SECONDS);
 
         pubnub.channelGroupRemoveChannel(channelNamespace + ":" + channelGroup, "ch1", cb2);
-        pubnub.channelGroupRemoveChannel(channelNamespace + ":" + channelGroup, new String[]{"ch4", "ch5"}, cb3);
+        pubnub.channelGroupRemoveChannel(channelNamespace + ":" + channelGroup, new String[] { "ch4", "ch5" }, cb3);
 
         latch2.await(10, TimeUnit.SECONDS);
         latch3.await(10, TimeUnit.SECONDS);
@@ -250,8 +247,7 @@ public class ChannelGroupTest {
 
         latch4.await(10, TimeUnit.SECONDS);
 
-        String expectedJSONString = (new JSONArray(new String[]{"ch2", "ch3"}))
-                .toString();
+        String expectedJSONString = (new JSONArray(new String[] { "ch2", "ch3" })).toString();
 
         JSONObject result = (JSONObject) cb4.getResponse();
         JSONArray channels = result.getJSONArray("channels");

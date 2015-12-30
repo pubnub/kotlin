@@ -10,7 +10,7 @@ interface PubnubAsyncInterfacePush {
      * @param gcmRegistrationId
      * @param callback
      */
-    void	enablePushNotificationsOnChannel(String channel, String gcmRegistrationId, Callback callback);
+    void enablePushNotificationsOnChannel(String channel, String gcmRegistrationId, Callback callback);
 
     /**
      *
@@ -18,7 +18,7 @@ interface PubnubAsyncInterfacePush {
      * @param gcmRegistrationId
      * @param callback
      */
-    void	enablePushNotificationsOnChannels(String[] channels, String gcmRegistrationId, Callback callback);
+    void enablePushNotificationsOnChannels(String[] channels, String gcmRegistrationId, Callback callback);
 
     /**
      *
@@ -26,7 +26,7 @@ interface PubnubAsyncInterfacePush {
      * @param gcmRegistrationId
      * @param callback
      */
-    void	disablePushNotificationsOnChannel(String channel, String gcmRegistrationId, Callback callback);
+    void disablePushNotificationsOnChannel(String channel, String gcmRegistrationId, Callback callback);
 
     /**
      *
@@ -34,5 +34,5 @@ interface PubnubAsyncInterfacePush {
      * @param gcmRegistrationId
      * @param callback
      */
-    void	disablePushNotificationsOnChannels(String[] channels, String gcmRegistrationId, Callback callback);
+    void disablePushNotificationsOnChannels(String[] channels, String gcmRegistrationId, Callback callback);
 }

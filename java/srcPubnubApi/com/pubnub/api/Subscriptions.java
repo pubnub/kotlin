@@ -14,7 +14,7 @@ class Subscriptions {
     private Hashtable items;
 
     JSONObject state;
-    
+
     String filter;
 
     public String getFilter() {
@@ -24,12 +24,12 @@ class Subscriptions {
     public void setFilter(String filter) {
         this.filter = filter;
     }
-    
+
     void runConnectOnNewThread(final Callback callback, final String name, final JSONArray jsa) {
-        Runnable r = new Runnable(){
-          public void run() {
-              callback.connectCallback(name, jsa);
-          }
+        Runnable r = new Runnable() {
+            public void run() {
+                callback.connectCallback(name, jsa);
+            }
         };
         PnThread thread = new PnThread(r);
         thread.setPnDaemon(Pubnub.daemonThreads);
@@ -37,30 +37,30 @@ class Subscriptions {
     }
 
     void runReconnectOnNewThread(final Callback callback, final String name, final JSONArray jsa) {
-        Runnable r = new Runnable(){
-          public void run() {
-              callback.disconnectCallback(name, jsa);
-          }
+        Runnable r = new Runnable() {
+            public void run() {
+                callback.disconnectCallback(name, jsa);
+            }
         };
         PnThread thread = new PnThread(r);
         thread.setPnDaemon(Pubnub.daemonThreads);
         thread.start();
     }
-    
+
     void runDisconnectOnNewThread(final Callback callback, final String name, final JSONArray jsa) {
-        Runnable r = new Runnable(){
-          public void run() {
-              callback.reconnectCallback(name, jsa);
-          }
+        Runnable r = new Runnable() {
+            public void run() {
+                callback.reconnectCallback(name, jsa);
+            }
         };
         PnThread thread = new PnThread(r);
         thread.setPnDaemon(Pubnub.daemonThreads);
         thread.start();
     }
-    
+
     public Subscriptions() {
-        items    = new Hashtable();
-        state    = new JSONObject();
+        items = new Hashtable();
+        state = new JSONObject();
     }
 
     public void addItem(SubscriptionItem item) {
@@ -167,7 +167,7 @@ class Subscriptions {
                 SubscriptionItem _item = (SubscriptionItem) this.items.get(items[i]);
                 if (_item != null) {
                     _item.connected = true;
-                    if ( _item.error ) {
+                    if (_item.error) {
                         runReconnectOnNewThread(_item.callback, _item.name,
                                 new JSONArray().put(1).put("Subscribe reconnected").put(message));
                         _item.error = false;

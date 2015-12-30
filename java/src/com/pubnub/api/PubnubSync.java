@@ -11,8 +11,7 @@ import java.util.UUID;
  * @author Pubnub
  *
  */
-public class PubnubSync extends PubnubCoreSync implements 
-	PubnubSyncInterfacePam, PubnubSyncInterfacePush {
+public class PubnubSync extends PubnubCoreSync implements PubnubSyncInterfacePam, PubnubSyncInterfacePush {
 
     /**
      * Pubnub Constructor
@@ -28,8 +27,7 @@ public class PubnubSync extends PubnubCoreSync implements
      * @param ssl_on
      *            SSL on ?
      */
-    public PubnubSync(String publish_key, String subscribe_key, String secret_key,
-                  String cipher_key, boolean ssl_on) {
+    public PubnubSync(String publish_key, String subscribe_key, String secret_key, String cipher_key, boolean ssl_on) {
         super(publish_key, subscribe_key, secret_key, cipher_key, ssl_on);
     }
 
@@ -45,8 +43,7 @@ public class PubnubSync extends PubnubCoreSync implements
      * @param ssl_on
      *            SSL on ?
      */
-    public PubnubSync(String publish_key, String subscribe_key, String secret_key,
-                  boolean ssl_on) {
+    public PubnubSync(String publish_key, String subscribe_key, String secret_key, boolean ssl_on) {
         super(publish_key, subscribe_key, secret_key, "", ssl_on);
     }
 
@@ -82,7 +79,6 @@ public class PubnubSync extends PubnubCoreSync implements
         super(publish_key, subscribe_key, secret_key, "", false);
     }
 
-
     /**
      *
      * Constructor for Pubnub Class
@@ -101,25 +97,24 @@ public class PubnubSync extends PubnubCoreSync implements
      *            Initialization vector
      */
 
-    public PubnubSync(String publish_key, String subscribe_key,
-                  String secret_key, String cipher_key, boolean ssl_on, String initialization_vector) {
+    public PubnubSync(String publish_key, String subscribe_key, String secret_key, String cipher_key, boolean ssl_on,
+            String initialization_vector) {
         super(publish_key, subscribe_key, secret_key, cipher_key, ssl_on, initialization_vector);
     }
 
-
     @Override
     public Object enablePushNotificationsOnChannel(String channel, String gcmRegistrationId) {
-        return _enablePushNotificationsOnChannels(new String[]{channel}, gcmRegistrationId,null, true);
+        return _enablePushNotificationsOnChannels(new String[] { channel }, gcmRegistrationId, null, true);
     }
 
     @Override
     public Object enablePushNotificationsOnChannels(String[] channels, String gcmRegistrationId) {
-        return _enablePushNotificationsOnChannels(channels, gcmRegistrationId,null, true);
+        return _enablePushNotificationsOnChannels(channels, gcmRegistrationId, null, true);
     }
 
     @Override
     public Object disablePushNotificationsOnChannel(String channel, String gcmRegistrationId) {
-        return _disablePushNotificationsOnChannels(new String[]{channel}, gcmRegistrationId, null, true);
+        return _disablePushNotificationsOnChannels(new String[] { channel }, gcmRegistrationId, null, true);
     }
 
     @Override
@@ -144,6 +139,5 @@ public class PubnubSync extends PubnubCoreSync implements
     public String uuid() {
         return java.util.UUID.randomUUID().toString();
     }
-
 
 }

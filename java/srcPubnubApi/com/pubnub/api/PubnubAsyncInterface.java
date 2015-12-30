@@ -49,30 +49,36 @@ interface PubnubAsyncInterface {
     /**
      * Get the list of channels in the namespaced group
      *
-     * @param group    name
-     * @param callback to invoke
+     * @param group
+     *            name
+     * @param callback
+     *            to invoke
      */
     public void channelGroupListChannels(String group, Callback callback);
 
     /**
      * Get the list of groups in the global namespace
      *
-     * @param callback to invoke
+     * @param callback
+     *            to invoke
      */
     public void channelGroupListGroups(Callback callback);
 
     /**
      * Get the list of groups in the namespace
      *
-     * @param namespace name
-     * @param callback  to invoke
+     * @param namespace
+     *            name
+     * @param callback
+     *            to invoke
      */
     public void channelGroupListGroups(String namespace, Callback callback);
 
     /**
      * Get all namespaces
      *
-     * @param callback to invoke
+     * @param callback
+     *            to invoke
      */
     public void channelGroupListNamespaces(Callback callback);
 
@@ -102,8 +108,10 @@ interface PubnubAsyncInterface {
     /**
      * Remove namespace
      *
-     * @param namespace to remove
-     * @param callback  to invoke
+     * @param namespace
+     *            to remove
+     * @param callback
+     *            to invoke
      */
     public void channelGroupRemoveNamespace(String namespace, Callback callback);
 
@@ -119,18 +127,24 @@ interface PubnubAsyncInterface {
     /**
      * Listen for a message on multiple channel groups.
      *
-     * @param groups   to subscribe
-     * @param callback to call
-     * @throws PubnubException if Callback is null
+     * @param groups
+     *            to subscribe
+     * @param callback
+     *            to call
+     * @throws PubnubException
+     *             if Callback is null
      */
     public void channelGroupSubscribe(String[] groups, Callback callback) throws PubnubException;
 
     /**
      * Listen for a message on multiple channel group.
      *
-     * @param groups    to subscribe
-     * @param callback  to call
-     * @param timetoken to use for subscribing
+     * @param groups
+     *            to subscribe
+     * @param callback
+     *            to call
+     * @param timetoken
+     *            to use for subscribing
      * @throws PubnubException
      */
     public void channelGroupSubscribe(String[] groups, Callback callback, long timetoken) throws PubnubException;
@@ -138,9 +152,12 @@ interface PubnubAsyncInterface {
     /**
      * Listen for a message on multiple channel group.
      *
-     * @param groups    to subscribe
-     * @param callback  to call
-     * @param timetoken to use for subscribing
+     * @param groups
+     *            to subscribe
+     * @param callback
+     *            to call
+     * @param timetoken
+     *            to use for subscribing
      * @throws PubnubException
      */
     public void channelGroupSubscribe(String[] groups, Callback callback, String timetoken) throws PubnubException;
@@ -148,8 +165,10 @@ interface PubnubAsyncInterface {
     /**
      * Listen for a message on a channel group.
      *
-     * @param group    name to subscribe
-     * @param callback to call
+     * @param group
+     *            name to subscribe
+     * @param callback
+     *            to call
      * @throws PubnubException
      */
     public void channelGroupSubscribe(String group, Callback callback) throws PubnubException;
@@ -157,9 +176,12 @@ interface PubnubAsyncInterface {
     /**
      * Listen for a message on a channel group.
      *
-     * @param group     name to subscribe
-     * @param callback  to call
-     * @param timetoken to use for subscribing
+     * @param group
+     *            name to subscribe
+     * @param callback
+     *            to call
+     * @param timetoken
+     *            to use for subscribing
      * @throws PubnubException
      */
     public void channelGroupSubscribe(String group, Callback callback, long timetoken) throws PubnubException;
@@ -167,9 +189,12 @@ interface PubnubAsyncInterface {
     /**
      * Listen for a message on a channel group.
      *
-     * @param group     name to subscribe
-     * @param callback  to call
-     * @param timetoken to use for subscribing
+     * @param group
+     *            name to subscribe
+     * @param callback
+     *            to call
+     * @param timetoken
+     *            to use for subscribing
      * @throws PubnubException
      */
     public void channelGroupSubscribe(String group, Callback callback, String timetoken) throws PubnubException;
@@ -211,7 +236,7 @@ interface PubnubAsyncInterface {
      * a comma separated String
      *
      * @return Comma separated string with all channel names currently
-     * subscribed
+     *         subscribed
      */
     public String getCurrentlySubscribedChannelNames();
 
@@ -273,11 +298,16 @@ interface PubnubAsyncInterface {
     /**
      * Read presence information from a channel or a channel group
      *
-     * @param channels      array
-     * @param channelGroups array
-     * @param state         state enabled ?
-     * @param uuids         enable / disable returning uuids in response ?
-     * @param callback      object of sub class of Callback class
+     * @param channels
+     *            array
+     * @param channelGroups
+     *            array
+     * @param state
+     *            state enabled ?
+     * @param uuids
+     *            enable / disable returning uuids in response ?
+     * @param callback
+     *            object of sub class of Callback class
      */
     public void hereNow(String[] channels, String[] channelGroups, boolean state, boolean uuids, Callback callback);
 
@@ -286,137 +316,191 @@ interface PubnubAsyncInterface {
     /**
      * Read presence information from a channel
      *
-     * @param channel  Channel name
-     * @param callback object of sub class of Callback class
+     * @param channel
+     *            Channel name
+     * @param callback
+     *            object of sub class of Callback class
      */
     public void hereNow(String channel, Callback callback);
 
     /**
      * Read History for a channel.
      *
-     * @param channel  Channel name for which history is required
-     * @param reverse  True if messages need to be in reverse order
-     * @param callback Callback
+     * @param channel
+     *            Channel name for which history is required
+     * @param reverse
+     *            True if messages need to be in reverse order
+     * @param callback
+     *            Callback
      */
     public void history(String channel, boolean reverse, Callback callback);
 
     /**
      * Read History for a channel.
      *
-     * @param channel          Channel name for which history is required
-     * @param includeTimetoken True/False whether to include timetokens in response
-     * @param count            Maximum number of messages
-     * @param callback         Callback object
+     * @param channel
+     *            Channel name for which history is required
+     * @param includeTimetoken
+     *            True/False whether to include timetokens in response
+     * @param count
+     *            Maximum number of messages
+     * @param callback
+     *            Callback object
      */
     public void history(String channel, boolean includeTimetoken, int count, Callback callback);
 
     /**
      * Read History for a channel.
      *
-     * @param channel  Channel name for which history is required
-     * @param count    Upper limit on number of messages to be returned
-     * @param reverse  True if messages need to be in reverse order
-     * @param callback Callback
+     * @param channel
+     *            Channel name for which history is required
+     * @param count
+     *            Upper limit on number of messages to be returned
+     * @param reverse
+     *            True if messages need to be in reverse order
+     * @param callback
+     *            Callback
      */
     public void history(String channel, int count, boolean reverse, Callback callback);
-
 
     /**
      * Read History for a channel.
      *
-     * @param channel  Channel name for which history is required
-     * @param count    Maximum number of messages
-     * @param callback Callback object
+     * @param channel
+     *            Channel name for which history is required
+     * @param count
+     *            Maximum number of messages
+     * @param callback
+     *            Callback object
      */
     public void history(String channel, int count, Callback callback);
 
     /**
      * Read History for a channel.
      *
-     * @param channel  Channel name for which history is required
-     * @param start    Start time
-     * @param reverse  True if messages need to be in reverse order
-     * @param callback Callback
+     * @param channel
+     *            Channel name for which history is required
+     * @param start
+     *            Start time
+     * @param reverse
+     *            True if messages need to be in reverse order
+     * @param callback
+     *            Callback
      */
     public void history(String channel, long start, boolean reverse, Callback callback);
 
     /**
      * Read History for a channel.
      *
-     * @param channel  Channel name for which history is required
-     * @param start    Start time
-     * @param count    Upper limit on number of messages to be returned
-     * @param reverse  True if messages need to be in reverse order
-     * @param callback Callback
+     * @param channel
+     *            Channel name for which history is required
+     * @param start
+     *            Start time
+     * @param count
+     *            Upper limit on number of messages to be returned
+     * @param reverse
+     *            True if messages need to be in reverse order
+     * @param callback
+     *            Callback
      */
     public void history(String channel, long start, int count, boolean reverse, Callback callback);
 
     /**
      * Read History for a channel.
      *
-     * @param channel  Channel name for which history is required
-     * @param start    Start time
-     * @param count    Upper limit on number of messages to be returned
-     * @param callback Callback
+     * @param channel
+     *            Channel name for which history is required
+     * @param start
+     *            Start time
+     * @param count
+     *            Upper limit on number of messages to be returned
+     * @param callback
+     *            Callback
      */
     public void history(String channel, long start, int count, Callback callback);
-
 
     /**
      * Read History for a channel.
      *
-     * @param channel  Channel name for which history is required
-     * @param start    Start time
-     * @param end      End time
-     * @param reverse  True if messages need to be in reverse order
-     * @param callback Callback
+     * @param channel
+     *            Channel name for which history is required
+     * @param start
+     *            Start time
+     * @param end
+     *            End time
+     * @param reverse
+     *            True if messages need to be in reverse order
+     * @param callback
+     *            Callback
      */
     public void history(String channel, long start, long end, boolean reverse, Callback callback);
 
     /**
      * Read History for a channel.
      *
-     * @param channel  Channel name for which history is required
-     * @param start    Start time
-     * @param end      End time
-     * @param callback Callback
+     * @param channel
+     *            Channel name for which history is required
+     * @param start
+     *            Start time
+     * @param end
+     *            End time
+     * @param callback
+     *            Callback
      */
     public void history(String channel, long start, long end, Callback callback);
 
     /**
      * Read History for a channel.
      *
-     * @param channel          Channel name for which history is required
-     * @param start            Start time
-     * @param end              End time
-     * @param count            Upper limit on number of messages to be returned
-     * @param reverse          True if messages need to be in reverse order
-     * @param includeTimetoken True/False whether to include timetokens in response
-     * @param callback         Callback
+     * @param channel
+     *            Channel name for which history is required
+     * @param start
+     *            Start time
+     * @param end
+     *            End time
+     * @param count
+     *            Upper limit on number of messages to be returned
+     * @param reverse
+     *            True if messages need to be in reverse order
+     * @param includeTimetoken
+     *            True/False whether to include timetokens in response
+     * @param callback
+     *            Callback
      */
-    public void history(String channel, long start, long end, int count, boolean reverse, boolean includeTimetoken, Callback callback);
-
+    public void history(String channel, long start, long end, int count, boolean reverse, boolean includeTimetoken,
+            Callback callback);
 
     /**
      * Read History for a channel.
      *
-     * @param channel  Channel name for which history is required
-     * @param start    Start time
-     * @param end      End time
-     * @param count    Upper limit on number of messages to be returned
-     * @param reverse  True if messages need to be in reverse order
-     * @param callback Callback
+     * @param channel
+     *            Channel name for which history is required
+     * @param start
+     *            Start time
+     * @param end
+     *            End time
+     * @param count
+     *            Upper limit on number of messages to be returned
+     * @param reverse
+     *            True if messages need to be in reverse order
+     * @param callback
+     *            Callback
      */
     public void history(String channel, long start, long end, int count, boolean reverse, Callback callback);
 
     /**
      * Read History for a channel.
      *
-     * @param channel  Channel name for which history is required
-     * @param start    Start time
-     * @param end      End time
-     * @param count    Upper limit on number of messages to be returned
-     * @param callback Callback
+     * @param channel
+     *            Channel name for which history is required
+     * @param start
+     *            Start time
+     * @param end
+     *            End time
+     * @param count
+     *            Upper limit on number of messages to be returned
+     * @param callback
+     *            Callback
      */
     public void history(String channel, long start, long end, int count, Callback callback);
 
@@ -430,222 +514,295 @@ interface PubnubAsyncInterface {
     /**
      * Listen for presence of subscribers on a channel
      *
-     * @param channel  Name of the channel on which to listen for join/leave i.e.
-     *                 presence events
-     * @param callback object of sub class of Callback class
-     * @throws PubnubException Throws PubnubException if Callback is null
+     * @param channel
+     *            Name of the channel on which to listen for join/leave i.e.
+     *            presence events
+     * @param callback
+     *            object of sub class of Callback class
+     * @throws PubnubException
+     *             Throws PubnubException if Callback is null
      */
     public void presence(String channel, Callback callback) throws PubnubException;
 
     /**
      * Send a message to a channel.
      *
-     * @param channel        Channel name
-     * @param message        Double to be published
-     * @param storeInHistory Store in History ?
-     * @param callback       object of sub class of Callback class
+     * @param channel
+     *            Channel name
+     * @param message
+     *            Double to be published
+     * @param storeInHistory
+     *            Store in History ?
+     * @param callback
+     *            object of sub class of Callback class
      */
     public void publish(String channel, Double message, boolean storeInHistory, Callback callback);
 
-
     /**
      * Send a message to a channel.
      *
-     * @param channel  Channel name
-     * @param message  Double to be published
-     * @param callback object of sub class of Callback class
+     * @param channel
+     *            Channel name
+     * @param message
+     *            Double to be published
+     * @param callback
+     *            object of sub class of Callback class
      */
     public void publish(String channel, Double message, Callback callback);
 
-
     /**
      * Send a message to a channel.
      *
-     * @param channel        Channel name
-     * @param message        Integer to be published
-     * @param storeInHistory Store in History ?
-     * @param callback       object of sub class of Callback class
+     * @param channel
+     *            Channel name
+     * @param message
+     *            Integer to be published
+     * @param storeInHistory
+     *            Store in History ?
+     * @param callback
+     *            object of sub class of Callback class
      */
     public void publish(String channel, Integer message, boolean storeInHistory, Callback callback);
 
     /**
      * Send a message to a channel.
      *
-     * @param channel  Channel name
-     * @param message  Integer to be published
-     * @param callback object of sub class of Callback class
+     * @param channel
+     *            Channel name
+     * @param message
+     *            Integer to be published
+     * @param callback
+     *            object of sub class of Callback class
      */
     public void publish(String channel, Integer message, Callback callback);
 
-
     /**
      * Send a message to a channel.
      *
-     * @param channel        Channel name
-     * @param message        JSONArray to be published
-     * @param storeInHistory Store in History ?
-     * @param callback       object of sub class of Callback class
+     * @param channel
+     *            Channel name
+     * @param message
+     *            JSONArray to be published
+     * @param storeInHistory
+     *            Store in History ?
+     * @param callback
+     *            object of sub class of Callback class
      */
     public void publish(String channel, JSONArray message, boolean storeInHistory, Callback callback);
 
-
     /**
      * Send a message to a channel.
      *
-     * @param channel  Channel name
-     * @param message  JSONOArray to be published
-     * @param callback object of sub class of Callback class
+     * @param channel
+     *            Channel name
+     * @param message
+     *            JSONOArray to be published
+     * @param callback
+     *            object of sub class of Callback class
      */
     public void publish(String channel, JSONArray message, Callback callback);
 
     /**
      * Send a message to a channel.
      *
-     * @param channel        Channel name
-     * @param message        JSONObject to be published
-     * @param storeInHistory Store in History ?
-     * @param callback       object of sub class of Callback class
+     * @param channel
+     *            Channel name
+     * @param message
+     *            JSONObject to be published
+     * @param storeInHistory
+     *            Store in History ?
+     * @param callback
+     *            object of sub class of Callback class
      */
     public void publish(String channel, JSONObject message, boolean storeInHistory, Callback callback);
 
-
     /**
      * Send a message to a channel.
      *
-     * @param channel  Channel name
-     * @param message  JSONObject to be published
-     * @param callback object of sub class of Callback class
+     * @param channel
+     *            Channel name
+     * @param message
+     *            JSONObject to be published
+     * @param callback
+     *            object of sub class of Callback class
      */
     public void publish(String channel, JSONObject message, Callback callback);
 
-
     /**
      * Send a message to a channel.
      *
-     * @param channel        Channel name
-     * @param message        String to be published
-     * @param storeInHistory Store in History ?
-     * @param callback       object of sub class of Callback class
+     * @param channel
+     *            Channel name
+     * @param message
+     *            String to be published
+     * @param storeInHistory
+     *            Store in History ?
+     * @param callback
+     *            object of sub class of Callback class
      */
     public void publish(String channel, String message, boolean storeInHistory, Callback callback);
 
     /**
      * Send a message to a channel.
      *
-     * @param channel  Channel name
-     * @param message  String to be published
-     * @param callback object of sub class of Callback class
+     * @param channel
+     *            Channel name
+     * @param message
+     *            String to be published
+     * @param callback
+     *            object of sub class of Callback class
      */
     public void publish(String channel, String message, Callback callback);
-    
+
     /**
      * Send a message to a channel.
      *
-     * @param channel  Channel name
-     * @param message  String to be published
-     * @param metadata       Metadata
-     * @param callback object of sub class of Callback class
+     * @param channel
+     *            Channel name
+     * @param message
+     *            String to be published
+     * @param metadata
+     *            Metadata
+     * @param callback
+     *            object of sub class of Callback class
      */
     public void publish(String channel, String message, JSONObject metadata, Callback callback);
-    
+
     /**
      * Send a message to a channel.
      *
-     * @param channel        Channel name
-     * @param message        Double to be published
-     * @param storeInHistory Store in History ?
-     * @param metadata       Metadata
-     * @param callback       object of sub class of Callback class
+     * @param channel
+     *            Channel name
+     * @param message
+     *            Double to be published
+     * @param storeInHistory
+     *            Store in History ?
+     * @param metadata
+     *            Metadata
+     * @param callback
+     *            object of sub class of Callback class
      */
     public void publish(String channel, Double message, boolean storeInHistory, JSONObject metadata, Callback callback);
 
-
     /**
      * Send a message to a channel.
      *
-     * @param channel  Channel name
-     * @param message  Double to be published
-     * @param metadata       Metadata
-     * @param callback object of sub class of Callback class
+     * @param channel
+     *            Channel name
+     * @param message
+     *            Double to be published
+     * @param metadata
+     *            Metadata
+     * @param callback
+     *            object of sub class of Callback class
      */
     public void publish(String channel, Double message, JSONObject metadata, Callback callback);
 
-
     /**
      * Send a message to a channel.
      *
-     * @param channel        Channel name
-     * @param message        Integer to be published
-     * @param storeInHistory Store in History ?
-     * @param metadata       Metadata
-     * @param callback       object of sub class of Callback class
+     * @param channel
+     *            Channel name
+     * @param message
+     *            Integer to be published
+     * @param storeInHistory
+     *            Store in History ?
+     * @param metadata
+     *            Metadata
+     * @param callback
+     *            object of sub class of Callback class
      */
     public void publish(String channel, Integer message, boolean storeInHistory, JSONObject metadata, Callback callback);
 
     /**
      * Send a message to a channel.
      *
-     * @param channel  Channel name
-     * @param message  Integer to be published
-     * @param metadata       Metadata
-     * @param callback object of sub class of Callback class
+     * @param channel
+     *            Channel name
+     * @param message
+     *            Integer to be published
+     * @param metadata
+     *            Metadata
+     * @param callback
+     *            object of sub class of Callback class
      */
     public void publish(String channel, Integer message, JSONObject metadata, Callback callback);
 
-
     /**
      * Send a message to a channel.
      *
-     * @param channel        Channel name
-     * @param message        JSONArray to be published
-     * @param storeInHistory Store in History ?
-     * @param metadata       Metadata
-     * @param callback       object of sub class of Callback class
+     * @param channel
+     *            Channel name
+     * @param message
+     *            JSONArray to be published
+     * @param storeInHistory
+     *            Store in History ?
+     * @param metadata
+     *            Metadata
+     * @param callback
+     *            object of sub class of Callback class
      */
-    public void publish(String channel, JSONArray message, boolean storeInHistory, JSONObject metadata, Callback callback);
-
+    public void publish(String channel, JSONArray message, boolean storeInHistory, JSONObject metadata,
+            Callback callback);
 
     /**
      * Send a message to a channel.
      *
-     * @param channel  Channel name
-     * @param message  JSONOArray to be published
-     * @param metadata       Metadata
-     * @param callback object of sub class of Callback class
+     * @param channel
+     *            Channel name
+     * @param message
+     *            JSONOArray to be published
+     * @param metadata
+     *            Metadata
+     * @param callback
+     *            object of sub class of Callback class
      */
     public void publish(String channel, JSONArray message, JSONObject metadata, Callback callback);
 
     /**
      * Send a message to a channel.
      *
-     * @param channel        Channel name
-     * @param message        JSONObject to be published
-     * @param storeInHistory Store in History ?
-     * @param metadata       Metadata
-     * @param callback       object of sub class of Callback class
+     * @param channel
+     *            Channel name
+     * @param message
+     *            JSONObject to be published
+     * @param storeInHistory
+     *            Store in History ?
+     * @param metadata
+     *            Metadata
+     * @param callback
+     *            object of sub class of Callback class
      */
-    public void publish(String channel, JSONObject message, boolean storeInHistory, JSONObject metadata, Callback callback);
-
+    public void publish(String channel, JSONObject message, boolean storeInHistory, JSONObject metadata,
+            Callback callback);
 
     /**
      * Send a message to a channel.
      *
-     * @param channel  Channel name
-     * @param message  JSONObject to be published
-     * @param metadata       Metadata
-     * @param callback object of sub class of Callback class
+     * @param channel
+     *            Channel name
+     * @param message
+     *            JSONObject to be published
+     * @param metadata
+     *            Metadata
+     * @param callback
+     *            object of sub class of Callback class
      */
     public void publish(String channel, JSONObject message, JSONObject metadata, Callback callback);
 
-
     /**
      * Send a message to a channel.
      *
-     * @param channel        Channel name
-     * @param message        String to be published
-     * @param storeInHistory Store in History ?
-     * @param metadata       Metadata
-     * @param callback       object of sub class of Callback class
+     * @param channel
+     *            Channel name
+     * @param message
+     *            String to be published
+     * @param storeInHistory
+     *            Store in History ?
+     * @param metadata
+     *            Metadata
+     * @param callback
+     *            object of sub class of Callback class
      */
     public void publish(String channel, String message, boolean storeInHistory, JSONObject metadata, Callback callback);
 
@@ -661,7 +818,8 @@ interface PubnubAsyncInterface {
     /**
      * This method sets presence expiry timeout.
      *
-     * @param heartbeat Presence Heartbeat value in seconds
+     * @param heartbeat
+     *            Presence Heartbeat value in seconds
      */
     public void setHeartbeat(int heartbeat, Callback callback);
 
@@ -683,7 +841,8 @@ interface PubnubAsyncInterface {
      * will make maxRetries attempts to connect to pubnub servers before timing
      * out.
      *
-     * @param maxRetries Max number of retries
+     * @param maxRetries
+     *            Max number of retries
      */
     public void setMaxRetries(int maxRetries);
 
@@ -696,7 +855,8 @@ interface PubnubAsyncInterface {
     /**
      * This method sets presence expiry timeout.
      *
-     * @param pnexpires Presence Expiry timeout in seconds
+     * @param pnexpires
+     *            Presence Expiry timeout in seconds
      */
     public void setPnExpires(int pnexpires, Callback callback);
 
@@ -705,7 +865,8 @@ interface PubnubAsyncInterface {
      * reconnection after disconnection. If false, then messages sent on the
      * channel between disconnection and reconnection are not received.
      *
-     * @param resumeOnReconnect True or False setting for Resume on Reconnect
+     * @param resumeOnReconnect
+     *            True or False setting for Resume on Reconnect
      */
     public void setResumeOnReconnect(boolean resumeOnReconnect);
 
@@ -714,7 +875,8 @@ interface PubnubAsyncInterface {
      * maxRetries attempts to connect to pubnub servers. These attemtps will be
      * made at an interval of retryInterval milliseconds.
      *
-     * @param retryInterval Retry Interval in milliseconds
+     * @param retryInterval
+     *            Retry Interval in milliseconds
      */
     public void setRetryInterval(int retryInterval);
 
@@ -730,26 +892,27 @@ interface PubnubAsyncInterface {
     /**
      * This method sets window interval for subscribe.
      *
-     * @param windowInterval Window Interval in milliseconds
+     * @param windowInterval
+     *            Window Interval in milliseconds
      */
     public void setWindowInterval(int windowInterval);
-
 
     /**
      * This method sets timeout value for subscribe/presence. Default value is
      * 310000 milliseconds i.e. 310 seconds
      *
-     * @param timeout Timeout value in milliseconds for subscribe/presence
+     * @param timeout
+     *            Timeout value in milliseconds for subscribe/presence
      */
     public void setSubscribeTimeout(int timeout);
-
 
     /**
      * This method set timeout value for non subscribe operations like publish,
      * history, hereNow. Default value is 15000 milliseconds i.e. 15 seconds.
      *
-     * @param timeout Timeout value in milliseconds for Non subscribe operations
-     *                like publish, history, hereNow
+     * @param timeout
+     *            Timeout value in milliseconds for Non subscribe operations
+     *            like publish, history, hereNow
      */
     public void setNonSubscribeTimeout(int timeout);
 
@@ -761,8 +924,10 @@ interface PubnubAsyncInterface {
     /**
      * Listen for a message on a channel.
      *
-     * @param channels array to listen on
-     * @param callback to call
+     * @param channels
+     *            array to listen on
+     * @param callback
+     *            to call
      * @throws PubnubException
      */
     public void subscribe(String[] channels, Callback callback) throws PubnubException;
@@ -770,9 +935,12 @@ interface PubnubAsyncInterface {
     /**
      * Listen for a message on a channel.
      *
-     * @param channels  array to listen on
-     * @param callback  to call
-     * @param timetoken to use for subscribing
+     * @param channels
+     *            array to listen on
+     * @param callback
+     *            to call
+     * @param timetoken
+     *            to use for subscribing
      * @throws PubnubException
      */
     public void subscribe(String[] channels, Callback callback, long timetoken) throws PubnubException;
@@ -780,19 +948,26 @@ interface PubnubAsyncInterface {
     /**
      * Listen for a message on a channel.
      *
-     * @param channels  array to listen on
-     * @param callback  to call
-     * @param timetoken to use for subscribing
-     * @throws PubnubException Throws PubnubException if Callback is null
+     * @param channels
+     *            array to listen on
+     * @param callback
+     *            to call
+     * @param timetoken
+     *            to use for subscribing
+     * @throws PubnubException
+     *             Throws PubnubException if Callback is null
      */
     public void subscribe(String[] channels, Callback callback, String timetoken) throws PubnubException;
 
     /**
      * Listen for a message on a multiple channels and a multiple channel groups
      *
-     * @param channels array to listen on
-     * @param groups   array to listen on
-     * @param callback to call
+     * @param channels
+     *            array to listen on
+     * @param groups
+     *            array to listen on
+     * @param callback
+     *            to call
      * @throws PubnubException
      */
     public void subscribe(String[] channels, String[] groups, Callback callback) throws PubnubException;
@@ -800,10 +975,14 @@ interface PubnubAsyncInterface {
     /**
      * Listen for a message on a multiple channels and a multiple channel groups
      *
-     * @param channels  array to listen on
-     * @param groups    array to listen on
-     * @param callback  to call
-     * @param timetoken to use for subscribing
+     * @param channels
+     *            array to listen on
+     * @param groups
+     *            array to listen on
+     * @param callback
+     *            to call
+     * @param timetoken
+     *            to use for subscribing
      * @throws PubnubException
      */
     public void subscribe(String[] channels, String[] groups, Callback callback, long timetoken) throws PubnubException;
@@ -811,20 +990,28 @@ interface PubnubAsyncInterface {
     /**
      * Listen for a message on a multiple channels and a multiple channel groups
      *
-     * @param channels  array to listen on
-     * @param groups    array to listen on
-     * @param callback  to call
-     * @param timetoken to use for subscribing
+     * @param channels
+     *            array to listen on
+     * @param groups
+     *            array to listen on
+     * @param callback
+     *            to call
+     * @param timetoken
+     *            to use for subscribing
      * @throws PubnubException
      */
-    public void subscribe(String[] channels, String[] groups, Callback callback, String timetoken) throws PubnubException;
+    public void subscribe(String[] channels, String[] groups, Callback callback, String timetoken)
+            throws PubnubException;
 
     /**
      * Listen for a message on a multiple channels and a single channel group.
      *
-     * @param channels array to listen on
-     * @param group    name
-     * @param callback to call
+     * @param channels
+     *            array to listen on
+     * @param group
+     *            name
+     * @param callback
+     *            to call
      * @throws PubnubException
      */
     public void subscribe(String[] channels, String group, Callback callback) throws PubnubException;
@@ -832,10 +1019,14 @@ interface PubnubAsyncInterface {
     /**
      * Listen for a message on a multiple channels and a single channel group.
      *
-     * @param channels  array to listen on
-     * @param group     name
-     * @param callback  to call
-     * @param timetoken to use for subscribing
+     * @param channels
+     *            array to listen on
+     * @param group
+     *            name
+     * @param callback
+     *            to call
+     * @param timetoken
+     *            to use for subscribing
      * @throws PubnubException
      */
     public void subscribe(String[] channels, String group, Callback callback, long timetoken) throws PubnubException;
@@ -843,10 +1034,14 @@ interface PubnubAsyncInterface {
     /**
      * Listen for a message on a multiple channels and a single channel group.
      *
-     * @param channels  array to listen on
-     * @param group     name
-     * @param callback  to call
-     * @param timetoken to use for subscribing
+     * @param channels
+     *            array to listen on
+     * @param group
+     *            name
+     * @param callback
+     *            to call
+     * @param timetoken
+     *            to use for subscribing
      * @throws PubnubException
      */
     public void subscribe(String[] channels, String group, Callback callback, String timetoken) throws PubnubException;
@@ -854,8 +1049,10 @@ interface PubnubAsyncInterface {
     /**
      * Listen for a message on a channel.
      *
-     * @param channel  name
-     * @param callback to call
+     * @param channel
+     *            name
+     * @param callback
+     *            to call
      * @throws PubnubException
      */
     public void subscribe(String channel, Callback callback) throws PubnubException;
@@ -863,8 +1060,10 @@ interface PubnubAsyncInterface {
     /**
      * Listen for a message on a channel.
      *
-     * @param channel  name
-     * @param callback to call
+     * @param channel
+     *            name
+     * @param callback
+     *            to call
      * @throws PubnubException
      */
     public void subscribe(String channel, Callback callback, long timetoken) throws PubnubException;
@@ -872,9 +1071,12 @@ interface PubnubAsyncInterface {
     /**
      * Listen for a message on a channel.
      *
-     * @param channel   name
-     * @param callback  to call
-     * @param timetoken to use for subscribing
+     * @param channel
+     *            name
+     * @param callback
+     *            to call
+     * @param timetoken
+     *            to use for subscribing
      * @throws PubnubException
      */
     public void subscribe(String channel, Callback callback, String timetoken) throws PubnubException;
@@ -882,9 +1084,12 @@ interface PubnubAsyncInterface {
     /**
      * Listen for a message on a channel and a multiple channel groups.
      *
-     * @param channel  name
-     * @param groups   array to listen on
-     * @param callback to call
+     * @param channel
+     *            name
+     * @param groups
+     *            array to listen on
+     * @param callback
+     *            to call
      * @throws PubnubException
      */
     public void subscribe(String channel, String[] groups, Callback callback) throws PubnubException;
@@ -892,10 +1097,14 @@ interface PubnubAsyncInterface {
     /**
      * Listen for a message on a channel and a multiple channel groups.
      *
-     * @param channel   name
-     * @param groups    array to listen on
-     * @param callback  to call
-     * @param timetoken to use for subscribing
+     * @param channel
+     *            name
+     * @param groups
+     *            array to listen on
+     * @param callback
+     *            to call
+     * @param timetoken
+     *            to use for subscribing
      * @throws PubnubException
      */
     public void subscribe(String channel, String[] groups, Callback callback, long timetoken) throws PubnubException;
@@ -903,10 +1112,14 @@ interface PubnubAsyncInterface {
     /**
      * Listen for a message on a channel and a multiple channel groups.
      *
-     * @param channel   name
-     * @param groups    array to listen on
-     * @param callback  to call
-     * @param timetoken to use for subscribing
+     * @param channel
+     *            name
+     * @param groups
+     *            array to listen on
+     * @param callback
+     *            to call
+     * @param timetoken
+     *            to use for subscribing
      * @throws PubnubException
      */
     public void subscribe(String channel, String[] groups, Callback callback, String timetoken) throws PubnubException;
@@ -914,9 +1127,12 @@ interface PubnubAsyncInterface {
     /**
      * Listen for a message on a channel and on a channel group.
      *
-     * @param channel  name
-     * @param group    name
-     * @param callback to call
+     * @param channel
+     *            name
+     * @param group
+     *            name
+     * @param callback
+     *            to call
      * @throws PubnubException
      */
     public void subscribe(String channel, String group, Callback callback) throws PubnubException;
@@ -924,10 +1140,14 @@ interface PubnubAsyncInterface {
     /**
      * Listen for a message on a channel and on a channel group.
      *
-     * @param channel   name
-     * @param group     name
-     * @param callback  to call
-     * @param timetoken to use for subscribing
+     * @param channel
+     *            name
+     * @param group
+     *            name
+     * @param callback
+     *            to call
+     * @param timetoken
+     *            to use for subscribing
      * @throws PubnubException
      */
     public void subscribe(String channel, String group, Callback callback, long timetoken) throws PubnubException;
@@ -935,131 +1155,145 @@ interface PubnubAsyncInterface {
     /**
      * Listen for a message on a channel and on a channel group.
      *
-     * @param channel   name
-     * @param group     name
-     * @param callback  to call
-     * @param timetoken to use for subscribing
+     * @param channel
+     *            name
+     * @param group
+     *            name
+     * @param callback
+     *            to call
+     * @param timetoken
+     *            to use for subscribing
      * @throws PubnubException
      */
     public void subscribe(String channel, String group, Callback callback, String timetoken) throws PubnubException;
 
-
     /**
      * Read current time from PubNub Cloud.
      *
-     * @param callback Callback object
+     * @param callback
+     *            Callback object
      */
     public void time(Callback callback);
 
+    /**
+     * Unsubscribe from channels.
+     *
+     * @param channels
+     *            String array containing channel names
+     */
+    public void unsubscribe(String[] channels, Callback callback);
 
     /**
      * Unsubscribe from channels.
      *
-     * @param channels String array containing channel names
-     */
-    public void unsubscribe(String[] channels, Callback callback);
-    
-    /**
-     * Unsubscribe from channels.
-     *
-     * @param channels String array containing channel names
+     * @param channels
+     *            String array containing channel names
      */
     public void unsubscribe(String[] channels);
 
     /**
      * Unsubscribe/Disconnect from channel.
      *
-     * @param channel channel name as String.
+     * @param channel
+     *            channel name as String.
      */
     public void unsubscribe(String channel);
 
-    
     /**
      * Unsubscribe/Disconnect from channel.
      *
-     * @param channel channel name as String.
+     * @param channel
+     *            channel name as String.
      */
     public void unsubscribe(String channel, Callback callback);
-    
 
     /**
      * Unsubscribe from channel group
      *
-     * @param group to unsubscribe
+     * @param group
+     *            to unsubscribe
      */
     public void channelGroupUnsubscribe(String group);
 
     /**
      * Unsubscribe from channel group
      *
-     * @param group to unsubscribe
-     * @param callback Callback
+     * @param group
+     *            to unsubscribe
+     * @param callback
+     *            Callback
      */
     public void channelGroupUnsubscribe(String group, Callback callback);
-    
-    
+
     /**
      * Unsubscribe from multiple channel groups
      *
-     * @param groups to unsubscribe
-     * @param callback Callback
+     * @param groups
+     *            to unsubscribe
+     * @param callback
+     *            Callback
      */
     public void channelGroupUnsubscribe(String[] groups, Callback callback);
-    
+
     /**
      * Unsubscribe from multiple channel groups
      *
-     * @param groups to unsubscribe
+     * @param groups
+     *            to unsubscribe
      */
     public void channelGroupUnsubscribe(String[] groups);
 
     /**
      * Unsubscribe from presence channel.
      *
-     * @param channel channel name as String.
-     * @param callback Callback
+     * @param channel
+     *            channel name as String.
+     * @param callback
+     *            Callback
      */
     public void unsubscribePresence(String channel, Callback callback);
 
     /**
      * Unsubscribe from presence channel.
      *
-     * @param channel channel name as String.
+     * @param channel
+     *            channel name as String.
      */
     public void unsubscribePresence(String channel);
-    
+
     /**
      * Unsubscribe from all channels and channel groups.
      * 
      * @param callback
      */
     public void unsubscribeAll(Callback callback);
-    
+
     /**
      * Unsubscribe from all channels and channel groups.
-     */    
+     */
     public void unsubscribeAll();
 
     /**
      * Unsubscribe from all channels.
      */
     public void unsubscribeAllChannels();
-    
+
     /**
      * Unsubscribe from all channels.
      * 
-     * @param callback Callback
+     * @param callback
+     *            Callback
      */
     public void unsubscribeAllChannels(Callback callback);
 
-    
     /**
      * Unsubscribe from all channel groups.
      * 
-     * @param callback Callback
+     * @param callback
+     *            Callback
      */
     public void channelGroupUnsubscribeAllGroups(Callback callback);
-    
+
     /**
      * Read presence information for Pubnub Object uuid
      *
@@ -1070,15 +1304,18 @@ interface PubnubAsyncInterface {
     /**
      * Read presence information for uuid
      *
-     * @param uuid     UUID
-     * @param callback object of sub class of Callback class
+     * @param uuid
+     *            UUID
+     * @param callback
+     *            object of sub class of Callback class
      */
     public void whereNow(String uuid, Callback callback);
-    
+
     public void setFilter(String filter);
-    
+
     public String getFilter();
 
     public void setV2(boolean v2);
+
     public boolean isV2();
 }

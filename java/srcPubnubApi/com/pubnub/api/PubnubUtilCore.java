@@ -19,7 +19,7 @@ class PubnubUtilCore {
             h.put(name, object);
         }
     }
-	
+
     /**
      * Takes source and delimiter string as inputs and returns splitted string
      * in form of tokens in String array
@@ -53,13 +53,11 @@ class PubnubUtilCore {
             int nextIndex = tmpStr.indexOf(delimiter, index + 1);
 
             if (nextIndex != -1) {
-                splittedList[counter++] = tmpStr.substring(
-                                              index + delimiter.length(), nextIndex);
+                splittedList[counter++] = tmpStr.substring(index + delimiter.length(), nextIndex);
                 tmpStr = tmpStr.substring(nextIndex);
 
             } else {
-                splittedList[counter++] = tmpStr.substring(index
-                                          + delimiter.length());
+                splittedList[counter++] = tmpStr.substring(index + delimiter.length());
                 tmpStr = tmpStr.substring(index + 1);
             }
         } while ((index = tmpStr.indexOf(delimiter)) != -1);
@@ -136,8 +134,7 @@ class PubnubUtilCore {
      *            , exclude channel if present as substring
      * @return , string array with hash keys string
      */
-    public static synchronized String hashTableKeysToDelimitedString(
-        Hashtable ht, String delimiter, String exclude) {
+    public static synchronized String hashTableKeysToDelimitedString(Hashtable ht, String delimiter, String exclude) {
 
         StringBuffer sb = new StringBuffer();
         boolean first = true;
@@ -162,8 +159,8 @@ class PubnubUtilCore {
         return sb.toString();
     }
 
-    public static synchronized String hashTableKeysToSortedSuffixString(
-            Hashtable ht, String delimiter, String lastSuffix) {
+    public static synchronized String hashTableKeysToSortedSuffixString(Hashtable ht, String delimiter,
+            String lastSuffix) {
 
         StringBuffer sb = new StringBuffer();
         StringBuffer sbPresence = new StringBuffer();
@@ -196,7 +193,7 @@ class PubnubUtilCore {
             return sb.toString() + delimiter + sbPresence.toString();
         } else if (sb.length() > 0 && sbPresence.length() == 0) {
             return sb.toString();
-        } else if (sb.length() ==  0 && sbPresence.length() > 0) {
+        } else if (sb.length() == 0 && sbPresence.length() > 0) {
             return sbPresence.toString();
         } else {
             return "";
@@ -267,6 +264,7 @@ class PubnubUtilCore {
         }
         return dst;
     }
+
     /**
      * Parse Json, change json string to string
      *
@@ -278,12 +276,12 @@ class PubnubUtilCore {
     static Object parseJSON(Object obj) {
         if (obj instanceof String) {
             if (((String) obj).endsWith("\"") && ((String) obj).startsWith("\""))
-                obj = ((String) obj).substring(1, ((String) obj).length() -1);
+                obj = ((String) obj).substring(1, ((String) obj).length() - 1);
         }
         return obj;
     }
-    
+
     static boolean isEmptyString(String s) {
-    	return (s == null || s.length() == 0);
+        return (s == null || s.length() == 0);
     }
 }

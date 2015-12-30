@@ -5,6 +5,7 @@ import org.json.JSONObject;
 
 /**
  * Message object for APNS
+ * 
  * @author Pubnub
  *
  */
@@ -35,12 +36,14 @@ public class PnApnsMessage extends JSONObject {
         }
         return aps;
     }
-     /**
-      * Set value of APS alert
-      * @param alert
-      *         String to be set as alert value for APNS message
-      */
-     public void setApsAlert(String alert) {
+
+    /**
+     * Set value of APS alert
+     * 
+     * @param alert
+     *            String to be set as alert value for APNS message
+     */
+    public void setApsAlert(String alert) {
 
         try {
             JSONObject aps = (JSONObject) getAps();
@@ -50,10 +53,12 @@ public class PnApnsMessage extends JSONObject {
         }
 
     }
+
     /**
      * Set value of APS badge
+     * 
      * @param badge
-     *         int to be set as badge value for APNS message
+     *            int to be set as badge value for APNS message
      */
     public void setApsBadge(int badge) {
         try {
@@ -67,18 +72,19 @@ public class PnApnsMessage extends JSONObject {
 
     /**
      * Set value of APS sound
+     * 
      * @param sound
-     *         String to be set as sound value for APNS message
+     *            String to be set as sound value for APNS message
      */
     public void setApsSound(String sound) {
 
-       try {
-           JSONObject aps = (JSONObject) getAps();
-           aps.put("sound", sound);
-       } catch (JSONException e) {
+        try {
+            JSONObject aps = (JSONObject) getAps();
+            aps.put("sound", sound);
+        } catch (JSONException e) {
 
-       }
+        }
 
-   }
+    }
 
 }

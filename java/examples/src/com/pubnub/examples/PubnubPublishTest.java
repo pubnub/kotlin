@@ -63,26 +63,24 @@ public class PubnubPublishTest {
             _pubnub.subscribe(new String[] { channel }, new Callback() {
                 @Override
                 public void successCallback(String channel, Object message) {
-                    notifyUser("RECV : " + channel + " : " + message.getClass()
-                               + " : " + message.toString());
+                    notifyUser("RECV : " + channel + " : " + message.getClass() + " : " + message.toString());
                 }
+
                 @Override
                 public void errorCallback(String channel, PubnubError error) {
-                    notifyUser("RECV : " + channel + " : "
-                               + " : " + error.toString());
+                    notifyUser("RECV : " + channel + " : " + " : " + error.toString());
                 }
 
             });
             _pubnub_enc.subscribe(new String[] { channel_enc }, new Callback() {
                 @Override
                 public void successCallback(String channel, Object message) {
-                    notifyUser("RECV : " + channel + " : " + message.getClass()
-                               + " : " + message.toString());
+                    notifyUser("RECV : " + channel + " : " + message.getClass() + " : " + message.toString());
                 }
+
                 @Override
                 public void errorCallback(String channel, PubnubError error) {
-                    notifyUser("RECV : " + channel + " : "
-                               + " : " + error.toString());
+                    notifyUser("RECV : " + channel + " : " + " : " + error.toString());
                 }
             });
 
@@ -114,13 +112,12 @@ public class PubnubPublishTest {
         pubnub.publish(channel, msg.toString(), new Callback() {
             @Override
             public void successCallback(String channel, Object message) {
-                notifyUser("SENT : " + channel + " : " + msg.getClass() + " : "
-                           + message.toString());
+                notifyUser("SENT : " + channel + " : " + msg.getClass() + " : " + message.toString());
             }
+
             @Override
             public void errorCallback(String channel, PubnubError error) {
-                notifyUser("SENT : " + channel + " : "
-                           + error.toString());
+                notifyUser("SENT : " + channel + " : " + error.toString());
             }
         });
     }
@@ -130,13 +127,12 @@ public class PubnubPublishTest {
         pubnub.history(channel, 10, new Callback() {
             @Override
             public void successCallback(String channel, Object message) {
-                notifyUser("HISTORY : " + channel + " : "
-                           + message.getClass() + " : " + message.toString());
+                notifyUser("HISTORY : " + channel + " : " + message.getClass() + " : " + message.toString());
             }
+
             @Override
             public void errorCallback(String channel, PubnubError error) {
-                notifyUser("HISTORY : " + channel + " : "
-                           + " : " + error.toString());
+                notifyUser("HISTORY : " + channel + " : " + " : " + error.toString());
             }
         });
     }

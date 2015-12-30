@@ -33,8 +33,7 @@ abstract class Worker implements Runnable {
 
     Worker(Vector _requestQueue, int connectionTimeout, int requestTimeout, Hashtable headers) {
         this._requestQueue = _requestQueue;
-        this.httpclient = HttpClient.getClient(connectionTimeout,
-                                               requestTimeout, headers);
+        this.httpclient = HttpClient.getClient(connectionTimeout, requestTimeout, headers);
     }
 
     void setConnectionTimeout(int timeout) {
@@ -87,8 +86,7 @@ abstract class Worker implements Runnable {
 
 class NonSubscribeWorker extends Worker {
 
-    NonSubscribeWorker(Vector _requestQueue, int connectionTimeout,
-                       int requestTimeout, Hashtable headers) {
+    NonSubscribeWorker(Vector _requestQueue, int connectionTimeout, int requestTimeout, Hashtable headers) {
         super(_requestQueue, connectionTimeout, requestTimeout, headers);
     }
 
@@ -105,14 +103,16 @@ class NonSubscribeWorker extends Worker {
         } catch (Exception e) {
             log.debug("Exception in Fetch : " + e.toString());
             if (!_die)
-                hreq.getResponseHandler().handleError(hreq, PubnubError.getErrorObject(PubnubError.PNERROBJ_HTTP_ERROR, 2, e.toString()));
+                hreq.getResponseHandler().handleError(hreq,
+                        PubnubError.getErrorObject(PubnubError.PNERROBJ_HTTP_ERROR, 2, e.toString()));
             return;
         }
 
         if (!_die) {
             if (hresp == null) {
                 log.debug("Error in fetching url : " + hreq.getUrl());
-                hreq.getResponseHandler().handleError(hreq, PubnubError.getErrorObject(PubnubError.PNERROBJ_HTTP_ERROR , 3));
+                hreq.getResponseHandler().handleError(hreq,
+                        PubnubError.getErrorObject(PubnubError.PNERROBJ_HTTP_ERROR, 3));
                 return;
             }
             hreq.getResponseHandler().handleResponse(hreq, hresp.getResponse());
@@ -120,7 +120,8 @@ class NonSubscribeWorker extends Worker {
     }
 
     public void shutdown() {
-        if (httpclient != null) httpclient.shutdown();
+        if (httpclient != null)
+            httpclient.shutdown();
     }
 
 }
@@ -183,9 +184,11 @@ abstract class RequestManager {
 
     class ConnectionResetter implements Runnable {
         Worker worker;
+
         ConnectionResetter(Worker w) {
             this.worker = w;
         }
+
         public void run() {
             if (this.worker != null) {
                 worker.resetConnection();
@@ -264,15 +267,13 @@ abstract class AbstractSubscribeManager extends RequestManager {
     protected volatile int retryInterval = 5000;
     protected volatile int windowInterval = 0;
 
-    public AbstractSubscribeManager(String name, int connectionTimeout,
-                                    int requestTimeout, boolean daemonThreads) {
+    public AbstractSubscribeManager(String name, int connectionTimeout, int requestTimeout, boolean daemonThreads) {
         super(name, connectionTimeout, requestTimeout, daemonThreads);
     }
 
     public Worker getWorker() {
-        return new SubscribeWorker(_waiting,
-                                   connectionTimeout, requestTimeout,
-                                   maxRetries, retryInterval, windowInterval, headers);
+        return new SubscribeWorker(_waiting, connectionTimeout, requestTimeout, maxRetries, retryInterval,
+                windowInterval, headers);
     }
 
     public void setMaxRetries(int maxRetries) {
@@ -313,14 +314,12 @@ abstract class AbstractSubscribeManager extends RequestManager {
 }
 
 abstract class AbstractNonSubscribeManager extends RequestManager {
-    public AbstractNonSubscribeManager(String name, int connectionTimeout,
-                                       int requestTimeout, boolean daemonThreads) {
+    public AbstractNonSubscribeManager(String name, int connectionTimeout, int requestTimeout, boolean daemonThreads) {
         super(name, connectionTimeout, requestTimeout, daemonThreads);
     }
 
     public Worker getWorker() {
-        return new NonSubscribeWorker(_waiting, connectionTimeout,
-                                      requestTimeout, headers);
+        return new NonSubscribeWorker(_waiting, connectionTimeout, requestTimeout, headers);
     }
 
     public void setConnectionTimeout(int timeout) {
@@ -344,18 +343,18 @@ abstract class AbstractSubscribeWorker extends Worker {
     protected volatile int retryInterval = 5000;
     protected volatile int windowInterval = 0;
 
-    AbstractSubscribeWorker(Vector _requestQueue, int connectionTimeout,
-                            int requestTimeout, int maxRetries, int retryInterval, Hashtable headers) {
+    AbstractSubscribeWorker(Vector _requestQueue, int connectionTimeout, int requestTimeout, int maxRetries,
+            int retryInterval, Hashtable headers) {
         super(_requestQueue, connectionTimeout, requestTimeout, headers);
         this.maxRetries = maxRetries;
-        this.retryInterval= retryInterval;
+        this.retryInterval = retryInterval;
     }
 
-    AbstractSubscribeWorker(Vector _requestQueue, int connectionTimeout,
-            int requestTimeout, int maxRetries, int retryInterval, int windowInterval, Hashtable headers) {
+    AbstractSubscribeWorker(Vector _requestQueue, int connectionTimeout, int requestTimeout, int maxRetries,
+            int retryInterval, int windowInterval, Hashtable headers) {
         super(_requestQueue, connectionTimeout, requestTimeout, headers);
         this.maxRetries = maxRetries;
-        this.retryInterval= retryInterval;
+        this.retryInterval = retryInterval;
         this.windowInterval = windowInterval;
     }
 

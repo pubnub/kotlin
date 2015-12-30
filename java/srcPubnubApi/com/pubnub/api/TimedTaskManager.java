@@ -6,27 +6,30 @@ import java.util.Vector;
 
 abstract class TimedTask {
     protected int interval;
+
     public abstract void run();
+
     TimedTask(int interval) {
         this.setInterval(interval);
     }
+
     public int getInterval() {
         return interval;
     }
+
     public void setInterval(int interval) {
         this.interval = interval;
     }
 
 }
 
-class TimedTaskWorker implements Runnable{
+class TimedTaskWorker implements Runnable {
 
     private TimedTask task;
     private Thread thread;
     protected volatile boolean _die;
     private String name;
     protected static Logger log = new Logger(Worker.class);
-
 
     public Thread getThread() {
         return thread;
@@ -43,6 +46,7 @@ class TimedTaskWorker implements Runnable{
     void interruptWorker() {
         thread.interrupt();
     }
+
     public TimedTask getTask() {
         return task;
     }
@@ -54,6 +58,7 @@ class TimedTaskWorker implements Runnable{
     public int getInterval() {
         return task.getInterval();
     }
+
     public void setInterval(int interval) {
         this.task.setInterval(interval);
     }
@@ -80,13 +85,13 @@ class TimedTaskWorker implements Runnable{
 
 }
 
-
 public class TimedTaskManager {
 
     protected Vector _workers = new Vector();;
     private static int count = 0;
     private TimedTask voidTask = new TimedTask(1) {
-        public void run() {}
+        public void run() {
+        }
     };
 
     protected static Logger log = new Logger(Worker.class);
@@ -94,10 +99,11 @@ public class TimedTaskManager {
     public TimedTaskManager(String name) {
 
     }
+
     private void interruptWorkers() {
-        synchronized(_workers) {
+        synchronized (_workers) {
             for (int i = 0; i < _workers.size(); i++) {
-                ((TimedTaskWorker)_workers.elementAt(i)).interruptWorker();
+                ((TimedTaskWorker) _workers.elementAt(i)).interruptWorker();
             }
         }
     }
@@ -114,9 +120,9 @@ public class TimedTaskManager {
     }
 
     public void removeTask(int hashCode) {
-        synchronized(_workers) {
+        synchronized (_workers) {
             for (int i = 0; i < _workers.size(); i++) {
-                TimedTaskWorker ttw = ((TimedTaskWorker)_workers.elementAt(i));
+                TimedTaskWorker ttw = ((TimedTaskWorker) _workers.elementAt(i));
                 if (ttw.hashCode() == hashCode) {
                     ttw.setTask(voidTask);
                     ttw.die();
@@ -126,10 +132,11 @@ public class TimedTaskManager {
             }
         }
     }
+
     public void updateTask(int hashCode, TimedTask task) {
-        synchronized(_workers) {
+        synchronized (_workers) {
             for (int i = 0; i < _workers.size(); i++) {
-                TimedTaskWorker ttw = ((TimedTaskWorker)_workers.elementAt(i));
+                TimedTaskWorker ttw = ((TimedTaskWorker) _workers.elementAt(i));
                 if (ttw.hashCode() == hashCode) {
                     ttw.setTask(task);
                     ttw.interruptWorker();
@@ -137,10 +144,11 @@ public class TimedTaskManager {
             }
         }
     }
+
     public void updateTask(int hashCode, int interval) {
-        synchronized(_workers) {
+        synchronized (_workers) {
             for (int i = 0; i < _workers.size(); i++) {
-                TimedTaskWorker ttw = ((TimedTaskWorker)_workers.elementAt(i));
+                TimedTaskWorker ttw = ((TimedTaskWorker) _workers.elementAt(i));
                 if (ttw.hashCode() == hashCode) {
                     ttw.getTask().setInterval(interval);
                     ttw.interruptWorker();
@@ -148,10 +156,11 @@ public class TimedTaskManager {
             }
         }
     }
+
     public void stop() {
-        synchronized(_workers) {
+        synchronized (_workers) {
             for (int i = 0; i < _workers.size(); i++) {
-                TimedTaskWorker ttw = ((TimedTaskWorker)_workers.elementAt(i));
+                TimedTaskWorker ttw = ((TimedTaskWorker) _workers.elementAt(i));
                 ttw.setTask(voidTask);
                 ttw.die();
                 ttw.interruptWorker();

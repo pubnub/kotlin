@@ -39,13 +39,16 @@ public class FourElementsResponseTest {
         channelSubscriptions = new Subscriptions();
         channelGroupSubscriptions = new Subscriptions();
 
-        channelCallback = new Callback() {};
-        channelCallback2 = new Callback() {};
-        channelGroupCallback = new Callback() {};
+        channelCallback = new Callback() {
+        };
+        channelCallback2 = new Callback() {
+        };
+        channelGroupCallback = new Callback() {
+        };
 
         timetoken = "123";
 
-        hreq = new HttpRequest(new String[] {"a", "b", "c"}, new Hashtable(), new ResponseHandler() {
+        hreq = new HttpRequest(new String[] { "a", "b", "c" }, new Hashtable(), new ResponseHandler() {
             @Override
             public void handleResponse(HttpRequest hreq, String response) {
 
@@ -64,8 +67,7 @@ public class FourElementsResponseTest {
     }
 
     @Test
-    public void testChannelMessage()
-            throws Exception {
+    public void testChannelMessage() throws Exception {
         third = "foo";
         fourth = "foo";
         message = "hello";
@@ -76,20 +78,12 @@ public class FourElementsResponseTest {
 
         Whitebox.invokeMethod(pubnub, "handleFourElementsSubscribeResponse", third, fourth, message, timetoken, hreq);
 
-        PowerMockito
-                .verifyPrivate(pubnub, times(1))
-                .invoke("invokeSubscribeCallback",
-                        eq(fourth),
-                        eq(channelCallback),
-                        eq(message),
-                        Mockito.anyString(),
-                        eq(hreq)
-                );
+        PowerMockito.verifyPrivate(pubnub, times(1)).invoke("invokeSubscribeCallback", eq(fourth), eq(channelCallback),
+                eq(message), Mockito.anyString(), eq(hreq));
     }
 
     @Test
-    public void testChannelGroupMessage()
-            throws Exception {
+    public void testChannelGroupMessage() throws Exception {
         third = "bar";
         fourth = "foo";
         message = "hello";
@@ -102,20 +96,12 @@ public class FourElementsResponseTest {
 
         Whitebox.invokeMethod(pubnub, "handleFourElementsSubscribeResponse", third, fourth, message, timetoken, hreq);
 
-        PowerMockito
-                .verifyPrivate(pubnub, times(1))
-                .invoke("invokeSubscribeCallback",
-                        eq(fourth),
-                        eq(channelGroupCallback),
-                        eq(message),
-                        Mockito.anyString(),
-                        eq(hreq)
-                );
+        PowerMockito.verifyPrivate(pubnub, times(1)).invoke("invokeSubscribeCallback", eq(fourth),
+                eq(channelGroupCallback), eq(message), Mockito.anyString(), eq(hreq));
     }
 
     @Test
-    public void testWildcardMessage()
-            throws Exception {
+    public void testWildcardMessage() throws Exception {
         String wildcardChannel = "foo.*";
         String channel = "foo.bar";
         message = "hello";
@@ -124,22 +110,15 @@ public class FourElementsResponseTest {
 
         channelSubscriptions.addItem(thirdSubscriptionItem);
 
-        Whitebox.invokeMethod(pubnub, "handleFourElementsSubscribeResponse", wildcardChannel, channel, message, timetoken, hreq);
+        Whitebox.invokeMethod(pubnub, "handleFourElementsSubscribeResponse", wildcardChannel, channel, message,
+                timetoken, hreq);
 
-        PowerMockito
-                .verifyPrivate(pubnub, times(1))
-                .invoke("invokeSubscribeCallback",
-                        eq(channel),
-                        eq(channelCallback),
-                        eq(message),
-                        Mockito.anyString(),
-                        eq(hreq)
-                );
+        PowerMockito.verifyPrivate(pubnub, times(1)).invoke("invokeSubscribeCallback", eq(channel),
+                eq(channelCallback), eq(message), Mockito.anyString(), eq(hreq));
     }
 
     @Test
-    public void testWildcardPresenceSameLevelWithSubscribe()
-            throws Exception {
+    public void testWildcardPresenceSameLevelWithSubscribe() throws Exception {
         String presenceChannel = "foo.*-pnpres";
         String messagesChannel = "foo.*";
         String channel = "foo.*-pnpres";
@@ -151,22 +130,15 @@ public class FourElementsResponseTest {
         channelSubscriptions.addItem(presenceSubscriptionItem);
         channelSubscriptions.addItem(messagesSubscriptionItem);
 
-        Whitebox.invokeMethod(pubnub, "handleFourElementsSubscribeResponse", messagesChannel, channel, message, timetoken, hreq);
+        Whitebox.invokeMethod(pubnub, "handleFourElementsSubscribeResponse", messagesChannel, channel, message,
+                timetoken, hreq);
 
-        PowerMockito
-                .verifyPrivate(pubnub, times(1))
-                .invoke("invokeSubscribeCallback",
-                        eq(channel),
-                        eq(channelCallback),
-                        eq(message),
-                        Mockito.anyString(),
-                        eq(hreq)
-                );
+        PowerMockito.verifyPrivate(pubnub, times(1)).invoke("invokeSubscribeCallback", eq(channel),
+                eq(channelCallback), eq(message), Mockito.anyString(), eq(hreq));
     }
 
     @Test
-    public void testWildcardPresenceDifferentLevelWithSubscribe()
-            throws Exception {
+    public void testWildcardPresenceDifferentLevelWithSubscribe() throws Exception {
         String presenceChannel = "foo.*-pnpres";
         String messagesChannel = "foo.*";
         String channel = "foo.bar.baz.*-pnpres";
@@ -178,16 +150,10 @@ public class FourElementsResponseTest {
         channelSubscriptions.addItem(presenceSubscriptionItem);
         channelSubscriptions.addItem(messagesSubscriptionItem);
 
-        Whitebox.invokeMethod(pubnub, "handleFourElementsSubscribeResponse", messagesChannel, channel, message, timetoken, hreq);
+        Whitebox.invokeMethod(pubnub, "handleFourElementsSubscribeResponse", messagesChannel, channel, message,
+                timetoken, hreq);
 
-        PowerMockito
-                .verifyPrivate(pubnub, times(1))
-                .invoke("invokeSubscribeCallback",
-                        eq(channel),
-                        eq(channelCallback2),
-                        eq(message),
-                        Mockito.anyString(),
-                        eq(hreq)
-                );
+        PowerMockito.verifyPrivate(pubnub, times(1)).invoke("invokeSubscribeCallback", eq(channel),
+                eq(channelCallback2), eq(message), Mockito.anyString(), eq(hreq));
     }
 }

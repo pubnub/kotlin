@@ -53,8 +53,7 @@ class HttpClientCore extends HttpClient {
     }
 
     public boolean isRedirect(int rc) {
-        return (rc == HttpURLConnection.HTTP_MOVED_PERM
-                || rc == HttpURLConnection.HTTP_MOVED_TEMP || rc == HttpURLConnection.HTTP_SEE_OTHER);
+        return (rc == HttpURLConnection.HTTP_MOVED_PERM || rc == HttpURLConnection.HTTP_MOVED_TEMP || rc == HttpURLConnection.HTTP_SEE_OTHER);
     }
 
     public boolean checkResponse(int rc) {
@@ -83,14 +82,14 @@ class HttpClientCore extends HttpClient {
         return fetch(url, null);
     }
 
-    public synchronized HttpResponse fetch(String url, Hashtable headers)
-    throws PubnubException, SocketTimeoutException {
+    public synchronized HttpResponse fetch(String url, Hashtable headers) throws PubnubException,
+            SocketTimeoutException {
         URL urlobj = null;
         log.debug("FETCHING URL : " + url);
         try {
             urlobj = new URL(url);
         } catch (MalformedURLException e3) {
-            throw new PubnubException(getErrorObject(PNERROBJ_MALFORMED_URL,url));
+            throw new PubnubException(getErrorObject(PNERROBJ_MALFORMED_URL, url));
         }
         try {
             connection = (HttpURLConnection) urlobj.openConnection();
@@ -122,21 +121,17 @@ class HttpClientCore extends HttpClient {
         connection.setConnectTimeout(connectionTimeout);
 
         /*
-        try {
-            connection.connect();
-        } catch (SocketTimeoutException  e) {
-            throw e;
-        } catch (IOException e) {
-            throw new PubnubException(getErrorObject(PNERROBJ_CONNECT_EXCEPTION, url + " : " + e.toString()));
-        }
-        */
+         * try { connection.connect(); } catch (SocketTimeoutException e) {
+         * throw e; } catch (IOException e) { throw new
+         * PubnubException(getErrorObject(PNERROBJ_CONNECT_EXCEPTION, url +
+         * " : " + e.toString())); }
+         */
         int rc = HttpURLConnection.HTTP_INTERNAL_ERROR;
         try {
             rc = connection.getResponseCode();
         } catch (SocketTimeoutException ste) {
             throw ste;
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new PubnubException(getErrorObject(PNERROBJ_HTTP_RC_ERROR, url + " : " + e.toString()));
         }
 
@@ -175,70 +170,62 @@ class HttpClientCore extends HttpClient {
             }
         }
 
-        log.debug("URL = " + url + ", Status Code : "  + rc + ", : RESPONSE = " + page);
+        log.debug("URL = " + url + ", Status Code : " + rc + ", : RESPONSE = " + page);
         switch (rc) {
-        case HttpURLConnection.HTTP_FORBIDDEN:
-            {
-                JSONObject payload = null;
-                String message = null;
-                try {
-                    JSONObject pageJso = new JSONObject(page);
-                    message            = pageJso.getString("message");
-                    payload            = pageJso.getJSONObject("payload");
-                    throw new PubnubException(
-                    		getErrorObject(PNERROBJ_FORBIDDEN, message, payload)
-                    		, page, pageJso);
-                } catch (JSONException e2) {}
-
-                throw new PubnubException(getErrorObject(PNERROBJ_FORBIDDEN, page), page);
+        case HttpURLConnection.HTTP_FORBIDDEN: {
+            JSONObject payload = null;
+            String message = null;
+            try {
+                JSONObject pageJso = new JSONObject(page);
+                message = pageJso.getString("message");
+                payload = pageJso.getJSONObject("payload");
+                throw new PubnubException(getErrorObject(PNERROBJ_FORBIDDEN, message, payload), page, pageJso);
+            } catch (JSONException e2) {
             }
-        case HttpURLConnection.HTTP_UNAUTHORIZED:
-	        {
-	            JSONObject payload = null;
-	            String message = null;
-	            try {
-	                JSONObject pageJso = new JSONObject(page);
-	                message            = pageJso.getString("message");
-	                payload            = pageJso.getJSONObject("payload");
-	                throw new PubnubException(
-	                		getErrorObject(PNERROBJ_UNAUTHORIZED, message, payload)
-	                		, page, pageJso);
-	            } catch (JSONException e2) {}
-	
-	            throw new PubnubException(getErrorObject(PNERROBJ_UNAUTHORIZED, page), page);
-	        }
 
-        case HttpURLConnection.HTTP_BAD_REQUEST:
-	        {
-	            JSONObject payload = null;
-	            String message = null;
-	            try {
-	                JSONObject pageJso = new JSONObject(page);
-	                message            = pageJso.getString("message");
-	                payload            = pageJso.getJSONObject("payload");
-	                throw new PubnubException(
-	                		getErrorObject(PNERROBJ_BAD_REQUEST, message, payload)
-	                		, page, pageJso);
-	            } catch (JSONException e2) {}
-	
-	            throw new PubnubException(getErrorObject(PNERROBJ_BAD_REQUEST, page), page);
-	        }
+            throw new PubnubException(getErrorObject(PNERROBJ_FORBIDDEN, page), page);
+        }
+        case HttpURLConnection.HTTP_UNAUTHORIZED: {
+            JSONObject payload = null;
+            String message = null;
+            try {
+                JSONObject pageJso = new JSONObject(page);
+                message = pageJso.getString("message");
+                payload = pageJso.getJSONObject("payload");
+                throw new PubnubException(getErrorObject(PNERROBJ_UNAUTHORIZED, message, payload), page, pageJso);
+            } catch (JSONException e2) {
+            }
 
-        case HttpURLConnection.HTTP_NOT_FOUND:
-	        {
-	            JSONObject payload = null;
-	            String message = null;
-	            try {
-	                JSONObject pageJso = new JSONObject(page);
-	                message            = pageJso.getString("message");
-	                payload            = pageJso.getJSONObject("payload");
-	                throw new PubnubException(
-	                		getErrorObject(PNERROBJ_NOT_FOUND_ERROR, message, payload)
-	                		, page, pageJso);
-	            } catch (JSONException e2) {}
-	
-	            throw new PubnubException(getErrorObject(PNERROBJ_NOT_FOUND_ERROR, page), page);
-	        }
+            throw new PubnubException(getErrorObject(PNERROBJ_UNAUTHORIZED, page), page);
+        }
+
+        case HttpURLConnection.HTTP_BAD_REQUEST: {
+            JSONObject payload = null;
+            String message = null;
+            try {
+                JSONObject pageJso = new JSONObject(page);
+                message = pageJso.getString("message");
+                payload = pageJso.getJSONObject("payload");
+                throw new PubnubException(getErrorObject(PNERROBJ_BAD_REQUEST, message, payload), page, pageJso);
+            } catch (JSONException e2) {
+            }
+
+            throw new PubnubException(getErrorObject(PNERROBJ_BAD_REQUEST, page), page);
+        }
+
+        case HttpURLConnection.HTTP_NOT_FOUND: {
+            JSONObject payload = null;
+            String message = null;
+            try {
+                JSONObject pageJso = new JSONObject(page);
+                message = pageJso.getString("message");
+                payload = pageJso.getJSONObject("payload");
+                throw new PubnubException(getErrorObject(PNERROBJ_NOT_FOUND_ERROR, message, payload), page, pageJso);
+            } catch (JSONException e2) {
+            }
+
+            throw new PubnubException(getErrorObject(PNERROBJ_NOT_FOUND_ERROR, page), page);
+        }
 
         case HttpURLConnection.HTTP_BAD_GATEWAY:
             throw new PubnubException(getErrorObject(PNERROBJ_BAD_GATEWAY, url), page);
@@ -269,4 +256,3 @@ class HttpClientCore extends HttpClient {
         }
     }
 }
-

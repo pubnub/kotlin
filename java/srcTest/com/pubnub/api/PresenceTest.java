@@ -33,7 +33,8 @@ public class PresenceTest {
 
         pubnub.presence(channel, presenceCb);
 
-        pubnub.subscribe(channel, new Callback() {});
+        pubnub.subscribe(channel, new Callback() {
+        });
 
         latch.await(10, TimeUnit.SECONDS);
 
@@ -50,7 +51,8 @@ public class PresenceTest {
 
         pubnub.presence(channel, presenceCb);
 
-        pubnub2.subscribe(channel, new Callback() {});
+        pubnub2.subscribe(channel, new Callback() {
+        });
 
         latch.await(10, TimeUnit.SECONDS);
 

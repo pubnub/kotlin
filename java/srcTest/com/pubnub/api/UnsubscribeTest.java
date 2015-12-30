@@ -49,8 +49,7 @@ public class UnsubscribeTest {
     }
 
     @Test
-    public void testUnsubscribe()
-            throws InterruptedException, PubnubException {
+    public void testUnsubscribe() throws InterruptedException, PubnubException {
         CountDownLatch latch = new CountDownLatch(1);
         CountDownLatch latch2 = new CountDownLatch(1);
 
@@ -74,8 +73,7 @@ public class UnsubscribeTest {
     }
 
     @Test
-    public void testUnsubscribeAllForGroup()
-            throws PubnubException, InterruptedException, JSONException {
+    public void testUnsubscribeAllForGroup() throws PubnubException, InterruptedException, JSONException {
         JSONObject result;
 
         CountDownLatch latch1 = new CountDownLatch(1);
@@ -117,8 +115,7 @@ public class UnsubscribeTest {
     }
 
     @Test
-    public void testUnsubscribeGroupForGroup()
-            throws PubnubException, InterruptedException, JSONException {
+    public void testUnsubscribeGroupForGroup() throws PubnubException, InterruptedException, JSONException {
         JSONObject result;
 
         CountDownLatch latch1 = new CountDownLatch(1);
@@ -139,8 +136,7 @@ public class UnsubscribeTest {
     }
 
     @Test
-    public void testUnsubscribeGroupsForGroup()
-            throws PubnubException, InterruptedException, JSONException {
+    public void testUnsubscribeGroupsForGroup() throws PubnubException, InterruptedException, JSONException {
         JSONObject result;
 
         CountDownLatch latch1 = new CountDownLatch(1);
@@ -150,7 +146,7 @@ public class UnsubscribeTest {
         connectToGroup();
 
         // check offline
-        pubnub2.channelGroupUnsubscribe(new String[]{group});
+        pubnub2.channelGroupUnsubscribe(new String[] { group });
         Thread.sleep(3000);
 
         pubnub.channelGroupHereNow(group, cb1);
@@ -160,8 +156,7 @@ public class UnsubscribeTest {
         assertEquals(0, result.getInt("total_occupancy"));
     }
 
-    private void connectToGroup()
-            throws InterruptedException, PubnubException, JSONException {
+    private void connectToGroup() throws InterruptedException, PubnubException, JSONException {
         CountDownLatch latch1 = new CountDownLatch(1);
         CountDownLatch latch2 = new CountDownLatch(1);
         CountDownLatch latch3 = new CountDownLatch(1);
@@ -182,9 +177,7 @@ public class UnsubscribeTest {
         latch3.await(10, TimeUnit.SECONDS);
 
         JSONObject result = (JSONObject) cb3.getResponse();
-        JSONArray uuids = result.getJSONObject("channels")
-                .getJSONObject(channel)
-                .getJSONArray("uuids");
+        JSONArray uuids = result.getJSONObject("channels").getJSONObject(channel).getJSONArray("uuids");
 
         assertJSONArrayHas(pubnub2.getUUID(), uuids);
     }

@@ -1,6 +1,5 @@
 package com.pubnub.api;
 
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,7 +17,9 @@ public class TestHelper {
         public SimpleCallback(CountDownLatch latch) {
             this.latch = latch;
         }
-        public SimpleCallback() {}
+
+        public SimpleCallback() {
+        }
 
         public Object getResponse() {
             return response;

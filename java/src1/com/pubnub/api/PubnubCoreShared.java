@@ -24,7 +24,7 @@ import static com.pubnub.api.PubnubError.getErrorObject;
  *
  */
 
-abstract class PubnubCoreShared extends PubnubCoreAsync  implements  PubnubAsyncInterfacePam, PubnubAsyncInterfacePush{
+abstract class PubnubCoreShared extends PubnubCoreAsync implements PubnubAsyncInterfacePam, PubnubAsyncInterfacePush {
 
     /**
      * Pubnub Constructor
@@ -40,8 +40,8 @@ abstract class PubnubCoreShared extends PubnubCoreAsync  implements  PubnubAsync
      * @param ssl_on
      *            SSL on ?
      */
-    public PubnubCoreShared(String publish_key, String subscribe_key, String secret_key,
-                  String cipher_key, boolean ssl_on) {
+    public PubnubCoreShared(String publish_key, String subscribe_key, String secret_key, String cipher_key,
+            boolean ssl_on) {
         super(publish_key, subscribe_key, secret_key, cipher_key, ssl_on);
     }
 
@@ -57,8 +57,7 @@ abstract class PubnubCoreShared extends PubnubCoreAsync  implements  PubnubAsync
      * @param ssl_on
      *            SSL on ?
      */
-    public PubnubCoreShared(String publish_key, String subscribe_key, String secret_key,
-                  boolean ssl_on) {
+    public PubnubCoreShared(String publish_key, String subscribe_key, String secret_key, boolean ssl_on) {
         super(publish_key, subscribe_key, secret_key, "", ssl_on);
     }
 
@@ -94,27 +93,26 @@ abstract class PubnubCoreShared extends PubnubCoreAsync  implements  PubnubAsync
         super(publish_key, subscribe_key, secret_key, "", false);
     }
 
-
     /**
-    *
-    * Constructor for Pubnub Class
-    *
-    * @param publish_key
-    *            Publish Key
-    * @param subscribe_key
-    *            Subscribe Key
-    * @param secret_key
-    *            Secret Key
-    * @param cipher_key
-    *            Cipher Key
-    * @param ssl_on
-    *            SSL enabled ?
-    * @param initialization_vector
-    *            Initialization vector
-    */
+     *
+     * Constructor for Pubnub Class
+     *
+     * @param publish_key
+     *            Publish Key
+     * @param subscribe_key
+     *            Subscribe Key
+     * @param secret_key
+     *            Secret Key
+     * @param cipher_key
+     *            Cipher Key
+     * @param ssl_on
+     *            SSL enabled ?
+     * @param initialization_vector
+     *            Initialization vector
+     */
 
-    public PubnubCoreShared(String publish_key, String subscribe_key,
-                  String secret_key, String cipher_key, boolean ssl_on, String initialization_vector) {
+    public PubnubCoreShared(String publish_key, String subscribe_key, String secret_key, String cipher_key,
+            boolean ssl_on, String initialization_vector) {
         super(publish_key, subscribe_key, secret_key, cipher_key, ssl_on, initialization_vector);
     }
 
@@ -163,10 +161,13 @@ abstract class PubnubCoreShared extends PubnubCoreAsync  implements  PubnubAsync
     public void setNonSubscribeTimeout(int timeout) {
         super.setNonSubscribeTimeout(timeout);
     }
+
     /**
-     * This method returns timeout value for non subscribe operations like publish, history, hereNow
+     * This method returns timeout value for non subscribe operations like
+     * publish, history, hereNow
      *
-     * @return Timeout value in milliseconds for for Non subscribe operations like publish, history, hereNow
+     * @return Timeout value in milliseconds for for Non subscribe operations
+     *         like publish, history, hereNow
      */
     public int getNonSubscribeTimeout() {
         return super.getNonSubscribeTimeout();
@@ -177,64 +178,70 @@ abstract class PubnubCoreShared extends PubnubCoreAsync  implements  PubnubAsync
 
         try {
             sha256_HMAC = Mac.getInstance("HmacSHA256");
-            SecretKeySpec secret_key = new SecretKeySpec(key.getBytes(),
-                    "HmacSHA256");
+            SecretKeySpec secret_key = new SecretKeySpec(key.getBytes(), "HmacSHA256");
             sha256_HMAC.init(secret_key);
             byte[] hmacData = sha256_HMAC.doFinal(data.getBytes("UTF-8"));
-            return new String(Base64Encoder.encode(hmacData)).replace('+', '-')
-                    .replace('/', '_');
+            return new String(Base64Encoder.encode(hmacData)).replace('+', '-').replace('/', '_');
         } catch (InvalidKeyException e1) {
-            throw new PubnubException(getErrorObject(PubnubError.PNERROBJ_ULSSIGN_ERROR, 1, "Invalid Key : " + e1.toString()));
+            throw new PubnubException(getErrorObject(PubnubError.PNERROBJ_ULSSIGN_ERROR, 1,
+                    "Invalid Key : " + e1.toString()));
         } catch (NoSuchAlgorithmException e1) {
-            throw new PubnubException(getErrorObject(PubnubError.PNERROBJ_ULSSIGN_ERROR, 2, "Invalid Algorithm : " + e1.toString()));
+            throw new PubnubException(getErrorObject(PubnubError.PNERROBJ_ULSSIGN_ERROR, 2,
+                    "Invalid Algorithm : " + e1.toString()));
         } catch (IllegalStateException e1) {
-            throw new PubnubException(getErrorObject(PubnubError.PNERROBJ_ULSSIGN_ERROR, 3, "Invalid State : " + e1.toString()));
+            throw new PubnubException(getErrorObject(PubnubError.PNERROBJ_ULSSIGN_ERROR, 3,
+                    "Invalid State : " + e1.toString()));
         } catch (UnsupportedEncodingException e1) {
-            throw new PubnubException(getErrorObject(PubnubError.PNERROBJ_ULSSIGN_ERROR, 4, "Unsupported encoding : " + e1.toString()));
+            throw new PubnubException(getErrorObject(PubnubError.PNERROBJ_ULSSIGN_ERROR, 4, "Unsupported encoding : "
+                    + e1.toString()));
         }
     }
-
 
     protected String pamSign(String key, String data) throws PubnubException {
         return _pamSign(key, data);
     }
 
-    /** Grant r/w access based on channel and auth key
+    /**
+     * Grant r/w access based on channel and auth key
+     * 
      * @param channel
      * @param auth_key
      * @param read
      * @param write
      * @param callback
      */
-    public void pamGrant(final String channel, String auth_key, boolean read,
-                         boolean write, final Callback callback) {
+    public void pamGrant(final String channel, String auth_key, boolean read, boolean write, final Callback callback) {
         pamGrant(channel, auth_key, read, write, -1, callback);
     }
 
-    /** Grant r/w access based on channel
+    /**
+     * Grant r/w access based on channel
+     * 
      * @param channel
      * @param read
      * @param write
      * @param callback
      */
-    public void pamGrant(final String channel, boolean read,
-                         boolean write, final Callback callback) {
+    public void pamGrant(final String channel, boolean read, boolean write, final Callback callback) {
         pamGrant(channel, null, read, write, -1, callback);
     }
 
-    /** Grant r/w access based on channel
+    /**
+     * Grant r/w access based on channel
+     * 
      * @param channel
      * @param read
      * @param write
      * @param ttl
      * @param callback
      */
-    public void pamGrant(final String channel, boolean read,
-                         boolean write, int ttl, final Callback callback) {
+    public void pamGrant(final String channel, boolean read, boolean write, int ttl, final Callback callback) {
         pamGrant(channel, null, read, write, ttl, callback);
     }
 
-    /** Grant r/w access based on channel and auth key
+    /**
+     * Grant r/w access based on channel and auth key
+     * 
      * @param channel
      * @param auth_key
      * @param read
@@ -242,54 +249,55 @@ abstract class PubnubCoreShared extends PubnubCoreAsync  implements  PubnubAsync
      * @param ttl
      * @param callback
      */
-    public void pamGrant(final String channel, String auth_key, boolean read,
-                         boolean write, int ttl, Callback callback) {
+    public void pamGrant(final String channel, String auth_key, boolean read, boolean write, int ttl, Callback callback) {
         _pamGrant(channel, auth_key, read, write, ttl, callback, false);
     }
 
-    public void pamGrantChannelGroup(final String group, boolean read,
-                                     boolean management, Callback callback) {
+    public void pamGrantChannelGroup(final String group, boolean read, boolean management, Callback callback) {
         pamGrantChannelGroup(group, read, management, -1, callback);
     }
 
-    public void pamGrantChannelGroup(final String group, boolean read,
-                                     boolean management, int ttl, Callback callback) {
+    public void pamGrantChannelGroup(final String group, boolean read, boolean management, int ttl, Callback callback) {
         pamGrantChannelGroup(group, null, read, management, ttl, callback);
     }
 
-    public void pamGrantChannelGroup(final String group, String auth_key, boolean read,
-                                     boolean management, Callback callback) {
+    public void pamGrantChannelGroup(final String group, String auth_key, boolean read, boolean management,
+            Callback callback) {
         pamGrantChannelGroup(group, auth_key, read, management, -1, callback);
     }
 
     public void pamGrantChannelGroup(final String group, String auth_key, boolean read, boolean management, int ttl,
-                                               Callback callback) {
+            Callback callback) {
         _pamGrantChannelGroup(group, auth_key, read, management, ttl, callback, false);
     }
 
-    /** ULS Audit
+    /**
+     * ULS Audit
+     * 
      * @param callback
      */
     public void pamAudit(Callback callback) {
         _pamAudit(null, callback, false);
     }
 
-    /** ULS audit by channel
+    /**
+     * ULS audit by channel
+     * 
      * @param channel
      * @param callback
      */
-    public void pamAudit(final String channel,
-                         Callback callback) {
+    public void pamAudit(final String channel, Callback callback) {
         _pamAudit(channel, callback, false);
     }
 
-    /** ULS audit by channel and auth key
+    /**
+     * ULS audit by channel and auth key
+     * 
      * @param channel
      * @param auth_key
      * @param callback
      */
-    public void pamAudit(final String channel, String auth_key,
-                         Callback callback) {
+    public void pamAudit(final String channel, String auth_key, Callback callback) {
         _pamAudit(channel, auth_key, callback, false);
     }
 
@@ -301,7 +309,9 @@ abstract class PubnubCoreShared extends PubnubCoreAsync  implements  PubnubAsync
         _pamAuditChannelGroup(group, auth_key, callback, false);
     }
 
-    /** ULS revoke by channel and auth key
+    /**
+     * ULS revoke by channel and auth key
+     * 
      * @param channel
      * @param auth_key
      * @param callback
@@ -310,7 +320,9 @@ abstract class PubnubCoreShared extends PubnubCoreAsync  implements  PubnubAsync
         pamGrant(channel, auth_key, false, false, callback);
     }
 
-    /** ULS revoke by channel
+    /**
+     * ULS revoke by channel
+     * 
      * @param channel
      * @param callback
      */
@@ -328,21 +340,23 @@ abstract class PubnubCoreShared extends PubnubCoreAsync  implements  PubnubAsync
 
     /**
      * Enable Push Notifications (Google Cloud Messaging)
+     * 
      * @param channel
-     *             Channel for which to enable push notifications
+     *            Channel for which to enable push notifications
      * @param gcmRegistrationId
-     *             Google Cloud Messaging registration id
+     *            Google Cloud Messaging registration id
      */
     public void enablePushNotificationsOnChannel(String channel, String gcmRegistrationId) {
-        enablePushNotificationsOnChannels(new String[]{channel}, gcmRegistrationId, null);
+        enablePushNotificationsOnChannels(new String[] { channel }, gcmRegistrationId, null);
     }
 
     /**
      * Enable Push Notifications (Google Cloud Messaging)
+     * 
      * @param channels
-     *             Channels for which to enable push notifications
+     *            Channels for which to enable push notifications
      * @param gcmRegistrationId
-     *             Google Cloud Messaging registration id
+     *            Google Cloud Messaging registration id
      */
     public void enablePushNotificationsOnChannels(String[] channels, String gcmRegistrationId) {
         enablePushNotificationsOnChannels(channels, gcmRegistrationId, null);
@@ -350,48 +364,52 @@ abstract class PubnubCoreShared extends PubnubCoreAsync  implements  PubnubAsync
 
     /**
      * Enable Push Notifications (Google Cloud Messaging)
+     * 
      * @param channel
-     *             Channel for which to enable push notifications
+     *            Channel for which to enable push notifications
      * @param gcmRegistrationId
-     *             Google Cloud Messaging registration id
+     *            Google Cloud Messaging registration id
      * @param callback
-     *             Callback object
+     *            Callback object
      */
     public void enablePushNotificationsOnChannel(String channel, String gcmRegistrationId, Callback callback) {
-        enablePushNotificationsOnChannels(new String[]{channel}, gcmRegistrationId, callback);
+        enablePushNotificationsOnChannels(new String[] { channel }, gcmRegistrationId, callback);
     }
-
 
     /**
      * Enable Push Notifications (Google Cloud Messaging)
+     * 
      * @param channels
-     *             Channels for which to enable push notifications
+     *            Channels for which to enable push notifications
      * @param gcmRegistrationId
-     *             Google Cloud Messaging registration id
+     *            Google Cloud Messaging registration id
      * @param callback
-     *             Callback object
+     *            Callback object
      */
-    public void enablePushNotificationsOnChannels(final String[] channels, String gcmRegistrationId, final Callback callback) {
+    public void enablePushNotificationsOnChannels(final String[] channels, String gcmRegistrationId,
+            final Callback callback) {
         _enablePushNotificationsOnChannels(channels, gcmRegistrationId, callback, false);
     }
 
     /**
      * Disable Push Notifications (Google Cloud Messaging)
+     * 
      * @param channel
-     *             Channel for which to disable push notifications
+     *            Channel for which to disable push notifications
      * @param gcmRegistrationId
-     *             Google Cloud Messaging registration id
+     *            Google Cloud Messaging registration id
      */
     public void disablePushNotificationsOnChannel(String channel, String gcmRegistrationId) {
-        disablePushNotificationsOnChannels(new String[]{channel}, gcmRegistrationId, null);
+        disablePushNotificationsOnChannels(new String[] { channel }, gcmRegistrationId, null);
     }
 
     /**
      * Disable Push Notifications (Google Cloud Messaging)
+     * 
      * @param channels
-     *             Channels for which to disable push notifications
+     *            Channels for which to disable push notifications
      * @param gcmRegistrationId
-     *             Google Cloud Messaging registration id
+     *            Google Cloud Messaging registration id
      */
     public void disablePushNotificationsOnChannels(String[] channels, String gcmRegistrationId) {
         disablePushNotificationsOnChannels(channels, gcmRegistrationId, null);
@@ -399,47 +417,53 @@ abstract class PubnubCoreShared extends PubnubCoreAsync  implements  PubnubAsync
 
     /**
      * Disable Push Notifications (Google Cloud Messaging)
+     * 
      * @param channel
      * @param gcmRegistrationId
      * @param callback
      */
     public void disablePushNotificationsOnChannel(String channel, String gcmRegistrationId, Callback callback) {
-        disablePushNotificationsOnChannels(new String[]{channel}, gcmRegistrationId, callback);
+        disablePushNotificationsOnChannels(new String[] { channel }, gcmRegistrationId, callback);
     }
 
     /**
      * Disable Push Notifications (Google Cloud Messaging)
+     * 
      * @param channel
      * @param callback
      */
     /**
      * @param channels
-     *             Channels for which to disable push notifications
+     *            Channels for which to disable push notifications
      * @param gcmRegistrationId
-     *             Google Cloud Messaging registration id
+     *            Google Cloud Messaging registration id
      * @param callback
-     *             Callback object
+     *            Callback object
      */
-    public void disablePushNotificationsOnChannels(final String[] channels, String gcmRegistrationId, final Callback callback) {
+    public void disablePushNotificationsOnChannels(final String[] channels, String gcmRegistrationId,
+            final Callback callback) {
         _disablePushNotificationsOnChannels(channels, gcmRegistrationId, callback, false);
     }
 
-
     /**
-     * Get channels for which push notification is enabled (Google Cloud Messaging)
+     * Get channels for which push notification is enabled (Google Cloud
+     * Messaging)
+     * 
      * @param gcmRegistrationId
-     *             Google Cloud Messaging registration id
+     *            Google Cloud Messaging registration id
      * @param callback
-     *             Callback object
+     *            Callback object
      */
-    public void requestPushNotificationEnabledChannelsForDeviceRegistrationId(String gcmRegistrationId, final Callback callback) {
+    public void requestPushNotificationEnabledChannelsForDeviceRegistrationId(String gcmRegistrationId,
+            final Callback callback) {
         _requestPushNotificationEnabledChannelsForDeviceRegistrationId(gcmRegistrationId, callback, false);
     }
 
     /**
      * Disable push notifications for all channels (Google Cloud Messaging)
+     * 
      * @param gcmRegistrationId
-     *             Google Cloud Messaging registration id
+     *            Google Cloud Messaging registration id
      */
     public void removeAllPushNotificationsForDeviceRegistrationId(String gcmRegistrationId) {
         removeAllPushNotificationsForDeviceRegistrationId(gcmRegistrationId, null);
@@ -447,10 +471,11 @@ abstract class PubnubCoreShared extends PubnubCoreAsync  implements  PubnubAsync
 
     /**
      * Disable push notifications for all channels (Google Cloud Messaging)
+     * 
      * @param gcmRegistrationId
-     *             Google Cloud Messaging registration id
+     *            Google Cloud Messaging registration id
      * @param callback
-     *             Callback object
+     *            Callback object
      */
     public void removeAllPushNotificationsForDeviceRegistrationId(String gcmRegistrationId, final Callback callback) {
         _removeAllPushNotificationsForDeviceRegistrationId(gcmRegistrationId, callback, false);

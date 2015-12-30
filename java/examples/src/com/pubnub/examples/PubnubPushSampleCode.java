@@ -46,36 +46,26 @@ public class PubnubPushSampleCode {
 
         CommandLine cmd = null;
 
-        options.addOption(OptionBuilder.hasArg().withArgName("String")
-                .withLongOpt("publish_key").withType(String.class)
-                .withDescription("Publish Key ( default: 'demo-36' )").create());
+        options.addOption(OptionBuilder.hasArg().withArgName("String").withLongOpt("publish_key")
+                .withType(String.class).withDescription("Publish Key ( default: 'demo-36' )").create());
 
-        options.addOption(OptionBuilder.hasArg().withArgName("String")
-                .withLongOpt("subscribe_key").withType(String.class)
-                .withDescription("Subscribe Key ( default: 'demo-36' )")
-                .create());
+        options.addOption(OptionBuilder.hasArg().withArgName("String").withLongOpt("subscribe_key")
+                .withType(String.class).withDescription("Subscribe Key ( default: 'demo-36' )").create());
 
-        options.addOption(OptionBuilder.hasArg().withArgName("String")
-                .withLongOpt("origin").withType(String.class)
+        options.addOption(OptionBuilder.hasArg().withArgName("String").withLongOpt("origin").withType(String.class)
                 .withDescription("Origin ( Ex. pubsub )").create());
 
-        options.addOption(OptionBuilder.hasArg().withArgName("String")
-                .withLongOpt("auth_key").withType(String.class)
+        options.addOption(OptionBuilder.hasArg().withArgName("String").withLongOpt("auth_key").withType(String.class)
                 .withDescription("Auth Key").create());
 
-        options.addOption(OptionBuilder.hasArg().withArgName("String")
-                .withLongOpt("channel").withType(String.class)
-                .withDescription("Secret Key ( default: 'my_channel' )")
-                .create());
+        options.addOption(OptionBuilder.hasArg().withArgName("String").withLongOpt("channel").withType(String.class)
+                .withDescription("Secret Key ( default: 'my_channel' )").create());
 
-        options.addOption(OptionBuilder.withLongOpt("apns")
-                .withDescription("APNS message").create());
+        options.addOption(OptionBuilder.withLongOpt("apns").withDescription("APNS message").create());
 
-        options.addOption(OptionBuilder.withLongOpt("gcm")
-                .withDescription("GCM message").create());
+        options.addOption(OptionBuilder.withLongOpt("gcm").withDescription("GCM message").create());
 
-        options.addOption(OptionBuilder.withLongOpt("native")
-                .withDescription("Native message").create());
+        options.addOption(OptionBuilder.withLongOpt("native").withDescription("Native message").create());
 
         CommandLineParser parser = new BasicParser();
         try {
@@ -177,8 +167,7 @@ public class PubnubPushSampleCode {
         apnsMessage.setApsBadge(2);
 
         try {
-            apnsMessage.put("teams", new JSONArray().put("49ers")
-                    .put("raiders"));
+            apnsMessage.put("teams", new JSONArray().put("49ers").put("raiders"));
             apnsMessage.put("score", new JSONArray().put(7).put(0));
         } catch (JSONException e1) {
 
@@ -213,8 +202,7 @@ public class PubnubPushSampleCode {
         PnMessage message = null;
 
         if (apns && gcm) {
-            message = new PnMessage(pubnub, channel, callback, apnsMessage,
-                    gcmMessage);
+            message = new PnMessage(pubnub, channel, callback, apnsMessage, gcmMessage);
         } else if (apns) {
             message = new PnMessage(pubnub, channel, callback, apnsMessage);
         } else if (gcm) {

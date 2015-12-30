@@ -11,6 +11,7 @@ abstract class ResponseHandler {
 
     public void handleTimeout(HttpRequest hreq) {
     }
+
     public void handleBackFromDar(HttpRequest hreq) {
     }
 }
