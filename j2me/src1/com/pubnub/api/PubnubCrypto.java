@@ -32,7 +32,7 @@ public class PubnubCrypto extends PubnubCryptoCore {
             m.update(bytes, 0, bytes.length);
             byte[] mac = new byte[m.getMacSize()];
             m.doFinal(mac, 0);
-            BigInteger number = new BigInteger(1,mac);
+            BigInteger number = new BigInteger(1, mac);
             String hashtext = number.toString();
             signature = hashtext;
         } catch (java.io.UnsupportedEncodingException e) {

@@ -11,8 +11,9 @@ public class ToggleResumeOnReconnect extends PubnubCommand {
     protected void initScreen() {
 
     }
+
     public void handler() {
-        _pubnub.setResumeOnReconnect((_pubnub.isResumeOnReconnect())?false:true);
+        _pubnub.setResumeOnReconnect((_pubnub.isResumeOnReconnect()) ? false : true);
     }
 
 }

@@ -19,7 +19,8 @@ public class PubnubCn1Connection {
 
     private byte[] data = null;
 
-    public PubnubCn1Response fetch(String url, int timeout, Hashtable _headers) throws UnsupportedEncodingException, IOException {
+    public PubnubCn1Response fetch(String url, int timeout, Hashtable _headers) throws UnsupportedEncodingException,
+            IOException {
         int rc = 0;
         String page = null;
         int contentLength = 0;
@@ -65,7 +66,7 @@ public class PubnubCn1Connection {
             data = Util.readInputStream(input);
             input.close();
         } catch (IOException ex) {
-            return new PubnubCn1Response(rc, ex.getMessage() );
+            return new PubnubCn1Response(rc, ex.getMessage());
         }
 
         input = null;

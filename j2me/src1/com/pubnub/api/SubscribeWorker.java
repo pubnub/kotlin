@@ -7,21 +7,19 @@ class SubscribeWorker extends AbstractSubscribeWorker {
 
     private Exception excp = null;
 
-    SubscribeWorker(Vector _requestQueue, int connectionTimeout,
-                    int requestTimeout, int maxRetries, int retryInterval, Hashtable headers) {
-        super(_requestQueue, connectionTimeout, requestTimeout,
-              maxRetries, retryInterval, headers);
+    SubscribeWorker(Vector _requestQueue, int connectionTimeout, int requestTimeout, int maxRetries, int retryInterval,
+            Hashtable headers) {
+        super(_requestQueue, connectionTimeout, requestTimeout, maxRetries, retryInterval, headers);
     }
 
-    SubscribeWorker(Vector _requestQueue, int connectionTimeout,
-                    int requestTimeout, int maxRetries, int retryInterval, int windowInterval, Hashtable headers) {
-        super(_requestQueue, connectionTimeout, requestTimeout,
-              maxRetries, retryInterval, windowInterval, headers);
+    SubscribeWorker(Vector _requestQueue, int connectionTimeout, int requestTimeout, int maxRetries, int retryInterval,
+            int windowInterval, Hashtable headers) {
+        super(_requestQueue, connectionTimeout, requestTimeout, maxRetries, retryInterval, windowInterval, headers);
     }
 
     void process(HttpRequest hreq) {
         HttpResponse hresp = null;
-        int currentRetryAttempt = (hreq.isDar())?1:maxRetries;
+        int currentRetryAttempt = (hreq.isDar()) ? 1 : maxRetries;
         log.verbose("disconnectAndResubscribe is " + hreq.isDar());
         boolean sleep = false;
         if (!hreq.isSubzero() && windowInterval != 0) {
@@ -41,21 +39,19 @@ class SubscribeWorker extends AbstractSubscribeWorker {
             try {
                 log.debug(hreq.getUrl());
                 hresp = httpclient.fetch(hreq.getUrl(), hreq.getHeaders());
-                if (hresp != null
-                        && HttpUtil.checkResponseSuccess(hresp
-                                                         .getStatusCode())) {
+                if (hresp != null && HttpUtil.checkResponseSuccess(hresp.getStatusCode())) {
                     currentRetryAttempt = 1;
                     break;
                 }
-            } /*catch (SocketTimeoutException e) {
-                log.verbose("No Traffic , Read Timeout Exception in Fetch : " + e.toString());
-                if (hreq.isDar()) {
-                    hreq.getResponseHandler().handleBackFromDar(hreq);
-                    return;
-                }
-                break;
-
-            }*/catch (PubnubException e) {
+            } /*
+               * catch (SocketTimeoutException e) {
+               * log.verbose("No Traffic , Read Timeout Exception in Fetch : " +
+               * e.toString()); if (hreq.isDar()) {
+               * hreq.getResponseHandler().handleBackFromDar(hreq); return; }
+               * break;
+               * 
+               * }
+               */catch (PubnubException e) {
                 excp = e;
                 switch (e.getPubnubError().errorCode) {
                 case PubnubError.PNERR_FORBIDDEN:
@@ -64,18 +60,19 @@ class SubscribeWorker extends AbstractSubscribeWorker {
                     currentRetryAttempt = maxRetries + 1;
                     break;
                 default:
-                    log.verbose("Retry Attempt : " + ((currentRetryAttempt == maxRetries)?"last":String.valueOf(currentRetryAttempt))
-                                + " Exception in Fetch : " + e.toString());
+                    log.verbose("Retry Attempt : "
+                            + ((currentRetryAttempt == maxRetries) ? "last" : String.valueOf(currentRetryAttempt))
+                            + " Exception in Fetch : " + e.toString());
                     currentRetryAttempt++;
                     break;
                 }
 
             } catch (Exception e) {
-                log.verbose("Retry Attempt : " + ((currentRetryAttempt == maxRetries)?"last":String.valueOf(currentRetryAttempt))
-                            + " Exception in Fetch : " + e.toString());
+                log.verbose("Retry Attempt : "
+                        + ((currentRetryAttempt == maxRetries) ? "last" : String.valueOf(currentRetryAttempt))
+                        + " Exception in Fetch : " + e.toString());
                 currentRetryAttempt++;
             }
-
 
         }
         if (!_die) {
@@ -85,10 +82,12 @@ class SubscribeWorker extends AbstractSubscribeWorker {
                     log.verbose("Exhausted number of retries");
                     hreq.getResponseHandler().handleTimeout(hreq);
                 } else {
-                    if (excp != null && excp instanceof PubnubException && ((PubnubException) excp).getPubnubError() != null) {
+                    if (excp != null && excp instanceof PubnubException
+                            && ((PubnubException) excp).getPubnubError() != null) {
                         hreq.getResponseHandler().handleError(hreq, ((PubnubException) excp).getPubnubError());
                     } else {
-                        hreq.getResponseHandler().handleError(hreq, PubnubError.getErrorObject(PubnubError.PNERROBJ_HTTP_ERROR, 1));
+                        hreq.getResponseHandler().handleError(hreq,
+                                PubnubError.getErrorObject(PubnubError.PNERROBJ_HTTP_ERROR, 1));
                     }
                 }
                 return;
@@ -98,8 +97,10 @@ class SubscribeWorker extends AbstractSubscribeWorker {
         }
 
     }
+
     public void shutdown() {
-        if (httpclient != null) httpclient.shutdown();
+        if (httpclient != null)
+            httpclient.shutdown();
     }
 
 }

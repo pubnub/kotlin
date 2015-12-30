@@ -16,7 +16,7 @@ import org.json.me.*;
 public class HttpClientCore extends HttpClient {
     private int requestTimeout = 310000;
     private int connectionTimeout = 5000;
-    private HttpConnection  hc;
+    private HttpConnection hc;
 
     private void init() {
 
@@ -28,7 +28,6 @@ public class HttpClientCore extends HttpClient {
         this.setConnectionTimeout(connectionTimeout);
         this._headers = headers;
     }
-
 
     public int getRequestTimeout() {
         return requestTimeout;
@@ -47,7 +46,7 @@ public class HttpClientCore extends HttpClient {
             b.append(prefix);
             in = hconn.openInputStream();
             if ("gzip".equals(hconn.getEncoding()))
-                in= new GZIPInputStream(in);
+                in = new GZIPInputStream(in);
 
             byte[] data = null;
             ByteArrayOutputStream tmp = new ByteArrayOutputStream();
@@ -77,8 +76,7 @@ public class HttpClientCore extends HttpClient {
     }
 
     public boolean isRedirect(int rc) {
-        return (rc == HttpConnection.HTTP_MOVED_PERM
-                || rc == HttpConnection.HTTP_MOVED_TEMP
+        return (rc == HttpConnection.HTTP_MOVED_PERM || rc == HttpConnection.HTTP_MOVED_TEMP
                 || rc == HttpConnection.HTTP_SEE_OTHER || rc == HttpConnection.HTTP_TEMP_REDIRECT);
     }
 
@@ -106,8 +104,7 @@ public class HttpClientCore extends HttpClient {
 
         while (follow-- > 0) {
 
-            hc = (HttpConnection) Connector.open(url, Connector.READ_WRITE,
-                                                 true);
+            hc = (HttpConnection) Connector.open(url, Connector.READ_WRITE, true);
             hc.setRequestMethod(HttpConnection.GET);
             if (_headers != null) {
                 Enumeration en = _headers.keys();
@@ -127,8 +124,6 @@ public class HttpClientCore extends HttpClient {
             }
 
             rc = hc.getResponseCode();
-
-
 
             if (!checkResponse(rc)) {
                 break;
@@ -175,7 +170,8 @@ public class HttpClientCore extends HttpClient {
                 JSONObject jso;
                 try {
                     jso = new JSONObject(response);
-                    throw new PubnubException(PubnubError.getErrorObject(PubnubError.PNERROBJ_BAD_REQUEST, 2, jso.toString()));
+                    throw new PubnubException(PubnubError.getErrorObject(PubnubError.PNERROBJ_BAD_REQUEST, 2,
+                            jso.toString()));
                 } catch (JSONException e1) {
                     throw new PubnubException(PubnubError.getErrorObject(PubnubError.PNERROBJ_INVALID_JSON, 2));
                 }

@@ -13,6 +13,7 @@ public class PubnubMenu {
     private Pubnub pubnub;
     private Display display;
     private PubnubDemoConsole app;
+
     public PubnubMenu(Pubnub pubnub, Display display, PubnubDemoConsole app) {
         this.pubnub = pubnub;
         this.display = display;
@@ -48,22 +49,21 @@ public class PubnubMenu {
 
             menu = new Form("Pubnub Demo Console");
             publish = new Publish(pubnub, display, menu);
-            subscribe = new Subscribe(pubnub,display,menu);
-            presence = new Presence(pubnub,display,menu);
-            history = new History(pubnub,display,menu);
-            hereNow = new HereNow(pubnub,display,menu);
-            unsubscribe = new Unsubscribe(pubnub,display,menu);
-            toggleResumeOnReconnect = new ToggleResumeOnReconnect(pubnub,display,menu);
-            disconnectAndResubscribe = new DisconnectAndResubscribe(pubnub,display,menu);
-            authKeyConfig = new AuthKeyConfig(pubnub,display,menu);
-            time = new Time(pubnub,display,menu);
+            subscribe = new Subscribe(pubnub, display, menu);
+            presence = new Presence(pubnub, display, menu);
+            history = new History(pubnub, display, menu);
+            hereNow = new HereNow(pubnub, display, menu);
+            unsubscribe = new Unsubscribe(pubnub, display, menu);
+            toggleResumeOnReconnect = new ToggleResumeOnReconnect(pubnub, display, menu);
+            disconnectAndResubscribe = new DisconnectAndResubscribe(pubnub, display, menu);
+            authKeyConfig = new AuthKeyConfig(pubnub, display, menu);
+            time = new Time(pubnub, display, menu);
 
-
-            toggleResumeOnReconnectCommand = new Command("ToggleResumeOnReconnect",    Command.ITEM, 0);
+            toggleResumeOnReconnectCommand = new Command("ToggleResumeOnReconnect", Command.ITEM, 0);
             menu.addCommand(toggleResumeOnReconnectCommand);
-            disconnectAndResubscribeCommand = new Command("DisconnectAndResubscribe",Command.ITEM, 0);
+            disconnectAndResubscribeCommand = new Command("DisconnectAndResubscribe", Command.ITEM, 0);
             menu.addCommand(disconnectAndResubscribeCommand);
-            historyCommand = new Command("History",    Command.ITEM, 0);
+            historyCommand = new Command("History", Command.ITEM, 0);
             menu.addCommand(historyCommand);
             presenceCommand = new Command("Presence", Command.ITEM, 0);
             menu.addCommand(presenceCommand);
@@ -109,7 +109,6 @@ public class PubnubMenu {
                     } else if (command == authKeyConfigCommand) {
                         authKeyConfig.handler();
                     }
-
 
                 }
             });

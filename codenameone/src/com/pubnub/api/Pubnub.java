@@ -1,6 +1,5 @@
 package com.pubnub.api;
 
-
 import java.util.Hashtable;
 import java.util.Random;
 
@@ -28,8 +27,7 @@ public class Pubnub extends PubnubCoreAsync {
      * @param ssl_on
      *            SSL on ?
      */
-    public Pubnub(String publish_key, String subscribe_key, String secret_key,
-                  String cipher_key, boolean ssl_on) {
+    public Pubnub(String publish_key, String subscribe_key, String secret_key, String cipher_key, boolean ssl_on) {
         super(publish_key, subscribe_key, secret_key, cipher_key, ssl_on);
     }
 
@@ -45,8 +43,7 @@ public class Pubnub extends PubnubCoreAsync {
      * @param ssl_on
      *            SSL on ?
      */
-    public Pubnub(String publish_key, String subscribe_key, String secret_key,
-                  boolean ssl_on) {
+    public Pubnub(String publish_key, String subscribe_key, String secret_key, boolean ssl_on) {
         super(publish_key, subscribe_key, secret_key, "", ssl_on);
     }
 
@@ -167,10 +164,13 @@ public class Pubnub extends PubnubCoreAsync {
     public void setNonSubscribeTimeout(int timeout) {
         super.setNonSubscribeTimeout(timeout);
     }
+
     /**
-     * This method returns timeout value for non subscribe operations like publish, history, hereNow
+     * This method returns timeout value for non subscribe operations like
+     * publish, history, hereNow
      *
-     * @return Timeout value in milliseconds for for Non subscribe operations like publish, history, hereNow
+     * @return Timeout value in milliseconds for for Non subscribe operations
+     *         like publish, history, hereNow
      */
     public int getNonSubscribeTimeout() {
         return super.getNonSubscribeTimeout();
@@ -179,6 +179,7 @@ public class Pubnub extends PubnubCoreAsync {
     protected String getUserAgent() {
         return "Java/" + VERSION;
     }
+
     void startNewThread(Runnable runnable, boolean daemonThreads) {
         Thread thread = new Thread(runnable);
         thread.start();

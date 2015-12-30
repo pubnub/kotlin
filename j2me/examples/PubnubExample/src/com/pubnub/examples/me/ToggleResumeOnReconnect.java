@@ -12,7 +12,7 @@ public class ToggleResumeOnReconnect extends PubnubCommand {
     }
 
     public void handler() {
-        _pubnub.setResumeOnReconnect((_pubnub.isResumeOnReconnect())?false:true);
+        _pubnub.setResumeOnReconnect((_pubnub.isResumeOnReconnect()) ? false : true);
     }
 
     protected void initForm() {

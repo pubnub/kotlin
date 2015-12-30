@@ -8,7 +8,6 @@ import com.pubnub.api.Callback;
 import com.pubnub.api.Pubnub;
 import com.pubnub.api.PubnubException;
 
-
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -68,20 +67,24 @@ public class PubnubService extends Service {
 
         Log.i("PUBNUB", "PubnubService created...");
         try {
-            pubnub.subscribe(new String[] {channel}, new Callback() {
+            pubnub.subscribe(new String[] { channel }, new Callback() {
                 public void connectCallback(String channel) {
                     notifyUser("CONNECT on channel:" + channel);
                 }
+
                 public void disconnectCallback(String channel) {
                     notifyUser("DISCONNECT on channel:" + channel);
                 }
+
                 public void reconnectCallback(String channel) {
                     notifyUser("RECONNECT on channel:" + channel);
                 }
+
                 @Override
                 public void successCallback(String channel, Object message) {
                     notifyUser(channel + " " + message.toString());
                 }
+
                 @Override
                 public void errorCallback(String channel, Object message) {
                     notifyUser(channel + " " + message.toString());

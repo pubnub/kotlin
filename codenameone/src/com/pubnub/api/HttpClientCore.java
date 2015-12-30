@@ -15,11 +15,9 @@ import org.json.*;
 
 class HttpClientCore extends HttpClient {
 
-
     PubnubCn1Connection connection;
     private int requestTimeout = 310000;
     private int connectionTimeout = 5000;
-
 
     protected static Logger log = new Logger(Worker.class);
 
@@ -54,12 +52,11 @@ class HttpClientCore extends HttpClient {
         return fetch(url, null);
     }
 
-    public synchronized HttpResponse fetch(String url, Hashtable headers)
-    throws PubnubException, IOException {
+    public synchronized HttpResponse fetch(String url, Hashtable headers) throws PubnubException, IOException {
         IOException excp = null;
         PubnubCn1Response pcr = null;
         try {
-            pcr = connection.fetch(url, requestTimeout, PubnubUtil.hashtableClone(headers,_headers));
+            pcr = connection.fetch(url, requestTimeout, PubnubUtil.hashtableClone(headers, _headers));
         } catch (IOException ex) {
             excp = ex;
         }
@@ -92,14 +89,15 @@ class HttpClientCore extends HttpClient {
         case HttpUtil.HTTP_INTERNAL_ERROR:
             throw new PubnubException(getErrorObject(PNERROBJ_INTERNAL_ERROR, url));
         default:
-            if (excp != null) throw excp;
+            if (excp != null)
+                throw excp;
             break;
         }
         return new HttpResponse(pcr.getResponseStatusCode(), pcr.getResponse());
     }
 
     public void shutdown() {
-        if (connection != null) connection.disconnect();
+        if (connection != null)
+            connection.disconnect();
     }
 }
-

@@ -18,7 +18,7 @@ public class History extends PubnubCommand {
 
     protected void initScreen() {
         final BasicEditField txtChannel = new BasicEditField("Channel : ", "", 256, BasicEditField.FILTER_DEFAULT);
-        final BasicEditField txtCount = new BasicEditField("Count : ", "",20, BasicEditField.FILTER_INTEGER);
+        final BasicEditField txtCount = new BasicEditField("Count : ", "", 20, BasicEditField.FILTER_INTEGER);
         screen = new MainScreen();
         screen.add(txtChannel);
         screen.add(txtCount);

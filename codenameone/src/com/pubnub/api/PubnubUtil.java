@@ -5,22 +5,23 @@ import org.json.*;
 
 /**
  * PubnubUtil class provides utility methods like urlEncode etc
+ * 
  * @author Pubnub
  *
  */
 public class PubnubUtil extends PubnubUtilCore {
 
-    private static String replace( String str, String pattern, String replace ) {
+    private static String replace(String str, String pattern, String replace) {
         int s = 0;
         int e = 0;
         StringBuffer result = new StringBuffer();
 
-        while ( (e = str.indexOf( pattern, s ) ) >= 0 ) {
-            result.append(str.substring( s, e ) );
-            result.append( replace );
-            s = e+pattern.length();
+        while ((e = str.indexOf(pattern, s)) >= 0) {
+            result.append(str.substring(s, e));
+            result.append(replace);
+            s = e + pattern.length();
         }
-        result.append( str.substring( s ) );
+        result.append(str.substring(s));
         return result.toString();
     }
 
@@ -58,6 +59,7 @@ public class PubnubUtil extends PubnubUtilCore {
     public static String urlEncode(String sUrl) {
         return Util.encodeUrl(sUrl);
     }
+
     /**
      * Convert input String to JSONObject, JSONArray, or String
      *

@@ -4,13 +4,15 @@ import net.rim.device.api.ui.Screen;
 import net.rim.device.api.ui.UiApplication;
 
 /**
- * This class extends the UiApplication class, providing a
- * graphical user interface.
+ * This class extends the UiApplication class, providing a graphical user
+ * interface.
  */
 public class PubnubDemoConsole extends UiApplication {
     /**
      * Entry point for application
-     * @param args Command line arguments (not used)
+     * 
+     * @param args
+     *            Command line arguments (not used)
      */
     public static void main(String[] args) {
 
@@ -19,7 +21,6 @@ public class PubnubDemoConsole extends UiApplication {
         PubnubDemoConsole theApp = new PubnubDemoConsole();
         theApp.enterEventDispatcher();
     }
-
 
     /**
      * Creates a new PubnubExample object

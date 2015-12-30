@@ -8,44 +8,44 @@ import org.json.me.*;
 
 public class PubnubUtil extends PubnubUtilCore {
 
-
-    private static String replace( String str, String pattern, String replace ) {
+    private static String replace(String str, String pattern, String replace) {
         int s = 0;
         int e = 0;
         StringBuffer result = new StringBuffer();
 
-        while ( (e = str.indexOf( pattern, s ) ) >= 0 ) {
-            result.append(str.substring( s, e ) );
-            result.append( replace );
-            s = e+pattern.length();
+        while ((e = str.indexOf(pattern, s)) >= 0) {
+            result.append(str.substring(s, e));
+            result.append(replace);
+            s = e + pattern.length();
         }
-        result.append( str.substring( s ) );
+        result.append(str.substring(s));
         return result.toString();
     }
 
-	/**
-	 * Returns encoded String
-	 * 
-	 * @param sUrl
-	 *            , input string
-	 * @return , encoded string
-	 */
+    /**
+     * Returns encoded String
+     * 
+     * @param sUrl
+     *            , input string
+     * @return , encoded string
+     */
     public static String pamEncode(String sUrl) {
-		/* !'()*~ */
+        /* !'()*~ */
 
-		String encoded = urlEncode(sUrl);
-		if (encoded != null) {
-			encoded = replace(encoded, "*", "%2A");
+        String encoded = urlEncode(sUrl);
+        if (encoded != null) {
+            encoded = replace(encoded, "*", "%2A");
             encoded = replace(encoded, "!", "%21");
-			encoded	= replace(encoded, "'", "%27");
+            encoded = replace(encoded, "'", "%27");
             encoded = replace(encoded, "(", "%28");
-			encoded = replace(encoded, ")", "%29");
+            encoded = replace(encoded, ")", "%29");
             encoded = replace(encoded, "[", "%5B");
-			encoded = replace(encoded, "]", "%5D");
+            encoded = replace(encoded, "]", "%5D");
             encoded = replace(encoded, "~", "%7E");
-		}
-		return encoded;
+        }
+        return encoded;
     }
+
     /**
      * Returns encoded String
      *
@@ -55,15 +55,13 @@ public class PubnubUtil extends PubnubUtilCore {
      */
     public static String urlEncode(String sUrl) {
         try {
-            return replace(encode(sUrl, "UTF-8"),"+", "%20");
+            return replace(encode(sUrl, "UTF-8"), "+", "%20");
         } catch (UnsupportedEncodingException e) {
             return null;
         }
     }
 
-
-    public static String encode(String s, String enc)
-    throws UnsupportedEncodingException {
+    public static String encode(String s, String enc) throws UnsupportedEncodingException {
 
         boolean needToChange = false;
         boolean wroteUnencodedChar = false;
@@ -80,7 +78,7 @@ public class PubnubUtil extends PubnubUtilCore {
                     c = '+';
                     needToChange = true;
                 }
-                out.append((char)c);
+                out.append((char) c);
                 wroteUnencodedChar = true;
             } else {
                 try {
@@ -91,8 +89,8 @@ public class PubnubUtil extends PubnubUtilCore {
                     writer.write(c);
                     if (c >= 0xD800 && c <= 0xDBFF) {
 
-                        if ( (i+1) < s.length()) {
-                            int d = (int) s.charAt(i+1);
+                        if ((i + 1) < s.length()) {
+                            int d = (int) s.charAt(i + 1);
                             if (d >= 0xDC00 && d <= 0xDFFF) {
                                 writer.write(d);
                                 i++;
@@ -117,7 +115,7 @@ public class PubnubUtil extends PubnubUtilCore {
             }
         }
 
-        return (needToChange? out.toString() : s);
+        return (needToChange ? out.toString() : s);
     }
 
     static class CCharacter {
@@ -129,15 +127,16 @@ public class PubnubUtil extends PubnubUtilCore {
                 return '\0';
             }
             if (digit < 10) {
-                return (char)('0' + digit);
+                return (char) ('0' + digit);
             }
-            return (char)('a' - 10 + digit);
+            return (char) ('a' - 10 + digit);
         }
     }
+
     public static boolean dontNeedEncoding(int ch) {
         int len = _dontNeedEncoding.length();
         boolean en = false;
-        for (int i =0; i< len; i++) {
+        for (int i = 0; i < len; i++) {
             if (_dontNeedEncoding.charAt(i) == ch) {
                 en = true;
                 break;
@@ -166,5 +165,6 @@ public class PubnubUtil extends PubnubUtilCore {
         }
         return str;
     }
+
     private static String _dontNeedEncoding = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ -_.*";
 }

@@ -33,8 +33,7 @@ public class AuthKeyConfig extends PubnubCommand {
                 } catch (Exception e) {
 
                 }
-            }});
+            }
+        });
     }
 }
-
-

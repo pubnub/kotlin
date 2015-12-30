@@ -24,8 +24,6 @@ public abstract class PubnubCommand {
 
     private MenuItem menuItem;
 
-
-
     /**
      * Presents a dialog to the user with a given message
      *

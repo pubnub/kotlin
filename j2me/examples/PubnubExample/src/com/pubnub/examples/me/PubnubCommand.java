@@ -22,7 +22,6 @@ public abstract class PubnubCommand {
 
     protected Command cmd;
 
-
     protected abstract void initForm();
 
     public PubnubCommand(Pubnub pubnub, Display display, Form menu, String command) {

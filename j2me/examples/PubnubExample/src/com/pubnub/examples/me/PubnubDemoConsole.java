@@ -26,10 +26,6 @@ public class PubnubDemoConsole extends MIDlet {
     public PubnubDemoConsole() {
     }
 
-
-
-
-
     private void init() {
         _pubnub = new Pubnub("demo", "demo", "demo", false);
         display = Display.getDisplay(this);
@@ -101,6 +97,5 @@ public class PubnubDemoConsole extends MIDlet {
      */
     public void destroyApp(boolean unconditional) {
     }
-
 
 }

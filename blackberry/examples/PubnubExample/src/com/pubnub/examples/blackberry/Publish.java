@@ -18,7 +18,7 @@ public class Publish extends PubnubCommand {
 
     protected void initScreen() {
         final BasicEditField txtChannel = new BasicEditField("Channel : ", "", 256, BasicEditField.FILTER_DEFAULT);
-        final BasicEditField txtMessage = new BasicEditField("Message : ", "",256, BasicEditField.FILTER_DEFAULT);
+        final BasicEditField txtMessage = new BasicEditField("Message : ", "", 256, BasicEditField.FILTER_DEFAULT);
         screen = new MainScreen();
         screen.add(txtChannel);
         screen.add(txtMessage);

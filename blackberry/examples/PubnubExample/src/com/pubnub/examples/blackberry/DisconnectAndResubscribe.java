@@ -11,6 +11,7 @@ public class DisconnectAndResubscribe extends PubnubCommand {
     protected void initScreen() {
 
     }
+
     public void handler() {
         _pubnub.disconnectAndResubscribe();
     }

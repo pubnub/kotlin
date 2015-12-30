@@ -15,8 +15,9 @@ public class Time extends PubnubCommand {
 
     protected void initForm() {
     }
+
     public void handler() {
-        _pubnub.time( new Callback() {
+        _pubnub.time(new Callback() {
             public void successCallback(String channel, Object message) {
                 notifyUser(message.toString());
             }

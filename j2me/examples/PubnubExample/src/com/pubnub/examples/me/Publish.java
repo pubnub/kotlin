@@ -19,9 +19,8 @@ import org.json.me.JSONObject;
 
 public class Publish extends PubnubCommand {
 
-
     public Publish(Pubnub pubnub, Display display, Form menu) {
-        super(pubnub, display,menu, "Publish");
+        super(pubnub, display, menu, "Publish");
         cmd = new Command("Publish", Command.ITEM, 0);
     }
 
@@ -57,7 +56,8 @@ public class Publish extends PubnubCommand {
 
                 }
 
-            }});
+            }
+        });
 
     }
 

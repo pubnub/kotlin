@@ -23,7 +23,7 @@ public class History extends PubnubCommand {
     protected void initForm() {
         final TextField txtChannel = new TextField("Channel : ", "", 255, TextField.ANY);
         final TextField txtCount = new TextField("Count : ", "1", 10, TextField.NUMERIC);
-        final ChoiceGroup cg = new ChoiceGroup("Reverse?",ChoiceGroup.EXCLUSIVE);
+        final ChoiceGroup cg = new ChoiceGroup("Reverse?", ChoiceGroup.EXCLUSIVE);
         cg.append("Yes", null);
         cg.append("No", null);
 
@@ -36,11 +36,8 @@ public class History extends PubnubCommand {
         form.setCommandListener(new CommandListener() {
             public void commandAction(Command arg0, Displayable arg1) {
 
-
-                _pubnub.history(txtChannel.getString(),
-                                        Integer.parseInt(txtCount.getString()),
-                                        cg.isSelected(0)?true:false,
-                new Callback() {
+                _pubnub.history(txtChannel.getString(), Integer.parseInt(txtCount.getString()), cg.isSelected(0) ? true
+                        : false, new Callback() {
                     public void successCallback(String channel, Object message) {
                         notifyUser(message.toString());
                     }
@@ -53,7 +50,6 @@ public class History extends PubnubCommand {
 
             }
         });
-
 
     }
 

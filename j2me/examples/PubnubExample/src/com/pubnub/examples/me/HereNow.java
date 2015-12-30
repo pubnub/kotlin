@@ -14,7 +14,7 @@ import com.pubnub.api.PubnubError;
 public class HereNow extends PubnubCommand {
 
     public HereNow(Pubnub pubnub, Display display, Form menu) {
-        super(pubnub, display, menu,"Here Now");
+        super(pubnub, display, menu, "Here Now");
     }
 
     protected void initForm() {

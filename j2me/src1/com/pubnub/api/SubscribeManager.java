@@ -2,8 +2,7 @@ package com.pubnub.api;
 
 class SubscribeManager extends AbstractSubscribeManager {
 
-    public SubscribeManager(String name, int connectionTimeout,
-                            int requestTimeout, boolean daemonThreads) {
+    public SubscribeManager(String name, int connectionTimeout, int requestTimeout, boolean daemonThreads) {
         super(name, connectionTimeout, requestTimeout, daemonThreads);
     }
 
@@ -12,7 +11,7 @@ class SubscribeManager extends AbstractSubscribeManager {
             _workers[i].die();
             _workers[i].interruptWorker();
             Worker w = getWorker();
-            w.setThread(new Thread(w,name));
+            w.setThread(new Thread(w, name));
             _workers[i] = w;
             w.startWorker();
         }

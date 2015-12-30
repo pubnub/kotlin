@@ -10,10 +10,9 @@ import com.pubnub.api.Pubnub;
  */
 public final class PubnubDemoConsoleScreen extends MainScreen {
     String channel = "hello_world";
-    String[] channels = { "hello_world1", "hello_world2", "hello_world3",
-                          "hello_world4"
-                        };
-    Pubnub _pubnub = new Pubnub("demo","demo","demo", false);
+    String[] channels = { "hello_world1", "hello_world2", "hello_world3", "hello_world4" };
+    Pubnub _pubnub = new Pubnub("demo", "demo", "demo", false);
+
     /**
      * Creates a new PubnubExampleScreen object
      */
@@ -31,6 +30,5 @@ public final class PubnubDemoConsoleScreen extends MainScreen {
         addMenuItem(new ToggleResumeOnReconnect(_pubnub).getMenuItem());
         addMenuItem(new Time(_pubnub).getMenuItem());
     }
-
 
 }

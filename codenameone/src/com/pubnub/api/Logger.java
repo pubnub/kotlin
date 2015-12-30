@@ -15,15 +15,15 @@ class Cn1Logger {
     }
 
     public void trace(String s) {
-        log.p(s,Log.INFO);
+        log.p(s, Log.INFO);
     }
 
     public void error(String s) {
-        log.p(s,Log.ERROR);
+        log.p(s, Log.ERROR);
     }
 
     public void info(String s) {
-        log.p(s,Log.INFO);
+        log.p(s, Log.INFO);
     }
 }
 
