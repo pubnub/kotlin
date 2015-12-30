@@ -179,5 +179,9 @@ public class Pubnub extends PubnubCoreAsync {
     protected String getUserAgent() {
         return "Java/" + VERSION;
     }
+    void startNewThread(Runnable runnable, boolean daemonThreads) {
+        Thread thread = new Thread(runnable);
+        thread.start();
+    }
 
 }

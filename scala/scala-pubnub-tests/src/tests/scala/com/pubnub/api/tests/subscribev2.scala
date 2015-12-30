@@ -36,10 +36,10 @@ import scala.util.Try
 
 object ErrorTest extends Tag("com.pubnub.api.tests.ErrorTest")
 
-
+object SingleTest extends Tag("com.pubnub.api.tests.SingleTest")
 
 @RunWith(classOf[JUnitRunner])
-class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
+class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  with BeforeAndAfterAll {
 
   var PUBLISH_KEY   = ""
   var SUBSCRIBE_KEY = ""
@@ -59,6 +59,24 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
       s += "☺☻✌☹"
     }
     return s
+  }
+
+  // Delete the temp file
+  override def afterAll(): Unit = {
+    var pubnub_sync = new PubnubSync(PUBLISH_KEY, SUBSCRIBE_KEY, SECRET_KEY, CIPHER_KEY, SSL)
+    //pubnub_sync.setResumeOnReconnect(true)
+    //pubnub_sync.setCacheBusting(false)
+    pubnub_sync.setOrigin("msgfiltering-dev")
+
+    var response = pubnub_sync.channelGroupListGroups()
+    if (response != null && response.get("payload") != null &&
+      response.get("payload").asInstanceOf[JSONObject].get("groups") != null) {
+    var groups = response.get("payload").asInstanceOf[JSONObject].get("groups").asInstanceOf[JSONArray]
+
+      for (i <- 1 to (groups.length() - 1)) {
+        pubnub_sync.channelGroupRemoveGroup(groups.get(i).asInstanceOf[String])
+      }
+    }
   }
 
   def withFixture(test: OneArgTest) {
@@ -82,18 +100,28 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
     pubnub.setResumeOnReconnect(true)
     pubnub.setCacheBusting(false)
     pubnub.setOrigin("msgfiltering-dev")
+    pubnub.setV2(true)
+
+
+
+
     pubnubTestConfig.pubnub = pubnub
     pubnubTestConfig.unicode = UNICODE
     pubnubTestConfig.metadata = metadata
 
+    /*
     var pubnub_sync = new PubnubSync(PUBLISH_KEY, SUBSCRIBE_KEY, SECRET_KEY, CIPHER_KEY, SSL)
+    //pubnub_sync.setResumeOnReconnect(true)
+    //pubnub_sync.setCacheBusting(false)
+    pubnub_sync.setOrigin("msgfiltering-dev")
 
     var response = pubnub_sync.channelGroupListGroups()
     var groups = response.get("payload").asInstanceOf[JSONObject].get("groups").asInstanceOf[JSONArray]
 
-    for (i <- 1 to groups.length()) {
-      pubnub_sync.channelGroupRemoveGroup(groups.get(0).asInstanceOf[String])
+    for (i <- 1 to (groups.length() - 1)) {
+      pubnub_sync.channelGroupRemoveGroup(groups.get(i).asInstanceOf[String])
     }
+    */
 
     withFixture(test.toNoArgTest(pubnubTestConfig))
 
@@ -133,16 +161,21 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
           })
 
         }
-        override def successCallback(channel: String, message1: Object) {
+        override def successCallbackV2(channel: String, message1: Object, envelope: JSONObject) {
           pubnub.unsubscribe(channel)
           testObj.test(true)
           testObj.test(message1.equals(message))
 
         }
       });
-
-
-      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      try {
+        await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      } catch {
+        case e: Exception => throw e
+      }
+      finally {
+        pubnub.unsubscribe(channel)
+      }
     }
 
 
@@ -170,16 +203,21 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
           })
 
         }
-        override def successCallback(channel: String, message1: Object) {
+        override def successCallbackV2(channel: String, message1: Object, envelope: JSONObject) {
           pubnub.unsubscribe(channel)
           testObj.test(true)
           testObj.test(message1.equals(message))
 
         }
       });
-
-      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
-
+      try {
+        await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      } catch {
+        case e: Exception => throw e
+      }
+      finally {
+        pubnub.unsubscribe(channel)
+      }
     }
 
     it("should be able to receive message successfully when subscribed with no filtering attribute" +
@@ -208,18 +246,23 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
           })
 
         }
-        override def successCallback(channel: String, message1: Object) {
+        override def successCallbackV2(channel: String, message1: Object, envelope: JSONObject) {
           pubnub.unsubscribe(channel)
           testObj.test(true)
           testObj.test(message1.equals(message))
 
         }
       });
-
-      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
-
+      try {
+        await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      } catch {
+        case e: Exception => throw e
+      }
+      finally {
+        pubnub.unsubscribe(channel)
+      }
     }
-    ignore("should not receive message when subscribed with filtering attribute foo==bar" +
+    it("should not receive message when subscribed with filtering attribute foo==bar" +
       " when message published with no metadata") { pubnubTestConfig =>
 
       var pubnub  = pubnubTestConfig.pubnub
@@ -244,17 +287,22 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
           })
 
         }
-        override def successCallback(channel: String, message1: Object) {
+        override def successCallbackV2(channel: String, message1: Object, envelope: JSONObject) {
           pubnub.unsubscribe(channel)
           assertTrue(false)
         }
       });
-
-      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
-
+      try {
+        await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      } catch {
+        case e: Exception => throw e
+      }
+      finally {
+        pubnub.unsubscribe(channel)
+      }
 
     }
-    ignore("should not receive message when subscribed with filtering attribute a==b" +
+    it("should not receive message when subscribed with filtering attribute a==b" +
       " when message published with metadata foo:bar") { pubnubTestConfig =>
       var metadata = pubnubTestConfig.metadata
       var pubnub  = pubnubTestConfig.pubnub
@@ -280,17 +328,21 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
           })
 
         }
-        override def successCallback(channel: String, message1: Object) {
+        override def successCallbackV2(channel: String, message1: Object, envelope: JSONObject) {
           pubnub.unsubscribe(channel)
           assertTrue(false)
         }
       });
-
-      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
-
-
+      try {
+        await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      } catch {
+        case e: Exception => throw e
+      }
+      finally {
+        pubnub.unsubscribe(channel)
+      }
     }
-    ignore("should not receive message when subscribed with filtering attribute foo==b" +
+    it("should not receive message when subscribed with filtering attribute foo==b" +
       " when message published with metadata foo:bar") { pubnubTestConfig =>
 
       var metadata = pubnubTestConfig.metadata
@@ -317,24 +369,29 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
           })
 
         }
-        override def successCallback(channel: String, message1: Object) {
+        override def successCallbackV2(channel: String, message1: Object, envelope: JSONObject) {
           pubnub.unsubscribe(channel)
           assertTrue(false)
         }
       });
-
-      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
-
+      try {
+        await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      } catch {
+        case e: Exception => throw e
+      }
+      finally {
+        pubnub.unsubscribe(channel)
+      }
 
     }
-    ignore("should not receive message when subscribed with filtering attribute bar==foo" +
+    it("should not receive message when subscribed with filtering attribute bar==foo" +
       " when message published with metadata foo:bar") { pubnubTestConfig =>
 
       var metadata = pubnubTestConfig.metadata
       var pubnub  = pubnubTestConfig.pubnub
       var channel = "channel-" + getRandom()
       var message = "message-" + getRandom(pubnubTestConfig.unicode)
-      var testObj = new PnTest(4)
+      var testObj = new PnTest(2)
 
       pubnub.setFilter("bar==\"foo\"")
       pubnub.subscribe(channel, new Callback {
@@ -354,20 +411,25 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
           })
 
         }
-        override def successCallback(channel: String, message1: Object) {
+        override def successCallbackV2(channel: String, message1: Object, envelope: JSONObject) {
           pubnub.unsubscribe(channel)
           assertTrue(false)
         }
       });
-
-      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
-
+      try {
+        await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      } catch {
+        case e: Exception => throw e
+      }
+      finally {
+        pubnub.unsubscribe(channel)
+      }
 
     }
 
 
     it("should receive message when subscribed to wildcard channel with filtering attribute foo==bar " +
-      " when message published with metadata foo:bar") { pubnubTestConfig =>
+      " when message published with metadata foo:bar", ErrorTest) { pubnubTestConfig =>
 
       var metadata = pubnubTestConfig.metadata
       var pubnub  = pubnubTestConfig.pubnub
@@ -375,7 +437,7 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
       var channel_wildcard = channel + ".*"
       var channel_wildcard_c = channel + ".a"
       var message = "message-" + getRandom(pubnubTestConfig.unicode)
-      var testObj = new PnTest(4)
+      var testObj = new PnTest(3)
 
       pubnub.setFilter("foo==\"bar\"")
       pubnub.subscribe(channel_wildcard, new Callback {
@@ -395,15 +457,22 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
           })
 
         }
-        override def successCallback(channel: String, message1: Object) {
+        override def successCallbackV2(channel: String, message1: Object, envelope: JSONObject) {
           pubnub.unsubscribe(channel)
           testObj.test(true)
-          testObj.test(message1.equals(message))
+          assertTrue(message1.equals(message))
 
         }
       });
-
-      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      try {
+        await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      } catch {
+        case e: Exception => throw e
+      }
+      finally {
+        pubnub.unsubscribe(channel)
+        pubnub.unsubscribe(channel_wildcard)
+      }
     }
 
 
@@ -415,7 +484,7 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
       var channel_wildcard = channel + ".*"
       var channel_wildcard_c = channel + ".a"
       var message = "message-" + getRandom(pubnubTestConfig.unicode)
-      var testObj = new PnTest(4)
+      var testObj = new PnTest(3)
 
       pubnub.subscribe(channel_wildcard, new Callback {
         override def connectCallback(channel: String, message1: Object) {
@@ -428,21 +497,26 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
 
             override def errorCallback(channel: String, error: PubnubError) {
               assert(false)
-              testObj.test(false)
             }
           })
 
         }
-        override def successCallback(channel: String, message1: Object) {
+        override def successCallbackV2(channel: String, message1: Object, envelope: JSONObject) {
           pubnub.unsubscribe(channel)
           testObj.test(true)
-          testObj.test(message1.equals(message))
+          assertTrue(message1.equals(message))
 
         }
       });
-
-      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
-
+      try {
+        await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      } catch {
+        case e: Exception => throw e
+      }
+      finally {
+        pubnub.unsubscribe(channel)
+        pubnub.unsubscribe(channel_wildcard)
+      }
     }
 
     it("should be able to receive message successfully when subscribed to wildcard channel with no filtering attribute" +
@@ -454,7 +528,7 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
       var channel_wildcard = channel + ".*"
       var channel_wildcard_c = channel + ".a"
       var message = "message-" + getRandom(pubnubTestConfig.unicode)
-      var testObj = new PnTest(4)
+      var testObj = new PnTest(3)
 
       pubnub.subscribe(channel_wildcard, new Callback {
         override def connectCallback(channel: String, message1: Object) {
@@ -473,18 +547,24 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
           })
 
         }
-        override def successCallback(channel: String, message1: Object) {
+        override def successCallbackV2(channel: String, message1: Object, envelope: JSONObject) {
           pubnub.unsubscribe(channel)
           testObj.test(true)
-          testObj.test(message1.equals(message))
+          assertTrue(message1.equals(message))
 
         }
       });
-
-      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
-
+      try {
+        await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      } catch {
+        case e: Exception => throw e
+      }
+      finally {
+        pubnub.unsubscribe(channel)
+        pubnub.unsubscribe(channel_wildcard)
+      }
     }
-    ignore("should not receive message when subscribed to wildcard channel with filtering attribute foo==bar" +
+    it("should not receive message when subscribed to wildcard channel with filtering attribute foo==bar" +
       " when message published with no metadata") { pubnubTestConfig =>
 
       var pubnub  = pubnubTestConfig.pubnub
@@ -511,17 +591,23 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
           })
 
         }
-        override def successCallback(channel: String, message1: Object) {
+        override def successCallbackV2(channel: String, message1: Object, envelope: JSONObject) {
           pubnub.unsubscribe(channel)
           assertTrue(false)
         }
       });
-
-      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
-
+      try {
+        await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      } catch {
+        case e: Exception => throw e
+      }
+      finally {
+        pubnub.unsubscribe(channel)
+        pubnub.unsubscribe(channel_wildcard)
+      }
 
     }
-    ignore("should not receive message when subscribed to wildcard channel with filtering attribute a==b" +
+    it("should not receive message when subscribed to wildcard channel with filtering attribute a==b" +
       " when message published with metadata foo:bar") { pubnubTestConfig =>
 
       var metadata = pubnubTestConfig.metadata
@@ -549,17 +635,23 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
           })
 
         }
-        override def successCallback(channel: String, message1: Object) {
+        override def successCallbackV2(channel: String, message1: Object, envelope: JSONObject) {
           pubnub.unsubscribe(channel)
           assertTrue(false)
         }
       });
-
-      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
-
+      try {
+        await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      } catch {
+        case e: Exception => throw e
+      }
+      finally {
+        pubnub.unsubscribe(channel)
+        pubnub.unsubscribe(channel_wildcard)
+      }
 
     }
-    ignore("should not receive message when subscribed to wildcard channel with filtering attribute foo==b" +
+    it("should not receive message when subscribed to wildcard channel with filtering attribute foo==b" +
       " when message published with metadata foo:bar") { pubnubTestConfig =>
       var metadata = pubnubTestConfig.metadata
       var pubnub  = pubnubTestConfig.pubnub
@@ -586,17 +678,23 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
           })
 
         }
-        override def successCallback(channel: String, message1: Object) {
+        override def successCallbackV2(channel: String, message1: Object, envelope: JSONObject) {
           pubnub.unsubscribe(channel)
           assertTrue(false)
         }
       });
-
-      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
-
+      try {
+        await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      } catch {
+        case e: Exception => throw e
+      }
+      finally {
+        pubnub.unsubscribe(channel)
+        pubnub.unsubscribe(channel_wildcard)
+      }
 
     }
-    ignore("should not receive message when subscribed to wildcard channel with filtering attribute bar==foo" +
+    it("should not receive message when subscribed to wildcard channel with filtering attribute bar==foo" +
       " when message published with metadata foo:bar") { pubnubTestConfig =>
       var metadata = pubnubTestConfig.metadata
       var pubnub  = pubnubTestConfig.pubnub
@@ -604,7 +702,7 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
       var channel_wildcard = channel + ".*"
       var channel_wildcard_c = channel + ".a"
       var message = "message-" + getRandom(pubnubTestConfig.unicode)
-      var testObj = new PnTest(4)
+      var testObj = new PnTest(2)
 
       pubnub.setFilter("bar==\"foo\"")
       pubnub.subscribe(channel_wildcard, new Callback {
@@ -623,14 +721,20 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
           })
 
         }
-        override def successCallback(channel: String, message1: Object) {
+        override def successCallbackV2(channel: String, message1: Object, envelope: JSONObject) {
           pubnub.unsubscribe(channel)
           assertTrue(false)
         }
       });
-
-      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
-
+      try {
+        await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      } catch {
+        case e: Exception => throw e
+      }
+      finally {
+        pubnub.unsubscribe(channel)
+        pubnub.unsubscribe(channel_wildcard)
+      }
 
     }
 
@@ -639,35 +743,65 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
     it("should receive message when subscribed to channel and wildcard channel with filtering attribute foo==bar " +
       " when message published with metadata foo:bar") { pubnubTestConfig =>
 
+      var metadata  = pubnubTestConfig.metadata
       var pubnub  = pubnubTestConfig.pubnub
       var channel = "channel-" + getRandom()
       var channel_wildcard = channel + ".*"
       var channel_wildcard_c = channel + ".a"
       var message = "message-" + getRandom(pubnubTestConfig.unicode)
-      var testObj = new PnTest(8)
+      var message_wildcard_c = "message-wildcard-" + getRandom(pubnubTestConfig.unicode)
+      var testObj = new PnTest(6)
 
-      pubnub.subscribe(Array(channel, channel_wildcard), new Callback {
-        override def connectCallback(channel: String, message1: Object) {
+      pubnub.setFilter("(foo==\"bar\")")
+      pubnub.subscribe(channel, new Callback {
+
+        override def connectCallback(channel1: String, message1: Object) {
           testObj.test(true)
-          pubnub.publish(channel_wildcard_c, message, new Callback {
-            override def successCallback(channel: String, message: Object) {
-              testObj.test(true)
-            }
 
-            override def errorCallback(channel: String, error: PubnubError) {
-              assert(false)
-              testObj.test(false)
+          pubnub.subscribe(channel_wildcard, new Callback {
+
+            override def connectCallback(channel1: String, message1: Object) {
+              testObj.test(true)
+              pubnub.publish(channel, message, metadata, new Callback {
+
+                override def successCallback(channel1: String, message1: Object) {
+
+                  testObj.test(true)
+                  pubnub.publish(channel_wildcard_c, message_wildcard_c, metadata, new Callback {
+
+                    override def successCallback(channel1: String, message1: Object) {
+                      testObj.test(true)
+                    }
+
+                    override def errorCallback(channel1: String, error: PubnubError) {
+                      assertTrue(false)
+                    }
+
+                  })
+                }
+              })
+            }
+            override def successCallbackV2(channel: String, message1: Object, envelope: JSONObject) {
+              testObj.test(true)
+              assertTrue(message1.equals(message_wildcard_c))
             }
           })
-
         }
-        override def successCallback(channel: String, message1: Object) {
+        override def successCallbackV2(channel: String, message1: Object, envelope: JSONObject) {
           testObj.test(true)
-          testObj.test(message1.equals(message))
+          assertTrue(message1.equals(message))
         }
-      });
+      })
 
-      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      try {
+        await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      } catch {
+        case e: Exception => throw e
+      }
+      finally {
+        pubnub.unsubscribe(channel)
+        pubnub.unsubscribe(channel_wildcard)
+      }
     }
 
 
@@ -679,72 +813,125 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
       var channel_wildcard = channel + ".*"
       var channel_wildcard_c = channel + ".a"
       var message = "message-" + getRandom(pubnubTestConfig.unicode)
-      var testObj = new PnTest(8)
+      var message_wildcard_c = "message-wildcard-" + getRandom(pubnubTestConfig.unicode)
+      var testObj = new PnTest(6)
 
-      pubnub.subscribe(Array(channel, channel_wildcard), new Callback {
-        override def connectCallback(channel: String, message1: Object) {
+      pubnub.subscribe(channel, new Callback {
+
+        override def connectCallback(channel1: String, message1: Object) {
           testObj.test(true)
-          pubnub.publish(channel_wildcard_c, message, new Callback {
 
-            override def successCallback(channel: String, message: Object) {
+          pubnub.subscribe(channel_wildcard, new Callback {
+
+            override def connectCallback(channel1: String, message1: Object) {
               testObj.test(true)
-            }
+              pubnub.publish(channel, message, new Callback {
 
-            override def errorCallback(channel: String, error: PubnubError) {
-              assert(false)
-              testObj.test(false)
+                override def successCallback(channel1: String, message1: Object) {
+
+                  testObj.test(true)
+                  pubnub.publish(channel_wildcard_c, message_wildcard_c, new Callback {
+
+                    override def successCallback(channel1: String, message1: Object) {
+                      testObj.test(true)
+                    }
+
+                    override def errorCallback(channel1: String, error: PubnubError) {
+                      assertTrue(false)
+                    }
+
+                  })
+                }
+              })
+            }
+            override def successCallbackV2(channel: String, message1: Object, envelope: JSONObject) {
+              testObj.test(true)
+              assertTrue(message1.equals(message_wildcard_c))
             }
           })
-
         }
-        override def successCallback(channel: String, message1: Object) {
+        override def successCallbackV2(channel: String, message1: Object, envelope: JSONObject) {
           testObj.test(true)
-          testObj.test(message1.equals(message))
-
+          assertTrue(message1.equals(message))
         }
-      });
+      })
 
-      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      try {
+        await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      } catch {
+        case e: Exception => throw e
+      }
+      finally {
+        pubnub.unsubscribe(channel)
+        pubnub.unsubscribe(channel_wildcard)
+      }
 
     }
 
     it("should be able to receive message successfully when subscribed to channel and wildcard channel with no filtering attribute" +
       " when message published with metadata foo:bar") { pubnubTestConfig =>
 
+      var metadata  = pubnubTestConfig.metadata
       var pubnub  = pubnubTestConfig.pubnub
       var channel = "channel-" + getRandom()
       var channel_wildcard = channel + ".*"
       var channel_wildcard_c = channel + ".a"
       var message = "message-" + getRandom(pubnubTestConfig.unicode)
-      var testObj = new PnTest(8)
+      var message_wildcard_c = "message-wildcard-" + getRandom(pubnubTestConfig.unicode)
+      var testObj = new PnTest(6)
 
-      pubnub.subscribe(Array(channel, channel_wildcard), new Callback {
-        override def connectCallback(channel: String, message1: Object) {
+      pubnub.subscribe(channel, new Callback {
+
+        override def connectCallback(channel1: String, message1: Object) {
           testObj.test(true)
-          pubnub.publish(channel_wildcard_c, message, new Callback {
 
-            override def successCallback(channel: String, message: Object) {
+          pubnub.subscribe(channel_wildcard, new Callback {
+
+            override def connectCallback(channel1: String, message1: Object) {
               testObj.test(true)
-            }
+              pubnub.publish(channel, message, metadata, new Callback {
 
-            override def errorCallback(channel: String, error: PubnubError) {
-              assert(false)
-              testObj.test(false)
+                override def successCallback(channel1: String, message1: Object) {
+
+                  testObj.test(true)
+                  pubnub.publish(channel_wildcard_c, message_wildcard_c, metadata, new Callback {
+
+                    override def successCallback(channel1: String, message1: Object) {
+                      testObj.test(true)
+                    }
+
+                    override def errorCallback(channel1: String, error: PubnubError) {
+                      assertTrue(false)
+                    }
+
+                  })
+                }
+              })
+            }
+            override def successCallbackV2(channel: String, message1: Object, envelope: JSONObject) {
+              testObj.test(true)
+              assertTrue(message1.equals(message_wildcard_c))
             }
           })
-
         }
-        override def successCallback(channel: String, message1: Object) {
+        override def successCallbackV2(channel: String, message1: Object, envelope: JSONObject) {
           testObj.test(true)
-          testObj.test(message1.equals(message))
-
+          assertTrue(message1.equals(message))
         }
-      });
+      })
 
-      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      try {
+        await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      } catch {
+        case e: Exception => throw e
+      }
+      finally {
+        pubnub.unsubscribe(channel)
+        pubnub.unsubscribe(channel_wildcard)
+      }
 
     }
-    ignore("should not receive message when subscribed to channel and wildcard channel with filtering attribute foo==bar" +
+    it("should not receive message when subscribed to channel and wildcard channel with filtering attribute foo==bar" +
       " when message published with no metadata") { pubnubTestConfig =>
 
       var pubnub  = pubnubTestConfig.pubnub
@@ -752,139 +939,243 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
       var channel_wildcard = channel + ".*"
       var channel_wildcard_c = channel + ".a"
       var message = "message-" + getRandom(pubnubTestConfig.unicode)
+      var message_wildcard_c = "message-wildcard-" + getRandom(pubnubTestConfig.unicode)
       var testObj = new PnTest(4)
 
-      pubnub.subscribe(Array(channel, channel_wildcard), new Callback {
-        override def connectCallback(channel: String, message1: Object) {
+      pubnub.setFilter("(foo==\"bar\")")
+      pubnub.subscribe(channel, new Callback {
+
+        override def connectCallback(channel1: String, message1: Object) {
           testObj.test(true)
-          pubnub.publish(channel_wildcard_c, message, new Callback {
 
-            override def successCallback(channel: String, message: Object) {
+          pubnub.subscribe(channel_wildcard, new Callback {
+
+            override def connectCallback(channel1: String, message1: Object) {
               testObj.test(true)
-            }
+              pubnub.publish(channel, message, new Callback {
 
-            override def errorCallback(channel: String, error: PubnubError) {
-              assert(false)
-              testObj.test(false)
+                override def successCallback(channel1: String, message1: Object) {
+
+                  testObj.test(true)
+                  pubnub.publish(channel_wildcard_c, message_wildcard_c, new Callback {
+
+                    override def successCallback(channel1: String, message1: Object) {
+                      testObj.test(true)
+                    }
+
+                    override def errorCallback(channel1: String, error: PubnubError) {
+                      assertTrue(false)
+                    }
+
+                  })
+                }
+              })
+            }
+            override def successCallbackV2(channel: String, message1: Object, envelope: JSONObject) {
+              assertTrue(false)
             }
           })
-
         }
-        override def successCallback(channel: String, message1: Object) {
-          pubnub.unsubscribe(channel)
+        override def successCallbackV2(channel: String, message1: Object, envelope: JSONObject) {
           assertTrue(false)
         }
-      });
+      })
 
-      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
-
+      try {
+        await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      } catch {
+        case e: Exception => throw e
+      }
+      finally {
+        pubnub.unsubscribe(channel)
+        pubnub.unsubscribe(channel_wildcard)
+      }
 
     }
-    ignore("should not receive message when subscribed to channel and wildcard channel with filtering attribute a==b" +
+    it("should not receive message when subscribed to channel and wildcard channel with filtering attribute a==b" +
       " when message published with metadata foo:bar") { pubnubTestConfig =>
 
+      var metadata  = pubnubTestConfig.metadata
       var pubnub  = pubnubTestConfig.pubnub
       var channel = "channel-" + getRandom()
       var channel_wildcard = channel + ".*"
       var channel_wildcard_c = channel + ".a"
       var message = "message-" + getRandom(pubnubTestConfig.unicode)
+      var message_wildcard_c = "message-wildcard-" + getRandom(pubnubTestConfig.unicode)
       var testObj = new PnTest(4)
 
-      pubnub.subscribe(Array(channel, channel_wildcard), new Callback {
-        override def connectCallback(channel: String, message1: Object) {
+      pubnub.setFilter("(a==\"b\")")
+      pubnub.subscribe(channel, new Callback {
+
+        override def connectCallback(channel1: String, message1: Object) {
           testObj.test(true)
-          pubnub.publish(channel_wildcard_c, message, new Callback {
 
-            override def successCallback(channel: String, message: Object) {
+          pubnub.subscribe(channel_wildcard, new Callback {
+
+            override def connectCallback(channel1: String, message1: Object) {
               testObj.test(true)
-            }
+              pubnub.publish(channel, message, metadata, new Callback {
 
-            override def errorCallback(channel: String, error: PubnubError) {
-              assert(false)
-              testObj.test(false)
+                override def successCallback(channel1: String, message1: Object) {
+
+                  testObj.test(true)
+                  pubnub.publish(channel_wildcard_c, message_wildcard_c, metadata, new Callback {
+
+                    override def successCallback(channel1: String, message1: Object) {
+                      testObj.test(true)
+                    }
+
+                    override def errorCallback(channel1: String, error: PubnubError) {
+                      assertTrue(false)
+                    }
+
+                  })
+                }
+              })
+            }
+            override def successCallbackV2(channel: String, message1: Object, envelope: JSONObject) {
+              assertTrue(false)
             }
           })
-
         }
-        override def successCallback(channel: String, message1: Object) {
-          pubnub.unsubscribe(channel)
+        override def successCallbackV2(channel: String, message1: Object, envelope: JSONObject) {
           assertTrue(false)
         }
-      });
+      })
 
-      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
-
+      try {
+        await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      } catch {
+        case e: Exception => throw e
+      }
+      finally {
+        pubnub.unsubscribe(channel)
+        pubnub.unsubscribe(channel_wildcard)
+      }
 
     }
-    ignore("should not receive message when subscribed to channel and wildcard channel with filtering attribute foo==b" +
+    it("should not receive message when subscribed to channel and wildcard channel with filtering attribute foo==b" +
       " when message published with metadata foo:bar") { pubnubTestConfig =>
 
+      var metadata  = pubnubTestConfig.metadata
       var pubnub  = pubnubTestConfig.pubnub
       var channel = "channel-" + getRandom()
       var channel_wildcard = channel + ".*"
       var channel_wildcard_c = channel + ".a"
       var message = "message-" + getRandom(pubnubTestConfig.unicode)
+      var message_wildcard_c = "message-wildcard-" + getRandom(pubnubTestConfig.unicode)
       var testObj = new PnTest(4)
 
-      pubnub.subscribe(Array(channel, channel_wildcard), new Callback {
-        override def connectCallback(channel: String, message1: Object) {
+      pubnub.setFilter("(foo==\"b\")")
+      pubnub.subscribe(channel, new Callback {
+
+        override def connectCallback(channel1: String, message1: Object) {
           testObj.test(true)
-          pubnub.publish(channel_wildcard_c, message, new Callback {
 
-            override def successCallback(channel: String, message: Object) {
+          pubnub.subscribe(channel_wildcard, new Callback {
+
+            override def connectCallback(channel1: String, message1: Object) {
               testObj.test(true)
-            }
+              pubnub.publish(channel, message, metadata, new Callback {
 
-            override def errorCallback(channel: String, error: PubnubError) {
-              assert(false)
-              testObj.test(false)
+                override def successCallback(channel1: String, message1: Object) {
+
+                  testObj.test(true)
+                  pubnub.publish(channel_wildcard_c, message_wildcard_c, metadata, new Callback {
+
+                    override def successCallback(channel1: String, message1: Object) {
+                      testObj.test(true)
+                    }
+
+                    override def errorCallback(channel1: String, error: PubnubError) {
+                      assertTrue(false)
+                    }
+
+                  })
+                }
+              })
+            }
+            override def successCallbackV2(channel: String, message1: Object, envelope: JSONObject) {
+              assertTrue(false)
             }
           })
-
         }
-        override def successCallback(channel: String, message1: Object) {
-          pubnub.unsubscribe(channel)
+        override def successCallbackV2(channel: String, message1: Object, envelope: JSONObject) {
           assertTrue(false)
         }
-      });
+      })
 
-      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
-
+      try {
+        await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      } catch {
+        case e: Exception => throw e
+      }
+      finally {
+        pubnub.unsubscribe(channel)
+        pubnub.unsubscribe(channel_wildcard)
+      }
 
     }
-    ignore("should not receive message when subscribed to channel and wildcard channel with filtering attribute bar==foo" +
+    it("should not receive message when subscribed to channel and wildcard channel with filtering attribute bar==foo" +
       " when message published with metadata foo:bar") { pubnubTestConfig =>
 
+      var metadata  = pubnubTestConfig.metadata
       var pubnub  = pubnubTestConfig.pubnub
       var channel = "channel-" + getRandom()
       var channel_wildcard = channel + ".*"
       var channel_wildcard_c = channel + ".a"
       var message = "message-" + getRandom(pubnubTestConfig.unicode)
+      var message_wildcard_c = "message-wildcard-" + getRandom(pubnubTestConfig.unicode)
       var testObj = new PnTest(4)
 
-      pubnub.subscribe(Array(channel, channel_wildcard), new Callback {
-        override def connectCallback(channel: String, message1: Object) {
+      pubnub.setFilter("(bar==\"foo\")")
+      pubnub.subscribe(channel, new Callback {
+
+        override def connectCallback(channel1: String, message1: Object) {
           testObj.test(true)
-          pubnub.publish(channel_wildcard_c, message, new Callback {
 
-            override def successCallback(channel: String, message: Object) {
+          pubnub.subscribe(channel_wildcard, new Callback {
+
+            override def connectCallback(channel1: String, message1: Object) {
               testObj.test(true)
-            }
+              pubnub.publish(channel, message, metadata, new Callback {
 
-            override def errorCallback(channel: String, error: PubnubError) {
-              assert(false)
-              testObj.test(false)
+                override def successCallback(channel1: String, message1: Object) {
+
+                  testObj.test(true)
+                  pubnub.publish(channel_wildcard_c, message_wildcard_c, metadata, new Callback {
+
+                    override def successCallback(channel1: String, message1: Object) {
+                      testObj.test(true)
+                    }
+
+                    override def errorCallback(channel1: String, error: PubnubError) {
+                      assertTrue(false)
+                    }
+
+                  })
+                }
+              })
+            }
+            override def successCallbackV2(channel: String, message1: Object, envelope: JSONObject) {
+              assertTrue(false)
             }
           })
-
         }
-        override def successCallback(channel: String, message1: Object) {
-          pubnub.unsubscribe(channel)
+        override def successCallbackV2(channel: String, message1: Object, envelope: JSONObject) {
           assertTrue(false)
         }
-      });
+      })
 
-      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      try {
+        await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      } catch {
+        case e: Exception => throw e
+      }
+      finally {
+        pubnub.unsubscribe(channel)
+        pubnub.unsubscribe(channel_wildcard)
+      }
 
 
     }
@@ -894,7 +1185,7 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
 
 
     it("should receive message when subscribed to channel group with filtering attribute foo==bar " +
-      " when message published with metadata foo:bar", ErrorTest) { pubnubTestConfig =>
+      " when message published with metadata foo:bar") { pubnubTestConfig =>
 
       var metadata = pubnubTestConfig.metadata
       var pubnub  = pubnubTestConfig.pubnub
@@ -937,13 +1228,15 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
               })
             }
 
-            override def successCallback(channel1: String, message1: Object) {
+            override def successCallbackV2(channel: String, message1: Object, envelope: JSONObject) {
               testObj.test(true)
               assertTrue(message1.equals(message_group_c))
+              pubnub.channelGroupUnsubscribe(channel_group)
             }
 
             override def errorCallback(channel1: String, error: PubnubError): Unit = {
-              assertTrue(false)
+              assertTrue(error.toString, false)
+              pubnub.channelGroupUnsubscribe(channel_group)
             }
 
 
@@ -951,16 +1244,20 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
         }
       })
 
-
-
-      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
-
-
+      try {
+        await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      } catch {
+        case e: Exception => throw e
+      }
+      finally {
+        pubnub.channelGroupUnsubscribe(channel_group)
+        pubnub.unsubscribe(channel)
+      }
     }
 
 
     it("should be able to receive message successfully when subscribed to channel group with no filtering attribute" +
-      " when message published with no metadata", ErrorTest) { pubnubTestConfig =>
+      " when message published with no metadata") { pubnubTestConfig =>
 
       var pubnub  = pubnubTestConfig.pubnub
       var channel = "channel-" + getRandom()
@@ -1002,13 +1299,15 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
               })
             }
 
-            override def successCallback(channel1: String, message1: Object) {
+            override def successCallbackV2(channel: String, message1: Object, envelope: JSONObject) {
               testObj.test(true)
               assertTrue(message1.equals(message_group_c))
+              pubnub.channelGroupUnsubscribe(channel_group)
             }
 
             override def errorCallback(channel1: String, error: PubnubError): Unit = {
-              assertTrue(false)
+              assertTrue(error.toString, false)
+              pubnub.channelGroupUnsubscribe(channel_group)
             }
 
 
@@ -1016,15 +1315,20 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
         }
       })
 
-
-
-      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
-
+      try {
+        await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      } catch {
+        case e: Exception => throw e
+      }
+      finally {
+        pubnub.channelGroupUnsubscribe(channel_group)
+        pubnub.unsubscribe(channel)
+      }
 
     }
 
     it("should be able to receive message successfully when subscribed to channel group with no filtering attribute" +
-      " when message published with metadata foo:bar", ErrorTest) { pubnubTestConfig =>
+      " when message published with metadata foo:bar") { pubnubTestConfig =>
 
       var metadata = pubnubTestConfig.metadata
       var pubnub  = pubnubTestConfig.pubnub
@@ -1067,13 +1371,15 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
               })
             }
 
-            override def successCallback(channel1: String, message1: Object) {
+            override def successCallbackV2(channel: String, message1: Object, envelope: JSONObject) {
               testObj.test(true)
               assertTrue(message1.equals(message_group_c))
+              pubnub.channelGroupUnsubscribe(channel_group)
             }
 
             override def errorCallback(channel1: String, error: PubnubError): Unit = {
-              assertTrue(false)
+              assertTrue(error.toString, false)
+              pubnub.channelGroupUnsubscribe(channel_group)
             }
 
 
@@ -1081,15 +1387,20 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
         }
       })
 
-
-
-      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
-
+      try {
+        await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      } catch {
+        case e: Exception => throw e
+      }
+      finally {
+        pubnub.channelGroupUnsubscribe(channel_group)
+        pubnub.unsubscribe(channel)
+      }
 
 
     }
     it("should not receive message when subscribed to channel group  with filtering attribute foo==bar" +
-      " when message published with no metadata", ErrorTest) { pubnubTestConfig =>
+      " when message published with no metadata") { pubnubTestConfig =>
 
       var metadata = pubnubTestConfig.metadata
       var pubnub  = pubnubTestConfig.pubnub
@@ -1132,12 +1443,14 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
               })
             }
 
-            override def successCallback(channel1: String, message1: Object) {
+            override def successCallbackV2(channel: String, message1: Object, envelope: JSONObject) {
               assertTrue(false)
+              pubnub.channelGroupUnsubscribe(channel_group)
             }
 
             override def errorCallback(channel1: String, error: PubnubError): Unit = {
-              assertTrue(false)
+              assertTrue(error.toString, false)
+              pubnub.channelGroupUnsubscribe(channel_group)
             }
 
 
@@ -1145,14 +1458,20 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
         }
       })
 
-
-
-      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      try {
+        await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      } catch {
+        case e: Exception => throw e
+      }
+      finally {
+        pubnub.channelGroupUnsubscribe(channel_group)
+        pubnub.unsubscribe(channel)
+      }
 
 
     }
     it("should not receive message when subscribed to channel group with filtering attribute a==b" +
-      " when message published with metadata foo:bar", ErrorTest) { pubnubTestConfig =>
+      " when message published with metadata foo:bar") { pubnubTestConfig =>
       var metadata = pubnubTestConfig.metadata
       var pubnub  = pubnubTestConfig.pubnub
       var channel = "channel-" + getRandom()
@@ -1194,12 +1513,14 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
               })
             }
 
-            override def successCallback(channel1: String, message1: Object) {
+            override def successCallbackV2(channel: String, message1: Object, envelope: JSONObject) {
               assertTrue(false)
+              pubnub.channelGroupUnsubscribe(channel_group)
             }
 
             override def errorCallback(channel1: String, error: PubnubError): Unit = {
               assertTrue(false)
+              pubnub.channelGroupUnsubscribe(channel_group)
             }
 
 
@@ -1207,15 +1528,21 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
         }
       })
 
-
-
-      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      try {
+        await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      } catch {
+        case e: Exception => throw e
+      }
+      finally {
+        pubnub.channelGroupUnsubscribe(channel_group)
+        pubnub.unsubscribe(channel)
+      }
 
 
 
     }
     it("should not receive message when subscribed to channel group with filtering attribute foo==b" +
-      " when message published with metadata foo:bar", ErrorTest) { pubnubTestConfig =>
+      " when message published with metadata foo:bar") { pubnubTestConfig =>
 
       var metadata = pubnubTestConfig.metadata
       var pubnub  = pubnubTestConfig.pubnub
@@ -1258,12 +1585,14 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
               })
             }
 
-            override def successCallback(channel1: String, message1: Object) {
+            override def successCallbackV2(channel: String, message1: Object, envelope: JSONObject) {
               assertTrue(false)
+              pubnub.channelGroupUnsubscribe(channel_group)
             }
 
             override def errorCallback(channel1: String, error: PubnubError): Unit = {
-              assertTrue(false)
+              assertTrue(error.toString(), false)
+              pubnub.channelGroupUnsubscribe(channel_group)
             }
 
 
@@ -1271,15 +1600,21 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
         }
       })
 
-
-
-      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      try {
+        await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      } catch {
+        case e: Exception => throw e
+      }
+      finally {
+        pubnub.channelGroupUnsubscribe(channel_group)
+        pubnub.unsubscribe(channel)
+      }
 
 
 
     }
     it("should not receive message when subscribed to channel group with filtering attribute bar==foo" +
-      " when message published with metadata foo:bar", ErrorTest) { pubnubTestConfig =>
+      " when message published with metadata foo:bar") { pubnubTestConfig =>
 
       var metadata = pubnubTestConfig.metadata
       var pubnub  = pubnubTestConfig.pubnub
@@ -1322,12 +1657,14 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
               })
             }
 
-            override def successCallback(channel1: String, message1: Object) {
+            override def successCallbackV2(channel: String, message1: Object, envelope: JSONObject) {
               assertTrue(false)
+              pubnub.channelGroupUnsubscribe(channel_group)
             }
 
             override def errorCallback(channel1: String, error: PubnubError): Unit = {
               assertTrue(false)
+              pubnub.channelGroupUnsubscribe(channel_group)
             }
 
 
@@ -1335,9 +1672,15 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
         }
       })
 
-
-
-      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      try {
+        await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      } catch {
+        case e: Exception => throw e
+      }
+      finally {
+        pubnub.channelGroupUnsubscribe(channel_group)
+        pubnub.unsubscribe(channel)
+      }
 
 
     }
@@ -1400,8 +1743,7 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
                   })
                 }
 
-                override def successCallback(channel1: String, message1: Object) {
-                  //println(message1)
+                override def successCallbackV2(channel: String, message1: Object, envelope: JSONObject) {
                   testObj.test(true)
                   //pubnub.channelGroupUnsubscribe(channel_group)
                   assertTrue(message1.equals(message_group_c))
@@ -1409,8 +1751,7 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
               })
             }
 
-            override def successCallback(channel1: String, message1: Object) {
-              //println(message1)
+            override def successCallbackV2(channel: String, message1: Object, envelope: JSONObject) {
               testObj.test(true)
               //pubnub.unsubscribe(channel)
               assertTrue(message1.equals(message))
@@ -1425,8 +1766,15 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
         }
       })
 
-
-      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      try {
+        await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      } catch {
+        case e: Exception => throw e
+      }
+      finally {
+        pubnub.channelGroupUnsubscribe(channel_group)
+        pubnub.unsubscribe(channel)
+      }
     }
 
 
@@ -1485,8 +1833,7 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
                   })
                 }
 
-                override def successCallback(channel1: String, message1: Object) {
-                  println(message1)
+                override def successCallbackV2(channel: String, message1: Object, envelope: JSONObject) {
                   testObj.test(true)
                   pubnub.channelGroupUnsubscribe(channel_group)
                   assertTrue(message1.equals(message_group_c))
@@ -1494,8 +1841,7 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
               })
             }
 
-            override def successCallback(channel1: String, message1: Object) {
-              println(message1)
+            override def successCallbackV2(channel: String, message1: Object, envelope: JSONObject) {
               testObj.test(true)
               pubnub.unsubscribe(channel)
               assertTrue(message1.equals(message))
@@ -1510,8 +1856,15 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
         }
       })
 
-
-      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      try {
+        await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      } catch {
+        case e: Exception => throw e
+      }
+      finally {
+        pubnub.channelGroupUnsubscribe(channel_group)
+        pubnub.unsubscribe(channel)
+      }
     }
 
     it("should be able to receive message successfully when subscribed to channel and channel group with no filtering attribute" +
@@ -1560,13 +1913,13 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
                     }
                   })
                 }
-                override def successCallback(channel1: String, message1: Object) {
+                override def successCallbackV2(channel: String, message1: Object, envelope: JSONObject) {
                   testObj.test(true)
                   assertTrue(message1.equals(message_group_c))
                 }
               })
             }
-            override def successCallback(channel1: String, message1: Object) {
+            override def successCallbackV2(channel: String, message1: Object, envelope: JSONObject) {
               testObj.test(true)
               assertTrue(message1.equals(message))
             }
@@ -1579,8 +1932,15 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
         }
       })
 
-
-      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      try {
+        await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      } catch {
+        case e: Exception => throw e
+      }
+      finally {
+        pubnub.channelGroupUnsubscribe(channel_group)
+        pubnub.unsubscribe(channel)
+      }
 
     }
 
@@ -1632,13 +1992,13 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
                     }
                   })
                 }
-                override def successCallback(channel1: String, message1: Object) {
+                override def successCallbackV2(channel: String, message1: Object, envelope: JSONObject) {
                   testObj.test(true)
                   assertTrue(message1.equals(message_group_c))
                 }
               })
             }
-            override def successCallback(channel1: String, message1: Object) {
+            override def successCallbackV2(channel: String, message1: Object, envelope: JSONObject) {
               testObj.test(true)
               assertTrue(message1.equals(message))
             }
@@ -1651,8 +2011,15 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
         }
       })
 
-
-      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      try {
+        await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      } catch {
+        case e: Exception => throw e
+      }
+      finally {
+        pubnub.channelGroupUnsubscribe(channel_group)
+        pubnub.unsubscribe(channel)
+      }
 
     }
     it("should not receive message when subscribed to channel and channel group  with filtering attribute foo==bar" +
@@ -1702,12 +2069,12 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
                     }
                   })
                 }
-                override def successCallback(channel1: String, message1: Object) {
+                override def successCallbackV2(channel: String, message1: Object, envelope: JSONObject) {
                   assertTrue(false)
                 }
               })
             }
-            override def successCallback(channel1: String, message1: Object) {
+            override def successCallbackV2(channel: String, message1: Object, envelope: JSONObject) {
               assertTrue(false)
             }
           })
@@ -1719,8 +2086,15 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
         }
       })
 
-
-      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      try {
+        await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      } catch {
+        case e: Exception => throw e
+      }
+      finally {
+        pubnub.channelGroupUnsubscribe(channel_group)
+        pubnub.unsubscribe(channel)
+      }
 
 
     }
@@ -1773,12 +2147,12 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
                     }
                   })
                 }
-                override def successCallback(channel1: String, message1: Object) {
+                override def successCallbackV2(channel: String, message1: Object, envelope: JSONObject) {
                   assertTrue(false)
                 }
               })
             }
-            override def successCallback(channel1: String, message1: Object) {
+            override def successCallbackV2(channel: String, message1: Object, envelope: JSONObject) {
               assertTrue(false)
             }
           })
@@ -1790,8 +2164,15 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
         }
       })
 
-
-      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      try {
+        await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      } catch {
+        case e: Exception => throw e
+      }
+      finally {
+        pubnub.channelGroupUnsubscribe(channel_group)
+        pubnub.unsubscribe(channel)
+      }
 
 
     }
@@ -1844,12 +2225,12 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
                     }
                   })
                 }
-                override def successCallback(channel1: String, message1: Object) {
+                override def successCallbackV2(channel: String, message1: Object, envelope: JSONObject) {
                   assertTrue(false)
                 }
               })
             }
-            override def successCallback(channel1: String, message1: Object) {
+            override def successCallbackV2(channel: String, message1: Object, envelope: JSONObject) {
               assertTrue(false)
             }
           })
@@ -1861,8 +2242,15 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
         }
       })
 
-
-      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      try {
+        await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      } catch {
+        case e: Exception => throw e
+      }
+      finally {
+        pubnub.channelGroupUnsubscribe(channel_group)
+        pubnub.unsubscribe(channel)
+      }
 
 
     }
@@ -1914,12 +2302,12 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
                     }
                   })
                 }
-                override def successCallback(channel1: String, message1: Object) {
+                override def successCallbackV2(channel: String, message1: Object, envelope: JSONObject) {
                   assertTrue(false)
                 }
               })
             }
-            override def successCallback(channel1: String, message1: Object) {
+            override def successCallbackV2(channel: String, message1: Object, envelope: JSONObject) {
               assertTrue(false)
             }
           })
@@ -1931,8 +2319,15 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
         }
       })
 
-
-      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      try {
+        await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      } catch {
+        case e: Exception => throw e
+      }
+      finally {
+        pubnub.channelGroupUnsubscribe(channel_group)
+        pubnub.unsubscribe(channel)
+      }
     }
 
 
@@ -2015,8 +2410,7 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
                       })
 
                     }
-                    override def successCallback(channel1: String, message1: Object) {
-                      println(message1 + " : " + message_wildcard_c)
+                    override def successCallbackV2(channel: String, message1: Object, envelope: JSONObject) {
                       //println(message_wildcard_c)
                       testObj.test(true)
                       //pubnub.unsubscribe(channel_wildcard)
@@ -2024,8 +2418,7 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
                     }
                   })
                 }
-                override def successCallback(channel1: String, message1: Object) {
-                  println(message1 + " : " + message_group_c)
+                override def successCallbackV2(channel: String, message1: Object, envelope: JSONObject) {
 
                   testObj.test(true)
                   //pubnub.channelGroupUnsubscribe(channel_group)
@@ -2033,8 +2426,7 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
                 }
               })
             }
-            override def successCallback(channel1: String, message1: Object) {
-              println(message1 + " : " + message)
+            override def successCallbackV2(channel: String, message1: Object, envelope: JSONObject) {
               //println(message1)
               testObj.test(true)
               //pubnub.unsubscribe(channel)
@@ -2051,7 +2443,16 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
       })
 
 
-      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      try {
+        await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      } catch {
+        case e: Exception => throw e
+      }
+      finally {
+        pubnub.channelGroupUnsubscribe(channel_group)
+        pubnub.unsubscribe(channel)
+        pubnub.unsubscribe(channel_wildcard)
+      }
     }
 
     it("should receive message when subscribed to channel, wildcard channel" +
@@ -2129,7 +2530,7 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
                       })
 
                     }
-                    override def successCallback(channel1: String, message1: Object) {
+                    override def successCallbackV2(channel: String, message1: Object, envelope: JSONObject) {
                       //println(message1)
                       testObj.test(true)
                       pubnub.unsubscribe(channel_wildcard)
@@ -2137,7 +2538,7 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
                     }
                   })
                 }
-                override def successCallback(channel1: String, message1: Object) {
+                override def successCallbackV2(channel: String, message1: Object, envelope: JSONObject) {
                   //println(message1)
                   testObj.test(true)
                   pubnub.channelGroupUnsubscribe(channel_group)
@@ -2145,7 +2546,7 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
                 }
               })
             }
-            override def successCallback(channel1: String, message1: Object) {
+            override def successCallbackV2(channel: String, message1: Object, envelope: JSONObject) {
               //println(message1)
               testObj.test(true)
               pubnub.unsubscribe(channel)
@@ -2162,7 +2563,16 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
       })
 
 
-      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      try {
+        await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      } catch {
+        case e: Exception => throw e
+      }
+      finally {
+        pubnub.channelGroupUnsubscribe(channel_group)
+        pubnub.unsubscribe(channel)
+        pubnub.unsubscribe(channel_wildcard)
+      }
     }
 
 
@@ -2239,7 +2649,7 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
                       })
 
                     }
-                    override def successCallback(channel1: String, message1: Object) {
+                    override def successCallbackV2(channel: String, message1: Object, envelope: JSONObject) {
                       //println(message1)
                       testObj.test(true)
                       //pubnub.unsubscribe(channel_wildcard)
@@ -2247,7 +2657,7 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
                     }
                   })
                 }
-                override def successCallback(channel1: String, message1: Object) {
+                override def successCallbackV2(channel: String, message1: Object, envelope: JSONObject) {
                   //println(message1)
                   testObj.test(true)
                   //pubnub.channelGroupUnsubscribe(channel_group)
@@ -2255,7 +2665,7 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
                 }
               })
             }
-            override def successCallback(channel1: String, message1: Object) {
+            override def successCallbackV2(channel: String, message1: Object, envelope: JSONObject) {
               //println(message1)
               testObj.test(true)
               //pubnub.unsubscribe(channel)
@@ -2272,7 +2682,16 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
       })
 
 
-      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      try {
+        await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      } catch {
+        case e: Exception => throw e
+      }
+      finally {
+        pubnub.channelGroupUnsubscribe(channel_group)
+        pubnub.unsubscribe(channel)
+        pubnub.unsubscribe(channel_wildcard)
+      }
 
     }
 
@@ -2349,7 +2768,7 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
                       })
 
                     }
-                    override def successCallback(channel1: String, message1: Object) {
+                    override def successCallbackV2(channel: String, message1: Object, envelope: JSONObject) {
                       //println(message1)
                       testObj.test(true)
                       pubnub.unsubscribe(channel_wildcard)
@@ -2357,7 +2776,7 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
                     }
                   })
                 }
-                override def successCallback(channel1: String, message1: Object) {
+                override def successCallbackV2(channel: String, message1: Object, envelope: JSONObject) {
                   //println(message1)
                   testObj.test(true)
                   pubnub.channelGroupUnsubscribe(channel_group)
@@ -2365,7 +2784,7 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
                 }
               })
             }
-            override def successCallback(channel1: String, message1: Object) {
+            override def successCallbackV2(channel: String, message1: Object, envelope: JSONObject) {
               //println(message1)
               testObj.test(true)
               pubnub.unsubscribe(channel)
@@ -2382,7 +2801,16 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
       })
 
 
-      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      try {
+        await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      } catch {
+        case e: Exception => throw e
+      }
+      finally {
+        pubnub.channelGroupUnsubscribe(channel_group)
+        pubnub.unsubscribe(channel)
+        pubnub.unsubscribe(channel_wildcard)
+      }
 
     }
 
@@ -2460,7 +2888,7 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
                       })
 
                     }
-                    override def successCallback(channel1: String, message1: Object) {
+                    override def successCallbackV2(channel: String, message1: Object, envelope: JSONObject) {
                       //println(message1)
                       testObj.test(true)
                       //pubnub.unsubscribe(channel_wildcard)
@@ -2468,7 +2896,7 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
                     }
                   })
                 }
-                override def successCallback(channel1: String, message1: Object) {
+                override def successCallbackV2(channel: String, message1: Object, envelope: JSONObject) {
                   //println(message1)
                   testObj.test(true)
                   //pubnub.channelGroupUnsubscribe(channel_group)
@@ -2476,7 +2904,7 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
                 }
               })
             }
-            override def successCallback(channel1: String, message1: Object) {
+            override def successCallbackV2(channel: String, message1: Object, envelope: JSONObject) {
               //println(message1)
               testObj.test(true)
               //pubnub.unsubscribe(channel)
@@ -2492,8 +2920,16 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
         }
       })
 
-
-      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      try {
+        await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      } catch {
+        case e: Exception => throw e
+      }
+      finally {
+        pubnub.channelGroupUnsubscribe(channel_group)
+        pubnub.unsubscribe(channel)
+        pubnub.unsubscribe(channel_wildcard)
+      }
 
     }
 
@@ -2572,7 +3008,7 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
                       })
 
                     }
-                    override def successCallback(channel1: String, message1: Object) {
+                    override def successCallbackV2(channel: String, message1: Object, envelope: JSONObject) {
                       //println(message1)
                       testObj.test(true)
                       pubnub.unsubscribe(channel_wildcard)
@@ -2580,7 +3016,7 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
                     }
                   })
                 }
-                override def successCallback(channel1: String, message1: Object) {
+                override def successCallbackV2(channel: String, message1: Object, envelope: JSONObject) {
                   //println(message1)
                   testObj.test(true)
                   pubnub.channelGroupUnsubscribe(channel_group)
@@ -2588,7 +3024,7 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
                 }
               })
             }
-            override def successCallback(channel1: String, message1: Object) {
+            override def successCallbackV2(channel: String, message1: Object, envelope: JSONObject) {
               //println(message1)
               testObj.test(true)
               pubnub.unsubscribe(channel)
@@ -2605,7 +3041,14 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
       })
 
 
-      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      try {
+        await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      } catch {
+        case e: Exception => throw e
+      }
+      finally {
+        pubnub.channelGroupUnsubscribe(channel_group)
+      }
 
     }
 
@@ -2683,17 +3126,17 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
                       })
 
                     }
-                    override def successCallback(channel1: String, message1: Object) {
+                    override def successCallbackV2(channel: String, message1: Object, envelope: JSONObject) {
                       assertTrue(false)
                     }
                   })
                 }
-                override def successCallback(channel1: String, message1: Object) {
+                override def successCallbackV2(channel: String, message1: Object, envelope: JSONObject) {
                   assertTrue(false)
                 }
               })
             }
-            override def successCallback(channel1: String, message1: Object) {
+            override def successCallbackV2(channel: String, message1: Object, envelope: JSONObject) {
               assertTrue(false)
             }
           })
@@ -2707,7 +3150,14 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
       })
 
 
-      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      try {
+        await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      } catch {
+        case e: Exception => throw e
+      }
+      finally {
+        pubnub.channelGroupUnsubscribe(channel_group)
+      }
 
 
 
@@ -2810,7 +3260,14 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
       })
 
 
-      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      try {
+        await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      } catch {
+        case e: Exception => throw e
+      }
+      finally {
+        pubnub.channelGroupUnsubscribe(channel_group)
+      }
 
 
 
@@ -2913,7 +3370,14 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
       })
 
 
-      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      try {
+        await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      } catch {
+        case e: Exception => throw e
+      }
+      finally {
+        pubnub.channelGroupUnsubscribe(channel_group)
+      }
 
 
 
@@ -3014,8 +3478,15 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  {
         }
       })
 
+      try {
+        await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      } catch {
+        case e: Exception => throw e
+      }
+      finally {
+        pubnub.channelGroupUnsubscribe(channel_group)
+      }
 
-      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
 
 
 

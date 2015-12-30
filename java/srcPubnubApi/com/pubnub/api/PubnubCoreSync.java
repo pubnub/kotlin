@@ -59,6 +59,7 @@ abstract class PubnubCoreSync extends PubnubCore implements PubnubSyncInterface 
         headers.put("V", VERSION);
         headers.put("Accept-Encoding", "gzip");
         headers.put("User-Agent", getUserAgent());
+        CACHE_BUSTING = false;
         httpClient = HttpClient.getClient(5000, 5000, headers);
 
     }

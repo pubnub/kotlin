@@ -21,6 +21,7 @@ abstract class PubnubCoreAsync extends PubnubCore implements PubnubAsyncInterfac
 
     protected TimedTaskManager timedTaskManager;
     private volatile String _timetoken = "0";
+    private volatile String _region = null;
     private volatile String _saved_timetoken = "0";
 
     protected static String PRESENCE_SUFFIX = "-pnpres";
@@ -35,11 +36,23 @@ abstract class PubnubCoreAsync extends PubnubCore implements PubnubAsyncInterfac
 
     private String connectionid;
 
+    private boolean V2 = false;
+
+    public void setV2(boolean v2) {
+        this.V2 = v2;
+    }
+
+    public boolean isV2() {
+        return this.V2;
+    }
+
+
     public void shutdown() {
         nonSubscribeManager.stop();
         subscribeManager.stop();
         timedTaskManager.stop();
     }
+
 
     public boolean isResumeOnReconnect() {
         return resumeOnReconnect;
@@ -1199,10 +1212,20 @@ abstract class PubnubCoreAsync extends PubnubCore implements PubnubAsyncInterfac
             channelString = PubnubUtil.urlEncode(channelString);
         }
 
-        String[] urlComponents = { getPubnubUrl(), "subscribe", this.SUBSCRIBE_KEY, channelString, "0", _timetoken };
+        String[] urlComponents = { getPubnubUrl(),((this.V2)?"v2/":"") +  "subscribe",
+                this.SUBSCRIBE_KEY, channelString, "0" + ((this.V2)?"":"/"+_timetoken) };
+
+
 
         Hashtable params = PubnubUtil.hashtableClone(this.params);
         params.put("uuid", UUID);
+
+        if (this.V2) {
+            params.put("tt", _timetoken);
+            if (this._region != null) params.put("tr", this._region);
+        } else {
+
+        }
 
         if (groupsArray.length > 0) {
             params.put("channel-group", groupString);
@@ -1222,12 +1245,162 @@ abstract class PubnubCoreAsync extends PubnubCore implements PubnubAsyncInterfac
         
         if (channelSubscriptions.getFilter() != null && 
                 channelSubscriptions.getFilter().length() > 0) {
-            params.put("filter", channelSubscriptions.getFilter());
+            params.put("filter-expr", channelSubscriptions.getFilter());
         }
 
         HttpRequest hreq = new HttpRequest(urlComponents, params, new ResponseHandler() {
 
+            void changeKey(JSONObject o, String ok, String nk) throws JSONException {
+                if (!o.isNull(ok)) {
+                    Object t = o.get(ok) ;
+                    o.put(nk, t);
+                    o.remove(ok);
+                }
+            }
+
+            JSONObject expandV2Keys(JSONObject m) throws  JSONException {
+                if (!m.isNull("o")){
+                    changeKey(m.getJSONObject("o"), "t", "timetoken");
+                    changeKey(m.getJSONObject("o"), "r", "region_code");
+                }
+                if (!m.isNull("p")){
+                    changeKey(m.getJSONObject("p"), "t", "timetoken");
+                    changeKey(m.getJSONObject("p"), "r", "region_code");
+                }
+                changeKey(m, "a", "shard");
+                changeKey(m, "b", "subscription_match");
+                changeKey(m,"c","channel");
+                changeKey(m,"d","payload");
+                changeKey(m,"ear","eat_after_reading");
+                changeKey(m,"f","flags");
+                changeKey(m,"i","issuing_client_id");
+                changeKey(m,"k","subscribe_key");
+                changeKey(m,"s","sequence_number");
+                changeKey(m,"o","origination_timetoken");
+                changeKey(m,"p","publish_timetoken");
+                changeKey(m,"r","replication_map");
+                changeKey(m,"u","user_metadata");
+                changeKey(m,"w","waypoint_list");
+                return m;
+            }
+
+            void v2Handler(JSONObject jso, HttpRequest hreq) throws  JSONException {
+                JSONArray messages = jso.getJSONArray("m");
+                for (int i = 0; i < messages.length(); i++) {
+                    JSONObject messageObj = messages.getJSONObject(i);
+                    String channel = messageObj.getString("c");
+                    String sub_channel = (messageObj.isNull("b"))?null:messageObj.getString("b");
+
+                    String message = messageObj.getString("d");
+
+                    SubscriptionItem chobj = null;
+                    if (channelSubscriptions != null &&
+                            sub_channel != null)
+                        chobj = channelSubscriptions.getItem(sub_channel);
+
+                    if (chobj == null &&
+                            channelGroupSubscriptions != null &&
+                             sub_channel != null)
+                        chobj = channelGroupSubscriptions.getItem(sub_channel);
+
+                    if (chobj == null &&
+                            channelSubscriptions != null)
+                        chobj = channelSubscriptions.getItem(channel);
+
+                    if (channel.indexOf("-pnpres") > 0) {
+                        chobj = channelSubscriptions.getItem(channel);
+                        channel = PubnubUtil.splitString(channel, "-pnpres")[0];
+
+                    }
+
+                    if (chobj != null) {
+                        Callback callback = chobj.callback;
+                        invokeSubscribeCallbackV2(chobj.name, chobj.callback,
+                                message, expandV2Keys(messageObj), _timetoken, hreq);
+                    }
+
+                }
+            }
+            void v1Handler(JSONArray jsa, HttpRequest hreq) throws  JSONException {
+
+                log.debug("v1handler");
+                JSONArray messages = new JSONArray(jsa.get(0).toString());
+
+                if (jsa.length() == 4) {
+                        /*
+                         * Response has multiple channels or/and groups
+                         */
+                    String[] _groups = PubnubUtil.splitString(jsa.getString(2), ",");
+                    String[] _channels = PubnubUtil.splitString(jsa.getString(3), ",");
+
+                    for (int i = 0; i < _channels.length; i++) {
+                        handleFourElementsSubscribeResponse(_groups[i], _channels[i], messages.get(i), _timetoken,
+                                hreq);
+                    }
+                } else if (jsa.length() == 3) {
+                        /*
+                         * Response has multiple channels
+                         */
+
+                    String[] _channels = PubnubUtil.splitString(jsa.getString(2), ",");
+
+                    for (int i = 0; i < _channels.length; i++) {
+                        SubscriptionItem _channel = channelSubscriptions.getItem(_channels[i]);
+                        Object message = messages.get(i);
+
+                        if (_channel != null) {
+                            invokeSubscribeCallback(_channel.name, _channel.callback, message, _timetoken, hreq);
+                        }
+                    }
+                } else if (jsa.length() < 3) {
+                        /*
+                         * Response for single channel Callback on single
+                         * channel
+                         */
+                    SubscriptionItem _channel = channelSubscriptions.getFirstItem();
+
+                    if (_channel != null) {
+                        for (int i = 0; i < messages.length(); i++) {
+                            Object message = messages.get(i);
+                            invokeSubscribeCallback(_channel.name, _channel.callback, message, _timetoken, hreq);
+                        }
+                    }
+
+                }
+
+            }
             public void handleResponse(HttpRequest hreq, String response) {
+
+                JSONArray jsa = null;
+
+                JSONObject jso = null;
+
+                String _in_response_timetoken = "";
+                boolean handleV2 = false;
+
+                try {
+                    jsa = new JSONArray(response);
+                    _in_response_timetoken = jsa.get(1).toString();
+
+                } catch (JSONException e) {
+                    try {
+                        // handle V2 response
+                        handleV2 = true;
+                        jso = new JSONObject(response);
+
+                        _in_response_timetoken = jso.getJSONObject("t").getString("t");
+                        _region = jso.getJSONObject("t").getString("r");
+
+                    } catch (JSONException e1) {
+                        if (hreq.isSubzero()) {
+                            log.verbose("Response of subscribe 0 request. Need to do dAr process again");
+                            _subscribe_base(false, hreq.isDar(), hreq.getWorker());
+                        } else
+                            _subscribe_base(false);
+                        return;
+                    }
+                }
+
 
                 /*
                  * Check if response has channel names. A JSON response with
@@ -1237,83 +1410,38 @@ abstract class PubnubCoreAsync extends PubnubCore implements PubnubAsyncInterfac
                  * corresponding response message.
                  */
 
-                JSONArray jsa;
-                try {
-                    jsa = new JSONArray(response);
 
-                    _timetoken = (!_saved_timetoken.equals("0") && isResumeOnReconnect()) ? _saved_timetoken
-                            : jsa.get(1).toString();
-                    log.verbose("Resume On Reconnect is " + isResumeOnReconnect());
-                    log.verbose("Saved Timetoken : " + _saved_timetoken);
-                    log.verbose("In Response Timetoken : " + jsa.get(1).toString());
-                    log.verbose("Timetoken value set to " + _timetoken);
-                    _saved_timetoken = "0";
-                    log.verbose("Saved Timetoken reset to 0");
+                _timetoken = (!_saved_timetoken.equals("0") && isResumeOnReconnect()) ? _saved_timetoken
+                        : _in_response_timetoken;
+                log.verbose("Resume On Reconnect is " + isResumeOnReconnect());
+                log.verbose("Saved Timetoken : " + _saved_timetoken);
+                log.verbose("In Response Timetoken : " + _in_response_timetoken);
+                log.verbose("Timetoken value set to " + _timetoken);
+                _saved_timetoken = "0";
+                log.verbose("Saved Timetoken reset to 0");
 
-                    if (!hreq.isDar()) {
-                        channelSubscriptions.invokeConnectCallbackOnItems(_timetoken);
-                        channelGroupSubscriptions.invokeConnectCallbackOnItems(_timetoken);
-                    } else {
-                        channelSubscriptions.invokeReconnectCallbackOnItems(_timetoken);
-                        channelGroupSubscriptions.invokeReconnectCallbackOnItems(_timetoken);
-                    }
-
-                    JSONArray messages = new JSONArray(jsa.get(0).toString());
-
-                    if (jsa.length() == 4) {
-                        /*
-                         * Response has multiple channels or/and groups
-                         */
-                        String[] _groups = PubnubUtil.splitString(jsa.getString(2), ",");
-                        String[] _channels = PubnubUtil.splitString(jsa.getString(3), ",");
-
-                        for (int i = 0; i < _channels.length; i++) {
-                            handleFourElementsSubscribeResponse(_groups[i], _channels[i], messages.get(i), _timetoken,
-                                    hreq);
-                        }
-                    } else if (jsa.length() == 3) {
-                        /*
-                         * Response has multiple channels
-                         */
-
-                        String[] _channels = PubnubUtil.splitString(jsa.getString(2), ",");
-
-                        for (int i = 0; i < _channels.length; i++) {
-                            SubscriptionItem _channel = channelSubscriptions.getItem(_channels[i]);
-                            Object message = messages.get(i);
-
-                            if (_channel != null) {
-                                invokeSubscribeCallback(_channel.name, _channel.callback, message, _timetoken, hreq);
-                            }
-                        }
-                    } else if (jsa.length() < 3) {
-                        /*
-                         * Response for single channel Callback on single
-                         * channel
-                         */
-                        SubscriptionItem _channel = channelSubscriptions.getFirstItem();
-
-                        if (_channel != null) {
-                            for (int i = 0; i < messages.length(); i++) {
-                                Object message = messages.get(i);
-                                invokeSubscribeCallback(_channel.name, _channel.callback, message, _timetoken, hreq);
-                            }
-                        }
-
-                    }
-                    if (hreq.isSubzero()) {
-                        log.verbose("Response of subscribe 0 request. Need to do dAr process again");
-                        _subscribe_base(false, hreq.isDar(), hreq.getWorker());
-                    } else
-                        _subscribe_base(false);
-                } catch (JSONException e) {
-                    if (hreq.isSubzero()) {
-                        log.verbose("Response of subscribe 0 request. Need to do dAr process again");
-                        _subscribe_base(false, hreq.isDar(), hreq.getWorker());
-                    } else
-                        _subscribe_base(false, hreq.getWorker());
+                if (!hreq.isDar()) {
+                    channelSubscriptions.invokeConnectCallbackOnItems(_timetoken);
+                    channelGroupSubscriptions.invokeConnectCallbackOnItems(_timetoken);
+                } else {
+                    channelSubscriptions.invokeReconnectCallbackOnItems(_timetoken);
+                    channelGroupSubscriptions.invokeReconnectCallbackOnItems(_timetoken);
                 }
+                try {
 
+                    if (handleV2)
+                        v2Handler(jso, hreq);
+                    else
+                        v1Handler(jsa, hreq);
+
+                } catch (JSONException e) {
+
+                }
+                if (hreq.isSubzero()) {
+                    log.verbose("Response of subscribe 0 request. Need to do dAr process again");
+                    _subscribe_base(false, hreq.isDar(), hreq.getWorker());
+                } else
+                    _subscribe_base(false);
             }
 
             public void handleBackFromDar(HttpRequest hreq) {
@@ -1371,15 +1499,18 @@ abstract class PubnubCoreAsync extends PubnubCore implements PubnubAsyncInterfac
                 invokeSubscribeCallback(fourthString, fourthChannel.callback, message, timetoken, hreq);
             } else if (thirdChannelGroup != null && !fourthString.endsWith(PRESENCE_SUFFIX)) {
                 invokeSubscribeCallback(fourthString, thirdChannelGroup.callback, message, timetoken, hreq);
-            } else if (thirdChannel != null && thirdString.endsWith(WILDCARD_SUFFIX)) {
+            } else if (thirdChannel != null && thirdString.endsWith(WILDCARD_SUFFIX) &&
+                    !fourthString.endsWith(PRESENCE_SUFFIX) /* !!! get reviewed by Alex */) {
                 invokeSubscribeCallback(fourthString, thirdChannel.callback, message, timetoken, hreq);
             } else {
-                System.out.println("ERROR: Unable to handle wildcard response: " + message);
+                // !!! This should be handled by error Callback. Or use logging mechanism
+                //System.out.println("ERROR: Unable to handle wildcard response: " + message);
             }
         } else if (!thirdString.equals(fourthString) && thirdChannelGroup != null) {
             invokeSubscribeCallback(fourthString, thirdChannelGroup.callback, message, timetoken, hreq);
         } else {
-            System.out.println("ERROR: Unable to handle response: " + message);
+            // !!!! This should be handled in error callback. Or use logging mechanism.
+            //System.out.println("ERROR: Unable to handle response: " + message);
         }
     }
 
@@ -1408,6 +1539,34 @@ abstract class PubnubCoreAsync extends PubnubCore implements PubnubAsyncInterfac
         } else {
             if (!isWorkerDead(hreq))
                 callback.successWrapperCallback(channel, PubnubUtil.parseJSON(message), timetoken);
+        }
+    }
+
+    private void invokeSubscribeCallbackV2(String channel, Callback callback, Object message, JSONObject envelope,
+                                         String timetoken, HttpRequest hreq) throws JSONException {
+        if (CIPHER_KEY.length() > 0 && !channel.endsWith(PRESENCE_SUFFIX)) {
+            PubnubCrypto pc = new PubnubCrypto(CIPHER_KEY, IV);
+            try {
+                message = pc.decrypt(message.toString());
+                if (!isWorkerDead(hreq))
+                    callback.successWrapperCallbackV2(channel,
+                            PubnubUtil.parseJSON(PubnubUtil.stringToJSON(message.toString())), envelope, timetoken);
+            } catch (IllegalStateException e) {
+                if (!isWorkerDead(hreq))
+                    callback.errorCallback(channel,
+                            PubnubError.getErrorObject(PubnubError.PNERROBJ_DECRYPTION_ERROR, 12, message.toString()));
+            } catch (PubnubException e) {
+                if (!isWorkerDead(hreq))
+                    callback.errorCallback(channel, getPubnubError(e, PubnubError.PNERROBJ_DECRYPTION_ERROR, 16,
+                            message.toString() + " : " + e.toString()));
+            } catch (Exception e) {
+                if (!isWorkerDead(hreq))
+                    callback.errorCallback(channel, PubnubError.getErrorObject(PubnubError.PNERROBJ_DECRYPTION_ERROR,
+                            15, message.toString() + " : " + e.toString()));
+            }
+        } else {
+            if (!isWorkerDead(hreq))
+                callback.successWrapperCallbackV2(channel, PubnubUtil.parseJSON(message), envelope, timetoken);
         }
     }
 

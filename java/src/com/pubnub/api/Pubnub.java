@@ -123,4 +123,5 @@ public class Pubnub extends PubnubCoreShared  {
     protected String getUserAgent() {
         return "Java/" + VERSION;
     }
+
 }

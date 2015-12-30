@@ -156,8 +156,8 @@ abstract class RequestManager {
         synchronized (_workers) {
             for (int i = 0; i < maxCalls; ++i) {
                 Worker w = getWorker();
-                Thread thread = new Thread(w, name + "-" + ++count);
-                thread.setDaemon(daemonThreads);
+                PnThread thread = new PnThread(w, name + "-" + ++count);
+                thread.setPnDaemon(daemonThreads);
                 w.setThread(thread);
                 _workers[i] = w;
                 log.verbose("Starting new worker " + _workers[i].getThread().getName());
@@ -199,15 +199,15 @@ abstract class RequestManager {
                 log.verbose("Sending DIE to " + _workers[i].getThread().getName());
                 _workers[i].die();
 
-                Thread resetter = new Thread(new ConnectionResetter(_workers[i]));
-                resetter.setDaemon(daemonThreads);
+                PnThread resetter = new PnThread(new ConnectionResetter(_workers[i]));
+                resetter.setPnDaemon(daemonThreads);
                 resetter.start();
 
                 _workers[i].interruptWorker();
                 Worker w = getWorker();
 
-                Thread thread = new Thread(w, name + "-" + ++count);
-                thread.setDaemon(daemonThreads);
+                PnThread thread = new PnThread(w, name + "-" + ++count);
+                thread.setPnDaemon(daemonThreads);
                 w.setThread(thread);
 
                 _workers[i] = w;

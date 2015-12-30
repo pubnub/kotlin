@@ -1,5 +1,7 @@
 package com.pubnub.api;
 
+import org.json.JSONObject;
+
 /**
  * Abstract class to be subclassed by objects being passed as callbacks to
  * Pubnub APIs Default implementation for all methods is blank
@@ -36,9 +38,26 @@ public abstract class Callback {
 
     }
 
+    /**
+     * This callback will be invoked when a message is received on the channel
+     *
+     * @param message
+     *            Message
+     */
+    public void successCallbackV2(String channel, Object message, JSONObject envelope) {
+
+    }
+
+
     void successWrapperCallback(String channel, Object message, String timetoken) {
         successCallback(channel, message);
         successCallback(channel, message, timetoken);
+    }
+
+    void successWrapperCallbackV2(String channel, Object message, JSONObject envelope, String timetoken) {
+        successCallback(channel, message);
+        successCallback(channel, message, timetoken);
+        successCallbackV2(channel, message, envelope);
     }
 
     /**

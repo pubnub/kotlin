@@ -1077,5 +1077,8 @@ interface PubnubAsyncInterface {
     
     public void setFilter(String filter);
     
-    public String getFilter(String filter);
+    public String getFilter();
+
+    public void setV2(boolean v2);
+    public boolean isV2();
 }

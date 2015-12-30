@@ -161,9 +161,9 @@
           <reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
           <junitxml>.</junitxml>
           <filereports>WDF TestSuite.txt</filereports>
-          <tagsToInclude>com.pubnub.api.tests.ErrorTest</tagsToInclude>
+          <!--<tagsToInclude>com.pubnub.api.tests.ErrorTest</tagsToInclude>-->
           <systemProperties>
-            <org.slf4j.simpleLogger.defaultLogLevel>debug</org.slf4j.simpleLogger.defaultLogLevel>
+            <org.slf4j.simpleLogger.defaultLogLevel></org.slf4j.simpleLogger.defaultLogLevel>
           </systemProperties>
         </configuration>
         <executions>
@@ -201,6 +201,42 @@
             </goals>
             <configuration>
               <config>publish_key=ds,subscribe_key=ds,secret_key=ds,cipher_key=enigma,ssl=true</config>
+            </configuration>
+          </execution>
+          <execution>
+            <id>SSL=FALSE,UNICODE=TRUE</id>
+            <goals>
+              <goal>test</goal>
+            </goals>
+            <configuration>
+              <config>publish_key=ds,subscribe_key=ds,secret_key=ds,ssl=false,unicode=true</config>
+            </configuration>
+          </execution>
+          <execution>
+            <id>SSL=TRUE,UNICODE=TRUE</id>
+            <goals>
+              <goal>test</goal>
+            </goals>
+            <configuration>
+              <config>publish_key=ds,subscribe_key=ds,secret_key=ds,ssl=true,unicode=true</config>
+            </configuration>
+          </execution>
+          <execution>
+            <id>ENCRYPTION=TRUE,SSL=FALSE,UNICODE=TRUE</id>
+            <goals>
+              <goal>test</goal>
+            </goals>
+            <configuration>
+              <config>publish_key=ds,subscribe_key=ds,secret_key=ds,cipher_key=enigma,ssl=false,unicode=true</config>
+            </configuration>
+          </execution>
+          <execution>
+            <id>ENCRYPTION=TRUE,SSL=TRUE,UNICODE=TRUE</id>
+            <goals>
+              <goal>test</goal>
+            </goals>
+            <configuration>
+              <config>publish_key=ds,subscribe_key=ds,secret_key=ds,cipher_key=enigma,ssl=true,unicode=true</config>
             </configuration>
           </execution>
         </executions>

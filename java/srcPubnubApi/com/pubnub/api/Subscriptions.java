@@ -31,8 +31,8 @@ class Subscriptions {
               callback.connectCallback(name, jsa);
           }
         };
-        Thread thread = new Thread(r);
-        thread.setDaemon(Pubnub.daemonThreads);
+        PnThread thread = new PnThread(r);
+        thread.setPnDaemon(Pubnub.daemonThreads);
         thread.start();
     }
 
@@ -42,8 +42,8 @@ class Subscriptions {
               callback.disconnectCallback(name, jsa);
           }
         };
-        Thread thread = new Thread(r);
-        thread.setDaemon(Pubnub.daemonThreads);
+        PnThread thread = new PnThread(r);
+        thread.setPnDaemon(Pubnub.daemonThreads);
         thread.start();
     }
     
@@ -53,8 +53,8 @@ class Subscriptions {
               callback.reconnectCallback(name, jsa);
           }
         };
-        Thread thread = new Thread(r);
-        thread.setDaemon(Pubnub.daemonThreads);
+        PnThread thread = new PnThread(r);
+        thread.setPnDaemon(Pubnub.daemonThreads);
         thread.start();
     }
     
