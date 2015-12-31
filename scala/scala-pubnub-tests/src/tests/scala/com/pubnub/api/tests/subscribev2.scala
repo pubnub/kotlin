@@ -2989,21 +2989,21 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  with Befor
                                 }
 
                                 override def errorCallback(channel1: String, error: PubnubError) {
-                                  assertTrue(false)
+                                  assertTrue(error.toString(), false)
                                 }
 
                               })
                             }
 
                             override def errorCallback(channel1: String, error: PubnubError) {
-                              assertTrue(false)
+                              assertTrue(error.toString(), false)
                             }
 
                           })
                         }
 
                         override def errorCallback(channel1: String, error: PubnubError) {
-                          assertTrue(false)
+                          assertTrue(error.toString(), false)
                         }
                       })
 
@@ -3035,8 +3035,7 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  with Befor
         }
 
         override def errorCallback(channel: String, error: PubnubError) {
-          assert(false)
-          testObj.test(false)
+          assertTrue(error.toString(), false)
         }
       })
 
@@ -3107,21 +3106,21 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  with Befor
                                 }
 
                                 override def errorCallback(channel1: String, error: PubnubError) {
-                                  assertTrue(false)
+                                  assertTrue(error.toString(), false)
                                 }
 
                               })
                             }
 
                             override def errorCallback(channel1: String, error: PubnubError) {
-                              assertTrue(false)
+                              assertTrue(error.toString(), false)
                             }
 
                           })
                         }
 
                         override def errorCallback(channel1: String, error: PubnubError) {
-                          assertTrue(false)
+                          assertTrue(error.toString(), false)
                         }
                       })
 
@@ -3144,8 +3143,7 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  with Befor
         }
 
         override def errorCallback(channel: String, error: PubnubError) {
-          assert(false)
-          testObj.test(false)
+          assertTrue(error.toString(), false)
         }
       })
 
@@ -3217,21 +3215,21 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  with Befor
                                 }
 
                                 override def errorCallback(channel1: String, error: PubnubError) {
-                                  assertTrue(false)
+                                  assertTrue(error.toString(), false)
                                 }
 
                               })
                             }
 
                             override def errorCallback(channel1: String, error: PubnubError) {
-                              assertTrue(false)
+                              assertTrue(error.toString(), false)
                             }
 
                           })
                         }
 
                         override def errorCallback(channel1: String, error: PubnubError) {
-                          assertTrue(false)
+                          assertTrue(error.toString(), false)
                         }
                       })
 
@@ -3254,8 +3252,7 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  with Befor
         }
 
         override def errorCallback(channel: String, error: PubnubError) {
-          assert(false)
-          testObj.test(false)
+          assertTrue(error.toString(), false)
         }
       })
 
@@ -3327,21 +3324,21 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  with Befor
                                 }
 
                                 override def errorCallback(channel1: String, error: PubnubError) {
-                                  assertTrue(false)
+                                  assertTrue(error.toString(), false)
                                 }
 
                               })
                             }
 
                             override def errorCallback(channel1: String, error: PubnubError) {
-                              assertTrue(false)
+                              assertTrue(error.toString(), false)
                             }
 
                           })
                         }
 
                         override def errorCallback(channel1: String, error: PubnubError) {
-                          assertTrue(false)
+                          assertTrue(error.toString(), false)
                         }
                       })
 
@@ -3364,8 +3361,7 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  with Befor
         }
 
         override def errorCallback(channel: String, error: PubnubError) {
-          assert(false)
-          testObj.test(false)
+          assertTrue(error.toString(), false)
         }
       })
 
@@ -3437,21 +3433,21 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  with Befor
                                 }
 
                                 override def errorCallback(channel1: String, error: PubnubError) {
-                                  assertTrue(false)
+                                  assertTrue(error.toString(), false)
                                 }
 
                               })
                             }
 
                             override def errorCallback(channel1: String, error: PubnubError) {
-                              assertTrue(false)
+                              assertTrue(error.toString(), false)
                             }
 
                           })
                         }
 
                         override def errorCallback(channel1: String, error: PubnubError) {
-                          assertTrue(false)
+                          assertTrue(error.toString(), false)
                         }
                       })
 
@@ -3474,7 +3470,7 @@ class SubscribeV2Spec extends fixture.FunSpec with AwaitilitySupport  with Befor
         }
 
         override def errorCallback(channel: String, error: PubnubError) {
-          assert(false)
+          assertTrue(error.toString(), false)
         }
       })
 
