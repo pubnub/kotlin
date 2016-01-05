@@ -1,6 +1,7 @@
 package com.pubnub.api;
 
 import com.codename1.io.Util;
+import com.codename1.util.StringUtil;
 import org.json.*;
 
 /**
@@ -58,6 +59,10 @@ public class PubnubUtil extends PubnubUtilCore {
      */
     public static String urlEncode(String sUrl) {
         return Util.encodeUrl(sUrl);
+    }
+
+    public static String stringReplaceAll(String s, String a, String b) {
+		return StringUtil.replaceAll(s, a, b);
     }
 
     /**

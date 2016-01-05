@@ -18,6 +18,9 @@ import org.json.JSONObject;
  */
 public class PubnubUtil extends PubnubUtilCore {
 
+    public static String stringReplaceAll(String s, String a, String b) {
+		return s.replaceAll(a, b);
+    }
     /**
      * Returns encoded String
      * 

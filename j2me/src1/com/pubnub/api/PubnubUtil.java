@@ -8,6 +8,10 @@ import org.json.me.*;
 
 public class PubnubUtil extends PubnubUtilCore {
 
+    public static String stringReplaceAll(String s, String a, String b) {
+		return s.replaceAll(a, b);
+    }
+
     private static String replace(String str, String pattern, String replace) {
         int s = 0;
         int e = 0;

@@ -219,7 +219,7 @@ abstract class PubnubCore implements PubnubInterface {
             }
         } else {
             if (message instanceof String) {
-                msgStr = msgStr.replaceAll("\"", "\\\\\"");
+                msgStr = PubnubUtil.stringReplaceAll(msgStr, "\"", "\\\\\"");
                 msgStr = "\"" + msgStr + "\"";
             }
         }
