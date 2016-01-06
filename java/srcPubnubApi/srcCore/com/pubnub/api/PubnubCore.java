@@ -1124,6 +1124,7 @@ abstract class PubnubCore implements PubnubInterface {
             Callback callback, boolean sync) {
         final Callback cb = getWrappedCallback(callback);
         Hashtable parameters = PubnubUtil.hashtableClone(params);
+        parameters.remove("auth");
 
         String r = (read) ? "1" : "0";
         String w = (write) ? "1" : "0";
