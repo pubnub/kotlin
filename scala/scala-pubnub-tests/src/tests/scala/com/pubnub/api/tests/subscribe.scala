@@ -35,6 +35,7 @@ import scala.util.Random
 class PubnubTestConfig {
   var pubnub: Pubnub = null
   var unicode: Boolean = false
+  var filter:  String = null
   var metadata: JSONObject = null
 }
 
