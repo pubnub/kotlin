@@ -161,7 +161,7 @@
           <reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
           <junitxml>.</junitxml>
           <filereports>WDF TestSuite.txt</filereports>
-          <!--<tagsToInclude>com.pubnub.api.tests.ErrorTest</tagsToInclude>-->
+          <!--<tagsToInclude>com.pubnub.api.tests.NewTest</tagsToInclude>-->
           <systemProperties>
             <org.slf4j.simpleLogger.defaultLogLevel></org.slf4j.simpleLogger.defaultLogLevel>
           </systemProperties>
@@ -176,6 +176,7 @@
               <config>publish_key=ds,subscribe_key=ds,secret_key=ds,ssl=false</config>
             </configuration>
           </execution>
+
           <execution>
             <id>SSL=TRUE</id>
             <goals>
