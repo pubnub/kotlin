@@ -21,7 +21,6 @@ abstract class PubnubCoreAsync extends PubnubCore implements PubnubAsyncInterfac
 
     protected TimedTaskManager timedTaskManager;
     private volatile String _timetoken = "0";
-    private volatile String _region = null;
     private volatile String _saved_timetoken = "0";
 
     protected static String PRESENCE_SUFFIX = "-pnpres";
@@ -34,17 +33,6 @@ abstract class PubnubCoreAsync extends PubnubCore implements PubnubAsyncInterfac
     private int HEARTBEAT = 320;
     private volatile int PRESENCE_HB_INTERVAL = 0;
 
-    private String connectionid;
-
-    private boolean V2 = false;
-
-    public void setV2(boolean v2) {
-        this.V2 = v2;
-    }
-
-    public boolean isV2() {
-        return this.V2;
-    }
 
     public void shutdown() {
         nonSubscribeManager.stop();
@@ -260,10 +248,6 @@ abstract class PubnubCoreAsync extends PubnubCore implements PubnubAsyncInterfac
 
     Random random = new Random();
 
-    private String getNewConnectionId() {
-        return "conn" + random.nextInt();
-    }
-
     private void initAsync() {
 
         if (channelSubscriptions == null)
@@ -290,8 +274,6 @@ abstract class PubnubCoreAsync extends PubnubCore implements PubnubAsyncInterfac
         nonSubscribeManager.setHeader("V", VERSION);
         nonSubscribeManager.setHeader("Accept-Encoding", "gzip");
         nonSubscribeManager.setHeader("User-Agent", getUserAgent());
-
-        this.connectionid = getNewConnectionId();
 
     }
 
@@ -393,103 +375,6 @@ abstract class PubnubCoreAsync extends PubnubCore implements PubnubAsyncInterfac
         Hashtable args = new Hashtable();
         args.put("channel", channel);
         args.put("message", message);
-        args.put("callback", callback);
-        _publish(args, false);
-    }
-
-    public void publish(String channel, JSONObject message, boolean storeInHistory, JSONObject metadata,
-            Callback callback) {
-        Hashtable args = new Hashtable();
-        args.put("channel", channel);
-        args.put("message", message);
-        args.put("callback", callback);
-        args.put("meta", metadata);
-        args.put("storeInHistory", (storeInHistory) ? "" : "0");
-        _publish(args, false);
-    }
-
-    public void publish(String channel, JSONArray message, boolean storeInHistory, JSONObject metadata,
-            Callback callback) {
-        Hashtable args = new Hashtable();
-        args.put("channel", channel);
-        args.put("message", message);
-        args.put("callback", callback);
-        args.put("meta", metadata);
-        args.put("storeInHistory", (storeInHistory) ? "" : "0");
-        _publish(args, false);
-    }
-
-    public void publish(String channel, String message, boolean storeInHistory, JSONObject metadata, Callback callback) {
-        Hashtable args = new Hashtable();
-        args.put("channel", channel);
-        args.put("message", message);
-        args.put("callback", callback);
-        args.put("meta", metadata);
-        args.put("storeInHistory", (storeInHistory) ? "" : "0");
-        _publish(args, false);
-    }
-
-    public void publish(String channel, Integer message, boolean storeInHistory, JSONObject metadata, Callback callback) {
-        Hashtable args = new Hashtable();
-        args.put("channel", channel);
-        args.put("message", message);
-        args.put("callback", callback);
-        args.put("meta", metadata);
-        args.put("storeInHistory", (storeInHistory) ? "" : "0");
-        _publish(args, false);
-    }
-
-    public void publish(String channel, Double message, boolean storeInHistory, JSONObject metadata, Callback callback) {
-        Hashtable args = new Hashtable();
-        args.put("channel", channel);
-        args.put("message", message);
-        args.put("callback", callback);
-        args.put("meta", metadata);
-        args.put("storeInHistory", (storeInHistory) ? "" : "0");
-        _publish(args, false);
-    }
-
-    public void publish(String channel, JSONObject message, JSONObject metadata, Callback callback) {
-        Hashtable args = new Hashtable();
-        args.put("channel", channel);
-        args.put("message", message);
-        args.put("meta", metadata);
-        args.put("callback", callback);
-        _publish(args, false);
-    }
-
-    public void publish(String channel, JSONArray message, JSONObject metadata, Callback callback) {
-        Hashtable args = new Hashtable();
-        args.put("channel", channel);
-        args.put("message", message);
-        args.put("meta", metadata);
-        args.put("callback", callback);
-        _publish(args, false);
-    }
-
-    public void publish(String channel, String message, JSONObject metadata, Callback callback) {
-        Hashtable args = new Hashtable();
-        args.put("channel", channel);
-        args.put("message", message);
-        args.put("meta", metadata);
-        args.put("callback", callback);
-        _publish(args, false);
-    }
-
-    public void publish(String channel, Integer message, JSONObject metadata, Callback callback) {
-        Hashtable args = new Hashtable();
-        args.put("channel", channel);
-        args.put("message", message);
-        args.put("meta", metadata);
-        args.put("callback", callback);
-        _publish(args, false);
-    }
-
-    public void publish(String channel, Double message, JSONObject metadata, Callback callback) {
-        Hashtable args = new Hashtable();
-        args.put("channel", channel);
-        args.put("message", message);
-        args.put("meta", metadata);
         args.put("callback", callback);
         _publish(args, false);
     }
@@ -721,9 +606,6 @@ abstract class PubnubCoreAsync extends PubnubCore implements PubnubAsyncInterfac
 
         if (!PubnubUtil.isEmptyString(channelGroup))
             params.put("channel-group", channelGroup);
-
-        params.put("connectionid", this.connectionid);
-        this.connectionid = getNewConnectionId();
 
         HttpRequest hreq = new HttpRequest(urlArgs, params, new ResponseHandler() {
             public void handleResponse(HttpRequest hreq, String response) {
@@ -1095,11 +977,7 @@ abstract class PubnubCoreAsync extends PubnubCore implements PubnubAsyncInterfac
 
         String[] channelList = (String[]) args.get("channels");
         String[] groupList = (String[]) args.get("groups");
-        String filter = (String) args.get("filter");
 
-        if (filter != null && filter.length() > 0) {
-            channelSubscriptions.setFilter(filter);
-        }
 
         if (channelList == null) {
             channelList = new String[0];
@@ -1209,19 +1087,11 @@ abstract class PubnubCoreAsync extends PubnubCore implements PubnubAsyncInterfac
             channelString = PubnubUtil.urlEncode(channelString);
         }
 
-        String[] urlComponents = { getPubnubUrl(), ((this.V2) ? "v2/" : "") + "subscribe", this.SUBSCRIBE_KEY,
-                channelString, "0" + ((this.V2) ? "" : "/" + _timetoken) };
+        String[] urlComponents = { getPubnubUrl(), "subscribe", this.SUBSCRIBE_KEY,
+                channelString, "0" + "/" + _timetoken};
 
         Hashtable params = PubnubUtil.hashtableClone(this.params);
         params.put("uuid", UUID);
-
-        if (this.V2) {
-            params.put("tt", _timetoken);
-            if (this._region != null)
-                params.put("tr", this._region);
-        } else {
-
-        }
 
         if (groupsArray.length > 0) {
             params.put("channel-group", groupString);
@@ -1235,87 +1105,11 @@ abstract class PubnubCoreAsync extends PubnubCore implements PubnubAsyncInterfac
             params.put("heartbeat", String.valueOf(HEARTBEAT));
         log.verbose("Subscribing with timetoken : " + _timetoken);
 
-        // add connection id
-
-        params.put("connectionid", this.connectionid);
-
-        if (channelSubscriptions.getFilter() != null && channelSubscriptions.getFilter().length() > 0) {
-            params.put("filter-expr", channelSubscriptions.getFilter());
-        }
 
         HttpRequest hreq = new HttpRequest(urlComponents, params, new ResponseHandler() {
 
-            void changeKey(JSONObject o, String ok, String nk) throws JSONException {
-                if (!o.isNull(ok)) {
-                    Object t = o.get(ok);
-                    o.put(nk, t);
-                    o.remove(ok);
-                }
-            }
-
-            JSONObject expandV2Keys(JSONObject m) throws JSONException {
-                if (!m.isNull("o")) {
-                    changeKey(m.getJSONObject("o"), "t", "timetoken");
-                    changeKey(m.getJSONObject("o"), "r", "region_code");
-                }
-                if (!m.isNull("p")) {
-                    changeKey(m.getJSONObject("p"), "t", "timetoken");
-                    changeKey(m.getJSONObject("p"), "r", "region_code");
-                }
-                changeKey(m, "a", "shard");
-                changeKey(m, "b", "subscription_match");
-                changeKey(m, "c", "channel");
-                changeKey(m, "d", "payload");
-                changeKey(m, "ear", "eat_after_reading");
-                changeKey(m, "f", "flags");
-                changeKey(m, "i", "issuing_client_id");
-                changeKey(m, "k", "subscribe_key");
-                changeKey(m, "s", "sequence_number");
-                changeKey(m, "o", "origination_timetoken");
-                changeKey(m, "p", "publish_timetoken");
-                changeKey(m, "r", "replication_map");
-                changeKey(m, "u", "user_metadata");
-                changeKey(m, "w", "waypoint_list");
-                return m;
-            }
-
-            void v2Handler(JSONObject jso, HttpRequest hreq) throws JSONException {
-                JSONArray messages = jso.getJSONArray("m");
-                for (int i = 0; i < messages.length(); i++) {
-                    JSONObject messageObj = messages.getJSONObject(i);
-                    String channel = messageObj.getString("c");
-                    String sub_channel = (messageObj.isNull("b")) ? null : messageObj.getString("b");
-
-                    String message = messageObj.getString("d");
-
-                    SubscriptionItem chobj = null;
-                    if (channelSubscriptions != null && sub_channel != null)
-                        chobj = channelSubscriptions.getItem(sub_channel);
-
-                    if (chobj == null && channelGroupSubscriptions != null && sub_channel != null)
-                        chobj = channelGroupSubscriptions.getItem(sub_channel);
-
-                    if (chobj == null && channelSubscriptions != null)
-                        chobj = channelSubscriptions.getItem(channel);
-
-                    if (channel.indexOf("-pnpres") > 0) {
-                        chobj = channelSubscriptions.getItem(channel);
-                        channel = PubnubUtil.splitString(channel, "-pnpres")[0];
-
-                    }
-
-                    if (chobj != null) {
-                        Callback callback = chobj.callback;
-                        invokeSubscribeCallbackV2(chobj.name, chobj.callback, message, expandV2Keys(messageObj),
-                                _timetoken, hreq);
-                    }
-
-                }
-            }
-
             void v1Handler(JSONArray jsa, HttpRequest hreq) throws JSONException {
 
-                log.debug("v1handler");
                 JSONArray messages = new JSONArray(jsa.get(0).toString());
 
                 if (jsa.length() == 4) {
@@ -1367,29 +1161,20 @@ abstract class PubnubCoreAsync extends PubnubCore implements PubnubAsyncInterfac
                 JSONObject jso = null;
 
                 String _in_response_timetoken = "";
-                boolean handleV2 = false;
 
                 try {
                     jsa = new JSONArray(response);
                     _in_response_timetoken = jsa.get(1).toString();
 
                 } catch (JSONException e) {
-                    try {
-                        // handle V2 response
-                        handleV2 = true;
-                        jso = new JSONObject(response);
 
-                        _in_response_timetoken = jso.getJSONObject("t").getString("t");
-                        _region = jso.getJSONObject("t").getString("r");
+                    if (hreq.isSubzero()) {
+                        log.verbose("Response of subscribe 0 request. Need to do dAr process again");
+                        _subscribe_base(false, hreq.isDar(), hreq.getWorker());
+                    } else
+                        _subscribe_base(false);
+                    return;
 
-                    } catch (JSONException e1) {
-                        if (hreq.isSubzero()) {
-                            log.verbose("Response of subscribe 0 request. Need to do dAr process again");
-                            _subscribe_base(false, hreq.isDar(), hreq.getWorker());
-                        } else
-                            _subscribe_base(false);
-                        return;
-                    }
                 }
 
                 /*
@@ -1418,10 +1203,7 @@ abstract class PubnubCoreAsync extends PubnubCore implements PubnubAsyncInterfac
                 }
                 try {
 
-                    if (handleV2)
-                        v2Handler(jso, hreq);
-                    else
-                        v1Handler(jsa, hreq);
+                    v1Handler(jsa, hreq);
 
                 } catch (JSONException e) {
 
@@ -1636,11 +1418,4 @@ abstract class PubnubCoreAsync extends PubnubCore implements PubnubAsyncInterfac
         resubscribe();
     }
 
-    public String getFilter() {
-        return channelSubscriptions.getFilter();
-    }
-
-    public void setFilter(String filter) {
-        channelSubscriptions.setFilter(filter);
-    }
 }

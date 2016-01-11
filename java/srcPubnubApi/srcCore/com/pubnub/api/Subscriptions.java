@@ -15,16 +15,6 @@ class Subscriptions {
 
     JSONObject state;
 
-    String filter;
-
-    public String getFilter() {
-        return filter;
-    }
-
-    public void setFilter(String filter) {
-        this.filter = filter;
-    }
-
     void runConnectOnNewThread(final Callback callback, final String name, final JSONArray jsa) {
         Runnable r = new Runnable() {
             public void run() {

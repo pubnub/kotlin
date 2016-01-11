@@ -60,99 +60,58 @@ abstract class PubnubCoreSync extends PubnubCore implements PubnubSyncInterface 
     }
 
     public Object publish(String channel, JSONObject message, boolean storeInHistory) {
-        return publish(channel, (Object) message, storeInHistory, null);
+        return publish(channel, (Object) message, storeInHistory);
     }
 
     public Object publish(String channel, JSONArray message, boolean storeInHistory) {
-        return publish(channel, (Object) message, storeInHistory, null);
+        return publish(channel, (Object) message, storeInHistory);
     }
 
     public Object publish(String channel, String message, boolean storeInHistory) {
-        return publish(channel, (Object) message, storeInHistory, null);
+        return publish(channel, (Object) message, storeInHistory);
     }
 
     public Object publish(String channel, Integer message, boolean storeInHistory) {
-        return publish(channel, (Object) message, storeInHistory, null);
+        return publish(channel, (Object) message, storeInHistory);
     }
 
     public Object publish(String channel, Double message, boolean storeInHistory) {
-        return publish(channel, (Object) message, storeInHistory, null);
+        return publish(channel, (Object) message, storeInHistory);
     }
 
-    public Object publish(String channel, JSONObject message, boolean storeInHistory, JSONObject metadata) {
-        return publish(channel, (Object) message, storeInHistory, metadata);
-    }
 
-    public Object publish(String channel, JSONArray message, boolean storeInHistory, JSONObject metadata) {
-        return publish(channel, (Object) message, storeInHistory, metadata);
-    }
-
-    public Object publish(String channel, String message, boolean storeInHistory, JSONObject metadata) {
-        return publish(channel, (Object) message, storeInHistory, metadata);
-    }
-
-    public Object publish(String channel, Integer message, boolean storeInHistory, JSONObject metadata) {
-        return publish(channel, (Object) message, storeInHistory, metadata);
-    }
-
-    public Object publish(String channel, Double message, boolean storeInHistory, JSONObject metadata) {
-        return publish(channel, (Object) message, storeInHistory, metadata);
-    }
-
-    protected Object publish(String channel, Object message, boolean storeInHistory, JSONObject metadata) {
+    protected Object publish(String channel, Object message, boolean storeInHistory) {
         Hashtable args = new Hashtable();
         PubnubUtil.addToHash(args, "channel", channel);
         PubnubUtil.addToHash(args, "message", message);
-        PubnubUtil.addToHash(args, "meta", metadata);
         PubnubUtil.addToHash(args, "storeInHistory", (storeInHistory) ? "" : "0");
         return _publish(args, true);
     }
 
     public Object publish(String channel, JSONObject message) {
-        return publish(channel, (Object) message, null);
+        return publish(channel, (Object) message);
     }
 
     public Object publish(String channel, JSONArray message) {
-        return publish(channel, (Object) message, null);
+        return publish(channel, (Object) message);
     }
 
     public Object publish(String channel, String message) {
-        return publish(channel, (Object) message, null);
+        return publish(channel, (Object) message);
     }
 
     public Object publish(String channel, Integer message) {
-        return publish(channel, (Object) message, null);
+        return publish(channel, (Object) message);
     }
 
     public Object publish(String channel, Double message) {
-        return publish(channel, (Object) message, null);
+        return publish(channel, (Object) message);
     }
 
-    public Object publish(String channel, JSONObject message, JSONObject metadata) {
-        return publish(channel, (Object) message, metadata);
-    }
-
-    public Object publish(String channel, JSONArray message, JSONObject metadata) {
-        return publish(channel, (Object) message, metadata);
-    }
-
-    public Object publish(String channel, String message, JSONObject metadata) {
-        return publish(channel, (Object) message, metadata);
-    }
-
-    public Object publish(String channel, Integer message, JSONObject metadata) {
-        return publish(channel, (Object) message, metadata);
-    }
-
-    public Object publish(String channel, Double message, JSONObject metadata) {
-        return publish(channel, (Object) message, metadata);
-    }
-
-    protected Object publish(String channel, Object message, JSONObject metadata) {
+    protected Object publish(String channel, Object message) {
         Hashtable args = new Hashtable();
         PubnubUtil.addToHash(args, "channel", channel);
         PubnubUtil.addToHash(args, "message", message);
-        PubnubUtil.addToHash(args, "meta", metadata);
         return _publish(args, true);
     }
 
