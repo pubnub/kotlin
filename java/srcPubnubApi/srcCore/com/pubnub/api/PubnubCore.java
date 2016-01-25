@@ -216,6 +216,7 @@ abstract class PubnubCore implements PubnubInterface {
             }
         } else {
             if (message instanceof String) {
+                msgStr = PubnubUtil.stringEscapeSlashes(msgStr, "\\", "\\\\");
                 msgStr = PubnubUtil.stringReplaceAll(msgStr, "\"", "\\\\\"");
                 msgStr = "\"" + msgStr + "\"";
             }

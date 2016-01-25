@@ -18,6 +18,9 @@ import org.json.JSONObject;
  */
 public class PubnubUtil extends PubnubUtilCore {
 
+    public static String stringEscapeSlashes(String s, String a, String b) {
+		return s.replace(a, b);
+    }
     public static String stringReplaceAll(String s, String a, String b) {
 		return s.replaceAll(a, b);
     }
