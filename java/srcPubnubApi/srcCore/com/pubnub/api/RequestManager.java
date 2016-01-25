@@ -137,6 +137,7 @@ abstract class RequestManager {
     protected Hashtable headers;
     private static int count = 0;
     private boolean daemonThreads = false;
+    protected volatile boolean stop = false;
 
     protected static Logger log = new Logger(RequestManager.class);
 
@@ -153,6 +154,8 @@ abstract class RequestManager {
         this.name = name;
         this.headers = new Hashtable();
         _workers = new Worker[maxCalls];
+
+        if (stop) return;
 
         synchronized (_workers) {
             for (int i = 0; i < maxCalls; ++i) {
@@ -207,6 +210,9 @@ abstract class RequestManager {
                 resetter.start();
 
                 _workers[i].interruptWorker();
+
+                if (stop) return;
+
                 Worker w = getWorker();
 
                 PnThread thread = new PnThread(w, name + "-" + ++count);
@@ -249,10 +255,14 @@ abstract class RequestManager {
     }
 
     public void stop() {
+        stop = true;
         synchronized (_workers) {
             for (int i = 0; i < _maxWorkers; ++i) {
                 Worker w = _workers[i];
                 w.die();
+                PnThread resetter = new PnThread(new ConnectionResetter(w));
+                resetter.setPnDaemon(daemonThreads);
+                resetter.start();
             }
         }
         synchronized (_waiting) {
