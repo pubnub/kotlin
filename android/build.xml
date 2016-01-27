@@ -39,7 +39,7 @@
 
     <path id="PubnubApi.classpath">
         <pathelement location="bin"/>
-        <pathelement location="../java/libs/bcprov-jdk15on-1.47.jar"/>
+        <pathelement location="../java/libs/commons-lang3-3.4.jar"/>
         <pathelement location="libs/android-8.jar"/>
     </path>
 
@@ -49,7 +49,7 @@
     <property name="source" value="1.5"/>
     <path id="classpath">
         <pathelement location="bin"/>
-        <pathelement location="${java_core_path}/libs/bcprov-jdk15on-1.47.jar"/>
+        <pathelement location="../java/libs/commons-lang3-3.4.jar"/>
         <pathelement location="libs/android-8.jar"/>
     </path>
     <target name="test" />

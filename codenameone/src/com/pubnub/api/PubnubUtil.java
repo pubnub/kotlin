@@ -62,7 +62,12 @@ public class PubnubUtil extends PubnubUtilCore {
     }
 
     public static String stringReplaceAll(String s, String a, String b) {
-		return StringUtil.replaceAll(s, a, b);
+        return StringUtil.replaceAll(s, a, b);
+    }
+
+    public static String escapeJava(String s) {
+        s = PubnubUtil.stringReplaceAll(s, "\"", "\\\\\"");
+        return s;
     }
 
     /**

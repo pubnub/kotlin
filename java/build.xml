@@ -33,6 +33,7 @@
     <property name="debug" value="false"/>
     <path id="PubnubApi.classpath">
         <pathelement location="bin"/>
+        <pathelement location="libs/commons-lang3-3.4.jar"/>
         <pathelement location="libs/bcprov-jdk15on-1.47.jar"/>
         <pathelement location="libs/json-20090211.jar"/>
         <pathelement location="libs/json-simple-1.1.1.jar"/>
@@ -151,7 +152,7 @@
                 <attribute name="Company" value="Pubnub" />
                 <attribute name="Project" value="pubnub-api" />
                 <attribute name="Java-Version" value="${java.version}" />
-                <attribute name="Rsrc-Class-Path" value="./ bcprov-jdk15on-1.47.jar commons-cli-1.2.jar json-simple-1.1.1.jar json-20090211.jar slf4j-api-1.7.5.jar slf4j-simple-1.7.5.jar" />
+                <attribute name="Rsrc-Class-Path" value="./ bcprov-jdk15on-1.47.jar commons-lang3-3.4.jar commons-cli-1.2.jar json-simple-1.1.1.jar json-20090211.jar slf4j-api-1.7.5.jar slf4j-simple-1.7.5.jar" />
                 <attribute name="Class-Path" value="." />
                 <attribute name="Rsrc-Main-Class" value="@{jar.classname}" />
                 <attribute name="Main-Class" value="org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader" />
@@ -207,7 +208,7 @@
         <create-jar jar.type="examples" jar.classname="com.pubnub.examples.PubnubPresenceTest" jar.filename="PubnubPresenceTest.jar" />
     </target>
     <target name="doc" depends="init" description="generate documentation">
-        <javadoc access="public" sourcepath="srcPubnubApi:src:srcLogging:src1:srcCrypto" destdir="doc" classpathref="PubnubApi.classpath"/>
+        <javadoc access="public" sourcepath="srcPubnubApi/srcCore:srcPubnubApi/srcCoreHttp:srcPubnubApi/srcInterfaces:src:srcLogging:src1:srcCrypto" destdir="doc" classpathref="PubnubApi.classpath"/>
       </target>
 
       <property name="src" location="src" />

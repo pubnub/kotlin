@@ -9,8 +9,14 @@ import org.json.me.*;
 public class PubnubUtil extends PubnubUtilCore {
 
     public static String stringReplaceAll(String s, String a, String b) {
-		return s.replaceAll(a, b);
+        return s.replaceAll(a, b);
     }
+
+    public static String escapeJava(String s) {
+        s = s.replaceAll("\"", "\\\\\"");
+        return s;
+    }
+		
 
     private static String replace(String str, String pattern, String replace) {
         int s = 0;
