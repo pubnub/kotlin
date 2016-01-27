@@ -23,10 +23,11 @@ class PublishResult {
     var result = 0;
 }
 
+/*
 @Test
 class PublishTest extends AwaitilitySupport {
 
-    /*
+
     @Test
     def subscribe() = {
         var pubnub = new Pubnub("demo", "demo")
@@ -48,8 +49,9 @@ class PublishTest extends AwaitilitySupport {
         await atMost(3000, MILLISECONDS) until { pr.result == 1 }
 
     }
-    */
+
 
 }
 
+*/
 

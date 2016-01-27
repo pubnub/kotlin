@@ -10,6 +10,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+
+
 /**
  * PubnubUtil class provides utility methods like urlEncode etc
  * 
@@ -17,6 +20,10 @@ import org.json.JSONObject;
  * 
  */
 public class PubnubUtil extends PubnubUtilCore {
+
+    public static String escapeJava(String a) {
+        return StringEscapeUtils.escapeJava(a);
+    }
 
     public static String stringEscapeSlashes(String s, String a, String b) {
 		return s.replace(a, b);

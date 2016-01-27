@@ -198,13 +198,15 @@ abstract class PubnubCore implements PubnubInterface {
         if (storeInHistory != null && storeInHistory.length() > 0)
             parameters.put("store", storeInHistory);
 
-
         final Callback callback = getWrappedCallback(cb);
+
+
 
         if (this.CIPHER_KEY.length() > 0) {
             // Encrypt Message
             PubnubCrypto pc = new PubnubCrypto(this.CIPHER_KEY, this.IV);
             try {
+
                 if (message instanceof String) {
                     msgStr = "\"" + msgStr + "\"";
                 }
@@ -216,8 +218,12 @@ abstract class PubnubCore implements PubnubInterface {
             }
         } else {
             if (message instanceof String) {
+                /*
+                msgStr = PubnubUtil.stringReplaceAll(msgStr, "\\n", "\\\\n");
                 msgStr = PubnubUtil.stringEscapeSlashes(msgStr, "\\", "\\\\");
                 msgStr = PubnubUtil.stringReplaceAll(msgStr, "\"", "\\\\\"");
+                */
+                msgStr = PubnubUtil.escapeJava(msgStr);
                 msgStr = "\"" + msgStr + "\"";
             }
         }

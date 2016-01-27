@@ -36,7 +36,7 @@ import scala.util.Random
 object PublishTest extends Tag("com.pubnub.api.tests.PublishTest")
 
 @RunWith(classOf[JUnitRunner])
-class PublishSpec extends fixture.FunSpec with AwaitilitySupport {
+class PublishSpec1 extends fixture.FunSpec with AwaitilitySupport {
 
   var PUBLISH_KEY   = ""
   var SUBSCRIBE_KEY = ""
@@ -45,7 +45,7 @@ class PublishSpec extends fixture.FunSpec with AwaitilitySupport {
   var SSL           = false
   var RANDOM        = new Random()
 
-
+  var TIMEOUT       = 20000
 
   type FixtureParam = PubnubTestConfig
 
@@ -70,11 +70,10 @@ class PublishSpec extends fixture.FunSpec with AwaitilitySupport {
 
   describe("Publish()") {
 
-    it("should be able to publish String with double quotes successfully") { pubnubTestConfig =>
+    it("should be able to publish String with double quotes successfully", PublishTest) { pubnubTestConfig =>
 
       var pubnub  = pubnubTestConfig.pubnub
-      //var channel = "channel-" + getRandom()
-      var channel = "ab"
+      var channel = "channel-" + getRandom()
       var message = "message-" + "\"hi\""
       var testObj = new PnTest(3)
 
@@ -96,7 +95,6 @@ class PublishSpec extends fixture.FunSpec with AwaitilitySupport {
         override def successCallback(channel: String, message1: Object) {
           pubnub.unsubscribe(channel)
           testObj.test(true)
-          println(message1)
           assertTrue(message1.toString, (message1.getClass()).equals(message.getClass()))
           assertTrue(message1.equals(message))
         }
@@ -106,15 +104,96 @@ class PublishSpec extends fixture.FunSpec with AwaitilitySupport {
         }
       });
 
-      await atMost(5000, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
 
     }
 
-    it("should be able to publish JSON Object successfully", PublishTest ) { pubnubTestConfig =>
+
+    it("should be able to publish JSON Array successfully", PublishTest) { pubnubTestConfig =>
 
       var pubnub  = pubnubTestConfig.pubnub
-      //var channel = "channel-" + getRandom()
-      var channel = "ab"
+      var channel = "channel-" + getRandom()
+      var message = new JSONArray();
+      message.put("a")
+      message.put("b")
+      var testObj = new PnTest(3)
+
+      pubnub.subscribe(channel, new Callback {
+        override def connectCallback(channel: String, message1: Object): Unit = {
+          testObj.test(true)
+          pubnub.publish(channel, message, new Callback {
+
+            override def successCallback(channel: String, message: Object) {
+              testObj.test(true)
+            }
+
+            override def errorCallback(channel: String, error: PubnubError) {
+              assertTrue(error.toString, false)
+            }
+          })
+
+        }
+        override def successCallback(channel: String, message1: Object) {
+          pubnub.unsubscribe(channel)
+          testObj.test(true)
+          assertTrue(message1.toString + " : " + message1.getClass(), (message1.getClass()).equals(message.getClass()))
+          assertTrue(message1.asInstanceOf[JSONArray].getString(0).equals("a"))
+          assertTrue(message1.asInstanceOf[JSONArray].getString(1).equals("b"))
+        }
+        override def errorCallback(channel: String, error: PubnubError) {
+          pubnub.unsubscribe(channel)
+          assertTrue(error.toString, false)
+        }
+      });
+
+      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+
+    }
+
+    it("should be able to publish JSON Array literal string successfully", PublishTest) { pubnubTestConfig =>
+
+      var pubnub  = pubnubTestConfig.pubnub
+      var channel = "channel-" + getRandom()
+      var message = "[\"a\",\"b\"]"
+      var testObj = new PnTest(3)
+
+      pubnub.subscribe(channel, new Callback {
+        override def connectCallback(channel: String, message1: Object): Unit = {
+          testObj.test(true)
+          pubnub.publish(channel, message, new Callback {
+
+            override def successCallback(channel: String, message: Object) {
+              testObj.test(true)
+            }
+
+            override def errorCallback(channel: String, error: PubnubError) {
+              assertTrue(error.toString, false)
+            }
+          })
+
+        }
+        override def successCallback(channel: String, message1: Object) {
+          pubnub.unsubscribe(channel)
+          testObj.test(true)
+          assertTrue(message1.toString + " : " + message1.getClass(), (message1.getClass()).equals(message.getClass()))
+          assertTrue(message1.toString + " : " + message.toString + "[" + message1.getClass() + "]", message1.equals(message))
+
+        }
+        override def errorCallback(channel: String, error: PubnubError) {
+          pubnub.unsubscribe(channel)
+          assertTrue(error.toString, false)
+        }
+      });
+
+      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+
+    }
+
+
+    it("should be able to publish JSON Object successfully", PublishTest) { pubnubTestConfig =>
+
+      var pubnub  = pubnubTestConfig.pubnub
+      var channel = "channel-" + getRandom()
       var message = new JSONObject();
       message.put("a", "b")
       var testObj = new PnTest(3)
@@ -146,15 +225,14 @@ class PublishSpec extends fixture.FunSpec with AwaitilitySupport {
         }
       });
 
-      await atMost(10000, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
 
     }
 
     it("should be able to publish JSON Object literal string successfully", PublishTest) { pubnubTestConfig =>
 
       var pubnub  = pubnubTestConfig.pubnub
-      //var channel = "channel-" + getRandom()
-      var channel = "ab"
+      var channel = "channel-" + getRandom()
       var message = "{\"a\":\"b\"}"
       var testObj = new PnTest(3)
 
@@ -186,10 +264,49 @@ class PublishSpec extends fixture.FunSpec with AwaitilitySupport {
         }
       });
 
-      await atMost(10000, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
 
     }
 
+
+    it("should be able to publish string with \\n successfully", PublishTest) { pubnubTestConfig =>
+
+      var pubnub  = pubnubTestConfig.pubnub
+      var channel = "channel-" + getRandom()
+      var message = "[1,\n2]"
+      var testObj = new PnTest(3)
+
+      pubnub.subscribe(channel, new Callback {
+        override def connectCallback(channel: String, message1: Object): Unit = {
+          testObj.test(true)
+          pubnub.publish(channel, message, new Callback {
+
+            override def successCallback(channel: String, message: Object) {
+              testObj.test(true)
+            }
+
+            override def errorCallback(channel: String, error: PubnubError) {
+              assertTrue(error.toString, false)
+            }
+          })
+
+        }
+        override def successCallback(channel: String, message1: Object) {
+          pubnub.unsubscribe(channel)
+          testObj.test(true)
+          assertTrue(message1.toString + " : " + message1.getClass(), (message1.getClass()).equals(message.getClass()))
+          assertTrue(message1.toString + " : " + message.toString + "[" + message1.getClass() + "]", message1.equals(message))
+
+        }
+        override def errorCallback(channel: String, error: PubnubError) {
+          pubnub.unsubscribe(channel)
+          assertTrue(error.toString, false)
+        }
+      });
+
+      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+
+    }
 
 
   }
