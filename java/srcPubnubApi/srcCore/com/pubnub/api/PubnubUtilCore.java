@@ -275,7 +275,9 @@ class PubnubUtilCore {
      */
     static Object parseJSON(Object obj) {
         if (obj instanceof String) {
-            if (((String) obj).endsWith("\"") && ((String) obj).startsWith("\""))
+            String s = (String)obj;
+            if (s.endsWith("\"") && s.startsWith("\"") &&
+                    s.length() > 1)
                 obj = ((String) obj).substring(1, ((String) obj).length() - 1);
         }
         return obj;

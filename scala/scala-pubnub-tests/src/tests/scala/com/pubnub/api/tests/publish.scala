@@ -34,6 +34,7 @@ import scala.util.Random
 
 
 object PublishTest extends Tag("com.pubnub.api.tests.PublishTest")
+object SingleTest extends Tag("com.pubnub.api.tests.SingleTest")
 
 @RunWith(classOf[JUnitRunner])
 class PublishSpec1 extends fixture.FunSpec with AwaitilitySupport {
@@ -274,6 +275,45 @@ class PublishSpec1 extends fixture.FunSpec with AwaitilitySupport {
       var pubnub  = pubnubTestConfig.pubnub
       var channel = "channel-" + getRandom()
       var message = "[1,\n2]"
+      var testObj = new PnTest(3)
+
+      pubnub.subscribe(channel, new Callback {
+        override def connectCallback(channel: String, message1: Object): Unit = {
+          testObj.test(true)
+          pubnub.publish(channel, message, new Callback {
+
+            override def successCallback(channel: String, message: Object) {
+              testObj.test(true)
+            }
+
+            override def errorCallback(channel: String, error: PubnubError) {
+              assertTrue(error.toString, false)
+            }
+          })
+
+        }
+        override def successCallback(channel: String, message1: Object) {
+          pubnub.unsubscribe(channel)
+          testObj.test(true)
+          assertTrue(message1.toString + " : " + message1.getClass(), (message1.getClass()).equals(message.getClass()))
+          assertTrue(message1.toString + " : " + message.toString + "[" + message1.getClass() + "]", message1.equals(message))
+
+        }
+        override def errorCallback(channel: String, error: PubnubError) {
+          pubnub.unsubscribe(channel)
+          assertTrue(error.toString, false)
+        }
+      });
+
+      await atMost(TIMEOUT, MILLISECONDS) until { testObj.checksRemaining() == 0 }
+
+    }
+
+    it("should be able to publish string with single double quote successfully", PublishTest) { pubnubTestConfig =>
+
+      var pubnub  = pubnubTestConfig.pubnub
+      var channel = "channel-" + getRandom()
+      var message = "\""
       var testObj = new PnTest(3)
 
       pubnub.subscribe(channel, new Callback {
