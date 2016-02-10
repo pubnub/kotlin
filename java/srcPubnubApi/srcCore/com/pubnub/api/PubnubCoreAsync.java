@@ -1301,7 +1301,7 @@ abstract class PubnubCoreAsync extends PubnubCore implements PubnubAsyncInterfac
                 message = pc.decrypt(message.toString());
                 if (!isWorkerDead(hreq))
                     callback.successWrapperCallback(channel,
-                            PubnubUtil.parseJSON(PubnubUtil.stringToJSON(message.toString())), timetoken);
+                            PubnubUtil.parseJSON(PubnubUtil.stringToJSON(message.toString()), true), timetoken);
             } catch (IllegalStateException e) {
                 if (!isWorkerDead(hreq))
                     callback.errorCallback(channel,
@@ -1321,7 +1321,7 @@ abstract class PubnubCoreAsync extends PubnubCore implements PubnubAsyncInterfac
             }
         } else {
             if (!isWorkerDead(hreq))
-                callback.successWrapperCallback(channel, PubnubUtil.parseJSON(message), timetoken);
+                callback.successWrapperCallback(channel, PubnubUtil.parseJSON(message, false), timetoken);
         }
     }
 
@@ -1333,7 +1333,7 @@ abstract class PubnubCoreAsync extends PubnubCore implements PubnubAsyncInterfac
                 message = pc.decrypt(message.toString());
                 if (!isWorkerDead(hreq))
                     callback.successWrapperCallbackV2(channel,
-                            PubnubUtil.parseJSON(PubnubUtil.stringToJSON(message.toString())), envelope, timetoken);
+                            PubnubUtil.parseJSON(PubnubUtil.stringToJSON(message.toString()), true), envelope, timetoken);
             } catch (IllegalStateException e) {
                 if (!isWorkerDead(hreq))
                     callback.errorCallback(channel,
@@ -1353,7 +1353,7 @@ abstract class PubnubCoreAsync extends PubnubCore implements PubnubAsyncInterfac
             }
         } else {
             if (!isWorkerDead(hreq))
-                callback.successWrapperCallbackV2(channel, PubnubUtil.parseJSON(message), envelope, timetoken);
+                callback.successWrapperCallbackV2(channel, PubnubUtil.parseJSON(message, false), envelope, timetoken);
         }
     }
 

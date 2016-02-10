@@ -273,13 +273,15 @@ class PubnubUtilCore {
      *
      * @return JSONArray or JSONObject or String
      */
-    static Object parseJSON(Object obj) {
-        if (obj instanceof String) {
+    static Object parseJSON(Object obj, boolean enc) {
+
+        if (obj instanceof String && enc) {
             String s = (String)obj;
             if (s.endsWith("\"") && s.startsWith("\"") &&
                     s.length() > 1)
                 obj = ((String) obj).substring(1, ((String) obj).length() - 1);
         }
+
         return obj;
     }
 
