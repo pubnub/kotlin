@@ -23,7 +23,9 @@
     <property name="pubnub_jar_file_name" value="Pubnub-StandardEdition-${VERSION}.jar"/>
     <property name="pubnub_debug_jar_file_name" value="Pubnub-StandardEdition-Debug-${VERSION}.jar"/>
     <property name="srcPubnubApi.link" value="srcPubnubApi"/>
-    <property name="sources_pubnub_api" value="${srcPubnubApi.link}/com/pubnub/api"/>
+    <property name="sources_pubnub_core" value="${srcPubnubApi.link}/srcCore/com/pubnub/api"/>
+    <property name="sources_pubnub_core_http" value="${srcPubnubApi.link}/srcCoreHttp/com/pubnub/api"/>
+    <property name="sources_pubnub_interfaces" value="${srcPubnubApi.link}/srcInterfaces/com/pubnub/api"/>
     <property name="sources_pubnub_logging" value="srcLogging/com/pubnub/api"/>
     <property name="sources_pubnub_java1" value="src1/com/pubnub/api"/>
     <property name="sources_pubnub_java" value="src/com/pubnub/api"/>
@@ -306,10 +308,12 @@
         <mkdir dir="${build}" />
         <mkdir dir="${maven}/src/com/pubnub/api" />
         <copy todir="${maven}/src/com/pubnub/api" >
-            <fileset dir="${sources_pubnub_java}" />
+            <fileset dir="${sources_pubnub_core}" />
+            <fileset dir="${sources_pubnub_core_http}" />
+            <fileset dir="${sources_pubnub_interfaces}" />
             <fileset dir="${sources_pubnub_java1}" />
             <fileset dir="${sources_pubnub_logging}" />
-            <fileset dir="${sources_pubnub_api}" />
+            <fileset dir="${sources_pubnub_java}" />
             <fileset dir="${sources_pubnub_crypto}" />
         </copy>
         <mkdir dir="${dist}/lib" />
@@ -321,10 +325,12 @@
         <mkdir dir="${build}" />
         <mkdir dir="${maven}/src/com/pubnub/api" />
         <copy todir="${maven}/src/com/pubnub/api" >
-            <fileset dir="${sources_pubnub_java}" />
+            <fileset dir="${sources_pubnub_core}" />
+            <fileset dir="${sources_pubnub_core_http}" />
+            <fileset dir="${sources_pubnub_interfaces}" />
             <fileset dir="${sources_pubnub_java1}" />
+            <fileset dir="${sources_pubnub_java}" />
             <fileset dir="${sources_pubnub_logging}" />
-            <fileset dir="${sources_pubnub_api}" />
             <fileset dir="${sources_pubnub_crypto}" />
         </copy>
         <replace dir="${maven}/src" token="boolean LOGGING = false" value="boolean LOGGING = true">
