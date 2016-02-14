@@ -239,6 +239,9 @@
             <fileset dir="${sources_pubnub_logging}" />
             <fileset dir="${sources_pubnub_crypto}" />
         </copy>
+        <replace dir="${maven}/src" token='static String VERSION = ""' value='static String VERSION = "${VERSION}"'>
+            <include name="**/*.java"/>
+        </replace>
         <mkdir dir="${dist}/lib" />
         <antcall target="stage"/>
         <antcall target="maven_clean"/>
@@ -256,6 +259,9 @@
             <fileset dir="${sources_pubnub_java}" />
             <fileset dir="${sources_pubnub_logging}" />
         </copy>
+        <replace dir="${maven}/src" token='static String VERSION = ""' value='static String VERSION = "${VERSION}"'>
+            <include name="**/*.java"/>
+        </replace>
         <replace dir="${maven}/src" token="boolean LOGGING = false" value="boolean LOGGING = true">
             <include name="**/*.java"/>
         </replace>
