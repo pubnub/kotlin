@@ -24,6 +24,9 @@
     <property name="pubnub_debug_lib_jar" value="Pubnub-Android-Debug-${VERSION}.jar"/>
     <property name="java_core_path" value="../java"/>
     <property name="src_pubnub_api_path" value="${java_core_path}/srcPubnubApi"/>
+    <property name="src_pubnub_core_path" value="${java_core_path}/srcPubnubApi/srcCore"/>
+    <property name="src_pubnub_core_http_path" value="${java_core_path}/srcPubnubApi/srcCoreHttp"/>
+    <property name="src_pubnub_interfaces_path" value="${java_core_path}/srcPubnubApi/srcInterfaces"/>
     <property name="src_java_path" value="${java_core_path}/src1"/>
     <property name="src_logging_path" value="./srcLogging"/>
     <property name="src_crypto_path" value="./srcCrypto"/>
@@ -31,7 +34,9 @@
     <property name="android_jar_path" value="jars"/>
 
     <property name="srcPubnubApi.link" value="../java/srcPubnubApi"/>
-    <property name="sources_pubnub_api" value="${srcPubnubApi.link}/com/pubnub/api"/>
+    <property name="sources_pubnub_core" value="${srcPubnubApi.link}/srcCore/com/pubnub/api"/>
+    <property name="sources_pubnub_core_http" value="${srcPubnubApi.link}/srcCoreHttp/com/pubnub/api"/>
+    <property name="sources_pubnub_interfaces" value="${srcPubnubApi.link}/srcInterfaces/com/pubnub/api"/>
     <property name="sources_pubnub_logging" value="srcLogging/com/pubnub/api"/>
     <property name="sources_pubnub_java1" value="../java/src1/com/pubnub/api"/>
     <property name="sources_pubnub_java" value="src/com/pubnub/api"/>
@@ -226,12 +231,17 @@
         <mkdir dir="${build}" />
         <mkdir dir="${maven}/src/com/pubnub/api" />
         <copy todir="${maven}/src/com/pubnub/api" >
-            <fileset dir="${sources_pubnub_java}" />
+            <fileset dir="${sources_pubnub_core}" />
+            <fileset dir="${sources_pubnub_core_http}" />
+            <fileset dir="${sources_pubnub_interfaces}" />
             <fileset dir="${sources_pubnub_java1}" />
+            <fileset dir="${sources_pubnub_java}" />
             <fileset dir="${sources_pubnub_logging}" />
-            <fileset dir="${sources_pubnub_api}" />
             <fileset dir="${sources_pubnub_crypto}" />
         </copy>
+        <replace dir="${maven}/src" token='static String VERSION = ""' value='static String VERSION = "${VERSION}"'>
+            <include name="**/*.java"/>
+        </replace>
         <mkdir dir="${dist}/lib" />
         <antcall target="stage"/>
         <antcall target="maven_clean"/>
@@ -241,12 +251,17 @@
         <mkdir dir="${build}" />
         <mkdir dir="${maven}/src/com/pubnub/api" />
         <copy todir="${maven}/src/com/pubnub/api" >
-            <fileset dir="${sources_pubnub_java}" />
+            <fileset dir="${sources_pubnub_core}" />
+            <fileset dir="${sources_pubnub_core_http}" />
+            <fileset dir="${sources_pubnub_interfaces}" />
             <fileset dir="${sources_pubnub_crypto}" />
             <fileset dir="${sources_pubnub_java1}" />
+            <fileset dir="${sources_pubnub_java}" />
             <fileset dir="${sources_pubnub_logging}" />
-            <fileset dir="${sources_pubnub_api}" />
         </copy>
+        <replace dir="${maven}/src" token='static String VERSION = ""' value='static String VERSION = "${VERSION}"'>
+            <include name="**/*.java"/>
+        </replace>
         <replace dir="${maven}/src" token="boolean LOGGING = false" value="boolean LOGGING = true">
             <include name="**/*.java"/>
         </replace>
