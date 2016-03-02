@@ -325,6 +325,13 @@ abstract class PubnubCore implements PubnubInterface {
         HttpRequest hreq = new HttpRequest(url, params, new ResponseHandler() {
 
             public void handleResponse(HttpRequest hreq, String response) {
+                JSONArray jsarr;
+                try {
+                    jsarr = new JSONArray(response);
+                } catch (JSONException e) {
+                    handleError(hreq, PubnubError.getErrorObject(PubnubError.PNERROBJ_INVALID_JSON, 7, response));
+                    return;
+                }
                 cb.successCallback(null, response);
             }
 
