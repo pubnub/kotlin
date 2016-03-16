@@ -29,7 +29,7 @@ class Subscriptions {
     void runReconnectOnNewThread(final Callback callback, final String name, final JSONArray jsa) {
         Runnable r = new Runnable() {
             public void run() {
-                callback.disconnectCallback(name, jsa);
+                callback.reconnectCallback(name, jsa);
             }
         };
         PnThread thread = new PnThread(r);
@@ -40,7 +40,7 @@ class Subscriptions {
     void runDisconnectOnNewThread(final Callback callback, final String name, final JSONArray jsa) {
         Runnable r = new Runnable() {
             public void run() {
-                callback.reconnectCallback(name, jsa);
+                callback.disconnectCallback(name, jsa);
             }
         };
         PnThread thread = new PnThread(r);
