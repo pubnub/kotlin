@@ -1,3 +1,7 @@
+03-16-16 - 3.7.7 - fe11841
+. fix for bug in reconnect, and disconnect callback logic
+. common lang3 lib dependency removed
+
 02-14-16 - 3.7.6 - fe6178c
 . fix for removal of starting and trailing quotes from strings
 . fix for bug in receiving "
