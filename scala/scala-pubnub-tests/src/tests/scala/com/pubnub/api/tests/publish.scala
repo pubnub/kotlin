@@ -65,6 +65,7 @@ class PublishSpec1 extends fixture.FunSpec with AwaitilitySupport {
     }
     SSL = Try(test.configMap.getRequired[String]("ssl").asInstanceOf[String].toBoolean).getOrElse(false)
     val pubnub = new Pubnub(PUBLISH_KEY, SUBSCRIBE_KEY, SECRET_KEY, CIPHER_KEY, SSL)
+    //pubnub.setV2(false)
     pubnubTestConfig.pubnub = pubnub
     withFixture(test.toNoArgTest(pubnubTestConfig))
   }
@@ -110,7 +111,7 @@ class PublishSpec1 extends fixture.FunSpec with AwaitilitySupport {
     }
 
 
-    it("should be able to publish JSON Array successfully", PublishTest) { pubnubTestConfig =>
+    it("should be able to publish JSON Array successfully", SingleTest) { pubnubTestConfig =>
 
       var pubnub  = pubnubTestConfig.pubnub
       var channel = "channel-" + getRandom()
@@ -151,7 +152,7 @@ class PublishSpec1 extends fixture.FunSpec with AwaitilitySupport {
 
     }
 
-    it("should be able to publish JSON Array literal string successfully", PublishTest) { pubnubTestConfig =>
+    it("should be able to publish JSON Array literal string successfully", SingleTest) { pubnubTestConfig =>
 
       var pubnub  = pubnubTestConfig.pubnub
       var channel = "channel-" + getRandom()
