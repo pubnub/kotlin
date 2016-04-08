@@ -12,7 +12,7 @@ public class SubscribeMessage {
     private String shard;
 
     @JsonProperty("b")
-    private String subscriptionMatch;
+    private String subscriptionMatch; // will contain channel group; or channel if user subscribed to channel
 
     @JsonProperty("c")
     private String channel;

@@ -4,8 +4,9 @@ import com.pubnub.api.callbacks.SubscribeCallback;
 import com.pubnub.api.core.ErrorStatus;
 import com.pubnub.api.core.PnCallback;
 import com.pubnub.api.core.Pubnub;
+import com.pubnub.api.core.enums.PNOperationType;
 import com.pubnub.api.core.enums.SubscriptionType;
-import com.pubnub.api.core.models.SubscriptionItem;
+import com.pubnub.api.core.models.*;
 import com.pubnub.api.core.models.server_responses.SubscribeEnvelope;
 import com.pubnub.api.core.models.server_responses.SubscribeMessage;
 import com.pubnub.api.endpoints.pubsub.Subscribe;
@@ -52,7 +53,7 @@ public class SubscriptionManager {
         for (SubscriptionItem subscriptionItem: subscribedChannels.values()) {
             combinedChannels.add(subscriptionItem.getName());
 
-            if  (subscriptionItem.isWithPresence()){
+            if  (subscriptionItem.isWithPresence()) {
                 combinedChannels.add(subscriptionItem.getName().concat("-pnpres"));
             }
         }
@@ -60,7 +61,7 @@ public class SubscriptionManager {
         for (SubscriptionItem subscriptionItem: subscribedChannelGroups.values()) {
             combinedChannelGroups.add(subscriptionItem.getName());
 
-            if  (subscriptionItem.isWithPresence()){
+            if  (subscriptionItem.isWithPresence()) {
                 combinedChannelGroups.add(subscriptionItem.getName().concat("-pnpres"));
             }
         }
@@ -90,7 +91,7 @@ public class SubscriptionManager {
         });
     }
 
-    public void adaptSubscribeBuilder(List<String> channels, List<String> channelGroups, boolean withPresence) {
+    public final void adaptSubscribeBuilder(List<String> channels, List<String> channelGroups, boolean withPresence) {
         for (String channel : channels) {
             SubscriptionItem subscriptionItem = new SubscriptionItem();
             subscriptionItem.setName(channel);
@@ -135,7 +136,33 @@ public class SubscriptionManager {
     }
 
     private void processIncomingMessages(List<SubscribeMessage> messages) {
-        // IMPLEMENT ME!!
-        int moose = 10;
+
+        for (SubscribeMessage message : messages) {
+            if (message.getChannel().contains("-pnpres")) {
+                // TODO
+            } else {
+                PNMessageResult pnMessageResult = new PNMessageResult();
+                PNMessageData pnMessageData = new PNMessageData();
+
+                pnMessageResult.setOperation(PNOperationType.PNSubscribeOperation);
+                pnMessageData.setMessage(message.getPayload());
+
+                String channel = message.getChannel();
+                String subscriptionMatch = message.getSubscriptionMatch();
+
+                if (channel.equals(subscriptionMatch)) {
+                    subscriptionMatch = null;
+                }
+
+                pnMessageData.setActualChannel((subscriptionMatch != null) ? channel : null);
+                pnMessageData.setSubscribedChannel(subscriptionMatch != null ? subscriptionMatch : channel);
+                pnMessageResult.setData(pnMessageData);
+
+                for (SubscribeCallback subscribeCallback: listeners) {
+                    subscribeCallback.message(this.pubnub, pnMessageResult);
+                }
+
+            }
+        }
     }
 }

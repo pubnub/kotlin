@@ -17,6 +17,5 @@ public class PNSubscriberData {
     private Long lastTimeToken;
     private List<String> subscribedChannels;
     private List<String> subscribedChannelGroups;
-    private PNResult data;
 
 }
