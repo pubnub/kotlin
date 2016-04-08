@@ -1,6 +1,9 @@
 package com.pubnub.api.core;
 
 
+import com.pubnub.api.callbacks.SubscribeCallback;
+import com.pubnub.api.core.builder.SubscribeBuilder;
+import com.pubnub.api.core.builder.UnsubscribeBuilder;
 import com.pubnub.api.endpoints.History;
 import com.pubnub.api.endpoints.Time;
 import com.pubnub.api.endpoints.access.Audit;
@@ -29,13 +32,31 @@ public class Pubnub {
     public Pubnub(final PnConfiguration initialConfig) {
         this.configuration = initialConfig;
         this.stateManager = new StateManager();
-        this.subscriptionManager = new SubscriptionManager();
+        this.subscriptionManager = new SubscriptionManager(this);
         this.basePathManager = new BasePathManager(initialConfig);
     }
 
     public String getBaseUrl() {
         return this.basePathManager.getBasePath();
     }
+
+
+    //
+    public final void addListener(SubscribeCallback listener) {
+        subscriptionManager.addListener(listener);
+    }
+
+    public final void removeListener(SubscribeCallback listener) {
+        subscriptionManager.removeListener(listener);
+    }
+
+    public final SubscribeBuilder subscribe() {
+        return new SubscribeBuilder(this.subscriptionManager);
+    }
+
+    public final UnsubscribeBuilder unsubscribe() { return new UnsubscribeBuilder(this.subscriptionManager); }
+
+    // start push
 
     public final ModifyProvisions.ModifyProvisionsBuilder modifyPushProvisions() {
         return ModifyProvisions.builder().pubnub(this);
@@ -67,8 +88,7 @@ public class Pubnub {
     public Leave.LeaveBuilder leave() {
         return Leave.builder()
             .pubnub(this)
-            .stateManager(stateManager)
-            .subscriptionManager(subscriptionManager);
+            .stateManager(stateManager);
     }
 
     public final Audit.AuditBuilder audit() {

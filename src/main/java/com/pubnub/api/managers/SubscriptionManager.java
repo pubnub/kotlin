@@ -1,35 +1,141 @@
 package com.pubnub.api.managers;
 
-import lombok.Getter;
+import com.pubnub.api.callbacks.SubscribeCallback;
+import com.pubnub.api.core.ErrorStatus;
+import com.pubnub.api.core.PnCallback;
+import com.pubnub.api.core.Pubnub;
+import com.pubnub.api.core.enums.SubscriptionType;
+import com.pubnub.api.core.models.SubscriptionItem;
+import com.pubnub.api.core.models.server_responses.SubscribeEnvelope;
+import com.pubnub.api.core.models.server_responses.SubscribeMessage;
+import com.pubnub.api.endpoints.pubsub.Subscribe;
+import retrofit2.Call;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-@Getter
 public class SubscriptionManager {
 
-    private List<String> subscribedChannels;
-    private List<String> subscribedChannelGroups;
+    private Map<String, SubscriptionItem> subscribedChannels;
+    private Map<String, SubscriptionItem> subscribedChannelGroups;
+    private List<SubscribeCallback> listeners;
+    private Pubnub pubnub;
+    private Call<SubscribeEnvelope> subscribeCall;
+    private String timetoken;
 
-    public SubscriptionManager() {
-        this.subscribedChannelGroups = new ArrayList<String>();
-        this.subscribedChannels = new ArrayList<String>();
+    public SubscriptionManager(Pubnub pubnub) {
+        this.subscribedChannelGroups = new HashMap<>();
+        this.subscribedChannels = new HashMap<>();
+        this.pubnub = pubnub;
+        this.listeners = new ArrayList<>();
     }
 
-    public void addChannel(String channel, boolean includePresence){
-        this.subscribedChannels.add(channel);
+    public void addListener(SubscribeCallback listener) {
+        listeners.add(listener);
     }
 
-    public void addChannelGroup(String channelGroup, boolean includePresence) {
-        this.subscribedChannelGroups.add(channelGroup);
+    public void removeListener(SubscribeCallback listener) {
+        listeners.remove(listener);
     }
 
-    public void removeChannel(String channel) {
-        this.subscribedChannels.remove(channel);
+    public void startSubscribeLoop() {
+
+        if (subscribeCall != null && !subscribeCall.isExecuted() && !subscribeCall.isCanceled()) {
+            subscribeCall.cancel();
+        }
+
+        List<String> combinedChannels = new ArrayList<>();
+        List<String> combinedChannelGroups = new ArrayList<>();
+
+        for (SubscriptionItem subscriptionItem: subscribedChannels.values()) {
+            combinedChannels.add(subscriptionItem.getName());
+
+            if  (subscriptionItem.isWithPresence()){
+                combinedChannels.add(subscriptionItem.getName().concat("-pnpres"));
+            }
+        }
+
+        for (SubscriptionItem subscriptionItem: subscribedChannelGroups.values()) {
+            combinedChannelGroups.add(subscriptionItem.getName());
+
+            if  (subscriptionItem.isWithPresence()){
+                combinedChannelGroups.add(subscriptionItem.getName().concat("-pnpres"));
+            }
+        }
+
+        subscribeCall = Subscribe.builder()
+                .pubnub(pubnub)
+                .channels(combinedChannels)
+                .channelGroups(combinedChannelGroups)
+                .timetoken(timetoken)
+                .build()
+                .async(new PnCallback<SubscribeEnvelope>() {
+            @Override
+            public void status(ErrorStatus status) {
+                int moose = 10;
+            }
+
+            @Override
+            public void result(SubscribeEnvelope result) {
+                timetoken = result.getMetadata().getTimetoken();
+
+                if (result.getMessages().size() != 0) {
+                    processIncomingMessages(result.getMessages());
+                }
+
+                startSubscribeLoop();
+            }
+        });
     }
 
-    public void removeChannelGroup(String channelGroup) {
-        this.subscribedChannelGroups.remove(channelGroup);
+    public void adaptSubscribeBuilder(List<String> channels, List<String> channelGroups, boolean withPresence) {
+        for (String channel : channels) {
+            SubscriptionItem subscriptionItem = new SubscriptionItem();
+            subscriptionItem.setName(channel);
+            subscriptionItem.setWithPresence(withPresence);
+            subscriptionItem.setType(SubscriptionType.CHANNEL);
+            subscribedChannels.put(channel, subscriptionItem);
+        }
+
+        for (String channelGroup : channelGroups) {
+            SubscriptionItem subscriptionItem = new SubscriptionItem();
+            subscriptionItem.setName(channelGroup);
+            subscriptionItem.setWithPresence(withPresence);
+            subscriptionItem.setType(SubscriptionType.CHANNEL_GROUP);
+            subscribedChannelGroups.put(channelGroup, subscriptionItem);
+        }
+
+        this.startSubscribeLoop();
+
     }
 
+    public void adaptUnsubscribeBuilder(List<String> channels, List<String> channelGroups) {
+
+        for (String channel: channels) {
+            this.subscribedChannels.remove(channel);
+        }
+
+        for (String channelGroup: channelGroups) {
+            this.subscribedChannelGroups.remove(channelGroup);
+        }
+
+        pubnub.leave().channels(channels).channelGroups(channelGroups).build().async(new PnCallback<Boolean>() {
+            @Override
+            public void status(ErrorStatus status) {
+                int moose = 10;
+            }
+
+            @Override
+            public void result(Boolean result) {
+                int moose = 11;
+            }
+        });
+    }
+
+    private void processIncomingMessages(List<SubscribeMessage> messages) {
+        // IMPLEMENT ME!!
+        int moose = 10;
+    }
 }

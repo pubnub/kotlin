@@ -37,7 +37,7 @@ public abstract class Endpoint<Input, Output> {
         return response.getPayload();
     }
 
-    public final void async(final PnCallback<Output> callback) {
+    public final Call<Input> async(final PnCallback<Output> callback) {
         this.validateParams();
 
         Call<Input> call = null;
@@ -89,6 +89,8 @@ public abstract class Endpoint<Input, Output> {
 
             }
         });
+
+        return call;
     }
 
     protected String signSHA256(String key, String data) throws PubnubException {
