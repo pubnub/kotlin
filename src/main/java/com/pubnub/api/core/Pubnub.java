@@ -14,8 +14,8 @@ import com.pubnub.api.endpoints.push.CreatePushNotification;
 import com.pubnub.api.endpoints.push.ListProvisions;
 import com.pubnub.api.endpoints.push.ModifyProvisions;
 import com.pubnub.api.managers.BasePathManager;
-import com.pubnub.api.managers.StateManager;
 import com.pubnub.api.managers.SubscriptionManager;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -25,13 +25,14 @@ import lombok.extern.slf4j.Slf4j;
 public class Pubnub {
 
     private PnConfiguration configuration;
-    private StateManager stateManager;
+
+    @Getter(AccessLevel.NONE)
     private SubscriptionManager subscriptionManager;
+    @Getter(AccessLevel.NONE)
     private BasePathManager basePathManager;
 
     public Pubnub(final PnConfiguration initialConfig) {
         this.configuration = initialConfig;
-        this.stateManager = new StateManager();
         this.subscriptionManager = new SubscriptionManager(this);
         this.basePathManager = new BasePathManager(initialConfig);
     }
@@ -85,11 +86,6 @@ public class Pubnub {
 
     public final History.HistoryBuilder history() { return History.builder().pubnub(this); }
 
-    public Leave.LeaveBuilder leave() {
-        return Leave.builder()
-            .pubnub(this)
-            .stateManager(stateManager);
-    }
 
     public final Audit.AuditBuilder audit() {
         return Audit.builder().pubnub(this);
@@ -99,7 +95,7 @@ public class Pubnub {
     }
 
     public GetState.GetStateBuilder getPresenceState() { return GetState.builder().pubnub(this); }
-    public SetState.SetStateBuilder setPresenceState() { return SetState.builder().pubnub(this).stateManager(stateManager); }
+    public SetState.SetStateBuilder setPresenceState() { return SetState.builder().pubnub(this).subscriptionManager(subscriptionManager); }
 
     public Publish.PublishBuilder publish() { return Publish.builder().pubnub(this); }
 

@@ -1,4 +1,4 @@
-package com.pubnub.api.core.models;
+package com.pubnub.api.core.models.consumer_facing;
 
 import lombok.Getter;
 import lombok.Setter;

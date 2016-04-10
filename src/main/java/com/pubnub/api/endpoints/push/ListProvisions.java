@@ -40,4 +40,13 @@ public class ListProvisions extends Endpoint<List<String>, List<String>> {
 
         return pnResponse;
     }
+
+    protected int getConnectTimeout() {
+        return pubnub.getConfiguration().getConnectTimeout();
+    }
+
+    protected int getRequestTimeout() {
+        return pubnub.getConfiguration().getNonSubscribeRequestTimeout();
+    }
+
 }

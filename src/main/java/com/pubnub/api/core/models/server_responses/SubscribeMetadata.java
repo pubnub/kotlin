@@ -9,7 +9,7 @@ import lombok.Getter;
 public class SubscribeMetadata {
 
     @JsonProperty("t")
-    private String timetoken;
+    private Long timetoken;
 
     @JsonProperty("r")
     private String region;

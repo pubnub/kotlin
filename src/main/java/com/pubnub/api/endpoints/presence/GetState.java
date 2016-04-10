@@ -66,4 +66,13 @@ public class GetState extends Endpoint<Envelope<Object>,Map<String, Object>> {
         pnResponse.setPayload(stateMappings);
         return pnResponse;
     }
+
+    protected int getConnectTimeout() {
+        return pubnub.getConfiguration().getConnectTimeout();
+    }
+
+    protected int getRequestTimeout() {
+        return pubnub.getConfiguration().getNonSubscribeRequestTimeout();
+    }
+
 }

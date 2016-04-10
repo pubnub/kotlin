@@ -156,4 +156,12 @@ public class HereNow extends Endpoint<Envelope<Object>, HereNowData> {
         return occupantsResults;
     }
 
+    protected int getConnectTimeout() {
+        return pubnub.getConfiguration().getConnectTimeout();
+    }
+
+    protected int getRequestTimeout() {
+        return pubnub.getConfiguration().getNonSubscribeRequestTimeout();
+    }
+
 }

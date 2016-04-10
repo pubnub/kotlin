@@ -45,4 +45,12 @@ public class Time extends Endpoint<List<Long>, TimeData> {
         return pnResponse;
     }
 
+    protected int getConnectTimeout() {
+        return pubnub.getConfiguration().getConnectTimeout();
+    }
+
+    protected int getRequestTimeout() {
+        return pubnub.getConfiguration().getNonSubscribeRequestTimeout();
+    }
+
 }

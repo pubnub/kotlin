@@ -11,12 +11,11 @@ public class EndpointTest {
 
     protected Pubnub createPubNubInstance(MockWebServer server) {
         PnConfiguration pnConfiguration = new PnConfiguration();
-        pnConfiguration.setUUID("myownUUID");
         pnConfiguration.setOrigin(server.getHostName() + ":" + server.getPort());
         pnConfiguration.setSecure(false);
         pnConfiguration.setSubscribeKey("mySubscribeKey");
         pnConfiguration.setPublishKey("myPublishKey");
-        pnConfiguration.setUUID("myUUID");
+        pnConfiguration.setUuid("myUUID");
 
         return new Pubnub(pnConfiguration);
     }

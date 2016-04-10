@@ -8,6 +8,7 @@ import com.pubnub.api.core.models.server_responses.SubscribeEnvelope;
 import com.pubnub.api.endpoints.Endpoint;
 import lombok.Builder;
 import lombok.Singular;
+import lombok.extern.slf4j.Slf4j;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -19,12 +20,12 @@ import java.util.Map;
  * Supports calling of the subscribe endpoints and deconstructs the response to POJO's.
  */
 @Builder
+@Slf4j
 public class Subscribe extends Endpoint<SubscribeEnvelope, SubscribeEnvelope> {
 
-    /**
-     * Global {Pubnub} instance to fetch configuration.
-     */
+
     private Pubnub pubnub;
+
     /**
      * List of channels that will be called to subscribe.
      */
@@ -37,7 +38,7 @@ public class Subscribe extends Endpoint<SubscribeEnvelope, SubscribeEnvelope> {
     /**
      * timeToken to subscribe with 0 for initial subscribe.
      */
-    private String timetoken;
+    private Long timetoken;
 
     @Override
     protected final boolean validateParams() {
@@ -78,4 +79,13 @@ public class Subscribe extends Endpoint<SubscribeEnvelope, SubscribeEnvelope> {
 
         return pnResponse;
     }
+
+    protected int getConnectTimeout() {
+        return pubnub.getConfiguration().getConnectTimeout();
+    }
+
+    protected int getRequestTimeout() {
+        return pubnub.getConfiguration().getSubscribeTimeout();
+    }
+
 }

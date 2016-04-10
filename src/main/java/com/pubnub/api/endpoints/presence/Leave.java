@@ -6,7 +6,6 @@ import com.pubnub.api.core.PubnubException;
 import com.pubnub.api.core.PubnubUtil;
 import com.pubnub.api.core.models.Envelope;
 import com.pubnub.api.endpoints.Endpoint;
-import com.pubnub.api.managers.StateManager;
 import lombok.Builder;
 import lombok.Singular;
 import retrofit2.Call;
@@ -20,7 +19,6 @@ import java.util.Map;
 public class Leave extends Endpoint<Envelope, Boolean> {
 
     private Pubnub pubnub;
-    private StateManager stateManager;
 
     @Singular private List<String> channels;
     @Singular private List<String> channelGroups;
@@ -36,7 +34,7 @@ public class Leave extends Endpoint<Envelope, Boolean> {
         String channelCSV;
         PresenceService service = this.createRetrofit(pubnub).create(PresenceService.class);
 
-        params.put("uuid", pubnub.getConfiguration().getUUID());
+        params.put("uuid", pubnub.getConfiguration().getUuid());
 
         if (channelGroups.size() > 0) {
             params.put("channel-group", PubnubUtil.joinString(channelGroups, ","));
@@ -53,10 +51,19 @@ public class Leave extends Endpoint<Envelope, Boolean> {
 
     @Override
     protected PnResponse<Boolean> createResponse(Response<Envelope> input) throws PubnubException {
-        PnResponse<Boolean> pnResponse = new PnResponse<Boolean>();
+        PnResponse<Boolean> pnResponse = new PnResponse<>();
         pnResponse.fillFromRetrofit(input);
         pnResponse.setPayload(true);
 
         return pnResponse;
     }
+
+    protected int getConnectTimeout() {
+        return pubnub.getConfiguration().getConnectTimeout();
+    }
+
+    protected int getRequestTimeout() {
+        return pubnub.getConfiguration().getNonSubscribeRequestTimeout();
+    }
+
 }

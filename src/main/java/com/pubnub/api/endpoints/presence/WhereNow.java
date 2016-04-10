@@ -26,7 +26,7 @@ public class WhereNow extends Endpoint<Envelope<WhereNowData>, WhereNowData> {
     protected Call<Envelope<WhereNowData>> doWork() {
         PresenceService service = this.createRetrofit(pubnub).create(PresenceService.class);
         return service.whereNow(pubnub.getConfiguration().getSubscribeKey(),
-                this.uuid != null ? this.uuid : pubnub.getConfiguration().getUUID());
+                this.uuid != null ? this.uuid : pubnub.getConfiguration().getUuid());
     }
 
     @Override
@@ -39,6 +39,14 @@ public class WhereNow extends Endpoint<Envelope<WhereNowData>, WhereNowData> {
         }
 
         return pnResponse;
+    }
+
+    protected int getConnectTimeout() {
+        return pubnub.getConfiguration().getConnectTimeout();
+    }
+
+    protected int getRequestTimeout() {
+        return pubnub.getConfiguration().getNonSubscribeRequestTimeout();
     }
 
 }

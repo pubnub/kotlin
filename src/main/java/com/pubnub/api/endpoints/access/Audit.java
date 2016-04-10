@@ -71,4 +71,13 @@ public class Audit extends Endpoint<Object, Object> {
     protected PnResponse<Object> createResponse(final Response<Object> input) throws PubnubException {
         return null;
     }
+
+    protected int getConnectTimeout() {
+        return pubnub.getConfiguration().getConnectTimeout();
+    }
+
+    protected int getRequestTimeout() {
+        return pubnub.getConfiguration().getNonSubscribeRequestTimeout();
+    }
+
 }

@@ -3,20 +3,24 @@ package com.pubnub.api.endpoints.presence;
 import com.pubnub.api.core.PnResponse;
 import com.pubnub.api.core.Pubnub;
 import com.pubnub.api.core.PubnubException;
+import com.pubnub.api.core.PubnubUtil;
 import com.pubnub.api.core.models.Envelope;
 import com.pubnub.api.endpoints.Endpoint;
-import com.pubnub.api.managers.StateManager;
-import com.pubnub.api.managers.SubscriptionManager;
 import lombok.Builder;
 import retrofit2.Call;
 import retrofit2.Response;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Builder
 public class Heartbeat extends Endpoint<Envelope, Boolean> {
 
     private Pubnub pubnub;
-    private StateManager stateManager;
-    private SubscriptionManager subscriptionManager;
+    private Object state;
+    private List<String> channels;
+    private List<String> channelGroups;
 
     @Override
     protected boolean validateParams() {
@@ -25,29 +29,29 @@ public class Heartbeat extends Endpoint<Envelope, Boolean> {
 
     @Override
     protected Call<Envelope> doWork() {
-        /*
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
 
-        params.put("uuid", pubnub.getConfiguration().getUUID());
-        params.put("state", stateManager.getStringifiedStateByChannel());
+        params.put("uuid", pubnub.getConfiguration().getUuid());
         params.put("heartbeat", pubnub.getConfiguration().getPresenceTimeout());
 
-        if (subscriptionManager.getSubscribedChannelGroups().size() > 0){
-            params.put("channel-group", PubnubUtil.joinString((List<String>) subscriptionManager.getSubscribedChannelGroups().keySet(), ","));
+        if (channelGroups != null && channelGroups.size() > 0){
+            params.put("channel-group", PubnubUtil.joinString(channelGroups, ","));
         }
 
-        String channels;
+        String channelsCSV;
 
-        if (subscriptionManager.getSubscribedChannels().size() > 0){
-            channels = PubnubUtil.joinString((List<String>) subscriptionManager.getSubscribedChannels().keySet(), ",");
+        if (channels != null && channels.size() > 0) {
+            channelsCSV = PubnubUtil.joinString(channels, ",");
         } else {
-            channels = ",";
+            channelsCSV = ",";
+        }
+
+        if (state != null) {
+            params.put("state", state);
         }
 
         PresenceService service = this.createRetrofit(pubnub).create(PresenceService.class);
-        return service.heartbeat(pubnub.getConfiguration().getSubscribeKey(), channels, params);
-        */
-        return null;
+        return service.heartbeat(pubnub.getConfiguration().getSubscribeKey(), channelsCSV, params);
     }
 
     @Override
@@ -58,4 +62,13 @@ public class Heartbeat extends Endpoint<Envelope, Boolean> {
 
         return pnResponse;
     }
+
+    protected int getConnectTimeout() {
+        return pubnub.getConfiguration().getConnectTimeout();
+    }
+
+    protected int getRequestTimeout() {
+        return pubnub.getConfiguration().getNonSubscribeRequestTimeout();
+    }
+
 }

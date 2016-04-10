@@ -3,6 +3,8 @@ package com.pubnub.api.endpoints;
 
 import com.pubnub.api.core.*;
 import com.pubnub.api.core.utils.Base64;
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -16,6 +18,7 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public abstract class Endpoint<Input, Output> {
 
@@ -121,9 +124,22 @@ public abstract class Endpoint<Input, Output> {
 
 
     protected final Retrofit createRetrofit(Pubnub pubnub) {
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.readTimeout(this.getRequestTimeout(), TimeUnit.SECONDS);
+        httpClient.connectTimeout(this.getConnectTimeout(), TimeUnit.SECONDS);
+
+        // TODO: REMOVE MEEEE
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        // set your desired log level
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+        // add logging as last interceptor
+        httpClient.addInterceptor(logging);  // <-- this is the important line!
+        // TODO: REMOVE MEEEE
+
         return new Retrofit.Builder()
                 .baseUrl(pubnub.getBaseUrl())
                 .addConverterFactory(JacksonConverterFactory.create())
+                .client(httpClient.build())
                 .build();
     }
 
@@ -139,5 +155,9 @@ public abstract class Endpoint<Input, Output> {
 
     protected abstract Call<Input> doWork() throws PubnubException;
     protected abstract PnResponse<Output> createResponse(Response<Input> input) throws PubnubException;
+
+    // add hooks for timeout
+    protected abstract int getConnectTimeout();
+    protected abstract int getRequestTimeout();
 
 }

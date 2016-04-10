@@ -1,8 +1,8 @@
 package com.pubnub.api.callbacks;
 
 import com.pubnub.api.core.Pubnub;
-import com.pubnub.api.core.models.PNMessageResult;
-import com.pubnub.api.core.models.PNPresenceEventResult;
+import com.pubnub.api.core.models.consumer_facing.PNMessageResult;
+import com.pubnub.api.core.models.consumer_facing.PNPresenceEventResult;
 import com.pubnub.api.core.models.PNStatus;
 
 public abstract class SubscribeCallback {

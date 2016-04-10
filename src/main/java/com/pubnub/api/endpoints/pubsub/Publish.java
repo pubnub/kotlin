@@ -64,7 +64,7 @@ public class Publish extends Endpoint<List<Object>, PublishData> {
             params.put("auth", pubnub.getConfiguration().getAuthKey());
         }
 
-        params.put("uuid", pubnub.getConfiguration().getUUID());
+        params.put("uuid", pubnub.getConfiguration().getUuid());
 
         if (shouldStore != null) {
             params.put("store", shouldStore);
@@ -93,4 +93,13 @@ public class Publish extends Endpoint<List<Object>, PublishData> {
 
         return pnResponse;
     }
+
+    protected int getConnectTimeout() {
+        return pubnub.getConfiguration().getConnectTimeout();
+    }
+
+    protected int getRequestTimeout() {
+        return pubnub.getConfiguration().getNonSubscribeRequestTimeout();
+    }
+
 }

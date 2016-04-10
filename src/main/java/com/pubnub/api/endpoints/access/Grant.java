@@ -29,4 +29,12 @@ public class Grant extends Endpoint<Object, Object> {
         return null;
     }
 
+    protected int getConnectTimeout() {
+        return pubnub.getConfiguration().getConnectTimeout();
+    }
+
+    protected int getRequestTimeout() {
+        return pubnub.getConfiguration().getNonSubscribeRequestTimeout();
+    }
+
 }
