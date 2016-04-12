@@ -4,6 +4,7 @@ import com.pubnub.api.core.PnResponse;
 import com.pubnub.api.core.Pubnub;
 import com.pubnub.api.core.PubnubException;
 import com.pubnub.api.core.PubnubUtil;
+import com.pubnub.api.core.enums.PNOperationType;
 import com.pubnub.api.endpoints.Endpoint;
 import lombok.Builder;
 import lombok.Singular;
@@ -78,6 +79,11 @@ public class Audit extends Endpoint<Object, Object> {
 
     protected int getRequestTimeout() {
         return pubnub.getConfiguration().getNonSubscribeRequestTimeout();
+    }
+
+    @Override
+    protected PNOperationType getOperationType() {
+        return PNOperationType.PNAccessManagerAudit;
     }
 
 }

@@ -4,7 +4,7 @@ import com.jayway.awaitility.Awaitility;
 import com.pubnub.api.callbacks.TimeCallback;
 import com.pubnub.api.core.ErrorStatus;
 import com.pubnub.api.core.PubnubException;
-import com.pubnub.api.core.models.TimeData;
+import com.pubnub.api.core.models.consumer_facing.PNTimeResult;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import org.junit.Before;
@@ -32,7 +32,7 @@ public class TimeEndpointTest extends EndpointTest {
     @org.junit.Test
     public void testSyncSuccess() throws IOException, PubnubException {
         server.enqueue(new MockResponse().setBody("[14593046077243110]"));
-        TimeData response = partialTime.sync();
+        PNTimeResult response = partialTime.sync();
         assertTrue(response.getTimetoken().equals(14593046077243110L));
     }
 
@@ -51,7 +51,7 @@ public class TimeEndpointTest extends EndpointTest {
     @org.junit.Test(expected=PubnubException.class)
     public void testSyncBrokenWithout200() throws IOException, PubnubException {
         server.enqueue(new MockResponse().setBody("[14593046077243110]").setResponseCode(404));
-        TimeData response = partialTime.sync();
+        PNTimeResult response = partialTime.sync();
         assertEquals(response.getTimetoken(), "14593046077243110");
     }
 
@@ -62,11 +62,7 @@ public class TimeEndpointTest extends EndpointTest {
         partialTime.async(new TimeCallback(){
 
             @Override
-            public void status(ErrorStatus status) {
-            }
-
-            @Override
-            public void result(TimeData result) {
+            public void onResponse(PNTimeResult result, ErrorStatus status) {
                 assertTrue(result.getTimetoken().equals(14593046077243110L));
                 atomic.incrementAndGet();
             }
@@ -83,12 +79,10 @@ public class TimeEndpointTest extends EndpointTest {
         partialTime.async(new TimeCallback(){
 
             @Override
-            public void status(ErrorStatus status) {
-                atomic.incrementAndGet();
-            }
-
-            @Override
-            public void result(TimeData result) {
+            public void onResponse(PNTimeResult result, ErrorStatus status) {
+                if (status != null) {
+                    atomic.incrementAndGet();
+                }
             }
         });
 
@@ -104,12 +98,10 @@ public class TimeEndpointTest extends EndpointTest {
         partialTime.async(new TimeCallback(){
 
             @Override
-            public void status(ErrorStatus status) {
-                atomic.incrementAndGet();
-            }
-
-            @Override
-            public void result(TimeData result) {
+            public void onResponse(PNTimeResult result, ErrorStatus status) {
+                if (status != null) {
+                    atomic.incrementAndGet();
+                }
             }
         });
 
@@ -125,13 +117,12 @@ public class TimeEndpointTest extends EndpointTest {
         partialTime.async(new TimeCallback(){
 
             @Override
-            public void status(ErrorStatus status) {
-                atomic.incrementAndGet();
+            public void onResponse(PNTimeResult result, ErrorStatus status) {
+                if (status != null) {
+                    atomic.incrementAndGet();
+                }
             }
 
-            @Override
-            public void result(TimeData result) {
-            }
         });
 
         Awaitility.await().atMost(5, TimeUnit.SECONDS)

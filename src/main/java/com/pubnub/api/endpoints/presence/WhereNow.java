@@ -1,7 +1,9 @@
 package com.pubnub.api.endpoints.presence;
 
-import com.pubnub.api.core.PnResponse;
 import com.pubnub.api.core.Pubnub;
+import com.pubnub.api.core.PubnubError;
+import com.pubnub.api.core.PubnubException;
+import com.pubnub.api.core.enums.PNOperationType;
 import com.pubnub.api.core.models.Envelope;
 import com.pubnub.api.core.models.WhereNowData;
 import com.pubnub.api.endpoints.Endpoint;
@@ -30,15 +32,12 @@ public class WhereNow extends Endpoint<Envelope<WhereNowData>, WhereNowData> {
     }
 
     @Override
-    protected PnResponse<WhereNowData> createResponse(Response<Envelope<WhereNowData>> input) {
-        PnResponse<WhereNowData> pnResponse = new PnResponse<WhereNowData>();
-        pnResponse.fillFromRetrofit(input);
-
-        if (input.body() != null && input.body().getPayload() != null){
-            pnResponse.setPayload(input.body().getPayload());
+    protected WhereNowData createResponse(Response<Envelope<WhereNowData>> input) throws PubnubException {
+        if (input.body() == null || input.body().getPayload() == null) {
+            throw new PubnubException(PubnubError.PNERROBJ_PARSING_ERROR);
         }
 
-        return pnResponse;
+        return input.body().getPayload();
     }
 
     protected int getConnectTimeout() {
@@ -47,6 +46,11 @@ public class WhereNow extends Endpoint<Envelope<WhereNowData>, WhereNowData> {
 
     protected int getRequestTimeout() {
         return pubnub.getConfiguration().getNonSubscribeRequestTimeout();
+    }
+
+    @Override
+    protected PNOperationType getOperationType() {
+        return PNOperationType.PNWhereNowOperation;
     }
 
 }

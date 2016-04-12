@@ -70,11 +70,7 @@ public class WhereNowEndpointTest extends EndpointTest {
         partialWhereNow.build().async(new WhereNowCallback(){
 
             @Override
-            public void status(ErrorStatus status) {
-            }
-
-            @Override
-            public void result(WhereNowData result) {
+            public void onResponse(WhereNowData result, ErrorStatus status) {
                 assertThat(result.getChannels(), org.hamcrest.Matchers.contains("a", "b"));
                 atomic.incrementAndGet();
             }
@@ -91,13 +87,10 @@ public class WhereNowEndpointTest extends EndpointTest {
         partialWhereNow.build().async(new WhereNowCallback(){
 
             @Override
-            public void status(ErrorStatus status) {
+            public void onResponse(WhereNowData result, ErrorStatus status) {
                 atomic.incrementAndGet();
             }
 
-            @Override
-            public void result(WhereNowData result) {
-            }
         });
 
         Awaitility.await().atMost(5, TimeUnit.SECONDS)
@@ -112,12 +105,8 @@ public class WhereNowEndpointTest extends EndpointTest {
         partialWhereNow.build().async(new WhereNowCallback(){
 
             @Override
-            public void status(ErrorStatus status) {
+            public void onResponse(WhereNowData result, ErrorStatus status) {
                 atomic.incrementAndGet();
-            }
-
-            @Override
-            public void result(WhereNowData result) {
             }
         });
 
@@ -133,12 +122,8 @@ public class WhereNowEndpointTest extends EndpointTest {
         partialWhereNow.build().async(new WhereNowCallback(){
 
             @Override
-            public void status(ErrorStatus status) {
+            public void onResponse(WhereNowData result, ErrorStatus status) {
                 atomic.incrementAndGet();
-            }
-
-            @Override
-            public void result(WhereNowData result) {
             }
         });
 

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.pubnub.api.core.*;
+import com.pubnub.api.core.enums.PNOperationType;
 import com.pubnub.api.core.models.Envelope;
 import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.managers.SubscriptionManager;
@@ -34,11 +35,11 @@ public class SetState extends Endpoint<Envelope<Object>, Boolean> {
     @Override
     protected boolean validateParams() {
 
-        if (state == null){
+        if (state == null) {
             return false;
         }
 
-        if (channels.size() == 0 && channelGroups.size() == 0){
+        if (channels.size() == 0 && channelGroups.size() == 0) {
             return false;
         }
 
@@ -57,7 +58,7 @@ public class SetState extends Endpoint<Envelope<Object>, Boolean> {
 
         PresenceService service = this.createRetrofit(this.pubnub).create(PresenceService.class);
 
-        if (channelGroups.size() > 0){
+        if (channelGroups.size() > 0) {
             params.put("channel-group", PubnubUtil.joinString(channelGroups, ","));
         }
 
@@ -75,17 +76,15 @@ public class SetState extends Endpoint<Envelope<Object>, Boolean> {
     }
 
     @Override
-    protected PnResponse<Boolean> createResponse(Response<Envelope<Object>> input) throws PubnubException {
+    protected Boolean createResponse(Response<Envelope<Object>> input) throws PubnubException {
         PnResponse<Boolean> pnResponse = new PnResponse<Boolean>();
         pnResponse.fillFromRetrofit(input);
 
-        if (input.body().getStatus() == 200) {
-            pnResponse.setPayload(true);
-        } else {
-            pnResponse.setPayload(false);
+        if (input.body() == null) {
+            throw new PubnubException(PubnubError.PNERROBJ_PARSING_ERROR);
         }
 
-        return pnResponse;
+        return true;
     }
 
     protected int getConnectTimeout() {
@@ -94,6 +93,11 @@ public class SetState extends Endpoint<Envelope<Object>, Boolean> {
 
     protected int getRequestTimeout() {
         return pubnub.getConfiguration().getNonSubscribeRequestTimeout();
+    }
+
+    @Override
+    protected PNOperationType getOperationType() {
+        return PNOperationType.PNSetStateOperation;
     }
 
 }

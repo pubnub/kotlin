@@ -4,6 +4,7 @@ package com.pubnub.api.endpoints.presence;
 import com.pubnub.api.core.PnResponse;
 import com.pubnub.api.core.Pubnub;
 import com.pubnub.api.core.PubnubUtil;
+import com.pubnub.api.core.enums.PNOperationType;
 import com.pubnub.api.core.models.Envelope;
 import com.pubnub.api.core.models.HereNow.HereNowChannelData;
 import com.pubnub.api.core.models.HereNow.HereNowData;
@@ -73,19 +74,17 @@ public class HereNow extends Endpoint<Envelope<Object>, HereNowData> {
     }
 
     @Override
-    protected PnResponse<HereNowData> createResponse(Response<Envelope<Object>> input) {
+    protected HereNowData createResponse(Response<Envelope<Object>> input) {
         PnResponse<HereNowData> pnResponse = new PnResponse<HereNowData>();
+        HereNowData herenowData;
 
         if (channels.size() > 1 || channelGroups.size() > 0) {
-            pnResponse.setPayload(parseMultipleChannelResponse(input.body().getPayload()));
+            herenowData = parseMultipleChannelResponse(input.body().getPayload());
         } else {
-            pnResponse.setPayload(parseSingleChannelResponse(input.body()));
+            herenowData = parseSingleChannelResponse(input.body());
         }
 
-
-
-        pnResponse.fillFromRetrofit(input);
-        return pnResponse;
+        return herenowData;
     }
 
     private HereNowData parseSingleChannelResponse(Envelope<Object> input) {
@@ -162,6 +161,11 @@ public class HereNow extends Endpoint<Envelope<Object>, HereNowData> {
 
     protected int getRequestTimeout() {
         return pubnub.getConfiguration().getNonSubscribeRequestTimeout();
+    }
+
+    @Override
+    protected PNOperationType getOperationType() {
+        return PNOperationType.PNHereNowOperation;
     }
 
 }

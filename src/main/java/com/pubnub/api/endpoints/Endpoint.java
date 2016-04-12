@@ -1,9 +1,13 @@
 package com.pubnub.api.endpoints;
 
 
+import com.pubnub.api.callbacks.PNCallback;
 import com.pubnub.api.core.*;
+import com.pubnub.api.core.enums.PNOperationType;
+import com.pubnub.api.core.models.consumer_facing.PNErrorStatus;
 import com.pubnub.api.core.utils.Base64;
 import okhttp3.OkHttpClient;
+import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -22,25 +26,37 @@ import java.util.concurrent.TimeUnit;
 
 public abstract class Endpoint<Input, Output> {
 
-    public Output sync() throws PubnubException {
+    public final Output sync() throws PubnubException {
         this.validateParams();
 
-        PnResponse<Output> response;
         Call<Input> call = doWork();
+        Response<Input> serverResponse;
+        Output response;
+
         try {
-            response = createResponse(call.execute());
+            serverResponse = call.execute();
         } catch (IOException e) {
-            throw new PubnubException(e.getMessage());
+            throw new PubnubException(PubnubError.PNERROBJ_HTTP_ERROR);
         }
 
-        if (!response.isSuccessful()) {
-            throw new PubnubException(PubnubError.PNERROBJ_HTTP_ERROR, response.getErrorBody(), response.getStatusCode());
+        if (!serverResponse.isSuccessful()) {
+            String responseBodyText;
+
+            try {
+                responseBodyText = serverResponse.errorBody().string();
+            } catch (IOException e) {
+                responseBodyText = "N/A";
+            }
+
+            throw new PubnubException(PubnubError.PNERROBJ_HTTP_ERROR, responseBodyText, serverResponse.code());
         }
 
-        return response.getPayload();
+        response = createResponse(serverResponse);
+
+        return response;
     }
 
-    public final Call<Input> async(final PnCallback<Output> callback) {
+    public final Call<Input> async(final PNCallback<Output> callback) {
         this.validateParams();
 
         Call<Input> call = null;
@@ -50,7 +66,7 @@ public abstract class Endpoint<Input, Output> {
             PubnubException pubnubException = new PubnubException(PubnubError.PNERROBJ_INVALID_ARGUMENTS, e.getMessage());
             ErrorStatus errorStatus = new ErrorStatus();
             errorStatus.setThrowable(pubnubException);
-            callback.status(errorStatus);
+            callback.onResponse(null, errorStatus);
         }
 
         call.enqueue(new retrofit2.Callback<Input>() {
@@ -66,21 +82,24 @@ public abstract class Endpoint<Input, Output> {
 
             @Override
             public void onResponse(final Call<Input> call, final Response<Input> response) {
-                PnResponse<Output> callbackResponse = null;
+                Output callbackResponse = null;
+                PNErrorStatus pnErrorStatus = new PNErrorStatus();
+                pnErrorStatus.setOperation(getOperationType());
+
                 try {
                     callbackResponse = createResponse(response);
                 } catch (PubnubException e) {
                     PubnubException pubnubException = new PubnubException(PubnubError.PNERROBJ_HTTP_ERROR, e.getMessage(), response.code());
                     ErrorStatus errorStatus = prepareError(pubnubException, call);
-                    callback.status(errorStatus);
+                    callback.onResponse(null, errorStatus);
                 }
 
-                if (callbackResponse.isSuccessful()) {
-                    callback.result(callbackResponse.getPayload());
+                if (response.isSuccessful()) {
+                    callback.onResponse(callbackResponse, null);
                 } else {
                     PubnubException pubnubException = new PubnubException(PubnubError.PNERROBJ_HTTP_ERROR, response.message(), response.code());
                     ErrorStatus errorStatus = prepareError(pubnubException, call);
-                    callback.status(errorStatus);
+                    callback.onResponse(null, errorStatus);
                 }
 
             }
@@ -88,7 +107,7 @@ public abstract class Endpoint<Input, Output> {
             @Override
             public void onFailure(final Call<Input> call, final Throwable throwable) {
                 ErrorStatus errorStatus = prepareError(throwable, call);
-                callback.status(errorStatus);
+                callback.onResponse(null, errorStatus);
 
             }
         });
@@ -154,10 +173,11 @@ public abstract class Endpoint<Input, Output> {
     protected abstract boolean validateParams();
 
     protected abstract Call<Input> doWork() throws PubnubException;
-    protected abstract PnResponse<Output> createResponse(Response<Input> input) throws PubnubException;
+    protected abstract Output createResponse(Response<Input> input) throws PubnubException;
 
     // add hooks for timeout
     protected abstract int getConnectTimeout();
     protected abstract int getRequestTimeout();
+    protected abstract PNOperationType getOperationType();
 
 }

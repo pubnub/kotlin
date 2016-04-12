@@ -3,6 +3,7 @@ package com.pubnub.api.endpoints.access;
 import com.pubnub.api.core.PnResponse;
 import com.pubnub.api.core.Pubnub;
 import com.pubnub.api.core.PubnubException;
+import com.pubnub.api.core.enums.PNOperationType;
 import com.pubnub.api.endpoints.Endpoint;
 import lombok.Builder;
 import retrofit2.Call;
@@ -35,6 +36,11 @@ public class Grant extends Endpoint<Object, Object> {
 
     protected int getRequestTimeout() {
         return pubnub.getConfiguration().getNonSubscribeRequestTimeout();
+    }
+
+    @Override
+    protected PNOperationType getOperationType() {
+        return PNOperationType.PNAccessManagerGrant;
     }
 
 }

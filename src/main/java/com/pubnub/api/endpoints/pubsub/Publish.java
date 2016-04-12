@@ -3,10 +3,10 @@ package com.pubnub.api.endpoints.pubsub;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import com.pubnub.api.core.PnResponse;
 import com.pubnub.api.core.Pubnub;
 import com.pubnub.api.core.PubnubError;
 import com.pubnub.api.core.PubnubException;
+import com.pubnub.api.core.enums.PNOperationType;
 import com.pubnub.api.core.models.PublishData;
 import com.pubnub.api.endpoints.Endpoint;
 import lombok.Builder;
@@ -85,13 +85,11 @@ public class Publish extends Endpoint<List<Object>, PublishData> {
     }
 
     @Override
-    protected final PnResponse<PublishData> createResponse(final Response<List<Object>> input) throws PubnubException {
-        PnResponse<PublishData> pnResponse = new PnResponse<PublishData>();
-        pnResponse.fillFromRetrofit(input);
+    protected final PublishData createResponse(final Response<List<Object>> input) throws PubnubException {
         PublishData publishData = new PublishData();
         publishData.setTimetoken(Long.valueOf(input.body().get(2).toString()));
 
-        return pnResponse;
+        return publishData;
     }
 
     protected int getConnectTimeout() {
@@ -100,6 +98,11 @@ public class Publish extends Endpoint<List<Object>, PublishData> {
 
     protected int getRequestTimeout() {
         return pubnub.getConfiguration().getNonSubscribeRequestTimeout();
+    }
+
+    @Override
+    protected PNOperationType getOperationType() {
+        return PNOperationType.PNPublishOperation;
     }
 
 }

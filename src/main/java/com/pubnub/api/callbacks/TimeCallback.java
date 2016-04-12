@@ -1,7 +1,6 @@
 package com.pubnub.api.callbacks;
 
-import com.pubnub.api.core.PnCallback;
-import com.pubnub.api.core.models.TimeData;
+import com.pubnub.api.core.models.consumer_facing.PNTimeResult;
 
-public abstract class TimeCallback extends PnCallback<TimeData> {
+public abstract class TimeCallback extends PNCallback<PNTimeResult> {
 }

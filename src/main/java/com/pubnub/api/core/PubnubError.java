@@ -255,7 +255,7 @@ import org.json.JSONObject;
         static final PubnubError PNERROBJ_5023_INTERNAL_ERROR = new PubnubError(PNERR_INTERNAL_ERROR,
                 "Internal Server Error. " + "Please contact support with error details.");
 
-        static final PubnubError PNERROBJ_PARSING_ERROR = new PubnubError(PNERR_PARSING_ERROR, "Parsing Error");
+        public static final PubnubError PNERROBJ_PARSING_ERROR = new PubnubError(PNERR_PARSING_ERROR, "Parsing Error");
 
         static final PubnubError PNERROBJ_PUBNUB_EXCEPTION = new PubnubError(PNERR_PUBNUB_EXCEPTION, "Pubnub Exception");
 

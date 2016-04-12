@@ -1,9 +1,9 @@
 package com.pubnub.api.endpoints.presence;
 
-import com.pubnub.api.core.PnResponse;
 import com.pubnub.api.core.Pubnub;
 import com.pubnub.api.core.PubnubException;
 import com.pubnub.api.core.PubnubUtil;
+import com.pubnub.api.core.enums.PNOperationType;
 import com.pubnub.api.core.models.Envelope;
 import com.pubnub.api.endpoints.Endpoint;
 import lombok.Builder;
@@ -55,12 +55,8 @@ public class Heartbeat extends Endpoint<Envelope, Boolean> {
     }
 
     @Override
-    protected PnResponse<Boolean> createResponse(Response<Envelope> input) throws PubnubException {
-        PnResponse<Boolean> pnResponse = new PnResponse<Boolean>();
-        pnResponse.fillFromRetrofit(input);
-        pnResponse.setPayload(true);
-
-        return pnResponse;
+    protected Boolean createResponse(Response<Envelope> input) throws PubnubException {
+        return true;
     }
 
     protected int getConnectTimeout() {
@@ -69,6 +65,11 @@ public class Heartbeat extends Endpoint<Envelope, Boolean> {
 
     protected int getRequestTimeout() {
         return pubnub.getConfiguration().getNonSubscribeRequestTimeout();
+    }
+
+    @Override
+    protected PNOperationType getOperationType() {
+        return PNOperationType.PNHeartbeatOperation;
     }
 
 }

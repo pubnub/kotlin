@@ -2,9 +2,9 @@ package com.pubnub.api.endpoints;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.pubnub.api.core.PnResponse;
 import com.pubnub.api.core.Pubnub;
 import com.pubnub.api.core.PubnubException;
+import com.pubnub.api.core.enums.PNOperationType;
 import com.pubnub.api.core.models.HistoryData;
 import com.pubnub.api.core.models.HistoryItemData;
 import lombok.Builder;
@@ -64,12 +64,10 @@ public class History extends Endpoint<JsonNode, HistoryData> {
     }
 
     @Override
-    protected PnResponse<HistoryData> createResponse(Response<JsonNode> input) throws PubnubException {
-        PnResponse<HistoryData> pnResponse = new PnResponse<HistoryData>();
-        pnResponse.fillFromRetrofit(input);
+    protected HistoryData createResponse(Response<JsonNode> input) throws PubnubException {
+        HistoryData historyData = new HistoryData();
 
-        if (input.body() != null){
-            HistoryData historyData = new HistoryData();
+        if (input.body() != null) {
             historyData.setStartTimeToken(input.body().get(1).asLong());
             historyData.setEndTimeToken(input.body().get(2).asLong());
 
@@ -79,7 +77,7 @@ public class History extends Endpoint<JsonNode, HistoryData> {
                 HistoryItemData historyItemData = new HistoryItemData();
                 Object message;
 
-                if (includeTimetoken){
+                if (includeTimetoken) {
                     historyItemData.setTimetoken(historyItem.get("timetoken").asLong());
                     message = historyItem.get("message");
                 } else {
@@ -89,11 +87,9 @@ public class History extends Endpoint<JsonNode, HistoryData> {
                 historyItemData.setEntry(message);
                 historyData.getItems().add(historyItemData);
             }
-
-            pnResponse.setPayload(historyData);
         }
 
-        return pnResponse;
+        return historyData;
     }
 
     protected int getConnectTimeout() {
@@ -102,6 +98,11 @@ public class History extends Endpoint<JsonNode, HistoryData> {
 
     protected int getRequestTimeout() {
         return pubnub.getConfiguration().getNonSubscribeRequestTimeout();
+    }
+
+    @Override
+    protected PNOperationType getOperationType() {
+        return PNOperationType.PNHistoryOperation;
     }
 
 }

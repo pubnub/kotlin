@@ -2,7 +2,7 @@ package com.pubnub.api.managers;
 
 import com.pubnub.api.callbacks.SubscribeCallback;
 import com.pubnub.api.core.ErrorStatus;
-import com.pubnub.api.core.PnCallback;
+import com.pubnub.api.callbacks.PNCallback;
 import com.pubnub.api.core.Pubnub;
 import com.pubnub.api.core.enums.PNOperationType;
 import com.pubnub.api.core.enums.SubscriptionType;
@@ -95,16 +95,11 @@ public class SubscriptionManager {
 
         Leave.builder().pubnub(pubnub)
             .channels(channels).channelGroups(channelGroups).build()
-            .async(new PnCallback<Boolean>() {
-            @Override
-            public void status(ErrorStatus status) {
-                int moose = 10;
-            }
-
-            @Override
-            public void result(Boolean result) {
-                int moose = 11;
-            }
+            .async(new PNCallback<Boolean>() {
+                @Override
+                public void onResponse(Boolean result, ErrorStatus status) {
+                    int moose = 10;
+                }
         });
 
         this.startSubscribeLoop();
@@ -154,14 +149,9 @@ public class SubscriptionManager {
 
         subscribeCall = Subscribe.builder().pubnub(pubnub)
                 .channels(combinedChannels).channelGroups(combinedChannelGroups).timetoken(timetoken).build()
-                .async(new PnCallback<SubscribeEnvelope>() {
+                .async(new PNCallback<SubscribeEnvelope>() {
                     @Override
-                    public void status(ErrorStatus status) {
-                        // TODO
-                    }
-
-                    @Override
-                    public void result(SubscribeEnvelope result) {
+                    public void onResponse(SubscribeEnvelope result, ErrorStatus status) {
                         if (result.getMessages().size() != 0) {
                             processIncomingMessages(result.getMessages());
                         }
@@ -198,16 +188,9 @@ public class SubscriptionManager {
         if (presenceChannels.size() != 0 || presenceChannelGroups.size() != 0) {
             heartbeatCall = Heartbeat.builder().pubnub(pubnub)
                     .channels(presenceChannels).channelGroups(presenceChannelGroups).state(stateStorage).build()
-                    .async(new PnCallback<Boolean>() {
+                    .async(new PNCallback<Boolean>() {
                         @Override
-                        public void status(ErrorStatus status) {
-                            // TODO
-                            int moose = 10;
-                        }
-
-                        @Override
-                        public void result(Boolean result) {
-                            // TODO
+                        public void onResponse(Boolean result, ErrorStatus status) {
                             int moose = 10;
                         }
                     });

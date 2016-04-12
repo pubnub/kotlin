@@ -1,8 +1,8 @@
 package com.pubnub.api.endpoints.push;
 
-import com.pubnub.api.core.PnResponse;
 import com.pubnub.api.core.Pubnub;
 import com.pubnub.api.core.PubnubException;
+import com.pubnub.api.core.enums.PNOperationType;
 import com.pubnub.api.endpoints.Endpoint;
 import lombok.Builder;
 import retrofit2.Call;
@@ -33,12 +33,8 @@ public class ListProvisions extends Endpoint<List<String>, List<String>> {
     }
 
     @Override
-    protected PnResponse<List<String>> createResponse(Response<List<String>> input) throws PubnubException {
-        PnResponse<List<String>> pnResponse = new PnResponse<List<String>>();
-        pnResponse.fillFromRetrofit(input);
-        pnResponse.setPayload(input.body());
-
-        return pnResponse;
+    protected List<String> createResponse(Response<List<String>> input) throws PubnubException {
+        return input.body();
     }
 
     protected int getConnectTimeout() {
@@ -47,6 +43,11 @@ public class ListProvisions extends Endpoint<List<String>, List<String>> {
 
     protected int getRequestTimeout() {
         return pubnub.getConfiguration().getNonSubscribeRequestTimeout();
+    }
+
+    @Override
+    protected PNOperationType getOperationType() {
+        return PNOperationType.PNPushNotificationListChannelsOperation;
     }
 
 }

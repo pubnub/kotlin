@@ -2,10 +2,10 @@ package com.pubnub.api;
 
 import com.pubnub.api.callbacks.SubscribeCallback;
 import com.pubnub.api.core.ErrorStatus;
-import com.pubnub.api.core.PnCallback;
+import com.pubnub.api.callbacks.PNCallback;
 import com.pubnub.api.core.PnConfiguration;
 import com.pubnub.api.core.Pubnub;
-import com.pubnub.api.core.models.PNStatus;
+import com.pubnub.api.core.models.consumer_facing.PNStatus;
 import com.pubnub.api.core.models.consumer_facing.PNMessageResult;
 import com.pubnub.api.core.models.consumer_facing.PNPresenceEventResult;
 import lombok.extern.slf4j.Slf4j;
@@ -45,15 +45,10 @@ public class max_test {
         state.put("max", "moose");
 
         pubnub.subscribe().channel("max-ch1").withPresence().execute();
-        pubnub.setPresenceState().channel("max-ch1").state(state).build().async(new PnCallback<Boolean>() {
+        pubnub.setPresenceState().channel("max-ch1").state(state).build().async(new PNCallback<Boolean>() {
             @Override
-            public void status(ErrorStatus status) {
+            public void onResponse(Boolean result, ErrorStatus status) {
                 int moose = 10;
-            }
-
-            @Override
-            public void result(Boolean result) {
-                int moose = 11;
             }
         });
 

@@ -1,6 +1,6 @@
 package com.pubnub.api.endpoints.push;
 
-import com.pubnub.api.core.PnCallback;
+import com.pubnub.api.callbacks.PNCallback;
 import com.pubnub.api.core.Pubnub;
 import com.pubnub.api.core.PubnubException;
 import com.pubnub.api.core.models.PublishData;
@@ -22,7 +22,7 @@ public class CreatePushNotification {
         return pubnub.publish().channel(channel).message(payload).build().sync();
     }
 
-    public void async(final PnCallback<PublishData> callback) {
+    public void async(final PNCallback<PublishData> callback) {
         Map<String, Object> payload = preparePayload();
         pubnub.publish().channel(channel).message(payload).build().async(callback);
     }

@@ -2,7 +2,7 @@ package com.pubnub.api.endpoints.push;
 
 import com.jayway.awaitility.Awaitility;
 import com.pubnub.api.core.ErrorStatus;
-import com.pubnub.api.core.PnCallback;
+import com.pubnub.api.callbacks.PNCallback;
 import com.pubnub.api.core.PubnubException;
 import com.pubnub.api.core.models.PublishData;
 import com.pubnub.api.endpoints.EndpointTest;
@@ -63,14 +63,9 @@ public class CreatePushNotificationTest extends EndpointTest {
         server.enqueue(new MockResponse().setBody(("[1,\"Sent\",\"14598111595318003\"]")));
         final AtomicInteger atomic = new AtomicInteger(0);
         instance.pushType(PushType.APNS).channel("testChannel")
-                .pushPayload(Arrays.asList("a", "b")).build().async(new PnCallback<PublishData>() {
+                .pushPayload(Arrays.asList("a", "b")).build().async(new PNCallback<PublishData>() {
             @Override
-            public void status(ErrorStatus status) {
-
-            }
-
-            @Override
-            public void result(PublishData result) {
+            public void onResponse(PublishData result, ErrorStatus status) {
                 try {
                     assertEquals("/publish/myPublishKey/mySubscribeKey/0/testChannel/0/%7B%22pn_apns%22:[%22a%22,%22b%22]%7D?uuid=myUUID", server.takeRequest().getPath());
                     atomic.addAndGet(1);
@@ -90,20 +85,15 @@ public class CreatePushNotificationTest extends EndpointTest {
         server.enqueue(new MockResponse().setBody(("[1,\"Sent\",\"14598111595318003\"]")));
         final AtomicInteger atomic = new AtomicInteger(0);
         instance.pushType(PushType.GCM).channel("testChannel")
-                .pushPayload(Arrays.asList("a", "b")).build().async(new PnCallback<PublishData>() {
+                .pushPayload(Arrays.asList("a", "b")).build().async(new PNCallback<PublishData>() {
             @Override
-            public void status(ErrorStatus status) {
-
-            }
-
-            @Override
-            public void result(PublishData result) {
+            public void onResponse(PublishData result, ErrorStatus status) {
                 try {
                     assertEquals("/publish/myPublishKey/mySubscribeKey/0/testChannel/0/%7B%22pn_gcm%22:[%22a%22,%22b%22]%7D?uuid=myUUID", server.takeRequest().getPath());
-                    atomic.addAndGet(1);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+                atomic.addAndGet(1);
             }
         });
 
@@ -117,14 +107,9 @@ public class CreatePushNotificationTest extends EndpointTest {
         server.enqueue(new MockResponse().setBody(("[1,\"Sent\",\"14598111595318003\"]")));
         final AtomicInteger atomic = new AtomicInteger(0);
         instance.pushType(PushType.MPNS).channel("testChannel")
-                .pushPayload(Arrays.asList("a", "b")).build().async(new PnCallback<PublishData>() {
+                .pushPayload(Arrays.asList("a", "b")).build().async(new PNCallback<PublishData>() {
             @Override
-            public void status(ErrorStatus status) {
-
-            }
-
-            @Override
-            public void result(PublishData result) {
+            public void onResponse(PublishData result, ErrorStatus status) {
                 try {
                     assertEquals("/publish/myPublishKey/mySubscribeKey/0/testChannel/0/%7B%22pn_mpns%22:[%22a%22,%22b%22]%7D?uuid=myUUID", server.takeRequest().getPath());
                     atomic.addAndGet(1);

@@ -1,9 +1,9 @@
 package com.pubnub.api.endpoints.presence;
 
-import com.pubnub.api.core.PnResponse;
 import com.pubnub.api.core.Pubnub;
 import com.pubnub.api.core.PubnubException;
 import com.pubnub.api.core.PubnubUtil;
+import com.pubnub.api.core.enums.PNOperationType;
 import com.pubnub.api.core.models.Envelope;
 import com.pubnub.api.endpoints.Endpoint;
 import lombok.Builder;
@@ -51,20 +51,17 @@ public class GetState extends Endpoint<Envelope<Object>,Map<String, Object>> {
     }
 
     @Override
-    protected PnResponse<Map<String, Object>> createResponse(Response<Envelope<Object>> input) throws PubnubException {
-        PnResponse<Map<String, Object>> pnResponse = new PnResponse<Map<String, Object>>();
+    protected Map<String, Object> createResponse(Response<Envelope<Object>> input) throws PubnubException {
         Map<String, Object> stateMappings;
 
-        if (channels.size() == 1 && channelGroups.size() == 0){
-            stateMappings = new HashMap<String, Object>();
+        if (channels.size() == 1 && channelGroups.size() == 0) {
+            stateMappings = new HashMap<>();
             stateMappings.put(channels.get(0), input.body().getPayload());
         } else {
             stateMappings = (Map<String, Object>) input.body().getPayload();
         }
 
-        pnResponse.fillFromRetrofit(input);
-        pnResponse.setPayload(stateMappings);
-        return pnResponse;
+        return stateMappings;
     }
 
     protected int getConnectTimeout() {
@@ -73,6 +70,11 @@ public class GetState extends Endpoint<Envelope<Object>,Map<String, Object>> {
 
     protected int getRequestTimeout() {
         return pubnub.getConfiguration().getNonSubscribeRequestTimeout();
+    }
+
+    @Override
+    protected PNOperationType getOperationType() {
+        return PNOperationType.PNGetState;
     }
 
 }

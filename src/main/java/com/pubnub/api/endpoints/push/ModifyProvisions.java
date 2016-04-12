@@ -1,9 +1,9 @@
 package com.pubnub.api.endpoints.push;
 
-import com.pubnub.api.core.PnResponse;
 import com.pubnub.api.core.Pubnub;
 import com.pubnub.api.core.PubnubException;
 import com.pubnub.api.core.PubnubUtil;
+import com.pubnub.api.core.enums.PNOperationType;
 import com.pubnub.api.endpoints.Endpoint;
 import lombok.Builder;
 import lombok.Singular;
@@ -68,12 +68,8 @@ public class ModifyProvisions extends Endpoint<List<Object>, Boolean> {
     }
 
     @Override
-    protected PnResponse<Boolean> createResponse(Response<List<Object>> input) throws PubnubException {
-        PnResponse<Boolean> pnResponse = new PnResponse<Boolean>();
-        pnResponse.fillFromRetrofit(input);
-        pnResponse.setPayload(true);
-
-        return pnResponse;
+    protected Boolean createResponse(Response<List<Object>> input) throws PubnubException {
+        return true;
     }
 
     protected int getConnectTimeout() {
@@ -82,6 +78,11 @@ public class ModifyProvisions extends Endpoint<List<Object>, Boolean> {
 
     protected int getRequestTimeout() {
         return pubnub.getConfiguration().getNonSubscribeRequestTimeout();
+    }
+
+    @Override
+    protected PNOperationType getOperationType() {
+        return PNOperationType.PNPushNotificationModifiedChannelsOperations;
     }
 
 }

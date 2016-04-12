@@ -1,9 +1,10 @@
 package com.pubnub.api.endpoints.pubsub;
 
-import com.pubnub.api.core.PnResponse;
 import com.pubnub.api.core.Pubnub;
+import com.pubnub.api.core.PubnubError;
 import com.pubnub.api.core.PubnubException;
 import com.pubnub.api.core.PubnubUtil;
+import com.pubnub.api.core.enums.PNOperationType;
 import com.pubnub.api.core.models.server_responses.SubscribeEnvelope;
 import com.pubnub.api.endpoints.Endpoint;
 import lombok.Builder;
@@ -69,15 +70,14 @@ public class Subscribe extends Endpoint<SubscribeEnvelope, SubscribeEnvelope> {
     }
 
     @Override
-    protected final PnResponse<SubscribeEnvelope> createResponse(final Response<SubscribeEnvelope> input) throws PubnubException {
-        PnResponse<SubscribeEnvelope> pnResponse = new PnResponse<>();
-        pnResponse.fillFromRetrofit(input);
+    protected final SubscribeEnvelope createResponse(final Response<SubscribeEnvelope> input) throws PubnubException {
 
-        if (input.body() != null && input.body() != null){
-            pnResponse.setPayload(input.body());
+        if (input.body() == null) {
+            throw new PubnubException(PubnubError.PNERROBJ_PARSING_ERROR);
         }
 
-        return pnResponse;
+        SubscribeEnvelope subscribeEnvelope = input.body();
+        return subscribeEnvelope;
     }
 
     protected int getConnectTimeout() {
@@ -86,6 +86,11 @@ public class Subscribe extends Endpoint<SubscribeEnvelope, SubscribeEnvelope> {
 
     protected int getRequestTimeout() {
         return pubnub.getConfiguration().getSubscribeTimeout();
+    }
+
+    @Override
+    protected PNOperationType getOperationType() {
+        return null;
     }
 
 }

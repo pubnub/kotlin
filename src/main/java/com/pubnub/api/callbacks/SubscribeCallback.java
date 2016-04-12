@@ -3,7 +3,7 @@ package com.pubnub.api.callbacks;
 import com.pubnub.api.core.Pubnub;
 import com.pubnub.api.core.models.consumer_facing.PNMessageResult;
 import com.pubnub.api.core.models.consumer_facing.PNPresenceEventResult;
-import com.pubnub.api.core.models.PNStatus;
+import com.pubnub.api.core.models.consumer_facing.PNStatus;
 
 public abstract class SubscribeCallback {
     public abstract void status(Pubnub pubnub, PNStatus status);
