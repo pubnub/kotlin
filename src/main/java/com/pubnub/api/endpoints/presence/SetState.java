@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.pubnub.api.core.*;
 import com.pubnub.api.core.enums.PNOperationType;
 import com.pubnub.api.core.models.Envelope;
+import com.pubnub.api.core.models.consumer_facing.PNSetStateResult;
 import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.managers.SubscriptionManager;
 import lombok.AccessLevel;
@@ -20,7 +21,7 @@ import java.util.Map;
 
 
 @Builder
-public class SetState extends Endpoint<Envelope<Object>, Boolean> {
+public class SetState extends Endpoint<Envelope<Map<String, Object>>, PNSetStateResult> {
 
     @Getter(AccessLevel.NONE)
     private Pubnub pubnub;
@@ -48,7 +49,7 @@ public class SetState extends Endpoint<Envelope<Object>, Boolean> {
     }
 
     @Override
-    protected Call<Envelope<Object>> doWork() throws PubnubException {
+    protected Call<Envelope<Map<String, Object>>> doWork() throws PubnubException {
         Map<String, Object> params = this.createBaseParams();
         ObjectWriter ow = new ObjectMapper().writer();
         String stringifiedState;
@@ -76,7 +77,7 @@ public class SetState extends Endpoint<Envelope<Object>, Boolean> {
     }
 
     @Override
-    protected Boolean createResponse(Response<Envelope<Object>> input) throws PubnubException {
+    protected PNSetStateResult createResponse(Response<Envelope<Map<String, Object>>> input) throws PubnubException {
         PnResponse<Boolean> pnResponse = new PnResponse<Boolean>();
         pnResponse.fillFromRetrofit(input);
 
@@ -84,7 +85,10 @@ public class SetState extends Endpoint<Envelope<Object>, Boolean> {
             throw new PubnubException(PubnubError.PNERROBJ_PARSING_ERROR);
         }
 
-        return true;
+        PNSetStateResult pnSetStateResult = new PNSetStateResult();
+        pnSetStateResult.setState(input.body().getPayload());
+
+        return pnSetStateResult;
     }
 
     protected int getConnectTimeout() {

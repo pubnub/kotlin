@@ -41,7 +41,7 @@ public interface PresenceService {
                                     @QueryMap Map<String, Object> options);
 
     @GET("v2/presence/sub-key/{subKey}/channel/{channel}/uuid/{uuid}/data")
-    Call<Envelope<Object>> setState(@Path("subKey") String subKey,
+    Call<Envelope<Map<String, Object>>> setState(@Path("subKey") String subKey,
                                     @Path("channel") String channel,
                                     @Path("uuid") String uuid,
                                     @QueryMap Map<String, Object> options);

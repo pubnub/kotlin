@@ -4,8 +4,8 @@ package com.pubnub.api.endpoints.presence;
 import com.jayway.awaitility.Awaitility;
 import com.pubnub.api.callbacks.WhereNowCallback;
 import com.pubnub.api.core.PubnubException;
-import com.pubnub.api.core.models.WhereNowData;
 import com.pubnub.api.core.models.consumer_facing.PNErrorStatus;
+import com.pubnub.api.core.models.consumer_facing.PNPresenceWhereNowResult;
 import com.pubnub.api.endpoints.EndpointTest;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -32,7 +32,7 @@ public class WhereNowEndpointTest extends EndpointTest {
     @org.junit.Test
     public void testSyncSuccess() throws IOException, PubnubException, InterruptedException {
         server.enqueue(new MockResponse().setBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": [\"a\",\"b\"]}, \"service\": \"Presence\"}"));
-        WhereNowData response = partialWhereNow.build().sync();
+        PNPresenceWhereNowResult response = partialWhereNow.build().sync();
         assertThat(response.getChannels(), org.hamcrest.Matchers.contains("a", "b"));
         assertEquals("/v2/presence/sub-key/mySubscribeKey/uuid/myUUID", server.takeRequest().getPath());
     }
@@ -40,7 +40,7 @@ public class WhereNowEndpointTest extends EndpointTest {
     @org.junit.Test
     public void testSyncSuccessCustomUUID() throws IOException, PubnubException, InterruptedException {
         server.enqueue(new MockResponse().setBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": [\"a\",\"b\"]}, \"service\": \"Presence\"}"));
-        WhereNowData response = partialWhereNow.uuid("customUUID").build().sync();
+        PNPresenceWhereNowResult response = partialWhereNow.uuid("customUUID").build().sync();
         assertThat(response.getChannels(), org.hamcrest.Matchers.contains("a", "b"));
         assertEquals("/v2/presence/sub-key/mySubscribeKey/uuid/customUUID", server.takeRequest().getPath());
     }
@@ -70,7 +70,7 @@ public class WhereNowEndpointTest extends EndpointTest {
         partialWhereNow.build().async(new WhereNowCallback(){
 
             @Override
-            public void onResponse(WhereNowData result, PNErrorStatus status) {
+            public void onResponse(PNPresenceWhereNowResult result, PNErrorStatus status) {
                 assertThat(result.getChannels(), org.hamcrest.Matchers.contains("a", "b"));
                 atomic.incrementAndGet();
             }
@@ -87,7 +87,7 @@ public class WhereNowEndpointTest extends EndpointTest {
         partialWhereNow.build().async(new WhereNowCallback(){
 
             @Override
-            public void onResponse(WhereNowData result, PNErrorStatus status) {
+            public void onResponse(PNPresenceWhereNowResult result, PNErrorStatus status) {
                 atomic.incrementAndGet();
             }
 
@@ -105,7 +105,7 @@ public class WhereNowEndpointTest extends EndpointTest {
         partialWhereNow.build().async(new WhereNowCallback(){
 
             @Override
-            public void onResponse(WhereNowData result, PNErrorStatus status) {
+            public void onResponse(PNPresenceWhereNowResult result, PNErrorStatus status) {
                 atomic.incrementAndGet();
             }
         });
@@ -122,7 +122,7 @@ public class WhereNowEndpointTest extends EndpointTest {
         partialWhereNow.build().async(new WhereNowCallback(){
 
             @Override
-            public void onResponse(WhereNowData result, PNErrorStatus status) {
+            public void onResponse(PNPresenceWhereNowResult result, PNErrorStatus status) {
                 atomic.incrementAndGet();
             }
         });

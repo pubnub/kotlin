@@ -25,11 +25,11 @@ public class GetState extends Endpoint<Envelope<Object>,Map<String, Object>> {
 
     @Override
     protected boolean validateParams() {
-        if (uuid == null){
+        if (uuid == null) {
             return false;
         }
 
-        if (channels.size() == 0 && channelGroups.size() == 0){
+        if (channels.size() == 0 && channelGroups.size() == 0) {
             return false;
         }
 
@@ -41,7 +41,7 @@ public class GetState extends Endpoint<Envelope<Object>,Map<String, Object>> {
         Map<String, Object> params = this.createBaseParams();
         PresenceService service = this.createRetrofit(this.pubnub).create(PresenceService.class);
 
-        if (channelGroups.size() > 0){
+        if (channelGroups.size() > 0) {
             params.put("channel-group", PubnubUtil.joinString(channelGroups, ","));
         }
 
@@ -51,7 +51,7 @@ public class GetState extends Endpoint<Envelope<Object>,Map<String, Object>> {
     }
 
     @Override
-    protected Map<String, Object> createResponse(Response<Envelope<Object>> input) throws PubnubException {
+    protected Map<String, Object> createResponse(final Response<Envelope<Object>> input) throws PubnubException {
         Map<String, Object> stateMappings;
 
         if (channels.size() == 1 && channelGroups.size() == 0) {

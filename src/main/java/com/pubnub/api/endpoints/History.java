@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.pubnub.api.core.Pubnub;
 import com.pubnub.api.core.PubnubException;
 import com.pubnub.api.core.enums.PNOperationType;
-import com.pubnub.api.core.models.HistoryData;
-import com.pubnub.api.core.models.HistoryItemData;
+import com.pubnub.api.core.models.consumer_facing.PNHistoryResult;
+import com.pubnub.api.core.models.consumer_facing.PNHistoryItemResult;
 import lombok.Builder;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Builder
-public class History extends Endpoint<JsonNode, HistoryData> {
+public class History extends Endpoint<JsonNode, PNHistoryResult> {
 
     private Pubnub pubnub;
     private String channel;
@@ -28,9 +28,11 @@ public class History extends Endpoint<JsonNode, HistoryData> {
     private int count = -1;
     private boolean includeTimetoken = false;
 
-    interface HistoryService {
+    private interface HistoryService {
         @GET("v2/history/sub-key/{subKey}/channel/{channel}")
-        Call<JsonNode> fetchHistory(@Path("subKey") String subKey, @Path("channel") String channel, @QueryMap Map<String, String> options);
+        Call<JsonNode> fetchHistory(@Path("subKey") String subKey,
+                                    @Path("channel") String channel,
+                                    @QueryMap Map<String, String> options);
     }
 
     @Override
@@ -47,7 +49,7 @@ public class History extends Endpoint<JsonNode, HistoryData> {
         params.put("reverse", String.valueOf(reverse));
         params.put("include_token", String.valueOf(includeTimetoken));
 
-        if (count > 0 && count <= 10){
+        if (count > 0 && count <= 10) {
             params.put("count", String.valueOf(count));
         } else {
             params.put("count", "100");
@@ -64,8 +66,8 @@ public class History extends Endpoint<JsonNode, HistoryData> {
     }
 
     @Override
-    protected HistoryData createResponse(Response<JsonNode> input) throws PubnubException {
-        HistoryData historyData = new HistoryData();
+    protected PNHistoryResult createResponse(Response<JsonNode> input) throws PubnubException {
+        PNHistoryResult historyData = new PNHistoryResult();
 
         if (input.body() != null) {
             historyData.setStartTimeToken(input.body().get(1).asLong());
@@ -74,7 +76,7 @@ public class History extends Endpoint<JsonNode, HistoryData> {
             ArrayNode historyItems = (ArrayNode) input.body().get(0);
 
             for (final JsonNode historyItem : historyItems) {
-                HistoryItemData historyItemData = new HistoryItemData();
+                PNHistoryItemResult historyItemData = new PNHistoryItemResult();
                 Object message;
 
                 if (includeTimetoken) {
@@ -85,7 +87,7 @@ public class History extends Endpoint<JsonNode, HistoryData> {
                 }
 
                 historyItemData.setEntry(message);
-                historyData.getItems().add(historyItemData);
+                historyData.getMessages().add(historyItemData);
             }
         }
 

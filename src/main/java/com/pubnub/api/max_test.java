@@ -4,10 +4,7 @@ import com.pubnub.api.callbacks.SubscribeCallback;
 import com.pubnub.api.callbacks.PNCallback;
 import com.pubnub.api.core.PnConfiguration;
 import com.pubnub.api.core.Pubnub;
-import com.pubnub.api.core.models.consumer_facing.PNErrorStatus;
-import com.pubnub.api.core.models.consumer_facing.PNStatus;
-import com.pubnub.api.core.models.consumer_facing.PNMessageResult;
-import com.pubnub.api.core.models.consumer_facing.PNPresenceEventResult;
+import com.pubnub.api.core.models.consumer_facing.*;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
@@ -45,9 +42,9 @@ public class max_test {
         state.put("max", "moose");
 
         pubnub.subscribe().channel("max-ch1").withPresence().execute();
-        pubnub.setPresenceState().channel("max-ch1").state(state).build().async(new PNCallback<Boolean>() {
+        pubnub.setPresenceState().channel("max-ch1").state(state).build().async(new PNCallback<PNSetStateResult>() {
             @Override
-            public void onResponse(Boolean result, PNErrorStatus status) {
+            public void onResponse(PNSetStateResult result, PNErrorStatus status) {
                 int moose = 10;
             }
         });

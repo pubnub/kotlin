@@ -6,6 +6,7 @@ import com.pubnub.api.core.PubnubException;
 import com.pubnub.api.core.enums.PNOperationType;
 import com.pubnub.api.core.models.Envelope;
 import com.pubnub.api.core.models.WhereNowData;
+import com.pubnub.api.core.models.consumer_facing.PNPresenceWhereNowResult;
 import com.pubnub.api.endpoints.Endpoint;
 import lombok.Builder;
 import retrofit2.Call;
@@ -13,7 +14,7 @@ import retrofit2.Response;
 
 
 @Builder
-public class WhereNow extends Endpoint<Envelope<WhereNowData>, WhereNowData> {
+public class WhereNow extends Endpoint<Envelope<WhereNowData>, PNPresenceWhereNowResult> {
 
     private Pubnub pubnub;
     private String uuid;
@@ -32,12 +33,15 @@ public class WhereNow extends Endpoint<Envelope<WhereNowData>, WhereNowData> {
     }
 
     @Override
-    protected WhereNowData createResponse(Response<Envelope<WhereNowData>> input) throws PubnubException {
+    protected PNPresenceWhereNowResult createResponse(Response<Envelope<WhereNowData>> input) throws PubnubException {
         if (input.body() == null || input.body().getPayload() == null) {
             throw new PubnubException(PubnubError.PNERROBJ_PARSING_ERROR);
         }
 
-        return input.body().getPayload();
+        PNPresenceWhereNowResult pnPresenceWhereNowResult = new PNPresenceWhereNowResult();
+        pnPresenceWhereNowResult.setChannels(input.body().getPayload().getChannels());
+
+        return pnPresenceWhereNowResult;
     }
 
     protected int getConnectTimeout() {
