@@ -69,9 +69,9 @@ public class SetStateEndpointTest extends EndpointTest {
         assertEquals(result, true);
     }
 
-    @Test
+    @org.junit.Test(expected=PubnubException.class)
     public void applyNon200Sync() throws PubnubException, InterruptedException {
-        server.enqueue(new MockResponse().setBody("{ \"status\": 400, \"message\": \"OK\", \"payload\": { \"age\" : 20, \"status\" : \"online\" }, \"service\": \"Presence\"}"));
+        server.enqueue(new MockResponse().setBody("{ \"status\": 400, \"message\": \"OK\", \"payload\": { \"age\" : 20, \"status\" : \"online\" }, \"service\": \"Presence\"}").setResponseCode(400));
         Boolean result = partialSetState.channel("ch1").channelGroup("cg1").channelGroup("cg2").state(Arrays.asList("s1", "s2", "s3")).build().sync();
         assertEquals("/v2/presence/sub-key/mySubscribeKey/channel/ch1/uuid/myUUID/data?channel-group=cg1,cg2&state=[%22s1%22,%22s2%22,%22s3%22]", server.takeRequest().getPath());
         assertEquals(result, false);

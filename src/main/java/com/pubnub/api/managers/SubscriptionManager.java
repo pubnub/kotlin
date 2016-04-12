@@ -1,7 +1,6 @@
 package com.pubnub.api.managers;
 
 import com.pubnub.api.callbacks.SubscribeCallback;
-import com.pubnub.api.core.ErrorStatus;
 import com.pubnub.api.callbacks.PNCallback;
 import com.pubnub.api.core.Pubnub;
 import com.pubnub.api.core.enums.PNOperationType;
@@ -97,7 +96,7 @@ public class SubscriptionManager {
             .channels(channels).channelGroups(channelGroups).build()
             .async(new PNCallback<Boolean>() {
                 @Override
-                public void onResponse(Boolean result, ErrorStatus status) {
+                public void onResponse(Boolean result, PNErrorStatus status) {
                     int moose = 10;
                 }
         });
@@ -151,7 +150,7 @@ public class SubscriptionManager {
                 .channels(combinedChannels).channelGroups(combinedChannelGroups).timetoken(timetoken).build()
                 .async(new PNCallback<SubscribeEnvelope>() {
                     @Override
-                    public void onResponse(SubscribeEnvelope result, ErrorStatus status) {
+                    public void onResponse(SubscribeEnvelope result, PNErrorStatus status) {
                         if (result.getMessages().size() != 0) {
                             processIncomingMessages(result.getMessages());
                         }
@@ -190,7 +189,7 @@ public class SubscriptionManager {
                     .channels(presenceChannels).channelGroups(presenceChannelGroups).state(stateStorage).build()
                     .async(new PNCallback<Boolean>() {
                         @Override
-                        public void onResponse(Boolean result, ErrorStatus status) {
+                        public void onResponse(Boolean result, PNErrorStatus status) {
                             int moose = 10;
                         }
                     });

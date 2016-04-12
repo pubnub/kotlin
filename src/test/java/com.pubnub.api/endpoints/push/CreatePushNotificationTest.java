@@ -1,10 +1,10 @@
 package com.pubnub.api.endpoints.push;
 
 import com.jayway.awaitility.Awaitility;
-import com.pubnub.api.core.ErrorStatus;
 import com.pubnub.api.callbacks.PNCallback;
 import com.pubnub.api.core.PubnubException;
 import com.pubnub.api.core.models.PublishData;
+import com.pubnub.api.core.models.consumer_facing.PNErrorStatus;
 import com.pubnub.api.endpoints.EndpointTest;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -65,7 +65,7 @@ public class CreatePushNotificationTest extends EndpointTest {
         instance.pushType(PushType.APNS).channel("testChannel")
                 .pushPayload(Arrays.asList("a", "b")).build().async(new PNCallback<PublishData>() {
             @Override
-            public void onResponse(PublishData result, ErrorStatus status) {
+            public void onResponse(PublishData result, PNErrorStatus status) {
                 try {
                     assertEquals("/publish/myPublishKey/mySubscribeKey/0/testChannel/0/%7B%22pn_apns%22:[%22a%22,%22b%22]%7D?uuid=myUUID", server.takeRequest().getPath());
                     atomic.addAndGet(1);
@@ -87,7 +87,7 @@ public class CreatePushNotificationTest extends EndpointTest {
         instance.pushType(PushType.GCM).channel("testChannel")
                 .pushPayload(Arrays.asList("a", "b")).build().async(new PNCallback<PublishData>() {
             @Override
-            public void onResponse(PublishData result, ErrorStatus status) {
+            public void onResponse(PublishData result, PNErrorStatus status) {
                 try {
                     assertEquals("/publish/myPublishKey/mySubscribeKey/0/testChannel/0/%7B%22pn_gcm%22:[%22a%22,%22b%22]%7D?uuid=myUUID", server.takeRequest().getPath());
                 } catch (InterruptedException e) {
@@ -109,7 +109,7 @@ public class CreatePushNotificationTest extends EndpointTest {
         instance.pushType(PushType.MPNS).channel("testChannel")
                 .pushPayload(Arrays.asList("a", "b")).build().async(new PNCallback<PublishData>() {
             @Override
-            public void onResponse(PublishData result, ErrorStatus status) {
+            public void onResponse(PublishData result, PNErrorStatus status) {
                 try {
                     assertEquals("/publish/myPublishKey/mySubscribeKey/0/testChannel/0/%7B%22pn_mpns%22:[%22a%22,%22b%22]%7D?uuid=myUUID", server.takeRequest().getPath());
                     atomic.addAndGet(1);

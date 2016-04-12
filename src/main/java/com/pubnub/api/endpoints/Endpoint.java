@@ -2,12 +2,13 @@ package com.pubnub.api.endpoints;
 
 
 import com.pubnub.api.callbacks.PNCallback;
-import com.pubnub.api.core.*;
+import com.pubnub.api.core.Pubnub;
+import com.pubnub.api.core.PubnubError;
+import com.pubnub.api.core.PubnubException;
 import com.pubnub.api.core.enums.PNOperationType;
 import com.pubnub.api.core.models.consumer_facing.PNErrorStatus;
 import com.pubnub.api.core.utils.Base64;
 import okhttp3.OkHttpClient;
-import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -39,7 +40,7 @@ public abstract class Endpoint<Input, Output> {
             throw new PubnubException(PubnubError.PNERROBJ_HTTP_ERROR);
         }
 
-        if (!serverResponse.isSuccessful()) {
+        if (!serverResponse.isSuccessful() || serverResponse.code() != 200) {
             String responseBodyText;
 
             try {
@@ -64,55 +65,63 @@ public abstract class Endpoint<Input, Output> {
             call = doWork();
         } catch (PubnubException e) {
             PubnubException pubnubException = new PubnubException(PubnubError.PNERROBJ_INVALID_ARGUMENTS, e.getMessage());
-            ErrorStatus errorStatus = new ErrorStatus();
-            errorStatus.setThrowable(pubnubException);
-            callback.onResponse(null, errorStatus);
+            PNErrorStatus pnErrorStatus = new PNErrorStatus();
+            writeFieldsToResponse(null, pnErrorStatus, true, pubnubException);
+            callback.onResponse(null, pnErrorStatus);
         }
 
         call.enqueue(new retrofit2.Callback<Input>() {
-
-
-            private ErrorStatus prepareError(final Throwable throwable, final Call<Input> call) {
-                ErrorStatus errorStatus = new ErrorStatus();
-                errorStatus.setExecutedCall(call);
-                errorStatus.setThrowable(throwable);
-                errorStatus.setCallbacks(this);
-                return errorStatus;
-            }
 
             @Override
             public void onResponse(final Call<Input> call, final Response<Input> response) {
                 Output callbackResponse = null;
                 PNErrorStatus pnErrorStatus = new PNErrorStatus();
-                pnErrorStatus.setOperation(getOperationType());
+
+
+                if (!response.isSuccessful() || response.code() != 200) {
+
+                    String responseBodyText;
+
+                    try {
+                        responseBodyText = response.errorBody().string();
+                    } catch (IOException e) {
+                        responseBodyText = "N/A";
+                    }
+
+                    PubnubException ex = new PubnubException(PubnubError.PNERROBJ_HTTP_ERROR, responseBodyText, response.code());
+                    writeFieldsToResponse(response, pnErrorStatus, false, null);
+                    callback.onResponse(null, pnErrorStatus);
+                    return;
+                }
 
                 try {
                     callbackResponse = createResponse(response);
                 } catch (PubnubException e) {
                     PubnubException pubnubException = new PubnubException(PubnubError.PNERROBJ_HTTP_ERROR, e.getMessage(), response.code());
-                    ErrorStatus errorStatus = prepareError(pubnubException, call);
-                    callback.onResponse(null, errorStatus);
+                    writeFieldsToResponse(response, pnErrorStatus, false, pubnubException);
+                    callback.onResponse(null, pnErrorStatus);
+                    return;
                 }
 
-                if (response.isSuccessful()) {
-                    callback.onResponse(callbackResponse, null);
-                } else {
-                    PubnubException pubnubException = new PubnubException(PubnubError.PNERROBJ_HTTP_ERROR, response.message(), response.code());
-                    ErrorStatus errorStatus = prepareError(pubnubException, call);
-                    callback.onResponse(null, errorStatus);
-                }
-
+                writeFieldsToResponse(response, pnErrorStatus, true, null);
+                callback.onResponse(callbackResponse, pnErrorStatus);
             }
 
             @Override
             public void onFailure(final Call<Input> call, final Throwable throwable) {
-                ErrorStatus errorStatus = prepareError(throwable, call);
-                callback.onResponse(null, errorStatus);
+                PNErrorStatus pnErrorStatus = new PNErrorStatus();
+                writeFieldsToResponse(null, pnErrorStatus, true, throwable);
+                callback.onResponse(null, pnErrorStatus);
 
             }
         });
 
         return call;
+    }
+
+    private void writeFieldsToResponse(Response<Input> response, PNErrorStatus pnErrorStatus, boolean isError, Throwable throwable) {
+        pnErrorStatus.setOperation(getOperationType());
+        pnErrorStatus.setError(isError);
     }
 
     protected String signSHA256(String key, String data) throws PubnubException {

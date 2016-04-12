@@ -3,9 +3,9 @@ package com.pubnub.api.endpoints.presence;
 
 import com.jayway.awaitility.Awaitility;
 import com.pubnub.api.callbacks.WhereNowCallback;
-import com.pubnub.api.core.ErrorStatus;
 import com.pubnub.api.core.PubnubException;
 import com.pubnub.api.core.models.WhereNowData;
+import com.pubnub.api.core.models.consumer_facing.PNErrorStatus;
 import com.pubnub.api.endpoints.EndpointTest;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -70,7 +70,7 @@ public class WhereNowEndpointTest extends EndpointTest {
         partialWhereNow.build().async(new WhereNowCallback(){
 
             @Override
-            public void onResponse(WhereNowData result, ErrorStatus status) {
+            public void onResponse(WhereNowData result, PNErrorStatus status) {
                 assertThat(result.getChannels(), org.hamcrest.Matchers.contains("a", "b"));
                 atomic.incrementAndGet();
             }
@@ -87,7 +87,7 @@ public class WhereNowEndpointTest extends EndpointTest {
         partialWhereNow.build().async(new WhereNowCallback(){
 
             @Override
-            public void onResponse(WhereNowData result, ErrorStatus status) {
+            public void onResponse(WhereNowData result, PNErrorStatus status) {
                 atomic.incrementAndGet();
             }
 
@@ -105,7 +105,7 @@ public class WhereNowEndpointTest extends EndpointTest {
         partialWhereNow.build().async(new WhereNowCallback(){
 
             @Override
-            public void onResponse(WhereNowData result, ErrorStatus status) {
+            public void onResponse(WhereNowData result, PNErrorStatus status) {
                 atomic.incrementAndGet();
             }
         });
@@ -122,7 +122,7 @@ public class WhereNowEndpointTest extends EndpointTest {
         partialWhereNow.build().async(new WhereNowCallback(){
 
             @Override
-            public void onResponse(WhereNowData result, ErrorStatus status) {
+            public void onResponse(WhereNowData result, PNErrorStatus status) {
                 atomic.incrementAndGet();
             }
         });

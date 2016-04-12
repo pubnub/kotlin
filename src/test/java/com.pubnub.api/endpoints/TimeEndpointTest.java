@@ -2,8 +2,8 @@ package com.pubnub.api.endpoints;
 
 import com.jayway.awaitility.Awaitility;
 import com.pubnub.api.callbacks.TimeCallback;
-import com.pubnub.api.core.ErrorStatus;
 import com.pubnub.api.core.PubnubException;
+import com.pubnub.api.core.models.consumer_facing.PNErrorStatus;
 import com.pubnub.api.core.models.consumer_facing.PNTimeResult;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -62,7 +62,7 @@ public class TimeEndpointTest extends EndpointTest {
         partialTime.async(new TimeCallback(){
 
             @Override
-            public void onResponse(PNTimeResult result, ErrorStatus status) {
+            public void onResponse(PNTimeResult result, PNErrorStatus status) {
                 assertTrue(result.getTimetoken().equals(14593046077243110L));
                 atomic.incrementAndGet();
             }
@@ -79,7 +79,7 @@ public class TimeEndpointTest extends EndpointTest {
         partialTime.async(new TimeCallback(){
 
             @Override
-            public void onResponse(PNTimeResult result, ErrorStatus status) {
+            public void onResponse(PNTimeResult result, PNErrorStatus status) {
                 if (status != null) {
                     atomic.incrementAndGet();
                 }
@@ -98,7 +98,7 @@ public class TimeEndpointTest extends EndpointTest {
         partialTime.async(new TimeCallback(){
 
             @Override
-            public void onResponse(PNTimeResult result, ErrorStatus status) {
+            public void onResponse(PNTimeResult result, PNErrorStatus status) {
                 if (status != null) {
                     atomic.incrementAndGet();
                 }
@@ -117,7 +117,7 @@ public class TimeEndpointTest extends EndpointTest {
         partialTime.async(new TimeCallback(){
 
             @Override
-            public void onResponse(PNTimeResult result, ErrorStatus status) {
+            public void onResponse(PNTimeResult result, PNErrorStatus status) {
                 if (status != null) {
                     atomic.incrementAndGet();
                 }

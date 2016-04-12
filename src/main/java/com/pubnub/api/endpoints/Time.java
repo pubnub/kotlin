@@ -37,7 +37,7 @@ public class Time extends Endpoint<List<Long>, PNTimeResult> {
     protected final PNTimeResult createResponse(final Response<List<Long>> input) throws PubnubException {
         PNTimeResult timeData = new PNTimeResult();
 
-        if (input.body() == null || input.body().size() > 0) {
+        if (input.body() == null || input.body().size() == 0) {
             throw new PubnubException(PubnubError.PNERROBJ_PARSING_ERROR);
         }
 
