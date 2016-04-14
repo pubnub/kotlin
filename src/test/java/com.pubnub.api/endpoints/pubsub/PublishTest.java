@@ -51,16 +51,16 @@ public class PublishTest extends EndpointTest {
     @Test
     public void testSuccessStoreSync() throws PubnubException, InterruptedException {
         server.enqueue(new MockResponse().setBody(("[1,\"Sent\",\"14598111595318003\"]")));
-        instance.channel("coolChannel").message("hi").shouldStore(true).build().sync();
-        assertEquals("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22hi%22?store=true&uuid=myUUID", server.takeRequest().getPath());
+        instance.channel("coolChannel").message("hi").shouldStore(false).build().sync();
+        assertEquals("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22hi%22?store=0&uuid=myUUID", server.takeRequest().getPath());
     }
 
     @Test
     public void testSuccessMetaSync() throws PubnubException, InterruptedException {
         server.enqueue(new MockResponse().setBody(("[1,\"Sent\",\"14598111595318003\"]")));
-        instance.channel("coolChannel").message("hi").meta(Arrays.asList("m1", "m2")).shouldStore(true).build().sync();
+        instance.channel("coolChannel").message("hi").meta(Arrays.asList("m1", "m2")).shouldStore(false).build().sync();
 
-        assertEquals("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22hi%22?meta=[%22m1%22,%22m2%22]&store=true&uuid=myUUID", server.takeRequest().getPath());
+        assertEquals("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22hi%22?meta=[%22m1%22,%22m2%22]&store=0&uuid=myUUID", server.takeRequest().getPath());
     }
 
     @Test

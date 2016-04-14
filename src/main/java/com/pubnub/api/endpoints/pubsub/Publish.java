@@ -65,8 +65,8 @@ public class Publish extends Endpoint<List<Object>, PublishData> {
 
         params.put("uuid", pubnub.getConfiguration().getUuid());
 
-        if (shouldStore != null) {
-            params.put("store", shouldStore);
+        if (shouldStore != null && !shouldStore) {
+            params.put("store", "0");
         }
 
         if (pubnub.getConfiguration().getCipherKey() != null) {

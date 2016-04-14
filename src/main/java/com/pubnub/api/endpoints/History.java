@@ -1,8 +1,11 @@
 package com.pubnub.api.endpoints;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.pubnub.api.core.Crypto;
 import com.pubnub.api.core.Pubnub;
+import com.pubnub.api.core.PubnubError;
 import com.pubnub.api.core.PubnubException;
 import com.pubnub.api.core.enums.PNOperationType;
 import com.pubnub.api.core.models.consumer_facing.PNHistoryResult;
@@ -14,6 +17,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.QueryMap;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,10 +26,10 @@ public class History extends Endpoint<JsonNode, PNHistoryResult> {
 
     private Pubnub pubnub;
     private String channel;
-    private long start = -1;
-    private long end = -1;
+    private Long start;
+    private Long end;
     private boolean reverse = false;
-    private int count = -1;
+    private Integer count;
     private boolean includeTimetoken = false;
 
     private interface HistoryService {
@@ -49,16 +53,16 @@ public class History extends Endpoint<JsonNode, PNHistoryResult> {
         params.put("reverse", String.valueOf(reverse));
         params.put("include_token", String.valueOf(includeTimetoken));
 
-        if (count > 0 && count <= 10) {
+        if (count != null && count > 0 && count <= 10) {
             params.put("count", String.valueOf(count));
         } else {
             params.put("count", "100");
         }
 
-        if (start != -1) {
+        if (start != null) {
             params.put("start", Long.toString(start).toLowerCase());
         }
-        if (end != -1) {
+        if (end != null) {
             params.put("end", Long.toString(end).toLowerCase());
         }
 
@@ -81,9 +85,9 @@ public class History extends Endpoint<JsonNode, PNHistoryResult> {
 
                 if (includeTimetoken) {
                     historyItemData.setTimetoken(historyItem.get("timetoken").asLong());
-                    message = historyItem.get("message");
+                    message = processMessage(historyItem.get("message"));
                 } else {
-                    message = historyItem;
+                    message = processMessage(historyItem);
                 }
 
                 historyItemData.setEntry(message);
@@ -105,6 +109,25 @@ public class History extends Endpoint<JsonNode, PNHistoryResult> {
     @Override
     protected PNOperationType getOperationType() {
         return PNOperationType.PNHistoryOperation;
+    }
+
+    private Object processMessage(JsonNode message) throws PubnubException {
+        if (this.pubnub.getConfiguration().getCipherKey() == null) {
+            return message;
+        }
+
+        Crypto crypto = new Crypto(pubnub.getConfiguration().getCipherKey());
+        String outputText = crypto.decrypt(message.asText());
+
+        ObjectMapper mapper = new ObjectMapper();
+        Object outputObject;
+        try {
+            outputObject = mapper.readValue(outputText, JsonNode.class);
+        } catch (IOException e) {
+            throw new PubnubException(PubnubError.PNERROBJ_PARSING_ERROR);
+        }
+
+        return outputObject;
     }
 
 }

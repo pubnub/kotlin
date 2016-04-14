@@ -4,6 +4,7 @@ import com.pubnub.api.callbacks.SubscribeCallback;
 import com.pubnub.api.core.PnConfiguration;
 import com.pubnub.api.core.Pubnub;
 import com.pubnub.api.core.PubnubException;
+import com.pubnub.api.core.models.consumer_facing.PNHistoryResult;
 import com.pubnub.api.core.models.consumer_facing.PNMessageResult;
 import com.pubnub.api.core.models.consumer_facing.PNPresenceEventResult;
 import com.pubnub.api.core.models.consumer_facing.PNStatus;
@@ -67,9 +68,14 @@ public class max_test {
         }
         */
 
+
         pubnub.publish()
-                .channel("coolChannel").usePOST(true)
+                .channel("coolChannelENC2").usePOST(false).shouldStore(true)
                 .message(Arrays.asList("m1", "m2", "m3")).build().sync();
+
+        PNHistoryResult moose = pubnub.history().channel("coolChannelENC2").build().sync();
+
+        int max = 10;
 
         /*
         Object moose = pubnub.audit()
