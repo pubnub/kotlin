@@ -2,6 +2,7 @@ package com.pubnub.api.endpoints;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pubnub.api.core.Pubnub;
 import com.pubnub.api.core.PubnubException;
 import com.pubnub.api.core.models.consumer_facing.PNHistoryResult;
 import okhttp3.mockwebserver.MockResponse;
@@ -20,13 +21,16 @@ public class HistoryEndpointTest extends EndpointTest {
 
     private MockWebServer server;
     private History.HistoryBuilder partialHistory;
+    private Pubnub pubnub;
 
 
     @Before
     public void beforeEach() throws IOException {
         server = new MockWebServer();
         server.start();
-        partialHistory = this.createPubNubInstance(server).history();
+
+        pubnub = this.createPubNubInstance(server);
+        partialHistory = pubnub.history();
     }
 
 
@@ -73,6 +77,35 @@ public class HistoryEndpointTest extends EndpointTest {
         Assert.assertTrue(response.getMessages().get(1).getTimetoken().equals(2222L));
         Assert.assertEquals(((JsonNode) response.getMessages().get(1).getEntry()).get("a").asInt(), 33);
         Assert.assertEquals(((JsonNode) response.getMessages().get(1).getEntry()).get("b").asInt(), 44);
+    }
+
+
+    @org.junit.Test
+    public void testSyncEncryptedSuccess() throws IOException, PubnubException {
+        pubnub.getConfiguration().setCipherKey("testCipher");
+
+
+        server.enqueue(new MockResponse().setBody("[[\"EGwV+Ti43wh2TprPIq7o0KMuW5j6B3yWy352ucWIOmU=\\n\",\"EGwV+Ti43wh2TprPIq7o0KMuW5j6B3yWy352ucWIOmU=\\n\",\"EGwV+Ti43wh2TprPIq7o0KMuW5j6B3yWy352ucWIOmU=\\n\"],14606134331557853,14606134485013970]"));
+        PNHistoryResult response = partialHistory.channel("niceChannel").includeTimetoken(false).build().sync();
+
+        Assert.assertTrue(response.getStartTimeToken().equals(14606134331557853L));
+        Assert.assertTrue(response.getEndTimeToken().equals(14606134485013970L));
+
+        Assert.assertEquals(response.getMessages().size(), 3);
+
+        Assert.assertEquals(response.getMessages().get(0).getTimetoken(), null);
+        Assert.assertEquals("m1", ((JsonNode) response.getMessages().get(0).getEntry()).get(0).asText());
+        Assert.assertEquals("m2", ((JsonNode) response.getMessages().get(0).getEntry()).get(1).asText());
+        Assert.assertEquals("m3", ((JsonNode) response.getMessages().get(0).getEntry()).get(2).asText());
+
+        Assert.assertEquals("m1", ((JsonNode) response.getMessages().get(1).getEntry()).get(0).asText());
+        Assert.assertEquals("m2", ((JsonNode) response.getMessages().get(1).getEntry()).get(1).asText());
+        Assert.assertEquals("m3", ((JsonNode) response.getMessages().get(1).getEntry()).get(2).asText());
+
+        Assert.assertEquals("m1", ((JsonNode) response.getMessages().get(2).getEntry()).get(0).asText());
+        Assert.assertEquals("m2", ((JsonNode) response.getMessages().get(2).getEntry()).get(1).asText());
+        Assert.assertEquals("m3", ((JsonNode) response.getMessages().get(2).getEntry()).get(2).asText());
+
     }
 
     @org.junit.Test

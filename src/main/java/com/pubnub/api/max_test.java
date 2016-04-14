@@ -4,13 +4,11 @@ import com.pubnub.api.callbacks.SubscribeCallback;
 import com.pubnub.api.core.PnConfiguration;
 import com.pubnub.api.core.Pubnub;
 import com.pubnub.api.core.PubnubException;
-import com.pubnub.api.core.models.consumer_facing.PNHistoryResult;
 import com.pubnub.api.core.models.consumer_facing.PNMessageResult;
 import com.pubnub.api.core.models.consumer_facing.PNPresenceEventResult;
 import com.pubnub.api.core.models.consumer_facing.PNStatus;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -47,7 +45,7 @@ public class max_test {
         Map<String, Object> state = new HashMap<>();
         state.put("max", "moose");
 
-        //pubnub.subscribe().channel("max-ch1").withPresence().execute();
+        pubnub.subscribe().channel("coolChannelENC").withPresence().execute();
         //pubnub.setPresenceState().channel("max-ch1").state(state).build().async(new PNCallback<PNSetStateResult>() {
         //    @Override
         //    public void onResponse(PNSetStateResult result, PNErrorStatus status) {
@@ -69,11 +67,13 @@ public class max_test {
         */
 
 
+        /*
         pubnub.publish()
                 .channel("coolChannelENC2").usePOST(false).shouldStore(true)
                 .message(Arrays.asList("m1", "m2", "m3")).build().sync();
 
         PNHistoryResult moose = pubnub.history().channel("coolChannelENC2").build().sync();
+        */
 
         int max = 10;
 
