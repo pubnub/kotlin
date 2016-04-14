@@ -45,7 +45,7 @@ public class SetStateEndpointTest extends EndpointTest {
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
-        assertEquals("[%22s1%22,%22s2%22,%22s3%22]", requests.get(0).queryParameter("state").firstValue());
+        assertEquals("%5B%22s1%22%2C%22s2%22%2C%22s3%22%5D", requests.get(0).queryParameter("state").firstValue());
 
     }
 
@@ -61,7 +61,7 @@ public class SetStateEndpointTest extends EndpointTest {
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
-        assertEquals("[%22s1%22,%22s2%22,%22s3%22]", requests.get(0).queryParameter("state").firstValue());
+        assertEquals("%5B%22s1%22%2C%22s2%22%2C%22s3%22%5D", requests.get(0).queryParameter("state").firstValue());
     }
 
     @Test
@@ -77,7 +77,7 @@ public class SetStateEndpointTest extends EndpointTest {
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
-        assertEquals("[%22s1%22,%22s2%22,%22s3%22]", requests.get(0).queryParameter("state").firstValue());
+        assertEquals("%5B%22s1%22%2C%22s2%22%2C%22s3%22%5D", requests.get(0).queryParameter("state").firstValue());
         assertEquals("cg1", requests.get(0).queryParameter("channel-group").firstValue());
     }
 
@@ -94,7 +94,7 @@ public class SetStateEndpointTest extends EndpointTest {
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
-        assertEquals("[%22s1%22,%22s2%22,%22s3%22]", requests.get(0).queryParameter("state").firstValue());
+        assertEquals("%5B%22s1%22%2C%22s2%22%2C%22s3%22%5D", requests.get(0).queryParameter("state").firstValue());
         assertEquals("cg1,cg2", requests.get(0).queryParameter("channel-group").firstValue());
 
     }
@@ -112,7 +112,7 @@ public class SetStateEndpointTest extends EndpointTest {
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
-        assertEquals("[%22s1%22,%22s2%22,%22s3%22]", requests.get(0).queryParameter("state").firstValue());
+        assertEquals("%5B%22s1%22%2C%22s2%22%2C%22s3%22%5D", requests.get(0).queryParameter("state").firstValue());
         assertEquals("cg1,cg2", requests.get(0).queryParameter("channel-group").firstValue());
 
     }
