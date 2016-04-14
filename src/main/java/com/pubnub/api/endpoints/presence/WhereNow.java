@@ -12,6 +12,8 @@ import lombok.Builder;
 import retrofit2.Call;
 import retrofit2.Response;
 
+import java.util.Map;
+
 
 @Builder
 public class WhereNow extends Endpoint<Envelope<WhereNowData>, PNPresenceWhereNowResult> {
@@ -26,10 +28,10 @@ public class WhereNow extends Endpoint<Envelope<WhereNowData>, PNPresenceWhereNo
     }
 
     @Override
-    protected Call<Envelope<WhereNowData>> doWork() {
+    protected Call<Envelope<WhereNowData>> doWork(Map<String, Object> params) {
         PresenceService service = this.createRetrofit(pubnub).create(PresenceService.class);
         return service.whereNow(pubnub.getConfiguration().getSubscribeKey(),
-                this.uuid != null ? this.uuid : pubnub.getConfiguration().getUuid());
+                this.uuid != null ? this.uuid : pubnub.getConfiguration().getUuid(), params);
     }
 
     @Override
@@ -55,6 +57,11 @@ public class WhereNow extends Endpoint<Envelope<WhereNowData>, PNPresenceWhereNo
     @Override
     protected PNOperationType getOperationType() {
         return PNOperationType.PNWhereNowOperation;
+    }
+
+    @Override
+    protected Pubnub getPubnub() {
+        return pubnub;
     }
 
 }

@@ -37,9 +37,8 @@ public class Audit extends Endpoint<Envelope<PNAccessManagerAuditData>, PNAccess
     }
 
     @Override
-    protected Call<Envelope<PNAccessManagerAuditData>> doWork() throws PubnubException {
+    protected Call<Envelope<PNAccessManagerAuditData>> doWork(Map<String, Object> queryParams) throws PubnubException {
         String signature;
-        Map<String, Object> queryParams = new HashMap<>();
         Map<String, String> signParams = new HashMap<>();
         int timestamp = (int) ((new Date().getTime()) / 1000);
 
@@ -95,6 +94,11 @@ public class Audit extends Endpoint<Envelope<PNAccessManagerAuditData>, PNAccess
     @Override
     protected PNOperationType getOperationType() {
         return PNOperationType.PNAccessManagerAudit;
+    }
+
+    @Override
+    protected Pubnub getPubnub() {
+        return pubnub;
     }
 
 }

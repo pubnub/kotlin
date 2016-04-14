@@ -10,7 +10,6 @@ import lombok.Builder;
 import retrofit2.Call;
 import retrofit2.Response;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -28,13 +27,12 @@ public class Heartbeat extends Endpoint<Envelope, Boolean> {
     }
 
     @Override
-    protected Call<Envelope> doWork() {
-        Map<String, Object> params = new HashMap<>();
+    protected Call<Envelope> doWork(Map<String, Object> params) {
 
         params.put("uuid", pubnub.getConfiguration().getUuid());
-        params.put("heartbeat", pubnub.getConfiguration().getPresenceTimeout());
+        params.put("heartbeat", String.valueOf(pubnub.getConfiguration().getPresenceTimeout()));
 
-        if (channelGroups != null && channelGroups.size() > 0){
+        if (channelGroups != null && channelGroups.size() > 0) {
             params.put("channel-group", PubnubUtil.joinString(channelGroups, ","));
         }
 
@@ -70,6 +68,11 @@ public class Heartbeat extends Endpoint<Envelope, Boolean> {
     @Override
     protected PNOperationType getOperationType() {
         return PNOperationType.PNHeartbeatOperation;
+    }
+
+    @Override
+    protected Pubnub getPubnub() {
+        return pubnub;
     }
 
 }

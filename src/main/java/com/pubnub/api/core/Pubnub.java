@@ -1,6 +1,5 @@
 package com.pubnub.api.core;
 
-
 import com.pubnub.api.callbacks.SubscribeCallback;
 import com.pubnub.api.core.builder.SubscribeBuilder;
 import com.pubnub.api.core.builder.UnsubscribeBuilder;
@@ -19,6 +18,10 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 
 @Getter
 @Slf4j
@@ -31,10 +34,14 @@ public class Pubnub {
     @Getter(AccessLevel.NONE)
     private BasePathManager basePathManager;
 
+    private String sdkVersion;
+
     public Pubnub(final PnConfiguration initialConfig) {
         this.configuration = initialConfig;
         this.subscriptionManager = new SubscriptionManager(this);
         this.basePathManager = new BasePathManager(initialConfig);
+
+        sdkVersion = fetchSDKVersion();
     }
 
     public String getBaseUrl() {
@@ -161,6 +168,24 @@ public class Pubnub {
         }
 
         return new Crypto(cipherKey).encrypt(inputString);
+    }
+
+    public String getVersion() {
+        return sdkVersion;
+    }
+
+    private String fetchSDKVersion() {
+        byte[] encoded;
+        try {
+            encoded = Files.readAllBytes(Paths.get(Pubnub.class.getClassLoader().getResource("version.properties").getPath()));
+        } catch (IOException e) {
+            return "N/A";
+        }
+        try {
+            return new String(encoded, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            return "N/A";
+        }
     }
 
 }

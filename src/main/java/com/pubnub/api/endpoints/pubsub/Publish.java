@@ -38,8 +38,7 @@ public class Publish extends Endpoint<List<Object>, PublishData> {
     }
 
     @Override
-    protected final Call<List<Object>> doWork() throws PubnubException {
-        Map<String, Object> params = this.createBaseParams();
+    protected final Call<List<Object>> doWork(Map<String, Object> params) throws PubnubException {
         String stringifiedMessage;
         String stringifiedMeta;
         ObjectWriter ow = new ObjectMapper().writer();
@@ -115,6 +114,11 @@ public class Publish extends Endpoint<List<Object>, PublishData> {
     @Override
     protected PNOperationType getOperationType() {
         return PNOperationType.PNPublishOperation;
+    }
+
+    @Override
+    protected Pubnub getPubnub() {
+        return pubnub;
     }
 
 }

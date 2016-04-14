@@ -13,7 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import retrofit2.Call;
 import retrofit2.Response;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -47,10 +46,9 @@ public class Subscribe extends Endpoint<SubscribeEnvelope, SubscribeEnvelope> {
     }
 
     @Override
-    protected final Call<SubscribeEnvelope> doWork() throws PubnubException {
+    protected final Call<SubscribeEnvelope> doWork(Map<String, Object> params) throws PubnubException {
         PubSubService pubSubService = this.createRetrofit(this.pubnub).create(PubSubService.class);
         String channelCSV;
-        Map<String, Object> params = new HashMap<>();
 
         if (channelGroups.size() > 0) {
             params.put("channel-group", PubnubUtil.joinString(channelGroups, ","));
@@ -91,6 +89,11 @@ public class Subscribe extends Endpoint<SubscribeEnvelope, SubscribeEnvelope> {
     @Override
     protected PNOperationType getOperationType() {
         return null;
+    }
+
+    @Override
+    protected Pubnub getPubnub() {
+        return pubnub;
     }
 
 }

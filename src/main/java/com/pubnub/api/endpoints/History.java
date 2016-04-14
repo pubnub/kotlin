@@ -8,8 +8,8 @@ import com.pubnub.api.core.Pubnub;
 import com.pubnub.api.core.PubnubError;
 import com.pubnub.api.core.PubnubException;
 import com.pubnub.api.core.enums.PNOperationType;
-import com.pubnub.api.core.models.consumer_facing.PNHistoryResult;
 import com.pubnub.api.core.models.consumer_facing.PNHistoryItemResult;
+import com.pubnub.api.core.models.consumer_facing.PNHistoryResult;
 import lombok.Builder;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -18,7 +18,6 @@ import retrofit2.http.Path;
 import retrofit2.http.QueryMap;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
 @Builder
@@ -36,7 +35,7 @@ public class History extends Endpoint<JsonNode, PNHistoryResult> {
         @GET("v2/history/sub-key/{subKey}/channel/{channel}")
         Call<JsonNode> fetchHistory(@Path("subKey") String subKey,
                                     @Path("channel") String channel,
-                                    @QueryMap Map<String, String> options);
+                                    @QueryMap Map<String, Object> options);
     }
 
     @Override
@@ -45,8 +44,7 @@ public class History extends Endpoint<JsonNode, PNHistoryResult> {
     }
 
     @Override
-    protected Call<JsonNode> doWork() {
-        Map<String, String> params = new HashMap<String, String>();
+    protected Call<JsonNode> doWork(Map<String, Object> params) {
 
         HistoryService service = this.createRetrofit(pubnub).create(HistoryService.class);
 
@@ -109,6 +107,11 @@ public class History extends Endpoint<JsonNode, PNHistoryResult> {
     @Override
     protected PNOperationType getOperationType() {
         return PNOperationType.PNHistoryOperation;
+    }
+
+    @Override
+    protected Pubnub getPubnub() {
+        return pubnub;
     }
 
     private Object processMessage(JsonNode message) throws PubnubException {

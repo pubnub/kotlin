@@ -10,7 +10,6 @@ import lombok.Singular;
 import retrofit2.Call;
 import retrofit2.Response;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -43,9 +42,7 @@ public class ModifyProvisions extends Endpoint<List<Object>, Boolean> {
     }
 
     @Override
-    protected Call<List<Object>> doWork() throws PubnubException {
-        Map<String, Object> params = new HashMap<String, Object>();
-
+    protected Call<List<Object>> doWork(Map<String, Object> params) throws PubnubException {
         params.put("type", pushType.name().toLowerCase());
 
         if (addChannels.size() != 0) {
@@ -83,6 +80,11 @@ public class ModifyProvisions extends Endpoint<List<Object>, Boolean> {
     @Override
     protected PNOperationType getOperationType() {
         return PNOperationType.PNPushNotificationModifiedChannelsOperations;
+    }
+
+    @Override
+    protected Pubnub getPubnub() {
+        return pubnub;
     }
 
 }

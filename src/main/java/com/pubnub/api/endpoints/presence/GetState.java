@@ -37,8 +37,7 @@ public class GetState extends Endpoint<Envelope<Object>,Map<String, Object>> {
     }
 
     @Override
-    protected Call<Envelope<Object>> doWork() throws PubnubException {
-        Map<String, Object> params = this.createBaseParams();
+    protected Call<Envelope<Object>> doWork(Map<String, Object> params) throws PubnubException {
         PresenceService service = this.createRetrofit(this.pubnub).create(PresenceService.class);
 
         if (channelGroups.size() > 0) {
@@ -75,6 +74,11 @@ public class GetState extends Endpoint<Envelope<Object>,Map<String, Object>> {
     @Override
     protected PNOperationType getOperationType() {
         return PNOperationType.PNGetState;
+    }
+
+    @Override
+    protected Pubnub getPubnub() {
+        return pubnub;
     }
 
 }

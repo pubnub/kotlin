@@ -11,7 +11,6 @@ import lombok.Singular;
 import retrofit2.Call;
 import retrofit2.Response;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -29,8 +28,7 @@ public class Leave extends Endpoint<Envelope, Boolean> {
     }
 
     @Override
-    protected Call<Envelope> doWork() {
-        Map<String, Object> params = new HashMap<>();
+    protected Call<Envelope> doWork(Map<String, Object> params) {
         String channelCSV;
         PresenceService service = this.createRetrofit(pubnub).create(PresenceService.class);
 
@@ -65,6 +63,11 @@ public class Leave extends Endpoint<Envelope, Boolean> {
     @Override
     protected PNOperationType getOperationType() {
         return PNOperationType.PNUnsubscribeOperation;
+    }
+
+    @Override
+    protected Pubnub getPubnub() {
+        return pubnub;
     }
 
 }

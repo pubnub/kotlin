@@ -35,7 +35,7 @@ public class HereNow extends Endpoint<Envelope<Object>, HereNowData> {
     }
 
     @Override
-    protected Call<Envelope<Object>> doWork() {
+    protected Call<Envelope<Object>> doWork(Map<String, Object> params) {
 
         if (includeState == null) {
             includeState = false;
@@ -46,7 +46,6 @@ public class HereNow extends Endpoint<Envelope<Object>, HereNowData> {
         }
 
         String channelCSV;
-        Map<String, String> params = new HashMap<String, String>();
 
         PresenceService service = this.createRetrofit(pubnub).create(PresenceService.class);
 
@@ -166,6 +165,11 @@ public class HereNow extends Endpoint<Envelope<Object>, HereNowData> {
     @Override
     protected PNOperationType getOperationType() {
         return PNOperationType.PNHereNowOperation;
+    }
+
+    @Override
+    protected Pubnub getPubnub() {
+        return pubnub;
     }
 
 }

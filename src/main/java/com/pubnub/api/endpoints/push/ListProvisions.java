@@ -8,7 +8,6 @@ import lombok.Builder;
 import retrofit2.Call;
 import retrofit2.Response;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,8 +24,7 @@ public class ListProvisions extends Endpoint<List<String>, List<String>> {
     }
 
     @Override
-    protected Call<List<String>> doWork() throws PubnubException {
-        Map<String, Object> params = new HashMap<String, Object>();
+    protected Call<List<String>> doWork(Map<String, Object> params) throws PubnubException {
         params.put("type", pushType.name().toLowerCase());
         PushService service = this.createRetrofit(pubnub).create(PushService.class);
         return service.listChannelsForDevice(pubnub.getConfiguration().getSubscribeKey(), deviceId, params);
@@ -48,6 +46,11 @@ public class ListProvisions extends Endpoint<List<String>, List<String>> {
     @Override
     protected PNOperationType getOperationType() {
         return PNOperationType.PNPushNotificationListChannelsOperation;
+    }
+
+    @Override
+    protected Pubnub getPubnub() {
+        return pubnub;
     }
 
 }

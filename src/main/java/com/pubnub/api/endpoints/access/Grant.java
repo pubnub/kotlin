@@ -39,9 +39,8 @@ public class Grant extends Endpoint<Envelope<PNAccessManagerGrantData>, PNAccess
     }
 
     @Override
-    protected Call<Envelope<PNAccessManagerGrantData>> doWork() throws PubnubException {
+    protected Call<Envelope<PNAccessManagerGrantData>> doWork(Map<String, Object> queryParams) throws PubnubException {
         String signature;
-        Map<String, Object> queryParams = new HashMap<>();
         Map<String, String> signParams = new HashMap<>();
         int timestamp = (int) ((new Date().getTime()) / 1000);
 
@@ -116,6 +115,11 @@ public class Grant extends Endpoint<Envelope<PNAccessManagerGrantData>, PNAccess
     @Override
     protected PNOperationType getOperationType() {
         return PNOperationType.PNAccessManagerGrant;
+    }
+
+    @Override
+    protected Pubnub getPubnub() {
+        return pubnub;
     }
 
 }

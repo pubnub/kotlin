@@ -49,8 +49,7 @@ public class SetState extends Endpoint<Envelope<Map<String, Object>>, PNSetState
     }
 
     @Override
-    protected Call<Envelope<Map<String, Object>>> doWork() throws PubnubException {
-        Map<String, Object> params = this.createBaseParams();
+    protected Call<Envelope<Map<String, Object>>> doWork(Map<String, Object> params) throws PubnubException {
         ObjectWriter ow = new ObjectMapper().writer();
         String stringifiedState;
 
@@ -102,6 +101,11 @@ public class SetState extends Endpoint<Envelope<Map<String, Object>>, PNSetState
     @Override
     protected PNOperationType getOperationType() {
         return PNOperationType.PNSetStateOperation;
+    }
+
+    @Override
+    protected Pubnub getPubnub() {
+        return pubnub;
     }
 
 }

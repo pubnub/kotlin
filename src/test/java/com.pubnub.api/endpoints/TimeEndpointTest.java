@@ -34,6 +34,7 @@ public class TimeEndpointTest extends EndpointTest {
         server.enqueue(new MockResponse().setBody("[14593046077243110]"));
         PNTimeResult response = partialTime.sync();
         assertTrue(response.getTimetoken().equals(14593046077243110L));
+        server.ta
     }
 
     @org.junit.Test(expected=PubnubException.class)

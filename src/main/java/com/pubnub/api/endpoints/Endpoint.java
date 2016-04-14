@@ -30,7 +30,7 @@ public abstract class Endpoint<Input, Output> {
     public final Output sync() throws PubnubException {
         this.validateParams();
 
-        Call<Input> call = doWork();
+        Call<Input> call = doWork(createBaseParams());
         Response<Input> serverResponse;
         Output response;
 
@@ -62,7 +62,7 @@ public abstract class Endpoint<Input, Output> {
 
         Call<Input> call = null;
         try {
-            call = doWork();
+            call = doWork(createBaseParams());
         } catch (PubnubException e) {
             PubnubException pubnubException = new PubnubException(PubnubError.PNERROBJ_INVALID_ARGUMENTS, e.getMessage());
             PNErrorStatus pnErrorStatus = new PNErrorStatus();
@@ -172,21 +172,24 @@ public abstract class Endpoint<Input, Output> {
     }
 
     protected final Map<String, Object> createBaseParams() {
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
 
         // TODO: put PNSDK here
+        params.put("pnsdk", "Java/" + getPubnub().getVersion());
+
 
         return params;
     }
 
     protected abstract boolean validateParams();
 
-    protected abstract Call<Input> doWork() throws PubnubException;
+    protected abstract Call<Input> doWork(Map<String, Object> baseParams) throws PubnubException;
     protected abstract Output createResponse(Response<Input> input) throws PubnubException;
 
     // add hooks for timeout
     protected abstract int getConnectTimeout();
     protected abstract int getRequestTimeout();
     protected abstract PNOperationType getOperationType();
+    protected abstract Pubnub getPubnub();
 
 }
