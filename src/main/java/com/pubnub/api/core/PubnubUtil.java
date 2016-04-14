@@ -71,7 +71,7 @@ public class PubnubUtil {
         int i = 0;
 
         for (String pamKey : pamKeys) {
-            if (i != 0){
+            if (i != 0) {
                 stringifiedArguments += "&";
             }
 

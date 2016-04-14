@@ -28,7 +28,7 @@ public class Leave extends Endpoint<Envelope, Boolean> {
     }
 
     @Override
-    protected Call<Envelope> doWork(Map<String, Object> params) {
+    protected Call<Envelope> doWork(Map<String, String> params) {
         String channelCSV;
         PresenceService service = this.createRetrofit(pubnub).create(PresenceService.class);
 

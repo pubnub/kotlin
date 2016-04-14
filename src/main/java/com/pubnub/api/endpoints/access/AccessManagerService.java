@@ -10,15 +10,12 @@ import retrofit2.http.QueryMap;
 
 import java.util.Map;
 
-/**
- * Created by Max on 4/3/16.
- */
 public interface AccessManagerService {
 
     @GET("/v1/auth/grant/sub-key/{subKey}")
-    Call<Envelope<PNAccessManagerGrantData>> grant(@Path("subKey") String subKey, @QueryMap Map<String, Object> options);
+    Call<Envelope<PNAccessManagerGrantData>> grant(@Path("subKey") String subKey, @QueryMap Map<String, String> options);
 
     @GET("/v1/auth/audit/sub-key/{subKey}")
-    Call<Envelope<PNAccessManagerAuditData>> audit(@Path("subKey") String subKey, @QueryMap Map<String, Object> options);
+    Call<Envelope<PNAccessManagerAuditData>> audit(@Path("subKey") String subKey, @QueryMap Map<String, String> options);
 
 }

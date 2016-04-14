@@ -37,7 +37,7 @@ public class Audit extends Endpoint<Envelope<PNAccessManagerAuditData>, PNAccess
     }
 
     @Override
-    protected Call<Envelope<PNAccessManagerAuditData>> doWork(Map<String, Object> queryParams) throws PubnubException {
+    protected Call<Envelope<PNAccessManagerAuditData>> doWork(Map<String, String> queryParams) throws PubnubException {
         String signature;
         Map<String, String> signParams = new HashMap<>();
         int timestamp = (int) ((new Date().getTime()) / 1000);

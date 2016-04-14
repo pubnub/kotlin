@@ -49,7 +49,7 @@ public class SetState extends Endpoint<Envelope<Map<String, Object>>, PNSetState
     }
 
     @Override
-    protected Call<Envelope<Map<String, Object>>> doWork(Map<String, Object> params) throws PubnubException {
+    protected Call<Envelope<Map<String, Object>>> doWork(Map<String, String> params) throws PubnubException {
         ObjectWriter ow = new ObjectMapper().writer();
         String stringifiedState;
 
@@ -68,6 +68,7 @@ public class SetState extends Endpoint<Envelope<Map<String, Object>>, PNSetState
             throw new PubnubException(PubnubError.PNERROBJ_INVALID_ARGUMENTS, e.getMessage(), null);
         }
 
+        stringifiedState = PubnubUtil.urlEncode(stringifiedState);
         params.put("state", stringifiedState);
 
         String channelCSV = channels.size() > 0 ? PubnubUtil.joinString(channels, ",") : ",";

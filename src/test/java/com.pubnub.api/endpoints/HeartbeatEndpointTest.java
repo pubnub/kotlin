@@ -1,30 +1,34 @@
 package com.pubnub.api.endpoints;
 
+import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import com.pubnub.api.core.Pubnub;
 import com.pubnub.api.core.PubnubException;
 import com.pubnub.api.endpoints.presence.Heartbeat;
-import okhttp3.mockwebserver.MockResponse;
-import okhttp3.mockwebserver.MockWebServer;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Rule;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static org.junit.Assert.assertEquals;
 
 public class HeartbeatEndpointTest extends EndpointTest {
 
-    private MockWebServer server;
     private Heartbeat.HeartbeatBuilder partialHeartbeat;
     private Pubnub pubnub;
 
+    @Rule
+    public WireMockRule wireMockRule = new WireMockRule();
+
     @Before
     public void beforeEach() throws IOException {
-        server = new MockWebServer();
-        server.start();
-
-        pubnub = this.createPubNubInstance(server);
+        pubnub = this.createPubNubInstance(8080);
         partialHeartbeat = Heartbeat.builder().pubnub(pubnub);
     }
 
@@ -32,36 +36,68 @@ public class HeartbeatEndpointTest extends EndpointTest {
     public void testSuccessOneChannel() throws PubnubException, InterruptedException {
         pubnub.getConfiguration().setPresenceTimeout(123);
 
-        server.enqueue(new MockResponse().setBody(("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\"}")));
+        stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch1/heartbeat"))
+                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\"}")));
+
         partialHeartbeat.channels(Arrays.asList("ch1")).build().sync();
-        Assert.assertEquals("/v2/presence/sub-key/mySubscribeKey/channel/ch1/heartbeat?heartbeat=123&uuid=myUUID", server.takeRequest().getPath());
+
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
+        assertEquals(1, requests.size());
+        LoggedRequest request = requests.get(0);
+        Assert.assertEquals("myUUID", request.queryParameter("uuid").firstValue());
+        Assert.assertEquals("123", request.queryParameter("heartbeat").firstValue());
+
     }
 
     @org.junit.Test
     public void testSuccessManyChannels() throws PubnubException, InterruptedException {
         pubnub.getConfiguration().setPresenceTimeout(123);
 
-        server.enqueue(new MockResponse().setBody(("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\"}")));
+        stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch1,ch2/heartbeat"))
+                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\"}")));
+
         partialHeartbeat.channels(Arrays.asList("ch1", "ch2")).build().sync();
-        Assert.assertEquals("/v2/presence/sub-key/mySubscribeKey/channel/ch1,ch2/heartbeat?heartbeat=123&uuid=myUUID", server.takeRequest().getPath());
+
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
+        assertEquals(1, requests.size());
+        LoggedRequest request = requests.get(0);
+        Assert.assertEquals("myUUID", request.queryParameter("uuid").firstValue());
+        Assert.assertEquals("123", request.queryParameter("heartbeat").firstValue());
     }
 
     @org.junit.Test
     public void testSuccessOneChannelGroup() throws PubnubException, InterruptedException {
         pubnub.getConfiguration().setPresenceTimeout(123);
 
-        server.enqueue(new MockResponse().setBody(("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\"}")));
+        stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/,/heartbeat"))
+                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\"}")));
+
         partialHeartbeat.channelGroups(Arrays.asList("cg1")).build().sync();
-        Assert.assertEquals("/v2/presence/sub-key/mySubscribeKey/channel/,/heartbeat?channel-group=cg1&heartbeat=123&uuid=myUUID", server.takeRequest().getPath());
+
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
+        assertEquals(1, requests.size());
+        LoggedRequest request = requests.get(0);
+        Assert.assertEquals("myUUID", request.queryParameter("uuid").firstValue());
+        Assert.assertEquals("cg1", request.queryParameter("channel-group").firstValue());
+        Assert.assertEquals("123", request.queryParameter("heartbeat").firstValue());
     }
 
     @org.junit.Test
     public void testSuccessManyChannelGroups() throws PubnubException, InterruptedException {
         pubnub.getConfiguration().setPresenceTimeout(123);
 
-        server.enqueue(new MockResponse().setBody(("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\"}")));
+        stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/,/heartbeat"))
+                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\"}")));
+
         partialHeartbeat.channelGroups(Arrays.asList("cg1", "cg2")).build().sync();
-        Assert.assertEquals("/v2/presence/sub-key/mySubscribeKey/channel/,/heartbeat?channel-group=cg1,cg2&heartbeat=123&uuid=myUUID", server.takeRequest().getPath());
+
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
+        assertEquals(1, requests.size());
+        LoggedRequest request = requests.get(0);
+        Assert.assertEquals("myUUID", request.queryParameter("uuid").firstValue());
+        Assert.assertEquals("cg1,cg2", request.queryParameter("channel-group").firstValue());
+        Assert.assertEquals("123", request.queryParameter("heartbeat").firstValue());
+
     }
 
     @org.junit.Test
@@ -72,8 +108,18 @@ public class HeartbeatEndpointTest extends EndpointTest {
 
         pubnub.getConfiguration().setPresenceTimeout(123);
 
-        server.enqueue(new MockResponse().setBody(("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\"}")));
+
+        stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch1,ch2/heartbeat"))
+                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\"}")));
+
         partialHeartbeat.channels(Arrays.asList("ch1", "ch2")).state(state).build().sync();
-        Assert.assertEquals("/v2/presence/sub-key/mySubscribeKey/channel/ch1,ch2/heartbeat?heartbeat=123&state={CH2%3Dthis-is-channel2,%20CH1%3Dthis-is-channel1}&uuid=myUUID", server.takeRequest().getPath());
+
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
+        assertEquals(1, requests.size());
+        LoggedRequest request = requests.get(0);
+        Assert.assertEquals("myUUID", request.queryParameter("uuid").firstValue());
+        Assert.assertEquals("123", request.queryParameter("heartbeat").firstValue());
+        Assert.assertEquals("%7B%22CH2%22%3A%22this-is-channel2%22%2C%22CH1%22%3A%22this-is-channel1%22%7D", request.queryParameter("state").firstValue());
+
     }
 }

@@ -1,6 +1,10 @@
 package com.pubnub.api.endpoints.presence;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.pubnub.api.core.Pubnub;
+import com.pubnub.api.core.PubnubError;
 import com.pubnub.api.core.PubnubException;
 import com.pubnub.api.core.PubnubUtil;
 import com.pubnub.api.core.enums.PNOperationType;
@@ -27,7 +31,8 @@ public class Heartbeat extends Endpoint<Envelope, Boolean> {
     }
 
     @Override
-    protected Call<Envelope> doWork(Map<String, Object> params) {
+    protected Call<Envelope> doWork(Map<String, String> params) throws PubnubException {
+        ObjectWriter ow = new ObjectMapper().writer();
 
         params.put("uuid", pubnub.getConfiguration().getUuid());
         params.put("heartbeat", String.valueOf(pubnub.getConfiguration().getPresenceTimeout()));
@@ -45,7 +50,16 @@ public class Heartbeat extends Endpoint<Envelope, Boolean> {
         }
 
         if (state != null) {
-            params.put("state", state);
+            String stringifiedState;
+
+            try {
+                stringifiedState = ow.writeValueAsString(state);
+            } catch (JsonProcessingException e) {
+                throw new PubnubException(PubnubError.PNERROBJ_INVALID_ARGUMENTS, e.getMessage(), null);
+            }
+
+            stringifiedState = PubnubUtil.urlEncode(stringifiedState);
+            params.put("state", stringifiedState);
         }
 
         PresenceService service = this.createRetrofit(pubnub).create(PresenceService.class);

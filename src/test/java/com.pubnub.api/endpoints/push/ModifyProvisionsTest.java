@@ -1,82 +1,119 @@
 package com.pubnub.api.endpoints.push;
 
+import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import com.pubnub.api.core.PubnubException;
 import com.pubnub.api.endpoints.EndpointTest;
-import okhttp3.mockwebserver.MockResponse;
-import okhttp3.mockwebserver.MockWebServer;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.junit.Assert.assertEquals;
 
 public class ModifyProvisionsTest extends EndpointTest {
 
-    private MockWebServer server;
-    private ModifyProvisions.ModifyProvisionsBuilder instance;
+    @Rule
+    public WireMockRule wireMockRule = new WireMockRule();
 
+    private ModifyProvisions.ModifyProvisionsBuilder instance;
 
     @Before
     public void beforeEach() throws IOException {
-        server = new MockWebServer();
-        server.start();
-        instance = this.createPubNubInstance(server).modifyPushProvisions();
+        instance = this.createPubNubInstance(8080).modifyPushProvisions();
     }
 
     @Test
     public void testAppleSuccessSync() throws PubnubException, InterruptedException {
-        server.enqueue(new MockResponse().setBody(("[1, \"Modified Channels\"]")));
+        stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
+                .willReturn(aResponse().withBody("[1, \"Modified Channels\"]")));
+
         instance.deviceId("niceDevice").pushType(PushType.APNS)
                 .addChannel("ch1").addChannels(Arrays.asList("ch2", "ch3"))
                 .removeChannel("chr1").removeChannels(Arrays.asList("chr2", "chr3")).build().sync();
 
-        assertEquals("/v1/push/sub-key/mySubscribeKey/devices/niceDevice?add=ch1,ch2,ch3&type=apns&remove=chr1,chr2,chr3", server.takeRequest().getPath());
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
+        assertEquals(1, requests.size());
+        assertEquals("ch1,ch2,ch3", requests.get(0).queryParameter("add").firstValue());
+        assertEquals("apns", requests.get(0).queryParameter("type").firstValue());
+        assertEquals("chr1,chr2,chr3", requests.get(0).queryParameter("remove").firstValue());
+
     }
 
     @Test
     public void testGoogleSuccessSync() throws PubnubException, InterruptedException {
-        server.enqueue(new MockResponse().setBody(("[1, \"Modified Channels\"]")));
+
+        stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
+                .willReturn(aResponse().withBody("[1, \"Modified Channels\"]")));
+
         instance.deviceId("niceDevice").pushType(PushType.GCM)
                 .addChannel("ch1").addChannels(Arrays.asList("ch2", "ch3"))
                 .removeChannel("chr1").removeChannels(Arrays.asList("chr2", "chr3")).build().sync();
 
-        assertEquals("/v1/push/sub-key/mySubscribeKey/devices/niceDevice?add=ch1,ch2,ch3&type=gcm&remove=chr1,chr2,chr3", server.takeRequest().getPath());
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
+        assertEquals(1, requests.size());
+        assertEquals("ch1,ch2,ch3", requests.get(0).queryParameter("add").firstValue());
+        assertEquals("gcm", requests.get(0).queryParameter("type").firstValue());
+        assertEquals("chr1,chr2,chr3", requests.get(0).queryParameter("remove").firstValue());
+
     }
 
     @Test
     public void testMicrosoftSuccessSync() throws PubnubException, InterruptedException {
-        server.enqueue(new MockResponse().setBody(("[1, \"Modified Channels\"]")));
+
+        stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
+                .willReturn(aResponse().withBody("[1, \"Modified Channels\"]")));
+
         instance.deviceId("niceDevice").pushType(PushType.MPNS)
                 .addChannel("ch1").addChannels(Arrays.asList("ch2", "ch3"))
                 .removeChannel("chr1").removeChannels(Arrays.asList("chr2", "chr3")).build().sync();
 
-        assertEquals("/v1/push/sub-key/mySubscribeKey/devices/niceDevice?add=ch1,ch2,ch3&type=mpns&remove=chr1,chr2,chr3", server.takeRequest().getPath());
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
+        assertEquals(1, requests.size());
+        assertEquals("ch1,ch2,ch3", requests.get(0).queryParameter("add").firstValue());
+        assertEquals("mpns", requests.get(0).queryParameter("type").firstValue());
+        assertEquals("chr1,chr2,chr3", requests.get(0).queryParameter("remove").firstValue());
     }
 
     @Test
     public void testAppleSuccessSyncRemoveAll() throws PubnubException, InterruptedException {
-        server.enqueue(new MockResponse().setBody(("[1, \"Modified Channels\"]")));
+
+        stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice/remove"))
+                .willReturn(aResponse().withBody("[1, \"Modified Channels\"]")));
+
         instance.deviceId("niceDevice").pushType(PushType.APNS).build().removeAllChannels().sync();
 
-        assertEquals("/v1/push/sub-key/mySubscribeKey/devices/niceDevice/remove?type=apns", server.takeRequest().getPath());
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
+        assertEquals(1, requests.size());
+        assertEquals("apns", requests.get(0).queryParameter("type").firstValue());
     }
 
     @Test
     public void testGoogleSuccessSyncRemoveAll() throws PubnubException, InterruptedException {
-        server.enqueue(new MockResponse().setBody(("[1, \"Modified Channels\"]")));
+        stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice/remove"))
+                .willReturn(aResponse().withBody("[1, \"Modified Channels\"]")));
+
         instance.deviceId("niceDevice").pushType(PushType.GCM).build().removeAllChannels().sync();
 
-        assertEquals("/v1/push/sub-key/mySubscribeKey/devices/niceDevice/remove?type=gcm", server.takeRequest().getPath());
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
+        assertEquals(1, requests.size());
+        assertEquals("gcm", requests.get(0).queryParameter("type").firstValue());
     }
 
     @Test
     public void testMicrosoftSuccessSyncRemoveAll() throws PubnubException, InterruptedException {
-        server.enqueue(new MockResponse().setBody(("[1, \"Modified Channels\"]")));
+        stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice/remove"))
+                .willReturn(aResponse().withBody("[1, \"Modified Channels\"]")));
+
         instance.deviceId("niceDevice").pushType(PushType.MPNS).build().removeAllChannels().sync();
 
-        assertEquals("/v1/push/sub-key/mySubscribeKey/devices/niceDevice/remove?type=mpns", server.takeRequest().getPath());
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
+        assertEquals(1, requests.size());
+        assertEquals("mpns", requests.get(0).queryParameter("type").firstValue());
     }
 
 }

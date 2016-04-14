@@ -28,7 +28,7 @@ public class WhereNow extends Endpoint<Envelope<WhereNowData>, PNPresenceWhereNo
     }
 
     @Override
-    protected Call<Envelope<WhereNowData>> doWork(Map<String, Object> params) {
+    protected Call<Envelope<WhereNowData>> doWork(Map<String, String> params) {
         PresenceService service = this.createRetrofit(pubnub).create(PresenceService.class);
         return service.whereNow(pubnub.getConfiguration().getSubscribeKey(),
                 this.uuid != null ? this.uuid : pubnub.getConfiguration().getUuid(), params);

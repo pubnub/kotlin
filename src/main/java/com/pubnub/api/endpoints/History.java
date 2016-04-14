@@ -35,7 +35,7 @@ public class History extends Endpoint<JsonNode, PNHistoryResult> {
         @GET("v2/history/sub-key/{subKey}/channel/{channel}")
         Call<JsonNode> fetchHistory(@Path("subKey") String subKey,
                                     @Path("channel") String channel,
-                                    @QueryMap Map<String, Object> options);
+                                    @QueryMap Map<String, String> options);
     }
 
     @Override
@@ -44,7 +44,7 @@ public class History extends Endpoint<JsonNode, PNHistoryResult> {
     }
 
     @Override
-    protected Call<JsonNode> doWork(Map<String, Object> params) {
+    protected Call<JsonNode> doWork(Map<String, String> params) {
 
         HistoryService service = this.createRetrofit(pubnub).create(HistoryService.class);
 

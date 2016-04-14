@@ -46,7 +46,7 @@ public class Subscribe extends Endpoint<SubscribeEnvelope, SubscribeEnvelope> {
     }
 
     @Override
-    protected final Call<SubscribeEnvelope> doWork(Map<String, Object> params) throws PubnubException {
+    protected final Call<SubscribeEnvelope> doWork(Map<String, String> params) throws PubnubException {
         PubSubService pubSubService = this.createRetrofit(this.pubnub).create(PubSubService.class);
         String channelCSV;
 
@@ -55,7 +55,7 @@ public class Subscribe extends Endpoint<SubscribeEnvelope, SubscribeEnvelope> {
         }
 
         if (timetoken != null) {
-            params.put("tt", timetoken);
+            params.put("tt", timetoken.toString());
         }
 
         if (channels.size() > 0) {

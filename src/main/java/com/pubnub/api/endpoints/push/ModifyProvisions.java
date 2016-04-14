@@ -42,7 +42,7 @@ public class ModifyProvisions extends Endpoint<List<Object>, Boolean> {
     }
 
     @Override
-    protected Call<List<Object>> doWork(Map<String, Object> params) throws PubnubException {
+    protected Call<List<Object>> doWork(Map<String, String> params) throws PubnubException {
         params.put("type", pushType.name().toLowerCase());
 
         if (addChannels.size() != 0) {

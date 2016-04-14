@@ -1,117 +1,178 @@
 package com.pubnub.api.endpoints.pubsub;
 
+import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import com.pubnub.api.core.Pubnub;
 import com.pubnub.api.core.PubnubException;
 import com.pubnub.api.endpoints.EndpointTest;
 import lombok.Data;
-import okhttp3.mockwebserver.MockResponse;
-import okhttp3.mockwebserver.MockWebServer;
-import okhttp3.mockwebserver.RecordedRequest;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.junit.Assert.assertEquals;
 
 public class PublishTest extends EndpointTest {
 
-    private MockWebServer server;
+    @Rule
+    public WireMockRule wireMockRule = new WireMockRule();
+
     private Pubnub pubnub;
     private Publish.PublishBuilder instance;
 
 
     @Before
     public void beforeEach() throws IOException {
-        server = new MockWebServer();
-        server.start();
-        pubnub = this.createPubNubInstance(server);
+        pubnub = this.createPubNubInstance(8080);
         instance = pubnub.publish();
     }
 
     @Test
     public void testSuccessSync() throws PubnubException, InterruptedException {
-        server.enqueue(new MockResponse().setBody(("[1,\"Sent\",\"14598111595318003\"]")));
+
+        stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22hi%22"))
+                .willReturn(aResponse().withBody("[1,\"Sent\",\"14598111595318003\"]")));
+
         instance.channel("coolChannel").message("hi").build().sync();
-        assertEquals("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22hi%22?uuid=myUUID", server.takeRequest().getPath());
+
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
+        assertEquals(1, requests.size());
+        assertEquals("myUUID", requests.get(0).queryParameter("uuid").firstValue());
     }
 
     @Test
     public void testSuccessPostSync() throws PubnubException, InterruptedException {
-        server.enqueue(new MockResponse().setBody(("[1,\"Sent\",\"14598111595318003\"]")));
+        stubFor(post(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0"))
+                .willReturn(aResponse().withBody("[1,\"Sent\",\"14598111595318003\"]")));
+
         instance.channel("coolChannel").usePOST(true).message(Arrays.asList("m1", "m2")).build().sync();
-        RecordedRequest recordedRequest = server.takeRequest();
-        assertEquals("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0?uuid=myUUID", recordedRequest.getPath());
-        assertEquals("[\"m1\",\"m2\"]", recordedRequest.getBody().readUtf8());
+
+        List<LoggedRequest> requests = findAll(postRequestedFor(urlMatching("/.*")));
+        assertEquals(1, requests.size());
+        assertEquals("myUUID", requests.get(0).queryParameter("uuid").firstValue());
+        assertEquals("[\"m1\",\"m2\"]", new String(requests.get(0).getBody()));
     }
 
     @Test
     public void testSuccessStoreSync() throws PubnubException, InterruptedException {
-        server.enqueue(new MockResponse().setBody(("[1,\"Sent\",\"14598111595318003\"]")));
+        stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22hi%22"))
+                .willReturn(aResponse().withBody("[1,\"Sent\",\"14598111595318003\"]")));
+
         instance.channel("coolChannel").message("hi").shouldStore(false).build().sync();
-        assertEquals("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22hi%22?store=0&uuid=myUUID", server.takeRequest().getPath());
+
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
+        assertEquals(1, requests.size());
+        assertEquals("0", requests.get(0).queryParameter("store").firstValue());
+        assertEquals("myUUID", requests.get(0).queryParameter("uuid").firstValue());
     }
 
     @Test
     public void testSuccessMetaSync() throws PubnubException, InterruptedException {
-        server.enqueue(new MockResponse().setBody(("[1,\"Sent\",\"14598111595318003\"]")));
+        stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22hi%22"))
+                .willReturn(aResponse().withBody("[1,\"Sent\",\"14598111595318003\"]")));
+
         instance.channel("coolChannel").message("hi").meta(Arrays.asList("m1", "m2")).shouldStore(false).build().sync();
 
-        assertEquals("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22hi%22?meta=[%22m1%22,%22m2%22]&store=0&uuid=myUUID", server.takeRequest().getPath());
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
+        assertEquals(1, requests.size());
+        assertEquals("0", requests.get(0).queryParameter("store").firstValue());
+        assertEquals("myUUID", requests.get(0).queryParameter("uuid").firstValue());
+        assertEquals("%5B%22m1%22%2C%22m2%22%5D", requests.get(0).queryParameter("meta").firstValue());
     }
 
     @Test
     public void testSuccessAuthKeySync() throws PubnubException, InterruptedException {
+        stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22hi%22"))
+                .willReturn(aResponse().withBody("[1,\"Sent\",\"14598111595318003\"]")));
+
         pubnub.getConfiguration().setAuthKey("authKey");
-        server.enqueue(new MockResponse().setBody(("[1,\"Sent\",\"14598111595318003\"]")));
         instance.channel("coolChannel").message("hi").build().sync();
-        assertEquals("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22hi%22?auth=authKey&uuid=myUUID", server.takeRequest().getPath());
+
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
+        assertEquals(1, requests.size());
+        assertEquals("authKey", requests.get(0).queryParameter("auth").firstValue());
+        assertEquals("myUUID", requests.get(0).queryParameter("uuid").firstValue());
+
     }
 
     @Test
     public void testSuccessIntSync() throws PubnubException, InterruptedException {
-        server.enqueue(new MockResponse().setBody(("[1,\"Sent\",\"14598111595318003\"]")));
+
+        stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/10"))
+                .willReturn(aResponse().withBody("[1,\"Sent\",\"14598111595318003\"]")));
+
         instance.channel("coolChannel").message(10).build().sync();
-        assertEquals("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/10?uuid=myUUID", server.takeRequest().getPath());
+
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
+        assertEquals(1, requests.size());
+        assertEquals("myUUID", requests.get(0).queryParameter("uuid").firstValue());
+
     }
 
     @Test
     public void testSuccessArraySync() throws PubnubException, InterruptedException {
-        server.enqueue(new MockResponse().setBody(("[1,\"Sent\",\"14598111595318003\"]")));
+        stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%5B%22a%22%2C%22b%22%2C%22c%22%5D?"))
+                .willReturn(aResponse().withBody("[1,\"Sent\",\"14598111595318003\"]")));
+
         instance.channel("coolChannel").message(Arrays.asList("a", "b", "c")).build().sync();
-        assertEquals("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/[%22a%22,%22b%22,%22c%22]?uuid=myUUID", server.takeRequest().getPath());
+
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
+        assertEquals(1, requests.size());
+        assertEquals("myUUID", requests.get(0).queryParameter("uuid").firstValue());
+
     }
 
     @Test
     public void testSuccessArrayEncryptedSync() throws PubnubException, InterruptedException {
+        stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22HFP7V6bDwBLrwc1t8Rnrog%3D%3D%22"))
+                .willReturn(aResponse().withBody("[1,\"Sent\",\"14598111595318003\"]")));
+
         pubnub.getConfiguration().setCipherKey("testCipher");
-        server.enqueue(new MockResponse().setBody(("[1,\"Sent\",\"14598111595318003\"]")));
         instance.channel("coolChannel").message(Arrays.asList("m1", "m2")).build().sync();
-        assertEquals("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22HFP7V6bDwBLrwc1t8Rnrog==%5Cn%22?uuid=myUUID", server.takeRequest().getPath());
+
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
+        assertEquals(1, requests.size());
+        assertEquals("myUUID", requests.get(0).queryParameter("uuid").firstValue());
+
     }
 
     @Test
     public void testSuccessPostEncryptedSync() throws PubnubException, InterruptedException {
+        stubFor(post(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0"))
+                .willReturn(aResponse().withBody("[1,\"Sent\",\"14598111595318003\"]")));
+
         pubnub.getConfiguration().setCipherKey("testCipher");
-        server.enqueue(new MockResponse().setBody(("[1,\"Sent\",\"14598111595318003\"]")));
+
         instance.channel("coolChannel").usePOST(true).message(Arrays.asList("m1", "m2")).build().sync();
-        RecordedRequest recordedRequest = server.takeRequest();
-        assertEquals("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0?uuid=myUUID", recordedRequest.getPath());
-        assertEquals("\"HFP7V6bDwBLrwc1t8Rnrog==\\n\"", recordedRequest.getBody().readUtf8().trim());
+
+        List<LoggedRequest> requests = findAll(postRequestedFor(urlMatching("/.*")));
+        assertEquals(1, requests.size());
+        assertEquals("myUUID", requests.get(0).queryParameter("uuid").firstValue());
+        assertEquals("\"HFP7V6bDwBLrwc1t8Rnrog==\"", new String(requests.get(0).getBody()));
     }
 
     @Test
     public void testSuccessHashMapSync() throws PubnubException, InterruptedException {
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("a", 10);
         params.put("z", "test");
 
-        server.enqueue(new MockResponse().setBody(("[1,\"Sent\",\"14598111595318003\"]")));
+        stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%7B%22a%22%3A10%2C%22z%22%3A%22test%22%7D"))
+                .willReturn(aResponse().withBody("[1,\"Sent\",\"14598111595318003\"]")));
+
         instance.channel("coolChannel").message(params).build().sync();
-        assertEquals("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%7B%22a%22:10,%22z%22:%22test%22%7D?uuid=myUUID", server.takeRequest().getPath());
+
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
+        assertEquals(1, requests.size());
+        assertEquals("myUUID", requests.get(0).queryParameter("uuid").firstValue());
+
     }
 
     @Test
@@ -127,9 +188,15 @@ public class PublishTest extends EndpointTest {
         testPojo.setField1("10");
         testPojo.setField2("20");
 
-        server.enqueue(new MockResponse().setBody(("[1,\"Sent\",\"14598111595318003\"]")));
+        stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%7B%22field1%22%3A%2210%22%2C%22field2%22%3A%2220%22%7D"))
+                .willReturn(aResponse().withBody("[1,\"Sent\",\"14598111595318003\"]")));
+
         instance.channel("coolChannel").message(testPojo).build().sync();
-        assertEquals("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%7B%22field1%22:%2210%22,%22field2%22:%2220%22%7D?uuid=myUUID", server.takeRequest().getPath());
+
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
+        assertEquals(1, requests.size());
+        assertEquals("myUUID", requests.get(0).queryParameter("uuid").firstValue());
+
     }
 
 }

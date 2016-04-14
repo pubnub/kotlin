@@ -2,13 +2,13 @@ package com.pubnub.api.endpoints;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.pubnub.api.core.Pubnub;
 import com.pubnub.api.core.PubnubException;
 import com.pubnub.api.core.models.consumer_facing.PNHistoryResult;
-import okhttp3.mockwebserver.MockResponse;
-import okhttp3.mockwebserver.MockWebServer;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Rule;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -16,20 +16,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
+
 
 public class HistoryEndpointTest extends EndpointTest {
 
-    private MockWebServer server;
     private History.HistoryBuilder partialHistory;
     private Pubnub pubnub;
 
+    @Rule
+    public WireMockRule wireMockRule = new WireMockRule();
 
     @Before
     public void beforeEach() throws IOException {
-        server = new MockWebServer();
-        server.start();
-
-        pubnub = this.createPubNubInstance(server);
+        pubnub = this.createPubNubInstance(8080);
         partialHistory = pubnub.history();
     }
 
@@ -62,7 +62,9 @@ public class HistoryEndpointTest extends EndpointTest {
         testArray.add(1234);
         testArray.add(4321);
 
-        server.enqueue(new MockResponse().setBody(mapper.writeValueAsString(testArray)));
+        stubFor(get(urlPathEqualTo("/v2/history/sub-key/mySubscribeKey/channel/niceChannel"))
+                .willReturn(aResponse().withBody(mapper.writeValueAsString(testArray))));
+
         PNHistoryResult response = partialHistory.channel("niceChannel").includeTimetoken(true).build().sync();
 
         Assert.assertTrue(response.getStartTimeToken().equals(1234L));
@@ -84,8 +86,9 @@ public class HistoryEndpointTest extends EndpointTest {
     public void testSyncEncryptedSuccess() throws IOException, PubnubException {
         pubnub.getConfiguration().setCipherKey("testCipher");
 
+        stubFor(get(urlPathEqualTo("/v2/history/sub-key/mySubscribeKey/channel/niceChannel"))
+                .willReturn(aResponse().withBody("[[\"EGwV+Ti43wh2TprPIq7o0KMuW5j6B3yWy352ucWIOmU=\\n\",\"EGwV+Ti43wh2TprPIq7o0KMuW5j6B3yWy352ucWIOmU=\\n\",\"EGwV+Ti43wh2TprPIq7o0KMuW5j6B3yWy352ucWIOmU=\\n\"],14606134331557853,14606134485013970]")));
 
-        server.enqueue(new MockResponse().setBody("[[\"EGwV+Ti43wh2TprPIq7o0KMuW5j6B3yWy352ucWIOmU=\\n\",\"EGwV+Ti43wh2TprPIq7o0KMuW5j6B3yWy352ucWIOmU=\\n\",\"EGwV+Ti43wh2TprPIq7o0KMuW5j6B3yWy352ucWIOmU=\\n\"],14606134331557853,14606134485013970]"));
         PNHistoryResult response = partialHistory.channel("niceChannel").includeTimetoken(false).build().sync();
 
         Assert.assertTrue(response.getStartTimeToken().equals(14606134331557853L));
@@ -130,7 +133,9 @@ public class HistoryEndpointTest extends EndpointTest {
         testArray.add(1234);
         testArray.add(4321);
 
-        server.enqueue(new MockResponse().setBody(mapper.writeValueAsString(testArray)));
+        stubFor(get(urlPathEqualTo("/v2/history/sub-key/mySubscribeKey/channel/niceChannel"))
+                .willReturn(aResponse().withBody(mapper.writeValueAsString(testArray))));
+
         PNHistoryResult response = partialHistory.channel("niceChannel").build().sync();
 
         Assert.assertTrue(response.getStartTimeToken().equals(1234L));

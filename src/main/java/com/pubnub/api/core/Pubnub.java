@@ -182,7 +182,7 @@ public class Pubnub {
             return "N/A";
         }
         try {
-            return new String(encoded, "UTF-8");
+            return new String(encoded, "UTF-8").trim();
         } catch (UnsupportedEncodingException e) {
             return "N/A";
         }

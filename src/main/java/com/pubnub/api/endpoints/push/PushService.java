@@ -13,16 +13,16 @@ public interface PushService {
     @GET("v1/push/sub-key/{subKey}/devices/{pushToken}")
     Call<List<Object>> modifyChannelsForDevice(@Path("subKey") String subKey,
                                              @Path("pushToken") String pushToken,
-                                             @QueryMap Map<String, Object> options);
+                                             @QueryMap Map<String, String> options);
 
     @GET("v1/push/sub-key/{subKey}/devices/{pushToken}/remove")
     Call<List<Object>> removeAllChannelsForDevice(@Path("subKey") String subKey,
                                                @Path("pushToken") String pushToken,
-                                               @QueryMap Map<String, Object> options);
+                                               @QueryMap Map<String, String> options);
 
     @GET("v1/push/sub-key/{subKey}/devices/{pushToken}")
     Call<List<String>> listChannelsForDevice(@Path("subKey") String subKey,
                                                   @Path("pushToken") String pushToken,
-                                                  @QueryMap Map<String, Object> options);
+                                                  @QueryMap Map<String, String> options);
 
 }

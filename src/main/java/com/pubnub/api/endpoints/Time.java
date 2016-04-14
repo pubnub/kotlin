@@ -21,7 +21,7 @@ public class Time extends Endpoint<List<Long>, PNTimeResult> {
 
     private interface TimeService {
         @GET("/time/0")
-        Call<List<Long>> fetchTime(@QueryMap Map<String, Object> options);
+        Call<List<Long>> fetchTime(@QueryMap Map<String, String> options);
     }
 
     @Override
@@ -30,7 +30,7 @@ public class Time extends Endpoint<List<Long>, PNTimeResult> {
     }
 
     @Override
-    protected final Call<List<Long>> doWork(Map<String, Object> params) {
+    protected final Call<List<Long>> doWork(Map<String, String> params) {
         TimeService service = this.createRetrofit(pubnub).create(TimeService.class);
         return service.fetchTime(params);
     }

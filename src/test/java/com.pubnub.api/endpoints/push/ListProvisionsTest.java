@@ -1,51 +1,72 @@
 package com.pubnub.api.endpoints.push;
 
+import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import com.pubnub.api.core.PubnubException;
 import com.pubnub.api.endpoints.EndpointTest;
-import okhttp3.mockwebserver.MockResponse;
-import okhttp3.mockwebserver.MockWebServer;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.List;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.junit.Assert.assertEquals;
 
 public class ListProvisionsTest extends EndpointTest {
 
-    private MockWebServer server;
+    @Rule
+    public WireMockRule wireMockRule = new WireMockRule();
+
     private ListProvisions.ListProvisionsBuilder instance;
 
 
     @Before
     public void beforeEach() throws IOException {
-        server = new MockWebServer();
-        server.start();
-        instance = this.createPubNubInstance(server).listPushProvisions();
+        instance = this.createPubNubInstance(8080).listPushProvisions();
     }
 
     @Test
     public void testAppleSuccessSync() throws PubnubException, InterruptedException {
-        server.enqueue(new MockResponse().setBody(("[\"ch1\", \"ch2\", \"ch3\"]")));
+
+        stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
+                .willReturn(aResponse().withBody("[\"ch1\", \"ch2\", \"ch3\"]")));
+
         instance.deviceId("niceDevice").pushType(PushType.APNS).build().sync();
 
-        assertEquals("/v1/push/sub-key/mySubscribeKey/devices/niceDevice?type=apns", server.takeRequest().getPath());
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
+        assertEquals(1, requests.size());
+
+        assertEquals("apns", requests.get(0).queryParameter("type").firstValue());
     }
 
     @Test
     public void testGoogleSuccessSync() throws PubnubException, InterruptedException {
-        server.enqueue(new MockResponse().setBody(("[\"ch1\", \"ch2\", \"ch3\"]")));
+
+        stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
+                .willReturn(aResponse().withBody("[\"ch1\", \"ch2\", \"ch3\"]")));
+
         instance.deviceId("niceDevice").pushType(PushType.GCM).build().sync();
 
-        assertEquals("/v1/push/sub-key/mySubscribeKey/devices/niceDevice?type=gcm", server.takeRequest().getPath());
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
+        assertEquals(1, requests.size());
+
+        assertEquals("gcm", requests.get(0).queryParameter("type").firstValue());
     }
 
     @Test
     public void testMicrosoftSuccessSync() throws PubnubException, InterruptedException {
-        server.enqueue(new MockResponse().setBody(("[\"ch1\", \"ch2\", \"ch3\"]")));
+
+        stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
+                .willReturn(aResponse().withBody("[\"ch1\", \"ch2\", \"ch3\"]")));
+
         instance.deviceId("niceDevice").pushType(PushType.MPNS).build().sync();
 
-        assertEquals("/v1/push/sub-key/mySubscribeKey/devices/niceDevice?type=mpns", server.takeRequest().getPath());
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
+        assertEquals(1, requests.size());
+
+        assertEquals("mpns", requests.get(0).queryParameter("type").firstValue());
     }
 
 }

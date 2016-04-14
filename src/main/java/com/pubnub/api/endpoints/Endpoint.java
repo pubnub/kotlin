@@ -127,7 +127,7 @@ public abstract class Endpoint<Input, Output> {
     protected String signSHA256(String key, String data) throws PubnubException {
         Mac sha256_HMAC;
         byte[] hmacData;
-        SecretKeySpec secret_key = new SecretKeySpec(key.getBytes(), "HmacSHA256");
+        SecretKeySpec secretKey = new SecretKeySpec(key.getBytes(), "HmacSHA256");
 
         try {
             sha256_HMAC = Mac.getInstance("HmacSHA256");
@@ -136,7 +136,7 @@ public abstract class Endpoint<Input, Output> {
         }
 
         try {
-            sha256_HMAC.init(secret_key);
+            sha256_HMAC.init(secretKey);
         } catch (InvalidKeyException e) {
             throw new PubnubException(PubnubError.PNERROBJ_CRYPTO_ERROR, e.getMessage(), null);
         }
@@ -171,19 +171,17 @@ public abstract class Endpoint<Input, Output> {
                 .build();
     }
 
-    protected final Map<String, Object> createBaseParams() {
-        Map<String, Object> params = new HashMap<>();
+    protected final Map<String, String> createBaseParams() {
+        Map<String, String> params = new HashMap<>();
 
-        // TODO: put PNSDK here
         params.put("pnsdk", "Java/" + getPubnub().getVersion());
-
 
         return params;
     }
 
     protected abstract boolean validateParams();
 
-    protected abstract Call<Input> doWork(Map<String, Object> baseParams) throws PubnubException;
+    protected abstract Call<Input> doWork(Map<String, String> baseParams) throws PubnubException;
     protected abstract Output createResponse(Response<Input> input) throws PubnubException;
 
     // add hooks for timeout

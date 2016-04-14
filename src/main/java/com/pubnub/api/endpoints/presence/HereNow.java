@@ -35,7 +35,7 @@ public class HereNow extends Endpoint<Envelope<Object>, HereNowData> {
     }
 
     @Override
-    protected Call<Envelope<Object>> doWork(Map<String, Object> params) {
+    protected Call<Envelope<Object>> doWork(Map<String, String> params) {
 
         if (includeState == null) {
             includeState = false;
