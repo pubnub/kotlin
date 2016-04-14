@@ -18,7 +18,7 @@ public interface PubSubService {
     Call<List<Object>> publish(@Path("pubKey") String pubKey,
                                @Path("subKey") String subKey,
                                @Path("channel") String channel,
-                               @Path("message") String message,
+                               @Path("message") Object message,
                                @QueryMap Map<String, Object> options);
 
     @POST("publish/{pubKey}/{subKey}/0/{channel}/0")

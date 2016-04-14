@@ -9,6 +9,7 @@ import com.pubnub.api.core.models.consumer_facing.PNPresenceEventResult;
 import com.pubnub.api.core.models.consumer_facing.PNStatus;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,9 +19,10 @@ public class max_test {
 
     public static void main(String[] args) throws InterruptedException, PubnubException {
         PnConfiguration pnConfiguration = new PnConfiguration();
-        pnConfiguration.setSubscribeKey("sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f");
-        pnConfiguration.setPublishKey("pub-c-8beb3658-0dfd-4032-8f4b-9c6b9ca4d803");
+        pnConfiguration.setSubscribeKey("sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f");
+        pnConfiguration.setPublishKey("pub-c-d34a0058-6747-4c9d-b669-e651d7e0efb7");
         pnConfiguration.setSecretKey("sec-c-NDJkOWM2ZWItNzBhMS00YzllLWFlZjAtNGJlMjVkZjZlNzMy");
+        pnConfiguration.setCipherKey("testCipher");
 
 
         Pubnub pubnub = new Pubnub(pnConfiguration);
@@ -52,6 +54,7 @@ public class max_test {
         //    }
         //});
 
+        /*
         try {
             Object moose = pubnub.grant().authKey("max")
                     .channel("ch1-max").channel("ch2-max")
@@ -62,12 +65,18 @@ public class max_test {
         } catch (PubnubException e) {
             e.printStackTrace();
         }
+        */
 
+        pubnub.publish()
+                .channel("coolChannel").usePOST(true)
+                .message(Arrays.asList("m1", "m2", "m3")).build().sync();
 
+        /*
         Object moose = pubnub.audit()
                 .authKey("max").authKey("max2")
                 .channel("ch1")
                 .build().sync();
+        */
 
         //Thread.sleep(5000);
 

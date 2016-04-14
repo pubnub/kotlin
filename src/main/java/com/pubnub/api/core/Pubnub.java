@@ -94,9 +94,73 @@ public class Pubnub {
         return Grant.builder().pubnub(this);
     }
 
-    public GetState.GetStateBuilder getPresenceState() { return GetState.builder().pubnub(this); }
-    public SetState.SetStateBuilder setPresenceState() { return SetState.builder().pubnub(this).subscriptionManager(subscriptionManager); }
+    public final GetState.GetStateBuilder getPresenceState() {
+        return GetState.builder().pubnub(this);
+    }
+    public final SetState.SetStateBuilder setPresenceState() {
+        return SetState.builder().pubnub(this).subscriptionManager(subscriptionManager);
+    }
 
-    public Publish.PublishBuilder publish() { return Publish.builder().pubnub(this); }
+    public final Publish.PublishBuilder publish() {
+        return Publish.builder().pubnub(this);
+    }
+
+    // public methods
+
+    /**
+     * Perform Cryptographic decryption of an input string using cipher key provided by PNConfiguration
+     * @param inputString String to be encrypted
+     * @return String containing the encryption of inputString using cipherKey
+     */
+    public final String decrypt(String inputString) throws PubnubException {
+        if (inputString == null) {
+            throw new PubnubException(PubnubError.PNERROBJ_INVALID_ARGUMENTS);
+        }
+
+        return decrypt(inputString, this.getConfiguration().getCipherKey());
+    }
+
+    /**
+     * Perform Cryptographic decryption of an input string using the cipher key
+     * @param inputString String to be encrypted
+     * @param cipherKey cipher key to be used for encryption
+     * @throws PubnubException throws exception in case of failed encryption
+     * @return String containing the encryption of inputString using cipherKey
+     */
+    public final String decrypt(final String inputString, final String cipherKey) throws PubnubException {
+        if (inputString == null) {
+            throw new PubnubException(PubnubError.PNERROBJ_INVALID_ARGUMENTS);
+        }
+
+        return new Crypto(cipherKey).decrypt(inputString);
+    }
+
+    /**
+     * Perform Cryptographic encryption of an input string and the cipher key provided by PNConfiguration
+     * @param inputString String to be encrypted
+     * @return String containing the encryption of inputString using cipherKey
+     */
+    public final String encrypt(String inputString) throws PubnubException {
+        if (inputString == null) {
+            throw new PubnubException(PubnubError.PNERROBJ_INVALID_ARGUMENTS);
+        }
+
+        return encrypt(inputString, this.getConfiguration().getCipherKey());
+    }
+
+    /**
+     * Perform Cryptographic encryption of an input string and the cipher key
+     * @param inputString String to be encrypted
+     * @param cipherKey cipher key to be used for encryption
+     * @throws PubnubException throws exception in case of failed encryption
+     * @return String containing the encryption of inputString using cipherKey
+     */
+    public final String encrypt(final String inputString, final String cipherKey) throws PubnubException {
+        if (inputString == null) {
+            throw new PubnubException(PubnubError.PNERROBJ_INVALID_ARGUMENTS);
+        }
+
+        return new Crypto(cipherKey).encrypt(inputString);
+    }
 
 }

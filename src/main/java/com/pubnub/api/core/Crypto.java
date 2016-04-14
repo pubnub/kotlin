@@ -16,23 +16,27 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.AlgorithmParameterSpec;
 
+
+
 @Slf4j
-abstract class Crypto {
+public class Crypto {
 
     byte[] keyBytes = null;
     byte[] ivBytes = null;
-    String IV = "0123456789012345";
-    String CIPHER_KEY;
+    String initializationVector = "0123456789012345";
+    String cipherKey;
     boolean INIT = false;
 
-    public Crypto(String CIPHER_KEY) {
-        this.CIPHER_KEY = CIPHER_KEY;
+    public Crypto(String cipherKey) {
+        this.cipherKey = cipherKey;
     }
 
-    public Crypto(String CIPHER_KEY, String initialization_vector) {
-        if (initialization_vector != null)
-            this.IV = initialization_vector;
-        this.CIPHER_KEY = CIPHER_KEY;
+    public Crypto(String cipherKey, String customInitializationVector) {
+        if (customInitializationVector != null) {
+            this.initializationVector = customInitializationVector;
+        }
+
+        this.cipherKey = cipherKey;
     }
 
     public void InitCiphers() throws PubnubException {
@@ -40,9 +44,10 @@ abstract class Crypto {
             return;
         try {
 
-            keyBytes = new String(hexEncode(sha256(this.CIPHER_KEY.getBytes("UTF-8"))), "UTF-8").substring(0, 32)
+            keyBytes = new String(hexEncode(sha256(this.cipherKey.getBytes("UTF-8"))), "UTF-8")
+                    .substring(0, 32)
                     .toLowerCase().getBytes("UTF-8");
-            ivBytes = IV.getBytes("UTF-8");
+            ivBytes = initializationVector.getBytes("UTF-8");
             INIT = true;
         } catch (UnsupportedEncodingException e) {
             throw new PubnubException(newCryptoError(11, e.toString()));
@@ -70,7 +75,7 @@ abstract class Crypto {
             AlgorithmParameterSpec ivSpec = new IvParameterSpec(ivBytes);
             SecretKeySpec newKey = new SecretKeySpec(keyBytes, "AES");
             Cipher cipher = null;
-            cipher = Cipher.getInstance("AES/CBC/PKCS7Padding");
+            cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
             cipher.init(Cipher.ENCRYPT_MODE, newKey, ivSpec);
             return new String(Base64.encode(cipher.doFinal(input.getBytes("UTF-8")), 0));
         } catch (NoSuchAlgorithmException e) {
@@ -103,7 +108,7 @@ abstract class Crypto {
             InitCiphers();
             AlgorithmParameterSpec ivSpec = new IvParameterSpec(ivBytes);
             SecretKeySpec newKey = new SecretKeySpec(keyBytes, "AES");
-            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS7Padding");
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
             cipher.init(Cipher.DECRYPT_MODE, newKey, ivSpec);
             return new String(cipher.doFinal(Base64.decode(cipher_text, 0)), "UTF-8");
         } catch (IllegalArgumentException e) {

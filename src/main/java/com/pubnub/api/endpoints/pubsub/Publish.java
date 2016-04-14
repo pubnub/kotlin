@@ -3,9 +3,7 @@ package com.pubnub.api.endpoints.pubsub;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import com.pubnub.api.core.Pubnub;
-import com.pubnub.api.core.PubnubError;
-import com.pubnub.api.core.PubnubException;
+import com.pubnub.api.core.*;
 import com.pubnub.api.core.enums.PNOperationType;
 import com.pubnub.api.core.models.PublishData;
 import com.pubnub.api.endpoints.Endpoint;
@@ -45,6 +43,7 @@ public class Publish extends Endpoint<List<Object>, PublishData> {
         String stringifiedMessage;
         String stringifiedMeta;
         ObjectWriter ow = new ObjectMapper().writer();
+
         try {
             stringifiedMessage = ow.writeValueAsString(message);
         } catch (JsonProcessingException e) {
@@ -68,6 +67,19 @@ public class Publish extends Endpoint<List<Object>, PublishData> {
 
         if (shouldStore != null) {
             params.put("store", shouldStore);
+        }
+
+        if (pubnub.getConfiguration().getCipherKey() != null) {
+            Crypto crypto = new Crypto(pubnub.getConfiguration().getCipherKey());
+            stringifiedMessage = crypto.encrypt(stringifiedMessage);
+            message = stringifiedMessage;
+
+            try {
+                stringifiedMessage = ow.writeValueAsString(stringifiedMessage);
+            } catch (JsonProcessingException e) {
+                throw new PubnubException(PubnubError.PNERROBJ_INVALID_ARGUMENTS, e.getMessage(), null);
+            }
+
         }
 
         PubSubService service = this.createRetrofit(pubnub).create(PubSubService.class);

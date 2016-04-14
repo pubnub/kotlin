@@ -86,6 +86,24 @@ public class PublishTest extends EndpointTest {
     }
 
     @Test
+    public void testSuccessArrayEncryptedSync() throws PubnubException, InterruptedException {
+        pubnub.getConfiguration().setCipherKey("testCipher");
+        server.enqueue(new MockResponse().setBody(("[1,\"Sent\",\"14598111595318003\"]")));
+        instance.channel("coolChannel").message(Arrays.asList("m1", "m2")).build().sync();
+        assertEquals("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22HFP7V6bDwBLrwc1t8Rnrog==%5Cn%22?uuid=myUUID", server.takeRequest().getPath());
+    }
+
+    @Test
+    public void testSuccessPostEncryptedSync() throws PubnubException, InterruptedException {
+        pubnub.getConfiguration().setCipherKey("testCipher");
+        server.enqueue(new MockResponse().setBody(("[1,\"Sent\",\"14598111595318003\"]")));
+        instance.channel("coolChannel").usePOST(true).message(Arrays.asList("m1", "m2")).build().sync();
+        RecordedRequest recordedRequest = server.takeRequest();
+        assertEquals("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0?uuid=myUUID", recordedRequest.getPath());
+        assertEquals("\"HFP7V6bDwBLrwc1t8Rnrog==\\n\"", recordedRequest.getBody().readUtf8().trim());
+    }
+
+    @Test
     public void testSuccessHashMapSync() throws PubnubException, InterruptedException {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("a", 10);
