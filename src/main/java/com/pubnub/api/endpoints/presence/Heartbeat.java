@@ -10,20 +10,24 @@ import com.pubnub.api.core.PubnubUtil;
 import com.pubnub.api.core.enums.PNOperationType;
 import com.pubnub.api.core.models.Envelope;
 import com.pubnub.api.endpoints.Endpoint;
-import lombok.Builder;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import retrofit2.Call;
 import retrofit2.Response;
 
 import java.util.List;
 import java.util.Map;
 
-@Builder
+@Accessors(chain = true, fluent = true)
 public class Heartbeat extends Endpoint<Envelope, Boolean> {
 
-    private Pubnub pubnub;
-    private Object state;
-    private List<String> channels;
-    private List<String> channelGroups;
+    @Setter private Object state;
+    @Setter private List<String> channels;
+    @Setter private List<String> channelGroups;
+
+    public Heartbeat(Pubnub pubnub) {
+        super(pubnub);
+    }
 
     @Override
     protected boolean validateParams() {
@@ -82,11 +86,6 @@ public class Heartbeat extends Endpoint<Envelope, Boolean> {
     @Override
     protected PNOperationType getOperationType() {
         return PNOperationType.PNHeartbeatOperation;
-    }
-
-    @Override
-    protected Pubnub getPubnub() {
-        return pubnub;
     }
 
 }

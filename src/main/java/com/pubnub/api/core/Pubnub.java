@@ -66,50 +66,50 @@ public class Pubnub {
 
     // start push
 
-    public final ModifyProvisions.ModifyProvisionsBuilder modifyPushProvisions() {
-        return ModifyProvisions.builder().pubnub(this);
+    public final ModifyProvisions modifyPushProvisions() {
+        return new ModifyProvisions(this);
     }
 
-    public final ListProvisions.ListProvisionsBuilder listPushProvisions() {
-        return ListProvisions.builder().pubnub(this);
+    public final ListProvisions listPushProvisions() {
+        return new ListProvisions(this);
     }
 
-    public final CreatePushNotification.CreatePushNotificationBuilder createPushNotification() {
-        return CreatePushNotification.builder().pubnub(this);
+    public final CreatePushNotification createPushNotification() {
+        return new CreatePushNotification(this);
     }
 
     // end push
 
-    public final WhereNow.WhereNowBuilder whereNow() {
-        return WhereNow.builder().pubnub(this);
+    public final WhereNow whereNow() {
+        return new WhereNow(this);
     }
-    public final HereNow.HereNowBuilder hereNow() {
-        return HereNow.builder().pubnub(this);
-    }
-
-    public final Time.TimeBuilder time() {
-        return Time.builder().pubnub(this);
+    public final HereNow hereNow() {
+        return new HereNow(this);
     }
 
-    public final History.HistoryBuilder history() { return History.builder().pubnub(this); }
-
-
-    public final Audit.AuditBuilder audit() {
-        return Audit.builder().pubnub(this);
-    }
-    public final Grant.GrantBuilder grant() {
-        return Grant.builder().pubnub(this);
+    public final Time time() {
+        return new Time(this);
     }
 
-    public final GetState.GetStateBuilder getPresenceState() {
-        return GetState.builder().pubnub(this);
+    public final History history() { return new History(this); }
+
+
+    public final Audit audit() {
+        return new Audit(this);
     }
-    public final SetState.SetStateBuilder setPresenceState() {
-        return SetState.builder().pubnub(this).subscriptionManager(subscriptionManager);
+    public final Grant grant() {
+        return new Grant(this);
     }
 
-    public final Publish.PublishBuilder publish() {
-        return Publish.builder().pubnub(this);
+    public final GetState getPresenceState() {
+        return new GetState(this);
+    }
+    public final SetState setPresenceState() {
+        return new SetState(this, subscriptionManager);
+    }
+
+    public final Publish publish() {
+        return new Publish(this);
     }
 
     // public methods

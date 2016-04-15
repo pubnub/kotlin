@@ -6,22 +6,26 @@ import com.pubnub.api.core.*;
 import com.pubnub.api.core.enums.PNOperationType;
 import com.pubnub.api.core.models.PublishData;
 import com.pubnub.api.endpoints.Endpoint;
-import lombok.Builder;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import retrofit2.Call;
 import retrofit2.Response;
 
 import java.util.List;
 import java.util.Map;
 
-@Builder
+@Accessors(chain = true, fluent = true)
 public class Publish extends Endpoint<List<Object>, PublishData> {
 
-    private Pubnub pubnub;
-    private Object message;
-    private String channel;
-    private Boolean shouldStore;
-    private Boolean usePOST;
-    private Object meta;
+    @Setter private Object message;
+    @Setter private String channel;
+    @Setter private Boolean shouldStore;
+    @Setter private Boolean usePOST;
+    @Setter private Object meta;
+
+    public Publish(Pubnub pubnub) {
+        super(pubnub);
+    }
 
     @Override
     protected final boolean validateParams() {
@@ -120,11 +124,6 @@ public class Publish extends Endpoint<List<Object>, PublishData> {
     @Override
     protected PNOperationType getOperationType() {
         return PNOperationType.PNPublishOperation;
-    }
-
-    @Override
-    protected Pubnub getPubnub() {
-        return pubnub;
     }
 
 }

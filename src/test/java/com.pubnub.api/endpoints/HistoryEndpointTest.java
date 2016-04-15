@@ -21,7 +21,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.*;
 
 public class HistoryEndpointTest extends EndpointTest {
 
-    private History.HistoryBuilder partialHistory;
+    private History partialHistory;
     private Pubnub pubnub;
 
     @Rule
@@ -65,7 +65,7 @@ public class HistoryEndpointTest extends EndpointTest {
         stubFor(get(urlPathEqualTo("/v2/history/sub-key/mySubscribeKey/channel/niceChannel"))
                 .willReturn(aResponse().withBody(mapper.writeValueAsString(testArray))));
 
-        PNHistoryResult response = partialHistory.channel("niceChannel").includeTimetoken(true).build().sync();
+        PNHistoryResult response = partialHistory.channel("niceChannel").includeTimetoken(true).sync();
 
         Assert.assertTrue(response.getStartTimeToken().equals(1234L));
         Assert.assertTrue(response.getEndTimeToken().equals(4321L));
@@ -89,7 +89,7 @@ public class HistoryEndpointTest extends EndpointTest {
         stubFor(get(urlPathEqualTo("/v2/history/sub-key/mySubscribeKey/channel/niceChannel"))
                 .willReturn(aResponse().withBody("[[\"EGwV+Ti43wh2TprPIq7o0KMuW5j6B3yWy352ucWIOmU=\\n\",\"EGwV+Ti43wh2TprPIq7o0KMuW5j6B3yWy352ucWIOmU=\\n\",\"EGwV+Ti43wh2TprPIq7o0KMuW5j6B3yWy352ucWIOmU=\\n\"],14606134331557853,14606134485013970]")));
 
-        PNHistoryResult response = partialHistory.channel("niceChannel").includeTimetoken(false).build().sync();
+        PNHistoryResult response = partialHistory.channel("niceChannel").includeTimetoken(false).sync();
 
         Assert.assertTrue(response.getStartTimeToken().equals(14606134331557853L));
         Assert.assertTrue(response.getEndTimeToken().equals(14606134485013970L));
@@ -136,7 +136,7 @@ public class HistoryEndpointTest extends EndpointTest {
         stubFor(get(urlPathEqualTo("/v2/history/sub-key/mySubscribeKey/channel/niceChannel"))
                 .willReturn(aResponse().withBody(mapper.writeValueAsString(testArray))));
 
-        PNHistoryResult response = partialHistory.channel("niceChannel").build().sync();
+        PNHistoryResult response = partialHistory.channel("niceChannel").sync();
 
         Assert.assertTrue(response.getStartTimeToken().equals(1234L));
         Assert.assertTrue(response.getEndTimeToken().equals(4321L));

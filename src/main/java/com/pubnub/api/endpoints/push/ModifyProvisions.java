@@ -5,23 +5,30 @@ import com.pubnub.api.core.PubnubException;
 import com.pubnub.api.core.PubnubUtil;
 import com.pubnub.api.core.enums.PNOperationType;
 import com.pubnub.api.endpoints.Endpoint;
-import lombok.Builder;
+import lombok.Setter;
 import lombok.Singular;
+import lombok.experimental.Accessors;
 import retrofit2.Call;
 import retrofit2.Response;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-@Builder
+@Accessors(chain = true, fluent = true)
 public class ModifyProvisions extends Endpoint<List<Object>, Boolean> {
 
-    private Pubnub pubnub;
-    private PushType pushType;
-    private @Singular List<String> addChannels;
-    private @Singular List<String> removeChannels;
-    private String deviceId;
-    private boolean removeAllChannels;
+    @Setter private PushType pushType;
+    @Setter private @Singular List<String> addChannels;
+    @Setter private @Singular List<String> removeChannels;
+    @Setter String deviceId;
+    @Setter private boolean removeAllChannels;
+
+    public ModifyProvisions(Pubnub pubnub) {
+        super(pubnub);
+        addChannels = new ArrayList<>();
+        removeChannels = new ArrayList<>();
+    }
 
     @Override
     protected boolean validateParams() {
@@ -80,11 +87,6 @@ public class ModifyProvisions extends Endpoint<List<Object>, Boolean> {
     @Override
     protected PNOperationType getOperationType() {
         return PNOperationType.PNPushNotificationModifiedChannelsOperations;
-    }
-
-    @Override
-    protected Pubnub getPubnub() {
-        return pubnub;
     }
 
 }

@@ -29,7 +29,7 @@ public class max_test {
 
         pubnub.publish()
                 .channel("coolChannel").usePOST(false).shouldStore(true)
-                .message(Arrays.asList("m1", "m2")).build().sync();
+                .message(Arrays.asList("m1", "m2")).sync();
 
         pubnub.addListener(new SubscribeCallback() {
             @Override

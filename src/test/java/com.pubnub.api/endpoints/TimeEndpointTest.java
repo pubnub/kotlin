@@ -27,7 +27,7 @@ public class TimeEndpointTest extends EndpointTest {
 
     @Before
     public void beforeEach() throws IOException {
-        partialTime = this.createPubNubInstance(8080).time().build();
+        partialTime = this.createPubNubInstance(8080).time();
     }
 
 

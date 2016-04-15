@@ -19,7 +19,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.junit.Assert.assertThat;
 
 public class WhereNowEndpointTest extends EndpointTest {
-    private WhereNow.WhereNowBuilder partialWhereNow;
+    private WhereNow partialWhereNow;
 
     @Rule
     public WireMockRule wireMockRule = new WireMockRule();
@@ -35,7 +35,7 @@ public class WhereNowEndpointTest extends EndpointTest {
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/uuid/myUUID"))
                 .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": [\"a\",\"b\"]}, \"service\": \"Presence\"}")));
 
-        PNPresenceWhereNowResult response = partialWhereNow.build().sync();
+        PNPresenceWhereNowResult response = partialWhereNow.sync();
         assertThat(response.getChannels(), org.hamcrest.Matchers.contains("a", "b"));
     }
 
@@ -45,7 +45,7 @@ public class WhereNowEndpointTest extends EndpointTest {
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/uuid/customUUID"))
                 .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": [\"a\",\"b\"]}, \"service\": \"Presence\"}")));
 
-        PNPresenceWhereNowResult response = partialWhereNow.uuid("customUUID").build().sync();
+        PNPresenceWhereNowResult response = partialWhereNow.uuid("customUUID").sync();
         assertThat(response.getChannels(), org.hamcrest.Matchers.contains("a", "b"));
     }
 
@@ -55,7 +55,7 @@ public class WhereNowEndpointTest extends EndpointTest {
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/uuid/myUUID"))
                 .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": [zimp]}, \"service\": \"Presence\"}")));
 
-        partialWhereNow.build().sync();
+        partialWhereNow.sync();
     }
 
     @org.junit.Test(expected=PubnubException.class)
@@ -64,7 +64,7 @@ public class WhereNowEndpointTest extends EndpointTest {
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/uuid/myUUID"))
                 .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": zimp}, \"service\": \"Presence\"}")));
 
-        partialWhereNow.build().sync();
+        partialWhereNow.sync();
     }
 
     @org.junit.Test(expected=PubnubException.class)
@@ -75,7 +75,7 @@ public class WhereNowEndpointTest extends EndpointTest {
                         .withStatus(404)
                         .withBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": [\"a\",\"b\"]}, \"service\": \"Presence\"}")));
 
-        partialWhereNow.build().sync();
+        partialWhereNow.sync();
     }
 
     @org.junit.Test
@@ -85,7 +85,7 @@ public class WhereNowEndpointTest extends EndpointTest {
                 .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": [\"a\",\"b\"]}, \"service\": \"Presence\"}")));
 
         final AtomicInteger atomic = new AtomicInteger(0);
-        partialWhereNow.build().async(new WhereNowCallback(){
+        partialWhereNow.async(new WhereNowCallback(){
 
             @Override
             public void onResponse(PNPresenceWhereNowResult result, PNErrorStatus status) {
@@ -105,7 +105,7 @@ public class WhereNowEndpointTest extends EndpointTest {
                 .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": [zimp]}, \"service\": \"Presence\"}")));
 
         final AtomicInteger atomic = new AtomicInteger(0);
-        partialWhereNow.build().async(new WhereNowCallback(){
+        partialWhereNow.async(new WhereNowCallback(){
 
             @Override
             public void onResponse(PNPresenceWhereNowResult result, PNErrorStatus status) {
@@ -126,7 +126,7 @@ public class WhereNowEndpointTest extends EndpointTest {
                 .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": zimp}, \"service\": \"Presence\"}")));
 
         final AtomicInteger atomic = new AtomicInteger(0);
-        partialWhereNow.build().async(new WhereNowCallback(){
+        partialWhereNow.async(new WhereNowCallback(){
 
             @Override
             public void onResponse(PNPresenceWhereNowResult result, PNErrorStatus status) {
@@ -148,7 +148,7 @@ public class WhereNowEndpointTest extends EndpointTest {
                         .withBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": [\"a\",\"b\"]}, \"service\": \"Presence\"}")));
 
         final AtomicInteger atomic = new AtomicInteger(0);
-        partialWhereNow.build().async(new WhereNowCallback(){
+        partialWhereNow.async(new WhereNowCallback(){
 
             @Override
             public void onResponse(PNPresenceWhereNowResult result, PNErrorStatus status) {

@@ -9,29 +9,32 @@ import com.pubnub.api.core.models.Envelope;
 import com.pubnub.api.core.models.consumer_facing.PNSetStateResult;
 import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.managers.SubscriptionManager;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Singular;
+import lombok.*;
+import lombok.experimental.Accessors;
 import retrofit2.Call;
 import retrofit2.Response;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 
-@Builder
+@Accessors(chain = true, fluent = true)
 public class SetState extends Endpoint<Envelope<Map<String, Object>>, PNSetStateResult> {
-
-    @Getter(AccessLevel.NONE)
-    private Pubnub pubnub;
 
     @Getter(AccessLevel.NONE)
     private SubscriptionManager subscriptionManager;
 
-    @Singular private List<String> channels;
-    @Singular private List<String> channelGroups;
-    private Object state;
+    @Setter private List<String> channels;
+    @Setter private List<String> channelGroups;
+    @Setter private Object state;
+
+    public SetState(Pubnub pubnub, SubscriptionManager subscriptionManager) {
+        super(pubnub);
+        this.subscriptionManager = subscriptionManager;
+        channels = new ArrayList<>();
+        channelGroups = new ArrayList<>();
+    }
 
     @Override
     protected boolean validateParams() {
@@ -102,11 +105,6 @@ public class SetState extends Endpoint<Envelope<Map<String, Object>>, PNSetState
     @Override
     protected PNOperationType getOperationType() {
         return PNOperationType.PNSetStateOperation;
-    }
-
-    @Override
-    protected Pubnub getPubnub() {
-        return pubnub;
     }
 
 }

@@ -8,8 +8,8 @@ import com.pubnub.api.core.models.Envelope;
 import com.pubnub.api.core.models.consumer_facing.PNAccessManagerGrantData;
 import com.pubnub.api.core.models.consumer_facing.PNAccessManagerGrantResult;
 import com.pubnub.api.endpoints.Endpoint;
-import lombok.Builder;
-import lombok.Singular;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -19,19 +19,22 @@ import java.util.List;
 import java.util.Map;
 
 
-@Builder
+@Accessors(chain = true, fluent = true)
 public class Grant extends Endpoint<Envelope<PNAccessManagerGrantData>, PNAccessManagerGrantResult> {
 
-    private Pubnub pubnub;
-    private boolean read;
-    private boolean write;
-    private boolean manage;
-    private int ttl;
+    @Setter private boolean read;
+    @Setter private boolean write;
+    @Setter private boolean manage;
+    @Setter private int ttl;
 
-    @Singular
-    private List<String> authKeys;
-    @Singular private List<String> channels;
-    @Singular private List<String> channelGroups;
+
+    @Setter private List<String> authKeys;
+    @Setter private List<String> channels;
+    @Setter private List<String> channelGroups;
+
+    public Grant(Pubnub pubnub) {
+        super(pubnub);
+    }
 
     @Override
     protected boolean validateParams() {
@@ -115,11 +118,6 @@ public class Grant extends Endpoint<Envelope<PNAccessManagerGrantData>, PNAccess
     @Override
     protected PNOperationType getOperationType() {
         return PNOperationType.PNAccessManagerGrant;
-    }
-
-    @Override
-    protected Pubnub getPubnub() {
-        return pubnub;
     }
 
 }

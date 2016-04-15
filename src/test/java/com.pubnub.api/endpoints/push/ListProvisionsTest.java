@@ -19,7 +19,7 @@ public class ListProvisionsTest extends EndpointTest {
     @Rule
     public WireMockRule wireMockRule = new WireMockRule();
 
-    private ListProvisions.ListProvisionsBuilder instance;
+    private ListProvisions instance;
 
 
     @Before
@@ -33,7 +33,7 @@ public class ListProvisionsTest extends EndpointTest {
         stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
                 .willReturn(aResponse().withBody("[\"ch1\", \"ch2\", \"ch3\"]")));
 
-        instance.deviceId("niceDevice").pushType(PushType.APNS).build().sync();
+        instance.deviceId("niceDevice").pushType(PushType.APNS).sync();
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
@@ -47,7 +47,7 @@ public class ListProvisionsTest extends EndpointTest {
         stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
                 .willReturn(aResponse().withBody("[\"ch1\", \"ch2\", \"ch3\"]")));
 
-        instance.deviceId("niceDevice").pushType(PushType.GCM).build().sync();
+        instance.deviceId("niceDevice").pushType(PushType.GCM).sync();
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
@@ -61,7 +61,7 @@ public class ListProvisionsTest extends EndpointTest {
         stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
                 .willReturn(aResponse().withBody("[\"ch1\", \"ch2\", \"ch3\"]")));
 
-        instance.deviceId("niceDevice").pushType(PushType.MPNS).build().sync();
+        instance.deviceId("niceDevice").pushType(PushType.MPNS).sync();
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());

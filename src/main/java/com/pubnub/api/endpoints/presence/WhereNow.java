@@ -8,19 +8,21 @@ import com.pubnub.api.core.models.Envelope;
 import com.pubnub.api.core.models.WhereNowData;
 import com.pubnub.api.core.models.consumer_facing.PNPresenceWhereNowResult;
 import com.pubnub.api.endpoints.Endpoint;
-import lombok.Builder;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import retrofit2.Call;
 import retrofit2.Response;
 
 import java.util.Map;
 
-
-@Builder
+@Accessors(chain = true, fluent = true)
 public class WhereNow extends Endpoint<Envelope<WhereNowData>, PNPresenceWhereNowResult> {
 
-    private Pubnub pubnub;
-    private String uuid;
+    @Setter private String uuid;
 
+    public WhereNow(Pubnub pubnub) {
+        super(pubnub);
+    }
 
     @Override
     protected boolean validateParams() {
@@ -57,11 +59,6 @@ public class WhereNow extends Endpoint<Envelope<WhereNowData>, PNPresenceWhereNo
     @Override
     protected PNOperationType getOperationType() {
         return PNOperationType.PNWhereNowOperation;
-    }
-
-    @Override
-    protected Pubnub getPubnub() {
-        return pubnub;
     }
 
 }

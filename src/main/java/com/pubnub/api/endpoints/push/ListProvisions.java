@@ -4,19 +4,23 @@ import com.pubnub.api.core.Pubnub;
 import com.pubnub.api.core.PubnubException;
 import com.pubnub.api.core.enums.PNOperationType;
 import com.pubnub.api.endpoints.Endpoint;
-import lombok.Builder;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import retrofit2.Call;
 import retrofit2.Response;
 
 import java.util.List;
 import java.util.Map;
 
-@Builder
+@Accessors(chain = true, fluent = true)
 public class ListProvisions extends Endpoint<List<String>, List<String>> {
 
-    private Pubnub pubnub;
-    private PushType pushType;
-    private String deviceId;
+    @Setter private PushType pushType;
+    @Setter private String deviceId;
+
+    public ListProvisions(Pubnub pubnub) {
+        super(pubnub);
+    }
 
     @Override
     protected boolean validateParams() {
@@ -46,11 +50,6 @@ public class ListProvisions extends Endpoint<List<String>, List<String>> {
     @Override
     protected PNOperationType getOperationType() {
         return PNOperationType.PNPushNotificationListChannelsOperation;
-    }
-
-    @Override
-    protected Pubnub getPubnub() {
-        return pubnub;
     }
 
 }

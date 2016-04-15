@@ -20,7 +20,7 @@ import static org.junit.Assert.assertEquals;
 
 public class HeartbeatEndpointTest extends EndpointTest {
 
-    private Heartbeat.HeartbeatBuilder partialHeartbeat;
+    private Heartbeat partialHeartbeat;
     private Pubnub pubnub;
 
     @Rule
@@ -29,7 +29,7 @@ public class HeartbeatEndpointTest extends EndpointTest {
     @Before
     public void beforeEach() throws IOException {
         pubnub = this.createPubNubInstance(8080);
-        partialHeartbeat = Heartbeat.builder().pubnub(pubnub);
+        partialHeartbeat = new Heartbeat(pubnub);
     }
 
     @org.junit.Test
@@ -39,7 +39,7 @@ public class HeartbeatEndpointTest extends EndpointTest {
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch1/heartbeat"))
                 .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\"}")));
 
-        partialHeartbeat.channels(Arrays.asList("ch1")).build().sync();
+        partialHeartbeat.channels(Arrays.asList("ch1")).sync();
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
@@ -56,7 +56,7 @@ public class HeartbeatEndpointTest extends EndpointTest {
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch1,ch2/heartbeat"))
                 .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\"}")));
 
-        partialHeartbeat.channels(Arrays.asList("ch1", "ch2")).build().sync();
+        partialHeartbeat.channels(Arrays.asList("ch1", "ch2")).sync();
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
@@ -72,7 +72,7 @@ public class HeartbeatEndpointTest extends EndpointTest {
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/,/heartbeat"))
                 .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\"}")));
 
-        partialHeartbeat.channelGroups(Arrays.asList("cg1")).build().sync();
+        partialHeartbeat.channelGroups(Arrays.asList("cg1")).sync();
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
@@ -89,7 +89,7 @@ public class HeartbeatEndpointTest extends EndpointTest {
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/,/heartbeat"))
                 .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\"}")));
 
-        partialHeartbeat.channelGroups(Arrays.asList("cg1", "cg2")).build().sync();
+        partialHeartbeat.channelGroups(Arrays.asList("cg1", "cg2")).sync();
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
@@ -112,7 +112,7 @@ public class HeartbeatEndpointTest extends EndpointTest {
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch1,ch2/heartbeat"))
                 .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\"}")));
 
-        partialHeartbeat.channels(Arrays.asList("ch1", "ch2")).state(state).build().sync();
+        partialHeartbeat.channels(Arrays.asList("ch1", "ch2")).state(state).sync();
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());

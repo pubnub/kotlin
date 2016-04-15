@@ -10,6 +10,7 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -22,7 +23,7 @@ public class GetStateEndpointTest extends EndpointTest {
     @Rule
     public WireMockRule wireMockRule = new WireMockRule();
 
-    private GetState.GetStateBuilder partialGetState;
+    private GetState partialGetState;
 
     @Before
     public void beforeEach() throws IOException {
@@ -36,7 +37,7 @@ public class GetStateEndpointTest extends EndpointTest {
                 .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : 20, \"status\" : \"online\"}, \"service\": \"Presence\"}")));
 
 
-        Map<String, Object> result = partialGetState.channel("testChannel").uuid("sampleUUID").build().sync();
+        Map<String, Object> result = partialGetState.channels(Arrays.asList("testChannel")).uuid("sampleUUID").sync();
         Map<String, Object> ch1Data = (Map<String, Object>) result.get("testChannel");
         Assert.assertEquals(ch1Data.get("age"), 20);
         Assert.assertEquals(ch1Data.get("status"), "online");
@@ -48,7 +49,7 @@ public class GetStateEndpointTest extends EndpointTest {
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/testChannel/uuid/sampleUUID"))
                 .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": \"age\" : 20, \"status\" : \"online\"}, \"service\": \"Presence\"}")));
 
-        partialGetState.channel("testChannel").uuid("sampleUUID").build().sync();
+        partialGetState.channels(Arrays.asList("testChannel")).uuid("sampleUUID").sync();
     }
 
     @Test
@@ -57,7 +58,7 @@ public class GetStateEndpointTest extends EndpointTest {
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch1,ch2/uuid/sampleUUID"))
                 .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"ch1\": { \"age\" : 20, \"status\" : \"online\"}, \"ch2\": { \"age\": 100, \"status\": \"offline\" } }, \"service\": \"Presence\"}")));
 
-        Map<String, Object> result = partialGetState.channel("ch1").channel("ch2").uuid("sampleUUID").build().sync();
+        Map<String, Object> result = partialGetState.channels(Arrays.asList("ch1", "ch2")).uuid("sampleUUID").sync();
         Map<String, Object> ch1Data = (Map<String, Object>) result.get("ch1");
         Assert.assertEquals(ch1Data.get("age"), 20);
         Assert.assertEquals(ch1Data.get("status"), "online");
@@ -72,7 +73,7 @@ public class GetStateEndpointTest extends EndpointTest {
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/,/uuid/sampleUUID"))
                 .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"chcg1\": { \"age\" : 20, \"status\" : \"online\"}, \"chcg2\": { \"age\": 100, \"status\": \"offline\" } }, \"service\": \"Presence\"}")));
 
-        Map<String, Object> result = partialGetState.channelGroup("cg1").uuid("sampleUUID").build().sync();
+        Map<String, Object> result = partialGetState.channelGroups(Arrays.asList("cg1")).uuid("sampleUUID").sync();
         Map<String, Object> ch1Data = (Map<String, Object>) result.get("chcg1");
         Assert.assertEquals(ch1Data.get("age"), 20);
         Assert.assertEquals(ch1Data.get("status"), "online");
@@ -91,7 +92,7 @@ public class GetStateEndpointTest extends EndpointTest {
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/,/uuid/sampleUUID"))
                 .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"chcg1\": { \"age\" : 20, \"status\" : \"online\"}, \"chcg2\": { \"age\": 100, \"status\": \"offline\" } }, \"service\": \"Presence\"}")));
 
-        Map<String, Object> result = partialGetState.channelGroup("cg1").channelGroup("cg2").uuid("sampleUUID").build().sync();
+        Map<String, Object> result = partialGetState.channelGroups(Arrays.asList("cg1", "cg2")).uuid("sampleUUID").sync();
         Map<String, Object> ch1Data = (Map<String, Object>) result.get("chcg1");
         Assert.assertEquals(ch1Data.get("age"), 20);
         Assert.assertEquals(ch1Data.get("status"), "online");
@@ -110,7 +111,7 @@ public class GetStateEndpointTest extends EndpointTest {
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch1/uuid/sampleUUID"))
                 .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"chcg1\": { \"age\" : 20, \"status\" : \"online\"}, \"chcg2\": { \"age\": 100, \"status\": \"offline\" } }, \"service\": \"Presence\"}")));
 
-        Map<String, Object> result = partialGetState.channel("ch1").channelGroup("cg1").channelGroup("cg2").uuid("sampleUUID").build().sync();
+        Map<String, Object> result = partialGetState.channels(Arrays.asList("ch1")).channelGroups(Arrays.asList("cg1", "cg2")).uuid("sampleUUID").sync();
         Map<String, Object> ch1Data = (Map<String, Object>) result.get("chcg1");
         Assert.assertEquals(ch1Data.get("age"), 20);
         Assert.assertEquals(ch1Data.get("status"), "online");

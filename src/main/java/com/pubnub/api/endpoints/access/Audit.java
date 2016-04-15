@@ -8,8 +8,8 @@ import com.pubnub.api.core.models.Envelope;
 import com.pubnub.api.core.models.consumer_facing.PNAccessManagerAuditData;
 import com.pubnub.api.core.models.consumer_facing.PNAccessManagerAuditResult;
 import com.pubnub.api.endpoints.Endpoint;
-import lombok.Builder;
-import lombok.Singular;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -18,14 +18,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Builder
+@Accessors(chain = true, fluent = true)
 public class Audit extends Endpoint<Envelope<PNAccessManagerAuditData>, PNAccessManagerAuditResult> {
 
-    private Pubnub pubnub;
-    @Singular private List<String> authKeys;
-    private String channel;
-    private String channelGroup;
+    @Setter private List<String> authKeys;
+    @Setter private String channel;
+    @Setter private String channelGroup;
 
+    public Audit(Pubnub pubnub) {
+        super(pubnub);
+    }
 
     @Override
     protected boolean validateParams() {
@@ -94,11 +96,6 @@ public class Audit extends Endpoint<Envelope<PNAccessManagerAuditData>, PNAccess
     @Override
     protected PNOperationType getOperationType() {
         return PNOperationType.PNAccessManagerAudit;
-    }
-
-    @Override
-    protected Pubnub getPubnub() {
-        return pubnub;
     }
 
 }

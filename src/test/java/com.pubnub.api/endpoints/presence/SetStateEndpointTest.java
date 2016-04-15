@@ -23,7 +23,7 @@ public class SetStateEndpointTest extends EndpointTest {
     @Rule
     public WireMockRule wireMockRule = new WireMockRule();
 
-    private SetState.SetStateBuilder partialSetState;
+    private SetState partialSetState;
     private Pubnub pubnub;
 
     @Before
@@ -39,7 +39,7 @@ public class SetStateEndpointTest extends EndpointTest {
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/testChannel/uuid/myUUID/data"))
                 .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : 20, \"status\" : \"online\" }, \"service\": \"Presence\"}")));
 
-        PNSetStateResult result = partialSetState.channel("testChannel").state(Arrays.asList("s1", "s2", "s3")).build().sync();
+        PNSetStateResult result = partialSetState.channels(Arrays.asList("testChannel")).state(Arrays.asList("s1", "s2", "s3")).sync();
         assertEquals(result.getState().get("age"), 20);
         assertEquals(result.getState().get("status"), "online");
 
@@ -55,7 +55,7 @@ public class SetStateEndpointTest extends EndpointTest {
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/testChannel,testChannel2/uuid/myUUID/data"))
                 .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : 20, \"status\" : \"online\" }, \"service\": \"Presence\"}")));
 
-        PNSetStateResult result = partialSetState.channel("testChannel").channel("testChannel2").state(Arrays.asList("s1", "s2", "s3")).build().sync();
+        PNSetStateResult result = partialSetState.channels(Arrays.asList("testChannel", "testChannel2")).state(Arrays.asList("s1", "s2", "s3")).sync();
         assertEquals(result.getState().get("age"), 20);
         assertEquals(result.getState().get("status"), "online");
 
@@ -70,7 +70,7 @@ public class SetStateEndpointTest extends EndpointTest {
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/,/uuid/myUUID/data"))
                 .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : 20, \"status\" : \"online\" }, \"service\": \"Presence\"}")));
 
-        PNSetStateResult result = partialSetState.channelGroup("cg1").state(Arrays.asList("s1", "s2", "s3")).build().sync();
+        PNSetStateResult result = partialSetState.channelGroups(Arrays.asList("cg1")).state(Arrays.asList("s1", "s2", "s3")).sync();
 
         assertEquals(result.getState().get("age"), 20);
         assertEquals(result.getState().get("status"), "online");
@@ -87,7 +87,7 @@ public class SetStateEndpointTest extends EndpointTest {
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/,/uuid/myUUID/data"))
                 .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : 20, \"status\" : \"online\" }, \"service\": \"Presence\"}")));
 
-        PNSetStateResult result = partialSetState.channelGroup("cg1").channelGroup("cg2").state(Arrays.asList("s1", "s2", "s3")).build().sync();
+        PNSetStateResult result = partialSetState.channelGroups(Arrays.asList("cg1", "cg2")).state(Arrays.asList("s1", "s2", "s3")).sync();
 
         assertEquals(result.getState().get("age"), 20);
         assertEquals(result.getState().get("status"), "online");
@@ -105,7 +105,7 @@ public class SetStateEndpointTest extends EndpointTest {
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch1/uuid/myUUID/data"))
                 .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : 20, \"status\" : \"online\" }, \"service\": \"Presence\"}")));
 
-        PNSetStateResult result = partialSetState.channel("ch1").channelGroup("cg1").channelGroup("cg2").state(Arrays.asList("s1", "s2", "s3")).build().sync();
+        PNSetStateResult result = partialSetState.channels(Arrays.asList("ch1")).channelGroups(Arrays.asList("cg1", "cg2")).state(Arrays.asList("s1", "s2", "s3")).sync();
 
         assertEquals(result.getState().get("age"), 20);
         assertEquals(result.getState().get("status"), "online");
@@ -124,7 +124,7 @@ public class SetStateEndpointTest extends EndpointTest {
                 .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : 20, \"status\" : \"online\" }, \"service\": \"Presence\"}").withStatus(400)));
 
 
-        PNSetStateResult result = partialSetState.channel("ch1").channelGroup("cg1").channelGroup("cg2").state(Arrays.asList("s1", "s2", "s3")).build().sync();
+        PNSetStateResult result = partialSetState.channels(Arrays.asList("ch1")).channelGroups(Arrays.asList("cg1", "cg2")).state(Arrays.asList("s1", "s2", "s3")).sync();
     }
 
 }

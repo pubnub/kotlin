@@ -6,22 +6,28 @@ import com.pubnub.api.core.PubnubUtil;
 import com.pubnub.api.core.enums.PNOperationType;
 import com.pubnub.api.core.models.Envelope;
 import com.pubnub.api.endpoints.Endpoint;
-import lombok.Builder;
-import lombok.Singular;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import retrofit2.Call;
 import retrofit2.Response;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Builder
+@Accessors(chain = true, fluent = true)
 public class GetState extends Endpoint<Envelope<Object>,Map<String, Object>> {
 
-    private Pubnub pubnub;
-    @Singular private List<String> channels;
-    @Singular private List<String> channelGroups;
-    private String uuid;
+    @Setter private List<String> channels;
+    @Setter private List<String> channelGroups;
+    @Setter private String uuid;
+
+    public GetState(Pubnub pubnub) {
+        super(pubnub);
+        channels = new ArrayList<>();
+        channelGroups = new ArrayList<>();
+    }
 
     @Override
     protected boolean validateParams() {
@@ -74,11 +80,6 @@ public class GetState extends Endpoint<Envelope<Object>,Map<String, Object>> {
     @Override
     protected PNOperationType getOperationType() {
         return PNOperationType.PNGetState;
-    }
-
-    @Override
-    protected Pubnub getPubnub() {
-        return pubnub;
     }
 
 }

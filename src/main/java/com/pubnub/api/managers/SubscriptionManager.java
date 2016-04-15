@@ -99,8 +99,8 @@ public class SubscriptionManager {
             this.stateStorage.remove(channelGroup);
         }
 
-        Leave.builder().pubnub(pubnub)
-            .channels(channels).channelGroups(channelGroups).build()
+        new Leave(pubnub)
+            .channels(channels).channelGroups(channelGroups)
             .async(new PNCallback<Boolean>() {
                 @Override
                 public void onResponse(Boolean result, PNErrorStatus status) {
@@ -153,8 +153,8 @@ public class SubscriptionManager {
             }
         }
 
-        subscribeCall = Subscribe.builder().pubnub(pubnub)
-                .channels(combinedChannels).channelGroups(combinedChannelGroups).timetoken(timetoken).build()
+        subscribeCall =  new Subscribe(pubnub)
+                .channels(combinedChannels).channelGroups(combinedChannelGroups).timetoken(timetoken)
                 .async(new PNCallback<SubscribeEnvelope>() {
                     @Override
                     public void onResponse(SubscribeEnvelope result, PNErrorStatus status) {
@@ -192,8 +192,8 @@ public class SubscriptionManager {
 
         // if we are not subscribed to any channels with presence, cancel the operation.
         if (presenceChannels.size() != 0 || presenceChannelGroups.size() != 0) {
-            heartbeatCall = Heartbeat.builder().pubnub(pubnub)
-                    .channels(presenceChannels).channelGroups(presenceChannelGroups).state(stateStorage).build()
+            heartbeatCall = new Heartbeat(pubnub)
+                    .channels(presenceChannels).channelGroups(presenceChannelGroups).state(stateStorage)
                     .async(new PNCallback<Boolean>() {
                         @Override
                         public void onResponse(Boolean result, PNErrorStatus status) {

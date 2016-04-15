@@ -27,6 +27,13 @@ import java.util.concurrent.TimeUnit;
 
 public abstract class Endpoint<Input, Output> {
 
+    protected Pubnub pubnub;
+
+    public Endpoint(Pubnub pubnub) {
+        this.pubnub = pubnub;
+    }
+
+
     public final Output sync() throws PubnubException {
         this.validateParams();
 
@@ -174,7 +181,7 @@ public abstract class Endpoint<Input, Output> {
     protected final Map<String, String> createBaseParams() {
         Map<String, String> params = new HashMap<>();
 
-        params.put("pnsdk", "Java/" + getPubnub().getVersion());
+        params.put("pnsdk", "Java/" + this.pubnub.getVersion());
 
         return params;
     }
@@ -188,6 +195,5 @@ public abstract class Endpoint<Input, Output> {
     protected abstract int getConnectTimeout();
     protected abstract int getRequestTimeout();
     protected abstract PNOperationType getOperationType();
-    protected abstract Pubnub getPubnub();
 
 }

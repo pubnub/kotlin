@@ -10,8 +10,8 @@ import com.pubnub.api.core.models.HereNow.HereNowChannelData;
 import com.pubnub.api.core.models.HereNow.HereNowData;
 import com.pubnub.api.core.models.HereNow.HereNowOccupantData;
 import com.pubnub.api.endpoints.Endpoint;
-import lombok.Builder;
-import lombok.Singular;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -20,13 +20,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Builder
+@Accessors(chain = true, fluent = true)
 public class HereNow extends Endpoint<Envelope<Object>, HereNowData> {
-    private Pubnub pubnub;
-    @Singular private List<String> channels;
-    @Singular private List<String> channelGroups;
-    private Boolean includeState;
-    private Boolean includeUUIDs;
+    @Setter private List<String> channels;
+    @Setter private List<String> channelGroups;
+    @Setter private Boolean includeState;
+    @Setter private Boolean includeUUIDs;
+
+    public HereNow(Pubnub pubnub) {
+        super(pubnub);
+        channels = new ArrayList<>();
+        channelGroups = new ArrayList<>();
+    }
 
 
     @Override
@@ -165,11 +170,6 @@ public class HereNow extends Endpoint<Envelope<Object>, HereNowData> {
     @Override
     protected PNOperationType getOperationType() {
         return PNOperationType.PNHereNowOperation;
-    }
-
-    @Override
-    protected Pubnub getPubnub() {
-        return pubnub;
     }
 
 }

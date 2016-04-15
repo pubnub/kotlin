@@ -4,27 +4,32 @@ import com.pubnub.api.callbacks.PNCallback;
 import com.pubnub.api.core.Pubnub;
 import com.pubnub.api.core.PubnubException;
 import com.pubnub.api.core.models.PublishData;
-import lombok.Builder;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
 import java.util.HashMap;
 import java.util.Map;
 
-@Builder
+@Accessors(chain = true, fluent = true)
 public class CreatePushNotification {
 
     private Pubnub pubnub;
-    private PushType pushType;
-    private Object pushPayload;
-    private String channel;
+    @Setter private PushType pushType;
+    @Setter private Object pushPayload;
+    @Setter private String channel;
+
+    public CreatePushNotification(Pubnub pubnub) {
+        this.pubnub = pubnub;
+    }
 
     public PublishData sync() throws PubnubException {
         Map<String, Object> payload = preparePayload();
-        return pubnub.publish().channel(channel).message(payload).build().sync();
+        return pubnub.publish().channel(channel).message(payload).sync();
     }
 
     public void async(final PNCallback<PublishData> callback) {
         Map<String, Object> payload = preparePayload();
-        pubnub.publish().channel(channel).message(payload).build().async(callback);
+        pubnub.publish().channel(channel).message(payload).async(callback);
     }
 
     private Map<String, Object> preparePayload() {

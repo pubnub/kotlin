@@ -6,21 +6,23 @@ import com.pubnub.api.core.PubnubUtil;
 import com.pubnub.api.core.enums.PNOperationType;
 import com.pubnub.api.core.models.Envelope;
 import com.pubnub.api.endpoints.Endpoint;
-import lombok.Builder;
-import lombok.Singular;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import retrofit2.Call;
 import retrofit2.Response;
 
 import java.util.List;
 import java.util.Map;
 
-@Builder
+@Accessors(chain = true, fluent = true)
 public class Leave extends Endpoint<Envelope, Boolean> {
 
-    private Pubnub pubnub;
+    public Leave(Pubnub pubnub) {
+        super(pubnub);
+    }
 
-    @Singular private List<String> channels;
-    @Singular private List<String> channelGroups;
+    @Setter private List<String> channels;
+    @Setter private List<String> channelGroups;
 
     @Override
     protected boolean validateParams() {
@@ -63,11 +65,6 @@ public class Leave extends Endpoint<Envelope, Boolean> {
     @Override
     protected PNOperationType getOperationType() {
         return PNOperationType.PNUnsubscribeOperation;
-    }
-
-    @Override
-    protected Pubnub getPubnub() {
-        return pubnub;
     }
 
 }

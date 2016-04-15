@@ -10,7 +10,8 @@ import com.pubnub.api.core.PubnubException;
 import com.pubnub.api.core.enums.PNOperationType;
 import com.pubnub.api.core.models.consumer_facing.PNHistoryItemResult;
 import com.pubnub.api.core.models.consumer_facing.PNHistoryResult;
-import lombok.Builder;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.http.GET;
@@ -20,16 +21,19 @@ import retrofit2.http.QueryMap;
 import java.io.IOException;
 import java.util.Map;
 
-@Builder
+@Accessors(chain = true, fluent = true)
 public class History extends Endpoint<JsonNode, PNHistoryResult> {
 
-    private Pubnub pubnub;
-    private String channel;
-    private Long start;
-    private Long end;
-    private boolean reverse = false;
-    private Integer count;
-    private boolean includeTimetoken = false;
+    @Setter private String channel;
+    @Setter private Long start;
+    @Setter private Long end;
+    @Setter private boolean reverse = false;
+    @Setter private Integer count;
+    @Setter private boolean includeTimetoken = false;
+
+    public History(Pubnub pubnub) {
+        super(pubnub);
+    }
 
     private interface HistoryService {
         @GET("v2/history/sub-key/{subKey}/channel/{channel}")
@@ -107,11 +111,6 @@ public class History extends Endpoint<JsonNode, PNHistoryResult> {
     @Override
     protected PNOperationType getOperationType() {
         return PNOperationType.PNHistoryOperation;
-    }
-
-    @Override
-    protected Pubnub getPubnub() {
-        return pubnub;
     }
 
     private Object processMessage(JsonNode message) throws PubnubException {

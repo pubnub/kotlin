@@ -25,7 +25,7 @@ public class PublishTest extends EndpointTest {
     public WireMockRule wireMockRule = new WireMockRule();
 
     private Pubnub pubnub;
-    private Publish.PublishBuilder instance;
+    private Publish instance;
 
 
     @Before
@@ -40,7 +40,7 @@ public class PublishTest extends EndpointTest {
         stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22hi%22"))
                 .willReturn(aResponse().withBody("[1,\"Sent\",\"14598111595318003\"]")));
 
-        instance.channel("coolChannel").message("hi").build().sync();
+        instance.channel("coolChannel").message("hi").sync();
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
@@ -52,7 +52,7 @@ public class PublishTest extends EndpointTest {
         stubFor(post(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0"))
                 .willReturn(aResponse().withBody("[1,\"Sent\",\"14598111595318003\"]")));
 
-        instance.channel("coolChannel").usePOST(true).message(Arrays.asList("m1", "m2")).build().sync();
+        instance.channel("coolChannel").usePOST(true).message(Arrays.asList("m1", "m2")).sync();
 
         List<LoggedRequest> requests = findAll(postRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
@@ -65,7 +65,7 @@ public class PublishTest extends EndpointTest {
         stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22hi%22"))
                 .willReturn(aResponse().withBody("[1,\"Sent\",\"14598111595318003\"]")));
 
-        instance.channel("coolChannel").message("hi").shouldStore(false).build().sync();
+        instance.channel("coolChannel").message("hi").shouldStore(false).sync();
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
@@ -78,7 +78,7 @@ public class PublishTest extends EndpointTest {
         stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22hi%22"))
                 .willReturn(aResponse().withBody("[1,\"Sent\",\"14598111595318003\"]")));
 
-        instance.channel("coolChannel").message("hi").meta(Arrays.asList("m1", "m2")).shouldStore(false).build().sync();
+        instance.channel("coolChannel").message("hi").meta(Arrays.asList("m1", "m2")).shouldStore(false).sync();
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
@@ -93,7 +93,7 @@ public class PublishTest extends EndpointTest {
                 .willReturn(aResponse().withBody("[1,\"Sent\",\"14598111595318003\"]")));
 
         pubnub.getConfiguration().setAuthKey("authKey");
-        instance.channel("coolChannel").message("hi").build().sync();
+        instance.channel("coolChannel").message("hi").sync();
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
@@ -108,7 +108,7 @@ public class PublishTest extends EndpointTest {
         stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/10"))
                 .willReturn(aResponse().withBody("[1,\"Sent\",\"14598111595318003\"]")));
 
-        instance.channel("coolChannel").message(10).build().sync();
+        instance.channel("coolChannel").message(10).sync();
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
@@ -121,7 +121,7 @@ public class PublishTest extends EndpointTest {
         stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%5B%22a%22%2C%22b%22%2C%22c%22%5D?"))
                 .willReturn(aResponse().withBody("[1,\"Sent\",\"14598111595318003\"]")));
 
-        instance.channel("coolChannel").message(Arrays.asList("a", "b", "c")).build().sync();
+        instance.channel("coolChannel").message(Arrays.asList("a", "b", "c")).sync();
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
@@ -135,7 +135,7 @@ public class PublishTest extends EndpointTest {
                 .willReturn(aResponse().withBody("[1,\"Sent\",\"14598111595318003\"]")));
 
         pubnub.getConfiguration().setCipherKey("testCipher");
-        instance.channel("coolChannel").message(Arrays.asList("m1", "m2")).build().sync();
+        instance.channel("coolChannel").message(Arrays.asList("m1", "m2")).sync();
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
@@ -150,7 +150,7 @@ public class PublishTest extends EndpointTest {
 
         pubnub.getConfiguration().setCipherKey("testCipher");
 
-        instance.channel("coolChannel").usePOST(true).message(Arrays.asList("m1", "m2")).build().sync();
+        instance.channel("coolChannel").usePOST(true).message(Arrays.asList("m1", "m2")).sync();
 
         List<LoggedRequest> requests = findAll(postRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
@@ -167,7 +167,7 @@ public class PublishTest extends EndpointTest {
         stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%7B%22a%22%3A10%2C%22z%22%3A%22test%22%7D"))
                 .willReturn(aResponse().withBody("[1,\"Sent\",\"14598111595318003\"]")));
 
-        instance.channel("coolChannel").message(params).build().sync();
+        instance.channel("coolChannel").message(params).sync();
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
@@ -191,7 +191,7 @@ public class PublishTest extends EndpointTest {
         stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%7B%22field1%22%3A%2210%22%2C%22field2%22%3A%2220%22%7D"))
                 .willReturn(aResponse().withBody("[1,\"Sent\",\"14598111595318003\"]")));
 
-        instance.channel("coolChannel").message(testPojo).build().sync();
+        instance.channel("coolChannel").message(testPojo).sync();
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());

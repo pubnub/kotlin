@@ -26,7 +26,7 @@ public class CreatePushNotificationTest extends EndpointTest {
     @Rule
     public WireMockRule wireMockRule = new WireMockRule();
 
-    private CreatePushNotification.CreatePushNotificationBuilder instance;
+    private CreatePushNotification instance;
 
 
     @Before
@@ -41,7 +41,7 @@ public class CreatePushNotificationTest extends EndpointTest {
                 .willReturn(aResponse().withBody("[1,\"Sent\",\"14598111595318003\"]")));
 
         instance.pushType(PushType.APNS).channel("testChannel")
-                .pushPayload(Arrays.asList("a", "b")).build().sync();
+                .pushPayload(Arrays.asList("a", "b")).sync();
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
@@ -55,7 +55,7 @@ public class CreatePushNotificationTest extends EndpointTest {
 
 
         instance.pushType(PushType.GCM).channel("testChannel")
-                .pushPayload(Arrays.asList("a", "b")).build().sync();
+                .pushPayload(Arrays.asList("a", "b")).sync();
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
@@ -69,7 +69,7 @@ public class CreatePushNotificationTest extends EndpointTest {
                 .willReturn(aResponse().withBody("[1,\"Sent\",\"14598111595318003\"]")));
 
         instance.pushType(PushType.MPNS).channel("testChannel")
-                .pushPayload(Arrays.asList("a", "b")).build().sync();
+                .pushPayload(Arrays.asList("a", "b")).sync();
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
@@ -84,7 +84,7 @@ public class CreatePushNotificationTest extends EndpointTest {
 
         final AtomicInteger atomic = new AtomicInteger(0);
         instance.pushType(PushType.APNS).channel("testChannel")
-                .pushPayload(Arrays.asList("a", "b")).build().async(new PNCallback<PublishData>() {
+                .pushPayload(Arrays.asList("a", "b")).async(new PNCallback<PublishData>() {
             @Override
             public void onResponse(PublishData result, PNErrorStatus status) {
                     List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
@@ -105,7 +105,7 @@ public class CreatePushNotificationTest extends EndpointTest {
                 .willReturn(aResponse().withBody("[1,\"Sent\",\"14598111595318003\"]")));
         final AtomicInteger atomic = new AtomicInteger(0);
         instance.pushType(PushType.GCM).channel("testChannel")
-                .pushPayload(Arrays.asList("a", "b")).build().async(new PNCallback<PublishData>() {
+                .pushPayload(Arrays.asList("a", "b")).async(new PNCallback<PublishData>() {
             @Override
             public void onResponse(PublishData result, PNErrorStatus status) {
                 List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
@@ -128,7 +128,7 @@ public class CreatePushNotificationTest extends EndpointTest {
 
         final AtomicInteger atomic = new AtomicInteger(0);
         instance.pushType(PushType.MPNS).channel("testChannel")
-                .pushPayload(Arrays.asList("a", "b")).build().async(new PNCallback<PublishData>() {
+                .pushPayload(Arrays.asList("a", "b")).async(new PNCallback<PublishData>() {
             @Override
             public void onResponse(PublishData result, PNErrorStatus status) {
                 List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));

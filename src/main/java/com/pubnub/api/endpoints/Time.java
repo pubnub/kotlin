@@ -5,7 +5,6 @@ import com.pubnub.api.core.PubnubError;
 import com.pubnub.api.core.PubnubException;
 import com.pubnub.api.core.enums.PNOperationType;
 import com.pubnub.api.core.models.consumer_facing.PNTimeResult;
-import lombok.Builder;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.http.GET;
@@ -14,10 +13,11 @@ import retrofit2.http.QueryMap;
 import java.util.List;
 import java.util.Map;
 
-@Builder
 public class Time extends Endpoint<List<Long>, PNTimeResult> {
 
-    private Pubnub pubnub;
+    public Time(Pubnub pubnub) {
+        super(pubnub);
+    }
 
     private interface TimeService {
         @GET("/time/0")
@@ -58,11 +58,6 @@ public class Time extends Endpoint<List<Long>, PNTimeResult> {
     @Override
     protected PNOperationType getOperationType() {
         return PNOperationType.PNTimeOperation;
-    }
-
-    @Override
-    protected Pubnub getPubnub() {
-        return pubnub;
     }
 
 }

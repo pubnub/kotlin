@@ -20,7 +20,7 @@ public class ModifyProvisionsTest extends EndpointTest {
     @Rule
     public WireMockRule wireMockRule = new WireMockRule();
 
-    private ModifyProvisions.ModifyProvisionsBuilder instance;
+    private ModifyProvisions instance;
 
     @Before
     public void beforeEach() throws IOException {
@@ -33,8 +33,8 @@ public class ModifyProvisionsTest extends EndpointTest {
                 .willReturn(aResponse().withBody("[1, \"Modified Channels\"]")));
 
         instance.deviceId("niceDevice").pushType(PushType.APNS)
-                .addChannel("ch1").addChannels(Arrays.asList("ch2", "ch3"))
-                .removeChannel("chr1").removeChannels(Arrays.asList("chr2", "chr3")).build().sync();
+                .addChannels(Arrays.asList("ch1", "ch2", "ch3"))
+                .removeChannels(Arrays.asList("chr1", "chr2", "chr3")).sync();
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
@@ -51,8 +51,8 @@ public class ModifyProvisionsTest extends EndpointTest {
                 .willReturn(aResponse().withBody("[1, \"Modified Channels\"]")));
 
         instance.deviceId("niceDevice").pushType(PushType.GCM)
-                .addChannel("ch1").addChannels(Arrays.asList("ch2", "ch3"))
-                .removeChannel("chr1").removeChannels(Arrays.asList("chr2", "chr3")).build().sync();
+                .addChannels(Arrays.asList("ch1","ch2", "ch3"))
+                .removeChannels(Arrays.asList("chr1", "chr2", "chr3")).sync();
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
@@ -69,8 +69,8 @@ public class ModifyProvisionsTest extends EndpointTest {
                 .willReturn(aResponse().withBody("[1, \"Modified Channels\"]")));
 
         instance.deviceId("niceDevice").pushType(PushType.MPNS)
-                .addChannel("ch1").addChannels(Arrays.asList("ch2", "ch3"))
-                .removeChannel("chr1").removeChannels(Arrays.asList("chr2", "chr3")).build().sync();
+                .addChannels(Arrays.asList("ch1","ch2", "ch3"))
+                .removeChannels(Arrays.asList("chr1", "chr2", "chr3")).sync();
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
@@ -85,7 +85,7 @@ public class ModifyProvisionsTest extends EndpointTest {
         stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice/remove"))
                 .willReturn(aResponse().withBody("[1, \"Modified Channels\"]")));
 
-        instance.deviceId("niceDevice").pushType(PushType.APNS).build().removeAllChannels().sync();
+        instance.deviceId("niceDevice").pushType(PushType.APNS).removeAllChannels().sync();
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
@@ -97,7 +97,7 @@ public class ModifyProvisionsTest extends EndpointTest {
         stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice/remove"))
                 .willReturn(aResponse().withBody("[1, \"Modified Channels\"]")));
 
-        instance.deviceId("niceDevice").pushType(PushType.GCM).build().removeAllChannels().sync();
+        instance.deviceId("niceDevice").pushType(PushType.GCM).removeAllChannels().sync();
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
@@ -109,7 +109,7 @@ public class ModifyProvisionsTest extends EndpointTest {
         stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice/remove"))
                 .willReturn(aResponse().withBody("[1, \"Modified Channels\"]")));
 
-        instance.deviceId("niceDevice").pushType(PushType.MPNS).build().removeAllChannels().sync();
+        instance.deviceId("niceDevice").pushType(PushType.MPNS).removeAllChannels().sync();
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
