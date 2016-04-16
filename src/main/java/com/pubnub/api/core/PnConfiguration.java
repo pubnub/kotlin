@@ -1,6 +1,7 @@
 package com.pubnub.api.core;
 
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,16 +17,21 @@ public class PnConfiguration {
      */
     private String origin;
     private int subscribeTimeout;
+
+
     /**
-     * In seconds, how long the server will consider this client to be onlien before issuing a leave event
+     * In seconds, how long the server will consider this client to be onlien before issuing a leave event.
      */
+    @Setter(AccessLevel.NONE)
     private int presenceTimeout;
     /**
-     * In seconds, How often the client should announce it's existance via heartbeating.
+     * In seconds, How often the client should announce it's existence via heartbeating.
      */
+    @Setter(AccessLevel.NONE)
     private int heartbeatInterval;
+
     /**
-     * set to true to switch the client to HTTPS:// based communications
+     * set to true to switch the client to HTTPS:// based communications.
      */
     private boolean secure;
     /**
@@ -33,7 +39,7 @@ public class PnConfiguration {
      */
     private String subscribeKey;
     /**
-     * Publish Key provided by PubNub
+     * Publish Key provided by PubNub.
      */
     private String publishKey;
     private String secretKey;
@@ -47,14 +53,15 @@ public class PnConfiguration {
     private boolean cacheBusting;
 
     /**
+     * toggle to enable verbose logging.
+     */
+
+    private boolean verboseLogging;
+
+    /**
      * Stores the maximum number of seconds which the client should wait for connection before timing out.
      */
     private int connectTimeout;
-
-    /**
-     * Stores reference on maximum number of seconds which client should wait for events from live feed
-     */
-    private int subscribeMaximumIdleTime;
 
     /**
      *  Reference on number of seconds which is used by client during non-subscription operations to
@@ -62,17 +69,40 @@ public class PnConfiguration {
      */
     private int nonSubscribeRequestTimeout;
 
+    /**
+     * Initialize the PnConfiguration with default values
+     */
     public PnConfiguration() {
-        // TODO: work w/ dynamic configurations for intervals
-        presenceTimeout = 300;
-        heartbeatInterval = 148;
+        setPresenceTimingConfiguration(300);
+
         uuid = UUID.randomUUID().toString();
 
         nonSubscribeRequestTimeout = 10;
-        subscribeMaximumIdleTime = 310;
+        subscribeTimeout = 310;
         connectTimeout = 5;
-
+        secure = true;
     }
 
+    /**
+     *  set presence configurations for timeout and announce interval.
+     * @param timeout presence timeout; how long before the server considers this client to be gone.
+     * @param interval presence announce interval, how often the client should announce itself.
+     * @return returns itself.
+     */
+    public PnConfiguration setPresenceTimingConfiguration(final int timeout, final int interval) {
+        this.presenceTimeout = timeout;
+        this.heartbeatInterval = interval;
+
+        return this;
+    }
+
+    /**
+     * set presence configurations for timeout and allow the client to pick the best interval
+     * @param timeout presence timeout; how long before the server considers this client to be gone.
+     * @return returns itself.
+     */
+    public PnConfiguration setPresenceTimingConfiguration(final int timeout) {
+        return setPresenceTimingConfiguration(timeout,(timeout / 2) - 1);
+    }
 
 }

@@ -163,13 +163,11 @@ public abstract class Endpoint<Input, Output> {
         httpClient.readTimeout(this.getRequestTimeout(), TimeUnit.SECONDS);
         httpClient.connectTimeout(this.getConnectTimeout(), TimeUnit.SECONDS);
 
-        // TODO: REMOVE MEEEE
-        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-        // set your desired log level
-        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-        // add logging as last interceptor
-        httpClient.addInterceptor(logging);  // <-- this is the important line!
-        // TODO: REMOVE MEEEE
+        if (pubnub.getConfiguration().isVerboseLogging()) {
+            HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+            logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+            httpClient.addInterceptor(logging);
+        }
 
         return new Retrofit.Builder()
                 .baseUrl(pubnub.getBaseUrl())
