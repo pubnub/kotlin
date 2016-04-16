@@ -34,7 +34,7 @@ public class HeartbeatEndpointTest extends EndpointTest {
 
     @org.junit.Test
     public void testSuccessOneChannel() throws PubnubException, InterruptedException {
-        pubnub.getConfiguration().setPresenceTimeout(123);
+        pubnub.getConfiguration().setPresenceTimingConfiguration(123);
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch1/heartbeat"))
                 .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\"}")));
@@ -51,7 +51,7 @@ public class HeartbeatEndpointTest extends EndpointTest {
 
     @org.junit.Test
     public void testSuccessManyChannels() throws PubnubException, InterruptedException {
-        pubnub.getConfiguration().setPresenceTimeout(123);
+        pubnub.getConfiguration().setPresenceTimingConfiguration(123);
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch1,ch2/heartbeat"))
                 .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\"}")));
@@ -67,7 +67,7 @@ public class HeartbeatEndpointTest extends EndpointTest {
 
     @org.junit.Test
     public void testSuccessOneChannelGroup() throws PubnubException, InterruptedException {
-        pubnub.getConfiguration().setPresenceTimeout(123);
+        pubnub.getConfiguration().setPresenceTimingConfiguration(123);
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/,/heartbeat"))
                 .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\"}")));
@@ -84,7 +84,7 @@ public class HeartbeatEndpointTest extends EndpointTest {
 
     @org.junit.Test
     public void testSuccessManyChannelGroups() throws PubnubException, InterruptedException {
-        pubnub.getConfiguration().setPresenceTimeout(123);
+        pubnub.getConfiguration().setPresenceTimingConfiguration(123);
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/,/heartbeat"))
                 .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\"}")));
@@ -106,7 +106,7 @@ public class HeartbeatEndpointTest extends EndpointTest {
         state.put("CH1", "this-is-channel1");
         state.put("CH2", "this-is-channel2");
 
-        pubnub.getConfiguration().setPresenceTimeout(123);
+        pubnub.getConfiguration().setPresenceTimingConfiguration(123);
 
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch1,ch2/heartbeat"))

@@ -80,7 +80,6 @@ public class PnConfiguration {
         nonSubscribeRequestTimeout = 10;
         subscribeTimeout = 310;
         connectTimeout = 5;
-        secure = true;
     }
 
     /**

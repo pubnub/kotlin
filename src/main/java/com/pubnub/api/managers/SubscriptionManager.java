@@ -169,8 +169,6 @@ public class SubscriptionManager {
     }
 
     private void performHeartbeatLoop() {
-        log.debug("performingHeartbeatLoop");
-
         if (heartbeatCall != null && !heartbeatCall.isCanceled() && !heartbeatCall.isExecuted()) {
             heartbeatCall.cancel();
         }
@@ -201,8 +199,6 @@ public class SubscriptionManager {
                         }
                     });
         }
-
-
     }
 
     private void processIncomingMessages(List<SubscribeMessage> messages) {
