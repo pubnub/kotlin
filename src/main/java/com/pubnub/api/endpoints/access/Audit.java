@@ -72,7 +72,7 @@ public class Audit extends Endpoint<Envelope<PNAccessManagerAuditData>, PNAccess
         queryParams.put("timestamp", String.valueOf(timestamp));
         queryParams.put("signature", signature);
 
-        AccessManagerService service = this.createRetrofit(pubnub).create(AccessManagerService.class);
+        AccessManagerService service = this.createRetrofit().create(AccessManagerService.class);
         return service.audit(pubnub.getConfiguration().getSubscribeKey(), queryParams);
     }
 

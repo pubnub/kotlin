@@ -66,7 +66,7 @@ public class Heartbeat extends Endpoint<Envelope, Boolean> {
             params.put("state", stringifiedState);
         }
 
-        PresenceService service = this.createRetrofit(pubnub).create(PresenceService.class);
+        PresenceService service = this.createRetrofit().create(PresenceService.class);
         return service.heartbeat(pubnub.getConfiguration().getSubscribeKey(), channelsCSV, params);
     }
 

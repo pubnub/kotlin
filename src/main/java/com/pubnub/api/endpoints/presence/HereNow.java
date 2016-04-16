@@ -52,7 +52,7 @@ public class HereNow extends Endpoint<Envelope<Object>, HereNowData> {
 
         String channelCSV;
 
-        PresenceService service = this.createRetrofit(pubnub).create(PresenceService.class);
+        PresenceService service = this.createRetrofit().create(PresenceService.class);
 
         if (includeState) {
             params.put("state", "1");

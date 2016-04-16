@@ -158,7 +158,7 @@ public abstract class Endpoint<Input, Output> {
     }
 
 
-    protected final Retrofit createRetrofit(Pubnub pubnub) {
+    protected final Retrofit createRetrofit() {
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.readTimeout(this.getRequestTimeout(), TimeUnit.SECONDS);
         httpClient.connectTimeout(this.getConnectTimeout(), TimeUnit.SECONDS);

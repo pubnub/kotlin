@@ -94,7 +94,7 @@ public class Grant extends Endpoint<Envelope<PNAccessManagerGrantData>, PNAccess
         queryParams.put("timestamp", String.valueOf(timestamp));
         queryParams.put("signature", signature);
 
-        AccessManagerService service = this.createRetrofit(pubnub).create(AccessManagerService.class);
+        AccessManagerService service = this.createRetrofit().create(AccessManagerService.class);
         return service.grant(pubnub.getConfiguration().getSubscribeKey(), queryParams);
     }
 

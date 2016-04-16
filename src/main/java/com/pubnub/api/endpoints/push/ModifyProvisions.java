@@ -60,7 +60,7 @@ public class ModifyProvisions extends Endpoint<List<Object>, Boolean> {
             params.put("remove", PubnubUtil.joinString(removeChannels, ","));
         }
 
-        PushService service = this.createRetrofit(pubnub).create(PushService.class);
+        PushService service = this.createRetrofit().create(PushService.class);
 
         if (this.removeAllChannels) {
             return service.removeAllChannelsForDevice(pubnub.getConfiguration().getSubscribeKey(), deviceId, params);

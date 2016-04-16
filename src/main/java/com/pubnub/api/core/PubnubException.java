@@ -1,6 +1,6 @@
 package com.pubnub.api.core;
 
-import org.json.JSONObject;
+import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * PubnubException is thrown by various Pubnub APIs
@@ -10,7 +10,7 @@ import org.json.JSONObject;
 public class PubnubException extends Exception {
     private String errormsg = "";
     private PubnubError pubnubError = PubnubError.PNERROBJ_PUBNUB_ERROR;
-    private JSONObject jso;
+    private JsonNode jso;
     private String response;
     private int statusCode;
 
@@ -74,7 +74,7 @@ public class PubnubException extends Exception {
      * @param response
      * @param jso
      */
-    public PubnubException(PubnubError pubnubError, String s, String response, JSONObject jso) {
+    public PubnubException(PubnubError pubnubError, String s, String response, JsonNode jso) {
         this.errormsg = s;
         this.pubnubError = pubnubError;
         this.jso = jso;
@@ -88,7 +88,7 @@ public class PubnubException extends Exception {
      * @param response
      * @param jso
      */
-    public PubnubException(PubnubError pubnubError, String response, JSONObject jso) {
+    public PubnubException(PubnubError pubnubError, String response, JsonNode jso) {
         this.pubnubError = pubnubError;
         this.jso = jso;
         this.response = response;
@@ -102,7 +102,7 @@ public class PubnubException extends Exception {
      * @param jso
      * @param statusCode
      */
-    public PubnubException(PubnubError pubnubError, String response, JSONObject jso, int statusCode) {
+    public PubnubException(PubnubError pubnubError, String response, JsonNode jso, int statusCode) {
         this.pubnubError = pubnubError;
         this.jso = jso;
         this.response = response;
@@ -129,7 +129,7 @@ public class PubnubException extends Exception {
         return response;
     }
 
-    public JSONObject getErrorJsonObject() {
+    public JsonNode getErrorJsonObject() {
         return jso;
     }
 

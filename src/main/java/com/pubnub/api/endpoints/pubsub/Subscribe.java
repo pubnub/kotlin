@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import retrofit2.Call;
 import retrofit2.Response;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -37,8 +38,24 @@ public class Subscribe extends Endpoint<SubscribeEnvelope, SubscribeEnvelope> {
      */
     @Setter private Long timetoken;
 
-    public Subscribe(Pubnub pubnub) {
+    /**
+     * filterExpression used as part of PubSub V2 specification to filter on message.
+     */
+    @Setter private String filterExpression;
+
+    /**
+     * region is used as part of PubSub V2 to help the server route traffic to best data center.
+     */
+    @Setter private String region;
+
+    /**
+     * Create a new Subscribe instance endpoint.
+     * @param pubnub supplied pubnub instance.
+     */
+    public Subscribe(final Pubnub pubnub) {
         super(pubnub);
+        channels = new ArrayList<>();
+        channelGroups = new ArrayList<>();
     }
 
     @Override
@@ -47,16 +64,24 @@ public class Subscribe extends Endpoint<SubscribeEnvelope, SubscribeEnvelope> {
     }
 
     @Override
-    protected final Call<SubscribeEnvelope> doWork(Map<String, String> params) throws PubnubException {
-        PubSubService pubSubService = this.createRetrofit(this.pubnub).create(PubSubService.class);
+    protected final Call<SubscribeEnvelope> doWork(final Map<String, String> params) throws PubnubException {
+        PubSubService pubSubService = this.createRetrofit().create(PubSubService.class);
         String channelCSV;
 
         if (channelGroups.size() > 0) {
             params.put("channel-group", PubnubUtil.joinString(channelGroups, ","));
         }
 
+        if (filterExpression != null && filterExpression.length() > 0) {
+            params.put("filter-expr",  PubnubUtil.urlEncode(filterExpression));
+        }
+
         if (timetoken != null) {
             params.put("tt", timetoken.toString());
+        }
+
+        if (region != null) {
+            params.put("tr", region);
         }
 
         if (channels.size() > 0) {
@@ -75,21 +100,28 @@ public class Subscribe extends Endpoint<SubscribeEnvelope, SubscribeEnvelope> {
             throw new PubnubException(PubnubError.PNERROBJ_PARSING_ERROR);
         }
 
-        SubscribeEnvelope subscribeEnvelope = input.body();
-        return subscribeEnvelope;
+        return  input.body();
     }
 
-    protected int getConnectTimeout() {
+    /**
+     * called by the parent class to determine how long to wait until connect timeout.
+     * @return timeout in seconds
+     */
+    protected final int getConnectTimeout() {
         return pubnub.getConfiguration().getConnectTimeout();
     }
 
-    protected int getRequestTimeout() {
+    /**
+     * called by the parent class to determine how long to wait until request timeout.
+     * @return timeout in seconds
+     */
+    protected final int getRequestTimeout() {
         return pubnub.getConfiguration().getSubscribeTimeout();
     }
 
     @Override
-    protected PNOperationType getOperationType() {
-        return null;
+    protected final PNOperationType getOperationType() {
+        return PNOperationType.PNSubscribeOperation;
     }
 
 }

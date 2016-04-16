@@ -22,7 +22,7 @@ public class max_test {
         pnConfiguration.setSubscribeKey("sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f");
         pnConfiguration.setPublishKey("pub-c-d34a0058-6747-4c9d-b669-e651d7e0efb7");
         pnConfiguration.setSecretKey("sec-c-NDJkOWM2ZWItNzBhMS00YzllLWFlZjAtNGJlMjVkZjZlNzMy");
-        pnConfiguration.setCipherKey("testCipher");
+        // pnConfiguration.setCipherKey("testCipher");
 
 
         Pubnub pubnub = new Pubnub(pnConfiguration);
@@ -51,7 +51,7 @@ public class max_test {
         Map<String, Object> state = new HashMap<>();
         state.put("max", "moose");
 
-        // pubnub.subscribe().channel("coolChannel").withPresence().execute();
+        pubnub.subscribe().channel("coolChannel").withPresence().execute();
         //pubnub.setPresenceState().channel("max-ch1").state(state).build().async(new PNCallback<PNSetStateResult>() {
         //    @Override
         //    public void onResponse(PNSetStateResult result, PNErrorStatus status) {

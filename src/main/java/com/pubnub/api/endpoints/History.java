@@ -50,7 +50,7 @@ public class History extends Endpoint<JsonNode, PNHistoryResult> {
     @Override
     protected Call<JsonNode> doWork(Map<String, String> params) {
 
-        HistoryService service = this.createRetrofit(pubnub).create(HistoryService.class);
+        HistoryService service = this.createRetrofit().create(HistoryService.class);
 
         params.put("reverse", String.valueOf(reverse));
         params.put("include_token", String.valueOf(includeTimetoken));

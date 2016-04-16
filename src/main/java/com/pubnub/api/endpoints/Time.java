@@ -31,7 +31,7 @@ public class Time extends Endpoint<List<Long>, PNTimeResult> {
 
     @Override
     protected final Call<List<Long>> doWork(Map<String, String> params) {
-        TimeService service = this.createRetrofit(pubnub).create(TimeService.class);
+        TimeService service = this.createRetrofit().create(TimeService.class);
         return service.fetchTime(params);
     }
 

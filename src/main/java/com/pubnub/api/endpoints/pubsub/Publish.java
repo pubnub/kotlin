@@ -77,7 +77,7 @@ public class Publish extends Endpoint<List<Object>, PublishData> {
             stringifiedMessage = crypto.encrypt(stringifiedMessage).replace("\n", "");
         }
 
-        PubSubService service = this.createRetrofit(pubnub).create(PubSubService.class);
+        PubSubService service = this.createRetrofit().create(PubSubService.class);
 
         if (usePOST != null && usePOST) {
             Object payloadToSend;

@@ -44,7 +44,7 @@ public class GetState extends Endpoint<Envelope<Object>,Map<String, Object>> {
 
     @Override
     protected Call<Envelope<Object>> doWork(Map<String, String> params) throws PubnubException {
-        PresenceService service = this.createRetrofit(this.pubnub).create(PresenceService.class);
+        PresenceService service = this.createRetrofit().create(PresenceService.class);
 
         if (channelGroups.size() > 0) {
             params.put("channel-group", PubnubUtil.joinString(channelGroups, ","));

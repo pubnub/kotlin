@@ -59,7 +59,7 @@ public class SetState extends Endpoint<Envelope<Map<String, Object>>, PNSetState
 
         subscriptionManager.adaptStateBuilder(channels, channelGroups, state);
 
-        PresenceService service = this.createRetrofit(this.pubnub).create(PresenceService.class);
+        PresenceService service = this.createRetrofit().create(PresenceService.class);
 
         if (channelGroups.size() > 0) {
             params.put("channel-group", PubnubUtil.joinString(channelGroups, ","));

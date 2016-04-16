@@ -30,7 +30,7 @@ public class ListProvisions extends Endpoint<List<String>, List<String>> {
     @Override
     protected Call<List<String>> doWork(Map<String, String> params) throws PubnubException {
         params.put("type", pushType.name().toLowerCase());
-        PushService service = this.createRetrofit(pubnub).create(PushService.class);
+        PushService service = this.createRetrofit().create(PushService.class);
         return service.listChannelsForDevice(pubnub.getConfiguration().getSubscribeKey(), deviceId, params);
     }
 

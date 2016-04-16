@@ -1,7 +1,7 @@
 package com.pubnub.api.core;
 
 
-import org.json.JSONObject;
+import com.fasterxml.jackson.databind.JsonNode;
 
 /**
      * PubnubError object is passed to errorCallback. It contains details of error,
@@ -299,11 +299,11 @@ import org.json.JSONObject;
 
         public final int errorCode;
         public final int errorCodeExtended;
-        public final JSONObject errorObject;
+        public final JsonNode errorObject;
         private final String errorString;
         private String message;
 
-        private PubnubError(int errorCode, int errorCodeExtended, String errorString, JSONObject errorObject, String message) {
+        private PubnubError(int errorCode, int errorCodeExtended, String errorString, JsonNode errorObject, String message) {
             this.errorCodeExtended = errorCodeExtended;
             this.errorCode = errorCode;
             this.errorString = errorString;
@@ -315,7 +315,7 @@ import org.json.JSONObject;
             this(errorCode, errorCodeExtended, errorString, null, null);
         }
 
-        private PubnubError(int errorCode, int errorCodeExtended, String errorString, JSONObject errorObject) {
+        private PubnubError(int errorCode, int errorCodeExtended, String errorString, JsonNode errorObject) {
             this(errorCode, errorCodeExtended, errorString, errorObject, null);
         }
 
@@ -331,7 +331,7 @@ import org.json.JSONObject;
             this(error.errorCode, error.errorCodeExtended, error.errorString, null, message);
         }
 
-        public PubnubError(PubnubError error, JSONObject errorObject) {
+        public PubnubError(PubnubError error, JsonNode errorObject) {
             this(error.errorCode, error.errorCodeExtended, error.errorString, errorObject, null);
         }
 
@@ -351,11 +351,11 @@ import org.json.JSONObject;
             return new PubnubError(error.errorCode, error.errorCodeExtended, error.errorString, message);
         }
 
-        public static PubnubError getErrorObject(PubnubError error, String message, JSONObject errorObject) {
+        public static PubnubError getErrorObject(PubnubError error, String message, JsonNode errorObject) {
             return new PubnubError(error.errorCode, error.errorCodeExtended, error.errorString, errorObject, message);
         }
 
-        public  static PubnubError getErrorObject(PubnubError error, int errorCodeExtended, JSONObject errorObject) {
+        public  static PubnubError getErrorObject(PubnubError error, int errorCodeExtended, JsonNode errorObject) {
             return new PubnubError(error.errorCode, errorCodeExtended, error.errorString, errorObject);
         }
 
