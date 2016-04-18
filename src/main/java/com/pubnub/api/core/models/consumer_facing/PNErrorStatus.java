@@ -1,8 +1,8 @@
 package com.pubnub.api.core.models.consumer_facing;
 
-/**
- * Created by Max on 4/11/16.
- */
+import lombok.Data;
+
+@Data
 public class PNErrorStatus extends PNStatus {
 
     PNErrorData errorData;

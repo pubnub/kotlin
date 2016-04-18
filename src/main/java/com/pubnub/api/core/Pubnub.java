@@ -174,6 +174,13 @@ public class Pubnub {
         return sdkVersion;
     }
 
+    /**
+     * Stop the SDK and terminate all listeners.
+     */
+    public void stop() {
+        subscriptionManager.stop();
+    }
+
     private String fetchSDKVersion() {
         byte[] encoded;
         try {

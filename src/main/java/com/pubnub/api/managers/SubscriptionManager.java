@@ -47,6 +47,11 @@ public class SubscriptionManager {
         registerHeartbeatTimer();
     }
 
+    public void stop() {
+        stopHeartbeatTimer();
+        stopSubscribeLoop();
+    }
+
     public void addListener(SubscribeCallback listener) {
         listeners.add(listener);
     }
@@ -113,10 +118,8 @@ public class SubscriptionManager {
     }
 
     private void registerHeartbeatTimer() {
-
-        if (timer != null) {
-            timer.cancel();
-        }
+        // make sure only one timer is running at a time.
+        stopHeartbeatTimer();
 
         timer = new Timer();
         timer.schedule(new TimerTask() {
@@ -128,11 +131,16 @@ public class SubscriptionManager {
 
     }
 
-    private void startSubscribeLoop() {
-
-        if (subscribeCall != null && !subscribeCall.isExecuted() && !subscribeCall.isCanceled()) {
-            subscribeCall.cancel();
+    private void stopHeartbeatTimer() {
+        if (timer != null) {
+            timer.cancel();
+            timer = null;
         }
+    }
+
+    private void startSubscribeLoop() {
+        // this function can be called from different points, make sure any old loop is closed
+        stopSubscribeLoop();
 
         List<String> combinedChannels = new ArrayList<>();
         List<String> combinedChannelGroups = new ArrayList<>();
@@ -158,6 +166,11 @@ public class SubscriptionManager {
                 .async(new PNCallback<SubscribeEnvelope>() {
                     @Override
                     public void onResponse(SubscribeEnvelope result, PNErrorStatus status) {
+                        if (status.isError()) {
+                            announce(status);
+                            return;
+                        }
+
                         if (result.getMessages().size() != 0) {
                             processIncomingMessages(result.getMessages());
                         }
@@ -166,6 +179,12 @@ public class SubscriptionManager {
                         startSubscribeLoop();
                     }
                 });
+    }
+
+    private void stopSubscribeLoop() {
+        if (subscribeCall != null && !subscribeCall.isExecuted() && !subscribeCall.isCanceled()) {
+            subscribeCall.cancel();
+        }
     }
 
     private void performHeartbeatLoop() {

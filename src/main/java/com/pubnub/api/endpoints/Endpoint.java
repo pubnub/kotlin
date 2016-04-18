@@ -6,6 +6,7 @@ import com.pubnub.api.core.Pubnub;
 import com.pubnub.api.core.PubnubError;
 import com.pubnub.api.core.PubnubException;
 import com.pubnub.api.core.enums.PNOperationType;
+import com.pubnub.api.core.models.consumer_facing.PNErrorData;
 import com.pubnub.api.core.models.consumer_facing.PNErrorStatus;
 import com.pubnub.api.core.utils.Base64;
 import okhttp3.OkHttpClient;
@@ -81,7 +82,7 @@ public abstract class Endpoint<Input, Output> {
 
             @Override
             public void onResponse(final Call<Input> call, final Response<Input> response) {
-                Output callbackResponse = null;
+                Output callbackResponse;
                 PNErrorStatus pnErrorStatus = new PNErrorStatus();
 
 
@@ -96,7 +97,7 @@ public abstract class Endpoint<Input, Output> {
                     }
 
                     PubnubException ex = new PubnubException(PubnubError.PNERROBJ_HTTP_ERROR, responseBodyText, response.code());
-                    writeFieldsToResponse(response, pnErrorStatus, false, null);
+                    writeFieldsToResponse(response, pnErrorStatus, true, ex);
                     callback.onResponse(null, pnErrorStatus);
                     return;
                 }
@@ -105,19 +106,20 @@ public abstract class Endpoint<Input, Output> {
                     callbackResponse = createResponse(response);
                 } catch (PubnubException e) {
                     PubnubException pubnubException = new PubnubException(PubnubError.PNERROBJ_HTTP_ERROR, e.getMessage(), response.code());
-                    writeFieldsToResponse(response, pnErrorStatus, false, pubnubException);
+                    writeFieldsToResponse(response, pnErrorStatus, true, pubnubException);
                     callback.onResponse(null, pnErrorStatus);
                     return;
                 }
 
-                writeFieldsToResponse(response, pnErrorStatus, true, null);
+                writeFieldsToResponse(response, pnErrorStatus, false, null);
                 callback.onResponse(callbackResponse, pnErrorStatus);
             }
 
             @Override
             public void onFailure(final Call<Input> call, final Throwable throwable) {
                 PNErrorStatus pnErrorStatus = new PNErrorStatus();
-                writeFieldsToResponse(null, pnErrorStatus, true, throwable);
+                PubnubException pubnubException = new PubnubException(PubnubError.PNERROBJ_HTTP_ERROR, throwable.getMessage(), null);
+                writeFieldsToResponse(null, pnErrorStatus, true, pubnubException);
                 callback.onResponse(null, pnErrorStatus);
 
             }
@@ -126,9 +128,20 @@ public abstract class Endpoint<Input, Output> {
         return call;
     }
 
-    private void writeFieldsToResponse(Response<Input> response, PNErrorStatus pnErrorStatus, boolean isError, Throwable throwable) {
+    private void writeFieldsToResponse(Response<Input> response, PNErrorStatus pnErrorStatus, boolean isError, Exception throwable) {
+
+        if (response != null) {
+            pnErrorStatus.setStatusCode(response.code());
+        }
+
         pnErrorStatus.setOperation(getOperationType());
         pnErrorStatus.setError(isError);
+
+        if (isError) {
+            PNErrorData errorData = new PNErrorData(null, throwable);
+            pnErrorStatus.setErrorData(errorData);
+        }
+
     }
 
     protected String signSHA256(String key, String data) throws PubnubException {
