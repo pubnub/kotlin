@@ -7,7 +7,7 @@ import com.pubnub.api.callbacks.WhereNowCallback;
 import com.pubnub.api.core.PubnubException;
 import com.pubnub.api.core.models.consumer_facing.PNErrorStatus;
 import com.pubnub.api.core.models.consumer_facing.PNPresenceWhereNowResult;
-import com.pubnub.api.endpoints.EndpointTest;
+import com.pubnub.api.endpoints.TestHarness;
 import org.junit.Before;
 import org.junit.Rule;
 
@@ -18,7 +18,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.junit.Assert.assertThat;
 
-public class WhereNowEndpointTest extends EndpointTest {
+public class WhereNowEndpointTest extends TestHarness {
     private WhereNow partialWhereNow;
 
     @Rule

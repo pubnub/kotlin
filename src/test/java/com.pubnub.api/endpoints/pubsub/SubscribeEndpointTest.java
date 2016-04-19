@@ -6,7 +6,7 @@ import com.pubnub.api.core.Pubnub;
 import com.pubnub.api.core.PubnubException;
 import com.pubnub.api.core.models.server_responses.SubscribeEnvelope;
 import com.pubnub.api.core.models.server_responses.SubscribeMessage;
-import com.pubnub.api.endpoints.EndpointTest;
+import com.pubnub.api.endpoints.TestHarness;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -19,7 +19,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class SubscribeEndpointTest extends EndpointTest {
+public class SubscribeEndpointTest extends TestHarness {
 
     @Rule
     public WireMockRule wireMockRule = new WireMockRule();
@@ -67,6 +67,21 @@ public class SubscribeEndpointTest extends EndpointTest {
         instance.channels(Arrays.asList("coolChannel", "coolChannel2")).sync();
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
+        assertEquals(1, requests.size());
+    }
+
+    @Test
+    public void subscribeChannelsAuthSync() throws PubnubException {
+
+        pubnub.getConfiguration().setAuthKey("authKey");
+
+        stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/coolChannel,coolChannel2/0"))
+                .willReturn(aResponse().withBody("{\"t\":{\"t\":\"14607577960932487\",\"r\":1},\"m\":[{\"a\":\"4\",\"f\":0,\"i\":\"Client-g5d4g\",\"p\":{\"t\":\"14607577960925503\",\"r\":1},\"k\":\"sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f\",\"c\":\"coolChannel\",\"d\":{\"text\":\"Enter Message Here\"},\"b\":\"coolChan-bnel\"}]}")));
+
+        instance.channels(Arrays.asList("coolChannel", "coolChannel2")).sync();
+
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
+        assertEquals("authKey", requests.get(0).queryParameter("auth").firstValue());
         assertEquals(1, requests.size());
     }
 

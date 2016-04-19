@@ -8,7 +8,7 @@ import com.pubnub.api.core.Pubnub;
 import com.pubnub.api.core.models.consumer_facing.PNMessageResult;
 import com.pubnub.api.core.models.consumer_facing.PNPresenceEventResult;
 import com.pubnub.api.core.models.consumer_facing.PNStatus;
-import com.pubnub.api.endpoints.EndpointTest;
+import com.pubnub.api.endpoints.TestHarness;
 import org.junit.*;
 
 import java.io.IOException;
@@ -20,7 +20,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 
-public class SubscriptionManagerTest extends EndpointTest {
+public class SubscriptionManagerTest extends TestHarness {
 
     private Pubnub pubnub;
     private SubscriptionManager instance;

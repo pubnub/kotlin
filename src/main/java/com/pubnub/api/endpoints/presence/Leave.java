@@ -34,8 +34,6 @@ public class Leave extends Endpoint<Envelope, Boolean> {
         String channelCSV;
         PresenceService service = this.createRetrofit().create(PresenceService.class);
 
-        params.put("uuid", pubnub.getConfiguration().getUuid());
-
         if (channelGroups.size() > 0) {
             params.put("channel-group", PubnubUtil.joinString(channelGroups, ","));
         }

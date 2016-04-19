@@ -19,7 +19,7 @@ import java.util.Map;
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 
 
-public class HistoryEndpointTest extends EndpointTest {
+public class HistoryEndpointTest extends TestHarness {
 
     private History partialHistory;
     private Pubnub pubnub;

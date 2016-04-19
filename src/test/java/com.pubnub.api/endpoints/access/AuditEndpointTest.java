@@ -4,7 +4,7 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.pubnub.api.core.Pubnub;
 import com.pubnub.api.core.PubnubException;
 import com.pubnub.api.core.models.consumer_facing.PNAccessManagerAuditResult;
-import com.pubnub.api.endpoints.EndpointTest;
+import com.pubnub.api.endpoints.TestHarness;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -15,7 +15,7 @@ import java.util.Arrays;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 
-public class AuditEndpointTest extends EndpointTest {
+public class AuditEndpointTest extends TestHarness {
 
     @Rule
     public WireMockRule wireMockRule = new WireMockRule();

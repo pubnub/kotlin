@@ -4,7 +4,7 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import com.pubnub.api.core.Pubnub;
 import com.pubnub.api.core.PubnubException;
-import com.pubnub.api.endpoints.EndpointTest;
+import com.pubnub.api.endpoints.TestHarness;
 import lombok.Data;
 import org.junit.Before;
 import org.junit.Rule;
@@ -19,7 +19,7 @@ import java.util.Map;
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.junit.Assert.assertEquals;
 
-public class PublishTest extends EndpointTest {
+public class PublishTest extends TestHarness {
 
     @Rule
     public WireMockRule wireMockRule = new WireMockRule();
@@ -61,7 +61,7 @@ public class PublishTest extends EndpointTest {
     }
 
     @Test
-    public void testSuccessStoreSync() throws PubnubException, InterruptedException {
+    public void testSuccessStoreFalseSync() throws PubnubException, InterruptedException {
         stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22hi%22"))
                 .willReturn(aResponse().withBody("[1,\"Sent\",\"14598111595318003\"]")));
 
@@ -70,6 +70,19 @@ public class PublishTest extends EndpointTest {
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
         assertEquals("0", requests.get(0).queryParameter("store").firstValue());
+        assertEquals("myUUID", requests.get(0).queryParameter("uuid").firstValue());
+    }
+
+    @Test
+    public void testSuccessStoreTrueSync() throws PubnubException, InterruptedException {
+        stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22hi%22"))
+                .willReturn(aResponse().withBody("[1,\"Sent\",\"14598111595318003\"]")));
+
+        instance.channel("coolChannel").message("hi").shouldStore(true).sync();
+
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
+        assertEquals(1, requests.size());
+        assertEquals("1", requests.get(0).queryParameter("store").firstValue());
         assertEquals("myUUID", requests.get(0).queryParameter("uuid").firstValue());
     }
 

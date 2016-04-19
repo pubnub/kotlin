@@ -49,7 +49,7 @@ public class Subscribe extends Endpoint<SubscribeEnvelope, SubscribeEnvelope> {
     @Setter private String region;
 
     /**
-     * Create a new Subscribe instance endpoint.
+     * CreFte a new Subscribe instance endpoint.
      * @param pubnub supplied pubnub instance.
      */
     public Subscribe(final Pubnub pubnub) {
@@ -100,7 +100,7 @@ public class Subscribe extends Endpoint<SubscribeEnvelope, SubscribeEnvelope> {
             throw PubnubException.builder().pubnubError(PubnubError.PNERROBJ_PARSING_ERROR).build();
         }
 
-        return  input.body();
+        return input.body();
     }
 
     /**

@@ -147,7 +147,7 @@ public class Pubnub {
      * @param inputString String to be encrypted
      * @return String containing the encryption of inputString using cipherKey
      */
-    public final String encrypt(String inputString) throws PubnubException {
+    public final String encrypt(final String inputString) throws PubnubException {
         if (inputString == null) {
             throw PubnubException.builder().pubnubError(PubnubError.PNERROBJ_INVALID_ARGUMENTS).build();
         }
@@ -156,7 +156,7 @@ public class Pubnub {
     }
 
     /**
-     * Perform Cryptographic encryption of an input string and the cipher key
+     * Perform Cryptographic encryption of an input string and the cipher key.
      * @param inputString String to be encrypted
      * @param cipherKey cipher key to be used for encryption
      * @throws PubnubException throws exception in case of failed encryption
@@ -170,17 +170,24 @@ public class Pubnub {
         return new Crypto(cipherKey).encrypt(inputString);
     }
 
-    public String getVersion() {
+    /**
+     * @return version of the SDK.
+     */
+    public final String getVersion() {
         return sdkVersion;
     }
 
     /**
      * Stop the SDK and terminate all listeners.
      */
-    public void stop() {
+    public final void stop() {
         subscriptionManager.stop();
     }
 
+    /**
+     * fetch the SDK version from the resource files.
+     * @return Stringified representation of the SDK version.
+     */
     private String fetchSDKVersion() {
         byte[] encoded;
         try {

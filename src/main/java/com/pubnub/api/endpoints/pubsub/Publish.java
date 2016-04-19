@@ -62,14 +62,12 @@ public class Publish extends Endpoint<List<Object>, PublishData> {
             }
         }
 
-        if (pubnub.getConfiguration().getAuthKey() != null) {
-            params.put("auth", pubnub.getConfiguration().getAuthKey());
-        }
-
-        params.put("uuid", pubnub.getConfiguration().getUuid());
-
-        if (shouldStore != null && !shouldStore) {
-            params.put("store", "0");
+        if (shouldStore != null) {
+            if (shouldStore) {
+                params.put("store", "1");
+            } else {
+                params.put("store", "0");
+            }
         }
 
         if (pubnub.getConfiguration().getCipherKey() != null) {

@@ -1,18 +1,107 @@
 package com.pubnub.api.endpoints;
 
-import com.pubnub.api.core.PnConfiguration;
 import com.pubnub.api.core.Pubnub;
+import com.pubnub.api.core.PubnubException;
+import com.pubnub.api.core.enums.PNOperationType;
+import okhttp3.Request;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
-public class EndpointTest {
+import java.io.IOException;
+import java.util.Map;
 
-    protected Pubnub createPubNubInstance(int port) {
-        PnConfiguration pnConfiguration = new PnConfiguration();
-        pnConfiguration.setOrigin("localhost" + ":" + port);
-        pnConfiguration.setSecure(false);
-        pnConfiguration.setSubscribeKey("mySubscribeKey");
-        pnConfiguration.setPublishKey("myPublishKey");
-        pnConfiguration.setUuid("myUUID");
+public class EndpointTest extends TestHarness {
 
-        return new Pubnub(pnConfiguration);
+    Pubnub pubnub;
+
+
+    @Before
+    public void beforeEach() throws IOException {
+        pubnub = this.createPubNubInstance(8080);
     }
+
+    @Test
+    public void testUUID() throws PubnubException {
+        Endpoint<Object, Object> endpoint =  new Endpoint<Object, Object>(pubnub) {
+
+            @Override
+            protected boolean validateParams() {
+                return false;
+            }
+
+            @Override
+            protected Object createResponse(Response input) throws PubnubException {
+                return null;
+            }
+
+            @Override
+            protected int getConnectTimeout() {
+                return 0;
+            }
+
+            @Override
+            protected int getRequestTimeout() {
+                return 0;
+            }
+
+            @Override
+            protected PNOperationType getOperationType() {
+                return null;
+            }
+
+            @Override
+            protected Call doWork(Map baseParams) throws PubnubException {
+
+                Call<Object> fakeCall = new Call<Object>() {
+
+                    @Override
+                    public Response<Object> execute() throws IOException {
+                        throw new IOException();
+                    }
+
+                    @Override
+                    public void enqueue(Callback<Object> callback) {
+
+                    }
+
+                    @Override
+                    public boolean isExecuted() {
+                        return false;
+                    }
+
+                    @Override
+                    public void cancel() {
+
+                    }
+
+                    @Override
+                    public boolean isCanceled() {
+                        return false;
+                    }
+
+                    @Override
+                    public Call<Object> clone() {
+                        return null;
+                    }
+
+                    @Override
+                    public Request request() {
+                        return null;
+                    }
+                };
+
+                Assert.assertEquals("myUUID",baseParams.get("uuid"));
+                return fakeCall;
+            }
+        };
+
+        endpoint.sync();
+    }
+
+
+
 }

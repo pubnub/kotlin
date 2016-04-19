@@ -169,25 +169,25 @@ public abstract class Endpoint<Input, Output> {
 
     }
 
-    protected String signSHA256(String key, String data) throws PubnubException {
-        Mac sha256_HMAC;
+    protected String signSHA256(final String key, final String data) throws PubnubException {
+        Mac sha256HMAC;
         byte[] hmacData;
         SecretKeySpec secretKey = new SecretKeySpec(key.getBytes(), "HmacSHA256");
 
         try {
-            sha256_HMAC = Mac.getInstance("HmacSHA256");
+            sha256HMAC = Mac.getInstance("HmacSHA256");
         } catch (NoSuchAlgorithmException e) {
             throw PubnubException.builder().pubnubError(PubnubError.PNERROBJ_CRYPTO_ERROR).errormsg(e.getMessage()).build();
         }
 
         try {
-            sha256_HMAC.init(secretKey);
+            sha256HMAC.init(secretKey);
         } catch (InvalidKeyException e) {
             throw PubnubException.builder().pubnubError(PubnubError.PNERROBJ_CRYPTO_ERROR).errormsg(e.getMessage()).build();
         }
 
         try {
-            hmacData = sha256_HMAC.doFinal(data.getBytes("UTF-8"));
+            hmacData = sha256HMAC.doFinal(data.getBytes("UTF-8"));
         } catch (UnsupportedEncodingException e) {
             throw PubnubException.builder().pubnubError(PubnubError.PNERROBJ_CRYPTO_ERROR).errormsg(e.getMessage()).build();
         }
@@ -218,6 +218,16 @@ public abstract class Endpoint<Input, Output> {
         Map<String, String> params = new HashMap<>();
 
         params.put("pnsdk", "Java/" + this.pubnub.getVersion());
+        params.put("uuid", this.pubnub.getConfiguration().getUuid());
+
+        // add the auth key for publish and subscribe.
+        if (this.pubnub.getConfiguration().getAuthKey() != null) {
+            if (getOperationType() == PNOperationType.PNPublishOperation
+                    || getOperationType() == PNOperationType.PNSubscribeOperation) {
+                params.put("auth", pubnub.getConfiguration().getAuthKey());
+            }
+        }
+
 
         return params;
     }

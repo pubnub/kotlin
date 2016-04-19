@@ -4,7 +4,7 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import com.pubnub.api.core.PubnubException;
 import com.pubnub.api.core.models.HereNow.HereNowData;
-import com.pubnub.api.endpoints.EndpointTest;
+import com.pubnub.api.endpoints.TestHarness;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -17,7 +17,7 @@ import java.util.List;
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.junit.Assert.assertEquals;
 
-public class HereNowEndpointTest extends EndpointTest {
+public class HereNowEndpointTest extends TestHarness {
 
     @Rule
     public WireMockRule wireMockRule = new WireMockRule();

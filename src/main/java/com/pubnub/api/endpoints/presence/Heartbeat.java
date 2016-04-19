@@ -38,7 +38,6 @@ public class Heartbeat extends Endpoint<Envelope, Boolean> {
     protected Call<Envelope> doWork(Map<String, String> params) throws PubnubException {
         ObjectWriter ow = new ObjectMapper().writer();
 
-        params.put("uuid", pubnub.getConfiguration().getUuid());
         params.put("heartbeat", String.valueOf(pubnub.getConfiguration().getPresenceTimeout()));
 
         if (channelGroups != null && channelGroups.size() > 0) {

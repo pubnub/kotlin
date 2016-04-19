@@ -18,7 +18,7 @@ import java.util.Map;
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.junit.Assert.assertEquals;
 
-public class HeartbeatEndpointTest extends EndpointTest {
+public class HeartbeatEndpointTest extends TestHarness {
 
     private Heartbeat partialHeartbeat;
     private Pubnub pubnub;

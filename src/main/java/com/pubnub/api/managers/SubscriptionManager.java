@@ -34,7 +34,16 @@ public class SubscriptionManager {
     private Pubnub pubnub;
     private Call<SubscribeEnvelope> subscribeCall;
     private Call<Envelope> heartbeatCall;
+    /**
+     * Store the latest timetoken to subscribe with, null by default to get the latest timetoken.
+     */
     private Long timetoken;
+
+    /**
+     * Keep track of Region to support PSV2 specification.
+     */
+    private String region;
+
     Timer timer;
 
     public SubscriptionManager(Pubnub pubnub) {
@@ -162,7 +171,8 @@ public class SubscriptionManager {
         }
 
         subscribeCall =  new Subscribe(pubnub)
-                .channels(combinedChannels).channelGroups(combinedChannelGroups).timetoken(timetoken)
+                .channels(combinedChannels).channelGroups(combinedChannelGroups)
+                .timetoken(timetoken).region(region)
                 .async(new PNCallback<SubscribeEnvelope>() {
                     @Override
                     public void onResponse(SubscribeEnvelope result, PNErrorStatus status) {
@@ -176,6 +186,7 @@ public class SubscriptionManager {
                         }
 
                         timetoken = result.getMetadata().getTimetoken();
+                        region = result.getMetadata().getRegion();
                         startSubscribeLoop();
                     }
                 });
@@ -253,7 +264,7 @@ public class SubscriptionManager {
 
                 announce(pnPresenceEventResult);
             } else {
-                Object extractedMessage = null;
+                Object extractedMessage;
 
                 try {
                     extractedMessage = processMessage(message.getPayload());
@@ -264,6 +275,7 @@ public class SubscriptionManager {
                     pnStatus.setCategory(PNStatusCategory.PNDecryptionErrorCategory);
 
                     announce(pnStatus);
+                    return;
                 }
 
                 PNMessageResult pnMessageResult = new PNMessageResult();
@@ -302,19 +314,23 @@ public class SubscriptionManager {
         return outputObject;
     }
 
-    private void announce(PNStatus status) {
+    /**
+     * announce a PNStatus to listeners.
+     * @param status PNStatus which will be broadcast to listeners.
+     */
+    private void announce(final PNStatus status) {
         for (SubscribeCallback subscribeCallback: listeners) {
             subscribeCallback.status(this.pubnub, status);
         }
     }
 
-    private void announce(PNMessageResult message) {
+    private void announce(final PNMessageResult message) {
         for (SubscribeCallback subscribeCallback: listeners) {
             subscribeCallback.message(this.pubnub, message);
         }
     }
 
-    private void announce(PNPresenceEventResult presence) {
+    private void announce(final PNPresenceEventResult presence) {
         for (SubscribeCallback subscribeCallback: listeners) {
             subscribeCallback.presence(this.pubnub, presence);
         }

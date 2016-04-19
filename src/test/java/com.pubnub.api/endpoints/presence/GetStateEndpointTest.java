@@ -3,7 +3,7 @@ package com.pubnub.api.endpoints.presence;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import com.pubnub.api.core.PubnubException;
-import com.pubnub.api.endpoints.EndpointTest;
+import com.pubnub.api.endpoints.TestHarness;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -18,7 +18,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.junit.Assert.assertEquals;
 
 
-public class GetStateEndpointTest extends EndpointTest {
+public class GetStateEndpointTest extends TestHarness {
 
     @Rule
     public WireMockRule wireMockRule = new WireMockRule();
