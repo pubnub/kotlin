@@ -40,7 +40,7 @@ public class Time extends Endpoint<List<Long>, PNTimeResult> {
         PNTimeResult timeData = new PNTimeResult();
 
         if (input.body() == null || input.body().size() == 0) {
-            throw new PubnubException(PubnubError.PNERROBJ_PARSING_ERROR);
+            throw PubnubException.builder().pubnubError(PubnubError.PNERROBJ_PARSING_ERROR).build();
         }
 
         timeData.setTimetoken(input.body().get(0));

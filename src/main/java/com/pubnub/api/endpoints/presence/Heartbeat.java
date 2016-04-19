@@ -59,7 +59,7 @@ public class Heartbeat extends Endpoint<Envelope, Boolean> {
             try {
                 stringifiedState = ow.writeValueAsString(state);
             } catch (JsonProcessingException e) {
-                throw new PubnubException(PubnubError.PNERROBJ_INVALID_ARGUMENTS, e.getMessage(), null);
+                throw PubnubException.builder().pubnubError(PubnubError.PNERROBJ_INVALID_ARGUMENTS).errormsg(e.getMessage()).build();
             }
 
             stringifiedState = PubnubUtil.urlEncode(stringifiedState);

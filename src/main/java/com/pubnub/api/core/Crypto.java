@@ -50,7 +50,7 @@ public class Crypto {
             ivBytes = initializationVector.getBytes("UTF-8");
             INIT = true;
         } catch (UnsupportedEncodingException e) {
-            throw new PubnubException(newCryptoError(11, e.toString()));
+            throw PubnubException.builder().pubnubError(newCryptoError(11, e.toString())).errormsg(e.getMessage()).build();
         }
     }
 
@@ -61,7 +61,7 @@ public class Crypto {
         try {
             return result.toString().getBytes("UTF-8");
         } catch (UnsupportedEncodingException e) {
-            throw new PubnubException(newCryptoError(12, e.toString()));
+            throw PubnubException.builder().pubnubError(newCryptoError(12, e.toString())).errormsg(e.getMessage()).build();
         }
     }
 
@@ -79,19 +79,19 @@ public class Crypto {
             cipher.init(Cipher.ENCRYPT_MODE, newKey, ivSpec);
             return new String(Base64.encode(cipher.doFinal(input.getBytes("UTF-8")), 0));
         } catch (NoSuchAlgorithmException e) {
-            throw new PubnubException(e.toString());
+            throw PubnubException.builder().errormsg(e.toString()).build();
         } catch (NoSuchPaddingException e) {
-            throw new PubnubException(e.toString());
+            throw PubnubException.builder().errormsg(e.toString()).build();
         } catch (InvalidKeyException e) {
-            throw new PubnubException(e.toString());
+            throw PubnubException.builder().errormsg(e.toString()).build();
         } catch (InvalidAlgorithmParameterException e) {
-            throw new PubnubException(e.toString());
+            throw PubnubException.builder().errormsg(e.toString()).build();
         } catch (UnsupportedEncodingException e) {
-            throw new PubnubException(e.toString());
+            throw PubnubException.builder().errormsg(e.toString()).build();
         } catch (IllegalBlockSizeException e) {
-            throw new PubnubException(e.toString());
+            throw PubnubException.builder().errormsg(e.toString()).build();
         } catch (BadPaddingException e) {
-            throw new PubnubException(e.toString());
+            throw PubnubException.builder().errormsg(e.toString()).build();
         }
 
     }
@@ -112,21 +112,21 @@ public class Crypto {
             cipher.init(Cipher.DECRYPT_MODE, newKey, ivSpec);
             return new String(cipher.doFinal(Base64.decode(cipher_text, 0)), "UTF-8");
         } catch (IllegalArgumentException e) {
-            throw new PubnubException(e.toString());
+            throw PubnubException.builder().errormsg(e.toString()).build();
         } catch (UnsupportedEncodingException e) {
-            throw new PubnubException(e.toString());
+            throw PubnubException.builder().errormsg(e.toString()).build();
         } catch (IllegalBlockSizeException e) {
-            throw new PubnubException(e.toString());
+            throw PubnubException.builder().errormsg(e.toString()).build();
         } catch (BadPaddingException e) {
-            throw new PubnubException(e.toString());
+            throw PubnubException.builder().errormsg(e.toString()).build();
         } catch (InvalidKeyException e) {
-            throw new PubnubException(e.toString());
+            throw PubnubException.builder().errormsg(e.toString()).build();
         } catch (InvalidAlgorithmParameterException e) {
-            throw new PubnubException(e.toString());
+            throw PubnubException.builder().errormsg(e.toString()).build();
         } catch (NoSuchAlgorithmException e) {
-            throw new PubnubException(e.toString());
+            throw PubnubException.builder().errormsg(e.toString()).build();
         } catch (NoSuchPaddingException e) {
-            throw new PubnubException(e.toString());
+            throw PubnubException.builder().errormsg(e.toString()).build();
         }
     }
 
@@ -153,9 +153,9 @@ public class Crypto {
             byte[] hashedBytes = digest.digest(input.getBytes("UTF-8"));
             return hashedBytes;
         } catch (NoSuchAlgorithmException e) {
-            throw new PubnubException(newCryptoError(118, e.toString()));
+            throw PubnubException.builder().pubnubError(newCryptoError(118, e.toString())).errormsg(e.getMessage()).build();
         } catch (UnsupportedEncodingException e) {
-            throw new PubnubException(newCryptoError(119, e.toString()));
+            throw PubnubException.builder().pubnubError(newCryptoError(119, e.toString())).errormsg(e.getMessage()).build();
         }
     }
 
@@ -173,7 +173,7 @@ public class Crypto {
             byte[] hashedBytes = digest.digest(input);
             return hashedBytes;
         } catch (NoSuchAlgorithmException e) {
-            throw new PubnubException(newCryptoError(1111, e.toString()));
+            throw PubnubException.builder().pubnubError(newCryptoError(111, e.toString())).errormsg(e.getMessage()).build();
         }
     }
 

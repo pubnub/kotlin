@@ -296,7 +296,7 @@ public class SubscriptionManager {
         try {
             outputObject = mapper.readValue(outputText, JsonNode.class);
         } catch (IOException e) {
-            throw new PubnubException(PubnubError.PNERROBJ_PARSING_ERROR);
+            throw PubnubException.builder().pubnubError(PubnubError.PNERROBJ_PARSING_ERROR).errormsg(e.getMessage()).build();
         }
 
         return outputObject;

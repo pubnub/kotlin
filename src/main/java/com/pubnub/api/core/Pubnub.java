@@ -121,7 +121,7 @@ public class Pubnub {
      */
     public final String decrypt(String inputString) throws PubnubException {
         if (inputString == null) {
-            throw new PubnubException(PubnubError.PNERROBJ_INVALID_ARGUMENTS);
+            throw PubnubException.builder().pubnubError(PubnubError.PNERROBJ_INVALID_ARGUMENTS).build();
         }
 
         return decrypt(inputString, this.getConfiguration().getCipherKey());
@@ -136,7 +136,7 @@ public class Pubnub {
      */
     public final String decrypt(final String inputString, final String cipherKey) throws PubnubException {
         if (inputString == null) {
-            throw new PubnubException(PubnubError.PNERROBJ_INVALID_ARGUMENTS);
+            throw PubnubException.builder().pubnubError(PubnubError.PNERROBJ_INVALID_ARGUMENTS).build();
         }
 
         return new Crypto(cipherKey).decrypt(inputString);
@@ -149,7 +149,7 @@ public class Pubnub {
      */
     public final String encrypt(String inputString) throws PubnubException {
         if (inputString == null) {
-            throw new PubnubException(PubnubError.PNERROBJ_INVALID_ARGUMENTS);
+            throw PubnubException.builder().pubnubError(PubnubError.PNERROBJ_INVALID_ARGUMENTS).build();
         }
 
         return encrypt(inputString, this.getConfiguration().getCipherKey());
@@ -164,7 +164,7 @@ public class Pubnub {
      */
     public final String encrypt(final String inputString, final String cipherKey) throws PubnubException {
         if (inputString == null) {
-            throw new PubnubException(PubnubError.PNERROBJ_INVALID_ARGUMENTS);
+            throw PubnubException.builder().pubnubError(PubnubError.PNERROBJ_INVALID_ARGUMENTS).build();
         }
 
         return new Crypto(cipherKey).encrypt(inputString);

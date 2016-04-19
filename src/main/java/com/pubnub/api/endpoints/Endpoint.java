@@ -45,7 +45,7 @@ public abstract class Endpoint<Input, Output> {
         try {
             serverResponse = call.execute();
         } catch (IOException e) {
-            throw new PubnubException(PubnubError.PNERROBJ_HTTP_ERROR);
+            throw PubnubException.builder().pubnubError(PubnubError.PNERROBJ_HTTP_ERROR).build();
         }
 
         if (!serverResponse.isSuccessful() || serverResponse.code() != 200) {
@@ -57,7 +57,11 @@ public abstract class Endpoint<Input, Output> {
                 responseBodyText = "N/A";
             }
 
-            throw new PubnubException(PubnubError.PNERROBJ_HTTP_ERROR, responseBodyText, serverResponse.code());
+            throw PubnubException.builder()
+                    .pubnubError(PubnubError.PNERROBJ_HTTP_ERROR)
+                    .errormsg(responseBodyText)
+                    .statusCode(serverResponse.code())
+                    .build();
         }
 
         response = createResponse(serverResponse);
@@ -72,7 +76,12 @@ public abstract class Endpoint<Input, Output> {
         try {
             call = doWork(createBaseParams());
         } catch (PubnubException e) {
-            PubnubException pubnubException = new PubnubException(PubnubError.PNERROBJ_INVALID_ARGUMENTS, e.getMessage());
+
+            PubnubException pubnubException = PubnubException.builder()
+                    .pubnubError(PubnubError.PNERROBJ_INVALID_ARGUMENTS)
+                    .errormsg(e.getMessage())
+                    .build();
+
             PNErrorStatus pnErrorStatus = new PNErrorStatus();
             writeFieldsToResponse(null, pnErrorStatus, true, pubnubException);
             callback.onResponse(null, pnErrorStatus);
@@ -96,7 +105,12 @@ public abstract class Endpoint<Input, Output> {
                         responseBodyText = "N/A";
                     }
 
-                    PubnubException ex = new PubnubException(PubnubError.PNERROBJ_HTTP_ERROR, responseBodyText, response.code());
+                    PubnubException ex = PubnubException.builder()
+                            .pubnubError(PubnubError.PNERROBJ_HTTP_ERROR)
+                            .errormsg(responseBodyText)
+                            .statusCode(response.code())
+                            .build();
+
                     writeFieldsToResponse(response, pnErrorStatus, true, ex);
                     callback.onResponse(null, pnErrorStatus);
                     return;
@@ -105,7 +119,13 @@ public abstract class Endpoint<Input, Output> {
                 try {
                     callbackResponse = createResponse(response);
                 } catch (PubnubException e) {
-                    PubnubException pubnubException = new PubnubException(PubnubError.PNERROBJ_HTTP_ERROR, e.getMessage(), response.code());
+
+                    PubnubException pubnubException = PubnubException.builder()
+                            .pubnubError(PubnubError.PNERROBJ_HTTP_ERROR)
+                            .errormsg(e.getMessage())
+                            .statusCode(response.code())
+                            .build();
+
                     writeFieldsToResponse(response, pnErrorStatus, true, pubnubException);
                     callback.onResponse(null, pnErrorStatus);
                     return;
@@ -118,7 +138,12 @@ public abstract class Endpoint<Input, Output> {
             @Override
             public void onFailure(final Call<Input> call, final Throwable throwable) {
                 PNErrorStatus pnErrorStatus = new PNErrorStatus();
-                PubnubException pubnubException = new PubnubException(PubnubError.PNERROBJ_HTTP_ERROR, throwable.getMessage(), null);
+
+                PubnubException pubnubException = PubnubException.builder()
+                        .pubnubError(PubnubError.PNERROBJ_HTTP_ERROR)
+                        .errormsg(throwable.getMessage())
+                        .build();
+
                 writeFieldsToResponse(null, pnErrorStatus, true, pubnubException);
                 callback.onResponse(null, pnErrorStatus);
 
@@ -152,19 +177,19 @@ public abstract class Endpoint<Input, Output> {
         try {
             sha256_HMAC = Mac.getInstance("HmacSHA256");
         } catch (NoSuchAlgorithmException e) {
-           throw new PubnubException(PubnubError.PNERROBJ_CRYPTO_ERROR, e.getMessage(), null);
+            throw PubnubException.builder().pubnubError(PubnubError.PNERROBJ_CRYPTO_ERROR).errormsg(e.getMessage()).build();
         }
 
         try {
             sha256_HMAC.init(secretKey);
         } catch (InvalidKeyException e) {
-            throw new PubnubException(PubnubError.PNERROBJ_CRYPTO_ERROR, e.getMessage(), null);
+            throw PubnubException.builder().pubnubError(PubnubError.PNERROBJ_CRYPTO_ERROR).errormsg(e.getMessage()).build();
         }
 
         try {
             hmacData = sha256_HMAC.doFinal(data.getBytes("UTF-8"));
         } catch (UnsupportedEncodingException e) {
-            throw new PubnubException(PubnubError.PNERROBJ_CRYPTO_ERROR, e.getMessage(), null);
+            throw PubnubException.builder().pubnubError(PubnubError.PNERROBJ_CRYPTO_ERROR).errormsg(e.getMessage()).build();
         }
 
         return new String(Base64.encode(hmacData, 0)).replace('+', '-').replace('/', '_');

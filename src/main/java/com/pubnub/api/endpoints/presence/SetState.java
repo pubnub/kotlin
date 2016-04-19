@@ -68,7 +68,7 @@ public class SetState extends Endpoint<Envelope<Map<String, Object>>, PNSetState
         try {
             stringifiedState = ow.writeValueAsString(state);
         } catch (JsonProcessingException e) {
-            throw new PubnubException(PubnubError.PNERROBJ_INVALID_ARGUMENTS, e.getMessage(), null);
+            throw PubnubException.builder().pubnubError(PubnubError.PNERROBJ_INVALID_ARGUMENTS).errormsg(e.getMessage()).build();
         }
 
         stringifiedState = PubnubUtil.urlEncode(stringifiedState);
@@ -85,7 +85,7 @@ public class SetState extends Endpoint<Envelope<Map<String, Object>>, PNSetState
         pnResponse.fillFromRetrofit(input);
 
         if (input.body() == null) {
-            throw new PubnubException(PubnubError.PNERROBJ_PARSING_ERROR);
+            throw PubnubException.builder().pubnubError(PubnubError.PNERROBJ_PARSING_ERROR).build();
         }
 
         PNSetStateResult pnSetStateResult = new PNSetStateResult();

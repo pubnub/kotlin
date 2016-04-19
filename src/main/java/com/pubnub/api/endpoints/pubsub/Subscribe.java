@@ -97,7 +97,7 @@ public class Subscribe extends Endpoint<SubscribeEnvelope, SubscribeEnvelope> {
     protected final SubscribeEnvelope createResponse(final Response<SubscribeEnvelope> input) throws PubnubException {
 
         if (input.body() == null) {
-            throw new PubnubException(PubnubError.PNERROBJ_PARSING_ERROR);
+            throw PubnubException.builder().pubnubError(PubnubError.PNERROBJ_PARSING_ERROR).build();
         }
 
         return  input.body();

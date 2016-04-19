@@ -39,7 +39,7 @@ public class WhereNow extends Endpoint<Envelope<WhereNowData>, PNPresenceWhereNo
     @Override
     protected PNPresenceWhereNowResult createResponse(Response<Envelope<WhereNowData>> input) throws PubnubException {
         if (input.body() == null || input.body().getPayload() == null) {
-            throw new PubnubException(PubnubError.PNERROBJ_PARSING_ERROR);
+            throw PubnubException.builder().pubnubError(PubnubError.PNERROBJ_PARSING_ERROR).build();
         }
 
         PNPresenceWhereNowResult pnPresenceWhereNowResult = new PNPresenceWhereNowResult();

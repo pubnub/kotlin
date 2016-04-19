@@ -49,7 +49,7 @@ public class Publish extends Endpoint<List<Object>, PublishData> {
         try {
             stringifiedMessage = mapper.writeValueAsString(message);
         } catch (JsonProcessingException e) {
-            throw new PubnubException(PubnubError.PNERROBJ_INVALID_ARGUMENTS, e.getMessage(), null);
+            throw PubnubException.builder().pubnubError(PubnubError.PNERROBJ_INVALID_ARGUMENTS).errormsg(e.getMessage()).build();
         }
 
         if (meta != null) {
@@ -58,7 +58,7 @@ public class Publish extends Endpoint<List<Object>, PublishData> {
                 stringifiedMeta = PubnubUtil.urlEncode(stringifiedMeta);
                 params.put("meta", stringifiedMeta);
             } catch (JsonProcessingException e) {
-                throw new PubnubException(PubnubError.PNERROBJ_INVALID_ARGUMENTS, e.getMessage(), null);
+                throw PubnubException.builder().pubnubError(PubnubError.PNERROBJ_INVALID_ARGUMENTS).errormsg(e.getMessage()).build();
             }
         }
 
