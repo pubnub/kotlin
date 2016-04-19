@@ -8,6 +8,8 @@ import com.pubnub.api.core.Crypto;
 import com.pubnub.api.core.Pubnub;
 import com.pubnub.api.core.PubnubError;
 import com.pubnub.api.core.PubnubException;
+import com.pubnub.api.core.builder.dto.SubscribeOperation;
+import com.pubnub.api.core.builder.dto.UnsubscribeOperation;
 import com.pubnub.api.core.enums.PNOperationType;
 import com.pubnub.api.core.enums.PNStatusCategory;
 import com.pubnub.api.core.enums.SubscriptionType;
@@ -80,41 +82,46 @@ public class SubscriptionManager {
 
     }
 
-    public final void adaptSubscribeBuilder(List<String> channels, List<String> channelGroups, boolean withPresence) {
-        for (String channel : channels) {
+    public final void adaptSubscribeBuilder(SubscribeOperation subscribeOperation) {
+        for (String channel : subscribeOperation.getChannels()) {
             SubscriptionItem subscriptionItem = new SubscriptionItem();
             subscriptionItem.setName(channel);
-            subscriptionItem.setWithPresence(withPresence);
+            subscriptionItem.setWithPresence(subscribeOperation.isPresenceEnabled());
             subscriptionItem.setType(SubscriptionType.CHANNEL);
             subscribedChannels.put(channel, subscriptionItem);
         }
 
-        for (String channelGroup : channelGroups) {
+        for (String channelGroup : subscribeOperation.getChannelGroups()) {
             SubscriptionItem subscriptionItem = new SubscriptionItem();
             subscriptionItem.setName(channelGroup);
-            subscriptionItem.setWithPresence(withPresence);
+            subscriptionItem.setWithPresence(subscribeOperation.isPresenceEnabled());
             subscriptionItem.setType(SubscriptionType.CHANNEL_GROUP);
             subscribedChannelGroups.put(channelGroup, subscriptionItem);
         }
+
+        if (subscribeOperation.getTimetoken() != null) {
+            this.timetoken = subscribeOperation.getTimetoken();
+        }
+
 
         this.startSubscribeLoop();
         this.registerHeartbeatTimer();
     }
 
-    public void adaptUnsubscribeBuilder(List<String> channels, List<String> channelGroups) {
+    public void adaptUnsubscribeBuilder(UnsubscribeOperation unsubscribeOperation) {
 
-        for (String channel: channels) {
+        for (String channel: unsubscribeOperation.getChannels()) {
             this.subscribedChannels.remove(channel);
             this.stateStorage.remove(channel);
         }
 
-        for (String channelGroup: channelGroups) {
+        for (String channelGroup: unsubscribeOperation.getChannelGroups()) {
             this.subscribedChannelGroups.remove(channelGroup);
             this.stateStorage.remove(channelGroup);
         }
 
         new Leave(pubnub)
-            .channels(channels).channelGroups(channelGroups)
+            .channels(unsubscribeOperation.getChannels()).channelGroups(unsubscribeOperation.getChannelGroups())
             .async(new PNCallback<Boolean>() {
                 @Override
                 public void onResponse(Boolean result, PNErrorStatus status) {

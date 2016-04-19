@@ -6,7 +6,7 @@ import lombok.Builder;
 @Builder
 public class PubnubException extends Exception {
     private String errormsg = "";
-    private PubnubError pubnubError = PubnubError.PNERROBJ_PUBNUB_ERROR;
+    private PubnubError pubnubError;
     private JsonNode jso;
     private String response;
     private int statusCode;

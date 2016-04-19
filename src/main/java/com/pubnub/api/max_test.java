@@ -51,7 +51,7 @@ public class max_test {
         Map<String, Object> state = new HashMap<>();
         state.put("max", "moose");
 
-        pubnub.subscribe().channel("coolChannel").withPresence().execute();
+        pubnub.subscribe().channels(Arrays.asList("coolChannel")).withPresence().execute();
         //pubnub.setPresenceState().channel("max-ch1").state(state).build().async(new PNCallback<PNSetStateResult>() {
         //    @Override
         //    public void onResponse(PNSetStateResult result, PNErrorStatus status) {

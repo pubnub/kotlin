@@ -60,7 +60,8 @@ public class EndpointTest extends TestHarness {
 
                     @Override
                     public Response<Object> execute() throws IOException {
-                        throw new IOException();
+                        Response<Object> newResponse = Response.success(null);
+                        return newResponse;
                     }
 
                     @Override

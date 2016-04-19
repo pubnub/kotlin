@@ -29,18 +29,9 @@ public abstract class PubSubBuilder {
         this.channelGroupSubscriptions = new ArrayList<>();
     }
 
-    public PubSubBuilder channel(String channel) {
-        channelSubscriptions.add(channel);
-        return this;
-    }
 
     public PubSubBuilder channels(List<String> channel) {
         channelSubscriptions.addAll(channel);
-        return this;
-    }
-
-    public PubSubBuilder channelGroup(String channelGroup) {
-        channelGroupSubscriptions.add(channelGroup);
         return this;
     }
 

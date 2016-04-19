@@ -1,7 +1,7 @@
 package com.pubnub.api.core.builder;
 
+import com.pubnub.api.core.builder.dto.SubscribeOperation;
 import com.pubnub.api.managers.SubscriptionManager;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,10 +11,17 @@ import java.util.List;
 @Setter
 public class SubscribeBuilder extends PubSubBuilder  {
 
-    @Setter(AccessLevel.NONE)
+    /**
+     * Allow users to specify if they would also like to include the presence channels for those subscriptions.
+     */
     private boolean presenceEnabled;
 
-    public SubscribeBuilder(SubscriptionManager subscriptionManager) {
+    /**
+     * Allow users to subscribe with a custom timetoken.
+     */
+    private Long timetoken;
+
+    public SubscribeBuilder(final SubscriptionManager subscriptionManager) {
         super(subscriptionManager);
     }
 
@@ -23,24 +30,27 @@ public class SubscribeBuilder extends PubSubBuilder  {
         return this;
     }
 
+    public SubscribeBuilder withTimetoken(final Long timetoken) {
+        this.timetoken = timetoken;
+        return this;
+    }
+
     public void execute() {
-        this.subscriptionManager.adaptSubscribeBuilder(this.channelSubscriptions, this.channelGroupSubscriptions,
-                this.presenceEnabled);
+        SubscribeOperation subscribeOperation = SubscribeOperation.builder()
+                .channels(channelSubscriptions)
+                .channelGroups(channelGroupSubscriptions)
+                .timetoken(timetoken)
+                .presenceEnabled(presenceEnabled)
+                .build();
+
+        this.subscriptionManager.adaptSubscribeBuilder(subscribeOperation);
     }
 
-    public SubscribeBuilder channel(String channel) {
-        return (SubscribeBuilder) super.channel(channel);
-    }
-
-    public SubscribeBuilder channels(List<String> channels) {
+    public SubscribeBuilder channels(final List<String> channels) {
         return (SubscribeBuilder) super.channels(channels);
     }
 
-    public SubscribeBuilder channelGroup(String channelGroup) {
-        return (SubscribeBuilder) super.channelGroup(channelGroup);
-    }
-
-    public SubscribeBuilder channelGroups(List<String> channelGroups) {
+    public SubscribeBuilder channelGroups(final List<String> channelGroups) {
         return (SubscribeBuilder) super.channelGroups(channelGroups);
     }
 

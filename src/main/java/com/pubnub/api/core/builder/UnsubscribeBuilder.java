@@ -1,5 +1,6 @@
 package com.pubnub.api.core.builder;
 
+import com.pubnub.api.core.builder.dto.UnsubscribeOperation;
 import com.pubnub.api.managers.SubscriptionManager;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,12 +9,18 @@ import lombok.Setter;
 @Setter
 public class UnsubscribeBuilder extends PubSubBuilder  {
 
-    public UnsubscribeBuilder(SubscriptionManager subscriptionManager) {
+    public UnsubscribeBuilder(final SubscriptionManager subscriptionManager) {
         super(subscriptionManager);
     }
 
     public void execute() {
-        this.subscriptionManager.adaptUnsubscribeBuilder(this.channelSubscriptions, this.channelGroupSubscriptions);
+
+        UnsubscribeOperation unsubscribeOperation = UnsubscribeOperation.builder()
+                .channels(channelSubscriptions)
+                .channelGroups(channelGroupSubscriptions)
+                .build();
+
+        this.subscriptionManager.adaptUnsubscribeBuilder(unsubscribeOperation);
     }
 
 }
