@@ -54,24 +54,22 @@ public class SubscriptionManager {
         this.pubnub = pubnub;
         this.listeners = new ArrayList<>();
         this.stateStorage = new HashMap<>();
-
-        registerHeartbeatTimer();
     }
 
-    public void stop() {
+    public synchronized void stop() {
         stopHeartbeatTimer();
         stopSubscribeLoop();
     }
 
-    public void addListener(SubscribeCallback listener) {
+    public final synchronized void addListener(SubscribeCallback listener) {
         listeners.add(listener);
     }
 
-    public void removeListener(SubscribeCallback listener) {
+    public final synchronized void removeListener(SubscribeCallback listener) {
         listeners.remove(listener);
     }
 
-    public final void adaptStateBuilder(List<String> channels, List<String> channelGroups, Object state) {
+    public final synchronized void adaptStateBuilder(List<String> channels, List<String> channelGroups, Object state) {
         for (String channel: channels) {
             stateStorage.put(channel, state);
         }
@@ -82,7 +80,7 @@ public class SubscriptionManager {
 
     }
 
-    public final void adaptSubscribeBuilder(SubscribeOperation subscribeOperation) {
+    public final synchronized void adaptSubscribeBuilder(final SubscribeOperation subscribeOperation) {
         for (String channel : subscribeOperation.getChannels()) {
             SubscriptionItem subscriptionItem = new SubscriptionItem();
             subscriptionItem.setName(channel);
@@ -108,7 +106,7 @@ public class SubscriptionManager {
         this.registerHeartbeatTimer();
     }
 
-    public void adaptUnsubscribeBuilder(UnsubscribeOperation unsubscribeOperation) {
+    public final synchronized void adaptUnsubscribeBuilder(final UnsubscribeOperation unsubscribeOperation) {
 
         for (String channel: unsubscribeOperation.getChannels()) {
             this.subscribedChannels.remove(channel);

@@ -6,6 +6,7 @@ import com.pubnub.api.core.*;
 import com.pubnub.api.core.enums.PNOperationType;
 import com.pubnub.api.core.models.PublishData;
 import com.pubnub.api.endpoints.Endpoint;
+import com.pubnub.api.managers.PublishSequenceManager;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import retrofit2.Call;
@@ -23,8 +24,12 @@ public class Publish extends Endpoint<List<Object>, PublishData> {
     @Setter private Boolean usePOST;
     @Setter private Object meta;
 
-    public Publish(Pubnub pubnub) {
+    PublishSequenceManager publishSequenceManager;
+
+    public Publish(Pubnub pubnub, PublishSequenceManager providedPublishSequenceManager) {
         super(pubnub);
+
+        this.publishSequenceManager = providedPublishSequenceManager;
     }
 
     @Override
@@ -69,6 +74,9 @@ public class Publish extends Endpoint<List<Object>, PublishData> {
                 params.put("store", "0");
             }
         }
+
+        params.put("seqn", String.valueOf(publishSequenceManager.getNextSequence()));
+
 
         if (pubnub.getConfiguration().getCipherKey() != null) {
             Crypto crypto = new Crypto(pubnub.getConfiguration().getCipherKey());

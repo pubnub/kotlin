@@ -48,6 +48,24 @@ public class PublishTest extends TestHarness {
     }
 
     @Test
+    public void testSuccessSequenceSync() throws PubnubException, InterruptedException {
+
+        stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22hi%22"))
+                .willReturn(aResponse().withBody("[1,\"Sent\",\"14598111595318003\"]")));
+
+        instance.channel("coolChannel").message("hi").sync();
+        instance.channel("coolChannel").message("hi").sync();
+
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
+        assertEquals(2, requests.size());
+        assertEquals("myUUID", requests.get(0).queryParameter("uuid").firstValue());
+        assertEquals("1", requests.get(0).queryParameter("seqn").firstValue());
+        assertEquals("2", requests.get(1).queryParameter("seqn").firstValue());
+
+
+    }
+
+    @Test
     public void testSuccessPostSync() throws PubnubException, InterruptedException {
         stubFor(post(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0"))
                 .willReturn(aResponse().withBody("[1,\"Sent\",\"14598111595318003\"]")));

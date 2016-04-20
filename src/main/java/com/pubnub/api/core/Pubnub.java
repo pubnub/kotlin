@@ -13,6 +13,7 @@ import com.pubnub.api.endpoints.push.CreatePushNotification;
 import com.pubnub.api.endpoints.push.ListProvisions;
 import com.pubnub.api.endpoints.push.ModifyProvisions;
 import com.pubnub.api.managers.BasePathManager;
+import com.pubnub.api.managers.PublishSequenceManager;
 import com.pubnub.api.managers.SubscriptionManager;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -33,6 +34,8 @@ public class Pubnub {
     private SubscriptionManager subscriptionManager;
     @Getter(AccessLevel.NONE)
     private BasePathManager basePathManager;
+    @Getter(AccessLevel.NONE)
+    private PublishSequenceManager publishSequenceManager;
 
     private String sdkVersion;
 
@@ -40,6 +43,7 @@ public class Pubnub {
         this.configuration = initialConfig;
         this.subscriptionManager = new SubscriptionManager(this);
         this.basePathManager = new BasePathManager(initialConfig);
+        this.publishSequenceManager = new PublishSequenceManager(65535);
 
         sdkVersion = fetchSDKVersion();
     }
@@ -109,7 +113,7 @@ public class Pubnub {
     }
 
     public final Publish publish() {
-        return new Publish(this);
+        return new Publish(this, publishSequenceManager);
     }
 
     // public methods
