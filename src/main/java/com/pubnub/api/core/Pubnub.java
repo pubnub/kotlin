@@ -7,6 +7,7 @@ import com.pubnub.api.endpoints.History;
 import com.pubnub.api.endpoints.Time;
 import com.pubnub.api.endpoints.access.Audit;
 import com.pubnub.api.endpoints.access.Grant;
+import com.pubnub.api.endpoints.channel_groups.*;
 import com.pubnub.api.endpoints.presence.*;
 import com.pubnub.api.endpoints.pubsub.Publish;
 import com.pubnub.api.endpoints.push.CreatePushNotification;
@@ -205,5 +206,12 @@ public class Pubnub {
             return "N/A";
         }
     }
+
+    public final ChannelGroupListAll.ChannelGroupListAllBuilder channelGroupListAll() {return ChannelGroupListAll.builder().pubnub(this); }
+    public final AllChannelsChannelGroup.AllChannelsChannelGroupBuilder allChannelsChannelGroup() {return AllChannelsChannelGroup.builder().pubnub(this);}
+    public final AddChannelChannelGroup.AddChannelChannelGroupBuilder addChannelChannelGroup() {return AddChannelChannelGroup.builder().pubnub(this);}
+    public final RemoveChannel.RemoveChannelBuilder removeChannel() {return RemoveChannel.builder().pubnub(this);}
+    public final DeleteChannelGroup.DeleteChannelGroupBuilder deleteChannelGroup() {return DeleteChannelGroup.builder().pubnub(this); }
+
 
 }
