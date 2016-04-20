@@ -3,6 +3,7 @@ package com.pubnub.api.endpoints.push;
 import com.pubnub.api.callbacks.PNCallback;
 import com.pubnub.api.core.Pubnub;
 import com.pubnub.api.core.PubnubException;
+import com.pubnub.api.core.enums.PushType;
 import com.pubnub.api.core.models.PublishData;
 import lombok.Setter;
 import lombok.experimental.Accessors;

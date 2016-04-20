@@ -50,9 +50,12 @@ public class SubscriptionManagerTest extends TestHarness {
 
             @Override
             public void message(Pubnub pubnub, PNMessageResult message) {
-                List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
-                Assert.assertEquals(1, requests.size());
-                atomic.addAndGet(1);
+                List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")));
+
+                if (requests.size() == 1){
+                    atomic.addAndGet(1);
+                }
+
             }
 
             @Override
@@ -81,10 +84,12 @@ public class SubscriptionManagerTest extends TestHarness {
 
             @Override
             public void message(Pubnub pubnub, PNMessageResult message) {
-                List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
-                Assert.assertEquals(1, requests.size());
-                assertEquals("1337", requests.get(0).queryParameter("tt").firstValue());
-                atomic.addAndGet(1);
+                List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")));
+
+                if (requests.size() == 1) {
+                    assertEquals("1337", requests.get(0).queryParameter("tt").firstValue());
+                    atomic.addAndGet(1);
+                }
             }
 
             @Override
@@ -114,9 +119,12 @@ public class SubscriptionManagerTest extends TestHarness {
             @Override
             public void message(Pubnub pubnub, PNMessageResult message) {
                 List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")));
-                Assert.assertEquals(1, requests.size());
-                Assert.assertEquals("{text=Enter Message Here}", message.getData().getMessage().toString());
-                atomic.addAndGet(1);
+
+                if (requests.size() == 1) {
+                    Assert.assertEquals("{text=Enter Message Here}", message.getData().getMessage().toString());
+                    atomic.addAndGet(1);
+                }
+
             }
 
             @Override
@@ -130,5 +138,73 @@ public class SubscriptionManagerTest extends TestHarness {
                 .untilAtomic(atomic, org.hamcrest.core.IsEqual.equalTo(1));
 
     }
+
+    @Test
+    public void testSubscribeRegionBuilder() {
+        final AtomicInteger atomic = new AtomicInteger(0);
+        stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch2-pnpres,ch1,ch1-pnpres/0"))
+                .willReturn(aResponse().withBody("{\"t\":{\"t\":\"14607577960932487\",\"r\":8},\"m\":[{\"a\":\"4\",\"f\":0,\"i\":\"Client-g5d4g\",\"p\":{\"t\":\"14607577960925503\",\"r\":1},\"k\":\"sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f\",\"c\":\"coolChannel\",\"d\":{\"text\":\"Enter Message Here\"},\"b\":\"coolChan-bnel\"}]}")));
+
+        pubnub.addListener(new SubscribeCallback() {
+            @Override
+            public void status(Pubnub pubnub, PNStatus status) {
+            }
+
+            @Override
+            public void message(Pubnub pubnub, PNMessageResult message) {
+                List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")));
+
+                if (requests.size() == 2){
+                    assertEquals("8", requests.get(1).queryParameter("tr").firstValue());
+                    atomic.addAndGet(1);
+                }
+
+            }
+
+            @Override
+            public void presence(Pubnub pubnub, PNPresenceEventResult presence) {
+            }
+        });
+
+        pubnub.subscribe().channels(Arrays.asList("ch1", "ch2")).withPresence().execute();
+
+        Awaitility.await().atMost(5, TimeUnit.SECONDS)
+                .untilAtomic(atomic, org.hamcrest.core.IsEqual.equalTo(1));
+
+    }
+
+    @Test
+    public void testRemoveListener() {
+
+        final AtomicInteger atomic = new AtomicInteger(0);
+
+        SubscribeCallback sub1 = new SubscribeCallback() {
+            @Override
+            public void status(Pubnub pubnub, PNStatus status) {
+                atomic.addAndGet(1);
+            }
+
+            @Override
+            public void message(Pubnub pubnub, PNMessageResult message) {
+                atomic.addAndGet(1);
+            }
+
+            @Override
+            public void presence(Pubnub pubnub, PNPresenceEventResult presence) {
+                atomic.addAndGet(1);
+            }
+        };
+
+        pubnub.addListener(sub1);
+        pubnub.removeListener(sub1);
+
+        pubnub.subscribe().channels(Arrays.asList("ch1", "ch2")).withPresence().execute();
+
+        Awaitility.await().atMost(2, TimeUnit.SECONDS)
+                .untilAtomic(atomic, org.hamcrest.core.IsEqual.equalTo(0));
+
+    }
+
+
 
 }

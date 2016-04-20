@@ -1,4 +1,4 @@
-package com.pubnub.api.endpoints.push;
+package com.pubnub.api.core.enums;
 
 public enum PushType {
 

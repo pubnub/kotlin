@@ -5,6 +5,7 @@ import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import com.jayway.awaitility.Awaitility;
 import com.pubnub.api.callbacks.PNCallback;
 import com.pubnub.api.core.PubnubException;
+import com.pubnub.api.core.enums.PushType;
 import com.pubnub.api.core.models.PublishData;
 import com.pubnub.api.core.models.consumer_facing.PNErrorStatus;
 import com.pubnub.api.endpoints.TestHarness;

@@ -177,6 +177,11 @@ public class SubscriptionManager {
             }
         }
 
+        // do not start the subscribe loop if we have no channels to subscribe to.
+        if (combinedChannels.isEmpty() && combinedChannelGroups.isEmpty()) {
+            return;
+        }
+
         subscribeCall =  new Subscribe(pubnub)
                 .channels(combinedChannels).channelGroups(combinedChannelGroups)
                 .timetoken(timetoken).region(region)
@@ -225,17 +230,19 @@ public class SubscriptionManager {
             }
         }
 
-        // if we are not subscribed to any channels with presence, cancel the operation.
-        if (presenceChannels.size() != 0 || presenceChannelGroups.size() != 0) {
-            heartbeatCall = new Heartbeat(pubnub)
-                    .channels(presenceChannels).channelGroups(presenceChannelGroups).state(stateStorage)
-                    .async(new PNCallback<Boolean>() {
-                        @Override
-                        public void onResponse(Boolean result, PNErrorStatus status) {
-                            int moose = 10;
-                        }
-                    });
+        // do not start the loop if we do not have any presence channels or channel groups enabled.
+        if (presenceChannels.isEmpty() && presenceChannelGroups.isEmpty()) {
+            return;
         }
+
+        heartbeatCall = new Heartbeat(pubnub)
+                .channels(presenceChannels).channelGroups(presenceChannelGroups).state(stateStorage)
+                .async(new PNCallback<Boolean>() {
+                    @Override
+                    public void onResponse(Boolean result, PNErrorStatus status) {
+                        int moose = 10;
+                    }
+                });
     }
 
     private void processIncomingMessages(List<SubscribeMessage> messages) {
