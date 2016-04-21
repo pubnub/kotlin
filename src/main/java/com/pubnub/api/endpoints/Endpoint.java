@@ -8,7 +8,6 @@ import com.pubnub.api.core.PubnubException;
 import com.pubnub.api.core.enums.PNOperationType;
 import com.pubnub.api.core.models.consumer_facing.PNErrorData;
 import com.pubnub.api.core.models.consumer_facing.PNErrorStatus;
-import com.pubnub.api.core.utils.Base64;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
@@ -16,12 +15,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -168,34 +162,7 @@ public abstract class Endpoint<Input, Output> {
         }
 
     }
-
-    protected String signSHA256(final String key, final String data) throws PubnubException {
-        Mac sha256HMAC;
-        byte[] hmacData;
-        SecretKeySpec secretKey = new SecretKeySpec(key.getBytes(), "HmacSHA256");
-
-        try {
-            sha256HMAC = Mac.getInstance("HmacSHA256");
-        } catch (NoSuchAlgorithmException e) {
-            throw PubnubException.builder().pubnubError(PubnubError.PNERROBJ_CRYPTO_ERROR).errormsg(e.getMessage()).build();
-        }
-
-        try {
-            sha256HMAC.init(secretKey);
-        } catch (InvalidKeyException e) {
-            throw PubnubException.builder().pubnubError(PubnubError.PNERROBJ_CRYPTO_ERROR).errormsg(e.getMessage()).build();
-        }
-
-        try {
-            hmacData = sha256HMAC.doFinal(data.getBytes("UTF-8"));
-        } catch (UnsupportedEncodingException e) {
-            throw PubnubException.builder().pubnubError(PubnubError.PNERROBJ_CRYPTO_ERROR).errormsg(e.getMessage()).build();
-        }
-
-        return new String(Base64.encode(hmacData, 0)).replace('+', '-').replace('/', '_');
-    }
-
-
+    
     protected final Retrofit createRetrofit() {
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.readTimeout(this.getRequestTimeout(), TimeUnit.SECONDS);
