@@ -7,7 +7,10 @@ import com.pubnub.api.endpoints.History;
 import com.pubnub.api.endpoints.Time;
 import com.pubnub.api.endpoints.access.Audit;
 import com.pubnub.api.endpoints.access.Grant;
-import com.pubnub.api.endpoints.presence.*;
+import com.pubnub.api.endpoints.presence.GetState;
+import com.pubnub.api.endpoints.presence.HereNow;
+import com.pubnub.api.endpoints.presence.SetState;
+import com.pubnub.api.endpoints.presence.WhereNow;
 import com.pubnub.api.endpoints.pubsub.Publish;
 import com.pubnub.api.endpoints.push.CreatePushNotification;
 import com.pubnub.api.endpoints.push.ListProvisions;
@@ -19,9 +22,9 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 
 
 @Getter
@@ -193,17 +196,16 @@ public class Pubnub {
      * @return Stringified representation of the SDK version.
      */
     private String fetchSDKVersion() {
-        byte[] encoded;
+        Properties prop = new Properties();
+        InputStream in = ClassLoader.getSystemClassLoader().getResourceAsStream("version.properties");
         try {
-            encoded = Files.readAllBytes(Paths.get(Pubnub.class.getClassLoader().getResource("version.properties").getPath()));
+            prop.load(in);
         } catch (IOException e) {
             return "N/A";
         }
-        try {
-            return new String(encoded, "UTF-8").trim();
-        } catch (UnsupportedEncodingException e) {
-            return "N/A";
-        }
+
+        return prop.getProperty("version");
+
     }
 
 }
