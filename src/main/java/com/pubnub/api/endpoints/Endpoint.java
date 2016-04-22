@@ -200,7 +200,8 @@ public abstract class Endpoint<Input, Output> {
         // add the auth key for publish and subscribe.
         if (this.pubnub.getConfiguration().getAuthKey() != null) {
             if (getOperationType() == PNOperationType.PNPublishOperation
-                    || getOperationType() == PNOperationType.PNSubscribeOperation) {
+                    || getOperationType() == PNOperationType.PNSubscribeOperation
+                    || getOperationType() == PNOperationType.PNHistoryOperation) {
                 params.put("auth", pubnub.getConfiguration().getAuthKey());
             }
         }

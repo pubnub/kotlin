@@ -11,6 +11,7 @@ import lombok.experimental.Accessors;
 import retrofit2.Call;
 import retrofit2.Response;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +20,8 @@ public class Leave extends Endpoint<Envelope, Boolean> {
 
     public Leave(Pubnub pubnub) {
         super(pubnub);
+        channels = new ArrayList<>();
+        channelGroups = new ArrayList<>();
     }
 
     @Setter private List<String> channels;
