@@ -5,6 +5,7 @@ import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import com.jayway.awaitility.Awaitility;
 import com.pubnub.api.callbacks.SubscribeCallback;
 import com.pubnub.api.core.Pubnub;
+import com.pubnub.api.core.enums.PNHeartbeatNotificationOptions;
 import com.pubnub.api.core.enums.PNOperationType;
 import com.pubnub.api.core.models.consumer_facing.PNMessageResult;
 import com.pubnub.api.core.models.consumer_facing.PNPresenceEventResult;
@@ -257,5 +258,181 @@ public class SubscriptionManagerTest extends TestHarness {
         Awaitility.await().atMost(2, TimeUnit.SECONDS).untilAtomic(statusRecieved, org.hamcrest.core.IsEqual.equalTo(true));
     }
 
+    @Test
+    public void testAllHeartbeats() {
+
+        final AtomicBoolean statusRecieved = new AtomicBoolean();
+        pubnub.getConfiguration().setHeartbeatNotificationOptions(PNHeartbeatNotificationOptions.All);
+
+        stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch2-pnpres,ch1,ch1-pnpres/0"))
+                .willReturn(aResponse().withBody("{\"t\":{\"t\":\"14607577960932487\",\"r\":1},\"m\":[{\"a\":\"4\",\"f\":0,\"i\":\"Client-g5d4g\",\"p\":{\"t\":\"14607577960925503\",\"r\":1},\"k\":\"sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f\",\"c\":\"coolChannel\",\"d\":{\"text\":\"Enter Message Here\"},\"b\":\"coolChan-bnel\"}]}")));
+
+        stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch2,ch1/heartbeat"))
+                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\", \"action\": \"leave\"}")));
+
+        SubscribeCallback sub1 = new SubscribeCallback() {
+            @Override
+            public void status(Pubnub pubnub, PNStatus status) {
+                if (status.getOperation() == PNOperationType.PNHeartbeatOperation && !status.isError()) {
+                    statusRecieved.set(true);
+                }
+            }
+
+            @Override
+            public void message(Pubnub pubnub, PNMessageResult message) {
+            }
+
+            @Override
+            public void presence(Pubnub pubnub, PNPresenceEventResult presence) {
+            }
+        };
+
+        pubnub.addListener(sub1);
+
+        pubnub.subscribe().channels(Arrays.asList("ch1", "ch2")).withPresence().execute();
+
+
+        Awaitility.await().atMost(2, TimeUnit.SECONDS).untilAtomic(statusRecieved, org.hamcrest.core.IsEqual.equalTo(true));
+    }
+
+    @Test
+    public void testSuccessOnFailureVerbosityHeartbeats() {
+
+        final AtomicBoolean statusRecieved = new AtomicBoolean();
+        pubnub.getConfiguration().setHeartbeatNotificationOptions(PNHeartbeatNotificationOptions.Failures);
+
+        stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch2-pnpres,ch1,ch1-pnpres/0"))
+                .willReturn(aResponse().withBody("{\"t\":{\"t\":\"14607577960932487\",\"r\":1},\"m\":[{\"a\":\"4\",\"f\":0,\"i\":\"Client-g5d4g\",\"p\":{\"t\":\"14607577960925503\",\"r\":1},\"k\":\"sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f\",\"c\":\"coolChannel\",\"d\":{\"text\":\"Enter Message Here\"},\"b\":\"coolChan-bnel\"}]}")));
+
+
+        SubscribeCallback sub1 = new SubscribeCallback() {
+            @Override
+            public void status(Pubnub pubnub, PNStatus status) {
+                if (status.getOperation() == PNOperationType.PNHeartbeatOperation) {
+                    statusRecieved.set(true);
+                }
+            }
+
+            @Override
+            public void message(Pubnub pubnub, PNMessageResult message) {
+            }
+
+            @Override
+            public void presence(Pubnub pubnub, PNPresenceEventResult presence) {
+            }
+        };
+
+        pubnub.addListener(sub1);
+
+        pubnub.subscribe().channels(Arrays.asList("ch1", "ch2")).withPresence().execute();
+
+
+        Awaitility.await().atMost(2, TimeUnit.SECONDS).untilAtomic(statusRecieved, org.hamcrest.core.IsEqual.equalTo(true));
+    }
+
+    @Test
+    public void testFailedHeartbeats() {
+
+        final AtomicBoolean statusRecieved = new AtomicBoolean();
+        pubnub.getConfiguration().setHeartbeatNotificationOptions(PNHeartbeatNotificationOptions.All);
+
+        stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch2-pnpres,ch1,ch1-pnpres/0"))
+                .willReturn(aResponse().withBody("{\"t\":{\"t\":\"14607577960932487\",\"r\":1},\"m\":[{\"a\":\"4\",\"f\":0,\"i\":\"Client-g5d4g\",\"p\":{\"t\":\"14607577960925503\",\"r\":1},\"k\":\"sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f\",\"c\":\"coolChannel\",\"d\":{\"text\":\"Enter Message Here\"},\"b\":\"coolChan-bnel\"}]}")));
+
+        SubscribeCallback sub1 = new SubscribeCallback() {
+            @Override
+            public void status(Pubnub pubnub, PNStatus status) {
+                if (status.getOperation() == PNOperationType.PNHeartbeatOperation && status.isError()) {
+                    statusRecieved.set(true);
+                }
+            }
+
+            @Override
+            public void message(Pubnub pubnub, PNMessageResult message) {
+            }
+
+            @Override
+            public void presence(Pubnub pubnub, PNPresenceEventResult presence) {
+            }
+        };
+
+        pubnub.addListener(sub1);
+
+        pubnub.subscribe().channels(Arrays.asList("ch1", "ch2")).withPresence().execute();
+
+
+        Awaitility.await().atMost(2, TimeUnit.SECONDS).untilAtomic(statusRecieved, org.hamcrest.core.IsEqual.equalTo(true));
+    }
+
+    @Test
+    public void testSilencedHeartbeats() {
+
+        final AtomicBoolean statusRecieved = new AtomicBoolean();
+        pubnub.getConfiguration().setHeartbeatNotificationOptions(PNHeartbeatNotificationOptions.None);
+
+        stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch2-pnpres,ch1,ch1-pnpres/0"))
+                .willReturn(aResponse().withBody("{\"t\":{\"t\":\"14607577960932487\",\"r\":1},\"m\":[{\"a\":\"4\",\"f\":0,\"i\":\"Client-g5d4g\",\"p\":{\"t\":\"14607577960925503\",\"r\":1},\"k\":\"sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f\",\"c\":\"coolChannel\",\"d\":{\"text\":\"Enter Message Here\"},\"b\":\"coolChan-bnel\"}]}")));
+
+        SubscribeCallback sub1 = new SubscribeCallback() {
+            @Override
+            public void status(Pubnub pubnub, PNStatus status) {
+                if (status.getOperation() == PNOperationType.PNHeartbeatOperation) {
+                    statusRecieved.set(true);
+                }
+            }
+
+            @Override
+            public void message(Pubnub pubnub, PNMessageResult message) {
+            }
+
+            @Override
+            public void presence(Pubnub pubnub, PNPresenceEventResult presence) {
+            }
+        };
+
+        pubnub.addListener(sub1);
+
+        pubnub.subscribe().channels(Arrays.asList("ch1", "ch2")).withPresence().execute();
+
+
+        Awaitility.await().atMost(2, TimeUnit.SECONDS).untilAtomic(statusRecieved, org.hamcrest.core.IsEqual.equalTo(false));
+    }
+
+    @Test
+    public void testFailedNoneHeartbeats() {
+
+        final AtomicBoolean statusRecieved = new AtomicBoolean();
+        pubnub.getConfiguration().setHeartbeatNotificationOptions(PNHeartbeatNotificationOptions.None);
+
+        stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch2-pnpres,ch1,ch1-pnpres/0"))
+                .willReturn(aResponse().withBody("{\"t\":{\"t\":\"14607577960932487\",\"r\":1},\"m\":[{\"a\":\"4\",\"f\":0,\"i\":\"Client-g5d4g\",\"p\":{\"t\":\"14607577960925503\",\"r\":1},\"k\":\"sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f\",\"c\":\"coolChannel\",\"d\":{\"text\":\"Enter Message Here\"},\"b\":\"coolChan-bnel\"}]}")));
+
+        stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch2,ch1/heartbeat"))
+                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\", \"action\": \"leave\"}")));
+
+        SubscribeCallback sub1 = new SubscribeCallback() {
+            @Override
+            public void status(Pubnub pubnub, PNStatus status) {
+                if (status.getOperation() == PNOperationType.PNHeartbeatOperation) {
+                    statusRecieved.set(true);
+                }
+            }
+
+            @Override
+            public void message(Pubnub pubnub, PNMessageResult message) {
+            }
+
+            @Override
+            public void presence(Pubnub pubnub, PNPresenceEventResult presence) {
+            }
+        };
+
+        pubnub.addListener(sub1);
+
+        pubnub.subscribe().channels(Arrays.asList("ch1", "ch2")).withPresence().execute();
+
+
+        Awaitility.await().atMost(2, TimeUnit.SECONDS).untilAtomic(statusRecieved, org.hamcrest.core.IsEqual.equalTo(false));
+    }
 
 }

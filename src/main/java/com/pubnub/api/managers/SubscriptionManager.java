@@ -2,18 +2,20 @@ package com.pubnub.api.managers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pubnub.api.callbacks.SubscribeCallback;
 import com.pubnub.api.callbacks.PNCallback;
+import com.pubnub.api.callbacks.SubscribeCallback;
 import com.pubnub.api.core.Crypto;
 import com.pubnub.api.core.Pubnub;
 import com.pubnub.api.core.PubnubError;
 import com.pubnub.api.core.PubnubException;
 import com.pubnub.api.core.builder.dto.SubscribeOperation;
 import com.pubnub.api.core.builder.dto.UnsubscribeOperation;
+import com.pubnub.api.core.enums.PNHeartbeatNotificationOptions;
 import com.pubnub.api.core.enums.PNOperationType;
 import com.pubnub.api.core.enums.PNStatusCategory;
 import com.pubnub.api.core.enums.SubscriptionType;
-import com.pubnub.api.core.models.*;
+import com.pubnub.api.core.models.Envelope;
+import com.pubnub.api.core.models.SubscriptionItem;
 import com.pubnub.api.core.models.consumer_facing.*;
 import com.pubnub.api.core.models.server_responses.SubscribeEnvelope;
 import com.pubnub.api.core.models.server_responses.SubscribeMessage;
@@ -238,7 +240,21 @@ public class SubscriptionManager {
                 .async(new PNCallback<Boolean>() {
                     @Override
                     public void onResponse(Boolean result, PNStatus status) {
-                        int moose = 10;
+                        PNHeartbeatNotificationOptions heartbeatVerbosity = pubnub
+                                .getConfiguration().getHeartbeatNotificationOptions();
+
+                        if (status.isError()) {
+                            if (heartbeatVerbosity == PNHeartbeatNotificationOptions.All ||
+                                    heartbeatVerbosity == PNHeartbeatNotificationOptions.Failures) {
+                                announce(status);
+                            }
+
+                            // TODO: handle reachability here.
+                        } else {
+                            if (heartbeatVerbosity == PNHeartbeatNotificationOptions.All) {
+                                announce(status);
+                            }
+                        }
                     }
                 });
     }

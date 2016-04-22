@@ -1,6 +1,7 @@
 package com.pubnub.api.core;
 
 
+import com.pubnub.api.core.enums.PNHeartbeatNotificationOptions;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -70,6 +71,11 @@ public class PnConfiguration {
     private int nonSubscribeRequestTimeout;
 
     /**
+     * verbosity of heartbeat configuration, by default only alerts on failed heartbeats
+     */
+    private PNHeartbeatNotificationOptions heartbeatNotificationOptions;
+
+    /**
      * Initialize the PnConfiguration with default values
      */
     public PnConfiguration() {
@@ -80,6 +86,8 @@ public class PnConfiguration {
         nonSubscribeRequestTimeout = 10;
         subscribeTimeout = 310;
         connectTimeout = 5;
+
+        heartbeatNotificationOptions = PNHeartbeatNotificationOptions.Failures;
     }
 
     /**
