@@ -5,6 +5,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class PNMessageResult extends PNResult {
+public class PNMessageResult {
     private PNMessageData data;
 }

@@ -8,7 +8,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class PNHistoryResult extends PNResult {
+public class PNHistoryResult {
 
     private List<PNHistoryItemResult> messages;
     private Long startTimeToken;

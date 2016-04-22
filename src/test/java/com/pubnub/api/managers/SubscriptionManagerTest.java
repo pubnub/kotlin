@@ -5,6 +5,7 @@ import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import com.jayway.awaitility.Awaitility;
 import com.pubnub.api.callbacks.SubscribeCallback;
 import com.pubnub.api.core.Pubnub;
+import com.pubnub.api.core.enums.PNOperationType;
 import com.pubnub.api.core.models.consumer_facing.PNMessageResult;
 import com.pubnub.api.core.models.consumer_facing.PNPresenceEventResult;
 import com.pubnub.api.core.models.consumer_facing.PNStatus;
@@ -15,6 +16,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
@@ -205,6 +207,55 @@ public class SubscriptionManagerTest extends TestHarness {
 
     }
 
+    @Test
+    public void testUnsubscribe() {
+
+        final AtomicBoolean statusRecieved = new AtomicBoolean();
+        final AtomicBoolean messageRecieved = new AtomicBoolean();
+
+        stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch2-pnpres,ch1,ch1-pnpres/0"))
+                .willReturn(aResponse().withBody("{\"t\":{\"t\":\"14607577960932487\",\"r\":1},\"m\":[{\"a\":\"4\",\"f\":0,\"i\":\"Client-g5d4g\",\"p\":{\"t\":\"14607577960925503\",\"r\":1},\"k\":\"sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f\",\"c\":\"coolChannel\",\"d\":{\"text\":\"Enter Message Here\"},\"b\":\"coolChan-bnel\"}]}")));
+
+        stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch2-pnpres/0"))
+                .willReturn(aResponse().withBody("{\"t\":{\"t\":\"14607577960932487\",\"r\":1},\"m\":[{\"a\":\"4\",\"f\":0,\"i\":\"Client-g5d4g\",\"p\":{\"t\":\"14607577960925503\",\"r\":1},\"k\":\"sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f\",\"c\":\"coolChannel\",\"d\":{\"text\":\"Enter Message Here\"},\"b\":\"coolChan-bnel\"}]}")));
+
+        stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch1/leave"))
+                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\", \"action\": \"leave\"}")));
+
+        SubscribeCallback sub1 = new SubscribeCallback() {
+            @Override
+            public void status(Pubnub pubnub, PNStatus status) {
+                if (status.getAffectedChannels().size() == 1 && status.getOperation() == PNOperationType.PNUnsubscribeOperation){
+                    if (status.getAffectedChannels().get(0).equals("ch1")) {
+                        statusRecieved.set(true);
+                    }
+                }
+            }
+
+            @Override
+            public void message(Pubnub pubnub, PNMessageResult message) {
+                List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/subscribe/mySubscribeKey/ch2,ch2-pnpres/0.*")));
+
+                if (!requests.isEmpty()) {
+                    messageRecieved.set(true);
+                }
+
+            }
+
+            @Override
+            public void presence(Pubnub pubnub, PNPresenceEventResult presence) {
+            }
+        };
+
+        pubnub.addListener(sub1);
+
+        pubnub.subscribe().channels(Arrays.asList("ch1", "ch2")).withPresence().execute();
+
+        pubnub.unsubscribe().channels(Arrays.asList("ch1")).execute();
+
+        Awaitility.await().atMost(2, TimeUnit.SECONDS).untilAtomic(messageRecieved, org.hamcrest.core.IsEqual.equalTo(true));
+        Awaitility.await().atMost(2, TimeUnit.SECONDS).untilAtomic(statusRecieved, org.hamcrest.core.IsEqual.equalTo(true));
+    }
 
 
 }

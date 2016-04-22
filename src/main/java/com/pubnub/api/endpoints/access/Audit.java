@@ -67,7 +67,7 @@ public class Audit extends Endpoint<Envelope<PNAccessManagerAuditData>, PNAccess
 
         signInput += PubnubUtil.preparePamArguments(signParams);
 
-        signature = signSHA256(this.pubnub.getConfiguration().getSecretKey(), signInput);
+        signature = PubnubUtil.signSHA256(this.pubnub.getConfiguration().getSecretKey(), signInput);
 
         queryParams.put("timestamp", String.valueOf(timestamp));
         queryParams.put("signature", signature);

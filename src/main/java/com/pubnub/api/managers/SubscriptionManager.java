@@ -122,8 +122,8 @@ public class SubscriptionManager {
             .channels(unsubscribeOperation.getChannels()).channelGroups(unsubscribeOperation.getChannelGroups())
             .async(new PNCallback<Boolean>() {
                 @Override
-                public void onResponse(Boolean result, PNErrorStatus status) {
-                    int moose = 10;
+                public void onResponse(Boolean result, PNStatus status) {
+                    announce(status);
                 }
         });
 
@@ -185,7 +185,7 @@ public class SubscriptionManager {
                 .timetoken(timetoken).region(region)
                 .async(new PNCallback<SubscribeEnvelope>() {
                     @Override
-                    public void onResponse(SubscribeEnvelope result, PNErrorStatus status) {
+                    public void onResponse(SubscribeEnvelope result, PNStatus status) {
                         if (status.isError()) {
                             announce(status);
                             return;
@@ -237,7 +237,7 @@ public class SubscriptionManager {
                 .channels(presenceChannels).channelGroups(presenceChannelGroups).state(stateStorage)
                 .async(new PNCallback<Boolean>() {
                     @Override
-                    public void onResponse(Boolean result, PNErrorStatus status) {
+                    public void onResponse(Boolean result, PNStatus status) {
                         int moose = 10;
                     }
                 });
@@ -272,7 +272,6 @@ public class SubscriptionManager {
                 pnPresenceDetailsData.setTimestamp(Long.valueOf(presencePayload.get("timestamp").toString()));
 
                 pnPresenceEventResult.setData(pnPresenceEventData);
-                pnPresenceEventResult.setOperation(PNOperationType.PNSubscribeOperation);
 
                 announce(pnPresenceEventResult);
             } else {
@@ -281,10 +280,10 @@ public class SubscriptionManager {
                 try {
                     extractedMessage = processMessage(message.getPayload());
                 } catch (PubnubException e) {
-                    PNStatus pnStatus = new PNStatus();
-                    pnStatus.setError(true);
-                    pnStatus.setOperation(PNOperationType.PNSubscribeOperation);
-                    pnStatus.setCategory(PNStatusCategory.PNDecryptionErrorCategory);
+                    PNStatus pnStatus = PNStatus.builder().error(true)
+                            .operation(PNOperationType.PNSubscribeOperation)
+                            .category(PNStatusCategory.PNDecryptionErrorCategory)
+                            .build();
 
                     announce(pnStatus);
                     return;
@@ -293,7 +292,6 @@ public class SubscriptionManager {
                 PNMessageResult pnMessageResult = new PNMessageResult();
                 PNMessageData pnMessageData = new PNMessageData();
 
-                pnMessageResult.setOperation(PNOperationType.PNSubscribeOperation);
                 pnMessageData.setMessage(extractedMessage);
 
                 pnMessageData.setActualChannel((subscriptionMatch != null) ? channel : null);

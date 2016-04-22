@@ -7,6 +7,6 @@ import java.util.List;
 
 @Getter
 @Setter
-public class PNPresenceWhereNowResult extends PNResult {
+public class PNPresenceWhereNowResult {
     private List<String> channels;
 }

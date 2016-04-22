@@ -5,6 +5,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class PNTimeResult extends PNResult {
+public class PNTimeResult {
     private Long timetoken;
 }

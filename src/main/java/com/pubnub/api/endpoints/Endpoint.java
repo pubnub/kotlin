@@ -6,9 +6,9 @@ import com.pubnub.api.core.Pubnub;
 import com.pubnub.api.core.PubnubError;
 import com.pubnub.api.core.PubnubException;
 import com.pubnub.api.core.enums.PNOperationType;
+import com.pubnub.api.core.enums.PNStatusCategory;
 import com.pubnub.api.core.models.consumer_facing.PNErrorData;
-import com.pubnub.api.core.models.consumer_facing.PNErrorStatus;
-import com.pubnub.api.core.utils.Base64;
+import com.pubnub.api.core.models.consumer_facing.PNStatus;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
@@ -16,13 +16,9 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -78,13 +74,11 @@ public abstract class Endpoint<Input, Output> {
         } catch (PubnubException e) {
 
             PubnubException pubnubException = PubnubException.builder()
-                    .pubnubError(PubnubError.PNERROBJ_INVALID_ARGUMENTS)
+                    .pubnubError(PubnubError.PNERROBJ_HTTP_ERROR)
                     .errormsg(e.getMessage())
                     .build();
 
-            PNErrorStatus pnErrorStatus = new PNErrorStatus();
-            writeFieldsToResponse(null, pnErrorStatus, true, pubnubException);
-            callback.onResponse(null, pnErrorStatus);
+            callback.onResponse(null, createStatusResponse(PNStatusCategory.PNBadRequestCategory, null, pubnubException));
         }
 
         call.enqueue(new retrofit2.Callback<Input>() {
@@ -92,7 +86,7 @@ public abstract class Endpoint<Input, Output> {
             @Override
             public void onResponse(final Call<Input> call, final Response<Input> response) {
                 Output callbackResponse;
-                PNErrorStatus pnErrorStatus = new PNErrorStatus();
+                PNStatus pnErrorStatus = PNStatus.builder().build();
 
 
                 if (!response.isSuccessful() || response.code() != 200) {
@@ -111,8 +105,7 @@ public abstract class Endpoint<Input, Output> {
                             .statusCode(response.code())
                             .build();
 
-                    writeFieldsToResponse(response, pnErrorStatus, true, ex);
-                    callback.onResponse(null, pnErrorStatus);
+                    callback.onResponse(null, createStatusResponse(PNStatusCategory.PNBadRequestCategory, response, ex));
                     return;
                 }
 
@@ -126,26 +119,23 @@ public abstract class Endpoint<Input, Output> {
                             .statusCode(response.code())
                             .build();
 
-                    writeFieldsToResponse(response, pnErrorStatus, true, pubnubException);
-                    callback.onResponse(null, pnErrorStatus);
+                    callback.onResponse(null, createStatusResponse(PNStatusCategory.PNBadRequestCategory, response, pubnubException));
                     return;
                 }
 
-                writeFieldsToResponse(response, pnErrorStatus, false, null);
-                callback.onResponse(callbackResponse, pnErrorStatus);
+                callback.onResponse(callbackResponse, createStatusResponse(null, response, null));
             }
 
             @Override
             public void onFailure(final Call<Input> call, final Throwable throwable) {
-                PNErrorStatus pnErrorStatus = new PNErrorStatus();
+                PNStatus pnErrorStatus = PNStatus.builder().build();
 
                 PubnubException pubnubException = PubnubException.builder()
                         .pubnubError(PubnubError.PNERROBJ_HTTP_ERROR)
                         .errormsg(throwable.getMessage())
                         .build();
 
-                writeFieldsToResponse(null, pnErrorStatus, true, pubnubException);
-                callback.onResponse(null, pnErrorStatus);
+                callback.onResponse(null, createStatusResponse(PNStatusCategory.PNBadRequestCategory, null, pubnubException));
 
             }
         });
@@ -153,49 +143,36 @@ public abstract class Endpoint<Input, Output> {
         return call;
     }
 
-    private void writeFieldsToResponse(Response<Input> response, PNErrorStatus pnErrorStatus, boolean isError, Exception throwable) {
+    private PNStatus createStatusResponse(PNStatusCategory category, Response<Input> response, Exception throwable) {
+        PNStatus.PNStatusBuilder pnStatus = PNStatus.builder();
+
+        if (response == null || throwable != null) {
+            pnStatus.error(true);
+        }
+
+        if (throwable != null) {
+            PNErrorData pnErrorData = new PNErrorData(throwable.getMessage(), throwable);
+            pnStatus.errorData(pnErrorData);
+        }
 
         if (response != null) {
-            pnErrorStatus.setStatusCode(response.code());
+            pnStatus.statusCode(response.code());
+            pnStatus.TLSEnabled(response.raw().request().url().isHttps());
+            pnStatus.origin(response.raw().request().url().host());
+            pnStatus.uuid(response.raw().request().url().queryParameter("uuid"));
+            pnStatus.authKey(response.raw().request().url().queryParameter("auth"));
+            pnStatus.clientRequest(response.raw().request());
         }
 
-        pnErrorStatus.setOperation(getOperationType());
-        pnErrorStatus.setError(isError);
 
-        if (isError) {
-            PNErrorData errorData = new PNErrorData(null, throwable);
-            pnErrorStatus.setErrorData(errorData);
-        }
+        pnStatus.operation(getOperationType());
+        pnStatus.category(category);
+        pnStatus.affectedChannels(getAffectedChannels());
+        pnStatus.affectedChannelGroups(getAffectedChannelGroups());
 
+        return pnStatus.build();
     }
-
-    protected String signSHA256(final String key, final String data) throws PubnubException {
-        Mac sha256HMAC;
-        byte[] hmacData;
-        SecretKeySpec secretKey = new SecretKeySpec(key.getBytes(), "HmacSHA256");
-
-        try {
-            sha256HMAC = Mac.getInstance("HmacSHA256");
-        } catch (NoSuchAlgorithmException e) {
-            throw PubnubException.builder().pubnubError(PubnubError.PNERROBJ_CRYPTO_ERROR).errormsg(e.getMessage()).build();
-        }
-
-        try {
-            sha256HMAC.init(secretKey);
-        } catch (InvalidKeyException e) {
-            throw PubnubException.builder().pubnubError(PubnubError.PNERROBJ_CRYPTO_ERROR).errormsg(e.getMessage()).build();
-        }
-
-        try {
-            hmacData = sha256HMAC.doFinal(data.getBytes("UTF-8"));
-        } catch (UnsupportedEncodingException e) {
-            throw PubnubException.builder().pubnubError(PubnubError.PNERROBJ_CRYPTO_ERROR).errormsg(e.getMessage()).build();
-        }
-
-        return new String(Base64.encode(hmacData, 0)).replace('+', '-').replace('/', '_');
-    }
-
-
+    
     protected final Retrofit createRetrofit() {
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.readTimeout(this.getRequestTimeout(), TimeUnit.SECONDS);
@@ -223,7 +200,8 @@ public abstract class Endpoint<Input, Output> {
         // add the auth key for publish and subscribe.
         if (this.pubnub.getConfiguration().getAuthKey() != null) {
             if (getOperationType() == PNOperationType.PNPublishOperation
-                    || getOperationType() == PNOperationType.PNSubscribeOperation) {
+                    || getOperationType() == PNOperationType.PNSubscribeOperation
+                    || getOperationType() == PNOperationType.PNHistoryOperation) {
                 params.put("auth", pubnub.getConfiguration().getAuthKey());
             }
         }
@@ -241,5 +219,14 @@ public abstract class Endpoint<Input, Output> {
     protected abstract int getConnectTimeout();
     protected abstract int getRequestTimeout();
     protected abstract PNOperationType getOperationType();
+
+    protected List<String> getAffectedChannels() {
+        return null;
+    }
+
+    protected List<String> getAffectedChannelGroups() {
+        return null;
+    }
+
 
 }

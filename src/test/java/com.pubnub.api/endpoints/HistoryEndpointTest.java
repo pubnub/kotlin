@@ -1,22 +1,23 @@
 package com.pubnub.api.endpoints;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import com.pubnub.api.core.Pubnub;
 import com.pubnub.api.core.PubnubException;
 import com.pubnub.api.core.models.consumer_facing.PNHistoryResult;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
+import org.junit.Test;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static org.junit.Assert.assertEquals;
 
 
 public class HistoryEndpointTest extends TestHarness {
@@ -79,6 +80,48 @@ public class HistoryEndpointTest extends TestHarness {
         Assert.assertTrue(response.getMessages().get(1).getTimetoken().equals(2222L));
         Assert.assertEquals(((JsonNode) response.getMessages().get(1).getEntry()).get("a").asInt(), 33);
         Assert.assertEquals(((JsonNode) response.getMessages().get(1).getEntry()).get("b").asInt(), 44);
+    }
+
+    @Test
+    public void testSyncAuthSuccess() throws PubnubException, JsonProcessingException {
+
+        pubnub.getConfiguration().setAuthKey("authKey");
+
+        List<Object> testArray = new ArrayList<Object>();
+        List<Object> historyItems = new ArrayList<Object>();
+        ObjectMapper mapper = new ObjectMapper();
+
+
+        Map<String, Object> historyEnvelope1 = new HashMap<String, Object>();
+        Map<String, Object> historyItem1 = new HashMap<String, Object>();
+        historyItem1.put("a", 11);
+        historyItem1.put("b", 22);
+        historyEnvelope1.put("timetoken", 1111);
+        historyEnvelope1.put("message", historyItem1);
+
+        Map<String, Object> historyEnvelope2 = new HashMap<String, Object>();
+        Map<String, Object> historyItem2 = new HashMap<String, Object>();
+        historyItem2.put("a", 33);
+        historyItem2.put("b", 44);
+        historyEnvelope2.put("timetoken", 2222);
+        historyEnvelope2.put("message", historyItem2);
+
+        historyItems.add(historyEnvelope1);
+        historyItems.add(historyEnvelope2);
+
+        testArray.add(historyItems);
+        testArray.add(1234);
+        testArray.add(4321);
+
+        stubFor(get(urlPathEqualTo("/v2/history/sub-key/mySubscribeKey/channel/niceChannel"))
+                .willReturn(aResponse().withBody(mapper.writeValueAsString(testArray))));
+
+
+        PNHistoryResult response = partialHistory.channel("niceChannel").includeTimetoken(true).sync();
+
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
+        assertEquals("authKey", requests.get(0).queryParameter("auth").firstValue());
+        assertEquals(1, requests.size());
     }
 
 
