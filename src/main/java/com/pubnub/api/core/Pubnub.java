@@ -7,6 +7,11 @@ import com.pubnub.api.endpoints.History;
 import com.pubnub.api.endpoints.Time;
 import com.pubnub.api.endpoints.access.Audit;
 import com.pubnub.api.endpoints.access.Grant;
+import com.pubnub.api.endpoints.channel_groups.AddChannelChannelGroup;
+import com.pubnub.api.endpoints.channel_groups.AllChannelsChannelGroup;
+import com.pubnub.api.endpoints.channel_groups.DeleteChannelGroup;
+import com.pubnub.api.endpoints.channel_groups.ListAllChannelGroup;
+import com.pubnub.api.endpoints.channel_groups.RemoveChannelChannelGroup;
 import com.pubnub.api.endpoints.presence.GetState;
 import com.pubnub.api.endpoints.presence.HereNow;
 import com.pubnub.api.endpoints.presence.SetState;
@@ -119,6 +124,26 @@ public class Pubnub {
         return new Publish(this, publishSequenceManager);
     }
 
+    public final ListAllChannelGroup listChannelsForChannelGroup() {
+        return new ListAllChannelGroup(this);
+    }
+
+    public final AllChannelsChannelGroup allChannelsInChannelGroup() {
+        return new AllChannelsChannelGroup(this);
+    }
+
+    public final AddChannelChannelGroup addChannelsToChannelGroup() {
+        return new AddChannelChannelGroup(this);
+    }
+
+    public final RemoveChannelChannelGroup removeChannelsFromChannelGroup() {
+        return new RemoveChannelChannelGroup(this);
+    }
+
+    public final DeleteChannelGroup deleteChannelGroup() {
+        return new DeleteChannelGroup(this);
+    }
+
     // public methods
 
     /**
@@ -207,5 +232,4 @@ public class Pubnub {
         return prop.getProperty("version");
 
     }
-
 }
