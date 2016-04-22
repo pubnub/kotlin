@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class PNPresenceEventResult extends PNResult {
+public class PNPresenceEventResult {
 
     private PNPresenceEventData data;
 

@@ -7,7 +7,7 @@ import com.pubnub.api.callbacks.PNCallback;
 import com.pubnub.api.core.PubnubException;
 import com.pubnub.api.core.enums.PushType;
 import com.pubnub.api.core.models.PublishData;
-import com.pubnub.api.core.models.consumer_facing.PNErrorStatus;
+import com.pubnub.api.core.models.consumer_facing.PNStatus;
 import com.pubnub.api.endpoints.TestHarness;
 import org.junit.Before;
 import org.junit.Rule;
@@ -87,7 +87,7 @@ public class CreatePushNotificationTest extends TestHarness {
         instance.pushType(PushType.APNS).channel("testChannel")
                 .pushPayload(Arrays.asList("a", "b")).async(new PNCallback<PublishData>() {
             @Override
-            public void onResponse(PublishData result, PNErrorStatus status) {
+            public void onResponse(PublishData result, PNStatus status) {
                     List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
                     assertEquals(1, requests.size());
                     assertEquals("myUUID", requests.get(0).queryParameter("uuid").firstValue());
@@ -108,7 +108,7 @@ public class CreatePushNotificationTest extends TestHarness {
         instance.pushType(PushType.GCM).channel("testChannel")
                 .pushPayload(Arrays.asList("a", "b")).async(new PNCallback<PublishData>() {
             @Override
-            public void onResponse(PublishData result, PNErrorStatus status) {
+            public void onResponse(PublishData result, PNStatus status) {
                 List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
                 assertEquals(1, requests.size());
                 assertEquals("myUUID", requests.get(0).queryParameter("uuid").firstValue());
@@ -131,7 +131,7 @@ public class CreatePushNotificationTest extends TestHarness {
         instance.pushType(PushType.MPNS).channel("testChannel")
                 .pushPayload(Arrays.asList("a", "b")).async(new PNCallback<PublishData>() {
             @Override
-            public void onResponse(PublishData result, PNErrorStatus status) {
+            public void onResponse(PublishData result, PNStatus status) {
                 List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
                 assertEquals(1, requests.size());
                 assertEquals("myUUID", requests.get(0).queryParameter("uuid").firstValue());

@@ -5,7 +5,7 @@ import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import com.jayway.awaitility.Awaitility;
 import com.pubnub.api.callbacks.TimeCallback;
 import com.pubnub.api.core.PubnubException;
-import com.pubnub.api.core.models.consumer_facing.PNErrorStatus;
+import com.pubnub.api.core.models.consumer_facing.PNStatus;
 import com.pubnub.api.core.models.consumer_facing.PNTimeResult;
 import org.junit.Before;
 import org.junit.Rule;
@@ -74,7 +74,7 @@ public class TimeEndpointTest extends TestHarness {
         partialTime.async(new TimeCallback(){
 
             @Override
-            public void onResponse(PNTimeResult result, PNErrorStatus status) {
+            public void onResponse(PNTimeResult result, PNStatus status) {
                 assertTrue(result.getTimetoken().equals(14593046077243110L));
                 atomic.incrementAndGet();
             }
@@ -92,7 +92,7 @@ public class TimeEndpointTest extends TestHarness {
         partialTime.async(new TimeCallback(){
 
             @Override
-            public void onResponse(PNTimeResult result, PNErrorStatus status) {
+            public void onResponse(PNTimeResult result, PNStatus status) {
                 if (status != null) {
                     atomic.incrementAndGet();
                 }
@@ -112,7 +112,7 @@ public class TimeEndpointTest extends TestHarness {
         partialTime.async(new TimeCallback(){
 
             @Override
-            public void onResponse(PNTimeResult result, PNErrorStatus status) {
+            public void onResponse(PNTimeResult result, PNStatus status) {
                 if (status != null) {
                     atomic.incrementAndGet();
                 }
@@ -132,7 +132,7 @@ public class TimeEndpointTest extends TestHarness {
         partialTime.async(new TimeCallback(){
 
             @Override
-            public void onResponse(PNTimeResult result, PNErrorStatus status) {
+            public void onResponse(PNTimeResult result, PNStatus status) {
                 if (status != null) {
                     atomic.incrementAndGet();
                 }

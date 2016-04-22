@@ -48,6 +48,9 @@ public class max_test {
             }
         });
 
+        PNStatus pnErrorStatus = PNStatus.builder().build();;
+
+
         Map<String, Object> state = new HashMap<>();
         state.put("max", "moose");
 

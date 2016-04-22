@@ -6,8 +6,9 @@ import com.pubnub.api.core.Pubnub;
 import com.pubnub.api.core.PubnubError;
 import com.pubnub.api.core.PubnubException;
 import com.pubnub.api.core.enums.PNOperationType;
+import com.pubnub.api.core.enums.PNStatusCategory;
 import com.pubnub.api.core.models.consumer_facing.PNErrorData;
-import com.pubnub.api.core.models.consumer_facing.PNErrorStatus;
+import com.pubnub.api.core.models.consumer_facing.PNStatus;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
@@ -76,9 +77,8 @@ public abstract class Endpoint<Input, Output> {
                     .errormsg(e.getMessage())
                     .build();
 
-            PNErrorStatus pnErrorStatus = new PNErrorStatus();
-            writeFieldsToResponse(null, pnErrorStatus, true, pubnubException);
-            callback.onResponse(null, pnErrorStatus);
+            PNStatus pnErrorStatus = PNStatus.builder().build();
+            callback.onResponse(null, createStatusResponse(null, pubnubException));
         }
 
         call.enqueue(new retrofit2.Callback<Input>() {
@@ -86,7 +86,7 @@ public abstract class Endpoint<Input, Output> {
             @Override
             public void onResponse(final Call<Input> call, final Response<Input> response) {
                 Output callbackResponse;
-                PNErrorStatus pnErrorStatus = new PNErrorStatus();
+                PNStatus pnErrorStatus = PNStatus.builder().build();
 
 
                 if (!response.isSuccessful() || response.code() != 200) {
@@ -105,8 +105,7 @@ public abstract class Endpoint<Input, Output> {
                             .statusCode(response.code())
                             .build();
 
-                    writeFieldsToResponse(response, pnErrorStatus, true, ex);
-                    callback.onResponse(null, pnErrorStatus);
+                    callback.onResponse(null, createStatusResponse(response, ex));
                     return;
                 }
 
@@ -120,26 +119,23 @@ public abstract class Endpoint<Input, Output> {
                             .statusCode(response.code())
                             .build();
 
-                    writeFieldsToResponse(response, pnErrorStatus, true, pubnubException);
-                    callback.onResponse(null, pnErrorStatus);
+                    callback.onResponse(null, createStatusResponse(response, pubnubException));
                     return;
                 }
 
-                writeFieldsToResponse(response, pnErrorStatus, false, null);
-                callback.onResponse(callbackResponse, pnErrorStatus);
+                callback.onResponse(callbackResponse, createStatusResponse(response, null));
             }
 
             @Override
             public void onFailure(final Call<Input> call, final Throwable throwable) {
-                PNErrorStatus pnErrorStatus = new PNErrorStatus();
+                PNStatus pnErrorStatus = PNStatus.builder().build();
 
                 PubnubException pubnubException = PubnubException.builder()
                         .pubnubError(PubnubError.PNERROBJ_HTTP_ERROR)
                         .errormsg(throwable.getMessage())
                         .build();
 
-                writeFieldsToResponse(null, pnErrorStatus, true, pubnubException);
-                callback.onResponse(null, pnErrorStatus);
+                callback.onResponse(null, createStatusResponse(null, pubnubException));
 
             }
         });
@@ -147,8 +143,31 @@ public abstract class Endpoint<Input, Output> {
         return call;
     }
 
-    private void writeFieldsToResponse(Response<Input> response, PNErrorStatus pnErrorStatus, boolean isError, Exception throwable) {
+    private PNStatus createStatusResponse(PNStatusCategory category, Response<Input> response, Exception throwable) {
+        PNStatus.PNStatusBuilder pnStatus = PNStatus.builder();
 
+        if (response == null || throwable != null) {
+            pnStatus.error(true);
+        }
+
+        if (throwable != null) {
+            PNErrorData pnErrorData = new PNErrorData(throwable.getMessage(), throwable);
+            pnStatus.errorData(pnErrorData);
+        }
+
+        if (response != null) {
+            pnStatus.statusCode(response.code());
+            pnStatus.TLSEnabled(response.raw().request().url().isHttps());
+            pnStatus.origin(response.raw().request().url().host());
+            pnStatus.uuid(response.raw().request().url().queryParameter("uuid"));
+            pnStatus.authKey(response.raw().request().url().queryParameter("auth"));
+        }
+
+
+        pnStatus.operation(getOperationType());
+        pnStatus.category(category);
+
+        /*
         if (response != null) {
             pnErrorStatus.setStatusCode(response.code());
         }
@@ -160,7 +179,9 @@ public abstract class Endpoint<Input, Output> {
             PNErrorData errorData = new PNErrorData(null, throwable);
             pnErrorStatus.setErrorData(errorData);
         }
+        */
 
+        return pnStatus.build();
     }
     
     protected final Retrofit createRetrofit() {

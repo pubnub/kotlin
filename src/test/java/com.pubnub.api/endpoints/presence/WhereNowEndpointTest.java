@@ -5,8 +5,8 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.jayway.awaitility.Awaitility;
 import com.pubnub.api.callbacks.WhereNowCallback;
 import com.pubnub.api.core.PubnubException;
-import com.pubnub.api.core.models.consumer_facing.PNErrorStatus;
 import com.pubnub.api.core.models.consumer_facing.PNPresenceWhereNowResult;
+import com.pubnub.api.core.models.consumer_facing.PNStatus;
 import com.pubnub.api.endpoints.TestHarness;
 import org.junit.Before;
 import org.junit.Rule;
@@ -88,7 +88,7 @@ public class WhereNowEndpointTest extends TestHarness {
         partialWhereNow.async(new WhereNowCallback(){
 
             @Override
-            public void onResponse(PNPresenceWhereNowResult result, PNErrorStatus status) {
+            public void onResponse(PNPresenceWhereNowResult result, PNStatus status) {
                 assertThat(result.getChannels(), org.hamcrest.Matchers.contains("a", "b"));
                 atomic.incrementAndGet();
             }
@@ -108,7 +108,7 @@ public class WhereNowEndpointTest extends TestHarness {
         partialWhereNow.async(new WhereNowCallback(){
 
             @Override
-            public void onResponse(PNPresenceWhereNowResult result, PNErrorStatus status) {
+            public void onResponse(PNPresenceWhereNowResult result, PNStatus status) {
                 atomic.incrementAndGet();
             }
 
@@ -129,7 +129,7 @@ public class WhereNowEndpointTest extends TestHarness {
         partialWhereNow.async(new WhereNowCallback(){
 
             @Override
-            public void onResponse(PNPresenceWhereNowResult result, PNErrorStatus status) {
+            public void onResponse(PNPresenceWhereNowResult result, PNStatus status) {
                 atomic.incrementAndGet();
             }
         });
@@ -151,7 +151,7 @@ public class WhereNowEndpointTest extends TestHarness {
         partialWhereNow.async(new WhereNowCallback(){
 
             @Override
-            public void onResponse(PNPresenceWhereNowResult result, PNErrorStatus status) {
+            public void onResponse(PNPresenceWhereNowResult result, PNStatus status) {
                 atomic.incrementAndGet();
             }
         });
