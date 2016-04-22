@@ -73,12 +73,11 @@ public abstract class Endpoint<Input, Output> {
         } catch (PubnubException e) {
 
             PubnubException pubnubException = PubnubException.builder()
-                    .pubnubError(PubnubError.PNERROBJ_INVALID_ARGUMENTS)
+                    .pubnubError(PubnubError.PNERROBJ_HTTP_ERROR)
                     .errormsg(e.getMessage())
                     .build();
 
-            PNStatus pnErrorStatus = PNStatus.builder().build();
-            callback.onResponse(null, createStatusResponse(null, pubnubException));
+            callback.onResponse(null, createStatusResponse(PNStatusCategory.PNBadRequestCategory, null, pubnubException));
         }
 
         call.enqueue(new retrofit2.Callback<Input>() {
@@ -105,7 +104,7 @@ public abstract class Endpoint<Input, Output> {
                             .statusCode(response.code())
                             .build();
 
-                    callback.onResponse(null, createStatusResponse(response, ex));
+                    callback.onResponse(null, createStatusResponse(PNStatusCategory.PNBadRequestCategory, response, ex));
                     return;
                 }
 
@@ -119,11 +118,11 @@ public abstract class Endpoint<Input, Output> {
                             .statusCode(response.code())
                             .build();
 
-                    callback.onResponse(null, createStatusResponse(response, pubnubException));
+                    callback.onResponse(null, createStatusResponse(PNStatusCategory.PNBadRequestCategory, response, pubnubException));
                     return;
                 }
 
-                callback.onResponse(callbackResponse, createStatusResponse(response, null));
+                callback.onResponse(callbackResponse, createStatusResponse(null, response, null));
             }
 
             @Override
@@ -135,7 +134,7 @@ public abstract class Endpoint<Input, Output> {
                         .errormsg(throwable.getMessage())
                         .build();
 
-                callback.onResponse(null, createStatusResponse(null, pubnubException));
+                callback.onResponse(null, createStatusResponse(PNStatusCategory.PNBadRequestCategory, null, pubnubException));
 
             }
         });
@@ -166,20 +165,6 @@ public abstract class Endpoint<Input, Output> {
 
         pnStatus.operation(getOperationType());
         pnStatus.category(category);
-
-        /*
-        if (response != null) {
-            pnErrorStatus.setStatusCode(response.code());
-        }
-
-        pnErrorStatus.setOperation(getOperationType());
-        pnErrorStatus.setError(isError);
-
-        if (isError) {
-            PNErrorData errorData = new PNErrorData(null, throwable);
-            pnErrorStatus.setErrorData(errorData);
-        }
-        */
 
         return pnStatus.build();
     }
