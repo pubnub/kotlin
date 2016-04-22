@@ -23,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Properties;
 
 
 @Getter
@@ -194,24 +195,35 @@ public class Pubnub {
      * @return Stringified representation of the SDK version.
      */
     private String fetchSDKVersion() {
-        byte[] encoded;
+        Properties prop = new Properties();
+        InputStream in = ClassLoader.getSystemClassLoader().getResourceAsStream("version.properties");
         try {
-            encoded = Files.readAllBytes(Paths.get(Pubnub.class.getClassLoader().getResource("version.properties").getPath()));
+            prop.load(in);
         } catch (IOException e) {
             return "N/A";
         }
-        try {
-            return new String(encoded, "UTF-8").trim();
-        } catch (UnsupportedEncodingException e) {
-            return "N/A";
-        }
+
+        return prop.getProperty("version");
+
+
+//        byte[] encoded;
+//        try {
+//            encoded = Files.readAllBytes(Paths.get(Pubnub.class.getClassLoader().getResource("version.properties").getPath()));
+//        } catch (IOException e) {
+//            return "N/A";
+//        }
+//        try {
+//            return new String(encoded, "UTF-8").trim();
+//        } catch (UnsupportedEncodingException e) {
+//            return "N/A";
+//        }
     }
 
-    public final ChannelGroupListAll.ChannelGroupListAllBuilder channelGroupListAll() {return ChannelGroupListAll.builder().pubnub(this); }
-    public final AllChannelsChannelGroup.AllChannelsChannelGroupBuilder allChannelsChannelGroup() {return AllChannelsChannelGroup.builder().pubnub(this);}
-    public final AddChannelChannelGroup.AddChannelChannelGroupBuilder addChannelChannelGroup() {return AddChannelChannelGroup.builder().pubnub(this);}
-    public final RemoveChannel.RemoveChannelBuilder removeChannel() {return RemoveChannel.builder().pubnub(this);}
-    public final DeleteChannelGroup.DeleteChannelGroupBuilder deleteChannelGroup() {return DeleteChannelGroup.builder().pubnub(this); }
-
-
+    public final ListAllChannelGroup listAllChannelGroup() {
+        return new ListAllChannelGroup(this);
+    }
+    public final AllChannelsChannelGroup allChannelsChannelGroup(){return new AllChannelsChannelGroup(this);}
+    public final AddChannelChannelGroup addChannelChannelGroup() {return new AddChannelChannelGroup(this);}
+    public final RemoveChannel removeChannel() {return new RemoveChannel(this);}
+    public final DeleteChannelGroup deleteChannelGroup() {return new DeleteChannelGroup(this);}
 }

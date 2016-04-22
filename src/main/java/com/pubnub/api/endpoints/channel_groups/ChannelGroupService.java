@@ -10,7 +10,7 @@ import java.util.Map;
 
 public interface ChannelGroupService {
     @GET("v2/channel-registration/sub-key/{subKey}/channel-group")
-    Call<Envelope<Object>> ChannelGroupListAll(@Path("subKey") String subKey,
+    Call<Envelope<Object>> ListAllChannelGroup(@Path("subKey") String subKey,
                                                @QueryMap Map<String, String> options);
 
     @GET("v2/channel-registration/sub-key/{subKey}/channel-group/{group}")

@@ -3,10 +3,9 @@ package com.pubnub.api.endpoints.channel_groups;
 import com.pubnub.api.core.Pubnub;
 import com.pubnub.api.core.PubnubError;
 import com.pubnub.api.core.PubnubException;
-import com.pubnub.api.core.PubnubUtil;
 import com.pubnub.api.core.enums.PNOperationType;
 import com.pubnub.api.core.models.Envelope;
-import com.pubnub.api.core.models.consumer_facing.PNChannelGroupsAllChannelsResult;
+import com.pubnub.api.core.models.consumer_facing.PNChannelGroupsListAllResult;
 import com.pubnub.api.endpoints.Endpoint;
 
 import java.util.ArrayList;
@@ -18,11 +17,11 @@ import retrofit2.Call;
 import retrofit2.Response;
 
 @Accessors(chain = true, fluent = true)
-public class DeleteChannelGroup extends Endpoint<Envelope,Boolean> {
+public class ListAllChannelGroup extends Endpoint<Envelope<Object>,PNChannelGroupsListAllResult>
+{
     @Setter private String uuid;
-    @Setter private String group;
 
-    public DeleteChannelGroup(Pubnub pubnub) {
+    public ListAllChannelGroup(Pubnub pubnub) {
         super(pubnub);
     }
 
@@ -32,18 +31,28 @@ public class DeleteChannelGroup extends Endpoint<Envelope,Boolean> {
     }
 
     @Override
-    protected Call<Envelope> doWork(Map<String, String> params) {
-        String channelCSV;
+    protected Call<Envelope<Object>> doWork(Map<String, String> params) {
         ChannelGroupService service = this.createRetrofit().create(ChannelGroupService.class);
-
         params.put("uuid", this.uuid != null ? this.uuid : pubnub.getConfiguration().getUuid());
 
-        return service.DeleteChannelGroup(pubnub.getConfiguration().getSubscribeKey(), group, params);
+        return service.ListAllChannelGroup(pubnub.getConfiguration().getSubscribeKey(), params);
     }
 
     @Override
-    protected Boolean createResponse(Response<Envelope> input) throws PubnubException {
-        return true;
+    protected PNChannelGroupsListAllResult createResponse(Response<Envelope<Object>> input) throws PubnubException {
+        Map<String, Object> stateMappings;
+
+        if (input.body() == null || input.body().getPayload() == null) {
+            throw PubnubException.builder().pubnubError(PubnubError.PNERROBJ_PARSING_ERROR).build();
+        }
+
+        PNChannelGroupsListAllResult pnChannelGroupsListAllResult = new PNChannelGroupsListAllResult();
+
+        stateMappings = (Map<String, Object>) input.body().getPayload();
+        List<String> groups = (ArrayList<String>) stateMappings.get("groups");
+        pnChannelGroupsListAllResult.setGroups(groups);
+
+        return pnChannelGroupsListAllResult;
     }
 
     protected int getConnectTimeout() {
@@ -56,7 +65,7 @@ public class DeleteChannelGroup extends Endpoint<Envelope,Boolean> {
 
     @Override
     protected PNOperationType getOperationType() {
-        return PNOperationType.PNRemoveGroupOperation;
+        return PNOperationType.PNChannelGroupsOperation;
     }
 
 }

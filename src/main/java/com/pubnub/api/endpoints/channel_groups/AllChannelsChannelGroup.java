@@ -1,55 +1,59 @@
 package com.pubnub.api.endpoints.channel_groups;
 
-import com.pubnub.api.core.PnResponse;
 import com.pubnub.api.core.Pubnub;
 import com.pubnub.api.core.PubnubError;
 import com.pubnub.api.core.PubnubException;
+import com.pubnub.api.core.enums.PNOperationType;
 import com.pubnub.api.core.models.Envelope;
+import com.pubnub.api.core.models.consumer_facing.PNChannelGroupsAllChannelsResult;
 import com.pubnub.api.endpoints.Endpoint;
-import lombok.Builder;
-import lombok.Singular;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import retrofit2.Call;
 import retrofit2.Response;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-@Builder
-public class AllChannelsChannelGroup extends Endpoint<Envelope<Object>,Map<String, Object>>
+@Accessors(chain = true, fluent = true)
+public class AllChannelsChannelGroup extends Endpoint<Envelope<Object>,PNChannelGroupsAllChannelsResult>
 {
-    private Pubnub pubnub;
-    private String group;
-    private String uuid;
+    @Setter private String uuid;
+    @Setter private String group;
 
-
-    @Override
-    protected boolean validateParams() {return true;}
-
-    @Override
-    protected final Call<Envelope<Object>> doWork() throws PubnubException {
-        Map<String, String> params = new HashMap<String, String>();
-
-        if (group==null) throw new PubnubException(PubnubError.PNERROBJ_INVALID_ARGUMENTS,"group cannot be null");
-
-        ChannelGroupService service = this.createRetrofit(this.pubnub).create(ChannelGroupService.class);
-        params.put("uuid", this.uuid != null ? this.uuid : pubnub.getConfiguration().getUuid());
-
-        return service.AllChannelsChannelGroup(pubnub.getConfiguration().getSubscribeKey(), group , params);
+    public AllChannelsChannelGroup(Pubnub pubnub) {
+        super(pubnub);
     }
 
     @Override
-    protected PnResponse<Map<String, Object>> createResponse(Response<Envelope<Object>> input) {
-        PnResponse<Map<String, Object>> pnResponse = new PnResponse<Map<String, Object>>();
-        pnResponse.fillFromRetrofit(input);
+    protected boolean validateParams() {
+        return true;
+    }
 
-        if (input.body() != null && input.body().getPayload()!=null) {
-            Map<String, Object> stateMappings;
-            stateMappings = (Map<String, Object>) input.body().getPayload();
-            pnResponse.setPayload(stateMappings);
+    @Override
+    protected Call<Envelope<Object>> doWork(Map<String, String> params) {
+        ChannelGroupService service = this.createRetrofit().create(ChannelGroupService.class);
+        params.put("uuid", this.uuid != null ? this.uuid : pubnub.getConfiguration().getUuid());
+
+        return service.AllChannelsChannelGroup(pubnub.getConfiguration().getSubscribeKey(), group, params);
+    }
+
+    @Override
+    protected PNChannelGroupsAllChannelsResult createResponse(Response<Envelope<Object>> input) throws PubnubException {
+        Map<String, Object> stateMappings;
+
+        if (input.body() == null || input.body().getPayload() == null) {
+            throw PubnubException.builder().pubnubError(PubnubError.PNERROBJ_PARSING_ERROR).build();
         }
 
-        return pnResponse;
+        PNChannelGroupsAllChannelsResult pnChannelGroupsAllChannelsResult = new PNChannelGroupsAllChannelsResult();
+
+        stateMappings = (Map<String, Object>) input.body().getPayload();
+        List<String> channels = (ArrayList<String>) stateMappings.get("channels");
+        pnChannelGroupsAllChannelsResult.setChannels(channels);
+
+        return pnChannelGroupsAllChannelsResult;
     }
 
     protected int getConnectTimeout() {
@@ -60,5 +64,9 @@ public class AllChannelsChannelGroup extends Endpoint<Envelope<Object>,Map<Strin
         return pubnub.getConfiguration().getNonSubscribeRequestTimeout();
     }
 
+    @Override
+    protected PNOperationType getOperationType() {
+        return PNOperationType.PNChannelsForGroupOperation;
+    }
 
 }

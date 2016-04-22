@@ -1,60 +1,45 @@
 package com.pubnub.api.endpoints.channel_groups;
 
+import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.pubnub.api.core.PubnubException;
-import com.pubnub.api.endpoints.EndpointTest;
-import okhttp3.mockwebserver.MockResponse;
-import okhttp3.mockwebserver.MockWebServer;
+import com.pubnub.api.core.models.consumer_facing.PNChannelGroupsAllChannelsResult;
+import com.pubnub.api.core.models.consumer_facing.PNChannelGroupsListAllResult;
+import com.pubnub.api.endpoints.TestHarness;
 import org.junit.Before;
+import org.junit.Rule;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.junit.Assert.assertThat;
 
-public class AllChannelsChannelGroupEndpointTest extends EndpointTest
-{
-    private MockWebServer server;
-    private AllChannelsChannelGroup.AllChannelsChannelGroupBuilder partialAllChannelsChannelGroup;
+public class AllChannelsChannelGroupEndpointTest extends TestHarness {
+    private AllChannelsChannelGroup partialAllChannelsChannelGroup;
+
+    @Rule
+    public WireMockRule wireMockRule = new WireMockRule();
 
     @Before
     public void beforeEach() throws IOException {
-        server = new MockWebServer();
-        server.start();
-        partialAllChannelsChannelGroup = this.createPubNubInstance(server).allChannelsChannelGroup();
+        partialAllChannelsChannelGroup = this.createPubNubInstance(8080).allChannelsChannelGroup();
     }
 
     @org.junit.Test
     public void testSyncSuccess() throws IOException, PubnubException, InterruptedException {
-        server.enqueue(new MockResponse().setBody("{\"status\": 200, \"message\": \"OK\", \"payload\": { \"group\": \"myGroup\", \"channels\": [\"ch1\",\"ch2\"]}, \"service\": \"ChannelGroups\"}"));
-        Map<String, Object> response = partialAllChannelsChannelGroup.group("MyGroup").build().sync();
-        List<String> channels = (List<String>) response.get("channels");
-        assertThat(channels, org.hamcrest.Matchers.contains("ch1", "ch2"));
-        assertEquals("/v2/channel-registration/sub-key/mySubscribeKey/channel-group/MyGroup?uuid=myUUID", server.takeRequest().getPath());
+        stubFor(get(urlPathEqualTo("/v2/channel-registration/sub-key/mySubscribeKey/channel-group/groupA"))
+                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": [\"a\",\"b\"]}, \"service\": \"ChannelGroups\"}")));
+
+        PNChannelGroupsAllChannelsResult response = partialAllChannelsChannelGroup.group("groupA").sync();
+        assertThat(response.getChannels(), org.hamcrest.Matchers.contains("a", "b"));
     }
 
     @org.junit.Test
     public void testSyncSuccessCustomUUID() throws IOException, PubnubException, InterruptedException {
-        server.enqueue(new MockResponse().setBody("{\"status\": 200, \"message\": \"OK\", \"payload\": { \"group\": \"myGroup\", \"channels\": [\"ch1\",\"ch2\"]}, \"service\": \"ChannelGroups\"}"));
-        Map<String, Object> response = partialAllChannelsChannelGroup.group("MyGroup").uuid("myCustomUUID").build().sync();
-        List<String> channels = (List<String>) response.get("channels");
-        assertThat(channels, org.hamcrest.Matchers.contains("ch1", "ch2"));
-        assertEquals("/v2/channel-registration/sub-key/mySubscribeKey/channel-group/MyGroup?uuid=myCustomUUID", server.takeRequest().getPath());
+        stubFor(get(urlPathEqualTo("/v2/channel-registration/sub-key/mySubscribeKey/channel-group/groupA"))
+                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": [\"a\",\"b\"]}, \"service\": \"ChannelGroups\"}")));
+
+        PNChannelGroupsAllChannelsResult response = partialAllChannelsChannelGroup.group("groupA").uuid("myCustomUUID").sync();
+        assertThat(response.getChannels(), org.hamcrest.Matchers.contains("a", "b"));
     }
-
-    @org.junit.Test(expected=PubnubException.class)
-    public void testFailedPayloadSync() throws PubnubException {
-        server.enqueue(new MockResponse().setBody("{\"status\": 200, \"message\": \"OK\", \"payload\": \"groups\": [\"a\",\"b\"]}, \"service\": \"ChannelGroups\"}"));
-        Map<String, Object> response = partialAllChannelsChannelGroup.group("MyGroup").build().sync();
-    }
-
-    @org.junit.Test(expected=PubnubException.class)
-    public void testFailedGroupMissedSync() throws PubnubException {
-        server.enqueue(new MockResponse().setBody("{\"status\": 200, \"message\": \"OK\", \"payload\": { \"group\": \"myGroup\", \"channels\": [\"ch1\",\"ch2\"]}, \"service\": \"ChannelGroups\"}"));
-        Map<String, Object> response = partialAllChannelsChannelGroup.build().sync();
-    }
-
-
 
 }

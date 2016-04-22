@@ -1,44 +1,46 @@
 package com.pubnub.api.endpoints.channel_groups;
 
+import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.pubnub.api.core.PubnubException;
-import com.pubnub.api.endpoints.EndpointTest;
-import okhttp3.mockwebserver.MockResponse;
-import okhttp3.mockwebserver.MockWebServer;
+import com.pubnub.api.core.models.consumer_facing.PNChannelGroupsAllChannelsResult;
+import com.pubnub.api.core.models.consumer_facing.PNChannelGroupsListAllResult;
+import com.pubnub.api.endpoints.TestHarness;
 import org.junit.Before;
+import org.junit.Rule;
 
 import java.io.IOException;
+import java.util.Arrays;
 
-import static org.junit.Assert.assertEquals;
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static org.junit.Assert.assertThat;
 
-public class DeleteChannelGroupEndpointTest extends EndpointTest
-{
-    private MockWebServer server;
-    private DeleteChannelGroup.DeleteChannelGroupBuilder partialDeleteChannelGroup;
+public class DeleteChannelGroupEndpointTest extends TestHarness {
+    private DeleteChannelGroup partialDeleteChannelGroup;
+
+    @Rule
+    public WireMockRule wireMockRule = new WireMockRule();
 
     @Before
     public void beforeEach() throws IOException {
-        server = new MockWebServer();
-        server.start();
-        partialDeleteChannelGroup = this.createPubNubInstance(server).deleteChannelGroup();
+        partialDeleteChannelGroup = this.createPubNubInstance(8080).deleteChannelGroup();
     }
 
     @org.junit.Test
     public void testSyncSuccess() throws IOException, PubnubException, InterruptedException {
-        server.enqueue(new MockResponse().setBody("{\"status\": 200, \"message\": \"OK\", \"service\": \"ChannelGroups\"}"));
-        partialDeleteChannelGroup.group_name("MyGroup").build().sync();
-        assertEquals("/v2/channel-registration/sub-key/mySubscribeKey/channel-group/MyGroup/remove?uuid=myUUID", server.takeRequest().getPath());
+        stubFor(get(urlPathEqualTo("/v2/channel-registration/sub-key/mySubscribeKey/channel-group/groupA/remove"))
+                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {}, \"service\": \"ChannelGroups\"}")));
+
+        boolean response = partialDeleteChannelGroup.group("groupA").sync();
+        assertThat(response, org.hamcrest.Matchers.equalTo(true));
     }
 
     @org.junit.Test
     public void testSyncSuccessCustomUUID() throws IOException, PubnubException, InterruptedException {
-        server.enqueue(new MockResponse().setBody("{\"status\": 200, \"message\": \"OK\", \"service\": \"ChannelGroups\"}"));
-        partialDeleteChannelGroup.group_name("MyGroup").uuid("myCustomUUID").build().sync();
-        assertEquals("/v2/channel-registration/sub-key/mySubscribeKey/channel-group/MyGroup/remove?uuid=myCustomUUID", server.takeRequest().getPath());
+        stubFor(get(urlPathEqualTo("/v2/channel-registration/sub-key/mySubscribeKey/channel-group/groupA/remove"))
+                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {}, \"service\": \"ChannelGroups\"}")));
+
+        boolean response = partialDeleteChannelGroup.group("groupA").uuid("myCustomUUID").sync();
+        assertThat(response, org.hamcrest.Matchers.equalTo(true));
     }
 
-    @org.junit.Test(expected=PubnubException.class)
-    public void testFailedMissedGroupSync() throws PubnubException {
-        server.enqueue(new MockResponse().setBody("{\"status\": 200, \"message\": \"OK\", \"payload\": { \"group\": \"myGroup\", \"channels\": [\"ch1\",\"ch2\"]}, \"service\": \"ChannelGroups\"}"));
-        partialDeleteChannelGroup.build().sync();
-    }
 }

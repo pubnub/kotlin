@@ -31,7 +31,6 @@ public class WhereNowEndpointTest extends TestHarness {
 
     @org.junit.Test
     public void testSyncSuccess() throws IOException, PubnubException, InterruptedException {
-
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/uuid/myUUID"))
                 .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": [\"a\",\"b\"]}, \"service\": \"Presence\"}")));
 

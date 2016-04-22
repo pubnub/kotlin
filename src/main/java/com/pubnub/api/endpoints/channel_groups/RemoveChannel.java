@@ -1,54 +1,55 @@
 package com.pubnub.api.endpoints.channel_groups;
 
-import com.pubnub.api.core.*;
+import com.pubnub.api.core.Pubnub;
+import com.pubnub.api.core.PubnubError;
+import com.pubnub.api.core.PubnubException;
+import com.pubnub.api.core.PubnubUtil;
+import com.pubnub.api.core.enums.PNOperationType;
 import com.pubnub.api.core.models.Envelope;
+import com.pubnub.api.core.models.consumer_facing.PNChannelGroupsAllChannelsResult;
 import com.pubnub.api.endpoints.Endpoint;
-import lombok.Builder;
-import lombok.Singular;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import retrofit2.Call;
 import retrofit2.Response;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+@Accessors(chain = true, fluent = true)
+public class RemoveChannel extends Endpoint<Envelope,Boolean> {
+    @Setter private String uuid;
+    @Setter private String group;
+    @Setter private List<String> channels;
 
-@Builder
-public class RemoveChannel extends Endpoint<Envelope,Void>
-{
-    private Pubnub pubnub;
-    private String group;
-    @Singular
-    private List<String> channels;
-    private String uuid;
 
-    @Override
-    protected boolean validateParams() {return true;}
-
-    @Override
-    protected final Call<Envelope> doWork() throws PubnubException {
-        Map<String, String> params = new HashMap<String, String>();
-        String channelCSV;
-
-        if (group==null) throw new PubnubException(PubnubError.PNERROBJ_INVALID_ARGUMENTS,"group cannot be null");
-        if (channels.size() == 0) throw new PubnubException(PubnubError.PNERROBJ_INVALID_ARGUMENTS,"channel cannot be null");
-
-        ChannelGroupService service = this.createRetrofit(this.pubnub).create(ChannelGroupService.class);
-
-        channelCSV = PubnubUtil.joinString(channels, ",");
-
-        params.put("remove", channelCSV);
-        params.put("uuid", this.uuid != null ? this.uuid : pubnub.getConfiguration().getUuid());
-
-        return service.RemoveChannel(pubnub.getConfiguration().getSubscribeKey(), group , params);
+    public RemoveChannel(Pubnub pubnub) {
+        super(pubnub);
     }
 
     @Override
-    protected PnResponse createResponse(Response<Envelope> input) {
-        PnResponse pnResponse = new PnResponse();
-        pnResponse.fillFromRetrofit(input);
-        pnResponse.setPayload("");
+    protected boolean validateParams() {
+        return true;
+    }
 
-        return pnResponse;
+    @Override
+    protected Call<Envelope> doWork(Map<String, String> params) {
+        String channelCSV;
+        ChannelGroupService service = this.createRetrofit().create(ChannelGroupService.class);
+
+        if (channels.size() > 0) {
+            params.put("add", PubnubUtil.joinString(channels, ","));
+        }
+
+        params.put("uuid", this.uuid != null ? this.uuid : pubnub.getConfiguration().getUuid());
+
+        return service.RemoveChannel(pubnub.getConfiguration().getSubscribeKey(), group, params);
+    }
+
+    @Override
+    protected Boolean createResponse(Response<Envelope> input) throws PubnubException {
+        return true;
     }
 
     protected int getConnectTimeout() {
@@ -58,4 +59,10 @@ public class RemoveChannel extends Endpoint<Envelope,Void>
     protected int getRequestTimeout() {
         return pubnub.getConfiguration().getNonSubscribeRequestTimeout();
     }
+
+    @Override
+    protected PNOperationType getOperationType() {
+        return PNOperationType.PNRemoveChannelsFromGroupOperation;
+    }
+
 }
