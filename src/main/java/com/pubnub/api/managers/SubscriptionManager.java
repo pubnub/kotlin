@@ -123,7 +123,7 @@ public class SubscriptionManager {
             .async(new PNCallback<Boolean>() {
                 @Override
                 public void onResponse(Boolean result, PNStatus status) {
-                    int moose = 10;
+                    announce(status);
                 }
         });
 

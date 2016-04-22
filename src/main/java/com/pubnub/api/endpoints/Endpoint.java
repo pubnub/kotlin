@@ -18,6 +18,7 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -160,11 +161,14 @@ public abstract class Endpoint<Input, Output> {
             pnStatus.origin(response.raw().request().url().host());
             pnStatus.uuid(response.raw().request().url().queryParameter("uuid"));
             pnStatus.authKey(response.raw().request().url().queryParameter("auth"));
+            pnStatus.clientRequest(response.raw().request());
         }
 
 
         pnStatus.operation(getOperationType());
         pnStatus.category(category);
+        pnStatus.affectedChannels(getAffectedChannels());
+        pnStatus.affectedChannelGroups(getAffectedChannelGroups());
 
         return pnStatus.build();
     }
@@ -214,5 +218,14 @@ public abstract class Endpoint<Input, Output> {
     protected abstract int getConnectTimeout();
     protected abstract int getRequestTimeout();
     protected abstract PNOperationType getOperationType();
+
+    protected List<String> getAffectedChannels() {
+        return null;
+    }
+
+    protected List<String> getAffectedChannelGroups() {
+        return null;
+    }
+
 
 }

@@ -5,6 +5,8 @@ import com.pubnub.api.core.enums.PNStatusCategory;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.List;
+
 @Builder
 @Getter
 public class PNStatus {
@@ -22,6 +24,9 @@ public class PNStatus {
     private String origin;
     private Object clientRequest;
 
+    // send back channel, channel groups that were affected by this operation
+    List<String> affectedChannels;
+    List<String> affectedChannelGroups;
 
     /*
     public void retry(){

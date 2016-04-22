@@ -65,4 +65,14 @@ public class Leave extends Endpoint<Envelope, Boolean> {
         return PNOperationType.PNUnsubscribeOperation;
     }
 
+    @Override
+    protected List<String> getAffectedChannels() {
+        return channels;
+    }
+
+    @Override
+    protected List<String> getAffectedChannelGroups() {
+        return channelGroups;
+    }
+
 }
