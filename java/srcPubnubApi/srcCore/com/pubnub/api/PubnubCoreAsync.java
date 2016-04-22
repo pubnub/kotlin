@@ -68,8 +68,9 @@ abstract class PubnubCoreAsync extends PubnubCore implements PubnubAsyncInterfac
 
     String[] getPresenceHeartbeatUrl() {
         String channelString = channelSubscriptions.getItemStringNoPresence();
+        String channelGroupString = channelGroupSubscriptions.getItemStringNoPresence();
 
-        if (channelString.length() <= 0) {
+        if (channelString.length() <= 0 && channelGroupString.length() <= 0) {
             return null;
         }
         return new String[] { getPubnubUrl(), "v2", "presence", "sub-key", this.SUBSCRIBE_KEY, "channel",
@@ -98,6 +99,11 @@ abstract class PubnubCoreAsync extends PubnubCore implements PubnubAsyncInterfac
             Hashtable parameters = PubnubUtil.hashtableClone(params);
             if (parameters.get("uuid") == null)
                 parameters.put("uuid", UUID);
+
+            String channelGroupString = channelGroupSubscriptions.getItemStringNoPresence();
+            if (channelGroupString.length() > 0) {
+                parameters.put("channel-group", channelGroupString);
+            }
 
             String st = getState();
             if (st != null)
