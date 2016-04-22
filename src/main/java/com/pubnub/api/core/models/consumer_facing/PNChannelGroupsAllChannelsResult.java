@@ -7,6 +7,6 @@ import java.util.List;
 
 @Getter
 @Setter
-public class PNChannelGroupsAllChannelsResult extends PNResult {
+public class PNChannelGroupsAllChannelsResult {
     private List<String> channels;
 }
