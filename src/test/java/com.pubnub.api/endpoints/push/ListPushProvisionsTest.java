@@ -15,17 +15,17 @@ import java.util.List;
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.junit.Assert.assertEquals;
 
-public class ListProvisionsTest extends TestHarness {
+public class ListPushProvisionsTest extends TestHarness {
 
     @Rule
     public WireMockRule wireMockRule = new WireMockRule();
 
-    private ListProvisions instance;
+    private ListPushProvisions instance;
 
 
     @Before
     public void beforeEach() throws IOException {
-        instance = this.createPubNubInstance(8080).listPushProvisions();
+        instance = this.createPubNubInstance(8080).auditPushChannelProvisions();
     }
 
     @Test

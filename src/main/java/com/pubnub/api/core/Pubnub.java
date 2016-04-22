@@ -7,19 +7,13 @@ import com.pubnub.api.endpoints.History;
 import com.pubnub.api.endpoints.Time;
 import com.pubnub.api.endpoints.access.Audit;
 import com.pubnub.api.endpoints.access.Grant;
-import com.pubnub.api.endpoints.channel_groups.AddChannelChannelGroup;
-import com.pubnub.api.endpoints.channel_groups.AllChannelsChannelGroup;
-import com.pubnub.api.endpoints.channel_groups.DeleteChannelGroup;
-import com.pubnub.api.endpoints.channel_groups.ListAllChannelGroup;
-import com.pubnub.api.endpoints.channel_groups.RemoveChannelChannelGroup;
+import com.pubnub.api.endpoints.channel_groups.*;
 import com.pubnub.api.endpoints.presence.GetState;
 import com.pubnub.api.endpoints.presence.HereNow;
 import com.pubnub.api.endpoints.presence.SetState;
 import com.pubnub.api.endpoints.presence.WhereNow;
 import com.pubnub.api.endpoints.pubsub.Publish;
-import com.pubnub.api.endpoints.push.CreatePushNotification;
-import com.pubnub.api.endpoints.push.ListProvisions;
-import com.pubnub.api.endpoints.push.ModifyProvisions;
+import com.pubnub.api.endpoints.push.*;
 import com.pubnub.api.managers.BasePathManager;
 import com.pubnub.api.managers.PublishSequenceManager;
 import com.pubnub.api.managers.SubscriptionManager;
@@ -78,12 +72,20 @@ public class Pubnub {
 
     // start push
 
-    public final ModifyProvisions modifyPushProvisions() {
-        return new ModifyProvisions(this);
+    public final AddChannelsToPush addPushNotificationsOnChannels() {
+        return new AddChannelsToPush(this);
     }
 
-    public final ListProvisions listPushProvisions() {
-        return new ListProvisions(this);
+    public final RemoveChannelsFromPush removePushNotificationsFromChannels() {
+        return new RemoveChannelsFromPush(this);
+    }
+
+    public final RemoveAllPushChannelsForDevice removeAllPushNotificationsFromDeviceWithPushToken() {
+        return new RemoveAllPushChannelsForDevice(this);
+    }
+
+    public final ListPushProvisions auditPushChannelProvisions() {
+        return new ListPushProvisions(this);
     }
 
     public final CreatePushNotification createPushNotification() {

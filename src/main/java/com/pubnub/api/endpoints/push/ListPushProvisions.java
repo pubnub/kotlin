@@ -14,12 +14,12 @@ import java.util.List;
 import java.util.Map;
 
 @Accessors(chain = true, fluent = true)
-public class ListProvisions extends Endpoint<List<String>, List<String>> {
+public class ListPushProvisions extends Endpoint<List<String>, List<String>> {
 
     @Setter private PushType pushType;
     @Setter private String deviceId;
 
-    public ListProvisions(Pubnub pubnub) {
+    public ListPushProvisions(Pubnub pubnub) {
         super(pubnub);
     }
 
@@ -50,7 +50,7 @@ public class ListProvisions extends Endpoint<List<String>, List<String>> {
 
     @Override
     protected PNOperationType getOperationType() {
-        return PNOperationType.PNPushNotificationListChannelsOperation;
+        return PNOperationType.PNPushNotificationEnabledChannelsOperation;
     }
 
 }

@@ -7,7 +7,6 @@ import com.pubnub.api.core.enums.PNOperationType;
 import com.pubnub.api.core.enums.PushType;
 import com.pubnub.api.endpoints.Endpoint;
 import lombok.Setter;
-import lombok.Singular;
 import lombok.experimental.Accessors;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -17,18 +16,16 @@ import java.util.List;
 import java.util.Map;
 
 @Accessors(chain = true, fluent = true)
-public class ModifyProvisions extends Endpoint<List<Object>, Boolean> {
+public class RemoveChannelsFromPush extends Endpoint<List<Object>, Boolean> {
 
     @Setter private PushType pushType;
-    @Setter private @Singular List<String> addChannels;
-    @Setter private @Singular List<String> removeChannels;
+    @Setter private List<String> channels;
     @Setter String deviceId;
-    @Setter private boolean removeAllChannels;
 
-    public ModifyProvisions(Pubnub pubnub) {
+    public RemoveChannelsFromPush(Pubnub pubnub) {
         super(pubnub);
-        addChannels = new ArrayList<>();
-        removeChannels = new ArrayList<>();
+
+        channels = new ArrayList<>();
     }
 
     @Override
@@ -41,40 +38,29 @@ public class ModifyProvisions extends Endpoint<List<Object>, Boolean> {
             return false;
         }
 
+        if (channels.size() == 0) {
+            return false;
+        }
+
         return true;
     }
 
-    public ModifyProvisions removeAllChannels() {
-        removeAllChannels = true;
-        return this;
-    }
-
     @Override
-    protected Call<List<Object>> doWork(Map<String, String> params) throws PubnubException {
-        params.put("type", pushType.name().toLowerCase());
+    protected Call<List<Object>> doWork(Map<String, String> baseParams) throws PubnubException {
+        baseParams.put("type", pushType.name().toLowerCase());
 
-        if (addChannels.size() != 0) {
-            params.put("add", PubnubUtil.joinString(addChannels, ","));
-        }
-
-        if (removeChannels.size() != 0) {
-            params.put("remove", PubnubUtil.joinString(removeChannels, ","));
+        if (channels.size() != 0) {
+            baseParams.put("remove", PubnubUtil.joinString(channels, ","));
         }
 
         PushService service = this.createRetrofit().create(PushService.class);
-
-        if (this.removeAllChannels) {
-            return service.removeAllChannelsForDevice(pubnub.getConfiguration().getSubscribeKey(), deviceId, params);
-        } else {
-            return service.modifyChannelsForDevice(pubnub.getConfiguration().getSubscribeKey(), deviceId, params);
-        }
-
+        return service.modifyChannelsForDevice(pubnub.getConfiguration().getSubscribeKey(), deviceId, baseParams);
 
     }
 
     @Override
     protected Boolean createResponse(Response<List<Object>> input) throws PubnubException {
-        return true;
+        return null;
     }
 
     protected int getConnectTimeout() {
@@ -87,7 +73,6 @@ public class ModifyProvisions extends Endpoint<List<Object>, Boolean> {
 
     @Override
     protected PNOperationType getOperationType() {
-        return PNOperationType.PNPushNotificationModifiedChannelsOperations;
+        return PNOperationType.PNRemovePushNotificationsFromChannelsOperation;
     }
-
 }

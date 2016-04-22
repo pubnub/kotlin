@@ -5,38 +5,27 @@ package com.pubnub.api.core.enums;
  */
 public enum PNOperationType {
     PNSubscribeOperation,
-
     PNUnsubscribeOperation,
-
     PNPublishOperation,
-
     PNHistoryOperation,
-
     PNWhereNowOperation,
-    PNHereNowOperation,
 
     PNHeartbeatOperation,
-
     PNSetStateOperation,
-    PNGetState,
-
-
     PNAddChannelsToGroupOperation,
     PNRemoveChannelsFromGroupOperation,
     PNChannelGroupsOperation,
     PNRemoveGroupOperation,
     PNChannelsForGroupOperation,
-
-    PNPushNotificationModifiedChannelsOperations,
-    PNPushNotificationListChannelsOperation,
-
     PNPushNotificationEnabledChannelsOperation,
     PNAddPushNotificationsOnChannelsOperation,
     PNRemovePushNotificationsFromChannelsOperation,
     PNRemoveAllPushNotificationsOperation,
-
-    PNAccessManagerAudit,
-    PNAccessManagerGrant,
-
     PNTimeOperation,
+
+    // CREATED
+    PNHereNowOperation,
+    PNGetState,
+    PNAccessManagerAudit,
+    PNAccessManagerGrant
 }
