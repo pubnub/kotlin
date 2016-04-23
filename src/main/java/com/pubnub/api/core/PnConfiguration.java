@@ -76,6 +76,11 @@ public class PnConfiguration {
     private PNHeartbeatNotificationOptions heartbeatNotificationOptions;
 
     /**
+     * filterExpression used as part of PSV2 specification.
+     */
+    @Setter private String filterExpression;
+
+    /**
      * Initialize the PnConfiguration with default values
      */
     public PnConfiguration() {

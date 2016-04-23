@@ -185,11 +185,15 @@ public class SubscriptionManager {
         subscribeCall =  new Subscribe(pubnub)
                 .channels(combinedChannels).channelGroups(combinedChannelGroups)
                 .timetoken(timetoken).region(region)
+                .filterExpression(pubnub.getConfiguration().getFilterExpression())
                 .async(new PNCallback<SubscribeEnvelope>() {
                     @Override
                     public void onResponse(SubscribeEnvelope result, PNStatus status) {
                         if (status.isError()) {
                             announce(status);
+
+                            // TODO: handle reachability here.
+
                             return;
                         }
 
