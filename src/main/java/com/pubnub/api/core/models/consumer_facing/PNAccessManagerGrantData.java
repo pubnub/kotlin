@@ -2,6 +2,7 @@ package com.pubnub.api.core.models.consumer_facing;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.JsonNode;
 import lombok.Getter;
 
 import java.util.Map;
@@ -18,5 +19,11 @@ public class PNAccessManagerGrantData {
     Map<String, PNAccessManagerKeysData> channels;
 
     @JsonProperty("channel-groups")
-    Map<String, PNAccessManagerKeysData> channelGroups;
+    JsonNode channelGroups;
+
+    @JsonProperty("auths")
+    Map<String, PNAccessManagerKeyData> authKeys;
+
+    String channel;
+
 }

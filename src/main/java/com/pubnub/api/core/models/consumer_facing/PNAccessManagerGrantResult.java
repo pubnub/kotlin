@@ -1,10 +1,20 @@
 package com.pubnub.api.core.models.consumer_facing;
 
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
 
-@Data
+import java.util.Map;
+
+@Builder
+@Getter
 public class PNAccessManagerGrantResult {
 
-    PNAccessManagerGrantData data;
+    String level;
+    int ttl;
+    String subscribeKey;
+
+    Map<String, Map<String,PNAccessManagerKeyData>> channels;
+
+    Map<String, Map<String,PNAccessManagerKeyData>> channelGroups;
 
 }

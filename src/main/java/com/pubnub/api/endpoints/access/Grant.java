@@ -1,19 +1,24 @@
 package com.pubnub.api.endpoints.access;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pubnub.api.core.Pubnub;
+import com.pubnub.api.core.PubnubError;
 import com.pubnub.api.core.PubnubException;
 import com.pubnub.api.core.PubnubUtil;
 import com.pubnub.api.core.enums.PNOperationType;
 import com.pubnub.api.core.models.Envelope;
 import com.pubnub.api.core.models.consumer_facing.PNAccessManagerGrantData;
 import com.pubnub.api.core.models.consumer_facing.PNAccessManagerGrantResult;
+import com.pubnub.api.core.models.consumer_facing.PNAccessManagerKeyData;
+import com.pubnub.api.core.models.consumer_facing.PNAccessManagerKeysData;
 import com.pubnub.api.endpoints.Endpoint;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import retrofit2.Call;
 import retrofit2.Response;
 
-import java.util.Date;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +30,7 @@ public class Grant extends Endpoint<Envelope<PNAccessManagerGrantData>, PNAccess
     @Setter private boolean read;
     @Setter private boolean write;
     @Setter private boolean manage;
-    @Setter private int ttl;
+    @Setter private Integer ttl;
 
 
     @Setter private List<String> authKeys;
@@ -44,67 +49,94 @@ public class Grant extends Endpoint<Envelope<PNAccessManagerGrantData>, PNAccess
     @Override
     protected Call<Envelope<PNAccessManagerGrantData>> doWork(Map<String, String> queryParams) throws PubnubException {
         String signature;
-        Map<String, String> signParams = new HashMap<>();
-        int timestamp = (int) ((new Date().getTime()) / 1000);
-
-
-        String r = (read) ? "1" : "0";
-        String w = (write) ? "1" : "0";
-        String m = (manage) ? "1" : "0";
 
         String signInput = this.pubnub.getConfiguration().getSubscribeKey() + "\n"
                 + this.pubnub.getConfiguration().getPublishKey() + "\n"
                 + "grant" + "\n";
 
-        signParams.put("timestamp", String.valueOf(timestamp));
+        queryParams.put("timestamp", String.valueOf(pubnub.getTimestamp()));
 
-        if (channels.size() > 0) {
-            signParams.put("channel", PubnubUtil.joinString(channels, ","));
+        if (channels != null && channels.size() > 0) {
             queryParams.put("channel", PubnubUtil.joinString(channels, ","));
         }
 
-        if (channelGroups.size() > 0) {
-            signParams.put("channel-group", PubnubUtil.joinString(channelGroups, ","));
+        if (channelGroups != null && channelGroups.size() > 0) {
             queryParams.put("channel-group", PubnubUtil.joinString(channelGroups, ","));
         }
 
-        if (authKeys.size() > 0) {
-            signParams.put("auth", PubnubUtil.joinString(authKeys, ","));
+        if (authKeys != null & authKeys.size() > 0) {
             queryParams.put("auth", PubnubUtil.joinString(authKeys, ","));
         }
 
-        if (ttl >= -1) {
-            signParams.put("ttl", String.valueOf(ttl));
+        if (ttl != null && ttl >= -1) {
             queryParams.put("ttl", String.valueOf(ttl));
         }
 
-        signParams.put("r", r);
-        queryParams.put("r", r);
+        queryParams.put("r", (read) ? "1" : "0");
+        queryParams.put("w", (write) ? "1" : "0");
+        queryParams.put("m", (manage) ? "1" : "0");
 
-        signParams.put("w", w);
-        queryParams.put("w", w);
-
-        signParams.put("m", m);
-        queryParams.put("m", m);
-
-        signInput += PubnubUtil.preparePamArguments(signParams);
+        signInput += PubnubUtil.preparePamArguments(queryParams);
 
         signature = PubnubUtil.signSHA256(this.pubnub.getConfiguration().getSecretKey(), signInput);
 
-        queryParams.put("timestamp", String.valueOf(timestamp));
         queryParams.put("signature", signature);
-
+        
         AccessManagerService service = this.createRetrofit().create(AccessManagerService.class);
         return service.grant(pubnub.getConfiguration().getSubscribeKey(), queryParams);
     }
 
     @Override
     protected PNAccessManagerGrantResult createResponse(Response<Envelope<PNAccessManagerGrantData>> input) throws PubnubException {
-        PNAccessManagerGrantResult pnAccessManagerGrantResult = new PNAccessManagerGrantResult();
+        ObjectMapper mapper = new ObjectMapper();
+        PNAccessManagerGrantResult.PNAccessManagerGrantResultBuilder pnAccessManagerGrantResult = PNAccessManagerGrantResult.builder();
 
-        pnAccessManagerGrantResult.setData(input.body().getPayload());
+        if (input.body() == null || input.body().getPayload() == null) {
+            throw PubnubException.builder().pubnubError(PubnubError.PNERROBJ_PARSING_ERROR).build();
+        }
 
-        return pnAccessManagerGrantResult;
+        PNAccessManagerGrantData data = input.body().getPayload();
+        Map<String, Map<String, PNAccessManagerKeyData>> constructedChannels = new HashMap<>();
+        Map<String, Map<String, PNAccessManagerKeyData>> constructedGroups = new HashMap<>();
+
+        // we have a case of a singular channel.
+        if (data.getChannel() != null) {
+            constructedChannels.put(data.getChannel(), data.getAuthKeys());
+        }
+
+        if (channelGroups != null) {
+            if (channelGroups.size() == 1) {
+                constructedGroups.put(data.getChannelGroups().asText(), data.getAuthKeys());
+            } else if (channelGroups.size() > 1) {
+                try {
+                    HashMap<String, PNAccessManagerKeysData> channelGroupKeySet = mapper.readValue(data.getChannelGroups().toString(),
+                            new TypeReference<HashMap<String, PNAccessManagerKeysData>>() {});
+
+                    for (String fetchedChannelGroup : channelGroupKeySet.keySet()) {
+                        constructedGroups.put(fetchedChannelGroup, channelGroupKeySet.get(fetchedChannelGroup).getAuthKeys());
+                    }
+
+                } catch (IOException e) {
+                    throw PubnubException.builder().pubnubError(PubnubError.PNERROBJ_PARSING_ERROR).errormsg(e.getMessage()).build();
+                }
+            }
+        }
+
+
+        if (data.getChannels() != null) {
+            for (String fetchedChannel : data.getChannels().keySet()) {
+                constructedChannels.put(fetchedChannel, data.getChannels().get(fetchedChannel).getAuthKeys());
+            }
+        }
+
+
+        return pnAccessManagerGrantResult
+                .subscribeKey(data.getSubscribeKey())
+                .level(data.getLevel())
+                .ttl(data.getTtl())
+                .channels(constructedChannels)
+                .channelGroups(constructedGroups)
+                .build();
     }
 
     protected int getConnectTimeout() {

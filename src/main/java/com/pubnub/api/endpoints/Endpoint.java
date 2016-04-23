@@ -41,7 +41,10 @@ public abstract class Endpoint<Input, Output> {
         try {
             serverResponse = call.execute();
         } catch (IOException e) {
-            throw PubnubException.builder().pubnubError(PubnubError.PNERROBJ_HTTP_ERROR).build();
+            throw PubnubException.builder()
+                    .pubnubError(PubnubError.PNERROBJ_PARSING_ERROR)
+                    .errormsg(e.toString())
+                    .build();
         }
 
         if (!serverResponse.isSuccessful() || serverResponse.code() != 200) {
