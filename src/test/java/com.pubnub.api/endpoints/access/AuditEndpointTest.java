@@ -16,6 +16,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.github.tomakehurst.wiremock.client.WireMock.matching;
+import static org.junit.Assert.assertEquals;
 
 public class AuditEndpointTest extends TestHarness {
 
@@ -39,6 +41,12 @@ public class AuditEndpointTest extends TestHarness {
     public void testSuccessChannelGroupSync() throws PubnubException {
 
         stubFor(get(urlPathEqualTo("/v1/auth/audit/sub-key/mySubscribeKey"))
+                .withQueryParam("pnsdk", matching("Java/suchJava"))
+                .withQueryParam("channel-group", matching("cg1"))
+                .withQueryParam("auth", matching("key1"))
+                .withQueryParam("signature", matching("IjnQ0J7c0SYT3gHBxrIC_8OkDHTqsF9KnI0SlBRLNfg%3D%0A"))
+                .withQueryParam("uuid", matching("myUUID"))
+                .withQueryParam("timestamp", matching("1337"))
                 .willReturn(aResponse().withBody("{\"message\":\"Success\",\"payload\":{\"level\":\"channel-group+auth\",\"subscribe_key\":\"sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f\",\"channel-group\":\"cg2\",\"auths\":{\"key1\":{\"r\":1,\"m\":1,\"w\":1}}},\"service\":\"Access Manager\",\"status\":200}")));
 
         PNAccessManagerAuditResult pnAccessManagerAuditResult = partialAudit.channelGroup("cg1").authKeys(Arrays.asList("key1")).sync();
@@ -50,8 +58,8 @@ public class AuditEndpointTest extends TestHarness {
         Assert.assertEquals("channel-group+auth", pnAccessManagerAuditResult.getData().getLevel());
         Assert.assertEquals("sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f", pnAccessManagerAuditResult.getData().getSubscribeKey());
 
-        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
-        Assert.assertEquals("/v1/auth/audit/sub-key/mySubscribeKey?pnsdk=Java/suchJava&channel-group=cg1&auth=key1&signature=IjnQ0J7c0SYT3gHBxrIC_8OkDHTqsF9KnI0SlBRLNfg%3D%0A&uuid=myUUID&timestamp=1337", requests.get(0).getUrl());
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v1/auth/audit/sub-key/mySubscribeKey.*")));
+        assertEquals(1, requests.size());
 
     }
 
@@ -59,6 +67,12 @@ public class AuditEndpointTest extends TestHarness {
     public void testSuccessChannelSync() throws PubnubException {
 
         stubFor(get(urlPathEqualTo("/v1/auth/audit/sub-key/mySubscribeKey"))
+                .withQueryParam("pnsdk", matching("Java/suchJava"))
+                .withQueryParam("channel", matching("ch1"))
+                .withQueryParam("auth", matching("key1"))
+                .withQueryParam("signature", matching("ZlPruaId7jzupmK4LUynpnjvA2CQYyrrT0475wWkbwY%3D%0A"))
+                .withQueryParam("uuid", matching("myUUID"))
+                .withQueryParam("timestamp", matching("1337"))
                 .willReturn(aResponse().withBody("{\"message\":\"Success\",\"payload\":{\"level\":\"user\",\"subscribe_key\":\"sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f\",\"channel\":\"ch1\",\"auths\":{\"key1\":{\"r\":1,\"m\":1,\"w\":1}}},\"service\":\"Access Manager\",\"status\":200}")));
 
         PNAccessManagerAuditResult pnAccessManagerAuditResult = partialAudit.channel("ch1").authKeys(Arrays.asList("key1")).sync();
@@ -71,7 +85,6 @@ public class AuditEndpointTest extends TestHarness {
         Assert.assertEquals("sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f", pnAccessManagerAuditResult.getData().getSubscribeKey());
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
-        Assert.assertEquals("/v1/auth/audit/sub-key/mySubscribeKey?pnsdk=Java/suchJava&auth=key1&signature=ZlPruaId7jzupmK4LUynpnjvA2CQYyrrT0475wWkbwY%3D%0A&channel=ch1&uuid=myUUID&timestamp=1337", requests.get(0).getUrl());
-
+        assertEquals(1, requests.size());
     }
 }
