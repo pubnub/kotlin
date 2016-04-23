@@ -1,6 +1,7 @@
 package com.pubnub.api.endpoints.access;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import com.pubnub.api.core.Pubnub;
 import com.pubnub.api.core.PubnubException;
 import com.pubnub.api.core.models.consumer_facing.PNAccessManagerAuditResult;
@@ -12,6 +13,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 
@@ -47,6 +49,10 @@ public class AuditEndpointTest extends TestHarness {
         Assert.assertEquals(true, pnAccessManagerAuditResult.getData().getAuthKeys().get("key1").isWriteEnabled());
         Assert.assertEquals("channel-group+auth", pnAccessManagerAuditResult.getData().getLevel());
         Assert.assertEquals("sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f", pnAccessManagerAuditResult.getData().getSubscribeKey());
+
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
+        Assert.assertEquals("/v1/auth/audit/sub-key/mySubscribeKey?pnsdk=Java/suchJava&channel-group=cg1&auth=key1&signature=IjnQ0J7c0SYT3gHBxrIC_8OkDHTqsF9KnI0SlBRLNfg%3D%0A&uuid=myUUID&timestamp=1337", requests.get(0).getUrl());
+
     }
 
     @Test
@@ -63,9 +69,9 @@ public class AuditEndpointTest extends TestHarness {
         Assert.assertEquals(true, pnAccessManagerAuditResult.getData().getAuthKeys().get("key1").isWriteEnabled());
         Assert.assertEquals("user", pnAccessManagerAuditResult.getData().getLevel());
         Assert.assertEquals("sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f", pnAccessManagerAuditResult.getData().getSubscribeKey());
+
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
+        Assert.assertEquals("/v1/auth/audit/sub-key/mySubscribeKey?pnsdk=Java/suchJava&auth=key1&signature=ZlPruaId7jzupmK4LUynpnjvA2CQYyrrT0475wWkbwY%3D%0A&channel=ch1&uuid=myUUID&timestamp=1337", requests.get(0).getUrl());
+
     }
-
-
-    //
-
 }

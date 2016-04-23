@@ -13,8 +13,6 @@ import lombok.experimental.Accessors;
 import retrofit2.Call;
 import retrofit2.Response;
 
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -41,35 +39,31 @@ public class Audit extends Endpoint<Envelope<PNAccessManagerAuditData>, PNAccess
     @Override
     protected Call<Envelope<PNAccessManagerAuditData>> doWork(Map<String, String> queryParams) throws PubnubException {
         String signature;
-        Map<String, String> signParams = new HashMap<>();
-        int timestamp = (int) ((new Date().getTime()) / 1000);
+
+        int timestamp = pubnub.getTimestamp();
 
         String signInput = this.pubnub.getConfiguration().getSubscribeKey() + "\n"
                 + this.pubnub.getConfiguration().getPublishKey() + "\n"
                 + "audit" + "\n";
 
-        signParams.put("timestamp", String.valueOf(timestamp));
+        queryParams.put("timestamp", String.valueOf(timestamp));
 
         if (channel != null) {
-            signParams.put("channel", channel);
             queryParams.put("channel", channel);
         }
 
         if (channelGroup != null) {
-            signParams.put("channel-group", channelGroup);
             queryParams.put("channel-group", channelGroup);
         }
 
         if (authKeys.size() > 0) {
-            signParams.put("auth", PubnubUtil.joinString(authKeys, ","));
             queryParams.put("auth", PubnubUtil.joinString(authKeys, ","));
         }
 
-        signInput += PubnubUtil.preparePamArguments(signParams);
+        signInput += PubnubUtil.preparePamArguments(queryParams);
 
         signature = PubnubUtil.signSHA256(this.pubnub.getConfiguration().getSecretKey(), signInput);
 
-        queryParams.put("timestamp", String.valueOf(timestamp));
         queryParams.put("signature", signature);
 
         AccessManagerService service = this.createRetrofit().create(AccessManagerService.class);

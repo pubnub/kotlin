@@ -13,6 +13,24 @@ public class TestHarness {
         pnConfiguration.setPublishKey("myPublishKey");
         pnConfiguration.setUuid("myUUID");
 
-        return new Pubnub(pnConfiguration);
+        class MockedTimePubnub extends Pubnub {
+
+            public MockedTimePubnub(PnConfiguration initialConfig) {
+                super(initialConfig);
+            }
+
+            @Override
+            public int getTimestamp() {
+                return 1337;
+            }
+
+            @Override
+            public String getVersion() {
+                return "suchJava";
+            }
+
+        }
+
+        return new MockedTimePubnub(pnConfiguration);
     }
 }

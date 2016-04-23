@@ -23,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
 import java.util.Properties;
 
 
@@ -204,10 +205,14 @@ public class Pubnub {
         return new Crypto(cipherKey).encrypt(inputString);
     }
 
+    public int getTimestamp() {
+        return (int) ((new Date().getTime()) / 1000);
+    }
+
     /**
      * @return version of the SDK.
      */
-    public final String getVersion() {
+    public String getVersion() {
         return sdkVersion;
     }
 
