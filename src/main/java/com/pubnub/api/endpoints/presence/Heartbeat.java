@@ -3,12 +3,12 @@ package com.pubnub.api.endpoints.presence;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import com.pubnub.api.core.Pubnub;
-import com.pubnub.api.core.PubnubError;
-import com.pubnub.api.core.PubnubException;
+import com.pubnub.api.core.PubNub;
+import com.pubnub.api.core.PubNubError;
+import com.pubnub.api.core.PubNubException;
 import com.pubnub.api.core.PubnubUtil;
 import com.pubnub.api.core.enums.PNOperationType;
-import com.pubnub.api.core.models.Envelope;
+import com.pubnub.api.core.models.server.Envelope;
 import com.pubnub.api.endpoints.Endpoint;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -25,7 +25,7 @@ public class Heartbeat extends Endpoint<Envelope, Boolean> {
     @Setter private List<String> channels;
     @Setter private List<String> channelGroups;
 
-    public Heartbeat(Pubnub pubnub) {
+    public Heartbeat(PubNub pubnub) {
         super(pubnub);
     }
 
@@ -35,7 +35,7 @@ public class Heartbeat extends Endpoint<Envelope, Boolean> {
     }
 
     @Override
-    protected Call<Envelope> doWork(Map<String, String> params) throws PubnubException {
+    protected Call<Envelope> doWork(Map<String, String> params) throws PubNubException {
         ObjectWriter ow = new ObjectMapper().writer();
 
         params.put("heartbeat", String.valueOf(pubnub.getConfiguration().getPresenceTimeout()));
@@ -58,7 +58,7 @@ public class Heartbeat extends Endpoint<Envelope, Boolean> {
             try {
                 stringifiedState = ow.writeValueAsString(state);
             } catch (JsonProcessingException e) {
-                throw PubnubException.builder().pubnubError(PubnubError.PNERROBJ_INVALID_ARGUMENTS).errormsg(e.getMessage()).build();
+                throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_INVALID_ARGUMENTS).errormsg(e.getMessage()).build();
             }
 
             stringifiedState = PubnubUtil.urlEncode(stringifiedState);
@@ -70,7 +70,7 @@ public class Heartbeat extends Endpoint<Envelope, Boolean> {
     }
 
     @Override
-    protected Boolean createResponse(Response<Envelope> input) throws PubnubException {
+    protected Boolean createResponse(Response<Envelope> input) throws PubNubException {
         return true;
     }
 

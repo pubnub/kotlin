@@ -1,21 +1,21 @@
 package com.pubnub.api.endpoints;
 
-import com.pubnub.api.core.PnConfiguration;
-import com.pubnub.api.core.Pubnub;
+import com.pubnub.api.core.PNConfiguration;
+import com.pubnub.api.core.PubNub;
 
 public class TestHarness {
 
-    protected Pubnub createPubNubInstance(int port) {
-        PnConfiguration pnConfiguration = new PnConfiguration();
+    protected PubNub createPubNubInstance(int port) {
+        PNConfiguration pnConfiguration = new PNConfiguration();
         pnConfiguration.setOrigin("localhost" + ":" + port);
         pnConfiguration.setSecure(false);
         pnConfiguration.setSubscribeKey("mySubscribeKey");
         pnConfiguration.setPublishKey("myPublishKey");
         pnConfiguration.setUuid("myUUID");
 
-        class MockedTimePubnub extends Pubnub {
+        class MockedTimePubNub extends PubNub {
 
-            public MockedTimePubnub(PnConfiguration initialConfig) {
+            public MockedTimePubNub(PNConfiguration initialConfig) {
                 super(initialConfig);
             }
 
@@ -31,6 +31,6 @@ public class TestHarness {
 
         }
 
-        return new MockedTimePubnub(pnConfiguration);
+        return new MockedTimePubNub(pnConfiguration);
     }
 }

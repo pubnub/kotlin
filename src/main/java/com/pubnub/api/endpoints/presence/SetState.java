@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.pubnub.api.core.*;
 import com.pubnub.api.core.enums.PNOperationType;
-import com.pubnub.api.core.models.Envelope;
-import com.pubnub.api.core.models.consumer_facing.PNSetStateResult;
+import com.pubnub.api.core.models.server.Envelope;
+import com.pubnub.api.core.models.consumer.presence.PNSetStateResult;
 import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.managers.SubscriptionManager;
 import lombok.*;
@@ -29,7 +29,7 @@ public class SetState extends Endpoint<Envelope<Map<String, Object>>, PNSetState
     @Setter private List<String> channelGroups;
     @Setter private Object state;
 
-    public SetState(Pubnub pubnub, SubscriptionManager subscriptionManager) {
+    public SetState(PubNub pubnub, SubscriptionManager subscriptionManager) {
         super(pubnub);
         this.subscriptionManager = subscriptionManager;
         channels = new ArrayList<>();
@@ -52,7 +52,7 @@ public class SetState extends Endpoint<Envelope<Map<String, Object>>, PNSetState
     }
 
     @Override
-    protected Call<Envelope<Map<String, Object>>> doWork(Map<String, String> params) throws PubnubException {
+    protected Call<Envelope<Map<String, Object>>> doWork(Map<String, String> params) throws PubNubException {
         ObjectWriter ow = new ObjectMapper().writer();
         String stringifiedState;
 
@@ -68,7 +68,7 @@ public class SetState extends Endpoint<Envelope<Map<String, Object>>, PNSetState
         try {
             stringifiedState = ow.writeValueAsString(state);
         } catch (JsonProcessingException e) {
-            throw PubnubException.builder().pubnubError(PubnubError.PNERROBJ_INVALID_ARGUMENTS).errormsg(e.getMessage()).build();
+            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_INVALID_ARGUMENTS).errormsg(e.getMessage()).build();
         }
 
         stringifiedState = PubnubUtil.urlEncode(stringifiedState);
@@ -80,18 +80,16 @@ public class SetState extends Endpoint<Envelope<Map<String, Object>>, PNSetState
     }
 
     @Override
-    protected PNSetStateResult createResponse(Response<Envelope<Map<String, Object>>> input) throws PubnubException {
-        PnResponse<Boolean> pnResponse = new PnResponse<Boolean>();
-        pnResponse.fillFromRetrofit(input);
+    protected PNSetStateResult createResponse(Response<Envelope<Map<String, Object>>> input) throws PubNubException {
 
         if (input.body() == null) {
-            throw PubnubException.builder().pubnubError(PubnubError.PNERROBJ_PARSING_ERROR).build();
+            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_PARSING_ERROR).build();
         }
 
-        PNSetStateResult pnSetStateResult = new PNSetStateResult();
-        pnSetStateResult.setState(input.body().getPayload());
+        PNSetStateResult.PNSetStateResultBuilder pnSetStateResult = PNSetStateResult.builder()
+                .state(input.body().getPayload());
 
-        return pnSetStateResult;
+        return pnSetStateResult.build();
     }
 
     protected int getConnectTimeout() {

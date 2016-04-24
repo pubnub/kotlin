@@ -1,14 +1,13 @@
 package com.pubnub.api.endpoints.presence;
 
 
-import com.pubnub.api.core.PnResponse;
-import com.pubnub.api.core.Pubnub;
+import com.pubnub.api.core.PubNub;
 import com.pubnub.api.core.PubnubUtil;
 import com.pubnub.api.core.enums.PNOperationType;
-import com.pubnub.api.core.models.Envelope;
-import com.pubnub.api.core.models.HereNow.HereNowChannelData;
-import com.pubnub.api.core.models.HereNow.HereNowData;
-import com.pubnub.api.core.models.HereNow.HereNowOccupantData;
+import com.pubnub.api.core.models.server.Envelope;
+import com.pubnub.api.core.models.consumer.presence.PNHereNowChannelData;
+import com.pubnub.api.core.models.consumer.presence.PNHereNowResult;
+import com.pubnub.api.core.models.consumer.presence.PNHereNowOccupantData;
 import com.pubnub.api.endpoints.Endpoint;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -21,13 +20,13 @@ import java.util.List;
 import java.util.Map;
 
 @Accessors(chain = true, fluent = true)
-public class HereNow extends Endpoint<Envelope<Object>, HereNowData> {
+public class HereNow extends Endpoint<Envelope<Object>, PNHereNowResult> {
     @Setter private List<String> channels;
     @Setter private List<String> channelGroups;
     @Setter private Boolean includeState;
     @Setter private Boolean includeUUIDs;
 
-    public HereNow(Pubnub pubnub) {
+    public HereNow(PubNub pubnub) {
         super(pubnub);
         channels = new ArrayList<>();
         channelGroups = new ArrayList<>();
@@ -78,9 +77,8 @@ public class HereNow extends Endpoint<Envelope<Object>, HereNowData> {
     }
 
     @Override
-    protected HereNowData createResponse(Response<Envelope<Object>> input) {
-        PnResponse<HereNowData> pnResponse = new PnResponse<HereNowData>();
-        HereNowData herenowData;
+    protected PNHereNowResult createResponse(Response<Envelope<Object>> input) {
+        PNHereNowResult herenowData;
 
         if (channels.size() > 1 || channelGroups.size() > 0) {
             herenowData = parseMultipleChannelResponse(input.body().getPayload());
@@ -91,69 +89,73 @@ public class HereNow extends Endpoint<Envelope<Object>, HereNowData> {
         return herenowData;
     }
 
-    private HereNowData parseSingleChannelResponse(Envelope<Object> input) {
-        HereNowData hereNowData = new HereNowData();
-        hereNowData.setTotalChannels(1);
-        hereNowData.setTotalOccupancy(input.getOccupancy());
+    private PNHereNowResult parseSingleChannelResponse(Envelope<Object> input) {
+        PNHereNowResult hereNowData = PNHereNowResult.builder()
+            .totalChannels(1)
+            .channels(new HashMap<String, PNHereNowChannelData>())
+            .totalOccupancy(input.getOccupancy())
+            .build();
 
-        HereNowChannelData hereNowChannelData = new HereNowChannelData();
-        hereNowChannelData.setChannelName(channels.get(0));
-        hereNowChannelData.setOccupancy(input.getOccupancy());
+        PNHereNowChannelData.PNHereNowChannelDataBuilder hereNowChannelData = PNHereNowChannelData.builder()
+            .channelName(channels.get(0))
+            .occupancy(input.getOccupancy());
 
         if (includeUUIDs) {
-            hereNowChannelData.setOccupants(prepareOccupantData(input.getUuids()));
-            hereNowData.getChannels().put(channels.get(0), hereNowChannelData);
+            hereNowChannelData.occupants(prepareOccupantData(input.getUuids()));
+            hereNowData.getChannels().put(channels.get(0), hereNowChannelData.build());
         }
 
         return hereNowData;
     }
 
-    private HereNowData parseMultipleChannelResponse(Object input) {
-        HereNowData hereNowData = new HereNowData();
+    private PNHereNowResult parseMultipleChannelResponse(Object input) {
         Map<String, Object> parsedInput = (Map<String, Object>) input;
 
-        hereNowData.setTotalChannels((Integer) parsedInput.get("total_channels"));
-        hereNowData.setTotalOccupancy((Integer) parsedInput.get("total_occupancy"));
+        PNHereNowResult hereNowData =  PNHereNowResult.builder()
+            .channels(new HashMap<String, PNHereNowChannelData>())
+            .totalChannels((Integer) parsedInput.get("total_channels"))
+            .totalOccupancy((Integer) parsedInput.get("total_occupancy"))
+            .build();
 
         Map<String, Object> channels = (HashMap<String, Object>) parsedInput.get("channels");
 
         for (String channelName: channels.keySet()) {
             Map<String, Object> channel = (Map<String, Object>) channels.get(channelName);
 
-            HereNowChannelData hereNowChannelData = new HereNowChannelData();
-            hereNowChannelData.setChannelName(channelName);
-            hereNowChannelData.setOccupancy((Integer) channel.get("occupancy"));
+            PNHereNowChannelData.PNHereNowChannelDataBuilder hereNowChannelData = PNHereNowChannelData.builder()
+                .channelName(channelName)
+                .occupancy((Integer) channel.get("occupancy"));
 
             if (includeUUIDs) {
-                hereNowChannelData.setOccupants(prepareOccupantData(channel.get("uuids")));
+                hereNowChannelData.occupants(prepareOccupantData(channel.get("uuids")));
             } else {
-                hereNowChannelData.setOccupants(null);
+                hereNowChannelData.occupants(null);
             }
 
-            hereNowData.getChannels().put(channelName, hereNowChannelData);
+            hereNowData.getChannels().put(channelName, hereNowChannelData.build());
         }
 
         return hereNowData;
     }
 
-    private List<HereNowOccupantData> prepareOccupantData(Object input) {
-        List<HereNowOccupantData> occupantsResults = new ArrayList<HereNowOccupantData>();
+    private List<PNHereNowOccupantData> prepareOccupantData(Object input) {
+        List<PNHereNowOccupantData> occupantsResults = new ArrayList<PNHereNowOccupantData>();
 
         if (includeState != null && includeState) {
             for (Map<String, Object> occupant : (List<Map<String, Object>>) input) {
-                HereNowOccupantData hereNowOccupantData = new HereNowOccupantData();
-                hereNowOccupantData.setUuid((String) occupant.get("uuid"));
-                hereNowOccupantData.setState(occupant.get("state"));
+                PNHereNowOccupantData.PNHereNowOccupantDataBuilder hereNowOccupantData = PNHereNowOccupantData.builder();
+                hereNowOccupantData.uuid((String) occupant.get("uuid"));
+                hereNowOccupantData.state(occupant.get("state"));
 
-                occupantsResults.add(hereNowOccupantData);
+                occupantsResults.add(hereNowOccupantData.build());
             }
         } else {
             for (String occupant : (List<String>) input) {
-                HereNowOccupantData hereNowOccupantData = new HereNowOccupantData();
-                hereNowOccupantData.setUuid(occupant);
-                hereNowOccupantData.setState(null);
+                PNHereNowOccupantData.PNHereNowOccupantDataBuilder hereNowOccupantData = PNHereNowOccupantData.builder();
+                hereNowOccupantData.uuid(occupant);
+                hereNowOccupantData.state(null);
 
-                occupantsResults.add(hereNowOccupantData);
+                occupantsResults.add(hereNowOccupantData.build());
             }
         }
         return occupantsResults;

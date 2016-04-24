@@ -92,7 +92,7 @@ public class PubnubUtil {
         return stringifiedArguments;
     }
 
-    public static String signSHA256(final String key, final String data) throws PubnubException {
+    public static String signSHA256(final String key, final String data) throws PubNubException {
         Mac sha256HMAC;
         byte[] hmacData;
         SecretKeySpec secretKey = new SecretKeySpec(key.getBytes(), "HmacSHA256");
@@ -100,19 +100,19 @@ public class PubnubUtil {
         try {
             sha256HMAC = Mac.getInstance("HmacSHA256");
         } catch (NoSuchAlgorithmException e) {
-            throw PubnubException.builder().pubnubError(PubnubError.PNERROBJ_CRYPTO_ERROR).errormsg(e.getMessage()).build();
+            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_CRYPTO_ERROR).errormsg(e.getMessage()).build();
         }
 
         try {
             sha256HMAC.init(secretKey);
         } catch (InvalidKeyException e) {
-            throw PubnubException.builder().pubnubError(PubnubError.PNERROBJ_CRYPTO_ERROR).errormsg(e.getMessage()).build();
+            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_CRYPTO_ERROR).errormsg(e.getMessage()).build();
         }
 
         try {
             hmacData = sha256HMAC.doFinal(data.getBytes("UTF-8"));
         } catch (UnsupportedEncodingException e) {
-            throw PubnubException.builder().pubnubError(PubnubError.PNERROBJ_CRYPTO_ERROR).errormsg(e.getMessage()).build();
+            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_CRYPTO_ERROR).errormsg(e.getMessage()).build();
         }
 
         return new String(Base64.encode(hmacData, 0)).replace('+', '-').replace('/', '_');

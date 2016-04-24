@@ -1,6 +1,6 @@
 package com.pubnub.api.endpoints.pubsub;
 
-import com.pubnub.api.core.models.server_responses.SubscribeEnvelope;
+import com.pubnub.api.core.models.server.SubscribeEnvelope;
 import retrofit2.Call;
 import retrofit2.http.*;
 

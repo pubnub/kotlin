@@ -5,9 +5,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
-import com.pubnub.api.core.Pubnub;
-import com.pubnub.api.core.PubnubException;
-import com.pubnub.api.core.models.consumer_facing.PNHistoryResult;
+import com.pubnub.api.core.PubNub;
+import com.pubnub.api.core.PubNubException;
+import com.pubnub.api.core.models.consumer.history.PNHistoryResult;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -23,7 +23,7 @@ import static org.junit.Assert.assertEquals;
 public class HistoryEndpointTest extends TestHarness {
 
     private History partialHistory;
-    private Pubnub pubnub;
+    private PubNub pubnub;
 
     @Rule
     public WireMockRule wireMockRule = new WireMockRule();
@@ -36,7 +36,7 @@ public class HistoryEndpointTest extends TestHarness {
 
 
     @org.junit.Test
-    public void testSyncSuccess() throws IOException, PubnubException {
+    public void testSyncSuccess() throws IOException, PubNubException {
         List<Object> testArray = new ArrayList<Object>();
         List<Object> historyItems = new ArrayList<Object>();
         ObjectMapper mapper = new ObjectMapper();
@@ -83,7 +83,7 @@ public class HistoryEndpointTest extends TestHarness {
     }
 
     @Test
-    public void testSyncAuthSuccess() throws PubnubException, JsonProcessingException {
+    public void testSyncAuthSuccess() throws PubNubException, JsonProcessingException {
 
         pubnub.getConfiguration().setAuthKey("authKey");
 
@@ -126,7 +126,7 @@ public class HistoryEndpointTest extends TestHarness {
 
 
     @org.junit.Test
-    public void testSyncEncryptedSuccess() throws IOException, PubnubException {
+    public void testSyncEncryptedSuccess() throws IOException, PubNubException {
         pubnub.getConfiguration().setCipherKey("testCipher");
 
         stubFor(get(urlPathEqualTo("/v2/history/sub-key/mySubscribeKey/channel/niceChannel"))
@@ -155,7 +155,7 @@ public class HistoryEndpointTest extends TestHarness {
     }
 
     @org.junit.Test
-    public void testSyncSuccessWithoutTimeToken() throws IOException, PubnubException {
+    public void testSyncSuccessWithoutTimeToken() throws IOException, PubNubException {
         List<Object> testArray = new ArrayList<Object>();
         List<Object> historyItems = new ArrayList<Object>();
         ObjectMapper mapper = new ObjectMapper();

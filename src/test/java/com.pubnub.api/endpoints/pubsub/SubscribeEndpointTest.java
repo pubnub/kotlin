@@ -2,10 +2,10 @@ package com.pubnub.api.endpoints.pubsub;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
-import com.pubnub.api.core.Pubnub;
-import com.pubnub.api.core.PubnubException;
-import com.pubnub.api.core.models.server_responses.SubscribeEnvelope;
-import com.pubnub.api.core.models.server_responses.SubscribeMessage;
+import com.pubnub.api.core.PubNub;
+import com.pubnub.api.core.PubNubException;
+import com.pubnub.api.core.models.server.SubscribeEnvelope;
+import com.pubnub.api.core.models.server.SubscribeMessage;
 import com.pubnub.api.endpoints.TestHarness;
 import org.junit.Before;
 import org.junit.Rule;
@@ -24,7 +24,7 @@ public class SubscribeEndpointTest extends TestHarness {
     @Rule
     public WireMockRule wireMockRule = new WireMockRule();
 
-    Pubnub pubnub;
+    PubNub pubnub;
     Subscribe instance;
 
     @Before
@@ -34,7 +34,7 @@ public class SubscribeEndpointTest extends TestHarness {
     }
 
     @Test
-    public void subscribeChannelSync() throws PubnubException {
+    public void subscribeChannelSync() throws PubNubException {
 
         stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/coolChannel/0"))
                 .willReturn(aResponse().withBody("{\"t\":{\"t\":\"14607577960932487\",\"r\":1},\"m\":[{\"a\":\"4\",\"f\":0,\"i\":\"Client-g5d4g\",\"p\":{\"t\":\"14607577960925503\",\"r\":1},\"k\":\"sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f\",\"c\":\"coolChannel\",\"d\":{\"text\":\"Enter Message Here\"},\"b\":\"coolChan-bnel\"}]}")));
@@ -59,7 +59,7 @@ public class SubscribeEndpointTest extends TestHarness {
     }
 
     @Test
-    public void subscribeChannelsSync() throws PubnubException {
+    public void subscribeChannelsSync() throws PubNubException {
 
         stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/coolChannel,coolChannel2/0"))
                 .willReturn(aResponse().withBody("{\"t\":{\"t\":\"14607577960932487\",\"r\":1},\"m\":[{\"a\":\"4\",\"f\":0,\"i\":\"Client-g5d4g\",\"p\":{\"t\":\"14607577960925503\",\"r\":1},\"k\":\"sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f\",\"c\":\"coolChannel\",\"d\":{\"text\":\"Enter Message Here\"},\"b\":\"coolChan-bnel\"}]}")));
@@ -71,7 +71,7 @@ public class SubscribeEndpointTest extends TestHarness {
     }
 
     @Test
-    public void subscribeChannelsAuthSync() throws PubnubException {
+    public void subscribeChannelsAuthSync() throws PubNubException {
 
         pubnub.getConfiguration().setAuthKey("authKey");
 
@@ -86,7 +86,7 @@ public class SubscribeEndpointTest extends TestHarness {
     }
 
     @Test
-    public void subscribeChannelsWithGroupSync() throws PubnubException {
+    public void subscribeChannelsWithGroupSync() throws PubNubException {
 
         stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/coolChannel,coolChannel2/0"))
                 .willReturn(aResponse().withBody("{\"t\":{\"t\":\"14607577960932487\",\"r\":1},\"m\":[{\"a\":\"4\",\"f\":0,\"i\":\"Client-g5d4g\",\"p\":{\"t\":\"14607577960925503\",\"r\":1},\"k\":\"sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f\",\"c\":\"coolChannel\",\"d\":{\"text\":\"Enter Message Here\"},\"b\":\"coolChan-bnel\"}]}")));
@@ -99,7 +99,7 @@ public class SubscribeEndpointTest extends TestHarness {
     }
 
     @Test
-    public void subscribeGroupsSync() throws PubnubException {
+    public void subscribeGroupsSync() throws PubNubException {
 
         stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/,/0"))
                 .willReturn(aResponse().withBody("{\"t\":{\"t\":\"14607577960932487\",\"r\":1},\"m\":[{\"a\":\"4\",\"f\":0,\"i\":\"Client-g5d4g\",\"p\":{\"t\":\"14607577960925503\",\"r\":1},\"k\":\"sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f\",\"c\":\"coolChannel\",\"d\":{\"text\":\"Enter Message Here\"},\"b\":\"coolChan-bnel\"}]}")));
@@ -112,7 +112,7 @@ public class SubscribeEndpointTest extends TestHarness {
     }
 
     @Test
-    public void subscribeGroupSync() throws PubnubException {
+    public void subscribeGroupSync() throws PubNubException {
 
         stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/,/0"))
                 .willReturn(aResponse().withBody("{\"t\":{\"t\":\"14607577960932487\",\"r\":1},\"m\":[{\"a\":\"4\",\"f\":0,\"i\":\"Client-g5d4g\",\"p\":{\"t\":\"14607577960925503\",\"r\":1},\"k\":\"sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f\",\"c\":\"coolChannel\",\"d\":{\"text\":\"Enter Message Here\"},\"b\":\"coolChan-bnel\"}]}")));
@@ -125,7 +125,7 @@ public class SubscribeEndpointTest extends TestHarness {
     }
 
     @Test
-    public void subscribeWithTimeTokenSync() throws PubnubException {
+    public void subscribeWithTimeTokenSync() throws PubNubException {
 
         stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/,/0"))
                 .willReturn(aResponse().withBody("{\"t\":{\"t\":\"14607577960932487\",\"r\":1},\"m\":[{\"a\":\"4\",\"f\":0,\"i\":\"Client-g5d4g\",\"p\":{\"t\":\"14607577960925503\",\"r\":1},\"k\":\"sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f\",\"c\":\"coolChannel\",\"d\":{\"text\":\"Enter Message Here\"},\"b\":\"coolChan-bnel\"}]}")));
@@ -139,7 +139,7 @@ public class SubscribeEndpointTest extends TestHarness {
     }
 
     @Test
-    public void subscribeWithFilter() throws PubnubException {
+    public void subscribeWithFilter() throws PubNubException {
 
         stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/,/0"))
                 .willReturn(aResponse().withBody("{\"t\":{\"t\":\"14607577960932487\",\"r\":1},\"m\":[{\"a\":\"4\",\"f\":0,\"i\":\"Client-g5d4g\",\"p\":{\"t\":\"14607577960925503\",\"r\":1},\"k\":\"sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f\",\"c\":\"coolChannel\",\"d\":{\"text\":\"Enter Message Here\"},\"b\":\"coolChan-bnel\"}]}")));
@@ -153,7 +153,7 @@ public class SubscribeEndpointTest extends TestHarness {
     }
 
     @Test
-    public void subscribeWithRegion() throws PubnubException {
+    public void subscribeWithRegion() throws PubNubException {
 
         stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/,/0"))
                 .willReturn(aResponse().withBody("{\"t\":{\"t\":\"14607577960932487\",\"r\":1},\"m\":[{\"a\":\"4\",\"f\":0,\"i\":\"Client-g5d4g\",\"p\":{\"t\":\"14607577960925503\",\"r\":1},\"k\":\"sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f\",\"c\":\"coolChannel\",\"d\":{\"text\":\"Enter Message Here\"},\"b\":\"coolChan-bnel\"}]}")));

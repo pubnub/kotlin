@@ -2,9 +2,9 @@ package com.pubnub.api.endpoints.presence;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
-import com.pubnub.api.core.Pubnub;
-import com.pubnub.api.core.PubnubException;
-import com.pubnub.api.core.models.consumer_facing.PNSetStateResult;
+import com.pubnub.api.core.PubNub;
+import com.pubnub.api.core.PubNubException;
+import com.pubnub.api.core.models.consumer.presence.PNSetStateResult;
 import com.pubnub.api.endpoints.TestHarness;
 import org.junit.Before;
 import org.junit.Rule;
@@ -24,7 +24,7 @@ public class SetStateEndpointTest extends TestHarness {
     public WireMockRule wireMockRule = new WireMockRule();
 
     private SetState partialSetState;
-    private Pubnub pubnub;
+    private PubNub pubnub;
 
     @Before
     public void beforeEach() throws IOException {
@@ -34,7 +34,7 @@ public class SetStateEndpointTest extends TestHarness {
     }
 
     @Test
-    public void applyStateForChannelSync() throws PubnubException, InterruptedException {
+    public void applyStateForChannelSync() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/testChannel/uuid/myUUID/data"))
                 .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : 20, \"status\" : \"online\" }, \"service\": \"Presence\"}")));
@@ -50,7 +50,7 @@ public class SetStateEndpointTest extends TestHarness {
     }
 
     @Test
-    public void applyStateForChannelsSync() throws PubnubException, InterruptedException {
+    public void applyStateForChannelsSync() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/testChannel,testChannel2/uuid/myUUID/data"))
                 .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : 20, \"status\" : \"online\" }, \"service\": \"Presence\"}")));
@@ -65,7 +65,7 @@ public class SetStateEndpointTest extends TestHarness {
     }
 
     @Test
-    public void applyStateForChannelGroupSync() throws PubnubException, InterruptedException {
+    public void applyStateForChannelGroupSync() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/,/uuid/myUUID/data"))
                 .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : 20, \"status\" : \"online\" }, \"service\": \"Presence\"}")));
@@ -82,7 +82,7 @@ public class SetStateEndpointTest extends TestHarness {
     }
 
     @Test
-    public void applyStateForChannelGroupsSync() throws PubnubException, InterruptedException {
+    public void applyStateForChannelGroupsSync() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/,/uuid/myUUID/data"))
                 .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : 20, \"status\" : \"online\" }, \"service\": \"Presence\"}")));
@@ -100,7 +100,7 @@ public class SetStateEndpointTest extends TestHarness {
     }
 
     @Test
-    public void applyStateForMixSync() throws PubnubException, InterruptedException {
+    public void applyStateForMixSync() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch1/uuid/myUUID/data"))
                 .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : 20, \"status\" : \"online\" }, \"service\": \"Presence\"}")));
@@ -117,8 +117,8 @@ public class SetStateEndpointTest extends TestHarness {
 
     }
 
-    @org.junit.Test(expected=PubnubException.class)
-    public void applyNon200Sync() throws PubnubException, InterruptedException {
+    @org.junit.Test(expected=PubNubException.class)
+    public void applyNon200Sync() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch1/uuid/myUUID/data"))
                 .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : 20, \"status\" : \"online\" }, \"service\": \"Presence\"}").withStatus(400)));

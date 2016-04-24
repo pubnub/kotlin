@@ -4,9 +4,9 @@ package com.pubnub.api.endpoints.presence;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.jayway.awaitility.Awaitility;
 import com.pubnub.api.callbacks.WhereNowCallback;
-import com.pubnub.api.core.PubnubException;
+import com.pubnub.api.core.PubNubException;
 import com.pubnub.api.core.models.consumer_facing.PNPresenceWhereNowResult;
-import com.pubnub.api.core.models.consumer_facing.PNStatus;
+import com.pubnub.api.core.models.consumer.PNStatus;
 import com.pubnub.api.endpoints.TestHarness;
 import org.junit.Before;
 import org.junit.Rule;
@@ -30,7 +30,7 @@ public class WhereNowEndpointTest extends TestHarness {
     }
 
     @org.junit.Test
-    public void testSyncSuccess() throws IOException, PubnubException, InterruptedException {
+    public void testSyncSuccess() throws IOException, PubNubException, InterruptedException {
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/uuid/myUUID"))
                 .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": [\"a\",\"b\"]}, \"service\": \"Presence\"}")));
 
@@ -39,7 +39,7 @@ public class WhereNowEndpointTest extends TestHarness {
     }
 
     @org.junit.Test
-    public void testSyncSuccessCustomUUID() throws IOException, PubnubException, InterruptedException {
+    public void testSyncSuccessCustomUUID() throws IOException, PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/uuid/customUUID"))
                 .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": [\"a\",\"b\"]}, \"service\": \"Presence\"}")));
@@ -48,8 +48,8 @@ public class WhereNowEndpointTest extends TestHarness {
         assertThat(response.getChannels(), org.hamcrest.Matchers.contains("a", "b"));
     }
 
-    @org.junit.Test(expected=PubnubException.class)
-    public void testSyncBrokenWithString() throws IOException, PubnubException {
+    @org.junit.Test(expected=PubNubException.class)
+    public void testSyncBrokenWithString() throws IOException, PubNubException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/uuid/myUUID"))
                 .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": [zimp]}, \"service\": \"Presence\"}")));
@@ -57,8 +57,8 @@ public class WhereNowEndpointTest extends TestHarness {
         partialWhereNow.sync();
     }
 
-    @org.junit.Test(expected=PubnubException.class)
-    public void testSyncBrokenWithoutJSON() throws IOException, PubnubException {
+    @org.junit.Test(expected=PubNubException.class)
+    public void testSyncBrokenWithoutJSON() throws IOException, PubNubException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/uuid/myUUID"))
                 .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": zimp}, \"service\": \"Presence\"}")));
@@ -66,8 +66,8 @@ public class WhereNowEndpointTest extends TestHarness {
         partialWhereNow.sync();
     }
 
-    @org.junit.Test(expected=PubnubException.class)
-    public void testSyncBrokenWithout200() throws IOException, PubnubException {
+    @org.junit.Test(expected=PubNubException.class)
+    public void testSyncBrokenWithout200() throws IOException, PubNubException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/uuid/myUUID"))
                 .willReturn(aResponse()
@@ -78,7 +78,7 @@ public class WhereNowEndpointTest extends TestHarness {
     }
 
     @org.junit.Test
-    public void testAsyncSuccess() throws IOException, PubnubException {
+    public void testAsyncSuccess() throws IOException, PubNubException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/uuid/myUUID"))
                 .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": [\"a\",\"b\"]}, \"service\": \"Presence\"}")));
@@ -98,7 +98,7 @@ public class WhereNowEndpointTest extends TestHarness {
     }
 
     @org.junit.Test
-    public void testAsyncBrokenWithString() throws IOException, PubnubException {
+    public void testAsyncBrokenWithString() throws IOException, PubNubException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/uuid/myUUID"))
                 .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": [zimp]}, \"service\": \"Presence\"}")));
@@ -119,7 +119,7 @@ public class WhereNowEndpointTest extends TestHarness {
     }
 
     @org.junit.Test
-    public void testAsyncBrokenWithoutJSON() throws IOException, PubnubException {
+    public void testAsyncBrokenWithoutJSON() throws IOException, PubNubException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/uuid/myUUID"))
                 .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": zimp}, \"service\": \"Presence\"}")));
@@ -139,7 +139,7 @@ public class WhereNowEndpointTest extends TestHarness {
     }
 
     @org.junit.Test
-    public void testAsyncBrokenWithout200() throws IOException, PubnubException {
+    public void testAsyncBrokenWithout200() throws IOException, PubNubException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/uuid/myUUID"))
                 .willReturn(aResponse()

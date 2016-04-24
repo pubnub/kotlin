@@ -1,12 +1,13 @@
 package com.pubnub.api.endpoints.access;
 
-import com.pubnub.api.core.Pubnub;
-import com.pubnub.api.core.PubnubException;
+import com.pubnub.api.core.PubNub;
+import com.pubnub.api.core.PubNubError;
+import com.pubnub.api.core.PubNubException;
 import com.pubnub.api.core.PubnubUtil;
 import com.pubnub.api.core.enums.PNOperationType;
-import com.pubnub.api.core.models.Envelope;
-import com.pubnub.api.core.models.consumer_facing.PNAccessManagerAuditData;
-import com.pubnub.api.core.models.consumer_facing.PNAccessManagerAuditResult;
+import com.pubnub.api.core.models.server.Envelope;
+import com.pubnub.api.core.models.consumer.access_manager.PNAccessManagerAuditResult;
+import com.pubnub.api.core.models.server.access_manager.AccessManagerAuditPayload;
 import com.pubnub.api.endpoints.Endpoint;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -17,13 +18,13 @@ import java.util.List;
 import java.util.Map;
 
 @Accessors(chain = true, fluent = true)
-public class Audit extends Endpoint<Envelope<PNAccessManagerAuditData>, PNAccessManagerAuditResult> {
+public class Audit extends Endpoint<Envelope<AccessManagerAuditPayload>, PNAccessManagerAuditResult> {
 
     @Setter private List<String> authKeys;
     @Setter private String channel;
     @Setter private String channelGroup;
 
-    public Audit(Pubnub pubnub) {
+    public Audit(PubNub pubnub) {
         super(pubnub);
     }
 
@@ -37,7 +38,7 @@ public class Audit extends Endpoint<Envelope<PNAccessManagerAuditData>, PNAccess
     }
 
     @Override
-    protected Call<Envelope<PNAccessManagerAuditData>> doWork(Map<String, String> queryParams) throws PubnubException {
+    protected Call<Envelope<AccessManagerAuditPayload>> doWork(Map<String, String> queryParams) throws PubNubException {
         String signature;
 
         int timestamp = pubnub.getTimestamp();
@@ -71,12 +72,23 @@ public class Audit extends Endpoint<Envelope<PNAccessManagerAuditData>, PNAccess
     }
 
     @Override
-    protected PNAccessManagerAuditResult createResponse(final Response<Envelope<PNAccessManagerAuditData>> input) throws PubnubException {
-        PNAccessManagerAuditResult pnAccessManagerAuditResult = new PNAccessManagerAuditResult();
+    protected PNAccessManagerAuditResult createResponse(final Response<Envelope<AccessManagerAuditPayload>> input) throws PubNubException {
+        PNAccessManagerAuditResult.PNAccessManagerAuditResultBuilder pnAccessManagerAuditResult = PNAccessManagerAuditResult.builder();
 
-        pnAccessManagerAuditResult.setData(input.body().getPayload());
+        if (input.body() == null || input.body().getPayload() == null) {
+            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_PARSING_ERROR).build();
+        }
 
-        return pnAccessManagerAuditResult;
+        AccessManagerAuditPayload auditPayload = input.body().getPayload();
+        pnAccessManagerAuditResult
+                .authKeys(auditPayload.getAuthKeys())
+                .channel(auditPayload.getChannel())
+                .channelGroup(auditPayload.getChannelGroup())
+                .level(auditPayload.getLevel())
+                .subscribeKey(auditPayload.getSubscribeKey());
+
+
+        return pnAccessManagerAuditResult.build();
     }
 
     protected int getConnectTimeout() {

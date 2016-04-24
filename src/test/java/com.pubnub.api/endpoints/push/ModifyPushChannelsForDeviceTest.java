@@ -2,8 +2,8 @@ package com.pubnub.api.endpoints.push;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
-import com.pubnub.api.core.Pubnub;
-import com.pubnub.api.core.PubnubException;
+import com.pubnub.api.core.PubNub;
+import com.pubnub.api.core.PubNubException;
 import com.pubnub.api.core.enums.PushType;
 import com.pubnub.api.endpoints.TestHarness;
 import org.junit.Before;
@@ -22,7 +22,7 @@ public class ModifyPushChannelsForDeviceTest extends TestHarness {
     @Rule
     public WireMockRule wireMockRule = new WireMockRule();
 
-    private Pubnub pubnub;
+    private PubNub pubnub;
     private RemoveAllPushChannelsForDevice instance;
     private AddChannelsToPush instanceAdd;
     private RemoveChannelsFromPush instanceRemove;
@@ -37,7 +37,7 @@ public class ModifyPushChannelsForDeviceTest extends TestHarness {
     }
 
     @Test
-    public void testAppleSuccessSyncRemoveAll() throws PubnubException, InterruptedException {
+    public void testAppleSuccessSyncRemoveAll() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice/remove"))
                 .willReturn(aResponse().withBody("[1, \"Modified Channels\"]")));
@@ -50,7 +50,7 @@ public class ModifyPushChannelsForDeviceTest extends TestHarness {
     }
 
     @Test
-    public void testGoogleSuccessSyncRemoveAll() throws PubnubException, InterruptedException {
+    public void testGoogleSuccessSyncRemoveAll() throws PubNubException, InterruptedException {
         stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice/remove"))
                 .willReturn(aResponse().withBody("[1, \"Modified Channels\"]")));
 
@@ -62,7 +62,7 @@ public class ModifyPushChannelsForDeviceTest extends TestHarness {
     }
 
     @Test
-    public void testMicrosoftSuccessSyncRemoveAll() throws PubnubException, InterruptedException {
+    public void testMicrosoftSuccessSyncRemoveAll() throws PubNubException, InterruptedException {
         stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice/remove"))
                 .willReturn(aResponse().withBody("[1, \"Modified Channels\"]")));
 
@@ -74,7 +74,7 @@ public class ModifyPushChannelsForDeviceTest extends TestHarness {
     }
 
     @Test
-    public void testAddAppleSuccessSync() throws PubnubException, InterruptedException {
+    public void testAddAppleSuccessSync() throws PubNubException, InterruptedException {
         stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
                 .willReturn(aResponse().withBody("[1, \"Modified Channels\"]")));
 
@@ -90,7 +90,7 @@ public class ModifyPushChannelsForDeviceTest extends TestHarness {
     }
 
     @Test
-    public void testAddGoogleSuccessSync() throws PubnubException, InterruptedException {
+    public void testAddGoogleSuccessSync() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
                 .willReturn(aResponse().withBody("[1, \"Modified Channels\"]")));
@@ -107,7 +107,7 @@ public class ModifyPushChannelsForDeviceTest extends TestHarness {
     }
 
     @Test
-    public void testAddMicrosoftSuccessSync() throws PubnubException, InterruptedException {
+    public void testAddMicrosoftSuccessSync() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
                 .willReturn(aResponse().withBody("[1, \"Modified Channels\"]")));
@@ -123,7 +123,7 @@ public class ModifyPushChannelsForDeviceTest extends TestHarness {
     }
 
     @Test
-    public void testRemoveAppleSuccessSync() throws PubnubException, InterruptedException {
+    public void testRemoveAppleSuccessSync() throws PubNubException, InterruptedException {
         stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
                 .willReturn(aResponse().withBody("[1, \"Modified Channels\"]")));
 
@@ -138,7 +138,7 @@ public class ModifyPushChannelsForDeviceTest extends TestHarness {
     }
 
     @Test
-    public void testGoogleSuccessSync() throws PubnubException, InterruptedException {
+    public void testGoogleSuccessSync() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
                 .willReturn(aResponse().withBody("[1, \"Modified Channels\"]")));
@@ -154,7 +154,7 @@ public class ModifyPushChannelsForDeviceTest extends TestHarness {
     }
 
     @Test
-    public void testMicrosoftSuccessSync() throws PubnubException, InterruptedException {
+    public void testMicrosoftSuccessSync() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
                 .willReturn(aResponse().withBody("[1, \"Modified Channels\"]")));

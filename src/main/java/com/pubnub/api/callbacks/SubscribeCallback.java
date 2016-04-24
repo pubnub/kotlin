@@ -1,12 +1,12 @@
 package com.pubnub.api.callbacks;
 
-import com.pubnub.api.core.Pubnub;
+import com.pubnub.api.core.PubNub;
 import com.pubnub.api.core.models.consumer_facing.PNMessageResult;
 import com.pubnub.api.core.models.consumer_facing.PNPresenceEventResult;
-import com.pubnub.api.core.models.consumer_facing.PNStatus;
+import com.pubnub.api.core.models.consumer.PNStatus;
 
 public abstract class SubscribeCallback {
-    public abstract void status(Pubnub pubnub, PNStatus status);
-    public abstract void message(Pubnub pubnub, PNMessageResult message);
-    public abstract void presence(Pubnub pubnub, PNPresenceEventResult presence);
+    public abstract void status(PubNub pubnub, PNStatus status);
+    public abstract void message(PubNub pubnub, PNMessageResult message);
+    public abstract void presence(PubNub pubnub, PNPresenceEventResult presence);
 }

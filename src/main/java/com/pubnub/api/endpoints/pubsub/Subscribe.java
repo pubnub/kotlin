@@ -1,11 +1,11 @@
 package com.pubnub.api.endpoints.pubsub;
 
-import com.pubnub.api.core.Pubnub;
-import com.pubnub.api.core.PubnubError;
-import com.pubnub.api.core.PubnubException;
+import com.pubnub.api.core.PubNub;
+import com.pubnub.api.core.PubNubError;
+import com.pubnub.api.core.PubNubException;
 import com.pubnub.api.core.PubnubUtil;
 import com.pubnub.api.core.enums.PNOperationType;
-import com.pubnub.api.core.models.server_responses.SubscribeEnvelope;
+import com.pubnub.api.core.models.server.SubscribeEnvelope;
 import com.pubnub.api.endpoints.Endpoint;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -52,7 +52,7 @@ public class Subscribe extends Endpoint<SubscribeEnvelope, SubscribeEnvelope> {
      * CreFte a new Subscribe instance endpoint.
      * @param pubnub supplied pubnub instance.
      */
-    public Subscribe(final Pubnub pubnub) {
+    public Subscribe(final PubNub pubnub) {
         super(pubnub);
         channels = new ArrayList<>();
         channelGroups = new ArrayList<>();
@@ -64,7 +64,7 @@ public class Subscribe extends Endpoint<SubscribeEnvelope, SubscribeEnvelope> {
     }
 
     @Override
-    protected final Call<SubscribeEnvelope> doWork(final Map<String, String> params) throws PubnubException {
+    protected final Call<SubscribeEnvelope> doWork(final Map<String, String> params) throws PubNubException {
         PubSubService pubSubService = this.createRetrofit().create(PubSubService.class);
         String channelCSV;
 
@@ -94,10 +94,10 @@ public class Subscribe extends Endpoint<SubscribeEnvelope, SubscribeEnvelope> {
     }
 
     @Override
-    protected final SubscribeEnvelope createResponse(final Response<SubscribeEnvelope> input) throws PubnubException {
+    protected final SubscribeEnvelope createResponse(final Response<SubscribeEnvelope> input) throws PubNubException {
 
         if (input.body() == null) {
-            throw PubnubException.builder().pubnubError(PubnubError.PNERROBJ_PARSING_ERROR).build();
+            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_PARSING_ERROR).build();
         }
 
         return input.body();

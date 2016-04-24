@@ -4,12 +4,12 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import com.jayway.awaitility.Awaitility;
 import com.pubnub.api.callbacks.SubscribeCallback;
-import com.pubnub.api.core.Pubnub;
+import com.pubnub.api.core.PubNub;
 import com.pubnub.api.core.enums.PNHeartbeatNotificationOptions;
 import com.pubnub.api.core.enums.PNOperationType;
 import com.pubnub.api.core.models.consumer_facing.PNMessageResult;
 import com.pubnub.api.core.models.consumer_facing.PNPresenceEventResult;
-import com.pubnub.api.core.models.consumer_facing.PNStatus;
+import com.pubnub.api.core.models.consumer.PNStatus;
 import com.pubnub.api.endpoints.TestHarness;
 import org.junit.*;
 
@@ -25,7 +25,7 @@ import static org.junit.Assert.assertEquals;
 
 public class SubscriptionManagerTest extends TestHarness {
 
-    private Pubnub pubnub;
+    private PubNub pubnub;
 
     @Before
     public void beforeEach() throws IOException {
@@ -48,11 +48,11 @@ public class SubscriptionManagerTest extends TestHarness {
 
         pubnub.addListener(new SubscribeCallback() {
             @Override
-            public void status(Pubnub pubnub, PNStatus status) {
+            public void status(PubNub pubnub, PNStatus status) {
             }
 
             @Override
-            public void message(Pubnub pubnub, PNMessageResult message) {
+            public void message(PubNub pubnub, PNMessageResult message) {
                 List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")));
 
                 if (requests.size() == 1){
@@ -62,7 +62,7 @@ public class SubscriptionManagerTest extends TestHarness {
             }
 
             @Override
-            public void presence(Pubnub pubnub, PNPresenceEventResult presence) {
+            public void presence(PubNub pubnub, PNPresenceEventResult presence) {
             }
         });
 
@@ -82,11 +82,11 @@ public class SubscriptionManagerTest extends TestHarness {
 
         pubnub.addListener(new SubscribeCallback() {
             @Override
-            public void status(Pubnub pubnub, PNStatus status) {
+            public void status(PubNub pubnub, PNStatus status) {
             }
 
             @Override
-            public void message(Pubnub pubnub, PNMessageResult message) {
+            public void message(PubNub pubnub, PNMessageResult message) {
                 List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")));
 
                 if (requests.size() == 1) {
@@ -96,7 +96,7 @@ public class SubscriptionManagerTest extends TestHarness {
             }
 
             @Override
-            public void presence(Pubnub pubnub, PNPresenceEventResult presence) {
+            public void presence(PubNub pubnub, PNPresenceEventResult presence) {
             }
         });
 
@@ -117,11 +117,11 @@ public class SubscriptionManagerTest extends TestHarness {
 
         pubnub.addListener(new SubscribeCallback() {
             @Override
-            public void status(Pubnub pubnub, PNStatus status) {
+            public void status(PubNub pubnub, PNStatus status) {
             }
 
             @Override
-            public void message(Pubnub pubnub, PNMessageResult message) {
+            public void message(PubNub pubnub, PNMessageResult message) {
                 List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")));
 
                 if (requests.size() == 1) {
@@ -131,7 +131,7 @@ public class SubscriptionManagerTest extends TestHarness {
             }
 
             @Override
-            public void presence(Pubnub pubnub, PNPresenceEventResult presence) {
+            public void presence(PubNub pubnub, PNPresenceEventResult presence) {
             }
         });
 
@@ -151,11 +151,11 @@ public class SubscriptionManagerTest extends TestHarness {
 
         pubnub.addListener(new SubscribeCallback() {
             @Override
-            public void status(Pubnub pubnub, PNStatus status) {
+            public void status(PubNub pubnub, PNStatus status) {
             }
 
             @Override
-            public void message(Pubnub pubnub, PNMessageResult message) {
+            public void message(PubNub pubnub, PNMessageResult message) {
                 List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")));
 
                 if (requests.size() == 1) {
@@ -166,7 +166,7 @@ public class SubscriptionManagerTest extends TestHarness {
             }
 
             @Override
-            public void presence(Pubnub pubnub, PNPresenceEventResult presence) {
+            public void presence(PubNub pubnub, PNPresenceEventResult presence) {
             }
         });
 
@@ -185,15 +185,15 @@ public class SubscriptionManagerTest extends TestHarness {
 
         pubnub.addListener(new SubscribeCallback() {
             @Override
-            public void status(Pubnub pubnub, PNStatus status) {
+            public void status(PubNub pubnub, PNStatus status) {
             }
 
             @Override
-            public void message(Pubnub pubnub, PNMessageResult message) {
+            public void message(PubNub pubnub, PNMessageResult message) {
             }
 
             @Override
-            public void presence(Pubnub pubnub, PNPresenceEventResult presence) {
+            public void presence(PubNub pubnub, PNPresenceEventResult presence) {
                 if (atomic.get() == 0) {
                     assertEquals("join", presence.getData().getPresenceEvent());
                     assertEquals("4a6d5df7-e301-4e73-a7b7-6af9ab484eb0", presence.getData().getPresence().getUuid());
@@ -219,11 +219,11 @@ public class SubscriptionManagerTest extends TestHarness {
 
         pubnub.addListener(new SubscribeCallback() {
             @Override
-            public void status(Pubnub pubnub, PNStatus status) {
+            public void status(PubNub pubnub, PNStatus status) {
             }
 
             @Override
-            public void message(Pubnub pubnub, PNMessageResult message) {
+            public void message(PubNub pubnub, PNMessageResult message) {
                 List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")));
 
                 if (requests.size() == 2){
@@ -234,7 +234,7 @@ public class SubscriptionManagerTest extends TestHarness {
             }
 
             @Override
-            public void presence(Pubnub pubnub, PNPresenceEventResult presence) {
+            public void presence(PubNub pubnub, PNPresenceEventResult presence) {
             }
         });
 
@@ -252,17 +252,17 @@ public class SubscriptionManagerTest extends TestHarness {
 
         SubscribeCallback sub1 = new SubscribeCallback() {
             @Override
-            public void status(Pubnub pubnub, PNStatus status) {
+            public void status(PubNub pubnub, PNStatus status) {
                 atomic.addAndGet(1);
             }
 
             @Override
-            public void message(Pubnub pubnub, PNMessageResult message) {
+            public void message(PubNub pubnub, PNMessageResult message) {
                 atomic.addAndGet(1);
             }
 
             @Override
-            public void presence(Pubnub pubnub, PNPresenceEventResult presence) {
+            public void presence(PubNub pubnub, PNPresenceEventResult presence) {
                 atomic.addAndGet(1);
             }
         };
@@ -294,7 +294,7 @@ public class SubscriptionManagerTest extends TestHarness {
 
         SubscribeCallback sub1 = new SubscribeCallback() {
             @Override
-            public void status(Pubnub pubnub, PNStatus status) {
+            public void status(PubNub pubnub, PNStatus status) {
                 if (status.getAffectedChannels().size() == 1 && status.getOperation() == PNOperationType.PNUnsubscribeOperation){
                     if (status.getAffectedChannels().get(0).equals("ch1")) {
                         statusRecieved.set(true);
@@ -303,7 +303,7 @@ public class SubscriptionManagerTest extends TestHarness {
             }
 
             @Override
-            public void message(Pubnub pubnub, PNMessageResult message) {
+            public void message(PubNub pubnub, PNMessageResult message) {
                 List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/subscribe/mySubscribeKey/ch2,ch2-pnpres/0.*")));
 
                 if (!requests.isEmpty()) {
@@ -313,7 +313,7 @@ public class SubscriptionManagerTest extends TestHarness {
             }
 
             @Override
-            public void presence(Pubnub pubnub, PNPresenceEventResult presence) {
+            public void presence(PubNub pubnub, PNPresenceEventResult presence) {
             }
         };
 
@@ -341,18 +341,18 @@ public class SubscriptionManagerTest extends TestHarness {
 
         SubscribeCallback sub1 = new SubscribeCallback() {
             @Override
-            public void status(Pubnub pubnub, PNStatus status) {
+            public void status(PubNub pubnub, PNStatus status) {
                 if (status.getOperation() == PNOperationType.PNHeartbeatOperation && !status.isError()) {
                     statusRecieved.set(true);
                 }
             }
 
             @Override
-            public void message(Pubnub pubnub, PNMessageResult message) {
+            public void message(PubNub pubnub, PNMessageResult message) {
             }
 
             @Override
-            public void presence(Pubnub pubnub, PNPresenceEventResult presence) {
+            public void presence(PubNub pubnub, PNPresenceEventResult presence) {
             }
         };
 
@@ -376,18 +376,18 @@ public class SubscriptionManagerTest extends TestHarness {
 
         SubscribeCallback sub1 = new SubscribeCallback() {
             @Override
-            public void status(Pubnub pubnub, PNStatus status) {
+            public void status(PubNub pubnub, PNStatus status) {
                 if (status.getOperation() == PNOperationType.PNHeartbeatOperation) {
                     statusRecieved.set(true);
                 }
             }
 
             @Override
-            public void message(Pubnub pubnub, PNMessageResult message) {
+            public void message(PubNub pubnub, PNMessageResult message) {
             }
 
             @Override
-            public void presence(Pubnub pubnub, PNPresenceEventResult presence) {
+            public void presence(PubNub pubnub, PNPresenceEventResult presence) {
             }
         };
 
@@ -410,18 +410,18 @@ public class SubscriptionManagerTest extends TestHarness {
 
         SubscribeCallback sub1 = new SubscribeCallback() {
             @Override
-            public void status(Pubnub pubnub, PNStatus status) {
+            public void status(PubNub pubnub, PNStatus status) {
                 if (status.getOperation() == PNOperationType.PNHeartbeatOperation && status.isError()) {
                     statusRecieved.set(true);
                 }
             }
 
             @Override
-            public void message(Pubnub pubnub, PNMessageResult message) {
+            public void message(PubNub pubnub, PNMessageResult message) {
             }
 
             @Override
-            public void presence(Pubnub pubnub, PNPresenceEventResult presence) {
+            public void presence(PubNub pubnub, PNPresenceEventResult presence) {
             }
         };
 
@@ -444,18 +444,18 @@ public class SubscriptionManagerTest extends TestHarness {
 
         SubscribeCallback sub1 = new SubscribeCallback() {
             @Override
-            public void status(Pubnub pubnub, PNStatus status) {
+            public void status(PubNub pubnub, PNStatus status) {
                 if (status.getOperation() == PNOperationType.PNHeartbeatOperation) {
                     statusRecieved.set(true);
                 }
             }
 
             @Override
-            public void message(Pubnub pubnub, PNMessageResult message) {
+            public void message(PubNub pubnub, PNMessageResult message) {
             }
 
             @Override
-            public void presence(Pubnub pubnub, PNPresenceEventResult presence) {
+            public void presence(PubNub pubnub, PNPresenceEventResult presence) {
             }
         };
 
@@ -481,18 +481,18 @@ public class SubscriptionManagerTest extends TestHarness {
 
         SubscribeCallback sub1 = new SubscribeCallback() {
             @Override
-            public void status(Pubnub pubnub, PNStatus status) {
+            public void status(PubNub pubnub, PNStatus status) {
                 if (status.getOperation() == PNOperationType.PNHeartbeatOperation) {
                     statusRecieved.set(true);
                 }
             }
 
             @Override
-            public void message(Pubnub pubnub, PNMessageResult message) {
+            public void message(PubNub pubnub, PNMessageResult message) {
             }
 
             @Override
-            public void presence(Pubnub pubnub, PNPresenceEventResult presence) {
+            public void presence(PubNub pubnub, PNPresenceEventResult presence) {
             }
         };
 

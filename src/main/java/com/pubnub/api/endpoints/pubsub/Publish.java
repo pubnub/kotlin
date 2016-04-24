@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pubnub.api.core.*;
 import com.pubnub.api.core.enums.PNOperationType;
-import com.pubnub.api.core.models.PublishData;
+import com.pubnub.api.core.models.consumer.PNPublishResult;
 import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.managers.PublishSequenceManager;
 import lombok.Setter;
@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 @Accessors(chain = true, fluent = true)
-public class Publish extends Endpoint<List<Object>, PublishData> {
+public class Publish extends Endpoint<List<Object>, PNPublishResult> {
 
     @Setter private Object message;
     @Setter private String channel;
@@ -26,7 +26,7 @@ public class Publish extends Endpoint<List<Object>, PublishData> {
 
     PublishSequenceManager publishSequenceManager;
 
-    public Publish(Pubnub pubnub, PublishSequenceManager providedPublishSequenceManager) {
+    public Publish(PubNub pubnub, PublishSequenceManager providedPublishSequenceManager) {
         super(pubnub);
 
         this.publishSequenceManager = providedPublishSequenceManager;
@@ -46,7 +46,7 @@ public class Publish extends Endpoint<List<Object>, PublishData> {
     }
 
     @Override
-    protected final Call<List<Object>> doWork(Map<String, String> params) throws PubnubException {
+    protected final Call<List<Object>> doWork(Map<String, String> params) throws PubNubException {
         String stringifiedMessage;
         String stringifiedMeta;
         ObjectMapper mapper = new ObjectMapper();
@@ -54,7 +54,7 @@ public class Publish extends Endpoint<List<Object>, PublishData> {
         try {
             stringifiedMessage = mapper.writeValueAsString(message);
         } catch (JsonProcessingException e) {
-            throw PubnubException.builder().pubnubError(PubnubError.PNERROBJ_INVALID_ARGUMENTS).errormsg(e.getMessage()).build();
+            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_INVALID_ARGUMENTS).errormsg(e.getMessage()).build();
         }
 
         if (meta != null) {
@@ -63,7 +63,7 @@ public class Publish extends Endpoint<List<Object>, PublishData> {
                 stringifiedMeta = PubnubUtil.urlEncode(stringifiedMeta);
                 params.put("meta", stringifiedMeta);
             } catch (JsonProcessingException e) {
-                throw PubnubException.builder().pubnubError(PubnubError.PNERROBJ_INVALID_ARGUMENTS).errormsg(e.getMessage()).build();
+                throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_INVALID_ARGUMENTS).errormsg(e.getMessage()).build();
             }
         }
 
@@ -112,11 +112,11 @@ public class Publish extends Endpoint<List<Object>, PublishData> {
     }
 
     @Override
-    protected final PublishData createResponse(final Response<List<Object>> input) throws PubnubException {
-        PublishData publishData = new PublishData();
-        publishData.setTimetoken(Long.valueOf(input.body().get(2).toString()));
+    protected final PNPublishResult createResponse(final Response<List<Object>> input) throws PubNubException {
+        PNPublishResult.PNPublishResultBuilder pnPublishResult = PNPublishResult.builder();
+        pnPublishResult.timetoken(Long.valueOf(input.body().get(2).toString()));
 
-        return publishData;
+        return pnPublishResult.build();
     }
 
     protected int getConnectTimeout() {

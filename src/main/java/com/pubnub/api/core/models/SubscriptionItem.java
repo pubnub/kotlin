@@ -1,9 +1,11 @@
 package com.pubnub.api.core.models;
 
 import com.pubnub.api.core.enums.SubscriptionType;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
 
-@Data
+@Builder
+@Getter
 public class SubscriptionItem {
 
     private String name;

@@ -1,29 +1,27 @@
-package com.pubnub.api.core.models.consumer_facing;
+package com.pubnub.api.core.models.server.access_manager;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.JsonNode;
+import com.pubnub.api.core.models.consumer.access_manager.PNAccessManagerKeyData;
 import lombok.Getter;
 
 import java.util.Map;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
-public class PNAccessManagerGrantData {
+public class AccessManagerAuditPayload {
 
     String level;
-    int ttl;
     @JsonProperty("subscribe_key")
     String subscribeKey;
 
-    Map<String, PNAccessManagerKeysData> channels;
+    String channel;
 
-    @JsonProperty("channel-groups")
-    JsonNode channelGroups;
+    @JsonProperty("channel-group")
+    String channelGroup;
 
     @JsonProperty("auths")
     Map<String, PNAccessManagerKeyData> authKeys;
 
-    String channel;
 
 }

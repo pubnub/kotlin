@@ -10,7 +10,7 @@ import java.util.UUID;
 
 @Getter
 @Setter
-public class PnConfiguration {
+public class PNConfiguration {
 
     /**
      * By default, the origin is pointing directly to PubNub servers. If a proxy origin is neeeded, set a custom
@@ -81,10 +81,10 @@ public class PnConfiguration {
     @Setter private String filterExpression;
 
     /**
-     * Initialize the PnConfiguration with default values
+     * Initialize the PNConfiguration with default values
      */
-    public PnConfiguration() {
-        setPresenceTimingConfiguration(300);
+    public PNConfiguration() {
+        setPresenceTimeout(300);
 
         uuid = UUID.randomUUID().toString();
 
@@ -101,7 +101,7 @@ public class PnConfiguration {
      * @param interval presence announce interval, how often the client should announce itself.
      * @return returns itself.
      */
-    public PnConfiguration setPresenceTimingConfiguration(final int timeout, final int interval) {
+    public PNConfiguration setPresenceTimeoutWithCustomInterval(final int timeout, final int interval) {
         this.presenceTimeout = timeout;
         this.heartbeatInterval = interval;
 
@@ -113,8 +113,8 @@ public class PnConfiguration {
      * @param timeout presence timeout; how long before the server considers this client to be gone.
      * @return returns itself.
      */
-    public PnConfiguration setPresenceTimingConfiguration(final int timeout) {
-        return setPresenceTimingConfiguration(timeout,(timeout / 2) - 1);
+    public PNConfiguration setPresenceTimeout(final int timeout) {
+        return setPresenceTimeoutWithCustomInterval(timeout,(timeout / 2) - 1);
     }
 
 }

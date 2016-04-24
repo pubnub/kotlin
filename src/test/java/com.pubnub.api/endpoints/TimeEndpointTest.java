@@ -4,9 +4,9 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import com.jayway.awaitility.Awaitility;
 import com.pubnub.api.callbacks.TimeCallback;
-import com.pubnub.api.core.PubnubException;
-import com.pubnub.api.core.models.consumer_facing.PNStatus;
-import com.pubnub.api.core.models.consumer_facing.PNTimeResult;
+import com.pubnub.api.core.PubNubException;
+import com.pubnub.api.core.models.consumer.PNStatus;
+import com.pubnub.api.core.models.consumer.PNTimeResult;
 import org.junit.Before;
 import org.junit.Rule;
 
@@ -32,7 +32,7 @@ public class TimeEndpointTest extends TestHarness {
 
 
     @org.junit.Test
-    public void testSyncSuccess() throws IOException, PubnubException, InterruptedException {
+    public void testSyncSuccess() throws IOException, PubNubException, InterruptedException {
         stubFor(get(urlPathEqualTo("/time/0"))
                 .willReturn(aResponse().withBody("[14593046077243110]")));
 
@@ -44,22 +44,22 @@ public class TimeEndpointTest extends TestHarness {
 
     }
 
-    @org.junit.Test(expected=PubnubException.class)
-    public void testSyncBrokenWithString() throws IOException, PubnubException {
+    @org.junit.Test(expected=PubNubException.class)
+    public void testSyncBrokenWithString() throws IOException, PubNubException {
         stubFor(get(urlPathEqualTo("/time/0"))
                 .willReturn(aResponse().withBody("[abc]")));
         partialTime.sync();
     }
 
-    @org.junit.Test(expected=PubnubException.class)
-    public void testSyncBrokenWithoutJSON() throws IOException, PubnubException {
+    @org.junit.Test(expected=PubNubException.class)
+    public void testSyncBrokenWithoutJSON() throws IOException, PubNubException {
         stubFor(get(urlPathEqualTo("/time/0"))
                 .willReturn(aResponse().withBody("zimp")));
         partialTime.sync();
     }
 
-    @org.junit.Test(expected=PubnubException.class)
-    public void testSyncBrokenWithout200() throws IOException, PubnubException {
+    @org.junit.Test(expected=PubNubException.class)
+    public void testSyncBrokenWithout200() throws IOException, PubNubException {
         stubFor(get(urlPathEqualTo("/time/0"))
                 .willReturn(aResponse().withBody("[14593046077243110]").withStatus(404)));
         PNTimeResult response = partialTime.sync();
@@ -67,7 +67,7 @@ public class TimeEndpointTest extends TestHarness {
     }
 
     @org.junit.Test
-    public void testAsyncSuccess() throws IOException, PubnubException {
+    public void testAsyncSuccess() throws IOException, PubNubException {
         stubFor(get(urlPathEqualTo("/time/0"))
                 .willReturn(aResponse().withBody("[14593046077243110]")));
         final AtomicInteger atomic = new AtomicInteger(0);
@@ -85,7 +85,7 @@ public class TimeEndpointTest extends TestHarness {
     }
 
     @org.junit.Test
-    public void testAsyncBrokenWithString() throws IOException, PubnubException {
+    public void testAsyncBrokenWithString() throws IOException, PubNubException {
         stubFor(get(urlPathEqualTo("/time/0"))
                 .willReturn(aResponse().withBody("[abc]")));
         final AtomicInteger atomic = new AtomicInteger(0);
@@ -105,7 +105,7 @@ public class TimeEndpointTest extends TestHarness {
     }
 
     @org.junit.Test
-    public void testAsyncBrokenWithoutJSON() throws IOException, PubnubException {
+    public void testAsyncBrokenWithoutJSON() throws IOException, PubNubException {
         stubFor(get(urlPathEqualTo("/time/0"))
                 .willReturn(aResponse().withBody("zimp")));
         final AtomicInteger atomic = new AtomicInteger(0);
@@ -125,7 +125,7 @@ public class TimeEndpointTest extends TestHarness {
     }
 
     @org.junit.Test
-    public void testAsyncBrokenWithout200() throws IOException, PubnubException {
+    public void testAsyncBrokenWithout200() throws IOException, PubNubException {
         stubFor(get(urlPathEqualTo("/time/0"))
                 .willReturn(aResponse().withBody("[14593046077243110]").withStatus(404)));
         final AtomicInteger atomic = new AtomicInteger(0);

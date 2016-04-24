@@ -1,9 +1,10 @@
-package com.pubnub.api.core.models.consumer_facing;
+package com.pubnub.api.core.models.consumer.history;
 
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 
-@Setter
+@Builder
+@Getter
 public class PNHistoryItemResult {
 
     @Getter private Long timetoken;

@@ -1,7 +1,7 @@
 package com.pubnub.api.endpoints.push;
 
-import com.pubnub.api.core.Pubnub;
-import com.pubnub.api.core.PubnubException;
+import com.pubnub.api.core.PubNub;
+import com.pubnub.api.core.PubNubException;
 import com.pubnub.api.core.enums.PNOperationType;
 import com.pubnub.api.core.enums.PushType;
 import com.pubnub.api.endpoints.Endpoint;
@@ -19,7 +19,7 @@ public class ListPushProvisions extends Endpoint<List<String>, List<String>> {
     @Setter private PushType pushType;
     @Setter private String deviceId;
 
-    public ListPushProvisions(Pubnub pubnub) {
+    public ListPushProvisions(PubNub pubnub) {
         super(pubnub);
     }
 
@@ -29,14 +29,14 @@ public class ListPushProvisions extends Endpoint<List<String>, List<String>> {
     }
 
     @Override
-    protected Call<List<String>> doWork(Map<String, String> params) throws PubnubException {
+    protected Call<List<String>> doWork(Map<String, String> params) throws PubNubException {
         params.put("type", pushType.name().toLowerCase());
         PushService service = this.createRetrofit().create(PushService.class);
         return service.listChannelsForDevice(pubnub.getConfiguration().getSubscribeKey(), deviceId, params);
     }
 
     @Override
-    protected List<String> createResponse(Response<List<String>> input) throws PubnubException {
+    protected List<String> createResponse(Response<List<String>> input) throws PubNubException {
         return input.body();
     }
 

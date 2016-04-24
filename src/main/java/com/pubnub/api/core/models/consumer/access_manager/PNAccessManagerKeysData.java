@@ -1,4 +1,4 @@
-package com.pubnub.api.core.models.consumer_facing;
+package com.pubnub.api.core.models.consumer.access_manager;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;

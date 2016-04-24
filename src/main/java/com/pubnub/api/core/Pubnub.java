@@ -29,9 +29,9 @@ import java.util.Properties;
 
 @Getter
 @Slf4j
-public class Pubnub {
+public class PubNub {
 
-    private PnConfiguration configuration;
+    private PNConfiguration configuration;
 
     @Getter(AccessLevel.NONE)
     private SubscriptionManager subscriptionManager;
@@ -42,7 +42,7 @@ public class Pubnub {
 
     private String sdkVersion;
 
-    public Pubnub(final PnConfiguration initialConfig) {
+    public PubNub(final PNConfiguration initialConfig) {
         this.configuration = initialConfig;
         this.subscriptionManager = new SubscriptionManager(this);
         this.basePathManager = new BasePathManager(initialConfig);
@@ -154,9 +154,9 @@ public class Pubnub {
      * @param inputString String to be encrypted
      * @return String containing the encryption of inputString using cipherKey
      */
-    public final String decrypt(String inputString) throws PubnubException {
+    public final String decrypt(String inputString) throws PubNubException {
         if (inputString == null) {
-            throw PubnubException.builder().pubnubError(PubnubError.PNERROBJ_INVALID_ARGUMENTS).build();
+            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_INVALID_ARGUMENTS).build();
         }
 
         return decrypt(inputString, this.getConfiguration().getCipherKey());
@@ -166,12 +166,12 @@ public class Pubnub {
      * Perform Cryptographic decryption of an input string using the cipher key
      * @param inputString String to be encrypted
      * @param cipherKey cipher key to be used for encryption
-     * @throws PubnubException throws exception in case of failed encryption
+     * @throws PubNubException throws exception in case of failed encryption
      * @return String containing the encryption of inputString using cipherKey
      */
-    public final String decrypt(final String inputString, final String cipherKey) throws PubnubException {
+    public final String decrypt(final String inputString, final String cipherKey) throws PubNubException {
         if (inputString == null) {
-            throw PubnubException.builder().pubnubError(PubnubError.PNERROBJ_INVALID_ARGUMENTS).build();
+            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_INVALID_ARGUMENTS).build();
         }
 
         return new Crypto(cipherKey).decrypt(inputString);
@@ -182,9 +182,9 @@ public class Pubnub {
      * @param inputString String to be encrypted
      * @return String containing the encryption of inputString using cipherKey
      */
-    public final String encrypt(final String inputString) throws PubnubException {
+    public final String encrypt(final String inputString) throws PubNubException {
         if (inputString == null) {
-            throw PubnubException.builder().pubnubError(PubnubError.PNERROBJ_INVALID_ARGUMENTS).build();
+            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_INVALID_ARGUMENTS).build();
         }
 
         return encrypt(inputString, this.getConfiguration().getCipherKey());
@@ -194,12 +194,12 @@ public class Pubnub {
      * Perform Cryptographic encryption of an input string and the cipher key.
      * @param inputString String to be encrypted
      * @param cipherKey cipher key to be used for encryption
-     * @throws PubnubException throws exception in case of failed encryption
+     * @throws PubNubException throws exception in case of failed encryption
      * @return String containing the encryption of inputString using cipherKey
      */
-    public final String encrypt(final String inputString, final String cipherKey) throws PubnubException {
+    public final String encrypt(final String inputString, final String cipherKey) throws PubNubException {
         if (inputString == null) {
-            throw PubnubException.builder().pubnubError(PubnubError.PNERROBJ_INVALID_ARGUMENTS).build();
+            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_INVALID_ARGUMENTS).build();
         }
 
         return new Crypto(cipherKey).encrypt(inputString);

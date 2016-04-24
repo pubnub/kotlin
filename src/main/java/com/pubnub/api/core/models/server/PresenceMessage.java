@@ -1,4 +1,4 @@
-package com.pubnub.api.core.models.server_responses;
+package com.pubnub.api.core.models.server;
 
 import lombok.Getter;
 

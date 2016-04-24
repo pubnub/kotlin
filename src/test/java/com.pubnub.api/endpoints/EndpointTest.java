@@ -1,7 +1,7 @@
 package com.pubnub.api.endpoints;
 
-import com.pubnub.api.core.Pubnub;
-import com.pubnub.api.core.PubnubException;
+import com.pubnub.api.core.PubNub;
+import com.pubnub.api.core.PubNubException;
 import com.pubnub.api.core.enums.PNOperationType;
 import okhttp3.Request;
 import org.junit.Assert;
@@ -16,7 +16,7 @@ import java.util.Map;
 
 public class EndpointTest extends TestHarness {
 
-    Pubnub pubnub;
+    PubNub pubnub;
 
 
     @Before
@@ -25,7 +25,7 @@ public class EndpointTest extends TestHarness {
     }
 
     @Test
-    public void testUUID() throws PubnubException {
+    public void testUUID() throws PubNubException {
         Endpoint<Object, Object> endpoint =  new Endpoint<Object, Object>(pubnub) {
 
             @Override
@@ -34,7 +34,7 @@ public class EndpointTest extends TestHarness {
             }
 
             @Override
-            protected Object createResponse(Response input) throws PubnubException {
+            protected Object createResponse(Response input) throws PubNubException {
                 return null;
             }
 
@@ -54,7 +54,7 @@ public class EndpointTest extends TestHarness {
             }
 
             @Override
-            protected Call doWork(Map baseParams) throws PubnubException {
+            protected Call doWork(Map baseParams) throws PubNubException {
 
                 Call<Object> fakeCall = new Call<Object>() {
 

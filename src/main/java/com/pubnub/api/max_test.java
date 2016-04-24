@@ -1,12 +1,12 @@
 package com.pubnub.api;
 
 import com.pubnub.api.callbacks.SubscribeCallback;
-import com.pubnub.api.core.PnConfiguration;
-import com.pubnub.api.core.Pubnub;
-import com.pubnub.api.core.PubnubException;
+import com.pubnub.api.core.PNConfiguration;
+import com.pubnub.api.core.PubNub;
+import com.pubnub.api.core.PubNubException;
+import com.pubnub.api.core.models.consumer.PNStatus;
 import com.pubnub.api.core.models.consumer_facing.PNMessageResult;
 import com.pubnub.api.core.models.consumer_facing.PNPresenceEventResult;
-import com.pubnub.api.core.models.consumer_facing.PNStatus;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Arrays;
@@ -17,15 +17,15 @@ import java.util.Map;
 @Slf4j
 public class max_test {
 
-    public static void main(String[] args) throws InterruptedException, PubnubException {
-        PnConfiguration pnConfiguration = new PnConfiguration();
+    public static void main(String[] args) throws InterruptedException, PubNubException {
+        PNConfiguration pnConfiguration = new PNConfiguration();
         pnConfiguration.setSubscribeKey("sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f");
         pnConfiguration.setPublishKey("pub-c-d34a0058-6747-4c9d-b669-e651d7e0efb7");
         pnConfiguration.setSecretKey("sec-c-NDJkOWM2ZWItNzBhMS00YzllLWFlZjAtNGJlMjVkZjZlNzMy");
         // pnConfiguration.setCipherKey("testCipher");
 
 
-        Pubnub pubnub = new Pubnub(pnConfiguration);
+        PubNub pubnub = new PubNub(pnConfiguration);
 
         pubnub.publish()
                 .channel("coolChannel").usePOST(false).shouldStore(true)
@@ -33,17 +33,17 @@ public class max_test {
 
         pubnub.addListener(new SubscribeCallback() {
             @Override
-            public void status(Pubnub pubnub, PNStatus status) {
+            public void status(PubNub pubnub, PNStatus status) {
                 int moose = 10;
             }
 
             @Override
-            public void message(Pubnub pubnub, PNMessageResult message) {
+            public void message(PubNub pubnub, PNMessageResult message) {
                 log.debug("result ->>", message.toString());
             }
 
             @Override
-            public void presence(Pubnub pubnub, PNPresenceEventResult presence) {
+            public void presence(PubNub pubnub, PNPresenceEventResult presence) {
                 log.debug("presence ->>", presence.toString());
             }
         });

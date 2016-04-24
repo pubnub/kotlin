@@ -1,4 +1,4 @@
-package com.pubnub.api.core.models;
+package com.pubnub.api.core.models.server;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;

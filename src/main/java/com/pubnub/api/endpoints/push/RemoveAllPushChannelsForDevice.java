@@ -1,7 +1,7 @@
 package com.pubnub.api.endpoints.push;
 
-import com.pubnub.api.core.Pubnub;
-import com.pubnub.api.core.PubnubException;
+import com.pubnub.api.core.PubNub;
+import com.pubnub.api.core.PubNubException;
 import com.pubnub.api.core.enums.PNOperationType;
 import com.pubnub.api.core.enums.PushType;
 import com.pubnub.api.endpoints.Endpoint;
@@ -19,7 +19,7 @@ public class RemoveAllPushChannelsForDevice extends Endpoint<List<Object>, Boole
     @Setter private PushType pushType;
     @Setter private String deviceId;
 
-    public RemoveAllPushChannelsForDevice(Pubnub pubnub) {
+    public RemoveAllPushChannelsForDevice(PubNub pubnub) {
         super(pubnub);
     }
 
@@ -34,7 +34,7 @@ public class RemoveAllPushChannelsForDevice extends Endpoint<List<Object>, Boole
 
 
     @Override
-    protected Call<List<Object>> doWork(Map<String, String> params) throws PubnubException {
+    protected Call<List<Object>> doWork(Map<String, String> params) throws PubNubException {
         params.put("type", pushType.name().toLowerCase());
 
         PushService service = this.createRetrofit().create(PushService.class);
@@ -44,7 +44,7 @@ public class RemoveAllPushChannelsForDevice extends Endpoint<List<Object>, Boole
     }
 
     @Override
-    protected Boolean createResponse(Response<List<Object>> input) throws PubnubException {
+    protected Boolean createResponse(Response<List<Object>> input) throws PubNubException {
         return true;
     }
 

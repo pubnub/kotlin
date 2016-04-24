@@ -1,7 +1,7 @@
 package com.pubnub.api.endpoints.channel_groups;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import com.pubnub.api.core.PubnubException;
+import com.pubnub.api.core.PubNubException;
 import com.pubnub.api.endpoints.TestHarness;
 import org.junit.Before;
 import org.junit.Rule;
@@ -24,8 +24,8 @@ public class RemoveChannelChannelGroupEndpointTest extends TestHarness {
     }
 
     @org.junit.Test
-    public void testSyncSuccess() throws IOException, PubnubException, InterruptedException {
-        stubFor(get(urlPathEqualTo("/v2/channel-registration/sub-key/mySubscribeKey/channel-group/groupA"))
+    public void testSyncSuccess() throws IOException, PubNubException, InterruptedException {
+        stubFor(get(urlPathEqualTo("/v1/channel-registration/sub-key/mySubscribeKey/channel-group/groupA"))
                 .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {}, \"service\": \"ChannelGroups\"}")));
 
         boolean response = partialRemoveChannelChannelGroup.channelGroup("groupA").channels(Arrays.asList("ch1", "ch2")).sync();

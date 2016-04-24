@@ -1,6 +1,6 @@
 package com.pubnub.api.managers;
 
-import com.pubnub.api.core.PnConfiguration;
+import com.pubnub.api.core.PNConfiguration;
 
 /**
  * A stateful manager to support base path construction, proxying and cache busting.
@@ -10,7 +10,7 @@ public class BasePathManager {
     /**
      * PubNub configuration storage.
      */
-    private PnConfiguration config;
+    private PNConfiguration config;
     /**
      * for cache busting, the current subdomain number used.
      */
@@ -33,7 +33,7 @@ public class BasePathManager {
      * Initialize the path management.
      * @param initialConfig configuration object
      */
-    public BasePathManager(final PnConfiguration initialConfig) {
+    public BasePathManager(final PNConfiguration initialConfig) {
         this.config = initialConfig;
         currentSubdomain = 1;
     }

@@ -1,10 +1,10 @@
 package com.pubnub.api.endpoints.presence;
 
-import com.pubnub.api.core.Pubnub;
-import com.pubnub.api.core.PubnubException;
+import com.pubnub.api.core.PubNub;
+import com.pubnub.api.core.PubNubException;
 import com.pubnub.api.core.PubnubUtil;
 import com.pubnub.api.core.enums.PNOperationType;
-import com.pubnub.api.core.models.Envelope;
+import com.pubnub.api.core.models.server.Envelope;
 import com.pubnub.api.endpoints.Endpoint;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -18,7 +18,7 @@ import java.util.Map;
 @Accessors(chain = true, fluent = true)
 public class Leave extends Endpoint<Envelope, Boolean> {
 
-    public Leave(Pubnub pubnub) {
+    public Leave(PubNub pubnub) {
         super(pubnub);
         channels = new ArrayList<>();
         channelGroups = new ArrayList<>();
@@ -51,7 +51,7 @@ public class Leave extends Endpoint<Envelope, Boolean> {
     }
 
     @Override
-    protected Boolean createResponse(Response<Envelope> input) throws PubnubException {
+    protected Boolean createResponse(Response<Envelope> input) throws PubNubException {
         return true;
     }
 

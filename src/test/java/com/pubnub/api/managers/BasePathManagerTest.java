@@ -1,6 +1,6 @@
 package com.pubnub.api.managers;
 
-import com.pubnub.api.core.PnConfiguration;
+import com.pubnub.api.core.PNConfiguration;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -9,11 +9,11 @@ import java.io.IOException;
 
 public class BasePathManagerTest {
 
-    PnConfiguration pnConfiguration;
+    PNConfiguration pnConfiguration;
 
     @Before
     public void beforeEach() throws IOException {
-        pnConfiguration = new PnConfiguration();
+        pnConfiguration = new PNConfiguration();
     }
 
     @Test

@@ -1,7 +1,7 @@
 package com.pubnub.api.endpoints.push;
 
-import com.pubnub.api.core.Pubnub;
-import com.pubnub.api.core.PubnubException;
+import com.pubnub.api.core.PubNub;
+import com.pubnub.api.core.PubNubException;
 import com.pubnub.api.core.PubnubUtil;
 import com.pubnub.api.core.enums.PNOperationType;
 import com.pubnub.api.core.enums.PushType;
@@ -22,7 +22,7 @@ public class RemoveChannelsFromPush extends Endpoint<List<Object>, Boolean> {
     @Setter private List<String> channels;
     @Setter String deviceId;
 
-    public RemoveChannelsFromPush(Pubnub pubnub) {
+    public RemoveChannelsFromPush(PubNub pubnub) {
         super(pubnub);
 
         channels = new ArrayList<>();
@@ -46,7 +46,7 @@ public class RemoveChannelsFromPush extends Endpoint<List<Object>, Boolean> {
     }
 
     @Override
-    protected Call<List<Object>> doWork(Map<String, String> baseParams) throws PubnubException {
+    protected Call<List<Object>> doWork(Map<String, String> baseParams) throws PubNubException {
         baseParams.put("type", pushType.name().toLowerCase());
 
         if (channels.size() != 0) {
@@ -59,7 +59,7 @@ public class RemoveChannelsFromPush extends Endpoint<List<Object>, Boolean> {
     }
 
     @Override
-    protected Boolean createResponse(Response<List<Object>> input) throws PubnubException {
+    protected Boolean createResponse(Response<List<Object>> input) throws PubNubException {
         return null;
     }
 

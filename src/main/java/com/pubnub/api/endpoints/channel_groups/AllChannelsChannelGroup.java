@@ -1,10 +1,10 @@
 package com.pubnub.api.endpoints.channel_groups;
 
-import com.pubnub.api.core.Pubnub;
-import com.pubnub.api.core.PubnubError;
-import com.pubnub.api.core.PubnubException;
+import com.pubnub.api.core.PubNub;
+import com.pubnub.api.core.PubNubError;
+import com.pubnub.api.core.PubNubException;
 import com.pubnub.api.core.enums.PNOperationType;
-import com.pubnub.api.core.models.Envelope;
+import com.pubnub.api.core.models.server.Envelope;
 import com.pubnub.api.core.models.consumer_facing.PNChannelGroupsAllChannelsResult;
 import com.pubnub.api.endpoints.Endpoint;
 import lombok.Setter;
@@ -20,7 +20,7 @@ import java.util.Map;
 public class AllChannelsChannelGroup extends Endpoint<Envelope<Object>, PNChannelGroupsAllChannelsResult> {
     @Setter private String channelGroup;
 
-    public AllChannelsChannelGroup(Pubnub pubnub) {
+    public AllChannelsChannelGroup(PubNub pubnub) {
         super(pubnub);
     }
 
@@ -37,11 +37,11 @@ public class AllChannelsChannelGroup extends Endpoint<Envelope<Object>, PNChanne
     }
 
     @Override
-    protected PNChannelGroupsAllChannelsResult createResponse(Response<Envelope<Object>> input) throws PubnubException {
+    protected PNChannelGroupsAllChannelsResult createResponse(Response<Envelope<Object>> input) throws PubNubException {
         Map<String, Object> stateMappings;
 
         if (input.body() == null || input.body().getPayload() == null) {
-            throw PubnubException.builder().pubnubError(PubnubError.PNERROBJ_PARSING_ERROR).build();
+            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_PARSING_ERROR).build();
         }
 
         PNChannelGroupsAllChannelsResult pnChannelGroupsAllChannelsResult = new PNChannelGroupsAllChannelsResult();

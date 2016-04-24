@@ -1,9 +1,9 @@
 package com.pubnub.api.endpoints.channel_groups;
 
-import com.pubnub.api.core.Pubnub;
-import com.pubnub.api.core.PubnubException;
+import com.pubnub.api.core.PubNub;
+import com.pubnub.api.core.PubNubException;
 import com.pubnub.api.core.enums.PNOperationType;
-import com.pubnub.api.core.models.Envelope;
+import com.pubnub.api.core.models.server.Envelope;
 import com.pubnub.api.endpoints.Endpoint;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -16,7 +16,7 @@ import java.util.Map;
 public class DeleteChannelGroup extends Endpoint<Envelope,Boolean> {
     @Setter private String channelGroup;
 
-    public DeleteChannelGroup(Pubnub pubnub) {
+    public DeleteChannelGroup(PubNub pubnub) {
         super(pubnub);
     }
 
@@ -33,7 +33,7 @@ public class DeleteChannelGroup extends Endpoint<Envelope,Boolean> {
     }
 
     @Override
-    protected Boolean createResponse(Response<Envelope> input) throws PubnubException {
+    protected Boolean createResponse(Response<Envelope> input) throws PubNubException {
         return true;
     }
 

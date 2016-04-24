@@ -1,10 +1,11 @@
 package com.pubnub.api.endpoints.presence;
 
-import com.pubnub.api.core.Pubnub;
-import com.pubnub.api.core.PubnubException;
+import com.pubnub.api.core.PubNub;
+import com.pubnub.api.core.PubNubException;
 import com.pubnub.api.core.PubnubUtil;
 import com.pubnub.api.core.enums.PNOperationType;
-import com.pubnub.api.core.models.Envelope;
+import com.pubnub.api.core.models.consumer.presence.PNGetStateResult;
+import com.pubnub.api.core.models.server.Envelope;
 import com.pubnub.api.endpoints.Endpoint;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -17,13 +18,13 @@ import java.util.List;
 import java.util.Map;
 
 @Accessors(chain = true, fluent = true)
-public class GetState extends Endpoint<Envelope<Object>,Map<String, Object>> {
+public class GetState extends Endpoint<Envelope<Object>, PNGetStateResult> {
 
     @Setter private List<String> channels;
     @Setter private List<String> channelGroups;
     @Setter private String uuid;
 
-    public GetState(Pubnub pubnub) {
+    public GetState(PubNub pubnub) {
         super(pubnub);
         channels = new ArrayList<>();
         channelGroups = new ArrayList<>();
@@ -31,9 +32,6 @@ public class GetState extends Endpoint<Envelope<Object>,Map<String, Object>> {
 
     @Override
     protected boolean validateParams() {
-        if (uuid == null) {
-            return false;
-        }
 
         if (channels.size() == 0 && channelGroups.size() == 0) {
             return false;
@@ -43,7 +41,7 @@ public class GetState extends Endpoint<Envelope<Object>,Map<String, Object>> {
     }
 
     @Override
-    protected Call<Envelope<Object>> doWork(Map<String, String> params) throws PubnubException {
+    protected Call<Envelope<Object>> doWork(Map<String, String> params) throws PubNubException {
         PresenceService service = this.createRetrofit().create(PresenceService.class);
 
         if (channelGroups.size() > 0) {
@@ -52,11 +50,13 @@ public class GetState extends Endpoint<Envelope<Object>,Map<String, Object>> {
 
         String channelCSV = channels.size() > 0 ? PubnubUtil.joinString(channels, ",") : ",";
 
-        return service.getState(pubnub.getConfiguration().getSubscribeKey(), channelCSV, uuid, params);
+        String selectedUUID = uuid != null ? uuid : pubnub.getConfiguration().getUuid();
+
+        return service.getState(pubnub.getConfiguration().getSubscribeKey(), channelCSV, selectedUUID, params);
     }
 
     @Override
-    protected Map<String, Object> createResponse(final Response<Envelope<Object>> input) throws PubnubException {
+    protected PNGetStateResult createResponse(final Response<Envelope<Object>> input) throws PubNubException {
         Map<String, Object> stateMappings;
 
         if (channels.size() == 1 && channelGroups.size() == 0) {
@@ -66,7 +66,7 @@ public class GetState extends Endpoint<Envelope<Object>,Map<String, Object>> {
             stateMappings = (Map<String, Object>) input.body().getPayload();
         }
 
-        return stateMappings;
+        return PNGetStateResult.builder().stateByUUID(stateMappings).build();
     }
 
     protected int getConnectTimeout() {

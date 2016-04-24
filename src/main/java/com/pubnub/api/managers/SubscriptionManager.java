@@ -5,20 +5,21 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pubnub.api.callbacks.PNCallback;
 import com.pubnub.api.callbacks.SubscribeCallback;
 import com.pubnub.api.core.Crypto;
-import com.pubnub.api.core.Pubnub;
-import com.pubnub.api.core.PubnubError;
-import com.pubnub.api.core.PubnubException;
+import com.pubnub.api.core.PubNub;
+import com.pubnub.api.core.PubNubError;
+import com.pubnub.api.core.PubNubException;
 import com.pubnub.api.core.builder.dto.SubscribeOperation;
 import com.pubnub.api.core.builder.dto.UnsubscribeOperation;
 import com.pubnub.api.core.enums.PNHeartbeatNotificationOptions;
 import com.pubnub.api.core.enums.PNOperationType;
 import com.pubnub.api.core.enums.PNStatusCategory;
 import com.pubnub.api.core.enums.SubscriptionType;
-import com.pubnub.api.core.models.Envelope;
+import com.pubnub.api.core.models.consumer.PNStatus;
+import com.pubnub.api.core.models.server.Envelope;
 import com.pubnub.api.core.models.SubscriptionItem;
 import com.pubnub.api.core.models.consumer_facing.*;
-import com.pubnub.api.core.models.server_responses.SubscribeEnvelope;
-import com.pubnub.api.core.models.server_responses.SubscribeMessage;
+import com.pubnub.api.core.models.server.SubscribeEnvelope;
+import com.pubnub.api.core.models.server.SubscribeMessage;
 import com.pubnub.api.endpoints.presence.Heartbeat;
 import com.pubnub.api.endpoints.presence.Leave;
 import com.pubnub.api.endpoints.pubsub.Subscribe;
@@ -35,7 +36,7 @@ public class SubscriptionManager {
     private Map<String, SubscriptionItem> subscribedChannelGroups;
     private Map<String, Object> stateStorage;
     private List<SubscribeCallback> listeners;
-    private Pubnub pubnub;
+    private PubNub pubnub;
     private Call<SubscribeEnvelope> subscribeCall;
     private Call<Envelope> heartbeatCall;
     /**
@@ -50,7 +51,7 @@ public class SubscriptionManager {
 
     Timer timer;
 
-    public SubscriptionManager(Pubnub pubnub) {
+    public SubscriptionManager(PubNub pubnub) {
         this.subscribedChannelGroups = new HashMap<>();
         this.subscribedChannels = new HashMap<>();
         this.pubnub = pubnub;
@@ -84,18 +85,20 @@ public class SubscriptionManager {
 
     public final synchronized void adaptSubscribeBuilder(final SubscribeOperation subscribeOperation) {
         for (String channel : subscribeOperation.getChannels()) {
-            SubscriptionItem subscriptionItem = new SubscriptionItem();
-            subscriptionItem.setName(channel);
-            subscriptionItem.setWithPresence(subscribeOperation.isPresenceEnabled());
-            subscriptionItem.setType(SubscriptionType.CHANNEL);
+            SubscriptionItem subscriptionItem = SubscriptionItem.builder()
+                .name(channel)
+                .withPresence(subscribeOperation.isPresenceEnabled())
+                .type(SubscriptionType.CHANNEL)
+                .build();
             subscribedChannels.put(channel, subscriptionItem);
         }
 
         for (String channelGroup : subscribeOperation.getChannelGroups()) {
-            SubscriptionItem subscriptionItem = new SubscriptionItem();
-            subscriptionItem.setName(channelGroup);
-            subscriptionItem.setWithPresence(subscribeOperation.isPresenceEnabled());
-            subscriptionItem.setType(SubscriptionType.CHANNEL_GROUP);
+            SubscriptionItem subscriptionItem = SubscriptionItem.builder()
+                    .name(channelGroup)
+                    .withPresence(subscribeOperation.isPresenceEnabled())
+                    .type(SubscriptionType.CHANNEL_GROUP)
+                    .build();
             subscribedChannelGroups.put(channelGroup, subscriptionItem);
         }
 
@@ -298,7 +301,7 @@ public class SubscriptionManager {
 
                 try {
                     extractedMessage = processMessage(message.getPayload());
-                } catch (PubnubException e) {
+                } catch (PubNubException e) {
                     PNStatus pnStatus = PNStatus.builder().error(true)
                             .operation(PNOperationType.PNSubscribeOperation)
                             .category(PNStatusCategory.PNDecryptionErrorCategory)
@@ -324,7 +327,7 @@ public class SubscriptionManager {
         }
     }
 
-    private Object processMessage(Object input) throws PubnubException {
+    private Object processMessage(Object input) throws PubNubException {
         if (pubnub.getConfiguration().getCipherKey() == null) {
             return input;
         }
@@ -337,7 +340,7 @@ public class SubscriptionManager {
         try {
             outputObject = mapper.readValue(outputText, JsonNode.class);
         } catch (IOException e) {
-            throw PubnubException.builder().pubnubError(PubnubError.PNERROBJ_PARSING_ERROR).errormsg(e.getMessage()).build();
+            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_PARSING_ERROR).errormsg(e.getMessage()).build();
         }
 
         return outputObject;

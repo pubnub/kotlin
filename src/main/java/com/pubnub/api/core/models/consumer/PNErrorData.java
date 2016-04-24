@@ -1,4 +1,4 @@
-package com.pubnub.api.core.models.consumer_facing;
+package com.pubnub.api.core.models.consumer;
 
 import lombok.AllArgsConstructor;
 

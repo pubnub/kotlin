@@ -1,4 +1,4 @@
-package com.pubnub.api.core.models.consumer_facing;
+package com.pubnub.api.core.models.consumer;
 
 import com.pubnub.api.core.enums.PNOperationType;
 import com.pubnub.api.core.enums.PNStatusCategory;
@@ -14,7 +14,8 @@ public class PNStatus {
     PNStatusCategory category;
     PNErrorData errorData;
     boolean error;
-    boolean automaticallyRetry;
+
+    // boolean automaticallyRetry;
 
     private int statusCode;
     private PNOperationType operation;

@@ -2,16 +2,16 @@ package com.pubnub.api.endpoints.access;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pubnub.api.core.Pubnub;
-import com.pubnub.api.core.PubnubError;
-import com.pubnub.api.core.PubnubException;
+import com.pubnub.api.core.PubNub;
+import com.pubnub.api.core.PubNubError;
+import com.pubnub.api.core.PubNubException;
 import com.pubnub.api.core.PubnubUtil;
 import com.pubnub.api.core.enums.PNOperationType;
-import com.pubnub.api.core.models.Envelope;
-import com.pubnub.api.core.models.consumer_facing.PNAccessManagerGrantData;
-import com.pubnub.api.core.models.consumer_facing.PNAccessManagerGrantResult;
-import com.pubnub.api.core.models.consumer_facing.PNAccessManagerKeyData;
-import com.pubnub.api.core.models.consumer_facing.PNAccessManagerKeysData;
+import com.pubnub.api.core.models.server.Envelope;
+import com.pubnub.api.core.models.server.access_manager.AccessManagerGrantPayload;
+import com.pubnub.api.core.models.consumer.access_manager.PNAccessManagerGrantResult;
+import com.pubnub.api.core.models.consumer.access_manager.PNAccessManagerKeyData;
+import com.pubnub.api.core.models.consumer.access_manager.PNAccessManagerKeysData;
 import com.pubnub.api.endpoints.Endpoint;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -25,7 +25,7 @@ import java.util.Map;
 
 
 @Accessors(chain = true, fluent = true)
-public class Grant extends Endpoint<Envelope<PNAccessManagerGrantData>, PNAccessManagerGrantResult> {
+public class Grant extends Endpoint<Envelope<AccessManagerGrantPayload>, PNAccessManagerGrantResult> {
 
     @Setter private boolean read;
     @Setter private boolean write;
@@ -37,7 +37,7 @@ public class Grant extends Endpoint<Envelope<PNAccessManagerGrantData>, PNAccess
     @Setter private List<String> channels;
     @Setter private List<String> channelGroups;
 
-    public Grant(Pubnub pubnub) {
+    public Grant(PubNub pubnub) {
         super(pubnub);
     }
 
@@ -47,7 +47,7 @@ public class Grant extends Endpoint<Envelope<PNAccessManagerGrantData>, PNAccess
     }
 
     @Override
-    protected Call<Envelope<PNAccessManagerGrantData>> doWork(Map<String, String> queryParams) throws PubnubException {
+    protected Call<Envelope<AccessManagerGrantPayload>> doWork(Map<String, String> queryParams) throws PubNubException {
         String signature;
 
         String signInput = this.pubnub.getConfiguration().getSubscribeKey() + "\n"
@@ -87,15 +87,15 @@ public class Grant extends Endpoint<Envelope<PNAccessManagerGrantData>, PNAccess
     }
 
     @Override
-    protected PNAccessManagerGrantResult createResponse(Response<Envelope<PNAccessManagerGrantData>> input) throws PubnubException {
+    protected PNAccessManagerGrantResult createResponse(Response<Envelope<AccessManagerGrantPayload>> input) throws PubNubException {
         ObjectMapper mapper = new ObjectMapper();
         PNAccessManagerGrantResult.PNAccessManagerGrantResultBuilder pnAccessManagerGrantResult = PNAccessManagerGrantResult.builder();
 
         if (input.body() == null || input.body().getPayload() == null) {
-            throw PubnubException.builder().pubnubError(PubnubError.PNERROBJ_PARSING_ERROR).build();
+            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_PARSING_ERROR).build();
         }
 
-        PNAccessManagerGrantData data = input.body().getPayload();
+        AccessManagerGrantPayload data = input.body().getPayload();
         Map<String, Map<String, PNAccessManagerKeyData>> constructedChannels = new HashMap<>();
         Map<String, Map<String, PNAccessManagerKeyData>> constructedGroups = new HashMap<>();
 
@@ -117,7 +117,7 @@ public class Grant extends Endpoint<Envelope<PNAccessManagerGrantData>, PNAccess
                     }
 
                 } catch (IOException e) {
-                    throw PubnubException.builder().pubnubError(PubnubError.PNERROBJ_PARSING_ERROR).errormsg(e.getMessage()).build();
+                    throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_PARSING_ERROR).errormsg(e.getMessage()).build();
                 }
             }
         }

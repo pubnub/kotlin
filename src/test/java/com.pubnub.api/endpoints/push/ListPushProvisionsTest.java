@@ -2,7 +2,7 @@ package com.pubnub.api.endpoints.push;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
-import com.pubnub.api.core.PubnubException;
+import com.pubnub.api.core.PubNubException;
 import com.pubnub.api.core.enums.PushType;
 import com.pubnub.api.endpoints.TestHarness;
 import org.junit.Before;
@@ -29,7 +29,7 @@ public class ListPushProvisionsTest extends TestHarness {
     }
 
     @Test
-    public void testAppleSuccessSync() throws PubnubException, InterruptedException {
+    public void testAppleSuccessSync() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
                 .willReturn(aResponse().withBody("[\"ch1\", \"ch2\", \"ch3\"]")));
@@ -43,7 +43,7 @@ public class ListPushProvisionsTest extends TestHarness {
     }
 
     @Test
-    public void testGoogleSuccessSync() throws PubnubException, InterruptedException {
+    public void testGoogleSuccessSync() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
                 .willReturn(aResponse().withBody("[\"ch1\", \"ch2\", \"ch3\"]")));
@@ -57,7 +57,7 @@ public class ListPushProvisionsTest extends TestHarness {
     }
 
     @Test
-    public void testMicrosoftSuccessSync() throws PubnubException, InterruptedException {
+    public void testMicrosoftSuccessSync() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
                 .willReturn(aResponse().withBody("[\"ch1\", \"ch2\", \"ch3\"]")));

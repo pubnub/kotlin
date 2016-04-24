@@ -2,9 +2,9 @@ package com.pubnub.api.endpoints.access;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
-import com.pubnub.api.core.Pubnub;
-import com.pubnub.api.core.PubnubException;
-import com.pubnub.api.core.models.consumer_facing.PNAccessManagerAuditResult;
+import com.pubnub.api.core.PubNub;
+import com.pubnub.api.core.PubNubException;
+import com.pubnub.api.core.models.consumer.access_manager.PNAccessManagerAuditResult;
 import com.pubnub.api.endpoints.TestHarness;
 import org.junit.Assert;
 import org.junit.Before;
@@ -25,7 +25,7 @@ public class AuditEndpointTest extends TestHarness {
     public WireMockRule wireMockRule = new WireMockRule();
 
     private Audit partialAudit;
-    private Pubnub pubnub;
+    private PubNub pubnub;
 
     @Before
     public void beforeEach() throws IOException {
@@ -38,7 +38,7 @@ public class AuditEndpointTest extends TestHarness {
     }
 
     @Test
-    public void testSuccessChannelGroupSync() throws PubnubException {
+    public void testSuccessChannelGroupSync() throws PubNubException {
 
         stubFor(get(urlPathEqualTo("/v1/auth/audit/sub-key/mySubscribeKey"))
                 .withQueryParam("pnsdk", matching("Java/suchJava"))
@@ -51,12 +51,12 @@ public class AuditEndpointTest extends TestHarness {
 
         PNAccessManagerAuditResult pnAccessManagerAuditResult = partialAudit.channelGroup("cg1").authKeys(Arrays.asList("key1")).sync();
 
-        Assert.assertEquals("cg2", pnAccessManagerAuditResult.getData().getChannelGroup());
-        Assert.assertEquals(true, pnAccessManagerAuditResult.getData().getAuthKeys().get("key1").isManageEnabled());
-        Assert.assertEquals(true, pnAccessManagerAuditResult.getData().getAuthKeys().get("key1").isReadEnabled());
-        Assert.assertEquals(true, pnAccessManagerAuditResult.getData().getAuthKeys().get("key1").isWriteEnabled());
-        Assert.assertEquals("channel-group+auth", pnAccessManagerAuditResult.getData().getLevel());
-        Assert.assertEquals("sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f", pnAccessManagerAuditResult.getData().getSubscribeKey());
+        Assert.assertEquals("cg2", pnAccessManagerAuditResult.getChannelGroup());
+        Assert.assertEquals(true, pnAccessManagerAuditResult.getAuthKeys().get("key1").isManageEnabled());
+        Assert.assertEquals(true, pnAccessManagerAuditResult.getAuthKeys().get("key1").isReadEnabled());
+        Assert.assertEquals(true, pnAccessManagerAuditResult.getAuthKeys().get("key1").isWriteEnabled());
+        Assert.assertEquals("channel-group+auth", pnAccessManagerAuditResult.getLevel());
+        Assert.assertEquals("sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f", pnAccessManagerAuditResult.getSubscribeKey());
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v1/auth/audit/sub-key/mySubscribeKey.*")));
         assertEquals(1, requests.size());
@@ -64,7 +64,7 @@ public class AuditEndpointTest extends TestHarness {
     }
 
     @Test
-    public void testSuccessChannelSync() throws PubnubException {
+    public void testSuccessChannelSync() throws PubNubException {
 
         stubFor(get(urlPathEqualTo("/v1/auth/audit/sub-key/mySubscribeKey"))
                 .withQueryParam("pnsdk", matching("Java/suchJava"))
@@ -77,12 +77,12 @@ public class AuditEndpointTest extends TestHarness {
 
         PNAccessManagerAuditResult pnAccessManagerAuditResult = partialAudit.channel("ch1").authKeys(Arrays.asList("key1")).sync();
 
-        Assert.assertEquals("ch1", pnAccessManagerAuditResult.getData().getChannel());
-        Assert.assertEquals(true, pnAccessManagerAuditResult.getData().getAuthKeys().get("key1").isManageEnabled());
-        Assert.assertEquals(true, pnAccessManagerAuditResult.getData().getAuthKeys().get("key1").isReadEnabled());
-        Assert.assertEquals(true, pnAccessManagerAuditResult.getData().getAuthKeys().get("key1").isWriteEnabled());
-        Assert.assertEquals("user", pnAccessManagerAuditResult.getData().getLevel());
-        Assert.assertEquals("sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f", pnAccessManagerAuditResult.getData().getSubscribeKey());
+        Assert.assertEquals("ch1", pnAccessManagerAuditResult.getChannel());
+        Assert.assertEquals(true, pnAccessManagerAuditResult.getAuthKeys().get("key1").isManageEnabled());
+        Assert.assertEquals(true, pnAccessManagerAuditResult.getAuthKeys().get("key1").isReadEnabled());
+        Assert.assertEquals(true, pnAccessManagerAuditResult.getAuthKeys().get("key1").isWriteEnabled());
+        Assert.assertEquals("user", pnAccessManagerAuditResult.getLevel());
+        Assert.assertEquals("sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f", pnAccessManagerAuditResult.getSubscribeKey());
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());

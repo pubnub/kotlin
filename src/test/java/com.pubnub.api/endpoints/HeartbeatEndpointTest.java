@@ -2,8 +2,8 @@ package com.pubnub.api.endpoints;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
-import com.pubnub.api.core.Pubnub;
-import com.pubnub.api.core.PubnubException;
+import com.pubnub.api.core.PubNub;
+import com.pubnub.api.core.PubNubException;
 import com.pubnub.api.endpoints.presence.Heartbeat;
 import org.junit.Assert;
 import org.junit.Before;
@@ -21,7 +21,7 @@ import static org.junit.Assert.assertEquals;
 public class HeartbeatEndpointTest extends TestHarness {
 
     private Heartbeat partialHeartbeat;
-    private Pubnub pubnub;
+    private PubNub pubnub;
 
     @Rule
     public WireMockRule wireMockRule = new WireMockRule();
@@ -33,8 +33,8 @@ public class HeartbeatEndpointTest extends TestHarness {
     }
 
     @org.junit.Test
-    public void testSuccessOneChannel() throws PubnubException, InterruptedException {
-        pubnub.getConfiguration().setPresenceTimingConfiguration(123);
+    public void testSuccessOneChannel() throws PubNubException, InterruptedException {
+        pubnub.getConfiguration().setPresenceTimeout(123);
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch1/heartbeat"))
                 .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\"}")));
@@ -50,8 +50,8 @@ public class HeartbeatEndpointTest extends TestHarness {
     }
 
     @org.junit.Test
-    public void testSuccessManyChannels() throws PubnubException, InterruptedException {
-        pubnub.getConfiguration().setPresenceTimingConfiguration(123);
+    public void testSuccessManyChannels() throws PubNubException, InterruptedException {
+        pubnub.getConfiguration().setPresenceTimeout(123);
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch1,ch2/heartbeat"))
                 .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\"}")));
@@ -66,8 +66,8 @@ public class HeartbeatEndpointTest extends TestHarness {
     }
 
     @org.junit.Test
-    public void testSuccessOneChannelGroup() throws PubnubException, InterruptedException {
-        pubnub.getConfiguration().setPresenceTimingConfiguration(123);
+    public void testSuccessOneChannelGroup() throws PubNubException, InterruptedException {
+        pubnub.getConfiguration().setPresenceTimeout(123);
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/,/heartbeat"))
                 .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\"}")));
@@ -83,8 +83,8 @@ public class HeartbeatEndpointTest extends TestHarness {
     }
 
     @org.junit.Test
-    public void testSuccessManyChannelGroups() throws PubnubException, InterruptedException {
-        pubnub.getConfiguration().setPresenceTimingConfiguration(123);
+    public void testSuccessManyChannelGroups() throws PubNubException, InterruptedException {
+        pubnub.getConfiguration().setPresenceTimeout(123);
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/,/heartbeat"))
                 .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\"}")));
@@ -101,12 +101,12 @@ public class HeartbeatEndpointTest extends TestHarness {
     }
 
     @org.junit.Test
-    public void testSuccessIncludeState() throws PubnubException, InterruptedException {
+    public void testSuccessIncludeState() throws PubNubException, InterruptedException {
         Map<String, String> state = new HashMap<>();
         state.put("CH1", "this-is-channel1");
         state.put("CH2", "this-is-channel2");
 
-        pubnub.getConfiguration().setPresenceTimingConfiguration(123);
+        pubnub.getConfiguration().setPresenceTimeout(123);
 
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch1,ch2/heartbeat"))

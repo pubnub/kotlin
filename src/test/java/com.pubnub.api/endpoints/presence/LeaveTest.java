@@ -4,9 +4,9 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import com.jayway.awaitility.Awaitility;
 import com.pubnub.api.callbacks.PNCallback;
-import com.pubnub.api.core.Pubnub;
-import com.pubnub.api.core.PubnubException;
-import com.pubnub.api.core.models.consumer_facing.PNStatus;
+import com.pubnub.api.core.PubNub;
+import com.pubnub.api.core.PubNubException;
+import com.pubnub.api.core.models.consumer.PNStatus;
 import com.pubnub.api.endpoints.TestHarness;
 import org.junit.Before;
 import org.junit.Rule;
@@ -28,7 +28,7 @@ public class LeaveTest extends TestHarness {
     public WireMockRule wireMockRule = new WireMockRule();
 
     private Leave instance;
-    private Pubnub pubnub;
+    private PubNub pubnub;
 
     @Before
     public void beforeEach() throws IOException {
@@ -37,7 +37,7 @@ public class LeaveTest extends TestHarness {
     }
 
     @Test
-    public void subscribeChannelSync() throws PubnubException {
+    public void subscribeChannelSync() throws PubNubException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/coolChannel/leave"))
                 .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\", \"action\": \"leave\"}")));
@@ -50,7 +50,7 @@ public class LeaveTest extends TestHarness {
     }
 
     @Test
-    public void subscribeChannelsSync() throws PubnubException {
+    public void subscribeChannelsSync() throws PubNubException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/coolChannel,coolChannel2/leave"))
                 .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\", \"action\": \"leave\"}")));
@@ -63,7 +63,7 @@ public class LeaveTest extends TestHarness {
 
 
     @Test
-    public void subscribeChannelsWithGroupSync() throws PubnubException {
+    public void subscribeChannelsWithGroupSync() throws PubNubException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/coolChannel,coolChannel2/leave"))
                 .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\", \"action\": \"leave\"}")));
@@ -76,7 +76,7 @@ public class LeaveTest extends TestHarness {
     }
 
     @Test
-    public void subscribeChannelsWithGroupASync() throws PubnubException {
+    public void subscribeChannelsWithGroupASync() throws PubNubException {
 
         final AtomicBoolean statusArrived = new AtomicBoolean();
 
@@ -98,7 +98,7 @@ public class LeaveTest extends TestHarness {
     }
 
     @Test
-    public void subscribeGroupsSync() throws PubnubException {
+    public void subscribeGroupsSync() throws PubNubException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/,/leave"))
                 .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\", \"action\": \"leave\"}")));
@@ -111,7 +111,7 @@ public class LeaveTest extends TestHarness {
     }
 
     @Test
-    public void subscribeGroupSync() throws PubnubException {
+    public void subscribeGroupSync() throws PubNubException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/,/leave"))
                 .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\", \"action\": \"leave\"}")));

@@ -2,13 +2,13 @@ package com.pubnub.api.endpoints;
 
 
 import com.pubnub.api.callbacks.PNCallback;
-import com.pubnub.api.core.Pubnub;
-import com.pubnub.api.core.PubnubError;
-import com.pubnub.api.core.PubnubException;
+import com.pubnub.api.core.PubNub;
+import com.pubnub.api.core.PubNubError;
+import com.pubnub.api.core.PubNubException;
 import com.pubnub.api.core.enums.PNOperationType;
 import com.pubnub.api.core.enums.PNStatusCategory;
-import com.pubnub.api.core.models.consumer_facing.PNErrorData;
-import com.pubnub.api.core.models.consumer_facing.PNStatus;
+import com.pubnub.api.core.models.consumer.PNErrorData;
+import com.pubnub.api.core.models.consumer.PNStatus;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
@@ -24,14 +24,14 @@ import java.util.concurrent.TimeUnit;
 
 public abstract class Endpoint<Input, Output> {
 
-    protected Pubnub pubnub;
+    protected PubNub pubnub;
 
-    public Endpoint(Pubnub pubnub) {
+    public Endpoint(PubNub pubnub) {
         this.pubnub = pubnub;
     }
 
 
-    public final Output sync() throws PubnubException {
+    public final Output sync() throws PubNubException {
         this.validateParams();
 
         Call<Input> call = doWork(createBaseParams());
@@ -41,8 +41,8 @@ public abstract class Endpoint<Input, Output> {
         try {
             serverResponse = call.execute();
         } catch (IOException e) {
-            throw PubnubException.builder()
-                    .pubnubError(PubnubError.PNERROBJ_PARSING_ERROR)
+            throw PubNubException.builder()
+                    .pubnubError(PubNubError.PNERROBJ_PARSING_ERROR)
                     .errormsg(e.toString())
                     .build();
         }
@@ -56,8 +56,8 @@ public abstract class Endpoint<Input, Output> {
                 responseBodyText = "N/A";
             }
 
-            throw PubnubException.builder()
-                    .pubnubError(PubnubError.PNERROBJ_HTTP_ERROR)
+            throw PubNubException.builder()
+                    .pubnubError(PubNubError.PNERROBJ_HTTP_ERROR)
                     .errormsg(responseBodyText)
                     .statusCode(serverResponse.code())
                     .build();
@@ -74,10 +74,10 @@ public abstract class Endpoint<Input, Output> {
         Call<Input> call = null;
         try {
             call = doWork(createBaseParams());
-        } catch (PubnubException e) {
+        } catch (PubNubException e) {
 
-            PubnubException pubnubException = PubnubException.builder()
-                    .pubnubError(PubnubError.PNERROBJ_HTTP_ERROR)
+            PubNubException pubnubException = PubNubException.builder()
+                    .pubnubError(PubNubError.PNERROBJ_HTTP_ERROR)
                     .errormsg(e.getMessage())
                     .build();
 
@@ -102,8 +102,8 @@ public abstract class Endpoint<Input, Output> {
                         responseBodyText = "N/A";
                     }
 
-                    PubnubException ex = PubnubException.builder()
-                            .pubnubError(PubnubError.PNERROBJ_HTTP_ERROR)
+                    PubNubException ex = PubNubException.builder()
+                            .pubnubError(PubNubError.PNERROBJ_HTTP_ERROR)
                             .errormsg(responseBodyText)
                             .statusCode(response.code())
                             .build();
@@ -114,10 +114,10 @@ public abstract class Endpoint<Input, Output> {
 
                 try {
                     callbackResponse = createResponse(response);
-                } catch (PubnubException e) {
+                } catch (PubNubException e) {
 
-                    PubnubException pubnubException = PubnubException.builder()
-                            .pubnubError(PubnubError.PNERROBJ_HTTP_ERROR)
+                    PubNubException pubnubException = PubNubException.builder()
+                            .pubnubError(PubNubError.PNERROBJ_HTTP_ERROR)
                             .errormsg(e.getMessage())
                             .statusCode(response.code())
                             .build();
@@ -133,8 +133,8 @@ public abstract class Endpoint<Input, Output> {
             public void onFailure(final Call<Input> call, final Throwable throwable) {
                 PNStatus pnErrorStatus = PNStatus.builder().build();
 
-                PubnubException pubnubException = PubnubException.builder()
-                        .pubnubError(PubnubError.PNERROBJ_HTTP_ERROR)
+                PubNubException pubnubException = PubNubException.builder()
+                        .pubnubError(PubNubError.PNERROBJ_HTTP_ERROR)
                         .errormsg(throwable.getMessage())
                         .build();
 
@@ -215,8 +215,8 @@ public abstract class Endpoint<Input, Output> {
 
     protected abstract boolean validateParams();
 
-    protected abstract Call<Input> doWork(Map<String, String> baseParams) throws PubnubException;
-    protected abstract Output createResponse(Response<Input> input) throws PubnubException;
+    protected abstract Call<Input> doWork(Map<String, String> baseParams) throws PubNubException;
+    protected abstract Output createResponse(Response<Input> input) throws PubNubException;
 
     // add hooks for timeout
     protected abstract int getConnectTimeout();

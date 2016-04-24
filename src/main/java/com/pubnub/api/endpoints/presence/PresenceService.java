@@ -1,7 +1,7 @@
 package com.pubnub.api.endpoints.presence;
 
-import com.pubnub.api.core.models.Envelope;
-import com.pubnub.api.core.models.WhereNowData;
+import com.pubnub.api.core.models.server.Envelope;
+import com.pubnub.api.core.models.server.presence.WhereNowPayload;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
@@ -22,9 +22,9 @@ public interface PresenceService {
                                     @QueryMap Map<String, String> options);
 
     @GET("v2/presence/sub-key/{subKey}/uuid/{uuid}")
-    Call<Envelope<WhereNowData>> whereNow(@Path("subKey") String subKey,
-                                          @Path("uuid") String uuid,
-                                          @QueryMap Map<String, String> options);
+    Call<Envelope<WhereNowPayload>> whereNow(@Path("subKey") String subKey,
+                                             @Path("uuid") String uuid,
+                                             @QueryMap Map<String, String> options);
 
     @GET("v2/presence/sub_key/{subKey}")
     Call<Envelope<Object>> globalHereNow(@Path("subKey") String subKey,

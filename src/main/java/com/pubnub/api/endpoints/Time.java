@@ -1,10 +1,10 @@
 package com.pubnub.api.endpoints;
 
-import com.pubnub.api.core.Pubnub;
-import com.pubnub.api.core.PubnubError;
-import com.pubnub.api.core.PubnubException;
+import com.pubnub.api.core.PubNub;
+import com.pubnub.api.core.PubNubError;
+import com.pubnub.api.core.PubNubException;
 import com.pubnub.api.core.enums.PNOperationType;
-import com.pubnub.api.core.models.consumer_facing.PNTimeResult;
+import com.pubnub.api.core.models.consumer.PNTimeResult;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.http.GET;
@@ -15,7 +15,7 @@ import java.util.Map;
 
 public class Time extends Endpoint<List<Long>, PNTimeResult> {
 
-    public Time(Pubnub pubnub) {
+    public Time(PubNub pubnub) {
         super(pubnub);
     }
 
@@ -36,15 +36,15 @@ public class Time extends Endpoint<List<Long>, PNTimeResult> {
     }
 
     @Override
-    protected final PNTimeResult createResponse(final Response<List<Long>> input) throws PubnubException {
-        PNTimeResult timeData = new PNTimeResult();
+    protected final PNTimeResult createResponse(final Response<List<Long>> input) throws PubNubException {
+        PNTimeResult.PNTimeResultBuilder timeData = PNTimeResult.builder();
 
         if (input.body() == null || input.body().size() == 0) {
-            throw PubnubException.builder().pubnubError(PubnubError.PNERROBJ_PARSING_ERROR).build();
+            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_PARSING_ERROR).build();
         }
 
-        timeData.setTimetoken(input.body().get(0));
-        return timeData;
+        timeData.timetoken(input.body().get(0));
+        return timeData.build();
     }
 
     protected int getConnectTimeout() {

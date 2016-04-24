@@ -4,12 +4,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.pubnub.api.core.Crypto;
-import com.pubnub.api.core.Pubnub;
-import com.pubnub.api.core.PubnubError;
-import com.pubnub.api.core.PubnubException;
+import com.pubnub.api.core.PubNub;
+import com.pubnub.api.core.PubNubError;
+import com.pubnub.api.core.PubNubException;
 import com.pubnub.api.core.enums.PNOperationType;
-import com.pubnub.api.core.models.consumer_facing.PNHistoryItemResult;
-import com.pubnub.api.core.models.consumer_facing.PNHistoryResult;
+import com.pubnub.api.core.models.consumer.history.PNHistoryItemResult;
+import com.pubnub.api.core.models.consumer.history.PNHistoryResult;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import retrofit2.Call;
@@ -19,6 +19,8 @@ import retrofit2.http.Path;
 import retrofit2.http.QueryMap;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @Accessors(chain = true, fluent = true)
@@ -31,7 +33,7 @@ public class History extends Endpoint<JsonNode, PNHistoryResult> {
     @Setter private Integer count;
     @Setter private boolean includeTimetoken = false;
 
-    public History(Pubnub pubnub) {
+    public History(PubNub pubnub) {
         super(pubnub);
     }
 
@@ -72,32 +74,35 @@ public class History extends Endpoint<JsonNode, PNHistoryResult> {
     }
 
     @Override
-    protected PNHistoryResult createResponse(Response<JsonNode> input) throws PubnubException {
-        PNHistoryResult historyData = new PNHistoryResult();
+    protected PNHistoryResult createResponse(Response<JsonNode> input) throws PubNubException {
+        PNHistoryResult.PNHistoryResultBuilder historyData = PNHistoryResult.builder();
+        List<PNHistoryItemResult> messages = new ArrayList<>();
 
         if (input.body() != null) {
-            historyData.setStartTimeToken(input.body().get(1).asLong());
-            historyData.setEndTimeToken(input.body().get(2).asLong());
+            historyData.startTimeToken(input.body().get(1).asLong());
+            historyData.endTimeToken(input.body().get(2).asLong());
 
             ArrayNode historyItems = (ArrayNode) input.body().get(0);
 
-            for (final JsonNode historyItem : historyItems) {
-                PNHistoryItemResult historyItemData = new PNHistoryItemResult();
+            for (final JsonNode historyEntry : historyItems) {
+                PNHistoryItemResult.PNHistoryItemResultBuilder historyItem = PNHistoryItemResult.builder();
                 Object message;
 
                 if (includeTimetoken) {
-                    historyItemData.setTimetoken(historyItem.get("timetoken").asLong());
-                    message = processMessage(historyItem.get("message"));
+                    historyItem.timetoken(historyEntry.get("timetoken").asLong());
+                    message = processMessage(historyEntry.get("message"));
                 } else {
-                    message = processMessage(historyItem);
+                    message = processMessage(historyEntry);
                 }
 
-                historyItemData.setEntry(message);
-                historyData.getMessages().add(historyItemData);
+                historyItem.entry(message);
+                messages.add(historyItem.build());
             }
+
+            historyData.messages(messages);
         }
 
-        return historyData;
+        return historyData.build();
     }
 
     protected int getConnectTimeout() {
@@ -113,7 +118,7 @@ public class History extends Endpoint<JsonNode, PNHistoryResult> {
         return PNOperationType.PNHistoryOperation;
     }
 
-    private Object processMessage(JsonNode message) throws PubnubException {
+    private Object processMessage(JsonNode message) throws PubNubException {
         if (this.pubnub.getConfiguration().getCipherKey() == null) {
             return message;
         }
@@ -126,7 +131,7 @@ public class History extends Endpoint<JsonNode, PNHistoryResult> {
         try {
             outputObject = mapper.readValue(outputText, JsonNode.class);
         } catch (IOException e) {
-            throw PubnubException.builder().pubnubError(PubnubError.PNERROBJ_PARSING_ERROR).errormsg(e.getMessage()).build();
+            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_PARSING_ERROR).errormsg(e.getMessage()).build();
         }
 
         return outputObject;

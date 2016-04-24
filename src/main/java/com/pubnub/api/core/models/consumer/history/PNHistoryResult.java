@@ -1,21 +1,16 @@
-package com.pubnub.api.core.models.consumer_facing;
+package com.pubnub.api.core.models.consumer.history;
 
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-@Setter
+@Builder
 public class PNHistoryResult {
 
     private List<PNHistoryItemResult> messages;
     private Long startTimeToken;
     private Long endTimeToken;
-
-    public PNHistoryResult() {
-       this.messages = new ArrayList<>();
-    }
 
 }
