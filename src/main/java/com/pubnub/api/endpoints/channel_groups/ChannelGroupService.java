@@ -9,28 +9,28 @@ import java.util.Map;
 
 
 public interface ChannelGroupService {
-    @GET("v2/channel-registration/sub-key/{subKey}/channel-group")
+    @GET("v1/channel-registration/sub-key/{subKey}/channel-group")
     Call<Envelope<Object>> ListAllChannelGroup(@Path("subKey") String subKey,
                                                @QueryMap Map<String, String> options);
 
-    @GET("v2/channel-registration/sub-key/{subKey}/channel-group/{group}")
+    @GET("v1/channel-registration/sub-key/{subKey}/channel-group/{group}")
     Call<Envelope<Object>> AllChannelsChannelGroup(@Path("subKey") String subKey,
                                                    @Path("group") String group,
                                                    @QueryMap Map<String, String> options);
 
-    @GET("v2/channel-registration/sub-key/{subKey}/channel-group/{group}")
+    @GET("v1/channel-registration/sub-key/{subKey}/channel-group/{group}")
     Call<Envelope> AddChannelChannelGroup(@Path("subKey") String subKey,
                                                    @Path("group") String group,
                                                    @QueryMap Map<String, String> options);
 
-    @GET("v2/channel-registration/sub-key/{subKey}/channel-group/{group}")
+    @GET("v1/channel-registration/sub-key/{subKey}/channel-group/{group}")
     Call<Envelope> RemoveChannel(@Path("subKey") String subKey,
                                           @Path("group") String group,
                                           @QueryMap Map<String, String> options);
 
-    @GET("v2/channel-registration/sub-key/{subKey}/channel-group/{group_name}/remove")
+    @GET("v1/channel-registration/sub-key/{subKey}/channel-group/{group}/remove")
     Call<Envelope> DeleteChannelGroup(@Path("subKey") String subKey,
-                                 @Path("group_name") String group,
+                                 @Path("group") String group,
                                  @QueryMap Map<String, String> options);
 }
 

@@ -32,7 +32,7 @@ public class AddChannelChannelGroup extends Endpoint<Envelope, Boolean> {
     }
 
     @Override
-    protected Call<Envelope> doWork(Map<String, String> params) {
+    protected Call<Envelope> doWork(final Map<String, String> params) {
         ChannelGroupService service = this.createRetrofit().create(ChannelGroupService.class);
 
         if (channels.size() > 0) {
@@ -44,7 +44,7 @@ public class AddChannelChannelGroup extends Endpoint<Envelope, Boolean> {
 
     @Override
     protected Boolean createResponse(Response<Envelope> input) throws PubnubException {
-        return true;
+        return !input.body().isError();
     }
 
     protected int getConnectTimeout() {

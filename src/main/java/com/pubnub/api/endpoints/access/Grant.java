@@ -81,7 +81,7 @@ public class Grant extends Endpoint<Envelope<PNAccessManagerGrantData>, PNAccess
         signature = PubnubUtil.signSHA256(this.pubnub.getConfiguration().getSecretKey(), signInput);
 
         queryParams.put("signature", signature);
-        
+
         AccessManagerService service = this.createRetrofit().create(AccessManagerService.class);
         return service.grant(pubnub.getConfiguration().getSubscribeKey(), queryParams);
     }

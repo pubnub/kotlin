@@ -103,7 +103,6 @@ public class SubscriptionManager {
             this.timetoken = subscribeOperation.getTimetoken();
         }
 
-
         this.startSubscribeLoop();
         this.registerHeartbeatTimer();
     }

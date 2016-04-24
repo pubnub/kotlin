@@ -178,6 +178,40 @@ public class SubscriptionManagerTest extends TestHarness {
     }
 
     @Test
+    public void testSubscribePresencePayloadBuilder() {
+        final AtomicInteger atomic = new AtomicInteger(0);
+        stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch2-pnpres,ch1,ch1-pnpres/0"))
+                .willReturn(aResponse().withBody("{\"t\":{\"t\":\"14614512228786519\",\"r\":1},\"m\":[{\"a\":\"4\",\"f\":0,\"p\":{\"t\":\"14614512228418349\",\"r\":2},\"k\":\"sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f\",\"c\":\"coolChannel-pnpres\",\"d\":{\"action\": \"join\", \"timestamp\": 1461451222, \"uuid\": \"4a6d5df7-e301-4e73-a7b7-6af9ab484eb0\", \"occupancy\": 1},\"b\":\"coolChannel-pnpres\"}]}\n")));
+
+        pubnub.addListener(new SubscribeCallback() {
+            @Override
+            public void status(Pubnub pubnub, PNStatus status) {
+            }
+
+            @Override
+            public void message(Pubnub pubnub, PNMessageResult message) {
+            }
+
+            @Override
+            public void presence(Pubnub pubnub, PNPresenceEventResult presence) {
+                if (atomic.get() == 0) {
+                    assertEquals("join", presence.getData().getPresenceEvent());
+                    assertEquals("4a6d5df7-e301-4e73-a7b7-6af9ab484eb0", presence.getData().getPresence().getUuid());
+                    Assert.assertTrue(presence.getData().getPresence().getOccupancy().equals(1));
+                    Assert.assertTrue(presence.getData().getPresence().getTimestamp().equals(1461451222L));
+                    atomic.incrementAndGet();
+                }
+            }
+        });
+
+        pubnub.subscribe().channels(Arrays.asList("ch1", "ch2")).withPresence().execute();
+
+        Awaitility.await().atMost(5, TimeUnit.SECONDS)
+                .untilAtomic(atomic, org.hamcrest.core.IsEqual.equalTo(1));
+
+    }
+
+    @Test
     public void testSubscribeRegionBuilder() {
         final AtomicInteger atomic = new AtomicInteger(0);
         stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch2-pnpres,ch1,ch1-pnpres/0"))

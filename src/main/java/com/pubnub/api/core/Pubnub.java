@@ -127,11 +127,11 @@ public class Pubnub {
         return new Publish(this, publishSequenceManager);
     }
 
-    public final ListAllChannelGroup listChannelsForChannelGroup() {
+    public final ListAllChannelGroup listAllChannelGroups() {
         return new ListAllChannelGroup(this);
     }
 
-    public final AllChannelsChannelGroup allChannelsInChannelGroup() {
+    public final AllChannelsChannelGroup listChannelsForChannelGroup() {
         return new AllChannelsChannelGroup(this);
     }
 

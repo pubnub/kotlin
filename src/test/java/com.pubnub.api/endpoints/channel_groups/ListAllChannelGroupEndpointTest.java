@@ -20,7 +20,7 @@ public class ListAllChannelGroupEndpointTest extends TestHarness {
 
     @Before
     public void beforeEach() throws IOException {
-        partialChannelGroup = this.createPubNubInstance(8080).listChannelsForChannelGroup();
+        partialChannelGroup = this.createPubNubInstance(8080).listAllChannelGroups();
     }
 
     @org.junit.Test

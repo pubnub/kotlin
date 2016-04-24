@@ -15,4 +15,7 @@ public class Envelope<T> {
     int occupancy;
     Object uuids;
     String action;
+
+    boolean error;
+
 }
