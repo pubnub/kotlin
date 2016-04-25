@@ -60,10 +60,6 @@ public class SubscriptionManager {
         this.stateStorage = new HashMap<>();
     }
 
-    public synchronized void stop() {
-        stopHeartbeatTimer();
-        stopSubscribeLoop();
-    }
 
     public final synchronized void addListener(SubscribeCallback listener) {
         listeners.add(listener);
@@ -71,6 +67,16 @@ public class SubscriptionManager {
 
     public final synchronized void removeListener(SubscribeCallback listener) {
         listeners.remove(listener);
+    }
+
+    public final synchronized void reconnect() {
+        this.startSubscribeLoop();
+        this.registerHeartbeatTimer();
+    }
+
+    public synchronized void stop() {
+        stopHeartbeatTimer();
+        stopSubscribeLoop();
     }
 
     public final synchronized void adaptStateBuilder(List<String> channels, List<String> channelGroups, Object state) {
@@ -107,8 +113,7 @@ public class SubscriptionManager {
             this.timetoken = subscribeOperation.getTimetoken();
         }
 
-        this.startSubscribeLoop();
-        this.registerHeartbeatTimer();
+        reconnect();
     }
 
     public final synchronized void adaptUnsubscribeBuilder(final UnsubscribeOperation unsubscribeOperation) {
@@ -132,8 +137,7 @@ public class SubscriptionManager {
                 }
         });
 
-        this.startSubscribeLoop();
-        this.registerHeartbeatTimer();
+        reconnect();
     }
 
     private void registerHeartbeatTimer() {
@@ -193,9 +197,12 @@ public class SubscriptionManager {
                     @Override
                     public void onResponse(SubscribeEnvelope result, PNStatus status) {
                         if (status.isError()) {
-                            announce(status);
 
-                            // TODO: handle reachability here.
+                            if (status.getCategory() == PNStatusCategory.PNTimeoutCategory) {
+                                startSubscribeLoop();
+                            } else {
+                                announce(status);
+                            }
 
                             return;
                         }
@@ -256,7 +263,6 @@ public class SubscriptionManager {
                                 announce(status);
                             }
 
-                            // TODO: handle reachability here.
                         } else {
                             if (heartbeatVerbosity == PNHeartbeatNotificationOptions.All) {
                                 announce(status);

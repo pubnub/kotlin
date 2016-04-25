@@ -224,6 +224,13 @@ public class PubNub {
     }
 
     /**
+     * Perform a Reconnect to the network
+     */
+    public final void reconnect() {
+        subscriptionManager.reconnect();
+    }
+
+    /**
      * fetch the SDK version from the resource files.
      * @return Stringified representation of the SDK version.
      */

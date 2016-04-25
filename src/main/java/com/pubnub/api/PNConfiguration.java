@@ -5,11 +5,13 @@ import com.pubnub.api.enums.PNHeartbeatNotificationOptions;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 import java.util.UUID;
 
 @Getter
 @Setter
+@Accessors(chain = true)
 public class PNConfiguration {
 
     /**

@@ -17,6 +17,8 @@ import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
 import java.io.IOException;
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -91,8 +93,6 @@ public abstract class Endpoint<Input, Output> {
             @Override
             public void onResponse(final Call<Input> call, final Response<Input> response) {
                 Output callbackResponse;
-                PNStatus pnErrorStatus = PNStatus.builder().build();
-
 
                 if (!response.isSuccessful() || response.code() != 200) {
 
@@ -104,13 +104,22 @@ public abstract class Endpoint<Input, Output> {
                         responseBodyText = "N/A";
                     }
 
+                    PNStatusCategory pnStatusCategory = PNStatusCategory.PNUnknownCategory;
                     PubNubException ex = PubNubException.builder()
                             .pubnubError(PubNubError.PNERROBJ_HTTP_ERROR)
                             .errormsg(responseBodyText)
                             .statusCode(response.code())
                             .build();
 
-                    callback.onResponse(null, createStatusResponse(PNStatusCategory.PNBadRequestCategory, response, ex));
+                    if (response.code() == 403) {
+                        pnStatusCategory = PNStatusCategory.PNAccessDeniedCategory;
+                    }
+
+                    if (response.code() == 400) {
+                        pnStatusCategory = PNStatusCategory.PNBadRequestCategory;
+                    }
+
+                    callback.onResponse(null, createStatusResponse(pnStatusCategory, response, ex));
                     return;
                 }
 
@@ -119,12 +128,12 @@ public abstract class Endpoint<Input, Output> {
                 } catch (PubNubException e) {
 
                     PubNubException pubnubException = PubNubException.builder()
-                            .pubnubError(PubNubError.PNERROBJ_HTTP_ERROR)
+                            .pubnubError(PubNubError.PNERROBJ_PARSING_ERROR)
                             .errormsg(e.getMessage())
                             .statusCode(response.code())
                             .build();
 
-                    callback.onResponse(null, createStatusResponse(PNStatusCategory.PNBadRequestCategory, response, pubnubException));
+                    callback.onResponse(null, createStatusResponse(PNStatusCategory.PNMalformedResponseCategory, response, pubnubException));
                     return;
                 }
 
@@ -133,14 +142,24 @@ public abstract class Endpoint<Input, Output> {
 
             @Override
             public void onFailure(final Call<Input> call, final Throwable throwable) {
-                PNStatus pnErrorStatus = PNStatus.builder().build();
+                PNStatusCategory pnStatusCategory = PNStatusCategory.PNBadRequestCategory;
+                PubNubException.PubNubExceptionBuilder pubnubException = PubNubException.builder()
+                        .errormsg(throwable.getMessage());
 
-                PubNubException pubnubException = PubNubException.builder()
-                        .pubnubError(PubNubError.PNERROBJ_HTTP_ERROR)
-                        .errormsg(throwable.getMessage())
-                        .build();
 
-                callback.onResponse(null, createStatusResponse(PNStatusCategory.PNBadRequestCategory, null, pubnubException));
+                try {
+                    throw throwable;
+                } catch (UnknownHostException networkException) {
+                    pubnubException.pubnubError(PubNubError.PNERROBJ_CONNECTION_NOT_SET);
+                    pnStatusCategory = PNStatusCategory.PNUnexpectedDisconnectCategory;
+                } catch (SocketTimeoutException socketTimeoutException) {
+                    pubnubException.pubnubError(PubNubError.PNERROBJ_SUBSCRIBE_TIMEOUT);
+                    pnStatusCategory = PNStatusCategory.PNTimeoutCategory;
+                } catch (Throwable throwable1) {
+                    pubnubException.pubnubError(PubNubError.PNERROBJ_HTTP_ERROR);
+                }
+
+                callback.onResponse(null, createStatusResponse(pnStatusCategory, null, pubnubException.build()));
 
             }
         });
