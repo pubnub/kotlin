@@ -2,23 +2,26 @@ package com.pubnub.api.builder;
 
 import com.pubnub.api.builder.dto.SubscribeOperation;
 import com.pubnub.api.managers.SubscriptionManager;
-import lombok.Getter;
+import lombok.AccessLevel;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 import java.util.List;
 
-@Getter
 @Setter
+@Accessors(chain = true, fluent =  true)
 public class SubscribeBuilder extends PubSubBuilder  {
 
     /**
      * Allow users to specify if they would also like to include the presence channels for those subscriptions.
      */
+    @Setter(AccessLevel.NONE)
     private boolean presenceEnabled;
 
     /**
      * Allow users to subscribe with a custom timetoken.
      */
+    @Setter(AccessLevel.NONE)
     private Long timetoken;
 
     public SubscribeBuilder(final SubscriptionManager subscriptionManager) {

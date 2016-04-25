@@ -1,10 +1,12 @@
 package com.pubnub.api.endpoints.push;
 
 import com.pubnub.api.PubNub;
+import com.pubnub.api.PubNubError;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.enums.PushType;
 import com.pubnub.api.endpoints.Endpoint;
+import com.pubnub.api.models.consumer.push.PNPushListProvisionsResult;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import retrofit2.Call;
@@ -14,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 @Accessors(chain = true, fluent = true)
-public class ListPushProvisions extends Endpoint<List<String>, List<String>> {
+public class ListPushProvisions extends Endpoint<List<String>, PNPushListProvisionsResult> {
 
     @Setter private PushType pushType;
     @Setter private String deviceId;
@@ -36,8 +38,12 @@ public class ListPushProvisions extends Endpoint<List<String>, List<String>> {
     }
 
     @Override
-    protected List<String> createResponse(Response<List<String>> input) throws PubNubException {
-        return input.body();
+    protected PNPushListProvisionsResult createResponse(Response<List<String>> input) throws PubNubException {
+        if (input.body() == null) {
+            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_PARSING_ERROR).build();
+        }
+
+        return PNPushListProvisionsResult.builder().channels(input.body()).build();
     }
 
     protected int getConnectTimeout() {

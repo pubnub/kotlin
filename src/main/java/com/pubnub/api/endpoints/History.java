@@ -29,9 +29,9 @@ public class History extends Endpoint<JsonNode, PNHistoryResult> {
     @Setter private String channel;
     @Setter private Long start;
     @Setter private Long end;
-    @Setter private boolean reverse = false;
+    @Setter private Boolean reverse;
     @Setter private Integer count;
-    @Setter private boolean includeTimetoken = false;
+    @Setter private Boolean includeTimetoken;
 
     public History(PubNub pubnub) {
         super(pubnub);
@@ -54,8 +54,13 @@ public class History extends Endpoint<JsonNode, PNHistoryResult> {
 
         HistoryService service = this.createRetrofit().create(HistoryService.class);
 
-        params.put("reverse", String.valueOf(reverse));
-        params.put("include_token", String.valueOf(includeTimetoken));
+        if (reverse != null) {
+            params.put("reverse", String.valueOf(reverse));
+        }
+
+        if (includeTimetoken != null) {
+            params.put("include_token", String.valueOf(includeTimetoken));
+        }
 
         if (count != null && count > 0 && count <= 10) {
             params.put("count", String.valueOf(count));
@@ -88,7 +93,7 @@ public class History extends Endpoint<JsonNode, PNHistoryResult> {
                 PNHistoryItemResult.PNHistoryItemResultBuilder historyItem = PNHistoryItemResult.builder();
                 Object message;
 
-                if (includeTimetoken) {
+                if (includeTimetoken != null && includeTimetoken) {
                     historyItem.timetoken(historyEntry.get("timetoken").asLong());
                     message = processMessage(historyEntry.get("message"));
                 } else {

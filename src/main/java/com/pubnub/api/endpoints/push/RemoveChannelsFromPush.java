@@ -1,11 +1,13 @@
 package com.pubnub.api.endpoints.push;
 
 import com.pubnub.api.PubNub;
+import com.pubnub.api.PubNubError;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.PubnubUtil;
+import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.enums.PushType;
-import com.pubnub.api.endpoints.Endpoint;
+import com.pubnub.api.models.consumer.push.PNPushRemoveChannelResult;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import retrofit2.Call;
@@ -16,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 @Accessors(chain = true, fluent = true)
-public class RemoveChannelsFromPush extends Endpoint<List<Object>, Boolean> {
+public class RemoveChannelsFromPush extends Endpoint<List<Object>, PNPushRemoveChannelResult> {
 
     @Setter private PushType pushType;
     @Setter private List<String> channels;
@@ -59,8 +61,12 @@ public class RemoveChannelsFromPush extends Endpoint<List<Object>, Boolean> {
     }
 
     @Override
-    protected Boolean createResponse(Response<List<Object>> input) throws PubNubException {
-        return null;
+    protected PNPushRemoveChannelResult createResponse(Response<List<Object>> input) throws PubNubException {
+        if (input.body() == null) {
+            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_PARSING_ERROR).build();
+        }
+
+        return PNPushRemoveChannelResult.builder().build();
     }
 
     protected int getConnectTimeout() {
