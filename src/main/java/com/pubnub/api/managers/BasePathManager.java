@@ -1,6 +1,6 @@
 package com.pubnub.api.managers;
 
-import com.pubnub.api.core.PNConfiguration;
+import com.pubnub.api.PNConfiguration;
 
 /**
  * A stateful manager to support base path construction, proxying and cache busting.

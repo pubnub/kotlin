@@ -1,11 +1,11 @@
 package com.pubnub.api.endpoints.channel_groups;
 
-import com.pubnub.api.core.PubNub;
-import com.pubnub.api.core.PubNubError;
-import com.pubnub.api.core.PubNubException;
-import com.pubnub.api.core.enums.PNOperationType;
-import com.pubnub.api.core.models.server.Envelope;
-import com.pubnub.api.core.models.consumer_facing.PNChannelGroupsListAllResult;
+import com.pubnub.api.PubNub;
+import com.pubnub.api.PubNubError;
+import com.pubnub.api.PubNubException;
+import com.pubnub.api.enums.PNOperationType;
+import com.pubnub.api.models.server.Envelope;
+import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsListAllResult;
 import com.pubnub.api.endpoints.Endpoint;
 import lombok.experimental.Accessors;
 import retrofit2.Call;
@@ -41,14 +41,13 @@ public class ListAllChannelGroup extends Endpoint<Envelope<Object>, PNChannelGro
         if (input.body() == null || input.body().getPayload() == null) {
             throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_PARSING_ERROR).build();
         }
-
-        PNChannelGroupsListAllResult pnChannelGroupsListAllResult = new PNChannelGroupsListAllResult();
-
+        
         stateMappings = (Map<String, Object>) input.body().getPayload();
         List<String> groups = (ArrayList<String>) stateMappings.get("groups");
-        pnChannelGroupsListAllResult.setGroups(groups);
 
-        return pnChannelGroupsListAllResult;
+        return PNChannelGroupsListAllResult.builder()
+                .groups(groups)
+                .build();
     }
 
     protected int getConnectTimeout() {

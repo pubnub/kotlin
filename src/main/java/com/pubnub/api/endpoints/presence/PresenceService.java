@@ -1,7 +1,7 @@
 package com.pubnub.api.endpoints.presence;
 
-import com.pubnub.api.core.models.server.Envelope;
-import com.pubnub.api.core.models.server.presence.WhereNowPayload;
+import com.pubnub.api.models.server.Envelope;
+import com.pubnub.api.models.server.presence.WhereNowPayload;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;

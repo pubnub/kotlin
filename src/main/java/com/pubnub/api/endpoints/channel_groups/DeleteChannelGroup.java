@@ -1,9 +1,9 @@
 package com.pubnub.api.endpoints.channel_groups;
 
-import com.pubnub.api.core.PubNub;
-import com.pubnub.api.core.PubNubException;
-import com.pubnub.api.core.enums.PNOperationType;
-import com.pubnub.api.core.models.server.Envelope;
+import com.pubnub.api.PubNub;
+import com.pubnub.api.PubNubException;
+import com.pubnub.api.enums.PNOperationType;
+import com.pubnub.api.models.server.Envelope;
 import com.pubnub.api.endpoints.Endpoint;
 import lombok.Setter;
 import lombok.experimental.Accessors;

@@ -1,7 +1,7 @@
 package com.pubnub.api.endpoints;
 
-import com.pubnub.api.core.PNConfiguration;
-import com.pubnub.api.core.PubNub;
+import com.pubnub.api.PNConfiguration;
+import com.pubnub.api.PubNub;
 
 public class TestHarness {
 

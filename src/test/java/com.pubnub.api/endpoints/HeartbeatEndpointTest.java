@@ -2,8 +2,8 @@ package com.pubnub.api.endpoints;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
-import com.pubnub.api.core.PubNub;
-import com.pubnub.api.core.PubNubException;
+import com.pubnub.api.PubNub;
+import com.pubnub.api.PubNubException;
 import com.pubnub.api.endpoints.presence.Heartbeat;
 import org.junit.Assert;
 import org.junit.Before;

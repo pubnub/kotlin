@@ -2,8 +2,8 @@ package com.pubnub.api.endpoints.pubsub;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
-import com.pubnub.api.core.PubNub;
-import com.pubnub.api.core.PubNubException;
+import com.pubnub.api.PubNub;
+import com.pubnub.api.PubNubException;
 import com.pubnub.api.endpoints.TestHarness;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

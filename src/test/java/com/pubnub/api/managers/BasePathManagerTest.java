@@ -1,6 +1,6 @@
 package com.pubnub.api.managers;
 
-import com.pubnub.api.core.PNConfiguration;
+import com.pubnub.api.PNConfiguration;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

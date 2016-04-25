@@ -4,12 +4,12 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import com.jayway.awaitility.Awaitility;
 import com.pubnub.api.callbacks.SubscribeCallback;
-import com.pubnub.api.core.PubNub;
-import com.pubnub.api.core.enums.PNHeartbeatNotificationOptions;
-import com.pubnub.api.core.enums.PNOperationType;
-import com.pubnub.api.core.models.consumer_facing.PNMessageResult;
-import com.pubnub.api.core.models.consumer_facing.PNPresenceEventResult;
-import com.pubnub.api.core.models.consumer.PNStatus;
+import com.pubnub.api.PubNub;
+import com.pubnub.api.enums.PNHeartbeatNotificationOptions;
+import com.pubnub.api.enums.PNOperationType;
+import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
+import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
+import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.endpoints.TestHarness;
 import org.junit.*;
 
@@ -159,7 +159,7 @@ public class SubscriptionManagerTest extends TestHarness {
                 List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")));
 
                 if (requests.size() == 1) {
-                    Assert.assertEquals("{text=Enter Message Here}", message.getData().getMessage().toString());
+                    Assert.assertEquals("{text=Enter Message Here}", message.getMessage().toString());
                     atomic.addAndGet(1);
                 }
 
@@ -195,10 +195,10 @@ public class SubscriptionManagerTest extends TestHarness {
             @Override
             public void presence(PubNub pubnub, PNPresenceEventResult presence) {
                 if (atomic.get() == 0) {
-                    assertEquals("join", presence.getData().getPresenceEvent());
-                    assertEquals("4a6d5df7-e301-4e73-a7b7-6af9ab484eb0", presence.getData().getPresence().getUuid());
-                    Assert.assertTrue(presence.getData().getPresence().getOccupancy().equals(1));
-                    Assert.assertTrue(presence.getData().getPresence().getTimestamp().equals(1461451222L));
+                    assertEquals("join", presence.getEvent());
+                    assertEquals("4a6d5df7-e301-4e73-a7b7-6af9ab484eb0", presence.getUuid());
+                    Assert.assertTrue(presence.getOccupancy().equals(1));
+                    Assert.assertTrue(presence.getTimestamp().equals(1461451222L));
                     atomic.incrementAndGet();
                 }
             }

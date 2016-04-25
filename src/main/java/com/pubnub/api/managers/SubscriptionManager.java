@@ -4,22 +4,23 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pubnub.api.callbacks.PNCallback;
 import com.pubnub.api.callbacks.SubscribeCallback;
-import com.pubnub.api.core.Crypto;
-import com.pubnub.api.core.PubNub;
-import com.pubnub.api.core.PubNubError;
-import com.pubnub.api.core.PubNubException;
-import com.pubnub.api.core.builder.dto.SubscribeOperation;
-import com.pubnub.api.core.builder.dto.UnsubscribeOperation;
-import com.pubnub.api.core.enums.PNHeartbeatNotificationOptions;
-import com.pubnub.api.core.enums.PNOperationType;
-import com.pubnub.api.core.enums.PNStatusCategory;
-import com.pubnub.api.core.enums.SubscriptionType;
-import com.pubnub.api.core.models.consumer.PNStatus;
-import com.pubnub.api.core.models.server.Envelope;
-import com.pubnub.api.core.models.SubscriptionItem;
-import com.pubnub.api.core.models.consumer_facing.*;
-import com.pubnub.api.core.models.server.SubscribeEnvelope;
-import com.pubnub.api.core.models.server.SubscribeMessage;
+import com.pubnub.api.Crypto;
+import com.pubnub.api.PubNub;
+import com.pubnub.api.PubNubError;
+import com.pubnub.api.PubNubException;
+import com.pubnub.api.builder.dto.SubscribeOperation;
+import com.pubnub.api.builder.dto.UnsubscribeOperation;
+import com.pubnub.api.enums.PNHeartbeatNotificationOptions;
+import com.pubnub.api.enums.PNOperationType;
+import com.pubnub.api.enums.PNStatusCategory;
+import com.pubnub.api.enums.SubscriptionType;
+import com.pubnub.api.models.consumer.PNStatus;
+import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
+import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
+import com.pubnub.api.models.server.Envelope;
+import com.pubnub.api.models.SubscriptionItem;
+import com.pubnub.api.models.server.SubscribeEnvelope;
+import com.pubnub.api.models.server.SubscribeMessage;
 import com.pubnub.api.endpoints.presence.Heartbeat;
 import com.pubnub.api.endpoints.presence.Leave;
 import com.pubnub.api.endpoints.pubsub.Subscribe;
@@ -277,23 +278,17 @@ public class SubscriptionManager {
             }
 
             if (message.getChannel().contains("-pnpres")) {
-                PNPresenceEventResult pnPresenceEventResult = new PNPresenceEventResult();
-                PNPresenceEventData pnPresenceEventData = new PNPresenceEventData();
-                PNPresenceDetailsData pnPresenceDetailsData = new PNPresenceDetailsData();
-
                 Map<String, Object> presencePayload = (Map<String, Object>) message.getPayload();
 
-                pnPresenceEventData.setPresenceEvent(presencePayload.get("action").toString());
-                pnPresenceEventData.setActualChannel((subscriptionMatch != null) ? channel : null);
-                pnPresenceEventData.setSubscribedChannel(subscriptionMatch != null ? subscriptionMatch : channel);
-                pnPresenceEventData.setPresence(pnPresenceDetailsData);
-                pnPresenceEventData.setTimetoken(timetoken);
-
-                pnPresenceDetailsData.setOccupancy((int) presencePayload.get("occupancy"));
-                pnPresenceDetailsData.setUuid(presencePayload.get("uuid").toString());
-                pnPresenceDetailsData.setTimestamp(Long.valueOf(presencePayload.get("timestamp").toString()));
-
-                pnPresenceEventResult.setData(pnPresenceEventData);
+                PNPresenceEventResult pnPresenceEventResult = PNPresenceEventResult.builder()
+                        .event(presencePayload.get("action").toString())
+                        .actualChannel((subscriptionMatch != null) ? channel : null)
+                        .subscribedChannel(subscriptionMatch != null ? subscriptionMatch : channel)
+                        .timetoken(timetoken)
+                        .occupancy((int) presencePayload.get("occupancy"))
+                        .uuid(presencePayload.get("uuid").toString())
+                        .timestamp(Long.valueOf(presencePayload.get("timestamp").toString()))
+                        .build();
 
                 announce(pnPresenceEventResult);
             } else {
@@ -311,16 +306,13 @@ public class SubscriptionManager {
                     return;
                 }
 
-                PNMessageResult pnMessageResult = new PNMessageResult();
-                PNMessageData pnMessageData = new PNMessageData();
+                PNMessageResult pnMessageResult = PNMessageResult.builder()
+                    .message(extractedMessage)
+                    .actualChannel((subscriptionMatch != null) ? channel : null)
+                    .subscribedChannel(subscriptionMatch != null ? subscriptionMatch : channel)
+                    .timetoken(timetoken)
+                    .build();
 
-                pnMessageData.setMessage(extractedMessage);
-
-                pnMessageData.setActualChannel((subscriptionMatch != null) ? channel : null);
-                pnMessageData.setSubscribedChannel(subscriptionMatch != null ? subscriptionMatch : channel);
-                pnMessageData.setTimetoken(timetoken);
-
-                pnMessageResult.setData(pnMessageData);
 
                 announce(pnMessageResult);
             }

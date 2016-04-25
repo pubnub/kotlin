@@ -1,6 +1,6 @@
 package com.pubnub.api.endpoints.channel_groups;
 
-import com.pubnub.api.core.models.server.Envelope;
+import com.pubnub.api.models.server.Envelope;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;

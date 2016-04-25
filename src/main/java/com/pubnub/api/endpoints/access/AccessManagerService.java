@@ -1,8 +1,8 @@
 package com.pubnub.api.endpoints.access;
 
-import com.pubnub.api.core.models.server.access_manager.AccessManagerGrantPayload;
-import com.pubnub.api.core.models.server.Envelope;
-import com.pubnub.api.core.models.server.access_manager.AccessManagerAuditPayload;
+import com.pubnub.api.models.server.access_manager.AccessManagerGrantPayload;
+import com.pubnub.api.models.server.Envelope;
+import com.pubnub.api.models.server.access_manager.AccessManagerAuditPayload;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;

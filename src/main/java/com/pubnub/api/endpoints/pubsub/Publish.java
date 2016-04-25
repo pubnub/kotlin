@@ -2,9 +2,9 @@ package com.pubnub.api.endpoints.pubsub;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pubnub.api.core.*;
-import com.pubnub.api.core.enums.PNOperationType;
-import com.pubnub.api.core.models.consumer.PNPublishResult;
+import com.pubnub.api.*;
+import com.pubnub.api.enums.PNOperationType;
+import com.pubnub.api.models.consumer.PNPublishResult;
 import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.managers.PublishSequenceManager;
 import lombok.Setter;

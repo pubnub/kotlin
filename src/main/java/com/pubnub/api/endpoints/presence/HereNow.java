@@ -1,13 +1,13 @@
 package com.pubnub.api.endpoints.presence;
 
 
-import com.pubnub.api.core.PubNub;
-import com.pubnub.api.core.PubnubUtil;
-import com.pubnub.api.core.enums.PNOperationType;
-import com.pubnub.api.core.models.server.Envelope;
-import com.pubnub.api.core.models.consumer.presence.PNHereNowChannelData;
-import com.pubnub.api.core.models.consumer.presence.PNHereNowResult;
-import com.pubnub.api.core.models.consumer.presence.PNHereNowOccupantData;
+import com.pubnub.api.PubNub;
+import com.pubnub.api.PubnubUtil;
+import com.pubnub.api.enums.PNOperationType;
+import com.pubnub.api.models.server.Envelope;
+import com.pubnub.api.models.consumer.presence.PNHereNowChannelData;
+import com.pubnub.api.models.consumer.presence.PNHereNowResult;
+import com.pubnub.api.models.consumer.presence.PNHereNowOccupantData;
 import com.pubnub.api.endpoints.Endpoint;
 import lombok.Setter;
 import lombok.experimental.Accessors;

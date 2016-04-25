@@ -1,10 +1,10 @@
 package com.pubnub.api.endpoints.access;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import com.pubnub.api.core.PubNub;
-import com.pubnub.api.core.PubNubException;
-import com.pubnub.api.core.models.consumer.access_manager.PNAccessManagerGrantResult;
-import com.pubnub.api.core.models.consumer.access_manager.PNAccessManagerKeyData;
+import com.pubnub.api.PubNub;
+import com.pubnub.api.PubNubException;
+import com.pubnub.api.models.consumer.access_manager.PNAccessManagerGrantResult;
+import com.pubnub.api.models.consumer.access_manager.PNAccessManagerKeyData;
 import com.pubnub.api.endpoints.TestHarness;
 import org.junit.Assert;
 import org.junit.Before;

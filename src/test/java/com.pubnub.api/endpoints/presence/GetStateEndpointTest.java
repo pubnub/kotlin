@@ -2,8 +2,8 @@ package com.pubnub.api.endpoints.presence;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
-import com.pubnub.api.core.PubNubException;
-import com.pubnub.api.core.models.consumer.presence.PNGetStateResult;
+import com.pubnub.api.PubNubException;
+import com.pubnub.api.models.consumer.presence.PNGetStateResult;
 import com.pubnub.api.endpoints.TestHarness;
 import org.junit.Assert;
 import org.junit.Before;

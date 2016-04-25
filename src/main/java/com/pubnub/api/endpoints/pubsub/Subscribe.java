@@ -1,11 +1,11 @@
 package com.pubnub.api.endpoints.pubsub;
 
-import com.pubnub.api.core.PubNub;
-import com.pubnub.api.core.PubNubError;
-import com.pubnub.api.core.PubNubException;
-import com.pubnub.api.core.PubnubUtil;
-import com.pubnub.api.core.enums.PNOperationType;
-import com.pubnub.api.core.models.server.SubscribeEnvelope;
+import com.pubnub.api.PubNub;
+import com.pubnub.api.PubNubError;
+import com.pubnub.api.PubNubException;
+import com.pubnub.api.PubnubUtil;
+import com.pubnub.api.enums.PNOperationType;
+import com.pubnub.api.models.server.SubscribeEnvelope;
 import com.pubnub.api.endpoints.Endpoint;
 import lombok.Setter;
 import lombok.experimental.Accessors;

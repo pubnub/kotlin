@@ -1,12 +1,12 @@
 package com.pubnub.api.endpoints.presence;
 
-import com.pubnub.api.core.PubNub;
-import com.pubnub.api.core.PubNubError;
-import com.pubnub.api.core.PubNubException;
-import com.pubnub.api.core.enums.PNOperationType;
-import com.pubnub.api.core.models.server.Envelope;
-import com.pubnub.api.core.models.server.presence.WhereNowPayload;
-import com.pubnub.api.core.models.consumer_facing.PNPresenceWhereNowResult;
+import com.pubnub.api.PubNub;
+import com.pubnub.api.PubNubError;
+import com.pubnub.api.PubNubException;
+import com.pubnub.api.enums.PNOperationType;
+import com.pubnub.api.models.consumer.presence.PNWhereNowResult;
+import com.pubnub.api.models.server.Envelope;
+import com.pubnub.api.models.server.presence.WhereNowPayload;
 import com.pubnub.api.endpoints.Endpoint;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -16,7 +16,7 @@ import retrofit2.Response;
 import java.util.Map;
 
 @Accessors(chain = true, fluent = true)
-public class WhereNow extends Endpoint<Envelope<WhereNowPayload>, PNPresenceWhereNowResult> {
+public class WhereNow extends Endpoint<Envelope<WhereNowPayload>, PNWhereNowResult> {
 
     @Setter private String uuid;
 
@@ -37,13 +37,14 @@ public class WhereNow extends Endpoint<Envelope<WhereNowPayload>, PNPresenceWher
     }
 
     @Override
-    protected PNPresenceWhereNowResult createResponse(Response<Envelope<WhereNowPayload>> input) throws PubNubException {
+    protected PNWhereNowResult createResponse(Response<Envelope<WhereNowPayload>> input) throws PubNubException {
         if (input.body() == null || input.body().getPayload() == null) {
             throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_PARSING_ERROR).build();
         }
 
-        PNPresenceWhereNowResult pnPresenceWhereNowResult = new PNPresenceWhereNowResult();
-        pnPresenceWhereNowResult.setChannels(input.body().getPayload().getChannels());
+        PNWhereNowResult pnPresenceWhereNowResult = PNWhereNowResult.builder()
+            .channels(input.body().getPayload().getChannels())
+            .build();
 
         return pnPresenceWhereNowResult;
     }

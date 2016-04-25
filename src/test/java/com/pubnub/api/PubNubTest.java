@@ -1,8 +1,5 @@
 package com.pubnub.api;
 
-import com.pubnub.api.core.PNConfiguration;
-import com.pubnub.api.core.PubNub;
-import com.pubnub.api.core.PubNubException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

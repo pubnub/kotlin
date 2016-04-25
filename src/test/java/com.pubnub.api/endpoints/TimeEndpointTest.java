@@ -4,9 +4,9 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import com.jayway.awaitility.Awaitility;
 import com.pubnub.api.callbacks.TimeCallback;
-import com.pubnub.api.core.PubNubException;
-import com.pubnub.api.core.models.consumer.PNStatus;
-import com.pubnub.api.core.models.consumer.PNTimeResult;
+import com.pubnub.api.PubNubException;
+import com.pubnub.api.models.consumer.PNStatus;
+import com.pubnub.api.models.consumer.PNTimeResult;
 import org.junit.Before;
 import org.junit.Rule;
 

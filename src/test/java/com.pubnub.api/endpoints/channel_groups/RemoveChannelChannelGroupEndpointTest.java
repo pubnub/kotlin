@@ -1,7 +1,7 @@
 package com.pubnub.api.endpoints.channel_groups;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import com.pubnub.api.core.PubNubException;
+import com.pubnub.api.PubNubException;
 import com.pubnub.api.endpoints.TestHarness;
 import org.junit.Before;
 import org.junit.Rule;

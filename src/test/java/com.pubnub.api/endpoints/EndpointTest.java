@@ -1,8 +1,8 @@
 package com.pubnub.api.endpoints;
 
-import com.pubnub.api.core.PubNub;
-import com.pubnub.api.core.PubNubException;
-import com.pubnub.api.core.enums.PNOperationType;
+import com.pubnub.api.PubNub;
+import com.pubnub.api.PubNubException;
+import com.pubnub.api.enums.PNOperationType;
 import okhttp3.Request;
 import org.junit.Assert;
 import org.junit.Before;
