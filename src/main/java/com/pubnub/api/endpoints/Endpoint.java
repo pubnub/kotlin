@@ -44,6 +44,7 @@ public abstract class Endpoint<Input, Output> {
             throw PubNubException.builder()
                     .pubnubError(PubNubError.PNERROBJ_PARSING_ERROR)
                     .errormsg(e.toString())
+                    .affectedCall(call)
                     .build();
         }
 
@@ -60,6 +61,7 @@ public abstract class Endpoint<Input, Output> {
                     .pubnubError(PubNubError.PNERROBJ_HTTP_ERROR)
                     .errormsg(responseBodyText)
                     .statusCode(serverResponse.code())
+                    .affectedCall(call)
                     .build();
         }
 

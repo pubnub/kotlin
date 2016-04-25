@@ -15,41 +15,66 @@ import java.util.Map;
 public class CreatePushNotification {
 
     private PubNub pubnub;
-    @Setter private PushType pushType;
-    @Setter private Object pushPayload;
     @Setter private String channel;
+
+    Map<String, Object> pushData;
 
     public CreatePushNotification(PubNub pubnub) {
         this.pubnub = pubnub;
+        pushData = new HashMap<>();
     }
 
     public PNPublishResult sync() throws PubNubException {
-        Map<String, Object> payload = preparePayload();
-        return pubnub.publish().channel(channel).message(payload).sync();
+        return pubnub.publish().channel(channel).message(pushData).sync();
     }
 
     public void async(final PNCallback<PNPublishResult> callback) {
-        Map<String, Object> payload = preparePayload();
-        pubnub.publish().channel(channel).message(payload).async(callback);
+        pubnub.publish().channel(channel).message(pushData).async(callback);
     }
 
-    private Map<String, Object> preparePayload() {
-        Map<String, Object> payload = new HashMap<>();
+    public CreatePushNotification addApplePayload(Map<String, Object> payload) {
+        if (payload != null) {
+            appendToPayload(PushType.APNS, payload);
+        }
+        return this;
+    }
 
+    public CreatePushNotification addGooglePayload(Map<String, Object> payload) {
+        if (payload != null) {
+            appendToPayload(PushType.GCM, payload);
+        }
+        return this;
+    }
+
+    public CreatePushNotification addMicrosoftPayload(Map<String, Object> payload) {
+        if (payload != null) {
+            appendToPayload(PushType.MPNS, payload);
+        }
+        return this;
+    }
+
+    public CreatePushNotification addPubNubPayload(Map<String, Object> payload) {
+        if (payload != null) {
+            for(String key : payload.keySet()) {
+                pushData.put(key, payload.get(key));
+            }
+        }
+
+        return this;
+    }
+
+    private void appendToPayload(PushType pushType, Map<String, Object> payload) {
         if (pushType == PushType.APNS) {
-            payload.put("pn_apns", pushPayload);
+            pushData.put("pn_apns", payload);
         }
 
         if (pushType == PushType.GCM) {
-            payload.put("pn_gcm", pushPayload);
+            pushData.put("pn_gcm", payload);
         }
 
         if (pushType == PushType.MPNS) {
-            payload.put("pn_mpns", pushPayload);
+            pushData.put("pn_mpns", payload);
         }
-
-        return payload;
     }
-
 
 }
