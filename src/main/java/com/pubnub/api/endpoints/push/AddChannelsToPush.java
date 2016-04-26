@@ -4,7 +4,7 @@ import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.PubnubUtil;
 import com.pubnub.api.enums.PNOperationType;
-import com.pubnub.api.enums.PushType;
+import com.pubnub.api.enums.PNPushType;
 import com.pubnub.api.endpoints.Endpoint;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -18,7 +18,7 @@ import java.util.Map;
 @Accessors(chain = true, fluent = true)
 public class AddChannelsToPush extends Endpoint<List<Object>, Boolean> {
 
-    @Setter private PushType pushType;
+    @Setter private PNPushType pushType;
     @Setter private List<String> channels;
     @Setter String deviceId;
 

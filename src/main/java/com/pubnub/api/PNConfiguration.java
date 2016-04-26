@@ -2,6 +2,7 @@ package com.pubnub.api;
 
 
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions;
+import com.pubnub.api.enums.PNLogVerbosity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,7 +24,7 @@ public class PNConfiguration {
 
 
     /**
-     * In seconds, how long the server will consider this client to be onlien before issuing a leave event.
+     * In seconds, how long the server will consider this client to be online before issuing a leave event.
      */
     @Setter(AccessLevel.NONE)
     private int presenceTimeout;
@@ -59,7 +60,7 @@ public class PNConfiguration {
      * toggle to enable verbose logging.
      */
 
-    private boolean verboseLogging;
+    private PNLogVerbosity logVerbosity;
 
     /**
      * Stores the maximum number of seconds which the client should wait for connection before timing out.
@@ -93,6 +94,8 @@ public class PNConfiguration {
         nonSubscribeRequestTimeout = 10;
         subscribeTimeout = 310;
         connectTimeout = 5;
+
+        logVerbosity = PNLogVerbosity.NONE;
 
         heartbeatNotificationOptions = PNHeartbeatNotificationOptions.Failures;
     }

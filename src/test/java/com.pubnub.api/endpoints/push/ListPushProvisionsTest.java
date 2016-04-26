@@ -3,7 +3,7 @@ package com.pubnub.api.endpoints.push;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import com.pubnub.api.PubNubException;
-import com.pubnub.api.enums.PushType;
+import com.pubnub.api.enums.PNPushType;
 import com.pubnub.api.endpoints.TestHarness;
 import org.junit.Before;
 import org.junit.Rule;
@@ -34,7 +34,7 @@ public class ListPushProvisionsTest extends TestHarness {
         stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
                 .willReturn(aResponse().withBody("[\"ch1\", \"ch2\", \"ch3\"]")));
 
-        instance.deviceId("niceDevice").pushType(PushType.APNS).sync();
+        instance.deviceId("niceDevice").pushType(PNPushType.APNS).sync();
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
@@ -48,7 +48,7 @@ public class ListPushProvisionsTest extends TestHarness {
         stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
                 .willReturn(aResponse().withBody("[\"ch1\", \"ch2\", \"ch3\"]")));
 
-        instance.deviceId("niceDevice").pushType(PushType.GCM).sync();
+        instance.deviceId("niceDevice").pushType(PNPushType.GCM).sync();
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
@@ -62,7 +62,7 @@ public class ListPushProvisionsTest extends TestHarness {
         stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
                 .willReturn(aResponse().withBody("[\"ch1\", \"ch2\", \"ch3\"]")));
 
-        instance.deviceId("niceDevice").pushType(PushType.MPNS).sync();
+        instance.deviceId("niceDevice").pushType(PNPushType.MPNS).sync();
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());

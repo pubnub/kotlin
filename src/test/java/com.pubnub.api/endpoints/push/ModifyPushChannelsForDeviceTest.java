@@ -4,7 +4,7 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
-import com.pubnub.api.enums.PushType;
+import com.pubnub.api.enums.PNPushType;
 import com.pubnub.api.endpoints.TestHarness;
 import org.junit.Before;
 import org.junit.Rule;
@@ -42,7 +42,7 @@ public class ModifyPushChannelsForDeviceTest extends TestHarness {
         stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice/remove"))
                 .willReturn(aResponse().withBody("[1, \"Modified Channels\"]")));
 
-        instance.deviceId("niceDevice").pushType(PushType.APNS).sync();
+        instance.deviceId("niceDevice").pushType(PNPushType.APNS).sync();
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
@@ -54,7 +54,7 @@ public class ModifyPushChannelsForDeviceTest extends TestHarness {
         stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice/remove"))
                 .willReturn(aResponse().withBody("[1, \"Modified Channels\"]")));
 
-        instance.deviceId("niceDevice").pushType(PushType.GCM).sync();
+        instance.deviceId("niceDevice").pushType(PNPushType.GCM).sync();
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
@@ -66,7 +66,7 @@ public class ModifyPushChannelsForDeviceTest extends TestHarness {
         stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice/remove"))
                 .willReturn(aResponse().withBody("[1, \"Modified Channels\"]")));
 
-        instance.deviceId("niceDevice").pushType(PushType.MPNS).sync();
+        instance.deviceId("niceDevice").pushType(PNPushType.MPNS).sync();
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
@@ -78,7 +78,7 @@ public class ModifyPushChannelsForDeviceTest extends TestHarness {
         stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
                 .willReturn(aResponse().withBody("[1, \"Modified Channels\"]")));
 
-        instanceAdd.deviceId("niceDevice").pushType(PushType.APNS)
+        instanceAdd.deviceId("niceDevice").pushType(PNPushType.APNS)
                 .channels(Arrays.asList("ch1", "ch2", "ch3"))
                 .sync();
 
@@ -95,7 +95,7 @@ public class ModifyPushChannelsForDeviceTest extends TestHarness {
         stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
                 .willReturn(aResponse().withBody("[1, \"Modified Channels\"]")));
 
-        instanceAdd.deviceId("niceDevice").pushType(PushType.GCM)
+        instanceAdd.deviceId("niceDevice").pushType(PNPushType.GCM)
                 .channels(Arrays.asList("ch1", "ch2", "ch3"))
                 .sync();
 
@@ -112,7 +112,7 @@ public class ModifyPushChannelsForDeviceTest extends TestHarness {
         stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
                 .willReturn(aResponse().withBody("[1, \"Modified Channels\"]")));
 
-        instanceAdd.deviceId("niceDevice").pushType(PushType.MPNS)
+        instanceAdd.deviceId("niceDevice").pushType(PNPushType.MPNS)
                 .channels(Arrays.asList("ch1", "ch2", "ch3"))
                 .sync();
 
@@ -127,7 +127,7 @@ public class ModifyPushChannelsForDeviceTest extends TestHarness {
         stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
                 .willReturn(aResponse().withBody("[1, \"Modified Channels\"]")));
 
-        instanceRemove.deviceId("niceDevice").pushType(PushType.APNS)
+        instanceRemove.deviceId("niceDevice").pushType(PNPushType.APNS)
                 .channels(Arrays.asList("chr1", "chr2", "chr3")).sync();
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
@@ -143,7 +143,7 @@ public class ModifyPushChannelsForDeviceTest extends TestHarness {
         stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
                 .willReturn(aResponse().withBody("[1, \"Modified Channels\"]")));
 
-        instanceRemove.deviceId("niceDevice").pushType(PushType.GCM)
+        instanceRemove.deviceId("niceDevice").pushType(PNPushType.GCM)
                 .channels(Arrays.asList("chr1", "chr2", "chr3")).sync();
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
@@ -159,7 +159,7 @@ public class ModifyPushChannelsForDeviceTest extends TestHarness {
         stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
                 .willReturn(aResponse().withBody("[1, \"Modified Channels\"]")));
 
-        instanceRemove.deviceId("niceDevice").pushType(PushType.MPNS)
+        instanceRemove.deviceId("niceDevice").pushType(PNPushType.MPNS)
                 .channels(Arrays.asList("chr1", "chr2", "chr3")).sync();
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));

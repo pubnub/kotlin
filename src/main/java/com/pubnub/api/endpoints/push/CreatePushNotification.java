@@ -3,7 +3,7 @@ package com.pubnub.api.endpoints.push;
 import com.pubnub.api.callbacks.PNCallback;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
-import com.pubnub.api.enums.PushType;
+import com.pubnub.api.enums.PNPushType;
 import com.pubnub.api.models.consumer.PNPublishResult;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -34,21 +34,21 @@ public class CreatePushNotification {
 
     public CreatePushNotification addApplePayload(Map<String, Object> payload) {
         if (payload != null) {
-            appendToPayload(PushType.APNS, payload);
+            appendToPayload(PNPushType.APNS, payload);
         }
         return this;
     }
 
     public CreatePushNotification addGooglePayload(Map<String, Object> payload) {
         if (payload != null) {
-            appendToPayload(PushType.GCM, payload);
+            appendToPayload(PNPushType.GCM, payload);
         }
         return this;
     }
 
     public CreatePushNotification addMicrosoftPayload(Map<String, Object> payload) {
         if (payload != null) {
-            appendToPayload(PushType.MPNS, payload);
+            appendToPayload(PNPushType.MPNS, payload);
         }
         return this;
     }
@@ -63,16 +63,16 @@ public class CreatePushNotification {
         return this;
     }
 
-    private void appendToPayload(PushType pushType, Map<String, Object> payload) {
-        if (pushType == PushType.APNS) {
+    private void appendToPayload(PNPushType pushType, Map<String, Object> payload) {
+        if (pushType == PNPushType.APNS) {
             pushData.put("pn_apns", payload);
         }
 
-        if (pushType == PushType.GCM) {
+        if (pushType == PNPushType.GCM) {
             pushData.put("pn_gcm", payload);
         }
 
-        if (pushType == PushType.MPNS) {
+        if (pushType == PNPushType.MPNS) {
             pushData.put("pn_mpns", payload);
         }
     }

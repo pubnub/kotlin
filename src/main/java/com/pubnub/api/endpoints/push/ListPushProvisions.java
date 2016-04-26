@@ -4,7 +4,7 @@ import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubError;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.enums.PNOperationType;
-import com.pubnub.api.enums.PushType;
+import com.pubnub.api.enums.PNPushType;
 import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.models.consumer.push.PNPushListProvisionsResult;
 import lombok.Setter;
@@ -18,7 +18,7 @@ import java.util.Map;
 @Accessors(chain = true, fluent = true)
 public class ListPushProvisions extends Endpoint<List<String>, PNPushListProvisionsResult> {
 
-    @Setter private PushType pushType;
+    @Setter private PNPushType pushType;
     @Setter private String deviceId;
 
     public ListPushProvisions(PubNub pubnub) {

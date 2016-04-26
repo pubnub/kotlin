@@ -1,6 +1,6 @@
 package com.pubnub.api.enums;
 
-public enum PushType {
+public enum PNPushType {
 
     APNS,
     MPNS,

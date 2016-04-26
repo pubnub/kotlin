@@ -5,6 +5,7 @@ import com.pubnub.api.callbacks.PNCallback;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubError;
 import com.pubnub.api.PubNubException;
+import com.pubnub.api.enums.PNLogVerbosity;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.enums.PNStatusCategory;
 import com.pubnub.api.models.consumer.PNErrorData;
@@ -202,7 +203,7 @@ public abstract class Endpoint<Input, Output> {
         httpClient.readTimeout(this.getRequestTimeout(), TimeUnit.SECONDS);
         httpClient.connectTimeout(this.getConnectTimeout(), TimeUnit.SECONDS);
 
-        if (pubnub.getConfiguration().isVerboseLogging()) {
+        if (pubnub.getConfiguration().getLogVerbosity() == PNLogVerbosity.BODY) {
             HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
             logging.setLevel(HttpLoggingInterceptor.Level.BODY);
             httpClient.addInterceptor(logging);
