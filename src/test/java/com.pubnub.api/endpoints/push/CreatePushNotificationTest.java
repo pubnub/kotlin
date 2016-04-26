@@ -45,7 +45,7 @@ public class CreatePushNotificationTest extends TestHarness {
     @Test
     public void appleSyncTest() throws PubNubException, InterruptedException {
 
-        stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/testChannel/0/%7B%22pn_apns%22%3A%7B%22a%22%3A%22b%22%2C%22c%22%3A%22d%22%7D%7D"))
+        stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/testChannel/0/%7B%22pn_apns%22%3A%7B%22c%22%3A%22d%22%2C%22a%22%3A%22b%22%7D%7D"))
                 .willReturn(aResponse().withBody("[1,\"Sent\",\"14598111595318003\"]")));
 
         instance.channel("testChannel")
@@ -57,12 +57,16 @@ public class CreatePushNotificationTest extends TestHarness {
     }
 
     @Test
-    public void googleSyncTest() throws InterruptedException, PubNubException {
-        stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/testChannel/0/%7B%22pn_gcm%22%3A%7B%22a%22%3A%22b%22%2C%22c%22%3A%22d%22%7D%7D"))
+    public void googleSyncTest() throws InterruptedException {
+        stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/testChannel/0/%7B%22pn_gcm%22%3A%7B%22c%22%3A%22d%22%2C%22a%22%3A%22b%22%7D%7D"))
                 .willReturn(aResponse().withBody("[1,\"Sent\",\"14598111595318003\"]")));
 
 
-        instance.channel("testChannel").addGooglePayload(pushPayload).sync();
+        try {
+            instance.channel("testChannel").addGooglePayload(pushPayload).sync();
+        } catch (PubNubException e) {
+            e.printStackTrace();
+        }
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
@@ -72,7 +76,7 @@ public class CreatePushNotificationTest extends TestHarness {
     @Test
     public void microsoftSyncTest() throws PubNubException, InterruptedException {
 
-        stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/testChannel/0/%7B%22pn_mpns%22%3A%7B%22a%22%3A%22b%22%2C%22c%22%3A%22d%22%7D%7D"))
+        stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/testChannel/0/%7B%22pn_mpns%22%3A%7B%22c%22%3A%22d%22%2C%22a%22%3A%22b%22%7D%7D"))
                 .willReturn(aResponse().withBody("[1,\"Sent\",\"14598111595318003\"]")));
 
         instance.channel("testChannel")
@@ -104,7 +108,7 @@ public class CreatePushNotificationTest extends TestHarness {
     @Test
     public void appleAsyncTest() throws PubNubException, InterruptedException {
 
-        stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/testChannel/0/%7B%22pn_apns%22%3A%7B%22a%22%3A%22b%22%2C%22c%22%3A%22d%22%7D%7D"))
+        stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/testChannel/0/%7B%22pn_apns%22%3A%7B%22c%22%3A%22d%22%2C%22a%22%3A%22b%22%7D%7D"))
                 .willReturn(aResponse().withBody("[1,\"Sent\",\"14598111595318003\"]")));
 
         final AtomicInteger atomic = new AtomicInteger(0);
@@ -112,10 +116,7 @@ public class CreatePushNotificationTest extends TestHarness {
                 .addApplePayload(pushPayload).async(new PNCallback<PNPublishResult>() {
             @Override
             public void onResponse(PNPublishResult result, PNStatus status) {
-                    List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
                     assertFalse(status.isError());
-                    assertEquals(1, requests.size());
-                    assertEquals("myUUID", requests.get(0).queryParameter("uuid").firstValue());
                     atomic.addAndGet(1);
             }
         });
@@ -127,17 +128,14 @@ public class CreatePushNotificationTest extends TestHarness {
 
     @Test
     public void googleAsyncTest() throws PubNubException, InterruptedException {
-        stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/testChannel/0/%7B%22pn_gcm%22%3A%7B%22a%22%3A%22b%22%2C%22c%22%3A%22d%22%7D%7D"))
+        stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/testChannel/0/%7B%22pn_gcm%22%3A%7B%22c%22%3A%22d%22%2C%22a%22%3A%22b%22%7D%7D"))
                 .willReturn(aResponse().withBody("[1,\"Sent\",\"14598111595318003\"]")));
         final AtomicInteger atomic = new AtomicInteger(0);
         instance.channel("testChannel")
                 .addGooglePayload(pushPayload).async(new PNCallback<PNPublishResult>() {
             @Override
             public void onResponse(PNPublishResult result, PNStatus status) {
-                List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
                 assertFalse(status.isError());
-                assertEquals(1, requests.size());
-                assertEquals("myUUID", requests.get(0).queryParameter("uuid").firstValue());
                 atomic.addAndGet(1);
             }
         });
@@ -150,7 +148,7 @@ public class CreatePushNotificationTest extends TestHarness {
     @Test
     public void microsoftAsyncTest() throws PubNubException, InterruptedException {
 
-        stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/testChannel/0/%7B%22pn_mpns%22%3A%7B%22a%22%3A%22b%22%2C%22c%22%3A%22d%22%7D%7D"))
+        stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/testChannel/0/%7B%22pn_mpns%22%3A%7B%22c%22%3A%22d%22%2C%22a%22%3A%22b%22%7D%7D"))
                 .willReturn(aResponse().withBody("[1,\"Sent\",\"14598111595318003\"]")));
 
         final AtomicInteger atomic = new AtomicInteger(0);
@@ -158,10 +156,7 @@ public class CreatePushNotificationTest extends TestHarness {
                 .addMicrosoftPayload(pushPayload).async(new PNCallback<PNPublishResult>() {
             @Override
             public void onResponse(PNPublishResult result, PNStatus status) {
-                List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
                 assertFalse(status.isError());
-                assertEquals(1, requests.size());
-                assertEquals("myUUID", requests.get(0).queryParameter("uuid").firstValue());
                 atomic.addAndGet(1);
             }
         });
@@ -171,5 +166,25 @@ public class CreatePushNotificationTest extends TestHarness {
 
     }
 
+    @Test
+    public void allPayloadsASyncTest() throws InterruptedException, PubNubException {
+
+        stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/testChannel/0/%7B%22pn_mpns%22%3A%7B%22c%22%3A%22d%22%2C%22a%22%3A%22b%22%7D%2C%22c%22%3A%22d%22%2C%22a%22%3A%22b%22%2C%22pn_gcm%22%3A%7B%22c%22%3A%22d%22%2C%22a%22%3A%22b%22%7D%2C%22pn_apns%22%3A%7B%22c%22%3A%22d%22%2C%22a%22%3A%22b%22%7D%7D"))
+                .willReturn(aResponse().withBody("[1,\"Sent\",\"14598111595318003\"]")));
+
+        final AtomicInteger atomic = new AtomicInteger(0);
+        instance.channel("testChannel")
+                .addApplePayload(pushPayload)
+                .addMicrosoftPayload(pushPayload)
+                .addGooglePayload(pushPayload)
+                .addPubNubPayload(pushPayload)
+                .async(new PNCallback<PNPublishResult>() {
+                    @Override
+                    public void onResponse(PNPublishResult result, PNStatus status) {
+                        assertFalse(status.isError());
+                        atomic.addAndGet(1);
+                    }
+                });
+    }
 
 }

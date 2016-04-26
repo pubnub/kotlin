@@ -75,6 +75,76 @@ public class SubscriptionManagerTest extends TestHarness {
     }
 
     @Test
+    public void testSubscribeChannelGroupBuilder() {
+        final AtomicInteger atomic = new AtomicInteger(0);
+        stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/,/0"))
+                .willReturn(aResponse().withBody("{\"t\":{\"t\":\"14607577960932487\",\"r\":1},\"m\":[{\"a\":\"4\",\"f\":0,\"i\":\"Client-g5d4g\",\"p\":{\"t\":\"14607577960925503\",\"r\":1},\"k\":\"sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f\",\"c\":\"coolChannel\",\"d\":{\"text\":\"Enter Message Here\"},\"b\":\"coolChan-bnel\"}]}")));
+
+        pubnub.addListener(new SubscribeCallback() {
+            @Override
+            public void status(PubNub pubnub, PNStatus status) {
+            }
+
+            @Override
+            public void message(PubNub pubnub, PNMessageResult message) {
+                List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")));
+
+                if (requests.size() == 1){
+                    assertEquals("cg1,cg2", requests.get(0).queryParameter("channel-group").firstValue());
+                    atomic.addAndGet(1);
+                }
+
+            }
+
+            @Override
+            public void presence(PubNub pubnub, PNPresenceEventResult presence) {
+            }
+        });
+
+
+        pubnub.subscribe().channelGroups(Arrays.asList("cg1", "cg2")).execute();
+
+        Awaitility.await().atMost(5, TimeUnit.SECONDS)
+                .untilAtomic(atomic, org.hamcrest.core.IsEqual.equalTo(1));
+
+    }
+
+    @Test
+    public void testSubscribeChannelGroupWithPresenceBuilder() {
+        final AtomicInteger atomic = new AtomicInteger(0);
+        stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/,/0"))
+                .willReturn(aResponse().withBody("{\"t\":{\"t\":\"14607577960932487\",\"r\":1},\"m\":[{\"a\":\"4\",\"f\":0,\"i\":\"Client-g5d4g\",\"p\":{\"t\":\"14607577960925503\",\"r\":1},\"k\":\"sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f\",\"c\":\"coolChannel\",\"d\":{\"text\":\"Enter Message Here\"},\"b\":\"coolChan-bnel\"}]}")));
+
+        pubnub.addListener(new SubscribeCallback() {
+            @Override
+            public void status(PubNub pubnub, PNStatus status) {
+            }
+
+            @Override
+            public void message(PubNub pubnub, PNMessageResult message) {
+                List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")));
+
+                if (requests.size() == 1){
+                    assertEquals("cg1,cg1-pnpres,cg2,cg2-pnpres", requests.get(0).queryParameter("channel-group").firstValue());
+                    atomic.addAndGet(1);
+                }
+
+            }
+
+            @Override
+            public void presence(PubNub pubnub, PNPresenceEventResult presence) {
+            }
+        });
+
+
+        pubnub.subscribe().channelGroups(Arrays.asList("cg1", "cg2")).withPresence().execute();
+
+        Awaitility.await().atMost(5, TimeUnit.SECONDS)
+                .untilAtomic(atomic, org.hamcrest.core.IsEqual.equalTo(1));
+
+    }
+
+    @Test
     public void testSubscribeWithTimeTokenBuilder() {
         final AtomicInteger atomic = new AtomicInteger(0);
         stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
