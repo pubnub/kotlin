@@ -89,10 +89,6 @@ public class PubNub {
         return new ListPushProvisions(this);
     }
 
-    public final CreatePushNotification createPushNotification() {
-        return new CreatePushNotification(this);
-    }
-
     // end push
 
     public final WhereNow whereNow() {

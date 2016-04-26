@@ -125,7 +125,9 @@ public class SubscriptionManagerTest extends TestHarness {
                 List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")));
 
                 if (requests.size() == 1){
-                    assertEquals("cg1,cg1-pnpres,cg2,cg2-pnpres", requests.get(0).queryParameter("channel-group").firstValue());
+                    String[] channelGroups = requests.get(0).queryParameter("channel-group").firstValue().split(",");
+                    Arrays.sort(channelGroups);
+                    assertEquals("cg1,cg1-pnpres,cg2,cg2-pnpres", joinArray(channelGroups));
                     atomic.addAndGet(1);
                 }
 
@@ -574,4 +576,15 @@ public class SubscriptionManagerTest extends TestHarness {
         Awaitility.await().atMost(2, TimeUnit.SECONDS).untilAtomic(statusRecieved, org.hamcrest.core.IsEqual.equalTo(false));
     }
 
+
+    private String joinArray(String[] arr) {
+        StringBuilder builder = new StringBuilder();
+        for(String s : arr) {
+            if (builder.length() != 0) {
+                builder.append(",");
+            }
+            builder.append(s);
+        }
+        return builder.toString();
+    }
 }
