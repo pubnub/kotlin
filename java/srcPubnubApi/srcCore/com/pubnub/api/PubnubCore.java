@@ -195,6 +195,8 @@ abstract class PubnubCore implements PubnubInterface {
         String msgStr = message.toString();
         Hashtable parameters = PubnubUtil.hashtableClone(params);
 
+        parameters.put("uuid", getUUID());
+
         if (storeInHistory != null && storeInHistory.length() > 0)
             parameters.put("store", storeInHistory);
         
