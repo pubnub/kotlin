@@ -2,7 +2,7 @@ package com.pubnub.api.endpoints.presence;
 
 
 import com.pubnub.api.PubNub;
-import com.pubnub.api.PubnubUtil;
+import com.pubnub.api.PubNubUtil;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.models.server.Envelope;
 import com.pubnub.api.models.consumer.presence.PNHereNowChannelData;
@@ -60,11 +60,11 @@ public class HereNow extends Endpoint<Envelope<Object>, PNHereNowResult> {
             params.put("disable_uuids", "1");
         }
         if (channelGroups.size() > 0) {
-            params.put("channel-group", PubnubUtil.joinString(channelGroups, ","));
+            params.put("channel-group", PubNubUtil.joinString(channelGroups, ","));
         }
 
         if (channels.size() > 0) {
-            channelCSV = PubnubUtil.joinString(channels, ",");
+            channelCSV = PubNubUtil.joinString(channels, ",");
         } else {
             channelCSV = ",";
         }

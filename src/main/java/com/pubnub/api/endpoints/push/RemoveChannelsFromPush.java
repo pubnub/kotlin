@@ -3,7 +3,7 @@ package com.pubnub.api.endpoints.push;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubError;
 import com.pubnub.api.PubNubException;
-import com.pubnub.api.PubnubUtil;
+import com.pubnub.api.PubNubUtil;
 import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.enums.PNPushType;
@@ -52,7 +52,7 @@ public class RemoveChannelsFromPush extends Endpoint<List<Object>, PNPushRemoveC
         baseParams.put("type", pushType.name().toLowerCase());
 
         if (channels.size() != 0) {
-            baseParams.put("remove", PubnubUtil.joinString(channels, ","));
+            baseParams.put("remove", PubNubUtil.joinString(channels, ","));
         }
 
         PushService service = this.createRetrofit().create(PushService.class);

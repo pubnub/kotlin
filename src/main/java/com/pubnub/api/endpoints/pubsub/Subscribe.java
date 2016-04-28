@@ -3,7 +3,7 @@ package com.pubnub.api.endpoints.pubsub;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubError;
 import com.pubnub.api.PubNubException;
-import com.pubnub.api.PubnubUtil;
+import com.pubnub.api.PubNubUtil;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.models.server.SubscribeEnvelope;
 import com.pubnub.api.endpoints.Endpoint;
@@ -69,11 +69,11 @@ public class Subscribe extends Endpoint<SubscribeEnvelope, SubscribeEnvelope> {
         String channelCSV;
 
         if (channelGroups.size() > 0) {
-            params.put("channel-group", PubnubUtil.joinString(channelGroups, ","));
+            params.put("channel-group", PubNubUtil.joinString(channelGroups, ","));
         }
 
         if (filterExpression != null && filterExpression.length() > 0) {
-            params.put("filter-expr",  PubnubUtil.urlEncode(filterExpression));
+            params.put("filter-expr",  PubNubUtil.urlEncode(filterExpression));
         }
 
         if (timetoken != null) {
@@ -85,7 +85,7 @@ public class Subscribe extends Endpoint<SubscribeEnvelope, SubscribeEnvelope> {
         }
 
         if (channels.size() > 0) {
-            channelCSV = PubnubUtil.joinString(channels, ",");
+            channelCSV = PubNubUtil.joinString(channels, ",");
         } else {
             channelCSV = ",";
         }

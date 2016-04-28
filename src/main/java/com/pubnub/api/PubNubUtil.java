@@ -16,7 +16,7 @@ import java.util.TreeSet;
 /**
  * Created by Frederick on 3/30/16.
  */
-public class PubnubUtil {
+public class PubNubUtil {
 
 
     public static String joinString(List<String> val, String delim){

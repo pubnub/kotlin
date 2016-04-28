@@ -3,7 +3,7 @@ package com.pubnub.api.endpoints.access;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubError;
 import com.pubnub.api.PubNubException;
-import com.pubnub.api.PubnubUtil;
+import com.pubnub.api.PubNubUtil;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.models.server.Envelope;
 import com.pubnub.api.models.consumer.access_manager.PNAccessManagerAuditResult;
@@ -58,12 +58,12 @@ public class Audit extends Endpoint<Envelope<AccessManagerAuditPayload>, PNAcces
         }
 
         if (authKeys.size() > 0) {
-            queryParams.put("auth", PubnubUtil.joinString(authKeys, ","));
+            queryParams.put("auth", PubNubUtil.joinString(authKeys, ","));
         }
 
-        signInput += PubnubUtil.preparePamArguments(queryParams);
+        signInput += PubNubUtil.preparePamArguments(queryParams);
 
-        signature = PubnubUtil.signSHA256(this.pubnub.getConfiguration().getSecretKey(), signInput);
+        signature = PubNubUtil.signSHA256(this.pubnub.getConfiguration().getSecretKey(), signInput);
 
         queryParams.put("signature", signature);
 

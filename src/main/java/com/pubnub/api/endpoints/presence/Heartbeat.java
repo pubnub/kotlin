@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubError;
 import com.pubnub.api.PubNubException;
-import com.pubnub.api.PubnubUtil;
+import com.pubnub.api.PubNubUtil;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.models.server.Envelope;
 import com.pubnub.api.endpoints.Endpoint;
@@ -41,13 +41,13 @@ public class Heartbeat extends Endpoint<Envelope, Boolean> {
         params.put("heartbeat", String.valueOf(pubnub.getConfiguration().getPresenceTimeout()));
 
         if (channelGroups != null && channelGroups.size() > 0) {
-            params.put("channel-group", PubnubUtil.joinString(channelGroups, ","));
+            params.put("channel-group", PubNubUtil.joinString(channelGroups, ","));
         }
 
         String channelsCSV;
 
         if (channels != null && channels.size() > 0) {
-            channelsCSV = PubnubUtil.joinString(channels, ",");
+            channelsCSV = PubNubUtil.joinString(channels, ",");
         } else {
             channelsCSV = ",";
         }
@@ -61,7 +61,7 @@ public class Heartbeat extends Endpoint<Envelope, Boolean> {
                 throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_INVALID_ARGUMENTS).errormsg(e.getMessage()).build();
             }
 
-            stringifiedState = PubnubUtil.urlEncode(stringifiedState);
+            stringifiedState = PubNubUtil.urlEncode(stringifiedState);
             params.put("state", stringifiedState);
         }
 

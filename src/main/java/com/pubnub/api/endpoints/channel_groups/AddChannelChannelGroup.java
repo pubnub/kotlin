@@ -3,7 +3,7 @@ package com.pubnub.api.endpoints.channel_groups;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubError;
 import com.pubnub.api.PubNubException;
-import com.pubnub.api.PubnubUtil;
+import com.pubnub.api.PubNubUtil;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsAddChannelResult;
 import com.pubnub.api.models.server.Envelope;
@@ -38,7 +38,7 @@ public class AddChannelChannelGroup extends Endpoint<Envelope, PNChannelGroupsAd
         ChannelGroupService service = this.createRetrofit().create(ChannelGroupService.class);
 
         if (channels.size() > 0) {
-            params.put("add", PubnubUtil.joinString(channels, ","));
+            params.put("add", PubNubUtil.joinString(channels, ","));
         }
 
         return service.AddChannelChannelGroup(pubnub.getConfiguration().getSubscribeKey(), channelGroup, params);

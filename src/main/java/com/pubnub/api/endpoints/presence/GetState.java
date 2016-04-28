@@ -2,7 +2,7 @@ package com.pubnub.api.endpoints.presence;
 
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
-import com.pubnub.api.PubnubUtil;
+import com.pubnub.api.PubNubUtil;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.models.consumer.presence.PNGetStateResult;
 import com.pubnub.api.models.server.Envelope;
@@ -45,10 +45,10 @@ public class GetState extends Endpoint<Envelope<Object>, PNGetStateResult> {
         PresenceService service = this.createRetrofit().create(PresenceService.class);
 
         if (channelGroups.size() > 0) {
-            params.put("channel-group", PubnubUtil.joinString(channelGroups, ","));
+            params.put("channel-group", PubNubUtil.joinString(channelGroups, ","));
         }
 
-        String channelCSV = channels.size() > 0 ? PubnubUtil.joinString(channels, ",") : ",";
+        String channelCSV = channels.size() > 0 ? PubNubUtil.joinString(channels, ",") : ",";
 
         String selectedUUID = uuid != null ? uuid : pubnub.getConfiguration().getUuid();
 

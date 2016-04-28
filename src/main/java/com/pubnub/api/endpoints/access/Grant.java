@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubError;
 import com.pubnub.api.PubNubException;
-import com.pubnub.api.PubnubUtil;
+import com.pubnub.api.PubNubUtil;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.models.server.Envelope;
 import com.pubnub.api.models.server.access_manager.AccessManagerGrantPayload;
@@ -57,15 +57,15 @@ public class Grant extends Endpoint<Envelope<AccessManagerGrantPayload>, PNAcces
         queryParams.put("timestamp", String.valueOf(pubnub.getTimestamp()));
 
         if (channels != null && channels.size() > 0) {
-            queryParams.put("channel", PubnubUtil.joinString(channels, ","));
+            queryParams.put("channel", PubNubUtil.joinString(channels, ","));
         }
 
         if (channelGroups != null && channelGroups.size() > 0) {
-            queryParams.put("channel-group", PubnubUtil.joinString(channelGroups, ","));
+            queryParams.put("channel-group", PubNubUtil.joinString(channelGroups, ","));
         }
 
         if (authKeys != null & authKeys.size() > 0) {
-            queryParams.put("auth", PubnubUtil.joinString(authKeys, ","));
+            queryParams.put("auth", PubNubUtil.joinString(authKeys, ","));
         }
 
         if (ttl != null && ttl >= -1) {
@@ -76,9 +76,9 @@ public class Grant extends Endpoint<Envelope<AccessManagerGrantPayload>, PNAcces
         queryParams.put("w", (write) ? "1" : "0");
         queryParams.put("m", (manage) ? "1" : "0");
 
-        signInput += PubnubUtil.preparePamArguments(queryParams);
+        signInput += PubNubUtil.preparePamArguments(queryParams);
 
-        signature = PubnubUtil.signSHA256(this.pubnub.getConfiguration().getSecretKey(), signInput);
+        signature = PubNubUtil.signSHA256(this.pubnub.getConfiguration().getSecretKey(), signInput);
 
         queryParams.put("signature", signature);
 

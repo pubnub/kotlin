@@ -2,7 +2,7 @@ package com.pubnub.api.endpoints.push;
 
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
-import com.pubnub.api.PubnubUtil;
+import com.pubnub.api.PubNubUtil;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.enums.PNPushType;
 import com.pubnub.api.endpoints.Endpoint;
@@ -50,7 +50,7 @@ public class AddChannelsToPush extends Endpoint<List<Object>, Boolean> {
         baseParams.put("type", pushType.name().toLowerCase());
 
         if (channels.size() != 0) {
-            baseParams.put("add", PubnubUtil.joinString(channels, ","));
+            baseParams.put("add", PubNubUtil.joinString(channels, ","));
         }
 
         PushService service = this.createRetrofit().create(PushService.class);

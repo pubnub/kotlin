@@ -60,7 +60,7 @@ public class Publish extends Endpoint<List<Object>, PNPublishResult> {
         if (meta != null) {
             try {
                 stringifiedMeta = mapper.writeValueAsString(meta);
-                stringifiedMeta = PubnubUtil.urlEncode(stringifiedMeta);
+                stringifiedMeta = PubNubUtil.urlEncode(stringifiedMeta);
                 params.put("meta", stringifiedMeta);
             } catch (JsonProcessingException e) {
                 throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_INVALID_ARGUMENTS).errormsg(e.getMessage()).build();
@@ -103,7 +103,7 @@ public class Publish extends Endpoint<List<Object>, PNPublishResult> {
                 stringifiedMessage = "\"".concat(stringifiedMessage).concat("\"");
             }
 
-            stringifiedMessage = PubnubUtil.urlEncode(stringifiedMessage);
+            stringifiedMessage = PubNubUtil.urlEncode(stringifiedMessage);
 
             return service.publish(pubnub.getConfiguration().getPublishKey(),
                     pubnub.getConfiguration().getSubscribeKey(),
