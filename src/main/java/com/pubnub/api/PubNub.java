@@ -232,7 +232,7 @@ public class PubNub {
      */
     private String fetchSDKVersion() {
         Properties prop = new Properties();
-        InputStream in = ClassLoader.getSystemClassLoader().getResourceAsStream("version.properties");
+        InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream("version.properties");
         try {
             prop.load(in);
         } catch (IOException e) {
