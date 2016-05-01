@@ -39,7 +39,7 @@ public class Crypto {
         this.cipherKey = cipherKey;
     }
 
-    public void InitCiphers() throws PubNubException {
+    public void initCiphers() throws PubNubException {
         if (INIT)
             return;
         try {
@@ -71,7 +71,7 @@ public class Crypto {
 
     public String encrypt(String input) throws PubNubException {
         try {
-            InitCiphers();
+            initCiphers();
             AlgorithmParameterSpec ivSpec = new IvParameterSpec(ivBytes);
             SecretKeySpec newKey = new SecretKeySpec(keyBytes, "AES");
             Cipher cipher = null;
@@ -105,7 +105,7 @@ public class Crypto {
      */
     public String decrypt(String cipher_text) throws PubNubException {
         try {
-            InitCiphers();
+            initCiphers();
             AlgorithmParameterSpec ivSpec = new IvParameterSpec(ivBytes);
             SecretKeySpec newKey = new SecretKeySpec(keyBytes, "AES");
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
