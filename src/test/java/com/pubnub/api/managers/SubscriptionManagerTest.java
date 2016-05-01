@@ -89,11 +89,8 @@ public class SubscriptionManagerTest extends TestHarness {
             public void message(PubNub pubnub, PNMessageResult message) {
                 List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")));
 
-                if (requests.size() == 1){
-                    assertEquals("cg1,cg2", requests.get(0).queryParameter("channel-group").firstValue());
-                    atomic.addAndGet(1);
-                }
-
+                assertEquals("cg1,cg2", requests.get(0).queryParameter("channel-group").firstValue());
+                atomic.addAndGet(1);
             }
 
             @Override
@@ -105,7 +102,7 @@ public class SubscriptionManagerTest extends TestHarness {
         pubnub.subscribe().channelGroups(Arrays.asList("cg1", "cg2")).execute();
 
         Awaitility.await().atMost(5, TimeUnit.SECONDS)
-                .untilAtomic(atomic, org.hamcrest.core.IsEqual.equalTo(1));
+                .untilAtomic(atomic, org.hamcrest.Matchers.greaterThan(0));
 
     }
 

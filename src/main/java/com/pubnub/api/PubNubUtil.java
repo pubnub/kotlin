@@ -78,13 +78,11 @@ public class PubNubUtil {
 
         for (String pamKey : pamKeys) {
             if (i != 0) {
-                stringifiedArguments += "&";
+                stringifiedArguments = stringifiedArguments.concat("&");
             }
 
 
-            stringifiedArguments += pamEncode(pamKey);
-            stringifiedArguments += "=";
-            stringifiedArguments += pamEncode(pamArgs.get(pamKey));
+            stringifiedArguments = stringifiedArguments.concat(pamKey).concat("=").concat(pamEncode(pamArgs.get(pamKey)));
 
             i += 1;
         }
