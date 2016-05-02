@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 @Accessors(chain = true, fluent = true)
-public class RemoveChannelChannelGroup extends Endpoint<Envelope, PNChannelGroupsRemoveChannelResult> {
+public class RemoveChannelChannelGroup extends Endpoint<Envelope, Boolean> {
     @Setter private String channelGroup;
     @Setter private List<String> channels;
 
@@ -29,8 +29,15 @@ public class RemoveChannelChannelGroup extends Endpoint<Envelope, PNChannelGroup
     }
 
     @Override
-    protected boolean validateParams() {
-        return true;
+    protected void validateParams() throws PubNubException {
+        if (channelGroup==null || channelGroup.isEmpty())
+        {
+            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_GROUP_MISSING).build();
+        }
+        if (channels.size() == 0)
+        {
+            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_CHANNEL_MISSING).build();
+        }
     }
 
     @Override
@@ -45,12 +52,8 @@ public class RemoveChannelChannelGroup extends Endpoint<Envelope, PNChannelGroup
     }
 
     @Override
-    protected PNChannelGroupsRemoveChannelResult createResponse(Response<Envelope> input) throws PubNubException {
-        if (input.body() == null) {
-            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_PARSING_ERROR).build();
-        }
-
-        return PNChannelGroupsRemoveChannelResult.builder().build();
+    protected Boolean createResponse(Response<Envelope> input) throws PubNubException {
+        return !input.body().isError();
     }
 
     protected int getConnectTimeout() {

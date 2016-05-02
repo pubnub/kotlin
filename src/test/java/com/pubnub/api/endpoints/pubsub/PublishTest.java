@@ -230,4 +230,21 @@ public class PublishTest extends TestHarness {
 
     }
 
+    @org.junit.Test(expected=PubNubException.class)
+    public void testMissingChannel() throws PubNubException, InterruptedException {
+
+        stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22hi%22"))
+                .willReturn(aResponse().withBody("[1,\"Sent\",\"14598111595318003\"]")));
+
+        instance.message("hi").sync();
+    }
+
+    @org.junit.Test(expected=PubNubException.class)
+    public void testMissingMessage() throws PubNubException, InterruptedException {
+
+        stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22hi%22"))
+                .willReturn(aResponse().withBody("[1,\"Sent\",\"14598111595318003\"]")));
+
+        instance.channel("coolChannel").sync();
+    }
 }

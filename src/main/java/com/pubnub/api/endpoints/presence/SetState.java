@@ -40,18 +40,17 @@ public class SetState extends Endpoint<Envelope<Map<String, Object>>, PNSetState
     }
 
     @Override
-    protected boolean validateParams() {
-
+    protected void validateParams() throws PubNubException {
         if (state == null) {
-            return false;
+            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_STATE_MISSING).build();
         }
-
-        if (channels.size() == 0 && channelGroups.size() == 0) {
-            return false;
+        if (pubnub.getConfiguration().getSubscribeKey()==null || pubnub.getConfiguration().getSubscribeKey().isEmpty()) {
+            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_SUBSCRIBE_KEY_MISSING).build();
         }
-
-
-        return true;
+        if (channels.size()==0 && channelGroups.size()==0)
+        {
+            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_CHANNEL_AND_GROUP_MISSING).build();
+        }
     }
 
     @Override

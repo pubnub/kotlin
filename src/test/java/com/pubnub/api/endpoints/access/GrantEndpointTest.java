@@ -602,4 +602,22 @@ public class GrantEndpointTest extends TestHarness {
 
     }
 
+
+    @org.junit.Test(expected=PubNubException.class)
+    public void NoGroupsOneChannelMissingKey() throws PubNubException {
+
+        stubFor(get(urlPathEqualTo("/v1/auth/grant/sub-key/mySubscribeKey"))
+                .withQueryParam("pnsdk", matching("Java/suchJava"))
+                .withQueryParam("channel", matching("ch1"))
+                .withQueryParam("auth", matching("key1"))
+                .withQueryParam("signature", matching("_znR67zw5cdCq3Cmn1QHUHtFolkquYARh_JYCeMb8ig%3D%0A"))
+                .withQueryParam("uuid", matching("myUUID"))
+                .withQueryParam("timestamp", matching("1337"))
+                .withQueryParam("r", matching("0"))
+                .withQueryParam("w", matching("0"))
+                .withQueryParam("m", matching("1"))
+                .willReturn(aResponse().withBody("{\"message\":\"Success\",\"payload\":{\"level\":\"user\",\"subscribe_key\":\"sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f\",\"ttl\":1,\"channel\":\"ch1\",\"auths\":{\"key1\":{\"r\":0,\"w\":0,\"m\":0}}},\"service\":\"Access Manager\",\"status\":200}")));
+
+        PNAccessManagerGrantResult result = partialGrant.channels(Arrays.asList("ch1")).manage(true).sync();
+    }
 }

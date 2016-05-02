@@ -28,8 +28,15 @@ public class DeleteChannelGroupEndpointTest extends TestHarness {
         stubFor(get(urlPathEqualTo("/v1/channel-registration/sub-key/mySubscribeKey/channel-group/groupA/remove"))
                 .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {}, \"service\": \"ChannelGroups\"}")));
 
-        PNChannelGroupsDeleteGroupResult response = partialDeleteChannelGroup.channelGroup("groupA").sync();
+        boolean response = partialDeleteChannelGroup.channelGroup("groupA").sync();
         assertNotNull(response);
     }
 
+    @org.junit.Test(expected=PubNubException.class)
+    public void testSyncMissingGroup() throws IOException, PubNubException, InterruptedException {
+        stubFor(get(urlPathEqualTo("/v1/channel-registration/sub-key/mySubscribeKey/channel-group/groupA/remove"))
+                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {}, \"service\": \"ChannelGroups\"}")));
+
+        boolean response = partialDeleteChannelGroup.sync();
+    }
 }

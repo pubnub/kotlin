@@ -25,8 +25,12 @@ public class AllChannelsChannelGroup extends Endpoint<Envelope<Object>, PNChanne
     }
 
     @Override
-    protected boolean validateParams() {
-        return true;
+    protected void validateParams() throws PubNubException
+    {
+        if (channelGroup==null || channelGroup.isEmpty())
+        {
+            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_GROUP_MISSING).build();
+        }
     }
 
     @Override

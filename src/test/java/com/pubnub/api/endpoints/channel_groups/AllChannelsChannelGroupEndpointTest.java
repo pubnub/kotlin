@@ -32,4 +32,13 @@ public class AllChannelsChannelGroupEndpointTest extends TestHarness {
         assertThat(response.getChannels(), org.hamcrest.Matchers.contains("a", "b"));
     }
 
+    @org.junit.Test(expected=PubNubException.class)
+    public void testSyncMissingGroup() throws IOException, PubNubException, InterruptedException {
+        stubFor(get(urlPathEqualTo("/v1/channel-registration/sub-key/mySubscribeKey/channel-group/groupA"))
+                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": [\"a\",\"b\"]}, \"service\": \"ChannelGroups\"}")));
+
+        PNChannelGroupsAllChannelsResult response = partialAllChannelsChannelGroup.sync();
+    }
+
+
 }

@@ -59,8 +59,14 @@ public class Subscribe extends Endpoint<SubscribeEnvelope, SubscribeEnvelope> {
     }
 
     @Override
-    protected final boolean validateParams() {
-        return true;
+    protected final void validateParams() throws PubNubException {
+        if (pubnub.getConfiguration().getSubscribeKey()==null || pubnub.getConfiguration().getSubscribeKey().isEmpty()) {
+            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_SUBSCRIBE_KEY_MISSING).build();
+        }
+        if (channels.size()==0 && channelGroups.size()==0)
+        {
+            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_CHANNEL_AND_GROUP_MISSING).build();
+        }
     }
 
     @Override
