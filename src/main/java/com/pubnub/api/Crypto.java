@@ -1,6 +1,6 @@
 package com.pubnub.api;
 
-import com.pubnub.api.core.utils.Base64;
+import com.pubnub.api.utils.Base64;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.crypto.BadPaddingException;

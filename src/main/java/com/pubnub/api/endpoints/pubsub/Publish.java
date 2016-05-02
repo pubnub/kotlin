@@ -33,16 +33,19 @@ public class Publish extends Endpoint<List<Object>, PNPublishResult> {
     }
 
     @Override
-    protected final boolean validateParams() {
+    protected final void validateParams() throws PubNubException {
         if (message == null) {
-            return false;
+            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_MESSAGE_MISSING).build();
         }
-
-        if (channel == null || channel.length() == 0) {
-            return false;
+        if (channel == null || channel.isEmpty()) {
+            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_CHANNEL_MISSING).build();
         }
-
-        return true;
+        if (pubnub.getConfiguration().getSubscribeKey()==null || pubnub.getConfiguration().getSubscribeKey().isEmpty()) {
+            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_SUBSCRIBE_KEY_MISSING).build();
+        }
+        if (pubnub.getConfiguration().getPublishKey()==null || pubnub.getConfiguration().getPublishKey().isEmpty()) {
+            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_PUBLISH_KEY_MISSING).build();
+        }
     }
 
     @Override

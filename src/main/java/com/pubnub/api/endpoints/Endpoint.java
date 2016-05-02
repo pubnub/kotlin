@@ -71,7 +71,6 @@ public abstract class Endpoint<Input, Output> {
     }
 
     public final Call<Input> async(final PNCallback<Output> callback) {
-        this.validateParams();
 
         Call<Input> call = null;
         try {
@@ -215,7 +214,7 @@ public abstract class Endpoint<Input, Output> {
         return params;
     }
 
-    protected abstract boolean validateParams();
+    protected abstract void validateParams() throws PubNubException;
 
     protected abstract Call<Input> doWork(Map<String, String> baseParams) throws PubNubException;
     protected abstract Output createResponse(Response<Input> input) throws PubNubException;

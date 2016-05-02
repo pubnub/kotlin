@@ -1,6 +1,7 @@
 package com.pubnub.api.endpoints.push;
 
 import com.pubnub.api.PubNub;
+import com.pubnub.api.PubNubError;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.enums.PushType;
@@ -24,12 +25,16 @@ public class RemoveAllPushChannelsForDevice extends Endpoint<List<Object>, Boole
     }
 
     @Override
-    protected boolean validateParams() {
-        if (pushType == null) {
-            return false;
+    protected void validateParams() throws PubNubException {
+        if (pubnub.getConfiguration().getSubscribeKey()==null || pubnub.getConfiguration().getSubscribeKey().isEmpty()) {
+            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_SUBSCRIBE_KEY_MISSING).build();
         }
-
-        return true;
+        if (pushType == null) {
+            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_PUSH_TYPE_MISSING).build();
+        }
+        if (deviceId == null || deviceId.isEmpty()) {
+            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_DEVICE_ID_MISSING).build();
+        }
     }
 
 

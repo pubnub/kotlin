@@ -1,6 +1,7 @@
 package com.pubnub.api.endpoints.push;
 
 import com.pubnub.api.PubNub;
+import com.pubnub.api.PubNubError;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.PubnubUtil;
 import com.pubnub.api.enums.PNOperationType;
@@ -24,25 +25,23 @@ public class AddChannelsToPush extends Endpoint<List<Object>, Boolean> {
 
     public AddChannelsToPush(PubNub pubnub) {
         super(pubnub);
-
         channels = new ArrayList<>();
     }
 
     @Override
-    protected boolean validateParams() {
+    protected void validateParams() throws PubNubException {
+        if (pubnub.getConfiguration().getSubscribeKey()==null || pubnub.getConfiguration().getSubscribeKey().isEmpty()) {
+            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_SUBSCRIBE_KEY_MISSING).build();
+        }
         if (pushType == null) {
-            return false;
+            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_PUSH_TYPE_MISSING).build();
         }
-
-        if (deviceId == null || deviceId.length() == 0) {
-            return false;
+        if (deviceId == null || deviceId.isEmpty()) {
+            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_DEVICE_ID_MISSING).build();
         }
-
         if (channels.size() == 0) {
-            return false;
+            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_CHANNEL_MISSING).build();
         }
-
-        return true;
     }
 
     @Override

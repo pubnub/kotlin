@@ -127,4 +127,14 @@ public class SetStateEndpointTest extends TestHarness {
         PNSetStateResult result = partialSetState.channels(Arrays.asList("ch1")).channelGroups(Arrays.asList("cg1", "cg2")).state(Arrays.asList("s1", "s2", "s3")).sync();
     }
 
+    @org.junit.Test(expected=PubNubException.class)
+    public void MissimStateSync() throws PubNubException, InterruptedException {
+
+        stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/testChannel/uuid/myUUID/data"))
+                .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : 20, \"status\" : \"online\" }, \"service\": \"Presence\"}")));
+
+        PNSetStateResult result = partialSetState.channels(Arrays.asList("testChannel")).sync();
+    }
+
+
 }

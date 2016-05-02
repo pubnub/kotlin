@@ -1,6 +1,7 @@
 package com.pubnub.api.endpoints.channel_groups;
 
 import com.pubnub.api.PubNub;
+import com.pubnub.api.PubNubError;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.models.server.Envelope;
@@ -21,8 +22,11 @@ public class DeleteChannelGroup extends Endpoint<Envelope,Boolean> {
     }
 
     @Override
-    protected boolean validateParams() {
-        return true;
+    protected void validateParams() throws PubNubException {
+        if (channelGroup==null || channelGroup.isEmpty())
+        {
+            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_GROUP_MISSING).build();
+        }
     }
 
     @Override
@@ -34,7 +38,7 @@ public class DeleteChannelGroup extends Endpoint<Envelope,Boolean> {
 
     @Override
     protected Boolean createResponse(Response<Envelope> input) throws PubNubException {
-        return true;
+        return !input.body().isError();
     }
 
     protected int getConnectTimeout() {

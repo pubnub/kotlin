@@ -19,6 +19,7 @@ import retrofit2.Call;
 import retrofit2.Response;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,11 +40,26 @@ public class Grant extends Endpoint<Envelope<AccessManagerGrantPayload>, PNAcces
 
     public Grant(PubNub pubnub) {
         super(pubnub);
+        authKeys = new ArrayList<>();
+        channels = new ArrayList<>();
+        channelGroups = new ArrayList<>();
     }
 
     @Override
-    protected boolean validateParams() {
-        return true;
+    protected void validateParams() throws PubNubException {
+        if (authKeys.size() == 0)
+        {
+            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_AUTH_KEYS_MISSING).build();
+        }
+        if (pubnub.getConfiguration().getSecretKey()==null || pubnub.getConfiguration().getSecretKey().isEmpty()) {
+            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_SECRET_KEY_MISSING).build();
+        }
+        if (pubnub.getConfiguration().getSubscribeKey()==null || pubnub.getConfiguration().getSubscribeKey().isEmpty()) {
+            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_SUBSCRIBE_KEY_MISSING).build();
+        }
+        if (pubnub.getConfiguration().getPublishKey()==null || pubnub.getConfiguration().getPublishKey().isEmpty()) {
+            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_PUBLISH_KEY_MISSING).build();
+        }
     }
 
     @Override
@@ -56,15 +72,15 @@ public class Grant extends Endpoint<Envelope<AccessManagerGrantPayload>, PNAcces
 
         queryParams.put("timestamp", String.valueOf(pubnub.getTimestamp()));
 
-        if (channels != null && channels.size() > 0) {
+        if (channels.size() > 0) {
             queryParams.put("channel", PubnubUtil.joinString(channels, ","));
         }
 
-        if (channelGroups != null && channelGroups.size() > 0) {
+        if (channelGroups.size() > 0) {
             queryParams.put("channel-group", PubnubUtil.joinString(channelGroups, ","));
         }
 
-        if (authKeys != null & authKeys.size() > 0) {
+        if (authKeys.size() > 0) {
             queryParams.put("auth", PubnubUtil.joinString(authKeys, ","));
         }
 

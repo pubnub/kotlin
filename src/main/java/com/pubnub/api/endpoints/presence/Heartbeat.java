@@ -15,6 +15,7 @@ import lombok.experimental.Accessors;
 import retrofit2.Call;
 import retrofit2.Response;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -25,13 +26,22 @@ public class Heartbeat extends Endpoint<Envelope, Boolean> {
     @Setter private List<String> channels;
     @Setter private List<String> channelGroups;
 
-    public Heartbeat(PubNub pubnub) {
+    public Heartbeat(PubNub pubnub)
+    {
         super(pubnub);
+        channels = new ArrayList<>();
+        channelGroups = new ArrayList<>();
     }
 
     @Override
-    protected boolean validateParams() {
-        return true;
+    protected void validateParams() throws PubNubException {
+        if (pubnub.getConfiguration().getSubscribeKey()==null || pubnub.getConfiguration().getSubscribeKey().isEmpty()) {
+            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_SUBSCRIBE_KEY_MISSING).build();
+        }
+        if (channels.size()==0 && channelGroups.size()==0)
+        {
+            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_CHANNEL_AND_GROUP_MISSING).build();
+        }
     }
 
     @Override
@@ -40,15 +50,17 @@ public class Heartbeat extends Endpoint<Envelope, Boolean> {
 
         params.put("heartbeat", String.valueOf(pubnub.getConfiguration().getPresenceTimeout()));
 
-        if (channelGroups != null && channelGroups.size() > 0) {
+        if (channelGroups.size() > 0) {
             params.put("channel-group", PubnubUtil.joinString(channelGroups, ","));
         }
 
         String channelsCSV;
 
-        if (channels != null && channels.size() > 0) {
+        if (channels.size() > 0) {
             channelsCSV = PubnubUtil.joinString(channels, ",");
-        } else {
+        }
+        else
+        {
             channelsCSV = ",";
         }
 

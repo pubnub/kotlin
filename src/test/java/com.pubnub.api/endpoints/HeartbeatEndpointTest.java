@@ -122,4 +122,15 @@ public class HeartbeatEndpointTest extends TestHarness {
         Assert.assertEquals("%7B%22CH2%22%3A%22this-is-channel2%22%2C%22CH1%22%3A%22this-is-channel1%22%7D", request.queryParameter("state").firstValue());
 
     }
+
+    @org.junit.Test(expected=PubNubException.class)
+    public void testMissingChannelAndGroupSync() throws PubNubException, InterruptedException {
+        pubnub.getConfiguration().setPresenceTimeout(123);
+
+        stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch1/heartbeat"))
+                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\"}")));
+
+        partialHeartbeat.sync();
+    }
+
 }

@@ -1,6 +1,7 @@
 package com.pubnub.api.endpoints.presence;
 
 import com.pubnub.api.PubNub;
+import com.pubnub.api.PubNubError;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.PubnubUtil;
 import com.pubnub.api.enums.PNOperationType;
@@ -17,6 +18,8 @@ import java.util.Map;
 
 @Accessors(chain = true, fluent = true)
 public class Leave extends Endpoint<Envelope, Boolean> {
+    @Setter private List<String> channels;
+    @Setter private List<String> channelGroups;
 
     public Leave(PubNub pubnub) {
         super(pubnub);
@@ -24,12 +27,15 @@ public class Leave extends Endpoint<Envelope, Boolean> {
         channelGroups = new ArrayList<>();
     }
 
-    @Setter private List<String> channels;
-    @Setter private List<String> channelGroups;
-
     @Override
-    protected boolean validateParams() {
-        return true;
+    protected void validateParams() throws PubNubException {
+        if (pubnub.getConfiguration().getSubscribeKey()==null || pubnub.getConfiguration().getSubscribeKey().isEmpty()) {
+            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_SUBSCRIBE_KEY_MISSING).build();
+        }
+        if (channels.size()==0 && channelGroups.size()==0)
+        {
+            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_CHANNEL_AND_GROUP_MISSING).build();
+        }
     }
 
     @Override

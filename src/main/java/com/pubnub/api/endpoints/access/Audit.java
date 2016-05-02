@@ -14,6 +14,7 @@ import lombok.experimental.Accessors;
 import retrofit2.Call;
 import retrofit2.Response;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -24,17 +25,27 @@ public class Audit extends Endpoint<Envelope<AccessManagerAuditPayload>, PNAcces
     @Setter private String channel;
     @Setter private String channelGroup;
 
-    public Audit(PubNub pubnub) {
+    public Audit(PubNub pubnub)
+    {
         super(pubnub);
+        authKeys = new ArrayList<>();
     }
 
     @Override
-    protected boolean validateParams() {
-        if (pubnub.getConfiguration().getSecretKey() != null && pubnub.getConfiguration().getSecretKey().length() == 0) {
-            return false;
+    protected void validateParams() throws PubNubException {
+        if (authKeys.size() == 0)
+        {
+            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_AUTH_KEYS_MISSING).build();
         }
-
-        return true;
+        if (pubnub.getConfiguration().getSecretKey()==null || pubnub.getConfiguration().getSecretKey().isEmpty()) {
+            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_SECRET_KEY_MISSING).build();
+        }
+        if (pubnub.getConfiguration().getSubscribeKey()==null || pubnub.getConfiguration().getSubscribeKey().isEmpty()) {
+            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_SUBSCRIBE_KEY_MISSING).build();
+        }
+        if (pubnub.getConfiguration().getPublishKey()==null || pubnub.getConfiguration().getPublishKey().isEmpty()) {
+            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_PUBLISH_KEY_MISSING).build();
+        }
     }
 
     @Override

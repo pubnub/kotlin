@@ -2,6 +2,8 @@ package com.pubnub.api.endpoints.presence;
 
 
 import com.pubnub.api.PubNub;
+import com.pubnub.api.PubNubError;
+import com.pubnub.api.PubNubException;
 import com.pubnub.api.PubnubUtil;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.models.server.Envelope;
@@ -34,8 +36,10 @@ public class HereNow extends Endpoint<Envelope<Object>, PNHereNowResult> {
 
 
     @Override
-    protected boolean validateParams() {
-        return true;
+    protected void validateParams() throws PubNubException {
+        if (pubnub.getConfiguration().getSubscribeKey()==null || pubnub.getConfiguration().getSubscribeKey().isEmpty()) {
+            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_SUBSCRIBE_KEY_MISSING).build();
+        }
     }
 
     @Override
