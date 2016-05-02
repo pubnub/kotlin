@@ -1,3 +1,9 @@
+
+05-2-16 - 3.7.9
+. Adjustments to presence message pass-through
+. Including UUID when performing Publish operations
+. Add Channel Group support for heartbeats.
+
 03-28-16 - 3.7.8 - f59c89b
 . Publish/Subscribe version 2 support added
 
