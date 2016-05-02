@@ -1283,7 +1283,7 @@ abstract class PubnubCoreAsync extends PubnubCore implements PubnubAsyncInterfac
                     if (chobj == null && channelSubscriptions != null)
                         chobj = channelSubscriptions.getItem(channel);
 
-                    if (channel.indexOf("-pnpres") > 0) {
+                    if (chobj == null && channel.indexOf("-pnpres") > 0) {
                         chobj = channelSubscriptions.getItem(channel);
                         channel = PubnubUtil.splitString(channel, "-pnpres")[0];
 
