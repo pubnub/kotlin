@@ -73,6 +73,12 @@ abstract class PubnubCoreAsync extends PubnubCore implements PubnubAsyncInterfac
         if (channelString.length() <= 0 && channelGroupString.length() <= 0) {
             return null;
         }
+
+        // if we do not have any channels but only channel groups: add , as channelString.
+        if (channelString.length() <= 0 && channelGroupString.length() > 0 ) {
+            channelString = ",";
+        }
+
         return new String[] { getPubnubUrl(), "v2", "presence", "sub-key", this.SUBSCRIBE_KEY, "channel",
                 PubnubUtil.urlEncode(channelString), "heartbeat" };
     }
