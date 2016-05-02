@@ -85,5 +85,21 @@ public class PubnubUtil extends PubnubUtilCore {
         }
         return str;
     }
+
+    /**
+     * Takes source and delimiter string as inputs and returns splitted string
+     * in form of tokens in String array
+     *
+     * @param source
+     *            , input String
+     * @param delimiter
+     *            , delimiter to split on
+     * @return String[] , tokens in and array
+     */
+
+    public static String[] splitString(String source, String delimiter) {
+        return source.split(delimiter);
+    }
+
 }
 

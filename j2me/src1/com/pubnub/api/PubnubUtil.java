@@ -177,4 +177,80 @@ public class PubnubUtil extends PubnubUtilCore {
     }
 
     private static String _dontNeedEncoding = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ -_.*";
+    
+
+    
+    /**
+     * Takes source and delimiter string as inputs and returns splitted string
+     * in form of tokens in String array
+     *
+     * @param source
+     *            , input String
+     * @param delimiter
+     *            , delimiter to split on
+     * @return String[] , tokens in and array
+     */
+    public static String[] splitString(String source, String delimiter) {
+        System.out.println("[" + delimiter + "] : " + source );
+        int delimiterCount = 0;
+        int index = 0;
+        String tmpStr = source;
+
+        String[] splittedList;
+
+        while ((index = tmpStr.indexOf(delimiter)) != -1) {
+
+            tmpStr = tmpStr.substring(index + delimiter.length());
+            delimiterCount++;
+        }
+
+        splittedList = new String[delimiterCount + 1];
+
+        int counter = 0;
+        tmpStr = source;
+        System.out.println("Delimiter Count : " + delimiterCount);
+        do {
+            int nextIndex = tmpStr.indexOf(delimiter, index + 1);
+            
+            System.out.println("Next Index : " + nextIndex);
+            
+            if (nextIndex != -1) {
+                System.out.println(tmpStr);
+                System.out.println(index);
+                System.out.println(index + delimiter.length() + " : " + nextIndex);
+                splittedList[counter++] = tmpStr.substring(index + delimiter.length(), nextIndex);
+                tmpStr = tmpStr.substring(nextIndex);
+
+            } else {
+                splittedList[counter++] = tmpStr.substring(index + delimiter.length());
+                tmpStr = tmpStr.substring(index + 1);
+            }
+        } while ((index = tmpStr.indexOf(delimiter)) != -1);
+
+        return splittedList;
+    }
+
+    /**
+     * Takes String[] of tokens, and String delimiter as input and returns
+     * joined String
+     *
+     * @param sourceArray
+     *            , input tokens in String array
+     * @param delimiter
+     *            , delimiter to join on
+     * @return String , string of tokens joined by delimiter
+     */
+    public static String joinString(String[] sourceArray, String delimiter) {
+        if (sourceArray == null || delimiter == null || sourceArray.length <= 0) {
+            return "";
+        }
+        StringBuffer sb = new StringBuffer();
+
+        for (int i = 0; i < sourceArray.length - 1; i++) {
+            sb.append(sourceArray[i]).append(delimiter);
+        }
+        sb.append(sourceArray[sourceArray.length - 1]);
+
+        return sb.toString();
+    }
 }
