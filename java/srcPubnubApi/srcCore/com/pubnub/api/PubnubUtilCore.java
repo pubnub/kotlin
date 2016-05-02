@@ -123,51 +123,6 @@ class PubnubUtilCore {
     }
 
     /**
-     * Takes source and delimiter string as inputs and returns splitted string
-     * in form of tokens in String array
-     *
-     * @param source
-     *            , input String
-     * @param delimiter
-     *            , delimiter to split on
-     * @return String[] , tokens in and array
-     */
-    public static String[] splitString(String source, String delimiter) {
-
-        int delimiterCount = 0;
-        int index = 0;
-        String tmpStr = source;
-
-        String[] splittedList;
-
-        while ((index = tmpStr.indexOf(delimiter)) != -1) {
-
-            tmpStr = tmpStr.substring(index + delimiter.length());
-            delimiterCount++;
-        }
-
-        splittedList = new String[delimiterCount + 1];
-
-        int counter = 0;
-        tmpStr = source;
-
-        do {
-            int nextIndex = tmpStr.indexOf(delimiter, index + 1);
-
-            if (nextIndex != -1) {
-                splittedList[counter++] = tmpStr.substring(index + delimiter.length(), nextIndex);
-                tmpStr = tmpStr.substring(nextIndex);
-
-            } else {
-                splittedList[counter++] = tmpStr.substring(index + delimiter.length());
-                tmpStr = tmpStr.substring(index + 1);
-            }
-        } while ((index = tmpStr.indexOf(delimiter)) != -1);
-
-        return splittedList;
-    }
-
-    /**
      * Takes String[] of tokens, and String delimiter as input and returns
      * joined String
      *
