@@ -1,0 +1,83 @@
+plugins {
+    id 'io.franzbecker.gradle-lombok' version '1.6'
+    id 'com.github.johnrengelman.shadow' version '1.2.3'
+    id 'java'
+    id 'jacoco'
+    id 'maven'
+    id 'checkstyle'
+    id 'findbugs'
+}
+group = 'com.pubnub'
+version = '4.0.0-beta1'
+
+description = """"""
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
+configurations.all {
+}
+
+repositories {
+
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+    maven { url "http://repo.maven.apache.org/maven2" }
+    maven { url "https://plugins.gradle.org/m2/" }
+}
+
+dependencies {
+    compile group: 'com.squareup.retrofit2', name: 'retrofit', version:'2.0.2'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version:'2.7.3'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version:'2.7.3'
+    compile group: 'com.squareup.retrofit2', name: 'converter-jackson', version:'2.0.2'
+    compile group: 'com.squareup.okhttp3', name: 'logging-interceptor', version:'3.2.0'
+    compile group: 'org.slf4j', name: 'slf4j-nop', version:'1.7.21'
+
+    testCompile group: 'ch.qos.logback', name: 'logback-classic', version:'1.1.7'
+    testCompile group: 'ch.qos.logback', name: 'logback-core', version:'1.1.7'
+    testCompile group: 'junit', name: 'junit', version:'4.12'
+    testCompile group: 'com.github.tomakehurst', name: 'wiremock', version:'1.58'
+    testCompile group: 'org.hamcrest', name: 'hamcrest-all', version:'1.3'
+    testCompile group: 'com.jayway.awaitility', name: 'awaitility', version:'1.7.0'
+}
+
+jacoco {
+    toolVersion = "0.7.6.201602180812"
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
+}
+
+checkstyle {
+    configFile = new File(rootDir, "src/test/checkstyle.xml")
+    toolVersion = '6.17'
+    ignoreFailures = true
+}
+
+findbugs {
+    ignoreFailures = true
+}
+
+tasks.withType(Checkstyle) {
+    reports {
+        xml.enabled =  true
+        html.enabled = true
+    }
+}
+
+tasks.withType(FindBugs) {
+    reports {
+        xml.enabled false
+        html.enabled true
+    }
+}
+
+check.dependsOn jacocoTestReport
+
+processResources {
+    expand projectVersion: project.version
+}

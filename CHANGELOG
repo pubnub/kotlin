@@ -1,3 +1,5 @@
+05-02-16 - 4.0.0-beta1
+- initial beta1
 
 05-2-16 - 3.7.9
 . Adjustments to presence message pass-through
@@ -105,4 +107,3 @@
 . improved keep-alive handling
 . support for chunked responses
 . improved logging
-
