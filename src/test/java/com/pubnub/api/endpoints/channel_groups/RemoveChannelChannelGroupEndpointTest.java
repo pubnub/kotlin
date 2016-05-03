@@ -48,5 +48,4 @@ public class RemoveChannelChannelGroupEndpointTest extends TestHarness {
 
         boolean response = partialRemoveChannelChannelGroup.channelGroup("groupA").sync();
     }
-
 }
