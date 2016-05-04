@@ -8,7 +8,6 @@ import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsAddChannelResult;
 import com.pubnub.api.models.server.Envelope;
 import com.pubnub.api.endpoints.Endpoint;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import retrofit2.Call;

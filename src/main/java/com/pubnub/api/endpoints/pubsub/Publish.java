@@ -7,6 +7,7 @@ import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.models.consumer.PNPublishResult;
 import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.managers.PublishSequenceManager;
+import com.pubnub.api.vendor.Crypto;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import retrofit2.Call;

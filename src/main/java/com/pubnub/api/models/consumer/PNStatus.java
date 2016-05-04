@@ -19,7 +19,11 @@ public class PNStatus {
 
     private int statusCode;
     private PNOperationType operation;
+
+    //CHECKSTYLE.OFF
     private boolean TLSEnabled;
+    //CHECKSTYLE.ON
+
     private String uuid;
     private String authKey;
     private String origin;

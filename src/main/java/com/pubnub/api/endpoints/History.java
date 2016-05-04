@@ -3,7 +3,7 @@ package com.pubnub.api.endpoints;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.pubnub.api.Crypto;
+import com.pubnub.api.vendor.Crypto;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubError;
 import com.pubnub.api.PubNubException;

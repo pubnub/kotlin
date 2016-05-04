@@ -1,6 +1,6 @@
 package com.pubnub.api;
 
-import com.pubnub.api.utils.Base64;
+import com.pubnub.api.vendor.Base64;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
