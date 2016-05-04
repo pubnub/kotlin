@@ -48,7 +48,7 @@ public class Audit extends Endpoint<Envelope<AccessManagerAuditPayload>, PNAcces
             throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_PUBLISH_KEY_MISSING).build();
         }
         if (channel == null && channelGroup == null) {
-            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_CHANNEL_MISSING).build();
+            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_CHANNEL_AND_GROUP_MISSING).build();
         }
     }
 
