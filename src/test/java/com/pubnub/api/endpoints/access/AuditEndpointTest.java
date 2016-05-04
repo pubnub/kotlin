@@ -87,4 +87,19 @@ public class AuditEndpointTest extends TestHarness {
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
     }
+
+    @org.junit.Test(expected=PubNubException.class)
+    public void testSuccessChannelMissingKeySync() throws PubNubException {
+
+        stubFor(get(urlPathEqualTo("/v1/auth/audit/sub-key/mySubscribeKey"))
+                .withQueryParam("pnsdk", matching("Java/suchJava"))
+                .withQueryParam("channel", matching("ch1"))
+                .withQueryParam("auth", matching("key1"))
+                .withQueryParam("signature", matching("ZlPruaId7jzupmK4LUynpnjvA2CQYyrrT0475wWkbwY%3D%0A"))
+                .withQueryParam("uuid", matching("myUUID"))
+                .withQueryParam("timestamp", matching("1337"))
+                .willReturn(aResponse().withBody("{\"message\":\"Success\",\"payload\":{\"level\":\"user\",\"subscribe_key\":\"sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f\",\"channel\":\"ch1\",\"auths\":{\"key1\":{\"r\":1,\"m\":1,\"w\":1}}},\"service\":\"Access Manager\",\"status\":200}")));
+
+        PNAccessManagerAuditResult pnAccessManagerAuditResult = partialAudit.channel("ch1").sync();
+    }
 }

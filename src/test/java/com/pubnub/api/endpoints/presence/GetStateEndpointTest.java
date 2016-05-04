@@ -140,4 +140,11 @@ public class GetStateEndpointTest extends TestHarness {
 
     }
 
+    @org.junit.Test(expected=PubNubException.class)
+    public void testMissingChannelAndGroupSync() throws PubNubException, InterruptedException {
+
+        stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/testChannel/uuid/sampleUUID"))
+                .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : 20, \"status\" : \"online\"}, \"service\": \"Presence\"}")));
+        PNGetStateResult result = partialGetState.uuid("sampleUUID").sync();
+    }
 }

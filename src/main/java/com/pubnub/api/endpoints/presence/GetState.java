@@ -1,6 +1,7 @@
 package com.pubnub.api.endpoints.presence;
 
 import com.pubnub.api.PubNub;
+import com.pubnub.api.PubNubError;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.PubNubUtil;
 import com.pubnub.api.enums.PNOperationType;
@@ -31,17 +32,18 @@ public class GetState extends Endpoint<Envelope<Object>, PNGetStateResult> {
     }
 
     @Override
-    protected boolean validateParams() {
-
-        if (channels.size() == 0 && channelGroups.size() == 0) {
-            return false;
+    protected void validateParams() throws PubNubException {
+        if (pubnub.getConfiguration().getSubscribeKey()==null || pubnub.getConfiguration().getSubscribeKey().isEmpty()) {
+            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_SUBSCRIBE_KEY_MISSING).build();
         }
-
-        return true;
+        if (channels.size()==0 && channelGroups.size()==0)
+        {
+            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_CHANNEL_AND_GROUP_MISSING).build();
+        }
     }
 
     @Override
-    protected Call<Envelope<Object>> doWork(Map<String, String> params) throws PubNubException {
+    protected Call<Envelope<Object>> doWork(Map<String, String> params) {
         PresenceService service = this.createRetrofit().create(PresenceService.class);
 
         if (channelGroups.size() > 0) {

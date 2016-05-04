@@ -23,12 +23,13 @@ public class ListAllChannelGroup extends Endpoint<Envelope<Object>, PNChannelGro
     }
 
     @Override
-    protected boolean validateParams() {
-        return true;
+    protected void validateParams() throws PubNubException
+    {
     }
 
     @Override
     protected Call<Envelope<Object>> doWork(Map<String, String> params) {
+
         ChannelGroupService service = this.createRetrofit().create(ChannelGroupService.class);
 
         return service.ListAllChannelGroup(pubnub.getConfiguration().getSubscribeKey(), params);

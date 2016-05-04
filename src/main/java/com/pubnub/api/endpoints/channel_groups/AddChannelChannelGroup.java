@@ -8,6 +8,7 @@ import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsAddChannelResult;
 import com.pubnub.api.models.server.Envelope;
 import com.pubnub.api.endpoints.Endpoint;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import retrofit2.Call;
@@ -19,8 +20,10 @@ import java.util.Map;
 
 @Accessors(chain = true, fluent = true)
 public class AddChannelChannelGroup extends Endpoint<Envelope, PNChannelGroupsAddChannelResult> {
-    @Setter private String channelGroup;
-    @Setter private List<String> channels;
+    @Setter
+    private String channelGroup;
+    @Setter
+    private List<String> channels;
 
 
     public AddChannelChannelGroup(PubNub pubnub) {
@@ -29,8 +32,13 @@ public class AddChannelChannelGroup extends Endpoint<Envelope, PNChannelGroupsAd
     }
 
     @Override
-    protected boolean validateParams() {
-        return true;
+    protected void validateParams() throws PubNubException {
+        if (channelGroup == null || channelGroup.isEmpty()) {
+            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_GROUP_MISSING).build();
+        }
+        if (channels.size() == 0) {
+            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_CHANNEL_MISSING).build();
+        }
     }
 
     @Override
@@ -49,7 +57,6 @@ public class AddChannelChannelGroup extends Endpoint<Envelope, PNChannelGroupsAd
         if (input.body() == null) {
             throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_PARSING_ERROR).build();
         }
-
         return PNChannelGroupsAddChannelResult.builder().build();
     }
 

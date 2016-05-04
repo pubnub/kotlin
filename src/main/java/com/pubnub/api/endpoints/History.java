@@ -17,6 +17,7 @@ import retrofit2.Response;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.QueryMap;
+import sun.invoke.empty.Empty;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -45,8 +46,10 @@ public class History extends Endpoint<JsonNode, PNHistoryResult> {
     }
 
     @Override
-    protected boolean validateParams() {
-        return true;
+    protected void validateParams() throws PubNubException {
+        if (channel == null || channel.isEmpty()) {
+            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_CHANNEL_MISSING).build();
+        }
     }
 
     @Override

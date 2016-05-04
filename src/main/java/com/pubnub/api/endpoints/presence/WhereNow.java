@@ -25,8 +25,10 @@ public class WhereNow extends Endpoint<Envelope<WhereNowPayload>, PNWhereNowResu
     }
 
     @Override
-    protected boolean validateParams() {
-        return true;
+    protected void validateParams() throws PubNubException {
+        if (pubnub.getConfiguration().getSubscribeKey()==null || pubnub.getConfiguration().getSubscribeKey().isEmpty()) {
+            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_SUBSCRIBE_KEY_MISSING).build();
+        }
     }
 
     @Override

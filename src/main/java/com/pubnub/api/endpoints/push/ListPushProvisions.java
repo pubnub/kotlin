@@ -26,8 +26,16 @@ public class ListPushProvisions extends Endpoint<List<String>, PNPushListProvisi
     }
 
     @Override
-    protected boolean validateParams() {
-        return true;
+    protected void validateParams() throws PubNubException {
+        if (pubnub.getConfiguration().getSubscribeKey()==null || pubnub.getConfiguration().getSubscribeKey().isEmpty()) {
+            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_SUBSCRIBE_KEY_MISSING).build();
+        }
+        if (pushType == null) {
+            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_PUSH_TYPE_MISSING).build();
+        }
+        if (deviceId == null || deviceId.isEmpty()) {
+            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_DEVICE_ID_MISSING).build();
+        }
     }
 
     @Override

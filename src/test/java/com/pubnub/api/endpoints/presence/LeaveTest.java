@@ -8,6 +8,7 @@ import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.endpoints.TestHarness;
+import com.pubnub.api.models.consumer.presence.PNGetStateResult;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -123,5 +124,12 @@ public class LeaveTest extends TestHarness {
         assertEquals("cg1", requests.get(0).queryParameter("channel-group").firstValue());
     }
 
+    @org.junit.Test(expected=PubNubException.class)
+    public void testMissingChannelAndGroupSync() throws PubNubException, InterruptedException {
+        stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/coolChannel/leave"))
+                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\", \"action\": \"leave\"}")));
+
+        instance.sync();
+    }
 
 }

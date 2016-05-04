@@ -1,6 +1,7 @@
 package com.pubnub.api.endpoints.channel_groups;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.endpoints.TestHarness;
 import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsDeleteGroupResult;
@@ -8,6 +9,7 @@ import org.junit.Before;
 import org.junit.Rule;
 
 import java.io.IOException;
+import java.util.List;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.junit.Assert.assertNotNull;
@@ -32,4 +34,11 @@ public class DeleteChannelGroupEndpointTest extends TestHarness {
         assertNotNull(response);
     }
 
+    @org.junit.Test(expected = PubNubException.class)
+    public void testSyncMissingGroup() throws IOException, PubNubException, InterruptedException {
+        stubFor(get(urlPathEqualTo("/v1/channel-registration/sub-key/mySubscribeKey/channel-group/groupA/remove"))
+                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {}, \"service\": \"ChannelGroups\"}")));
+
+        PNChannelGroupsDeleteGroupResult response = partialDeleteChannelGroup.sync();
+    }
 }

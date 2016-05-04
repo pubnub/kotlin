@@ -16,15 +16,18 @@ import java.util.Map;
 
 @Accessors(chain = true, fluent = true)
 public class DeleteChannelGroup extends Endpoint<Envelope, PNChannelGroupsDeleteGroupResult> {
-    @Setter private String channelGroup;
+    @Setter
+    private String channelGroup;
 
     public DeleteChannelGroup(PubNub pubnub) {
         super(pubnub);
     }
 
     @Override
-    protected boolean validateParams() {
-        return true;
+    protected void validateParams() throws PubNubException {
+        if (channelGroup == null || channelGroup.isEmpty()) {
+            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_GROUP_MISSING).build();
+        }
     }
 
     @Override
@@ -39,7 +42,6 @@ public class DeleteChannelGroup extends Endpoint<Envelope, PNChannelGroupsDelete
         if (input.body() == null) {
             throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_PARSING_ERROR).build();
         }
-
         return PNChannelGroupsDeleteGroupResult.builder().build();
     }
 
