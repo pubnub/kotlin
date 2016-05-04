@@ -15,8 +15,9 @@ import retrofit2.Response;
 import java.util.Map;
 
 @Accessors(chain = true, fluent = true)
-public class DeleteChannelGroup extends Endpoint<Envelope, Boolean> {
-    @Setter private String channelGroup;
+public class DeleteChannelGroup extends Endpoint<Envelope, PNChannelGroupsDeleteGroupResult> {
+    @Setter
+    private String channelGroup;
 
     public DeleteChannelGroup(PubNub pubnub) {
         super(pubnub);
@@ -24,8 +25,7 @@ public class DeleteChannelGroup extends Endpoint<Envelope, Boolean> {
 
     @Override
     protected void validateParams() throws PubNubException {
-        if (channelGroup==null || channelGroup.isEmpty())
-        {
+        if (channelGroup == null || channelGroup.isEmpty()) {
             throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_GROUP_MISSING).build();
         }
     }
@@ -38,8 +38,11 @@ public class DeleteChannelGroup extends Endpoint<Envelope, Boolean> {
     }
 
     @Override
-    protected Boolean createResponse(Response<Envelope> input) throws PubNubException {
-        return !input.body().isError();
+    protected PNChannelGroupsDeleteGroupResult createResponse(Response<Envelope> input) throws PubNubException {
+        if (input.body() == null) {
+            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_PARSING_ERROR).build();
+        }
+        return PNChannelGroupsDeleteGroupResult.builder().build();
     }
 
     protected int getConnectTimeout() {

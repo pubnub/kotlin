@@ -21,30 +21,34 @@ import java.util.Map;
 @Accessors(chain = true, fluent = true)
 public class Audit extends Endpoint<Envelope<AccessManagerAuditPayload>, PNAccessManagerAuditResult> {
 
-    @Setter private List<String> authKeys;
-    @Setter private String channel;
-    @Setter private String channelGroup;
+    @Setter
+    private List<String> authKeys;
+    @Setter
+    private String channel;
+    @Setter
+    private String channelGroup;
 
-    public Audit(PubNub pubnub)
-    {
+    public Audit(PubNub pubnub) {
         super(pubnub);
         authKeys = new ArrayList<>();
     }
 
     @Override
     protected void validateParams() throws PubNubException {
-        if (authKeys.size() == 0)
-        {
+        if (authKeys.size() == 0) {
             throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_AUTH_KEYS_MISSING).build();
         }
-        if (pubnub.getConfiguration().getSecretKey()==null || pubnub.getConfiguration().getSecretKey().isEmpty()) {
+        if (pubnub.getConfiguration().getSecretKey() == null || pubnub.getConfiguration().getSecretKey().isEmpty()) {
             throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_SECRET_KEY_MISSING).build();
         }
-        if (pubnub.getConfiguration().getSubscribeKey()==null || pubnub.getConfiguration().getSubscribeKey().isEmpty()) {
+        if (pubnub.getConfiguration().getSubscribeKey() == null || pubnub.getConfiguration().getSubscribeKey().isEmpty()) {
             throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_SUBSCRIBE_KEY_MISSING).build();
         }
-        if (pubnub.getConfiguration().getPublishKey()==null || pubnub.getConfiguration().getPublishKey().isEmpty()) {
+        if (pubnub.getConfiguration().getPublishKey() == null || pubnub.getConfiguration().getPublishKey().isEmpty()) {
             throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_PUBLISH_KEY_MISSING).build();
+        }
+        if (channel == null && channelGroup == null) {
+            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_CHANNEL_MISSING).build();
         }
     }
 

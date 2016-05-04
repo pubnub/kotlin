@@ -28,15 +28,22 @@ import java.util.Map;
 @Accessors(chain = true, fluent = true)
 public class Grant extends Endpoint<Envelope<AccessManagerGrantPayload>, PNAccessManagerGrantResult> {
 
-    @Setter private boolean read;
-    @Setter private boolean write;
-    @Setter private boolean manage;
-    @Setter private Integer ttl;
+    @Setter
+    private boolean read;
+    @Setter
+    private boolean write;
+    @Setter
+    private boolean manage;
+    @Setter
+    private Integer ttl;
 
 
-    @Setter private List<String> authKeys;
-    @Setter private List<String> channels;
-    @Setter private List<String> channelGroups;
+    @Setter
+    private List<String> authKeys;
+    @Setter
+    private List<String> channels;
+    @Setter
+    private List<String> channelGroups;
 
     public Grant(PubNub pubnub) {
         super(pubnub);
@@ -47,18 +54,20 @@ public class Grant extends Endpoint<Envelope<AccessManagerGrantPayload>, PNAcces
 
     @Override
     protected void validateParams() throws PubNubException {
-        if (authKeys.size() == 0)
-        {
+        if (authKeys.size() == 0) {
             throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_AUTH_KEYS_MISSING).build();
         }
-        if (pubnub.getConfiguration().getSecretKey()==null || pubnub.getConfiguration().getSecretKey().isEmpty()) {
+        if (pubnub.getConfiguration().getSecretKey() == null || pubnub.getConfiguration().getSecretKey().isEmpty()) {
             throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_SECRET_KEY_MISSING).build();
         }
-        if (pubnub.getConfiguration().getSubscribeKey()==null || pubnub.getConfiguration().getSubscribeKey().isEmpty()) {
+        if (pubnub.getConfiguration().getSubscribeKey() == null || pubnub.getConfiguration().getSubscribeKey().isEmpty()) {
             throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_SUBSCRIBE_KEY_MISSING).build();
         }
-        if (pubnub.getConfiguration().getPublishKey()==null || pubnub.getConfiguration().getPublishKey().isEmpty()) {
+        if (pubnub.getConfiguration().getPublishKey() == null || pubnub.getConfiguration().getPublishKey().isEmpty()) {
             throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_PUBLISH_KEY_MISSING).build();
+        }
+        if (channels.size() == 0 && channelGroups.size() == 0) {
+            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_CHANNEL_AND_GROUP_MISSING).build();
         }
     }
 
@@ -126,7 +135,8 @@ public class Grant extends Endpoint<Envelope<AccessManagerGrantPayload>, PNAcces
             } else if (channelGroups.size() > 1) {
                 try {
                     HashMap<String, PNAccessManagerKeysData> channelGroupKeySet = mapper.readValue(data.getChannelGroups().toString(),
-                            new TypeReference<HashMap<String, PNAccessManagerKeysData>>() {});
+                            new TypeReference<HashMap<String, PNAccessManagerKeysData>>() {
+                            });
 
                     for (String fetchedChannelGroup : channelGroupKeySet.keySet()) {
                         constructedGroups.put(fetchedChannelGroup, channelGroupKeySet.get(fetchedChannelGroup).getAuthKeys());

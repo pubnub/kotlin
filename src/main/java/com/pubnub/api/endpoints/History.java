@@ -47,8 +47,7 @@ public class History extends Endpoint<JsonNode, PNHistoryResult> {
 
     @Override
     protected void validateParams() throws PubNubException {
-        if (channel==null || channel.isEmpty())
-        {
+        if (channel == null || channel.isEmpty()) {
             throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_CHANNEL_MISSING).build();
         }
     }
