@@ -1,5 +1,6 @@
 package com.pubnub.api;
 
+import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.utils.Base64;
 import lombok.extern.slf4j.Slf4j;
 
@@ -66,7 +67,8 @@ public class Crypto {
     }
 
     private static PubNubError newCryptoError(int code, String message) {
-        return PubNubError.getErrorObject(PubNubError.PNERROBJ_CRYPTO_ERROR, code, message);
+
+        return PubNubErrorBuilder.createCryptoError(code, message);
     }
 
     public String encrypt(String input) throws PubNubException {

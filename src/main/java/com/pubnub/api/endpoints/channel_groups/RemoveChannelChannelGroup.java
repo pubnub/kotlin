@@ -1,13 +1,13 @@
 package com.pubnub.api.endpoints.channel_groups;
 
 import com.pubnub.api.PubNub;
-import com.pubnub.api.PubNubError;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.PubNubUtil;
+import com.pubnub.api.builder.PubNubErrorBuilder;
+import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsRemoveChannelResult;
 import com.pubnub.api.models.server.Envelope;
-import com.pubnub.api.endpoints.Endpoint;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import retrofit2.Call;
@@ -33,10 +33,10 @@ public class RemoveChannelChannelGroup extends Endpoint<Envelope, PNChannelGroup
     @Override
     protected void validateParams() throws PubNubException {
         if (channelGroup == null || channelGroup.isEmpty()) {
-            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_GROUP_MISSING).build();
+            throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_GROUP_MISSING).build();
         }
         if (channels.size() == 0) {
-            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_CHANNEL_MISSING).build();
+            throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_CHANNEL_MISSING).build();
         }
     }
 
@@ -54,7 +54,7 @@ public class RemoveChannelChannelGroup extends Endpoint<Envelope, PNChannelGroup
     @Override
     protected PNChannelGroupsRemoveChannelResult createResponse(Response<Envelope> input) throws PubNubException {
         if (input.body() == null) {
-            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_PARSING_ERROR).build();
+            throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_PARSING_ERROR).build();
         }
         return PNChannelGroupsRemoveChannelResult.builder().build();
     }

@@ -1,8 +1,8 @@
 package com.pubnub.api.endpoints;
 
 import com.pubnub.api.PubNub;
-import com.pubnub.api.PubNubError;
 import com.pubnub.api.PubNubException;
+import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.models.consumer.PNTimeResult;
 import retrofit2.Call;
@@ -40,7 +40,7 @@ public class Time extends Endpoint<List<Long>, PNTimeResult> {
         PNTimeResult.PNTimeResultBuilder timeData = PNTimeResult.builder();
 
         if (input.body() == null || input.body().size() == 0) {
-            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_PARSING_ERROR).build();
+            throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_PARSING_ERROR).build();
         }
 
         timeData.timetoken(input.body().get(0));

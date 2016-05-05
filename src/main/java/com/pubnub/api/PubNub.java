@@ -1,5 +1,6 @@
 package com.pubnub.api;
 
+import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.callbacks.SubscribeCallback;
 import com.pubnub.api.builder.SubscribeBuilder;
 import com.pubnub.api.builder.UnsubscribeBuilder;
@@ -152,7 +153,7 @@ public class PubNub {
      */
     public final String decrypt(String inputString) throws PubNubException {
         if (inputString == null) {
-            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_INVALID_ARGUMENTS).build();
+            throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_INVALID_ARGUMENTS).build();
         }
 
         return decrypt(inputString, this.getConfiguration().getCipherKey());
@@ -167,7 +168,7 @@ public class PubNub {
      */
     public final String decrypt(final String inputString, final String cipherKey) throws PubNubException {
         if (inputString == null) {
-            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_INVALID_ARGUMENTS).build();
+            throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_INVALID_ARGUMENTS).build();
         }
 
         return new Crypto(cipherKey).decrypt(inputString);
@@ -180,7 +181,7 @@ public class PubNub {
      */
     public final String encrypt(final String inputString) throws PubNubException {
         if (inputString == null) {
-            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_INVALID_ARGUMENTS).build();
+            throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_INVALID_ARGUMENTS).build();
         }
 
         return encrypt(inputString, this.getConfiguration().getCipherKey());
@@ -195,7 +196,7 @@ public class PubNub {
      */
     public final String encrypt(final String inputString, final String cipherKey) throws PubNubException {
         if (inputString == null) {
-            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_INVALID_ARGUMENTS).build();
+            throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_INVALID_ARGUMENTS).build();
         }
 
         return new Crypto(cipherKey).encrypt(inputString);

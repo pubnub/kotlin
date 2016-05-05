@@ -1,5 +1,6 @@
 package com.pubnub.api;
 
+import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.utils.Base64;
 
 import javax.crypto.Mac;
@@ -98,19 +99,19 @@ public class PubNubUtil {
         try {
             sha256HMAC = Mac.getInstance("HmacSHA256");
         } catch (NoSuchAlgorithmException e) {
-            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_CRYPTO_ERROR).errormsg(e.getMessage()).build();
+            throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_CRYPTO_ERROR).errormsg(e.getMessage()).build();
         }
 
         try {
             sha256HMAC.init(secretKey);
         } catch (InvalidKeyException e) {
-            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_CRYPTO_ERROR).errormsg(e.getMessage()).build();
+            throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_CRYPTO_ERROR).errormsg(e.getMessage()).build();
         }
 
         try {
             hmacData = sha256HMAC.doFinal(data.getBytes("UTF-8"));
         } catch (UnsupportedEncodingException e) {
-            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_CRYPTO_ERROR).errormsg(e.getMessage()).build();
+            throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_CRYPTO_ERROR).errormsg(e.getMessage()).build();
         }
 
         return new String(Base64.encode(hmacData, 0)).replace('+', '-').replace('/', '_');

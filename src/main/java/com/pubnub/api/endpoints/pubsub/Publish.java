@@ -3,6 +3,7 @@ package com.pubnub.api.endpoints.pubsub;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pubnub.api.*;
+import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.models.consumer.PNPublishResult;
 import com.pubnub.api.endpoints.Endpoint;
@@ -35,16 +36,16 @@ public class Publish extends Endpoint<List<Object>, PNPublishResult> {
     @Override
     protected final void validateParams() throws PubNubException {
         if (message == null) {
-            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_MESSAGE_MISSING).build();
+            throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_MESSAGE_MISSING).build();
         }
         if (channel == null || channel.isEmpty()) {
-            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_CHANNEL_MISSING).build();
+            throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_CHANNEL_MISSING).build();
         }
         if (pubnub.getConfiguration().getSubscribeKey()==null || pubnub.getConfiguration().getSubscribeKey().isEmpty()) {
-            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_SUBSCRIBE_KEY_MISSING).build();
+            throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_SUBSCRIBE_KEY_MISSING).build();
         }
         if (pubnub.getConfiguration().getPublishKey()==null || pubnub.getConfiguration().getPublishKey().isEmpty()) {
-            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_PUBLISH_KEY_MISSING).build();
+            throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_PUBLISH_KEY_MISSING).build();
         }
     }
 
@@ -57,7 +58,7 @@ public class Publish extends Endpoint<List<Object>, PNPublishResult> {
         try {
             stringifiedMessage = mapper.writeValueAsString(message);
         } catch (JsonProcessingException e) {
-            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_INVALID_ARGUMENTS).errormsg(e.getMessage()).build();
+            throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_INVALID_ARGUMENTS).errormsg(e.getMessage()).build();
         }
 
         if (meta != null) {
@@ -66,7 +67,7 @@ public class Publish extends Endpoint<List<Object>, PNPublishResult> {
                 stringifiedMeta = PubNubUtil.urlEncode(stringifiedMeta);
                 params.put("meta", stringifiedMeta);
             } catch (JsonProcessingException e) {
-                throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_INVALID_ARGUMENTS).errormsg(e.getMessage()).build();
+                throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_INVALID_ARGUMENTS).errormsg(e.getMessage()).build();
             }
         }
 

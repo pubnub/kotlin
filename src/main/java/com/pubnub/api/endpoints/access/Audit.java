@@ -1,14 +1,14 @@
 package com.pubnub.api.endpoints.access;
 
 import com.pubnub.api.PubNub;
-import com.pubnub.api.PubNubError;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.PubNubUtil;
-import com.pubnub.api.enums.PNOperationType;
-import com.pubnub.api.models.server.Envelope;
-import com.pubnub.api.models.consumer.access_manager.PNAccessManagerAuditResult;
-import com.pubnub.api.models.server.access_manager.AccessManagerAuditPayload;
+import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.Endpoint;
+import com.pubnub.api.enums.PNOperationType;
+import com.pubnub.api.models.consumer.access_manager.PNAccessManagerAuditResult;
+import com.pubnub.api.models.server.Envelope;
+import com.pubnub.api.models.server.access_manager.AccessManagerAuditPayload;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import retrofit2.Call;
@@ -36,19 +36,19 @@ public class Audit extends Endpoint<Envelope<AccessManagerAuditPayload>, PNAcces
     @Override
     protected void validateParams() throws PubNubException {
         if (authKeys.size() == 0) {
-            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_AUTH_KEYS_MISSING).build();
+            throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_AUTH_KEYS_MISSING).build();
         }
         if (pubnub.getConfiguration().getSecretKey() == null || pubnub.getConfiguration().getSecretKey().isEmpty()) {
-            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_SECRET_KEY_MISSING).build();
+            throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_SECRET_KEY_MISSING).build();
         }
         if (pubnub.getConfiguration().getSubscribeKey() == null || pubnub.getConfiguration().getSubscribeKey().isEmpty()) {
-            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_SUBSCRIBE_KEY_MISSING).build();
+            throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_SUBSCRIBE_KEY_MISSING).build();
         }
         if (pubnub.getConfiguration().getPublishKey() == null || pubnub.getConfiguration().getPublishKey().isEmpty()) {
-            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_PUBLISH_KEY_MISSING).build();
+            throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_PUBLISH_KEY_MISSING).build();
         }
         if (channel == null && channelGroup == null) {
-            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_CHANNEL_AND_GROUP_MISSING).build();
+            throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_CHANNEL_AND_GROUP_MISSING).build();
         }
     }
 
@@ -91,7 +91,7 @@ public class Audit extends Endpoint<Envelope<AccessManagerAuditPayload>, PNAcces
         PNAccessManagerAuditResult.PNAccessManagerAuditResultBuilder pnAccessManagerAuditResult = PNAccessManagerAuditResult.builder();
 
         if (input.body() == null || input.body().getPayload() == null) {
-            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_PARSING_ERROR).build();
+            throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_PARSING_ERROR).build();
         }
 
         AccessManagerAuditPayload auditPayload = input.body().getPayload();

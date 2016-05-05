@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.pubnub.api.Crypto;
 import com.pubnub.api.PubNub;
-import com.pubnub.api.PubNubError;
 import com.pubnub.api.PubNubException;
+import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.models.consumer.history.PNHistoryItemResult;
 import com.pubnub.api.models.consumer.history.PNHistoryResult;
@@ -47,7 +47,7 @@ public class History extends Endpoint<JsonNode, PNHistoryResult> {
     @Override
     protected void validateParams() throws PubNubException {
         if (channel == null || channel.isEmpty()) {
-            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_CHANNEL_MISSING).build();
+            throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_CHANNEL_MISSING).build();
         }
     }
 
@@ -138,7 +138,7 @@ public class History extends Endpoint<JsonNode, PNHistoryResult> {
         try {
             outputObject = mapper.readValue(outputText, JsonNode.class);
         } catch (IOException e) {
-            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_PARSING_ERROR).errormsg(e.getMessage()).build();
+            throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_PARSING_ERROR).errormsg(e.getMessage()).build();
         }
 
         return outputObject;

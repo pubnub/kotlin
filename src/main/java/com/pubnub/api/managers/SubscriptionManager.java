@@ -2,28 +2,28 @@ package com.pubnub.api.managers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pubnub.api.callbacks.PNCallback;
-import com.pubnub.api.callbacks.SubscribeCallback;
 import com.pubnub.api.Crypto;
 import com.pubnub.api.PubNub;
-import com.pubnub.api.PubNubError;
 import com.pubnub.api.PubNubException;
+import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.builder.dto.SubscribeOperation;
 import com.pubnub.api.builder.dto.UnsubscribeOperation;
+import com.pubnub.api.callbacks.PNCallback;
+import com.pubnub.api.callbacks.SubscribeCallback;
+import com.pubnub.api.endpoints.presence.Heartbeat;
+import com.pubnub.api.endpoints.presence.Leave;
+import com.pubnub.api.endpoints.pubsub.Subscribe;
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.enums.PNStatusCategory;
 import com.pubnub.api.enums.SubscriptionType;
+import com.pubnub.api.models.SubscriptionItem;
 import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
 import com.pubnub.api.models.server.Envelope;
-import com.pubnub.api.models.SubscriptionItem;
 import com.pubnub.api.models.server.SubscribeEnvelope;
 import com.pubnub.api.models.server.SubscribeMessage;
-import com.pubnub.api.endpoints.presence.Heartbeat;
-import com.pubnub.api.endpoints.presence.Leave;
-import com.pubnub.api.endpoints.pubsub.Subscribe;
 import lombok.extern.slf4j.Slf4j;
 import retrofit2.Call;
 
@@ -338,7 +338,7 @@ public class SubscriptionManager {
         try {
             outputObject = mapper.readValue(outputText, JsonNode.class);
         } catch (IOException e) {
-            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_PARSING_ERROR).errormsg(e.getMessage()).build();
+            throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_PARSING_ERROR).errormsg(e.getMessage()).build();
         }
 
         return outputObject;

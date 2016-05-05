@@ -1,8 +1,8 @@
 package com.pubnub.api.endpoints.push;
 
 import com.pubnub.api.PubNub;
-import com.pubnub.api.PubNubError;
 import com.pubnub.api.PubNubException;
+import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.enums.PNPushType;
@@ -28,13 +28,13 @@ public class RemoveAllPushChannelsForDevice extends Endpoint<List<Object>, PNPus
     @Override
     protected void validateParams() throws PubNubException {
         if (pubnub.getConfiguration().getSubscribeKey()==null || pubnub.getConfiguration().getSubscribeKey().isEmpty()) {
-            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_SUBSCRIBE_KEY_MISSING).build();
+            throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_SUBSCRIBE_KEY_MISSING).build();
         }
         if (pushType == null) {
-            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_PUSH_TYPE_MISSING).build();
+            throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_PUSH_TYPE_MISSING).build();
         }
         if (deviceId == null || deviceId.isEmpty()) {
-            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_DEVICE_ID_MISSING).build();
+            throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_DEVICE_ID_MISSING).build();
         }
     }
 
@@ -52,7 +52,7 @@ public class RemoveAllPushChannelsForDevice extends Endpoint<List<Object>, PNPus
     @Override
     protected PNPushRemoveAllChannelsResult createResponse(Response<List<Object>> input) throws PubNubException {
         if (input.body() == null) {
-            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_PARSING_ERROR).build();
+            throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_PARSING_ERROR).build();
         }
 
         return PNPushRemoveAllChannelsResult.builder().build();

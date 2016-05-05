@@ -1,10 +1,10 @@
 package com.pubnub.api.endpoints;
 
 
-import com.pubnub.api.callbacks.PNCallback;
 import com.pubnub.api.PubNub;
-import com.pubnub.api.PubNubError;
 import com.pubnub.api.PubNubException;
+import com.pubnub.api.builder.PubNubErrorBuilder;
+import com.pubnub.api.callbacks.PNCallback;
 import com.pubnub.api.enums.PNLogVerbosity;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.enums.PNStatusCategory;
@@ -45,7 +45,7 @@ public abstract class Endpoint<Input, Output> {
             serverResponse = call.execute();
         } catch (IOException e) {
             throw PubNubException.builder()
-                    .pubnubError(PubNubError.PNERROBJ_PARSING_ERROR)
+                    .pubnubError(PubNubErrorBuilder.PNERROBJ_PARSING_ERROR)
                     .errormsg(e.toString())
                     .affectedCall(call)
                     .build();
@@ -61,7 +61,7 @@ public abstract class Endpoint<Input, Output> {
             }
 
             throw PubNubException.builder()
-                    .pubnubError(PubNubError.PNERROBJ_HTTP_ERROR)
+                    .pubnubError(PubNubErrorBuilder.PNERROBJ_HTTP_ERROR)
                     .errormsg(responseBodyText)
                     .statusCode(serverResponse.code())
                     .affectedCall(call)
@@ -81,7 +81,7 @@ public abstract class Endpoint<Input, Output> {
         } catch (PubNubException e) {
 
             PubNubException pubnubException = PubNubException.builder()
-                    .pubnubError(PubNubError.PNERROBJ_HTTP_ERROR)
+                    .pubnubError(PubNubErrorBuilder.PNERROBJ_HTTP_ERROR)
                     .errormsg(e.getMessage())
                     .build();
 
@@ -106,7 +106,7 @@ public abstract class Endpoint<Input, Output> {
 
                     PNStatusCategory pnStatusCategory = PNStatusCategory.PNUnknownCategory;
                     PubNubException ex = PubNubException.builder()
-                            .pubnubError(PubNubError.PNERROBJ_HTTP_ERROR)
+                            .pubnubError(PubNubErrorBuilder.PNERROBJ_HTTP_ERROR)
                             .errormsg(responseBodyText)
                             .statusCode(response.code())
                             .build();
@@ -128,7 +128,7 @@ public abstract class Endpoint<Input, Output> {
                 } catch (PubNubException e) {
 
                     PubNubException pubnubException = PubNubException.builder()
-                            .pubnubError(PubNubError.PNERROBJ_PARSING_ERROR)
+                            .pubnubError(PubNubErrorBuilder.PNERROBJ_PARSING_ERROR)
                             .errormsg(e.getMessage())
                             .statusCode(response.code())
                             .build();
@@ -150,13 +150,13 @@ public abstract class Endpoint<Input, Output> {
                 try {
                     throw throwable;
                 } catch (UnknownHostException networkException) {
-                    pubnubException.pubnubError(PubNubError.PNERROBJ_CONNECTION_NOT_SET);
+                    pubnubException.pubnubError(PubNubErrorBuilder.PNERROBJ_CONNECTION_NOT_SET);
                     pnStatusCategory = PNStatusCategory.PNUnexpectedDisconnectCategory;
                 } catch (SocketTimeoutException socketTimeoutException) {
-                    pubnubException.pubnubError(PubNubError.PNERROBJ_SUBSCRIBE_TIMEOUT);
+                    pubnubException.pubnubError(PubNubErrorBuilder.PNERROBJ_SUBSCRIBE_TIMEOUT);
                     pnStatusCategory = PNStatusCategory.PNTimeoutCategory;
                 } catch (Throwable throwable1) {
-                    pubnubException.pubnubError(PubNubError.PNERROBJ_HTTP_ERROR);
+                    pubnubException.pubnubError(PubNubErrorBuilder.PNERROBJ_HTTP_ERROR);
                 }
 
                 callback.onResponse(null, createStatusResponse(pnStatusCategory, null, pubnubException.build()));

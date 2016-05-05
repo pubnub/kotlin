@@ -1,12 +1,12 @@
 package com.pubnub.api.endpoints.channel_groups;
 
 import com.pubnub.api.PubNub;
-import com.pubnub.api.PubNubError;
 import com.pubnub.api.PubNubException;
-import com.pubnub.api.enums.PNOperationType;
-import com.pubnub.api.models.server.Envelope;
-import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsListAllResult;
+import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.Endpoint;
+import com.pubnub.api.enums.PNOperationType;
+import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsListAllResult;
+import com.pubnub.api.models.server.Envelope;
 import lombok.experimental.Accessors;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -40,7 +40,7 @@ public class ListAllChannelGroup extends Endpoint<Envelope<Object>, PNChannelGro
         Map<String, Object> stateMappings;
 
         if (input.body() == null || input.body().getPayload() == null) {
-            throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_PARSING_ERROR).build();
+            throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_PARSING_ERROR).build();
         }
         
         stateMappings = (Map<String, Object>) input.body().getPayload();
