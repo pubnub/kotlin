@@ -16,7 +16,6 @@ import com.pubnub.api.endpoints.pubsub.Subscribe;
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.enums.PNStatusCategory;
-import com.pubnub.api.enums.SubscriptionType;
 import com.pubnub.api.models.SubscriptionItem;
 import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
@@ -33,9 +32,25 @@ import java.util.*;
 @Slf4j
 public class SubscriptionManager {
 
+    /**
+     * Contains a list of subscribed channels
+     */
     private Map<String, SubscriptionItem> subscribedChannels;
+    /**
+     * Contains a list of subscribed presence channels.
+     */
+    private Map<String, SubscriptionItem> subscribedPresenceChannels;
+
+    /**
+     * Contains a list of subscribed channel groups.
+     */
     private Map<String, SubscriptionItem> subscribedChannelGroups;
-    private Map<String, Object> stateStorage;
+
+    /**
+     * Contains a list of subscribed presence channel groups.
+     */
+    private Map<String, SubscriptionItem> subscribedPresenceChannelGroups;
+
     private List<SubscribeCallback> listeners;
     private PubNub pubnub;
     private Call<SubscribeEnvelope> subscribeCall;
@@ -54,10 +69,14 @@ public class SubscriptionManager {
 
     public SubscriptionManager(PubNub pubnub) {
         this.subscribedChannelGroups = new HashMap<>();
+        this.subscribedPresenceChannelGroups = new HashMap<>();
+
         this.subscribedChannels = new HashMap<>();
+        this.subscribedPresenceChannels = new HashMap<>();
+
+
         this.pubnub = pubnub;
         this.listeners = new ArrayList<>();
-        this.stateStorage = new HashMap<>();
     }
 
 
@@ -79,34 +98,49 @@ public class SubscriptionManager {
         stopSubscribeLoop();
     }
 
-    public final synchronized void adaptStateBuilder(List<String> channels, List<String> channelGroups, Object state) {
+    public final synchronized void adaptStateBuilder(final List<String> channels,
+                                                     final List<String> channelGroups,
+                                                     final Object state) {
         for (String channel: channels) {
-            stateStorage.put(channel, state);
+            SubscriptionItem subscribedChannel = subscribedChannels.get(channel);
+
+            if (subscribedChannel != null) {
+                subscribedChannel.setState(state);
+            }
         }
 
         for (String channelGroup: channelGroups) {
-            stateStorage.put(channelGroup, state);
+            SubscriptionItem subscribedChannelGroup = subscribedChannelGroups.get(channelGroup);
+
+            if (subscribedChannelGroup != null) {
+                subscribedChannelGroup.setState(state);
+            }
         }
 
+        reconnect();
     }
 
     public final synchronized void adaptSubscribeBuilder(final SubscribeOperation subscribeOperation) {
         for (String channel : subscribeOperation.getChannels()) {
-            SubscriptionItem subscriptionItem = SubscriptionItem.builder()
-                .name(channel)
-                .withPresence(subscribeOperation.isPresenceEnabled())
-                .type(SubscriptionType.CHANNEL)
-                .build();
+            SubscriptionItem subscriptionItem = new SubscriptionItem().setName(channel);
             subscribedChannels.put(channel, subscriptionItem);
+
+            if (subscribeOperation.isPresenceEnabled()) {
+                SubscriptionItem presenceSubscriptionItem = new SubscriptionItem().setName(channel);
+                subscribedPresenceChannels.put(channel, presenceSubscriptionItem);
+            }
+
         }
 
         for (String channelGroup : subscribeOperation.getChannelGroups()) {
-            SubscriptionItem subscriptionItem = SubscriptionItem.builder()
-                    .name(channelGroup)
-                    .withPresence(subscribeOperation.isPresenceEnabled())
-                    .type(SubscriptionType.CHANNEL_GROUP)
-                    .build();
+            SubscriptionItem subscriptionItem = new SubscriptionItem().setName(channelGroup);
             subscribedChannelGroups.put(channelGroup, subscriptionItem);
+
+            if (subscribeOperation.isPresenceEnabled()) {
+                SubscriptionItem presenceSubscriptionItem = new SubscriptionItem().setName(channelGroup);
+                subscribedPresenceChannelGroups.put(channelGroup, presenceSubscriptionItem);
+            }
+
         }
 
         if (subscribeOperation.getTimetoken() != null) {
@@ -120,12 +154,12 @@ public class SubscriptionManager {
 
         for (String channel: unsubscribeOperation.getChannels()) {
             this.subscribedChannels.remove(channel);
-            this.stateStorage.remove(channel);
+            this.subscribedPresenceChannels.remove(channel);
         }
 
         for (String channelGroup: unsubscribeOperation.getChannelGroups()) {
             this.subscribedChannelGroups.remove(channelGroup);
-            this.stateStorage.remove(channelGroup);
+            this.subscribedPresenceChannelGroups.remove(channelGroup);
         }
 
         new Leave(pubnub)
@@ -138,6 +172,51 @@ public class SubscriptionManager {
         });
 
         reconnect();
+    }
+
+    private Map<String, Object> createStatePayload() {
+        Map<String, Object> stateResponse = new HashMap<>();
+
+        for (SubscriptionItem channel: subscribedChannels.values()) {
+            if (channel.getState() != null) {
+                stateResponse.put(channel.getName(), channel.getState());
+            }
+        }
+
+        for (SubscriptionItem channelGroup: subscribedChannelGroups.values()) {
+            if (channelGroup.getState() != null) {
+                stateResponse.put(channelGroup.getName(), channelGroup.getState());
+            }
+        }
+
+        return stateResponse;
+    }
+
+    private List<String> prepareChannelList(final boolean includePresence) {
+        return prepareMembershipList(subscribedChannels, subscribedPresenceChannels, includePresence);
+    }
+
+    private List<String> prepareChannelGroupList(final boolean includePresence) {
+        return prepareMembershipList(subscribedChannelGroups, subscribedPresenceChannelGroups, includePresence);
+    }
+
+    private List<String> prepareMembershipList(final Map<String, SubscriptionItem> dataStorage,
+                                               final Map<String, SubscriptionItem> presenceStorage,
+                                               final boolean includePresence) {
+        List<String> response = new ArrayList<>();
+
+        for (SubscriptionItem channelGroupItem: dataStorage.values()) {
+            response.add(channelGroupItem.getName());
+        }
+
+        if (includePresence) {
+            for (SubscriptionItem presenceChannelGroupItem: presenceStorage.values()) {
+                response.add(presenceChannelGroupItem.getName().concat("-pnpres"));
+            }
+        }
+
+
+        return response;
     }
 
     private void registerHeartbeatTimer() {
@@ -165,24 +244,8 @@ public class SubscriptionManager {
         // this function can be called from different points, make sure any old loop is closed
         stopSubscribeLoop();
 
-        List<String> combinedChannels = new ArrayList<>();
-        List<String> combinedChannelGroups = new ArrayList<>();
-
-        for (SubscriptionItem subscriptionItem: subscribedChannels.values()) {
-            combinedChannels.add(subscriptionItem.getName());
-
-            if  (subscriptionItem.isWithPresence()) {
-                combinedChannels.add(subscriptionItem.getName().concat("-pnpres"));
-            }
-        }
-
-        for (SubscriptionItem subscriptionItem: subscribedChannelGroups.values()) {
-            combinedChannelGroups.add(subscriptionItem.getName());
-
-            if  (subscriptionItem.isWithPresence()) {
-                combinedChannelGroups.add(subscriptionItem.getName().concat("-pnpres"));
-            }
-        }
+        List<String> combinedChannels = prepareChannelList(true);
+        List<String> combinedChannelGroups = prepareChannelGroupList(true);
 
         // do not start the subscribe loop if we have no channels to subscribe to.
         if (combinedChannels.isEmpty() && combinedChannelGroups.isEmpty()) {
@@ -229,20 +292,9 @@ public class SubscriptionManager {
             heartbeatCall.cancel();
         }
 
-        List<String> presenceChannels = new ArrayList<>();
-        List<String> presenceChannelGroups = new ArrayList<>();
-
-        for (SubscriptionItem subscriptionItem: subscribedChannels.values()) {
-            if  (subscriptionItem.isWithPresence()) {
-                presenceChannels.add(subscriptionItem.getName());
-            }
-        }
-
-        for (SubscriptionItem subscriptionItem: subscribedChannelGroups.values()) {
-            if  (subscriptionItem.isWithPresence()) {
-                presenceChannelGroups.add(subscriptionItem.getName());
-            }
-        }
+        List<String> presenceChannels = prepareChannelList(false);
+        List<String> presenceChannelGroups = prepareChannelGroupList(false);
+        Map<String, Object> stateStorage = createStatePayload();
 
         // do not start the loop if we do not have any presence channels or channel groups enabled.
         if (presenceChannels.isEmpty() && presenceChannelGroups.isEmpty()) {

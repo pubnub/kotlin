@@ -6,6 +6,7 @@ import com.pubnub.api.utils.Base64;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -67,6 +68,21 @@ public class PubNubUtil {
     public static String urlEncode(String sUrl) {
         try {
             return URLEncoder.encode(sUrl, "UTF-8").replace("+", "%20");
+        } catch (UnsupportedEncodingException e) {
+            return null;
+        }
+    }
+
+    /**
+     * Returns decoded String
+     *
+     * @param sUrl
+     *            , input string
+     * @return , decoded string
+     */
+    public static String urlDecode(String sUrl) {
+        try {
+            return URLDecoder.decode(sUrl, "UTF-8");
         } catch (UnsupportedEncodingException e) {
             return null;
         }

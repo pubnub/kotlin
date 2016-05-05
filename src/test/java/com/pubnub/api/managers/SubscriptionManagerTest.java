@@ -1,12 +1,17 @@
 package com.pubnub.api.managers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.tomakehurst.wiremock.http.QueryParameter;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import com.jayway.awaitility.Awaitility;
+import com.pubnub.api.PubNubUtil;
+import com.pubnub.api.callbacks.PNCallback;
 import com.pubnub.api.callbacks.SubscribeCallback;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions;
 import com.pubnub.api.enums.PNOperationType;
+import com.pubnub.api.models.consumer.presence.PNSetStateResult;
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
 import com.pubnub.api.models.consumer.PNStatus;
@@ -16,6 +21,7 @@ import org.junit.*;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -75,6 +81,63 @@ public class SubscriptionManagerTest extends TestHarness {
     }
 
     @Test
+    public void testSubscribeBuilderWithState() throws IOException {
+        final AtomicInteger atomic = new AtomicInteger(0);
+
+        final ObjectMapper mapper = new ObjectMapper();
+        final String expectedPayload = PubNubUtil.urlDecode("%7B%22ch1%22%3A%5B%22p1%22%2C%22p2%22%5D%2C%22cg2%22%3A%5B%22p1%22%2C%22p2%22%5D%7D");
+        final Map<String, Object> expectedMap = mapper.readValue(expectedPayload, Map.class);
+
+        stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
+                .willReturn(aResponse().withBody("{\"t\":{\"t\":\"14607577960932487\",\"r\":1},\"m\":[{\"a\":\"4\",\"f\":0,\"i\":\"Client-g5d4g\",\"p\":{\"t\":\"14607577960925503\",\"r\":1},\"k\":\"sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f\",\"c\":\"coolChannel\",\"d\":{\"text\":\"Enter Message Here\"},\"b\":\"coolChan-bnel\"}]}")));
+
+        pubnub.getConfiguration().setHeartbeatNotificationOptions(PNHeartbeatNotificationOptions.All);
+        pubnub.addListener(new SubscribeCallback() {
+            @Override
+            public void status(PubNub pubnub, PNStatus status) {
+
+                List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching(
+                        "/v2/presence/sub-key/" + pubnub.getConfiguration().getSubscribeKey() + "/channel/ch2,ch1/heartbeat.*")));
+
+                for (LoggedRequest request: requests) {
+                    String stateString = PubNubUtil.urlDecode(request.queryParameter("state").firstValue());
+                    Map<String, Object> actualMap = null;
+                    try {
+                        actualMap = mapper.readValue(stateString, Map.class);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    if (actualMap != null && actualMap.equals(expectedMap)) {
+                        atomic.getAndAdd(1);
+                    }
+                }
+            }
+
+            @Override
+            public void message(PubNub pubnub, PNMessageResult message) {
+            }
+
+            @Override
+            public void presence(PubNub pubnub, PNPresenceEventResult presence) {
+            }
+        });
+
+
+        pubnub.subscribe().channels(Arrays.asList("ch1", "ch2")).channelGroups(Arrays.asList("cg1", "cg2")).execute();
+        pubnub.setPresenceState().channels(Arrays.asList("ch1")).channelGroups(Arrays.asList("cg2"))
+                .state(Arrays.asList("p1", "p2"))
+                .async(new PNCallback<PNSetStateResult>() {
+                    @Override
+                    public void onResponse(PNSetStateResult result, PNStatus status) {}
+                });
+
+        Awaitility.await().atMost(5, TimeUnit.SECONDS)
+                .untilAtomic(atomic, org.hamcrest.Matchers.greaterThan(0));
+
+    }
+
+    @Test
     public void testSubscribeChannelGroupBuilder() {
         final AtomicInteger atomic = new AtomicInteger(0);
         stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/,/0"))
@@ -89,8 +152,13 @@ public class SubscriptionManagerTest extends TestHarness {
             public void message(PubNub pubnub, PNMessageResult message) {
                 List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")));
 
-                assertEquals("cg1,cg2", requests.get(0).queryParameter("channel-group").firstValue());
-                atomic.addAndGet(1);
+                for (LoggedRequest request: requests) {
+                    QueryParameter channelGroupQuery = request.queryParameter("channel-group");
+                    if (channelGroupQuery != null && channelGroupQuery.firstValue().equals("cg1,cg2")) {
+                        atomic.addAndGet(1);
+                    }
+                }
+
             }
 
             @Override
@@ -121,11 +189,13 @@ public class SubscriptionManagerTest extends TestHarness {
             public void message(PubNub pubnub, PNMessageResult message) {
                 List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")));
 
-                if (requests.size() == 1){
-                    String[] channelGroups = requests.get(0).queryParameter("channel-group").firstValue().split(",");
+                for (LoggedRequest request: requests) {
+                    String[] channelGroups = request.queryParameter("channel-group").firstValue().split(",");
                     Arrays.sort(channelGroups);
-                    assertEquals("cg1,cg1-pnpres,cg2,cg2-pnpres", joinArray(channelGroups));
-                    atomic.addAndGet(1);
+                    if ("cg1,cg1-pnpres,cg2,cg2-pnpres".equals(joinArray(channelGroups))) {
+                        atomic.addAndGet(1);
+                    }
+
                 }
 
             }
@@ -139,7 +209,7 @@ public class SubscriptionManagerTest extends TestHarness {
         pubnub.subscribe().channelGroups(Arrays.asList("cg1", "cg2")).withPresence().execute();
 
         Awaitility.await().atMost(5, TimeUnit.SECONDS)
-                .untilAtomic(atomic, org.hamcrest.core.IsEqual.equalTo(1));
+                .untilAtomic(atomic, org.hamcrest.Matchers.greaterThan(0));
 
     }
 
@@ -215,12 +285,13 @@ public class SubscriptionManagerTest extends TestHarness {
     @Test
     public void testSubscribePresenceBuilder() {
         final AtomicInteger atomic = new AtomicInteger(0);
-        stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch2-pnpres,ch1,ch1-pnpres/0"))
+        stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1,ch2-pnpres,ch1-pnpres/0"))
                 .willReturn(aResponse().withBody("{\"t\":{\"t\":\"14607577960932487\",\"r\":1},\"m\":[{\"a\":\"4\",\"f\":0,\"i\":\"Client-g5d4g\",\"p\":{\"t\":\"14607577960925503\",\"r\":1},\"k\":\"sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f\",\"c\":\"coolChannel\",\"d\":{\"text\":\"Enter Message Here\"},\"b\":\"coolChan-bnel\"}]}")));
 
         pubnub.addListener(new SubscribeCallback() {
             @Override
             public void status(PubNub pubnub, PNStatus status) {
+                int moose = 10;
             }
 
             @Override
@@ -249,7 +320,7 @@ public class SubscriptionManagerTest extends TestHarness {
     @Test
     public void testSubscribePresencePayloadBuilder() {
         final AtomicInteger atomic = new AtomicInteger(0);
-        stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch2-pnpres,ch1,ch1-pnpres/0"))
+        stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1,ch2-pnpres,ch1-pnpres/0"))
                 .willReturn(aResponse().withBody("{\"t\":{\"t\":\"14614512228786519\",\"r\":1},\"m\":[{\"a\":\"4\",\"f\":0,\"p\":{\"t\":\"14614512228418349\",\"r\":2},\"k\":\"sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f\",\"c\":\"coolChannel-pnpres\",\"d\":{\"action\": \"join\", \"timestamp\": 1461451222, \"uuid\": \"4a6d5df7-e301-4e73-a7b7-6af9ab484eb0\", \"occupancy\": 1},\"b\":\"coolChannel-pnpres\"}]}\n")));
 
         pubnub.addListener(new SubscribeCallback() {
@@ -283,7 +354,7 @@ public class SubscriptionManagerTest extends TestHarness {
     @Test
     public void testSubscribeRegionBuilder() {
         final AtomicInteger atomic = new AtomicInteger(0);
-        stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch2-pnpres,ch1,ch1-pnpres/0"))
+        stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1,ch2-pnpres,ch1-pnpres/0"))
                 .willReturn(aResponse().withBody("{\"t\":{\"t\":\"14607577960932487\",\"r\":8},\"m\":[{\"a\":\"4\",\"f\":0,\"i\":\"Client-g5d4g\",\"p\":{\"t\":\"14607577960925503\",\"r\":1},\"k\":\"sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f\",\"c\":\"coolChannel\",\"d\":{\"text\":\"Enter Message Here\"},\"b\":\"coolChan-bnel\"}]}")));
 
         pubnub.addListener(new SubscribeCallback() {
@@ -352,7 +423,7 @@ public class SubscriptionManagerTest extends TestHarness {
         final AtomicBoolean statusRecieved = new AtomicBoolean();
         final AtomicBoolean messageRecieved = new AtomicBoolean();
 
-        stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch2-pnpres,ch1,ch1-pnpres/0"))
+        stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1,ch2-pnpres,ch1-pnpres/0"))
                 .willReturn(aResponse().withBody("{\"t\":{\"t\":\"14607577960932487\",\"r\":1},\"m\":[{\"a\":\"4\",\"f\":0,\"i\":\"Client-g5d4g\",\"p\":{\"t\":\"14607577960925503\",\"r\":1},\"k\":\"sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f\",\"c\":\"coolChannel\",\"d\":{\"text\":\"Enter Message Here\"},\"b\":\"coolChan-bnel\"}]}")));
 
         stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch2-pnpres/0"))
@@ -402,7 +473,7 @@ public class SubscriptionManagerTest extends TestHarness {
         final AtomicBoolean statusRecieved = new AtomicBoolean();
         pubnub.getConfiguration().setHeartbeatNotificationOptions(PNHeartbeatNotificationOptions.All);
 
-        stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch2-pnpres,ch1,ch1-pnpres/0"))
+        stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1,ch2-pnpres,ch1-pnpres/0"))
                 .willReturn(aResponse().withBody("{\"t\":{\"t\":\"14607577960932487\",\"r\":1},\"m\":[{\"a\":\"4\",\"f\":0,\"i\":\"Client-g5d4g\",\"p\":{\"t\":\"14607577960925503\",\"r\":1},\"k\":\"sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f\",\"c\":\"coolChannel\",\"d\":{\"text\":\"Enter Message Here\"},\"b\":\"coolChan-bnel\"}]}")));
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch2,ch1/heartbeat"))

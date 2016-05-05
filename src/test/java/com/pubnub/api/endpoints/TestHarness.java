@@ -2,6 +2,7 @@ package com.pubnub.api.endpoints;
 
 import com.pubnub.api.PNConfiguration;
 import com.pubnub.api.PubNub;
+import com.pubnub.api.enums.PNLogVerbosity;
 
 public class TestHarness {
 
@@ -12,6 +13,7 @@ public class TestHarness {
         pnConfiguration.setSubscribeKey("mySubscribeKey");
         pnConfiguration.setPublishKey("myPublishKey");
         pnConfiguration.setUuid("myUUID");
+        pnConfiguration.setLogVerbosity(PNLogVerbosity.BODY);
 
         class MockedTimePubNub extends PubNub {
 
