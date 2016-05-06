@@ -1,11 +1,13 @@
 package com.pubnub.api.models.consumer;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 @AllArgsConstructor
+@Getter
 public class PNErrorData {
 
-    String information;
-    Exception throwable;
+    private String information;
+    private Exception throwable;
 
 }

@@ -11,17 +11,17 @@ import java.util.Map;
 @Getter
 public class AccessManagerAuditPayload {
 
-    String level;
+    private String level;
     @JsonProperty("subscribe_key")
-    String subscribeKey;
+    private String subscribeKey;
 
-    String channel;
+    private String channel;
 
     @JsonProperty("channel-group")
-    String channelGroup;
+    private String channelGroup;
 
     @JsonProperty("auths")
-    Map<String, PNAccessManagerKeyData> authKeys;
+    private Map<String, PNAccessManagerKeyData> authKeys;
 
 
 }

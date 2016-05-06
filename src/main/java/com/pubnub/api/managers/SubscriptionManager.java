@@ -6,6 +6,7 @@ import com.pubnub.api.Crypto;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.builder.PubNubErrorBuilder;
+import com.pubnub.api.builder.dto.StateOperation;
 import com.pubnub.api.builder.dto.SubscribeOperation;
 import com.pubnub.api.builder.dto.UnsubscribeOperation;
 import com.pubnub.api.callbacks.PNCallback;
@@ -16,11 +17,12 @@ import com.pubnub.api.endpoints.pubsub.Subscribe;
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.enums.PNStatusCategory;
-import com.pubnub.api.models.SubscriptionItem;
+import com.pubnub.api.models.consumer.PNErrorData;
 import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
 import com.pubnub.api.models.server.Envelope;
+import com.pubnub.api.models.server.PresenceEnvelope;
 import com.pubnub.api.models.server.SubscribeEnvelope;
 import com.pubnub.api.models.server.SubscribeMessage;
 import lombok.extern.slf4j.Slf4j;
@@ -32,24 +34,6 @@ import java.util.*;
 @Slf4j
 public class SubscriptionManager {
 
-    /**
-     * Contains a list of subscribed channels
-     */
-    private Map<String, SubscriptionItem> subscribedChannels;
-    /**
-     * Contains a list of subscribed presence channels.
-     */
-    private Map<String, SubscriptionItem> subscribedPresenceChannels;
-
-    /**
-     * Contains a list of subscribed channel groups.
-     */
-    private Map<String, SubscriptionItem> subscribedChannelGroups;
-
-    /**
-     * Contains a list of subscribed presence channel groups.
-     */
-    private Map<String, SubscriptionItem> subscribedPresenceChannelGroups;
 
     private List<SubscribeCallback> listeners;
     private PubNub pubnub;
@@ -65,18 +49,24 @@ public class SubscriptionManager {
      */
     private String region;
 
-    Timer timer;
+    /**
+     * Timer for heartbeat operations.
+     */
+    private Timer timer;
+
+    private ObjectMapper mapper;
+
+
+    private StateManager subscriptionState;
 
     public SubscriptionManager(PubNub pubnub) {
-        this.subscribedChannelGroups = new HashMap<>();
-        this.subscribedPresenceChannelGroups = new HashMap<>();
 
-        this.subscribedChannels = new HashMap<>();
-        this.subscribedPresenceChannels = new HashMap<>();
-
-
+        this.subscriptionState = new StateManager();
         this.pubnub = pubnub;
         this.listeners = new ArrayList<>();
+
+        this.mapper = new ObjectMapper();
+
     }
 
 
@@ -98,50 +88,13 @@ public class SubscriptionManager {
         stopSubscribeLoop();
     }
 
-    public final synchronized void adaptStateBuilder(final List<String> channels,
-                                                     final List<String> channelGroups,
-                                                     final Object state) {
-        for (String channel: channels) {
-            SubscriptionItem subscribedChannel = subscribedChannels.get(channel);
-
-            if (subscribedChannel != null) {
-                subscribedChannel.setState(state);
-            }
-        }
-
-        for (String channelGroup: channelGroups) {
-            SubscriptionItem subscribedChannelGroup = subscribedChannelGroups.get(channelGroup);
-
-            if (subscribedChannelGroup != null) {
-                subscribedChannelGroup.setState(state);
-            }
-        }
-
+    public final synchronized void adaptStateBuilder(final StateOperation stateOperation) {
+        this.subscriptionState.adaptStateBuilder(stateOperation);
         reconnect();
     }
 
     public final synchronized void adaptSubscribeBuilder(final SubscribeOperation subscribeOperation) {
-        for (String channel : subscribeOperation.getChannels()) {
-            SubscriptionItem subscriptionItem = new SubscriptionItem().setName(channel);
-            subscribedChannels.put(channel, subscriptionItem);
-
-            if (subscribeOperation.isPresenceEnabled()) {
-                SubscriptionItem presenceSubscriptionItem = new SubscriptionItem().setName(channel);
-                subscribedPresenceChannels.put(channel, presenceSubscriptionItem);
-            }
-
-        }
-
-        for (String channelGroup : subscribeOperation.getChannelGroups()) {
-            SubscriptionItem subscriptionItem = new SubscriptionItem().setName(channelGroup);
-            subscribedChannelGroups.put(channelGroup, subscriptionItem);
-
-            if (subscribeOperation.isPresenceEnabled()) {
-                SubscriptionItem presenceSubscriptionItem = new SubscriptionItem().setName(channelGroup);
-                subscribedPresenceChannelGroups.put(channelGroup, presenceSubscriptionItem);
-            }
-
-        }
+        this.subscriptionState.adaptSubscribeBuilder(subscribeOperation);
 
         if (subscribeOperation.getTimetoken() != null) {
             this.timetoken = subscribeOperation.getTimetoken();
@@ -151,16 +104,7 @@ public class SubscriptionManager {
     }
 
     public final synchronized void adaptUnsubscribeBuilder(final UnsubscribeOperation unsubscribeOperation) {
-
-        for (String channel: unsubscribeOperation.getChannels()) {
-            this.subscribedChannels.remove(channel);
-            this.subscribedPresenceChannels.remove(channel);
-        }
-
-        for (String channelGroup: unsubscribeOperation.getChannelGroups()) {
-            this.subscribedChannelGroups.remove(channelGroup);
-            this.subscribedPresenceChannelGroups.remove(channelGroup);
-        }
+        this.subscriptionState.adaptUnsubscribeBuilder(unsubscribeOperation);
 
         new Leave(pubnub)
             .channels(unsubscribeOperation.getChannels()).channelGroups(unsubscribeOperation.getChannelGroups())
@@ -172,51 +116,6 @@ public class SubscriptionManager {
         });
 
         reconnect();
-    }
-
-    private Map<String, Object> createStatePayload() {
-        Map<String, Object> stateResponse = new HashMap<>();
-
-        for (SubscriptionItem channel: subscribedChannels.values()) {
-            if (channel.getState() != null) {
-                stateResponse.put(channel.getName(), channel.getState());
-            }
-        }
-
-        for (SubscriptionItem channelGroup: subscribedChannelGroups.values()) {
-            if (channelGroup.getState() != null) {
-                stateResponse.put(channelGroup.getName(), channelGroup.getState());
-            }
-        }
-
-        return stateResponse;
-    }
-
-    private List<String> prepareChannelList(final boolean includePresence) {
-        return prepareMembershipList(subscribedChannels, subscribedPresenceChannels, includePresence);
-    }
-
-    private List<String> prepareChannelGroupList(final boolean includePresence) {
-        return prepareMembershipList(subscribedChannelGroups, subscribedPresenceChannelGroups, includePresence);
-    }
-
-    private List<String> prepareMembershipList(final Map<String, SubscriptionItem> dataStorage,
-                                               final Map<String, SubscriptionItem> presenceStorage,
-                                               final boolean includePresence) {
-        List<String> response = new ArrayList<>();
-
-        for (SubscriptionItem channelGroupItem: dataStorage.values()) {
-            response.add(channelGroupItem.getName());
-        }
-
-        if (includePresence) {
-            for (SubscriptionItem presenceChannelGroupItem: presenceStorage.values()) {
-                response.add(presenceChannelGroupItem.getName().concat("-pnpres"));
-            }
-        }
-
-
-        return response;
     }
 
     private void registerHeartbeatTimer() {
@@ -244,8 +143,8 @@ public class SubscriptionManager {
         // this function can be called from different points, make sure any old loop is closed
         stopSubscribeLoop();
 
-        List<String> combinedChannels = prepareChannelList(true);
-        List<String> combinedChannelGroups = prepareChannelGroupList(true);
+        List<String> combinedChannels = this.subscriptionState.prepareChannelList(true);
+        List<String> combinedChannelGroups = this.subscriptionState.prepareChannelGroupList(true);
 
         // do not start the subscribe loop if we have no channels to subscribe to.
         if (combinedChannels.isEmpty() && combinedChannelGroups.isEmpty()) {
@@ -258,7 +157,7 @@ public class SubscriptionManager {
                 .filterExpression(pubnub.getConfiguration().getFilterExpression())
                 .async(new PNCallback<SubscribeEnvelope>() {
                     @Override
-                    public void onResponse(SubscribeEnvelope result, PNStatus status) {
+                    public void onResponse(final SubscribeEnvelope result, final PNStatus status) {
                         if (status.isError()) {
 
                             if (status.getCategory() == PNStatusCategory.PNTimeoutCategory) {
@@ -292,9 +191,9 @@ public class SubscriptionManager {
             heartbeatCall.cancel();
         }
 
-        List<String> presenceChannels = prepareChannelList(false);
-        List<String> presenceChannelGroups = prepareChannelGroupList(false);
-        Map<String, Object> stateStorage = createStatePayload();
+        List<String> presenceChannels = this.subscriptionState.prepareChannelList(false);
+        List<String> presenceChannelGroups = this.subscriptionState.prepareChannelGroupList(false);
+        Map<String, Object> stateStorage = this.subscriptionState.createStatePayload();
 
         // do not start the loop if we do not have any presence channels or channel groups enabled.
         if (presenceChannels.isEmpty() && presenceChannelGroups.isEmpty()) {
@@ -324,7 +223,7 @@ public class SubscriptionManager {
                 });
     }
 
-    private void processIncomingMessages(List<SubscribeMessage> messages) {
+    private void processIncomingMessages(final List<SubscribeMessage> messages) {
 
         for (SubscribeMessage message : messages) {
 
@@ -336,16 +235,16 @@ public class SubscriptionManager {
             }
 
             if (message.getChannel().contains("-pnpres")) {
-                Map<String, Object> presencePayload = (Map<String, Object>) message.getPayload();
+                PresenceEnvelope presencePayload = mapper.convertValue(message.getPayload(), PresenceEnvelope.class);
 
                 PNPresenceEventResult pnPresenceEventResult = PNPresenceEventResult.builder()
-                        .event(presencePayload.get("action").toString())
+                        .event(presencePayload.getAction())
                         .actualChannel((subscriptionMatch != null) ? channel : null)
                         .subscribedChannel(subscriptionMatch != null ? subscriptionMatch : channel)
                         .timetoken(timetoken)
-                        .occupancy((int) presencePayload.get("occupancy"))
-                        .uuid(presencePayload.get("uuid").toString())
-                        .timestamp(Long.valueOf(presencePayload.get("timestamp").toString()))
+                        .occupancy(presencePayload.getOccupancy())
+                        .uuid(presencePayload.getUuid())
+                        .timestamp(presencePayload.getTimestamp())
                         .build();
 
                 announce(pnPresenceEventResult);
@@ -356,8 +255,9 @@ public class SubscriptionManager {
                     extractedMessage = processMessage(message.getPayload());
                 } catch (PubNubException e) {
                     PNStatus pnStatus = PNStatus.builder().error(true)
+                            .errorData(new PNErrorData(e.getMessage(), e))
                             .operation(PNOperationType.PNSubscribeOperation)
-                            .category(PNStatusCategory.PNDecryptionErrorCategory)
+                            .category(PNStatusCategory.PNUnknownCategory)
                             .build();
 
                     announce(pnStatus);
@@ -377,16 +277,21 @@ public class SubscriptionManager {
         }
     }
 
-    private Object processMessage(Object input) throws PubNubException {
+    private Object processMessage(final Object input) throws PubNubException {
         if (pubnub.getConfiguration().getCipherKey() == null) {
             return input;
         }
 
         Crypto crypto = new Crypto(pubnub.getConfiguration().getCipherKey());
-        String outputText = crypto.decrypt(input.toString());
-
-        ObjectMapper mapper = new ObjectMapper();
+        String outputText;
         Object outputObject;
+
+        try {
+            outputText = crypto.decrypt(input.toString());
+        } catch (PubNubException e) {
+            throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_CRYPTO_ERROR).errormsg(e.getMessage()).build();
+        }
+
         try {
             outputObject = mapper.readValue(outputText, JsonNode.class);
         } catch (IOException e) {

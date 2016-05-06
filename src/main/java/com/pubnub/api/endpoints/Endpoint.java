@@ -75,7 +75,8 @@ public abstract class Endpoint<Input, Output> {
 
     public final Call<Input> async(final PNCallback<Output> callback) {
 
-        Call<Input> call = null;
+        Call<Input> call;
+
         try {
             call = doWork(createBaseParams());
         } catch (PubNubException e) {
@@ -86,6 +87,7 @@ public abstract class Endpoint<Input, Output> {
                     .build();
 
             callback.onResponse(null, createStatusResponse(PNStatusCategory.PNBadRequestCategory, null, pubnubException));
+            return null;
         }
 
         call.enqueue(new retrofit2.Callback<Input>() {

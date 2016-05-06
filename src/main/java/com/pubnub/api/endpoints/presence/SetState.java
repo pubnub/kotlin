@@ -7,6 +7,7 @@ import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.PubNubUtil;
 import com.pubnub.api.builder.PubNubErrorBuilder;
+import com.pubnub.api.builder.dto.StateOperation;
 import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.managers.SubscriptionManager;
@@ -49,8 +50,7 @@ public class SetState extends Endpoint<Envelope<Map<String, Object>>, PNSetState
         if (pubnub.getConfiguration().getSubscribeKey()==null || pubnub.getConfiguration().getSubscribeKey().isEmpty()) {
             throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_SUBSCRIBE_KEY_MISSING).build();
         }
-        if (channels.size()==0 && channelGroups.size()==0)
-        {
+        if (channels.size()==0 && channelGroups.size()==0) {
             throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_CHANNEL_AND_GROUP_MISSING).build();
         }
     }
@@ -60,8 +60,12 @@ public class SetState extends Endpoint<Envelope<Map<String, Object>>, PNSetState
         ObjectWriter ow = new ObjectMapper().writer();
         String stringifiedState;
 
-
-        subscriptionManager.adaptStateBuilder(channels, channelGroups, state);
+        StateOperation stateOperation = StateOperation.builder()
+                .state(state)
+                .channels(channels)
+                .channelGroups(channelGroups)
+                .build();
+        subscriptionManager.adaptStateBuilder(stateOperation);
 
         PresenceService service = this.createRetrofit().create(PresenceService.class);
 
