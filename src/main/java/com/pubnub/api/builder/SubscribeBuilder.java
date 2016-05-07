@@ -9,8 +9,8 @@ import lombok.experimental.Accessors;
 import java.util.List;
 
 @Setter
-@Accessors(chain = true, fluent =  true)
-public class SubscribeBuilder extends PubSubBuilder  {
+@Accessors(chain = true, fluent = true)
+public class SubscribeBuilder extends PubSubBuilder {
 
     /**
      * Allow users to specify if they would also like to include the presence channels for those subscriptions.
@@ -33,20 +33,20 @@ public class SubscribeBuilder extends PubSubBuilder  {
         return this;
     }
 
-    public SubscribeBuilder withTimetoken(final Long timetoken) {
-        this.timetoken = timetoken;
+    public SubscribeBuilder withTimetoken(Long timetokenInstance) {
+        this.timetoken = timetokenInstance;
         return this;
     }
 
     public void execute() {
         SubscribeOperation subscribeOperation = SubscribeOperation.builder()
-                .channels(channelSubscriptions)
-                .channelGroups(channelGroupSubscriptions)
+                .channels(this.getChannelSubscriptions())
+                .channelGroups(this.getChannelGroupSubscriptions())
                 .timetoken(timetoken)
                 .presenceEnabled(presenceEnabled)
                 .build();
 
-        this.subscriptionManager.adaptSubscribeBuilder(subscribeOperation);
+        this.getSubscriptionManager().adaptSubscribeBuilder(subscribeOperation);
     }
 
     public SubscribeBuilder channels(final List<String> channels) {

@@ -9,12 +9,12 @@ import java.util.Map;
 @Getter
 public class PNAccessManagerGrantResult {
 
-    String level;
-    int ttl;
-    String subscribeKey;
+    private String level;
+    private int ttl;
+    private String subscribeKey;
 
-    Map<String, Map<String,PNAccessManagerKeyData>> channels;
+    private Map<String, Map<String, PNAccessManagerKeyData>> channels;
 
-    Map<String, Map<String,PNAccessManagerKeyData>> channelGroups;
+    private Map<String, Map<String, PNAccessManagerKeyData>> channelGroups;
 
 }

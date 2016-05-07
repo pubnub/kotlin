@@ -12,7 +12,9 @@ import com.pubnub.api.models.server.Envelope;
 import com.pubnub.api.models.consumer.presence.PNSetStateResult;
 import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.managers.SubscriptionManager;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -28,13 +30,16 @@ public class SetState extends Endpoint<Envelope<Map<String, Object>>, PNSetState
     @Getter(AccessLevel.NONE)
     private SubscriptionManager subscriptionManager;
 
-    @Setter private List<String> channels;
-    @Setter private List<String> channelGroups;
-    @Setter private Object state;
+    @Setter
+    private List<String> channels;
+    @Setter
+    private List<String> channelGroups;
+    @Setter
+    private Object state;
 
-    public SetState(PubNub pubnub, SubscriptionManager subscriptionManager) {
-        super(pubnub);
-        this.subscriptionManager = subscriptionManager;
+    public SetState(PubNub pubnubInstance, SubscriptionManager subscriptionManagerInstance) {
+        super(pubnubInstance);
+        this.subscriptionManager = subscriptionManagerInstance;
         channels = new ArrayList<>();
         channelGroups = new ArrayList<>();
     }
@@ -44,11 +49,10 @@ public class SetState extends Endpoint<Envelope<Map<String, Object>>, PNSetState
         if (state == null) {
             throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_STATE_MISSING).build();
         }
-        if (pubnub.getConfiguration().getSubscribeKey()==null || pubnub.getConfiguration().getSubscribeKey().isEmpty()) {
+        if (this.getPubnub().getConfiguration().getSubscribeKey() == null || this.getPubnub().getConfiguration().getSubscribeKey().isEmpty()) {
             throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_SUBSCRIBE_KEY_MISSING).build();
         }
-        if (channels.size()==0 && channelGroups.size()==0)
-        {
+        if (channels.size() == 0 && channelGroups.size() == 0) {
             throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_CHANNEL_AND_GROUP_MISSING).build();
         }
     }
@@ -78,7 +82,7 @@ public class SetState extends Endpoint<Envelope<Map<String, Object>>, PNSetState
 
         String channelCSV = channels.size() > 0 ? PubNubUtil.joinString(channels, ",") : ",";
 
-        return service.setState(pubnub.getConfiguration().getSubscribeKey(), channelCSV, this.pubnub.getConfiguration().getUuid(), params);
+        return service.setState(this.getPubnub().getConfiguration().getSubscribeKey(), channelCSV, this.getPubnub().getConfiguration().getUuid(), params);
     }
 
     @Override
@@ -95,11 +99,11 @@ public class SetState extends Endpoint<Envelope<Map<String, Object>>, PNSetState
     }
 
     protected int getConnectTimeout() {
-        return pubnub.getConfiguration().getConnectTimeout();
+        return this.getPubnub().getConfiguration().getConnectTimeout();
     }
 
     protected int getRequestTimeout() {
-        return pubnub.getConfiguration().getNonSubscribeRequestTimeout();
+        return this.getPubnub().getConfiguration().getNonSubscribeRequestTimeout();
     }
 
     @Override

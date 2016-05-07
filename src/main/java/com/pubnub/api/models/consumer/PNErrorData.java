@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class PNErrorData {
 
-    String information;
-    Exception throwable;
+    private String information;
+    private Exception throwable;
 
 }

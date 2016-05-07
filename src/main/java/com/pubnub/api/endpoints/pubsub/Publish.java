@@ -2,7 +2,10 @@ package com.pubnub.api.endpoints.pubsub;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pubnub.api.*;
+import com.pubnub.api.PubNub;
+import com.pubnub.api.PubNubError;
+import com.pubnub.api.PubNubException;
+import com.pubnub.api.PubNubUtil;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.models.consumer.PNPublishResult;
 import com.pubnub.api.endpoints.Endpoint;
@@ -19,13 +22,18 @@ import java.util.Map;
 @Accessors(chain = true, fluent = true)
 public class Publish extends Endpoint<List<Object>, PNPublishResult> {
 
-    @Setter private Object message;
-    @Setter private String channel;
-    @Setter private Boolean shouldStore;
-    @Setter private Boolean usePOST;
-    @Setter private Object meta;
+    @Setter
+    private Object message;
+    @Setter
+    private String channel;
+    @Setter
+    private Boolean shouldStore;
+    @Setter
+    private Boolean usePOST;
+    @Setter
+    private Object meta;
 
-    PublishSequenceManager publishSequenceManager;
+    private PublishSequenceManager publishSequenceManager;
 
     public Publish(PubNub pubnub, PublishSequenceManager providedPublishSequenceManager) {
         super(pubnub);
@@ -41,10 +49,10 @@ public class Publish extends Endpoint<List<Object>, PNPublishResult> {
         if (channel == null || channel.isEmpty()) {
             throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_CHANNEL_MISSING).build();
         }
-        if (pubnub.getConfiguration().getSubscribeKey()==null || pubnub.getConfiguration().getSubscribeKey().isEmpty()) {
+        if (this.getPubnub().getConfiguration().getSubscribeKey() == null || this.getPubnub().getConfiguration().getSubscribeKey().isEmpty()) {
             throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_SUBSCRIBE_KEY_MISSING).build();
         }
-        if (pubnub.getConfiguration().getPublishKey()==null || pubnub.getConfiguration().getPublishKey().isEmpty()) {
+        if (this.getPubnub().getConfiguration().getPublishKey() == null || this.getPubnub().getConfiguration().getPublishKey().isEmpty()) {
             throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_PUBLISH_KEY_MISSING).build();
         }
     }
@@ -82,8 +90,8 @@ public class Publish extends Endpoint<List<Object>, PNPublishResult> {
         params.put("seqn", String.valueOf(publishSequenceManager.getNextSequence()));
 
 
-        if (pubnub.getConfiguration().getCipherKey() != null) {
-            Crypto crypto = new Crypto(pubnub.getConfiguration().getCipherKey());
+        if (this.getPubnub().getConfiguration().getCipherKey() != null) {
+            Crypto crypto = new Crypto(this.getPubnub().getConfiguration().getCipherKey());
             stringifiedMessage = crypto.encrypt(stringifiedMessage).replace("\n", "");
         }
 
@@ -92,25 +100,25 @@ public class Publish extends Endpoint<List<Object>, PNPublishResult> {
         if (usePOST != null && usePOST) {
             Object payloadToSend;
 
-            if (pubnub.getConfiguration().getCipherKey() != null) {
+            if (this.getPubnub().getConfiguration().getCipherKey() != null) {
                 payloadToSend = stringifiedMessage;
             } else {
                 payloadToSend = message;
             }
 
-            return service.publishWithPost(pubnub.getConfiguration().getPublishKey(),
-                    pubnub.getConfiguration().getSubscribeKey(),
+            return service.publishWithPost(this.getPubnub().getConfiguration().getPublishKey(),
+                    this.getPubnub().getConfiguration().getSubscribeKey(),
                     channel, payloadToSend, params);
         } else {
 
-            if (pubnub.getConfiguration().getCipherKey() != null) {
+            if (this.getPubnub().getConfiguration().getCipherKey() != null) {
                 stringifiedMessage = "\"".concat(stringifiedMessage).concat("\"");
             }
 
             stringifiedMessage = PubNubUtil.urlEncode(stringifiedMessage);
 
-            return service.publish(pubnub.getConfiguration().getPublishKey(),
-                    pubnub.getConfiguration().getSubscribeKey(),
+            return service.publish(this.getPubnub().getConfiguration().getPublishKey(),
+                    this.getPubnub().getConfiguration().getSubscribeKey(),
                     channel, stringifiedMessage, params);
         }
     }
@@ -124,11 +132,11 @@ public class Publish extends Endpoint<List<Object>, PNPublishResult> {
     }
 
     protected int getConnectTimeout() {
-        return pubnub.getConfiguration().getConnectTimeout();
+        return this.getPubnub().getConfiguration().getConnectTimeout();
     }
 
     protected int getRequestTimeout() {
-        return pubnub.getConfiguration().getNonSubscribeRequestTimeout();
+        return this.getPubnub().getConfiguration().getNonSubscribeRequestTimeout();
     }
 
     @Override

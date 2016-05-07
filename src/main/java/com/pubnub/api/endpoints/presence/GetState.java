@@ -21,9 +21,12 @@ import java.util.Map;
 @Accessors(chain = true, fluent = true)
 public class GetState extends Endpoint<Envelope<Object>, PNGetStateResult> {
 
-    @Setter private List<String> channels;
-    @Setter private List<String> channelGroups;
-    @Setter private String uuid;
+    @Setter
+    private List<String> channels;
+    @Setter
+    private List<String> channelGroups;
+    @Setter
+    private String uuid;
 
     public GetState(PubNub pubnub) {
         super(pubnub);
@@ -33,11 +36,10 @@ public class GetState extends Endpoint<Envelope<Object>, PNGetStateResult> {
 
     @Override
     protected void validateParams() throws PubNubException {
-        if (pubnub.getConfiguration().getSubscribeKey()==null || pubnub.getConfiguration().getSubscribeKey().isEmpty()) {
+        if (this.getPubnub().getConfiguration().getSubscribeKey() == null || this.getPubnub().getConfiguration().getSubscribeKey().isEmpty()) {
             throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_SUBSCRIBE_KEY_MISSING).build();
         }
-        if (channels.size()==0 && channelGroups.size()==0)
-        {
+        if (channels.size() == 0 && channelGroups.size() == 0) {
             throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_CHANNEL_AND_GROUP_MISSING).build();
         }
     }
@@ -52,9 +54,9 @@ public class GetState extends Endpoint<Envelope<Object>, PNGetStateResult> {
 
         String channelCSV = channels.size() > 0 ? PubNubUtil.joinString(channels, ",") : ",";
 
-        String selectedUUID = uuid != null ? uuid : pubnub.getConfiguration().getUuid();
+        String selectedUUID = uuid != null ? uuid : this.getPubnub().getConfiguration().getUuid();
 
-        return service.getState(pubnub.getConfiguration().getSubscribeKey(), channelCSV, selectedUUID, params);
+        return service.getState(this.getPubnub().getConfiguration().getSubscribeKey(), channelCSV, selectedUUID, params);
     }
 
     @Override
@@ -72,11 +74,11 @@ public class GetState extends Endpoint<Envelope<Object>, PNGetStateResult> {
     }
 
     protected int getConnectTimeout() {
-        return pubnub.getConfiguration().getConnectTimeout();
+        return this.getPubnub().getConfiguration().getConnectTimeout();
     }
 
     protected int getRequestTimeout() {
-        return pubnub.getConfiguration().getNonSubscribeRequestTimeout();
+        return this.getPubnub().getConfiguration().getNonSubscribeRequestTimeout();
     }
 
     @Override

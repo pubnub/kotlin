@@ -11,18 +11,18 @@ import java.util.List;
 @Getter
 public class PNStatus {
 
-    PNStatusCategory category;
-    PNErrorData errorData;
-    boolean error;
+    private PNStatusCategory category;
+    private PNErrorData errorData;
+    private boolean error;
 
     // boolean automaticallyRetry;
 
     private int statusCode;
     private PNOperationType operation;
 
-    //CHECKSTYLE.OFF
+    //CHECKSTYLE:OFF
     private boolean TLSEnabled;
-    //CHECKSTYLE.ON
+    //CHECKSTYLE:ON
 
     private String uuid;
     private String authKey;
@@ -30,8 +30,8 @@ public class PNStatus {
     private Object clientRequest;
 
     // send back channel, channel groups that were affected by this operation
-    List<String> affectedChannels;
-    List<String> affectedChannelGroups;
+    private List<String> affectedChannels;
+    private List<String> affectedChannelGroups;
 
     /*
     public void retry(){

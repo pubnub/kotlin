@@ -117,7 +117,7 @@ public class SetStateEndpointTest extends TestHarness {
 
     }
 
-    @org.junit.Test(expected=PubNubException.class)
+    @org.junit.Test(expected = PubNubException.class)
     public void applyNon200Sync() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch1/uuid/myUUID/data"))
@@ -127,7 +127,7 @@ public class SetStateEndpointTest extends TestHarness {
         PNSetStateResult result = partialSetState.channels(Arrays.asList("ch1")).channelGroups(Arrays.asList("cg1", "cg2")).state(Arrays.asList("s1", "s2", "s3")).sync();
     }
 
-    @org.junit.Test(expected=PubNubException.class)
+    @org.junit.Test(expected = PubNubException.class)
     public void MissimStateSync() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/testChannel/uuid/myUUID/data"))

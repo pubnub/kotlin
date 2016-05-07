@@ -18,17 +18,16 @@ import java.util.Map;
 
 @Accessors(chain = true, fluent = true)
 public class AllChannelsChannelGroup extends Endpoint<Envelope<Object>, PNChannelGroupsAllChannelsResult> {
-    @Setter private String channelGroup;
+    @Setter
+    private String channelGroup;
 
     public AllChannelsChannelGroup(PubNub pubnub) {
         super(pubnub);
     }
 
     @Override
-    protected void validateParams() throws PubNubException
-    {
-        if (channelGroup==null || channelGroup.isEmpty())
-        {
+    protected void validateParams() throws PubNubException {
+        if (channelGroup == null || channelGroup.isEmpty()) {
             throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_GROUP_MISSING).build();
         }
     }
@@ -37,7 +36,7 @@ public class AllChannelsChannelGroup extends Endpoint<Envelope<Object>, PNChanne
     protected Call<Envelope<Object>> doWork(Map<String, String> params) {
         ChannelGroupService service = this.createRetrofit().create(ChannelGroupService.class);
 
-        return service.AllChannelsChannelGroup(pubnub.getConfiguration().getSubscribeKey(), channelGroup, params);
+        return service.allChannelsChannelGroup(this.getPubnub().getConfiguration().getSubscribeKey(), channelGroup, params);
     }
 
     @Override
@@ -57,11 +56,11 @@ public class AllChannelsChannelGroup extends Endpoint<Envelope<Object>, PNChanne
     }
 
     protected int getConnectTimeout() {
-        return pubnub.getConfiguration().getConnectTimeout();
+        return this.getPubnub().getConfiguration().getConnectTimeout();
     }
 
     protected int getRequestTimeout() {
-        return pubnub.getConfiguration().getNonSubscribeRequestTimeout();
+        return this.getPubnub().getConfiguration().getNonSubscribeRequestTimeout();
     }
 
     @Override

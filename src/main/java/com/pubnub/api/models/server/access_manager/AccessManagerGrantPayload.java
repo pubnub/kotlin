@@ -13,19 +13,19 @@ import java.util.Map;
 @Getter
 public class AccessManagerGrantPayload {
 
-    String level;
-    int ttl;
+    private String level;
+    private int ttl;
     @JsonProperty("subscribe_key")
-    String subscribeKey;
+    private String subscribeKey;
 
-    Map<String, PNAccessManagerKeysData> channels;
+    private Map<String, PNAccessManagerKeysData> channels;
 
     @JsonProperty("channel-groups")
-    JsonNode channelGroups;
+    private JsonNode channelGroups;
 
     @JsonProperty("auths")
-    Map<String, PNAccessManagerKeyData> authKeys;
+    private Map<String, PNAccessManagerKeyData> authKeys;
 
-    String channel;
+    private String channel;
 
 }

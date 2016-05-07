@@ -23,8 +23,7 @@ public class ListAllChannelGroup extends Endpoint<Envelope<Object>, PNChannelGro
     }
 
     @Override
-    protected void validateParams() throws PubNubException
-    {
+    protected void validateParams() throws PubNubException {
     }
 
     @Override
@@ -32,7 +31,7 @@ public class ListAllChannelGroup extends Endpoint<Envelope<Object>, PNChannelGro
 
         ChannelGroupService service = this.createRetrofit().create(ChannelGroupService.class);
 
-        return service.ListAllChannelGroup(pubnub.getConfiguration().getSubscribeKey(), params);
+        return service.listAllChannelGroup(this.getPubnub().getConfiguration().getSubscribeKey(), params);
     }
 
     @Override
@@ -42,7 +41,7 @@ public class ListAllChannelGroup extends Endpoint<Envelope<Object>, PNChannelGro
         if (input.body() == null || input.body().getPayload() == null) {
             throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_PARSING_ERROR).build();
         }
-        
+
         stateMappings = (Map<String, Object>) input.body().getPayload();
         List<String> groups = (ArrayList<String>) stateMappings.get("groups");
 
@@ -52,11 +51,11 @@ public class ListAllChannelGroup extends Endpoint<Envelope<Object>, PNChannelGro
     }
 
     protected int getConnectTimeout() {
-        return pubnub.getConfiguration().getConnectTimeout();
+        return this.getPubnub().getConfiguration().getConnectTimeout();
     }
 
     protected int getRequestTimeout() {
-        return pubnub.getConfiguration().getNonSubscribeRequestTimeout();
+        return this.getPubnub().getConfiguration().getNonSubscribeRequestTimeout();
     }
 
     @Override

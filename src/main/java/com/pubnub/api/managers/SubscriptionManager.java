@@ -28,11 +28,16 @@ import lombok.extern.slf4j.Slf4j;
 import retrofit2.Call;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 @Slf4j
 public class SubscriptionManager {
-
+    private static final int HEART_BEAT_INTERVAL_MULTIPLIER = 1000;
     private Map<String, SubscriptionItem> subscribedChannels;
     private Map<String, SubscriptionItem> subscribedChannelGroups;
     private Map<String, Object> stateStorage;
@@ -50,12 +55,12 @@ public class SubscriptionManager {
      */
     private String region;
 
-    Timer timer;
+    private Timer timer;
 
-    public SubscriptionManager(PubNub pubnub) {
+    public SubscriptionManager(PubNub pubnubInstance) {
         this.subscribedChannelGroups = new HashMap<>();
         this.subscribedChannels = new HashMap<>();
-        this.pubnub = pubnub;
+        this.pubnub = pubnubInstance;
         this.listeners = new ArrayList<>();
         this.stateStorage = new HashMap<>();
     }
@@ -80,11 +85,11 @@ public class SubscriptionManager {
     }
 
     public final synchronized void adaptStateBuilder(List<String> channels, List<String> channelGroups, Object state) {
-        for (String channel: channels) {
+        for (String channel : channels) {
             stateStorage.put(channel, state);
         }
 
-        for (String channelGroup: channelGroups) {
+        for (String channelGroup : channelGroups) {
             stateStorage.put(channelGroup, state);
         }
 
@@ -93,10 +98,10 @@ public class SubscriptionManager {
     public final synchronized void adaptSubscribeBuilder(final SubscribeOperation subscribeOperation) {
         for (String channel : subscribeOperation.getChannels()) {
             SubscriptionItem subscriptionItem = SubscriptionItem.builder()
-                .name(channel)
-                .withPresence(subscribeOperation.isPresenceEnabled())
-                .type(SubscriptionType.CHANNEL)
-                .build();
+                    .name(channel)
+                    .withPresence(subscribeOperation.isPresenceEnabled())
+                    .type(SubscriptionType.CHANNEL)
+                    .build();
             subscribedChannels.put(channel, subscriptionItem);
         }
 
@@ -118,24 +123,24 @@ public class SubscriptionManager {
 
     public final synchronized void adaptUnsubscribeBuilder(final UnsubscribeOperation unsubscribeOperation) {
 
-        for (String channel: unsubscribeOperation.getChannels()) {
+        for (String channel : unsubscribeOperation.getChannels()) {
             this.subscribedChannels.remove(channel);
             this.stateStorage.remove(channel);
         }
 
-        for (String channelGroup: unsubscribeOperation.getChannelGroups()) {
+        for (String channelGroup : unsubscribeOperation.getChannelGroups()) {
             this.subscribedChannelGroups.remove(channelGroup);
             this.stateStorage.remove(channelGroup);
         }
 
         new Leave(pubnub)
-            .channels(unsubscribeOperation.getChannels()).channelGroups(unsubscribeOperation.getChannelGroups())
-            .async(new PNCallback<Boolean>() {
-                @Override
-                public void onResponse(Boolean result, PNStatus status) {
-                    announce(status);
-                }
-        });
+                .channels(unsubscribeOperation.getChannels()).channelGroups(unsubscribeOperation.getChannelGroups())
+                .async(new PNCallback<Boolean>() {
+                    @Override
+                    public void onResponse(Boolean result, PNStatus status) {
+                        announce(status);
+                    }
+                });
 
         reconnect();
     }
@@ -150,7 +155,7 @@ public class SubscriptionManager {
             public void run() {
                 performHeartbeatLoop();
             }
-        }, 0, pubnub.getConfiguration().getHeartbeatInterval() * 1000);
+        }, 0, pubnub.getConfiguration().getHeartbeatInterval() * HEART_BEAT_INTERVAL_MULTIPLIER);
 
     }
 
@@ -168,18 +173,18 @@ public class SubscriptionManager {
         List<String> combinedChannels = new ArrayList<>();
         List<String> combinedChannelGroups = new ArrayList<>();
 
-        for (SubscriptionItem subscriptionItem: subscribedChannels.values()) {
+        for (SubscriptionItem subscriptionItem : subscribedChannels.values()) {
             combinedChannels.add(subscriptionItem.getName());
 
-            if  (subscriptionItem.isWithPresence()) {
+            if (subscriptionItem.isWithPresence()) {
                 combinedChannels.add(subscriptionItem.getName().concat("-pnpres"));
             }
         }
 
-        for (SubscriptionItem subscriptionItem: subscribedChannelGroups.values()) {
+        for (SubscriptionItem subscriptionItem : subscribedChannelGroups.values()) {
             combinedChannelGroups.add(subscriptionItem.getName());
 
-            if  (subscriptionItem.isWithPresence()) {
+            if (subscriptionItem.isWithPresence()) {
                 combinedChannelGroups.add(subscriptionItem.getName().concat("-pnpres"));
             }
         }
@@ -189,7 +194,7 @@ public class SubscriptionManager {
             return;
         }
 
-        subscribeCall =  new Subscribe(pubnub)
+        subscribeCall = new Subscribe(pubnub)
                 .channels(combinedChannels).channelGroups(combinedChannelGroups)
                 .timetoken(timetoken).region(region)
                 .filterExpression(pubnub.getConfiguration().getFilterExpression())
@@ -232,14 +237,14 @@ public class SubscriptionManager {
         List<String> presenceChannels = new ArrayList<>();
         List<String> presenceChannelGroups = new ArrayList<>();
 
-        for (SubscriptionItem subscriptionItem: subscribedChannels.values()) {
-            if  (subscriptionItem.isWithPresence()) {
+        for (SubscriptionItem subscriptionItem : subscribedChannels.values()) {
+            if (subscriptionItem.isWithPresence()) {
                 presenceChannels.add(subscriptionItem.getName());
             }
         }
 
-        for (SubscriptionItem subscriptionItem: subscribedChannelGroups.values()) {
-            if  (subscriptionItem.isWithPresence()) {
+        for (SubscriptionItem subscriptionItem : subscribedChannelGroups.values()) {
+            if (subscriptionItem.isWithPresence()) {
                 presenceChannelGroups.add(subscriptionItem.getName());
             }
         }
@@ -258,8 +263,7 @@ public class SubscriptionManager {
                                 .getConfiguration().getHeartbeatNotificationOptions();
 
                         if (status.isError()) {
-                            if (heartbeatVerbosity == PNHeartbeatNotificationOptions.All ||
-                                    heartbeatVerbosity == PNHeartbeatNotificationOptions.Failures) {
+                            if (heartbeatVerbosity == PNHeartbeatNotificationOptions.All || heartbeatVerbosity == PNHeartbeatNotificationOptions.Failures) {
                                 announce(status);
                             }
 
@@ -313,11 +317,11 @@ public class SubscriptionManager {
                 }
 
                 PNMessageResult pnMessageResult = PNMessageResult.builder()
-                    .message(extractedMessage)
-                    .actualChannel((subscriptionMatch != null) ? channel : null)
-                    .subscribedChannel(subscriptionMatch != null ? subscriptionMatch : channel)
-                    .timetoken(timetoken)
-                    .build();
+                        .message(extractedMessage)
+                        .actualChannel((subscriptionMatch != null) ? channel : null)
+                        .subscribedChannel(subscriptionMatch != null ? subscriptionMatch : channel)
+                        .timetoken(timetoken)
+                        .build();
 
 
                 announce(pnMessageResult);
@@ -346,22 +350,23 @@ public class SubscriptionManager {
 
     /**
      * announce a PNStatus to listeners.
+     *
      * @param status PNStatus which will be broadcast to listeners.
      */
     private void announce(final PNStatus status) {
-        for (SubscribeCallback subscribeCallback: listeners) {
+        for (SubscribeCallback subscribeCallback : listeners) {
             subscribeCallback.status(this.pubnub, status);
         }
     }
 
     private void announce(final PNMessageResult message) {
-        for (SubscribeCallback subscribeCallback: listeners) {
+        for (SubscribeCallback subscribeCallback : listeners) {
             subscribeCallback.message(this.pubnub, message);
         }
     }
 
     private void announce(final PNPresenceEventResult presence) {
-        for (SubscribeCallback subscribeCallback: listeners) {
+        for (SubscribeCallback subscribeCallback : listeners) {
             subscribeCallback.presence(this.pubnub, presence);
         }
     }

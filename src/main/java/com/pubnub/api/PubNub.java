@@ -7,13 +7,20 @@ import com.pubnub.api.endpoints.History;
 import com.pubnub.api.endpoints.Time;
 import com.pubnub.api.endpoints.access.Audit;
 import com.pubnub.api.endpoints.access.Grant;
-import com.pubnub.api.endpoints.channel_groups.*;
+import com.pubnub.api.endpoints.channel_groups.AddChannelChannelGroup;
+import com.pubnub.api.endpoints.channel_groups.AllChannelsChannelGroup;
+import com.pubnub.api.endpoints.channel_groups.DeleteChannelGroup;
+import com.pubnub.api.endpoints.channel_groups.RemoveChannelChannelGroup;
+import com.pubnub.api.endpoints.channel_groups.ListAllChannelGroup;
 import com.pubnub.api.endpoints.presence.GetState;
 import com.pubnub.api.endpoints.presence.HereNow;
 import com.pubnub.api.endpoints.presence.SetState;
 import com.pubnub.api.endpoints.presence.WhereNow;
 import com.pubnub.api.endpoints.pubsub.Publish;
-import com.pubnub.api.endpoints.push.*;
+import com.pubnub.api.endpoints.push.AddChannelsToPush;
+import com.pubnub.api.endpoints.push.RemoveChannelsFromPush;
+import com.pubnub.api.endpoints.push.RemoveAllPushChannelsForDevice;
+import com.pubnub.api.endpoints.push.ListPushProvisions;
 import com.pubnub.api.managers.BasePathManager;
 import com.pubnub.api.managers.PublishSequenceManager;
 import com.pubnub.api.managers.SubscriptionManager;
@@ -43,11 +50,14 @@ public class PubNub {
 
     private String sdkVersion;
 
+    private static final int TIMESTAMP_DIVIDER = 1000;
+    private static final int MAX_SEQUENCE = 65535;
+
     public PubNub(final PNConfiguration initialConfig) {
         this.configuration = initialConfig;
         this.subscriptionManager = new SubscriptionManager(this);
         this.basePathManager = new BasePathManager(initialConfig);
-        this.publishSequenceManager = new PublishSequenceManager(65535);
+        this.publishSequenceManager = new PublishSequenceManager(MAX_SEQUENCE);
 
         sdkVersion = fetchSDKVersion();
     }
@@ -70,7 +80,9 @@ public class PubNub {
         return new SubscribeBuilder(this.subscriptionManager);
     }
 
-    public final UnsubscribeBuilder unsubscribe() { return new UnsubscribeBuilder(this.subscriptionManager); }
+    public final UnsubscribeBuilder unsubscribe() {
+        return new UnsubscribeBuilder(this.subscriptionManager);
+    }
 
     // start push
 
@@ -95,6 +107,7 @@ public class PubNub {
     public final WhereNow whereNow() {
         return new WhereNow(this);
     }
+
     public final HereNow hereNow() {
         return new HereNow(this);
     }
@@ -103,12 +116,15 @@ public class PubNub {
         return new Time(this);
     }
 
-    public final History history() { return new History(this); }
+    public final History history() {
+        return new History(this);
+    }
 
 
     public final Audit audit() {
         return new Audit(this);
     }
+
     public final Grant grant() {
         return new Grant(this);
     }
@@ -116,6 +132,7 @@ public class PubNub {
     public final GetState getPresenceState() {
         return new GetState(this);
     }
+
     public final SetState setPresenceState() {
         return new SetState(this, subscriptionManager);
     }
@@ -148,6 +165,7 @@ public class PubNub {
 
     /**
      * Perform Cryptographic decryption of an input string using cipher key provided by PNConfiguration
+     *
      * @param inputString String to be encrypted
      * @return String containing the encryption of inputString using cipherKey
      */
@@ -161,10 +179,11 @@ public class PubNub {
 
     /**
      * Perform Cryptographic decryption of an input string using the cipher key
+     *
      * @param inputString String to be encrypted
-     * @param cipherKey cipher key to be used for encryption
-     * @throws PubNubException throws exception in case of failed encryption
+     * @param cipherKey   cipher key to be used for encryption
      * @return String containing the encryption of inputString using cipherKey
+     * @throws PubNubException throws exception in case of failed encryption
      */
     public final String decrypt(final String inputString, final String cipherKey) throws PubNubException {
         if (inputString == null) {
@@ -176,6 +195,7 @@ public class PubNub {
 
     /**
      * Perform Cryptographic encryption of an input string and the cipher key provided by PNConfiguration
+     *
      * @param inputString String to be encrypted
      * @return String containing the encryption of inputString using cipherKey
      */
@@ -189,10 +209,11 @@ public class PubNub {
 
     /**
      * Perform Cryptographic encryption of an input string and the cipher key.
+     *
      * @param inputString String to be encrypted
-     * @param cipherKey cipher key to be used for encryption
-     * @throws PubNubException throws exception in case of failed encryption
+     * @param cipherKey   cipher key to be used for encryption
      * @return String containing the encryption of inputString using cipherKey
+     * @throws PubNubException throws exception in case of failed encryption
      */
     public final String encrypt(final String inputString, final String cipherKey) throws PubNubException {
         if (inputString == null) {
@@ -203,7 +224,7 @@ public class PubNub {
     }
 
     public int getTimestamp() {
-        return (int) ((new Date().getTime()) / 1000);
+        return (int) ((new Date().getTime()) / TIMESTAMP_DIVIDER);
     }
 
     /**
@@ -229,6 +250,7 @@ public class PubNub {
 
     /**
      * fetch the SDK version from the resource files.
+     *
      * @return Stringified representation of the SDK version.
      */
     private String fetchSDKVersion() {

@@ -2,8 +2,12 @@ package com.pubnub.api.endpoints.pubsub;
 
 import com.pubnub.api.models.server.SubscribeEnvelope;
 import retrofit2.Call;
-import retrofit2.http.*;
-
+import retrofit2.http.GET;
+import retrofit2.http.POST;
+import retrofit2.http.Path;
+import retrofit2.http.QueryMap;
+import retrofit2.http.Headers;
+import retrofit2.http.Body;
 import java.util.List;
 import java.util.Map;
 

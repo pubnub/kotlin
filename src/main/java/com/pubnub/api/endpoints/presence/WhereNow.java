@@ -18,7 +18,8 @@ import java.util.Map;
 @Accessors(chain = true, fluent = true)
 public class WhereNow extends Endpoint<Envelope<WhereNowPayload>, PNWhereNowResult> {
 
-    @Setter private String uuid;
+    @Setter
+    private String uuid;
 
     public WhereNow(PubNub pubnub) {
         super(pubnub);
@@ -26,7 +27,7 @@ public class WhereNow extends Endpoint<Envelope<WhereNowPayload>, PNWhereNowResu
 
     @Override
     protected void validateParams() throws PubNubException {
-        if (pubnub.getConfiguration().getSubscribeKey()==null || pubnub.getConfiguration().getSubscribeKey().isEmpty()) {
+        if (this.getPubnub().getConfiguration().getSubscribeKey() == null || this.getPubnub().getConfiguration().getSubscribeKey().isEmpty()) {
             throw PubNubException.builder().pubnubError(PubNubError.PNERROBJ_SUBSCRIBE_KEY_MISSING).build();
         }
     }
@@ -34,8 +35,8 @@ public class WhereNow extends Endpoint<Envelope<WhereNowPayload>, PNWhereNowResu
     @Override
     protected Call<Envelope<WhereNowPayload>> doWork(Map<String, String> params) {
         PresenceService service = this.createRetrofit().create(PresenceService.class);
-        return service.whereNow(pubnub.getConfiguration().getSubscribeKey(),
-                this.uuid != null ? this.uuid : pubnub.getConfiguration().getUuid(), params);
+        return service.whereNow(this.getPubnub().getConfiguration().getSubscribeKey(),
+                this.uuid != null ? this.uuid : this.getPubnub().getConfiguration().getUuid(), params);
     }
 
     @Override
@@ -45,18 +46,18 @@ public class WhereNow extends Endpoint<Envelope<WhereNowPayload>, PNWhereNowResu
         }
 
         PNWhereNowResult pnPresenceWhereNowResult = PNWhereNowResult.builder()
-            .channels(input.body().getPayload().getChannels())
-            .build();
+                .channels(input.body().getPayload().getChannels())
+                .build();
 
         return pnPresenceWhereNowResult;
     }
 
     protected int getConnectTimeout() {
-        return pubnub.getConfiguration().getConnectTimeout();
+        return this.getPubnub().getConfiguration().getConnectTimeout();
     }
 
     protected int getRequestTimeout() {
-        return pubnub.getConfiguration().getNonSubscribeRequestTimeout();
+        return this.getPubnub().getConfiguration().getNonSubscribeRequestTimeout();
     }
 
     @Override

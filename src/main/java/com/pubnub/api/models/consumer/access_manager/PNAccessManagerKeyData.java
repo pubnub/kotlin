@@ -9,12 +9,12 @@ import lombok.Getter;
 public class PNAccessManagerKeyData {
 
     @JsonProperty("r")
-    boolean readEnabled;
+    private boolean readEnabled;
 
     @JsonProperty("w")
-    boolean writeEnabled;
+    private boolean writeEnabled;
 
     @JsonProperty("m")
-    boolean manageEnabled;
+    private boolean manageEnabled;
 
 }
