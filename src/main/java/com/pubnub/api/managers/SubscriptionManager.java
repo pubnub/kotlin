@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pubnub.api.Crypto;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
-import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.builder.dto.StateOperation;
 import com.pubnub.api.builder.dto.SubscribeOperation;
 import com.pubnub.api.builder.dto.UnsubscribeOperation;
@@ -110,7 +109,7 @@ public class SubscriptionManager {
             .channels(unsubscribeOperation.getChannels()).channelGroups(unsubscribeOperation.getChannelGroups())
             .async(new PNCallback<Boolean>() {
                 @Override
-                public void onResponse(Boolean result, PNStatus status) {
+                public void onResponse(final Boolean result, final PNStatus status) {
                     announce(status);
                 }
         });
@@ -209,8 +208,8 @@ public class SubscriptionManager {
                                 .getConfiguration().getHeartbeatNotificationOptions();
 
                         if (status.isError()) {
-                            if (heartbeatVerbosity == PNHeartbeatNotificationOptions.All ||
-                                    heartbeatVerbosity == PNHeartbeatNotificationOptions.Failures) {
+                            if (heartbeatVerbosity == PNHeartbeatNotificationOptions.All
+                                    || heartbeatVerbosity == PNHeartbeatNotificationOptions.Failures) {
                                 announce(status);
                             }
 
@@ -249,19 +248,10 @@ public class SubscriptionManager {
 
                 announce(pnPresenceEventResult);
             } else {
-                Object extractedMessage;
+                Object extractedMessage = processMessage(message.getPayload());
 
-                try {
-                    extractedMessage = processMessage(message.getPayload());
-                } catch (PubNubException e) {
-                    PNStatus pnStatus = PNStatus.builder().error(true)
-                            .errorData(new PNErrorData(e.getMessage(), e))
-                            .operation(PNOperationType.PNSubscribeOperation)
-                            .category(PNStatusCategory.PNUnknownCategory)
-                            .build();
-
-                    announce(pnStatus);
-                    return;
+                if (extractedMessage == null) {
+                    log.debug("unable to parse payload on #processIncomingMessages");
                 }
 
                 PNMessageResult pnMessageResult = PNMessageResult.builder()
@@ -277,7 +267,7 @@ public class SubscriptionManager {
         }
     }
 
-    private Object processMessage(final Object input) throws PubNubException {
+    private Object processMessage(final Object input) {
         if (pubnub.getConfiguration().getCipherKey() == null) {
             return input;
         }
@@ -289,13 +279,27 @@ public class SubscriptionManager {
         try {
             outputText = crypto.decrypt(input.toString());
         } catch (PubNubException e) {
-            throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_CRYPTO_ERROR).errormsg(e.getMessage()).build();
+            PNStatus pnStatus = PNStatus.builder().error(true)
+                    .errorData(new PNErrorData(e.getMessage(), e))
+                    .operation(PNOperationType.PNSubscribeOperation)
+                    .category(PNStatusCategory.PNDecryptionErrorCategory)
+                    .build();
+
+            announce(pnStatus);
+            return null;
         }
 
         try {
             outputObject = mapper.readValue(outputText, JsonNode.class);
         } catch (IOException e) {
-            throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_PARSING_ERROR).errormsg(e.getMessage()).build();
+            PNStatus pnStatus = PNStatus.builder().error(true)
+                    .errorData(new PNErrorData(e.getMessage(), e))
+                    .operation(PNOperationType.PNSubscribeOperation)
+                    .category(PNStatusCategory.PNMalformedResponseCategory)
+                    .build();
+
+            announce(pnStatus);
+            return null;
         }
 
         return outputObject;
