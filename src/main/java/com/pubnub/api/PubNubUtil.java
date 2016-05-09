@@ -8,6 +8,7 @@ import javax.crypto.spec.SecretKeySpec;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
@@ -108,7 +109,7 @@ public final class PubNubUtil {
     public static String signSHA256(final String key, final String data) throws PubNubException {
         Mac sha256HMAC;
         byte[] hmacData;
-        SecretKeySpec secretKey = new SecretKeySpec(key.getBytes(), "HmacSHA256");
+        SecretKeySpec secretKey = new SecretKeySpec(key.getBytes(Charset.forName("UTF-8")), "HmacSHA256");
 
         try {
             sha256HMAC = Mac.getInstance("HmacSHA256");
@@ -128,7 +129,7 @@ public final class PubNubUtil {
             throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_CRYPTO_ERROR).errormsg(e.getMessage()).build();
         }
 
-        return new String(Base64.encode(hmacData, 0)).replace('+', '-').replace('/', '_');
+        return new String(Base64.encode(hmacData, 0), Charset.forName("UTF-8")).replace('+', '-').replace('/', '_');
     }
 
 }

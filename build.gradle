@@ -57,10 +57,6 @@ checkstyle {
     toolVersion = '6.17'
 }
 
-findbugs {
-    ignoreFailures = true
-}
-
 tasks.withType(Checkstyle) {
 
     exclude '**/vendor/**', "**/PubNubError.java", "**/*Test*"
@@ -72,6 +68,9 @@ tasks.withType(Checkstyle) {
 }
 
 tasks.withType(FindBugs) {
+
+    exclude '**/vendor/**', "**/PubNubError.java", "**/*Test*"
+
     reports {
         xml.enabled false
         html.enabled true

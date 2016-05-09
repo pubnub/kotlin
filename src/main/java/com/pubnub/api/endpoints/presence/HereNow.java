@@ -127,11 +127,11 @@ public class HereNow extends Endpoint<Envelope<Object>, PNHereNowResult> {
 
         Map<String, Object> channelsParam = (HashMap<String, Object>) parsedInput.get("channels");
 
-        for (String channelName : channelsParam.keySet()) {
-            Map<String, Object> channel = (Map<String, Object>) channelsParam.get(channelName);
+        for (Map.Entry<String, Object> entry : channelsParam.entrySet()) {
+            Map<String, Object> channel = (Map<String, Object>) channelsParam.get(entry.getKey());
 
             PNHereNowChannelData.PNHereNowChannelDataBuilder hereNowChannelData = PNHereNowChannelData.builder()
-                    .channelName(channelName)
+                    .channelName(entry.getKey())
                     .occupancy((Integer) channel.get("occupancy"));
 
             if (includeUUIDs) {
@@ -140,8 +140,24 @@ public class HereNow extends Endpoint<Envelope<Object>, PNHereNowResult> {
                 hereNowChannelData.occupants(null);
             }
 
-            hereNowData.getChannels().put(channelName, hereNowChannelData.build());
+            hereNowData.getChannels().put(entry.getKey(), hereNowChannelData.build());
         }
+
+//        for (String channelName : channelsParam.keySet()) {
+//            Map<String, Object> channel = (Map<String, Object>) channelsParam.get(channelName);
+//
+//            PNHereNowChannelData.PNHereNowChannelDataBuilder hereNowChannelData = PNHereNowChannelData.builder()
+//                    .channelName(channelName)
+//                    .occupancy((Integer) channel.get("occupancy"));
+//
+//            if (includeUUIDs) {
+//                hereNowChannelData.occupants(prepareOccupantData(channel.get("uuids")));
+//            } else {
+//                hereNowChannelData.occupants(null);
+//            }
+//
+//            hereNowData.getChannels().put(channelName, hereNowChannelData.build());
+//        }
 
         return hereNowData;
     }

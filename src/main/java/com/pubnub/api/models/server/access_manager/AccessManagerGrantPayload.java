@@ -13,11 +13,15 @@ import java.util.Map;
 @Getter
 public class AccessManagerGrantPayload {
 
+    @JsonProperty("level")
     private String level;
+
     private int ttl;
+
     @JsonProperty("subscribe_key")
     private String subscribeKey;
 
+    @JsonProperty("channels")
     private Map<String, PNAccessManagerKeysData> channels;
 
     @JsonProperty("channel-groups")
@@ -26,6 +30,7 @@ public class AccessManagerGrantPayload {
     @JsonProperty("auths")
     private Map<String, PNAccessManagerKeyData> authKeys;
 
+    @JsonProperty("channel")
     private String channel;
 
 }

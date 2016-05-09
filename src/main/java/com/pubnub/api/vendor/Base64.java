@@ -17,6 +17,7 @@
 package com.pubnub.api.vendor;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 
 /**
  * Utilities for encoding and decoding the Base64 representation of
@@ -115,7 +116,7 @@ public class Base64 {
      * incorrect padding
      */
     public static byte[] decode(String str, int flags) {
-        return decode(str.getBytes(), flags);
+        return decode(str.getBytes(Charset.forName("UTF-8")), flags);
     }
 
     /**
@@ -522,6 +523,7 @@ public class Base64 {
                 case 0: break;
                 case 1: output_len += 2; break;
                 case 2: output_len += 3; break;
+                default: break;
             }
         }
 

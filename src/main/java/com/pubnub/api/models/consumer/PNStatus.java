@@ -20,9 +20,7 @@ public class PNStatus {
     private int statusCode;
     private PNOperationType operation;
 
-    //CHECKSTYLE:OFF
     private boolean tlsEnabled;
-    //CHECKSTYLE:ON
 
     private String uuid;
     private String authKey;

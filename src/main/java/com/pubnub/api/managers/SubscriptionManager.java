@@ -180,7 +180,6 @@ public class SubscriptionManager {
                             return;
                         }
 
-
                         if (!subscriptionStatusAnnounced) {
                             PNStatus pnStatus = PNStatus.builder()
                                     .error(false)

@@ -137,11 +137,12 @@ public class Grant extends Endpoint<Envelope<AccessManagerGrantPayload>, PNAcces
                     HashMap<String, PNAccessManagerKeysData> channelGroupKeySet = mapper.readValue(data.getChannelGroups().toString(),
                             new TypeReference<HashMap<String, PNAccessManagerKeysData>>() {
                             });
-
-                    for (String fetchedChannelGroup : channelGroupKeySet.keySet()) {
-                        constructedGroups.put(fetchedChannelGroup, channelGroupKeySet.get(fetchedChannelGroup).getAuthKeys());
+//                    for (String fetchedChannelGroup : channelGroupKeySet.keySet()) {
+//                        constructedGroups.put(fetchedChannelGroup, channelGroupKeySet.get(fetchedChannelGroup).getAuthKeys());
+//                    }
+                    for (Map.Entry<String, PNAccessManagerKeysData> entry : channelGroupKeySet.entrySet()) {
+                        constructedGroups.put(entry.getKey(), entry.getValue().getAuthKeys());
                     }
-
                 } catch (IOException e) {
                     throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_PARSING_ERROR).errormsg(e.getMessage()).build();
                 }

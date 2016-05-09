@@ -49,7 +49,7 @@ public class SubscriptionManagerTest extends TestHarness {
 
     @Test
     public void testSubscribeBuilder() {
-        final AtomicBoolean gotStatus = new AtomicBoolean();
+        final AtomicInteger gotStatus = new AtomicInteger();
         final AtomicBoolean gotMessage = new AtomicBoolean();
         stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
                 .willReturn(aResponse().withBody("{\"t\":{\"t\":\"14607577960932487\",\"r\":1},\"m\":[{\"a\":\"4\",\"f\":0,\"i\":\"Client-g5d4g\",\"p\":{\"t\":\"14607577960925503\",\"r\":1},\"k\":\"sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f\",\"c\":\"coolChannel\",\"d\":{\"text\":\"Message\"},\"b\":\"coolChan-bnel\"}]}")));
@@ -58,8 +58,9 @@ public class SubscriptionManagerTest extends TestHarness {
             @Override
             public void status(PubNub pubnub, PNStatus status) {
 
-                assertEquals(PNStatusCategory.PNConnectedCategory, status.getCategory());
-                gotStatus.set(true);
+                if (status.getCategory() == PNStatusCategory.PNConnectedCategory) {
+                    gotStatus.addAndGet(1);
+                }
 
             }
 
@@ -80,7 +81,7 @@ public class SubscriptionManagerTest extends TestHarness {
         pubnub.subscribe().channels(Arrays.asList("ch1", "ch2")).execute();
 
         Awaitility.await().atMost(2, TimeUnit.SECONDS).untilAtomic(gotMessage, org.hamcrest.core.IsEqual.equalTo(true));
-        Awaitility.await().atMost(2, TimeUnit.SECONDS).untilAtomic(gotStatus, org.hamcrest.core.IsEqual.equalTo(true));
+        Awaitility.await().atMost(2, TimeUnit.SECONDS).untilAtomic(gotStatus, org.hamcrest.core.IsEqual.equalTo(1));
 
     }
 

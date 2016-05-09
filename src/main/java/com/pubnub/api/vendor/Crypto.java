@@ -12,6 +12,7 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
@@ -80,7 +81,7 @@ public class Crypto {
             Cipher cipher = null;
             cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
             cipher.init(Cipher.ENCRYPT_MODE, newKey, ivSpec);
-            return new String(Base64.encode(cipher.doFinal(input.getBytes("UTF-8")), 0));
+            return new String(Base64.encode(cipher.doFinal(input.getBytes("UTF-8")), 0), Charset.forName("UTF-8"));
         } catch (NoSuchAlgorithmException e) {
             throw PubNubException.builder().errormsg(e.toString()).build();
         } catch (NoSuchPaddingException e) {

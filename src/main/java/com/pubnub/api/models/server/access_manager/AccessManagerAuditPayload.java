@@ -11,10 +11,13 @@ import java.util.Map;
 @Getter
 public class AccessManagerAuditPayload {
 
+    @JsonProperty("level")
     private String level;
+
     @JsonProperty("subscribe_key")
     private String subscribeKey;
 
+    @JsonProperty("channel")
     private String channel;
 
     @JsonProperty("channel-group")

@@ -29,6 +29,8 @@ public class SubscribeMessageWorker implements Runnable {
     private LinkedBlockingQueue<SubscribeMessage> queue;
     private ObjectMapper mapper;
 
+    private boolean isRunning;
+
     public SubscribeMessageWorker(PubNub pubnubInstance, ListenerManager listenerManagerInstance, LinkedBlockingQueue<SubscribeMessage> queueInstance) {
         this.pubnub = pubnubInstance;
         this.listenerManager = listenerManagerInstance;
@@ -43,12 +45,15 @@ public class SubscribeMessageWorker implements Runnable {
 
 
     private void takeMessage() {
-        try {
-            SubscribeMessage payload = this.queue.take();
-            this.processIncomingPayload(payload);
-            takeMessage();
-        } catch (InterruptedException e) {
-            log.warn("take message interrupted", e);
+        this.isRunning = true;
+
+        while (this.isRunning) {
+            try {
+                this.processIncomingPayload(this.queue.take());
+            } catch (InterruptedException e) {
+                this.isRunning = false;
+                log.warn("take message interrupted", e);
+            }
         }
     }
 
