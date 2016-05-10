@@ -38,13 +38,13 @@ public class Audit extends Endpoint<Envelope<AccessManagerAuditPayload>, PNAcces
         if (authKeys.size() == 0) {
             throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_AUTH_KEYS_MISSING).build();
         }
-        if (pubnub.getConfiguration().getSecretKey() == null || pubnub.getConfiguration().getSecretKey().isEmpty()) {
+        if (this.getPubnub().getConfiguration().getSecretKey() == null || this.getPubnub().getConfiguration().getSecretKey().isEmpty()) {
             throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_SECRET_KEY_MISSING).build();
         }
-        if (pubnub.getConfiguration().getSubscribeKey() == null || pubnub.getConfiguration().getSubscribeKey().isEmpty()) {
+        if (this.getPubnub().getConfiguration().getSubscribeKey() == null || this.getPubnub().getConfiguration().getSubscribeKey().isEmpty()) {
             throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_SUBSCRIBE_KEY_MISSING).build();
         }
-        if (pubnub.getConfiguration().getPublishKey() == null || pubnub.getConfiguration().getPublishKey().isEmpty()) {
+        if (this.getPubnub().getConfiguration().getPublishKey() == null || this.getPubnub().getConfiguration().getPublishKey().isEmpty()) {
             throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_PUBLISH_KEY_MISSING).build();
         }
         if (channel == null && channelGroup == null) {
@@ -56,10 +56,10 @@ public class Audit extends Endpoint<Envelope<AccessManagerAuditPayload>, PNAcces
     protected Call<Envelope<AccessManagerAuditPayload>> doWork(Map<String, String> queryParams) throws PubNubException {
         String signature;
 
-        int timestamp = pubnub.getTimestamp();
+        int timestamp = this.getPubnub().getTimestamp();
 
-        String signInput = this.pubnub.getConfiguration().getSubscribeKey() + "\n"
-                + this.pubnub.getConfiguration().getPublishKey() + "\n"
+        String signInput = this.getPubnub().getConfiguration().getSubscribeKey() + "\n"
+                + this.getPubnub().getConfiguration().getPublishKey() + "\n"
                 + "audit" + "\n";
 
         queryParams.put("timestamp", String.valueOf(timestamp));
@@ -78,12 +78,12 @@ public class Audit extends Endpoint<Envelope<AccessManagerAuditPayload>, PNAcces
 
         signInput += PubNubUtil.preparePamArguments(queryParams);
 
-        signature = PubNubUtil.signSHA256(this.pubnub.getConfiguration().getSecretKey(), signInput);
+        signature = PubNubUtil.signSHA256(this.getPubnub().getConfiguration().getSecretKey(), signInput);
 
         queryParams.put("signature", signature);
 
         AccessManagerService service = this.createRetrofit().create(AccessManagerService.class);
-        return service.audit(pubnub.getConfiguration().getSubscribeKey(), queryParams);
+        return service.audit(this.getPubnub().getConfiguration().getSubscribeKey(), queryParams);
     }
 
     @Override
@@ -107,11 +107,11 @@ public class Audit extends Endpoint<Envelope<AccessManagerAuditPayload>, PNAcces
     }
 
     protected int getConnectTimeout() {
-        return pubnub.getConfiguration().getConnectTimeout();
+        return this.getPubnub().getConfiguration().getConnectTimeout();
     }
 
     protected int getRequestTimeout() {
-        return pubnub.getConfiguration().getNonSubscribeRequestTimeout();
+        return this.getPubnub().getConfiguration().getNonSubscribeRequestTimeout();
     }
 
     @Override

@@ -20,9 +20,12 @@ import java.util.Map;
 @Accessors(chain = true, fluent = true)
 public class AddChannelsToPush extends Endpoint<List<Object>, PNPushAddChannelResult> {
 
-    @Setter private PNPushType pushType;
-    @Setter private List<String> channels;
-    @Setter String deviceId;
+    @Setter
+    private PNPushType pushType;
+    @Setter
+    private List<String> channels;
+    @Setter
+    private String deviceId;
 
     public AddChannelsToPush(PubNub pubnub) {
         super(pubnub);
@@ -31,7 +34,7 @@ public class AddChannelsToPush extends Endpoint<List<Object>, PNPushAddChannelRe
 
     @Override
     protected void validateParams() throws PubNubException {
-        if (pubnub.getConfiguration().getSubscribeKey()==null || pubnub.getConfiguration().getSubscribeKey().isEmpty()) {
+        if (this.getPubnub().getConfiguration().getSubscribeKey() == null || this.getPubnub().getConfiguration().getSubscribeKey().isEmpty()) {
             throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_SUBSCRIBE_KEY_MISSING).build();
         }
         if (pushType == null) {
@@ -54,7 +57,7 @@ public class AddChannelsToPush extends Endpoint<List<Object>, PNPushAddChannelRe
         }
 
         PushService service = this.createRetrofit().create(PushService.class);
-        return service.modifyChannelsForDevice(pubnub.getConfiguration().getSubscribeKey(), deviceId, baseParams);
+        return service.modifyChannelsForDevice(this.getPubnub().getConfiguration().getSubscribeKey(), deviceId, baseParams);
 
     }
 
@@ -68,11 +71,11 @@ public class AddChannelsToPush extends Endpoint<List<Object>, PNPushAddChannelRe
     }
 
     protected int getConnectTimeout() {
-        return pubnub.getConfiguration().getConnectTimeout();
+        return this.getPubnub().getConfiguration().getConnectTimeout();
     }
 
     protected int getRequestTimeout() {
-        return pubnub.getConfiguration().getNonSubscribeRequestTimeout();
+        return this.getPubnub().getConfiguration().getNonSubscribeRequestTimeout();
     }
 
     @Override

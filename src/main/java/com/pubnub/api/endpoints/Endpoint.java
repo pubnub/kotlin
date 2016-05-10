@@ -10,6 +10,8 @@ import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.enums.PNStatusCategory;
 import com.pubnub.api.models.consumer.PNErrorData;
 import com.pubnub.api.models.consumer.PNStatus;
+import lombok.AccessLevel;
+import lombok.Getter;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
@@ -27,10 +29,14 @@ import java.util.concurrent.TimeUnit;
 
 public abstract class Endpoint<Input, Output> {
 
-    protected PubNub pubnub;
+    @Getter(AccessLevel.PROTECTED)
+    private PubNub pubnub;
+    private static final int SERVER_RESPONSE_SUCCESS = 200;
+    private static final int SERVER_RESPONSE_FORBIDDEN = 403;
+    private static final int SERVER_RESPONSE_BAD_REQUEST = 400;
 
-    public Endpoint(PubNub pubnub) {
-        this.pubnub = pubnub;
+    public Endpoint(final PubNub pubnubInstance) {
+        this.pubnub = pubnubInstance;
     }
 
 
@@ -51,7 +57,7 @@ public abstract class Endpoint<Input, Output> {
                     .build();
         }
 
-        if (!serverResponse.isSuccessful() || serverResponse.code() != 200) {
+        if (!serverResponse.isSuccessful() || serverResponse.code() != SERVER_RESPONSE_SUCCESS) {
             String responseBodyText;
 
             try {
@@ -96,7 +102,7 @@ public abstract class Endpoint<Input, Output> {
             public void onResponse(final Call<Input> call, final Response<Input> response) {
                 Output callbackResponse;
 
-                if (!response.isSuccessful() || response.code() != 200) {
+                if (!response.isSuccessful() || response.code() != SERVER_RESPONSE_SUCCESS) {
 
                     String responseBodyText;
 
@@ -113,11 +119,11 @@ public abstract class Endpoint<Input, Output> {
                             .statusCode(response.code())
                             .build();
 
-                    if (response.code() == 403) {
+                    if (response.code() == SERVER_RESPONSE_FORBIDDEN) {
                         pnStatusCategory = PNStatusCategory.PNAccessDeniedCategory;
                     }
 
-                    if (response.code() == 400) {
+                    if (response.code() == SERVER_RESPONSE_BAD_REQUEST) {
                         pnStatusCategory = PNStatusCategory.PNBadRequestCategory;
                     }
 
@@ -198,7 +204,7 @@ public abstract class Endpoint<Input, Output> {
 
         return pnStatus.build();
     }
-    
+
     protected final Retrofit createRetrofit() {
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.readTimeout(this.getRequestTimeout(), TimeUnit.SECONDS);
@@ -239,11 +245,14 @@ public abstract class Endpoint<Input, Output> {
     protected abstract void validateParams() throws PubNubException;
 
     protected abstract Call<Input> doWork(Map<String, String> baseParams) throws PubNubException;
+
     protected abstract Output createResponse(Response<Input> input) throws PubNubException;
 
     // add hooks for timeout
     protected abstract int getConnectTimeout();
+
     protected abstract int getRequestTimeout();
+
     protected abstract PNOperationType getOperationType();
 
     protected List<String> getAffectedChannels() {

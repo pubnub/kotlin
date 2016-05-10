@@ -2,14 +2,14 @@ package com.pubnub.api.managers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pubnub.api.Crypto;
+import com.pubnub.api.callbacks.PNCallback;
+import com.pubnub.api.callbacks.SubscribeCallback;
+import com.pubnub.api.vendor.Crypto;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.builder.dto.StateOperation;
 import com.pubnub.api.builder.dto.SubscribeOperation;
 import com.pubnub.api.builder.dto.UnsubscribeOperation;
-import com.pubnub.api.callbacks.PNCallback;
-import com.pubnub.api.callbacks.SubscribeCallback;
 import com.pubnub.api.endpoints.presence.Heartbeat;
 import com.pubnub.api.endpoints.presence.Leave;
 import com.pubnub.api.endpoints.pubsub.Subscribe;
@@ -28,12 +28,16 @@ import lombok.extern.slf4j.Slf4j;
 import retrofit2.Call;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 @Slf4j
 public class SubscriptionManager {
 
-
+    private static final int HEART_BEAT_INTERVAL_MULTIPLIER = 1000;
     private List<SubscribeCallback> listeners;
     private PubNub pubnub;
     private Call<SubscribeEnvelope> subscribeCall;
@@ -55,17 +59,14 @@ public class SubscriptionManager {
 
     private ObjectMapper mapper;
 
-
     private StateManager subscriptionState;
 
-    public SubscriptionManager(PubNub pubnub) {
 
+    public SubscriptionManager(PubNub pubnubInstance) {
         this.subscriptionState = new StateManager();
-        this.pubnub = pubnub;
+        this.pubnub = pubnubInstance;
         this.listeners = new ArrayList<>();
-
         this.mapper = new ObjectMapper();
-
     }
 
 
@@ -127,7 +128,7 @@ public class SubscriptionManager {
             public void run() {
                 performHeartbeatLoop();
             }
-        }, 0, pubnub.getConfiguration().getHeartbeatInterval() * 1000);
+        }, 0, pubnub.getConfiguration().getHeartbeatInterval() * HEART_BEAT_INTERVAL_MULTIPLIER);
 
     }
 
@@ -150,7 +151,7 @@ public class SubscriptionManager {
             return;
         }
 
-        subscribeCall =  new Subscribe(pubnub)
+        subscribeCall = new Subscribe(pubnub)
                 .channels(combinedChannels).channelGroups(combinedChannelGroups)
                 .timetoken(timetoken).region(region)
                 .filterExpression(pubnub.getConfiguration().getFilterExpression())
@@ -255,11 +256,11 @@ public class SubscriptionManager {
                 }
 
                 PNMessageResult pnMessageResult = PNMessageResult.builder()
-                    .message(extractedMessage)
-                    .actualChannel((subscriptionMatch != null) ? channel : null)
-                    .subscribedChannel(subscriptionMatch != null ? subscriptionMatch : channel)
-                    .timetoken(timetoken)
-                    .build();
+                        .message(extractedMessage)
+                        .actualChannel((subscriptionMatch != null) ? channel : null)
+                        .subscribedChannel(subscriptionMatch != null ? subscriptionMatch : channel)
+                        .timetoken(timetoken)
+                        .build();
 
 
                 announce(pnMessageResult);
@@ -307,22 +308,23 @@ public class SubscriptionManager {
 
     /**
      * announce a PNStatus to listeners.
+     *
      * @param status PNStatus which will be broadcast to listeners.
      */
     private void announce(final PNStatus status) {
-        for (SubscribeCallback subscribeCallback: listeners) {
+        for (SubscribeCallback subscribeCallback : listeners) {
             subscribeCallback.status(this.pubnub, status);
         }
     }
 
     private void announce(final PNMessageResult message) {
-        for (SubscribeCallback subscribeCallback: listeners) {
+        for (SubscribeCallback subscribeCallback : listeners) {
             subscribeCallback.message(this.pubnub, message);
         }
     }
 
     private void announce(final PNPresenceEventResult presence) {
-        for (SubscribeCallback subscribeCallback: listeners) {
+        for (SubscribeCallback subscribeCallback : listeners) {
             subscribeCallback.presence(this.pubnub, presence);
         }
     }

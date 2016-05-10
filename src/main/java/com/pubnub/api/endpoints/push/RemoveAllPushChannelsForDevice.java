@@ -18,8 +18,10 @@ import java.util.Map;
 @Accessors(chain = true, fluent = true)
 public class RemoveAllPushChannelsForDevice extends Endpoint<List<Object>, PNPushRemoveAllChannelsResult> {
 
-    @Setter private PNPushType pushType;
-    @Setter private String deviceId;
+    @Setter
+    private PNPushType pushType;
+    @Setter
+    private String deviceId;
 
     public RemoveAllPushChannelsForDevice(PubNub pubnub) {
         super(pubnub);
@@ -27,7 +29,7 @@ public class RemoveAllPushChannelsForDevice extends Endpoint<List<Object>, PNPus
 
     @Override
     protected void validateParams() throws PubNubException {
-        if (pubnub.getConfiguration().getSubscribeKey()==null || pubnub.getConfiguration().getSubscribeKey().isEmpty()) {
+        if (this.getPubnub().getConfiguration().getSubscribeKey() == null || this.getPubnub().getConfiguration().getSubscribeKey().isEmpty()) {
             throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_SUBSCRIBE_KEY_MISSING).build();
         }
         if (pushType == null) {
@@ -45,7 +47,7 @@ public class RemoveAllPushChannelsForDevice extends Endpoint<List<Object>, PNPus
 
         PushService service = this.createRetrofit().create(PushService.class);
 
-        return service.removeAllChannelsForDevice(pubnub.getConfiguration().getSubscribeKey(), deviceId, params);
+        return service.removeAllChannelsForDevice(this.getPubnub().getConfiguration().getSubscribeKey(), deviceId, params);
 
     }
 
@@ -59,11 +61,11 @@ public class RemoveAllPushChannelsForDevice extends Endpoint<List<Object>, PNPus
     }
 
     protected int getConnectTimeout() {
-        return pubnub.getConfiguration().getConnectTimeout();
+        return this.getPubnub().getConfiguration().getConnectTimeout();
     }
 
     protected int getRequestTimeout() {
-        return pubnub.getConfiguration().getNonSubscribeRequestTimeout();
+        return this.getPubnub().getConfiguration().getNonSubscribeRequestTimeout();
     }
 
     @Override

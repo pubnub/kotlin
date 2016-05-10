@@ -18,8 +18,10 @@ import java.util.Map;
 @Accessors(chain = true, fluent = true)
 public class ListPushProvisions extends Endpoint<List<String>, PNPushListProvisionsResult> {
 
-    @Setter private PNPushType pushType;
-    @Setter private String deviceId;
+    @Setter
+    private PNPushType pushType;
+    @Setter
+    private String deviceId;
 
     public ListPushProvisions(PubNub pubnub) {
         super(pubnub);
@@ -27,7 +29,7 @@ public class ListPushProvisions extends Endpoint<List<String>, PNPushListProvisi
 
     @Override
     protected void validateParams() throws PubNubException {
-        if (pubnub.getConfiguration().getSubscribeKey()==null || pubnub.getConfiguration().getSubscribeKey().isEmpty()) {
+        if (this.getPubnub().getConfiguration().getSubscribeKey() == null || this.getPubnub().getConfiguration().getSubscribeKey().isEmpty()) {
             throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_SUBSCRIBE_KEY_MISSING).build();
         }
         if (pushType == null) {
@@ -42,7 +44,7 @@ public class ListPushProvisions extends Endpoint<List<String>, PNPushListProvisi
     protected Call<List<String>> doWork(Map<String, String> params) throws PubNubException {
         params.put("type", pushType.name().toLowerCase());
         PushService service = this.createRetrofit().create(PushService.class);
-        return service.listChannelsForDevice(pubnub.getConfiguration().getSubscribeKey(), deviceId, params);
+        return service.listChannelsForDevice(this.getPubnub().getConfiguration().getSubscribeKey(), deviceId, params);
     }
 
     @Override
@@ -55,11 +57,11 @@ public class ListPushProvisions extends Endpoint<List<String>, PNPushListProvisi
     }
 
     protected int getConnectTimeout() {
-        return pubnub.getConfiguration().getConnectTimeout();
+        return this.getPubnub().getConfiguration().getConnectTimeout();
     }
 
     protected int getRequestTimeout() {
-        return pubnub.getConfiguration().getNonSubscribeRequestTimeout();
+        return this.getPubnub().getConfiguration().getNonSubscribeRequestTimeout();
     }
 
     @Override

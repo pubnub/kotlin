@@ -57,13 +57,13 @@ public class Grant extends Endpoint<Envelope<AccessManagerGrantPayload>, PNAcces
         if (authKeys.size() == 0) {
             throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_AUTH_KEYS_MISSING).build();
         }
-        if (pubnub.getConfiguration().getSecretKey() == null || pubnub.getConfiguration().getSecretKey().isEmpty()) {
+        if (this.getPubnub().getConfiguration().getSecretKey() == null || this.getPubnub().getConfiguration().getSecretKey().isEmpty()) {
             throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_SECRET_KEY_MISSING).build();
         }
-        if (pubnub.getConfiguration().getSubscribeKey() == null || pubnub.getConfiguration().getSubscribeKey().isEmpty()) {
+        if (this.getPubnub().getConfiguration().getSubscribeKey() == null || this.getPubnub().getConfiguration().getSubscribeKey().isEmpty()) {
             throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_SUBSCRIBE_KEY_MISSING).build();
         }
-        if (pubnub.getConfiguration().getPublishKey() == null || pubnub.getConfiguration().getPublishKey().isEmpty()) {
+        if (this.getPubnub().getConfiguration().getPublishKey() == null || this.getPubnub().getConfiguration().getPublishKey().isEmpty()) {
             throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_PUBLISH_KEY_MISSING).build();
         }
         if (channels.size() == 0 && channelGroups.size() == 0) {
@@ -75,11 +75,11 @@ public class Grant extends Endpoint<Envelope<AccessManagerGrantPayload>, PNAcces
     protected Call<Envelope<AccessManagerGrantPayload>> doWork(Map<String, String> queryParams) throws PubNubException {
         String signature;
 
-        String signInput = this.pubnub.getConfiguration().getSubscribeKey() + "\n"
-                + this.pubnub.getConfiguration().getPublishKey() + "\n"
+        String signInput = this.getPubnub().getConfiguration().getSubscribeKey() + "\n"
+                + this.getPubnub().getConfiguration().getPublishKey() + "\n"
                 + "grant" + "\n";
 
-        queryParams.put("timestamp", String.valueOf(pubnub.getTimestamp()));
+        queryParams.put("timestamp", String.valueOf(this.getPubnub().getTimestamp()));
 
         if (channels.size() > 0) {
             queryParams.put("channel", PubNubUtil.joinString(channels, ","));
@@ -103,12 +103,12 @@ public class Grant extends Endpoint<Envelope<AccessManagerGrantPayload>, PNAcces
 
         signInput += PubNubUtil.preparePamArguments(queryParams);
 
-        signature = PubNubUtil.signSHA256(this.pubnub.getConfiguration().getSecretKey(), signInput);
+        signature = PubNubUtil.signSHA256(this.getPubnub().getConfiguration().getSecretKey(), signInput);
 
         queryParams.put("signature", signature);
 
         AccessManagerService service = this.createRetrofit().create(AccessManagerService.class);
-        return service.grant(pubnub.getConfiguration().getSubscribeKey(), queryParams);
+        return service.grant(this.getPubnub().getConfiguration().getSubscribeKey(), queryParams);
     }
 
     @Override
@@ -166,11 +166,11 @@ public class Grant extends Endpoint<Envelope<AccessManagerGrantPayload>, PNAcces
     }
 
     protected int getConnectTimeout() {
-        return pubnub.getConfiguration().getConnectTimeout();
+        return this.getPubnub().getConfiguration().getConnectTimeout();
     }
 
     protected int getRequestTimeout() {
-        return pubnub.getConfiguration().getNonSubscribeRequestTimeout();
+        return this.getPubnub().getConfiguration().getNonSubscribeRequestTimeout();
     }
 
     @Override

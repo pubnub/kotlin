@@ -34,7 +34,7 @@ public class DeleteChannelGroup extends Endpoint<Envelope, PNChannelGroupsDelete
     protected Call<Envelope> doWork(Map<String, String> params) {
         ChannelGroupService service = this.createRetrofit().create(ChannelGroupService.class);
 
-        return service.DeleteChannelGroup(pubnub.getConfiguration().getSubscribeKey(), channelGroup, params);
+        return service.deleteChannelGroup(this.getPubnub().getConfiguration().getSubscribeKey(), channelGroup, params);
     }
 
     @Override
@@ -46,11 +46,11 @@ public class DeleteChannelGroup extends Endpoint<Envelope, PNChannelGroupsDelete
     }
 
     protected int getConnectTimeout() {
-        return pubnub.getConfiguration().getConnectTimeout();
+        return this.getPubnub().getConfiguration().getConnectTimeout();
     }
 
     protected int getRequestTimeout() {
-        return pubnub.getConfiguration().getNonSubscribeRequestTimeout();
+        return this.getPubnub().getConfiguration().getNonSubscribeRequestTimeout();
     }
 
     @Override

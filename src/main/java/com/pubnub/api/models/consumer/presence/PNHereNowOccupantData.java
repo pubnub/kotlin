@@ -6,6 +6,6 @@ import lombok.Getter;
 @Getter
 @Builder
 public class PNHereNowOccupantData {
-    String uuid;
-    Object state;
+    private String uuid;
+    private Object state;
 }

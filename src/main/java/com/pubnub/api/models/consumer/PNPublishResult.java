@@ -6,5 +6,5 @@ import lombok.Getter;
 @Getter
 @Builder
 public class PNPublishResult {
-	private Long timetoken;
+    private Long timetoken;
 }

@@ -14,6 +14,10 @@ import java.util.UUID;
 @Setter
 @Accessors(chain = true)
 public class PNConfiguration {
+    private static final int PRESENCE_TIMEOUT = 300;
+    private static final int NON_SUBSCRIBE_REQUEST_TIMEOUT = 10;
+    private static final int SUBSCRIBE_TIMEOUT = 310;
+    private static final int CONNECT_TIMEOUT = 5;
 
     /**
      * By default, the origin is pointing directly to PubNub servers. If a proxy origin is neeeded, set a custom
@@ -68,8 +72,8 @@ public class PNConfiguration {
     private int connectTimeout;
 
     /**
-     *  Reference on number of seconds which is used by client during non-subscription operations to
-     check whether response potentially failed with 'timeout' or not.
+     * Reference on number of seconds which is used by client during non-subscription operations to
+     * check whether response potentially failed with 'timeout' or not.
      */
     private int nonSubscribeRequestTimeout;
 
@@ -81,19 +85,20 @@ public class PNConfiguration {
     /**
      * filterExpression used as part of PSV2 specification.
      */
-    @Setter private String filterExpression;
+    @Setter
+    private String filterExpression;
 
     /**
      * Initialize the PNConfiguration with default values
      */
     public PNConfiguration() {
-        setPresenceTimeout(300);
+        setPresenceTimeout(PRESENCE_TIMEOUT);
 
         uuid = UUID.randomUUID().toString();
 
-        nonSubscribeRequestTimeout = 10;
-        subscribeTimeout = 310;
-        connectTimeout = 5;
+        nonSubscribeRequestTimeout = NON_SUBSCRIBE_REQUEST_TIMEOUT;
+        subscribeTimeout = SUBSCRIBE_TIMEOUT;
+        connectTimeout = CONNECT_TIMEOUT;
 
         logVerbosity = PNLogVerbosity.NONE;
 
@@ -101,8 +106,9 @@ public class PNConfiguration {
     }
 
     /**
-     *  set presence configurations for timeout and announce interval.
-     * @param timeout presence timeout; how long before the server considers this client to be gone.
+     * set presence configurations for timeout and announce interval.
+     *
+     * @param timeout  presence timeout; how long before the server considers this client to be gone.
      * @param interval presence announce interval, how often the client should announce itself.
      * @return returns itself.
      */
@@ -115,11 +121,12 @@ public class PNConfiguration {
 
     /**
      * set presence configurations for timeout and allow the client to pick the best interval
+     *
      * @param timeout presence timeout; how long before the server considers this client to be gone.
      * @return returns itself.
      */
     public PNConfiguration setPresenceTimeout(final int timeout) {
-        return setPresenceTimeoutWithCustomInterval(timeout,(timeout / 2) - 1);
+        return setPresenceTimeoutWithCustomInterval(timeout, (timeout / 2) - 1);
     }
 
 }

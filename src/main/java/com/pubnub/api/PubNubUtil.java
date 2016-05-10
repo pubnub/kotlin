@@ -1,7 +1,7 @@
 package com.pubnub.api;
 
 import com.pubnub.api.builder.PubNubErrorBuilder;
-import com.pubnub.api.utils.Base64;
+import com.pubnub.api.vendor.Base64;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -15,28 +15,27 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-/**
- * Created by Frederick on 3/30/16.
- */
-public class PubNubUtil {
 
+public final class PubNubUtil {
 
-    public static String joinString(List<String> val, String delim){
+    private PubNubUtil() {
+    }
+
+    public static String joinString(List<String> val, String delim) {
         StringBuilder builder = new StringBuilder();
-        for(String l: val){
+        for (String l : val) {
             builder.append(l);
             builder.append(",");
         }
 
-        return builder.toString().substring(0,builder.toString().length() - 1);
+        return builder.toString().substring(0, builder.toString().length() - 1);
 
     }
 
     /**
      * Returns encoded String
      *
-     * @param sUrl
-     *            , input string
+     * @param sUrl , input string
      * @return , encoded string
      */
     public static String pamEncode(String sUrl) {
@@ -61,8 +60,7 @@ public class PubNubUtil {
     /**
      * Returns encoded String
      *
-     * @param sUrl
-     *            , input string
+     * @param sUrl , input string
      * @return , encoded string
      */
     public static String urlEncode(String sUrl) {
@@ -88,7 +86,7 @@ public class PubNubUtil {
         }
     }
 
-    public static String preparePamArguments(Map<String, String> pamArgs){
+    public static String preparePamArguments(Map<String, String> pamArgs) {
         Set<String> pamKeys = new TreeSet(pamArgs.keySet());
         String stringifiedArguments = "";
         int i = 0;

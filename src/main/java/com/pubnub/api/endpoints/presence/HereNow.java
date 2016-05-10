@@ -23,13 +23,17 @@ import java.util.Map;
 
 @Accessors(chain = true, fluent = true)
 public class HereNow extends Endpoint<Envelope<Object>, PNHereNowResult> {
-    @Setter private List<String> channels;
-    @Setter private List<String> channelGroups;
-    @Setter private Boolean includeState;
-    @Setter private Boolean includeUUIDs;
+    @Setter
+    private List<String> channels;
+    @Setter
+    private List<String> channelGroups;
+    @Setter
+    private Boolean includeState;
+    @Setter
+    private Boolean includeUUIDs;
 
-    public HereNow(PubNub pubnub) {
-        super(pubnub);
+    public HereNow(PubNub pubnubInstance) {
+        super(pubnubInstance);
         channels = new ArrayList<>();
         channelGroups = new ArrayList<>();
     }
@@ -37,7 +41,7 @@ public class HereNow extends Endpoint<Envelope<Object>, PNHereNowResult> {
 
     @Override
     protected void validateParams() throws PubNubException {
-        if (pubnub.getConfiguration().getSubscribeKey()==null || pubnub.getConfiguration().getSubscribeKey().isEmpty()) {
+        if (this.getPubnub().getConfiguration().getSubscribeKey() == null || this.getPubnub().getConfiguration().getSubscribeKey().isEmpty()) {
             throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_SUBSCRIBE_KEY_MISSING).build();
         }
     }
@@ -74,9 +78,9 @@ public class HereNow extends Endpoint<Envelope<Object>, PNHereNowResult> {
         }
 
         if (channels.size() > 0 || channelGroups.size() > 0) {
-            return service.hereNow(pubnub.getConfiguration().getSubscribeKey(), channelCSV, params);
+            return service.hereNow(this.getPubnub().getConfiguration().getSubscribeKey(), channelCSV, params);
         } else {
-            return service.globalHereNow(pubnub.getConfiguration().getSubscribeKey(), params);
+            return service.globalHereNow(this.getPubnub().getConfiguration().getSubscribeKey(), params);
         }
     }
 
@@ -95,14 +99,14 @@ public class HereNow extends Endpoint<Envelope<Object>, PNHereNowResult> {
 
     private PNHereNowResult parseSingleChannelResponse(Envelope<Object> input) {
         PNHereNowResult hereNowData = PNHereNowResult.builder()
-            .totalChannels(1)
-            .channels(new HashMap<String, PNHereNowChannelData>())
-            .totalOccupancy(input.getOccupancy())
-            .build();
+                .totalChannels(1)
+                .channels(new HashMap<String, PNHereNowChannelData>())
+                .totalOccupancy(input.getOccupancy())
+                .build();
 
         PNHereNowChannelData.PNHereNowChannelDataBuilder hereNowChannelData = PNHereNowChannelData.builder()
-            .channelName(channels.get(0))
-            .occupancy(input.getOccupancy());
+                .channelName(channels.get(0))
+                .occupancy(input.getOccupancy());
 
         if (includeUUIDs) {
             hereNowChannelData.occupants(prepareOccupantData(input.getUuids()));
@@ -115,20 +119,20 @@ public class HereNow extends Endpoint<Envelope<Object>, PNHereNowResult> {
     private PNHereNowResult parseMultipleChannelResponse(Object input) {
         Map<String, Object> parsedInput = (Map<String, Object>) input;
 
-        PNHereNowResult hereNowData =  PNHereNowResult.builder()
-            .channels(new HashMap<String, PNHereNowChannelData>())
-            .totalChannels((Integer) parsedInput.get("total_channels"))
-            .totalOccupancy((Integer) parsedInput.get("total_occupancy"))
-            .build();
+        PNHereNowResult hereNowData = PNHereNowResult.builder()
+                .channels(new HashMap<String, PNHereNowChannelData>())
+                .totalChannels((Integer) parsedInput.get("total_channels"))
+                .totalOccupancy((Integer) parsedInput.get("total_occupancy"))
+                .build();
 
-        Map<String, Object> channels = (HashMap<String, Object>) parsedInput.get("channels");
+        Map<String, Object> channelsParam = (HashMap<String, Object>) parsedInput.get("channels");
 
-        for (String channelName: channels.keySet()) {
-            Map<String, Object> channel = (Map<String, Object>) channels.get(channelName);
+        for (String channelName : channelsParam.keySet()) {
+            Map<String, Object> channel = (Map<String, Object>) channelsParam.get(channelName);
 
             PNHereNowChannelData.PNHereNowChannelDataBuilder hereNowChannelData = PNHereNowChannelData.builder()
-                .channelName(channelName)
-                .occupancy((Integer) channel.get("occupancy"));
+                    .channelName(channelName)
+                    .occupancy((Integer) channel.get("occupancy"));
 
             if (includeUUIDs) {
                 hereNowChannelData.occupants(prepareOccupantData(channel.get("uuids")));
@@ -166,11 +170,11 @@ public class HereNow extends Endpoint<Envelope<Object>, PNHereNowResult> {
     }
 
     protected int getConnectTimeout() {
-        return pubnub.getConfiguration().getConnectTimeout();
+        return this.getPubnub().getConfiguration().getConnectTimeout();
     }
 
     protected int getRequestTimeout() {
-        return pubnub.getConfiguration().getNonSubscribeRequestTimeout();
+        return this.getPubnub().getConfiguration().getNonSubscribeRequestTimeout();
     }
 
     @Override

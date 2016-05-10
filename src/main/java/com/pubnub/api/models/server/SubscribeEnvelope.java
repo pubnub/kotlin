@@ -11,9 +11,9 @@ import java.util.List;
 public class SubscribeEnvelope {
 
     @JsonProperty("m")
-    List<SubscribeMessage> messages;
+    private List<SubscribeMessage> messages;
 
     @JsonProperty("t")
-    SubscribeMetadata metadata;
+    private SubscribeMetadata metadata;
 
 }

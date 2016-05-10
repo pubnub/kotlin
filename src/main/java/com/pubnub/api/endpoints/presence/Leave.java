@@ -18,8 +18,10 @@ import java.util.Map;
 
 @Accessors(chain = true, fluent = true)
 public class Leave extends Endpoint<Envelope, Boolean> {
-    @Setter private List<String> channels;
-    @Setter private List<String> channelGroups;
+    @Setter
+    private List<String> channels;
+    @Setter
+    private List<String> channelGroups;
 
     public Leave(PubNub pubnub) {
         super(pubnub);
@@ -29,11 +31,10 @@ public class Leave extends Endpoint<Envelope, Boolean> {
 
     @Override
     protected void validateParams() throws PubNubException {
-        if (pubnub.getConfiguration().getSubscribeKey()==null || pubnub.getConfiguration().getSubscribeKey().isEmpty()) {
+        if (this.getPubnub().getConfiguration().getSubscribeKey() == null || this.getPubnub().getConfiguration().getSubscribeKey().isEmpty()) {
             throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_SUBSCRIBE_KEY_MISSING).build();
         }
-        if (channels.size()==0 && channelGroups.size()==0)
-        {
+        if (channels.size() == 0 && channelGroups.size() == 0) {
             throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_CHANNEL_AND_GROUP_MISSING).build();
         }
     }
@@ -53,7 +54,7 @@ public class Leave extends Endpoint<Envelope, Boolean> {
             channelCSV = ",";
         }
 
-        return service.leave(this.pubnub.getConfiguration().getSubscribeKey(), channelCSV, params);
+        return service.leave(this.getPubnub().getConfiguration().getSubscribeKey(), channelCSV, params);
     }
 
     @Override
@@ -62,11 +63,11 @@ public class Leave extends Endpoint<Envelope, Boolean> {
     }
 
     protected int getConnectTimeout() {
-        return pubnub.getConfiguration().getConnectTimeout();
+        return this.getPubnub().getConfiguration().getConnectTimeout();
     }
 
     protected int getRequestTimeout() {
-        return pubnub.getConfiguration().getNonSubscribeRequestTimeout();
+        return this.getPubnub().getConfiguration().getNonSubscribeRequestTimeout();
     }
 
     @Override

@@ -16,11 +16,11 @@ public class UnsubscribeBuilder extends PubSubBuilder  {
     public void execute() {
 
         UnsubscribeOperation unsubscribeOperation = UnsubscribeOperation.builder()
-                .channels(channelSubscriptions)
-                .channelGroups(channelGroupSubscriptions)
+                .channels(this.getChannelSubscriptions())
+                .channelGroups(this.getChannelGroupSubscriptions())
                 .build();
 
-        this.subscriptionManager.adaptUnsubscribeBuilder(unsubscribeOperation);
+        this.getSubscriptionManager().adaptUnsubscribeBuilder(unsubscribeOperation);
     }
 
 }

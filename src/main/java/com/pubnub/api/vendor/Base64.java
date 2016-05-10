@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pubnub.api.utils;
+package com.pubnub.api.vendor;
 
 import java.io.UnsupportedEncodingException;
 

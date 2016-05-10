@@ -27,29 +27,35 @@ public class Subscribe extends Endpoint<SubscribeEnvelope, SubscribeEnvelope> {
     /**
      * List of channels that will be called to subscribe.
      */
-    @Setter private List<String> channels;
+    @Setter
+    private List<String> channels;
     /**
      * List of channel groups that will be called with subscribe.
      */
-    @Setter private List<String> channelGroups;
+    @Setter
+    private List<String> channelGroups;
 
     /**
      * timeToken to subscribe with 0 for initial subscribe.
      */
-    @Setter private Long timetoken;
+    @Setter
+    private Long timetoken;
 
     /**
      * filterExpression used as part of PubSub V2 specification to filter on message.
      */
-    @Setter private String filterExpression;
+    @Setter
+    private String filterExpression;
 
     /**
      * region is used as part of PubSub V2 to help the server route traffic to best data center.
      */
-    @Setter private String region;
+    @Setter
+    private String region;
 
     /**
      * CreFte a new Subscribe instance endpoint.
+     *
      * @param pubnub supplied pubnub instance.
      */
     public Subscribe(final PubNub pubnub) {
@@ -60,11 +66,10 @@ public class Subscribe extends Endpoint<SubscribeEnvelope, SubscribeEnvelope> {
 
     @Override
     protected final void validateParams() throws PubNubException {
-        if (pubnub.getConfiguration().getSubscribeKey()==null || pubnub.getConfiguration().getSubscribeKey().isEmpty()) {
+        if (this.getPubnub().getConfiguration().getSubscribeKey() == null || this.getPubnub().getConfiguration().getSubscribeKey().isEmpty()) {
             throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_SUBSCRIBE_KEY_MISSING).build();
         }
-        if (channels.size()==0 && channelGroups.size()==0)
-        {
+        if (channels.size() == 0 && channelGroups.size() == 0) {
             throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_CHANNEL_AND_GROUP_MISSING).build();
         }
     }
@@ -79,7 +84,7 @@ public class Subscribe extends Endpoint<SubscribeEnvelope, SubscribeEnvelope> {
         }
 
         if (filterExpression != null && filterExpression.length() > 0) {
-            params.put("filter-expr",  PubNubUtil.urlEncode(filterExpression));
+            params.put("filter-expr", PubNubUtil.urlEncode(filterExpression));
         }
 
         if (timetoken != null) {
@@ -96,7 +101,7 @@ public class Subscribe extends Endpoint<SubscribeEnvelope, SubscribeEnvelope> {
             channelCSV = ",";
         }
 
-        return pubSubService.subscribe(this.pubnub.getConfiguration().getSubscribeKey(), channelCSV,  params);
+        return pubSubService.subscribe(this.getPubnub().getConfiguration().getSubscribeKey(), channelCSV, params);
     }
 
     @Override
@@ -111,18 +116,20 @@ public class Subscribe extends Endpoint<SubscribeEnvelope, SubscribeEnvelope> {
 
     /**
      * called by the parent class to determine how long to wait until connect timeout.
+     *
      * @return timeout in seconds
      */
     protected final int getConnectTimeout() {
-        return pubnub.getConfiguration().getConnectTimeout();
+        return this.getPubnub().getConfiguration().getConnectTimeout();
     }
 
     /**
      * called by the parent class to determine how long to wait until request timeout.
+     *
      * @return timeout in seconds
      */
     protected final int getRequestTimeout() {
-        return pubnub.getConfiguration().getSubscribeTimeout();
+        return this.getPubnub().getConfiguration().getSubscribeTimeout();
     }
 
     @Override

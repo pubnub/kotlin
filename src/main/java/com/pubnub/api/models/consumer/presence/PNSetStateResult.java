@@ -9,6 +9,6 @@ import java.util.Map;
 @Getter
 public class PNSetStateResult {
 
-    Map<String, Object> state;
+    private Map<String, Object> state;
 
 }

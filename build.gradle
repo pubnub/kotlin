@@ -55,7 +55,6 @@ jacocoTestReport {
 checkstyle {
     configFile = new File(rootDir, "src/test/checkstyle.xml")
     toolVersion = '6.17'
-    ignoreFailures = true
 }
 
 findbugs {
@@ -63,6 +62,9 @@ findbugs {
 }
 
 tasks.withType(Checkstyle) {
+
+    exclude '**/vendor/**', "**/PubNubError.java"
+
     reports {
         xml.enabled =  true
         html.enabled = true

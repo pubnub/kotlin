@@ -11,6 +11,6 @@ import java.util.Map;
 public class PNAccessManagerKeysData {
 
     @JsonProperty("auths")
-    Map<String, PNAccessManagerKeyData> authKeys;
+    private Map<String, PNAccessManagerKeyData> authKeys;
 
 }

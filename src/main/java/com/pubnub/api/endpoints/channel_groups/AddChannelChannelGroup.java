@@ -48,7 +48,7 @@ public class AddChannelChannelGroup extends Endpoint<Envelope, PNChannelGroupsAd
             params.put("add", PubNubUtil.joinString(channels, ","));
         }
 
-        return service.AddChannelChannelGroup(pubnub.getConfiguration().getSubscribeKey(), channelGroup, params);
+        return service.addChannelChannelGroup(this.getPubnub().getConfiguration().getSubscribeKey(), channelGroup, params);
     }
 
     @Override
@@ -60,11 +60,11 @@ public class AddChannelChannelGroup extends Endpoint<Envelope, PNChannelGroupsAd
     }
 
     protected int getConnectTimeout() {
-        return pubnub.getConfiguration().getConnectTimeout();
+        return this.getPubnub().getConfiguration().getConnectTimeout();
     }
 
     protected int getRequestTimeout() {
-        return pubnub.getConfiguration().getNonSubscribeRequestTimeout();
+        return this.getPubnub().getConfiguration().getNonSubscribeRequestTimeout();
     }
 
     @Override
