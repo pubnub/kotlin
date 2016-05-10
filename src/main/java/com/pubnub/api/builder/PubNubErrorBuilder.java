@@ -477,7 +477,7 @@ public final class PubNubErrorBuilder {
             .message("Error while encrypting/decrypting message. Please contact support with error details.")
             .build();
 
-    public static final PubNubError createCryptoError(final int code, final String message) {
+    public static PubNubError createCryptoError(final int code, final String message) {
         return PubNubError.builder()
                 .errorCode(PNERR_CRYPTO_ERROR)
                 .errorCodeExtended(code)

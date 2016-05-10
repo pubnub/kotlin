@@ -21,7 +21,7 @@ public class PNStatus {
     private PNOperationType operation;
 
     //CHECKSTYLE:OFF
-    private boolean TLSEnabled;
+    private boolean tlsEnabled;
     //CHECKSTYLE:ON
 
     private String uuid;

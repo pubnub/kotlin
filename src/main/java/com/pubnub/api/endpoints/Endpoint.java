@@ -189,7 +189,7 @@ public abstract class Endpoint<Input, Output> {
 
         if (response != null) {
             pnStatus.statusCode(response.code());
-            pnStatus.TLSEnabled(response.raw().request().url().isHttps());
+            pnStatus.tlsEnabled(response.raw().request().url().isHttps());
             pnStatus.origin(response.raw().request().url().host());
             pnStatus.uuid(response.raw().request().url().queryParameter("uuid"));
             pnStatus.authKey(response.raw().request().url().queryParameter("auth"));

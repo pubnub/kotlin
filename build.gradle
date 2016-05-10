@@ -63,7 +63,7 @@ findbugs {
 
 tasks.withType(Checkstyle) {
 
-    exclude '**/vendor/**', "**/PubNubError.java"
+    exclude '**/vendor/**', "**/PubNubError.java", "**/*Test*"
 
     reports {
         xml.enabled =  true
