@@ -53,6 +53,11 @@ public class EndpointTest extends TestHarness {
             }
 
             @Override
+            protected boolean isAuthRequired() {
+                return true;
+            }
+
+            @Override
             protected Call doWork(Map baseParams) throws PubNubException {
 
                 Call<Object> fakeCall = new Call<Object>() {

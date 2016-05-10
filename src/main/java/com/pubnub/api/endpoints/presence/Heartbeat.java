@@ -98,4 +98,9 @@ public class Heartbeat extends Endpoint<Envelope, Boolean> {
         return PNOperationType.PNHeartbeatOperation;
     }
 
+    @Override
+    protected boolean isAuthRequired() {
+        return true;
+    }
+
 }

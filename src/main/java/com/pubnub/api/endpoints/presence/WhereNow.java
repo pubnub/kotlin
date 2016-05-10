@@ -65,4 +65,9 @@ public class WhereNow extends Endpoint<Envelope<WhereNowPayload>, PNWhereNowResu
         return PNOperationType.PNWhereNowOperation;
     }
 
+    @Override
+    protected boolean isAuthRequired() {
+        return true;
+    }
+
 }

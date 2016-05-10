@@ -60,4 +60,9 @@ public class Time extends Endpoint<List<Long>, PNTimeResult> {
         return PNOperationType.PNTimeOperation;
     }
 
+    @Override
+    protected boolean isAuthRequired() {
+        return false;
+    }
+
 }

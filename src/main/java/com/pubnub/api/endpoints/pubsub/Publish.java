@@ -144,4 +144,9 @@ public class Publish extends Endpoint<List<Object>, PNPublishResult> {
         return PNOperationType.PNPublishOperation;
     }
 
+    @Override
+    protected boolean isAuthRequired() {
+        return true;
+    }
+
 }

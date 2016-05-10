@@ -86,4 +86,9 @@ public class GetState extends Endpoint<Envelope<Object>, PNGetStateResult> {
         return PNOperationType.PNGetState;
     }
 
+    @Override
+    protected boolean isAuthRequired() {
+        return true;
+    }
+
 }

@@ -182,4 +182,9 @@ public class HereNow extends Endpoint<Envelope<Object>, PNHereNowResult> {
         return PNOperationType.PNHereNowOperation;
     }
 
+    @Override
+    protected boolean isAuthRequired() {
+        return true;
+    }
+
 }

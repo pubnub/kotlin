@@ -178,4 +178,9 @@ public class Grant extends Endpoint<Envelope<AccessManagerGrantPayload>, PNAcces
         return PNOperationType.PNAccessManagerGrant;
     }
 
+    @Override
+    protected boolean isAuthRequired() {
+        return false;
+    }
+
 }

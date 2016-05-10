@@ -131,6 +131,11 @@ public class History extends Endpoint<JsonNode, PNHistoryResult> {
         return PNOperationType.PNHistoryOperation;
     }
 
+    @Override
+    protected boolean isAuthRequired() {
+        return true;
+    }
+
     private Object processMessage(JsonNode message) throws PubNubException {
         if (this.getPubnub().getConfiguration().getCipherKey() == null) {
             return message;

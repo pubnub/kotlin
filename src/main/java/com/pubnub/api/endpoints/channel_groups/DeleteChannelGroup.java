@@ -58,4 +58,9 @@ public class DeleteChannelGroup extends Endpoint<Envelope, PNChannelGroupsDelete
         return PNOperationType.PNRemoveGroupOperation;
     }
 
+    @Override
+    protected boolean isAuthRequired() {
+        return true;
+    }
+
 }

@@ -76,6 +76,11 @@ public class Leave extends Endpoint<Envelope, Boolean> {
     }
 
     @Override
+    protected boolean isAuthRequired() {
+        return true;
+    }
+
+    @Override
     protected List<String> getAffectedChannels() {
         return channels;
     }

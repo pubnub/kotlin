@@ -73,4 +73,9 @@ public class RemoveAllPushChannelsForDevice extends Endpoint<List<Object>, PNPus
         return null; // PNOperationType.PNPushNotificationModifiedChannelsOperations;
     }
 
+    @Override
+    protected boolean isAuthRequired() {
+        return true;
+    }
+
 }

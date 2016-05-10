@@ -137,4 +137,9 @@ public class Subscribe extends Endpoint<SubscribeEnvelope, SubscribeEnvelope> {
         return PNOperationType.PNSubscribeOperation;
     }
 
+    @Override
+    protected boolean isAuthRequired() {
+        return true;
+    }
+
 }

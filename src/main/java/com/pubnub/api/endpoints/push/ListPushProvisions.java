@@ -69,4 +69,9 @@ public class ListPushProvisions extends Endpoint<List<String>, PNPushListProvisi
         return PNOperationType.PNPushNotificationEnabledChannelsOperation;
     }
 
+    @Override
+    protected boolean isAuthRequired() {
+        return true;
+    }
+
 }

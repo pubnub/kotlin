@@ -72,4 +72,9 @@ public class AddChannelChannelGroup extends Endpoint<Envelope, PNChannelGroupsAd
         return PNOperationType.PNAddChannelsToGroupOperation;
     }
 
+    @Override
+    protected boolean isAuthRequired() {
+        return true;
+    }
+
 }

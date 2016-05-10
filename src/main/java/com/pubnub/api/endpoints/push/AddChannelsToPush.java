@@ -82,4 +82,9 @@ public class AddChannelsToPush extends Endpoint<List<Object>, PNPushAddChannelRe
     protected PNOperationType getOperationType() {
         return PNOperationType.PNPushNotificationEnabledChannelsOperation;
     }
+
+    @Override
+    protected boolean isAuthRequired() {
+        return true;
+    }
 }

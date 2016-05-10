@@ -61,12 +61,21 @@ public class SubscriptionManager {
 
     private StateManager subscriptionState;
 
+    /**
+     * lever to indicate if an announcement to the user about the subscription should be made.
+     * the announcement happens only after the channel mix has been changed.
+     */
+    private boolean subscriptionStatusAnnounced;
+
 
     public SubscriptionManager(PubNub pubnubInstance) {
         this.subscriptionState = new StateManager();
         this.pubnub = pubnubInstance;
         this.listeners = new ArrayList<>();
         this.mapper = new ObjectMapper();
+
+        this.subscriptionStatusAnnounced = false;
+
     }
 
 
@@ -95,6 +104,8 @@ public class SubscriptionManager {
 
     public final synchronized void adaptSubscribeBuilder(final SubscribeOperation subscribeOperation) {
         this.subscriptionState.adaptSubscribeBuilder(subscribeOperation);
+        // the channel mix changed, on the successful subscribe, there is going to be announcement.
+        this.subscriptionStatusAnnounced = false;
 
         if (subscribeOperation.getTimetoken() != null) {
             this.timetoken = subscribeOperation.getTimetoken();
@@ -167,6 +178,22 @@ public class SubscriptionManager {
                             }
 
                             return;
+                        }
+
+                        if (!subscriptionStatusAnnounced) {
+                            PNStatus pnStatus = PNStatus.builder()
+                                    .error(false)
+                                    .category(PNStatusCategory.PNConnectedCategory)
+                                    .statusCode(status.getStatusCode())
+                                    .authKey(status.getAuthKey())
+                                    .operation(status.getOperation())
+                                    .clientRequest(status.getClientRequest())
+                                    .origin(status.getOrigin())
+                                    .tlsEnabled(status.isTlsEnabled())
+                                    .build();
+
+                            announce(pnStatus);
+                            subscriptionStatusAnnounced = true;
                         }
 
                         if (result.getMessages().size() != 0) {

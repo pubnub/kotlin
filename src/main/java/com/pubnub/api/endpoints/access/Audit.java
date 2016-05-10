@@ -119,4 +119,9 @@ public class Audit extends Endpoint<Envelope<AccessManagerAuditPayload>, PNAcces
         return PNOperationType.PNAccessManagerAudit;
     }
 
+    @Override
+    protected boolean isAuthRequired() {
+        return false;
+    }
+
 }

@@ -116,4 +116,9 @@ public class SetState extends Endpoint<Envelope<Map<String, Object>>, PNSetState
         return PNOperationType.PNSetStateOperation;
     }
 
+    @Override
+    protected boolean isAuthRequired() {
+        return true;
+    }
+
 }

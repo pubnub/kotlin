@@ -83,4 +83,9 @@ public class RemoveChannelsFromPush extends Endpoint<List<Object>, PNPushRemoveC
     protected PNOperationType getOperationType() {
         return PNOperationType.PNRemovePushNotificationsFromChannelsOperation;
     }
+
+    @Override
+    protected boolean isAuthRequired() {
+        return true;
+    }
 }

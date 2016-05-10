@@ -230,16 +230,20 @@ public abstract class Endpoint<Input, Output> {
         params.put("uuid", this.pubnub.getConfiguration().getUuid());
 
         // add the auth key for publish and subscribe.
-        if (this.pubnub.getConfiguration().getAuthKey() != null) {
-            if (getOperationType() == PNOperationType.PNPublishOperation
-                    || getOperationType() == PNOperationType.PNSubscribeOperation
-                    || getOperationType() == PNOperationType.PNHistoryOperation) {
+        if (this.pubnub.getConfiguration().getAuthKey() != null && isAuthRequired()) {
                 params.put("auth", pubnub.getConfiguration().getAuthKey());
-            }
         }
 
 
         return params;
+    }
+
+    protected List<String> getAffectedChannels() {
+        return null;
+    }
+
+    protected List<String> getAffectedChannelGroups() {
+        return null;
     }
 
     protected abstract void validateParams() throws PubNubException;
@@ -255,13 +259,6 @@ public abstract class Endpoint<Input, Output> {
 
     protected abstract PNOperationType getOperationType();
 
-    protected List<String> getAffectedChannels() {
-        return null;
-    }
-
-    protected List<String> getAffectedChannelGroups() {
-        return null;
-    }
-
+    protected abstract boolean isAuthRequired();
 
 }

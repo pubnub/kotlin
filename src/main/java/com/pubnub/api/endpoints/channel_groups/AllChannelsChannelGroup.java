@@ -68,4 +68,9 @@ public class AllChannelsChannelGroup extends Endpoint<Envelope<Object>, PNChanne
         return PNOperationType.PNChannelsForGroupOperation;
     }
 
+    @Override
+    protected boolean isAuthRequired() {
+        return true;
+    }
+
 }
