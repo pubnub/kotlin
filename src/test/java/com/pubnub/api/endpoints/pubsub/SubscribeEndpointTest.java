@@ -55,7 +55,7 @@ public class SubscribeEndpointTest extends TestHarness {
         assertEquals("coolChan-bnel", subscribeMessage.getSubscriptionMatch());
         assertEquals("sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f", subscribeMessage.getSubscribeKey());
         assertEquals("Client-g5d4g", subscribeMessage.getIssuingClientId());
-        assertEquals("{text=Enter Message Here}", subscribeMessage.getPayload().toString());
+        assertEquals("{\"text\":\"Enter Message Here\"}", subscribeMessage.getPayload().toString());
     }
 
     @Test

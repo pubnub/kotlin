@@ -50,7 +50,7 @@ public class SubscriptionManagerTest extends TestHarness {
     public void testSubscribeBuilder() {
         final AtomicInteger atomic = new AtomicInteger(0);
         stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
-                .willReturn(aResponse().withBody("{\"t\":{\"t\":\"14607577960932487\",\"r\":1},\"m\":[{\"a\":\"4\",\"f\":0,\"i\":\"Client-g5d4g\",\"p\":{\"t\":\"14607577960925503\",\"r\":1},\"k\":\"sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f\",\"c\":\"coolChannel\",\"d\":{\"text\":\"Enter Message Here\"},\"b\":\"coolChan-bnel\"}]}")));
+                .willReturn(aResponse().withBody("{\"t\":{\"t\":\"14607577960932487\",\"r\":1},\"m\":[{\"a\":\"4\",\"f\":0,\"i\":\"Client-g5d4g\",\"p\":{\"t\":\"14607577960925503\",\"r\":1},\"k\":\"sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f\",\"c\":\"coolChannel\",\"d\":{\"text\":\"Message\"},\"b\":\"coolChan-bnel\"}]}")));
 
         pubnub.addListener(new SubscribeCallback() {
             @Override
@@ -61,10 +61,8 @@ public class SubscriptionManagerTest extends TestHarness {
             public void message(PubNub pubnub, PNMessageResult message) {
                 List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")));
 
-                if (requests.size() == 1){
-                    atomic.addAndGet(1);
-                }
-
+                assertEquals("Message", message.getMessage().get("text").asText());
+                atomic.addAndGet(1);
             }
 
             @Override
@@ -76,7 +74,39 @@ public class SubscriptionManagerTest extends TestHarness {
         pubnub.subscribe().channels(Arrays.asList("ch1", "ch2")).execute();
 
         Awaitility.await().atMost(5, TimeUnit.SECONDS)
-                .untilAtomic(atomic, org.hamcrest.core.IsEqual.equalTo(1));
+                .untilAtomic(atomic, org.hamcrest.Matchers.greaterThan(0));
+
+    }
+
+    @Test
+    public void testSubscribeBuilderNumber() {
+        final AtomicInteger atomic = new AtomicInteger(0);
+        stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
+                .willReturn(aResponse().withBody("{\"t\":{\"t\":\"14607577960932487\",\"r\":1},\"m\":[{\"a\":\"4\",\"f\":0,\"i\":\"Client-g5d4g\",\"p\":{\"t\":\"14607577960925503\",\"r\":1},\"k\":\"sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f\",\"c\":\"coolChannel\",\"d\": 10,\"b\":\"coolChan-bnel\"}]}")));
+
+        pubnub.addListener(new SubscribeCallback() {
+            @Override
+            public void status(PubNub pubnub, PNStatus status) {
+            }
+
+            @Override
+            public void message(PubNub pubnub, PNMessageResult message) {
+                List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")));
+
+                assertEquals(10, message.getMessage().asInt());
+                atomic.addAndGet(1);
+            }
+
+            @Override
+            public void presence(PubNub pubnub, PNPresenceEventResult presence) {
+            }
+        });
+
+
+        pubnub.subscribe().channels(Arrays.asList("ch1", "ch2")).execute();
+
+        Awaitility.await().atMost(5, TimeUnit.SECONDS)
+                .untilAtomic(atomic, org.hamcrest.Matchers.greaterThan(0));
 
     }
 
@@ -228,10 +258,8 @@ public class SubscriptionManagerTest extends TestHarness {
             public void message(PubNub pubnub, PNMessageResult message) {
                 List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")));
 
-                if (requests.size() == 1) {
-                    assertEquals("1337", requests.get(0).queryParameter("tt").firstValue());
-                    atomic.addAndGet(1);
-                }
+                assertEquals("1337", requests.get(0).queryParameter("tt").firstValue());
+                atomic.addAndGet(1);
             }
 
             @Override
@@ -243,7 +271,7 @@ public class SubscriptionManagerTest extends TestHarness {
         pubnub.subscribe().channels(Arrays.asList("ch1", "ch2")).withTimetoken(1337L).execute();
 
         Awaitility.await().atMost(5, TimeUnit.SECONDS)
-                .untilAtomic(atomic, org.hamcrest.core.IsEqual.equalTo(1));
+                .untilAtomic(atomic, org.hamcrest.Matchers.greaterThan(0));
 
     }
 
@@ -263,10 +291,8 @@ public class SubscriptionManagerTest extends TestHarness {
             public void message(PubNub pubnub, PNMessageResult message) {
                 List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")));
 
-                if (requests.size() == 1) {
-                    assertEquals("much%3Dfiltering", requests.get(0).queryParameter("filter-expr").firstValue());
-                    atomic.addAndGet(1);
-                }
+                assertEquals("much%3Dfiltering", requests.get(0).queryParameter("filter-expr").firstValue());
+                atomic.addAndGet(1);
             }
 
             @Override
@@ -278,7 +304,7 @@ public class SubscriptionManagerTest extends TestHarness {
         pubnub.subscribe().channels(Arrays.asList("ch1", "ch2")).execute();
 
         Awaitility.await().atMost(5, TimeUnit.SECONDS)
-                .untilAtomic(atomic, org.hamcrest.core.IsEqual.equalTo(1));
+                .untilAtomic(atomic, org.hamcrest.Matchers.greaterThan(0));
 
     }
 
@@ -298,11 +324,8 @@ public class SubscriptionManagerTest extends TestHarness {
             public void message(PubNub pubnub, PNMessageResult message) {
                 List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")));
 
-                if (requests.size() == 1) {
-                    Assert.assertEquals("{text=Enter Message Here}", message.getMessage().toString());
-                    atomic.addAndGet(1);
-                }
-
+                Assert.assertEquals("{\"text\":\"Enter Message Here\"}", message.getMessage().toString());
+                atomic.addAndGet(1);
             }
 
             @Override
@@ -313,7 +336,7 @@ public class SubscriptionManagerTest extends TestHarness {
         pubnub.subscribe().channels(Arrays.asList("ch1", "ch2")).withPresence().execute();
 
         Awaitility.await().atMost(5, TimeUnit.SECONDS)
-                .untilAtomic(atomic, org.hamcrest.core.IsEqual.equalTo(1));
+                .untilAtomic(atomic, org.hamcrest.Matchers.greaterThan(0));
 
     }
 

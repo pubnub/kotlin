@@ -248,7 +248,7 @@ public class SubscriptionManager {
 
                 announce(pnPresenceEventResult);
             } else {
-                Object extractedMessage = processMessage(message.getPayload());
+                JsonNode extractedMessage = processMessage(message.getPayload());
 
                 if (extractedMessage == null) {
                     log.debug("unable to parse payload on #processIncomingMessages");
@@ -267,14 +267,14 @@ public class SubscriptionManager {
         }
     }
 
-    private Object processMessage(final Object input) {
+    private JsonNode processMessage(final JsonNode input) {
         if (pubnub.getConfiguration().getCipherKey() == null) {
             return input;
         }
 
         Crypto crypto = new Crypto(pubnub.getConfiguration().getCipherKey());
         String outputText;
-        Object outputObject;
+        JsonNode outputObject;
 
         try {
             outputText = crypto.decrypt(input.toString());
