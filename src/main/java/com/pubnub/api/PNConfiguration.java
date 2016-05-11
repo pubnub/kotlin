@@ -102,7 +102,7 @@ public class PNConfiguration {
 
         logVerbosity = PNLogVerbosity.NONE;
 
-        heartbeatNotificationOptions = PNHeartbeatNotificationOptions.Failures;
+        heartbeatNotificationOptions = PNHeartbeatNotificationOptions.FAILURES;
     }
 
     /**

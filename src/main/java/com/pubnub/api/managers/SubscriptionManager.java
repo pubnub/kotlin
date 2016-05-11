@@ -236,13 +236,13 @@ public class SubscriptionManager {
                                 .getConfiguration().getHeartbeatNotificationOptions();
 
                         if (status.isError()) {
-                            if (heartbeatVerbosity == PNHeartbeatNotificationOptions.All
-                                    || heartbeatVerbosity == PNHeartbeatNotificationOptions.Failures) {
+                            if (heartbeatVerbosity == PNHeartbeatNotificationOptions.ALL
+                                    || heartbeatVerbosity == PNHeartbeatNotificationOptions.FAILURES) {
                                 announce(status);
                             }
 
                         } else {
-                            if (heartbeatVerbosity == PNHeartbeatNotificationOptions.All) {
+                            if (heartbeatVerbosity == PNHeartbeatNotificationOptions.ALL) {
                                 announce(status);
                             }
                         }

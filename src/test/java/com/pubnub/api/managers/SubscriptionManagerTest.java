@@ -121,7 +121,7 @@ public class SubscriptionManagerTest extends TestHarness {
         stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
                 .willReturn(aResponse().withBody("{\"t\":{\"t\":\"14607577960932487\",\"r\":1},\"m\":[{\"a\":\"4\",\"f\":0,\"i\":\"Client-g5d4g\",\"p\":{\"t\":\"14607577960925503\",\"r\":1},\"k\":\"sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f\",\"c\":\"coolChannel\",\"d\":{\"text\":\"Enter Message Here\"},\"b\":\"coolChan-bnel\"}]}")));
 
-        pubnub.getConfiguration().setHeartbeatNotificationOptions(PNHeartbeatNotificationOptions.All);
+        pubnub.getConfiguration().setHeartbeatNotificationOptions(PNHeartbeatNotificationOptions.ALL);
         pubnub.addListener(new SubscribeCallback() {
             @Override
             public void status(PubNub pubnub, PNStatus status) {
@@ -494,7 +494,7 @@ public class SubscriptionManagerTest extends TestHarness {
     public void testAllHeartbeats() {
 
         final AtomicBoolean statusRecieved = new AtomicBoolean();
-        pubnub.getConfiguration().setHeartbeatNotificationOptions(PNHeartbeatNotificationOptions.All);
+        pubnub.getConfiguration().setHeartbeatNotificationOptions(PNHeartbeatNotificationOptions.ALL);
 
         stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1,ch2-pnpres,ch1-pnpres/0"))
                 .willReturn(aResponse().withBody("{\"t\":{\"t\":\"14607577960932487\",\"r\":1},\"m\":[{\"a\":\"4\",\"f\":0,\"i\":\"Client-g5d4g\",\"p\":{\"t\":\"14607577960925503\",\"r\":1},\"k\":\"sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f\",\"c\":\"coolChannel\",\"d\":{\"text\":\"Enter Message Here\"},\"b\":\"coolChan-bnel\"}]}")));
@@ -531,7 +531,7 @@ public class SubscriptionManagerTest extends TestHarness {
     public void testSuccessOnFailureVerbosityHeartbeats() {
 
         final AtomicBoolean statusRecieved = new AtomicBoolean();
-        pubnub.getConfiguration().setHeartbeatNotificationOptions(PNHeartbeatNotificationOptions.Failures);
+        pubnub.getConfiguration().setHeartbeatNotificationOptions(PNHeartbeatNotificationOptions.FAILURES);
 
         stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch2-pnpres,ch1,ch1-pnpres/0"))
                 .willReturn(aResponse().withBody("{\"t\":{\"t\":\"14607577960932487\",\"r\":1},\"m\":[{\"a\":\"4\",\"f\":0,\"i\":\"Client-g5d4g\",\"p\":{\"t\":\"14607577960925503\",\"r\":1},\"k\":\"sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f\",\"c\":\"coolChannel\",\"d\":{\"text\":\"Enter Message Here\"},\"b\":\"coolChan-bnel\"}]}")));
@@ -566,7 +566,7 @@ public class SubscriptionManagerTest extends TestHarness {
     public void testFailedHeartbeats() {
 
         final AtomicBoolean statusRecieved = new AtomicBoolean();
-        pubnub.getConfiguration().setHeartbeatNotificationOptions(PNHeartbeatNotificationOptions.All);
+        pubnub.getConfiguration().setHeartbeatNotificationOptions(PNHeartbeatNotificationOptions.ALL);
 
         stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch2-pnpres,ch1,ch1-pnpres/0"))
                 .willReturn(aResponse().withBody("{\"t\":{\"t\":\"14607577960932487\",\"r\":1},\"m\":[{\"a\":\"4\",\"f\":0,\"i\":\"Client-g5d4g\",\"p\":{\"t\":\"14607577960925503\",\"r\":1},\"k\":\"sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f\",\"c\":\"coolChannel\",\"d\":{\"text\":\"Enter Message Here\"},\"b\":\"coolChan-bnel\"}]}")));
@@ -600,7 +600,7 @@ public class SubscriptionManagerTest extends TestHarness {
     public void testSilencedHeartbeats() {
 
         final AtomicBoolean statusRecieved = new AtomicBoolean();
-        pubnub.getConfiguration().setHeartbeatNotificationOptions(PNHeartbeatNotificationOptions.None);
+        pubnub.getConfiguration().setHeartbeatNotificationOptions(PNHeartbeatNotificationOptions.NONE);
 
         stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch2-pnpres,ch1,ch1-pnpres/0"))
                 .willReturn(aResponse().withBody("{\"t\":{\"t\":\"14607577960932487\",\"r\":1},\"m\":[{\"a\":\"4\",\"f\":0,\"i\":\"Client-g5d4g\",\"p\":{\"t\":\"14607577960925503\",\"r\":1},\"k\":\"sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f\",\"c\":\"coolChannel\",\"d\":{\"text\":\"Enter Message Here\"},\"b\":\"coolChan-bnel\"}]}")));
@@ -634,7 +634,7 @@ public class SubscriptionManagerTest extends TestHarness {
     public void testFailedNoneHeartbeats() {
 
         final AtomicBoolean statusRecieved = new AtomicBoolean();
-        pubnub.getConfiguration().setHeartbeatNotificationOptions(PNHeartbeatNotificationOptions.None);
+        pubnub.getConfiguration().setHeartbeatNotificationOptions(PNHeartbeatNotificationOptions.NONE);
 
         stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch2-pnpres,ch1,ch1-pnpres/0"))
                 .willReturn(aResponse().withBody("{\"t\":{\"t\":\"14607577960932487\",\"r\":1},\"m\":[{\"a\":\"4\",\"f\":0,\"i\":\"Client-g5d4g\",\"p\":{\"t\":\"14607577960925503\",\"r\":1},\"k\":\"sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f\",\"c\":\"coolChannel\",\"d\":{\"text\":\"Enter Message Here\"},\"b\":\"coolChan-bnel\"}]}")));
