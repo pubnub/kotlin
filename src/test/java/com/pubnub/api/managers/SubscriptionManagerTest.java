@@ -85,6 +85,56 @@ public class SubscriptionManagerTest extends TestHarness {
     }
 
     @Test
+    public void testSubscribeSlidingBuilder() {
+        final AtomicBoolean gotMessage1 = new AtomicBoolean();
+        final AtomicBoolean gotMessage2 = new AtomicBoolean();
+        final AtomicBoolean gotMessage3 = new AtomicBoolean();
+
+        stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
+                .withQueryParam("tt", matching("0"))
+                .willReturn(aResponse().withBody("{\"t\":{\"t\":\"3\",\"r\":1},\"m\":[{\"a\":\"4\",\"f\":0,\"i\":\"Client-g5d4g\",\"p\":{\"t\":\"14607577960925503\",\"r\":1},\"k\":\"sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f\",\"c\":\"coolChannel\",\"d\":{\"text\":\"Message\"},\"b\":\"coolChan-bnel\"}]}")));
+
+        stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
+                .withQueryParam("tt", matching("3"))
+                .willReturn(aResponse().withBody("{\"t\":{\"t\":\"10\",\"r\":1},\"m\":[{\"a\":\"4\",\"f\":0,\"i\":\"Client-g5d4g\",\"p\":{\"t\":\"14607577960925503\",\"r\":1},\"k\":\"sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f\",\"c\":\"coolChannel\",\"d\":{\"text\":\"Message3\"},\"b\":\"coolChan-bnel\"}]}")));
+
+        stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
+                .withQueryParam("tt", matching("10"))
+                .willReturn(aResponse().withBody("{\"t\":{\"t\":\"20\",\"r\":1},\"m\":[{\"a\":\"4\",\"f\":0,\"i\":\"Client-g5d4g\",\"p\":{\"t\":\"14607577960925503\",\"r\":1},\"k\":\"sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f\",\"c\":\"coolChannel\",\"d\":{\"text\":\"Message10\"},\"b\":\"coolChan-bnel\"}]}")));
+
+        pubnub.addListener(new SubscribeCallback() {
+            @Override
+            public void status(PubNub pubnub, PNStatus status) {
+
+            }
+
+            @Override
+            public void message(PubNub pubnub, PNMessageResult message) {
+                List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")));
+
+                if (message.getMessage().get("text").asText().equals("Message")) {
+                    gotMessage1.set(true);
+                } else if (message.getMessage().get("text").asText().equals("Message3")) {
+                    gotMessage2.set(true);
+                } else if (message.getMessage().get("text").asText().equals("Message10")) {
+                    gotMessage3.set(true);
+                }
+            }
+
+            @Override
+            public void presence(PubNub pubnub, PNPresenceEventResult presence) {
+            }
+        });
+
+
+        pubnub.subscribe().channels(Arrays.asList("ch1", "ch2")).execute();
+
+        Awaitility.await().atMost(2, TimeUnit.SECONDS).untilAtomic(gotMessage1, org.hamcrest.core.IsEqual.equalTo(true));
+        Awaitility.await().atMost(2, TimeUnit.SECONDS).untilAtomic(gotMessage2, org.hamcrest.core.IsEqual.equalTo(true));
+        Awaitility.await().atMost(2, TimeUnit.SECONDS).untilAtomic(gotMessage3, org.hamcrest.core.IsEqual.equalTo(true));
+    }
+
+    @Test
     public void testSubscribeBuilderNumber() {
         final AtomicInteger atomic = new AtomicInteger(0);
         stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))

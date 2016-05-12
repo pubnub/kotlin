@@ -70,6 +70,8 @@ public class SubscriptionManager {
         this.subscriptionState = new StateManager();
         this.listenerManager = new ListenerManager(this.pubnub);
 
+        this.timetoken = 0L;
+
 
         consumerThread = new Thread(new SubscribeMessageWorker(this.pubnub, listenerManager, messageQueue));
         consumerThread.start();
