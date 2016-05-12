@@ -37,11 +37,11 @@ public class SubscribeMessage {
     //@JsonProperty("s")
     //private String sequenceNumber;
 
-    //@JsonProperty("o")
-    //private String originationTimetoken;
+    @JsonProperty("o")
+    private String originationTimetoken;
 
-    //@JsonProperty("p")
-    //private String publishTimetoken;
+    @JsonProperty("p")
+    private PublishMetaData publishMetaData;
 
     //@JsonProperty("r")
     //private Object replicationMap;

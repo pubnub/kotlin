@@ -1,47 +1,40 @@
 package com.pubnub.api.managers;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pubnub.api.callbacks.PNCallback;
-import com.pubnub.api.callbacks.SubscribeCallback;
-import com.pubnub.api.vendor.Crypto;
 import com.pubnub.api.PubNub;
-import com.pubnub.api.PubNubException;
 import com.pubnub.api.builder.dto.StateOperation;
 import com.pubnub.api.builder.dto.SubscribeOperation;
 import com.pubnub.api.builder.dto.UnsubscribeOperation;
+import com.pubnub.api.callbacks.PNCallback;
+import com.pubnub.api.callbacks.SubscribeCallback;
 import com.pubnub.api.endpoints.presence.Heartbeat;
 import com.pubnub.api.endpoints.presence.Leave;
 import com.pubnub.api.endpoints.pubsub.Subscribe;
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions;
-import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.enums.PNStatusCategory;
-import com.pubnub.api.models.consumer.PNErrorData;
 import com.pubnub.api.models.consumer.PNStatus;
-import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
-import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
 import com.pubnub.api.models.server.Envelope;
-import com.pubnub.api.models.server.PresenceEnvelope;
 import com.pubnub.api.models.server.SubscribeEnvelope;
 import com.pubnub.api.models.server.SubscribeMessage;
+import com.pubnub.api.workers.SubscribeMessageWorker;
 import lombok.extern.slf4j.Slf4j;
 import retrofit2.Call;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.LinkedBlockingQueue;
 
 @Slf4j
 public class SubscriptionManager {
 
     private static final int HEART_BEAT_INTERVAL_MULTIPLIER = 1000;
-    private List<SubscribeCallback> listeners;
     private PubNub pubnub;
     private Call<SubscribeEnvelope> subscribeCall;
     private Call<Envelope> heartbeatCall;
+
+    private LinkedBlockingQueue<SubscribeMessage> messageQueue;
+
     /**
      * Store the latest timetoken to subscribe with, null by default to get the latest timetoken.
      */
@@ -57,9 +50,10 @@ public class SubscriptionManager {
      */
     private Timer timer;
 
-    private ObjectMapper mapper;
-
     private StateManager subscriptionState;
+    private ListenerManager listenerManager;
+
+    private Thread consumerThread;
 
     /**
      * lever to indicate if an announcement to the user about the subscription should be made.
@@ -69,23 +63,26 @@ public class SubscriptionManager {
 
 
     public SubscriptionManager(PubNub pubnubInstance) {
-        this.subscriptionState = new StateManager();
         this.pubnub = pubnubInstance;
-        this.listeners = new ArrayList<>();
-        this.mapper = new ObjectMapper();
 
         this.subscriptionStatusAnnounced = false;
+        this.messageQueue = new LinkedBlockingQueue<>();
+        this.subscriptionState = new StateManager();
+        this.listenerManager = new ListenerManager(this.pubnub);
 
+
+        consumerThread = new Thread(new SubscribeMessageWorker(this.pubnub, listenerManager, messageQueue));
+        consumerThread.start();
     }
 
-
-    public final synchronized void addListener(SubscribeCallback listener) {
-        listeners.add(listener);
+    public final void addListener(SubscribeCallback listener) {
+        listenerManager.addListener(listener);
     }
 
-    public final synchronized void removeListener(SubscribeCallback listener) {
-        listeners.remove(listener);
+    public final void removeListener(SubscribeCallback listener) {
+        listenerManager.removeListener(listener);
     }
+
 
     public final synchronized void reconnect() {
         this.startSubscribeLoop();
@@ -95,6 +92,7 @@ public class SubscriptionManager {
     public synchronized void stop() {
         stopHeartbeatTimer();
         stopSubscribeLoop();
+        consumerThread.interrupt();
     }
 
     public final synchronized void adaptStateBuilder(final StateOperation stateOperation) {
@@ -122,7 +120,7 @@ public class SubscriptionManager {
             .async(new PNCallback<Boolean>() {
                 @Override
                 public void onResponse(final Boolean result, final PNStatus status) {
-                    announce(status);
+                    listenerManager.announce(status);
                 }
         });
 
@@ -174,11 +172,12 @@ public class SubscriptionManager {
                             if (status.getCategory() == PNStatusCategory.PNTimeoutCategory) {
                                 startSubscribeLoop();
                             } else {
-                                announce(status);
+                                listenerManager.announce(status);
                             }
 
                             return;
                         }
+
 
                         if (!subscriptionStatusAnnounced) {
                             PNStatus pnStatus = PNStatus.builder()
@@ -192,12 +191,12 @@ public class SubscriptionManager {
                                     .tlsEnabled(status.isTlsEnabled())
                                     .build();
 
-                            announce(pnStatus);
                             subscriptionStatusAnnounced = true;
+                            listenerManager.announce(pnStatus);
                         }
 
                         if (result.getMessages().size() != 0) {
-                            processIncomingMessages(result.getMessages());
+                            messageQueue.addAll(result.getMessages());
                         }
 
                         timetoken = result.getMetadata().getTimetoken();
@@ -238,122 +237,16 @@ public class SubscriptionManager {
                         if (status.isError()) {
                             if (heartbeatVerbosity == PNHeartbeatNotificationOptions.ALL
                                     || heartbeatVerbosity == PNHeartbeatNotificationOptions.FAILURES) {
-                                announce(status);
+                                listenerManager.announce(status);
                             }
 
                         } else {
                             if (heartbeatVerbosity == PNHeartbeatNotificationOptions.ALL) {
-                                announce(status);
+                                listenerManager.announce(status);
                             }
                         }
                     }
                 });
-    }
-
-    private void processIncomingMessages(final List<SubscribeMessage> messages) {
-
-        for (SubscribeMessage message : messages) {
-
-            String channel = message.getChannel();
-            String subscriptionMatch = message.getSubscriptionMatch();
-
-            if (channel.equals(subscriptionMatch)) {
-                subscriptionMatch = null;
-            }
-
-            if (message.getChannel().contains("-pnpres")) {
-                PresenceEnvelope presencePayload = mapper.convertValue(message.getPayload(), PresenceEnvelope.class);
-
-                PNPresenceEventResult pnPresenceEventResult = PNPresenceEventResult.builder()
-                        .event(presencePayload.getAction())
-                        .actualChannel((subscriptionMatch != null) ? channel : null)
-                        .subscribedChannel(subscriptionMatch != null ? subscriptionMatch : channel)
-                        .timetoken(timetoken)
-                        .occupancy(presencePayload.getOccupancy())
-                        .uuid(presencePayload.getUuid())
-                        .timestamp(presencePayload.getTimestamp())
-                        .build();
-
-                announce(pnPresenceEventResult);
-            } else {
-                JsonNode extractedMessage = processMessage(message.getPayload());
-
-                if (extractedMessage == null) {
-                    log.debug("unable to parse payload on #processIncomingMessages");
-                }
-
-                PNMessageResult pnMessageResult = PNMessageResult.builder()
-                        .message(extractedMessage)
-                        .actualChannel((subscriptionMatch != null) ? channel : null)
-                        .subscribedChannel(subscriptionMatch != null ? subscriptionMatch : channel)
-                        .timetoken(timetoken)
-                        .build();
-
-
-                announce(pnMessageResult);
-            }
-        }
-    }
-
-    private JsonNode processMessage(final JsonNode input) {
-        if (pubnub.getConfiguration().getCipherKey() == null) {
-            return input;
-        }
-
-        Crypto crypto = new Crypto(pubnub.getConfiguration().getCipherKey());
-        String outputText;
-        JsonNode outputObject;
-
-        try {
-            outputText = crypto.decrypt(input.toString());
-        } catch (PubNubException e) {
-            PNStatus pnStatus = PNStatus.builder().error(true)
-                    .errorData(new PNErrorData(e.getMessage(), e))
-                    .operation(PNOperationType.PNSubscribeOperation)
-                    .category(PNStatusCategory.PNDecryptionErrorCategory)
-                    .build();
-
-            announce(pnStatus);
-            return null;
-        }
-
-        try {
-            outputObject = mapper.readValue(outputText, JsonNode.class);
-        } catch (IOException e) {
-            PNStatus pnStatus = PNStatus.builder().error(true)
-                    .errorData(new PNErrorData(e.getMessage(), e))
-                    .operation(PNOperationType.PNSubscribeOperation)
-                    .category(PNStatusCategory.PNMalformedResponseCategory)
-                    .build();
-
-            announce(pnStatus);
-            return null;
-        }
-
-        return outputObject;
-    }
-
-    /**
-     * announce a PNStatus to listeners.
-     *
-     * @param status PNStatus which will be broadcast to listeners.
-     */
-    private void announce(final PNStatus status) {
-        for (SubscribeCallback subscribeCallback : listeners) {
-            subscribeCallback.status(this.pubnub, status);
-        }
-    }
-
-    private void announce(final PNMessageResult message) {
-        for (SubscribeCallback subscribeCallback : listeners) {
-            subscribeCallback.message(this.pubnub, message);
-        }
-    }
-
-    private void announce(final PNPresenceEventResult presence) {
-        for (SubscribeCallback subscribeCallback : listeners) {
-            subscribeCallback.presence(this.pubnub, presence);
-        }
     }
 
 }

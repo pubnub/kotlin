@@ -11,6 +11,7 @@ import com.pubnub.api.callbacks.SubscribeCallback;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions;
 import com.pubnub.api.enums.PNOperationType;
+import com.pubnub.api.enums.PNStatusCategory;
 import com.pubnub.api.models.consumer.presence.PNSetStateResult;
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
@@ -48,13 +49,18 @@ public class SubscriptionManagerTest extends TestHarness {
 
     @Test
     public void testSubscribeBuilder() {
-        final AtomicInteger atomic = new AtomicInteger(0);
+        final AtomicBoolean gotStatus = new AtomicBoolean();
+        final AtomicBoolean gotMessage = new AtomicBoolean();
         stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
                 .willReturn(aResponse().withBody("{\"t\":{\"t\":\"14607577960932487\",\"r\":1},\"m\":[{\"a\":\"4\",\"f\":0,\"i\":\"Client-g5d4g\",\"p\":{\"t\":\"14607577960925503\",\"r\":1},\"k\":\"sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f\",\"c\":\"coolChannel\",\"d\":{\"text\":\"Message\"},\"b\":\"coolChan-bnel\"}]}")));
 
         pubnub.addListener(new SubscribeCallback() {
             @Override
             public void status(PubNub pubnub, PNStatus status) {
+
+                assertEquals(PNStatusCategory.PNConnectedCategory, status.getCategory());
+                gotStatus.set(true);
+
             }
 
             @Override
@@ -62,7 +68,7 @@ public class SubscriptionManagerTest extends TestHarness {
                 List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")));
 
                 assertEquals("Message", message.getMessage().get("text").asText());
-                atomic.addAndGet(1);
+                gotMessage.set(true);
             }
 
             @Override
@@ -73,8 +79,8 @@ public class SubscriptionManagerTest extends TestHarness {
 
         pubnub.subscribe().channels(Arrays.asList("ch1", "ch2")).execute();
 
-        Awaitility.await().atMost(5, TimeUnit.SECONDS)
-                .untilAtomic(atomic, org.hamcrest.Matchers.greaterThan(0));
+        Awaitility.await().atMost(2, TimeUnit.SECONDS).untilAtomic(gotMessage, org.hamcrest.core.IsEqual.equalTo(true));
+        Awaitility.await().atMost(2, TimeUnit.SECONDS).untilAtomic(gotStatus, org.hamcrest.core.IsEqual.equalTo(true));
 
     }
 
@@ -458,6 +464,11 @@ public class SubscriptionManagerTest extends TestHarness {
         SubscribeCallback sub1 = new SubscribeCallback() {
             @Override
             public void status(PubNub pubnub, PNStatus status) {
+
+                if (status.getCategory() == PNStatusCategory.PNConnectedCategory) {
+                    pubnub.unsubscribe().channels(Arrays.asList("ch1")).execute();
+                }
+
                 if (status.getAffectedChannels().size() == 1 && status.getOperation() == PNOperationType.PNUnsubscribeOperation){
                     if (status.getAffectedChannels().get(0).equals("ch1")) {
                         statusRecieved.set(true);
@@ -483,8 +494,6 @@ public class SubscriptionManagerTest extends TestHarness {
         pubnub.addListener(sub1);
 
         pubnub.subscribe().channels(Arrays.asList("ch1", "ch2")).withPresence().execute();
-
-        pubnub.unsubscribe().channels(Arrays.asList("ch1")).execute();
 
         Awaitility.await().atMost(2, TimeUnit.SECONDS).untilAtomic(messageRecieved, org.hamcrest.core.IsEqual.equalTo(true));
         Awaitility.await().atMost(2, TimeUnit.SECONDS).untilAtomic(statusRecieved, org.hamcrest.core.IsEqual.equalTo(true));
