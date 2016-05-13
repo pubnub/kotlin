@@ -58,10 +58,6 @@ checkstyle {
     toolVersion = '6.17'
 }
 
-task myJavadocs(type: Javadoc) {
-    source = sourceSets.main.allJava
-}
-
 tasks.withType(Checkstyle) {
 
     exclude '**/vendor/**', "**/PubNubError.java", "**/*Test*"
