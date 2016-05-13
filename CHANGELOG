@@ -1,3 +1,9 @@
+
+05-10-16 - 4.0.0-beta2
+- reworking of message queue
+- checkstyle, findbugs
+- reworking error notifications
+
 05-02-16 - 4.0.0-beta1
 - initial beta1
 

@@ -16,9 +16,9 @@ import lombok.Getter;
 @Builder
 public class PubNubError {
 
-    public final int errorCode;
-    public final int errorCodeExtended;
-    public final JsonNode errorObject;
+    private final int errorCode;
+    private final int errorCodeExtended;
+    private final JsonNode errorObject;
     /**
      * includes a message from the thrown exception (if any.)
      */

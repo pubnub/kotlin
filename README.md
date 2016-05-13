@@ -8,6 +8,6 @@
 [![Download](https://api.bintray.com/packages/bintray/jcenter/com.pubnub%3Apubnub/images/download.svg)](https://bintray.com/bintray/jcenter/com.pubnub%3Apubnub/_latestVersion)
 [![Maven Central](https://img.shields.io/maven-central/v/com.pubnub/pubnub.svg)]()
 
-### [Documentation](https://gist.github.com/MaxPresman/5a457ccbd85b33d65c9ee98aaad8311e)
+### [Documentation](https://www.pubnub.com/docs/java/pubnub-java-sdk-v4)
 
 

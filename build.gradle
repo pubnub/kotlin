@@ -1,6 +1,7 @@
 plugins {
     id 'io.franzbecker.gradle-lombok' version '1.6'
     id 'com.github.johnrengelman.shadow' version '1.2.3'
+    id "com.bmuschko.nexus" version "2.3.1"
     id 'java'
     id 'jacoco'
     id 'maven'
@@ -57,6 +58,10 @@ checkstyle {
     toolVersion = '6.17'
 }
 
+task myJavadocs(type: Javadoc) {
+    source = sourceSets.main.allJava
+}
+
 tasks.withType(Checkstyle) {
 
     exclude '**/vendor/**', "**/PubNubError.java", "**/*Test*"
@@ -81,4 +86,16 @@ check.dependsOn jacocoTestReport
 
 processResources {
     expand projectVersion: project.version
+}
+
+extraArchive {
+    sources = true
+    tests = true
+    javadoc = true
+}
+
+nexus {
+    sign = true
+    repositoryUrl = 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
+    snapshotRepositoryUrl = 'https://oss.sonatype.org/content/repositories/snapshots'
 }
