@@ -1,4 +1,7 @@
 
+05-03-16 3.7.10
+. Fixing compilation wraning for older java run times.
+
 05-2-16 - 3.7.9
 . Adjustments to presence message pass-through
 . Including UUID when performing Publish operations
