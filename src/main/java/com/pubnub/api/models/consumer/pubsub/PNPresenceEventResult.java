@@ -1,5 +1,6 @@
 package com.pubnub.api.models.consumer.pubsub;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -12,6 +13,7 @@ public class PNPresenceEventResult {
     private String uuid;
     private Long timestamp;
     private Integer occupancy;
+    private JsonNode state;
 
     private String subscribedChannel;
     private String actualChannel;

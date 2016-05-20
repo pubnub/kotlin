@@ -111,6 +111,7 @@ public class SubscribeMessageWorker implements Runnable {
                     .event(presencePayload.getAction())
                     .actualChannel((subscriptionMatch != null) ? channel : null)
                     .subscribedChannel(subscriptionMatch != null ? subscriptionMatch : channel)
+                    .state(presencePayload.getData())
                     .timetoken(publishMetaData.getPublishTimetoken())
                     .occupancy(presencePayload.getOccupancy())
                     .uuid(presencePayload.getUuid())

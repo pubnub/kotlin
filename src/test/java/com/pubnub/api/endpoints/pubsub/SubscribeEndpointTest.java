@@ -142,14 +142,16 @@ public class SubscribeEndpointTest extends TestHarness {
     public void subscribeWithFilter() throws PubNubException {
 
         stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/,/0"))
+                .withQueryParam("uuid", matching("myUUID"))
+                .withQueryParam("pnsdk", matching("Java/suchJava"))
+                .withQueryParam("filter-expr", matching("this%3D1%26that%3Dcool"))
+                .withQueryParam("channel-group", matching("cg1"))
                 .willReturn(aResponse().withBody("{\"t\":{\"t\":\"14607577960932487\",\"r\":1},\"m\":[{\"a\":\"4\",\"f\":0,\"i\":\"Client-g5d4g\",\"p\":{\"t\":\"14607577960925503\",\"r\":1},\"k\":\"sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f\",\"c\":\"coolChannel\",\"d\":{\"text\":\"Enter Message Here\"},\"b\":\"coolChan-bnel\"}]}")));
 
         instance.channelGroups(Arrays.asList("cg1")).filterExpression("this=1&that=cool").sync();
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
-        assertEquals("cg1", requests.get(0).queryParameter("channel-group").firstValue());
-        assertEquals("this%3D1%26that%3Dcool", requests.get(0).queryParameter("filter-expr").firstValue());
     }
 
     @Test

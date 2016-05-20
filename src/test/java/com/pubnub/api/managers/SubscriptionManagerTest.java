@@ -29,6 +29,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class SubscriptionManagerTest extends TestHarness {
 
@@ -337,6 +338,10 @@ public class SubscriptionManagerTest extends TestHarness {
         final AtomicInteger atomic = new AtomicInteger(0);
         pubnub.getConfiguration().setFilterExpression("much=filtering");
         stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
+                .withQueryParam("uuid", matching("myUUID"))
+                .withQueryParam("pnsdk", matching("Java/suchJava"))
+                .withQueryParam("filter-expr", matching("much%3Dfiltering"))
+                .withQueryParam("tt", matching("0"))
                 .willReturn(aResponse().withBody("{\"t\":{\"t\":\"14607577960932487\",\"r\":1},\"m\":[{\"a\":\"4\",\"f\":0,\"i\":\"Client-g5d4g\",\"p\":{\"t\":\"14607577960925503\",\"r\":1},\"k\":\"sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f\",\"c\":\"coolChannel\",\"d\":{\"text\":\"Enter Message Here\"},\"b\":\"coolChan-bnel\"}]}")));
 
         pubnub.addListener(new SubscribeCallback() {
@@ -347,8 +352,7 @@ public class SubscriptionManagerTest extends TestHarness {
             @Override
             public void message(PubNub pubnub, PNMessageResult message) {
                 List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")));
-
-                assertEquals("much%3Dfiltering", requests.get(0).queryParameter("filter-expr").firstValue());
+                assertTrue(requests.size() > 0);
                 atomic.addAndGet(1);
             }
 
@@ -428,6 +432,37 @@ public class SubscriptionManagerTest extends TestHarness {
 
         Awaitility.await().atMost(5, TimeUnit.SECONDS)
                 .untilAtomic(atomic, org.hamcrest.core.IsEqual.equalTo(1));
+
+    }
+
+    @Test
+    public void testSubscribePresenceStateCallback() {
+        final AtomicBoolean atomic = new AtomicBoolean();
+        stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch10,ch10-pnpres/0"))
+                .willReturn(aResponse().withBody("{\"t\":{\"t\":\"14637536741734954\",\"r\":1},\"m\":[{\"a\":\"4\",\"f\":512,\"p\":{\"t\":\"14637536740940378\",\"r\":1},\"k\":\"demo-36\",\"c\":\"ch10-pnpres\",\"d\":{\"action\": \"join\", \"timestamp\": 1463753674, \"uuid\": \"24c9bb19-1fcd-4c40-a6f1-522a8a1329ef\", \"occupancy\": 3},\"b\":\"ch10-pnpres\"},{\"a\":\"4\",\"f\":512,\"p\":{\"t\":\"14637536741726901\",\"r\":1},\"k\":\"demo-36\",\"c\":\"ch10-pnpres\",\"d\":{\"action\": \"state-change\", \"timestamp\": 1463753674, \"data\": {\"state\": \"cool\"}, \"uuid\": \"24c9bb19-1fcd-4c40-a6f1-522a8a1329ef\", \"occupancy\": 3},\"b\":\"ch10-pnpres\"}]}")));
+
+        pubnub.addListener(new SubscribeCallback() {
+            @Override
+            public void status(PubNub pubnub, PNStatus status) {
+            }
+
+            @Override
+            public void message(PubNub pubnub, PNMessageResult message) {
+            }
+
+            @Override
+            public void presence(PubNub pubnub, PNPresenceEventResult presence) {
+                if (presence.getEvent().equals("state-change")) {
+                    if (presence.getState().has("state") && presence.getState().get("state").asText().equals("cool")) {
+                        atomic.set(true);
+                    }
+                }
+            }
+        });
+
+        pubnub.subscribe().channels(Arrays.asList("ch10")).withPresence().execute();
+
+        Awaitility.await().atMost(2, TimeUnit.SECONDS).untilAtomic(atomic, org.hamcrest.core.IsEqual.equalTo(true));
 
     }
 

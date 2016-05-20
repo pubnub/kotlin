@@ -45,6 +45,6 @@ public interface PresenceService {
     Call<Envelope<Map<String, Object>>> setState(@Path("subKey") String subKey,
                                     @Path("channel") String channel,
                                     @Path("uuid") String uuid,
-                                    @QueryMap Map<String, String> options);
+                                    @QueryMap(encoded = true) Map<String, String> options);
 
 }

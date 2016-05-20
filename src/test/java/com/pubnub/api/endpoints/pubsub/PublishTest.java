@@ -108,15 +108,17 @@ public class PublishTest extends TestHarness {
     @Test
     public void testSuccessMetaSync() throws PubNubException, InterruptedException {
         stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22hi%22"))
+                .withQueryParam("uuid", matching("myUUID"))
+                .withQueryParam("pnsdk", matching("Java/suchJava"))
+                .withQueryParam("meta", matching("%5B%22m1%22%2C%22m2%22%5D"))
+                .withQueryParam("store", matching("0"))
+                .withQueryParam("seqn", matching("1"))
                 .willReturn(aResponse().withBody("[1,\"Sent\",\"14598111595318003\"]")));
 
         instance.channel("coolChannel").message("hi").meta(Arrays.asList("m1", "m2")).shouldStore(false).sync();
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
-        assertEquals("0", requests.get(0).queryParameter("store").firstValue());
-        assertEquals("myUUID", requests.get(0).queryParameter("uuid").firstValue());
-        assertEquals("%5B%22m1%22%2C%22m2%22%5D", requests.get(0).queryParameter("meta").firstValue());
     }
 
     @Test
