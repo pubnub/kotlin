@@ -15,9 +15,10 @@ import java.util.TimerTask;
 @Slf4j
 public class ReconnectionManager {
 
+    private static final int INTERVAL = 3000;
+
     private ReconnectionCallback callback;
     private PubNub pubnub;
-    private int INTERVAL = 3000;
 
     /**
      * Timer for heartbeat operations.
@@ -28,8 +29,8 @@ public class ReconnectionManager {
         this.pubnub = pubnubInstance;
     }
 
-    public ReconnectionManager setReconnectionListener(ReconnectionCallback callback) {
-        this.callback = callback;
+    public ReconnectionManager setReconnectionListener(ReconnectionCallback reconnectionCallback) {
+        this.callback = reconnectionCallback;
         return this;
     }
 

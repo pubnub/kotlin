@@ -75,10 +75,6 @@ public class SubscriptionManager {
 
         this.timetoken = 0L;
 
-
-        consumerThread = new Thread(new SubscribeMessageWorker(this.pubnub, listenerManager, messageQueue));
-        consumerThread.start();
-
         this.reconnectionManager.setReconnectionListener(new ReconnectionCallback() {
             @Override
             public void onReconnection() {
@@ -93,6 +89,8 @@ public class SubscriptionManager {
             }
         });
 
+        consumerThread = new Thread(new SubscribeMessageWorker(this.pubnub, listenerManager, messageQueue));
+        consumerThread.start();
     }
 
     public final void addListener(SubscribeCallback listener) {
