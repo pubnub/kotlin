@@ -5,6 +5,7 @@ import com.pubnub.api.builder.dto.StateOperation;
 import com.pubnub.api.builder.dto.SubscribeOperation;
 import com.pubnub.api.builder.dto.UnsubscribeOperation;
 import com.pubnub.api.callbacks.PNCallback;
+import com.pubnub.api.callbacks.ReconnectionCallback;
 import com.pubnub.api.callbacks.SubscribeCallback;
 import com.pubnub.api.endpoints.presence.Heartbeat;
 import com.pubnub.api.endpoints.presence.Leave;
@@ -28,7 +29,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 @Slf4j
 public class SubscriptionManager {
 
-    private static final int HEART_BEAT_INTERVAL_MULTIPLIER = 1000;
+    private static final int HEARTBEAT_INTERVAL_MULTIPLIER = 1000;
+
     private PubNub pubnub;
     private Call<SubscribeEnvelope> subscribeCall;
     private Call<Envelope> heartbeatCall;
@@ -52,6 +54,7 @@ public class SubscriptionManager {
 
     private StateManager subscriptionState;
     private ListenerManager listenerManager;
+    private ReconnectionManager reconnectionManager;
 
     private Thread consumerThread;
 
@@ -61,7 +64,6 @@ public class SubscriptionManager {
      */
     private boolean subscriptionStatusAnnounced;
 
-
     public SubscriptionManager(PubNub pubnubInstance) {
         this.pubnub = pubnubInstance;
 
@@ -69,12 +71,28 @@ public class SubscriptionManager {
         this.messageQueue = new LinkedBlockingQueue<>();
         this.subscriptionState = new StateManager();
         this.listenerManager = new ListenerManager(this.pubnub);
+        this.reconnectionManager = new ReconnectionManager(this.pubnub);
 
         this.timetoken = 0L;
 
 
         consumerThread = new Thread(new SubscribeMessageWorker(this.pubnub, listenerManager, messageQueue));
         consumerThread.start();
+
+        this.reconnectionManager.setReconnectionListener(new ReconnectionCallback() {
+            @Override
+            public void onReconnection() {
+                reconnect();
+                PNStatus pnStatus = PNStatus.builder()
+                        .error(false)
+                        .category(PNStatusCategory.PNReconnectedCategory)
+                        .build();
+
+                subscriptionStatusAnnounced = true;
+                listenerManager.announce(pnStatus);
+            }
+        });
+
     }
 
     public final void addListener(SubscribeCallback listener) {
@@ -91,9 +109,14 @@ public class SubscriptionManager {
         this.registerHeartbeatTimer();
     }
 
-    public synchronized void stop() {
+    public final synchronized void disconnect() {
         stopHeartbeatTimer();
         stopSubscribeLoop();
+    }
+
+
+    public synchronized void stop() {
+        disconnect();
         consumerThread.interrupt();
     }
 
@@ -139,7 +162,7 @@ public class SubscriptionManager {
             public void run() {
                 performHeartbeatLoop();
             }
-        }, 0, pubnub.getConfiguration().getHeartbeatInterval() * HEART_BEAT_INTERVAL_MULTIPLIER);
+        }, 0, pubnub.getConfiguration().getHeartbeatInterval() * HEARTBEAT_INTERVAL_MULTIPLIER);
 
     }
 
@@ -174,7 +197,11 @@ public class SubscriptionManager {
                             if (status.getCategory() == PNStatusCategory.PNTimeoutCategory) {
                                 startSubscribeLoop();
                             } else {
+                                disconnect();
                                 listenerManager.announce(status);
+
+                                // stop all announcements and ask the reconnection manager to start polling for connection restoration..
+                                reconnectionManager.startPolling();
                             }
 
                             return;

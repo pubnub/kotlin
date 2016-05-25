@@ -20,6 +20,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.HashMap;
@@ -159,6 +160,9 @@ public abstract class Endpoint<Input, Output> {
                     throw throwable;
                 } catch (UnknownHostException networkException) {
                     pubnubException.pubnubError(PubNubErrorBuilder.PNERROBJ_CONNECTION_NOT_SET);
+                    pnStatusCategory = PNStatusCategory.PNUnexpectedDisconnectCategory;
+                } catch (ConnectException connectException) {
+                    pubnubException.pubnubError(PubNubErrorBuilder.PNERROBJ_CONNECT_EXCEPTION);
                     pnStatusCategory = PNStatusCategory.PNUnexpectedDisconnectCategory;
                 } catch (SocketTimeoutException socketTimeoutException) {
                     pubnubException.pubnubError(PubNubErrorBuilder.PNERROBJ_SUBSCRIBE_TIMEOUT);

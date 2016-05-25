@@ -3,6 +3,7 @@ package com.pubnub.api;
 
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions;
 import com.pubnub.api.enums.PNLogVerbosity;
+import com.pubnub.api.enums.PNReconnectionPolicy;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,7 +21,7 @@ public class PNConfiguration {
     private static final int CONNECT_TIMEOUT = 5;
 
     /**
-     * By default, the origin is pointing directly to PubNub servers. If a proxy origin is neeeded, set a custom
+     * By default, the origin is pointing directly to PubNub servers. If a proxy origin is needed, set a custom
      * origin using this parameter.
      */
     private String origin;
@@ -88,6 +89,13 @@ public class PNConfiguration {
     @Setter
     private String filterExpression;
 
+
+    /**
+     * Reconnection policy which will be used if/when networking goes down
+     */
+    @Setter
+    private PNReconnectionPolicy reconnectionPolicy;
+
     /**
      * Initialize the PNConfiguration with default values
      */
@@ -103,6 +111,7 @@ public class PNConfiguration {
         logVerbosity = PNLogVerbosity.NONE;
 
         heartbeatNotificationOptions = PNHeartbeatNotificationOptions.FAILURES;
+        reconnectionPolicy = PNReconnectionPolicy.NONE;
     }
 
     /**
