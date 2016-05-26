@@ -85,6 +85,31 @@ public class TimeEndpointTest extends TestHarness {
     }
 
     @org.junit.Test
+    public void testAsyncRetrySuccess() throws IOException, PubNubException {
+        stubFor(get(urlPathEqualTo("/time/0"))
+                .willReturn(aResponse().withBody("[14593046077243110]")));
+        final AtomicInteger atomic = new AtomicInteger(0);
+        partialTime.async(new TimeCallback(){
+
+            @Override
+            public void onResponse(PNTimeResult result, PNStatus status) {
+
+
+                assertTrue(result.getTimetoken().equals(14593046077243110L));
+                atomic.incrementAndGet();
+
+                if (atomic.get() == 1) {
+                    status.retry();
+                }
+
+            }
+        });
+
+        Awaitility.await().atMost(5, TimeUnit.SECONDS)
+                .untilAtomic(atomic, org.hamcrest.core.IsEqual.equalTo(2));
+    }
+
+    @org.junit.Test
     public void testAsyncBrokenWithString() throws IOException, PubNubException {
         stubFor(get(urlPathEqualTo("/time/0"))
                 .willReturn(aResponse().withBody("[abc]")));

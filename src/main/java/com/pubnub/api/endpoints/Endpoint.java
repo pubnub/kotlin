@@ -32,6 +32,9 @@ public abstract class Endpoint<Input, Output> {
 
     @Getter(AccessLevel.PROTECTED)
     private PubNub pubnub;
+    @Getter(AccessLevel.NONE)
+    private PNCallback<Output> cachedCallback;
+
     private static final int SERVER_RESPONSE_SUCCESS = 200;
     private static final int SERVER_RESPONSE_FORBIDDEN = 403;
     private static final int SERVER_RESPONSE_BAD_REQUEST = 400;
@@ -81,7 +84,7 @@ public abstract class Endpoint<Input, Output> {
     }
 
     public final Call<Input> async(final PNCallback<Output> callback) {
-
+        cachedCallback = callback;
         Call<Input> call;
 
         try {
@@ -179,8 +182,14 @@ public abstract class Endpoint<Input, Output> {
         return call;
     }
 
+    public void retry() {
+        async(cachedCallback);
+    };
+
     private PNStatus createStatusResponse(PNStatusCategory category, Response<Input> response, Exception throwable) {
         PNStatus.PNStatusBuilder pnStatus = PNStatus.builder();
+
+        pnStatus.executedEndpoint(this);
 
         if (response == null || throwable != null) {
             pnStatus.error(true);

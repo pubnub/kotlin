@@ -1,7 +1,9 @@
 package com.pubnub.api.models.consumer;
 
+import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.enums.PNStatusCategory;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -31,11 +33,15 @@ public class PNStatus {
     private List<String> affectedChannels;
     private List<String> affectedChannelGroups;
 
-    /*
-    public void retry(){
-        // TODO
+    @Getter(AccessLevel.NONE)
+    private Endpoint executedEndpoint;
+
+
+    public void retry() {
+        executedEndpoint.retry();
     }
 
+    /*
     public void cancelAutomaticRetry() {
         // TODO
     }
