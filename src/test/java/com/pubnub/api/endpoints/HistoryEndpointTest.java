@@ -1,7 +1,6 @@
 package com.pubnub.api.endpoints;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
@@ -14,7 +13,10 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.junit.Assert.assertEquals;
@@ -74,12 +76,12 @@ public class HistoryEndpointTest extends TestHarness {
         Assert.assertEquals(response.getMessages().size(), 2);
 
         Assert.assertTrue(response.getMessages().get(0).getTimetoken().equals(1111L));
-        Assert.assertEquals(((JsonNode) response.getMessages().get(0).getEntry()).get("a").asInt(), 11);
-        Assert.assertEquals(((JsonNode) response.getMessages().get(0).getEntry()).get("b").asInt(), 22);
+        Assert.assertEquals((response.getMessages().get(0).getEntry()).get("a").asInt(), 11);
+        Assert.assertEquals((response.getMessages().get(0).getEntry()).get("b").asInt(), 22);
 
         Assert.assertTrue(response.getMessages().get(1).getTimetoken().equals(2222L));
-        Assert.assertEquals(((JsonNode) response.getMessages().get(1).getEntry()).get("a").asInt(), 33);
-        Assert.assertEquals(((JsonNode) response.getMessages().get(1).getEntry()).get("b").asInt(), 44);
+        Assert.assertEquals((response.getMessages().get(1).getEntry()).get("a").asInt(), 33);
+        Assert.assertEquals((response.getMessages().get(1).getEntry()).get("b").asInt(), 44);
     }
 
     @Test
@@ -140,17 +142,17 @@ public class HistoryEndpointTest extends TestHarness {
         Assert.assertEquals(response.getMessages().size(), 3);
 
         Assert.assertEquals(response.getMessages().get(0).getTimetoken(), null);
-        Assert.assertEquals("m1", ((JsonNode) response.getMessages().get(0).getEntry()).get(0).asText());
-        Assert.assertEquals("m2", ((JsonNode) response.getMessages().get(0).getEntry()).get(1).asText());
-        Assert.assertEquals("m3", ((JsonNode) response.getMessages().get(0).getEntry()).get(2).asText());
+        Assert.assertEquals("m1", (response.getMessages().get(0).getEntry()).get(0).asText());
+        Assert.assertEquals("m2", (response.getMessages().get(0).getEntry()).get(1).asText());
+        Assert.assertEquals("m3", (response.getMessages().get(0).getEntry()).get(2).asText());
 
-        Assert.assertEquals("m1", ((JsonNode) response.getMessages().get(1).getEntry()).get(0).asText());
-        Assert.assertEquals("m2", ((JsonNode) response.getMessages().get(1).getEntry()).get(1).asText());
-        Assert.assertEquals("m3", ((JsonNode) response.getMessages().get(1).getEntry()).get(2).asText());
+        Assert.assertEquals("m1", (response.getMessages().get(1).getEntry()).get(0).asText());
+        Assert.assertEquals("m2", (response.getMessages().get(1).getEntry()).get(1).asText());
+        Assert.assertEquals("m3", (response.getMessages().get(1).getEntry()).get(2).asText());
 
-        Assert.assertEquals("m1", ((JsonNode) response.getMessages().get(2).getEntry()).get(0).asText());
-        Assert.assertEquals("m2", ((JsonNode) response.getMessages().get(2).getEntry()).get(1).asText());
-        Assert.assertEquals("m3", ((JsonNode) response.getMessages().get(2).getEntry()).get(2).asText());
+        Assert.assertEquals("m1", (response.getMessages().get(2).getEntry()).get(0).asText());
+        Assert.assertEquals("m2", (response.getMessages().get(2).getEntry()).get(1).asText());
+        Assert.assertEquals("m3", (response.getMessages().get(2).getEntry()).get(2).asText());
 
     }
 
@@ -187,12 +189,12 @@ public class HistoryEndpointTest extends TestHarness {
         Assert.assertEquals(response.getMessages().size(), 2);
 
         Assert.assertNull(response.getMessages().get(0).getTimetoken());
-        Assert.assertEquals(((JsonNode) response.getMessages().get(0).getEntry()).get("a").asInt(), 11);
-        Assert.assertEquals(((JsonNode) response.getMessages().get(0).getEntry()).get("b").asInt(), 22);
+        Assert.assertEquals(response.getMessages().get(0).getEntry().get("a").asInt(), 11);
+        Assert.assertEquals(response.getMessages().get(0).getEntry().get("b").asInt(), 22);
 
         Assert.assertNull(response.getMessages().get(1).getTimetoken());
-        Assert.assertEquals(((JsonNode) response.getMessages().get(1).getEntry()).get("a").asInt(), 33);
-        Assert.assertEquals(((JsonNode) response.getMessages().get(1).getEntry()).get("b").asInt(), 44);
+        Assert.assertEquals(response.getMessages().get(1).getEntry().get("a").asInt(), 33);
+        Assert.assertEquals(response.getMessages().get(1).getEntry().get("b").asInt(), 44);
     }
 
 

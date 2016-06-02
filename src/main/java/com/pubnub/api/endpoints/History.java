@@ -99,7 +99,7 @@ public class History extends Endpoint<JsonNode, PNHistoryResult> {
 
             for (final JsonNode historyEntry : historyItems) {
                 PNHistoryItemResult.PNHistoryItemResultBuilder historyItem = PNHistoryItemResult.builder();
-                Object message;
+                JsonNode message;
 
                 if (includeTimetoken != null && includeTimetoken) {
                     historyItem.timetoken(historyEntry.get("timetoken").asLong());
@@ -136,7 +136,7 @@ public class History extends Endpoint<JsonNode, PNHistoryResult> {
         return true;
     }
 
-    private Object processMessage(JsonNode message) throws PubNubException {
+    private JsonNode processMessage(JsonNode message) throws PubNubException {
         if (this.getPubnub().getConfiguration().getCipherKey() == null) {
             return message;
         }
@@ -145,7 +145,7 @@ public class History extends Endpoint<JsonNode, PNHistoryResult> {
         String outputText = crypto.decrypt(message.asText());
 
         ObjectMapper mapper = new ObjectMapper();
-        Object outputObject;
+        JsonNode outputObject;
         try {
             outputObject = mapper.readValue(outputText, JsonNode.class);
         } catch (IOException e) {
