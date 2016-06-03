@@ -70,8 +70,8 @@ public class HistoryEndpointTest extends TestHarness {
 
         PNHistoryResult response = partialHistory.channel("niceChannel").includeTimetoken(true).sync();
 
-        Assert.assertTrue(response.getStartTimeToken().equals(1234L));
-        Assert.assertTrue(response.getEndTimeToken().equals(4321L));
+        Assert.assertTrue(response.getStartTimetoken().equals(1234L));
+        Assert.assertTrue(response.getEndTimetoken().equals(4321L));
 
         Assert.assertEquals(response.getMessages().size(), 2);
 
@@ -136,8 +136,8 @@ public class HistoryEndpointTest extends TestHarness {
 
         PNHistoryResult response = partialHistory.channel("niceChannel").includeTimetoken(false).sync();
 
-        Assert.assertTrue(response.getStartTimeToken().equals(14606134331557853L));
-        Assert.assertTrue(response.getEndTimeToken().equals(14606134485013970L));
+        Assert.assertTrue(response.getStartTimetoken().equals(14606134331557853L));
+        Assert.assertTrue(response.getEndTimetoken().equals(14606134485013970L));
 
         Assert.assertEquals(response.getMessages().size(), 3);
 
@@ -183,8 +183,8 @@ public class HistoryEndpointTest extends TestHarness {
 
         PNHistoryResult response = partialHistory.channel("niceChannel").sync();
 
-        Assert.assertTrue(response.getStartTimeToken().equals(1234L));
-        Assert.assertTrue(response.getEndTimeToken().equals(4321L));
+        Assert.assertTrue(response.getStartTimetoken().equals(1234L));
+        Assert.assertTrue(response.getEndTimetoken().equals(4321L));
 
         Assert.assertEquals(response.getMessages().size(), 2);
 

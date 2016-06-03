@@ -1,6 +1,6 @@
 
 
-###PubNub Java-based SDK's for Java / Android
+### PubNub Java-based SDKs for Java / Android
 
 
 [![Build Status](https://travis-ci.org/pubnub/java.svg?branch=edge)](https://travis-ci.org/pubnub/java)
@@ -10,4 +10,6 @@
 
 ### [Documentation](https://www.pubnub.com/docs/java/pubnub-java-sdk-v4)
 
+## Communication
 
+- If you **need help** or have a **general question**, contact <support@pubnub.com>

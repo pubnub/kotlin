@@ -92,8 +92,8 @@ public class History extends Endpoint<JsonNode, PNHistoryResult> {
         List<PNHistoryItemResult> messages = new ArrayList<>();
 
         if (input.body() != null) {
-            historyData.startTimeToken(input.body().get(1).asLong());
-            historyData.endTimeToken(input.body().get(2).asLong());
+            historyData.startTimetoken(input.body().get(1).asLong());
+            historyData.endTimetoken(input.body().get(2).asLong());
 
             ArrayNode historyItems = (ArrayNode) input.body().get(0);
 

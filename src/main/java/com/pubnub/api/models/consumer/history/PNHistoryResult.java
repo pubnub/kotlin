@@ -10,7 +10,7 @@ import java.util.List;
 public class PNHistoryResult {
 
     private List<PNHistoryItemResult> messages;
-    private Long startTimeToken;
-    private Long endTimeToken;
+    private Long startTimetoken;
+    private Long endTimetoken;
 
 }
