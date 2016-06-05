@@ -13,12 +13,10 @@ import com.pubnub.api.endpoints.pubsub.Subscribe;
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions;
 import com.pubnub.api.enums.PNStatusCategory;
 import com.pubnub.api.models.consumer.PNStatus;
-import com.pubnub.api.models.server.Envelope;
 import com.pubnub.api.models.server.SubscribeEnvelope;
 import com.pubnub.api.models.server.SubscribeMessage;
 import com.pubnub.api.workers.SubscribeMessageWorker;
 import lombok.extern.slf4j.Slf4j;
-import retrofit2.Call;
 
 import java.util.List;
 import java.util.Map;
@@ -32,8 +30,8 @@ public class SubscriptionManager {
     private static final int HEARTBEAT_INTERVAL_MULTIPLIER = 1000;
 
     private PubNub pubnub;
-    private Call<SubscribeEnvelope> subscribeCall;
-    private Call<Envelope> heartbeatCall;
+    private Subscribe subscribeCall;
+    private Heartbeat heartbeatCall;
 
     private LinkedBlockingQueue<SubscribeMessage> messageQueue;
 
@@ -186,61 +184,63 @@ public class SubscriptionManager {
         subscribeCall = new Subscribe(pubnub)
                 .channels(combinedChannels).channelGroups(combinedChannelGroups)
                 .timetoken(timetoken).region(region)
-                .filterExpression(pubnub.getConfiguration().getFilterExpression())
-                .async(new PNCallback<SubscribeEnvelope>() {
-                    @Override
-                    public void onResponse(final SubscribeEnvelope result, final PNStatus status) {
-                        if (status.isError()) {
+                .filterExpression(pubnub.getConfiguration().getFilterExpression());
 
-                            if (status.getCategory() == PNStatusCategory.PNTimeoutCategory) {
-                                startSubscribeLoop();
-                            } else {
-                                disconnect();
-                                listenerManager.announce(status);
+        subscribeCall.async(new PNCallback<SubscribeEnvelope>() {
+            @Override
+            public void onResponse(final SubscribeEnvelope result, final PNStatus status) {
+                if (status.isError()) {
 
-                                // stop all announcements and ask the reconnection manager to start polling for connection restoration..
-                                reconnectionManager.startPolling();
-                            }
-
-                            return;
-                        }
-
-                        if (!subscriptionStatusAnnounced) {
-                            PNStatus pnStatus = PNStatus.builder()
-                                    .error(false)
-                                    .category(PNStatusCategory.PNConnectedCategory)
-                                    .statusCode(status.getStatusCode())
-                                    .authKey(status.getAuthKey())
-                                    .operation(status.getOperation())
-                                    .clientRequest(status.getClientRequest())
-                                    .origin(status.getOrigin())
-                                    .tlsEnabled(status.isTlsEnabled())
-                                    .build();
-
-                            subscriptionStatusAnnounced = true;
-                            listenerManager.announce(pnStatus);
-                        }
-
-                        if (result.getMessages().size() != 0) {
-                            messageQueue.addAll(result.getMessages());
-                        }
-
-                        timetoken = result.getMetadata().getTimetoken();
-                        region = result.getMetadata().getRegion();
+                    if (status.getCategory() == PNStatusCategory.PNTimeoutCategory) {
                         startSubscribeLoop();
+                    } else {
+                        disconnect();
+                        listenerManager.announce(status);
+
+                        // stop all announcements and ask the reconnection manager to start polling for connection restoration..
+                        reconnectionManager.startPolling();
                     }
-                });
+
+                    return;
+                }
+
+                if (!subscriptionStatusAnnounced) {
+                    PNStatus pnStatus = PNStatus.builder()
+                            .error(false)
+                            .category(PNStatusCategory.PNConnectedCategory)
+                            .statusCode(status.getStatusCode())
+                            .authKey(status.getAuthKey())
+                            .operation(status.getOperation())
+                            .clientRequest(status.getClientRequest())
+                            .origin(status.getOrigin())
+                            .tlsEnabled(status.isTlsEnabled())
+                            .build();
+
+                    subscriptionStatusAnnounced = true;
+                    listenerManager.announce(pnStatus);
+                }
+
+                if (result.getMessages().size() != 0) {
+                    messageQueue.addAll(result.getMessages());
+                }
+
+                timetoken = result.getMetadata().getTimetoken();
+                region = result.getMetadata().getRegion();
+                startSubscribeLoop();
+            }
+        });
+
     }
 
     private void stopSubscribeLoop() {
-        if (subscribeCall != null && !subscribeCall.isExecuted() && !subscribeCall.isCanceled()) {
-            subscribeCall.cancel();
+        if (subscribeCall != null) {
+            subscribeCall.silentCancel();
         }
     }
 
     private void performHeartbeatLoop() {
-        if (heartbeatCall != null && !heartbeatCall.isCanceled() && !heartbeatCall.isExecuted()) {
-            heartbeatCall.cancel();
+        if (heartbeatCall != null) {
+            heartbeatCall.silentCancel();
         }
 
         List<String> presenceChannels = this.subscriptionState.prepareChannelList(false);
@@ -253,26 +253,28 @@ public class SubscriptionManager {
         }
 
         heartbeatCall = new Heartbeat(pubnub)
-                .channels(presenceChannels).channelGroups(presenceChannelGroups).state(stateStorage)
-                .async(new PNCallback<Boolean>() {
-                    @Override
-                    public void onResponse(Boolean result, PNStatus status) {
-                        PNHeartbeatNotificationOptions heartbeatVerbosity = pubnub
-                                .getConfiguration().getHeartbeatNotificationOptions();
+                .channels(presenceChannels).channelGroups(presenceChannelGroups).state(stateStorage);
 
-                        if (status.isError()) {
-                            if (heartbeatVerbosity == PNHeartbeatNotificationOptions.ALL
-                                    || heartbeatVerbosity == PNHeartbeatNotificationOptions.FAILURES) {
-                                listenerManager.announce(status);
-                            }
+        heartbeatCall.async(new PNCallback<Boolean>() {
+            @Override
+            public void onResponse(Boolean result, PNStatus status) {
+                PNHeartbeatNotificationOptions heartbeatVerbosity = pubnub
+                        .getConfiguration().getHeartbeatNotificationOptions();
 
-                        } else {
-                            if (heartbeatVerbosity == PNHeartbeatNotificationOptions.ALL) {
-                                listenerManager.announce(status);
-                            }
-                        }
+                if (status.isError()) {
+                    if (heartbeatVerbosity == PNHeartbeatNotificationOptions.ALL
+                            || heartbeatVerbosity == PNHeartbeatNotificationOptions.FAILURES) {
+                        listenerManager.announce(status);
                     }
-                });
+
+                } else {
+                    if (heartbeatVerbosity == PNHeartbeatNotificationOptions.ALL) {
+                        listenerManager.announce(status);
+                    }
+                }
+            }
+        });
+
     }
 
 }

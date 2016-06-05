@@ -35,6 +35,16 @@ public abstract class Endpoint<Input, Output> {
     @Getter(AccessLevel.NONE)
     private PNCallback<Output> cachedCallback;
 
+    @Getter(AccessLevel.NONE)
+    private Call<Input> call;
+
+    /**
+     * If the endpoint failed to execute and we do not want to alert the user, flip this to true
+     * This operation is handy if we internally cancelled the endpoint.
+     */
+    @Getter(AccessLevel.NONE)
+    private boolean silenceFailures;
+
     private static final int SERVER_RESPONSE_SUCCESS = 200;
     private static final int SERVER_RESPONSE_FORBIDDEN = 403;
     private static final int SERVER_RESPONSE_BAD_REQUEST = 400;
@@ -47,7 +57,7 @@ public abstract class Endpoint<Input, Output> {
     public final Output sync() throws PubNubException {
         this.validateParams();
 
-        Call<Input> call = doWork(createBaseParams());
+        call = doWork(createBaseParams());
         Response<Input> serverResponse;
         Output response;
 
@@ -83,9 +93,8 @@ public abstract class Endpoint<Input, Output> {
         return response;
     }
 
-    public final Call<Input> async(final PNCallback<Output> callback) {
+    public final void async(final PNCallback<Output> callback) {
         cachedCallback = callback;
-        Call<Input> call;
 
         try {
             call = doWork(createBaseParams());
@@ -97,13 +106,13 @@ public abstract class Endpoint<Input, Output> {
                     .build();
 
             callback.onResponse(null, createStatusResponse(PNStatusCategory.PNBadRequestCategory, null, pubnubException));
-            return null;
+            return;
         }
 
         call.enqueue(new retrofit2.Callback<Input>() {
 
             @Override
-            public void onResponse(final Call<Input> call, final Response<Input> response) {
+            public void onResponse(final Call<Input> performedCall, final Response<Input> response) {
                 Output callbackResponse;
 
                 if (!response.isSuccessful() || response.code() != SERVER_RESPONSE_SUCCESS) {
@@ -149,15 +158,18 @@ public abstract class Endpoint<Input, Output> {
                     return;
                 }
 
-                callback.onResponse(callbackResponse, createStatusResponse(null, response, null));
+                callback.onResponse(callbackResponse, createStatusResponse(PNStatusCategory.PNAcknowledgmentCategory, response, null));
             }
 
             @Override
-            public void onFailure(final Call<Input> call, final Throwable throwable) {
+            public void onFailure(final Call<Input> performedCall, final Throwable throwable) {
+                if (silenceFailures) {
+                    return;
+                }
+
                 PNStatusCategory pnStatusCategory = PNStatusCategory.PNBadRequestCategory;
                 PubNubException.PubNubExceptionBuilder pubnubException = PubNubException.builder()
                         .errormsg(throwable.getMessage());
-
 
                 try {
                     throw throwable;
@@ -178,13 +190,22 @@ public abstract class Endpoint<Input, Output> {
 
             }
         });
-
-        return call;
     }
 
     public void retry() {
+        silenceFailures = false;
         async(cachedCallback);
     };
+
+    /**
+     * cancel the operation but do not alert anybody, useful for restarting the heartbeats and subscribe loops.
+     */
+    public void silentCancel() {
+        if (call != null && !call.isCanceled()) {
+            this.silenceFailures = true;
+            call.cancel();
+        }
+    }
 
     private PNStatus createStatusResponse(PNStatusCategory category, Response<Input> response, Exception throwable) {
         PNStatus.PNStatusBuilder pnStatus = PNStatus.builder();
