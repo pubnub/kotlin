@@ -30,10 +30,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Date;
-import java.util.Properties;
 
 
 @Getter
@@ -49,18 +46,17 @@ public class PubNub {
     @Getter(AccessLevel.NONE)
     private PublishSequenceManager publishSequenceManager;
 
-    private String sdkVersion;
 
     private static final int TIMESTAMP_DIVIDER = 1000;
     private static final int MAX_SEQUENCE = 65535;
+
+    private static final String SDK_VERSION = "4.0.2";
 
     public PubNub(final PNConfiguration initialConfig) {
         this.configuration = initialConfig;
         this.subscriptionManager = new SubscriptionManager(this);
         this.basePathManager = new BasePathManager(initialConfig);
         this.publishSequenceManager = new PublishSequenceManager(MAX_SEQUENCE);
-
-        sdkVersion = fetchSDKVersion();
     }
 
     public String getBaseUrl() {
@@ -232,7 +228,7 @@ public class PubNub {
      * @return version of the SDK.
      */
     public String getVersion() {
-        return sdkVersion;
+        return SDK_VERSION;
     }
 
     /**
@@ -249,21 +245,4 @@ public class PubNub {
         subscriptionManager.reconnect();
     }
 
-    /**
-     * fetch the SDK version from the resource files.
-     *
-     * @return Stringified representation of the SDK version.
-     */
-    private String fetchSDKVersion() {
-        Properties prop = new Properties();
-        InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream("version.properties");
-        try {
-            prop.load(in);
-        } catch (IOException e) {
-            return "N/A";
-        }
-
-        return prop.getProperty("version");
-
-    }
 }
