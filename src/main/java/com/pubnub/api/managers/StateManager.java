@@ -141,4 +141,9 @@ public class StateManager {
 
         return response;
     }
+
+    public boolean isEmpty()
+    {
+        return (channels.isEmpty() && presenceChannels.isEmpty() && groups.isEmpty());
+    }
 }

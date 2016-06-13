@@ -145,6 +145,11 @@ public class SubscriptionManager {
                 }
         });
 
+        if(this.subscriptionState.isEmpty())
+        {
+            region = null;
+            timetoken=0L;
+        }
         reconnect();
     }
 
