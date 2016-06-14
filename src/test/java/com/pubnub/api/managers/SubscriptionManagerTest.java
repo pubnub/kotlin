@@ -762,6 +762,61 @@ public class SubscriptionManagerTest extends TestHarness {
         Awaitility.await().atMost(2, TimeUnit.SECONDS).untilAtomic(statusRecieved, org.hamcrest.core.IsEqual.equalTo(false));
     }
 
+    @Test
+    public void testUnsubscribeAll() {
+
+        final AtomicBoolean statusRecieved = new AtomicBoolean();
+        final AtomicBoolean messageRecieved = new AtomicBoolean();
+
+        stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1,ch2-pnpres,ch1-pnpres/0"))
+                .willReturn(aResponse().withBody("{\"t\":{\"t\":\"14607577960932487\",\"r\":1},\"m\":[{\"a\":\"4\",\"f\":0,\"i\":\"Client-g5d4g\",\"p\":{\"t\":\"14607577960925503\",\"r\":1},\"k\":\"sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f\",\"c\":\"coolChannel\",\"d\":{\"text\":\"Enter Message Here\"},\"b\":\"coolChan-bnel\"}]}")));
+
+        stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch2-pnpres/0"))
+                .willReturn(aResponse().withBody("{\"t\":{\"t\":\"14607577960932487\",\"r\":1},\"m\":[{\"a\":\"4\",\"f\":0,\"i\":\"Client-g5d4g\",\"p\":{\"t\":\"14607577960925503\",\"r\":1},\"k\":\"sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f\",\"c\":\"coolChannel\",\"d\":{\"text\":\"Enter Message Here\"},\"b\":\"coolChan-bnel\"}]}")));
+
+        stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch1/leave"))
+                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\", \"action\": \"leave\"}")));
+
+        stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch2/leave"))
+                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\", \"action\": \"leave\"}")));
+
+        SubscribeCallback sub1 = new SubscribeCallback() {
+            @Override
+            public void status(PubNub pubnub, PNStatus status) {
+
+                if (status.getCategory() == PNStatusCategory.PNConnectedCategory) {
+                    pubnub.unsubscribe().channels(Arrays.asList("ch1")).execute();
+                }
+
+                if (status.getAffectedChannels()!=null && status.getAffectedChannels().size() == 1 && status.getOperation() == PNOperationType.PNUnsubscribeOperation){
+                    if (status.getAffectedChannels().get(0).equals("ch1")) {
+                        pubnub.unsubscribe().channels(Arrays.asList("ch2")).execute();
+                    }
+                }
+
+                if (status.getAffectedChannels()!=null && status.getAffectedChannels().size() == 1 && status.getOperation() == PNOperationType.PNUnsubscribeOperation){
+                    if (status.getAffectedChannels().get(0).equals("ch2")) {
+                        statusRecieved.set(true);
+                    }
+                }
+            }
+
+            @Override
+            public void message(PubNub pubnub, PNMessageResult message) {
+            }
+
+            @Override
+            public void presence(PubNub pubnub, PNPresenceEventResult presence) {
+            }
+        };
+
+        pubnub.addListener(sub1);
+
+        pubnub.subscribe().channels(Arrays.asList("ch1", "ch2")).withPresence().execute();
+
+        Awaitility.await().atMost(4, TimeUnit.SECONDS).untilAtomic(statusRecieved, org.hamcrest.core.IsEqual.equalTo(true));
+    }
+
 
     private String joinArray(String[] arr) {
         StringBuilder builder = new StringBuilder();

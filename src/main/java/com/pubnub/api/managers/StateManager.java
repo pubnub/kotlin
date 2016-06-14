@@ -123,6 +123,10 @@ public class StateManager {
         return prepareMembershipList(groups, presenceGroups, includePresence);
     }
 
+    public boolean isEmpty() {
+        return (channels.isEmpty() && presenceChannels.isEmpty() && groups.isEmpty() && presenceGroups.isEmpty());
+    }
+
     private List<String> prepareMembershipList(final Map<String, SubscriptionItem> dataStorage,
                                                final Map<String, SubscriptionItem> presenceStorage,
                                                final boolean includePresence) {
@@ -141,4 +145,5 @@ public class StateManager {
 
         return response;
     }
+
 }
