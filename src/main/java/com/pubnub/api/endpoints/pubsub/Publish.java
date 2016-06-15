@@ -32,6 +32,8 @@ public class Publish extends Endpoint<List<Object>, PNPublishResult> {
     private Boolean usePOST;
     @Setter
     private Object meta;
+    @Setter
+    private Boolean replicate;
 
     private PublishSequenceManager publishSequenceManager;
 
@@ -39,6 +41,7 @@ public class Publish extends Endpoint<List<Object>, PNPublishResult> {
         super(pubnub);
 
         this.publishSequenceManager = providedPublishSequenceManager;
+        this.replicate = true;
     }
 
     @Override
@@ -89,6 +92,9 @@ public class Publish extends Endpoint<List<Object>, PNPublishResult> {
 
         params.put("seqn", String.valueOf(publishSequenceManager.getNextSequence()));
 
+        if (!replicate) {
+            params.put("norep", String.valueOf(true));
+        }
 
         if (this.getPubnub().getConfiguration().getCipherKey() != null) {
             Crypto crypto = new Crypto(this.getPubnub().getConfiguration().getCipherKey());

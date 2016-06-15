@@ -34,6 +34,46 @@ public class PublishTest extends TestHarness {
         pubnub = this.createPubNubInstance(8080);
         instance = pubnub.publish();
     }
+    @Test
+
+    public void testFireSuccessSync() throws PubNubException, InterruptedException {
+
+        stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22hi%22"))
+                .willReturn(aResponse().withBody("[1,\"Sent\",\"14598111595318003\"]")));
+
+        pubnub.fire().channel("coolChannel").message("hi").sync();
+
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
+        assertEquals(1, requests.size());
+        assertEquals("myUUID", requests.get(0).queryParameter("uuid").firstValue());
+    }
+
+    @Test
+    public void testNoRepSuccessSync() throws PubNubException, InterruptedException {
+
+        stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22hi%22"))
+                .willReturn(aResponse().withBody("[1,\"Sent\",\"14598111595318003\"]")));
+
+        instance.channel("coolChannel").message("hi").replicate(false).sync();
+
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
+        assertEquals(1, requests.size());
+        assertEquals("myUUID", requests.get(0).queryParameter("uuid").firstValue());
+    }
+
+    @Test
+    public void testRepDefaultSuccessSync() throws PubNubException, InterruptedException {
+
+        stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22hi%22"))
+                .willReturn(aResponse().withBody("[1,\"Sent\",\"14598111595318003\"]")));
+
+        instance.channel("coolChannel").message("hi").sync();
+
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
+        assertEquals(1, requests.size());
+        assertEquals("myUUID", requests.get(0).queryParameter("uuid").firstValue());
+    }
+
 
     @Test
     public void testSuccessSync() throws PubNubException, InterruptedException {

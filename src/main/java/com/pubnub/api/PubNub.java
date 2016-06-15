@@ -245,4 +245,8 @@ public class PubNub {
         subscriptionManager.reconnect();
     }
 
+    public final Publish fire() {
+        return publish().shouldStore(false).replicate(false);
+    }
+
 }
