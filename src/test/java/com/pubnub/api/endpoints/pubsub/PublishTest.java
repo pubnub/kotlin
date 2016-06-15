@@ -154,7 +154,7 @@ public class PublishTest extends TestHarness {
     public void testSuccessMetaSync() throws PubNubException, InterruptedException {
         stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22hi%22"))
                 .withQueryParam("uuid", matching("myUUID"))
-                .withQueryParam("pnsdk", matching("Java/suchJava"))
+                .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 .withQueryParam("meta", matching("%5B%22m1%22%2C%22m2%22%5D"))
                 .withQueryParam("store", matching("0"))
                 .withQueryParam("seqn", matching("1"))

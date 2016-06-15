@@ -143,7 +143,7 @@ public class SubscribeEndpointTest extends TestHarness {
 
         stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/,/0"))
                 .withQueryParam("uuid", matching("myUUID"))
-                .withQueryParam("pnsdk", matching("Java/suchJava"))
+                .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 .withQueryParam("filter-expr", matching("this%3D1%26that%3Dcool"))
                 .withQueryParam("channel-group", matching("cg1"))
                 .willReturn(aResponse().withBody("{\"t\":{\"t\":\"14607577960932487\",\"r\":1},\"m\":[{\"a\":\"4\",\"f\":0,\"i\":\"Client-g5d4g\",\"p\":{\"t\":\"14607577960925503\",\"r\":1},\"k\":\"sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f\",\"c\":\"coolChannel\",\"d\":{\"text\":\"Enter Message Here\"},\"b\":\"coolChan-bnel\"}]}")));

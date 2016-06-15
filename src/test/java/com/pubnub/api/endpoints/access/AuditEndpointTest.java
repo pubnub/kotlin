@@ -41,10 +41,10 @@ public class AuditEndpointTest extends TestHarness {
     public void testSuccessChannelGroupSync() throws PubNubException {
 
         stubFor(get(urlPathEqualTo("/v1/auth/audit/sub-key/mySubscribeKey"))
-                .withQueryParam("pnsdk", matching("Java/suchJava"))
+                .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 .withQueryParam("channel-group", matching("cg1"))
                 .withQueryParam("auth", matching("key1"))
-                .withQueryParam("signature", matching("IjnQ0J7c0SYT3gHBxrIC_8OkDHTqsF9KnI0SlBRLNfg%3D%0A"))
+                .withQueryParam("signature", matching("rXy69MNT1vceNs3Ob6HnjShUAzCV5x4OumSG1lSPL6s%3D%0A"))
                 .withQueryParam("uuid", matching("myUUID"))
                 .withQueryParam("timestamp", matching("1337"))
                 .willReturn(aResponse().withBody("{\"message\":\"Success\",\"payload\":{\"level\":\"channel-group+auth\",\"subscribe_key\":\"sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f\",\"channel-group\":\"cg2\",\"auths\":{\"key1\":{\"r\":1,\"m\":1,\"w\":1}}},\"service\":\"Access Manager\",\"status\":200}")));
@@ -67,10 +67,10 @@ public class AuditEndpointTest extends TestHarness {
     public void testSuccessChannelSync() throws PubNubException {
 
         stubFor(get(urlPathEqualTo("/v1/auth/audit/sub-key/mySubscribeKey"))
-                .withQueryParam("pnsdk", matching("Java/suchJava"))
+                .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 .withQueryParam("channel", matching("ch1"))
                 .withQueryParam("auth", matching("key1"))
-                .withQueryParam("signature", matching("ZlPruaId7jzupmK4LUynpnjvA2CQYyrrT0475wWkbwY%3D%0A"))
+                .withQueryParam("signature", matching("oICb_S5OubabiqrEA9vDqQ-Ri4PdztWLs6__fQQP_Gs%3D%0A"))
                 .withQueryParam("uuid", matching("myUUID"))
                 .withQueryParam("timestamp", matching("1337"))
                 .willReturn(aResponse().withBody("{\"message\":\"Success\",\"payload\":{\"level\":\"user\",\"subscribe_key\":\"sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f\",\"channel\":\"ch1\",\"auths\":{\"key1\":{\"r\":1,\"m\":1,\"w\":1}}},\"service\":\"Access Manager\",\"status\":200}")));
@@ -92,7 +92,7 @@ public class AuditEndpointTest extends TestHarness {
     public void testSuccessChannelMissingKeySync() throws PubNubException {
 
         stubFor(get(urlPathEqualTo("/v1/auth/audit/sub-key/mySubscribeKey"))
-                .withQueryParam("pnsdk", matching("Java/suchJava"))
+                .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 .withQueryParam("channel", matching("ch1"))
                 .withQueryParam("auth", matching("key1"))
                 .withQueryParam("signature", matching("ZlPruaId7jzupmK4LUynpnjvA2CQYyrrT0475wWkbwY%3D%0A"))

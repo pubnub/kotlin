@@ -40,7 +40,7 @@ public class SetStateEndpointTest extends TestHarness {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/testChannel/uuid/myUUID/data"))
                 .withQueryParam("uuid", matching("myUUID"))
-                .withQueryParam("pnsdk", matching("Java/suchJava"))
+                .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 .withQueryParam("state", matching("%7B%22age%22%3A20%7D"))
                 .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : 20, \"status\" : \"online\" }, \"service\": \"Presence\"}")));
 
@@ -60,7 +60,7 @@ public class SetStateEndpointTest extends TestHarness {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/testChannel,testChannel2/uuid/myUUID/data"))
                 .withQueryParam("uuid", matching("myUUID"))
-                .withQueryParam("pnsdk", matching("Java/suchJava"))
+                .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 .withQueryParam("state", matching("%7B%22age%22%3A20%7D"))
                 .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : 20, \"status\" : \"online\" }, \"service\": \"Presence\"}")));
 
@@ -81,7 +81,7 @@ public class SetStateEndpointTest extends TestHarness {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/,/uuid/myUUID/data"))
                 .withQueryParam("uuid", matching("myUUID"))
-                .withQueryParam("pnsdk", matching("Java/suchJava"))
+                .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 .withQueryParam("state", matching("%7B%22age%22%3A20%7D"))
                 .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : 20, \"status\" : \"online\" }, \"service\": \"Presence\"}")));
 
@@ -103,7 +103,7 @@ public class SetStateEndpointTest extends TestHarness {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/,/uuid/myUUID/data"))
                 .withQueryParam("uuid", matching("myUUID"))
-                .withQueryParam("pnsdk", matching("Java/suchJava"))
+                .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 .withQueryParam("state", matching("%7B%22age%22%3A20%7D"))
                 .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : 20, \"status\" : \"online\" }, \"service\": \"Presence\"}")));
 
@@ -126,7 +126,7 @@ public class SetStateEndpointTest extends TestHarness {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch1/uuid/myUUID/data"))
                 .withQueryParam("uuid", matching("myUUID"))
-                .withQueryParam("pnsdk", matching("Java/suchJava"))
+                .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 .withQueryParam("state", matching("%7B%22age%22%3A20%7D"))
                 .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : 20, \"status\" : \"online\" }, \"service\": \"Presence\"}")));
 
@@ -148,7 +148,7 @@ public class SetStateEndpointTest extends TestHarness {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch1/uuid/myUUID/data"))
                 .withQueryParam("uuid", matching("myUUID"))
-                .withQueryParam("pnsdk", matching("Java/suchJava"))
+                .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 .withQueryParam("state", matching("%7B%22status%22%3A%22oneline%22%2C%22age%22%3A20%7D"))
                 .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : 20, \"status\" : \"online\" }, \"service\": \"Presence\"}").withStatus(400)));
 
@@ -165,7 +165,7 @@ public class SetStateEndpointTest extends TestHarness {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/testChannel/uuid/myUUID/data"))
                 .withQueryParam("uuid", matching("myUUID"))
-                .withQueryParam("pnsdk", matching("Java/suchJava"))
+                .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : 20, \"status\" : \"online\" }, \"service\": \"Presence\"}")));
 
         PNSetStateResult result = partialSetState.channels(Arrays.asList("testChannel")).sync();
