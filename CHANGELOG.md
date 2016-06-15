@@ -1,4 +1,13 @@
 
+4.0.3
+- fire() method and no-replicaton options.
+
+4.0.2
+- fix to the version fetching.
+
+4.0.1
+- adjustment of the subscribe loop to alleviate duplicate dispatches.
+
 06-03-16 - 4.0.0
 - first GA.
 
