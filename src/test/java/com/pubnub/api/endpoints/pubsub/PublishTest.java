@@ -19,6 +19,7 @@ import java.util.Map;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class PublishTest extends TestHarness {
 
@@ -46,6 +47,8 @@ public class PublishTest extends TestHarness {
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
         assertEquals("myUUID", requests.get(0).queryParameter("uuid").firstValue());
+        assertEquals("true", requests.get(0).queryParameter("norep").firstValue());
+        assertEquals("0", requests.get(0).queryParameter("store").firstValue());
     }
 
     @Test
@@ -59,19 +62,21 @@ public class PublishTest extends TestHarness {
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
         assertEquals("myUUID", requests.get(0).queryParameter("uuid").firstValue());
+        assertEquals("true", requests.get(0).queryParameter("norep").firstValue());
     }
 
     @Test
     public void testRepDefaultSuccessSync() throws PubNubException, InterruptedException {
 
-        stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22hi%22"))
+        stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22hirep%22"))
                 .willReturn(aResponse().withBody("[1,\"Sent\",\"14598111595318003\"]")));
 
-        instance.channel("coolChannel").message("hi").sync();
+        instance.channel("coolChannel").message("hirep").sync();
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
         assertEquals("myUUID", requests.get(0).queryParameter("uuid").firstValue());
+        assertNull(requests.get(0).queryParameter("norep"));
     }
 
 

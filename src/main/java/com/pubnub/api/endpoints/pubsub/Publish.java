@@ -93,7 +93,7 @@ public class Publish extends Endpoint<List<Object>, PNPublishResult> {
         params.put("seqn", String.valueOf(publishSequenceManager.getNextSequence()));
 
         if (!replicate) {
-            params.put("norep", String.valueOf(true));
+            params.put("norep", "true");
         }
 
         if (this.getPubnub().getConfiguration().getCipherKey() != null) {
