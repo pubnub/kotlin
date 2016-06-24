@@ -56,6 +56,26 @@ public class SetStateEndpointTest extends TestHarness {
     }
 
     @Test
+    public void applyStateForSomebodyElseChannelSync() throws PubNubException, InterruptedException {
+
+        stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/testChannel/uuid/someoneElseUUID/data"))
+                .withQueryParam("uuid", matching("myUUID"))
+                .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
+                .withQueryParam("state", matching("%7B%22age%22%3A20%7D"))
+                .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : 20, \"status\" : \"online\" }, \"service\": \"Presence\"}")));
+
+        Map<String, Object> myState = new HashMap<>();
+        myState.put("age", 20);
+
+        PNSetStateResult result = partialSetState.channels(Arrays.asList("testChannel")).state(myState).uuid("someoneElseUUID").sync();
+        assertEquals(result.getState().get("age"), 20);
+        assertEquals(result.getState().get("status"), "online");
+
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
+        assertEquals(1, requests.size());
+    }
+
+    @Test
     public void applyStateForChannelsSync() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/testChannel,testChannel2/uuid/myUUID/data"))

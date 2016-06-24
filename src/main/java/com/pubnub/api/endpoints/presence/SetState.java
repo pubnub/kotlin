@@ -37,6 +37,8 @@ public class SetState extends Endpoint<Envelope<Map<String, Object>>, PNSetState
     private List<String> channelGroups;
     @Setter
     private Object state;
+    @Setter
+    private String uuid;
 
     public SetState(PubNub pubnubInstance, SubscriptionManager subscriptionManagerInstance) {
         super(pubnubInstance);
@@ -61,14 +63,18 @@ public class SetState extends Endpoint<Envelope<Map<String, Object>>, PNSetState
     @Override
     protected Call<Envelope<Map<String, Object>>> doWork(Map<String, String> params) throws PubNubException {
         ObjectWriter ow = new ObjectMapper().writer();
+        String selectedUUID = uuid != null ? uuid : this.getPubnub().getConfiguration().getUuid();
         String stringifiedState;
 
-        StateOperation stateOperation = StateOperation.builder()
-                .state(state)
-                .channels(channels)
-                .channelGroups(channelGroups)
-                .build();
-        subscriptionManager.adaptStateBuilder(stateOperation);
+        // only store the state change if we are modifying it for ourselves.
+        if (selectedUUID.equals(this.getPubnub().getConfiguration().getUuid())) {
+            StateOperation stateOperation = StateOperation.builder()
+                    .state(state)
+                    .channels(channels)
+                    .channelGroups(channelGroups)
+                    .build();
+            subscriptionManager.adaptStateBuilder(stateOperation);
+        }
 
         PresenceService service = this.createRetrofit().create(PresenceService.class);
 
@@ -87,7 +93,7 @@ public class SetState extends Endpoint<Envelope<Map<String, Object>>, PNSetState
 
         String channelCSV = channels.size() > 0 ? PubNubUtil.joinString(channels, ",") : ",";
 
-        return service.setState(this.getPubnub().getConfiguration().getSubscribeKey(), channelCSV, this.getPubnub().getConfiguration().getUuid(), params);
+        return service.setState(this.getPubnub().getConfiguration().getSubscribeKey(), channelCSV, selectedUUID, params);
     }
 
     @Override

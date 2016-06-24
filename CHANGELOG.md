@@ -1,4 +1,7 @@
 
+4.0.4
+- setting State for other UUID's is now supported (again)
+
 4.0.3
 - fire() method and no-replicaton options.
 
