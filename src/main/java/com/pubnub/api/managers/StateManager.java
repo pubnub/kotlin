@@ -97,7 +97,7 @@ public class StateManager {
         }
     }
 
-    public Map<String, Object> createStatePayload() {
+    public final synchronized Map<String, Object> createStatePayload() {
         Map<String, Object> stateResponse = new HashMap<>();
 
         for (SubscriptionItem channel: channels.values()) {
@@ -115,19 +115,19 @@ public class StateManager {
         return stateResponse;
     }
 
-    public List<String> prepareChannelList(final boolean includePresence) {
+    public synchronized List<String> prepareChannelList(final boolean includePresence) {
         return prepareMembershipList(channels, presenceChannels, includePresence);
     }
 
-    public List<String> prepareChannelGroupList(final boolean includePresence) {
+    public synchronized List<String> prepareChannelGroupList(final boolean includePresence) {
         return prepareMembershipList(groups, presenceGroups, includePresence);
     }
 
-    public boolean isEmpty() {
+    public synchronized boolean isEmpty() {
         return (channels.isEmpty() && presenceChannels.isEmpty() && groups.isEmpty() && presenceGroups.isEmpty());
     }
 
-    private List<String> prepareMembershipList(final Map<String, SubscriptionItem> dataStorage,
+    private synchronized List<String> prepareMembershipList(final Map<String, SubscriptionItem> dataStorage,
                                                final Map<String, SubscriptionItem> presenceStorage,
                                                final boolean includePresence) {
         List<String> response = new ArrayList<>();
