@@ -7,6 +7,7 @@ import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.models.consumer.PNTimeResult;
 import retrofit2.Call;
 import retrofit2.Response;
+import retrofit2.Retrofit;
 import retrofit2.http.GET;
 import retrofit2.http.QueryMap;
 
@@ -15,8 +16,8 @@ import java.util.Map;
 
 public class Time extends Endpoint<List<Long>, PNTimeResult> {
 
-    public Time(PubNub pubnub) {
-        super(pubnub);
+    public Time(PubNub pubnub, Retrofit retrofit) {
+        super(pubnub, retrofit);
     }
 
     private interface TimeService {
@@ -31,7 +32,7 @@ public class Time extends Endpoint<List<Long>, PNTimeResult> {
 
     @Override
     protected final Call<List<Long>> doWork(Map<String, String> params) {
-        TimeService service = this.createRetrofit().create(TimeService.class);
+        TimeService service = this.getRetrofit().create(TimeService.class);
         return service.fetchTime(params);
     }
 

@@ -14,6 +14,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import retrofit2.Call;
 import retrofit2.Response;
+import retrofit2.Retrofit;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.QueryMap;
@@ -39,8 +40,8 @@ public class History extends Endpoint<JsonNode, PNHistoryResult> {
     @Setter
     private Boolean includeTimetoken;
 
-    public History(PubNub pubnubInstance) {
-        super(pubnubInstance);
+    public History(PubNub pubnub, Retrofit retrofit) {
+        super(pubnub, retrofit);
     }
 
     private interface HistoryService {
@@ -60,7 +61,7 @@ public class History extends Endpoint<JsonNode, PNHistoryResult> {
     @Override
     protected Call<JsonNode> doWork(Map<String, String> params) {
 
-        HistoryService service = this.createRetrofit().create(HistoryService.class);
+        HistoryService service = this.getRetrofit().create(HistoryService.class);
 
         if (reverse != null) {
             params.put("reverse", String.valueOf(reverse));

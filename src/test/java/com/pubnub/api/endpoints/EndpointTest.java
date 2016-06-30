@@ -26,7 +26,7 @@ public class EndpointTest extends TestHarness {
 
     @Test
     public void testUUID() throws PubNubException {
-        Endpoint<Object, Object> endpoint =  new Endpoint<Object, Object>(pubnub) {
+        Endpoint<Object, Object> endpoint =  new Endpoint<Object, Object>(pubnub, null) {
 
             @Override
             protected void validateParams() throws PubNubException {
@@ -35,16 +35,6 @@ public class EndpointTest extends TestHarness {
             @Override
             protected Object createResponse(Response input) throws PubNubException {
                 return null;
-            }
-
-            @Override
-            protected int getConnectTimeout() {
-                return 0;
-            }
-
-            @Override
-            protected int getRequestTimeout() {
-                return 0;
             }
 
             @Override

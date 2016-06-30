@@ -13,6 +13,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import retrofit2.Call;
 import retrofit2.Response;
+import retrofit2.Retrofit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,8 +29,8 @@ public class Audit extends Endpoint<Envelope<AccessManagerAuditPayload>, PNAcces
     @Setter
     private String channelGroup;
 
-    public Audit(PubNub pubnub) {
-        super(pubnub);
+    public Audit(PubNub pubnub, Retrofit retrofit) {
+        super(pubnub, retrofit);
         authKeys = new ArrayList<>();
     }
 
@@ -82,7 +83,7 @@ public class Audit extends Endpoint<Envelope<AccessManagerAuditPayload>, PNAcces
 
         queryParams.put("signature", signature);
 
-        AccessManagerService service = this.createRetrofit().create(AccessManagerService.class);
+        AccessManagerService service = this.getRetrofit().create(AccessManagerService.class);
         return service.audit(this.getPubnub().getConfiguration().getSubscribeKey(), queryParams);
     }
 
@@ -104,14 +105,6 @@ public class Audit extends Endpoint<Envelope<AccessManagerAuditPayload>, PNAcces
 
 
         return pnAccessManagerAuditResult.build();
-    }
-
-    protected int getConnectTimeout() {
-        return this.getPubnub().getConfiguration().getConnectTimeout();
-    }
-
-    protected int getRequestTimeout() {
-        return this.getPubnub().getConfiguration().getNonSubscribeRequestTimeout();
     }
 
     @Override

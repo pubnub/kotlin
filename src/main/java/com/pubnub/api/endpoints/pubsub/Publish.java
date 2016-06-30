@@ -15,6 +15,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import retrofit2.Call;
 import retrofit2.Response;
+import retrofit2.Retrofit;
 
 import java.util.List;
 import java.util.Map;
@@ -37,8 +38,8 @@ public class Publish extends Endpoint<List<Object>, PNPublishResult> {
 
     private PublishSequenceManager publishSequenceManager;
 
-    public Publish(PubNub pubnub, PublishSequenceManager providedPublishSequenceManager) {
-        super(pubnub);
+    public Publish(PubNub pubnub, PublishSequenceManager providedPublishSequenceManager, Retrofit retrofit) {
+        super(pubnub, retrofit);
 
         this.publishSequenceManager = providedPublishSequenceManager;
         this.replicate = true;
@@ -101,7 +102,7 @@ public class Publish extends Endpoint<List<Object>, PNPublishResult> {
             stringifiedMessage = crypto.encrypt(stringifiedMessage).replace("\n", "");
         }
 
-        PubSubService service = this.createRetrofit().create(PubSubService.class);
+        PubSubService service = this.getRetrofit().create(PubSubService.class);
 
         if (usePOST != null && usePOST) {
             Object payloadToSend;

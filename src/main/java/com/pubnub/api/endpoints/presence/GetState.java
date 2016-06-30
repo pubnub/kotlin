@@ -12,6 +12,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import retrofit2.Call;
 import retrofit2.Response;
+import retrofit2.Retrofit;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,8 +29,8 @@ public class GetState extends Endpoint<Envelope<Object>, PNGetStateResult> {
     @Setter
     private String uuid;
 
-    public GetState(PubNub pubnub) {
-        super(pubnub);
+    public GetState(PubNub pubnub, Retrofit retrofit) {
+        super(pubnub, retrofit);
         channels = new ArrayList<>();
         channelGroups = new ArrayList<>();
     }
@@ -46,7 +47,7 @@ public class GetState extends Endpoint<Envelope<Object>, PNGetStateResult> {
 
     @Override
     protected Call<Envelope<Object>> doWork(Map<String, String> params) {
-        PresenceService service = this.createRetrofit().create(PresenceService.class);
+        PresenceService service = this.getRetrofit().create(PresenceService.class);
 
         if (channelGroups.size() > 0) {
             params.put("channel-group", PubNubUtil.joinString(channelGroups, ","));

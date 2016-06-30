@@ -10,6 +10,7 @@ import com.pubnub.api.models.server.Envelope;
 import lombok.experimental.Accessors;
 import retrofit2.Call;
 import retrofit2.Response;
+import retrofit2.Retrofit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,8 +19,8 @@ import java.util.Map;
 @Accessors(chain = true, fluent = true)
 public class ListAllChannelGroup extends Endpoint<Envelope<Object>, PNChannelGroupsListAllResult> {
 
-    public ListAllChannelGroup(PubNub pubnub) {
-        super(pubnub);
+    public ListAllChannelGroup(PubNub pubnub, Retrofit retrofit) {
+        super(pubnub, retrofit);
     }
 
     @Override
@@ -29,7 +30,7 @@ public class ListAllChannelGroup extends Endpoint<Envelope<Object>, PNChannelGro
     @Override
     protected Call<Envelope<Object>> doWork(Map<String, String> params) {
 
-        ChannelGroupService service = this.createRetrofit().create(ChannelGroupService.class);
+        ChannelGroupService service = this.getRetrofit().create(ChannelGroupService.class);
 
         return service.listAllChannelGroup(this.getPubnub().getConfiguration().getSubscribeKey(), params);
     }

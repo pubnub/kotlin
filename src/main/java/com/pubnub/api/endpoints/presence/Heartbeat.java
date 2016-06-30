@@ -14,6 +14,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import retrofit2.Call;
 import retrofit2.Response;
+import retrofit2.Retrofit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,8 +30,8 @@ public class Heartbeat extends Endpoint<Envelope, Boolean> {
     @Setter
     private List<String> channelGroups;
 
-    public Heartbeat(PubNub pubnub) {
-        super(pubnub);
+    public Heartbeat(PubNub pubnub, Retrofit retrofit) {
+        super(pubnub, retrofit);
         channels = new ArrayList<>();
         channelGroups = new ArrayList<>();
     }
@@ -76,7 +77,7 @@ public class Heartbeat extends Endpoint<Envelope, Boolean> {
             params.put("state", stringifiedState);
         }
 
-        PresenceService service = this.createRetrofit().create(PresenceService.class);
+        PresenceService service = this.getRetrofit().create(PresenceService.class);
         return service.heartbeat(this.getPubnub().getConfiguration().getSubscribeKey(), channelsCSV, params);
     }
 

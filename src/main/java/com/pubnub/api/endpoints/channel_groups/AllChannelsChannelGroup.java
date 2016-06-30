@@ -11,6 +11,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import retrofit2.Call;
 import retrofit2.Response;
+import retrofit2.Retrofit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,8 +22,8 @@ public class AllChannelsChannelGroup extends Endpoint<Envelope<Object>, PNChanne
     @Setter
     private String channelGroup;
 
-    public AllChannelsChannelGroup(PubNub pubnub) {
-        super(pubnub);
+    public AllChannelsChannelGroup(PubNub pubnub, Retrofit retrofit) {
+        super(pubnub, retrofit);
     }
 
     @Override
@@ -34,7 +35,7 @@ public class AllChannelsChannelGroup extends Endpoint<Envelope<Object>, PNChanne
 
     @Override
     protected Call<Envelope<Object>> doWork(Map<String, String> params) {
-        ChannelGroupService service = this.createRetrofit().create(ChannelGroupService.class);
+        ChannelGroupService service = this.getRetrofit().create(ChannelGroupService.class);
 
         return service.allChannelsChannelGroup(this.getPubnub().getConfiguration().getSubscribeKey(), channelGroup, params);
     }

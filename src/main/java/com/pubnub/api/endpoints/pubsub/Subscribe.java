@@ -12,6 +12,7 @@ import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import retrofit2.Call;
 import retrofit2.Response;
+import retrofit2.Retrofit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,8 +59,8 @@ public class Subscribe extends Endpoint<SubscribeEnvelope, SubscribeEnvelope> {
      *
      * @param pubnub supplied pubnub instance.
      */
-    public Subscribe(final PubNub pubnub) {
-        super(pubnub);
+    public Subscribe(final PubNub pubnub, Retrofit retrofit) {
+        super(pubnub, retrofit);
         channels = new ArrayList<>();
         channelGroups = new ArrayList<>();
     }
@@ -76,7 +77,7 @@ public class Subscribe extends Endpoint<SubscribeEnvelope, SubscribeEnvelope> {
 
     @Override
     protected final Call<SubscribeEnvelope> doWork(final Map<String, String> params) throws PubNubException {
-        PubSubService pubSubService = this.createRetrofit().create(PubSubService.class);
+        PubSubService pubSubService = this.getRetrofit().create(PubSubService.class);
         String channelCSV;
 
         if (channelGroups.size() > 0) {

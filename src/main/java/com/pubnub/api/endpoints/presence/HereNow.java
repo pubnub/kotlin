@@ -15,6 +15,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import retrofit2.Call;
 import retrofit2.Response;
+import retrofit2.Retrofit;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,8 +33,8 @@ public class HereNow extends Endpoint<Envelope<Object>, PNHereNowResult> {
     @Setter
     private Boolean includeUUIDs;
 
-    public HereNow(PubNub pubnubInstance) {
-        super(pubnubInstance);
+    public HereNow(PubNub pubnubInstance, Retrofit retrofit) {
+        super(pubnubInstance, retrofit);
         channels = new ArrayList<>();
         channelGroups = new ArrayList<>();
     }
@@ -59,7 +60,7 @@ public class HereNow extends Endpoint<Envelope<Object>, PNHereNowResult> {
 
         String channelCSV;
 
-        PresenceService service = this.createRetrofit().create(PresenceService.class);
+        PresenceService service = this.getRetrofit().create(PresenceService.class);
 
         if (includeState) {
             params.put("state", "1");

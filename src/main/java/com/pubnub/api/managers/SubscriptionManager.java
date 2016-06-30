@@ -53,6 +53,7 @@ public class SubscriptionManager {
     private StateManager subscriptionState;
     private ListenerManager listenerManager;
     private ReconnectionManager reconnectionManager;
+    private RetrofitManager retrofitManager;
 
     private Thread consumerThread;
 
@@ -62,14 +63,16 @@ public class SubscriptionManager {
      */
     private boolean subscriptionStatusAnnounced;
 
-    public SubscriptionManager(PubNub pubnubInstance) {
+    public SubscriptionManager(PubNub pubnubInstance, RetrofitManager retrofitManagerInstance) {
         this.pubnub = pubnubInstance;
 
         this.subscriptionStatusAnnounced = false;
         this.messageQueue = new LinkedBlockingQueue<>();
         this.subscriptionState = new StateManager();
+
         this.listenerManager = new ListenerManager(this.pubnub);
         this.reconnectionManager = new ReconnectionManager(this.pubnub);
+        this.retrofitManager = retrofitManagerInstance;
 
         this.timetoken = 0L;
 
@@ -136,7 +139,7 @@ public class SubscriptionManager {
     public final synchronized void adaptUnsubscribeBuilder(final UnsubscribeOperation unsubscribeOperation) {
         this.subscriptionState.adaptUnsubscribeBuilder(unsubscribeOperation);
 
-        new Leave(pubnub)
+        new Leave(pubnub, this.retrofitManager.getTransactionInstance())
             .channels(unsubscribeOperation.getChannels()).channelGroups(unsubscribeOperation.getChannelGroups())
             .async(new PNCallback<Boolean>() {
                 @Override
@@ -187,7 +190,7 @@ public class SubscriptionManager {
             return;
         }
 
-        subscribeCall = new Subscribe(pubnub)
+        subscribeCall = new Subscribe(pubnub, this.retrofitManager.getSubscriptionInstance())
                 .channels(combinedChannels).channelGroups(combinedChannelGroups)
                 .timetoken(timetoken).region(region)
                 .filterExpression(pubnub.getConfiguration().getFilterExpression());
@@ -258,7 +261,7 @@ public class SubscriptionManager {
             return;
         }
 
-        heartbeatCall = new Heartbeat(pubnub)
+        heartbeatCall = new Heartbeat(pubnub, this.retrofitManager.getTransactionInstance())
                 .channels(presenceChannels).channelGroups(presenceChannelGroups).state(stateStorage);
 
         heartbeatCall.async(new PNCallback<Boolean>() {

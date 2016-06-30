@@ -19,6 +19,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import retrofit2.Call;
 import retrofit2.Response;
+import retrofit2.Retrofit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,8 +41,8 @@ public class SetState extends Endpoint<Envelope<Map<String, Object>>, PNSetState
     @Setter
     private String uuid;
 
-    public SetState(PubNub pubnubInstance, SubscriptionManager subscriptionManagerInstance) {
-        super(pubnubInstance);
+    public SetState(PubNub pubnub, SubscriptionManager subscriptionManagerInstance, Retrofit retrofit) {
+        super(pubnub, retrofit);
         this.subscriptionManager = subscriptionManagerInstance;
         channels = new ArrayList<>();
         channelGroups = new ArrayList<>();
@@ -76,7 +77,7 @@ public class SetState extends Endpoint<Envelope<Map<String, Object>>, PNSetState
             subscriptionManager.adaptStateBuilder(stateOperation);
         }
 
-        PresenceService service = this.createRetrofit().create(PresenceService.class);
+        PresenceService service = this.getRetrofit().create(PresenceService.class);
 
         if (channelGroups.size() > 0) {
             params.put("channel-group", PubNubUtil.joinString(channelGroups, ","));

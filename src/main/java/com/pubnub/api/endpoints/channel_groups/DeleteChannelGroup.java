@@ -11,6 +11,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import retrofit2.Call;
 import retrofit2.Response;
+import retrofit2.Retrofit;
 
 import java.util.Map;
 
@@ -19,8 +20,8 @@ public class DeleteChannelGroup extends Endpoint<Envelope, PNChannelGroupsDelete
     @Setter
     private String channelGroup;
 
-    public DeleteChannelGroup(PubNub pubnub) {
-        super(pubnub);
+    public DeleteChannelGroup(PubNub pubnub, Retrofit retrofit) {
+        super(pubnub, retrofit);
     }
 
     @Override
@@ -32,7 +33,7 @@ public class DeleteChannelGroup extends Endpoint<Envelope, PNChannelGroupsDelete
 
     @Override
     protected Call<Envelope> doWork(Map<String, String> params) {
-        ChannelGroupService service = this.createRetrofit().create(ChannelGroupService.class);
+        ChannelGroupService service = this.getRetrofit().create(ChannelGroupService.class);
 
         return service.deleteChannelGroup(this.getPubnub().getConfiguration().getSubscribeKey(), channelGroup, params);
     }

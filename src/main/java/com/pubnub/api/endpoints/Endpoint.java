@@ -5,19 +5,15 @@ import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.callbacks.PNCallback;
-import com.pubnub.api.enums.PNLogVerbosity;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.enums.PNStatusCategory;
 import com.pubnub.api.models.consumer.PNErrorData;
 import com.pubnub.api.models.consumer.PNStatus;
 import lombok.AccessLevel;
 import lombok.Getter;
-import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.converter.jackson.JacksonConverterFactory;
 
 import java.io.IOException;
 import java.net.ConnectException;
@@ -26,12 +22,14 @@ import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 public abstract class Endpoint<Input, Output> {
 
     @Getter(AccessLevel.PROTECTED)
     private PubNub pubnub;
+    @Getter(AccessLevel.PROTECTED)
+    private Retrofit retrofit;
+
     @Getter(AccessLevel.NONE)
     private PNCallback<Output> cachedCallback;
 
@@ -49,8 +47,9 @@ public abstract class Endpoint<Input, Output> {
     private static final int SERVER_RESPONSE_FORBIDDEN = 403;
     private static final int SERVER_RESPONSE_BAD_REQUEST = 400;
 
-    public Endpoint(final PubNub pubnubInstance) {
+    public Endpoint(final PubNub pubnubInstance, Retrofit retrofit) {
         this.pubnub = pubnubInstance;
+        this.retrofit = retrofit;
     }
 
 
@@ -239,24 +238,6 @@ public abstract class Endpoint<Input, Output> {
         return pnStatus.build();
     }
 
-    protected final Retrofit createRetrofit() {
-        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-        httpClient.readTimeout(this.getRequestTimeout(), TimeUnit.SECONDS);
-        httpClient.connectTimeout(this.getConnectTimeout(), TimeUnit.SECONDS);
-
-        if (pubnub.getConfiguration().getLogVerbosity() == PNLogVerbosity.BODY) {
-            HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-            logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-            httpClient.addInterceptor(logging);
-        }
-
-        return new Retrofit.Builder()
-                .baseUrl(pubnub.getBaseUrl())
-                .addConverterFactory(JacksonConverterFactory.create())
-                .client(httpClient.build())
-                .build();
-    }
-
     protected final Map<String, String> createBaseParams() {
         Map<String, String> params = new HashMap<>();
 
@@ -285,11 +266,6 @@ public abstract class Endpoint<Input, Output> {
     protected abstract Call<Input> doWork(Map<String, String> baseParams) throws PubNubException;
 
     protected abstract Output createResponse(Response<Input> input) throws PubNubException;
-
-    // add hooks for timeout
-    protected abstract int getConnectTimeout();
-
-    protected abstract int getRequestTimeout();
 
     protected abstract PNOperationType getOperationType();
 

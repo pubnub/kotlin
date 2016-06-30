@@ -12,6 +12,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import retrofit2.Call;
 import retrofit2.Response;
+import retrofit2.Retrofit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,8 +28,8 @@ public class RemoveChannelsFromPush extends Endpoint<List<Object>, PNPushRemoveC
     @Setter
     private String deviceId;
 
-    public RemoveChannelsFromPush(PubNub pubnub) {
-        super(pubnub);
+    public RemoveChannelsFromPush(PubNub pubnub, Retrofit retrofit) {
+        super(pubnub, retrofit);
 
         channels = new ArrayList<>();
     }
@@ -57,7 +58,7 @@ public class RemoveChannelsFromPush extends Endpoint<List<Object>, PNPushRemoveC
             baseParams.put("remove", PubNubUtil.joinString(channels, ","));
         }
 
-        PushService service = this.createRetrofit().create(PushService.class);
+        PushService service = this.getRetrofit().create(PushService.class);
         return service.modifyChannelsForDevice(this.getPubnub().getConfiguration().getSubscribeKey(), deviceId, baseParams);
 
     }

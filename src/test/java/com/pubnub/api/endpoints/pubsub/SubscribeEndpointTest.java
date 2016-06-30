@@ -4,6 +4,8 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
+import com.pubnub.api.managers.BasePathManager;
+import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.models.server.SubscribeEnvelope;
 import com.pubnub.api.models.server.SubscribeMessage;
 import com.pubnub.api.endpoints.TestHarness;
@@ -30,7 +32,9 @@ public class SubscribeEndpointTest extends TestHarness {
     @Before
     public void beforeEach() throws IOException {
         pubnub = this.createPubNubInstance(8080);
-        instance = new Subscribe(pubnub);
+        BasePathManager basePathManager = new BasePathManager(pubnub.getConfiguration());
+        RetrofitManager retrofitManager = new RetrofitManager(pubnub, basePathManager);
+        instance = new Subscribe(pubnub, retrofitManager.getSubscriptionInstance());
     }
 
     @Test

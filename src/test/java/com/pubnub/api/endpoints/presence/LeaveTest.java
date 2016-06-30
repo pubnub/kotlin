@@ -3,12 +3,13 @@ package com.pubnub.api.endpoints.presence;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import com.jayway.awaitility.Awaitility;
-import com.pubnub.api.callbacks.PNCallback;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
-import com.pubnub.api.models.consumer.PNStatus;
+import com.pubnub.api.callbacks.PNCallback;
 import com.pubnub.api.endpoints.TestHarness;
-import com.pubnub.api.models.consumer.presence.PNGetStateResult;
+import com.pubnub.api.managers.BasePathManager;
+import com.pubnub.api.managers.RetrofitManager;
+import com.pubnub.api.models.consumer.PNStatus;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -34,7 +35,9 @@ public class LeaveTest extends TestHarness {
     @Before
     public void beforeEach() throws IOException {
         pubnub = this.createPubNubInstance(8080);
-        instance = new Leave(pubnub);
+        BasePathManager basePathManager = new BasePathManager(pubnub.getConfiguration());
+        RetrofitManager retrofitManager = new RetrofitManager(pubnub, basePathManager);
+        instance = new Leave(pubnub, retrofitManager.getTransactionInstance());
     }
 
     @Test

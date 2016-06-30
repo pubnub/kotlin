@@ -24,6 +24,7 @@ import com.pubnub.api.endpoints.push.RemoveAllPushChannelsForDevice;
 import com.pubnub.api.endpoints.push.ListPushProvisions;
 import com.pubnub.api.managers.BasePathManager;
 import com.pubnub.api.managers.PublishSequenceManager;
+import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.SubscriptionManager;
 import com.pubnub.api.vendor.Crypto;
 import lombok.AccessLevel;
@@ -45,6 +46,8 @@ public class PubNub {
     private BasePathManager basePathManager;
     @Getter(AccessLevel.NONE)
     private PublishSequenceManager publishSequenceManager;
+    @Getter(AccessLevel.NONE)
+    private RetrofitManager retrofitManager;
 
 
     private static final int TIMESTAMP_DIVIDER = 1000;
@@ -54,8 +57,9 @@ public class PubNub {
 
     public PubNub(final PNConfiguration initialConfig) {
         this.configuration = initialConfig;
-        this.subscriptionManager = new SubscriptionManager(this);
         this.basePathManager = new BasePathManager(initialConfig);
+        this.retrofitManager = new RetrofitManager(this, basePathManager);
+        this.subscriptionManager = new SubscriptionManager(this, retrofitManager);
         this.publishSequenceManager = new PublishSequenceManager(MAX_SEQUENCE);
     }
 
@@ -84,78 +88,78 @@ public class PubNub {
     // start push
 
     public final AddChannelsToPush addPushNotificationsOnChannels() {
-        return new AddChannelsToPush(this);
+        return new AddChannelsToPush(this, this.retrofitManager.getTransactionInstance());
     }
 
     public final RemoveChannelsFromPush removePushNotificationsFromChannels() {
-        return new RemoveChannelsFromPush(this);
+        return new RemoveChannelsFromPush(this, this.retrofitManager.getTransactionInstance());
     }
 
     public final RemoveAllPushChannelsForDevice removeAllPushNotificationsFromDeviceWithPushToken() {
-        return new RemoveAllPushChannelsForDevice(this);
+        return new RemoveAllPushChannelsForDevice(this, this.retrofitManager.getTransactionInstance());
     }
 
     public final ListPushProvisions auditPushChannelProvisions() {
-        return new ListPushProvisions(this);
+        return new ListPushProvisions(this, this.retrofitManager.getTransactionInstance());
     }
 
     // end push
 
     public final WhereNow whereNow() {
-        return new WhereNow(this);
+        return new WhereNow(this, this.retrofitManager.getTransactionInstance());
     }
 
     public final HereNow hereNow() {
-        return new HereNow(this);
+        return new HereNow(this, this.retrofitManager.getTransactionInstance());
     }
 
     public final Time time() {
-        return new Time(this);
+        return new Time(this, this.retrofitManager.getTransactionInstance());
     }
 
     public final History history() {
-        return new History(this);
+        return new History(this, this.retrofitManager.getTransactionInstance());
     }
 
 
     public final Audit audit() {
-        return new Audit(this);
+        return new Audit(this, this.retrofitManager.getTransactionInstance());
     }
 
     public final Grant grant() {
-        return new Grant(this);
+        return new Grant(this, this.retrofitManager.getTransactionInstance());
     }
 
     public final GetState getPresenceState() {
-        return new GetState(this);
+        return new GetState(this, this.retrofitManager.getTransactionInstance());
     }
 
     public final SetState setPresenceState() {
-        return new SetState(this, subscriptionManager);
+        return new SetState(this, subscriptionManager, this.retrofitManager.getTransactionInstance());
     }
 
     public final Publish publish() {
-        return new Publish(this, publishSequenceManager);
+        return new Publish(this, publishSequenceManager, this.retrofitManager.getTransactionInstance());
     }
 
     public final ListAllChannelGroup listAllChannelGroups() {
-        return new ListAllChannelGroup(this);
+        return new ListAllChannelGroup(this, this.retrofitManager.getTransactionInstance());
     }
 
     public final AllChannelsChannelGroup listChannelsForChannelGroup() {
-        return new AllChannelsChannelGroup(this);
+        return new AllChannelsChannelGroup(this, this.retrofitManager.getTransactionInstance());
     }
 
     public final AddChannelChannelGroup addChannelsToChannelGroup() {
-        return new AddChannelChannelGroup(this);
+        return new AddChannelChannelGroup(this, this.retrofitManager.getTransactionInstance());
     }
 
     public final RemoveChannelChannelGroup removeChannelsFromChannelGroup() {
-        return new RemoveChannelChannelGroup(this);
+        return new RemoveChannelChannelGroup(this, this.retrofitManager.getTransactionInstance());
     }
 
     public final DeleteChannelGroup deleteChannelGroup() {
-        return new DeleteChannelGroup(this);
+        return new DeleteChannelGroup(this, this.retrofitManager.getTransactionInstance());
     }
 
     // public methods

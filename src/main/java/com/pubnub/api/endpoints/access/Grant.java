@@ -17,6 +17,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import retrofit2.Call;
 import retrofit2.Response;
+import retrofit2.Retrofit;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -45,8 +46,8 @@ public class Grant extends Endpoint<Envelope<AccessManagerGrantPayload>, PNAcces
     @Setter
     private List<String> channelGroups;
 
-    public Grant(PubNub pubnub) {
-        super(pubnub);
+    public Grant(PubNub pubnub, Retrofit retrofit) {
+        super(pubnub, retrofit);
         authKeys = new ArrayList<>();
         channels = new ArrayList<>();
         channelGroups = new ArrayList<>();
@@ -107,7 +108,7 @@ public class Grant extends Endpoint<Envelope<AccessManagerGrantPayload>, PNAcces
 
         queryParams.put("signature", signature);
 
-        AccessManagerService service = this.createRetrofit().create(AccessManagerService.class);
+        AccessManagerService service = this.getRetrofit().create(AccessManagerService.class);
         return service.grant(this.getPubnub().getConfiguration().getSubscribeKey(), queryParams);
     }
 

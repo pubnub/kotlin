@@ -12,6 +12,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import retrofit2.Call;
 import retrofit2.Response;
+import retrofit2.Retrofit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,8 +26,8 @@ public class RemoveChannelChannelGroup extends Endpoint<Envelope, PNChannelGroup
     private List<String> channels;
 
 
-    public RemoveChannelChannelGroup(PubNub pubnub) {
-        super(pubnub);
+    public RemoveChannelChannelGroup(PubNub pubnub, Retrofit retrofit) {
+        super(pubnub, retrofit);
         channels = new ArrayList<>();
     }
 
@@ -42,7 +43,7 @@ public class RemoveChannelChannelGroup extends Endpoint<Envelope, PNChannelGroup
 
     @Override
     protected Call<Envelope> doWork(Map<String, String> params) {
-        ChannelGroupService service = this.createRetrofit().create(ChannelGroupService.class);
+        ChannelGroupService service = this.getRetrofit().create(ChannelGroupService.class);
 
         if (channels.size() > 0) {
             params.put("remove", PubNubUtil.joinString(channels, ","));
