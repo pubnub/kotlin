@@ -1,4 +1,7 @@
 
+4.0.5
+- unified retrofit handling to lower amount of instances and sync'd the state methods.
+
 4.0.4
 - setting State for other UUID's is now supported (again)
 

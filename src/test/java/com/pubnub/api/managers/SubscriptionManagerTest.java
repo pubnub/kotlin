@@ -481,9 +481,10 @@ public class SubscriptionManagerTest extends TestHarness {
             public void message(PubNub pubnub, PNMessageResult message) {
                 List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")));
 
-                assertEquals("8", requests.get(1).queryParameter("tr").firstValue());
-                atomic.set(true);
-
+                if (requests.size() > 1) {
+                    assertEquals("8", requests.get(1).queryParameter("tr").firstValue());
+                    atomic.set(true);
+                }
             }
 
             @Override
