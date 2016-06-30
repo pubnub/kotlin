@@ -5,7 +5,6 @@ import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.endpoints.presence.Heartbeat;
-import com.pubnub.api.managers.BasePathManager;
 import com.pubnub.api.managers.RetrofitManager;
 import org.junit.Assert;
 import org.junit.Before;
@@ -31,8 +30,7 @@ public class HeartbeatEndpointTest extends TestHarness {
     @Before
     public void beforeEach() throws IOException {
         pubnub = this.createPubNubInstance(8080);
-        BasePathManager basePathManager = new BasePathManager(pubnub.getConfiguration());
-        RetrofitManager retrofitManager = new RetrofitManager(pubnub, basePathManager);
+        RetrofitManager retrofitManager = new RetrofitManager(pubnub);
         partialHeartbeat = new Heartbeat(pubnub, retrofitManager.getTransactionInstance());
     }
 

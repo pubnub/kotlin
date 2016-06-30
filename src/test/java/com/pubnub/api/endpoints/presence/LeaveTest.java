@@ -7,7 +7,6 @@ import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.callbacks.PNCallback;
 import com.pubnub.api.endpoints.TestHarness;
-import com.pubnub.api.managers.BasePathManager;
 import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.models.consumer.PNStatus;
 import org.junit.Before;
@@ -35,8 +34,7 @@ public class LeaveTest extends TestHarness {
     @Before
     public void beforeEach() throws IOException {
         pubnub = this.createPubNubInstance(8080);
-        BasePathManager basePathManager = new BasePathManager(pubnub.getConfiguration());
-        RetrofitManager retrofitManager = new RetrofitManager(pubnub, basePathManager);
+        RetrofitManager retrofitManager = new RetrofitManager(pubnub);
         instance = new Leave(pubnub, retrofitManager.getTransactionInstance());
     }
 

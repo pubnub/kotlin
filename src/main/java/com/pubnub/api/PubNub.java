@@ -58,7 +58,7 @@ public class PubNub {
     public PubNub(final PNConfiguration initialConfig) {
         this.configuration = initialConfig;
         this.basePathManager = new BasePathManager(initialConfig);
-        this.retrofitManager = new RetrofitManager(this, basePathManager);
+        this.retrofitManager = new RetrofitManager(this);
         this.subscriptionManager = new SubscriptionManager(this, retrofitManager);
         this.publishSequenceManager = new PublishSequenceManager(MAX_SEQUENCE);
     }

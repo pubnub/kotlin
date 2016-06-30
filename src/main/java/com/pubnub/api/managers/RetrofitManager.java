@@ -14,16 +14,14 @@ import java.util.concurrent.TimeUnit;
 public class RetrofitManager {
 
     private PubNub pubnub;
-    private BasePathManager basePathManager;
 
     @Getter
     private Retrofit transactionInstance;
     @Getter
     private Retrofit subscriptionInstance;
 
-    public RetrofitManager(PubNub pubNubInstance, BasePathManager basePathManagerInstance) {
+    public RetrofitManager(PubNub pubNubInstance) {
         this.pubnub = pubNubInstance;
-        this.basePathManager = basePathManagerInstance;
 
         this.transactionInstance = createRetrofit(
                 this.pubnub.getConfiguration().getNonSubscribeRequestTimeout(),

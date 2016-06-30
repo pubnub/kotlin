@@ -47,9 +47,9 @@ public abstract class Endpoint<Input, Output> {
     private static final int SERVER_RESPONSE_FORBIDDEN = 403;
     private static final int SERVER_RESPONSE_BAD_REQUEST = 400;
 
-    public Endpoint(final PubNub pubnubInstance, Retrofit retrofit) {
+    public Endpoint(final PubNub pubnubInstance, Retrofit retrofitInstance) {
         this.pubnub = pubnubInstance;
-        this.retrofit = retrofit;
+        this.retrofit = retrofitInstance;
     }
 
 

@@ -468,7 +468,7 @@ public class SubscriptionManagerTest extends TestHarness {
 
     @Test
     public void testSubscribeRegionBuilder() {
-        final AtomicInteger atomic = new AtomicInteger(0);
+        final AtomicBoolean atomic = new AtomicBoolean();
         stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1,ch2-pnpres,ch1-pnpres/0"))
                 .willReturn(aResponse().withBody("{\"t\":{\"t\":\"14607577960932487\",\"r\":8},\"m\":[{\"a\":\"4\",\"f\":0,\"i\":\"Client-g5d4g\",\"p\":{\"t\":\"14607577960925503\",\"r\":1},\"k\":\"sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f\",\"c\":\"coolChannel\",\"d\":{\"text\":\"Enter Message Here\"},\"b\":\"coolChan-bnel\"}]}")));
 
@@ -481,10 +481,8 @@ public class SubscriptionManagerTest extends TestHarness {
             public void message(PubNub pubnub, PNMessageResult message) {
                 List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")));
 
-                if (requests.size() == 2){
-                    assertEquals("8", requests.get(1).queryParameter("tr").firstValue());
-                    atomic.addAndGet(1);
-                }
+                assertEquals("8", requests.get(1).queryParameter("tr").firstValue());
+                atomic.set(true);
 
             }
 
@@ -496,7 +494,7 @@ public class SubscriptionManagerTest extends TestHarness {
         pubnub.subscribe().channels(Arrays.asList("ch1", "ch2")).withPresence().execute();
 
         Awaitility.await().atMost(5, TimeUnit.SECONDS)
-                .untilAtomic(atomic, org.hamcrest.core.IsEqual.equalTo(1));
+                .untilAtomic(atomic, org.hamcrest.core.IsEqual.equalTo(true));
 
     }
 
