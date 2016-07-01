@@ -59,6 +59,7 @@ public class PNConfiguration {
      * If proxies are forcefully caching requests, set to true to allow the client to randomize the subdomain.
      * This configuration is not supported if custom origin is enabled.
      */
+    @Deprecated
     private boolean cacheBusting;
 
     /**
