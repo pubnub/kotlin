@@ -177,5 +177,40 @@ public class SubscribeEndpointTest extends TestHarness {
         SubscribeEnvelope subscribeEnvelope = instance.sync();
     }
 
+    @org.junit.Test(expected=PubNubException.class)
+    public void testNullSubKeySync() throws PubNubException, InterruptedException {
+
+        stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/coolChannel,coolChannel2/0"))
+                .willReturn(aResponse().withBody("{\"t\":{\"t\":\"14607577960932487\",\"r\":1},\"m\":[{\"a\":\"4\",\"f\":0,\"i\":\"Client-g5d4g\",\"p\":{\"t\":\"14607577960925503\",\"r\":1},\"k\":\"sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f\",\"c\":\"coolChannel\",\"d\":{\"text\":\"Enter Message Here\"},\"b\":\"coolChan-bnel\"}]}")));
+
+        pubnub.getConfiguration().setSubscribeKey(null);
+        instance.channels(Arrays.asList("coolChannel", "coolChannel2")).sync();
+    }
+
+    @org.junit.Test(expected=PubNubException.class)
+    public void testEmptySubKeySync() throws PubNubException, InterruptedException {
+
+        stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/coolChannel,coolChannel2/0"))
+                .willReturn(aResponse().withBody("{\"t\":{\"t\":\"14607577960932487\",\"r\":1},\"m\":[{\"a\":\"4\",\"f\":0,\"i\":\"Client-g5d4g\",\"p\":{\"t\":\"14607577960925503\",\"r\":1},\"k\":\"sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f\",\"c\":\"coolChannel\",\"d\":{\"text\":\"Enter Message Here\"},\"b\":\"coolChan-bnel\"}]}")));
+
+        pubnub.getConfiguration().setSubscribeKey("");
+        instance.channels(Arrays.asList("coolChannel", "coolChannel2")).sync();
+    }
+
+    @org.junit.Test
+    public void StopAndReconnect() throws PubNubException {
+        stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/coolChannel,coolChannel2/0"))
+                .willReturn(aResponse().withBody("{\"t\":{\"t\":\"14607577960932487\",\"r\":1},\"m\":[{\"a\":\"4\",\"f\":0,\"i\":\"Client-g5d4g\",\"p\":{\"t\":\"14607577960925503\",\"r\":1},\"k\":\"sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f\",\"c\":\"coolChannel\",\"d\":{\"text\":\"Enter Message Here\"},\"b\":\"coolChan-bnel\"}]}")));
+
+        instance.channels(Arrays.asList("coolChannel", "coolChannel2")).sync();
+        pubnub.stop();
+        pubnub.reconnect();
+        instance.channels(Arrays.asList("coolChannel", "coolChannel2")).sync();
+
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
+        assertEquals(2, requests.size());
+    }
+
+
 
 }

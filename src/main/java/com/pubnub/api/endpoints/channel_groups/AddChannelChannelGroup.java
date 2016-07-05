@@ -56,6 +56,7 @@ public class AddChannelChannelGroup extends Endpoint<Envelope, PNChannelGroupsAd
         if (input.body() == null) {
             throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_PARSING_ERROR).build();
         }
+
         return PNChannelGroupsAddChannelResult.builder().build();
     }
 

@@ -2,9 +2,15 @@ package com.pubnub.api.endpoints.pubsub;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
+import com.jayway.awaitility.Awaitility;
 import com.pubnub.api.PubNub;
+import com.pubnub.api.PubNubError;
 import com.pubnub.api.PubNubException;
+import com.pubnub.api.callbacks.PNCallback;
 import com.pubnub.api.endpoints.TestHarness;
+import com.pubnub.api.enums.PNOperationType;
+import com.pubnub.api.models.consumer.PNPublishResult;
+import com.pubnub.api.models.consumer.PNStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.junit.Before;
@@ -16,6 +22,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.junit.Assert.assertEquals;
@@ -35,8 +43,8 @@ public class PublishTest extends TestHarness {
         pubnub = this.createPubNubInstance(8080);
         instance = pubnub.publish();
     }
-    @Test
 
+    @Test
     public void testFireSuccessSync() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22hi%22"))
@@ -78,7 +86,6 @@ public class PublishTest extends TestHarness {
         assertEquals("myUUID", requests.get(0).queryParameter("uuid").firstValue());
         assertNull(requests.get(0).queryParameter("norep"));
     }
-
 
     @Test
     public void testSuccessSync() throws PubNubException, InterruptedException {
@@ -287,11 +294,109 @@ public class PublishTest extends TestHarness {
     }
 
     @org.junit.Test(expected=PubNubException.class)
+    public void testEmptyChannel() throws PubNubException, InterruptedException {
+
+        stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22hi%22"))
+                .willReturn(aResponse().withBody("[1,\"Sent\",\"14598111595318003\"]")));
+
+        instance.message("hi").channel("").sync();
+    }
+
+    @org.junit.Test(expected=PubNubException.class)
     public void testMissingMessage() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22hi%22"))
                 .willReturn(aResponse().withBody("[1,\"Sent\",\"14598111595318003\"]")));
 
         instance.channel("coolChannel").sync();
+    }
+
+    @org.junit.Test
+    public void testOperationTypeSuccessAsync() throws IOException, PubNubException, InterruptedException {
+        stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22hi%22"))
+                .willReturn(aResponse().withBody("[1,\"Sent\",\"14598111595318003\"]")));
+
+        final AtomicInteger atomic = new AtomicInteger(0);
+
+        instance.async(new PNCallback<PNPublishResult>() {
+            @Override
+            public void onResponse(PNPublishResult result, PNStatus status) {
+                if (status != null && status.getOperation()== PNOperationType.PNPublishOperation) {
+                    atomic.incrementAndGet();
+                }
+
+            }
+        });
+
+        Awaitility.await().atMost(5, TimeUnit.SECONDS)
+                .untilAtomic(atomic, org.hamcrest.core.IsEqual.equalTo(1));
+    }
+
+    @org.junit.Test(expected=PubNubException.class)
+    public void testNullSubKeySync() throws PubNubException, InterruptedException {
+
+        stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22hirep%22"))
+                .willReturn(aResponse().withBody("[1,\"Sent\",\"14598111595318003\"]")));
+
+        pubnub.getConfiguration().setSubscribeKey(null);
+        instance.channel("coolChannel").message("hirep").sync();
+    }
+
+    @org.junit.Test(expected=PubNubException.class)
+    public void testEmptySubKeySync() throws PubNubException, InterruptedException {
+
+        stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22hirep%22"))
+                .willReturn(aResponse().withBody("[1,\"Sent\",\"14598111595318003\"]")));
+
+        pubnub.getConfiguration().setSubscribeKey("");
+        instance.channel("coolChannel").message("hirep").sync();
+    }
+
+    @org.junit.Test(expected=PubNubException.class)
+    public void testNullPublishKeySync() throws PubNubException, InterruptedException {
+
+        stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22hirep%22"))
+                .willReturn(aResponse().withBody("[1,\"Sent\",\"14598111595318003\"]")));
+
+        pubnub.getConfiguration().setPublishKey(null);
+        instance.channel("coolChannel").message("hirep").sync();
+    }
+
+    @org.junit.Test(expected=PubNubException.class)
+    public void testEmptyPublishKeySync() throws PubNubException, InterruptedException {
+
+        stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22hirep%22"))
+                .willReturn(aResponse().withBody("[1,\"Sent\",\"14598111595318003\"]")));
+
+        pubnub.getConfiguration().setPublishKey("");
+        instance.channel("coolChannel").message("hirep").sync();
+    }
+
+    @org.junit.Test(expected=PubNubException.class)
+    public void testInvalidMessage() throws PubNubException, InterruptedException {
+
+        stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22hirep%22"))
+                .willReturn(aResponse().withBody("[1,\"Sent\",\"14598111595318003\"]")));
+
+        instance.channel("coolChannel").message(new Object()).sync();
+
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
+        assertEquals(1, requests.size());
+        assertEquals("myUUID", requests.get(0).queryParameter("uuid").firstValue());
+        assertNull(requests.get(0).queryParameter("norep"));
+    }
+
+    @org.junit.Test(expected=PubNubException.class)
+    public void testInvalidMeta() throws PubNubException, InterruptedException {
+
+        stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22hirep%22"))
+                .willReturn(aResponse().withBody("[1,\"Sent\",\"14598111595318003\"]")));
+
+        instance.channel("coolChannel").message("hi").meta(new Object()).sync();
+
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
+        assertEquals(1, requests.size());
+        assertEquals("myUUID", requests.get(0).queryParameter("uuid").firstValue());
+        assertNull(requests.get(0).queryParameter("norep"));
     }
 }

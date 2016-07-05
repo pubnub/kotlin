@@ -2,7 +2,9 @@ package com.pubnub.api.endpoints;
 
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
+import com.pubnub.api.endpoints.channel_groups.RemoveChannelChannelGroup;
 import com.pubnub.api.enums.PNOperationType;
+import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsRemoveChannelResult;
 import okhttp3.Request;
 import org.junit.Assert;
 import org.junit.Before;
@@ -12,7 +14,11 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Map;
+
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static org.junit.Assert.assertNotNull;
 
 public class EndpointTest extends TestHarness {
 
@@ -106,7 +112,5 @@ public class EndpointTest extends TestHarness {
 
         endpoint.sync();
     }
-
-
 
 }

@@ -99,7 +99,7 @@ public class SetState extends Endpoint<Envelope<Map<String, Object>>, PNSetState
     @Override
     protected PNSetStateResult createResponse(Response<Envelope<Map<String, Object>>> input) throws PubNubException {
 
-        if (input.body() == null) {
+        if (input.body() == null || input.body().getPayload() == null) {
             throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_PARSING_ERROR).build();
         }
 

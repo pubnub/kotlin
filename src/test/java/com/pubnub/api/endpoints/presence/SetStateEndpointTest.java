@@ -192,5 +192,97 @@ public class SetStateEndpointTest extends TestHarness {
 
     }
 
+    @org.junit.Test(expected = PubNubException.class)
+    public void InvalidStateSync() throws PubNubException, InterruptedException {
+
+        stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/testChannel/uuid/myUUID/data"))
+                .withQueryParam("uuid", matching("myUUID"))
+                .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
+                .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : 20, \"status\" : \"online\" }, \"service\": \"Presence\"}")));
+
+        PNSetStateResult result = partialSetState.channels(Arrays.asList("testChannel")).state(new Object()).sync();
+
+    }
+
+    @org.junit.Test
+    public void testIsAuthRequiredSuccessSync() throws IOException, PubNubException, InterruptedException {
+        stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/testChannel/uuid/myUUID/data"))
+                .withQueryParam("uuid", matching("myUUID"))
+                .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
+                .withQueryParam("state", matching("%7B%22age%22%3A20%7D"))
+                .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : 20, \"status\" : \"online\" }, \"service\": \"Presence\"}")));
+
+        Map<String, Object> myState = new HashMap<>();
+        myState.put("age", 20);
+
+        pubnub.getConfiguration().setAuthKey("myKey");
+        PNSetStateResult result = partialSetState.channels(Arrays.asList("testChannel")).state(myState).sync();
+
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
+        assertEquals(1, requests.size());
+        assertEquals("myKey", requests.get(0).queryParameter("auth").firstValue());
+    }
+
+    @org.junit.Test(expected=PubNubException.class)
+    public void testNullSubKeySync() throws PubNubException, InterruptedException {
+
+        stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/testChannel/uuid/myUUID/data"))
+                .withQueryParam("uuid", matching("myUUID"))
+                .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
+                .withQueryParam("state", matching("%7B%22age%22%3A20%7D"))
+                .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : 20, \"status\" : \"online\" }, \"service\": \"Presence\"}")));
+
+        Map<String, Object> myState = new HashMap<>();
+        myState.put("age", 20);
+
+        pubnub.getConfiguration().setSubscribeKey(null);
+        PNSetStateResult result = partialSetState.channels(Arrays.asList("testChannel")).state(myState).sync();
+    }
+
+    @org.junit.Test(expected=PubNubException.class)
+    public void testEmptySubKeySync() throws PubNubException, InterruptedException {
+
+        stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/testChannel/uuid/myUUID/data"))
+                .withQueryParam("uuid", matching("myUUID"))
+                .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
+                .withQueryParam("state", matching("%7B%22age%22%3A20%7D"))
+                .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : 20, \"status\" : \"online\" }, \"service\": \"Presence\"}")));
+
+        Map<String, Object> myState = new HashMap<>();
+        myState.put("age", 20);
+
+        pubnub.getConfiguration().setSubscribeKey("");
+        PNSetStateResult result = partialSetState.channels(Arrays.asList("testChannel")).state(myState).sync();
+    }
+
+    @org.junit.Test(expected=PubNubException.class)
+    public void testChannelAndGroupMissingSync() throws PubNubException, InterruptedException {
+
+        stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/testChannel/uuid/myUUID/data"))
+                .withQueryParam("uuid", matching("myUUID"))
+                .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
+                .withQueryParam("state", matching("%7B%22age%22%3A20%7D"))
+                .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : 20, \"status\" : \"online\" }, \"service\": \"Presence\"}")));
+
+        Map<String, Object> myState = new HashMap<>();
+        myState.put("age", 20);
+
+        PNSetStateResult result = partialSetState.state(myState).sync();
+    }
+
+    @org.junit.Test(expected=PubNubException.class)
+    public void testNullPayloadSync() throws PubNubException, InterruptedException {
+
+        stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/testChannel/uuid/myUUID/data"))
+                .withQueryParam("uuid", matching("myUUID"))
+                .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
+                .withQueryParam("state", matching("%7B%22age%22%3A20%7D"))
+                .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"service\": \"Presence\"}")));
+
+        Map<String, Object> myState = new HashMap<>();
+        myState.put("age", 20);
+
+        PNSetStateResult result = partialSetState.channels(Arrays.asList("testChannel")).state(myState).sync();
+    }
 
 }

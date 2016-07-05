@@ -133,4 +133,49 @@ public class HeartbeatEndpointTest extends TestHarness {
         partialHeartbeat.sync();
     }
 
+    @org.junit.Test
+    public void testIsAuthRequiredSuccessSync() throws IOException, PubNubException, InterruptedException {
+
+        stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch1/heartbeat"))
+                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\"}")));
+
+        pubnub.getConfiguration().setAuthKey("myKey");
+        partialHeartbeat.channels(Arrays.asList("ch1")).sync();
+
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
+        assertEquals(1, requests.size());
+        assertEquals("myKey", requests.get(0).queryParameter("auth").firstValue());
+    }
+
+    @org.junit.Test(expected=PubNubException.class)
+    public void testNullSubKeySync() throws PubNubException, InterruptedException {
+        pubnub.getConfiguration().setPresenceTimeout(123);
+
+        stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch1/heartbeat"))
+                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\"}")));
+
+        pubnub.getConfiguration().setSubscribeKey(null);
+        partialHeartbeat.channels(Arrays.asList("ch1")).sync();
+    }
+
+    @org.junit.Test(expected=PubNubException.class)
+    public void testEmptySubKeySync() throws PubNubException, InterruptedException {
+        pubnub.getConfiguration().setPresenceTimeout(123);
+
+        stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch1/heartbeat"))
+                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\"}")));
+
+        pubnub.getConfiguration().setSubscribeKey("");
+        partialHeartbeat.channels(Arrays.asList("ch1")).sync();
+    }
+
+    @org.junit.Test(expected=PubNubException.class)
+    public void testInvalidStateSync() throws PubNubException, InterruptedException {
+        pubnub.getConfiguration().setPresenceTimeout(123);
+
+        stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch1/heartbeat"))
+                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\"}")));
+
+        partialHeartbeat.channels(Arrays.asList("ch1")).state(new Object()).sync();
+    }
 }
