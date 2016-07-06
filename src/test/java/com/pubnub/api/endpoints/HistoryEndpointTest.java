@@ -351,6 +351,14 @@ public class HistoryEndpointTest extends TestHarness {
 
         PNHistoryResult response = partialHistory.channel("niceChannel").count(5).reverse(true).start(1L).end(2L).includeTimetoken(true).sync();
 
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/history/sub-key/mySubscribeKey/channel/niceChannel.*")));
+        Assert.assertTrue(requests.get(0).queryParameter("reverse").firstValue().equals("true"));
+        Assert.assertTrue(Integer.valueOf(requests.get(0).queryParameter("count").firstValue()).equals(5));
+        Assert.assertTrue(Integer.valueOf(requests.get(0).queryParameter("start").firstValue()).equals(1));
+        Assert.assertTrue(Integer.valueOf(requests.get(0).queryParameter("end").firstValue()).equals(2));
+        Assert.assertTrue(requests.get(0).queryParameter("include_token").firstValue().equals("true"));
+
+
         Assert.assertTrue(response.getStartTimetoken().equals(1234L));
         Assert.assertTrue(response.getEndTimetoken().equals(4321L));
 
@@ -398,19 +406,6 @@ public class HistoryEndpointTest extends TestHarness {
 
         pubnub.getConfiguration().setCipherKey("Test");
         PNHistoryResult response = partialHistory.channel("niceChannel").count(5).reverse(true).start(1L).end(2L).includeTimetoken(true).sync();
-
-        Assert.assertTrue(response.getStartTimetoken().equals(1234L));
-        Assert.assertTrue(response.getEndTimetoken().equals(4321L));
-
-        Assert.assertEquals(response.getMessages().size(), 2);
-
-        Assert.assertTrue(response.getMessages().get(0).getTimetoken().equals(1111L));
-        Assert.assertEquals((response.getMessages().get(0).getEntry()).get("a").asInt(), 11);
-        Assert.assertEquals((response.getMessages().get(0).getEntry()).get("b").asInt(), 22);
-
-        Assert.assertTrue(response.getMessages().get(1).getTimetoken().equals(2222L));
-        Assert.assertEquals((response.getMessages().get(1).getEntry()).get("a").asInt(), 33);
-        Assert.assertEquals((response.getMessages().get(1).getEntry()).get("b").asInt(), 44);
     }
 
 

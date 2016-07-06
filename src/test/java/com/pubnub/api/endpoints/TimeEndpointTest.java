@@ -8,6 +8,7 @@ import com.pubnub.api.callbacks.TimeCallback;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.PNTimeResult;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 
