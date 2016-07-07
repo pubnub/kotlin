@@ -71,14 +71,6 @@ public class AddChannelsToPush extends Endpoint<List<Object>, PNPushAddChannelRe
         return PNPushAddChannelResult.builder().build();
     }
 
-    protected int getConnectTimeout() {
-        return this.getPubnub().getConfiguration().getConnectTimeout();
-    }
-
-    protected int getRequestTimeout() {
-        return this.getPubnub().getConfiguration().getNonSubscribeRequestTimeout();
-    }
-
     @Override
     protected PNOperationType getOperationType() {
         return PNOperationType.PNPushNotificationEnabledChannelsOperation;

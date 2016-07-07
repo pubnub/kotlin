@@ -57,14 +57,6 @@ public class ListPushProvisions extends Endpoint<List<String>, PNPushListProvisi
         return PNPushListProvisionsResult.builder().channels(input.body()).build();
     }
 
-    protected int getConnectTimeout() {
-        return this.getPubnub().getConfiguration().getConnectTimeout();
-    }
-
-    protected int getRequestTimeout() {
-        return this.getPubnub().getConfiguration().getNonSubscribeRequestTimeout();
-    }
-
     @Override
     protected PNOperationType getOperationType() {
         return PNOperationType.PNPushNotificationEnabledChannelsOperation;

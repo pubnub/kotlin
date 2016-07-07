@@ -53,14 +53,6 @@ public class WhereNow extends Endpoint<Envelope<WhereNowPayload>, PNWhereNowResu
         return pnPresenceWhereNowResult;
     }
 
-    protected int getConnectTimeout() {
-        return this.getPubnub().getConfiguration().getConnectTimeout();
-    }
-
-    protected int getRequestTimeout() {
-        return this.getPubnub().getConfiguration().getNonSubscribeRequestTimeout();
-    }
-
     @Override
     protected PNOperationType getOperationType() {
         return PNOperationType.PNWhereNowOperation;

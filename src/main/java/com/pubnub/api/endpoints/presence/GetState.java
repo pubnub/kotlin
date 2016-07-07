@@ -74,14 +74,6 @@ public class GetState extends Endpoint<Envelope<Object>, PNGetStateResult> {
         return PNGetStateResult.builder().stateByUUID(stateMappings).build();
     }
 
-    protected int getConnectTimeout() {
-        return this.getPubnub().getConfiguration().getConnectTimeout();
-    }
-
-    protected int getRequestTimeout() {
-        return this.getPubnub().getConfiguration().getNonSubscribeRequestTimeout();
-    }
-
     @Override
     protected PNOperationType getOperationType() {
         return PNOperationType.PNGetState;

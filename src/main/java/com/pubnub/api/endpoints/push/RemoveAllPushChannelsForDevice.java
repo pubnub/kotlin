@@ -61,14 +61,6 @@ public class RemoveAllPushChannelsForDevice extends Endpoint<List<Object>, PNPus
         return PNPushRemoveAllChannelsResult.builder().build();
     }
 
-    protected int getConnectTimeout() {
-        return this.getPubnub().getConfiguration().getConnectTimeout();
-    }
-
-    protected int getRequestTimeout() {
-        return this.getPubnub().getConfiguration().getNonSubscribeRequestTimeout();
-    }
-
     @Override
     protected PNOperationType getOperationType() {
         return null; // PNOperationType.PNPushNotificationModifiedChannelsOperations;

@@ -167,14 +167,6 @@ public class Grant extends Endpoint<Envelope<AccessManagerGrantPayload>, PNAcces
                 .build();
     }
 
-    protected int getConnectTimeout() {
-        return this.getPubnub().getConfiguration().getConnectTimeout();
-    }
-
-    protected int getRequestTimeout() {
-        return this.getPubnub().getConfiguration().getNonSubscribeRequestTimeout();
-    }
-
     @Override
     protected PNOperationType getOperationType() {
         return PNOperationType.PNAccessManagerGrant;

@@ -46,14 +46,6 @@ public class DeleteChannelGroup extends Endpoint<Envelope, PNChannelGroupsDelete
         return PNChannelGroupsDeleteGroupResult.builder().build();
     }
 
-    protected int getConnectTimeout() {
-        return this.getPubnub().getConfiguration().getConnectTimeout();
-    }
-
-    protected int getRequestTimeout() {
-        return this.getPubnub().getConfiguration().getNonSubscribeRequestTimeout();
-    }
-
     @Override
     protected PNOperationType getOperationType() {
         return PNOperationType.PNRemoveGroupOperation;

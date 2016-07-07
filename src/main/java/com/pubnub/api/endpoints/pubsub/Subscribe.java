@@ -115,24 +115,6 @@ public class Subscribe extends Endpoint<SubscribeEnvelope, SubscribeEnvelope> {
         return input.body();
     }
 
-    /**
-     * called by the parent class to determine how long to wait until connect timeout.
-     *
-     * @return timeout in seconds
-     */
-    protected final int getConnectTimeout() {
-        return this.getPubnub().getConfiguration().getConnectTimeout();
-    }
-
-    /**
-     * called by the parent class to determine how long to wait until request timeout.
-     *
-     * @return timeout in seconds
-     */
-    protected final int getRequestTimeout() {
-        return this.getPubnub().getConfiguration().getSubscribeTimeout();
-    }
-
     @Override
     protected final PNOperationType getOperationType() {
         return PNOperationType.PNSubscribeOperation;

@@ -110,14 +110,6 @@ public class SetState extends Endpoint<Envelope<Map<String, Object>>, PNSetState
         return pnSetStateResult.build();
     }
 
-    protected int getConnectTimeout() {
-        return this.getPubnub().getConfiguration().getConnectTimeout();
-    }
-
-    protected int getRequestTimeout() {
-        return this.getPubnub().getConfiguration().getNonSubscribeRequestTimeout();
-    }
-
     @Override
     protected PNOperationType getOperationType() {
         return PNOperationType.PNSetStateOperation;
