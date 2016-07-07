@@ -127,10 +127,45 @@ public class LeaveTest extends TestHarness {
 
     @org.junit.Test(expected=PubNubException.class)
     public void testMissingChannelAndGroupSync() throws PubNubException, InterruptedException {
+
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/coolChannel/leave"))
                 .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\", \"action\": \"leave\"}")));
 
         instance.sync();
+    }
+
+    @org.junit.Test(expected=PubNubException.class)
+    public void testNullSubKeySync() throws PubNubException, InterruptedException {
+
+        stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/coolChannel/leave"))
+                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\", \"action\": \"leave\"}")));
+
+        pubnub.getConfiguration().setSubscribeKey(null);
+        instance.sync();
+    }
+
+    @org.junit.Test(expected=PubNubException.class)
+    public void testEmptySubKeySync() throws PubNubException, InterruptedException {
+
+        stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/coolChannel/leave"))
+                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\", \"action\": \"leave\"}")));
+
+        pubnub.getConfiguration().setSubscribeKey("");
+        instance.sync();
+    }
+
+    @org.junit.Test
+    public void testIsAuthRequiredSuccessSync() throws IOException, PubNubException, InterruptedException {
+
+        stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/coolChannel/leave"))
+                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\", \"action\": \"leave\"}")));
+
+        pubnub.getConfiguration().setAuthKey("myKey");
+        instance.channels(Arrays.asList("coolChannel")).sync();
+
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
+        assertEquals(1, requests.size());
+        assertEquals("myKey", requests.get(0).queryParameter("auth").firstValue());
     }
 
 }
