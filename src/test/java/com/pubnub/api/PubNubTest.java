@@ -1,16 +1,11 @@
 package com.pubnub.api;
 
-import com.pubnub.api.callbacks.SubscribeCallback;
 import com.pubnub.api.enums.PNReconnectionPolicy;
-import com.pubnub.api.models.consumer.PNStatus;
-import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
-import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 public class PubNubTest {
     private PubNub pubnub;
@@ -96,7 +91,7 @@ public class PubNubTest {
         pubnub = new PubNub(pnConfiguration);
         String version = pubnub.getVersion();
         int timeStamp = pubnub.getTimestamp();
-        Assert.assertEquals("4.0.4", version);
+        Assert.assertEquals("4.0.5", version);
         Assert.assertTrue(timeStamp > 0);
     }
 
