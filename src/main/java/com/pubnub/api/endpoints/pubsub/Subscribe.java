@@ -102,6 +102,8 @@ public class Subscribe extends Endpoint<SubscribeEnvelope, SubscribeEnvelope> {
             channelCSV = ",";
         }
 
+        params.put("heartbeat", String.valueOf(this.getPubnub().getConfiguration().getPresenceTimeout()));
+
         return pubSubService.subscribe(this.getPubnub().getConfiguration().getSubscribeKey(), channelCSV, params);
     }
 
