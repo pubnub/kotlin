@@ -9,7 +9,7 @@ plugins {
     id 'findbugs'
 }
 group = 'com.pubnub'
-version = '4.0.5'
+version = '4.0.6'
 
 description = """"""
 
@@ -60,7 +60,7 @@ checkstyle {
 
 tasks.withType(Checkstyle) {
 
-    exclude '**/vendor/**', "**/PubNubError.java", "**/*Test*"
+    exclude '**/vendor/**', "**/*Test*"
 
     reports {
         xml.enabled =  true
@@ -70,7 +70,7 @@ tasks.withType(Checkstyle) {
 
 tasks.withType(FindBugs) {
 
-    exclude '**/vendor/**', "**/PubNubError.java", "**/*Test*"
+    exclude '**/vendor/**', "**/*Test*"
 
     reports {
         xml.enabled false

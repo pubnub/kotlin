@@ -1,4 +1,7 @@
 
+4.0.6
+- send heartbeat presence value when subscribing
+
 4.0.5
 - unified retrofit handling to lower amount of instances and sync'd the state methods.
 
