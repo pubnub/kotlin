@@ -49,6 +49,53 @@ public class SubscriptionManagerTest extends TestHarness {
     public WireMockRule wireMockRule = new WireMockRule();
 
     @Test
+    public void testGetSubscribedChannels() {
+        stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
+                .willReturn(aResponse().withBody("{\"t\":{\"t\":\"14607577960932487\",\"r\":1},\"m\":[{\"a\":\"4\",\"f\":0,\"i\":\"Client-g5d4g\",\"p\":{\"t\":\"14607577960925503\",\"r\":1},\"k\":\"sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f\",\"c\":\"coolChannel\",\"d\":{\"text\":\"Message\"},\"b\":\"coolChan-bnel\"}]}")));
+
+        pubnub.subscribe().channels(Arrays.asList("ch1", "ch2")).execute();
+
+        List<String> channels = pubnub.getSubscribedChannels();
+
+        assertEquals(2, channels.size());
+    }
+
+    @Test
+    public void testGetSubscribedChannelGroups() {
+        stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/,/0"))
+                .willReturn(aResponse().withBody("{\"t\":{\"t\":\"14607577960932487\",\"r\":1},\"m\":[{\"a\":\"4\",\"f\":0,\"i\":\"Client-g5d4g\",\"p\":{\"t\":\"14607577960925503\",\"r\":1},\"k\":\"sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f\",\"c\":\"coolChannel\",\"d\":{\"text\":\"Enter Message Here\"},\"b\":\"coolChan-bnel\"}]}")));
+
+        pubnub.subscribe().channelGroups(Arrays.asList("cg1", "cg2")).execute();
+
+        List<String> groups = pubnub.getSubscribedChannelGroups();
+
+        assertEquals(2, groups.size());
+    }
+
+    @Test
+    public void testPubNubUnsubscribeAll() {
+
+        pubnub.subscribe().channels(Arrays.asList("ch1", "ch2"))
+                .channelGroups(Arrays.asList("grp1","grp2"))
+                .withPresence()
+                .execute();
+
+        List<String> channels = pubnub.getSubscribedChannels();
+        assertEquals(2, channels.size());
+
+        List<String> groups = pubnub.getSubscribedChannelGroups();
+        assertEquals(2, groups.size());
+
+        pubnub.unsubscribeAll();
+
+        channels = pubnub.getSubscribedChannels();
+        assertEquals(0, channels.size());
+
+        groups = pubnub.getSubscribedChannelGroups();
+        assertEquals(0, groups.size());
+    }
+
+    @Test
     public void testSubscribeBuilder() {
         final AtomicInteger gotStatus = new AtomicInteger();
         final AtomicBoolean gotMessage = new AtomicBoolean();

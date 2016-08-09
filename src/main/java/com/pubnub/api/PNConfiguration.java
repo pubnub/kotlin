@@ -113,6 +113,8 @@ public class PNConfiguration {
 
         heartbeatNotificationOptions = PNHeartbeatNotificationOptions.FAILURES;
         reconnectionPolicy = PNReconnectionPolicy.NONE;
+
+        secure = true;
     }
 
     /**

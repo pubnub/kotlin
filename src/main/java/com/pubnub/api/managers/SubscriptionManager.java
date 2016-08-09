@@ -286,4 +286,18 @@ public class SubscriptionManager {
 
     }
 
+    public final synchronized List<String> getSubscribedChannels() {
+        return subscriptionState.prepareChannelList(false);
+    }
+
+    public final synchronized List<String> getSubscribedChannelGroups() {
+        return subscriptionState.prepareChannelGroupList(false);
+    }
+
+    public final synchronized void unsubscribeAll() {
+        adaptUnsubscribeBuilder(UnsubscribeOperation.builder()
+                .channelGroups(subscriptionState.prepareChannelGroupList(false))
+                .channels(subscriptionState.prepareChannelList(false))
+                .build());
+    }
 }

@@ -14,7 +14,6 @@ public class PubNubTest {
     @Before
     public void beforeEach() throws IOException {
         pnConfiguration = new PNConfiguration();
-        pnConfiguration.setSecure(true);
         pnConfiguration.setSubscribeKey("demo");
         pnConfiguration.setPublishKey("demo");
     }
@@ -22,6 +21,7 @@ public class PubNubTest {
     @org.junit.Test
     public void testCreateSuccess() throws IOException, PubNubException {
         pubnub = new PubNub(pnConfiguration);
+        Assert.assertEquals(true, pubnub.getConfiguration().isSecure());
         Assert.assertNotNull("pubnub object is null", pubnub);
         Assert.assertNotNull(pubnub.getConfiguration());
         Assert.assertEquals("https://pubsub.pubnub.com", pubnub.getBaseUrl());

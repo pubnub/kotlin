@@ -32,6 +32,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Date;
+import java.util.List;
 
 
 @Getter
@@ -253,4 +254,15 @@ public class PubNub {
         return publish().shouldStore(false).replicate(false);
     }
 
+    public final List<String> getSubscribedChannels() {
+        return subscriptionManager.getSubscribedChannels();
+    }
+
+    public final List<String> getSubscribedChannelGroups() {
+        return subscriptionManager.getSubscribedChannelGroups();
+    }
+
+    public final void unsubscribeAll() {
+        subscriptionManager.unsubscribeAll();
+    }
 }
