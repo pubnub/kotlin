@@ -97,13 +97,7 @@ public abstract class Endpoint<Input, Output> {
 
         try {
             call = doWork(createBaseParams());
-        } catch (PubNubException e) {
-
-            PubNubException pubnubException = PubNubException.builder()
-                    .pubnubError(PubNubErrorBuilder.PNERROBJ_HTTP_ERROR)
-                    .errormsg(e.getMessage())
-                    .build();
-
+        } catch (PubNubException pubnubException) {
             callback.onResponse(null, createStatusResponse(PNStatusCategory.PNBadRequestCategory, null, pubnubException));
             return;
         }
@@ -145,14 +139,7 @@ public abstract class Endpoint<Input, Output> {
 
                 try {
                     callbackResponse = createResponse(response);
-                } catch (PubNubException e) {
-
-                    PubNubException pubnubException = PubNubException.builder()
-                            .pubnubError(PubNubErrorBuilder.PNERROBJ_PARSING_ERROR)
-                            .errormsg(e.getMessage())
-                            .statusCode(response.code())
-                            .build();
-
+                } catch (PubNubException pubnubException) {
                     callback.onResponse(null, createStatusResponse(PNStatusCategory.PNMalformedResponseCategory, response, pubnubException));
                     return;
                 }
@@ -229,7 +216,6 @@ public abstract class Endpoint<Input, Output> {
             pnStatus.clientRequest(response.raw().request());
         }
 
-
         pnStatus.operation(getOperationType());
         pnStatus.category(category);
         pnStatus.affectedChannels(getAffectedChannels());
@@ -248,7 +234,6 @@ public abstract class Endpoint<Input, Output> {
         if (this.pubnub.getConfiguration().getAuthKey() != null && isAuthRequired()) {
                 params.put("auth", pubnub.getConfiguration().getAuthKey());
         }
-
 
         return params;
     }
