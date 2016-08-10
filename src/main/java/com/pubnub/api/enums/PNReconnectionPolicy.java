@@ -4,5 +4,5 @@ public enum PNReconnectionPolicy {
 
     NONE,
     LINEAR,
-
+    EXPONENTIAL
 }

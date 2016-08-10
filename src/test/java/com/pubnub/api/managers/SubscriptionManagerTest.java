@@ -57,7 +57,8 @@ public class SubscriptionManagerTest extends TestHarness {
 
         List<String> channels = pubnub.getSubscribedChannels();
 
-        assertEquals(2, channels.size());
+        assertTrue(channels.contains("ch1"));
+        assertTrue(channels.contains("ch2"));
     }
 
     @Test
@@ -69,22 +70,25 @@ public class SubscriptionManagerTest extends TestHarness {
 
         List<String> groups = pubnub.getSubscribedChannelGroups();
 
-        assertEquals(2, groups.size());
+        assertTrue(groups.contains("cg1"));
+        assertTrue(groups.contains("cg2"));
     }
 
     @Test
     public void testPubNubUnsubscribeAll() {
 
         pubnub.subscribe().channels(Arrays.asList("ch1", "ch2"))
-                .channelGroups(Arrays.asList("grp1","grp2"))
+                .channelGroups(Arrays.asList("cg1","cg2"))
                 .withPresence()
                 .execute();
 
         List<String> channels = pubnub.getSubscribedChannels();
-        assertEquals(2, channels.size());
+        assertTrue(channels.contains("ch1"));
+        assertTrue(channels.contains("ch2"));
 
         List<String> groups = pubnub.getSubscribedChannelGroups();
-        assertEquals(2, groups.size());
+        assertTrue(groups.contains("cg1"));
+        assertTrue(groups.contains("cg2"));
 
         pubnub.unsubscribeAll();
 
