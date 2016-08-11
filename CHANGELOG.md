@@ -1,4 +1,7 @@
 
+4.0.7
+- reduce overlap on error handling when returning exceptions
+
 4.0.6
 - send heartbeat presence value when subscribing
 
