@@ -227,7 +227,7 @@ public abstract class Endpoint<Input, Output> {
     protected final Map<String, String> createBaseParams() {
         Map<String, String> params = new HashMap<>();
 
-        params.put("pnsdk", "PubNub-Java-Unified/" + this.pubnub.getVersion());
+        params.put("pnsdk", "PubNub-Java-Unified/".concat(this.pubnub.getVersion()));
         params.put("uuid", this.pubnub.getConfiguration().getUuid());
 
         // add the auth key for publish and subscribe.

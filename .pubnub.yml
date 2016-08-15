@@ -1,8 +1,17 @@
 name: java
-version: 4.0.7
+version: 4.0.8
 schema: 1
 scm: github.com/pubnub/java
 changelog:
+  - version: v4.0.8
+    date:
+    changes:
+      - type: feature
+        text: added unsubscribeAll, getSubscribedChannels, getSubscribedChannelGroups
+      - type: feature
+        text: SDK will establish secure connections by default
+      - type: feature
+        text: added support for exponential backoff reconnection policies
   - version: v4.0.7
     date: 
     changes:
