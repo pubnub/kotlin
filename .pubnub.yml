@@ -1,5 +1,84 @@
 name: java
 version: 4.0.7
+schema: 1
+scm: github.com/pubnub/java
+changelog:
+  - version: v4.0.7
+    date: 
+    changes:
+      - type: improvement
+        text: reduce overlap on error handling when returning exceptions.
+  - version: v4.0.6
+    changes:
+      - type: improvement
+        text: send heartbeat presence value when subscribing
+  - version: v4.0.5
+    changes:
+      - type: improvement
+        text: unified retrofit handling to lower amount of instances and sync'd the state methods.
+  - version: v4.0.4
+    changes:
+      - type: bug
+        text: setting State for other UUID's is now supported.
+  - version: v4.0.3
+    changes:
+      - type: feature
+        text: fire() method and no-replicaton options.
+  - version: v4.0.2
+    changes:
+      - type: bug
+        text: fix to the version fetching.
+  - version: v4.0.1
+    changes:
+      - type: bug
+        text: adjustment of the subscribe loop to alleviate duplicate dispatches.
+  - version: v4.0.0
+    changes:
+      - type: bug
+        text: first GA.
+  - version: v4.0.0-beta4
+    changes:
+      - type: improvement
+        text: reconnects and minor adjustments.
+  - version: v4.0.0-beta3
+    changes:
+      - type: bug
+        text: fixing state not coming on the subscriber callback.
+      - type: bug
+        text: adjustments to URL encoding on publish, subscribe, set-state operations to avoid double encoding with retrofit.
+  - version: v4.0.0-beta2
+    changes:
+      - type: improvement
+        text: reworking of message queue.
+      - type: improvement
+        text: checkstyle, findbugs.
+      - type: improvement
+        text: reworking error notifications.
+  - version: v4.0.0-beta1
+    changes:
+      - type: improvement
+        text: initial beta1.
 features:
+  access:
+    - GRANT
+    - AUDIT
+  channel-groups:
+    - ADD-CHANNELS
+    - REMOVE-CHANNELS
+    - LIST-GROUPS
+    - LIST-CHANNELS-IN-GROUP
+  push:
+    - ADD-DEVICE-TO-CHANNELS
+    - REMOVE-DEVICE-FROM-CHANNELS
+    - LIST-CHANNELS-FROM-DEVICE
+    - REMOVE-DEVICE
+  presence:
+    - HERE-NOW
+    - WHERE-NOW
+    - SET-STATE
+    - GET-STATE
+    - HEARTBEAT
   publish:
    - STORE-FLAG
+   - FIRE
+   - REPLICATION-FLAG
