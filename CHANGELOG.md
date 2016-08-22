@@ -1,4 +1,18 @@
 
+## [v4.0.9](https://github.com/pubnub/java/tree/v4.0.9)
+
+
+  [Full Changelog](https://github.com/pubnub/java/compare/v4.0.8...v4.0.9)
+
+
+- ⭐adjustments for handling pn_other and decryption
+
+
+
+- ⭐retrofit version bumps.
+
+
+
 ## [v4.0.8](https://github.com/pubnub/java/tree/v4.0.8)
 
 
