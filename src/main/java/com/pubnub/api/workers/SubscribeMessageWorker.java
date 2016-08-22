@@ -58,16 +58,24 @@ public class SubscribeMessageWorker implements Runnable {
     }
 
     private JsonNode processMessage(final JsonNode input) {
+        // if we do not have a crypto key, there is no way to process the node; let's return.
         if (pubnub.getConfiguration().getCipherKey() == null) {
             return input;
         }
 
         Crypto crypto = new Crypto(pubnub.getConfiguration().getCipherKey());
+        String inputText;
         String outputText;
         JsonNode outputObject;
 
+        if (input.isObject() && input.has("pn_other")) {
+            inputText = input.get("pn_other").asText();
+        } else {
+            inputText = input.asText();
+        }
+
         try {
-            outputText = crypto.decrypt(input.toString());
+            outputText = crypto.decrypt(inputText);
         } catch (PubNubException e) {
             PNStatus pnStatus = PNStatus.builder().error(true)
                     .errorData(new PNErrorData(e.getMessage(), e))
