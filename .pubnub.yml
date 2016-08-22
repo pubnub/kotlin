@@ -1,8 +1,15 @@
 name: java
-version: 4.0.8
+version: 4.0.9
 schema: 1
 scm: github.com/pubnub/java
 changelog:
+  - version: v4.0.9
+    date:
+    changes:
+      - type: improvement
+        text: adjustments for handling pn_other and decryption
+      - type: improvement
+        text: retrofit version bumps.
   - version: v4.0.8
     date:
     changes:
