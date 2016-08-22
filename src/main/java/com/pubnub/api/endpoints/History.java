@@ -130,15 +130,25 @@ public class History extends Endpoint<JsonNode, PNHistoryResult> {
     }
 
     private JsonNode processMessage(JsonNode message) throws PubNubException {
+        // if we do not have a crypto key, there is no way to process the node; let's return.
         if (this.getPubnub().getConfiguration().getCipherKey() == null) {
             return message;
         }
 
         Crypto crypto = new Crypto(this.getPubnub().getConfiguration().getCipherKey());
-        String outputText = crypto.decrypt(message.asText());
-
         ObjectMapper mapper = new ObjectMapper();
+        String inputText;
+        String outputText;
         JsonNode outputObject;
+
+        if (message.isObject() && message.has("pn_other")) {
+            inputText = message.get("pn_other").asText();
+        } else {
+            inputText = message.asText();
+        }
+
+        outputText = crypto.decrypt(inputText);
+
         try {
             outputObject = mapper.readValue(outputText, JsonNode.class);
         } catch (IOException e) {

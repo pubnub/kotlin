@@ -163,6 +163,25 @@ public class HistoryEndpointTest extends TestHarness {
     }
 
     @org.junit.Test
+    public void testSyncEncryptedWithPNOtherSuccess() throws IOException, PubNubException {
+        pubnub.getConfiguration().setCipherKey("hello");
+
+        stubFor(get(urlPathEqualTo("/v2/history/sub-key/mySubscribeKey/channel/niceChannel"))
+                .willReturn(aResponse().withBody("[[{\"pn_other\":\"6QoqmS9CnB3W9+I4mhmL7w==\"}],14606134331557852,14606134485013970]")));
+
+        PNHistoryResult response = partialHistory.channel("niceChannel").includeTimetoken(false).sync();
+
+        Assert.assertTrue(response.getStartTimetoken().equals(14606134331557852L));
+        Assert.assertTrue(response.getEndTimetoken().equals(14606134485013970L));
+
+        Assert.assertEquals(response.getMessages().size(), 1);
+
+        Assert.assertEquals(response.getMessages().get(0).getTimetoken(), null);
+        Assert.assertEquals("hey", response.getMessages().get(0).getEntry().get("text").asText());
+
+    }
+
+    @org.junit.Test
     public void testSyncSuccessWithoutTimeToken() throws IOException, PubNubException {
         List<Object> testArray = new ArrayList<Object>();
         List<Object> historyItems = new ArrayList<Object>();
