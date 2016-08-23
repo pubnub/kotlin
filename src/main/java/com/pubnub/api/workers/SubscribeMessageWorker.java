@@ -2,6 +2,7 @@ package com.pubnub.api.workers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.enums.PNOperationType;
@@ -98,6 +99,13 @@ public class SubscribeMessageWorker implements Runnable {
 
             listenerManager.announce(pnStatus);
             return null;
+        }
+
+        // inject the decoded response into the payload
+        if (input.isObject() && input.has("pn_other")) {
+            ObjectNode objectNode = (ObjectNode) input;
+            objectNode.set("pn_other", outputObject);
+            outputObject = objectNode;
         }
 
         return outputObject;

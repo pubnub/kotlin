@@ -471,7 +471,7 @@ public class SubscriptionManagerTest extends TestHarness {
             public void message(PubNub pubnub, PNMessageResult message) {
                 List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")));
                 assertTrue(requests.size() > 0);
-                assertEquals("hey", message.getMessage().get("text").asText());
+                assertEquals("hey", message.getMessage().get("pn_other").get("text").asText());
                 atomic.addAndGet(1);
             }
 
