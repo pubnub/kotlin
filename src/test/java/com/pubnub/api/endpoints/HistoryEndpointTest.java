@@ -177,7 +177,7 @@ public class HistoryEndpointTest extends TestHarness {
         Assert.assertEquals(response.getMessages().size(), 1);
 
         Assert.assertEquals(response.getMessages().get(0).getTimetoken(), null);
-        Assert.assertEquals("hey", response.getMessages().get(0).getEntry().get("text").asText());
+        Assert.assertEquals("hey", response.getMessages().get(0).getEntry().get("pn_other").get("text").asText());
 
     }
 
@@ -188,11 +188,11 @@ public class HistoryEndpointTest extends TestHarness {
         ObjectMapper mapper = new ObjectMapper();
 
 
-        Map<String, Object> historyItem1 = new HashMap<String, Object>();
+        Map<String, Object> historyItem1 = new HashMap<>();
         historyItem1.put("a", 11);
         historyItem1.put("b", 22);
 
-        Map<String, Object> historyItem2 = new HashMap<String, Object>();
+        Map<String, Object> historyItem2 = new HashMap<>();
         historyItem2.put("a", 33);
         historyItem2.put("b", 44);
 
