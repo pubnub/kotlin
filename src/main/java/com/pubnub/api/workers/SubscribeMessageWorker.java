@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
+import com.pubnub.api.PubNubUtil;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.enums.PNStatusCategory;
 import com.pubnub.api.managers.ListenerManager;
@@ -120,13 +121,27 @@ public class SubscribeMessageWorker implements Runnable {
             subscriptionMatch = null;
         }
 
-        if (message.getChannel().contains("-pnpres")) {
+        if (message.getChannel().endsWith("-pnpres")) {
             PresenceEnvelope presencePayload = mapper.convertValue(message.getPayload(), PresenceEnvelope.class);
+
+            String associatedChannel = message.getChannel();
+            String associatedChannelGroup = message.getSubscriptionMatch();
+
+            if (associatedChannel != null) {
+                associatedChannel = PubNubUtil.replaceLast(associatedChannel, "-pnpres", "");
+            }
+            if (associatedChannelGroup != null) {
+                associatedChannelGroup = PubNubUtil.replaceLast(associatedChannelGroup, "-pnpres", "");
+            }
 
             PNPresenceEventResult pnPresenceEventResult = PNPresenceEventResult.builder()
                     .event(presencePayload.getAction())
+                    // deprecated
                     .actualChannel((subscriptionMatch != null) ? channel : null)
                     .subscribedChannel(subscriptionMatch != null ? subscriptionMatch : channel)
+                    // deprecated
+                    .channel(associatedChannel)
+                    .channelGroup(associatedChannelGroup)
                     .state(presencePayload.getData())
                     .timetoken(publishMetaData.getPublishTimetoken())
                     .occupancy(presencePayload.getOccupancy())
@@ -144,8 +159,12 @@ public class SubscribeMessageWorker implements Runnable {
 
             PNMessageResult pnMessageResult = PNMessageResult.builder()
                     .message(extractedMessage)
+                    // deprecated
                     .actualChannel((subscriptionMatch != null) ? channel : null)
                     .subscribedChannel(subscriptionMatch != null ? subscriptionMatch : channel)
+                    // deprecated
+                    .channel(channel)
+                    .channelGroup(subscriptionMatch)
                     .timetoken(publishMetaData.getPublishTimetoken())
                     .build();
 
