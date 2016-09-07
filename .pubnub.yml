@@ -1,8 +1,13 @@
 name: java
-version: 4.0.9
+version: 4.0.10
 schema: 1
 scm: github.com/pubnub/java
 changelog:
+  - version: v4.0.10
+    date:
+    changes:
+      - type: improvement
+        text: adding channel / channelGroup fields when a message / presence event comes in.
   - version: v4.0.9
     date:
     changes:

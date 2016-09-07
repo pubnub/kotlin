@@ -1,4 +1,14 @@
 
+## [v4.0.10](https://github.com/pubnub/java/tree/v4.0.10)
+
+
+  [Full Changelog](https://github.com/pubnub/java/compare/v4.0.9...v4.0.10)
+
+
+- ⭐adding channel / channelGroup fields when a message / presence event comes in.
+
+
+
 ## [v4.0.9](https://github.com/pubnub/java/tree/v4.0.9)
 
 
