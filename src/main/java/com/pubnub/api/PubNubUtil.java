@@ -132,4 +132,13 @@ public final class PubNubUtil {
         return new String(Base64.encode(hmacData, 0), Charset.forName("UTF-8")).replace('+', '-').replace('/', '_');
     }
 
+    public static String replaceLast(String string, String toReplace, String replacement) {
+        int pos = string.lastIndexOf(toReplace);
+        if (pos > -1) {
+            return string.substring(0, pos).concat(replacement).concat(string.substring(pos + toReplace.length(), string.length()));
+        } else {
+            return string;
+        }
+    }
+
 }
