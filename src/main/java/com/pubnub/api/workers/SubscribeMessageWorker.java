@@ -125,13 +125,13 @@ public class SubscribeMessageWorker implements Runnable {
             PresenceEnvelope presencePayload = mapper.convertValue(message.getPayload(), PresenceEnvelope.class);
 
             String associatedChannel = message.getChannel();
-            String associatedChannelGroup = message.getSubscriptionMatch();
+            String associatedSubscription = message.getSubscriptionMatch();
 
             if (associatedChannel != null) {
                 associatedChannel = PubNubUtil.replaceLast(associatedChannel, "-pnpres", "");
             }
-            if (associatedChannelGroup != null) {
-                associatedChannelGroup = PubNubUtil.replaceLast(associatedChannelGroup, "-pnpres", "");
+            if (associatedSubscription != null) {
+                associatedSubscription = PubNubUtil.replaceLast(associatedSubscription, "-pnpres", "");
             }
 
             PNPresenceEventResult pnPresenceEventResult = PNPresenceEventResult.builder()
@@ -141,7 +141,7 @@ public class SubscribeMessageWorker implements Runnable {
                     .subscribedChannel(subscriptionMatch != null ? subscriptionMatch : channel)
                     // deprecated
                     .channel(associatedChannel)
-                    .channelGroup(associatedChannelGroup)
+                    .subscription(associatedSubscription)
                     .state(presencePayload.getData())
                     .timetoken(publishMetaData.getPublishTimetoken())
                     .occupancy(presencePayload.getOccupancy())
@@ -163,8 +163,8 @@ public class SubscribeMessageWorker implements Runnable {
                     .actualChannel((subscriptionMatch != null) ? channel : null)
                     .subscribedChannel(subscriptionMatch != null ? subscriptionMatch : channel)
                     // deprecated
-                    .channel(channel)
-                    .channelGroup(subscriptionMatch)
+                    .channel(message.getChannel())
+                    .subscription(message.getSubscriptionMatch())
                     .timetoken(publishMetaData.getPublishTimetoken())
                     .build();
 

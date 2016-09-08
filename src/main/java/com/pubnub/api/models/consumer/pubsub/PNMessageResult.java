@@ -16,7 +16,7 @@ public class PNMessageResult {
     private String actualChannel;
 
     private String channel;
-    private String channelGroup;
+    private String subscription;
 
     private Long timetoken;
     private Object userMetadata;
