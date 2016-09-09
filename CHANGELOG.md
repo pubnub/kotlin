@@ -1,4 +1,14 @@
 
+## [v4.0.11](https://github.com/pubnub/java/tree/v4.0.11)
+
+
+  [Full Changelog](https://github.com/pubnub/java/compare/v4.0.10...v4.0.11)
+
+
+- ⭐bumping build process for gradle 3 / merging documentation into the repo and test adjustments
+
+
+
 ## [v4.0.10](https://github.com/pubnub/java/tree/v4.0.10)
 
 
