@@ -117,21 +117,21 @@ public class SubscribeMessageWorker implements Runnable {
         String subscriptionMatch = message.getSubscriptionMatch();
         PublishMetaData publishMetaData = message.getPublishMetaData();
 
-        if (channel.equals(subscriptionMatch)) {
+        if (channel != null && channel.equals(subscriptionMatch)) {
             subscriptionMatch = null;
         }
 
         if (message.getChannel().endsWith("-pnpres")) {
             PresenceEnvelope presencePayload = mapper.convertValue(message.getPayload(), PresenceEnvelope.class);
 
-            String associatedChannel = message.getChannel();
-            String associatedSubscription = message.getSubscriptionMatch();
+            String strippedPresenceChannel = null;
+            String strippedPresenceSubscription = null;
 
-            if (associatedChannel != null) {
-                associatedChannel = PubNubUtil.replaceLast(associatedChannel, "-pnpres", "");
+            if (channel != null) {
+                strippedPresenceChannel = PubNubUtil.replaceLast(channel, "-pnpres", "");
             }
-            if (associatedSubscription != null) {
-                associatedSubscription = PubNubUtil.replaceLast(associatedSubscription, "-pnpres", "");
+            if (subscriptionMatch != null) {
+                strippedPresenceSubscription = PubNubUtil.replaceLast(subscriptionMatch, "-pnpres", "");
             }
 
             PNPresenceEventResult pnPresenceEventResult = PNPresenceEventResult.builder()
@@ -140,8 +140,8 @@ public class SubscribeMessageWorker implements Runnable {
                     .actualChannel((subscriptionMatch != null) ? channel : null)
                     .subscribedChannel(subscriptionMatch != null ? subscriptionMatch : channel)
                     // deprecated
-                    .channel(associatedChannel)
-                    .subscription(associatedSubscription)
+                    .channel(strippedPresenceChannel)
+                    .subscription(strippedPresenceSubscription)
                     .state(presencePayload.getData())
                     .timetoken(publishMetaData.getPublishTimetoken())
                     .occupancy(presencePayload.getOccupancy())
@@ -163,8 +163,8 @@ public class SubscribeMessageWorker implements Runnable {
                     .actualChannel((subscriptionMatch != null) ? channel : null)
                     .subscribedChannel(subscriptionMatch != null ? subscriptionMatch : channel)
                     // deprecated
-                    .channel(message.getChannel())
-                    .subscription(message.getSubscriptionMatch())
+                    .channel(channel)
+                    .subscription(subscriptionMatch)
                     .timetoken(publishMetaData.getPublishTimetoken())
                     .build();
 
