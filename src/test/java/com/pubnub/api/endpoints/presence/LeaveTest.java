@@ -36,6 +36,7 @@ public class LeaveTest extends TestHarness {
         pubnub = this.createPubNubInstance(8080);
         RetrofitManager retrofitManager = new RetrofitManager(pubnub);
         instance = new Leave(pubnub, retrofitManager.getTransactionInstance());
+        wireMockRule.start();
     }
 
     @Test

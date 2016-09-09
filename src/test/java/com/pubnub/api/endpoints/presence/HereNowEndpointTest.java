@@ -36,6 +36,7 @@ public class HereNowEndpointTest extends TestHarness {
     public void beforeEach() throws IOException {
         pubnub = this.createPubNubInstance(8080);
         partialHereNow = pubnub.hereNow();
+        wireMockRule.start();
     }
 
     @Test
@@ -212,7 +213,7 @@ public class HereNowEndpointTest extends TestHarness {
                 .willReturn(aResponse().withBody("{\"status\":200,\"message\":\"OK\",\"payload\":{\"total_occupancy\":3,\"total_channels\":2,\"channels\":{\"ch1\":{\"occupancy\":1,\"uuids\":[{\"uuid\":\"user1\",\"state\":{\"age\":10}}]},\"ch2\":{\"occupancy\":2,\"uuids\":[{\"uuid\":\"user1\",\"state\":{\"age\":10}},{\"uuid\":\"user3\",\"state\":{\"age\":30}}]}}},\"service\":\"Presence\"}")));
 
         pubnub.getConfiguration().setAuthKey("myKey");
-        PNHereNowResult response =  partialHereNow.channels(Arrays.asList("ch1", "ch2")).includeState(true).sync();
+        partialHereNow.channels(Arrays.asList("ch1", "ch2")).includeState(true).sync();
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
@@ -236,8 +237,7 @@ public class HereNowEndpointTest extends TestHarness {
             }
         });
 
-        Awaitility.await().atMost(5, TimeUnit.SECONDS)
-                .untilAtomic(atomic, org.hamcrest.core.IsEqual.equalTo(1));
+        Awaitility.await().atMost(5, TimeUnit.SECONDS).untilAtomic(atomic, org.hamcrest.core.IsEqual.equalTo(1));
     }
 
     @org.junit.Test(expected=PubNubException.class)
@@ -247,7 +247,7 @@ public class HereNowEndpointTest extends TestHarness {
                 .willReturn(aResponse().withBody("{\"status\":200,\"message\":\"OK\",\"payload\":{\"total_occupancy\":3,\"total_channels\":2,\"channels\":{\"ch1\":{\"occupancy\":1,\"uuids\":[{\"uuid\":\"user1\",\"state\":{\"age\":10}}]},\"ch2\":{\"occupancy\":2,\"uuids\":[{\"uuid\":\"user1\",\"state\":{\"age\":10}},{\"uuid\":\"user3\",\"state\":{\"age\":30}}]}}},\"service\":\"Presence\"}")));
 
         pubnub.getConfiguration().setSubscribeKey(null);
-        PNHereNowResult response =  partialHereNow.channels(Arrays.asList("ch1", "ch2")).includeState(true).sync();
+        partialHereNow.channels(Arrays.asList("ch1", "ch2")).includeState(true).sync();
     }
 
     @org.junit.Test(expected=PubNubException.class)
@@ -257,7 +257,7 @@ public class HereNowEndpointTest extends TestHarness {
                 .willReturn(aResponse().withBody("{\"status\":200,\"message\":\"OK\",\"payload\":{\"total_occupancy\":3,\"total_channels\":2,\"channels\":{\"ch1\":{\"occupancy\":1,\"uuids\":[{\"uuid\":\"user1\",\"state\":{\"age\":10}}]},\"ch2\":{\"occupancy\":2,\"uuids\":[{\"uuid\":\"user1\",\"state\":{\"age\":10}},{\"uuid\":\"user3\",\"state\":{\"age\":30}}]}}},\"service\":\"Presence\"}")));
 
         pubnub.getConfiguration().setSubscribeKey("");
-        PNHereNowResult response =  partialHereNow.channels(Arrays.asList("ch1", "ch2")).includeState(true).sync();
+        partialHereNow.channels(Arrays.asList("ch1", "ch2")).includeState(true).sync();
     }
 
 }

@@ -87,7 +87,7 @@ public class PubNubTest {
     }
 
     @org.junit.Test
-    public void GetVersionAndTimeStamp() throws PubNubException {
+    public void getVersionAndTimeStamp() throws PubNubException {
         pubnub = new PubNub(pnConfiguration);
         String version = pubnub.getVersion();
         int timeStamp = pubnub.getTimestamp();

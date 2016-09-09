@@ -38,8 +38,8 @@ public class AuditEndpointTest extends TestHarness {
 
         pubnub = this.createPubNubInstance(8080);
         partialAudit = pubnub.audit();
-
         pubnub.getConfiguration().setSecretKey("secretKey");
+        wireMockRule.start();
 
     }
 
@@ -106,7 +106,7 @@ public class AuditEndpointTest extends TestHarness {
                 .withQueryParam("timestamp", matching("1337"))
                 .willReturn(aResponse().withBody("{\"message\":\"Success\",\"payload\":{\"level\":\"user\",\"subscribe_key\":\"sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f\",\"channel\":\"ch1\",\"auths\":{\"key1\":{\"r\":1,\"m\":1,\"w\":1}}},\"service\":\"Access Manager\",\"status\":200}")));
 
-        PNAccessManagerAuditResult pnAccessManagerAuditResult = partialAudit.channel("ch1").sync();
+        partialAudit.channel("ch1").sync();
     }
 
     @org.junit.Test
@@ -149,7 +149,7 @@ public class AuditEndpointTest extends TestHarness {
                 .willReturn(aResponse().withBody("{\"message\":\"Success\",\"payload\":{\"level\":\"channel-group+auth\",\"subscribe_key\":\"sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f\",\"channel-group\":\"cg2\",\"auths\":{\"key1\":{\"r\":1,\"m\":1,\"w\":1}}},\"service\":\"Access Manager\",\"status\":200}")));
 
         pubnub.getConfiguration().setAuthKey("myKey");
-        PNAccessManagerAuditResult pnAccessManagerAuditResult = partialAudit.channelGroup("cg1").authKeys(Arrays.asList("key1")).sync();
+        partialAudit.channelGroup("cg1").authKeys(Arrays.asList("key1")).sync();
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
@@ -167,7 +167,7 @@ public class AuditEndpointTest extends TestHarness {
                 .withQueryParam("timestamp", matching("1337"))
                 .willReturn(aResponse().withBody("{\"message\":\"Success\",\"service\":\"Access Manager\",\"status\":200}")));
 
-        PNAccessManagerAuditResult pnAccessManagerAuditResult = partialAudit.channelGroup("cg1").authKeys(Arrays.asList("key1")).sync();
+        partialAudit.channelGroup("cg1").authKeys(Arrays.asList("key1")).sync();
     }
 
     @org.junit.Test(expected=PubNubException.class)
@@ -183,7 +183,7 @@ public class AuditEndpointTest extends TestHarness {
                 .willReturn(aResponse().withBody("{\"message\":\"Success\",\"service\":\"Access Manager\",\"status\":200}")));
 
         pubnub.getConfiguration().setSecretKey(null);
-        PNAccessManagerAuditResult pnAccessManagerAuditResult = partialAudit.channelGroup("cg1").authKeys(Arrays.asList("key1")).sync();
+        partialAudit.channelGroup("cg1").authKeys(Arrays.asList("key1")).sync();
     }
 
     @org.junit.Test(expected=PubNubException.class)
@@ -199,7 +199,7 @@ public class AuditEndpointTest extends TestHarness {
                 .willReturn(aResponse().withBody("{\"message\":\"Success\",\"service\":\"Access Manager\",\"status\":200}")));
 
         pubnub.getConfiguration().setSecretKey("");
-        PNAccessManagerAuditResult pnAccessManagerAuditResult = partialAudit.channelGroup("cg1").authKeys(Arrays.asList("key1")).sync();
+        partialAudit.channelGroup("cg1").authKeys(Arrays.asList("key1")).sync();
     }
 
     @org.junit.Test(expected=PubNubException.class)
@@ -215,7 +215,7 @@ public class AuditEndpointTest extends TestHarness {
                 .willReturn(aResponse().withBody("{\"message\":\"Success\",\"service\":\"Access Manager\",\"status\":200}")));
 
         pubnub.getConfiguration().setSubscribeKey(null);
-        PNAccessManagerAuditResult pnAccessManagerAuditResult = partialAudit.channelGroup("cg1").authKeys(Arrays.asList("key1")).sync();
+        partialAudit.channelGroup("cg1").authKeys(Arrays.asList("key1")).sync();
     }
 
     @org.junit.Test(expected=PubNubException.class)
@@ -231,7 +231,7 @@ public class AuditEndpointTest extends TestHarness {
                 .willReturn(aResponse().withBody("{\"message\":\"Success\",\"service\":\"Access Manager\",\"status\":200}")));
 
         pubnub.getConfiguration().setSubscribeKey("");
-        PNAccessManagerAuditResult pnAccessManagerAuditResult = partialAudit.channelGroup("cg1").authKeys(Arrays.asList("key1")).sync();
+        partialAudit.channelGroup("cg1").authKeys(Arrays.asList("key1")).sync();
     }
 
     @org.junit.Test(expected=PubNubException.class)
@@ -247,7 +247,7 @@ public class AuditEndpointTest extends TestHarness {
                 .willReturn(aResponse().withBody("{\"message\":\"Success\",\"service\":\"Access Manager\",\"status\":200}")));
 
         pubnub.getConfiguration().setPublishKey(null);
-        PNAccessManagerAuditResult pnAccessManagerAuditResult = partialAudit.channelGroup("cg1").authKeys(Arrays.asList("key1")).sync();
+        partialAudit.channelGroup("cg1").authKeys(Arrays.asList("key1")).sync();
     }
 
     @org.junit.Test(expected=PubNubException.class)
@@ -263,7 +263,7 @@ public class AuditEndpointTest extends TestHarness {
                 .willReturn(aResponse().withBody("{\"message\":\"Success\",\"service\":\"Access Manager\",\"status\":200}")));
 
         pubnub.getConfiguration().setPublishKey("");
-        PNAccessManagerAuditResult pnAccessManagerAuditResult = partialAudit.channelGroup("cg1").authKeys(Arrays.asList("key1")).sync();
+        partialAudit.channelGroup("cg1").authKeys(Arrays.asList("key1")).sync();
     }
 
     @org.junit.Test(expected=PubNubException.class)
@@ -278,7 +278,7 @@ public class AuditEndpointTest extends TestHarness {
                 .withQueryParam("timestamp", matching("1337"))
                 .willReturn(aResponse().withBody("{\"message\":\"Success\",\"service\":\"Access Manager\",\"status\":200}")));
 
-        PNAccessManagerAuditResult pnAccessManagerAuditResult = partialAudit.authKeys(Arrays.asList("key1")).channel(null).channelGroup(null).sync();
+        partialAudit.authKeys(Arrays.asList("key1")).channel(null).channelGroup(null).sync();
     }
 
 }

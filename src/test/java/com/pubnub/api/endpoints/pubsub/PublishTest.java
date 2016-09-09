@@ -4,20 +4,19 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import com.jayway.awaitility.Awaitility;
 import com.pubnub.api.PubNub;
-import com.pubnub.api.PubNubError;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.callbacks.PNCallback;
 import com.pubnub.api.endpoints.TestHarness;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.models.consumer.PNPublishResult;
 import com.pubnub.api.models.consumer.PNStatus;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -37,11 +36,11 @@ public class PublishTest extends TestHarness {
     private PubNub pubnub;
     private Publish instance;
 
-
     @Before
     public void beforeEach() throws IOException {
         pubnub = this.createPubNubInstance(8080);
         instance = pubnub.publish();
+        wireMockRule.start();
     }
 
     @Test
@@ -119,7 +118,7 @@ public class PublishTest extends TestHarness {
     }
 
     @Test
-    public void testSuccessPostSync() throws PubNubException, InterruptedException {
+    public void testSuccessPostSync() throws PubNubException, InterruptedException, UnsupportedEncodingException {
         stubFor(post(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0"))
                 .willReturn(aResponse().withBody("[1,\"Sent\",\"14598111595318003\"]")));
 
@@ -128,7 +127,7 @@ public class PublishTest extends TestHarness {
         List<LoggedRequest> requests = findAll(postRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
         assertEquals("myUUID", requests.get(0).queryParameter("uuid").firstValue());
-        assertEquals("[\"m1\",\"m2\"]", new String(requests.get(0).getBody()));
+        assertEquals("[\"m1\",\"m2\"]", new String(requests.get(0).getBody(), "UTF-8"));
     }
 
     @Test
@@ -241,7 +240,7 @@ public class PublishTest extends TestHarness {
         List<LoggedRequest> requests = findAll(postRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
         assertEquals("myUUID", requests.get(0).queryParameter("uuid").firstValue());
-        assertEquals("\"HFP7V6bDwBLrwc1t8Rnrog==\"", new String(requests.get(0).getBody()));
+        assertEquals("\"HFP7V6bDwBLrwc1t8Rnrog==\"", new String(requests.get(0).getBody(), Charset.forName("UTF-8")));
     }
 
     @Test
@@ -263,14 +262,6 @@ public class PublishTest extends TestHarness {
 
     @Test
     public void testSuccessPOJOSync() throws PubNubException, InterruptedException {
-
-        @AllArgsConstructor
-        @Getter
-        class TestPojo {
-            String field1;
-            String field2;
-        }
-
         TestPojo testPojo = new TestPojo("10", "20");
 
         stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%7B%22field1%22%3A%2210%22%2C%22field2%22%3A%2220%22%7D"))

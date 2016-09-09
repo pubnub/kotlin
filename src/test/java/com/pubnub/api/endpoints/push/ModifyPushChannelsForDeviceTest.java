@@ -43,6 +43,7 @@ public class ModifyPushChannelsForDeviceTest extends TestHarness {
         instance = pubnub.removeAllPushNotificationsFromDeviceWithPushToken();
         instanceAdd = pubnub.addPushNotificationsOnChannels();
         instanceRemove = pubnub.removePushNotificationsFromChannels();
+        wireMockRule.start();
     }
 
     @Test
