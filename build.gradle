@@ -61,7 +61,7 @@ checkstyle {
 
 tasks.withType(Checkstyle) {
 
-    exclude '**/vendor/**', "**/*Test*"
+    exclude '**/vendor/**'
 
     reports {
         xml.enabled =  true
@@ -71,7 +71,7 @@ tasks.withType(Checkstyle) {
 
 tasks.withType(FindBugs) {
 
-    exclude '**/vendor/**', "**/*Test*"
+    exclude '**/vendor/**'
 
     reports {
         xml.enabled false
@@ -83,6 +83,11 @@ check.dependsOn jacocoTestReport
 
 processResources {
     expand projectVersion: project.version
+}
+
+
+javadoc {
+    destinationDir = file("docs")
 }
 
 extraArchive {
