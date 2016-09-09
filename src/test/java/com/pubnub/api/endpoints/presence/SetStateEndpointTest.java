@@ -31,8 +31,8 @@ public class SetStateEndpointTest extends TestHarness {
     @Before
     public void beforeEach() throws IOException {
         pubnub = this.createPubNubInstance(8080);
-
         partialSetState = pubnub.setPresenceState();
+        wireMockRule.start();
     }
 
     @Test
@@ -176,32 +176,29 @@ public class SetStateEndpointTest extends TestHarness {
         Map<String, Object> myState = new HashMap<>();
         myState.put("age", 20);
 
-        PNSetStateResult result = partialSetState.channels(Arrays.asList("ch1")).channelGroups(Arrays.asList("cg1", "cg2")).state(myState).sync();
-
+        partialSetState.channels(Arrays.asList("ch1")).channelGroups(Arrays.asList("cg1", "cg2")).state(myState).sync();
     }
 
     @org.junit.Test(expected = PubNubException.class)
-    public void MissingStateSync() throws PubNubException, InterruptedException {
+    public void missingStateSync() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/testChannel/uuid/myUUID/data"))
                 .withQueryParam("uuid", matching("myUUID"))
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : 20, \"status\" : \"online\" }, \"service\": \"Presence\"}")));
 
-        PNSetStateResult result = partialSetState.channels(Arrays.asList("testChannel")).sync();
-
+        partialSetState.channels(Arrays.asList("testChannel")).sync();
     }
 
     @org.junit.Test(expected = PubNubException.class)
-    public void InvalidStateSync() throws PubNubException, InterruptedException {
+    public void invalidStateSync() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/testChannel/uuid/myUUID/data"))
                 .withQueryParam("uuid", matching("myUUID"))
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : 20, \"status\" : \"online\" }, \"service\": \"Presence\"}")));
 
-        PNSetStateResult result = partialSetState.channels(Arrays.asList("testChannel")).state(new Object()).sync();
-
+        partialSetState.channels(Arrays.asList("testChannel")).state(new Object()).sync();
     }
 
     @org.junit.Test
@@ -216,7 +213,7 @@ public class SetStateEndpointTest extends TestHarness {
         myState.put("age", 20);
 
         pubnub.getConfiguration().setAuthKey("myKey");
-        PNSetStateResult result = partialSetState.channels(Arrays.asList("testChannel")).state(myState).sync();
+        partialSetState.channels(Arrays.asList("testChannel")).state(myState).sync();
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
@@ -236,7 +233,7 @@ public class SetStateEndpointTest extends TestHarness {
         myState.put("age", 20);
 
         pubnub.getConfiguration().setSubscribeKey(null);
-        PNSetStateResult result = partialSetState.channels(Arrays.asList("testChannel")).state(myState).sync();
+        partialSetState.channels(Arrays.asList("testChannel")).state(myState).sync();
     }
 
     @org.junit.Test(expected=PubNubException.class)
@@ -252,7 +249,7 @@ public class SetStateEndpointTest extends TestHarness {
         myState.put("age", 20);
 
         pubnub.getConfiguration().setSubscribeKey("");
-        PNSetStateResult result = partialSetState.channels(Arrays.asList("testChannel")).state(myState).sync();
+        partialSetState.channels(Arrays.asList("testChannel")).state(myState).sync();
     }
 
     @org.junit.Test(expected=PubNubException.class)
@@ -267,7 +264,7 @@ public class SetStateEndpointTest extends TestHarness {
         Map<String, Object> myState = new HashMap<>();
         myState.put("age", 20);
 
-        PNSetStateResult result = partialSetState.state(myState).sync();
+       partialSetState.state(myState).sync();
     }
 
     @org.junit.Test(expected=PubNubException.class)
@@ -282,7 +279,7 @@ public class SetStateEndpointTest extends TestHarness {
         Map<String, Object> myState = new HashMap<>();
         myState.put("age", 20);
 
-        PNSetStateResult result = partialSetState.channels(Arrays.asList("testChannel")).state(myState).sync();
+        partialSetState.channels(Arrays.asList("testChannel")).state(myState).sync();
     }
 
 }

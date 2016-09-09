@@ -6,25 +6,22 @@ import com.jayway.awaitility.Awaitility;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.callbacks.PNCallback;
+import com.pubnub.api.endpoints.TestHarness;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.access_manager.PNAccessManagerGrantResult;
 import com.pubnub.api.models.consumer.access_manager.PNAccessManagerKeyData;
-import com.pubnub.api.endpoints.TestHarness;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
-import static com.github.tomakehurst.wiremock.client.WireMock.matching;
 import static org.junit.Assert.assertEquals;
 
 public class GrantEndpointTest extends TestHarness {
@@ -37,12 +34,10 @@ public class GrantEndpointTest extends TestHarness {
 
     @Before
     public void beforeEach() throws IOException {
-
         pubnub = this.createPubNubInstance(8080);
         partialGrant = pubnub.grant();
-
         pubnub.getConfiguration().setSecretKey("secretKey");
-
+        wireMockRule.start();
     }
 
     @Test
@@ -628,7 +623,7 @@ public class GrantEndpointTest extends TestHarness {
                 .withQueryParam("m", matching("1"))
                 .willReturn(aResponse().withBody("{\"message\":\"Success\",\"payload\":{\"level\":\"user\",\"subscribe_key\":\"sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f\",\"ttl\":1,\"channel\":\"ch1\",\"auths\":{\"key1\":{\"r\":0,\"w\":0,\"m\":0}}},\"service\":\"Access Manager\",\"status\":200}")));
 
-        PNAccessManagerGrantResult result = partialGrant.channels(Arrays.asList("ch1")).manage(true).sync();
+        partialGrant.channels(Arrays.asList("ch1")).manage(true).sync();
     }
 
     @org.junit.Test
@@ -647,7 +642,7 @@ public class GrantEndpointTest extends TestHarness {
                 .willReturn(aResponse().withBody("{\"message\":\"Success\",\"payload\":{\"level\":\"user\",\"subscribe_key\":\"sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f\",\"ttl\":1,\"channel\":\"ch1\",\"auths\":{\"key1\":{\"r\":0,\"w\":0,\"m\":0}}},\"service\":\"Access Manager\",\"status\":200}")));
 
         pubnub.getConfiguration().setAuthKey("myKey");
-        PNAccessManagerGrantResult result = partialGrant.authKeys(Arrays.asList("key1")).channels(Arrays.asList("ch1")).sync();
+        partialGrant.authKeys(Arrays.asList("key1")).channels(Arrays.asList("ch1")).sync();
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
@@ -679,8 +674,7 @@ public class GrantEndpointTest extends TestHarness {
             }
         });
 
-        Awaitility.await().atMost(5, TimeUnit.SECONDS)
-                .untilAtomic(atomic, org.hamcrest.core.IsEqual.equalTo(1));
+        Awaitility.await().atMost(5, TimeUnit.SECONDS).untilAtomic(atomic, org.hamcrest.core.IsEqual.equalTo(1));
     }
 
     @org.junit.Test(expected=PubNubException.class)
@@ -699,7 +693,7 @@ public class GrantEndpointTest extends TestHarness {
                 .willReturn(aResponse().withBody("{\"message\":\"Success\",\"payload\":{\"level\":\"user\",\"subscribe_key\":\"sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f\",\"ttl\":1,\"channel\":\"ch1\",\"auths\":{\"key1\":{\"r\":0,\"w\":0,\"m\":0}}},\"service\":\"Access Manager\",\"status\":200}")));
 
         pubnub.getConfiguration().setSecretKey(null);
-        PNAccessManagerGrantResult result = partialGrant.authKeys(Arrays.asList("key1")).channels(Arrays.asList("ch1")).sync();
+        partialGrant.authKeys(Arrays.asList("key1")).channels(Arrays.asList("ch1")).sync();
     }
 
     @org.junit.Test(expected=PubNubException.class)
@@ -718,7 +712,7 @@ public class GrantEndpointTest extends TestHarness {
                 .willReturn(aResponse().withBody("{\"message\":\"Success\",\"payload\":{\"level\":\"user\",\"subscribe_key\":\"sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f\",\"ttl\":1,\"channel\":\"ch1\",\"auths\":{\"key1\":{\"r\":0,\"w\":0,\"m\":0}}},\"service\":\"Access Manager\",\"status\":200}")));
 
         pubnub.getConfiguration().setSecretKey("");
-        PNAccessManagerGrantResult result = partialGrant.authKeys(Arrays.asList("key1")).channels(Arrays.asList("ch1")).sync();
+        partialGrant.authKeys(Arrays.asList("key1")).channels(Arrays.asList("ch1")).sync();
     }
 
     @org.junit.Test(expected=PubNubException.class)
@@ -737,7 +731,7 @@ public class GrantEndpointTest extends TestHarness {
                 .willReturn(aResponse().withBody("{\"message\":\"Success\",\"payload\":{\"level\":\"user\",\"subscribe_key\":\"sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f\",\"ttl\":1,\"channel\":\"ch1\",\"auths\":{\"key1\":{\"r\":0,\"w\":0,\"m\":0}}},\"service\":\"Access Manager\",\"status\":200}")));
 
         pubnub.getConfiguration().setSubscribeKey(null);
-        PNAccessManagerGrantResult result = partialGrant.authKeys(Arrays.asList("key1")).channels(Arrays.asList("ch1")).sync();
+        partialGrant.authKeys(Arrays.asList("key1")).channels(Arrays.asList("ch1")).sync();
     }
 
     @org.junit.Test(expected=PubNubException.class)
@@ -756,7 +750,7 @@ public class GrantEndpointTest extends TestHarness {
                 .willReturn(aResponse().withBody("{\"message\":\"Success\",\"payload\":{\"level\":\"user\",\"subscribe_key\":\"sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f\",\"ttl\":1,\"channel\":\"ch1\",\"auths\":{\"key1\":{\"r\":0,\"w\":0,\"m\":0}}},\"service\":\"Access Manager\",\"status\":200}")));
 
         pubnub.getConfiguration().setSubscribeKey("");
-        PNAccessManagerGrantResult result = partialGrant.authKeys(Arrays.asList("key1")).channels(Arrays.asList("ch1")).sync();
+        partialGrant.authKeys(Arrays.asList("key1")).channels(Arrays.asList("ch1")).sync();
     }
 
     @org.junit.Test(expected=PubNubException.class)
@@ -775,7 +769,7 @@ public class GrantEndpointTest extends TestHarness {
                 .willReturn(aResponse().withBody("{\"message\":\"Success\",\"payload\":{\"level\":\"user\",\"subscribe_key\":\"sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f\",\"ttl\":1,\"channel\":\"ch1\",\"auths\":{\"key1\":{\"r\":0,\"w\":0,\"m\":0}}},\"service\":\"Access Manager\",\"status\":200}")));
 
         pubnub.getConfiguration().setPublishKey(null);
-        PNAccessManagerGrantResult result = partialGrant.authKeys(Arrays.asList("key1")).channels(Arrays.asList("ch1")).sync();
+        partialGrant.authKeys(Arrays.asList("key1")).channels(Arrays.asList("ch1")).sync();
     }
 
     @org.junit.Test(expected=PubNubException.class)
@@ -794,7 +788,7 @@ public class GrantEndpointTest extends TestHarness {
                 .willReturn(aResponse().withBody("{\"message\":\"Success\",\"payload\":{\"level\":\"user\",\"subscribe_key\":\"sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f\",\"ttl\":1,\"channel\":\"ch1\",\"auths\":{\"key1\":{\"r\":0,\"w\":0,\"m\":0}}},\"service\":\"Access Manager\",\"status\":200}")));
 
         pubnub.getConfiguration().setPublishKey("");
-        PNAccessManagerGrantResult result = partialGrant.authKeys(Arrays.asList("key1")).channels(Arrays.asList("ch1")).sync();
+        partialGrant.authKeys(Arrays.asList("key1")).channels(Arrays.asList("ch1")).sync();
     }
 
     @org.junit.Test(expected=PubNubException.class)
@@ -812,7 +806,7 @@ public class GrantEndpointTest extends TestHarness {
                 .withQueryParam("m", matching("0"))
                 .willReturn(aResponse().withBody("{\"message\":\"Success\",\"payload\":{\"level\":\"user\",\"subscribe_key\":\"sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f\",\"ttl\":1,\"channel\":\"ch1\",\"auths\":{\"key1\":{\"r\":0,\"w\":0,\"m\":0}}},\"service\":\"Access Manager\",\"status\":200}")));
 
-        PNAccessManagerGrantResult result = partialGrant.authKeys(Arrays.asList("key1")).sync();
+        partialGrant.authKeys(Arrays.asList("key1")).sync();
     }
 
     @org.junit.Test(expected=PubNubException.class)
@@ -830,7 +824,7 @@ public class GrantEndpointTest extends TestHarness {
                 .withQueryParam("m", matching("0"))
                 .willReturn(aResponse().withBody("{\"message\":\"Success\",\"service\":\"Access Manager\",\"status\":200}")));
 
-        PNAccessManagerGrantResult result = partialGrant.authKeys(Arrays.asList("key1")).channels(Arrays.asList("ch1")).sync();
+        partialGrant.authKeys(Arrays.asList("key1")).channels(Arrays.asList("ch1")).sync();
     }
 }
 

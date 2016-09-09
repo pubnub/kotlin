@@ -38,6 +38,7 @@ public class SubscriptionManagerTest extends TestHarness {
     @Before
     public void beforeEach() throws IOException {
         pubnub = this.createPubNubInstance(8080);
+        wireMockRule.start();
     }
 
     @After
@@ -119,7 +120,7 @@ public class SubscriptionManagerTest extends TestHarness {
             @Override
             public void message(PubNub pubnub, PNMessageResult message) {
                 List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")));
-
+                assertTrue(requests.size() >= 1);
                 assertEquals("Message", message.getMessage().get("text").asText());
                 assertEquals("coolChannel", message.getChannel());
                 assertEquals(null, message.getSubscription());
@@ -159,7 +160,7 @@ public class SubscriptionManagerTest extends TestHarness {
             @Override
             public void message(PubNub pubnub, PNMessageResult message) {
                 List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")));
-
+                assertTrue(requests.size() >= 1);
                 assertEquals("Message", message.getMessage().get("text").asText());
                 assertEquals("coolChannel", message.getChannel());
                 assertEquals("coolChannelGroup", message.getSubscription());
@@ -203,7 +204,7 @@ public class SubscriptionManagerTest extends TestHarness {
             @Override
             public void presence(PubNub pubnub, PNPresenceEventResult presence) {
                 List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")));
-
+                assertTrue(requests.size() >= 1);
                 assertEquals("coolChannel", presence.getChannel());
                 assertEquals(null, presence.getSubscription());
                 gotMessage.set(true);
@@ -242,7 +243,7 @@ public class SubscriptionManagerTest extends TestHarness {
             @Override
             public void presence(PubNub pubnub, PNPresenceEventResult presence) {
                 List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")));
-
+                assertTrue(requests.size() >= 1);
                 assertEquals("coolChannel", presence.getChannel());
                 assertEquals("coolChannelGroup", presence.getSubscription());
                 gotMessage.set(true);
@@ -285,6 +286,7 @@ public class SubscriptionManagerTest extends TestHarness {
             @Override
             public void message(PubNub pubnub, PNMessageResult message) {
                 List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")));
+                assertTrue(requests.size() >= 1);
 
                 if (message.getMessage().get("text").asText().equals("Message")) {
                     gotMessage1.set(true);
@@ -322,7 +324,7 @@ public class SubscriptionManagerTest extends TestHarness {
             @Override
             public void message(PubNub pubnub, PNMessageResult message) {
                 List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")));
-
+                assertTrue(requests.size() >= 1);
                 assertEquals(10, message.getMessage().asInt());
                 atomic.addAndGet(1);
             }
@@ -624,7 +626,7 @@ public class SubscriptionManagerTest extends TestHarness {
             @Override
             public void message(PubNub pubnub, PNMessageResult message) {
                 List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")));
-
+                assertTrue(requests.size() >= 1);
                 Assert.assertEquals("{\"text\":\"Enter Message Here\"}", message.getMessage().toString());
                 atomic.addAndGet(1);
             }
@@ -1005,7 +1007,6 @@ public class SubscriptionManagerTest extends TestHarness {
     public void testUnsubscribeAll() {
 
         final AtomicBoolean statusRecieved = new AtomicBoolean();
-        final AtomicBoolean messageRecieved = new AtomicBoolean();
 
         stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1,ch2-pnpres,ch1-pnpres/0"))
                 .willReturn(aResponse().withBody("{\"t\":{\"t\":\"14607577960932487\",\"r\":1},\"m\":[{\"a\":\"4\",\"f\":0,\"i\":\"Client-g5d4g\",\"p\":{\"t\":\"14607577960925503\",\"r\":1},\"k\":\"sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f\",\"c\":\"coolChannel\",\"d\":{\"text\":\"Enter Message Here\"},\"b\":\"coolChan-bnel\"}]}")));

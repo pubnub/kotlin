@@ -33,6 +33,7 @@ public class WhereNowEndpointTest extends TestHarness {
     public void beforeEach() throws IOException {
         pubnub = this.createPubNubInstance(8080);
         partialWhereNow = pubnub.whereNow();
+        wireMockRule.start();
     }
 
     @org.junit.Test
@@ -99,8 +100,7 @@ public class WhereNowEndpointTest extends TestHarness {
             }
         });
 
-        Awaitility.await().atMost(5, TimeUnit.SECONDS)
-                .untilAtomic(atomic, org.hamcrest.core.IsEqual.equalTo(1));
+        Awaitility.await().atMost(5, TimeUnit.SECONDS).untilAtomic(atomic, org.hamcrest.core.IsEqual.equalTo(1));
     }
 
     @org.junit.Test
@@ -119,9 +119,7 @@ public class WhereNowEndpointTest extends TestHarness {
 
         });
 
-        Awaitility.await().atMost(5, TimeUnit.SECONDS)
-                .untilAtomic(atomic, org.hamcrest.core.IsEqual.equalTo(1));
-
+        Awaitility.await().atMost(5, TimeUnit.SECONDS).untilAtomic(atomic, org.hamcrest.core.IsEqual.equalTo(1));
     }
 
     @org.junit.Test
@@ -139,8 +137,7 @@ public class WhereNowEndpointTest extends TestHarness {
             }
         });
 
-        Awaitility.await().atMost(5, TimeUnit.SECONDS)
-                .untilAtomic(atomic, org.hamcrest.core.IsEqual.equalTo(1));
+        Awaitility.await().atMost(5, TimeUnit.SECONDS).untilAtomic(atomic, org.hamcrest.core.IsEqual.equalTo(1));
 
     }
 
@@ -161,8 +158,7 @@ public class WhereNowEndpointTest extends TestHarness {
             }
         });
 
-        Awaitility.await().atMost(5, TimeUnit.SECONDS)
-                .untilAtomic(atomic, org.hamcrest.core.IsEqual.equalTo(1));
+        Awaitility.await().atMost(5, TimeUnit.SECONDS).untilAtomic(atomic, org.hamcrest.core.IsEqual.equalTo(1));
 
     }
 
@@ -173,7 +169,7 @@ public class WhereNowEndpointTest extends TestHarness {
                 .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": [\"a\",\"b\"]}, \"service\": \"Presence\"}")));
 
         pubnub.getConfiguration().setAuthKey("myKey");
-        PNWhereNowResult response = partialWhereNow.sync();
+        partialWhereNow.sync();
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
@@ -187,7 +183,7 @@ public class WhereNowEndpointTest extends TestHarness {
                 .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": [\"a\",\"b\"]}, \"service\": \"Presence\"}")));
 
         pubnub.getConfiguration().setSubscribeKey(null);
-        PNWhereNowResult response = partialWhereNow.sync();
+        partialWhereNow.sync();
     }
 
     @org.junit.Test(expected=PubNubException.class)
@@ -197,7 +193,7 @@ public class WhereNowEndpointTest extends TestHarness {
                 .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": [\"a\",\"b\"]}, \"service\": \"Presence\"}")));
 
         pubnub.getConfiguration().setSubscribeKey("");
-        PNWhereNowResult response = partialWhereNow.sync();
+        partialWhereNow.sync();
     }
 
     @org.junit.Test(expected=PubNubException.class)
@@ -206,7 +202,7 @@ public class WhereNowEndpointTest extends TestHarness {
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/uuid/myUUID"))
                 .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\"}")));
 
-        PNWhereNowResult response = partialWhereNow.sync();
+        partialWhereNow.sync();
     }
 
 }

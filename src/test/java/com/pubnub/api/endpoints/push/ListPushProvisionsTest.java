@@ -36,6 +36,7 @@ public class ListPushProvisionsTest extends TestHarness {
     public void beforeEach() throws IOException {
         pubnub = this.createPubNubInstance(8080);
         instance = pubnub.auditPushChannelProvisions();
+        wireMockRule.start();
     }
 
     @Test

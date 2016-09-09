@@ -40,6 +40,7 @@ public class HistoryEndpointTest extends TestHarness {
     public void beforeEach() throws IOException {
         pubnub = this.createPubNubInstance(8080);
         partialHistory = pubnub.history();
+        wireMockRule.start();
     }
 
 
@@ -124,8 +125,7 @@ public class HistoryEndpointTest extends TestHarness {
         stubFor(get(urlPathEqualTo("/v2/history/sub-key/mySubscribeKey/channel/niceChannel"))
                 .willReturn(aResponse().withBody(mapper.writeValueAsString(testArray))));
 
-
-        PNHistoryResult response = partialHistory.channel("niceChannel").includeTimetoken(true).sync();
+        partialHistory.channel("niceChannel").includeTimetoken(true).sync();
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals("authKey", requests.get(0).queryParameter("auth").firstValue());
@@ -254,7 +254,7 @@ public class HistoryEndpointTest extends TestHarness {
         stubFor(get(urlPathEqualTo("/v2/history/sub-key/mySubscribeKey/channel/niceChannel"))
                 .willReturn(aResponse().withBody(mapper.writeValueAsString(testArray))));
 
-        PNHistoryResult response = partialHistory.includeTimetoken(true).sync();
+        partialHistory.includeTimetoken(true).sync();
     }
 
     @org.junit.Test(expected=PubNubException.class)
@@ -288,7 +288,7 @@ public class HistoryEndpointTest extends TestHarness {
         stubFor(get(urlPathEqualTo("/v2/history/sub-key/mySubscribeKey/channel/niceChannel"))
                 .willReturn(aResponse().withBody(mapper.writeValueAsString(testArray))));
 
-        PNHistoryResult response = partialHistory.channel("").includeTimetoken(true).sync();
+        partialHistory.channel("").includeTimetoken(true).sync();
     }
 
     @org.junit.Test
@@ -424,7 +424,7 @@ public class HistoryEndpointTest extends TestHarness {
                 .willReturn(aResponse().withBody(mapper.writeValueAsString(testArray))));
 
         pubnub.getConfiguration().setCipherKey("Test");
-        PNHistoryResult response = partialHistory.channel("niceChannel").count(5).reverse(true).start(1L).end(2L).includeTimetoken(true).sync();
+        partialHistory.channel("niceChannel").count(5).reverse(true).start(1L).end(2L).includeTimetoken(true).sync();
     }
 
 

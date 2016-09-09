@@ -10,7 +10,6 @@ import com.pubnub.api.endpoints.TestHarness;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsDeleteGroupResult;
-import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsListAllResult;
 import org.junit.Before;
 import org.junit.Rule;
 
@@ -22,7 +21,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 public class DeleteChannelGroupEndpointTest extends TestHarness {
     private DeleteChannelGroup partialDeleteChannelGroup;
@@ -35,6 +33,7 @@ public class DeleteChannelGroupEndpointTest extends TestHarness {
     public void beforeEach() throws IOException {
         pubnub = this.createPubNubInstance(8080);
         partialDeleteChannelGroup = pubnub.deleteChannelGroup();
+        wireMockRule.start();
     }
 
     @org.junit.Test
@@ -51,7 +50,7 @@ public class DeleteChannelGroupEndpointTest extends TestHarness {
         stubFor(get(urlPathEqualTo("/v1/channel-registration/sub-key/mySubscribeKey/channel-group/groupA/remove"))
                 .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {}, \"service\": \"ChannelGroups\"}")));
 
-        PNChannelGroupsDeleteGroupResult response = partialDeleteChannelGroup.sync();
+        partialDeleteChannelGroup.sync();
     }
 
     @org.junit.Test(expected = PubNubException.class)
@@ -59,7 +58,7 @@ public class DeleteChannelGroupEndpointTest extends TestHarness {
         stubFor(get(urlPathEqualTo("/v1/channel-registration/sub-key/mySubscribeKey/channel-group/groupA/remove"))
                 .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {}, \"service\": \"ChannelGroups\"}")));
 
-        PNChannelGroupsDeleteGroupResult response = partialDeleteChannelGroup.channelGroup("").sync();
+        partialDeleteChannelGroup.channelGroup("").sync();
     }
 
     @org.junit.Test
@@ -68,7 +67,7 @@ public class DeleteChannelGroupEndpointTest extends TestHarness {
                 .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"payload\": {}, \"service\": \"ChannelGroups\"}")));
 
         pubnub.getConfiguration().setAuthKey("myKey");
-        PNChannelGroupsDeleteGroupResult response = partialDeleteChannelGroup.channelGroup("groupA").sync();
+        partialDeleteChannelGroup.channelGroup("groupA").sync();
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
@@ -91,8 +90,7 @@ public class DeleteChannelGroupEndpointTest extends TestHarness {
             }
         });
 
-        Awaitility.await().atMost(5, TimeUnit.SECONDS)
-                .untilAtomic(atomic, org.hamcrest.core.IsEqual.equalTo(1));
+        Awaitility.await().atMost(5, TimeUnit.SECONDS).untilAtomic(atomic, org.hamcrest.core.IsEqual.equalTo(1));
     }
 
 }

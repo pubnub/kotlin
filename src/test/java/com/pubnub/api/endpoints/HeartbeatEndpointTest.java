@@ -32,6 +32,7 @@ public class HeartbeatEndpointTest extends TestHarness {
         pubnub = this.createPubNubInstance(8080);
         RetrofitManager retrofitManager = new RetrofitManager(pubnub);
         partialHeartbeat = new Heartbeat(pubnub, retrofitManager.getTransactionInstance());
+        wireMockRule.start();
     }
 
     @org.junit.Test
