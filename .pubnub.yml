@@ -1,8 +1,13 @@
 name: java
-version: 4.0.10
+version: 4.0.11
 schema: 1
 scm: github.com/pubnub/java
 changelog:
+  - version: v4.0.11
+    date:
+    changes:
+      - type: improvement
+        text: bumping build process for gradle 3 / merging documentation into the repo and test adjustments
   - version: v4.0.10
     date:
     changes:
