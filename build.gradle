@@ -61,7 +61,7 @@ checkstyle {
 
 tasks.withType(Checkstyle) {
 
-    exclude '**/vendor/**'
+    exclude '**/vendor/**', "**/*Test*"
 
     reports {
         xml.enabled =  true
