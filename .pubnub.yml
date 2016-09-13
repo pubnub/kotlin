@@ -1,8 +1,13 @@
 name: java
-version: 4.0.11
+version: 4.0.12
 schema: 1
 scm: github.com/pubnub/java
 changelog:
+  - version: v4.0.12
+    date:
+    changes:
+      - type: bug
+        text: fixing parsing of origination payload within the psv2 enevelope
   - version: v4.0.11
     date:
     changes:

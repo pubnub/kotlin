@@ -1,4 +1,14 @@
 
+## [v4.0.12](https://github.com/pubnub/java/tree/v4.0.12)
+
+
+  [Full Changelog](https://github.com/pubnub/java/compare/v4.0.11...v4.0.12)
+
+
+
+- 🐛fixing parsing of origination payload within the psv2 enevelope
+
+
 ## [v4.0.11](https://github.com/pubnub/java/tree/v4.0.11)
 
 
