@@ -38,7 +38,7 @@ public class SubscribeMessage {
     //private String sequenceNumber;
 
     @JsonProperty("o")
-    private String originationTimetoken;
+    private OriginationMetaData originationMetadata;
 
     @JsonProperty("p")
     private PublishMetaData publishMetaData;
