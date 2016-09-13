@@ -1,6 +1,8 @@
 package com.pubnub.api.endpoints;
 
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.builder.PubNubErrorBuilder;
@@ -47,9 +49,12 @@ public abstract class Endpoint<Input, Output> {
     private static final int SERVER_RESPONSE_FORBIDDEN = 403;
     private static final int SERVER_RESPONSE_BAD_REQUEST = 400;
 
+    private ObjectMapper mapper;
+
     public Endpoint(final PubNub pubnubInstance, Retrofit retrofitInstance) {
         this.pubnub = pubnubInstance;
         this.retrofit = retrofitInstance;
+        this.mapper = new ObjectMapper();
     }
 
 
@@ -72,6 +77,7 @@ public abstract class Endpoint<Input, Output> {
 
         if (!serverResponse.isSuccessful() || serverResponse.code() != SERVER_RESPONSE_SUCCESS) {
             String responseBodyText;
+            JsonNode responseBody;
 
             try {
                 responseBodyText = serverResponse.errorBody().string();
@@ -79,9 +85,16 @@ public abstract class Endpoint<Input, Output> {
                 responseBodyText = "N/A";
             }
 
+            try {
+                responseBody = mapper.readValue(responseBodyText, JsonNode.class);
+            } catch (IOException e) {
+                responseBody = null;
+            }
+
             throw PubNubException.builder()
                     .pubnubError(PubNubErrorBuilder.PNERROBJ_HTTP_ERROR)
                     .errormsg(responseBodyText)
+                    .jso(responseBody)
                     .statusCode(serverResponse.code())
                     .affectedCall(call)
                     .build();
@@ -111,6 +124,7 @@ public abstract class Endpoint<Input, Output> {
                 if (!response.isSuccessful() || response.code() != SERVER_RESPONSE_SUCCESS) {
 
                     String responseBodyText;
+                    JsonNode responseBody;
 
                     try {
                         responseBodyText = response.errorBody().string();
@@ -118,10 +132,17 @@ public abstract class Endpoint<Input, Output> {
                         responseBodyText = "N/A";
                     }
 
+                    try {
+                        responseBody = mapper.readValue(responseBodyText, JsonNode.class);
+                    } catch (IOException e) {
+                        responseBody = null;
+                    }
+
                     PNStatusCategory pnStatusCategory = PNStatusCategory.PNUnknownCategory;
                     PubNubException ex = PubNubException.builder()
                             .pubnubError(PubNubErrorBuilder.PNERROBJ_HTTP_ERROR)
                             .errormsg(responseBodyText)
+                            .jso(responseBody)
                             .statusCode(response.code())
                             .build();
 
