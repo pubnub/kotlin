@@ -1,4 +1,14 @@
 
+## [v4.0.13](https://github.com/pubnub/java/tree/v4.0.13)
+
+
+  [Full Changelog](https://github.com/pubnub/java/compare/v4.0.12...v4.0.13)
+
+
+- ⭐populate jso with the error.
+
+
+
 ## [v4.0.12](https://github.com/pubnub/java/tree/v4.0.12)
 
 
