@@ -244,6 +244,13 @@ public class PubNub {
     }
 
     /**
+     *  Destroy the SDK to evict the connection pools.
+     */
+    public final void destroy() {
+        retrofitManager.destroy();
+    }
+
+    /**
      * Perform a Reconnect to the network
      */
     public final void reconnect() {

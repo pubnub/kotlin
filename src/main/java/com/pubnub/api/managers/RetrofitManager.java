@@ -15,27 +15,30 @@ public class RetrofitManager {
 
     private PubNub pubnub;
 
-    @Getter
-    private Retrofit transactionInstance;
-    @Getter
-    private Retrofit subscriptionInstance;
+    private OkHttpClient transactionClientInstance;
+    private OkHttpClient subscriptionClientInstance;
+
+    @Getter private Retrofit transactionInstance;
+    @Getter private Retrofit subscriptionInstance;
 
     public RetrofitManager(PubNub pubNubInstance) {
         this.pubnub = pubNubInstance;
 
-        this.transactionInstance = createRetrofit(
+        this.transactionClientInstance = createOkHttpClient(
                 this.pubnub.getConfiguration().getNonSubscribeRequestTimeout(),
                 this.pubnub.getConfiguration().getConnectTimeout()
         );
 
-        this.subscriptionInstance = createRetrofit(
+        this.subscriptionClientInstance = createOkHttpClient(
                 this.pubnub.getConfiguration().getSubscribeTimeout(),
                 this.pubnub.getConfiguration().getConnectTimeout()
         );
 
+        this.transactionInstance = createRetrofit(this.transactionClientInstance);
+        this.subscriptionInstance = createRetrofit(this.subscriptionClientInstance);
     }
 
-    protected final Retrofit createRetrofit(int requestTimeout, int connectTimeOut) {
+    private OkHttpClient createOkHttpClient(int requestTimeout, int connectTimeOut) {
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.readTimeout(requestTimeout, TimeUnit.SECONDS);
         httpClient.connectTimeout(connectTimeOut, TimeUnit.SECONDS);
@@ -46,11 +49,20 @@ public class RetrofitManager {
             httpClient.addInterceptor(logging);
         }
 
+        return httpClient.build();
+    }
+
+    private Retrofit createRetrofit(OkHttpClient client) {
         return new Retrofit.Builder()
                 .baseUrl(pubnub.getBaseUrl())
                 .addConverterFactory(JacksonConverterFactory.create())
-                .client(httpClient.build())
+                .client(client)
                 .build();
+    }
+
+    public final void destroy() {
+        this.transactionClientInstance.connectionPool().evictAll();
+        this.subscriptionClientInstance.connectionPool().evictAll();
     }
 
 }
