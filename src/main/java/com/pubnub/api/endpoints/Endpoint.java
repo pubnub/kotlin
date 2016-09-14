@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -111,7 +112,7 @@ public abstract class Endpoint<Input, Output> {
         try {
             call = doWork(createBaseParams());
         } catch (PubNubException pubnubException) {
-            callback.onResponse(null, createStatusResponse(PNStatusCategory.PNBadRequestCategory, null, pubnubException));
+            callback.onResponse(null, createStatusResponse(PNStatusCategory.PNBadRequestCategory, null, pubnubException, null, null));
             return;
         }
 
@@ -125,6 +126,9 @@ public abstract class Endpoint<Input, Output> {
 
                     String responseBodyText;
                     JsonNode responseBody;
+                    JsonNode responseBodyPayload = null;
+                    ArrayList<String> affectedChannels = new ArrayList<>();
+                    ArrayList<String> affectedChannelGroups = new ArrayList<>();
 
                     try {
                         responseBodyText = response.errorBody().string();
@@ -138,6 +142,10 @@ public abstract class Endpoint<Input, Output> {
                         responseBody = null;
                     }
 
+                    if (responseBody != null && responseBody.has("payload")) {
+                        responseBodyPayload = responseBody.get("payload");
+                    }
+
                     PNStatusCategory pnStatusCategory = PNStatusCategory.PNUnknownCategory;
                     PubNubException ex = PubNubException.builder()
                             .pubnubError(PubNubErrorBuilder.PNERROBJ_HTTP_ERROR)
@@ -148,24 +156,37 @@ public abstract class Endpoint<Input, Output> {
 
                     if (response.code() == SERVER_RESPONSE_FORBIDDEN) {
                         pnStatusCategory = PNStatusCategory.PNAccessDeniedCategory;
+
+                        if (responseBodyPayload != null && responseBodyPayload.has("channels")) {
+                            for (final JsonNode objNode : responseBodyPayload.get("channels")) {
+                                affectedChannels.add(objNode.asText());
+                            }
+                        }
+
+                        if (responseBodyPayload != null && responseBodyPayload.has("channel-groups")) {
+                            for (final JsonNode objNode : responseBodyPayload.get("channel-groups")) {
+                                affectedChannelGroups.add(objNode.asText().substring(1));
+                            }
+                        }
+
                     }
 
                     if (response.code() == SERVER_RESPONSE_BAD_REQUEST) {
                         pnStatusCategory = PNStatusCategory.PNBadRequestCategory;
                     }
 
-                    callback.onResponse(null, createStatusResponse(pnStatusCategory, response, ex));
+                    callback.onResponse(null, createStatusResponse(pnStatusCategory, response, ex, affectedChannels, affectedChannelGroups));
                     return;
                 }
 
                 try {
                     callbackResponse = createResponse(response);
                 } catch (PubNubException pubnubException) {
-                    callback.onResponse(null, createStatusResponse(PNStatusCategory.PNMalformedResponseCategory, response, pubnubException));
+                    callback.onResponse(null, createStatusResponse(PNStatusCategory.PNMalformedResponseCategory, response, pubnubException, null, null));
                     return;
                 }
 
-                callback.onResponse(callbackResponse, createStatusResponse(PNStatusCategory.PNAcknowledgmentCategory, response, null));
+                callback.onResponse(callbackResponse, createStatusResponse(PNStatusCategory.PNAcknowledgmentCategory, response, null, null, null));
             }
 
             @Override
@@ -193,7 +214,7 @@ public abstract class Endpoint<Input, Output> {
                     pubnubException.pubnubError(PubNubErrorBuilder.PNERROBJ_HTTP_ERROR);
                 }
 
-                callback.onResponse(null, createStatusResponse(pnStatusCategory, null, pubnubException.build()));
+                callback.onResponse(null, createStatusResponse(pnStatusCategory, null, pubnubException.build(), null, null));
 
             }
         });
@@ -214,7 +235,7 @@ public abstract class Endpoint<Input, Output> {
         }
     }
 
-    private PNStatus createStatusResponse(PNStatusCategory category, Response<Input> response, Exception throwable) {
+    private PNStatus createStatusResponse(PNStatusCategory category, Response<Input> response, Exception throwable, ArrayList<String> errorChannels, ArrayList<String> errorChannelGroups) {
         PNStatus.PNStatusBuilder pnStatus = PNStatus.builder();
 
         pnStatus.executedEndpoint(this);
@@ -239,8 +260,18 @@ public abstract class Endpoint<Input, Output> {
 
         pnStatus.operation(getOperationType());
         pnStatus.category(category);
-        pnStatus.affectedChannels(getAffectedChannels());
-        pnStatus.affectedChannelGroups(getAffectedChannelGroups());
+
+        if (errorChannels != null && !errorChannels.isEmpty()) {
+            pnStatus.affectedChannels(errorChannels);
+        } else {
+            pnStatus.affectedChannels(getAffectedChannels());
+        }
+
+        if (errorChannelGroups != null && !errorChannelGroups.isEmpty()) {
+            pnStatus.affectedChannelGroups(errorChannelGroups);
+        } else {
+            pnStatus.affectedChannelGroups(getAffectedChannelGroups());
+        }
 
         return pnStatus.build();
     }
