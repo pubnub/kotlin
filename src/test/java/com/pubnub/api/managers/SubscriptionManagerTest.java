@@ -141,6 +141,40 @@ public class SubscriptionManagerTest extends TestHarness {
     }
 
     @Test
+    public void testSubscribeBuilderWithAccessManager403Error() {
+        final AtomicInteger gotStatus = new AtomicInteger();
+        stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
+                .willReturn(aResponse().withStatus(403).withBody("{\"message\":\"Forbidden\",\"payload\":{\"channels\":[\"ch1\", \"ch2\"], \"channel-groups\":[\":cg1\", \":cg2\"]},\"error\":true,\"service\":\"Access Manager\",\"status\":403}")));
+
+        pubnub.addListener(new SubscribeCallback() {
+            @Override
+            public void status(PubNub pubnub, PNStatus status) {
+
+                if (status.getCategory() == PNStatusCategory.PNAccessDeniedCategory) {
+
+                    assertEquals(PNStatusCategory.PNAccessDeniedCategory, status.getCategory());
+                    assertEquals(Arrays.asList(new String[]{"ch1","ch2"}), status.getAffectedChannels());
+                    assertEquals(Arrays.asList(new String[]{"cg1","cg2"}), status.getAffectedChannelGroups());
+                    gotStatus.addAndGet(1);
+                }
+            }
+
+            @Override
+            public void message(PubNub pubnub, PNMessageResult message) {
+            }
+
+            @Override
+            public void presence(PubNub pubnub, PNPresenceEventResult presence) {
+            }
+        });
+
+
+        pubnub.subscribe().channels(Arrays.asList("ch1", "ch2")).execute();
+
+        Awaitility.await().atMost(2, TimeUnit.SECONDS).untilAtomic(gotStatus, org.hamcrest.core.IsEqual.equalTo(1));
+    }
+
+    @Test
     public void testNamingSubscribeChannelGroupBuilder() {
         final AtomicInteger gotStatus = new AtomicInteger();
         final AtomicBoolean gotMessage = new AtomicBoolean();

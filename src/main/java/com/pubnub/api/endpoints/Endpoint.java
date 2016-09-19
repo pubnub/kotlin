@@ -165,7 +165,8 @@ public abstract class Endpoint<Input, Output> {
 
                         if (responseBodyPayload != null && responseBodyPayload.has("channel-groups")) {
                             for (final JsonNode objNode : responseBodyPayload.get("channel-groups")) {
-                                affectedChannelGroups.add(objNode.asText().substring(1));
+                                String channelGroupName = objNode.asText().substring(0, 1).equals(":") ? objNode.asText().substring(1) : objNode.asText();
+                                affectedChannelGroups.add(channelGroupName);
                             }
                         }
 
