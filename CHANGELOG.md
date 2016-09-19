@@ -1,4 +1,14 @@
 
+## [v4.0.14](https://github.com/pubnub/java/tree/v4.0.14)
+
+
+  [Full Changelog](https://github.com/pubnub/java/compare/v4.0.13...v4.0.14)
+
+
+- ⭐on PAM error, populate the affectedChannel or affectedChannelGroup to signal which channels are failing
+
+
+
 ## [v4.0.13](https://github.com/pubnub/java/tree/v4.0.13)
 
 

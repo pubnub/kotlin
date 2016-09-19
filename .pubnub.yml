@@ -1,8 +1,13 @@
 name: java
-version: 4.0.13
+version: 4.0.14
 schema: 1
 scm: github.com/pubnub/java
 changelog:
+  - version: v4.0.14
+    date:
+    changes:
+      - type: improvement
+        text: on PAM error, populate the affectedChannel or affectedChannelGroup to signal which channels are failing
   - version: v4.0.13
     date:
     changes:
