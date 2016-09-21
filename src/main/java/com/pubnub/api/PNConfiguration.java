@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+import java.net.Proxy;
 import java.util.UUID;
 
 @Getter
@@ -96,6 +97,12 @@ public class PNConfiguration {
      */
     @Setter
     private PNReconnectionPolicy reconnectionPolicy;
+
+    /**
+     * Proxy configuration which will be passed to the networking layer.
+     */
+    @Setter
+    private Proxy proxy;
 
     /**
      * Initialize the PNConfiguration with default values

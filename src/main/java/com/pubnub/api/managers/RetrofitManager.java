@@ -49,6 +49,10 @@ public class RetrofitManager {
             httpClient.addInterceptor(logging);
         }
 
+        if (pubnub.getConfiguration().getProxy() != null) {
+            httpClient.proxy(pubnub.getConfiguration().getProxy());
+        }
+
         return httpClient.build();
     }
 
