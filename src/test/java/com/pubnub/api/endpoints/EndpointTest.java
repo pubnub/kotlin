@@ -25,7 +25,7 @@ public class EndpointTest extends TestHarness {
     }
 
     @Test
-    public void testUUID() throws PubNubException {
+    public void testBaseParams() throws PubNubException {
         Endpoint<Object, Object> endpoint =  new Endpoint<Object, Object>(pubnub, null) {
 
             @Override
@@ -90,6 +90,8 @@ public class EndpointTest extends TestHarness {
                 };
 
                 Assert.assertEquals("myUUID",baseParams.get("uuid"));
+                Assert.assertEquals("PubNubRequestId",baseParams.get("requestid"));
+                Assert.assertEquals("PubNubInstanceId",baseParams.get("instanceid"));
                 return fakeCall;
             }
         };

@@ -284,11 +284,11 @@ public abstract class Endpoint<Input, Output> {
         params.put("uuid", this.pubnub.getConfiguration().getUuid());
 
         if (this.pubnub.getConfiguration().isIncludeInstanceIdentifier()) {
-            params.put("instanceId", pubnub.getInstanceId());
+            params.put("instanceid", pubnub.getInstanceId());
         }
 
         if (this.pubnub.getConfiguration().isIncludeRequestIdentifier()) {
-            params.put("requestId", pubnub.getRequestId());
+            params.put("requestid", pubnub.getRequestId());
         }
 
         // add the auth key for publish and subscribe.
