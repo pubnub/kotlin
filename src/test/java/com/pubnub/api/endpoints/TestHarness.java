@@ -31,6 +31,12 @@ public class TestHarness {
                 return "suchJava";
             }
 
+            @Override
+            public String getInstanceId() { return "PubNubInstanceId"; }
+
+            @Override
+            public String getRequestId() { return "PubNubRequestId"; }
+
         }
 
         return new MockedTimePubNub(pnConfiguration);

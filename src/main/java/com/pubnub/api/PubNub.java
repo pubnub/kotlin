@@ -33,6 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 
 @Getter
@@ -40,7 +41,8 @@ import java.util.List;
 public class PubNub {
 
     private PNConfiguration configuration;
-
+    @Getter(AccessLevel.NONE)
+    private String instanceId;
     @Getter(AccessLevel.NONE)
     private SubscriptionManager subscriptionManager;
     @Getter(AccessLevel.NONE)
@@ -62,6 +64,7 @@ public class PubNub {
         this.retrofitManager = new RetrofitManager(this);
         this.subscriptionManager = new SubscriptionManager(this, retrofitManager);
         this.publishSequenceManager = new PublishSequenceManager(MAX_SEQUENCE);
+        instanceId = UUID.randomUUID().toString();
     }
 
     public String getBaseUrl() {
@@ -227,6 +230,20 @@ public class PubNub {
 
     public int getTimestamp() {
         return (int) ((new Date().getTime()) / TIMESTAMP_DIVIDER);
+    }
+
+    /**
+     * @return instance uuid.
+     */
+    public String getInstanceId() {
+        return  instanceId;
+    }
+
+    /**
+     * @return request uuid.
+     */
+    public String getRequestId() {
+        return  UUID.randomUUID().toString();
     }
 
     /**

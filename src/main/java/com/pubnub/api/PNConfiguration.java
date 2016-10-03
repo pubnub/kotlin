@@ -15,11 +15,26 @@ import java.util.UUID;
 @Getter
 @Setter
 @Accessors(chain = true)
+
 public class PNConfiguration {
     private static final int PRESENCE_TIMEOUT = 300;
     private static final int NON_SUBSCRIBE_REQUEST_TIMEOUT = 10;
     private static final int SUBSCRIBE_TIMEOUT = 310;
     private static final int CONNECT_TIMEOUT = 5;
+
+    /**
+     *  Set to true to send a UUID for PubNub instance
+     */
+    @Getter
+    @Setter(AccessLevel.NONE)
+    private boolean includeInstanceIdentifier;
+
+    /**
+     *  Set to true to send a UUID on each request
+     */
+    @Getter
+    @Setter(AccessLevel.NONE)
+    private boolean includeRequestIdentifier;
 
     /**
      * By default, the origin is pointing directly to PubNub servers. If a proxy origin is needed, set a custom
@@ -122,6 +137,11 @@ public class PNConfiguration {
         reconnectionPolicy = PNReconnectionPolicy.NONE;
 
         secure = true;
+
+        includeInstanceIdentifier = true;
+
+        includeRequestIdentifier = true;
+
     }
 
     /**

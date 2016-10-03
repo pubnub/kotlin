@@ -283,6 +283,14 @@ public abstract class Endpoint<Input, Output> {
         params.put("pnsdk", "PubNub-Java-Unified/".concat(this.pubnub.getVersion()));
         params.put("uuid", this.pubnub.getConfiguration().getUuid());
 
+        if (this.pubnub.getConfiguration().isIncludeInstanceIdentifier()) {
+            params.put("instanceId", pubnub.getInstanceId());
+        }
+
+        if (this.pubnub.getConfiguration().isIncludeRequestIdentifier()) {
+            params.put("requestId", pubnub.getRequestId());
+        }
+
         // add the auth key for publish and subscribe.
         if (this.pubnub.getConfiguration().getAuthKey() != null && isAuthRequired()) {
                 params.put("auth", pubnub.getConfiguration().getAuthKey());

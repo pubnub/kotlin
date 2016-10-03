@@ -48,9 +48,11 @@ public class AuditEndpointTest extends TestHarness {
 
         stubFor(get(urlPathEqualTo("/v1/auth/audit/sub-key/mySubscribeKey"))
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
+                .withQueryParam("instanceId", matching("PubNubInstanceId"))
+                .withQueryParam("requestId", matching("PubNubRequestId"))
+                .withQueryParam("signature", matching("dVle3aE_grdzKypoEegdNSZs_CXpJQJEcnqcM0nMH0Q%3D%0A"))
                 .withQueryParam("channel-group", matching("cg1"))
                 .withQueryParam("auth", matching("key1"))
-                .withQueryParam("signature", matching("rXy69MNT1vceNs3Ob6HnjShUAzCV5x4OumSG1lSPL6s%3D%0A"))
                 .withQueryParam("uuid", matching("myUUID"))
                 .withQueryParam("timestamp", matching("1337"))
                 .willReturn(aResponse().withBody("{\"message\":\"Success\",\"payload\":{\"level\":\"channel-group+auth\",\"subscribe_key\":\"sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f\",\"channel-group\":\"cg2\",\"auths\":{\"key1\":{\"r\":1,\"m\":1,\"w\":1}}},\"service\":\"Access Manager\",\"status\":200}")));
@@ -76,7 +78,9 @@ public class AuditEndpointTest extends TestHarness {
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 .withQueryParam("channel", matching("ch1"))
                 .withQueryParam("auth", matching("key1"))
-                .withQueryParam("signature", matching("oICb_S5OubabiqrEA9vDqQ-Ri4PdztWLs6__fQQP_Gs%3D%0A"))
+                .withQueryParam("instanceId", matching("PubNubInstanceId"))
+                .withQueryParam("requestId", matching("PubNubRequestId"))
+                .withQueryParam("signature", matching("4WIVMIc007EqwYGrqyJuMy5qf-gvtdopDjfaXEa1zOs%3D%0A"))
                 .withQueryParam("uuid", matching("myUUID"))
                 .withQueryParam("timestamp", matching("1337"))
                 .willReturn(aResponse().withBody("{\"message\":\"Success\",\"payload\":{\"level\":\"user\",\"subscribe_key\":\"sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f\",\"channel\":\"ch1\",\"auths\":{\"key1\":{\"r\":1,\"m\":1,\"w\":1}}},\"service\":\"Access Manager\",\"status\":200}")));
@@ -143,7 +147,9 @@ public class AuditEndpointTest extends TestHarness {
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 .withQueryParam("channel-group", matching("cg1"))
                 .withQueryParam("auth", matching("key1"))
-                .withQueryParam("signature", matching("rXy69MNT1vceNs3Ob6HnjShUAzCV5x4OumSG1lSPL6s%3D%0A"))
+                .withQueryParam("instanceId", matching("PubNubInstanceId"))
+                .withQueryParam("requestId", matching("PubNubRequestId"))
+                .withQueryParam("signature", matching("dVle3aE_grdzKypoEegdNSZs_CXpJQJEcnqcM0nMH0Q%3D%0A"))
                 .withQueryParam("uuid", matching("myUUID"))
                 .withQueryParam("timestamp", matching("1337"))
                 .willReturn(aResponse().withBody("{\"message\":\"Success\",\"payload\":{\"level\":\"channel-group+auth\",\"subscribe_key\":\"sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f\",\"channel-group\":\"cg2\",\"auths\":{\"key1\":{\"r\":1,\"m\":1,\"w\":1}}},\"service\":\"Access Manager\",\"status\":200}")));
