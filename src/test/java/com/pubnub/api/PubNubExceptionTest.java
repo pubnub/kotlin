@@ -1,6 +1,6 @@
+package com.pubnub.api;
+
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import com.pubnub.api.PubNub;
-import com.pubnub.api.PubNubException;
 import com.pubnub.api.endpoints.TestHarness;
 import com.pubnub.api.endpoints.pubsub.Publish;
 import org.junit.Before;
@@ -12,9 +12,7 @@ import java.io.IOException;
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.junit.Assert.assertEquals;
 
-/**
- * Created by tukunare on 7/5/2016.
- */
+
 public class PubNubExceptionTest extends TestHarness {
     @Rule
     public WireMockRule wireMockRule = new WireMockRule();

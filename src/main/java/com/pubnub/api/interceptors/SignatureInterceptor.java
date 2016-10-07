@@ -3,6 +3,7 @@ package com.pubnub.api.interceptors;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.PubNubUtil;
+import lombok.extern.java.Log;
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.Request;
@@ -13,9 +14,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 
+@Log
 public class SignatureInterceptor implements Interceptor {
 
-    PubNub pubNub;
+    private PubNub pubNub;
 
     public SignatureInterceptor(PubNub pubNubInstance) {
         this.pubNub = pubNubInstance;
@@ -50,7 +52,7 @@ public class SignatureInterceptor implements Interceptor {
         } else if (requestURL.startsWith("/v1/auth/grant")) {
             signInput += "grant" + "\n";
         } else {
-            int moose = 10;
+            signInput += requestURL + "\n";
         }
 
         signInput += PubNubUtil.preparePamArguments(queryParams);
@@ -58,12 +60,12 @@ public class SignatureInterceptor implements Interceptor {
         try {
             signature = PubNubUtil.signSHA256(pubNub.getConfiguration().getSecretKey(), signInput);
         } catch (PubNubException e) {
-            int moose = 11;
+            log.warning("signature failed on SignatureInterceptor: " + e.toString());
         }
 
         HttpUrl rebuiltUrl = url.newBuilder()
                 .addQueryParameter("timestamp", String.valueOf(timestamp))
-                .addQueryParameter("signature", signature)
+                .addQueryParameter("signature", PubNubUtil.urlEncode(signature))
                 .build();
         Request request = chain.request().newBuilder().url(rebuiltUrl).build();
         return chain.proceed(request);

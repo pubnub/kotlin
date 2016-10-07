@@ -46,8 +46,6 @@ public class AuditEndpointTest extends TestHarness {
     @Test
     public void testSuccessChannelGroupSync() throws PubNubException {
 
-        // http://localhost:8080/v1/auth/audit/sub-key/mySubscribeKey?pnsdk=PubNub-Java-Unified/suchJava&channel-group=cg1&instanceid=PubNubInstanceId&auth=key1&requestid=PubNubRequestId&uuid=myUUID&timestamp=1337&signature=rnb_-C8C4twE5IlyMeSlTyF4538WNv4uKCQu6jQwggU%3D%0A
-
         stubFor(get(urlPathEqualTo("/v1/auth/audit/sub-key/mySubscribeKey"))
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 .withQueryParam("instanceid", matching("PubNubInstanceId"))
@@ -60,7 +58,7 @@ public class AuditEndpointTest extends TestHarness {
                 .willReturn(aResponse().withBody("{\"message\":\"Success\",\"payload\":{\"level\":\"channel-group+auth\",\"subscribe_key\":\"sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f\",\"channel-group\":\"cg2\",\"auths\":{\"key1\":{\"r\":1,\"m\":1,\"w\":1}}},\"service\":\"Access Manager\",\"status\":200}")));
 
         PNAccessManagerAuditResult pnAccessManagerAuditResult = partialAudit.channelGroup("cg1").authKeys(Arrays.asList("key1")).sync();
-
+        
         Assert.assertEquals("cg2", pnAccessManagerAuditResult.getChannelGroup());
         Assert.assertEquals(true, pnAccessManagerAuditResult.getAuthKeys().get("key1").isManageEnabled());
         Assert.assertEquals(true, pnAccessManagerAuditResult.getAuthKeys().get("key1").isReadEnabled());
