@@ -74,13 +74,6 @@ public class Grant extends Endpoint<Envelope<AccessManagerGrantPayload>, PNAcces
 
     @Override
     protected Call<Envelope<AccessManagerGrantPayload>> doWork(Map<String, String> queryParams) throws PubNubException {
-        String signature;
-
-        String signInput = this.getPubnub().getConfiguration().getSubscribeKey() + "\n"
-                + this.getPubnub().getConfiguration().getPublishKey() + "\n"
-                + "grant" + "\n";
-
-        queryParams.put("timestamp", String.valueOf(this.getPubnub().getTimestamp()));
 
         if (channels.size() > 0) {
             queryParams.put("channel", PubNubUtil.joinString(channels, ","));
@@ -101,12 +94,6 @@ public class Grant extends Endpoint<Envelope<AccessManagerGrantPayload>, PNAcces
         queryParams.put("r", (read) ? "1" : "0");
         queryParams.put("w", (write) ? "1" : "0");
         queryParams.put("m", (manage) ? "1" : "0");
-
-        signInput += PubNubUtil.preparePamArguments(queryParams);
-
-        signature = PubNubUtil.signSHA256(this.getPubnub().getConfiguration().getSecretKey(), signInput);
-
-        queryParams.put("signature", signature);
 
         AccessManagerService service = this.getRetrofit().create(AccessManagerService.class);
         return service.grant(this.getPubnub().getConfiguration().getSubscribeKey(), queryParams);

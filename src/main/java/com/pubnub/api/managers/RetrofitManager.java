@@ -3,6 +3,7 @@ package com.pubnub.api.managers;
 
 import com.pubnub.api.PubNub;
 import com.pubnub.api.enums.PNLogVerbosity;
+import com.pubnub.api.interceptors.SignatureInterceptor;
 import lombok.Getter;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -16,6 +17,8 @@ public class RetrofitManager {
 
     private PubNub pubnub;
 
+    private SignatureInterceptor signatureInterceptor;
+
     private OkHttpClient transactionClientInstance;
     private OkHttpClient subscriptionClientInstance;
 
@@ -24,6 +27,8 @@ public class RetrofitManager {
 
     public RetrofitManager(PubNub pubNubInstance) {
         this.pubnub = pubNubInstance;
+
+        this.signatureInterceptor = new SignatureInterceptor(pubNubInstance);
 
         this.transactionClientInstance = createOkHttpClient(
                 this.pubnub.getConfiguration().getNonSubscribeRequestTimeout(),
@@ -53,6 +58,8 @@ public class RetrofitManager {
         if (pubnub.getConfiguration().getProxy() != null) {
             httpClient.proxy(pubnub.getConfiguration().getProxy());
         }
+
+        httpClient.addInterceptor(this.signatureInterceptor);
 
         return httpClient.build();
     }

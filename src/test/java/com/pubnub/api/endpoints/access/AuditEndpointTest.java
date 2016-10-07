@@ -46,6 +46,8 @@ public class AuditEndpointTest extends TestHarness {
     @Test
     public void testSuccessChannelGroupSync() throws PubNubException {
 
+        // http://localhost:8080/v1/auth/audit/sub-key/mySubscribeKey?pnsdk=PubNub-Java-Unified/suchJava&channel-group=cg1&instanceid=PubNubInstanceId&auth=key1&requestid=PubNubRequestId&uuid=myUUID&timestamp=1337&signature=rnb_-C8C4twE5IlyMeSlTyF4538WNv4uKCQu6jQwggU%3D%0A
+
         stubFor(get(urlPathEqualTo("/v1/auth/audit/sub-key/mySubscribeKey"))
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 .withQueryParam("instanceid", matching("PubNubInstanceId"))

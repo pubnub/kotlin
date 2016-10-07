@@ -55,15 +55,6 @@ public class Audit extends Endpoint<Envelope<AccessManagerAuditPayload>, PNAcces
 
     @Override
     protected Call<Envelope<AccessManagerAuditPayload>> doWork(Map<String, String> queryParams) throws PubNubException {
-        String signature;
-
-        int timestamp = this.getPubnub().getTimestamp();
-
-        String signInput = this.getPubnub().getConfiguration().getSubscribeKey() + "\n"
-                + this.getPubnub().getConfiguration().getPublishKey() + "\n"
-                + "audit" + "\n";
-
-        queryParams.put("timestamp", String.valueOf(timestamp));
 
         if (channel != null) {
             queryParams.put("channel", channel);
@@ -76,12 +67,6 @@ public class Audit extends Endpoint<Envelope<AccessManagerAuditPayload>, PNAcces
         if (authKeys.size() > 0) {
             queryParams.put("auth", PubNubUtil.joinString(authKeys, ","));
         }
-
-        signInput += PubNubUtil.preparePamArguments(queryParams);
-
-        signature = PubNubUtil.signSHA256(this.getPubnub().getConfiguration().getSecretKey(), signInput);
-
-        queryParams.put("signature", signature);
 
         AccessManagerService service = this.getRetrofit().create(AccessManagerService.class);
         return service.audit(this.getPubnub().getConfiguration().getSubscribeKey(), queryParams);
