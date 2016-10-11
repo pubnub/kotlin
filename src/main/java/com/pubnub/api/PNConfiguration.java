@@ -26,14 +26,12 @@ public class PNConfiguration {
      *  Set to true to send a UUID for PubNub instance
      */
     @Getter
-    @Setter(AccessLevel.NONE)
     private boolean includeInstanceIdentifier;
 
     /**
      *  Set to true to send a UUID on each request
      */
     @Getter
-    @Setter(AccessLevel.NONE)
     private boolean includeRequestIdentifier;
 
     /**
@@ -138,7 +136,7 @@ public class PNConfiguration {
 
         secure = true;
 
-        includeInstanceIdentifier = true;
+        includeInstanceIdentifier = false;
 
         includeRequestIdentifier = true;
 

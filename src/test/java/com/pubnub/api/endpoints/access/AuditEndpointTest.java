@@ -38,7 +38,7 @@ public class AuditEndpointTest extends TestHarness {
 
         pubnub = this.createPubNubInstance(8080);
         partialAudit = pubnub.audit();
-        pubnub.getConfiguration().setSecretKey("secretKey");
+        pubnub.getConfiguration().setSecretKey("secretKey").setIncludeInstanceIdentifier(true);
         wireMockRule.start();
 
     }

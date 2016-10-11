@@ -1,8 +1,17 @@
 name: java
-version: 4.0.14
+version: 4.1.0
 schema: 1
 scm: github.com/pubnub/java
 changelog:
+  - version: v4.1.0
+    date:
+    changes:
+      - type: improvement
+        text: destory now correctly forces the producer thread to shut down; stop is now deprecated for disconnect
+      - type: improvement
+        text: support for sending instance id for presence detection (disabled by default)
+      - type: improvement
+        text: support for sending request id to burst cache (enabled by default)
   - version: v4.0.14
     date:
     changes:

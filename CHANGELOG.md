@@ -1,4 +1,22 @@
 
+## [v4.1.0](https://github.com/pubnub/java/tree/v4.1.0)
+
+
+  [Full Changelog](https://github.com/pubnub/java/compare/v4.0.14...v4.1.0)
+
+
+- ⭐destory now correctly forces the producer thread to shut down; stop is now deprecated for disconnect
+
+
+
+- ⭐support for sending instance id for presence detection (disabled by default)
+
+
+
+- ⭐support for sending request id to burst cache (enabled by default)
+
+
+
 ## [v4.0.14](https://github.com/pubnub/java/tree/v4.0.14)
 
 

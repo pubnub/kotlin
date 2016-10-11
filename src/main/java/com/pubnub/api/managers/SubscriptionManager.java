@@ -114,9 +114,15 @@ public class SubscriptionManager {
     }
 
 
+    @Deprecated()
     public synchronized void stop() {
-        disconnect();
         consumerThread.interrupt();
+        disconnect();
+    }
+
+    public synchronized void  destroy() {
+        consumerThread.interrupt();
+        this.disconnect();
     }
 
     public final synchronized void adaptStateBuilder(final StateOperation stateOperation) {

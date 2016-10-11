@@ -22,6 +22,7 @@ public class EndpointTest extends TestHarness {
     @Before
     public void beforeEach() throws IOException {
         pubnub = this.createPubNubInstance(8080);
+        pubnub.getConfiguration().setIncludeInstanceIdentifier(true);
     }
 
     @Test

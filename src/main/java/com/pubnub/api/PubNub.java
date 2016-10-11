@@ -56,7 +56,7 @@ public class PubNub {
     private static final int TIMESTAMP_DIVIDER = 1000;
     private static final int MAX_SEQUENCE = 65535;
 
-    private static final String SDK_VERSION = "4.0.14";
+    private static final String SDK_VERSION = "4.1.0";
 
     public PubNub(final PNConfiguration initialConfig) {
         this.configuration = initialConfig;
@@ -256,6 +256,7 @@ public class PubNub {
     /**
      * Stop the SDK and terminate all listeners.
      */
+    @Deprecated
     public final void stop() {
         subscriptionManager.stop();
     }
@@ -265,6 +266,7 @@ public class PubNub {
      */
     public final void destroy() {
         retrofitManager.destroy();
+        subscriptionManager.destroy();
     }
 
     /**
@@ -272,6 +274,13 @@ public class PubNub {
      */
     public final void reconnect() {
         subscriptionManager.reconnect();
+    }
+
+    /**
+     * Perform a disconnect from the listeners
+     */
+    public final void disconnect() {
+        subscriptionManager.disconnect();
     }
 
     public final Publish fire() {

@@ -36,7 +36,7 @@ public class GrantEndpointTest extends TestHarness {
     public void beforeEach() throws IOException {
         pubnub = this.createPubNubInstance(8080);
         partialGrant = pubnub.grant();
-        pubnub.getConfiguration().setSecretKey("secretKey");
+        pubnub.getConfiguration().setSecretKey("secretKey").setIncludeInstanceIdentifier(true);
         wireMockRule.start();
     }
 
