@@ -110,6 +110,7 @@ public abstract class Endpoint<Input, Output> {
         cachedCallback = callback;
 
         try {
+            this.validateParams();
             call = doWork(createBaseParams());
         } catch (PubNubException pubnubException) {
             callback.onResponse(null, createStatusResponse(PNStatusCategory.PNBadRequestCategory, null, pubnubException, null, null));
