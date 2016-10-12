@@ -12,6 +12,8 @@ changelog:
         text: support for sending instance id for presence detection (disabled by default)
       - type: improvement
         text: support for sending request id to burst cache (enabled by default)
+      - type: improvement
+        text: proxy support via the native proxy configurator class.
   - version: v4.0.14
     date:
     changes:
