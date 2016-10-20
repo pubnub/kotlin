@@ -114,15 +114,15 @@ public class SubscriptionManager {
     }
 
 
-    @Deprecated()
+    @Deprecated
     public synchronized void stop() {
+        this.disconnect();
         consumerThread.interrupt();
-        disconnect();
     }
 
     public synchronized void  destroy() {
-        consumerThread.interrupt();
         this.disconnect();
+        consumerThread.interrupt();
     }
 
     public final synchronized void adaptStateBuilder(final StateOperation stateOperation) {
@@ -250,12 +250,14 @@ public class SubscriptionManager {
     private void stopSubscribeLoop() {
         if (subscribeCall != null) {
             subscribeCall.silentCancel();
+            subscribeCall = null;
         }
     }
 
     private void performHeartbeatLoop() {
         if (heartbeatCall != null) {
             heartbeatCall.silentCancel();
+            heartbeatCall = null;
         }
 
         List<String> presenceChannels = this.subscriptionState.prepareChannelList(false);

@@ -9,6 +9,7 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class RetrofitManager {
@@ -65,8 +66,16 @@ public class RetrofitManager {
     }
 
     public final void destroy() {
-        this.transactionClientInstance.connectionPool().evictAll();
-        this.subscriptionClientInstance.connectionPool().evictAll();
+        closeExecutor(this.transactionClientInstance);
+        closeExecutor(this.subscriptionClientInstance);
+    }
+
+    private void closeExecutor(OkHttpClient client) {
+        client.connectionPool().evictAll();
+
+        ExecutorService executorService = client.dispatcher().executorService();
+        executorService.shutdown();
+
     }
 
 }

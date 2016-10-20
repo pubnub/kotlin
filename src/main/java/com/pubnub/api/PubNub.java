@@ -265,8 +265,8 @@ public class PubNub {
      *  Destroy the SDK to evict the connection pools.
      */
     public final void destroy() {
-        retrofitManager.destroy();
         subscriptionManager.destroy();
+        retrofitManager.destroy();
     }
 
     /**
