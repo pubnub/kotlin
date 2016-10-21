@@ -111,6 +111,8 @@ changelog:
       - type: improvement
         text: initial beta1.
 features:
+  notify:
+    - REQUEST_MESSAGE_COUNT_EXCEEDED
   access:
     - ACCESS-GRANT
   channel-groups:
