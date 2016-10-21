@@ -118,6 +118,11 @@ public class PNConfiguration {
     private Proxy proxy;
 
     /**
+     * if set, the SDK will alert once the number of messages arrived in one call equal to the threshold
+     */
+    private Integer requestMessageCountThreshold;
+
+    /**
      * Initialize the PNConfiguration with default values
      */
     public PNConfiguration() {

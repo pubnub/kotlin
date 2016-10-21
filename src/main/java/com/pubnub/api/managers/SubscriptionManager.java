@@ -220,18 +220,21 @@ public class SubscriptionManager {
                 }
 
                 if (!subscriptionStatusAnnounced) {
-                    PNStatus pnStatus = PNStatus.builder()
-                            .error(false)
+                    PNStatus pnStatus = createPublicStatus(status)
                             .category(PNStatusCategory.PNConnectedCategory)
-                            .statusCode(status.getStatusCode())
-                            .authKey(status.getAuthKey())
-                            .operation(status.getOperation())
-                            .clientRequest(status.getClientRequest())
-                            .origin(status.getOrigin())
-                            .tlsEnabled(status.isTlsEnabled())
+                            .error(false)
+                            .build();
+                    subscriptionStatusAnnounced = true;
+                    listenerManager.announce(pnStatus);
+                }
+
+                Integer requestMessageCountThreshold = pubnub.getConfiguration().getRequestMessageCountThreshold();
+                if (requestMessageCountThreshold != null && requestMessageCountThreshold == result.getMessages().size()) {
+                    PNStatus pnStatus = createPublicStatus(status)
+                            .category(PNStatusCategory.PNRequestMessageCountExceededCategory)
+                            .error(false)
                             .build();
 
-                    subscriptionStatusAnnounced = true;
                     listenerManager.announce(pnStatus);
                 }
 
@@ -308,4 +311,15 @@ public class SubscriptionManager {
                 .channels(subscriptionState.prepareChannelList(false))
                 .build());
     }
+
+    private PNStatus.PNStatusBuilder createPublicStatus(PNStatus privateStatus) {
+        return PNStatus.builder()
+                .statusCode(privateStatus.getStatusCode())
+                .authKey(privateStatus.getAuthKey())
+                .operation(privateStatus.getOperation())
+                .clientRequest(privateStatus.getClientRequest())
+                .origin(privateStatus.getOrigin())
+                .tlsEnabled(privateStatus.isTlsEnabled());
+    }
+
 }
