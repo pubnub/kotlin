@@ -129,7 +129,7 @@ public final class PubNubUtil {
             throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_CRYPTO_ERROR).errormsg(e.getMessage()).build();
         }
 
-        return new String(Base64.encode(hmacData, 0), Charset.forName("UTF-8")).replace('+', '-').replace('/', '_');
+        return new String(Base64.encode(hmacData, 0), Charset.forName("UTF-8")).replace('+', '-').replace('/', '_').replace("\n", "");
     }
 
     public static String replaceLast(String string, String toReplace, String replacement) {

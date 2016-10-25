@@ -68,7 +68,7 @@ public class GrantEndpointTest extends TestHarness {
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v1/auth/grant/sub-key/mySubscribeKey.*")));
         assertEquals(1, requests.size());
         String signature = requests.get(0).queryParameter("signature").firstValue();
-        assertEquals("nUZe6LEDe2RGPeh4qoe-IpjAYzBf8RJMtSXI7ktaah8%3D%0A", signature);
+        assertEquals("nUZe6LEDe2RGPeh4qoe-IpjAYzBf8RJMtSXI7ktaah8=", signature);
 
     }
 
@@ -100,7 +100,7 @@ public class GrantEndpointTest extends TestHarness {
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v1/auth/grant/sub-key/mySubscribeKey.*")));
         assertEquals(1, requests.size());
         String signature = requests.get(0).queryParameter("signature").firstValue();
-        assertEquals("ml__GSdczD-5CLqz8Vappaux1bZj6IycOP4O6FyS7ek%3D%0A", signature);
+        assertEquals("ml__GSdczD-5CLqz8Vappaux1bZj6IycOP4O6FyS7ek=", signature);
     }
 
     @Test
@@ -132,7 +132,7 @@ public class GrantEndpointTest extends TestHarness {
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v1/auth/grant/sub-key/mySubscribeKey.*")));
         assertEquals(1, requests.size());
         String signature = requests.get(0).queryParameter("signature").firstValue();
-        assertEquals("J6g30_aZUtbXOLCQ3kkYx0-K6Rm0F-pFUPa3kZ2647Q%3D%0A", signature);
+        assertEquals("J6g30_aZUtbXOLCQ3kkYx0-K6Rm0F-pFUPa3kZ2647Q=", signature);
     }
 
     @Test
@@ -166,7 +166,7 @@ public class GrantEndpointTest extends TestHarness {
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v1/auth/grant/sub-key/mySubscribeKey.*")));
         assertEquals(1, requests.size());
         String signature = requests.get(0).queryParameter("signature").firstValue();
-        assertEquals("-3DlrA39lnyhbjTtuJC6s13Gc5Owa_SdRxAx3zJFUd4%3D%0A", signature);
+        assertEquals("-3DlrA39lnyhbjTtuJC6s13Gc5Owa_SdRxAx3zJFUd4=", signature);
     }
 
     @Test
@@ -196,7 +196,7 @@ public class GrantEndpointTest extends TestHarness {
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v1/auth/grant/sub-key/mySubscribeKey.*")));
         assertEquals(1, requests.size());
         String signature = requests.get(0).queryParameter("signature").firstValue();
-        assertEquals("JfuIHr4BMGVbaAVp1QdDvvhcX2aaCEqINIcIsHJMGCs%3D%0A", signature);
+        assertEquals("JfuIHr4BMGVbaAVp1QdDvvhcX2aaCEqINIcIsHJMGCs=", signature);
     }
 
     @Test
@@ -227,7 +227,7 @@ public class GrantEndpointTest extends TestHarness {
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v1/auth/grant/sub-key/mySubscribeKey.*")));
         assertEquals(1, requests.size());
         String signature = requests.get(0).queryParameter("signature").firstValue();
-        assertEquals("m47WC6N_zx9EhnX3XcO-bNS0wO5Fw4sj8154NoyyVKs%3D%0A", signature);
+        assertEquals("m47WC6N_zx9EhnX3XcO-bNS0wO5Fw4sj8154NoyyVKs=", signature);
     }
 
     @Test
@@ -261,7 +261,7 @@ public class GrantEndpointTest extends TestHarness {
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v1/auth/grant/sub-key/mySubscribeKey.*")));
         assertEquals(1, requests.size());
         String signature = requests.get(0).queryParameter("signature").firstValue();
-        assertEquals("TXuXp8mvpziVIeuyd8b0dgNXRYEJ9oBIhktnhilt7Xs%3D%0A", signature);
+        assertEquals("TXuXp8mvpziVIeuyd8b0dgNXRYEJ9oBIhktnhilt7Xs=", signature);
     }
 
     @Test
@@ -297,7 +297,7 @@ public class GrantEndpointTest extends TestHarness {
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v1/auth/grant/sub-key/mySubscribeKey.*")));
         assertEquals(1, requests.size());
         String signature = requests.get(0).queryParameter("signature").firstValue();
-        assertEquals("KbQ7nkSPXZO_iTfn7nNfCO_Ut7OsEg4Hzb321vGgYUc%3D%0A", signature);
+        assertEquals("KbQ7nkSPXZO_iTfn7nNfCO_Ut7OsEg4Hzb321vGgYUc=", signature);
 
     }
 
@@ -333,7 +333,7 @@ public class GrantEndpointTest extends TestHarness {
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v1/auth/grant/sub-key/mySubscribeKey.*")));
         assertEquals(1, requests.size());
         String signature = requests.get(0).queryParameter("signature").firstValue();
-        assertEquals("gstN6_LP_z9LVMcBY4nAgXZQu_AcAta6Cuq2nWglbmw%3D%0A", signature);
+        assertEquals("gstN6_LP_z9LVMcBY4nAgXZQu_AcAta6Cuq2nWglbmw=", signature);
 
     }
 
@@ -372,7 +372,7 @@ public class GrantEndpointTest extends TestHarness {
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v1/auth/grant/sub-key/mySubscribeKey.*")));
         assertEquals(1, requests.size());
         String signature = requests.get(0).queryParameter("signature").firstValue();
-        assertEquals("p6eQF50jjcKvWQ1rulCE41WHKlJyp11byW989x4FEFc%3D%0A", signature);
+        assertEquals("p6eQF50jjcKvWQ1rulCE41WHKlJyp11byW989x4FEFc=", signature);
     }
 
 
@@ -405,7 +405,7 @@ public class GrantEndpointTest extends TestHarness {
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v1/auth/grant/sub-key/mySubscribeKey.*")));
         assertEquals(1, requests.size());
         String signature = requests.get(0).queryParameter("signature").firstValue();
-        assertEquals("rBRwhq15luvJ5IOFMgQqICHP_K10h0lm1m4TbKTgdWE%3D%0A", signature);
+        assertEquals("rBRwhq15luvJ5IOFMgQqICHP_K10h0lm1m4TbKTgdWE=", signature);
     }
 
     @Test
@@ -438,7 +438,7 @@ public class GrantEndpointTest extends TestHarness {
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v1/auth/grant/sub-key/mySubscribeKey.*")));
         assertEquals(1, requests.size());
         String signature = requests.get(0).queryParameter("signature").firstValue();
-        assertEquals("_78G4e79CvlnpKJfQTvORBGzimTFZfzxY5tcEVLW4Xs%3D%0A", signature);
+        assertEquals("_78G4e79CvlnpKJfQTvORBGzimTFZfzxY5tcEVLW4Xs=", signature);
     }
 
     @Test
@@ -474,7 +474,7 @@ public class GrantEndpointTest extends TestHarness {
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v1/auth/grant/sub-key/mySubscribeKey.*")));
         assertEquals(1, requests.size());
         String signature = requests.get(0).queryParameter("signature").firstValue();
-        assertEquals("8y9GXwhZFO1m9saIe1FVkAu5jIPMu-U9eHVSy0ybyio%3D%0A", signature);
+        assertEquals("8y9GXwhZFO1m9saIe1FVkAu5jIPMu-U9eHVSy0ybyio=", signature);
     }
 
     @Test
@@ -513,7 +513,7 @@ public class GrantEndpointTest extends TestHarness {
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v1/auth/grant/sub-key/mySubscribeKey.*")));
         assertEquals(1, requests.size());
         String signature = requests.get(0).queryParameter("signature").firstValue();
-        assertEquals("GIgfQnwun0NgZNYD_rDtS3DkIuK7xMyWN8p_7kG4y5Q%3D%0A", signature);
+        assertEquals("GIgfQnwun0NgZNYD_rDtS3DkIuK7xMyWN8p_7kG4y5Q=", signature);
     }
 
     @Test
@@ -550,7 +550,7 @@ public class GrantEndpointTest extends TestHarness {
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v1/auth/grant/sub-key/mySubscribeKey.*")));
         assertEquals(1, requests.size());
         String signature = requests.get(0).queryParameter("signature").firstValue();
-        assertEquals("Kvm2uRwgJ60iGYyvI60KC_WIdU3cxIKyYaX1LK0PL3c%3D%0A", signature);
+        assertEquals("Kvm2uRwgJ60iGYyvI60KC_WIdU3cxIKyYaX1LK0PL3c=", signature);
     }
 
     @Test
@@ -592,7 +592,7 @@ public class GrantEndpointTest extends TestHarness {
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v1/auth/grant/sub-key/mySubscribeKey.*")));
         assertEquals(1, requests.size());
         String signature = requests.get(0).queryParameter("signature").firstValue();
-        assertEquals("uptOF3nuKzGHSJ-swKQFj4XSgzKetO5uHl9iRkPeYGY%3D%0A", signature);
+        assertEquals("uptOF3nuKzGHSJ-swKQFj4XSgzKetO5uHl9iRkPeYGY=", signature);
     }
 
     @Test
@@ -623,7 +623,7 @@ public class GrantEndpointTest extends TestHarness {
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v1/auth/grant/sub-key/mySubscribeKey.*")));
         assertEquals(1, requests.size());
         String signature = requests.get(0).queryParameter("signature").firstValue();
-        assertEquals("VcJTCcpMugw4Stm409oUeaLWR0-ZewRJNKKetI6A1Jk%3D%0A", signature);
+        assertEquals("VcJTCcpMugw4Stm409oUeaLWR0-ZewRJNKKetI6A1Jk=", signature);
     }
 
     @Test
@@ -653,7 +653,7 @@ public class GrantEndpointTest extends TestHarness {
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v1/auth/grant/sub-key/mySubscribeKey.*")));
         assertEquals(1, requests.size());
         String signature = requests.get(0).queryParameter("signature").firstValue();
-        assertEquals("9ngAxIIhZUq6qqCAPXwcpoqPlSRXDokohXmgZ9jEZsM%3D%0A", signature);
+        assertEquals("9ngAxIIhZUq6qqCAPXwcpoqPlSRXDokohXmgZ9jEZsM=", signature);
     }
 
     @Test
@@ -683,7 +683,7 @@ public class GrantEndpointTest extends TestHarness {
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v1/auth/grant/sub-key/mySubscribeKey.*")));
         assertEquals(1, requests.size());
         String signature = requests.get(0).queryParameter("signature").firstValue();
-        assertEquals("ZNoFdFsoGjNmKLoOFPW7Xn9es3c41ZG1gHZ3Szz9BbA%3D%0A", signature);
+        assertEquals("ZNoFdFsoGjNmKLoOFPW7Xn9es3c41ZG1gHZ3Szz9BbA=", signature);
     }
 
     @Test
@@ -713,7 +713,7 @@ public class GrantEndpointTest extends TestHarness {
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v1/auth/grant/sub-key/mySubscribeKey.*")));
         assertEquals(1, requests.size());
         String signature = requests.get(0).queryParameter("signature").firstValue();
-        assertEquals("lMTGADViQb_pQPkwOypoiRhiJGdN2prTlWlHCfZrgx0%3D%0A", signature);
+        assertEquals("lMTGADViQb_pQPkwOypoiRhiJGdN2prTlWlHCfZrgx0=", signature);
     }
 
 
@@ -749,7 +749,7 @@ public class GrantEndpointTest extends TestHarness {
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v1/auth/grant/sub-key/mySubscribeKey.*")));
         assertEquals(1, requests.size());
         String signature = requests.get(0).queryParameter("signature").firstValue();
-        assertEquals("nUZe6LEDe2RGPeh4qoe-IpjAYzBf8RJMtSXI7ktaah8%3D%0A", signature);
+        assertEquals("nUZe6LEDe2RGPeh4qoe-IpjAYzBf8RJMtSXI7ktaah8=", signature);
     }
 
     @Test
@@ -759,7 +759,7 @@ public class GrantEndpointTest extends TestHarness {
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 .withQueryParam("channel", matching("ch1"))
                 .withQueryParam("auth", matching("key1"))
-                .withQueryParam("signature", matching("HlyfXDFhdgNhKfBzGaouxh2T2SRimm4bVq_JVKLRPQI%3D%0A"))
+                .withQueryParam("signature", matching("HlyfXDFhdgNhKfBzGaouxh2T2SRimm4bVq_JVKLRPQI="))
                 .withQueryParam("uuid", matching("myUUID"))
                 .withQueryParam("timestamp", matching("1337"))
                 .withQueryParam("r", matching("0"))
@@ -893,7 +893,7 @@ public class GrantEndpointTest extends TestHarness {
         stubFor(get(urlPathEqualTo("/v1/auth/grant/sub-key/mySubscribeKey"))
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 .withQueryParam("channel", matching("ch1"))
-                .withQueryParam("signature", matching("HlyfXDFhdgNhKfBzGaouxh2T2SRimm4bVq_JVKLRPQI%3D%0A"))
+                .withQueryParam("signature", matching("HlyfXDFhdgNhKfBzGaouxh2T2SRimm4bVq_JVKLRPQI="))
                 .withQueryParam("uuid", matching("myUUID"))
                 .withQueryParam("timestamp", matching("1337"))
                 .withQueryParam("r", matching("0"))

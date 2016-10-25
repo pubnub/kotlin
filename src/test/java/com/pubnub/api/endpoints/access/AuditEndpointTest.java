@@ -68,7 +68,7 @@ public class AuditEndpointTest extends TestHarness {
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v1/auth/audit/sub-key/mySubscribeKey.*")));
         assertEquals(1, requests.size());
         String signature = requests.get(0).queryParameter("signature").firstValue();
-        assertEquals("rnb_-C8C4twE5IlyMeSlTyF4538WNv4uKCQu6jQwggU%3D%0A", signature);
+        assertEquals("rnb_-C8C4twE5IlyMeSlTyF4538WNv4uKCQu6jQwggU=", signature);
 
     }
 
@@ -97,7 +97,7 @@ public class AuditEndpointTest extends TestHarness {
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
         String signature = requests.get(0).queryParameter("signature").firstValue();
-        assertEquals("l0mnete94wADUcKR6THq1L4nhJrJg5q7eot0uRWoT8U%3D%0A", signature);
+        assertEquals("l0mnete94wADUcKR6THq1L4nhJrJg5q7eot0uRWoT8U=", signature);
     }
 
     @Test
@@ -117,7 +117,7 @@ public class AuditEndpointTest extends TestHarness {
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 .withQueryParam("channel-group", matching("cg1"))
                 .withQueryParam("auth", matching("key1"))
-                .withQueryParam("signature", matching("rXy69MNT1vceNs3Ob6HnjShUAzCV5x4OumSG1lSPL6s%3D%0A"))
+                .withQueryParam("signature", matching("rXy69MNT1vceNs3Ob6HnjShUAzCV5x4OumSG1lSPL6s="))
                 .withQueryParam("uuid", matching("myUUID"))
                 .withQueryParam("timestamp", matching("1337"))
                 .willReturn(aResponse().withBody("{\"message\":\"Success\",\"payload\":{\"level\":\"channel-group+auth\",\"subscribe_key\":\"sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f\",\"channel-group\":\"cg2\",\"auths\":{\"key1\":{\"r\":1,\"m\":1,\"w\":1}}},\"service\":\"Access Manager\",\"status\":200}")));
@@ -156,7 +156,7 @@ public class AuditEndpointTest extends TestHarness {
             List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
             assertEquals(1, requests.size());
             String signature = requests.get(0).queryParameter("signature").firstValue();
-            assertEquals("rnb_-C8C4twE5IlyMeSlTyF4538WNv4uKCQu6jQwggU%3D%0A", signature);
+            assertEquals("rnb_-C8C4twE5IlyMeSlTyF4538WNv4uKCQu6jQwggU=", signature);
         } catch (PubNubException ex) {
             throw new RuntimeException("should never reach here", ex);
         }

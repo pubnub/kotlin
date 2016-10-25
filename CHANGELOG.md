@@ -1,4 +1,22 @@
 
+## [v4.2.0](https://github.com/pubnub/java/tree/v4.2.0)
+
+
+  [Full Changelog](https://github.com/pubnub/java/compare/v4.1.0...v4.2.0)
+
+
+- ⭐Signatures are generated for all requests with secret key to ensure secure transmission of data
+
+
+
+- ⭐support for alerting of queue exceeded (PNRequestMessageCountExceededCategory)
+
+
+
+- ⭐signaling to okhttp to stop the queues on termination.
+
+
+
 ## [v4.1.0](https://github.com/pubnub/java/tree/v4.1.0)
 
 
@@ -14,6 +32,10 @@
 
 
 - ⭐support for sending request id to burst cache (enabled by default)
+
+
+
+- ⭐proxy support via the native proxy configurator class.
 
 
 

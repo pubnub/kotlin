@@ -65,7 +65,7 @@ public class SignatureInterceptor implements Interceptor {
 
         HttpUrl rebuiltUrl = url.newBuilder()
                 .addQueryParameter("timestamp", String.valueOf(timestamp))
-                .addQueryParameter("signature", PubNubUtil.urlEncode(signature))
+                .addQueryParameter("signature", signature)
                 .build();
         Request request = chain.request().newBuilder().url(rebuiltUrl).build();
         return chain.proceed(request);
