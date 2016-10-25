@@ -10,6 +10,7 @@ com.pubnub.api.endpoints.presence
 com.pubnub.api.endpoints.pubsub
 com.pubnub.api.endpoints.push
 com.pubnub.api.enums
+com.pubnub.api.interceptors
 com.pubnub.api.managers
 com.pubnub.api.models
 com.pubnub.api.models.consumer
