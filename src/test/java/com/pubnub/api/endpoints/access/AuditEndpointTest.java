@@ -50,7 +50,6 @@ public class AuditEndpointTest extends TestHarness {
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 .withQueryParam("instanceid", matching("PubNubInstanceId"))
                 .withQueryParam("requestid", matching("PubNubRequestId"))
-                .withQueryParam("signature", matching("rnb_-C8C4twE5IlyMeSlTyF4538WNv4uKCQu6jQwggU%3D%0A"))
                 .withQueryParam("channel-group", matching("cg1"))
                 .withQueryParam("auth", matching("key1"))
                 .withQueryParam("uuid", matching("myUUID"))
@@ -68,6 +67,8 @@ public class AuditEndpointTest extends TestHarness {
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v1/auth/audit/sub-key/mySubscribeKey.*")));
         assertEquals(1, requests.size());
+        String signature = requests.get(0).queryParameter("signature").firstValue();
+        assertEquals("rnb_-C8C4twE5IlyMeSlTyF4538WNv4uKCQu6jQwggU%3D%0A", signature);
 
     }
 
@@ -80,7 +81,6 @@ public class AuditEndpointTest extends TestHarness {
                 .withQueryParam("auth", matching("key1"))
                 .withQueryParam("instanceid", matching("PubNubInstanceId"))
                 .withQueryParam("requestid", matching("PubNubRequestId"))
-                .withQueryParam("signature", matching("l0mnete94wADUcKR6THq1L4nhJrJg5q7eot0uRWoT8U%3D%0A"))
                 .withQueryParam("uuid", matching("myUUID"))
                 .withQueryParam("timestamp", matching("1337"))
                 .willReturn(aResponse().withBody("{\"message\":\"Success\",\"payload\":{\"level\":\"user\",\"subscribe_key\":\"sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f\",\"channel\":\"ch1\",\"auths\":{\"key1\":{\"r\":1,\"m\":1,\"w\":1}}},\"service\":\"Access Manager\",\"status\":200}")));
@@ -96,25 +96,22 @@ public class AuditEndpointTest extends TestHarness {
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
+        String signature = requests.get(0).queryParameter("signature").firstValue();
+        assertEquals("l0mnete94wADUcKR6THq1L4nhJrJg5q7eot0uRWoT8U%3D%0A", signature);
     }
 
-    @org.junit.Test(expected=PubNubException.class)
-    public void testSuccessChannelMissingKeySync() throws PubNubException {
-
-        stubFor(get(urlPathEqualTo("/v1/auth/audit/sub-key/mySubscribeKey"))
-                .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
-                .withQueryParam("channel", matching("ch1"))
-                .withQueryParam("auth", matching("key1"))
-                .withQueryParam("signature", matching("ZlPruaId7jzupmK4LUynpnjvA2CQYyrrT0475wWkbwY%3D%0A"))
-                .withQueryParam("uuid", matching("myUUID"))
-                .withQueryParam("timestamp", matching("1337"))
-                .willReturn(aResponse().withBody("{\"message\":\"Success\",\"payload\":{\"level\":\"user\",\"subscribe_key\":\"sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f\",\"channel\":\"ch1\",\"auths\":{\"key1\":{\"r\":1,\"m\":1,\"w\":1}}},\"service\":\"Access Manager\",\"status\":200}")));
-
-        partialAudit.channel("ch1").sync();
+    @Test
+    public void testSuccessChannelMissingKeySync() {
+        try {
+            partialAudit.channel("ch1").sync();
+            throw new RuntimeException("should never reach here");
+        } catch (PubNubException e) {
+            assertEquals("Auth Keys Missing.", e.getPubnubError().getMessage());
+        }
     }
 
-    @org.junit.Test
-    public void testOperationTypeSuccessAsync() throws IOException, PubNubException, InterruptedException {
+    @Test
+    public void testOperationTypeSuccessAsync() {
 
         stubFor(get(urlPathEqualTo("/v1/auth/audit/sub-key/mySubscribeKey"))
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
@@ -136,12 +133,11 @@ public class AuditEndpointTest extends TestHarness {
             }
         });
 
-        Awaitility.await().atMost(5, TimeUnit.SECONDS)
-                .untilAtomic(atomic, org.hamcrest.core.IsEqual.equalTo(1));
+        Awaitility.await().atMost(5, TimeUnit.SECONDS).untilAtomic(atomic, org.hamcrest.core.IsEqual.equalTo(1));
     }
 
-    @org.junit.Test
-    public void testIsAuthRequiredSuccessSync() throws IOException, PubNubException, InterruptedException {
+    @Test
+    public void testIsAuthRequiredSuccessSync() {
 
         stubFor(get(urlPathEqualTo("/v1/auth/audit/sub-key/mySubscribeKey"))
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
@@ -149,142 +145,125 @@ public class AuditEndpointTest extends TestHarness {
                 .withQueryParam("auth", matching("key1"))
                 .withQueryParam("instanceid", matching("PubNubInstanceId"))
                 .withQueryParam("requestid", matching("PubNubRequestId"))
-                .withQueryParam("signature", matching("rnb_-C8C4twE5IlyMeSlTyF4538WNv4uKCQu6jQwggU%3D%0A"))
                 .withQueryParam("uuid", matching("myUUID"))
                 .withQueryParam("timestamp", matching("1337"))
                 .willReturn(aResponse().withBody("{\"message\":\"Success\",\"payload\":{\"level\":\"channel-group+auth\",\"subscribe_key\":\"sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f\",\"channel-group\":\"cg2\",\"auths\":{\"key1\":{\"r\":1,\"m\":1,\"w\":1}}},\"service\":\"Access Manager\",\"status\":200}")));
 
         pubnub.getConfiguration().setAuthKey("myKey");
-        partialAudit.channelGroup("cg1").authKeys(Arrays.asList("key1")).sync();
 
-        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
-        assertEquals(1, requests.size());
+        try {
+            partialAudit.channelGroup("cg1").authKeys(Arrays.asList("key1")).sync();
+            List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
+            assertEquals(1, requests.size());
+            String signature = requests.get(0).queryParameter("signature").firstValue();
+            assertEquals("rnb_-C8C4twE5IlyMeSlTyF4538WNv4uKCQu6jQwggU%3D%0A", signature);
+        } catch (PubNubException ex) {
+            throw new RuntimeException("should never reach here", ex);
+        }
     }
 
-    @org.junit.Test(expected=PubNubException.class)
-    public void testNullPayload() throws IOException, PubNubException, InterruptedException {
+    @Test
+    public void testNullPayload() {
 
         stubFor(get(urlPathEqualTo("/v1/auth/audit/sub-key/mySubscribeKey"))
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 .withQueryParam("channel-group", matching("cg1"))
                 .withQueryParam("auth", matching("key1"))
-                .withQueryParam("signature", matching("rXy69MNT1vceNs3Ob6HnjShUAzCV5x4OumSG1lSPL6s%3D%0A"))
                 .withQueryParam("uuid", matching("myUUID"))
                 .withQueryParam("timestamp", matching("1337"))
                 .willReturn(aResponse().withBody("{\"message\":\"Success\",\"service\":\"Access Manager\",\"status\":200}")));
 
-        partialAudit.channelGroup("cg1").authKeys(Arrays.asList("key1")).sync();
+        try {
+            partialAudit.channelGroup("cg1").authKeys(Arrays.asList("key1")).sync();
+            throw new RuntimeException("should never reach here");
+        } catch (PubNubException e) {
+            assertEquals("Parsing Error", e.getPubnubError().getMessage());
+        }
     }
 
-    @org.junit.Test(expected=PubNubException.class)
-    public void testNullSecretKey() throws IOException, PubNubException, InterruptedException {
-
-        stubFor(get(urlPathEqualTo("/v1/auth/audit/sub-key/mySubscribeKey"))
-                .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
-                .withQueryParam("channel-group", matching("cg1"))
-                .withQueryParam("auth", matching("key1"))
-                .withQueryParam("signature", matching("rXy69MNT1vceNs3Ob6HnjShUAzCV5x4OumSG1lSPL6s%3D%0A"))
-                .withQueryParam("uuid", matching("myUUID"))
-                .withQueryParam("timestamp", matching("1337"))
-                .willReturn(aResponse().withBody("{\"message\":\"Success\",\"service\":\"Access Manager\",\"status\":200}")));
-
+    @Test
+    public void testNullSecretKey() {
         pubnub.getConfiguration().setSecretKey(null);
-        partialAudit.channelGroup("cg1").authKeys(Arrays.asList("key1")).sync();
+
+        try {
+            partialAudit.channelGroup("cg1").authKeys(Arrays.asList("key1")).sync();
+            throw new RuntimeException("should never reach here");
+        } catch (PubNubException e) {
+            assertEquals("ULS configuration failed. Secret Key not configured.", e.getPubnubError().getMessage());
+        }
+
     }
 
-    @org.junit.Test(expected=PubNubException.class)
-    public void testEmptySecretKey() throws IOException, PubNubException, InterruptedException {
-
-        stubFor(get(urlPathEqualTo("/v1/auth/audit/sub-key/mySubscribeKey"))
-                .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
-                .withQueryParam("channel-group", matching("cg1"))
-                .withQueryParam("auth", matching("key1"))
-                .withQueryParam("signature", matching("rXy69MNT1vceNs3Ob6HnjShUAzCV5x4OumSG1lSPL6s%3D%0A"))
-                .withQueryParam("uuid", matching("myUUID"))
-                .withQueryParam("timestamp", matching("1337"))
-                .willReturn(aResponse().withBody("{\"message\":\"Success\",\"service\":\"Access Manager\",\"status\":200}")));
-
+    @Test
+    public void testEmptySecretKey() {
         pubnub.getConfiguration().setSecretKey("");
-        partialAudit.channelGroup("cg1").authKeys(Arrays.asList("key1")).sync();
+
+        try {
+            partialAudit.channelGroup("cg1").authKeys(Arrays.asList("key1")).sync();
+            throw new RuntimeException("should never reach here");
+        } catch (PubNubException e) {
+            assertEquals("ULS configuration failed. Secret Key not configured.", e.getPubnubError().getMessage());
+        }
+
     }
 
-    @org.junit.Test(expected=PubNubException.class)
-    public void testNullSubscribeKey() throws IOException, PubNubException, InterruptedException {
-
-        stubFor(get(urlPathEqualTo("/v1/auth/audit/sub-key/mySubscribeKey"))
-                .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
-                .withQueryParam("channel-group", matching("cg1"))
-                .withQueryParam("auth", matching("key1"))
-                .withQueryParam("signature", matching("rXy69MNT1vceNs3Ob6HnjShUAzCV5x4OumSG1lSPL6s%3D%0A"))
-                .withQueryParam("uuid", matching("myUUID"))
-                .withQueryParam("timestamp", matching("1337"))
-                .willReturn(aResponse().withBody("{\"message\":\"Success\",\"service\":\"Access Manager\",\"status\":200}")));
-
+    @Test
+    public void testNullSubscribeKey() {
         pubnub.getConfiguration().setSubscribeKey(null);
-        partialAudit.channelGroup("cg1").authKeys(Arrays.asList("key1")).sync();
+
+        try {
+            partialAudit.channelGroup("cg1").authKeys(Arrays.asList("key1")).sync();
+            throw new RuntimeException("should never reach here");
+        } catch (PubNubException e) {
+            assertEquals("ULS configuration failed. Subscribe Key not configured.", e.getPubnubError().getMessage());
+        }
     }
 
-    @org.junit.Test(expected=PubNubException.class)
-    public void testEmptySubscribeKey() throws IOException, PubNubException, InterruptedException {
-
-        stubFor(get(urlPathEqualTo("/v1/auth/audit/sub-key/mySubscribeKey"))
-                .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
-                .withQueryParam("channel-group", matching("cg1"))
-                .withQueryParam("auth", matching("key1"))
-                .withQueryParam("signature", matching("rXy69MNT1vceNs3Ob6HnjShUAzCV5x4OumSG1lSPL6s%3D%0A"))
-                .withQueryParam("uuid", matching("myUUID"))
-                .withQueryParam("timestamp", matching("1337"))
-                .willReturn(aResponse().withBody("{\"message\":\"Success\",\"service\":\"Access Manager\",\"status\":200}")));
-
+    @Test
+    public void testEmptySubscribeKey() {
         pubnub.getConfiguration().setSubscribeKey("");
-        partialAudit.channelGroup("cg1").authKeys(Arrays.asList("key1")).sync();
+
+        try {
+            partialAudit.channelGroup("cg1").authKeys(Arrays.asList("key1")).sync();
+            throw new RuntimeException("should never reach here");
+        } catch (PubNubException e) {
+            assertEquals("ULS configuration failed. Subscribe Key not configured.", e.getPubnubError().getMessage());
+        }
     }
 
-    @org.junit.Test(expected=PubNubException.class)
-    public void testNullPublishKey() throws IOException, PubNubException, InterruptedException {
-
-        stubFor(get(urlPathEqualTo("/v1/auth/audit/sub-key/mySubscribeKey"))
-                .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
-                .withQueryParam("channel-group", matching("cg1"))
-                .withQueryParam("auth", matching("key1"))
-                .withQueryParam("signature", matching("rXy69MNT1vceNs3Ob6HnjShUAzCV5x4OumSG1lSPL6s%3D%0A"))
-                .withQueryParam("uuid", matching("myUUID"))
-                .withQueryParam("timestamp", matching("1337"))
-                .willReturn(aResponse().withBody("{\"message\":\"Success\",\"service\":\"Access Manager\",\"status\":200}")));
-
+    @Test
+    public void testNullPublishKey() {
         pubnub.getConfiguration().setPublishKey(null);
-        partialAudit.channelGroup("cg1").authKeys(Arrays.asList("key1")).sync();
+
+        try {
+            partialAudit.channelGroup("cg1").authKeys(Arrays.asList("key1")).sync();
+            throw new RuntimeException("should never reach here");
+        } catch (PubNubException e) {
+            assertEquals("ULS configuration failed. Publish Key not configured.", e.getPubnubError().getMessage());
+        }
     }
 
-    @org.junit.Test(expected=PubNubException.class)
-    public void testEmptyPublishKey() throws IOException, PubNubException, InterruptedException {
-
-        stubFor(get(urlPathEqualTo("/v1/auth/audit/sub-key/mySubscribeKey"))
-                .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
-                .withQueryParam("channel-group", matching("cg1"))
-                .withQueryParam("auth", matching("key1"))
-                .withQueryParam("signature", matching("rXy69MNT1vceNs3Ob6HnjShUAzCV5x4OumSG1lSPL6s%3D%0A"))
-                .withQueryParam("uuid", matching("myUUID"))
-                .withQueryParam("timestamp", matching("1337"))
-                .willReturn(aResponse().withBody("{\"message\":\"Success\",\"service\":\"Access Manager\",\"status\":200}")));
-
+    @Test
+    public void testEmptyPublishKey() {
         pubnub.getConfiguration().setPublishKey("");
-        partialAudit.channelGroup("cg1").authKeys(Arrays.asList("key1")).sync();
+
+        try {
+            partialAudit.channelGroup("cg1").authKeys(Arrays.asList("key1")).sync();
+            throw new RuntimeException("should never reach here");
+        } catch (PubNubException e) {
+            assertEquals("ULS configuration failed. Publish Key not configured.", e.getPubnubError().getMessage());
+        }
+
     }
 
-    @org.junit.Test(expected=PubNubException.class)
-    public void testChannelAndChanneGroupNull() throws IOException, PubNubException, InterruptedException {
-
-        stubFor(get(urlPathEqualTo("/v1/auth/audit/sub-key/mySubscribeKey"))
-                .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
-                .withQueryParam("channel-group", matching("cg1"))
-                .withQueryParam("auth", matching("key1"))
-                .withQueryParam("signature", matching("rXy69MNT1vceNs3Ob6HnjShUAzCV5x4OumSG1lSPL6s%3D%0A"))
-                .withQueryParam("uuid", matching("myUUID"))
-                .withQueryParam("timestamp", matching("1337"))
-                .willReturn(aResponse().withBody("{\"message\":\"Success\",\"service\":\"Access Manager\",\"status\":200}")));
-
-        partialAudit.authKeys(Arrays.asList("key1")).channel(null).channelGroup(null).sync();
+    @Test
+    public void testChannelAndChanneGroupNull() {
+        try {
+            partialAudit.authKeys(Arrays.asList("key1")).channel(null).channelGroup(null).sync();
+            throw new RuntimeException("should never reach here");
+        } catch (PubNubException e) {
+            assertEquals("Channel and Group Missing.", e.getPubnubError().getMessage());
+        }
     }
 
 }

@@ -43,7 +43,7 @@ public class SubscriptionManagerTest extends TestHarness {
 
     @After
     public void afterEach() {
-        pubnub.stop();
+        pubnub.destroy();
     }
 
     @Rule
