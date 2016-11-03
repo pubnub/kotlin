@@ -120,8 +120,6 @@ changelog:
       - type: improvement
         text: initial beta1.
 features:
-  notify:
-    - REQUEST_MESSAGE_COUNT_EXCEEDED
   access:
     - ACCESS-GRANT
   channel-groups:
@@ -129,6 +127,8 @@ features:
     - CHANNEL-GROUPS-REMOVE-CHANNELS
     - CHANNEL-GROUPS-REMOVE-GROUPS
     - CHANNEL-GROUPS-LIST-CHANNELS-IN-GROUP
+  notify:
+    - REQUEST-MESSAGE-COUNT-EXCEEDED
   push:
     - PUSH-ADD-DEVICE-TO-CHANNELS
     - PUSH-REMOVE-DEVICE-FROM-CHANNELS
