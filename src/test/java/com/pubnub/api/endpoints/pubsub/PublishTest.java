@@ -390,4 +390,31 @@ public class PublishTest extends TestHarness {
         assertEquals("myUUID", requests.get(0).queryParameter("uuid").firstValue());
         assertNull(requests.get(0).queryParameter("norep"));
     }
+
+    @Test
+    public void testTTLStoreInHistoryDefaultSuccessSync() throws PubNubException, InterruptedException {
+
+        stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22hi%22"))
+                .willReturn(aResponse().withBody("[1,\"Sent\",\"14598111595318003\"]")));
+
+        instance.channel("coolChannel").message("hi").ttl(10).sync();
+
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
+        assertEquals(1, requests.size());
+        assertEquals("10", requests.get(0).queryParameter("ttl").firstValue());
+    }
+
+    @Test
+    public void testTTLStoreInHistoryFalseSuccessSync() throws PubNubException, InterruptedException {
+
+        stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22hi%22"))
+                .willReturn(aResponse().withBody("[1,\"Sent\",\"14598111595318003\"]")));
+
+        instance.channel("coolChannel").message("hi").storeInHistory(false).sync();
+
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
+        assertEquals(1, requests.size());
+        assertEquals(null, requests.get(0).queryParameter("ttl"));
+    }
+
 }

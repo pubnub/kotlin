@@ -105,7 +105,7 @@ public class SubscriptionManagerTest extends TestHarness {
         final AtomicInteger gotStatus = new AtomicInteger();
         final AtomicBoolean gotMessage = new AtomicBoolean();
         stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
-                .willReturn(aResponse().withBody("{\"t\":{\"t\":\"14607577960932487\",\"r\":1},\"m\":[{\"a\":\"4\",\"f\":0,\"i\":\"Client-g5d4g\",\"p\":{\"t\":\"14607577960925503\",\"r\":1},\"o\":{\"t\":\"14737141991877032\",\"r\":2},\"k\":\"sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f\",\"c\":\"coolChannel\",\"d\":{\"text\":\"Message\"},\"b\":\"coolChannel\"}]}")));
+                .willReturn(aResponse().withBody("{\"t\":{\"t\":\"14607577960932487\",\"r\":1},\"m\":[{\"a\":\"4\",\"f\":0,\"i\":\"Publisher-A\",\"p\":{\"t\":\"14607577960925503\",\"r\":1},\"o\":{\"t\":\"14737141991877032\",\"r\":2},\"k\":\"sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f\",\"c\":\"coolChannel\",\"d\":{\"text\":\"Message\"},\"b\":\"coolChannel\"}]}")));
 
         pubnub.addListener(new SubscribeCallback() {
             @Override
@@ -124,6 +124,7 @@ public class SubscriptionManagerTest extends TestHarness {
                 assertEquals("Message", message.getMessage().get("text").asText());
                 assertEquals("coolChannel", message.getChannel());
                 assertEquals(null, message.getSubscription());
+                assertEquals("Publisher-A", message.getPublisher());
                 gotMessage.set(true);
             }
 

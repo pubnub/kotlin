@@ -214,6 +214,4 @@ public class SubscribeEndpointTest extends TestHarness {
         assertEquals(2, requests.size());
     }
 
-
-
 }
