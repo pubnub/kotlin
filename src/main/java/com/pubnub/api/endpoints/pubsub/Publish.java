@@ -36,8 +36,6 @@ public class Publish extends Endpoint<List<Object>, PNPublishResult> {
     @Setter
     private Boolean replicate;
     @Setter
-    private Boolean storeInHistory;
-    @Setter
     private Integer ttl;
 
     private PublishSequenceManager publishSequenceManager;
@@ -47,7 +45,7 @@ public class Publish extends Endpoint<List<Object>, PNPublishResult> {
 
         this.publishSequenceManager = providedPublishSequenceManager;
         this.replicate = true;
-        this.storeInHistory = true;
+        this.shouldStore = true;
     }
 
     @Override
@@ -64,9 +62,6 @@ public class Publish extends Endpoint<List<Object>, PNPublishResult> {
         if (this.getPubnub().getConfiguration().getPublishKey() == null || this.getPubnub().getConfiguration().getPublishKey().isEmpty()) {
             throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_PUBLISH_KEY_MISSING).build();
         }
-//        if (storeInHistory && ttl == null) {
-//
-//        }
     }
 
     @Override
@@ -94,6 +89,9 @@ public class Publish extends Endpoint<List<Object>, PNPublishResult> {
         if (shouldStore != null) {
             if (shouldStore) {
                 params.put("store", "1");
+                if (ttl != null) {
+                    params.put("ttl", String.valueOf(ttl));
+                }
             } else {
                 params.put("store", "0");
             }
@@ -105,9 +103,6 @@ public class Publish extends Endpoint<List<Object>, PNPublishResult> {
             params.put("norep", "true");
         }
 
-        if (storeInHistory && ttl != null) {
-            params.put("ttl", String.valueOf(ttl));
-        }
 
         if (this.getPubnub().getConfiguration().getCipherKey() != null) {
             Crypto crypto = new Crypto(this.getPubnub().getConfiguration().getCipherKey());

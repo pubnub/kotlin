@@ -392,7 +392,7 @@ public class PublishTest extends TestHarness {
     }
 
     @Test
-    public void testTTLStoreInHistoryDefaultSuccessSync() throws PubNubException, InterruptedException {
+    public void testTTLShouldStoryDefaultSuccessSync() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22hi%22"))
                 .willReturn(aResponse().withBody("[1,\"Sent\",\"14598111595318003\"]")));
@@ -405,12 +405,12 @@ public class PublishTest extends TestHarness {
     }
 
     @Test
-    public void testTTLStoreInHistoryFalseSuccessSync() throws PubNubException, InterruptedException {
+    public void testTTLShouldStoreFalseSuccessSync() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22hi%22"))
                 .willReturn(aResponse().withBody("[1,\"Sent\",\"14598111595318003\"]")));
 
-        instance.channel("coolChannel").message("hi").storeInHistory(false).sync();
+        instance.channel("coolChannel").message("hi").shouldStore(false).sync();
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
