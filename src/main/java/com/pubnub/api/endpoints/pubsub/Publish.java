@@ -86,15 +86,13 @@ public class Publish extends Endpoint<List<Object>, PNPublishResult> {
             }
         }
 
-        if (shouldStore != null) {
-            if (shouldStore) {
-                params.put("store", "1");
-                if (ttl != null) {
-                    params.put("ttl", String.valueOf(ttl));
-                }
-            } else {
-                params.put("store", "0");
+        if (shouldStore) {
+            params.put("store", "1");
+            if (ttl != null) {
+                params.put("ttl", String.valueOf(ttl));
             }
+        } else {
+            params.put("store", "0");
         }
 
         params.put("seqn", String.valueOf(publishSequenceManager.getNextSequence()));
