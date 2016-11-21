@@ -8,8 +8,10 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import okhttp3.Authenticator;
 
 import java.net.Proxy;
+import java.net.ProxySelector;
 import java.util.UUID;
 
 @Getter
@@ -116,6 +118,10 @@ public class PNConfiguration {
      */
     @Setter
     private Proxy proxy;
+    @Setter
+    private ProxySelector proxySelector;
+    @Setter
+    private Authenticator proxyAuthenticator;
 
     /**
      * if set, the SDK will alert once the number of messages arrived in one call equal to the threshold
