@@ -59,7 +59,7 @@ public class RetrofitManager {
             httpClient.proxy(pubnub.getConfiguration().getProxy());
         }
 
-        if (pubnub.getConfiguration().getProxyAuthenticator() != null) {
+        if (pubnub.getConfiguration().getProxySelector() != null) {
             httpClient.proxySelector(pubnub.getConfiguration().getProxySelector());
         }
 
