@@ -5,6 +5,7 @@ import com.pubnub.api.callbacks.SubscribeCallback;
 import com.pubnub.api.builder.SubscribeBuilder;
 import com.pubnub.api.builder.UnsubscribeBuilder;
 import com.pubnub.api.endpoints.History;
+import com.pubnub.api.endpoints.HistoryForChannels;
 import com.pubnub.api.endpoints.Time;
 import com.pubnub.api.endpoints.access.Audit;
 import com.pubnub.api.endpoints.access.Grant;
@@ -125,6 +126,9 @@ public class PubNub {
         return new History(this, this.retrofitManager.getTransactionInstance());
     }
 
+    public final HistoryForChannels historyForChannels() {
+        return new HistoryForChannels(this, this.retrofitManager.getTransactionInstance());
+    }
 
     public final Audit audit() {
         return new Audit(this, this.retrofitManager.getTransactionInstance());
