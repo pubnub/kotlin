@@ -18,9 +18,9 @@ import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.junit.Assert.assertEquals;
 
 
-public class HistoryForChannelsEndpointTest extends TestHarness {
+public class FetchMessagesEndpointTest extends TestHarness {
 
-    private HistoryForChannels partialHistory;
+    private FetchMessages partialHistory;
     private PubNub pubnub;
 
     @Rule
@@ -29,7 +29,7 @@ public class HistoryForChannelsEndpointTest extends TestHarness {
     @Before
     public void beforeEach() throws IOException {
         pubnub = this.createPubNubInstance(8080);
-        partialHistory = pubnub.historyForChannels();
+        partialHistory = pubnub.fetchMessages();
         wireMockRule.start();
     }
 

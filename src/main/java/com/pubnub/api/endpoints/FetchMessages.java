@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 @Accessors(chain = true, fluent = true)
-public class HistoryForChannels extends Endpoint<HistoryForChannelsEnvelope, HistoryForChannelsEnvelope> {
+public class FetchMessages extends Endpoint<HistoryForChannelsEnvelope, HistoryForChannelsEnvelope> {
     private static final int MAX_CHANNELS = 100;
     private static final int MAX_MESSAGES = 25;
     @Setter
@@ -38,7 +38,7 @@ public class HistoryForChannels extends Endpoint<HistoryForChannelsEnvelope, His
     @Setter
     private Long end;
 
-    public HistoryForChannels(PubNub pubnub, Retrofit retrofit) {
+    public FetchMessages(PubNub pubnub, Retrofit retrofit) {
         super(pubnub, retrofit);
         channels = new ArrayList<>();
         maximumPerChannel = 1;
