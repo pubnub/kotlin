@@ -45,7 +45,6 @@ public class Publish extends Endpoint<List<Object>, PNPublishResult> {
 
         this.publishSequenceManager = providedPublishSequenceManager;
         this.replicate = true;
-        this.shouldStore = true;
     }
 
     @Override
@@ -86,13 +85,16 @@ public class Publish extends Endpoint<List<Object>, PNPublishResult> {
             }
         }
 
-        if (shouldStore) {
-            params.put("store", "1");
-            if (ttl != null) {
-                params.put("ttl", String.valueOf(ttl));
+        if (shouldStore != null) {
+            if (shouldStore) {
+                params.put("store", "1");
+            } else {
+                params.put("store", "0");
             }
-        } else {
-            params.put("store", "0");
+        }
+
+        if (ttl != null) {
+            params.put("ttl", String.valueOf(ttl));
         }
 
         params.put("seqn", String.valueOf(publishSequenceManager.getNextSequence()));
@@ -100,7 +102,6 @@ public class Publish extends Endpoint<List<Object>, PNPublishResult> {
         if (!replicate) {
             params.put("norep", "true");
         }
-
 
         if (this.getPubnub().getConfiguration().getCipherKey() != null) {
             Crypto crypto = new Crypto(this.getPubnub().getConfiguration().getCipherKey());
