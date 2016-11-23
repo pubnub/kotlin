@@ -1,13 +1,12 @@
 package com.pubnub.api.endpoints.pubsub;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.PubNubUtil;
 import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.enums.PNOperationType;
+import com.pubnub.api.managers.MapperManager;
 import com.pubnub.api.managers.PublishSequenceManager;
 import com.pubnub.api.models.consumer.PNPublishResult;
 import com.pubnub.api.vendor.Crypto;
@@ -65,24 +64,14 @@ public class Publish extends Endpoint<List<Object>, PNPublishResult> {
 
     @Override
     protected Call<List<Object>> doWork(Map<String, String> params) throws PubNubException {
-        String stringifiedMessage;
-        String stringifiedMeta;
-        ObjectMapper mapper = new ObjectMapper();
+        MapperManager mapper = this.getPubnub().getMapper();
 
-        try {
-            stringifiedMessage = mapper.writeValueAsString(message);
-        } catch (JsonProcessingException e) {
-            throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_INVALID_ARGUMENTS).errormsg(e.getMessage()).build();
-        }
+        String stringifiedMessage = mapper.toJson(message);
 
         if (meta != null) {
-            try {
-                stringifiedMeta = mapper.writeValueAsString(meta);
-                stringifiedMeta = PubNubUtil.urlEncode(stringifiedMeta);
-                params.put("meta", stringifiedMeta);
-            } catch (JsonProcessingException e) {
-                throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_INVALID_ARGUMENTS).errormsg(e.getMessage()).build();
-            }
+            String stringifiedMeta = mapper.toJson(meta);
+            stringifiedMeta = PubNubUtil.urlEncode(stringifiedMeta);
+            params.put("meta", stringifiedMeta);
         }
 
         if (shouldStore != null) {

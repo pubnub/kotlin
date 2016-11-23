@@ -1,13 +1,13 @@
 package com.pubnub.api.endpoints;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.PubNubUtil;
 import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.enums.PNOperationType;
+import com.pubnub.api.managers.MapperManager;
 import com.pubnub.api.models.server.HistoryForChannelsEnvelope;
 import com.pubnub.api.models.server.HistoryForChannelsItem;
 import com.pubnub.api.vendor.Crypto;
@@ -20,7 +20,6 @@ import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.QueryMap;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -116,7 +115,7 @@ public class FetchMessages extends Endpoint<HistoryForChannelsEnvelope, HistoryF
         }
 
         Crypto crypto = new Crypto(this.getPubnub().getConfiguration().getCipherKey());
-        ObjectMapper mapper = new ObjectMapper();
+        MapperManager mapper = this.getPubnub().getMapper();
         String inputText;
         String outputText;
         JsonNode outputObject;
@@ -128,14 +127,9 @@ public class FetchMessages extends Endpoint<HistoryForChannelsEnvelope, HistoryF
         }
 
         outputText = crypto.decrypt(inputText);
+        outputObject = mapper.fromJson(outputText, JsonNode.class);
 
-        try {
-            outputObject = mapper.readValue(outputText, JsonNode.class);
-        } catch (IOException e) {
-            throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_PARSING_ERROR).errormsg(e.getMessage()).build();
-        }
-
-        // inject the decoded resposne into the payload
+        // inject the decoded response into the payload
         if (message.isObject() && message.has("message")) {
             ObjectNode objectNode = (ObjectNode) message;
             objectNode.set("message", outputObject);

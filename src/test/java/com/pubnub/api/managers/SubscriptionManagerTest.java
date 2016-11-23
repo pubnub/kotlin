@@ -1,10 +1,10 @@
 package com.pubnub.api.managers;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.http.QueryParameter;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import com.jayway.awaitility.Awaitility;
+import com.pubnub.api.PubNubException;
 import com.pubnub.api.PubNubUtil;
 import com.pubnub.api.callbacks.PNCallback;
 import com.pubnub.api.callbacks.SubscribeCallback;
@@ -408,12 +408,11 @@ public class SubscriptionManagerTest extends TestHarness {
     }
 
     @Test
-    public void testSubscribeBuilderWithState() throws IOException {
+    public void testSubscribeBuilderWithState() throws PubNubException {
         final AtomicInteger atomic = new AtomicInteger(0);
 
-        final ObjectMapper mapper = new ObjectMapper();
         final String expectedPayload = PubNubUtil.urlDecode("%7B%22ch1%22%3A%5B%22p1%22%2C%22p2%22%5D%2C%22cg2%22%3A%5B%22p1%22%2C%22p2%22%5D%7D");
-        final Map<String, Object> expectedMap = mapper.readValue(expectedPayload, Map.class);
+        final Map<String, Object> expectedMap = pubnub.getMapper().fromJson(expectedPayload, Map.class);
 
         stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
                 .willReturn(aResponse().withBody("{\"t\":{\"t\":\"14607577960932487\",\"r\":1},\"m\":[{\"a\":\"4\",\"f\":0,\"i\":\"Client-g5d4g\",\"p\":{\"t\":\"14607577960925503\",\"r\":1},\"k\":\"sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f\",\"c\":\"coolChannel\",\"d\":{\"text\":\"Enter Message Here\"},\"b\":\"coolChan-bnel\"}]}")));
@@ -430,8 +429,8 @@ public class SubscriptionManagerTest extends TestHarness {
                     String stateString = PubNubUtil.urlDecode(request.queryParameter("state").firstValue());
                     Map<String, Object> actualMap = null;
                     try {
-                        actualMap = mapper.readValue(stateString, Map.class);
-                    } catch (IOException e) {
+                        actualMap = pubnub.getMapper().fromJson(stateString, Map.class);
+                    } catch (PubNubException e) {
                         e.printStackTrace();
                     }
 

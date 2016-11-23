@@ -1,7 +1,6 @@
 package com.pubnub.api.workers;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
@@ -9,6 +8,7 @@ import com.pubnub.api.PubNubUtil;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.enums.PNStatusCategory;
 import com.pubnub.api.managers.ListenerManager;
+import com.pubnub.api.managers.MapperManager;
 import com.pubnub.api.models.consumer.PNErrorData;
 import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
@@ -19,7 +19,6 @@ import com.pubnub.api.models.server.SubscribeMessage;
 import com.pubnub.api.vendor.Crypto;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.IOException;
 import java.util.concurrent.LinkedBlockingQueue;
 
 
@@ -29,14 +28,12 @@ public class SubscribeMessageWorker implements Runnable {
     private PubNub pubnub;
     private ListenerManager listenerManager;
     private LinkedBlockingQueue<SubscribeMessage> queue;
-    private ObjectMapper mapper;
 
     private boolean isRunning;
 
     public SubscribeMessageWorker(PubNub pubnubInstance, ListenerManager listenerManagerInstance, LinkedBlockingQueue<SubscribeMessage> queueInstance) {
         this.pubnub = pubnubInstance;
         this.listenerManager = listenerManagerInstance;
-        this.mapper = new ObjectMapper();
         this.queue = queueInstance;
     }
 
@@ -66,6 +63,7 @@ public class SubscribeMessageWorker implements Runnable {
         }
 
         Crypto crypto = new Crypto(pubnub.getConfiguration().getCipherKey());
+        MapperManager mapper = this.pubnub.getMapper();
         String inputText;
         String outputText;
         JsonNode outputObject;
@@ -90,8 +88,8 @@ public class SubscribeMessageWorker implements Runnable {
         }
 
         try {
-            outputObject = mapper.readValue(outputText, JsonNode.class);
-        } catch (IOException e) {
+            outputObject = mapper.fromJson(outputText, JsonNode.class);
+        } catch (PubNubException e) {
             PNStatus pnStatus = PNStatus.builder().error(true)
                     .errorData(new PNErrorData(e.getMessage(), e))
                     .operation(PNOperationType.PNSubscribeOperation)
@@ -113,6 +111,8 @@ public class SubscribeMessageWorker implements Runnable {
     }
 
     private void processIncomingPayload(SubscribeMessage message) {
+        MapperManager mapper = this.pubnub.getMapper();
+
         String channel = message.getChannel();
         String subscriptionMatch = message.getSubscriptionMatch();
         PublishMetaData publishMetaData = message.getPublishMetaData();

@@ -24,35 +24,35 @@ import com.pubnub.api.endpoints.push.ListPushProvisions;
 import com.pubnub.api.endpoints.push.RemoveAllPushChannelsForDevice;
 import com.pubnub.api.endpoints.push.RemoveChannelsFromPush;
 import com.pubnub.api.managers.BasePathManager;
+import com.pubnub.api.managers.MapperManager;
 import com.pubnub.api.managers.PublishSequenceManager;
 import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.SubscriptionManager;
 import com.pubnub.api.vendor.Crypto;
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
 
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
 
-@Getter
-@Slf4j
 public class PubNub {
 
+    @Getter
     private PNConfiguration configuration;
-    @Getter(AccessLevel.NONE)
-    private String instanceId;
-    @Getter(AccessLevel.NONE)
-    private SubscriptionManager subscriptionManager;
-    @Getter(AccessLevel.NONE)
-    private BasePathManager basePathManager;
-    @Getter(AccessLevel.NONE)
-    private PublishSequenceManager publishSequenceManager;
-    @Getter(AccessLevel.NONE)
-    private RetrofitManager retrofitManager;
 
+    @Getter
+    private MapperManager mapper;
+
+    private String instanceId;
+
+    private SubscriptionManager subscriptionManager;
+
+    private BasePathManager basePathManager;
+
+    private PublishSequenceManager publishSequenceManager;
+
+    private RetrofitManager retrofitManager;
 
     private static final int TIMESTAMP_DIVIDER = 1000;
     private static final int MAX_SEQUENCE = 65535;
@@ -61,6 +61,7 @@ public class PubNub {
 
     public PubNub(PNConfiguration initialConfig) {
         this.configuration = initialConfig;
+        this.mapper = new MapperManager();
         this.basePathManager = new BasePathManager(initialConfig);
         this.retrofitManager = new RetrofitManager(this);
         this.subscriptionManager = new SubscriptionManager(this, retrofitManager);

@@ -1,13 +1,13 @@
 package com.pubnub.api.endpoints.access;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.PubNubUtil;
 import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.enums.PNOperationType;
+import com.pubnub.api.managers.MapperManager;
 import com.pubnub.api.models.consumer.access_manager.PNAccessManagerGrantResult;
 import com.pubnub.api.models.consumer.access_manager.PNAccessManagerKeyData;
 import com.pubnub.api.models.consumer.access_manager.PNAccessManagerKeysData;
@@ -19,7 +19,6 @@ import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -101,7 +100,6 @@ public class Grant extends Endpoint<Envelope<AccessManagerGrantPayload>, PNAcces
 
     @Override
     protected PNAccessManagerGrantResult createResponse(Response<Envelope<AccessManagerGrantPayload>> input) throws PubNubException {
-        ObjectMapper mapper = new ObjectMapper();
         PNAccessManagerGrantResult.PNAccessManagerGrantResultBuilder pnAccessManagerGrantResult = PNAccessManagerGrantResult.builder();
 
         if (input.body() == null || input.body().getPayload() == null) {
@@ -121,18 +119,15 @@ public class Grant extends Endpoint<Envelope<AccessManagerGrantPayload>, PNAcces
             if (channelGroups.size() == 1) {
                 constructedGroups.put(data.getChannelGroups().asText(), data.getAuthKeys());
             } else if (channelGroups.size() > 1) {
-                try {
-                    HashMap<String, PNAccessManagerKeysData> channelGroupKeySet = mapper.readValue(data.getChannelGroups().toString(),
-                            new TypeReference<HashMap<String, PNAccessManagerKeysData>>() {
-                            });
+                MapperManager mapper = this.getPubnub().getMapper();
+                HashMap<String, PNAccessManagerKeysData> channelGroupKeySet = mapper.fromJson(data.getChannelGroups().toString(),
+                        new TypeReference<HashMap<String, PNAccessManagerKeysData>>() {
+                        });
 //                    for (String fetchedChannelGroup : channelGroupKeySet.keySet()) {
 //                        constructedGroups.put(fetchedChannelGroup, channelGroupKeySet.get(fetchedChannelGroup).getAuthKeys());
 //                    }
-                    for (Map.Entry<String, PNAccessManagerKeysData> entry : channelGroupKeySet.entrySet()) {
-                        constructedGroups.put(entry.getKey(), entry.getValue().getAuthKeys());
-                    }
-                } catch (IOException e) {
-                    throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_PARSING_ERROR).errormsg(e.getMessage()).build();
+                for (Map.Entry<String, PNAccessManagerKeysData> entry : channelGroupKeySet.entrySet()) {
+                    constructedGroups.put(entry.getKey(), entry.getValue().getAuthKeys());
                 }
             }
         }

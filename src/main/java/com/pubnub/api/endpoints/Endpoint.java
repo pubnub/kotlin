@@ -2,13 +2,13 @@ package com.pubnub.api.endpoints;
 
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.callbacks.PNCallback;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.enums.PNStatusCategory;
+import com.pubnub.api.managers.MapperManager;
 import com.pubnub.api.models.consumer.PNErrorData;
 import com.pubnub.api.models.consumer.PNStatus;
 import lombok.AccessLevel;
@@ -50,12 +50,12 @@ public abstract class Endpoint<Input, Output> {
     private static final int SERVER_RESPONSE_FORBIDDEN = 403;
     private static final int SERVER_RESPONSE_BAD_REQUEST = 400;
 
-    private ObjectMapper mapper;
+    private MapperManager mapper;
 
     public Endpoint(PubNub pubnubInstance, Retrofit retrofitInstance) {
         this.pubnub = pubnubInstance;
         this.retrofit = retrofitInstance;
-        this.mapper = new ObjectMapper();
+        this.mapper = this.pubnub.getMapper();
     }
 
 
@@ -87,8 +87,8 @@ public abstract class Endpoint<Input, Output> {
             }
 
             try {
-                responseBody = mapper.readValue(responseBodyText, JsonNode.class);
-            } catch (IOException e) {
+                responseBody = mapper.fromJson(responseBodyText, JsonNode.class);
+            } catch (PubNubException e) {
                 responseBody = null;
             }
 
@@ -138,8 +138,8 @@ public abstract class Endpoint<Input, Output> {
                     }
 
                     try {
-                        responseBody = mapper.readValue(responseBodyText, JsonNode.class);
-                    } catch (IOException e) {
+                        responseBody = mapper.fromJson(responseBodyText, JsonNode.class);
+                    } catch (PubNubException e) {
                         responseBody = null;
                     }
 
@@ -225,7 +225,7 @@ public abstract class Endpoint<Input, Output> {
     public void retry() {
         silenceFailures = false;
         async(cachedCallback);
-    };
+    }
 
     /**
      * cancel the operation but do not alert anybody, useful for restarting the heartbeats and subscribe loops.

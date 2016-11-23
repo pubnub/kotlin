@@ -1,16 +1,15 @@
 package com.pubnub.api.endpoints;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.pubnub.api.vendor.Crypto;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.models.consumer.history.PNHistoryItemResult;
 import com.pubnub.api.models.consumer.history.PNHistoryResult;
+import com.pubnub.api.vendor.Crypto;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import retrofit2.Call;
@@ -20,7 +19,6 @@ import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.QueryMap;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -137,7 +135,6 @@ public class History extends Endpoint<JsonNode, PNHistoryResult> {
         }
 
         Crypto crypto = new Crypto(this.getPubnub().getConfiguration().getCipherKey());
-        ObjectMapper mapper = new ObjectMapper();
         String inputText;
         String outputText;
         JsonNode outputObject;
@@ -149,14 +146,9 @@ public class History extends Endpoint<JsonNode, PNHistoryResult> {
         }
 
         outputText = crypto.decrypt(inputText);
+        outputObject = this.getPubnub().getMapper().fromJson(outputText, JsonNode.class);
 
-        try {
-            outputObject = mapper.readValue(outputText, JsonNode.class);
-        } catch (IOException e) {
-            throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_PARSING_ERROR).errormsg(e.getMessage()).build();
-        }
-
-        // inject the decoded resposne into the payload
+        // inject the decoded response into the payload
         if (message.isObject() && message.has("pn_other")) {
             ObjectNode objectNode = (ObjectNode) message;
             objectNode.set("pn_other", outputObject);

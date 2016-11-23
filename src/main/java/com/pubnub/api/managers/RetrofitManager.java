@@ -8,7 +8,6 @@ import lombok.Getter;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
-import retrofit2.converter.jackson.JacksonConverterFactory;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -75,7 +74,7 @@ public class RetrofitManager {
     private Retrofit createRetrofit(OkHttpClient client) {
         return new Retrofit.Builder()
                 .baseUrl(pubnub.getBaseUrl())
-                .addConverterFactory(JacksonConverterFactory.create())
+                .addConverterFactory(this.pubnub.getMapper().getConverterFactory())
                 .client(client)
                 .build();
     }
