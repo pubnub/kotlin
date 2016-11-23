@@ -27,7 +27,6 @@ import java.util.Map;
 
 @Accessors(chain = true, fluent = true)
 public class FetchMessages extends Endpoint<HistoryForChannelsEnvelope, HistoryForChannelsEnvelope> {
-    private static final int MAX_CHANNELS = 100;
     private static final int MAX_MESSAGES = 25;
     @Setter
     private List<String> channels;
@@ -102,7 +101,7 @@ public class FetchMessages extends Endpoint<HistoryForChannelsEnvelope, HistoryF
 
     @Override
     protected PNOperationType getOperationType() {
-        return PNOperationType.PNHistoryOperation;
+        return PNOperationType.PNFetchMessagesOperation;
     }
 
     @Override

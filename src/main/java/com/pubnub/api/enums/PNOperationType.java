@@ -6,8 +6,12 @@ package com.pubnub.api.enums;
 public enum PNOperationType {
     PNSubscribeOperation,
     PNUnsubscribeOperation,
+
     PNPublishOperation,
+
     PNHistoryOperation,
+    PNFetchMessagesOperation,
+
     PNWhereNowOperation,
 
     PNHeartbeatOperation,
