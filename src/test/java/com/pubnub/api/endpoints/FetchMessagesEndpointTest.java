@@ -4,7 +4,7 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
-import com.pubnub.api.models.server.HistoryForChannelsEnvelope;
+import com.pubnub.api.models.consumer.history.PNFetchMessagesResult;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -43,9 +43,9 @@ public class FetchMessagesEndpointTest extends TestHarness {
     @Test
     public void testSyncSuccess() throws PubNubException {
         stubFor(get(urlPathEqualTo("/v3/history/sub-key/mySubscribeKey/channel/mychannel,my_channel"))
-                .willReturn(aResponse().withBody("{\"status\": 200, \"error\": false, \"error_message\": \"\", \"channels\": {\"my_channel\":[{\"message\":\"hihi\",\"timetoken\":\"14698320467224036\"},{\"message\":\"hihi\",\"timetoken\":\"14698320468265639\"}],\"mychannel\":[{\"message\":\"sample message\",\"timetoken\":\"14369823849575729\"}]}}")));
+                .willReturn(aResponse().withBody("{\"status\": 200, \"error\": false, \"error_message\": \"\", \"channels\": {\"my_channel\":[{\"message\":\"hihi\",\"timetoken\":\"14698320467224036\"},{\"message\":\"Hey\",\"timetoken\":\"14698320468265639\"}],\"mychannel\":[{\"message\":\"sample message\",\"timetoken\":\"14369823849575729\"}]}}")));
 
-        HistoryForChannelsEnvelope response = partialHistory.channels(Arrays.asList("mychannel,my_channel")).maximumPerChannel(25).sync();
+        PNFetchMessagesResult response = partialHistory.channels(Arrays.asList("mychannel,my_channel")).maximumPerChannel(25).sync();
 
         Assert.assertEquals(response.getChannels().size(), 2);
         Assert.assertEquals(response.getChannels().containsKey("mychannel"), true);
@@ -57,11 +57,11 @@ public class FetchMessagesEndpointTest extends TestHarness {
     @Test
     public void testSyncAuthSuccess() throws PubNubException {
         stubFor(get(urlPathEqualTo("/v3/history/sub-key/mySubscribeKey/channel/mychannel,my_channel"))
-                .willReturn(aResponse().withBody("{\"status\": 200, \"error\": false, \"error_message\": \"\", \"channels\": {\"my_channel\":[{\"message\":\"hihi\",\"timetoken\":\"14698320467224036\"},{\"message\":\"hihi\",\"timetoken\":\"14698320468265639\"}],\"mychannel\":[{\"message\":\"sample message\",\"timetoken\":\"14369823849575729\"}]}}")));
+                .willReturn(aResponse().withBody("{\"status\": 200, \"error\": false, \"error_message\": \"\", \"channels\": {\"my_channel\":[{\"message\":\"hihi\",\"timetoken\":\"14698320467224036\"},{\"message\":\"Hey\",\"timetoken\":\"14698320468265639\"}],\"mychannel\":[{\"message\":\"sample message\",\"timetoken\":\"14369823849575729\"}]}}")));
 
         pubnub.getConfiguration().setAuthKey("authKey");
 
-        HistoryForChannelsEnvelope response = partialHistory.channels(Arrays.asList("mychannel,my_channel")).maximumPerChannel(25).sync();
+        PNFetchMessagesResult response = partialHistory.channels(Arrays.asList("mychannel,my_channel")).maximumPerChannel(25).sync();
 
         Assert.assertEquals(response.getChannels().size(), 2);
         Assert.assertEquals(response.getChannels().containsKey("mychannel"), true);
@@ -81,7 +81,7 @@ public class FetchMessagesEndpointTest extends TestHarness {
         stubFor(get(urlPathEqualTo("/v3/history/sub-key/mySubscribeKey/channel/mychannel,my_channel"))
                 .willReturn(aResponse().withBody("{\"status\": 200, \"error\": false, \"error_message\": \"\", \"channels\": {\"my_channel\":[{\"message\":\"jC/yJ2y99BeYFYMQ7c53pg==\",\"timetoken\":\"14797423056306675\"}],\"mychannel\":[{\"message\":\"jC/yJ2y99BeYFYMQ7c53pg==\",\"timetoken\":\"14797423056306675\"}]}}")));
 
-        HistoryForChannelsEnvelope response = partialHistory.channels(Arrays.asList("mychannel,my_channel")).maximumPerChannel(25).sync();
+        PNFetchMessagesResult response = partialHistory.channels(Arrays.asList("mychannel,my_channel")).maximumPerChannel(25).sync();
 
         Assert.assertEquals(response.getChannels().size(), 2);
         Assert.assertEquals(response.getChannels().containsKey("mychannel"), true);

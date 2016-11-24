@@ -8,7 +8,9 @@ import com.pubnub.api.PubNubUtil;
 import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.managers.MapperManager;
-import com.pubnub.api.models.server.HistoryForChannelsEnvelope;
+import com.pubnub.api.models.consumer.history.PNFetchMessagesResult;
+import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
+import com.pubnub.api.models.server.FetchMessagesEnvelope;
 import com.pubnub.api.models.server.HistoryForChannelsItem;
 import com.pubnub.api.vendor.Crypto;
 import lombok.Setter;
@@ -21,11 +23,12 @@ import retrofit2.http.Path;
 import retrofit2.http.QueryMap;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Accessors(chain = true, fluent = true)
-public class FetchMessages extends Endpoint<HistoryForChannelsEnvelope, HistoryForChannelsEnvelope> {
+public class FetchMessages extends Endpoint<FetchMessagesEnvelope, PNFetchMessagesResult> {
     private static final int MAX_MESSAGES = 25;
     @Setter
     private List<String> channels;
@@ -44,9 +47,9 @@ public class FetchMessages extends Endpoint<HistoryForChannelsEnvelope, HistoryF
 
     private interface HistoryForChannelsService {
         @GET("v3/history/sub-key/{subKey}/channel/{channels}")
-        Call<HistoryForChannelsEnvelope> fetchHistoryForChannels(@Path("subKey") String subKey,
-                                                                 @Path("channels") String channels,
-                                                                 @QueryMap Map<String, String> options);
+        Call<FetchMessagesEnvelope> fetchMessages(@Path("subKey") String subKey,
+                                                            @Path("channels") String channels,
+                                                            @QueryMap Map<String, String> options);
     }
 
     @Override
@@ -62,7 +65,7 @@ public class FetchMessages extends Endpoint<HistoryForChannelsEnvelope, HistoryF
     }
 
     @Override
-    protected Call<HistoryForChannelsEnvelope> doWork(Map<String, String> params) {
+    protected Call<FetchMessagesEnvelope> doWork(Map<String, String> params) {
 
         HistoryForChannelsService service = this.getRetrofit().create(HistoryForChannelsService.class);
 
@@ -75,27 +78,39 @@ public class FetchMessages extends Endpoint<HistoryForChannelsEnvelope, HistoryF
             params.put("end", Long.toString(end).toLowerCase());
         }
 
-        return service.fetchHistoryForChannels(this.getPubnub().getConfiguration().getSubscribeKey(), PubNubUtil.joinString(channels, ","), params);
+        return service.fetchMessages(this.getPubnub().getConfiguration().getSubscribeKey(), PubNubUtil.joinString(channels, ","), params);
     }
 
     @Override
-    protected HistoryForChannelsEnvelope createResponse(Response<HistoryForChannelsEnvelope> input) throws PubNubException {
+    protected PNFetchMessagesResult createResponse(Response<FetchMessagesEnvelope> input) throws PubNubException {
         if (input.body() == null) {
             throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_PARSING_ERROR).build();
         }
 
-        HistoryForChannelsEnvelope envelope = input.body();
-        Map<String, List<HistoryForChannelsItem>> channelsList = envelope.getChannels();
+        PNFetchMessagesResult.PNFetchMessagesResultBuilder result = PNFetchMessagesResult.builder();
+        Map<String, List<PNMessageResult>> listMap = new HashMap<>();
 
-        for (Map.Entry<String, List<HistoryForChannelsItem>> entry : channelsList.entrySet()) {
+        FetchMessagesEnvelope envelope = input.body();
+
+        for (Map.Entry<String, List<HistoryForChannelsItem>> entry : envelope.getChannels().entrySet()) {
+
+            List<PNMessageResult> messages = new ArrayList<>();
+
             for (HistoryForChannelsItem item: entry.getValue()) {
+                PNMessageResult.PNMessageResultBuilder pnMessageResultBuilder = PNMessageResult.builder();
+                pnMessageResultBuilder.channel(entry.getKey());
                 JsonNode message = processMessage(item.getMessage());
-                item.setMessage(message);
+                pnMessageResultBuilder.message(message);
+                pnMessageResultBuilder.timetoken(item.getTimeToken());
+                messages.add(pnMessageResultBuilder.build());
             }
 
+            listMap.put(entry.getKey(), messages);
         }
 
-        return envelope;
+        result.channels(listMap);
+
+        return result.build();
     }
 
     @Override
@@ -120,8 +135,8 @@ public class FetchMessages extends Endpoint<HistoryForChannelsEnvelope, HistoryF
         String outputText;
         JsonNode outputObject;
 
-        if (message.isObject() && message.has("message")) {
-            inputText = message.get("message").asText();
+        if (message.isObject() && message.has("pn_other")) {
+            inputText = message.get("pn_other").asText();
         } else {
             inputText = message.asText();
         }
@@ -129,10 +144,10 @@ public class FetchMessages extends Endpoint<HistoryForChannelsEnvelope, HistoryF
         outputText = crypto.decrypt(inputText);
         outputObject = mapper.fromJson(outputText, JsonNode.class);
 
-        // inject the decoded response into the payload
-        if (message.isObject() && message.has("message")) {
+        // inject the decoded resposne into the payload
+        if (message.isObject() && message.has("pn_other")) {
             ObjectNode objectNode = (ObjectNode) message;
-            objectNode.set("message", outputObject);
+            objectNode.set("pn_other", outputObject);
             outputObject = objectNode;
         }
 

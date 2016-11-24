@@ -9,7 +9,7 @@ import java.util.Map;
 
 @Getter
 @Setter
-public class HistoryForChannelsEnvelope {
+public class FetchMessagesEnvelope {
 
     @JsonProperty("channels")
     private Map<String, List<HistoryForChannelsItem>> channels;
