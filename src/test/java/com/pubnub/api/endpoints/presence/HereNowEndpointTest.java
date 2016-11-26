@@ -54,15 +54,15 @@ public class HereNowEndpointTest extends TestHarness {
         Assert.assertEquals(response.getChannels().get("ch1").getOccupancy(), 1);
         Assert.assertEquals(response.getChannels().get("ch1").getOccupants().size(), 1);
         Assert.assertEquals(response.getChannels().get("ch1").getOccupants().get(0).getUuid(), "user1");
-        Assert.assertEquals(response.getChannels().get("ch1").getOccupants().get(0).getState().toString(), "{age=10}");
+        Assert.assertEquals(response.getChannels().get("ch1").getOccupants().get(0).getState().toString(), "{\"age\":10}");
 
         Assert.assertEquals(response.getChannels().get("ch2").getChannelName(), "ch2");
         Assert.assertEquals(response.getChannels().get("ch2").getOccupancy(), 2);
         Assert.assertEquals(response.getChannels().get("ch2").getOccupants().size(), 2);
         Assert.assertEquals(response.getChannels().get("ch2").getOccupants().get(0).getUuid(), "user1");
-        Assert.assertEquals(response.getChannels().get("ch2").getOccupants().get(0).getState().toString(), "{age=10}");
+        Assert.assertEquals(response.getChannels().get("ch2").getOccupants().get(0).getState().toString(), "{\"age\":10}");
         Assert.assertEquals(response.getChannels().get("ch2").getOccupants().get(1).getUuid(), "user3");
-        Assert.assertEquals(response.getChannels().get("ch2").getOccupants().get(1).getState().toString(), "{age=30}");
+        Assert.assertEquals(response.getChannels().get("ch2").getOccupants().get(1).getState().toString(), "{\"age\":30}");
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
@@ -187,7 +187,7 @@ public class HereNowEndpointTest extends TestHarness {
         Assert.assertEquals(response.getChannels().get("game1").getOccupancy(), 1);
         Assert.assertEquals(response.getChannels().get("game1").getOccupants().size(), 1);
         Assert.assertEquals(response.getChannels().get("game1").getOccupants().get(0).getUuid(), "a3ffd012-a3b9-478c-8705-64089f24d71e");
-        Assert.assertEquals(response.getChannels().get("game1").getOccupants().get(0).getState().toString(), "{age=10}");
+        Assert.assertEquals(response.getChannels().get("game1").getOccupants().get(0).getState().toString(), "{\"age\":10}");
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());

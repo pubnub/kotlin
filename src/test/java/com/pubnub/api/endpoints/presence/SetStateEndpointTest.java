@@ -12,6 +12,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,9 +48,9 @@ public class SetStateEndpointTest extends TestHarness {
         Map<String, Object> myState = new HashMap<>();
         myState.put("age", 20);
 
-        PNSetStateResult result = partialSetState.channels(Arrays.asList("testChannel")).state(myState).sync();
-        assertEquals(result.getState().get("age"), 20);
-        assertEquals(result.getState().get("status"), "online");
+        PNSetStateResult result = partialSetState.channels(Collections.singletonList("testChannel")).state(myState).sync();
+        assertEquals(result.getState().get("age").asInt(), 20);
+        assertEquals(result.getState().get("status").asText(), "online");
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
@@ -67,9 +68,9 @@ public class SetStateEndpointTest extends TestHarness {
         Map<String, Object> myState = new HashMap<>();
         myState.put("age", 20);
 
-        PNSetStateResult result = partialSetState.channels(Arrays.asList("testChannel")).state(myState).uuid("someoneElseUUID").sync();
-        assertEquals(result.getState().get("age"), 20);
-        assertEquals(result.getState().get("status"), "online");
+        PNSetStateResult result = partialSetState.channels(Collections.singletonList("testChannel")).state(myState).uuid("someoneElseUUID").sync();
+        assertEquals(result.getState().get("age").asInt(), 20);
+        assertEquals(result.getState().get("status").asText(), "online");
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
@@ -88,8 +89,8 @@ public class SetStateEndpointTest extends TestHarness {
         myState.put("age", 20);
 
         PNSetStateResult result = partialSetState.channels(Arrays.asList("testChannel", "testChannel2")).state(myState).sync();
-        assertEquals(result.getState().get("age"), 20);
-        assertEquals(result.getState().get("status"), "online");
+        assertEquals(result.getState().get("age").asInt(), 20);
+        assertEquals(result.getState().get("status").asText(), "online");
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
@@ -108,10 +109,10 @@ public class SetStateEndpointTest extends TestHarness {
         Map<String, Object> myState = new HashMap<>();
         myState.put("age", 20);
 
-        PNSetStateResult result = partialSetState.channelGroups(Arrays.asList("cg1")).state(myState).sync();
+        PNSetStateResult result = partialSetState.channelGroups(Collections.singletonList("cg1")).state(myState).sync();
 
-        assertEquals(result.getState().get("age"), 20);
-        assertEquals(result.getState().get("status"), "online");
+        assertEquals(result.getState().get("age").asInt(), 20);
+        assertEquals(result.getState().get("status").asText(), "online");
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
@@ -132,8 +133,8 @@ public class SetStateEndpointTest extends TestHarness {
 
         PNSetStateResult result = partialSetState.channelGroups(Arrays.asList("cg1", "cg2")).state(myState).sync();
 
-        assertEquals(result.getState().get("age"), 20);
-        assertEquals(result.getState().get("status"), "online");
+        assertEquals(result.getState().get("age").asInt(), 20);
+        assertEquals(result.getState().get("status").asText(), "online");
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
@@ -153,10 +154,10 @@ public class SetStateEndpointTest extends TestHarness {
         Map<String, Object> myState = new HashMap<>();
         myState.put("age", 20);
 
-        PNSetStateResult result = partialSetState.channels(Arrays.asList("ch1")).channelGroups(Arrays.asList("cg1", "cg2")).state(myState).sync();
+        PNSetStateResult result = partialSetState.channels(Collections.singletonList("ch1")).channelGroups(Arrays.asList("cg1", "cg2")).state(myState).sync();
 
-        assertEquals(result.getState().get("age"), 20);
-        assertEquals(result.getState().get("status"), "online");
+        assertEquals(result.getState().get("age").asInt(), 20);
+        assertEquals(result.getState().get("status").asText(), "online");
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
@@ -176,7 +177,7 @@ public class SetStateEndpointTest extends TestHarness {
         Map<String, Object> myState = new HashMap<>();
         myState.put("age", 20);
 
-        partialSetState.channels(Arrays.asList("ch1")).channelGroups(Arrays.asList("cg1", "cg2")).state(myState).sync();
+        partialSetState.channels(Collections.singletonList("ch1")).channelGroups(Arrays.asList("cg1", "cg2")).state(myState).sync();
     }
 
     @org.junit.Test(expected = PubNubException.class)
@@ -187,7 +188,7 @@ public class SetStateEndpointTest extends TestHarness {
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : 20, \"status\" : \"online\" }, \"service\": \"Presence\"}")));
 
-        partialSetState.channels(Arrays.asList("testChannel")).sync();
+        partialSetState.channels(Collections.singletonList("testChannel")).sync();
     }
 
     @org.junit.Test(expected = PubNubException.class)
@@ -198,7 +199,7 @@ public class SetStateEndpointTest extends TestHarness {
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : 20, \"status\" : \"online\" }, \"service\": \"Presence\"}")));
 
-        partialSetState.channels(Arrays.asList("testChannel")).state(new Object()).sync();
+        partialSetState.channels(Collections.singletonList("testChannel")).state(new Object()).sync();
     }
 
     @org.junit.Test
@@ -213,7 +214,7 @@ public class SetStateEndpointTest extends TestHarness {
         myState.put("age", 20);
 
         pubnub.getConfiguration().setAuthKey("myKey");
-        partialSetState.channels(Arrays.asList("testChannel")).state(myState).sync();
+        partialSetState.channels(Collections.singletonList("testChannel")).state(myState).sync();
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
@@ -233,7 +234,7 @@ public class SetStateEndpointTest extends TestHarness {
         myState.put("age", 20);
 
         pubnub.getConfiguration().setSubscribeKey(null);
-        partialSetState.channels(Arrays.asList("testChannel")).state(myState).sync();
+        partialSetState.channels(Collections.singletonList("testChannel")).state(myState).sync();
     }
 
     @org.junit.Test(expected=PubNubException.class)
@@ -249,7 +250,7 @@ public class SetStateEndpointTest extends TestHarness {
         myState.put("age", 20);
 
         pubnub.getConfiguration().setSubscribeKey("");
-        partialSetState.channels(Arrays.asList("testChannel")).state(myState).sync();
+        partialSetState.channels(Collections.singletonList("testChannel")).state(myState).sync();
     }
 
     @org.junit.Test(expected=PubNubException.class)
@@ -279,7 +280,7 @@ public class SetStateEndpointTest extends TestHarness {
         Map<String, Object> myState = new HashMap<>();
         myState.put("age", 20);
 
-        partialSetState.channels(Arrays.asList("testChannel")).state(myState).sync();
+        partialSetState.channels(Collections.singletonList("testChannel")).state(myState).sync();
     }
 
 }
