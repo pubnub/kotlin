@@ -1,7 +1,6 @@
 package com.pubnub.api.managers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pubnub.api.PubNubException;
@@ -30,15 +29,6 @@ public class MapperManager {
     public <T> T fromJson(String input, Class<T> clazz) throws PubNubException {
         try {
             return this.objectMapper.readValue(input, clazz);
-        } catch (IOException e) {
-            throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_PARSING_ERROR).errormsg(e.getMessage()).build();
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    public <T> T fromJson(String input, TypeReference typeReference) throws PubNubException {
-        try {
-            return this.objectMapper.readValue(input, typeReference);
         } catch (IOException e) {
             throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_PARSING_ERROR).errormsg(e.getMessage()).build();
         }
