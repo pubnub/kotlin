@@ -74,99 +74,99 @@ public class PubNub {
 
 
     //
-    public final void addListener(SubscribeCallback listener) {
+    public void addListener(SubscribeCallback listener) {
         subscriptionManager.addListener(listener);
     }
 
-    public final void removeListener(SubscribeCallback listener) {
+    public void removeListener(SubscribeCallback listener) {
         subscriptionManager.removeListener(listener);
     }
 
-    public final SubscribeBuilder subscribe() {
+    public SubscribeBuilder subscribe() {
         return new SubscribeBuilder(this.subscriptionManager);
     }
 
-    public final UnsubscribeBuilder unsubscribe() {
+    public UnsubscribeBuilder unsubscribe() {
         return new UnsubscribeBuilder(this.subscriptionManager);
     }
 
     // start push
 
-    public final AddChannelsToPush addPushNotificationsOnChannels() {
+    public AddChannelsToPush addPushNotificationsOnChannels() {
         return new AddChannelsToPush(this, this.retrofitManager.getTransactionInstance());
     }
 
-    public final RemoveChannelsFromPush removePushNotificationsFromChannels() {
+    public RemoveChannelsFromPush removePushNotificationsFromChannels() {
         return new RemoveChannelsFromPush(this, this.retrofitManager.getTransactionInstance());
     }
 
-    public final RemoveAllPushChannelsForDevice removeAllPushNotificationsFromDeviceWithPushToken() {
+    public RemoveAllPushChannelsForDevice removeAllPushNotificationsFromDeviceWithPushToken() {
         return new RemoveAllPushChannelsForDevice(this, this.retrofitManager.getTransactionInstance());
     }
 
-    public final ListPushProvisions auditPushChannelProvisions() {
+    public ListPushProvisions auditPushChannelProvisions() {
         return new ListPushProvisions(this, this.retrofitManager.getTransactionInstance());
     }
 
     // end push
 
-    public final WhereNow whereNow() {
+    public WhereNow whereNow() {
         return new WhereNow(this, this.retrofitManager.getTransactionInstance());
     }
 
-    public final HereNow hereNow() {
+    public HereNow hereNow() {
         return new HereNow(this, this.retrofitManager.getTransactionInstance());
     }
 
-    public final Time time() {
+    public Time time() {
         return new Time(this, this.retrofitManager.getTransactionInstance());
     }
 
-    public final History history() {
+    public History history() {
         return new History(this, this.retrofitManager.getTransactionInstance());
     }
 
-    public final FetchMessages fetchMessages() {
+    public FetchMessages fetchMessages() {
         return new FetchMessages(this, this.retrofitManager.getTransactionInstance());
     }
 
-    public final Audit audit() {
+    public Audit audit() {
         return new Audit(this, this.retrofitManager.getTransactionInstance());
     }
 
-    public final Grant grant() {
+    public Grant grant() {
         return new Grant(this, this.retrofitManager.getTransactionInstance());
     }
 
-    public final GetState getPresenceState() {
+    public GetState getPresenceState() {
         return new GetState(this, this.retrofitManager.getTransactionInstance());
     }
 
-    public final SetState setPresenceState() {
+    public SetState setPresenceState() {
         return new SetState(this, subscriptionManager, this.retrofitManager.getTransactionInstance());
     }
 
-    public final Publish publish() {
+    public Publish publish() {
         return new Publish(this, publishSequenceManager, this.retrofitManager.getTransactionInstance());
     }
 
-    public final ListAllChannelGroup listAllChannelGroups() {
+    public ListAllChannelGroup listAllChannelGroups() {
         return new ListAllChannelGroup(this, this.retrofitManager.getTransactionInstance());
     }
 
-    public final AllChannelsChannelGroup listChannelsForChannelGroup() {
+    public AllChannelsChannelGroup listChannelsForChannelGroup() {
         return new AllChannelsChannelGroup(this, this.retrofitManager.getTransactionInstance());
     }
 
-    public final AddChannelChannelGroup addChannelsToChannelGroup() {
+    public AddChannelChannelGroup addChannelsToChannelGroup() {
         return new AddChannelChannelGroup(this, this.retrofitManager.getTransactionInstance());
     }
 
-    public final RemoveChannelChannelGroup removeChannelsFromChannelGroup() {
+    public RemoveChannelChannelGroup removeChannelsFromChannelGroup() {
         return new RemoveChannelChannelGroup(this, this.retrofitManager.getTransactionInstance());
     }
 
-    public final DeleteChannelGroup deleteChannelGroup() {
+    public DeleteChannelGroup deleteChannelGroup() {
         return new DeleteChannelGroup(this, this.retrofitManager.getTransactionInstance());
     }
 
@@ -178,7 +178,7 @@ public class PubNub {
      * @param inputString String to be encrypted
      * @return String containing the encryption of inputString using cipherKey
      */
-    public final String decrypt(String inputString) throws PubNubException {
+    public String decrypt(String inputString) throws PubNubException {
         if (inputString == null) {
             throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_INVALID_ARGUMENTS).build();
         }
@@ -194,7 +194,7 @@ public class PubNub {
      * @return String containing the encryption of inputString using cipherKey
      * @throws PubNubException throws exception in case of failed encryption
      */
-    public final String decrypt(final String inputString, final String cipherKey) throws PubNubException {
+    public String decrypt(String inputString, String cipherKey) throws PubNubException {
         if (inputString == null) {
             throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_INVALID_ARGUMENTS).build();
         }
@@ -208,7 +208,7 @@ public class PubNub {
      * @param inputString String to be encrypted
      * @return String containing the encryption of inputString using cipherKey
      */
-    public final String encrypt(final String inputString) throws PubNubException {
+    public  String encrypt(String inputString) throws PubNubException {
         if (inputString == null) {
             throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_INVALID_ARGUMENTS).build();
         }
@@ -224,7 +224,7 @@ public class PubNub {
      * @return String containing the encryption of inputString using cipherKey
      * @throws PubNubException throws exception in case of failed encryption
      */
-    public final String encrypt(final String inputString, final String cipherKey) throws PubNubException {
+    public String encrypt(String inputString, String cipherKey) throws PubNubException {
         if (inputString == null) {
             throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_INVALID_ARGUMENTS).build();
         }
@@ -261,14 +261,14 @@ public class PubNub {
      * Stop the SDK and terminate all listeners.
      */
     @Deprecated
-    public final void stop() {
+    public void stop() {
         subscriptionManager.stop();
     }
 
     /**
      *  Destroy the SDK to evict the connection pools.
      */
-    public final void destroy() {
+    public void destroy() {
         subscriptionManager.destroy();
         retrofitManager.destroy();
     }
@@ -276,30 +276,30 @@ public class PubNub {
     /**
      * Perform a Reconnect to the network
      */
-    public final void reconnect() {
+    public void reconnect() {
         subscriptionManager.reconnect();
     }
 
     /**
      * Perform a disconnect from the listeners
      */
-    public final void disconnect() {
+    public void disconnect() {
         subscriptionManager.disconnect();
     }
 
-    public final Publish fire() {
+    public Publish fire() {
         return publish().shouldStore(false).replicate(false);
     }
 
-    public final List<String> getSubscribedChannels() {
+    public List<String> getSubscribedChannels() {
         return subscriptionManager.getSubscribedChannels();
     }
 
-    public final List<String> getSubscribedChannelGroups() {
+    public List<String> getSubscribedChannelGroups() {
         return subscriptionManager.getSubscribedChannelGroups();
     }
 
-    public final void unsubscribeAll() {
+    public void unsubscribeAll() {
         subscriptionManager.unsubscribeAll();
     }
 }
