@@ -2,7 +2,6 @@ com.pubnub.api
 com.pubnub.api.builder
 com.pubnub.api.builder.dto
 com.pubnub.api.callbacks
-com.pubnub.api.core.models.server
 com.pubnub.api.endpoints
 com.pubnub.api.endpoints.access
 com.pubnub.api.endpoints.channel_groups
