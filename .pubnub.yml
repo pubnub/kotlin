@@ -1,9 +1,9 @@
 name: java
-version: 4.2.1
+version: 4.2.2
 schema: 1
 scm: github.com/pubnub/java
 changelog:
-  - version: v4.2.1
+  - version: v4.2.2
     date:
     changes:
       - type: improvement
