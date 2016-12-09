@@ -8,6 +8,13 @@ changelog:
     changes:
       - type: improvement
         text: remove final identifiers from the public facing API.
+  - version: v4.2.1
+    date:
+    changes:
+      - type: improvement
+        text: include publisher UUID on incoming message
+      - type: improvement
+        text: allow to set custom TTL on a publish
   - version: v4.2.0
     date:
     changes:
