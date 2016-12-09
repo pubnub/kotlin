@@ -1,11 +1,25 @@
 
+## [v4.2.2](https://github.com/pubnub/java/tree/v4.2.2)
+
+
+  [Full Changelog](https://github.com/pubnub/java/compare/v4.2.1...v4.2.2)
+
+
+- ⭐remove final identifiers from the public facing API.
+
+
+
 ## [v4.2.1](https://github.com/pubnub/java/tree/v4.2.1)
 
 
   [Full Changelog](https://github.com/pubnub/java/compare/v4.2.0...v4.2.1)
 
 
-- ⭐remove final identifiers from the public facing API.
+- ⭐include publisher UUID on incoming message
+
+
+
+- ⭐allow to set custom TTL on a publish
 
 
 
