@@ -160,7 +160,7 @@ public class PNConfiguration {
      * @param interval presence announce interval, how often the client should announce itself.
      * @return returns itself.
      */
-    public PNConfiguration setPresenceTimeoutWithCustomInterval(final int timeout, final int interval) {
+    public PNConfiguration setPresenceTimeoutWithCustomInterval(int timeout, int interval) {
         this.presenceTimeout = timeout;
         this.heartbeatInterval = interval;
 
@@ -173,7 +173,7 @@ public class PNConfiguration {
      * @param timeout presence timeout; how long before the server considers this client to be gone.
      * @return returns itself.
      */
-    public PNConfiguration setPresenceTimeout(final int timeout) {
+    public PNConfiguration setPresenceTimeout(int timeout) {
         return setPresenceTimeoutWithCustomInterval(timeout, (timeout / 2) - 1);
     }
 

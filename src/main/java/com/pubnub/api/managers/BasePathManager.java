@@ -33,7 +33,7 @@ public class BasePathManager {
      * Initialize the path management.
      * @param initialConfig configuration object
      */
-    public BasePathManager(final PNConfiguration initialConfig) {
+    public BasePathManager(PNConfiguration initialConfig) {
         this.config = initialConfig;
         currentSubdomain = 1;
     }
@@ -43,7 +43,7 @@ public class BasePathManager {
      * Prepares a next usable base url.
      * @return usable base url.
      */
-    public final String getBasePath() {
+    public String getBasePath() {
         StringBuilder constructedUrl = new StringBuilder("http");
 
         if (config.isSecure()) {

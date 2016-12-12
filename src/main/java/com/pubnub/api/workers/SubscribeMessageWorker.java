@@ -59,7 +59,7 @@ public class SubscribeMessageWorker implements Runnable {
         }
     }
 
-    private JsonNode processMessage(final JsonNode input) {
+    private JsonNode processMessage(JsonNode input) {
         // if we do not have a crypto key, there is no way to process the node; let's return.
         if (pubnub.getConfiguration().getCipherKey() == null) {
             return input;
@@ -112,7 +112,7 @@ public class SubscribeMessageWorker implements Runnable {
         return outputObject;
     }
 
-    private void processIncomingPayload(final SubscribeMessage message) {
+    private void processIncomingPayload(SubscribeMessage message) {
         String channel = message.getChannel();
         String subscriptionMatch = message.getSubscriptionMatch();
         PublishMetaData publishMetaData = message.getPublishMetaData();

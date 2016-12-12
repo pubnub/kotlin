@@ -73,7 +73,7 @@ public class Audit extends Endpoint<Envelope<AccessManagerAuditPayload>, PNAcces
     }
 
     @Override
-    protected PNAccessManagerAuditResult createResponse(final Response<Envelope<AccessManagerAuditPayload>> input) throws PubNubException {
+    protected PNAccessManagerAuditResult createResponse(Response<Envelope<AccessManagerAuditPayload>> input) throws PubNubException {
         PNAccessManagerAuditResult.PNAccessManagerAuditResultBuilder pnAccessManagerAuditResult = PNAccessManagerAuditResult.builder();
 
         if (input.body() == null || input.body().getPayload() == null) {

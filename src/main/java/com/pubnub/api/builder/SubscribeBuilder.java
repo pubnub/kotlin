@@ -24,7 +24,7 @@ public class SubscribeBuilder extends PubSubBuilder {
     @Setter(AccessLevel.NONE)
     private Long timetoken;
 
-    public SubscribeBuilder(final SubscriptionManager subscriptionManager) {
+    public SubscribeBuilder(SubscriptionManager subscriptionManager) {
         super(subscriptionManager);
     }
 
@@ -49,11 +49,11 @@ public class SubscribeBuilder extends PubSubBuilder {
         this.getSubscriptionManager().adaptSubscribeBuilder(subscribeOperation);
     }
 
-    public SubscribeBuilder channels(final List<String> channels) {
+    public SubscribeBuilder channels(List<String> channels) {
         return (SubscribeBuilder) super.channels(channels);
     }
 
-    public SubscribeBuilder channelGroups(final List<String> channelGroups) {
+    public SubscribeBuilder channelGroups(List<String> channelGroups) {
         return (SubscribeBuilder) super.channelGroups(channelGroups);
     }
 

@@ -52,14 +52,14 @@ public abstract class Endpoint<Input, Output> {
 
     private ObjectMapper mapper;
 
-    public Endpoint(final PubNub pubnubInstance, Retrofit retrofitInstance) {
+    public Endpoint(PubNub pubnubInstance, Retrofit retrofitInstance) {
         this.pubnub = pubnubInstance;
         this.retrofit = retrofitInstance;
         this.mapper = new ObjectMapper();
     }
 
 
-    public final Output sync() throws PubNubException {
+    public Output sync() throws PubNubException {
         this.validateParams();
 
         call = doWork(createBaseParams());
@@ -106,7 +106,7 @@ public abstract class Endpoint<Input, Output> {
         return response;
     }
 
-    public final void async(final PNCallback<Output> callback) {
+    public void async(final PNCallback<Output> callback) {
         cachedCallback = callback;
 
         try {
@@ -120,7 +120,7 @@ public abstract class Endpoint<Input, Output> {
         call.enqueue(new retrofit2.Callback<Input>() {
 
             @Override
-            public void onResponse(final Call<Input> performedCall, final Response<Input> response) {
+            public void onResponse(Call<Input> performedCall, Response<Input> response) {
                 Output callbackResponse;
 
                 if (!response.isSuccessful() || response.code() != SERVER_RESPONSE_SUCCESS) {
@@ -159,13 +159,13 @@ public abstract class Endpoint<Input, Output> {
                         pnStatusCategory = PNStatusCategory.PNAccessDeniedCategory;
 
                         if (responseBodyPayload != null && responseBodyPayload.has("channels")) {
-                            for (final JsonNode objNode : responseBodyPayload.get("channels")) {
+                            for (JsonNode objNode : responseBodyPayload.get("channels")) {
                                 affectedChannels.add(objNode.asText());
                             }
                         }
 
                         if (responseBodyPayload != null && responseBodyPayload.has("channel-groups")) {
-                            for (final JsonNode objNode : responseBodyPayload.get("channel-groups")) {
+                            for (JsonNode objNode : responseBodyPayload.get("channel-groups")) {
                                 String channelGroupName = objNode.asText().substring(0, 1).equals(":") ? objNode.asText().substring(1) : objNode.asText();
                                 affectedChannelGroups.add(channelGroupName);
                             }
@@ -192,7 +192,7 @@ public abstract class Endpoint<Input, Output> {
             }
 
             @Override
-            public void onFailure(final Call<Input> performedCall, final Throwable throwable) {
+            public void onFailure(Call<Input> performedCall, Throwable throwable) {
                 if (silenceFailures) {
                     return;
                 }
@@ -278,7 +278,7 @@ public abstract class Endpoint<Input, Output> {
         return pnStatus.build();
     }
 
-    protected final Map<String, String> createBaseParams() {
+    protected Map<String, String> createBaseParams() {
         Map<String, String> params = new HashMap<>();
 
         params.put("pnsdk", "PubNub-Java-Unified/".concat(this.pubnub.getVersion()));

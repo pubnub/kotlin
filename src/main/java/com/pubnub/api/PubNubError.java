@@ -16,17 +16,17 @@ import lombok.Getter;
 @Builder
 public class PubNubError {
 
-    private final int errorCode;
-    private final int errorCodeExtended;
-    private final JsonNode errorObject;
+    private int errorCode;
+    private int errorCodeExtended;
+    private JsonNode errorObject;
     /**
      * includes a message from the thrown exception (if any.)
      */
-    private final String message;
+    private String message;
     /**
      * PubNub supplied explanation of the error.
      */
-    private final String errorString;
+    private String errorString;
 
 }
 

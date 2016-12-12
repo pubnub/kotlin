@@ -59,14 +59,14 @@ public class Subscribe extends Endpoint<SubscribeEnvelope, SubscribeEnvelope> {
      *
      * @param pubnub supplied pubnub instance.
      */
-    public Subscribe(final PubNub pubnub, Retrofit retrofit) {
+    public Subscribe(PubNub pubnub, Retrofit retrofit) {
         super(pubnub, retrofit);
         channels = new ArrayList<>();
         channelGroups = new ArrayList<>();
     }
 
     @Override
-    protected final void validateParams() throws PubNubException {
+    protected void validateParams() throws PubNubException {
         if (this.getPubnub().getConfiguration().getSubscribeKey() == null || this.getPubnub().getConfiguration().getSubscribeKey().isEmpty()) {
             throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_SUBSCRIBE_KEY_MISSING).build();
         }
@@ -76,7 +76,7 @@ public class Subscribe extends Endpoint<SubscribeEnvelope, SubscribeEnvelope> {
     }
 
     @Override
-    protected final Call<SubscribeEnvelope> doWork(final Map<String, String> params) throws PubNubException {
+    protected Call<SubscribeEnvelope> doWork(Map<String, String> params) throws PubNubException {
         PubSubService pubSubService = this.getRetrofit().create(PubSubService.class);
         String channelCSV;
 
@@ -108,7 +108,7 @@ public class Subscribe extends Endpoint<SubscribeEnvelope, SubscribeEnvelope> {
     }
 
     @Override
-    protected final SubscribeEnvelope createResponse(final Response<SubscribeEnvelope> input) throws PubNubException {
+    protected SubscribeEnvelope createResponse(Response<SubscribeEnvelope> input) throws PubNubException {
 
         if (input.body() == null) {
             throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_PARSING_ERROR).build();
@@ -118,7 +118,7 @@ public class Subscribe extends Endpoint<SubscribeEnvelope, SubscribeEnvelope> {
     }
 
     @Override
-    protected final PNOperationType getOperationType() {
+    protected PNOperationType getOperationType() {
         return PNOperationType.PNSubscribeOperation;
     }
 

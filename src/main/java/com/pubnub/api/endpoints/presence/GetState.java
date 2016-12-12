@@ -61,7 +61,7 @@ public class GetState extends Endpoint<Envelope<Object>, PNGetStateResult> {
     }
 
     @Override
-    protected PNGetStateResult createResponse(final Response<Envelope<Object>> input) throws PubNubException {
+    protected PNGetStateResult createResponse(Response<Envelope<Object>> input) throws PubNubException {
         Map<String, Object> stateMappings;
 
         if (channels.size() == 1 && channelGroups.size() == 0) {

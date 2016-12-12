@@ -6,11 +6,11 @@ public class PublishSequenceManager {
     private int maxSequence;
     private int nextSequence;
 
-    public PublishSequenceManager(final int providedMaxSequence) {
+    public PublishSequenceManager(int providedMaxSequence) {
         this.maxSequence = providedMaxSequence;
     }
 
-    public final synchronized int getNextSequence() {
+    public synchronized int getNextSequence() {
         if (maxSequence == nextSequence) {
             nextSequence = 1;
         } else {

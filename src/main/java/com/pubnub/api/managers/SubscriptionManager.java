@@ -94,21 +94,21 @@ public class SubscriptionManager {
         consumerThread.start();
     }
 
-    public final void addListener(SubscribeCallback listener) {
+    public void addListener(SubscribeCallback listener) {
         listenerManager.addListener(listener);
     }
 
-    public final void removeListener(SubscribeCallback listener) {
+    public void removeListener(SubscribeCallback listener) {
         listenerManager.removeListener(listener);
     }
 
 
-    public final synchronized void reconnect() {
+    public synchronized void reconnect() {
         this.startSubscribeLoop();
         this.registerHeartbeatTimer();
     }
 
-    public final synchronized void disconnect() {
+    public synchronized void disconnect() {
         stopHeartbeatTimer();
         stopSubscribeLoop();
     }
@@ -125,12 +125,12 @@ public class SubscriptionManager {
         consumerThread.interrupt();
     }
 
-    public final synchronized void adaptStateBuilder(final StateOperation stateOperation) {
+    public synchronized void adaptStateBuilder(StateOperation stateOperation) {
         this.subscriptionState.adaptStateBuilder(stateOperation);
         reconnect();
     }
 
-    public final synchronized void adaptSubscribeBuilder(final SubscribeOperation subscribeOperation) {
+    public synchronized void adaptSubscribeBuilder(SubscribeOperation subscribeOperation) {
         this.subscriptionState.adaptSubscribeBuilder(subscribeOperation);
         // the channel mix changed, on the successful subscribe, there is going to be announcement.
         this.subscriptionStatusAnnounced = false;
@@ -142,14 +142,14 @@ public class SubscriptionManager {
         reconnect();
     }
 
-    public final synchronized void adaptUnsubscribeBuilder(final UnsubscribeOperation unsubscribeOperation) {
+    public synchronized void adaptUnsubscribeBuilder(UnsubscribeOperation unsubscribeOperation) {
         this.subscriptionState.adaptUnsubscribeBuilder(unsubscribeOperation);
 
         new Leave(pubnub, this.retrofitManager.getTransactionInstance())
             .channels(unsubscribeOperation.getChannels()).channelGroups(unsubscribeOperation.getChannelGroups())
             .async(new PNCallback<Boolean>() {
                 @Override
-                public void onResponse(final Boolean result, final PNStatus status) {
+                public void onResponse(Boolean result, PNStatus status) {
                     listenerManager.announce(status);
                 }
         });
@@ -203,7 +203,7 @@ public class SubscriptionManager {
 
         subscribeCall.async(new PNCallback<SubscribeEnvelope>() {
             @Override
-            public void onResponse(final SubscribeEnvelope result, final PNStatus status) {
+            public void onResponse(SubscribeEnvelope result, PNStatus status) {
                 if (status.isError()) {
 
                     if (status.getCategory() == PNStatusCategory.PNTimeoutCategory) {
@@ -297,15 +297,15 @@ public class SubscriptionManager {
 
     }
 
-    public final synchronized List<String> getSubscribedChannels() {
+    public synchronized List<String> getSubscribedChannels() {
         return subscriptionState.prepareChannelList(false);
     }
 
-    public final synchronized List<String> getSubscribedChannelGroups() {
+    public synchronized List<String> getSubscribedChannelGroups() {
         return subscriptionState.prepareChannelGroupList(false);
     }
 
-    public final synchronized void unsubscribeAll() {
+    public synchronized void unsubscribeAll() {
         adaptUnsubscribeBuilder(UnsubscribeOperation.builder()
                 .channelGroups(subscriptionState.prepareChannelGroupList(false))
                 .channels(subscriptionState.prepareChannelList(false))

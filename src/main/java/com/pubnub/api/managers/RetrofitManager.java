@@ -80,7 +80,7 @@ public class RetrofitManager {
                 .build();
     }
 
-    public final void destroy() {
+    public void destroy() {
         closeExecutor(this.transactionClientInstance);
         closeExecutor(this.subscriptionClientInstance);
     }

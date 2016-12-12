@@ -41,7 +41,7 @@ public class StateManager {
     }
 
 
-    public final synchronized void adaptSubscribeBuilder(final SubscribeOperation subscribeOperation) {
+    public synchronized void adaptSubscribeBuilder(SubscribeOperation subscribeOperation) {
         for (String channel : subscribeOperation.getChannels()) {
             SubscriptionItem subscriptionItem = new SubscriptionItem().setName(channel);
             channels.put(channel, subscriptionItem);
@@ -65,7 +65,7 @@ public class StateManager {
         }
     }
 
-    public final synchronized void adaptStateBuilder(final StateOperation stateOperation) {
+    public synchronized void adaptStateBuilder(StateOperation stateOperation) {
         for (String channel: stateOperation.getChannels()) {
             SubscriptionItem subscribedChannel = channels.get(channel);
 
@@ -84,8 +84,7 @@ public class StateManager {
     }
 
 
-    public final synchronized void adaptUnsubscribeBuilder(final UnsubscribeOperation unsubscribeOperation) {
-
+    public synchronized void adaptUnsubscribeBuilder(UnsubscribeOperation unsubscribeOperation) {
         for (String channel: unsubscribeOperation.getChannels()) {
             this.channels.remove(channel);
             this.presenceChannels.remove(channel);
@@ -97,7 +96,7 @@ public class StateManager {
         }
     }
 
-    public final synchronized Map<String, Object> createStatePayload() {
+    public synchronized Map<String, Object> createStatePayload() {
         Map<String, Object> stateResponse = new HashMap<>();
 
         for (SubscriptionItem channel: channels.values()) {
@@ -115,11 +114,11 @@ public class StateManager {
         return stateResponse;
     }
 
-    public synchronized List<String> prepareChannelList(final boolean includePresence) {
+    public synchronized List<String> prepareChannelList(boolean includePresence) {
         return prepareMembershipList(channels, presenceChannels, includePresence);
     }
 
-    public synchronized List<String> prepareChannelGroupList(final boolean includePresence) {
+    public synchronized List<String> prepareChannelGroupList(boolean includePresence) {
         return prepareMembershipList(groups, presenceGroups, includePresence);
     }
 
@@ -127,9 +126,7 @@ public class StateManager {
         return (channels.isEmpty() && presenceChannels.isEmpty() && groups.isEmpty() && presenceGroups.isEmpty());
     }
 
-    private synchronized List<String> prepareMembershipList(final Map<String, SubscriptionItem> dataStorage,
-                                               final Map<String, SubscriptionItem> presenceStorage,
-                                               final boolean includePresence) {
+    private synchronized List<String> prepareMembershipList(Map<String, SubscriptionItem> dataStorage, Map<String, SubscriptionItem> presenceStorage, boolean includePresence) {
         List<String> response = new ArrayList<>();
 
         for (SubscriptionItem channelGroupItem: dataStorage.values()) {

@@ -42,7 +42,7 @@ public class AddChannelChannelGroup extends Endpoint<Envelope, PNChannelGroupsAd
     }
 
     @Override
-    protected Call<Envelope> doWork(final Map<String, String> params) {
+    protected Call<Envelope> doWork(Map<String, String> params) {
         ChannelGroupService service = this.getRetrofit().create(ChannelGroupService.class);
 
         if (channels.size() > 0) {

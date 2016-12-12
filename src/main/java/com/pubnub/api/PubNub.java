@@ -57,9 +57,9 @@ public class PubNub {
     private static final int TIMESTAMP_DIVIDER = 1000;
     private static final int MAX_SEQUENCE = 65535;
 
-    private static final String SDK_VERSION = "4.2.2";
+    private static final String SDK_VERSION = "4.2.3";
 
-    public PubNub(final PNConfiguration initialConfig) {
+    public PubNub(PNConfiguration initialConfig) {
         this.configuration = initialConfig;
         this.basePathManager = new BasePathManager(initialConfig);
         this.retrofitManager = new RetrofitManager(this);

@@ -17,7 +17,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 
-public final class PubNubUtil {
+public class PubNubUtil {
 
     private PubNubUtil() {
     }
@@ -106,7 +106,7 @@ public final class PubNubUtil {
         return stringifiedArguments;
     }
 
-    public static String signSHA256(final String key, final String data) throws PubNubException {
+    public static String signSHA256(String key, String data) throws PubNubException {
         Mac sha256HMAC;
         byte[] hmacData;
         SecretKeySpec secretKey = new SecretKeySpec(key.getBytes(Charset.forName("UTF-8")), "HmacSHA256");

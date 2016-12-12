@@ -99,7 +99,7 @@ public class History extends Endpoint<JsonNode, PNHistoryResult> {
 
             ArrayNode historyItems = (ArrayNode) input.body().get(0);
 
-            for (final JsonNode historyEntry : historyItems) {
+            for (JsonNode historyEntry : historyItems) {
                 PNHistoryItemResult.PNHistoryItemResultBuilder historyItem = PNHistoryItemResult.builder();
                 JsonNode message;
 

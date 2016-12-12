@@ -19,11 +19,11 @@ public class ListenerManager {
         this.pubnub = pubnubInstance;
     }
 
-    public final void addListener(SubscribeCallback listener) {
+    public void addListener(SubscribeCallback listener) {
         listeners.add(listener);
     }
 
-    public final void removeListener(SubscribeCallback listener) {
+    public void removeListener(SubscribeCallback listener) {
         listeners.remove(listener);
     }
 
@@ -32,19 +32,19 @@ public class ListenerManager {
      *
      * @param status PNStatus which will be broadcast to listeners.
      */
-    public void announce(final PNStatus status) {
+    public void announce(PNStatus status) {
         for (SubscribeCallback subscribeCallback : listeners) {
             subscribeCallback.status(this.pubnub, status);
         }
     }
 
-    public void announce(final PNMessageResult message) {
+    public void announce(PNMessageResult message) {
         for (SubscribeCallback subscribeCallback : listeners) {
             subscribeCallback.message(this.pubnub, message);
         }
     }
 
-    public void announce(final PNPresenceEventResult presence) {
+    public void announce(PNPresenceEventResult presence) {
         for (SubscribeCallback subscribeCallback : listeners) {
             subscribeCallback.presence(this.pubnub, presence);
         }

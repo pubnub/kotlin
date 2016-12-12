@@ -48,7 +48,7 @@ public class Publish extends Endpoint<List<Object>, PNPublishResult> {
     }
 
     @Override
-    protected final void validateParams() throws PubNubException {
+    protected void validateParams() throws PubNubException {
         if (message == null) {
             throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_MESSAGE_MISSING).build();
         }
@@ -64,7 +64,7 @@ public class Publish extends Endpoint<List<Object>, PNPublishResult> {
     }
 
     @Override
-    protected final Call<List<Object>> doWork(Map<String, String> params) throws PubNubException {
+    protected Call<List<Object>> doWork(Map<String, String> params) throws PubNubException {
         String stringifiedMessage;
         String stringifiedMeta;
         ObjectMapper mapper = new ObjectMapper();
@@ -137,7 +137,7 @@ public class Publish extends Endpoint<List<Object>, PNPublishResult> {
     }
 
     @Override
-    protected final PNPublishResult createResponse(final Response<List<Object>> input) throws PubNubException {
+    protected PNPublishResult createResponse(Response<List<Object>> input) throws PubNubException {
         PNPublishResult.PNPublishResultBuilder pnPublishResult = PNPublishResult.builder();
         pnPublishResult.timetoken(Long.valueOf(input.body().get(2).toString()));
 

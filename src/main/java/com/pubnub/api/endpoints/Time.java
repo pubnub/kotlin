@@ -26,18 +26,18 @@ public class Time extends Endpoint<List<Long>, PNTimeResult> {
     }
 
     @Override
-    protected final void validateParams() throws PubNubException {
+    protected void validateParams() throws PubNubException {
 
     }
 
     @Override
-    protected final Call<List<Long>> doWork(Map<String, String> params) {
+    protected Call<List<Long>> doWork(Map<String, String> params) {
         TimeService service = this.getRetrofit().create(TimeService.class);
         return service.fetchTime(params);
     }
 
     @Override
-    protected final PNTimeResult createResponse(final Response<List<Long>> input) throws PubNubException {
+    protected PNTimeResult createResponse(Response<List<Long>> input) throws PubNubException {
         PNTimeResult.PNTimeResultBuilder timeData = PNTimeResult.builder();
 
         if (input.body() == null || input.body().size() == 0) {
