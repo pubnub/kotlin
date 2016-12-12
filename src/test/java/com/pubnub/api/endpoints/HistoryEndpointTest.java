@@ -79,12 +79,12 @@ public class HistoryEndpointTest extends TestHarness {
         Assert.assertEquals(response.getMessages().size(), 2);
 
         Assert.assertTrue(response.getMessages().get(0).getTimetoken().equals(1111L));
-        Assert.assertEquals((response.getMessages().get(0).getEntry()).get("a").asInt(), 11);
-        Assert.assertEquals((response.getMessages().get(0).getEntry()).get("b").asInt(), 22);
+        Assert.assertEquals((response.getMessages().get(0).getEntry()).getAsJsonObject().get("a").getAsInt(), 11);
+        Assert.assertEquals((response.getMessages().get(0).getEntry()).getAsJsonObject().get("b").getAsInt(), 22);
 
         Assert.assertTrue(response.getMessages().get(1).getTimetoken().equals(2222L));
-        Assert.assertEquals((response.getMessages().get(1).getEntry()).get("a").asInt(), 33);
-        Assert.assertEquals((response.getMessages().get(1).getEntry()).get("b").asInt(), 44);
+        Assert.assertEquals((response.getMessages().get(1).getEntry()).getAsJsonObject().get("a").getAsInt(), 33);
+        Assert.assertEquals((response.getMessages().get(1).getEntry()).getAsJsonObject().get("b").getAsInt(), 44);
     }
 
     @Test
@@ -142,17 +142,17 @@ public class HistoryEndpointTest extends TestHarness {
         Assert.assertEquals(response.getMessages().size(), 3);
 
         Assert.assertEquals(response.getMessages().get(0).getTimetoken(), null);
-        Assert.assertEquals("m1", (response.getMessages().get(0).getEntry()).get(0).asText());
-        Assert.assertEquals("m2", (response.getMessages().get(0).getEntry()).get(1).asText());
-        Assert.assertEquals("m3", (response.getMessages().get(0).getEntry()).get(2).asText());
+        Assert.assertEquals("m1", (response.getMessages().get(0).getEntry()).getAsJsonArray().get(0).getAsString());
+        Assert.assertEquals("m2", (response.getMessages().get(0).getEntry()).getAsJsonArray().get(1).getAsString());
+        Assert.assertEquals("m3", (response.getMessages().get(0).getEntry()).getAsJsonArray().get(2).getAsString());
 
-        Assert.assertEquals("m1", (response.getMessages().get(1).getEntry()).get(0).asText());
-        Assert.assertEquals("m2", (response.getMessages().get(1).getEntry()).get(1).asText());
-        Assert.assertEquals("m3", (response.getMessages().get(1).getEntry()).get(2).asText());
+        Assert.assertEquals("m1", (response.getMessages().get(1).getEntry()).getAsJsonArray().get(0).getAsString());
+        Assert.assertEquals("m2", (response.getMessages().get(1).getEntry()).getAsJsonArray().get(1).getAsString());
+        Assert.assertEquals("m3", (response.getMessages().get(1).getEntry()).getAsJsonArray().get(2).getAsString());
 
-        Assert.assertEquals("m1", (response.getMessages().get(2).getEntry()).get(0).asText());
-        Assert.assertEquals("m2", (response.getMessages().get(2).getEntry()).get(1).asText());
-        Assert.assertEquals("m3", (response.getMessages().get(2).getEntry()).get(2).asText());
+        Assert.assertEquals("m1", (response.getMessages().get(2).getEntry()).getAsJsonArray().get(0).getAsString());
+        Assert.assertEquals("m2", (response.getMessages().get(2).getEntry()).getAsJsonArray().get(1).getAsString());
+        Assert.assertEquals("m3", (response.getMessages().get(2).getEntry()).getAsJsonArray().get(2).getAsString());
 
     }
 
@@ -171,7 +171,7 @@ public class HistoryEndpointTest extends TestHarness {
         Assert.assertEquals(response.getMessages().size(), 1);
 
         Assert.assertEquals(response.getMessages().get(0).getTimetoken(), null);
-        Assert.assertEquals("hey", response.getMessages().get(0).getEntry().get("pn_other").get("text").asText());
+        Assert.assertEquals("hey", response.getMessages().get(0).getEntry().getAsJsonObject().get("pn_other").getAsJsonObject().get("text").getAsString());
 
     }
 
@@ -206,12 +206,12 @@ public class HistoryEndpointTest extends TestHarness {
         Assert.assertEquals(response.getMessages().size(), 2);
 
         Assert.assertNull(response.getMessages().get(0).getTimetoken());
-        Assert.assertEquals(response.getMessages().get(0).getEntry().get("a").asInt(), 11);
-        Assert.assertEquals(response.getMessages().get(0).getEntry().get("b").asInt(), 22);
+        Assert.assertEquals(response.getMessages().get(0).getEntry().getAsJsonObject().get("a").getAsInt(), 11);
+        Assert.assertEquals(response.getMessages().get(0).getEntry().getAsJsonObject().get("b").getAsInt(), 22);
 
         Assert.assertNull(response.getMessages().get(1).getTimetoken());
-        Assert.assertEquals(response.getMessages().get(1).getEntry().get("a").asInt(), 33);
-        Assert.assertEquals(response.getMessages().get(1).getEntry().get("b").asInt(), 44);
+        Assert.assertEquals(response.getMessages().get(1).getEntry().getAsJsonObject().get("a").getAsInt(), 33);
+        Assert.assertEquals(response.getMessages().get(1).getEntry().getAsJsonObject().get("b").getAsInt(), 44);
     }
 
 
@@ -368,15 +368,15 @@ public class HistoryEndpointTest extends TestHarness {
         Assert.assertEquals(response.getMessages().size(), 2);
 
         Assert.assertTrue(response.getMessages().get(0).getTimetoken().equals(1111L));
-        Assert.assertEquals((response.getMessages().get(0).getEntry()).get("a").asInt(), 11);
-        Assert.assertEquals((response.getMessages().get(0).getEntry()).get("b").asInt(), 22);
+        Assert.assertEquals((response.getMessages().get(0).getEntry()).getAsJsonObject().get("a").getAsInt(), 11);
+        Assert.assertEquals((response.getMessages().get(0).getEntry()).getAsJsonObject().get("b").getAsInt(), 22);
 
         Assert.assertTrue(response.getMessages().get(1).getTimetoken().equals(2222L));
-        Assert.assertEquals((response.getMessages().get(1).getEntry()).get("a").asInt(), 33);
-        Assert.assertEquals((response.getMessages().get(1).getEntry()).get("b").asInt(), 44);
+        Assert.assertEquals((response.getMessages().get(1).getEntry()).getAsJsonObject().get("a").getAsInt(), 33);
+        Assert.assertEquals((response.getMessages().get(1).getEntry()).getAsJsonObject().get("b").getAsInt(), 44);
     }
 
-    @org.junit.Test(expected=PubNubException.class)
+    @org.junit.Test(expected=UnsupportedOperationException.class)
     public void testSyncProcessMessageError() throws IOException, PubNubException {
         List<Object> testArray = new ArrayList<Object>();
         List<Object> historyItems = new ArrayList<Object>();

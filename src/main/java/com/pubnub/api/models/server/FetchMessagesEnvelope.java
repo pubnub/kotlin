@@ -1,6 +1,6 @@
 package com.pubnub.api.models.server;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,6 +11,6 @@ import java.util.Map;
 @Setter
 public class FetchMessagesEnvelope {
 
-    @JsonProperty("channels")
+    @SerializedName("channels")
     private Map<String, List<HistoryForChannelsItem>> channels;
 }

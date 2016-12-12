@@ -1,6 +1,6 @@
 package com.pubnub.api.models.server;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import com.google.gson.JsonElement;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,7 +12,7 @@ public class Envelope<T> {
     private String service;
     private T payload;
     private int occupancy;
-    private JsonNode uuids;
+    private JsonElement uuids;
     private String action;
     private boolean error;
 }

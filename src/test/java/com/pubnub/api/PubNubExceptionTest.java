@@ -42,7 +42,7 @@ public class PubNubExceptionTest extends TestHarness {
             statusCode = error.getStatusCode();
         }
 
-        assertEquals(0, statusCode);
+        assertEquals(404, statusCode);
     }
 
 

@@ -1,7 +1,7 @@
 package com.pubnub.api.workers;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.PubNubUtil;
@@ -56,7 +56,7 @@ public class SubscribeMessageWorker implements Runnable {
         }
     }
 
-    private JsonNode processMessage(JsonNode input) {
+    private JsonElement processMessage(JsonElement input) {
         // if we do not have a crypto key, there is no way to process the node; let's return.
         if (pubnub.getConfiguration().getCipherKey() == null) {
             return input;
@@ -66,12 +66,12 @@ public class SubscribeMessageWorker implements Runnable {
         MapperManager mapper = this.pubnub.getMapper();
         String inputText;
         String outputText;
-        JsonNode outputObject;
+        JsonElement outputObject;
 
-        if (input.isObject() && input.has("pn_other")) {
-            inputText = input.get("pn_other").asText();
+        if (mapper.isJsonObject(input) && mapper.hasField(input, "pn_other")) {
+            inputText = mapper.elementToString(input, "pn_other");
         } else {
-            inputText = input.asText();
+            inputText = mapper.elementToString(input);
         }
 
         try {
@@ -88,7 +88,7 @@ public class SubscribeMessageWorker implements Runnable {
         }
 
         try {
-            outputObject = mapper.fromJson(outputText, JsonNode.class);
+            outputObject = mapper.fromJson(outputText, JsonElement.class);
         } catch (PubNubException e) {
             PNStatus pnStatus = PNStatus.builder().error(true)
                     .errorData(new PNErrorData(e.getMessage(), e))
@@ -101,9 +101,9 @@ public class SubscribeMessageWorker implements Runnable {
         }
 
         // inject the decoded response into the payload
-        if (input.isObject() && input.has("pn_other")) {
-            ObjectNode objectNode = (ObjectNode) input;
-            objectNode.set("pn_other", outputObject);
+        if (mapper.isJsonObject(input) && mapper.hasField(input, "pn_other")) {
+            JsonObject objectNode = mapper.getAsObject(input);
+            mapper.putOnObject(objectNode, "pn_other", outputObject);
             outputObject = objectNode;
         }
 
@@ -151,7 +151,7 @@ public class SubscribeMessageWorker implements Runnable {
 
             listenerManager.announce(pnPresenceEventResult);
         } else {
-            JsonNode extractedMessage = processMessage(message.getPayload());
+            JsonElement extractedMessage = processMessage(message.getPayload());
 
             if (extractedMessage == null) {
                 log.debug("unable to parse payload on #processIncomingMessages");

@@ -172,13 +172,4 @@ public class HeartbeatEndpointTest extends TestHarness {
         partialHeartbeat.channels(Arrays.asList("ch1")).sync();
     }
 
-    @org.junit.Test(expected=PubNubException.class)
-    public void testInvalidStateSync() throws PubNubException, InterruptedException {
-        pubnub.getConfiguration().setPresenceTimeout(123);
-
-        stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch1/heartbeat"))
-                .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\"}")));
-
-        partialHeartbeat.channels(Arrays.asList("ch1")).state(new Object()).sync();
-    }
 }

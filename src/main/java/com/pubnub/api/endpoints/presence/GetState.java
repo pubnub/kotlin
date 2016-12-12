@@ -1,12 +1,13 @@
 package com.pubnub.api.endpoints.presence;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import com.google.gson.JsonElement;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.PubNubUtil;
 import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.enums.PNOperationType;
+import com.pubnub.api.managers.MapperManager;
 import com.pubnub.api.models.consumer.presence.PNGetStateResult;
 import com.pubnub.api.models.server.Envelope;
 import lombok.Setter;
@@ -22,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 @Accessors(chain = true, fluent = true)
-public class GetState extends Endpoint<Envelope<JsonNode>, PNGetStateResult> {
+public class GetState extends Endpoint<Envelope<JsonElement>, PNGetStateResult> {
 
     @Setter
     private List<String> channels;
@@ -48,7 +49,7 @@ public class GetState extends Endpoint<Envelope<JsonNode>, PNGetStateResult> {
     }
 
     @Override
-    protected Call<Envelope<JsonNode>> doWork(Map<String, String> params) {
+    protected Call<Envelope<JsonElement>> doWork(Map<String, String> params) {
         PresenceService service = this.getRetrofit().create(PresenceService.class);
 
         if (channelGroups.size() > 0) {
@@ -63,14 +64,15 @@ public class GetState extends Endpoint<Envelope<JsonNode>, PNGetStateResult> {
     }
 
     @Override
-    protected PNGetStateResult createResponse(Response<Envelope<JsonNode>> input) throws PubNubException {
-        Map<String, JsonNode> stateMappings = new HashMap<>();
+    protected PNGetStateResult createResponse(Response<Envelope<JsonElement>> input) throws PubNubException {
+        Map<String, JsonElement> stateMappings = new HashMap<>();
+        MapperManager mapper = getPubnub().getMapper();
 
         if (channels.size() == 1 && channelGroups.size() == 0) {
             stateMappings.put(channels.get(0), input.body().getPayload());
         } else {
-            for (Iterator<Map.Entry<String, JsonNode>> it = input.body().getPayload().fields(); it.hasNext();) {
-                Map.Entry<String, JsonNode> stateMapping = it.next();
+            for (Iterator<Map.Entry<String, JsonElement>> it = mapper.getObjectIterator(input.body().getPayload()); it.hasNext();) {
+                Map.Entry<String, JsonElement> stateMapping = it.next();
                 stateMappings.put(stateMapping.getKey(), stateMapping.getValue());
             }
         }

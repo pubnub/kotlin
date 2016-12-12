@@ -1,7 +1,7 @@
 package com.pubnub.api.endpoints;
 
 
-import com.fasterxml.jackson.databind.JsonNode;
+import com.google.gson.JsonElement;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.builder.PubNubErrorBuilder;
@@ -23,6 +23,7 @@ import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -78,7 +79,7 @@ public abstract class Endpoint<Input, Output> {
 
         if (!serverResponse.isSuccessful() || serverResponse.code() != SERVER_RESPONSE_SUCCESS) {
             String responseBodyText;
-            JsonNode responseBody;
+            JsonElement responseBody;
 
             try {
                 responseBodyText = serverResponse.errorBody().string();
@@ -87,7 +88,7 @@ public abstract class Endpoint<Input, Output> {
             }
 
             try {
-                responseBody = mapper.fromJson(responseBodyText, JsonNode.class);
+                responseBody = mapper.fromJson(responseBodyText, JsonElement.class);
             } catch (PubNubException e) {
                 responseBody = null;
             }
@@ -126,8 +127,8 @@ public abstract class Endpoint<Input, Output> {
                 if (!response.isSuccessful() || response.code() != SERVER_RESPONSE_SUCCESS) {
 
                     String responseBodyText;
-                    JsonNode responseBody;
-                    JsonNode responseBodyPayload = null;
+                    JsonElement responseBody;
+                    JsonElement responseBodyPayload = null;
                     ArrayList<String> affectedChannels = new ArrayList<>();
                     ArrayList<String> affectedChannelGroups = new ArrayList<>();
 
@@ -138,13 +139,13 @@ public abstract class Endpoint<Input, Output> {
                     }
 
                     try {
-                        responseBody = mapper.fromJson(responseBodyText, JsonNode.class);
+                        responseBody = mapper.fromJson(responseBodyText, JsonElement.class);
                     } catch (PubNubException e) {
                         responseBody = null;
                     }
 
-                    if (responseBody != null && responseBody.has("payload")) {
-                        responseBodyPayload = responseBody.get("payload");
+                    if (responseBody != null && mapper.isJsonObject(responseBody) && mapper.hasField(responseBody, "payload")) {
+                        responseBodyPayload = mapper.getField(responseBody, "payload");
                     }
 
                     PNStatusCategory pnStatusCategory = PNStatusCategory.PNUnknownCategory;
@@ -158,15 +159,17 @@ public abstract class Endpoint<Input, Output> {
                     if (response.code() == SERVER_RESPONSE_FORBIDDEN) {
                         pnStatusCategory = PNStatusCategory.PNAccessDeniedCategory;
 
-                        if (responseBodyPayload != null && responseBodyPayload.has("channels")) {
-                            for (JsonNode objNode : responseBodyPayload.get("channels")) {
-                                affectedChannels.add(objNode.asText());
+                        if (responseBodyPayload != null && mapper.hasField(responseBodyPayload, "channels")) {
+                            for (Iterator<JsonElement> it = mapper.getArrayIterator(responseBodyPayload, "channels"); it.hasNext();) {
+                                JsonElement objNode = it.next();
+                                affectedChannels.add(mapper.elementToString(objNode));
                             }
                         }
 
-                        if (responseBodyPayload != null && responseBodyPayload.has("channel-groups")) {
-                            for (JsonNode objNode : responseBodyPayload.get("channel-groups")) {
-                                String channelGroupName = objNode.asText().substring(0, 1).equals(":") ? objNode.asText().substring(1) : objNode.asText();
+                        if (responseBodyPayload != null && mapper.hasField(responseBodyPayload, "channel-groups")) {
+                            for (Iterator<JsonElement> it = mapper.getArrayIterator(responseBodyPayload, "channel-groups"); it.hasNext();) {
+                                JsonElement objNode = it.next();
+                                String channelGroupName = mapper.elementToString(objNode).substring(0, 1).equals(":") ? mapper.elementToString(objNode).substring(1) : mapper.elementToString(objNode);
                                 affectedChannelGroups.add(channelGroupName);
                             }
                         }

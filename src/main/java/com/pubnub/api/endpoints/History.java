@@ -1,12 +1,12 @@
 package com.pubnub.api.endpoints;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.enums.PNOperationType;
+import com.pubnub.api.managers.MapperManager;
 import com.pubnub.api.models.consumer.history.PNHistoryItemResult;
 import com.pubnub.api.models.consumer.history.PNHistoryResult;
 import com.pubnub.api.vendor.Crypto;
@@ -20,11 +20,12 @@ import retrofit2.http.Path;
 import retrofit2.http.QueryMap;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 @Accessors(chain = true, fluent = true)
-public class History extends Endpoint<JsonNode, PNHistoryResult> {
+public class History extends Endpoint<JsonElement, PNHistoryResult> {
     private static final int MAX_COUNT = 100;
     @Setter
     private String channel;
@@ -45,7 +46,7 @@ public class History extends Endpoint<JsonNode, PNHistoryResult> {
 
     private interface HistoryService {
         @GET("v2/history/sub-key/{subKey}/channel/{channel}")
-        Call<JsonNode> fetchHistory(@Path("subKey") String subKey,
+        Call<JsonElement> fetchHistory(@Path("subKey") String subKey,
                                     @Path("channel") String channel,
                                     @QueryMap Map<String, String> options);
     }
@@ -58,7 +59,7 @@ public class History extends Endpoint<JsonNode, PNHistoryResult> {
     }
 
     @Override
-    protected Call<JsonNode> doWork(Map<String, String> params) {
+    protected Call<JsonElement> doWork(Map<String, String> params) {
 
         HistoryService service = this.getRetrofit().create(HistoryService.class);
 
@@ -87,23 +88,23 @@ public class History extends Endpoint<JsonNode, PNHistoryResult> {
     }
 
     @Override
-    protected PNHistoryResult createResponse(Response<JsonNode> input) throws PubNubException {
+    protected PNHistoryResult createResponse(Response<JsonElement> input) throws PubNubException {
         PNHistoryResult.PNHistoryResultBuilder historyData = PNHistoryResult.builder();
         List<PNHistoryItemResult> messages = new ArrayList<>();
+        MapperManager mapper = getPubnub().getMapper();
 
         if (input.body() != null) {
-            historyData.startTimetoken(input.body().get(1).asLong());
-            historyData.endTimetoken(input.body().get(2).asLong());
+            historyData.startTimetoken(mapper.elementToLong(mapper.getArrayElement(input.body(), 1)));
+            historyData.endTimetoken(mapper.elementToLong(mapper.getArrayElement(input.body(), 2)));
 
-            ArrayNode historyItems = (ArrayNode) input.body().get(0);
-
-            for (JsonNode historyEntry : historyItems) {
+            for (Iterator<JsonElement> it = mapper.getArrayIterator(mapper.getArrayElement(input.body(), 0)); it.hasNext();) {
+                JsonElement historyEntry = it.next();
                 PNHistoryItemResult.PNHistoryItemResultBuilder historyItem = PNHistoryItemResult.builder();
-                JsonNode message;
+                JsonElement message;
 
                 if (includeTimetoken != null && includeTimetoken) {
-                    historyItem.timetoken(historyEntry.get("timetoken").asLong());
-                    message = processMessage(historyEntry.get("message"));
+                    historyItem.timetoken(mapper.elementToLong(historyEntry, "timetoken"));
+                    message = processMessage(mapper.getField(historyEntry, "message"));
                 } else {
                     message = processMessage(historyEntry);
                 }
@@ -128,30 +129,31 @@ public class History extends Endpoint<JsonNode, PNHistoryResult> {
         return true;
     }
 
-    private JsonNode processMessage(JsonNode message) throws PubNubException {
+    private JsonElement processMessage(JsonElement message) throws PubNubException {
         // if we do not have a crypto key, there is no way to process the node; let's return.
         if (this.getPubnub().getConfiguration().getCipherKey() == null) {
             return message;
         }
 
         Crypto crypto = new Crypto(this.getPubnub().getConfiguration().getCipherKey());
+        MapperManager mapper = getPubnub().getMapper();
         String inputText;
         String outputText;
-        JsonNode outputObject;
+        JsonElement outputObject;
 
-        if (message.isObject() && message.has("pn_other")) {
-            inputText = message.get("pn_other").asText();
+        if (mapper.isJsonObject(message) && mapper.hasField(message, "pn_other")) {
+            inputText = mapper.elementToString(message, "pn_other");
         } else {
-            inputText = message.asText();
+            inputText = mapper.elementToString(message);
         }
 
         outputText = crypto.decrypt(inputText);
-        outputObject = this.getPubnub().getMapper().fromJson(outputText, JsonNode.class);
+        outputObject = this.getPubnub().getMapper().fromJson(outputText, JsonElement.class);
 
         // inject the decoded response into the payload
-        if (message.isObject() && message.has("pn_other")) {
-            ObjectNode objectNode = (ObjectNode) message;
-            objectNode.set("pn_other", outputObject);
+        if (mapper.isJsonObject(message) && mapper.hasField(message, "pn_other")) {
+            JsonObject objectNode = mapper.getAsObject(message);
+            mapper.putOnObject(objectNode, "pn_other", outputObject);
             outputObject = objectNode;
         }
 

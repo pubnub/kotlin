@@ -1,12 +1,13 @@
 package com.pubnub.api.endpoints.access;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import com.google.gson.JsonElement;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.PubNubUtil;
 import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.enums.PNOperationType;
+import com.pubnub.api.managers.MapperManager;
 import com.pubnub.api.models.consumer.access_manager.PNAccessManagerGrantResult;
 import com.pubnub.api.models.consumer.access_manager.PNAccessManagerKeyData;
 import com.pubnub.api.models.server.Envelope;
@@ -99,6 +100,7 @@ public class Grant extends Endpoint<Envelope<AccessManagerGrantPayload>, PNAcces
 
     @Override
     protected PNAccessManagerGrantResult createResponse(Response<Envelope<AccessManagerGrantPayload>> input) throws PubNubException {
+        MapperManager mapperManager = getPubnub().getMapper();
         PNAccessManagerGrantResult.PNAccessManagerGrantResultBuilder pnAccessManagerGrantResult = PNAccessManagerGrantResult.builder();
 
         if (input.body() == null || input.body().getPayload() == null) {
@@ -116,10 +118,10 @@ public class Grant extends Endpoint<Envelope<AccessManagerGrantPayload>, PNAcces
 
         if (channelGroups != null) {
             if (channelGroups.size() == 1) {
-                constructedGroups.put(data.getChannelGroups().asText(), data.getAuthKeys());
+                constructedGroups.put(mapperManager.elementToString(data.getChannelGroups()), data.getAuthKeys());
             } else if (channelGroups.size() > 1) {
-                for (Iterator<Map.Entry<String, JsonNode>> it = data.getChannelGroups().fields(); it.hasNext();) {
-                    Map.Entry<String, JsonNode> channelGroup = it.next();
+                for (Iterator<Map.Entry<String, JsonElement>> it = mapperManager.getObjectIterator(data.getChannelGroups()); it.hasNext();) {
+                    Map.Entry<String, JsonElement> channelGroup = it.next();
                     constructedGroups.put(channelGroup.getKey(), createKeyMap(channelGroup.getValue()));
                 }
             }
@@ -150,15 +152,16 @@ public class Grant extends Endpoint<Envelope<AccessManagerGrantPayload>, PNAcces
         return false;
     }
 
-    private Map<String, PNAccessManagerKeyData> createKeyMap(JsonNode input) {
+    private Map<String, PNAccessManagerKeyData> createKeyMap(JsonElement input) {
         Map<String, PNAccessManagerKeyData> result = new HashMap<>();
+        MapperManager mapper = getPubnub().getMapper();
 
-        for (Iterator<Map.Entry<String, JsonNode>> it = input.get("auths").fields(); it.hasNext();) {
-            Map.Entry<String, JsonNode> keyMap = it.next();
+        for (Iterator<Map.Entry<String, JsonElement>> it = mapper.getObjectIterator(input, "auths"); it.hasNext();) {
+            Map.Entry<String, JsonElement> keyMap = it.next();
             PNAccessManagerKeyData pnAccessManagerKeyData = new PNAccessManagerKeyData()
-                    .setManageEnabled(keyMap.getValue().get("m").asBoolean())
-                    .setWriteEnabled(keyMap.getValue().get("w").asBoolean())
-                    .setReadEnabled(keyMap.getValue().get("r").asBoolean());
+                    .setManageEnabled(mapper.getAsBoolean(keyMap.getValue(), "m"))
+                    .setWriteEnabled(mapper.getAsBoolean(keyMap.getValue(), "w"))
+                    .setReadEnabled(mapper.getAsBoolean(keyMap.getValue(), "r"));
 
             result.put(keyMap.getKey(), pnAccessManagerKeyData);
         }

@@ -1,6 +1,6 @@
 package com.pubnub.api.models.consumer.history;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,7 +11,7 @@ import java.util.Map;
 @Getter
 @Builder
 public class PNFetchMessagesResult {
-    @JsonProperty("channels")
+    @SerializedName("channels")
     private Map<String, List<PNMessageResult>> channels;
 
 
