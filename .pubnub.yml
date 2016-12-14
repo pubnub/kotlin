@@ -1,8 +1,15 @@
 name: java
-version: 4.2.3
+version: 4.3.0
 schema: 1
 scm: github.com/pubnub/java
 changelog:
+  - version: v4.3.0
+    date:
+    changes:
+      - type: improvement
+        text: JSON parser is switched to GSON, new artifact on nexus as pubnub-gson
+      - type: improvement
+        text: GetState, setState return a JsonElement instead of a plain object.
   - version: v4.2.3
     date:
     changes:
