@@ -101,7 +101,7 @@ public class FetchMessages extends Endpoint<FetchMessagesEnvelope, PNFetchMessag
                 pnMessageResultBuilder.channel(entry.getKey());
                 JsonElement message = processMessage(item.getMessage());
                 pnMessageResultBuilder.message(message);
-                pnMessageResultBuilder.timetoken(item.getTimeToken());
+                pnMessageResultBuilder.timetoken(item.getTimetoken());
                 messages.add(pnMessageResultBuilder.build());
             }
 

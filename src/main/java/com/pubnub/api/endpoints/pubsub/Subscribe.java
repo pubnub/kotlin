@@ -37,7 +37,7 @@ public class Subscribe extends Endpoint<SubscribeEnvelope, SubscribeEnvelope> {
     private List<String> channelGroups;
 
     /**
-     * timeToken to subscribe with 0 for initial subscribe.
+     * timetoken to subscribe with 0 for initial subscribe.
      */
     @Setter
     private Long timetoken;

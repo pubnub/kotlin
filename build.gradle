@@ -10,7 +10,7 @@ plugins {
     id 'findbugs'
 }
 group = 'com.pubnub'
-version = '4.2.3'
+version = '4.3.0'
 
 description = """"""
 
@@ -27,6 +27,7 @@ lombok {
 repositories {
     mavenCentral()
 }
+
 
 dependencies {
     compile group: 'com.squareup.retrofit2', name: 'retrofit', version:'2.1.0'
