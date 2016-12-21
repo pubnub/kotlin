@@ -23,11 +23,11 @@ public class BasePathManager {
     /**
      * default subdomain used if cache busting is disabled.
      */
-    private static final String DEFAULT_SUBDOMAIN = "pubsub";
+    private static final String DEFAULT_SUBDOMAIN = "ps";
     /**
      * default base path if a custom one is not provided.
      */
-    private static final String DEFAULT_BASE_PATH = "pubnub.com";
+    private static final String DEFAULT_BASE_PATH = "pndsn.com";
 
     /**
      * Initialize the path management.

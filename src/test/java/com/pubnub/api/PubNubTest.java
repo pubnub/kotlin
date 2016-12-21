@@ -24,7 +24,7 @@ public class PubNubTest {
         Assert.assertEquals(true, pubnub.getConfiguration().isSecure());
         Assert.assertNotNull("pubnub object is null", pubnub);
         Assert.assertNotNull(pubnub.getConfiguration());
-        Assert.assertEquals("https://pubsub.pubnub.com", pubnub.getBaseUrl());
+        Assert.assertEquals("https://ps.pndsn.com", pubnub.getBaseUrl());
     }
 
     @Test
@@ -67,7 +67,7 @@ public class PubNubTest {
 
         Assert.assertNotNull("pubnub object is null", pubnub);
         Assert.assertNotNull(pubnub.getConfiguration());
-        Assert.assertEquals("https://pubsub.pubnub.com", pubnub.getBaseUrl());
+        Assert.assertEquals("https://ps.pndsn.com", pubnub.getBaseUrl());
         Assert.assertEquals(3000, pnConfiguration.getSubscribeTimeout());
         Assert.assertEquals(4000, pnConfiguration.getConnectTimeout());
         Assert.assertEquals(5000, pnConfiguration.getNonSubscribeRequestTimeout());
