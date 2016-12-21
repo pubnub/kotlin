@@ -716,17 +716,6 @@ public class GrantEndpointTest extends TestHarness {
         assertEquals("lMTGADViQb_pQPkwOypoiRhiJGdN2prTlWlHCfZrgx0=", signature);
     }
 
-
-    @Test
-    public void NoGroupsOneChannelMissingKey() {
-        try {
-            partialGrant.channels(Collections.singletonList("ch1")).manage(true).sync();
-            throw new RuntimeException("should never reach here");
-        } catch (PubNubException e) {
-            assertEquals("Auth Keys Missing.", e.getPubnubError().getMessage());
-        }
-    }
-
     @Test
     public void testIsAuthRequiredSuccessSync() throws PubNubException {
 

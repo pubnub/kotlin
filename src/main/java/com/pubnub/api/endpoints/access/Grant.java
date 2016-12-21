@@ -54,9 +54,6 @@ public class Grant extends Endpoint<Envelope<AccessManagerGrantPayload>, PNAcces
 
     @Override
     protected void validateParams() throws PubNubException {
-        if (authKeys.size() == 0) {
-            throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_AUTH_KEYS_MISSING).build();
-        }
         if (this.getPubnub().getConfiguration().getSecretKey() == null || this.getPubnub().getConfiguration().getSecretKey().isEmpty()) {
             throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_SECRET_KEY_MISSING).build();
         }
