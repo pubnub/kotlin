@@ -8,6 +8,7 @@ com.pubnub.api.endpoints.channel_groups
 com.pubnub.api.endpoints.presence
 com.pubnub.api.endpoints.pubsub
 com.pubnub.api.endpoints.push
+com.pubnub.api.endpoints.vendor
 com.pubnub.api.enums
 com.pubnub.api.interceptors
 com.pubnub.api.managers

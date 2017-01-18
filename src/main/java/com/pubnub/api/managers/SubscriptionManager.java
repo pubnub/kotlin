@@ -90,8 +90,11 @@ public class SubscriptionManager {
             }
         });
 
-        consumerThread = new Thread(new SubscribeMessageWorker(this.pubnub, listenerManager, messageQueue));
-        consumerThread.start();
+
+        if (this.pubnub.getConfiguration().isStartSubscriberThread()) {
+            consumerThread = new Thread(new SubscribeMessageWorker(this.pubnub, listenerManager, messageQueue));
+            consumerThread.start();
+        }
     }
 
     public void addListener(SubscribeCallback listener) {

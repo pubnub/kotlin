@@ -2,6 +2,7 @@ package com.pubnub.api.managers;
 
 
 import com.pubnub.api.PubNub;
+import com.pubnub.api.endpoints.vendor.AppEngineFactory;
 import com.pubnub.api.enums.PNLogVerbosity;
 import com.pubnub.api.interceptors.SignatureInterceptor;
 import lombok.Getter;
@@ -72,7 +73,13 @@ public class RetrofitManager {
     }
 
     private Retrofit createRetrofit(OkHttpClient client) {
-        return new Retrofit.Builder()
+        Retrofit.Builder retrofitBuilder = new Retrofit.Builder();
+
+        if (pubnub.getConfiguration().isGoogleAppEngineNetworking()) {
+            retrofitBuilder.callFactory(new AppEngineFactory.Factory());
+        }
+
+        return retrofitBuilder
                 .baseUrl(pubnub.getBaseUrl())
                 .addConverterFactory(this.pubnub.getMapper().getConverterFactory())
                 .client(client)

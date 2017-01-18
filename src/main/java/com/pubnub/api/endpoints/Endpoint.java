@@ -248,7 +248,6 @@ public abstract class Endpoint<Input, Output> {
         if (response == null || throwable != null) {
             pnStatus.error(true);
         }
-
         if (throwable != null) {
             PNErrorData pnErrorData = new PNErrorData(throwable.getMessage(), throwable);
             pnStatus.errorData(pnErrorData);

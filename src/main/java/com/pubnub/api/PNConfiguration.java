@@ -129,6 +129,14 @@ public class PNConfiguration {
     private Integer requestMessageCountThreshold;
 
     /**
+     * Use Google App Engine based networking configuration
+     */
+    @Setter
+    private boolean googleAppEngineNetworking;
+    @Setter
+    private boolean startSubscriberThread;
+
+    /**
      * Initialize the PNConfiguration with default values
      */
     public PNConfiguration() {
@@ -150,6 +158,8 @@ public class PNConfiguration {
         includeInstanceIdentifier = false;
 
         includeRequestIdentifier = true;
+
+        startSubscriberThread = true;
 
     }
 
