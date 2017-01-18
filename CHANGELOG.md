@@ -1,4 +1,38 @@
 
+## [v4.3.1](https://github.com/pubnub/java/tree/v4.3.1)
+
+
+  [Full Changelog](https://github.com/pubnub/java/compare/v4.3.0...v4.3.1)
+
+
+- ⭐support for key-level grant.
+
+
+
+## [v4.3.0](https://github.com/pubnub/java/tree/v4.3.0)
+
+
+  [Full Changelog](https://github.com/pubnub/java/compare/v4.2.3...v4.3.0)
+
+
+- ⭐JSON parser is switched to GSON, new artifact on nexus as pubnub-gson
+
+
+
+- ⭐GetState, setState return a JsonElement instead of a plain object.
+
+
+
+## [v4.2.3](https://github.com/pubnub/java/tree/v4.2.3)
+
+
+  [Full Changelog](https://github.com/pubnub/java/compare/v4.2.2...v4.2.3)
+
+
+- ⭐Swapping out logger for slf4japi and removing final methods
+
+
+
 ## [v4.2.2](https://github.com/pubnub/java/tree/v4.2.2)
 
 
