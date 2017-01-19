@@ -114,6 +114,12 @@ public class PNConfiguration {
     private PNReconnectionPolicy reconnectionPolicy;
 
     /**
+     * Set how many times the reconneciton manager will try to connect before giving app
+     */
+    @Setter
+    private int maximumReconnectionRetries;
+
+    /**
      * Proxy configuration which will be passed to the networking layer.
      */
     @Setter
@@ -160,6 +166,8 @@ public class PNConfiguration {
         includeRequestIdentifier = true;
 
         startSubscriberThread = true;
+
+        maximumReconnectionRetries = -1;
 
     }
 

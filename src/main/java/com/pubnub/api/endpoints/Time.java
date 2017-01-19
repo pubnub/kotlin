@@ -20,6 +20,16 @@ public class Time extends Endpoint<List<Long>, PNTimeResult> {
         super(pubnub, retrofit);
     }
 
+    @Override
+    protected List<String> getAffectedChannels() {
+        return null;
+    }
+
+    @Override
+    protected List<String> getAffectedChannelGroups() {
+        return null;
+    }
+
     private interface TimeService {
         @GET("/time/0")
         Call<List<Long>> fetchTime(@QueryMap Map<String, String> options);

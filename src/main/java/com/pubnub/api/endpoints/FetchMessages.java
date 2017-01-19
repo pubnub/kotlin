@@ -45,6 +45,16 @@ public class FetchMessages extends Endpoint<FetchMessagesEnvelope, PNFetchMessag
         maximumPerChannel = 1;
     }
 
+    @Override
+    protected List<String> getAffectedChannels() {
+        return channels;
+    }
+
+    @Override
+    protected List<String> getAffectedChannelGroups() {
+        return null;
+    }
+
     private interface HistoryForChannelsService {
         @GET("v3/history/sub-key/{subKey}/channel/{channels}")
         Call<FetchMessagesEnvelope> fetchMessages(@Path("subKey") String subKey,

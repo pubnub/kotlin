@@ -17,13 +17,14 @@ import java.util.TimerTask;
 public class ReconnectionManager {
 
     private static final int INTERVAL = 3;
+    private static final int MINEXPONENTIALBACKOFF = 1;
+    private static final int MAXEXPONENTIALBACKOFF = 32;
 
     private ReconnectionCallback callback;
     private PubNub pubnub;
-    private static final int MINEXPONENTIALBACKOFF = 1;
-    private static final int MAXEXPONENTIALBACKOFF = 32;
-    private int timerInterval;
-    private int connectionErrors = 1;
+
+    private int exponentialMultiplier = 1;
+    private int failedCalls = 0;
     private static final int MILLISECONDS = 1000;
 
     /**
@@ -54,19 +55,33 @@ public class ReconnectionManager {
         // make sure only one timer is running at a time.
         stopHeartbeatTimer();
 
+        if (this.pubnub.getConfiguration().getReconnectionPolicy() == PNReconnectionPolicy.NONE) {
+            log.warn("reconnection policy is disabled, please handle reconnection manually.");
+            return;
+        }
+
+        int  maxRetries = this.pubnub.getConfiguration().getMaximumReconnectionRetries();
+        if (maxRetries != -1 && failedCalls >= maxRetries) {
+            callback.onMaxReconnectionExhaustion();
+            return;
+        }
+
         timer = new Timer();
+        int timerInterval = INTERVAL;
 
         if (pubnub.getConfiguration().getReconnectionPolicy() == PNReconnectionPolicy.EXPONENTIAL) {
-            timerInterval = (int) (Math.pow(2, connectionErrors) - 1);
+            timerInterval = (int) (Math.pow(2, exponentialMultiplier) - 1);
             if (timerInterval > MAXEXPONENTIALBACKOFF) {
                 timerInterval = MINEXPONENTIALBACKOFF;
-                connectionErrors = 1;
+                exponentialMultiplier = 1;
                 log.debug("timerInterval > MAXEXPONENTIALBACKOFF at: " + Calendar.getInstance().getTime().toString());
             } else if (timerInterval < 1) {
                 timerInterval = MINEXPONENTIALBACKOFF;
             }
             log.debug("timerInterval = " + String.valueOf(timerInterval) + " at: " + Calendar.getInstance().getTime().toString());
-        } else {
+        }
+
+        if (pubnub.getConfiguration().getReconnectionPolicy() == PNReconnectionPolicy.LINEAR) {
             timerInterval = INTERVAL;
         }
 
@@ -90,13 +105,15 @@ public class ReconnectionManager {
             @Override
             public void onResponse(PNTimeResult result, PNStatus status) {
                 if (!status.isError()) {
-                    connectionErrors = 1;
+                    exponentialMultiplier = 1;
+                    failedCalls = 0;
                     stopHeartbeatTimer();
                     callback.onReconnection();
                 } else if (pubnub.getConfiguration().getReconnectionPolicy() == PNReconnectionPolicy.EXPONENTIAL) {
                     log.debug("callTime() at: " + Calendar.getInstance().getTime().toString());
                     stopHeartbeatTimer();
-                    connectionErrors++;
+                    exponentialMultiplier++;
+                    failedCalls++;
                     registerHeartbeatTimer();
                 }
             }

@@ -15,6 +15,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -29,6 +30,16 @@ public class RemoveChannelChannelGroup extends Endpoint<Envelope, PNChannelGroup
     public RemoveChannelChannelGroup(PubNub pubnub, Retrofit retrofit) {
         super(pubnub, retrofit);
         channels = new ArrayList<>();
+    }
+
+    @Override
+    protected List<String> getAffectedChannels() {
+        return channels;
+    }
+
+    @Override
+    protected List<String> getAffectedChannelGroups() {
+        return Collections.singletonList(channelGroup);
     }
 
     @Override

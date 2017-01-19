@@ -302,13 +302,9 @@ public abstract class Endpoint<Input, Output> {
         return params;
     }
 
-    protected List<String> getAffectedChannels() {
-        return null;
-    }
+    protected abstract List<String> getAffectedChannels();
 
-    protected List<String> getAffectedChannelGroups() {
-        return null;
-    }
+    protected abstract List<String> getAffectedChannelGroups();
 
     protected abstract void validateParams() throws PubNubException;
 

@@ -53,6 +53,16 @@ public class Grant extends Endpoint<Envelope<AccessManagerGrantPayload>, PNAcces
     }
 
     @Override
+    protected List<String> getAffectedChannels() {
+        return channels;
+    }
+
+    @Override
+    protected List<String> getAffectedChannelGroups() {
+        return channelGroups;
+    }
+
+    @Override
     protected void validateParams() throws PubNubException {
         if (this.getPubnub().getConfiguration().getSecretKey() == null || this.getPubnub().getConfiguration().getSecretKey().isEmpty()) {
             throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_SECRET_KEY_MISSING).build();

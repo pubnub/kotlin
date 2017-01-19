@@ -14,6 +14,7 @@ import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
+import java.util.List;
 import java.util.Map;
 
 @Accessors(chain = true, fluent = true)
@@ -24,6 +25,16 @@ public class WhereNow extends Endpoint<Envelope<WhereNowPayload>, PNWhereNowResu
 
     public WhereNow(PubNub pubnub, Retrofit retrofit) {
         super(pubnub, retrofit);
+    }
+
+    @Override
+    protected List<String> getAffectedChannels() {
+        return null;
+    }
+
+    @Override
+    protected List<String> getAffectedChannelGroups() {
+        return null;
     }
 
     @Override

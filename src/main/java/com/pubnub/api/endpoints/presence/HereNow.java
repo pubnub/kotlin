@@ -42,6 +42,16 @@ public class HereNow extends Endpoint<Envelope<JsonElement>, PNHereNowResult> {
         channelGroups = new ArrayList<>();
     }
 
+    @Override
+    protected List<String> getAffectedChannels() {
+        return channels;
+    }
+
+    @Override
+    protected List<String> getAffectedChannelGroups() {
+        return channelGroups;
+    }
+
 
     @Override
     protected void validateParams() throws PubNubException {

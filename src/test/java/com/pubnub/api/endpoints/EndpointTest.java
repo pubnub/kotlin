@@ -12,6 +12,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 public class EndpointTest extends TestHarness {
@@ -28,6 +29,16 @@ public class EndpointTest extends TestHarness {
     @Test
     public void testBaseParams() throws PubNubException {
         Endpoint<Object, Object> endpoint =  new Endpoint<Object, Object>(pubnub, null) {
+
+            @Override
+            protected List<String> getAffectedChannels() {
+                return null;
+            }
+
+            @Override
+            protected List<String> getAffectedChannelGroups() {
+                return null;
+            }
 
             @Override
             protected void validateParams() throws PubNubException {

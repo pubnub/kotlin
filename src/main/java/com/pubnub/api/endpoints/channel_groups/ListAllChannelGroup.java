@@ -24,6 +24,16 @@ public class ListAllChannelGroup extends Endpoint<Envelope<Object>, PNChannelGro
     }
 
     @Override
+    protected List<String> getAffectedChannels() {
+        return null;
+    }
+
+    @Override
+    protected List<String> getAffectedChannelGroups() {
+        return null;
+    }
+
+    @Override
     protected void validateParams() throws PubNubException {
     }
 

@@ -39,6 +39,16 @@ public class GetState extends Endpoint<Envelope<JsonElement>, PNGetStateResult> 
     }
 
     @Override
+    protected List<String> getAffectedChannels() {
+        return channels;
+    }
+
+    @Override
+    protected List<String> getAffectedChannelGroups() {
+        return channelGroups;
+    }
+
+    @Override
     protected void validateParams() throws PubNubException {
         if (this.getPubnub().getConfiguration().getSubscribeKey() == null || this.getPubnub().getConfiguration().getSubscribeKey().isEmpty()) {
             throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_SUBSCRIBE_KEY_MISSING).build();

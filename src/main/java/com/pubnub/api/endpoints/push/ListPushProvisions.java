@@ -29,6 +29,16 @@ public class ListPushProvisions extends Endpoint<List<String>, PNPushListProvisi
     }
 
     @Override
+    protected List<String> getAffectedChannels() {
+        return null;
+    }
+
+    @Override
+    protected List<String> getAffectedChannelGroups() {
+        return null;
+    }
+
+    @Override
     protected void validateParams() throws PubNubException {
         if (this.getPubnub().getConfiguration().getSubscribeKey() == null || this.getPubnub().getConfiguration().getSubscribeKey().isEmpty()) {
             throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_SUBSCRIBE_KEY_MISSING).build();

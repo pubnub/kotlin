@@ -88,8 +88,16 @@ public class SubscriptionManager {
                 subscriptionStatusAnnounced = true;
                 listenerManager.announce(pnStatus);
             }
-        });
 
+            @Override
+            public void onMaxReconnectionExhaustion() {
+                PNStatus pnStatus = PNStatus.builder()
+                        .error(false)
+                        .category(PNStatusCategory.PNReconnectionAttemptsExhausted)
+                        .build();
+                listenerManager.announce(pnStatus);
+            }
+        });
 
         if (this.pubnub.getConfiguration().isStartSubscriberThread()) {
             consumerThread = new Thread(new SubscribeMessageWorker(this.pubnub, listenerManager, messageQueue));

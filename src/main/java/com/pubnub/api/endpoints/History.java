@@ -20,6 +20,7 @@ import retrofit2.http.Path;
 import retrofit2.http.QueryMap;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +43,16 @@ public class History extends Endpoint<JsonElement, PNHistoryResult> {
 
     public History(PubNub pubnub, Retrofit retrofit) {
         super(pubnub, retrofit);
+    }
+
+    @Override
+    protected List<String> getAffectedChannels() {
+        return Collections.singletonList(channel);
+    }
+
+    @Override
+    protected List<String> getAffectedChannelGroups() {
+        return null;
     }
 
     private interface HistoryService {

@@ -16,6 +16,7 @@ import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -44,6 +45,16 @@ public class Publish extends Endpoint<List<Object>, PNPublishResult> {
 
         this.publishSequenceManager = providedPublishSequenceManager;
         this.replicate = true;
+    }
+
+    @Override
+    protected List<String> getAffectedChannels() {
+        return Collections.singletonList(channel);
+    }
+
+    @Override
+    protected List<String> getAffectedChannelGroups() {
+        return null;
     }
 
     @Override

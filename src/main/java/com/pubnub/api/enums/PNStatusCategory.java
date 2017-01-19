@@ -19,6 +19,7 @@ public enum PNStatusCategory {
     PNTLSConnectionFailedCategory,
     PNTLSUntrustedCertificateCategory,
 
-    PNRequestMessageCountExceededCategory
+    PNRequestMessageCountExceededCategory,
+    PNReconnectionAttemptsExhausted
 
 }

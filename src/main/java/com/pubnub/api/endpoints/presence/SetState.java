@@ -39,11 +39,23 @@ public class SetState extends Endpoint<Envelope<JsonElement>, PNSetStateResult> 
     @Setter
     private String uuid;
 
+
+
     public SetState(PubNub pubnub, SubscriptionManager subscriptionManagerInstance, Retrofit retrofit) {
         super(pubnub, retrofit);
         this.subscriptionManager = subscriptionManagerInstance;
         channels = new ArrayList<>();
         channelGroups = new ArrayList<>();
+    }
+
+    @Override
+    protected List<String> getAffectedChannels() {
+        return channels;
+    }
+
+    @Override
+    protected List<String> getAffectedChannelGroups() {
+        return channelGroups;
     }
 
     @Override

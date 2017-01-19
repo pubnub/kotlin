@@ -16,6 +16,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -32,6 +33,16 @@ public class Audit extends Endpoint<Envelope<AccessManagerAuditPayload>, PNAcces
     public Audit(PubNub pubnub, Retrofit retrofit) {
         super(pubnub, retrofit);
         authKeys = new ArrayList<>();
+    }
+
+    @Override
+    protected List<String> getAffectedChannels() {
+        return Collections.singletonList(channel);
+    }
+
+    @Override
+    protected List<String> getAffectedChannelGroups() {
+        return Collections.singletonList(channelGroup);
     }
 
     @Override
