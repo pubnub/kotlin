@@ -47,6 +47,9 @@ public class ReconnectionManager {
             return;
         }
 
+        exponentialMultiplier = 1;
+        failedCalls = 0;
+
         registerHeartbeatTimer();
     }
 
@@ -105,13 +108,10 @@ public class ReconnectionManager {
             @Override
             public void onResponse(PNTimeResult result, PNStatus status) {
                 if (!status.isError()) {
-                    exponentialMultiplier = 1;
-                    failedCalls = 0;
                     stopHeartbeatTimer();
                     callback.onReconnection();
-                } else if (pubnub.getConfiguration().getReconnectionPolicy() == PNReconnectionPolicy.EXPONENTIAL) {
+                } else {
                     log.debug("callTime() at: " + Calendar.getInstance().getTime().toString());
-                    stopHeartbeatTimer();
                     exponentialMultiplier++;
                     failedCalls++;
                     registerHeartbeatTimer();
