@@ -92,10 +92,6 @@ tasks.withType(FindBugs) {
 
 check.dependsOn jacocoTestReport
 
-processResources {
-    expand projectVersion: project.version
-}
-
 extraArchive {
     sources = false
     tests = true

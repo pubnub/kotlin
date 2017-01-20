@@ -217,6 +217,7 @@ public class SubscriptionManagerTest extends TestHarness {
             public void status(PubNub pubnub, PNStatus status) {
 
                 if (status.getCategory() == PNStatusCategory.PNConnectedCategory) {
+                    assertEquals(2, status.getAffectedChannels().size());
                     gotStatus.addAndGet(1);
                 }
 

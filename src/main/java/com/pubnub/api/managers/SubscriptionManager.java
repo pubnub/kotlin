@@ -82,6 +82,8 @@ public class SubscriptionManager {
                 reconnect();
                 PNStatus pnStatus = PNStatus.builder()
                         .error(false)
+                        .affectedChannels(subscriptionState.prepareChannelList(true))
+                        .affectedChannelGroups(subscriptionState.prepareChannelGroupList(true))
                         .category(PNStatusCategory.PNReconnectedCategory)
                         .build();
 
@@ -94,6 +96,8 @@ public class SubscriptionManager {
                 PNStatus pnStatus = PNStatus.builder()
                         .error(false)
                         .category(PNStatusCategory.PNReconnectionAttemptsExhausted)
+                        .affectedChannels(subscriptionState.prepareChannelList(true))
+                        .affectedChannelGroups(subscriptionState.prepareChannelGroupList(true))
                         .build();
                 listenerManager.announce(pnStatus);
             }
@@ -328,6 +332,8 @@ public class SubscriptionManager {
                 .statusCode(privateStatus.getStatusCode())
                 .authKey(privateStatus.getAuthKey())
                 .operation(privateStatus.getOperation())
+                .affectedChannels(privateStatus.getAffectedChannels())
+                .affectedChannelGroups(privateStatus.getAffectedChannelGroups())
                 .clientRequest(privateStatus.getClientRequest())
                 .origin(privateStatus.getOrigin())
                 .tlsEnabled(privateStatus.isTlsEnabled());
