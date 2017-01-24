@@ -1,19 +1,23 @@
 
-## [v4.3.2](https://github.com/pubnub/java/tree/v4.3.2)
+## [v4.4.0](https://github.com/pubnub/java/tree/v4.4.0)
 
 
-  [Full Changelog](https://github.com/pubnub/java/compare/v4.3.1...v4.3.2)
+  [Full Changelog](https://github.com/pubnub/java/compare/v4.3.1...v4.4.0)
 
 
-- ⭐support for maximum reconnection attempts
-
-
-
-- ⭐populate affecterChannel and affectedChannelGroups
+- ⭐Support for maximum reconnection attempts
 
 
 
-- ⭐support for GAE
+- ⭐Populate affectedChannel and affectedChannelGroups
+
+
+
+- ⭐Support for GAE
+
+
+
+- ⭐Emit pnconnected when adding / removing channels.
 
 
 

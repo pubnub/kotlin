@@ -39,6 +39,7 @@ public class SubscriptionManager {
      * Store the latest timetoken to subscribe with, null by default to get the latest timetoken.
      */
     private Long timetoken;
+    private Long storedTimetoken; // when changing the channel mix, store the timetoken for a later date.
 
     /**
      * Keep track of Region to support PSV2 specification.
@@ -75,6 +76,7 @@ public class SubscriptionManager {
         this.retrofitManager = retrofitManagerInstance;
 
         this.timetoken = 0L;
+        this.storedTimetoken = null;
 
         this.reconnectionManager.setReconnectionListener(new ReconnectionCallback() {
             @Override
@@ -154,11 +156,20 @@ public class SubscriptionManager {
             this.timetoken = subscribeOperation.getTimetoken();
         }
 
+        // if the timetoken is not at starting position, reset the timetoken to get a connected event
+        // and store the old timetoken to be reused later during subscribe.
+        if (timetoken != 0L) {
+            storedTimetoken = timetoken;
+        }
+        timetoken = 0L;
+
         reconnect();
     }
 
     public synchronized void adaptUnsubscribeBuilder(UnsubscribeOperation unsubscribeOperation) {
         this.subscriptionState.adaptUnsubscribeBuilder(unsubscribeOperation);
+
+        this.subscriptionStatusAnnounced = false;
 
         new Leave(pubnub, this.retrofitManager.getTransactionInstance())
             .channels(unsubscribeOperation.getChannels()).channelGroups(unsubscribeOperation.getChannelGroups())
@@ -172,6 +183,10 @@ public class SubscriptionManager {
         // if we unsubscribed from all the channels, reset the timetoken back to zero and remove the region.
         if (this.subscriptionState.isEmpty()) {
             region = null;
+            storedTimetoken = null;
+            timetoken = 0L;
+        } else {
+            storedTimetoken = timetoken;
             timetoken = 0L;
         }
 
@@ -257,7 +272,13 @@ public class SubscriptionManager {
                     messageQueue.addAll(result.getMessages());
                 }
 
-                timetoken = result.getMetadata().getTimetoken();
+                if (storedTimetoken != null) {
+                    timetoken = storedTimetoken;
+                    storedTimetoken = null;
+                } else {
+                    timetoken = result.getMetadata().getTimetoken();
+                }
+
                 region = result.getMetadata().getRegion();
                 startSubscribeLoop();
             }

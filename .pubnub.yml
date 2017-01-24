@@ -1,17 +1,19 @@
 name: java
-version: 4.3.1
+version: 4.4.0
 schema: 1
 scm: github.com/pubnub/java
 changelog:
-  - version: v4.3.2
+  - version: v4.4.0
     date:
     changes:
       - type: improvement
-        text: support for maximum reconnection attempts
+        text: Support for maximum reconnection attempts
       - type: improvement
-        text: populate affecterChannel and affectedChannelGroups
+        text: Populate affectedChannel and affectedChannelGroups
       - type: improvement
-        text: support for GAE
+        text: Support for GAE
+      - type: improvement
+        text: Emit pnconnected when adding / removing channels.
   - version: v4.3.1
     date:
     changes:
