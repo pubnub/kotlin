@@ -102,6 +102,9 @@ public class SubscriptionManager {
                         .affectedChannelGroups(subscriptionState.prepareChannelGroupList(true))
                         .build();
                 listenerManager.announce(pnStatus);
+
+                disconnect();
+
             }
         });
 
