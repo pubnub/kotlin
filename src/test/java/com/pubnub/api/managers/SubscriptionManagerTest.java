@@ -11,6 +11,7 @@ import com.pubnub.api.callbacks.SubscribeCallback;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions;
 import com.pubnub.api.enums.PNOperationType;
+import com.pubnub.api.enums.PNReconnectionPolicy;
 import com.pubnub.api.enums.PNStatusCategory;
 import com.pubnub.api.models.consumer.presence.PNSetStateResult;
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
@@ -961,6 +962,40 @@ public class SubscriptionManagerTest extends TestHarness {
 
 
         Awaitility.await().atMost(2, TimeUnit.SECONDS).untilAtomic(statusRecieved, org.hamcrest.core.IsEqual.equalTo(true));
+    }
+
+
+    @Test
+    public void testReconnectionExhaustion() {
+
+        final AtomicBoolean statusReceived = new AtomicBoolean();
+        pubnub.getConfiguration().setReconnectionPolicy(PNReconnectionPolicy.LINEAR);
+        pubnub.getConfiguration().setMaximumReconnectionRetries(1);
+        pubnub.reconnect();
+
+        SubscribeCallback sub1 = new SubscribeCallback() {
+            @Override
+            public void status(PubNub pubnub, PNStatus status) {
+                if (status.getCategory() == PNStatusCategory.PNReconnectionAttemptsExhausted) {
+                    statusReceived.set(true);
+                }
+            }
+
+            @Override
+            public void message(PubNub pubnub, PNMessageResult message) {
+            }
+
+            @Override
+            public void presence(PubNub pubnub, PNPresenceEventResult presence) {
+            }
+        };
+
+        pubnub.addListener(sub1);
+
+        pubnub.subscribe().channels(Arrays.asList("ch1", "ch2")).withPresence().execute();
+
+
+        Awaitility.await().atMost(4, TimeUnit.SECONDS).untilAtomic(statusReceived, org.hamcrest.core.IsEqual.equalTo(true));
     }
 
     @Test

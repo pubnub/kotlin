@@ -1,8 +1,13 @@
 name: java
-version: 4.4.0
+version: 4.4.1
 schema: 1
 scm: github.com/pubnub/java
 changelog:
+  - version: v4.4.1
+    date:
+    changes:
+      - type: bug
+        text: SDK did not honor the exhaustion of reconnections, it will now disconnect once max retries happened
   - version: v4.4.0
     date:
     changes:

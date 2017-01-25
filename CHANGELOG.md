@@ -1,4 +1,14 @@
 
+## [v4.4.1](https://github.com/pubnub/java/tree/v4.4.1)
+
+
+  [Full Changelog](https://github.com/pubnub/java/compare/v4.4.0...v4.4.1)
+
+
+
+- 🐛SDK did not honor the exhaustion of reconnections, it will now disconnect once max retries happened
+
+
 ## [v4.4.0](https://github.com/pubnub/java/tree/v4.4.0)
 
 
