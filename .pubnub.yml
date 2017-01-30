@@ -7,6 +7,8 @@ changelog:
     date:
     changes:
       - type: bug
+        text: SDK was not sending the metadata on Message Callback
+      - type: bug
         text: SDK did not honor the exhaustion of reconnections, it will now disconnect once max retries happened
   - version: v4.4.0
     date:

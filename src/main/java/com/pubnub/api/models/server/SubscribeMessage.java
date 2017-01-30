@@ -44,8 +44,8 @@ public class SubscribeMessage {
     //@SerializedName("r")
     //private Object replicationMap;
 
-    //@SerializedName("u")
-    //private String userMetadata;
+    @SerializedName("u")
+    private JsonElement userMetadata;
 
     //@SerializedName("w")
     //private String waypointList;

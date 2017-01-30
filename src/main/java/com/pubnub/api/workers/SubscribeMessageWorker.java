@@ -167,6 +167,7 @@ public class SubscribeMessageWorker implements Runnable {
                     .subscription(subscriptionMatch)
                     .timetoken(publishMetaData.getPublishTimetoken())
                     .publisher(message.getIssuingClientId())
+                    .userMetadata(message.getUserMetadata())
                     .build();
 
 

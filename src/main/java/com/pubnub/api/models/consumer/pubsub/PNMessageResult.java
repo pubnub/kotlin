@@ -19,7 +19,7 @@ public class PNMessageResult {
     private String subscription;
 
     private Long timetoken;
-    private Object userMetadata;
+    private JsonElement userMetadata;
 
     private String publisher;
 }
