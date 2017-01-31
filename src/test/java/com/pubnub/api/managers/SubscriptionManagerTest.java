@@ -410,6 +410,38 @@ public class SubscriptionManagerTest extends TestHarness {
     }
 
     @Test
+    public void testSubscribeBuilderWithMetadata() {
+        final AtomicInteger atomic = new AtomicInteger(0);
+        stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
+                .willReturn(aResponse().withBody(" {\"t\":{\"t\":\"14858178301085322\",\"r\":7},\"m\":[{\"a\":\"4\",\"f\":512,\"i\":\"02a7b822-220c-49b0-90c4-d9cbecc0fd85\",\"s\":1,\"p\":{\"t\":\"14858178301075219\",\"r\":7},\"k\":\"demo-36\",\"c\":\"chTest\",\"u\":{\"status_update\":{\"lat\":55.752023906250656,\"lon\":37.61749036080494,\"driver_id\":4722}},\"d\":{\"City\":\"Goiania\",\"Name\":\"Marcelo\"}}]}")));
+
+        pubnub.addListener(new SubscribeCallback() {
+            @Override
+            public void status(PubNub pubnub, PNStatus status) {
+            }
+
+            @Override
+            public void message(PubNub pubnub, PNMessageResult message) {
+                List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")));
+                assertTrue(requests.size() >= 1);
+                assertEquals("{\"status_update\":{\"lat\":55.752023906250656,\"lon\":37.61749036080494,\"driver_id\":4722}}", message.getUserMetadata().toString());
+                atomic.addAndGet(1);
+            }
+
+            @Override
+            public void presence(PubNub pubnub, PNPresenceEventResult presence) {
+            }
+        });
+
+
+        pubnub.subscribe().channels(Arrays.asList("ch1", "ch2")).execute();
+
+        Awaitility.await().atMost(5, TimeUnit.SECONDS)
+                .untilAtomic(atomic, org.hamcrest.Matchers.greaterThan(0));
+
+    }
+
+    @Test
     public void testSubscribeBuilderWithState() throws PubNubException {
         final AtomicInteger atomic = new AtomicInteger(0);
 
