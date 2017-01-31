@@ -1,4 +1,14 @@
 
+## [v4.4.2](https://github.com/pubnub/java/tree/v4.4.2)
+
+
+  [Full Changelog](https://github.com/pubnub/java/compare/v4.4.1...v4.4.2)
+
+
+
+- 🐛SDK was not sending the metadata on Message Callback
+
+
 ## [v4.4.1](https://github.com/pubnub/java/tree/v4.4.1)
 
 
