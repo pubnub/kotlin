@@ -1,13 +1,18 @@
 name: java
-version: 4.4.2
+version: 4.4.3
 schema: 1
 scm: github.com/pubnub/java
 changelog:
+  - version: v4.4.3
+    date:
+    changes:
+      - type: feature
+        text: Add support to configure custom certificate pinning via SSLSocketFactory and X509 configuration objects.
   - version: v4.4.2
     date:
     changes:
       - type: bug
-        text: SDK was not sending the metadata on Message Callback
+        text: SDK was not sending the user metadata on Message Callback
   - version: v4.4.1
     date:
     changes:

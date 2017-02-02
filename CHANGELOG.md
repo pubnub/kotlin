@@ -1,4 +1,14 @@
 
+## [v4.4.3](https://github.com/pubnub/java/tree/v4.4.3)
+
+
+  [Full Changelog](https://github.com/pubnub/java/compare/v4.4.2...v4.4.3)
+
+- 🌟Add support to configure custom certificate pinning via SSLSocketFactory and X509 configuration objects.
+
+
+
+
 ## [v4.4.2](https://github.com/pubnub/java/tree/v4.4.2)
 
 
@@ -6,7 +16,7 @@
 
 
 
-- 🐛SDK was not sending the metadata on Message Callback
+- 🐛SDK was not sending the user metadata on Message Callback
 
 
 ## [v4.4.1](https://github.com/pubnub/java/tree/v4.4.1)
