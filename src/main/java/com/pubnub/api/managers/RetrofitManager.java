@@ -1,6 +1,7 @@
 package com.pubnub.api.managers;
 
 
+import com.pubnub.api.PNConfiguration;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.endpoints.vendor.AppEngineFactory;
 import com.pubnub.api.enums.PNLogVerbosity;
@@ -45,6 +46,7 @@ public class RetrofitManager {
     }
 
     private OkHttpClient createOkHttpClient(int requestTimeout, int connectTimeOut) {
+        PNConfiguration pnConfiguration = pubnub.getConfiguration();
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.readTimeout(requestTimeout, TimeUnit.SECONDS);
         httpClient.connectTimeout(connectTimeOut, TimeUnit.SECONDS);
@@ -53,6 +55,10 @@ public class RetrofitManager {
             HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
             logging.setLevel(HttpLoggingInterceptor.Level.BODY);
             httpClient.addInterceptor(logging);
+        }
+
+        if (pnConfiguration.getSslSocketFactory() != null && pnConfiguration.getX509ExtendedTrustManager() != null) {
+            httpClient.sslSocketFactory(pnConfiguration.getSslSocketFactory(), pnConfiguration.getX509ExtendedTrustManager());
         }
 
         if (pubnub.getConfiguration().getProxy() != null) {

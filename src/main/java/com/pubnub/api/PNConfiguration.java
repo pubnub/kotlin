@@ -10,6 +10,8 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import okhttp3.Authenticator;
 
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.X509ExtendedTrustManager;
 import java.net.Proxy;
 import java.net.ProxySelector;
 import java.util.UUID;
@@ -23,6 +25,11 @@ public class PNConfiguration {
     private static final int NON_SUBSCRIBE_REQUEST_TIMEOUT = 10;
     private static final int SUBSCRIBE_TIMEOUT = 310;
     private static final int CONNECT_TIMEOUT = 5;
+
+    @Getter
+    private SSLSocketFactory sslSocketFactory;
+    @Getter
+    private X509ExtendedTrustManager x509ExtendedTrustManager;
 
     /**
      *  Set to true to send a UUID for PubNub instance
