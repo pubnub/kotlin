@@ -1,4 +1,14 @@
 
+## [v4.4.4](https://github.com/pubnub/java/tree/v4.4.4)
+
+
+  [Full Changelog](https://github.com/pubnub/java/compare/v4.4.3...v4.4.4)
+
+- 🌟Add support to configure host name verifier.
+
+
+
+
 ## [v4.4.3](https://github.com/pubnub/java/tree/v4.4.3)
 
 
