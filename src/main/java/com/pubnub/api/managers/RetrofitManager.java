@@ -61,6 +61,10 @@ public class RetrofitManager {
             httpClient.sslSocketFactory(pnConfiguration.getSslSocketFactory(), pnConfiguration.getX509ExtendedTrustManager());
         }
 
+        if (pnConfiguration.getHostnameVerifier() != null) {
+            httpClient.hostnameVerifier(pnConfiguration.getHostnameVerifier());
+        }
+
         if (pubnub.getConfiguration().getProxy() != null) {
             httpClient.proxy(pubnub.getConfiguration().getProxy());
         }

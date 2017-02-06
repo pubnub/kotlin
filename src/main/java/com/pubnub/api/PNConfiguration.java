@@ -10,6 +10,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import okhttp3.Authenticator;
 
+import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.X509ExtendedTrustManager;
 import java.net.Proxy;
@@ -30,6 +31,9 @@ public class PNConfiguration {
     private SSLSocketFactory sslSocketFactory;
     @Getter
     private X509ExtendedTrustManager x509ExtendedTrustManager;
+
+    @Getter
+    private HostnameVerifier hostnameVerifier;
 
     /**
      *  Set to true to send a UUID for PubNub instance
