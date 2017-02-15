@@ -126,7 +126,7 @@ public class LeaveTest extends TestHarness {
         assertEquals("cg1", requests.get(0).queryParameter("channel-group").firstValue());
     }
 
-    @org.junit.Test(expected=PubNubException.class)
+    @Test(expected=PubNubException.class)
     public void testMissingChannelAndGroupSync() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/coolChannel/leave"))
@@ -135,7 +135,7 @@ public class LeaveTest extends TestHarness {
         instance.sync();
     }
 
-    @org.junit.Test(expected=PubNubException.class)
+    @Test(expected=PubNubException.class)
     public void testNullSubKeySync() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/coolChannel/leave"))
@@ -145,7 +145,7 @@ public class LeaveTest extends TestHarness {
         instance.sync();
     }
 
-    @org.junit.Test(expected=PubNubException.class)
+    @Test(expected=PubNubException.class)
     public void testEmptySubKeySync() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/coolChannel/leave"))
@@ -155,7 +155,7 @@ public class LeaveTest extends TestHarness {
         instance.sync();
     }
 
-    @org.junit.Test
+    @Test
     public void testIsAuthRequiredSuccessSync() throws IOException, PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/coolChannel/leave"))

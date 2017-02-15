@@ -9,7 +9,6 @@ import com.pubnub.api.callbacks.PNCallback;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.history.PNHistoryResult;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -24,6 +23,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 
 public class HistoryEndpointTest extends TestHarness {
@@ -42,7 +43,7 @@ public class HistoryEndpointTest extends TestHarness {
     }
 
 
-    @org.junit.Test
+    @Test
     public void testSyncSuccess() throws IOException, PubNubException {
         List<Object> testArray = new ArrayList<Object>();
         List<Object> historyItems = new ArrayList<Object>();
@@ -73,18 +74,18 @@ public class HistoryEndpointTest extends TestHarness {
 
         PNHistoryResult response = partialHistory.channel("niceChannel").includeTimetoken(true).sync();
 
-        Assert.assertTrue(response.getStartTimetoken().equals(1234L));
-        Assert.assertTrue(response.getEndTimetoken().equals(4321L));
+        assertTrue(response.getStartTimetoken().equals(1234L));
+        assertTrue(response.getEndTimetoken().equals(4321L));
 
-        Assert.assertEquals(response.getMessages().size(), 2);
+        assertEquals(response.getMessages().size(), 2);
 
-        Assert.assertTrue(response.getMessages().get(0).getTimetoken().equals(1111L));
-        Assert.assertEquals((response.getMessages().get(0).getEntry()).getAsJsonObject().get("a").getAsInt(), 11);
-        Assert.assertEquals((response.getMessages().get(0).getEntry()).getAsJsonObject().get("b").getAsInt(), 22);
+        assertTrue(response.getMessages().get(0).getTimetoken().equals(1111L));
+        assertEquals((response.getMessages().get(0).getEntry()).getAsJsonObject().get("a").getAsInt(), 11);
+        assertEquals((response.getMessages().get(0).getEntry()).getAsJsonObject().get("b").getAsInt(), 22);
 
-        Assert.assertTrue(response.getMessages().get(1).getTimetoken().equals(2222L));
-        Assert.assertEquals((response.getMessages().get(1).getEntry()).getAsJsonObject().get("a").getAsInt(), 33);
-        Assert.assertEquals((response.getMessages().get(1).getEntry()).getAsJsonObject().get("b").getAsInt(), 44);
+        assertTrue(response.getMessages().get(1).getTimetoken().equals(2222L));
+        assertEquals((response.getMessages().get(1).getEntry()).getAsJsonObject().get("a").getAsInt(), 33);
+        assertEquals((response.getMessages().get(1).getEntry()).getAsJsonObject().get("b").getAsInt(), 44);
     }
 
     @Test
@@ -127,7 +128,7 @@ public class HistoryEndpointTest extends TestHarness {
     }
 
 
-    @org.junit.Test
+    @Test
     public void testSyncEncryptedSuccess() throws IOException, PubNubException {
         pubnub.getConfiguration().setCipherKey("testCipher");
 
@@ -136,27 +137,27 @@ public class HistoryEndpointTest extends TestHarness {
 
         PNHistoryResult response = partialHistory.channel("niceChannel").includeTimetoken(false).sync();
 
-        Assert.assertTrue(response.getStartTimetoken().equals(14606134331557853L));
-        Assert.assertTrue(response.getEndTimetoken().equals(14606134485013970L));
+        assertTrue(response.getStartTimetoken().equals(14606134331557853L));
+        assertTrue(response.getEndTimetoken().equals(14606134485013970L));
 
-        Assert.assertEquals(response.getMessages().size(), 3);
+        assertEquals(response.getMessages().size(), 3);
 
-        Assert.assertEquals(response.getMessages().get(0).getTimetoken(), null);
-        Assert.assertEquals("m1", (response.getMessages().get(0).getEntry()).getAsJsonArray().get(0).getAsString());
-        Assert.assertEquals("m2", (response.getMessages().get(0).getEntry()).getAsJsonArray().get(1).getAsString());
-        Assert.assertEquals("m3", (response.getMessages().get(0).getEntry()).getAsJsonArray().get(2).getAsString());
+        assertEquals(response.getMessages().get(0).getTimetoken(), null);
+        assertEquals("m1", (response.getMessages().get(0).getEntry()).getAsJsonArray().get(0).getAsString());
+        assertEquals("m2", (response.getMessages().get(0).getEntry()).getAsJsonArray().get(1).getAsString());
+        assertEquals("m3", (response.getMessages().get(0).getEntry()).getAsJsonArray().get(2).getAsString());
 
-        Assert.assertEquals("m1", (response.getMessages().get(1).getEntry()).getAsJsonArray().get(0).getAsString());
-        Assert.assertEquals("m2", (response.getMessages().get(1).getEntry()).getAsJsonArray().get(1).getAsString());
-        Assert.assertEquals("m3", (response.getMessages().get(1).getEntry()).getAsJsonArray().get(2).getAsString());
+        assertEquals("m1", (response.getMessages().get(1).getEntry()).getAsJsonArray().get(0).getAsString());
+        assertEquals("m2", (response.getMessages().get(1).getEntry()).getAsJsonArray().get(1).getAsString());
+        assertEquals("m3", (response.getMessages().get(1).getEntry()).getAsJsonArray().get(2).getAsString());
 
-        Assert.assertEquals("m1", (response.getMessages().get(2).getEntry()).getAsJsonArray().get(0).getAsString());
-        Assert.assertEquals("m2", (response.getMessages().get(2).getEntry()).getAsJsonArray().get(1).getAsString());
-        Assert.assertEquals("m3", (response.getMessages().get(2).getEntry()).getAsJsonArray().get(2).getAsString());
+        assertEquals("m1", (response.getMessages().get(2).getEntry()).getAsJsonArray().get(0).getAsString());
+        assertEquals("m2", (response.getMessages().get(2).getEntry()).getAsJsonArray().get(1).getAsString());
+        assertEquals("m3", (response.getMessages().get(2).getEntry()).getAsJsonArray().get(2).getAsString());
 
     }
 
-    @org.junit.Test
+    @Test
     public void testSyncEncryptedWithPNOtherSuccess() throws PubNubException {
         pubnub.getConfiguration().setCipherKey("hello");
 
@@ -165,17 +166,17 @@ public class HistoryEndpointTest extends TestHarness {
 
         PNHistoryResult response = partialHistory.channel("niceChannel").includeTimetoken(false).sync();
 
-        Assert.assertTrue(response.getStartTimetoken().equals(14606134331557852L));
-        Assert.assertTrue(response.getEndTimetoken().equals(14606134485013970L));
+        assertTrue(response.getStartTimetoken().equals(14606134331557852L));
+        assertTrue(response.getEndTimetoken().equals(14606134485013970L));
 
-        Assert.assertEquals(response.getMessages().size(), 1);
+        assertEquals(response.getMessages().size(), 1);
 
-        Assert.assertEquals(response.getMessages().get(0).getTimetoken(), null);
-        Assert.assertEquals("hey", response.getMessages().get(0).getEntry().getAsJsonObject().get("pn_other").getAsJsonObject().get("text").getAsString());
+        assertEquals(response.getMessages().get(0).getTimetoken(), null);
+        assertEquals("hey", response.getMessages().get(0).getEntry().getAsJsonObject().get("pn_other").getAsJsonObject().get("text").getAsString());
 
     }
 
-    @org.junit.Test
+    @Test
     public void testSyncSuccessWithoutTimeToken() throws PubNubException {
         List<Object> testArray = new ArrayList<Object>();
         List<Object> historyItems = new ArrayList<Object>();
@@ -200,22 +201,22 @@ public class HistoryEndpointTest extends TestHarness {
 
         PNHistoryResult response = partialHistory.channel("niceChannel").sync();
 
-        Assert.assertTrue(response.getStartTimetoken().equals(1234L));
-        Assert.assertTrue(response.getEndTimetoken().equals(4321L));
+        assertTrue(response.getStartTimetoken().equals(1234L));
+        assertTrue(response.getEndTimetoken().equals(4321L));
 
-        Assert.assertEquals(response.getMessages().size(), 2);
+        assertEquals(response.getMessages().size(), 2);
 
-        Assert.assertNull(response.getMessages().get(0).getTimetoken());
-        Assert.assertEquals(response.getMessages().get(0).getEntry().getAsJsonObject().get("a").getAsInt(), 11);
-        Assert.assertEquals(response.getMessages().get(0).getEntry().getAsJsonObject().get("b").getAsInt(), 22);
+        assertNull(response.getMessages().get(0).getTimetoken());
+        assertEquals(response.getMessages().get(0).getEntry().getAsJsonObject().get("a").getAsInt(), 11);
+        assertEquals(response.getMessages().get(0).getEntry().getAsJsonObject().get("b").getAsInt(), 22);
 
-        Assert.assertNull(response.getMessages().get(1).getTimetoken());
-        Assert.assertEquals(response.getMessages().get(1).getEntry().getAsJsonObject().get("a").getAsInt(), 33);
-        Assert.assertEquals(response.getMessages().get(1).getEntry().getAsJsonObject().get("b").getAsInt(), 44);
+        assertNull(response.getMessages().get(1).getTimetoken());
+        assertEquals(response.getMessages().get(1).getEntry().getAsJsonObject().get("a").getAsInt(), 33);
+        assertEquals(response.getMessages().get(1).getEntry().getAsJsonObject().get("b").getAsInt(), 44);
     }
 
 
-    @org.junit.Test(expected=PubNubException.class)
+    @Test(expected=PubNubException.class)
     public void testMissinChannel() throws IOException, PubNubException {
         List<Object> testArray = new ArrayList<Object>();
         List<Object> historyItems = new ArrayList<Object>();
@@ -247,7 +248,7 @@ public class HistoryEndpointTest extends TestHarness {
         partialHistory.includeTimetoken(true).sync();
     }
 
-    @org.junit.Test(expected=PubNubException.class)
+    @Test(expected=PubNubException.class)
     public void testChannelIsEmpty() throws PubNubException {
         List<Object> testArray = new ArrayList<Object>();
         List<Object> historyItems = new ArrayList<Object>();
@@ -279,7 +280,7 @@ public class HistoryEndpointTest extends TestHarness {
         partialHistory.channel("").includeTimetoken(true).sync();
     }
 
-    @org.junit.Test
+    @Test
     public void testOperationTypeSuccessAsync() throws PubNubException {
 
         List<Object> testArray = new ArrayList<Object>();
@@ -323,7 +324,7 @@ public class HistoryEndpointTest extends TestHarness {
                 .untilAtomic(atomic, org.hamcrest.core.IsEqual.equalTo(1));
     }
 
-    @org.junit.Test
+    @Test
     public void testSyncCountReverseStartEndSuccess() throws IOException, PubNubException {
         List<Object> testArray = new ArrayList<Object>();
         List<Object> historyItems = new ArrayList<Object>();
@@ -355,28 +356,28 @@ public class HistoryEndpointTest extends TestHarness {
         PNHistoryResult response = partialHistory.channel("niceChannel").count(5).reverse(true).start(1L).end(2L).includeTimetoken(true).sync();
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/history/sub-key/mySubscribeKey/channel/niceChannel.*")));
-        Assert.assertTrue(requests.get(0).queryParameter("reverse").firstValue().equals("true"));
-        Assert.assertTrue(Integer.valueOf(requests.get(0).queryParameter("count").firstValue()).equals(5));
-        Assert.assertTrue(Integer.valueOf(requests.get(0).queryParameter("start").firstValue()).equals(1));
-        Assert.assertTrue(Integer.valueOf(requests.get(0).queryParameter("end").firstValue()).equals(2));
-        Assert.assertTrue(requests.get(0).queryParameter("include_token").firstValue().equals("true"));
+        assertTrue(requests.get(0).queryParameter("reverse").firstValue().equals("true"));
+        assertTrue(Integer.valueOf(requests.get(0).queryParameter("count").firstValue()).equals(5));
+        assertTrue(Integer.valueOf(requests.get(0).queryParameter("start").firstValue()).equals(1));
+        assertTrue(Integer.valueOf(requests.get(0).queryParameter("end").firstValue()).equals(2));
+        assertTrue(requests.get(0).queryParameter("include_token").firstValue().equals("true"));
 
 
-        Assert.assertTrue(response.getStartTimetoken().equals(1234L));
-        Assert.assertTrue(response.getEndTimetoken().equals(4321L));
+        assertTrue(response.getStartTimetoken().equals(1234L));
+        assertTrue(response.getEndTimetoken().equals(4321L));
 
-        Assert.assertEquals(response.getMessages().size(), 2);
+        assertEquals(response.getMessages().size(), 2);
 
-        Assert.assertTrue(response.getMessages().get(0).getTimetoken().equals(1111L));
-        Assert.assertEquals((response.getMessages().get(0).getEntry()).getAsJsonObject().get("a").getAsInt(), 11);
-        Assert.assertEquals((response.getMessages().get(0).getEntry()).getAsJsonObject().get("b").getAsInt(), 22);
+        assertTrue(response.getMessages().get(0).getTimetoken().equals(1111L));
+        assertEquals((response.getMessages().get(0).getEntry()).getAsJsonObject().get("a").getAsInt(), 11);
+        assertEquals((response.getMessages().get(0).getEntry()).getAsJsonObject().get("b").getAsInt(), 22);
 
-        Assert.assertTrue(response.getMessages().get(1).getTimetoken().equals(2222L));
-        Assert.assertEquals((response.getMessages().get(1).getEntry()).getAsJsonObject().get("a").getAsInt(), 33);
-        Assert.assertEquals((response.getMessages().get(1).getEntry()).getAsJsonObject().get("b").getAsInt(), 44);
+        assertTrue(response.getMessages().get(1).getTimetoken().equals(2222L));
+        assertEquals((response.getMessages().get(1).getEntry()).getAsJsonObject().get("a").getAsInt(), 33);
+        assertEquals((response.getMessages().get(1).getEntry()).getAsJsonObject().get("b").getAsInt(), 44);
     }
 
-    @org.junit.Test(expected=UnsupportedOperationException.class)
+    @Test(expected=UnsupportedOperationException.class)
     public void testSyncProcessMessageError() throws IOException, PubNubException {
         List<Object> testArray = new ArrayList<Object>();
         List<Object> historyItems = new ArrayList<Object>();

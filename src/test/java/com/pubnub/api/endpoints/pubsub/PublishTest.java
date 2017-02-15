@@ -310,7 +310,7 @@ public class PublishTest extends TestHarness {
 
     }
 
-    @org.junit.Test(expected=PubNubException.class)
+    @Test(expected=PubNubException.class)
     public void testMissingChannel() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22hi%22"))
@@ -319,7 +319,7 @@ public class PublishTest extends TestHarness {
         instance.message("hi").sync();
     }
 
-    @org.junit.Test(expected=PubNubException.class)
+    @Test(expected=PubNubException.class)
     public void testEmptyChannel() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22hi%22"))
@@ -328,7 +328,7 @@ public class PublishTest extends TestHarness {
         instance.message("hi").channel("").sync();
     }
 
-    @org.junit.Test(expected=PubNubException.class)
+    @Test(expected=PubNubException.class)
     public void testMissingMessage() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22hi%22"))
@@ -337,7 +337,7 @@ public class PublishTest extends TestHarness {
         instance.channel("coolChannel").sync();
     }
 
-    @org.junit.Test
+    @Test
     public void testOperationTypeSuccessAsync() throws IOException, PubNubException, InterruptedException {
         stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22hi%22"))
                 .willReturn(aResponse().withBody("[1,\"Sent\",\"14598111595318003\"]")));
@@ -358,7 +358,7 @@ public class PublishTest extends TestHarness {
                 .untilAtomic(atomic, org.hamcrest.core.IsEqual.equalTo(1));
     }
 
-    @org.junit.Test(expected=PubNubException.class)
+    @Test(expected=PubNubException.class)
     public void testNullSubKeySync() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22hirep%22"))
@@ -368,7 +368,7 @@ public class PublishTest extends TestHarness {
         instance.channel("coolChannel").message("hirep").sync();
     }
 
-    @org.junit.Test(expected=PubNubException.class)
+    @Test(expected=PubNubException.class)
     public void testEmptySubKeySync() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22hirep%22"))
@@ -378,7 +378,7 @@ public class PublishTest extends TestHarness {
         instance.channel("coolChannel").message("hirep").sync();
     }
 
-    @org.junit.Test(expected=PubNubException.class)
+    @Test(expected=PubNubException.class)
     public void testNullPublishKeySync() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22hirep%22"))
@@ -388,7 +388,7 @@ public class PublishTest extends TestHarness {
         instance.channel("coolChannel").message("hirep").sync();
     }
 
-    @org.junit.Test(expected=PubNubException.class)
+    @Test(expected=PubNubException.class)
     public void testEmptyPublishKeySync() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22hirep%22"))
@@ -398,7 +398,7 @@ public class PublishTest extends TestHarness {
         instance.channel("coolChannel").message("hirep").sync();
     }
 
-    @org.junit.Test(expected=PubNubException.class)
+    @Test(expected=PubNubException.class)
     public void testInvalidMessage() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22hirep%22"))
@@ -412,7 +412,7 @@ public class PublishTest extends TestHarness {
         assertNull(requests.get(0).queryParameter("norep"));
     }
 
-    @org.junit.Test(expected=PubNubException.class)
+    @Test(expected=PubNubException.class)
     public void testInvalidMeta() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22hirep%22"))

@@ -9,7 +9,7 @@ import java.io.IOException;
 
 public class BasePathManagerTest {
 
-    PNConfiguration pnConfiguration;
+    private PNConfiguration pnConfiguration;
 
     @Before
     public void beforeEach() throws IOException {
@@ -17,21 +17,21 @@ public class BasePathManagerTest {
     }
 
     @Test
-    public void stdOriginNotSecure(){
+    public void stdOriginNotSecure() {
         pnConfiguration.setSecure(false);
         BasePathManager basePathManager = new BasePathManager(pnConfiguration);
         Assert.assertEquals("http://ps.pndsn.com", basePathManager.getBasePath());
     }
 
     @Test
-    public void stdOriginSecure(){
+    public void stdOriginSecure() {
         pnConfiguration.setSecure(true);
         BasePathManager basePathManager = new BasePathManager(pnConfiguration);
         Assert.assertEquals("https://ps.pndsn.com", basePathManager.getBasePath());
     }
 
     @Test
-    public void customOriginNotSecure(){
+    public void customOriginNotSecure() {
         pnConfiguration.setOrigin("custom.origin.com");
         pnConfiguration.setSecure(false);
         BasePathManager basePathManager = new BasePathManager(pnConfiguration);
@@ -39,7 +39,7 @@ public class BasePathManagerTest {
     }
 
     @Test
-    public void customOriginSecure(){
+    public void customOriginSecure() {
         pnConfiguration.setOrigin("custom.origin.com");
         pnConfiguration.setSecure(true);
         BasePathManager basePathManager = new BasePathManager(pnConfiguration);
@@ -47,7 +47,7 @@ public class BasePathManagerTest {
     }
 
     @Test
-    public void customOriginNotSecureWithCacheBusting(){
+    public void customOriginNotSecureWithCacheBusting() {
         pnConfiguration.setOrigin("custom.origin.com");
         pnConfiguration.setCacheBusting(true);
         pnConfiguration.setSecure(false);
@@ -56,7 +56,7 @@ public class BasePathManagerTest {
     }
 
     @Test
-    public void customOriginSecureWithCacheBusting(){
+    public void customOriginSecureWithCacheBusting() {
         pnConfiguration.setOrigin("custom.origin.com");
         pnConfiguration.setSecure(true);
         pnConfiguration.setCacheBusting(true);
@@ -65,7 +65,7 @@ public class BasePathManagerTest {
     }
 
     @Test
-    public void cacheBustingNotSecure(){
+    public void cacheBustingNotSecure() {
         pnConfiguration.setCacheBusting(true);
         pnConfiguration.setSecure(false);
         BasePathManager basePathManager = new BasePathManager(pnConfiguration);
@@ -93,7 +93,7 @@ public class BasePathManagerTest {
     }
 
     @Test
-    public void cacheBustingSecure(){;
+    public void cacheBustingSecure() {
         pnConfiguration.setCacheBusting(true);
         BasePathManager basePathManager = new BasePathManager(pnConfiguration);
         Assert.assertEquals("https://ps1.pndsn.com", basePathManager.getBasePath());

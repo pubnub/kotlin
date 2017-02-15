@@ -81,7 +81,7 @@ public class ListPushProvisionsTest extends TestHarness {
         assertEquals("mpns", requests.get(0).queryParameter("type").firstValue());
     }
 
-    @org.junit.Test
+    @Test
     public void testIsAuthRequiredSuccess() throws IOException, PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
@@ -95,7 +95,7 @@ public class ListPushProvisionsTest extends TestHarness {
         assertEquals("myKey", requests.get(0).queryParameter("auth").firstValue());
     }
 
-    @org.junit.Test
+    @Test
     public void testOperationTypeSuccess() throws IOException, PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
@@ -116,7 +116,7 @@ public class ListPushProvisionsTest extends TestHarness {
                 .untilAtomic(atomic, org.hamcrest.core.IsEqual.equalTo(1));
     }
 
-    @org.junit.Test(expected=PubNubException.class)
+    @Test(expected=PubNubException.class)
     public void testNullSubscribeKey() throws IOException, PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
@@ -126,7 +126,7 @@ public class ListPushProvisionsTest extends TestHarness {
         instance.deviceId("niceDevice").pushType(PNPushType.APNS).sync();
     }
 
-    @org.junit.Test(expected=PubNubException.class)
+    @Test(expected=PubNubException.class)
     public void testEmptySubscribeKey() throws IOException, PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
@@ -136,7 +136,7 @@ public class ListPushProvisionsTest extends TestHarness {
         instance.deviceId("niceDevice").pushType(PNPushType.MPNS).sync();
     }
 
-    @org.junit.Test(expected=PubNubException.class)
+    @Test(expected=PubNubException.class)
     public void testNullPushType() throws IOException, PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
@@ -145,7 +145,7 @@ public class ListPushProvisionsTest extends TestHarness {
         instance.deviceId("niceDevice").sync();
     }
 
-    @org.junit.Test(expected=PubNubException.class)
+    @Test(expected=PubNubException.class)
     public void testNullDeviceId() throws IOException, PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
@@ -154,7 +154,7 @@ public class ListPushProvisionsTest extends TestHarness {
         instance.pushType(PNPushType.MPNS).sync();
     }
 
-    @org.junit.Test(expected=PubNubException.class)
+    @Test(expected=PubNubException.class)
     public void testEmptyDeviceIdRemoveAll() throws IOException, PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))

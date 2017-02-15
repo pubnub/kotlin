@@ -1,8 +1,13 @@
 name: java
-version: 4.4.4
+version: 4.5.0
 schema: 1
 scm: github.com/pubnub/java
 changelog:
+  - version: v4.5.0
+    date:
+    changes:
+      - type: feature
+        text: add .toString methods to all public facing models and POJOs
   - version: v4.4.4
     date:
     changes:

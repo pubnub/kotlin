@@ -42,7 +42,7 @@ public class GrantEndpointTest extends TestHarness {
     }
 
     @Test
-    public void NoGroupsOneChannelOneKeyTest() throws PubNubException {
+    public void noGroupsOneChannelOneKeyTest() throws PubNubException {
 
         stubFor(get(urlPathEqualTo("/v1/auth/grant/sub-key/mySubscribeKey"))
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
@@ -73,7 +73,7 @@ public class GrantEndpointTest extends TestHarness {
     }
 
     @Test
-    public void NoGroupsOneChannelTwoKeyTest() throws PubNubException {
+    public void noGroupsOneChannelTwoKeyTest() throws PubNubException {
 
         stubFor(get(urlPathEqualTo("/v1/auth/grant/sub-key/mySubscribeKey"))
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
@@ -104,7 +104,7 @@ public class GrantEndpointTest extends TestHarness {
     }
 
     @Test
-    public void NoGroupsTwoChannelOneKeyTest() throws PubNubException {
+    public void noGroupsTwoChannelOneKeyTest() throws PubNubException {
 
         stubFor(get(urlPathEqualTo("/v1/auth/grant/sub-key/mySubscribeKey"))
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
@@ -136,7 +136,7 @@ public class GrantEndpointTest extends TestHarness {
     }
 
     @Test
-    public void NoGroupsTwoChannelTwoKeyTest() throws PubNubException {
+    public void noGroupsTwoChannelTwoKeyTest() throws PubNubException {
 
         stubFor(get(urlPathEqualTo("/v1/auth/grant/sub-key/mySubscribeKey"))
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
@@ -170,7 +170,7 @@ public class GrantEndpointTest extends TestHarness {
     }
 
     @Test
-    public void OneGroupNoChannelOneKey() throws PubNubException {
+    public void oneGroupNoChannelOneKey() throws PubNubException {
 
         stubFor(get(urlPathEqualTo("/v1/auth/grant/sub-key/mySubscribeKey"))
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
@@ -200,7 +200,7 @@ public class GrantEndpointTest extends TestHarness {
     }
 
     @Test
-    public void OneGroupNoChannelTwoKey() throws PubNubException {
+    public void oneGroupNoChannelTwoKey() throws PubNubException {
 
         stubFor(get(urlPathEqualTo("/v1/auth/grant/sub-key/mySubscribeKey"))
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
@@ -231,7 +231,7 @@ public class GrantEndpointTest extends TestHarness {
     }
 
     @Test
-    public void OneGroupOneChannelOneKey() throws PubNubException {
+    public void oneGroupOneChannelOneKey() throws PubNubException {
 
         stubFor(get(urlPathEqualTo("/v1/auth/grant/sub-key/mySubscribeKey"))
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
@@ -265,7 +265,7 @@ public class GrantEndpointTest extends TestHarness {
     }
 
     @Test
-    public void OneGroupOneChannelTwoKey() throws PubNubException {
+    public void oneGroupOneChannelTwoKey() throws PubNubException {
 
         stubFor(get(urlPathEqualTo("/v1/auth/grant/sub-key/mySubscribeKey"))
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
@@ -302,7 +302,7 @@ public class GrantEndpointTest extends TestHarness {
     }
 
     @Test
-    public void OneGroupTwoChannelOneKey() throws PubNubException {
+    public void oneGroupTwoChannelOneKey() throws PubNubException {
 
         stubFor(get(urlPathEqualTo("/v1/auth/grant/sub-key/mySubscribeKey"))
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
@@ -338,7 +338,7 @@ public class GrantEndpointTest extends TestHarness {
     }
 
     @Test
-    public void OneGroupTwoChannelTwoKey() throws PubNubException {
+    public void oneGroupTwoChannelTwoKey() throws PubNubException {
 
         stubFor(get(urlPathEqualTo("/v1/auth/grant/sub-key/mySubscribeKey"))
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
@@ -377,7 +377,7 @@ public class GrantEndpointTest extends TestHarness {
 
 
     @Test
-    public void TwoGroupNoChannelOneKey() throws PubNubException {
+    public void twoGroupNoChannelOneKey() throws PubNubException {
 
         stubFor(get(urlPathEqualTo("/v1/auth/grant/sub-key/mySubscribeKey"))
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
@@ -409,7 +409,7 @@ public class GrantEndpointTest extends TestHarness {
     }
 
     @Test
-    public void TwoGroupNoChannelTwoKey() throws PubNubException {
+    public void twoGroupNoChannelTwoKey() throws PubNubException {
 
         stubFor(get(urlPathEqualTo("/v1/auth/grant/sub-key/mySubscribeKey"))
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
@@ -442,7 +442,7 @@ public class GrantEndpointTest extends TestHarness {
     }
 
     @Test
-    public void TwoGroupOneChannelOneKey() throws PubNubException {
+    public void twoGroupOneChannelOneKey() throws PubNubException {
 
         stubFor(get(urlPathEqualTo("/v1/auth/grant/sub-key/mySubscribeKey"))
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
@@ -478,7 +478,7 @@ public class GrantEndpointTest extends TestHarness {
     }
 
     @Test
-    public void TwoGroupOneChannelTwoKey() throws PubNubException {
+    public void twoGroupOneChannelTwoKey() throws PubNubException {
 
         stubFor(get(urlPathEqualTo("/v1/auth/grant/sub-key/mySubscribeKey"))
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
@@ -517,7 +517,7 @@ public class GrantEndpointTest extends TestHarness {
     }
 
     @Test
-    public void TwoGroupTwoChannelOneKey() throws PubNubException {
+    public void twoGroupTwoChannelOneKey() throws PubNubException {
 
         stubFor(get(urlPathEqualTo("/v1/auth/grant/sub-key/mySubscribeKey"))
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
@@ -554,7 +554,7 @@ public class GrantEndpointTest extends TestHarness {
     }
 
     @Test
-    public void TwoGroupTwoChannelTwoKey() throws PubNubException {
+    public void twoGroupTwoChannelTwoKey() throws PubNubException {
 
         stubFor(get(urlPathEqualTo("/v1/auth/grant/sub-key/mySubscribeKey"))
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
@@ -596,7 +596,7 @@ public class GrantEndpointTest extends TestHarness {
     }
 
     @Test
-    public void NoGroupsOneChannelOneKeyTTLTest() throws PubNubException {
+    public void noGroupsOneChannelOneKeyTTLTest() throws PubNubException {
 
         stubFor(get(urlPathEqualTo("/v1/auth/grant/sub-key/mySubscribeKey"))
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
@@ -627,7 +627,7 @@ public class GrantEndpointTest extends TestHarness {
     }
 
     @Test
-    public void NoGroupsOneChannelOneReadKeyTest() throws PubNubException {
+    public void noGroupsOneChannelOneReadKeyTest() throws PubNubException {
 
         stubFor(get(urlPathEqualTo("/v1/auth/grant/sub-key/mySubscribeKey"))
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
@@ -657,7 +657,7 @@ public class GrantEndpointTest extends TestHarness {
     }
 
     @Test
-    public void NoGroupsOneChannelOneWriteKeyTest() throws PubNubException {
+    public void noGroupsOneChannelOneWriteKeyTest() throws PubNubException {
 
         stubFor(get(urlPathEqualTo("/v1/auth/grant/sub-key/mySubscribeKey"))
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
@@ -687,7 +687,7 @@ public class GrantEndpointTest extends TestHarness {
     }
 
     @Test
-    public void NoGroupsOneChannelOneKeyManageTest() throws PubNubException {
+    public void noGroupsOneChannelOneKeyManageTest() throws PubNubException {
 
         stubFor(get(urlPathEqualTo("/v1/auth/grant/sub-key/mySubscribeKey"))
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))

@@ -17,12 +17,11 @@ public class PubNubExceptionTest extends TestHarness {
     @Rule
     public WireMockRule wireMockRule = new WireMockRule();
 
-    private PubNub pubnub;
     private Publish instance;
 
     @Before
     public void beforeEach() throws IOException {
-        pubnub = this.createPubNubInstance(8080);
+         PubNub pubnub = this.createPubNubInstance(8080);
         instance = pubnub.publish();
         wireMockRule.start();
     }

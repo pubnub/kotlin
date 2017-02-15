@@ -6,9 +6,9 @@ import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.endpoints.presence.Heartbeat;
 import com.pubnub.api.managers.RetrofitManager;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -16,7 +16,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.findAll;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
 import static org.junit.Assert.assertEquals;
 
 public class HeartbeatEndpointTest extends TestHarness {
@@ -35,7 +41,7 @@ public class HeartbeatEndpointTest extends TestHarness {
         wireMockRule.start();
     }
 
-    @org.junit.Test
+    @Test
     public void testSuccessOneChannel() throws PubNubException, InterruptedException {
         pubnub.getConfiguration().setPresenceTimeout(123);
 
@@ -47,12 +53,12 @@ public class HeartbeatEndpointTest extends TestHarness {
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
         LoggedRequest request = requests.get(0);
-        Assert.assertEquals("myUUID", request.queryParameter("uuid").firstValue());
-        Assert.assertEquals("123", request.queryParameter("heartbeat").firstValue());
+        assertEquals("myUUID", request.queryParameter("uuid").firstValue());
+        assertEquals("123", request.queryParameter("heartbeat").firstValue());
 
     }
 
-    @org.junit.Test
+    @Test
     public void testSuccessManyChannels() throws PubNubException, InterruptedException {
         pubnub.getConfiguration().setPresenceTimeout(123);
 
@@ -64,11 +70,11 @@ public class HeartbeatEndpointTest extends TestHarness {
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
         LoggedRequest request = requests.get(0);
-        Assert.assertEquals("myUUID", request.queryParameter("uuid").firstValue());
-        Assert.assertEquals("123", request.queryParameter("heartbeat").firstValue());
+        assertEquals("myUUID", request.queryParameter("uuid").firstValue());
+        assertEquals("123", request.queryParameter("heartbeat").firstValue());
     }
 
-    @org.junit.Test
+    @Test
     public void testSuccessOneChannelGroup() throws PubNubException, InterruptedException {
         pubnub.getConfiguration().setPresenceTimeout(123);
 
@@ -80,12 +86,12 @@ public class HeartbeatEndpointTest extends TestHarness {
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
         LoggedRequest request = requests.get(0);
-        Assert.assertEquals("myUUID", request.queryParameter("uuid").firstValue());
-        Assert.assertEquals("cg1", request.queryParameter("channel-group").firstValue());
-        Assert.assertEquals("123", request.queryParameter("heartbeat").firstValue());
+        assertEquals("myUUID", request.queryParameter("uuid").firstValue());
+        assertEquals("cg1", request.queryParameter("channel-group").firstValue());
+        assertEquals("123", request.queryParameter("heartbeat").firstValue());
     }
 
-    @org.junit.Test
+    @Test
     public void testSuccessManyChannelGroups() throws PubNubException, InterruptedException {
         pubnub.getConfiguration().setPresenceTimeout(123);
 
@@ -97,13 +103,13 @@ public class HeartbeatEndpointTest extends TestHarness {
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
         LoggedRequest request = requests.get(0);
-        Assert.assertEquals("myUUID", request.queryParameter("uuid").firstValue());
-        Assert.assertEquals("cg1,cg2", request.queryParameter("channel-group").firstValue());
-        Assert.assertEquals("123", request.queryParameter("heartbeat").firstValue());
+        assertEquals("myUUID", request.queryParameter("uuid").firstValue());
+        assertEquals("cg1,cg2", request.queryParameter("channel-group").firstValue());
+        assertEquals("123", request.queryParameter("heartbeat").firstValue());
 
     }
 
-    @org.junit.Test
+    @Test
     public void testSuccessIncludeState() throws PubNubException, InterruptedException {
         Map<String, String> state = new HashMap<>();
         state.put("CH1", "this-is-channel1");
@@ -120,13 +126,13 @@ public class HeartbeatEndpointTest extends TestHarness {
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
         LoggedRequest request = requests.get(0);
-        Assert.assertEquals("myUUID", request.queryParameter("uuid").firstValue());
-        Assert.assertEquals("123", request.queryParameter("heartbeat").firstValue());
-        Assert.assertEquals("%7B%22CH2%22%3A%22this-is-channel2%22%2C%22CH1%22%3A%22this-is-channel1%22%7D", request.queryParameter("state").firstValue());
+        assertEquals("myUUID", request.queryParameter("uuid").firstValue());
+        assertEquals("123", request.queryParameter("heartbeat").firstValue());
+        assertEquals("%7B%22CH2%22%3A%22this-is-channel2%22%2C%22CH1%22%3A%22this-is-channel1%22%7D", request.queryParameter("state").firstValue());
 
     }
 
-    @org.junit.Test(expected=PubNubException.class)
+    @Test(expected=PubNubException.class)
     public void testMissingChannelAndGroupSync() throws PubNubException, InterruptedException {
         pubnub.getConfiguration().setPresenceTimeout(123);
 
@@ -136,7 +142,7 @@ public class HeartbeatEndpointTest extends TestHarness {
         partialHeartbeat.sync();
     }
 
-    @org.junit.Test
+    @Test
     public void testIsAuthRequiredSuccessSync() throws IOException, PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch1/heartbeat"))
@@ -150,7 +156,7 @@ public class HeartbeatEndpointTest extends TestHarness {
         assertEquals("myKey", requests.get(0).queryParameter("auth").firstValue());
     }
 
-    @org.junit.Test(expected=PubNubException.class)
+    @Test(expected=PubNubException.class)
     public void testNullSubKeySync() throws PubNubException, InterruptedException {
         pubnub.getConfiguration().setPresenceTimeout(123);
 
@@ -161,7 +167,7 @@ public class HeartbeatEndpointTest extends TestHarness {
         partialHeartbeat.channels(Arrays.asList("ch1")).sync();
     }
 
-    @org.junit.Test(expected=PubNubException.class)
+    @Test(expected=PubNubException.class)
     public void testEmptySubKeySync() throws PubNubException, InterruptedException {
         pubnub.getConfiguration().setPresenceTimeout(123);
 

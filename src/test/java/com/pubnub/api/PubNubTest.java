@@ -18,7 +18,7 @@ public class PubNubTest {
         pnConfiguration.setPublishKey("demo");
     }
 
-    @org.junit.Test
+    @Test
     public void testCreateSuccess() throws IOException, PubNubException {
         pubnub = new PubNub(pnConfiguration);
         Assert.assertEquals(true, pubnub.getConfiguration().isSecure());
@@ -57,7 +57,7 @@ public class PubNubTest {
 
     }
 
-    @org.junit.Test
+    @Test
     public void testPNConfiguration() throws IOException, PubNubException {
         pnConfiguration.setSubscribeTimeout(3000);
         pnConfiguration.setConnectTimeout(4000);
@@ -73,35 +73,35 @@ public class PubNubTest {
         Assert.assertEquals(5000, pnConfiguration.getNonSubscribeRequestTimeout());
     }
 
-    @org.junit.Test(expected = PubNubException.class)
+    @Test(expected = PubNubException.class)
     public void testDecryptNull() throws PubNubException {
         pnConfiguration.setCipherKey("cipherKey");
         pubnub = new PubNub(pnConfiguration);
         Assert.assertEquals("test1", pubnub.decrypt(null).trim());
     }
 
-    @org.junit.Test(expected = PubNubException.class)
+    @Test(expected = PubNubException.class)
     public void testDecryptNull_B() throws PubNubException {
         pubnub = new PubNub(pnConfiguration);
         Assert.assertEquals("test1", pubnub.decrypt(null, "cipherKey").trim());
     }
 
-    @org.junit.Test
+    @Test
     public void getVersionAndTimeStamp() throws PubNubException {
         pubnub = new PubNub(pnConfiguration);
         String version = pubnub.getVersion();
         int timeStamp = pubnub.getTimestamp();
-        Assert.assertEquals("4.4.4", version);
+        Assert.assertEquals("4.5.0", version);
         Assert.assertTrue(timeStamp > 0);
     }
 
-    @org.junit.Test(expected = PubNubException.class)
+    @Test(expected = PubNubException.class)
     public void testEcryptNull() throws PubNubException {
         pubnub = new PubNub(pnConfiguration);
         Assert.assertEquals("test1", pubnub.encrypt(null));
     }
 
-    @org.junit.Test(expected = PubNubException.class)
+    @Test(expected = PubNubException.class)
     public void testEcryptNull_B() throws PubNubException {
         pubnub = new PubNub(pnConfiguration);
         Assert.assertEquals("test1", pubnub.encrypt(null, "chiperKey"));

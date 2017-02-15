@@ -74,7 +74,7 @@ public class FetchMessagesEndpointTest extends TestHarness {
         assertEquals(1, requests.size());
     }
 
-    @org.junit.Test
+    @Test
     public void testSyncEncryptedSuccess() throws PubNubException {
         pubnub.getConfiguration().setCipherKey("testCipher");
 

@@ -10,6 +10,7 @@ import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.PNTimeResult;
 import org.junit.Before;
 import org.junit.Rule;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.util.List;
@@ -35,7 +36,7 @@ public class TimeEndpointTest extends TestHarness {
     }
 
 
-    @org.junit.Test
+    @Test
     public void testSyncSuccess() throws IOException, PubNubException, InterruptedException {
         stubFor(get(urlPathEqualTo("/time/0"))
                 .willReturn(aResponse().withBody("[14593046077243110]")));
@@ -48,21 +49,21 @@ public class TimeEndpointTest extends TestHarness {
 
     }
 
-    @org.junit.Test(expected=PubNubException.class)
+    @Test(expected=PubNubException.class)
     public void testSyncBrokenWithString() throws IOException, PubNubException {
         stubFor(get(urlPathEqualTo("/time/0"))
                 .willReturn(aResponse().withBody("[abc]")));
         partialTime.sync();
     }
 
-    @org.junit.Test(expected=PubNubException.class)
+    @Test(expected=PubNubException.class)
     public void testSyncBrokenWithoutJSON() throws IOException, PubNubException {
         stubFor(get(urlPathEqualTo("/time/0"))
                 .willReturn(aResponse().withBody("zimp")));
         partialTime.sync();
     }
 
-    @org.junit.Test(expected=PubNubException.class)
+    @Test(expected=PubNubException.class)
     public void testSyncBrokenWithout200() throws IOException, PubNubException {
         stubFor(get(urlPathEqualTo("/time/0"))
                 .willReturn(aResponse().withBody("[14593046077243110]").withStatus(404)));
@@ -70,7 +71,7 @@ public class TimeEndpointTest extends TestHarness {
         assertTrue(response.getTimetoken().equals(14593046077243110L));
     }
 
-    @org.junit.Test
+    @Test
     public void testAsyncSuccess() throws IOException, PubNubException {
         stubFor(get(urlPathEqualTo("/time/0"))
                 .willReturn(aResponse().withBody("[14593046077243110]")));
@@ -88,7 +89,7 @@ public class TimeEndpointTest extends TestHarness {
                 .untilAtomic(atomic, org.hamcrest.core.IsEqual.equalTo(1));
     }
 
-    @org.junit.Test
+    @Test
     public void testAsyncRetrySuccess() throws IOException, PubNubException {
         stubFor(get(urlPathEqualTo("/time/0"))
                 .willReturn(aResponse().withBody("[14593046077243110]")));
@@ -113,7 +114,7 @@ public class TimeEndpointTest extends TestHarness {
                 .untilAtomic(atomic, org.hamcrest.core.IsEqual.equalTo(2));
     }
 
-    @org.junit.Test
+    @Test
     public void testAsyncBrokenWithString() throws IOException, PubNubException {
         stubFor(get(urlPathEqualTo("/time/0"))
                 .willReturn(aResponse().withBody("[abc]")));
@@ -133,7 +134,7 @@ public class TimeEndpointTest extends TestHarness {
 
     }
 
-    @org.junit.Test
+    @Test
     public void testAsyncBrokenWithoutJSON() throws IOException, PubNubException {
         stubFor(get(urlPathEqualTo("/time/0"))
                 .willReturn(aResponse().withBody("zimp")));
@@ -153,7 +154,7 @@ public class TimeEndpointTest extends TestHarness {
 
     }
 
-    @org.junit.Test
+    @Test
     public void testAsyncBrokenWithout200() throws IOException, PubNubException {
         stubFor(get(urlPathEqualTo("/time/0"))
                 .willReturn(aResponse().withBody("[14593046077243110]").withStatus(404)));
@@ -174,7 +175,7 @@ public class TimeEndpointTest extends TestHarness {
 
     }
 
-    @org.junit.Test
+    @Test
     public void testIsAuthRequiredSuccessSync() throws IOException, PubNubException, InterruptedException {
         stubFor(get(urlPathEqualTo("/time/0"))
                 .willReturn(aResponse().withBody("[14593046077243110]")));

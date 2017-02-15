@@ -6,11 +6,13 @@ import com.pubnub.api.enums.PNStatusCategory;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.util.List;
 
 @Builder
 @Getter
+@ToString
 public class PNStatus {
 
     private PNStatusCategory category;

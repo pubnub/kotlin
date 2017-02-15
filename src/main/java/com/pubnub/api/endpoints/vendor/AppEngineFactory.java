@@ -18,7 +18,7 @@ import java.net.URL;
 
 
 public class AppEngineFactory implements Call {
-    Request request;
+    private Request request;
 
     AppEngineFactory(Request request) {
         this.request = request;

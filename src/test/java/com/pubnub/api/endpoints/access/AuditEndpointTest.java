@@ -6,23 +6,28 @@ import com.jayway.awaitility.Awaitility;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.callbacks.PNCallback;
+import com.pubnub.api.endpoints.TestHarness;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.access_manager.PNAccessManagerAuditResult;
-import com.pubnub.api.endpoints.TestHarness;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.findAll;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.matching;
+import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
 import static org.junit.Assert.assertEquals;
 
 public class AuditEndpointTest extends TestHarness {
@@ -56,14 +61,14 @@ public class AuditEndpointTest extends TestHarness {
                 .withQueryParam("timestamp", matching("1337"))
                 .willReturn(aResponse().withBody("{\"message\":\"Success\",\"payload\":{\"level\":\"channel-group+auth\",\"subscribe_key\":\"sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f\",\"channel-group\":\"cg2\",\"auths\":{\"key1\":{\"r\":1,\"m\":1,\"w\":1}}},\"service\":\"Access Manager\",\"status\":200}")));
 
-        PNAccessManagerAuditResult pnAccessManagerAuditResult = partialAudit.channelGroup("cg1").authKeys(Arrays.asList("key1")).sync();
+        PNAccessManagerAuditResult pnAccessManagerAuditResult = partialAudit.channelGroup("cg1").authKeys(Collections.singletonList("key1")).sync();
         
-        Assert.assertEquals("cg2", pnAccessManagerAuditResult.getChannelGroup());
-        Assert.assertEquals(true, pnAccessManagerAuditResult.getAuthKeys().get("key1").isManageEnabled());
-        Assert.assertEquals(true, pnAccessManagerAuditResult.getAuthKeys().get("key1").isReadEnabled());
-        Assert.assertEquals(true, pnAccessManagerAuditResult.getAuthKeys().get("key1").isWriteEnabled());
-        Assert.assertEquals("channel-group+auth", pnAccessManagerAuditResult.getLevel());
-        Assert.assertEquals("sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f", pnAccessManagerAuditResult.getSubscribeKey());
+        assertEquals("cg2", pnAccessManagerAuditResult.getChannelGroup());
+        assertEquals(true, pnAccessManagerAuditResult.getAuthKeys().get("key1").isManageEnabled());
+        assertEquals(true, pnAccessManagerAuditResult.getAuthKeys().get("key1").isReadEnabled());
+        assertEquals(true, pnAccessManagerAuditResult.getAuthKeys().get("key1").isWriteEnabled());
+        assertEquals("channel-group+auth", pnAccessManagerAuditResult.getLevel());
+        assertEquals("sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f", pnAccessManagerAuditResult.getSubscribeKey());
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v1/auth/audit/sub-key/mySubscribeKey.*")));
         assertEquals(1, requests.size());
@@ -85,14 +90,14 @@ public class AuditEndpointTest extends TestHarness {
                 .withQueryParam("timestamp", matching("1337"))
                 .willReturn(aResponse().withBody("{\"message\":\"Success\",\"payload\":{\"level\":\"user\",\"subscribe_key\":\"sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f\",\"channel\":\"ch1\",\"auths\":{\"key1\":{\"r\":1,\"m\":1,\"w\":1}}},\"service\":\"Access Manager\",\"status\":200}")));
 
-        PNAccessManagerAuditResult pnAccessManagerAuditResult = partialAudit.channel("ch1").authKeys(Arrays.asList("key1")).sync();
+        PNAccessManagerAuditResult pnAccessManagerAuditResult = partialAudit.channel("ch1").authKeys(Collections.singletonList("key1")).sync();
 
-        Assert.assertEquals("ch1", pnAccessManagerAuditResult.getChannel());
-        Assert.assertEquals(true, pnAccessManagerAuditResult.getAuthKeys().get("key1").isManageEnabled());
-        Assert.assertEquals(true, pnAccessManagerAuditResult.getAuthKeys().get("key1").isReadEnabled());
-        Assert.assertEquals(true, pnAccessManagerAuditResult.getAuthKeys().get("key1").isWriteEnabled());
-        Assert.assertEquals("user", pnAccessManagerAuditResult.getLevel());
-        Assert.assertEquals("sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f", pnAccessManagerAuditResult.getSubscribeKey());
+        assertEquals("ch1", pnAccessManagerAuditResult.getChannel());
+        assertEquals(true, pnAccessManagerAuditResult.getAuthKeys().get("key1").isManageEnabled());
+        assertEquals(true, pnAccessManagerAuditResult.getAuthKeys().get("key1").isReadEnabled());
+        assertEquals(true, pnAccessManagerAuditResult.getAuthKeys().get("key1").isWriteEnabled());
+        assertEquals("user", pnAccessManagerAuditResult.getLevel());
+        assertEquals("sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f", pnAccessManagerAuditResult.getSubscribeKey());
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
@@ -124,7 +129,7 @@ public class AuditEndpointTest extends TestHarness {
 
         final AtomicInteger atomic = new AtomicInteger(0);
 
-        partialAudit.channelGroup("cg1").authKeys(Arrays.asList("key1")).async(new PNCallback<PNAccessManagerAuditResult>() {
+        partialAudit.channelGroup("cg1").authKeys(Collections.singletonList("key1")).async(new PNCallback<PNAccessManagerAuditResult>() {
             @Override
             public void onResponse(PNAccessManagerAuditResult result, PNStatus status) {
                 if (status != null && status.getOperation()== PNOperationType.PNAccessManagerAudit) {
@@ -152,7 +157,7 @@ public class AuditEndpointTest extends TestHarness {
         pubnub.getConfiguration().setAuthKey("myKey");
 
         try {
-            partialAudit.channelGroup("cg1").authKeys(Arrays.asList("key1")).sync();
+            partialAudit.channelGroup("cg1").authKeys(Collections.singletonList("key1")).sync();
             List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
             assertEquals(1, requests.size());
             String signature = requests.get(0).queryParameter("signature").firstValue();
@@ -174,7 +179,7 @@ public class AuditEndpointTest extends TestHarness {
                 .willReturn(aResponse().withBody("{\"message\":\"Success\",\"service\":\"Access Manager\",\"status\":200}")));
 
         try {
-            partialAudit.channelGroup("cg1").authKeys(Arrays.asList("key1")).sync();
+            partialAudit.channelGroup("cg1").authKeys(Collections.singletonList("key1")).sync();
             throw new RuntimeException("should never reach here");
         } catch (PubNubException e) {
             assertEquals("Parsing Error", e.getPubnubError().getMessage());
@@ -186,7 +191,7 @@ public class AuditEndpointTest extends TestHarness {
         pubnub.getConfiguration().setSecretKey(null);
 
         try {
-            partialAudit.channelGroup("cg1").authKeys(Arrays.asList("key1")).sync();
+            partialAudit.channelGroup("cg1").authKeys(Collections.singletonList("key1")).sync();
             throw new RuntimeException("should never reach here");
         } catch (PubNubException e) {
             assertEquals("ULS configuration failed. Secret Key not configured.", e.getPubnubError().getMessage());
@@ -199,7 +204,7 @@ public class AuditEndpointTest extends TestHarness {
         pubnub.getConfiguration().setSecretKey("");
 
         try {
-            partialAudit.channelGroup("cg1").authKeys(Arrays.asList("key1")).sync();
+            partialAudit.channelGroup("cg1").authKeys(Collections.singletonList("key1")).sync();
             throw new RuntimeException("should never reach here");
         } catch (PubNubException e) {
             assertEquals("ULS configuration failed. Secret Key not configured.", e.getPubnubError().getMessage());
@@ -212,7 +217,7 @@ public class AuditEndpointTest extends TestHarness {
         pubnub.getConfiguration().setSubscribeKey(null);
 
         try {
-            partialAudit.channelGroup("cg1").authKeys(Arrays.asList("key1")).sync();
+            partialAudit.channelGroup("cg1").authKeys(Collections.singletonList("key1")).sync();
             throw new RuntimeException("should never reach here");
         } catch (PubNubException e) {
             assertEquals("ULS configuration failed. Subscribe Key not configured.", e.getPubnubError().getMessage());
@@ -224,7 +229,7 @@ public class AuditEndpointTest extends TestHarness {
         pubnub.getConfiguration().setSubscribeKey("");
 
         try {
-            partialAudit.channelGroup("cg1").authKeys(Arrays.asList("key1")).sync();
+            partialAudit.channelGroup("cg1").authKeys(Collections.singletonList("key1")).sync();
             throw new RuntimeException("should never reach here");
         } catch (PubNubException e) {
             assertEquals("ULS configuration failed. Subscribe Key not configured.", e.getPubnubError().getMessage());
@@ -236,7 +241,7 @@ public class AuditEndpointTest extends TestHarness {
         pubnub.getConfiguration().setPublishKey(null);
 
         try {
-            partialAudit.channelGroup("cg1").authKeys(Arrays.asList("key1")).sync();
+            partialAudit.channelGroup("cg1").authKeys(Collections.singletonList("key1")).sync();
             throw new RuntimeException("should never reach here");
         } catch (PubNubException e) {
             assertEquals("ULS configuration failed. Publish Key not configured.", e.getPubnubError().getMessage());
@@ -248,7 +253,7 @@ public class AuditEndpointTest extends TestHarness {
         pubnub.getConfiguration().setPublishKey("");
 
         try {
-            partialAudit.channelGroup("cg1").authKeys(Arrays.asList("key1")).sync();
+            partialAudit.channelGroup("cg1").authKeys(Collections.singletonList("key1")).sync();
             throw new RuntimeException("should never reach here");
         } catch (PubNubException e) {
             assertEquals("ULS configuration failed. Publish Key not configured.", e.getPubnubError().getMessage());
@@ -259,7 +264,7 @@ public class AuditEndpointTest extends TestHarness {
     @Test
     public void testChannelAndChanneGroupNull() {
         try {
-            partialAudit.authKeys(Arrays.asList("key1")).channel(null).channelGroup(null).sync();
+            partialAudit.authKeys(Collections.singletonList("key1")).channel(null).channelGroup(null).sync();
             throw new RuntimeException("should never reach here");
         } catch (PubNubException e) {
             assertEquals("Channel and Group Missing.", e.getPubnubError().getMessage());

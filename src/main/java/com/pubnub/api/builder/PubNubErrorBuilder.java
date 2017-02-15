@@ -5,13 +5,7 @@ import com.pubnub.api.PubNubError;
 
 public final class PubNubErrorBuilder {
 
-
-    private PubNubErrorBuilder() {
-
-    }
-
     // Error Codes
-
     /**
      * Timeout Error .
      */
@@ -251,7 +245,6 @@ public final class PubNubErrorBuilder {
     public static final int PNERR_DEVICE_ID_MISSING = 144;
 
     // Error Objects
-
     public static final PubNubError PNERROBJ_TIMEOUT = PubNubError.builder()
             .errorCode(PNERR_TIMEOUT)
             .message("Timeout Occurred")
@@ -476,6 +469,10 @@ public final class PubNubErrorBuilder {
             .errorCode(PNERR_CRYPTO_ERROR)
             .message("Error while encrypting/decrypting message. Please contact support with error details.")
             .build();
+
+    private PubNubErrorBuilder() {
+
+    }
 
     public static PubNubError createCryptoError(int code, String message) {
         return PubNubError.builder()

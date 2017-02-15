@@ -6,11 +6,10 @@ import com.jayway.awaitility.Awaitility;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.callbacks.PNCallback;
+import com.pubnub.api.endpoints.TestHarness;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.presence.PNHereNowResult;
-import com.pubnub.api.endpoints.TestHarness;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -21,7 +20,13 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.findAll;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
 import static org.junit.Assert.assertEquals;
 
 public class HereNowEndpointTest extends TestHarness {
@@ -47,22 +52,22 @@ public class HereNowEndpointTest extends TestHarness {
 
         PNHereNowResult response =  partialHereNow.channels(Arrays.asList("ch1", "ch2")).includeState(true).sync();
 
-        Assert.assertEquals(response.getTotalChannels(), 2);
-        Assert.assertEquals(response.getTotalOccupancy(), 3);
+        assertEquals(response.getTotalChannels(), 2);
+        assertEquals(response.getTotalOccupancy(), 3);
 
-        Assert.assertEquals(response.getChannels().get("ch1").getChannelName(), "ch1");
-        Assert.assertEquals(response.getChannels().get("ch1").getOccupancy(), 1);
-        Assert.assertEquals(response.getChannels().get("ch1").getOccupants().size(), 1);
-        Assert.assertEquals(response.getChannels().get("ch1").getOccupants().get(0).getUuid(), "user1");
-        Assert.assertEquals(response.getChannels().get("ch1").getOccupants().get(0).getState().toString(), "{\"age\":10}");
+        assertEquals(response.getChannels().get("ch1").getChannelName(), "ch1");
+        assertEquals(response.getChannels().get("ch1").getOccupancy(), 1);
+        assertEquals(response.getChannels().get("ch1").getOccupants().size(), 1);
+        assertEquals(response.getChannels().get("ch1").getOccupants().get(0).getUuid(), "user1");
+        assertEquals(response.getChannels().get("ch1").getOccupants().get(0).getState().toString(), "{\"age\":10}");
 
-        Assert.assertEquals(response.getChannels().get("ch2").getChannelName(), "ch2");
-        Assert.assertEquals(response.getChannels().get("ch2").getOccupancy(), 2);
-        Assert.assertEquals(response.getChannels().get("ch2").getOccupants().size(), 2);
-        Assert.assertEquals(response.getChannels().get("ch2").getOccupants().get(0).getUuid(), "user1");
-        Assert.assertEquals(response.getChannels().get("ch2").getOccupants().get(0).getState().toString(), "{\"age\":10}");
-        Assert.assertEquals(response.getChannels().get("ch2").getOccupants().get(1).getUuid(), "user3");
-        Assert.assertEquals(response.getChannels().get("ch2").getOccupants().get(1).getState().toString(), "{\"age\":30}");
+        assertEquals(response.getChannels().get("ch2").getChannelName(), "ch2");
+        assertEquals(response.getChannels().get("ch2").getOccupancy(), 2);
+        assertEquals(response.getChannels().get("ch2").getOccupants().size(), 2);
+        assertEquals(response.getChannels().get("ch2").getOccupants().get(0).getUuid(), "user1");
+        assertEquals(response.getChannels().get("ch2").getOccupants().get(0).getState().toString(), "{\"age\":10}");
+        assertEquals(response.getChannels().get("ch2").getOccupants().get(1).getUuid(), "user3");
+        assertEquals(response.getChannels().get("ch2").getOccupants().get(1).getState().toString(), "{\"age\":30}");
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
@@ -77,22 +82,22 @@ public class HereNowEndpointTest extends TestHarness {
 
         PNHereNowResult response =  partialHereNow.channels(Arrays.asList("ch1", "ch2")).includeState(true).sync();
 
-        Assert.assertEquals(response.getTotalChannels(), 2);
-        Assert.assertEquals(response.getTotalOccupancy(), 3);
+        assertEquals(response.getTotalChannels(), 2);
+        assertEquals(response.getTotalOccupancy(), 3);
 
-        Assert.assertEquals(response.getChannels().get("ch1").getChannelName(), "ch1");
-        Assert.assertEquals(response.getChannels().get("ch1").getOccupancy(), 1);
-        Assert.assertEquals(response.getChannels().get("ch1").getOccupants().size(), 1);
-        Assert.assertEquals(response.getChannels().get("ch1").getOccupants().get(0).getUuid(), "user1");
-        Assert.assertEquals(response.getChannels().get("ch1").getOccupants().get(0).getState(), null);
+        assertEquals(response.getChannels().get("ch1").getChannelName(), "ch1");
+        assertEquals(response.getChannels().get("ch1").getOccupancy(), 1);
+        assertEquals(response.getChannels().get("ch1").getOccupants().size(), 1);
+        assertEquals(response.getChannels().get("ch1").getOccupants().get(0).getUuid(), "user1");
+        assertEquals(response.getChannels().get("ch1").getOccupants().get(0).getState(), null);
 
-        Assert.assertEquals(response.getChannels().get("ch2").getChannelName(), "ch2");
-        Assert.assertEquals(response.getChannels().get("ch2").getOccupancy(), 2);
-        Assert.assertEquals(response.getChannels().get("ch2").getOccupants().size(), 2);
-        Assert.assertEquals(response.getChannels().get("ch2").getOccupants().get(0).getUuid(), "user1");
-        Assert.assertEquals(response.getChannels().get("ch2").getOccupants().get(0).getState(), null);
-        Assert.assertEquals(response.getChannels().get("ch2").getOccupants().get(1).getUuid(), "user3");
-        Assert.assertEquals(response.getChannels().get("ch2").getOccupants().get(1).getState(), null);
+        assertEquals(response.getChannels().get("ch2").getChannelName(), "ch2");
+        assertEquals(response.getChannels().get("ch2").getOccupancy(), 2);
+        assertEquals(response.getChannels().get("ch2").getOccupants().size(), 2);
+        assertEquals(response.getChannels().get("ch2").getOccupants().get(0).getUuid(), "user1");
+        assertEquals(response.getChannels().get("ch2").getOccupants().get(0).getState(), null);
+        assertEquals(response.getChannels().get("ch2").getOccupants().get(1).getUuid(), "user3");
+        assertEquals(response.getChannels().get("ch2").getOccupants().get(1).getState(), null);
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
@@ -107,14 +112,14 @@ public class HereNowEndpointTest extends TestHarness {
 
         PNHereNowResult response =  partialHereNow.channels(Arrays.asList("game1", "game2")).includeState(false).sync();
 
-        Assert.assertEquals(response.getTotalChannels(), 1);
-        Assert.assertEquals(response.getTotalOccupancy(), 1);
+        assertEquals(response.getTotalChannels(), 1);
+        assertEquals(response.getTotalOccupancy(), 1);
 
-        Assert.assertEquals(response.getChannels().get("game1").getChannelName(), "game1");
-        Assert.assertEquals(response.getChannels().get("game1").getOccupancy(), 1);
-        Assert.assertEquals(response.getChannels().get("game1").getOccupants().size(), 1);
-        Assert.assertEquals(response.getChannels().get("game1").getOccupants().get(0).getUuid(), "a3ffd012-a3b9-478c-8705-64089f24d71e");
-        Assert.assertEquals(response.getChannels().get("game1").getOccupants().get(0).getState(), null);
+        assertEquals(response.getChannels().get("game1").getChannelName(), "game1");
+        assertEquals(response.getChannels().get("game1").getOccupancy(), 1);
+        assertEquals(response.getChannels().get("game1").getOccupants().size(), 1);
+        assertEquals(response.getChannels().get("game1").getOccupants().get(0).getUuid(), "a3ffd012-a3b9-478c-8705-64089f24d71e");
+        assertEquals(response.getChannels().get("game1").getOccupants().get(0).getState(), null);
 
     }
 
@@ -126,12 +131,12 @@ public class HereNowEndpointTest extends TestHarness {
 
         PNHereNowResult response =  partialHereNow.channels(Arrays.asList("game1", "game2")).includeState(false).includeUUIDs(false).sync();
 
-        Assert.assertEquals(response.getTotalChannels(), 1);
-        Assert.assertEquals(response.getTotalOccupancy(), 1);
+        assertEquals(response.getTotalChannels(), 1);
+        assertEquals(response.getTotalOccupancy(), 1);
 
-        Assert.assertEquals(response.getChannels().get("game1").getChannelName(), "game1");
-        Assert.assertEquals(response.getChannels().get("game1").getOccupancy(), 1);
-        Assert.assertEquals(response.getChannels().get("game1").getOccupants(), null);
+        assertEquals(response.getChannels().get("game1").getChannelName(), "game1");
+        assertEquals(response.getChannels().get("game1").getOccupancy(), 1);
+        assertEquals(response.getChannels().get("game1").getOccupants(), null);
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
@@ -146,8 +151,8 @@ public class HereNowEndpointTest extends TestHarness {
 
         PNHereNowResult response =  partialHereNow.channels(Arrays.asList("game1")).includeState(false).includeUUIDs(false).sync();
 
-        Assert.assertEquals(response.getTotalChannels(), 1);
-        Assert.assertEquals(response.getTotalOccupancy(), 3);
+        assertEquals(response.getTotalChannels(), 1);
+        assertEquals(response.getTotalOccupancy(), 3);
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
@@ -163,13 +168,13 @@ public class HereNowEndpointTest extends TestHarness {
 
         PNHereNowResult response =  partialHereNow.channels(Arrays.asList("game1")).includeState(false).sync();
 
-        Assert.assertEquals(response.getTotalChannels(), 1);
-        Assert.assertEquals(response.getTotalOccupancy(), 1);
-        Assert.assertEquals(response.getChannels().size(), 1);
-        Assert.assertEquals(response.getChannels().get("game1").getOccupancy(), 1);
-        Assert.assertEquals(response.getChannels().get("game1").getOccupants().size(), 1);
-        Assert.assertEquals(response.getChannels().get("game1").getOccupants().get(0).getUuid(), "a3ffd012-a3b9-478c-8705-64089f24d71e");
-        Assert.assertEquals(response.getChannels().get("game1").getOccupants().get(0).getState(), null);
+        assertEquals(response.getTotalChannels(), 1);
+        assertEquals(response.getTotalOccupancy(), 1);
+        assertEquals(response.getChannels().size(), 1);
+        assertEquals(response.getChannels().get("game1").getOccupancy(), 1);
+        assertEquals(response.getChannels().get("game1").getOccupants().size(), 1);
+        assertEquals(response.getChannels().get("game1").getOccupants().get(0).getUuid(), "a3ffd012-a3b9-478c-8705-64089f24d71e");
+        assertEquals(response.getChannels().get("game1").getOccupants().get(0).getState(), null);
 
     }
 
@@ -181,13 +186,13 @@ public class HereNowEndpointTest extends TestHarness {
 
         PNHereNowResult response =  partialHereNow.channels(Arrays.asList("game1")).includeState(true).sync();
 
-        Assert.assertEquals(response.getTotalChannels(), 1);
-        Assert.assertEquals(response.getTotalOccupancy(), 1);
-        Assert.assertEquals(response.getChannels().size(), 1);
-        Assert.assertEquals(response.getChannels().get("game1").getOccupancy(), 1);
-        Assert.assertEquals(response.getChannels().get("game1").getOccupants().size(), 1);
-        Assert.assertEquals(response.getChannels().get("game1").getOccupants().get(0).getUuid(), "a3ffd012-a3b9-478c-8705-64089f24d71e");
-        Assert.assertEquals(response.getChannels().get("game1").getOccupants().get(0).getState().toString(), "{\"age\":10}");
+        assertEquals(response.getTotalChannels(), 1);
+        assertEquals(response.getTotalOccupancy(), 1);
+        assertEquals(response.getChannels().size(), 1);
+        assertEquals(response.getChannels().get("game1").getOccupancy(), 1);
+        assertEquals(response.getChannels().get("game1").getOccupants().size(), 1);
+        assertEquals(response.getChannels().get("game1").getOccupants().get(0).getUuid(), "a3ffd012-a3b9-478c-8705-64089f24d71e");
+        assertEquals(response.getChannels().get("game1").getOccupants().get(0).getState().toString(), "{\"age\":10}");
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
@@ -202,11 +207,11 @@ public class HereNowEndpointTest extends TestHarness {
 
         PNHereNowResult response =  partialHereNow.channelGroups(Arrays.asList("grp1")).channels(Arrays.asList("game1")).includeState(true).sync();
 
-        Assert.assertEquals(response.getTotalOccupancy(), 0);
+        assertEquals(response.getTotalOccupancy(), 0);
     }
 
 
-    @org.junit.Test
+    @Test
     public void testIsAuthRequiredSuccessSync() throws IOException, PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub_key/mySubscribeKey/channel/ch1,ch2"))
@@ -220,7 +225,7 @@ public class HereNowEndpointTest extends TestHarness {
         assertEquals("myKey", requests.get(0).queryParameter("auth").firstValue());
     }
 
-    @org.junit.Test
+    @Test
     public void testOperationTypeSuccessAsync() throws IOException, PubNubException, InterruptedException {
         stubFor(get(urlPathEqualTo("/v2/presence/sub_key/mySubscribeKey/channel/ch1,ch2"))
                 .willReturn(aResponse().withBody("{\"status\":200,\"message\":\"OK\",\"payload\":{\"total_occupancy\":3,\"total_channels\":2,\"channels\":{\"ch1\":{\"occupancy\":1,\"uuids\":[{\"uuid\":\"user1\",\"state\":{\"age\":10}}]},\"ch2\":{\"occupancy\":2,\"uuids\":[{\"uuid\":\"user1\",\"state\":{\"age\":10}},{\"uuid\":\"user3\",\"state\":{\"age\":30}}]}}},\"service\":\"Presence\"}")));
@@ -240,7 +245,7 @@ public class HereNowEndpointTest extends TestHarness {
         Awaitility.await().atMost(5, TimeUnit.SECONDS).untilAtomic(atomic, org.hamcrest.core.IsEqual.equalTo(1));
     }
 
-    @org.junit.Test(expected=PubNubException.class)
+    @Test(expected=PubNubException.class)
     public void testNullSubKeySync() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub_key/mySubscribeKey/channel/ch1,ch2"))
@@ -250,7 +255,7 @@ public class HereNowEndpointTest extends TestHarness {
         partialHereNow.channels(Arrays.asList("ch1", "ch2")).includeState(true).sync();
     }
 
-    @org.junit.Test(expected=PubNubException.class)
+    @Test(expected=PubNubException.class)
     public void testEmptySubKeySync() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub_key/mySubscribeKey/channel/ch1,ch2"))

@@ -718,14 +718,13 @@ public class SubscriptionManagerTest extends TestHarness {
         pubnub.addListener(new SubscribeCallback() {
             @Override
             public void status(PubNub pubnub, PNStatus status) {
-                int moose = 10;
             }
 
             @Override
             public void message(PubNub pubnub, PNMessageResult message) {
                 List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")));
                 assertTrue(requests.size() >= 1);
-                Assert.assertEquals("{\"text\":\"Enter Message Here\"}", message.getMessage().toString());
+                assertEquals("{\"text\":\"Enter Message Here\"}", message.getMessage().toString());
                 atomic.addAndGet(1);
             }
 
@@ -761,8 +760,8 @@ public class SubscriptionManagerTest extends TestHarness {
                 if (atomic.get() == 0) {
                     assertEquals("join", presence.getEvent());
                     assertEquals("4a6d5df7-e301-4e73-a7b7-6af9ab484eb0", presence.getUuid());
-                    Assert.assertTrue(presence.getOccupancy().equals(1));
-                    Assert.assertTrue(presence.getTimestamp().equals(1461451222L));
+                    assertTrue(presence.getOccupancy().equals(1));
+                    assertTrue(presence.getTimestamp().equals(1461451222L));
                     atomic.incrementAndGet();
                 }
             }

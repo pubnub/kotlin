@@ -17,8 +17,7 @@ import java.util.Map;
 
 public class EndpointTest extends TestHarness {
 
-    PubNub pubnub;
-
+    private PubNub pubnub;
 
     @Before
     public void beforeEach() throws IOException {

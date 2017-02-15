@@ -9,6 +9,6 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 class TestPojo {
-    String field1;
-    String field2;
+    private String field1;
+    private String field2;
 }
