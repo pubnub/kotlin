@@ -45,18 +45,18 @@ public class HistoryEndpointTest extends TestHarness {
 
     @Test
     public void testSyncSuccess() throws IOException, PubNubException {
-        List<Object> testArray = new ArrayList<Object>();
-        List<Object> historyItems = new ArrayList<Object>();
+        List<Object> testArray = new ArrayList<>();
+        List<Object> historyItems = new ArrayList<>();
 
-        Map<String, Object> historyEnvelope1 = new HashMap<String, Object>();
-        Map<String, Object> historyItem1 = new HashMap<String, Object>();
+        Map<String, Object> historyEnvelope1 = new HashMap<>();
+        Map<String, Object> historyItem1 = new HashMap<>();
         historyItem1.put("a", 11);
         historyItem1.put("b", 22);
         historyEnvelope1.put("timetoken", 1111);
         historyEnvelope1.put("message", historyItem1);
 
-        Map<String, Object> historyEnvelope2 = new HashMap<String, Object>();
-        Map<String, Object> historyItem2 = new HashMap<String, Object>();
+        Map<String, Object> historyEnvelope2 = new HashMap<>();
+        Map<String, Object> historyItem2 = new HashMap<>();
         historyItem2.put("a", 33);
         historyItem2.put("b", 44);
         historyEnvelope2.put("timetoken", 2222);
@@ -93,18 +93,18 @@ public class HistoryEndpointTest extends TestHarness {
 
         pubnub.getConfiguration().setAuthKey("authKey");
 
-        List<Object> testArray = new ArrayList<Object>();
-        List<Object> historyItems = new ArrayList<Object>();
+        List<Object> testArray = new ArrayList<>();
+        List<Object> historyItems = new ArrayList<>();
 
-        Map<String, Object> historyEnvelope1 = new HashMap<String, Object>();
-        Map<String, Object> historyItem1 = new HashMap<String, Object>();
+        Map<String, Object> historyEnvelope1 = new HashMap<>();
+        Map<String, Object> historyItem1 = new HashMap<>();
         historyItem1.put("a", 11);
         historyItem1.put("b", 22);
         historyEnvelope1.put("timetoken", 1111);
         historyEnvelope1.put("message", historyItem1);
 
-        Map<String, Object> historyEnvelope2 = new HashMap<String, Object>();
-        Map<String, Object> historyItem2 = new HashMap<String, Object>();
+        Map<String, Object> historyEnvelope2 = new HashMap<>();
+        Map<String, Object> historyItem2 = new HashMap<>();
         historyItem2.put("a", 33);
         historyItem2.put("b", 44);
         historyEnvelope2.put("timetoken", 2222);
@@ -178,8 +178,8 @@ public class HistoryEndpointTest extends TestHarness {
 
     @Test
     public void testSyncSuccessWithoutTimeToken() throws PubNubException {
-        List<Object> testArray = new ArrayList<Object>();
-        List<Object> historyItems = new ArrayList<Object>();
+        List<Object> testArray = new ArrayList<>();
+        List<Object> historyItems = new ArrayList<>();
 
         Map<String, Object> historyItem1 = new HashMap<>();
         historyItem1.put("a", 11);
@@ -218,18 +218,18 @@ public class HistoryEndpointTest extends TestHarness {
 
     @Test(expected=PubNubException.class)
     public void testMissinChannel() throws IOException, PubNubException {
-        List<Object> testArray = new ArrayList<Object>();
-        List<Object> historyItems = new ArrayList<Object>();
+        List<Object> testArray = new ArrayList<>();
+        List<Object> historyItems = new ArrayList<>();
 
-        Map<String, Object> historyEnvelope1 = new HashMap<String, Object>();
-        Map<String, Object> historyItem1 = new HashMap<String, Object>();
+        Map<String, Object> historyEnvelope1 = new HashMap<>();
+        Map<String, Object> historyItem1 = new HashMap<>();
         historyItem1.put("a", 11);
         historyItem1.put("b", 22);
         historyEnvelope1.put("timetoken", 1111);
         historyEnvelope1.put("message", historyItem1);
 
-        Map<String, Object> historyEnvelope2 = new HashMap<String, Object>();
-        Map<String, Object> historyItem2 = new HashMap<String, Object>();
+        Map<String, Object> historyEnvelope2 = new HashMap<>();
+        Map<String, Object> historyItem2 = new HashMap<>();
         historyItem2.put("a", 33);
         historyItem2.put("b", 44);
         historyEnvelope2.put("timetoken", 2222);
@@ -250,18 +250,18 @@ public class HistoryEndpointTest extends TestHarness {
 
     @Test(expected=PubNubException.class)
     public void testChannelIsEmpty() throws PubNubException {
-        List<Object> testArray = new ArrayList<Object>();
-        List<Object> historyItems = new ArrayList<Object>();
+        List<Object> testArray = new ArrayList<>();
+        List<Object> historyItems = new ArrayList<>();
 
-        Map<String, Object> historyEnvelope1 = new HashMap<String, Object>();
-        Map<String, Object> historyItem1 = new HashMap<String, Object>();
+        Map<String, Object> historyEnvelope1 = new HashMap<>();
+        Map<String, Object> historyItem1 = new HashMap<>();
         historyItem1.put("a", 11);
         historyItem1.put("b", 22);
         historyEnvelope1.put("timetoken", 1111);
         historyEnvelope1.put("message", historyItem1);
 
-        Map<String, Object> historyEnvelope2 = new HashMap<String, Object>();
-        Map<String, Object> historyItem2 = new HashMap<String, Object>();
+        Map<String, Object> historyEnvelope2 = new HashMap<>();
+        Map<String, Object> historyItem2 = new HashMap<>();
         historyItem2.put("a", 33);
         historyItem2.put("b", 44);
         historyEnvelope2.put("timetoken", 2222);
@@ -283,18 +283,18 @@ public class HistoryEndpointTest extends TestHarness {
     @Test
     public void testOperationTypeSuccessAsync() throws PubNubException {
 
-        List<Object> testArray = new ArrayList<Object>();
-        List<Object> historyItems = new ArrayList<Object>();
+        List<Object> testArray = new ArrayList<>();
+        List<Object> historyItems = new ArrayList<>();
 
-        Map<String, Object> historyEnvelope1 = new HashMap<String, Object>();
-        Map<String, Object> historyItem1 = new HashMap<String, Object>();
+        Map<String, Object> historyEnvelope1 = new HashMap<>();
+        Map<String, Object> historyItem1 = new HashMap<>();
         historyItem1.put("a", 11);
         historyItem1.put("b", 22);
         historyEnvelope1.put("timetoken", 1111);
         historyEnvelope1.put("message", historyItem1);
 
-        Map<String, Object> historyEnvelope2 = new HashMap<String, Object>();
-        Map<String, Object> historyItem2 = new HashMap<String, Object>();
+        Map<String, Object> historyEnvelope2 = new HashMap<>();
+        Map<String, Object> historyItem2 = new HashMap<>();
         historyItem2.put("a", 33);
         historyItem2.put("b", 44);
         historyEnvelope2.put("timetoken", 2222);
@@ -326,18 +326,18 @@ public class HistoryEndpointTest extends TestHarness {
 
     @Test
     public void testSyncCountReverseStartEndSuccess() throws IOException, PubNubException {
-        List<Object> testArray = new ArrayList<Object>();
-        List<Object> historyItems = new ArrayList<Object>();
+        List<Object> testArray = new ArrayList<>();
+        List<Object> historyItems = new ArrayList<>();
 
-        Map<String, Object> historyEnvelope1 = new HashMap<String, Object>();
-        Map<String, Object> historyItem1 = new HashMap<String, Object>();
+        Map<String, Object> historyEnvelope1 = new HashMap<>();
+        Map<String, Object> historyItem1 = new HashMap<>();
         historyItem1.put("a", 11);
         historyItem1.put("b", 22);
         historyEnvelope1.put("timetoken", 1111);
         historyEnvelope1.put("message", historyItem1);
 
-        Map<String, Object> historyEnvelope2 = new HashMap<String, Object>();
-        Map<String, Object> historyItem2 = new HashMap<String, Object>();
+        Map<String, Object> historyEnvelope2 = new HashMap<>();
+        Map<String, Object> historyItem2 = new HashMap<>();
         historyItem2.put("a", 33);
         historyItem2.put("b", 44);
         historyEnvelope2.put("timetoken", 2222);
@@ -379,18 +379,18 @@ public class HistoryEndpointTest extends TestHarness {
 
     @Test(expected=UnsupportedOperationException.class)
     public void testSyncProcessMessageError() throws IOException, PubNubException {
-        List<Object> testArray = new ArrayList<Object>();
-        List<Object> historyItems = new ArrayList<Object>();
+        List<Object> testArray = new ArrayList<>();
+        List<Object> historyItems = new ArrayList<>();
 
-        Map<String, Object> historyEnvelope1 = new HashMap<String, Object>();
-        Map<String, Object> historyItem1 = new HashMap<String, Object>();
+        Map<String, Object> historyEnvelope1 = new HashMap<>();
+        Map<String, Object> historyItem1 = new HashMap<>();
         historyItem1.put("a", 11);
         historyItem1.put("b", 22);
         historyEnvelope1.put("timetoken", 1111);
         historyEnvelope1.put("message", historyItem1);
 
-        Map<String, Object> historyEnvelope2 = new HashMap<String, Object>();
-        Map<String, Object> historyItem2 = new HashMap<String, Object>();
+        Map<String, Object> historyEnvelope2 = new HashMap<>();
+        Map<String, Object> historyItem2 = new HashMap<>();
         historyItem2.put("a", 33);
         historyItem2.put("b", 44);
         historyEnvelope2.put("timetoken", 2222);
