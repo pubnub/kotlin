@@ -1,4 +1,14 @@
 
+## [v4.5.0](https://github.com/pubnub/java/tree/v4.5.0)
+
+
+  [Full Changelog](https://github.com/pubnub/java/compare/v4.4.4...v4.5.0)
+
+- 🌟add .toString methods to all public facing models and POJOs
+
+
+
+
 ## [v4.4.4](https://github.com/pubnub/java/tree/v4.4.4)
 
 
