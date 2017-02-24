@@ -159,7 +159,7 @@ public class PNConfiguration {
     public PNConfiguration() {
         setPresenceTimeout(PRESENCE_TIMEOUT);
 
-        uuid = UUID.randomUUID().toString();
+        uuid = "pn-" + UUID.randomUUID().toString();
 
         nonSubscribeRequestTimeout = NON_SUBSCRIBE_REQUEST_TIMEOUT;
         subscribeTimeout = SUBSCRIBE_TIMEOUT;
