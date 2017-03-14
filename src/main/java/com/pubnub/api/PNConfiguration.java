@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import okhttp3.Authenticator;
+import okhttp3.ConnectionSpec;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSocketFactory;
@@ -31,6 +32,8 @@ public class PNConfiguration {
     private SSLSocketFactory sslSocketFactory;
     @Getter
     private X509ExtendedTrustManager x509ExtendedTrustManager;
+    @Getter
+    private ConnectionSpec connectionSpec;
 
     @Getter
     private HostnameVerifier hostnameVerifier;

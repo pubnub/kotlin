@@ -11,6 +11,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 
+import java.util.Collections;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
@@ -59,6 +60,10 @@ public class RetrofitManager {
 
         if (pnConfiguration.getSslSocketFactory() != null && pnConfiguration.getX509ExtendedTrustManager() != null) {
             httpClient.sslSocketFactory(pnConfiguration.getSslSocketFactory(), pnConfiguration.getX509ExtendedTrustManager());
+        }
+
+        if (pnConfiguration.getConnectionSpec() != null) {
+            httpClient.connectionSpecs(Collections.singletonList(pnConfiguration.getConnectionSpec()));
         }
 
         if (pnConfiguration.getHostnameVerifier() != null) {
