@@ -11,6 +11,9 @@
 
 
 
+- ⭐Bump retrofit to 2.2.0
+
+
 
 ## [v4.5.0](https://github.com/pubnub/java/tree/v4.5.0)
 
