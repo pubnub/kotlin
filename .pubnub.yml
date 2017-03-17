@@ -260,7 +260,7 @@ supported-platforms:
       - Suse Linux Enterprise Server 12.x (7u75 and above)
       - Ubuntu Linux 10.04 and above
     editors:
-      - Java7
+      - Java7+
   - 
     version: PubNub Android SDK 
     platforms:
