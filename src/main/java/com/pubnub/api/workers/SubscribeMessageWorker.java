@@ -137,30 +137,6 @@ public class SubscribeMessageWorker implements Runnable {
                 strippedPresenceSubscription = PubNubUtil.replaceLast(subscriptionMatch, "-pnpres", "");
             }
 
-            List<String> join = new ArrayList<>();
-            if (message.getPayload().getAsJsonObject().get("join") != null) {
-                JsonArray jsonArray = message.getPayload().getAsJsonObject().get("join").getAsJsonArray();
-                for (int i = 0; i < jsonArray.size(); i++) {
-                    join.add(jsonArray.get(i).getAsString());
-                }
-            }
-
-            List<String> leave = new ArrayList<>();
-            if (message.getPayload().getAsJsonObject().get("leave") != null) {
-                JsonArray jsonArray = message.getPayload().getAsJsonObject().get("leave").getAsJsonArray();
-                for (int i = 0; i < jsonArray.size(); i++) {
-                    leave.add(jsonArray.get(i).getAsString());
-                }
-            }
-
-            List<String> timeout = new ArrayList<>();
-            if (message.getPayload().getAsJsonObject().get("timeout") != null) {
-                JsonArray jsonArray = message.getPayload().getAsJsonObject().get("timeout").getAsJsonArray();
-                for (int i = 0; i < jsonArray.size(); i++) {
-                    timeout.add(jsonArray.get(i).getAsString());
-                }
-            }
-
             PNPresenceEventResult pnPresenceEventResult = PNPresenceEventResult.builder()
                     .event(presencePayload.getAction())
                     // deprecated
@@ -174,9 +150,9 @@ public class SubscribeMessageWorker implements Runnable {
                     .occupancy(presencePayload.getOccupancy())
                     .uuid(presencePayload.getUuid())
                     .timestamp(presencePayload.getTimestamp())
-                    .join(join)
-                    .leave(leave)
-                    .timeout(timeout)
+                    .join(getDelta(message.getPayload().getAsJsonObject().get("join")))
+                    .leave(getDelta(message.getPayload().getAsJsonObject().get("leave")))
+                    .timeout(getDelta(message.getPayload().getAsJsonObject().get("timeout")))
                     .build();
 
             listenerManager.announce(pnPresenceEventResult);
@@ -205,4 +181,16 @@ public class SubscribeMessageWorker implements Runnable {
         }
     }
 
+    private List<String> getDelta(JsonElement delta) {
+        List<String> list = new ArrayList<>();
+        if (delta != null) {
+            JsonArray jsonArray = delta.getAsJsonArray();
+            for (int i = 0; i < jsonArray.size(); i++) {
+                list.add(jsonArray.get(i).getAsString());
+            }
+        }
+
+        return list;
+
+    }
 }
