@@ -1,5 +1,6 @@
 package com.pubnub.api.workers;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.pubnub.api.PubNub;
@@ -19,6 +20,8 @@ import com.pubnub.api.models.server.SubscribeMessage;
 import com.pubnub.api.vendor.Crypto;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
 
 
@@ -134,6 +137,30 @@ public class SubscribeMessageWorker implements Runnable {
                 strippedPresenceSubscription = PubNubUtil.replaceLast(subscriptionMatch, "-pnpres", "");
             }
 
+            List<String> join = new ArrayList<>();
+            if (message.getPayload().getAsJsonObject().get("join") != null) {
+                JsonArray jsonArray = message.getPayload().getAsJsonObject().get("join").getAsJsonArray();
+                for (int i = 0; i < jsonArray.size(); i++) {
+                    join.add(jsonArray.get(i).getAsString());
+                }
+            }
+
+            List<String> leave = new ArrayList<>();
+            if (message.getPayload().getAsJsonObject().get("leave") != null) {
+                JsonArray jsonArray = message.getPayload().getAsJsonObject().get("leave").getAsJsonArray();
+                for (int i = 0; i < jsonArray.size(); i++) {
+                    leave.add(jsonArray.get(i).getAsString());
+                }
+            }
+
+            List<String> timeout = new ArrayList<>();
+            if (message.getPayload().getAsJsonObject().get("timeout") != null) {
+                JsonArray jsonArray = message.getPayload().getAsJsonObject().get("timeout").getAsJsonArray();
+                for (int i = 0; i < jsonArray.size(); i++) {
+                    timeout.add(jsonArray.get(i).getAsString());
+                }
+            }
+
             PNPresenceEventResult pnPresenceEventResult = PNPresenceEventResult.builder()
                     .event(presencePayload.getAction())
                     // deprecated
@@ -147,6 +174,9 @@ public class SubscribeMessageWorker implements Runnable {
                     .occupancy(presencePayload.getOccupancy())
                     .uuid(presencePayload.getUuid())
                     .timestamp(presencePayload.getTimestamp())
+                    .join(join)
+                    .leave(leave)
+                    .timeout(timeout)
                     .build();
 
             listenerManager.announce(pnPresenceEventResult);
