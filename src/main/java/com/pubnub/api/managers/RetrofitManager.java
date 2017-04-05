@@ -17,7 +17,6 @@ import java.util.concurrent.TimeUnit;
 
 public class RetrofitManager {
 
-    private static final int TIMEOUTEXECUTOR = 60;
     private PubNub pubnub;
 
     private SignatureInterceptor signatureInterceptor;
