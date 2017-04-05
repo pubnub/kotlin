@@ -104,19 +104,23 @@ public class ReconnectionManager {
     }
 
     private void callTime() {
-        pubnub.time().async(new PNCallback<PNTimeResult>() {
-            @Override
-            public void onResponse(PNTimeResult result, PNStatus status) {
-                if (!status.isError()) {
-                    stopHeartbeatTimer();
-                    callback.onReconnection();
-                } else {
-                    log.debug("callTime() at: " + Calendar.getInstance().getTime().toString());
-                    exponentialMultiplier++;
-                    failedCalls++;
-                    registerHeartbeatTimer();
+        try {
+            pubnub.time().async(new PNCallback<PNTimeResult>() {
+                @Override
+                public void onResponse(PNTimeResult result, PNStatus status) {
+                    if (!status.isError()) {
+                        stopHeartbeatTimer();
+                        callback.onReconnection();
+                    } else {
+                        log.debug("callTime() at: " + Calendar.getInstance().getTime().toString());
+                        exponentialMultiplier++;
+                        failedCalls++;
+                        registerHeartbeatTimer();
+                    }
                 }
-            }
-        });
+            });
+        } catch (Exception error) {
+            //
+        }
     }
 }

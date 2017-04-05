@@ -17,6 +17,7 @@ import java.util.concurrent.TimeUnit;
 
 public class RetrofitManager {
 
+    private static final int TIMEOUTEXECUTOR = 60;
     private PubNub pubnub;
 
     private SignatureInterceptor signatureInterceptor;
@@ -108,10 +109,8 @@ public class RetrofitManager {
 
     private void closeExecutor(OkHttpClient client) {
         client.connectionPool().evictAll();
-
+        client.dispatcher().cancelAll();
         ExecutorService executorService = client.dispatcher().executorService();
         executorService.shutdown();
-
     }
-
 }
