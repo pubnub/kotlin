@@ -21,6 +21,7 @@ import com.pubnub.api.endpoints.TestHarness;
 import org.junit.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -737,6 +738,118 @@ public class SubscriptionManagerTest extends TestHarness {
 
         Awaitility.await().atMost(5, TimeUnit.SECONDS)
                 .untilAtomic(atomic, org.hamcrest.Matchers.greaterThan(0));
+
+    }
+
+    @Test
+    public void testSubscribePresencePayloadJoinDeltaBuilder() {
+        final AtomicInteger atomic = new AtomicInteger(0);
+        stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1,ch2-pnpres,ch1-pnpres/0"))
+                .willReturn(aResponse().withBody("{\"t\":{\"t\":\"14901247588021627\",\"r\":2},\"m\":[{\"a\":\"4\",\"f\":0,\"p\":{\"t\":\"14901247587675704\",\"r\":1},\"k\":\"demo-36\",\"c\":\"moon-interval-deltas-pnpres\",\"d\":{\"action\": \"interval\", \"timestamp\": 1490124758, \"occupancy\": 2, \"join\": [\"2220E216-5A30-49AD-A89C-1E0B5AE26AD7\", \"4262AE3F-3202-4487-BEE0-1A0D91307DEB\"]},\"b\":\"moon-interval-deltas-pnpres\"}]}")));
+
+        pubnub.addListener(new SubscribeCallback() {
+            @Override
+            public void status(PubNub pubnub, PNStatus status) {
+            }
+
+            @Override
+            public void message(PubNub pubnub, PNMessageResult message) {
+            }
+
+            @Override
+            public void presence(PubNub pubnub, PNPresenceEventResult presence) {
+                if (atomic.get() == 0) {
+                    List<String> joinList = new ArrayList<>();
+                    joinList.add("2220E216-5A30-49AD-A89C-1E0B5AE26AD7");
+                    joinList.add("4262AE3F-3202-4487-BEE0-1A0D91307DEB");
+
+                    assertEquals("interval", presence.getEvent());
+                    assertEquals(joinList, presence.getJoin());
+                    assertTrue(presence.getOccupancy().equals(2));
+                    atomic.incrementAndGet();
+                }
+            }
+        });
+
+        pubnub.subscribe().channels(Arrays.asList("ch1", "ch2")).withPresence().execute();
+
+        Awaitility.await().atMost(5, TimeUnit.SECONDS)
+                .untilAtomic(atomic, org.hamcrest.core.IsEqual.equalTo(1));
+
+    }
+
+    @Test
+    public void testSubscribePresencePayloadLeaveDeltaBuilder() {
+        final AtomicInteger atomic = new AtomicInteger(0);
+        stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1,ch2-pnpres,ch1-pnpres/0"))
+                .willReturn(aResponse().withBody("{\"t\":{\"t\":\"14901247588021627\",\"r\":2},\"m\":[{\"a\":\"4\",\"f\":0,\"p\":{\"t\":\"14901247587675704\",\"r\":1},\"k\":\"demo-36\",\"c\":\"moon-interval-deltas-pnpres\",\"d\":{\"action\": \"interval\", \"timestamp\": 1490124758, \"occupancy\": 2, \"leave\": [\"2220E216-5A30-49AD-A89C-1E0B5AE26AD7\", \"4262AE3F-3202-4487-BEE0-1A0D91307DEB\"]},\"b\":\"moon-interval-deltas-pnpres\"}]}")));
+
+        pubnub.addListener(new SubscribeCallback() {
+            @Override
+            public void status(PubNub pubnub, PNStatus status) {
+            }
+
+            @Override
+            public void message(PubNub pubnub, PNMessageResult message) {
+            }
+
+            @Override
+            public void presence(PubNub pubnub, PNPresenceEventResult presence) {
+                if (atomic.get() == 0) {
+                    List<String> leaveList = new ArrayList<>();
+
+                    leaveList.add("2220E216-5A30-49AD-A89C-1E0B5AE26AD7");
+                    leaveList.add("4262AE3F-3202-4487-BEE0-1A0D91307DEB");
+
+                    assertEquals("interval", presence.getEvent());
+                    assertEquals(leaveList, presence.getLeave());
+                    assertTrue(presence.getOccupancy().equals(2));
+                    atomic.incrementAndGet();
+                }
+            }
+        });
+
+        pubnub.subscribe().channels(Arrays.asList("ch1", "ch2")).withPresence().execute();
+
+        Awaitility.await().atMost(5, TimeUnit.SECONDS)
+                .untilAtomic(atomic, org.hamcrest.core.IsEqual.equalTo(1));
+
+    }
+
+    @Test
+    public void testSubscribePresencePayloadTimeoutDeltaBuilder() {
+        final AtomicInteger atomic = new AtomicInteger(0);
+        stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1,ch2-pnpres,ch1-pnpres/0"))
+                .willReturn(aResponse().withBody("{\"t\":{\"t\":\"14901247588021627\",\"r\":2},\"m\":[{\"a\":\"4\",\"f\":0,\"p\":{\"t\":\"14901247587675704\",\"r\":1},\"k\":\"demo-36\",\"c\":\"moon-interval-deltas-pnpres\",\"d\":{\"action\": \"interval\", \"timestamp\": 1490124758, \"occupancy\": 2, \"timeout\": [\"2220E216-5A30-49AD-A89C-1E0B5AE26AD7\", \"4262AE3F-3202-4487-BEE0-1A0D91307DEB\"]},\"b\":\"moon-interval-deltas-pnpres\"}]}")));
+
+        pubnub.addListener(new SubscribeCallback() {
+            @Override
+            public void status(PubNub pubnub, PNStatus status) {
+            }
+
+            @Override
+            public void message(PubNub pubnub, PNMessageResult message) {
+            }
+
+            @Override
+            public void presence(PubNub pubnub, PNPresenceEventResult presence) {
+                if (atomic.get() == 0) {
+                    List<String> timeoutList = new ArrayList<>();
+                    timeoutList.add("2220E216-5A30-49AD-A89C-1E0B5AE26AD7");
+                    timeoutList.add("4262AE3F-3202-4487-BEE0-1A0D91307DEB");
+
+                    assertEquals("interval", presence.getEvent());
+                    assertEquals(timeoutList, presence.getTimeout());
+                    assertTrue(presence.getOccupancy().equals(2));
+                    atomic.incrementAndGet();
+                }
+            }
+        });
+
+        pubnub.subscribe().channels(Arrays.asList("ch1", "ch2")).withPresence().execute();
+
+        Awaitility.await().atMost(5, TimeUnit.SECONDS)
+                .untilAtomic(atomic, org.hamcrest.core.IsEqual.equalTo(1));
 
     }
 

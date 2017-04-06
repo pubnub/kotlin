@@ -108,10 +108,8 @@ public class RetrofitManager {
 
     private void closeExecutor(OkHttpClient client) {
         client.connectionPool().evictAll();
-
+        client.dispatcher().cancelAll();
         ExecutorService executorService = client.dispatcher().executorService();
         executorService.shutdown();
-
     }
-
 }

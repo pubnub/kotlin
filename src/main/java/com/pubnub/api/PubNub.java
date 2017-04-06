@@ -57,7 +57,7 @@ public class PubNub {
     private static final int TIMESTAMP_DIVIDER = 1000;
     private static final int MAX_SEQUENCE = 65535;
 
-    private static final String SDK_VERSION = "4.6.0";
+    private static final String SDK_VERSION = "4.6.1";
 
     public PubNub(PNConfiguration initialConfig) {
         this.configuration = initialConfig;
@@ -270,8 +270,12 @@ public class PubNub {
      *  Destroy the SDK to evict the connection pools.
      */
     public void destroy() {
-        subscriptionManager.destroy();
-        retrofitManager.destroy();
+        try {
+            subscriptionManager.destroy();
+            retrofitManager.destroy();
+        } catch (Exception error) {
+            //
+        }
     }
 
     /**

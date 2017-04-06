@@ -1,5 +1,6 @@
 package com.pubnub.api.workers;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.pubnub.api.PubNub;
@@ -19,6 +20,8 @@ import com.pubnub.api.models.server.SubscribeMessage;
 import com.pubnub.api.vendor.Crypto;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
 
 
@@ -147,6 +150,9 @@ public class SubscribeMessageWorker implements Runnable {
                     .occupancy(presencePayload.getOccupancy())
                     .uuid(presencePayload.getUuid())
                     .timestamp(presencePayload.getTimestamp())
+                    .join(getDelta(message.getPayload().getAsJsonObject().get("join")))
+                    .leave(getDelta(message.getPayload().getAsJsonObject().get("leave")))
+                    .timeout(getDelta(message.getPayload().getAsJsonObject().get("timeout")))
                     .build();
 
             listenerManager.announce(pnPresenceEventResult);
@@ -175,4 +181,16 @@ public class SubscribeMessageWorker implements Runnable {
         }
     }
 
+    private List<String> getDelta(JsonElement delta) {
+        List<String> list = new ArrayList<>();
+        if (delta != null) {
+            JsonArray jsonArray = delta.getAsJsonArray();
+            for (int i = 0; i < jsonArray.size(); i++) {
+                list.add(jsonArray.get(i).getAsString());
+            }
+        }
+
+        return list;
+
+    }
 }

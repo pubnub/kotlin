@@ -1,4 +1,17 @@
 
+## [v4.6.1](https://github.com/pubnub/java/tree/v4.6.1)
+
+
+  [Full Changelog](https://github.com/pubnub/java/compare/v4.6.0...v4.6.1)
+
+
+
+- 🐛SDK crash in Android with Airplane Mode
+- 🌟add deltas on interval action.
+
+
+
+
 ## [v4.6.0](https://github.com/pubnub/java/tree/v4.6.0)
 
 

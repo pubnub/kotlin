@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.util.List;
+
 @Getter
 @Builder
 @ToString
@@ -27,5 +29,8 @@ public class PNPresenceEventResult {
 
     private Long timetoken;
     private Object userMetadata;
+    private List<String> join;
+    private List<String> leave;
+    private List<String> timeout;
 
 }
