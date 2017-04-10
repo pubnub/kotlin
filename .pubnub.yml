@@ -1,8 +1,13 @@
 name: java
-version: 4.6.1
+version: 4.6.2
 schema: 1
 scm: github.com/pubnub/java
 changelog:
+  - version: v4.6.2
+    date:
+    changes:
+      - type: feature
+        text: set a name and daemon for Subscription Manager Consumer Thead.
   - version: v4.6.1
     date:
     changes:
