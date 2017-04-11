@@ -111,7 +111,6 @@ public class SubscriptionManager {
         if (this.pubnub.getConfiguration().isStartSubscriberThread()) {
             consumerThread = new Thread(new SubscribeMessageWorker(this.pubnub, listenerManager, messageQueue));
             consumerThread.setName("Subscription Manager Consumer Thread");
-            consumerThread.setDaemon(true);
             consumerThread.start();
         }
     }
