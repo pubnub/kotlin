@@ -154,6 +154,9 @@ javadoc {
     dependsOn delombok
     source = delombok.outputDir
     destinationDir = file("docs")
+
+    options.noTimestamp = true
+
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
