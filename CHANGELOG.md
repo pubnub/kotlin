@@ -1,4 +1,14 @@
 
+## [v4.6.3](https://github.com/pubnub/java/tree/v4.6.3)
+
+
+  [Full Changelog](https://github.com/pubnub/java/compare/v4.6.2...v4.6.3)
+
+- 🌟on interval events, pass hereNowRefresh to indicate if a here_now fetch is needed.
+
+
+
+
 ## [v4.6.2](https://github.com/pubnub/java/tree/v4.6.2)
 
 
