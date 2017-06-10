@@ -44,6 +44,34 @@ public class HistoryEndpointTest extends TestHarness {
 
 
     @Test
+    public void testSyncDisabled() {
+        String payload = "[[\"Use of the history API requires the Storage & Playback add-on which is not enabled for this subscribe key. Login to your PubNub Dashboard Account and ADD the Storage & Playback add-on. Contact support@pubnub.com if you require further assistance.\"],0,0]";
+
+        stubFor(get(urlPathEqualTo("/v2/history/sub-key/mySubscribeKey/channel/niceChannel"))
+                .willReturn(aResponse().withBody(payload)));
+
+        try {
+            partialHistory.channel("niceChannel").sync();
+        } catch (PubNubException ex) {
+            assertEquals("History is disabled", ex.getErrormsg());
+        }
+    }
+
+    @Test
+    public void testSyncWithTokensDisabled() {
+        String payload = "[[\"Use of the history API requires the Storage & Playback add-on which is not enabled for this subscribe key. Login to your PubNub Dashboard Account and ADD the Storage & Playback add-on. Contact support@pubnub.com if you require further assistance.\"],0,0]";
+
+        stubFor(get(urlPathEqualTo("/v2/history/sub-key/mySubscribeKey/channel/niceChannel"))
+                .willReturn(aResponse().withBody(payload)));
+
+        try {
+            partialHistory.channel("niceChannel").includeTimetoken(true).sync();
+        } catch (PubNubException ex) {
+            assertEquals("History is disabled", ex.getErrormsg());
+        }
+    }
+
+    @Test
     public void testSyncSuccess() throws IOException, PubNubException {
         List<Object> testArray = new ArrayList<>();
         List<Object> historyItems = new ArrayList<>();

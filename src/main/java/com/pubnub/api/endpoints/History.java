@@ -105,8 +105,20 @@ public class History extends Endpoint<JsonElement, PNHistoryResult> {
         MapperManager mapper = getPubnub().getMapper();
 
         if (input.body() != null) {
-            historyData.startTimetoken(mapper.elementToLong(mapper.getArrayElement(input.body(), 1)));
-            historyData.endTimetoken(mapper.elementToLong(mapper.getArrayElement(input.body(), 2)));
+            Long startTimeToken = mapper.elementToLong(mapper.getArrayElement(input.body(), 1));
+            Long endTimeToken = mapper.elementToLong(mapper.getArrayElement(input.body(), 2));
+
+            if (startTimeToken == 0 && endTimeToken == 0) {
+                throw PubNubException.builder()
+                        .pubnubError(PubNubErrorBuilder.PNERROBJ_HTTP_ERROR)
+                        .errormsg("History is disabled")
+                        .jso(input.body())
+                        .build();
+            }
+
+            historyData.startTimetoken(startTimeToken);
+            historyData.endTimetoken(endTimeToken);
+
 
             for (Iterator<JsonElement> it = mapper.getArrayIterator(mapper.getArrayElement(input.body(), 0)); it.hasNext();) {
                 JsonElement historyEntry = it.next();

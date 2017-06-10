@@ -1,4 +1,14 @@
 
+## [v4.6.4](https://github.com/pubnub/java/tree/v4.6.4)
+
+
+  [Full Changelog](https://github.com/pubnub/java/compare/v4.6.3...v4.6.4)
+
+
+
+- 🐛gracefully handle disabled history
+
+
 ## [v4.6.3](https://github.com/pubnub/java/tree/v4.6.3)
 
 
