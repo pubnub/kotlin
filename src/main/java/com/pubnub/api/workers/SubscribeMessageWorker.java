@@ -54,7 +54,7 @@ public class SubscribeMessageWorker implements Runnable {
                 this.processIncomingPayload(this.queue.take());
             } catch (InterruptedException e) {
                 this.isRunning = false;
-                log.warn("take message interrupted", e);
+                log.trace("take message interrupted", e);
             }
         }
     }
