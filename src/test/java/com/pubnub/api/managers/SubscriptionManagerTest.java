@@ -144,7 +144,65 @@ public class SubscriptionManagerTest extends TestHarness {
     }
 
     @Test
-    public void testQueueNotificationsBuilder() {
+    public void testQueueNotificationsBuilderNoThresholdSpecified() {
+        pubnub.getConfiguration().setRequestMessageCountThreshold(null);
+        final AtomicBoolean gotStatus = new AtomicBoolean();
+        stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
+            .willReturn(aResponse().withBody("{\"t\":{\"t\":\"14607577960932487\",\"r\":1},\"m\":[{\"a\":\"4\",\"f\":0,\"i\":\"Client-g5d4g\",\"p\":{\"t\":\"14607577960925503\",\"r\":1},\"o\":{\"t\":\"14737141991877032\",\"r\":2},\"k\":\"sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f\",\"c\":\"coolChannel\",\"d\":{\"text\":\"Message\"},\"b\":\"coolChannel\"}]}")));
+
+        pubnub.addListener(new SubscribeCallback() {
+            @Override
+            public void status(PubNub pubnub, PNStatus status) {
+                if (status.getCategory() == PNStatusCategory.PNRequestMessageCountExceededCategory) {
+                    gotStatus.set(true);
+                }
+            }
+
+            @Override
+            public void message(PubNub pubnub, PNMessageResult message) {
+            }
+
+            @Override
+            public void presence(PubNub pubnub, PNPresenceEventResult presence) {
+            }
+        });
+
+        pubnub.subscribe().channels(Arrays.asList("ch1", "ch2")).execute();
+
+        Awaitility.await().atMost(2, TimeUnit.SECONDS).untilAtomic(gotStatus, org.hamcrest.core.IsEqual.equalTo(false));
+    }
+
+    @Test
+    public void testQueueNotificationsBuilderBelowThreshold() {
+        pubnub.getConfiguration().setRequestMessageCountThreshold(10);
+        final AtomicBoolean gotStatus = new AtomicBoolean();
+        stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
+            .willReturn(aResponse().withBody("{\"t\":{\"t\":\"14607577960932487\",\"r\":1},\"m\":[{\"a\":\"4\",\"f\":0,\"i\":\"Client-g5d4g\",\"p\":{\"t\":\"14607577960925503\",\"r\":1},\"o\":{\"t\":\"14737141991877032\",\"r\":2},\"k\":\"sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f\",\"c\":\"coolChannel\",\"d\":{\"text\":\"Message\"},\"b\":\"coolChannel\"}]}")));
+
+        pubnub.addListener(new SubscribeCallback() {
+            @Override
+            public void status(PubNub pubnub, PNStatus status) {
+                if (status.getCategory() == PNStatusCategory.PNRequestMessageCountExceededCategory) {
+                    gotStatus.set(true);
+                }
+            }
+
+            @Override
+            public void message(PubNub pubnub, PNMessageResult message) {
+            }
+
+            @Override
+            public void presence(PubNub pubnub, PNPresenceEventResult presence) {
+            }
+        });
+
+        pubnub.subscribe().channels(Arrays.asList("ch1", "ch2")).execute();
+
+        Awaitility.await().atMost(2, TimeUnit.SECONDS).untilAtomic(gotStatus, org.hamcrest.core.IsEqual.equalTo(false));
+    }
+
+    @Test
+    public void testQueueNotificationsBuilderThresholdMatched() {
         pubnub.getConfiguration().setRequestMessageCountThreshold(1);
         final AtomicBoolean gotStatus = new AtomicBoolean();
         stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
@@ -167,6 +225,34 @@ public class SubscriptionManagerTest extends TestHarness {
             }
         });
 
+        pubnub.subscribe().channels(Arrays.asList("ch1", "ch2")).execute();
+
+        Awaitility.await().atMost(2, TimeUnit.SECONDS).untilAtomic(gotStatus, org.hamcrest.core.IsEqual.equalTo(true));
+    }
+
+    @Test
+    public void testQueueNotificationsBuilderThresholdExceeded() {
+        pubnub.getConfiguration().setRequestMessageCountThreshold(1);
+        final AtomicBoolean gotStatus = new AtomicBoolean();
+        stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
+            .willReturn(aResponse().withBody("{\"m\":[{\"a\":\"4\",\"b\":\"coolChannel\",\"c\":\"coolChannel\",\"d\":{\"text\":\"Message\"},\"f\":0,\"i\":\"Client-g5d4g\",\"k\":\"sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f\",\"o\":{\"r\":2,\"t\":\"14737141991877032\"},\"p\":{\"r\":1,\"t\":\"14607577960925503\"}},{\"a\":\"5\",\"b\":\"coolChannel2\",\"c\":\"coolChannel2\",\"d\":{\"text\":\"Message2\"},\"f\":0,\"i\":\"Client-g5d4g\",\"k\":\"sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4g\",\"o\":{\"r\":2,\"t\":\"14737141991877033\"},\"p\":{\"r\":1,\"t\":\"14607577960925504\"}}],\"t\":{\"r\":1,\"t\":\"14607577960932487\"}}")));
+
+        pubnub.addListener(new SubscribeCallback() {
+            @Override
+            public void status(PubNub pubnub, PNStatus status) {
+                if (status.getCategory() == PNStatusCategory.PNRequestMessageCountExceededCategory) {
+                    gotStatus.set(true);
+                }
+            }
+
+            @Override
+            public void message(PubNub pubnub, PNMessageResult message) {
+            }
+
+            @Override
+            public void presence(PubNub pubnub, PNPresenceEventResult presence) {
+            }
+        });
 
         pubnub.subscribe().channels(Arrays.asList("ch1", "ch2")).execute();
 
