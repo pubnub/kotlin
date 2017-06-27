@@ -263,7 +263,7 @@ public class SubscriptionManager {
                 }
 
                 Integer requestMessageCountThreshold = pubnub.getConfiguration().getRequestMessageCountThreshold();
-                if (requestMessageCountThreshold != null && requestMessageCountThreshold == result.getMessages().size()) {
+                if (requestMessageCountThreshold != null && requestMessageCountThreshold <= result.getMessages().size()) {
                     PNStatus pnStatus = createPublicStatus(status)
                             .category(PNStatusCategory.PNRequestMessageCountExceededCategory)
                             .error(false)
