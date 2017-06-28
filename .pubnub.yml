@@ -1,10 +1,15 @@
 name: java
-version: 4.6.4
+version: 4.6.5
 schema: 1
 scm: github.com/pubnub/java
 files:
-  - build/libs/pubnub-gson-4.6.4-all.jar
+  - build/libs/pubnub-gson-4.6.5-all.jar
 changelog:
+  - version: v4.6.5
+    date:
+    changes:
+      - type: bug
+        text: adjust queue exceeded notifications to be greater or equal of.
   - version: v4.6.4
     date:
     changes:
