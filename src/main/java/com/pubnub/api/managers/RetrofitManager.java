@@ -58,6 +58,10 @@ public class RetrofitManager {
             httpClient.addInterceptor(logging);
         }
 
+        if (pubnub.getConfiguration().getHttpLoggingInterceptor() != null) {
+            httpClient.addInterceptor(pubnub.getConfiguration().getHttpLoggingInterceptor());
+        }
+
         if (pnConfiguration.getSslSocketFactory() != null && pnConfiguration.getX509ExtendedTrustManager() != null) {
             httpClient.sslSocketFactory(pnConfiguration.getSslSocketFactory(), pnConfiguration.getX509ExtendedTrustManager());
         }

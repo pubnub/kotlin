@@ -5,6 +5,11 @@ scm: github.com/pubnub/java
 files:
   - build/libs/pubnub-gson-4.6.5-all.jar
 changelog:
+  - version: v4.7.0
+    date:
+    changes:
+      - type: feature
+        text: Allow injection of httpLoggingInterceptor for extra logging monitoring..
   - version: v4.6.5
     date:
     changes:

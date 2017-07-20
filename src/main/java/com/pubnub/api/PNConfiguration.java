@@ -10,6 +10,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import okhttp3.Authenticator;
 import okhttp3.ConnectionSpec;
+import okhttp3.logging.HttpLoggingInterceptor;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSocketFactory;
@@ -142,6 +143,9 @@ public class PNConfiguration {
     private ProxySelector proxySelector;
     @Setter
     private Authenticator proxyAuthenticator;
+
+    @Setter
+    private HttpLoggingInterceptor httpLoggingInterceptor;
 
     /**
      * if set, the SDK will alert once the number of messages arrived in one call equal to the threshold
