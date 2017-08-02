@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import okhttp3.Authenticator;
+import okhttp3.CertificatePinner;
 import okhttp3.ConnectionSpec;
 import okhttp3.logging.HttpLoggingInterceptor;
 
@@ -143,6 +144,9 @@ public class PNConfiguration {
     private ProxySelector proxySelector;
     @Setter
     private Authenticator proxyAuthenticator;
+
+    @Setter
+    private CertificatePinner certificatePinner;
 
     @Setter
     private HttpLoggingInterceptor httpLoggingInterceptor;

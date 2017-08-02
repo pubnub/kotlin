@@ -86,6 +86,10 @@ public class RetrofitManager {
             httpClient.proxyAuthenticator(pubnub.getConfiguration().getProxyAuthenticator());
         }
 
+        if (pubnub.getConfiguration().getCertificatePinner() != null) {
+            httpClient.certificatePinner(pubnub.getConfiguration().getCertificatePinner());
+        }
+
         httpClient.addInterceptor(this.signatureInterceptor);
 
         return httpClient.build();
