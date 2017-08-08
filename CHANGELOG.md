@@ -1,4 +1,20 @@
 
+## [v4.8.0](https://github.com/pubnub/java/tree/v4.8.0)
+
+
+  [Full Changelog](https://github.com/pubnub/java/compare/v4.7.0...v4.8.0)
+
+- 🌟Allow certificate pinning via setCertificatePinner on PNConfiguration
+
+
+- 🌟Allow disabling of heartbeat by setting the interval to 0.
+
+
+- 🌟GAE fixes.
+
+
+
+
 ## [v4.7.0](https://github.com/pubnub/java/tree/v4.7.0)
 
 
