@@ -201,6 +201,11 @@ public class SubscriptionManager {
         // make sure only one timer is running at a time.
         stopHeartbeatTimer();
 
+        // if the interval is 0, do not start the timer
+        if (pubnub.getConfiguration().getHeartbeatInterval() == 0) {
+            return;
+        }
+
         timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override

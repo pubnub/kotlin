@@ -2,6 +2,9 @@ package com.pubnub.api;
 
 import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.vendor.Base64;
+import lombok.extern.java.Log;
+import okhttp3.HttpUrl;
+import okhttp3.Request;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -11,12 +14,13 @@ import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-
+@Log
 public class PubNubUtil {
 
     private PubNubUtil() {
@@ -139,6 +143,49 @@ public class PubNubUtil {
         } else {
             return string;
         }
+    }
+
+    public static Request requestSigner(Request originalRequest, PNConfiguration pnConfiguration, int timestamp) {
+        // only sign if we have a secret key in place.
+        if (pnConfiguration.getSecretKey() == null) {
+            return originalRequest;
+        }
+
+        HttpUrl url = originalRequest.url();
+        String requestURL = url.encodedPath();
+        Map<String, String> queryParams = new HashMap<>();
+        String signature = "";
+
+        for (String queryKey: url.queryParameterNames()) {
+            queryParams.put(queryKey, url.queryParameter(queryKey));
+        }
+
+        queryParams.put("timestamp", String.valueOf(timestamp));
+
+        String signInput = pnConfiguration.getSubscribeKey() + "\n"  + pnConfiguration.getPublishKey() + "\n";
+
+        if (requestURL.startsWith("/v1/auth/audit")) {
+            signInput += "audit" + "\n";
+        } else if (requestURL.startsWith("/v1/auth/grant")) {
+            signInput += "grant" + "\n";
+        } else {
+            signInput += requestURL + "\n";
+        }
+
+        signInput += PubNubUtil.preparePamArguments(queryParams);
+
+        try {
+            signature = PubNubUtil.signSHA256(pnConfiguration.getSecretKey(), signInput);
+        } catch (PubNubException e) {
+            log.warning("signature failed on SignatureInterceptor: " + e.toString());
+        }
+
+        HttpUrl rebuiltUrl = url.newBuilder()
+                .addQueryParameter("timestamp", String.valueOf(timestamp))
+                .addQueryParameter("signature", signature)
+                .build();
+
+        return originalRequest.newBuilder().url(rebuiltUrl).build();
     }
 
 }
