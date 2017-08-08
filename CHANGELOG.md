@@ -1,4 +1,24 @@
 
+## [v4.7.0](https://github.com/pubnub/java/tree/v4.7.0)
+
+
+  [Full Changelog](https://github.com/pubnub/java/compare/v4.6.5...v4.7.0)
+
+- 🌟Allow injection of httpLoggingInterceptor for extra logging monitoring..
+
+
+
+
+## [v4.6.5](https://github.com/pubnub/java/tree/v4.6.5)
+
+
+  [Full Changelog](https://github.com/pubnub/java/compare/v4.6.4...v4.6.5)
+
+
+
+- 🐛adjust queue exceeded notifications to be greater or equal of.
+
+
 ## [v4.6.4](https://github.com/pubnub/java/tree/v4.6.4)
 
 
