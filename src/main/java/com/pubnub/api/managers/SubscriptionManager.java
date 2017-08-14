@@ -35,6 +35,8 @@ public class SubscriptionManager {
 
     private LinkedBlockingQueue<SubscribeMessage> messageQueue;
 
+    private DuplicationManager duplicationManager;
+
     /**
      * Store the latest timetoken to subscribe with, null by default to get the latest timetoken.
      */
@@ -74,6 +76,7 @@ public class SubscriptionManager {
         this.listenerManager = new ListenerManager(this.pubnub);
         this.reconnectionManager = new ReconnectionManager(this.pubnub);
         this.retrofitManager = retrofitManagerInstance;
+        this.duplicationManager = new DuplicationManager(this.pubnub.getConfiguration());
 
         this.timetoken = 0L;
         this.storedTimetoken = null;
@@ -109,7 +112,7 @@ public class SubscriptionManager {
         });
 
         if (this.pubnub.getConfiguration().isStartSubscriberThread()) {
-            consumerThread = new Thread(new SubscribeMessageWorker(this.pubnub, listenerManager, messageQueue));
+            consumerThread = new Thread(new SubscribeMessageWorker(this.pubnub, listenerManager, messageQueue, duplicationManager));
             consumerThread.setName("Subscription Manager Consumer Thread");
             consumerThread.start();
         }
@@ -155,6 +158,8 @@ public class SubscriptionManager {
         this.subscriptionState.adaptSubscribeBuilder(subscribeOperation);
         // the channel mix changed, on the successful subscribe, there is going to be announcement.
         this.subscriptionStatusAnnounced = false;
+
+        this.duplicationManager.clearHistory();
 
         if (subscribeOperation.getTimetoken() != null) {
             this.timetoken = subscribeOperation.getTimetoken();

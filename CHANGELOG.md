@@ -1,4 +1,14 @@
 
+## [v4.9.0](https://github.com/pubnub/java/tree/v4.9.0)
+
+
+  [Full Changelog](https://github.com/pubnub/java/compare/v4.8.0...v4.9.0)
+
+- 🌟Internal deduping mechanism when devices cross regions (dedupOnSubscribe).
+
+
+
+
 ## [v4.8.0](https://github.com/pubnub/java/tree/v4.8.0)
 
 

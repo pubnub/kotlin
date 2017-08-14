@@ -24,6 +24,8 @@ import java.util.Map;
 
 public class DeleteMessages extends Endpoint<DeleteMessagesEnvelope, PNDeleteMessagesResult> {
 
+    private static final int SERVER_RESPONSE_SUCCESS = 200;
+
     @Setter
     private List<String> channels;
     @Setter
@@ -76,10 +78,10 @@ public class DeleteMessages extends Endpoint<DeleteMessagesEnvelope, PNDeleteMes
 
     @Override
     protected PNDeleteMessagesResult createResponse(Response<DeleteMessagesEnvelope> input) throws PubNubException {
-        if (input.body() == null || input.body().getStatus() == null || input.body().getStatus() != 200) {
+        if (input.body() == null || input.body().getStatus() == null || input.body().getStatus() != SERVER_RESPONSE_SUCCESS) {
             String errorMsg = null;
 
-            if (input.body() != null && input.body().getErrorMessage() != null){
+            if (input.body() != null && input.body().getErrorMessage() != null) {
                 errorMsg = input.body().getErrorMessage();
             } else {
                 errorMsg = "n/a";

@@ -8,6 +8,7 @@ import com.pubnub.api.PubNubException;
 import com.pubnub.api.PubNubUtil;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.enums.PNStatusCategory;
+import com.pubnub.api.managers.DuplicationManager;
 import com.pubnub.api.managers.ListenerManager;
 import com.pubnub.api.managers.MapperManager;
 import com.pubnub.api.models.consumer.PNErrorData;
@@ -31,13 +32,18 @@ public class SubscribeMessageWorker implements Runnable {
     private PubNub pubnub;
     private ListenerManager listenerManager;
     private LinkedBlockingQueue<SubscribeMessage> queue;
+    private DuplicationManager duplicationManager;
 
     private boolean isRunning;
 
-    public SubscribeMessageWorker(PubNub pubnubInstance, ListenerManager listenerManagerInstance, LinkedBlockingQueue<SubscribeMessage> queueInstance) {
+    public SubscribeMessageWorker(PubNub pubnubInstance,
+                                  ListenerManager listenerManagerInstance,
+                                  LinkedBlockingQueue<SubscribeMessage> queueInstance,
+                                  DuplicationManager dupManager) {
         this.pubnub = pubnubInstance;
         this.listenerManager = listenerManagerInstance;
         this.queue = queueInstance;
+        this.duplicationManager = dupManager;
     }
 
     @Override
@@ -122,6 +128,14 @@ public class SubscribeMessageWorker implements Runnable {
 
         if (channel != null && channel.equals(subscriptionMatch)) {
             subscriptionMatch = null;
+        }
+
+        if (this.pubnub.getConfiguration().isDedupOnSubscribe()) {
+            if (this.duplicationManager.isDuplicate(message)) {
+                return;
+            } else {
+                this.duplicationManager.addEntry(message);
+            }
         }
 
         if (message.getChannel().endsWith("-pnpres")) {

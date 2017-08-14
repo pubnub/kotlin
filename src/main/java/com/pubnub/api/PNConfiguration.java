@@ -25,6 +25,7 @@ import java.util.UUID;
 @Accessors(chain = true)
 
 public class PNConfiguration {
+    private static final int DEFAULT_DEDUPE_SIZE = 100;
     private static final int PRESENCE_TIMEOUT = 300;
     private static final int NON_SUBSCRIBE_REQUEST_TIMEOUT = 10;
     private static final int SUBSCRIBE_TIMEOUT = 310;
@@ -164,6 +165,11 @@ public class PNConfiguration {
     @Setter
     private boolean startSubscriberThread;
 
+    @Setter
+    private boolean dedupOnSubscribe;
+    @Setter
+    private Integer maximumMessagesCacheSize;
+
     /**
      * Initialize the PNConfiguration with default values
      */
@@ -191,6 +197,8 @@ public class PNConfiguration {
 
         maximumReconnectionRetries = -1;
 
+        dedupOnSubscribe = false;
+        maximumMessagesCacheSize = DEFAULT_DEDUPE_SIZE;
     }
 
     /**
