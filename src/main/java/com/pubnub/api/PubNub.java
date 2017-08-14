@@ -4,6 +4,7 @@ import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.builder.SubscribeBuilder;
 import com.pubnub.api.builder.UnsubscribeBuilder;
 import com.pubnub.api.callbacks.SubscribeCallback;
+import com.pubnub.api.endpoints.DeleteMessages;
 import com.pubnub.api.endpoints.FetchMessages;
 import com.pubnub.api.endpoints.History;
 import com.pubnub.api.endpoints.Time;
@@ -129,6 +130,10 @@ public class PubNub {
 
     public FetchMessages fetchMessages() {
         return new FetchMessages(this, this.retrofitManager.getTransactionInstance());
+    }
+
+    public DeleteMessages deleteMessages() {
+        return new DeleteMessages(this, this.retrofitManager.getTransactionInstance());
     }
 
     public Audit audit() {
