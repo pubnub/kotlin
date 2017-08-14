@@ -1,4 +1,14 @@
 
+## [v4.9.1](https://github.com/pubnub/java/tree/v4.9.1)
+
+
+  [Full Changelog](https://github.com/pubnub/java/compare/v4.9.0...v4.9.1)
+
+- 🌟patch-up to the deduping algorithm
+
+
+
+
 ## [v4.9.0](https://github.com/pubnub/java/tree/v4.9.0)
 
 
