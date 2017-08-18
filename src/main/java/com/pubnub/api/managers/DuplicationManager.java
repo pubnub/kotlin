@@ -16,7 +16,7 @@ public class DuplicationManager {
     }
 
     private String getKey(SubscribeMessage message) {
-        return message.getChannel().concat(Integer.toString(message.getPayload().hashCode()));
+        return message.getPublishMetaData().getPublishTimetoken().toString().concat("-").concat(Integer.toString(message.getPayload().hashCode()));
     }
 
     public boolean isDuplicate(SubscribeMessage message) {
