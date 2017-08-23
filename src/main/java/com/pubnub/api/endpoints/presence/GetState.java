@@ -8,6 +8,7 @@ import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.managers.MapperManager;
+import com.pubnub.api.managers.TelemetryManager;
 import com.pubnub.api.models.consumer.presence.PNGetStateResult;
 import com.pubnub.api.models.server.Envelope;
 import lombok.Setter;
@@ -32,8 +33,8 @@ public class GetState extends Endpoint<Envelope<JsonElement>, PNGetStateResult> 
     @Setter
     private String uuid;
 
-    public GetState(PubNub pubnub, Retrofit retrofit) {
-        super(pubnub, retrofit);
+    public GetState(PubNub pubnub, TelemetryManager telemetryManager, Retrofit retrofit) {
+        super(pubnub, telemetryManager, retrofit);
         channels = new ArrayList<>();
         channelGroups = new ArrayList<>();
     }

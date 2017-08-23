@@ -7,6 +7,7 @@ import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.enums.PNPushType;
+import com.pubnub.api.managers.TelemetryManager;
 import com.pubnub.api.models.consumer.push.PNPushRemoveChannelResult;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -28,8 +29,8 @@ public class RemoveChannelsFromPush extends Endpoint<List<Object>, PNPushRemoveC
     @Setter
     private String deviceId;
 
-    public RemoveChannelsFromPush(PubNub pubnub, Retrofit retrofit) {
-        super(pubnub, retrofit);
+    public RemoveChannelsFromPush(PubNub pubnub, TelemetryManager telemetryManager, Retrofit retrofit) {
+        super(pubnub, telemetryManager, retrofit);
 
         channels = new ArrayList<>();
     }

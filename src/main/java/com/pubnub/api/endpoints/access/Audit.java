@@ -6,6 +6,7 @@ import com.pubnub.api.PubNubUtil;
 import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.enums.PNOperationType;
+import com.pubnub.api.managers.TelemetryManager;
 import com.pubnub.api.models.consumer.access_manager.PNAccessManagerAuditResult;
 import com.pubnub.api.models.server.Envelope;
 import com.pubnub.api.models.server.access_manager.AccessManagerAuditPayload;
@@ -30,8 +31,8 @@ public class Audit extends Endpoint<Envelope<AccessManagerAuditPayload>, PNAcces
     @Setter
     private String channelGroup;
 
-    public Audit(PubNub pubnub, Retrofit retrofit) {
-        super(pubnub, retrofit);
+    public Audit(PubNub pubnub, TelemetryManager telemetryManager, Retrofit retrofit) {
+        super(pubnub, telemetryManager, retrofit);
         authKeys = new ArrayList<>();
     }
 

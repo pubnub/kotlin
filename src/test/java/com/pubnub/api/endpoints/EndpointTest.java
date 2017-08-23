@@ -27,7 +27,7 @@ public class EndpointTest extends TestHarness {
 
     @Test
     public void testBaseParams() throws PubNubException {
-        Endpoint<Object, Object> endpoint =  new Endpoint<Object, Object>(pubnub, null) {
+        Endpoint<Object, Object> endpoint =  new Endpoint<Object, Object>(pubnub, null, null) {
 
             @Override
             protected List<String> getAffectedChannels() {

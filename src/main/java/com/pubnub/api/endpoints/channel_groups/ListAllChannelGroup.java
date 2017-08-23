@@ -5,6 +5,7 @@ import com.pubnub.api.PubNubException;
 import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.enums.PNOperationType;
+import com.pubnub.api.managers.TelemetryManager;
 import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsListAllResult;
 import com.pubnub.api.models.server.Envelope;
 import lombok.experimental.Accessors;
@@ -19,8 +20,8 @@ import java.util.Map;
 @Accessors(chain = true, fluent = true)
 public class ListAllChannelGroup extends Endpoint<Envelope<Object>, PNChannelGroupsListAllResult> {
 
-    public ListAllChannelGroup(PubNub pubnub, Retrofit retrofit) {
-        super(pubnub, retrofit);
+    public ListAllChannelGroup(PubNub pubnub, TelemetryManager telemetryManager, Retrofit retrofit) {
+        super(pubnub, telemetryManager, retrofit);
     }
 
     @Override

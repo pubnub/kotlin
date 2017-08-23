@@ -6,6 +6,7 @@ import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.enums.PNPushType;
+import com.pubnub.api.managers.TelemetryManager;
 import com.pubnub.api.models.consumer.push.PNPushListProvisionsResult;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -24,8 +25,8 @@ public class ListPushProvisions extends Endpoint<List<String>, PNPushListProvisi
     @Setter
     private String deviceId;
 
-    public ListPushProvisions(PubNub pubnub, Retrofit retrofit) {
-        super(pubnub, retrofit);
+    public ListPushProvisions(PubNub pubnub, TelemetryManager telemetryManager, Retrofit retrofit) {
+        super(pubnub, telemetryManager, retrofit);
     }
 
     @Override

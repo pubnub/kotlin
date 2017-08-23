@@ -8,6 +8,7 @@ import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.managers.MapperManager;
+import com.pubnub.api.managers.TelemetryManager;
 import com.pubnub.api.models.consumer.access_manager.PNAccessManagerGrantResult;
 import com.pubnub.api.models.consumer.access_manager.PNAccessManagerKeyData;
 import com.pubnub.api.models.server.Envelope;
@@ -45,8 +46,8 @@ public class Grant extends Endpoint<Envelope<AccessManagerGrantPayload>, PNAcces
     @Setter
     private List<String> channelGroups;
 
-    public Grant(PubNub pubnub, Retrofit retrofit) {
-        super(pubnub, retrofit);
+    public Grant(PubNub pubnub, TelemetryManager telemetryManager, Retrofit retrofit) {
+        super(pubnub, telemetryManager, retrofit);
         authKeys = new ArrayList<>();
         channels = new ArrayList<>();
         channelGroups = new ArrayList<>();

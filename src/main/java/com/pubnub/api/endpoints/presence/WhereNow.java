@@ -5,6 +5,7 @@ import com.pubnub.api.PubNubException;
 import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.enums.PNOperationType;
+import com.pubnub.api.managers.TelemetryManager;
 import com.pubnub.api.models.consumer.presence.PNWhereNowResult;
 import com.pubnub.api.models.server.Envelope;
 import com.pubnub.api.models.server.presence.WhereNowPayload;
@@ -23,8 +24,8 @@ public class WhereNow extends Endpoint<Envelope<WhereNowPayload>, PNWhereNowResu
     @Setter
     private String uuid;
 
-    public WhereNow(PubNub pubnub, Retrofit retrofit) {
-        super(pubnub, retrofit);
+    public WhereNow(PubNub pubnub, TelemetryManager telemetryManager, Retrofit retrofit) {
+        super(pubnub, telemetryManager, retrofit);
     }
 
     @Override

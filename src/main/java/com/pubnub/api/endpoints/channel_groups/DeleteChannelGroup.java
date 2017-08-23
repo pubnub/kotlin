@@ -5,6 +5,7 @@ import com.pubnub.api.PubNubException;
 import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.enums.PNOperationType;
+import com.pubnub.api.managers.TelemetryManager;
 import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsDeleteGroupResult;
 import com.pubnub.api.models.server.Envelope;
 import lombok.Setter;
@@ -22,8 +23,8 @@ public class DeleteChannelGroup extends Endpoint<Envelope, PNChannelGroupsDelete
     @Setter
     private String channelGroup;
 
-    public DeleteChannelGroup(PubNub pubnub, Retrofit retrofit) {
-        super(pubnub, retrofit);
+    public DeleteChannelGroup(PubNub pubnub, TelemetryManager telemetryManager, Retrofit retrofit) {
+        super(pubnub, telemetryManager, retrofit);
     }
 
     @Override
