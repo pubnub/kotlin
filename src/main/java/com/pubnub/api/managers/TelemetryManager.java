@@ -151,6 +151,7 @@ public class TelemetryManager {
                 break;
             default:
                 endpoint = "time";
+                break;
         }
 
         return endpoint;

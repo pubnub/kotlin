@@ -24,9 +24,13 @@ import com.pubnub.api.endpoints.push.AddChannelsToPush;
 import com.pubnub.api.endpoints.push.ListPushProvisions;
 import com.pubnub.api.endpoints.push.RemoveAllPushChannelsForDevice;
 import com.pubnub.api.endpoints.push.RemoveChannelsFromPush;
-import com.pubnub.api.managers.*;
+import com.pubnub.api.managers.MapperManager;
+import com.pubnub.api.managers.SubscriptionManager;
+import com.pubnub.api.managers.BasePathManager;
+import com.pubnub.api.managers.PublishSequenceManager;
+import com.pubnub.api.managers.TelemetryManager;
+import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.vendor.Crypto;
-import lombok.AccessLevel;
 import lombok.Getter;
 
 import java.util.Date;
