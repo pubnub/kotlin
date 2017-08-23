@@ -57,11 +57,11 @@ public abstract class Endpoint<Input, Output> {
 
     private MapperManager mapper;
 
-    public Endpoint(PubNub pubnubInstance, TelemetryManager telemetryManager, Retrofit retrofitInstance) {
+    public Endpoint(PubNub pubnubInstance, TelemetryManager telemetry, Retrofit retrofitInstance) {
         this.pubnub = pubnubInstance;
         this.retrofit = retrofitInstance;
         this.mapper = this.pubnub.getMapper();
-        this.telemetryManager = telemetryManager;
+        this.telemetryManager = telemetry;
     }
 
 
@@ -310,10 +310,12 @@ public abstract class Endpoint<Input, Output> {
 
         // add the auth key for publish and subscribe.
         if (this.pubnub.getConfiguration().getAuthKey() != null && isAuthRequired()) {
-                params.put("auth", pubnub.getConfiguration().getAuthKey());
+            params.put("auth", pubnub.getConfiguration().getAuthKey());
         }
 
-        if (this.telemetryManager != null) { params.putAll(this.telemetryManager.operationsLatency()); }
+        if (this.telemetryManager != null) {
+            params.putAll(this.telemetryManager.operationsLatency());
+        }
 
         return params;
     }

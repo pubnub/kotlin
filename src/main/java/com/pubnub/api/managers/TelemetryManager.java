@@ -1,7 +1,14 @@
 package com.pubnub.api.managers;
 
 import com.pubnub.api.enums.PNOperationType;
-import java.util.*;
+
+import java.util.ArrayList;
+import java.util.TimerTask;
+import java.util.HashMap;
+import java.util.Timer;
+import java.util.List;
+import java.util.Date;
+import java.util.Map;
 
 public class TelemetryManager {
 
@@ -51,7 +58,7 @@ public class TelemetryManager {
 
                 Map<String, Double> latencyEntry = new HashMap<>();
                 latencyEntry.put("d", storeDate);
-                latencyEntry.put("l",  ((double)latency / TIMESTAMP_DIVIDER));
+                latencyEntry.put("l",  ((double) latency / TIMESTAMP_DIVIDER));
                 operationLatencies.add(latencyEntry);
             }
         }
@@ -68,24 +75,40 @@ public class TelemetryManager {
                     outdatedLatencies.add(latencyInformation);
                 }
             }
-            if (outdatedLatencies.size() > 0) { operationLatencies.removeAll(outdatedLatencies); }
-            if (operationLatencies.size() == 0) { this.latencies.remove(endpoint); }
+            if (outdatedLatencies.size() > 0) {
+                operationLatencies.removeAll(outdatedLatencies);
+            }
+            if (operationLatencies.size() == 0) {
+                this.latencies.remove(endpoint);
+            }
         }
     }
 
     private void startCleanUpTimer() {
         long interval = CLEAN_UP_INTERVAL * CLEAN_UP_INTERVAL_MULTIPLIER;
 
+        stopCleanUpTimer();
         this.timer = new Timer();
         this.timer.schedule(new TimerTask() {
             @Override
-            public void run() { cleanUpTelemetryData(); }
+            public void run() {
+                cleanUpTelemetryData();
+            }
         }, interval, interval);
+    }
+
+    private void stopCleanUpTimer() {
+        if (this.timer != null) {
+            this.timer.cancel();
+            this.timer = null;
+        }
     }
 
     private static double averageLatencyFromData(List<Map<String, Double>> endpointLatencies) {
         double totalLatency = 0.0f;
-        for (Map<String, Double> item: endpointLatencies) { totalLatency += item.get("l"); }
+        for (Map<String, Double> item: endpointLatencies) {
+            totalLatency += item.get("l");
+        }
 
         return totalLatency / endpointLatencies.size();
     }

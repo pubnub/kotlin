@@ -67,9 +67,9 @@ public class SubscriptionManager {
      */
     private boolean subscriptionStatusAnnounced;
 
-    public SubscriptionManager(PubNub pubnubInstance, RetrofitManager retrofitManagerInstance, TelemetryManager telemetryManager) {
+    public SubscriptionManager(PubNub pubnubInstance, RetrofitManager retrofitManagerInstance, TelemetryManager telemetry) {
         this.pubnub = pubnubInstance;
-        this.telemetryManager = telemetryManager;
+        this.telemetryManager = telemetry;
 
         this.subscriptionStatusAnnounced = false;
         this.messageQueue = new LinkedBlockingQueue<>();
