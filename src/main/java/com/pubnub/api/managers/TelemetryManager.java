@@ -48,7 +48,7 @@ public class TelemetryManager {
         if (type != PNOperationType.PNSubscribeOperation && latency > 0) {
             String endpointName = TelemetryManager.endpointNameForOperation(type);
             if (endpointName != null) {
-                double storeDate = (new Date()).getTime() / TIMESTAMP_DIVIDER;
+                double storeDate = (new Date()).getTime() / (double) TIMESTAMP_DIVIDER;
 
                 List<Map<String, Double>> operationLatencies = this.latencies.get(endpointName);
                 if (operationLatencies == null) {
@@ -65,7 +65,7 @@ public class TelemetryManager {
     }
 
     private synchronized void cleanUpTelemetryData() {
-        double currentDate = (new Date()).getTime() / TIMESTAMP_DIVIDER;
+        double currentDate = (new Date()).getTime() / (double) TIMESTAMP_DIVIDER;
         List<String> endpoints = new ArrayList<>(this.latencies.keySet());
         for (String endpoint: endpoints) {
             List<Map<String, Double>> outdatedLatencies = new ArrayList<>();
