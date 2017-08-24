@@ -108,7 +108,7 @@ public class ModifyPushChannelsForDeviceTest extends TestHarness {
         instance.deviceId("niceDevice").pushType(PNPushType.MPNS).async(new PNCallback<PNPushRemoveAllChannelsResult>() {
             @Override
             public void onResponse(PNPushRemoveAllChannelsResult result, PNStatus status) {
-                if (status != null && status.getOperation()== null) {
+                if (status != null && status.getOperation() == PNOperationType.PNRemoveAllPushNotificationsOperation) {
                     atomic.incrementAndGet();
                 }
             }

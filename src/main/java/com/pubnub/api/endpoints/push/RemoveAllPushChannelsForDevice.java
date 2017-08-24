@@ -74,7 +74,7 @@ public class RemoveAllPushChannelsForDevice extends Endpoint<List<Object>, PNPus
 
     @Override
     protected PNOperationType getOperationType() {
-        return null; // PNOperationType.PNPushNotificationModifiedChannelsOperations;
+        return PNOperationType.PNRemoveAllPushNotificationsOperation;
     }
 
     @Override
