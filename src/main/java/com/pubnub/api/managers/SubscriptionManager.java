@@ -30,6 +30,7 @@ public class SubscriptionManager {
     private static final int HEARTBEAT_INTERVAL_MULTIPLIER = 1000;
 
     private PubNub pubnub;
+    private TelemetryManager telemetryManager;
     private Subscribe subscribeCall;
     private Heartbeat heartbeatCall;
 
@@ -66,8 +67,9 @@ public class SubscriptionManager {
      */
     private boolean subscriptionStatusAnnounced;
 
-    public SubscriptionManager(PubNub pubnubInstance, RetrofitManager retrofitManagerInstance) {
+    public SubscriptionManager(PubNub pubnubInstance, RetrofitManager retrofitManagerInstance, TelemetryManager telemetry) {
         this.pubnub = pubnubInstance;
+        this.telemetryManager = telemetry;
 
         this.subscriptionStatusAnnounced = false;
         this.messageQueue = new LinkedBlockingQueue<>();
@@ -180,7 +182,7 @@ public class SubscriptionManager {
 
         this.subscriptionStatusAnnounced = false;
 
-        new Leave(pubnub, this.retrofitManager.getTransactionInstance())
+        new Leave(pubnub, this.telemetryManager, this.retrofitManager.getTransactionInstance())
             .channels(unsubscribeOperation.getChannels()).channelGroups(unsubscribeOperation.getChannelGroups())
             .async(new PNCallback<Boolean>() {
                 @Override
@@ -322,7 +324,7 @@ public class SubscriptionManager {
             return;
         }
 
-        heartbeatCall = new Heartbeat(pubnub, this.retrofitManager.getTransactionInstance())
+        heartbeatCall = new Heartbeat(pubnub, this.telemetryManager, this.retrofitManager.getTransactionInstance())
                 .channels(presenceChannels).channelGroups(presenceChannelGroups).state(stateStorage);
 
         heartbeatCall.async(new PNCallback<Boolean>() {

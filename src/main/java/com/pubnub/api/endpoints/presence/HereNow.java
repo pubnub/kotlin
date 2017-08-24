@@ -9,6 +9,7 @@ import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.managers.MapperManager;
+import com.pubnub.api.managers.TelemetryManager;
 import com.pubnub.api.models.consumer.presence.PNHereNowChannelData;
 import com.pubnub.api.models.consumer.presence.PNHereNowOccupantData;
 import com.pubnub.api.models.consumer.presence.PNHereNowResult;
@@ -36,8 +37,8 @@ public class HereNow extends Endpoint<Envelope<JsonElement>, PNHereNowResult> {
     @Setter
     private Boolean includeUUIDs;
 
-    public HereNow(PubNub pubnubInstance, Retrofit retrofit) {
-        super(pubnubInstance, retrofit);
+    public HereNow(PubNub pubnubInstance, TelemetryManager telemetryManager, Retrofit retrofit) {
+        super(pubnubInstance, telemetryManager, retrofit);
         channels = new ArrayList<>();
         channelGroups = new ArrayList<>();
     }

@@ -9,6 +9,7 @@ import com.pubnub.api.callbacks.PNCallback;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.enums.PNStatusCategory;
 import com.pubnub.api.managers.MapperManager;
+import com.pubnub.api.managers.TelemetryManager;
 import com.pubnub.api.models.consumer.PNErrorData;
 import com.pubnub.api.models.consumer.PNStatus;
 import lombok.AccessLevel;
@@ -35,6 +36,9 @@ public abstract class Endpoint<Input, Output> {
     private Retrofit retrofit;
 
     @Getter(AccessLevel.NONE)
+    private TelemetryManager telemetryManager;
+
+    @Getter(AccessLevel.NONE)
     private PNCallback<Output> cachedCallback;
 
     @Getter(AccessLevel.NONE)
@@ -53,10 +57,11 @@ public abstract class Endpoint<Input, Output> {
 
     private MapperManager mapper;
 
-    public Endpoint(PubNub pubnubInstance, Retrofit retrofitInstance) {
+    public Endpoint(PubNub pubnubInstance, TelemetryManager telemetry, Retrofit retrofitInstance) {
         this.pubnub = pubnubInstance;
         this.retrofit = retrofitInstance;
         this.mapper = this.pubnub.getMapper();
+        this.telemetryManager = telemetry;
     }
 
 
@@ -102,6 +107,7 @@ public abstract class Endpoint<Input, Output> {
                     .build();
         }
 
+        storeRequestLatency(serverResponse, getOperationType());
         response = createResponse(serverResponse);
 
         return response;
@@ -183,6 +189,7 @@ public abstract class Endpoint<Input, Output> {
                     callback.onResponse(null, createStatusResponse(pnStatusCategory, response, ex, affectedChannels, affectedChannelGroups));
                     return;
                 }
+                storeRequestLatency(response, getOperationType());
 
                 try {
                     callbackResponse = createResponse(response);
@@ -280,6 +287,13 @@ public abstract class Endpoint<Input, Output> {
         return pnStatus.build();
     }
 
+    private void storeRequestLatency(Response response, PNOperationType type) {
+        if (this.telemetryManager != null) {
+            long latency = response.raw().receivedResponseAtMillis() - response.raw().sentRequestAtMillis();
+            this.telemetryManager.storeLatency(latency, type);
+        }
+    }
+
     protected Map<String, String> createBaseParams() {
         Map<String, String> params = new HashMap<>();
 
@@ -296,7 +310,11 @@ public abstract class Endpoint<Input, Output> {
 
         // add the auth key for publish and subscribe.
         if (this.pubnub.getConfiguration().getAuthKey() != null && isAuthRequired()) {
-                params.put("auth", pubnub.getConfiguration().getAuthKey());
+            params.put("auth", pubnub.getConfiguration().getAuthKey());
+        }
+
+        if (this.telemetryManager != null) {
+            params.putAll(this.telemetryManager.operationsLatency());
         }
 
         return params;

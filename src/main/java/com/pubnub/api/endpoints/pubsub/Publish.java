@@ -8,6 +8,7 @@ import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.managers.MapperManager;
 import com.pubnub.api.managers.PublishSequenceManager;
+import com.pubnub.api.managers.TelemetryManager;
 import com.pubnub.api.models.consumer.PNPublishResult;
 import com.pubnub.api.vendor.Crypto;
 import lombok.Setter;
@@ -40,8 +41,8 @@ public class Publish extends Endpoint<List<Object>, PNPublishResult> {
 
     private PublishSequenceManager publishSequenceManager;
 
-    public Publish(PubNub pubnub, PublishSequenceManager providedPublishSequenceManager, Retrofit retrofit) {
-        super(pubnub, retrofit);
+    public Publish(PubNub pubnub, PublishSequenceManager providedPublishSequenceManager, TelemetryManager telemetryManager, Retrofit retrofit) {
+        super(pubnub, telemetryManager, retrofit);
 
         this.publishSequenceManager = providedPublishSequenceManager;
         this.replicate = true;

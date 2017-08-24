@@ -7,6 +7,7 @@ import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.enums.PNPushType;
+import com.pubnub.api.managers.TelemetryManager;
 import com.pubnub.api.models.consumer.push.PNPushAddChannelResult;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -28,8 +29,8 @@ public class AddChannelsToPush extends Endpoint<List<Object>, PNPushAddChannelRe
     @Setter
     private String deviceId;
 
-    public AddChannelsToPush(PubNub pubnub, Retrofit retrofit) {
-        super(pubnub, retrofit);
+    public AddChannelsToPush(PubNub pubnub, TelemetryManager telemetryManager, Retrofit retrofit) {
+        super(pubnub, telemetryManager, retrofit);
         channels = new ArrayList<>();
     }
 

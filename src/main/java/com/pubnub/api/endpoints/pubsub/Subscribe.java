@@ -60,7 +60,7 @@ public class Subscribe extends Endpoint<SubscribeEnvelope, SubscribeEnvelope> {
      * @param pubnub supplied pubnub instance.
      */
     public Subscribe(PubNub pubnub, Retrofit retrofit) {
-        super(pubnub, retrofit);
+        super(pubnub, null, retrofit);
         channels = new ArrayList<>();
         channelGroups = new ArrayList<>();
     }

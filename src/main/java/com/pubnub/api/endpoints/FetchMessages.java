@@ -8,6 +8,7 @@ import com.pubnub.api.PubNubUtil;
 import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.managers.MapperManager;
+import com.pubnub.api.managers.TelemetryManager;
 import com.pubnub.api.models.consumer.history.PNFetchMessagesResult;
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
 import com.pubnub.api.models.server.FetchMessagesEnvelope;
@@ -39,8 +40,8 @@ public class FetchMessages extends Endpoint<FetchMessagesEnvelope, PNFetchMessag
     @Setter
     private Long end;
 
-    public FetchMessages(PubNub pubnub, Retrofit retrofit) {
-        super(pubnub, retrofit);
+    public FetchMessages(PubNub pubnub, TelemetryManager telemetryManager, Retrofit retrofit) {
+        super(pubnub, telemetryManager, retrofit);
         channels = new ArrayList<>();
         maximumPerChannel = 1;
     }

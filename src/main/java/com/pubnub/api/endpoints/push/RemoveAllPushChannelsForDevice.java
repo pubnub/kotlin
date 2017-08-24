@@ -6,6 +6,7 @@ import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.enums.PNPushType;
+import com.pubnub.api.managers.TelemetryManager;
 import com.pubnub.api.models.consumer.push.PNPushRemoveAllChannelsResult;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -24,8 +25,8 @@ public class RemoveAllPushChannelsForDevice extends Endpoint<List<Object>, PNPus
     @Setter
     private String deviceId;
 
-    public RemoveAllPushChannelsForDevice(PubNub pubnub, Retrofit retrofit) {
-        super(pubnub, retrofit);
+    public RemoveAllPushChannelsForDevice(PubNub pubnub, TelemetryManager telemetryManager, Retrofit retrofit) {
+        super(pubnub, telemetryManager, retrofit);
     }
 
     @Override
@@ -73,7 +74,7 @@ public class RemoveAllPushChannelsForDevice extends Endpoint<List<Object>, PNPus
 
     @Override
     protected PNOperationType getOperationType() {
-        return null; // PNOperationType.PNPushNotificationModifiedChannelsOperations;
+        return PNOperationType.PNRemoveAllPushNotificationsOperation;
     }
 
     @Override

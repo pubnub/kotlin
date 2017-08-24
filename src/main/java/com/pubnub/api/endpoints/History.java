@@ -7,6 +7,7 @@ import com.pubnub.api.PubNubException;
 import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.managers.MapperManager;
+import com.pubnub.api.managers.TelemetryManager;
 import com.pubnub.api.models.consumer.history.PNHistoryItemResult;
 import com.pubnub.api.models.consumer.history.PNHistoryResult;
 import com.pubnub.api.vendor.Crypto;
@@ -41,8 +42,8 @@ public class History extends Endpoint<JsonElement, PNHistoryResult> {
     @Setter
     private Boolean includeTimetoken;
 
-    public History(PubNub pubnub, Retrofit retrofit) {
-        super(pubnub, retrofit);
+    public History(PubNub pubnub, TelemetryManager telemetryManager, Retrofit retrofit) {
+        super(pubnub, telemetryManager, retrofit);
     }
 
     @Override

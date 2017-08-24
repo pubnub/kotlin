@@ -5,6 +5,7 @@ import com.pubnub.api.PubNubException;
 import com.pubnub.api.PubNubUtil;
 import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.enums.PNOperationType;
+import com.pubnub.api.managers.TelemetryManager;
 import com.pubnub.api.models.consumer.history.PNDeleteMessagesResult;
 import com.pubnub.api.models.server.DeleteMessagesEnvelope;
 import lombok.Setter;
@@ -40,8 +41,8 @@ public class DeleteMessages extends Endpoint<DeleteMessagesEnvelope, PNDeleteMes
                                                   @QueryMap Map<String, String> options);
     }
 
-    public DeleteMessages(PubNub pubnubInstance, Retrofit retrofitInstance) {
-        super(pubnubInstance, retrofitInstance);
+    public DeleteMessages(PubNub pubnubInstance, TelemetryManager telemetryManager, Retrofit retrofitInstance) {
+        super(pubnubInstance, telemetryManager, retrofitInstance);
         channels = new ArrayList<>();
     }
 
