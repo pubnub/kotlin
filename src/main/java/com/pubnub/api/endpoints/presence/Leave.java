@@ -6,13 +6,13 @@ import com.pubnub.api.PubNubUtil;
 import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.enums.PNOperationType;
+import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.TelemetryManager;
 import com.pubnub.api.models.server.Envelope;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import retrofit2.Call;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +25,7 @@ public class Leave extends Endpoint<Envelope, Boolean> {
     @Setter
     private List<String> channelGroups;
 
-    public Leave(PubNub pubnub, TelemetryManager telemetryManager, Retrofit retrofit) {
+    public Leave(PubNub pubnub, TelemetryManager telemetryManager, RetrofitManager retrofit) {
         super(pubnub, telemetryManager, retrofit);
         channels = new ArrayList<>();
         channelGroups = new ArrayList<>();
@@ -44,7 +44,6 @@ public class Leave extends Endpoint<Envelope, Boolean> {
     @Override
     protected Call<Envelope> doWork(Map<String, String> params) {
         String channelCSV;
-        PresenceService service = this.getRetrofit().create(PresenceService.class);
 
         if (channelGroups.size() > 0) {
             params.put("channel-group", PubNubUtil.joinString(channelGroups, ","));
@@ -56,7 +55,7 @@ public class Leave extends Endpoint<Envelope, Boolean> {
             channelCSV = ",";
         }
 
-        return service.leave(this.getPubnub().getConfiguration().getSubscribeKey(), channelCSV, params);
+        return this.getRetrofit().getPresenceService().leave(this.getPubnub().getConfiguration().getSubscribeKey(), channelCSV, params);
     }
 
     @Override

@@ -8,6 +8,7 @@ import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.builder.dto.StateOperation;
 import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.enums.PNOperationType;
+import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.SubscriptionManager;
 import com.pubnub.api.managers.TelemetryManager;
 import com.pubnub.api.models.consumer.presence.PNSetStateResult;
@@ -18,7 +19,6 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import retrofit2.Call;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +42,7 @@ public class SetState extends Endpoint<Envelope<JsonElement>, PNSetStateResult> 
 
 
 
-    public SetState(PubNub pubnub, SubscriptionManager subscriptionManagerInstance, TelemetryManager telemetryManager, Retrofit retrofit) {
+    public SetState(PubNub pubnub, SubscriptionManager subscriptionManagerInstance, TelemetryManager telemetryManager, RetrofitManager retrofit) {
         super(pubnub, telemetryManager, retrofit);
         this.subscriptionManager = subscriptionManagerInstance;
         channels = new ArrayList<>();
@@ -87,8 +87,6 @@ public class SetState extends Endpoint<Envelope<JsonElement>, PNSetStateResult> 
             subscriptionManager.adaptStateBuilder(stateOperation);
         }
 
-        PresenceService service = this.getRetrofit().create(PresenceService.class);
-
         if (channelGroups.size() > 0) {
             params.put("channel-group", PubNubUtil.joinString(channelGroups, ","));
         }
@@ -100,7 +98,7 @@ public class SetState extends Endpoint<Envelope<JsonElement>, PNSetStateResult> 
 
         String channelCSV = channels.size() > 0 ? PubNubUtil.joinString(channels, ",") : ",";
 
-        return service.setState(this.getPubnub().getConfiguration().getSubscribeKey(), channelCSV, selectedUUID, params);
+        return this.getRetrofit().getPresenceService().setState(this.getPubnub().getConfiguration().getSubscribeKey(), channelCSV, selectedUUID, params);
     }
 
     @Override

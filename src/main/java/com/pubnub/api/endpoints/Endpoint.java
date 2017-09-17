@@ -9,6 +9,7 @@ import com.pubnub.api.callbacks.PNCallback;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.enums.PNStatusCategory;
 import com.pubnub.api.managers.MapperManager;
+import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.TelemetryManager;
 import com.pubnub.api.models.consumer.PNErrorData;
 import com.pubnub.api.models.consumer.PNStatus;
@@ -16,7 +17,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import retrofit2.Call;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 import java.io.IOException;
 import java.net.ConnectException;
@@ -33,7 +33,7 @@ public abstract class Endpoint<Input, Output> {
     @Getter(AccessLevel.PROTECTED)
     private PubNub pubnub;
     @Getter(AccessLevel.PROTECTED)
-    private Retrofit retrofit;
+    private RetrofitManager retrofit;
 
     @Getter(AccessLevel.NONE)
     private TelemetryManager telemetryManager;
@@ -57,7 +57,7 @@ public abstract class Endpoint<Input, Output> {
 
     private MapperManager mapper;
 
-    public Endpoint(PubNub pubnubInstance, TelemetryManager telemetry, Retrofit retrofitInstance) {
+    public Endpoint(PubNub pubnubInstance, TelemetryManager telemetry, RetrofitManager retrofitInstance) {
         this.pubnub = pubnubInstance;
         this.retrofit = retrofitInstance;
         this.mapper = this.pubnub.getMapper();

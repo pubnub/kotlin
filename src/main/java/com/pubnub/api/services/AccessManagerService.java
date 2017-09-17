@@ -1,4 +1,4 @@
-package com.pubnub.api.endpoints.access;
+package com.pubnub.api.services;
 
 import com.pubnub.api.models.server.access_manager.AccessManagerGrantPayload;
 import com.pubnub.api.models.server.Envelope;

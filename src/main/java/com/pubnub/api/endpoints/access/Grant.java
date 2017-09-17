@@ -8,6 +8,7 @@ import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.managers.MapperManager;
+import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.TelemetryManager;
 import com.pubnub.api.models.consumer.access_manager.PNAccessManagerGrantResult;
 import com.pubnub.api.models.consumer.access_manager.PNAccessManagerKeyData;
@@ -17,7 +18,6 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import retrofit2.Call;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,7 +46,7 @@ public class Grant extends Endpoint<Envelope<AccessManagerGrantPayload>, PNAcces
     @Setter
     private List<String> channelGroups;
 
-    public Grant(PubNub pubnub, TelemetryManager telemetryManager, Retrofit retrofit) {
+    public Grant(PubNub pubnub, TelemetryManager telemetryManager, RetrofitManager retrofit) {
         super(pubnub, telemetryManager, retrofit);
         authKeys = new ArrayList<>();
         channels = new ArrayList<>();
@@ -102,8 +102,7 @@ public class Grant extends Endpoint<Envelope<AccessManagerGrantPayload>, PNAcces
         queryParams.put("w", (write) ? "1" : "0");
         queryParams.put("m", (manage) ? "1" : "0");
 
-        AccessManagerService service = this.getRetrofit().create(AccessManagerService.class);
-        return service.grant(this.getPubnub().getConfiguration().getSubscribeKey(), queryParams);
+        return this.getRetrofit().getAccessManagerService().grant(this.getPubnub().getConfiguration().getSubscribeKey(), queryParams);
     }
 
     @Override

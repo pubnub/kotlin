@@ -5,6 +5,7 @@ import com.pubnub.api.PubNubException;
 import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.enums.PNOperationType;
+import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.TelemetryManager;
 import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsAllChannelsResult;
 import com.pubnub.api.models.server.Envelope;
@@ -12,7 +13,6 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import retrofit2.Call;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +23,7 @@ public class AllChannelsChannelGroup extends Endpoint<Envelope<Object>, PNChanne
     @Setter
     private String channelGroup;
 
-    public AllChannelsChannelGroup(PubNub pubnub, TelemetryManager telemetryManager, Retrofit retrofit) {
+    public AllChannelsChannelGroup(PubNub pubnub, TelemetryManager telemetryManager, RetrofitManager retrofit) {
         super(pubnub, telemetryManager, retrofit);
     }
 
@@ -46,9 +46,8 @@ public class AllChannelsChannelGroup extends Endpoint<Envelope<Object>, PNChanne
 
     @Override
     protected Call<Envelope<Object>> doWork(Map<String, String> params) {
-        ChannelGroupService service = this.getRetrofit().create(ChannelGroupService.class);
-
-        return service.allChannelsChannelGroup(this.getPubnub().getConfiguration().getSubscribeKey(), channelGroup, params);
+        return this.getRetrofit().getChannelGroupService()
+                .allChannelsChannelGroup(this.getPubnub().getConfiguration().getSubscribeKey(), channelGroup, params);
     }
 
     @Override

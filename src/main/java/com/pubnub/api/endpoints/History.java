@@ -7,6 +7,7 @@ import com.pubnub.api.PubNubException;
 import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.managers.MapperManager;
+import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.TelemetryManager;
 import com.pubnub.api.models.consumer.history.PNHistoryItemResult;
 import com.pubnub.api.models.consumer.history.PNHistoryResult;
@@ -15,10 +16,6 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import retrofit2.Call;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.http.GET;
-import retrofit2.http.Path;
-import retrofit2.http.QueryMap;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -42,7 +39,7 @@ public class History extends Endpoint<JsonElement, PNHistoryResult> {
     @Setter
     private Boolean includeTimetoken;
 
-    public History(PubNub pubnub, TelemetryManager telemetryManager, Retrofit retrofit) {
+    public History(PubNub pubnub, TelemetryManager telemetryManager, RetrofitManager retrofit) {
         super(pubnub, telemetryManager, retrofit);
     }
 
@@ -56,13 +53,6 @@ public class History extends Endpoint<JsonElement, PNHistoryResult> {
         return null;
     }
 
-    private interface HistoryService {
-        @GET("v2/history/sub-key/{subKey}/channel/{channel}")
-        Call<JsonElement> fetchHistory(@Path("subKey") String subKey,
-                                    @Path("channel") String channel,
-                                    @QueryMap Map<String, String> options);
-    }
-
     @Override
     protected void validateParams() throws PubNubException {
         if (channel == null || channel.isEmpty()) {
@@ -72,8 +62,6 @@ public class History extends Endpoint<JsonElement, PNHistoryResult> {
 
     @Override
     protected Call<JsonElement> doWork(Map<String, String> params) {
-
-        HistoryService service = this.getRetrofit().create(HistoryService.class);
 
         if (reverse != null) {
             params.put("reverse", String.valueOf(reverse));
@@ -96,7 +84,7 @@ public class History extends Endpoint<JsonElement, PNHistoryResult> {
             params.put("end", Long.toString(end).toLowerCase());
         }
 
-        return service.fetchHistory(this.getPubnub().getConfiguration().getSubscribeKey(), channel, params);
+        return this.getRetrofit().getHistoryService().fetchHistory(this.getPubnub().getConfiguration().getSubscribeKey(), channel, params);
     }
 
     @Override

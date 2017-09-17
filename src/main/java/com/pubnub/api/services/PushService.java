@@ -1,4 +1,4 @@
-package com.pubnub.api.endpoints.push;
+package com.pubnub.api.services;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

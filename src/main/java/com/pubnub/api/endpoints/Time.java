@@ -4,20 +4,18 @@ import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.enums.PNOperationType;
+import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.TelemetryManager;
 import com.pubnub.api.models.consumer.PNTimeResult;
 import retrofit2.Call;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.http.GET;
-import retrofit2.http.QueryMap;
 
 import java.util.List;
 import java.util.Map;
 
 public class Time extends Endpoint<List<Long>, PNTimeResult> {
 
-    public Time(PubNub pubnub, TelemetryManager telemetryManager, Retrofit retrofit) {
+    public Time(PubNub pubnub, TelemetryManager telemetryManager, RetrofitManager retrofit) {
         super(pubnub, telemetryManager, retrofit);
     }
 
@@ -31,10 +29,7 @@ public class Time extends Endpoint<List<Long>, PNTimeResult> {
         return null;
     }
 
-    private interface TimeService {
-        @GET("/time/0")
-        Call<List<Long>> fetchTime(@QueryMap Map<String, String> options);
-    }
+
 
     @Override
     protected void validateParams() throws PubNubException {
@@ -43,8 +38,7 @@ public class Time extends Endpoint<List<Long>, PNTimeResult> {
 
     @Override
     protected Call<List<Long>> doWork(Map<String, String> params) {
-        TimeService service = this.getRetrofit().create(TimeService.class);
-        return service.fetchTime(params);
+        return this.getRetrofit().getTimeService().fetchTime(params);
     }
 
     @Override

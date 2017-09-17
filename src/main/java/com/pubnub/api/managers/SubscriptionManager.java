@@ -182,7 +182,7 @@ public class SubscriptionManager {
 
         this.subscriptionStatusAnnounced = false;
 
-        new Leave(pubnub, this.telemetryManager, this.retrofitManager.getTransactionInstance())
+        new Leave(pubnub, this.telemetryManager, this.retrofitManager)
             .channels(unsubscribeOperation.getChannels()).channelGroups(unsubscribeOperation.getChannelGroups())
             .async(new PNCallback<Boolean>() {
                 @Override
@@ -242,7 +242,7 @@ public class SubscriptionManager {
             return;
         }
 
-        subscribeCall = new Subscribe(pubnub, this.retrofitManager.getSubscriptionInstance())
+        subscribeCall = new Subscribe(pubnub, this.retrofitManager)
                 .channels(combinedChannels).channelGroups(combinedChannelGroups)
                 .timetoken(timetoken).region(region)
                 .filterExpression(pubnub.getConfiguration().getFilterExpression());
@@ -324,7 +324,7 @@ public class SubscriptionManager {
             return;
         }
 
-        heartbeatCall = new Heartbeat(pubnub, this.telemetryManager, this.retrofitManager.getTransactionInstance())
+        heartbeatCall = new Heartbeat(pubnub, this.telemetryManager, this.retrofitManager)
                 .channels(presenceChannels).channelGroups(presenceChannelGroups).state(stateStorage);
 
         heartbeatCall.async(new PNCallback<Boolean>() {

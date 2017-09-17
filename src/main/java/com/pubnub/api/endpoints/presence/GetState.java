@@ -8,6 +8,7 @@ import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.managers.MapperManager;
+import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.TelemetryManager;
 import com.pubnub.api.models.consumer.presence.PNGetStateResult;
 import com.pubnub.api.models.server.Envelope;
@@ -15,7 +16,6 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import retrofit2.Call;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,7 +33,7 @@ public class GetState extends Endpoint<Envelope<JsonElement>, PNGetStateResult> 
     @Setter
     private String uuid;
 
-    public GetState(PubNub pubnub, TelemetryManager telemetryManager, Retrofit retrofit) {
+    public GetState(PubNub pubnub, TelemetryManager telemetryManager, RetrofitManager retrofit) {
         super(pubnub, telemetryManager, retrofit);
         channels = new ArrayList<>();
         channelGroups = new ArrayList<>();
@@ -61,8 +61,6 @@ public class GetState extends Endpoint<Envelope<JsonElement>, PNGetStateResult> 
 
     @Override
     protected Call<Envelope<JsonElement>> doWork(Map<String, String> params) {
-        PresenceService service = this.getRetrofit().create(PresenceService.class);
-
         if (channelGroups.size() > 0) {
             params.put("channel-group", PubNubUtil.joinString(channelGroups, ","));
         }
@@ -71,7 +69,7 @@ public class GetState extends Endpoint<Envelope<JsonElement>, PNGetStateResult> 
 
         String selectedUUID = uuid != null ? uuid : this.getPubnub().getConfiguration().getUuid();
 
-        return service.getState(this.getPubnub().getConfiguration().getSubscribeKey(), channelCSV, selectedUUID, params);
+        return this.getRetrofit().getPresenceService().getState(this.getPubnub().getConfiguration().getSubscribeKey(), channelCSV, selectedUUID, params);
     }
 
     @Override

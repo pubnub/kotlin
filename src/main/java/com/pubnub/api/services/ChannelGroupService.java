@@ -1,4 +1,4 @@
-package com.pubnub.api.endpoints.channel_groups;
+package com.pubnub.api.services;
 
 import com.pubnub.api.models.server.Envelope;
 import retrofit2.Call;

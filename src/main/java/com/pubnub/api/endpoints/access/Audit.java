@@ -6,6 +6,7 @@ import com.pubnub.api.PubNubUtil;
 import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.enums.PNOperationType;
+import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.TelemetryManager;
 import com.pubnub.api.models.consumer.access_manager.PNAccessManagerAuditResult;
 import com.pubnub.api.models.server.Envelope;
@@ -14,7 +15,6 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import retrofit2.Call;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,7 +31,7 @@ public class Audit extends Endpoint<Envelope<AccessManagerAuditPayload>, PNAcces
     @Setter
     private String channelGroup;
 
-    public Audit(PubNub pubnub, TelemetryManager telemetryManager, Retrofit retrofit) {
+    public Audit(PubNub pubnub, TelemetryManager telemetryManager, RetrofitManager retrofit) {
         super(pubnub, telemetryManager, retrofit);
         authKeys = new ArrayList<>();
     }
@@ -80,8 +80,7 @@ public class Audit extends Endpoint<Envelope<AccessManagerAuditPayload>, PNAcces
             queryParams.put("auth", PubNubUtil.joinString(authKeys, ","));
         }
 
-        AccessManagerService service = this.getRetrofit().create(AccessManagerService.class);
-        return service.audit(this.getPubnub().getConfiguration().getSubscribeKey(), queryParams);
+        return this.getRetrofit().getAccessManagerService().audit(this.getPubnub().getConfiguration().getSubscribeKey(), queryParams);
     }
 
     @Override

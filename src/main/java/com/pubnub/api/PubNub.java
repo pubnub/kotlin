@@ -61,7 +61,7 @@ public class PubNub {
     private static final int TIMESTAMP_DIVIDER = 1000;
     private static final int MAX_SEQUENCE = 65535;
 
-    private static final String SDK_VERSION = "4.9.1";
+    private static final String SDK_VERSION = "4.10.0";
 
     public PubNub(PNConfiguration initialConfig) {
         this.configuration = initialConfig;
@@ -99,85 +99,85 @@ public class PubNub {
     // start push
 
     public AddChannelsToPush addPushNotificationsOnChannels() {
-        return new AddChannelsToPush(this, this.telemetryManager, this.retrofitManager.getTransactionInstance());
+        return new AddChannelsToPush(this, this.telemetryManager, this.retrofitManager);
     }
 
     public RemoveChannelsFromPush removePushNotificationsFromChannels() {
-        return new RemoveChannelsFromPush(this, this.telemetryManager, this.retrofitManager.getTransactionInstance());
+        return new RemoveChannelsFromPush(this, this.telemetryManager, this.retrofitManager);
     }
 
     public RemoveAllPushChannelsForDevice removeAllPushNotificationsFromDeviceWithPushToken() {
-        return new RemoveAllPushChannelsForDevice(this, this.telemetryManager, this.retrofitManager.getTransactionInstance());
+        return new RemoveAllPushChannelsForDevice(this, this.telemetryManager, this.retrofitManager);
     }
 
     public ListPushProvisions auditPushChannelProvisions() {
-        return new ListPushProvisions(this, this.telemetryManager, this.retrofitManager.getTransactionInstance());
+        return new ListPushProvisions(this, this.telemetryManager, this.retrofitManager);
     }
 
     // end push
 
     public WhereNow whereNow() {
-        return new WhereNow(this, this.telemetryManager, this.retrofitManager.getTransactionInstance());
+        return new WhereNow(this, this.telemetryManager, this.retrofitManager);
     }
 
     public HereNow hereNow() {
-        return new HereNow(this, this.telemetryManager, this.retrofitManager.getTransactionInstance());
+        return new HereNow(this, this.telemetryManager, this.retrofitManager);
     }
 
     public Time time() {
-        return new Time(this, this.telemetryManager, this.retrofitManager.getTransactionInstance());
+        return new Time(this, this.telemetryManager, this.retrofitManager);
     }
 
     public History history() {
-        return new History(this, this.telemetryManager, this.retrofitManager.getTransactionInstance());
+        return new History(this, this.telemetryManager, this.retrofitManager);
     }
 
     public FetchMessages fetchMessages() {
-        return new FetchMessages(this, this.telemetryManager, this.retrofitManager.getTransactionInstance());
+        return new FetchMessages(this, this.telemetryManager, this.retrofitManager);
     }
 
     public DeleteMessages deleteMessages() {
-        return new DeleteMessages(this, this.telemetryManager, this.retrofitManager.getTransactionInstance());
+        return new DeleteMessages(this, this.telemetryManager, this.retrofitManager);
     }
 
     public Audit audit() {
-        return new Audit(this, this.telemetryManager, this.retrofitManager.getTransactionInstance());
+        return new Audit(this, this.telemetryManager, this.retrofitManager);
     }
 
     public Grant grant() {
-        return new Grant(this, this.telemetryManager, this.retrofitManager.getTransactionInstance());
+        return new Grant(this, this.telemetryManager, this.retrofitManager);
     }
 
     public GetState getPresenceState() {
-        return new GetState(this, this.telemetryManager, this.retrofitManager.getTransactionInstance());
+        return new GetState(this, this.telemetryManager, this.retrofitManager);
     }
 
     public SetState setPresenceState() {
-        return new SetState(this, subscriptionManager, this.telemetryManager, this.retrofitManager.getTransactionInstance());
+        return new SetState(this, subscriptionManager, this.telemetryManager, this.retrofitManager);
     }
 
     public Publish publish() {
-        return new Publish(this, publishSequenceManager, this.telemetryManager, this.retrofitManager.getTransactionInstance());
+        return new Publish(this, publishSequenceManager, this.telemetryManager, this.retrofitManager);
     }
 
     public ListAllChannelGroup listAllChannelGroups() {
-        return new ListAllChannelGroup(this, this.telemetryManager, this.retrofitManager.getTransactionInstance());
+        return new ListAllChannelGroup(this, this.telemetryManager, this.retrofitManager);
     }
 
     public AllChannelsChannelGroup listChannelsForChannelGroup() {
-        return new AllChannelsChannelGroup(this, this.telemetryManager, this.retrofitManager.getTransactionInstance());
+        return new AllChannelsChannelGroup(this, this.telemetryManager, this.retrofitManager);
     }
 
     public AddChannelChannelGroup addChannelsToChannelGroup() {
-        return new AddChannelChannelGroup(this, this.telemetryManager, this.retrofitManager.getTransactionInstance());
+        return new AddChannelChannelGroup(this, this.telemetryManager, this.retrofitManager);
     }
 
     public RemoveChannelChannelGroup removeChannelsFromChannelGroup() {
-        return new RemoveChannelChannelGroup(this, this.telemetryManager, this.retrofitManager.getTransactionInstance());
+        return new RemoveChannelChannelGroup(this, this.telemetryManager, this.retrofitManager);
     }
 
     public DeleteChannelGroup deleteChannelGroup() {
-        return new DeleteChannelGroup(this, this.telemetryManager, this.retrofitManager.getTransactionInstance());
+        return new DeleteChannelGroup(this, this.telemetryManager, this.retrofitManager);
     }
 
     // public methods

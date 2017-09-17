@@ -6,13 +6,13 @@ import com.pubnub.api.PubNubUtil;
 import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.enums.PNOperationType;
+import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.models.server.SubscribeEnvelope;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import retrofit2.Call;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +59,7 @@ public class Subscribe extends Endpoint<SubscribeEnvelope, SubscribeEnvelope> {
      *
      * @param pubnub supplied pubnub instance.
      */
-    public Subscribe(PubNub pubnub, Retrofit retrofit) {
+    public Subscribe(PubNub pubnub, RetrofitManager retrofit) {
         super(pubnub, null, retrofit);
         channels = new ArrayList<>();
         channelGroups = new ArrayList<>();
@@ -87,7 +87,6 @@ public class Subscribe extends Endpoint<SubscribeEnvelope, SubscribeEnvelope> {
 
     @Override
     protected Call<SubscribeEnvelope> doWork(Map<String, String> params) throws PubNubException {
-        PubSubService pubSubService = this.getRetrofit().create(PubSubService.class);
         String channelCSV;
 
         if (channelGroups.size() > 0) {
@@ -114,7 +113,8 @@ public class Subscribe extends Endpoint<SubscribeEnvelope, SubscribeEnvelope> {
 
         params.put("heartbeat", String.valueOf(this.getPubnub().getConfiguration().getPresenceTimeout()));
 
-        return pubSubService.subscribe(this.getPubnub().getConfiguration().getSubscribeKey(), channelCSV, params);
+        return this.getRetrofit().getSubscribeService()
+                .subscribe(this.getPubnub().getConfiguration().getSubscribeKey(), channelCSV, params);
     }
 
     @Override

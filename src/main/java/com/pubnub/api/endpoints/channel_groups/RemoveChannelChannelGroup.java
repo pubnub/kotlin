@@ -6,6 +6,7 @@ import com.pubnub.api.PubNubUtil;
 import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.enums.PNOperationType;
+import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.TelemetryManager;
 import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsRemoveChannelResult;
 import com.pubnub.api.models.server.Envelope;
@@ -13,7 +14,6 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import retrofit2.Call;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,7 +28,7 @@ public class RemoveChannelChannelGroup extends Endpoint<Envelope, PNChannelGroup
     private List<String> channels;
 
 
-    public RemoveChannelChannelGroup(PubNub pubnub, TelemetryManager telemetryManager, Retrofit retrofit) {
+    public RemoveChannelChannelGroup(PubNub pubnub, TelemetryManager telemetryManager, RetrofitManager retrofit) {
         super(pubnub, telemetryManager, retrofit);
         channels = new ArrayList<>();
     }
@@ -55,13 +55,12 @@ public class RemoveChannelChannelGroup extends Endpoint<Envelope, PNChannelGroup
 
     @Override
     protected Call<Envelope> doWork(Map<String, String> params) {
-        ChannelGroupService service = this.getRetrofit().create(ChannelGroupService.class);
-
         if (channels.size() > 0) {
             params.put("remove", PubNubUtil.joinString(channels, ","));
         }
 
-        return service.removeChannel(this.getPubnub().getConfiguration().getSubscribeKey(), channelGroup, params);
+        return this.getRetrofit().getChannelGroupService()
+                .removeChannel(this.getPubnub().getConfiguration().getSubscribeKey(), channelGroup, params);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.pubnub.api.endpoints.presence;
+package com.pubnub.api.services;
 
 import com.google.gson.JsonElement;
 import com.pubnub.api.models.server.Envelope;

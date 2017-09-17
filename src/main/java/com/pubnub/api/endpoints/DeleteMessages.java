@@ -5,6 +5,7 @@ import com.pubnub.api.PubNubException;
 import com.pubnub.api.PubNubUtil;
 import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.enums.PNOperationType;
+import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.TelemetryManager;
 import com.pubnub.api.models.consumer.history.PNDeleteMessagesResult;
 import com.pubnub.api.models.server.DeleteMessagesEnvelope;
@@ -12,10 +13,6 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import retrofit2.Call;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.http.DELETE;
-import retrofit2.http.Path;
-import retrofit2.http.QueryMap;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,14 +31,7 @@ public class DeleteMessages extends Endpoint<DeleteMessagesEnvelope, PNDeleteMes
     @Setter
     private Long end;
 
-    private interface DeleteHistoryService {
-        @DELETE("v3/history/sub-key/{subKey}/channel/{channels}")
-        Call<DeleteMessagesEnvelope> deleteMessages(@Path("subKey") String subKey,
-                                                  @Path("channels") String channels,
-                                                  @QueryMap Map<String, String> options);
-    }
-
-    public DeleteMessages(PubNub pubnubInstance, TelemetryManager telemetryManager, Retrofit retrofitInstance) {
+    public DeleteMessages(PubNub pubnubInstance, TelemetryManager telemetryManager, RetrofitManager retrofitInstance) {
         super(pubnubInstance, telemetryManager, retrofitInstance);
         channels = new ArrayList<>();
     }
@@ -65,7 +55,6 @@ public class DeleteMessages extends Endpoint<DeleteMessagesEnvelope, PNDeleteMes
 
     @Override
     protected Call<DeleteMessagesEnvelope> doWork(Map<String, String> params) throws PubNubException {
-        DeleteHistoryService service = this.getRetrofit().create(DeleteHistoryService.class);
 
         if (start != null) {
             params.put("start", Long.toString(start).toLowerCase());
@@ -74,7 +63,7 @@ public class DeleteMessages extends Endpoint<DeleteMessagesEnvelope, PNDeleteMes
             params.put("end", Long.toString(end).toLowerCase());
         }
 
-        return service.deleteMessages(this.getPubnub().getConfiguration().getSubscribeKey(), PubNubUtil.joinString(channels, ","), params);
+        return this.getRetrofit().getHistoryService().deleteMessages(this.getPubnub().getConfiguration().getSubscribeKey(), PubNubUtil.joinString(channels, ","), params);
     }
 
     @Override

@@ -8,6 +8,7 @@ import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.managers.MapperManager;
 import com.pubnub.api.managers.PublishSequenceManager;
+import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.TelemetryManager;
 import com.pubnub.api.models.consumer.PNPublishResult;
 import com.pubnub.api.vendor.Crypto;
@@ -15,7 +16,6 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import retrofit2.Call;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 import java.util.Collections;
 import java.util.List;
@@ -41,7 +41,7 @@ public class Publish extends Endpoint<List<Object>, PNPublishResult> {
 
     private PublishSequenceManager publishSequenceManager;
 
-    public Publish(PubNub pubnub, PublishSequenceManager providedPublishSequenceManager, TelemetryManager telemetryManager, Retrofit retrofit) {
+    public Publish(PubNub pubnub, PublishSequenceManager providedPublishSequenceManager, TelemetryManager telemetryManager, RetrofitManager retrofit) {
         super(pubnub, telemetryManager, retrofit);
 
         this.publishSequenceManager = providedPublishSequenceManager;
@@ -109,8 +109,6 @@ public class Publish extends Endpoint<List<Object>, PNPublishResult> {
             stringifiedMessage = crypto.encrypt(stringifiedMessage).replace("\n", "");
         }
 
-        PubSubService service = this.getRetrofit().create(PubSubService.class);
-
         if (usePOST != null && usePOST) {
             Object payloadToSend;
 
@@ -120,7 +118,7 @@ public class Publish extends Endpoint<List<Object>, PNPublishResult> {
                 payloadToSend = message;
             }
 
-            return service.publishWithPost(this.getPubnub().getConfiguration().getPublishKey(),
+            return this.getRetrofit().getPublishService().publishWithPost(this.getPubnub().getConfiguration().getPublishKey(),
                     this.getPubnub().getConfiguration().getSubscribeKey(),
                     channel, payloadToSend, params);
         } else {
@@ -131,7 +129,7 @@ public class Publish extends Endpoint<List<Object>, PNPublishResult> {
 
             stringifiedMessage = PubNubUtil.urlEncode(stringifiedMessage);
 
-            return service.publish(this.getPubnub().getConfiguration().getPublishKey(),
+            return this.getRetrofit().getPublishService().publish(this.getPubnub().getConfiguration().getPublishKey(),
                     this.getPubnub().getConfiguration().getSubscribeKey(),
                     channel, stringifiedMessage, params);
         }

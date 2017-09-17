@@ -23,5 +23,6 @@ com.pubnub.api.models.consumer.push
 com.pubnub.api.models.server
 com.pubnub.api.models.server.access_manager
 com.pubnub.api.models.server.presence
+com.pubnub.api.services
 com.pubnub.api.vendor
 com.pubnub.api.workers

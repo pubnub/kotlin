@@ -8,6 +8,7 @@ import com.pubnub.api.PubNubUtil;
 import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.managers.MapperManager;
+import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.TelemetryManager;
 import com.pubnub.api.models.consumer.history.PNFetchMessagesResult;
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
@@ -18,10 +19,6 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import retrofit2.Call;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.http.GET;
-import retrofit2.http.Path;
-import retrofit2.http.QueryMap;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,7 +37,7 @@ public class FetchMessages extends Endpoint<FetchMessagesEnvelope, PNFetchMessag
     @Setter
     private Long end;
 
-    public FetchMessages(PubNub pubnub, TelemetryManager telemetryManager, Retrofit retrofit) {
+    public FetchMessages(PubNub pubnub, TelemetryManager telemetryManager, RetrofitManager retrofit) {
         super(pubnub, telemetryManager, retrofit);
         channels = new ArrayList<>();
         maximumPerChannel = 1;
@@ -56,12 +53,6 @@ public class FetchMessages extends Endpoint<FetchMessagesEnvelope, PNFetchMessag
         return null;
     }
 
-    private interface HistoryForChannelsService {
-        @GET("v3/history/sub-key/{subKey}/channel/{channels}")
-        Call<FetchMessagesEnvelope> fetchMessages(@Path("subKey") String subKey,
-                                                            @Path("channels") String channels,
-                                                            @QueryMap Map<String, String> options);
-    }
 
     @Override
     protected void validateParams() throws PubNubException {
@@ -77,9 +68,6 @@ public class FetchMessages extends Endpoint<FetchMessagesEnvelope, PNFetchMessag
 
     @Override
     protected Call<FetchMessagesEnvelope> doWork(Map<String, String> params) {
-
-        HistoryForChannelsService service = this.getRetrofit().create(HistoryForChannelsService.class);
-
         params.put("max", String.valueOf(maximumPerChannel));
 
         if (start != null) {
@@ -89,7 +77,7 @@ public class FetchMessages extends Endpoint<FetchMessagesEnvelope, PNFetchMessag
             params.put("end", Long.toString(end).toLowerCase());
         }
 
-        return service.fetchMessages(this.getPubnub().getConfiguration().getSubscribeKey(), PubNubUtil.joinString(channels, ","), params);
+        return this.getRetrofit().getHistoryService().fetchMessages(this.getPubnub().getConfiguration().getSubscribeKey(), PubNubUtil.joinString(channels, ","), params);
     }
 
     @Override

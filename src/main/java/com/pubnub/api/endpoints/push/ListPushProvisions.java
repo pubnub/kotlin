@@ -6,13 +6,13 @@ import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.enums.PNPushType;
+import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.TelemetryManager;
 import com.pubnub.api.models.consumer.push.PNPushListProvisionsResult;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import retrofit2.Call;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 import java.util.List;
 import java.util.Map;
@@ -25,7 +25,7 @@ public class ListPushProvisions extends Endpoint<List<String>, PNPushListProvisi
     @Setter
     private String deviceId;
 
-    public ListPushProvisions(PubNub pubnub, TelemetryManager telemetryManager, Retrofit retrofit) {
+    public ListPushProvisions(PubNub pubnub, TelemetryManager telemetryManager, RetrofitManager retrofit) {
         super(pubnub, telemetryManager, retrofit);
     }
 
@@ -55,8 +55,7 @@ public class ListPushProvisions extends Endpoint<List<String>, PNPushListProvisi
     @Override
     protected Call<List<String>> doWork(Map<String, String> params) throws PubNubException {
         params.put("type", pushType.name().toLowerCase());
-        PushService service = this.getRetrofit().create(PushService.class);
-        return service.listChannelsForDevice(this.getPubnub().getConfiguration().getSubscribeKey(), deviceId, params);
+        return this.getRetrofit().getPushService().listChannelsForDevice(this.getPubnub().getConfiguration().getSubscribeKey(), deviceId, params);
     }
 
     @Override

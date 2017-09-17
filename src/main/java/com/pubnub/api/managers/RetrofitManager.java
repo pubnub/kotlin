@@ -6,15 +6,22 @@ import com.pubnub.api.PubNub;
 import com.pubnub.api.endpoints.vendor.AppEngineFactory;
 import com.pubnub.api.enums.PNLogVerbosity;
 import com.pubnub.api.interceptors.SignatureInterceptor;
-
-import java.util.Collections;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.TimeUnit;
-
+import com.pubnub.api.services.AccessManagerService;
+import com.pubnub.api.services.ChannelGroupService;
+import com.pubnub.api.services.HistoryService;
+import com.pubnub.api.services.PresenceService;
+import com.pubnub.api.services.PublishService;
+import com.pubnub.api.services.PushService;
+import com.pubnub.api.services.SubscribeService;
+import com.pubnub.api.services.TimeService;
 import lombok.Getter;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
+
+import java.util.Collections;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class RetrofitManager {
 
@@ -24,6 +31,16 @@ public class RetrofitManager {
 
     private OkHttpClient transactionClientInstance;
     private OkHttpClient subscriptionClientInstance;
+
+    // services
+    @Getter private PresenceService presenceService;
+    @Getter private HistoryService historyService;
+    @Getter private PushService pushService;
+    @Getter private AccessManagerService accessManagerService;
+    @Getter private ChannelGroupService channelGroupService;
+    @Getter private TimeService timeService;
+    @Getter private PublishService publishService;
+    @Getter private SubscribeService subscribeService;
 
     @Getter private Retrofit transactionInstance;
     @Getter private Retrofit subscriptionInstance;
@@ -47,6 +64,16 @@ public class RetrofitManager {
 
         this.transactionInstance = createRetrofit(this.transactionClientInstance);
         this.subscriptionInstance = createRetrofit(this.subscriptionClientInstance);
+
+        this.presenceService = transactionInstance.create(PresenceService.class);
+        this.historyService = transactionInstance.create(HistoryService.class);
+        this.pushService = transactionInstance.create(PushService.class);
+        this.accessManagerService = transactionInstance.create(AccessManagerService.class);
+        this.channelGroupService = transactionInstance.create(ChannelGroupService.class);
+        this.publishService = transactionInstance.create(PublishService.class);
+        this.subscribeService = subscriptionInstance.create(SubscribeService.class);
+        this.timeService = transactionInstance.create(TimeService.class);
+
     }
 
     private OkHttpClient createOkHttpClient(int requestTimeout, int connectTimeOut) {
@@ -116,6 +143,8 @@ public class RetrofitManager {
 
         return retrofitBuilder.build();
     }
+
+
 
     public void destroy() {
         if (this.transactionClientInstance != null) {

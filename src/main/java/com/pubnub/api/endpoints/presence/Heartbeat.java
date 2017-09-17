@@ -7,13 +7,13 @@ import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.managers.MapperManager;
+import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.TelemetryManager;
 import com.pubnub.api.models.server.Envelope;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import retrofit2.Call;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +29,7 @@ public class Heartbeat extends Endpoint<Envelope, Boolean> {
     @Setter
     private List<String> channelGroups;
 
-    public Heartbeat(PubNub pubnub, TelemetryManager telemetryManager, Retrofit retrofit) {
+    public Heartbeat(PubNub pubnub, TelemetryManager telemetryManager, RetrofitManager retrofit) {
         super(pubnub, telemetryManager, retrofit);
         channels = new ArrayList<>();
         channelGroups = new ArrayList<>();
@@ -79,8 +79,8 @@ public class Heartbeat extends Endpoint<Envelope, Boolean> {
             params.put("state", stringifiedState);
         }
 
-        PresenceService service = this.getRetrofit().create(PresenceService.class);
-        return service.heartbeat(this.getPubnub().getConfiguration().getSubscribeKey(), channelsCSV, params);
+
+        return this.getRetrofit().getPresenceService().heartbeat(this.getPubnub().getConfiguration().getSubscribeKey(), channelsCSV, params);
     }
 
     @Override

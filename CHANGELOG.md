@@ -1,4 +1,15 @@
 
+## [v4.10.0](https://github.com/pubnub/java/tree/v4.10.0)
+  September-17-2017
+
+
+  [Full Changelog](https://github.com/pubnub/java/compare/v4.9.1...v4.10.0)
+
+- 🌟rework the loading of services to load the classes once.
+
+
+
+
 ## [v4.9.1](https://github.com/pubnub/java/tree/v4.9.1)
 
 

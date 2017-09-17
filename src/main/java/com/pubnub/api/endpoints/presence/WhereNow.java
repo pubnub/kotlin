@@ -5,6 +5,7 @@ import com.pubnub.api.PubNubException;
 import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.enums.PNOperationType;
+import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.TelemetryManager;
 import com.pubnub.api.models.consumer.presence.PNWhereNowResult;
 import com.pubnub.api.models.server.Envelope;
@@ -13,7 +14,6 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import retrofit2.Call;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 import java.util.List;
 import java.util.Map;
@@ -24,7 +24,7 @@ public class WhereNow extends Endpoint<Envelope<WhereNowPayload>, PNWhereNowResu
     @Setter
     private String uuid;
 
-    public WhereNow(PubNub pubnub, TelemetryManager telemetryManager, Retrofit retrofit) {
+    public WhereNow(PubNub pubnub, TelemetryManager telemetryManager, RetrofitManager retrofit) {
         super(pubnub, telemetryManager, retrofit);
     }
 
@@ -47,8 +47,7 @@ public class WhereNow extends Endpoint<Envelope<WhereNowPayload>, PNWhereNowResu
 
     @Override
     protected Call<Envelope<WhereNowPayload>> doWork(Map<String, String> params) {
-        PresenceService service = this.getRetrofit().create(PresenceService.class);
-        return service.whereNow(this.getPubnub().getConfiguration().getSubscribeKey(),
+        return this.getRetrofit().getPresenceService().whereNow(this.getPubnub().getConfiguration().getSubscribeKey(),
                 this.uuid != null ? this.uuid : this.getPubnub().getConfiguration().getUuid(), params);
     }
 
