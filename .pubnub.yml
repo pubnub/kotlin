@@ -3,7 +3,7 @@ version: 4.11.0
 schema: 1
 scm: github.com/pubnub/java
 files:
-  - build/libs/pubnub-gson-4.10.0-all.jar
+  - build/libs/pubnub-gson-4.11.0-all.jar
 changelog:
   - version: v4.11.0
     date: 2017-10-05
