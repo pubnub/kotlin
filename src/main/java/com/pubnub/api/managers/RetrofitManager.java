@@ -20,7 +20,6 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 
 import java.util.Collections;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class RetrofitManager {
