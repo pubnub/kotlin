@@ -146,7 +146,7 @@ public class SubscriptionManager {
         consumerThread.interrupt();
     }
 
-    public synchronized void  destroy() {
+    public synchronized void destroy() {
         this.disconnect();
     }
 
