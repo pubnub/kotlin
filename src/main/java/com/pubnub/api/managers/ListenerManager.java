@@ -39,9 +39,12 @@ public class ListenerManager {
     }
 
     public void announce(PNMessageResult message) {
-        for (SubscribeCallback subscribeCallback : listeners) {
+        List<SubscribeCallback> tempCallbackList = new ArrayList<>();
+        tempCallbackList.addAll(listeners);
+        for (SubscribeCallback subscribeCallback : tempCallbackList) {
             subscribeCallback.message(this.pubnub, message);
         }
+        tempCallbackList.clear();
     }
 
     public void announce(PNPresenceEventResult presence) {
