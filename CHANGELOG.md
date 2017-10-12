@@ -1,13 +1,27 @@
 
+## [v4.12.0](https://github.com/pubnub/java/tree/v4.12.0)
+  October-05-2017
+
+
+  [Full Changelog](https://github.com/pubnub/java/compare/v4.11.0...v4.12.0)
+
+
+
+- 🐛fix worker thread unloading.
+- 🌟prevent concurrent modification of listeners.
+
+
+
+
 ## [v4.11.0](https://github.com/pubnub/java/tree/v4.11.0)
   October-05-2017
 
 
   [Full Changelog](https://github.com/pubnub/java/compare/v4.10.0...v4.11.0)
 
-- 🌟fix retrofit unloading.
 
 
+- 🐛fix retrofit unloading.
 
 
 ## [v4.10.0](https://github.com/pubnub/java/tree/v4.10.0)
