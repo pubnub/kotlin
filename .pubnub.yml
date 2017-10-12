@@ -1,14 +1,21 @@
 name: java
-version: 4.11.0
+version: 4.12.0
 schema: 1
 scm: github.com/pubnub/java
 files:
-  - build/libs/pubnub-gson-4.10.0-all.jar
+  - build/libs/pubnub-gson-4.12.0-all.jar
 changelog:
+  - version: v4.12.0
+    date: 2017-10-05
+    changes:
+      - type: bug
+        text: fix worker thread unloading.
+      - type: feature
+        text: prevent concurrent modification of listeners.
   - version: v4.11.0
     date: 2017-10-05
     changes:
-      - type: feature
+      - type: bug
         text: fix retrofit unloading.
   - version: v4.10.0
     date: 2017-09-17
