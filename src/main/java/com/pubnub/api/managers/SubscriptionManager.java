@@ -146,8 +146,10 @@ public class SubscriptionManager {
         consumerThread.interrupt();
     }
 
-    public synchronized void destroy() {
+    public synchronized void destroy(boolean forceDestroy) {
         this.disconnect();
+        if (forceDestroy)
+            consumerThread.interrupt();
     }
 
     public synchronized void adaptStateBuilder(StateOperation stateOperation) {
