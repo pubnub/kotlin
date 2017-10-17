@@ -148,8 +148,9 @@ public class SubscriptionManager {
 
     public synchronized void destroy(boolean forceDestroy) {
         this.disconnect();
-        if (forceDestroy)
+        if (forceDestroy){
             consumerThread.interrupt();
+        }
     }
 
     public synchronized void adaptStateBuilder(StateOperation stateOperation) {
