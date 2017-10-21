@@ -37,6 +37,7 @@ public class MapperManager {
                     out.value(value);
                 }
             }
+
             @Override public Boolean read(JsonReader in) throws IOException {
                 JsonToken peek = in.peek();
                 switch (peek) {
@@ -90,12 +91,12 @@ public class MapperManager {
         return element.getAsString();
     }
 
-    public int elementToInt(JsonElement element, String field) {
-        return element.getAsJsonObject().get(field).getAsInt();
-    }
-
     public String elementToString(JsonElement element, String field) {
         return element.getAsJsonObject().get(field).getAsString();
+    }
+
+    public int elementToInt(JsonElement element, String field) {
+        return element.getAsJsonObject().get(field).getAsInt();
     }
 
     public boolean isJsonObject(JsonElement element) {

@@ -133,12 +133,11 @@ public class RetrofitManager {
         }
 
         retrofitBuilder = retrofitBuilder
-                .baseUrl(pubnub.getBaseUrl())
-                .addConverterFactory(this.pubnub.getMapper().getConverterFactory());
+            .baseUrl(pubnub.getBaseUrl())
+            .addConverterFactory(this.pubnub.getMapper().getConverterFactory());
 
         if (!pubnub.getConfiguration().isGoogleAppEngineNetworking()) {
-             retrofitBuilder = retrofitBuilder
-                     .client(client);
+            retrofitBuilder = retrofitBuilder.client(client);
         }
 
         return retrofitBuilder.build();

@@ -191,7 +191,7 @@ public class SubscriptionManager {
                 public void onResponse(Boolean result, PNStatus status) {
                     listenerManager.announce(status);
                 }
-        });
+            });
 
         // if we unsubscribed from all the channels, reset the timetoken back to zero and remove the region.
         if (this.subscriptionState.isEmpty()) {
