@@ -67,7 +67,7 @@ jacocoTestReport {
 
 checkstyle {
     configFile = new File(rootDir, "src/test/checkstyle.xml")
-    toolVersion = '8.3'
+    toolVersion = '6.19'
 }
 
 tasks.withType(Checkstyle) {
