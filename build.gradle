@@ -1,6 +1,6 @@
 plugins {
     id "io.franzbecker.gradle-lombok" version "1.8"
-    id 'com.github.johnrengelman.shadow' version '2.0.1'
+    id 'com.github.johnrengelman.shadow' version '1.2.4'
     id "com.bmuschko.nexus" version "2.3.1"
     id 'com.github.ben-manes.versions' version '0.15.0'
     id 'java'
@@ -10,7 +10,7 @@ plugins {
     id 'findbugs'
 }
 group = 'com.pubnub'
-version = '4.12.0'
+version = '4.13.0'
 
 description = """"""
 

@@ -341,6 +341,9 @@ public class SubscriptionManager {
                         listenerManager.announce(status);
                     }
 
+                    // stop the heartbeating logic since an error happened.
+                    stopHeartbeatTimer();
+
                 } else {
                     if (heartbeatVerbosity == PNHeartbeatNotificationOptions.ALL) {
                         listenerManager.announce(status);
