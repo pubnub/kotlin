@@ -1,4 +1,18 @@
 
+## [v4.13.0](https://github.com/pubnub/java/tree/v4.13.0)
+  October-23-2017
+
+
+  [Full Changelog](https://github.com/pubnub/java/compare/v4.12.0...v4.13.0)
+
+
+- ⭐do not execute subscribe on empty string channel, channel groups
+
+
+- ⭐stop heartbeat loop if an error shows up.
+
+
+
 ## [v4.12.0](https://github.com/pubnub/java/tree/v4.12.0)
   October-05-2017
 

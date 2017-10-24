@@ -146,8 +146,11 @@ public class SubscriptionManager {
         consumerThread.interrupt();
     }
 
-    public synchronized void destroy() {
+    public synchronized void destroy(boolean forceDestroy) {
         this.disconnect();
+        if (forceDestroy) {
+            consumerThread.interrupt();
+        }
     }
 
     public synchronized void adaptStateBuilder(StateOperation stateOperation) {
@@ -188,7 +191,7 @@ public class SubscriptionManager {
                 public void onResponse(Boolean result, PNStatus status) {
                     listenerManager.announce(status);
                 }
-        });
+            });
 
         // if we unsubscribed from all the channels, reset the timetoken back to zero and remove the region.
         if (this.subscriptionState.isEmpty()) {
@@ -337,6 +340,9 @@ public class SubscriptionManager {
                             || heartbeatVerbosity == PNHeartbeatNotificationOptions.FAILURES) {
                         listenerManager.announce(status);
                     }
+
+                    // stop the heartbeating logic since an error happened.
+                    stopHeartbeatTimer();
 
                 } else {
                     if (heartbeatVerbosity == PNHeartbeatNotificationOptions.ALL) {

@@ -20,6 +20,7 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 
 import java.util.Collections;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class RetrofitManager {
@@ -132,29 +133,32 @@ public class RetrofitManager {
         }
 
         retrofitBuilder = retrofitBuilder
-                .baseUrl(pubnub.getBaseUrl())
-                .addConverterFactory(this.pubnub.getMapper().getConverterFactory());
+            .baseUrl(pubnub.getBaseUrl())
+            .addConverterFactory(this.pubnub.getMapper().getConverterFactory());
 
         if (!pubnub.getConfiguration().isGoogleAppEngineNetworking()) {
-             retrofitBuilder = retrofitBuilder
-                     .client(client);
+            retrofitBuilder = retrofitBuilder.client(client);
         }
 
         return retrofitBuilder.build();
     }
 
 
-
-    public void destroy() {
+    public void destroy(boolean force) {
         if (this.transactionClientInstance != null) {
-            closeExecutor(this.transactionClientInstance);
+            closeExecutor(this.transactionClientInstance, force);
         }
         if (this.subscriptionClientInstance != null) {
-            closeExecutor(this.subscriptionClientInstance);
+            closeExecutor(this.subscriptionClientInstance, force);
         }
     }
 
-    private void closeExecutor(OkHttpClient client) {
+    private void closeExecutor(OkHttpClient client, boolean force) {
         client.dispatcher().cancelAll();
+        if (force) {
+            client.connectionPool().evictAll();
+            ExecutorService executorService = client.dispatcher().executorService();
+            executorService.shutdown();
+        }
     }
 }

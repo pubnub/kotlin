@@ -40,16 +40,16 @@ public class PubNubUtil {
     /**
      * Returns encoded String
      *
-     * @param sUrl , input string
+     * @param stringToEncode , input string
      * @return , encoded string
      */
-    public static String pamEncode(String sUrl) {
+    public static String pamEncode(String stringToEncode) {
         /* !'()*~ */
 
-        String encoded = urlEncode(sUrl);
+        String encoded = urlEncode(stringToEncode);
         if (encoded != null) {
-            encoded = encoded.
-                    replace("*", "%2A")
+            encoded = encoded
+                    .replace("*", "%2A")
                     .replace("!", "%21")
                     .replace("'", "%27")
                     .replace("(", "%28")
@@ -65,12 +65,12 @@ public class PubNubUtil {
     /**
      * Returns encoded String
      *
-     * @param sUrl , input string
+     * @param stringToEncode , input string
      * @return , encoded string
      */
-    public static String urlEncode(String sUrl) {
+    public static String urlEncode(String stringToEncode) {
         try {
-            return URLEncoder.encode(sUrl, "UTF-8").replace("+", "%20");
+            return URLEncoder.encode(stringToEncode, "UTF-8").replace("+", "%20");
         } catch (UnsupportedEncodingException e) {
             return null;
         }
@@ -79,13 +79,13 @@ public class PubNubUtil {
     /**
      * Returns decoded String
      *
-     * @param sUrl
+     * @param stringToEncode
      *            , input string
      * @return , decoded string
      */
-    public static String urlDecode(String sUrl) {
+    public static String urlDecode(String stringToEncode) {
         try {
-            return URLDecoder.decode(sUrl, "UTF-8");
+            return URLDecoder.decode(stringToEncode, "UTF-8");
         } catch (UnsupportedEncodingException e) {
             return null;
         }

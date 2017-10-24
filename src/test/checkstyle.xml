@@ -80,12 +80,12 @@
 
 
     <!-- <module name="SuppressionCommentFilter"/> -->
-	<module name="SuppressionCommentFilter">
-	  <property name="offCommentFormat" value="CHECKSTYLE_OFF: ALMOST_ALL"/>
-	  <property name="onCommentFormat" value="CHECKSTYLE_ON: ALMOST_ALL"/>
-	  <property name="checkFormat" value="^((?!(EqualsHashCode)).)*$"/>
-	</module>
-	
+    <module name="SuppressionCommentFilter">
+        <property name="offCommentFormat" value="CHECKSTYLE_OFF: ALMOST_ALL"/>
+        <property name="onCommentFormat" value="CHECKSTYLE_ON: ALMOST_ALL"/>
+        <property name="checkFormat" value="^((?!(EqualsHashCode)).)*$"/>
+    </module>
+
     <module name="TreeWalker">
 
         <!-- Checks for Javadoc comments.                     -->

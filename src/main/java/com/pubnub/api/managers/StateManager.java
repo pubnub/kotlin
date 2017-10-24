@@ -43,6 +43,10 @@ public class StateManager {
 
     public synchronized void adaptSubscribeBuilder(SubscribeOperation subscribeOperation) {
         for (String channel : subscribeOperation.getChannels()) {
+            if (channel == null || channel.length() == 0) {
+                continue;
+            }
+
             SubscriptionItem subscriptionItem = new SubscriptionItem().setName(channel);
             channels.put(channel, subscriptionItem);
 
@@ -54,6 +58,10 @@ public class StateManager {
         }
 
         for (String channelGroup : subscribeOperation.getChannelGroups()) {
+            if (channelGroup == null || channelGroup.length() == 0) {
+                continue;
+            }
+
             SubscriptionItem subscriptionItem = new SubscriptionItem().setName(channelGroup);
             groups.put(channelGroup, subscriptionItem);
 

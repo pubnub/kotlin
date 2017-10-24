@@ -61,7 +61,7 @@ public class PubNub {
     private static final int TIMESTAMP_DIVIDER = 1000;
     private static final int MAX_SEQUENCE = 65535;
 
-    private static final String SDK_VERSION = "4.12.0";
+    private static final String SDK_VERSION = "4.13.0";
 
     public PubNub(PNConfiguration initialConfig) {
         this.configuration = initialConfig;
@@ -218,7 +218,7 @@ public class PubNub {
      * @param inputString String to be encrypted
      * @return String containing the encryption of inputString using cipherKey
      */
-    public  String encrypt(String inputString) throws PubNubException {
+    public String encrypt(String inputString) throws PubNubException {
         if (inputString == null) {
             throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_INVALID_ARGUMENTS).build();
         }
@@ -250,14 +250,14 @@ public class PubNub {
      * @return instance uuid.
      */
     public String getInstanceId() {
-        return  instanceId;
+        return instanceId;
     }
 
     /**
      * @return request uuid.
      */
     public String getRequestId() {
-        return  UUID.randomUUID().toString();
+        return UUID.randomUUID().toString();
     }
 
     /**
@@ -276,12 +276,24 @@ public class PubNub {
     }
 
     /**
-     *  Destroy the SDK to evict the connection pools.
+     * Destroy the SDK to cancel all ongoing requests and stop heartbeat timer.
      */
     public void destroy() {
         try {
-            subscriptionManager.destroy();
-            retrofitManager.destroy();
+            subscriptionManager.destroy(false);
+            retrofitManager.destroy(false);
+        } catch (Exception error) {
+            //
+        }
+    }
+
+    /**
+     * Force destroy the SDK to evict the connection pools and close executors.
+     */
+    public void forceDestroy() {
+        try {
+            subscriptionManager.destroy(true);
+            retrofitManager.destroy(true);
         } catch (Exception error) {
             //
         }
