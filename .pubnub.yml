@@ -1,10 +1,15 @@
 name: java
-version: 4.13.0
+version: 4.14.0
 schema: 1
 scm: github.com/pubnub/java
 files:
-  - build/libs/pubnub-gson-4.13.0-all.jar
+  - build/libs/pubnub-gson-4.14.0-all.jar
 changelog:
+  - version: v4.14.0
+    date: 2017-10-23
+    changes:
+      - type: improvement
+        text: add support to supress leave events
   - version: v4.13.0
     date: 2017-10-23
     changes:

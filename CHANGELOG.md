@@ -1,4 +1,15 @@
 
+## [v4.14.0](https://github.com/pubnub/java/tree/v4.14.0)
+  October-23-2017
+
+
+  [Full Changelog](https://github.com/pubnub/java/compare/v4.13.0...v4.14.0)
+
+
+- ⭐add support to supress leave events
+
+
+
 ## [v4.13.0](https://github.com/pubnub/java/tree/v4.13.0)
   October-23-2017
 
