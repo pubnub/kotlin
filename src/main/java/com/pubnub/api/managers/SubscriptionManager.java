@@ -184,14 +184,17 @@ public class SubscriptionManager {
 
         this.subscriptionStatusAnnounced = false;
 
-        new Leave(pubnub, this.telemetryManager, this.retrofitManager)
-            .channels(unsubscribeOperation.getChannels()).channelGroups(unsubscribeOperation.getChannelGroups())
-            .async(new PNCallback<Boolean>() {
-                @Override
-                public void onResponse(Boolean result, PNStatus status) {
-                    listenerManager.announce(status);
-                }
-            });
+        if (!this.pubnub.getConfiguration().isSupressLeaveEvents()) {
+            new Leave(pubnub, this.telemetryManager, this.retrofitManager)
+                    .channels(unsubscribeOperation.getChannels()).channelGroups(unsubscribeOperation.getChannelGroups())
+                    .async(new PNCallback<Boolean>() {
+                        @Override
+                        public void onResponse(Boolean result, PNStatus status) {
+                            listenerManager.announce(status);
+                        }
+                    });
+        }
+
 
         // if we unsubscribed from all the channels, reset the timetoken back to zero and remove the region.
         if (this.subscriptionState.isEmpty()) {
