@@ -825,38 +825,6 @@ public class SubscriptionManagerTest extends TestHarness {
     }
 
     @Test
-    public void testSubscribeWithTimeTokenBuilder() {
-        final AtomicInteger atomic = new AtomicInteger(0);
-        stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
-                .willReturn(aResponse().withBody("{\"t\":{\"t\":\"14607577960932487\",\"r\":1},\"m\":[{\"a\":\"4\",\"f\":0,\"i\":\"Client-g5d4g\",\"p\":{\"t\":\"14607577960925503\",\"r\":1},\"k\":\"sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f\",\"c\":\"coolChannel\",\"d\":{\"text\":\"Enter Message Here\"},\"b\":\"coolChan-bnel\"}]}")));
-
-        pubnub.addListener(new SubscribeCallback() {
-            @Override
-            public void status(PubNub pubnub, PNStatus status) {
-            }
-
-            @Override
-            public void message(PubNub pubnub, PNMessageResult message) {
-                List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")));
-
-                assertEquals("1337", requests.get(1).queryParameter("tt").firstValue());
-                atomic.addAndGet(1);
-            }
-
-            @Override
-            public void presence(PubNub pubnub, PNPresenceEventResult presence) {
-            }
-        });
-
-
-        pubnub.subscribe().channels(Arrays.asList("ch1", "ch2")).withTimetoken(1337L).execute();
-
-        Awaitility.await().atMost(5, TimeUnit.SECONDS)
-                .untilAtomic(atomic, org.hamcrest.Matchers.greaterThan(0));
-
-    }
-
-    @Test
     public void testSubscribeWithFilterExpressionBuilder() {
         final AtomicInteger atomic = new AtomicInteger(0);
         pubnub.getConfiguration().setFilterExpression("much=filtering");
