@@ -6,12 +6,14 @@ files:
   - build/libs/pubnub-gson-4.15.0-all.jar
 changelog:
   - version: v4.15.0
-    date: 2017-11-15
+    date: 2017-11-17
     changes:
       - type: improvement
         text: update gson dependency
       - type: bug
         text: make listeners thread safe
+      - type: bug
+        text: close hanging threads on shutdown
   - version: v4.14.0
     date: 2017-10-25
     changes:
@@ -233,27 +235,33 @@ changelog:
       - type: improvement
         text: reduce overlap on error handling when returning exceptions.
   - version: v4.0.6
-    changes: 2016-07-18
+    date: 2016-07-18
+    changes:
       - type: improvement
         text: send heartbeat presence value when subscribing
   - version: v4.0.5
-    changes: 2016-07-07
+    date: 2016-07-07
+    changes:
       - type: improvement
         text: unified retrofit handling to lower amount of instances and sync'd the state methods.
   - version: v4.0.4
-    changes: 2016-06-24
+    date: 2016-06-24
+    changes:
       - type: bug
         text: setting State for other UUID's is now supported.
   - version: v4.0.3
-    changes: 2016-06-15
+    date: 2016-06-15
+    changes:
       - type: feature
         text: fire() method and no-replicaton options.
   - version: v4.0.2
-    changes: 2016-06-15
+    date: 2016-06-15
+    changes:
       - type: bug
         text: fix to the version fetching.
   - version: v4.0.1
-    changes: 2016-06-06
+    date: 2016-06-06
+    changes:
       - type: bug
         text: adjustment of the subscribe loop to alleviate duplicate dispatches.
   - version: v4.0.0
