@@ -122,7 +122,13 @@ public class RetrofitManager {
 
         httpClient.addInterceptor(this.signatureInterceptor);
 
-        return httpClient.build();
+        OkHttpClient constructedClient = httpClient.build();
+
+        if (pubnub.getConfiguration().getMaximumConnections() != null) {
+            constructedClient.dispatcher().setMaxRequestsPerHost(pubnub.getConfiguration().getMaximumConnections());
+        }
+
+        return constructedClient;
     }
 
     private Retrofit createRetrofit(OkHttpClient client) {

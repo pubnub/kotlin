@@ -155,6 +155,9 @@ public class PNConfiguration {
     private CertificatePinner certificatePinner;
 
     @Setter
+    private Integer maximumConnections;
+
+    @Setter
     private HttpLoggingInterceptor httpLoggingInterceptor;
 
     /**
