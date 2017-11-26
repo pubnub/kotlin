@@ -1,6 +1,34 @@
 
+## [v4.16.0](https://github.com/pubnub/java/tree/v4.16.0)
+  November-21-2017
+
+
+  [Full Changelog](https://github.com/pubnub/java/compare/v4.15.0...v4.16.0)
+
+
+- ⭐allow setting setMaximumConnections to open more connections to PubNub
+
+
+
+## [v4.15.0](https://github.com/pubnub/java/tree/v4.15.0)
+  November-17-2017
+
+
+  [Full Changelog](https://github.com/pubnub/java/compare/v4.14.0...v4.15.0)
+
+
+- ⭐update gson dependency
+
+
+
+- 🐛make listeners thread safe
+
+
+- 🐛close hanging threads on shutdown
+
+
 ## [v4.14.0](https://github.com/pubnub/java/tree/v4.14.0)
-  October-23-2017
+  October-25-2017
 
 
   [Full Changelog](https://github.com/pubnub/java/compare/v4.13.0...v4.14.0)
@@ -61,6 +89,7 @@
 
 
 ## [v4.9.1](https://github.com/pubnub/java/tree/v4.9.1)
+  August-14-2017
 
 
   [Full Changelog](https://github.com/pubnub/java/compare/v4.9.0...v4.9.1)
@@ -71,6 +100,7 @@
 
 
 ## [v4.9.0](https://github.com/pubnub/java/tree/v4.9.0)
+  August-14-2017
 
 
   [Full Changelog](https://github.com/pubnub/java/compare/v4.8.0...v4.9.0)
@@ -81,6 +111,7 @@
 
 
 ## [v4.8.0](https://github.com/pubnub/java/tree/v4.8.0)
+  August-08-2017
 
 
   [Full Changelog](https://github.com/pubnub/java/compare/v4.7.0...v4.8.0)
@@ -97,6 +128,7 @@
 
 
 ## [v4.7.0](https://github.com/pubnub/java/tree/v4.7.0)
+  July-20-2017
 
 
   [Full Changelog](https://github.com/pubnub/java/compare/v4.6.5...v4.7.0)
@@ -107,6 +139,7 @@
 
 
 ## [v4.6.5](https://github.com/pubnub/java/tree/v4.6.5)
+  June-28-2017
 
 
   [Full Changelog](https://github.com/pubnub/java/compare/v4.6.4...v4.6.5)
@@ -117,6 +150,7 @@
 
 
 ## [v4.6.4](https://github.com/pubnub/java/tree/v4.6.4)
+  June-10-2017
 
 
   [Full Changelog](https://github.com/pubnub/java/compare/v4.6.3...v4.6.4)
@@ -127,6 +161,7 @@
 
 
 ## [v4.6.3](https://github.com/pubnub/java/tree/v4.6.3)
+  June-03-2017
 
 
   [Full Changelog](https://github.com/pubnub/java/compare/v4.6.2...v4.6.3)
@@ -137,6 +172,7 @@
 
 
 ## [v4.6.2](https://github.com/pubnub/java/tree/v4.6.2)
+  April-13-2017
 
 
   [Full Changelog](https://github.com/pubnub/java/compare/v4.6.1...v4.6.2)
@@ -147,6 +183,7 @@
 
 
 ## [v4.6.1](https://github.com/pubnub/java/tree/v4.6.1)
+  April-06-2017
 
 
   [Full Changelog](https://github.com/pubnub/java/compare/v4.6.0...v4.6.1)
@@ -160,6 +197,7 @@
 
 
 ## [v4.6.0](https://github.com/pubnub/java/tree/v4.6.0)
+  March-14-2017
 
 
   [Full Changelog](https://github.com/pubnub/java/compare/v4.5.0...v4.6.0)
@@ -176,6 +214,7 @@
 
 
 ## [v4.5.0](https://github.com/pubnub/java/tree/v4.5.0)
+  February-15-2017
 
 
   [Full Changelog](https://github.com/pubnub/java/compare/v4.4.4...v4.5.0)
@@ -186,6 +225,7 @@
 
 
 ## [v4.4.4](https://github.com/pubnub/java/tree/v4.4.4)
+  February-06-2017
 
 
   [Full Changelog](https://github.com/pubnub/java/compare/v4.4.3...v4.4.4)
@@ -196,6 +236,7 @@
 
 
 ## [v4.4.3](https://github.com/pubnub/java/tree/v4.4.3)
+  February-02-2017
 
 
   [Full Changelog](https://github.com/pubnub/java/compare/v4.4.2...v4.4.3)
@@ -206,6 +247,7 @@
 
 
 ## [v4.4.2](https://github.com/pubnub/java/tree/v4.4.2)
+  January-31-2017
 
 
   [Full Changelog](https://github.com/pubnub/java/compare/v4.4.1...v4.4.2)
@@ -216,6 +258,7 @@
 
 
 ## [v4.4.1](https://github.com/pubnub/java/tree/v4.4.1)
+  January-25-2017
 
 
   [Full Changelog](https://github.com/pubnub/java/compare/v4.4.0...v4.4.1)
@@ -226,6 +269,7 @@
 
 
 ## [v4.4.0](https://github.com/pubnub/java/tree/v4.4.0)
+  January-24-2017
 
 
   [Full Changelog](https://github.com/pubnub/java/compare/v4.3.1...v4.4.0)
@@ -245,6 +289,7 @@
 
 
 ## [v4.3.1](https://github.com/pubnub/java/tree/v4.3.1)
+  December-22-2016
 
 
   [Full Changelog](https://github.com/pubnub/java/compare/v4.3.0...v4.3.1)
@@ -255,6 +300,7 @@
 
 
 ## [v4.3.0](https://github.com/pubnub/java/tree/v4.3.0)
+  December-14-2016
 
 
   [Full Changelog](https://github.com/pubnub/java/compare/v4.2.3...v4.3.0)
@@ -278,6 +324,7 @@
 
 
 ## [v4.2.2](https://github.com/pubnub/java/tree/v4.2.2)
+  December-09-2016
 
 
   [Full Changelog](https://github.com/pubnub/java/compare/v4.2.1...v4.2.2)
@@ -288,6 +335,7 @@
 
 
 ## [v4.2.1](https://github.com/pubnub/java/tree/v4.2.1)
+  November-23-2016
 
 
   [Full Changelog](https://github.com/pubnub/java/compare/v4.2.0...v4.2.1)
@@ -301,6 +349,7 @@
 
 
 ## [v4.2.0](https://github.com/pubnub/java/tree/v4.2.0)
+  October-25-2016
 
 
   [Full Changelog](https://github.com/pubnub/java/compare/v4.1.0...v4.2.0)
@@ -317,6 +366,7 @@
 
 
 ## [v4.1.0](https://github.com/pubnub/java/tree/v4.1.0)
+  October-12-2016
 
 
   [Full Changelog](https://github.com/pubnub/java/compare/v4.0.14...v4.1.0)
@@ -336,6 +386,7 @@
 
 
 ## [v4.0.14](https://github.com/pubnub/java/tree/v4.0.14)
+  September-20-2016
 
 
   [Full Changelog](https://github.com/pubnub/java/compare/v4.0.13...v4.0.14)
@@ -346,6 +397,7 @@
 
 
 ## [v4.0.13](https://github.com/pubnub/java/tree/v4.0.13)
+  September-14-2016
 
 
   [Full Changelog](https://github.com/pubnub/java/compare/v4.0.12...v4.0.13)
@@ -356,6 +408,7 @@
 
 
 ## [v4.0.12](https://github.com/pubnub/java/tree/v4.0.12)
+  September-13-2016
 
 
   [Full Changelog](https://github.com/pubnub/java/compare/v4.0.11...v4.0.12)
@@ -366,6 +419,7 @@
 
 
 ## [v4.0.11](https://github.com/pubnub/java/tree/v4.0.11)
+  September-09-2016
 
 
   [Full Changelog](https://github.com/pubnub/java/compare/v4.0.10...v4.0.11)
@@ -376,6 +430,7 @@
 
 
 ## [v4.0.10](https://github.com/pubnub/java/tree/v4.0.10)
+  September-07-2016
 
 
   [Full Changelog](https://github.com/pubnub/java/compare/v4.0.9...v4.0.10)
@@ -386,6 +441,7 @@
 
 
 ## [v4.0.9](https://github.com/pubnub/java/tree/v4.0.9)
+  August-24-2016
 
 
   [Full Changelog](https://github.com/pubnub/java/compare/v4.0.8...v4.0.9)
@@ -399,6 +455,7 @@
 
 
 ## [v4.0.8](https://github.com/pubnub/java/tree/v4.0.8)
+  August-16-2016
 
 
   [Full Changelog](https://github.com/pubnub/java/compare/v4.0.7...v4.0.8)
@@ -415,6 +472,7 @@
 
 
 ## [v4.0.7](https://github.com/pubnub/java/tree/v4.0.7)
+  August-11-2016
 
 
   [Full Changelog](https://github.com/pubnub/java/compare/v4.0.6...v4.0.7)
@@ -425,6 +483,7 @@
 
 
 ## [v4.0.6](https://github.com/pubnub/java/tree/v4.0.6)
+  July-18-2016
 
 
   [Full Changelog](https://github.com/pubnub/java/compare/v4.0.5...v4.0.6)
@@ -435,6 +494,7 @@
 
 
 ## [v4.0.5](https://github.com/pubnub/java/tree/v4.0.5)
+  July-07-2016
 
 
   [Full Changelog](https://github.com/pubnub/java/compare/v4.0.4...v4.0.5)
@@ -445,6 +505,7 @@
 
 
 ## [v4.0.4](https://github.com/pubnub/java/tree/v4.0.4)
+  June-24-2016
 
 
   [Full Changelog](https://github.com/pubnub/java/compare/v4.0.3...v4.0.4)
@@ -455,6 +516,7 @@
 
 
 ## [v4.0.3](https://github.com/pubnub/java/tree/v4.0.3)
+  June-15-2016
 
 
   [Full Changelog](https://github.com/pubnub/java/compare/v4.0.2...v4.0.3)
@@ -465,6 +527,7 @@
 
 
 ## [v4.0.2](https://github.com/pubnub/java/tree/v4.0.2)
+  June-15-2016
 
 
   [Full Changelog](https://github.com/pubnub/java/compare/v4.0.1...v4.0.2)
@@ -475,6 +538,7 @@
 
 
 ## [v4.0.1](https://github.com/pubnub/java/tree/v4.0.1)
+  June-06-2016
 
 
   [Full Changelog](https://github.com/pubnub/java/compare/v4.0.0...v4.0.1)
@@ -485,6 +549,7 @@
 
 
 ## [v4.0.0](https://github.com/pubnub/java/tree/v4.0.0)
+  June-03-2016
 
 
   [Full Changelog](https://github.com/pubnub/java/compare/v4.0.0-beta4...v4.0.0)

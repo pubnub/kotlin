@@ -1,10 +1,15 @@
 name: java
-version: 4.15.0
+version: 4.16.0
 schema: 1
 scm: github.com/pubnub/java
 files:
-  - build/libs/pubnub-gson-4.15.0-all.jar
+  - build/libs/pubnub-gson-4.16.0-all.jar
 changelog:
+  - version: v4.16.0
+    date: 2017-11-21
+    changes:
+      - type: improvement
+        text: allow setting setMaximumConnections to open more connections to PubNub
   - version: v4.15.0
     date: 2017-11-17
     changes:
