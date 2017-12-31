@@ -1,6 +1,6 @@
 package com.pubnub.api.managers;
 
-
+import com.pubnub.api.builder.dto.PresenceOperation;
 import com.pubnub.api.builder.dto.StateOperation;
 import com.pubnub.api.builder.dto.SubscribeOperation;
 import com.pubnub.api.builder.dto.UnsubscribeOperation;
@@ -32,14 +32,19 @@ public class StateManager {
      */
     private Map<String, SubscriptionItem> presenceGroups;
 
+    private Map<String, SubscriptionItem> heartbeatChannels;
+    private Map<String, SubscriptionItem> heartbeatGroups;
+
     public StateManager() {
         this.channels = new HashMap<>();
         this.presenceChannels = new HashMap<>();
 
         this.groups = new HashMap<>();
         this.presenceGroups = new HashMap<>();
-    }
 
+        this.heartbeatChannels = new HashMap<>();
+        this.heartbeatGroups = new HashMap<>();
+    }
 
     public synchronized void adaptSubscribeBuilder(SubscribeOperation subscribeOperation) {
         for (String channel : subscribeOperation.getChannels()) {
@@ -104,6 +109,36 @@ public class StateManager {
         }
     }
 
+    public synchronized void adaptPresenceBuilder(PresenceOperation presenceOperation) {
+        for (String channel : presenceOperation.getChannels()) {
+            if (channel == null || channel.length() == 0) {
+                continue;
+            }
+
+            if (presenceOperation.isConnected()) {
+                SubscriptionItem subscriptionItem = new SubscriptionItem().setName(channel);
+                heartbeatChannels.put(channel, subscriptionItem);
+            } else {
+                heartbeatChannels.remove(channel);
+            }
+
+        }
+
+        for (String channelGroup : presenceOperation.getChannelGroups()) {
+            if (channelGroup == null || channelGroup.length() == 0) {
+                continue;
+            }
+
+            if (presenceOperation.isConnected()) {
+                SubscriptionItem subscriptionItem = new SubscriptionItem().setName(channelGroup);
+                heartbeatGroups.put(channelGroup, subscriptionItem);
+            } else {
+                heartbeatGroups.remove(channelGroup);
+            }
+
+        }
+    }
+
     public synchronized Map<String, Object> createStatePayload() {
         Map<String, Object> stateResponse = new HashMap<>();
 
@@ -128,6 +163,14 @@ public class StateManager {
 
     public synchronized List<String> prepareChannelGroupList(boolean includePresence) {
         return prepareMembershipList(groups, presenceGroups, includePresence);
+    }
+
+    public synchronized List<String> prepareHeartbeatChannelList(boolean includePresence) {
+        return prepareMembershipList(heartbeatChannels, presenceChannels, includePresence);
+    }
+
+    public synchronized List<String> prepareHeartbeatChannelGroupList(boolean includePresence) {
+        return prepareMembershipList(heartbeatGroups, presenceGroups, includePresence);
     }
 
     public synchronized boolean isEmpty() {

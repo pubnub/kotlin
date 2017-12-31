@@ -19,7 +19,7 @@ public class PubNubTest {
     }
 
     @Test
-    public void testCreateSuccess() throws IOException, PubNubException {
+    public void testCreateSuccess() {
         pubnub = new PubNub(pnConfiguration);
         Assert.assertEquals(true, pubnub.getConfiguration().isSecure());
         Assert.assertNotNull("pubnub object is null", pubnub);
@@ -58,7 +58,7 @@ public class PubNubTest {
     }
 
     @Test
-    public void testPNConfiguration() throws IOException, PubNubException {
+    public void testPNConfiguration() {
         pnConfiguration.setSubscribeTimeout(3000);
         pnConfiguration.setConnectTimeout(4000);
         pnConfiguration.setNonSubscribeRequestTimeout(5000);
@@ -87,11 +87,11 @@ public class PubNubTest {
     }
 
     @Test
-    public void getVersionAndTimeStamp() throws PubNubException {
+    public void getVersionAndTimeStamp() {
         pubnub = new PubNub(pnConfiguration);
         String version = pubnub.getVersion();
         int timeStamp = pubnub.getTimestamp();
-        Assert.assertEquals("4.16.0", version);
+        Assert.assertEquals("4.17.0", version);
         Assert.assertTrue(timeStamp > 0);
     }
 

@@ -10,7 +10,7 @@ plugins {
     id 'findbugs'
 }
 group = 'com.pubnub'
-version = '4.16.0'
+version = '4.17.0'
 
 description = """"""
 
@@ -32,7 +32,7 @@ repositories {
 dependencies {
     compile group: 'com.squareup.retrofit2', name: 'retrofit', version:'2.3.0'
 
-    compile group: 'com.squareup.okhttp3', name: 'logging-interceptor', version:'3.8.1'
+    compile group: 'com.squareup.okhttp3', name: 'logging-interceptor', version:'3.9.1'
     compile group: 'org.slf4j', name: 'slf4j-api', version:'1.7.22'
 
     // jackson

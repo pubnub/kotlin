@@ -1,6 +1,7 @@
 package com.pubnub.api.managers;
 
 import com.pubnub.api.PubNub;
+import com.pubnub.api.builder.dto.PresenceOperation;
 import com.pubnub.api.builder.dto.StateOperation;
 import com.pubnub.api.builder.dto.SubscribeOperation;
 import com.pubnub.api.builder.dto.UnsubscribeOperation;
@@ -16,13 +17,15 @@ import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.server.SubscribeEnvelope;
 import com.pubnub.api.models.server.SubscribeMessage;
 import com.pubnub.api.workers.SubscribeMessageWorker;
-import lombok.extern.slf4j.Slf4j;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.LinkedBlockingQueue;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class SubscriptionManager {
@@ -179,6 +182,23 @@ public class SubscriptionManager {
         reconnect();
     }
 
+    public void adaptPresenceBuilder(PresenceOperation presenceOperation) {
+        this.subscriptionState.adaptPresenceBuilder(presenceOperation);
+
+        if (!this.pubnub.getConfiguration().isSupressLeaveEvents() && !presenceOperation.isConnected()) {
+            new Leave(pubnub, this.telemetryManager, this.retrofitManager)
+                    .channels(presenceOperation.getChannels()).channelGroups(presenceOperation.getChannelGroups())
+                    .async(new PNCallback<Boolean>() {
+                        @Override
+                        public void onResponse(Boolean result, PNStatus status) {
+                            listenerManager.announce(status);
+                        }
+                    });
+        }
+
+        registerHeartbeatTimer();
+    }
+
     public synchronized void adaptUnsubscribeBuilder(UnsubscribeOperation unsubscribeOperation) {
         this.subscriptionState.adaptUnsubscribeBuilder(unsubscribeOperation);
 
@@ -324,13 +344,30 @@ public class SubscriptionManager {
         List<String> presenceChannelGroups = this.subscriptionState.prepareChannelGroupList(false);
         Map<String, Object> stateStorage = this.subscriptionState.createStatePayload();
 
+        List<String> heartbeatChannels = this.subscriptionState.prepareHeartbeatChannelList(false);
+        List<String> heartbeatChannelGroups = this.subscriptionState.prepareHeartbeatChannelGroupList(false);
+
+
         // do not start the loop if we do not have any presence channels or channel groups enabled.
-        if (presenceChannels.isEmpty() && presenceChannelGroups.isEmpty()) {
+        if (presenceChannels.isEmpty()
+                && presenceChannelGroups.isEmpty()
+                && heartbeatChannels.isEmpty()
+                && heartbeatChannelGroups.isEmpty()
+                ) {
             return;
         }
 
-        heartbeatCall = new Heartbeat(pubnub, this.telemetryManager, this.retrofitManager)
-                .channels(presenceChannels).channelGroups(presenceChannelGroups).state(stateStorage);
+        List<String> channels = new ArrayList<>();
+        channels.addAll(presenceChannels);
+        channels.addAll(heartbeatChannels);
+
+        List<String> groups = new ArrayList<>();
+        groups.addAll(presenceChannelGroups);
+        groups.addAll(heartbeatChannelGroups);
+
+        heartbeatCall = new Heartbeat(pubnub, this.telemetryManager, this.retrofitManager).channels(channels)
+                .channelGroups(groups)
+                .state(stateStorage);
 
         heartbeatCall.async(new PNCallback<Boolean>() {
             @Override
