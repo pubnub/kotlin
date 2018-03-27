@@ -84,7 +84,8 @@ public class History extends Endpoint<JsonElement, PNHistoryResult> {
             params.put("end", Long.toString(end).toLowerCase());
         }
 
-        return this.getRetrofit().getHistoryService().fetchHistory(this.getPubnub().getConfiguration().getSubscribeKey(), channel, params);
+        return this.getRetrofit().getHistoryService().fetchHistory(this.getPubnub().getConfiguration()
+                .getSubscribeKey(), channel, params);
     }
 
     @Override
@@ -97,7 +98,28 @@ public class History extends Endpoint<JsonElement, PNHistoryResult> {
             Long startTimeToken = mapper.elementToLong(mapper.getArrayElement(input.body(), 1));
             Long endTimeToken = mapper.elementToLong(mapper.getArrayElement(input.body(), 2));
 
-            if (startTimeToken == 0 && endTimeToken == 0) {
+            historyData.startTimetoken(startTimeToken);
+            historyData.endTimetoken(endTimeToken);
+
+
+            if (mapper.getArrayElement(input.body(), 0).isJsonArray()) {
+                for (Iterator<JsonElement> it = mapper.getArrayIterator(mapper.getArrayElement(input.body(), 0)); it
+                        .hasNext();) {
+                    JsonElement historyEntry = it.next();
+                    PNHistoryItemResult.PNHistoryItemResultBuilder historyItem = PNHistoryItemResult.builder();
+                    JsonElement message;
+
+                    if (includeTimetoken != null && includeTimetoken) {
+                        historyItem.timetoken(mapper.elementToLong(historyEntry, "timetoken"));
+                        message = processMessage(mapper.getField(historyEntry, "message"));
+                    } else {
+                        message = processMessage(historyEntry);
+                    }
+
+                    historyItem.entry(message);
+                    messages.add(historyItem.build());
+                }
+            } else {
                 throw PubNubException.builder()
                         .pubnubError(PubNubErrorBuilder.PNERROBJ_HTTP_ERROR)
                         .errormsg("History is disabled")
@@ -105,25 +127,6 @@ public class History extends Endpoint<JsonElement, PNHistoryResult> {
                         .build();
             }
 
-            historyData.startTimetoken(startTimeToken);
-            historyData.endTimetoken(endTimeToken);
-
-
-            for (Iterator<JsonElement> it = mapper.getArrayIterator(mapper.getArrayElement(input.body(), 0)); it.hasNext();) {
-                JsonElement historyEntry = it.next();
-                PNHistoryItemResult.PNHistoryItemResultBuilder historyItem = PNHistoryItemResult.builder();
-                JsonElement message;
-
-                if (includeTimetoken != null && includeTimetoken) {
-                    historyItem.timetoken(mapper.elementToLong(historyEntry, "timetoken"));
-                    message = processMessage(mapper.getField(historyEntry, "message"));
-                } else {
-                    message = processMessage(historyEntry);
-                }
-
-                historyItem.entry(message);
-                messages.add(historyItem.build());
-            }
 
             historyData.messages(messages);
         }

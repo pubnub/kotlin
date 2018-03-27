@@ -59,7 +59,7 @@ public class HistoryEndpointTest extends TestHarness {
 
     @Test
     public void testSyncWithTokensDisabled() {
-        String payload = "[[\"Use of the history API requires the Storage & Playback add-on which is not enabled for this subscribe key. Login to your PubNub Dashboard Account and ADD the Storage & Playback add-on. Contact support@pubnub.com if you require further assistance.\"],0,0]";
+        String payload = "[\"Use of the history API requires the Storage & Playback which is not enabled for this subscribe key.Login to your PubNub Dashboard Account and enable Storage & Playback.Contact support @pubnub.com if you require further assistance.\",0,0]";
 
         stubFor(get(urlPathEqualTo("/v2/history/sub-key/mySubscribeKey/channel/niceChannel"))
                 .willReturn(aResponse().withBody(payload)));
