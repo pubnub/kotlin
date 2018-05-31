@@ -101,10 +101,14 @@ public class HereNow extends Endpoint<Envelope<JsonElement>, PNHereNowResult> {
     protected PNHereNowResult createResponse(Response<Envelope<JsonElement>> input) {
         PNHereNowResult herenowData;
 
-        if (channels.size() > 1 || channelGroups.size() > 0) {
+        if (channels.isEmpty() && channelGroups.isEmpty()) {
             herenowData = parseMultipleChannelResponse(input.body().getPayload());
         } else {
-            herenowData = parseSingleChannelResponse(input.body());
+            if (channels.size() > 1 || channelGroups.size() > 0) {
+                herenowData = parseMultipleChannelResponse(input.body().getPayload());
+            } else {
+                herenowData = parseSingleChannelResponse(input.body());
+            }
         }
 
         return herenowData;
