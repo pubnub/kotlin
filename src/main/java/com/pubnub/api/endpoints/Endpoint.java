@@ -15,6 +15,8 @@ import com.pubnub.api.models.consumer.PNErrorData;
 import com.pubnub.api.models.consumer.PNStatus;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -43,6 +45,10 @@ public abstract class Endpoint<Input, Output> {
 
     @Getter(AccessLevel.NONE)
     private Call<Input> call;
+
+    @Setter(AccessLevel.PUBLIC)
+    @Accessors(chain = true, fluent = true)
+    private Map<String, String> queryParam;
 
     /**
      * If the endpoint failed to execute and we do not want to alert the user, flip this to true
@@ -296,6 +302,10 @@ public abstract class Endpoint<Input, Output> {
 
     protected Map<String, String> createBaseParams() {
         Map<String, String> params = new HashMap<>();
+
+        if (queryParam != null) {
+            params.putAll(queryParam);
+        }
 
         params.put("pnsdk", "PubNub-Java-Unified/".concat(this.pubnub.getVersion()));
         params.put("uuid", this.pubnub.getConfiguration().getUuid());

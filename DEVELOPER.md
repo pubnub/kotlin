@@ -5,6 +5,11 @@
     * [intellij](https://plugins.jetbrains.com/plugin/6317) -- [installation guide](https://github.com/mplushnikov/lombok-intellij-plugin#installation)
     * [eclipse](http://stackoverflow.com/questions/22310414/how-to-configure-lombok-in-eclipse-luna)
 
+### Adding Dependencies
+  * File -> Project Structure -> Modules -> Main/Test -> Dependencies (tab) -> "+" (add) -> Library -> Java
+  * Select and add all libraries from list
+  * Apply changes
+
 ### Compiling
   `gradle clean compile`
   
