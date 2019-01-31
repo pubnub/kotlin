@@ -1,12 +1,6 @@
 package com.pubnub.api.managers;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-import com.google.gson.TypeAdapter;
+import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
@@ -30,7 +24,8 @@ public class MapperManager {
     public MapperManager() {
 
         TypeAdapter<Boolean> booleanAsIntAdapter = new TypeAdapter<Boolean>() {
-            @Override public void write(JsonWriter out, Boolean value) throws IOException {
+            @Override
+            public void write(JsonWriter out, Boolean value) throws IOException {
                 if (value == null) {
                     out.nullValue();
                 } else {
@@ -38,7 +33,8 @@ public class MapperManager {
                 }
             }
 
-            @Override public Boolean read(JsonReader in) throws IOException {
+            @Override
+            public Boolean read(JsonReader in) throws IOException {
                 JsonToken peek = in.peek();
                 switch (peek) {
                     case BOOLEAN:

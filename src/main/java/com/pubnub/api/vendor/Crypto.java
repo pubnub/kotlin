@@ -1,8 +1,8 @@
 package com.pubnub.api.vendor;
 
-import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.PubNubError;
 import com.pubnub.api.PubNubException;
+import com.pubnub.api.builder.PubNubErrorBuilder;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.crypto.BadPaddingException;
@@ -18,7 +18,6 @@ import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.AlgorithmParameterSpec;
-
 
 
 @Slf4j

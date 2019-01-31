@@ -4,6 +4,7 @@ import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.enums.PNOperationType;
 import okhttp3.Request;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,13 +22,19 @@ public class EndpointTest extends TestHarness {
 
     @Before
     public void beforeEach() throws IOException {
-        pubnub = this.createPubNubInstance(8080);
+        pubnub = this.createPubNubInstance();
         pubnub.getConfiguration().setIncludeInstanceIdentifier(true);
+    }
+
+    @After
+    public void afterEach() {
+        pubnub.destroy();
+        pubnub = null;
     }
 
     @Test
     public void testBaseParams() throws PubNubException {
-        Endpoint<Object, Object> endpoint =  new Endpoint<Object, Object>(pubnub, null, null) {
+        Endpoint<Object, Object> endpoint = new Endpoint<Object, Object>(pubnub, null, null) {
 
             @Override
             protected List<String> getAffectedChannels() {
@@ -61,7 +68,7 @@ public class EndpointTest extends TestHarness {
             @Override
             protected Call doWork(Map baseParams) throws PubNubException {
 
-                Call<Object> fakeCall = new Call<Object>() {
+                Call fakeCall = new Call<Object>() {
 
                     @Override
                     public Response<Object> execute() throws IOException {
@@ -96,13 +103,13 @@ public class EndpointTest extends TestHarness {
 
                     @Override
                     public Request request() {
-                        return null;
+                        return new Request.Builder().build();
                     }
                 };
 
-                Assert.assertEquals("myUUID",baseParams.get("uuid"));
-                Assert.assertEquals("PubNubRequestId",baseParams.get("requestid"));
-                Assert.assertEquals("PubNubInstanceId",baseParams.get("instanceid"));
+                Assert.assertEquals("myUUID", baseParams.get("uuid"));
+                Assert.assertEquals("PubNubRequestId", baseParams.get("requestid"));
+                Assert.assertEquals("PubNubInstanceId", baseParams.get("instanceid"));
                 return fakeCall;
             }
         };

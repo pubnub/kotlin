@@ -17,11 +17,7 @@ import lombok.experimental.Accessors;
 import retrofit2.Call;
 import retrofit2.Response;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Accessors(chain = true, fluent = true)
 public class GetState extends Endpoint<Envelope<JsonElement>, PNGetStateResult> {
@@ -69,7 +65,8 @@ public class GetState extends Endpoint<Envelope<JsonElement>, PNGetStateResult> 
 
         String selectedUUID = uuid != null ? uuid : this.getPubnub().getConfiguration().getUuid();
 
-        return this.getRetrofit().getPresenceService().getState(this.getPubnub().getConfiguration().getSubscribeKey(), channelCSV, selectedUUID, params);
+        return this.getRetrofit().getPresenceService().getState(
+                this.getPubnub().getConfiguration().getSubscribeKey(), channelCSV, selectedUUID, params);
     }
 
     @Override
@@ -80,7 +77,8 @@ public class GetState extends Endpoint<Envelope<JsonElement>, PNGetStateResult> 
         if (channels.size() == 1 && channelGroups.size() == 0) {
             stateMappings.put(channels.get(0), input.body().getPayload());
         } else {
-            for (Iterator<Map.Entry<String, JsonElement>> it = mapper.getObjectIterator(input.body().getPayload()); it.hasNext();) {
+            Iterator<Map.Entry<String, JsonElement>> it = mapper.getObjectIterator(input.body().getPayload());
+            while (it.hasNext()) {
                 Map.Entry<String, JsonElement> stateMapping = it.next();
                 stateMappings.put(stateMapping.getKey(), stateMapping.getValue());
             }

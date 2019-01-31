@@ -30,7 +30,6 @@ public class Time extends Endpoint<List<Long>, PNTimeResult> {
     }
 
 
-
     @Override
     protected void validateParams() throws PubNubException {
 

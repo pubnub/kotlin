@@ -5,10 +5,11 @@ import com.pubnub.api.PubNub;
 import com.pubnub.api.enums.PNLogVerbosity;
 
 public class TestHarness {
+    protected final static int PORT = 8080;
 
-    protected PubNub createPubNubInstance(int port) {
+    protected PubNub createPubNubInstance() {
         PNConfiguration pnConfiguration = new PNConfiguration();
-        pnConfiguration.setOrigin("localhost" + ":" + port);
+        pnConfiguration.setOrigin("localhost" + ":" + PORT);
         pnConfiguration.setSecure(false);
         pnConfiguration.setSubscribeKey("mySubscribeKey");
         pnConfiguration.setPublishKey("myPublishKey");
@@ -32,10 +33,14 @@ public class TestHarness {
             }
 
             @Override
-            public String getInstanceId() { return "PubNubInstanceId"; }
+            public String getInstanceId() {
+                return "PubNubInstanceId";
+            }
 
             @Override
-            public String getRequestId() { return "PubNubRequestId"; }
+            public String getRequestId() {
+                return "PubNubRequestId";
+            }
 
         }
 

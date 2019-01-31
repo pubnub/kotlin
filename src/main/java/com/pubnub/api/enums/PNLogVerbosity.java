@@ -1,6 +1,6 @@
 package com.pubnub.api.enums;
 
-public enum  PNLogVerbosity {
+public enum PNLogVerbosity {
 
     NONE,
     BODY,

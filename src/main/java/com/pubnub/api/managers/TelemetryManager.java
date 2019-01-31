@@ -2,13 +2,7 @@ package com.pubnub.api.managers;
 
 import com.pubnub.api.enums.PNOperationType;
 
-import java.util.ArrayList;
-import java.util.TimerTask;
-import java.util.HashMap;
-import java.util.Timer;
-import java.util.List;
-import java.util.Date;
-import java.util.Map;
+import java.util.*;
 
 public class TelemetryManager {
 
@@ -58,7 +52,7 @@ public class TelemetryManager {
 
                 Map<String, Double> latencyEntry = new HashMap<>();
                 latencyEntry.put("d", storeDate);
-                latencyEntry.put("l",  ((double) latency / TIMESTAMP_DIVIDER));
+                latencyEntry.put("l", ((double) latency / TIMESTAMP_DIVIDER));
                 operationLatencies.add(latencyEntry);
             }
         }
@@ -67,10 +61,10 @@ public class TelemetryManager {
     private synchronized void cleanUpTelemetryData() {
         double currentDate = (new Date()).getTime() / (double) TIMESTAMP_DIVIDER;
         List<String> endpoints = new ArrayList<>(this.latencies.keySet());
-        for (String endpoint: endpoints) {
+        for (String endpoint : endpoints) {
             List<Map<String, Double>> outdatedLatencies = new ArrayList<>();
             List<Map<String, Double>> operationLatencies = this.latencies.get(endpoint);
-            for (Map<String, Double> latencyInformation: operationLatencies) {
+            for (Map<String, Double> latencyInformation : operationLatencies) {
                 if (currentDate - latencyInformation.get("d") > MAXIMUM_LATENCY_DATA_AGE) {
                     outdatedLatencies.add(latencyInformation);
                 }
@@ -106,7 +100,7 @@ public class TelemetryManager {
 
     private static double averageLatencyFromData(List<Map<String, Double>> endpointLatencies) {
         double totalLatency = 0.0f;
-        for (Map<String, Double> item: endpointLatencies) {
+        for (Map<String, Double> item : endpointLatencies) {
             totalLatency += item.get("l");
         }
 

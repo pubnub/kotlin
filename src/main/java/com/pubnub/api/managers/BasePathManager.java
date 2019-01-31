@@ -31,6 +31,7 @@ public class BasePathManager {
 
     /**
      * Initialize the path management.
+     *
      * @param initialConfig configuration object
      */
     public BasePathManager(PNConfiguration initialConfig) {
@@ -41,6 +42,7 @@ public class BasePathManager {
 
     /**
      * Prepares a next usable base url.
+     *
      * @return usable base url.
      */
     public String getBasePath() {

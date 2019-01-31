@@ -42,13 +42,13 @@ public class PNConfiguration {
     private HostnameVerifier hostnameVerifier;
 
     /**
-     *  Set to true to send a UUID for PubNub instance
+     * Set to true to send a UUID for PubNub instance
      */
     @Getter
     private boolean includeInstanceIdentifier;
 
     /**
-     *  Set to true to send a UUID on each request
+     * Set to true to send a UUID on each request
      */
     @Getter
     private boolean includeRequestIdentifier;

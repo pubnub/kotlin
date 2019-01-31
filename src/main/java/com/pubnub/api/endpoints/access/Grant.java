@@ -19,11 +19,7 @@ import lombok.experimental.Accessors;
 import retrofit2.Call;
 import retrofit2.Response;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 @Accessors(chain = true, fluent = true)
@@ -108,7 +104,8 @@ public class Grant extends Endpoint<Envelope<AccessManagerGrantPayload>, PNAcces
     @Override
     protected PNAccessManagerGrantResult createResponse(Response<Envelope<AccessManagerGrantPayload>> input) throws PubNubException {
         MapperManager mapperManager = getPubnub().getMapper();
-        PNAccessManagerGrantResult.PNAccessManagerGrantResultBuilder pnAccessManagerGrantResult = PNAccessManagerGrantResult.builder();
+        PNAccessManagerGrantResult.PNAccessManagerGrantResultBuilder pnAccessManagerGrantResult =
+                PNAccessManagerGrantResult.builder();
 
         if (input.body() == null || input.body().getPayload() == null) {
             throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_PARSING_ERROR).build();
@@ -127,7 +124,8 @@ public class Grant extends Endpoint<Envelope<AccessManagerGrantPayload>, PNAcces
             if (channelGroups.size() == 1) {
                 constructedGroups.put(mapperManager.elementToString(data.getChannelGroups()), data.getAuthKeys());
             } else if (channelGroups.size() > 1) {
-                for (Iterator<Map.Entry<String, JsonElement>> it = mapperManager.getObjectIterator(data.getChannelGroups()); it.hasNext();) {
+                Iterator<Map.Entry<String, JsonElement>> it = mapperManager.getObjectIterator(data.getChannelGroups());
+                while (it.hasNext()) {
                     Map.Entry<String, JsonElement> channelGroup = it.next();
                     constructedGroups.put(channelGroup.getKey(), createKeyMap(channelGroup.getValue()));
                 }
@@ -163,7 +161,8 @@ public class Grant extends Endpoint<Envelope<AccessManagerGrantPayload>, PNAcces
         Map<String, PNAccessManagerKeyData> result = new HashMap<>();
         MapperManager mapper = getPubnub().getMapper();
 
-        for (Iterator<Map.Entry<String, JsonElement>> it = mapper.getObjectIterator(input, "auths"); it.hasNext();) {
+        Iterator<Map.Entry<String, JsonElement>> it = mapper.getObjectIterator(input, "auths");
+        while (it.hasNext()) {
             Map.Entry<String, JsonElement> keyMap = it.next();
             PNAccessManagerKeyData pnAccessManagerKeyData = new PNAccessManagerKeyData()
                     .setManageEnabled(mapper.getAsBoolean(keyMap.getValue(), "m"))

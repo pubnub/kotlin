@@ -95,7 +95,7 @@ public class FetchMessages extends Endpoint<FetchMessagesEnvelope, PNFetchMessag
 
             List<PNMessageResult> messages = new ArrayList<>();
 
-            for (HistoryForChannelsItem item: entry.getValue()) {
+            for (HistoryForChannelsItem item : entry.getValue()) {
                 PNMessageResult.PNMessageResultBuilder pnMessageResultBuilder = PNMessageResult.builder();
                 pnMessageResultBuilder.channel(entry.getKey());
                 JsonElement message = processMessage(item.getMessage());

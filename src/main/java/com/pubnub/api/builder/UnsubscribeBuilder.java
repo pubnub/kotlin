@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class UnsubscribeBuilder extends PubSubBuilder  {
+public class UnsubscribeBuilder extends PubSubBuilder {
 
     public UnsubscribeBuilder(SubscriptionManager subscriptionManager) {
         super(subscriptionManager);

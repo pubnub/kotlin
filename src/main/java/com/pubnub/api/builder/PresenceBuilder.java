@@ -2,12 +2,11 @@ package com.pubnub.api.builder;
 
 import com.pubnub.api.builder.dto.PresenceOperation;
 import com.pubnub.api.managers.SubscriptionManager;
-
-import java.util.List;
-
 import lombok.AccessLevel;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+
+import java.util.List;
 
 @Setter
 @Accessors(chain = true, fluent = true)

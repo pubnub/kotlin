@@ -10,7 +10,6 @@ import lombok.Getter;
  * like error code, error string, and optional message
  *
  * @author PubNub
- *
  */
 @Getter
 @Builder

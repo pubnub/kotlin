@@ -55,7 +55,8 @@ public class Leave extends Endpoint<Envelope, Boolean> {
             channelCSV = ",";
         }
 
-        return this.getRetrofit().getPresenceService().leave(this.getPubnub().getConfiguration().getSubscribeKey(), channelCSV, params);
+        return this.getRetrofit().getPresenceService().leave(this.getPubnub().getConfiguration().getSubscribeKey(),
+                channelCSV, params);
     }
 
     @Override

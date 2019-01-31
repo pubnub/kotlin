@@ -17,11 +17,7 @@ import lombok.experimental.Accessors;
 import retrofit2.Call;
 import retrofit2.Response;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Accessors(chain = true, fluent = true)
 public class History extends Endpoint<JsonElement, PNHistoryResult> {
@@ -103,8 +99,8 @@ public class History extends Endpoint<JsonElement, PNHistoryResult> {
 
 
             if (mapper.getArrayElement(input.body(), 0).isJsonArray()) {
-                for (Iterator<JsonElement> it = mapper.getArrayIterator(mapper.getArrayElement(input.body(), 0)); it
-                        .hasNext();) {
+                Iterator<JsonElement> it = mapper.getArrayIterator(mapper.getArrayElement(input.body(), 0));
+                while (it.hasNext()) {
                     JsonElement historyEntry = it.next();
                     PNHistoryItemResult.PNHistoryItemResultBuilder historyItem = PNHistoryItemResult.builder();
                     JsonElement message;

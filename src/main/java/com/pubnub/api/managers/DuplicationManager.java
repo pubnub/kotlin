@@ -24,7 +24,7 @@ public class DuplicationManager {
     }
 
     public void addEntry(SubscribeMessage message) {
-        if (this.hashHistory.size() >=  pnConfiguration.getMaximumMessagesCacheSize()) {
+        if (this.hashHistory.size() >= pnConfiguration.getMaximumMessagesCacheSize()) {
             hashHistory.remove(0);
         }
 

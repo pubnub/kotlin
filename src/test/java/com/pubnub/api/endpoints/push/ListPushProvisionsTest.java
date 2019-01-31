@@ -2,15 +2,16 @@ package com.pubnub.api.endpoints.push;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
-import com.jayway.awaitility.Awaitility;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.callbacks.PNCallback;
+import com.pubnub.api.endpoints.TestHarness;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.enums.PNPushType;
-import com.pubnub.api.endpoints.TestHarness;
 import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.push.PNPushListProvisionsResult;
+import org.awaitility.Awaitility;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -21,22 +22,29 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 import static org.junit.Assert.assertEquals;
 
 public class ListPushProvisionsTest extends TestHarness {
 
     @Rule
-    public WireMockRule wireMockRule = new WireMockRule();
+    public WireMockRule wireMockRule = new WireMockRule(options().port(this.PORT), false);
 
     private ListPushProvisions instance;
     private PubNub pubnub;
 
-
     @Before
     public void beforeEach() throws IOException {
-        pubnub = this.createPubNubInstance(8080);
+        pubnub = this.createPubNubInstance();
         instance = pubnub.auditPushChannelProvisions();
         wireMockRule.start();
+    }
+
+    @After
+    public void afterEach() {
+        pubnub.destroy();
+        pubnub = null;
+        wireMockRule.stop();
     }
 
     @Test
@@ -106,7 +114,7 @@ public class ListPushProvisionsTest extends TestHarness {
         instance.deviceId("niceDevice").pushType(PNPushType.APNS).async(new PNCallback<PNPushListProvisionsResult>() {
             @Override
             public void onResponse(PNPushListProvisionsResult result, PNStatus status) {
-                if (status != null && status.getOperation()== PNOperationType.PNPushNotificationEnabledChannelsOperation) {
+                if (status != null && status.getOperation() == PNOperationType.PNPushNotificationEnabledChannelsOperation) {
                     atomic.incrementAndGet();
                 }
             }
@@ -116,7 +124,7 @@ public class ListPushProvisionsTest extends TestHarness {
                 .untilAtomic(atomic, org.hamcrest.core.IsEqual.equalTo(1));
     }
 
-    @Test(expected=PubNubException.class)
+    @Test(expected = PubNubException.class)
     public void testNullSubscribeKey() throws IOException, PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
@@ -126,7 +134,7 @@ public class ListPushProvisionsTest extends TestHarness {
         instance.deviceId("niceDevice").pushType(PNPushType.APNS).sync();
     }
 
-    @Test(expected=PubNubException.class)
+    @Test(expected = PubNubException.class)
     public void testEmptySubscribeKey() throws IOException, PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
@@ -136,7 +144,7 @@ public class ListPushProvisionsTest extends TestHarness {
         instance.deviceId("niceDevice").pushType(PNPushType.MPNS).sync();
     }
 
-    @Test(expected=PubNubException.class)
+    @Test(expected = PubNubException.class)
     public void testNullPushType() throws IOException, PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
@@ -145,7 +153,7 @@ public class ListPushProvisionsTest extends TestHarness {
         instance.deviceId("niceDevice").sync();
     }
 
-    @Test(expected=PubNubException.class)
+    @Test(expected = PubNubException.class)
     public void testNullDeviceId() throws IOException, PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
@@ -154,7 +162,7 @@ public class ListPushProvisionsTest extends TestHarness {
         instance.pushType(PNPushType.MPNS).sync();
     }
 
-    @Test(expected=PubNubException.class)
+    @Test(expected = PubNubException.class)
     public void testEmptyDeviceIdRemoveAll() throws IOException, PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))

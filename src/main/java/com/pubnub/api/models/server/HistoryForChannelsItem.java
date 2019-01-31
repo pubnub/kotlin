@@ -8,8 +8,10 @@ import lombok.Setter;
 @Setter
 public class HistoryForChannelsItem {
 
-    @Getter private JsonElement message;
+    @Getter
+    private JsonElement message;
 
-    @Getter private Long timetoken;
+    @Getter
+    private Long timetoken;
 
 }

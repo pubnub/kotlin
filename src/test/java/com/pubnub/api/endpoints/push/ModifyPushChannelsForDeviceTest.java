@@ -2,17 +2,18 @@ package com.pubnub.api.endpoints.push;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
-import com.jayway.awaitility.Awaitility;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.callbacks.PNCallback;
+import com.pubnub.api.endpoints.TestHarness;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.enums.PNPushType;
-import com.pubnub.api.endpoints.TestHarness;
 import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.push.PNPushAddChannelResult;
 import com.pubnub.api.models.consumer.push.PNPushRemoveAllChannelsResult;
 import com.pubnub.api.models.consumer.push.PNPushRemoveChannelResult;
+import org.awaitility.Awaitility;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -24,26 +25,33 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 import static org.junit.Assert.assertEquals;
 
 public class ModifyPushChannelsForDeviceTest extends TestHarness {
 
     @Rule
-    public WireMockRule wireMockRule = new WireMockRule();
+    public WireMockRule wireMockRule = new WireMockRule(options().port(this.PORT), false);
 
     private PubNub pubnub;
     private RemoveAllPushChannelsForDevice instance;
     private AddChannelsToPush instanceAdd;
     private RemoveChannelsFromPush instanceRemove;
 
-
     @Before
     public void beforeEach() throws IOException {
-        pubnub = this.createPubNubInstance(8080);
+        pubnub = this.createPubNubInstance();
         instance = pubnub.removeAllPushNotificationsFromDeviceWithPushToken();
         instanceAdd = pubnub.addPushNotificationsOnChannels();
         instanceRemove = pubnub.removePushNotificationsFromChannels();
         wireMockRule.start();
+    }
+
+    @After
+    public void afterEach() {
+        pubnub.destroy();
+        pubnub = null;
+        wireMockRule.stop();
     }
 
     @Test
@@ -119,7 +127,7 @@ public class ModifyPushChannelsForDeviceTest extends TestHarness {
     }
 
 
-    @Test(expected=PubNubException.class)
+    @Test(expected = PubNubException.class)
     public void testNullSubscribeKeyRemoveAll() throws IOException, PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice/remove"))
@@ -129,7 +137,7 @@ public class ModifyPushChannelsForDeviceTest extends TestHarness {
         instance.deviceId("niceDevice").pushType(PNPushType.MPNS).sync();
     }
 
-    @Test(expected=PubNubException.class)
+    @Test(expected = PubNubException.class)
     public void testEmptySubscribeKeyRemoveAll() throws IOException, PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice/remove"))
@@ -139,7 +147,7 @@ public class ModifyPushChannelsForDeviceTest extends TestHarness {
         instance.deviceId("niceDevice").pushType(PNPushType.MPNS).sync();
     }
 
-    @Test(expected=PubNubException.class)
+    @Test(expected = PubNubException.class)
     public void testNullPushTypeRemoveAll() throws IOException, PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice/remove"))
@@ -148,7 +156,7 @@ public class ModifyPushChannelsForDeviceTest extends TestHarness {
         instance.deviceId("niceDevice").sync();
     }
 
-    @Test(expected=PubNubException.class)
+    @Test(expected = PubNubException.class)
     public void testNullDeviceIdRemoveAll() throws IOException, PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice/remove"))
@@ -157,7 +165,7 @@ public class ModifyPushChannelsForDeviceTest extends TestHarness {
         instance.pushType(PNPushType.MPNS).sync();
     }
 
-    @Test(expected=PubNubException.class)
+    @Test(expected = PubNubException.class)
     public void testEmptyDeviceIdRemoveAll() throws IOException, PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice/remove"))
@@ -244,7 +252,7 @@ public class ModifyPushChannelsForDeviceTest extends TestHarness {
                 .async(new PNCallback<PNPushAddChannelResult>() {
                     @Override
                     public void onResponse(PNPushAddChannelResult result, PNStatus status) {
-                        if (status != null && status.getOperation()== PNOperationType.PNPushNotificationEnabledChannelsOperation) {
+                        if (status != null && status.getOperation() == PNOperationType.PNPushNotificationEnabledChannelsOperation) {
                             atomic.incrementAndGet();
                         }
                     }
@@ -255,7 +263,7 @@ public class ModifyPushChannelsForDeviceTest extends TestHarness {
                 .untilAtomic(atomic, org.hamcrest.core.IsEqual.equalTo(1));
     }
 
-    @Test(expected=PubNubException.class)
+    @Test(expected = PubNubException.class)
     public void testNullSubscribeKeyAdd() throws IOException, PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
@@ -272,7 +280,7 @@ public class ModifyPushChannelsForDeviceTest extends TestHarness {
         assertEquals("mpns", requests.get(0).queryParameter("type").firstValue());
     }
 
-    @Test(expected=PubNubException.class)
+    @Test(expected = PubNubException.class)
     public void testEmptySubscribeKeyAdd() throws IOException, PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
@@ -289,7 +297,7 @@ public class ModifyPushChannelsForDeviceTest extends TestHarness {
         assertEquals("mpns", requests.get(0).queryParameter("type").firstValue());
     }
 
-    @Test(expected=PubNubException.class)
+    @Test(expected = PubNubException.class)
     public void testNullPushTypeAdd() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
@@ -300,7 +308,7 @@ public class ModifyPushChannelsForDeviceTest extends TestHarness {
                 .sync();
     }
 
-    @Test(expected=PubNubException.class)
+    @Test(expected = PubNubException.class)
     public void testNullDeviceIdAdd() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
@@ -311,7 +319,7 @@ public class ModifyPushChannelsForDeviceTest extends TestHarness {
                 .sync();
     }
 
-    @Test(expected=PubNubException.class)
+    @Test(expected = PubNubException.class)
     public void testEmptyDeviceIdAdd() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
@@ -322,7 +330,7 @@ public class ModifyPushChannelsForDeviceTest extends TestHarness {
                 .sync();
     }
 
-    @Test(expected=PubNubException.class)
+    @Test(expected = PubNubException.class)
     public void testMissingChannelsAdd() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
@@ -331,7 +339,6 @@ public class ModifyPushChannelsForDeviceTest extends TestHarness {
         instanceAdd.deviceId("niceDevice").pushType(PNPushType.MPNS)
                 .sync();
     }
-
 
 
     @Test
@@ -407,7 +414,7 @@ public class ModifyPushChannelsForDeviceTest extends TestHarness {
                 .channels(Arrays.asList("chr1", "chr2", "chr3")).async(new PNCallback<PNPushRemoveChannelResult>() {
             @Override
             public void onResponse(PNPushRemoveChannelResult result, PNStatus status) {
-                if (status != null && status.getOperation()== PNOperationType.PNRemovePushNotificationsFromChannelsOperation) {
+                if (status != null && status.getOperation() == PNOperationType.PNRemovePushNotificationsFromChannelsOperation) {
                     atomic.incrementAndGet();
                 }
             }
@@ -417,7 +424,7 @@ public class ModifyPushChannelsForDeviceTest extends TestHarness {
                 .untilAtomic(atomic, org.hamcrest.core.IsEqual.equalTo(1));
     }
 
-    @Test(expected=PubNubException.class)
+    @Test(expected = PubNubException.class)
     public void testNullSubscribeKeyRemove() throws IOException, PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
@@ -432,7 +439,7 @@ public class ModifyPushChannelsForDeviceTest extends TestHarness {
         assertEquals("myKey", requests.get(0).queryParameter("auth").firstValue());
     }
 
-    @Test(expected=PubNubException.class)
+    @Test(expected = PubNubException.class)
     public void testEmptySubscribeKeyRemove() throws IOException, PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
@@ -447,7 +454,7 @@ public class ModifyPushChannelsForDeviceTest extends TestHarness {
         assertEquals("myKey", requests.get(0).queryParameter("auth").firstValue());
     }
 
-    @Test(expected=PubNubException.class)
+    @Test(expected = PubNubException.class)
     public void testNullPushType() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
@@ -457,7 +464,7 @@ public class ModifyPushChannelsForDeviceTest extends TestHarness {
 
     }
 
-    @Test(expected=PubNubException.class)
+    @Test(expected = PubNubException.class)
     public void testNullDeviceId() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
@@ -468,7 +475,7 @@ public class ModifyPushChannelsForDeviceTest extends TestHarness {
 
     }
 
-    @Test(expected=PubNubException.class)
+    @Test(expected = PubNubException.class)
     public void testEmptyDeviceId() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
@@ -479,7 +486,7 @@ public class ModifyPushChannelsForDeviceTest extends TestHarness {
 
     }
 
-    @Test(expected=PubNubException.class)
+    @Test(expected = PubNubException.class)
     public void testMissingChannels() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))

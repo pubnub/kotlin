@@ -6,14 +6,7 @@ import com.pubnub.api.PubNub;
 import com.pubnub.api.endpoints.vendor.AppEngineFactory;
 import com.pubnub.api.enums.PNLogVerbosity;
 import com.pubnub.api.interceptors.SignatureInterceptor;
-import com.pubnub.api.services.AccessManagerService;
-import com.pubnub.api.services.ChannelGroupService;
-import com.pubnub.api.services.HistoryService;
-import com.pubnub.api.services.PresenceService;
-import com.pubnub.api.services.PublishService;
-import com.pubnub.api.services.PushService;
-import com.pubnub.api.services.SubscribeService;
-import com.pubnub.api.services.TimeService;
+import com.pubnub.api.services.*;
 import lombok.Getter;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -33,17 +26,27 @@ public class RetrofitManager {
     private OkHttpClient subscriptionClientInstance;
 
     // services
-    @Getter private PresenceService presenceService;
-    @Getter private HistoryService historyService;
-    @Getter private PushService pushService;
-    @Getter private AccessManagerService accessManagerService;
-    @Getter private ChannelGroupService channelGroupService;
-    @Getter private TimeService timeService;
-    @Getter private PublishService publishService;
-    @Getter private SubscribeService subscribeService;
+    @Getter
+    private PresenceService presenceService;
+    @Getter
+    private HistoryService historyService;
+    @Getter
+    private PushService pushService;
+    @Getter
+    private AccessManagerService accessManagerService;
+    @Getter
+    private ChannelGroupService channelGroupService;
+    @Getter
+    private TimeService timeService;
+    @Getter
+    private PublishService publishService;
+    @Getter
+    private SubscribeService subscribeService;
 
-    @Getter private Retrofit transactionInstance;
-    @Getter private Retrofit subscriptionInstance;
+    @Getter
+    private Retrofit transactionInstance;
+    @Getter
+    private Retrofit subscriptionInstance;
 
     public RetrofitManager(PubNub pubNubInstance) {
         this.pubnub = pubNubInstance;
@@ -93,7 +96,8 @@ public class RetrofitManager {
         }
 
         if (pnConfiguration.getSslSocketFactory() != null && pnConfiguration.getX509ExtendedTrustManager() != null) {
-            httpClient.sslSocketFactory(pnConfiguration.getSslSocketFactory(), pnConfiguration.getX509ExtendedTrustManager());
+            httpClient.sslSocketFactory(pnConfiguration.getSslSocketFactory(),
+                    pnConfiguration.getX509ExtendedTrustManager());
         }
 
         if (pnConfiguration.getConnectionSpec() != null) {
@@ -139,8 +143,8 @@ public class RetrofitManager {
         }
 
         retrofitBuilder = retrofitBuilder
-            .baseUrl(pubnub.getBaseUrl())
-            .addConverterFactory(this.pubnub.getMapper().getConverterFactory());
+                .baseUrl(pubnub.getBaseUrl())
+                .addConverterFactory(this.pubnub.getMapper().getConverterFactory());
 
         if (!pubnub.getConfiguration().isGoogleAppEngineNetworking()) {
             retrofitBuilder = retrofitBuilder.client(client);

@@ -14,11 +14,7 @@ import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 @Log
 public class PubNubUtil {
@@ -79,8 +75,7 @@ public class PubNubUtil {
     /**
      * Returns decoded String
      *
-     * @param stringToEncode
-     *            , input string
+     * @param stringToEncode , input string
      * @return , decoded string
      */
     public static String urlDecode(String stringToEncode) {
@@ -102,7 +97,8 @@ public class PubNubUtil {
             }
 
 
-            stringifiedArguments = stringifiedArguments.concat(pamKey).concat("=").concat(pamEncode(pamArgs.get(pamKey)));
+            stringifiedArguments =
+                    stringifiedArguments.concat(pamKey).concat("=").concat(pamEncode(pamArgs.get(pamKey)));
 
             i += 1;
         }
@@ -139,7 +135,8 @@ public class PubNubUtil {
     public static String replaceLast(String string, String toReplace, String replacement) {
         int pos = string.lastIndexOf(toReplace);
         if (pos > -1) {
-            return string.substring(0, pos).concat(replacement).concat(string.substring(pos + toReplace.length(), string.length()));
+            return string.substring(0, pos).concat(replacement).concat(string.substring(pos + toReplace.length(),
+                    string.length()));
         } else {
             return string;
         }
@@ -156,13 +153,13 @@ public class PubNubUtil {
         Map<String, String> queryParams = new HashMap<>();
         String signature = "";
 
-        for (String queryKey: url.queryParameterNames()) {
+        for (String queryKey : url.queryParameterNames()) {
             queryParams.put(queryKey, url.queryParameter(queryKey));
         }
 
         queryParams.put("timestamp", String.valueOf(timestamp));
 
-        String signInput = pnConfiguration.getSubscribeKey() + "\n"  + pnConfiguration.getPublishKey() + "\n";
+        String signInput = pnConfiguration.getSubscribeKey() + "\n" + pnConfiguration.getPublishKey() + "\n";
 
         if (requestURL.startsWith("/v1/auth/audit")) {
             signInput += "audit" + "\n";

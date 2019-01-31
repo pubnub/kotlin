@@ -1,10 +1,15 @@
 name: java
-version: 4.21.0
+version: 4.22.0-beta
 schema: 1
 scm: github.com/pubnub/java
 files:
-  - build/libs/pubnub-gson-4.21.0-all.jar
+  - build/libs/pubnub-gson-4.22.0-beta-all.jar
 changelog:
+  - version: v4.22.0-beta
+    date: 2018-01-31
+    changes:
+      - type: feature
+        text: Update 3rd party libraries
   - version: v4.21.0
     date: 2018-10-26
     changes:
@@ -326,7 +331,7 @@ changelog:
 features:
   access:
     - ACCESS-GRANT
-    - ACCESS-SECRET-KEY-ALL-ACCESS    
+    - ACCESS-SECRET-KEY-ALL-ACCESS
   channel-groups:
     - CHANNEL-GROUPS-ADD-CHANNELS
     - CHANNEL-GROUPS-REMOVE-CHANNELS
@@ -352,7 +357,7 @@ features:
     - PUBLISH-GET
     - PUBLISH-POST
     - PUBLISH-ASYNC
-    - PUBLISH-FIRE 
+    - PUBLISH-FIRE
     - PUBLISH-REPLICATION-FLAG
     - PUBLISH-MESSAGE-TTL
   storage:
@@ -374,8 +379,7 @@ features:
     - SUBSCRIBE-FILTER-EXPRESSION
     - SUBSCRIBE-PUBLISHER-UUID
 supported-platforms:
-  - 
-    version: PubNub Java SDK 
+  - version: PubNub Java SDK
     platforms:
       - Windows 10 (7u85 and above)
       - Windows 8.x (Desktop)
@@ -394,7 +398,6 @@ supported-platforms:
       - Ubuntu Linux 10.04 and above
     editors:
       - Java7+
-  - 
-    version: PubNub Android SDK 
+  - version: PubNub Android SDK
     platforms:
       - Android 2.3.1+

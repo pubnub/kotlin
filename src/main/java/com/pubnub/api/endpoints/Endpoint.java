@@ -24,11 +24,7 @@ import java.io.IOException;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public abstract class Endpoint<Input, Output> {
 
@@ -126,7 +122,9 @@ public abstract class Endpoint<Input, Output> {
             this.validateParams();
             call = doWork(createBaseParams());
         } catch (PubNubException pubnubException) {
-            callback.onResponse(null, createStatusResponse(PNStatusCategory.PNBadRequestCategory, null, pubnubException, null, null));
+            callback.onResponse(null,
+                    createStatusResponse(PNStatusCategory.PNBadRequestCategory, null, pubnubException,
+                            null, null));
             return;
         }
 
@@ -156,7 +154,8 @@ public abstract class Endpoint<Input, Output> {
                         responseBody = null;
                     }
 
-                    if (responseBody != null && mapper.isJsonObject(responseBody) && mapper.hasField(responseBody, "payload")) {
+                    if (responseBody != null && mapper.isJsonObject(responseBody) && mapper.hasField(responseBody,
+                            "payload")) {
                         responseBodyPayload = mapper.getField(responseBody, "payload");
                     }
 
@@ -172,16 +171,21 @@ public abstract class Endpoint<Input, Output> {
                         pnStatusCategory = PNStatusCategory.PNAccessDeniedCategory;
 
                         if (responseBodyPayload != null && mapper.hasField(responseBodyPayload, "channels")) {
-                            for (Iterator<JsonElement> it = mapper.getArrayIterator(responseBodyPayload, "channels"); it.hasNext();) {
+                            Iterator<JsonElement> it = mapper.getArrayIterator(responseBodyPayload, "channels");
+                            while (it.hasNext()) {
                                 JsonElement objNode = it.next();
                                 affectedChannels.add(mapper.elementToString(objNode));
                             }
                         }
 
                         if (responseBodyPayload != null && mapper.hasField(responseBodyPayload, "channel-groups")) {
-                            for (Iterator<JsonElement> it = mapper.getArrayIterator(responseBodyPayload, "channel-groups"); it.hasNext();) {
+                            Iterator<JsonElement> it = mapper.getArrayIterator(responseBodyPayload, "channel-groups");
+                            while (it.hasNext()) {
                                 JsonElement objNode = it.next();
-                                String channelGroupName = mapper.elementToString(objNode).substring(0, 1).equals(":") ? mapper.elementToString(objNode).substring(1) : mapper.elementToString(objNode);
+                                String channelGroupName =
+                                        mapper.elementToString(objNode).substring(0, 1).equals(":")
+                                                ? mapper.elementToString(objNode).substring(1)
+                                                : mapper.elementToString(objNode);
                                 affectedChannelGroups.add(channelGroupName);
                             }
                         }
@@ -192,7 +196,9 @@ public abstract class Endpoint<Input, Output> {
                         pnStatusCategory = PNStatusCategory.PNBadRequestCategory;
                     }
 
-                    callback.onResponse(null, createStatusResponse(pnStatusCategory, response, ex, affectedChannels, affectedChannelGroups));
+                    callback.onResponse(null,
+                            createStatusResponse(pnStatusCategory, response, ex, affectedChannels,
+                                    affectedChannelGroups));
                     return;
                 }
                 storeRequestLatency(response, getOperationType());
@@ -200,11 +206,15 @@ public abstract class Endpoint<Input, Output> {
                 try {
                     callbackResponse = createResponse(response);
                 } catch (PubNubException pubnubException) {
-                    callback.onResponse(null, createStatusResponse(PNStatusCategory.PNMalformedResponseCategory, response, pubnubException, null, null));
+                    callback.onResponse(null,
+                            createStatusResponse(PNStatusCategory.PNMalformedResponseCategory, response,
+                                    pubnubException, null, null));
                     return;
                 }
 
-                callback.onResponse(callbackResponse, createStatusResponse(PNStatusCategory.PNAcknowledgmentCategory, response, null, null, null));
+                callback.onResponse(callbackResponse,
+                        createStatusResponse(PNStatusCategory.PNAcknowledgmentCategory, response,
+                                null, null, null));
             }
 
             @Override
@@ -232,7 +242,9 @@ public abstract class Endpoint<Input, Output> {
                     pubnubException.pubnubError(PubNubErrorBuilder.PNERROBJ_HTTP_ERROR);
                 }
 
-                callback.onResponse(null, createStatusResponse(pnStatusCategory, null, pubnubException.build(), null, null));
+                callback.onResponse(null,
+                        createStatusResponse(pnStatusCategory, null, pubnubException.build(),
+                                null, null));
 
             }
         });
@@ -253,7 +265,8 @@ public abstract class Endpoint<Input, Output> {
         }
     }
 
-    private PNStatus createStatusResponse(PNStatusCategory category, Response<Input> response, Exception throwable, ArrayList<String> errorChannels, ArrayList<String> errorChannelGroups) {
+    private PNStatus createStatusResponse(PNStatusCategory category, Response<Input> response, Exception throwable,
+                                          ArrayList<String> errorChannels, ArrayList<String> errorChannelGroups) {
         PNStatus.PNStatusBuilder pnStatus = PNStatus.builder();
 
         pnStatus.executedEndpoint(this);

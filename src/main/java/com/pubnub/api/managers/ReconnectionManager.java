@@ -63,7 +63,7 @@ public class ReconnectionManager {
             return;
         }
 
-        int  maxRetries = this.pubnub.getConfiguration().getMaximumReconnectionRetries();
+        int maxRetries = this.pubnub.getConfiguration().getMaximumReconnectionRetries();
         if (maxRetries != -1 && failedCalls >= maxRetries) {
             callback.onMaxReconnectionExhaustion();
             return;

@@ -41,8 +41,8 @@ public class SetState extends Endpoint<Envelope<JsonElement>, PNSetStateResult> 
     private String uuid;
 
 
-
-    public SetState(PubNub pubnub, SubscriptionManager subscriptionManagerInstance, TelemetryManager telemetryManager, RetrofitManager retrofit) {
+    public SetState(PubNub pubnub, SubscriptionManager subscriptionManagerInstance,
+                    TelemetryManager telemetryManager, RetrofitManager retrofit) {
         super(pubnub, telemetryManager, retrofit);
         this.subscriptionManager = subscriptionManagerInstance;
         channels = new ArrayList<>();
@@ -98,7 +98,8 @@ public class SetState extends Endpoint<Envelope<JsonElement>, PNSetStateResult> 
 
         String channelCSV = channels.size() > 0 ? PubNubUtil.joinString(channels, ",") : ",";
 
-        return this.getRetrofit().getPresenceService().setState(this.getPubnub().getConfiguration().getSubscribeKey(), channelCSV, selectedUUID, params);
+        return this.getRetrofit().getPresenceService().setState(
+                this.getPubnub().getConfiguration().getSubscribeKey(), channelCSV, selectedUUID, params);
     }
 
     @Override

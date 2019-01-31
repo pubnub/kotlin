@@ -20,11 +20,7 @@ import lombok.experimental.Accessors;
 import retrofit2.Call;
 import retrofit2.Response;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Accessors(chain = true, fluent = true)
 public class HereNow extends Endpoint<Envelope<JsonElement>, PNHereNowResult> {
@@ -141,7 +137,8 @@ public class HereNow extends Endpoint<Envelope<JsonElement>, PNHereNowResult> {
                 .totalOccupancy(mapper.elementToInt(input, "total_occupancy"))
                 .build();
 
-        for (Iterator<Map.Entry<String, JsonElement>> it = mapper.getObjectIterator(input, "channels"); it.hasNext();) {
+        Iterator<Map.Entry<String, JsonElement>> it = mapper.getObjectIterator(input, "channels");
+        while (it.hasNext()) {
             Map.Entry<String, JsonElement> entry = it.next();
 
             PNHereNowChannelData.PNHereNowChannelDataBuilder hereNowChannelData = PNHereNowChannelData.builder()
@@ -165,18 +162,22 @@ public class HereNow extends Endpoint<Envelope<JsonElement>, PNHereNowResult> {
         MapperManager mapper = getPubnub().getMapper();
 
         if (includeState != null && includeState) {
-            for (Iterator<JsonElement> it = mapper.getArrayIterator(input); it.hasNext();) {
+            Iterator<JsonElement> it = mapper.getArrayIterator(input);
+            while (it.hasNext()) {
                 JsonElement occupant = it.next();
-                PNHereNowOccupantData.PNHereNowOccupantDataBuilder hereNowOccupantData = PNHereNowOccupantData.builder();
+                PNHereNowOccupantData.PNHereNowOccupantDataBuilder hereNowOccupantData =
+                        PNHereNowOccupantData.builder();
                 hereNowOccupantData.uuid(mapper.elementToString(occupant, "uuid"));
                 hereNowOccupantData.state(mapper.getField(occupant, "state"));
 
                 occupantsResults.add(hereNowOccupantData.build());
             }
         } else {
-            for (Iterator<JsonElement> it = mapper.getArrayIterator(input); it.hasNext();) {
+            Iterator<JsonElement> it = mapper.getArrayIterator(input);
+            while (it.hasNext()) {
                 JsonElement occupant = it.next();
-                PNHereNowOccupantData.PNHereNowOccupantDataBuilder hereNowOccupantData = PNHereNowOccupantData.builder();
+                PNHereNowOccupantData.PNHereNowOccupantDataBuilder hereNowOccupantData =
+                        PNHereNowOccupantData.builder();
                 hereNowOccupantData.uuid(mapper.elementToString(occupant));
                 hereNowOccupantData.state(null);
 

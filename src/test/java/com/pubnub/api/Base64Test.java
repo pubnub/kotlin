@@ -10,8 +10,8 @@ public class Base64Test {
 
 
     @Test
-    public void testBase64Encode(){
-       Assert.assertEquals("YWJj", Base64.encodeToString("abc".getBytes(Charset.forName("UTF-8")), 0).trim());
+    public void testBase64Encode() {
+        Assert.assertEquals("YWJj", Base64.encodeToString("abc".getBytes(Charset.forName("UTF-8")), 0).trim());
     }
 
 }

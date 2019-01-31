@@ -1,6 +1,7 @@
 package com.pubnub.api;
 
 import com.pubnub.api.enums.PNReconnectionPolicy;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,6 +17,12 @@ public class PubNubTest {
         pnConfiguration = new PNConfiguration();
         pnConfiguration.setSubscribeKey("demo");
         pnConfiguration.setPublishKey("demo");
+    }
+
+    @After
+    public void cleanup() {
+        pubnub.forceDestroy();
+        pubnub = null;
     }
 
     @Test
@@ -91,7 +98,7 @@ public class PubNubTest {
         pubnub = new PubNub(pnConfiguration);
         String version = pubnub.getVersion();
         int timeStamp = pubnub.getTimestamp();
-        Assert.assertEquals("4.21.0", version);
+        Assert.assertEquals("4.22.0-beta", version);
         Assert.assertTrue(timeStamp > 0);
     }
 

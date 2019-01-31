@@ -6,6 +6,7 @@ import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.endpoints.presence.Heartbeat;
 import com.pubnub.api.managers.RetrofitManager;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -16,29 +17,31 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.findAll;
-import static com.github.tomakehurst.wiremock.client.WireMock.get;
-import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
-import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 import static org.junit.Assert.assertEquals;
 
 public class HeartbeatEndpointTest extends TestHarness {
 
+    @Rule
+    public WireMockRule wireMockRule = new WireMockRule(options().port(this.PORT), false);
+
     private Heartbeat partialHeartbeat;
     private PubNub pubnub;
 
-    @Rule
-    public WireMockRule wireMockRule = new WireMockRule();
-
     @Before
     public void beforeEach() throws IOException {
-        pubnub = this.createPubNubInstance(8080);
+        pubnub = this.createPubNubInstance();
         RetrofitManager retrofitManager = new RetrofitManager(pubnub);
         partialHeartbeat = new Heartbeat(pubnub, null, retrofitManager);
         wireMockRule.start();
+    }
+
+    @After
+    public void afterEach() {
+        pubnub.destroy();
+        pubnub = null;
+        wireMockRule.stop();
     }
 
     @Test
@@ -128,11 +131,12 @@ public class HeartbeatEndpointTest extends TestHarness {
         LoggedRequest request = requests.get(0);
         assertEquals("myUUID", request.queryParameter("uuid").firstValue());
         assertEquals("123", request.queryParameter("heartbeat").firstValue());
-        assertEquals("%7B%22CH2%22%3A%22this-is-channel2%22%2C%22CH1%22%3A%22this-is-channel1%22%7D", request.queryParameter("state").firstValue());
+        assertEquals("%7B%22CH2%22%3A%22this-is-channel2%22%2C%22CH1%22%3A%22this-is-channel1%22%7D",
+                request.queryParameter("state").firstValue());
 
     }
 
-    @Test(expected=PubNubException.class)
+    @Test(expected = PubNubException.class)
     public void testMissingChannelAndGroupSync() throws PubNubException, InterruptedException {
         pubnub.getConfiguration().setPresenceTimeout(123);
 
@@ -156,7 +160,7 @@ public class HeartbeatEndpointTest extends TestHarness {
         assertEquals("myKey", requests.get(0).queryParameter("auth").firstValue());
     }
 
-    @Test(expected=PubNubException.class)
+    @Test(expected = PubNubException.class)
     public void testNullSubKeySync() throws PubNubException, InterruptedException {
         pubnub.getConfiguration().setPresenceTimeout(123);
 
@@ -167,7 +171,7 @@ public class HeartbeatEndpointTest extends TestHarness {
         partialHeartbeat.channels(Arrays.asList("ch1")).sync();
     }
 
-    @Test(expected=PubNubException.class)
+    @Test(expected = PubNubException.class)
     public void testEmptySubKeySync() throws PubNubException, InterruptedException {
         pubnub.getConfiguration().setPresenceTimeout(123);
 

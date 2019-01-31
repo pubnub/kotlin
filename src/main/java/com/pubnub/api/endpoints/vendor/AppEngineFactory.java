@@ -3,17 +3,11 @@ package com.pubnub.api.endpoints.vendor;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubUtil;
 import lombok.extern.java.Log;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Headers;
-import okhttp3.MediaType;
-import okhttp3.Protocol;
-import okhttp3.Request;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
+import okhttp3.*;
 import okio.BufferedSink;
 import okio.BufferedSource;
 import okio.Okio;
+import okio.Timeout;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -108,6 +102,11 @@ public class AppEngineFactory implements Call {
     @Override
     public boolean isCanceled() {
         return false;
+    }
+
+    @Override
+    public Timeout timeout() {
+        return Timeout.NONE;
     }
 
     @Override

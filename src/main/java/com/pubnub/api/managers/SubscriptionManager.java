@@ -17,15 +17,10 @@ import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.server.SubscribeEnvelope;
 import com.pubnub.api.models.server.SubscribeMessage;
 import com.pubnub.api.workers.SubscribeMessageWorker;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.LinkedBlockingQueue;
-
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.*;
+import java.util.concurrent.LinkedBlockingQueue;
 
 @Slf4j
 public class SubscriptionManager {
@@ -70,7 +65,8 @@ public class SubscriptionManager {
      */
     private boolean subscriptionStatusAnnounced;
 
-    public SubscriptionManager(PubNub pubnubInstance, RetrofitManager retrofitManagerInstance, TelemetryManager telemetry) {
+    public SubscriptionManager(PubNub pubnubInstance, RetrofitManager retrofitManagerInstance,
+                               TelemetryManager telemetry) {
         this.pubnub = pubnubInstance;
         this.telemetryManager = telemetry;
 
@@ -117,7 +113,8 @@ public class SubscriptionManager {
         });
 
         if (this.pubnub.getConfiguration().isStartSubscriberThread()) {
-            consumerThread = new Thread(new SubscribeMessageWorker(this.pubnub, listenerManager, messageQueue, duplicationManager));
+            consumerThread = new Thread(new SubscribeMessageWorker(
+                    this.pubnub, listenerManager, messageQueue, duplicationManager));
             consumerThread.setName("Subscription Manager Consumer Thread");
             consumerThread.start();
         }
@@ -283,7 +280,8 @@ public class SubscriptionManager {
                         disconnect();
                         listenerManager.announce(status);
 
-                        // stop all announcements and ask the reconnection manager to start polling for connection restoration..
+                        // stop all announcements and ask the reconnection manager to start polling for connection
+                        // restoration..
                         reconnectionManager.startPolling();
                     }
 
@@ -352,8 +350,7 @@ public class SubscriptionManager {
         if (presenceChannels.isEmpty()
                 && presenceChannelGroups.isEmpty()
                 && heartbeatChannels.isEmpty()
-                && heartbeatChannelGroups.isEmpty()
-                ) {
+                && heartbeatChannelGroups.isEmpty()) {
             return;
         }
 
@@ -372,8 +369,8 @@ public class SubscriptionManager {
         heartbeatCall.async(new PNCallback<Boolean>() {
             @Override
             public void onResponse(Boolean result, PNStatus status) {
-                PNHeartbeatNotificationOptions heartbeatVerbosity = pubnub
-                        .getConfiguration().getHeartbeatNotificationOptions();
+                PNHeartbeatNotificationOptions heartbeatVerbosity =
+                        pubnub.getConfiguration().getHeartbeatNotificationOptions();
 
                 if (status.isError()) {
                     if (heartbeatVerbosity == PNHeartbeatNotificationOptions.ALL

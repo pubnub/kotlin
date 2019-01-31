@@ -41,7 +41,8 @@ public class Publish extends Endpoint<List<Object>, PNPublishResult> {
 
     private PublishSequenceManager publishSequenceManager;
 
-    public Publish(PubNub pubnub, PublishSequenceManager providedPublishSequenceManager, TelemetryManager telemetryManager, RetrofitManager retrofit) {
+    public Publish(PubNub pubnub, PublishSequenceManager providedPublishSequenceManager,
+                   TelemetryManager telemetryManager, RetrofitManager retrofit) {
         super(pubnub, telemetryManager, retrofit);
 
         this.publishSequenceManager = providedPublishSequenceManager;

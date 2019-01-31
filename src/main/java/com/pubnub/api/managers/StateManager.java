@@ -79,7 +79,7 @@ public class StateManager {
     }
 
     public synchronized void adaptStateBuilder(StateOperation stateOperation) {
-        for (String channel: stateOperation.getChannels()) {
+        for (String channel : stateOperation.getChannels()) {
             SubscriptionItem subscribedChannel = channels.get(channel);
 
             if (subscribedChannel != null) {
@@ -87,7 +87,7 @@ public class StateManager {
             }
         }
 
-        for (String channelGroup: stateOperation.getChannelGroups()) {
+        for (String channelGroup : stateOperation.getChannelGroups()) {
             SubscriptionItem subscribedChannelGroup = groups.get(channelGroup);
 
             if (subscribedChannelGroup != null) {
@@ -98,12 +98,12 @@ public class StateManager {
 
 
     public synchronized void adaptUnsubscribeBuilder(UnsubscribeOperation unsubscribeOperation) {
-        for (String channel: unsubscribeOperation.getChannels()) {
+        for (String channel : unsubscribeOperation.getChannels()) {
             this.channels.remove(channel);
             this.presenceChannels.remove(channel);
         }
 
-        for (String channelGroup: unsubscribeOperation.getChannelGroups()) {
+        for (String channelGroup : unsubscribeOperation.getChannelGroups()) {
             this.groups.remove(channelGroup);
             this.presenceGroups.remove(channelGroup);
         }
@@ -142,13 +142,13 @@ public class StateManager {
     public synchronized Map<String, Object> createStatePayload() {
         Map<String, Object> stateResponse = new HashMap<>();
 
-        for (SubscriptionItem channel: channels.values()) {
+        for (SubscriptionItem channel : channels.values()) {
             if (channel.getState() != null) {
                 stateResponse.put(channel.getName(), channel.getState());
             }
         }
 
-        for (SubscriptionItem channelGroup: groups.values()) {
+        for (SubscriptionItem channelGroup : groups.values()) {
             if (channelGroup.getState() != null) {
                 stateResponse.put(channelGroup.getName(), channelGroup.getState());
             }
@@ -177,15 +177,16 @@ public class StateManager {
         return (channels.isEmpty() && presenceChannels.isEmpty() && groups.isEmpty() && presenceGroups.isEmpty());
     }
 
-    private synchronized List<String> prepareMembershipList(Map<String, SubscriptionItem> dataStorage, Map<String, SubscriptionItem> presenceStorage, boolean includePresence) {
+    private synchronized List<String> prepareMembershipList(Map<String, SubscriptionItem> dataStorage, Map<String,
+            SubscriptionItem> presenceStorage, boolean includePresence) {
         List<String> response = new ArrayList<>();
 
-        for (SubscriptionItem channelGroupItem: dataStorage.values()) {
+        for (SubscriptionItem channelGroupItem : dataStorage.values()) {
             response.add(channelGroupItem.getName());
         }
 
         if (includePresence) {
-            for (SubscriptionItem presenceChannelGroupItem: presenceStorage.values()) {
+            for (SubscriptionItem presenceChannelGroupItem : presenceStorage.values()) {
                 response.add(presenceChannelGroupItem.getName().concat("-pnpres"));
             }
         }
