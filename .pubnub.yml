@@ -400,4 +400,4 @@ supported-platforms:
       - Java7+
   - version: PubNub Android SDK
     platforms:
-      - Android 2.3.1+
+      - Android 4.0+
