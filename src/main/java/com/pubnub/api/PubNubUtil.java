@@ -33,6 +33,17 @@ public class PubNubUtil {
 
     }
 
+    public static String joinLong(List<Long> val, String delim) {
+        StringBuilder builder = new StringBuilder();
+        for (Long l : val) {
+            builder.append(Long.toString(l).toLowerCase());
+            builder.append(",");
+        }
+
+        return builder.toString().substring(0, builder.toString().length() - 1);
+
+    }
+
     /**
      * Returns encoded String
      *

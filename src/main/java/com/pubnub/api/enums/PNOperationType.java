@@ -12,6 +12,7 @@ public enum PNOperationType {
     PNHistoryOperation,
     PNFetchMessagesOperation,
     PNDeleteMessagesOperation,
+    PNMessageCountOperation,
 
     PNWhereNowOperation,
 

@@ -8,10 +8,15 @@ import com.pubnub.api.callbacks.SubscribeCallback;
 import com.pubnub.api.endpoints.DeleteMessages;
 import com.pubnub.api.endpoints.FetchMessages;
 import com.pubnub.api.endpoints.History;
+import com.pubnub.api.endpoints.MessageCounts;
 import com.pubnub.api.endpoints.Time;
 import com.pubnub.api.endpoints.access.Audit;
 import com.pubnub.api.endpoints.access.Grant;
-import com.pubnub.api.endpoints.channel_groups.*;
+import com.pubnub.api.endpoints.channel_groups.AddChannelChannelGroup;
+import com.pubnub.api.endpoints.channel_groups.AllChannelsChannelGroup;
+import com.pubnub.api.endpoints.channel_groups.DeleteChannelGroup;
+import com.pubnub.api.endpoints.channel_groups.ListAllChannelGroup;
+import com.pubnub.api.endpoints.channel_groups.RemoveChannelChannelGroup;
 import com.pubnub.api.endpoints.presence.GetState;
 import com.pubnub.api.endpoints.presence.HereNow;
 import com.pubnub.api.endpoints.presence.SetState;
@@ -21,7 +26,12 @@ import com.pubnub.api.endpoints.push.AddChannelsToPush;
 import com.pubnub.api.endpoints.push.ListPushProvisions;
 import com.pubnub.api.endpoints.push.RemoveAllPushChannelsForDevice;
 import com.pubnub.api.endpoints.push.RemoveChannelsFromPush;
-import com.pubnub.api.managers.*;
+import com.pubnub.api.managers.BasePathManager;
+import com.pubnub.api.managers.MapperManager;
+import com.pubnub.api.managers.PublishSequenceManager;
+import com.pubnub.api.managers.RetrofitManager;
+import com.pubnub.api.managers.SubscriptionManager;
+import com.pubnub.api.managers.TelemetryManager;
 import com.pubnub.api.vendor.Crypto;
 import lombok.Getter;
 
@@ -53,7 +63,7 @@ public class PubNub {
     private static final int TIMESTAMP_DIVIDER = 1000;
     private static final int MAX_SEQUENCE = 65535;
 
-    private static final String SDK_VERSION = "4.22.0-beta";
+    private static final String SDK_VERSION = "4.22.0";
 
     public PubNub(PNConfiguration initialConfig) {
         this.configuration = initialConfig;
@@ -134,6 +144,10 @@ public class PubNub {
 
     public DeleteMessages deleteMessages() {
         return new DeleteMessages(this, this.telemetryManager, this.retrofitManager);
+    }
+
+    public MessageCounts messageCounts() {
+        return new MessageCounts(this, this.telemetryManager, this.retrofitManager);
     }
 
     public Audit audit() {

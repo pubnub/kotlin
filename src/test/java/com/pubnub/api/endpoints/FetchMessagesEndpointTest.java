@@ -19,7 +19,7 @@ import static org.junit.Assert.assertEquals;
 public class FetchMessagesEndpointTest extends TestHarness {
 
     @Rule
-    public WireMockRule wireMockRule = new WireMockRule(options().port(this.PORT), false);
+    public WireMockRule wireMockRule = new WireMockRule(options().port(PORT), false);
 
     private FetchMessages partialHistory;
     private PubNub pubnub;

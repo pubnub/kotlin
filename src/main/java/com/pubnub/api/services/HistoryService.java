@@ -28,4 +28,9 @@ public interface HistoryService {
                                               @Path("channels") String channels,
                                               @QueryMap Map<String, String> options);
 
+    @GET("v3/history/sub-key/{subKey}/message-counts/{channels}")
+    Call<JsonElement> fetchCount(@Path("subKey") String subKey,
+                                 @Path("channels") String channels,
+                                 @QueryMap Map<String, String> options);
+
 }

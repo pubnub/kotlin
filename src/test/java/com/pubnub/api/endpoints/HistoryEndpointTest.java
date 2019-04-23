@@ -30,7 +30,7 @@ import static org.junit.Assert.*;
 public class HistoryEndpointTest extends TestHarness {
 
     @Rule
-    public WireMockRule wireMockRule = new WireMockRule(options().port(this.PORT), false);
+    public WireMockRule wireMockRule = new WireMockRule(options().port(PORT), false);
 
     private History partialHistory;
     private PubNub pubnub;
