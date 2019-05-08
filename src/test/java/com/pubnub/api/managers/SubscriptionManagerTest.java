@@ -11,7 +11,6 @@ import com.pubnub.api.callbacks.SubscribeCallback;
 import com.pubnub.api.endpoints.TestHarness;
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions;
 import com.pubnub.api.enums.PNOperationType;
-import com.pubnub.api.enums.PNReconnectionPolicy;
 import com.pubnub.api.enums.PNStatusCategory;
 import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.presence.PNSetStateResult;
@@ -32,9 +31,18 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.findAll;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.matching;
+import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class SubscriptionManagerTest extends TestHarness {
 
@@ -1598,41 +1606,6 @@ public class SubscriptionManagerTest extends TestHarness {
 
         Awaitility.await().atMost(2, TimeUnit.SECONDS).untilAtomic(statusRecieved,
                 org.hamcrest.core.IsEqual.equalTo(true));
-    }
-
-
-    @Test
-    public void testReconnectionExhaustion() {
-
-        final AtomicBoolean statusReceived = new AtomicBoolean();
-        pubnub.getConfiguration().setReconnectionPolicy(PNReconnectionPolicy.LINEAR);
-        pubnub.getConfiguration().setMaximumReconnectionRetries(1);
-        pubnub.reconnect();
-
-        SubscribeCallback sub1 = new SubscribeCallback() {
-            @Override
-            public void status(PubNub pubnub, PNStatus status) {
-                if (status.getCategory() == PNStatusCategory.PNReconnectionAttemptsExhausted) {
-                    statusReceived.set(true);
-                }
-            }
-
-            @Override
-            public void message(PubNub pubnub, PNMessageResult message) {
-            }
-
-            @Override
-            public void presence(PubNub pubnub, PNPresenceEventResult presence) {
-            }
-        };
-
-        pubnub.addListener(sub1);
-
-        pubnub.subscribe().channels(Arrays.asList("ch1", "ch2")).withPresence().execute();
-
-
-        Awaitility.await().atMost(4, TimeUnit.SECONDS)
-                .untilAtomic(statusReceived, org.hamcrest.core.IsEqual.equalTo(true));
     }
 
     @Test

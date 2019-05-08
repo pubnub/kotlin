@@ -273,13 +273,15 @@ public class SubscriptionManager {
             @Override
             public void onResponse(SubscribeEnvelope result, PNStatus status) {
                 if (status.isError()) {
-
                     if (status.getCategory() == PNStatusCategory.PNTimeoutCategory) {
                         startSubscribeLoop();
-                    } else {
-                        disconnect();
-                        listenerManager.announce(status);
+                        return;
+                    }
 
+                    disconnect();
+                    listenerManager.announce(status);
+
+                    if (status.getCategory() == PNStatusCategory.PNUnexpectedDisconnectCategory) {
                         // stop all announcements and ask the reconnection manager to start polling for connection
                         // restoration..
                         reconnectionManager.startPolling();
