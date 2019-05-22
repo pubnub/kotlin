@@ -230,8 +230,8 @@ public class SubscriptionManager {
         // make sure only one timer is running at a time.
         stopHeartbeatTimer();
 
-        // if the interval is 0, do not start the timer
-        if (pubnub.getConfiguration().getHeartbeatInterval() == 0) {
+        // if the interval is 0 or less, do not start the timer
+        if (pubnub.getConfiguration().getHeartbeatInterval() <= 0) {
             return;
         }
 

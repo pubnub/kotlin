@@ -17,6 +17,7 @@ import com.pubnub.api.models.consumer.presence.PNSetStateResult;
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
 import org.awaitility.Awaitility;
+import org.awaitility.Duration;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -27,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -803,6 +805,7 @@ public class SubscriptionManagerTest extends TestHarness {
                         "\"k\":\"sub-c-4cec9f8e-01fa-11e6-8180-0619f8945a4f\",\"c\":\"coolChannel\"," +
                         "\"d\":{\"text\":\"Enter Message Here\"},\"b\":\"coolChan-bnel\"}]}")));
 
+        pubnub.getConfiguration().setPresenceTimeout(20);
         pubnub.getConfiguration().setHeartbeatNotificationOptions(PNHeartbeatNotificationOptions.ALL);
         pubnub.addListener(new SubscribeCallback() {
             @Override
@@ -1455,6 +1458,7 @@ public class SubscriptionManagerTest extends TestHarness {
     public void testAllHeartbeats() {
 
         final AtomicBoolean statusRecieved = new AtomicBoolean();
+        pubnub.getConfiguration().setPresenceTimeout(20);
         pubnub.getConfiguration().setHeartbeatNotificationOptions(PNHeartbeatNotificationOptions.ALL);
 
         stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1,ch2-pnpres,ch1-pnpres/0"))
@@ -1497,6 +1501,7 @@ public class SubscriptionManagerTest extends TestHarness {
     public void testAllHeartbeatsViaPresence() {
 
         final AtomicBoolean statusRecieved = new AtomicBoolean();
+        pubnub.getConfiguration().setPresenceTimeout(20);
         pubnub.getConfiguration().setHeartbeatNotificationOptions(PNHeartbeatNotificationOptions.ALL);
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch2,ch1/heartbeat"))
@@ -1573,6 +1578,7 @@ public class SubscriptionManagerTest extends TestHarness {
     public void testSuccessOnFailureVerbosityHeartbeats() {
 
         final AtomicBoolean statusRecieved = new AtomicBoolean();
+        pubnub.getConfiguration().setPresenceTimeout(20);
         pubnub.getConfiguration().setHeartbeatNotificationOptions(PNHeartbeatNotificationOptions.FAILURES);
 
         stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch2-pnpres,ch1,ch1-pnpres/0"))
@@ -1612,6 +1618,7 @@ public class SubscriptionManagerTest extends TestHarness {
     public void testFailedHeartbeats() {
 
         final AtomicBoolean statusRecieved = new AtomicBoolean();
+        pubnub.getConfiguration().setPresenceTimeout(20);
         pubnub.getConfiguration().setHeartbeatNotificationOptions(PNHeartbeatNotificationOptions.ALL);
 
         stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch2-pnpres,ch1,ch1-pnpres/0"))
@@ -1721,6 +1728,161 @@ public class SubscriptionManagerTest extends TestHarness {
         pubnub.subscribe().channels(Arrays.asList("ch1", "ch2")).withPresence().execute();
 
         Awaitility.await().atMost(4, TimeUnit.SECONDS).untilTrue(statusRecieved);
+    }
+
+    @Test
+    public void testHeartbeatsDisabled() {
+        final AtomicInteger heartbeatCallsCount = new AtomicInteger(0);
+        final AtomicBoolean subscribeSuccess = new AtomicBoolean();
+
+        pubnub.getConfiguration().setHeartbeatNotificationOptions(PNHeartbeatNotificationOptions.ALL);
+
+        assertEquals(PNHeartbeatNotificationOptions.ALL, pubnub.getConfiguration().getHeartbeatNotificationOptions());
+        assertEquals(300, pubnub.getConfiguration().getPresenceTimeout());
+        assertEquals(0, pubnub.getConfiguration().getHeartbeatInterval());
+
+        stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch1,ch1-pnpres/0"))
+                .willReturn(aResponse()
+                        .withBody("{\"t\":{\"t\":null,\"r\":12},\"m\":[]}")
+                        .withStatus(200)));
+
+        stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch1/heartbeat"))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withBody("{\"status\": 200, \"message\": \"OK\", \"service\":\"Presence\"}")));
+
+        pubnub.addListener(new SubscribeCallback() {
+            @Override
+            public void status(PubNub pubnub, PNStatus status) {
+                if (!status.isError()) {
+                    if (status.getOperation() == PNOperationType.PNSubscribeOperation) {
+                        subscribeSuccess.set(true);
+                    }
+                    if (status.getOperation() == PNOperationType.PNHeartbeatOperation) {
+                        heartbeatCallsCount.incrementAndGet();
+                    }
+                }
+            }
+
+            @Override
+            public void message(PubNub pubnub, PNMessageResult message) {
+
+            }
+
+            @Override
+            public void presence(PubNub pubnub, PNPresenceEventResult presence) {
+
+            }
+        });
+
+        pubnub.subscribe()
+                .channels(Arrays.asList("ch1"))
+                .withPresence()
+                .execute();
+
+        Duration delayDuration = new Duration(40, TimeUnit.SECONDS);
+
+        Awaitility.await()
+                .atLeast(delayDuration)
+                .atMost(Duration.ONE_MINUTE)
+                .with()
+                .pollInterval(Duration.ONE_SECOND)
+                .pollDelay(delayDuration)
+                .until(new Callable<Boolean>() {
+                    @Override
+                    public Boolean call() throws Exception {
+                        return subscribeSuccess.get() && heartbeatCallsCount.get() == 0;
+                    }
+                });
+    }
+
+    @Test
+    public void testHeartbeatsEnabled() {
+        final AtomicInteger heartbeatCallsCount = new AtomicInteger(0);
+        final AtomicBoolean subscribeSuccess = new AtomicBoolean();
+
+        pubnub.getConfiguration().setHeartbeatNotificationOptions(PNHeartbeatNotificationOptions.ALL);
+
+        assertEquals(PNHeartbeatNotificationOptions.ALL, pubnub.getConfiguration().getHeartbeatNotificationOptions());
+        assertEquals(300, pubnub.getConfiguration().getPresenceTimeout());
+        assertEquals(0, pubnub.getConfiguration().getHeartbeatInterval());
+
+        pubnub.getConfiguration().setPresenceTimeout(20);
+
+
+        assertEquals(20, pubnub.getConfiguration().getPresenceTimeout());
+        assertEquals(9, pubnub.getConfiguration().getHeartbeatInterval());
+
+        stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch1,ch1-pnpres/0"))
+                .willReturn(aResponse()
+                        .withBody("{\"t\":{\"t\":null,\"r\":12},\"m\":[]}")
+                        .withStatus(200)));
+
+        stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch1/heartbeat"))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withBody("{\"status\": 200, \"message\": \"OK\", \"service\":\"Presence\"}")));
+
+        pubnub.addListener(new SubscribeCallback() {
+            @Override
+            public void status(PubNub pubnub, PNStatus status) {
+                if (!status.isError()) {
+                    if (status.getOperation() == PNOperationType.PNSubscribeOperation) {
+                        subscribeSuccess.set(true);
+                    }
+                    if (status.getOperation() == PNOperationType.PNHeartbeatOperation) {
+                        heartbeatCallsCount.incrementAndGet();
+                        System.out.println("New heartbeat!");
+                    }
+                }
+            }
+
+            @Override
+            public void message(PubNub pubnub, PNMessageResult message) {
+
+            }
+
+            @Override
+            public void presence(PubNub pubnub, PNPresenceEventResult presence) {
+
+            }
+        });
+
+        pubnub.subscribe()
+                .channels(Arrays.asList("ch1"))
+                .withPresence()
+                .execute();
+
+        int delay = 40;
+
+        Duration delayDuration = new Duration(delay, TimeUnit.SECONDS);
+
+        Awaitility.await()
+                .atLeast(delayDuration)
+                .atMost(Duration.ONE_MINUTE)
+                .with()
+                .pollInterval(Duration.ONE_SECOND)
+                .pollDelay(delayDuration)
+                .until(new Callable<Boolean>() {
+                    @Override
+                    public Boolean call() throws Exception {
+                        return subscribeSuccess.get() && heartbeatCallsCount.get() > 3;
+                    }
+                });
+    }
+
+    @Test
+    public void testMinimumPresenceValueNoInterval() {
+        pubnub.getConfiguration().setPresenceTimeout(10);
+        assertEquals(20, pubnub.getConfiguration().getPresenceTimeout());
+        assertEquals(9, pubnub.getConfiguration().getHeartbeatInterval());
+    }
+
+    @Test
+    public void testMinimumPresenceValueWithInterval() {
+        pubnub.getConfiguration().setPresenceTimeoutWithCustomInterval(10, 50);
+        assertEquals(20, pubnub.getConfiguration().getPresenceTimeout());
+        assertEquals(50, pubnub.getConfiguration().getHeartbeatInterval());
     }
 
     @Test
