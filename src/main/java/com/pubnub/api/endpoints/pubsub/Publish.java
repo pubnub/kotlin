@@ -110,6 +110,8 @@ public class Publish extends Endpoint<List<Object>, PNPublishResult> {
             stringifiedMessage = crypto.encrypt(stringifiedMessage).replace("\n", "");
         }
 
+        params.putAll(encodeParams(params));
+
         if (usePOST != null && usePOST) {
             Object payloadToSend;
 

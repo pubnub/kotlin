@@ -793,7 +793,8 @@ public class SubscriptionManagerTest extends TestHarness {
 
     @Test
     public void testSubscribeBuilderWithState() throws PubNubException {
-        final AtomicInteger atomic = new AtomicInteger(0);
+        final AtomicInteger subscribeHits = new AtomicInteger(0);
+        final AtomicInteger heartbeatHits = new AtomicInteger(0);
 
         final String expectedPayload = PubNubUtil.urlDecode("%7B%22ch1%22%3A%5B%22p1%22%2C%22p2%22%5D%2C%22cg2%22%3A" +
                 "%5B%22p1%22%2C%22p2%22%5D%7D");
@@ -811,11 +812,15 @@ public class SubscriptionManagerTest extends TestHarness {
             @Override
             public void status(PubNub pubnub, PNStatus status) {
 
-                List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching(
+                List<LoggedRequest> heartbeatRequests = findAll(getRequestedFor(urlMatching(
                         "/v2/presence/sub-key/" + pubnub.getConfiguration().getSubscribeKey() + "/channel/ch2," +
                                 "ch1/heartbeat.*")));
 
-                for (LoggedRequest request : requests) {
+                List<LoggedRequest> subscribeRequests = findAll(getRequestedFor(urlMatching(
+                        "/v2/subscribe/" + pubnub.getConfiguration().getSubscribeKey() + "/ch2,ch1/.*")));
+
+
+                for (LoggedRequest request : subscribeRequests) {
                     String stateString = PubNubUtil.urlDecode(request.queryParameter("state").firstValue());
                     Map<String, Object> actualMap = null;
                     try {
@@ -825,7 +830,13 @@ public class SubscriptionManagerTest extends TestHarness {
                     }
 
                     if (actualMap != null && actualMap.equals(expectedMap)) {
-                        atomic.getAndAdd(1);
+                        subscribeHits.getAndAdd(1);
+                    }
+                }
+
+                for (LoggedRequest request : heartbeatRequests) {
+                    if (!request.getQueryParams().containsKey("state")) {
+                        heartbeatHits.getAndAdd(1);
                     }
                 }
             }
@@ -850,7 +861,12 @@ public class SubscriptionManagerTest extends TestHarness {
                 });
 
         Awaitility.await().atMost(5, TimeUnit.SECONDS)
-                .untilAtomic(atomic, org.hamcrest.Matchers.greaterThan(0));
+                .until(new Callable<Boolean>() {
+                    @Override
+                    public Boolean call() throws Exception {
+                        return subscribeHits.get() > 0 && heartbeatHits.get() > 0;
+                    }
+                });
 
     }
 

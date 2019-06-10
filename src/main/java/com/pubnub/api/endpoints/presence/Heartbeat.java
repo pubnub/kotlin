@@ -6,7 +6,6 @@ import com.pubnub.api.PubNubUtil;
 import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.enums.PNOperationType;
-import com.pubnub.api.managers.MapperManager;
 import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.TelemetryManager;
 import com.pubnub.api.models.server.Envelope;
@@ -22,8 +21,6 @@ import java.util.Map;
 @Accessors(chain = true, fluent = true)
 public class Heartbeat extends Endpoint<Envelope, Boolean> {
 
-    @Setter
-    private Object state;
     @Setter
     private List<String> channels;
     @Setter
@@ -56,9 +53,7 @@ public class Heartbeat extends Endpoint<Envelope, Boolean> {
     }
 
     @Override
-    protected Call<Envelope> doWork(Map<String, String> params) throws PubNubException {
-        MapperManager mapper = this.getPubnub().getMapper();
-
+    protected Call<Envelope> doWork(Map<String, String> params) {
         params.put("heartbeat", String.valueOf(this.getPubnub().getConfiguration().getPresenceTimeout()));
 
         if (channelGroups.size() > 0) {
@@ -73,12 +68,7 @@ public class Heartbeat extends Endpoint<Envelope, Boolean> {
             channelsCSV = ",";
         }
 
-        if (state != null) {
-            String stringifiedState = mapper.toJson(state);
-            stringifiedState = PubNubUtil.urlEncode(stringifiedState);
-            params.put("state", stringifiedState);
-        }
-
+        params.putAll(encodeParams(params));
 
         return this.getRetrofit().getPresenceService().heartbeat(this.getPubnub().getConfiguration().getSubscribeKey(), channelsCSV, params);
     }

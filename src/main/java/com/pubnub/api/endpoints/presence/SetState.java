@@ -96,6 +96,8 @@ public class SetState extends Endpoint<Envelope<JsonElement>, PNSetStateResult> 
         stringifiedState = PubNubUtil.urlEncode(stringifiedState);
         params.put("state", stringifiedState);
 
+        params.putAll(encodeParams(params));
+
         String channelCSV = channels.size() > 0 ? PubNubUtil.joinString(channels, ",") : ",";
 
         return this.getRetrofit().getPresenceService().setState(

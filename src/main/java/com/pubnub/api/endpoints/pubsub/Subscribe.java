@@ -6,6 +6,7 @@ import com.pubnub.api.PubNubUtil;
 import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.enums.PNOperationType;
+import com.pubnub.api.managers.MapperManager;
 import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.models.server.SubscribeEnvelope;
 import lombok.Setter;
@@ -54,8 +55,11 @@ public class Subscribe extends Endpoint<SubscribeEnvelope, SubscribeEnvelope> {
     @Setter
     private String region;
 
+    @Setter
+    private Object state;
+
     /**
-     * CreFte a new Subscribe instance endpoint.
+     * Create a new Subscribe instance endpoint.
      *
      * @param pubnub supplied pubnub instance.
      */
@@ -87,6 +91,8 @@ public class Subscribe extends Endpoint<SubscribeEnvelope, SubscribeEnvelope> {
 
     @Override
     protected Call<SubscribeEnvelope> doWork(Map<String, String> params) throws PubNubException {
+        MapperManager mapper = this.getPubnub().getMapper();
+
         String channelCSV;
 
         if (channelGroups.size() > 0) {
@@ -112,6 +118,14 @@ public class Subscribe extends Endpoint<SubscribeEnvelope, SubscribeEnvelope> {
         }
 
         params.put("heartbeat", String.valueOf(this.getPubnub().getConfiguration().getPresenceTimeout()));
+
+        if (state != null) {
+            String stringifiedState = mapper.toJson(state);
+            stringifiedState = PubNubUtil.urlEncode(stringifiedState);
+            params.put("state", stringifiedState);
+        }
+
+        params.putAll(encodeParams(params));
 
         return this.getRetrofit().getSubscribeService()
                 .subscribe(this.getPubnub().getConfiguration().getSubscribeKey(), channelCSV, params);

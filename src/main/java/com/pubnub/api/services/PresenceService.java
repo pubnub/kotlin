@@ -20,7 +20,7 @@ public interface PresenceService {
     @GET("v2/presence/sub-key/{subKey}/channel/{channel}/heartbeat")
     Call<Envelope> heartbeat(@Path("subKey") String subKey,
                              @Path("channel") String channel,
-                             @QueryMap Map<String, String> options);
+                             @QueryMap(encoded = true) Map<String, String> options);
 
     @GET("v2/presence/sub-key/{subKey}/uuid/{uuid}")
     Call<Envelope<WhereNowPayload>> whereNow(@Path("subKey") String subKey,

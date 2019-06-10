@@ -12,6 +12,7 @@ import com.pubnub.api.models.consumer.access_manager.PNAccessManagerGrantResult;
 import com.pubnub.api.models.consumer.access_manager.PNAccessManagerKeyData;
 import org.awaitility.Awaitility;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -971,11 +972,29 @@ public class GrantEndpointTest extends TestHarness {
 
     @Test
     public void testMissingChannelsAndChannelGroup() {
+
+        stubFor(get(urlPathEqualTo("/v1/auth/grant/sub-key/mySubscribeKey"))
+                .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
+                .withQueryParam("uuid", matching("myUUID"))
+                .withQueryParam("timestamp", matching("1337"))
+                .withQueryParam("r", matching("0"))
+                .withQueryParam("w", matching("0"))
+                .withQueryParam("m", matching("0"))
+                .withQueryParam("signature", matching("2ChTJop-BoPtTNfZehYicjJinZzOeICMfa0z7oj2x3I="))
+                .willReturn(aResponse().withStatus(200).withBody("{\"message\":\"Success\"," +
+                        "\"payload\":{\"level\":\"subkey\",\"subscribe_key\":\"mySubscribeKey\",\"ttl\":1440,\"r\":0," +
+                        "\"w\":1,\"m\":0,\"d\":0},\"service\":\"Access Manager\",\"status\":200}")));
+
         try {
-            partialGrant.authKeys(Arrays.asList("key1")).sync();
-            throw new RuntimeException("should never reach here");
+            PNAccessManagerGrantResult grantResult = partialGrant.sync();
+            Assert.assertNotNull(grantResult);
+            assertEquals("subkey", grantResult.getLevel());
+            assertEquals(1440, grantResult.getTtl());
+            assertEquals(0, grantResult.getChannels().size());
+            assertEquals(0, grantResult.getChannelGroups().size());
         } catch (PubNubException e) {
-            assertEquals("Channel and Group Missing.", e.getPubnubError().getMessage());
+            e.printStackTrace();
+            throw new RuntimeException("should never reach here");
         }
     }
 

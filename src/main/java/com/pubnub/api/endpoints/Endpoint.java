@@ -4,6 +4,7 @@ package com.pubnub.api.endpoints;
 import com.google.gson.JsonElement;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
+import com.pubnub.api.PubNubUtil;
 import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.callbacks.PNCallback;
 import com.pubnub.api.enums.PNOperationType;
@@ -24,7 +25,11 @@ import java.io.IOException;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 public abstract class Endpoint<Input, Output> {
 
@@ -341,6 +346,14 @@ public abstract class Endpoint<Input, Output> {
         }
 
         return params;
+    }
+
+    protected Map<String, String> encodeParams(Map<String, String> params) {
+        Map<String, String> encodedParams = new HashMap<>(params);
+        if (encodedParams.containsKey("auth")) {
+            encodedParams.put("auth", PubNubUtil.urlEncode(encodedParams.get("auth")));
+        }
+        return encodedParams;
     }
 
     protected abstract List<String> getAffectedChannels();

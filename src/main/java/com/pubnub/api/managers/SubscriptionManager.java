@@ -19,7 +19,11 @@ import com.pubnub.api.models.server.SubscribeMessage;
 import com.pubnub.api.workers.SubscribeMessageWorker;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.LinkedBlockingQueue;
 
 @Slf4j
@@ -258,6 +262,7 @@ public class SubscriptionManager {
 
         List<String> combinedChannels = this.subscriptionState.prepareChannelList(true);
         List<String> combinedChannelGroups = this.subscriptionState.prepareChannelGroupList(true);
+        Map<String, Object> stateStorage = this.subscriptionState.createStatePayload();
 
         // do not start the subscribe loop if we have no channels to subscribe to.
         if (combinedChannels.isEmpty() && combinedChannelGroups.isEmpty()) {
@@ -267,7 +272,8 @@ public class SubscriptionManager {
         subscribeCall = new Subscribe(pubnub, this.retrofitManager)
                 .channels(combinedChannels).channelGroups(combinedChannelGroups)
                 .timetoken(timetoken).region(region)
-                .filterExpression(pubnub.getConfiguration().getFilterExpression());
+                .filterExpression(pubnub.getConfiguration().getFilterExpression())
+                .state(stateStorage);
 
         subscribeCall.async(new PNCallback<SubscribeEnvelope>() {
             @Override
@@ -342,7 +348,6 @@ public class SubscriptionManager {
 
         List<String> presenceChannels = this.subscriptionState.prepareChannelList(false);
         List<String> presenceChannelGroups = this.subscriptionState.prepareChannelGroupList(false);
-        Map<String, Object> stateStorage = this.subscriptionState.createStatePayload();
 
         List<String> heartbeatChannels = this.subscriptionState.prepareHeartbeatChannelList(false);
         List<String> heartbeatChannelGroups = this.subscriptionState.prepareHeartbeatChannelGroupList(false);
@@ -364,9 +369,9 @@ public class SubscriptionManager {
         groups.addAll(presenceChannelGroups);
         groups.addAll(heartbeatChannelGroups);
 
-        heartbeatCall = new Heartbeat(pubnub, this.telemetryManager, this.retrofitManager).channels(channels)
-                .channelGroups(groups)
-                .state(stateStorage);
+        heartbeatCall = new Heartbeat(pubnub, this.telemetryManager, this.retrofitManager)
+                .channels(channels)
+                .channelGroups(groups);
 
         heartbeatCall.async(new PNCallback<Boolean>() {
             @Override

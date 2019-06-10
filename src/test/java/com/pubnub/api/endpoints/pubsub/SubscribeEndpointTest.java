@@ -15,9 +15,18 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.findAll;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.matching;
+import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -260,6 +269,33 @@ public class SubscribeEndpointTest extends TestHarness {
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(2, requests.size());
+    }
+
+    @Test
+    public void testSuccessIncludeState()  {
+        Map<String, String> state = new HashMap<>();
+        state.put("CH1", "this-is-channel1");
+        state.put("CH2", "this-is-channel2");
+
+        pubnub.getConfiguration().setPresenceTimeout(123);
+
+        stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch1,ch2/0"))
+                .willReturn(aResponse().withStatus(200)));
+
+        try {
+            instance.channels(Arrays.asList("ch1", "ch2")).state(state).sync();
+        } catch (PubNubException e) {
+            e.printStackTrace();
+        }
+
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
+        assertEquals(1, requests.size());
+        LoggedRequest request = requests.get(0);
+        assertEquals("myUUID", request.queryParameter("uuid").firstValue());
+        assertEquals("123", request.queryParameter("heartbeat").firstValue());
+        assertEquals("{\"CH2\":\"this-is-channel2\",\"CH1\":\"this-is-channel1\"}",
+                request.queryParameter("state").firstValue());
+
     }
 
 }
