@@ -11,4 +11,6 @@ public abstract class SubscribeCallback {
     public abstract void message(PubNub pubnub, PNMessageResult message);
 
     public abstract void presence(PubNub pubnub, PNPresenceEventResult presence);
+
+    public abstract void signal(PubNub pubnub, PNMessageResult signal);
 }

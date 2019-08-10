@@ -42,6 +42,9 @@ public class RetrofitManager {
     private PublishService publishService;
     @Getter
     private SubscribeService subscribeService;
+    @Getter
+    private SignalService signalService;
+
 
     @Getter
     private Retrofit transactionInstance;
@@ -76,6 +79,7 @@ public class RetrofitManager {
         this.publishService = transactionInstance.create(PublishService.class);
         this.subscribeService = subscriptionInstance.create(SubscribeService.class);
         this.timeService = transactionInstance.create(TimeService.class);
+        this.signalService = transactionInstance.create(SignalService.class);
 
     }
 

@@ -49,4 +49,8 @@ public class SubscribeMessage {
 
     //@SerializedName("w")
     //private String waypointList;
+
+    @SerializedName("e")
+    private Integer type;
+
 }

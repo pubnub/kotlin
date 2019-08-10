@@ -143,6 +143,12 @@ public class TelemetryManager {
             case PNAccessManagerGrant:
                 endpoint = "pam";
                 break;
+            case PNMessageCountOperation:
+                endpoint = "mc";
+                break;
+            case PNSignalOperation:
+                endpoint = "sig";
+                break;
             default:
                 endpoint = "time";
                 break;

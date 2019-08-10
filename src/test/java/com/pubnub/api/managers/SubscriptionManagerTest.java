@@ -110,6 +110,11 @@ public class SubscriptionManagerTest extends TestHarness {
             public void presence(PubNub pubnub, PNPresenceEventResult presence) {
                 gotMessages.addAndGet(1);
             }
+
+            @Override
+            public void signal(PubNub pubnub, PNMessageResult signal) {
+
+            }
         });
 
 
@@ -144,6 +149,11 @@ public class SubscriptionManagerTest extends TestHarness {
             @Override
             public void presence(PubNub pubnub, PNPresenceEventResult presence) {
                 gotMessages.addAndGet(1);
+            }
+
+            @Override
+            public void signal(PubNub pubnub, PNMessageResult signal) {
+
             }
         });
 
@@ -228,6 +238,11 @@ public class SubscriptionManagerTest extends TestHarness {
             @Override
             public void presence(PubNub pubnub, PNPresenceEventResult presence) {
             }
+
+            @Override
+            public void signal(PubNub pubnub, PNMessageResult signal) {
+
+            }
         });
 
 
@@ -267,6 +282,11 @@ public class SubscriptionManagerTest extends TestHarness {
             @Override
             public void presence(PubNub pubnub, PNPresenceEventResult presence) {
             }
+
+            @Override
+            public void signal(PubNub pubnub, PNMessageResult signal) {
+
+            }
         });
 
 
@@ -304,6 +324,11 @@ public class SubscriptionManagerTest extends TestHarness {
 
             @Override
             public void presence(PubNub pubnub, PNPresenceEventResult presence) {
+            }
+
+            @Override
+            public void signal(PubNub pubnub, PNMessageResult signal) {
+
             }
         });
 
@@ -348,6 +373,11 @@ public class SubscriptionManagerTest extends TestHarness {
             @Override
             public void presence(PubNub pubnub, PNPresenceEventResult presence) {
             }
+
+            @Override
+            public void signal(PubNub pubnub, PNMessageResult signal) {
+
+            }
         });
 
 
@@ -382,6 +412,11 @@ public class SubscriptionManagerTest extends TestHarness {
             @Override
             public void presence(PubNub pubnub, PNPresenceEventResult presence) {
             }
+
+            @Override
+            public void signal(PubNub pubnub, PNMessageResult signal) {
+
+            }
         });
 
         pubnub.subscribe().channels(Arrays.asList("ch1", "ch2")).execute();
@@ -415,6 +450,11 @@ public class SubscriptionManagerTest extends TestHarness {
             @Override
             public void presence(PubNub pubnub, PNPresenceEventResult presence) {
             }
+
+            @Override
+            public void signal(PubNub pubnub, PNMessageResult signal) {
+
+            }
         });
 
         pubnub.subscribe().channels(Arrays.asList("ch1", "ch2")).execute();
@@ -447,6 +487,11 @@ public class SubscriptionManagerTest extends TestHarness {
 
             @Override
             public void presence(PubNub pubnub, PNPresenceEventResult presence) {
+            }
+
+            @Override
+            public void signal(PubNub pubnub, PNMessageResult signal) {
+
             }
         });
 
@@ -484,6 +529,11 @@ public class SubscriptionManagerTest extends TestHarness {
             @Override
             public void presence(PubNub pubnub, PNPresenceEventResult presence) {
             }
+
+            @Override
+            public void signal(PubNub pubnub, PNMessageResult signal) {
+
+            }
         });
 
         pubnub.subscribe().channels(Arrays.asList("ch1", "ch2")).execute();
@@ -518,6 +568,11 @@ public class SubscriptionManagerTest extends TestHarness {
 
             @Override
             public void presence(PubNub pubnub, PNPresenceEventResult presence) {
+            }
+
+            @Override
+            public void signal(PubNub pubnub, PNMessageResult signal) {
+
             }
         });
 
@@ -558,6 +613,11 @@ public class SubscriptionManagerTest extends TestHarness {
 
             @Override
             public void presence(PubNub pubnub, PNPresenceEventResult presence) {
+            }
+
+            @Override
+            public void signal(PubNub pubnub, PNMessageResult signal) {
+
             }
         });
 
@@ -600,6 +660,11 @@ public class SubscriptionManagerTest extends TestHarness {
                 assertEquals("coolChannel", presence.getChannel());
                 assertEquals(null, presence.getSubscription());
                 gotMessage.set(true);
+            }
+
+            @Override
+            public void signal(PubNub pubnub, PNMessageResult signal) {
+
             }
         });
 
@@ -644,6 +709,11 @@ public class SubscriptionManagerTest extends TestHarness {
                 assertEquals("coolChannel", presence.getChannel());
                 assertEquals("coolChannelGroup", presence.getSubscription());
                 gotMessage.set(true);
+            }
+
+            @Override
+            public void signal(PubNub pubnub, PNMessageResult signal) {
+
             }
         });
 
@@ -706,6 +776,12 @@ public class SubscriptionManagerTest extends TestHarness {
             @Override
             public void presence(PubNub pubnub, PNPresenceEventResult presence) {
             }
+
+            @Override
+            public void signal(PubNub pubnub, PNMessageResult signal) {
+
+            }
+
         });
 
 
@@ -744,6 +820,11 @@ public class SubscriptionManagerTest extends TestHarness {
             @Override
             public void presence(PubNub pubnub, PNPresenceEventResult presence) {
             }
+
+            @Override
+            public void signal(PubNub pubnub, PNMessageResult signal) {
+
+            }
         });
 
 
@@ -780,6 +861,11 @@ public class SubscriptionManagerTest extends TestHarness {
 
             @Override
             public void presence(PubNub pubnub, PNPresenceEventResult presence) {
+            }
+
+            @Override
+            public void signal(PubNub pubnub, PNMessageResult signal) {
+
             }
         });
 
@@ -848,6 +934,11 @@ public class SubscriptionManagerTest extends TestHarness {
             @Override
             public void presence(PubNub pubnub, PNPresenceEventResult presence) {
             }
+
+            @Override
+            public void signal(PubNub pubnub, PNMessageResult signal) {
+
+            }
         });
 
 
@@ -901,6 +992,11 @@ public class SubscriptionManagerTest extends TestHarness {
             @Override
             public void presence(PubNub pubnub, PNPresenceEventResult presence) {
             }
+
+            @Override
+            public void signal(PubNub pubnub, PNMessageResult signal) {
+
+            }
         });
 
         pubnub.subscribe().channelGroups(Arrays.asList("cg1", "cg2")).execute();
@@ -939,6 +1035,11 @@ public class SubscriptionManagerTest extends TestHarness {
 
             @Override
             public void presence(PubNub pubnub, PNPresenceEventResult presence) {
+            }
+
+            @Override
+            public void signal(PubNub pubnub, PNMessageResult signal) {
+
             }
         });
 
@@ -980,6 +1081,11 @@ public class SubscriptionManagerTest extends TestHarness {
             @Override
             public void presence(PubNub pubnub, PNPresenceEventResult presence) {
             }
+
+            @Override
+            public void signal(PubNub pubnub, PNMessageResult signal) {
+
+            }
         });
 
         pubnub.subscribe().channels(Arrays.asList("ch1", "ch2")).execute();
@@ -1012,6 +1118,11 @@ public class SubscriptionManagerTest extends TestHarness {
 
             @Override
             public void presence(PubNub pubnub, PNPresenceEventResult presence) {
+            }
+
+            @Override
+            public void signal(PubNub pubnub, PNMessageResult signal) {
+
             }
         });
 
@@ -1051,6 +1162,11 @@ public class SubscriptionManagerTest extends TestHarness {
             @Override
             public void presence(PubNub pubnub, PNPresenceEventResult presence) {
             }
+
+            @Override
+            public void signal(PubNub pubnub, PNMessageResult signal) {
+
+            }
         });
 
 
@@ -1085,6 +1201,11 @@ public class SubscriptionManagerTest extends TestHarness {
 
             @Override
             public void presence(PubNub pubnub, PNPresenceEventResult presence) {
+            }
+
+            @Override
+            public void signal(PubNub pubnub, PNMessageResult signal) {
+
             }
         });
 
@@ -1122,6 +1243,11 @@ public class SubscriptionManagerTest extends TestHarness {
                     assertTrue(presence.getOccupancy().equals(2));
                     atomic.incrementAndGet();
                 }
+            }
+
+            @Override
+            public void signal(PubNub pubnub, PNMessageResult signal) {
+
             }
         });
 
@@ -1165,6 +1291,11 @@ public class SubscriptionManagerTest extends TestHarness {
                     atomic.incrementAndGet();
                 }
             }
+
+            @Override
+            public void signal(PubNub pubnub, PNMessageResult signal) {
+
+            }
         });
 
         pubnub.subscribe().channels(Arrays.asList("ch1", "ch2")).withPresence().execute();
@@ -1207,6 +1338,11 @@ public class SubscriptionManagerTest extends TestHarness {
                     atomic.incrementAndGet();
                 }
             }
+
+            @Override
+            public void signal(PubNub pubnub, PNMessageResult signal) {
+
+            }
         });
 
         pubnub.subscribe().channels(Arrays.asList("ch1", "ch2")).withPresence().execute();
@@ -1248,6 +1384,11 @@ public class SubscriptionManagerTest extends TestHarness {
                     atomic.incrementAndGet();
                 }
             }
+
+            @Override
+            public void signal(PubNub pubnub, PNMessageResult signal) {
+
+            }
         });
 
         pubnub.subscribe().channels(Arrays.asList("ch1", "ch2")).withPresence().execute();
@@ -1286,6 +1427,11 @@ public class SubscriptionManagerTest extends TestHarness {
                     assertTrue(presence.getTimestamp().equals(1461451222L));
                     atomic.incrementAndGet();
                 }
+            }
+
+            @Override
+            public void signal(PubNub pubnub, PNMessageResult signal) {
+
             }
         });
 
@@ -1329,6 +1475,11 @@ public class SubscriptionManagerTest extends TestHarness {
                     }
                 }
             }
+
+            @Override
+            public void signal(PubNub pubnub, PNMessageResult signal) {
+
+            }
         });
 
         pubnub.subscribe().channels(Arrays.asList("ch10")).withPresence().execute();
@@ -1365,6 +1516,11 @@ public class SubscriptionManagerTest extends TestHarness {
             @Override
             public void presence(PubNub pubnub, PNPresenceEventResult presence) {
             }
+
+            @Override
+            public void signal(PubNub pubnub, PNMessageResult signal) {
+
+            }
         });
 
         pubnub.subscribe().channels(Arrays.asList("ch1", "ch2")).withPresence().execute();
@@ -1393,6 +1549,11 @@ public class SubscriptionManagerTest extends TestHarness {
             @Override
             public void presence(PubNub pubnub, PNPresenceEventResult presence) {
                 atomic.addAndGet(1);
+            }
+
+            @Override
+            public void signal(PubNub pubnub, PNMessageResult signal) {
+
             }
         };
 
@@ -1458,6 +1619,11 @@ public class SubscriptionManagerTest extends TestHarness {
             @Override
             public void presence(PubNub pubnub, PNPresenceEventResult presence) {
             }
+
+            @Override
+            public void signal(PubNub pubnub, PNMessageResult signal) {
+
+            }
         };
 
         pubnub.addListener(sub1);
@@ -1502,6 +1668,11 @@ public class SubscriptionManagerTest extends TestHarness {
             @Override
             public void presence(PubNub pubnub, PNPresenceEventResult presence) {
             }
+
+            @Override
+            public void signal(PubNub pubnub, PNMessageResult signal) {
+
+            }
         };
 
         pubnub.addListener(sub1);
@@ -1538,6 +1709,11 @@ public class SubscriptionManagerTest extends TestHarness {
 
             @Override
             public void presence(PubNub pubnub, PNPresenceEventResult presence) {
+            }
+
+            @Override
+            public void signal(PubNub pubnub, PNMessageResult signal) {
+
             }
         };
 
@@ -1576,6 +1752,11 @@ public class SubscriptionManagerTest extends TestHarness {
 
             @Override
             public void presence(PubNub pubnub, PNPresenceEventResult presence) {
+            }
+
+            @Override
+            public void signal(PubNub pubnub, PNMessageResult signal) {
+
             }
         };
 
@@ -1619,6 +1800,11 @@ public class SubscriptionManagerTest extends TestHarness {
             @Override
             public void presence(PubNub pubnub, PNPresenceEventResult presence) {
             }
+
+            @Override
+            public void signal(PubNub pubnub, PNMessageResult signal) {
+
+            }
         };
 
         pubnub.addListener(sub1);
@@ -1658,6 +1844,11 @@ public class SubscriptionManagerTest extends TestHarness {
             @Override
             public void presence(PubNub pubnub, PNPresenceEventResult presence) {
             }
+
+            @Override
+            public void signal(PubNub pubnub, PNMessageResult signal) {
+
+            }
         };
 
         pubnub.addListener(sub1);
@@ -1695,6 +1886,11 @@ public class SubscriptionManagerTest extends TestHarness {
 
             @Override
             public void presence(PubNub pubnub, PNPresenceEventResult presence) {
+            }
+
+            @Override
+            public void signal(PubNub pubnub, PNMessageResult signal) {
+
             }
         };
 
@@ -1737,6 +1933,11 @@ public class SubscriptionManagerTest extends TestHarness {
 
             @Override
             public void presence(PubNub pubnub, PNPresenceEventResult presence) {
+            }
+
+            @Override
+            public void signal(PubNub pubnub, PNMessageResult signal) {
+
             }
         };
 
@@ -1787,6 +1988,11 @@ public class SubscriptionManagerTest extends TestHarness {
 
             @Override
             public void presence(PubNub pubnub, PNPresenceEventResult presence) {
+
+            }
+
+            @Override
+            public void signal(PubNub pubnub, PNMessageResult signal) {
 
             }
         });
@@ -1862,6 +2068,13 @@ public class SubscriptionManagerTest extends TestHarness {
             public void presence(PubNub pubnub, PNPresenceEventResult presence) {
 
             }
+
+            @Override
+            public void signal(PubNub pubnub, PNMessageResult signal) {
+
+            }
+
+
         });
 
         pubnub.subscribe()
@@ -1954,6 +2167,11 @@ public class SubscriptionManagerTest extends TestHarness {
 
             @Override
             public void presence(PubNub pubnub, PNPresenceEventResult presence) {
+            }
+
+            @Override
+            public void signal(PubNub pubnub, PNMessageResult signal) {
+
             }
         };
 

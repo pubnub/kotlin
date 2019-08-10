@@ -22,6 +22,7 @@ import com.pubnub.api.endpoints.presence.HereNow;
 import com.pubnub.api.endpoints.presence.SetState;
 import com.pubnub.api.endpoints.presence.WhereNow;
 import com.pubnub.api.endpoints.pubsub.Publish;
+import com.pubnub.api.endpoints.pubsub.Signal;
 import com.pubnub.api.endpoints.push.AddChannelsToPush;
 import com.pubnub.api.endpoints.push.ListPushProvisions;
 import com.pubnub.api.endpoints.push.RemoveAllPushChannelsForDevice;
@@ -63,7 +64,7 @@ public class PubNub {
     private static final int TIMESTAMP_DIVIDER = 1000;
     private static final int MAX_SEQUENCE = 65535;
 
-    private static final String SDK_VERSION = "4.25.0";
+    private static final String SDK_VERSION = "4.26.0";
 
     public PubNub(PNConfiguration initialConfig) {
         this.configuration = initialConfig;
@@ -168,6 +169,10 @@ public class PubNub {
 
     public Publish publish() {
         return new Publish(this, publishSequenceManager, this.telemetryManager, this.retrofitManager);
+    }
+
+    public Signal signal() {
+        return new Signal(this, this.telemetryManager, this.retrofitManager);
     }
 
     public ListAllChannelGroup listAllChannelGroups() {

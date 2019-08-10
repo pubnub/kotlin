@@ -8,6 +8,7 @@ public enum PNOperationType {
     PNUnsubscribeOperation,
 
     PNPublishOperation,
+    PNSignalOperation,
 
     PNHistoryOperation,
     PNFetchMessagesOperation,

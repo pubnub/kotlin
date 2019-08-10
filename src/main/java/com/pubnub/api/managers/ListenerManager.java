@@ -50,9 +50,13 @@ public class ListenerManager {
         }
     }
 
-    public void announce(PNMessageResult message) {
+    public void announce(PNMessageResult message, Integer type) {
         for (SubscribeCallback subscribeCallback : getListeners()) {
-            subscribeCallback.message(this.pubnub, message);
+            if (type == null) {
+                subscribeCallback.message(this.pubnub, message);
+            } else if (type == 1) {
+                subscribeCallback.signal(this.pubnub, message);
+            }
         }
     }
 

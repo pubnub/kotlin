@@ -193,8 +193,7 @@ public class SubscribeMessageWorker implements Runnable {
                     .userMetadata(message.getUserMetadata())
                     .build();
 
-
-            listenerManager.announce(pnMessageResult);
+            listenerManager.announce(pnMessageResult, message.getType());
         }
     }
 
