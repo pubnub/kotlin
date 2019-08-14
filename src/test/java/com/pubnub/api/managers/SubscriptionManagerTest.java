@@ -16,6 +16,7 @@ import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.presence.PNSetStateResult;
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
+import com.pubnub.api.models.consumer.pubsub.PNSignalResult;
 import org.awaitility.Awaitility;
 import org.awaitility.Duration;
 import org.junit.After;
@@ -112,7 +113,7 @@ public class SubscriptionManagerTest extends TestHarness {
             }
 
             @Override
-            public void signal(PubNub pubnub, PNMessageResult signal) {
+            public void signal(PubNub pubnub, PNSignalResult signal) {
 
             }
         });
@@ -152,7 +153,7 @@ public class SubscriptionManagerTest extends TestHarness {
             }
 
             @Override
-            public void signal(PubNub pubnub, PNMessageResult signal) {
+            public void signal(PubNub pubnub, PNSignalResult signal) {
 
             }
         });
@@ -240,7 +241,7 @@ public class SubscriptionManagerTest extends TestHarness {
             }
 
             @Override
-            public void signal(PubNub pubnub, PNMessageResult signal) {
+            public void signal(PubNub pubnub, PNSignalResult signal) {
 
             }
         });
@@ -284,7 +285,7 @@ public class SubscriptionManagerTest extends TestHarness {
             }
 
             @Override
-            public void signal(PubNub pubnub, PNMessageResult signal) {
+            public void signal(PubNub pubnub, PNSignalResult signal) {
 
             }
         });
@@ -327,7 +328,7 @@ public class SubscriptionManagerTest extends TestHarness {
             }
 
             @Override
-            public void signal(PubNub pubnub, PNMessageResult signal) {
+            public void signal(PubNub pubnub, PNSignalResult signal) {
 
             }
         });
@@ -375,7 +376,7 @@ public class SubscriptionManagerTest extends TestHarness {
             }
 
             @Override
-            public void signal(PubNub pubnub, PNMessageResult signal) {
+            public void signal(PubNub pubnub, PNSignalResult signal) {
 
             }
         });
@@ -414,7 +415,7 @@ public class SubscriptionManagerTest extends TestHarness {
             }
 
             @Override
-            public void signal(PubNub pubnub, PNMessageResult signal) {
+            public void signal(PubNub pubnub, PNSignalResult signal) {
 
             }
         });
@@ -452,7 +453,7 @@ public class SubscriptionManagerTest extends TestHarness {
             }
 
             @Override
-            public void signal(PubNub pubnub, PNMessageResult signal) {
+            public void signal(PubNub pubnub, PNSignalResult signal) {
 
             }
         });
@@ -490,7 +491,7 @@ public class SubscriptionManagerTest extends TestHarness {
             }
 
             @Override
-            public void signal(PubNub pubnub, PNMessageResult signal) {
+            public void signal(PubNub pubnub, PNSignalResult signal) {
 
             }
         });
@@ -531,7 +532,7 @@ public class SubscriptionManagerTest extends TestHarness {
             }
 
             @Override
-            public void signal(PubNub pubnub, PNMessageResult signal) {
+            public void signal(PubNub pubnub, PNSignalResult signal) {
 
             }
         });
@@ -571,7 +572,7 @@ public class SubscriptionManagerTest extends TestHarness {
             }
 
             @Override
-            public void signal(PubNub pubnub, PNMessageResult signal) {
+            public void signal(PubNub pubnub, PNSignalResult signal) {
 
             }
         });
@@ -616,7 +617,7 @@ public class SubscriptionManagerTest extends TestHarness {
             }
 
             @Override
-            public void signal(PubNub pubnub, PNMessageResult signal) {
+            public void signal(PubNub pubnub, PNSignalResult signal) {
 
             }
         });
@@ -663,7 +664,7 @@ public class SubscriptionManagerTest extends TestHarness {
             }
 
             @Override
-            public void signal(PubNub pubnub, PNMessageResult signal) {
+            public void signal(PubNub pubnub, PNSignalResult signal) {
 
             }
         });
@@ -712,7 +713,7 @@ public class SubscriptionManagerTest extends TestHarness {
             }
 
             @Override
-            public void signal(PubNub pubnub, PNMessageResult signal) {
+            public void signal(PubNub pubnub, PNSignalResult signal) {
 
             }
         });
@@ -778,7 +779,7 @@ public class SubscriptionManagerTest extends TestHarness {
             }
 
             @Override
-            public void signal(PubNub pubnub, PNMessageResult signal) {
+            public void signal(PubNub pubnub, PNSignalResult signal) {
 
             }
 
@@ -822,7 +823,7 @@ public class SubscriptionManagerTest extends TestHarness {
             }
 
             @Override
-            public void signal(PubNub pubnub, PNMessageResult signal) {
+            public void signal(PubNub pubnub, PNSignalResult signal) {
 
             }
         });
@@ -864,7 +865,7 @@ public class SubscriptionManagerTest extends TestHarness {
             }
 
             @Override
-            public void signal(PubNub pubnub, PNMessageResult signal) {
+            public void signal(PubNub pubnub, PNSignalResult signal) {
 
             }
         });
@@ -936,7 +937,7 @@ public class SubscriptionManagerTest extends TestHarness {
             }
 
             @Override
-            public void signal(PubNub pubnub, PNMessageResult signal) {
+            public void signal(PubNub pubnub, PNSignalResult signal) {
 
             }
         });
@@ -994,7 +995,7 @@ public class SubscriptionManagerTest extends TestHarness {
             }
 
             @Override
-            public void signal(PubNub pubnub, PNMessageResult signal) {
+            public void signal(PubNub pubnub, PNSignalResult signal) {
 
             }
         });
@@ -1038,7 +1039,7 @@ public class SubscriptionManagerTest extends TestHarness {
             }
 
             @Override
-            public void signal(PubNub pubnub, PNMessageResult signal) {
+            public void signal(PubNub pubnub, PNSignalResult signal) {
 
             }
         });
@@ -1083,7 +1084,7 @@ public class SubscriptionManagerTest extends TestHarness {
             }
 
             @Override
-            public void signal(PubNub pubnub, PNMessageResult signal) {
+            public void signal(PubNub pubnub, PNSignalResult signal) {
 
             }
         });
@@ -1121,7 +1122,7 @@ public class SubscriptionManagerTest extends TestHarness {
             }
 
             @Override
-            public void signal(PubNub pubnub, PNMessageResult signal) {
+            public void signal(PubNub pubnub, PNSignalResult signal) {
 
             }
         });
@@ -1164,7 +1165,7 @@ public class SubscriptionManagerTest extends TestHarness {
             }
 
             @Override
-            public void signal(PubNub pubnub, PNMessageResult signal) {
+            public void signal(PubNub pubnub, PNSignalResult signal) {
 
             }
         });
@@ -1204,7 +1205,7 @@ public class SubscriptionManagerTest extends TestHarness {
             }
 
             @Override
-            public void signal(PubNub pubnub, PNMessageResult signal) {
+            public void signal(PubNub pubnub, PNSignalResult signal) {
 
             }
         });
@@ -1246,7 +1247,7 @@ public class SubscriptionManagerTest extends TestHarness {
             }
 
             @Override
-            public void signal(PubNub pubnub, PNMessageResult signal) {
+            public void signal(PubNub pubnub, PNSignalResult signal) {
 
             }
         });
@@ -1293,7 +1294,7 @@ public class SubscriptionManagerTest extends TestHarness {
             }
 
             @Override
-            public void signal(PubNub pubnub, PNMessageResult signal) {
+            public void signal(PubNub pubnub, PNSignalResult signal) {
 
             }
         });
@@ -1340,7 +1341,7 @@ public class SubscriptionManagerTest extends TestHarness {
             }
 
             @Override
-            public void signal(PubNub pubnub, PNMessageResult signal) {
+            public void signal(PubNub pubnub, PNSignalResult signal) {
 
             }
         });
@@ -1386,7 +1387,7 @@ public class SubscriptionManagerTest extends TestHarness {
             }
 
             @Override
-            public void signal(PubNub pubnub, PNMessageResult signal) {
+            public void signal(PubNub pubnub, PNSignalResult signal) {
 
             }
         });
@@ -1430,7 +1431,7 @@ public class SubscriptionManagerTest extends TestHarness {
             }
 
             @Override
-            public void signal(PubNub pubnub, PNMessageResult signal) {
+            public void signal(PubNub pubnub, PNSignalResult signal) {
 
             }
         });
@@ -1477,7 +1478,7 @@ public class SubscriptionManagerTest extends TestHarness {
             }
 
             @Override
-            public void signal(PubNub pubnub, PNMessageResult signal) {
+            public void signal(PubNub pubnub, PNSignalResult signal) {
 
             }
         });
@@ -1518,7 +1519,7 @@ public class SubscriptionManagerTest extends TestHarness {
             }
 
             @Override
-            public void signal(PubNub pubnub, PNMessageResult signal) {
+            public void signal(PubNub pubnub, PNSignalResult signal) {
 
             }
         });
@@ -1552,7 +1553,7 @@ public class SubscriptionManagerTest extends TestHarness {
             }
 
             @Override
-            public void signal(PubNub pubnub, PNMessageResult signal) {
+            public void signal(PubNub pubnub, PNSignalResult signal) {
 
             }
         };
@@ -1621,7 +1622,7 @@ public class SubscriptionManagerTest extends TestHarness {
             }
 
             @Override
-            public void signal(PubNub pubnub, PNMessageResult signal) {
+            public void signal(PubNub pubnub, PNSignalResult signal) {
 
             }
         };
@@ -1670,7 +1671,7 @@ public class SubscriptionManagerTest extends TestHarness {
             }
 
             @Override
-            public void signal(PubNub pubnub, PNMessageResult signal) {
+            public void signal(PubNub pubnub, PNSignalResult signal) {
 
             }
         };
@@ -1712,7 +1713,7 @@ public class SubscriptionManagerTest extends TestHarness {
             }
 
             @Override
-            public void signal(PubNub pubnub, PNMessageResult signal) {
+            public void signal(PubNub pubnub, PNSignalResult signal) {
 
             }
         };
@@ -1755,7 +1756,7 @@ public class SubscriptionManagerTest extends TestHarness {
             }
 
             @Override
-            public void signal(PubNub pubnub, PNMessageResult signal) {
+            public void signal(PubNub pubnub, PNSignalResult signal) {
 
             }
         };
@@ -1802,7 +1803,7 @@ public class SubscriptionManagerTest extends TestHarness {
             }
 
             @Override
-            public void signal(PubNub pubnub, PNMessageResult signal) {
+            public void signal(PubNub pubnub, PNSignalResult signal) {
 
             }
         };
@@ -1846,7 +1847,7 @@ public class SubscriptionManagerTest extends TestHarness {
             }
 
             @Override
-            public void signal(PubNub pubnub, PNMessageResult signal) {
+            public void signal(PubNub pubnub, PNSignalResult signal) {
 
             }
         };
@@ -1889,7 +1890,7 @@ public class SubscriptionManagerTest extends TestHarness {
             }
 
             @Override
-            public void signal(PubNub pubnub, PNMessageResult signal) {
+            public void signal(PubNub pubnub, PNSignalResult signal) {
 
             }
         };
@@ -1936,7 +1937,7 @@ public class SubscriptionManagerTest extends TestHarness {
             }
 
             @Override
-            public void signal(PubNub pubnub, PNMessageResult signal) {
+            public void signal(PubNub pubnub, PNSignalResult signal) {
 
             }
         };
@@ -1992,7 +1993,7 @@ public class SubscriptionManagerTest extends TestHarness {
             }
 
             @Override
-            public void signal(PubNub pubnub, PNMessageResult signal) {
+            public void signal(PubNub pubnub, PNSignalResult signal) {
 
             }
         });
@@ -2070,7 +2071,7 @@ public class SubscriptionManagerTest extends TestHarness {
             }
 
             @Override
-            public void signal(PubNub pubnub, PNMessageResult signal) {
+            public void signal(PubNub pubnub, PNSignalResult signal) {
 
             }
 
@@ -2170,7 +2171,7 @@ public class SubscriptionManagerTest extends TestHarness {
             }
 
             @Override
-            public void signal(PubNub pubnub, PNMessageResult signal) {
+            public void signal(PubNub pubnub, PNSignalResult signal) {
 
             }
         };

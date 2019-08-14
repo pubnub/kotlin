@@ -13,8 +13,10 @@ import com.pubnub.api.managers.ListenerManager;
 import com.pubnub.api.managers.MapperManager;
 import com.pubnub.api.models.consumer.PNErrorData;
 import com.pubnub.api.models.consumer.PNStatus;
+import com.pubnub.api.models.consumer.pubsub.MessageResult;
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
+import com.pubnub.api.models.consumer.pubsub.PNSignalResult;
 import com.pubnub.api.models.server.PresenceEnvelope;
 import com.pubnub.api.models.server.PublishMetaData;
 import com.pubnub.api.models.server.SubscribeMessage;
@@ -180,7 +182,7 @@ public class SubscribeMessageWorker implements Runnable {
                 log.debug("unable to parse payload on #processIncomingMessages");
             }
 
-            PNMessageResult pnMessageResult = PNMessageResult.builder()
+            MessageResult messageResult = MessageResult.builder()
                     .message(extractedMessage)
                     // deprecated
                     .actualChannel((subscriptionMatch != null) ? channel : null)
@@ -193,7 +195,13 @@ public class SubscribeMessageWorker implements Runnable {
                     .userMetadata(message.getUserMetadata())
                     .build();
 
-            listenerManager.announce(pnMessageResult, message.getType());
+            if (message.getType() == null) {
+                listenerManager.announce(new PNMessageResult(messageResult));
+            } else if (message.getType() == 0) {
+                listenerManager.announce(new PNMessageResult(messageResult));
+            } else if (message.getType() == 1) {
+                listenerManager.announce(new PNSignalResult(messageResult));
+            }
         }
     }
 

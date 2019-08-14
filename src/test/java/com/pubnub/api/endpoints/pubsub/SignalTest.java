@@ -13,6 +13,7 @@ import com.pubnub.api.models.consumer.PNPublishResult;
 import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
+import com.pubnub.api.models.consumer.pubsub.PNSignalResult;
 import okhttp3.HttpUrl;
 import org.awaitility.Awaitility;
 import org.awaitility.Duration;
@@ -141,7 +142,7 @@ public class SignalTest extends TestHarness {
             }
 
             @Override
-            public void signal(PubNub pubnub, PNMessageResult signal) {
+            public void signal(PubNub pubnub, PNSignalResult signal) {
                 assertEquals("coolChannel", signal.getChannel());
                 assertEquals("hello", signal.getMessage().getAsString());
                 assertEquals("uuid", signal.getPublisher());

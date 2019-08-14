@@ -11,6 +11,7 @@ import com.pubnub.api.managers.MapperManager;
 import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.TelemetryManager;
 import com.pubnub.api.models.consumer.history.PNFetchMessagesResult;
+import com.pubnub.api.models.consumer.pubsub.MessageResult;
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
 import com.pubnub.api.models.server.FetchMessagesEnvelope;
 import com.pubnub.api.models.server.HistoryForChannelsItem;
@@ -96,12 +97,12 @@ public class FetchMessages extends Endpoint<FetchMessagesEnvelope, PNFetchMessag
             List<PNMessageResult> messages = new ArrayList<>();
 
             for (HistoryForChannelsItem item : entry.getValue()) {
-                PNMessageResult.PNMessageResultBuilder pnMessageResultBuilder = PNMessageResult.builder();
-                pnMessageResultBuilder.channel(entry.getKey());
+                MessageResult.MessageResultBuilder messageResultBuilder = PNMessageResult.builder();
+                messageResultBuilder.channel(entry.getKey());
                 JsonElement message = processMessage(item.getMessage());
-                pnMessageResultBuilder.message(message);
-                pnMessageResultBuilder.timetoken(item.getTimetoken());
-                messages.add(pnMessageResultBuilder.build());
+                messageResultBuilder.message(message);
+                messageResultBuilder.timetoken(item.getTimetoken());
+                messages.add(new PNMessageResult(messageResultBuilder.build()));
             }
 
             listMap.put(entry.getKey(), messages);
