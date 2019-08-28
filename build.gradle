@@ -11,7 +11,7 @@ plugins {
 }
 group = 'com.pubnub'
 
-version = '4.26.1'
+version = '4.27.0'
 
 description = """"""
 
@@ -69,6 +69,10 @@ checkstyle {
     toolVersion = "8.14"
     configFile = rootProject.file('config/checkstyle/checkstyle.xml')
     //configFile = new File(rootDir, "config/checkstyle/checkstyle.xml")
+}
+
+findbugs {
+    excludeFilter = rootProject.file("config/findbugs/excludeFilter.xml")
 }
 
 tasks.withType(Checkstyle) {

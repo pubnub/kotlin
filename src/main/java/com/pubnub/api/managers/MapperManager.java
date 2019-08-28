@@ -1,6 +1,13 @@
 package com.pubnub.api.managers;
 
-import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonParser;
+import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
@@ -146,6 +153,15 @@ public class MapperManager {
             return this.objectMapper.toJson(input);
         } catch (JsonParseException e) {
             throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_JSON_ERROR).errormsg(e.getMessage()).build();
+        }
+    }
+
+    public void isValidJsonObject(Object object) throws PubNubException {
+        String json = toJson(object);
+        JsonElement jsonElement = new JsonParser().parse(json);
+        boolean isValid = isJsonObject(jsonElement);
+        if (!isValid) {
+            throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_INVALID_JSON).build();
         }
     }
 

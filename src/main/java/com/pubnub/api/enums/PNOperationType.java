@@ -34,5 +34,27 @@ public enum PNOperationType {
     PNHereNowOperation,
     PNGetState,
     PNAccessManagerAudit,
-    PNAccessManagerGrant
+    PNAccessManagerGrant,
+
+    // Users
+    PNCreateUserOperation,
+    PNGetUserOperation,
+    PNGetUsersOperation,
+    PNUpdateUserOperation,
+    PNDeleteUserOperation,
+
+    // Spaces
+    PNCreateSpaceOperation,
+    PNGetSpaceOperation,
+    PNGetSpacesOperation,
+    PNUpdateSpaceOperation,
+    PNDeleteSpaceOperation,
+
+    // Members
+    PNGetMembers,
+    PNManageMembers,
+
+    // Memberships
+    PNGetMemberships,
+    PNManageMemberships
 }

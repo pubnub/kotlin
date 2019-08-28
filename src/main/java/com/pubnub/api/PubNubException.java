@@ -9,7 +9,7 @@ import retrofit2.Call;
 @Builder
 @Getter
 public class PubNubException extends Exception {
-    private String errormsg = "";
+    private String errormsg;
     private PubNubError pubnubError;
     private JsonElement jso;
     private String response;

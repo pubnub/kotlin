@@ -6,7 +6,19 @@ import com.pubnub.api.PubNub;
 import com.pubnub.api.endpoints.vendor.AppEngineFactory;
 import com.pubnub.api.enums.PNLogVerbosity;
 import com.pubnub.api.interceptors.SignatureInterceptor;
-import com.pubnub.api.services.*;
+import com.pubnub.api.services.AccessManagerService;
+import com.pubnub.api.services.ChannelGroupService;
+import com.pubnub.api.services.HistoryService;
+import com.pubnub.api.services.MemberService;
+import com.pubnub.api.services.MembershipService;
+import com.pubnub.api.services.PresenceService;
+import com.pubnub.api.services.PublishService;
+import com.pubnub.api.services.PushService;
+import com.pubnub.api.services.SignalService;
+import com.pubnub.api.services.SpaceService;
+import com.pubnub.api.services.SubscribeService;
+import com.pubnub.api.services.TimeService;
+import com.pubnub.api.services.UserService;
 import lombok.Getter;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -44,7 +56,14 @@ public class RetrofitManager {
     private SubscribeService subscribeService;
     @Getter
     private SignalService signalService;
-
+    @Getter
+    private UserService userService;
+    @Getter
+    private SpaceService spaceService;
+    @Getter
+    private MembershipService membershipService;
+    @Getter
+    private MemberService memberService;
 
     @Getter
     private Retrofit transactionInstance;
@@ -80,7 +99,10 @@ public class RetrofitManager {
         this.subscribeService = subscriptionInstance.create(SubscribeService.class);
         this.timeService = transactionInstance.create(TimeService.class);
         this.signalService = transactionInstance.create(SignalService.class);
-
+        this.userService = transactionInstance.create(UserService.class);
+        this.spaceService = transactionInstance.create(SpaceService.class);
+        this.membershipService = transactionInstance.create(MembershipService.class);
+        this.memberService = transactionInstance.create(MemberService.class);
     }
 
     private OkHttpClient createOkHttpClient(int requestTimeout, int connectTimeOut) {

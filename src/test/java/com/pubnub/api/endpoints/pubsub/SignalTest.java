@@ -11,6 +11,9 @@ import com.pubnub.api.endpoints.TestHarness;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.models.consumer.PNPublishResult;
 import com.pubnub.api.models.consumer.PNStatus;
+import com.pubnub.api.models.consumer.pubsub.objects.PNMembershipResult;
+import com.pubnub.api.models.consumer.pubsub.objects.PNSpaceResult;
+import com.pubnub.api.models.consumer.pubsub.objects.PNUserResult;
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult;
@@ -147,6 +150,21 @@ public class SignalTest extends TestHarness {
                 assertEquals("hello", signal.getMessage().getAsString());
                 assertEquals("uuid", signal.getPublisher());
                 success.set(true);
+            }
+
+            @Override
+            public void user(PubNub pubnub, PNUserResult pnUserResult) {
+
+            }
+
+            @Override
+            public void space(PubNub pubnub, PNSpaceResult pnSpaceResult) {
+
+            }
+
+            @Override
+            public void membership(PubNub pubnub, PNMembershipResult pnMembershipResult) {
+
             }
         });
 

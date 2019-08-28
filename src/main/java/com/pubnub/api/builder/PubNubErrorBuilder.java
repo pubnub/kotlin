@@ -241,6 +241,36 @@ public final class PubNubErrorBuilder {
      */
     public static final int PNERR_CHANNELS_TIMETOKEN_MISMATCH = 146;
 
+    /**
+     * User missing
+     */
+    public static final int PNERR_USER_MISSING = 147;
+
+    /**
+     * User ID missing
+     */
+    public static final int PNERR_USER_ID_MISSING = 148;
+
+    /**
+     * User name missing
+     */
+    public static final int PNERR_USER_NAME_MISSING = 149;
+
+    /**
+     * Space missing
+     */
+    public static final int PNERR_SPACE_MISSING = 150;
+
+    /**
+     * Space ID missing
+     */
+    public static final int PNERR_SPACE_ID_MISSING = 151;
+
+    /**
+     * Space name missing
+     */
+    public static final int PNERR_SPACE_NAME_MISSING = 152;
+
     // Error Objects
     public static final PubNubError PNERROBJ_TIMEOUT = PubNubError.builder()
             .errorCode(PNERR_TIMEOUT)
@@ -477,6 +507,36 @@ public final class PubNubErrorBuilder {
     public static final PubNubError PNERROBJ_CHANNELS_TIMETOKEN_MISMATCH = PubNubError.builder()
             .errorCode(PNERR_CHANNELS_TIMETOKEN_MISMATCH)
             .message("Channels and timetokens are not equal in size.")
+            .build();
+
+    public static final PubNubError PNERROBJ_USER_MISSING = PubNubError.builder()
+            .errorCode(PNERR_USER_MISSING)
+            .message("User is missing")
+            .build();
+
+    public static final PubNubError PNERROBJ_USER_ID_MISSING = PubNubError.builder()
+            .errorCode(PNERR_USER_ID_MISSING)
+            .message("User ID is missing")
+            .build();
+
+    public static final PubNubError PNERROBJ_USER_NAME_MISSING = PubNubError.builder()
+            .errorCode(PNERR_USER_NAME_MISSING)
+            .message("User name is missing")
+            .build();
+
+    public static final PubNubError PNERROBJ_SPACE_MISSING = PubNubError.builder()
+            .errorCode(PNERR_SPACE_MISSING)
+            .message("Space is missing")
+            .build();
+
+    public static final PubNubError PNERROBJ_SPACE_ID_MISSING = PubNubError.builder()
+            .errorCode(PNERR_SPACE_ID_MISSING)
+            .message("Space ID is missing")
+            .build();
+
+    public static final PubNubError PNERROBJ_SPACE_NAME_MISSING = PubNubError.builder()
+            .errorCode(PNERR_SPACE_NAME_MISSING)
+            .message("Space name is missing")
             .build();
 
     private PubNubErrorBuilder() {

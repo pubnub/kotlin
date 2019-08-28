@@ -53,4 +53,8 @@ public class SubscribeMessage {
     @SerializedName("e")
     private Integer type;
 
+    public boolean supportsEncryption() {
+        return type == null || type == 0;
+    }
+
 }

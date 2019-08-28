@@ -3,6 +3,9 @@ package com.pubnub.api.managers;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.callbacks.SubscribeCallback;
 import com.pubnub.api.models.consumer.PNStatus;
+import com.pubnub.api.models.consumer.pubsub.objects.PNMembershipResult;
+import com.pubnub.api.models.consumer.pubsub.objects.PNSpaceResult;
+import com.pubnub.api.models.consumer.pubsub.objects.PNUserResult;
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult;
@@ -66,6 +69,24 @@ public class ListenerManager {
     public void announce(PNSignalResult signal) {
         for (SubscribeCallback subscribeCallback : getListeners()) {
             subscribeCallback.signal(this.pubnub, signal);
+        }
+    }
+
+    public void announce(PNUserResult user) {
+        for (SubscribeCallback subscribeCallback : getListeners()) {
+            subscribeCallback.user(this.pubnub, user);
+        }
+    }
+
+    public void announce(PNSpaceResult space) {
+        for (SubscribeCallback subscribeCallback : getListeners()) {
+            subscribeCallback.space(this.pubnub, space);
+        }
+    }
+
+    public void announce(PNMembershipResult membership) {
+        for (SubscribeCallback subscribeCallback : getListeners()) {
+            subscribeCallback.membership(this.pubnub, membership);
         }
     }
 

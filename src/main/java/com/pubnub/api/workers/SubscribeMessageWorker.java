@@ -13,10 +13,16 @@ import com.pubnub.api.managers.ListenerManager;
 import com.pubnub.api.managers.MapperManager;
 import com.pubnub.api.models.consumer.PNErrorData;
 import com.pubnub.api.models.consumer.PNStatus;
-import com.pubnub.api.models.consumer.pubsub.MessageResult;
+import com.pubnub.api.models.consumer.pubsub.BasePubSubResult;
+import com.pubnub.api.models.consumer.pubsub.objects.ObjectPayload;
+import com.pubnub.api.models.consumer.pubsub.objects.PNMembershipResult;
+import com.pubnub.api.models.consumer.pubsub.objects.PNSpaceResult;
+import com.pubnub.api.models.consumer.pubsub.objects.PNUserResult;
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult;
+import com.pubnub.api.models.consumer.objects_api.space.PNSpace;
+import com.pubnub.api.models.consumer.objects_api.user.PNUser;
 import com.pubnub.api.models.server.PresenceEnvelope;
 import com.pubnub.api.models.server.PublishMetaData;
 import com.pubnub.api.models.server.SubscribeMessage;
@@ -67,9 +73,17 @@ public class SubscribeMessageWorker implements Runnable {
         }
     }
 
-    private JsonElement processMessage(JsonElement input) {
+    private JsonElement processMessage(SubscribeMessage subscribeMessage) {
+        JsonElement input = subscribeMessage.getPayload();
+
         // if we do not have a crypto key, there is no way to process the node; let's return.
         if (pubnub.getConfiguration().getCipherKey() == null) {
+            return input;
+        }
+
+        // if the message couldn't possibly be encrypted in the first place, there is no way to process the node; let's
+        // return.
+        if (!subscribeMessage.supportsEncryption()) {
             return input;
         }
 
@@ -176,14 +190,13 @@ public class SubscribeMessageWorker implements Runnable {
 
             listenerManager.announce(pnPresenceEventResult);
         } else {
-            JsonElement extractedMessage = processMessage(message.getPayload());
+            JsonElement extractedMessage = processMessage(message);
 
             if (extractedMessage == null) {
                 log.debug("unable to parse payload on #processIncomingMessages");
             }
 
-            MessageResult messageResult = MessageResult.builder()
-                    .message(extractedMessage)
+            BasePubSubResult result = BasePubSubResult.builder()
                     // deprecated
                     .actualChannel((subscriptionMatch != null) ? channel : null)
                     .subscribedChannel(subscriptionMatch != null ? subscriptionMatch : channel)
@@ -196,11 +209,38 @@ public class SubscribeMessageWorker implements Runnable {
                     .build();
 
             if (message.getType() == null) {
-                listenerManager.announce(new PNMessageResult(messageResult));
+                listenerManager.announce(new PNMessageResult(result, extractedMessage));
             } else if (message.getType() == 0) {
-                listenerManager.announce(new PNMessageResult(messageResult));
+                listenerManager.announce(new PNMessageResult(result, extractedMessage));
             } else if (message.getType() == 1) {
-                listenerManager.announce(new PNSignalResult(messageResult));
+                listenerManager.announce(new PNSignalResult(result, extractedMessage));
+            } else if (message.getType() == 2) {
+                ObjectPayload objectPayload = mapper.convertValue(extractedMessage, ObjectPayload.class);
+                String type = objectPayload.getType();
+                switch (type) {
+                    case "user":
+                        listenerManager.announce(PNUserResult.userBuilder()
+                                .result(result)
+                                .event(objectPayload.getEvent())
+                                .user(mapper.convertValue(objectPayload.getData(), PNUser.class))
+                                .build());
+                        break;
+                    case "space":
+                        listenerManager.announce(PNSpaceResult.spaceBuilder()
+                                .result(result)
+                                .event(objectPayload.getEvent())
+                                .space(mapper.convertValue(objectPayload.getData(), PNSpace.class))
+                                .build());
+                        break;
+                    case "membership":
+                        listenerManager.announce(PNMembershipResult.membershipBuilder()
+                                .result(result)
+                                .event(objectPayload.getEvent())
+                                .data(objectPayload.getData())
+                                .build());
+                        break;
+                    default:
+                }
             }
         }
     }
