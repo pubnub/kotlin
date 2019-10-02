@@ -21,4 +21,7 @@ public class PNAccessManagerKeyData {
     @SerializedName("m")
     private boolean manageEnabled;
 
+    @SerializedName("d")
+    private boolean deleteEnabled;
+
 }

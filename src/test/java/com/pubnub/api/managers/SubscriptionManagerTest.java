@@ -13,13 +13,13 @@ import com.pubnub.api.enums.PNHeartbeatNotificationOptions;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.enums.PNStatusCategory;
 import com.pubnub.api.models.consumer.PNStatus;
-import com.pubnub.api.models.consumer.pubsub.objects.PNMembershipResult;
-import com.pubnub.api.models.consumer.pubsub.objects.PNSpaceResult;
-import com.pubnub.api.models.consumer.pubsub.objects.PNUserResult;
+import com.pubnub.api.models.consumer.presence.PNSetStateResult;
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult;
-import com.pubnub.api.models.consumer.presence.PNSetStateResult;
+import com.pubnub.api.models.consumer.pubsub.objects.PNMembershipResult;
+import com.pubnub.api.models.consumer.pubsub.objects.PNSpaceResult;
+import com.pubnub.api.models.consumer.pubsub.objects.PNUserResult;
 import org.awaitility.Awaitility;
 import org.awaitility.Duration;
 import org.junit.After;
@@ -30,6 +30,7 @@ import org.junit.Test;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -2553,8 +2554,8 @@ public class SubscriptionManagerTest extends TestHarness {
 
     @Test
     public void testHeartbeatsDisabled() {
-        final AtomicInteger heartbeatCallsCount = new AtomicInteger(0);
         final AtomicBoolean subscribeSuccess = new AtomicBoolean();
+        final AtomicBoolean heartbeatFail = new AtomicBoolean(false);
 
         pubnub.getConfiguration().setHeartbeatNotificationOptions(PNHeartbeatNotificationOptions.ALL);
 
@@ -2580,7 +2581,7 @@ public class SubscriptionManagerTest extends TestHarness {
                         subscribeSuccess.set(true);
                     }
                     if (status.getOperation() == PNOperationType.PNHeartbeatOperation) {
-                        heartbeatCallsCount.incrementAndGet();
+                        heartbeatFail.set(true);
                     }
                 }
             }
@@ -2621,26 +2622,15 @@ public class SubscriptionManagerTest extends TestHarness {
                 .withPresence()
                 .execute();
 
-        Duration delayDuration = new Duration(40, TimeUnit.SECONDS);
-
         Awaitility.await()
-                .atLeast(delayDuration)
-                .atMost(Duration.ONE_MINUTE)
-                .with()
-                .pollInterval(Duration.ONE_SECOND)
-                .pollDelay(delayDuration)
-                .until(new Callable<Boolean>() {
-                    @Override
-                    public Boolean call() throws Exception {
-                        return subscribeSuccess.get() && heartbeatCallsCount.get() == 0;
-                    }
-                });
+                .atMost(Duration.FIVE_SECONDS)
+                .until(() -> subscribeSuccess.get() && !heartbeatFail.get());
     }
 
     @Test
     public void testHeartbeatsEnabled() {
-        final AtomicInteger heartbeatCallsCount = new AtomicInteger(0);
         final AtomicBoolean subscribeSuccess = new AtomicBoolean();
+        final AtomicBoolean heartbeatSuccess = new AtomicBoolean();
 
         pubnub.getConfiguration().setHeartbeatNotificationOptions(PNHeartbeatNotificationOptions.ALL);
 
@@ -2649,7 +2639,6 @@ public class SubscriptionManagerTest extends TestHarness {
         assertEquals(0, pubnub.getConfiguration().getHeartbeatInterval());
 
         pubnub.getConfiguration().setPresenceTimeout(20);
-
 
         assertEquals(20, pubnub.getConfiguration().getPresenceTimeout());
         assertEquals(9, pubnub.getConfiguration().getHeartbeatInterval());
@@ -2672,8 +2661,7 @@ public class SubscriptionManagerTest extends TestHarness {
                         subscribeSuccess.set(true);
                     }
                     if (status.getOperation() == PNOperationType.PNHeartbeatOperation) {
-                        heartbeatCallsCount.incrementAndGet();
-                        System.out.println("New heartbeat!");
+                        heartbeatSuccess.set(true);
                     }
                 }
             }
@@ -2710,26 +2698,13 @@ public class SubscriptionManagerTest extends TestHarness {
         });
 
         pubnub.subscribe()
-                .channels(Arrays.asList("ch1"))
+                .channels(Collections.singletonList("ch1"))
                 .withPresence()
                 .execute();
 
-        int delay = 40;
-
-        Duration delayDuration = new Duration(delay, TimeUnit.SECONDS);
-
         Awaitility.await()
-                .atLeast(delayDuration)
-                .atMost(Duration.ONE_MINUTE)
-                .with()
-                .pollInterval(Duration.ONE_SECOND)
-                .pollDelay(delayDuration)
-                .until(new Callable<Boolean>() {
-                    @Override
-                    public Boolean call() throws Exception {
-                        return subscribeSuccess.get() && heartbeatCallsCount.get() > 3;
-                    }
-                });
+                .atMost(Duration.FIVE_SECONDS)
+                .until(() -> subscribeSuccess.get() && heartbeatSuccess.get());
     }
 
     @Test

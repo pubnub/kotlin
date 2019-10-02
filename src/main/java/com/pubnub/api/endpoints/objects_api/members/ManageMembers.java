@@ -8,6 +8,9 @@ import com.pubnub.api.enums.PNMemberFields;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.TelemetryManager;
+import com.pubnub.api.managers.token_manager.PNResourceType;
+import com.pubnub.api.managers.token_manager.TokenManagerProperties;
+import com.pubnub.api.managers.token_manager.TokenManagerPropertyProvider;
 import com.pubnub.api.models.consumer.objects_api.PNPatchPayload;
 import com.pubnub.api.models.consumer.objects_api.member.Member;
 import com.pubnub.api.models.consumer.objects_api.member.PNManageMembersResult;
@@ -29,7 +32,8 @@ import java.util.Map;
 public class ManageMembers extends Endpoint<EntityArrayEnvelope<PNMember>, PNManageMembersResult> implements
         InclusionParamsProvider<ManageMembers, PNMemberFields>,
         ListingParamsProvider<ManageMembers>,
-        MembershipChainProvider<ManageMembers, Member> {
+        MembershipChainProvider<ManageMembers, Member>,
+        TokenManagerPropertyProvider {
 
     private Map<String, String> extraParamsMap;
     private PNPatchPayload<Member> pnPatchPayload;
@@ -78,7 +82,8 @@ public class ManageMembers extends Endpoint<EntityArrayEnvelope<PNMember>, PNMan
     }
 
     @Override
-    protected PNManageMembersResult createResponse(Response<EntityArrayEnvelope<PNMember>> input) throws PubNubException {
+    protected PNManageMembersResult createResponse(Response<EntityArrayEnvelope<PNMember>> input)
+            throws PubNubException {
         if (input.body() != null) {
             return PNManageMembersResult.create(input.body());
         }
@@ -139,6 +144,14 @@ public class ManageMembers extends Endpoint<EntityArrayEnvelope<PNMember>, PNMan
     public ManageMembers remove(Member... list) {
         pnPatchPayload.setRemove(list);
         return this;
+    }
+
+    @Override
+    public TokenManagerProperties getTmsProperties() {
+        return TokenManagerProperties.builder()
+                .pnResourceType(PNResourceType.SPACE)
+                .resourceId(spaceId)
+                .build();
     }
 }
 

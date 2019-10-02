@@ -1,20 +1,27 @@
 package com.pubnub.api;
 
+
 import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.vendor.Base64;
 import lombok.extern.java.Log;
 import okhttp3.HttpUrl;
 import okhttp3.Request;
+import okio.Buffer;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 @Log
 public class PubNubUtil {
@@ -68,7 +75,6 @@ public class PubNubUtil {
         return encoded;
     }
 
-
     /**
      * Returns encoded String
      *
@@ -107,7 +113,6 @@ public class PubNubUtil {
                 stringifiedArguments = stringifiedArguments.concat("&");
             }
 
-
             stringifiedArguments =
                     stringifiedArguments.concat(pamKey).concat("=").concat(pamEncode(pamArgs.get(pamKey)));
 
@@ -120,27 +125,32 @@ public class PubNubUtil {
     public static String signSHA256(String key, String data) throws PubNubException {
         Mac sha256HMAC;
         byte[] hmacData;
-        SecretKeySpec secretKey = new SecretKeySpec(key.getBytes(Charset.forName("UTF-8")), "HmacSHA256");
+        SecretKeySpec secretKey = new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), "HmacSHA256");
 
         try {
             sha256HMAC = Mac.getInstance("HmacSHA256");
         } catch (NoSuchAlgorithmException e) {
-            throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_CRYPTO_ERROR).errormsg(e.getMessage()).build();
+            throw PubNubException.builder()
+                    .pubnubError(PubNubErrorBuilder.PNERROBJ_CRYPTO_ERROR)
+                    .errormsg(e.getMessage())
+                    .build();
         }
 
         try {
             sha256HMAC.init(secretKey);
         } catch (InvalidKeyException e) {
-            throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_CRYPTO_ERROR).errormsg(e.getMessage()).build();
+            throw PubNubException.builder()
+                    .pubnubError(PubNubErrorBuilder.PNERROBJ_CRYPTO_ERROR)
+                    .errormsg(e.getMessage())
+                    .build();
         }
 
-        try {
-            hmacData = sha256HMAC.doFinal(data.getBytes("UTF-8"));
-        } catch (UnsupportedEncodingException e) {
-            throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_CRYPTO_ERROR).errormsg(e.getMessage()).build();
-        }
+        hmacData = sha256HMAC.doFinal(data.getBytes(StandardCharsets.UTF_8));
 
-        return new String(Base64.encode(hmacData, 0), Charset.forName("UTF-8")).replace('+', '-').replace('/', '_').replace("\n", "");
+        return new String(Base64.encode(hmacData, 0), StandardCharsets.UTF_8)
+                .replace('+', '-')
+                .replace('/', '_')
+                .replace("\n", "");
     }
 
     public static String replaceLast(String string, String toReplace, String replacement) {
@@ -153,47 +163,85 @@ public class PubNubUtil {
         }
     }
 
-    public static Request requestSigner(Request originalRequest, PNConfiguration pnConfiguration, int timestamp) {
+    public static Request signRequest(Request originalRequest, PNConfiguration pnConfiguration, int timestamp) {
         // only sign if we have a secret key in place.
         if (pnConfiguration.getSecretKey() == null) {
             return originalRequest;
         }
 
-        HttpUrl url = originalRequest.url();
-        String requestURL = url.encodedPath();
-        Map<String, String> queryParams = new HashMap<>();
-        String signature = "";
+        String signature = generateSignature(pnConfiguration, originalRequest, timestamp);
 
-        for (String queryKey : url.queryParameterNames()) {
-            queryParams.put(queryKey, url.queryParameter(queryKey));
-        }
-
-        queryParams.put("timestamp", String.valueOf(timestamp));
-
-        String signInput = pnConfiguration.getSubscribeKey() + "\n" + pnConfiguration.getPublishKey() + "\n";
-
-        if (requestURL.startsWith("/v1/auth/audit")) {
-            signInput += "audit" + "\n";
-        } else if (requestURL.startsWith("/v1/auth/grant")) {
-            signInput += "grant" + "\n";
-        } else {
-            signInput += requestURL + "\n";
-        }
-
-        signInput += PubNubUtil.preparePamArguments(queryParams);
-
-        try {
-            signature = PubNubUtil.signSHA256(pnConfiguration.getSecretKey(), signInput);
-        } catch (PubNubException e) {
-            log.warning("signature failed on SignatureInterceptor: " + e.toString());
-        }
-
-        HttpUrl rebuiltUrl = url.newBuilder()
+        HttpUrl rebuiltUrl = originalRequest.url().newBuilder()
                 .addQueryParameter("timestamp", String.valueOf(timestamp))
                 .addQueryParameter("signature", signature)
                 .build();
 
         return originalRequest.newBuilder().url(rebuiltUrl).build();
+    }
+
+    private static String generateSignature(PNConfiguration configuration, Request request, int timestamp) {
+        boolean isV2Signature;
+
+        StringBuilder signatureBuilder = new StringBuilder();
+        String requestURL = request.url().encodedPath();
+
+        Map<String, String> queryParams = new HashMap<>();
+        for (String queryKey : request.url().queryParameterNames()) {
+            queryParams.put(queryKey, request.url().queryParameter(queryKey));
+        }
+        queryParams.put("timestamp", String.valueOf(timestamp));
+        String encodedQueryString = PubNubUtil.preparePamArguments(queryParams);
+
+        isV2Signature = !(requestURL.startsWith("/publish") && request.method().equalsIgnoreCase("post"));
+
+        if (!isV2Signature) {
+            signatureBuilder.append(configuration.getSubscribeKey()).append("\n");
+            signatureBuilder.append(configuration.getPublishKey()).append("\n");
+            signatureBuilder.append(requestURL).append("\n");
+            signatureBuilder.append(encodedQueryString);
+        } else {
+            signatureBuilder.append(request.method().toUpperCase()).append("\n");
+            signatureBuilder.append(configuration.getPublishKey()).append("\n");
+            signatureBuilder.append(requestURL).append("\n");
+            signatureBuilder.append(encodedQueryString).append("\n");
+            signatureBuilder.append(requestBodyToString(request));
+        }
+
+        String signature = "";
+        try {
+            signature = PubNubUtil.signSHA256(configuration.getSecretKey(), signatureBuilder.toString());
+            if (isV2Signature) {
+                signature = removeTrailingEqualSigns(signature);
+                signature = "v2.".concat(signature);
+            }
+        } catch (PubNubException e) {
+            log.warning("signature failed on SignatureInterceptor: " + e.toString());
+        }
+
+        return signature;
+    }
+
+    public static String removeTrailingEqualSigns(String signature) {
+        String cleanSignature = signature;
+
+        while ((cleanSignature.charAt(cleanSignature.length() - 1) == '=')) {
+            cleanSignature = cleanSignature.substring(0, cleanSignature.length() - 1);
+        }
+        return cleanSignature;
+    }
+
+    private static String requestBodyToString(final Request request) {
+        if (request.body() == null) {
+            return "";
+        }
+        try {
+            Buffer buffer = new Buffer();
+            request.body().writeTo(buffer);
+            return buffer.readUtf8();
+        } catch (final IOException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 
 }

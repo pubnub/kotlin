@@ -20,7 +20,7 @@ public class SignatureInterceptor implements Interceptor {
     @Override
     public Response intercept(Chain chain) throws IOException {
         Request originalRequest = chain.request();
-        Request request = PubNubUtil.requestSigner(originalRequest, pubNub.getConfiguration(), pubNub.getTimestamp());
+        Request request = PubNubUtil.signRequest(originalRequest, pubNub.getConfiguration(), pubNub.getTimestamp());
         return chain.proceed(request);
     }
 }

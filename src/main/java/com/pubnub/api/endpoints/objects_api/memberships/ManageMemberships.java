@@ -8,6 +8,9 @@ import com.pubnub.api.enums.PNMembershipFields;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.TelemetryManager;
+import com.pubnub.api.managers.token_manager.PNResourceType;
+import com.pubnub.api.managers.token_manager.TokenManagerProperties;
+import com.pubnub.api.managers.token_manager.TokenManagerPropertyProvider;
 import com.pubnub.api.models.consumer.objects_api.PNPatchPayload;
 import com.pubnub.api.models.consumer.objects_api.membership.Membership;
 import com.pubnub.api.models.consumer.objects_api.membership.PNManageMembershipsResult;
@@ -29,7 +32,8 @@ import java.util.Map;
 public class ManageMemberships extends Endpoint<EntityArrayEnvelope<PNMembership>, PNManageMembershipsResult> implements
         InclusionParamsProvider<ManageMemberships, PNMembershipFields>,
         ListingParamsProvider<ManageMemberships>,
-        MembershipChainProvider<ManageMemberships, Membership> {
+        MembershipChainProvider<ManageMemberships, Membership>,
+        TokenManagerPropertyProvider {
 
     private Map<String, String> extraParamsMap;
     private PNPatchPayload<Membership> pnPatchPayload;
@@ -140,5 +144,13 @@ public class ManageMemberships extends Endpoint<EntityArrayEnvelope<PNMembership
     public ManageMemberships withTotalCount(Boolean count) {
         extraParamsMap.put("count", String.valueOf(count));
         return this;
+    }
+
+    @Override
+    public TokenManagerProperties getTmsProperties() {
+        return TokenManagerProperties.builder()
+                .pnResourceType(PNResourceType.USER)
+                .resourceId(userId)
+                .build();
     }
 }

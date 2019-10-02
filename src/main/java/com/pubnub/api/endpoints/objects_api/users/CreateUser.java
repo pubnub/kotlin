@@ -4,13 +4,16 @@ import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.Endpoint;
-import com.pubnub.api.models.consumer.objects_api.util.InclusionParamsProvider;
-import com.pubnub.api.enums.PNUserFields;
-import com.pubnub.api.models.consumer.objects_api.user.PNCreateUserResult;
-import com.pubnub.api.models.consumer.objects_api.user.PNUser;
 import com.pubnub.api.enums.PNOperationType;
+import com.pubnub.api.enums.PNUserFields;
 import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.TelemetryManager;
+import com.pubnub.api.managers.token_manager.PNResourceType;
+import com.pubnub.api.managers.token_manager.TokenManagerProperties;
+import com.pubnub.api.managers.token_manager.TokenManagerPropertyProvider;
+import com.pubnub.api.models.consumer.objects_api.user.PNCreateUserResult;
+import com.pubnub.api.models.consumer.objects_api.user.PNUser;
+import com.pubnub.api.models.consumer.objects_api.util.InclusionParamsProvider;
 import com.pubnub.api.models.server.objects_api.EntityEnvelope;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -23,7 +26,8 @@ import java.util.Map;
 
 @Accessors(chain = true, fluent = true)
 public class CreateUser extends Endpoint<EntityEnvelope<PNUser>, PNCreateUserResult>
-        implements InclusionParamsProvider<CreateUser, PNUserFields> {
+        implements InclusionParamsProvider<CreateUser, PNUserFields>,
+        TokenManagerPropertyProvider {
 
     private Map<String, String> extraParamsMap;
 
@@ -98,5 +102,13 @@ public class CreateUser extends Endpoint<EntityEnvelope<PNUser>, PNCreateUserRes
     @Override
     public CreateUser includeFields(PNUserFields... params) {
         return appendInclusionParams(extraParamsMap, params);
+    }
+
+    @Override
+    public TokenManagerProperties getTmsProperties() {
+        return TokenManagerProperties.builder()
+                .pnResourceType(PNResourceType.USER)
+                .resourceId(user.getId())
+                .build();
     }
 }

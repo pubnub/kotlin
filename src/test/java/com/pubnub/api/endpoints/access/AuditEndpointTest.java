@@ -51,7 +51,7 @@ public class AuditEndpointTest extends TestHarness {
     @Test
     public void testSuccessChannelGroupSync() throws PubNubException {
 
-        stubFor(get(urlPathEqualTo("/v1/auth/audit/sub-key/mySubscribeKey"))
+        stubFor(get(urlPathEqualTo("/v2/auth/audit/sub-key/mySubscribeKey"))
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 .withQueryParam("instanceid", matching("PubNubInstanceId"))
                 .withQueryParam("requestid", matching("PubNubRequestId"))
@@ -75,16 +75,16 @@ public class AuditEndpointTest extends TestHarness {
         assertEquals("channel-group+auth", pnAccessManagerAuditResult.getLevel());
         assertEquals("sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f", pnAccessManagerAuditResult.getSubscribeKey());
 
-        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v1/auth/audit/sub-key/mySubscribeKey.*")));
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/auth/audit/sub-key/mySubscribeKey.*")));
         assertEquals(1, requests.size());
         String signature = requests.get(0).queryParameter("signature").firstValue();
-        assertEquals("rnb_-C8C4twE5IlyMeSlTyF4538WNv4uKCQu6jQwggU=", signature);
+        assertEquals("v2.wqWRNiXXNRHlFKN_3u63W9lY1JwvLttNK22bCrTs0w0", signature);
     }
 
     @Test
     public void testSuccessChannelSync() throws PubNubException {
 
-        stubFor(get(urlPathEqualTo("/v1/auth/audit/sub-key/mySubscribeKey"))
+        stubFor(get(urlPathEqualTo("/v2/auth/audit/sub-key/mySubscribeKey"))
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 .withQueryParam("channel", matching("ch1"))
                 .withQueryParam("auth", matching("key1"))
@@ -110,7 +110,7 @@ public class AuditEndpointTest extends TestHarness {
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
         String signature = requests.get(0).queryParameter("signature").firstValue();
-        assertEquals("l0mnete94wADUcKR6THq1L4nhJrJg5q7eot0uRWoT8U=", signature);
+        assertEquals("v2.DSnl_gFjq2z9WaFCNem1YynOMntw4km3Ox4vtHwiYC8", signature);
     }
 
     @Test
@@ -126,7 +126,7 @@ public class AuditEndpointTest extends TestHarness {
     @Test
     public void testOperationTypeSuccessAsync() {
 
-        stubFor(get(urlPathEqualTo("/v1/auth/audit/sub-key/mySubscribeKey"))
+        stubFor(get(urlPathEqualTo("/v2/auth/audit/sub-key/mySubscribeKey"))
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 .withQueryParam("channel-group", matching("cg1"))
                 .withQueryParam("auth", matching("key1"))
@@ -156,7 +156,7 @@ public class AuditEndpointTest extends TestHarness {
     @Test
     public void testIsAuthRequiredSuccessSync() {
 
-        stubFor(get(urlPathEqualTo("/v1/auth/audit/sub-key/mySubscribeKey"))
+        stubFor(get(urlPathEqualTo("/v2/auth/audit/sub-key/mySubscribeKey"))
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 .withQueryParam("channel-group", matching("cg1"))
                 .withQueryParam("auth", matching("key1"))
@@ -177,7 +177,7 @@ public class AuditEndpointTest extends TestHarness {
             List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
             assertEquals(1, requests.size());
             String signature = requests.get(0).queryParameter("signature").firstValue();
-            assertEquals("rnb_-C8C4twE5IlyMeSlTyF4538WNv4uKCQu6jQwggU=", signature);
+            assertEquals("v2.wqWRNiXXNRHlFKN_3u63W9lY1JwvLttNK22bCrTs0w0", signature);
         } catch (PubNubException ex) {
             throw new RuntimeException("should never reach here", ex);
         }
@@ -186,7 +186,7 @@ public class AuditEndpointTest extends TestHarness {
     @Test
     public void testNullPayload() {
 
-        stubFor(get(urlPathEqualTo("/v1/auth/audit/sub-key/mySubscribeKey"))
+        stubFor(get(urlPathEqualTo("/v2/auth/audit/sub-key/mySubscribeKey"))
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 .withQueryParam("channel-group", matching("cg1"))
                 .withQueryParam("auth", matching("key1"))

@@ -8,6 +8,9 @@ import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.TelemetryManager;
+import com.pubnub.api.managers.token_manager.PNResourceType;
+import com.pubnub.api.managers.token_manager.TokenManagerProperties;
+import com.pubnub.api.managers.token_manager.TokenManagerPropertyProvider;
 import com.pubnub.api.models.consumer.objects_api.space.PNDeleteSpaceResult;
 import com.pubnub.api.models.server.objects_api.EntityEnvelope;
 import lombok.Setter;
@@ -19,7 +22,8 @@ import java.util.List;
 import java.util.Map;
 
 @Accessors(chain = true, fluent = true)
-public class DeleteSpace extends Endpoint<EntityEnvelope<JsonElement>, PNDeleteSpaceResult> {
+public class DeleteSpace extends Endpoint<EntityEnvelope<JsonElement>, PNDeleteSpaceResult>
+        implements TokenManagerPropertyProvider {
 
     @Setter
     private String spaceId;
@@ -73,5 +77,13 @@ public class DeleteSpace extends Endpoint<EntityEnvelope<JsonElement>, PNDeleteS
     @Override
     protected boolean isAuthRequired() {
         return true;
+    }
+
+    @Override
+    public TokenManagerProperties getTmsProperties() {
+        return TokenManagerProperties.builder()
+                .pnResourceType(PNResourceType.SPACE)
+                .resourceId(spaceId)
+                .build();
     }
 }

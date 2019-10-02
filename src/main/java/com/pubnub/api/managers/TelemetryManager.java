@@ -177,6 +177,9 @@ public class TelemetryManager {
             case PNManageMemberships:
                 endpoint = "obj";
                 break;
+            case PNAccessManagerGrantToken:
+                endpoint = "pamv3";
+                break;
             default:
                 endpoint = "time";
                 break;

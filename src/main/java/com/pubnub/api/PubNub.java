@@ -12,15 +12,16 @@ import com.pubnub.api.endpoints.MessageCounts;
 import com.pubnub.api.endpoints.Time;
 import com.pubnub.api.endpoints.access.Audit;
 import com.pubnub.api.endpoints.access.Grant;
+import com.pubnub.api.endpoints.access.GrantToken;
 import com.pubnub.api.endpoints.channel_groups.AddChannelChannelGroup;
 import com.pubnub.api.endpoints.channel_groups.AllChannelsChannelGroup;
 import com.pubnub.api.endpoints.channel_groups.DeleteChannelGroup;
 import com.pubnub.api.endpoints.channel_groups.ListAllChannelGroup;
 import com.pubnub.api.endpoints.channel_groups.RemoveChannelChannelGroup;
-import com.pubnub.api.endpoints.objects_api.members.ManageMembers;
-import com.pubnub.api.endpoints.objects_api.memberships.ManageMemberships;
 import com.pubnub.api.endpoints.objects_api.members.GetMembers;
+import com.pubnub.api.endpoints.objects_api.members.ManageMembers;
 import com.pubnub.api.endpoints.objects_api.memberships.GetMemberships;
+import com.pubnub.api.endpoints.objects_api.memberships.ManageMemberships;
 import com.pubnub.api.endpoints.objects_api.spaces.CreateSpace;
 import com.pubnub.api.endpoints.objects_api.spaces.DeleteSpace;
 import com.pubnub.api.endpoints.objects_api.spaces.GetSpace;
@@ -47,10 +48,14 @@ import com.pubnub.api.managers.PublishSequenceManager;
 import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.SubscriptionManager;
 import com.pubnub.api.managers.TelemetryManager;
+import com.pubnub.api.managers.token_manager.PNResourceType;
+import com.pubnub.api.managers.token_manager.TokenManager;
+import com.pubnub.api.managers.token_manager.TokenManagerProperties;
 import com.pubnub.api.vendor.Crypto;
 import lombok.Getter;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -75,10 +80,12 @@ public class PubNub {
 
     private RetrofitManager retrofitManager;
 
+    private TokenManager tokenManager;
+
     private static final int TIMESTAMP_DIVIDER = 1000;
     private static final int MAX_SEQUENCE = 65535;
 
-    private static final String SDK_VERSION = "4.27.0";
+    private static final String SDK_VERSION = "4.28.0";
 
     public PubNub(PNConfiguration initialConfig) {
         this.configuration = initialConfig;
@@ -86,6 +93,7 @@ public class PubNub {
         this.telemetryManager = new TelemetryManager();
         this.basePathManager = new BasePathManager(initialConfig);
         this.retrofitManager = new RetrofitManager(this);
+        this.tokenManager = new TokenManager();
         this.subscriptionManager = new SubscriptionManager(this, retrofitManager, this.telemetryManager);
         this.publishSequenceManager = new PublishSequenceManager(MAX_SEQUENCE);
         instanceId = UUID.randomUUID().toString();
@@ -169,8 +177,17 @@ public class PubNub {
         return new Audit(this, this.telemetryManager, this.retrofitManager);
     }
 
+    /**
+     * @deprecated This method will soon be obsoleted.
+     * <p> Use {@link PubNub#grantToken()} instead.
+     */
+    @Deprecated
     public Grant grant() {
         return new Grant(this, this.telemetryManager, this.retrofitManager);
+    }
+
+    public GrantToken grantToken() {
+        return new GrantToken(this, this.telemetryManager, this.retrofitManager);
     }
 
     public GetState getPresenceState() {
@@ -413,5 +430,28 @@ public class PubNub {
 
     public void unsubscribeAll() {
         subscriptionManager.unsubscribeAll();
+    }
+
+    public void setToken(String token) throws PubNubException {
+        tokenManager.setToken(token);
+    }
+
+    public void setTokens(List<String> tokens) throws PubNubException {
+        tokenManager.setTokens(tokens);
+    }
+
+    public String getToken(String resourceId, PNResourceType resourceType) {
+        return tokenManager.getToken(TokenManagerProperties.builder()
+                .resourceId(resourceId)
+                .pnResourceType(resourceType)
+                .build());
+    }
+
+    public String getToken(TokenManagerProperties tokenManagerProperties) {
+        return tokenManager.getToken(tokenManagerProperties);
+    }
+
+    public HashMap<String, HashMap<String, String>> getTokensByResource(PNResourceType resourceType) {
+        return tokenManager.getTokensByResource(resourceType);
     }
 }

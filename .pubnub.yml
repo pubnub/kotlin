@@ -1,10 +1,21 @@
 name: java
-version: 4.27.0
+version: 4.28.0
 schema: 1
 scm: github.com/pubnub/java
 files:
-  - build/libs/pubnub-gson-4.27.0-all.jar
+  - build/libs/pubnub-gson-4.28.0-all.jar
 changelog:
+  - version: v4.28.0
+    date: 2019-10-01
+    changes:
+      - type: feature
+        text: Add PAMv3 support
+      - type: feature
+        text: Implement TMS (Token Manager)
+      - type: feature
+        text: Upgrade PAM endpoints to v2
+      - type: feature
+        text: Introduce delete permission for grant
   - version: v4.27.0
     date: 2019-08-27
     changes:
@@ -376,7 +387,11 @@ changelog:
 features:
   access:
     - ACCESS-GRANT
+    - ACCESS-GRANT-MANAGE
+    - ACCESS-GRANT-DELETE
     - ACCESS-SECRET-KEY-ALL-ACCESS
+    - ACCESS-GRANT-V3
+    - ACCESS-TOKEN-MANAGEMENT
   channel-groups:
     - CHANNEL-GROUPS-ADD-CHANNELS
     - CHANNEL-GROUPS-REMOVE-CHANNELS
@@ -425,8 +440,32 @@ features:
     - SUBSCRIBE-FILTER-EXPRESSION
     - SUBSCRIBE-PUBLISHER-UUID
     - SUBSCRIBE-SIGNAL-LISTENER
+    - SUBSCRIBE-MEMBERSHIP-LISTENER
+    - SUBSCRIBE-SPACE-LISTENER
+    - SUBSCRIBE-USER-LISTENER
   signal:
     - SIGNAL-SEND
+  objects:
+    - OBJECTS-GET-USERS
+    - OBJECTS-GET-USER
+    - OBJECTS-CREATE-USER
+    - OBJECTS-UPDATE-USER
+    - OBJECTS-DELETE-USER
+    - OBJECTS-GET-SPACES
+    - OBJECTS-CREATE-SPACE
+    - OBJECTS-GET-SPACE
+    - OBJECTS-UPDATE-SPACE
+    - OBJECTS-DELETE-SPACE
+    - OBJECTS-GET-MEMBERSHIPS
+    - OBJECTS-MANAGE-MEMBERSHIPS
+    - OBJECTS-GET-MEMBERS
+    - OBJECTS-MANAGE-MEMBERS
+    - OBJECTS-JOIN-SPACES
+    - OBJECTS-UPDATE-MEMBERSHIPS
+    - OBJECTS-LEAVE-SPACES
+    - OBJECTS-ADD-MEMBERS
+    - OBJECTS-REMOVE-MEMBERS
+    - OBJECTS-UPDATE-MEMBERS
 supported-platforms:
   - version: PubNub Java SDK
     platforms:

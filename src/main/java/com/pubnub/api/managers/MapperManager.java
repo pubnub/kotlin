@@ -148,6 +148,11 @@ public class MapperManager {
         return (T) this.objectMapper.fromJson(input, clazz);
     }
 
+    @SuppressWarnings("unchecked")
+    public <T> T convertValue(Object object, Class clazz) throws PubNubException {
+        return (T) fromJson(toJson(object), clazz);
+    }
+
     public String toJson(Object input) throws PubNubException {
         try {
             return this.objectMapper.toJson(input);

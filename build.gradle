@@ -11,7 +11,7 @@ plugins {
 }
 group = 'com.pubnub'
 
-version = '4.27.0'
+version = '4.28.0'
 
 description = """"""
 
@@ -44,6 +44,10 @@ dependencies {
     // gson
     api 'com.google.code.gson:gson:2.8.5'
     implementation group: 'com.squareup.retrofit2', name: 'converter-gson', version: '2.4.0'
+
+    // cbor
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.9'
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-cbor:2.9.9'
 
     testImplementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
     testImplementation group: 'ch.qos.logback', name: 'logback-core', version: '1.2.3'

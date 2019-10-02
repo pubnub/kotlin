@@ -271,6 +271,31 @@ public final class PubNubErrorBuilder {
      */
     public static final int PNERR_SPACE_NAME_MISSING = 152;
 
+    /**
+     * Resources missing
+     */
+    public static final int PNERR_RESOURCES_MISSING = 153;
+
+    /**
+     * TTL missing
+     */
+    public static final int PNERR_TTL_MISSING = 154;
+
+    /**
+     * Invalid meta parameter
+     */
+    public static final int PNERR_INVALID_META = 155;
+
+    /**
+     * Permission missing
+     */
+    public static final int PNERR_PERMISSION_MISSING = 156;
+
+    /**
+     * Invalid access token
+     */
+    public static final int PNERR_INVALID_ACCESS_TOKEN = 157;
+
     // Error Objects
     public static final PubNubError PNERROBJ_TIMEOUT = PubNubError.builder()
             .errorCode(PNERR_TIMEOUT)
@@ -537,6 +562,31 @@ public final class PubNubErrorBuilder {
     public static final PubNubError PNERROBJ_SPACE_NAME_MISSING = PubNubError.builder()
             .errorCode(PNERR_SPACE_NAME_MISSING)
             .message("Space name is missing")
+            .build();
+
+    public static final PubNubError PNERROBJ_RESOURCES_MISSING = PubNubError.builder()
+            .errorCode(PNERR_RESOURCES_MISSING)
+            .message("Resources missing")
+            .build();
+
+    public static final PubNubError PNERROBJ_TTL_MISSING = PubNubError.builder()
+            .errorCode(PNERR_TTL_MISSING)
+            .message("TTL missing")
+            .build();
+
+    public static final PubNubError PNERROBJ_INVALID_META = PubNubError.builder()
+            .errorCode(PNERR_INVALID_META)
+            .message("Invalid meta parameter")
+            .build();
+
+    public static final PubNubError PNERROBJ_PERMISSION_MISSING = PubNubError.builder()
+            .errorCode(PNERR_PERMISSION_MISSING)
+            .message("Permission missing")
+            .build();
+
+    public static final PubNubError PNERROBJ_INVALID_ACCESS_TOKEN = PubNubError.builder()
+            .errorCode(PNERR_INVALID_ACCESS_TOKEN)
+            .message("Invalid access token")
             .build();
 
     private PubNubErrorBuilder() {

@@ -30,7 +30,7 @@ public class AppEngineFactory implements Call {
 
     @Override
     public Response execute() throws IOException {
-        request = PubNubUtil.requestSigner(request, pubNub.getConfiguration(), pubNub.getTimestamp());
+        request = PubNubUtil.signRequest(request, pubNub.getConfiguration(), pubNub.getTimestamp());
 
         URL url = request.url().url();
         final HttpURLConnection connection = (HttpURLConnection) url.openConnection();

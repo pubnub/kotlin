@@ -12,12 +12,15 @@ import com.pubnub.api.enums.PNStatusCategory;
 import com.pubnub.api.managers.MapperManager;
 import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.TelemetryManager;
+import com.pubnub.api.managers.token_manager.TokenManagerProperties;
+import com.pubnub.api.managers.token_manager.TokenManagerPropertyProvider;
 import com.pubnub.api.models.consumer.PNErrorData;
 import com.pubnub.api.models.consumer.PNStatus;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import lombok.extern.java.Log;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -31,6 +34,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+@Log
 public abstract class Endpoint<Input, Output> {
 
     @Getter(AccessLevel.PROTECTED)
@@ -339,6 +343,19 @@ public abstract class Endpoint<Input, Output> {
         // add the auth key for publish and subscribe.
         if (this.pubnub.getConfiguration().getAuthKey() != null && isAuthRequired()) {
             params.put("auth", pubnub.getConfiguration().getAuthKey());
+        }
+
+        if (!this.pubnub.getConfiguration().isDisableTokenManager() && this.pubnub.getConfiguration().getSecretKey() == null) {
+            if (this instanceof TokenManagerPropertyProvider) {
+                TokenManagerProperties tokenManagerProperties =
+                        ((TokenManagerPropertyProvider) this).getTmsProperties();
+                String token = this.pubnub.getToken(tokenManagerProperties);
+                if (token != null) {
+                    params.put("auth", token);
+                } else {
+                    log.warning("No token found for: ".concat(tokenManagerProperties.toString()));
+                }
+            }
         }
 
         if (this.telemetryManager != null) {

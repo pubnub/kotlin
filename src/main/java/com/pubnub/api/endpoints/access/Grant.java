@@ -32,6 +32,8 @@ public class Grant extends Endpoint<Envelope<AccessManagerGrantPayload>, PNAcces
     @Setter
     private boolean manage;
     @Setter
+    private boolean delete;
+    @Setter
     private Integer ttl;
 
 
@@ -94,6 +96,7 @@ public class Grant extends Endpoint<Envelope<AccessManagerGrantPayload>, PNAcces
         queryParams.put("r", (read) ? "1" : "0");
         queryParams.put("w", (write) ? "1" : "0");
         queryParams.put("m", (manage) ? "1" : "0");
+        queryParams.put("d", (delete) ? "1" : "0");
 
         return this.getRetrofit().getAccessManagerService().grant(this.getPubnub().getConfiguration().getSubscribeKey(), queryParams);
     }

@@ -4,14 +4,17 @@ import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.Endpoint;
-import com.pubnub.api.models.consumer.objects_api.util.InclusionParamsProvider;
-import com.pubnub.api.models.consumer.objects_api.util.ListingParamsProvider;
 import com.pubnub.api.enums.PNMembershipFields;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.TelemetryManager;
+import com.pubnub.api.managers.token_manager.PNResourceType;
+import com.pubnub.api.managers.token_manager.TokenManagerProperties;
+import com.pubnub.api.managers.token_manager.TokenManagerPropertyProvider;
 import com.pubnub.api.models.consumer.objects_api.membership.PNGetMembershipsResult;
 import com.pubnub.api.models.consumer.objects_api.membership.PNMembership;
+import com.pubnub.api.models.consumer.objects_api.util.InclusionParamsProvider;
+import com.pubnub.api.models.consumer.objects_api.util.ListingParamsProvider;
 import com.pubnub.api.models.server.objects_api.EntityArrayEnvelope;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -28,7 +31,8 @@ import java.util.Map;
 @Accessors(chain = true, fluent = true)
 public class GetMemberships extends Endpoint<EntityArrayEnvelope<PNMembership>, PNGetMembershipsResult> implements
         InclusionParamsProvider<GetMemberships, PNMembershipFields>,
-        ListingParamsProvider<GetMemberships> {
+        ListingParamsProvider<GetMemberships>,
+        TokenManagerPropertyProvider {
 
     private Map<String, String> extraParamsMap;
 
@@ -118,5 +122,13 @@ public class GetMemberships extends Endpoint<EntityArrayEnvelope<PNMembership>, 
     public GetMemberships withTotalCount(Boolean count) {
         extraParamsMap.put("count", String.valueOf(count));
         return this;
+    }
+
+    @Override
+    public TokenManagerProperties getTmsProperties() {
+        return TokenManagerProperties.builder()
+                .pnResourceType(PNResourceType.USER)
+                .resourceId(userId)
+                .build();
     }
 }

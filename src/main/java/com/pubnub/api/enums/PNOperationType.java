@@ -56,5 +56,8 @@ public enum PNOperationType {
 
     // Memberships
     PNGetMemberships,
-    PNManageMemberships
+    PNManageMemberships,
+
+    // PAMv3
+    PNAccessManagerGrantToken,
 }
