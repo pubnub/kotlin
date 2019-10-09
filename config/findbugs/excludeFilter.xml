@@ -30,4 +30,14 @@
         <Field name="id"/>
         <Bug pattern="URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD"/>
     </Match>
+    <Match>
+        <Class name="com.pubnub.api.models.consumer.history.PNFetchMessageItem$Action"/>
+        <Field name="uuid"/>
+        <Bug pattern="UWF_UNWRITTEN_FIELD"/>
+    </Match>
+    <Match>
+        <Class name="com.pubnub.api.models.consumer.history.PNFetchMessageItem$Action"/>
+        <Field name="actionTimetoken"/>
+        <Bug pattern="UWF_UNWRITTEN_FIELD"/>
+    </Match>
 </FindBugsFilter>

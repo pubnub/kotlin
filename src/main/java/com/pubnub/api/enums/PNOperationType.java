@@ -60,4 +60,9 @@ public enum PNOperationType {
 
     // PAMv3
     PNAccessManagerGrantToken,
+
+    // Message Actions
+    PNAddMessageAction,
+    PNGetMessageActions,
+    PNDeleteMessageAction
 }

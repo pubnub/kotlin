@@ -1,10 +1,21 @@
 name: java
-version: 4.28.0
+version: 4.29.0
 schema: 1
 scm: github.com/pubnub/java
 files:
-  - build/libs/pubnub-gson-4.28.0-all.jar
+  - build/libs/pubnub-gson-4.29.0-all.jar
 changelog:
+  - version: v4.29.0
+    date: 2019-10-08
+    changes:
+      - type: feature
+        text: Implemented Message Actions API
+      - type: feature
+        text: Added 'includeMeta' to history()
+      - type: feature
+        text: Added 'includeMeta' to fetchMessages()
+      - type: feature
+        text: Added 'includeMessageActions' to fetchMessages()
   - version: v4.28.0
     date: 2019-10-01
     changes:
@@ -428,6 +439,9 @@ features:
     - STORAGE-FETCH-MESSAGES
     - STORAGE-DELETE-MESSAGES
     - STORAGE-MESSAGE-COUNT
+    - STORAGE-HISTORY-WITH-META
+    - STORAGE-FETCH-WITH-META
+    - STORAGE-FETCH-WITH-MESSAGE-ACTIONS
   time:
     - TIME-TIME
   subscribe:
@@ -443,6 +457,7 @@ features:
     - SUBSCRIBE-MEMBERSHIP-LISTENER
     - SUBSCRIBE-SPACE-LISTENER
     - SUBSCRIBE-USER-LISTENER
+    - SUBSCRIBE-MESSAGE-ACTIONS-LISTENER
   signal:
     - SIGNAL-SEND
   objects:
@@ -466,6 +481,10 @@ features:
     - OBJECTS-ADD-MEMBERS
     - OBJECTS-REMOVE-MEMBERS
     - OBJECTS-UPDATE-MEMBERS
+  message-actions:
+    - MESSAGE-ACTIONS-GET
+    - MESSAGE-ACTIONS-ADD
+    - MESSAGE-ACTIONS-REMOVE
 supported-platforms:
   - version: PubNub Java SDK
     platforms:

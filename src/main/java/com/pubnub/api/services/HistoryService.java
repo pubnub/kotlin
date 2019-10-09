@@ -28,6 +28,11 @@ public interface HistoryService {
                                               @Path("channels") String channels,
                                               @QueryMap Map<String, String> options);
 
+    @GET("v3/history-with-actions/sub-key/{subKey}/channel/{channel}")
+    Call<FetchMessagesEnvelope> fetchMessagesWithActions(@Path("subKey") String subKey,
+                                                         @Path("channel") String channel,
+                                                         @QueryMap Map<String, String> options);
+
     @GET("v3/history/sub-key/{subKey}/message-counts/{channels}")
     Call<JsonElement> fetchCount(@Path("subKey") String subKey,
                                  @Path("channels") String channels,

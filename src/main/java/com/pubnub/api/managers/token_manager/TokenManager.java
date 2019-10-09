@@ -27,8 +27,6 @@ public class TokenManager {
 
     private synchronized void initMap() {
         PNResourceType[] resources = new PNResourceType[]{
-                PNResourceType.CHANNEL,
-                PNResourceType.GROUP,
                 PNResourceType.USER,
                 PNResourceType.SPACE
         };
@@ -135,10 +133,6 @@ public class TokenManager {
 
     private String getExtendedResourceType(String resourceTypeAbbreviation) {
         switch (resourceTypeAbbreviation) {
-            case "chan":
-                return PNResourceType.CHANNEL.toString();
-            case "grp":
-                return PNResourceType.GROUP.toString();
             case "usr":
                 return PNResourceType.USER.toString();
             case "spc":
@@ -158,5 +152,4 @@ public class TokenManager {
         }
         return pnMatchType.toString();
     }
-
 }

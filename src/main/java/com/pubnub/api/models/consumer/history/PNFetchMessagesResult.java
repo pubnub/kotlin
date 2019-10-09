@@ -1,6 +1,5 @@
 package com.pubnub.api.models.consumer.history;
 
-import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
@@ -12,5 +11,5 @@ import java.util.Map;
 @Builder
 @ToString
 public class PNFetchMessagesResult {
-    private Map<String, List<PNMessageResult>> channels;
+    private Map<String, List<PNFetchMessageItem>> channels;
 }

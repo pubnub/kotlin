@@ -5,13 +5,13 @@ import lombok.Getter;
 import lombok.ToString;
 
 @ToString(callSuper = true)
-class ObjectResult<T> extends BasePubSubResult {
+public class ObjectResult<T> extends BasePubSubResult {
 
     @Getter
     protected String event;
     protected T data;
 
-    ObjectResult(BasePubSubResult result, String event, T data) {
+    protected ObjectResult(BasePubSubResult result, String event, T data) {
         super(result);
         this.event = event;
         this.data = data;

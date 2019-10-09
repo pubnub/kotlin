@@ -180,6 +180,12 @@ public class TelemetryManager {
             case PNAccessManagerGrantToken:
                 endpoint = "pamv3";
                 break;
+            case PNAddMessageAction:
+            case PNGetMessageActions:
+            case PNDeleteMessageAction:
+                endpoint = "msga";
+                break;
+
             default:
                 endpoint = "time";
                 break;

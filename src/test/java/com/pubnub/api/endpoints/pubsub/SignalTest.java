@@ -11,6 +11,7 @@ import com.pubnub.api.endpoints.TestHarness;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.models.consumer.PNPublishResult;
 import com.pubnub.api.models.consumer.PNStatus;
+import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult;
 import com.pubnub.api.models.consumer.pubsub.objects.PNMembershipResult;
 import com.pubnub.api.models.consumer.pubsub.objects.PNSpaceResult;
 import com.pubnub.api.models.consumer.pubsub.objects.PNUserResult;
@@ -164,6 +165,11 @@ public class SignalTest extends TestHarness {
 
             @Override
             public void membership(PubNub pubnub, PNMembershipResult pnMembershipResult) {
+
+            }
+
+            @Override
+            public void messageAction(PubNub pubnub, PNMessageActionResult pnMessageActionResult) {
 
             }
         });

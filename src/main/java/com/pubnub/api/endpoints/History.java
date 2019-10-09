@@ -17,7 +17,11 @@ import lombok.experimental.Accessors;
 import retrofit2.Call;
 import retrofit2.Response;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 @Accessors(chain = true, fluent = true)
 public class History extends Endpoint<JsonElement, PNHistoryResult> {
@@ -34,6 +38,8 @@ public class History extends Endpoint<JsonElement, PNHistoryResult> {
     private Integer count;
     @Setter
     private Boolean includeTimetoken;
+    @Setter
+    private Boolean includeMeta;
 
     public History(PubNub pubnub, TelemetryManager telemetryManager, RetrofitManager retrofit) {
         super(pubnub, telemetryManager, retrofit);
@@ -51,8 +57,18 @@ public class History extends Endpoint<JsonElement, PNHistoryResult> {
 
     @Override
     protected void validateParams() throws PubNubException {
+        if (this.getPubnub().getConfiguration().getSubscribeKey() == null
+                || this.getPubnub().getConfiguration().getSubscribeKey().isEmpty()) {
+            throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_SUBSCRIBE_KEY_MISSING).build();
+        }
         if (channel == null || channel.isEmpty()) {
             throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_CHANNEL_MISSING).build();
+        }
+        if (includeMeta == null) {
+            includeMeta = false;
+        }
+        if (includeTimetoken == null) {
+            includeTimetoken = false;
         }
     }
 
@@ -65,6 +81,10 @@ public class History extends Endpoint<JsonElement, PNHistoryResult> {
 
         if (includeTimetoken != null) {
             params.put("include_token", String.valueOf(includeTimetoken));
+        }
+
+        if (includeMeta) {
+            params.put("include_meta", String.valueOf(includeMeta));
         }
 
         if (count != null && count > 0 && count <= MAX_COUNT) {
@@ -105,9 +125,14 @@ public class History extends Endpoint<JsonElement, PNHistoryResult> {
                     PNHistoryItemResult.PNHistoryItemResultBuilder historyItem = PNHistoryItemResult.builder();
                     JsonElement message;
 
-                    if (includeTimetoken != null && includeTimetoken) {
-                        historyItem.timetoken(mapper.elementToLong(historyEntry, "timetoken"));
+                    if (includeTimetoken || includeMeta) {
                         message = processMessage(mapper.getField(historyEntry, "message"));
+                        if (includeTimetoken) {
+                            historyItem.timetoken(mapper.elementToLong(historyEntry, "timetoken"));
+                        }
+                        if (includeMeta) {
+                            historyItem.meta(mapper.getField(historyEntry, "meta"));
+                        }
                     } else {
                         message = processMessage(historyEntry);
                     }

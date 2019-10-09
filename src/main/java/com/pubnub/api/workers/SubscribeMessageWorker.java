@@ -13,16 +13,18 @@ import com.pubnub.api.managers.ListenerManager;
 import com.pubnub.api.managers.MapperManager;
 import com.pubnub.api.models.consumer.PNErrorData;
 import com.pubnub.api.models.consumer.PNStatus;
+import com.pubnub.api.models.consumer.message_actions.PNMessageAction;
+import com.pubnub.api.models.consumer.objects_api.space.PNSpace;
+import com.pubnub.api.models.consumer.objects_api.user.PNUser;
 import com.pubnub.api.models.consumer.pubsub.BasePubSubResult;
+import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
+import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
+import com.pubnub.api.models.consumer.pubsub.PNSignalResult;
+import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult;
 import com.pubnub.api.models.consumer.pubsub.objects.ObjectPayload;
 import com.pubnub.api.models.consumer.pubsub.objects.PNMembershipResult;
 import com.pubnub.api.models.consumer.pubsub.objects.PNSpaceResult;
 import com.pubnub.api.models.consumer.pubsub.objects.PNUserResult;
-import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
-import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
-import com.pubnub.api.models.consumer.pubsub.PNSignalResult;
-import com.pubnub.api.models.consumer.objects_api.space.PNSpace;
-import com.pubnub.api.models.consumer.objects_api.user.PNUser;
 import com.pubnub.api.models.server.PresenceEnvelope;
 import com.pubnub.api.models.server.PublishMetaData;
 import com.pubnub.api.models.server.SubscribeMessage;
@@ -36,6 +38,11 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 @Slf4j
 public class SubscribeMessageWorker implements Runnable {
+
+    private final int typeMessage = 0;
+    private final int typeSignal = 1;
+    private final int typeObject = 2;
+    private final int typeMessageAction = 3;
 
     private PubNub pubnub;
     private ListenerManager listenerManager;
@@ -210,11 +217,11 @@ public class SubscribeMessageWorker implements Runnable {
 
             if (message.getType() == null) {
                 listenerManager.announce(new PNMessageResult(result, extractedMessage));
-            } else if (message.getType() == 0) {
+            } else if (message.getType() == typeMessage) {
                 listenerManager.announce(new PNMessageResult(result, extractedMessage));
-            } else if (message.getType() == 1) {
+            } else if (message.getType() == typeSignal) {
                 listenerManager.announce(new PNSignalResult(result, extractedMessage));
-            } else if (message.getType() == 2) {
+            } else if (message.getType() == typeObject) {
                 ObjectPayload objectPayload = mapper.convertValue(extractedMessage, ObjectPayload.class);
                 String type = objectPayload.getType();
                 switch (type) {
@@ -241,7 +248,19 @@ public class SubscribeMessageWorker implements Runnable {
                         break;
                     default:
                 }
+            } else if (message.getType() == typeMessageAction) {
+                ObjectPayload objectPayload = mapper.convertValue(extractedMessage, ObjectPayload.class);
+                JsonObject data = objectPayload.getData().getAsJsonObject();
+                if (!data.has("uuid")) {
+                    data.addProperty("uuid", result.getPublisher());
+                }
+                listenerManager.announce(PNMessageActionResult.actionBuilder()
+                        .result(result)
+                        .event(objectPayload.getEvent())
+                        .data(mapper.convertValue(data, PNMessageAction.class))
+                        .build());
             }
+
         }
     }
 

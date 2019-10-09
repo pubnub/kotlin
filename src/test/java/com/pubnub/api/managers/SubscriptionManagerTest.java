@@ -17,6 +17,7 @@ import com.pubnub.api.models.consumer.presence.PNSetStateResult;
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult;
+import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult;
 import com.pubnub.api.models.consumer.pubsub.objects.PNMembershipResult;
 import com.pubnub.api.models.consumer.pubsub.objects.PNSpaceResult;
 import com.pubnub.api.models.consumer.pubsub.objects.PNUserResult;
@@ -135,6 +136,11 @@ public class SubscriptionManagerTest extends TestHarness {
             public void membership(PubNub pubnub, PNMembershipResult pnMembershipResult) {
 
             }
+
+            @Override
+            public void messageAction(PubNub pubnub, PNMessageActionResult pnMessageActionResult) {
+
+            }
         });
 
 
@@ -188,6 +194,11 @@ public class SubscriptionManagerTest extends TestHarness {
 
             @Override
             public void membership(PubNub pubnub, PNMembershipResult pnMembershipResult) {
+
+            }
+
+            @Override
+            public void messageAction(PubNub pubnub, PNMessageActionResult pnMessageActionResult) {
 
             }
         });
@@ -293,6 +304,11 @@ public class SubscriptionManagerTest extends TestHarness {
             public void membership(PubNub pubnub, PNMembershipResult pnMembershipResult) {
 
             }
+
+            @Override
+            public void messageAction(PubNub pubnub, PNMessageActionResult pnMessageActionResult) {
+
+            }
         });
 
 
@@ -352,6 +368,11 @@ public class SubscriptionManagerTest extends TestHarness {
             public void membership(PubNub pubnub, PNMembershipResult pnMembershipResult) {
 
             }
+
+            @Override
+            public void messageAction(PubNub pubnub, PNMessageActionResult pnMessageActionResult) {
+
+            }
         });
 
 
@@ -408,6 +429,11 @@ public class SubscriptionManagerTest extends TestHarness {
 
             @Override
             public void membership(PubNub pubnub, PNMembershipResult pnMembershipResult) {
+
+            }
+
+            @Override
+            public void messageAction(PubNub pubnub, PNMessageActionResult pnMessageActionResult) {
 
             }
         });
@@ -473,6 +499,11 @@ public class SubscriptionManagerTest extends TestHarness {
             public void membership(PubNub pubnub, PNMembershipResult pnMembershipResult) {
 
             }
+
+            @Override
+            public void messageAction(PubNub pubnub, PNMessageActionResult pnMessageActionResult) {
+
+            }
         });
 
 
@@ -525,6 +556,11 @@ public class SubscriptionManagerTest extends TestHarness {
 
             @Override
             public void membership(PubNub pubnub, PNMembershipResult pnMembershipResult) {
+
+            }
+
+            @Override
+            public void messageAction(PubNub pubnub, PNMessageActionResult pnMessageActionResult) {
 
             }
         });
@@ -580,6 +616,11 @@ public class SubscriptionManagerTest extends TestHarness {
             public void membership(PubNub pubnub, PNMembershipResult pnMembershipResult) {
 
             }
+
+            @Override
+            public void messageAction(PubNub pubnub, PNMessageActionResult pnMessageActionResult) {
+
+            }
         });
 
         pubnub.subscribe().channels(Arrays.asList("ch1", "ch2")).execute();
@@ -631,6 +672,11 @@ public class SubscriptionManagerTest extends TestHarness {
 
             @Override
             public void membership(PubNub pubnub, PNMembershipResult pnMembershipResult) {
+
+            }
+
+            @Override
+            public void messageAction(PubNub pubnub, PNMessageActionResult pnMessageActionResult) {
 
             }
         });
@@ -689,6 +735,11 @@ public class SubscriptionManagerTest extends TestHarness {
             public void membership(PubNub pubnub, PNMembershipResult pnMembershipResult) {
 
             }
+
+            @Override
+            public void messageAction(PubNub pubnub, PNMessageActionResult pnMessageActionResult) {
+
+            }
         });
 
         pubnub.subscribe().channels(Arrays.asList("ch1", "ch2")).execute();
@@ -742,6 +793,11 @@ public class SubscriptionManagerTest extends TestHarness {
 
             @Override
             public void membership(PubNub pubnub, PNMembershipResult pnMembershipResult) {
+
+            }
+
+            @Override
+            public void messageAction(PubNub pubnub, PNMessageActionResult pnMessageActionResult) {
 
             }
         });
@@ -802,6 +858,11 @@ public class SubscriptionManagerTest extends TestHarness {
 
             @Override
             public void membership(PubNub pubnub, PNMembershipResult pnMembershipResult) {
+
+            }
+
+            @Override
+            public void messageAction(PubNub pubnub, PNMessageActionResult pnMessageActionResult) {
 
             }
         });
@@ -866,6 +927,11 @@ public class SubscriptionManagerTest extends TestHarness {
             public void membership(PubNub pubnub, PNMembershipResult pnMembershipResult) {
 
             }
+
+            @Override
+            public void messageAction(PubNub pubnub, PNMessageActionResult pnMessageActionResult) {
+
+            }
         });
 
 
@@ -928,6 +994,11 @@ public class SubscriptionManagerTest extends TestHarness {
 
             @Override
             public void membership(PubNub pubnub, PNMembershipResult pnMembershipResult) {
+
+            }
+
+            @Override
+            public void messageAction(PubNub pubnub, PNMessageActionResult pnMessageActionResult) {
 
             }
         });
@@ -1012,6 +1083,11 @@ public class SubscriptionManagerTest extends TestHarness {
 
             }
 
+            @Override
+            public void messageAction(PubNub pubnub, PNMessageActionResult pnMessageActionResult) {
+
+            }
+
         });
 
 
@@ -1070,6 +1146,11 @@ public class SubscriptionManagerTest extends TestHarness {
             public void membership(PubNub pubnub, PNMembershipResult pnMembershipResult) {
 
             }
+
+            @Override
+            public void messageAction(PubNub pubnub, PNMessageActionResult pnMessageActionResult) {
+
+            }
         });
 
 
@@ -1125,6 +1206,11 @@ public class SubscriptionManagerTest extends TestHarness {
 
             @Override
             public void membership(PubNub pubnub, PNMembershipResult pnMembershipResult) {
+
+            }
+
+            @Override
+            public void messageAction(PubNub pubnub, PNMessageActionResult pnMessageActionResult) {
 
             }
         });
@@ -1214,6 +1300,11 @@ public class SubscriptionManagerTest extends TestHarness {
             public void membership(PubNub pubnub, PNMembershipResult pnMembershipResult) {
 
             }
+
+            @Override
+            public void messageAction(PubNub pubnub, PNMessageActionResult pnMessageActionResult) {
+
+            }
         });
 
 
@@ -1287,6 +1378,11 @@ public class SubscriptionManagerTest extends TestHarness {
             public void membership(PubNub pubnub, PNMembershipResult pnMembershipResult) {
 
             }
+
+            @Override
+            public void messageAction(PubNub pubnub, PNMessageActionResult pnMessageActionResult) {
+
+            }
         });
 
         pubnub.subscribe().channelGroups(Arrays.asList("cg1", "cg2")).execute();
@@ -1344,6 +1440,11 @@ public class SubscriptionManagerTest extends TestHarness {
 
             @Override
             public void membership(PubNub pubnub, PNMembershipResult pnMembershipResult) {
+
+            }
+
+            @Override
+            public void messageAction(PubNub pubnub, PNMessageActionResult pnMessageActionResult) {
 
             }
         });
@@ -1406,6 +1507,11 @@ public class SubscriptionManagerTest extends TestHarness {
             public void membership(PubNub pubnub, PNMembershipResult pnMembershipResult) {
 
             }
+
+            @Override
+            public void messageAction(PubNub pubnub, PNMessageActionResult pnMessageActionResult) {
+
+            }
         });
 
         pubnub.subscribe().channels(Arrays.asList("ch1", "ch2")).execute();
@@ -1457,6 +1563,11 @@ public class SubscriptionManagerTest extends TestHarness {
 
             @Override
             public void membership(PubNub pubnub, PNMembershipResult pnMembershipResult) {
+
+            }
+
+            @Override
+            public void messageAction(PubNub pubnub, PNMessageActionResult pnMessageActionResult) {
 
             }
         });
@@ -1517,6 +1628,11 @@ public class SubscriptionManagerTest extends TestHarness {
             public void membership(PubNub pubnub, PNMembershipResult pnMembershipResult) {
 
             }
+
+            @Override
+            public void messageAction(PubNub pubnub, PNMessageActionResult pnMessageActionResult) {
+
+            }
         });
 
 
@@ -1570,6 +1686,11 @@ public class SubscriptionManagerTest extends TestHarness {
 
             @Override
             public void membership(PubNub pubnub, PNMembershipResult pnMembershipResult) {
+
+            }
+
+            @Override
+            public void messageAction(PubNub pubnub, PNMessageActionResult pnMessageActionResult) {
 
             }
         });
@@ -1627,6 +1748,11 @@ public class SubscriptionManagerTest extends TestHarness {
 
             @Override
             public void membership(PubNub pubnub, PNMembershipResult pnMembershipResult) {
+
+            }
+
+            @Override
+            public void messageAction(PubNub pubnub, PNMessageActionResult pnMessageActionResult) {
 
             }
         });
@@ -1691,6 +1817,11 @@ public class SubscriptionManagerTest extends TestHarness {
             public void membership(PubNub pubnub, PNMembershipResult pnMembershipResult) {
 
             }
+
+            @Override
+            public void messageAction(PubNub pubnub, PNMessageActionResult pnMessageActionResult) {
+
+            }
         });
 
         pubnub.subscribe().channels(Arrays.asList("ch1", "ch2")).withPresence().execute();
@@ -1751,6 +1882,11 @@ public class SubscriptionManagerTest extends TestHarness {
 
             @Override
             public void membership(PubNub pubnub, PNMembershipResult pnMembershipResult) {
+
+            }
+
+            @Override
+            public void messageAction(PubNub pubnub, PNMessageActionResult pnMessageActionResult) {
 
             }
         });
@@ -1814,6 +1950,11 @@ public class SubscriptionManagerTest extends TestHarness {
             public void membership(PubNub pubnub, PNMembershipResult pnMembershipResult) {
 
             }
+
+            @Override
+            public void messageAction(PubNub pubnub, PNMessageActionResult pnMessageActionResult) {
+
+            }
         });
 
         pubnub.subscribe().channels(Arrays.asList("ch1", "ch2")).withPresence().execute();
@@ -1871,6 +2012,11 @@ public class SubscriptionManagerTest extends TestHarness {
 
             @Override
             public void membership(PubNub pubnub, PNMembershipResult pnMembershipResult) {
+
+            }
+
+            @Override
+            public void messageAction(PubNub pubnub, PNMessageActionResult pnMessageActionResult) {
 
             }
         });
@@ -1935,6 +2081,11 @@ public class SubscriptionManagerTest extends TestHarness {
             public void membership(PubNub pubnub, PNMembershipResult pnMembershipResult) {
 
             }
+
+            @Override
+            public void messageAction(PubNub pubnub, PNMessageActionResult pnMessageActionResult) {
+
+            }
         });
 
         pubnub.subscribe().channels(Arrays.asList("ch10")).withPresence().execute();
@@ -1991,6 +2142,11 @@ public class SubscriptionManagerTest extends TestHarness {
             public void membership(PubNub pubnub, PNMembershipResult pnMembershipResult) {
 
             }
+
+            @Override
+            public void messageAction(PubNub pubnub, PNMessageActionResult pnMessageActionResult) {
+
+            }
         });
 
         pubnub.subscribe().channels(Arrays.asList("ch1", "ch2")).withPresence().execute();
@@ -2038,6 +2194,11 @@ public class SubscriptionManagerTest extends TestHarness {
 
             @Override
             public void membership(PubNub pubnub, PNMembershipResult pnMembershipResult) {
+
+            }
+
+            @Override
+            public void messageAction(PubNub pubnub, PNMessageActionResult pnMessageActionResult) {
 
             }
         };
@@ -2124,6 +2285,11 @@ public class SubscriptionManagerTest extends TestHarness {
             public void membership(PubNub pubnub, PNMembershipResult pnMembershipResult) {
 
             }
+
+            @Override
+            public void messageAction(PubNub pubnub, PNMessageActionResult pnMessageActionResult) {
+
+            }
         };
 
         pubnub.addListener(sub1);
@@ -2188,6 +2354,11 @@ public class SubscriptionManagerTest extends TestHarness {
             public void membership(PubNub pubnub, PNMembershipResult pnMembershipResult) {
 
             }
+
+            @Override
+            public void messageAction(PubNub pubnub, PNMessageActionResult pnMessageActionResult) {
+
+            }
         };
 
         pubnub.addListener(sub1);
@@ -2243,6 +2414,11 @@ public class SubscriptionManagerTest extends TestHarness {
 
             @Override
             public void membership(PubNub pubnub, PNMembershipResult pnMembershipResult) {
+
+            }
+
+            @Override
+            public void messageAction(PubNub pubnub, PNMessageActionResult pnMessageActionResult) {
 
             }
         };
@@ -2301,6 +2477,11 @@ public class SubscriptionManagerTest extends TestHarness {
 
             @Override
             public void membership(PubNub pubnub, PNMembershipResult pnMembershipResult) {
+
+            }
+
+            @Override
+            public void messageAction(PubNub pubnub, PNMessageActionResult pnMessageActionResult) {
 
             }
         };
@@ -2365,6 +2546,11 @@ public class SubscriptionManagerTest extends TestHarness {
             public void membership(PubNub pubnub, PNMembershipResult pnMembershipResult) {
 
             }
+
+            @Override
+            public void messageAction(PubNub pubnub, PNMessageActionResult pnMessageActionResult) {
+
+            }
         };
 
         pubnub.addListener(sub1);
@@ -2424,6 +2610,11 @@ public class SubscriptionManagerTest extends TestHarness {
             public void membership(PubNub pubnub, PNMembershipResult pnMembershipResult) {
 
             }
+
+            @Override
+            public void messageAction(PubNub pubnub, PNMessageActionResult pnMessageActionResult) {
+
+            }
         };
 
         pubnub.addListener(sub1);
@@ -2480,6 +2671,11 @@ public class SubscriptionManagerTest extends TestHarness {
 
             @Override
             public void membership(PubNub pubnub, PNMembershipResult pnMembershipResult) {
+
+            }
+
+            @Override
+            public void messageAction(PubNub pubnub, PNMessageActionResult pnMessageActionResult) {
 
             }
         };
@@ -2542,6 +2738,11 @@ public class SubscriptionManagerTest extends TestHarness {
 
             @Override
             public void membership(PubNub pubnub, PNMembershipResult pnMembershipResult) {
+
+            }
+
+            @Override
+            public void messageAction(PubNub pubnub, PNMessageActionResult pnMessageActionResult) {
 
             }
         };
@@ -2613,6 +2814,11 @@ public class SubscriptionManagerTest extends TestHarness {
 
             @Override
             public void membership(PubNub pubnub, PNMembershipResult pnMembershipResult) {
+
+            }
+
+            @Override
+            public void messageAction(PubNub pubnub, PNMessageActionResult pnMessageActionResult) {
 
             }
         });
@@ -2693,6 +2899,11 @@ public class SubscriptionManagerTest extends TestHarness {
 
             @Override
             public void membership(PubNub pubnub, PNMembershipResult pnMembershipResult) {
+
+            }
+
+            @Override
+            public void messageAction(PubNub pubnub, PNMessageActionResult pnMessageActionResult) {
 
             }
         });
@@ -2793,6 +3004,11 @@ public class SubscriptionManagerTest extends TestHarness {
 
             @Override
             public void membership(PubNub pubnub, PNMembershipResult pnMembershipResult) {
+
+            }
+
+            @Override
+            public void messageAction(PubNub pubnub, PNMessageActionResult pnMessageActionResult) {
 
             }
         };

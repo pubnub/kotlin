@@ -2,12 +2,13 @@ package com.pubnub.api.callbacks;
 
 import com.pubnub.api.PubNub;
 import com.pubnub.api.models.consumer.PNStatus;
-import com.pubnub.api.models.consumer.pubsub.objects.PNMembershipResult;
-import com.pubnub.api.models.consumer.pubsub.objects.PNSpaceResult;
-import com.pubnub.api.models.consumer.pubsub.objects.PNUserResult;
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult;
+import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult;
+import com.pubnub.api.models.consumer.pubsub.objects.PNMembershipResult;
+import com.pubnub.api.models.consumer.pubsub.objects.PNSpaceResult;
+import com.pubnub.api.models.consumer.pubsub.objects.PNUserResult;
 
 public abstract class SubscribeCallback {
     public abstract void status(PubNub pubnub, PNStatus pnStatus);
@@ -23,4 +24,6 @@ public abstract class SubscribeCallback {
     public abstract void space(PubNub pubnub, PNSpaceResult pnSpaceResult);
 
     public abstract void membership(PubNub pubnub, PNMembershipResult pnMembershipResult);
+
+    public abstract void messageAction(PubNub pubnub, PNMessageActionResult pnMessageActionResult);
 }

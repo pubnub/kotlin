@@ -3,12 +3,13 @@ package com.pubnub.api.managers;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.callbacks.SubscribeCallback;
 import com.pubnub.api.models.consumer.PNStatus;
-import com.pubnub.api.models.consumer.pubsub.objects.PNMembershipResult;
-import com.pubnub.api.models.consumer.pubsub.objects.PNSpaceResult;
-import com.pubnub.api.models.consumer.pubsub.objects.PNUserResult;
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult;
+import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult;
+import com.pubnub.api.models.consumer.pubsub.objects.PNMembershipResult;
+import com.pubnub.api.models.consumer.pubsub.objects.PNSpaceResult;
+import com.pubnub.api.models.consumer.pubsub.objects.PNUserResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,6 +88,12 @@ public class ListenerManager {
     public void announce(PNMembershipResult membership) {
         for (SubscribeCallback subscribeCallback : getListeners()) {
             subscribeCallback.membership(this.pubnub, membership);
+        }
+    }
+
+    public void announce(PNMessageActionResult messageAction) {
+        for (SubscribeCallback subscribeCallback : getListeners()) {
+            subscribeCallback.messageAction(this.pubnub, messageAction);
         }
     }
 

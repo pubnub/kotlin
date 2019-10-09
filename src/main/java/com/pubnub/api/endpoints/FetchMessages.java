@@ -10,14 +10,13 @@ import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.managers.MapperManager;
 import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.TelemetryManager;
+import com.pubnub.api.models.consumer.history.PNFetchMessageItem;
 import com.pubnub.api.models.consumer.history.PNFetchMessagesResult;
-import com.pubnub.api.models.consumer.pubsub.BasePubSubResult;
-import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
 import com.pubnub.api.models.server.FetchMessagesEnvelope;
-import com.pubnub.api.models.server.HistoryForChannelsItem;
 import com.pubnub.api.vendor.Crypto;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import lombok.extern.slf4j.Slf4j;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -26,9 +25,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.pubnub.api.builder.PubNubErrorBuilder.PNERROBJ_HISTORY_MESSAGE_ACTIONS_MULTIPLE_CHANNELS;
+
+@Slf4j
 @Accessors(chain = true, fluent = true)
 public class FetchMessages extends Endpoint<FetchMessagesEnvelope, PNFetchMessagesResult> {
+    private static final int DEFAULT_MESSAGES = 1;
     private static final int MAX_MESSAGES = 25;
+    private static final int MAX_MESSAGES_ACTIONS = 100;
+
     @Setter
     private List<String> channels;
     @Setter
@@ -38,10 +43,14 @@ public class FetchMessages extends Endpoint<FetchMessagesEnvelope, PNFetchMessag
     @Setter
     private Long end;
 
+    @Setter
+    private Boolean includeMeta;
+    @Setter
+    private Boolean includeMessageActions;
+
     public FetchMessages(PubNub pubnub, TelemetryManager telemetryManager, RetrofitManager retrofit) {
         super(pubnub, telemetryManager, retrofit);
         channels = new ArrayList<>();
-        maximumPerChannel = 1;
     }
 
     @Override
@@ -57,18 +66,41 @@ public class FetchMessages extends Endpoint<FetchMessagesEnvelope, PNFetchMessag
 
     @Override
     protected void validateParams() throws PubNubException {
+        if (this.getPubnub().getConfiguration().getSubscribeKey() == null
+                || this.getPubnub().getConfiguration().getSubscribeKey().isEmpty()) {
+            throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_SUBSCRIBE_KEY_MISSING).build();
+        }
+
         if (channels == null || channels.size() == 0) {
             throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_CHANNEL_MISSING).build();
         }
-        if (maximumPerChannel != null && maximumPerChannel > MAX_MESSAGES) {
-            maximumPerChannel = MAX_MESSAGES;
-        } else if (maximumPerChannel == null) {
-            maximumPerChannel = 1;
+
+        if (includeMeta == null) {
+            includeMeta = false;
+        }
+
+        if (includeMessageActions == null) {
+            includeMessageActions = false;
+        }
+
+        if (!includeMessageActions) {
+            if (maximumPerChannel == null || maximumPerChannel < DEFAULT_MESSAGES) {
+                maximumPerChannel = DEFAULT_MESSAGES;
+                log.info("maximumPerChannel param defaulting to " + maximumPerChannel);
+            } else if (maximumPerChannel > MAX_MESSAGES) {
+                maximumPerChannel = MAX_MESSAGES;
+                log.info("maximumPerChannel param defaulting to " + maximumPerChannel);
+            }
+        } else {
+            if (maximumPerChannel == null || maximumPerChannel < 1 || maximumPerChannel > MAX_MESSAGES_ACTIONS) {
+                maximumPerChannel = MAX_MESSAGES_ACTIONS;
+                log.info("maximumPerChannel param defaulting to " + maximumPerChannel);
+            }
         }
     }
 
     @Override
-    protected Call<FetchMessagesEnvelope> doWork(Map<String, String> params) {
+    protected Call<FetchMessagesEnvelope> doWork(Map<String, String> params) throws PubNubException {
         params.put("max", String.valueOf(maximumPerChannel));
 
         if (start != null) {
@@ -78,7 +110,21 @@ public class FetchMessages extends Endpoint<FetchMessagesEnvelope, PNFetchMessag
             params.put("end", Long.toString(end).toLowerCase());
         }
 
-        return this.getRetrofit().getHistoryService().fetchMessages(this.getPubnub().getConfiguration().getSubscribeKey(), PubNubUtil.joinString(channels, ","), params);
+        if (includeMeta) {
+            params.put("include_meta", String.valueOf(includeMeta));
+        }
+
+        if (!includeMessageActions) {
+            return this.getRetrofit().getHistoryService().fetchMessages(
+                    this.getPubnub().getConfiguration().getSubscribeKey(), PubNubUtil.joinString(channels, ","),
+                    params);
+        } else {
+            if (channels.size() > 1) {
+                throw PubNubException.builder().pubnubError(PNERROBJ_HISTORY_MESSAGE_ACTIONS_MULTIPLE_CHANNELS).build();
+            }
+            return this.getRetrofit().getHistoryService().fetchMessagesWithActions(
+                    this.getPubnub().getConfiguration().getSubscribeKey(), channels.get(0), params);
+        }
     }
 
     @Override
@@ -87,29 +133,36 @@ public class FetchMessages extends Endpoint<FetchMessagesEnvelope, PNFetchMessag
             throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_PARSING_ERROR).build();
         }
 
-        PNFetchMessagesResult.PNFetchMessagesResultBuilder result = PNFetchMessagesResult.builder();
-        Map<String, List<PNMessageResult>> listMap = new HashMap<>();
+        PNFetchMessagesResult.PNFetchMessagesResultBuilder builder = PNFetchMessagesResult.builder();
 
-        FetchMessagesEnvelope envelope = input.body();
+        HashMap<String, List<PNFetchMessageItem>> channelsMap = new HashMap<>();
 
-        for (Map.Entry<String, List<HistoryForChannelsItem>> entry : envelope.getChannels().entrySet()) {
+        for (Map.Entry<String, List<PNFetchMessageItem>> entry : input.body().getChannels().entrySet()) {
+            List<PNFetchMessageItem> items = new ArrayList<>();
 
-            List<PNMessageResult> messages = new ArrayList<>();
+            for (PNFetchMessageItem item : entry.getValue()) {
+                PNFetchMessageItem.PNFetchMessageItemBuilder messageItemBuilder = PNFetchMessageItem.builder();
+                messageItemBuilder.message(processMessage(item.getMessage()));
+                messageItemBuilder.timetoken(item.getTimetoken());
+                messageItemBuilder.meta(item.getMeta());
 
-            for (HistoryForChannelsItem item : entry.getValue()) {
-                BasePubSubResult.BasePubSubResultBuilder resultBuilder = BasePubSubResult.builder();
-                resultBuilder.channel(entry.getKey());
-                JsonElement message = processMessage(item.getMessage());
-                resultBuilder.timetoken(item.getTimetoken());
-                messages.add(new PNMessageResult(resultBuilder.build(), message));
+                if (includeMessageActions) {
+                    if (item.getActions() != null) {
+                        messageItemBuilder.actions(item.getActions());
+                    } else {
+                        messageItemBuilder.actions(new HashMap<>());
+                    }
+                }
+
+                items.add(messageItemBuilder.build());
             }
 
-            listMap.put(entry.getKey(), messages);
+            channelsMap.put(entry.getKey(), items);
         }
 
-        result.channels(listMap);
+        builder.channels(channelsMap);
 
-        return result.build();
+        return builder.build();
     }
 
     @Override
@@ -143,7 +196,7 @@ public class FetchMessages extends Endpoint<FetchMessagesEnvelope, PNFetchMessag
         outputText = crypto.decrypt(inputText);
         outputObject = mapper.fromJson(outputText, JsonElement.class);
 
-        // inject the decoded resposne into the payload
+        // inject the decoded response into the payload
         if (mapper.isJsonObject(message) && mapper.hasField(message, "pn_other")) {
             JsonObject objectNode = mapper.getAsObject(message);
             mapper.putOnObject(objectNode, "pn_other", outputObject);
@@ -152,6 +205,4 @@ public class FetchMessages extends Endpoint<FetchMessagesEnvelope, PNFetchMessag
 
         return outputObject;
     }
-
 }
-

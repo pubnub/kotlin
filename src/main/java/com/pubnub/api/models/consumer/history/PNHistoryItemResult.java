@@ -10,9 +10,7 @@ import lombok.ToString;
 @ToString
 public class PNHistoryItemResult {
 
-    @Getter
     private Long timetoken;
-    @Getter
     private JsonElement entry;
-
+    private JsonElement meta;
 }

@@ -18,6 +18,9 @@ import com.pubnub.api.endpoints.channel_groups.AllChannelsChannelGroup;
 import com.pubnub.api.endpoints.channel_groups.DeleteChannelGroup;
 import com.pubnub.api.endpoints.channel_groups.ListAllChannelGroup;
 import com.pubnub.api.endpoints.channel_groups.RemoveChannelChannelGroup;
+import com.pubnub.api.endpoints.message_actions.AddMessageAction;
+import com.pubnub.api.endpoints.message_actions.GetMessageActions;
+import com.pubnub.api.endpoints.message_actions.RemoveMessageAction;
 import com.pubnub.api.endpoints.objects_api.members.GetMembers;
 import com.pubnub.api.endpoints.objects_api.members.ManageMembers;
 import com.pubnub.api.endpoints.objects_api.memberships.GetMemberships;
@@ -85,7 +88,7 @@ public class PubNub {
     private static final int TIMESTAMP_DIVIDER = 1000;
     private static final int MAX_SEQUENCE = 65535;
 
-    private static final String SDK_VERSION = "4.28.0";
+    private static final String SDK_VERSION = "4.29.0";
 
     public PubNub(PNConfiguration initialConfig) {
         this.configuration = initialConfig;
@@ -282,6 +285,18 @@ public class PubNub {
         return new ManageMembers(this, this.telemetryManager, this.retrofitManager);
     }
 
+    public AddMessageAction addMessageAction() {
+        return new AddMessageAction(this, this.telemetryManager, this.retrofitManager);
+    }
+
+    public GetMessageActions getMessageActions() {
+        return new GetMessageActions(this, this.telemetryManager, this.retrofitManager);
+    }
+
+    public RemoveMessageAction removeMessageAction() {
+        return new RemoveMessageAction(this, this.telemetryManager, this.retrofitManager);
+    }
+
     // public methods
 
     /**
@@ -449,6 +464,10 @@ public class PubNub {
 
     public String getToken(TokenManagerProperties tokenManagerProperties) {
         return tokenManager.getToken(tokenManagerProperties);
+    }
+
+    public HashMap<String, HashMap<String, HashMap<String, String>>> getTokens() {
+        return tokenManager.getTokens();
     }
 
     public HashMap<String, HashMap<String, String>> getTokensByResource(PNResourceType resourceType) {
