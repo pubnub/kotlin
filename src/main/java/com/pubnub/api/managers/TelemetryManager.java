@@ -2,10 +2,13 @@ package com.pubnub.api.managers;
 
 import com.pubnub.api.enums.PNOperationType;
 
+import java.math.RoundingMode;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -19,6 +22,10 @@ public class TelemetryManager {
 
     private Map<String, List<Map<String, Double>>> latencies;
 
+    private NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.US);
+
+    private static final int MAX_FRACTION_DIGITS = 3;
+
     private static final int TIMESTAMP_DIVIDER = 1000;
 
     private static final double MAXIMUM_LATENCY_DATA_AGE = 60.0f;
@@ -26,11 +33,14 @@ public class TelemetryManager {
     private static final int CLEAN_UP_INTERVAL_MULTIPLIER = 1000;
 
     public TelemetryManager() {
-
         this.latencies = new HashMap<>();
+
+        this.numberFormat.setMaximumFractionDigits(MAX_FRACTION_DIGITS);
+        this.numberFormat.setRoundingMode(RoundingMode.HALF_UP);
+        this.numberFormat.setGroupingUsed(false);
+
         startCleanUpTimer();
     }
-
 
     public synchronized Map<String, String> operationsLatency() {
         Map<String, String> operationLatencies = new HashMap<>();
@@ -38,7 +48,7 @@ public class TelemetryManager {
             String latencyKey = "l_".concat(entry.getKey());
             double endpointAverageLatency = TelemetryManager.averageLatencyFromData(entry.getValue());
             if (endpointAverageLatency > 0.0f) {
-                operationLatencies.put(latencyKey, Double.toString(endpointAverageLatency));
+                operationLatencies.put(latencyKey, numberFormat.format(endpointAverageLatency));
             }
         }
         return operationLatencies;

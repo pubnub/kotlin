@@ -12,9 +12,21 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.equalToJson;
+import static com.github.tomakehurst.wiremock.client.WireMock.findAll;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.matching;
+import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 import static org.junit.Assert.assertEquals;
 
@@ -57,6 +69,9 @@ public class SetStateEndpointTest extends TestHarness {
 
         PNSetStateResult result =
                 partialSetState.channels(Collections.singletonList("testChannel")).state(myState).sync();
+
+        assert result != null;
+
         assertEquals(pubnub.getMapper().elementToInt(result.getState(), "age"), 20);
         assertEquals(pubnub.getMapper().elementToString(result.getState(), "status"), "online");
 
@@ -81,6 +96,9 @@ public class SetStateEndpointTest extends TestHarness {
         PNSetStateResult result =
                 partialSetState.channels(Collections.singletonList("testChannel")).state(myState).uuid(
                         "someoneElseUUID").sync();
+
+        assert result != null;
+
         assertEquals(pubnub.getMapper().elementToInt(result.getState(), "age"), 20);
         assertEquals(pubnub.getMapper().elementToString(result.getState(), "status"), "online");
 
@@ -105,6 +123,9 @@ public class SetStateEndpointTest extends TestHarness {
 
         PNSetStateResult result =
                 partialSetState.channels(Arrays.asList("testChannel", "testChannel2")).state(myState).sync();
+
+        assert result != null;
+
         assertEquals(pubnub.getMapper().elementToInt(result.getState(), "age"), 20);
         assertEquals(pubnub.getMapper().elementToString(result.getState(), "status"), "online");
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
@@ -126,6 +147,8 @@ public class SetStateEndpointTest extends TestHarness {
         myState.put("age", 20);
 
         PNSetStateResult result = partialSetState.channelGroups(Collections.singletonList("cg1")).state(myState).sync();
+
+        assert result != null;
 
         assertEquals(pubnub.getMapper().elementToInt(result.getState(), "age"), 20);
         assertEquals(pubnub.getMapper().elementToString(result.getState(), "status"), "online");
@@ -150,6 +173,8 @@ public class SetStateEndpointTest extends TestHarness {
         myState.put("age", 20);
 
         PNSetStateResult result = partialSetState.channelGroups(Arrays.asList("cg1", "cg2")).state(myState).sync();
+
+        assert result != null;
 
         assertEquals(pubnub.getMapper().elementToInt(result.getState(), "age"), 20);
         assertEquals(pubnub.getMapper().elementToString(result.getState(), "status"), "online");
@@ -177,6 +202,8 @@ public class SetStateEndpointTest extends TestHarness {
         PNSetStateResult result =
                 partialSetState.channels(Collections.singletonList("ch1")).channelGroups(Arrays.asList("cg1", "cg2")).state(myState).sync();
 
+        assert result != null;
+
         assertEquals(pubnub.getMapper().elementToInt(result.getState(), "age"), 20);
         assertEquals(pubnub.getMapper().elementToString(result.getState(), "status"), "online");
 
@@ -194,7 +221,6 @@ public class SetStateEndpointTest extends TestHarness {
                 .withQueryParam("state", matching("%7B%22status%22%3A%22oneline%22%2C%22age%22%3A20%7D"))
                 .willReturn(aResponse().withBody("{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : " +
                         "20, \"status\" : \"online\" }, \"service\": \"Presence\"}").withStatus(400)));
-
 
         Map<String, Object> myState = new HashMap<>();
         myState.put("age", 20);

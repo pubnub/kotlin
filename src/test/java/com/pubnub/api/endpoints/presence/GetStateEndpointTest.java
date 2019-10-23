@@ -11,6 +11,7 @@ import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.presence.PNGetStateResult;
 import org.awaitility.Awaitility;
+import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -23,7 +24,13 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.findAll;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 import static org.junit.Assert.assertEquals;
 
@@ -60,6 +67,9 @@ public class GetStateEndpointTest extends TestHarness {
 
         PNGetStateResult result = partialGetState.channels(Collections.singletonList("testChannel")).uuid("sampleUUID"
         ).sync();
+
+        assert result != null;
+
         JsonElement ch1Data = result.getStateByUUID().get("testChannel");
         assertEquals(pubnub.getMapper().elementToInt(ch1Data, "age"), 20);
         assertEquals(pubnub.getMapper().elementToString(ch1Data, "status"), "online");
@@ -74,6 +84,9 @@ public class GetStateEndpointTest extends TestHarness {
 
 
         PNGetStateResult result = partialGetState.channels(Collections.singletonList("testChannel")).sync();
+
+        assert result != null;
+
         JsonElement ch1Data = result.getStateByUUID().get("testChannel");
         assertEquals(pubnub.getMapper().elementToInt(ch1Data, "age"), 20);
         assertEquals(pubnub.getMapper().elementToString(ch1Data, "status"), "online");
@@ -99,6 +112,9 @@ public class GetStateEndpointTest extends TestHarness {
                         "}, \"service\": \"Presence\"}")));
 
         PNGetStateResult result = partialGetState.channels(Arrays.asList("ch1", "ch2")).uuid("sampleUUID").sync();
+
+        assert result != null;
+
         JsonElement ch1Data = result.getStateByUUID().get("ch1");
         assertEquals(pubnub.getMapper().elementToInt(ch1Data, "age"), 20);
         assertEquals(pubnub.getMapper().elementToString(ch1Data, "status"), "online");
@@ -117,6 +133,9 @@ public class GetStateEndpointTest extends TestHarness {
 
         PNGetStateResult result =
                 partialGetState.channelGroups(Collections.singletonList("cg1")).uuid("sampleUUID").sync();
+
+        assert result != null;
+
         JsonElement ch1Data = result.getStateByUUID().get("chcg1");
         assertEquals(pubnub.getMapper().elementToInt(ch1Data, "age"), 20);
         assertEquals(pubnub.getMapper().elementToString(ch1Data, "status"), "online");
@@ -138,6 +157,9 @@ public class GetStateEndpointTest extends TestHarness {
                         "} }, \"service\": \"Presence\"}")));
 
         PNGetStateResult result = partialGetState.channelGroups(Arrays.asList("cg1", "cg2")).uuid("sampleUUID").sync();
+
+        assert result != null;
+
         JsonElement ch1Data = result.getStateByUUID().get("chcg1");
         assertEquals(pubnub.getMapper().elementToInt(ch1Data, "age"), 20);
         assertEquals(pubnub.getMapper().elementToString(ch1Data, "status"), "online");
@@ -160,6 +182,9 @@ public class GetStateEndpointTest extends TestHarness {
 
         PNGetStateResult result =
                 partialGetState.channels(Collections.singletonList("ch1")).channelGroups(Arrays.asList("cg1", "cg2")).uuid("sampleUUID").sync();
+
+        assert result != null;
+
         JsonElement ch1Data = result.getStateByUUID().get("chcg1");
         assertEquals(pubnub.getMapper().elementToInt(ch1Data, "age"), 20);
         assertEquals(pubnub.getMapper().elementToString(ch1Data, "status"), "online");
@@ -208,7 +233,7 @@ public class GetStateEndpointTest extends TestHarness {
 
         partialGetState.channels(Collections.singletonList("testChannel")).uuid("sampleUUID").async(new PNCallback<PNGetStateResult>() {
             @Override
-            public void onResponse(PNGetStateResult result, PNStatus status) {
+            public void onResponse(PNGetStateResult result, @NotNull PNStatus status) {
                 if (status != null && status.getOperation() == PNOperationType.PNGetState) {
                     atomic.incrementAndGet();
                 }

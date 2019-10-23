@@ -11,6 +11,7 @@ import com.pubnub.api.enums.PNPushType;
 import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.push.PNPushListProvisionsResult;
 import org.awaitility.Awaitility;
+import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -113,7 +114,7 @@ public class ListPushProvisionsTest extends TestHarness {
 
         instance.deviceId("niceDevice").pushType(PNPushType.APNS).async(new PNCallback<PNPushListProvisionsResult>() {
             @Override
-            public void onResponse(PNPushListProvisionsResult result, PNStatus status) {
+            public void onResponse(PNPushListProvisionsResult result, @NotNull PNStatus status) {
                 if (status != null && status.getOperation() == PNOperationType.PNPushNotificationEnabledChannelsOperation) {
                     atomic.incrementAndGet();
                 }

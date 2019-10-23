@@ -10,6 +10,7 @@ import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.models.consumer.PNPublishResult;
 import com.pubnub.api.models.consumer.PNStatus;
 import org.awaitility.Awaitility;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.After;
@@ -356,7 +357,7 @@ public class PublishTest extends TestHarness {
 
         instance.async(new PNCallback<PNPublishResult>() {
             @Override
-            public void onResponse(PNPublishResult result, PNStatus status) {
+            public void onResponse(PNPublishResult result, @NotNull PNStatus status) {
                 if (status != null && status.getOperation() == PNOperationType.PNPublishOperation) {
                     atomic.incrementAndGet();
                 }

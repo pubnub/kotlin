@@ -40,4 +40,14 @@
         <Field name="actionTimetoken"/>
         <Bug pattern="UWF_UNWRITTEN_FIELD"/>
     </Match>
+    <Match>
+        <Class name="com.pubnub.api.PubNubUtil"/>
+        <Method name="requestBodyToString"/>
+        <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
+    </Match>
+    <Match>
+        <Class name="com.pubnub.api.endpoints.vendor.AppEngineFactory"/>
+        <Method name="execute"/>
+        <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
+    </Match>
 </FindBugsFilter>

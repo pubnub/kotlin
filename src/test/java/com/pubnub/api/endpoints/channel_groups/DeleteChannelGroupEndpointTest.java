@@ -10,6 +10,7 @@ import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsDeleteGroupResult;
 import org.awaitility.Awaitility;
+import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -99,7 +100,7 @@ public class DeleteChannelGroupEndpointTest extends TestHarness {
 
         partialDeleteChannelGroup.channelGroup("groupA").async(new PNCallback<PNChannelGroupsDeleteGroupResult>() {
             @Override
-            public void onResponse(PNChannelGroupsDeleteGroupResult result, PNStatus status) {
+            public void onResponse(PNChannelGroupsDeleteGroupResult result, @NotNull PNStatus status) {
                 if (status != null && status.getOperation() == PNOperationType.PNRemoveGroupOperation) {
                     atomic.incrementAndGet();
                 }

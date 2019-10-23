@@ -10,6 +10,7 @@ import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsAllChannelsResult;
 import org.awaitility.Awaitility;
+import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -20,7 +21,13 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.findAll;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
@@ -54,6 +61,9 @@ public class AllChannelsChannelGroupEndpointTest extends TestHarness {
                         "[\"a\",\"b\"]}, \"service\": \"ChannelGroups\"}")));
 
         PNChannelGroupsAllChannelsResult response = partialAllChannelsChannelGroup.channelGroup("groupA").sync();
+
+        assert response != null;
+
         assertThat(response.getChannels(), org.hamcrest.Matchers.contains("a", "b"));
     }
 
@@ -82,6 +92,9 @@ public class AllChannelsChannelGroupEndpointTest extends TestHarness {
                         "\"ChannelGroups\"}")));
 
         PNChannelGroupsAllChannelsResult response = partialAllChannelsChannelGroup.channelGroup("groupA").sync();
+
+        assert response != null;
+
         assertThat(response.getChannels(), org.hamcrest.Matchers.contains("a", "b"));
     }
 
@@ -109,7 +122,7 @@ public class AllChannelsChannelGroupEndpointTest extends TestHarness {
 
         partialAllChannelsChannelGroup.channelGroup("groupA").async(new PNCallback<PNChannelGroupsAllChannelsResult>() {
             @Override
-            public void onResponse(PNChannelGroupsAllChannelsResult result, PNStatus status) {
+            public void onResponse(PNChannelGroupsAllChannelsResult result, @NotNull PNStatus status) {
                 if (status != null && status.getOperation() == PNOperationType.PNChannelsForGroupOperation) {
                     atomic.incrementAndGet();
                 }

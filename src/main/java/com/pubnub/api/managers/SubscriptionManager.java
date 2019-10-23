@@ -18,6 +18,7 @@ import com.pubnub.api.models.server.SubscribeEnvelope;
 import com.pubnub.api.models.server.SubscribeMessage;
 import com.pubnub.api.workers.SubscribeMessageWorker;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -191,7 +192,7 @@ public class SubscriptionManager {
                     .channels(presenceOperation.getChannels()).channelGroups(presenceOperation.getChannelGroups())
                     .async(new PNCallback<Boolean>() {
                         @Override
-                        public void onResponse(Boolean result, PNStatus status) {
+                        public void onResponse(Boolean result, @NotNull PNStatus status) {
                             listenerManager.announce(status);
                         }
                     });
@@ -210,7 +211,7 @@ public class SubscriptionManager {
                     .channels(unsubscribeOperation.getChannels()).channelGroups(unsubscribeOperation.getChannelGroups())
                     .async(new PNCallback<Boolean>() {
                         @Override
-                        public void onResponse(Boolean result, PNStatus status) {
+                        public void onResponse(Boolean result, @NotNull PNStatus status) {
                             listenerManager.announce(status);
                         }
                     });
@@ -277,7 +278,7 @@ public class SubscriptionManager {
 
         subscribeCall.async(new PNCallback<SubscribeEnvelope>() {
             @Override
-            public void onResponse(SubscribeEnvelope result, PNStatus status) {
+            public void onResponse(SubscribeEnvelope result, @NotNull PNStatus status) {
                 if (status.isError()) {
                     if (status.getCategory() == PNStatusCategory.PNTimeoutCategory) {
                         startSubscribeLoop();
@@ -375,7 +376,7 @@ public class SubscriptionManager {
 
         heartbeatCall.async(new PNCallback<Boolean>() {
             @Override
-            public void onResponse(Boolean result, PNStatus status) {
+            public void onResponse(Boolean result, @NotNull PNStatus status) {
                 PNHeartbeatNotificationOptions heartbeatVerbosity =
                         pubnub.getConfiguration().getHeartbeatNotificationOptions();
 

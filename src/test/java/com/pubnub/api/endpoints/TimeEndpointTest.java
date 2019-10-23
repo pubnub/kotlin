@@ -8,6 +8,8 @@ import com.pubnub.api.callbacks.TimeCallback;
 import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.PNTimeResult;
 import org.awaitility.Awaitility;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -18,10 +20,15 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.findAll;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class TimeEndpointTest extends TestHarness {
 
@@ -51,7 +58,10 @@ public class TimeEndpointTest extends TestHarness {
                 .willReturn(aResponse().withBody("[14593046077243110]")));
 
         PNTimeResult response = partialTime.sync();
-        assertTrue(response.getTimetoken().equals(14593046077243110L));
+
+        assert response != null;
+
+        assertEquals(14593046077243110L, (long) response.getTimetoken());
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
@@ -77,7 +87,10 @@ public class TimeEndpointTest extends TestHarness {
         stubFor(get(urlPathEqualTo("/time/0"))
                 .willReturn(aResponse().withBody("[14593046077243110]").withStatus(404)));
         PNTimeResult response = partialTime.sync();
-        assertTrue(response.getTimetoken().equals(14593046077243110L));
+
+        assert response != null;
+
+        assertEquals(14593046077243110L, (long) response.getTimetoken());
     }
 
     @Test
@@ -88,8 +101,9 @@ public class TimeEndpointTest extends TestHarness {
         partialTime.async(new TimeCallback() {
 
             @Override
-            public void onResponse(PNTimeResult result, PNStatus status) {
-                assertTrue(result.getTimetoken().equals(14593046077243110L));
+            public void onResponse(@Nullable PNTimeResult result, @NotNull PNStatus status) {
+                assert result != null;
+                assertEquals(14593046077243110L, (long) result.getTimetoken());
                 atomic.incrementAndGet();
             }
         });
@@ -106,10 +120,9 @@ public class TimeEndpointTest extends TestHarness {
         partialTime.async(new TimeCallback() {
 
             @Override
-            public void onResponse(PNTimeResult result, PNStatus status) {
-
-
-                assertTrue(result.getTimetoken().equals(14593046077243110L));
+            public void onResponse(@Nullable PNTimeResult result, @NotNull PNStatus status) {
+                assert result != null;
+                assertEquals(14593046077243110L, (long) result.getTimetoken());
                 atomic.incrementAndGet();
 
                 if (atomic.get() == 1) {
@@ -131,7 +144,7 @@ public class TimeEndpointTest extends TestHarness {
         partialTime.async(new TimeCallback() {
 
             @Override
-            public void onResponse(PNTimeResult result, PNStatus status) {
+            public void onResponse(PNTimeResult result, @NotNull PNStatus status) {
                 if (status != null) {
                     atomic.incrementAndGet();
                 }
@@ -151,7 +164,7 @@ public class TimeEndpointTest extends TestHarness {
         partialTime.async(new TimeCallback() {
 
             @Override
-            public void onResponse(PNTimeResult result, PNStatus status) {
+            public void onResponse(PNTimeResult result, @NotNull PNStatus status) {
                 if (status != null) {
                     atomic.incrementAndGet();
                 }
@@ -171,7 +184,7 @@ public class TimeEndpointTest extends TestHarness {
         partialTime.async(new TimeCallback() {
 
             @Override
-            public void onResponse(PNTimeResult result, PNStatus status) {
+            public void onResponse(PNTimeResult result, @NotNull PNStatus status) {
                 if (status != null) {
                     atomic.incrementAndGet();
                 }
@@ -191,7 +204,10 @@ public class TimeEndpointTest extends TestHarness {
 
         pubnub.getConfiguration().setAuthKey("myKey");
         PNTimeResult response = partialTime.sync();
-        assertTrue(response.getTimetoken().equals(14593046077243110L));
+
+        assert response != null;
+
+        assertEquals(14593046077243110L, (long) response.getTimetoken());
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());

@@ -10,7 +10,6 @@ import com.pubnub.api.endpoints.FetchMessages;
 import com.pubnub.api.endpoints.History;
 import com.pubnub.api.endpoints.MessageCounts;
 import com.pubnub.api.endpoints.Time;
-import com.pubnub.api.endpoints.access.Audit;
 import com.pubnub.api.endpoints.access.Grant;
 import com.pubnub.api.endpoints.access.GrantToken;
 import com.pubnub.api.endpoints.channel_groups.AddChannelChannelGroup;
@@ -56,6 +55,8 @@ import com.pubnub.api.managers.token_manager.TokenManager;
 import com.pubnub.api.managers.token_manager.TokenManagerProperties;
 import com.pubnub.api.vendor.Crypto;
 import lombok.Getter;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -66,10 +67,10 @@ import java.util.UUID;
 public class PubNub {
 
     @Getter
-    private PNConfiguration configuration;
+    private @NotNull PNConfiguration configuration;
 
     @Getter
-    private MapperManager mapper;
+    private @NotNull MapperManager mapper;
 
     private String instanceId;
 
@@ -88,9 +89,9 @@ public class PubNub {
     private static final int TIMESTAMP_DIVIDER = 1000;
     private static final int MAX_SEQUENCE = 65535;
 
-    private static final String SDK_VERSION = "4.29.0";
+    private static final String SDK_VERSION = "4.29.1";
 
-    public PubNub(PNConfiguration initialConfig) {
+    public PubNub(@NotNull PNConfiguration initialConfig) {
         this.configuration = initialConfig;
         this.mapper = new MapperManager();
         this.telemetryManager = new TelemetryManager();
@@ -102,200 +103,241 @@ public class PubNub {
         instanceId = UUID.randomUUID().toString();
     }
 
+    @NotNull
     public String getBaseUrl() {
         return this.basePathManager.getBasePath();
     }
 
 
-    //
-    public void addListener(SubscribeCallback listener) {
+    public void addListener(@NotNull SubscribeCallback listener) {
         subscriptionManager.addListener(listener);
     }
 
-    public void removeListener(SubscribeCallback listener) {
+    public void removeListener(@NotNull SubscribeCallback listener) {
         subscriptionManager.removeListener(listener);
     }
 
+    @NotNull
     public SubscribeBuilder subscribe() {
         return new SubscribeBuilder(this.subscriptionManager);
     }
 
+    @NotNull
     public UnsubscribeBuilder unsubscribe() {
         return new UnsubscribeBuilder(this.subscriptionManager);
     }
 
+    @NotNull
     public PresenceBuilder presence() {
         return new PresenceBuilder(this.subscriptionManager);
     }
 
     // start push
 
+    @NotNull
     public AddChannelsToPush addPushNotificationsOnChannels() {
         return new AddChannelsToPush(this, this.telemetryManager, this.retrofitManager);
     }
 
+    @NotNull
     public RemoveChannelsFromPush removePushNotificationsFromChannels() {
         return new RemoveChannelsFromPush(this, this.telemetryManager, this.retrofitManager);
     }
 
+    @NotNull
     public RemoveAllPushChannelsForDevice removeAllPushNotificationsFromDeviceWithPushToken() {
         return new RemoveAllPushChannelsForDevice(this, this.telemetryManager, this.retrofitManager);
     }
 
+    @NotNull
     public ListPushProvisions auditPushChannelProvisions() {
         return new ListPushProvisions(this, this.telemetryManager, this.retrofitManager);
     }
 
     // end push
 
+    @NotNull
     public WhereNow whereNow() {
         return new WhereNow(this, this.telemetryManager, this.retrofitManager);
     }
 
+    @NotNull
     public HereNow hereNow() {
         return new HereNow(this, this.telemetryManager, this.retrofitManager);
     }
 
+    @NotNull
     public Time time() {
         return new Time(this, this.telemetryManager, this.retrofitManager);
     }
 
+    @NotNull
     public History history() {
         return new History(this, this.telemetryManager, this.retrofitManager);
     }
 
+    @NotNull
     public FetchMessages fetchMessages() {
         return new FetchMessages(this, this.telemetryManager, this.retrofitManager);
     }
 
+    @NotNull
     public DeleteMessages deleteMessages() {
         return new DeleteMessages(this, this.telemetryManager, this.retrofitManager);
     }
 
+    @NotNull
     public MessageCounts messageCounts() {
         return new MessageCounts(this, this.telemetryManager, this.retrofitManager);
     }
 
-    public Audit audit() {
-        return new Audit(this, this.telemetryManager, this.retrofitManager);
-    }
-
-    /**
-     * @deprecated This method will soon be obsoleted.
-     * <p> Use {@link PubNub#grantToken()} instead.
-     */
-    @Deprecated
+    @NotNull
     public Grant grant() {
         return new Grant(this, this.telemetryManager, this.retrofitManager);
     }
 
+    @NotNull
     public GrantToken grantToken() {
         return new GrantToken(this, this.telemetryManager, this.retrofitManager);
     }
 
+    @NotNull
     public GetState getPresenceState() {
         return new GetState(this, this.telemetryManager, this.retrofitManager);
     }
 
+    @NotNull
     public SetState setPresenceState() {
         return new SetState(this, subscriptionManager, this.telemetryManager, this.retrofitManager);
     }
 
+    @NotNull
     public Publish publish() {
         return new Publish(this, publishSequenceManager, this.telemetryManager, this.retrofitManager);
     }
 
+    @NotNull
     public Signal signal() {
         return new Signal(this, this.telemetryManager, this.retrofitManager);
     }
 
+    @NotNull
     public ListAllChannelGroup listAllChannelGroups() {
         return new ListAllChannelGroup(this, this.telemetryManager, this.retrofitManager);
     }
 
+    @NotNull
     public AllChannelsChannelGroup listChannelsForChannelGroup() {
         return new AllChannelsChannelGroup(this, this.telemetryManager, this.retrofitManager);
     }
 
+    @NotNull
     public AddChannelChannelGroup addChannelsToChannelGroup() {
         return new AddChannelChannelGroup(this, this.telemetryManager, this.retrofitManager);
     }
 
+    @NotNull
     public RemoveChannelChannelGroup removeChannelsFromChannelGroup() {
         return new RemoveChannelChannelGroup(this, this.telemetryManager, this.retrofitManager);
     }
 
+    @NotNull
     public DeleteChannelGroup deleteChannelGroup() {
         return new DeleteChannelGroup(this, this.telemetryManager, this.retrofitManager);
     }
 
+    // Start Objects API
+
+    @NotNull
     public GetUsers getUsers() {
         return new GetUsers(this, this.telemetryManager, this.retrofitManager);
     }
 
+    @NotNull
     public GetUser getUser() {
         return new GetUser(this, this.telemetryManager, this.retrofitManager);
     }
 
+    @NotNull
     public CreateUser createUser() {
         return new CreateUser(this, this.telemetryManager, this.retrofitManager);
     }
 
+    @NotNull
     public UpdateUser updateUser() {
         return new UpdateUser(this, this.telemetryManager, this.retrofitManager);
     }
 
+    @NotNull
     public DeleteUser deleteUser() {
         return new DeleteUser(this, this.telemetryManager, this.retrofitManager);
     }
 
+    @NotNull
     public GetSpaces getSpaces() {
         return new GetSpaces(this, this.telemetryManager, this.retrofitManager);
     }
 
+    @NotNull
     public GetSpace getSpace() {
         return new GetSpace(this, this.telemetryManager, this.retrofitManager);
     }
 
+    @NotNull
     public CreateSpace createSpace() {
         return new CreateSpace(this, this.telemetryManager, this.retrofitManager);
     }
 
+    @NotNull
     public UpdateSpace updateSpace() {
         return new UpdateSpace(this, this.telemetryManager, this.retrofitManager);
     }
 
+    @NotNull
     public DeleteSpace deleteSpace() {
         return new DeleteSpace(this, this.telemetryManager, this.retrofitManager);
     }
 
+    @NotNull
     public GetMemberships getMemberships() {
         return new GetMemberships(this, this.telemetryManager, this.retrofitManager);
     }
 
+    @NotNull
     public GetMembers getMembers() {
         return new GetMembers(this, this.telemetryManager, this.retrofitManager);
     }
 
+    @NotNull
     public ManageMemberships manageMemberships() {
         return new ManageMemberships(this, this.telemetryManager, this.retrofitManager);
     }
 
+    @NotNull
     public ManageMembers manageMembers() {
         return new ManageMembers(this, this.telemetryManager, this.retrofitManager);
     }
 
+    // End Objects API
+
+    // Start Message Actions API
+
+    @NotNull
     public AddMessageAction addMessageAction() {
         return new AddMessageAction(this, this.telemetryManager, this.retrofitManager);
     }
 
+    @NotNull
     public GetMessageActions getMessageActions() {
         return new GetMessageActions(this, this.telemetryManager, this.retrofitManager);
     }
 
+    @NotNull
     public RemoveMessageAction removeMessageAction() {
         return new RemoveMessageAction(this, this.telemetryManager, this.retrofitManager);
     }
+
+    // End Message Actions API
 
     // public methods
 
@@ -305,6 +347,7 @@ public class PubNub {
      * @param inputString String to be encrypted
      * @return String containing the encryption of inputString using cipherKey
      */
+    @Nullable
     public String decrypt(String inputString) throws PubNubException {
         if (inputString == null) {
             throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_INVALID_ARGUMENTS).build();
@@ -321,6 +364,7 @@ public class PubNub {
      * @return String containing the encryption of inputString using cipherKey
      * @throws PubNubException throws exception in case of failed encryption
      */
+    @Nullable
     public String decrypt(String inputString, String cipherKey) throws PubNubException {
         if (inputString == null) {
             throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_INVALID_ARGUMENTS).build();
@@ -335,6 +379,7 @@ public class PubNub {
      * @param inputString String to be encrypted
      * @return String containing the encryption of inputString using cipherKey
      */
+    @Nullable
     public String encrypt(String inputString) throws PubNubException {
         if (inputString == null) {
             throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_INVALID_ARGUMENTS).build();
@@ -351,6 +396,7 @@ public class PubNub {
      * @return String containing the encryption of inputString using cipherKey
      * @throws PubNubException throws exception in case of failed encryption
      */
+    @Nullable
     public String encrypt(String inputString, String cipherKey) throws PubNubException {
         if (inputString == null) {
             throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_INVALID_ARGUMENTS).build();
@@ -366,6 +412,7 @@ public class PubNub {
     /**
      * @return instance uuid.
      */
+    @NotNull
     public String getInstanceId() {
         return instanceId;
     }
@@ -373,6 +420,7 @@ public class PubNub {
     /**
      * @return request uuid.
      */
+    @NotNull
     public String getRequestId() {
         return UUID.randomUUID().toString();
     }
@@ -380,6 +428,7 @@ public class PubNub {
     /**
      * @return version of the SDK.
      */
+    @NotNull
     public String getVersion() {
         return SDK_VERSION;
     }
@@ -431,14 +480,17 @@ public class PubNub {
         subscriptionManager.disconnect();
     }
 
+    @NotNull
     public Publish fire() {
         return publish().shouldStore(false).replicate(false);
     }
 
+    @NotNull
     public List<String> getSubscribedChannels() {
         return subscriptionManager.getSubscribedChannels();
     }
 
+    @NotNull
     public List<String> getSubscribedChannelGroups() {
         return subscriptionManager.getSubscribedChannelGroups();
     }
@@ -451,26 +503,30 @@ public class PubNub {
         tokenManager.setToken(token);
     }
 
-    public void setTokens(List<String> tokens) throws PubNubException {
+    public void setTokens(@NotNull List<String> tokens) throws PubNubException {
         tokenManager.setTokens(tokens);
     }
 
-    public String getToken(String resourceId, PNResourceType resourceType) {
+    @Nullable
+    public String getToken(@NotNull String resourceId, @NotNull PNResourceType resourceType) {
         return tokenManager.getToken(TokenManagerProperties.builder()
                 .resourceId(resourceId)
                 .pnResourceType(resourceType)
                 .build());
     }
 
-    public String getToken(TokenManagerProperties tokenManagerProperties) {
+    @Nullable
+    public String getToken(@NotNull TokenManagerProperties tokenManagerProperties) {
         return tokenManager.getToken(tokenManagerProperties);
     }
 
+    @NotNull
     public HashMap<String, HashMap<String, HashMap<String, String>>> getTokens() {
         return tokenManager.getTokens();
     }
 
-    public HashMap<String, HashMap<String, String>> getTokensByResource(PNResourceType resourceType) {
+    @NotNull
+    public HashMap<String, HashMap<String, String>> getTokensByResource(@NotNull PNResourceType resourceType) {
         return tokenManager.getTokensByResource(resourceType);
     }
 }

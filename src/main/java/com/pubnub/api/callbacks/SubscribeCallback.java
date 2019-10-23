@@ -10,20 +10,22 @@ import com.pubnub.api.models.consumer.pubsub.objects.PNMembershipResult;
 import com.pubnub.api.models.consumer.pubsub.objects.PNSpaceResult;
 import com.pubnub.api.models.consumer.pubsub.objects.PNUserResult;
 
+import org.jetbrains.annotations.NotNull;
+
 public abstract class SubscribeCallback {
-    public abstract void status(PubNub pubnub, PNStatus pnStatus);
+    public abstract void status(@NotNull PubNub pubnub, @NotNull PNStatus pnStatus);
 
-    public abstract void message(PubNub pubnub, PNMessageResult pnMessageResult);
+    public abstract void message(@NotNull PubNub pubnub, @NotNull PNMessageResult pnMessageResult);
 
-    public abstract void presence(PubNub pubnub, PNPresenceEventResult pnPresenceEventResult);
+    public abstract void presence(@NotNull PubNub pubnub, @NotNull PNPresenceEventResult pnPresenceEventResult);
 
-    public abstract void signal(PubNub pubnub, PNSignalResult pnSignalResult);
+    public abstract void signal(@NotNull PubNub pubnub, @NotNull PNSignalResult pnSignalResult);
 
-    public abstract void user(PubNub pubnub, PNUserResult pnUserResult);
+    public abstract void user(@NotNull PubNub pubnub, @NotNull PNUserResult pnUserResult);
 
-    public abstract void space(PubNub pubnub, PNSpaceResult pnSpaceResult);
+    public abstract void space(@NotNull PubNub pubnub, @NotNull PNSpaceResult pnSpaceResult);
 
-    public abstract void membership(PubNub pubnub, PNMembershipResult pnMembershipResult);
+    public abstract void membership(@NotNull PubNub pubnub, @NotNull PNMembershipResult pnMembershipResult);
 
-    public abstract void messageAction(PubNub pubnub, PNMessageActionResult pnMessageActionResult);
+    public abstract void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnMessageActionResult);
 }

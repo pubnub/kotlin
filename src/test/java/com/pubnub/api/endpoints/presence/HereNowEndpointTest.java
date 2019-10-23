@@ -10,6 +10,7 @@ import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.presence.PNHereNowResult;
 import org.awaitility.Awaitility;
+import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -21,9 +22,16 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.findAll;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class HereNowEndpointTest extends TestHarness {
 
@@ -60,6 +68,8 @@ public class HereNowEndpointTest extends TestHarness {
 
         PNHereNowResult response = partialHereNow.channels(Arrays.asList("ch1", "ch2")).includeState(true).sync();
 
+        assert response != null;
+
         assertEquals(response.getTotalChannels(), 2);
         assertEquals(response.getTotalOccupancy(), 3);
 
@@ -94,6 +104,8 @@ public class HereNowEndpointTest extends TestHarness {
 
         PNHereNowResult response = partialHereNow.channels(Arrays.asList("ch1", "ch2")).includeState(true).sync();
 
+        assert response != null;
+
         assertEquals(response.getTotalChannels(), 2);
         assertEquals(response.getTotalOccupancy(), 3);
 
@@ -101,15 +113,15 @@ public class HereNowEndpointTest extends TestHarness {
         assertEquals(response.getChannels().get("ch1").getOccupancy(), 1);
         assertEquals(response.getChannels().get("ch1").getOccupants().size(), 1);
         assertEquals(response.getChannels().get("ch1").getOccupants().get(0).getUuid(), "user1");
-        assertEquals(response.getChannels().get("ch1").getOccupants().get(0).getState(), null);
+        assertNull(response.getChannels().get("ch1").getOccupants().get(0).getState());
 
         assertEquals(response.getChannels().get("ch2").getChannelName(), "ch2");
         assertEquals(response.getChannels().get("ch2").getOccupancy(), 2);
         assertEquals(response.getChannels().get("ch2").getOccupants().size(), 2);
         assertEquals(response.getChannels().get("ch2").getOccupants().get(0).getUuid(), "user1");
-        assertEquals(response.getChannels().get("ch2").getOccupants().get(0).getState(), null);
+        assertNull(response.getChannels().get("ch2").getOccupants().get(0).getState());
         assertEquals(response.getChannels().get("ch2").getOccupants().get(1).getUuid(), "user3");
-        assertEquals(response.getChannels().get("ch2").getOccupants().get(1).getState(), null);
+        assertNull(response.getChannels().get("ch2").getOccupants().get(1).getState());
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
@@ -126,6 +138,8 @@ public class HereNowEndpointTest extends TestHarness {
 
         PNHereNowResult response = partialHereNow.channels(Arrays.asList("game1", "game2")).includeState(false).sync();
 
+        assert response != null;
+
         assertEquals(response.getTotalChannels(), 1);
         assertEquals(response.getTotalOccupancy(), 1);
 
@@ -134,7 +148,7 @@ public class HereNowEndpointTest extends TestHarness {
         assertEquals(response.getChannels().get("game1").getOccupants().size(), 1);
         assertEquals(response.getChannels().get("game1").getOccupants().get(0).getUuid(), "a3ffd012-a3b9-478c-8705" +
                 "-64089f24d71e");
-        assertEquals(response.getChannels().get("game1").getOccupants().get(0).getState(), null);
+        assertNull(response.getChannels().get("game1").getOccupants().get(0).getState());
 
     }
 
@@ -149,12 +163,14 @@ public class HereNowEndpointTest extends TestHarness {
         PNHereNowResult response =
                 partialHereNow.channels(Arrays.asList("game1", "game2")).includeState(false).includeUUIDs(false).sync();
 
+        assert response != null;
+
         assertEquals(response.getTotalChannels(), 1);
         assertEquals(response.getTotalOccupancy(), 1);
 
         assertEquals(response.getChannels().get("game1").getChannelName(), "game1");
         assertEquals(response.getChannels().get("game1").getOccupancy(), 1);
-        assertEquals(response.getChannels().get("game1").getOccupants(), null);
+        assertNull(response.getChannels().get("game1").getOccupants());
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
@@ -170,6 +186,8 @@ public class HereNowEndpointTest extends TestHarness {
 
         PNHereNowResult response =
                 partialHereNow.channels(Arrays.asList("game1")).includeState(false).includeUUIDs(false).sync();
+
+        assert response != null;
 
         assertEquals(response.getTotalChannels(), 1);
         assertEquals(response.getTotalOccupancy(), 3);
@@ -188,6 +206,8 @@ public class HereNowEndpointTest extends TestHarness {
                         "\"uuids\": [\"a3ffd012-a3b9-478c-8705-64089f24d71e\"], \"occupancy\": 1}")));
 
         PNHereNowResult response = partialHereNow.channels(Arrays.asList("game1")).includeState(false).sync();
+
+        assert response != null;
 
         assertEquals(response.getTotalChannels(), 1);
         assertEquals(response.getTotalOccupancy(), 1);
@@ -209,6 +229,8 @@ public class HereNowEndpointTest extends TestHarness {
                         "\"occupancy\":1}")));
 
         PNHereNowResult response = partialHereNow.channels(Arrays.asList("game1")).includeState(true).sync();
+
+        assert response != null;
 
         assertEquals(response.getTotalChannels(), 1);
         assertEquals(response.getTotalOccupancy(), 1);
@@ -233,6 +255,8 @@ public class HereNowEndpointTest extends TestHarness {
 
         PNHereNowResult response =
                 partialHereNow.channelGroups(Arrays.asList("grp1")).channels(Arrays.asList("game1")).includeState(true).sync();
+
+        assert response != null;
 
         assertEquals(response.getTotalOccupancy(), 0);
     }
@@ -271,7 +295,7 @@ public class HereNowEndpointTest extends TestHarness {
 
         partialHereNow.async(new PNCallback<PNHereNowResult>() {
             @Override
-            public void onResponse(PNHereNowResult result, PNStatus status) {
+            public void onResponse(PNHereNowResult result, @NotNull PNStatus status) {
                 if (status != null && status.getOperation() == PNOperationType.PNHereNowOperation) {
                     atomic.incrementAndGet();
                 }

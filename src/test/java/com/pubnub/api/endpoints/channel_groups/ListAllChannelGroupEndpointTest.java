@@ -10,6 +10,7 @@ import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsListAllResult;
 import org.awaitility.Awaitility;
+import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -54,6 +55,9 @@ public class ListAllChannelGroupEndpointTest extends TestHarness {
                         "[\"a\",\"b\"]}, \"service\": \"ChannelGroups\"}")));
 
         PNChannelGroupsListAllResult response = partialChannelGroup.sync();
+
+        assert response != null;
+
         assertThat(response.getGroups(), org.hamcrest.Matchers.contains("a", "b"));
     }
 
@@ -64,6 +68,9 @@ public class ListAllChannelGroupEndpointTest extends TestHarness {
                         "\"ChannelGroups\"}")));
 
         PNChannelGroupsListAllResult response = partialChannelGroup.sync();
+
+        assert response != null;
+
         assertThat(response.getGroups(), org.hamcrest.Matchers.contains("a", "b"));
     }
 
@@ -73,6 +80,9 @@ public class ListAllChannelGroupEndpointTest extends TestHarness {
                 .willReturn(aResponse()));
 
         PNChannelGroupsListAllResult response = partialChannelGroup.sync();
+
+        assert response != null;
+
         assertThat(response.getGroups(), org.hamcrest.Matchers.contains("a", "b"));
     }
 
@@ -100,8 +110,8 @@ public class ListAllChannelGroupEndpointTest extends TestHarness {
 
         partialChannelGroup.async(new PNCallback<PNChannelGroupsListAllResult>() {
             @Override
-            public void onResponse(PNChannelGroupsListAllResult result, PNStatus status) {
-                if (status != null && status.getOperation() == PNOperationType.PNChannelGroupsOperation) {
+            public void onResponse(PNChannelGroupsListAllResult result, @NotNull PNStatus status) {
+                if (status.getOperation() == PNOperationType.PNChannelGroupsOperation) {
                     atomic.incrementAndGet();
                 }
             }

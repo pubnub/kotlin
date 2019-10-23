@@ -7,6 +7,7 @@ import com.pubnub.api.enums.PNReconnectionPolicy;
 import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.PNTimeResult;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Calendar;
 import java.util.Timer;
@@ -107,7 +108,7 @@ public class ReconnectionManager {
         try {
             pubnub.time().async(new PNCallback<PNTimeResult>() {
                 @Override
-                public void onResponse(PNTimeResult result, PNStatus status) {
+                public void onResponse(PNTimeResult result, @NotNull PNStatus status) {
                     if (!status.isError()) {
                         stopHeartbeatTimer();
                         callback.onReconnection();

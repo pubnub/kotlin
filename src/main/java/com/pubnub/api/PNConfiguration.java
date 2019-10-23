@@ -13,6 +13,8 @@ import okhttp3.Authenticator;
 import okhttp3.CertificatePinner;
 import okhttp3.ConnectionSpec;
 import okhttp3.logging.HttpLoggingInterceptor;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSocketFactory;
@@ -36,8 +38,10 @@ public class PNConfiguration {
 
     @Getter
     private SSLSocketFactory sslSocketFactory;
+
     @Getter
     private X509ExtendedTrustManager x509ExtendedTrustManager;
+
     @Getter
     private ConnectionSpec connectionSpec;
 
@@ -102,6 +106,7 @@ public class PNConfiguration {
      * toggle to enable verbose logging.
      */
 
+    @NotNull
     private PNLogVerbosity logVerbosity;
 
     /**
@@ -123,6 +128,7 @@ public class PNConfiguration {
     /**
      * verbosity of heartbeat configuration, by default only alerts on failed heartbeats
      */
+    @Nullable
     private PNHeartbeatNotificationOptions heartbeatNotificationOptions;
 
     /**
@@ -136,6 +142,7 @@ public class PNConfiguration {
      * Reconnection policy which will be used if/when networking goes down
      */
     @Setter
+    @Nullable
     private PNReconnectionPolicy reconnectionPolicy;
 
     /**

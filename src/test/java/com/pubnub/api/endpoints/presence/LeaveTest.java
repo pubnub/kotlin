@@ -9,6 +9,7 @@ import com.pubnub.api.endpoints.TestHarness;
 import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.models.consumer.PNStatus;
 import org.awaitility.Awaitility;
+import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -101,7 +102,7 @@ public class LeaveTest extends TestHarness {
 
         instance.channels(Arrays.asList("coolChannel", "coolChannel2")).channelGroups(Arrays.asList("cg1")).async(new PNCallback<Boolean>() {
             @Override
-            public void onResponse(Boolean result, PNStatus status) {
+            public void onResponse(Boolean result, @NotNull PNStatus status) {
                 assertEquals(status.getAffectedChannels().get(0), "coolChannel");
                 assertEquals(status.getAffectedChannels().get(1), "coolChannel2");
                 assertEquals(status.getAffectedChannelGroups().get(0), "cg1");

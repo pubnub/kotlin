@@ -10,6 +10,8 @@ import com.pubnub.api.endpoints.TestHarness;
 import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.presence.PNWhereNowResult;
 import org.awaitility.Awaitility;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -20,7 +22,13 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.findAll;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
@@ -54,6 +62,9 @@ public class WhereNowEndpointTest extends TestHarness {
                         "[\"a\",\"b\"]}, \"service\": \"Presence\"}")));
 
         PNWhereNowResult response = partialWhereNow.sync();
+
+        assert response != null;
+
         assertThat(response.getChannels(), org.hamcrest.Matchers.contains("a", "b"));
     }
 
@@ -65,6 +76,9 @@ public class WhereNowEndpointTest extends TestHarness {
                         "[\"a\",\"b\"]}, \"service\": \"Presence\"}")));
 
         PNWhereNowResult response = partialWhereNow.uuid("customUUID").sync();
+
+        assert response != null;
+
         assertThat(response.getChannels(), org.hamcrest.Matchers.contains("a", "b"));
     }
 
@@ -111,7 +125,8 @@ public class WhereNowEndpointTest extends TestHarness {
         partialWhereNow.async(new WhereNowCallback() {
 
             @Override
-            public void onResponse(PNWhereNowResult result, PNStatus status) {
+            public void onResponse(@Nullable PNWhereNowResult result, @NotNull PNStatus status) {
+                assert result != null;
                 assertThat(result.getChannels(), org.hamcrest.Matchers.contains("a", "b"));
                 atomic.incrementAndGet();
             }
@@ -131,7 +146,7 @@ public class WhereNowEndpointTest extends TestHarness {
         partialWhereNow.async(new WhereNowCallback() {
 
             @Override
-            public void onResponse(PNWhereNowResult result, PNStatus status) {
+            public void onResponse(@Nullable PNWhereNowResult result, @NotNull PNStatus status) {
                 atomic.incrementAndGet();
             }
 
@@ -151,7 +166,7 @@ public class WhereNowEndpointTest extends TestHarness {
         partialWhereNow.async(new WhereNowCallback() {
 
             @Override
-            public void onResponse(PNWhereNowResult result, PNStatus status) {
+            public void onResponse(@Nullable PNWhereNowResult result, @NotNull PNStatus status) {
                 atomic.incrementAndGet();
             }
         });
@@ -173,7 +188,7 @@ public class WhereNowEndpointTest extends TestHarness {
         partialWhereNow.async(new WhereNowCallback() {
 
             @Override
-            public void onResponse(PNWhereNowResult result, PNStatus status) {
+            public void onResponse(PNWhereNowResult result, @NotNull PNStatus status) {
                 atomic.incrementAndGet();
             }
         });

@@ -49,9 +49,11 @@ public class FetchMessagesEndpointTest extends TestHarness {
         PNFetchMessagesResult response =
                 partialHistory.channels(Arrays.asList("mychannel,my_channel")).maximumPerChannel(25).sync();
 
+        assert response != null;
+
         Assert.assertEquals(response.getChannels().size(), 2);
-        Assert.assertEquals(response.getChannels().containsKey("mychannel"), true);
-        Assert.assertEquals(response.getChannels().containsKey("my_channel"), true);
+        Assert.assertTrue(response.getChannels().containsKey("mychannel"));
+        Assert.assertTrue(response.getChannels().containsKey("my_channel"));
         Assert.assertEquals(response.getChannels().get("mychannel").size(), 1);
         Assert.assertEquals(response.getChannels().get("my_channel").size(), 2);
     }
@@ -69,9 +71,11 @@ public class FetchMessagesEndpointTest extends TestHarness {
         PNFetchMessagesResult response =
                 partialHistory.channels(Arrays.asList("mychannel,my_channel")).maximumPerChannel(25).sync();
 
+        assert response != null;
+
         Assert.assertEquals(response.getChannels().size(), 2);
-        Assert.assertEquals(response.getChannels().containsKey("mychannel"), true);
-        Assert.assertEquals(response.getChannels().containsKey("my_channel"), true);
+        Assert.assertTrue(response.getChannels().containsKey("mychannel"));
+        Assert.assertTrue(response.getChannels().containsKey("my_channel"));
         Assert.assertEquals(response.getChannels().get("mychannel").size(), 1);
         Assert.assertEquals(response.getChannels().get("my_channel").size(), 2);
 
@@ -94,9 +98,11 @@ public class FetchMessagesEndpointTest extends TestHarness {
         PNFetchMessagesResult response =
                 partialHistory.channels(Arrays.asList("mychannel,my_channel")).maximumPerChannel(25).sync();
 
+        assert response != null;
+
         Assert.assertEquals(response.getChannels().size(), 2);
-        Assert.assertEquals(response.getChannels().containsKey("mychannel"), true);
-        Assert.assertEquals(response.getChannels().containsKey("my_channel"), true);
+        Assert.assertTrue(response.getChannels().containsKey("mychannel"));
+        Assert.assertTrue(response.getChannels().containsKey("my_channel"));
         Assert.assertEquals(response.getChannels().get("mychannel").size(), 1);
         Assert.assertEquals(response.getChannels().get("my_channel").size(), 1);
     }

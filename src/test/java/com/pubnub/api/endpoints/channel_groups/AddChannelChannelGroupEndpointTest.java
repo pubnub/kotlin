@@ -10,6 +10,7 @@ import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsAddChannelResult;
 import org.awaitility.Awaitility;
+import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -111,7 +112,7 @@ public class AddChannelChannelGroupEndpointTest extends TestHarness {
 
         partialAddChannelChannelGroup.channelGroup("groupA").channels(Arrays.asList("ch1", "ch2")).async(new PNCallback<PNChannelGroupsAddChannelResult>() {
             @Override
-            public void onResponse(PNChannelGroupsAddChannelResult result, PNStatus status) {
+            public void onResponse(PNChannelGroupsAddChannelResult result, @NotNull PNStatus status) {
                 if (status != null && status.getOperation() == PNOperationType.PNAddChannelsToGroupOperation) {
                     atomic.incrementAndGet();
                 }
@@ -131,7 +132,7 @@ public class AddChannelChannelGroupEndpointTest extends TestHarness {
 
         partialAddChannelChannelGroup.channelGroup("groupA").channels(Arrays.asList("ch1", "ch2")).async(new PNCallback<PNChannelGroupsAddChannelResult>() {
             @Override
-            public void onResponse(PNChannelGroupsAddChannelResult result, PNStatus status) {
+            public void onResponse(PNChannelGroupsAddChannelResult result, @NotNull PNStatus status) {
                 if (status != null && status.getOperation() == PNOperationType.PNAddChannelsToGroupOperation) {
                     atomic.incrementAndGet();
                 }

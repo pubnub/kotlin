@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
@@ -25,6 +24,8 @@ import java.util.TreeSet;
 
 @Log
 public class PubNubUtil {
+
+    private static final String CHARSET = "UTF-8";
 
     private PubNubUtil() {
     }
@@ -83,7 +84,7 @@ public class PubNubUtil {
      */
     public static String urlEncode(String stringToEncode) {
         try {
-            return URLEncoder.encode(stringToEncode, "UTF-8").replace("+", "%20");
+            return URLEncoder.encode(stringToEncode, CHARSET).replace("+", "%20");
         } catch (UnsupportedEncodingException e) {
             return null;
         }
@@ -97,7 +98,7 @@ public class PubNubUtil {
      */
     public static String urlDecode(String stringToEncode) {
         try {
-            return URLDecoder.decode(stringToEncode, "UTF-8");
+            return URLDecoder.decode(stringToEncode, CHARSET);
         } catch (UnsupportedEncodingException e) {
             return null;
         }
@@ -122,10 +123,10 @@ public class PubNubUtil {
         return stringifiedArguments;
     }
 
-    public static String signSHA256(String key, String data) throws PubNubException {
+    public static String signSHA256(String key, String data) throws PubNubException, UnsupportedEncodingException {
         Mac sha256HMAC;
         byte[] hmacData;
-        SecretKeySpec secretKey = new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), "HmacSHA256");
+        SecretKeySpec secretKey = new SecretKeySpec(key.getBytes(CHARSET), "HmacSHA256");
 
         try {
             sha256HMAC = Mac.getInstance("HmacSHA256");
@@ -145,9 +146,9 @@ public class PubNubUtil {
                     .build();
         }
 
-        hmacData = sha256HMAC.doFinal(data.getBytes(StandardCharsets.UTF_8));
+        hmacData = sha256HMAC.doFinal(data.getBytes(CHARSET));
 
-        return new String(Base64.encode(hmacData, 0), StandardCharsets.UTF_8)
+        return new String(Base64.encode(hmacData, 0), CHARSET)
                 .replace('+', '-')
                 .replace('/', '_')
                 .replace("\n", "");
@@ -214,7 +215,7 @@ public class PubNubUtil {
                 signature = removeTrailingEqualSigns(signature);
                 signature = "v2.".concat(signature);
             }
-        } catch (PubNubException e) {
+        } catch (PubNubException | UnsupportedEncodingException e) {
             log.warning("signature failed on SignatureInterceptor: " + e.toString());
         }
 

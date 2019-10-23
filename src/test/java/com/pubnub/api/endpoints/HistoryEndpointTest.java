@@ -9,6 +9,7 @@ import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.history.PNHistoryResult;
 import org.awaitility.Awaitility;
+import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -22,9 +23,17 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.findAll;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 
 public class HistoryEndpointTest extends TestHarness {
@@ -112,16 +121,18 @@ public class HistoryEndpointTest extends TestHarness {
 
         PNHistoryResult response = partialHistory.channel("niceChannel").includeTimetoken(true).sync();
 
-        assertTrue(response.getStartTimetoken().equals(1234L));
-        assertTrue(response.getEndTimetoken().equals(4321L));
+        assert response != null;
+
+        assertEquals(1234L, (long) response.getStartTimetoken());
+        assertEquals(4321L, (long) response.getEndTimetoken());
 
         assertEquals(response.getMessages().size(), 2);
 
-        assertTrue(response.getMessages().get(0).getTimetoken().equals(1111L));
+        assertEquals(1111L, (long) response.getMessages().get(0).getTimetoken());
         assertEquals((response.getMessages().get(0).getEntry()).getAsJsonObject().get("a").getAsInt(), 11);
         assertEquals((response.getMessages().get(0).getEntry()).getAsJsonObject().get("b").getAsInt(), 22);
 
-        assertTrue(response.getMessages().get(1).getTimetoken().equals(2222L));
+        assertEquals(2222L, (long) response.getMessages().get(1).getTimetoken());
         assertEquals((response.getMessages().get(1).getEntry()).getAsJsonObject().get("a").getAsInt(), 33);
         assertEquals((response.getMessages().get(1).getEntry()).getAsJsonObject().get("b").getAsInt(), 44);
     }
@@ -177,12 +188,14 @@ public class HistoryEndpointTest extends TestHarness {
 
         PNHistoryResult response = partialHistory.channel("niceChannel").includeTimetoken(false).sync();
 
-        assertTrue(response.getStartTimetoken().equals(14606134331557853L));
-        assertTrue(response.getEndTimetoken().equals(14606134485013970L));
+        assert response != null;
+
+        assertEquals(14606134331557853L, (long) response.getStartTimetoken());
+        assertEquals(14606134485013970L, (long) response.getEndTimetoken());
 
         assertEquals(response.getMessages().size(), 3);
 
-        assertEquals(response.getMessages().get(0).getTimetoken(), null);
+        assertNull(response.getMessages().get(0).getTimetoken());
         assertEquals("m1", (response.getMessages().get(0).getEntry()).getAsJsonArray().get(0).getAsString());
         assertEquals("m2", (response.getMessages().get(0).getEntry()).getAsJsonArray().get(1).getAsString());
         assertEquals("m3", (response.getMessages().get(0).getEntry()).getAsJsonArray().get(2).getAsString());
@@ -207,12 +220,14 @@ public class HistoryEndpointTest extends TestHarness {
 
         PNHistoryResult response = partialHistory.channel("niceChannel").includeTimetoken(false).sync();
 
-        assertTrue(response.getStartTimetoken().equals(14606134331557852L));
-        assertTrue(response.getEndTimetoken().equals(14606134485013970L));
+        assert response != null;
+
+        assertEquals(14606134331557852L, (long) response.getStartTimetoken());
+        assertEquals(14606134485013970L, (long) response.getEndTimetoken());
 
         assertEquals(response.getMessages().size(), 1);
 
-        assertEquals(response.getMessages().get(0).getTimetoken(), null);
+        assertNull(response.getMessages().get(0).getTimetoken());
         assertEquals("hey",
                 response.getMessages().get(0).getEntry().getAsJsonObject().get("pn_other").getAsJsonObject().get(
                         "text").getAsString());
@@ -243,6 +258,8 @@ public class HistoryEndpointTest extends TestHarness {
                 .willReturn(aResponse().withBody(pubnub.getMapper().toJson(testArray))));
 
         PNHistoryResult response = partialHistory.channel("niceChannel").sync();
+
+        assert response != null;
 
         assertTrue(response.getStartTimetoken().equals(1234L));
         assertTrue(response.getEndTimetoken().equals(4321L));
@@ -356,7 +373,7 @@ public class HistoryEndpointTest extends TestHarness {
         final AtomicInteger atomic = new AtomicInteger(0);
         partialHistory.channel("niceChannel").includeTimetoken(true).async(new PNCallback<PNHistoryResult>() {
             @Override
-            public void onResponse(PNHistoryResult result, PNStatus status) {
+            public void onResponse(PNHistoryResult result, @NotNull PNStatus status) {
                 if (status != null && status.getOperation() == PNOperationType.PNHistoryOperation) {
                     atomic.incrementAndGet();
                 }

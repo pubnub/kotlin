@@ -77,6 +77,8 @@ public class MessageCountTest extends TestHarness {
                 .channelsTimetoken(Collections.singletonList(10000L))
                 .sync();
 
+        assert response != null;
+
         assertEquals(response.getChannels().size(), 1);
         assertFalse(response.getChannels().containsKey("channel_does_not_exist"));
         assertTrue(response.getChannels().containsKey("my_channel"));
@@ -119,6 +121,8 @@ public class MessageCountTest extends TestHarness {
                 .channelsTimetoken(Collections.singletonList(10000L))
                 .sync();
 
+        assert response != null;
+
         assertEquals(response.getChannels().size(), 2);
         assertFalse(response.getChannels().containsKey("channel_does_not_exist"));
         assertTrue(response.getChannels().containsKey("my_channel"));
@@ -143,6 +147,8 @@ public class MessageCountTest extends TestHarness {
                 .channels(Arrays.asList("my_channel", "new_channel"))
                 .channelsTimetoken(Arrays.asList(10000L, 20000L))
                 .sync();
+
+        assert response != null;
 
         assertEquals(response.getChannels().size(), 2);
         assertFalse(response.getChannels().containsKey("channel_does_not_exist"));

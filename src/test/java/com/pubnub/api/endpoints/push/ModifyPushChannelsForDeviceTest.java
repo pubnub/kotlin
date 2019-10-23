@@ -13,6 +13,7 @@ import com.pubnub.api.models.consumer.push.PNPushAddChannelResult;
 import com.pubnub.api.models.consumer.push.PNPushRemoveAllChannelsResult;
 import com.pubnub.api.models.consumer.push.PNPushRemoveChannelResult;
 import org.awaitility.Awaitility;
+import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -115,7 +116,7 @@ public class ModifyPushChannelsForDeviceTest extends TestHarness {
 
         instance.deviceId("niceDevice").pushType(PNPushType.MPNS).async(new PNCallback<PNPushRemoveAllChannelsResult>() {
             @Override
-            public void onResponse(PNPushRemoveAllChannelsResult result, PNStatus status) {
+            public void onResponse(PNPushRemoveAllChannelsResult result, @NotNull PNStatus status) {
                 if (status != null && status.getOperation() == PNOperationType.PNRemoveAllPushNotificationsOperation) {
                     atomic.incrementAndGet();
                 }
@@ -251,7 +252,7 @@ public class ModifyPushChannelsForDeviceTest extends TestHarness {
                 .channels(Arrays.asList("ch1", "ch2", "ch3"))
                 .async(new PNCallback<PNPushAddChannelResult>() {
                     @Override
-                    public void onResponse(PNPushAddChannelResult result, PNStatus status) {
+                    public void onResponse(PNPushAddChannelResult result, @NotNull PNStatus status) {
                         if (status != null && status.getOperation() == PNOperationType.PNPushNotificationEnabledChannelsOperation) {
                             atomic.incrementAndGet();
                         }
@@ -413,7 +414,7 @@ public class ModifyPushChannelsForDeviceTest extends TestHarness {
         instanceRemove.deviceId("niceDevice").pushType(PNPushType.MPNS)
                 .channels(Arrays.asList("chr1", "chr2", "chr3")).async(new PNCallback<PNPushRemoveChannelResult>() {
             @Override
-            public void onResponse(PNPushRemoveChannelResult result, PNStatus status) {
+            public void onResponse(PNPushRemoveChannelResult result, @NotNull PNStatus status) {
                 if (status != null && status.getOperation() == PNOperationType.PNRemovePushNotificationsFromChannelsOperation) {
                     atomic.incrementAndGet();
                 }

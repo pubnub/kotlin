@@ -11,6 +11,7 @@ import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.access_manager.PNAccessManagerGrantResult;
 import com.pubnub.api.models.consumer.access_manager.PNAccessManagerKeyData;
 import org.awaitility.Awaitility;
+import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -81,6 +82,8 @@ public class GrantEndpointTest extends TestHarness {
                 partialGrant.authKeys(Collections.singletonList("key1")).channels(
                         Collections.singletonList("ch1")).sync();
 
+        assert result != null;
+
         assertEquals(1, result.getChannels().size());
         assertEquals(0, result.getChannelGroups().size());
 
@@ -115,6 +118,8 @@ public class GrantEndpointTest extends TestHarness {
 
         PNAccessManagerGrantResult result =
                 partialGrant.authKeys(Arrays.asList("key1", "key2")).channels(Collections.singletonList("ch1")).sync();
+
+        assert result != null;
 
         assertEquals(1, result.getChannels().size());
         assertEquals(0, result.getChannelGroups().size());
@@ -152,6 +157,8 @@ public class GrantEndpointTest extends TestHarness {
         PNAccessManagerGrantResult result =
                 partialGrant.authKeys(Collections.singletonList("key1")).channels(Arrays.asList("ch1", "ch2")).sync();
 
+        assert result != null;
+
         assertEquals(2, result.getChannels().size());
         assertEquals(0, result.getChannelGroups().size());
 
@@ -188,6 +195,8 @@ public class GrantEndpointTest extends TestHarness {
 
         PNAccessManagerGrantResult result =
                 partialGrant.authKeys(Arrays.asList("key1", "key2")).channels(Arrays.asList("ch1", "ch2")).sync();
+
+        assert result != null;
 
         assertEquals(2, result.getChannels().size());
         assertEquals(0, result.getChannelGroups().size());
@@ -228,6 +237,8 @@ public class GrantEndpointTest extends TestHarness {
         PNAccessManagerGrantResult result = partialGrant.authKeys(Arrays.asList("key1")).channelGroups(Arrays.asList(
                 "cg1")).sync();
 
+        assert result != null;
+
         assertEquals(0, result.getChannels().size());
         assertEquals(1, result.getChannelGroups().size());
 
@@ -262,6 +273,8 @@ public class GrantEndpointTest extends TestHarness {
 
         PNAccessManagerGrantResult result =
                 partialGrant.authKeys(Arrays.asList("key1", "key2")).channelGroups(Arrays.asList("cg1")).sync();
+
+        assert result != null;
 
         assertEquals(0, result.getChannels().size());
         assertEquals(1, result.getChannelGroups().size());
@@ -300,6 +313,8 @@ public class GrantEndpointTest extends TestHarness {
         PNAccessManagerGrantResult result =
                 partialGrant.authKeys(Arrays.asList("key1")).channels(Arrays.asList("ch1")).channelGroups(
                         Arrays.asList("cg1")).sync();
+
+        assert result != null;
 
         assertEquals(1, result.getChannels().size());
         assertEquals(1, result.getChannelGroups().size());
@@ -340,6 +355,8 @@ public class GrantEndpointTest extends TestHarness {
         PNAccessManagerGrantResult result =
                 partialGrant.authKeys(Arrays.asList("key1", "key2")).channels(Arrays.asList("ch1")).channelGroups(
                         Arrays.asList("cg1")).sync();
+
+        assert result != null;
 
         assertEquals(1, result.getChannels().size());
         assertEquals(1, result.getChannelGroups().size());
@@ -384,6 +401,8 @@ public class GrantEndpointTest extends TestHarness {
 
         PNAccessManagerGrantResult result = partialGrant.authKeys(Arrays.asList("key1")).channels(Arrays.asList("ch1"
                 , "ch2")).channelGroups(Arrays.asList("cg1")).sync();
+
+        assert result != null;
 
         assertEquals(2, result.getChannels().size());
         assertEquals(1, result.getChannelGroups().size());
@@ -430,6 +449,8 @@ public class GrantEndpointTest extends TestHarness {
                 partialGrant.authKeys(Arrays.asList("key1", "key2")).channels(
                         Arrays.asList("ch1", "ch2")).channelGroups(Arrays.asList("cg1")).sync();
 
+        assert result != null;
+
         assertEquals(2, result.getChannels().size());
         assertEquals(1, result.getChannelGroups().size());
 
@@ -474,6 +495,8 @@ public class GrantEndpointTest extends TestHarness {
         PNAccessManagerGrantResult result = partialGrant.authKeys(Arrays.asList("key1")).channelGroups(Arrays.asList(
                 "cg1", "cg2")).sync();
 
+        assert result != null;
+
         assertEquals(0, result.getChannels().size());
         assertEquals(2, result.getChannelGroups().size());
 
@@ -511,6 +534,8 @@ public class GrantEndpointTest extends TestHarness {
 
         PNAccessManagerGrantResult result =
                 partialGrant.authKeys(Arrays.asList("key1", "key2")).channelGroups(Arrays.asList("cg1", "cg2")).sync();
+
+        assert result != null;
 
         assertEquals(0, result.getChannels().size());
         assertEquals(2, result.getChannelGroups().size());
@@ -552,6 +577,8 @@ public class GrantEndpointTest extends TestHarness {
 
         PNAccessManagerGrantResult result = partialGrant.authKeys(Arrays.asList("key1")).channelGroups(Arrays.asList(
                 "cg1", "cg2")).channels(Arrays.asList("ch1")).sync();
+
+        assert result != null;
 
         assertEquals(1, result.getChannels().size());
         assertEquals(2, result.getChannelGroups().size());
@@ -596,6 +623,8 @@ public class GrantEndpointTest extends TestHarness {
         PNAccessManagerGrantResult result =
                 partialGrant.authKeys(Arrays.asList("key1", "key2")).channelGroups(
                         Arrays.asList("cg1", "cg2")).channels(Arrays.asList("ch1")).sync();
+
+        assert result != null;
 
         assertEquals(1, result.getChannels().size());
         assertEquals(2, result.getChannelGroups().size());
@@ -642,6 +671,8 @@ public class GrantEndpointTest extends TestHarness {
 
         PNAccessManagerGrantResult result = partialGrant.authKeys(Arrays.asList("key1")).channelGroups(Arrays.asList(
                 "cg1", "cg2")).channels(Arrays.asList("ch1", "ch2")).sync();
+
+        assert result != null;
 
         assertEquals(2, result.getChannels().size());
         assertEquals(2, result.getChannelGroups().size());
@@ -691,6 +722,8 @@ public class GrantEndpointTest extends TestHarness {
                 partialGrant.authKeys(Arrays.asList("key1", "key2")).channelGroups(
                         Arrays.asList("cg1", "cg2")).channels(Arrays.asList("ch1", "ch2")).sync();
 
+        assert result != null;
+
         assertEquals(2, result.getChannels().size());
         assertEquals(2, result.getChannelGroups().size());
 
@@ -737,6 +770,8 @@ public class GrantEndpointTest extends TestHarness {
         PNAccessManagerGrantResult result =
                 partialGrant.authKeys(Arrays.asList("key1")).channels(Arrays.asList("ch1")).ttl(1334).sync();
 
+        assert result != null;
+
         assertEquals(1, result.getChannels().size());
         assertEquals(0, result.getChannelGroups().size());
 
@@ -771,6 +806,8 @@ public class GrantEndpointTest extends TestHarness {
         PNAccessManagerGrantResult result =
                 partialGrant.authKeys(Arrays.asList("key1")).channels(Arrays.asList("ch1")).read(true).sync();
 
+        assert result != null;
+
         assertEquals(1, result.getChannels().size());
         assertEquals(0, result.getChannelGroups().size());
 
@@ -804,6 +841,8 @@ public class GrantEndpointTest extends TestHarness {
 
         PNAccessManagerGrantResult result =
                 partialGrant.authKeys(Arrays.asList("key1")).channels(Arrays.asList("ch1")).write(true).sync();
+
+        assert result != null;
 
         assertEquals(1, result.getChannels().size());
         assertEquals(0, result.getChannelGroups().size());
@@ -840,6 +879,8 @@ public class GrantEndpointTest extends TestHarness {
         PNAccessManagerGrantResult result =
                 partialGrant.authKeys(Arrays.asList("key1")).channels(Arrays.asList("ch1")).delete(true).sync();
 
+        assert result != null;
+
         assertEquals(1, result.getChannels().size());
         assertEquals(0, result.getChannelGroups().size());
 
@@ -873,6 +914,8 @@ public class GrantEndpointTest extends TestHarness {
 
         PNAccessManagerGrantResult result =
                 partialGrant.authKeys(Arrays.asList("key1")).channels(Arrays.asList("ch1")).manage(true).sync();
+
+        assert result != null;
 
         assertEquals(1, result.getChannels().size());
         assertEquals(0, result.getChannelGroups().size());
@@ -936,7 +979,7 @@ public class GrantEndpointTest extends TestHarness {
         partialGrant.authKeys(Collections.singletonList("key1")).channels(Collections.singletonList("ch1")).async(
                 new PNCallback<PNAccessManagerGrantResult>() {
                     @Override
-                    public void onResponse(PNAccessManagerGrantResult result, PNStatus status) {
+                    public void onResponse(PNAccessManagerGrantResult result, @NotNull PNStatus status) {
                         if (status != null && status.getOperation() == PNOperationType.PNAccessManagerGrant) {
                             atomic.set(true);
                         }
@@ -1090,7 +1133,7 @@ public class GrantEndpointTest extends TestHarness {
 
         partialGrant.channels(Collections.singletonList("ch1")).async(new PNCallback<PNAccessManagerGrantResult>() {
             @Override
-            public void onResponse(PNAccessManagerGrantResult result, PNStatus status) {
+            public void onResponse(PNAccessManagerGrantResult result, @NotNull PNStatus status) {
                 if (status != null && status.getOperation() == PNOperationType.PNAccessManagerGrant
                         && !status.isError()) {
                     atomic.set(true);

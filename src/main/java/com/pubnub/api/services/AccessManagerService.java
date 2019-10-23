@@ -2,7 +2,6 @@ package com.pubnub.api.services;
 
 import com.google.gson.JsonObject;
 import com.pubnub.api.models.server.Envelope;
-import com.pubnub.api.models.server.access_manager.AccessManagerAuditPayload;
 import com.pubnub.api.models.server.access_manager.AccessManagerGrantPayload;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -19,13 +18,8 @@ public interface AccessManagerService {
     Call<Envelope<AccessManagerGrantPayload>> grant(@Path("subKey") String subKey,
                                                     @QueryMap Map<String, String> options);
 
-    @GET("/v2/auth/audit/sub-key/{subKey}")
-    Call<Envelope<AccessManagerAuditPayload>> audit(@Path("subKey") String subKey,
-                                                    @QueryMap Map<String, String> options);
-
     @POST("/v3/pam/{subKey}/grant")
     Call<JsonObject> grantToken(@Path("subKey") String subKey,
                                 @Body Object body,
                                 @QueryMap Map<String, String> options);
-
 }

@@ -1,8 +1,6 @@
 package com.pubnub.api.managers.token_manager;
 
 public enum PNResourceType {
-    CHANNEL("channel"),
-    GROUP("group"),
     USER("user"),
     SPACE("space");
 

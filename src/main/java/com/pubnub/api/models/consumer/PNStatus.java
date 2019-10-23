@@ -7,6 +7,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -32,10 +33,13 @@ public class PNStatus {
     private Object clientRequest;
 
     // send back channel, channel groups that were affected by this operation
+    @Nullable
     private List<String> affectedChannels;
+    @Nullable
     private List<String> affectedChannelGroups;
 
     @Getter(AccessLevel.NONE)
+    @ToString.Exclude
     private Endpoint executedEndpoint;
 
 
