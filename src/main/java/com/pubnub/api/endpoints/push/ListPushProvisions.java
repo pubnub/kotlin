@@ -5,6 +5,7 @@ import com.pubnub.api.PubNubException;
 import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.enums.PNOperationType;
+import com.pubnub.api.enums.PNPushEnvironment;
 import com.pubnub.api.enums.PNPushType;
 import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.TelemetryManager;
@@ -24,6 +25,10 @@ public class ListPushProvisions extends Endpoint<List<String>, PNPushListProvisi
     private PNPushType pushType;
     @Setter
     private String deviceId;
+    @Setter
+    private PNPushEnvironment environment;
+    @Setter
+    private String topic;
 
     public ListPushProvisions(PubNub pubnub, TelemetryManager telemetryManager, RetrofitManager retrofit) {
         super(pubnub, telemetryManager, retrofit);
@@ -41,7 +46,8 @@ public class ListPushProvisions extends Endpoint<List<String>, PNPushListProvisi
 
     @Override
     protected void validateParams() throws PubNubException {
-        if (this.getPubnub().getConfiguration().getSubscribeKey() == null || this.getPubnub().getConfiguration().getSubscribeKey().isEmpty()) {
+        if (this.getPubnub().getConfiguration().getSubscribeKey() == null
+                || this.getPubnub().getConfiguration().getSubscribeKey().isEmpty()) {
             throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_SUBSCRIBE_KEY_MISSING).build();
         }
         if (pushType == null) {
@@ -50,12 +56,30 @@ public class ListPushProvisions extends Endpoint<List<String>, PNPushListProvisi
         if (deviceId == null || deviceId.isEmpty()) {
             throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_DEVICE_ID_MISSING).build();
         }
+        if (pushType == PNPushType.APNS2) {
+            if (topic == null || topic.isEmpty()) {
+                throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_PUSH_TOPIC_MISSING).build();
+            }
+            if (environment == null) {
+                environment = PNPushEnvironment.DEVELOPMENT;
+            }
+        }
     }
 
     @Override
     protected Call<List<String>> doWork(Map<String, String> params) throws PubNubException {
-        params.put("type", pushType.name().toLowerCase());
-        return this.getRetrofit().getPushService().listChannelsForDevice(this.getPubnub().getConfiguration().getSubscribeKey(), deviceId, params);
+        if (pushType != PNPushType.APNS2) {
+            params.put("type", pushType.name().toLowerCase());
+            return this.getRetrofit().getPushService().listChannelsForDevice(
+                    this.getPubnub().getConfiguration().getSubscribeKey(), deviceId, params);
+        } else {
+            params.put("environment", environment.name().toLowerCase());
+            params.put("topic", topic);
+            return this.getRetrofit().getPushService().listChannelsForDeviceApns2(
+                    this.getPubnub().getConfiguration().getSubscribeKey(),
+                    deviceId,
+                    params);
+        }
     }
 
     @Override

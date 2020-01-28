@@ -4,6 +4,7 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
+import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.callbacks.PNCallback;
 import com.pubnub.api.endpoints.TestHarness;
 import com.pubnub.api.enums.PNOperationType;
@@ -13,6 +14,7 @@ import com.pubnub.api.models.consumer.push.PNPushListProvisionsResult;
 import org.awaitility.Awaitility;
 import org.jetbrains.annotations.NotNull;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -22,9 +24,16 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.findAll;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 public class ListPushProvisionsTest extends TestHarness {
 
@@ -60,6 +69,8 @@ public class ListPushProvisionsTest extends TestHarness {
         assertEquals(1, requests.size());
 
         assertEquals("apns", requests.get(0).queryParameter("type").firstValue());
+        assertFalse(requests.get(0).queryParameter("environment").isPresent());
+        assertFalse(requests.get(0).queryParameter("news").isPresent());
     }
 
     @Test
@@ -74,6 +85,8 @@ public class ListPushProvisionsTest extends TestHarness {
         assertEquals(1, requests.size());
 
         assertEquals("gcm", requests.get(0).queryParameter("type").firstValue());
+        assertFalse(requests.get(0).queryParameter("environment").isPresent());
+        assertFalse(requests.get(0).queryParameter("news").isPresent());
     }
 
     @Test
@@ -88,6 +101,24 @@ public class ListPushProvisionsTest extends TestHarness {
         assertEquals(1, requests.size());
 
         assertEquals("mpns", requests.get(0).queryParameter("type").firstValue());
+        assertFalse(requests.get(0).queryParameter("environment").isPresent());
+        assertFalse(requests.get(0).queryParameter("news").isPresent());
+    }
+
+    @Test
+    public void testApns2SuccessSync() throws PubNubException, InterruptedException {
+
+        stubFor(get(urlPathEqualTo("/v2/push/sub-key/mySubscribeKey/devices-apns2/niceDevice"))
+                .willReturn(aResponse().withBody("[\"ch1\", \"ch2\", \"ch3\"]")));
+
+        instance.deviceId("niceDevice").pushType(PNPushType.APNS2).topic("news").sync();
+
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
+        assertEquals(1, requests.size());
+
+        assertEquals("development", requests.get(0).queryParameter("environment").firstValue());
+        assertEquals("news", requests.get(0).queryParameter("topic").firstValue());
+        assertFalse(requests.get(0).queryParameter("type").isPresent());
     }
 
     @Test
@@ -115,7 +146,8 @@ public class ListPushProvisionsTest extends TestHarness {
         instance.deviceId("niceDevice").pushType(PNPushType.APNS).async(new PNCallback<PNPushListProvisionsResult>() {
             @Override
             public void onResponse(PNPushListProvisionsResult result, @NotNull PNStatus status) {
-                if (status != null && status.getOperation() == PNOperationType.PNPushNotificationEnabledChannelsOperation) {
+                if (status != null
+                        && status.getOperation() == PNOperationType.PNPushNotificationEnabledChannelsOperation) {
                     atomic.incrementAndGet();
                 }
             }
@@ -170,6 +202,28 @@ public class ListPushProvisionsTest extends TestHarness {
                 .willReturn(aResponse().withBody("[\"ch1\", \"ch2\", \"ch3\"]")));
 
         instance.deviceId("").pushType(PNPushType.MPNS).sync();
+    }
+
+    @Test
+    public void testApns2NoTopic() {
+        try {
+            instance.deviceId("niceDevice").pushType(PNPushType.APNS2).sync();
+        } catch (PubNubException e) {
+            Assert.assertEquals(e.getPubnubError(), PubNubErrorBuilder.PNERROBJ_PUSH_TOPIC_MISSING);
+        }
+    }
+
+    @Test
+    public void testApns2DefaultEnvironment() throws PubNubException {
+        stubFor(get(urlPathEqualTo("/v2/push/sub-key/mySubscribeKey/devices-apns2/niceDevice"))
+                .willReturn(aResponse().withBody("[\"ch1\", \"ch2\", \"ch3\"]")));
+
+        instance.deviceId("niceDevice").pushType(PNPushType.APNS2).topic("news").sync();
+
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
+        assertEquals(1, requests.size());
+
+        assertEquals("development", requests.get(0).queryParameter("environment").firstValue());
     }
 
 }

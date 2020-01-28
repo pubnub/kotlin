@@ -11,7 +11,7 @@ plugins {
 }
 group = 'com.pubnub'
 
-version = '4.29.2'
+version = '4.30.0'
 
 description = """"""
 
@@ -79,6 +79,7 @@ checkstyle {
 
 findbugs {
     excludeFilter = rootProject.file("config/findbugs/excludeFilter.xml")
+    sourceSets = [sourceSets.main]
 }
 
 tasks.withType(Checkstyle) {
@@ -91,7 +92,7 @@ tasks.withType(Checkstyle) {
 }
 
 tasks.withType(FindBugs) {
-    exclude '**/vendor/**'
+    exclude '**/vendor/**', '**/*Test*'
 
     reports {
         xml.enabled false

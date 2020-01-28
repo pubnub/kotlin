@@ -4,6 +4,6 @@ public enum PNPushType {
 
     APNS,
     MPNS,
-    GCM
-
+    GCM,
+    APNS2
 }

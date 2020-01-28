@@ -1,5 +1,17 @@
 package com.pubnub.api.endpoints.push;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.findAll;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import com.pubnub.api.PubNub;
@@ -12,6 +24,7 @@ import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.push.PNPushAddChannelResult;
 import com.pubnub.api.models.consumer.push.PNPushRemoveAllChannelsResult;
 import com.pubnub.api.models.consumer.push.PNPushRemoveChannelResult;
+
 import org.awaitility.Awaitility;
 import org.jetbrains.annotations.NotNull;
 import org.junit.After;
@@ -24,10 +37,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
-import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
-import static org.junit.Assert.assertEquals;
 
 public class ModifyPushChannelsForDeviceTest extends TestHarness {
 
@@ -66,6 +75,8 @@ public class ModifyPushChannelsForDeviceTest extends TestHarness {
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
         assertEquals("apns", requests.get(0).queryParameter("type").firstValue());
+        assertFalse(requests.get(0).queryParameter("environment").isPresent());
+        assertFalse(requests.get(0).queryParameter("topic").isPresent());
     }
 
     @Test
@@ -78,6 +89,8 @@ public class ModifyPushChannelsForDeviceTest extends TestHarness {
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
         assertEquals("gcm", requests.get(0).queryParameter("type").firstValue());
+        assertFalse(requests.get(0).queryParameter("environment").isPresent());
+        assertFalse(requests.get(0).queryParameter("topic").isPresent());
     }
 
     @Test
@@ -90,6 +103,22 @@ public class ModifyPushChannelsForDeviceTest extends TestHarness {
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
         assertEquals(1, requests.size());
         assertEquals("mpns", requests.get(0).queryParameter("type").firstValue());
+        assertFalse(requests.get(0).queryParameter("environment").isPresent());
+        assertFalse(requests.get(0).queryParameter("topic").isPresent());
+    }
+
+    @Test
+    public void testApns2SuccessSyncRemoveAll() throws PubNubException, InterruptedException {
+        stubFor(get(urlPathEqualTo("/v2/push/sub-key/mySubscribeKey/devices-apns2/niceDevice/remove"))
+                .willReturn(aResponse().withBody("[1, \"Modified Channels\"]")));
+
+        instance.deviceId("niceDevice").pushType(PNPushType.APNS2).topic("news").sync();
+
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
+        assertEquals(1, requests.size());
+        assertEquals("development", requests.get(0).queryParameter("environment").firstValue());
+        assertEquals("news", requests.get(0).queryParameter("topic").firstValue());
+        assertFalse(requests.get(0).queryParameter("type").isPresent());
     }
 
     @Test
@@ -114,14 +143,16 @@ public class ModifyPushChannelsForDeviceTest extends TestHarness {
 
         final AtomicInteger atomic = new AtomicInteger(0);
 
-        instance.deviceId("niceDevice").pushType(PNPushType.MPNS).async(new PNCallback<PNPushRemoveAllChannelsResult>() {
-            @Override
-            public void onResponse(PNPushRemoveAllChannelsResult result, @NotNull PNStatus status) {
-                if (status != null && status.getOperation() == PNOperationType.PNRemoveAllPushNotificationsOperation) {
-                    atomic.incrementAndGet();
-                }
-            }
-        });
+        instance.deviceId("niceDevice").pushType(PNPushType.MPNS).async(
+                new PNCallback<PNPushRemoveAllChannelsResult>() {
+                    @Override
+                    public void onResponse(PNPushRemoveAllChannelsResult result, @NotNull PNStatus status) {
+                        if (status != null
+                                && status.getOperation() == PNOperationType.PNRemoveAllPushNotificationsOperation) {
+                            atomic.incrementAndGet();
+                        }
+                    }
+                });
 
         Awaitility.await().atMost(5, TimeUnit.SECONDS)
                 .untilAtomic(atomic, org.hamcrest.core.IsEqual.equalTo(1));
@@ -188,7 +219,8 @@ public class ModifyPushChannelsForDeviceTest extends TestHarness {
         assertEquals(1, requests.size());
         assertEquals("ch1,ch2,ch3", requests.get(0).queryParameter("add").firstValue());
         assertEquals("apns", requests.get(0).queryParameter("type").firstValue());
-
+        assertFalse(requests.get(0).queryParameter("environment").isPresent());
+        assertFalse(requests.get(0).queryParameter("topic").isPresent());
     }
 
     @Test
@@ -205,7 +237,8 @@ public class ModifyPushChannelsForDeviceTest extends TestHarness {
         assertEquals(1, requests.size());
         assertEquals("ch1,ch2,ch3", requests.get(0).queryParameter("add").firstValue());
         assertEquals("gcm", requests.get(0).queryParameter("type").firstValue());
-
+        assertFalse(requests.get(0).queryParameter("environment").isPresent());
+        assertFalse(requests.get(0).queryParameter("topic").isPresent());
     }
 
     @Test
@@ -222,6 +255,27 @@ public class ModifyPushChannelsForDeviceTest extends TestHarness {
         assertEquals(1, requests.size());
         assertEquals("ch1,ch2,ch3", requests.get(0).queryParameter("add").firstValue());
         assertEquals("mpns", requests.get(0).queryParameter("type").firstValue());
+        assertFalse(requests.get(0).queryParameter("environment").isPresent());
+        assertFalse(requests.get(0).queryParameter("topic").isPresent());
+    }
+
+    @Test
+    public void testAddApns2SuccessSync() throws PubNubException, InterruptedException {
+
+        stubFor(get(urlPathEqualTo("/v2/push/sub-key/mySubscribeKey/devices-apns2/niceDevice"))
+                .willReturn(aResponse().withBody("[1, \"Modified Channels\"]")));
+
+        instanceAdd.deviceId("niceDevice").pushType(PNPushType.APNS2)
+                .channels(Arrays.asList("ch1", "ch2", "ch3"))
+                .topic("topic")
+                .sync();
+
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
+        assertEquals(1, requests.size());
+        assertEquals("ch1,ch2,ch3", requests.get(0).queryParameter("add").firstValue());
+        assertEquals("development", requests.get(0).queryParameter("environment").firstValue());
+        assertEquals("topic", requests.get(0).queryParameter("topic").firstValue());
+        assertFalse(requests.get(0).queryParameter("type").isPresent());
     }
 
     @Test
@@ -253,7 +307,8 @@ public class ModifyPushChannelsForDeviceTest extends TestHarness {
                 .async(new PNCallback<PNPushAddChannelResult>() {
                     @Override
                     public void onResponse(PNPushAddChannelResult result, @NotNull PNStatus status) {
-                        if (status != null && status.getOperation() == PNOperationType.PNPushNotificationEnabledChannelsOperation) {
+                        if (status != null && status.getOperation()
+                                == PNOperationType.PNPushNotificationEnabledChannelsOperation) {
                             atomic.incrementAndGet();
                         }
                     }
@@ -354,11 +409,12 @@ public class ModifyPushChannelsForDeviceTest extends TestHarness {
         assertEquals(1, requests.size());
         assertEquals("apns", requests.get(0).queryParameter("type").firstValue());
         assertEquals("chr1,chr2,chr3", requests.get(0).queryParameter("remove").firstValue());
-
+        assertFalse(requests.get(0).queryParameter("environment").isPresent());
+        assertFalse(requests.get(0).queryParameter("topic").isPresent());
     }
 
     @Test
-    public void testGoogleSuccessSync() throws PubNubException, InterruptedException {
+    public void testRemoveGoogleSuccessSync() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
                 .willReturn(aResponse().withBody("[1, \"Modified Channels\"]")));
@@ -370,11 +426,12 @@ public class ModifyPushChannelsForDeviceTest extends TestHarness {
         assertEquals(1, requests.size());
         assertEquals("gcm", requests.get(0).queryParameter("type").firstValue());
         assertEquals("chr1,chr2,chr3", requests.get(0).queryParameter("remove").firstValue());
-
+        assertFalse(requests.get(0).queryParameter("environment").isPresent());
+        assertFalse(requests.get(0).queryParameter("topic").isPresent());
     }
 
     @Test
-    public void testMicrosoftSuccessSync() throws PubNubException, InterruptedException {
+    public void testRemoveMicrosoftSuccessSync() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
                 .willReturn(aResponse().withBody("[1, \"Modified Channels\"]")));
@@ -386,6 +443,25 @@ public class ModifyPushChannelsForDeviceTest extends TestHarness {
         assertEquals(1, requests.size());
         assertEquals("mpns", requests.get(0).queryParameter("type").firstValue());
         assertEquals("chr1,chr2,chr3", requests.get(0).queryParameter("remove").firstValue());
+        assertFalse(requests.get(0).queryParameter("environment").isPresent());
+        assertFalse(requests.get(0).queryParameter("topic").isPresent());
+    }
+
+    @Test
+    public void testRemoveApns2SuccessSync() throws PubNubException, InterruptedException {
+
+        stubFor(get(urlPathEqualTo("/v2/push/sub-key/mySubscribeKey/devices-apns2/niceDevice"))
+                .willReturn(aResponse().withBody("[1, \"Modified Channels\"]")));
+
+        instanceRemove.deviceId("niceDevice").pushType(PNPushType.APNS2).topic("news")
+                .channels(Arrays.asList("chr1", "chr2", "chr3")).sync();
+
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
+        assertEquals(1, requests.size());
+        assertEquals("chr1,chr2,chr3", requests.get(0).queryParameter("remove").firstValue());
+        assertEquals("development", requests.get(0).queryParameter("environment").firstValue());
+        assertEquals("news", requests.get(0).queryParameter("topic").firstValue());
+        assertFalse(requests.get(0).queryParameter("type").isPresent());
     }
 
     @Test
@@ -415,7 +491,8 @@ public class ModifyPushChannelsForDeviceTest extends TestHarness {
                 .channels(Arrays.asList("chr1", "chr2", "chr3")).async(new PNCallback<PNPushRemoveChannelResult>() {
             @Override
             public void onResponse(PNPushRemoveChannelResult result, @NotNull PNStatus status) {
-                if (status != null && status.getOperation() == PNOperationType.PNRemovePushNotificationsFromChannelsOperation) {
+                if (status != null
+                        && status.getOperation() == PNOperationType.PNRemovePushNotificationsFromChannelsOperation) {
                     atomic.incrementAndGet();
                 }
             }

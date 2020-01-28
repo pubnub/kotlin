@@ -6,6 +6,7 @@ import com.pubnub.api.PubNubUtil;
 import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.enums.PNOperationType;
+import com.pubnub.api.enums.PNPushEnvironment;
 import com.pubnub.api.enums.PNPushType;
 import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.TelemetryManager;
@@ -15,7 +16,6 @@ import lombok.experimental.Accessors;
 import retrofit2.Call;
 import retrofit2.Response;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -28,11 +28,13 @@ public class RemoveChannelsFromPush extends Endpoint<List<Object>, PNPushRemoveC
     private List<String> channels;
     @Setter
     private String deviceId;
+    @Setter
+    private PNPushEnvironment environment;
+    @Setter
+    private String topic;
 
     public RemoveChannelsFromPush(PubNub pubnub, TelemetryManager telemetryManager, RetrofitManager retrofit) {
         super(pubnub, telemetryManager, retrofit);
-
-        channels = new ArrayList<>();
     }
 
     @Override
@@ -47,7 +49,8 @@ public class RemoveChannelsFromPush extends Endpoint<List<Object>, PNPushRemoveC
 
     @Override
     protected void validateParams() throws PubNubException {
-        if (this.getPubnub().getConfiguration().getSubscribeKey() == null || this.getPubnub().getConfiguration().getSubscribeKey().isEmpty()) {
+        if (this.getPubnub().getConfiguration().getSubscribeKey() == null
+                || this.getPubnub().getConfiguration().getSubscribeKey().isEmpty()) {
             throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_SUBSCRIBE_KEY_MISSING).build();
         }
         if (pushType == null) {
@@ -56,21 +59,38 @@ public class RemoveChannelsFromPush extends Endpoint<List<Object>, PNPushRemoveC
         if (deviceId == null || deviceId.isEmpty()) {
             throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_DEVICE_ID_MISSING).build();
         }
-        if (channels.size() == 0) {
+        if (channels == null || channels.isEmpty()) {
             throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_CHANNEL_MISSING).build();
+        }
+        if (pushType == PNPushType.APNS2) {
+            if (topic == null || topic.isEmpty()) {
+                throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_PUSH_TOPIC_MISSING).build();
+            }
+            if (environment == null) {
+                environment = PNPushEnvironment.DEVELOPMENT;
+            }
         }
     }
 
     @Override
     protected Call<List<Object>> doWork(Map<String, String> baseParams) throws PubNubException {
-        baseParams.put("type", pushType.name().toLowerCase());
+        baseParams.put("remove", PubNubUtil.joinString(channels, ","));
 
-        if (channels.size() != 0) {
-            baseParams.put("remove", PubNubUtil.joinString(channels, ","));
+        if (pushType != PNPushType.APNS2) {
+            baseParams.put("type", pushType.name().toLowerCase());
+            return this.getRetrofit().getPushService().modifyChannelsForDevice(
+                    this.getPubnub().getConfiguration().getSubscribeKey(),
+                    deviceId,
+                    baseParams);
+        } else {
+            baseParams.put("environment", environment.name().toLowerCase());
+            baseParams.put("topic", topic);
+
+            return this.getRetrofit().getPushService().modifyChannelsForDeviceApns2(
+                    this.getPubnub().getConfiguration().getSubscribeKey(),
+                    deviceId,
+                    baseParams);
         }
-
-        return this.getRetrofit().getPushService().modifyChannelsForDevice(this.getPubnub().getConfiguration().getSubscribeKey(), deviceId, baseParams);
-
     }
 
     @Override
@@ -78,7 +98,6 @@ public class RemoveChannelsFromPush extends Endpoint<List<Object>, PNPushRemoveC
         if (input.body() == null) {
             throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_PARSING_ERROR).build();
         }
-
         return PNPushRemoveChannelResult.builder().build();
     }
 

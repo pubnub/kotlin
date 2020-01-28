@@ -326,6 +326,11 @@ public final class PubNubErrorBuilder {
      */
     public static final int PNERR_HISTORY_MESSAGE_ACTIONS_MULTIPLE_CHANNELS = 163;
 
+    /**
+     * Push topic missing
+     */
+    public static final int PNERR_PUSH_TOPIC_MISSING = 164;
+
     // Error Objects
     public static final PubNubError PNERROBJ_TIMEOUT = PubNubError.builder()
             .errorCode(PNERR_TIMEOUT)
@@ -648,6 +653,11 @@ public final class PubNubErrorBuilder {
             .errorCode(PNERR_HISTORY_MESSAGE_ACTIONS_MULTIPLE_CHANNELS)
             .message("History can return message action data for a single channel only. "
                     .concat("Either pass a single channel or disable the includeMessageActions flag."))
+            .build();
+
+    public static final PubNubError PNERROBJ_PUSH_TOPIC_MISSING = PubNubError.builder()
+            .errorCode(PNERR_PUSH_TOPIC_MISSING)
+            .message("Push notification topic is missing. Required only if push type is APNS2.")
             .build();
 
     private PubNubErrorBuilder() {
