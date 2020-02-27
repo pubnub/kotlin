@@ -2,6 +2,7 @@ package com.pubnub.api.endpoints.objects_api.users;
 
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
+import com.pubnub.api.PubNubUtil;
 import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.enums.PNOperationType;
@@ -13,6 +14,7 @@ import com.pubnub.api.managers.token_manager.TokenManagerProperties;
 import com.pubnub.api.managers.token_manager.TokenManagerPropertyProvider;
 import com.pubnub.api.models.consumer.objects_api.user.PNGetUsersResult;
 import com.pubnub.api.models.consumer.objects_api.user.PNUser;
+import com.pubnub.api.models.consumer.objects_api.util.FilteringParamsProvider;
 import com.pubnub.api.models.consumer.objects_api.util.InclusionParamsProvider;
 import com.pubnub.api.models.consumer.objects_api.util.ListingParamsProvider;
 import com.pubnub.api.models.server.objects_api.EntityArrayEnvelope;
@@ -28,6 +30,7 @@ import java.util.Map;
 public class GetUsers extends Endpoint<EntityArrayEnvelope<PNUser>, PNGetUsersResult> implements
         InclusionParamsProvider<GetUsers, PNUserFields>,
         ListingParamsProvider<GetUsers>,
+        FilteringParamsProvider<GetUsers>,
         TokenManagerPropertyProvider {
 
     private Map<String, String> extraParamsMap;
@@ -110,6 +113,12 @@ public class GetUsers extends Endpoint<EntityArrayEnvelope<PNUser>, PNGetUsersRe
     @Override
     public GetUsers withTotalCount(Boolean count) {
         extraParamsMap.put("count", String.valueOf(count));
+        return this;
+    }
+
+    @Override
+    public GetUsers filter(String expression) {
+        extraParamsMap.put("filter", PubNubUtil.urlEncode(expression));
         return this;
     }
 

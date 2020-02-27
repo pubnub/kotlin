@@ -11,13 +11,14 @@ import com.pubnub.api.enums.PNPushType;
 import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.TelemetryManager;
 import com.pubnub.api.models.consumer.push.PNPushAddChannelResult;
+
+import java.util.List;
+import java.util.Map;
+
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import retrofit2.Call;
 import retrofit2.Response;
-
-import java.util.List;
-import java.util.Map;
 
 @Accessors(chain = true, fluent = true)
 public class AddChannelsToPush extends Endpoint<List<Object>, PNPushAddChannelResult> {
@@ -77,7 +78,7 @@ public class AddChannelsToPush extends Endpoint<List<Object>, PNPushAddChannelRe
         baseParams.put("add", PubNubUtil.joinString(channels, ","));
 
         if (pushType != PNPushType.APNS2) {
-            baseParams.put("type", pushType.name().toLowerCase());
+            baseParams.put("type", pushType.toString());
 
             return this.getRetrofit().getPushService().modifyChannelsForDevice(
                     this.getPubnub().getConfiguration().getSubscribeKey(),

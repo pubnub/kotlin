@@ -2,6 +2,7 @@ package com.pubnub.api.endpoints.objects_api.members;
 
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
+import com.pubnub.api.PubNubUtil;
 import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.enums.PNMemberFields;
@@ -13,6 +14,7 @@ import com.pubnub.api.managers.token_manager.TokenManagerProperties;
 import com.pubnub.api.managers.token_manager.TokenManagerPropertyProvider;
 import com.pubnub.api.models.consumer.objects_api.member.PNGetMembersResult;
 import com.pubnub.api.models.consumer.objects_api.member.PNMember;
+import com.pubnub.api.models.consumer.objects_api.util.FilteringParamsProvider;
 import com.pubnub.api.models.consumer.objects_api.util.InclusionParamsProvider;
 import com.pubnub.api.models.consumer.objects_api.util.ListingParamsProvider;
 import com.pubnub.api.models.server.objects_api.EntityArrayEnvelope;
@@ -32,6 +34,7 @@ import java.util.Map;
 public class GetMembers extends Endpoint<EntityArrayEnvelope<PNMember>, PNGetMembersResult> implements
         InclusionParamsProvider<GetMembers, PNMemberFields>,
         ListingParamsProvider<GetMembers>,
+        FilteringParamsProvider<GetMembers>,
         TokenManagerPropertyProvider {
 
     private Map<String, String> extraParamsMap;
@@ -121,6 +124,12 @@ public class GetMembers extends Endpoint<EntityArrayEnvelope<PNMember>, PNGetMem
     @Override
     public GetMembers withTotalCount(Boolean count) {
         extraParamsMap.put("count", String.valueOf(count));
+        return this;
+    }
+
+    @Override
+    public GetMembers filter(String expression) {
+        extraParamsMap.put("filter", PubNubUtil.urlEncode(expression));
         return this;
     }
 

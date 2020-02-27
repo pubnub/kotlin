@@ -3,23 +3,34 @@ package com.pubnub.api.managers;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.builder.PubNubErrorBuilder;
+
+import org.jetbrains.annotations.NotNull;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.Iterator;
+import java.util.Map;
+
 import lombok.Getter;
 import retrofit2.Converter;
 import retrofit2.converter.gson.GsonConverterFactory;
-
-import java.io.IOException;
-import java.util.Iterator;
-import java.util.Map;
 
 public class MapperManager {
 
@@ -29,39 +40,13 @@ public class MapperManager {
     private Converter.Factory converterFactory;
 
     public MapperManager() {
-
-        TypeAdapter<Boolean> booleanAsIntAdapter = new TypeAdapter<Boolean>() {
-            @Override
-            public void write(JsonWriter out, Boolean value) throws IOException {
-                if (value == null) {
-                    out.nullValue();
-                } else {
-                    out.value(value);
-                }
-            }
-
-            @Override
-            public Boolean read(JsonReader in) throws IOException {
-                JsonToken peek = in.peek();
-                switch (peek) {
-                    case BOOLEAN:
-                        return in.nextBoolean();
-                    //case NULL:
-                    //    in.nextNull();
-                    //    return null;
-                    case NUMBER:
-                        return in.nextInt() != 0;
-                    case STRING:
-                        return Boolean.parseBoolean(in.nextString());
-                    default:
-                        throw new IllegalStateException("Expected BOOLEAN or NUMBER but was " + peek);
-                }
-            }
-        };
+        TypeAdapter<Boolean> booleanAsIntAdapter = getBooleanTypeAdapter();
 
         this.objectMapper = new GsonBuilder()
                 .registerTypeAdapter(Boolean.class, booleanAsIntAdapter)
                 .registerTypeAdapter(boolean.class, booleanAsIntAdapter)
+                .registerTypeAdapter(JSONObject.class, new JSONObjectAdapter())
+                .registerTypeAdapter(JSONArray.class, new JSONArrayAdapter())
                 .create();
         this.converterFactory = GsonConverterFactory.create(this.getObjectMapper());
     }
@@ -167,6 +152,102 @@ public class MapperManager {
         boolean isValid = isJsonObject(jsonElement);
         if (!isValid) {
             throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_INVALID_JSON).build();
+        }
+    }
+
+    @NotNull
+    private TypeAdapter<Boolean> getBooleanTypeAdapter() {
+        return new TypeAdapter<Boolean>() {
+            @Override
+            public void write(JsonWriter out, Boolean value) throws IOException {
+                if (value == null) {
+                    out.nullValue();
+                } else {
+                    out.value(value);
+                }
+            }
+
+            @Override
+            public Boolean read(JsonReader in) throws IOException {
+                JsonToken peek = in.peek();
+                switch (peek) {
+                    case BOOLEAN:
+                        return in.nextBoolean();
+                    //case NULL:
+                    //    in.nextNull();
+                    //    return null;
+                    case NUMBER:
+                        return in.nextInt() != 0;
+                    case STRING:
+                        return Boolean.parseBoolean(in.nextString());
+                    default:
+                        throw new IllegalStateException("Expected BOOLEAN or NUMBER but was " + peek);
+                }
+            }
+        };
+    }
+
+    private static class JSONObjectAdapter implements JsonSerializer<JSONObject>, JsonDeserializer<JSONObject> {
+
+        @Override
+        public JsonElement serialize(JSONObject src, Type typeOfSrc, JsonSerializationContext context) {
+            if (src == null) {
+                return null;
+            }
+            JsonObject jsonObject = new JsonObject();
+            Iterator<String> keys = src.keys();
+            while (keys.hasNext()) {
+                String key = keys.next();
+                Object value = src.opt(key);
+                JsonElement jsonElement = context.serialize(value, value.getClass());
+                jsonObject.add(key, jsonElement);
+            }
+            return jsonObject;
+        }
+
+        @Override
+        public JSONObject deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+                throws JsonParseException {
+            if (json == null) {
+                return null;
+            }
+            try {
+                return new JSONObject(json.toString());
+            } catch (JSONException e) {
+                e.printStackTrace();
+                throw new JsonParseException(e);
+            }
+        }
+    }
+
+    private static class JSONArrayAdapter implements JsonSerializer<JSONArray>, JsonDeserializer<JSONArray> {
+
+        @Override
+        public JsonElement serialize(JSONArray src, Type typeOfSrc, JsonSerializationContext context) {
+            if (src == null) {
+                return null;
+            }
+            JsonArray jsonArray = new JsonArray();
+            for (int i = 0; i < src.length(); i++) {
+                Object object = src.opt(i);
+                JsonElement jsonElement = context.serialize(object, object.getClass());
+                jsonArray.add(jsonElement);
+            }
+            return jsonArray;
+        }
+
+        @Override
+        public JSONArray deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+                throws JsonParseException {
+            if (json == null) {
+                return null;
+            }
+            try {
+                return new JSONArray(json.toString());
+            } catch (JSONException e) {
+                e.printStackTrace();
+                throw new JsonParseException(e);
+            }
         }
     }
 

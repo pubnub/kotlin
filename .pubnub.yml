@@ -1,10 +1,23 @@
 name: java
-version: 4.29.2
+version: 4.31.0
 schema: 1
 scm: github.com/pubnub/java
 files:
-  - build/libs/pubnub-gson-4.30.0-all.jar
+  - build/libs/pubnub-gson-4.31.0-all.jar
 changelog:
+  - version: v4.31.0
+    date: 2020-02-25
+    changes:
+      - type: feature
+        text: Implemented Objects Filtering API
+      - type: improvement
+        text: Handled more network events to keep the client subscribed
+      - type: improvement
+        text: Improved interaction with classes from org.json*
+      - type: improvement
+        text: Made PNCallback eligible for SAM/lambda conversion
+      - type: improvement
+        text: Deprecated PNPushType.GCM in favor of PNPushType.FCM
   - version: v4.30.0
     date: 2020-01-23
     changes:
@@ -436,6 +449,11 @@ features:
     - PUSH-REMOVE-DEVICE-FROM-CHANNELS
     - PUSH-LIST-CHANNELS-FROM-DEVICE
     - PUSH-REMOVE-DEVICE
+    - PUSH-TYPE-APNS
+    - PUSH-TYPE-APNS2
+    - PUSH-TYPE-GCM
+    - PUSH-TYPE-FCM
+    - PUSH-TYPE-MPNS
   presence:
     - PRESENCE-HERE-NOW
     - PRESENCE-WHERE-NOW
@@ -474,6 +492,7 @@ features:
     - SUBSCRIBE-WILDCARD
     - SUBSCRIBE-FILTER-EXPRESSION
     - SUBSCRIBE-PUBLISHER-UUID
+    - SUBSCRIBE-PUBSUB-V2
     - SUBSCRIBE-SIGNAL-LISTENER
     - SUBSCRIBE-MEMBERSHIP-LISTENER
     - SUBSCRIBE-SPACE-LISTENER
@@ -502,10 +521,16 @@ features:
     - OBJECTS-ADD-MEMBERS
     - OBJECTS-REMOVE-MEMBERS
     - OBJECTS-UPDATE-MEMBERS
+    - OBJECTS-FILTERING
   message-actions:
     - MESSAGE-ACTIONS-GET
     - MESSAGE-ACTIONS-ADD
     - MESSAGE-ACTIONS-REMOVE
+  others:
+    - TELEMETRY
+    - QUERY-PARAM
+    - PN-OTHER-PROCESSING
+    - CREATE-PUSH-PAYLOAD
 supported-platforms:
   - version: PubNub Java SDK
     platforms:

@@ -10,13 +10,14 @@ import com.pubnub.api.enums.PNPushType;
 import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.TelemetryManager;
 import com.pubnub.api.models.consumer.push.PNPushRemoveAllChannelsResult;
+
+import java.util.List;
+import java.util.Map;
+
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import retrofit2.Call;
 import retrofit2.Response;
-
-import java.util.List;
-import java.util.Map;
 
 @Accessors(chain = true, fluent = true)
 public class RemoveAllPushChannelsForDevice extends Endpoint<List<Object>, PNPushRemoveAllChannelsResult> {
@@ -70,7 +71,7 @@ public class RemoveAllPushChannelsForDevice extends Endpoint<List<Object>, PNPus
     @Override
     protected Call<List<Object>> doWork(Map<String, String> params) throws PubNubException {
         if (pushType != PNPushType.APNS2) {
-            params.put("type", pushType.name().toLowerCase());
+            params.put("type", pushType.toString());
             return this.getRetrofit().getPushService().removeAllChannelsForDevice(
                     this.getPubnub().getConfiguration().getSubscribeKey(),
                     deviceId,

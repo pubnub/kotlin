@@ -94,6 +94,20 @@ public class ModifyPushChannelsForDeviceTest extends TestHarness {
     }
 
     @Test
+    public void testFirebaseSuccessSyncRemoveAll() throws PubNubException, InterruptedException {
+        stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice/remove"))
+                .willReturn(aResponse().withBody("[1, \"Modified Channels\"]")));
+
+        instance.deviceId("niceDevice").pushType(PNPushType.FCM).sync();
+
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
+        assertEquals(1, requests.size());
+        assertEquals("gcm", requests.get(0).queryParameter("type").firstValue());
+        assertFalse(requests.get(0).queryParameter("environment").isPresent());
+        assertFalse(requests.get(0).queryParameter("topic").isPresent());
+    }
+
+    @Test
     public void testMicrosoftSuccessSyncRemoveAll() throws PubNubException, InterruptedException {
         stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice/remove"))
                 .willReturn(aResponse().withBody("[1, \"Modified Channels\"]")));
@@ -230,6 +244,24 @@ public class ModifyPushChannelsForDeviceTest extends TestHarness {
                 .willReturn(aResponse().withBody("[1, \"Modified Channels\"]")));
 
         instanceAdd.deviceId("niceDevice").pushType(PNPushType.GCM)
+                .channels(Arrays.asList("ch1", "ch2", "ch3"))
+                .sync();
+
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
+        assertEquals(1, requests.size());
+        assertEquals("ch1,ch2,ch3", requests.get(0).queryParameter("add").firstValue());
+        assertEquals("gcm", requests.get(0).queryParameter("type").firstValue());
+        assertFalse(requests.get(0).queryParameter("environment").isPresent());
+        assertFalse(requests.get(0).queryParameter("topic").isPresent());
+    }
+
+    @Test
+    public void testAddFirebaseSuccessSync() throws PubNubException, InterruptedException {
+
+        stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
+                .willReturn(aResponse().withBody("[1, \"Modified Channels\"]")));
+
+        instanceAdd.deviceId("niceDevice").pushType(PNPushType.FCM)
                 .channels(Arrays.asList("ch1", "ch2", "ch3"))
                 .sync();
 
@@ -420,6 +452,23 @@ public class ModifyPushChannelsForDeviceTest extends TestHarness {
                 .willReturn(aResponse().withBody("[1, \"Modified Channels\"]")));
 
         instanceRemove.deviceId("niceDevice").pushType(PNPushType.GCM)
+                .channels(Arrays.asList("chr1", "chr2", "chr3")).sync();
+
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
+        assertEquals(1, requests.size());
+        assertEquals("gcm", requests.get(0).queryParameter("type").firstValue());
+        assertEquals("chr1,chr2,chr3", requests.get(0).queryParameter("remove").firstValue());
+        assertFalse(requests.get(0).queryParameter("environment").isPresent());
+        assertFalse(requests.get(0).queryParameter("topic").isPresent());
+    }
+
+    @Test
+    public void testRemoveFirebaseSuccessSync() throws PubNubException, InterruptedException {
+
+        stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
+                .willReturn(aResponse().withBody("[1, \"Modified Channels\"]")));
+
+        instanceRemove.deviceId("niceDevice").pushType(PNPushType.FCM)
                 .channels(Arrays.asList("chr1", "chr2", "chr3")).sync();
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));

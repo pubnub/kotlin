@@ -2,6 +2,7 @@ package com.pubnub.api.endpoints.objects_api.spaces;
 
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
+import com.pubnub.api.PubNubUtil;
 import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.enums.PNOperationType;
@@ -13,21 +14,24 @@ import com.pubnub.api.managers.token_manager.TokenManagerProperties;
 import com.pubnub.api.managers.token_manager.TokenManagerPropertyProvider;
 import com.pubnub.api.models.consumer.objects_api.space.PNGetSpacesResult;
 import com.pubnub.api.models.consumer.objects_api.space.PNSpace;
+import com.pubnub.api.models.consumer.objects_api.util.FilteringParamsProvider;
 import com.pubnub.api.models.consumer.objects_api.util.InclusionParamsProvider;
 import com.pubnub.api.models.consumer.objects_api.util.ListingParamsProvider;
 import com.pubnub.api.models.server.objects_api.EntityArrayEnvelope;
-import lombok.experimental.Accessors;
-import retrofit2.Call;
-import retrofit2.Response;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import lombok.experimental.Accessors;
+import retrofit2.Call;
+import retrofit2.Response;
+
 @Accessors(chain = true, fluent = true)
 public class GetSpaces extends Endpoint<EntityArrayEnvelope<PNSpace>, PNGetSpacesResult> implements
         InclusionParamsProvider<GetSpaces, PNSpaceFields>,
         ListingParamsProvider<GetSpaces>,
+        FilteringParamsProvider<GetSpaces>,
         TokenManagerPropertyProvider {
 
     private Map<String, String> extraParamsMap;
@@ -113,6 +117,11 @@ public class GetSpaces extends Endpoint<EntityArrayEnvelope<PNSpace>, PNGetSpace
         return this;
     }
 
+    @Override
+    public GetSpaces filter(String expression) {
+        extraParamsMap.put("filter", PubNubUtil.urlEncode(expression));
+        return this;
+    }
 
     @Override
     public TokenManagerProperties getTmsProperties() {

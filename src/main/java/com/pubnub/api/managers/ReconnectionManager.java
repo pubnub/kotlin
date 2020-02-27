@@ -1,50 +1,58 @@
 package com.pubnub.api.managers;
 
+import com.pubnub.api.PNConfiguration;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.callbacks.PNCallback;
 import com.pubnub.api.callbacks.ReconnectionCallback;
 import com.pubnub.api.enums.PNReconnectionPolicy;
 import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.PNTimeResult;
-import lombok.extern.slf4j.Slf4j;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import lombok.extern.slf4j.Slf4j;
+
 
 @Slf4j
 public class ReconnectionManager {
 
-    private static final int INTERVAL = 3;
-    private static final int MINEXPONENTIALBACKOFF = 1;
-    private static final int MAXEXPONENTIALBACKOFF = 32;
+    private static final int LINEAR_INTERVAL = 3;
+    private static final int MIN_EXPONENTIAL_BACKOFF = 1;
+    private static final int MAX_EXPONENTIAL_BACKOFF = 32;
+
+    private static final int MILLISECONDS = 1000;
 
     private ReconnectionCallback callback;
     private PubNub pubnub;
 
     private int exponentialMultiplier = 1;
     private int failedCalls = 0;
-    private static final int MILLISECONDS = 1000;
+
+    private PNReconnectionPolicy pnReconnectionPolicy;
+    private int maxConnectionRetries;
 
     /**
      * Timer for heartbeat operations.
      */
     private Timer timer;
 
-    public ReconnectionManager(PubNub pubnubInstance) {
-        this.pubnub = pubnubInstance;
+    public ReconnectionManager(PubNub pubnub) {
+        this.pubnub = pubnub;
     }
 
-    public ReconnectionManager setReconnectionListener(ReconnectionCallback reconnectionCallback) {
+    public void setReconnectionListener(ReconnectionCallback reconnectionCallback) {
         this.callback = reconnectionCallback;
-        return this;
     }
 
-    public void startPolling() {
-        if (this.pubnub.getConfiguration().getReconnectionPolicy() == PNReconnectionPolicy.NONE) {
-            log.warn("reconnection policy is disabled, please handle reconnection manually.");
+    public void startPolling(PNConfiguration pnConfiguration) {
+        this.pnReconnectionPolicy = pnConfiguration.getReconnectionPolicy();
+        this.maxConnectionRetries = pnConfiguration.getMaximumReconnectionRetries();
+
+        if (isReconnectionPolicyUndefined()) {
             return;
         }
 
@@ -54,47 +62,49 @@ public class ReconnectionManager {
         registerHeartbeatTimer();
     }
 
-
     private void registerHeartbeatTimer() {
         // make sure only one timer is running at a time.
         stopHeartbeatTimer();
 
-        if (this.pubnub.getConfiguration().getReconnectionPolicy() == PNReconnectionPolicy.NONE) {
-            log.warn("reconnection policy is disabled, please handle reconnection manually.");
+        if (isReconnectionPolicyUndefined()) {
             return;
         }
 
-        int maxRetries = this.pubnub.getConfiguration().getMaximumReconnectionRetries();
-        if (maxRetries != -1 && failedCalls >= maxRetries) {
+        if (maxConnectionRetries != -1 && failedCalls >= maxConnectionRetries) { // _what's -1?
             callback.onMaxReconnectionExhaustion();
             return;
         }
 
         timer = new Timer();
-        int timerInterval = INTERVAL;
-
-        if (pubnub.getConfiguration().getReconnectionPolicy() == PNReconnectionPolicy.EXPONENTIAL) {
-            timerInterval = (int) (Math.pow(2, exponentialMultiplier) - 1);
-            if (timerInterval > MAXEXPONENTIALBACKOFF) {
-                timerInterval = MINEXPONENTIALBACKOFF;
-                exponentialMultiplier = 1;
-                log.debug("timerInterval > MAXEXPONENTIALBACKOFF at: " + Calendar.getInstance().getTime().toString());
-            } else if (timerInterval < 1) {
-                timerInterval = MINEXPONENTIALBACKOFF;
-            }
-            log.debug("timerInterval = " + String.valueOf(timerInterval) + " at: " + Calendar.getInstance().getTime().toString());
-        }
-
-        if (pubnub.getConfiguration().getReconnectionPolicy() == PNReconnectionPolicy.LINEAR) {
-            timerInterval = INTERVAL;
-        }
 
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
                 callTime();
             }
-        }, timerInterval * MILLISECONDS, timerInterval * MILLISECONDS);
+        }, getBestInterval() * MILLISECONDS);
+    }
+
+    private int getBestInterval() {
+        int timerInterval = LINEAR_INTERVAL;
+
+        if (pnReconnectionPolicy == PNReconnectionPolicy.EXPONENTIAL) {
+            timerInterval = (int) (Math.pow(2, exponentialMultiplier) - 1);
+            if (timerInterval > MAX_EXPONENTIAL_BACKOFF) {
+                timerInterval = MIN_EXPONENTIAL_BACKOFF;
+                exponentialMultiplier = 1;
+                log.debug("timerInterval > MAXEXPONENTIALBACKOFF at: " + Calendar.getInstance().getTime().toString());
+            } else if (timerInterval < 1) {
+                timerInterval = MIN_EXPONENTIAL_BACKOFF;
+            }
+            log.debug("timerInterval = " + timerInterval + " at: " + Calendar.getInstance().getTime().toString());
+        }
+
+        if (pnReconnectionPolicy == PNReconnectionPolicy.LINEAR) {
+            timerInterval = LINEAR_INTERVAL;
+        }
+
+        return timerInterval;
     }
 
     private void stopHeartbeatTimer() {
@@ -105,23 +115,27 @@ public class ReconnectionManager {
     }
 
     private void callTime() {
-        try {
-            pubnub.time().async(new PNCallback<PNTimeResult>() {
-                @Override
-                public void onResponse(PNTimeResult result, @NotNull PNStatus status) {
-                    if (!status.isError()) {
-                        stopHeartbeatTimer();
-                        callback.onReconnection();
-                    } else {
-                        log.debug("callTime() at: " + Calendar.getInstance().getTime().toString());
-                        exponentialMultiplier++;
-                        failedCalls++;
-                        registerHeartbeatTimer();
-                    }
+        pubnub.time().async(new PNCallback<PNTimeResult>() {
+            @Override
+            public void onResponse(PNTimeResult result, @NotNull PNStatus status) {
+                if (!status.isError()) {
+                    stopHeartbeatTimer();
+                    callback.onReconnection();
+                } else {
+                    log.debug("callTime() at: " + Calendar.getInstance().getTime().toString());
+                    exponentialMultiplier++;
+                    failedCalls++;
+                    registerHeartbeatTimer();
                 }
-            });
-        } catch (Exception error) {
-            //
+            }
+        });
+    }
+
+    private boolean isReconnectionPolicyUndefined() {
+        if (pnReconnectionPolicy == null || pnReconnectionPolicy == PNReconnectionPolicy.NONE) {
+            log.warn("reconnection policy is disabled, please handle reconnection manually.");
+            return true;
         }
+        return false;
     }
 }

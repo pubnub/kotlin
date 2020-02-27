@@ -17,7 +17,7 @@ import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.server.SubscribeEnvelope;
 import com.pubnub.api.models.server.SubscribeMessage;
 import com.pubnub.api.workers.SubscribeMessageWorker;
-import lombok.extern.slf4j.Slf4j;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -26,6 +26,8 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.LinkedBlockingQueue;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class SubscriptionManager {
@@ -291,7 +293,7 @@ public class SubscriptionManager {
                     if (status.getCategory() == PNStatusCategory.PNUnexpectedDisconnectCategory) {
                         // stop all announcements and ask the reconnection manager to start polling for connection
                         // restoration..
-                        reconnectionManager.startPolling();
+                        reconnectionManager.startPolling(pubnub.getConfiguration());
                     }
 
                     return;

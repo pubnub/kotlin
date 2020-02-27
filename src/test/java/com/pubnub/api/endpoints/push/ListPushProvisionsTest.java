@@ -90,6 +90,22 @@ public class ListPushProvisionsTest extends TestHarness {
     }
 
     @Test
+    public void testFirebaseSuccessSync() throws PubNubException, InterruptedException {
+
+        stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
+                .willReturn(aResponse().withBody("[\"ch1\", \"ch2\", \"ch3\"]")));
+
+        instance.deviceId("niceDevice").pushType(PNPushType.FCM).sync();
+
+        List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/.*")));
+        assertEquals(1, requests.size());
+
+        assertEquals("gcm", requests.get(0).queryParameter("type").firstValue());
+        assertFalse(requests.get(0).queryParameter("environment").isPresent());
+        assertFalse(requests.get(0).queryParameter("news").isPresent());
+    }
+
+    @Test
     public void testMicrosoftSuccessSync() throws PubNubException, InterruptedException {
 
         stubFor(get(urlPathEqualTo("/v1/push/sub-key/mySubscribeKey/devices/niceDevice"))
@@ -226,4 +242,18 @@ public class ListPushProvisionsTest extends TestHarness {
         assertEquals("development", requests.get(0).queryParameter("environment").firstValue());
     }
 
+    @Test
+    public void testPushTypeNames() {
+        String expectedName = "gcm";
+        Assert.assertEquals(PNPushType.GCM.toString(), PNPushType.FCM.toString());
+        Assert.assertEquals(PNPushType.GCM + "", PNPushType.FCM + "");
+        Assert.assertEquals(expectedName, PNPushType.GCM + "");
+        Assert.assertEquals(expectedName, PNPushType.FCM + "");
+        Assert.assertEquals(expectedName, PNPushType.GCM.toString());
+        Assert.assertEquals(expectedName, PNPushType.FCM.toString());
+
+        Assert.assertEquals("mpns", PNPushType.MPNS.toString());
+        Assert.assertEquals("apns", PNPushType.APNS.toString());
+        Assert.assertEquals("apns2", PNPushType.APNS2.toString());
+    }
 }

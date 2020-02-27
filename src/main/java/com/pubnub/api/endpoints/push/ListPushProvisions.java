@@ -10,13 +10,14 @@ import com.pubnub.api.enums.PNPushType;
 import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.TelemetryManager;
 import com.pubnub.api.models.consumer.push.PNPushListProvisionsResult;
+
+import java.util.List;
+import java.util.Map;
+
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import retrofit2.Call;
 import retrofit2.Response;
-
-import java.util.List;
-import java.util.Map;
 
 @Accessors(chain = true, fluent = true)
 public class ListPushProvisions extends Endpoint<List<String>, PNPushListProvisionsResult> {
@@ -69,7 +70,7 @@ public class ListPushProvisions extends Endpoint<List<String>, PNPushListProvisi
     @Override
     protected Call<List<String>> doWork(Map<String, String> params) throws PubNubException {
         if (pushType != PNPushType.APNS2) {
-            params.put("type", pushType.name().toLowerCase());
+            params.put("type", pushType.toString());
             return this.getRetrofit().getPushService().listChannelsForDevice(
                     this.getPubnub().getConfiguration().getSubscribeKey(), deviceId, params);
         } else {

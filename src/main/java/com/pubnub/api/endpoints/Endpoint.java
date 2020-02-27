@@ -16,19 +16,12 @@ import com.pubnub.api.managers.token_manager.TokenManagerProperties;
 import com.pubnub.api.managers.token_manager.TokenManagerPropertyProvider;
 import com.pubnub.api.models.consumer.PNErrorData;
 import com.pubnub.api.models.consumer.PNStatus;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.Accessors;
-import lombok.extern.java.Log;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import retrofit2.Call;
-import retrofit2.Response;
 
 import java.io.IOException;
-import java.net.ConnectException;
+import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -36,6 +29,16 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import javax.net.ssl.SSLException;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+import lombok.extern.java.Log;
+import retrofit2.Call;
+import retrofit2.Response;
 
 @Log
 public abstract class Endpoint<Input, Output> {
@@ -245,7 +248,7 @@ public abstract class Endpoint<Input, Output> {
                 } catch (UnknownHostException networkException) {
                     pubnubException.pubnubError(PubNubErrorBuilder.PNERROBJ_CONNECTION_NOT_SET);
                     pnStatusCategory = PNStatusCategory.PNUnexpectedDisconnectCategory;
-                } catch (ConnectException connectException) {
+                } catch (SocketException | SSLException exception) {
                     pubnubException.pubnubError(PubNubErrorBuilder.PNERROBJ_CONNECT_EXCEPTION);
                     pnStatusCategory = PNStatusCategory.PNUnexpectedDisconnectCategory;
                 } catch (SocketTimeoutException socketTimeoutException) {
