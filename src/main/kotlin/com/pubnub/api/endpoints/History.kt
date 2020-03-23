@@ -11,61 +11,56 @@ import com.pubnub.api.models.consumer.history.PNHistoryResult
 import com.pubnub.api.vendor.Crypto
 import retrofit2.Call
 import retrofit2.Response
-import java.util.*
+import java.util.ArrayList
+import java.util.HashMap
+import java.util.Locale
 
 class History(pubnub: PubNub) : Endpoint<JsonElement, PNHistoryResult>(pubnub) {
 
-    companion object {
+    private companion object {
         private const val MAX_COUNT = 100
     }
 
-    inner class Params {
-        var channel: String? = null
-        var start: Long? = null
-        var end: Long? = null
-        var reverse = false
-        var count: Int? = null
-        var includeTimetoken = false
-        var includeMeta = false
-    }
-
-    val params = Params()
+    lateinit var channel: String
+    var start: Long? = null
+    var end: Long? = null
+    var count = MAX_COUNT
+    var reverse = false
+    var includeTimetoken = false
+    var includeMeta = false
 
     override fun validateParams() {
         super.validateParams()
-        if (params.channel.isNullOrBlank()) {
+        if (!::channel.isInitialized) {
             throw PubNubException(PubNubError.CHANNEL_MISSING)
         }
+        count =
+            when (count) {
+                in 1..MAX_COUNT -> count
+                else -> MAX_COUNT
+            }
     }
 
-    override fun getAffectedChannels() = listOf(params.channel)
+    override fun getAffectedChannels() = listOf(channel)
 
     override fun getAffectedChannelGroups() = emptyList<String>()
 
     override fun doWork(queryParams: HashMap<String, String>): Call<JsonElement> {
-        queryParams["reverse"] = params.reverse.toString()
-        queryParams["include_token"] = params.includeTimetoken.toString()
-        queryParams["include_meta"] = params.includeMeta.toString()
+        queryParams["reverse"] = reverse.toString()
+        queryParams["include_token"] = includeTimetoken.toString()
+        queryParams["include_meta"] = includeMeta.toString()
+        queryParams["count"] = count.toString()
 
-        params.count?.let {
-            queryParams["count"] =
-                when (it) {
-                    in 1..MAX_COUNT -> it
-                    else -> MAX_COUNT
-                }.toString()
+        start?.let {
+            queryParams["start"] = it.toString().toLowerCase(Locale.US)
         }
-
-        params.start?.let {
-            queryParams["start"] = it.toString().toLowerCase()
-        }
-
-        params.end?.let {
-            queryParams["end"] = it.toString().toLowerCase()
+        end?.let {
+            queryParams["end"] = it.toString().toLowerCase(Locale.US)
         }
 
         return pubnub.retrofitManager.historyService.fetchHistory(
-            pubnub.config.subscribeKey!!,
-            params.channel!!,
+            pubnub.configuration.subscribeKey,
+            channel,
             queryParams
         )
     }
@@ -83,15 +78,15 @@ class History(pubnub: PubNub) : Endpoint<JsonElement, PNHistoryResult>(pubnub) {
                 if (this.isJsonArray) {
                     pubnub.mapper.getArrayIterator(this)?.forEach {
 
-                        var message: JsonElement? = null
+                        var message: JsonElement?
                         var timetoken: Long? = null
                         var meta: JsonElement? = null
 
-                        if (params.includeTimetoken || params.includeMeta) {
-                            if (params.includeTimetoken) {
+                        if (includeTimetoken || includeMeta) {
+                            if (includeTimetoken) {
                                 timetoken = pubnub.mapper.elementToLong(it, "timetoken")
                             }
-                            if (params.includeMeta) {
+                            if (includeMeta) {
                                 meta = pubnub.mapper.getField(it, "meta")
                             }
                             message = processMessage(pubnub.mapper.getField(it, "message")!!)
@@ -99,12 +94,20 @@ class History(pubnub: PubNub) : Endpoint<JsonElement, PNHistoryResult>(pubnub) {
                             message = processMessage(it)
                         }
 
-                        messages += PNHistoryItemResult(message, timetoken, meta)
+                        messages += PNHistoryItemResult(
+                            message,
+                            timetoken,
+                            meta
+                        )
                     }
                 }
             }
 
-            result = PNHistoryResult(messages, startTimeToken, endTimeToken)
+            result = PNHistoryResult(
+                messages,
+                startTimeToken,
+                endTimeToken
+            )
         }
 
         return result
@@ -112,11 +115,10 @@ class History(pubnub: PubNub) : Endpoint<JsonElement, PNHistoryResult>(pubnub) {
 
     @Throws(PubNubException::class)
     private fun processMessage(message: JsonElement): JsonElement {
-        if (pubnub.config.cipherKey == null) {
+        if (!pubnub.configuration.isCipherKeyValid())
             return message
-        }
 
-        val crypto = Crypto(pubnub.config.cipherKey!!)
+        val crypto = Crypto(pubnub.configuration.cipherKey)
 
         val inputText = pubnub.mapper.getField(message, "pn_other")?.let {
             pubnub.mapper.elementToString(it)

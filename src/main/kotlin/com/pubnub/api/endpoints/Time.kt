@@ -8,10 +8,6 @@ import retrofit2.Response
 
 class Time(pubnub: PubNub) : Endpoint<List<Long>, PNTimeResult>(pubnub) {
 
-    inner class Params {}
-
-    val params = Params()
-
     override fun getAffectedChannels() = emptyList<String>()
 
     override fun getAffectedChannelGroups() = emptyList<String>()
