@@ -3,8 +3,17 @@ package com.pubnub.api
 import com.google.gson.JsonElement
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
-import com.pubnub.api.enums.PNStatusCategory.*
+import com.pubnub.api.enums.PNStatusCategory.PNAccessDeniedCategory
+import com.pubnub.api.enums.PNStatusCategory.PNAcknowledgmentCategory
+import com.pubnub.api.enums.PNStatusCategory.PNBadRequestCategory
+import com.pubnub.api.enums.PNStatusCategory.PNCancelledCategory
+import com.pubnub.api.enums.PNStatusCategory.PNMalformedResponseCategory
+import com.pubnub.api.enums.PNStatusCategory.PNNotFoundCategory
+import com.pubnub.api.enums.PNStatusCategory.PNTimeoutCategory
+import com.pubnub.api.enums.PNStatusCategory.PNUnexpectedDisconnectCategory
+import com.pubnub.api.enums.PNStatusCategory.PNUnknownCategory
 import com.pubnub.api.models.consumer.PNStatus
+import com.pubnub.api.models.server.Envelope
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -12,10 +21,9 @@ import java.io.IOException
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
-import java.util.*
+import java.util.HashMap
 
 abstract class Endpoint<Input, Output>(internal val pubnub: PubNub) {
-
 
     companion object {
         private const val SERVER_RESPONSE_SUCCESS = 200
@@ -24,7 +32,6 @@ abstract class Endpoint<Input, Output>(internal val pubnub: PubNub) {
         private const val SERVER_RESPONSE_NOT_FOUND = 404
     }
 
-    // private lateinit var cachedCallback: PNCallback<Output>
     private lateinit var cachedCallback: (result: Output?, status: PNStatus) -> Unit
     private lateinit var call: Call<Input>
     private var silenceFailures = false
@@ -39,7 +46,6 @@ abstract class Endpoint<Input, Output>(internal val pubnub: PubNub) {
                 call.execute()
             } catch (e: IOException) {
                 throw PubNubException(PubNubError.PARSING_ERROR).apply {
-                    errorMessage = e.message
                     affectedCall = call
                 }
             }
@@ -84,6 +90,7 @@ abstract class Endpoint<Input, Output>(internal val pubnub: PubNub) {
 
                 when {
                     response.isSuccessful -> {
+                        // query params
                         storeRequestLatency(response)
                         try {
                             Triple(PNAcknowledgmentCategory, createResponse(response), null)
@@ -92,7 +99,11 @@ abstract class Endpoint<Input, Output>(internal val pubnub: PubNub) {
                         }.let {
                             callback.invoke(
                                 it.second,
-                                createStatusResponse(it.first, response, it.third)
+                                createStatusResponse(
+                                    category = it.first,
+                                    response = response,
+                                    exception = it.third
+                                )
                             )
                         }
                     }
@@ -124,6 +135,7 @@ abstract class Endpoint<Input, Output>(internal val pubnub: PubNub) {
             }
 
             override fun onFailure(call: Call<Input>, t: Throwable) {
+
                 if (silenceFailures) {
                     return
                 }
@@ -164,14 +176,20 @@ abstract class Endpoint<Input, Output>(internal val pubnub: PubNub) {
     }
 
     private fun storeRequestLatency(response: Response<Input>) {
-        // todo
-        println("storeRequestLatency: ${operationType().queryParam}")
+        pubnub.telemetryManager.storeLatency(
+            latency = with(response.raw()) {
+                receivedResponseAtMillis() - sentRequestAtMillis()
+            },
+            type = operationType()
+        )
     }
 
     protected fun encodeParams(params: Map<String, String>): Map<String, String> {
         val encodedParams = HashMap(params)
         if (encodedParams.containsKey("auth")) {
-            encodedParams["auth"] = encodedParams["auth"]?.let { PubNubUtil.urlEncode(it) }
+            encodedParams["auth"] = encodedParams["auth"]?.let {
+                PubNubUtil.urlEncode(it)
+            }
         }
         return encodedParams
     }
@@ -179,16 +197,29 @@ abstract class Endpoint<Input, Output>(internal val pubnub: PubNub) {
     private fun createBaseParams(): HashMap<String, String> {
         val map = hashMapOf(
             "pnsdk" to "PubNub-Kotlin/${pubnub.version}",
-            "uuid" to pubnub.config.uuid,
+            "uuid" to pubnub.configuration.uuid,
             "instanceid" to pubnub.instanceId,
             "requestid" to pubnub.requestId()
         )
-        if (isAuthRequired()) {
-            pubnub.config.authKey?.let {
-                map["auth"] = it
+
+        if (isAuthRequired() && pubnub.configuration.isAuthKeyValid()) {
+            map["auth"] = pubnub.configuration.authKey
+        }
+
+        map.putAll(pubnub.telemetryManager.operationsLatency())
+        return map
+    }
+
+    /**
+     * cancel the operation but do not alert anybody, useful for restarting the heartbeats and subscribe loops.
+     */
+    fun silentCancel() {
+        if (::call.isInitialized) {
+            if (!call.isCanceled) {
+                silenceFailures = true
+                call.cancel()
             }
         }
-        return map
     }
 
 
@@ -251,12 +282,11 @@ abstract class Endpoint<Input, Output>(internal val pubnub: PubNub) {
 
     protected abstract fun getAffectedChannelGroups(): List<String?>
 
-    @Throws(PubNubException::class)
     protected open fun validateParams() {
-        if (isSubKeyRequired() && pubnub.config.subscribeKey.isNullOrBlank()) {
+        if (isSubKeyRequired() && !pubnub.configuration.isSubscribeKeyValid()) {
             throw PubNubException(PubNubError.SUBSCRIBE_KEY_MISSING)
         }
-        if (isPubKeyRequired() && pubnub.config.publishKey.isNullOrBlank()) {
+        if (isPubKeyRequired() && !pubnub.configuration.isPublishKeyValid()) {
             throw PubNubException(PubNubError.PUBLISH_KEY_MISSING)
         }
     }
@@ -272,4 +302,10 @@ abstract class Endpoint<Input, Output>(internal val pubnub: PubNub) {
     protected abstract fun isSubKeyRequired(): Boolean
     protected abstract fun isPubKeyRequired(): Boolean
     protected abstract fun isAuthRequired(): Boolean
+}
+
+internal fun <T> Response<Envelope<T>>.throwIfEmpty() {
+    if (body() == null || body()?.payload == null) {
+        throw PubNubException(PubNubError.PARSING_ERROR)
+    }
 }

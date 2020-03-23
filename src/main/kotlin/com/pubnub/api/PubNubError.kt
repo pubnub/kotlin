@@ -60,6 +60,16 @@ enum class PubNubError(val code: Int, val message: String) {
     CRYPTO_ERROR(
         135,
         "Error while encrypting/decrypting message. Please contact support with error details."
+    ),
+
+    STATE_MISSING(
+        140,
+        "State Missing."
+    ),
+
+    CHANNEL_AND_GROUP_MISSING(
+        141,
+        "Channel and Group Missing."
     );
 
     override fun toString(): String {

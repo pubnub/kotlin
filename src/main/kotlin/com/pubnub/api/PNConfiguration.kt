@@ -9,7 +9,7 @@ import okhttp3.ConnectionSpec
 import okhttp3.logging.HttpLoggingInterceptor
 import java.net.Proxy
 import java.net.ProxySelector
-import java.util.*
+import java.util.UUID
 import javax.net.ssl.HostnameVerifier
 import javax.net.ssl.SSLSocketFactory
 import javax.net.ssl.X509ExtendedTrustManager
@@ -17,7 +17,7 @@ import javax.net.ssl.X509ExtendedTrustManager
 
 class PNConfiguration {
 
-    companion object Constants {
+    private companion object Constants {
         private const val DEFAULT_DEDUPE_SIZE = 100
         private const val PRESENCE_TIMEOUT = 300
         private const val MINIMUM_PRESENCE_TIMEOUT = 20
@@ -27,12 +27,13 @@ class PNConfiguration {
         private const val DEFAULT_BASE_PATH = "ps.pndsn.com"
     }
 
-    var subscribeKey: String? = null
-    var publishKey: String? = null
-    var secretKey: String? = null
+    lateinit var subscribeKey: String
+    lateinit var publishKey: String
+    lateinit var secretKey: String
+    lateinit var authKey: String
+    lateinit var cipherKey: String
+
     var uuid: String = "pn-${UUID.randomUUID()}"
-    var authKey: String? = null
-    var cipherKey: String? = null
 
     var origin = DEFAULT_BASE_PATH
     var secure = true
@@ -55,12 +56,13 @@ class PNConfiguration {
 
     var subscribeTimeout = SUBSCRIBE_TIMEOUT
     var connectTimeout = CONNECT_TIMEOUT
-    var nonSubscribeRequestTimeout = NON_SUBSCRIBE_REQUEST_TIMEOUT
+    var nonSubscribeRequestTimeout =
+        NON_SUBSCRIBE_REQUEST_TIMEOUT
     var maximumMessagesCacheSize = DEFAULT_DEDUPE_SIZE
 
     var suppressLeaveEvents = false
     var disableTokenManager = false
-    var filterExpression: String? = null
+    lateinit var filterExpression: String
     var includeInstanceIdentifier = false
     var includeRequestIdentifier = true
     var maximumReconnectionRetries = -1
@@ -79,4 +81,15 @@ class PNConfiguration {
     var x509ExtendedTrustManager: X509ExtendedTrustManager? = null
     var connectionSpec: ConnectionSpec? = null
     var hostnameVerifier: HostnameVerifier? = null
+
+    internal fun isSubscribeKeyValid() = ::subscribeKey.isInitialized && !subscribeKey.isBlank()
+    internal fun isAuthKeyValid() = ::authKey.isInitialized && !authKey.isBlank()
+    internal fun isCipherKeyValid() = ::cipherKey.isInitialized && !cipherKey.isBlank()
+    internal fun isPublishKeyValid() = ::publishKey.isInitialized && !publishKey.isBlank()
+    internal fun isSecretKeyValid() = ::secretKey.isInitialized && !secretKey.isBlank()
+    internal fun isFilterExpressionKeyValid(function: String.() -> Unit) {
+        if (::filterExpression.isInitialized && !filterExpression.isBlank()) {
+            function.invoke(filterExpression)
+        }
+    }
 }
