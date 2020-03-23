@@ -7,8 +7,8 @@ import com.pubnub.api.enums.PNStatusCategory
 import okhttp3.Request
 
 data class PNStatus(
-    val category: PNStatusCategory,
-    val error: Boolean,
+    var category: PNStatusCategory,
+    var error: Boolean,
     val operation: PNOperationType,
 
     val exception: PubNubException? = null,
@@ -23,6 +23,7 @@ data class PNStatus(
     var affectedChannelGroups: List<String?> = emptyList()
 
 ) {
+
 
     var executedEndpoint: Endpoint<*, *>? = null
     var clientRequest: Request? = null
