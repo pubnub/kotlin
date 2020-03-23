@@ -1,4 +1,4 @@
-package com.pubnub.api.enums;
+package com.pubnub.api.enums
 
 sealed class PNOperationType(open val queryParam: String? = null) {
 
@@ -71,5 +71,8 @@ sealed class PNOperationType(open val queryParam: String? = null) {
 
     object PNTimeOperation : TimeOperation()
 
+    override fun toString(): String {
+        return this.javaClass.simpleName
+    }
 
 }
