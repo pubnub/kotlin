@@ -3,7 +3,9 @@ package com.pubnub.api.managers
 import com.pubnub.api.PubNub
 import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.services.HistoryService
+import com.pubnub.api.services.PresenceService
 import com.pubnub.api.services.PublishService
+import com.pubnub.api.services.SubscribeService
 import com.pubnub.api.services.TimeService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -14,19 +16,40 @@ import java.util.concurrent.TimeUnit
 
 class RetrofitManager(val pubnub: PubNub) {
 
-    private val transactionClientInstance = createOkHttpClient(pubnub.config.nonSubscribeRequestTimeout)
-    private val transactionInstance = createRetrofit(transactionClientInstance)
+    private val transactionClientInstance: OkHttpClient by lazy {
+        createOkHttpClient(pubnub.configuration.nonSubscribeRequestTimeout)
+    }
 
-    val timeService: TimeService = transactionInstance.create(TimeService::class.java)
-    val publishService: PublishService = transactionInstance.create(PublishService::class.java)
-    val historyService: HistoryService = transactionInstance.create(HistoryService::class.java)
+    private val subscriptionClientInstance: OkHttpClient by lazy {
+        createOkHttpClient(pubnub.configuration.subscribeTimeout)
+    }
+
+    internal val timeService: TimeService
+    internal val publishService: PublishService
+    internal val historyService: HistoryService
+    internal val presenceService: PresenceService
+
+    internal val subscribeService: SubscribeService
+
+
+    init {
+        val transactionInstance = createRetrofit(transactionClientInstance)
+        val subscriptionInstance = createRetrofit(subscriptionClientInstance)
+
+        timeService = transactionInstance.create(TimeService::class.java)
+        publishService = transactionInstance.create(PublishService::class.java)
+        historyService = transactionInstance.create(HistoryService::class.java)
+        presenceService = transactionInstance.create(PresenceService::class.java)
+
+        subscribeService = subscriptionInstance.create(SubscribeService::class.java)
+    }
 
     private fun createOkHttpClient(readTimeout: Int): OkHttpClient {
         val okHttpBuilder = OkHttpClient.Builder()
             .readTimeout(readTimeout.toLong(), TimeUnit.SECONDS)
-            .connectTimeout(pubnub.config.connectTimeout.toLong(), TimeUnit.SECONDS)
+            .connectTimeout(pubnub.configuration.connectTimeout.toLong(), TimeUnit.SECONDS)
 
-        with(pubnub.config) {
+        with(pubnub.configuration) {
             if (logVerbosity == PNLogVerbosity.BODY) {
                 okHttpBuilder.addInterceptor(HttpLoggingInterceptor().apply {
                     level = HttpLoggingInterceptor.Level.BODY
@@ -34,8 +57,8 @@ class RetrofitManager(val pubnub: PubNub) {
             }
             if (sslSocketFactory != null && x509ExtendedTrustManager != null) {
                 okHttpBuilder.sslSocketFactory(
-                    pubnub.config.sslSocketFactory!!,
-                    pubnub.config.x509ExtendedTrustManager!!
+                    pubnub.configuration.sslSocketFactory!!,
+                    pubnub.configuration.x509ExtendedTrustManager!!
                 )
             }
             connectionSpec?.let { okHttpBuilder.connectionSpecs(listOf(it)) }
@@ -48,7 +71,7 @@ class RetrofitManager(val pubnub: PubNub) {
 
         val okHttpClient = okHttpBuilder.build()
 
-        pubnub.config.maximumConnections?.let { okHttpClient.dispatcher().maxRequestsPerHost = it }
+        pubnub.configuration.maximumConnections?.let { okHttpClient.dispatcher().maxRequestsPerHost = it }
 
         return okHttpClient
     }
@@ -60,5 +83,19 @@ class RetrofitManager(val pubnub: PubNub) {
             .addConverterFactory(GsonConverterFactory.create())
 
         return retrofitBuilder.build()
+    }
+
+    fun destroy(force: Boolean = false) {
+        closeExecutor(transactionClientInstance, force)
+        closeExecutor(subscriptionClientInstance, force)
+    }
+
+    private fun closeExecutor(client: OkHttpClient, force: Boolean) {
+        client.dispatcher().cancelAll()
+        if (force) {
+            client.connectionPool().evictAll()
+            val executorService = client.dispatcher().executorService()
+            executorService.shutdown()
+        }
     }
 }

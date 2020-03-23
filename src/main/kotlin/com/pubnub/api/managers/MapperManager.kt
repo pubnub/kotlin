@@ -1,7 +1,14 @@
 package com.pubnub.api.managers
 
-import com.google.gson.*
-import com.google.gson.internal.bind.TypeAdapters.*
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import com.google.gson.JsonElement
+import com.google.gson.JsonObject
+import com.google.gson.JsonParseException
+import com.google.gson.TypeAdapter
+import com.google.gson.internal.bind.TypeAdapters.BOOLEAN
+import com.google.gson.internal.bind.TypeAdapters.NUMBER
+import com.google.gson.internal.bind.TypeAdapters.STRING
 import com.google.gson.stream.JsonReader
 import com.google.gson.stream.JsonWriter
 import com.pubnub.api.PubNubError
@@ -59,9 +66,9 @@ class MapperManager {
     fun getObjectIterator(element: JsonElement, field: String) =
         element.asJsonObject.get(field).asJsonObject.entrySet().iterator()
 
-    fun elementToString(element: JsonElement) = element.asString
+    fun elementToString(element: JsonElement?) = element?.asString
 
-    fun elementToString(element: JsonElement, field: String) = element.asJsonObject.get(field).asString
+    fun elementToString(element: JsonElement?, field: String) = element?.asJsonObject?.get(field)?.asString
 
     fun elementToInt(element: JsonElement, field: String) = element.asJsonObject.get(field).asInt
 
@@ -92,14 +99,14 @@ class MapperManager {
         }
     }
 
-    fun <T> convertValue(input: JsonElement, clazz: Class<T>): T {
-        return this.objectMapper.fromJson<Any>(input, clazz) as T
+    fun <T> convertValue(input: JsonElement?, clazz: Class<T>): T {
+        return this.objectMapper.fromJson(input, clazz) as T
     }
 
-    @Throws(PubNubException::class)
+    /*@Throws(PubNubException::class)
     fun <T> convertValue(obj: Any, clazz: Class<T>): T {
         return fromJson(toJson(obj), clazz)
-    }
+    }*/
 
     @Throws(PubNubException::class)
     fun toJson(input: Any): String {

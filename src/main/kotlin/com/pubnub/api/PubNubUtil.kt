@@ -24,5 +24,22 @@ class PubNubUtil {
 
         }
 
+        fun replaceLast(string: String, toReplace: String, replacement: String): String {
+            val pos = string.lastIndexOf(toReplace)
+            return if (pos > -1) {
+                string.substring(0, pos) + replacement + string.substring(
+                    pos + toReplace.length,
+                    string.length
+                )
+            } else {
+                string
+            }
+        }
     }
+}
+
+internal fun <E> List<E>.toCsv(): String {
+    if (this.isNotEmpty())
+        return this.joinToString(",")
+    return ","
 }
