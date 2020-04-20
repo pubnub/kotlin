@@ -1,10 +1,15 @@
 name: java
-version: 4.31.0
+version: 4.31.1
 schema: 1
 scm: github.com/pubnub/java
 files:
-  - build/libs/pubnub-gson-4.31.0-all.jar
+  - build/libs/pubnub-gson-4.31.1-all.jar
 changelog:
+  - version: v4.31.1
+    date: 2020-04-16
+    changes:
+      - type: bug
+        text: Fix OkHttp reconnection policy
   - version: v4.31.0
     date: 2020-02-25
     changes:

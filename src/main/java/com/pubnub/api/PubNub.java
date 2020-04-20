@@ -54,7 +54,7 @@ import com.pubnub.api.managers.token_manager.PNResourceType;
 import com.pubnub.api.managers.token_manager.TokenManager;
 import com.pubnub.api.managers.token_manager.TokenManagerProperties;
 import com.pubnub.api.vendor.Crypto;
-import lombok.Getter;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -62,6 +62,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+
+import lombok.Getter;
 
 
 public class PubNub {
@@ -89,7 +91,7 @@ public class PubNub {
     private static final int TIMESTAMP_DIVIDER = 1000;
     private static final int MAX_SEQUENCE = 65535;
 
-    private static final String SDK_VERSION = "4.31.0";
+    private static final String SDK_VERSION = "4.31.1";
 
     public PubNub(@NotNull PNConfiguration initialConfig) {
         this.configuration = initialConfig;
