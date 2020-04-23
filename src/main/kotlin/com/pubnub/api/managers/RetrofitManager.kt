@@ -2,11 +2,7 @@ package com.pubnub.api.managers
 
 import com.pubnub.api.PubNub
 import com.pubnub.api.enums.PNLogVerbosity
-import com.pubnub.api.services.HistoryService
-import com.pubnub.api.services.PresenceService
-import com.pubnub.api.services.PublishService
-import com.pubnub.api.services.SubscribeService
-import com.pubnub.api.services.TimeService
+import com.pubnub.api.services.*
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -28,6 +24,11 @@ class RetrofitManager(val pubnub: PubNub) {
     internal val publishService: PublishService
     internal val historyService: HistoryService
     internal val presenceService: PresenceService
+    internal val messageActionService: MessageActionService
+    internal val signalService: SignalService
+    internal val channelGroupService: ChannelGroupService
+    internal val pushService: PushService
+    internal val userService: UserService
 
     internal val subscribeService: SubscribeService
 
@@ -40,6 +41,11 @@ class RetrofitManager(val pubnub: PubNub) {
         publishService = transactionInstance.create(PublishService::class.java)
         historyService = transactionInstance.create(HistoryService::class.java)
         presenceService = transactionInstance.create(PresenceService::class.java)
+        messageActionService = transactionInstance.create(MessageActionService::class.java)
+        signalService = transactionInstance.create(SignalService::class.java)
+        channelGroupService = transactionInstance.create(ChannelGroupService::class.java)
+        pushService = transactionInstance.create(PushService::class.java)
+        userService = transactionInstance.create(UserService::class.java)
 
         subscribeService = subscriptionInstance.create(SubscribeService::class.java)
     }
