@@ -4,9 +4,7 @@ import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
 import com.pubnub.api.callbacks.ReconnectionCallback
 import com.pubnub.api.enums.PNReconnectionPolicy
-import java.util.Calendar
-import java.util.Timer
-import java.util.TimerTask
+import java.util.*
 import kotlin.math.pow
 
 class ReconnectionManager(val pubnub: PubNub) {
@@ -85,13 +83,16 @@ class ReconnectionManager(val pubnub: PubNub) {
     }
 
     private fun callTime() {
-        // todo reconnection
         pubnub.time()
-            .async { _, status ->
+            .async { result, status ->
                 if (!status.error) {
-
+                    stopHeartbeatTimer()
+                    reconnectionCallback.onReconnection()
                 } else {
-
+                    println("callTime at ${System.currentTimeMillis()}")
+                    exponentialMultiplier++
+                    failedCalls++
+                    registerHeartbeatTimer()
                 }
             }
     }

@@ -109,12 +109,12 @@ class SubscriptionManager(val pubnub: PubNub) {
     }
 
     @Synchronized
-    fun getSubscribedChannels(): List<String?>? {
+    fun getSubscribedChannels(): List<String> {
         return subscriptionState.prepareChannelList(false)
     }
 
     @Synchronized
-    fun getSubscribedChannelGroups(): List<String?>? {
+    fun getSubscribedChannelGroups(): List<String> {
         return subscriptionState.prepareChannelGroupList(false)
     }
 
