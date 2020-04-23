@@ -9,10 +9,13 @@ import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.managers.DuplicationManager
 import com.pubnub.api.managers.ListenerManager
 import com.pubnub.api.models.consumer.PNStatus
+import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 import com.pubnub.api.models.consumer.pubsub.BasePubSubResult
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult
+import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
+import com.pubnub.api.models.consumer.pubsub.objects.ObjectPayload
 import com.pubnub.api.models.server.PresenceEnvelope
 import com.pubnub.api.models.server.SubscribeMessage
 import com.pubnub.api.vendor.Crypto
@@ -125,9 +128,21 @@ class SubscribeMessageWorker(
                 TYPE_OBJECT -> {
 
                 }
+                TYPE_MESSAGE_ACTION -> {
+                    val objectPayload = pubnub.mapper.convertValue(extractedMessage, ObjectPayload::class.java)
+                    val data = objectPayload.data.asJsonObject
+                    if (!data.has("uuid")) {
+                        data.addProperty("uuid", result.publisher)
+                    }
+                    listenerManager.announce(
+                        PNMessageActionResult(
+                            result = result,
+                            event = objectPayload.event,
+                            data = pubnub.mapper.convertValue(data, PNMessageAction::class.java)
+                        )
+                    )
+                }
             }
-
-
         }
 
     }
@@ -148,10 +163,12 @@ class SubscribeMessageWorker(
 
         val crypto = Crypto(pubnub.configuration.cipherKey)
 
-        var inputText = pubnub.mapper.elementToString(input, "pn_other")?.let { it }
-        if (inputText == null) {
-            inputText = pubnub.mapper.elementToString(input)
-        }
+        val inputText =
+            if (pubnub.mapper.isJsonObject(input!!) && pubnub.mapper.hasField(input, "pn_other")) {
+                pubnub.mapper.elementToString(input, "pn_other")
+            } else {
+                pubnub.mapper.elementToString(input)
+            }
 
         val outputText =
             try {
