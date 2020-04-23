@@ -1,6 +1,7 @@
 package com.pubnub.api
 
 import java.io.UnsupportedEncodingException
+import java.net.URLDecoder
 import java.net.URLEncoder
 
 class PubNubUtil {
@@ -35,6 +36,21 @@ class PubNubUtil {
                 string
             }
         }
+
+        /**
+         * Returns decoded String
+         *
+         * @param stringToEncode , input string
+         * @return , decoded string
+         */
+        fun urlDecode(stringToEncode: String?): String? {
+            return try {
+                URLDecoder.decode(stringToEncode, CHARSET)
+            } catch (e: UnsupportedEncodingException) {
+                null
+            }
+        }
+
     }
 }
 

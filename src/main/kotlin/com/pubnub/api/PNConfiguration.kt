@@ -9,11 +9,10 @@ import okhttp3.ConnectionSpec
 import okhttp3.logging.HttpLoggingInterceptor
 import java.net.Proxy
 import java.net.ProxySelector
-import java.util.UUID
+import java.util.*
 import javax.net.ssl.HostnameVerifier
 import javax.net.ssl.SSLSocketFactory
 import javax.net.ssl.X509ExtendedTrustManager
-
 
 class PNConfiguration {
 
@@ -24,7 +23,6 @@ class PNConfiguration {
         private const val NON_SUBSCRIBE_REQUEST_TIMEOUT = 10
         private const val SUBSCRIBE_TIMEOUT = 310
         private const val CONNECT_TIMEOUT = 5
-        private const val DEFAULT_BASE_PATH = "ps.pndsn.com"
     }
 
     lateinit var subscribeKey: String
@@ -35,7 +33,7 @@ class PNConfiguration {
 
     var uuid: String = "pn-${UUID.randomUUID()}"
 
-    var origin = DEFAULT_BASE_PATH
+    lateinit var origin: String
     var secure = true
 
     var logVerbosity = PNLogVerbosity.NONE
@@ -60,6 +58,8 @@ class PNConfiguration {
         NON_SUBSCRIBE_REQUEST_TIMEOUT
     var maximumMessagesCacheSize = DEFAULT_DEDUPE_SIZE
 
+    var cacheBusting = false
+
     var suppressLeaveEvents = false
     var disableTokenManager = false
     lateinit var filterExpression: String
@@ -70,7 +70,7 @@ class PNConfiguration {
     var requestMessageCountThreshold: Int? = null
     var googleAppEngineNetworking = false
     var startSubscriberThread = true
-    var dedupOnSubscribe = true
+    var dedupOnSubscribe = false
 
     var proxy: Proxy? = null
     var proxySelector: ProxySelector? = null
@@ -87,6 +87,7 @@ class PNConfiguration {
     internal fun isCipherKeyValid() = ::cipherKey.isInitialized && !cipherKey.isBlank()
     internal fun isPublishKeyValid() = ::publishKey.isInitialized && !publishKey.isBlank()
     internal fun isSecretKeyValid() = ::secretKey.isInitialized && !secretKey.isBlank()
+    internal fun isOriginValid() = ::origin.isInitialized && !origin.isBlank()
     internal fun isFilterExpressionKeyValid(function: String.() -> Unit) {
         if (::filterExpression.isInitialized && !filterExpression.isBlank()) {
             function.invoke(filterExpression)

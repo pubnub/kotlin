@@ -7,6 +7,11 @@ enum class PubNubError(val code: Int, val message: String) {
         "Timeout Occurred"
     ),
 
+    CONNECT_EXCEPTION(
+        102,
+        "Connect Exception. Please verify if network is reachable"
+    ),
+
     JSON_ERROR(
         121,
         "JSON Error while processing API response"
@@ -22,6 +27,11 @@ enum class PubNubError(val code: Int, val message: String) {
         "PubNub Connection not set"
     ),
 
+    GROUP_MISSING(
+        136,
+        "Group Missing"
+    ),
+
     SUBSCRIBE_KEY_MISSING(
         138,
         "Subscribe Key not configured"
@@ -30,11 +40,6 @@ enum class PubNubError(val code: Int, val message: String) {
     PUBLISH_KEY_MISSING(
         139,
         "Publish Key not configured"
-    ),
-
-    CONNECT_EXCEPTION(
-        102,
-        "Connect Exception. Please verify if network is reachable"
     ),
 
     SUBSCRIBE_TIMEOUT(
@@ -70,6 +75,81 @@ enum class PubNubError(val code: Int, val message: String) {
     CHANNEL_AND_GROUP_MISSING(
         141,
         "Channel and Group Missing."
+    ),
+
+    PUSH_TYPE_MISSING(
+        143,
+        "Push Type Missing."
+    ),
+
+    DEVICE_ID_MISSING(
+        144,
+        "Device ID Missing"
+    ),
+
+    TIMETOKEN_MISSING(
+        145,
+        "Timetoken Missing."
+    ),
+
+    CHANNELS_TIMETOKEN_MISMATCH(
+        146,
+        "Channels and timetokens are not equal in size."
+    ),
+
+    USER_MISSING(
+        147,
+        "User is missing"
+    ),
+
+    USER_ID_MISSING(
+        148,
+        "User ID is missing"
+    ),
+
+    USER_NAME_MISSING(
+        149,
+        "User name is missing"
+    ),
+
+    MESSAGE_ACTION_MISSING(
+        158,
+        "Message action is missing."
+    ),
+
+    MESSAGE_ACTION_TYPE_MISSING(
+        159,
+        "Message action type is missing."
+    ),
+
+    MESSAGE_ACTION_VALUE_MISSING(
+        160,
+        "Message action value is missing."
+    ),
+
+    MESSAGE_TIMETOKEN_MISSING(
+        161,
+        "Message timetoken is missing."
+    ),
+
+    MESSAGE_ACTION_TIMETOKEN_MISSING(
+        162,
+        "Message action timetoken is missing."
+    ),
+
+    PUSH_TOPIC_MISSING(
+        164,
+        "Push notification topic is missing. Required only if push type is APNS2."
+    ),
+
+    UNINITIALIZED_PROPERTY_ACCESS(
+        998,
+        "Uninitialized Property Access"
+    ),
+
+    X(
+        999,
+        "X ERROR"
     );
 
     override fun toString(): String {
