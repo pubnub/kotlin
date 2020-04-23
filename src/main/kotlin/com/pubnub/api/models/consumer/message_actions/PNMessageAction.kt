@@ -1,6 +1,6 @@
 package com.pubnub.api.models.consumer.message_actions
 
-class PNMessageAction {
+open class PNMessageAction {
     val type: String
     val value: String
     val messageTimetoken: Long
