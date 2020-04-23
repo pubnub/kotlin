@@ -3,12 +3,17 @@ package com.pubnub.api.managers
 import com.pubnub.api.enums.PNOperationType
 import java.math.RoundingMode
 import java.text.NumberFormat
-import java.util.Date
-import java.util.Locale
-import java.util.Timer
-import java.util.TimerTask
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
+import kotlin.collections.List
+import kotlin.collections.Map
+import kotlin.collections.MutableList
+import kotlin.collections.forEach
+import kotlin.collections.set
+import kotlin.collections.toList
 
-class TelemetryManager {
+internal class TelemetryManager {
 
     companion object {
         private const val MAX_FRACTION_DIGITS = 3
@@ -59,7 +64,7 @@ class TelemetryManager {
     }
 
 
-    private fun stopCleanUpTimer() {
+    internal fun stopCleanUpTimer() {
         this.timer?.cancel()
     }
 

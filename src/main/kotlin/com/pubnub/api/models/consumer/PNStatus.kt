@@ -24,7 +24,6 @@ data class PNStatus(
 
 ) {
 
-
     var executedEndpoint: Endpoint<*, *>? = null
     var clientRequest: Request? = null
 
