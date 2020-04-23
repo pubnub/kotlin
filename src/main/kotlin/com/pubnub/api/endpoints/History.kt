@@ -11,9 +11,7 @@ import com.pubnub.api.models.consumer.history.PNHistoryResult
 import com.pubnub.api.vendor.Crypto
 import retrofit2.Call
 import retrofit2.Response
-import java.util.ArrayList
-import java.util.HashMap
-import java.util.Locale
+import java.util.*
 
 class History(pubnub: PubNub) : Endpoint<JsonElement, PNHistoryResult>(pubnub) {
 
@@ -31,7 +29,7 @@ class History(pubnub: PubNub) : Endpoint<JsonElement, PNHistoryResult>(pubnub) {
 
     override fun validateParams() {
         super.validateParams()
-        if (!::channel.isInitialized) {
+        if (!::channel.isInitialized || channel.isBlank()) {
             throw PubNubException(PubNubError.CHANNEL_MISSING)
         }
         count =
@@ -42,8 +40,6 @@ class History(pubnub: PubNub) : Endpoint<JsonElement, PNHistoryResult>(pubnub) {
     }
 
     override fun getAffectedChannels() = listOf(channel)
-
-    override fun getAffectedChannelGroups() = emptyList<String>()
 
     override fun doWork(queryParams: HashMap<String, String>): Call<JsonElement> {
         queryParams["reverse"] = reverse.toString()
@@ -66,65 +62,70 @@ class History(pubnub: PubNub) : Endpoint<JsonElement, PNHistoryResult>(pubnub) {
     }
 
     override fun createResponse(input: Response<JsonElement>): PNHistoryResult? {
+        val startTimeToken = pubnub.mapper.elementToLong(pubnub.mapper.getArrayElement(input.body()!!, 1))
+        val endTimeToken = pubnub.mapper.elementToLong(pubnub.mapper.getArrayElement(input.body()!!, 2))
 
-        var result: PNHistoryResult? = null
-        val messages = ArrayList<PNHistoryItemResult>()
+        val messages = mutableListOf<PNHistoryItemResult>()
 
-        input.body()?.let {
-            val startTimeToken = pubnub.mapper.elementToLong(pubnub.mapper.getArrayElement(it, 1))
-            val endTimeToken = pubnub.mapper.elementToLong(pubnub.mapper.getArrayElement(it, 2))
+        var historyData = PNHistoryResult(
+            messages = messages,
+            startTimetoken = startTimeToken,
+            endTimetoken = endTimeToken
+        )
 
-            pubnub.mapper.getArrayElement(it, 0).run {
-                if (this.isJsonArray) {
-                    pubnub.mapper.getArrayIterator(this)?.forEach {
+        if (pubnub.mapper.getArrayElement(input.body()!!, 0).isJsonArray) {
+            val iterator = pubnub.mapper.getArrayIterator(pubnub.mapper.getArrayElement(input.body()!!, 0))!!
+            while (iterator.hasNext()) {
 
-                        var message: JsonElement?
-                        var timetoken: Long? = null
-                        var meta: JsonElement? = null
+                val historyEntry = iterator.next()
 
-                        if (includeTimetoken || includeMeta) {
-                            if (includeTimetoken) {
-                                timetoken = pubnub.mapper.elementToLong(it, "timetoken")
-                            }
-                            if (includeMeta) {
-                                meta = pubnub.mapper.getField(it, "meta")
-                            }
-                            message = processMessage(pubnub.mapper.getField(it, "message")!!)
-                        } else {
-                            message = processMessage(it)
-                        }
+                var message: JsonElement
+                var timetoken: Long? = null
+                var meta: JsonElement? = null
 
-                        messages += PNHistoryItemResult(
-                            message,
-                            timetoken,
-                            meta
-                        )
+                if (includeTimetoken || includeMeta) {
+                    message = processMessage(pubnub.mapper.getField(historyEntry, "message")!!)
+                    if (includeTimetoken) {
+                        timetoken = pubnub.mapper.elementToLong(historyEntry, "timetoken")
                     }
+                    if (includeMeta) {
+                        meta = pubnub.mapper.getField(historyEntry, "meta")
+                    }
+                } else {
+                    message = processMessage(historyEntry)
                 }
-            }
 
-            result = PNHistoryResult(
-                messages,
-                startTimeToken,
-                endTimeToken
-            )
+                val historyItem = PNHistoryItemResult(
+                    entry = message,
+                    timetoken = timetoken,
+                    meta = meta
+                )
+
+                messages.add(historyItem)
+            }
+        } else {
+            throw PubNubException(PubNubError.HTTP_ERROR).apply {
+                errorMessage = "History is disabled"
+            }
         }
 
-        return result
+        return historyData
     }
 
-    @Throws(PubNubException::class)
     private fun processMessage(message: JsonElement): JsonElement {
         if (!pubnub.configuration.isCipherKeyValid())
             return message
 
         val crypto = Crypto(pubnub.configuration.cipherKey)
 
-        val inputText = pubnub.mapper.getField(message, "pn_other")?.let {
-            pubnub.mapper.elementToString(it)
-        }.run {
-            pubnub.mapper.elementToString(message)
-        }
+        val inputText =
+            if (pubnub.mapper.isJsonObject(message) && pubnub.mapper.hasField(message, "pn_other")) {
+                pubnub.mapper.elementToString(message, "pn_other")
+            } else {
+                pubnub.mapper.elementToString(message)
+            }
+
+        println("InputtTextt $inputText")
 
         val outputText = crypto.decrypt(inputText!!)
 
@@ -140,8 +141,4 @@ class History(pubnub: PubNub) : Endpoint<JsonElement, PNHistoryResult>(pubnub) {
     }
 
     override fun operationType() = PNOperationType.PNHistoryOperation
-
-    override fun isSubKeyRequired() = true
-    override fun isPubKeyRequired() = false
-    override fun isAuthRequired() = true
 }
