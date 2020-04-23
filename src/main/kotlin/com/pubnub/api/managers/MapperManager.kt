@@ -1,20 +1,14 @@
 package com.pubnub.api.managers
 
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
-import com.google.gson.JsonElement
-import com.google.gson.JsonObject
-import com.google.gson.JsonParseException
-import com.google.gson.TypeAdapter
-import com.google.gson.internal.bind.TypeAdapters.BOOLEAN
-import com.google.gson.internal.bind.TypeAdapters.NUMBER
-import com.google.gson.internal.bind.TypeAdapters.STRING
+import com.google.gson.*
+import com.google.gson.internal.bind.TypeAdapters.*
 import com.google.gson.stream.JsonReader
 import com.google.gson.stream.JsonWriter
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import retrofit2.Converter
 import retrofit2.converter.gson.GsonConverterFactory
+import java.lang.reflect.Type
 
 class MapperManager {
 
@@ -88,10 +82,19 @@ class MapperManager {
 
     fun getAsArray(element: JsonElement) = element.asJsonArray
 
-    @Throws(PubNubException::class)
     fun <T> fromJson(input: String?, clazz: Class<T>): T {
         return try {
-            this.objectMapper.fromJson(input, clazz)
+            this.objectMapper.fromJson<T>(input, clazz)
+        } catch (e: JsonParseException) {
+            throw PubNubException(PubNubError.PARSING_ERROR).apply {
+                errorMessage = e.message
+            }
+        }
+    }
+
+    fun <T> fromJson(input: String?, typeOfT: Type): T {
+        return try {
+            this.objectMapper.fromJson<T>(input, typeOfT)
         } catch (e: JsonParseException) {
             throw PubNubException(PubNubError.PARSING_ERROR).apply {
                 errorMessage = e.message
@@ -108,8 +111,7 @@ class MapperManager {
         return fromJson(toJson(obj), clazz)
     }*/
 
-    @Throws(PubNubException::class)
-    fun toJson(input: Any): String {
+    fun toJson(input: Any?): String {
         return try {
             this.objectMapper.toJson(input)
         } catch (e: JsonParseException) {
