@@ -1,10 +1,6 @@
-package com.pubnub.api.endpoints
+package com.pubnub.api.endpoints.pubsub
 
-import com.pubnub.api.Endpoint
-import com.pubnub.api.PubNub
-import com.pubnub.api.PubNubError
-import com.pubnub.api.PubNubException
-import com.pubnub.api.PubNubUtil
+import com.pubnub.api.*
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.PNPublishResult
 import com.pubnub.api.vendor.Crypto
@@ -27,7 +23,7 @@ class Publish(pubnub: PubNub) : Endpoint<List<Any>, PNPublishResult>(pubnub) {
 
     override fun validateParams() {
         super.validateParams()
-        if (!isChannelValid()) {
+        if (!isChannelValid() || channel.isBlank()) {
             throw PubNubException(PubNubError.CHANNEL_MISSING)
         }
         if (!isMessageValid()) {
@@ -37,8 +33,6 @@ class Publish(pubnub: PubNub) : Endpoint<List<Any>, PNPublishResult>(pubnub) {
 
     override fun getAffectedChannels() = listOf(channel)
 
-    override fun getAffectedChannelGroups() = emptyList<String>()
-
     override fun doWork(queryParams: HashMap<String, String>): Call<List<Any>> {
 
         var stringifiedMessage = pubnub.mapper.toJson(message)
@@ -47,7 +41,7 @@ class Publish(pubnub: PubNub) : Endpoint<List<Any>, PNPublishResult>(pubnub) {
             queryParams["meta"] = PubNubUtil.urlEncode(pubnub.mapper.toJson(meta))
         }
 
-        if (shouldStore) queryParams["store"] = "1"
+        queryParams["store"] = if (shouldStore) "1" else "0"
 
         ttl?.let { queryParams["ttl"] = it.toString() }
 
@@ -97,15 +91,13 @@ class Publish(pubnub: PubNub) : Endpoint<List<Any>, PNPublishResult>(pubnub) {
     }
 
     override fun createResponse(input: Response<List<Any>>): PNPublishResult? {
-        return input.body()?.let {
-            PNPublishResult(it[2].toString().toLong())
-        }
+        return PNPublishResult(
+            timetoken = input.body()!![2].toString().toLong()
+        )
     }
 
     override fun operationType() = PNOperationType.PNPublishOperation
 
-    override fun isSubKeyRequired() = true
     override fun isPubKeyRequired() = true
-    override fun isAuthRequired() = true
 
 }

@@ -62,12 +62,7 @@ class GetState(pubnub: PubNub) : Endpoint<Envelope<JsonElement>, PNGetStateResul
         )
     }
 
-
     override fun operationType() = PNOperationType.PNGetState
-
-    override fun isSubKeyRequired() = true
-    override fun isPubKeyRequired() = false
-    override fun isAuthRequired() = true
 }
 
 

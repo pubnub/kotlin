@@ -1,17 +1,12 @@
 package com.pubnub.api.endpoints.presence
 
-import com.pubnub.api.Endpoint
-import com.pubnub.api.PubNub
-import com.pubnub.api.PubNubError
-import com.pubnub.api.PubNubException
+import com.pubnub.api.*
 import com.pubnub.api.enums.PNOperationType
-import com.pubnub.api.models.server.Envelope
-import com.pubnub.api.toCsv
 import retrofit2.Call
 import retrofit2.Response
-import java.util.HashMap
+import java.util.*
 
-internal class Leave(pubnub: PubNub) : Endpoint<Envelope<*>, Boolean>(pubnub) {
+internal class Leave(pubnub: PubNub) : Endpoint<Any, Boolean>(pubnub) {
 
     var channels = emptyList<String>()
     var channelGroups = emptyList<String>()
@@ -24,10 +19,9 @@ internal class Leave(pubnub: PubNub) : Endpoint<Envelope<*>, Boolean>(pubnub) {
     }
 
     override fun getAffectedChannels() = channels
-
     override fun getAffectedChannelGroups() = channelGroups
 
-    override fun doWork(queryParams: HashMap<String, String>): Call<Envelope<*>> {
+    override fun doWork(queryParams: HashMap<String, String>): Call<Any> {
         queryParams["channel-group"] = channelGroups.toCsv()
 
         return pubnub.retrofitManager.presenceService.leave(
@@ -37,13 +31,9 @@ internal class Leave(pubnub: PubNub) : Endpoint<Envelope<*>, Boolean>(pubnub) {
         )
     }
 
-    override fun createResponse(input: Response<Envelope<*>>) = true
+    override fun createResponse(input: Response<Any>) = true
 
     override fun operationType() = PNOperationType.PNUnsubscribeOperation
-
-    override fun isSubKeyRequired() = true
-    override fun isPubKeyRequired() = false
-    override fun isAuthRequired() = true
 }
 
 

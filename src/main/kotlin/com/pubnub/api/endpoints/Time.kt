@@ -16,15 +16,12 @@ class Time(pubnub: PubNub) : Endpoint<List<Long>, PNTimeResult>(pubnub) {
         pubnub.retrofitManager.timeService.fetchTime(queryParams)
 
     override fun createResponse(input: Response<List<Long>>): PNTimeResult? {
-        return input.body()?.let {
-            PNTimeResult(it[0])
-        }
+        return PNTimeResult(input.body()!![0])
     }
 
     override fun operationType() = PNOperationType.PNTimeOperation
 
     override fun isAuthRequired() = false
     override fun isSubKeyRequired() = false
-    override fun isPubKeyRequired() = false
 
 }

@@ -8,16 +8,15 @@ import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.server.Envelope
 import retrofit2.Call
 import retrofit2.Response
-import java.util.HashMap
+import java.util.*
 
 internal class Heartbeat(
     pubnub: PubNub,
     val channels: List<String> = listOf(),
     val channelGroups: List<String> = listOf()
-) : Endpoint<Envelope<*>, Boolean>(pubnub) {
+) : Endpoint<Envelope<Any>, Boolean>(pubnub) {
 
     override fun getAffectedChannels() = channels
-
     override fun getAffectedChannelGroups() = channelGroups
 
     override fun validateParams() {
@@ -27,7 +26,7 @@ internal class Heartbeat(
         }
     }
 
-    override fun doWork(queryParams: HashMap<String, String>): Call<Envelope<*>> {
+    override fun doWork(queryParams: HashMap<String, String>): Call<Envelope<Any>> {
         queryParams["heartbeat"] = pubnub.configuration.presenceTimeout.toString()
 
         if (channelGroups.isNotEmpty()) {
@@ -49,13 +48,8 @@ internal class Heartbeat(
         )
     }
 
-    override fun createResponse(input: Response<Envelope<*>>) = true
+    override fun createResponse(input: Response<Envelope<Any>>) = true
 
     override fun operationType() = PNOperationType.PNHeartbeatOperation
-
-    override fun isSubKeyRequired() = true
-    override fun isPubKeyRequired() = false
-    override fun isAuthRequired() = true
-
 
 }

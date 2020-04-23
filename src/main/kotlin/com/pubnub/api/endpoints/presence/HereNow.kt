@@ -24,9 +24,8 @@ class HereNow(pubnub: PubNub) : Endpoint<Envelope<JsonElement>, PNHereNowResult>
 
     // todo try here now without sub key
 
-    override fun getAffectedChannels(): List<String?> = channels
-
-    override fun getAffectedChannelGroups(): List<String?> = channelGroups
+    override fun getAffectedChannels() = channels
+    override fun getAffectedChannelGroups() = channelGroups
 
     override fun doWork(queryParams: HashMap<String, String>): Call<Envelope<JsonElement>> {
         if (includeState) {
@@ -131,9 +130,4 @@ class HereNow(pubnub: PubNub) : Endpoint<Envelope<JsonElement>, PNHereNowResult>
     }
 
     override fun operationType() = PNOperationType.PNHereNowOperation
-
-    override fun isSubKeyRequired() = true
-    override fun isPubKeyRequired() = false
-    override fun isAuthRequired() = true
-
 }

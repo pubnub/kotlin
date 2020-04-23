@@ -3,17 +3,8 @@ package com.pubnub.api
 import com.google.gson.JsonElement
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
-import com.pubnub.api.enums.PNStatusCategory.PNAccessDeniedCategory
-import com.pubnub.api.enums.PNStatusCategory.PNAcknowledgmentCategory
-import com.pubnub.api.enums.PNStatusCategory.PNBadRequestCategory
-import com.pubnub.api.enums.PNStatusCategory.PNCancelledCategory
-import com.pubnub.api.enums.PNStatusCategory.PNMalformedResponseCategory
-import com.pubnub.api.enums.PNStatusCategory.PNNotFoundCategory
-import com.pubnub.api.enums.PNStatusCategory.PNTimeoutCategory
-import com.pubnub.api.enums.PNStatusCategory.PNUnexpectedDisconnectCategory
-import com.pubnub.api.enums.PNStatusCategory.PNUnknownCategory
+import com.pubnub.api.enums.PNStatusCategory.*
 import com.pubnub.api.models.consumer.PNStatus
-import com.pubnub.api.models.server.Envelope
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -21,9 +12,9 @@ import java.io.IOException
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
-import java.util.HashMap
+import java.util.*
 
-abstract class Endpoint<Input, Output>(internal val pubnub: PubNub) {
+abstract class Endpoint<Input, Output>(protected val pubnub: PubNub) {
 
     companion object {
         private const val SERVER_RESPONSE_SUCCESS = 200
@@ -44,8 +35,9 @@ abstract class Endpoint<Input, Output>(internal val pubnub: PubNub) {
         val response =
             try {
                 call.execute()
-            } catch (e: IOException) {
+            } catch (e: Exception) {
                 throw PubNubException(PubNubError.PARSING_ERROR).apply {
+                    errorMessage = e.toString()
                     affectedCall = call
                 }
             }
@@ -53,13 +45,13 @@ abstract class Endpoint<Input, Output>(internal val pubnub: PubNub) {
         when {
             response.isSuccessful -> {
                 storeRequestLatency(response)
-                return createResponse(response)
+                return checkAndCreateResponse(response)
             }
             else -> {
                 val (errorString, errorJson) = extractErrorBody(response)
                 throw PubNubException(PubNubError.HTTP_ERROR).apply {
                     errorMessage = errorString
-                    jso = errorJson
+                    jso = errorJson.toString()
                     statusCode = response.code()
                     affectedCall = call
                 }
@@ -93,7 +85,7 @@ abstract class Endpoint<Input, Output>(internal val pubnub: PubNub) {
                         // query params
                         storeRequestLatency(response)
                         try {
-                            Triple(PNAcknowledgmentCategory, createResponse(response), null)
+                            Triple(PNAcknowledgmentCategory, checkAndCreateResponse(response), null)
                         } catch (e: PubNubException) {
                             Triple(PNMalformedResponseCategory, null, e)
                         }.let {
@@ -111,7 +103,7 @@ abstract class Endpoint<Input, Output>(internal val pubnub: PubNub) {
                         val (errorString, errorJson) = extractErrorBody(response)
 
                         val exception = with(PubNubException(errorString)) {
-                            jso = errorJson
+                            jso = errorJson.toString()
                             statusCode = response.code()
                             this
                         }
@@ -124,9 +116,10 @@ abstract class Endpoint<Input, Output>(internal val pubnub: PubNub) {
                         callback.invoke(
                             null,
                             createStatusResponse(
-                                pnStatusCategory,
-                                response,
-                                exception
+                                category = pnStatusCategory,
+                                response = response,
+                                exception = exception,
+                                errorBody = errorJson
                             )
                         )
                         return
@@ -142,7 +135,7 @@ abstract class Endpoint<Input, Output>(internal val pubnub: PubNub) {
 
                 lateinit var pnStatusCategory: PNStatusCategory
 
-                val pubnubException = PubNubException(t.message)
+                val pubnubException = PubNubException(t.toString())
 
                 try {
                     throw t
@@ -155,6 +148,12 @@ abstract class Endpoint<Input, Output>(internal val pubnub: PubNub) {
                 } catch (socketTimeoutException: SocketTimeoutException) {
                     pubnubException.pubnubError = PubNubError.SUBSCRIBE_TIMEOUT
                     pnStatusCategory = PNTimeoutCategory
+                } catch (ioException: IOException) {
+                    pubnubException.pubnubError = PubNubError.PARSING_ERROR
+                    pnStatusCategory = PNMalformedResponseCategory
+                } catch (ioException: IllegalStateException) {
+                    pubnubException.pubnubError = PubNubError.PARSING_ERROR
+                    pnStatusCategory = PNMalformedResponseCategory
                 } catch (throwable1: Throwable) {
                     pubnubException.pubnubError = PubNubError.HTTP_ERROR
                     pnStatusCategory = if (call.isCanceled) {
@@ -194,13 +193,26 @@ abstract class Endpoint<Input, Output>(internal val pubnub: PubNub) {
         return encodedParams
     }
 
+    protected fun appendInclusionParams(map: MutableMap<String, String>, params: List<Enum<*>>) {
+        /*if (params.isEmpty()) {
+            return
+        }*/
+        map["include"] = params.toCsv()
+    }
+
     private fun createBaseParams(): HashMap<String, String> {
         val map = hashMapOf(
             "pnsdk" to "PubNub-Kotlin/${pubnub.version}",
-            "uuid" to pubnub.configuration.uuid,
-            "instanceid" to pubnub.instanceId,
-            "requestid" to pubnub.requestId()
+            "uuid" to pubnub.configuration.uuid
         )
+
+        if (pubnub.configuration.includeInstanceIdentifier) {
+            map["instanceid"] = pubnub.instanceId
+        }
+
+        if (pubnub.configuration.includeRequestIdentifier) {
+            map["requestid"] = pubnub.requestId()
+        }
 
         if (isAuthRequired() && pubnub.configuration.isAuthKeyValid()) {
             map["auth"] = pubnub.configuration.authKey
@@ -226,7 +238,8 @@ abstract class Endpoint<Input, Output>(internal val pubnub: PubNub) {
     private fun createStatusResponse(
         category: PNStatusCategory,
         response: Response<Input>? = null,
-        exception: PubNubException? = null
+        exception: PubNubException? = null,
+        errorBody: JsonElement? = null
     ): PNStatus {
 
         val pnStatus = PNStatus(
@@ -250,9 +263,61 @@ abstract class Endpoint<Input, Output>(internal val pubnub: PubNub) {
             }
         }
 
+        val errorChannels = mutableListOf<String>()
+        val errorGroups = mutableListOf<String>()
 
-        pnStatus.affectedChannels = getAffectedChannels()
-        pnStatus.affectedChannelGroups = getAffectedChannelGroups()
+        if (errorBody != null) {
+            if (pubnub.mapper.isJsonObject(errorBody) && pubnub.mapper.hasField(errorBody, "payload")) {
+
+                val payloadBody = pubnub.mapper.getField(errorBody, "payload")!!
+
+                if (pubnub.mapper.hasField(payloadBody, "channels")) {
+                    val iterator = pubnub.mapper.getArrayIterator(payloadBody, "channels")
+                    while (iterator.hasNext()) {
+                        errorChannels.add(pubnub.mapper.elementToString(iterator.next())!!)
+                    }
+                }
+
+                if (pubnub.mapper.hasField(payloadBody, "channel-groups")) {
+                    val iterator = pubnub.mapper.getArrayIterator(payloadBody, "channel-groups")
+                    while (iterator.hasNext()) {
+                        val node = iterator.next()
+
+                        val channelGroupName = pubnub.mapper.elementToString(node)!!.let {
+                            if (it.first().toString() == ":") {
+                                it.substring(1)
+                            } else {
+                                it
+                            }
+                        }
+
+                        errorGroups.add(channelGroupName)
+                    }
+                }
+            }
+        }
+
+        pnStatus.affectedChannels =
+            if (errorChannels.isNotEmpty()) {
+                errorChannels
+            } else {
+                try {
+                    getAffectedChannels()
+                } catch (e: UninitializedPropertyAccessException) {
+                    emptyList<String>()
+                }
+            }
+
+        pnStatus.affectedChannelGroups =
+            if (errorGroups.isNotEmpty()) {
+                errorGroups
+            } else {
+                try {
+                    getAffectedChannelGroups()
+                } catch (e: UninitializedPropertyAccessException) {
+                    emptyList<String>()
+                }
+            }
 
         return pnStatus
     }
@@ -278,9 +343,30 @@ abstract class Endpoint<Input, Output>(internal val pubnub: PubNub) {
         return errorBodyString to errorBodyJson
     }
 
-    protected abstract fun getAffectedChannels(): List<String?>
+    private fun checkAndCreateResponse(input: Response<Input>): Output? {
+        try {
+            return createResponse(input)
+        } catch (pubnubException: PubNubException) {
+            throw pubnubException.apply {
+                statusCode = input.code()
+                jso = pubnub.mapper.toJson(input.body())
+                affectedCall = call
+            }
+        } catch (e: KotlinNullPointerException) {
+            throw PubNubException(PubNubError.PARSING_ERROR).apply {
+                errorMessage = e.toString()
+                affectedCall = call
+                statusCode = input.code()
+                jso = pubnub.mapper.toJson(input.body())
+            }
+        }
+    }
 
-    protected abstract fun getAffectedChannelGroups(): List<String?>
+    // protected abstract fun getAffectedChannels(): List<String?>
+    // protected abstract fun getAffectedChannelGroups(): List<String?>
+
+    protected open fun getAffectedChannels() = emptyList<String>()
+    protected open fun getAffectedChannelGroups(): List<String> = emptyList()
 
     protected open fun validateParams() {
         if (isSubKeyRequired() && !pubnub.configuration.isSubscribeKeyValid()) {
@@ -291,21 +377,21 @@ abstract class Endpoint<Input, Output>(internal val pubnub: PubNub) {
         }
     }
 
-    @Throws(PubNubException::class)
     protected abstract fun doWork(queryParams: HashMap<String, String>): Call<Input>
-
-    @Throws(PubNubException::class)
     protected abstract fun createResponse(input: Response<Input>): Output?
 
     protected abstract fun operationType(): PNOperationType
 
-    protected abstract fun isSubKeyRequired(): Boolean
-    protected abstract fun isPubKeyRequired(): Boolean
-    protected abstract fun isAuthRequired(): Boolean
+    protected open fun isSubKeyRequired() = true
+    protected open fun isPubKeyRequired() = false
+    protected open fun isAuthRequired() = true
 }
 
-internal fun <T> Response<Envelope<T>>.throwIfEmpty() {
-    if (body() == null || body()?.payload == null) {
-        throw PubNubException(PubNubError.PARSING_ERROR)
+internal fun HashMap<String, String>.encodeAuth(): HashMap<String, String> {
+    this["auth"]?.let {
+        this["auth"] = it.pnUrlEncode()
     }
+    return this
 }
+
+internal fun String.pnUrlEncode() = PubNubUtil.urlEncode(this)

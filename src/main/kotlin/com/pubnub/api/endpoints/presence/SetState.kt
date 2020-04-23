@@ -1,20 +1,14 @@
 package com.pubnub.api.endpoints.presence
 
 import com.google.gson.JsonElement
-import com.pubnub.api.Endpoint
-import com.pubnub.api.PubNub
-import com.pubnub.api.PubNubError
-import com.pubnub.api.PubNubException
-import com.pubnub.api.PubNubUtil
+import com.pubnub.api.*
 import com.pubnub.api.builder.StateOperation
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.presence.PNSetStateResult
 import com.pubnub.api.models.server.Envelope
-import com.pubnub.api.throwIfEmpty
-import com.pubnub.api.toCsv
 import retrofit2.Call
 import retrofit2.Response
-import java.util.HashMap
+import java.util.*
 
 class SetState(pubnub: PubNub) :
     Endpoint<Envelope<JsonElement>, PNSetStateResult>(pubnub) {
@@ -25,7 +19,6 @@ class SetState(pubnub: PubNub) :
     lateinit var state: Any
 
     override fun getAffectedChannels() = channels
-
     override fun getAffectedChannelGroups() = channelGroups
 
     override fun validateParams() {
@@ -66,18 +59,12 @@ class SetState(pubnub: PubNub) :
     }
 
     override fun createResponse(input: Response<Envelope<JsonElement>>): PNSetStateResult? {
-        input.throwIfEmpty()
         return PNSetStateResult(
             state = input.body()!!.payload
         )
     }
 
-
     override fun operationType() = PNOperationType.PNSetStateOperation
-
-    override fun isSubKeyRequired() = true
-    override fun isPubKeyRequired() = false
-    override fun isAuthRequired() = true
 }
 
 

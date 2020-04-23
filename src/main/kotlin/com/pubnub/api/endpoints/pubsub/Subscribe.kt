@@ -1,16 +1,11 @@
 package com.pubnub.api.endpoints.pubsub
 
-import com.pubnub.api.Endpoint
-import com.pubnub.api.PubNub
-import com.pubnub.api.PubNubError
-import com.pubnub.api.PubNubException
-import com.pubnub.api.PubNubUtil
+import com.pubnub.api.*
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.server.SubscribeEnvelope
-import com.pubnub.api.toCsv
 import retrofit2.Call
 import retrofit2.Response
-import java.util.HashMap
+import java.util.*
 
 class Subscribe(pubnub: PubNub) : Endpoint<SubscribeEnvelope, SubscribeEnvelope>(pubnub) {
 
@@ -65,16 +60,8 @@ class Subscribe(pubnub: PubNub) : Endpoint<SubscribeEnvelope, SubscribeEnvelope>
     }
 
     override fun createResponse(input: Response<SubscribeEnvelope>): SubscribeEnvelope? {
-        if (input.body() == null) {
-            throw PubNubException(PubNubError.PARSING_ERROR)
-        } else {
-            return input.body()
-        }
+        return input.body()
     }
 
     override fun operationType() = PNOperationType.PNSubscribeOperation
-
-    override fun isSubKeyRequired() = true
-    override fun isPubKeyRequired() = false
-    override fun isAuthRequired() = true
 }

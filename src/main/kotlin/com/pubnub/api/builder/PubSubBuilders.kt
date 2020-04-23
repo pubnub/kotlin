@@ -10,10 +10,10 @@ abstract class PubSubBuilder(
     abstract fun execute()
 }
 
-internal class PresenceBuilder(
+class PresenceBuilder(
     subscriptionManager: SubscriptionManager,
-    channels: List<String>,
-    channelGroups: List<String>,
+    channels: List<String> = emptyList(),
+    channelGroups: List<String> = emptyList(),
     internal var connected: Boolean = false
 ) : PubSubBuilder(subscriptionManager, channels, channelGroups) {
 
