@@ -3,10 +3,12 @@ package com.pubnub.api.managers
 import com.pubnub.api.PubNub
 import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.models.consumer.PNStatus
+import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult
-import java.util.ArrayList
+import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
+import java.util.*
 
 class ListenerManager(val pubnub: PubNub) {
     private val listeners = mutableListOf<SubscribeCallback>()
@@ -46,6 +48,10 @@ class ListenerManager(val pubnub: PubNub) {
 
     fun announce(signal: PNSignalResult) {
         getListeners().forEach { it.signal(pubnub, signal) }
+    }
+
+    fun announce(messageAction: PNMessageActionResult) {
+        getListeners().forEach { it.messageAction(pubnub, messageAction) }
     }
 
 
