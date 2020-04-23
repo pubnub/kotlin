@@ -33,7 +33,7 @@ class GetStateEndpointTest : BaseTest() {
                 )
         )
 
-        val result = pubnub.getState().apply {
+        val result = pubnub.getPresenceState().apply {
             channels = listOf("testChannel")
             uuid = "sampleUUID"
         }.sync()!!
@@ -64,7 +64,7 @@ class GetStateEndpointTest : BaseTest() {
                 )
         )
 
-        val result = pubnub.getState().apply {
+        val result = pubnub.getPresenceState().apply {
             channels = listOf("testChannel")
         }.sync()!!
 
@@ -86,7 +86,7 @@ class GetStateEndpointTest : BaseTest() {
         )
 
         try {
-            pubnub.getState().apply {
+            pubnub.getPresenceState().apply {
                 channels = listOf("testChannel")
                 uuid = "sampleUUID"
             }.sync()
