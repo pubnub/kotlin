@@ -1,15 +1,65 @@
 package com.pubnub.api.managers
 
-import com.pubnub.api.PubNub
+import com.pubnub.api.PNConfiguration
 
-class BasePathManager(val pubnub: PubNub) {
+class BasePathManager(val config: PNConfiguration) {
+
+    /**
+     * for cache busting, the current subdomain number used.
+     */
+    private var currentSubdomain = 1
+
+    /**
+     * if using cache busting, this is the max number of subdomains that are supported.
+     */
+    private val MAX_SUBDOMAIN = 20
+
+    /**
+     * default subdomain used if cache busting is disabled.
+     */
+
+    private val DEFAULT_SUBDOMAIN = "ps"
+    /**
+     * default base path if a custom one is not provided.
+     */
+
+    private val DEFAULT_BASE_PATH = "pndsn.com"
 
     fun basePath(): String {
-        return StringBuilder("http")
-            .append(if (pubnub.configuration.secure) "s" else "")
+        val basePathBuilder = StringBuilder("http")
+            .append(if (config.secure) "s" else "")
             .append("://")
-            .append(pubnub.configuration.origin)
-            .toString()
+
+        when {
+            config.isOriginValid() -> {
+                basePathBuilder.append(config.origin)
+            }
+            config.cacheBusting -> {
+                basePathBuilder
+                    .append("ps")
+                    .append(currentSubdomain)
+                    .append(".")
+                    .append(DEFAULT_BASE_PATH)
+
+                incrementSubdomain()
+            }
+            else -> {
+                basePathBuilder
+                    .append(DEFAULT_SUBDOMAIN)
+                    .append(".")
+                    .append(DEFAULT_BASE_PATH)
+            }
+        }
+
+        return basePathBuilder.toString()
+    }
+
+    private fun incrementSubdomain() {
+        if (currentSubdomain == MAX_SUBDOMAIN) {
+            currentSubdomain = 1
+        } else {
+            currentSubdomain++
+        }
     }
 
 }
