@@ -8,7 +8,6 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
-import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 
 class EndpointTest : BaseTest() {
@@ -83,6 +82,46 @@ class EndpointTest : BaseTest() {
         fakeEndpoint {
             println(it)
             assertEquals(expectedUuid, it["uuid"])
+        }.sync()
+    }
+
+    @Test
+    fun testQueryParam() {
+        fakeEndpoint {
+            println(it)
+            assertEquals("sf", it["city"])
+            assertEquals(pubnub.configuration.uuid, it["uuid"])
+            assertEquals(4, it.size)
+            assertTrue(it.contains("pnsdk"))
+            assertTrue(it.contains("requestid"))
+            assertTrue(it.contains("uuid"))
+        }.apply {
+            queryParam = mapOf(
+                "city" to "sf",
+                "uuid" to "overwritten"
+            )
+        }.sync()
+    }
+
+    @Test
+    fun testQueryParamEmpty() {
+        fakeEndpoint {
+            assertEquals(3, it.size)
+            assertTrue(it.contains("pnsdk"))
+            assertTrue(it.contains("requestid"))
+            assertTrue(it.contains("uuid"))
+        }.apply {
+            queryParam = emptyMap()
+        }.sync()
+    }
+
+    @Test
+    fun testQueryParamMissing() {
+        fakeEndpoint {
+            assertEquals(3, it.size)
+            assertTrue(it.contains("pnsdk"))
+            assertTrue(it.contains("requestid"))
+            assertTrue(it.contains("uuid"))
         }.sync()
     }
 

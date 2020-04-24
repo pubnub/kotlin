@@ -27,6 +27,8 @@ abstract class Endpoint<Input, Output>(protected val pubnub: PubNub) {
     private lateinit var call: Call<Input>
     private var silenceFailures = false
 
+    var queryParam: Map<String, String> = emptyMap()
+
     fun sync(): Output? {
         validateParams()
 
@@ -201,10 +203,12 @@ abstract class Endpoint<Input, Output>(protected val pubnub: PubNub) {
     }
 
     private fun createBaseParams(): HashMap<String, String> {
-        val map = hashMapOf(
-            "pnsdk" to "PubNub-Kotlin/${pubnub.version}",
-            "uuid" to pubnub.configuration.uuid
-        )
+        val map = hashMapOf<String, String>()
+
+        map.putAll(queryParam)
+
+        map["pnsdk"] = "PubNub-Kotlin/${pubnub.version}"
+        map["uuid"] = pubnub.configuration.uuid
 
         if (pubnub.configuration.includeInstanceIdentifier) {
             map["instanceid"] = pubnub.instanceId
