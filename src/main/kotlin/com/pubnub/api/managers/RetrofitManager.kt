@@ -2,13 +2,12 @@ package com.pubnub.api.managers
 
 import com.pubnub.api.PubNub
 import com.pubnub.api.enums.PNLogVerbosity
+import com.pubnub.api.interceptor.SignatureInterceptor
 import com.pubnub.api.services.*
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
-
 
 class RetrofitManager(val pubnub: PubNub) {
 
@@ -20,6 +19,8 @@ class RetrofitManager(val pubnub: PubNub) {
         createOkHttpClient(pubnub.configuration.subscribeTimeout)
     }
 
+    private val signatureInterceptor: SignatureInterceptor
+
     internal val timeService: TimeService
     internal val publishService: PublishService
     internal val historyService: HistoryService
@@ -28,12 +29,14 @@ class RetrofitManager(val pubnub: PubNub) {
     internal val signalService: SignalService
     internal val channelGroupService: ChannelGroupService
     internal val pushService: PushService
-    internal val userService: UserService
+    internal val accessManagerService: AccessManagerService
 
     internal val subscribeService: SubscribeService
 
 
     init {
+        signatureInterceptor = SignatureInterceptor(pubnub)
+
         val transactionInstance = createRetrofit(transactionClientInstance)
         val subscriptionInstance = createRetrofit(subscriptionClientInstance)
 
@@ -45,13 +48,14 @@ class RetrofitManager(val pubnub: PubNub) {
         signalService = transactionInstance.create(SignalService::class.java)
         channelGroupService = transactionInstance.create(ChannelGroupService::class.java)
         pushService = transactionInstance.create(PushService::class.java)
-        userService = transactionInstance.create(UserService::class.java)
+        accessManagerService = transactionInstance.create(AccessManagerService::class.java)
 
         subscribeService = subscriptionInstance.create(SubscribeService::class.java)
     }
 
     private fun createOkHttpClient(readTimeout: Int): OkHttpClient {
         val okHttpBuilder = OkHttpClient.Builder()
+            .retryOnConnectionFailure(true)
             .readTimeout(readTimeout.toLong(), TimeUnit.SECONDS)
             .connectTimeout(pubnub.configuration.connectTimeout.toLong(), TimeUnit.SECONDS)
 
@@ -75,6 +79,8 @@ class RetrofitManager(val pubnub: PubNub) {
             certificatePinner?.let { okHttpBuilder.certificatePinner(it) }
         }
 
+        okHttpBuilder.addInterceptor(signatureInterceptor)
+
         val okHttpClient = okHttpBuilder.build()
 
         pubnub.configuration.maximumConnections?.let { okHttpClient.dispatcher().maxRequestsPerHost = it }
@@ -86,7 +92,7 @@ class RetrofitManager(val pubnub: PubNub) {
         val retrofitBuilder = Retrofit.Builder()
             .client(okHttpClient)
             .baseUrl(pubnub.baseUrl())
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(pubnub.mapper.converterFactory)
 
         return retrofitBuilder.build()
     }
