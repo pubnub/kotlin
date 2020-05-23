@@ -1,17 +1,13 @@
 package com.pubnub.api.endpoints.presence
 
 import com.google.gson.JsonElement
-import com.pubnub.api.Endpoint
-import com.pubnub.api.PubNub
-import com.pubnub.api.PubNubError
-import com.pubnub.api.PubNubException
+import com.pubnub.api.*
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.presence.PNGetStateResult
 import com.pubnub.api.models.server.Envelope
-import com.pubnub.api.toCsv
 import retrofit2.Call
 import retrofit2.Response
-import java.util.HashMap
+import java.util.*
 
 class GetState(pubnub: PubNub) : Endpoint<Envelope<JsonElement>, PNGetStateResult>(pubnub) {
 
@@ -34,8 +30,6 @@ class GetState(pubnub: PubNub) : Endpoint<Envelope<JsonElement>, PNGetStateResul
         if (channelGroups.isNotEmpty()) {
             queryParams["channel-group"] = channelGroups.toCsv()
         }
-
-        queryParams.putAll(encodeParams(queryParams))
 
         return pubnub.retrofitManager.presenceService.getState(
             pubnub.configuration.subscribeKey,

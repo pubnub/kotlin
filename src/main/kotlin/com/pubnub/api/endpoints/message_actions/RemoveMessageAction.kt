@@ -6,11 +6,12 @@ import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.message_actions.PNRemoveMessageActionResult
+import com.pubnub.api.models.server.objects_api.EntityEnvelope
 import retrofit2.Call
 import retrofit2.Response
 import java.util.*
 
-class RemoveMessageAction(pubnub: PubNub) : Endpoint<Any, PNRemoveMessageActionResult>(pubnub) {
+class RemoveMessageAction(pubnub: PubNub) : Endpoint<EntityEnvelope<Any>, PNRemoveMessageActionResult>(pubnub) {
 
     lateinit var channel: String
     var messageTimetoken: Long? = null
@@ -31,9 +32,7 @@ class RemoveMessageAction(pubnub: PubNub) : Endpoint<Any, PNRemoveMessageActionR
 
     override fun getAffectedChannels() = listOf(channel)
 
-    override fun doWork(queryParams: HashMap<String, String>): Call<Any> {
-        queryParams.putAll(encodeParams(queryParams))
-
+    override fun doWork(queryParams: HashMap<String, String>): Call<EntityEnvelope<Any>> {
         return pubnub.retrofitManager.messageActionService
             .deleteMessageAction(
                 subKey = pubnub.configuration.subscribeKey,
@@ -44,7 +43,8 @@ class RemoveMessageAction(pubnub: PubNub) : Endpoint<Any, PNRemoveMessageActionR
             )
     }
 
-    override fun createResponse(input: Response<Any>): PNRemoveMessageActionResult? {
+    override fun createResponse(input: Response<EntityEnvelope<Any>>): PNRemoveMessageActionResult? {
+        input.body()!!.data!!
         return PNRemoveMessageActionResult()
     }
 

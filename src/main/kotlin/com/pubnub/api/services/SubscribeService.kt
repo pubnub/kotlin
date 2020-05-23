@@ -11,6 +11,6 @@ interface SubscribeService {
     fun subscribe(
         @Path("subKey") subKey: String,
         @Path("channel") channel: String,
-        @QueryMap(encoded = true) options: Map<String, String>
+        @QueryMap options: Map<String, String>
     ): Call<SubscribeEnvelope>
 }

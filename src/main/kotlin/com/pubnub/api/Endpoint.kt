@@ -104,17 +104,19 @@ abstract class Endpoint<Input, Output>(protected val pubnub: PubNub) {
                     else -> {
                         val (errorString, errorJson) = extractErrorBody(response)
 
-                        val exception = with(PubNubException(errorString)) {
+                        val exception = PubNubException(PubNubError.HTTP_ERROR).apply {
+                            errorMessage = errorString
                             jso = errorJson.toString()
                             statusCode = response.code()
-                            this
                         }
+
                         val pnStatusCategory = when (response.code()) {
                             SERVER_RESPONSE_FORBIDDEN -> PNAccessDeniedCategory
                             SERVER_RESPONSE_BAD_REQUEST -> PNBadRequestCategory
                             SERVER_RESPONSE_NOT_FOUND -> PNNotFoundCategory
                             else -> PNUnknownCategory
                         }
+
                         callback.invoke(
                             null,
                             createStatusResponse(
@@ -185,7 +187,7 @@ abstract class Endpoint<Input, Output>(protected val pubnub: PubNub) {
         )
     }
 
-    protected fun encodeParams(params: Map<String, String>): Map<String, String> {
+    /*protected fun encodeParams(params: Map<String, String>): Map<String, String> {
         val encodedParams = HashMap(params)
         if (encodedParams.containsKey("auth")) {
             encodedParams["auth"] = encodedParams["auth"]?.let {
@@ -193,7 +195,7 @@ abstract class Endpoint<Input, Output>(protected val pubnub: PubNub) {
             }
         }
         return encodedParams
-    }
+    }*/
 
     protected fun appendInclusionParams(map: MutableMap<String, String>, params: List<Enum<*>>) {
         /*if (params.isEmpty()) {
@@ -350,13 +352,27 @@ abstract class Endpoint<Input, Output>(protected val pubnub: PubNub) {
     private fun checkAndCreateResponse(input: Response<Input>): Output? {
         try {
             return createResponse(input)
-        } catch (pubnubException: PubNubException) {
+        } catch (pubnubException: PubNubException ){
             throw pubnubException.apply {
                 statusCode = input.code()
                 jso = pubnub.mapper.toJson(input.body())
                 affectedCall = call
             }
         } catch (e: KotlinNullPointerException) {
+            throw PubNubException(PubNubError.PARSING_ERROR).apply {
+                errorMessage = e.toString()
+                affectedCall = call
+                statusCode = input.code()
+                jso = pubnub.mapper.toJson(input.body())
+            }
+        } catch (e: IllegalStateException) {
+            throw PubNubException(PubNubError.PARSING_ERROR).apply {
+                errorMessage = e.toString()
+                affectedCall = call
+                statusCode = input.code()
+                jso = pubnub.mapper.toJson(input.body())
+            }
+        } catch (e: IndexOutOfBoundsException) {
             throw PubNubException(PubNubError.PARSING_ERROR).apply {
                 errorMessage = e.toString()
                 affectedCall = call
@@ -391,11 +407,3 @@ abstract class Endpoint<Input, Output>(protected val pubnub: PubNub) {
     protected open fun isAuthRequired() = true
 }
 
-internal fun HashMap<String, String>.encodeAuth(): HashMap<String, String> {
-    this["auth"]?.let {
-        this["auth"] = it.pnUrlEncode()
-    }
-    return this
-}
-
-internal fun String.pnUrlEncode() = PubNubUtil.urlEncode(this)

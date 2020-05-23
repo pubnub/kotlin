@@ -125,8 +125,6 @@ class History(pubnub: PubNub) : Endpoint<JsonElement, PNHistoryResult>(pubnub) {
                 pubnub.mapper.elementToString(message)
             }
 
-        println("InputtTextt $inputText")
-
         val outputText = crypto.decrypt(inputText!!)
 
         var outputObject = pubnub.mapper.fromJson(outputText, JsonElement::class.java)

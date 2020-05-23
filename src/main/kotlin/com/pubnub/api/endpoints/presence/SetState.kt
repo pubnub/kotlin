@@ -46,9 +46,7 @@ class SetState(pubnub: PubNub) :
         if (channelGroups.isNotEmpty()) {
             queryParams["channel-group"] = channelGroups.toCsv()
         }
-        queryParams["state"] = PubNubUtil.urlEncode(pubnub.mapper.toJson(state))
-
-        queryParams.putAll(encodeParams(queryParams))
+        queryParams["state"] = pubnub.mapper.toJson(state)
 
         return pubnub.retrofitManager.presenceService.setState(
             pubnub.configuration.subscribeKey,
@@ -60,7 +58,7 @@ class SetState(pubnub: PubNub) :
 
     override fun createResponse(input: Response<Envelope<JsonElement>>): PNSetStateResult? {
         return PNSetStateResult(
-            state = input.body()!!.payload
+            state = input.body()!!.payload!!
         )
     }
 

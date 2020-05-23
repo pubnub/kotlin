@@ -37,8 +37,6 @@ class AddMessageAction(pubnub: PubNub) : Endpoint<EntityEnvelope<PNMessageAction
     override fun getAffectedChannels() = listOf(channel)
 
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityEnvelope<PNMessageAction>> {
-        queryParams.putAll(encodeParams(queryParams))
-
         val body = JsonObject()
         body.addProperty("type", messageAction.type)
         body.addProperty("value", messageAction.value)

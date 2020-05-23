@@ -21,7 +21,7 @@ interface PresenceService {
     fun heartbeat(
         @Path("subKey") subKey: String,
         @Path("channel") channel: String,
-        @QueryMap(encoded = true) options: Map<String, String>
+        @QueryMap options: Map<String, String>
     ): Call<Envelope<Any>>
 
     @GET("v2/presence/sub-key/{subKey}/uuid/{uuid}")
@@ -57,7 +57,7 @@ interface PresenceService {
         @Path("subKey") subKey: String,
         @Path("channel") channel: String,
         @Path("uuid") uuid: String,
-        @QueryMap(encoded = true) options: Map<String, String>
+        @QueryMap options: Map<String, String>
     ): Call<Envelope<JsonElement>>
 
 }

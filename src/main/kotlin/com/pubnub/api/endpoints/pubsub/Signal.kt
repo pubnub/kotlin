@@ -1,6 +1,9 @@
 package com.pubnub.api.endpoints.pubsub
 
-import com.pubnub.api.*
+import com.pubnub.api.Endpoint
+import com.pubnub.api.PubNub
+import com.pubnub.api.PubNubError
+import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.PNPublishResult
 import retrofit2.Call
@@ -27,13 +30,11 @@ class Signal(pubnub: PubNub) : Endpoint<List<Any>, PNPublishResult>(pubnub) {
     override fun getAffectedChannels() = listOf(channel)
 
     override fun doWork(queryParams: HashMap<String, String>): Call<List<Any>> {
-        queryParams.putAll(encodeParams(queryParams))
-
         return pubnub.retrofitManager.signalService.signal(
             pubKey = pubnub.configuration.publishKey,
             subKey = pubnub.configuration.subscribeKey,
             channel = channel,
-            message = PubNubUtil.urlEncode(pubnub.mapper.toJson(message)),
+            message = pubnub.mapper.toJson(message),
             options = queryParams
         )
     }

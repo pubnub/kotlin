@@ -12,6 +12,11 @@ enum class PubNubError(val code: Int, val message: String) {
         "Connect Exception. Please verify if network is reachable"
     ),
 
+    SECRET_KEY_MISSING(
+        114,
+        "ULS configuration failed. Secret Key not configured"
+    ),
+
     JSON_ERROR(
         121,
         "JSON Error while processing API response"
@@ -34,12 +39,12 @@ enum class PubNubError(val code: Int, val message: String) {
 
     SUBSCRIBE_KEY_MISSING(
         138,
-        "Subscribe Key not configured"
+        "ULS configuration failed. Subscribe Key not configured."
     ),
 
     PUBLISH_KEY_MISSING(
         139,
-        "Publish Key not configured"
+        "ULS configuration failed. Publish Key not configured."
     ),
 
     SUBSCRIBE_TIMEOUT(

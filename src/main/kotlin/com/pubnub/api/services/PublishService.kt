@@ -10,8 +10,8 @@ interface PublishService {
         @Path("pubKey") pubKey: String,
         @Path("subKey") subKey: String,
         @Path("channel") channel: String,
-        @Path(value = "message", encoded = true) message: String,
-        @QueryMap(encoded = true) options: Map<String, String>
+        @Path(value = "message", encoded = false) message: String,
+        @QueryMap(encoded = false) options: Map<String, String>
     ): Call<List<Any>>
 
     @POST("publish/{pubKey}/{subKey}/0/{channel}/0")
@@ -21,6 +21,6 @@ interface PublishService {
         @Path("subKey") subKey: String,
         @Path("channel") channel: String,
         @Body body: Any,
-        @QueryMap(encoded = true) options: Map<String, String>
+        @QueryMap(encoded = false) options: Map<String, String>
     ): Call<List<Any>>
 }

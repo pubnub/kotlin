@@ -39,8 +39,6 @@ internal class Heartbeat(
             else
                 ","
 
-        queryParams.putAll(encodeParams(queryParams))
-
         return pubnub.retrofitManager.presenceService.heartbeat(
             pubnub.configuration.subscribeKey,
             channelsCsv,

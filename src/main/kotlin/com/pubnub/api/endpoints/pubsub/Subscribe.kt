@@ -9,8 +9,8 @@ import java.util.*
 
 class Subscribe(pubnub: PubNub) : Endpoint<SubscribeEnvelope, SubscribeEnvelope>(pubnub) {
 
-    var channels = listOf<String>()
-    var channelGroups = listOf<String>()
+    var channels = emptyList<String>()
+    var channelGroups = emptyList<String>()
     var timetoken: Long? = null
     var region: String? = null
     var state: Any? = null
@@ -33,7 +33,7 @@ class Subscribe(pubnub: PubNub) : Endpoint<SubscribeEnvelope, SubscribeEnvelope>
         }
 
         if (!filterExpression.isNullOrBlank()) {
-            queryParams["filter-expr"] = PubNubUtil.urlEncode(filterExpression!!)
+            queryParams["filter-expr"] = filterExpression!!
         }
 
         timetoken?.let {
@@ -47,10 +47,8 @@ class Subscribe(pubnub: PubNub) : Endpoint<SubscribeEnvelope, SubscribeEnvelope>
         queryParams["heartbeat"] = pubnub.configuration.presenceTimeout.toString()
 
         state?.let {
-            queryParams["state"] = PubNubUtil.urlEncode(pubnub.mapper.toJson(it))
+            queryParams["state"] = pubnub.mapper.toJson(it)
         }
-
-        queryParams.putAll(encodeParams(queryParams))
 
         return pubnub.retrofitManager.subscribeService.subscribe(
             pubnub.configuration.subscribeKey,

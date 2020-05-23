@@ -28,7 +28,7 @@ class PubNub(val configuration: PNConfiguration) {
 
     private companion object Constants {
         private const val TIMESTAMP_DIVIDER = 1000
-        private const val SDK_VERSION = "0.0.1-canary"
+        private const val SDK_VERSION = "0.0.2-dev"
         private const val MAX_SEQUENCE = 65535;
     }
 
@@ -45,7 +45,7 @@ class PubNub(val configuration: PNConfiguration) {
 
     fun baseUrl() = basePathManager.basePath()
     fun requestId() = UUID.randomUUID().toString()
-    fun timestamp() = Date().time / TIMESTAMP_DIVIDER
+    fun timestamp() = (Date().time / TIMESTAMP_DIVIDER).toInt()
 
     fun publish() = Publish(this)
     fun fire() = Publish(this).apply {
@@ -59,13 +59,18 @@ class PubNub(val configuration: PNConfiguration) {
     fun presence() = PresenceBuilder(subscriptionManager)
 
     fun addPushNotificationsOnChannels() = AddChannelsToPush(this)
-    fun removePushNotificationsFromChannels() = RemoveChannelsFromPush(this)
-    fun removeAllPushNotificationsFromDeviceWithPushToken() = RemoveAllPushChannelsForDevice(this)
+    fun removePushNotificationsFromChannels() =
+        RemoveChannelsFromPush(this)
+
+    fun removeAllPushNotificationsFromDeviceWithPushToken() =
+        RemoveAllPushChannelsForDevice(this)
+
     fun auditPushChannelProvisions() = ListPushProvisions(this)
 
     fun history() = History(this)
     fun messageCounts() = MessageCounts(this)
     fun fetchMessages() = FetchMessages(this)
+    fun deleteMessages() = DeleteMessages(this)
     fun hereNow() = HereNow(this)
     fun whereNow() = WhereNow(this)
     fun setPresenceState() = SetState(this)

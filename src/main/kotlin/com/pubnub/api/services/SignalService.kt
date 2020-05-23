@@ -12,8 +12,8 @@ interface SignalService {
         @Path("pubKey") pubKey: String,
         @Path("subKey") subKey: String,
         @Path("channel") channel: String,
-        @Path(value = "payload", encoded = true) message: String,
-        @QueryMap(encoded = true) options: Map<String, String>
+        @Path(value = "payload") message: String,
+        @QueryMap options: Map<String, String>
     ): Call<List<Any>>
 
 }

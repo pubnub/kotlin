@@ -1,6 +1,9 @@
 package com.pubnub.api.endpoints.pubsub
 
-import com.pubnub.api.*
+import com.pubnub.api.Endpoint
+import com.pubnub.api.PubNub
+import com.pubnub.api.PubNubError
+import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.PNPublishResult
 import com.pubnub.api.vendor.Crypto
@@ -38,7 +41,7 @@ class Publish(pubnub: PubNub) : Endpoint<List<Any>, PNPublishResult>(pubnub) {
         var stringifiedMessage = pubnub.mapper.toJson(message)
 
         if (isMetaValid()) {
-            queryParams["meta"] = PubNubUtil.urlEncode(pubnub.mapper.toJson(meta))
+            queryParams["meta"] = pubnub.mapper.toJson(meta)
         }
 
         queryParams["store"] = if (shouldStore) "1" else "0"
@@ -48,8 +51,6 @@ class Publish(pubnub: PubNub) : Endpoint<List<Any>, PNPublishResult>(pubnub) {
         if (!replicate) queryParams["norep"] = "true"
 
         queryParams["seqn"] = pubnub.publishSequenceManager.nextSequence().toString()
-
-        queryParams.putAll(encodeParams(queryParams))
 
         if (pubnub.configuration.isCipherKeyValid()) {
             stringifiedMessage = Crypto(pubnub.configuration.cipherKey)
@@ -78,7 +79,7 @@ class Publish(pubnub: PubNub) : Endpoint<List<Any>, PNPublishResult>(pubnub) {
                 stringifiedMessage = "\"$stringifiedMessage\""
             }
 
-            stringifiedMessage = PubNubUtil.urlEncode(stringifiedMessage)
+            stringifiedMessage = /*PubNubUtil.urlEncode*/(stringifiedMessage)
 
             return pubnub.retrofitManager.publishService.publish(
                 pubnub.configuration.publishKey,

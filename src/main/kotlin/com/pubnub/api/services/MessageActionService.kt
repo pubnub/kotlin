@@ -1,6 +1,5 @@
 package com.pubnub.api.services
 
-import com.google.gson.JsonObject
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 import com.pubnub.api.models.server.objects_api.EntityEnvelope
 import retrofit2.Call
@@ -15,15 +14,15 @@ interface MessageActionService {
         @Path("channel") channel: String,
         @Path("messageTimetoken") messageTimetoken: String,
         @Body body: Any,
-        @QueryMap(encoded = true) options: Map<String, String>
+        @QueryMap options: Map<String, String>
     ): Call<EntityEnvelope<PNMessageAction>>
 
     @GET("v1/message-actions/{subKey}/channel/{channel}")
     fun getMessageActions(
         @Path("subKey") subKey: String,
         @Path("channel") channel: String,
-        @QueryMap(encoded = true) options: Map<String, String>
-    ): Call<JsonObject>
+        @QueryMap options: Map<String, String>
+    ): Call<EntityEnvelope<List<PNMessageAction>>>
 
     @DELETE("v1/message-actions/{subKey}/channel/{channel}/message/{messageTimetoken}/action/{actionTimetoken}")
     fun deleteMessageAction(
@@ -31,7 +30,7 @@ interface MessageActionService {
         @Path("channel") channel: String,
         @Path("messageTimetoken") messageTimetoken: String,
         @Path("actionTimetoken") actionTimetoken: String,
-        @QueryMap(encoded = true) options: Map<String, String>
-    ): Call<Any>
+        @QueryMap options: Map<String, String>
+    ): Call<EntityEnvelope<Any>>
 
 }
