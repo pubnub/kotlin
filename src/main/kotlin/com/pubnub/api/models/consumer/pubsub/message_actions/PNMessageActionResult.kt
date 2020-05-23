@@ -10,7 +10,5 @@ class PNMessageActionResult(
     data: PNMessageAction
 ) : ObjectResult<PNMessageAction>(result, event, data) {
 
-    fun messageAction(): PNMessageAction {
-        return data
-    }
+    val messageAction = data
 }
