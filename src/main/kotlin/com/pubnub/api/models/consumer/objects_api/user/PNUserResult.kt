@@ -8,19 +8,13 @@ class PNDeleteUserResult
 
 class PNGetUserResult internal constructor(val user: PNUser)
 
-class PNGetUsersResult : EntityArrayEnvelope<PNUser>() {
+class PNGetUsersResult private constructor() : EntityArrayEnvelope<PNUser>() {
 
-    fun create(envelope: EntityArrayEnvelope<PNUser>): PNGetUsersResult {
-        val result = PNGetUsersResult()
-        result.totalCount = envelope.totalCount
-        result.next = envelope.next
-        result.prev = envelope.prev
-        result.data = envelope.data
-        return result
-    }
-
-    fun create(): PNGetUsersResult {
-        return PNGetUsersResult()
+    internal constructor(envelope: EntityArrayEnvelope<PNUser>) : this() {
+        totalCount = envelope.totalCount
+        next = envelope.next
+        prev = envelope.prev
+        data = envelope.data
     }
 }
 
