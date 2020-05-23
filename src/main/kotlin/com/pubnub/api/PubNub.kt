@@ -4,15 +4,12 @@ import com.pubnub.api.builder.PresenceBuilder
 import com.pubnub.api.builder.SubscribeBuilder
 import com.pubnub.api.builder.UnsubscribeBuilder
 import com.pubnub.api.callbacks.SubscribeCallback
-import com.pubnub.api.endpoints.FetchMessages
-import com.pubnub.api.endpoints.History
-import com.pubnub.api.endpoints.MessageCounts
-import com.pubnub.api.endpoints.Time
+import com.pubnub.api.endpoints.*
+import com.pubnub.api.endpoints.access.Grant
 import com.pubnub.api.endpoints.channel_groups.*
 import com.pubnub.api.endpoints.message_actions.AddMessageAction
 import com.pubnub.api.endpoints.message_actions.GetMessageActions
 import com.pubnub.api.endpoints.message_actions.RemoveMessageAction
-import com.pubnub.api.endpoints.objects_api.users.*
 import com.pubnub.api.endpoints.presence.GetState
 import com.pubnub.api.endpoints.presence.HereNow
 import com.pubnub.api.endpoints.presence.SetState
@@ -84,11 +81,7 @@ class PubNub(val configuration: PNConfiguration) {
     fun removeChannelsFromChannelGroup() = RemoveChannelChannelGroup(this)
     fun deleteChannelGroup() = DeleteChannelGroup(this)
 
-    fun getUsers() = GetUsers(this)
-    fun getUser() = GetUser(this)
-    fun createUser() = CreateUser(this)
-    fun updateUser() = UpdateUser(this)
-    fun deleteUser() = DeleteUser(this)
+    fun grant() = Grant(this)
 
     fun addListener(listener: SubscribeCallback) {
         subscriptionManager.addListener(listener)
