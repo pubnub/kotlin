@@ -36,6 +36,8 @@ dependencies {
     testImplementation 'org.awaitility:awaitility-kotlin:4.0.1'
 
     implementation 'com.github.tomakehurst:wiremock:2.26.3'
+
+    implementation group: 'org.json', name: 'json', version: '20190722'
 }
 
 test {

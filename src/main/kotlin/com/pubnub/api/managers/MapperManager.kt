@@ -1,8 +1,8 @@
 package com.pubnub.api.managers
 
 import com.google.gson.*
-import com.google.gson.internal.bind.TypeAdapters.*
 import com.google.gson.stream.JsonReader
+import com.google.gson.stream.JsonToken
 import com.google.gson.stream.JsonWriter
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
@@ -13,7 +13,7 @@ import java.lang.reflect.Type
 class MapperManager {
 
     private val objectMapper: Gson
-    private val converterFactory: Converter.Factory
+    internal val converterFactory: Converter.Factory
 
     init {
         val booleanAsIntAdapter = object : TypeAdapter<Boolean>() {
@@ -25,19 +25,21 @@ class MapperManager {
                 }
             }
 
-            override fun read(_in: JsonReader?): Boolean? {
-                return when (_in?.peek()) {
-                    BOOLEAN -> _in?.nextBoolean()
-                    NUMBER -> _in?.nextInt() != 0
-                    STRING -> _in?.nextString()?.toBoolean()
-                    else -> throw IllegalStateException("Expected BOOLEAN or NUMBER")
+            override fun read(_in: JsonReader): Boolean? {
+                val peek: JsonToken = _in.peek()
+                return when (peek) {
+                    JsonToken.BOOLEAN -> _in.nextBoolean()
+                    JsonToken.NUMBER -> _in.nextInt() != 0
+                    JsonToken.STRING -> java.lang.Boolean.parseBoolean(_in.nextString())
+                    else -> throw IllegalStateException("Expected BOOLEAN or NUMBER but was $peek")
                 }
             }
         }
 
         objectMapper = GsonBuilder()
-            .registerTypeAdapter(Boolean::class.java, booleanAsIntAdapter)
+            .registerTypeAdapter(Boolean::class.javaObjectType, booleanAsIntAdapter)
             .registerTypeAdapter(Boolean::class.javaPrimitiveType, booleanAsIntAdapter)
+            .registerTypeAdapter(Boolean::class.java, booleanAsIntAdapter)
             .create()
         converterFactory = GsonConverterFactory.create(objectMapper)
     }
