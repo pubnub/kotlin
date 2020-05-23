@@ -84,7 +84,7 @@ class ReconnectionManager(val pubnub: PubNub) {
 
     private fun callTime() {
         pubnub.time()
-            .async { result, status ->
+            .async { _, status ->
                 if (!status.error) {
                     stopHeartbeatTimer()
                     reconnectionCallback.onReconnection()

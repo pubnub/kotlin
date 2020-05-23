@@ -59,7 +59,7 @@ public class Crypto {
         }
     }
 
-    private static PubNubException newCryptoError(int code, Exception exception) {
+    public static PubNubException newCryptoError(int code, Exception exception) {
         PubNubException pubNubException = new PubNubException();
         pubNubException.setPubnubError(PubNubError.CRYPTO_ERROR);
         pubNubException.setErrorMessage(exception.getClass().getSimpleName() + " " + exception.getMessage() + " " + code);

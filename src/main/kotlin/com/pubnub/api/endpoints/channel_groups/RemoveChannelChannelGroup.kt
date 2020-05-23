@@ -2,7 +2,6 @@ package com.pubnub.api.endpoints.channel_groups
 
 import com.pubnub.api.*
 import com.pubnub.api.enums.PNOperationType
-import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsListAllResult
 import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsRemoveChannelResult
 import com.pubnub.api.models.server.Envelope
 import retrofit2.Call

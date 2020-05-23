@@ -1,6 +1,5 @@
 package com.pubnub.api.endpoints.channel_groups
 
-import com.google.gson.Gson
 import com.pubnub.api.Endpoint
 import com.pubnub.api.PubNub
 import com.pubnub.api.enums.PNOperationType

@@ -198,7 +198,7 @@ class SubscribeMessageWorker(
                 return null
             }
 
-        if (pubnub.mapper.isJsonObject(input!!) && pubnub.mapper.hasField(input, "pn_other")) {
+        if (pubnub.mapper.isJsonObject(input) && pubnub.mapper.hasField(input, "pn_other")) {
             val objectNode = pubnub.mapper.getAsObject(input)
             pubnub.mapper.putOnObject(objectNode, "pn_other", outputObject)
             outputObject = objectNode
