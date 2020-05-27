@@ -1,0 +1,63 @@
+package com.pubnub.api.suite
+
+import com.github.tomakehurst.wiremock.client.WireMock.*
+import com.pubnub.api.endpoints.message_actions.AddMessageAction
+import com.pubnub.api.enums.PNOperationType
+import com.pubnub.api.models.consumer.message_actions.PNAddMessageActionResult
+import com.pubnub.api.models.consumer.message_actions.PNMessageAction
+import org.junit.jupiter.api.Assertions.assertEquals
+
+class MessageActionTestSuite : EndpointTestSuite<AddMessageAction, PNAddMessageActionResult>() {
+
+    override fun telemetryParamName() = "l_msga"
+
+    override fun pnOperation() = PNOperationType.PNAddMessageAction
+
+    override fun requiredKeys() = SUB + AUTH
+
+    override fun snippet(): AddMessageAction {
+        return pubnub.addMessageAction().apply {
+            channel = "ch1"
+            messageAction = PNMessageAction(
+                type = "reaction",
+                value = "smiley",
+                messageTimetoken = 1000
+            )
+        }
+    }
+
+    override fun successfulResponseBody() = """
+            {
+             "status": 200,
+             "data": {
+              "messageTimetoken": "123",
+              "type": "reaction",
+              "uuid": "someUuid",
+              "value": "smiley",
+              "actionTimetoken": "1000"
+             }
+            }
+        """.trimIndent()
+
+
+    override fun unsuccessfulResponseBodyList() = listOf(
+        """{"status":200,"data":null}""",
+        """{"status":200}"""
+    )
+
+    override fun verifyResultExpectations(result: PNAddMessageActionResult) {
+        assertEquals(123, result.messageTimetoken)
+        assertEquals("reaction", result.type)
+        assertEquals("someUuid", result.uuid)
+        assertEquals("smiley", result.value)
+        assertEquals(1000, result.actionTimetoken)
+    }
+
+    override fun mappingBuilder() =
+        post(urlMatching("/v1/message-actions/mySubscribeKey/channel/ch1/message/1000.*"))
+            .withRequestBody(
+                equalToJson("""{"type":"reaction","value":"smiley"}""")
+            )
+
+    override fun affectedChannelsAndGroups() = listOf("ch1") to emptyList<String>()
+}
