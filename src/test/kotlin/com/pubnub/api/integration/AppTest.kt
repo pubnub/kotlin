@@ -1,12 +1,14 @@
-package com.pubnub.api
+package com.pubnub.api.integration
 
+import com.pubnub.api.PNConfiguration
+import com.pubnub.api.PubNub
 import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNOperationType.PNTimeOperation
-import com.pubnub.api.enums.PNPushType
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.enums.PNStatusCategory.PNUnknownCategory
+import com.pubnub.api.listen
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
@@ -15,6 +17,7 @@ import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResu
 import com.pubnub.api.models.consumer.pubsub.objects.PNMembershipResult
 import com.pubnub.api.models.consumer.pubsub.objects.PNSpaceResult
 import com.pubnub.api.models.consumer.pubsub.objects.PNUserResult
+import com.pubnub.api.printQueryParams
 import org.awaitility.Awaitility
 import org.awaitility.Durations
 import org.junit.jupiter.api.*
@@ -55,6 +58,8 @@ class AppTest {
 
     @Test
     fun testPublishSync() {
+        val list = (0..9).map { it.toString() } + ('A'..'Z')
+        println(list)
         pubnub.publish().apply {
             channel = UUID.randomUUID().toString()
             message = UUID.randomUUID().toString()
@@ -128,7 +133,7 @@ class AppTest {
 
     @Test
     fun testSynchronizedAccess() {
-        val size = 60
+        val size = 500
         var counter = 0
 
         pubnub.addListener(object : SubscribeCallback() {
@@ -195,7 +200,7 @@ class AppTest {
                     .containsAll(expectedChannels)
             }
 
-        val pnHereNowResult = pubnub.hereNow().apply {
+        pubnub.hereNow().apply {
             channels = expectedChannels
             includeUUIDs = false
             includeState = false
