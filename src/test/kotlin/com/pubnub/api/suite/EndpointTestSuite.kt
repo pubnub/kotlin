@@ -9,11 +9,15 @@ import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.models.consumer.PNStatus
+import org.awaitility.Awaitility
+import org.awaitility.Durations
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 
-typealias MoreChecks = (status: PNStatus) -> Unit
+typealias AsyncCheck<T> = (pnStatus: PNStatus, result: T?) -> Unit
 
 abstract class EndpointTestSuite<T : Endpoint<*, R>, R> : BaseTest() {
 
@@ -29,18 +33,33 @@ abstract class EndpointTestSuite<T : Endpoint<*, R>, R> : BaseTest() {
     abstract fun mappingBuilder(): MappingBuilder
     abstract fun affectedChannelsAndGroups(): Pair<List<String>, List<String>>
 
-    open fun optionalScenarioList(): List<OptionalScenario> = emptyList()
+    open fun optionalScenarioList(): List<OptionalScenario<R>> = emptyList()
+    open fun voidResponse() = false
 
     override fun onBefore() {
         super.onBefore()
         expectedStub = stubFor(mappingBuilder().willReturn(aResponse().withBody(successfulResponseBody())))
+        pubnub.configuration.includeInstanceIdentifier = false
+        pubnub.configuration.includeRequestIdentifier = false
     }
 
     @Test
     fun testTelemetryParameter() {
-        val success = AtomicBoolean()
+        if (pnOperation() == PNOperationType.PNSubscribeOperation)
+            return
 
         stubTimeEndpoint()
+
+        wireMockServer.removeStub(expectedStub)
+
+        stubFor(
+            mappingBuilder()
+                .willReturn(
+                    aResponse()
+                        .withFixedDelay(50)
+                        .withBody(successfulResponseBody())
+                )
+        )
 
         lateinit var telemetryParamName: String
 
@@ -48,22 +67,32 @@ abstract class EndpointTestSuite<T : Endpoint<*, R>, R> : BaseTest() {
             assertFalse(status.error)
             assertEquals(pnOperation(), status.operation)
             assertEquals(PNStatusCategory.PNAcknowledgmentCategory, status.category)
-            telemetryParamName = "l_${status.operation.queryParam}"
+            telemetryParamName = "l_${status.operation.queryParam!!}"
             assertEquals(telemetryParamName(), telemetryParamName)
         }
 
-        pubnub.time().async { _, status ->
-            assertFalse(status.error)
-            assertNotNull(status.param(telemetryParamName))
-            success.set(true)
-        }
+        Awaitility.await()
+            .pollInterval(Durations.FIVE_HUNDRED_MILLISECONDS)
+            .pollDelay(Durations.FIVE_HUNDRED_MILLISECONDS)
+            .atMost(Durations.FIVE_SECONDS)
+            .until {
+                val latch = CountDownLatch(1)
 
-        success.listen()
+                pubnub.time().async { _, status ->
+                    assertFalse(status.error)
+                    assertNotNull(status.param(telemetryParamName))
+                    latch.countDown()
+                }
+
+                latch.await(500, TimeUnit.MILLISECONDS)
+            }
     }
 
     @Test
     fun testSuccessAsync() {
         snippet().eval { result, status ->
+            // todo
+            // status.exception?.printStackTrace()
             assertFalse(status.error)
             assertEquals(PNStatusCategory.PNAcknowledgmentCategory, status.category)
             assertEquals(pnOperation(), status.operation)
@@ -84,10 +113,11 @@ abstract class EndpointTestSuite<T : Endpoint<*, R>, R> : BaseTest() {
         testPublishKey()
         testAuthKeySync()
         testAuthKeyAsync()
+        testSecretKey()
     }
 
     @Test
-    fun testWrongResponsesSync() {
+    fun testUnsuccessfulResponsesSync() {
         wireMockServer.removeStub(expectedStub)
 
         unsuccessfulResponseBodyList().forEach {
@@ -96,14 +126,15 @@ abstract class EndpointTestSuite<T : Endpoint<*, R>, R> : BaseTest() {
                 testSuccessSync()
                 failTest()
             } catch (e: Exception) {
-                // assertPnException(PubNubError.PARSING_ERROR, e)
+                e.printStackTrace()
+                assertPnException(PubNubError.PARSING_ERROR, e)
             }
             wireMockServer.removeStub(stub)
         }
     }
 
     @Test
-    fun testWrongResponsesAsync() {
+    fun testUnsuccessfulResponsesAsync() {
         wireMockServer.removeStub(expectedStub)
 
         unsuccessfulResponseBodyList().forEach {
@@ -117,19 +148,48 @@ abstract class EndpointTestSuite<T : Endpoint<*, R>, R> : BaseTest() {
     }
 
     @Test
-    fun testUsualWrongResponsesSync() {
+    fun testUsualWrongResponses() {
         wireMockServer.removeStub(expectedStub)
 
-        val list = listOf(emptyJson(), noContent(), aResponse().withBody("{}"))
+        val map = hashMapOf(
+            "empty_json" to emptyJson(),
+            "no_content" to noContent(),
+            "malformed" to aResponse().withBody("{")
+        )
 
-        list.forEach {
-            val stub = stubFor(mappingBuilder().willReturn(it))
+        if (pnOperation() == PNOperationType.PNSubscribeOperation)
+            map.remove("empty_json")
+
+        map.forEach {
+            val stub = stubFor(mappingBuilder().willReturn(it.value))
             try {
-                testSuccessSync()
-                failTest()
+                val result = snippet().sync()
+                if (voidResponse()) {
+                    assertNotNull(result)
+                } else {
+                    failTest(it.key)
+                }
             } catch (e: Exception) {
+                if (voidResponse()) {
+                    failTest(it.key)
+                }
                 assertPnException(PubNubError.PARSING_ERROR, e)
             }
+
+            snippet().eval { result, status ->
+                assertEquals(!voidResponse(), status.error)
+
+                if (!voidResponse()) {
+                    assertNull(result)
+                    assertPnException(PubNubError.PARSING_ERROR, status)
+                    assertEquals(PNStatusCategory.PNMalformedResponseCategory, status.category)
+                } else {
+                    assertNotNull(result)
+                    assertEquals(PNStatusCategory.PNAcknowledgmentCategory, status.category)
+                }
+
+            }
+
             wireMockServer.removeStub(stub)
         }
     }
@@ -166,7 +226,7 @@ abstract class EndpointTestSuite<T : Endpoint<*, R>, R> : BaseTest() {
             val stub = stubFor(mappingBuilder().willReturn(it.build()))
 
             snippet().eval { result, status ->
-                it.additionalChecks.invoke(status)
+                it.additionalChecks.invoke(status, result)
                 if (it.result == Result.SUCCESS) {
                     assertFalse(status.error)
                     result!!
@@ -259,6 +319,21 @@ abstract class EndpointTestSuite<T : Endpoint<*, R>, R> : BaseTest() {
         }
     }
 
+    private fun testSecretKey() {
+        pubnub.configuration.secretKey = " "
+        try {
+            testSuccessSync()
+            if (requiredKeys().contains(SEC)) {
+                failTest()
+            }
+        } catch (e: Exception) {
+            if (requiredKeys().contains(SEC)) {
+                assertPnException(PubNubError.SECRET_KEY_MISSING, e)
+            }
+        }
+        pubnub.configuration.secretKey = "mySecretKey"
+    }
+
     private fun runSync() {
         val result = snippet().sync()!!
         verifyResultExpectations(result)
@@ -267,7 +342,10 @@ abstract class EndpointTestSuite<T : Endpoint<*, R>, R> : BaseTest() {
     private fun stubTimeEndpoint() {
         stubFor(
             get(urlMatching("/time/0.*"))
-                .willReturn(aResponse().withBody("[1000]"))
+                .willReturn(
+                    aResponse()
+                        .withBody("[1000]")
+                )
         )
     }
 }
@@ -276,46 +354,44 @@ private fun extractKeys(n: Int): List<Int> {
     val keys = mutableListOf<Int>()
     var n = n
     while (n > 0) {
-        val power = highestPowerOf2(n);
+        val power = {
+            var res = 0
+            for (i in n downTo 1) {
+                if (i and i - 1 == 0) {
+                    res = i
+                    break
+                }
+            }
+            res
+        }.invoke()
         keys.add(power)
         n -= power
     }
     return keys
 }
 
-private fun highestPowerOf2(n: Int): Int {
-    var res = 0
-    for (i in n downTo 1) {
-        // If i is a power of 2
-        if (i and i - 1 == 0) {
-            res = i
-            break
-        }
-    }
-    return res
-}
-
 val SUB = 0b001
 val PUB = 0b010
 val AUTH = 0b100
+val SEC = 0b1000
 
 private fun Int.contains(sub: Int): Boolean {
     return extractKeys(this).contains(sub)
 }
 
-private fun <Input, Output> Endpoint<Input, Output>.eval(pieceOfCode: (result: Output?, status: PNStatus) -> Unit) {
+private fun <Input, Output> Endpoint<Input, Output>.eval(function: (result: Output?, status: PNStatus) -> Unit) {
     val success = AtomicBoolean()
     async { result, status ->
-        pieceOfCode.invoke(result, status)
+        function.invoke(result, status)
         success.set(true)
     }
     success.listen()
 }
 
-class OptionalScenario {
+class OptionalScenario<R> {
     var responseBuilder: ResponseDefinitionBuilder.() -> ResponseDefinitionBuilder = { this }
 
-    var additionalChecks: MoreChecks = {}
+    var additionalChecks: AsyncCheck<R> = { status: PNStatus, result: R? -> }
     var result: Result = Result.SUCCESS
     var pnError: PubNubError? = null
 
