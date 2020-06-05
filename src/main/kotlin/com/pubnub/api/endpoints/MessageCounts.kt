@@ -45,18 +45,12 @@ class MessageCounts(pubnub: PubNub) : Endpoint<JsonElement, PNMessageCountResult
     override fun createResponse(input: Response<JsonElement>): PNMessageCountResult? {
         val channelsMap = HashMap<String, Long>()
 
-        if (pubnub.mapper.getField(input.body()!!, "channels") != null) {
-            val it = pubnub.mapper.getObjectIterator(input.body()!!, "channels")
-            while (it.hasNext()) {
-                val entry = it.next()
-                channelsMap[entry.key] = entry.value.asLong
-            }
-            return PNMessageCountResult(channelsMap)
-        } else {
-            throw PubNubException(PubNubError.HTTP_ERROR).apply {
-                errorMessage = "History is disabled"
-            }
+        val it = pubnub.mapper.getObjectIterator(input.body()!!, "channels")
+        while (it.hasNext()) {
+            val entry = it.next()
+            channelsMap[entry.key] = entry.value.asLong
         }
+        return PNMessageCountResult(channelsMap)
     }
 
     override fun operationType() = PNOperationType.PNMessageCountOperation
