@@ -20,7 +20,7 @@ import java.util.stream.Collectors
 
 private fun observe(success: AtomicBoolean) {
     Awaitility.await()
-        .atMost(Durations.FIVE_SECONDS)
+        .atMost(Durations.TWO_SECONDS)
         .with()
         .until(success::get)
 }
@@ -173,3 +173,5 @@ fun getResourceFileAsString(fileName: String?): String? {
         }
     }
 }
+
+fun Any.stringify() = Gson().toJson(this)
