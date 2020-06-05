@@ -59,9 +59,7 @@ class ListPushProvisions(pubnub: PubNub) : Endpoint<List<String>, PNPushListProv
     }
 
     override fun createResponse(input: Response<List<String>>): PNPushListProvisionsResult? {
-        return PNPushListProvisionsResult().apply {
-            channels = input.body()!!
-        }
+        return PNPushListProvisionsResult(input.body()!!)
     }
 
     override fun operationType() = PNOperationType.PNPushNotificationEnabledChannelsOperation

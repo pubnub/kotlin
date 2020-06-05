@@ -12,14 +12,14 @@ interface PushService {
         @Path("subKey") subKey: String,
         @Path("pushToken") pushToken: String,
         @QueryMap options: Map<String, String>
-    ): Call<List<Any>>
+    ): Call<Void>
 
     @GET("v1/push/sub-key/{subKey}/devices/{pushToken}/remove")
     fun removeAllChannelsForDevice(
         @Path("subKey") subKey: String,
         @Path("pushToken") pushToken: String,
         @QueryMap options: Map<String, String>
-    ): Call<List<Any>>
+    ): Call<Void>
 
     @GET("v1/push/sub-key/{subKey}/devices/{pushToken}")
     fun listChannelsForDevice(
@@ -36,7 +36,7 @@ interface PushService {
         @Path("subKey") subKey: String,
         @Path("deviceApns2") deviceApns2: String,
         @QueryMap options: Map<String, String>
-    ): Call<List<Any>>
+    ): Call<Void>
 
     @GET("v2/push/sub-key/{subKey}/devices-apns2/{deviceApns2}")
     fun listChannelsForDeviceApns2(
@@ -50,5 +50,5 @@ interface PushService {
         @Path("subKey") subKey: String,
         @Path("deviceApns2") deviceApns2: String,
         @QueryMap options: Map<String, String>
-    ): Call<List<Any>>
+    ): Call<Void>
 }

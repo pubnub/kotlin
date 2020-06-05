@@ -12,7 +12,7 @@ import retrofit2.Call
 import retrofit2.Response
 import java.util.*
 
-class RemoveAllPushChannelsForDevice(pubnub: PubNub) : Endpoint<List<Any>, PNPushRemoveAllChannelsResult>(pubnub) {
+class RemoveAllPushChannelsForDevice(pubnub: PubNub) : Endpoint<Void, PNPushRemoveAllChannelsResult>(pubnub) {
 
     lateinit var pushType: PNPushType
     lateinit var deviceId: String
@@ -34,7 +34,7 @@ class RemoveAllPushChannelsForDevice(pubnub: PubNub) : Endpoint<List<Any>, PNPus
         }
     }
 
-    override fun doWork(queryParams: HashMap<String, String>): Call<List<Any>> {
+    override fun doWork(queryParams: HashMap<String, String>): Call<Void> {
         if (pushType != PNPushType.APNS2) {
             queryParams["type"] = pushType.toParamString()
 
@@ -58,7 +58,7 @@ class RemoveAllPushChannelsForDevice(pubnub: PubNub) : Endpoint<List<Any>, PNPus
 
     }
 
-    override fun createResponse(input: Response<List<Any>>): PNPushRemoveAllChannelsResult? {
+    override fun createResponse(input: Response<Void>): PNPushRemoveAllChannelsResult? {
         return PNPushRemoveAllChannelsResult()
     }
 

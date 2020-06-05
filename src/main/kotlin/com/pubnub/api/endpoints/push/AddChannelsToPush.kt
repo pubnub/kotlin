@@ -9,7 +9,7 @@ import retrofit2.Call
 import retrofit2.Response
 import java.util.*
 
-class AddChannelsToPush(pubnub: PubNub) : Endpoint<List<Any>, PNPushAddChannelResult>(pubnub) {
+class AddChannelsToPush(pubnub: PubNub) : Endpoint<Void, PNPushAddChannelResult>(pubnub) {
 
     lateinit var pushType: PNPushType
     lateinit var channels: List<String>
@@ -37,7 +37,7 @@ class AddChannelsToPush(pubnub: PubNub) : Endpoint<List<Any>, PNPushAddChannelRe
         }
     }
 
-    override fun doWork(queryParams: HashMap<String, String>): Call<List<Any>> {
+    override fun doWork(queryParams: HashMap<String, String>): Call<Void> {
         queryParams["add"] = channels.toCsv()
 
         if (pushType != PNPushType.APNS2) {
@@ -63,8 +63,7 @@ class AddChannelsToPush(pubnub: PubNub) : Endpoint<List<Any>, PNPushAddChannelRe
 
     }
 
-    // is there any usable data in the response?
-    override fun createResponse(input: Response<List<Any>>): PNPushAddChannelResult? {
+    override fun createResponse(input: Response<Void>): PNPushAddChannelResult? {
         return PNPushAddChannelResult()
     }
 
