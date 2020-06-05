@@ -7,4 +7,5 @@ build/
 *.class
 bin/
 gen/
+out/
 /src/test/resources/config.properties
