@@ -1,4 +1,4 @@
-package com.pubnub.api.suite
+package com.pubnub.api.suite.pubsub
 
 import com.github.tomakehurst.wiremock.client.MappingBuilder
 import com.github.tomakehurst.wiremock.client.WireMock.*
@@ -6,6 +6,10 @@ import com.google.gson.Gson
 import com.pubnub.api.endpoints.pubsub.Publish
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.PNPublishResult
+import com.pubnub.api.suite.AUTH
+import com.pubnub.api.suite.EndpointTestSuite
+import com.pubnub.api.suite.PUB
+import com.pubnub.api.suite.SUB
 import org.json.JSONObject
 import org.junit.jupiter.api.Assertions.assertEquals
 
@@ -19,7 +23,7 @@ class PublishPostTestSuite : EndpointTestSuite<Publish, PNPublishResult>() {
 
     override fun snippet(): Publish {
         return pubnub.publish().apply {
-            channel = "foo"
+            channel = "ch1"
             message = mapOf(
                 "name" to "john",
                 "age" to 30,
@@ -42,7 +46,7 @@ class PublishPostTestSuite : EndpointTestSuite<Publish, PNPublishResult>() {
 
     override fun mappingBuilder(): MappingBuilder {
         return post(
-            urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/foo/0")
+            urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/ch1/0")
         )
             .withQueryParam(
                 "meta", equalToJson("""{"city":"sf"}""")
@@ -60,6 +64,6 @@ class PublishPostTestSuite : EndpointTestSuite<Publish, PNPublishResult>() {
             )!!
     }
 
-    override fun affectedChannelsAndGroups() = listOf("foo") to emptyList<String>()
+    override fun affectedChannelsAndGroups() = listOf("ch1") to emptyList<String>()
 
 }

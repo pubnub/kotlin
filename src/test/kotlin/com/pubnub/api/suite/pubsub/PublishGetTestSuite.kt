@@ -1,4 +1,4 @@
-package com.pubnub.api.suite
+package com.pubnub.api.suite.pubsub
 
 import com.github.tomakehurst.wiremock.client.MappingBuilder
 import com.github.tomakehurst.wiremock.client.WireMock.get
@@ -7,6 +7,10 @@ import com.google.gson.Gson
 import com.pubnub.api.endpoints.pubsub.Publish
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.PNPublishResult
+import com.pubnub.api.suite.AUTH
+import com.pubnub.api.suite.EndpointTestSuite
+import com.pubnub.api.suite.PUB
+import com.pubnub.api.suite.SUB
 import org.junit.jupiter.api.Assertions.assertEquals
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
@@ -21,8 +25,8 @@ class PublishGetTestSuite : EndpointTestSuite<Publish, PNPublishResult>() {
 
     override fun snippet(): Publish {
         return pubnub.publish().apply {
-            channel = "foo"
-            message = "bar"
+            channel = "ch1"
+            message = "ch2"
         }
     }
 
@@ -37,20 +41,20 @@ class PublishGetTestSuite : EndpointTestSuite<Publish, PNPublishResult>() {
     override fun mappingBuilder(): MappingBuilder {
         return get(
             urlPathEqualTo(
-                "/publish/myPublishKey/mySubscribeKey/0/foo/0/%s".format(
-                    URLEncoder.encode(Gson().toJson("bar"), StandardCharsets.UTF_8.name())
+                "/publish/myPublishKey/mySubscribeKey/0/ch1/0/%s".format(
+                    URLEncoder.encode(Gson().toJson("ch2"), StandardCharsets.UTF_8.name())
                 )
             )
         )!!
     }
 
-    override fun affectedChannelsAndGroups() = listOf("foo") to emptyList<String>()
+    override fun affectedChannelsAndGroups() = listOf("ch1") to emptyList<String>()
 
     /*companion object {
         @JvmStatic
         fun predefined(): Stream<Arguments?>? {
             return Stream.of(
-                Arguments.of("foo"),
+                Arguments.of("ch1"),
                 Arguments.of(123),
                 Arguments.of(3.14)
             )
