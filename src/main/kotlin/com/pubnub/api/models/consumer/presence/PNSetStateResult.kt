@@ -2,6 +2,6 @@ package com.pubnub.api.models.consumer.presence
 
 import com.google.gson.JsonElement
 
-data class PNSetStateResult(
-    val state: JsonElement?
+class PNSetStateResult(
+    val state: JsonElement
 )

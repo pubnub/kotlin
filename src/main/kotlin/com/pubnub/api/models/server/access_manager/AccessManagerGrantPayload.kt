@@ -7,12 +7,12 @@ import com.pubnub.api.models.consumer.access_manager.PNAccessManagerKeysData
 
 class AccessManagerGrantPayload {
 
-    internal lateinit var level: String
+    internal var level: String? = null
 
     internal var ttl = 0
 
     @SerializedName("subscribe_key")
-    internal lateinit var subscribeKey: String
+    internal var subscribeKey: String? = null
 
     internal val channels: Map<String, PNAccessManagerKeysData>? = null
 

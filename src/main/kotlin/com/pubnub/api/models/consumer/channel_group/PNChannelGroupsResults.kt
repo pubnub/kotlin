@@ -6,12 +6,10 @@ class PNChannelGroupsDeleteGroupResult
 
 class PNChannelGroupsRemoveChannelResult
 
-class PNChannelGroupsAllChannelsResult {
-    var channels = listOf<String>()
-        internal set
-}
+class PNChannelGroupsAllChannelsResult internal constructor(
+    val channels: List<String>
+)
 
-class PNChannelGroupsListAllResult {
-    var groups = listOf<String>()
-        internal set
-}
+class PNChannelGroupsListAllResult internal constructor(
+    val groups: List<String>
+)

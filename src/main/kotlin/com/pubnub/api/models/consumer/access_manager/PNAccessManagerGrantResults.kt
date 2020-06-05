@@ -6,8 +6,8 @@ class PNAccessManagerGrantResult(
     val level: String,
     val ttl: Int,
     val subscribeKey: String,
-    val channels: Map<String, Map<String, PNAccessManagerKeyData>>,
-    val channelGroups: Map<String, Map<String, PNAccessManagerKeyData>>
+    val channels: Map<String, Map<String, PNAccessManagerKeyData>?>,
+    val channelGroups: Map<String, Map<String, PNAccessManagerKeyData>?>
 )
 
 class PNAccessManagerKeyData() {
