@@ -6,12 +6,11 @@ import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsDeleteGroupResult
-import com.pubnub.api.models.server.Envelope
 import retrofit2.Call
 import retrofit2.Response
 import java.util.*
 
-class DeleteChannelGroup(pubnub: PubNub) : Endpoint<Envelope<Any>, PNChannelGroupsDeleteGroupResult>(pubnub) {
+class DeleteChannelGroup(pubnub: PubNub) : Endpoint<Void, PNChannelGroupsDeleteGroupResult>(pubnub) {
 
     lateinit var channelGroup: String
 
@@ -24,7 +23,7 @@ class DeleteChannelGroup(pubnub: PubNub) : Endpoint<Envelope<Any>, PNChannelGrou
 
     override fun getAffectedChannelGroups() = listOf(channelGroup)
 
-    override fun doWork(queryParams: HashMap<String, String>): Call<Envelope<Any>> {
+    override fun doWork(queryParams: HashMap<String, String>): Call<Void> {
         return pubnub.retrofitManager.channelGroupService
             .deleteChannelGroup(
                 pubnub.configuration.subscribeKey,
@@ -33,10 +32,7 @@ class DeleteChannelGroup(pubnub: PubNub) : Endpoint<Envelope<Any>, PNChannelGrou
             )
     }
 
-    override fun createResponse(input: Response<Envelope<Any>>): PNChannelGroupsDeleteGroupResult? {
-        if (input.body() == null) {
-            throw PubNubException(PubNubError.PARSING_ERROR)
-        }
+    override fun createResponse(input: Response<Void>): PNChannelGroupsDeleteGroupResult? {
         return PNChannelGroupsDeleteGroupResult()
     }
 

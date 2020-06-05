@@ -3,12 +3,11 @@ package com.pubnub.api.endpoints.channel_groups
 import com.pubnub.api.*
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsRemoveChannelResult
-import com.pubnub.api.models.server.Envelope
 import retrofit2.Call
 import retrofit2.Response
 import java.util.*
 
-class RemoveChannelChannelGroup(pubnub: PubNub) : Endpoint<Envelope<Any>, PNChannelGroupsRemoveChannelResult>(pubnub) {
+class RemoveChannelChannelGroup(pubnub: PubNub) : Endpoint<Void, PNChannelGroupsRemoveChannelResult>(pubnub) {
 
     lateinit var channelGroup: String
     lateinit var channels: List<String>
@@ -27,7 +26,7 @@ class RemoveChannelChannelGroup(pubnub: PubNub) : Endpoint<Envelope<Any>, PNChan
         }
     }
 
-    override fun doWork(queryParams: HashMap<String, String>): Call<Envelope<Any>> {
+    override fun doWork(queryParams: HashMap<String, String>): Call<Void> {
         if (channels.isNotEmpty()) {
             queryParams["remove"] = channels.toCsv()
         }
@@ -40,7 +39,7 @@ class RemoveChannelChannelGroup(pubnub: PubNub) : Endpoint<Envelope<Any>, PNChan
             )
     }
 
-    override fun createResponse(input: Response<Envelope<Any>>): PNChannelGroupsRemoveChannelResult? {
+    override fun createResponse(input: Response<Void>): PNChannelGroupsRemoveChannelResult? {
         return PNChannelGroupsRemoveChannelResult()
     }
 

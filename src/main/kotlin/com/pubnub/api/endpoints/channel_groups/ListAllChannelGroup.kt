@@ -20,9 +20,9 @@ class ListAllChannelGroup(pubnub: PubNub) : Endpoint<Envelope<Map<String, Any>>,
     }
 
     override fun createResponse(input: Response<Envelope<Map<String, Any>>>): PNChannelGroupsListAllResult? {
-        return PNChannelGroupsListAllResult().apply {
-            groups = input.body()!!.payload!!["groups"] as List<String>
-        }
+        return PNChannelGroupsListAllResult(
+            input.body()!!.payload!!["groups"] as List<String>
+        )
     }
 
     override fun operationType() = PNOperationType.PNChannelGroupsOperation

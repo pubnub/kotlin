@@ -26,20 +26,20 @@ internal interface ChannelGroupService {
         @Path("subKey") subKey: String,
         @Path("group") group: String,
         @QueryMap options: Map<String, String>
-    ): Call<Envelope<Any>>
+    ): Call<Void>
 
     @GET("v1/channel-registration/sub-key/{subKey}/channel-group/{group}")
     fun removeChannel(
         @Path("subKey") subKey: String,
         @Path("group") group: String,
         @QueryMap options: Map<String, String>
-    ): Call<Envelope<Any>>
+    ): Call<Void>
 
     @GET("v1/channel-registration/sub-key/{subKey}/channel-group/{group}/remove")
     fun deleteChannelGroup(
         @Path("subKey") subKey: String,
         @Path("group") group: String,
         @QueryMap options: Map<String, String>
-    ): Call<Envelope<Any>>
+    ): Call<Void>
 
 }

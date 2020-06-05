@@ -35,12 +35,9 @@ class AllChannelsChannelGroup(pubnub: PubNub) :
     }
 
     override fun createResponse(input: Response<Envelope<Map<String, Any>>>): PNChannelGroupsAllChannelsResult? {
-        // todo test dot of null
-        return PNChannelGroupsAllChannelsResult().apply {
-            input.body()!!.payload!!["channels"]?.let {
-                channels = it as List<String>
-            }
-        }
+        return PNChannelGroupsAllChannelsResult(
+            input.body()!!.payload!!["channels"] as List<String>
+        )
     }
 
     override fun operationType() = PNOperationType.PNChannelsForGroupOperation
