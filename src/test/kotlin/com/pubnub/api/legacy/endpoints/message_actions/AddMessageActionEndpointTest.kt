@@ -412,7 +412,6 @@ class AddMessageActionEndpointTest : BaseTest() {
                 messageTimetoken = 123
             )
         }.async { _, status ->
-            println(status)
             assertFalse(status.error)
             assertEquals(PNOperationType.PNAddMessageAction, status.operation)
             telemetryParamName = "l_${status.operation.queryParam}"

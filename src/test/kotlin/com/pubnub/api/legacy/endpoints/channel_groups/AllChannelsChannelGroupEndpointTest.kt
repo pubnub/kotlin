@@ -130,7 +130,6 @@ class AllChannelsChannelGroupEndpointTest : BaseTest() {
         pubnub.listChannelsForChannelGroup().apply {
             channelGroup = "groupA"
         }.async { result, status ->
-            println(status)
             assertFalse(status.error)
             assertEquals(PNOperationType.PNChannelsForGroupOperation, status.operation)
             assertEquals(PNStatusCategory.PNAcknowledgmentCategory, status.category)
@@ -154,7 +153,6 @@ class AllChannelsChannelGroupEndpointTest : BaseTest() {
             }.sync()!!
             throw RuntimeException()
         } catch (e: PubNubException) {
-            e.printStackTrace()
             assertPnException(PubNubError.SUBSCRIBE_KEY_MISSING, e)
         }
     }

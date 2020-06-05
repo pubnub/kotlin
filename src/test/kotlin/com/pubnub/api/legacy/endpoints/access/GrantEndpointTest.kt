@@ -1654,7 +1654,6 @@ class GrantEndpointTest : BaseTest() {
             assertEquals(0, grantResult.channels.size)
             assertEquals(0, grantResult.channelGroups.size)
         } catch (e: PubNubException) {
-            e.printStackTrace()
             failTest()
         }
     }

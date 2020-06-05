@@ -87,14 +87,9 @@ class DeleteChannelGroupEndpointTest : BaseTest() {
                 .willReturn(noContent())
         )
 
-        try {
-            pubnub.deleteChannelGroup().apply {
-                channelGroup = "groupA"
-            }.sync()!!
-            failTest()
-        } catch (e: PubNubException) {
-            assertPnException(PubNubError.PARSING_ERROR, e)
-        }
+        pubnub.deleteChannelGroup().apply {
+            channelGroup = "groupA"
+        }.sync()!!
     }
 
     @Test

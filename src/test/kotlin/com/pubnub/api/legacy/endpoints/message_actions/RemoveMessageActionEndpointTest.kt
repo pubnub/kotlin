@@ -57,7 +57,7 @@ class RemoveMessageActionEndpointTest : BaseTest() {
             actionTimetoken = 100L
         }.async { _, status ->
             assertFalse(status.error)
-            assertEquals(PNOperationType.PNAddMessageAction, status.operation)
+            assertEquals(PNOperationType.PNDeleteMessageAction, status.operation)
             success.set(true)
         }
 
@@ -73,7 +73,7 @@ class RemoveMessageActionEndpointTest : BaseTest() {
                         """
                         {
                           "status": 200
-                          "data": {}
+                          "data": {
                         }
                     """.trimIndent()
                     )
@@ -86,9 +86,8 @@ class RemoveMessageActionEndpointTest : BaseTest() {
                 messageTimetoken = 123L
                 actionTimetoken = 100L
             }.sync()!!
-            failTest()
         } catch (e: Exception) {
-            assertPnException(PubNubError.PARSING_ERROR, e)
+            failTest()
         }
     }
 
@@ -106,9 +105,8 @@ class RemoveMessageActionEndpointTest : BaseTest() {
                 messageTimetoken = 123L
                 actionTimetoken = 100L
             }.sync()!!
-            failTest()
         } catch (e: Exception) {
-            assertPnException(PubNubError.PARSING_ERROR, e)
+            failTest()
         }
     }
 
@@ -125,9 +123,8 @@ class RemoveMessageActionEndpointTest : BaseTest() {
                 messageTimetoken = 123L
                 actionTimetoken = 100L
             }.sync()!!
-            failTest()
         } catch (e: Exception) {
-            assertPnException(PubNubError.PARSING_ERROR, e)
+            failTest()
         }
     }
 
@@ -152,9 +149,8 @@ class RemoveMessageActionEndpointTest : BaseTest() {
                 messageTimetoken = 123L
                 actionTimetoken = 100L
             }.sync()!!
-            failTest()
         } catch (e: Exception) {
-            assertPnException(PubNubError.PARSING_ERROR, e)
+            failTest()
         }
     }
 
@@ -180,9 +176,8 @@ class RemoveMessageActionEndpointTest : BaseTest() {
                 messageTimetoken = 123L
                 actionTimetoken = 100L
             }.sync()!!
-            failTest()
         } catch (e: Exception) {
-            assertPnException(PubNubError.PARSING_ERROR, e)
+            failTest()
         }
     }
 
@@ -310,9 +305,8 @@ class RemoveMessageActionEndpointTest : BaseTest() {
             messageTimetoken = 123L
             actionTimetoken = 100L
         }.async { _, status ->
-            println(status)
             assertFalse(status.error)
-            assertEquals(PNOperationType.PNAddMessageAction, status.operation)
+            assertEquals(PNOperationType.PNDeleteMessageAction, status.operation)
             telemetryParamName = "l_${status.operation.queryParam}"
             assertEquals("l_msga", telemetryParamName)
             success.set(true)
@@ -328,6 +322,5 @@ class RemoveMessageActionEndpointTest : BaseTest() {
 
         success.listen()
     }
-
 
 }

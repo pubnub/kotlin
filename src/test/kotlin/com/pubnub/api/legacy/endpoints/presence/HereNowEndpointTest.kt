@@ -1,10 +1,10 @@
 package com.pubnub.api.legacy.endpoints.presence
 
 import com.github.tomakehurst.wiremock.client.WireMock.*
-import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.PubNubError.SUBSCRIBE_KEY_MISSING
 import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType.PNHereNowOperation
+import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.models.consumer.presence.PNHereNowResult
 import org.awaitility.Awaitility
 import org.hamcrest.core.IsEqual
@@ -273,11 +273,8 @@ class HereNowEndpointTest : BaseTest() {
             includeUUIDs = false
         }.sync()!!
 
-        println(response)
-
         assertEquals(response.totalChannels, 1)
         assertEquals(response.totalOccupancy, 3)
-        println("response.channels: ${response.channels}")
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
         assertEquals(1, requests.size)

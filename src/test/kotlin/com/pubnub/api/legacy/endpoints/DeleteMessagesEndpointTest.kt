@@ -87,10 +87,8 @@ class DeleteMessagesEndpointTest : BaseTest() {
             pubnub.deleteMessages().apply {
                 channels = listOf("mychannel,my_channel")
             }.sync()!!
-            failTest()
         } catch (e: Exception) {
-            e.printStackTrace()
-            assertPnException(PubNubError.PARSING_ERROR, e)
+            failTest()
         }
     }
 
@@ -116,7 +114,6 @@ class DeleteMessagesEndpointTest : BaseTest() {
         pubnub.deleteMessages().apply {
             channels = listOf("mychannel,my_channel")
         }.async { result, status ->
-            println(status)
             result!!
             assertFalse(status.error)
             assertEquals(PNOperationType.PNDeleteMessagesOperation, status.operation)

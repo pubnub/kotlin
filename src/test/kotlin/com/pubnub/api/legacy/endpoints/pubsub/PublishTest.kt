@@ -1,7 +1,6 @@
 package com.pubnub.api.legacy.endpoints.pubsub
 
 import com.github.tomakehurst.wiremock.client.WireMock.*
-import com.google.gson.Gson
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.assertPnException
@@ -351,8 +350,6 @@ class PublishTest : BaseTest() {
                 .willReturn(aResponse().withBody("""[1,"Sent","15883272000000000"]"""))
         )
 
-        println("pozho ${Gson().toJson(testPojo)}")
-
         pubnub.publish().apply {
             channel = "coolChannel"
             message = testPojo
@@ -464,7 +461,7 @@ class PublishTest : BaseTest() {
 
         pubnub.publish().apply {
 
-        }.async { result, status ->
+        }.async { _, status ->
             if (status.operation === PNOperationType.PNPublishOperation) {
                 atomic.incrementAndGet()
             }

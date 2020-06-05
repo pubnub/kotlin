@@ -109,7 +109,7 @@ class SetStateEndpointTest : BaseTest() {
             state = mapOf("age" to 20)
         }.sync()!!
 
-        assertEquals(pubnub.mapper.elementToInt(result.state!!, "age"), 20)
+        assertEquals(pubnub.mapper.elementToInt(result.state, "age"), 20)
         assertEquals(pubnub.mapper.elementToString(result.state, "status"), "online")
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))

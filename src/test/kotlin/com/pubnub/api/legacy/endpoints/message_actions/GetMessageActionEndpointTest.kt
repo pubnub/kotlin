@@ -466,7 +466,6 @@ class GetMessageActionEndpointTest : BaseTest() {
         pubnub.getMessageActions().apply {
             channel = "coolChannel"
         }.async { _, status ->
-            println(status)
             assertFalse(status.error)
             assertEquals(PNOperationType.PNGetMessageActions, status.operation)
             telemetryParamName = "l_${status.operation.queryParam}"

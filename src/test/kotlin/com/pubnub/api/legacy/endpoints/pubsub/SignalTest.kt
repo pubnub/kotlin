@@ -1,7 +1,6 @@
 package com.pubnub.api.legacy.endpoints.pubsub
 
 import com.github.tomakehurst.wiremock.client.WireMock.*
-import com.google.gson.Gson
 import com.pubnub.api.*
 import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.enums.PNOperationType
@@ -87,7 +86,6 @@ class SignalTest : BaseTest() {
             channel = "coolChannel"
             message = payload
         }.async { result, status ->
-            println(status)
             result!!
             assertFalse(status.error)
             assertEquals(PNOperationType.PNSignalOperation, status.operation)
@@ -137,7 +135,6 @@ class SignalTest : BaseTest() {
 
         pubnub.addListener(object : SubscribeCallback() {
             override fun signal(pubnub: PubNub, pnSignalResult: PNSignalResult) {
-                println("rezz ${Gson().toJson(pnSignalResult)}")
                 assertEquals("coolChannel", pnSignalResult.channel)
                 assertEquals("hello", pnSignalResult.message.asString)
                 assertEquals("uuid", pnSignalResult.publisher)

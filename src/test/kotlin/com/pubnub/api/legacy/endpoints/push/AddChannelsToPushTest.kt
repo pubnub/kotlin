@@ -130,7 +130,7 @@ class AddChannelsToPushTest : BaseTest() {
             deviceId = "niceDevice"
             pushType = PNPushType.FCM
             channels = listOf("ch1", "ch2", "ch3")
-        }.async { result, status ->
+        }.async { _, status ->
             Assertions.assertFalse(status.error)
             Assertions.assertEquals(PNOperationType.PNAddPushNotificationsOnChannelsOperation, status.operation)
             Assertions.assertEquals(PNStatusCategory.PNAcknowledgmentCategory, status.category)

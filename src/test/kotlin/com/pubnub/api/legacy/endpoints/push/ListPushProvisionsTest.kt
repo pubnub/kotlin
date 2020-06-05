@@ -157,7 +157,6 @@ class ListPushProvisionsTest : BaseTest() {
             }.sync()!!
             failTest()
         } catch (e: Exception) {
-            e.printStackTrace()
             assertPnException(PubNubError.PARSING_ERROR, e)
         }
     }
@@ -192,7 +191,6 @@ class ListPushProvisionsTest : BaseTest() {
             deviceId = "niceDevice"
             pushType = PNPushType.FCM
         }.async { _, status ->
-            println(status)
             assertPnException(PubNubError.PARSING_ERROR, status)
             assertEquals(PNStatusCategory.PNMalformedResponseCategory, status.category)
             success.set(true)

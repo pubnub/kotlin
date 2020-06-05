@@ -1,11 +1,11 @@
 package com.pubnub.api.legacy.endpoints.presence
 
 import com.github.tomakehurst.wiremock.client.WireMock.*
-import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.PubNubError
 import com.pubnub.api.assertPnException
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.failTest
+import com.pubnub.api.legacy.BaseTest
 import org.awaitility.Awaitility
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers
@@ -207,7 +207,7 @@ class WhereNowEndpointTest : BaseTest() {
 
         val atomic = AtomicInteger(0)
 
-        pubnub.whereNow().async { result, status ->
+        pubnub.whereNow().async { _, status ->
             assertTrue(status.error)
             assertPnException(PubNubError.PARSING_ERROR, status)
             atomic.incrementAndGet()
@@ -243,7 +243,7 @@ class WhereNowEndpointTest : BaseTest() {
 
         val atomic = AtomicInteger(0)
 
-        pubnub.whereNow().async { result, status ->
+        pubnub.whereNow().async { _, status ->
             assertTrue(status.error)
             assertPnException(PubNubError.HTTP_ERROR, status)
             assertEquals(PNStatusCategory.PNBadRequestCategory, status.category)

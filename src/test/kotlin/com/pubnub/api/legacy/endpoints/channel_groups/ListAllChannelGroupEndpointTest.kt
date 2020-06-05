@@ -44,7 +44,7 @@ class ListAllChannelGroupEndpointTest : BaseTest() {
         )
 
         val response = pubnub.listAllChannelGroups().sync()!!
-        assertThat(response.groups, Matchers.contains("a", "b"))
+        assertThat(response.groups, Matchers.contains("a", "b"))//todo matchers
     }
 
     @Test

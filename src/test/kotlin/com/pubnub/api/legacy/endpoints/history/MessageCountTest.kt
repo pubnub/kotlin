@@ -10,34 +10,6 @@ import org.junit.jupiter.api.Test
 class MessageCountTest : BaseTest() {
 
     @Test
-    fun testSyncDisabled() {
-        val payload =
-            """
-                [
-                  "Use of the history API requires the Storage & Playback which is not enabled
-                   for this subscribe key.Login to your PubNub Dashboard Account and enable Storage & Playback.
-                   Contact support @pubnub.com if you require further assistance.",
-                  0,
-                  0
-                ]
-            """.trimIndent()
-
-        stubFor(
-            get(urlPathEqualTo("/v3/history/sub-key/mySubscribeKey/message-counts/my_channel"))
-                .willReturn(aResponse().withBody(payload))
-        )
-
-        try {
-            pubnub.messageCounts().apply {
-                channels = listOf("my_channel")
-                channelsTimetoken = listOf(10000L)
-            }.sync()
-        } catch (ex: PubNubException) {
-            assertEquals("History is disabled", ex.errorMessage)
-        }
-    }
-
-    @Test
     @Throws(PubNubException::class)
     fun testSingleChannelWithSingleToken() {
         stubFor(

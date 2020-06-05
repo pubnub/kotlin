@@ -2,9 +2,7 @@ package com.pubnub.api.legacy.managers
 
 import com.github.tomakehurst.wiremock.client.WireMock.*
 import com.google.gson.reflect.TypeToken
-import com.pubnub.api.PubNub
-import com.pubnub.api.PubNubException
-import com.pubnub.api.PubNubUtil
+import com.pubnub.api.*
 import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions
 import com.pubnub.api.enums.PNOperationType
@@ -13,12 +11,6 @@ import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
-import com.pubnub.api.models.consumer.pubsub.PNSignalResult
-import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
-import com.pubnub.api.models.consumer.pubsub.objects.PNMembershipResult
-import com.pubnub.api.models.consumer.pubsub.objects.PNSpaceResult
-import com.pubnub.api.models.consumer.pubsub.objects.PNUserResult
-import com.pubnub.api.toCsv
 import org.awaitility.Awaitility
 import org.hamcrest.Matchers
 import org.hamcrest.core.IsEqual
@@ -128,11 +120,6 @@ class SubscriptionManagerTest : BaseTest() {
                 gotMessages.addAndGet(1)
             }
 
-            override fun signal(pubnub: PubNub, pnSignalResult: PNSignalResult) {}
-            override fun user(pubnub: PubNub, pnUserResult: PNUserResult) {}
-            override fun space(pubnub: PubNub, pnSpaceResult: PNSpaceResult) {}
-            override fun membership(pubnub: PubNub, pnMembershipResult: PNMembershipResult) {}
-            override fun messageAction(pubnub: PubNub, pnMessageActionResult: PNMessageActionResult) {}
         })
 
         Awaitility.await()
@@ -194,11 +181,6 @@ class SubscriptionManagerTest : BaseTest() {
                 gotMessages.addAndGet(1)
             }
 
-            override fun signal(pubnub: PubNub, pnSignalResult: PNSignalResult) {}
-            override fun user(pubnub: PubNub, pnUserResult: PNUserResult) {}
-            override fun space(pubnub: PubNub, pnSpaceResult: PNSpaceResult) {}
-            override fun membership(pubnub: PubNub, pnMembershipResult: PNMembershipResult) {}
-            override fun messageAction(pubnub: PubNub, pnMessageActionResult: PNMessageActionResult) {}
         })
 
         Awaitility.await()
@@ -252,6 +234,11 @@ class SubscriptionManagerTest : BaseTest() {
 
     @Test
     fun testPubNubUnsubscribeAll() {
+        stubFor(
+            get(urlPathMatching("/v2/subscribe/mySubscribeKey/.*"))
+                .willReturn(emptyJson())
+        )
+
         pubnub.subscribe().apply {
             channels = listOf("ch1", "ch2")
             channelGroups = listOf("cg1", "cg2")
@@ -334,12 +321,6 @@ class SubscriptionManagerTest : BaseTest() {
                 gotMessage.set(true)
             }
 
-            override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {}
-            override fun signal(pubnub: PubNub, pnSignalResult: PNSignalResult) {}
-            override fun user(pubnub: PubNub, pnUserResult: PNUserResult) {}
-            override fun space(pubnub: PubNub, pnSpaceResult: PNSpaceResult) {}
-            override fun membership(pubnub: PubNub, pnMembershipResult: PNMembershipResult) {}
-            override fun messageAction(pubnub: PubNub, pnMessageActionResult: PNMessageActionResult) {}
         })
 
         pubnub.subscribe().apply {
@@ -367,7 +348,7 @@ class SubscriptionManagerTest : BaseTest() {
                         """
                             {
                               "t": {
-                                "t": "14607577960932487",
+                                "t": "5",
                                 "r": 1
                               },
                               "m": [
@@ -416,18 +397,18 @@ class SubscriptionManagerTest : BaseTest() {
                 )
         )
 
+        stubFor(
+            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
+                .withQueryParam("tt", matching("5"))
+                .willReturn(emptyJson())
+        )
+
         pubnub.addListener(object : SubscribeCallback() {
             override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {
                 gotMessages.addAndGet(1)
             }
 
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {}
-            override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {}
-            override fun signal(pubnub: PubNub, pnSignalResult: PNSignalResult) {}
-            override fun user(pubnub: PubNub, pnUserResult: PNUserResult) {}
-            override fun space(pubnub: PubNub, pnSpaceResult: PNSpaceResult) {}
-            override fun membership(pubnub: PubNub, pnMembershipResult: PNMembershipResult) {}
-            override fun messageAction(pubnub: PubNub, pnMessageActionResult: PNMessageActionResult) {}
         })
 
         pubnub.subscribe().apply {
@@ -453,7 +434,7 @@ class SubscriptionManagerTest : BaseTest() {
                         """
                             {
                               "t": {
-                                "t": "14607577960932487",
+                                "t": "5",
                                 "r": 1
                               },
                               "m": [
@@ -502,18 +483,18 @@ class SubscriptionManagerTest : BaseTest() {
                 )
         )
 
+        stubFor(
+            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
+                .withQueryParam("tt", matching("5"))
+                .willReturn(emptyJson())
+        )
+
         pubnub.addListener(object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {}
             override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {
                 gotMessages.addAndGet(1)
             }
 
-            override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {}
-            override fun signal(pubnub: PubNub, pnSignalResult: PNSignalResult) {}
-            override fun user(pubnub: PubNub, pnUserResult: PNUserResult) {}
-            override fun space(pubnub: PubNub, pnSpaceResult: PNSpaceResult) {}
-            override fun membership(pubnub: PubNub, pnMembershipResult: PNMembershipResult) {}
-            override fun messageAction(pubnub: PubNub, pnMessageActionResult: PNMessageActionResult) {}
         })
 
         pubnub.subscribe().apply {
@@ -540,7 +521,7 @@ class SubscriptionManagerTest : BaseTest() {
                         """
                             {
                               "t": {
-                                "t": "14607577960932487",
+                                "t": "5",
                                 "r": 1
                               },
                               "m": [
@@ -608,18 +589,18 @@ class SubscriptionManagerTest : BaseTest() {
                 )
         )
 
+        stubFor(
+            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
+                .withQueryParam("tt", matching("5"))
+                .willReturn(notFound())
+        )
+
         pubnub.addListener(object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {}
             override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {
                 gotMessages.addAndGet(1)
             }
 
-            override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {}
-            override fun signal(pubnub: PubNub, pnSignalResult: PNSignalResult) {}
-            override fun user(pubnub: PubNub, pnUserResult: PNUserResult) {}
-            override fun space(pubnub: PubNub, pnSpaceResult: PNSpaceResult) {}
-            override fun membership(pubnub: PubNub, pnMembershipResult: PNMembershipResult) {}
-            override fun messageAction(pubnub: PubNub, pnMessageActionResult: PNMessageActionResult) {}
         })
 
         pubnub.subscribe().apply {
@@ -681,13 +662,6 @@ class SubscriptionManagerTest : BaseTest() {
                 }
             }
 
-            override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {}
-            override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {}
-            override fun signal(pubnub: PubNub, pnSignalResult: PNSignalResult) {}
-            override fun user(pubnub: PubNub, pnUserResult: PNUserResult) {}
-            override fun space(pubnub: PubNub, pnSpaceResult: PNSpaceResult) {}
-            override fun membership(pubnub: PubNub, pnMembershipResult: PNMembershipResult) {}
-            override fun messageAction(pubnub: PubNub, pnMessageActionResult: PNMessageActionResult) {}
         })
 
         pubnub.subscribe().apply {
@@ -749,13 +723,6 @@ class SubscriptionManagerTest : BaseTest() {
                 }
             }
 
-            override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {}
-            override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {}
-            override fun signal(pubnub: PubNub, pnSignalResult: PNSignalResult) {}
-            override fun user(pubnub: PubNub, pnUserResult: PNUserResult) {}
-            override fun space(pubnub: PubNub, pnSpaceResult: PNSpaceResult) {}
-            override fun membership(pubnub: PubNub, pnMembershipResult: PNMembershipResult) {}
-            override fun messageAction(pubnub: PubNub, pnMessageActionResult: PNMessageActionResult) {}
         })
 
         pubnub.subscribe().apply {
@@ -817,13 +784,6 @@ class SubscriptionManagerTest : BaseTest() {
                 }
             }
 
-            override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {}
-            override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {}
-            override fun signal(pubnub: PubNub, pnSignalResult: PNSignalResult) {}
-            override fun user(pubnub: PubNub, pnUserResult: PNUserResult) {}
-            override fun space(pubnub: PubNub, pnSpaceResult: PNSpaceResult) {}
-            override fun membership(pubnub: PubNub, pnMembershipResult: PNMembershipResult) {}
-            override fun messageAction(pubnub: PubNub, pnMessageActionResult: PNMessageActionResult) {}
         })
 
         pubnub.subscribe().apply {
@@ -904,13 +864,6 @@ class SubscriptionManagerTest : BaseTest() {
                 }
             }
 
-            override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {}
-            override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {}
-            override fun signal(pubnub: PubNub, pnSignalResult: PNSignalResult) {}
-            override fun user(pubnub: PubNub, pnUserResult: PNUserResult) {}
-            override fun space(pubnub: PubNub, pnSpaceResult: PNSpaceResult) {}
-            override fun membership(pubnub: PubNub, pnMembershipResult: PNMembershipResult) {}
-            override fun messageAction(pubnub: PubNub, pnMessageActionResult: PNMessageActionResult) {}
         })
 
         pubnub.subscribe().apply {
@@ -962,13 +915,6 @@ class SubscriptionManagerTest : BaseTest() {
                 }
             }
 
-            override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {}
-            override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {}
-            override fun signal(pubnub: PubNub, pnSignalResult: PNSignalResult) {}
-            override fun user(pubnub: PubNub, pnUserResult: PNUserResult) {}
-            override fun space(pubnub: PubNub, pnSpaceResult: PNSpaceResult) {}
-            override fun membership(pubnub: PubNub, pnMembershipResult: PNMembershipResult) {}
-            override fun messageAction(pubnub: PubNub, pnMessageActionResult: PNMessageActionResult) {}
         })
 
         pubnub.subscribe().apply {
@@ -1035,12 +981,6 @@ class SubscriptionManagerTest : BaseTest() {
                 gotMessage.set(true)
             }
 
-            override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {}
-            override fun signal(pubnub: PubNub, pnSignalResult: PNSignalResult) {}
-            override fun user(pubnub: PubNub, pnUserResult: PNUserResult) {}
-            override fun space(pubnub: PubNub, pnSpaceResult: PNSpaceResult) {}
-            override fun membership(pubnub: PubNub, pnMembershipResult: PNMembershipResult) {}
-            override fun messageAction(pubnub: PubNub, pnMessageActionResult: PNMessageActionResult) {}
         })
 
         pubnub.subscribe().apply {
@@ -1097,7 +1037,6 @@ class SubscriptionManagerTest : BaseTest() {
                 }
             }
 
-            override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {}
             override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {
                 val requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")))
                 assertTrue(requests.size >= 1)
@@ -1106,11 +1045,6 @@ class SubscriptionManagerTest : BaseTest() {
                 gotMessage.set(true)
             }
 
-            override fun signal(pubnub: PubNub, pnSignalResult: PNSignalResult) {}
-            override fun user(pubnub: PubNub, pnUserResult: PNUserResult) {}
-            override fun space(pubnub: PubNub, pnSpaceResult: PNSpaceResult) {}
-            override fun membership(pubnub: PubNub, pnMembershipResult: PNMembershipResult) {}
-            override fun messageAction(pubnub: PubNub, pnMessageActionResult: PNMessageActionResult) {}
         })
 
         pubnub.subscribe().apply {
@@ -1173,7 +1107,6 @@ class SubscriptionManagerTest : BaseTest() {
                 }
             }
 
-            override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {}
             override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {
                 val requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")))
                 assertTrue(requests.size >= 1)
@@ -1182,11 +1115,6 @@ class SubscriptionManagerTest : BaseTest() {
                 gotMessage.set(true)
             }
 
-            override fun signal(pubnub: PubNub, pnSignalResult: PNSignalResult) {}
-            override fun user(pubnub: PubNub, pnUserResult: PNUserResult) {}
-            override fun space(pubnub: PubNub, pnSpaceResult: PNSpaceResult) {}
-            override fun membership(pubnub: PubNub, pnMembershipResult: PNMembershipResult) {}
-            override fun messageAction(pubnub: PubNub, pnMessageActionResult: PNMessageActionResult) {}
         })
 
         pubnub.subscribe().apply {
@@ -1307,11 +1235,18 @@ class SubscriptionManagerTest : BaseTest() {
                     )
                 )
         )
+
+        stubFor(
+            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
+                .withQueryParam("tt", matching("20"))
+                .willReturn(emptyJson())
+        )
+
         pubnub.addListener(object : SubscribeCallback() {
-            override fun status(pubnub: PubNub, pnStatus: PNStatus) {}
+            override fun status(pubnub: PubNub, pnStatus: PNStatus) {
+            }
+
             override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {
-                val requests = findAll(getRequestedFor(urlMatching("/v2/subscribe.*")))
-                assertTrue(requests.size >= 1)
                 when (pnMessageResult.message.asJsonObject["text"].asString) {
                     "Message" -> {
                         gotMessage1.set(true)
@@ -1324,13 +1259,6 @@ class SubscriptionManagerTest : BaseTest() {
                     }
                 }
             }
-
-            override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {}
-            override fun signal(pubnub: PubNub, pnSignalResult: PNSignalResult) {}
-            override fun user(pubnub: PubNub, pnUserResult: PNUserResult) {}
-            override fun space(pubnub: PubNub, pnSpaceResult: PNSpaceResult) {}
-            override fun membership(pubnub: PubNub, pnMembershipResult: PNMembershipResult) {}
-            override fun messageAction(pubnub: PubNub, pnMessageActionResult: PNMessageActionResult) {}
         })
 
         pubnub.subscribe().apply {
@@ -1395,12 +1323,6 @@ class SubscriptionManagerTest : BaseTest() {
                 atomic.addAndGet(1)
             }
 
-            override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {}
-            override fun signal(pubnub: PubNub, pnSignalResult: PNSignalResult) {}
-            override fun user(pubnub: PubNub, pnUserResult: PNUserResult) {}
-            override fun space(pubnub: PubNub, pnSpaceResult: PNSpaceResult) {}
-            override fun membership(pubnub: PubNub, pnMembershipResult: PNMembershipResult) {}
-            override fun messageAction(pubnub: PubNub, pnMessageActionResult: PNMessageActionResult) {}
         })
 
         pubnub.subscribe().apply {
@@ -1467,12 +1389,6 @@ class SubscriptionManagerTest : BaseTest() {
                 atomic.addAndGet(1)
             }
 
-            override fun presence(pubnub: PubNub, presence: PNPresenceEventResult) {}
-            override fun signal(pubnub: PubNub, pnSignalResult: PNSignalResult) {}
-            override fun user(pubnub: PubNub, pnUserResult: PNUserResult) {}
-            override fun space(pubnub: PubNub, pnSpaceResult: PNSpaceResult) {}
-            override fun membership(pubnub: PubNub, pnMembershipResult: PNMembershipResult) {}
-            override fun messageAction(pubnub: PubNub, pnMessageActionResult: PNMessageActionResult) {}
         })
 
         pubnub.subscribe().apply {
@@ -1492,10 +1408,12 @@ class SubscriptionManagerTest : BaseTest() {
         val expectedPayload = PubNubUtil.urlDecode(
             """%7B%22ch1%22%3A%5B%22p1%22%2C%22p2%22%5D%2C%22cg2%22%3A%5B%22p1%22%2C%22p2%22%5D%7D"""
         )
+
         val expectedMap = pubnub.mapper.fromJson<HashMap<String, Any>?>(
             expectedPayload,
             object : TypeToken<HashMap<String, Any>?>() {}.type
         )
+
         stubFor(
             get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
                 .willReturn(
@@ -1528,6 +1446,17 @@ class SubscriptionManagerTest : BaseTest() {
                     )
                 )
         )
+
+        stubFor(
+            get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch2,ch1/heartbeat"))
+                .willReturn(emptyJson())
+        )
+
+        stubFor(
+            get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch1/uuid/myUUID/data"))
+                .willReturn(emptyJson())
+        )
+
         pubnub.configuration.presenceTimeout = 20
         pubnub.configuration.heartbeatNotificationOptions = PNHeartbeatNotificationOptions.ALL
 
@@ -1569,15 +1498,7 @@ class SubscriptionManagerTest : BaseTest() {
                 }
             }
 
-            override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {}
-            override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {}
-            override fun signal(pubnub: PubNub, pnSignalResult: PNSignalResult) {}
-            override fun user(pubnub: PubNub, pnUserResult: PNUserResult) {}
-            override fun space(pubnub: PubNub, pnSpaceResult: PNSpaceResult) {}
-            override fun membership(pubnub: PubNub, pnMembershipResult: PNMembershipResult) {}
-            override fun messageAction(pubnub: PubNub, pnMessageActionResult: PNMessageActionResult) {}
         })
-
 
         pubnub.subscribe().apply {
             channels = listOf("ch1", "ch2")
@@ -1642,12 +1563,6 @@ class SubscriptionManagerTest : BaseTest() {
                 }
             }
 
-            override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {}
-            override fun signal(pubnub: PubNub, pnSignalResult: PNSignalResult) {}
-            override fun user(pubnub: PubNub, pnUserResult: PNUserResult) {}
-            override fun space(pubnub: PubNub, pnSpaceResult: PNSpaceResult) {}
-            override fun membership(pubnub: PubNub, pnMembershipResult: PNMembershipResult) {}
-            override fun messageAction(pubnub: PubNub, pnMessageActionResult: PNMessageActionResult) {}
         })
 
         pubnub.subscribe().apply {
@@ -1710,12 +1625,6 @@ class SubscriptionManagerTest : BaseTest() {
                 }
             }
 
-            override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {}
-            override fun signal(pubnub: PubNub, pnSignalResult: PNSignalResult) {}
-            override fun user(pubnub: PubNub, pnUserResult: PNUserResult) {}
-            override fun space(pubnub: PubNub, pnSpaceResult: PNSpaceResult) {}
-            override fun membership(pubnub: PubNub, pnMembershipResult: PNMembershipResult) {}
-            override fun messageAction(pubnub: PubNub, pnMessageActionResult: PNMessageActionResult) {}
         })
 
         pubnub.subscribe().apply {
@@ -1745,7 +1654,7 @@ class SubscriptionManagerTest : BaseTest() {
                         """
                             {
                               "t": {
-                                "t": "14607577960932487",
+                                "t": "5",
                                 "r": 1
                               },
                               "m": [
@@ -1770,6 +1679,13 @@ class SubscriptionManagerTest : BaseTest() {
                     )
                 )
         )
+
+        stubFor(
+            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
+                .withQueryParam("tt", matching("5"))
+                .willReturn(notFound())
+        )
+
         pubnub.addListener(object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {}
             override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {
@@ -1779,12 +1695,6 @@ class SubscriptionManagerTest : BaseTest() {
                 atomic.set(true)
             }
 
-            override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {}
-            override fun signal(pubnub: PubNub, pnSignalResult: PNSignalResult) {}
-            override fun user(pubnub: PubNub, pnUserResult: PNUserResult) {}
-            override fun space(pubnub: PubNub, pnSpaceResult: PNSpaceResult) {}
-            override fun membership(pubnub: PubNub, pnMembershipResult: PNMembershipResult) {}
-            override fun messageAction(pubnub: PubNub, pnMessageActionResult: PNMessageActionResult) {}
         })
 
         pubnub.subscribe().apply {
@@ -1836,12 +1746,6 @@ class SubscriptionManagerTest : BaseTest() {
                 atomic.addAndGet(1)
             }
 
-            override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {}
-            override fun signal(pubnub: PubNub, pnSignalResult: PNSignalResult) {}
-            override fun user(pubnub: PubNub, pnUserResult: PNUserResult) {}
-            override fun space(pubnub: PubNub, pnSpaceResult: PNSpaceResult) {}
-            override fun membership(pubnub: PubNub, pnMembershipResult: PNMembershipResult) {}
-            override fun messageAction(pubnub: PubNub, pnMessageActionResult: PNMessageActionResult) {}
         })
 
         pubnub.subscribe().apply {
@@ -1902,12 +1806,6 @@ class SubscriptionManagerTest : BaseTest() {
                 atomic.addAndGet(1)
             }
 
-            override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {}
-            override fun signal(pubnub: PubNub, pnSignalResult: PNSignalResult) {}
-            override fun user(pubnub: PubNub, pnUserResult: PNUserResult) {}
-            override fun space(pubnub: PubNub, pnSpaceResult: PNSpaceResult) {}
-            override fun membership(pubnub: PubNub, pnMembershipResult: PNMembershipResult) {}
-            override fun messageAction(pubnub: PubNub, pnMessageActionResult: PNMessageActionResult) {}
         })
 
         pubnub.subscribe().apply {
@@ -1964,12 +1862,6 @@ class SubscriptionManagerTest : BaseTest() {
                 atomic.addAndGet(1)
             }
 
-            override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {}
-            override fun signal(pubnub: PubNub, pnSignalResult: PNSignalResult) {}
-            override fun user(pubnub: PubNub, pnUserResult: PNUserResult) {}
-            override fun space(pubnub: PubNub, pnSpaceResult: PNSpaceResult) {}
-            override fun membership(pubnub: PubNub, pnMembershipResult: PNMembershipResult) {}
-            override fun messageAction(pubnub: PubNub, pnMessageActionResult: PNMessageActionResult) {}
         })
 
         pubnub.subscribe().apply {
@@ -2025,7 +1917,6 @@ class SubscriptionManagerTest : BaseTest() {
         )
         pubnub.addListener(object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {}
-            override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {}
             override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {
                 if (atomic.get() == 0) {
                     assertEquals(true, pnPresenceEventResult.hereNowRefresh)
@@ -2034,11 +1925,6 @@ class SubscriptionManagerTest : BaseTest() {
                 }
             }
 
-            override fun signal(pubnub: PubNub, pnSignalResult: PNSignalResult) {}
-            override fun user(pubnub: PubNub, pnUserResult: PNUserResult) {}
-            override fun space(pubnub: PubNub, pnSpaceResult: PNSpaceResult) {}
-            override fun membership(pubnub: PubNub, pnMembershipResult: PNMembershipResult) {}
-            override fun messageAction(pubnub: PubNub, pnMessageActionResult: PNMessageActionResult) {}
         })
 
         pubnub.subscribe().apply {
@@ -2093,7 +1979,6 @@ class SubscriptionManagerTest : BaseTest() {
         )
         pubnub.addListener(object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {}
-            override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {}
             override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {
                 if (atomic.get() == 0) {
                     val joinList: MutableList<String> = ArrayList()
@@ -2106,11 +1991,6 @@ class SubscriptionManagerTest : BaseTest() {
                 }
             }
 
-            override fun signal(pubnub: PubNub, pnSignalResult: PNSignalResult) {}
-            override fun user(pubnub: PubNub, pnUserResult: PNUserResult) {}
-            override fun space(pubnub: PubNub, pnSpaceResult: PNSpaceResult) {}
-            override fun membership(pubnub: PubNub, pnMembershipResult: PNMembershipResult) {}
-            override fun messageAction(pubnub: PubNub, pnMessageActionResult: PNMessageActionResult) {}
         })
 
         pubnub.subscribe().apply {
@@ -2165,7 +2045,6 @@ class SubscriptionManagerTest : BaseTest() {
         )
         pubnub.addListener(object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {}
-            override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {}
             override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {
                 if (atomic.get() == 0) {
                     val leaveList: MutableList<String> = ArrayList()
@@ -2178,11 +2057,6 @@ class SubscriptionManagerTest : BaseTest() {
                 }
             }
 
-            override fun signal(pubnub: PubNub, pnSignalResult: PNSignalResult) {}
-            override fun user(pubnub: PubNub, pnUserResult: PNUserResult) {}
-            override fun space(pubnub: PubNub, pnSpaceResult: PNSpaceResult) {}
-            override fun membership(pubnub: PubNub, pnMembershipResult: PNMembershipResult) {}
-            override fun messageAction(pubnub: PubNub, pnMessageActionResult: PNMessageActionResult) {}
         })
 
         pubnub.subscribe().apply {
@@ -2237,7 +2111,6 @@ class SubscriptionManagerTest : BaseTest() {
         )
         pubnub.addListener(object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {}
-            override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {}
             override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {
                 if (atomic.get() == 0) {
                     val timeoutList = listOf(
@@ -2251,11 +2124,6 @@ class SubscriptionManagerTest : BaseTest() {
                 }
             }
 
-            override fun signal(pubnub: PubNub, pnSignalResult: PNSignalResult) {}
-            override fun user(pubnub: PubNub, pnUserResult: PNUserResult) {}
-            override fun space(pubnub: PubNub, pnSpaceResult: PNSpaceResult) {}
-            override fun membership(pubnub: PubNub, pnMembershipResult: PNMembershipResult) {}
-            override fun messageAction(pubnub: PubNub, pnMessageActionResult: PNMessageActionResult) {}
         })
 
         pubnub.subscribe().apply {
@@ -2308,7 +2176,6 @@ class SubscriptionManagerTest : BaseTest() {
 
         pubnub.addListener(object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {}
-            override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {}
             override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {
                 if (atomic.get() == 0) {
                     assertEquals("join", pnPresenceEventResult.event)
@@ -2319,11 +2186,6 @@ class SubscriptionManagerTest : BaseTest() {
                 }
             }
 
-            override fun signal(pubnub: PubNub, pnSignalResult: PNSignalResult) {}
-            override fun user(pubnub: PubNub, pnUserResult: PNUserResult) {}
-            override fun space(pubnub: PubNub, pnSpaceResult: PNSpaceResult) {}
-            override fun membership(pubnub: PubNub, pnMembershipResult: PNMembershipResult) {}
-            override fun messageAction(pubnub: PubNub, pnMessageActionResult: PNMessageActionResult) {}
         })
 
         pubnub.subscribe().apply {
@@ -2395,7 +2257,6 @@ class SubscriptionManagerTest : BaseTest() {
         )
         pubnub.addListener(object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {}
-            override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {}
             override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {
                 if (pnPresenceEventResult.event == "state-change") {
                     if (pnPresenceEventResult.state!!.asJsonObject.has("state") &&
@@ -2406,11 +2267,6 @@ class SubscriptionManagerTest : BaseTest() {
                 }
             }
 
-            override fun signal(pubnub: PubNub, pnSignalResult: PNSignalResult) {}
-            override fun user(pubnub: PubNub, pnUserResult: PNUserResult) {}
-            override fun space(pubnub: PubNub, pnSpaceResult: PNSpaceResult) {}
-            override fun membership(pubnub: PubNub, pnMembershipResult: PNMembershipResult) {}
-            override fun messageAction(pubnub: PubNub, pnMessageActionResult: PNMessageActionResult) {}
         })
 
         pubnub.subscribe().apply {
@@ -2470,12 +2326,6 @@ class SubscriptionManagerTest : BaseTest() {
                 }
             }
 
-            override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {}
-            override fun signal(pubnub: PubNub, pnSignalResult: PNSignalResult) {}
-            override fun user(pubnub: PubNub, pnUserResult: PNUserResult) {}
-            override fun space(pubnub: PubNub, pnSpaceResult: PNSpaceResult) {}
-            override fun membership(pubnub: PubNub, pnMembershipResult: PNMembershipResult) {}
-            override fun messageAction(pubnub: PubNub, pnMessageActionResult: PNMessageActionResult) {}
         })
 
         pubnub.subscribe().apply {
@@ -2490,6 +2340,11 @@ class SubscriptionManagerTest : BaseTest() {
 
     @Test
     fun testRemoveListener() {
+        stubFor(
+            get(urlPathMatching("/v2/subscribe/mySubscribeKey/.*"))
+                .willReturn(emptyJson())
+        )
+
         val atomic = AtomicInteger(0)
         val sub1: SubscribeCallback = object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
@@ -2504,11 +2359,6 @@ class SubscriptionManagerTest : BaseTest() {
                 atomic.addAndGet(1)
             }
 
-            override fun signal(pubnub: PubNub, pnSignalResult: PNSignalResult) {}
-            override fun user(pubnub: PubNub, pnUserResult: PNUserResult) {}
-            override fun space(pubnub: PubNub, pnSpaceResult: PNSpaceResult) {}
-            override fun membership(pubnub: PubNub, pnMembershipResult: PNMembershipResult) {}
-            override fun messageAction(pubnub: PubNub, pnMessageActionResult: PNMessageActionResult) {}
         }
 
         pubnub.addListener(sub1)
@@ -2633,12 +2483,6 @@ class SubscriptionManagerTest : BaseTest() {
                 }
             }
 
-            override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {}
-            override fun signal(pubnub: PubNub, pnSignalResult: PNSignalResult) {}
-            override fun user(pubnub: PubNub, pnUserResult: PNUserResult) {}
-            override fun space(pubnub: PubNub, pnSpaceResult: PNSpaceResult) {}
-            override fun membership(pubnub: PubNub, pnMembershipResult: PNMembershipResult) {}
-            override fun messageAction(pubnub: PubNub, pnMessageActionResult: PNMessageActionResult) {}
         }
         pubnub.addListener(sub1)
 
@@ -2719,13 +2563,6 @@ class SubscriptionManagerTest : BaseTest() {
                 }
             }
 
-            override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {}
-            override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {}
-            override fun signal(pubnub: PubNub, pnSignalResult: PNSignalResult) {}
-            override fun user(pubnub: PubNub, pnUserResult: PNUserResult) {}
-            override fun space(pubnub: PubNub, pnSpaceResult: PNSpaceResult) {}
-            override fun membership(pubnub: PubNub, pnMembershipResult: PNMembershipResult) {}
-            override fun messageAction(pubnub: PubNub, pnMessageActionResult: PNMessageActionResult) {}
         }
         pubnub.addListener(sub1)
 
@@ -2767,13 +2604,6 @@ class SubscriptionManagerTest : BaseTest() {
                 }
             }
 
-            override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {}
-            override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {}
-            override fun signal(pubnub: PubNub, pnSignalResult: PNSignalResult) {}
-            override fun user(pubnub: PubNub, pnUserResult: PNUserResult) {}
-            override fun space(pubnub: PubNub, pnSpaceResult: PNSpaceResult) {}
-            override fun membership(pubnub: PubNub, pnMembershipResult: PNMembershipResult) {}
-            override fun messageAction(pubnub: PubNub, pnMessageActionResult: PNMessageActionResult) {}
         }
         assertNotNull(sub1)
         pubnub.addListener(sub1)
@@ -2816,13 +2646,6 @@ class SubscriptionManagerTest : BaseTest() {
                 }
             }
 
-            override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {}
-            override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {}
-            override fun signal(pubnub: PubNub, pnSignalResult: PNSignalResult) {}
-            override fun user(pubnub: PubNub, pnUserResult: PNUserResult) {}
-            override fun space(pubnub: PubNub, pnSpaceResult: PNSpaceResult) {}
-            override fun membership(pubnub: PubNub, pnMembershipResult: PNMembershipResult) {}
-            override fun messageAction(pubnub: PubNub, pnMessageActionResult: PNMessageActionResult) {}
         }
 
         pubnub.addListener(sub1)
@@ -2845,13 +2668,13 @@ class SubscriptionManagerTest : BaseTest() {
         pubnub.configuration.heartbeatNotificationOptions = PNHeartbeatNotificationOptions.FAILURES
 
         stubFor(
-            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch2-pnpres,ch1,ch1-pnpres/0"))
+            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1,ch2-pnpres,ch1-pnpres/0"))
                 .willReturn(
                     aResponse().withBody(
                         """
                             {
                               "t": {
-                                "t": "14607577960932487",
+                                "t": "5",
                                 "r": 1
                               },
                               "m": [
@@ -2876,6 +2699,18 @@ class SubscriptionManagerTest : BaseTest() {
                     )
                 )
         )
+
+        stubFor(
+            get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch2,ch1/heartbeat"))
+                .willReturn(aResponse().withStatus(404).withBody("{}"))
+        )
+
+        stubFor(
+            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1,ch2-pnpres,ch1-pnpres/0"))
+                .withQueryParam("tt", matching("5"))
+                .willReturn(notFound())
+        )
+
         val sub1: SubscribeCallback = object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
                 if (pnStatus.operation == PNOperationType.PNHeartbeatOperation) {
@@ -2883,13 +2718,6 @@ class SubscriptionManagerTest : BaseTest() {
                 }
             }
 
-            override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {}
-            override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {}
-            override fun signal(pubnub: PubNub, pnSignalResult: PNSignalResult) {}
-            override fun user(pubnub: PubNub, pnUserResult: PNUserResult) {}
-            override fun space(pubnub: PubNub, pnSpaceResult: PNSpaceResult) {}
-            override fun membership(pubnub: PubNub, pnMembershipResult: PNMembershipResult) {}
-            override fun messageAction(pubnub: PubNub, pnMessageActionResult: PNMessageActionResult) {}
         }
 
         pubnub.addListener(sub1)
@@ -2912,13 +2740,14 @@ class SubscriptionManagerTest : BaseTest() {
         pubnub.configuration.heartbeatNotificationOptions = PNHeartbeatNotificationOptions.ALL
 
         stubFor(
-            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch2-pnpres,ch1,ch1-pnpres/0"))
+            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1,ch2-pnpres,ch1-pnpres/0"))
+                .withQueryParam("tt", matching("0"))
                 .willReturn(
                     aResponse().withBody(
                         """
                             {
                               "t": {
-                                "t": "14607577960932487",
+                                "t": "5",
                                 "r": 1
                               },
                               "m": [
@@ -2944,6 +2773,17 @@ class SubscriptionManagerTest : BaseTest() {
                 )
         )
 
+        stubFor(
+            get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch2,ch1/heartbeat"))
+                .willReturn(emptyJson().withStatus(403))
+        )
+
+        stubFor(
+            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1,ch2-pnpres,ch1-pnpres/0"))
+                .withQueryParam("tt", matching("5"))
+                .willReturn(notFound())
+        )
+
         val sub1: SubscribeCallback = object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
                 if (pnStatus.operation == PNOperationType.PNHeartbeatOperation && pnStatus.error) {
@@ -2951,13 +2791,6 @@ class SubscriptionManagerTest : BaseTest() {
                 }
             }
 
-            override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {}
-            override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {}
-            override fun signal(pubnub: PubNub, pnSignalResult: PNSignalResult) {}
-            override fun user(pubnub: PubNub, pnUserResult: PNUserResult) {}
-            override fun space(pubnub: PubNub, pnSpaceResult: PNSpaceResult) {}
-            override fun membership(pubnub: PubNub, pnMembershipResult: PNMembershipResult) {}
-            override fun messageAction(pubnub: PubNub, pnMessageActionResult: PNMessageActionResult) {}
         }
         pubnub.addListener(sub1)
 
@@ -2978,7 +2811,7 @@ class SubscriptionManagerTest : BaseTest() {
         pubnub.configuration.heartbeatNotificationOptions = PNHeartbeatNotificationOptions.NONE
 
         stubFor(
-            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch2-pnpres,ch1,ch1-pnpres/0"))
+            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1,ch2-pnpres,ch1-pnpres/0"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -3015,13 +2848,6 @@ class SubscriptionManagerTest : BaseTest() {
                 }
             }
 
-            override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {}
-            override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {}
-            override fun signal(pubnub: PubNub, pnSignalResult: PNSignalResult) {}
-            override fun user(pubnub: PubNub, pnUserResult: PNUserResult) {}
-            override fun space(pubnub: PubNub, pnSpaceResult: PNSpaceResult) {}
-            override fun membership(pubnub: PubNub, pnMembershipResult: PNMembershipResult) {}
-            override fun messageAction(pubnub: PubNub, pnMessageActionResult: PNMessageActionResult) {}
         }
 
         pubnub.addListener(sub1)
@@ -3043,7 +2869,7 @@ class SubscriptionManagerTest : BaseTest() {
         pubnub.configuration.heartbeatNotificationOptions = PNHeartbeatNotificationOptions.NONE
 
         stubFor(
-            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch2-pnpres,ch1,ch1-pnpres/0"))
+            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1,ch2-pnpres,ch1-pnpres/0"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -3074,6 +2900,7 @@ class SubscriptionManagerTest : BaseTest() {
                     )
                 )
         )
+
         stubFor(
             get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch2,ch1/heartbeat"))
                 .willReturn(
@@ -3089,6 +2916,7 @@ class SubscriptionManagerTest : BaseTest() {
                     )
                 )
         )
+
         val sub1: SubscribeCallback = object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
                 if (pnStatus.operation != PNOperationType.PNHeartbeatOperation) {
@@ -3096,13 +2924,6 @@ class SubscriptionManagerTest : BaseTest() {
                 }
             }
 
-            override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {}
-            override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {}
-            override fun signal(pubnub: PubNub, pnSignalResult: PNSignalResult) {}
-            override fun user(pubnub: PubNub, pnUserResult: PNUserResult) {}
-            override fun space(pubnub: PubNub, pnSpaceResult: PNSpaceResult) {}
-            override fun membership(pubnub: PubNub, pnMembershipResult: PNMembershipResult) {}
-            override fun messageAction(pubnub: PubNub, pnMessageActionResult: PNMessageActionResult) {}
         }
         pubnub.addListener(sub1)
 
@@ -3173,13 +2994,6 @@ class SubscriptionManagerTest : BaseTest() {
                 }
             }
 
-            override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {}
-            override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {}
-            override fun signal(pubnub: PubNub, pnSignalResult: PNSignalResult) {}
-            override fun user(pubnub: PubNub, pnUserResult: PNUserResult) {}
-            override fun space(pubnub: PubNub, pnSpaceResult: PNSpaceResult) {}
-            override fun membership(pubnub: PubNub, pnMembershipResult: PNMembershipResult) {}
-            override fun messageAction(pubnub: PubNub, pnMessageActionResult: PNMessageActionResult) {}
         })
 
         pubnub.subscribe().apply {
@@ -3256,13 +3070,6 @@ class SubscriptionManagerTest : BaseTest() {
                 }
             }
 
-            override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {}
-            override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {}
-            override fun signal(pubnub: PubNub, pnSignalResult: PNSignalResult) {}
-            override fun user(pubnub: PubNub, pnUserResult: PNUserResult) {}
-            override fun space(pubnub: PubNub, pnSpaceResult: PNSpaceResult) {}
-            override fun membership(pubnub: PubNub, pnMembershipResult: PNMembershipResult) {}
-            override fun messageAction(pubnub: PubNub, pnMessageActionResult: PNMessageActionResult) {}
         })
 
         pubnub.subscribe().apply {
@@ -3417,13 +3224,6 @@ class SubscriptionManagerTest : BaseTest() {
                 }
             }
 
-            override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {}
-            override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {}
-            override fun signal(pubnub: PubNub, pnSignalResult: PNSignalResult) {}
-            override fun user(pubnub: PubNub, pnUserResult: PNUserResult) {}
-            override fun space(pubnub: PubNub, pnSpaceResult: PNSpaceResult) {}
-            override fun membership(pubnub: PubNub, pnMembershipResult: PNMembershipResult) {}
-            override fun messageAction(pubnub: PubNub, pnMessageActionResult: PNMessageActionResult) {}
         }
 
         pubnub.addListener(sub1)
