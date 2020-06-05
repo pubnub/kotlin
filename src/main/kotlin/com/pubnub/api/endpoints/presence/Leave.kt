@@ -6,7 +6,7 @@ import retrofit2.Call
 import retrofit2.Response
 import java.util.*
 
-internal class Leave(pubnub: PubNub) : Endpoint<Any, Boolean>(pubnub) {
+class Leave internal constructor(pubnub: PubNub) : Endpoint<Void, Boolean>(pubnub) {
 
     var channels = emptyList<String>()
     var channelGroups = emptyList<String>()
@@ -21,7 +21,7 @@ internal class Leave(pubnub: PubNub) : Endpoint<Any, Boolean>(pubnub) {
     override fun getAffectedChannels() = channels
     override fun getAffectedChannelGroups() = channelGroups
 
-    override fun doWork(queryParams: HashMap<String, String>): Call<Any> {
+    override fun doWork(queryParams: HashMap<String, String>): Call<Void> {
         queryParams["channel-group"] = channelGroups.toCsv()
 
         return pubnub.retrofitManager.presenceService.leave(
@@ -31,7 +31,7 @@ internal class Leave(pubnub: PubNub) : Endpoint<Any, Boolean>(pubnub) {
         )
     }
 
-    override fun createResponse(input: Response<Any>) = true
+    override fun createResponse(input: Response<Void>) = true
 
     override fun operationType() = PNOperationType.PNUnsubscribeOperation
 }

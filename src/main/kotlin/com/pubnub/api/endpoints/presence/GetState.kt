@@ -42,18 +42,16 @@ class GetState(pubnub: PubNub) : Endpoint<Envelope<JsonElement>, PNGetStateResul
     override fun createResponse(input: Response<Envelope<JsonElement>>): PNGetStateResult? {
         val stateMappings = hashMapOf<String, JsonElement>()
         if (channels.size == 1 && channelGroups.isEmpty()) {
-            stateMappings[channels.first()] = input.body()?.payload!!
+            stateMappings[channels.first()] = input.body()!!.payload!!
         } else {
-            val it = pubnub.mapper.getObjectIterator(input.body()?.payload!!)
+            val it = pubnub.mapper.getObjectIterator(input.body()!!.payload!!)
             while (it.hasNext()) {
                 val stateMapping = it.next()
                 stateMappings[stateMapping.key] = stateMapping.value
             }
         }
 
-        return PNGetStateResult(
-            stateByUUID = stateMappings
-        )
+        return PNGetStateResult(stateMappings)
     }
 
     override fun operationType() = PNOperationType.PNGetState

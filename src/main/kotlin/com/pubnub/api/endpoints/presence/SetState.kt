@@ -1,6 +1,7 @@
 package com.pubnub.api.endpoints.presence
 
 import com.google.gson.JsonElement
+import com.google.gson.JsonNull
 import com.pubnub.api.*
 import com.pubnub.api.builder.StateOperation
 import com.pubnub.api.enums.PNOperationType
@@ -10,8 +11,7 @@ import retrofit2.Call
 import retrofit2.Response
 import java.util.*
 
-class SetState(pubnub: PubNub) :
-    Endpoint<Envelope<JsonElement>, PNSetStateResult>(pubnub) {
+class SetState(pubnub: PubNub) : Endpoint<Envelope<JsonElement>, PNSetStateResult>(pubnub) {
 
     var channels = emptyList<String>()
     var channelGroups = emptyList<String>()
@@ -57,9 +57,10 @@ class SetState(pubnub: PubNub) :
     }
 
     override fun createResponse(input: Response<Envelope<JsonElement>>): PNSetStateResult? {
-        return PNSetStateResult(
-            state = input.body()!!.payload!!
-        )
+        if (input.body()!!.payload!! is JsonNull) {
+            throw PubNubException(PubNubError.PARSING_ERROR)
+        }
+        return PNSetStateResult(input.body()!!.payload!!)
     }
 
     override fun operationType() = PNOperationType.PNSetStateOperation
