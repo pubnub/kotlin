@@ -3,12 +3,11 @@ package com.pubnub.api.endpoints
 import com.pubnub.api.*
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.history.PNDeleteMessagesResult
-import com.pubnub.api.models.server.DeleteMessagesEnvelope
 import retrofit2.Call
 import retrofit2.Response
 import java.util.*
 
-class DeleteMessages(pubnub: PubNub) : Endpoint<DeleteMessagesEnvelope, PNDeleteMessagesResult>(pubnub) {
+class DeleteMessages(pubnub: PubNub) : Endpoint<Void, PNDeleteMessagesResult>(pubnub) {
 
     lateinit var channels: List<String>
     var start: Long? = null
@@ -21,7 +20,7 @@ class DeleteMessages(pubnub: PubNub) : Endpoint<DeleteMessagesEnvelope, PNDelete
         }
     }
 
-    override fun doWork(queryParams: HashMap<String, String>): Call<DeleteMessagesEnvelope> {
+    override fun doWork(queryParams: HashMap<String, String>): Call<Void> {
         start?.let {
             queryParams["start"] = it.toString().toLowerCase(Locale.US)
         }
@@ -36,10 +35,7 @@ class DeleteMessages(pubnub: PubNub) : Endpoint<DeleteMessagesEnvelope, PNDelete
         )
     }
 
-    override fun createResponse(input: Response<DeleteMessagesEnvelope>): PNDeleteMessagesResult? {
-        if (input.body()!!.status != 200) {
-            throw PubNubException(PubNubError.PARSING_ERROR)
-        }
+    override fun createResponse(input: Response<Void>): PNDeleteMessagesResult? {
         return PNDeleteMessagesResult()
     }
 
