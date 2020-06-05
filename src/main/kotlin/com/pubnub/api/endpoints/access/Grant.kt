@@ -63,8 +63,8 @@ class Grant(pubnub: PubNub) : Endpoint<Envelope<AccessManagerGrantPayload>, PNAc
     override fun createResponse(input: Response<Envelope<AccessManagerGrantPayload>>): PNAccessManagerGrantResult? {
         val data = input.body()!!.payload!!
 
-        val constructedChannels = mutableMapOf<String, Map<String, PNAccessManagerKeyData>>()
-        val constructedGroups = mutableMapOf<String, Map<String, PNAccessManagerKeyData>>()
+        val constructedChannels = mutableMapOf<String, Map<String, PNAccessManagerKeyData>?>()
+        val constructedGroups = mutableMapOf<String, Map<String, PNAccessManagerKeyData>?>()
 
         // we have a case of a singular channel.
         data.channel?.let {
@@ -82,13 +82,13 @@ class Grant(pubnub: PubNub) : Endpoint<Envelope<AccessManagerGrantPayload>, PNAc
         }
 
         data.channels?.forEach {
-            constructedChannels[it.key] = data.channels[it.key]!!.authKeys!!
+            constructedChannels[it.key] = data.channels[it.key]!!.authKeys
         }
 
         return PNAccessManagerGrantResult(
-            level = data.level,
+            level = data.level!!,
             ttl = data.ttl,
-            subscribeKey = data.subscribeKey,
+            subscribeKey = data.subscribeKey!!,
             channels = constructedChannels,
             channelGroups = constructedGroups
         )
@@ -105,6 +105,7 @@ class Grant(pubnub: PubNub) : Endpoint<Envelope<AccessManagerGrantPayload>, PNAc
             pnAccessManagerKeyData.manageEnabled = (pubnub.mapper.getAsBoolean(keyMap.value, "m"))
             pnAccessManagerKeyData.writeEnabled = (pubnub.mapper.getAsBoolean(keyMap.value, "w"))
             pnAccessManagerKeyData.readEnabled = (pubnub.mapper.getAsBoolean(keyMap.value, "r"))
+            pnAccessManagerKeyData.deleteEnabled = (pubnub.mapper.getAsBoolean(keyMap.value, "d"))
             result[keyMap.key] = pnAccessManagerKeyData
         }
         return result
