@@ -7,7 +7,7 @@ import retrofit2.Call
 import retrofit2.Response
 import java.util.*
 
-class Subscribe(pubnub: PubNub) : Endpoint<SubscribeEnvelope, SubscribeEnvelope>(pubnub) {
+class Subscribe internal constructor(pubnub: PubNub) : Endpoint<SubscribeEnvelope, SubscribeEnvelope>(pubnub) {
 
     var channels = emptyList<String>()
     var channelGroups = emptyList<String>()
@@ -58,7 +58,7 @@ class Subscribe(pubnub: PubNub) : Endpoint<SubscribeEnvelope, SubscribeEnvelope>
     }
 
     override fun createResponse(input: Response<SubscribeEnvelope>): SubscribeEnvelope? {
-        return input.body()
+        return input.body()!!
     }
 
     override fun operationType() = PNOperationType.PNSubscribeOperation
