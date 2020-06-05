@@ -44,9 +44,7 @@ class GetMessageActions(pubnub: PubNub) :
     }
 
     override fun createResponse(input: Response<EntityEnvelope<List<PNMessageAction>>>): PNGetMessageActionsResult? {
-        return PNGetMessageActionsResult().apply {
-            actions = input.body()!!.data!!
-        }
+        return PNGetMessageActionsResult(input.body()!!.data!!)
     }
 
     override fun operationType() = PNOperationType.PNGetMessageActions
