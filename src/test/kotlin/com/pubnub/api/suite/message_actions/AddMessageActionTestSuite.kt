@@ -1,13 +1,16 @@
-package com.pubnub.api.suite
+package com.pubnub.api.suite.message_actions
 
 import com.github.tomakehurst.wiremock.client.WireMock.*
 import com.pubnub.api.endpoints.message_actions.AddMessageAction
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.message_actions.PNAddMessageActionResult
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
+import com.pubnub.api.suite.AUTH
+import com.pubnub.api.suite.EndpointTestSuite
+import com.pubnub.api.suite.SUB
 import org.junit.jupiter.api.Assertions.assertEquals
 
-class MessageActionTestSuite : EndpointTestSuite<AddMessageAction, PNAddMessageActionResult>() {
+class AddMessageActionTestSuite : EndpointTestSuite<AddMessageAction, PNAddMessageActionResult>() {
 
     override fun telemetryParamName() = "l_msga"
 
@@ -46,11 +49,11 @@ class MessageActionTestSuite : EndpointTestSuite<AddMessageAction, PNAddMessageA
     )
 
     override fun verifyResultExpectations(result: PNAddMessageActionResult) {
-        assertEquals(123, result.messageTimetoken)
+        assertEquals(123L, result.messageTimetoken)
         assertEquals("reaction", result.type)
         assertEquals("someUuid", result.uuid)
         assertEquals("smiley", result.value)
-        assertEquals(1000, result.actionTimetoken)
+        assertEquals(1000L, result.actionTimetoken)
     }
 
     override fun mappingBuilder() =
