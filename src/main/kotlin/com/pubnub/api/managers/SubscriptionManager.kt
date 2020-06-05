@@ -198,8 +198,8 @@ class SubscriptionManager(val pubnub: PubNub) {
         groups.addAll(heartbeatChannelGroups)
         heartbeatCall = Heartbeat(pubnub, channels, groups)
         heartbeatCall?.async { _, status ->
-            val heartbeatVerbosity: PNHeartbeatNotificationOptions =
-                pubnub.configuration.heartbeatNotificationOptions
+            val heartbeatVerbosity = pubnub.configuration.heartbeatNotificationOptions
+
             if (status.error) {
                 if (heartbeatVerbosity == PNHeartbeatNotificationOptions.ALL
                     || heartbeatVerbosity == PNHeartbeatNotificationOptions.FAILURES

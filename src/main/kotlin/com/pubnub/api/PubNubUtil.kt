@@ -109,8 +109,6 @@ class PubNubUtil {
                 preparePamArguments("${request.url().encodedQuery()}&timestamp=${timestamp}")
             }
 
-            println("encodedQueryString $encodedQueryString")
-
             isV2Signature = !(requestURL.startsWith("/publish") && request.method().equals("post", ignoreCase = true))
             if (!isV2Signature) {
                 signatureBuilder.append(configuration.subscribeKey).append("\n")

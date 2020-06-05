@@ -6,12 +6,7 @@ import java.text.NumberFormat
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
-import kotlin.collections.List
-import kotlin.collections.Map
-import kotlin.collections.MutableList
-import kotlin.collections.forEach
 import kotlin.collections.set
-import kotlin.collections.toList
 
 internal class TelemetryManager {
 
@@ -27,8 +22,7 @@ internal class TelemetryManager {
     private val latencies: HashMap<String, MutableList<Map<String, Double>>> = HashMap()
     private val numberFormat by lazy {
         NumberFormat.getNumberInstance(Locale.US).apply {
-            maximumFractionDigits =
-                MAX_FRACTION_DIGITS
+            maximumFractionDigits = MAX_FRACTION_DIGITS
             roundingMode = RoundingMode.HALF_UP
             isGroupingUsed = false
         }

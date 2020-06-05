@@ -72,7 +72,8 @@ class MapperManager {
 
     fun getAsObject(element: JsonElement) = element.asJsonObject
 
-    fun getAsBoolean(element: JsonElement, field: String) = element.asJsonObject.get(field).asBoolean
+    fun getAsBoolean(element: JsonElement, field: String) = element.asJsonObject.get(field)?.asBoolean
+        .run { this != null }
 
     fun putOnObject(element: JsonObject, key: String, value: JsonElement) = element.add(key, value)
 
