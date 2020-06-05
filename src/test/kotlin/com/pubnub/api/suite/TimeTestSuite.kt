@@ -1,12 +1,12 @@
 package com.pubnub.api.suite
 
 import com.github.tomakehurst.wiremock.client.WireMock.get
-import com.github.tomakehurst.wiremock.client.WireMock.urlMatching
+import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 import com.pubnub.api.endpoints.Time
 import com.pubnub.api.enums.PNOperationType
+import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.PNTimeResult
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Assertions.*
 
 class TimeTestSuite : EndpointTestSuite<Time, PNTimeResult>() {
     override fun telemetryParamName() = "l_time"
@@ -16,12 +16,7 @@ class TimeTestSuite : EndpointTestSuite<Time, PNTimeResult>() {
     override fun requiredKeys() = 0
 
     override fun snippet(): Time {
-        return pubnub.time().apply {
-            queryParam = mapOf(
-                "key_1_space" to "ab cd",
-                "key_2_plus" to "ab+cd"
-            )
-        }
+        return pubnub.time()
     }
 
     override fun verifyResultExpectations(result: PNTimeResult) {
@@ -35,22 +30,28 @@ class TimeTestSuite : EndpointTestSuite<Time, PNTimeResult>() {
         """[false]"""
     )
 
-    override fun optionalScenarioList(): List<OptionalScenario> {
+    override fun optionalScenarioList(): List<OptionalScenario<PNTimeResult>> {
         return listOf(
-            OptionalScenario().apply {
+            OptionalScenario<PNTimeResult>().apply {
                 responseBuilder = { withBody("[wrong]") }
                 result = Result.FAIL
-                additionalChecks = { status ->
+                additionalChecks = { status: PNStatus, result: PNTimeResult? ->
                     assertTrue(status.error)
+                    assertNull(result)
                 }
             },
-            OptionalScenario().apply {
+            OptionalScenario<PNTimeResult>().apply {
                 responseBuilder = { withBody("[123]") }
+                additionalChecks = { status: PNStatus, result: PNTimeResult? ->
+                    assertFalse(status.error)
+                    assertEquals(123, result!!.timetoken)
+                }
             }
         )
     }
 
-    override fun mappingBuilder() = get(urlMatching("/time/0.*"))
+    override fun mappingBuilder() = get(urlPathEqualTo("/time/0"))
 
     override fun affectedChannelsAndGroups() = emptyList<String>() to emptyList<String>()
+
 }
