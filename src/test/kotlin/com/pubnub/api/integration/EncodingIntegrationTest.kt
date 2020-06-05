@@ -18,8 +18,7 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.stream.Stream
 
-
-class PlayGroundIntegrationTest : BaseIntegrationTest() {
+class EncodingIntegrationTest : BaseIntegrationTest() {
 
     @Test
     fun testSpecialCharsPathAndUrl() {
@@ -73,8 +72,6 @@ class PlayGroundIntegrationTest : BaseIntegrationTest() {
     @ParameterizedTest(name = "testWith \"{0}\" {1}")
     @MethodSource("provideSpecialCharsStream")
     fun testVerifySignature(name: String, regular: String, encoded: String) {
-        println("testVerifySignature: $name $regular $encoded")
-
         val success = AtomicBoolean()
 
         server.configuration.includeRequestIdentifier = false
@@ -93,11 +90,9 @@ class PlayGroundIntegrationTest : BaseIntegrationTest() {
             queryParam = mapOf(propertyName to regular)
             shouldStore = true
             usePost = false
-        }.async { result, status ->
+        }.async { _, status ->
             assertFalse(status.error)
-            // val encodedParam = status.clientRequest!!.url().encodedQuery()!!.encodedParam(propertyName)
             val encodedParam = status.encodedParam(propertyName)
-            println("Checkking $name $encoded $encodedParam")
             assertEquals(encoded, encodedParam)
             decomposeAndVerifySignature(server.configuration, status.clientRequest!!)
             success.set(true)
@@ -142,7 +137,6 @@ class PlayGroundIntegrationTest : BaseIntegrationTest() {
 
         historyTest.invoke()
     }
-
 
     companion object {
 

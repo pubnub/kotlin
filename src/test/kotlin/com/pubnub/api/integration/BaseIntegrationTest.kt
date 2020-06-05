@@ -132,3 +132,7 @@ fun randomValue(length: Int = 10): String {
         .take(length)
         .joinToString(separator = "")
 }
+
+fun randomNumeric(length: Int = 10): String {
+    return generateSequence { (0..9).random() }.take(length).toList().shuffled().joinToString(separator = "")
+}

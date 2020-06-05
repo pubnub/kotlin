@@ -17,7 +17,6 @@ import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResu
 import com.pubnub.api.models.consumer.pubsub.objects.PNMembershipResult
 import com.pubnub.api.models.consumer.pubsub.objects.PNSpaceResult
 import com.pubnub.api.models.consumer.pubsub.objects.PNUserResult
-import com.pubnub.api.printQueryParams
 import org.awaitility.Awaitility
 import org.awaitility.Durations
 import org.junit.jupiter.api.*
@@ -56,10 +55,13 @@ class AppTest {
         )
     }
 
+    @AfterEach
+    fun cleanUp() {
+        pubnub.forceDestroy()
+    }
+
     @Test
     fun testPublishSync() {
-        val list = (0..9).map { it.toString() } + ('A'..'Z')
-        println(list)
         pubnub.publish().apply {
             channel = UUID.randomUUID().toString()
             message = UUID.randomUUID().toString()
@@ -91,7 +93,6 @@ class AppTest {
             channel = UUID.randomUUID().toString()
             message = UUID.randomUUID().toString()
         }.async { result, status ->
-            status.printQueryParams()
             assertFalse(status.error)
             result!!.timetoken
             success.set(true)
@@ -142,14 +143,6 @@ class AppTest {
                 val time = SimpleDateFormat("HH:mm:ss:SSS").format(System.currentTimeMillis())
                 println("$time ${pnStatus.authKey} [$counter]")
             }
-
-            override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {}
-            override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {}
-            override fun signal(pubnub: PubNub, pnSignalResult: PNSignalResult) {}
-            override fun user(pubnub: PubNub, pnUserResult: PNUserResult) {}
-            override fun space(pubnub: PubNub, pnSpaceResult: PNSpaceResult) {}
-            override fun membership(pubnub: PubNub, pnMembershipResult: PNMembershipResult) {}
-            override fun messageAction(pubnub: PubNub, pnMessageActionResult: PNMessageActionResult) {}
         })
 
         val pool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors())
