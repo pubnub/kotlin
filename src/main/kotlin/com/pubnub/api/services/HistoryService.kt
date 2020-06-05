@@ -1,7 +1,6 @@
 package com.pubnub.api.services
 
 import com.google.gson.JsonElement
-import com.pubnub.api.models.server.DeleteMessagesEnvelope
 import com.pubnub.api.models.server.FetchMessagesEnvelope
 import retrofit2.Call
 import retrofit2.http.DELETE
@@ -23,7 +22,7 @@ interface HistoryService {
         @Path("subKey") subKey: String,
         @Path("channels") channels: String,
         @QueryMap options: Map<String, String>
-    ): Call<DeleteMessagesEnvelope>
+    ): Call<Void>
 
     @GET("v3/history/sub-key/{subKey}/channel/{channels}")
     fun fetchMessages(

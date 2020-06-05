@@ -31,6 +31,6 @@ interface MessageActionService {
         @Path("messageTimetoken") messageTimetoken: String,
         @Path("actionTimetoken") actionTimetoken: String,
         @QueryMap options: Map<String, String>
-    ): Call<EntityEnvelope<Any>>
+    ): Call<Void>
 
 }

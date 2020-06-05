@@ -15,14 +15,14 @@ interface PresenceService {
         @Path("subKey") subKey: String,
         @Path("channel") channel: String,
         @QueryMap options: Map<String, String>
-    ): Call<Any>
+    ): Call<Void>
 
     @GET("v2/presence/sub-key/{subKey}/channel/{channel}/heartbeat")
     fun heartbeat(
         @Path("subKey") subKey: String,
         @Path("channel") channel: String,
         @QueryMap options: Map<String, String>
-    ): Call<Envelope<Any>>
+    ): Call<Void>
 
     @GET("v2/presence/sub-key/{subKey}/uuid/{uuid}")
     fun whereNow(
