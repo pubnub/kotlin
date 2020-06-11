@@ -5,7 +5,6 @@ import com.github.tomakehurst.wiremock.verification.LoggedRequest
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.pubnub.api.models.consumer.PNStatus
-import com.pubnub.api.suite.SpecialChar
 import okhttp3.HttpUrl
 import okhttp3.Request
 import org.awaitility.Awaitility
@@ -14,21 +13,20 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import java.io.BufferedReader
 import java.io.InputStreamReader
+import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.stream.Collectors
 
+var DEFAULT_LISTEN_DURATION: Int? = null
 
-private fun observe(success: AtomicBoolean) {
+private fun observe(success: AtomicBoolean, seconds: Int) {
     Awaitility.await()
-        .atMost(Durations.TWO_SECONDS)
-        .with()
-        .until(success::get)
+        .atMost(seconds.toLong(), TimeUnit.SECONDS)
+        .untilTrue(success)
 }
 
-fun AtomicBoolean.listen(): AtomicBoolean {
-    this.set(false)
-    observe(this)
-    return this
+fun AtomicBoolean.listen(seconds: Int = DEFAULT_LISTEN_DURATION!!) {
+    observe(this, seconds)
 }
 
 fun AtomicBoolean.listen(function: () -> Boolean): AtomicBoolean {
@@ -39,12 +37,6 @@ fun AtomicBoolean.listen(function: () -> Boolean): AtomicBoolean {
             function.invoke()
         }
     return this
-}
-
-fun PNStatus.printQueryParams() {
-    this.clientRequest!!.url().queryParameterNames().map {
-        print("$it ${this.clientRequest?.url()?.queryParameterValues(it)?.first()} ")
-    }
 }
 
 fun assertPnException(expectedPubNubError: PubNubError, pnStatus: PNStatus) {
@@ -175,3 +167,9 @@ fun getResourceFileAsString(fileName: String?): String? {
 }
 
 fun Any.stringify() = Gson().toJson(this)
+
+class SpecialChar(
+    val name: String,
+    val regular: String,
+    val encoded: String
+)

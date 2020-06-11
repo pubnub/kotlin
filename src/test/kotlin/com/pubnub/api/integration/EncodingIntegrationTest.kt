@@ -31,7 +31,6 @@ class EncodingIntegrationTest : BaseIntegrationTest() {
         server.publish().apply {
             channel = expectedChannel
             message = value
-            shouldStore = true
             meta = mapOf(
                 keyName to value
             )
@@ -55,10 +54,10 @@ class EncodingIntegrationTest : BaseIntegrationTest() {
             .pollInterval(Durations.FIVE_HUNDRED_MILLISECONDS)
             .atMost(Durations.FIVE_SECONDS)
             .until {
-                val (messages, _, _) = server.history().apply {
+                val messages = server.history().apply {
                     channel = expectedChannel
                     includeMeta = true
-                }.sync()!!
+                }.sync()!!.messages
 
                 assertEquals(1, messages.size)
                 assertEquals(value, messages[0].meta!!.asJsonObject[keyName].asString)
@@ -88,7 +87,6 @@ class EncodingIntegrationTest : BaseIntegrationTest() {
             message = expectedMessage
             meta = expectedMetadata
             queryParam = mapOf(propertyName to regular)
-            shouldStore = true
             usePost = false
         }.async { _, status ->
             assertFalse(status.error)
