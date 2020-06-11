@@ -11,9 +11,6 @@ import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
-import com.pubnub.api.models.consumer.pubsub.objects.PNMembershipResult
-import com.pubnub.api.models.consumer.pubsub.objects.PNSpaceResult
-import com.pubnub.api.models.consumer.pubsub.objects.PNUserResult
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.util.concurrent.atomic.AtomicBoolean
@@ -80,18 +77,6 @@ class ReceiveMessageActions : BaseTest() {
             }
 
             override fun signal(pubnub: PubNub, pnSignalResult: PNSignalResult) {
-                failTest()
-            }
-
-            override fun user(pubnub: PubNub, pnUserResult: PNUserResult) {
-                failTest()
-            }
-
-            override fun space(pubnub: PubNub, pnSpaceResult: PNSpaceResult) {
-                failTest()
-            }
-
-            override fun membership(pubnub: PubNub, pnMembershipResult: PNMembershipResult) {
                 failTest()
             }
 
@@ -190,6 +175,7 @@ class ReceiveMessageActions : BaseTest() {
 
             override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {
                 failTest()
+                pnMessageResult.message
             }
 
             override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {
@@ -197,18 +183,6 @@ class ReceiveMessageActions : BaseTest() {
             }
 
             override fun signal(pubnub: PubNub, pnSignalResult: PNSignalResult) {
-                failTest()
-            }
-
-            override fun user(pubnub: PubNub, pnUserResult: PNUserResult) {
-                failTest()
-            }
-
-            override fun space(pubnub: PubNub, pnSpaceResult: PNSpaceResult) {
-                failTest()
-            }
-
-            override fun membership(pubnub: PubNub, pnMembershipResult: PNMembershipResult) {
                 failTest()
             }
 

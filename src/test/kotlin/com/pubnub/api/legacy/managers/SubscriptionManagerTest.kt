@@ -2260,7 +2260,7 @@ class SubscriptionManagerTest : BaseTest() {
             override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {
                 if (pnPresenceEventResult.event == "state-change") {
                     if (pnPresenceEventResult.state!!.asJsonObject.has("state") &&
-                        pnPresenceEventResult.state.asJsonObject.get("state").asString == "cool"
+                        pnPresenceEventResult.state!!.asJsonObject.get("state").asString == "cool"
                     ) {
                         atomic.set(true)
                     }

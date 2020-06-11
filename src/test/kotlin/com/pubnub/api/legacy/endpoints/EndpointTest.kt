@@ -4,12 +4,10 @@ import com.github.tomakehurst.wiremock.client.WireMock.*
 import com.github.tomakehurst.wiremock.matching.UrlPattern
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
-import com.pubnub.api.Endpoint
+import com.pubnub.api.*
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.legacy.BaseTest
-import com.pubnub.api.listen
-import com.pubnub.api.param
 import okhttp3.Request
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
@@ -248,6 +246,38 @@ class EndpointTest : BaseTest() {
             }
 
         success.listen()
+    }
+
+    @Test
+    fun testDefaultTimeoutValues() {
+        val p = PubNub(PNConfiguration())
+        assertEquals(300, p.configuration.presenceTimeout)
+        assertEquals(0, p.configuration.heartbeatInterval)
+    }
+
+    @Test
+    fun testCustomTimeoutValues1() {
+        val p = PubNub(PNConfiguration())
+        p.configuration.presenceTimeout = 100
+        assertEquals(100, p.configuration.presenceTimeout)
+        assertEquals(49, p.configuration.heartbeatInterval)
+    }
+
+    @Test
+    fun testCustomTimeoutValues2() {
+        val p = PubNub(PNConfiguration())
+        p.configuration.heartbeatInterval = 100
+        assertEquals(300, p.configuration.presenceTimeout)
+        assertEquals(100, p.configuration.heartbeatInterval)
+    }
+
+    @Test
+    fun testCustomTimeoutValues3() {
+        val p = PubNub(PNConfiguration())
+        p.configuration.heartbeatInterval = 40
+        p.configuration.presenceTimeout = 50
+        assertEquals(50, p.configuration.presenceTimeout)
+        assertEquals(24, p.configuration.heartbeatInterval)
     }
 
 

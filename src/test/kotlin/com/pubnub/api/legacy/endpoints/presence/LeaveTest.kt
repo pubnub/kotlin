@@ -117,7 +117,7 @@ class LeaveTest : BaseTest() {
         Leave(pubnub).apply {
             channels = listOf("coolChannel", "coolChannel2")
             channelGroups = listOf("cg1")
-        }.async { result, status ->
+        }.async { _, status ->
             assertEquals(status.affectedChannels[0], "coolChannel")
             assertEquals(status.affectedChannels[1], "coolChannel2")
             assertEquals(status.affectedChannelGroups[0], "cg1")

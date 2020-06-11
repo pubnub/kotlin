@@ -10,9 +10,6 @@ import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
-import com.pubnub.api.models.consumer.pubsub.objects.PNMembershipResult
-import com.pubnub.api.models.consumer.pubsub.objects.PNSpaceResult
-import com.pubnub.api.models.consumer.pubsub.objects.PNUserResult
 import okhttp3.HttpUrl
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
@@ -144,9 +141,6 @@ class SignalTest : BaseTest() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {}
             override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {}
             override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {}
-            override fun user(pubnub: PubNub, pnUserResult: PNUserResult) {}
-            override fun space(pubnub: PubNub, pnSpaceResult: PNSpaceResult) {}
-            override fun membership(pubnub: PubNub, pnMembershipResult: PNMembershipResult) {}
             override fun messageAction(pubnub: PubNub, pnMessageActionResult: PNMessageActionResult) {}
         })
 

@@ -1733,6 +1733,4 @@ class GrantEndpointTest : BaseTest() {
         Awaitility.await().atMost(5, TimeUnit.SECONDS).untilTrue(atomic)
     }
 
-    // todo does telemetry param count?
-
 }

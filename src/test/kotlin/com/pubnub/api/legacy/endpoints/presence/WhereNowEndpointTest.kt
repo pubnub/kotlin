@@ -41,7 +41,7 @@ class WhereNowEndpointTest : BaseTest() {
         )
 
         val response = pubnub.whereNow().sync()!!
-        assertThat(response.channels, Matchers.contains("a", "b")) // todo compare timestamp param like this
+        assertThat(response.channels, Matchers.contains("a", "b"))
     }
 
     @Test

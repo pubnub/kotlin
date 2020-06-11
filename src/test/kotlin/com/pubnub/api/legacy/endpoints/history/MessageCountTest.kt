@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test
 class MessageCountTest : BaseTest() {
 
     @Test
-    @Throws(PubNubException::class)
     fun testSingleChannelWithSingleToken() {
         stubFor(
             get(urlPathEqualTo("/v3/history/sub-key/mySubscribeKey/message-counts/my_channel"))

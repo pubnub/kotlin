@@ -45,7 +45,7 @@ class AddMessageActionEndpointTest : BaseTest() {
 
         assertEquals(result.messageTimetoken, 123)
         assertEquals(result.type, "emoji")
-        assertEquals(result.uuid, "someUuid") // todo what's the uuid? author?
+        assertEquals(result.uuid, "someUuid")
         assertEquals(result.value, "smiley")
         assertEquals(result.actionTimetoken, 1000)
     }

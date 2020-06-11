@@ -1,8 +1,7 @@
 package com.pubnub.api.legacy.endpoints.push
 
-import com.google.gson.Gson
-import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.enums.PNPushEnvironment
+import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.models.consumer.push.payload.PushPayloadHelper
 import com.pubnub.api.models.consumer.push.payload.PushPayloadHelper.*
 import com.pubnub.api.models.consumer.push.payload.PushPayloadHelper.APNSPayload.APNS2Configuration
@@ -175,8 +174,6 @@ class PushPayloadHelperHelperTest : BaseTest() {
 
         val map = pushPayloadHelper.build()
 
-        println(Gson().toJson(map))
-
         val apnsMap = map["pn_apns"] as Map<*, *>
         val pnPushList = apnsMap["pn_push"] as List<Map<*, *>>
 
@@ -275,8 +272,6 @@ class PushPayloadHelperHelperTest : BaseTest() {
         }
 
         val map = pushPayloadHelper.build()
-
-        print(map)
 
         val pnFcmMap = map["pn_gcm"] as Map<*, *>
         assertNotNull(pnFcmMap)

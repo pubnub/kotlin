@@ -99,23 +99,25 @@ class HistoryEndpointTest : BaseTest() {
                 .willReturn(aResponse().withBody(pubnub.mapper.toJson(testArray)))
         )
 
-        val (messages, startTimetoken, endTimetoken) = pubnub.history().apply {
+        val result = pubnub.history().apply {
             channel = "niceChannel"
             includeTimetoken = true
         }.sync()!!
 
-        assertEquals(1234, startTimetoken)
-        assertEquals(4321, endTimetoken)
+        with(result) {
+            assertEquals(1234, startTimetoken)
+            assertEquals(4321, endTimetoken)
 
-        assertEquals(2, messages.size)
+            assertEquals(2, messages.size)
 
-        assertEquals(1111, messages[0].timetoken)
-        assertEquals(11, messages[0].entry.asJsonObject["a"].asInt)
-        assertEquals(22, messages[0].entry.asJsonObject["b"].asInt)
+            assertEquals(1111, messages[0].timetoken)
+            assertEquals(11, messages[0].entry.asJsonObject["a"].asInt)
+            assertEquals(22, messages[0].entry.asJsonObject["b"].asInt)
 
-        assertEquals(2222, messages[1].timetoken)
-        assertEquals(33, messages[1].entry.asJsonObject["a"].asInt)
-        assertEquals(44, messages[1].entry.asJsonObject["b"].asInt)
+            assertEquals(2222, messages[1].timetoken)
+            assertEquals(33, messages[1].entry.asJsonObject["a"].asInt)
+            assertEquals(44, messages[1].entry.asJsonObject["b"].asInt)
+        }
     }
 
     @Test
@@ -188,29 +190,31 @@ class HistoryEndpointTest : BaseTest() {
                 )
         )
 
-        val (messages, startTimetoken, endTimetoken) = pubnub.history().apply {
+        val result = pubnub.history().apply {
             channel = "niceChannel"
             includeTimetoken = false
         }.sync()!!
 
-        assertEquals(14606134331557852, startTimetoken)
-        assertEquals(14606134485013970, endTimetoken)
+        with(result) {
+            assertEquals(14606134331557852, startTimetoken)
+            assertEquals(14606134485013970, endTimetoken)
 
-        assertEquals(3, messages.size)
+            assertEquals(3, messages.size)
 
-        assertNull(messages[0].timetoken)
+            assertNull(messages[0].timetoken)
 
-        assertEquals("m1", messages[0].entry.asJsonArray[0].asString)
-        assertEquals("m2", messages[0].entry.asJsonArray[1].asString)
-        assertEquals("m3", messages[0].entry.asJsonArray[2].asString)
+            assertEquals("m1", messages[0].entry.asJsonArray[0].asString)
+            assertEquals("m2", messages[0].entry.asJsonArray[1].asString)
+            assertEquals("m3", messages[0].entry.asJsonArray[2].asString)
 
-        assertEquals("m1", messages[1].entry.asJsonArray[0].asString)
-        assertEquals("m2", messages[1].entry.asJsonArray[1].asString)
-        assertEquals("m3", messages[1].entry.asJsonArray[2].asString)
+            assertEquals("m1", messages[1].entry.asJsonArray[0].asString)
+            assertEquals("m2", messages[1].entry.asJsonArray[1].asString)
+            assertEquals("m3", messages[1].entry.asJsonArray[2].asString)
 
-        assertEquals("m1", messages[2].entry.asJsonArray[0].asString)
-        assertEquals("m2", messages[2].entry.asJsonArray[1].asString)
-        assertEquals("m3", messages[2].entry.asJsonArray[2].asString)
+            assertEquals("m1", messages[2].entry.asJsonArray[0].asString)
+            assertEquals("m2", messages[2].entry.asJsonArray[1].asString)
+            assertEquals("m3", messages[2].entry.asJsonArray[2].asString)
+        }
     }
 
     @Test
@@ -237,19 +241,20 @@ class HistoryEndpointTest : BaseTest() {
         )
 
 
-        val (messages, startTimetoken, endTimetoken) = pubnub.history().apply {
+        val result = pubnub.history().apply {
             channel = "niceChannel"
             includeTimetoken = false
         }.sync()!!
 
-        assertEquals(14606134331557852, startTimetoken)
-        assertEquals(14606134485013970, endTimetoken)
+        with(result) {
+            assertEquals(14606134331557852, startTimetoken)
+            assertEquals(14606134485013970, endTimetoken)
 
-        assertEquals(1, messages.size)
+            assertEquals(1, messages.size)
 
-        assertNull(messages[0].timetoken)
-        assertEquals("hey", messages[0].entry.asJsonObject.get("pn_other").asJsonObject.get("text").asString)
-
+            assertNull(messages[0].timetoken)
+            assertEquals("hey", messages[0].entry.asJsonObject.get("pn_other").asJsonObject.get("text").asString)
+        }
     }
 
     @Test
@@ -277,22 +282,24 @@ class HistoryEndpointTest : BaseTest() {
                 .willReturn(aResponse().withBody(pubnub.mapper.toJson(testArray)))
         )
 
-        val (messages, startTimetoken, endTimetoken) = pubnub.history().apply {
+        val result = pubnub.history().apply {
             channel = "niceChannel"
         }.sync()!!
 
-        assertEquals(1234, startTimetoken)
-        assertEquals(4321, endTimetoken)
+        with(result) {
+            assertEquals(1234, startTimetoken)
+            assertEquals(4321, endTimetoken)
 
-        assertEquals(2, messages.size)
+            assertEquals(2, messages.size)
 
-        assertNull(messages[0].timetoken)
-        assertEquals(11, messages[0].entry.asJsonObject["a"].asInt)
-        assertEquals(22, messages[0].entry.asJsonObject["b"].asInt)
+            assertNull(messages[0].timetoken)
+            assertEquals(11, messages[0].entry.asJsonObject["a"].asInt)
+            assertEquals(22, messages[0].entry.asJsonObject["b"].asInt)
 
-        assertNull(messages[1].timetoken)
-        assertEquals(33, messages[1].entry.asJsonObject["a"].asInt)
-        assertEquals(44, messages[1].entry.asJsonObject["b"].asInt)
+            assertNull(messages[1].timetoken)
+            assertEquals(33, messages[1].entry.asJsonObject["a"].asInt)
+            assertEquals(44, messages[1].entry.asJsonObject["b"].asInt)
+        }
     }
 
     @Test
@@ -375,20 +382,20 @@ class HistoryEndpointTest : BaseTest() {
 
             assertEquals(PNOperationType.PNHistoryOperation, status.operation)
 
-            val (messages, startTimetoken, endTimetoken) = result!!
+            with(result!!) {
+                assertEquals(1234, startTimetoken)
+                assertEquals(4321, endTimetoken)
 
-            assertEquals(1234, startTimetoken)
-            assertEquals(4321, endTimetoken)
+                assertEquals(2, messages.size)
 
-            assertEquals(2, messages.size)
+                assertEquals(1111, messages[0].timetoken)
+                assertEquals(11, messages[0].entry.asJsonObject["a"].asInt)
+                assertEquals(22, messages[0].entry.asJsonObject["b"].asInt)
 
-            assertEquals(1111, messages[0].timetoken)
-            assertEquals(11, messages[0].entry.asJsonObject["a"].asInt)
-            assertEquals(22, messages[0].entry.asJsonObject["b"].asInt)
-
-            assertEquals(2222, messages[1].timetoken)
-            assertEquals(33, messages[1].entry.asJsonObject["a"].asInt)
-            assertEquals(44, messages[1].entry.asJsonObject["b"].asInt)
+                assertEquals(2222, messages[1].timetoken)
+                assertEquals(33, messages[1].entry.asJsonObject["a"].asInt)
+                assertEquals(44, messages[1].entry.asJsonObject["b"].asInt)
+            }
 
             success.set(true)
         }
@@ -431,7 +438,7 @@ class HistoryEndpointTest : BaseTest() {
                 .willReturn(aResponse().withBody(pubnub.mapper.toJson(testArray)))
         )
 
-        val (messages, startTimetoken, endTimetoken) = pubnub.history().apply {
+        val result = pubnub.history().apply {
             channel = "niceChannel"
             count = 5
             reverse = true
@@ -455,18 +462,20 @@ class HistoryEndpointTest : BaseTest() {
         assertEquals("2", requests.first().queryParameter("end").firstValue())
         assertEquals("true", requests.first().queryParameter("include_token").firstValue())
 
-        assertEquals(1234, startTimetoken)
-        assertEquals(4321, endTimetoken)
+        with(result) {
+            assertEquals(1234, startTimetoken)
+            assertEquals(4321, endTimetoken)
 
-        assertEquals(2, messages.size)
+            assertEquals(2, messages.size)
 
-        assertEquals(1111, messages[0].timetoken)
-        assertEquals(11, messages[0].entry.asJsonObject["a"].asInt)
-        assertEquals(22, messages[0].entry.asJsonObject["b"].asInt)
+            assertEquals(1111, messages[0].timetoken)
+            assertEquals(11, messages[0].entry.asJsonObject["a"].asInt)
+            assertEquals(22, messages[0].entry.asJsonObject["b"].asInt)
 
-        assertEquals(2222, messages[1].timetoken)
-        assertEquals(33, messages[1].entry.asJsonObject["a"].asInt)
-        assertEquals(44, messages[1].entry.asJsonObject["b"].asInt)
+            assertEquals(2222, messages[1].timetoken)
+            assertEquals(33, messages[1].entry.asJsonObject["a"].asInt)
+            assertEquals(44, messages[1].entry.asJsonObject["b"].asInt)
+        }
 
     }
 
