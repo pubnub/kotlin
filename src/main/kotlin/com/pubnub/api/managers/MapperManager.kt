@@ -6,6 +6,9 @@ import com.google.gson.stream.JsonToken
 import com.google.gson.stream.JsonWriter
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
+import org.json.JSONArray
+import org.json.JSONException
+import org.json.JSONObject
 import retrofit2.Converter
 import retrofit2.converter.gson.GsonConverterFactory
 import java.lang.reflect.Type
@@ -40,6 +43,8 @@ class MapperManager {
             .registerTypeAdapter(Boolean::class.javaObjectType, booleanAsIntAdapter)
             .registerTypeAdapter(Boolean::class.javaPrimitiveType, booleanAsIntAdapter)
             .registerTypeAdapter(Boolean::class.java, booleanAsIntAdapter)
+            .registerTypeAdapter(JSONObject::class.java, JSONObjectAdapter())
+            .registerTypeAdapter(JSONArray::class.java, JSONArrayAdapter())
             .create()
         converterFactory = GsonConverterFactory.create(objectMapper)
     }
@@ -109,10 +114,9 @@ class MapperManager {
         return this.objectMapper.fromJson(input, clazz) as T
     }
 
-    /*@Throws(PubNubException::class)
-    fun <T> convertValue(obj: Any, clazz: Class<T>): T {
-        return fromJson(toJson(obj), clazz)
-    }*/
+    fun <T> convertValue(o: Any?, clazz: Class<T>?): T {
+        return this.objectMapper.fromJson(toJson(o), clazz) as T
+    }
 
     fun toJson(input: Any?): String {
         return try {
@@ -120,6 +124,76 @@ class MapperManager {
         } catch (e: JsonParseException) {
             throw PubNubException(PubNubError.JSON_ERROR).apply {
                 errorMessage = e.message
+            }
+        }
+    }
+
+    private class JSONObjectAdapter : JsonSerializer<JSONObject?>, JsonDeserializer<JSONObject?> {
+        override fun serialize(
+            src: JSONObject?,
+            typeOfSrc: Type?,
+            context: JsonSerializationContext
+        ): JsonElement? {
+            if (src == null) {
+                return null
+            }
+            val jsonObject = JsonObject()
+            val keys: Iterator<String> = src.keys()
+            while (keys.hasNext()) {
+                val key = keys.next()
+                val value: Any = src.opt(key)
+                val jsonElement = context.serialize(value, value.javaClass)
+                jsonObject.add(key, jsonElement)
+            }
+            return jsonObject
+        }
+
+        override fun deserialize(
+            json: JsonElement?,
+            typeOfT: Type?,
+            context: JsonDeserializationContext?
+        ): JSONObject? {
+            return if (json == null) {
+                null
+            } else try {
+                JSONObject(json.toString())
+            } catch (e: JSONException) {
+                e.printStackTrace()
+                throw JsonParseException(e)
+            }
+        }
+    }
+
+    private class JSONArrayAdapter : JsonSerializer<JSONArray?>, JsonDeserializer<JSONArray?> {
+        override fun serialize(
+            src: JSONArray?,
+            typeOfSrc: Type?,
+            context: JsonSerializationContext
+        ): JsonElement? {
+            if (src == null) {
+                return null
+            }
+            val jsonArray = JsonArray()
+            for (i in 0 until src.length()) {
+                val `object`: Any = src.opt(i)
+                val jsonElement = context.serialize(`object`, `object`.javaClass)
+                jsonArray.add(jsonElement)
+            }
+            return jsonArray
+        }
+
+        override fun deserialize(
+            json: JsonElement?,
+            typeOfT: Type?,
+            context: JsonDeserializationContext?
+        ): JSONArray? {
+            return if (json == null) {
+                null
+            } else try {
+                JSONArray(json.toString())
+            } catch (e: JSONException) {
+                e.printStackTrace()
+                throw JsonParseException(e)
             }
         }
     }

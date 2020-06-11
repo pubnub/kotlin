@@ -7,20 +7,22 @@ import com.pubnub.api.models.consumer.history.PNFetchMessageItem
 import com.pubnub.api.models.consumer.history.PNFetchMessagesResult
 import com.pubnub.api.models.server.FetchMessagesEnvelope
 import com.pubnub.api.vendor.Crypto
+import org.slf4j.LoggerFactory
 import retrofit2.Call
 import retrofit2.Response
 import java.util.*
 
 class FetchMessages(pubnub: PubNub) : Endpoint<FetchMessagesEnvelope, PNFetchMessagesResult>(pubnub) {
 
+    private val log = LoggerFactory.getLogger("FetchMessages")
+
     private companion object {
         private const val DEFAULT_MESSAGES = 1
         private const val MAX_MESSAGES = 25
-        private const val MAX_MESSAGES_ACTIONS = 100
     }
 
     lateinit var channels: List<String>
-    var maximumPerChannel: Int = DEFAULT_MESSAGES
+    var maximumPerChannel = 0
     var start: Long? = null
     var end: Long? = null
     var includeMeta = false
@@ -38,12 +40,12 @@ class FetchMessages(pubnub: PubNub) : Endpoint<FetchMessagesEnvelope, PNFetchMes
                     maximumPerChannel < DEFAULT_MESSAGES -> maximumPerChannel = DEFAULT_MESSAGES
                     maximumPerChannel > MAX_MESSAGES -> maximumPerChannel = MAX_MESSAGES
                 }
-                print("maximumPerChannel param defaulting to $maximumPerChannel")
+                log.info("maximumPerChannel param defaulting to $maximumPerChannel")
             }
         } else {
             if (maximumPerChannel !in DEFAULT_MESSAGES..MAX_MESSAGES) {
-                maximumPerChannel = MAX_MESSAGES_ACTIONS
-                print("maximumPerChannel param defaulting to $maximumPerChannel")
+                maximumPerChannel = MAX_MESSAGES
+                log.info("maximumPerChannel param defaulting to $maximumPerChannel")
             }
         }
     }
@@ -71,6 +73,9 @@ class FetchMessages(pubnub: PubNub) : Endpoint<FetchMessagesEnvelope, PNFetchMes
                 options = queryParams
             )
         } else {
+            if (channels.size > 1) {
+                throw PubNubException(PubNubError.HISTORY_MESSAGE_ACTIONS_MULTIPLE_CHANNELS)
+            }
             pubnub.retrofitManager.historyService.fetchMessagesWithActions(
                 subKey = pubnub.configuration.subscribeKey,
                 channel = channels.first(),
@@ -90,9 +95,12 @@ class FetchMessages(pubnub: PubNub) : Endpoint<FetchMessagesEnvelope, PNFetchMes
                     PNFetchMessageItem(
                         message = processMessage(item.message),
                         timetoken = item.timetoken,
-                        meta = item.meta,
-                        actions = item.actions
-                    )
+                        meta = item.meta
+                    ).apply {
+                        if (includeMessageActions) {
+                            actions = (item.actions) ?: mapOf()
+                        }
+                    }
                 )
             }
             channelsMap[entry.key] = items

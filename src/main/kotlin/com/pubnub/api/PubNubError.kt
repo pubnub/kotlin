@@ -142,24 +142,18 @@ enum class PubNubError(val code: Int, val message: String) {
         "Message action timetoken is missing."
     ),
 
+    HISTORY_MESSAGE_ACTIONS_MULTIPLE_CHANNELS(
+        163,
+        "History can return message action data for a single channel only. Either pass a single channel or disable the includeMessageActions flag."
+    ),
+
     PUSH_TOPIC_MISSING(
         164,
         "Push notification topic is missing. Required only if push type is APNS2."
-    ),
-
-    UNINITIALIZED_PROPERTY_ACCESS(
-        998,
-        "Uninitialized Property Access"
-    ),
-
-    X(
-        999,
-        "X ERROR"
     );
 
     override fun toString(): String {
         return "PubNubError(name=$name, code=$code, message='$message')"
     }
-
 
 }

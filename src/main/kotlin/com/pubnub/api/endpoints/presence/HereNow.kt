@@ -11,7 +11,7 @@ import com.pubnub.api.models.server.Envelope
 import com.pubnub.api.toCsv
 import retrofit2.Call
 import retrofit2.Response
-import java.util.HashMap
+import java.util.*
 
 class HereNow(pubnub: PubNub) : Endpoint<Envelope<JsonElement>, PNHereNowResult>(pubnub) {
 
@@ -21,8 +21,6 @@ class HereNow(pubnub: PubNub) : Endpoint<Envelope<JsonElement>, PNHereNowResult>
     var includeUUIDs = true
 
     private fun isGlobalHereNow() = channels.isEmpty() && channelGroups.isEmpty()
-
-    // todo try here now without sub key
 
     override fun getAffectedChannels() = channels
     override fun getAffectedChannelGroups() = channelGroups

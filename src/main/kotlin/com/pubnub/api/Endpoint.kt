@@ -401,9 +401,6 @@ abstract class Endpoint<Input, Output>(protected val pubnub: PubNub) {
         }
     }
 
-    // protected abstract fun getAffectedChannels(): List<String?>
-    // protected abstract fun getAffectedChannelGroups(): List<String?>
-
     protected open fun getAffectedChannels() = emptyList<String>()
     protected open fun getAffectedChannelGroups(): List<String> = emptyList()
 
