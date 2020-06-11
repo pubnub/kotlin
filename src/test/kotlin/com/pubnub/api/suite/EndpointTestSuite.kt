@@ -17,7 +17,7 @@ import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 
-typealias AsyncCheck<T> = (pnStatus: PNStatus, result: T?) -> Unit
+typealias AsyncCheck<T> = (status: PNStatus, result: T?) -> Unit
 
 abstract class EndpointTestSuite<T : Endpoint<*, R>, R> : BaseTest() {
 
@@ -63,7 +63,7 @@ abstract class EndpointTestSuite<T : Endpoint<*, R>, R> : BaseTest() {
 
         lateinit var telemetryParamName: String
 
-        snippet().eval { _, status ->
+        snippet().await { _, status ->
             assertFalse(status.error)
             assertEquals(pnOperation(), status.operation)
             assertEquals(PNStatusCategory.PNAcknowledgmentCategory, status.category)
@@ -90,7 +90,7 @@ abstract class EndpointTestSuite<T : Endpoint<*, R>, R> : BaseTest() {
 
     @Test
     fun testSuccessAsync() {
-        snippet().eval { result, status ->
+        snippet().await { result, status ->
             // todo
             // status.exception?.printStackTrace()
             assertFalse(status.error)
@@ -139,7 +139,7 @@ abstract class EndpointTestSuite<T : Endpoint<*, R>, R> : BaseTest() {
 
         unsuccessfulResponseBodyList().forEach {
             val stub = stubFor(mappingBuilder().willReturn(aResponse().withBody(it)))
-            snippet().eval { _, status ->
+            snippet().await { _, status ->
                 assertTrue(status.error)
                 assertPnException(PubNubError.PARSING_ERROR, status)
             }
@@ -176,7 +176,7 @@ abstract class EndpointTestSuite<T : Endpoint<*, R>, R> : BaseTest() {
                 assertPnException(PubNubError.PARSING_ERROR, e)
             }
 
-            snippet().eval { result, status ->
+            snippet().await { result, status ->
                 assertEquals(!voidResponse(), status.error)
 
                 if (!voidResponse()) {
@@ -225,7 +225,7 @@ abstract class EndpointTestSuite<T : Endpoint<*, R>, R> : BaseTest() {
         optionalScenarioList().forEach {
             val stub = stubFor(mappingBuilder().willReturn(it.build()))
 
-            snippet().eval { result, status ->
+            snippet().await { result, status ->
                 it.additionalChecks.invoke(status, result)
                 if (it.result == Result.SUCCESS) {
                     assertFalse(status.error)
@@ -249,7 +249,7 @@ abstract class EndpointTestSuite<T : Endpoint<*, R>, R> : BaseTest() {
             queryParam = getSpecialCharsMap().map {
                 it.name to it.regular
             }.toMap()
-        }.eval { result, status ->
+        }.await { result, status ->
             assertFalse(status.error)
             assertNotNull(result)
 
@@ -308,7 +308,7 @@ abstract class EndpointTestSuite<T : Endpoint<*, R>, R> : BaseTest() {
     private fun testAuthKeyAsync() {
         pubnub.configuration.authKey = "someAuthKey"
 
-        snippet().eval { result, status ->
+        snippet().await { _, status ->
             assertFalse(status.error)
 
             if (requiredKeys().contains(AUTH)) {
@@ -379,7 +379,7 @@ private fun Int.contains(sub: Int): Boolean {
     return extractKeys(this).contains(sub)
 }
 
-private fun <Input, Output> Endpoint<Input, Output>.eval(function: (result: Output?, status: PNStatus) -> Unit) {
+fun <Input, Output> Endpoint<Input, Output>.await(function: (result: Output?, status: PNStatus) -> Unit) {
     val success = AtomicBoolean()
     async { result, status ->
         function.invoke(result, status)
@@ -391,7 +391,7 @@ private fun <Input, Output> Endpoint<Input, Output>.eval(function: (result: Outp
 class OptionalScenario<R> {
     var responseBuilder: ResponseDefinitionBuilder.() -> ResponseDefinitionBuilder = { this }
 
-    var additionalChecks: AsyncCheck<R> = { status: PNStatus, result: R? -> }
+    var additionalChecks: AsyncCheck<R> = { _: PNStatus, _: R? -> }
     var result: Result = Result.SUCCESS
     var pnError: PubNubError? = null
 
@@ -405,8 +405,3 @@ enum class Result {
     FAIL
 }
 
-class SpecialChar(
-    val name: String,
-    val regular: String,
-    val encoded: String
-)

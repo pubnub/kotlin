@@ -101,7 +101,7 @@ class FetchMessagesMetaActionsTestSuite : EndpointTestSuite<FetchMessages, PNFet
 
     override fun mappingBuilder(): MappingBuilder {
         return get(urlPathEqualTo("/v3/history-with-actions/sub-key/mySubscribeKey/channel/ch1"))
-            .withQueryParam("max", equalTo("1"))
+            .withQueryParam("max", equalTo("25"))
             .withQueryParam("include_meta", equalTo("true"))
     }
 
