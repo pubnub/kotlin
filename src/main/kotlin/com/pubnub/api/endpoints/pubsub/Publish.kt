@@ -15,7 +15,7 @@ class Publish(pubnub: PubNub) : Endpoint<List<Any>, PNPublishResult>(pubnub) {
     lateinit var channel: String
     lateinit var message: Any
     lateinit var meta: Any
-    var shouldStore = false
+    var shouldStore: Boolean? = null
     var usePost = false
     var replicate = true
     var ttl: Int? = null
@@ -44,7 +44,7 @@ class Publish(pubnub: PubNub) : Endpoint<List<Any>, PNPublishResult>(pubnub) {
             queryParams["meta"] = pubnub.mapper.toJson(meta)
         }
 
-        queryParams["store"] = if (shouldStore) "1" else "0"
+        shouldStore?.run { queryParams["store"] = if (this) "1" else "0" }
 
         ttl?.let { queryParams["ttl"] = it.toString() }
 
@@ -78,8 +78,6 @@ class Publish(pubnub: PubNub) : Endpoint<List<Any>, PNPublishResult>(pubnub) {
             if (pubnub.configuration.isCipherKeyValid()) {
                 stringifiedMessage = "\"$stringifiedMessage\""
             }
-
-            stringifiedMessage = /*PubNubUtil.urlEncode*/(stringifiedMessage)
 
             return pubnub.retrofitManager.publishService.publish(
                 pubnub.configuration.publishKey,
