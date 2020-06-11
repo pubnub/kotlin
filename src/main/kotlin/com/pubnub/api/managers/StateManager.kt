@@ -6,7 +6,7 @@ import com.pubnub.api.builder.SubscribeOperation
 import com.pubnub.api.builder.UnsubscribeOperation
 import com.pubnub.api.models.SubscriptionItem
 
-class StateManager {
+internal class StateManager {
 
     /**
      * Contains a list of subscribed channels

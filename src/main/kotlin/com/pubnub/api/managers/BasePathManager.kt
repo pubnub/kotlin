@@ -2,7 +2,7 @@ package com.pubnub.api.managers
 
 import com.pubnub.api.PNConfiguration
 
-class BasePathManager(val config: PNConfiguration) {
+internal class BasePathManager(private val config: PNConfiguration) {
 
     /**
      * for cache busting, the current subdomain number used.
@@ -19,6 +19,7 @@ class BasePathManager(val config: PNConfiguration) {
      */
 
     private val DEFAULT_SUBDOMAIN = "ps"
+
     /**
      * default base path if a custom one is not provided.
      */

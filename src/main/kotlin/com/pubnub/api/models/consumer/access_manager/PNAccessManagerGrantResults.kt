@@ -10,7 +10,7 @@ class PNAccessManagerGrantResult(
     val channelGroups: Map<String, Map<String, PNAccessManagerKeyData>?>
 )
 
-class PNAccessManagerKeyData() {
+class PNAccessManagerKeyData {
 
     @SerializedName("r")
     internal var readEnabled: Boolean = false

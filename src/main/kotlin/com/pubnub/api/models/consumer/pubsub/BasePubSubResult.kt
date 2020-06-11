@@ -3,14 +3,14 @@ package com.pubnub.api.models.consumer.pubsub
 import com.google.gson.JsonElement
 
 open class BasePubSubResult(
-    internal val channel: String,
-    internal val subscription: String?,
-    internal val timetoken: Long?,
-    internal val userMetadata: JsonElement?,
-    internal val publisher: String?
+    val channel: String,
+    val subscription: String?,
+    val timetoken: Long?,
+    val userMetadata: JsonElement?,
+    val publisher: String?
 
 ) {
-    constructor(basePubSubResult: BasePubSubResult) : this(
+    internal constructor(basePubSubResult: BasePubSubResult) : this(
         basePubSubResult.channel,
         basePubSubResult.subscription,
         basePubSubResult.timetoken,
@@ -18,3 +18,4 @@ open class BasePubSubResult(
         basePubSubResult.publisher
     )
 }
+

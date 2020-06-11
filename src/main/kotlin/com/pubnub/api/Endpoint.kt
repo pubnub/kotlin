@@ -188,23 +188,6 @@ abstract class Endpoint<Input, Output>(protected val pubnub: PubNub) {
         )
     }
 
-    /*protected fun encodeParams(params: Map<String, String>): Map<String, String> {
-        val encodedParams = HashMap(params)
-        if (encodedParams.containsKey("auth")) {
-            encodedParams["auth"] = encodedParams["auth"]?.let {
-                PubNubUtil.urlEncode(it)
-            }
-        }
-        return encodedParams
-    }*/
-
-    protected fun appendInclusionParams(map: MutableMap<String, String>, params: List<Enum<*>>) {
-        /*if (params.isEmpty()) {
-            return
-        }*/
-        map["include"] = params.toCsv()
-    }
-
     private fun createBaseParams(): HashMap<String, String> {
         val map = hashMapOf<String, String>()
 

@@ -4,6 +4,7 @@ import com.pubnub.api.vendor.Base64
 import com.pubnub.api.vendor.Crypto
 import okhttp3.Request
 import okio.Buffer
+import org.slf4j.LoggerFactory
 import java.io.IOException
 import java.io.UnsupportedEncodingException
 import java.net.URLDecoder
@@ -15,9 +16,11 @@ import java.util.*
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 
-class PubNubUtil {
+internal class PubNubUtil {
 
     companion object A {
+
+        private val log = LoggerFactory.getLogger("PubNubUtil")
 
         private const val CHARSET = "UTF-8"
 
@@ -131,9 +134,9 @@ class PubNubUtil {
                     signature = "v2.$signature"
                 }
             } catch (e: PubNubException) {
-                println("signature failed on SignatureInterceptor: $e")
+                log.warn("signature failed on SignatureInterceptor: $e")
             } catch (e: UnsupportedEncodingException) {
-                println("signature failed on SignatureInterceptor: $e")
+                log.warn("signature failed on SignatureInterceptor: $e")
             }
             return signature
         }
@@ -174,13 +177,12 @@ class PubNubUtil {
             return stringifiedArguments
         }
 
-        internal fun preparePamArguments(encodedQueryString: String): String {
+        private fun preparePamArguments(encodedQueryString: String): String {
             return encodedQueryString.split("&")
                 .toSortedSet()
                 .map { pamEncode(it, true) }
                 .joinToString("&")
         }
-
 
         /**
          * Returns encoded String
@@ -198,7 +200,6 @@ class PubNubUtil {
                     .replace("+", "%20")
             }.run {
                 replace("*", "%2A")
-                // this
             }
         }
 

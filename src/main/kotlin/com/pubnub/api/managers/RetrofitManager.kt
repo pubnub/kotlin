@@ -9,7 +9,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import java.util.concurrent.TimeUnit
 
-class RetrofitManager(val pubnub: PubNub) {
+internal class RetrofitManager(val pubnub: PubNub) {
 
     private val transactionClientInstance: OkHttpClient by lazy {
         createOkHttpClient(pubnub.configuration.nonSubscribeRequestTimeout)

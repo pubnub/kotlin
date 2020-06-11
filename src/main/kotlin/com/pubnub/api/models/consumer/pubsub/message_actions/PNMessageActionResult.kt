@@ -6,7 +6,7 @@ import com.pubnub.api.models.consumer.pubsub.objects.ObjectResult
 
 class PNMessageActionResult(
     result: BasePubSubResult,
-    event: String,
+    override val event: String,
     data: PNMessageAction
 ) : ObjectResult<PNMessageAction>(result, event, data) {
 

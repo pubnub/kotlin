@@ -9,7 +9,7 @@ import com.pubnub.api.models.consumer.pubsub.PNSignalResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
 import java.util.*
 
-class ListenerManager(val pubnub: PubNub) {
+internal class ListenerManager(val pubnub: PubNub) {
     private val listeners = mutableListOf<SubscribeCallback>()
 
     fun addListener(listener: SubscribeCallback) {

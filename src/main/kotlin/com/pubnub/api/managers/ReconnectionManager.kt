@@ -4,10 +4,13 @@ import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
 import com.pubnub.api.callbacks.ReconnectionCallback
 import com.pubnub.api.enums.PNReconnectionPolicy
+import org.slf4j.LoggerFactory
 import java.util.*
 import kotlin.math.pow
 
-class ReconnectionManager(val pubnub: PubNub) {
+internal class ReconnectionManager(val pubnub: PubNub) {
+
+    private val log = LoggerFactory.getLogger("ReconnectionManager")
 
     private companion object {
         private const val LINEAR_INTERVAL = 3
@@ -66,11 +69,11 @@ class ReconnectionManager(val pubnub: PubNub) {
             if (timerInterval > MAX_EXPONENTIAL_BACKOFF) {
                 timerInterval = MIN_EXPONENTIAL_BACKOFF
                 exponentialMultiplier = 1
-                println("timerInterval > MAXEXPONENTIALBACKOFF at: " + Calendar.getInstance().time.toString())
+                log.info("timerInterval > MAXEXPONENTIALBACKOFF at: " + Calendar.getInstance().time.toString())
             } else if (timerInterval < 1) {
                 timerInterval = MIN_EXPONENTIAL_BACKOFF
             }
-            println("timerInterval = " + timerInterval + " at: " + Calendar.getInstance().time.toString())
+            log.info("timerInterval = " + timerInterval + " at: " + Calendar.getInstance().time.toString())
         }
         if (pnReconnectionPolicy == PNReconnectionPolicy.LINEAR) {
             timerInterval = LINEAR_INTERVAL
@@ -89,7 +92,7 @@ class ReconnectionManager(val pubnub: PubNub) {
                     stopHeartbeatTimer()
                     reconnectionCallback.onReconnection()
                 } else {
-                    println("callTime at ${System.currentTimeMillis()}")
+                    log.info("callTime at ${System.currentTimeMillis()}")
                     exponentialMultiplier++
                     failedCalls++
                     registerHeartbeatTimer()
@@ -97,10 +100,9 @@ class ReconnectionManager(val pubnub: PubNub) {
             }
     }
 
-
     private fun isReconnectionPolicyUndefined(): Boolean {
         if (pnReconnectionPolicy == PNReconnectionPolicy.NONE) {
-            println("reconnection policy is disabled, please handle reconnection manually.")
+            log.info("reconnection policy is disabled, please handle reconnection manually.")
             return true
         }
         return false

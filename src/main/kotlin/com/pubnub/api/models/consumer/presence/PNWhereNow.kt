@@ -1,5 +1,5 @@
 package com.pubnub.api.models.consumer.presence
 
-data class PNWhereNowResult(
+class PNWhereNowResult(
     val channels: List<String>
 )

@@ -4,8 +4,8 @@ import com.pubnub.api.managers.SubscriptionManager
 
 abstract class PubSubBuilder(
     protected val subscriptionManager: SubscriptionManager,
-    internal var channels: List<String> = emptyList(),
-    internal var channelGroups: List<String> = emptyList()
+    var channels: List<String> = emptyList(),
+    var channelGroups: List<String> = emptyList()
 ) {
     abstract fun execute()
 }
@@ -14,7 +14,7 @@ class PresenceBuilder(
     subscriptionManager: SubscriptionManager,
     channels: List<String> = emptyList(),
     channelGroups: List<String> = emptyList(),
-    internal var connected: Boolean = false
+    var connected: Boolean = false
 ) : PubSubBuilder(subscriptionManager, channels, channelGroups) {
 
     override fun execute() {

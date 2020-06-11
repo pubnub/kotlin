@@ -19,14 +19,17 @@ import com.pubnub.api.models.consumer.pubsub.objects.ObjectPayload
 import com.pubnub.api.models.server.PresenceEnvelope
 import com.pubnub.api.models.server.SubscribeMessage
 import com.pubnub.api.vendor.Crypto
+import org.slf4j.LoggerFactory
 import java.util.concurrent.LinkedBlockingQueue
 
-class SubscribeMessageWorker(
+internal class SubscribeMessageWorker(
     val pubnub: PubNub,
     val listenerManager: ListenerManager,
     val queue: LinkedBlockingQueue<SubscribeMessage>,
     val duplicationManager: DuplicationManager
 ) : Runnable {
+
+    private val log = LoggerFactory.getLogger("SubscribeMessageWorker")
 
     private var running = false
 
@@ -49,7 +52,8 @@ class SubscribeMessageWorker(
                 processIncomingPayload(queue.take())
             } catch (e: InterruptedException) {
                 running = false
-                print("take message interrupted!")
+                log.trace("take message interrupted!")
+                e.printStackTrace()
             }
         }
     }
@@ -104,7 +108,7 @@ class SubscribeMessageWorker(
             val extractedMessage = processMessage(message)
 
             if (extractedMessage == null) {
-                println("unable to parse payload on #processIncomingMessages")
+                log.debug("unable to parse payload on #processIncomingMessages")
             }
 
             val result = BasePubSubResult(

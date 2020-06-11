@@ -7,6 +7,7 @@ import okhttp3.Authenticator
 import okhttp3.CertificatePinner
 import okhttp3.ConnectionSpec
 import okhttp3.logging.HttpLoggingInterceptor
+import org.slf4j.LoggerFactory
 import java.net.Proxy
 import java.net.ProxySelector
 import java.util.*
@@ -15,6 +16,8 @@ import javax.net.ssl.SSLSocketFactory
 import javax.net.ssl.X509ExtendedTrustManager
 
 class PNConfiguration {
+
+    private val log = LoggerFactory.getLogger("PNConfiguration")
 
     private companion object Constants {
         private const val DEFAULT_DEDUPE_SIZE = 100
@@ -44,7 +47,7 @@ class PNConfiguration {
         set(value) {
             field =
                 if (value < MINIMUM_PRESENCE_TIMEOUT) {
-                    println("Presence timeout is too low. Defaulting to: $MINIMUM_PRESENCE_TIMEOUT")
+                    log.warn("Presence timeout is too low. Defaulting to: $MINIMUM_PRESENCE_TIMEOUT")
                     MINIMUM_PRESENCE_TIMEOUT
                 } else value
             heartbeatInterval = (presenceTimeout / 2) - 1

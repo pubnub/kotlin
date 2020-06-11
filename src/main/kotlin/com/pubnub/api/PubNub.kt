@@ -28,13 +28,13 @@ class PubNub(val configuration: PNConfiguration) {
 
     private companion object Constants {
         private const val TIMESTAMP_DIVIDER = 1000
-        private const val SDK_VERSION = "0.0.2-dev"
+        private const val SDK_VERSION = "4.0.0-dev"
         private const val MAX_SEQUENCE = 65535;
     }
 
     private val basePathManager = BasePathManager(configuration)
 
-    internal val mapper = MapperManager()
+    val mapper = MapperManager()
     internal val retrofitManager = RetrofitManager(this)
     internal val publishSequenceManager = PublishSequenceManager(MAX_SEQUENCE)
     internal val telemetryManager = TelemetryManager()
@@ -99,9 +99,6 @@ class PubNub(val configuration: PNConfiguration) {
     fun getSubscribedChannels() = subscriptionManager.getSubscribedChannels()
     fun getSubscribedChannelGroups() = subscriptionManager.getSubscribedChannelGroups()
     fun unsubscribeAll() = subscriptionManager.unsubscribeAll()
-
-    // End Message Actions API
-    // public methods
 
     /**
      * Perform Cryptographic decryption of an input string using cipher key provided by PNConfiguration

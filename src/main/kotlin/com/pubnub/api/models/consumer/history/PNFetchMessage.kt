@@ -9,10 +9,10 @@ class PNFetchMessagesResult(
 class PNFetchMessageItem(
     val message: JsonElement,
     val meta: JsonElement?,
-    val timetoken: Long,
-    val actions: Map<String, HashMap<String, List<Action>>>?
+    val timetoken: Long
 ) {
-
+    var actions: Map<String, HashMap<String, List<Action>>>? = null
+        internal set
 }
 
 class Action(

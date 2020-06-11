@@ -385,11 +385,9 @@ class SubscriptionManager(val pubnub: PubNub) {
 
     @Synchronized
     fun destroy(forceDestroy: Boolean = false) {
-        synchronized(this) {
-            disconnect()
-            if (forceDestroy && consumerThread != null) {
-                consumerThread!!.interrupt()
-            }
+        disconnect()
+        if (forceDestroy && consumerThread != null) {
+            consumerThread!!.interrupt()
         }
     }
 
