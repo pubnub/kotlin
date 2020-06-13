@@ -1,3 +1,10 @@
+## [v4.31.2](https://github.com/pubnub/java/releases/tag/v4.31.2)
+June-13-2020
+
+[Full Changelog](https://github.com/pubnub/java/compare/v4.31.1...v4.31.2)
+
+- 🌟️ Add "click_action" parameter to PushPayloadHelper in order to pass it to FCM. 
+
 ## [v4.29.2](https://github.com/pubnub/java/tree/v4.29.2)
   December-03-2019
 
@@ -785,5 +792,3 @@
 
 
 - ⭐initial beta1.
-
-

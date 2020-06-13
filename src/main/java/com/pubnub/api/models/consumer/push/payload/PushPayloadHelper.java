@@ -225,23 +225,34 @@ public class PushPayloadHelper {
         @Setter
         @Accessors(chain = true)
         public static class Notification implements PushPayloadSerializer {
-            private String title;
-            private String body;
-            private String image;
+            private Map<String, Object> parametersMap = new HashMap();
+
+            public Notification set(String parameterName, Object parameterValue) {
+                parametersMap.put(parameterName, parameterValue);
+                return this;
+            }
+
+            public Notification setTitle(String title) {
+                set("title", title);
+                return this;
+            }
+
+            public Notification setBody(String body) {
+                set("body", body);
+                return this;
+            }
+            public Notification setImage(String image) {
+                set("image", image);
+                return this;
+            }
+            public Notification setClickAction(String clickAction) {
+                set("click_action", clickAction);
+                return this;
+            }
 
             @Override
             public Map<String, Object> toMap() {
-                Map<String, Object> map = new HashMap<>();
-                if (title != null) {
-                    map.put("title", title);
-                }
-                if (body != null) {
-                    map.put("body", body);
-                }
-                if (image != null) {
-                    map.put("image", image);
-                }
-                return map;
+                return filterNonNullEntries(parametersMap);
             }
         }
     }

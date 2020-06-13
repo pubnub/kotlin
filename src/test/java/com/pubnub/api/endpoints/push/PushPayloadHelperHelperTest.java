@@ -337,6 +337,7 @@ public class PushPayloadHelperHelperTest extends TestHarness {
                         .setBody("Notification body")
                         .setImage(null)
                         .setTitle("")
+                        .setClickAction("FOO_ACTION")
         );
 
         HashMap<String, Object> customFcmPayload = new HashMap<>();
@@ -374,8 +375,7 @@ public class PushPayloadHelperHelperTest extends TestHarness {
         Assert.assertEquals(pnFcmNotificationsMap.get("body"), "Notification body");
         Assert.assertEquals(pnFcmNotificationsMap.get("image"), null);
         Assert.assertEquals(pnFcmNotificationsMap.get("title"), "");
-
-
+        Assert.assertEquals(pnFcmNotificationsMap.get("click_action"), "FOO_ACTION");
     }
 
     @Test
