@@ -5,12 +5,10 @@ scm: github.com/pubnub/java
 files:
   - build/libs/pubnub-gson-4.31.2-all.jar
 changelog:
-  -
-    version: v4.31.2
-    date: 2020-06-13
+  - version: v4.31.2
+    date: 2020-06-12
     changes:
-      -
-        type: feature
+      - type: feature
         text: "Add \"click_action\" parameter to PushPayloadHelper in order to pass it to FCM."
   - version: v4.31.1
     date: 2020-04-16

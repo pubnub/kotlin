@@ -1,18 +1,42 @@
 ## [v4.31.2](https://github.com/pubnub/java/releases/tag/v4.31.2)
-June-13-2020
+June-12-2020
 
 [Full Changelog](https://github.com/pubnub/java/compare/v4.31.1...v4.31.2)
 
-- 🌟️ Add "click_action" parameter to PushPayloadHelper in order to pass it to FCM. 
+- 🌟 Add "click_action" parameter to PushPayloadHelper in order to pass it to FCM. 
+
+## [v4.31.1](https://github.com/pubnub/java/releases/tag/v4.31.1)
+April-16-2020
+
+[Full Changelog](https://github.com/pubnub/java/compare/v4.31.0...v4.31.1)
+
+- 🐛 Fix OkHttp reconnection policy. 
+
+## [v4.31.0](https://github.com/pubnub/java/tree/v4.31.0)
+February-25-2020
+
+[Full Changelog](https://github.com/pubnub/java/compare/v4.30.0...v4.31.0)
+
+- 🌟️ Implemented Objects Filtering API
+- ⭐ Handled more network events to keep the client subscribed.
+- ⭐ Improved interaction with classes from org.json*.
+- ⭐ Made PNCallback eligible for SAM/lambda conversion.
+- ⭐ Deprecated PNPushType.GCM in favor of PNPushType.FCM.
+
+## [v4.30.0](https://github.com/pubnub/java/tree/v4.30.0)
+January-23-2020
+
+[Full Changelog](https://github.com/pubnub/java/compare/v4.29.2...v4.30.0)
+
+- 🌟️ Add support for APNS2 Push API.
+- 🌟️ Add a utility class to ease creating push payloads.
 
 ## [v4.29.2](https://github.com/pubnub/java/tree/v4.29.2)
-  December-03-2019
-
+  December-02-2019
 
   [Full Changelog](https://github.com/pubnub/java/compare/v4.29.1...v4.29.2)
 
-
-- ⭐Disable Okhttp retry on failure
+- ⭐ Disable Okhttp retry on failure
 
 
 ## [v4.29.1](https://github.com/pubnub/java/tree/v4.29.1)
