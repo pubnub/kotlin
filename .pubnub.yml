@@ -1,10 +1,15 @@
 name: java
-version: 4.31.2
+version: 4.31.3
 schema: 1
 scm: github.com/pubnub/java
 files:
-  - build/libs/pubnub-gson-4.31.2-all.jar
+  - build/libs/pubnub-gson-4.31.3-all.jar
 changelog:
+  - version: v4.31.3
+    date: 2020-06-17
+    changes:
+      - type: bug
+        text: "Fix typo in suppressLeaveEvents in PNConfiguration."
   - version: v4.31.2
     date: 2020-06-12
     changes:

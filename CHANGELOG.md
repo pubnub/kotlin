@@ -1,3 +1,10 @@
+## [v4.31.3](https://github.com/pubnub/java/releases/tag/v4.31.3)
+June-17-2020
+
+[Full Changelog](https://github.com/pubnub/java/compare/v4.31.2...v4.31.3)
+
+- 🐛 Fix typo in suppressLeaveEvents in PNConfiguration. 
+
 ## [v4.31.2](https://github.com/pubnub/java/releases/tag/v4.31.2)
 June-12-2020
 

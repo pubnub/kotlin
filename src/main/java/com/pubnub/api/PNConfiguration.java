@@ -121,9 +121,9 @@ public class PNConfiguration {
     private int nonSubscribeRequestTimeout;
 
     /**
-     * Supress leave events when a channel gets disconnected
+     * Suppress leave events when a channel gets disconnected
      */
-    private boolean supressLeaveEvents;
+    private boolean suppressLeaveEvents;
 
     /**
      * verbosity of heartbeat configuration, by default only alerts on failed heartbeats
@@ -218,7 +218,7 @@ public class PNConfiguration {
         maximumReconnectionRetries = -1;
 
         dedupOnSubscribe = false;
-        supressLeaveEvents = false;
+        suppressLeaveEvents = false;
         maximumMessagesCacheSize = DEFAULT_DEDUPE_SIZE;
 
         disableTokenManager = false;

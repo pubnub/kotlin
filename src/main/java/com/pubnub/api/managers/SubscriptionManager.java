@@ -189,7 +189,7 @@ public class SubscriptionManager {
     public void adaptPresenceBuilder(PresenceOperation presenceOperation) {
         this.subscriptionState.adaptPresenceBuilder(presenceOperation);
 
-        if (!this.pubnub.getConfiguration().isSupressLeaveEvents() && !presenceOperation.isConnected()) {
+        if (!this.pubnub.getConfiguration().isSuppressLeaveEvents() && !presenceOperation.isConnected()) {
             new Leave(pubnub, this.telemetryManager, this.retrofitManager)
                     .channels(presenceOperation.getChannels()).channelGroups(presenceOperation.getChannelGroups())
                     .async(new PNCallback<Boolean>() {
@@ -208,7 +208,7 @@ public class SubscriptionManager {
 
         this.subscriptionStatusAnnounced = false;
 
-        if (!this.pubnub.getConfiguration().isSupressLeaveEvents()) {
+        if (!this.pubnub.getConfiguration().isSuppressLeaveEvents()) {
             new Leave(pubnub, this.telemetryManager, this.retrofitManager)
                     .channels(unsubscribeOperation.getChannels()).channelGroups(unsubscribeOperation.getChannelGroups())
                     .async(new PNCallback<Boolean>() {
