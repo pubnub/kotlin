@@ -2,9 +2,11 @@ package com.pubnub.api.integration
 
 import com.pubnub.api.enums.PNPushEnvironment
 import com.pubnub.api.enums.PNPushType
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
-import java.util.*
+import java.util.UUID
 
 class PushIntegrationTest : BaseIntegrationTest() {
 
@@ -36,18 +38,16 @@ class PushIntegrationTest : BaseIntegrationTest() {
     }
 
     private fun runPushOperations(pushType: PNPushType) {
-        // todo logger
-        println("Push type '$pushType'")
-        println("Channels $expectedChannels'")
-        println("Topic $expectedTopic'")
-        println("GeneratedToken '${expectedDeviceId.length}': $expectedDeviceId")
+        logger.info("Push type '$pushType'")
+        logger.info("Channels $expectedChannels'")
+        logger.info("Topic $expectedTopic'")
+        logger.info("GeneratedToken '${expectedDeviceId.length}': $expectedDeviceId")
 
         pubnub.addPushNotificationsOnChannels().apply {
             channels = expectedChannels
             this.pushType = pushType
             topic = expectedTopic
             deviceId = expectedDeviceId
-
         }.sync()!!
 
         wait()
@@ -57,7 +57,6 @@ class PushIntegrationTest : BaseIntegrationTest() {
             this.pushType = pushType
             topic = expectedTopic
             environment = PNPushEnvironment.DEVELOPMENT
-
         }.sync()!!.run {
             assertTrue(channels.containsAll(expectedChannels))
         }
@@ -70,7 +69,6 @@ class PushIntegrationTest : BaseIntegrationTest() {
             deviceId = expectedDeviceId
             topic = expectedTopic
             channels = listOf(expectedChannels[0])
-
         }.sync()!!
 
         wait()
@@ -92,7 +90,6 @@ class PushIntegrationTest : BaseIntegrationTest() {
             environment = PNPushEnvironment.DEVELOPMENT
             deviceId = expectedDeviceId
             topic = expectedTopic
-
         }.sync()!!
 
         wait()
@@ -107,5 +104,4 @@ class PushIntegrationTest : BaseIntegrationTest() {
             assertFalse(channels.containsAll(expectedChannels))
         }
     }
-
 }

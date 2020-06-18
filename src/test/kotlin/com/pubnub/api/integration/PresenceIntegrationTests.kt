@@ -1,17 +1,21 @@
 package com.pubnub.api.integration
 
 import com.pubnub.api.PubNub
+import com.pubnub.api.asyncRetry
+import com.pubnub.api.await
 import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
-import com.pubnub.api.suite.await
-
+import com.pubnub.api.randomChannel
+import com.pubnub.api.randomValue
 import org.awaitility.Awaitility
 import org.awaitility.Durations
 import org.hamcrest.core.IsEqual
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
@@ -48,11 +52,9 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
             it.subscribeToBlocking(*expectedChannels.toTypedArray())
         }
 
-        wait(TIMEOUT_MEDIUM)
-
         pubnub.hereNow().apply {
             includeUUIDs = true
-        }.await { result, status ->
+        }.asyncRetry { result, status ->
             assertFalse(status.error)
             assertTrue(result!!.totalOccupancy >= expectedClientsCount)
             assertTrue(result.totalChannels >= expectedChannelsCount)
@@ -92,12 +94,10 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
         assertEquals(expectedChannelsCount, expectedChannels.size)
         assertEquals(expectedClientsCount, clients.size)
 
-        wait(TIMEOUT_MEDIUM)
-
         pubnub.hereNow().apply {
             channels = expectedChannels
             includeUUIDs = true
-        }.await { result, status ->
+        }.asyncRetry { result, status ->
             assertFalse(status.error)
             assertEquals(expectedChannelsCount, result!!.totalChannels)
             assertEquals(expectedChannelsCount, result.channels.size)
@@ -127,14 +127,14 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
         val hits = AtomicInteger()
         val expectedHits = 2
         val expectedStatePayload = generatePayload()
-        val expectedChannel = randomValue()
+        val expectedChannel = randomChannel()
 
         pubnub.addListener(object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {}
             override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {
-                if (pnPresenceEventResult.event == "state-change"
-                    && pnPresenceEventResult.channel == expectedChannel
-                    && pnPresenceEventResult.uuid == pubnub.configuration.uuid
+                if (pnPresenceEventResult.event == "state-change" &&
+                    pnPresenceEventResult.channel == expectedChannel &&
+                    pnPresenceEventResult.uuid == pubnub.configuration.uuid
                 ) {
                     assertEquals(expectedStatePayload, pnPresenceEventResult.state)
                     hits.incrementAndGet()
@@ -173,13 +173,13 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
     fun testHeartbeatsDisabled() {
         val heartbeatCallsCount = AtomicInteger()
         val subscribeSuccess = AtomicBoolean()
-        val expectedChannel = randomValue()
+        val expectedChannel = randomChannel()
 
         pubnub.configuration.heartbeatNotificationOptions = PNHeartbeatNotificationOptions.ALL
         assertEquals(PNHeartbeatNotificationOptions.ALL, pubnub.configuration.heartbeatNotificationOptions)
 
-        pubnub.configuration.presenceTimeout = 20;
-        pubnub.configuration.heartbeatInterval = 0;
+        pubnub.configuration.presenceTimeout = 20
+        pubnub.configuration.heartbeatInterval = 0
 
         assertEquals(20, pubnub.configuration.presenceTimeout)
         assertEquals(0, pubnub.configuration.heartbeatInterval)

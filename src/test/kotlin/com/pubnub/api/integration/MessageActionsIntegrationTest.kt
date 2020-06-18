@@ -1,10 +1,16 @@
 package com.pubnub.api.integration
 
-import com.pubnub.api.*
+import com.pubnub.api.PubNub
+import com.pubnub.api.PubNubError
+import com.pubnub.api.assertPnException
+import com.pubnub.api.asyncRetry
+import com.pubnub.api.await
 import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.endpoints.message_actions.GetMessageActions
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
+import com.pubnub.api.failTest
+import com.pubnub.api.listen
 import com.pubnub.api.models.consumer.PNPublishResult
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.history.Action
@@ -15,13 +21,20 @@ import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
-import com.pubnub.api.suite.await
+import com.pubnub.api.randomChannel
+import com.pubnub.api.randomValue
 import org.awaitility.Awaitility
 import org.awaitility.Durations
 import org.hamcrest.core.IsEqual
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
-import java.util.*
+import java.util.Collections
+import java.util.HashMap
+import java.util.UUID
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.function.Consumer
@@ -32,7 +45,7 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
     lateinit var expectedChannel: String
 
     override fun onBefore() {
-        expectedChannel = randomValue()
+        expectedChannel = randomChannel()
 
         publishResult = pubnub.publish().apply {
             channel = expectedChannel
@@ -53,7 +66,6 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
         }.await { _, status ->
             assertFalse(status.error)
             assertEquals(PNOperationType.PNAddMessageAction, status.operation)
-
         }
     }
 
@@ -63,8 +75,8 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
             channel = expectedChannel
             messageAction =
                 PNMessageAction(
-                    type = randomValue(),
-                    value = randomValue(),
+                    type = randomValue(5),
+                    value = unicode(),
                     messageTimetoken = publishResult.timetoken
                 )
         }.sync()!!
@@ -84,18 +96,18 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
         val addMessageActionResult = pubnub.addMessageAction().apply {
             channel = expectedChannel
             messageAction = (
-                    PNMessageAction(
-                        type = "REACTION",
-                        value = expectedValue,
-                        messageTimetoken = publishResult.timetoken
-                    ))
+                PNMessageAction(
+                    type = "REACTION",
+                    value = expectedValue,
+                    messageTimetoken = publishResult.timetoken
+                ))
         }.sync()!!
 
         pubnub.removeMessageAction().apply {
             messageTimetoken = publishResult.timetoken
             actionTimetoken = addMessageActionResult.actionTimetoken
             channel = expectedChannel
-        }.await { _, status ->
+        }.asyncRetry { _, status ->
             assertFalse(status.error)
             assertEquals(PNOperationType.PNDeleteMessageAction, status.operation)
         }
@@ -116,8 +128,7 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
 
         pubnub.getMessageActions().apply {
             channel = expectedChannel
-
-        }.await { result, status ->
+        }.asyncRetry { result, status ->
             assertFalse(status.error)
             assertEquals(PNOperationType.PNGetMessageActions, status.operation)
             assertEquals(1, result!!.actions.size)
@@ -128,7 +139,7 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
     @Test
     fun testAddGetMessageAction_Bulk() {
         val expectedMessageCount = 10
-        val expectedChannel = randomValue()
+        val expectedChannel = randomChannel()
 
         publishMixed(pubnub, expectedMessageCount, expectedChannel).forEach { pnPublishResult ->
             pubnub.addMessageAction().apply {
@@ -143,7 +154,7 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
 
         pubnub.getMessageActions().apply {
             channel = expectedChannel
-        }.await { result, status ->
+        }.asyncRetry { result, status ->
             assertFalse(status.error)
             assertEquals(PNOperationType.PNGetMessageActions, status.operation)
             assertEquals(expectedMessageCount, result!!.actions.size)
@@ -151,13 +162,14 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
     }
 
     @Test
-    @Throws(PubNubException::class)
     fun testAddGetMessageAction_Bulk_Pagination() {
         val expectedChannelName = randomValue()
         val messageCount = 10
         val messages = publishMixed(pubnub, messageCount, expectedChannelName)
 
-        assertEquals(10, messages.size)
+        assertEquals(messageCount, messages.size)
+
+        wait(2)
 
         messages.forEachIndexed { index, i ->
             pubnub.addMessageAction().apply {
@@ -172,6 +184,12 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
 
         val success = AtomicBoolean()
         val count = AtomicInteger()
+
+        pubnub.getMessageActions().apply {
+            channel = expectedChannelName
+        }.sync()!!.run {
+            assertEquals(messageCount, messages.size)
+        }
 
         page(expectedChannelName, System.currentTimeMillis() * 10_000, object : Callback {
             override fun onMore(actions: List<PNMessageAction>) {
@@ -191,14 +209,13 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
         fun onDone()
     }
 
-    fun page(channel: String, start: Long, callback: Callback) {
+    private fun page(channel: String, start: Long, callback: Callback) {
         pubnub.getMessageActions().apply {
             this.channel = channel
             this.start = start
-            this.limit = 5
-
-        }.async { result, status ->
-            if (!status.error && !result!!.actions.isEmpty()) {
+            this.limit = 3
+        }.await { result, status ->
+            if (!status.error && result!!.actions.isNotEmpty()) {
                 callback.onMore(result.actions)
                 page(channel, result.actions[0].actionTimetoken!!, callback)
             } else {
@@ -250,7 +267,7 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
         })
     }
 
-    fun pageActions(chunk: Int, channel: String, start: Long?, callback: Callback) {
+    private fun pageActions(chunk: Int, channel: String, start: Long?, callback: Callback) {
         val builder: GetMessageActions = pubnub.getMessageActions().apply {
             this.limit = chunk
             this.channel = channel
@@ -269,10 +286,9 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
 
     @Test
     fun testFetchHistory() {
-        val expectedChannel = randomValue()
+        val expectedChannel = randomChannel()
         val expectedMessageCount = 10
         val publishResultList = publishMixed(pubnub, expectedMessageCount, expectedChannel)
-
 
         publishResultList.forEachIndexed { i, it ->
             if (i % 2 == 0 && i % 3 == 0) {
@@ -281,7 +297,7 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
                     messageAction = PNMessageAction(
                         type = "receipt",
                         value = emoji(),
-                        messageTimetoken = publishResultList[i].timetoken
+                        messageTimetoken = it.timetoken
                     )
                 }.sync()!!
             }
@@ -291,7 +307,7 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
                     messageAction = PNMessageAction(
                         type = "receipt",
                         value = emoji(),
-                        messageTimetoken = publishResultList[i].timetoken
+                        messageTimetoken = it.timetoken
                     )
                 }.sync()!!
             }
@@ -301,7 +317,7 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
                     messageAction = PNMessageAction(
                         type = "receipt",
                         value = emoji(),
-                        messageTimetoken = publishResultList[i].timetoken
+                        messageTimetoken = it.timetoken
                     )
                 }.sync()!!
             }
@@ -311,7 +327,7 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
                     messageAction = PNMessageAction(
                         type = "fiver",
                         value = emoji(),
-                        messageTimetoken = publishResultList[i].timetoken
+                        messageTimetoken = it.timetoken
                     )
                 }.sync()!!
             }
@@ -422,20 +438,18 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
 
             override fun messageAction(pubnub: PubNub, pnMessageActionResult: PNMessageActionResult) {
                 assertEquals(expectedChannelName, pnMessageActionResult.channel)
-                actionsCount.incrementAndGet();
+                actionsCount.incrementAndGet()
             }
         })
 
         pubnub.subscribe().apply {
             channels = Collections.singletonList(expectedChannelName)
             withPresence = true
-
         }.execute()
 
         Awaitility.await()
             .atMost(Durations.TEN_SECONDS)
-            .untilAtomic(actionsCount, IsEqual.equalTo(expectedMessageCount));
-
+            .untilAtomic(actionsCount, IsEqual.equalTo(expectedMessageCount))
     }
 
     @Test
@@ -452,7 +466,7 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
     fun testAddAction_NoMessageActionObject() {
         try {
             pubnub.addMessageAction().apply {
-                channel = randomValue()
+                channel = randomChannel()
             }.sync()
         } catch (e: Exception) {
             assertPnException(PubNubError.MESSAGE_ACTION_MISSING, e)
@@ -463,7 +477,7 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
     fun testAddAction_NoMessageActionType() {
         try {
             pubnub.addMessageAction().apply {
-                channel = randomValue()
+                channel = randomChannel()
                 messageAction = PNMessageAction(
                     type = "",
                     value = randomValue(),
@@ -479,7 +493,7 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
     fun testAddAction_NoMessageActionValue() {
         try {
             pubnub.addMessageAction().apply {
-                channel = randomValue()
+                channel = randomChannel()
                 messageAction = PNMessageAction(
                     type = randomValue(),
                     value = "",
@@ -515,7 +529,7 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
     fun testRemoveAction_NoMessageTimetoken() {
         try {
             pubnub.removeMessageAction().apply {
-                channel = randomValue()
+                channel = randomChannel()
                 actionTimetoken = 1L
             }.sync()
         } catch (e: Exception) {
@@ -527,7 +541,7 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
     fun testRemoveAction_NoMessageActionTimetoken() {
         try {
             pubnub.removeMessageAction().apply {
-                channel = randomValue()
+                channel = randomChannel()
                 messageTimetoken = 1L
             }.sync()
         } catch (e: Exception) {
@@ -537,7 +551,7 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
 
     @Test
     fun testAddSameActionTwice() {
-        val expectedChannel = randomValue()
+        val expectedChannel = randomChannel()
         val expectedEmoji = emoji()
 
         val timetoken = pubnub.publish().apply {
@@ -566,7 +580,5 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
             assertTrue(status.error)
             assertEquals(409, status.statusCode)
         }
-
     }
-
 }

@@ -1,7 +1,11 @@
 package com.pubnub.api.integration
 
-import com.pubnub.api.suite.await
-import org.junit.jupiter.api.Assertions.*
+import com.pubnub.api.await
+import com.pubnub.api.randomValue
+import com.pubnub.api.retry
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
 class GroupManagementIntegrationTests : BaseIntegrationTest() {
@@ -56,9 +60,9 @@ class GroupManagementIntegrationTests : BaseIntegrationTest() {
             withPresence = true
         }.execute()
 
-        wait()
-
-        assertTrue(pubnub.getSubscribedChannelGroups().contains(expectedGroup))
+        retry {
+            assertTrue(pubnub.getSubscribedChannelGroups().contains(expectedGroup))
+        }
     }
 
     @Test

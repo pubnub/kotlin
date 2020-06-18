@@ -2,10 +2,17 @@ package com.pubnub.api.integration
 
 import com.pubnub.api.PubNubError
 import com.pubnub.api.assertPnException
+import com.pubnub.api.await
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 import com.pubnub.api.param
-import com.pubnub.api.suite.await
-import org.junit.jupiter.api.Assertions.*
+import com.pubnub.api.randomChannel
+import com.pubnub.api.randomValue
+import com.pubnub.api.retry
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
 class HistoryIntegrationTest : BaseIntegrationTest() {
@@ -20,13 +27,15 @@ class HistoryIntegrationTest : BaseIntegrationTest() {
             publishMixed(pubnub, expectedMessageCount, expectedChannelName).size
         )
 
-        pubnub.history().apply {
-            channel = expectedChannelName
-        }.sync()!!.run {
-            messages.forEach {
-                assertNotNull(it.entry)
-                assertNull(it.meta)
-                assertNull(it.timetoken)
+        retry {
+            pubnub.history().apply {
+                channel = expectedChannelName
+            }.sync()!!.run {
+                messages.forEach {
+                    assertNotNull(it.entry)
+                    assertNull(it.meta)
+                    assertNull(it.timetoken)
+                }
             }
         }
     }
@@ -41,14 +50,16 @@ class HistoryIntegrationTest : BaseIntegrationTest() {
             publishMixed(pubnub, expectedMessageCount, expectedChannelName).size
         )
 
-        pubnub.history().apply {
-            channel = expectedChannelName
-            includeTimetoken = true
-        }.sync()!!.run {
-            this.messages.forEach {
-                assertNotNull(it.entry)
-                assertNotNull(it.timetoken)
-                assertNull(it.meta)
+        retry {
+            pubnub.history().apply {
+                channel = expectedChannelName
+                includeTimetoken = true
+            }.sync()!!.run {
+                this.messages.forEach {
+                    assertNotNull(it.entry)
+                    assertNotNull(it.timetoken)
+                    assertNull(it.meta)
+                }
             }
         }
     }
@@ -63,14 +74,16 @@ class HistoryIntegrationTest : BaseIntegrationTest() {
             publishMixed(pubnub, expectedMessageCount, expectedChannelName).size
         )
 
-        pubnub.history().apply {
-            channel = expectedChannelName
-            includeMeta = true
-        }.sync()!!.run {
-            messages.forEach {
-                assertNotNull(it.entry)
-                assertNull(it.timetoken)
-                assertNotNull(it.meta)
+        retry {
+            pubnub.history().apply {
+                channel = expectedChannelName
+                includeMeta = true
+            }.sync()!!.run {
+                messages.forEach {
+                    assertNotNull(it.entry)
+                    assertNull(it.timetoken)
+                    assertNotNull(it.meta)
+                }
             }
         }
     }
@@ -85,15 +98,17 @@ class HistoryIntegrationTest : BaseIntegrationTest() {
             publishMixed(pubnub, expectedMessageCount, expectedChannelName).size
         )
 
-        pubnub.history().apply {
-            channel = expectedChannelName
-            includeMeta = true
-            includeTimetoken = true
-        }.sync()!!.run {
-            messages.forEach {
-                assertNotNull(it.entry)
-                assertNotNull(it.timetoken)
-                assertNotNull(it.meta)
+        retry {
+            pubnub.history().apply {
+                channel = expectedChannelName
+                includeMeta = true
+                includeTimetoken = true
+            }.sync()!!.run {
+                messages.forEach {
+                    assertNotNull(it.entry)
+                    assertNotNull(it.timetoken)
+                    assertNotNull(it.meta)
+                }
             }
         }
     }
@@ -104,15 +119,17 @@ class HistoryIntegrationTest : BaseIntegrationTest() {
 
         publishMixed(pubnub, 10, expectedChannelName)
 
-        pubnub.fetchMessages().apply {
-            channels = listOf(expectedChannelName)
-            maximumPerChannel = 25
-        }.sync()!!.run {
-            channels[expectedChannelName]!!.forEach {
-                assertNotNull(it.message)
-                assertNotNull(it.timetoken)
-                assertNull(it.meta)
-                assertNull(it.actions)
+        retry {
+            pubnub.fetchMessages().apply {
+                channels = listOf(expectedChannelName)
+                maximumPerChannel = 25
+            }.sync()!!.run {
+                channels[expectedChannelName]!!.forEach {
+                    assertNotNull(it.message)
+                    assertNotNull(it.timetoken)
+                    assertNull(it.meta)
+                    assertNull(it.actions)
+                }
             }
         }
     }
@@ -122,16 +139,18 @@ class HistoryIntegrationTest : BaseIntegrationTest() {
         val expectedChannelName = randomValue()
         publishMixed(pubnub, 10, expectedChannelName)
 
-        pubnub.fetchMessages().apply {
-            channels = listOf(expectedChannelName)
-            maximumPerChannel = 25
-            includeMeta = true
-        }.sync()!!.run {
-            channels[expectedChannelName]!!.forEach {
-                assertNotNull(it.message)
-                assertNotNull(it.timetoken)
-                assertNotNull(it.meta)
-                assertNull(it.actions)
+        retry {
+            pubnub.fetchMessages().apply {
+                channels = listOf(expectedChannelName)
+                maximumPerChannel = 25
+                includeMeta = true
+            }.sync()!!.run {
+                channels[expectedChannelName]!!.forEach {
+                    assertNotNull(it.message)
+                    assertNotNull(it.timetoken)
+                    assertNotNull(it.meta)
+                    assertNull(it.actions)
+                }
             }
         }
     }
@@ -152,20 +171,22 @@ class HistoryIntegrationTest : BaseIntegrationTest() {
             ))
         }.sync()!!
 
-        pubnub.fetchMessages().apply {
-            channels = listOf(expectedChannelName)
-            maximumPerChannel = 25
-            includeMessageActions = true
-            includeMeta = false
-        }.sync()!!.run {
-            channels[expectedChannelName]!!.forEach {
-                assertNotNull(it.message)
-                assertNotNull(it.timetoken)
-                assertNull(it.meta)
-                if (it.timetoken == results[0].timetoken) {
-                    assertNotNull(it.actions)
-                } else {
-                    assertTrue(it.actions!!.isEmpty())
+        retry {
+            pubnub.fetchMessages().apply {
+                channels = listOf(expectedChannelName)
+                maximumPerChannel = 25
+                includeMessageActions = true
+                includeMeta = false
+            }.sync()!!.run {
+                channels[expectedChannelName]!!.forEach {
+                    assertNotNull(it.message)
+                    assertNotNull(it.timetoken)
+                    assertNull(it.meta)
+                    if (it.timetoken == results[0].timetoken) {
+                        assertNotNull(it.actions)
+                    } else {
+                        assertTrue(it.actions!!.isEmpty())
+                    }
                 }
             }
         }
@@ -185,22 +206,22 @@ class HistoryIntegrationTest : BaseIntegrationTest() {
             )
         }.sync()!!
 
-        wait()
-
-        pubnub.fetchMessages().apply {
-            channels = listOf(expectedChannelName)
-            maximumPerChannel = 25
-            includeMessageActions = true
-            includeMeta = true
-        }.sync()!!.run {
-            channels[expectedChannelName]!!.forEach {
-                assertNotNull(it.message)
-                assertNotNull(it.timetoken)
-                assertNotNull(it.meta)
-                if (it.timetoken == results[0].timetoken) {
-                    assertNotNull(it.actions)
-                } else {
-                    assertTrue(it.actions!!.isEmpty())
+        retry {
+            pubnub.fetchMessages().apply {
+                channels = listOf(expectedChannelName)
+                maximumPerChannel = 25
+                includeMessageActions = true
+                includeMeta = true
+            }.sync()!!.run {
+                channels[expectedChannelName]!!.forEach {
+                    assertNotNull(it.message)
+                    assertNotNull(it.timetoken)
+                    assertNotNull(it.meta)
+                    if (it.timetoken == results[0].timetoken) {
+                        assertNotNull(it.actions)
+                    } else {
+                        assertTrue(it.actions!!.isEmpty())
+                    }
                 }
             }
         }
@@ -216,20 +237,21 @@ class HistoryIntegrationTest : BaseIntegrationTest() {
                 }
             }
 
-        pubnub.fetchMessages().apply {
-            channels = expectedChannelNames
-            maximumPerChannel = 25
-        }.sync()!!.run {
-            expectedChannelNames.forEach { expectedChannel ->
-                channels[expectedChannel]!!.forEach {
-                    assertNotNull(it.message)
-                    assertNotNull(it.timetoken)
-                    assertNull(it.meta)
-                    assertNull(it.actions)
+        retry {
+            pubnub.fetchMessages().apply {
+                channels = expectedChannelNames
+                maximumPerChannel = 25
+            }.sync()!!.run {
+                expectedChannelNames.forEach { expectedChannel ->
+                    channels[expectedChannel]!!.forEach {
+                        assertNotNull(it.message)
+                        assertNotNull(it.timetoken)
+                        assertNull(it.meta)
+                        assertNull(it.actions)
+                    }
                 }
             }
         }
-
     }
 
     @Test
@@ -237,17 +259,17 @@ class HistoryIntegrationTest : BaseIntegrationTest() {
         val expectedChannelName = randomValue()
         assertEquals(10, publishMixed(pubnub, 10, expectedChannelName).size)
 
-        wait()
-
-        pubnub.fetchMessages().apply {
-            channels = listOf(expectedChannelName)
-        }.sync()!!.run {
-            assertEquals(1, channels[expectedChannelName]!!.size)
-            channels[expectedChannelName]!!.forEach {
-                assertNotNull(it.message)
-                assertNotNull(it.timetoken)
-                assertNull(it.meta)
-                assertNull(it.actions)
+        retry {
+            pubnub.fetchMessages().apply {
+                channels = listOf(expectedChannelName)
+            }.sync()!!.run {
+                assertEquals(1, channels[expectedChannelName]!!.size)
+                channels[expectedChannelName]!!.forEach {
+                    assertNotNull(it.message)
+                    assertNotNull(it.timetoken)
+                    assertNull(it.meta)
+                    assertNull(it.actions)
+                }
             }
         }
     }
@@ -258,18 +280,18 @@ class HistoryIntegrationTest : BaseIntegrationTest() {
 
         assertEquals(10, publishMixed(pubnub, 10, expectedChannelName).size)
 
-        wait()
-
-        pubnub.fetchMessages().apply {
-            channels = (listOf(expectedChannelName))
-            maximumPerChannel = 100
-        }.sync()!!.apply {
-            assertEquals(10, channels[expectedChannelName]!!.size)
-            channels[expectedChannelName]!!.forEach {
-                assertNotNull(it.message)
-                assertNotNull(it.timetoken)
-                assertNull(it.meta)
-                assertNull(it.actions)
+        retry {
+            pubnub.fetchMessages().apply {
+                channels = (listOf(expectedChannelName))
+                maximumPerChannel = 100
+            }.sync()!!.apply {
+                assertEquals(10, channels[expectedChannelName]!!.size)
+                channels[expectedChannelName]!!.forEach {
+                    assertNotNull(it.message)
+                    assertNotNull(it.timetoken)
+                    assertNull(it.meta)
+                    assertNull(it.actions)
+                }
             }
         }
     }
@@ -293,16 +315,18 @@ class HistoryIntegrationTest : BaseIntegrationTest() {
             publishMixed(pubnub, expectedMessageCount, expectedChannelName).size
         )
 
-        observer.history().apply {
-            channel = expectedChannelName
-            includeTimetoken = true
-            includeMeta = true
-        }.sync()!!.run {
-            messages.forEach {
-                assertNotNull(it.entry)
-                assertNotNull(it.timetoken)
-                assertNotNull(it.meta)
-                assertTrue(it.entry.toString().contains("_msg"))
+        retry {
+            observer.history().apply {
+                channel = expectedChannelName
+                includeTimetoken = true
+                includeMeta = true
+            }.sync()!!.run {
+                messages.forEach {
+                    assertNotNull(it.entry)
+                    assertNotNull(it.timetoken)
+                    assertNotNull(it.meta)
+                    assertTrue(it.entry.toString().contains("_msg"))
+                }
             }
         }
     }
@@ -326,16 +350,18 @@ class HistoryIntegrationTest : BaseIntegrationTest() {
             publishMixed(pubnub, expectedMessageCount, expectedChannelName).size
         )
 
-        observer.fetchMessages().apply {
-            channels = listOf(expectedChannelName)
-            includeMeta = true
-        }.sync()!!.run {
-            channels[expectedChannelName]!!.forEach {
-                assertNotNull(it.message)
-                assertNotNull(it.timetoken)
-                assertNotNull(it.meta)
-                assertNull(it.actions)
-                assertTrue(it.message.toString().contains("_msg"))
+        retry {
+            observer.fetchMessages().apply {
+                channels = listOf(expectedChannelName)
+                includeMeta = true
+            }.sync()!!.run {
+                channels[expectedChannelName]!!.forEach {
+                    assertNotNull(it.message)
+                    assertNotNull(it.timetoken)
+                    assertNotNull(it.meta)
+                    assertNull(it.actions)
+                    assertTrue(it.message.toString().contains("_msg"))
+                }
             }
         }
     }
@@ -373,21 +399,23 @@ class HistoryIntegrationTest : BaseIntegrationTest() {
             }
         }
 
-        observer.fetchMessages().apply {
-            channels = listOf(expectedChannelName)
-            includeMeta = true
-            includeMessageActions = true
-        }.sync()!!.run {
-            channels[expectedChannelName]!!.forEach {
-                assertNotNull(it.message)
-                assertNotNull(it.timetoken)
-                assertNotNull(it.meta)
-                if (messagesWithActions.contains(it.timetoken)) {
-                    assertNotNull(it.actions)
-                } else {
-                    assertTrue(it.actions!!.isEmpty())
+        retry {
+            observer.fetchMessages().apply {
+                channels = listOf(expectedChannelName)
+                includeMeta = true
+                includeMessageActions = true
+            }.sync()!!.run {
+                channels[expectedChannelName]!!.forEach {
+                    assertNotNull(it.message)
+                    assertNotNull(it.timetoken)
+                    assertNotNull(it.meta)
+                    if (messagesWithActions.contains(it.timetoken)) {
+                        assertNotNull(it.actions)
+                    } else {
+                        assertTrue(it.actions!!.isEmpty())
+                    }
+                    assertTrue(it.message.toString().contains("_msg"))
                 }
-                assertTrue(it.message.toString().contains("_msg"))
             }
         }
     }
@@ -481,14 +509,14 @@ class HistoryIntegrationTest : BaseIntegrationTest() {
             channels = listOf(randomValue())
             includeMessageActions = true
             maximumPerChannel = 15
-        }.await { result, status ->
+        }.await { _, status ->
             assertEquals("15", status.param("max"))
         }
     }
 
     @Test
     fun testEmptyMeta() {
-        val expectedChannel = randomValue()
+        val expectedChannel = randomChannel()
 
         // publish a message without any metadata
         pubnub.publish().apply {
@@ -496,15 +524,15 @@ class HistoryIntegrationTest : BaseIntegrationTest() {
             channel = expectedChannel
         }.sync()!!
 
-        wait()
-
         // /v2/history
-        pubnub.history().apply {
-            channel = expectedChannel
-            includeMeta = true
-        }.sync()!!.run {
-            assertEquals(1, messages.size)
-            assertNotNull(messages[0].meta)
+        retry {
+            pubnub.history().apply {
+                channel = expectedChannel
+                includeMeta = true
+            }.sync()!!.run {
+                assertEquals(1, messages.size)
+                assertNotNull(messages[0].meta)
+            }
         }
 
         // /v3/history
@@ -529,4 +557,17 @@ class HistoryIntegrationTest : BaseIntegrationTest() {
         // three responses from three different APIs will return a non-null meta field
     }
 
+    @Test
+    fun testCountFallback() {
+        val expectedChannel = randomChannel()
+
+        pubnub.history().apply {
+            channel = expectedChannel
+            includeMeta = true
+            count = -1
+        }.await { _, status ->
+            assertFalse(status.error)
+            assertEquals("100", status.param("count"))
+        }
+    }
 }

@@ -13,11 +13,16 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import java.io.BufferedReader
 import java.io.InputStreamReader
+import java.util.UUID
+import java.util.concurrent.Callable
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicInteger
 import java.util.stream.Collectors
 
-var DEFAULT_LISTEN_DURATION: Int? = null
+var DEFAULT_LISTEN_DURATION = 5
 
 private fun observe(success: AtomicBoolean, seconds: Int) {
     Awaitility.await()
@@ -25,7 +30,7 @@ private fun observe(success: AtomicBoolean, seconds: Int) {
         .untilTrue(success)
 }
 
-fun AtomicBoolean.listen(seconds: Int = DEFAULT_LISTEN_DURATION!!) {
+fun AtomicBoolean.listen(seconds: Int = DEFAULT_LISTEN_DURATION) {
     observe(this, seconds)
 }
 
@@ -173,3 +178,85 @@ class SpecialChar(
     val regular: String,
     val encoded: String
 )
+
+fun retry(function: () -> Unit) {
+    val success = AtomicBoolean()
+    val block = {
+        try {
+            val executor = Executors.newSingleThreadExecutor()
+            val submit = executor.submit(
+                Callable {
+                    try {
+                        function.invoke()
+                        true
+                    } catch (t: Throwable) {
+                        false
+                    }
+                })
+            success.set(submit.get())
+        } catch (t: Throwable) {
+            success.set(false)
+        }
+    }
+
+    Awaitility.await()
+        .atMost(DEFAULT_LISTEN_DURATION.toLong(), TimeUnit.SECONDS)
+        .pollInterval(Durations.FIVE_HUNDRED_MILLISECONDS)
+        .until {
+            block.invoke()
+            success.get()
+        }
+}
+
+fun <Input, Output> Endpoint<Input, Output>.await(function: (result: Output?, status: PNStatus) -> Unit) {
+    val success = AtomicBoolean()
+    async { result, status ->
+        function.invoke(result, status)
+        success.set(true)
+    }
+    success.listen()
+}
+
+fun <Input, Output> Endpoint<Input, Output>.asyncRetry(
+    function: (result: Output?, status: PNStatus) -> Unit
+) {
+    val hits = AtomicInteger(0)
+
+    val block = {
+        hits.incrementAndGet()
+        val latch = CountDownLatch(1)
+        val success = AtomicBoolean()
+        queryParam = mapOf("key" to UUID.randomUUID().toString())
+        async { result, status ->
+            try {
+                function.invoke(result, status)
+                success.set(true)
+            } catch (e: Throwable) {
+                success.set(false)
+            }
+            latch.countDown()
+        }
+        latch.await()
+        success.get()
+    }
+
+    Awaitility.await()
+        .atMost(DEFAULT_LISTEN_DURATION!!.toLong(), TimeUnit.SECONDS)
+        .pollInterval(Durations.FIVE_HUNDRED_MILLISECONDS)
+        .until { block.invoke() }
+}
+
+fun randomValue(length: Int = 10): String {
+    return UUID.randomUUID().toString()
+        .replace("-", "")
+        .take(length)
+        .toUpperCase()
+}
+
+fun randomChannel(): String {
+    return "ch_${System.currentTimeMillis()}_${randomValue()}"
+}
+
+fun randomNumeric(length: Int = 10): String {
+    return generateSequence { (0..9).random() }.take(length).toList().shuffled().joinToString(separator = "")
+}

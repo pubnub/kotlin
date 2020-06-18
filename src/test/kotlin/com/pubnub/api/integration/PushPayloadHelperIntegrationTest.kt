@@ -6,7 +6,7 @@ import com.pubnub.api.PubNub
 import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.models.consumer.PNStatus
 import org.junit.jupiter.api.Test
-import java.util.*
+import java.util.UUID
 
 class PushPayloadHelperIntegrationTest : BaseIntegrationTest() {
 
@@ -33,7 +33,7 @@ class PushPayloadHelperIntegrationTest : BaseIntegrationTest() {
         wait()
     }
 
-    val json = """
+    private val json = """
             {
               "match": {
                 "tournament": "Barclay's Premier League",

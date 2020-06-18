@@ -4,6 +4,7 @@ import com.pubnub.api.decomposeAndVerifySignature
 import com.pubnub.api.encodedParam
 import com.pubnub.api.getSpecialCharsMap
 import com.pubnub.api.listen
+import com.pubnub.api.randomChannel
 import org.awaitility.Awaitility
 import org.awaitility.Durations
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -22,7 +23,7 @@ class EncodingIntegrationTest : BaseIntegrationTest() {
 
     @Test
     fun testSpecialCharsPathAndUrl() {
-        val expectedChannel = randomValue()
+        val expectedChannel = randomChannel()
         val keyName = "special_char"
         val value = getSpecialCharsMap().map { it.regular }.shuffled().joinToString("")
 
@@ -64,7 +65,6 @@ class EncodingIntegrationTest : BaseIntegrationTest() {
                 assertEquals(value, messages[0].entry.asString)
                 true
             }
-
     }
 
     @DisplayName("EncodingTestSuite")
@@ -76,7 +76,7 @@ class EncodingIntegrationTest : BaseIntegrationTest() {
         server.configuration.includeRequestIdentifier = false
         server.configuration.includeInstanceIdentifier = false
 
-        val expectedChannel = randomValue()
+        val expectedChannel = randomChannel()
         val expectedMessage = "msg${regular}msg"
         val expectedMetadata = "meta${regular}meta"
 
@@ -149,5 +149,4 @@ class EncodingIntegrationTest : BaseIntegrationTest() {
     }
 
     override fun provideAuthKey() = ""
-
 }

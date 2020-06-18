@@ -5,13 +5,14 @@ import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
+import com.pubnub.api.randomChannel
 import org.awaitility.Awaitility
 import org.awaitility.Durations
 import org.hamcrest.core.IsEqual
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Test
-import java.util.*
+import java.util.Arrays
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
@@ -21,7 +22,7 @@ class HeartbeatIntegrationTest : BaseIntegrationTest() {
     lateinit var expectedChannel: String
 
     override fun onBefore() {
-        expectedChannel = randomValue()
+        expectedChannel = randomChannel()
     }
 
     @Test
@@ -39,8 +40,8 @@ class HeartbeatIntegrationTest : BaseIntegrationTest() {
         observer.addListener(object : SubscribeCallback() {
 
             override fun status(p: PubNub, pnStatus: PNStatus) {
-                if (pnStatus.operation == PNOperationType.PNSubscribeOperation
-                    && pnStatus.affectedChannels.contains(expectedChannel)
+                if (pnStatus.operation == PNOperationType.PNSubscribeOperation &&
+                    pnStatus.affectedChannels.contains(expectedChannel)
                 ) {
                     pubnub.subscribe().apply {
                         channels = listOf(expectedChannel)
@@ -50,8 +51,8 @@ class HeartbeatIntegrationTest : BaseIntegrationTest() {
             }
 
             override fun presence(p: PubNub, pnPresenceEventResult: PNPresenceEventResult) {
-                if (pnPresenceEventResult.uuid.equals(pubnub.configuration.uuid)
-                    && pnPresenceEventResult.channel.equals(expectedChannel)
+                if (pnPresenceEventResult.uuid.equals(pubnub.configuration.uuid) &&
+                    pnPresenceEventResult.channel.equals(expectedChannel)
                 ) {
                     when (pnPresenceEventResult.event) {
                         "state-change" -> {
@@ -66,7 +67,6 @@ class HeartbeatIntegrationTest : BaseIntegrationTest() {
                                 pubnub.setPresenceState().apply {
                                     state = expectedStatePayload
                                     channels = Arrays.asList(expectedChannel)
-
                                 }.async { result, status ->
                                     assertFalse(status.error)
                                     assertEquals(expectedStatePayload, result!!.state)
@@ -79,25 +79,22 @@ class HeartbeatIntegrationTest : BaseIntegrationTest() {
                                 assertEquals(expectedStatePayload, pnPresenceEventResult.state)
                                 hits.incrementAndGet()
                             }
-
                         }
                         "timeout" -> {
-                            pubnub.reconnect();
+                            pubnub.reconnect()
                         }
                     }
                 }
             }
-
         })
 
         observer.subscribe().apply {
             channels = listOf(expectedChannel)
             withPresence = true
-        }.execute();
+        }.execute()
 
         Awaitility.await()
             .atMost(40, TimeUnit.SECONDS)
-            .untilAtomic(hits, IsEqual.equalTo(4));
+            .untilAtomic(hits, IsEqual.equalTo(4))
     }
-
 }
