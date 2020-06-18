@@ -1,6 +1,14 @@
 package com.pubnub.api.legacy.endpoints.presence
 
-import com.github.tomakehurst.wiremock.client.WireMock.*
+import com.github.tomakehurst.wiremock.client.WireMock.aResponse
+import com.github.tomakehurst.wiremock.client.WireMock.equalToJson
+import com.github.tomakehurst.wiremock.client.WireMock.findAll
+import com.github.tomakehurst.wiremock.client.WireMock.get
+import com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor
+import com.github.tomakehurst.wiremock.client.WireMock.matching
+import com.github.tomakehurst.wiremock.client.WireMock.stubFor
+import com.github.tomakehurst.wiremock.client.WireMock.urlMatching
+import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 import com.pubnub.api.PubNubError
 import com.pubnub.api.assertPnException
 import com.pubnub.api.failTest
@@ -115,7 +123,6 @@ class SetStateEndpointTest : BaseTest() {
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
         assertEquals(1, requests.size)
     }
-
 
     @Test
     fun applyStateForChannelGroupSync() {
@@ -337,7 +344,7 @@ class SetStateEndpointTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         "{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : " +
-                                "20, \"status\" : \"online\" }, \"service\": \"Presence\"}"
+                            "20, \"status\" : \"online\" }, \"service\": \"Presence\"}"
                     )
                 )
         )
@@ -365,7 +372,7 @@ class SetStateEndpointTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         "{ \"status\": 200, \"message\": \"OK\", \"payload\": { \"age\" : " +
-                                "20, \"status\" : \"online\" }, \"service\": \"Presence\"}"
+                            "20, \"status\" : \"online\" }, \"service\": \"Presence\"}"
                     )
                 )
         )
@@ -445,5 +452,4 @@ class SetStateEndpointTest : BaseTest() {
             assertPnException(PubNubError.PARSING_ERROR, e)
         }
     }
-
 }

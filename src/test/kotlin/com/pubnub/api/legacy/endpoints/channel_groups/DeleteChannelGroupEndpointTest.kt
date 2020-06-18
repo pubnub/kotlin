@@ -1,10 +1,24 @@
 package com.pubnub.api.legacy.endpoints.channel_groups
 
-import com.github.tomakehurst.wiremock.client.WireMock.*
-import com.pubnub.api.*
+import com.github.tomakehurst.wiremock.client.WireMock.aResponse
+import com.github.tomakehurst.wiremock.client.WireMock.any
+import com.github.tomakehurst.wiremock.client.WireMock.anyUrl
+import com.github.tomakehurst.wiremock.client.WireMock.findAll
+import com.github.tomakehurst.wiremock.client.WireMock.get
+import com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor
+import com.github.tomakehurst.wiremock.client.WireMock.noContent
+import com.github.tomakehurst.wiremock.client.WireMock.stubFor
+import com.github.tomakehurst.wiremock.client.WireMock.urlMatching
+import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
+import com.pubnub.api.PubNubError
+import com.pubnub.api.PubNubException
+import com.pubnub.api.assertPnException
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
+import com.pubnub.api.failTest
 import com.pubnub.api.legacy.BaseTest
+import com.pubnub.api.listen
+import com.pubnub.api.param
 import org.awaitility.Awaitility
 import org.hamcrest.core.IsEqual
 import org.junit.jupiter.api.Assertions
@@ -36,7 +50,6 @@ class DeleteChannelGroupEndpointTest : BaseTest() {
     fun testSyncMissingGroup() {
         try {
             pubnub.deleteChannelGroup().apply {
-
             }.sync()!!
         } catch (e: PubNubException) {
             assertPnException(PubNubError.GROUP_MISSING, e)
@@ -159,6 +172,4 @@ class DeleteChannelGroupEndpointTest : BaseTest() {
 
         success.listen()
     }
-
-
 }

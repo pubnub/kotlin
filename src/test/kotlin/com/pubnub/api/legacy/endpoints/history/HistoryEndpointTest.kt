@@ -1,9 +1,20 @@
 package com.pubnub.api.legacy.endpoints.history
 
-import com.github.tomakehurst.wiremock.client.WireMock.*
-import com.pubnub.api.*
+import com.github.tomakehurst.wiremock.client.WireMock.aResponse
+import com.github.tomakehurst.wiremock.client.WireMock.anyUrl
+import com.github.tomakehurst.wiremock.client.WireMock.findAll
+import com.github.tomakehurst.wiremock.client.WireMock.get
+import com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor
+import com.github.tomakehurst.wiremock.client.WireMock.stubFor
+import com.github.tomakehurst.wiremock.client.WireMock.urlMatching
+import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
+import com.pubnub.api.PubNubError
+import com.pubnub.api.PubNubException
+import com.pubnub.api.assertPnException
 import com.pubnub.api.enums.PNOperationType
+import com.pubnub.api.failTest
 import com.pubnub.api.legacy.BaseTest
+import com.pubnub.api.listen
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Test
@@ -240,7 +251,6 @@ class HistoryEndpointTest : BaseTest() {
                 )
         )
 
-
         val result = pubnub.history().apply {
             channel = "niceChannel"
             includeTimetoken = false
@@ -306,7 +316,6 @@ class HistoryEndpointTest : BaseTest() {
     fun testMissingChannel() {
         try {
             pubnub.history().apply {
-
             }.sync()!!
             throw RuntimeException()
         } catch (e: PubNubException) {
@@ -476,7 +485,6 @@ class HistoryEndpointTest : BaseTest() {
             assertEquals(33, messages[1].entry.asJsonObject["a"].asInt)
             assertEquals(44, messages[1].entry.asJsonObject["b"].asInt)
         }
-
     }
 
     @Test
@@ -527,8 +535,6 @@ class HistoryEndpointTest : BaseTest() {
             }.sync()!!
             failTest()
         } catch (e: UnsupportedOperationException) {
-
         }
     }
-
 }

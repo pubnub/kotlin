@@ -1,7 +1,10 @@
 package com.pubnub.api.suite.grant
 
 import com.github.tomakehurst.wiremock.client.MappingBuilder
-import com.github.tomakehurst.wiremock.client.WireMock.*
+import com.github.tomakehurst.wiremock.client.WireMock.equalTo
+import com.github.tomakehurst.wiremock.client.WireMock.get
+import com.github.tomakehurst.wiremock.client.WireMock.matching
+import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 import com.pubnub.api.endpoints.access.Grant
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.access_manager.PNAccessManagerGrantResult
@@ -17,7 +20,7 @@ class GrantTestSuite : EndpointTestSuite<Grant, PNAccessManagerGrantResult>() {
         pubnub.configuration.secretKey = "mySecretKey"
     }
 
-    override fun telemetryParamName() = "l_pam";
+    override fun telemetryParamName() = "l_pam"
 
     override fun pnOperation() = PNOperationType.PNAccessManagerGrant
 
@@ -25,7 +28,6 @@ class GrantTestSuite : EndpointTestSuite<Grant, PNAccessManagerGrantResult>() {
 
     override fun snippet(): Grant {
         return pubnub.grant().apply {
-
         }
     }
 
@@ -54,12 +56,10 @@ class GrantTestSuite : EndpointTestSuite<Grant, PNAccessManagerGrantResult>() {
         }
     """.trimIndent()
 
-
     override fun unsuccessfulResponseBodyList() = listOf(
         """{"payload":{}}""",
         """{"payload":null}"""
     )
-
 
     override fun mappingBuilder(): MappingBuilder {
         return get(urlPathEqualTo("/v2/auth/grant/sub-key/mySubscribeKey"))
@@ -72,5 +72,4 @@ class GrantTestSuite : EndpointTestSuite<Grant, PNAccessManagerGrantResult>() {
     }
 
     override fun affectedChannelsAndGroups() = emptyList<String>() to emptyList<String>()
-
 }

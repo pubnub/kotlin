@@ -1,6 +1,9 @@
 package com.pubnub.api.legacy.endpoints.message_actions
 
-import com.github.tomakehurst.wiremock.client.WireMock.*
+import com.github.tomakehurst.wiremock.client.WireMock.aResponse
+import com.github.tomakehurst.wiremock.client.WireMock.get
+import com.github.tomakehurst.wiremock.client.WireMock.stubFor
+import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 import com.pubnub.api.PubNub
 import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.failTest
@@ -65,7 +68,6 @@ class ReceiveMessageActions : BaseTest() {
 
         pubnub.addListener(object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
-
             }
 
             override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {
@@ -96,7 +98,6 @@ class ReceiveMessageActions : BaseTest() {
         }.execute()
 
         success.listen()
-
     }
 
     @Test
@@ -170,7 +171,6 @@ class ReceiveMessageActions : BaseTest() {
 
         pubnub.addListener(object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
-
             }
 
             override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {
@@ -200,5 +200,4 @@ class ReceiveMessageActions : BaseTest() {
 
         success.listen()
     }
-
 }

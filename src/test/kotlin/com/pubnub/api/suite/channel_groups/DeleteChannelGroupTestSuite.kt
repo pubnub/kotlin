@@ -25,7 +25,6 @@ class DeleteChannelGroupTestSuite : EndpointTestSuite<DeleteChannelGroup, PNChan
     }
 
     override fun verifyResultExpectations(result: PNChannelGroupsDeleteGroupResult) {
-
     }
 
     override fun successfulResponseBody() = """
@@ -46,5 +45,4 @@ class DeleteChannelGroupTestSuite : EndpointTestSuite<DeleteChannelGroup, PNChan
     override fun affectedChannelsAndGroups() = emptyList<String>() to listOf("cg1")
 
     override fun voidResponse() = true
-
 }

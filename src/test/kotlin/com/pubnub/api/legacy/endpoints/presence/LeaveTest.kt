@@ -1,6 +1,12 @@
 package com.pubnub.api.legacy.endpoints.presence
 
-import com.github.tomakehurst.wiremock.client.WireMock.*
+import com.github.tomakehurst.wiremock.client.WireMock.aResponse
+import com.github.tomakehurst.wiremock.client.WireMock.findAll
+import com.github.tomakehurst.wiremock.client.WireMock.get
+import com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor
+import com.github.tomakehurst.wiremock.client.WireMock.stubFor
+import com.github.tomakehurst.wiremock.client.WireMock.urlMatching
+import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 import com.pubnub.api.PubNubError
 import com.pubnub.api.assertPnException
 import com.pubnub.api.endpoints.presence.Leave
@@ -65,7 +71,6 @@ class LeaveTest : BaseTest() {
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
         assertEquals(1, requests.size)
     }
-
 
     @Test
     fun subscribeChannelsWithGroupSync() {
@@ -291,5 +296,4 @@ class LeaveTest : BaseTest() {
         assertEquals(1, requests.size)
         assertEquals("myKey", requests[0].queryParameter("auth").firstValue())
     }
-
 }

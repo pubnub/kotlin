@@ -1,6 +1,12 @@
 package com.pubnub.api.legacy.endpoints.presence
 
-import com.github.tomakehurst.wiremock.client.WireMock.*
+import com.github.tomakehurst.wiremock.client.WireMock.aResponse
+import com.github.tomakehurst.wiremock.client.WireMock.findAll
+import com.github.tomakehurst.wiremock.client.WireMock.get
+import com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor
+import com.github.tomakehurst.wiremock.client.WireMock.stubFor
+import com.github.tomakehurst.wiremock.client.WireMock.urlMatching
+import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 import com.pubnub.api.PubNubError
 import com.pubnub.api.assertPnException
 import com.pubnub.api.enums.PNOperationType
@@ -74,7 +80,6 @@ class GetStateEndpointTest : BaseTest() {
         assertEquals(pubnub.mapper.elementToInt(ch1Data, "age"), 20)
         assertEquals(pubnub.mapper.elementToString(ch1Data, "status"), "online")
     }
-
 
     @Test
     fun testFailedPayloadSync() {
@@ -439,5 +444,4 @@ class GetStateEndpointTest : BaseTest() {
             assertPnException(PubNubError.SUBSCRIBE_KEY_MISSING, e)
         }
     }
-
 }

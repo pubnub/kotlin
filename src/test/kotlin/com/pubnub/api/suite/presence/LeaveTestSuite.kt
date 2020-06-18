@@ -44,5 +44,4 @@ class LeaveTestSuite : EndpointTestSuite<Leave, Boolean>() {
     override fun affectedChannelsAndGroups() = listOf("ch1") to emptyList<String>()
 
     override fun voidResponse() = true
-
 }

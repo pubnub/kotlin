@@ -1,6 +1,14 @@
 package com.pubnub.api.legacy.endpoints.presence
 
-import com.github.tomakehurst.wiremock.client.WireMock.*
+import com.github.tomakehurst.wiremock.client.WireMock.aResponse
+import com.github.tomakehurst.wiremock.client.WireMock.anyUrl
+import com.github.tomakehurst.wiremock.client.WireMock.findAll
+import com.github.tomakehurst.wiremock.client.WireMock.get
+import com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor
+import com.github.tomakehurst.wiremock.client.WireMock.stubFor
+import com.github.tomakehurst.wiremock.client.WireMock.urlMatching
+import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
+import com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching
 import com.pubnub.api.PubNubError.SUBSCRIBE_KEY_MISSING
 import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType.PNHereNowOperation
@@ -8,7 +16,9 @@ import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.models.consumer.presence.PNHereNowResult
 import org.awaitility.Awaitility
 import org.hamcrest.core.IsEqual
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import java.util.concurrent.TimeUnit.SECONDS
 import java.util.concurrent.atomic.AtomicInteger
@@ -487,7 +497,7 @@ class HereNowEndpointTest : BaseTest() {
             if (status.operation == PNHereNowOperation) {
                 assertEquals(1, result!!.channels.size)
                 assertEquals(pubnub.configuration.uuid, result.channels["ch1"]!!.occupants[0].uuid)
-                atomic.incrementAndGet();
+                atomic.incrementAndGet()
             }
         }
 
@@ -509,5 +519,4 @@ class HereNowEndpointTest : BaseTest() {
             assertTrue((e as PubNubException).pubnubError == SUBSCRIBE_KEY_MISSING)
         }
     }
-
 }

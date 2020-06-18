@@ -1,7 +1,9 @@
 package com.pubnub.api.suite.history.counts
 
 import com.github.tomakehurst.wiremock.client.MappingBuilder
-import com.github.tomakehurst.wiremock.client.WireMock.*
+import com.github.tomakehurst.wiremock.client.WireMock.equalTo
+import com.github.tomakehurst.wiremock.client.WireMock.get
+import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 import com.pubnub.api.endpoints.MessageCounts
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.history.PNMessageCountResult
@@ -49,5 +51,4 @@ class MessageCountsTestSuite : EndpointTestSuite<MessageCounts, PNMessageCountRe
     }
 
     override fun affectedChannelsAndGroups() = listOf("ch1") to emptyList<String>()
-
 }

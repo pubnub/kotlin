@@ -1,11 +1,15 @@
 package com.pubnub.api.legacy.endpoints.push
 
 import com.github.tomakehurst.wiremock.client.WireMock
-import com.pubnub.api.*
+import com.pubnub.api.PubNubError
+import com.pubnub.api.PubNubException
+import com.pubnub.api.assertPnException
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNPushType
 import com.pubnub.api.enums.PNStatusCategory
+import com.pubnub.api.failTest
 import com.pubnub.api.legacy.BaseTest
+import com.pubnub.api.listen
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import java.util.concurrent.atomic.AtomicBoolean
@@ -225,5 +229,4 @@ class RemoveChannelsFromPushTest : BaseTest() {
             assertPnException(PubNubError.CHANNEL_MISSING, e)
         }
     }
-
 }

@@ -1,6 +1,12 @@
 package com.pubnub.api.legacy.endpoints.presence
 
-import com.github.tomakehurst.wiremock.client.WireMock.*
+import com.github.tomakehurst.wiremock.client.WireMock.aResponse
+import com.github.tomakehurst.wiremock.client.WireMock.findAll
+import com.github.tomakehurst.wiremock.client.WireMock.get
+import com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor
+import com.github.tomakehurst.wiremock.client.WireMock.stubFor
+import com.github.tomakehurst.wiremock.client.WireMock.urlMatching
+import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 import com.pubnub.api.PubNubError
 import com.pubnub.api.assertPnException
 import com.pubnub.api.enums.PNStatusCategory
@@ -10,7 +16,9 @@ import org.awaitility.Awaitility
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers
 import org.hamcrest.core.IsEqual
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import java.util.concurrent.TimeUnit.SECONDS
 import java.util.concurrent.atomic.AtomicInteger
@@ -81,7 +89,7 @@ class WhereNowEndpointTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         "{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\"" +
-                                ": [zimp]}, \"service\": \"Presence\"}"
+                            ": [zimp]}, \"service\": \"Presence\"}"
                     )
                 )
         )
@@ -101,7 +109,7 @@ class WhereNowEndpointTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         "{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": " +
-                                "zimp}, \"service\": \"Presence\"}"
+                            "zimp}, \"service\": \"Presence\"}"
                     )
                 )
         )
@@ -123,7 +131,7 @@ class WhereNowEndpointTest : BaseTest() {
                         .withStatus(404)
                         .withBody(
                             "{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": [\"a\",\"b\"]}," +
-                                    " \"service\": \"Presence\"}"
+                                " \"service\": \"Presence\"}"
                         )
                 )
         )
@@ -177,7 +185,7 @@ class WhereNowEndpointTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         "{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": " +
-                                "[zimp]}, \"service\": \"Presence\"}"
+                            "[zimp]}, \"service\": \"Presence\"}"
                     )
                 )
         )
@@ -200,7 +208,7 @@ class WhereNowEndpointTest : BaseTest() {
                 .willReturn(
                     aResponse().withBody(
                         "{\"status\": 200, \"message\": \"OK\", \"payload\": {\"channels\": " +
-                                "zimp}, \"service\": \"Presence\"}"
+                            "zimp}, \"service\": \"Presence\"}"
                     )
                 )
         )
@@ -372,5 +380,4 @@ class WhereNowEndpointTest : BaseTest() {
             assertPnException(PubNubError.PARSING_ERROR, e)
         }
     }
-
 }

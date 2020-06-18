@@ -2,20 +2,37 @@ package com.pubnub.api.suite
 
 import com.github.tomakehurst.wiremock.client.MappingBuilder
 import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder
-import com.github.tomakehurst.wiremock.client.WireMock.*
+import com.github.tomakehurst.wiremock.client.WireMock.aResponse
+import com.github.tomakehurst.wiremock.client.WireMock.anyRequestedFor
+import com.github.tomakehurst.wiremock.client.WireMock.findAll
+import com.github.tomakehurst.wiremock.client.WireMock.get
+import com.github.tomakehurst.wiremock.client.WireMock.noContent
+import com.github.tomakehurst.wiremock.client.WireMock.stubFor
+import com.github.tomakehurst.wiremock.client.WireMock.urlMatching
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
-import com.pubnub.api.*
+import com.pubnub.api.Endpoint
+import com.pubnub.api.PubNubError
+import com.pubnub.api.assertPnException
+import com.pubnub.api.await
+import com.pubnub.api.emptyJson
+import com.pubnub.api.encodedParam
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
+import com.pubnub.api.failTest
+import com.pubnub.api.getSpecialCharsMap
 import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.models.consumer.PNStatus
+import com.pubnub.api.param
 import org.awaitility.Awaitility
 import org.awaitility.Durations
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
-import java.util.concurrent.atomic.AtomicBoolean
 
 typealias AsyncCheck<T> = (status: PNStatus, result: T?) -> Unit
 
@@ -187,7 +204,6 @@ abstract class EndpointTestSuite<T : Endpoint<*, R>, R> : BaseTest() {
                     assertNotNull(result)
                     assertEquals(PNStatusCategory.PNAcknowledgmentCategory, status.category)
                 }
-
             }
 
             wireMockServer.removeStub(stub)
@@ -379,15 +395,6 @@ private fun Int.contains(sub: Int): Boolean {
     return extractKeys(this).contains(sub)
 }
 
-fun <Input, Output> Endpoint<Input, Output>.await(function: (result: Output?, status: PNStatus) -> Unit) {
-    val success = AtomicBoolean()
-    async { result, status ->
-        function.invoke(result, status)
-        success.set(true)
-    }
-    success.listen()
-}
-
 class OptionalScenario<R> {
     var responseBuilder: ResponseDefinitionBuilder.() -> ResponseDefinitionBuilder = { this }
 
@@ -404,4 +411,3 @@ enum class Result {
     SUCCESS,
     FAIL
 }
-

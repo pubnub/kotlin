@@ -3,12 +3,19 @@ package com.pubnub.api.legacy.endpoints.push
 import com.pubnub.api.enums.PNPushEnvironment
 import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.models.consumer.push.payload.PushPayloadHelper
-import com.pubnub.api.models.consumer.push.payload.PushPayloadHelper.*
+import com.pubnub.api.models.consumer.push.payload.PushPayloadHelper.APNSPayload
 import com.pubnub.api.models.consumer.push.payload.PushPayloadHelper.APNSPayload.APNS2Configuration
 import com.pubnub.api.models.consumer.push.payload.PushPayloadHelper.APNSPayload.APS
-import org.junit.jupiter.api.Assertions.*
+import com.pubnub.api.models.consumer.push.payload.PushPayloadHelper.FCMPayload
+import com.pubnub.api.models.consumer.push.payload.PushPayloadHelper.MPNSPayload
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
-import java.util.*
+import java.util.ArrayList
+import java.util.HashMap
 
 class PushPayloadHelperHelperTest : BaseTest() {
 
@@ -193,7 +200,6 @@ class PushPayloadHelperHelperTest : BaseTest() {
         assertFalse(pnPushList[2].containsKey("collapse_id"))
         assertEquals("v3", pnPushList[2]["version"])
         assertTrue(pnPushList[2].containsKey("targets"))
-
 
         val pnTargetsMap = pnPushList[2]["targets"] as List<Map<*, *>>
 

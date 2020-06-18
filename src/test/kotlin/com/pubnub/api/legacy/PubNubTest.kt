@@ -81,5 +81,4 @@ class PubNubTest : BaseTest() {
         assertEquals("4.0.0-dev", version)
         assertTrue(timeStamp > 0)
     }
-
 }

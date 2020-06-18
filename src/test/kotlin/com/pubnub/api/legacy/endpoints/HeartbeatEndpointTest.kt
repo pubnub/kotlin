@@ -1,6 +1,12 @@
 package com.pubnub.api.legacy.endpoints
 
-import com.github.tomakehurst.wiremock.client.WireMock.*
+import com.github.tomakehurst.wiremock.client.WireMock.aResponse
+import com.github.tomakehurst.wiremock.client.WireMock.findAll
+import com.github.tomakehurst.wiremock.client.WireMock.get
+import com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor
+import com.github.tomakehurst.wiremock.client.WireMock.stubFor
+import com.github.tomakehurst.wiremock.client.WireMock.urlMatching
+import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 import com.pubnub.api.PubNubError
 import com.pubnub.api.assertPnException
 import com.pubnub.api.endpoints.presence.Heartbeat
@@ -244,6 +250,5 @@ class HeartbeatEndpointTest : BaseTest() {
                 e
             )
         }
-
     }
 }

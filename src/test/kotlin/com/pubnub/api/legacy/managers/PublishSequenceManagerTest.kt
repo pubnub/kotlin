@@ -16,5 +16,4 @@ class PublishSequenceManagerTest : BaseTest() {
         assertEquals(1, publishSequenceManager.nextSequence())
         assertEquals(2, publishSequenceManager.nextSequence())
     }
-
 }

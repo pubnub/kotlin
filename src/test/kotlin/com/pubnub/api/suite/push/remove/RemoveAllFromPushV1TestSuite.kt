@@ -1,6 +1,9 @@
 package com.pubnub.api.suite.push.remove
 
-import com.github.tomakehurst.wiremock.client.WireMock.*
+import com.github.tomakehurst.wiremock.client.WireMock.absent
+import com.github.tomakehurst.wiremock.client.WireMock.equalTo
+import com.github.tomakehurst.wiremock.client.WireMock.get
+import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 import com.pubnub.api.endpoints.push.RemoveAllPushChannelsForDevice
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNPushType
@@ -9,7 +12,8 @@ import com.pubnub.api.suite.AUTH
 import com.pubnub.api.suite.EndpointTestSuite
 import com.pubnub.api.suite.SUB
 
-class RemoveAllFromPushV1TestSuite : EndpointTestSuite<RemoveAllPushChannelsForDevice, PNPushRemoveAllChannelsResult>() {
+class RemoveAllFromPushV1TestSuite :
+    EndpointTestSuite<RemoveAllPushChannelsForDevice, PNPushRemoveAllChannelsResult>() {
 
     override fun telemetryParamName() = "l_push"
 
@@ -25,7 +29,6 @@ class RemoveAllFromPushV1TestSuite : EndpointTestSuite<RemoveAllPushChannelsForD
     }
 
     override fun verifyResultExpectations(result: PNPushRemoveAllChannelsResult) {
-
     }
 
     override fun successfulResponseBody(): String {

@@ -1,6 +1,12 @@
 package com.pubnub.api.legacy.endpoints.channel_groups
 
-import com.github.tomakehurst.wiremock.client.WireMock.*
+import com.github.tomakehurst.wiremock.client.WireMock.aResponse
+import com.github.tomakehurst.wiremock.client.WireMock.findAll
+import com.github.tomakehurst.wiremock.client.WireMock.get
+import com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor
+import com.github.tomakehurst.wiremock.client.WireMock.stubFor
+import com.github.tomakehurst.wiremock.client.WireMock.urlMatching
+import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.assertPnException
@@ -52,13 +58,15 @@ class ListAllChannelGroupEndpointTest : BaseTest() {
         stubFor(
             get(urlPathEqualTo("/v1/channel-registration/sub-key/mySubscribeKey/channel-group"))
                 .willReturn(
-                    aResponse().withBody("""
+                    aResponse().withBody(
+                        """
                         {
                          "status": 200,
                          "message": "OK",
                          "service": "ChannelGroups"
                         }
-                    """.trimIndent())
+                    """.trimIndent()
+                    )
                 )
         )
 

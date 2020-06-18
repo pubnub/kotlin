@@ -20,7 +20,6 @@ class WhereNowTestSuite : EndpointTestSuite<WhereNow, PNWhereNowResult>() {
 
     override fun snippet(): WhereNow {
         return pubnub.whereNow().apply {
-
         }
     }
 
@@ -52,5 +51,4 @@ class WhereNowTestSuite : EndpointTestSuite<WhereNow, PNWhereNowResult>() {
         get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/uuid/myUUID"))
 
     override fun affectedChannelsAndGroups() = emptyList<String>() to emptyList<String>()
-
 }

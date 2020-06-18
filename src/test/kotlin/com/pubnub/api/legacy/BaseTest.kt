@@ -19,7 +19,6 @@ abstract class BaseTest {
 
     @BeforeEach
     fun beforeEach() {
-        // wireMockServer = WireMockServer(wireMockConfig().dynamicPort())
         wireMockServer = WireMockServer(
             wireMockConfig()
                 .bindAddress("localhost")
@@ -51,10 +50,8 @@ abstract class BaseTest {
     }
 
     open fun onBefore() {
-
     }
 
     open fun onAfter() {
-
     }
 }
