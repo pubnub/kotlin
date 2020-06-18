@@ -7,7 +7,7 @@ import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
-import java.util.*
+import java.util.ArrayList
 
 internal class ListenerManager(val pubnub: PubNub) {
     private val listeners = mutableListOf<SubscribeCallback>()
@@ -37,21 +37,23 @@ internal class ListenerManager(val pubnub: PubNub) {
         getListeners().forEach { it.status(pubnub, status) }
     }
 
+    @Synchronized
     fun announce(message: PNMessageResult) {
         getListeners().forEach { it.message(pubnub, message) }
     }
 
+    @Synchronized
     fun announce(presence: PNPresenceEventResult) {
         getListeners().forEach { it.presence(pubnub, presence) }
     }
 
+    @Synchronized
     fun announce(signal: PNSignalResult) {
         getListeners().forEach { it.signal(pubnub, signal) }
     }
 
+    @Synchronized
     fun announce(messageAction: PNMessageActionResult) {
         getListeners().forEach { it.messageAction(pubnub, messageAction) }
     }
-
-
 }

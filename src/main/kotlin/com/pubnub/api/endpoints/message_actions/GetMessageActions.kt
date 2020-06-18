@@ -10,7 +10,7 @@ import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 import com.pubnub.api.models.server.objects_api.EntityEnvelope
 import retrofit2.Call
 import retrofit2.Response
-import java.util.*
+import java.util.HashMap
 
 class GetMessageActions(pubnub: PubNub) :
     Endpoint<EntityEnvelope<List<PNMessageAction>>, PNGetMessageActionsResult>(pubnub) {

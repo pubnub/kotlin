@@ -40,5 +40,4 @@ class SubscribeMessage(
 ) {
 
     fun supportsEncryption() = type == null || type == 0
-
 }

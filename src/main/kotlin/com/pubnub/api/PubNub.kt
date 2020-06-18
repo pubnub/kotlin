@@ -4,9 +4,17 @@ import com.pubnub.api.builder.PresenceBuilder
 import com.pubnub.api.builder.SubscribeBuilder
 import com.pubnub.api.builder.UnsubscribeBuilder
 import com.pubnub.api.callbacks.SubscribeCallback
-import com.pubnub.api.endpoints.*
+import com.pubnub.api.endpoints.DeleteMessages
+import com.pubnub.api.endpoints.FetchMessages
+import com.pubnub.api.endpoints.History
+import com.pubnub.api.endpoints.MessageCounts
+import com.pubnub.api.endpoints.Time
 import com.pubnub.api.endpoints.access.Grant
-import com.pubnub.api.endpoints.channel_groups.*
+import com.pubnub.api.endpoints.channel_groups.AddChannelChannelGroup
+import com.pubnub.api.endpoints.channel_groups.AllChannelsChannelGroup
+import com.pubnub.api.endpoints.channel_groups.DeleteChannelGroup
+import com.pubnub.api.endpoints.channel_groups.ListAllChannelGroup
+import com.pubnub.api.endpoints.channel_groups.RemoveChannelChannelGroup
 import com.pubnub.api.endpoints.message_actions.AddMessageAction
 import com.pubnub.api.endpoints.message_actions.GetMessageActions
 import com.pubnub.api.endpoints.message_actions.RemoveMessageAction
@@ -20,16 +28,22 @@ import com.pubnub.api.endpoints.push.AddChannelsToPush
 import com.pubnub.api.endpoints.push.ListPushProvisions
 import com.pubnub.api.endpoints.push.RemoveAllPushChannelsForDevice
 import com.pubnub.api.endpoints.push.RemoveChannelsFromPush
-import com.pubnub.api.managers.*
+import com.pubnub.api.managers.BasePathManager
+import com.pubnub.api.managers.MapperManager
+import com.pubnub.api.managers.PublishSequenceManager
+import com.pubnub.api.managers.RetrofitManager
+import com.pubnub.api.managers.SubscriptionManager
+import com.pubnub.api.managers.TelemetryManager
 import com.pubnub.api.vendor.Crypto
-import java.util.*
+import java.util.Date
+import java.util.UUID
 
 class PubNub(val configuration: PNConfiguration) {
 
     private companion object Constants {
         private const val TIMESTAMP_DIVIDER = 1000
         private const val SDK_VERSION = "4.0.0-dev"
-        private const val MAX_SEQUENCE = 65535;
+        private const val MAX_SEQUENCE = 65535
     }
 
     private val basePathManager = BasePathManager(configuration)
@@ -114,7 +128,7 @@ class PubNub(val configuration: PNConfiguration) {
      * Perform Cryptographic decryption of an input string using the cipher key
      *
      * @param inputString String to be encrypted
-     * @param cipherKey   cipher key to be used for encryption
+     * @param cipherKey cipher key to be used for encryption
      * @return String containing the encryption of inputString using cipherKey
      * @throws PubNubException throws exception in case of failed encryption
      */
@@ -136,7 +150,7 @@ class PubNub(val configuration: PNConfiguration) {
      * Perform Cryptographic encryption of an input string and the cipher key.
      *
      * @param inputString String to be encrypted
-     * @param cipherKey   cipher key to be used for encryption
+     * @param cipherKey cipher key to be used for encryption
      * @return String containing the encryption of inputString using cipherKey
      * @throws PubNubException throws exception in case of failed encryption
      */
@@ -163,6 +177,4 @@ class PubNub(val configuration: PNConfiguration) {
         retrofitManager.destroy(true)
         telemetryManager.stopCleanUpTimer()
     }
-
-
 }

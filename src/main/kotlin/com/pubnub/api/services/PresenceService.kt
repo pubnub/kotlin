@@ -59,5 +59,4 @@ interface PresenceService {
         @Path("uuid") uuid: String,
         @QueryMap options: Map<String, String>
     ): Call<Envelope<JsonElement>>
-
 }

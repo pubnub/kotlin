@@ -3,7 +3,16 @@ package com.pubnub.api.managers
 import com.pubnub.api.PubNub
 import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.interceptor.SignatureInterceptor
-import com.pubnub.api.services.*
+import com.pubnub.api.services.AccessManagerService
+import com.pubnub.api.services.ChannelGroupService
+import com.pubnub.api.services.HistoryService
+import com.pubnub.api.services.MessageActionService
+import com.pubnub.api.services.PresenceService
+import com.pubnub.api.services.PublishService
+import com.pubnub.api.services.PushService
+import com.pubnub.api.services.SignalService
+import com.pubnub.api.services.SubscribeService
+import com.pubnub.api.services.TimeService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -32,7 +41,6 @@ internal class RetrofitManager(val pubnub: PubNub) {
     internal val accessManagerService: AccessManagerService
 
     internal val subscribeService: SubscribeService
-
 
     init {
         signatureInterceptor = SignatureInterceptor(pubnub)
@@ -65,6 +73,11 @@ internal class RetrofitManager(val pubnub: PubNub) {
                     level = HttpLoggingInterceptor.Level.BODY
                 })
             }
+
+            if (httpLoggingInterceptor != null) {
+                okHttpBuilder.addInterceptor(httpLoggingInterceptor!!)
+            }
+
             if (sslSocketFactory != null && x509ExtendedTrustManager != null) {
                 okHttpBuilder.sslSocketFactory(
                     pubnub.configuration.sslSocketFactory!!,

@@ -5,7 +5,9 @@ import com.pubnub.api.PubNub
 import com.pubnub.api.callbacks.ReconnectionCallback
 import com.pubnub.api.enums.PNReconnectionPolicy
 import org.slf4j.LoggerFactory
-import java.util.*
+import java.util.Calendar
+import java.util.Timer
+import java.util.TimerTask
 import kotlin.math.pow
 
 internal class ReconnectionManager(val pubnub: PubNub) {
@@ -107,5 +109,4 @@ internal class ReconnectionManager(val pubnub: PubNub) {
         }
         return false
     }
-
 }

@@ -30,5 +30,4 @@ data class PNStatus(
     fun retry() {
         executedEndpoint?.retry()
     }
-
 }

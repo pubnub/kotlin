@@ -44,5 +44,4 @@ interface HistoryService {
         @Path("channels") channels: String,
         @QueryMap options: Map<String, String>
     ): Call<JsonElement>
-
 }

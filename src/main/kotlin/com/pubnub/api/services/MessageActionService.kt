@@ -3,7 +3,13 @@ package com.pubnub.api.services
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 import com.pubnub.api.models.server.objects_api.EntityEnvelope
 import retrofit2.Call
-import retrofit2.http.*
+import retrofit2.http.Body
+import retrofit2.http.DELETE
+import retrofit2.http.GET
+import retrofit2.http.Headers
+import retrofit2.http.POST
+import retrofit2.http.Path
+import retrofit2.http.QueryMap
 
 interface MessageActionService {
 
@@ -32,5 +38,4 @@ interface MessageActionService {
         @Path("actionTimetoken") actionTimetoken: String,
         @QueryMap options: Map<String, String>
     ): Call<Void>
-
 }

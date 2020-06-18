@@ -23,5 +23,4 @@ class Time(pubnub: PubNub) : Endpoint<List<Long>, PNTimeResult>(pubnub) {
 
     override fun isAuthRequired() = false
     override fun isSubKeyRequired() = false
-
 }

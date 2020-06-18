@@ -48,5 +48,4 @@ class Signal(pubnub: PubNub) : Endpoint<List<Any>, PNPublishResult>(pubnub) {
     override fun operationType() = PNOperationType.PNSignalOperation
 
     override fun isPubKeyRequired() = true
-
 }

@@ -62,5 +62,4 @@ internal class BasePathManager(private val config: PNConfiguration) {
             currentSubdomain++
         }
     }
-
 }

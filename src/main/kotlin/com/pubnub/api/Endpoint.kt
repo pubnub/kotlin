@@ -3,7 +3,15 @@ package com.pubnub.api
 import com.google.gson.JsonElement
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
-import com.pubnub.api.enums.PNStatusCategory.*
+import com.pubnub.api.enums.PNStatusCategory.PNAccessDeniedCategory
+import com.pubnub.api.enums.PNStatusCategory.PNAcknowledgmentCategory
+import com.pubnub.api.enums.PNStatusCategory.PNBadRequestCategory
+import com.pubnub.api.enums.PNStatusCategory.PNCancelledCategory
+import com.pubnub.api.enums.PNStatusCategory.PNMalformedResponseCategory
+import com.pubnub.api.enums.PNStatusCategory.PNNotFoundCategory
+import com.pubnub.api.enums.PNStatusCategory.PNTimeoutCategory
+import com.pubnub.api.enums.PNStatusCategory.PNUnexpectedDisconnectCategory
+import com.pubnub.api.enums.PNStatusCategory.PNUnknownCategory
 import com.pubnub.api.models.consumer.PNStatus
 import retrofit2.Call
 import retrofit2.Callback
@@ -12,7 +20,7 @@ import java.io.IOException
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
-import java.util.*
+import java.util.HashMap
 
 abstract class Endpoint<Input, Output>(protected val pubnub: PubNub) {
 
@@ -224,7 +232,6 @@ abstract class Endpoint<Input, Output>(protected val pubnub: PubNub) {
         }
     }
 
-
     private fun createStatusResponse(
         category: PNStatusCategory,
         response: Response<Input>? = null,
@@ -422,4 +429,3 @@ abstract class Endpoint<Input, Output>(protected val pubnub: PubNub) {
     protected open fun isPubKeyRequired() = false
     protected open fun isAuthRequired() = true
 }
-

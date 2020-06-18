@@ -12,6 +12,4 @@ class SignatureInterceptor(val pubnub: PubNub) : Interceptor {
         val request = PubNubUtil.signRequest(originalRequest, pubnub.configuration, pubnub.timestamp())
         return chain.proceed(request)
     }
-
-
 }

@@ -10,7 +10,7 @@ import com.pubnub.api.enums.PNPushType
 import com.pubnub.api.models.consumer.push.PNPushListProvisionsResult
 import retrofit2.Call
 import retrofit2.Response
-import java.util.*
+import java.util.HashMap
 
 class ListPushProvisions(pubnub: PubNub) : Endpoint<List<String>, PNPushListProvisionsResult>(pubnub) {
 
@@ -55,7 +55,6 @@ class ListPushProvisions(pubnub: PubNub) : Endpoint<List<String>, PNPushListProv
                 deviceApns2 = deviceId,
                 options = queryParams
             )
-
     }
 
     override fun createResponse(input: Response<List<String>>): PNPushListProvisionsResult? {

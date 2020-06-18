@@ -130,7 +130,6 @@ internal class SubscribeMessageWorker(
                     listenerManager.announce(PNSignalResult(result, extractedMessage!!))
                 }
                 TYPE_OBJECT -> {
-
                 }
                 TYPE_MESSAGE_ACTION -> {
                     val objectPayload = pubnub.mapper.convertValue(extractedMessage, ObjectPayload::class.java)
@@ -148,7 +147,6 @@ internal class SubscribeMessageWorker(
                 }
             }
         }
-
     }
 
     private fun processMessage(subscribeMessage: SubscribeMessage): JsonElement? {
@@ -222,5 +220,4 @@ internal class SubscribeMessageWorker(
         }
         return list
     }
-
 }

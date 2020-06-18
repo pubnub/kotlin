@@ -1,16 +1,21 @@
 package com.pubnub.api.endpoints
 
 import com.google.gson.JsonElement
-import com.pubnub.api.*
+import com.pubnub.api.Endpoint
+import com.pubnub.api.PubNub
+import com.pubnub.api.PubNubError
+import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.history.PNFetchMessageItem
 import com.pubnub.api.models.consumer.history.PNFetchMessagesResult
 import com.pubnub.api.models.server.FetchMessagesEnvelope
+import com.pubnub.api.toCsv
 import com.pubnub.api.vendor.Crypto
 import org.slf4j.LoggerFactory
 import retrofit2.Call
 import retrofit2.Response
-import java.util.*
+import java.util.HashMap
+import java.util.Locale
 
 class FetchMessages(pubnub: PubNub) : Endpoint<FetchMessagesEnvelope, PNFetchMessagesResult>(pubnub) {
 
@@ -82,7 +87,6 @@ class FetchMessages(pubnub: PubNub) : Endpoint<FetchMessagesEnvelope, PNFetchMes
                 options = queryParams
             )
         }
-
     }
 
     override fun createResponse(input: Response<FetchMessagesEnvelope>): PNFetchMessagesResult? {

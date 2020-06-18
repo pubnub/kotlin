@@ -2,7 +2,7 @@ package com.pubnub.api.models.consumer.pubsub.objects
 
 import com.google.gson.JsonElement
 
-data class ObjectPayload(
+class ObjectPayload(
     val source: String,
     val version: String,
     val event: String,

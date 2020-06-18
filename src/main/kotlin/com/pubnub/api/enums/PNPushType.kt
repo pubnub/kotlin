@@ -1,6 +1,6 @@
 package com.pubnub.api.enums
 
-import java.util.*
+import java.util.Locale
 
 enum class PNPushType(s: String) {
 
