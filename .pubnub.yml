@@ -1,26 +1,21 @@
 name: kotlin
-version: 4.0.1
+version: 1.0.0
 schema: 1
 scm: github.com/pubnub/kotlin
+files:
+  - build/libs/pubnub-kotlin-1.0.0-all.jar
 changelog:
-  - version: v4.0.1
+  - version: v1.0.0
+    date: 2020-06-11
     changes:
-      - type: fix
-        text: Fix cleanup logic in telemetry.
-      - type: improvement
-        text: Add Grant API integration tests
-  - version: v4.0.0
-    changes:
-      - type: improvement
-        text: Initial Release.
+      - type: feature
+        text: Initial release
 features:
   access:
     - ACCESS-GRANT
     - ACCESS-GRANT-MANAGE
     - ACCESS-GRANT-DELETE
     - ACCESS-SECRET-KEY-ALL-ACCESS
-    - ACCESS-GRANT-V3
-    - ACCESS-TOKEN-MANAGEMENT
   channel-groups:
     - CHANNEL-GROUPS-ADD-CHANNELS
     - CHANNEL-GROUPS-REMOVE-CHANNELS
@@ -77,35 +72,9 @@ features:
     - SUBSCRIBE-FILTER-EXPRESSION
     - SUBSCRIBE-PUBLISHER-UUID
     - SUBSCRIBE-PUBSUB-V2
-    - SUBSCRIBE-SIGNAL-LISTENER
-    - SUBSCRIBE-MEMBERSHIP-LISTENER
-    - SUBSCRIBE-SPACE-LISTENER
-    - SUBSCRIBE-USER-LISTENER
     - SUBSCRIBE-MESSAGE-ACTIONS-LISTENER
   signal:
     - SIGNAL-SEND
-  objects:
-    - OBJECTS-GET-USERS
-    - OBJECTS-GET-USER
-    - OBJECTS-CREATE-USER
-    - OBJECTS-UPDATE-USER
-    - OBJECTS-DELETE-USER
-    - OBJECTS-GET-SPACES
-    - OBJECTS-CREATE-SPACE
-    - OBJECTS-GET-SPACE
-    - OBJECTS-UPDATE-SPACE
-    - OBJECTS-DELETE-SPACE
-    - OBJECTS-GET-MEMBERSHIPS
-    - OBJECTS-MANAGE-MEMBERSHIPS
-    - OBJECTS-GET-MEMBERS
-    - OBJECTS-MANAGE-MEMBERS
-    - OBJECTS-JOIN-SPACES
-    - OBJECTS-UPDATE-MEMBERSHIPS
-    - OBJECTS-LEAVE-SPACES
-    - OBJECTS-ADD-MEMBERS
-    - OBJECTS-REMOVE-MEMBERS
-    - OBJECTS-UPDATE-MEMBERS
-    - OBJECTS-FILTERING
   unsubscribe:
     - UNSUBSCRIBE-ALL
     - UNSUBSCRIBE-SUPPRESS-LEAVE-EVENTS
@@ -119,7 +88,7 @@ features:
     - PN-OTHER-PROCESSING
     - CREATE-PUSH-PAYLOAD
 supported-platforms:
-  - version: PubNub Java SDK
+  - version: PubNub Kotlin SDK
     platforms:
       - Windows 10 (8u51 and above)
       - Windows 8.x (Desktop)
