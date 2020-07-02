@@ -57,14 +57,12 @@ class PNConfiguration {
 
     var subscribeTimeout = SUBSCRIBE_TIMEOUT
     var connectTimeout = CONNECT_TIMEOUT
-    var nonSubscribeRequestTimeout =
-        NON_SUBSCRIBE_REQUEST_TIMEOUT
+    var nonSubscribeRequestTimeout = NON_SUBSCRIBE_REQUEST_TIMEOUT
     var maximumMessagesCacheSize = DEFAULT_DEDUPE_SIZE
 
     var cacheBusting = false
 
     var suppressLeaveEvents = false
-    var disableTokenManager = false
     lateinit var filterExpression: String
     var includeInstanceIdentifier = false
     var includeRequestIdentifier = true

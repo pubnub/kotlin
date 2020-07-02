@@ -20,15 +20,11 @@ import java.util.concurrent.TimeUnit
 
 internal class RetrofitManager(val pubnub: PubNub) {
 
-    private val transactionClientInstance: OkHttpClient by lazy {
-        createOkHttpClient(pubnub.configuration.nonSubscribeRequestTimeout)
-    }
+    private lateinit var transactionClientInstance: OkHttpClient
 
-    private val subscriptionClientInstance: OkHttpClient by lazy {
-        createOkHttpClient(pubnub.configuration.subscribeTimeout)
-    }
+    private lateinit var subscriptionClientInstance: OkHttpClient
 
-    private val signatureInterceptor: SignatureInterceptor
+    private var signatureInterceptor: SignatureInterceptor
 
     internal val timeService: TimeService
     internal val publishService: PublishService
@@ -44,6 +40,11 @@ internal class RetrofitManager(val pubnub: PubNub) {
 
     init {
         signatureInterceptor = SignatureInterceptor(pubnub)
+
+        if (!pubnub.configuration.googleAppEngineNetworking) {
+            transactionClientInstance = createOkHttpClient(pubnub.configuration.nonSubscribeRequestTimeout)
+            subscriptionClientInstance = createOkHttpClient(pubnub.configuration.subscribeTimeout)
+        }
 
         val transactionInstance = createRetrofit(transactionClientInstance)
         val subscriptionInstance = createRetrofit(subscriptionClientInstance)
