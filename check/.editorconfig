@@ -1,8 +1,0 @@
-root = true
-
-[*.{kt, kts}]
-disabled_rules = import-ordering
-kotlin_imports_layout = idea
-indent_size = 4
-ij_kotlin_keep_blank_lines_in_declarations = 1
-ij_kotlin_keep_blank_lines_in_code = 1
