@@ -28,7 +28,6 @@ dependencies {
     implementation group: 'com.squareup.retrofit2', name: 'converter-gson', version: '2.6.2'
 
     implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.28'
-    // testImplementation group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.28'
 
     testImplementation 'org.awaitility:awaitility-kotlin:4.0.1'
     testImplementation 'com.github.tomakehurst:wiremock:2.26.3'
