@@ -1,10 +1,16 @@
 package com.pubnub.api.legacy.endpoints.history
 
-import com.github.tomakehurst.wiremock.client.WireMock.*
+import com.github.tomakehurst.wiremock.client.WireMock.aResponse
+import com.github.tomakehurst.wiremock.client.WireMock.get
+import com.github.tomakehurst.wiremock.client.WireMock.stubFor
+import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.legacy.BaseTest
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
 class MessageCountTest : BaseTest() {
@@ -271,7 +277,8 @@ class MessageCountTest : BaseTest() {
         stubFor(
             get(urlPathEqualTo("/v3/history/sub-key/mySubscribeKey/message-counts/my_channel"))
                 .willReturn(
-                    aResponse().withBody("""
+                    aResponse().withBody(
+                        """
                         {
                          "status": 200,
                          "error": false,
@@ -280,7 +287,8 @@ class MessageCountTest : BaseTest() {
                           "my_channel": 19
                          }
                         }
-                    """.trimIndent())
+                    """.trimIndent()
+                    )
                 )
         )
         var exception: PubNubException? = null
@@ -298,5 +306,4 @@ class MessageCountTest : BaseTest() {
             )
         }
     }
-
 }

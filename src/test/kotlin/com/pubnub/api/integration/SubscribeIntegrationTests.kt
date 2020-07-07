@@ -7,6 +7,8 @@ import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.listen
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
+import com.pubnub.api.randomChannel
+import com.pubnub.api.randomValue
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
@@ -39,7 +41,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
 
     @Test
     fun testSubscribeToChannel() {
-        val expectedChannel = randomValue()
+        val expectedChannel = randomChannel()
 
         pubnub.subscribe().apply {
             channels = listOf(expectedChannel)
@@ -81,14 +83,14 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
     fun testUnsubscribeFromChannel() {
         val success = AtomicBoolean()
 
-        val expectedChannel = randomValue()
+        val expectedChannel = randomChannel()
 
         pubnub.subscribeToBlocking(expectedChannel)
 
         pubnub.addListener(object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
-                if (pnStatus.operation == PNOperationType.PNUnsubscribeOperation
-                    && pnStatus.category == PNStatusCategory.PNAcknowledgmentCategory
+                if (pnStatus.operation == PNOperationType.PNUnsubscribeOperation &&
+                    pnStatus.category == PNStatusCategory.PNAcknowledgmentCategory
                 ) {
                     success.set(pubnub.getSubscribedChannels().none { it == expectedChannel })
                 }
@@ -114,5 +116,4 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
 
         success.listen()
     }
-
 }

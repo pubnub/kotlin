@@ -49,5 +49,4 @@ class SignalTestSuite : EndpointTestSuite<Signal, PNPublishResult>() {
     }
 
     override fun affectedChannelsAndGroups() = listOf("ch1") to emptyList<String>()
-
 }

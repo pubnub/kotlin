@@ -1,10 +1,26 @@
 package com.pubnub.api.legacy.endpoints.message_actions
 
-import com.github.tomakehurst.wiremock.client.WireMock.*
-import com.pubnub.api.*
+import com.github.tomakehurst.wiremock.client.WireMock.aResponse
+import com.github.tomakehurst.wiremock.client.WireMock.absent
+import com.github.tomakehurst.wiremock.client.WireMock.findAll
+import com.github.tomakehurst.wiremock.client.WireMock.get
+import com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor
+import com.github.tomakehurst.wiremock.client.WireMock.matching
+import com.github.tomakehurst.wiremock.client.WireMock.noContent
+import com.github.tomakehurst.wiremock.client.WireMock.stubFor
+import com.github.tomakehurst.wiremock.client.WireMock.urlMatching
+import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
+import com.pubnub.api.PubNubError
+import com.pubnub.api.assertPnException
+import com.pubnub.api.emptyJson
 import com.pubnub.api.enums.PNOperationType
+import com.pubnub.api.failTest
 import com.pubnub.api.legacy.BaseTest
-import org.junit.jupiter.api.Assertions.*
+import com.pubnub.api.listen
+import com.pubnub.api.param
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -51,7 +67,8 @@ class GetMessageActionEndpointTest : BaseTest() {
         stubFor(
             get(urlPathEqualTo("/v1/message-actions/mySubscribeKey/channel/coolChannel"))
                 .willReturn(
-                    aResponse().withBody("""
+                    aResponse().withBody(
+                        """
                         {
                           "status": 200,
                           "data": [
@@ -107,7 +124,6 @@ class GetMessageActionEndpointTest : BaseTest() {
         assertEquals(result.actions[2].value, "😄")
         assertEquals(result.actions[2].actionTimetoken, 3000)
     }
-
 
     @Test
     fun testAsyncSuccess() {
@@ -271,12 +287,10 @@ class GetMessageActionEndpointTest : BaseTest() {
         }
     }
 
-
     @Test
     fun testNoChannel() {
         try {
             pubnub.getMessageActions().apply {
-
             }.sync()!!
             failTest()
         } catch (e: Exception) {
@@ -483,6 +497,4 @@ class GetMessageActionEndpointTest : BaseTest() {
 
         success.listen()
     }
-
-
 }

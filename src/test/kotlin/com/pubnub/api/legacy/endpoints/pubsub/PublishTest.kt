@@ -1,6 +1,16 @@
 package com.pubnub.api.legacy.endpoints.pubsub
 
-import com.github.tomakehurst.wiremock.client.WireMock.*
+import com.github.tomakehurst.wiremock.client.WireMock.aResponse
+import com.github.tomakehurst.wiremock.client.WireMock.equalToJson
+import com.github.tomakehurst.wiremock.client.WireMock.findAll
+import com.github.tomakehurst.wiremock.client.WireMock.get
+import com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor
+import com.github.tomakehurst.wiremock.client.WireMock.matching
+import com.github.tomakehurst.wiremock.client.WireMock.post
+import com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor
+import com.github.tomakehurst.wiremock.client.WireMock.stubFor
+import com.github.tomakehurst.wiremock.client.WireMock.urlMatching
+import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.assertPnException
@@ -15,7 +25,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Test
 import java.nio.charset.Charset
-import java.util.*
+import java.util.HashMap
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -184,7 +194,7 @@ class PublishTest : BaseTest() {
                 .withQueryParam("uuid", matching("myUUID"))
                 .withQueryParam(
                     "pnsdk", matching("PubNub-Kotlin/.*")
-                ) //.withQueryParam("meta", matching("%5B%22m1%22%2C%22m2%22%5D"))
+                ) // .withQueryParam("meta", matching("%5B%22m1%22%2C%22m2%22%5D"))
                 .withQueryParam("meta", equalToJson("""["m1","m2"]"""))
                 .withQueryParam("store", matching("0"))
                 .withQueryParam("seqn", matching("1"))
@@ -335,7 +345,6 @@ class PublishTest : BaseTest() {
 
         private var field1: String? = null
         private var field2: String? = null
-
     }
 
     @Test
@@ -354,7 +363,6 @@ class PublishTest : BaseTest() {
             channel = "coolChannel"
             message = testPojo
         }.sync()!!
-
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
         assertEquals(1, requests.size)
@@ -460,7 +468,6 @@ class PublishTest : BaseTest() {
         val atomic = AtomicInteger(0)
 
         pubnub.publish().apply {
-
         }.async { _, status ->
             if (status.operation === PNOperationType.PNPublishOperation) {
                 atomic.incrementAndGet()

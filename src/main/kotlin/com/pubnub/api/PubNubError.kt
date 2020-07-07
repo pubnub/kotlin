@@ -155,5 +155,4 @@ enum class PubNubError(val code: Int, val message: String) {
     override fun toString(): String {
         return "PubNubError(name=$name, code=$code, message='$message')"
     }
-
 }

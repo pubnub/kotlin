@@ -22,5 +22,4 @@ internal class DuplicationManager(private val config: PNConfiguration) {
     }
 
     fun clearHistory() = hashHistory.clear()
-
 }

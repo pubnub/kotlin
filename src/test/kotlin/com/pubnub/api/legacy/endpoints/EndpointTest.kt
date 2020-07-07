@@ -1,20 +1,32 @@
 package com.pubnub.api.legacy.endpoints
 
-import com.github.tomakehurst.wiremock.client.WireMock.*
+import com.github.tomakehurst.wiremock.client.WireMock.aResponse
+import com.github.tomakehurst.wiremock.client.WireMock.any
+import com.github.tomakehurst.wiremock.client.WireMock.forbidden
+import com.github.tomakehurst.wiremock.client.WireMock.stubFor
 import com.github.tomakehurst.wiremock.matching.UrlPattern
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
-import com.pubnub.api.*
+import com.pubnub.api.Endpoint
+import com.pubnub.api.PNConfiguration
+import com.pubnub.api.PubNub
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.legacy.BaseTest
+import com.pubnub.api.listen
+import com.pubnub.api.param
 import okhttp3.Request
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.*
+import java.util.HashMap
+import java.util.UUID
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 
@@ -141,7 +153,7 @@ class EndpointTest : BaseTest() {
                         .withBody(
                             JsonObject().apply {
                                 add("payload", JsonObject().apply {
-                                    add("channels", JsonArray().apply { add("ch1");add("ch2") })
+                                    add("channels", JsonArray().apply { add("ch1"); add("ch2") })
                                     add("channel-groups", JsonArray().apply { add("cg1") })
                                 })
                             }.toString()
@@ -226,7 +238,6 @@ class EndpointTest : BaseTest() {
         success.listen()
     }
 
-
     @Test
     fun testUnauthorized() {
         stubFor(
@@ -279,7 +290,6 @@ class EndpointTest : BaseTest() {
         assertEquals(50, p.configuration.presenceTimeout)
         assertEquals(24, p.configuration.heartbeatInterval)
     }
-
 
     private fun fakeEndpoint(
         paramsCondition: (map: HashMap<String, String>) -> Unit

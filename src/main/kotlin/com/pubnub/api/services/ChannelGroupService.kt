@@ -41,5 +41,4 @@ internal interface ChannelGroupService {
         @Path("group") group: String,
         @QueryMap options: Map<String, String>
     ): Call<Void>
-
 }

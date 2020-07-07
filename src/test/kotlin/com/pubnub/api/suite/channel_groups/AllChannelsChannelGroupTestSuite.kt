@@ -8,8 +8,14 @@ import com.pubnub.api.endpoints.channel_groups.AllChannelsChannelGroup
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsAllChannelsResult
-import com.pubnub.api.suite.*
-import org.junit.jupiter.api.Assertions.*
+import com.pubnub.api.suite.AUTH
+import com.pubnub.api.suite.EndpointTestSuite
+import com.pubnub.api.suite.OptionalScenario
+import com.pubnub.api.suite.Result
+import com.pubnub.api.suite.SUB
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
 
 class AllChannelsChannelGroupTestSuite :
     EndpointTestSuite<AllChannelsChannelGroup, PNChannelGroupsAllChannelsResult>() {
@@ -91,11 +97,10 @@ class AllChannelsChannelGroupTestSuite :
             }
             pnError = PubNubError.PARSING_ERROR
             result = Result.FAIL
-            additionalChecks = { status: PNStatus, result: PNChannelGroupsAllChannelsResult? ->
+            additionalChecks = { status: PNStatus, _: PNChannelGroupsAllChannelsResult? ->
                 assertTrue(status.error)
             }
         }
 
     )
-
 }

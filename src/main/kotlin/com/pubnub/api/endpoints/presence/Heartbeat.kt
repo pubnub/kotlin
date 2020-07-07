@@ -7,7 +7,7 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
 import retrofit2.Call
 import retrofit2.Response
-import java.util.*
+import java.util.HashMap
 
 class Heartbeat internal constructor(
     pubnub: PubNub,
@@ -50,5 +50,4 @@ class Heartbeat internal constructor(
     }
 
     override fun operationType() = PNOperationType.PNHeartbeatOperation
-
 }

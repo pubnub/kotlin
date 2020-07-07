@@ -6,20 +6,22 @@ import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
 import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.models.consumer.PNPublishResult
-import org.awaitility.Awaitility
-import org.awaitility.Durations
+import com.pubnub.api.randomValue
+import okhttp3.logging.HttpLoggingInterceptor
 import org.json.JSONObject
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.TestInstance
-import java.util.*
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+import java.util.Properties
 import java.util.UUID
-import java.util.concurrent.CountDownLatch
-import java.util.concurrent.TimeUnit
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 abstract class BaseIntegrationTest {
+
+    protected val logger = LoggerFactory.getLogger(this.javaClass.simpleName)
 
     companion object {
         const val TIMEOUT_MEDIUM = 5
@@ -98,7 +100,9 @@ abstract class BaseIntegrationTest {
             pnConfiguration.publishKey = PAM_PUB_KEY
             pnConfiguration.authKey = provideAuthKey()!!
         }
-        pnConfiguration.logVerbosity = PNLogVerbosity.BODY
+        pnConfiguration.logVerbosity = PNLogVerbosity.NONE
+        pnConfiguration.httpLoggingInterceptor = createInterceptor(logger)
+
         pnConfiguration.uuid = "client-${UUID.randomUUID()}"
         return pnConfiguration
     }
@@ -108,7 +112,9 @@ abstract class BaseIntegrationTest {
         pnConfiguration.subscribeKey = PAM_SUB_KEY
         pnConfiguration.publishKey = PAM_PUB_KEY
         pnConfiguration.secretKey = PAM_SEC_KEY
-        pnConfiguration.logVerbosity = PNLogVerbosity.BODY
+        pnConfiguration.logVerbosity = PNLogVerbosity.NONE
+        pnConfiguration.httpLoggingInterceptor = createInterceptor(logger)
+
         pnConfiguration.uuid = "server-${UUID.randomUUID()}"
         return pnConfiguration
     }
@@ -134,21 +140,7 @@ abstract class BaseIntegrationTest {
 
     fun wait(seconds: Int = 3) {
         Thread.sleep((seconds * 1_000).toLong())
-        /*Awaitility.await()
-            .atMost(seconds.toLong(), TimeUnit.SECONDS)
-            .until { true }*/
     }
-
-    /*protected fun subscribeToChannel(vararg channels: String, pubnub: PubNub = this.pubnub) {
-        pubnub.subscribe().apply {
-            this.channels = listOf(*channels)
-            withPresence = true
-
-        }.execute()
-
-        wait(2)
-    }*/
-
 }
 
 internal fun PubNub.subscribeToBlocking(vararg channels: String) {
@@ -162,20 +154,8 @@ internal fun PubNub.subscribeToBlocking(vararg channels: String) {
 internal fun PubNub.unsubscribeFromBlocking(vararg channels: String) {
     unsubscribe().apply {
         this.channels = listOf(*channels)
-    }.execute();
+    }.execute()
     Thread.sleep(2000)
-}
-
-fun randomValue(length: Int = 10): String {
-    return ((0..9).toList().map(Int::toString) + ('A'..'Z').toList().map(Char::toString))
-        .shuffled()
-        .toList()
-        .take(length)
-        .joinToString(separator = "")
-}
-
-fun randomNumeric(length: Int = 10): String {
-    return generateSequence { (0..9).random() }.take(length).toList().shuffled().joinToString(separator = "")
 }
 
 fun publishMixed(pubnub: PubNub, count: Int, channel: String): List<PNPublishResult> {
@@ -190,7 +170,6 @@ fun publishMixed(pubnub: PubNub, count: Int, channel: String): List<PNPublishRes
                 else -> null
             }
             meta?.let { this.meta = it }
-
         }.sync()
         list.add(sync!!)
     }
@@ -216,7 +195,6 @@ fun generateMessage(pubnub: PubNub): JsonObject {
         addProperty("publisher", pubnub.configuration.uuid)
         addProperty("text", randomValue())
         addProperty("uncd", unicode(8))
-
     }
 }
 
@@ -346,18 +324,9 @@ fun emoji(): String {
     ).shuffled().take(5).joinToString("")
 }
 
-inline fun retry(crossinline block: () -> Unit) {
-    Awaitility.await()
-        .pollInterval(Durations.TWO_HUNDRED_MILLISECONDS)
-        .atLeast(Durations.FIVE_SECONDS)
-        .until {
-            val latch = CountDownLatch(1)
-            try {
-                block.invoke()
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-            latch.countDown()
-            latch.await(1, TimeUnit.SECONDS)
-        }
-}
+private fun createInterceptor(logger: Logger) =
+    HttpLoggingInterceptor {
+        logger.debug(it)
+    }.apply {
+        level = HttpLoggingInterceptor.Level.BODY
+    }

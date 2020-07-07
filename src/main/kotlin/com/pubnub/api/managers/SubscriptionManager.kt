@@ -16,7 +16,8 @@ import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.server.SubscribeMessage
 import com.pubnub.api.workers.SubscribeMessageWorker
-import java.util.*
+import java.util.ArrayList
+import java.util.Timer
 import java.util.concurrent.LinkedBlockingQueue
 import kotlin.concurrent.timerTask
 
@@ -183,10 +184,10 @@ class SubscriptionManager(val pubnub: PubNub) {
         val heartbeatChannelGroups =
             subscriptionState.prepareHeartbeatChannelGroupList(false)
         // do not start the loop if we do not have any presence channels or channel groups enabled.
-        if (presenceChannels.isEmpty()
-            && presenceChannelGroups.isEmpty()
-            && heartbeatChannels.isEmpty()
-            && heartbeatChannelGroups.isEmpty()
+        if (presenceChannels.isEmpty() &&
+            presenceChannelGroups.isEmpty() &&
+            heartbeatChannels.isEmpty() &&
+            heartbeatChannelGroups.isEmpty()
         ) {
             return
         }
@@ -201,8 +202,8 @@ class SubscriptionManager(val pubnub: PubNub) {
             val heartbeatVerbosity = pubnub.configuration.heartbeatNotificationOptions
 
             if (status.error) {
-                if (heartbeatVerbosity == PNHeartbeatNotificationOptions.ALL
-                    || heartbeatVerbosity == PNHeartbeatNotificationOptions.FAILURES
+                if (heartbeatVerbosity == PNHeartbeatNotificationOptions.ALL ||
+                    heartbeatVerbosity == PNHeartbeatNotificationOptions.FAILURES
                 ) {
                     listenerManager.announce(status)
                 }
@@ -292,9 +293,7 @@ class SubscriptionManager(val pubnub: PubNub) {
 
             region = result.metadata.region
             startSubscribeLoop()
-
         }
-
     }
 
     private fun stopSubscribeLoop() {
@@ -390,5 +389,4 @@ class SubscriptionManager(val pubnub: PubNub) {
             consumerThread!!.interrupt()
         }
     }
-
 }

@@ -36,7 +36,6 @@ class PushPayloadHelper {
         }
     }
 
-
     class APNSPayload : PushPayloadSerializer {
         var aps: APS? = null
         var apns2Configurations: List<APNS2Configuration>? = null
@@ -68,7 +67,6 @@ class PushPayloadHelper {
                     sound?.let { put("sound", it) }
                 }
             }
-
         }
 
         class APNS2Configuration : PushPayloadSerializer {
@@ -105,9 +103,7 @@ class PushPayloadHelper {
                     }
                 }
             }
-
         }
-
     }
 
     class MPNSPayload : PushPayloadSerializer {
@@ -128,7 +124,6 @@ class PushPayloadHelper {
                 custom?.let { putAll(it) }
             }
         }
-
     }
 
     class FCMPayload : PushPayloadSerializer {

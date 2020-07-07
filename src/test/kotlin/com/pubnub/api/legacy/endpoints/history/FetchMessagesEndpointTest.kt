@@ -1,6 +1,12 @@
 package com.pubnub.api.legacy.endpoints.history
 
-import com.github.tomakehurst.wiremock.client.WireMock.*
+import com.github.tomakehurst.wiremock.client.WireMock.aResponse
+import com.github.tomakehurst.wiremock.client.WireMock.findAll
+import com.github.tomakehurst.wiremock.client.WireMock.get
+import com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor
+import com.github.tomakehurst.wiremock.client.WireMock.stubFor
+import com.github.tomakehurst.wiremock.client.WireMock.urlMatching
+import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 import com.pubnub.api.legacy.BaseTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -42,7 +48,6 @@ class FetchMessagesEndpointTest : BaseTest() {
                     )
                 )
         )
-
 
         val response = pubnub.fetchMessages().apply {
             channels = listOf("mychannel", "my_channel")
@@ -152,5 +157,4 @@ class FetchMessagesEndpointTest : BaseTest() {
         assertEquals(response.channels["mychannel"]!!.size, 1)
         assertEquals(response.channels["my_channel"]!!.size, 1)
     }
-
 }

@@ -1,7 +1,12 @@
 package com.pubnub.api.integration
 
-import com.pubnub.api.suite.await
-import org.junit.jupiter.api.Assertions.*
+import com.pubnub.api.asyncRetry
+import com.pubnub.api.await
+import com.pubnub.api.randomChannel
+import com.pubnub.api.randomValue
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
 
 class StorageAndPlaybackIntegrationTests : BaseIntegrationTest() {
@@ -9,18 +14,16 @@ class StorageAndPlaybackIntegrationTests : BaseIntegrationTest() {
     @Test
     fun testHistoryMessages() {
         val expectedMessage = randomValue()
-        val expectedChannel = randomValue()
+        val expectedChannel = randomChannel()
 
         pubnub.publish().apply {
             channel = expectedChannel
             message = expectedMessage
         }.await { _, _ -> }
 
-        wait()
-
         pubnub.history().apply {
             this.channel = expectedChannel
-        }.await { result, status ->
+        }.asyncRetry { result, status ->
             assertFalse(status.error)
             assertEquals(expectedMessage, result!!.messages[0].entry.asString)
         }
@@ -28,7 +31,7 @@ class StorageAndPlaybackIntegrationTests : BaseIntegrationTest() {
 
     @Test
     fun testHistoryMessagesWithTimeToken() {
-        val expectedChannel = randomValue()
+        val expectedChannel = randomChannel()
 
         repeat(3) {
             pubnub.publish().apply {
@@ -37,12 +40,10 @@ class StorageAndPlaybackIntegrationTests : BaseIntegrationTest() {
             }.sync()!!
         }
 
-        wait()
-
         pubnub.history().apply {
             channel = expectedChannel
             includeTimetoken = true
-        }.await { result, status ->
+        }.asyncRetry { result, status ->
             assertFalse(status.error)
             result!!.messages.forEach {
                 assertNotNull(it.timetoken)
@@ -52,7 +53,7 @@ class StorageAndPlaybackIntegrationTests : BaseIntegrationTest() {
 
     @Test
     fun testLoadingHistoryMessagesWithLimit() {
-        val expectedChannel = randomValue()
+        val expectedChannel = randomChannel()
 
         repeat(20) {
             pubnub.publish().apply {
@@ -61,12 +62,10 @@ class StorageAndPlaybackIntegrationTests : BaseIntegrationTest() {
             }.sync()!!
         }
 
-        wait()
-
         pubnub.history().apply {
             channel = expectedChannel
             count = 10
-        }.await { result, status ->
+        }.asyncRetry { result, status ->
             assertFalse(status.error)
             assertEquals(10, result!!.messages.size)
         }
@@ -74,7 +73,7 @@ class StorageAndPlaybackIntegrationTests : BaseIntegrationTest() {
 
     @Test
     fun testLoadingHistoryWithSpecificTimeInterval() {
-        val expectedChannel = randomValue()
+        val expectedChannel = randomChannel()
 
         val before = System.currentTimeMillis() * 10000
         wait(5)
@@ -105,7 +104,6 @@ class StorageAndPlaybackIntegrationTests : BaseIntegrationTest() {
         val message1: String = randomValue(20)
         val message2: String = randomValue(20)
 
-
         pubnub.publish().apply {
             channel = expectedChannel
             message = message1
@@ -116,17 +114,14 @@ class StorageAndPlaybackIntegrationTests : BaseIntegrationTest() {
             message = message2
         }.sync()!!
 
-        wait()
-
         pubnub.history().apply {
             channel = expectedChannel
             count = 10
             reverse = true
-        }.await { result, status ->
+        }.asyncRetry { result, status ->
             assertFalse(status.error)
             assertEquals(message1, result!!.messages[0].entry.asString)
             assertEquals(message2, result.messages[1].entry.asString)
         }
     }
-
 }

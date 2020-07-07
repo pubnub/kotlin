@@ -72,5 +72,4 @@ class GetStateTestSuite : EndpointTestSuite<GetState, PNGetStateResult>() {
             }
         )
     }
-
 }

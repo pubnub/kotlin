@@ -12,7 +12,7 @@ import java.net.URLEncoder
 import java.nio.charset.Charset
 import java.security.InvalidKeyException
 import java.security.NoSuchAlgorithmException
-import java.util.*
+import java.util.TreeSet
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 
@@ -109,7 +109,7 @@ internal class PubNubUtil {
             val encodedQueryString = if (classic) {
                 preparePamArguments(queryParams)
             } else {
-                preparePamArguments("${request.url().encodedQuery()}&timestamp=${timestamp}")
+                preparePamArguments("${request.url().encodedQuery()}&timestamp=$timestamp")
             }
 
             isV2Signature = !(requestURL.startsWith("/publish") && request.method().equals("post", ignoreCase = true))
@@ -202,7 +202,6 @@ internal class PubNubUtil {
                 replace("*", "%2A")
             }
         }
-
     }
 }
 

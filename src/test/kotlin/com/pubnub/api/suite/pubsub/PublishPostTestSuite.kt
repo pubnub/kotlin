@@ -1,7 +1,9 @@
 package com.pubnub.api.suite.pubsub
 
 import com.github.tomakehurst.wiremock.client.MappingBuilder
-import com.github.tomakehurst.wiremock.client.WireMock.*
+import com.github.tomakehurst.wiremock.client.WireMock.equalToJson
+import com.github.tomakehurst.wiremock.client.WireMock.post
+import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 import com.google.gson.Gson
 import com.pubnub.api.endpoints.pubsub.Publish
 import com.pubnub.api.enums.PNOperationType
@@ -65,5 +67,4 @@ class PublishPostTestSuite : EndpointTestSuite<Publish, PNPublishResult>() {
     }
 
     override fun affectedChannelsAndGroups() = listOf("ch1") to emptyList<String>()
-
 }

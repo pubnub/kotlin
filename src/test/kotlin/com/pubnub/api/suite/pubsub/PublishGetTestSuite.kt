@@ -60,5 +60,4 @@ class PublishGetTestSuite : EndpointTestSuite<Publish, PNPublishResult>() {
             )
         }
     }*/
-
 }

@@ -1,6 +1,8 @@
 package com.pubnub.api.suite.message_actions
 
-import com.github.tomakehurst.wiremock.client.WireMock.*
+import com.github.tomakehurst.wiremock.client.WireMock.absent
+import com.github.tomakehurst.wiremock.client.WireMock.get
+import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 import com.pubnub.api.endpoints.message_actions.GetMessageActions
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.message_actions.PNGetMessageActionsResult
@@ -51,7 +53,6 @@ class GetMessageActionsTestSuite : EndpointTestSuite<GetMessageActions, PNGetMes
             assertEquals("abc", uuid)
             assertEquals("smiley", value)
             assertEquals(200L, actionTimetoken)
-
         }
     }
 

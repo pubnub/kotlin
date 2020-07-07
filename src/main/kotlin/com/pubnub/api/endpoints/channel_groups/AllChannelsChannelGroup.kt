@@ -9,7 +9,7 @@ import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsAllChannelsRe
 import com.pubnub.api.models.server.Envelope
 import retrofit2.Call
 import retrofit2.Response
-import java.util.*
+import java.util.HashMap
 
 class AllChannelsChannelGroup(pubnub: PubNub) :
     Endpoint<Envelope<Map<String, Any>>, PNChannelGroupsAllChannelsResult>(pubnub) {

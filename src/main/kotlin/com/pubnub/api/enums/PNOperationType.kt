@@ -74,5 +74,4 @@ sealed class PNOperationType(open val queryParam: String? = null) {
     override fun toString(): String {
         return this.javaClass.simpleName
     }
-
 }

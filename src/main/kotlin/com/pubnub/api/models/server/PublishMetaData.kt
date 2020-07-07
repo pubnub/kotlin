@@ -8,5 +8,4 @@ class PublishMetaData(
 
     @SerializedName("r")
     internal val region: Int?
-) {
-}
+)

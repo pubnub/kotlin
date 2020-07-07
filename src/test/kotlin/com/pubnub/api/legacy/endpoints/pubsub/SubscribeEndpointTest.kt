@@ -1,6 +1,13 @@
 package com.pubnub.api.legacy.endpoints.pubsub
 
-import com.github.tomakehurst.wiremock.client.WireMock.*
+import com.github.tomakehurst.wiremock.client.WireMock.aResponse
+import com.github.tomakehurst.wiremock.client.WireMock.findAll
+import com.github.tomakehurst.wiremock.client.WireMock.get
+import com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor
+import com.github.tomakehurst.wiremock.client.WireMock.matching
+import com.github.tomakehurst.wiremock.client.WireMock.stubFor
+import com.github.tomakehurst.wiremock.client.WireMock.urlMatching
+import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.assertPnException
@@ -167,7 +174,6 @@ class SubscribeEndpointTest : BaseTest() {
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
         assertEquals(1, requests.size)
         assertEquals("authKey", requests[0].queryParameter("auth").firstValue())
-
     }
 
     @Test
@@ -449,7 +455,6 @@ class SubscribeEndpointTest : BaseTest() {
     fun subscribeMissingChannelAndGroupSync() {
         try {
             Subscribe(pubnub).apply {
-
             }.sync()!!
             throw RuntimeException()
         } catch (e: PubNubException) {
@@ -463,7 +468,6 @@ class SubscribeEndpointTest : BaseTest() {
 
         try {
             Subscribe(pubnub).apply {
-
             }.sync()!!
             throw RuntimeException()
         } catch (e: PubNubException) {
@@ -553,5 +557,4 @@ class SubscribeEndpointTest : BaseTest() {
             request.queryParameter("state").firstValue()
         )
     }
-
 }

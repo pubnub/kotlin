@@ -1,13 +1,20 @@
 package com.pubnub.api.suite.push.add
 
-import com.github.tomakehurst.wiremock.client.WireMock.*
+import com.github.tomakehurst.wiremock.client.WireMock.absent
+import com.github.tomakehurst.wiremock.client.WireMock.equalTo
+import com.github.tomakehurst.wiremock.client.WireMock.get
+import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 import com.pubnub.api.PubNubError
 import com.pubnub.api.endpoints.push.AddChannelsToPush
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNPushType
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.push.PNPushAddChannelResult
-import com.pubnub.api.suite.*
+import com.pubnub.api.suite.AUTH
+import com.pubnub.api.suite.EndpointTestSuite
+import com.pubnub.api.suite.OptionalScenario
+import com.pubnub.api.suite.Result
+import com.pubnub.api.suite.SUB
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 
@@ -28,7 +35,6 @@ class AddChannelsToPushV1TestSuite : EndpointTestSuite<AddChannelsToPush, PNPush
     }
 
     override fun verifyResultExpectations(result: PNPushAddChannelResult) {
-
     }
 
     override fun successfulResponseBody(): String {
@@ -52,9 +58,9 @@ class AddChannelsToPushV1TestSuite : EndpointTestSuite<AddChannelsToPush, PNPush
         return listOf(
             OptionalScenario<PNPushAddChannelResult>().apply {
                 val body = "{\"error\":\"Use of the mobile push notifications API requires Push Notifications" +
-                        " which is not enabled for this subscribe key. Login to your PubNub Dashboard Account" +
-                        " and enable Push Notifications. " +
-                        "Contact support@pubnub.com if you require further assistance.\"}"
+                    " which is not enabled for this subscribe key. Login to your PubNub Dashboard Account" +
+                    " and enable Push Notifications. " +
+                    "Contact support@pubnub.com if you require further assistance.\"}"
                 result = Result.FAIL
                 responseBuilder = { withBody(body).withStatus(400) }
                 pnError = PubNubError.HTTP_ERROR

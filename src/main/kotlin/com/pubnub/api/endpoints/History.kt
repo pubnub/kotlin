@@ -11,7 +11,8 @@ import com.pubnub.api.models.consumer.history.PNHistoryResult
 import com.pubnub.api.vendor.Crypto
 import retrofit2.Call
 import retrofit2.Response
-import java.util.*
+import java.util.HashMap
+import java.util.Locale
 
 class History(pubnub: PubNub) : Endpoint<JsonElement, PNHistoryResult>(pubnub) {
 

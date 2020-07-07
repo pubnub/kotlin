@@ -1,7 +1,9 @@
 package com.pubnub.api.suite.channel_groups
 
 import com.github.tomakehurst.wiremock.client.MappingBuilder
-import com.github.tomakehurst.wiremock.client.WireMock.*
+import com.github.tomakehurst.wiremock.client.WireMock.equalTo
+import com.github.tomakehurst.wiremock.client.WireMock.get
+import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 import com.pubnub.api.endpoints.channel_groups.AddChannelChannelGroup
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsAddChannelResult
@@ -25,7 +27,6 @@ class AddChannelChannelGroupTestSuite : EndpointTestSuite<AddChannelChannelGroup
     }
 
     override fun verifyResultExpectations(result: PNChannelGroupsAddChannelResult) {
-
     }
 
     override fun successfulResponseBody() = """
@@ -47,5 +48,4 @@ class AddChannelChannelGroupTestSuite : EndpointTestSuite<AddChannelChannelGroup
     override fun affectedChannelsAndGroups() = listOf("ch1", "ch2") to listOf("cg1")
 
     override fun voidResponse() = true
-
 }

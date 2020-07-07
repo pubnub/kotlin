@@ -10,7 +10,7 @@ import com.pubnub.api.enums.PNPushType
 import com.pubnub.api.models.consumer.push.PNPushRemoveAllChannelsResult
 import retrofit2.Call
 import retrofit2.Response
-import java.util.*
+import java.util.HashMap
 
 class RemoveAllPushChannelsForDevice(pubnub: PubNub) : Endpoint<Void, PNPushRemoveAllChannelsResult>(pubnub) {
 
@@ -55,7 +55,6 @@ class RemoveAllPushChannelsForDevice(pubnub: PubNub) : Endpoint<Void, PNPushRemo
                 deviceApns2 = deviceId,
                 options = queryParams
             )
-
     }
 
     override fun createResponse(input: Response<Void>): PNPushRemoveAllChannelsResult? {

@@ -1,6 +1,9 @@
 package com.pubnub.api.suite.push.add
 
-import com.github.tomakehurst.wiremock.client.WireMock.*
+import com.github.tomakehurst.wiremock.client.WireMock.absent
+import com.github.tomakehurst.wiremock.client.WireMock.equalTo
+import com.github.tomakehurst.wiremock.client.WireMock.get
+import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 import com.pubnub.api.endpoints.push.AddChannelsToPush
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNPushType
@@ -27,7 +30,6 @@ class AddChannelsToPushV2TestSuite : EndpointTestSuite<AddChannelsToPush, PNPush
     }
 
     override fun verifyResultExpectations(result: PNPushAddChannelResult) {
-
     }
 
     override fun successfulResponseBody(): String {

@@ -5,6 +5,7 @@ import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.listen
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
+import com.pubnub.api.randomChannel
 import org.awaitility.Awaitility
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -22,7 +23,7 @@ class PresenceEventsIntegrationTests : BaseIntegrationTest() {
     @Test
     fun testJoinChannel() {
         val success = AtomicBoolean()
-        val expectedChannel = randomValue()
+        val expectedChannel = randomChannel()
 
         pubnub.addListener(object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {}
@@ -32,7 +33,6 @@ class PresenceEventsIntegrationTests : BaseIntegrationTest() {
                 assertEquals(expectedChannel, pnPresenceEventResult.channel)
                 success.set(true)
             }
-
         })
 
         pubnub.subscribeToBlocking(expectedChannel)
@@ -43,7 +43,7 @@ class PresenceEventsIntegrationTests : BaseIntegrationTest() {
     @Test
     fun testLeaveChannel() {
         val success = AtomicBoolean()
-        val expectedChannel = randomValue()
+        val expectedChannel = randomChannel()
 
         pubnub.subscribeToBlocking(expectedChannel)
         guest.subscribeToBlocking(expectedChannel)
@@ -66,7 +66,7 @@ class PresenceEventsIntegrationTests : BaseIntegrationTest() {
     @Test
     fun testTimeoutFromChannel() {
         val success = AtomicBoolean()
-        val expectedChannel = randomValue()
+        val expectedChannel = randomChannel()
 
         pubnub.configuration.presenceTimeout = 20
         pubnub.configuration.heartbeatInterval = 0
@@ -80,7 +80,6 @@ class PresenceEventsIntegrationTests : BaseIntegrationTest() {
                     success.set(true)
                 }
             }
-
         })
 
         pubnub.subscribeToBlocking(expectedChannel)
@@ -93,7 +92,7 @@ class PresenceEventsIntegrationTests : BaseIntegrationTest() {
     @Test
     fun testStateChangeEvent() {
         val success = AtomicBoolean()
-        val expectedChannel = randomValue()
+        val expectedChannel = randomChannel()
 
         pubnub.subscribeToBlocking(expectedChannel)
 
@@ -106,7 +105,6 @@ class PresenceEventsIntegrationTests : BaseIntegrationTest() {
                 assertEquals(pubnub.configuration.uuid, pnPresenceEventResult.uuid)
                 success.set(true)
             }
-
         })
 
         pubnub.setPresenceState().apply {

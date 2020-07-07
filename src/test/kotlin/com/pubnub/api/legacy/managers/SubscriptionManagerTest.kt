@@ -1,9 +1,22 @@
 package com.pubnub.api.legacy.managers
 
-import com.github.tomakehurst.wiremock.client.WireMock.*
+import com.github.tomakehurst.wiremock.client.WireMock.aResponse
+import com.github.tomakehurst.wiremock.client.WireMock.equalTo
+import com.github.tomakehurst.wiremock.client.WireMock.findAll
+import com.github.tomakehurst.wiremock.client.WireMock.get
+import com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor
+import com.github.tomakehurst.wiremock.client.WireMock.matching
+import com.github.tomakehurst.wiremock.client.WireMock.notFound
+import com.github.tomakehurst.wiremock.client.WireMock.stubFor
+import com.github.tomakehurst.wiremock.client.WireMock.urlMatching
+import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
+import com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching
 import com.google.gson.reflect.TypeToken
-import com.pubnub.api.*
+import com.pubnub.api.PubNub
+import com.pubnub.api.PubNubException
+import com.pubnub.api.PubNubUtil
 import com.pubnub.api.callbacks.SubscribeCallback
+import com.pubnub.api.emptyJson
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
@@ -11,10 +24,13 @@ import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
+import com.pubnub.api.toCsv
 import org.awaitility.Awaitility
 import org.hamcrest.Matchers
 import org.hamcrest.core.IsEqual
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
@@ -119,7 +135,6 @@ class SubscriptionManagerTest : BaseTest() {
             override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {
                 gotMessages.addAndGet(1)
             }
-
         })
 
         Awaitility.await()
@@ -180,7 +195,6 @@ class SubscriptionManagerTest : BaseTest() {
             override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {
                 gotMessages.addAndGet(1)
             }
-
         })
 
         Awaitility.await()
@@ -320,7 +334,6 @@ class SubscriptionManagerTest : BaseTest() {
                 assertEquals("Publisher-A", pnMessageResult.publisher)
                 gotMessage.set(true)
             }
-
         })
 
         pubnub.subscribe().apply {
@@ -494,7 +507,6 @@ class SubscriptionManagerTest : BaseTest() {
             override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {
                 gotMessages.addAndGet(1)
             }
-
         })
 
         pubnub.subscribe().apply {
@@ -600,7 +612,6 @@ class SubscriptionManagerTest : BaseTest() {
             override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {
                 gotMessages.addAndGet(1)
             }
-
         })
 
         pubnub.subscribe().apply {
@@ -661,7 +672,6 @@ class SubscriptionManagerTest : BaseTest() {
                     gotStatus.set(true)
                 }
             }
-
         })
 
         pubnub.subscribe().apply {
@@ -722,7 +732,6 @@ class SubscriptionManagerTest : BaseTest() {
                     gotStatus.set(true)
                 }
             }
-
         })
 
         pubnub.subscribe().apply {
@@ -783,7 +792,6 @@ class SubscriptionManagerTest : BaseTest() {
                     gotStatus.set(true)
                 }
             }
-
         })
 
         pubnub.subscribe().apply {
@@ -863,7 +871,6 @@ class SubscriptionManagerTest : BaseTest() {
                     gotStatus.set(true)
                 }
             }
-
         })
 
         pubnub.subscribe().apply {
@@ -914,7 +921,6 @@ class SubscriptionManagerTest : BaseTest() {
                     gotStatus.addAndGet(1)
                 }
             }
-
         })
 
         pubnub.subscribe().apply {
@@ -980,7 +986,6 @@ class SubscriptionManagerTest : BaseTest() {
                 assertEquals("coolChannelGroup", pnMessageResult.subscription)
                 gotMessage.set(true)
             }
-
         })
 
         pubnub.subscribe().apply {
@@ -1044,7 +1049,6 @@ class SubscriptionManagerTest : BaseTest() {
                 assertEquals(null, pnPresenceEventResult.subscription)
                 gotMessage.set(true)
             }
-
         })
 
         pubnub.subscribe().apply {
@@ -1114,7 +1118,6 @@ class SubscriptionManagerTest : BaseTest() {
                 assertEquals("coolChannelGroup", pnPresenceEventResult.subscription)
                 gotMessage.set(true)
             }
-
         })
 
         pubnub.subscribe().apply {
@@ -1322,7 +1325,6 @@ class SubscriptionManagerTest : BaseTest() {
                 assertEquals(10, pnMessageResult.message.asInt)
                 atomic.addAndGet(1)
             }
-
         })
 
         pubnub.subscribe().apply {
@@ -1388,13 +1390,11 @@ class SubscriptionManagerTest : BaseTest() {
                 )
                 atomic.addAndGet(1)
             }
-
         })
 
         pubnub.subscribe().apply {
             channels = listOf("ch1", "ch2")
         }.execute()
-
 
         Awaitility.await()
             .atMost(5, TimeUnit.SECONDS)
@@ -1497,7 +1497,6 @@ class SubscriptionManagerTest : BaseTest() {
                     }
                 }
             }
-
         })
 
         pubnub.subscribe().apply {
@@ -1562,7 +1561,6 @@ class SubscriptionManagerTest : BaseTest() {
                     }
                 }
             }
-
         })
 
         pubnub.subscribe().apply {
@@ -1624,7 +1622,6 @@ class SubscriptionManagerTest : BaseTest() {
                     }
                 }
             }
-
         })
 
         pubnub.subscribe().apply {
@@ -1694,7 +1691,6 @@ class SubscriptionManagerTest : BaseTest() {
                 assertTrue(requests.size > 0)
                 atomic.set(true)
             }
-
         })
 
         pubnub.subscribe().apply {
@@ -1745,7 +1741,6 @@ class SubscriptionManagerTest : BaseTest() {
                 assertEquals("hey", pubnub.mapper.elementToString(pnMessageResult.message, "text"))
                 atomic.addAndGet(1)
             }
-
         })
 
         pubnub.subscribe().apply {
@@ -1805,7 +1800,6 @@ class SubscriptionManagerTest : BaseTest() {
                 )
                 atomic.addAndGet(1)
             }
-
         })
 
         pubnub.subscribe().apply {
@@ -1861,7 +1855,6 @@ class SubscriptionManagerTest : BaseTest() {
                 assertEquals("""{"text":"Enter Message Here"}""", pnMessageResult.message.toString())
                 atomic.addAndGet(1)
             }
-
         })
 
         pubnub.subscribe().apply {
@@ -1924,7 +1917,6 @@ class SubscriptionManagerTest : BaseTest() {
                     atomic.incrementAndGet()
                 }
             }
-
         })
 
         pubnub.subscribe().apply {
@@ -1990,7 +1982,6 @@ class SubscriptionManagerTest : BaseTest() {
                     atomic.incrementAndGet()
                 }
             }
-
         })
 
         pubnub.subscribe().apply {
@@ -2056,7 +2047,6 @@ class SubscriptionManagerTest : BaseTest() {
                     atomic.incrementAndGet()
                 }
             }
-
         })
 
         pubnub.subscribe().apply {
@@ -2123,7 +2113,6 @@ class SubscriptionManagerTest : BaseTest() {
                     atomic.incrementAndGet()
                 }
             }
-
         })
 
         pubnub.subscribe().apply {
@@ -2185,7 +2174,6 @@ class SubscriptionManagerTest : BaseTest() {
                     atomic.incrementAndGet()
                 }
             }
-
         })
 
         pubnub.subscribe().apply {
@@ -2266,7 +2254,6 @@ class SubscriptionManagerTest : BaseTest() {
                     }
                 }
             }
-
         })
 
         pubnub.subscribe().apply {
@@ -2325,7 +2312,6 @@ class SubscriptionManagerTest : BaseTest() {
                     atomic.set(true)
                 }
             }
-
         })
 
         pubnub.subscribe().apply {
@@ -2358,7 +2344,6 @@ class SubscriptionManagerTest : BaseTest() {
             override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {
                 atomic.addAndGet(1)
             }
-
         }
 
         pubnub.addListener(sub1)
@@ -2482,7 +2467,6 @@ class SubscriptionManagerTest : BaseTest() {
                     messageReceived.set(true)
                 }
             }
-
         }
         pubnub.addListener(sub1)
 
@@ -2562,7 +2546,6 @@ class SubscriptionManagerTest : BaseTest() {
                     statusRecieved.set(true)
                 }
             }
-
         }
         pubnub.addListener(sub1)
 
@@ -2603,7 +2586,6 @@ class SubscriptionManagerTest : BaseTest() {
                     statusReceived.set(true)
                 }
             }
-
         }
         assertNotNull(sub1)
         pubnub.addListener(sub1)
@@ -2645,7 +2627,6 @@ class SubscriptionManagerTest : BaseTest() {
                     statusReceived.set(true)
                 }
             }
-
         }
 
         pubnub.addListener(sub1)
@@ -2717,7 +2698,6 @@ class SubscriptionManagerTest : BaseTest() {
                     statusReceived.set(true)
                 }
             }
-
         }
 
         pubnub.addListener(sub1)
@@ -2790,7 +2770,6 @@ class SubscriptionManagerTest : BaseTest() {
                     statusReceived.set(true)
                 }
             }
-
         }
         pubnub.addListener(sub1)
 
@@ -2847,7 +2826,6 @@ class SubscriptionManagerTest : BaseTest() {
                     statusReceived.set(true)
                 }
             }
-
         }
 
         pubnub.addListener(sub1)
@@ -2923,7 +2901,6 @@ class SubscriptionManagerTest : BaseTest() {
                     statusReceived.set(true)
                 }
             }
-
         }
         pubnub.addListener(sub1)
 
@@ -2993,7 +2970,6 @@ class SubscriptionManagerTest : BaseTest() {
                     }
                 }
             }
-
         })
 
         pubnub.subscribe().apply {
@@ -3069,7 +3045,6 @@ class SubscriptionManagerTest : BaseTest() {
                     }
                 }
             }
-
         })
 
         pubnub.subscribe().apply {
@@ -3223,7 +3198,6 @@ class SubscriptionManagerTest : BaseTest() {
                     }
                 }
             }
-
         }
 
         pubnub.addListener(sub1)
@@ -3236,5 +3210,49 @@ class SubscriptionManagerTest : BaseTest() {
         Awaitility.await()
             .atMost(4, TimeUnit.SECONDS)
             .untilTrue(statusReceived)
+    }
+
+    @Test
+    fun testSubscribeWithCustomTimetoken() {
+        stubFor(
+            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
+                .withQueryParam("tt", equalTo("0"))
+                .willReturn(
+                    aResponse().withBody(
+                        """
+                            {
+                              "t": {
+                                "t": "999",
+                                "r": 1
+                              },
+                              "m": []
+                            }
+                        """.trimIndent()
+                    )
+                )
+        )
+
+        stubFor(
+            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
+                .withQueryParam("tt", equalTo("555"))
+                .willReturn(emptyJson())
+        )
+
+        pubnub.subscribe().apply {
+            channels = listOf("ch1", "ch2")
+            withTimetoken = 555L
+        }.execute()
+
+        Awaitility.await()
+            .atMost(5, TimeUnit.SECONDS)
+            .pollDelay(2, TimeUnit.SECONDS)
+            .until {
+                val requests = findAll(
+                    getRequestedFor(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
+                        .withQueryParam("tt", equalTo("555"))
+                )
+                assertEquals(1, requests.size)
+                true
+            }
     }
 }

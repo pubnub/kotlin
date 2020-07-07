@@ -1,8 +1,19 @@
 package com.pubnub.api.legacy.endpoints.access
 
-import com.github.tomakehurst.wiremock.client.WireMock.*
-import com.pubnub.api.*
+import com.github.tomakehurst.wiremock.client.WireMock.aResponse
+import com.github.tomakehurst.wiremock.client.WireMock.findAll
+import com.github.tomakehurst.wiremock.client.WireMock.get
+import com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor
+import com.github.tomakehurst.wiremock.client.WireMock.matching
+import com.github.tomakehurst.wiremock.client.WireMock.stubFor
+import com.github.tomakehurst.wiremock.client.WireMock.urlMatching
+import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
+import com.pubnub.api.PubNubError
+import com.pubnub.api.PubNubException
+import com.pubnub.api.assertPnException
+import com.pubnub.api.decomposeAndVerifySignature
 import com.pubnub.api.enums.PNOperationType
+import com.pubnub.api.failTest
 import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.models.consumer.access_manager.PNAccessManagerKeyData
 import org.awaitility.Awaitility
@@ -672,7 +683,6 @@ class GrantEndpointTest : BaseTest() {
 
         decomposeAndVerifySignature(pubnub.configuration, requests[0])
     }
-
 
     @Test
     fun twoGroupNoChannelOneKey() {
@@ -1732,5 +1742,4 @@ class GrantEndpointTest : BaseTest() {
 
         Awaitility.await().atMost(5, TimeUnit.SECONDS).untilTrue(atomic)
     }
-
 }

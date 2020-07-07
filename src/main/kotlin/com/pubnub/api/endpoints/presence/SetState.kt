@@ -2,14 +2,18 @@ package com.pubnub.api.endpoints.presence
 
 import com.google.gson.JsonElement
 import com.google.gson.JsonNull
-import com.pubnub.api.*
+import com.pubnub.api.Endpoint
+import com.pubnub.api.PubNub
+import com.pubnub.api.PubNubError
+import com.pubnub.api.PubNubException
 import com.pubnub.api.builder.StateOperation
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.presence.PNSetStateResult
 import com.pubnub.api.models.server.Envelope
+import com.pubnub.api.toCsv
 import retrofit2.Call
 import retrofit2.Response
-import java.util.*
+import java.util.HashMap
 
 class SetState(pubnub: PubNub) : Endpoint<Envelope<JsonElement>, PNSetStateResult>(pubnub) {
 
@@ -65,6 +69,3 @@ class SetState(pubnub: PubNub) : Endpoint<Envelope<JsonElement>, PNSetStateResul
 
     override fun operationType() = PNOperationType.PNSetStateOperation
 }
-
-
-

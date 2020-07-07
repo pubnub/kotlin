@@ -1,7 +1,9 @@
 package com.pubnub.api.suite.presence
 
 import com.github.tomakehurst.wiremock.client.MappingBuilder
-import com.github.tomakehurst.wiremock.client.WireMock.*
+import com.github.tomakehurst.wiremock.client.WireMock.equalTo
+import com.github.tomakehurst.wiremock.client.WireMock.get
+import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 import com.pubnub.api.endpoints.presence.Heartbeat
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.suite.AUTH
@@ -45,5 +47,4 @@ class HeartbeatTestSuite : EndpointTestSuite<Heartbeat, Boolean>() {
     override fun affectedChannelsAndGroups() = listOf("ch1") to emptyList<String>()
 
     override fun voidResponse() = true
-
 }

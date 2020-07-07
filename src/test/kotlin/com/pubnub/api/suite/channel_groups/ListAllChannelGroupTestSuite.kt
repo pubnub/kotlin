@@ -7,8 +7,14 @@ import com.pubnub.api.endpoints.channel_groups.ListAllChannelGroup
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsListAllResult
-import com.pubnub.api.suite.*
-import org.junit.jupiter.api.Assertions.*
+import com.pubnub.api.suite.AUTH
+import com.pubnub.api.suite.EndpointTestSuite
+import com.pubnub.api.suite.OptionalScenario
+import com.pubnub.api.suite.Result
+import com.pubnub.api.suite.SUB
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
 
 class ListAllChannelGroupTestSuite : EndpointTestSuite<ListAllChannelGroup, PNChannelGroupsListAllResult>() {
 

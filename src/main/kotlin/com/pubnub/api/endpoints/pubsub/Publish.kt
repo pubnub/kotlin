@@ -98,5 +98,4 @@ class Publish(pubnub: PubNub) : Endpoint<List<Any>, PNPublishResult>(pubnub) {
     override fun operationType() = PNOperationType.PNPublishOperation
 
     override fun isPubKeyRequired() = true
-
 }

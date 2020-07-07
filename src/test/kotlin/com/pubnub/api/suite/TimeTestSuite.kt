@@ -6,7 +6,10 @@ import com.pubnub.api.endpoints.Time
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.PNTimeResult
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions.assertTrue
 
 class TimeTestSuite : EndpointTestSuite<Time, PNTimeResult>() {
     override fun telemetryParamName() = "l_time"
@@ -53,5 +56,4 @@ class TimeTestSuite : EndpointTestSuite<Time, PNTimeResult>() {
     override fun mappingBuilder() = get(urlPathEqualTo("/time/0"))
 
     override fun affectedChannelsAndGroups() = emptyList<String>() to emptyList<String>()
-
 }

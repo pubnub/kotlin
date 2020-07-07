@@ -35,7 +35,6 @@ class RemoveMessageActionsTestSuite : EndpointTestSuite<RemoveMessageAction, PNR
     override fun unsuccessfulResponseBodyList() = emptyList<String>()
 
     override fun verifyResultExpectations(result: PNRemoveMessageActionResult) {
-
     }
 
     override fun mappingBuilder() =

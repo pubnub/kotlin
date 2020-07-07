@@ -1,6 +1,8 @@
 package com.pubnub.api.suite.presence
 
-import com.github.tomakehurst.wiremock.client.WireMock.*
+import com.github.tomakehurst.wiremock.client.WireMock.absent
+import com.github.tomakehurst.wiremock.client.WireMock.get
+import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 import com.pubnub.api.endpoints.presence.HereNow
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.presence.PNHereNowResult
@@ -56,5 +58,4 @@ class HereNowTestSuite : EndpointTestSuite<HereNow, PNHereNowResult>() {
             .withQueryParam("channel-group", absent())
 
     override fun affectedChannelsAndGroups() = listOf("ch1") to emptyList<String>()
-
 }

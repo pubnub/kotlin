@@ -18,4 +18,3 @@ open class BasePubSubResult(
         basePubSubResult.publisher
     )
 }
-

@@ -2,12 +2,15 @@ package com.pubnub.api.integration
 
 import com.google.gson.JsonObject
 import com.pubnub.api.PubNub
+import com.pubnub.api.asyncRetry
+import com.pubnub.api.await
 import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.listen
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
-import com.pubnub.api.suite.await
+import com.pubnub.api.randomChannel
+import com.pubnub.api.retry
 import org.awaitility.Awaitility
 import org.awaitility.Durations
 import org.hamcrest.core.IsEqual
@@ -23,7 +26,7 @@ class PublishIntegrationTests : BaseIntegrationTest() {
 
     @Test
     fun testPublishMessage() {
-        val expectedChannel = randomValue()
+        val expectedChannel = randomChannel()
 
         pubnub.publish().apply {
             channel = expectedChannel
@@ -36,7 +39,7 @@ class PublishIntegrationTests : BaseIntegrationTest() {
 
     @Test
     fun testPublishMessageHistory() {
-        val expectedChannel = randomValue()
+        val expectedChannel = randomChannel()
 
         val expectedPayload = JSONObject().apply {
             put("name", "joe")
@@ -50,13 +53,10 @@ class PublishIntegrationTests : BaseIntegrationTest() {
             message = expectedPayload
         }.sync()!!
 
-        wait()
-
         pubnub.fetchMessages().apply {
             channels = listOf(expectedChannel)
             maximumPerChannel = 1
-
-        }.await { result, status ->
+        }.asyncRetry { result, status ->
             assertFalse(status.error)
             assertEquals(1, result!!.channels.size)
             assertEquals(1, result.channels[expectedChannel]!!.size)
@@ -66,7 +66,7 @@ class PublishIntegrationTests : BaseIntegrationTest() {
 
     @Test
     fun testPublishMessageNoHistory() {
-        val expectedChannel = randomValue()
+        val expectedChannel = randomChannel()
         val messagePayload = generateMessage(pubnub)
 
         pubnub.publish().apply {
@@ -78,12 +78,10 @@ class PublishIntegrationTests : BaseIntegrationTest() {
             assertEquals(status.uuid, pubnub.configuration.uuid)
         }
 
-        wait()
-
         pubnub.history().apply {
             count = 1
             channel = expectedChannel
-        }.await { result, status ->
+        }.asyncRetry { result, status ->
             assertFalse(status.error)
             assertEquals(0, result!!.messages.size)
         }
@@ -92,15 +90,15 @@ class PublishIntegrationTests : BaseIntegrationTest() {
     @Test
     fun testReceiveMessage() {
         val success = AtomicBoolean()
-        val expectedChannel = randomValue()
+        val expectedChannel = randomChannel()
         val messagePayload = generateMessage(pubnub)
 
         val observer = createPubNub()
 
         pubnub.addListener(object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
-                if (pnStatus.operation == PNOperationType.PNSubscribeOperation
-                    && pnStatus.affectedChannels.contains(expectedChannel)
+                if (pnStatus.operation == PNOperationType.PNSubscribeOperation &&
+                    pnStatus.affectedChannels.contains(expectedChannel)
                 ) {
                     observer.publish().apply {
                         message = messagePayload
@@ -117,7 +115,6 @@ class PublishIntegrationTests : BaseIntegrationTest() {
                 assertEquals(messagePayload, pnMessageResult.message)
                 success.set(true)
             }
-
         })
 
         pubnub.subscribeToBlocking(expectedChannel)
@@ -127,7 +124,7 @@ class PublishIntegrationTests : BaseIntegrationTest() {
 
     @Test
     fun testOrgJsonObject_Get_History() {
-        val expectedChannel = randomValue()
+        val expectedChannel = randomChannel()
 
         val expectedPayload = JSONObject().apply {
             put("name", "John Doe")
@@ -140,19 +137,19 @@ class PublishIntegrationTests : BaseIntegrationTest() {
             usePost = true
         }.sync()!!
 
-        wait()
-
-        pubnub.history().apply {
-            channel = expectedChannel
-            count = 1
-        }.sync()!!.run {
-            assertEquals(expectedPayload.toString(), JSONObject(messages[0].entry.toString()).toString())
+        retry {
+            pubnub.history().apply {
+                channel = expectedChannel
+                count = 1
+            }.sync()!!.run {
+                assertEquals(expectedPayload.toString(), JSONObject(messages[0].entry.toString()).toString())
+            }
         }
     }
 
     @Test
     fun testOrgJsonObject_Post_History() {
-        val expectedChannel = randomValue()
+        val expectedChannel = randomChannel()
         val expectedPayload = generatePayloadJSON()
 
         pubnub.publish().apply {
@@ -161,19 +158,19 @@ class PublishIntegrationTests : BaseIntegrationTest() {
             usePost = true
         }.sync()!!
 
-        wait()
-
-        pubnub.history().apply {
-            channel = expectedChannel
-            count = 1
-        }.sync()!!.run {
-            assertEquals(expectedPayload.toString(), JSONObject(messages[0].entry.toString()).toString())
+        retry {
+            pubnub.history().apply {
+                channel = expectedChannel
+                count = 1
+            }.sync()!!.run {
+                assertEquals(expectedPayload.toString(), JSONObject(messages[0].entry.toString()).toString())
+            }
         }
     }
 
     @Test
     fun testOrgJsonObject_Get_Receive() {
-        val expectedChannel = randomValue()
+        val expectedChannel = randomChannel()
         val expectedPayload = generatePayloadJSON()
         val success = AtomicBoolean()
 
@@ -182,7 +179,6 @@ class PublishIntegrationTests : BaseIntegrationTest() {
             override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {
                 success.set(expectedPayload.toString() == JSONObject(pnMessageResult.message.toString()).toString())
             }
-
         })
 
         pubnub.subscribeToBlocking(expectedChannel)
@@ -192,14 +188,12 @@ class PublishIntegrationTests : BaseIntegrationTest() {
             channel = expectedChannel
         }.sync()!!
 
-        wait()
-
         success.listen()
     }
 
     @Test
     fun testOrgJsonObject_Post_Receive() {
-        val expectedChannel = randomValue()
+        val expectedChannel = randomChannel()
         val expectedPayload = generatePayloadJSON()
         val success = AtomicBoolean()
 
@@ -223,7 +217,7 @@ class PublishIntegrationTests : BaseIntegrationTest() {
 
     @Test
     fun testOrgJsonArray_Get_History() {
-        val expectedChannel = randomValue()
+        val expectedChannel = randomChannel()
         val expectedPayload = JSONArray().apply {
             repeat(2) { put(generatePayloadJSON()) }
         }
@@ -233,19 +227,19 @@ class PublishIntegrationTests : BaseIntegrationTest() {
             channel = expectedChannel
         }.sync()!!
 
-        wait()
-
-        pubnub.history().apply {
-            channel = expectedChannel
-            count = 1
-        }.sync()!!.run {
-            assertEquals(expectedPayload.toString(), JSONArray(messages[0].entry.toString()).toString())
+        retry {
+            pubnub.history().apply {
+                channel = expectedChannel
+                count = 1
+            }.sync()!!.run {
+                assertEquals(expectedPayload.toString(), JSONArray(messages[0].entry.toString()).toString())
+            }
         }
     }
 
     @Test
     fun testOrgJsonArray_Post_History() {
-        val expectedChannel = randomValue()
+        val expectedChannel = randomChannel()
         val expectedPayload = JSONArray().apply {
             repeat(2) { put(generatePayloadJSON()) }
         }
@@ -256,19 +250,19 @@ class PublishIntegrationTests : BaseIntegrationTest() {
             usePost = true
         }.sync()!!
 
-        wait()
-
-        pubnub.history().apply {
-            channel = expectedChannel
-            count = 1
-        }.sync()!!.run {
-            assertEquals(expectedPayload.toString(), JSONArray(messages[0].entry.toString()).toString())
+        retry {
+            pubnub.history().apply {
+                channel = expectedChannel
+                count = 1
+            }.sync()!!.run {
+                assertEquals(expectedPayload.toString(), JSONArray(messages[0].entry.toString()).toString())
+            }
         }
     }
 
     @Test
     fun testOrgJsonArray_Get_Receive() {
-        val expectedChannel = randomValue()
+        val expectedChannel = randomChannel()
         val expectedPayload = JSONArray().apply {
             repeat(2) { put(generatePayloadJSON()) }
         }
@@ -294,7 +288,7 @@ class PublishIntegrationTests : BaseIntegrationTest() {
 
     @Test
     fun testOrgJsonArray_Post_Receive() {
-        val expectedChannel = randomValue()
+        val expectedChannel = randomChannel()
         val expectedPayload = JSONArray().apply {
             repeat(2) { put(generatePayloadJSON()) }
         }
@@ -321,7 +315,7 @@ class PublishIntegrationTests : BaseIntegrationTest() {
 
     @Test
     fun testOrgJson_Combo() {
-        val expectedChannel = randomValue()
+        val expectedChannel = randomChannel()
 
         val expectedPayload = JSONObject().apply {
             put("key_1", generatePayloadJSON())

@@ -4,13 +4,17 @@ import com.google.gson.Gson
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubError
 import com.pubnub.api.assertPnException
+import com.pubnub.api.await
 import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.listen
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult
-import com.pubnub.api.suite.await
-import org.junit.jupiter.api.Assertions.*
+import com.pubnub.api.randomChannel
+import com.pubnub.api.randomValue
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -20,7 +24,7 @@ class SignalIntegrationTests : BaseIntegrationTest() {
     lateinit var expectedPayload: String
 
     override fun onBefore() {
-        expectedChannel = randomValue()
+        expectedChannel = randomChannel()
         expectedPayload = randomValue(5)
     }
 
@@ -53,8 +57,8 @@ class SignalIntegrationTests : BaseIntegrationTest() {
 
         observerClient.addListener(object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
-                if (pnStatus.operation == PNOperationType.PNSubscribeOperation
-                    && pnStatus.affectedChannels.contains(expectedChannel)
+                if (pnStatus.operation == PNOperationType.PNSubscribeOperation &&
+                    pnStatus.affectedChannels.contains(expectedChannel)
                 ) {
                     pubnub.signal().apply {
                         message = expectedPayload
@@ -98,7 +102,7 @@ class SignalIntegrationTests : BaseIntegrationTest() {
     fun testPublishSignalMessageSyncWithoutMessage() {
         try {
             pubnub.signal().apply {
-                channel = randomValue()
+                channel = randomChannel()
             }.sync()!!
         } catch (e: Exception) {
             assertPnException(PubNubError.MESSAGE_MISSING, e)
@@ -110,12 +114,11 @@ class SignalIntegrationTests : BaseIntegrationTest() {
         try {
             pubnub.configuration.subscribeKey = ""
             pubnub.signal().apply {
-                channel = randomValue()
+                channel = randomChannel()
                 message = randomValue()
             }.sync()
         } catch (e: Exception) {
             assertPnException(PubNubError.SUBSCRIBE_KEY_MISSING, e)
         }
     }
-
 }

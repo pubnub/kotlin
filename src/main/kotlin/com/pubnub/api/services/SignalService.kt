@@ -15,5 +15,4 @@ interface SignalService {
         @Path(value = "payload") message: String,
         @QueryMap options: Map<String, String>
     ): Call<List<Any>>
-
 }

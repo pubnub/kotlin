@@ -11,7 +11,7 @@ import com.pubnub.api.models.server.Envelope
 import com.pubnub.api.toCsv
 import retrofit2.Call
 import retrofit2.Response
-import java.util.*
+import java.util.HashMap
 
 class HereNow(pubnub: PubNub) : Endpoint<Envelope<JsonElement>, PNHereNowResult>(pubnub) {
 

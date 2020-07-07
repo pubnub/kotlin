@@ -3,14 +3,15 @@ package com.pubnub.api.managers
 import com.pubnub.api.enums.PNOperationType
 import java.math.RoundingMode
 import java.text.NumberFormat
-import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
+import java.util.Date
+import java.util.Locale
+import java.util.Timer
+import java.util.TimerTask
 import kotlin.collections.set
 
 internal class TelemetryManager {
 
-    companion object {
+    private companion object {
         private const val MAX_FRACTION_DIGITS = 3
         private const val TIMESTAMP_DIVIDER = 1000
         private const val MAXIMUM_LATENCY_DATA_AGE = 60.0
@@ -57,30 +58,29 @@ internal class TelemetryManager {
         }, interval, interval)
     }
 
-
     internal fun stopCleanUpTimer() {
         this.timer?.cancel()
     }
 
     @Synchronized
     private fun cleanUpTelemetryData() {
-        val currentDate = Date().time / (TIMESTAMP_DIVIDER.toDouble())
-        val endpoints = latencies.keys.toList()
-        endpoints.forEach {
-            val outdatedLatencies = ArrayList<Map<String, Double>>()
-            val operationLatencies = ArrayList<Map<String, Double>>()
-            operationLatencies.forEach { map: Map<String, Double> ->
-                map["d"]?.let { d: Double ->
-                    if (currentDate - d > MAXIMUM_LATENCY_DATA_AGE) {
-                        outdatedLatencies.add(map)
+        val currentDate = Date().time / TIMESTAMP_DIVIDER.toDouble()
+
+        latencies.forEach { (endpoint, _) ->
+            val outdatedLatencies = mutableListOf<Map<String, Double>>()
+            val operationLatencies = latencies[endpoint]
+            operationLatencies?.run {
+                forEach { latencyInformation ->
+                    if (currentDate - latencyInformation["d"]!! > MAXIMUM_LATENCY_DATA_AGE) {
+                        outdatedLatencies.add(latencyInformation)
                     }
                 }
-            }
-            if (outdatedLatencies.size > 0) {
-                operationLatencies.removeAll(outdatedLatencies)
-            }
-            if (operationLatencies.size == 0) {
-                this.latencies.remove(it)
+                if (outdatedLatencies.isNotEmpty()) {
+                    removeAll(outdatedLatencies)
+                }
+                if (operationLatencies.isEmpty()) {
+                    latencies.remove(endpoint)
+                }
             }
         }
     }
@@ -116,5 +116,4 @@ internal class TelemetryManager {
             }
         }
     }
-
 }

@@ -16,12 +16,18 @@ import com.pubnub.api.models.consumer.pubsub.PNSignalResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
 import org.awaitility.Awaitility
 import org.awaitility.Durations
-import org.junit.jupiter.api.*
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.TestInstance.Lifecycle
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Properties
+import java.util.UUID
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -63,7 +69,7 @@ class AppTest {
             channel = UUID.randomUUID().toString()
             message = UUID.randomUUID().toString()
         }.sync().let {
-            Assertions.assertNotNull(it)
+            assertNotNull(it)
         }
     }
 

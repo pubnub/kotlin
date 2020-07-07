@@ -1,6 +1,9 @@
 package com.pubnub.api.suite.pubsub
 
-import com.github.tomakehurst.wiremock.client.WireMock.*
+import com.github.tomakehurst.wiremock.client.WireMock.absent
+import com.github.tomakehurst.wiremock.client.WireMock.equalTo
+import com.github.tomakehurst.wiremock.client.WireMock.get
+import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 import com.pubnub.api.endpoints.pubsub.Subscribe
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.server.SubscribeEnvelope
@@ -52,5 +55,4 @@ class SubscribeTestSuite : EndpointTestSuite<Subscribe, SubscribeEnvelope>() {
             .withQueryParam("heartbeat", equalTo("300"))
 
     override fun affectedChannelsAndGroups() = listOf("ch1") to emptyList<String>()
-
 }

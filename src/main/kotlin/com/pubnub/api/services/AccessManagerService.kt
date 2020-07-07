@@ -14,5 +14,4 @@ interface AccessManagerService {
         @Path("subKey") subKey: String,
         @QueryMap options: Map<String, String>
     ): Call<Envelope<AccessManagerGrantPayload>>
-
 }
