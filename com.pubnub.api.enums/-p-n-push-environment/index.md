@@ -1,8 +1,4 @@
----
-title: PNPushEnvironment - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.enums](../index.html) / [PNPushEnvironment](./index.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.enums](../index.md) / [PNPushEnvironment](./index.md)
 
 # PNPushEnvironment
 
@@ -10,6 +6,7 @@ title: PNPushEnvironment - pubnub-kotlin
 
 ### Enum Values
 
-| [DEVELOPMENT](-d-e-v-e-l-o-p-m-e-n-t.html) |  |
-| [PRODUCTION](-p-r-o-d-u-c-t-i-o-n.html) |  |
-
+| Name | Summary |
+|---|---|
+| [DEVELOPMENT](-d-e-v-e-l-o-p-m-e-n-t.md) |  |
+| [PRODUCTION](-p-r-o-d-u-c-t-i-o-n.md) |  |

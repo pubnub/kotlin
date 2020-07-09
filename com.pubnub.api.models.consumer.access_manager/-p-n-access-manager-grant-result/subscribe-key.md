@@ -1,9 +1,11 @@
----
-title: PNAccessManagerGrantResult.subscribeKey - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.models.consumer.access_manager](../index.html) / [PNAccessManagerGrantResult](index.html) / [subscribeKey](./subscribe-key.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.models.consumer.access_manager](../index.md) / [PNAccessManagerGrantResult](index.md) / [subscribeKey](./subscribe-key.md)
 
 # subscribeKey
 
 `val subscribeKey: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
+
+The subscribe key.
+
+### Property
+
+`subscribeKey` - The subscribe key.

@@ -1,14 +1,11 @@
----
-title: PNOperationType.MessageActionsOperation - pubnub-kotlin
----
-
-[pubnub-kotlin](../../../index.html) / [com.pubnub.api.enums](../../index.html) / [PNOperationType](../index.html) / [MessageActionsOperation](./index.html)
+[pubnub-kotlin](../../../index.md) / [com.pubnub.api.enums](../../index.md) / [PNOperationType](../index.md) / [MessageActionsOperation](./index.md)
 
 # MessageActionsOperation
 
-`open class MessageActionsOperation : `[`PNOperationType`](../index.html)
+`open class MessageActionsOperation : `[`PNOperationType`](../index.md)
 
 ### Constructors
 
-| [&lt;init&gt;](-init-.html) | `MessageActionsOperation()` |
-
+| Name | Summary |
+|---|---|
+| [&lt;init&gt;](-init-.md) | `MessageActionsOperation()` |

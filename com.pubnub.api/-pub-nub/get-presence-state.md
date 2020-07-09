@@ -1,9 +1,10 @@
----
-title: PubNub.getPresenceState - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api](../index.html) / [PubNub](index.html) / [getPresenceState](./get-presence-state.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api](../index.md) / [PubNub](index.md) / [getPresenceState](./get-presence-state.md)
 
 # getPresenceState
 
-`fun getPresenceState(): `[`GetState`](../../com.pubnub.api.endpoints.presence/-get-state/index.html)
+`fun getPresenceState(): `[`GetState`](../../com.pubnub.api.endpoints.presence/-get-state/index.md)
+
+Retrieve state information specific to a subscriber UUID.
+
+State information is supplied as a JSON object of key/value pairs.
+

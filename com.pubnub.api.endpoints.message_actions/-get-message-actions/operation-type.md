@@ -1,8 +1,4 @@
----
-title: GetMessageActions.operationType - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.endpoints.message_actions](../index.html) / [GetMessageActions](index.html) / [operationType](./operation-type.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.endpoints.message_actions](../index.md) / [GetMessageActions](index.md) / [operationType](./operation-type.md)
 
 # operationType
 

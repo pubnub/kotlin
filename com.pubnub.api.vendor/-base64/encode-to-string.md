@@ -1,8 +1,4 @@
----
-title: Base64.encodeToString - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.vendor](../index.html) / [Base64](index.html) / [encodeToString](./encode-to-string.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.vendor](../index.md) / [Base64](index.md) / [encodeToString](./encode-to-string.md)
 
 # encodeToString
 

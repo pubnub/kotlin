@@ -1,8 +1,4 @@
----
-title: SubscriptionManager.getSubscribedChannels - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.managers](../index.html) / [SubscriptionManager](index.html) / [getSubscribedChannels](./get-subscribed-channels.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.managers](../index.md) / [SubscriptionManager](index.md) / [getSubscribedChannels](./get-subscribed-channels.md)
 
 # getSubscribedChannels
 

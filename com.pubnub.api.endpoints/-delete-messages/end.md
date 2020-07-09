@@ -1,8 +1,4 @@
----
-title: DeleteMessages.end - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.endpoints](../index.html) / [DeleteMessages](index.html) / [end](./end.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.endpoints](../index.md) / [DeleteMessages](index.md) / [end](./end.md)
 
 # end
 

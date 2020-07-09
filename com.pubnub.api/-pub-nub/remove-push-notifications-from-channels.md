@@ -1,9 +1,8 @@
----
-title: PubNub.removePushNotificationsFromChannels - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api](../index.html) / [PubNub](index.html) / [removePushNotificationsFromChannels](./remove-push-notifications-from-channels.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api](../index.md) / [PubNub](index.md) / [removePushNotificationsFromChannels](./remove-push-notifications-from-channels.md)
 
 # removePushNotificationsFromChannels
 
-`fun removePushNotificationsFromChannels(): `[`RemoveChannelsFromPush`](../../com.pubnub.api.endpoints.push/-remove-channels-from-push/index.html)
+`fun removePushNotificationsFromChannels(): `[`RemoveChannelsFromPush`](../../com.pubnub.api.endpoints.push/-remove-channels-from-push/index.md)
+
+Disable push notifications on provided set of channels.
+

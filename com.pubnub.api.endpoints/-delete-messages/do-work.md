@@ -1,8 +1,4 @@
----
-title: DeleteMessages.doWork - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.endpoints](../index.html) / [DeleteMessages](index.html) / [doWork](./do-work.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.endpoints](../index.md) / [DeleteMessages](index.md) / [doWork](./do-work.md)
 
 # doWork
 

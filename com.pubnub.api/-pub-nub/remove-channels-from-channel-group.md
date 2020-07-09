@@ -1,9 +1,8 @@
----
-title: PubNub.removeChannelsFromChannelGroup - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api](../index.html) / [PubNub](index.html) / [removeChannelsFromChannelGroup](./remove-channels-from-channel-group.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api](../index.md) / [PubNub](index.md) / [removeChannelsFromChannelGroup](./remove-channels-from-channel-group.md)
 
 # removeChannelsFromChannelGroup
 
-`fun removeChannelsFromChannelGroup(): `[`RemoveChannelChannelGroup`](../../com.pubnub.api.endpoints.channel_groups/-remove-channel-channel-group/index.html)
+`fun removeChannelsFromChannelGroup(): `[`RemoveChannelChannelGroup`](../../com.pubnub.api.endpoints.channel_groups/-remove-channel-channel-group/index.md)
+
+Removes channels from a channel group.
+

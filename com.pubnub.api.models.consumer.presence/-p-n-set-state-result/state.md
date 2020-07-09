@@ -1,9 +1,11 @@
----
-title: PNSetStateResult.state - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.models.consumer.presence](../index.html) / [PNSetStateResult](index.html) / [state](./state.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.models.consumer.presence](../index.md) / [PNSetStateResult](index.md) / [state](./state.md)
 
 # state
 
 `val state: JsonElement`
+
+The actual state object.
+
+### Property
+
+`state` - The actual state object.

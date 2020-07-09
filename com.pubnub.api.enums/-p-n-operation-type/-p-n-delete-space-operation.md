@@ -1,8 +1,4 @@
----
-title: PNOperationType.PNDeleteSpaceOperation - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.enums](../index.html) / [PNOperationType](index.html) / [PNDeleteSpaceOperation](./-p-n-delete-space-operation.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.enums](../index.md) / [PNOperationType](index.md) / [PNDeleteSpaceOperation](./-p-n-delete-space-operation.md)
 
 # PNDeleteSpaceOperation
 

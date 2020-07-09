@@ -1,8 +1,4 @@
----
-title: SubscribeCallback.<init> - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.callbacks](../index.html) / [SubscribeCallback](index.html) / [&lt;init&gt;](./-init-.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.callbacks](../index.md) / [SubscribeCallback](index.md) / [&lt;init&gt;](./-init-.md)
 
 # &lt;init&gt;
 

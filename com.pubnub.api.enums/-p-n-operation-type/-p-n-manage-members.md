@@ -1,8 +1,4 @@
----
-title: PNOperationType.PNManageMembers - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.enums](../index.html) / [PNOperationType](index.html) / [PNManageMembers](./-p-n-manage-members.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.enums](../index.md) / [PNOperationType](index.md) / [PNManageMembers](./-p-n-manage-members.md)
 
 # PNManageMembers
 

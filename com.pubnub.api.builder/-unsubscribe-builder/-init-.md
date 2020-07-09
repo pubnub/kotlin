@@ -1,9 +1,5 @@
----
-title: UnsubscribeBuilder.<init> - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.builder](../index.html) / [UnsubscribeBuilder](index.html) / [&lt;init&gt;](./-init-.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.builder](../index.md) / [UnsubscribeBuilder](index.md) / [&lt;init&gt;](./-init-.md)
 
 # &lt;init&gt;
 
-`UnsubscribeBuilder(subscriptionManager: `[`SubscriptionManager`](../../com.pubnub.api.managers/-subscription-manager/index.html)`)`
+`UnsubscribeBuilder(subscriptionManager: `[`SubscriptionManager`](../../com.pubnub.api.managers/-subscription-manager/index.md)`)`

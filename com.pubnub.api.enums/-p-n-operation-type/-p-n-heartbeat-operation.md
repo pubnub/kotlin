@@ -1,8 +1,4 @@
----
-title: PNOperationType.PNHeartbeatOperation - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.enums](../index.html) / [PNOperationType](index.html) / [PNHeartbeatOperation](./-p-n-heartbeat-operation.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.enums](../index.md) / [PNOperationType](index.md) / [PNHeartbeatOperation](./-p-n-heartbeat-operation.md)
 
 # PNHeartbeatOperation
 

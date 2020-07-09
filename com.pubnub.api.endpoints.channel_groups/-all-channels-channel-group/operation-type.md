@@ -1,8 +1,4 @@
----
-title: AllChannelsChannelGroup.operationType - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.endpoints.channel_groups](../index.html) / [AllChannelsChannelGroup](index.html) / [operationType](./operation-type.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.endpoints.channel_groups](../index.md) / [AllChannelsChannelGroup](index.md) / [operationType](./operation-type.md)
 
 # operationType
 

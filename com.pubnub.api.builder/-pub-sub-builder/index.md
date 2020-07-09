@@ -1,8 +1,4 @@
----
-title: PubSubBuilder - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.builder](../index.html) / [PubSubBuilder](./index.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.builder](../index.md) / [PubSubBuilder](./index.md)
 
 # PubSubBuilder
 
@@ -10,21 +6,28 @@ title: PubSubBuilder - pubnub-kotlin
 
 ### Constructors
 
-| [&lt;init&gt;](-init-.html) | `PubSubBuilder(subscriptionManager: `[`SubscriptionManager`](../../com.pubnub.api.managers/-subscription-manager/index.html)`, channels: `[`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)`<`[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`> = emptyList(), channelGroups: `[`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)`<`[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`> = emptyList())` |
+| Name | Summary |
+|---|---|
+| [&lt;init&gt;](-init-.md) | `PubSubBuilder(subscriptionManager: `[`SubscriptionManager`](../../com.pubnub.api.managers/-subscription-manager/index.md)`, channels: `[`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)`<`[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`> = emptyList(), channelGroups: `[`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)`<`[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`> = emptyList())` |
 
 ### Properties
 
-| [channelGroups](channel-groups.html) | `var channelGroups: `[`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)`<`[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`>` |
-| [channels](channels.html) | `var channels: `[`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)`<`[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`>` |
-| [subscriptionManager](subscription-manager.html) | `val subscriptionManager: `[`SubscriptionManager`](../../com.pubnub.api.managers/-subscription-manager/index.html) |
+| Name | Summary |
+|---|---|
+| [channelGroups](channel-groups.md) | Channel groups to subscribe/unsubscribe. Either `channelGroups` or [channel](#) are required.`var channelGroups: `[`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)`<`[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`>` |
+| [channels](channels.md) | Channels to subscribe/unsubscribe. Either `channel` or [channelGroups](channel-groups.md) are required.`var channels: `[`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)`<`[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`>` |
+| [subscriptionManager](subscription-manager.md) | `val subscriptionManager: `[`SubscriptionManager`](../../com.pubnub.api.managers/-subscription-manager/index.md) |
 
 ### Functions
 
-| [execute](execute.html) | `abstract fun execute(): `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html) |
+| Name | Summary |
+|---|---|
+| [execute](execute.md) | `abstract fun execute(): `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html) |
 
 ### Inheritors
 
-| [PresenceBuilder](../-presence-builder/index.html) | `class PresenceBuilder : `[`PubSubBuilder`](./index.html) |
-| [SubscribeBuilder](../-subscribe-builder/index.html) | `class SubscribeBuilder : `[`PubSubBuilder`](./index.html) |
-| [UnsubscribeBuilder](../-unsubscribe-builder/index.html) | `class UnsubscribeBuilder : `[`PubSubBuilder`](./index.html) |
-
+| Name | Summary |
+|---|---|
+| [PresenceBuilder](../-presence-builder/index.md) | `class PresenceBuilder : `[`PubSubBuilder`](./index.md) |
+| [SubscribeBuilder](../-subscribe-builder/index.md) | `class SubscribeBuilder : `[`PubSubBuilder`](./index.md) |
+| [UnsubscribeBuilder](../-unsubscribe-builder/index.md) | `class UnsubscribeBuilder : `[`PubSubBuilder`](./index.md) |

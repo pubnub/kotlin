@@ -1,8 +1,4 @@
----
-title: Signal.doWork - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.endpoints.pubsub](../index.html) / [Signal](index.html) / [doWork](./do-work.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.endpoints.pubsub](../index.md) / [Signal](index.md) / [doWork](./do-work.md)
 
 # doWork
 

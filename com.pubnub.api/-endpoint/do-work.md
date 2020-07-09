@@ -1,8 +1,4 @@
----
-title: Endpoint.doWork - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api](../index.html) / [Endpoint](index.html) / [doWork](./do-work.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api](../index.md) / [Endpoint](index.md) / [doWork](./do-work.md)
 
 # doWork
 

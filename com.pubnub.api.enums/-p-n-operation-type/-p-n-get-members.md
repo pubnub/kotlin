@@ -1,8 +1,4 @@
----
-title: PNOperationType.PNGetMembers - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.enums](../index.html) / [PNOperationType](index.html) / [PNGetMembers](./-p-n-get-members.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.enums](../index.md) / [PNOperationType](index.md) / [PNGetMembers](./-p-n-get-members.md)
 
 # PNGetMembers
 

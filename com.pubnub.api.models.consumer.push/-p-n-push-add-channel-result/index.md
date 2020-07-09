@@ -1,14 +1,13 @@
----
-title: PNPushAddChannelResult - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.models.consumer.push](../index.html) / [PNPushAddChannelResult](./index.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.models.consumer.push](../index.md) / [PNPushAddChannelResult](./index.md)
 
 # PNPushAddChannelResult
 
 `class PNPushAddChannelResult`
 
+Result of [PubNub.addPushNotificationsOnChannels](../../com.pubnub.api/-pub-nub/add-push-notifications-on-channels.md) operation.
+
 ### Constructors
 
-| [&lt;init&gt;](-init-.html) | `PNPushAddChannelResult()` |
-
+| Name | Summary |
+|---|---|
+| [&lt;init&gt;](-init-.md) | Result of [PubNub.addPushNotificationsOnChannels](../../com.pubnub.api/-pub-nub/add-push-notifications-on-channels.md) operation.`PNPushAddChannelResult()` |

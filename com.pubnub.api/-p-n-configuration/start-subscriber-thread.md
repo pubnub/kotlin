@@ -1,9 +1,10 @@
----
-title: PNConfiguration.startSubscriberThread - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api](../index.html) / [PNConfiguration](index.html) / [startSubscriberThread](./start-subscriber-thread.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api](../index.md) / [PNConfiguration](index.md) / [startSubscriberThread](./start-subscriber-thread.md)
 
 # startSubscriberThread
 
 `var startSubscriberThread: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)
+
+Whether to start a separate subscriber thread when creating the instance.
+
+Defaults to `true`.
+

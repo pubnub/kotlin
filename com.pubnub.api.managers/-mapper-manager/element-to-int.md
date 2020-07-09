@@ -1,8 +1,4 @@
----
-title: MapperManager.elementToInt - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.managers](../index.html) / [MapperManager](index.html) / [elementToInt](./element-to-int.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.managers](../index.md) / [MapperManager](index.md) / [elementToInt](./element-to-int.md)
 
 # elementToInt
 

@@ -1,9 +1,8 @@
----
-title: PubNub.removeMessageAction - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api](../index.html) / [PubNub](index.html) / [removeMessageAction](./remove-message-action.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api](../index.md) / [PubNub](index.md) / [removeMessageAction](./remove-message-action.md)
 
 # removeMessageAction
 
-`fun removeMessageAction(): `[`RemoveMessageAction`](../../com.pubnub.api.endpoints.message_actions/-remove-message-action/index.html)
+`fun removeMessageAction(): `[`RemoveMessageAction`](../../com.pubnub.api.endpoints.message_actions/-remove-message-action/index.md)
+
+Remove a previously added action on a published message. Returns an empty response.
+

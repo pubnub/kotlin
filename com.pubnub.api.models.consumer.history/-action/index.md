@@ -1,19 +1,20 @@
----
-title: Action - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.models.consumer.history](../index.html) / [Action](./index.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.models.consumer.history](../index.md) / [Action](./index.md)
 
 # Action
 
 `class Action`
 
+Encapsulates a message action in terms of batch history.
+
 ### Constructors
 
-| [&lt;init&gt;](-init-.html) | `Action(uuid: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`, actionTimetoken: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`)` |
+| Name | Summary |
+|---|---|
+| [&lt;init&gt;](-init-.md) | Encapsulates a message action in terms of batch history.`Action(uuid: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`, actionTimetoken: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`)` |
 
 ### Properties
 
-| [actionTimetoken](action-timetoken.html) | `val actionTimetoken: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
-| [uuid](uuid.html) | `val uuid: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
-
+| Name | Summary |
+|---|---|
+| [actionTimetoken](action-timetoken.md) | The publish timetoken of the message action.`val actionTimetoken: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
+| [uuid](uuid.md) | The UUID of the publisher.`val uuid: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |

@@ -1,8 +1,4 @@
----
-title: SetState.getAffectedChannels - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.endpoints.presence](../index.html) / [SetState](index.html) / [getAffectedChannels](./get-affected-channels.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.endpoints.presence](../index.md) / [SetState](index.md) / [getAffectedChannels](./get-affected-channels.md)
 
 # getAffectedChannels
 

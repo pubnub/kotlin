@@ -1,8 +1,4 @@
----
-title: ObjectPayload.data - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.models.consumer.pubsub.objects](../index.html) / [ObjectPayload](index.html) / [data](./data.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.models.consumer.pubsub.objects](../index.md) / [ObjectPayload](index.md) / [data](./data.md)
 
 # data
 

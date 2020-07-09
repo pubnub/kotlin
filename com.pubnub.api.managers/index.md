@@ -1,13 +1,10 @@
----
-title: com.pubnub.api.managers - pubnub-kotlin
----
-
-[pubnub-kotlin](../index.html) / [com.pubnub.api.managers](./index.html)
+[pubnub-kotlin](../index.md) / [com.pubnub.api.managers](./index.md)
 
 ## Package com.pubnub.api.managers
 
 ### Types
 
-| [MapperManager](-mapper-manager/index.html) | `class MapperManager` |
-| [SubscriptionManager](-subscription-manager/index.html) | `class SubscriptionManager` |
-
+| Name | Summary |
+|---|---|
+| [MapperManager](-mapper-manager/index.md) | `class MapperManager` |
+| [SubscriptionManager](-subscription-manager/index.md) | `class SubscriptionManager` |

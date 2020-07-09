@@ -1,8 +1,4 @@
----
-title: WhereNowPayload - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.models.server.presence](../index.html) / [WhereNowPayload](./index.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.models.server.presence](../index.md) / [WhereNowPayload](./index.md)
 
 # WhereNowPayload
 
@@ -10,5 +6,6 @@ title: WhereNowPayload - pubnub-kotlin
 
 ### Properties
 
-| [channels](channels.html) | `val channels: `[`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)`<`[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`>` |
-
+| Name | Summary |
+|---|---|
+| [channels](channels.md) | `val channels: `[`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)`<`[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`>` |

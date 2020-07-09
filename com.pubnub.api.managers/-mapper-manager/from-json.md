@@ -1,8 +1,4 @@
----
-title: MapperManager.fromJson - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.managers](../index.html) / [MapperManager](index.html) / [fromJson](./from-json.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.managers](../index.md) / [MapperManager](index.md) / [fromJson](./from-json.md)
 
 # fromJson
 

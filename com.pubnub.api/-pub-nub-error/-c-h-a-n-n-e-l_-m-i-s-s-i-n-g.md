@@ -1,8 +1,4 @@
----
-title: PubNubError.CHANNEL_MISSING - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api](../index.html) / [PubNubError](index.html) / [CHANNEL_MISSING](./-c-h-a-n-n-e-l_-m-i-s-s-i-n-g.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api](../index.md) / [PubNubError](index.md) / [CHANNEL_MISSING](./-c-h-a-n-n-e-l_-m-i-s-s-i-n-g.md)
 
 # CHANNEL_MISSING
 

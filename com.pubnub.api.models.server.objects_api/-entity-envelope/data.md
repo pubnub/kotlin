@@ -1,8 +1,4 @@
----
-title: EntityEnvelope.data - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.models.server.objects_api](../index.html) / [EntityEnvelope](index.html) / [data](./data.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.models.server.objects_api](../index.md) / [EntityEnvelope](index.md) / [data](./data.md)
 
 # data
 

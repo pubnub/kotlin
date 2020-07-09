@@ -1,9 +1,5 @@
----
-title: SubscriptionManager.addListener - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.managers](../index.html) / [SubscriptionManager](index.html) / [addListener](./add-listener.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.managers](../index.md) / [SubscriptionManager](index.md) / [addListener](./add-listener.md)
 
 # addListener
 
-`fun addListener(listener: `[`SubscribeCallback`](../../com.pubnub.api.callbacks/-subscribe-callback/index.html)`): `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html)
+`fun addListener(listener: `[`SubscribeCallback`](../../com.pubnub.api.callbacks/-subscribe-callback/index.md)`): `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html)

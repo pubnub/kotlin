@@ -1,8 +1,4 @@
----
-title: ObjectPayload.event - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.models.consumer.pubsub.objects](../index.html) / [ObjectPayload](index.html) / [event](./event.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.models.consumer.pubsub.objects](../index.md) / [ObjectPayload](index.md) / [event](./event.md)
 
 # event
 

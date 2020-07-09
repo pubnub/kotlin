@@ -1,8 +1,4 @@
----
-title: RemoveAllPushChannelsForDevice.validateParams - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.endpoints.push](../index.html) / [RemoveAllPushChannelsForDevice](index.html) / [validateParams](./validate-params.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.endpoints.push](../index.md) / [RemoveAllPushChannelsForDevice](index.md) / [validateParams](./validate-params.md)
 
 # validateParams
 

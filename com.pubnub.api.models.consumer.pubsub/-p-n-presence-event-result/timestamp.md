@@ -1,9 +1,11 @@
----
-title: PNPresenceEventResult.timestamp - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.models.consumer.pubsub](../index.html) / [PNPresenceEventResult](index.html) / [timestamp](./timestamp.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.models.consumer.pubsub](../index.md) / [PNPresenceEventResult](index.md) / [timestamp](./timestamp.md)
 
 # timestamp
 
 `val timestamp: `[`Long`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)`?`
+
+The timestamp of the event.
+
+### Property
+
+`timestamp` - The timestamp of the event.

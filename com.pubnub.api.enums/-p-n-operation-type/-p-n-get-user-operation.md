@@ -1,8 +1,4 @@
----
-title: PNOperationType.PNGetUserOperation - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.enums](../index.html) / [PNOperationType](index.html) / [PNGetUserOperation](./-p-n-get-user-operation.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.enums](../index.md) / [PNOperationType](index.md) / [PNGetUserOperation](./-p-n-get-user-operation.md)
 
 # PNGetUserOperation
 

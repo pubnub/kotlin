@@ -1,8 +1,4 @@
----
-title: AccessManagerGrantPayload.<init> - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.models.server.access_manager](../index.html) / [AccessManagerGrantPayload](index.html) / [&lt;init&gt;](./-init-.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.models.server.access_manager](../index.md) / [AccessManagerGrantPayload](index.md) / [&lt;init&gt;](./-init-.md)
 
 # &lt;init&gt;
 

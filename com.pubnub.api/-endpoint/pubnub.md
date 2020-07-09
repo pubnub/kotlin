@@ -1,9 +1,11 @@
----
-title: Endpoint.pubnub - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api](../index.html) / [Endpoint](index.html) / [pubnub](./pubnub.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api](../index.md) / [Endpoint](index.md) / [pubnub](./pubnub.md)
 
 # pubnub
 
-`protected val pubnub: `[`PubNub`](../-pub-nub/index.html)
+`protected val pubnub: `[`PubNub`](../-pub-nub/index.md)
+
+The client instance.
+
+### Property
+
+`pubnub` - The client instance.

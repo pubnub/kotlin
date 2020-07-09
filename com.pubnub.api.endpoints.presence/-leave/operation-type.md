@@ -1,8 +1,4 @@
----
-title: Leave.operationType - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.endpoints.presence](../index.html) / [Leave](index.html) / [operationType](./operation-type.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.endpoints.presence](../index.md) / [Leave](index.md) / [operationType](./operation-type.md)
 
 # operationType
 

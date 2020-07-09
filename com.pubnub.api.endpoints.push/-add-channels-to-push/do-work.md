@@ -1,8 +1,4 @@
----
-title: AddChannelsToPush.doWork - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.endpoints.push](../index.html) / [AddChannelsToPush](index.html) / [doWork](./do-work.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.endpoints.push](../index.md) / [AddChannelsToPush](index.md) / [doWork](./do-work.md)
 
 # doWork
 

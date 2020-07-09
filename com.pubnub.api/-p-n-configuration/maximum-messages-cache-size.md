@@ -1,8 +1,4 @@
----
-title: PNConfiguration.maximumMessagesCacheSize - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api](../index.html) / [PNConfiguration](index.html) / [maximumMessagesCacheSize](./maximum-messages-cache-size.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api](../index.md) / [PNConfiguration](index.md) / [maximumMessagesCacheSize](./maximum-messages-cache-size.md)
 
 # maximumMessagesCacheSize
 

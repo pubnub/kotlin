@@ -1,9 +1,10 @@
----
-title: PNConfiguration.certificatePinner - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api](../index.html) / [PNConfiguration](index.html) / [certificatePinner](./certificate-pinner.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api](../index.md) / [PNConfiguration](index.md) / [certificatePinner](./certificate-pinner.md)
 
 # certificatePinner
 
 `var certificatePinner: CertificatePinner?`
+
+**See Also**
+
+[CertificatePinner](#)
+

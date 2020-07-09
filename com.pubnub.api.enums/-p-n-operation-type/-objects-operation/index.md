@@ -1,14 +1,11 @@
----
-title: PNOperationType.ObjectsOperation - pubnub-kotlin
----
-
-[pubnub-kotlin](../../../index.html) / [com.pubnub.api.enums](../../index.html) / [PNOperationType](../index.html) / [ObjectsOperation](./index.html)
+[pubnub-kotlin](../../../index.md) / [com.pubnub.api.enums](../../index.md) / [PNOperationType](../index.md) / [ObjectsOperation](./index.md)
 
 # ObjectsOperation
 
-`open class ObjectsOperation : `[`PNOperationType`](../index.html)
+`open class ObjectsOperation : `[`PNOperationType`](../index.md)
 
 ### Constructors
 
-| [&lt;init&gt;](-init-.html) | `ObjectsOperation()` |
-
+| Name | Summary |
+|---|---|
+| [&lt;init&gt;](-init-.md) | `ObjectsOperation()` |

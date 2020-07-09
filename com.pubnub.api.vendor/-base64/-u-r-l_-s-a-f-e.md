@@ -1,8 +1,4 @@
----
-title: Base64.URL_SAFE - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.vendor](../index.html) / [Base64](index.html) / [URL_SAFE](./-u-r-l_-s-a-f-e.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.vendor](../index.md) / [Base64](index.md) / [URL_SAFE](./-u-r-l_-s-a-f-e.md)
 
 # URL_SAFE
 

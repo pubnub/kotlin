@@ -1,9 +1,10 @@
----
-title: PNConfiguration.maximumConnections - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api](../index.html) / [PNConfiguration](index.html) / [maximumConnections](./maximum-connections.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api](../index.md) / [PNConfiguration](index.md) / [maximumConnections](./maximum-connections.md)
 
 # maximumConnections
 
 `var maximumConnections: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)`?`
+
+**See Also**
+
+[okhttp3.Dispatcher.setMaxRequestsPerHost](#)
+

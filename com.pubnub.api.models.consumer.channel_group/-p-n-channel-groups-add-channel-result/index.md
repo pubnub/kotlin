@@ -1,14 +1,13 @@
----
-title: PNChannelGroupsAddChannelResult - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.models.consumer.channel_group](../index.html) / [PNChannelGroupsAddChannelResult](./index.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.models.consumer.channel_group](../index.md) / [PNChannelGroupsAddChannelResult](./index.md)
 
 # PNChannelGroupsAddChannelResult
 
 `class PNChannelGroupsAddChannelResult`
 
+Result of the [PubNub.addChannelsToChannelGroup](../../com.pubnub.api/-pub-nub/add-channels-to-channel-group.md) operation.
+
 ### Constructors
 
-| [&lt;init&gt;](-init-.html) | `PNChannelGroupsAddChannelResult()` |
-
+| Name | Summary |
+|---|---|
+| [&lt;init&gt;](-init-.md) | Result of the [PubNub.addChannelsToChannelGroup](../../com.pubnub.api/-pub-nub/add-channels-to-channel-group.md) operation.`PNChannelGroupsAddChannelResult()` |

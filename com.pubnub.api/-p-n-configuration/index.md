@@ -1,54 +1,57 @@
----
-title: PNConfiguration - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api](../index.html) / [PNConfiguration](./index.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api](../index.md) / [PNConfiguration](./index.md)
 
 # PNConfiguration
 
 `class PNConfiguration`
 
+A storage for user-provided information which describe further PubNub client behaviour.
+Configuration instance contains additional set of properties which
+allow to perform precise PubNub client configuration.
+
 ### Constructors
 
-| [&lt;init&gt;](-init-.html) | `PNConfiguration()` |
+| Name | Summary |
+|---|---|
+| [&lt;init&gt;](-init-.md) | A storage for user-provided information which describe further PubNub client behaviour. Configuration instance contains additional set of properties which allow to perform precise PubNub client configuration.`PNConfiguration()` |
 
 ### Properties
 
-| [authKey](auth-key.html) | `lateinit var authKey: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
-| [cacheBusting](cache-busting.html) | `var cacheBusting: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) |
-| [certificatePinner](certificate-pinner.html) | `var certificatePinner: CertificatePinner?` |
-| [cipherKey](cipher-key.html) | `lateinit var cipherKey: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
-| [connectionSpec](connection-spec.html) | `var connectionSpec: ConnectionSpec?` |
-| [connectTimeout](connect-timeout.html) | `var connectTimeout: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html) |
-| [dedupOnSubscribe](dedup-on-subscribe.html) | `var dedupOnSubscribe: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) |
-| [filterExpression](filter-expression.html) | `lateinit var filterExpression: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
-| [googleAppEngineNetworking](google-app-engine-networking.html) | `var googleAppEngineNetworking: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) |
-| [heartbeatInterval](heartbeat-interval.html) | `var heartbeatInterval: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html) |
-| [heartbeatNotificationOptions](heartbeat-notification-options.html) | `var heartbeatNotificationOptions: `[`PNHeartbeatNotificationOptions`](../../com.pubnub.api.enums/-p-n-heartbeat-notification-options/index.html) |
-| [hostnameVerifier](hostname-verifier.html) | `var hostnameVerifier: `[`HostnameVerifier`](https://docs.oracle.com/javase/6/docs/api/javax/net/ssl/HostnameVerifier.html)`?` |
-| [httpLoggingInterceptor](http-logging-interceptor.html) | `var httpLoggingInterceptor: HttpLoggingInterceptor?` |
-| [includeInstanceIdentifier](include-instance-identifier.html) | `var includeInstanceIdentifier: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) |
-| [includeRequestIdentifier](include-request-identifier.html) | `var includeRequestIdentifier: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) |
-| [logVerbosity](log-verbosity.html) | `var logVerbosity: `[`PNLogVerbosity`](../../com.pubnub.api.enums/-p-n-log-verbosity/index.html) |
-| [maximumConnections](maximum-connections.html) | `var maximumConnections: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)`?` |
-| [maximumMessagesCacheSize](maximum-messages-cache-size.html) | `var maximumMessagesCacheSize: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html) |
-| [maximumReconnectionRetries](maximum-reconnection-retries.html) | `var maximumReconnectionRetries: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html) |
-| [nonSubscribeRequestTimeout](non-subscribe-request-timeout.html) | `var nonSubscribeRequestTimeout: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html) |
-| [origin](origin.html) | `lateinit var origin: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
-| [presenceTimeout](presence-timeout.html) | `var presenceTimeout: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html) |
-| [proxy](proxy.html) | `var proxy: `[`Proxy`](https://docs.oracle.com/javase/6/docs/api/java/net/Proxy.html)`?` |
-| [proxyAuthenticator](proxy-authenticator.html) | `var proxyAuthenticator: Authenticator?` |
-| [proxySelector](proxy-selector.html) | `var proxySelector: `[`ProxySelector`](https://docs.oracle.com/javase/6/docs/api/java/net/ProxySelector.html)`?` |
-| [publishKey](publish-key.html) | `lateinit var publishKey: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
-| [reconnectionPolicy](reconnection-policy.html) | `var reconnectionPolicy: `[`PNReconnectionPolicy`](../../com.pubnub.api.enums/-p-n-reconnection-policy/index.html) |
-| [requestMessageCountThreshold](request-message-count-threshold.html) | `var requestMessageCountThreshold: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)`?` |
-| [secretKey](secret-key.html) | `lateinit var secretKey: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
-| [secure](secure.html) | `var secure: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) |
-| [sslSocketFactory](ssl-socket-factory.html) | `var sslSocketFactory: `[`SSLSocketFactory`](https://docs.oracle.com/javase/6/docs/api/javax/net/ssl/SSLSocketFactory.html)`?` |
-| [startSubscriberThread](start-subscriber-thread.html) | `var startSubscriberThread: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) |
-| [subscribeKey](subscribe-key.html) | `lateinit var subscribeKey: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
-| [subscribeTimeout](subscribe-timeout.html) | `var subscribeTimeout: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html) |
-| [suppressLeaveEvents](suppress-leave-events.html) | `var suppressLeaveEvents: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) |
-| [uuid](uuid.html) | `var uuid: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
-| [x509ExtendedTrustManager](x509-extended-trust-manager.html) | `var x509ExtendedTrustManager: `[`X509ExtendedTrustManager`](https://docs.oracle.com/javase/6/docs/api/javax/net/ssl/X509ExtendedTrustManager.html)`?` |
-
+| Name | Summary |
+|---|---|
+| [authKey](auth-key.md) | If Access Manager is utilized, client will use this authKey in all restricted requests.`lateinit var authKey: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
+| [cacheBusting](cache-busting.md) | If operating behind a misbehaving proxy, allow the client to shuffle the subdomains.`var cacheBusting: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) |
+| [certificatePinner](certificate-pinner.md) | `var certificatePinner: CertificatePinner?` |
+| [cipherKey](cipher-key.md) | If set, all communications to and from PubNub will be encrypted.`lateinit var cipherKey: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
+| [connectionSpec](connection-spec.md) | `var connectionSpec: ConnectionSpec?` |
+| [connectTimeout](connect-timeout.md) | How long before the client gives up trying to connect with a subscribe call.`var connectTimeout: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html) |
+| [dedupOnSubscribe](dedup-on-subscribe.md) | `var dedupOnSubscribe: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) |
+| [filterExpression](filter-expression.md) | Feature to subscribe with a custom filter expression.`lateinit var filterExpression: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
+| [googleAppEngineNetworking](google-app-engine-networking.md) | Enable Google App Engine networking.`var googleAppEngineNetworking: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) |
+| [heartbeatInterval](heartbeat-interval.md) | How often the client will announce itself to server.`var heartbeatInterval: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html) |
+| [heartbeatNotificationOptions](heartbeat-notification-options.md) | Set Heartbeat notification options.`var heartbeatNotificationOptions: `[`PNHeartbeatNotificationOptions`](../../com.pubnub.api.enums/-p-n-heartbeat-notification-options/index.md) |
+| [hostnameVerifier](hostname-verifier.md) | `var hostnameVerifier: `[`HostnameVerifier`](https://docs.oracle.com/javase/6/docs/api/javax/net/ssl/HostnameVerifier.html)`?` |
+| [httpLoggingInterceptor](http-logging-interceptor.md) | Sets a custom [HttpLoggingInterceptor](#) for logging network traffic.`var httpLoggingInterceptor: HttpLoggingInterceptor?` |
+| [includeInstanceIdentifier](include-instance-identifier.md) | Whether to include a [PubNub.instanceId](../-pub-nub/instance-id.md) with every request.`var includeInstanceIdentifier: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) |
+| [includeRequestIdentifier](include-request-identifier.md) | Whether to include a [PubNub.requestId](#) with every request.`var includeRequestIdentifier: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) |
+| [logVerbosity](log-verbosity.md) | Set to [PNLogVerbosity.BODY](../../com.pubnub.api.enums/-p-n-log-verbosity/-b-o-d-y.md) to enable logging of network traffic, otherwise se to [PNLogVerbosity.NONE](../../com.pubnub.api.enums/-p-n-log-verbosity/-n-o-n-e.md).`var logVerbosity: `[`PNLogVerbosity`](../../com.pubnub.api.enums/-p-n-log-verbosity/index.md) |
+| [maximumConnections](maximum-connections.md) | `var maximumConnections: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)`?` |
+| [maximumMessagesCacheSize](maximum-messages-cache-size.md) | `var maximumMessagesCacheSize: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html) |
+| [maximumReconnectionRetries](maximum-reconnection-retries.md) | Sets how many times to retry to reconnect before giving up. Must be used in combination with [reconnectionPolicy](reconnection-policy.md).`var maximumReconnectionRetries: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html) |
+| [nonSubscribeRequestTimeout](non-subscribe-request-timeout.md) | For non subscribe operations (publish, herenow, etc), how long to wait to connect to PubNub before giving up with a connection timeout error.`var nonSubscribeRequestTimeout: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html) |
+| [origin](origin.md) | Custom origin if needed.`lateinit var origin: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
+| [presenceTimeout](presence-timeout.md) | Sets the custom presence server timeout.`var presenceTimeout: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html) |
+| [proxy](proxy.md) | Instructs the SDK to use a proxy configuration when communicating with PubNub servers.`var proxy: `[`Proxy`](https://docs.oracle.com/javase/6/docs/api/java/net/Proxy.html)`?` |
+| [proxyAuthenticator](proxy-authenticator.md) | `var proxyAuthenticator: Authenticator?` |
+| [proxySelector](proxy-selector.md) | `var proxySelector: `[`ProxySelector`](https://docs.oracle.com/javase/6/docs/api/java/net/ProxySelector.html)`?` |
+| [publishKey](publish-key.md) | The publish key from the admin panel (only required if publishing).`lateinit var publishKey: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
+| [reconnectionPolicy](reconnection-policy.md) | Set to [PNReconnectionPolicy.LINEAR](../../com.pubnub.api.enums/-p-n-reconnection-policy/-l-i-n-e-a-r.md) for automatic reconnects.`var reconnectionPolicy: `[`PNReconnectionPolicy`](../../com.pubnub.api.enums/-p-n-reconnection-policy/index.md) |
+| [requestMessageCountThreshold](request-message-count-threshold.md) | If the number of messages into the payload is above this value,`var requestMessageCountThreshold: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)`?` |
+| [secretKey](secret-key.md) | The secret key from the admin panel (only required for modifying/revealing access permissions).`lateinit var secretKey: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
+| [secure](secure.md) | If set to `true`,  requests will be made over HTTPS.`var secure: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) |
+| [sslSocketFactory](ssl-socket-factory.md) | `var sslSocketFactory: `[`SSLSocketFactory`](https://docs.oracle.com/javase/6/docs/api/javax/net/ssl/SSLSocketFactory.html)`?` |
+| [startSubscriberThread](start-subscriber-thread.md) | Whether to start a separate subscriber thread when creating the instance.`var startSubscriberThread: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) |
+| [subscribeKey](subscribe-key.md) | The subscribe key from the admin panel.`lateinit var subscribeKey: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
+| [subscribeTimeout](subscribe-timeout.md) | The subscribe request timeout.`var subscribeTimeout: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html) |
+| [suppressLeaveEvents](suppress-leave-events.md) | When `true` the SDK doesn't send out the leave requests.`var suppressLeaveEvents: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) |
+| [uuid](uuid.md) | UUID to use. You should set a unique UUID to identify the user or the device that connects to PubNub.`var uuid: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
+| [x509ExtendedTrustManager](x509-extended-trust-manager.md) | `var x509ExtendedTrustManager: `[`X509ExtendedTrustManager`](https://docs.oracle.com/javase/6/docs/api/javax/net/ssl/X509ExtendedTrustManager.html)`?` |

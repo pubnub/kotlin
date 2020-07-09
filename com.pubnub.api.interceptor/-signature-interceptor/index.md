@@ -1,8 +1,4 @@
----
-title: SignatureInterceptor - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.interceptor](../index.html) / [SignatureInterceptor](./index.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.interceptor](../index.md) / [SignatureInterceptor](./index.md)
 
 # SignatureInterceptor
 
@@ -10,13 +6,18 @@ title: SignatureInterceptor - pubnub-kotlin
 
 ### Constructors
 
-| [&lt;init&gt;](-init-.html) | `SignatureInterceptor(pubnub: `[`PubNub`](../../com.pubnub.api/-pub-nub/index.html)`)` |
+| Name | Summary |
+|---|---|
+| [&lt;init&gt;](-init-.md) | `SignatureInterceptor(pubnub: `[`PubNub`](../../com.pubnub.api/-pub-nub/index.md)`)` |
 
 ### Properties
 
-| [pubnub](pubnub.html) | `val pubnub: `[`PubNub`](../../com.pubnub.api/-pub-nub/index.html) |
+| Name | Summary |
+|---|---|
+| [pubnub](pubnub.md) | `val pubnub: `[`PubNub`](../../com.pubnub.api/-pub-nub/index.md) |
 
 ### Functions
 
-| [intercept](intercept.html) | `fun intercept(chain: Chain): Response` |
-
+| Name | Summary |
+|---|---|
+| [intercept](intercept.md) | `fun intercept(chain: Chain): Response` |

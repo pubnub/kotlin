@@ -1,9 +1,5 @@
----
-title: Subscribe.createResponse - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.endpoints.pubsub](../index.html) / [Subscribe](index.html) / [createResponse](./create-response.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.endpoints.pubsub](../index.md) / [Subscribe](index.md) / [createResponse](./create-response.md)
 
 # createResponse
 
-`protected fun createResponse(input: Response<`[`SubscribeEnvelope`](../../com.pubnub.api.models.server/-subscribe-envelope/index.html)`>): `[`SubscribeEnvelope`](../../com.pubnub.api.models.server/-subscribe-envelope/index.html)`?`
+`protected fun createResponse(input: Response<`[`SubscribeEnvelope`](../../com.pubnub.api.models.server/-subscribe-envelope/index.md)`>): `[`SubscribeEnvelope`](../../com.pubnub.api.models.server/-subscribe-envelope/index.md)`?`

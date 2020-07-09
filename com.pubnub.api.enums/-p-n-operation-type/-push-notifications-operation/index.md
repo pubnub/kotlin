@@ -1,14 +1,11 @@
----
-title: PNOperationType.PushNotificationsOperation - pubnub-kotlin
----
-
-[pubnub-kotlin](../../../index.html) / [com.pubnub.api.enums](../../index.html) / [PNOperationType](../index.html) / [PushNotificationsOperation](./index.html)
+[pubnub-kotlin](../../../index.md) / [com.pubnub.api.enums](../../index.md) / [PNOperationType](../index.md) / [PushNotificationsOperation](./index.md)
 
 # PushNotificationsOperation
 
-`open class PushNotificationsOperation : `[`PNOperationType`](../index.html)
+`open class PushNotificationsOperation : `[`PNOperationType`](../index.md)
 
 ### Constructors
 
-| [&lt;init&gt;](-init-.html) | `PushNotificationsOperation()` |
-
+| Name | Summary |
+|---|---|
+| [&lt;init&gt;](-init-.md) | `PushNotificationsOperation()` |

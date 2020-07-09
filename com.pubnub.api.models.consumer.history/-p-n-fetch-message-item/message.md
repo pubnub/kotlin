@@ -1,9 +1,11 @@
----
-title: PNFetchMessageItem.message - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.models.consumer.history](../index.html) / [PNFetchMessageItem](index.html) / [message](./message.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.models.consumer.history](../index.md) / [PNFetchMessageItem](index.md) / [message](./message.md)
 
 # message
 
 `val message: JsonElement`
+
+The actual message content.
+
+### Property
+
+`message` - The actual message content.

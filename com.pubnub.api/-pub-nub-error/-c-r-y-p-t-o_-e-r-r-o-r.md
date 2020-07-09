@@ -1,8 +1,4 @@
----
-title: PubNubError.CRYPTO_ERROR - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api](../index.html) / [PubNubError](index.html) / [CRYPTO_ERROR](./-c-r-y-p-t-o_-e-r-r-o-r.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api](../index.md) / [PubNubError](index.md) / [CRYPTO_ERROR](./-c-r-y-p-t-o_-e-r-r-o-r.md)
 
 # CRYPTO_ERROR
 

@@ -1,8 +1,4 @@
----
-title: Grant.getAffectedChannels - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.endpoints.access](../index.html) / [Grant](index.html) / [getAffectedChannels](./get-affected-channels.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.endpoints.access](../index.md) / [Grant](index.md) / [getAffectedChannels](./get-affected-channels.md)
 
 # getAffectedChannels
 

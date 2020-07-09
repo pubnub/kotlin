@@ -1,8 +1,4 @@
----
-title: RemoveChannelsFromPush.doWork - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.endpoints.push](../index.html) / [RemoveChannelsFromPush](index.html) / [doWork](./do-work.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.endpoints.push](../index.md) / [RemoveChannelsFromPush](index.md) / [doWork](./do-work.md)
 
 # doWork
 

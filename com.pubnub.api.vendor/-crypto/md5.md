@@ -1,8 +1,4 @@
----
-title: Crypto.md5 - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.vendor](../index.html) / [Crypto](index.html) / [md5](./md5.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.vendor](../index.md) / [Crypto](index.md) / [md5](./md5.md)
 
 # md5
 

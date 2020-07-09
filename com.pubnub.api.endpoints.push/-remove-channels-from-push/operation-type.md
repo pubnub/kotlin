@@ -1,8 +1,4 @@
----
-title: RemoveChannelsFromPush.operationType - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.endpoints.push](../index.html) / [RemoveChannelsFromPush](index.html) / [operationType](./operation-type.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.endpoints.push](../index.md) / [RemoveChannelsFromPush](index.md) / [operationType](./operation-type.md)
 
 # operationType
 

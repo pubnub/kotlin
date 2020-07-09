@@ -1,8 +1,4 @@
----
-title: PNOperationType.PNRemovePushNotificationsFromChannelsOperation - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.enums](../index.html) / [PNOperationType](index.html) / [PNRemovePushNotificationsFromChannelsOperation](./-p-n-remove-push-notifications-from-channels-operation.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.enums](../index.md) / [PNOperationType](index.md) / [PNRemovePushNotificationsFromChannelsOperation](./-p-n-remove-push-notifications-from-channels-operation.md)
 
 # PNRemovePushNotificationsFromChannelsOperation
 

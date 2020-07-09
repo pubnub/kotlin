@@ -1,8 +1,4 @@
----
-title: MapperManager.isJsonObject - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.managers](../index.html) / [MapperManager](index.html) / [isJsonObject](./is-json-object.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.managers](../index.md) / [MapperManager](index.md) / [isJsonObject](./is-json-object.md)
 
 # isJsonObject
 

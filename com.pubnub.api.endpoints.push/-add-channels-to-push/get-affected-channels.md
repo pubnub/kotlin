@@ -1,8 +1,4 @@
----
-title: AddChannelsToPush.getAffectedChannels - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.endpoints.push](../index.html) / [AddChannelsToPush](index.html) / [getAffectedChannels](./get-affected-channels.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.endpoints.push](../index.md) / [AddChannelsToPush](index.md) / [getAffectedChannels](./get-affected-channels.md)
 
 # getAffectedChannels
 

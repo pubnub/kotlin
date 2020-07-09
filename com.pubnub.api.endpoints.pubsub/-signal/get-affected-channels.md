@@ -1,8 +1,4 @@
----
-title: Signal.getAffectedChannels - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.endpoints.pubsub](../index.html) / [Signal](index.html) / [getAffectedChannels](./get-affected-channels.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.endpoints.pubsub](../index.md) / [Signal](index.md) / [getAffectedChannels](./get-affected-channels.md)
 
 # getAffectedChannels
 

@@ -1,8 +1,4 @@
----
-title: Time.isSubKeyRequired - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.endpoints](../index.html) / [Time](index.html) / [isSubKeyRequired](./is-sub-key-required.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.endpoints](../index.md) / [Time](index.md) / [isSubKeyRequired](./is-sub-key-required.md)
 
 # isSubKeyRequired
 

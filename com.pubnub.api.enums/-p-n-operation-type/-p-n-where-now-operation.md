@@ -1,8 +1,4 @@
----
-title: PNOperationType.PNWhereNowOperation - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.enums](../index.html) / [PNOperationType](index.html) / [PNWhereNowOperation](./-p-n-where-now-operation.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.enums](../index.md) / [PNOperationType](index.md) / [PNWhereNowOperation](./-p-n-where-now-operation.md)
 
 # PNWhereNowOperation
 

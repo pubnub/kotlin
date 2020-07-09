@@ -1,8 +1,4 @@
----
-title: Endpoint.isAuthRequired - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api](../index.html) / [Endpoint](index.html) / [isAuthRequired](./is-auth-required.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api](../index.md) / [Endpoint](index.md) / [isAuthRequired](./is-auth-required.md)
 
 # isAuthRequired
 

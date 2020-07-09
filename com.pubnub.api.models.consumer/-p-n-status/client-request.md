@@ -1,8 +1,4 @@
----
-title: PNStatus.clientRequest - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.models.consumer](../index.html) / [PNStatus](index.html) / [clientRequest](./client-request.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.models.consumer](../index.md) / [PNStatus](index.md) / [clientRequest](./client-request.md)
 
 # clientRequest
 

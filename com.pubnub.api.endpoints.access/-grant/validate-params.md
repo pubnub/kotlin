@@ -1,8 +1,4 @@
----
-title: Grant.validateParams - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.endpoints.access](../index.html) / [Grant](index.html) / [validateParams](./validate-params.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.endpoints.access](../index.md) / [Grant](index.md) / [validateParams](./validate-params.md)
 
 # validateParams
 

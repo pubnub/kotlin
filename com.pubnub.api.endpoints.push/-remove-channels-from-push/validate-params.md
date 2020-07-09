@@ -1,8 +1,4 @@
----
-title: RemoveChannelsFromPush.validateParams - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.endpoints.push](../index.html) / [RemoveChannelsFromPush](index.html) / [validateParams](./validate-params.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.endpoints.push](../index.md) / [RemoveChannelsFromPush](index.md) / [validateParams](./validate-params.md)
 
 # validateParams
 

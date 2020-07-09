@@ -1,8 +1,4 @@
----
-title: SubscribeMessage.supportsEncryption - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.models.server](../index.html) / [SubscribeMessage](index.html) / [supportsEncryption](./supports-encryption.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.models.server](../index.md) / [SubscribeMessage](index.md) / [supportsEncryption](./supports-encryption.md)
 
 # supportsEncryption
 

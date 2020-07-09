@@ -1,8 +1,4 @@
----
-title: Grant.operationType - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.endpoints.access](../index.html) / [Grant](index.html) / [operationType](./operation-type.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.endpoints.access](../index.md) / [Grant](index.md) / [operationType](./operation-type.md)
 
 # operationType
 

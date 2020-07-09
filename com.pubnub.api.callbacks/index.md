@@ -1,12 +1,9 @@
----
-title: com.pubnub.api.callbacks - pubnub-kotlin
----
-
-[pubnub-kotlin](../index.html) / [com.pubnub.api.callbacks](./index.html)
+[pubnub-kotlin](../index.md) / [com.pubnub.api.callbacks](./index.md)
 
 ## Package com.pubnub.api.callbacks
 
 ### Types
 
-| [SubscribeCallback](-subscribe-callback/index.html) | `abstract class SubscribeCallback` |
-
+| Name | Summary |
+|---|---|
+| [SubscribeCallback](-subscribe-callback/index.md) | `abstract class SubscribeCallback` |

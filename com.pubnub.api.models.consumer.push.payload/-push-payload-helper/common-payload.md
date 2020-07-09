@@ -1,8 +1,4 @@
----
-title: PushPayloadHelper.commonPayload - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.models.consumer.push.payload](../index.html) / [PushPayloadHelper](index.html) / [commonPayload](./common-payload.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.models.consumer.push.payload](../index.md) / [PushPayloadHelper](index.md) / [commonPayload](./common-payload.md)
 
 # commonPayload
 

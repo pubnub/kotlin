@@ -1,8 +1,4 @@
----
-title: AllChannelsChannelGroup.getAffectedChannelGroups - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.endpoints.channel_groups](../index.html) / [AllChannelsChannelGroup](index.html) / [getAffectedChannelGroups](./get-affected-channel-groups.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.endpoints.channel_groups](../index.md) / [AllChannelsChannelGroup](index.md) / [getAffectedChannelGroups](./get-affected-channel-groups.md)
 
 # getAffectedChannelGroups
 

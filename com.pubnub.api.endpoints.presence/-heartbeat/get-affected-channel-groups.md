@@ -1,8 +1,4 @@
----
-title: Heartbeat.getAffectedChannelGroups - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.endpoints.presence](../index.html) / [Heartbeat](index.html) / [getAffectedChannelGroups](./get-affected-channel-groups.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.endpoints.presence](../index.md) / [Heartbeat](index.md) / [getAffectedChannelGroups](./get-affected-channel-groups.md)
 
 # getAffectedChannelGroups
 

@@ -1,24 +1,23 @@
----
-title: WhereNow - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.endpoints.presence](../index.html) / [WhereNow](./index.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.endpoints.presence](../index.md) / [WhereNow](./index.md)
 
 # WhereNow
 
-`class WhereNow : `[`Endpoint`](../../com.pubnub.api/-endpoint/index.html)`<`[`Envelope`](../../com.pubnub.api.models.server/-envelope/index.html)`<`[`WhereNowPayload`](../../com.pubnub.api.models.server.presence/-where-now-payload/index.html)`>, `[`PNWhereNowResult`](../../com.pubnub.api.models.consumer.presence/-p-n-where-now-result/index.html)`>`
+`class WhereNow : `[`Endpoint`](../../com.pubnub.api/-endpoint/index.md)`<`[`Envelope`](../../com.pubnub.api.models.server/-envelope/index.md)`<`[`WhereNowPayload`](../../com.pubnub.api.models.server.presence/-where-now-payload/index.md)`>, `[`PNWhereNowResult`](../../com.pubnub.api.models.consumer.presence/-p-n-where-now-result/index.md)`>`
 
-### Constructors
+**See Also**
 
-| [&lt;init&gt;](-init-.html) | `WhereNow(pubnub: `[`PubNub`](../../com.pubnub.api/-pub-nub/index.html)`)` |
+[PubNub.whereNow](../../com.pubnub.api/-pub-nub/where-now.md)
 
 ### Properties
 
-| [uuid](uuid.html) | `var uuid: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
+| Name | Summary |
+|---|---|
+| [uuid](uuid.md) | UUID of the user to get its current channel subscriptions.`var uuid: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
 
 ### Functions
 
-| [createResponse](create-response.html) | `fun createResponse(input: Response<`[`Envelope`](../../com.pubnub.api.models.server/-envelope/index.html)`<`[`WhereNowPayload`](../../com.pubnub.api.models.server.presence/-where-now-payload/index.html)`>>): `[`PNWhereNowResult`](../../com.pubnub.api.models.consumer.presence/-p-n-where-now-result/index.html)`?` |
-| [doWork](do-work.html) | `fun doWork(queryParams: `[`HashMap`](https://docs.oracle.com/javase/6/docs/api/java/util/HashMap.html)`<`[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`, `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`>): Call<`[`Envelope`](../../com.pubnub.api.models.server/-envelope/index.html)`<`[`WhereNowPayload`](../../com.pubnub.api.models.server.presence/-where-now-payload/index.html)`>>` |
-| [operationType](operation-type.html) | `fun operationType(): PNWhereNowOperation` |
-
+| Name | Summary |
+|---|---|
+| [createResponse](create-response.md) | `fun createResponse(input: Response<`[`Envelope`](../../com.pubnub.api.models.server/-envelope/index.md)`<`[`WhereNowPayload`](../../com.pubnub.api.models.server.presence/-where-now-payload/index.md)`>>): `[`PNWhereNowResult`](../../com.pubnub.api.models.consumer.presence/-p-n-where-now-result/index.md)`?` |
+| [doWork](do-work.md) | `fun doWork(queryParams: `[`HashMap`](https://docs.oracle.com/javase/6/docs/api/java/util/HashMap.html)`<`[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`, `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`>): Call<`[`Envelope`](../../com.pubnub.api.models.server/-envelope/index.md)`<`[`WhereNowPayload`](../../com.pubnub.api.models.server.presence/-where-now-payload/index.md)`>>` |
+| [operationType](operation-type.md) | `fun operationType(): PNWhereNowOperation` |

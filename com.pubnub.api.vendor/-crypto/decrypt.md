@@ -1,8 +1,4 @@
----
-title: Crypto.decrypt - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.vendor](../index.html) / [Crypto](index.html) / [decrypt](./decrypt.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.vendor](../index.md) / [Crypto](index.md) / [decrypt](./decrypt.md)
 
 # decrypt
 

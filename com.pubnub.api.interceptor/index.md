@@ -1,12 +1,9 @@
----
-title: com.pubnub.api.interceptor - pubnub-kotlin
----
-
-[pubnub-kotlin](../index.html) / [com.pubnub.api.interceptor](./index.html)
+[pubnub-kotlin](../index.md) / [com.pubnub.api.interceptor](./index.md)
 
 ## Package com.pubnub.api.interceptor
 
 ### Types
 
-| [SignatureInterceptor](-signature-interceptor/index.html) | `class SignatureInterceptor : Interceptor` |
-
+| Name | Summary |
+|---|---|
+| [SignatureInterceptor](-signature-interceptor/index.md) | `class SignatureInterceptor : Interceptor` |

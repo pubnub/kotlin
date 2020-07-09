@@ -1,8 +1,4 @@
----
-title: EntityEnvelope.status - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.models.server.objects_api](../index.html) / [EntityEnvelope](index.html) / [status](./status.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.models.server.objects_api](../index.md) / [EntityEnvelope](index.md) / [status](./status.md)
 
 # status
 

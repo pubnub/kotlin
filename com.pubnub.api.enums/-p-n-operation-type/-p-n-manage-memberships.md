@@ -1,8 +1,4 @@
----
-title: PNOperationType.PNManageMemberships - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.enums](../index.html) / [PNOperationType](index.html) / [PNManageMemberships](./-p-n-manage-memberships.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.enums](../index.md) / [PNOperationType](index.md) / [PNManageMemberships](./-p-n-manage-memberships.md)
 
 # PNManageMemberships
 

@@ -1,12 +1,9 @@
----
-title: com.pubnub.api.models.server.access_manager - pubnub-kotlin
----
-
-[pubnub-kotlin](../index.html) / [com.pubnub.api.models.server.access_manager](./index.html)
+[pubnub-kotlin](../index.md) / [com.pubnub.api.models.server.access_manager](./index.md)
 
 ## Package com.pubnub.api.models.server.access_manager
 
 ### Types
 
-| [AccessManagerGrantPayload](-access-manager-grant-payload/index.html) | `class AccessManagerGrantPayload` |
-
+| Name | Summary |
+|---|---|
+| [AccessManagerGrantPayload](-access-manager-grant-payload/index.md) | `class AccessManagerGrantPayload` |

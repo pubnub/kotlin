@@ -1,8 +1,4 @@
----
-title: History.doWork - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.endpoints](../index.html) / [History](index.html) / [doWork](./do-work.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.endpoints](../index.md) / [History](index.md) / [doWork](./do-work.md)
 
 # doWork
 

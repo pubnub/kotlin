@@ -1,8 +1,4 @@
----
-title: Subscribe.channels - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.endpoints.pubsub](../index.html) / [Subscribe](index.html) / [channels](./channels.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.endpoints.pubsub](../index.md) / [Subscribe](index.md) / [channels](./channels.md)
 
 # channels
 

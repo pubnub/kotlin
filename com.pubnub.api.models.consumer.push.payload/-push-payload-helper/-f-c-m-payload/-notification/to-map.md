@@ -1,8 +1,4 @@
----
-title: PushPayloadHelper.FCMPayload.Notification.toMap - pubnub-kotlin
----
-
-[pubnub-kotlin](../../../../index.html) / [com.pubnub.api.models.consumer.push.payload](../../../index.html) / [PushPayloadHelper](../../index.html) / [FCMPayload](../index.html) / [Notification](index.html) / [toMap](./to-map.html)
+[pubnub-kotlin](../../../../index.md) / [com.pubnub.api.models.consumer.push.payload](../../../index.md) / [PushPayloadHelper](../../index.md) / [FCMPayload](../index.md) / [Notification](index.md) / [toMap](./to-map.md)
 
 # toMap
 

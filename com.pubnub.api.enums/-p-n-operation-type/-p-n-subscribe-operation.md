@@ -1,9 +1,5 @@
----
-title: PNOperationType.PNSubscribeOperation - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.enums](../index.html) / [PNOperationType](index.html) / [PNSubscribeOperation](./-p-n-subscribe-operation.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.enums](../index.md) / [PNOperationType](index.md) / [PNSubscribeOperation](./-p-n-subscribe-operation.md)
 
 # PNSubscribeOperation
 
-`object PNSubscribeOperation : `[`PNOperationType`](index.html)
+`object PNSubscribeOperation : `[`PNOperationType`](index.md)

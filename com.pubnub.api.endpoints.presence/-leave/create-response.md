@@ -1,8 +1,4 @@
----
-title: Leave.createResponse - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.endpoints.presence](../index.html) / [Leave](index.html) / [createResponse](./create-response.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.endpoints.presence](../index.md) / [Leave](index.md) / [createResponse](./create-response.md)
 
 # createResponse
 

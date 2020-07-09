@@ -1,8 +1,4 @@
----
-title: SubscriptionManager.destroy - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.managers](../index.html) / [SubscriptionManager](index.html) / [destroy](./destroy.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.managers](../index.md) / [SubscriptionManager](index.md) / [destroy](./destroy.md)
 
 # destroy
 

@@ -1,8 +1,4 @@
----
-title: Subscribe.state - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.endpoints.pubsub](../index.html) / [Subscribe](index.html) / [state](./state.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.endpoints.pubsub](../index.md) / [Subscribe](index.md) / [state](./state.md)
 
 # state
 

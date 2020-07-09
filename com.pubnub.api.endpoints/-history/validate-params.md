@@ -1,8 +1,4 @@
----
-title: History.validateParams - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.endpoints](../index.html) / [History](index.html) / [validateParams](./validate-params.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.endpoints](../index.md) / [History](index.md) / [validateParams](./validate-params.md)
 
 # validateParams
 

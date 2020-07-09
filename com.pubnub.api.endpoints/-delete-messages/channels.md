@@ -1,8 +1,4 @@
----
-title: DeleteMessages.channels - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.endpoints](../index.html) / [DeleteMessages](index.html) / [channels](./channels.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.endpoints](../index.md) / [DeleteMessages](index.md) / [channels](./channels.md)
 
 # channels
 

@@ -1,8 +1,4 @@
----
-title: Base64.decode - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.vendor](../index.html) / [Base64](index.html) / [decode](./decode.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.vendor](../index.md) / [Base64](index.md) / [decode](./decode.md)
 
 # decode
 

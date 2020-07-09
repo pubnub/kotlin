@@ -1,8 +1,4 @@
----
-title: PNPushListProvisionsResult.channels - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.models.consumer.push](../index.html) / [PNPushListProvisionsResult](index.html) / [channels](./channels.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.models.consumer.push](../index.md) / [PNPushListProvisionsResult](index.md) / [channels](./channels.md)
 
 # channels
 

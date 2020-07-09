@@ -1,36 +1,36 @@
----
-title: PubNub.decrypt - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api](../index.html) / [PubNub](index.html) / [decrypt](./decrypt.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api](../index.md) / [PubNub](index.md) / [decrypt](./decrypt.md)
 
 # decrypt
 
 `fun decrypt(inputString: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`): `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
 
-Perform Cryptographic decryption of an input string using cipher key provided by PNConfiguration
+Perform Cryptographic decryption of an input string using cipher key provided by [PNConfiguration.cipherKey](../-p-n-configuration/cipher-key.md).
 
 ### Parameters
 
-`inputString` - String to be encrypted
-
-**Return**
-String containing the encryption of inputString using cipherKey
-
-`fun decrypt(inputString: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`, cipherKey: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`): `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
-
-Perform Cryptographic decryption of an input string using the cipher key
-
-### Parameters
-
-`inputString` - String to be encrypted
-
-`cipherKey` - cipher key to be used for encryption
+`inputString` - String to be encrypted.
 
 ### Exceptions
 
-`PubNubException` - throws exception in case of failed encryption
+`PubNubException` - throws exception in case of failed encryption.
 
 **Return**
-String containing the encryption of inputString using cipherKey
+String containing the encryption of `inputString` using `cipherKey`.
+
+`fun decrypt(inputString: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`, cipherKey: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`): `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
+
+Perform Cryptographic decryption of an input string using a cipher key.
+
+### Parameters
+
+`inputString` - String to be encrypted.
+
+`cipherKey` - cipher key to be used for encryption.
+
+### Exceptions
+
+`PubNubException` - throws exception in case of failed encryption.
+
+**Return**
+String containing the encryption of `inputString` using `cipherKey`.
 

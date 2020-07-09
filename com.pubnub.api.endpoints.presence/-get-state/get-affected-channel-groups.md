@@ -1,8 +1,4 @@
----
-title: GetState.getAffectedChannelGroups - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.endpoints.presence](../index.html) / [GetState](index.html) / [getAffectedChannelGroups](./get-affected-channel-groups.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.endpoints.presence](../index.md) / [GetState](index.md) / [getAffectedChannelGroups](./get-affected-channel-groups.md)
 
 # getAffectedChannelGroups
 

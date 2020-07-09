@@ -1,8 +1,4 @@
----
-title: GetMessageActions.validateParams - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.endpoints.message_actions](../index.html) / [GetMessageActions](index.html) / [validateParams](./validate-params.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.endpoints.message_actions](../index.md) / [GetMessageActions](index.md) / [validateParams](./validate-params.md)
 
 # validateParams
 

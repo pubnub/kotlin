@@ -1,12 +1,9 @@
----
-title: com.pubnub.api.models.server.objects_api - pubnub-kotlin
----
-
-[pubnub-kotlin](../index.html) / [com.pubnub.api.models.server.objects_api](./index.html)
+[pubnub-kotlin](../index.md) / [com.pubnub.api.models.server.objects_api](./index.md)
 
 ## Package com.pubnub.api.models.server.objects_api
 
 ### Types
 
-| [EntityEnvelope](-entity-envelope/index.html) | `open class EntityEnvelope<T>` |
-
+| Name | Summary |
+|---|---|
+| [EntityEnvelope](-entity-envelope/index.md) | `open class EntityEnvelope<T>` |

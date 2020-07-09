@@ -1,8 +1,4 @@
----
-title: ListPushProvisions.validateParams - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.endpoints.push](../index.html) / [ListPushProvisions](index.html) / [validateParams](./validate-params.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.endpoints.push](../index.md) / [ListPushProvisions](index.md) / [validateParams](./validate-params.md)
 
 # validateParams
 

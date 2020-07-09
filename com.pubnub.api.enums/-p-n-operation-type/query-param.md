@@ -1,8 +1,4 @@
----
-title: PNOperationType.queryParam - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.enums](../index.html) / [PNOperationType](index.html) / [queryParam](./query-param.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.enums](../index.md) / [PNOperationType](index.md) / [queryParam](./query-param.md)
 
 # queryParam
 

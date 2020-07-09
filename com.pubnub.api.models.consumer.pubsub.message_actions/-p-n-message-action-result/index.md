@@ -1,18 +1,13 @@
----
-title: PNMessageActionResult - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.models.consumer.pubsub.message_actions](../index.html) / [PNMessageActionResult](./index.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.models.consumer.pubsub.message_actions](../index.md) / [PNMessageActionResult](./index.md)
 
 # PNMessageActionResult
 
-`class PNMessageActionResult : `[`ObjectResult`](../../com.pubnub.api.models.consumer.pubsub.objects/-object-result/index.html)`<`[`PNMessageAction`](../../com.pubnub.api.models.consumer.message_actions/-p-n-message-action/index.html)`>`
+`class PNMessageActionResult : `[`ObjectResult`](../../com.pubnub.api.models.consumer.pubsub.objects/-object-result/index.md)`<`[`PNMessageAction`](../../com.pubnub.api.models.consumer.message_actions/-p-n-message-action/index.md)`>`
 
-### Constructors
-
-| [&lt;init&gt;](-init-.html) | `PNMessageActionResult(result: `[`BasePubSubResult`](../../com.pubnub.api.models.consumer.pubsub/-base-pub-sub-result/index.html)`, event: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`, data: `[`PNMessageAction`](../../com.pubnub.api.models.consumer.message_actions/-p-n-message-action/index.html)`)` |
+Wrapper around message actions received in [SubscribeCallback.messageAction](../../com.pubnub.api.callbacks/-subscribe-callback/message-action.md).
 
 ### Properties
 
-| [messageAction](message-action.html) | `val messageAction: `[`PNMessageAction`](../../com.pubnub.api.models.consumer.message_actions/-p-n-message-action/index.html) |
-
+| Name | Summary |
+|---|---|
+| [messageAction](message-action.md) | `val messageAction: `[`PNMessageAction`](../../com.pubnub.api.models.consumer.message_actions/-p-n-message-action/index.md) |

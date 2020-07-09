@@ -1,8 +1,4 @@
----
-title: PublishMetaData.<init> - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.models.server](../index.html) / [PublishMetaData](index.html) / [&lt;init&gt;](./-init-.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.models.server](../index.md) / [PublishMetaData](index.md) / [&lt;init&gt;](./-init-.md)
 
 # &lt;init&gt;
 

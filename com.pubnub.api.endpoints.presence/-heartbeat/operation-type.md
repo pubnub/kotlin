@@ -1,8 +1,4 @@
----
-title: Heartbeat.operationType - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.endpoints.presence](../index.html) / [Heartbeat](index.html) / [operationType](./operation-type.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.endpoints.presence](../index.md) / [Heartbeat](index.md) / [operationType](./operation-type.md)
 
 # operationType
 

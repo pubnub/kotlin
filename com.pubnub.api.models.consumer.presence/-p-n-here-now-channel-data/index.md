@@ -1,20 +1,15 @@
----
-title: PNHereNowChannelData - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.models.consumer.presence](../index.html) / [PNHereNowChannelData](./index.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.models.consumer.presence](../index.md) / [PNHereNowChannelData](./index.md)
 
 # PNHereNowChannelData
 
 `class PNHereNowChannelData`
 
-### Constructors
-
-| [&lt;init&gt;](-init-.html) | `PNHereNowChannelData(channelName: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`, occupancy: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)`, occupants: `[`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)`<`[`PNHereNowOccupantData`](../-p-n-here-now-occupant-data/index.html)`> = emptyList())` |
+Wrapper class representing 'here now' data for a given channel.
 
 ### Properties
 
-| [channelName](channel-name.html) | `val channelName: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
-| [occupancy](occupancy.html) | `val occupancy: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html) |
-| [occupants](occupants.html) | `var occupants: `[`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)`<`[`PNHereNowOccupantData`](../-p-n-here-now-occupant-data/index.html)`>` |
-
+| Name | Summary |
+|---|---|
+| [channelName](channel-name.md) | The channel name.`val channelName: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
+| [occupancy](occupancy.md) | Total number of UUIDs currently in the channel.`val occupancy: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html) |
+| [occupants](occupants.md) | List of [PNHereNowOccupantData](../-p-n-here-now-occupant-data/index.md) (users) currently in the channel.`var occupants: `[`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)`<`[`PNHereNowOccupantData`](../-p-n-here-now-occupant-data/index.md)`>` |

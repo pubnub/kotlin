@@ -1,8 +1,4 @@
----
-title: Leave.channels - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.endpoints.presence](../index.html) / [Leave](index.html) / [channels](./channels.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.endpoints.presence](../index.md) / [Leave](index.md) / [channels](./channels.md)
 
 # channels
 

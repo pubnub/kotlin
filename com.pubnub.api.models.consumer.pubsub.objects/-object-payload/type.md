@@ -1,8 +1,4 @@
----
-title: ObjectPayload.type - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.models.consumer.pubsub.objects](../index.html) / [ObjectPayload](index.html) / [type](./type.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.models.consumer.pubsub.objects](../index.md) / [ObjectPayload](index.md) / [type](./type.md)
 
 # type
 

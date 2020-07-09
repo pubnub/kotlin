@@ -1,8 +1,4 @@
----
-title: Time.doWork - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.endpoints](../index.html) / [Time](index.html) / [doWork](./do-work.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.endpoints](../index.md) / [Time](index.md) / [doWork](./do-work.md)
 
 # doWork
 

@@ -1,8 +1,4 @@
----
-title: Crypto.encrypt - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.vendor](../index.html) / [Crypto](index.html) / [encrypt](./encrypt.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.vendor](../index.md) / [Crypto](index.md) / [encrypt](./encrypt.md)
 
 # encrypt
 

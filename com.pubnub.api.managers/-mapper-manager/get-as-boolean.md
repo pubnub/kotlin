@@ -1,8 +1,4 @@
----
-title: MapperManager.getAsBoolean - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.managers](../index.html) / [MapperManager](index.html) / [getAsBoolean](./get-as-boolean.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.managers](../index.md) / [MapperManager](index.md) / [getAsBoolean](./get-as-boolean.md)
 
 # getAsBoolean
 

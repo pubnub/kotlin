@@ -1,8 +1,4 @@
----
-title: PNOperationType.PNAddPushNotificationsOnChannelsOperation - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.enums](../index.html) / [PNOperationType](index.html) / [PNAddPushNotificationsOnChannelsOperation](./-p-n-add-push-notifications-on-channels-operation.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.enums](../index.md) / [PNOperationType](index.md) / [PNAddPushNotificationsOnChannelsOperation](./-p-n-add-push-notifications-on-channels-operation.md)
 
 # PNAddPushNotificationsOnChannelsOperation
 

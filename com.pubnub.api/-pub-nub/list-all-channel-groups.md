@@ -1,9 +1,8 @@
----
-title: PubNub.listAllChannelGroups - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api](../index.html) / [PubNub](index.html) / [listAllChannelGroups](./list-all-channel-groups.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api](../index.md) / [PubNub](index.md) / [listAllChannelGroups](./list-all-channel-groups.md)
 
 # listAllChannelGroups
 
-`fun listAllChannelGroups(): `[`ListAllChannelGroup`](../../com.pubnub.api.endpoints.channel_groups/-list-all-channel-group/index.html)
+`fun listAllChannelGroups(): `[`ListAllChannelGroup`](../../com.pubnub.api.endpoints.channel_groups/-list-all-channel-group/index.md)
+
+Lists all registered channel groups for the subscribe key.
+

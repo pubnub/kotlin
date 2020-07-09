@@ -1,8 +1,4 @@
----
-title: AddChannelsToPush.validateParams - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.endpoints.push](../index.html) / [AddChannelsToPush](index.html) / [validateParams](./validate-params.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.endpoints.push](../index.md) / [AddChannelsToPush](index.md) / [validateParams](./validate-params.md)
 
 # validateParams
 

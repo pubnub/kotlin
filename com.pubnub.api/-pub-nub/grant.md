@@ -1,9 +1,16 @@
----
-title: PubNub.grant - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api](../index.html) / [PubNub](index.html) / [grant](./grant.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api](../index.md) / [PubNub](index.md) / [grant](./grant.md)
 
 # grant
 
-`fun grant(): `[`Grant`](../../com.pubnub.api.endpoints.access/-grant/index.html)
+`fun grant(): `[`Grant`](../../com.pubnub.api.endpoints.access/-grant/index.md)
+
+This function establishes access permissions for PubNub Access Manager (PAM) by setting the `read` or `write`
+attribute to `true`.
+A grant with `read` or `write` set to `false` (or not included) will revoke any previous grants
+with `read` or `write` set to `true`.
+
+Permissions can be applied to any one of three levels:
+
+* Application level privileges are based on `subscribeKey` applying to all associated channels.
+* Channel level privileges are based on a combination of `subscribeKey` and `channel` name.
+* User level privileges are based on the combination of `subscribeKey`, `channel`, and `auth_key`.

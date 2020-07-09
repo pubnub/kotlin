@@ -1,9 +1,8 @@
----
-title: PNStatusCategory.PNNotFoundCategory - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.enums](../index.html) / [PNStatusCategory](index.html) / [PNNotFoundCategory](./-p-n-not-found-category.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.enums](../index.md) / [PNStatusCategory](index.md) / [PNNotFoundCategory](./-p-n-not-found-category.md)
 
 # PNNotFoundCategory
 
 `PNNotFoundCategory`
+
+The subscriber got a HTTP 404 from the server.
+

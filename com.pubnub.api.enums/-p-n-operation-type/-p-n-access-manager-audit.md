@@ -1,8 +1,4 @@
----
-title: PNOperationType.PNAccessManagerAudit - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.enums](../index.html) / [PNOperationType](index.html) / [PNAccessManagerAudit](./-p-n-access-manager-audit.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.enums](../index.md) / [PNOperationType](index.md) / [PNAccessManagerAudit](./-p-n-access-manager-audit.md)
 
 # PNAccessManagerAudit
 

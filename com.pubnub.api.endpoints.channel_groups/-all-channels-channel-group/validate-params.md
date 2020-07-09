@@ -1,8 +1,4 @@
----
-title: AllChannelsChannelGroup.validateParams - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.endpoints.channel_groups](../index.html) / [AllChannelsChannelGroup](index.html) / [validateParams](./validate-params.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.endpoints.channel_groups](../index.md) / [AllChannelsChannelGroup](index.md) / [validateParams](./validate-params.md)
 
 # validateParams
 

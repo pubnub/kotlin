@@ -1,8 +1,4 @@
----
-title: PushPayloadHelper.MPNSPayload.toMap - pubnub-kotlin
----
-
-[pubnub-kotlin](../../../index.html) / [com.pubnub.api.models.consumer.push.payload](../../index.html) / [PushPayloadHelper](../index.html) / [MPNSPayload](index.html) / [toMap](./to-map.html)
+[pubnub-kotlin](../../../index.md) / [com.pubnub.api.models.consumer.push.payload](../../index.md) / [PushPayloadHelper](../index.md) / [MPNSPayload](index.md) / [toMap](./to-map.md)
 
 # toMap
 

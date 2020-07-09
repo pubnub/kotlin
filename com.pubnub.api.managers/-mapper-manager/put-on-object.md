@@ -1,8 +1,4 @@
----
-title: MapperManager.putOnObject - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.managers](../index.html) / [MapperManager](index.html) / [putOnObject](./put-on-object.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.managers](../index.md) / [MapperManager](index.md) / [putOnObject](./put-on-object.md)
 
 # putOnObject
 

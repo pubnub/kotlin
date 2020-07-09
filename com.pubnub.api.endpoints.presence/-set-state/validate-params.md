@@ -1,8 +1,4 @@
----
-title: SetState.validateParams - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.endpoints.presence](../index.html) / [SetState](index.html) / [validateParams](./validate-params.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.endpoints.presence](../index.md) / [SetState](index.md) / [validateParams](./validate-params.md)
 
 # validateParams
 

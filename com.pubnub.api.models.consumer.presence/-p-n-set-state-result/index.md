@@ -1,18 +1,13 @@
----
-title: PNSetStateResult - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.models.consumer.presence](../index.html) / [PNSetStateResult](./index.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.models.consumer.presence](../index.md) / [PNSetStateResult](./index.md)
 
 # PNSetStateResult
 
 `class PNSetStateResult`
 
-### Constructors
-
-| [&lt;init&gt;](-init-.html) | `PNSetStateResult(state: JsonElement)` |
+Result of the [PubNub.setPresenceState](../../com.pubnub.api/-pub-nub/set-presence-state.md) operation.
 
 ### Properties
 
-| [state](state.html) | `val state: JsonElement` |
-
+| Name | Summary |
+|---|---|
+| [state](state.md) | The actual state object.`val state: JsonElement` |

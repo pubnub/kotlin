@@ -1,12 +1,9 @@
----
-title: com.pubnub.api.models.server.presence - pubnub-kotlin
----
-
-[pubnub-kotlin](../index.html) / [com.pubnub.api.models.server.presence](./index.html)
+[pubnub-kotlin](../index.md) / [com.pubnub.api.models.server.presence](./index.md)
 
 ## Package com.pubnub.api.models.server.presence
 
 ### Types
 
-| [WhereNowPayload](-where-now-payload/index.html) | `class WhereNowPayload` |
-
+| Name | Summary |
+|---|---|
+| [WhereNowPayload](-where-now-payload/index.md) | `class WhereNowPayload` |

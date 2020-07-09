@@ -1,8 +1,4 @@
----
-title: Subscribe.channelGroups - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.endpoints.pubsub](../index.html) / [Subscribe](index.html) / [channelGroups](./channel-groups.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.endpoints.pubsub](../index.md) / [Subscribe](index.md) / [channelGroups](./channel-groups.md)
 
 # channelGroups
 

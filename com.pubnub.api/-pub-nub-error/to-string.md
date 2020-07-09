@@ -1,8 +1,4 @@
----
-title: PubNubError.toString - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api](../index.html) / [PubNubError](index.html) / [toString](./to-string.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api](../index.md) / [PubNubError](index.md) / [toString](./to-string.md)
 
 # toString
 

@@ -1,8 +1,4 @@
----
-title: Time.getAffectedChannels - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.endpoints](../index.html) / [Time](index.html) / [getAffectedChannels](./get-affected-channels.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.endpoints](../index.md) / [Time](index.md) / [getAffectedChannels](./get-affected-channels.md)
 
 # getAffectedChannels
 

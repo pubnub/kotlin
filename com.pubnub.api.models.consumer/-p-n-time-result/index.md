@@ -1,14 +1,13 @@
----
-title: PNTimeResult - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.models.consumer](../index.html) / [PNTimeResult](./index.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.models.consumer](../index.md) / [PNTimeResult](./index.md)
 
 # PNTimeResult
 
 `class PNTimeResult`
 
+Result of the [PubNub.time](../../com.pubnub.api/-pub-nub/time.md) operation.
+
 ### Properties
 
-| [timetoken](timetoken.html) | `val timetoken: `[`Long`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html) |
-
+| Name | Summary |
+|---|---|
+| [timetoken](timetoken.md) | Current time token.`val timetoken: `[`Long`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html) |

@@ -1,14 +1,11 @@
----
-title: PNOperationType.PAMOperation - pubnub-kotlin
----
-
-[pubnub-kotlin](../../../index.html) / [com.pubnub.api.enums](../../index.html) / [PNOperationType](../index.html) / [PAMOperation](./index.html)
+[pubnub-kotlin](../../../index.md) / [com.pubnub.api.enums](../../index.md) / [PNOperationType](../index.md) / [PAMOperation](./index.md)
 
 # PAMOperation
 
-`open class PAMOperation : `[`PNOperationType`](../index.html)
+`open class PAMOperation : `[`PNOperationType`](../index.md)
 
 ### Constructors
 
-| [&lt;init&gt;](-init-.html) | `PAMOperation()` |
-
+| Name | Summary |
+|---|---|
+| [&lt;init&gt;](-init-.md) | `PAMOperation()` |

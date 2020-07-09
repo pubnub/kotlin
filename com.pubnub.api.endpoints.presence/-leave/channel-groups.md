@@ -1,8 +1,4 @@
----
-title: Leave.channelGroups - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.endpoints.presence](../index.html) / [Leave](index.html) / [channelGroups](./channel-groups.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.endpoints.presence](../index.md) / [Leave](index.md) / [channelGroups](./channel-groups.md)
 
 # channelGroups
 

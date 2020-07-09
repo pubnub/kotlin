@@ -1,9 +1,8 @@
----
-title: PNConfiguration.filterExpression - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api](../index.html) / [PNConfiguration](index.html) / [filterExpression](./filter-expression.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api](../index.md) / [PNConfiguration](index.md) / [filterExpression](./filter-expression.md)
 
 # filterExpression
 
 `lateinit var filterExpression: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
+
+Feature to subscribe with a custom filter expression.
+

@@ -1,8 +1,4 @@
----
-title: MapperManager.getObjectIterator - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.managers](../index.html) / [MapperManager](index.html) / [getObjectIterator](./get-object-iterator.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.managers](../index.md) / [MapperManager](index.md) / [getObjectIterator](./get-object-iterator.md)
 
 # getObjectIterator
 

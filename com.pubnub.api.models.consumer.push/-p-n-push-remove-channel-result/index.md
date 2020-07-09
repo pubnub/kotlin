@@ -1,8 +1,4 @@
----
-title: PNPushRemoveChannelResult - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.models.consumer.push](../index.html) / [PNPushRemoveChannelResult](./index.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.models.consumer.push](../index.md) / [PNPushRemoveChannelResult](./index.md)
 
 # PNPushRemoveChannelResult
 
@@ -10,5 +6,6 @@ title: PNPushRemoveChannelResult - pubnub-kotlin
 
 ### Constructors
 
-| [&lt;init&gt;](-init-.html) | `PNPushRemoveChannelResult()` |
-
+| Name | Summary |
+|---|---|
+| [&lt;init&gt;](-init-.md) | `PNPushRemoveChannelResult()` |

@@ -1,8 +1,4 @@
----
-title: ListPushProvisions.doWork - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.endpoints.push](../index.html) / [ListPushProvisions](index.html) / [doWork](./do-work.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.endpoints.push](../index.md) / [ListPushProvisions](index.md) / [doWork](./do-work.md)
 
 # doWork
 

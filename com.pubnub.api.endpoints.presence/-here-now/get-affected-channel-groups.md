@@ -1,8 +1,4 @@
----
-title: HereNow.getAffectedChannelGroups - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.endpoints.presence](../index.html) / [HereNow](index.html) / [getAffectedChannelGroups](./get-affected-channel-groups.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.endpoints.presence](../index.md) / [HereNow](index.md) / [getAffectedChannelGroups](./get-affected-channel-groups.md)
 
 # getAffectedChannelGroups
 

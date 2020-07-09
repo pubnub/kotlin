@@ -1,8 +1,4 @@
----
-title: RemoveAllPushChannelsForDevice.doWork - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.endpoints.push](../index.html) / [RemoveAllPushChannelsForDevice](index.html) / [doWork](./do-work.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.endpoints.push](../index.md) / [RemoveAllPushChannelsForDevice](index.md) / [doWork](./do-work.md)
 
 # doWork
 

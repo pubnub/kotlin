@@ -1,8 +1,4 @@
----
-title: PubNubError.USER_NAME_MISSING - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api](../index.html) / [PubNubError](index.html) / [USER_NAME_MISSING](./-u-s-e-r_-n-a-m-e_-m-i-s-s-i-n-g.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api](../index.md) / [PubNubError](index.md) / [USER_NAME_MISSING](./-u-s-e-r_-n-a-m-e_-m-i-s-s-i-n-g.md)
 
 # USER_NAME_MISSING
 

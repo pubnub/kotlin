@@ -1,8 +1,4 @@
----
-title: PNOperationType.PNDeleteMessageAction - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.enums](../index.html) / [PNOperationType](index.html) / [PNDeleteMessageAction](./-p-n-delete-message-action.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.enums](../index.md) / [PNOperationType](index.md) / [PNDeleteMessageAction](./-p-n-delete-message-action.md)
 
 # PNDeleteMessageAction
 

@@ -1,8 +1,4 @@
----
-title: RemoveMessageAction.doWork - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.endpoints.message_actions](../index.html) / [RemoveMessageAction](index.html) / [doWork](./do-work.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.endpoints.message_actions](../index.md) / [RemoveMessageAction](index.md) / [doWork](./do-work.md)
 
 # doWork
 

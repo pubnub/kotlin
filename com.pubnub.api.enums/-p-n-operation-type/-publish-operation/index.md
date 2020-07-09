@@ -1,14 +1,11 @@
----
-title: PNOperationType.PublishOperation - pubnub-kotlin
----
-
-[pubnub-kotlin](../../../index.html) / [com.pubnub.api.enums](../../index.html) / [PNOperationType](../index.html) / [PublishOperation](./index.html)
+[pubnub-kotlin](../../../index.md) / [com.pubnub.api.enums](../../index.md) / [PNOperationType](../index.md) / [PublishOperation](./index.md)
 
 # PublishOperation
 
-`open class PublishOperation : `[`PNOperationType`](../index.html)
+`open class PublishOperation : `[`PNOperationType`](../index.md)
 
 ### Constructors
 
-| [&lt;init&gt;](-init-.html) | `PublishOperation()` |
-
+| Name | Summary |
+|---|---|
+| [&lt;init&gt;](-init-.md) | `PublishOperation()` |

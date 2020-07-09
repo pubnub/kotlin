@@ -1,8 +1,4 @@
----
-title: MapperManager.<init> - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.managers](../index.html) / [MapperManager](index.html) / [&lt;init&gt;](./-init-.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.managers](../index.md) / [MapperManager](index.md) / [&lt;init&gt;](./-init-.md)
 
 # &lt;init&gt;
 

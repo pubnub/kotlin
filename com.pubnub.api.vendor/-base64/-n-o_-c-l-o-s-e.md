@@ -1,8 +1,4 @@
----
-title: Base64.NO_CLOSE - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.vendor](../index.html) / [Base64](index.html) / [NO_CLOSE](./-n-o_-c-l-o-s-e.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.vendor](../index.md) / [Base64](index.md) / [NO_CLOSE](./-n-o_-c-l-o-s-e.md)
 
 # NO_CLOSE
 

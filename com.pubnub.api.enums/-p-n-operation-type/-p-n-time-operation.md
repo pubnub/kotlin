@@ -1,8 +1,4 @@
----
-title: PNOperationType.PNTimeOperation - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.enums](../index.html) / [PNOperationType](index.html) / [PNTimeOperation](./-p-n-time-operation.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.enums](../index.md) / [PNOperationType](index.md) / [PNTimeOperation](./-p-n-time-operation.md)
 
 # PNTimeOperation
 

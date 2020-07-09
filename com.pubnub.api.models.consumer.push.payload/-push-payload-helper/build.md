@@ -1,8 +1,4 @@
----
-title: PushPayloadHelper.build - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.models.consumer.push.payload](../index.html) / [PushPayloadHelper](index.html) / [build](./build.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.models.consumer.push.payload](../index.md) / [PushPayloadHelper](index.md) / [build](./build.md)
 
 # build
 

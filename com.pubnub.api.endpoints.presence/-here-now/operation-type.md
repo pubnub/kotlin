@@ -1,8 +1,4 @@
----
-title: HereNow.operationType - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.endpoints.presence](../index.html) / [HereNow](index.html) / [operationType](./operation-type.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.endpoints.presence](../index.md) / [HereNow](index.md) / [operationType](./operation-type.md)
 
 # operationType
 

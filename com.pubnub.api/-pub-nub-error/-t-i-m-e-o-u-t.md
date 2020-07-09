@@ -1,8 +1,4 @@
----
-title: PubNubError.TIMEOUT - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api](../index.html) / [PubNubError](index.html) / [TIMEOUT](./-t-i-m-e-o-u-t.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api](../index.md) / [PubNubError](index.md) / [TIMEOUT](./-t-i-m-e-o-u-t.md)
 
 # TIMEOUT
 

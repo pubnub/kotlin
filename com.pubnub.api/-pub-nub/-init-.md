@@ -1,9 +1,5 @@
----
-title: PubNub.<init> - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api](../index.html) / [PubNub](index.html) / [&lt;init&gt;](./-init-.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api](../index.md) / [PubNub](index.md) / [&lt;init&gt;](./-init-.md)
 
 # &lt;init&gt;
 
-`PubNub(configuration: `[`PNConfiguration`](../-p-n-configuration/index.html)`)`
+`PubNub(configuration: `[`PNConfiguration`](../-p-n-configuration/index.md)`)`

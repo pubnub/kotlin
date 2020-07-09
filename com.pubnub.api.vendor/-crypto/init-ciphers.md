@@ -1,8 +1,4 @@
----
-title: Crypto.initCiphers - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.vendor](../index.html) / [Crypto](index.html) / [initCiphers](./init-ciphers.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.vendor](../index.md) / [Crypto](index.md) / [initCiphers](./init-ciphers.md)
 
 # initCiphers
 

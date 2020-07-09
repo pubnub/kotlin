@@ -1,9 +1,8 @@
----
-title: Publish.replicate - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.endpoints.pubsub](../index.html) / [Publish](index.html) / [replicate](./replicate.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.endpoints.pubsub](../index.md) / [Publish](index.md) / [replicate](./replicate.md)
 
 # replicate
 
 `var replicate: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)
+
+Replicate the message. Is set to `true` by default.
+

@@ -1,9 +1,8 @@
----
-title: RemoveChannelsFromPush.deviceId - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.endpoints.push](../index.html) / [RemoveChannelsFromPush](index.html) / [deviceId](./device-id.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.endpoints.push](../index.md) / [RemoveChannelsFromPush](index.md) / [deviceId](./device-id.md)
 
 # deviceId
 
 `lateinit var deviceId: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
+
+The device ID (token) associated with push notifications.
+

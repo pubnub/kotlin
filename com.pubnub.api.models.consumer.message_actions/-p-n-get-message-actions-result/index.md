@@ -1,14 +1,13 @@
----
-title: PNGetMessageActionsResult - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.models.consumer.message_actions](../index.html) / [PNGetMessageActionsResult](./index.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.models.consumer.message_actions](../index.md) / [PNGetMessageActionsResult](./index.md)
 
 # PNGetMessageActionsResult
 
 `class PNGetMessageActionsResult`
 
+Result for the [PubNub.getMessageActions](../../com.pubnub.api/-pub-nub/get-message-actions.md) API operation.
+
 ### Properties
 
-| [actions](actions.html) | `val actions: `[`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)`<`[`PNMessageAction`](../-p-n-message-action/index.html)`>` |
-
+| Name | Summary |
+|---|---|
+| [actions](actions.md) | List of message actions for a certain message in a certain channel.`val actions: `[`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)`<`[`PNMessageAction`](../-p-n-message-action/index.md)`>` |

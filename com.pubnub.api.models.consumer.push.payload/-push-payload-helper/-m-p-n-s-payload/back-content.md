@@ -1,8 +1,4 @@
----
-title: PushPayloadHelper.MPNSPayload.backContent - pubnub-kotlin
----
-
-[pubnub-kotlin](../../../index.html) / [com.pubnub.api.models.consumer.push.payload](../../index.html) / [PushPayloadHelper](../index.html) / [MPNSPayload](index.html) / [backContent](./back-content.html)
+[pubnub-kotlin](../../../index.md) / [com.pubnub.api.models.consumer.push.payload](../../index.md) / [PushPayloadHelper](../index.md) / [MPNSPayload](index.md) / [backContent](./back-content.md)
 
 # backContent
 

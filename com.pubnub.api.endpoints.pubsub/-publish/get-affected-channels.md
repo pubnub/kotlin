@@ -1,8 +1,4 @@
----
-title: Publish.getAffectedChannels - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.endpoints.pubsub](../index.html) / [Publish](index.html) / [getAffectedChannels](./get-affected-channels.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.endpoints.pubsub](../index.md) / [Publish](index.md) / [getAffectedChannels](./get-affected-channels.md)
 
 # getAffectedChannels
 

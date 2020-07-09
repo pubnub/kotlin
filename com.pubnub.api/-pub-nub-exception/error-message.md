@@ -1,9 +1,11 @@
----
-title: PubNubException.errorMessage - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api](../index.html) / [PubNubException](index.html) / [errorMessage](./error-message.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api](../index.md) / [PubNubException](index.md) / [errorMessage](./error-message.md)
 
 # errorMessage
 
 `var errorMessage: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`?`
+
+The error message received from the server, if any.
+
+### Property
+
+`errorMessage` - The error message received from the server, if any.

@@ -1,14 +1,11 @@
----
-title: PNOperationType.SignalsOperation - pubnub-kotlin
----
-
-[pubnub-kotlin](../../../index.html) / [com.pubnub.api.enums](../../index.html) / [PNOperationType](../index.html) / [SignalsOperation](./index.html)
+[pubnub-kotlin](../../../index.md) / [com.pubnub.api.enums](../../index.md) / [PNOperationType](../index.md) / [SignalsOperation](./index.md)
 
 # SignalsOperation
 
-`open class SignalsOperation : `[`PNOperationType`](../index.html)
+`open class SignalsOperation : `[`PNOperationType`](../index.md)
 
 ### Constructors
 
-| [&lt;init&gt;](-init-.html) | `SignalsOperation()` |
-
+| Name | Summary |
+|---|---|
+| [&lt;init&gt;](-init-.md) | `SignalsOperation()` |

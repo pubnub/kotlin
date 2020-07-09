@@ -1,9 +1,8 @@
----
-title: PubNub.getMessageActions - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api](../index.html) / [PubNub](index.html) / [getMessageActions](./get-message-actions.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api](../index.md) / [PubNub](index.md) / [getMessageActions](./get-message-actions.md)
 
 # getMessageActions
 
-`fun getMessageActions(): `[`GetMessageActions`](../../com.pubnub.api.endpoints.message_actions/-get-message-actions/index.html)
+`fun getMessageActions(): `[`GetMessageActions`](../../com.pubnub.api.endpoints.message_actions/-get-message-actions/index.md)
+
+Get a list of message actions in a channel. Returns a list of actions in the response.
+

@@ -1,8 +1,4 @@
----
-title: SubscribeCallback - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.callbacks](../index.html) / [SubscribeCallback](./index.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.callbacks](../index.md) / [SubscribeCallback](./index.md)
 
 # SubscribeCallback
 
@@ -10,13 +6,16 @@ title: SubscribeCallback - pubnub-kotlin
 
 ### Constructors
 
-| [&lt;init&gt;](-init-.html) | `SubscribeCallback()` |
+| Name | Summary |
+|---|---|
+| [&lt;init&gt;](-init-.md) | `SubscribeCallback()` |
 
 ### Functions
 
-| [message](message.html) | `open fun message(pubnub: `[`PubNub`](../../com.pubnub.api/-pub-nub/index.html)`, pnMessageResult: `[`PNMessageResult`](../../com.pubnub.api.models.consumer.pubsub/-p-n-message-result/index.html)`): `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html) |
-| [messageAction](message-action.html) | `open fun messageAction(pubnub: `[`PubNub`](../../com.pubnub.api/-pub-nub/index.html)`, pnMessageActionResult: `[`PNMessageActionResult`](../../com.pubnub.api.models.consumer.pubsub.message_actions/-p-n-message-action-result/index.html)`): `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html) |
-| [presence](presence.html) | `open fun presence(pubnub: `[`PubNub`](../../com.pubnub.api/-pub-nub/index.html)`, pnPresenceEventResult: `[`PNPresenceEventResult`](../../com.pubnub.api.models.consumer.pubsub/-p-n-presence-event-result/index.html)`): `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html) |
-| [signal](signal.html) | `open fun signal(pubnub: `[`PubNub`](../../com.pubnub.api/-pub-nub/index.html)`, pnSignalResult: `[`PNSignalResult`](../../com.pubnub.api.models.consumer.pubsub/-p-n-signal-result/index.html)`): `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html) |
-| [status](status.html) | `abstract fun status(pubnub: `[`PubNub`](../../com.pubnub.api/-pub-nub/index.html)`, pnStatus: `[`PNStatus`](../../com.pubnub.api.models.consumer/-p-n-status/index.html)`): `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html) |
-
+| Name | Summary |
+|---|---|
+| [message](message.md) | Receive messages at subscribed channels.`open fun message(pubnub: `[`PubNub`](../../com.pubnub.api/-pub-nub/index.md)`, pnMessageResult: `[`PNMessageResult`](../../com.pubnub.api.models.consumer.pubsub/-p-n-message-result.md)`): `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html) |
+| [messageAction](message-action.md) | Receive message actions for messages in subscribed channels.`open fun messageAction(pubnub: `[`PubNub`](../../com.pubnub.api/-pub-nub/index.md)`, pnMessageActionResult: `[`PNMessageActionResult`](../../com.pubnub.api.models.consumer.pubsub.message_actions/-p-n-message-action-result/index.md)`): `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html) |
+| [presence](presence.md) | Receive presence events for channels subscribed to with presence enabled via `withPresence = true` in [PubNub.subscribe](../../com.pubnub.api/-pub-nub/subscribe.md)`open fun presence(pubnub: `[`PubNub`](../../com.pubnub.api/-pub-nub/index.md)`, pnPresenceEventResult: `[`PNPresenceEventResult`](../../com.pubnub.api.models.consumer.pubsub/-p-n-presence-event-result/index.md)`): `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html) |
+| [signal](signal.md) | Receive signals at subscribed channels.`open fun signal(pubnub: `[`PubNub`](../../com.pubnub.api/-pub-nub/index.md)`, pnSignalResult: `[`PNSignalResult`](../../com.pubnub.api.models.consumer.pubsub/-p-n-signal-result/index.md)`): `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html) |
+| [status](status.md) | Receive status events like [PNStatusCategory.PNAcknowledgmentCategory](../../com.pubnub.api.enums/-p-n-status-category/-p-n-acknowledgment-category.md), [PNStatusCategory.PNConnectedCategory](../../com.pubnub.api.enums/-p-n-status-category/-p-n-connected-category.md), [PNStatusCategory.PNReconnectedCategory](../../com.pubnub.api.enums/-p-n-status-category/-p-n-reconnected-category.md)`abstract fun status(pubnub: `[`PubNub`](../../com.pubnub.api/-pub-nub/index.md)`, pnStatus: `[`PNStatus`](../../com.pubnub.api.models.consumer/-p-n-status/index.md)`): `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html) |

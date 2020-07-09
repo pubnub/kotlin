@@ -1,9 +1,8 @@
----
-title: FetchMessages.start - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.endpoints](../index.html) / [FetchMessages](index.html) / [start](./start.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.endpoints](../index.md) / [FetchMessages](index.md) / [start](./start.md)
 
 # start
 
 `var start: `[`Long`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)`?`
+
+Timetoken delimiting the start of time slice (exclusive) to pull messages from.
+

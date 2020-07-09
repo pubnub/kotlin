@@ -1,8 +1,4 @@
----
-title: WhereNow.operationType - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.endpoints.presence](../index.html) / [WhereNow](index.html) / [operationType](./operation-type.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.endpoints.presence](../index.md) / [WhereNow](index.md) / [operationType](./operation-type.md)
 
 # operationType
 

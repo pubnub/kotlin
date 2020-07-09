@@ -1,9 +1,11 @@
----
-title: PubNubException.affectedCall - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api](../index.html) / [PubNubException](index.html) / [affectedCall](./affected-call.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api](../index.md) / [PubNubException](index.md) / [affectedCall](./affected-call.md)
 
 # affectedCall
 
 `var affectedCall: Call<*>?`
+
+A reference to the affected call. Useful for calling [retry](#).
+
+### Property
+
+`affectedCall` - A reference to the affected call. Useful for calling [retry](#).

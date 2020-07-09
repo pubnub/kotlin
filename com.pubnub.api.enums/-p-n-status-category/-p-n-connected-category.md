@@ -1,9 +1,8 @@
----
-title: PNStatusCategory.PNConnectedCategory - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.enums](../index.html) / [PNStatusCategory](index.html) / [PNConnectedCategory](./-p-n-connected-category.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.enums](../index.md) / [PNStatusCategory](index.md) / [PNConnectedCategory](./-p-n-connected-category.md)
 
 # PNConnectedCategory
 
 `PNConnectedCategory`
+
+SDK subscribed with a new mix of channels (fired every time the channel / channel group mix changed).
+

@@ -1,8 +1,4 @@
----
-title: Signal.isPubKeyRequired - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.endpoints.pubsub](../index.html) / [Signal](index.html) / [isPubKeyRequired](./is-pub-key-required.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.endpoints.pubsub](../index.md) / [Signal](index.md) / [isPubKeyRequired](./is-pub-key-required.md)
 
 # isPubKeyRequired
 

@@ -1,9 +1,11 @@
----
-title: Action.uuid - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.models.consumer.history](../index.html) / [Action](index.html) / [uuid](./uuid.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.models.consumer.history](../index.md) / [Action](index.md) / [uuid](./uuid.md)
 
 # uuid
 
 `val uuid: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
+
+The UUID of the publisher.
+
+### Property
+
+`uuid` - The UUID of the publisher.

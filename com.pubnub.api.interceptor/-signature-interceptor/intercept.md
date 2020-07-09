@@ -1,8 +1,4 @@
----
-title: SignatureInterceptor.intercept - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.interceptor](../index.html) / [SignatureInterceptor](index.html) / [intercept](./intercept.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.interceptor](../index.md) / [SignatureInterceptor](index.md) / [intercept](./intercept.md)
 
 # intercept
 

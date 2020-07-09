@@ -1,8 +1,4 @@
----
-title: MapperManager.getAsObject - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.managers](../index.html) / [MapperManager](index.html) / [getAsObject](./get-as-object.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.managers](../index.md) / [MapperManager](index.md) / [getAsObject](./get-as-object.md)
 
 # getAsObject
 

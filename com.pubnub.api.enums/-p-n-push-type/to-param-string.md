@@ -1,8 +1,4 @@
----
-title: PNPushType.toParamString - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.enums](../index.html) / [PNPushType](index.html) / [toParamString](./to-param-string.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.enums](../index.md) / [PNPushType](index.md) / [toParamString](./to-param-string.md)
 
 # toParamString
 

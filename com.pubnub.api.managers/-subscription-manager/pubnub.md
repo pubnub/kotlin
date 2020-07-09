@@ -1,9 +1,5 @@
----
-title: SubscriptionManager.pubnub - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.managers](../index.html) / [SubscriptionManager](index.html) / [pubnub](./pubnub.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.managers](../index.md) / [SubscriptionManager](index.md) / [pubnub](./pubnub.md)
 
 # pubnub
 
-`val pubnub: `[`PubNub`](../../com.pubnub.api/-pub-nub/index.html)
+`val pubnub: `[`PubNub`](../../com.pubnub.api/-pub-nub/index.md)

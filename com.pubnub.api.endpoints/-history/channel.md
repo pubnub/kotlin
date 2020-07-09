@@ -1,9 +1,8 @@
----
-title: History.channel - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.endpoints](../index.html) / [History](index.html) / [channel](./channel.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.endpoints](../index.md) / [History](index.md) / [channel](./channel.md)
 
 # channel
 
 `lateinit var channel: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
+
+Channel to return history messages from.
+

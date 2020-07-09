@@ -1,9 +1,8 @@
----
-title: Grant.manage - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.endpoints.access](../index.html) / [Grant](index.html) / [manage](./manage.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.endpoints.access](../index.md) / [Grant](index.md) / [manage](./manage.md)
 
 # manage
 
 `var manage: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)
+
+Set to `true` to request the *read* permission. Defaults to `false`.
+

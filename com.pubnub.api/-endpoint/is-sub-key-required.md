@@ -1,8 +1,4 @@
----
-title: Endpoint.isSubKeyRequired - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api](../index.html) / [Endpoint](index.html) / [isSubKeyRequired](./is-sub-key-required.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api](../index.md) / [Endpoint](index.md) / [isSubKeyRequired](./is-sub-key-required.md)
 
 # isSubKeyRequired
 

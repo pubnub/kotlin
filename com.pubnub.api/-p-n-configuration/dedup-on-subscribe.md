@@ -1,8 +1,4 @@
----
-title: PNConfiguration.dedupOnSubscribe - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api](../index.html) / [PNConfiguration](index.html) / [dedupOnSubscribe](./dedup-on-subscribe.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api](../index.md) / [PNConfiguration](index.md) / [dedupOnSubscribe](./dedup-on-subscribe.md)
 
 # dedupOnSubscribe
 

@@ -1,8 +1,4 @@
----
-title: SubscribeBuilder.execute - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.builder](../index.html) / [SubscribeBuilder](index.html) / [execute](./execute.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.builder](../index.md) / [SubscribeBuilder](index.md) / [execute](./execute.md)
 
 # execute
 

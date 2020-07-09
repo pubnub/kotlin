@@ -1,9 +1,9 @@
----
-title: AddChannelsToPush.environment - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.endpoints.push](../index.html) / [AddChannelsToPush](index.html) / [environment](./environment.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.endpoints.push](../index.md) / [AddChannelsToPush](index.md) / [environment](./environment.md)
 
 # environment
 
-`var environment: `[`PNPushEnvironment`](../../com.pubnub.api.enums/-p-n-push-environment/index.html)
+`var environment: `[`PNPushEnvironment`](../../com.pubnub.api.enums/-p-n-push-environment/index.md)
+
+Environment within which device should manage list of channels with enabled notifications
+(works only if [pushType](push-type.md) set to [PNPushType.APNS2](../../com.pubnub.api.enums/-p-n-push-type/-a-p-n-s2.md)).
+

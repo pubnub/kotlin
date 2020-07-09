@@ -1,8 +1,4 @@
----
-title: PushPayloadHelper.APNSPayload.APNS2Configuration.collapseId - pubnub-kotlin
----
-
-[pubnub-kotlin](../../../../index.html) / [com.pubnub.api.models.consumer.push.payload](../../../index.html) / [PushPayloadHelper](../../index.html) / [APNSPayload](../index.html) / [APNS2Configuration](index.html) / [collapseId](./collapse-id.html)
+[pubnub-kotlin](../../../../index.md) / [com.pubnub.api.models.consumer.push.payload](../../../index.md) / [PushPayloadHelper](../../index.md) / [APNSPayload](../index.md) / [APNS2Configuration](index.md) / [collapseId](./collapse-id.md)
 
 # collapseId
 

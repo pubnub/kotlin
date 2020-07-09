@@ -1,8 +1,4 @@
----
-title: MessageCounts.getAffectedChannels - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.endpoints](../index.html) / [MessageCounts](index.html) / [getAffectedChannels](./get-affected-channels.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.endpoints](../index.md) / [MessageCounts](index.md) / [getAffectedChannels](./get-affected-channels.md)
 
 # getAffectedChannels
 

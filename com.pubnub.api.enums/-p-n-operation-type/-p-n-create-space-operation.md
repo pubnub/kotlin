@@ -1,8 +1,4 @@
----
-title: PNOperationType.PNCreateSpaceOperation - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.enums](../index.html) / [PNOperationType](index.html) / [PNCreateSpaceOperation](./-p-n-create-space-operation.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.enums](../index.md) / [PNOperationType](index.md) / [PNCreateSpaceOperation](./-p-n-create-space-operation.md)
 
 # PNCreateSpaceOperation
 

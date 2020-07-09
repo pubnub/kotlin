@@ -1,8 +1,4 @@
----
-title: PushPayloadHelper - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.models.consumer.push.payload](../index.html) / [PushPayloadHelper](./index.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.models.consumer.push.payload](../index.md) / [PushPayloadHelper](./index.md)
 
 # PushPayloadHelper
 
@@ -10,22 +6,29 @@ title: PushPayloadHelper - pubnub-kotlin
 
 ### Types
 
-| [APNSPayload](-a-p-n-s-payload/index.html) | `class APNSPayload : `[`PushPayloadSerializer`](../-push-payload-serializer/index.html) |
-| [FCMPayload](-f-c-m-payload/index.html) | `class FCMPayload : `[`PushPayloadSerializer`](../-push-payload-serializer/index.html) |
-| [MPNSPayload](-m-p-n-s-payload/index.html) | `class MPNSPayload : `[`PushPayloadSerializer`](../-push-payload-serializer/index.html) |
+| Name | Summary |
+|---|---|
+| [APNSPayload](-a-p-n-s-payload/index.md) | `class APNSPayload : `[`PushPayloadSerializer`](../-push-payload-serializer/index.md) |
+| [FCMPayload](-f-c-m-payload/index.md) | `class FCMPayload : `[`PushPayloadSerializer`](../-push-payload-serializer/index.md) |
+| [MPNSPayload](-m-p-n-s-payload/index.md) | `class MPNSPayload : `[`PushPayloadSerializer`](../-push-payload-serializer/index.md) |
 
 ### Constructors
 
-| [&lt;init&gt;](-init-.html) | `PushPayloadHelper()` |
+| Name | Summary |
+|---|---|
+| [&lt;init&gt;](-init-.md) | `PushPayloadHelper()` |
 
 ### Properties
 
-| [apnsPayload](apns-payload.html) | `var apnsPayload: APNSPayload?` |
-| [commonPayload](common-payload.html) | `var commonPayload: `[`Map`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html)`<`[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`, `[`Any`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)`>?` |
-| [fcmPayload](fcm-payload.html) | `var fcmPayload: FCMPayload?` |
-| [mpnsPayload](mpns-payload.html) | `var mpnsPayload: MPNSPayload?` |
+| Name | Summary |
+|---|---|
+| [apnsPayload](apns-payload.md) | `var apnsPayload: APNSPayload?` |
+| [commonPayload](common-payload.md) | `var commonPayload: `[`Map`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html)`<`[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`, `[`Any`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)`>?` |
+| [fcmPayload](fcm-payload.md) | `var fcmPayload: FCMPayload?` |
+| [mpnsPayload](mpns-payload.md) | `var mpnsPayload: MPNSPayload?` |
 
 ### Functions
 
-| [build](build.html) | `fun build(): `[`Map`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html)`<`[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`, `[`Any`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)`>` |
-
+| Name | Summary |
+|---|---|
+| [build](build.md) | `fun build(): `[`Map`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html)`<`[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`, `[`Any`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)`>` |

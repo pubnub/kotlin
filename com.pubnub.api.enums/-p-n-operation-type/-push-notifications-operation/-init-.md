@@ -1,8 +1,4 @@
----
-title: PNOperationType.PushNotificationsOperation.<init> - pubnub-kotlin
----
-
-[pubnub-kotlin](../../../index.html) / [com.pubnub.api.enums](../../index.html) / [PNOperationType](../index.html) / [PushNotificationsOperation](index.html) / [&lt;init&gt;](./-init-.html)
+[pubnub-kotlin](../../../index.md) / [com.pubnub.api.enums](../../index.md) / [PNOperationType](../index.md) / [PushNotificationsOperation](index.md) / [&lt;init&gt;](./-init-.md)
 
 # &lt;init&gt;
 

@@ -1,8 +1,4 @@
----
-title: Grant.isAuthRequired - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.endpoints.access](../index.html) / [Grant](index.html) / [isAuthRequired](./is-auth-required.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.endpoints.access](../index.md) / [Grant](index.md) / [isAuthRequired](./is-auth-required.md)
 
 # isAuthRequired
 

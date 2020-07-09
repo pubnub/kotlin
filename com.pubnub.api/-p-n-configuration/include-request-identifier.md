@@ -1,9 +1,10 @@
----
-title: PNConfiguration.includeRequestIdentifier - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api](../index.html) / [PNConfiguration](index.html) / [includeRequestIdentifier](./include-request-identifier.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api](../index.md) / [PNConfiguration](index.md) / [includeRequestIdentifier](./include-request-identifier.md)
 
 # includeRequestIdentifier
 
 `var includeRequestIdentifier: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)
+
+Whether to include a [PubNub.requestId](#) with every request.
+
+Defaults to `true`.
+

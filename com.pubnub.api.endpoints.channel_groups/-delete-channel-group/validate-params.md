@@ -1,8 +1,4 @@
----
-title: DeleteChannelGroup.validateParams - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.endpoints.channel_groups](../index.html) / [DeleteChannelGroup](index.html) / [validateParams](./validate-params.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.endpoints.channel_groups](../index.md) / [DeleteChannelGroup](index.md) / [validateParams](./validate-params.md)
 
 # validateParams
 

@@ -1,24 +1,25 @@
----
-title: PushPayloadHelper.APNSPayload.APS - pubnub-kotlin
----
-
-[pubnub-kotlin](../../../../index.html) / [com.pubnub.api.models.consumer.push.payload](../../../index.html) / [PushPayloadHelper](../../index.html) / [APNSPayload](../index.html) / [APS](./index.html)
+[pubnub-kotlin](../../../../index.md) / [com.pubnub.api.models.consumer.push.payload](../../../index.md) / [PushPayloadHelper](../../index.md) / [APNSPayload](../index.md) / [APS](./index.md)
 
 # APS
 
-`class APS : `[`PushPayloadSerializer`](../../../-push-payload-serializer/index.html)
+`class APS : `[`PushPayloadSerializer`](../../../-push-payload-serializer/index.md)
 
 ### Constructors
 
-| [&lt;init&gt;](-init-.html) | `APS()` |
+| Name | Summary |
+|---|---|
+| [&lt;init&gt;](-init-.md) | `APS()` |
 
 ### Properties
 
-| [alert](alert.html) | `var alert: `[`Any`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)`?` |
-| [badge](badge.html) | `var badge: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)`?` |
-| [sound](sound.html) | `var sound: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`?` |
+| Name | Summary |
+|---|---|
+| [alert](alert.md) | `var alert: `[`Any`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)`?` |
+| [badge](badge.md) | `var badge: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)`?` |
+| [sound](sound.md) | `var sound: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`?` |
 
 ### Functions
 
-| [toMap](to-map.html) | `fun toMap(): `[`Map`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html)`<`[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`, `[`Any`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)`>` |
-
+| Name | Summary |
+|---|---|
+| [toMap](to-map.md) | `fun toMap(): `[`Map`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html)`<`[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`, `[`Any`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)`>` |

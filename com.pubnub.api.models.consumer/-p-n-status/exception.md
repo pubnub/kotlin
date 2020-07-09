@@ -1,9 +1,11 @@
----
-title: PNStatus.exception - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.models.consumer](../index.html) / [PNStatus](index.html) / [exception](./exception.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.models.consumer](../index.md) / [PNStatus](index.md) / [exception](./exception.md)
 
 # exception
 
-`val exception: `[`PubNubException`](../../com.pubnub.api/-pub-nub-exception/index.html)`?`
+`val exception: `[`PubNubException`](../../com.pubnub.api/-pub-nub-exception/index.md)`?`
+
+Error information if the request didn't succeed.
+
+### Property
+
+`exception` - Error information if the request didn't succeed.

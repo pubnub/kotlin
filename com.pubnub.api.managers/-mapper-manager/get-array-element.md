@@ -1,8 +1,4 @@
----
-title: MapperManager.getArrayElement - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.managers](../index.html) / [MapperManager](index.html) / [getArrayElement](./get-array-element.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.managers](../index.md) / [MapperManager](index.md) / [getArrayElement](./get-array-element.md)
 
 # getArrayElement
 

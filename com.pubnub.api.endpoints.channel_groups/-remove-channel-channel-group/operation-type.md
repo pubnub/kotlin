@@ -1,8 +1,4 @@
----
-title: RemoveChannelChannelGroup.operationType - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.endpoints.channel_groups](../index.html) / [RemoveChannelChannelGroup](index.html) / [operationType](./operation-type.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.endpoints.channel_groups](../index.md) / [RemoveChannelChannelGroup](index.md) / [operationType](./operation-type.md)
 
 # operationType
 

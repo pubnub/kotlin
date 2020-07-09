@@ -1,8 +1,4 @@
----
-title: PNAccessManagerKeysData - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.models.consumer.access_manager](../index.html) / [PNAccessManagerKeysData](./index.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.models.consumer.access_manager](../index.md) / [PNAccessManagerKeysData](./index.md)
 
 # PNAccessManagerKeysData
 
@@ -10,5 +6,6 @@ title: PNAccessManagerKeysData - pubnub-kotlin
 
 ### Constructors
 
-| [&lt;init&gt;](-init-.html) | `PNAccessManagerKeysData()` |
-
+| Name | Summary |
+|---|---|
+| [&lt;init&gt;](-init-.md) | `PNAccessManagerKeysData()` |

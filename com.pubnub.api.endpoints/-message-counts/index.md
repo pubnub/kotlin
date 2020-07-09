@@ -1,27 +1,26 @@
----
-title: MessageCounts - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.endpoints](../index.html) / [MessageCounts](./index.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.endpoints](../index.md) / [MessageCounts](./index.md)
 
 # MessageCounts
 
-`class MessageCounts : `[`Endpoint`](../../com.pubnub.api/-endpoint/index.html)`<JsonElement, `[`PNMessageCountResult`](../../com.pubnub.api.models.consumer.history/-p-n-message-count-result/index.html)`>`
+`class MessageCounts : `[`Endpoint`](../../com.pubnub.api/-endpoint/index.md)`<JsonElement, `[`PNMessageCountResult`](../../com.pubnub.api.models.consumer.history/-p-n-message-count-result/index.md)`>`
 
-### Constructors
+**See Also**
 
-| [&lt;init&gt;](-init-.html) | `MessageCounts(pubnub: `[`PubNub`](../../com.pubnub.api/-pub-nub/index.html)`)` |
+[PubNub.messageCounts](../../com.pubnub.api/-pub-nub/message-counts.md)
 
 ### Properties
 
-| [channels](channels.html) | `lateinit var channels: `[`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)`<`[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`>` |
-| [channelsTimetoken](channels-timetoken.html) | `lateinit var channelsTimetoken: `[`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)`<`[`Long`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)`>` |
+| Name | Summary |
+|---|---|
+| [channels](channels.md) | Channels to fetch the message count from.`lateinit var channels: `[`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)`<`[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`>` |
+| [channelsTimetoken](channels-timetoken.md) | List of timetokens, in order of the channels list. Specify a single timetoken to apply it to all channels.`lateinit var channelsTimetoken: `[`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)`<`[`Long`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)`>` |
 
 ### Functions
 
-| [createResponse](create-response.html) | `fun createResponse(input: Response<JsonElement>): `[`PNMessageCountResult`](../../com.pubnub.api.models.consumer.history/-p-n-message-count-result/index.html)`?` |
-| [doWork](do-work.html) | `fun doWork(queryParams: `[`HashMap`](https://docs.oracle.com/javase/6/docs/api/java/util/HashMap.html)`<`[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`, `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`>): Call<JsonElement>` |
-| [getAffectedChannels](get-affected-channels.html) | `fun getAffectedChannels(): `[`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)`<`[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`>` |
-| [operationType](operation-type.html) | `fun operationType(): PNMessageCountOperation` |
-| [validateParams](validate-params.html) | `fun validateParams(): `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html) |
-
+| Name | Summary |
+|---|---|
+| [createResponse](create-response.md) | `fun createResponse(input: Response<JsonElement>): `[`PNMessageCountResult`](../../com.pubnub.api.models.consumer.history/-p-n-message-count-result/index.md)`?` |
+| [doWork](do-work.md) | `fun doWork(queryParams: `[`HashMap`](https://docs.oracle.com/javase/6/docs/api/java/util/HashMap.html)`<`[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`, `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`>): Call<JsonElement>` |
+| [getAffectedChannels](get-affected-channels.md) | `fun getAffectedChannels(): `[`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)`<`[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`>` |
+| [operationType](operation-type.md) | `fun operationType(): PNMessageCountOperation` |
+| [validateParams](validate-params.md) | `fun validateParams(): `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html) |

@@ -1,8 +1,4 @@
----
-title: PNOperationType.SignalsOperation.<init> - pubnub-kotlin
----
-
-[pubnub-kotlin](../../../index.html) / [com.pubnub.api.enums](../../index.html) / [PNOperationType](../index.html) / [SignalsOperation](index.html) / [&lt;init&gt;](./-init-.html)
+[pubnub-kotlin](../../../index.md) / [com.pubnub.api.enums](../../index.md) / [PNOperationType](../index.md) / [SignalsOperation](index.md) / [&lt;init&gt;](./-init-.md)
 
 # &lt;init&gt;
 

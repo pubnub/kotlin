@@ -1,8 +1,4 @@
----
-title: Subscribe.timetoken - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.endpoints.pubsub](../index.html) / [Subscribe](index.html) / [timetoken](./timetoken.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.endpoints.pubsub](../index.md) / [Subscribe](index.md) / [timetoken](./timetoken.md)
 
 # timetoken
 

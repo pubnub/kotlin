@@ -1,8 +1,4 @@
----
-title: SubscriptionManager.unsubscribeAll - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.managers](../index.html) / [SubscriptionManager](index.html) / [unsubscribeAll](./unsubscribe-all.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.managers](../index.md) / [SubscriptionManager](index.md) / [unsubscribeAll](./unsubscribe-all.md)
 
 # unsubscribeAll
 

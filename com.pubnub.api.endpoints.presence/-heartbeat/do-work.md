@@ -1,8 +1,4 @@
----
-title: Heartbeat.doWork - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.endpoints.presence](../index.html) / [Heartbeat](index.html) / [doWork](./do-work.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.endpoints.presence](../index.md) / [Heartbeat](index.md) / [doWork](./do-work.md)
 
 # doWork
 

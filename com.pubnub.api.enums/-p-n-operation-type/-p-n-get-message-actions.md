@@ -1,8 +1,4 @@
----
-title: PNOperationType.PNGetMessageActions - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.enums](../index.html) / [PNOperationType](index.html) / [PNGetMessageActions](./-p-n-get-message-actions.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.enums](../index.md) / [PNOperationType](index.md) / [PNGetMessageActions](./-p-n-get-message-actions.md)
 
 # PNGetMessageActions
 

@@ -1,8 +1,4 @@
----
-title: PNOperationType.PNCreateUserOperation - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.enums](../index.html) / [PNOperationType](index.html) / [PNCreateUserOperation](./-p-n-create-user-operation.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.enums](../index.md) / [PNOperationType](index.md) / [PNCreateUserOperation](./-p-n-create-user-operation.md)
 
 # PNCreateUserOperation
 

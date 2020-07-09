@@ -1,8 +1,4 @@
----
-title: Base64.DEFAULT - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.vendor](../index.html) / [Base64](index.html) / [DEFAULT](./-d-e-f-a-u-l-t.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.vendor](../index.md) / [Base64](index.md) / [DEFAULT](./-d-e-f-a-u-l-t.md)
 
 # DEFAULT
 

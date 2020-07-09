@@ -1,8 +1,4 @@
----
-title: Time.operationType - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.endpoints](../index.html) / [Time](index.html) / [operationType](./operation-type.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.endpoints](../index.md) / [Time](index.md) / [operationType](./operation-type.md)
 
 # operationType
 

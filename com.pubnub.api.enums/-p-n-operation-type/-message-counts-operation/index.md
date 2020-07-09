@@ -1,14 +1,11 @@
----
-title: PNOperationType.MessageCountsOperation - pubnub-kotlin
----
-
-[pubnub-kotlin](../../../index.html) / [com.pubnub.api.enums](../../index.html) / [PNOperationType](../index.html) / [MessageCountsOperation](./index.html)
+[pubnub-kotlin](../../../index.md) / [com.pubnub.api.enums](../../index.md) / [PNOperationType](../index.md) / [MessageCountsOperation](./index.md)
 
 # MessageCountsOperation
 
-`open class MessageCountsOperation : `[`PNOperationType`](../index.html)
+`open class MessageCountsOperation : `[`PNOperationType`](../index.md)
 
 ### Constructors
 
-| [&lt;init&gt;](-init-.html) | `MessageCountsOperation()` |
-
+| Name | Summary |
+|---|---|
+| [&lt;init&gt;](-init-.md) | `MessageCountsOperation()` |

@@ -1,8 +1,4 @@
----
-title: PNOperationType.PNAccessManagerGrantToken - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.enums](../index.html) / [PNOperationType](index.html) / [PNAccessManagerGrantToken](./-p-n-access-manager-grant-token.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.enums](../index.md) / [PNOperationType](index.md) / [PNAccessManagerGrantToken](./-p-n-access-manager-grant-token.md)
 
 # PNAccessManagerGrantToken
 

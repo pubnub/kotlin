@@ -1,8 +1,4 @@
----
-title: Signal.validateParams - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.endpoints.pubsub](../index.html) / [Signal](index.html) / [validateParams](./validate-params.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.endpoints.pubsub](../index.md) / [Signal](index.md) / [validateParams](./validate-params.md)
 
 # validateParams
 

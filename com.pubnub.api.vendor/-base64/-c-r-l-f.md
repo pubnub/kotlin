@@ -1,8 +1,4 @@
----
-title: Base64.CRLF - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.vendor](../index.html) / [Base64](index.html) / [CRLF](./-c-r-l-f.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.vendor](../index.md) / [Base64](index.md) / [CRLF](./-c-r-l-f.md)
 
 # CRLF
 

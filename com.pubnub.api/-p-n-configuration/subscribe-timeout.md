@@ -1,9 +1,12 @@
----
-title: PNConfiguration.subscribeTimeout - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api](../index.html) / [PNConfiguration](index.html) / [subscribeTimeout](./subscribe-timeout.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api](../index.md) / [PNConfiguration](index.md) / [subscribeTimeout](./subscribe-timeout.md)
 
 # subscribeTimeout
 
 `var subscribeTimeout: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)
+
+The subscribe request timeout.
+
+The value is in seconds.
+
+Defaults to 310.
+

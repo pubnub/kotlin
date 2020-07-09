@@ -1,24 +1,25 @@
----
-title: PushPayloadHelper.FCMPayload.Notification - pubnub-kotlin
----
-
-[pubnub-kotlin](../../../../index.html) / [com.pubnub.api.models.consumer.push.payload](../../../index.html) / [PushPayloadHelper](../../index.html) / [FCMPayload](../index.html) / [Notification](./index.html)
+[pubnub-kotlin](../../../../index.md) / [com.pubnub.api.models.consumer.push.payload](../../../index.md) / [PushPayloadHelper](../../index.md) / [FCMPayload](../index.md) / [Notification](./index.md)
 
 # Notification
 
-`class Notification : `[`PushPayloadSerializer`](../../../-push-payload-serializer/index.html)
+`class Notification : `[`PushPayloadSerializer`](../../../-push-payload-serializer/index.md)
 
 ### Constructors
 
-| [&lt;init&gt;](-init-.html) | `Notification()` |
+| Name | Summary |
+|---|---|
+| [&lt;init&gt;](-init-.md) | `Notification()` |
 
 ### Properties
 
-| [body](body.html) | `var body: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`?` |
-| [image](image.html) | `var image: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`?` |
-| [title](title.html) | `var title: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`?` |
+| Name | Summary |
+|---|---|
+| [body](body.md) | `var body: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`?` |
+| [image](image.md) | `var image: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`?` |
+| [title](title.md) | `var title: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`?` |
 
 ### Functions
 
-| [toMap](to-map.html) | `fun toMap(): `[`Map`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html)`<`[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`, `[`Any`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)`>` |
-
+| Name | Summary |
+|---|---|
+| [toMap](to-map.md) | `fun toMap(): `[`Map`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html)`<`[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`, `[`Any`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)`>` |

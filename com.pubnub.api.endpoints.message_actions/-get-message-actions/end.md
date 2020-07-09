@@ -1,9 +1,9 @@
----
-title: GetMessageActions.end - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.endpoints.message_actions](../index.html) / [GetMessageActions](index.html) / [end](./end.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.endpoints.message_actions](../index.md) / [GetMessageActions](index.md) / [end](./end.md)
 
 # end
 
 `var end: `[`Long`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)`?`
+
+Message Action timetoken denoting the end of the range requested
+(return values will be greater than or equal to end).
+

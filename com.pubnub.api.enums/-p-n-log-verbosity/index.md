@@ -1,8 +1,4 @@
----
-title: PNLogVerbosity - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.enums](../index.html) / [PNLogVerbosity](./index.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.enums](../index.md) / [PNLogVerbosity](./index.md)
 
 # PNLogVerbosity
 
@@ -10,6 +6,7 @@ title: PNLogVerbosity - pubnub-kotlin
 
 ### Enum Values
 
-| [NONE](-n-o-n-e.html) |  |
-| [BODY](-b-o-d-y.html) |  |
-
+| Name | Summary |
+|---|---|
+| [NONE](-n-o-n-e.md) | No logs. |
+| [BODY](-b-o-d-y.md) | Logs request and response lines and their respective headers and bodies (if present). |

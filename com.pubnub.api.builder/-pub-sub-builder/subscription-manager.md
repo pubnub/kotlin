@@ -1,9 +1,5 @@
----
-title: PubSubBuilder.subscriptionManager - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.builder](../index.html) / [PubSubBuilder](index.html) / [subscriptionManager](./subscription-manager.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.builder](../index.md) / [PubSubBuilder](index.md) / [subscriptionManager](./subscription-manager.md)
 
 # subscriptionManager
 
-`protected val subscriptionManager: `[`SubscriptionManager`](../../com.pubnub.api.managers/-subscription-manager/index.html)
+`protected val subscriptionManager: `[`SubscriptionManager`](../../com.pubnub.api.managers/-subscription-manager/index.md)

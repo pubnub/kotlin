@@ -1,8 +1,4 @@
----
-title: EntityEnvelope - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.models.server.objects_api](../index.html) / [EntityEnvelope](./index.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.models.server.objects_api](../index.md) / [EntityEnvelope](./index.md)
 
 # EntityEnvelope
 
@@ -10,10 +6,13 @@ title: EntityEnvelope - pubnub-kotlin
 
 ### Constructors
 
-| [&lt;init&gt;](-init-.html) | `EntityEnvelope()` |
+| Name | Summary |
+|---|---|
+| [&lt;init&gt;](-init-.md) | `EntityEnvelope()` |
 
 ### Properties
 
-| [data](data.html) | `var data: T?` |
-| [status](status.html) | `var status: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html) |
-
+| Name | Summary |
+|---|---|
+| [data](data.md) | `var data: T?` |
+| [status](status.md) | `var status: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html) |

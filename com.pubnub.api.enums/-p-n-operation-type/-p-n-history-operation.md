@@ -1,8 +1,4 @@
----
-title: PNOperationType.PNHistoryOperation - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.enums](../index.html) / [PNOperationType](index.html) / [PNHistoryOperation](./-p-n-history-operation.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.enums](../index.md) / [PNOperationType](index.md) / [PNHistoryOperation](./-p-n-history-operation.md)
 
 # PNHistoryOperation
 

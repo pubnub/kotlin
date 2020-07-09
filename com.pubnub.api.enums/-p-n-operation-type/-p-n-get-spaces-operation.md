@@ -1,8 +1,4 @@
----
-title: PNOperationType.PNGetSpacesOperation - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.enums](../index.html) / [PNOperationType](index.html) / [PNGetSpacesOperation](./-p-n-get-spaces-operation.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.enums](../index.md) / [PNOperationType](index.md) / [PNGetSpacesOperation](./-p-n-get-spaces-operation.md)
 
 # PNGetSpacesOperation
 

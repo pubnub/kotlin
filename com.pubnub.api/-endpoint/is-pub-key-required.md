@@ -1,8 +1,4 @@
----
-title: Endpoint.isPubKeyRequired - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api](../index.html) / [Endpoint](index.html) / [isPubKeyRequired](./is-pub-key-required.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api](../index.md) / [Endpoint](index.md) / [isPubKeyRequired](./is-pub-key-required.md)
 
 # isPubKeyRequired
 

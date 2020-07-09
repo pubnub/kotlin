@@ -1,9 +1,8 @@
----
-title: PNStatusCategory.PNReconnectedCategory - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.enums](../index.html) / [PNStatusCategory](index.html) / [PNReconnectedCategory](./-p-n-reconnected-category.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.enums](../index.md) / [PNStatusCategory](index.md) / [PNReconnectedCategory](./-p-n-reconnected-category.md)
 
 # PNReconnectedCategory
 
 `PNReconnectedCategory`
+
+SDK was able to reconnect to PubNub, i.e. the subscription loop has been reconnected.
+

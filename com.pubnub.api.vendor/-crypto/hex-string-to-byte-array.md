@@ -1,8 +1,4 @@
----
-title: Crypto.hexStringToByteArray - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.vendor](../index.html) / [Crypto](index.html) / [hexStringToByteArray](./hex-string-to-byte-array.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.vendor](../index.md) / [Crypto](index.md) / [hexStringToByteArray](./hex-string-to-byte-array.md)
 
 # hexStringToByteArray
 

@@ -1,8 +1,4 @@
----
-title: Heartbeat.channelGroups - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.endpoints.presence](../index.html) / [Heartbeat](index.html) / [channelGroups](./channel-groups.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.endpoints.presence](../index.md) / [Heartbeat](index.md) / [channelGroups](./channel-groups.md)
 
 # channelGroups
 

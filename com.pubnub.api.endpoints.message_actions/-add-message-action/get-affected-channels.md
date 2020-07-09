@@ -1,8 +1,4 @@
----
-title: AddMessageAction.getAffectedChannels - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.endpoints.message_actions](../index.html) / [AddMessageAction](index.html) / [getAffectedChannels](./get-affected-channels.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.endpoints.message_actions](../index.md) / [AddMessageAction](index.md) / [getAffectedChannels](./get-affected-channels.md)
 
 # getAffectedChannels
 

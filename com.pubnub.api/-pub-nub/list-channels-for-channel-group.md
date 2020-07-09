@@ -1,9 +1,8 @@
----
-title: PubNub.listChannelsForChannelGroup - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api](../index.html) / [PubNub](index.html) / [listChannelsForChannelGroup](./list-channels-for-channel-group.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api](../index.md) / [PubNub](index.md) / [listChannelsForChannelGroup](./list-channels-for-channel-group.md)
 
 # listChannelsForChannelGroup
 
-`fun listChannelsForChannelGroup(): `[`AllChannelsChannelGroup`](../../com.pubnub.api.endpoints.channel_groups/-all-channels-channel-group/index.html)
+`fun listChannelsForChannelGroup(): `[`AllChannelsChannelGroup`](../../com.pubnub.api.endpoints.channel_groups/-all-channels-channel-group/index.md)
+
+Lists all the channels of the channel group.
+

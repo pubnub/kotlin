@@ -1,9 +1,8 @@
----
-title: PubNub.whereNow - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api](../index.html) / [PubNub](index.html) / [whereNow](./where-now.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api](../index.md) / [PubNub](index.md) / [whereNow](./where-now.md)
 
 # whereNow
 
-`fun whereNow(): `[`WhereNow`](../../com.pubnub.api.endpoints.presence/-where-now/index.html)
+`fun whereNow(): `[`WhereNow`](../../com.pubnub.api.endpoints.presence/-where-now/index.md)
+
+Obtain information about the current list of channels to which a UUID is subscribed to.
+

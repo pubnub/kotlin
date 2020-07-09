@@ -1,8 +1,4 @@
----
-title: MapperManager.elementToString - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.managers](../index.html) / [MapperManager](index.html) / [elementToString](./element-to-string.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.managers](../index.md) / [MapperManager](index.md) / [elementToString](./element-to-string.md)
 
 # elementToString
 

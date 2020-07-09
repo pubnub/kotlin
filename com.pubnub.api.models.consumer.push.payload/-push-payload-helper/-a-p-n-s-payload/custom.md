@@ -1,8 +1,4 @@
----
-title: PushPayloadHelper.APNSPayload.custom - pubnub-kotlin
----
-
-[pubnub-kotlin](../../../index.html) / [com.pubnub.api.models.consumer.push.payload](../../index.html) / [PushPayloadHelper](../index.html) / [APNSPayload](index.html) / [custom](./custom.html)
+[pubnub-kotlin](../../../index.md) / [com.pubnub.api.models.consumer.push.payload](../../index.md) / [PushPayloadHelper](../index.md) / [APNSPayload](index.md) / [custom](./custom.md)
 
 # custom
 

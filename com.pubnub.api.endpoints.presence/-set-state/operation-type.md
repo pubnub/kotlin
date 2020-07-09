@@ -1,8 +1,4 @@
----
-title: SetState.operationType - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.endpoints.presence](../index.html) / [SetState](index.html) / [operationType](./operation-type.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.endpoints.presence](../index.md) / [SetState](index.md) / [operationType](./operation-type.md)
 
 # operationType
 

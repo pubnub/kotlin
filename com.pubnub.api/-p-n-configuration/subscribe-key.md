@@ -1,9 +1,8 @@
----
-title: PNConfiguration.subscribeKey - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api](../index.html) / [PNConfiguration](index.html) / [subscribeKey](./subscribe-key.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api](../index.md) / [PNConfiguration](index.md) / [subscribeKey](./subscribe-key.md)
 
 # subscribeKey
 
 `lateinit var subscribeKey: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
+
+The subscribe key from the admin panel.
+

@@ -1,8 +1,4 @@
----
-title: WhereNowPayload.channels - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.models.server.presence](../index.html) / [WhereNowPayload](index.html) / [channels](./channels.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.models.server.presence](../index.md) / [WhereNowPayload](index.md) / [channels](./channels.md)
 
 # channels
 

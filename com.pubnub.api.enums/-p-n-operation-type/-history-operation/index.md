@@ -1,14 +1,11 @@
----
-title: PNOperationType.HistoryOperation - pubnub-kotlin
----
-
-[pubnub-kotlin](../../../index.html) / [com.pubnub.api.enums](../../index.html) / [PNOperationType](../index.html) / [HistoryOperation](./index.html)
+[pubnub-kotlin](../../../index.md) / [com.pubnub.api.enums](../../index.md) / [PNOperationType](../index.md) / [HistoryOperation](./index.md)
 
 # HistoryOperation
 
-`open class HistoryOperation : `[`PNOperationType`](../index.html)
+`open class HistoryOperation : `[`PNOperationType`](../index.md)
 
 ### Constructors
 
-| [&lt;init&gt;](-init-.html) | `HistoryOperation()` |
-
+| Name | Summary |
+|---|---|
+| [&lt;init&gt;](-init-.md) | `HistoryOperation()` |

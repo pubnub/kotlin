@@ -1,8 +1,4 @@
----
-title: Crypto.hexEncode - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.vendor](../index.html) / [Crypto](index.html) / [hexEncode](./hex-encode.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.vendor](../index.md) / [Crypto](index.md) / [hexEncode](./hex-encode.md)
 
 # hexEncode
 

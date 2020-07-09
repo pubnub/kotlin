@@ -1,8 +1,4 @@
----
-title: PNOperationType.PublishOperation.<init> - pubnub-kotlin
----
-
-[pubnub-kotlin](../../../index.html) / [com.pubnub.api.enums](../../index.html) / [PNOperationType](../index.html) / [PublishOperation](index.html) / [&lt;init&gt;](./-init-.html)
+[pubnub-kotlin](../../../index.md) / [com.pubnub.api.enums](../../index.md) / [PNOperationType](../index.md) / [PublishOperation](index.md) / [&lt;init&gt;](./-init-.md)
 
 # &lt;init&gt;
 

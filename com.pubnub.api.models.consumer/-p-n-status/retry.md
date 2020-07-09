@@ -1,9 +1,8 @@
----
-title: PNStatus.retry - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.models.consumer](../index.html) / [PNStatus](index.html) / [retry](./retry.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.models.consumer](../index.md) / [PNStatus](index.md) / [retry](./retry.md)
 
 # retry
 
 `fun retry(): `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html)
+
+Execute the API operation again.
+

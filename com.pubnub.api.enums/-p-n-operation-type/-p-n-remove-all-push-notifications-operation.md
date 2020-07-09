@@ -1,8 +1,4 @@
----
-title: PNOperationType.PNRemoveAllPushNotificationsOperation - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.enums](../index.html) / [PNOperationType](index.html) / [PNRemoveAllPushNotificationsOperation](./-p-n-remove-all-push-notifications-operation.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.enums](../index.md) / [PNOperationType](index.md) / [PNRemoveAllPushNotificationsOperation](./-p-n-remove-all-push-notifications-operation.md)
 
 # PNRemoveAllPushNotificationsOperation
 

@@ -1,8 +1,4 @@
----
-title: PresenceBuilder.connected - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.builder](../index.html) / [PresenceBuilder](index.html) / [connected](./connected.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.builder](../index.md) / [PresenceBuilder](index.md) / [connected](./connected.md)
 
 # connected
 

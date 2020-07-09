@@ -1,8 +1,4 @@
----
-title: SubscriptionManager.reconnect - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.managers](../index.html) / [SubscriptionManager](index.html) / [reconnect](./reconnect.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.managers](../index.md) / [SubscriptionManager](index.md) / [reconnect](./reconnect.md)
 
 # reconnect
 

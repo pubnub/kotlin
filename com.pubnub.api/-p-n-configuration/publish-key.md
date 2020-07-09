@@ -1,9 +1,8 @@
----
-title: PNConfiguration.publishKey - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api](../index.html) / [PNConfiguration](index.html) / [publishKey](./publish-key.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api](../index.md) / [PNConfiguration](index.md) / [publishKey](./publish-key.md)
 
 # publishKey
 
 `lateinit var publishKey: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
+
+The publish key from the admin panel (only required if publishing).
+

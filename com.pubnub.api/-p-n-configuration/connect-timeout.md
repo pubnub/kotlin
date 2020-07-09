@@ -1,9 +1,12 @@
----
-title: PNConfiguration.connectTimeout - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api](../index.html) / [PNConfiguration](index.html) / [connectTimeout](./connect-timeout.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api](../index.md) / [PNConfiguration](index.md) / [connectTimeout](./connect-timeout.md)
 
 # connectTimeout
 
 `var connectTimeout: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)
+
+How long before the client gives up trying to connect with a subscribe call.
+
+The value is in seconds.
+
+Defaults to 5.
+

@@ -1,8 +1,4 @@
----
-title: MapperManager.getArrayIterator - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.managers](../index.html) / [MapperManager](index.html) / [getArrayIterator](./get-array-iterator.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.managers](../index.md) / [MapperManager](index.md) / [getArrayIterator](./get-array-iterator.md)
 
 # getArrayIterator
 

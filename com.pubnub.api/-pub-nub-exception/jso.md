@@ -1,9 +1,11 @@
----
-title: PubNubException.jso - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api](../index.html) / [PubNubException](index.html) / [jso](./jso.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api](../index.md) / [PubNubException](index.md) / [jso](./jso.md)
 
 # jso
 
 `var jso: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`?`
+
+The error json received from the server, if any.
+
+### Property
+
+`jso` - The error json received from the server, if any.

@@ -1,9 +1,5 @@
----
-title: SignatureInterceptor.<init> - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.interceptor](../index.html) / [SignatureInterceptor](index.html) / [&lt;init&gt;](./-init-.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.interceptor](../index.md) / [SignatureInterceptor](index.md) / [&lt;init&gt;](./-init-.md)
 
 # &lt;init&gt;
 
-`SignatureInterceptor(pubnub: `[`PubNub`](../../com.pubnub.api/-pub-nub/index.html)`)`
+`SignatureInterceptor(pubnub: `[`PubNub`](../../com.pubnub.api/-pub-nub/index.md)`)`

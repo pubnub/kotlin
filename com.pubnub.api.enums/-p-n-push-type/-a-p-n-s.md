@@ -1,8 +1,4 @@
----
-title: PNPushType.APNS - pubnub-kotlin
----
-
-[pubnub-kotlin](../../index.html) / [com.pubnub.api.enums](../index.html) / [PNPushType](index.html) / [APNS](./-a-p-n-s.html)
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.enums](../index.md) / [PNPushType](index.md) / [APNS](./-a-p-n-s.md)
 
 # APNS
 
