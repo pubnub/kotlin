@@ -16,9 +16,9 @@ import com.pubnub.api.suite.EndpointTestSuite
 import com.pubnub.api.suite.OptionalScenario
 import com.pubnub.api.suite.Result
 import com.pubnub.api.suite.SUB
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertNull
-import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 
 class FetchMessagesTestSuite : EndpointTestSuite<FetchMessages, PNFetchMessagesResult>() {
 
@@ -28,11 +28,10 @@ class FetchMessagesTestSuite : EndpointTestSuite<FetchMessages, PNFetchMessagesR
 
     override fun requiredKeys() = SUB + AUTH
 
-    override fun snippet(): FetchMessages {
-        return pubnub.fetchMessages().apply {
+    override fun snippet(): FetchMessages =
+        pubnub.fetchMessages(
             channels = listOf("ch1")
-        }
-    }
+        )
 
     override fun verifyResultExpectations(result: PNFetchMessagesResult) {
         assertEquals(1, result.channels.size)

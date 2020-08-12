@@ -16,10 +16,10 @@ import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.models.consumer.presence.PNHereNowResult
 import org.awaitility.Awaitility
 import org.hamcrest.core.IsEqual
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertNull
-import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.Test
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
+import org.junit.Test
 import java.util.concurrent.TimeUnit.SECONDS
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -75,10 +75,10 @@ class HereNowEndpointTest : BaseTest() {
             )
         )
 
-        val response = pubnub.hereNow().apply {
-            channels = listOf("ch1", "ch2")
+        val response = pubnub.hereNow(
+            channels = listOf("ch1", "ch2"),
             includeState = true
-        }.sync()!!
+        ).sync()!!
 
         assertEquals(response.totalChannels, 2)
         assertEquals(response.totalOccupancy, 3)
@@ -144,10 +144,10 @@ class HereNowEndpointTest : BaseTest() {
                 )
         )
 
-        val response = pubnub.hereNow().apply {
-            channels = listOf("ch1", "ch2")
+        val response = pubnub.hereNow(
+            channels = listOf("ch1", "ch2"),
             includeState = true
-        }.sync()!!
+        ).sync()!!
 
         assertEquals(response.totalChannels, 2)
         assertEquals(response.totalOccupancy, 3)
@@ -200,10 +200,10 @@ class HereNowEndpointTest : BaseTest() {
                 )
         )
 
-        val response = pubnub.hereNow().apply {
-            channels = listOf("game1", "game2")
+        val response = pubnub.hereNow(
+            channels = listOf("game1", "game2"),
             includeState = false
-        }.sync()!!
+        ).sync()!!
 
         assertEquals(response.totalChannels, 1)
         assertEquals(response.totalOccupancy, 1)
@@ -211,7 +211,10 @@ class HereNowEndpointTest : BaseTest() {
         assertEquals(response.channels["game1"]!!.channelName, "game1")
         assertEquals(response.channels["game1"]!!.occupancy, 1)
         assertEquals(response.channels["game1"]!!.occupants.size, 1)
-        assertEquals(response.channels["game1"]!!.occupants[0].uuid, "a3ffd012-a3b9-478c-8705-64089f24d71e")
+        assertEquals(
+            response.channels["game1"]!!.occupants[0].uuid,
+            "a3ffd012-a3b9-478c-8705-64089f24d71e"
+        )
         assertNull(response.channels["game1"]!!.occupants[0].state)
     }
 
@@ -241,11 +244,11 @@ class HereNowEndpointTest : BaseTest() {
                 )
         )
 
-        val response = pubnub.hereNow().apply {
-            channels = listOf("game1", "game2")
-            includeState = false
+        val response = pubnub.hereNow(
+            channels = listOf("game1", "game2"),
+            includeState = false,
             includeUUIDs = false
-        }.sync()!!
+        ).sync()!!
 
         assertEquals(response.totalChannels, 1)
         assertEquals(response.totalOccupancy, 1)
@@ -277,11 +280,10 @@ class HereNowEndpointTest : BaseTest() {
                 )
         )
 
-        val response = pubnub.hereNow().apply {
-            channels = listOf("game1")
+        val response = pubnub.hereNow(
+            channels = listOf("game1"),
             includeUUIDs = false
-            includeUUIDs = false
-        }.sync()!!
+        ).sync()!!
 
         assertEquals(response.totalChannels, 1)
         assertEquals(response.totalOccupancy, 3)
@@ -312,17 +314,20 @@ class HereNowEndpointTest : BaseTest() {
                 )
         )
 
-        val response = pubnub.hereNow().apply {
-            channels = listOf("game1")
+        val response = pubnub.hereNow(
+            channels = listOf("game1"),
             includeState = false
-        }.sync()!!
+        ).sync()!!
 
         assertEquals(response.totalChannels, 1)
         assertEquals(response.totalOccupancy, 1)
         assertEquals(response.channels.size, 1)
         assertEquals(response.channels["game1"]!!.occupancy, 1)
         assertEquals(response.channels["game1"]!!.occupants.size, 1)
-        assertEquals(response.channels["game1"]!!.occupants[0].uuid, "a3ffd012-a3b9-478c-8705-64089f24d71e")
+        assertEquals(
+            response.channels["game1"]!!.occupants[0].uuid,
+            "a3ffd012-a3b9-478c-8705-64089f24d71e"
+        )
         assertEquals(response.channels["game1"]!!.occupants[0].state, null)
     }
 
@@ -351,17 +356,20 @@ class HereNowEndpointTest : BaseTest() {
                     )
                 )
         )
-        val response = pubnub.hereNow().apply {
-            channels = listOf("game1")
+        val response = pubnub.hereNow(
+            channels = listOf("game1"),
             includeState = true
-        }.sync()!!
+        ).sync()!!
 
         assertEquals(response.totalChannels, 1)
         assertEquals(response.totalOccupancy, 1)
         assertEquals(response.channels.size, 1)
         assertEquals(response.channels["game1"]!!.occupancy, 1)
         assertEquals(response.channels["game1"]!!.occupants.size, 1)
-        assertEquals(response.channels["game1"]!!.occupants[0].uuid, "a3ffd012-a3b9-478c-8705-64089f24d71e")
+        assertEquals(
+            response.channels["game1"]!!.occupants[0].uuid,
+            "a3ffd012-a3b9-478c-8705-64089f24d71e"
+        )
         assertEquals(response.channels["game1"]!!.occupants[0].state.toString(), """{"age":10}""")
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
         assertEquals(1, requests.size)
@@ -390,11 +398,11 @@ class HereNowEndpointTest : BaseTest() {
                 )
         )
 
-        val response = pubnub.hereNow().apply {
-            channels = listOf("game1")
-            channelGroups = listOf("grp1")
+        val response = pubnub.hereNow(
+            channels = listOf("game1"),
+            channelGroups = listOf("grp1"),
             includeState = true
-        }.sync()!!
+        ).sync()!!
 
         assertEquals(response.totalOccupancy, 0)
     }
@@ -452,10 +460,10 @@ class HereNowEndpointTest : BaseTest() {
 
         pubnub.configuration.authKey = "myKey"
 
-        pubnub.hereNow().apply {
-            channels = listOf("ch1", "ch2")
+        pubnub.hereNow(
+            channels = listOf("ch1", "ch2"),
             includeState = true
-        }.sync()!!
+        ).sync()!!
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
         assertEquals(1, requests.size)
@@ -510,10 +518,10 @@ class HereNowEndpointTest : BaseTest() {
 
         var response: PNHereNowResult? = null
         try {
-            response = pubnub.hereNow().apply {
-                channels = listOf("ch1", "ch2")
+            response = pubnub.hereNow(
+                channels = listOf("ch1", "ch2"),
                 includeState = true
-            }.sync()
+            ).sync()
         } catch (e: Exception) {
             assertNull(response)
             assertTrue((e as PubNubException).pubnubError == SUBSCRIBE_KEY_MISSING)

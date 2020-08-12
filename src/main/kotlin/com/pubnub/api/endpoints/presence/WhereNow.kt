@@ -10,9 +10,13 @@ import retrofit2.Call
 import retrofit2.Response
 import java.util.HashMap
 
-class WhereNow(pubnub: PubNub) : Endpoint<Envelope<WhereNowPayload>, PNWhereNowResult>(pubnub) {
-
-    var uuid = pubnub.configuration.uuid
+/**
+ * @see [PubNub.whereNow]
+ */
+class WhereNow internal constructor(
+    pubnub: PubNub,
+    val uuid: String = pubnub.configuration.uuid
+) : Endpoint<Envelope<WhereNowPayload>, PNWhereNowResult>(pubnub) {
 
     override fun doWork(queryParams: HashMap<String, String>): Call<Envelope<WhereNowPayload>> {
         return pubnub.retrofitManager.presenceService.whereNow(
@@ -22,9 +26,8 @@ class WhereNow(pubnub: PubNub) : Endpoint<Envelope<WhereNowPayload>, PNWhereNowR
         )
     }
 
-    override fun createResponse(input: Response<Envelope<WhereNowPayload>>): PNWhereNowResult? {
-        return PNWhereNowResult(input.body()!!.payload!!.channels)
-    }
+    override fun createResponse(input: Response<Envelope<WhereNowPayload>>): PNWhereNowResult =
+        PNWhereNowResult(channels = input.body()!!.payload!!.channels)
 
     override fun operationType() = PNOperationType.PNWhereNowOperation
 }

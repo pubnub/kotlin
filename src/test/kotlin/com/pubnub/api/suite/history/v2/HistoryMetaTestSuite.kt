@@ -16,8 +16,8 @@ import com.pubnub.api.suite.EndpointTestSuite
 import com.pubnub.api.suite.OptionalScenario
 import com.pubnub.api.suite.Result
 import com.pubnub.api.suite.SUB
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 
 class HistoryMetaTestSuite : EndpointTestSuite<History, PNHistoryResult>() {
 
@@ -27,13 +27,12 @@ class HistoryMetaTestSuite : EndpointTestSuite<History, PNHistoryResult>() {
 
     override fun requiredKeys() = SUB + AUTH
 
-    override fun snippet(): History {
-        return pubnub.history().apply {
-            channel = "ch1"
-            includeMeta = true
+    override fun snippet(): History =
+        pubnub.history(
+            channel = "ch1",
+            includeMeta = true,
             includeTimetoken = true
-        }
-    }
+        )
 
     override fun verifyResultExpectations(result: PNHistoryResult) {
         assertEquals(100L, result.startTimetoken)

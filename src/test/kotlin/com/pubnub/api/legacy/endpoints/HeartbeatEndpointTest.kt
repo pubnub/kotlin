@@ -7,13 +7,13 @@ import com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.stubFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlMatching
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
+import com.pubnub.api.CommonUtils.assertPnException
+import com.pubnub.api.CommonUtils.failTest
 import com.pubnub.api.PubNubError
-import com.pubnub.api.assertPnException
 import com.pubnub.api.endpoints.presence.Heartbeat
-import com.pubnub.api.failTest
 import com.pubnub.api.legacy.BaseTest
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Test
+import org.junit.Assert.assertEquals
+import org.junit.Test
 
 class HeartbeatEndpointTest : BaseTest() {
 

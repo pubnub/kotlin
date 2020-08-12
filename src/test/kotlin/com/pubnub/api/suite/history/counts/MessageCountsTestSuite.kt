@@ -10,7 +10,7 @@ import com.pubnub.api.models.consumer.history.PNMessageCountResult
 import com.pubnub.api.suite.AUTH
 import com.pubnub.api.suite.EndpointTestSuite
 import com.pubnub.api.suite.SUB
-import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.Assert.assertEquals
 
 class MessageCountsTestSuite : EndpointTestSuite<MessageCounts, PNMessageCountResult>() {
 
@@ -20,12 +20,11 @@ class MessageCountsTestSuite : EndpointTestSuite<MessageCounts, PNMessageCountRe
 
     override fun requiredKeys() = SUB + AUTH
 
-    override fun snippet(): MessageCounts {
-        return pubnub.messageCounts().apply {
-            channels = listOf("ch1")
+    override fun snippet(): MessageCounts =
+        pubnub.messageCounts(
+            channels = listOf("ch1"),
             channelsTimetoken = listOf(1588284000000)
-        }
-    }
+        )
 
     override fun verifyResultExpectations(result: PNMessageCountResult) {
         assertEquals(1, result.channels.keys.size)

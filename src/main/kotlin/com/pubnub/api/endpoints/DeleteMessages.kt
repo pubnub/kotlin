@@ -12,26 +12,23 @@ import retrofit2.Response
 import java.util.HashMap
 import java.util.Locale
 
-class DeleteMessages(pubnub: PubNub) : Endpoint<Void, PNDeleteMessagesResult>(pubnub) {
-
-    lateinit var channels: List<String>
-    var start: Long? = null
-    var end: Long? = null
+/**
+ * @see [PubNub.deleteMessages]
+ */
+class DeleteMessages internal constructor(
+    pubnub: PubNub,
+    val channels: List<String>,
+    val start: Long? = null,
+    val end: Long? = null
+) : Endpoint<Void, PNDeleteMessagesResult>(pubnub) {
 
     override fun validateParams() {
         super.validateParams()
-        if (!::channels.isInitialized || channels.isEmpty()) {
-            throw PubNubException(PubNubError.CHANNEL_MISSING)
-        }
+        if (channels.isEmpty()) throw PubNubException(PubNubError.CHANNEL_MISSING)
     }
 
     override fun doWork(queryParams: HashMap<String, String>): Call<Void> {
-        start?.let {
-            queryParams["start"] = it.toString().toLowerCase(Locale.US)
-        }
-        end?.let {
-            queryParams["end"] = it.toString().toLowerCase(Locale.US)
-        }
+        addQueryParams(queryParams)
 
         return pubnub.retrofitManager.historyService.deleteMessages(
             pubnub.configuration.subscribeKey,
@@ -40,9 +37,13 @@ class DeleteMessages(pubnub: PubNub) : Endpoint<Void, PNDeleteMessagesResult>(pu
         )
     }
 
-    override fun createResponse(input: Response<Void>): PNDeleteMessagesResult? {
-        return PNDeleteMessagesResult()
-    }
+    override fun createResponse(input: Response<Void>): PNDeleteMessagesResult =
+        PNDeleteMessagesResult()
 
     override fun operationType() = PNOperationType.PNDeleteMessagesOperation
+
+    private fun addQueryParams(queryParams: MutableMap<String, String>) {
+        start?.run { queryParams["start"] = this.toString().toLowerCase(Locale.US) }
+        end?.run { queryParams["end"] = this.toString().toLowerCase(Locale.US) }
+    }
 }

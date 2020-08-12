@@ -10,23 +10,19 @@ import retrofit2.Call
 import retrofit2.Response
 import java.util.HashMap
 
-class RemoveMessageAction(pubnub: PubNub) : Endpoint<Void, PNRemoveMessageActionResult>(pubnub) {
-
-    lateinit var channel: String
-    var messageTimetoken: Long? = null
-    var actionTimetoken: Long? = null
+/**
+ * @see [PubNub.removeMessageAction]
+ */
+class RemoveMessageAction internal constructor(
+    pubnub: PubNub,
+    val channel: String,
+    val messageTimetoken: Long,
+    val actionTimetoken: Long
+) : Endpoint<Void, PNRemoveMessageActionResult>(pubnub) {
 
     override fun validateParams() {
         super.validateParams()
-        if (!::channel.isInitialized || channel.isBlank()) {
-            throw PubNubException(PubNubError.CHANNEL_MISSING)
-        }
-        if (messageTimetoken == null) {
-            throw PubNubException(PubNubError.MESSAGE_TIMETOKEN_MISSING)
-        }
-        if (actionTimetoken == null) {
-            throw PubNubException(PubNubError.MESSAGE_ACTION_TIMETOKEN_MISSING)
-        }
+        if (channel.isBlank()) throw PubNubException(PubNubError.CHANNEL_MISSING)
     }
 
     override fun getAffectedChannels() = listOf(channel)

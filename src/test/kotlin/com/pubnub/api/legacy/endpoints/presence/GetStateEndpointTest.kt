@@ -7,14 +7,14 @@ import com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.stubFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlMatching
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
+import com.pubnub.api.CommonUtils.assertPnException
 import com.pubnub.api.PubNubError
-import com.pubnub.api.assertPnException
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.legacy.BaseTest
 import org.awaitility.Awaitility
 import org.hamcrest.core.IsEqual
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Test
+import org.junit.Assert.assertEquals
+import org.junit.Test
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -41,10 +41,10 @@ class GetStateEndpointTest : BaseTest() {
                 )
         )
 
-        val result = pubnub.getPresenceState().apply {
-            channels = listOf("testChannel")
+        val result = pubnub.getPresenceState(
+            channels = listOf("testChannel"),
             uuid = "sampleUUID"
-        }.sync()!!
+        ).sync()!!
 
         val ch1Data = result.stateByUUID["testChannel"]!!
         assertEquals(pubnub.mapper.elementToInt(ch1Data, "age"), 20)
@@ -72,9 +72,9 @@ class GetStateEndpointTest : BaseTest() {
                 )
         )
 
-        val result = pubnub.getPresenceState().apply {
+        val result = pubnub.getPresenceState(
             channels = listOf("testChannel")
-        }.sync()!!
+        ).sync()!!
 
         val ch1Data = result.stateByUUID["testChannel"]!!
         assertEquals(pubnub.mapper.elementToInt(ch1Data, "age"), 20)
@@ -95,10 +95,10 @@ class GetStateEndpointTest : BaseTest() {
         )
 
         try {
-            pubnub.getPresenceState().apply {
-                channels = listOf("testChannel")
+            pubnub.getPresenceState(
+                channels = listOf("testChannel"),
                 uuid = "sampleUUID"
-            }.sync()
+            ).sync()
         } catch (e: Exception) {
             assertPnException(PubNubError.PARSING_ERROR, e)
         }
@@ -131,10 +131,10 @@ class GetStateEndpointTest : BaseTest() {
                 )
         )
 
-        val result = pubnub.getPresenceState().apply {
-            channels = listOf("ch1", "ch2")
+        val result = pubnub.getPresenceState(
+            channels = listOf("ch1", "ch2"),
             uuid = "sampleUUID"
-        }.sync()!!
+        ).sync()!!
 
         val ch1Data = result.stateByUUID["ch1"]!!
         assertEquals(pubnub.mapper.elementToInt(ch1Data, "age"), 20)
@@ -172,10 +172,10 @@ class GetStateEndpointTest : BaseTest() {
                 )
         )
 
-        val result = pubnub.getPresenceState().apply {
-            channelGroups = listOf("cg1")
+        val result = pubnub.getPresenceState(
+            channelGroups = listOf("cg1"),
             uuid = "sampleUUID"
-        }.sync()!!
+        ).sync()!!
 
         val ch1Data = result.stateByUUID["chcg1"]!!
         assertEquals(pubnub.mapper.elementToInt(ch1Data, "age"), 20)
@@ -217,10 +217,10 @@ class GetStateEndpointTest : BaseTest() {
                 )
         )
 
-        val result = pubnub.getPresenceState().apply {
-            channelGroups = listOf("cg1", "cg2")
+        val result = pubnub.getPresenceState(
+            channelGroups = listOf("cg1", "cg2"),
             uuid = "sampleUUID"
-        }.sync()!!
+        ).sync()!!
 
         val ch1Data = result.stateByUUID["chcg1"]!!
         assertEquals(pubnub.mapper.elementToInt(ch1Data, "age"), 20)
@@ -262,11 +262,11 @@ class GetStateEndpointTest : BaseTest() {
                 )
         )
 
-        val result = pubnub.getPresenceState().apply {
-            channels = listOf("ch1")
-            channelGroups = listOf("cg1", "cg2")
+        val result = pubnub.getPresenceState(
+            channels = listOf("ch1"),
+            channelGroups = listOf("cg1", "cg2"),
             uuid = "sampleUUID"
-        }.sync()!!
+        ).sync()!!
 
         val ch1Data = result.stateByUUID["chcg1"]!!
         assertEquals(pubnub.mapper.elementToInt(ch1Data, "age"), 20)
@@ -303,9 +303,9 @@ class GetStateEndpointTest : BaseTest() {
         )
 
         try {
-            pubnub.getPresenceState().apply {
+            pubnub.getPresenceState(
                 uuid = "sampleUUID"
-            }.sync()!!
+            ).sync()!!
         } catch (e: Exception) {
             assertPnException(PubNubError.CHANNEL_AND_GROUP_MISSING, e)
         }
@@ -334,10 +334,10 @@ class GetStateEndpointTest : BaseTest() {
 
         pubnub.configuration.authKey = "myKey"
 
-        pubnub.getPresenceState().apply {
-            channels = listOf("testChannel")
+        pubnub.getPresenceState(
+            channels = listOf("testChannel"),
             uuid = "sampleUUID"
-        }.sync()!!
+        ).sync()!!
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
         assertEquals(1, requests.size)
@@ -367,16 +367,18 @@ class GetStateEndpointTest : BaseTest() {
 
         val atomic = AtomicInteger(0)
 
-        pubnub.getPresenceState().apply {
-            channels = listOf("testChannel")
+        pubnub.getPresenceState(
+            channels = listOf("testChannel"),
             uuid = "sampleUUID"
-        }.async { result, status ->
+        ).async { _, status ->
             if (status.operation == PNOperationType.PNGetState) {
                 atomic.incrementAndGet()
             }
         }
 
-        Awaitility.await().atMost(5, TimeUnit.SECONDS).untilAtomic(atomic, IsEqual.equalTo(1))
+        Awaitility.await()
+            .atMost(5, TimeUnit.SECONDS)
+            .untilAtomic(atomic, IsEqual.equalTo(1))
     }
 
     @Test
@@ -403,10 +405,10 @@ class GetStateEndpointTest : BaseTest() {
         pubnub.configuration.subscribeKey = " "
 
         try {
-            pubnub.getPresenceState().apply {
-                channels = listOf("testChannel")
+            pubnub.getPresenceState(
+                channels = listOf("testChannel"),
                 uuid = "sampleUUID"
-            }.sync()!!
+            ).sync()!!
         } catch (e: Exception) {
             assertPnException(PubNubError.SUBSCRIBE_KEY_MISSING, e)
         }
@@ -436,10 +438,10 @@ class GetStateEndpointTest : BaseTest() {
         pubnub.configuration.subscribeKey = ""
 
         try {
-            pubnub.getPresenceState().apply {
-                channels = listOf("testChannel")
+            pubnub.getPresenceState(
+                channels = listOf("testChannel"),
                 uuid = "sampleUUID"
-            }.sync()!!
+            ).sync()!!
         } catch (e: Exception) {
             assertPnException(PubNubError.SUBSCRIBE_KEY_MISSING, e)
         }

@@ -22,10 +22,10 @@ class RemoveAllFromPushV1TestSuite :
     override fun requiredKeys() = SUB + AUTH
 
     override fun snippet(): RemoveAllPushChannelsForDevice {
-        return pubnub.removeAllPushNotificationsFromDeviceWithPushToken().apply {
-            pushType = PNPushType.FCM
+        return pubnub.removeAllPushNotificationsFromDeviceWithPushToken(
+            pushType = PNPushType.FCM,
             deviceId = "12345"
-        }
+        )
     }
 
     override fun verifyResultExpectations(result: PNPushRemoveAllChannelsResult) {

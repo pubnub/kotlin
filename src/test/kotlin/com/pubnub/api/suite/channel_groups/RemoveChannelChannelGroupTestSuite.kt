@@ -13,8 +13,8 @@ import com.pubnub.api.suite.EndpointTestSuite
 import com.pubnub.api.suite.OptionalScenario
 import com.pubnub.api.suite.Result
 import com.pubnub.api.suite.SUB
-import org.junit.jupiter.api.Assertions.assertNull
-import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 
 class RemoveChannelChannelGroupTestSuite :
     EndpointTestSuite<RemoveChannelChannelGroup, PNChannelGroupsRemoveChannelResult>() {
@@ -26,10 +26,10 @@ class RemoveChannelChannelGroupTestSuite :
     override fun requiredKeys() = SUB + AUTH
 
     override fun snippet(): RemoveChannelChannelGroup {
-        return pubnub.removeChannelsFromChannelGroup().apply {
-            channelGroup = "cg1"
+        return pubnub.removeChannelsFromChannelGroup(
+            channelGroup = "cg1",
             channels = listOf("ch1", "ch2")
-        }
+        )
     }
 
     override fun verifyResultExpectations(result: PNChannelGroupsRemoveChannelResult) {}

@@ -8,7 +8,7 @@ import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.QueryMap
 
-interface PublishService {
+internal interface PublishService {
 
     @GET("publish/{pubKey}/{subKey}/0/{channel}/0/{message}")
     fun publish(

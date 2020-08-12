@@ -3,21 +3,21 @@ package com.pubnub.api.legacy
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig
-import com.pubnub.api.DEFAULT_LISTEN_DURATION
+import com.pubnub.api.CommonUtils.DEFAULT_LISTEN_DURATION
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
 import com.pubnub.api.enums.PNLogVerbosity
 import okhttp3.HttpUrl
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.BeforeEach
+import org.junit.After
+import org.junit.Assert.assertTrue
+import org.junit.Before
 
 abstract class BaseTest {
 
     lateinit var wireMockServer: WireMockServer
     protected lateinit var pubnub: PubNub
 
-    @BeforeEach
+    @Before
     fun beforeEach() {
         wireMockServer = WireMockServer(
             wireMockConfig()
@@ -38,7 +38,7 @@ abstract class BaseTest {
         onBefore()
     }
 
-    @AfterEach
+    @After
     fun afterEach() {
         wireMockServer.stop()
         wireMockServer.findAllUnmatchedRequests().forEach {

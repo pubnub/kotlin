@@ -10,18 +10,18 @@ import com.github.tomakehurst.wiremock.client.WireMock.noContent
 import com.github.tomakehurst.wiremock.client.WireMock.stubFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlMatching
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
+import com.pubnub.api.CommonUtils.assertPnException
+import com.pubnub.api.CommonUtils.emptyJson
+import com.pubnub.api.CommonUtils.failTest
 import com.pubnub.api.PubNubError
-import com.pubnub.api.assertPnException
-import com.pubnub.api.emptyJson
 import com.pubnub.api.enums.PNOperationType
-import com.pubnub.api.failTest
 import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.listen
 import com.pubnub.api.param
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertFalse
-import org.junit.jupiter.api.Assertions.assertNotNull
-import org.junit.jupiter.api.Test
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotNull
+import org.junit.Test
 import java.util.concurrent.atomic.AtomicBoolean
 
 class GetMessageActionEndpointTest : BaseTest() {
@@ -50,16 +50,16 @@ class GetMessageActionEndpointTest : BaseTest() {
                 )
         )
 
-        val result = pubnub.getMessageActions().apply {
+        val result = pubnub.getMessageActions(
             channel = "coolChannel"
-        }.sync()!!
+        ).sync()!!
 
         assertEquals(result.actions.size, 1)
-        assertEquals(result.actions[0].messageTimetoken, 123)
+        assertEquals(result.actions[0].messageTimetoken, 123L)
         assertEquals(result.actions[0].type, "emoji")
         assertEquals(result.actions[0].uuid, "someUuid")
         assertEquals(result.actions[0].value, "smiley")
-        assertEquals(result.actions[0].actionTimetoken, 1000)
+        assertEquals(result.actions[0].actionTimetoken, 1000L)
     }
 
     @Test
@@ -100,29 +100,29 @@ class GetMessageActionEndpointTest : BaseTest() {
                 )
         )
 
-        val result = pubnub.getMessageActions().apply {
+        val result = pubnub.getMessageActions(
             channel = "coolChannel"
-        }.sync()!!
+        ).sync()!!
 
         assertEquals(result.actions.size, 3)
 
-        assertEquals(result.actions[0].messageTimetoken, 123)
+        assertEquals(result.actions[0].messageTimetoken, 123L)
         assertEquals(result.actions[0].type, "emoji")
         assertEquals(result.actions[0].uuid, "uuid_1")
         assertEquals(result.actions[0].value, "❤️")
-        assertEquals(result.actions[0].actionTimetoken, 1000)
+        assertEquals(result.actions[0].actionTimetoken, 1000L)
 
-        assertEquals(result.actions[1].messageTimetoken, 456)
+        assertEquals(result.actions[1].messageTimetoken, 456L)
         assertEquals(result.actions[1].type, "reaction")
         assertEquals(result.actions[1].uuid, "uuid_2")
         assertEquals(result.actions[1].value, "👍")
-        assertEquals(result.actions[1].actionTimetoken, 2000)
+        assertEquals(result.actions[1].actionTimetoken, 2000L)
 
-        assertEquals(result.actions[2].messageTimetoken, 789)
+        assertEquals(result.actions[2].messageTimetoken, 789L)
         assertEquals(result.actions[2].type, "emoji")
         assertEquals(result.actions[2].uuid, "uuid_2")
         assertEquals(result.actions[2].value, "😄")
-        assertEquals(result.actions[2].actionTimetoken, 3000)
+        assertEquals(result.actions[2].actionTimetoken, 3000L)
     }
 
     @Test
@@ -151,17 +151,17 @@ class GetMessageActionEndpointTest : BaseTest() {
 
         val success = AtomicBoolean()
 
-        pubnub.getMessageActions().apply {
+        pubnub.getMessageActions(
             channel = "coolChannel"
-        }.async { result, status ->
+        ).async { result, status ->
             assertFalse(status.error)
             assertEquals(PNOperationType.PNGetMessageActions, status.operation)
             assertEquals(result!!.actions.size, 1)
-            assertEquals(result.actions[0].messageTimetoken, 123)
+            assertEquals(result.actions[0].messageTimetoken, 123L)
             assertEquals(result.actions[0].type, "emoji")
             assertEquals(result.actions[0].uuid, "someUuid")
             assertEquals(result.actions[0].value, "smiley")
-            assertEquals(result.actions[0].actionTimetoken, 1000)
+            assertEquals(result.actions[0].actionTimetoken, 1000L)
             success.set(true)
         }
 
@@ -193,9 +193,9 @@ class GetMessageActionEndpointTest : BaseTest() {
         )
 
         try {
-            pubnub.getMessageActions().apply {
+            pubnub.getMessageActions(
                 channel = "coolChannel"
-            }.sync()!!
+            ).sync()!!
             failTest()
         } catch (e: Exception) {
             assertPnException(PubNubError.PARSING_ERROR, e)
@@ -210,9 +210,9 @@ class GetMessageActionEndpointTest : BaseTest() {
         )
 
         try {
-            pubnub.getMessageActions().apply {
+            pubnub.getMessageActions(
                 channel = "coolChannel"
-            }.sync()!!
+            ).sync()!!
             failTest()
         } catch (e: Exception) {
             assertPnException(PubNubError.PARSING_ERROR, e)
@@ -227,9 +227,9 @@ class GetMessageActionEndpointTest : BaseTest() {
         )
 
         try {
-            pubnub.getMessageActions().apply {
+            pubnub.getMessageActions(
                 channel = "coolChannel"
-            }.sync()!!
+            ).sync()!!
             failTest()
         } catch (e: Exception) {
             assertPnException(PubNubError.PARSING_ERROR, e)
@@ -252,9 +252,9 @@ class GetMessageActionEndpointTest : BaseTest() {
         )
 
         try {
-            pubnub.getMessageActions().apply {
+            pubnub.getMessageActions(
                 channel = "coolChannel"
-            }.sync()!!
+            ).sync()!!
             failTest()
         } catch (e: Exception) {
             assertPnException(PubNubError.PARSING_ERROR, e)
@@ -278,9 +278,9 @@ class GetMessageActionEndpointTest : BaseTest() {
         )
 
         try {
-            pubnub.getMessageActions().apply {
+            pubnub.getMessageActions(
                 channel = "coolChannel"
-            }.sync()!!
+            ).sync()!!
             failTest()
         } catch (e: Exception) {
             assertPnException(PubNubError.PARSING_ERROR, e)
@@ -288,22 +288,11 @@ class GetMessageActionEndpointTest : BaseTest() {
     }
 
     @Test
-    fun testNoChannel() {
-        try {
-            pubnub.getMessageActions().apply {
-            }.sync()!!
-            failTest()
-        } catch (e: Exception) {
-            assertPnException(PubNubError.CHANNEL_MISSING, e)
-        }
-    }
-
-    @Test
     fun testBlankChannel() {
         try {
-            pubnub.getMessageActions().apply {
+            pubnub.getMessageActions(
                 channel = " "
-            }.sync()!!
+            ).sync()!!
             failTest()
         } catch (e: Exception) {
             assertPnException(PubNubError.CHANNEL_MISSING, e)
@@ -314,9 +303,9 @@ class GetMessageActionEndpointTest : BaseTest() {
     fun testInvalidSubKey() {
         pubnub.configuration.subscribeKey = " "
         try {
-            pubnub.getMessageActions().apply {
+            pubnub.getMessageActions(
                 channel = "coolChannel"
-            }.sync()!!
+            ).sync()!!
             failTest()
         } catch (e: Exception) {
             assertPnException(PubNubError.SUBSCRIBE_KEY_MISSING, e)
@@ -349,9 +338,9 @@ class GetMessageActionEndpointTest : BaseTest() {
 
         pubnub.configuration.authKey = "authKey"
 
-        pubnub.getMessageActions().apply {
+        pubnub.getMessageActions(
             channel = "coolChannel"
-        }.sync()!!
+        ).sync()!!
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
         assertEquals(1, requests.size)
@@ -388,12 +377,12 @@ class GetMessageActionEndpointTest : BaseTest() {
 
         pubnub.configuration.authKey = "authKey"
 
-        pubnub.getMessageActions().apply {
-            channel = "coolChannel"
-            limit = 10
-            start = 15
+        pubnub.getMessageActions(
+            channel = "coolChannel",
+            limit = 10,
+            start = 15,
             end = 20
-        }.sync()!!
+        ).sync()!!
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
         assertEquals(1, requests.size)
@@ -432,9 +421,9 @@ class GetMessageActionEndpointTest : BaseTest() {
 
         pubnub.configuration.authKey = "authKey"
 
-        pubnub.getMessageActions().apply {
+        pubnub.getMessageActions(
             channel = "coolChannel"
-        }.sync()!!
+        ).sync()!!
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
         assertEquals(1, requests.size)
@@ -477,9 +466,9 @@ class GetMessageActionEndpointTest : BaseTest() {
 
         lateinit var telemetryParamName: String
 
-        pubnub.getMessageActions().apply {
+        pubnub.getMessageActions(
             channel = "coolChannel"
-        }.async { _, status ->
+        ).async { _, status ->
             assertFalse(status.error)
             assertEquals(PNOperationType.PNGetMessageActions, status.operation)
             telemetryParamName = "l_${status.operation.queryParam}"

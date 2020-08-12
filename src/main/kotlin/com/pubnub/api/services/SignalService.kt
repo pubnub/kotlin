@@ -5,7 +5,7 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.QueryMap
 
-interface SignalService {
+internal interface SignalService {
 
     @GET("/signal/{pubKey}/{subKey}/0/{channel}/0/{payload}")
     fun signal(

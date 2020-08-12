@@ -7,16 +7,15 @@ import com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.stubFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlMatching
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
-import com.pubnub.api.PubNubError
-import com.pubnub.api.assertPnException
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.legacy.BaseTest
 import org.awaitility.Awaitility
 import org.hamcrest.core.IsEqual
-import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Test
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
+import org.junit.Test
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -40,64 +39,10 @@ class RemoveChannelChannelGroupEndpointTest : BaseTest() {
                 )
         )
 
-        pubnub.removeChannelsFromChannelGroup().apply {
-            channelGroup = "groupA"
+        pubnub.removeChannelsFromChannelGroup(
+            channelGroup = "groupA",
             channels = arrayListOf("ch1", "ch2")
-        }.sync()!!
-    }
-
-    @Test
-    fun testSyncMissingGroup() {
-        stubFor(
-            get(urlPathEqualTo("/v1/channel-registration/sub-key/mySubscribeKey/channel-group/groupA"))
-                .willReturn(
-                    aResponse().withBody(
-                        """
-                            {
-                             "status": 200,
-                             "message": "OK",
-                             "payload": {},
-                             "service": "ChannelGroups"
-                            }
-                        """.trimIndent()
-                    )
-                )
-        )
-
-        try {
-            pubnub.removeChannelsFromChannelGroup().apply {
-                channels = arrayListOf("ch1", "ch2")
-            }.sync()!!
-        } catch (e: Exception) {
-            assertPnException(PubNubError.GROUP_MISSING, e)
-        }
-    }
-
-    @Test
-    fun testSyncMissingChannel() {
-        stubFor(
-            get(urlPathEqualTo("/v1/channel-registration/sub-key/mySubscribeKey/channel-group/groupA"))
-                .willReturn(
-                    aResponse().withBody(
-                        """
-                            {
-                             "status": 200,
-                             "message": "OK",
-                             "payload": {},
-                             "service": "ChannelGroups"
-                            }
-                        """.trimIndent()
-                    )
-                )
-        )
-
-        try {
-            pubnub.removeChannelsFromChannelGroup().apply {
-                channelGroup = "groupA"
-            }.sync()!!
-        } catch (e: Exception) {
-            assertPnException(PubNubError.CHANNEL_MISSING, e)
-        }
+        ).sync()!!
     }
 
     @Test
@@ -120,10 +65,10 @@ class RemoveChannelChannelGroupEndpointTest : BaseTest() {
 
         pubnub.configuration.authKey = "myKey"
 
-        pubnub.removeChannelsFromChannelGroup().apply {
-            channelGroup = "groupA"
+        pubnub.removeChannelsFromChannelGroup(
+            channelGroup = "groupA",
             channels = arrayListOf("ch1", "ch2")
-        }.sync()!!
+        ).sync()!!
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
         assertEquals(1, requests.size)
@@ -150,15 +95,15 @@ class RemoveChannelChannelGroupEndpointTest : BaseTest() {
 
         val atomic = AtomicInteger(0)
 
-        pubnub.removeChannelsFromChannelGroup().apply {
-            channelGroup = "groupA"
+        pubnub.removeChannelsFromChannelGroup(
+            channelGroup = "groupA",
             channels = arrayListOf("ch1", "ch2")
-        }.async { _, status ->
-            Assertions.assertFalse(status.error)
+        ).async { _, status ->
+            assertFalse(status.error)
             assertEquals(PNOperationType.PNRemoveChannelsFromGroupOperation, status.operation)
             assertEquals(PNStatusCategory.PNAcknowledgmentCategory, status.category)
-            Assertions.assertTrue(status.affectedChannels == listOf("ch1", "ch2"))
-            Assertions.assertTrue(status.affectedChannelGroups == listOf("groupA"))
+            assertTrue(status.affectedChannels == listOf("ch1", "ch2"))
+            assertTrue(status.affectedChannelGroups == listOf("groupA"))
             atomic.incrementAndGet()
         }
 

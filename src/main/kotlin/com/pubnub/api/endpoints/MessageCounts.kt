@@ -12,32 +12,27 @@ import retrofit2.Call
 import retrofit2.Response
 import java.util.HashMap
 
-class MessageCounts(pubnub: PubNub) : Endpoint<JsonElement, PNMessageCountResult>(pubnub) {
-
-    lateinit var channels: List<String>
-    lateinit var channelsTimetoken: List<Long>
+/**
+ * @see [PubNub.messageCounts]
+ */
+class MessageCounts internal constructor(
+    pubnub: PubNub,
+    val channels: List<String>,
+    val channelsTimetoken: List<Long>
+) : Endpoint<JsonElement, PNMessageCountResult>(pubnub) {
 
     override fun validateParams() {
         super.validateParams()
-        if (!::channels.isInitialized || channels.isEmpty()) {
-            throw PubNubException(PubNubError.CHANNEL_MISSING)
-        }
-        if (!::channelsTimetoken.isInitialized || channelsTimetoken.isEmpty()) {
-            throw PubNubException(PubNubError.TIMETOKEN_MISSING)
-        }
-        if (channelsTimetoken.size != channels.size && channelsTimetoken.size > 1) {
+        if (channels.isEmpty()) throw PubNubException(PubNubError.CHANNEL_MISSING)
+        if (channelsTimetoken.isEmpty()) throw PubNubException(PubNubError.TIMETOKEN_MISSING)
+        if (channelsTimetoken.size != channels.size && channelsTimetoken.size > 1)
             throw PubNubException(PubNubError.CHANNELS_TIMETOKEN_MISMATCH)
-        }
     }
 
     override fun getAffectedChannels() = channels
 
     override fun doWork(queryParams: HashMap<String, String>): Call<JsonElement> {
-        if (channelsTimetoken.size == 1) {
-            queryParams["timetoken"] = channelsTimetoken.toCsv()
-        } else {
-            queryParams["channelsTimetoken"] = channelsTimetoken.toCsv()
-        }
+        addQueryParams(queryParams)
 
         return pubnub.retrofitManager.historyService.fetchCount(
             subKey = pubnub.configuration.subscribeKey,
@@ -46,7 +41,7 @@ class MessageCounts(pubnub: PubNub) : Endpoint<JsonElement, PNMessageCountResult
         )
     }
 
-    override fun createResponse(input: Response<JsonElement>): PNMessageCountResult? {
+    override fun createResponse(input: Response<JsonElement>): PNMessageCountResult {
         val channelsMap = HashMap<String, Long>()
 
         val it = pubnub.mapper.getObjectIterator(input.body()!!, "channels")
@@ -58,4 +53,9 @@ class MessageCounts(pubnub: PubNub) : Endpoint<JsonElement, PNMessageCountResult
     }
 
     override fun operationType() = PNOperationType.PNMessageCountOperation
+
+    private fun addQueryParams(queryParams: MutableMap<String, String>) {
+        if (channelsTimetoken.size == 1) queryParams["timetoken"] = channelsTimetoken.toCsv()
+        else queryParams["channelsTimetoken"] = channelsTimetoken.toCsv()
+    }
 }

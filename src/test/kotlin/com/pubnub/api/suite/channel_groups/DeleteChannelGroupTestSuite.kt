@@ -19,9 +19,9 @@ class DeleteChannelGroupTestSuite : EndpointTestSuite<DeleteChannelGroup, PNChan
     override fun requiredKeys() = SUB + AUTH
 
     override fun snippet(): DeleteChannelGroup {
-        return pubnub.deleteChannelGroup().apply {
+        return pubnub.deleteChannelGroup(
             channelGroup = "cg1"
-        }
+        )
     }
 
     override fun verifyResultExpectations(result: PNChannelGroupsDeleteGroupResult) {

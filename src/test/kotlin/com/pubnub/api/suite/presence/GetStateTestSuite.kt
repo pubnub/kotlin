@@ -12,8 +12,8 @@ import com.pubnub.api.suite.AUTH
 import com.pubnub.api.suite.EndpointTestSuite
 import com.pubnub.api.suite.OptionalScenario
 import com.pubnub.api.suite.SUB
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 
 class GetStateTestSuite : EndpointTestSuite<GetState, PNGetStateResult>() {
 
@@ -23,11 +23,10 @@ class GetStateTestSuite : EndpointTestSuite<GetState, PNGetStateResult>() {
 
     override fun requiredKeys() = SUB + AUTH
 
-    override fun snippet(): GetState {
-        return pubnub.getPresenceState().apply {
+    override fun snippet(): GetState =
+        pubnub.getPresenceState(
             channels = listOf("ch1")
-        }
-    }
+        )
 
     override fun verifyResultExpectations(result: PNGetStateResult) {
         assertEquals(1, result.stateByUUID.keys.size)

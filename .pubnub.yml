@@ -1,11 +1,23 @@
 name: kotlin
-version: 1.0.0
+version: 5.0.0
 schema: 1
 scm: github.com/pubnub/kotlin
 files:
-  - build/libs/pubnub-kotlin-1.0.0-all.jar
+  - build/libs/pubnub-kotlin-5.0.0-all.jar
 changelog:
-  - version: v1.0.0
+  -
+    version: v5.0.0
+    date: 2020-08-12
+    changes:
+      -
+        type: improvement
+        text: "PubNub methods will no longer support builder style calls and will use named arguments instead."
+  - version: v4.0.1
+    date: 2020-07-28
+    changes:
+      - type: feature
+        text: kdoc (javadoc)
+  - version: v4.0.0
     date: 2020-06-11
     changes:
       - type: feature

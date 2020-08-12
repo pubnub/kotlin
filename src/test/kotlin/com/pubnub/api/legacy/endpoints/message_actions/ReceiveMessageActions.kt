@@ -4,9 +4,9 @@ import com.github.tomakehurst.wiremock.client.WireMock.aResponse
 import com.github.tomakehurst.wiremock.client.WireMock.get
 import com.github.tomakehurst.wiremock.client.WireMock.stubFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
+import com.pubnub.api.CommonUtils.failTest
 import com.pubnub.api.PubNub
 import com.pubnub.api.callbacks.SubscribeCallback
-import com.pubnub.api.failTest
 import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.listen
 import com.pubnub.api.models.consumer.PNStatus
@@ -14,8 +14,8 @@ import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Test
+import org.junit.Assert.assertEquals
+import org.junit.Test
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -84,18 +84,18 @@ class ReceiveMessageActions : BaseTest() {
 
             override fun messageAction(pubnub: PubNub, pnMessageActionResult: PNMessageActionResult) {
                 assertEquals(pnMessageActionResult.channel, "coolChannel")
-                assertEquals(pnMessageActionResult.messageAction.messageTimetoken, 500)
+                assertEquals(pnMessageActionResult.messageAction.messageTimetoken, 500L)
                 assertEquals(pnMessageActionResult.messageAction.uuid, "client-1639ed91")
-                assertEquals(pnMessageActionResult.messageAction.actionTimetoken, 600)
+                assertEquals(pnMessageActionResult.messageAction.actionTimetoken, 600L)
                 assertEquals(pnMessageActionResult.messageAction.type, "reaction")
                 assertEquals(pnMessageActionResult.messageAction.value, "smiley")
                 success.set(true)
             }
         })
 
-        pubnub.subscribe().apply {
+        pubnub.subscribe(
             channels = listOf("coolChannel")
-        }.execute()
+        )
 
         success.listen()
     }
@@ -194,9 +194,9 @@ class ReceiveMessageActions : BaseTest() {
             }
         })
 
-        pubnub.subscribe().apply {
+        pubnub.subscribe(
             channels = listOf("coolChannel")
-        }.execute()
+        )
 
         success.listen()
     }

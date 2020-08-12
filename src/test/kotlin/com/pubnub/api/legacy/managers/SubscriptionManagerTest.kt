@@ -12,11 +12,11 @@ import com.github.tomakehurst.wiremock.client.WireMock.urlMatching
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching
 import com.google.gson.reflect.TypeToken
+import com.pubnub.api.CommonUtils.emptyJson
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubException
 import com.pubnub.api.PubNubUtil
 import com.pubnub.api.callbacks.SubscribeCallback
-import com.pubnub.api.emptyJson
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
@@ -28,10 +28,10 @@ import com.pubnub.api.toCsv
 import org.awaitility.Awaitility
 import org.hamcrest.Matchers
 import org.hamcrest.core.IsEqual
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertNotNull
-import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.Test
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertTrue
+import org.junit.Test
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
@@ -73,9 +73,9 @@ class SubscriptionManagerTest : BaseTest() {
                 )
         )
 
-        pubnub.subscribe().apply {
+        pubnub.subscribe(
             channels = listOf("ch1", "ch2")
-        }.execute()
+        )
 
         val channels = pubnub.getSubscribedChannels()
         assertTrue(channels.contains("ch1"))
@@ -119,9 +119,9 @@ class SubscriptionManagerTest : BaseTest() {
                 )
         )
 
-        pubnub.subscribe().apply {
+        pubnub.subscribe(
             channels = listOf("")
-        }.execute()
+        )
 
         pubnub.addListener(object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
@@ -179,9 +179,9 @@ class SubscriptionManagerTest : BaseTest() {
                 )
         )
 
-        pubnub.subscribe().apply {
+        pubnub.subscribe(
             channelGroups = listOf("")
-        }.execute()
+        )
 
         pubnub.addListener(object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
@@ -237,9 +237,9 @@ class SubscriptionManagerTest : BaseTest() {
                 )
         )
 
-        pubnub.subscribe().apply {
+        pubnub.subscribe(
             channelGroups = listOf("cg1", "cg2")
-        }.execute()
+        )
 
         val groups: List<String> = pubnub.getSubscribedChannelGroups()
         assertTrue(groups.contains("cg1"))
@@ -253,11 +253,11 @@ class SubscriptionManagerTest : BaseTest() {
                 .willReturn(emptyJson())
         )
 
-        pubnub.subscribe().apply {
-            channels = listOf("ch1", "ch2")
-            channelGroups = listOf("cg1", "cg2")
+        pubnub.subscribe(
+            channels = listOf("ch1", "ch2"),
+            channelGroups = listOf("cg1", "cg2"),
             withPresence = true
-        }.execute()
+        )
 
         var channels = pubnub.getSubscribedChannels()
         assertTrue(channels.contains("ch1"))
@@ -336,9 +336,9 @@ class SubscriptionManagerTest : BaseTest() {
             }
         })
 
-        pubnub.subscribe().apply {
+        pubnub.subscribe(
             channels = listOf("ch1", "ch2")
-        }.execute()
+        )
 
         Awaitility.await()
             .atMost(3, TimeUnit.SECONDS)
@@ -424,9 +424,9 @@ class SubscriptionManagerTest : BaseTest() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {}
         })
 
-        pubnub.subscribe().apply {
+        pubnub.subscribe(
             channels = listOf("ch1", "ch2")
-        }.execute()
+        )
 
         Awaitility.await()
             .atMost(3, TimeUnit.SECONDS)
@@ -509,9 +509,9 @@ class SubscriptionManagerTest : BaseTest() {
             }
         })
 
-        pubnub.subscribe().apply {
+        pubnub.subscribe(
             channels = listOf("ch1", "ch2")
-        }.execute()
+        )
 
         Awaitility.await()
             .atMost(3, TimeUnit.SECONDS)
@@ -614,9 +614,9 @@ class SubscriptionManagerTest : BaseTest() {
             }
         })
 
-        pubnub.subscribe().apply {
+        pubnub.subscribe(
             channels = listOf("ch1", "ch2")
-        }.execute()
+        )
 
         Awaitility.await()
             .atMost(3, TimeUnit.SECONDS)
@@ -674,9 +674,9 @@ class SubscriptionManagerTest : BaseTest() {
             }
         })
 
-        pubnub.subscribe().apply {
+        pubnub.subscribe(
             channels = listOf("ch1", "ch2")
-        }.execute()
+        )
 
         Awaitility.await()
             .atMost(2, TimeUnit.SECONDS)
@@ -734,9 +734,9 @@ class SubscriptionManagerTest : BaseTest() {
             }
         })
 
-        pubnub.subscribe().apply {
+        pubnub.subscribe(
             channels = listOf("ch1", "ch2")
-        }.execute()
+        )
 
         Awaitility.await()
             .atMost(2, TimeUnit.SECONDS)
@@ -794,9 +794,9 @@ class SubscriptionManagerTest : BaseTest() {
             }
         })
 
-        pubnub.subscribe().apply {
+        pubnub.subscribe(
             channels = listOf("ch1", "ch2")
-        }.execute()
+        )
 
         Awaitility.await()
             .atMost(2, TimeUnit.SECONDS)
@@ -873,9 +873,9 @@ class SubscriptionManagerTest : BaseTest() {
             }
         })
 
-        pubnub.subscribe().apply {
+        pubnub.subscribe(
             channels = listOf("ch1", "ch2")
-        }.execute()
+        )
 
         Awaitility.await()
             .atMost(2, TimeUnit.SECONDS)
@@ -923,9 +923,9 @@ class SubscriptionManagerTest : BaseTest() {
             }
         })
 
-        pubnub.subscribe().apply {
+        pubnub.subscribe(
             channels = listOf("ch1", "ch2")
-        }.execute()
+        )
 
         Awaitility.await()
             .atMost(2, TimeUnit.SECONDS)
@@ -988,9 +988,9 @@ class SubscriptionManagerTest : BaseTest() {
             }
         })
 
-        pubnub.subscribe().apply {
+        pubnub.subscribe(
             channels = listOf("ch1", "ch2")
-        }.execute()
+        )
 
         Awaitility.await().atMost(4, TimeUnit.SECONDS).untilTrue(gotMessage)
         Awaitility.await().atMost(4, TimeUnit.SECONDS).untilTrue(gotStatus)
@@ -1051,9 +1051,9 @@ class SubscriptionManagerTest : BaseTest() {
             }
         })
 
-        pubnub.subscribe().apply {
+        pubnub.subscribe(
             channels = listOf("ch1", "ch2")
-        }.execute()
+        )
 
         Awaitility.await()
             .atMost(2, TimeUnit.SECONDS)
@@ -1120,9 +1120,9 @@ class SubscriptionManagerTest : BaseTest() {
             }
         })
 
-        pubnub.subscribe().apply {
+        pubnub.subscribe(
             channels = listOf("ch1", "ch2")
-        }.execute()
+        )
 
         Awaitility.await()
             .atMost(2, TimeUnit.SECONDS)
@@ -1264,9 +1264,9 @@ class SubscriptionManagerTest : BaseTest() {
             }
         })
 
-        pubnub.subscribe().apply {
+        pubnub.subscribe(
             channels = listOf("ch1", "ch2")
-        }.execute()
+        )
 
         Awaitility.await().atMost(2, TimeUnit.SECONDS).untilAtomic(
             gotMessage1,
@@ -1327,9 +1327,9 @@ class SubscriptionManagerTest : BaseTest() {
             }
         })
 
-        pubnub.subscribe().apply {
+        pubnub.subscribe(
             channels = listOf("ch1", "ch2")
-        }.execute()
+        )
 
         Awaitility.await()
             .atMost(5, TimeUnit.SECONDS)
@@ -1392,9 +1392,9 @@ class SubscriptionManagerTest : BaseTest() {
             }
         })
 
-        pubnub.subscribe().apply {
+        pubnub.subscribe(
             channels = listOf("ch1", "ch2")
-        }.execute()
+        )
 
         Awaitility.await()
             .atMost(5, TimeUnit.SECONDS)
@@ -1499,16 +1499,16 @@ class SubscriptionManagerTest : BaseTest() {
             }
         })
 
-        pubnub.subscribe().apply {
-            channels = listOf("ch1", "ch2")
+        pubnub.subscribe(
+            channels = listOf("ch1", "ch2"),
             channelGroups = listOf("cg1", "cg2")
-        }.execute()
+        )
 
-        pubnub.setPresenceState().apply {
-            channels = listOf("ch1")
-            channelGroups = listOf("cg2")
+        pubnub.setPresenceState(
+            channels = listOf("ch1"),
+            channelGroups = listOf("cg2"),
             state = listOf("p1", "p2")
-        }.async { _, _ -> }
+        ).async { _, _ -> }
 
         Awaitility.await()
             .atMost(5, TimeUnit.SECONDS)
@@ -1563,9 +1563,9 @@ class SubscriptionManagerTest : BaseTest() {
             }
         })
 
-        pubnub.subscribe().apply {
+        pubnub.subscribe(
             channelGroups = listOf("cg1", "cg2")
-        }.execute()
+        )
 
         Awaitility.await()
             .atMost(5, TimeUnit.SECONDS)
@@ -1624,10 +1624,10 @@ class SubscriptionManagerTest : BaseTest() {
             }
         })
 
-        pubnub.subscribe().apply {
-            channelGroups = listOf("cg1", "cg2")
+        pubnub.subscribe(
+            channelGroups = listOf("cg1", "cg2"),
             withPresence = true
-        }.execute()
+        )
 
         Awaitility.await()
             .atMost(5, TimeUnit.SECONDS)
@@ -1693,9 +1693,9 @@ class SubscriptionManagerTest : BaseTest() {
             }
         })
 
-        pubnub.subscribe().apply {
+        pubnub.subscribe(
             channels = listOf("ch1", "ch2")
-        }.execute()
+        )
 
         Awaitility.await().atMost(5, TimeUnit.SECONDS).untilTrue(atomic)
     }
@@ -1743,9 +1743,9 @@ class SubscriptionManagerTest : BaseTest() {
             }
         })
 
-        pubnub.subscribe().apply {
+        pubnub.subscribe(
             channels = listOf("ch1", "ch2")
-        }.execute()
+        )
 
         Awaitility.await()
             .atMost(5, TimeUnit.SECONDS)
@@ -1802,9 +1802,9 @@ class SubscriptionManagerTest : BaseTest() {
             }
         })
 
-        pubnub.subscribe().apply {
+        pubnub.subscribe(
             channels = listOf("ch1", "ch2")
-        }.execute()
+        )
 
         Awaitility.await()
             .atMost(5, TimeUnit.SECONDS)
@@ -1857,10 +1857,10 @@ class SubscriptionManagerTest : BaseTest() {
             }
         })
 
-        pubnub.subscribe().apply {
-            channels = listOf("ch1", "ch2")
+        pubnub.subscribe(
+            channels = listOf("ch1", "ch2"),
             withPresence = true
-        }.execute()
+        )
 
         Awaitility.await()
             .atMost(5, TimeUnit.SECONDS)
@@ -1919,10 +1919,10 @@ class SubscriptionManagerTest : BaseTest() {
             }
         })
 
-        pubnub.subscribe().apply {
-            channels = listOf("ch1", "ch2")
+        pubnub.subscribe(
+            channels = listOf("ch1", "ch2"),
             withPresence = true
-        }.execute()
+        )
 
         Awaitility.await()
             .atMost(5, TimeUnit.SECONDS)
@@ -1984,10 +1984,10 @@ class SubscriptionManagerTest : BaseTest() {
             }
         })
 
-        pubnub.subscribe().apply {
-            channels = listOf("ch1", "ch2")
+        pubnub.subscribe(
+            channels = listOf("ch1", "ch2"),
             withPresence = true
-        }.execute()
+        )
 
         Awaitility.await()
             .atMost(5, TimeUnit.SECONDS)
@@ -2049,10 +2049,10 @@ class SubscriptionManagerTest : BaseTest() {
             }
         })
 
-        pubnub.subscribe().apply {
-            channels = listOf("ch1", "ch2")
+        pubnub.subscribe(
+            channels = listOf("ch1", "ch2"),
             withPresence = true
-        }.execute()
+        )
 
         Awaitility.await()
             .atMost(5, TimeUnit.SECONDS)
@@ -2115,10 +2115,10 @@ class SubscriptionManagerTest : BaseTest() {
             }
         })
 
-        pubnub.subscribe().apply {
-            channels = listOf("ch1", "ch2")
+        pubnub.subscribe(
+            channels = listOf("ch1", "ch2"),
             withPresence = true
-        }.execute()
+        )
 
         Awaitility.await()
             .atMost(5, TimeUnit.SECONDS)
@@ -2176,10 +2176,10 @@ class SubscriptionManagerTest : BaseTest() {
             }
         })
 
-        pubnub.subscribe().apply {
-            channels = listOf("ch1", "ch2")
+        pubnub.subscribe(
+            channels = listOf("ch1", "ch2"),
             withPresence = true
-        }.execute()
+        )
 
         Awaitility.await()
             .atMost(5, TimeUnit.SECONDS)
@@ -2256,10 +2256,10 @@ class SubscriptionManagerTest : BaseTest() {
             }
         })
 
-        pubnub.subscribe().apply {
-            channels = listOf("ch10")
+        pubnub.subscribe(
+            channels = listOf("ch10"),
             withPresence = true
-        }.execute()
+        )
 
         Awaitility.await()
             .atMost(2, TimeUnit.SECONDS)
@@ -2314,10 +2314,10 @@ class SubscriptionManagerTest : BaseTest() {
             }
         })
 
-        pubnub.subscribe().apply {
-            channels = listOf("ch1", "ch2")
+        pubnub.subscribe(
+            channels = listOf("ch1", "ch2"),
             withPresence = true
-        }.execute()
+        )
 
         Awaitility.await()
             .atMost(5, TimeUnit.SECONDS)
@@ -2349,10 +2349,10 @@ class SubscriptionManagerTest : BaseTest() {
         pubnub.addListener(sub1)
         pubnub.removeListener(sub1)
 
-        pubnub.subscribe().apply {
-            channels = listOf("ch1", "ch2")
+        pubnub.subscribe(
+            channels = listOf("ch1", "ch2"),
             withPresence = true
-        }.execute()
+        )
 
         Awaitility.await()
             .atMost(2, TimeUnit.SECONDS)
@@ -2445,9 +2445,9 @@ class SubscriptionManagerTest : BaseTest() {
         val sub1: SubscribeCallback = object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
                 if (pnStatus.category == PNStatusCategory.PNConnectedCategory) {
-                    pubnub.unsubscribe().apply {
+                    pubnub.unsubscribe(
                         channels = listOf("ch1")
-                    }.execute()
+                    )
                 }
                 val affectedChannels = pnStatus.affectedChannels
                 if (affectedChannels.size == 1 && pnStatus.operation == PNOperationType.PNUnsubscribeOperation) {
@@ -2470,10 +2470,10 @@ class SubscriptionManagerTest : BaseTest() {
         }
         pubnub.addListener(sub1)
 
-        pubnub.subscribe().apply {
-            channels = listOf("ch1", "ch2")
+        pubnub.subscribe(
+            channels = listOf("ch1", "ch2"),
             withPresence = true
-        }.execute()
+        )
 
         Awaitility.await()
             .atMost(2, TimeUnit.SECONDS)
@@ -2549,10 +2549,10 @@ class SubscriptionManagerTest : BaseTest() {
         }
         pubnub.addListener(sub1)
 
-        pubnub.subscribe().apply {
-            channels = listOf("ch1", "ch2")
+        pubnub.subscribe(
+            channels = listOf("ch1", "ch2"),
             withPresence = true
-        }.execute()
+        )
 
         Awaitility.await()
             .atMost(2, TimeUnit.SECONDS)
@@ -2590,10 +2590,10 @@ class SubscriptionManagerTest : BaseTest() {
         assertNotNull(sub1)
         pubnub.addListener(sub1)
 
-        pubnub.presence().apply {
-            channels = listOf("ch1", "ch2")
+        pubnub.presence(
+            channels = listOf("ch1", "ch2"),
             connected = true
-        }.execute()
+        )
 
         Awaitility.await()
             .atMost(2, TimeUnit.SECONDS)
@@ -2631,10 +2631,10 @@ class SubscriptionManagerTest : BaseTest() {
 
         pubnub.addListener(sub1)
 
-        pubnub.presence().apply {
-            channels = listOf("ch1", "ch2")
+        pubnub.presence(
+            channels = listOf("ch1", "ch2"),
             connected = false
-        }.execute()
+        )
 
         Awaitility.await()
             .atMost(2, TimeUnit.SECONDS)
@@ -2702,10 +2702,10 @@ class SubscriptionManagerTest : BaseTest() {
 
         pubnub.addListener(sub1)
 
-        pubnub.subscribe().apply {
-            channels = listOf("ch1", "ch2")
+        pubnub.subscribe(
+            channels = listOf("ch1", "ch2"),
             withPresence = true
-        }.execute()
+        )
 
         Awaitility.await()
             .atMost(2, TimeUnit.SECONDS)
@@ -2773,10 +2773,10 @@ class SubscriptionManagerTest : BaseTest() {
         }
         pubnub.addListener(sub1)
 
-        pubnub.subscribe().apply {
-            channels = listOf("ch1", "ch2")
+        pubnub.subscribe(
+            channels = listOf("ch1", "ch2"),
             withPresence = true
-        }.execute()
+        )
 
         Awaitility.await()
             .atMost(2, TimeUnit.SECONDS)
@@ -2830,10 +2830,10 @@ class SubscriptionManagerTest : BaseTest() {
 
         pubnub.addListener(sub1)
 
-        pubnub.subscribe().apply {
-            channels = listOf("ch1", "ch2")
+        pubnub.subscribe(
+            channels = listOf("ch1", "ch2"),
             withPresence = true
-        }.execute()
+        )
 
         Awaitility.await()
             .atMost(2, TimeUnit.SECONDS)
@@ -2904,10 +2904,10 @@ class SubscriptionManagerTest : BaseTest() {
         }
         pubnub.addListener(sub1)
 
-        pubnub.subscribe().apply {
-            channels = listOf("ch1", "ch2")
+        pubnub.subscribe(
+            channels = listOf("ch1", "ch2"),
             withPresence = true
-        }.execute()
+        )
 
         Awaitility.await()
             .atMost(4, TimeUnit.SECONDS)
@@ -2972,10 +2972,10 @@ class SubscriptionManagerTest : BaseTest() {
             }
         })
 
-        pubnub.subscribe().apply {
-            channels = listOf("ch1")
+        pubnub.subscribe(
+            channels = listOf("ch1"),
             withPresence = true
-        }.execute()
+        )
 
         Awaitility.await()
             .atMost(5, TimeUnit.SECONDS)
@@ -3047,10 +3047,10 @@ class SubscriptionManagerTest : BaseTest() {
             }
         })
 
-        pubnub.subscribe().apply {
-            channels = listOf("ch1")
+        pubnub.subscribe(
+            channels = listOf("ch1"),
             withPresence = true
-        }.execute()
+        )
 
         Awaitility.await()
             .atMost(5, TimeUnit.SECONDS)
@@ -3177,18 +3177,18 @@ class SubscriptionManagerTest : BaseTest() {
         val sub1: SubscribeCallback = object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
                 if (pnStatus.category == PNStatusCategory.PNConnectedCategory) {
-                    pubnub.unsubscribe().apply {
+                    pubnub.unsubscribe(
                         channels = listOf("ch1")
-                    }.execute()
+                    )
                 }
 
                 val affectedChannels = pnStatus.affectedChannels
 
                 if (affectedChannels.size == 1 && pnStatus.operation == PNOperationType.PNUnsubscribeOperation) {
                     if (affectedChannels[0] == "ch1") {
-                        pubnub.unsubscribe().apply {
+                        pubnub.unsubscribe(
                             channels = listOf("ch2")
-                        }.execute()
+                        )
                     }
                 }
 
@@ -3202,10 +3202,10 @@ class SubscriptionManagerTest : BaseTest() {
 
         pubnub.addListener(sub1)
 
-        pubnub.subscribe().apply {
-            channels = listOf("ch1", "ch2")
+        pubnub.subscribe(
+            channels = listOf("ch1", "ch2"),
             withPresence = true
-        }.execute()
+        )
 
         Awaitility.await()
             .atMost(4, TimeUnit.SECONDS)
@@ -3238,10 +3238,10 @@ class SubscriptionManagerTest : BaseTest() {
                 .willReturn(emptyJson())
         )
 
-        pubnub.subscribe().apply {
-            channels = listOf("ch1", "ch2")
+        pubnub.subscribe(
+            channels = listOf("ch1", "ch2"),
             withTimetoken = 555L
-        }.execute()
+        )
 
         Awaitility.await()
             .atMost(5, TimeUnit.SECONDS)

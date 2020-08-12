@@ -10,15 +10,17 @@ import retrofit2.Call
 import retrofit2.Response
 import java.util.HashMap
 
-class DeleteChannelGroup(pubnub: PubNub) : Endpoint<Void, PNChannelGroupsDeleteGroupResult>(pubnub) {
-
-    lateinit var channelGroup: String
+/**
+ * @see [PubNub.deleteChannelGroup]
+ */
+class DeleteChannelGroup internal constructor(
+    pubnub: PubNub,
+    val channelGroup: String
+) : Endpoint<Void, PNChannelGroupsDeleteGroupResult>(pubnub) {
 
     override fun validateParams() {
         super.validateParams()
-        if (!::channelGroup.isInitialized || channelGroup.isBlank()) {
-            throw PubNubException(PubNubError.GROUP_MISSING)
-        }
+        if (channelGroup.isBlank()) throw PubNubException(PubNubError.GROUP_MISSING)
     }
 
     override fun getAffectedChannelGroups() = listOf(channelGroup)
@@ -32,9 +34,8 @@ class DeleteChannelGroup(pubnub: PubNub) : Endpoint<Void, PNChannelGroupsDeleteG
             )
     }
 
-    override fun createResponse(input: Response<Void>): PNChannelGroupsDeleteGroupResult? {
-        return PNChannelGroupsDeleteGroupResult()
-    }
+    override fun createResponse(input: Response<Void>): PNChannelGroupsDeleteGroupResult =
+        PNChannelGroupsDeleteGroupResult()
 
     override fun operationType() = PNOperationType.PNRemoveGroupOperation
 }

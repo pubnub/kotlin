@@ -8,9 +8,9 @@ import com.github.tomakehurst.wiremock.client.WireMock.stubFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlMatching
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 import com.pubnub.api.legacy.BaseTest
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.Test
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
+import org.junit.Test
 
 class FetchMessagesEndpointTest : BaseTest() {
 
@@ -49,10 +49,10 @@ class FetchMessagesEndpointTest : BaseTest() {
                 )
         )
 
-        val response = pubnub.fetchMessages().apply {
-            channels = listOf("mychannel", "my_channel")
+        val response = pubnub.fetchMessages(
+            channels = listOf("mychannel", "my_channel"),
             maximumPerChannel = 25
-        }.sync()!!
+        ).sync()!!
 
         assertEquals(response.channels.size, 2)
         assertTrue(response.channels.containsKey("mychannel"))
@@ -98,10 +98,10 @@ class FetchMessagesEndpointTest : BaseTest() {
 
         pubnub.configuration.authKey = "authKey"
 
-        val response = pubnub.fetchMessages().apply {
-            channels = listOf("mychannel", "my_channel")
+        val response = pubnub.fetchMessages(
+            channels = listOf("mychannel", "my_channel"),
             maximumPerChannel = 25
-        }.sync()!!
+        ).sync()!!
 
         assertEquals(response.channels.size, 2)
         assertTrue(response.channels.containsKey("mychannel"))
@@ -146,10 +146,10 @@ class FetchMessagesEndpointTest : BaseTest() {
                 )
         )
 
-        val response = pubnub.fetchMessages().apply {
-            channels = listOf("mychannel", "my_channel")
+        val response = pubnub.fetchMessages(
+            channels = listOf("mychannel", "my_channel"),
             maximumPerChannel = 25
-        }.sync()!!
+        ).sync()!!
 
         assertEquals(response.channels.size, 2)
         assertTrue(response.channels.containsKey("mychannel"))

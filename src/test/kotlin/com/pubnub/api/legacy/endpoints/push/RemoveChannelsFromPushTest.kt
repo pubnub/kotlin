@@ -1,17 +1,19 @@
 package com.pubnub.api.legacy.endpoints.push
 
 import com.github.tomakehurst.wiremock.client.WireMock
+import com.pubnub.api.CommonUtils.assertPnException
+import com.pubnub.api.CommonUtils.failTest
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
-import com.pubnub.api.assertPnException
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNPushType
 import com.pubnub.api.enums.PNStatusCategory
-import com.pubnub.api.failTest
 import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.listen
-import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.Test
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
+import org.junit.Test
 import java.util.concurrent.atomic.AtomicBoolean
 
 class RemoveChannelsFromPushTest : BaseTest() {
@@ -23,18 +25,18 @@ class RemoveChannelsFromPushTest : BaseTest() {
                 .willReturn(WireMock.aResponse().withBody("[1, \"Modified Channels\"]"))
         )
 
-        pubnub.removePushNotificationsFromChannels().apply {
-            deviceId = "niceDevice"
-            pushType = PNPushType.APNS
+        pubnub.removePushNotificationsFromChannels(
+            deviceId = "niceDevice",
+            pushType = PNPushType.APNS,
             channels = listOf("chr1", "chr2", "chr3")
-        }.sync()!!
+        ).sync()!!
 
         val requests = WireMock.findAll(WireMock.getRequestedFor(WireMock.urlMatching("/.*")))
-        Assertions.assertEquals(1, requests.size)
-        Assertions.assertEquals("apns", requests[0].queryParameter("type").firstValue())
-        Assertions.assertEquals("chr1,chr2,chr3", requests[0].queryParameter("remove").firstValue())
-        Assertions.assertFalse(requests[0].queryParameter("environment").isPresent)
-        Assertions.assertFalse(requests[0].queryParameter("topic").isPresent)
+        assertEquals(1, requests.size)
+        assertEquals("apns", requests[0].queryParameter("type").firstValue())
+        assertEquals("chr1,chr2,chr3", requests[0].queryParameter("remove").firstValue())
+        assertFalse(requests[0].queryParameter("environment").isPresent)
+        assertFalse(requests[0].queryParameter("topic").isPresent)
     }
 
     @Test
@@ -44,18 +46,18 @@ class RemoveChannelsFromPushTest : BaseTest() {
                 .willReturn(WireMock.aResponse().withBody("[1, \"Modified Channels\"]"))
         )
 
-        pubnub.removePushNotificationsFromChannels().apply {
-            deviceId = "niceDevice"
-            pushType = PNPushType.FCM
+        pubnub.removePushNotificationsFromChannels(
+            deviceId = "niceDevice",
+            pushType = PNPushType.FCM,
             channels = listOf("chr1", "chr2", "chr3")
-        }.sync()!!
+        ).sync()!!
 
         val requests = WireMock.findAll(WireMock.getRequestedFor(WireMock.urlMatching("/.*")))
-        Assertions.assertEquals(1, requests.size)
-        Assertions.assertEquals("gcm", requests[0].queryParameter("type").firstValue())
-        Assertions.assertEquals("chr1,chr2,chr3", requests[0].queryParameter("remove").firstValue())
-        Assertions.assertFalse(requests[0].queryParameter("environment").isPresent)
-        Assertions.assertFalse(requests[0].queryParameter("topic").isPresent)
+        assertEquals(1, requests.size)
+        assertEquals("gcm", requests[0].queryParameter("type").firstValue())
+        assertEquals("chr1,chr2,chr3", requests[0].queryParameter("remove").firstValue())
+        assertFalse(requests[0].queryParameter("environment").isPresent)
+        assertFalse(requests[0].queryParameter("topic").isPresent)
     }
 
     @Test
@@ -65,18 +67,18 @@ class RemoveChannelsFromPushTest : BaseTest() {
                 .willReturn(WireMock.aResponse().withBody("[1, \"Modified Channels\"]"))
         )
 
-        pubnub.removePushNotificationsFromChannels().apply {
-            deviceId = "niceDevice"
-            pushType = PNPushType.MPNS
+        pubnub.removePushNotificationsFromChannels(
+            deviceId = "niceDevice",
+            pushType = PNPushType.MPNS,
             channels = listOf("chr1", "chr2", "chr3")
-        }.sync()!!
+        ).sync()!!
 
         val requests = WireMock.findAll(WireMock.getRequestedFor(WireMock.urlMatching("/.*")))
-        Assertions.assertEquals(1, requests.size)
-        Assertions.assertEquals("mpns", requests[0].queryParameter("type").firstValue())
-        Assertions.assertEquals("chr1,chr2,chr3", requests[0].queryParameter("remove").firstValue())
-        Assertions.assertFalse(requests[0].queryParameter("environment").isPresent)
-        Assertions.assertFalse(requests[0].queryParameter("topic").isPresent)
+        assertEquals(1, requests.size)
+        assertEquals("mpns", requests[0].queryParameter("type").firstValue())
+        assertEquals("chr1,chr2,chr3", requests[0].queryParameter("remove").firstValue())
+        assertFalse(requests[0].queryParameter("environment").isPresent)
+        assertFalse(requests[0].queryParameter("topic").isPresent)
     }
 
     @Test
@@ -86,19 +88,22 @@ class RemoveChannelsFromPushTest : BaseTest() {
                 .willReturn(WireMock.aResponse().withBody("[1, \"Modified Channels\"]"))
         )
 
-        pubnub.removePushNotificationsFromChannels().apply {
-            deviceId = "niceDevice"
-            pushType = PNPushType.APNS2
-            channels = listOf("chr1", "chr2", "chr3")
+        pubnub.removePushNotificationsFromChannels(
+            deviceId = "niceDevice",
+            pushType = PNPushType.APNS2,
+            channels = listOf("chr1", "chr2", "chr3"),
             topic = "news"
-        }.sync()!!
+        ).sync()!!
 
         val requests = WireMock.findAll(WireMock.getRequestedFor(WireMock.urlMatching("/.*")))
-        Assertions.assertEquals(1, requests.size)
-        Assertions.assertEquals("chr1,chr2,chr3", requests[0].queryParameter("remove").firstValue())
-        Assertions.assertEquals("development", requests[0].queryParameter("environment").firstValue())
-        Assertions.assertEquals("news", requests[0].queryParameter("topic").firstValue())
-        Assertions.assertFalse(requests[0].queryParameter("type").isPresent)
+        assertEquals(1, requests.size)
+        assertEquals("chr1,chr2,chr3", requests[0].queryParameter("remove").firstValue())
+        assertEquals(
+            "development",
+            requests[0].queryParameter("environment").firstValue()
+        )
+        assertEquals("news", requests[0].queryParameter("topic").firstValue())
+        assertFalse(requests[0].queryParameter("type").isPresent)
     }
 
     @Test
@@ -110,16 +115,16 @@ class RemoveChannelsFromPushTest : BaseTest() {
 
         pubnub.configuration.authKey = "myKey"
 
-        pubnub.removePushNotificationsFromChannels().apply {
-            deviceId = "niceDevice"
-            pushType = PNPushType.FCM
-            channels = listOf("chr1", "chr2", "chr3")
+        pubnub.removePushNotificationsFromChannels(
+            deviceId = "niceDevice",
+            pushType = PNPushType.FCM,
+            channels = listOf("chr1", "chr2", "chr3"),
             topic = "news"
-        }.sync()!!
+        ).sync()!!
 
         val requests = WireMock.findAll(WireMock.getRequestedFor(WireMock.urlMatching("/.*")))
-        Assertions.assertEquals(1, requests.size)
-        Assertions.assertEquals("myKey", requests[0].queryParameter("auth").firstValue())
+        assertEquals(1, requests.size)
+        assertEquals("myKey", requests[0].queryParameter("auth").firstValue())
     }
 
     @Test
@@ -131,16 +136,19 @@ class RemoveChannelsFromPushTest : BaseTest() {
 
         val success = AtomicBoolean()
 
-        pubnub.removePushNotificationsFromChannels().apply {
-            deviceId = "niceDevice"
-            pushType = PNPushType.FCM
+        pubnub.removePushNotificationsFromChannels(
+            deviceId = "niceDevice",
+            pushType = PNPushType.FCM,
             channels = listOf("chr1", "chr2", "chr3")
-        }.async { _, status ->
-            Assertions.assertFalse(status.error)
-            Assertions.assertEquals(PNOperationType.PNRemovePushNotificationsFromChannelsOperation, status.operation)
-            Assertions.assertEquals(PNStatusCategory.PNAcknowledgmentCategory, status.category)
-            Assertions.assertEquals(status.affectedChannels, listOf("chr1", "chr2", "chr3"))
-            Assertions.assertTrue(status.affectedChannelGroups.isEmpty())
+        ).async { _, status ->
+            assertFalse(status.error)
+            assertEquals(
+                PNOperationType.PNRemovePushNotificationsFromChannelsOperation,
+                status.operation
+            )
+            assertEquals(PNStatusCategory.PNAcknowledgmentCategory, status.category)
+            assertEquals(status.affectedChannels, listOf("chr1", "chr2", "chr3"))
+            assertTrue(status.affectedChannelGroups.isEmpty())
             success.set(true)
         }
 
@@ -152,11 +160,11 @@ class RemoveChannelsFromPushTest : BaseTest() {
         pubnub.configuration.subscribeKey = " "
 
         try {
-            pubnub.removePushNotificationsFromChannels().apply {
-                deviceId = "niceDevice"
-                pushType = PNPushType.FCM
+            pubnub.removePushNotificationsFromChannels(
+                deviceId = "niceDevice",
+                pushType = PNPushType.FCM,
                 channels = listOf("chr1", "chr2", "chr3")
-            }.sync()!!
+            ).sync()!!
             failTest()
         } catch (e: PubNubException) {
             assertPnException(PubNubError.SUBSCRIBE_KEY_MISSING, e)
@@ -164,66 +172,27 @@ class RemoveChannelsFromPushTest : BaseTest() {
     }
 
     @Test
-    fun testNullPushType() {
-        try {
-            pubnub.removePushNotificationsFromChannels().apply {
-                deviceId = "niceDevice"
-                channels = listOf("chr1", "chr2", "chr3")
-            }.sync()!!
-            failTest()
-        } catch (e: PubNubException) {
-            assertPnException(PubNubError.PUSH_TYPE_MISSING, e)
-        }
-    }
-
-    @Test
-    fun testNullDeviceId() {
-        try {
-            pubnub.removePushNotificationsFromChannels().apply {
-                pushType = PNPushType.FCM
-                channels = listOf("chr1", "chr2", "chr3")
-            }.sync()!!
-            failTest()
-        } catch (e: PubNubException) {
-            assertPnException(PubNubError.DEVICE_ID_MISSING, e)
-        }
-    }
-
-    @Test
     fun testEmptyDeviceId() {
         try {
-            pubnub.removePushNotificationsFromChannels().apply {
-                pushType = PNPushType.FCM
-                deviceId = " "
+            pubnub.removePushNotificationsFromChannels(
+                pushType = PNPushType.FCM,
+                deviceId = " ",
                 channels = listOf("chr1", "chr2", "chr3")
-            }.sync()!!
+            ).sync()!!
             failTest()
         } catch (e: PubNubException) {
             assertPnException(PubNubError.DEVICE_ID_MISSING, e)
-        }
-    }
-
-    @Test
-    fun testMissingChannels() {
-        try {
-            pubnub.removePushNotificationsFromChannels().apply {
-                pushType = PNPushType.FCM
-                deviceId = "niceDevice"
-            }.sync()!!
-            failTest()
-        } catch (e: PubNubException) {
-            assertPnException(PubNubError.CHANNEL_MISSING, e)
         }
     }
 
     @Test
     fun testEmptyChannels() {
         try {
-            pubnub.removePushNotificationsFromChannels().apply {
-                pushType = PNPushType.FCM
-                deviceId = "niceDevice"
+            pubnub.removePushNotificationsFromChannels(
+                pushType = PNPushType.FCM,
+                deviceId = "niceDevice",
                 channels = emptyList()
-            }.sync()!!
+            ).sync()!!
             failTest()
         } catch (e: PubNubException) {
             assertPnException(PubNubError.CHANNEL_MISSING, e)

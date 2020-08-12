@@ -22,10 +22,16 @@ import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 import java.util.HashMap
 
-abstract class Endpoint<Input, Output>(protected val pubnub: PubNub) {
+/**
+ * Base class for all PubNub API operation implementations.
+ *
+ * @param Input Server's response.
+ * @param Output Parsed and encapsulated response for endusers.
+ * @property pubnub The client instance.
+ */
+abstract class Endpoint<Input, Output> protected constructor(protected val pubnub: PubNub) {
 
-    companion object {
-        private const val SERVER_RESPONSE_SUCCESS = 200
+    private companion object {
         private const val SERVER_RESPONSE_BAD_REQUEST = 400
         private const val SERVER_RESPONSE_FORBIDDEN = 403
         private const val SERVER_RESPONSE_NOT_FOUND = 404
@@ -35,8 +41,18 @@ abstract class Endpoint<Input, Output>(protected val pubnub: PubNub) {
     private lateinit var call: Call<Input>
     private var silenceFailures = false
 
-    var queryParam: Map<String, String> = emptyMap()
+    /**
+     * Key-value object to pass with every PubNub API operation. Used for debugging purposes.
+     */
+    val queryParam: MutableMap<String, String> = mutableMapOf()
 
+    /**
+     * Executes the call synchronously. This function blocks the thread.
+     *
+     * @return A parsed and encapsulated response if the request has been successful, `null` otherwise.
+     *
+     * @throws [PubNubException] if anything goes wrong with the request.
+     */
     fun sync(): Output? {
         validateParams()
 
@@ -69,6 +85,11 @@ abstract class Endpoint<Input, Output>(protected val pubnub: PubNub) {
         }
     }
 
+    /**
+     * Executes the call asynchronously. This function does not block the thread.
+     *
+     * @param callback The callback to receive the response in.
+     */
     fun async(callback: (result: Output?, status: PNStatus) -> Unit) {
         cachedCallback = callback
 
@@ -199,7 +220,7 @@ abstract class Endpoint<Input, Output>(protected val pubnub: PubNub) {
     private fun createBaseParams(): HashMap<String, String> {
         val map = hashMapOf<String, String>()
 
-        map.putAll(queryParam)
+        map += queryParam
 
         map["pnsdk"] = "PubNub-Kotlin/${pubnub.version}"
         map["uuid"] = pubnub.configuration.uuid
@@ -221,7 +242,7 @@ abstract class Endpoint<Input, Output>(protected val pubnub: PubNub) {
     }
 
     /**
-     * cancel the operation but do not alert anybody, useful for restarting the heartbeats and subscribe loops.
+     * Cancel the operation but do not alert anybody, useful for restarting the heartbeats and subscribe loops.
      */
     fun silentCancel() {
         if (::call.isInitialized) {

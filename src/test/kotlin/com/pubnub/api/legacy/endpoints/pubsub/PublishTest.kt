@@ -11,19 +11,19 @@ import com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.stubFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlMatching
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
+import com.pubnub.api.CommonUtils.assertPnException
+import com.pubnub.api.CommonUtils.failTest
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
-import com.pubnub.api.assertPnException
 import com.pubnub.api.enums.PNOperationType
-import com.pubnub.api.failTest
 import com.pubnub.api.legacy.BaseTest
 import org.awaitility.Awaitility
 import org.hamcrest.core.IsEqual
 import org.json.JSONArray
 import org.json.JSONObject
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertFalse
-import org.junit.jupiter.api.Test
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Test
 import java.nio.charset.Charset
 import java.util.HashMap
 import java.util.concurrent.TimeUnit
@@ -38,10 +38,10 @@ class PublishTest : BaseTest() {
                 .willReturn(aResponse().withBody("""[1,"Sent","15883272000000000"]"""))
         )
 
-        pubnub.fire().apply {
-            channel = "coolChannel"
+        pubnub.fire(
+            channel = "coolChannel",
             message = "hi"
-        }.sync()!!
+        ).sync()!!
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
         assertEquals(1, requests.size)
@@ -57,11 +57,11 @@ class PublishTest : BaseTest() {
                 .willReturn(aResponse().withBody("""[1,"Sent","15883272000000000"]"""))
         )
 
-        pubnub.publish().apply {
-            channel = "coolChannel"
-            message = "hi"
+        pubnub.publish(
+            channel = "coolChannel",
+            message = "hi",
             replicate = false
-        }.sync()!!
+        ).sync()!!
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
         assertEquals(1, requests.size)
@@ -76,11 +76,11 @@ class PublishTest : BaseTest() {
                 .willReturn(aResponse().withBody("""[1,"Sent","15883272000000000"]"""))
         )
 
-        pubnub.publish().apply {
-            channel = "coolChannel"
-            message = "hirep"
+        pubnub.publish(
+            channel = "coolChannel",
+            message = "hirep",
             replicate = false
-        }.sync()!!
+        ).sync()!!
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
         assertEquals(1, requests.size)
@@ -95,11 +95,11 @@ class PublishTest : BaseTest() {
                 .willReturn(aResponse().withBody("""[1,"Sent","15883272000000000"]"""))
         )
 
-        pubnub.publish().apply {
-            channel = "coolChannel"
-            message = "hi"
+        pubnub.publish(
+            channel = "coolChannel",
+            message = "hi",
             replicate = false
-        }.sync()!!
+        ).sync()!!
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
         assertEquals(1, requests.size)
@@ -113,15 +113,15 @@ class PublishTest : BaseTest() {
                 .willReturn(aResponse().withBody("""[1,"Sent","15883272000000000"]"""))
         )
 
-        pubnub.publish().apply {
-            channel = "coolChannel"
+        pubnub.publish(
+            channel = "coolChannel",
             message = "hi"
-        }.sync()!!
+        ).sync()!!
 
-        pubnub.publish().apply {
-            channel = "coolChannel"
+        pubnub.publish(
+            channel = "coolChannel",
             message = "hi"
-        }.sync()!!
+        ).sync()!!
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
         assertEquals(2, requests.size)
@@ -137,11 +137,11 @@ class PublishTest : BaseTest() {
                 .willReturn(aResponse().withBody("""[1,"Sent","15883272000000000"]"""))
         )
 
-        pubnub.publish().apply {
-            channel = "coolChannel"
-            message = listOf("m1", "m2")
+        pubnub.publish(
+            channel = "coolChannel",
+            message = listOf("m1", "m2"),
             usePost = true
-        }.sync()!!
+        ).sync()!!
 
         val requests = findAll(postRequestedFor(urlMatching("/.*")))
         assertEquals(1, requests.size)
@@ -156,11 +156,11 @@ class PublishTest : BaseTest() {
                 .willReturn(aResponse().withBody("""[1,"Sent","15883272000000000"]"""))
         )
 
-        pubnub.publish().apply {
-            channel = "coolChannel"
-            message = "hi"
+        pubnub.publish(
+            channel = "coolChannel",
+            message = "hi",
             shouldStore = false
-        }.sync()!!
+        ).sync()!!
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
         assertEquals(1, requests.size)
@@ -175,11 +175,11 @@ class PublishTest : BaseTest() {
                 .willReturn(aResponse().withBody("""[1,"Sent","15883272000000000"]"""))
         )
 
-        pubnub.publish().apply {
-            channel = "coolChannel"
-            message = "hi"
+        pubnub.publish(
+            channel = "coolChannel",
+            message = "hi",
             shouldStore = true
-        }.sync()!!
+        ).sync()!!
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
         assertEquals(1, requests.size)
@@ -201,12 +201,12 @@ class PublishTest : BaseTest() {
                 .willReturn(aResponse().withBody("""[1,"Sent","15883272000000000"]"""))
         )
 
-        pubnub.publish().apply {
-            channel = "coolChannel"
-            message = "hi"
-            meta = listOf("m1", "m2")
+        pubnub.publish(
+            channel = "coolChannel",
+            message = "hi",
+            meta = listOf("m1", "m2"),
             shouldStore = false
-        }.sync()!!
+        ).sync()!!
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
         assertEquals(1, requests.size)
@@ -220,10 +220,10 @@ class PublishTest : BaseTest() {
         )
         pubnub.configuration.authKey = "authKey"
 
-        pubnub.publish().apply {
-            channel = "coolChannel"
+        pubnub.publish(
+            channel = "coolChannel",
             message = "hi"
-        }.sync()!!
+        ).sync()!!
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
         assertEquals(1, requests.size)
@@ -238,10 +238,10 @@ class PublishTest : BaseTest() {
                 .willReturn(aResponse().withBody("""[1,"Sent","15883272000000000"]"""))
         )
 
-        pubnub.publish().apply {
-            channel = "coolChannel"
+        pubnub.publish(
+            channel = "coolChannel",
             message = 10
-        }.sync()!!
+        ).sync()!!
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
         assertEquals(1, requests.size)
@@ -260,10 +260,10 @@ class PublishTest : BaseTest() {
 
         val l = listOf("a", "b", "c")
 
-        pubnub.publish().apply {
-            channel = "coolChannel"
+        pubnub.publish(
+            channel = "coolChannel",
             message = l
-        }.sync()!!
+        ).sync()!!
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
         assertEquals(1, requests.size)
@@ -282,10 +282,10 @@ class PublishTest : BaseTest() {
         )
         pubnub.configuration.cipherKey = "testCipher"
 
-        pubnub.publish().apply {
-            channel = "coolChannel"
+        pubnub.publish(
+            channel = "coolChannel",
             message = listOf("m1", "m2")
-        }.sync()!!
+        ).sync()!!
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
         assertEquals(1, requests.size)
@@ -300,16 +300,19 @@ class PublishTest : BaseTest() {
         )
         pubnub.configuration.cipherKey = "testCipher"
 
-        pubnub.publish().apply {
-            channel = "coolChannel"
-            message = listOf("m1", "m2")
+        pubnub.publish(
+            channel = "coolChannel",
+            message = listOf("m1", "m2"),
             usePost = true
-        }.sync()!!
+        ).sync()!!
 
         val requests = findAll(postRequestedFor(urlMatching("/.*")))
         assertEquals(1, requests.size)
         assertEquals("myUUID", requests[0].queryParameter("uuid").firstValue())
-        assertEquals(""""HFP7V6bDwBLrwc1t8Rnrog=="""", String(requests[0].body, Charset.forName("UTF-8")))
+        assertEquals(
+            """"HFP7V6bDwBLrwc1t8Rnrog=="""",
+            String(requests[0].body, Charset.forName("UTF-8"))
+        )
     }
 
     @Test
@@ -326,10 +329,10 @@ class PublishTest : BaseTest() {
                 .willReturn(aResponse().withBody("""[1,"Sent","15883272000000000"]"""))
         )
 
-        pubnub.publish().apply {
-            channel = "coolChannel"
+        pubnub.publish(
+            channel = "coolChannel",
             message = params
-        }.sync()!!
+        ).sync()!!
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
         assertEquals(1, requests.size)
@@ -359,10 +362,10 @@ class PublishTest : BaseTest() {
                 .willReturn(aResponse().withBody("""[1,"Sent","15883272000000000"]"""))
         )
 
-        pubnub.publish().apply {
-            channel = "coolChannel"
+        pubnub.publish(
+            channel = "coolChannel",
             message = testPojo
-        }.sync()!!
+        ).sync()!!
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
         assertEquals(1, requests.size)
@@ -378,10 +381,10 @@ class PublishTest : BaseTest() {
                 .willReturn(aResponse().withBody("""[1,"Sent","15883272000000000"]"""))
         )
 
-        pubnub.publish().apply {
-            channel = "coolChannel"
+        pubnub.publish(
+            channel = "coolChannel",
             message = testMessage.toMap()
-        }.sync()!!
+        ).sync()!!
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
         assertEquals(1, requests.size)
@@ -398,32 +401,32 @@ class PublishTest : BaseTest() {
                 .willReturn(aResponse().withBody("""[1,"Sent","15883272000000000"]"""))
         )
 
-        pubnub.publish().apply {
-            channel = "coolChannel"
+        pubnub.publish(
+            channel = "coolChannel",
             message = testMessage.toList()
-        }.sync()!!
+        ).sync()!!
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
         assertEquals(1, requests.size)
         assertEquals("myUUID", requests[0].queryParameter("uuid").firstValue())
     }
-
-    @Test
-    fun testMissingChannel() {
-        stubFor(
-            get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22hi%22"))
-                .willReturn(aResponse().withBody("""[1,"Sent","15883272000000000"]"""))
-        )
-
-        try {
-            pubnub.publish().apply {
-                message = "hi"
-            }.sync()!!
-            failTest()
-        } catch (e: PubNubException) {
-            assertPnException(PubNubError.CHANNEL_MISSING, e)
-        }
-    }
+//    @Deprecated("Channel is required parameter now")
+//    @Test
+//    fun testMissingChannel() {
+//        stubFor(
+//            get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22hi%22"))
+//                .willReturn(aResponse().withBody("""[1,"Sent","15883272000000000"]"""))
+//        )
+//
+//        try {
+//            pubnub.publish(
+//                message = "hi"
+//            ).sync()!!
+//            failTest()
+//        } catch (e: PubNubException) {
+//            assertPnException(PubNubError.CHANNEL_MISSING, e)
+//        }
+//    }
 
     @Test
     fun testEmptyChannel() {
@@ -433,31 +436,32 @@ class PublishTest : BaseTest() {
         )
 
         try {
-            pubnub.publish().apply {
-                channel = " "
+            pubnub.publish(
+                channel = " ",
                 message = "hi"
-            }.sync()!!
+            ).sync()!!
             failTest()
         } catch (e: PubNubException) {
             assertPnException(PubNubError.CHANNEL_MISSING, e)
         }
     }
 
-    @Test
-    fun testMissingMessage() {
-        stubFor(
-            get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22hi%22"))
-                .willReturn(aResponse().withBody("""[1,"Sent","15883272000000000"]"""))
-        )
-        try {
-            pubnub.publish().apply {
-                channel = "coolChannel"
-            }.sync()!!
-            failTest()
-        } catch (e: PubNubException) {
-            assertPnException(PubNubError.MESSAGE_MISSING, e)
-        }
-    }
+//    @Deprecated("Message is required parameter now")
+//    @Test
+//    fun testMissingMessage() {
+//        stubFor(
+//            get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22hi%22"))
+//                .willReturn(aResponse().withBody("""[1,"Sent","15883272000000000"]"""))
+//        )
+//        try {
+//            pubnub.publish(
+//                channel = "coolChannel"
+//            ).sync()!!
+//            failTest()
+//        } catch (e: PubNubException) {
+//            assertPnException(PubNubError.MESSAGE_MISSING, e)
+//        }
+//    }
 
     @Test
     fun testOperationTypeSuccessAsync() {
@@ -467,8 +471,10 @@ class PublishTest : BaseTest() {
         )
         val atomic = AtomicInteger(0)
 
-        pubnub.publish().apply {
-        }.async { _, status ->
+        pubnub.publish(
+            channel = "coolChannel",
+            message = "hi"
+        ).async { _, status ->
             if (status.operation === PNOperationType.PNPublishOperation) {
                 atomic.incrementAndGet()
             }
@@ -489,10 +495,10 @@ class PublishTest : BaseTest() {
         pubnub.configuration.subscribeKey = ""
 
         try {
-            pubnub.publish().apply {
-                channel = "coolChannel"
+            pubnub.publish(
+                channel = "coolChannel",
                 message = "hirep"
-            }.sync()!!
+            ).sync()!!
             failTest()
         } catch (e: Exception) {
             assertPnException(PubNubError.SUBSCRIBE_KEY_MISSING, e)
@@ -508,10 +514,10 @@ class PublishTest : BaseTest() {
         pubnub.configuration.publishKey = ""
 
         try {
-            pubnub.publish().apply {
-                channel = "coolChannel"
+            pubnub.publish(
+                channel = "coolChannel",
                 message = "hirep"
-            }.sync()!!
+            ).sync()!!
             failTest()
         } catch (e: Exception) {
             assertPnException(PubNubError.PUBLISH_KEY_MISSING, e)
@@ -525,11 +531,11 @@ class PublishTest : BaseTest() {
                 .willReturn(aResponse().withBody("""[1,"Sent","15883272000000000"]"""))
         )
 
-        pubnub.publish().apply {
-            channel = "coolChannel"
-            message = "hi"
+        pubnub.publish(
+            channel = "coolChannel",
+            message = "hi",
             ttl = 10
-        }.sync()!!
+        ).sync()!!
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
         assertEquals(1, requests.size)
@@ -543,11 +549,11 @@ class PublishTest : BaseTest() {
                 .willReturn(aResponse().withBody("""[1,"Sent","15883272000000000"]"""))
         )
 
-        pubnub.publish().apply {
-            channel = "coolChannel"
-            message = "hi"
+        pubnub.publish(
+            channel = "coolChannel",
+            message = "hi",
             shouldStore = false
-        }.sync()!!
+        ).sync()!!
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
         assertEquals(1, requests.size)

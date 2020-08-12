@@ -8,20 +8,20 @@ import com.github.tomakehurst.wiremock.client.WireMock.ok
 import com.github.tomakehurst.wiremock.client.WireMock.stubFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlMatching
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
+import com.pubnub.api.CommonUtils.assertPnException
+import com.pubnub.api.CommonUtils.failTest
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
-import com.pubnub.api.assertPnException
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNPushEnvironment
 import com.pubnub.api.enums.PNPushType
 import com.pubnub.api.enums.PNStatusCategory
-import com.pubnub.api.failTest
 import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.listen
-import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertFalse
-import org.junit.jupiter.api.Test
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
+import org.junit.Test
 import java.util.UUID
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -34,11 +34,11 @@ class ListPushProvisionsTest : BaseTest() {
                 .willReturn(aResponse().withBody("""["ch1", "ch2", "ch3"]"""))
         )
 
-        val response = pubnub.auditPushChannelProvisions().apply {
-            deviceId = "niceDevice"
-            pushType = PNPushType.APNS
+        val response = pubnub.auditPushChannelProvisions(
+            deviceId = "niceDevice",
+            pushType = PNPushType.APNS,
             topic = "irrelevant"
-        }.sync()!!
+        ).sync()!!
 
         assertEquals(listOf("ch1", "ch2", "ch3"), response.channels)
 
@@ -56,11 +56,11 @@ class ListPushProvisionsTest : BaseTest() {
                 .willReturn(aResponse().withBody("""["ch1", "ch2", "ch3"]"""))
         )
 
-        val response = pubnub.auditPushChannelProvisions().apply {
-            deviceId = "niceDevice"
-            pushType = PNPushType.FCM
+        val response = pubnub.auditPushChannelProvisions(
+            deviceId = "niceDevice",
+            pushType = PNPushType.FCM,
             topic = "irrelevant"
-        }.sync()!!
+        ).sync()!!
 
         assertEquals(listOf("ch1", "ch2", "ch3"), response.channels)
 
@@ -78,11 +78,11 @@ class ListPushProvisionsTest : BaseTest() {
                 .willReturn(aResponse().withBody("""["ch1", "ch2", "ch3"]"""))
         )
 
-        val response = pubnub.auditPushChannelProvisions().apply {
-            deviceId = "niceDevice"
-            pushType = PNPushType.MPNS
+        val response = pubnub.auditPushChannelProvisions(
+            deviceId = "niceDevice",
+            pushType = PNPushType.MPNS,
             topic = "irrelevant"
-        }.sync()!!
+        ).sync()!!
 
         assertEquals(listOf("ch1", "ch2", "ch3"), response.channels)
 
@@ -100,11 +100,11 @@ class ListPushProvisionsTest : BaseTest() {
                 .willReturn(aResponse().withBody("""["ch1", "ch2", "ch3"]"""))
         )
 
-        val response = pubnub.auditPushChannelProvisions().apply {
-            deviceId = "niceDevice"
-            pushType = PNPushType.APNS2
+        val response = pubnub.auditPushChannelProvisions(
+            deviceId = "niceDevice",
+            pushType = PNPushType.APNS2,
             topic = "news"
-        }.sync()!!
+        ).sync()!!
 
         assertEquals(listOf("ch1", "ch2", "ch3"), response.channels)
 
@@ -121,12 +121,12 @@ class ListPushProvisionsTest : BaseTest() {
                 .willReturn(aResponse().withBody("""["ch1", "ch2", "ch3"]"""))
         )
 
-        val response = pubnub.auditPushChannelProvisions().apply {
-            deviceId = "niceDevice"
-            pushType = PNPushType.APNS2
-            topic = "news"
+        val response = pubnub.auditPushChannelProvisions(
+            deviceId = "niceDevice",
+            pushType = PNPushType.APNS2,
+            topic = "news",
             environment = PNPushEnvironment.PRODUCTION
-        }.sync()!!
+        ).sync()!!
 
         assertEquals(listOf("ch1", "ch2", "ch3"), response.channels)
 
@@ -143,10 +143,10 @@ class ListPushProvisionsTest : BaseTest() {
                 .willReturn(aResponse().withBody("[]"))
         )
 
-        val response = pubnub.auditPushChannelProvisions().apply {
-            deviceId = "niceDevice"
+        val response = pubnub.auditPushChannelProvisions(
+            deviceId = "niceDevice",
             pushType = PNPushType.FCM
-        }.sync()!!
+        ).sync()!!
 
         assertEquals(emptyList<String>(), response.channels)
 
@@ -162,10 +162,10 @@ class ListPushProvisionsTest : BaseTest() {
         )
 
         try {
-            pubnub.auditPushChannelProvisions().apply {
-                deviceId = "niceDevice"
+            pubnub.auditPushChannelProvisions(
+                deviceId = "niceDevice",
                 pushType = PNPushType.FCM
-            }.sync()!!
+            ).sync()!!
             failTest()
         } catch (e: Exception) {
             assertPnException(PubNubError.PARSING_ERROR, e)
@@ -180,10 +180,10 @@ class ListPushProvisionsTest : BaseTest() {
         )
 
         try {
-            pubnub.auditPushChannelProvisions().apply {
-                deviceId = "niceDevice"
+            pubnub.auditPushChannelProvisions(
+                deviceId = "niceDevice",
                 pushType = PNPushType.FCM
-            }.sync()!!
+            ).sync()!!
             failTest()
         } catch (e: PubNubException) {
             assertPnException(PubNubError.PARSING_ERROR, e)
@@ -198,10 +198,10 @@ class ListPushProvisionsTest : BaseTest() {
         )
 
         val success = AtomicBoolean()
-        pubnub.auditPushChannelProvisions().apply {
-            deviceId = "niceDevice"
+        pubnub.auditPushChannelProvisions(
+            deviceId = "niceDevice",
             pushType = PNPushType.FCM
-        }.async { _, status ->
+        ).async { _, status ->
             assertPnException(PubNubError.PARSING_ERROR, status)
             assertEquals(PNStatusCategory.PNMalformedResponseCategory, status.category)
             success.set(true)
@@ -218,10 +218,10 @@ class ListPushProvisionsTest : BaseTest() {
 
         pubnub.configuration.authKey = "myKey"
 
-        pubnub.auditPushChannelProvisions().apply {
-            deviceId = "niceDevice"
+        pubnub.auditPushChannelProvisions(
+            deviceId = "niceDevice",
             pushType = PNPushType.APNS
-        }.sync()!!
+        ).sync()!!
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
         assertEquals(1, requests.size)
@@ -237,15 +237,18 @@ class ListPushProvisionsTest : BaseTest() {
 
         val success = AtomicBoolean()
 
-        pubnub.auditPushChannelProvisions().apply {
-            deviceId = "niceDevice"
+        pubnub.auditPushChannelProvisions(
+            deviceId = "niceDevice",
             pushType = PNPushType.APNS
-        }.async { _, status ->
+        ).async { _, status ->
             assertFalse(status.error)
-            assertEquals(PNOperationType.PNPushNotificationEnabledChannelsOperation, status.operation)
+            assertEquals(
+                PNOperationType.PNPushNotificationEnabledChannelsOperation,
+                status.operation
+            )
             assertEquals(PNStatusCategory.PNAcknowledgmentCategory, status.category)
-            Assertions.assertTrue(status.affectedChannels.isEmpty())
-            Assertions.assertTrue(status.affectedChannelGroups.isEmpty())
+            assertTrue(status.affectedChannels.isEmpty())
+            assertTrue(status.affectedChannelGroups.isEmpty())
             success.set(true)
         }
 
@@ -262,10 +265,10 @@ class ListPushProvisionsTest : BaseTest() {
         pubnub.configuration.subscribeKey = " "
 
         try {
-            pubnub.auditPushChannelProvisions().apply {
-                deviceId = "niceDevice"
+            pubnub.auditPushChannelProvisions(
+                deviceId = "niceDevice",
                 pushType = PNPushType.APNS
-            }.sync()!!
+            ).sync()!!
             failTest("Didn't throw SUBSCRIBE_KEY_MISSING")
         } catch (e: Exception) {
             assertPnException(PubNubError.SUBSCRIBE_KEY_MISSING, e)
@@ -273,36 +276,12 @@ class ListPushProvisionsTest : BaseTest() {
     }
 
     @Test
-    fun testValidationNoDeviceId() {
-        try {
-            pubnub.auditPushChannelProvisions().apply {
-                pushType = PNPushType.FCM
-            }.sync()!!
-            failTest("Should throw no device id")
-        } catch (e: PubNubException) {
-            assertPnException(PubNubError.DEVICE_ID_MISSING, e)
-        }
-    }
-
-    @Test
-    fun testValidationNoPushTYpe() {
-        try {
-            pubnub.auditPushChannelProvisions().apply {
-                deviceId = "niceDevice"
-            }.sync()!!
-            failTest("Should throw no push type")
-        } catch (e: PubNubException) {
-            assertPnException(PubNubError.PUSH_TYPE_MISSING, e)
-        }
-    }
-
-    @Test
     fun testValidationNoTopic() {
         try {
-            pubnub.auditPushChannelProvisions().apply {
-                deviceId = "niceDevice"
+            pubnub.auditPushChannelProvisions(
+                deviceId = "niceDevice",
                 pushType = PNPushType.APNS2
-            }.sync()!!
+            ).sync()!!
             failTest("Should throw no topic")
         } catch (e: PubNubException) {
             assertPnException(PubNubError.PUSH_TOPIC_MISSING, e)
@@ -316,11 +295,11 @@ class ListPushProvisionsTest : BaseTest() {
                 .willReturn(aResponse().withBody("""["ch1", "ch2", "ch3"]"""))
         )
 
-        pubnub.auditPushChannelProvisions().apply {
-            deviceId = "niceDevice"
-            pushType = PNPushType.APNS2
+        pubnub.auditPushChannelProvisions(
+            deviceId = "niceDevice",
+            pushType = PNPushType.APNS2,
             topic = UUID.randomUUID().toString()
-        }.sync()!!
+        ).sync()!!
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
         assertEquals(1, requests.size)

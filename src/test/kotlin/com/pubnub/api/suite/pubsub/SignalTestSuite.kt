@@ -11,7 +11,7 @@ import com.pubnub.api.suite.AUTH
 import com.pubnub.api.suite.EndpointTestSuite
 import com.pubnub.api.suite.PUB
 import com.pubnub.api.suite.SUB
-import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.Assert.assertEquals
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
@@ -24,10 +24,10 @@ class SignalTestSuite : EndpointTestSuite<Signal, PNPublishResult>() {
     override fun requiredKeys() = SUB + PUB + AUTH
 
     override fun snippet(): Signal {
-        return pubnub.signal().apply {
-            channel = "ch1"
+        return pubnub.signal(
+            channel = "ch1",
             message = "ch2"
-        }
+        )
     }
 
     override fun verifyResultExpectations(result: PNPublishResult) {

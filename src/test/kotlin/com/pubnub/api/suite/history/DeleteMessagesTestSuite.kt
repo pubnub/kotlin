@@ -19,11 +19,10 @@ class DeleteMessagesTestSuite : EndpointTestSuite<DeleteMessages, PNDeleteMessag
 
     override fun requiredKeys() = SUB + AUTH
 
-    override fun snippet(): DeleteMessages {
-        return pubnub.deleteMessages().apply {
+    override fun snippet(): DeleteMessages =
+        pubnub.deleteMessages(
             channels = listOf("ch1")
-        }
-    }
+        )
 
     override fun verifyResultExpectations(result: PNDeleteMessagesResult) {
     }

@@ -15,8 +15,8 @@ import com.pubnub.api.suite.EndpointTestSuite
 import com.pubnub.api.suite.OptionalScenario
 import com.pubnub.api.suite.Result
 import com.pubnub.api.suite.SUB
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 
 class AddChannelsToPushV1TestSuite : EndpointTestSuite<AddChannelsToPush, PNPushAddChannelResult>() {
 
@@ -27,11 +27,11 @@ class AddChannelsToPushV1TestSuite : EndpointTestSuite<AddChannelsToPush, PNPush
     override fun requiredKeys() = SUB + AUTH
 
     override fun snippet(): AddChannelsToPush {
-        return pubnub.addPushNotificationsOnChannels().apply {
-            pushType = PNPushType.FCM
-            channels = listOf("ch1", "ch2")
+        return pubnub.addPushNotificationsOnChannels(
+            pushType = PNPushType.FCM,
+            channels = listOf("ch1", "ch2"),
             deviceId = "12345"
-        }
+        )
     }
 
     override fun verifyResultExpectations(result: PNPushAddChannelResult) {

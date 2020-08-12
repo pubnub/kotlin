@@ -16,12 +16,12 @@ import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.listen
 import com.pubnub.api.param
 import okhttp3.Request
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertFalse
-import org.junit.jupiter.api.Assertions.assertNotNull
-import org.junit.jupiter.api.Assertions.assertNull
-import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.Test
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
+import org.junit.Test
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -114,7 +114,7 @@ class EndpointTest : BaseTest() {
             assertTrue(it.contains("requestid"))
             assertTrue(it.contains("uuid"))
         }.apply {
-            queryParam = mapOf(
+            queryParam += mapOf(
                 "city" to "sf",
                 "uuid" to "overwritten"
             )
@@ -129,7 +129,7 @@ class EndpointTest : BaseTest() {
             assertTrue(it.contains("requestid"))
             assertTrue(it.contains("uuid"))
         }.apply {
-            queryParam = emptyMap()
+            queryParam.clear()
         }.sync()
     }
 
@@ -164,7 +164,7 @@ class EndpointTest : BaseTest() {
         val success = AtomicBoolean()
 
         pubnub.time()
-            .async { result, status ->
+            .async { _, status ->
                 assertEquals(listOf("ch1", "ch2"), status.affectedChannels)
                 assertEquals(listOf("cg1"), status.affectedChannelGroups)
                 success.set(true)

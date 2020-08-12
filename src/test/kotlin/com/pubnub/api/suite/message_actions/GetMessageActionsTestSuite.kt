@@ -9,7 +9,7 @@ import com.pubnub.api.models.consumer.message_actions.PNGetMessageActionsResult
 import com.pubnub.api.suite.AUTH
 import com.pubnub.api.suite.EndpointTestSuite
 import com.pubnub.api.suite.SUB
-import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.Assert.assertEquals
 
 class GetMessageActionsTestSuite : EndpointTestSuite<GetMessageActions, PNGetMessageActionsResult>() {
 
@@ -19,11 +19,10 @@ class GetMessageActionsTestSuite : EndpointTestSuite<GetMessageActions, PNGetMes
 
     override fun requiredKeys() = SUB + AUTH
 
-    override fun snippet(): GetMessageActions {
-        return pubnub.getMessageActions().apply {
+    override fun snippet(): GetMessageActions =
+        pubnub.getMessageActions(
             channel = "ch1"
-        }
-    }
+        )
 
     override fun successfulResponseBody() = """
         {

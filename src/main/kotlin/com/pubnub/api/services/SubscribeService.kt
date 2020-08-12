@@ -6,7 +6,7 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.QueryMap
 
-interface SubscribeService {
+internal interface SubscribeService {
     @GET("v2/subscribe/{subKey}/{channel}/0")
     fun subscribe(
         @Path("subKey") subKey: String,

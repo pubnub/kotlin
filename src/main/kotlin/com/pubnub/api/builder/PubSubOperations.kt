@@ -3,23 +3,32 @@ package com.pubnub.api.builder
 // basic publish/subscribe class
 
 internal abstract class PubSubOperation(
-    internal var channels: List<String> = emptyList(),
-    internal var channelGroups: List<String> = emptyList()
+    internal val channels: List<String> = emptyList(),
+    internal val channelGroups: List<String> = emptyList()
 )
 
 // concrete publish/subscribe cases
 
 internal class SubscribeOperation(
-    internal var presenceEnabled: Boolean = false,
-    internal var timetoken: Long = 0L
-) : PubSubOperation()
+    channels: List<String> = emptyList(),
+    channelGroups: List<String> = emptyList(),
+    internal val presenceEnabled: Boolean = false,
+    internal val timetoken: Long = 0L
+) : PubSubOperation(channels, channelGroups)
 
-internal class UnsubscribeOperation : PubSubOperation()
+internal class UnsubscribeOperation(
+    channels: List<String> = emptyList(),
+    channelGroups: List<String> = emptyList()
+) : PubSubOperation(channels, channelGroups)
 
 internal class PresenceOperation(
-    internal var connected: Boolean = false
-) : PubSubOperation()
+    channels: List<String> = emptyList(),
+    channelGroups: List<String> = emptyList(),
+    internal val connected: Boolean = false
+) : PubSubOperation(channels, channelGroups)
 
 internal class StateOperation(
-    var state: Any? = null
-) : PubSubOperation()
+    channels: List<String> = emptyList(),
+    channelGroups: List<String> = emptyList(),
+    val state: Any? = null
+) : PubSubOperation(channels, channelGroups)

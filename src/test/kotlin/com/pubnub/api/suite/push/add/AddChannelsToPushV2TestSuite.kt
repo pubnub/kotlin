@@ -21,12 +21,12 @@ class AddChannelsToPushV2TestSuite : EndpointTestSuite<AddChannelsToPush, PNPush
     override fun requiredKeys() = SUB + AUTH
 
     override fun snippet(): AddChannelsToPush {
-        return pubnub.addPushNotificationsOnChannels().apply {
-            pushType = PNPushType.APNS2
-            channels = listOf("ch1", "ch2")
-            deviceId = "12345"
+        return pubnub.addPushNotificationsOnChannels(
+            pushType = PNPushType.APNS2,
+            channels = listOf("ch1", "ch2"),
+            deviceId = "12345",
             topic = "news"
-        }
+        )
     }
 
     override fun verifyResultExpectations(result: PNPushAddChannelResult) {

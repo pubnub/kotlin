@@ -349,10 +349,10 @@ class SubscriptionManager(val pubnub: PubNub) {
     @Synchronized
     fun unsubscribeAll() {
         adaptUnsubscribeBuilder(
-            UnsubscribeOperation().apply {
-                channels = subscriptionState.prepareChannelList(false)
+            UnsubscribeOperation(
+                channels = subscriptionState.prepareChannelList(false),
                 channelGroups = subscriptionState.prepareChannelGroupList(false)
-            }
+            )
         )
     }
 

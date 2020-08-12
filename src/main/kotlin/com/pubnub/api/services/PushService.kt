@@ -5,7 +5,7 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.QueryMap
 
-interface PushService {
+internal interface PushService {
 
     @GET("v1/push/sub-key/{subKey}/devices/{pushToken}")
     fun modifyChannelsForDevice(

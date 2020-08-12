@@ -12,28 +12,27 @@ import retrofit2.Call
 import retrofit2.Response
 import java.util.HashMap
 
-class GetMessageActions(pubnub: PubNub) :
-    Endpoint<EntityEnvelope<List<PNMessageAction>>, PNGetMessageActionsResult>(pubnub) {
-
-    lateinit var channel: String
-    var start: Long? = null
-    var end: Long? = null
-    var limit: Int? = null
+/**
+ * @see [PubNub.getMessageActions]
+ */
+class GetMessageActions internal constructor(
+    pubnub: PubNub,
+    val channel: String,
+    val start: Long? = null,
+    val end: Long? = null,
+    val limit: Int? = null
+) : Endpoint<EntityEnvelope<List<PNMessageAction>>, PNGetMessageActionsResult>(pubnub) {
 
     override fun validateParams() {
         super.validateParams()
-        if (!::channel.isInitialized || channel.isBlank()) {
-            throw PubNubException(PubNubError.CHANNEL_MISSING)
-        }
+        if (channel.isBlank()) throw PubNubException(PubNubError.CHANNEL_MISSING)
     }
 
     override fun getAffectedChannels() = listOf(channel)
 
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityEnvelope<List<PNMessageAction>>> {
 
-        start?.let { queryParams["start"] = it.toString().toLowerCase() }
-        end?.let { queryParams["end"] = it.toString().toLowerCase() }
-        limit?.let { queryParams["limit"] = it.toString().toLowerCase() }
+        addQueryParams(queryParams)
 
         return pubnub.retrofitManager.messageActionService
             .getMessageActions(
@@ -43,9 +42,16 @@ class GetMessageActions(pubnub: PubNub) :
             )
     }
 
-    override fun createResponse(input: Response<EntityEnvelope<List<PNMessageAction>>>): PNGetMessageActionsResult? {
-        return PNGetMessageActionsResult(input.body()!!.data!!)
-    }
+    override fun createResponse(input: Response<EntityEnvelope<List<PNMessageAction>>>): PNGetMessageActionsResult =
+        PNGetMessageActionsResult(
+            actions = input.body()!!.data!!
+        )
 
     override fun operationType() = PNOperationType.PNGetMessageActions
+
+    private fun addQueryParams(queryParams: MutableMap<String, String>) {
+        start?.run { queryParams["start"] = this.toString().toLowerCase() }
+        end?.run { queryParams["end"] = this.toString().toLowerCase() }
+        limit?.run { queryParams["limit"] = this.toString().toLowerCase() }
+    }
 }

@@ -13,7 +13,7 @@ import com.pubnub.api.suite.EndpointTestSuite
 import com.pubnub.api.suite.PUB
 import com.pubnub.api.suite.SUB
 import org.json.JSONObject
-import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.Assert.assertEquals
 
 class PublishPostTestSuite : EndpointTestSuite<Publish, PNPublishResult>() {
 
@@ -24,18 +24,18 @@ class PublishPostTestSuite : EndpointTestSuite<Publish, PNPublishResult>() {
     override fun requiredKeys() = SUB + PUB + AUTH
 
     override fun snippet(): Publish {
-        return pubnub.publish().apply {
-            channel = "ch1"
+        return pubnub.publish(
+            channel = "ch1",
             message = mapOf(
                 "name" to "john",
                 "age" to 30,
                 "private" to false
-            )
+            ),
             meta = JSONObject().apply {
                 put("city", "sf")
-            }.toMap()
+            }.toMap(),
             usePost = true
-        }
+        )
     }
 
     override fun verifyResultExpectations(result: PNPublishResult) {

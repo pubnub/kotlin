@@ -7,7 +7,7 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.QueryMap
 
-interface AccessManagerService {
+internal interface AccessManagerService {
 
     @GET("/v2/auth/grant/sub-key/{subKey}")
     fun grant(

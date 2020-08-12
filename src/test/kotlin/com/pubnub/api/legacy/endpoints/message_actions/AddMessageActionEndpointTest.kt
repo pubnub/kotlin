@@ -10,19 +10,19 @@ import com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.stubFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlMatching
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
+import com.pubnub.api.CommonUtils.assertPnException
+import com.pubnub.api.CommonUtils.emptyJson
+import com.pubnub.api.CommonUtils.failTest
 import com.pubnub.api.PubNubError
-import com.pubnub.api.assertPnException
-import com.pubnub.api.emptyJson
 import com.pubnub.api.enums.PNOperationType
-import com.pubnub.api.failTest
 import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.listen
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 import com.pubnub.api.param
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertFalse
-import org.junit.jupiter.api.Assertions.assertNotNull
-import org.junit.jupiter.api.Test
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotNull
+import org.junit.Test
 import java.util.concurrent.atomic.AtomicBoolean
 
 class AddMessageActionEndpointTest : BaseTest() {
@@ -50,20 +50,20 @@ class AddMessageActionEndpointTest : BaseTest() {
                 )
         )
 
-        val result = pubnub.addMessageAction().apply {
-            channel = "coolChannel"
+        val result = pubnub.addMessageAction(
+            channel = "coolChannel",
             messageAction = PNMessageAction(
                 type = "emoji",
                 value = "smiley",
                 messageTimetoken = 123
             )
-        }.sync()!!
+        ).sync()!!
 
-        assertEquals(result.messageTimetoken, 123)
+        assertEquals(result.messageTimetoken, 123L)
         assertEquals(result.type, "emoji")
         assertEquals(result.uuid, "someUuid")
         assertEquals(result.value, "smiley")
-        assertEquals(result.actionTimetoken, 1000)
+        assertEquals(result.actionTimetoken, 1000L)
     }
 
     @Test
@@ -91,21 +91,21 @@ class AddMessageActionEndpointTest : BaseTest() {
 
         val success = AtomicBoolean()
 
-        pubnub.addMessageAction().apply {
-            channel = "coolChannel"
+        pubnub.addMessageAction(
+            channel = "coolChannel",
             messageAction = PNMessageAction(
                 type = "emoji",
                 value = "smiley",
                 messageTimetoken = 123
             )
-        }.async { result, status ->
+        ).async { result, status ->
             assertFalse(status.error)
             assertEquals(PNOperationType.PNAddMessageAction, status.operation)
-            assertEquals(result!!.messageTimetoken, 123)
+            assertEquals(result!!.messageTimetoken, 123L)
             assertEquals(result.type, "emoji")
             assertEquals(result.uuid, "someUuid")
             assertEquals(result.value, "smiley")
-            assertEquals(result.actionTimetoken, 1000)
+            assertEquals(result.actionTimetoken, 1000L)
             success.set(true)
         }
 
@@ -135,14 +135,14 @@ class AddMessageActionEndpointTest : BaseTest() {
         )
 
         try {
-            pubnub.addMessageAction().apply {
-                channel = "coolChannel"
+            pubnub.addMessageAction(
+                channel = "coolChannel",
                 messageAction = PNMessageAction(
                     type = "emoji",
                     value = "smiley",
                     messageTimetoken = 123
                 )
-            }.sync()!!
+            ).sync()!!
             failTest()
         } catch (e: Exception) {
             assertPnException(PubNubError.PARSING_ERROR, e)
@@ -158,14 +158,14 @@ class AddMessageActionEndpointTest : BaseTest() {
         )
 
         try {
-            pubnub.addMessageAction().apply {
-                channel = "coolChannel"
+            pubnub.addMessageAction(
+                channel = "coolChannel",
                 messageAction = PNMessageAction(
                     type = "emoji",
                     value = "smiley",
                     messageTimetoken = 123
                 )
-            }.sync()!!
+            ).sync()!!
             failTest()
         } catch (e: Exception) {
             assertPnException(PubNubError.PARSING_ERROR, e)
@@ -181,14 +181,14 @@ class AddMessageActionEndpointTest : BaseTest() {
         )
 
         try {
-            pubnub.addMessageAction().apply {
-                channel = "coolChannel"
+            pubnub.addMessageAction(
+                channel = "coolChannel",
                 messageAction = PNMessageAction(
                     type = "emoji",
                     value = "smiley",
                     messageTimetoken = 123
                 )
-            }.sync()!!
+            ).sync()!!
             failTest()
         } catch (e: Exception) {
             assertPnException(PubNubError.PARSING_ERROR, e)
@@ -212,14 +212,14 @@ class AddMessageActionEndpointTest : BaseTest() {
         )
 
         try {
-            pubnub.addMessageAction().apply {
-                channel = "coolChannel"
+            pubnub.addMessageAction(
+                channel = "coolChannel",
                 messageAction = PNMessageAction(
                     type = "emoji",
                     value = "smiley",
                     messageTimetoken = 123
                 )
-            }.sync()!!
+            ).sync()!!
             failTest()
         } catch (e: Exception) {
             assertPnException(PubNubError.PARSING_ERROR, e)
@@ -244,14 +244,14 @@ class AddMessageActionEndpointTest : BaseTest() {
         )
 
         try {
-            pubnub.addMessageAction().apply {
-                channel = "coolChannel"
+            pubnub.addMessageAction(
+                channel = "coolChannel",
                 messageAction = PNMessageAction(
                     type = "emoji",
                     value = "smiley",
                     messageTimetoken = 123
                 )
-            }.sync()!!
+            ).sync()!!
             failTest()
         } catch (e: Exception) {
             assertPnException(PubNubError.PARSING_ERROR, e)
@@ -259,51 +259,33 @@ class AddMessageActionEndpointTest : BaseTest() {
     }
 
     @Test
-    fun testNoChannel() {
-        try {
-            pubnub.addMessageAction().apply {
-            }.sync()!!
-            failTest()
-        } catch (e: Exception) {
-            assertPnException(PubNubError.CHANNEL_MISSING, e)
-        }
-    }
-
-    @Test
     fun testBlankChannel() {
         try {
-            pubnub.addMessageAction().apply {
-                channel = " "
-            }.sync()!!
+            pubnub.addMessageAction(
+                channel = " ",
+                messageAction = PNMessageAction(
+                    type = "emoji",
+                    value = "smiley",
+                    messageTimetoken = 123
+                )
+            ).sync()!!
             failTest()
         } catch (e: Exception) {
             assertPnException(PubNubError.CHANNEL_MISSING, e)
-        }
-    }
-
-    @Test
-    fun testNoMessageAction() {
-        try {
-            pubnub.addMessageAction().apply {
-                channel = "coolChannel"
-            }.sync()!!
-            failTest()
-        } catch (e: Exception) {
-            assertPnException(PubNubError.MESSAGE_ACTION_MISSING, e)
         }
     }
 
     @Test
     fun testBlankType() {
         try {
-            pubnub.addMessageAction().apply {
-                channel = "coolChannel"
+            pubnub.addMessageAction(
+                channel = "coolChannel",
                 messageAction = PNMessageAction(
                     type = " ",
                     value = "smiley",
                     messageTimetoken = 123
                 )
-            }.sync()!!
+            ).sync()!!
             failTest()
         } catch (e: Exception) {
             assertPnException(PubNubError.MESSAGE_ACTION_TYPE_MISSING, e)
@@ -313,14 +295,14 @@ class AddMessageActionEndpointTest : BaseTest() {
     @Test
     fun testBlankValue() {
         try {
-            pubnub.addMessageAction().apply {
-                channel = "coolChannel"
+            pubnub.addMessageAction(
+                channel = "coolChannel",
                 messageAction = PNMessageAction(
                     type = "emoji",
                     value = " ",
                     messageTimetoken = 123
                 )
-            }.sync()!!
+            ).sync()!!
             failTest()
         } catch (e: Exception) {
             assertPnException(PubNubError.MESSAGE_ACTION_VALUE_MISSING, e)
@@ -331,14 +313,14 @@ class AddMessageActionEndpointTest : BaseTest() {
     fun testInvalidSubKey() {
         pubnub.configuration.subscribeKey = " "
         try {
-            pubnub.addMessageAction().apply {
-                channel = "coolChannel"
+            pubnub.addMessageAction(
+                channel = "coolChannel",
                 messageAction = PNMessageAction(
                     type = "emoji",
                     value = " ",
                     messageTimetoken = 123
                 )
-            }.sync()!!
+            ).sync()!!
             failTest()
         } catch (e: Exception) {
             assertPnException(PubNubError.SUBSCRIBE_KEY_MISSING, e)
@@ -370,14 +352,14 @@ class AddMessageActionEndpointTest : BaseTest() {
 
         pubnub.configuration.authKey = "authKey"
 
-        pubnub.addMessageAction().apply {
-            channel = "coolChannel"
+        pubnub.addMessageAction(
+            channel = "coolChannel",
             messageAction = PNMessageAction(
                 type = "emoji",
                 value = "smiley",
                 messageTimetoken = 123
             )
-        }.sync()!!
+        ).sync()!!
 
         val requests = findAll(postRequestedFor(urlMatching("/.*")))
         assertEquals(1, requests.size)
@@ -417,14 +399,14 @@ class AddMessageActionEndpointTest : BaseTest() {
 
         lateinit var telemetryParamName: String
 
-        pubnub.addMessageAction().apply {
-            channel = "coolChannel"
+        pubnub.addMessageAction(
+            channel = "coolChannel",
             messageAction = PNMessageAction(
                 type = "emoji",
                 value = "smiley",
                 messageTimetoken = 123
             )
-        }.async { _, status ->
+        ).async { _, status ->
             assertFalse(status.error)
             assertEquals(PNOperationType.PNAddMessageAction, status.operation)
             telemetryParamName = "l_${status.operation.queryParam}"

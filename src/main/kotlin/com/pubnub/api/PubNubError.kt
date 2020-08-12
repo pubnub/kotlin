@@ -1,6 +1,14 @@
 package com.pubnub.api
 
-enum class PubNubError(val code: Int, val message: String) {
+import com.pubnub.api.models.consumer.PNStatus
+
+/**
+ * List of known PubNub errors. Observe them in [PubNubException.pubnubError] in [PNStatus.exception].
+ *
+ * @property code The error code.
+ * @property message The error message.
+ */
+enum class PubNubError(private val code: Int, val message: String) {
 
     TIMEOUT(
         100,

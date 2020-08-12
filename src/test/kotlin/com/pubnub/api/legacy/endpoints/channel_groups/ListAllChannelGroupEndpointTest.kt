@@ -7,20 +7,21 @@ import com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.stubFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlMatching
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
+import com.pubnub.api.CommonUtils.assertPnException
+import com.pubnub.api.CommonUtils.failTest
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
-import com.pubnub.api.assertPnException
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
-import com.pubnub.api.failTest
 import com.pubnub.api.legacy.BaseTest
 import org.awaitility.Awaitility
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers
 import org.hamcrest.core.IsEqual
-import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Test
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
+import org.junit.Test
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -152,11 +153,11 @@ class ListAllChannelGroupEndpointTest : BaseTest() {
 
         pubnub.listAllChannelGroups()
             .async { _, status ->
-                Assertions.assertFalse(status.error)
+                assertFalse(status.error)
                 assertEquals(PNOperationType.PNChannelGroupsOperation, status.operation)
                 assertEquals(PNStatusCategory.PNAcknowledgmentCategory, status.category)
-                Assertions.assertTrue(status.affectedChannels.isEmpty())
-                Assertions.assertTrue(status.affectedChannelGroups.isEmpty())
+                assertTrue(status.affectedChannels.isEmpty())
+                assertTrue(status.affectedChannelGroups.isEmpty())
                 atomic.incrementAndGet()
             }
 

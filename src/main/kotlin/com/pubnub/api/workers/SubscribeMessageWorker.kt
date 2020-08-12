@@ -16,6 +16,8 @@ import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
 import com.pubnub.api.models.consumer.pubsub.objects.ObjectPayload
+import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventMessage
+import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
 import com.pubnub.api.models.server.PresenceEnvelope
 import com.pubnub.api.models.server.SubscribeMessage
 import com.pubnub.api.vendor.Crypto
@@ -130,6 +132,8 @@ internal class SubscribeMessageWorker(
                     listenerManager.announce(PNSignalResult(result, extractedMessage!!))
                 }
                 TYPE_OBJECT -> {
+                    listenerManager.announce(PNObjectEventResult(result,
+                            pubnub.mapper.convertValue(extractedMessage, PNObjectEventMessage::class.java)))
                 }
                 TYPE_MESSAGE_ACTION -> {
                     val objectPayload = pubnub.mapper.convertValue(extractedMessage, ObjectPayload::class.java)

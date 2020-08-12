@@ -10,27 +10,27 @@ import com.github.tomakehurst.wiremock.client.WireMock.noContent
 import com.github.tomakehurst.wiremock.client.WireMock.stubFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlMatching
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
+import com.pubnub.api.CommonUtils.assertPnException
+import com.pubnub.api.CommonUtils.emptyJson
+import com.pubnub.api.CommonUtils.failTest
+import com.pubnub.api.CommonUtils.getSpecialCharsMap
 import com.pubnub.api.Endpoint
 import com.pubnub.api.PubNubError
-import com.pubnub.api.assertPnException
 import com.pubnub.api.await
-import com.pubnub.api.emptyJson
 import com.pubnub.api.encodedParam
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
-import com.pubnub.api.failTest
-import com.pubnub.api.getSpecialCharsMap
 import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.param
 import org.awaitility.Awaitility
 import org.awaitility.Durations
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertFalse
-import org.junit.jupiter.api.Assertions.assertNotNull
-import org.junit.jupiter.api.Assertions.assertNull
-import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.Test
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
+import org.junit.Test
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
@@ -262,7 +262,7 @@ abstract class EndpointTestSuite<T : Endpoint<*, R>, R> : BaseTest() {
     @Test
     fun testUrlEncoding() {
         snippet().apply {
-            queryParam = getSpecialCharsMap().map {
+            queryParam += getSpecialCharsMap().map {
                 it.name to it.regular
             }.toMap()
         }.await { result, status ->
@@ -366,9 +366,9 @@ abstract class EndpointTestSuite<T : Endpoint<*, R>, R> : BaseTest() {
     }
 }
 
-private fun extractKeys(n: Int): List<Int> {
+private fun extractKeys(value: Int): List<Int> {
     val keys = mutableListOf<Int>()
-    var n = n
+    var n = value
     while (n > 0) {
         val power = {
             var res = 0

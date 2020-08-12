@@ -21,12 +21,12 @@ class RemoveChannelsFromPushV2TestSuite : EndpointTestSuite<RemoveChannelsFromPu
     override fun requiredKeys() = SUB + AUTH
 
     override fun snippet(): RemoveChannelsFromPush {
-        return pubnub.removePushNotificationsFromChannels().apply {
-            pushType = PNPushType.APNS2
-            channels = listOf("ch1", "ch2")
-            deviceId = "12345"
+        return pubnub.removePushNotificationsFromChannels(
+            pushType = PNPushType.APNS2,
+            channels = listOf("ch1", "ch2"),
+            deviceId = "12345",
             topic = "news"
-        }
+        )
     }
 
     override fun verifyResultExpectations(result: PNPushRemoveChannelResult) {

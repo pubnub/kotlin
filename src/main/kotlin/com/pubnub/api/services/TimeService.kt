@@ -4,7 +4,7 @@ import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.QueryMap
 
-interface TimeService {
+internal interface TimeService {
 
     @GET("/time/0")
     fun fetchTime(@QueryMap options: Map<String, String>): Call<List<Long>>

@@ -9,7 +9,7 @@ import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.suite.AUTH
 import com.pubnub.api.suite.EndpointTestSuite
 import com.pubnub.api.suite.SUB
-import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.Assert.assertTrue
 
 class HeartbeatTestSuite : EndpointTestSuite<Heartbeat, Boolean>() {
 

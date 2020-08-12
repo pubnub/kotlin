@@ -14,10 +14,10 @@ import com.pubnub.api.suite.EndpointTestSuite
 import com.pubnub.api.suite.OptionalScenario
 import com.pubnub.api.suite.Result
 import com.pubnub.api.suite.SUB
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertFalse
-import org.junit.jupiter.api.Assertions.assertNull
-import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 
 class SetStateTestSuite : EndpointTestSuite<SetState, PNSetStateResult>() {
 
@@ -27,12 +27,11 @@ class SetStateTestSuite : EndpointTestSuite<SetState, PNSetStateResult>() {
 
     override fun requiredKeys() = SUB + AUTH
 
-    override fun snippet(): SetState {
-        return pubnub.setPresenceState().apply {
-            channels = listOf("ch1")
+    override fun snippet(): SetState =
+        pubnub.setPresenceState(
+            channels = listOf("ch1"),
             state = mapOf("text" to "hello")
-        }
-    }
+        )
 
     override fun verifyResultExpectations(result: PNSetStateResult) {
         assertEquals(JsonObject().apply { addProperty("text", "hello") }, result.state)

@@ -13,33 +13,29 @@ import retrofit2.Call
 import retrofit2.Response
 import java.util.HashMap
 
-class AddMessageAction(pubnub: PubNub) : Endpoint<EntityEnvelope<PNMessageAction>, PNAddMessageActionResult>(pubnub) {
-
-    lateinit var channel: String
-    lateinit var messageAction: PNMessageAction
+/**
+ * @see [PubNub.addMessageAction]
+ */
+class AddMessageAction internal constructor(
+    pubnub: PubNub,
+    val channel: String,
+    val messageAction: PNMessageAction
+) : Endpoint<EntityEnvelope<PNMessageAction>, PNAddMessageActionResult>(pubnub) {
 
     override fun validateParams() {
         super.validateParams()
-        if (!::channel.isInitialized || channel.isBlank()) {
-            throw PubNubException(PubNubError.CHANNEL_MISSING)
-        }
-        if (!::messageAction.isInitialized) {
-            throw PubNubException(PubNubError.MESSAGE_ACTION_MISSING)
-        }
-        if (messageAction.type.isBlank()) {
-            throw PubNubException(PubNubError.MESSAGE_ACTION_TYPE_MISSING)
-        }
-        if (messageAction.value.isBlank()) {
-            throw PubNubException(PubNubError.MESSAGE_ACTION_VALUE_MISSING)
-        }
+        if (channel.isBlank()) throw PubNubException(PubNubError.CHANNEL_MISSING)
+        if (messageAction.type.isBlank()) throw PubNubException(PubNubError.MESSAGE_ACTION_TYPE_MISSING)
+        if (messageAction.value.isBlank()) throw PubNubException(PubNubError.MESSAGE_ACTION_VALUE_MISSING)
     }
 
     override fun getAffectedChannels() = listOf(channel)
 
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityEnvelope<PNMessageAction>> {
-        val body = JsonObject()
-        body.addProperty("type", messageAction.type)
-        body.addProperty("value", messageAction.value)
+        val body = JsonObject().apply {
+            addProperty("type", messageAction.type)
+            addProperty("value", messageAction.value)
+        }
 
         return pubnub.retrofitManager.messageActionService
             .addMessageAction(
@@ -51,9 +47,10 @@ class AddMessageAction(pubnub: PubNub) : Endpoint<EntityEnvelope<PNMessageAction
             )
     }
 
-    override fun createResponse(input: Response<EntityEnvelope<PNMessageAction>>): PNAddMessageActionResult? {
-        return PNAddMessageActionResult(input.body()!!.data!!)
-    }
+    override fun createResponse(input: Response<EntityEnvelope<PNMessageAction>>): PNAddMessageActionResult =
+        PNAddMessageActionResult(
+            action = input.body()!!.data!!
+        )
 
     override fun operationType() = PNOperationType.PNAddMessageAction
 }

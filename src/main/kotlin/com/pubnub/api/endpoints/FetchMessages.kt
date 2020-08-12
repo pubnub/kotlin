@@ -17,40 +17,46 @@ import retrofit2.Response
 import java.util.HashMap
 import java.util.Locale
 
-class FetchMessages(pubnub: PubNub) : Endpoint<FetchMessagesEnvelope, PNFetchMessagesResult>(pubnub) {
-
-    private val log = LoggerFactory.getLogger("FetchMessages")
+/**
+ * @see [PubNub.fetchMessages]
+ */
+class FetchMessages internal constructor(
+    pubnub: PubNub,
+    val channels: List<String>,
+    val maximumPerChannel: Int,
+    val start: Long? = null,
+    val end: Long? = null,
+    val includeMeta: Boolean,
+    val includeMessageActions: Boolean
+) :
+    Endpoint<FetchMessagesEnvelope, PNFetchMessagesResult>(pubnub) {
 
     private companion object {
         private const val DEFAULT_MESSAGES = 1
         private const val MAX_MESSAGES = 25
     }
 
-    lateinit var channels: List<String>
-    var maximumPerChannel = 0
-    var start: Long? = null
-    var end: Long? = null
-    var includeMeta = false
-    var includeMessageActions = false
+    private val log = LoggerFactory.getLogger("FetchMessages")
+
+    private var maximumPerChannelParam: Int = maximumPerChannel
 
     override fun validateParams() {
         super.validateParams()
-        if (!::channels.isInitialized || channels.isEmpty()) {
-            throw PubNubException(PubNubError.CHANNEL_MISSING)
-        }
+        if (channels.isEmpty()) throw PubNubException(PubNubError.CHANNEL_MISSING)
 
         if (!includeMessageActions) {
             if (maximumPerChannel !in DEFAULT_MESSAGES..MAX_MESSAGES) {
                 when {
-                    maximumPerChannel < DEFAULT_MESSAGES -> maximumPerChannel = DEFAULT_MESSAGES
-                    maximumPerChannel > MAX_MESSAGES -> maximumPerChannel = MAX_MESSAGES
+                    maximumPerChannel < DEFAULT_MESSAGES -> maximumPerChannelParam =
+                        DEFAULT_MESSAGES
+                    maximumPerChannel > MAX_MESSAGES -> maximumPerChannelParam = MAX_MESSAGES
                 }
-                log.info("maximumPerChannel param defaulting to $maximumPerChannel")
+                log.info("maximumPerChannel param defaulting to $maximumPerChannelParam")
             }
         } else {
             if (maximumPerChannel !in DEFAULT_MESSAGES..MAX_MESSAGES) {
-                maximumPerChannel = MAX_MESSAGES
-                log.info("maximumPerChannel param defaulting to $maximumPerChannel")
+                maximumPerChannelParam = MAX_MESSAGES
+                log.info("maximumPerChannel param defaulting to $maximumPerChannelParam")
             }
         }
     }
@@ -58,18 +64,7 @@ class FetchMessages(pubnub: PubNub) : Endpoint<FetchMessagesEnvelope, PNFetchMes
     override fun getAffectedChannels() = channels
 
     override fun doWork(queryParams: HashMap<String, String>): Call<FetchMessagesEnvelope> {
-        queryParams["max"] = maximumPerChannel.toString()
-
-        start?.let {
-            queryParams["start"] = it.toString().toLowerCase(Locale.US)
-        }
-        end?.let {
-            queryParams["end"] = it.toString().toLowerCase(Locale.US)
-        }
-
-        if (includeMeta) {
-            queryParams["include_meta"] = includeMeta.toString()
-        }
+        addQueryParams(queryParams)
 
         return if (!includeMessageActions) {
             pubnub.retrofitManager.historyService.fetchMessages(
@@ -89,7 +84,7 @@ class FetchMessages(pubnub: PubNub) : Endpoint<FetchMessagesEnvelope, PNFetchMes
         }
     }
 
-    override fun createResponse(input: Response<FetchMessagesEnvelope>): PNFetchMessagesResult? {
+    override fun createResponse(input: Response<FetchMessagesEnvelope>): PNFetchMessagesResult {
         val channelsMap = hashMapOf<String, List<PNFetchMessageItem>>()
 
         for (entry in input.body()!!.channels) {
@@ -110,8 +105,10 @@ class FetchMessages(pubnub: PubNub) : Endpoint<FetchMessagesEnvelope, PNFetchMes
             channelsMap[entry.key] = items
         }
 
-        return PNFetchMessagesResult(channelsMap)
+        return PNFetchMessagesResult(channels = channelsMap)
     }
+
+    override fun operationType() = PNOperationType.PNFetchMessagesOperation
 
     private fun processMessage(message: JsonElement): JsonElement {
         if (!pubnub.configuration.isCipherKeyValid())
@@ -120,7 +117,11 @@ class FetchMessages(pubnub: PubNub) : Endpoint<FetchMessagesEnvelope, PNFetchMes
         val crypto = Crypto(pubnub.configuration.cipherKey)
 
         val inputText =
-            if (pubnub.mapper.isJsonObject(message) && pubnub.mapper.hasField(message, "pn_other")) {
+            if (pubnub.mapper.isJsonObject(message) && pubnub.mapper.hasField(
+                    message,
+                    "pn_other"
+                )
+            ) {
                 pubnub.mapper.elementToString(message, "pn_other")
             } else {
                 pubnub.mapper.elementToString(message)
@@ -139,5 +140,12 @@ class FetchMessages(pubnub: PubNub) : Endpoint<FetchMessagesEnvelope, PNFetchMes
         return outputObject
     }
 
-    override fun operationType() = PNOperationType.PNFetchMessagesOperation
+    private fun addQueryParams(queryParams: MutableMap<String, String>) {
+        queryParams["max"] = maximumPerChannelParam.toString()
+
+        start?.run { queryParams["start"] = this.toString().toLowerCase(Locale.US) }
+        end?.run { queryParams["end"] = this.toString().toLowerCase(Locale.US) }
+
+        if (includeMeta) queryParams["include_meta"] = includeMeta.toString()
+    }
 }

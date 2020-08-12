@@ -11,10 +11,14 @@ import retrofit2.Call
 import retrofit2.Response
 import java.util.HashMap
 
-class RemoveChannelChannelGroup(pubnub: PubNub) : Endpoint<Void, PNChannelGroupsRemoveChannelResult>(pubnub) {
-
-    lateinit var channelGroup: String
-    lateinit var channels: List<String>
+/**
+ * @see [PubNub.removeChannelsFromChannelGroup]
+ */
+class RemoveChannelChannelGroup internal constructor(
+    pubnub: PubNub,
+    val channelGroup: String,
+    val channels: List<String>
+) : Endpoint<Void, PNChannelGroupsRemoveChannelResult>(pubnub) {
 
     override fun getAffectedChannels() = channels
 
@@ -22,18 +26,13 @@ class RemoveChannelChannelGroup(pubnub: PubNub) : Endpoint<Void, PNChannelGroups
 
     override fun validateParams() {
         super.validateParams()
-        if (!::channelGroup.isInitialized || channelGroup.isBlank()) {
-            throw PubNubException(PubNubError.GROUP_MISSING)
-        }
-        if (!::channels.isInitialized || channels.isEmpty()) {
-            throw PubNubException(PubNubError.CHANNEL_MISSING)
-        }
+        if (channelGroup.isBlank()) throw PubNubException(PubNubError.GROUP_MISSING)
+        if (channels.isEmpty()) throw PubNubException(PubNubError.CHANNEL_MISSING)
     }
 
     override fun doWork(queryParams: HashMap<String, String>): Call<Void> {
-        if (channels.isNotEmpty()) {
-            queryParams["remove"] = channels.toCsv()
-        }
+
+        addQueryParams(queryParams)
 
         return pubnub.retrofitManager.channelGroupService
             .removeChannel(
@@ -43,9 +42,14 @@ class RemoveChannelChannelGroup(pubnub: PubNub) : Endpoint<Void, PNChannelGroups
             )
     }
 
-    override fun createResponse(input: Response<Void>): PNChannelGroupsRemoveChannelResult? {
-        return PNChannelGroupsRemoveChannelResult()
-    }
+    override fun createResponse(input: Response<Void>): PNChannelGroupsRemoveChannelResult =
+        PNChannelGroupsRemoveChannelResult()
 
     override fun operationType() = PNOperationType.PNRemoveChannelsFromGroupOperation
+
+    private fun addQueryParams(queryParams: MutableMap<String, String>) {
+        if (channels.isNotEmpty()) {
+            queryParams["remove"] = channels.toCsv()
+        }
+    }
 }

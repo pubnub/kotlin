@@ -15,47 +15,33 @@ import retrofit2.Call
 import retrofit2.Response
 import java.util.HashMap
 
-class Grant(pubnub: PubNub) : Endpoint<Envelope<AccessManagerGrantPayload>, PNAccessManagerGrantResult>(pubnub) {
+/**
+ * @see [PubNub.grant]
+ */
+class Grant internal constructor(
+    pubnub: PubNub,
+    val read: Boolean = false,
+    val write: Boolean = false,
+    val manage: Boolean = false,
+    val delete: Boolean = false,
+    val ttl: Int = -1,
 
-    var read = false
-    var write = false
-    var manage = false
-    var delete = false
-    var ttl: Int = -1
-
-    var authKeys = emptyList<String>()
-    var channels = emptyList<String>()
-    var channelGroups = emptyList<String>()
+    val authKeys: List<String> = emptyList(),
+    val channels: List<String> = emptyList(),
+    val channelGroups: List<String> = emptyList()
+) : Endpoint<Envelope<AccessManagerGrantPayload>, PNAccessManagerGrantResult>(pubnub) {
 
     override fun validateParams() {
         super.validateParams()
-        if (!pubnub.configuration.isSecretKeyValid()) {
-            throw PubNubException(PubNubError.SECRET_KEY_MISSING)
-        }
+        if (!pubnub.configuration.isSecretKeyValid()) throw PubNubException(PubNubError.SECRET_KEY_MISSING)
     }
 
     override fun getAffectedChannels() = channels
     override fun getAffectedChannelGroups() = channelGroups
 
     override fun doWork(queryParams: HashMap<String, String>): Call<Envelope<AccessManagerGrantPayload>> {
-        channels.run {
-            if (isNotEmpty()) queryParams["channel"] = toCsv()
-        }
-        channelGroups.run {
-            if (isNotEmpty()) queryParams["channel-group"] = toCsv()
-        }
-        authKeys.run {
-            if (isNotEmpty()) queryParams["auth"] = toCsv()
-        }
 
-        if (ttl >= -1) {
-            queryParams["ttl"] = ttl.toString()
-        }
-
-        queryParams["r"] = if (read) "1" else "0"
-        queryParams["w"] = if (write) "1" else "0"
-        queryParams["m"] = if (manage) "1" else "0"
-        queryParams["d"] = if (delete) "1" else "0"
+        addQueryParams(queryParams)
 
         return pubnub.retrofitManager.accessManagerService
             .grant(
@@ -98,6 +84,10 @@ class Grant(pubnub: PubNub) : Endpoint<Envelope<AccessManagerGrantPayload>, PNAc
         )
     }
 
+    override fun operationType() = PNOperationType.PNAccessManagerGrant
+
+    override fun isAuthRequired() = false
+
     private fun createKeyMap(input: JsonElement): Map<String, PNAccessManagerKeyData> {
         val result: MutableMap<String, PNAccessManagerKeyData> =
             HashMap()
@@ -115,7 +105,18 @@ class Grant(pubnub: PubNub) : Endpoint<Envelope<AccessManagerGrantPayload>, PNAc
         return result
     }
 
-    override fun operationType() = PNOperationType.PNAccessManagerGrant
+    private fun addQueryParams(queryParams: MutableMap<String, String>) {
+        channels.run { if (isNotEmpty()) queryParams["channel"] = toCsv() }
+        channelGroups.run { if (isNotEmpty()) queryParams["channel-group"] = toCsv() }
+        authKeys.run { if (isNotEmpty()) queryParams["auth"] = toCsv() }
 
-    override fun isAuthRequired() = false
+        if (ttl >= -1) {
+            queryParams["ttl"] = ttl.toString()
+        }
+
+        queryParams["r"] = if (read) "1" else "0"
+        queryParams["w"] = if (write) "1" else "0"
+        queryParams["m"] = if (manage) "1" else "0"
+        queryParams["d"] = if (delete) "1" else "0"
+    }
 }

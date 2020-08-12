@@ -7,9 +7,9 @@ import com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.stubFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlMatching
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
+import com.pubnub.api.CommonUtils.assertPnException
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
-import com.pubnub.api.assertPnException
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.legacy.BaseTest
@@ -19,11 +19,11 @@ import org.awaitility.Awaitility
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers
 import org.hamcrest.core.IsEqual
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertFalse
-import org.junit.jupiter.api.Assertions.assertNotNull
-import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.Test
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertTrue
+import org.junit.Test
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
@@ -53,29 +53,19 @@ class AllChannelsChannelGroupEndpointTest : BaseTest() {
                 )
         )
 
-        val response = pubnub.listChannelsForChannelGroup().apply {
+        val response = pubnub.listChannelsForChannelGroup(
             channelGroup = "groupA"
-        }.sync()!!
+        ).sync()!!
 
         assertThat(response.channels, Matchers.contains("a", "b"))
     }
 
     @Test
-    fun testSyncMissingGroup() {
-        try {
-            pubnub.listChannelsForChannelGroup().apply {
-            }.sync()!!
-        } catch (e: Exception) {
-            assertPnException(PubNubError.GROUP_MISSING, e)
-        }
-    }
-
-    @Test
     fun testSyncEmptyGroup() {
         try {
-            pubnub.listChannelsForChannelGroup().apply {
+            pubnub.listChannelsForChannelGroup(
                 channelGroup = " "
-            }.sync()!!
+            ).sync()!!
         } catch (e: Exception) {
             assertPnException(PubNubError.GROUP_MISSING, e)
         }
@@ -105,9 +95,9 @@ class AllChannelsChannelGroupEndpointTest : BaseTest() {
         )
         pubnub.configuration.authKey = "myKey"
 
-        pubnub.listChannelsForChannelGroup().apply {
+        pubnub.listChannelsForChannelGroup(
             channelGroup = "groupA"
-        }.sync()!!
+        ).sync()!!
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
         assertEquals(1, requests.size)
@@ -139,9 +129,9 @@ class AllChannelsChannelGroupEndpointTest : BaseTest() {
 
         val atomic = AtomicInteger(0)
 
-        pubnub.listChannelsForChannelGroup().apply {
+        pubnub.listChannelsForChannelGroup(
             channelGroup = "groupA"
-        }.async { result, status ->
+        ).async { result, status ->
             assertFalse(status.error)
             assertEquals(PNOperationType.PNChannelsForGroupOperation, status.operation)
             assertEquals(PNStatusCategory.PNAcknowledgmentCategory, status.category)
@@ -160,9 +150,9 @@ class AllChannelsChannelGroupEndpointTest : BaseTest() {
     fun testIsSubRequiredSuccessSync() {
         pubnub.configuration.subscribeKey = " "
         try {
-            pubnub.listChannelsForChannelGroup().apply {
+            pubnub.listChannelsForChannelGroup(
                 channelGroup = "groupA"
-            }.sync()!!
+            ).sync()!!
             throw RuntimeException()
         } catch (e: PubNubException) {
             assertPnException(PubNubError.SUBSCRIBE_KEY_MISSING, e)
@@ -201,9 +191,9 @@ class AllChannelsChannelGroupEndpointTest : BaseTest() {
 
         lateinit var telemetryParamName: String
 
-        pubnub.listChannelsForChannelGroup().apply {
+        pubnub.listChannelsForChannelGroup(
             channelGroup = "groupA"
-        }.async { _, status ->
+        ).async { _, status ->
             assertFalse(status.error)
             assertEquals(PNOperationType.PNChannelsForGroupOperation, status.operation)
             telemetryParamName = "l_${status.operation.queryParam}"

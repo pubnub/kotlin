@@ -11,7 +11,7 @@ import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.QueryMap
 
-interface MessageActionService {
+internal interface MessageActionService {
 
     @POST("v1/message-actions/{subKey}/channel/{channel}/message/{messageTimetoken}")
     @Headers("Content-Type: application/json; charset=UTF-8")

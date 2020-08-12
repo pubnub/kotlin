@@ -8,10 +8,9 @@ import com.github.tomakehurst.wiremock.client.WireMock.matching
 import com.github.tomakehurst.wiremock.client.WireMock.stubFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlMatching
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
+import com.pubnub.api.CommonUtils.assertPnException
+import com.pubnub.api.CommonUtils.emptyJson
 import com.pubnub.api.PubNubError
-import com.pubnub.api.PubNubException
-import com.pubnub.api.assertPnException
-import com.pubnub.api.emptyJson
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.legacy.BaseTest
@@ -19,11 +18,11 @@ import com.pubnub.api.listen
 import com.pubnub.api.param
 import org.awaitility.Awaitility
 import org.hamcrest.core.IsEqual
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertFalse
-import org.junit.jupiter.api.Assertions.assertNotNull
-import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.Test
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertTrue
+import org.junit.Test
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
@@ -38,27 +37,10 @@ class AddChannelChannelGroupEndpointTest : BaseTest() {
                 .willReturn(emptyJson())
         )
 
-        pubnub.addChannelsToChannelGroup().apply {
-            channelGroup = "groupA"
+        pubnub.addChannelsToChannelGroup(
+            channelGroup = "groupA",
             channels = listOf("ch1", "ch2")
-        }.sync()!!
-    }
-
-    @Test
-    fun testSyncGroupMissing() {
-        stubFor(
-            get(urlPathEqualTo("/v1/channel-registration/sub-key/mySubscribeKey/channel-group/groupA"))
-                .withQueryParam("add", matching("ch1,ch2"))
-                .willReturn(emptyJson())
-        )
-
-        try {
-            pubnub.addChannelsToChannelGroup().apply {
-                channels = listOf("ch1", "ch2")
-            }.sync()!!
-        } catch (e: Exception) {
-            assertPnException(PubNubError.GROUP_MISSING, e)
-        }
+        ).sync()!!
     }
 
     @Test
@@ -69,28 +51,12 @@ class AddChannelChannelGroupEndpointTest : BaseTest() {
         )
 
         try {
-            pubnub.addChannelsToChannelGroup().apply {
-                channelGroup = ""
+            pubnub.addChannelsToChannelGroup(
+                channelGroup = "",
                 channels = listOf("ch1", "ch2")
-            }.sync()
+            ).sync()
         } catch (e: Exception) {
             assertPnException(PubNubError.GROUP_MISSING, e)
-        }
-    }
-
-    @Test
-    fun testSyncChannelMissing() {
-        stubFor(
-            get(urlPathEqualTo("/v1/channel-registration/sub-key/mySubscribeKey/channel-group/groupA"))
-                .willReturn(emptyJson())
-        )
-
-        try {
-            pubnub.addChannelsToChannelGroup().apply {
-                channelGroup = "groupA"
-            }.sync()
-        } catch (e: PubNubException) {
-            assertPnException(PubNubError.CHANNEL_MISSING, e)
         }
     }
 
@@ -105,10 +71,10 @@ class AddChannelChannelGroupEndpointTest : BaseTest() {
         pubnub.configuration.subscribeKey = " "
 
         try {
-            pubnub.addChannelsToChannelGroup().apply {
-                channelGroup = "groupA"
+            pubnub.addChannelsToChannelGroup(
+                channelGroup = "groupA",
                 channels = listOf("ch1", "ch2")
-            }.sync()
+            ).sync()
         } catch (e: Exception) {
             assertPnException(PubNubError.SUBSCRIBE_KEY_MISSING, e)
         }
@@ -123,10 +89,10 @@ class AddChannelChannelGroupEndpointTest : BaseTest() {
         )
         pubnub.configuration.authKey = "myKey"
 
-        pubnub.addChannelsToChannelGroup().apply {
-            channelGroup = "groupA"
+        pubnub.addChannelsToChannelGroup(
+            channelGroup = "groupA",
             channels = listOf("ch1", "ch2")
-        }.sync()!!
+        ).sync()!!
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
         assertEquals(1, requests.size)
@@ -143,10 +109,10 @@ class AddChannelChannelGroupEndpointTest : BaseTest() {
 
         val atomic = AtomicInteger(0)
 
-        pubnub.addChannelsToChannelGroup().apply {
-            channelGroup = "groupA"
+        pubnub.addChannelsToChannelGroup(
+            channelGroup = "groupA",
             channels = listOf("ch1", "ch2")
-        }.async { _, status ->
+        ).async { _, status ->
             assertFalse(status.error)
             assertEquals(PNOperationType.PNAddChannelsToGroupOperation, status.operation)
             assertEquals(PNStatusCategory.PNAcknowledgmentCategory, status.category)
@@ -170,10 +136,10 @@ class AddChannelChannelGroupEndpointTest : BaseTest() {
 
         val atomic = AtomicInteger(0)
 
-        pubnub.addChannelsToChannelGroup().apply {
-            channelGroup = "groupA"
+        pubnub.addChannelsToChannelGroup(
+            channelGroup = "groupA",
             channels = listOf("ch1", "ch2")
-        }.async { _, status ->
+        ).async { _, status ->
             assertTrue(status.error)
             assertEquals(PNOperationType.PNAddChannelsToGroupOperation, status.operation)
             assertEquals(PNStatusCategory.PNAccessDeniedCategory, status.category)
@@ -199,10 +165,10 @@ class AddChannelChannelGroupEndpointTest : BaseTest() {
 
         lateinit var telemetryParamName: String
 
-        pubnub.addChannelsToChannelGroup().apply {
-            channelGroup = "groupA"
+        pubnub.addChannelsToChannelGroup(
+            channelGroup = "groupA",
             channels = listOf("ch1", "ch2")
-        }.async { _, status ->
+        ).async { _, status ->
             assertFalse(status.error)
             assertEquals(PNOperationType.PNAddChannelsToGroupOperation, status.operation)
             telemetryParamName = "l_${status.operation.queryParam}"

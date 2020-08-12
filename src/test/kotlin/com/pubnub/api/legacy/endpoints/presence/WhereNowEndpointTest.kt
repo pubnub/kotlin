@@ -7,19 +7,19 @@ import com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.stubFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlMatching
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
+import com.pubnub.api.CommonUtils.assertPnException
+import com.pubnub.api.CommonUtils.failTest
 import com.pubnub.api.PubNubError
-import com.pubnub.api.assertPnException
 import com.pubnub.api.enums.PNStatusCategory
-import com.pubnub.api.failTest
 import com.pubnub.api.legacy.BaseTest
 import org.awaitility.Awaitility
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers
 import org.hamcrest.core.IsEqual
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertFalse
-import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.Test
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
+import org.junit.Test
 import java.util.concurrent.TimeUnit.SECONDS
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -75,9 +75,9 @@ class WhereNowEndpointTest : BaseTest() {
                 )
         )
 
-        val response = pubnub.whereNow().apply {
+        val response = pubnub.whereNow(
             uuid = "customUUID"
-        }.sync()!!
+        ).sync()!!
 
         assertThat(response.channels, Matchers.contains("a", "b"))
     }
@@ -192,7 +192,7 @@ class WhereNowEndpointTest : BaseTest() {
 
         val atomic = AtomicInteger(0)
 
-        pubnub.whereNow().async { result, status ->
+        pubnub.whereNow().async { _, status ->
             assertTrue(status.error)
             assertPnException(PubNubError.PARSING_ERROR, status)
             atomic.incrementAndGet()

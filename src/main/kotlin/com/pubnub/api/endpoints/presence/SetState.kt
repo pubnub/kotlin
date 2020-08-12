@@ -15,42 +15,38 @@ import retrofit2.Call
 import retrofit2.Response
 import java.util.HashMap
 
-class SetState(pubnub: PubNub) : Endpoint<Envelope<JsonElement>, PNSetStateResult>(pubnub) {
-
-    var channels = emptyList<String>()
-    var channelGroups = emptyList<String>()
-    var uuid = pubnub.configuration.uuid
-    lateinit var state: Any
+/**
+ * @see [PubNub.setPresenceState]
+ */
+class SetState internal constructor(
+    pubnub: PubNub,
+    val channels: List<String>,
+    val channelGroups: List<String>,
+    val state: Any,
+    val uuid: String = pubnub.configuration.uuid
+) : Endpoint<Envelope<JsonElement>, PNSetStateResult>(pubnub) {
 
     override fun getAffectedChannels() = channels
     override fun getAffectedChannelGroups() = channelGroups
 
     override fun validateParams() {
         super.validateParams()
-        if (channels.isNullOrEmpty() && channelGroups.isNullOrEmpty()) {
+        if (channels.isEmpty() && channelGroups.isEmpty())
             throw PubNubException(PubNubError.CHANNEL_AND_GROUP_MISSING)
-        }
-        if (!::state.isInitialized) {
-            throw PubNubException(PubNubError.STATE_MISSING)
-        }
     }
 
     override fun doWork(queryParams: HashMap<String, String>): Call<Envelope<JsonElement>> {
         if (uuid == pubnub.configuration.uuid) {
             pubnub.subscriptionManager.adaptStateBuilder(
                 StateOperation(
-                    state = state
-                ).apply {
-                    this.channels = this@SetState.channels
-                    this.channelGroups = this@SetState.channelGroups
-                }
+                    state = state,
+                    channels = channels,
+                    channelGroups = channelGroups
+                )
             )
         }
 
-        if (channelGroups.isNotEmpty()) {
-            queryParams["channel-group"] = channelGroups.toCsv()
-        }
-        queryParams["state"] = pubnub.mapper.toJson(state)
+        addQueryParams(queryParams)
 
         return pubnub.retrofitManager.presenceService.setState(
             pubnub.configuration.subscribeKey,
@@ -60,12 +56,17 @@ class SetState(pubnub: PubNub) : Endpoint<Envelope<JsonElement>, PNSetStateResul
         )
     }
 
-    override fun createResponse(input: Response<Envelope<JsonElement>>): PNSetStateResult? {
+    override fun createResponse(input: Response<Envelope<JsonElement>>): PNSetStateResult {
         if (input.body()!!.payload!! is JsonNull) {
             throw PubNubException(PubNubError.PARSING_ERROR)
         }
-        return PNSetStateResult(input.body()!!.payload!!)
+        return PNSetStateResult(state = input.body()!!.payload!!)
     }
 
     override fun operationType() = PNOperationType.PNSetStateOperation
+
+    private fun addQueryParams(queryParams: MutableMap<String, String>) {
+        if (channelGroups.isNotEmpty()) queryParams["channel-group"] = channelGroups.toCsv()
+        queryParams["state"] = pubnub.mapper.toJson(state)
+    }
 }

@@ -8,12 +8,12 @@ import com.pubnub.api.models.consumer.push.payload.PushPayloadHelper.APNSPayload
 import com.pubnub.api.models.consumer.push.payload.PushPayloadHelper.APNSPayload.APS
 import com.pubnub.api.models.consumer.push.payload.PushPayloadHelper.FCMPayload
 import com.pubnub.api.models.consumer.push.payload.PushPayloadHelper.MPNSPayload
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertFalse
-import org.junit.jupiter.api.Assertions.assertNotNull
-import org.junit.jupiter.api.Assertions.assertNull
-import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.Test
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
+import org.junit.Test
 import java.util.ArrayList
 import java.util.HashMap
 
@@ -116,6 +116,7 @@ class PushPayloadHelperHelperTest : BaseTest() {
         assertEquals("2", pnApnsDataMap["key_2"])
     }
 
+    @Suppress("UNCHECKED_CAST")
     @Test
     fun testApple_PnPushArray() {
         val pushPayloadHelper = PushPayloadHelper()

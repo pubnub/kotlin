@@ -7,65 +7,42 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.PNPublishResult
 import com.pubnub.api.vendor.Crypto
+import com.pubnub.extension.numericString
+import com.pubnub.extension.valueString
 import retrofit2.Call
 import retrofit2.Response
 
-class Publish(pubnub: PubNub) : Endpoint<List<Any>, PNPublishResult>(pubnub) {
+/**
+ * @see [PubNub.publish]
+ */
+class Publish internal constructor(
+    pubnub: PubNub,
+    val message: Any,
+    val channel: String,
+    val meta: Any? = null,
+    val shouldStore: Boolean? = null,
+    val usePost: Boolean = false,
+    val replicate: Boolean = true,
+    val ttl: Int? = null
+) : Endpoint<List<Any>, PNPublishResult>(pubnub) {
 
-    lateinit var channel: String
-    lateinit var message: Any
-    lateinit var meta: Any
-    var shouldStore: Boolean? = null
-    var usePost = false
-    var replicate = true
-    var ttl: Int? = null
-
-    private fun isChannelValid() = ::channel.isInitialized
-    private fun isMessageValid() = ::message.isInitialized
-    private fun isMetaValid() = ::meta.isInitialized
+    private val useEncryption: Boolean = pubnub.configuration.isCipherKeyValid()
 
     override fun validateParams() {
         super.validateParams()
-        if (!isChannelValid() || channel.isBlank()) {
-            throw PubNubException(PubNubError.CHANNEL_MISSING)
-        }
-        if (!isMessageValid()) {
-            throw PubNubException(PubNubError.MESSAGE_MISSING)
-        }
+        if (channel.isBlank()) throw PubNubException(PubNubError.CHANNEL_MISSING)
     }
 
     override fun getAffectedChannels() = listOf(channel)
 
     override fun doWork(queryParams: HashMap<String, String>): Call<List<Any>> {
 
-        var stringifiedMessage = pubnub.mapper.toJson(message)
+        addQueryParams(queryParams)
 
-        if (isMetaValid()) {
-            queryParams["meta"] = pubnub.mapper.toJson(meta)
-        }
+        return if (usePost) {
+            val payload = getBodyMessage(message, useEncryption)
 
-        shouldStore?.run { queryParams["store"] = if (this) "1" else "0" }
-
-        ttl?.let { queryParams["ttl"] = it.toString() }
-
-        if (!replicate) queryParams["norep"] = "true"
-
-        queryParams["seqn"] = pubnub.publishSequenceManager.nextSequence().toString()
-
-        if (pubnub.configuration.isCipherKeyValid()) {
-            stringifiedMessage = Crypto(pubnub.configuration.cipherKey)
-                .encrypt(stringifiedMessage)
-                .replace("\n", "")
-        }
-
-        if (usePost) {
-            var payload = message
-
-            if (pubnub.configuration.isCipherKeyValid()) {
-                payload = stringifiedMessage
-            }
-
-            return pubnub.retrofitManager.publishService.publishWithPost(
+            pubnub.retrofitManager.publishService.publishWithPost(
                 pubnub.configuration.publishKey,
                 pubnub.configuration.subscribeKey,
                 channel,
@@ -73,13 +50,10 @@ class Publish(pubnub: PubNub) : Endpoint<List<Any>, PNPublishResult>(pubnub) {
                 queryParams
             )
         } else {
-            // get request
+            // HTTP GET request
+            val stringifiedMessage = getParamMessage(message, useEncryption)
 
-            if (pubnub.configuration.isCipherKeyValid()) {
-                stringifiedMessage = "\"$stringifiedMessage\""
-            }
-
-            return pubnub.retrofitManager.publishService.publish(
+            pubnub.retrofitManager.publishService.publish(
                 pubnub.configuration.publishKey,
                 pubnub.configuration.subscribeKey,
                 channel,
@@ -89,13 +63,66 @@ class Publish(pubnub: PubNub) : Endpoint<List<Any>, PNPublishResult>(pubnub) {
         }
     }
 
-    override fun createResponse(input: Response<List<Any>>): PNPublishResult? {
-        return PNPublishResult(
+    override fun createResponse(input: Response<List<Any>>): PNPublishResult =
+        PNPublishResult(
             timetoken = input.body()!![2].toString().toLong()
         )
-    }
 
     override fun operationType() = PNOperationType.PNPublishOperation
 
     override fun isPubKeyRequired() = true
+
+    // region Parameters
+    /**
+     * Add query params to passed HashMap
+     *
+     * @param queryParams hashMap to add parameters
+     */
+    private fun addQueryParams(queryParams: MutableMap<String, String>) {
+
+        meta?.run { queryParams["meta"] = pubnub.mapper.toJson(this) }
+
+        shouldStore?.run { queryParams["store"] = this.numericString }
+
+        ttl?.run { queryParams["ttl"] = this.toString() }
+
+        if (!replicate) queryParams["norep"] = true.valueString
+
+        queryParams["seqn"] = pubnub.publishSequenceManager.nextSequence().toString()
+    }
+    // endregion
+
+    // region Message parsers
+    private fun getBodyMessage(message: Any, useEncryption: Boolean): Any =
+        if (useEncryption) prepareMessage(message, useEncryption)
+        else message
+
+    private fun getParamMessage(message: Any, useEncryption: Boolean): String =
+        prepareMessage(message, useEncryption, true)
+
+    /**
+     * Create stringified message from passed text and apply encryption if needed
+     *
+     * @param message any object
+     * @param useEncryption should encrypt message
+     * @param wrapEncrypted should add double quotes to escaped message
+     */
+    private fun prepareMessage(
+        message: Any,
+        useEncryption: Boolean,
+        wrapEncrypted: Boolean = false
+    ): String =
+        pubnub.mapper.toJson(message).also { json ->
+            if (useEncryption)
+                return encryptMessage(json).also { encrypted ->
+                    if (wrapEncrypted)
+                        return "\"$encrypted\""
+                }
+        }
+
+    private fun encryptMessage(message: String): String =
+        Crypto(pubnub.configuration.cipherKey)
+            .encrypt(message)
+            .replace("\n", "")
+    // endregion
 }

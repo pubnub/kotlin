@@ -1,6 +1,5 @@
 package com.pubnub.api.vendor;
 
-import com.google.gson.Gson;
 import com.pubnub.api.PubNubError;
 import com.pubnub.api.PubNubException;
 

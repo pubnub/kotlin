@@ -6,7 +6,10 @@ import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.PNTimeResult
 import retrofit2.Response
 
-class Time(pubnub: PubNub) : Endpoint<List<Long>, PNTimeResult>(pubnub) {
+/**
+ * @see [PubNub.time]
+ */
+class Time internal constructor(pubnub: PubNub) : Endpoint<List<Long>, PNTimeResult>(pubnub) {
 
     override fun getAffectedChannels() = emptyList<String>()
 

@@ -10,7 +10,7 @@ import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 import com.pubnub.api.suite.AUTH
 import com.pubnub.api.suite.EndpointTestSuite
 import com.pubnub.api.suite.SUB
-import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.Assert.assertEquals
 
 class AddMessageActionTestSuite : EndpointTestSuite<AddMessageAction, PNAddMessageActionResult>() {
 
@@ -20,16 +20,15 @@ class AddMessageActionTestSuite : EndpointTestSuite<AddMessageAction, PNAddMessa
 
     override fun requiredKeys() = SUB + AUTH
 
-    override fun snippet(): AddMessageAction {
-        return pubnub.addMessageAction().apply {
-            channel = "ch1"
+    override fun snippet(): AddMessageAction =
+        pubnub.addMessageAction(
+            channel = "ch1",
             messageAction = PNMessageAction(
                 type = "reaction",
                 value = "smiley",
                 messageTimetoken = 1000
             )
-        }
-    }
+        )
 
     override fun successfulResponseBody() = """
             {

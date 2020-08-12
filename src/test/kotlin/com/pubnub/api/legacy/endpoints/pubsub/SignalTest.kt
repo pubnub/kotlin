@@ -6,10 +6,10 @@ import com.github.tomakehurst.wiremock.client.WireMock.get
 import com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.stubFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlMatching
+import com.pubnub.api.CommonUtils.assertPnException
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
-import com.pubnub.api.assertPnException
 import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.legacy.BaseTest
@@ -20,10 +20,10 @@ import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
 import okhttp3.HttpUrl
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertFalse
-import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.Test
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
+import org.junit.Test
 import java.util.UUID
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -49,10 +49,10 @@ class SignalTest : BaseTest() {
 
         val payload = mapOf("text" to "hello")
 
-        pubnub.signal().apply {
-            channel = "coolChannel"
+        pubnub.signal(
+            channel = "coolChannel",
             message = payload
-        }.sync()
+        ).sync()
 
         val requests = findAll(getRequestedFor(urlMatching("/signal.*")))
         assertEquals(1, requests.size)
@@ -89,10 +89,10 @@ class SignalTest : BaseTest() {
 
         val success = AtomicBoolean()
 
-        pubnub.signal().apply {
-            channel = "coolChannel"
+        pubnub.signal(
+            channel = "coolChannel",
             message = payload
-        }.async { result, status ->
+        ).async { result, status ->
             result!!
             assertFalse(status.error)
             assertEquals(PNOperationType.PNSignalOperation, status.operation)
@@ -152,47 +152,23 @@ class SignalTest : BaseTest() {
             override fun messageAction(pubnub: PubNub, pnMessageActionResult: PNMessageActionResult) {}
         })
 
-        pubnub.subscribe().apply {
+        pubnub.subscribe(
             channels = listOf("coolChannel")
-        }.execute()
+        )
 
         success.listen()
     }
 
     @Test
-    fun testSignalFailNoChannel() {
-        try {
-            pubnub.signal().apply {
-                message = UUID.randomUUID().toString()
-            }.sync()!!
-            throw RuntimeException()
-        } catch (e: PubNubException) {
-            assertPnException(PubNubError.CHANNEL_MISSING, e)
-        }
-    }
-
-    @Test
     fun testSignalFailBlankChannel() {
         try {
-            pubnub.signal().apply {
-                channel = " "
+            pubnub.signal(
+                channel = " ",
                 message = UUID.randomUUID().toString()
-            }.sync()!!
+            ).sync()!!
             throw RuntimeException()
         } catch (e: PubNubException) {
             assertPnException(PubNubError.CHANNEL_MISSING, e)
-        }
-    }
-
-    @Test
-    fun testSignalFailNoMessage() {
-        try {
-            pubnub.signal().apply {
-                channel = UUID.randomUUID().toString()
-            }.sync()!!
-            throw RuntimeException()
-        } catch (e: PubNubException) {
-            assertPnException(PubNubError.MESSAGE_MISSING, e)
         }
     }
 
@@ -215,10 +191,10 @@ class SignalTest : BaseTest() {
             get(urlMatching("/time/0.*"))
                 .willReturn(aResponse().withBody("[1000]"))
         )
-        pubnub.signal().apply {
-            channel = "coolChannel"
+        pubnub.signal(
+            channel = "coolChannel",
             message = UUID.randomUUID().toString()
-        }.sync()!!
+        ).sync()!!
 
         pubnub.time()
             .sync()

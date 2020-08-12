@@ -7,11 +7,11 @@ import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.legacy.BaseTest
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertFalse
-import org.junit.jupiter.api.Assertions.assertNotNull
-import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.Test
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertTrue
+import org.junit.Test
 
 class MessageCountTest : BaseTest() {
 
@@ -35,10 +35,10 @@ class MessageCountTest : BaseTest() {
                 )
         )
 
-        val response = pubnub.messageCounts().apply {
-            channels = listOf("my_channel")
+        val response = pubnub.messageCounts(
+            channels = listOf("my_channel"),
             channelsTimetoken = listOf(10000L)
-        }.sync()!!
+        ).sync()!!
 
         assertEquals(response.channels.size, 1)
         assertFalse(response.channels.containsKey("channel_does_not_exist"))
@@ -70,10 +70,10 @@ class MessageCountTest : BaseTest() {
         )
         var exception: PubNubException? = null
         try {
-            pubnub.messageCounts().apply {
-                channels = listOf("my_channel")
+            pubnub.messageCounts(
+                channels = listOf("my_channel"),
                 channelsTimetoken = listOf(10000L, 20000L)
-            }.sync()
+            ).sync()
         } catch (e: PubNubException) {
             exception = e
         } finally {
@@ -107,10 +107,10 @@ class MessageCountTest : BaseTest() {
                 )
         )
 
-        val response = pubnub.messageCounts().apply {
-            channels = listOf("my_channel", "new_channel")
+        val response = pubnub.messageCounts(
+            channels = listOf("my_channel", "new_channel"),
             channelsTimetoken = listOf(10000L)
-        }.sync()!!
+        ).sync()!!
 
         assertEquals(response.channels.size, 2)
         assertFalse(response.channels.containsKey("channel_does_not_exist"))
@@ -147,10 +147,10 @@ class MessageCountTest : BaseTest() {
                 )
         )
 
-        val response = pubnub.messageCounts().apply {
-            channels = listOf("my_channel", "new_channel")
+        val response = pubnub.messageCounts(
+            channels = listOf("my_channel", "new_channel"),
             channelsTimetoken = listOf(10000L, 20000L)
-        }.sync()!!
+        ).sync()!!
 
         assertEquals(response.channels.size, 2)
         assertFalse(response.channels.containsKey("channel_does_not_exist"))
@@ -166,42 +166,7 @@ class MessageCountTest : BaseTest() {
     }
 
     @Test
-    fun testWithoutTimeToken() {
-        stubFor(
-            get(urlPathEqualTo("/v3/history/sub-key/mySubscribeKey/message-counts/my_channel"))
-                .willReturn(
-                    aResponse().withBody(
-                        """
-                            {
-                             "status": 200,
-                             "error": false,
-                             "error_message": "",
-                             "channels": {
-                              "my_channel": 19
-                             }
-                            }
-                        """.trimIndent()
-                    )
-                )
-        )
-        var exception: PubNubException? = null
-        try {
-            pubnub.messageCounts().apply {
-                channels = listOf("my_channel")
-            }.sync()
-        } catch (ex: PubNubException) {
-            exception = ex
-        } finally {
-            assertNotNull(exception)
-            assertEquals(
-                PubNubError.TIMETOKEN_MISSING.message,
-                exception!!.pubnubError!!.message
-            )
-        }
-    }
-
-    @Test
-    fun testWithoutChannelsSingleToken() {
+    fun testWitEmptyChannelsSingleToken() {
         stubFor(
             get(urlPathEqualTo("/v3/history/sub-key/mySubscribeKey/message-counts/my_channel"))
                 .willReturn(
@@ -222,9 +187,10 @@ class MessageCountTest : BaseTest() {
         )
         var exception: PubNubException? = null
         try {
-            pubnub.messageCounts().apply {
+            pubnub.messageCounts(
+                channels = listOf(),
                 channelsTimetoken = listOf(10000L)
-            }.sync()
+            ).sync()
         } catch (ex: PubNubException) {
             exception = ex
         } finally {
@@ -237,7 +203,7 @@ class MessageCountTest : BaseTest() {
     }
 
     @Test
-    fun testWithoutChannelsMultipleTokens() {
+    fun testWithEmptyChannelsMultipleTokens() {
         stubFor(
             get(urlPathEqualTo("/v3/history/sub-key/mySubscribeKey/message-counts/my_channel"))
                 .willReturn(
@@ -258,9 +224,10 @@ class MessageCountTest : BaseTest() {
         )
         var exception: PubNubException? = null
         try {
-            pubnub.messageCounts().apply {
+            pubnub.messageCounts(
+                channels = listOf(),
                 channelsTimetoken = listOf(10000L, 20000L)
-            }.sync()
+            ).sync()
         } catch (ex: PubNubException) {
             exception = ex
         } finally {
@@ -293,9 +260,10 @@ class MessageCountTest : BaseTest() {
         )
         var exception: PubNubException? = null
         try {
-            pubnub.messageCounts().apply {
-                channels = listOf("my_channel")
-            }.sync()
+            pubnub.messageCounts(
+                channels = listOf("my_channel"),
+                channelsTimetoken = listOf()
+            ).sync()
         } catch (ex: PubNubException) {
             exception = ex
         } finally {

@@ -13,12 +13,16 @@ import retrofit2.Call
 import retrofit2.Response
 import java.util.HashMap
 
-class HereNow(pubnub: PubNub) : Endpoint<Envelope<JsonElement>, PNHereNowResult>(pubnub) {
-
-    var channels = listOf<String>()
-    var channelGroups = listOf<String>()
-    var includeState = false
-    var includeUUIDs = true
+/**
+ * @see [PubNub.hereNow]
+ */
+class HereNow internal constructor(
+    pubnub: PubNub,
+    val channels: List<String> = emptyList(),
+    val channelGroups: List<String> = emptyList(),
+    val includeState: Boolean = false,
+    val includeUUIDs: Boolean = true
+) : Endpoint<Envelope<JsonElement>, PNHereNowResult>(pubnub) {
 
     private fun isGlobalHereNow() = channels.isEmpty() && channelGroups.isEmpty()
 
@@ -26,15 +30,7 @@ class HereNow(pubnub: PubNub) : Endpoint<Envelope<JsonElement>, PNHereNowResult>
     override fun getAffectedChannelGroups() = channelGroups
 
     override fun doWork(queryParams: HashMap<String, String>): Call<Envelope<JsonElement>> {
-        if (includeState) {
-            queryParams["state"] = "1"
-        }
-        if (!includeUUIDs) {
-            queryParams["disable_uuids"] = "1"
-        }
-        if (channelGroups.isNotEmpty()) {
-            queryParams["channel-group"] = channelGroups.toCsv()
-        }
+        addQueryParams(queryParams)
 
         return if (!isGlobalHereNow()) {
             pubnub.retrofitManager.presenceService.hereNow(
@@ -50,17 +46,15 @@ class HereNow(pubnub: PubNub) : Endpoint<Envelope<JsonElement>, PNHereNowResult>
         }
     }
 
-    override fun createResponse(input: Response<Envelope<JsonElement>>): PNHereNowResult? {
-        return if (isGlobalHereNow()) {
+    override fun createResponse(input: Response<Envelope<JsonElement>>): PNHereNowResult {
+        return if (isGlobalHereNow() || (channels.size > 1 || channelGroups.isNotEmpty())) {
             parseMultipleChannelResponse(input.body()?.payload!!)
         } else {
-            if (channels.size > 1 || channelGroups.isNotEmpty()) {
-                parseMultipleChannelResponse(input.body()?.payload!!)
-            } else {
-                parseSingleChannelResponse(input.body()!!)
-            }
+            parseSingleChannelResponse(input.body()!!)
         }
     }
+
+    override fun operationType() = PNOperationType.PNHereNowOperation
 
     private fun parseSingleChannelResponse(input: Envelope<JsonElement>): PNHereNowResult {
         val pnHereNowResult = PNHereNowResult(
@@ -127,5 +121,9 @@ class HereNow(pubnub: PubNub) : Endpoint<Envelope<JsonElement>, PNHereNowResult>
         return occupantsResults
     }
 
-    override fun operationType() = PNOperationType.PNHereNowOperation
+    private fun addQueryParams(queryParams: MutableMap<String, String>) {
+        if (includeState) queryParams["state"] = "1"
+        if (!includeUUIDs) queryParams["disable_uuids"] = "1"
+        if (channelGroups.isNotEmpty()) queryParams["channel-group"] = channelGroups.toCsv()
+    }
 }

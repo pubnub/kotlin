@@ -13,9 +13,9 @@ import com.pubnub.api.suite.EndpointTestSuite
 import com.pubnub.api.suite.OptionalScenario
 import com.pubnub.api.suite.Result
 import com.pubnub.api.suite.SUB
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertFalse
-import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 
 class AllChannelsChannelGroupTestSuite :
     EndpointTestSuite<AllChannelsChannelGroup, PNChannelGroupsAllChannelsResult>() {
@@ -27,9 +27,9 @@ class AllChannelsChannelGroupTestSuite :
     override fun requiredKeys() = SUB + AUTH
 
     override fun snippet(): AllChannelsChannelGroup {
-        return pubnub.listChannelsForChannelGroup().apply {
+        return pubnub.listChannelsForChannelGroup(
             channelGroup = "cg1"
-        }
+        )
     }
 
     override fun verifyResultExpectations(result: PNChannelGroupsAllChannelsResult) {

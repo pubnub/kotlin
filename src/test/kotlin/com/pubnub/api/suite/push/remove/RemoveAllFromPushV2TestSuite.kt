@@ -22,11 +22,11 @@ class RemoveAllFromPushV2TestSuite :
     override fun requiredKeys() = SUB + AUTH
 
     override fun snippet(): RemoveAllPushChannelsForDevice {
-        return pubnub.removeAllPushNotificationsFromDeviceWithPushToken().apply {
-            pushType = PNPushType.APNS2
-            deviceId = "12345"
+        return pubnub.removeAllPushNotificationsFromDeviceWithPushToken(
+            pushType = PNPushType.APNS2,
+            deviceId = "12345",
             topic = "news"
-        }
+        )
     }
 
     override fun verifyResultExpectations(result: PNPushRemoveAllChannelsResult) {

@@ -20,10 +20,10 @@ class AddChannelChannelGroupTestSuite : EndpointTestSuite<AddChannelChannelGroup
     override fun requiredKeys() = SUB + AUTH
 
     override fun snippet(): AddChannelChannelGroup {
-        return pubnub.addChannelsToChannelGroup().apply {
-            channelGroup = "cg1"
+        return pubnub.addChannelsToChannelGroup(
+            channelGroup = "cg1",
             channels = listOf("ch1", "ch2")
-        }
+        )
     }
 
     override fun verifyResultExpectations(result: PNChannelGroupsAddChannelResult) {

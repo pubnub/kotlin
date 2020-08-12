@@ -11,7 +11,7 @@ import com.pubnub.api.models.consumer.access_manager.PNAccessManagerGrantResult
 import com.pubnub.api.suite.EndpointTestSuite
 import com.pubnub.api.suite.SEC
 import com.pubnub.api.suite.SUB
-import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.Assert.assertEquals
 
 class GrantTestSuite : EndpointTestSuite<Grant, PNAccessManagerGrantResult>() {
 

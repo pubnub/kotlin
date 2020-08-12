@@ -10,8 +10,8 @@ import com.pubnub.api.models.server.SubscribeEnvelope
 import com.pubnub.api.suite.AUTH
 import com.pubnub.api.suite.EndpointTestSuite
 import com.pubnub.api.suite.SUB
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 
 class SubscribeTestSuite : EndpointTestSuite<Subscribe, SubscribeEnvelope>() {
 

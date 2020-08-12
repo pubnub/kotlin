@@ -14,8 +14,8 @@ import com.pubnub.api.suite.EndpointTestSuite
 import com.pubnub.api.suite.OptionalScenario
 import com.pubnub.api.suite.Result
 import com.pubnub.api.suite.SUB
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 
 class ListPushProvisionsV2TestSuite : EndpointTestSuite<ListPushProvisions, PNPushListProvisionsResult>() {
 
@@ -26,11 +26,11 @@ class ListPushProvisionsV2TestSuite : EndpointTestSuite<ListPushProvisions, PNPu
     override fun requiredKeys() = SUB + AUTH
 
     override fun snippet(): ListPushProvisions {
-        return pubnub.auditPushChannelProvisions().apply {
-            pushType = PNPushType.APNS2
-            deviceId = "12345"
+        return pubnub.auditPushChannelProvisions(
+            pushType = PNPushType.APNS2,
+            deviceId = "12345",
             topic = "news"
-        }
+        )
     }
 
     override fun verifyResultExpectations(result: PNPushListProvisionsResult) {

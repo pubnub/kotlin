@@ -13,11 +13,15 @@ import retrofit2.Call
 import retrofit2.Response
 import java.util.HashMap
 
-class GetState(pubnub: PubNub) : Endpoint<Envelope<JsonElement>, PNGetStateResult>(pubnub) {
-
-    var channels = listOf<String>()
-    var channelGroups = listOf<String>()
-    var uuid = pubnub.configuration.uuid
+/**
+ * @see [PubNub.getPresenceState]
+ */
+class GetState internal constructor(
+    pubnub: PubNub,
+    val channels: List<String>,
+    val channelGroups: List<String>,
+    val uuid: String = pubnub.configuration.uuid
+) : Endpoint<Envelope<JsonElement>, PNGetStateResult>(pubnub) {
 
     override fun getAffectedChannels() = channels
 
@@ -25,15 +29,12 @@ class GetState(pubnub: PubNub) : Endpoint<Envelope<JsonElement>, PNGetStateResul
 
     override fun validateParams() {
         super.validateParams()
-        if (channels.isNullOrEmpty() && channelGroups.isNullOrEmpty()) {
+        if (channels.isEmpty() && channelGroups.isEmpty())
             throw PubNubException(PubNubError.CHANNEL_AND_GROUP_MISSING)
-        }
     }
 
     override fun doWork(queryParams: HashMap<String, String>): Call<Envelope<JsonElement>> {
-        if (channelGroups.isNotEmpty()) {
-            queryParams["channel-group"] = channelGroups.toCsv()
-        }
+        addQueryParams(queryParams)
 
         return pubnub.retrofitManager.presenceService.getState(
             pubnub.configuration.subscribeKey,
@@ -43,7 +44,7 @@ class GetState(pubnub: PubNub) : Endpoint<Envelope<JsonElement>, PNGetStateResul
         )
     }
 
-    override fun createResponse(input: Response<Envelope<JsonElement>>): PNGetStateResult? {
+    override fun createResponse(input: Response<Envelope<JsonElement>>): PNGetStateResult {
         val stateMappings = hashMapOf<String, JsonElement>()
         if (channels.size == 1 && channelGroups.isEmpty()) {
             stateMappings[channels.first()] = input.body()!!.payload!!
@@ -55,8 +56,12 @@ class GetState(pubnub: PubNub) : Endpoint<Envelope<JsonElement>, PNGetStateResul
             }
         }
 
-        return PNGetStateResult(stateMappings)
+        return PNGetStateResult(stateByUUID = stateMappings)
     }
 
     override fun operationType() = PNOperationType.PNGetState
+
+    private fun addQueryParams(queryParams: MutableMap<String, String>) {
+        if (channelGroups.isNotEmpty()) queryParams["channel-group"] = channelGroups.toCsv()
+    }
 }

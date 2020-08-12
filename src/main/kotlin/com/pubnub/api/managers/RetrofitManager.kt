@@ -7,6 +7,7 @@ import com.pubnub.api.services.AccessManagerService
 import com.pubnub.api.services.ChannelGroupService
 import com.pubnub.api.services.HistoryService
 import com.pubnub.api.services.MessageActionService
+import com.pubnub.api.services.ObjectsService
 import com.pubnub.api.services.PresenceService
 import com.pubnub.api.services.PublishService
 import com.pubnub.api.services.PushService
@@ -37,6 +38,7 @@ internal class RetrofitManager(val pubnub: PubNub) {
     internal val accessManagerService: AccessManagerService
 
     internal val subscribeService: SubscribeService
+    internal val objectsService: ObjectsService
 
     init {
         signatureInterceptor = SignatureInterceptor(pubnub)
@@ -58,6 +60,7 @@ internal class RetrofitManager(val pubnub: PubNub) {
         channelGroupService = transactionInstance.create(ChannelGroupService::class.java)
         pushService = transactionInstance.create(PushService::class.java)
         accessManagerService = transactionInstance.create(AccessManagerService::class.java)
+        objectsService = transactionInstance.create(ObjectsService::class.java)
 
         subscribeService = subscriptionInstance.create(SubscribeService::class.java)
     }

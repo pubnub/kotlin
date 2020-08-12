@@ -18,11 +18,11 @@ class RemoveMessageActionsTestSuite : EndpointTestSuite<RemoveMessageAction, PNR
     override fun requiredKeys() = SUB + AUTH
 
     override fun snippet(): RemoveMessageAction {
-        return pubnub.removeMessageAction().apply {
-            channel = "ch1"
-            messageTimetoken = 100
+        return pubnub.removeMessageAction(
+            channel = "ch1",
+            messageTimetoken = 100,
             actionTimetoken = 200
-        }
+        )
     }
 
     override fun successfulResponseBody() = """

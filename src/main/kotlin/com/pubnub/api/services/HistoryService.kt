@@ -8,7 +8,7 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.QueryMap
 
-interface HistoryService {
+internal interface HistoryService {
 
     @GET("v2/history/sub-key/{subKey}/channel/{channel}")
     fun fetchHistory(

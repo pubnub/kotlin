@@ -1,17 +1,19 @@
 package com.pubnub.api.legacy.endpoints.push
 
 import com.github.tomakehurst.wiremock.client.WireMock
+import com.pubnub.api.CommonUtils.assertPnException
+import com.pubnub.api.CommonUtils.failTest
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
-import com.pubnub.api.assertPnException
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNPushType
 import com.pubnub.api.enums.PNStatusCategory
-import com.pubnub.api.failTest
 import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.listen
-import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.Test
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
+import org.junit.Test
 import java.util.concurrent.atomic.AtomicBoolean
 
 class AddChannelsToPushTest : BaseTest() {
@@ -23,18 +25,18 @@ class AddChannelsToPushTest : BaseTest() {
                 .willReturn(WireMock.aResponse().withBody("[1, \"Modified Channels\"]"))
         )
 
-        pubnub.addPushNotificationsOnChannels().apply {
-            deviceId = "niceDevice"
-            pushType = PNPushType.APNS
+        pubnub.addPushNotificationsOnChannels(
+            deviceId = "niceDevice",
+            pushType = PNPushType.APNS,
             channels = listOf("ch1", "ch2", "ch3")
-        }.sync()!!
+        ).sync()!!
 
         val requests = WireMock.findAll(WireMock.getRequestedFor(WireMock.urlMatching("/.*")))
-        Assertions.assertEquals(1, requests.size)
-        Assertions.assertEquals("ch1,ch2,ch3", requests[0].queryParameter("add").firstValue())
-        Assertions.assertEquals("apns", requests[0].queryParameter("type").firstValue())
-        Assertions.assertFalse(requests[0].queryParameter("environment").isPresent)
-        Assertions.assertFalse(requests[0].queryParameter("topic").isPresent)
+        assertEquals(1, requests.size)
+        assertEquals("ch1,ch2,ch3", requests[0].queryParameter("add").firstValue())
+        assertEquals("apns", requests[0].queryParameter("type").firstValue())
+        assertFalse(requests[0].queryParameter("environment").isPresent)
+        assertFalse(requests[0].queryParameter("topic").isPresent)
     }
 
     @Test
@@ -44,18 +46,18 @@ class AddChannelsToPushTest : BaseTest() {
                 .willReturn(WireMock.aResponse().withBody("[1, \"Modified Channels\"]"))
         )
 
-        pubnub.addPushNotificationsOnChannels().apply {
-            deviceId = "niceDevice"
-            pushType = PNPushType.FCM
+        pubnub.addPushNotificationsOnChannels(
+            deviceId = "niceDevice",
+            pushType = PNPushType.FCM,
             channels = listOf("ch1", "ch2", "ch3")
-        }.sync()!!
+        ).sync()!!
 
         val requests = WireMock.findAll(WireMock.getRequestedFor(WireMock.urlMatching("/.*")))
-        Assertions.assertEquals(1, requests.size)
-        Assertions.assertEquals("ch1,ch2,ch3", requests[0].queryParameter("add").firstValue())
-        Assertions.assertEquals("gcm", requests[0].queryParameter("type").firstValue())
-        Assertions.assertFalse(requests[0].queryParameter("environment").isPresent)
-        Assertions.assertFalse(requests[0].queryParameter("topic").isPresent)
+        assertEquals(1, requests.size)
+        assertEquals("ch1,ch2,ch3", requests[0].queryParameter("add").firstValue())
+        assertEquals("gcm", requests[0].queryParameter("type").firstValue())
+        assertFalse(requests[0].queryParameter("environment").isPresent)
+        assertFalse(requests[0].queryParameter("topic").isPresent)
     }
 
     @Test
@@ -65,18 +67,18 @@ class AddChannelsToPushTest : BaseTest() {
                 .willReturn(WireMock.aResponse().withBody("[1, \"Modified Channels\"]"))
         )
 
-        pubnub.addPushNotificationsOnChannels().apply {
-            deviceId = "niceDevice"
-            pushType = PNPushType.MPNS
+        pubnub.addPushNotificationsOnChannels(
+            deviceId = "niceDevice",
+            pushType = PNPushType.MPNS,
             channels = listOf("ch1", "ch2", "ch3")
-        }.sync()!!
+        ).sync()!!
 
         val requests = WireMock.findAll(WireMock.getRequestedFor(WireMock.urlMatching("/.*")))
-        Assertions.assertEquals(1, requests.size)
-        Assertions.assertEquals("ch1,ch2,ch3", requests[0].queryParameter("add").firstValue())
-        Assertions.assertEquals("mpns", requests[0].queryParameter("type").firstValue())
-        Assertions.assertFalse(requests[0].queryParameter("environment").isPresent)
-        Assertions.assertFalse(requests[0].queryParameter("topic").isPresent)
+        assertEquals(1, requests.size)
+        assertEquals("ch1,ch2,ch3", requests[0].queryParameter("add").firstValue())
+        assertEquals("mpns", requests[0].queryParameter("type").firstValue())
+        assertFalse(requests[0].queryParameter("environment").isPresent)
+        assertFalse(requests[0].queryParameter("topic").isPresent)
     }
 
     @Test
@@ -86,19 +88,19 @@ class AddChannelsToPushTest : BaseTest() {
                 .willReturn(WireMock.aResponse().withBody("[1, \"Modified Channels\"]"))
         )
 
-        pubnub.addPushNotificationsOnChannels().apply {
-            deviceId = "niceDevice"
-            pushType = PNPushType.APNS2
-            channels = listOf("ch1", "ch2", "ch3")
+        pubnub.addPushNotificationsOnChannels(
+            deviceId = "niceDevice",
+            pushType = PNPushType.APNS2,
+            channels = listOf("ch1", "ch2", "ch3"),
             topic = "topic"
-        }.sync()!!
+        ).sync()!!
 
         val requests = WireMock.findAll(WireMock.getRequestedFor(WireMock.urlMatching("/.*")))
-        Assertions.assertEquals(1, requests.size)
-        Assertions.assertEquals("ch1,ch2,ch3", requests[0].queryParameter("add").firstValue())
-        Assertions.assertEquals("development", requests[0].queryParameter("environment").firstValue())
-        Assertions.assertEquals("topic", requests[0].queryParameter("topic").firstValue())
-        Assertions.assertFalse(requests[0].queryParameter("type").isPresent)
+        assertEquals(1, requests.size)
+        assertEquals("ch1,ch2,ch3", requests[0].queryParameter("add").firstValue())
+        assertEquals("development", requests[0].queryParameter("environment").firstValue())
+        assertEquals("topic", requests[0].queryParameter("topic").firstValue())
+        assertFalse(requests[0].queryParameter("type").isPresent)
     }
 
     @Test
@@ -110,15 +112,15 @@ class AddChannelsToPushTest : BaseTest() {
 
         pubnub.configuration.authKey = "myKey"
 
-        pubnub.addPushNotificationsOnChannels().apply {
-            deviceId = "niceDevice"
-            pushType = PNPushType.FCM
+        pubnub.addPushNotificationsOnChannels(
+            deviceId = "niceDevice",
+            pushType = PNPushType.FCM,
             channels = listOf("ch1", "ch2", "ch3")
-        }.sync()!!
+        ).sync()!!
 
         val requests = WireMock.findAll(WireMock.getRequestedFor(WireMock.urlMatching("/.*")))
-        Assertions.assertEquals(1, requests.size)
-        Assertions.assertEquals("myKey", requests[0].queryParameter("auth").firstValue())
+        assertEquals(1, requests.size)
+        assertEquals("myKey", requests[0].queryParameter("auth").firstValue())
     }
 
     @Test
@@ -130,16 +132,19 @@ class AddChannelsToPushTest : BaseTest() {
 
         val success = AtomicBoolean()
 
-        pubnub.addPushNotificationsOnChannels().apply {
-            deviceId = "niceDevice"
-            pushType = PNPushType.FCM
+        pubnub.addPushNotificationsOnChannels(
+            deviceId = "niceDevice",
+            pushType = PNPushType.FCM,
             channels = listOf("ch1", "ch2", "ch3")
-        }.async { _, status ->
-            Assertions.assertFalse(status.error)
-            Assertions.assertEquals(PNOperationType.PNAddPushNotificationsOnChannelsOperation, status.operation)
-            Assertions.assertEquals(PNStatusCategory.PNAcknowledgmentCategory, status.category)
-            Assertions.assertEquals(status.affectedChannels, listOf("ch1", "ch2", "ch3"))
-            Assertions.assertTrue(status.affectedChannelGroups.isEmpty())
+        ).async { _, status ->
+            assertFalse(status.error)
+            assertEquals(
+                PNOperationType.PNAddPushNotificationsOnChannelsOperation,
+                status.operation
+            )
+            assertEquals(PNStatusCategory.PNAcknowledgmentCategory, status.category)
+            assertEquals(status.affectedChannels, listOf("ch1", "ch2", "ch3"))
+            assertTrue(status.affectedChannelGroups.isEmpty())
             success.set(true)
         }
 
@@ -151,11 +156,11 @@ class AddChannelsToPushTest : BaseTest() {
         pubnub.configuration.subscribeKey = ""
 
         try {
-            pubnub.addPushNotificationsOnChannels().apply {
-                deviceId = "niceDevice"
-                pushType = PNPushType.FCM
+            pubnub.addPushNotificationsOnChannels(
+                deviceId = "niceDevice",
+                pushType = PNPushType.FCM,
                 channels = listOf("ch1", "ch2", "ch3")
-            }.sync()!!
+            ).sync()!!
             failTest()
         } catch (e: PubNubException) {
             assertPnException(PubNubError.SUBSCRIBE_KEY_MISSING, e)
@@ -163,66 +168,27 @@ class AddChannelsToPushTest : BaseTest() {
     }
 
     @Test
-    fun testNullPushTypeAdd() {
-        try {
-            pubnub.addPushNotificationsOnChannels().apply {
-                deviceId = "niceDevice"
-                channels = listOf("ch1", "ch2", "ch3")
-            }.sync()!!
-            failTest()
-        } catch (e: PubNubException) {
-            assertPnException(PubNubError.PUSH_TYPE_MISSING, e)
-        }
-    }
-
-    @Test
-    fun testNullDeviceIdAdd() {
-        try {
-            pubnub.addPushNotificationsOnChannels().apply {
-                pushType = PNPushType.FCM
-                channels = listOf("ch1", "ch2", "ch3")
-            }.sync()!!
-            failTest()
-        } catch (e: PubNubException) {
-            assertPnException(PubNubError.DEVICE_ID_MISSING, e)
-        }
-    }
-
-    @Test
     fun testEmptyDeviceIdAdd() {
         try {
-            pubnub.addPushNotificationsOnChannels().apply {
-                pushType = PNPushType.FCM
-                channels = listOf("ch1", "ch2", "ch3")
+            pubnub.addPushNotificationsOnChannels(
+                pushType = PNPushType.FCM,
+                channels = listOf("ch1", "ch2", "ch3"),
                 deviceId = " "
-            }.sync()!!
+            ).sync()!!
             failTest()
         } catch (e: PubNubException) {
             assertPnException(PubNubError.DEVICE_ID_MISSING, e)
-        }
-    }
-
-    @Test
-    fun testMissingChannelsAdd() {
-        try {
-            pubnub.addPushNotificationsOnChannels().apply {
-                deviceId = "niceDevice"
-                pushType = PNPushType.FCM
-            }.sync()!!
-            failTest()
-        } catch (e: PubNubException) {
-            assertPnException(PubNubError.CHANNEL_MISSING, e)
         }
     }
 
     @Test
     fun testEmptyChannelsAdd() {
         try {
-            pubnub.addPushNotificationsOnChannels().apply {
-                deviceId = "niceDevice"
-                pushType = PNPushType.FCM
+            pubnub.addPushNotificationsOnChannels(
+                deviceId = "niceDevice",
+                pushType = PNPushType.FCM,
                 channels = emptyList()
-            }.sync()!!
+            ).sync()!!
             failTest()
         } catch (e: PubNubException) {
             assertPnException(PubNubError.CHANNEL_MISSING, e)

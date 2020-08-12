@@ -8,7 +8,7 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.QueryMap
 
-interface PresenceService {
+internal interface PresenceService {
 
     @GET("v2/presence/sub-key/{subKey}/channel/{channel}/leave")
     fun leave(

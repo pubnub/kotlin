@@ -11,28 +11,27 @@ import retrofit2.Call
 import retrofit2.Response
 import java.util.HashMap
 
-class AddChannelChannelGroup(pubnub: PubNub) : Endpoint<Void, PNChannelGroupsAddChannelResult>(pubnub) {
-
-    lateinit var channelGroup: String
-    lateinit var channels: List<String>
+/**
+ * @see [PubNub.addChannelsToChannelGroup]
+ */
+class AddChannelChannelGroup internal constructor(
+    pubnub: PubNub,
+    val channelGroup: String,
+    val channels: List<String>
+) : Endpoint<Void, PNChannelGroupsAddChannelResult>(pubnub) {
 
     override fun getAffectedChannels() = channels
     override fun getAffectedChannelGroups() = listOf(channelGroup)
 
     override fun validateParams() {
         super.validateParams()
-        if (!::channelGroup.isInitialized || channelGroup.isBlank()) {
-            throw PubNubException(PubNubError.GROUP_MISSING)
-        }
-        if (!::channels.isInitialized || channels.isEmpty()) {
-            throw PubNubException(PubNubError.CHANNEL_MISSING)
-        }
+        if (channelGroup.isBlank()) throw PubNubException(PubNubError.GROUP_MISSING)
+        if (channels.isEmpty()) throw PubNubException(PubNubError.CHANNEL_MISSING)
     }
 
     override fun doWork(queryParams: HashMap<String, String>): Call<Void> {
-        if (channels.isNotEmpty()) {
-            queryParams["add"] = channels.toCsv()
-        }
+
+        addQueryParams(queryParams)
 
         return pubnub.retrofitManager.channelGroupService
             .addChannelChannelGroup(
@@ -42,9 +41,14 @@ class AddChannelChannelGroup(pubnub: PubNub) : Endpoint<Void, PNChannelGroupsAdd
             )
     }
 
-    override fun createResponse(input: Response<Void>): PNChannelGroupsAddChannelResult? {
-        return PNChannelGroupsAddChannelResult()
-    }
+    override fun createResponse(input: Response<Void>): PNChannelGroupsAddChannelResult =
+        PNChannelGroupsAddChannelResult()
 
     override fun operationType() = PNOperationType.PNAddChannelsToGroupOperation
+
+    private fun addQueryParams(queryParams: MutableMap<String, String>) {
+        if (channels.isNotEmpty()) {
+            queryParams["add"] = channels.toCsv()
+        }
+    }
 }

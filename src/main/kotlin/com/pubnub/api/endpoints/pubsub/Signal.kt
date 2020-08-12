@@ -9,22 +9,18 @@ import com.pubnub.api.models.consumer.PNPublishResult
 import retrofit2.Call
 import retrofit2.Response
 
-class Signal(pubnub: PubNub) : Endpoint<List<Any>, PNPublishResult>(pubnub) {
-
-    lateinit var channel: String
-    lateinit var message: Any
-
-    private fun isChannelValid() = ::channel.isInitialized
-    private fun isMessageValid() = ::message.isInitialized
+/**
+ * @see [PubNub.signal]
+ */
+class Signal internal constructor(
+    pubnub: PubNub,
+    val channel: String,
+    val message: Any
+) : Endpoint<List<Any>, PNPublishResult>(pubnub) {
 
     override fun validateParams() {
         super.validateParams()
-        if (!isChannelValid() || channel.isBlank()) {
-            throw PubNubException(PubNubError.CHANNEL_MISSING)
-        }
-        if (!isMessageValid()) {
-            throw PubNubException(PubNubError.MESSAGE_MISSING)
-        }
+        if (channel.isBlank()) throw PubNubException(PubNubError.CHANNEL_MISSING)
     }
 
     override fun getAffectedChannels() = listOf(channel)
@@ -39,11 +35,10 @@ class Signal(pubnub: PubNub) : Endpoint<List<Any>, PNPublishResult>(pubnub) {
         )
     }
 
-    override fun createResponse(input: Response<List<Any>>): PNPublishResult? {
-        return PNPublishResult(
+    override fun createResponse(input: Response<List<Any>>): PNPublishResult =
+        PNPublishResult(
             timetoken = input.body()!![2].toString().toLong()
         )
-    }
 
     override fun operationType() = PNOperationType.PNSignalOperation
 

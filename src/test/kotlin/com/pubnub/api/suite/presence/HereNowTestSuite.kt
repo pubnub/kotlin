@@ -9,7 +9,7 @@ import com.pubnub.api.models.consumer.presence.PNHereNowResult
 import com.pubnub.api.suite.AUTH
 import com.pubnub.api.suite.EndpointTestSuite
 import com.pubnub.api.suite.SUB
-import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.Assert.assertEquals
 
 class HereNowTestSuite : EndpointTestSuite<HereNow, PNHereNowResult>() {
 
@@ -19,11 +19,10 @@ class HereNowTestSuite : EndpointTestSuite<HereNow, PNHereNowResult>() {
 
     override fun requiredKeys() = SUB + AUTH
 
-    override fun snippet(): HereNow {
-        return pubnub.hereNow().apply {
+    override fun snippet(): HereNow =
+        pubnub.hereNow(
             channels = listOf("ch1")
-        }
-    }
+        )
 
     override fun verifyResultExpectations(result: PNHereNowResult) {
         assertEquals(1, result.totalChannels)
