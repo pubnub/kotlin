@@ -2,9 +2,4 @@
 
 # includeTimetoken
 
-`var includeTimetoken: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)
-
-Whether to include message timetokens in the response.
-
-Defaults to `false`.
-
+`val includeTimetoken: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)

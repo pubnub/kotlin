@@ -2,7 +2,4 @@
 
 # delete
 
-`var delete: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)
-
-Set to `true` to request the *delete* permission. Defaults to `false`.
-
+`val delete: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)

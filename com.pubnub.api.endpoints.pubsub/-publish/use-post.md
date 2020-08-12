@@ -2,7 +2,4 @@
 
 # usePost
 
-`var usePost: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)
-
-Use HTTP POST to publish.
-
+`val usePost: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)

@@ -2,17 +2,17 @@
 
 # EntityEnvelope
 
-`open class EntityEnvelope<T>`
+`data class EntityEnvelope<T>`
 
 ### Constructors
 
 | Name | Summary |
 |---|---|
-| [&lt;init&gt;](-init-.md) | `EntityEnvelope()` |
+| [&lt;init&gt;](-init-.md) | `EntityEnvelope(status: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)`, data: T? = null)` |
 
 ### Properties
 
 | Name | Summary |
 |---|---|
-| [data](data.md) | `var data: T?` |
-| [status](status.md) | `var status: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html) |
+| [data](data.md) | `val data: T?` |
+| [status](status.md) | `val status: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html) |

@@ -2,7 +2,4 @@
 
 # messageTimetoken
 
-`var messageTimetoken: `[`Long`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)`?`
-
-The publish timetoken of the original message.
-
+`val messageTimetoken: `[`Long`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)

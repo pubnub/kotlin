@@ -1,0 +1,5 @@
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.models.consumer.objects.member](../index.md) / [PNUUIDDetailsLevel](index.md) / [UUID_WITH_CUSTOM](./-u-u-i-d_-w-i-t-h_-c-u-s-t-o-m.md)
+
+# UUID_WITH_CUSTOM
+
+`UUID_WITH_CUSTOM`

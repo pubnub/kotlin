@@ -2,7 +2,4 @@
 
 # end
 
-`var end: `[`Long`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)`?`
-
-Time token delimiting the end of time slice (inclusive) to pull messages from.
-
+`val end: `[`Long`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)`?`

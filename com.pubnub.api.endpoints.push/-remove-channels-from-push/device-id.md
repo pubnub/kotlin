@@ -2,7 +2,4 @@
 
 # deviceId
 
-`lateinit var deviceId: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
-
-The device ID (token) associated with push notifications.
-
+`val deviceId: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)

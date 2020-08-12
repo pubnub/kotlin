@@ -6,4 +6,6 @@
 
 | Name | Summary |
 |---|---|
-| [EntityEnvelope](-entity-envelope/index.md) | `open class EntityEnvelope<T>` |
+| [ChannelId](-channel-id/index.md) | `data class ChannelId` |
+| [EntityArrayEnvelope](-entity-array-envelope/index.md) | `data class EntityArrayEnvelope<T>` |
+| [EntityEnvelope](-entity-envelope/index.md) | `data class EntityEnvelope<T>` |

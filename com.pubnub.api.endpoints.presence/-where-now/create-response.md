@@ -2,4 +2,4 @@
 
 # createResponse
 
-`protected fun createResponse(input: Response<`[`Envelope`](../../com.pubnub.api.models.server/-envelope/index.md)`<`[`WhereNowPayload`](../../com.pubnub.api.models.server.presence/-where-now-payload/index.md)`>>): `[`PNWhereNowResult`](../../com.pubnub.api.models.consumer.presence/-p-n-where-now-result/index.md)`?`
+`protected fun createResponse(input: Response<`[`Envelope`](../../com.pubnub.api.models.server/-envelope/index.md)`<`[`WhereNowPayload`](../../com.pubnub.api.models.server.presence/-where-now-payload/index.md)`>>): `[`PNWhereNowResult`](../../com.pubnub.api.models.consumer.presence/-p-n-where-now-result/index.md)

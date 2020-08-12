@@ -2,11 +2,4 @@
 
 # pushType
 
-`lateinit var pushType: `[`PNPushType`](../../com.pubnub.api.enums/-p-n-push-type/index.md)
-
-Accepted values: FCM, APNS, MPNS, APNS2.
-
-**See Also**
-
-[PNPushType](../../com.pubnub.api.enums/-p-n-push-type/index.md)
-
+`val pushType: `[`PNPushType`](../../com.pubnub.api.enums/-p-n-push-type/index.md)

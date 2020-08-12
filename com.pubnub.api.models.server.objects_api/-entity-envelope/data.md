@@ -2,4 +2,4 @@
 
 # data
 
-`var data: T?`
+`val data: T?`

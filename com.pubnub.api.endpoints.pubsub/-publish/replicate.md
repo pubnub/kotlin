@@ -2,7 +2,4 @@
 
 # replicate
 
-`var replicate: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)
-
-Replicate the message. Is set to `true` by default.
-
+`val replicate: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)

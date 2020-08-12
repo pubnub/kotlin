@@ -2,4 +2,4 @@
 
 # createResponse
 
-`protected fun createResponse(input: Response<`[`Envelope`](../../com.pubnub.api.models.server/-envelope/index.md)`<JsonElement>>): `[`PNSetStateResult`](../../com.pubnub.api.models.consumer.presence/-p-n-set-state-result/index.md)`?`
+`protected fun createResponse(input: Response<`[`Envelope`](../../com.pubnub.api.models.server/-envelope/index.md)`<JsonElement>>): `[`PNSetStateResult`](../../com.pubnub.api.models.consumer.presence/-p-n-set-state-result/index.md)

@@ -28,6 +28,16 @@ Encapsulates a message action in terms of batch history.
 
 |
 
+##### [com.pubnub.api.endpoints.objects.member.AddMembers](../com.pubnub.api.endpoints.objects.member/-add-members/index.md)
+
+
+|
+
+##### [com.pubnub.api.endpoints.objects.membership.AddMemberships](../com.pubnub.api.endpoints.objects.membership/-add-memberships/index.md)
+
+
+|
+
 ##### [com.pubnub.api.endpoints.message_actions.AddMessageAction](../com.pubnub.api.endpoints.message_actions/-add-message-action/index.md)
 
 
@@ -46,6 +56,11 @@ Utilities for encoding and decoding the Base64 representation of binary data. Se
 |
 
 ##### [com.pubnub.api.models.consumer.pubsub.BasePubSubResult](../com.pubnub.api.models.consumer.pubsub/-base-pub-sub-result/index.md)
+
+
+|
+
+##### [com.pubnub.api.models.server.objects_api.ChannelId](../com.pubnub.api.models.server.objects_api/-channel-id/index.md)
 
 
 |
@@ -72,6 +87,11 @@ Base class for all PubNub API operation implementations.
 
 |
 
+##### [com.pubnub.api.models.server.objects_api.EntityArrayEnvelope](../com.pubnub.api.models.server.objects_api/-entity-array-envelope/index.md)
+
+
+|
+
 ##### [com.pubnub.api.models.server.objects_api.EntityEnvelope](../com.pubnub.api.models.server.objects_api/-entity-envelope/index.md)
 
 
@@ -92,12 +112,42 @@ Base class for all PubNub API operation implementations.
 
 |
 
+##### [com.pubnub.api.endpoints.objects.channel.GetAllChannelMetadata](../com.pubnub.api.endpoints.objects.channel/-get-all-channel-metadata/index.md)
+
+
+|
+
+##### [com.pubnub.api.endpoints.objects.uuid.GetAllUUIDMetadata](../com.pubnub.api.endpoints.objects.uuid/-get-all-u-u-i-d-metadata/index.md)
+
+
+|
+
+##### [com.pubnub.api.endpoints.objects.channel.GetChannelMetadata](../com.pubnub.api.endpoints.objects.channel/-get-channel-metadata/index.md)
+
+
+|
+
+##### [com.pubnub.api.endpoints.objects.member.GetMembers](../com.pubnub.api.endpoints.objects.member/-get-members/index.md)
+
+
+|
+
+##### [com.pubnub.api.endpoints.objects.membership.GetMemberships](../com.pubnub.api.endpoints.objects.membership/-get-memberships/index.md)
+
+
+|
+
 ##### [com.pubnub.api.endpoints.message_actions.GetMessageActions](../com.pubnub.api.endpoints.message_actions/-get-message-actions/index.md)
 
 
 |
 
 ##### [com.pubnub.api.endpoints.presence.GetState](../com.pubnub.api.endpoints.presence/-get-state/index.md)
+
+
+|
+
+##### [com.pubnub.api.endpoints.objects.uuid.GetUUIDMetadata](../com.pubnub.api.endpoints.objects.uuid/-get-u-u-i-d-metadata/index.md)
 
 
 |
@@ -191,6 +241,11 @@ Result for the [PubNub.addMessageAction](../com.pubnub.api/-pub-nub/add-message-
 
 |
 
+##### [com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel](../com.pubnub.api.models.consumer.objects.membership/-p-n-channel-details-level/index.md)
+
+
+|
+
 ##### [com.pubnub.api.models.consumer.channel_group.PNChannelGroupsAddChannelResult](../com.pubnub.api.models.consumer.channel_group/-p-n-channel-groups-add-channel-result/index.md)
 
 Result of the [PubNub.addChannelsToChannelGroup](../com.pubnub.api/-pub-nub/add-channels-to-channel-group.md) operation.
@@ -226,6 +281,36 @@ Result of the [PubNub.removeChannelsFromChannelGroup](../com.pubnub.api/-pub-nub
 
 |
 
+##### [com.pubnub.api.models.consumer.objects.membership.PNChannelMembership](../com.pubnub.api.models.consumer.objects.membership/-p-n-channel-membership/index.md)
+
+
+|
+
+##### [com.pubnub.api.models.consumer.objects.membership.PNChannelMembershipArrayResult](../com.pubnub.api.models.consumer.objects.membership/-p-n-channel-membership-array-result/index.md)
+
+
+|
+
+##### [com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata](../com.pubnub.api.models.consumer.objects.channel/-p-n-channel-metadata/index.md)
+
+
+|
+
+##### [com.pubnub.api.models.consumer.objects.channel.PNChannelMetadataArrayResult](../com.pubnub.api.models.consumer.objects.channel/-p-n-channel-metadata-array-result/index.md)
+
+
+|
+
+##### [com.pubnub.api.models.consumer.objects.channel.PNChannelMetadataResult](../com.pubnub.api.models.consumer.objects.channel/-p-n-channel-metadata-result/index.md)
+
+
+|
+
+##### [com.pubnub.api.models.consumer.objects.membership.PNChannelWithCustom](../com.pubnub.api.models.consumer.objects.membership/-p-n-channel-with-custom/index.md)
+
+
+|
+
 ##### [com.pubnub.api.PNConfiguration](../com.pubnub.api/-p-n-configuration/index.md)
 
 A storage for user-provided information which describe further PubNub client behaviour.
@@ -235,9 +320,29 @@ allow to perform precise PubNub client configuration.
 
 |
 
+##### [com.pubnub.api.models.consumer.pubsub.objects.PNDeleteChannelMetadataEventMessage](../com.pubnub.api.models.consumer.pubsub.objects/-p-n-delete-channel-metadata-event-message/index.md)
+
+
+|
+
+##### [com.pubnub.api.models.consumer.pubsub.objects.PNDeleteMembershipEvent](../com.pubnub.api.models.consumer.pubsub.objects/-p-n-delete-membership-event/index.md)
+
+
+|
+
+##### [com.pubnub.api.models.consumer.pubsub.objects.PNDeleteMembershipEventMessage](../com.pubnub.api.models.consumer.pubsub.objects/-p-n-delete-membership-event-message/index.md)
+
+
+|
+
 ##### [com.pubnub.api.models.consumer.history.PNDeleteMessagesResult](../com.pubnub.api.models.consumer.history/-p-n-delete-messages-result/index.md)
 
 Result of the [PubNub.deleteMessages](../com.pubnub.api/-pub-nub/delete-messages.md) operation.
+
+
+|
+
+##### [com.pubnub.api.models.consumer.pubsub.objects.PNDeleteUUIDMetadataEventMessage](../com.pubnub.api.models.consumer.pubsub.objects/-p-n-delete-u-u-i-d-metadata-event-message/index.md)
 
 
 |
@@ -310,7 +415,22 @@ Result of the [PubNub.history](../com.pubnub.api/-pub-nub/history.md) operation.
 
 |
 
+##### [com.pubnub.api.models.consumer.objects.PNKey](../com.pubnub.api.models.consumer.objects/-p-n-key/index.md)
+
+
+|
+
 ##### [com.pubnub.api.enums.PNLogVerbosity](../com.pubnub.api.enums/-p-n-log-verbosity/index.md)
+
+
+|
+
+##### [com.pubnub.api.models.consumer.objects.member.PNMember](../com.pubnub.api.models.consumer.objects.member/-p-n-member/index.md)
+
+
+|
+
+##### [com.pubnub.api.models.consumer.objects.member.PNMemberArrayResult](../com.pubnub.api.models.consumer.objects.member/-p-n-member-array-result/index.md)
 
 
 |
@@ -343,7 +463,22 @@ Wrapper around an actual message received in [SubscribeCallback.message](../com.
 
 |
 
+##### [com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventMessage](../com.pubnub.api.models.consumer.pubsub.objects/-p-n-object-event-message/index.md)
+
+
+|
+
+##### [com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult](../com.pubnub.api.models.consumer.pubsub.objects/-p-n-object-event-result/index.md)
+
+
+|
+
 ##### [com.pubnub.api.enums.PNOperationType](../com.pubnub.api.enums/-p-n-operation-type/index.md)
+
+
+|
+
+##### [com.pubnub.api.models.consumer.objects.PNPage](../com.pubnub.api.models.consumer.objects/-p-n-page/index.md)
 
 
 |
@@ -406,6 +541,26 @@ Result for the [PubNub.removeMessageAction](../com.pubnub.api/-pub-nub/remove-me
 
 |
 
+##### [com.pubnub.api.models.consumer.objects.PNRemoveMetadataResult](../com.pubnub.api.models.consumer.objects/-p-n-remove-metadata-result/index.md)
+
+
+|
+
+##### [com.pubnub.api.models.consumer.pubsub.objects.PNSetChannelMetadataEventMessage](../com.pubnub.api.models.consumer.pubsub.objects/-p-n-set-channel-metadata-event-message/index.md)
+
+
+|
+
+##### [com.pubnub.api.models.consumer.pubsub.objects.PNSetMembershipEvent](../com.pubnub.api.models.consumer.pubsub.objects/-p-n-set-membership-event/index.md)
+
+
+|
+
+##### [com.pubnub.api.models.consumer.pubsub.objects.PNSetMembershipEventMessage](../com.pubnub.api.models.consumer.pubsub.objects/-p-n-set-membership-event-message/index.md)
+
+
+|
+
 ##### [com.pubnub.api.models.consumer.presence.PNSetStateResult](../com.pubnub.api.models.consumer.presence/-p-n-set-state-result/index.md)
 
 Result of the [PubNub.setPresenceState](../com.pubnub.api/-pub-nub/set-presence-state.md) operation.
@@ -413,9 +568,19 @@ Result of the [PubNub.setPresenceState](../com.pubnub.api/-pub-nub/set-presence-
 
 |
 
+##### [com.pubnub.api.models.consumer.pubsub.objects.PNSetUUIDMetadataEventMessage](../com.pubnub.api.models.consumer.pubsub.objects/-p-n-set-u-u-i-d-metadata-event-message/index.md)
+
+
+|
+
 ##### [com.pubnub.api.models.consumer.pubsub.PNSignalResult](../com.pubnub.api.models.consumer.pubsub/-p-n-signal-result/index.md)
 
 Wrapper around a signal received in [SubscribeCallback.signal](../com.pubnub.api.callbacks/-subscribe-callback/signal.md).
+
+
+|
+
+##### [com.pubnub.api.models.consumer.objects.PNSortKey](../com.pubnub.api.models.consumer.objects/-p-n-sort-key/index.md)
 
 
 |
@@ -442,6 +607,31 @@ Result of the [PubNub.time](../com.pubnub.api/-pub-nub/time.md) operation.
 
 |
 
+##### [com.pubnub.api.models.consumer.objects.member.PNUUIDDetailsLevel](../com.pubnub.api.models.consumer.objects.member/-p-n-u-u-i-d-details-level/index.md)
+
+
+|
+
+##### [com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata](../com.pubnub.api.models.consumer.objects.uuid/-p-n-u-u-i-d-metadata/index.md)
+
+
+|
+
+##### [com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataArrayResult](../com.pubnub.api.models.consumer.objects.uuid/-p-n-u-u-i-d-metadata-array-result/index.md)
+
+
+|
+
+##### [com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataResult](../com.pubnub.api.models.consumer.objects.uuid/-p-n-u-u-i-d-metadata-result/index.md)
+
+
+|
+
+##### [com.pubnub.api.models.consumer.objects.member.PNUUIDWithCustom](../com.pubnub.api.models.consumer.objects.member/-p-n-u-u-i-d-with-custom/index.md)
+
+
+|
+
 ##### [com.pubnub.api.models.consumer.presence.PNWhereNowResult](../com.pubnub.api.models.consumer.presence/-p-n-where-now-result/index.md)
 
 Result of the [PubNub.whereNow](../com.pubnub.api/-pub-nub/where-now.md) operation.
@@ -449,7 +639,7 @@ Result of the [PubNub.whereNow](../com.pubnub.api/-pub-nub/where-now.md) operati
 
 |
 
-##### [com.pubnub.api.builder.PresenceBuilder](../com.pubnub.api.builder/-presence-builder/index.md)
+##### [com.pubnub.api.models.server.PresenceEnvelope](../com.pubnub.api.models.server/-presence-envelope/index.md)
 
 
 |
@@ -483,7 +673,7 @@ Custom exception wrapper for errors occurred during execution or processing of a
 
 |
 
-##### [com.pubnub.api.builder.PubSubBuilder](../com.pubnub.api.builder/-pub-sub-builder/index.md)
+##### [com.pubnub.api.builder.PubSub](../com.pubnub.api.builder/-pub-sub.md)
 
 
 |
@@ -508,7 +698,22 @@ Custom exception wrapper for errors occurred during execution or processing of a
 
 |
 
+##### [com.pubnub.api.endpoints.objects.channel.RemoveChannelMetadata](../com.pubnub.api.endpoints.objects.channel/-remove-channel-metadata/index.md)
+
+
+|
+
 ##### [com.pubnub.api.endpoints.push.RemoveChannelsFromPush](../com.pubnub.api.endpoints.push/-remove-channels-from-push/index.md)
+
+
+|
+
+##### [com.pubnub.api.endpoints.objects.member.RemoveMembers](../com.pubnub.api.endpoints.objects.member/-remove-members/index.md)
+
+
+|
+
+##### [com.pubnub.api.endpoints.objects.membership.RemoveMemberships](../com.pubnub.api.endpoints.objects.membership/-remove-memberships/index.md)
 
 
 |
@@ -518,7 +723,42 @@ Custom exception wrapper for errors occurred during execution or processing of a
 
 |
 
+##### [com.pubnub.api.endpoints.objects.uuid.RemoveUUIDMetadata](../com.pubnub.api.endpoints.objects.uuid/-remove-u-u-i-d-metadata/index.md)
+
+
+|
+
+##### [com.pubnub.api.endpoints.objects.internal.ReturningChannelDetailsCustom](../com.pubnub.api.endpoints.objects.internal/-returning-channel-details-custom/index.md)
+
+
+|
+
+##### [com.pubnub.api.endpoints.objects.internal.ReturningCollection](../com.pubnub.api.endpoints.objects.internal/-returning-collection/index.md)
+
+
+|
+
+##### [com.pubnub.api.endpoints.objects.internal.ReturningCustom](../com.pubnub.api.endpoints.objects.internal/-returning-custom/index.md)
+
+
+|
+
+##### [com.pubnub.api.endpoints.objects.internal.ReturningUUIDDetailsCustom](../com.pubnub.api.endpoints.objects.internal/-returning-u-u-i-d-details-custom/index.md)
+
+
+|
+
+##### [com.pubnub.api.endpoints.objects.channel.SetChannelMetadata](../com.pubnub.api.endpoints.objects.channel/-set-channel-metadata/index.md)
+
+
+|
+
 ##### [com.pubnub.api.endpoints.presence.SetState](../com.pubnub.api.endpoints.presence/-set-state/index.md)
+
+
+|
+
+##### [com.pubnub.api.endpoints.objects.uuid.SetUUIDMetadata](../com.pubnub.api.endpoints.objects.uuid/-set-u-u-i-d-metadata/index.md)
 
 
 |
@@ -534,11 +774,6 @@ Custom exception wrapper for errors occurred during execution or processing of a
 |
 
 ##### [com.pubnub.api.endpoints.pubsub.Subscribe](../com.pubnub.api.endpoints.pubsub/-subscribe/index.md)
-
-
-|
-
-##### [com.pubnub.api.builder.SubscribeBuilder](../com.pubnub.api.builder/-subscribe-builder/index.md)
 
 
 |
@@ -569,11 +804,6 @@ Custom exception wrapper for errors occurred during execution or processing of a
 |
 
 ##### [com.pubnub.api.endpoints.Time](../com.pubnub.api.endpoints/-time/index.md)
-
-
-|
-
-##### [com.pubnub.api.builder.UnsubscribeBuilder](../com.pubnub.api.builder/-unsubscribe-builder/index.md)
 
 
 |

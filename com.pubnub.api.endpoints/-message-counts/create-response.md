@@ -2,4 +2,4 @@
 
 # createResponse
 
-`protected fun createResponse(input: Response<JsonElement>): `[`PNMessageCountResult`](../../com.pubnub.api.models.consumer.history/-p-n-message-count-result/index.md)`?`
+`protected fun createResponse(input: Response<JsonElement>): `[`PNMessageCountResult`](../../com.pubnub.api.models.consumer.history/-p-n-message-count-result/index.md)

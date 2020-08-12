@@ -2,7 +2,4 @@
 
 # write
 
-`var write: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)
-
-Set to `true` to request the *write* permission. Defaults to `false`.
-
+`val write: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)

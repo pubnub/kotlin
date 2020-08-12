@@ -2,7 +2,7 @@
 
 # history
 
-`fun history(): `[`History`](../../com.pubnub.api.endpoints/-history/index.md)
+`fun history(channel: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`, start: `[`Long`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)`? = null, end: `[`Long`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)`? = null, count: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)` = History.MAX_COUNT, reverse: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)` = false, includeTimetoken: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)` = false, includeMeta: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)` = false): `[`History`](../../com.pubnub.api.endpoints/-history/index.md)
 
 Fetch historical messages of a channel.
 
@@ -26,3 +26,23 @@ will return messages between those timetoken values (inclusive on the `end` valu
 even if there are more messages that meet the timetoken values.
 Iterative calls to history adjusting the start timetoken is necessary to page through the full set of results
 if more than 100 messages meet the timetoken values.
+
+### Parameters
+
+`channel` - Channel to return history messages from.
+
+`start` - Timetoken delimiting the start of time slice (exclusive) to pull messages from.
+
+`end` - Timetoken delimiting the end of time slice (inclusive) to pull messages from.
+
+`count` - Specifies the number of historical messages to return.
+    Default and maximum value is `100`.
+
+`reverse` - Whether to traverse the time ine in reverse starting with the oldest message first.
+    Default is `false`.
+
+`includeTimetoken` - Whether to include message timetokens in the response.
+    Defaults to `false`.
+
+`includeMeta` - Whether to include message metadata in response.
+    Defaults to `false`.

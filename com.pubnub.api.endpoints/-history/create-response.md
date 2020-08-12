@@ -2,4 +2,4 @@
 
 # createResponse
 
-`protected fun createResponse(input: Response<JsonElement>): `[`PNHistoryResult`](../../com.pubnub.api.models.consumer.history/-p-n-history-result/index.md)`?`
+`protected fun createResponse(input: Response<JsonElement>): `[`PNHistoryResult`](../../com.pubnub.api.models.consumer.history/-p-n-history-result/index.md)

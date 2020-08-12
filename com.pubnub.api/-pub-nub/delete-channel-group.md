@@ -2,7 +2,10 @@
 
 # deleteChannelGroup
 
-`fun deleteChannelGroup(): `[`DeleteChannelGroup`](../../com.pubnub.api.endpoints.channel_groups/-delete-channel-group/index.md)
+`fun deleteChannelGroup(channelGroup: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`): `[`DeleteChannelGroup`](../../com.pubnub.api.endpoints.channel_groups/-delete-channel-group/index.md)
 
 Removes the channel group.
 
+### Parameters
+
+`channelGroup` - The channel group to remove.

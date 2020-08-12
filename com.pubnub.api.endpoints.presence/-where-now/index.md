@@ -12,12 +12,12 @@
 
 | Name | Summary |
 |---|---|
-| [uuid](uuid.md) | UUID of the user to get its current channel subscriptions.`var uuid: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
+| [uuid](uuid.md) | `val uuid: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
 
 ### Functions
 
 | Name | Summary |
 |---|---|
-| [createResponse](create-response.md) | `fun createResponse(input: Response<`[`Envelope`](../../com.pubnub.api.models.server/-envelope/index.md)`<`[`WhereNowPayload`](../../com.pubnub.api.models.server.presence/-where-now-payload/index.md)`>>): `[`PNWhereNowResult`](../../com.pubnub.api.models.consumer.presence/-p-n-where-now-result/index.md)`?` |
+| [createResponse](create-response.md) | `fun createResponse(input: Response<`[`Envelope`](../../com.pubnub.api.models.server/-envelope/index.md)`<`[`WhereNowPayload`](../../com.pubnub.api.models.server.presence/-where-now-payload/index.md)`>>): `[`PNWhereNowResult`](../../com.pubnub.api.models.consumer.presence/-p-n-where-now-result/index.md) |
 | [doWork](do-work.md) | `fun doWork(queryParams: `[`HashMap`](https://docs.oracle.com/javase/6/docs/api/java/util/HashMap.html)`<`[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`, `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`>): Call<`[`Envelope`](../../com.pubnub.api.models.server/-envelope/index.md)`<`[`WhereNowPayload`](../../com.pubnub.api.models.server.presence/-where-now-payload/index.md)`>>` |
 | [operationType](operation-type.md) | `fun operationType(): PNWhereNowOperation` |

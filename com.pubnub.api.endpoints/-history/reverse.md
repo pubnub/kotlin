@@ -2,9 +2,4 @@
 
 # reverse
 
-`var reverse: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)
-
-Whether to traverse the time ine in reverse starting with the oldest message first.
-
-Default is `false`.
-
+`val reverse: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)

@@ -2,7 +2,4 @@
 
 # read
 
-`var read: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)
-
-Set to `true` to request the *read* permission. Defaults to `false`.
-
+`val read: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)

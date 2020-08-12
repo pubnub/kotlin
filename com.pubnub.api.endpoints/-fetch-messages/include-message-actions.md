@@ -2,9 +2,4 @@
 
 # includeMessageActions
 
-`var includeMessageActions: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)
-
-Whether to include message actions in response.
-
-Defaults to `false`.
-
+`val includeMessageActions: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)

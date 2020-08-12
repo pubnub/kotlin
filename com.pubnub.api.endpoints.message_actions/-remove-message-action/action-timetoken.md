@@ -2,7 +2,4 @@
 
 # actionTimetoken
 
-`var actionTimetoken: `[`Long`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)`?`
-
-The publish timetoken of the message action to be removed.
-
+`val actionTimetoken: `[`Long`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)

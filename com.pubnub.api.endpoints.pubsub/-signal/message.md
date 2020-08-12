@@ -2,7 +2,4 @@
 
 # message
 
-`lateinit var message: `[`Any`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)
-
-The payload which will be serialized and sent.
-
+`val message: `[`Any`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)

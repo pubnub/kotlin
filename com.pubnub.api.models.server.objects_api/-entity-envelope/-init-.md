@@ -2,4 +2,4 @@
 
 # &lt;init&gt;
 
-`EntityEnvelope()`
+`EntityEnvelope(status: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)`, data: T? = null)`

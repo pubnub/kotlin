@@ -12,14 +12,14 @@
 
 | Name | Summary |
 |---|---|
-| [channels](channels.md) | Channels to fetch the message count from.`lateinit var channels: `[`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)`<`[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`>` |
-| [channelsTimetoken](channels-timetoken.md) | List of timetokens, in order of the channels list. Specify a single timetoken to apply it to all channels.`lateinit var channelsTimetoken: `[`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)`<`[`Long`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)`>` |
+| [channels](channels.md) | `val channels: `[`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)`<`[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`>` |
+| [channelsTimetoken](channels-timetoken.md) | `val channelsTimetoken: `[`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)`<`[`Long`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)`>` |
 
 ### Functions
 
 | Name | Summary |
 |---|---|
-| [createResponse](create-response.md) | `fun createResponse(input: Response<JsonElement>): `[`PNMessageCountResult`](../../com.pubnub.api.models.consumer.history/-p-n-message-count-result/index.md)`?` |
+| [createResponse](create-response.md) | `fun createResponse(input: Response<JsonElement>): `[`PNMessageCountResult`](../../com.pubnub.api.models.consumer.history/-p-n-message-count-result/index.md) |
 | [doWork](do-work.md) | `fun doWork(queryParams: `[`HashMap`](https://docs.oracle.com/javase/6/docs/api/java/util/HashMap.html)`<`[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`, `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`>): Call<JsonElement>` |
 | [getAffectedChannels](get-affected-channels.md) | `fun getAffectedChannels(): `[`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)`<`[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`>` |
 | [operationType](operation-type.md) | `fun operationType(): PNMessageCountOperation` |

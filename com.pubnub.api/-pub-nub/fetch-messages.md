@@ -2,7 +2,7 @@
 
 # fetchMessages
 
-`fun fetchMessages(): `[`FetchMessages`](../../com.pubnub.api.endpoints/-fetch-messages/index.md)
+`fun fetchMessages(channels: `[`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)`<`[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`>, maximumPerChannel: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)` = 0, start: `[`Long`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)`? = null, end: `[`Long`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)`? = null, includeMeta: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)` = false, includeMessageActions: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)` = false): `[`FetchMessages`](../../com.pubnub.api.endpoints/-fetch-messages/index.md)
 
 Fetch historical messages from multiple channels.
 The `includeMessageActions` flag also allows you to fetch message actions along with the messages.
@@ -29,3 +29,21 @@ you will receive messages from that `end` timetoken and newer.
 even if there are more messages that meet the timetoken values.
 * Iterative calls to history adjusting the start timetoken is necessary to page through the full set of results
 if more than 25 messages meet the timetoken values.
+
+### Parameters
+
+`channels` - Channels to return history messages from.
+
+`maximumPerChannel` - Specifies the number of historical messages to return per channel.
+    If [includeMessageActions](fetch-messages.md#com.pubnub.api.PubNub$fetchMessages(kotlin.collections.List((kotlin.String)), kotlin.Int, kotlin.Long, kotlin.Long, kotlin.Boolean, kotlin.Boolean)/includeMessageActions) is `false`, then `1` is the default (and maximum) value.
+    Otherwise it's `25`.
+
+`start` - Timetoken delimiting the start of time slice (exclusive) to pull messages from.
+
+`end` - Time token delimiting the end of time slice (inclusive) to pull messages from.
+
+`includeMeta` - Whether to include message metadata in response.
+    Defaults to `false`.
+
+`includeMessageActions` - Whether to include message actions in response.
+    Defaults to `false`.

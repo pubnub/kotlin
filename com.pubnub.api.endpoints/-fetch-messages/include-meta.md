@@ -2,9 +2,4 @@
 
 # includeMeta
 
-`var includeMeta: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)
-
-Whether to include message metadata in response.
-
-Defaults to `false`.
-
+`val includeMeta: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)

@@ -2,7 +2,4 @@
 
 # start
 
-`var start: `[`Long`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)`?`
-
-Timetoken delimiting the start of time slice (exclusive) to pull messages from.
-
+`val start: `[`Long`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)`?`

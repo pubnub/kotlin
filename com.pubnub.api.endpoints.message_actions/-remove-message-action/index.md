@@ -12,9 +12,9 @@
 
 | Name | Summary |
 |---|---|
-| [actionTimetoken](action-timetoken.md) | The publish timetoken of the message action to be removed.`var actionTimetoken: `[`Long`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)`?` |
-| [channel](channel.md) | Channel to remove message actions from.`lateinit var channel: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
-| [messageTimetoken](message-timetoken.md) | The publish timetoken of the original message.`var messageTimetoken: `[`Long`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)`?` |
+| [actionTimetoken](action-timetoken.md) | `val actionTimetoken: `[`Long`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html) |
+| [channel](channel.md) | `val channel: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
+| [messageTimetoken](message-timetoken.md) | `val messageTimetoken: `[`Long`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html) |
 
 ### Functions
 

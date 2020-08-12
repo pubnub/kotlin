@@ -2,7 +2,4 @@
 
 # channelGroup
 
-`lateinit var channelGroup: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
-
-Channel group to fetch the belonging channels.
-
+`val channelGroup: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)

@@ -2,9 +2,4 @@
 
 # limit
 
-`var limit: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)`?`
-
-Specifies the number of message actions to return in response.
-
-Default (and the maximum value) is 100.
-
+`val limit: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)`?`

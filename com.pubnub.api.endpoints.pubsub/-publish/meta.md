@@ -2,7 +2,4 @@
 
 # meta
 
-`lateinit var meta: `[`Any`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)
-
-Metadata object which can be used with the filtering ability.
-
+`val meta: `[`Any`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)`?`
