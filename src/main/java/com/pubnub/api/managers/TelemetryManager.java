@@ -195,7 +195,9 @@ public class TelemetryManager {
             case PNDeleteMessageAction:
                 endpoint = "msga";
                 break;
-
+            case PNFileAction:
+                endpoint = "file";
+                break;
             default:
                 endpoint = "time";
                 break;

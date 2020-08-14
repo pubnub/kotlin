@@ -6,6 +6,7 @@ import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult;
+import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult;
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult;
 import com.pubnub.api.models.consumer.pubsub.objects.PNMembershipResult;
 import com.pubnub.api.models.consumer.pubsub.objects.PNSpaceResult;
@@ -97,4 +98,9 @@ public class ListenerManager {
         }
     }
 
+    public void announce(PNFileEventResult fileEventResult) {
+        for (SubscribeCallback subscribeCallback : getListeners()) {
+            subscribeCallback.file(this.pubnub, fileEventResult);
+        }
+    }
 }

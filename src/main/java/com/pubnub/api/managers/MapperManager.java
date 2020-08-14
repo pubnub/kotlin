@@ -1,5 +1,7 @@
 package com.pubnub.api.managers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -17,27 +19,27 @@ import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.builder.PubNubErrorBuilder;
-
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import retrofit2.Converter;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.Iterator;
 import java.util.Map;
 
-import lombok.Getter;
-import retrofit2.Converter;
-import retrofit2.converter.gson.GsonConverterFactory;
-
 public class MapperManager {
 
     @Getter
-    private Gson objectMapper;
+    private final Gson objectMapper;
     @Getter
-    private Converter.Factory converterFactory;
+    private final Converter.Factory converterFactory;
+
+    private final ObjectMapper jacksonObjectMapper = new ObjectMapper();
 
     public MapperManager() {
         TypeAdapter<Boolean> booleanAsIntAdapter = getBooleanTypeAdapter();
@@ -124,7 +126,10 @@ public class MapperManager {
         try {
             return this.objectMapper.fromJson(input, clazz);
         } catch (JsonParseException e) {
-            throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_PARSING_ERROR).errormsg(e.getMessage()).build();
+            throw PubNubException.builder()
+                    .pubnubError(PubNubErrorBuilder.PNERROBJ_PARSING_ERROR)
+                    .errormsg(e.getMessage())
+                    .build();
         }
     }
 
@@ -142,7 +147,21 @@ public class MapperManager {
         try {
             return this.objectMapper.toJson(input);
         } catch (JsonParseException e) {
-            throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_JSON_ERROR).errormsg(e.getMessage()).build();
+            throw PubNubException.builder()
+                    .pubnubError(PubNubErrorBuilder.PNERROBJ_JSON_ERROR)
+                    .errormsg(e.getMessage())
+                    .build();
+        }
+    }
+
+    public String toJsonUsinJackson(Object input) throws PubNubException {
+        try {
+            return this.jacksonObjectMapper.writeValueAsString(input);
+        } catch (JsonProcessingException e) {
+            throw PubNubException.builder()
+                    .pubnubError(PubNubErrorBuilder.PNERROBJ_JSON_ERROR)
+                    .errormsg(e.getMessage())
+                    .build();
         }
     }
 
@@ -250,5 +269,4 @@ public class MapperManager {
             }
         }
     }
-
 }

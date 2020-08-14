@@ -13,6 +13,7 @@ import com.pubnub.api.managers.ListenerManager;
 import com.pubnub.api.managers.MapperManager;
 import com.pubnub.api.models.consumer.PNErrorData;
 import com.pubnub.api.models.consumer.PNStatus;
+import com.pubnub.api.models.consumer.files.PNDownloadableFile;
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction;
 import com.pubnub.api.models.consumer.objects_api.space.PNSpace;
 import com.pubnub.api.models.consumer.objects_api.user.PNUser;
@@ -20,6 +21,7 @@ import com.pubnub.api.models.consumer.pubsub.BasePubSubResult;
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult;
+import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult;
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult;
 import com.pubnub.api.models.consumer.pubsub.objects.ObjectPayload;
 import com.pubnub.api.models.consumer.pubsub.objects.PNMembershipResult;
@@ -28,6 +30,8 @@ import com.pubnub.api.models.consumer.pubsub.objects.PNUserResult;
 import com.pubnub.api.models.server.PresenceEnvelope;
 import com.pubnub.api.models.server.PublishMetaData;
 import com.pubnub.api.models.server.SubscribeMessage;
+import com.pubnub.api.models.server.files.FileUploadNotification;
+import com.pubnub.api.services.FilesService;
 import com.pubnub.api.vendor.Crypto;
 import lombok.extern.slf4j.Slf4j;
 
@@ -39,10 +43,11 @@ import java.util.concurrent.LinkedBlockingQueue;
 @Slf4j
 public class SubscribeMessageWorker implements Runnable {
 
-    private final int typeMessage = 0;
+    public static final int TYPE_MESSAGE = 0;
     private final int typeSignal = 1;
     private final int typeObject = 2;
     private final int typeMessageAction = 3;
+    public static final int TYPE_FILES = 4;
 
     private PubNub pubnub;
     private ListenerManager listenerManager;
@@ -217,7 +222,7 @@ public class SubscribeMessageWorker implements Runnable {
 
             if (message.getType() == null) {
                 listenerManager.announce(new PNMessageResult(result, extractedMessage));
-            } else if (message.getType() == typeMessage) {
+            } else if (message.getType() == TYPE_MESSAGE) {
                 listenerManager.announce(new PNMessageResult(result, extractedMessage));
             } else if (message.getType() == typeSignal) {
                 listenerManager.announce(new PNSignalResult(result, extractedMessage));
@@ -259,9 +264,33 @@ public class SubscribeMessageWorker implements Runnable {
                         .event(objectPayload.getEvent())
                         .data(mapper.convertValue(data, PNMessageAction.class))
                         .build());
+            } else if (message.getType() == TYPE_FILES) {
+                FileUploadNotification event = mapper.convertValue(extractedMessage, FileUploadNotification.class);
+                listenerManager.announce(PNFileEventResult.builder()
+                        .file(new PNDownloadableFile(event.getFile().getId(),
+                                event.getFile().getName(),
+                                buildFileUrl(message.getChannel(),
+                                        event.getFile().getId(),
+                                        event.getFile().getName())))
+                        .message(event.getMessage())
+                        .channel(message.getChannel())
+                        .publisher(message.getIssuingClientId())
+                        .timetoken(publishMetaData.getPublishTimetoken())
+                        .build());
             }
 
         }
+    }
+    @SuppressWarnings("RegExpRedundantEscape")
+    private final String formatFriendlyGetFileUrl = "%s" + FilesService.GET_FILE_URL.replaceAll("\\{.*?\\}", "%s");
+
+    private String buildFileUrl(String channel, String fileId, String fileName) {
+        return String.format(formatFriendlyGetFileUrl,
+                pubnub.getBaseUrl(),
+                pubnub.getConfiguration().getSubscribeKey(),
+                channel,
+                fileId,
+                fileName);
     }
 
     private List<String> getDelta(JsonElement delta) {

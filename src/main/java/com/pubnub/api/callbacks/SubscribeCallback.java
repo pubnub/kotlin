@@ -5,6 +5,7 @@ import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult;
+import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult;
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult;
 import com.pubnub.api.models.consumer.pubsub.objects.PNMembershipResult;
 import com.pubnub.api.models.consumer.pubsub.objects.PNSpaceResult;
@@ -28,4 +29,7 @@ public abstract class SubscribeCallback {
     public abstract void membership(@NotNull PubNub pubnub, @NotNull PNMembershipResult pnMembershipResult);
 
     public abstract void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnMessageActionResult);
+
+    public abstract void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult);
+
 }

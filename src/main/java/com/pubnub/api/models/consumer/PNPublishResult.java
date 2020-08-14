@@ -1,12 +1,9 @@
 package com.pubnub.api.models.consumer;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 
-@Getter
 @Builder
-@ToString
+@Data
 public class PNPublishResult {
-    private Long timetoken;
+    private final Long timetoken;
 }

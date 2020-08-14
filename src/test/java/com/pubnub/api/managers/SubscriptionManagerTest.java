@@ -17,6 +17,7 @@ import com.pubnub.api.models.consumer.presence.PNSetStateResult;
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult;
+import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult;
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult;
 import com.pubnub.api.models.consumer.pubsub.objects.PNMembershipResult;
 import com.pubnub.api.models.consumer.pubsub.objects.PNSpaceResult;
@@ -142,6 +143,11 @@ public class SubscriptionManagerTest extends TestHarness {
             public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnMessageActionResult) {
 
             }
+
+            @Override
+            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
+
+            }
         });
 
 
@@ -200,6 +206,11 @@ public class SubscriptionManagerTest extends TestHarness {
 
             @Override
             public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnMessageActionResult) {
+
+            }
+
+            @Override
+            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
 
             }
         });
@@ -310,6 +321,11 @@ public class SubscriptionManagerTest extends TestHarness {
             public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnMessageActionResult) {
 
             }
+
+            @Override
+            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
+
+            }
         });
 
 
@@ -374,6 +390,11 @@ public class SubscriptionManagerTest extends TestHarness {
             public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnMessageActionResult) {
 
             }
+
+            @Override
+            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
+
+            }
         });
 
 
@@ -435,6 +456,11 @@ public class SubscriptionManagerTest extends TestHarness {
 
             @Override
             public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnMessageActionResult) {
+
+            }
+
+            @Override
+            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
 
             }
         });
@@ -505,6 +531,11 @@ public class SubscriptionManagerTest extends TestHarness {
             public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnMessageActionResult) {
 
             }
+
+            @Override
+            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
+
+            }
         });
 
 
@@ -562,6 +593,11 @@ public class SubscriptionManagerTest extends TestHarness {
 
             @Override
             public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnMessageActionResult) {
+
+            }
+
+            @Override
+            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
 
             }
         });
@@ -622,6 +658,11 @@ public class SubscriptionManagerTest extends TestHarness {
             public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnMessageActionResult) {
 
             }
+
+            @Override
+            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
+
+            }
         });
 
         pubnub.subscribe().channels(Arrays.asList("ch1", "ch2")).execute();
@@ -678,6 +719,11 @@ public class SubscriptionManagerTest extends TestHarness {
 
             @Override
             public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnMessageActionResult) {
+
+            }
+
+            @Override
+            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
 
             }
         });
@@ -741,6 +787,11 @@ public class SubscriptionManagerTest extends TestHarness {
             public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnMessageActionResult) {
 
             }
+
+            @Override
+            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
+
+            }
         });
 
         pubnub.subscribe().channels(Arrays.asList("ch1", "ch2")).execute();
@@ -801,6 +852,11 @@ public class SubscriptionManagerTest extends TestHarness {
 
             @Override
             public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnMessageActionResult) {
+
+            }
+
+            @Override
+            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
 
             }
         });
@@ -867,6 +923,11 @@ public class SubscriptionManagerTest extends TestHarness {
 
             @Override
             public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnMessageActionResult) {
+
+            }
+
+            @Override
+            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
 
             }
         });
@@ -936,6 +997,11 @@ public class SubscriptionManagerTest extends TestHarness {
             public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnMessageActionResult) {
 
             }
+
+            @Override
+            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
+
+            }
         });
 
 
@@ -1003,6 +1069,11 @@ public class SubscriptionManagerTest extends TestHarness {
 
             @Override
             public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnMessageActionResult) {
+
+            }
+
+            @Override
+            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
 
             }
         });
@@ -1092,6 +1163,11 @@ public class SubscriptionManagerTest extends TestHarness {
 
             }
 
+            @Override
+            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
+
+            }
+
         });
 
 
@@ -1155,6 +1231,11 @@ public class SubscriptionManagerTest extends TestHarness {
             public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnMessageActionResult) {
 
             }
+
+            @Override
+            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
+
+            }
         });
 
 
@@ -1215,6 +1296,11 @@ public class SubscriptionManagerTest extends TestHarness {
 
             @Override
             public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnMessageActionResult) {
+
+            }
+
+            @Override
+            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
 
             }
         });
@@ -1309,6 +1395,11 @@ public class SubscriptionManagerTest extends TestHarness {
             public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnMessageActionResult) {
 
             }
+
+            @Override
+            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
+
+            }
         });
 
 
@@ -1387,6 +1478,11 @@ public class SubscriptionManagerTest extends TestHarness {
             public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnMessageActionResult) {
 
             }
+
+            @Override
+            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
+
+            }
         });
 
         pubnub.subscribe().channelGroups(Arrays.asList("cg1", "cg2")).execute();
@@ -1449,6 +1545,11 @@ public class SubscriptionManagerTest extends TestHarness {
 
             @Override
             public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnMessageActionResult) {
+
+            }
+
+            @Override
+            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
 
             }
         });
@@ -1516,6 +1617,11 @@ public class SubscriptionManagerTest extends TestHarness {
             public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnMessageActionResult) {
 
             }
+
+            @Override
+            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
+
+            }
         });
 
         pubnub.subscribe().channels(Arrays.asList("ch1", "ch2")).execute();
@@ -1572,6 +1678,11 @@ public class SubscriptionManagerTest extends TestHarness {
 
             @Override
             public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnMessageActionResult) {
+
+            }
+
+            @Override
+            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
 
             }
         });
@@ -1637,6 +1748,11 @@ public class SubscriptionManagerTest extends TestHarness {
             public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnMessageActionResult) {
 
             }
+
+            @Override
+            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
+
+            }
         });
 
 
@@ -1695,6 +1811,11 @@ public class SubscriptionManagerTest extends TestHarness {
 
             @Override
             public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnMessageActionResult) {
+
+            }
+
+            @Override
+            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
 
             }
         });
@@ -1757,6 +1878,11 @@ public class SubscriptionManagerTest extends TestHarness {
 
             @Override
             public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnMessageActionResult) {
+
+            }
+
+            @Override
+            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
 
             }
         });
@@ -1826,6 +1952,11 @@ public class SubscriptionManagerTest extends TestHarness {
             public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnMessageActionResult) {
 
             }
+
+            @Override
+            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
+
+            }
         });
 
         pubnub.subscribe().channels(Arrays.asList("ch1", "ch2")).withPresence().execute();
@@ -1891,6 +2022,11 @@ public class SubscriptionManagerTest extends TestHarness {
 
             @Override
             public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnMessageActionResult) {
+
+            }
+
+            @Override
+            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
 
             }
         });
@@ -1959,6 +2095,11 @@ public class SubscriptionManagerTest extends TestHarness {
             public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnMessageActionResult) {
 
             }
+
+            @Override
+            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
+
+            }
         });
 
         pubnub.subscribe().channels(Arrays.asList("ch1", "ch2")).withPresence().execute();
@@ -2021,6 +2162,11 @@ public class SubscriptionManagerTest extends TestHarness {
 
             @Override
             public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnMessageActionResult) {
+
+            }
+
+            @Override
+            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
 
             }
         });
@@ -2090,6 +2236,11 @@ public class SubscriptionManagerTest extends TestHarness {
             public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnMessageActionResult) {
 
             }
+
+            @Override
+            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
+
+            }
         });
 
         pubnub.subscribe().channels(Arrays.asList("ch10")).withPresence().execute();
@@ -2151,6 +2302,11 @@ public class SubscriptionManagerTest extends TestHarness {
             public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnMessageActionResult) {
 
             }
+
+            @Override
+            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
+
+            }
         });
 
         pubnub.subscribe().channels(Arrays.asList("ch1", "ch2")).withPresence().execute();
@@ -2203,6 +2359,11 @@ public class SubscriptionManagerTest extends TestHarness {
 
             @Override
             public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnMessageActionResult) {
+
+            }
+
+            @Override
+            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
 
             }
         };
@@ -2297,6 +2458,11 @@ public class SubscriptionManagerTest extends TestHarness {
             public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnMessageActionResult) {
 
             }
+
+            @Override
+            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
+
+            }
         };
 
         pubnub.addListener(sub1);
@@ -2369,6 +2535,11 @@ public class SubscriptionManagerTest extends TestHarness {
 
             }
 
+            @Override
+            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
+
+            }
+
 
         };
 
@@ -2432,6 +2603,11 @@ public class SubscriptionManagerTest extends TestHarness {
 
             @Override
             public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnMessageActionResult) {
+
+            }
+
+            @Override
+            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
 
             }
 
@@ -2499,6 +2675,11 @@ public class SubscriptionManagerTest extends TestHarness {
 
             @Override
             public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnMessageActionResult) {
+
+            }
+
+            @Override
+            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
 
             }
 
@@ -2573,6 +2754,11 @@ public class SubscriptionManagerTest extends TestHarness {
 
             }
 
+            @Override
+            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
+
+            }
+
 
         };
 
@@ -2638,6 +2824,11 @@ public class SubscriptionManagerTest extends TestHarness {
             public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnMessageActionResult) {
 
             }
+
+            @Override
+            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
+
+            }
         };
 
         pubnub.addListener(sub1);
@@ -2699,6 +2890,11 @@ public class SubscriptionManagerTest extends TestHarness {
 
             @Override
             public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnMessageActionResult) {
+
+            }
+
+            @Override
+            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
 
             }
         };
@@ -2766,6 +2962,11 @@ public class SubscriptionManagerTest extends TestHarness {
 
             @Override
             public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnMessageActionResult) {
+
+            }
+
+            @Override
+            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
 
             }
         };
@@ -2842,6 +3043,11 @@ public class SubscriptionManagerTest extends TestHarness {
 
             @Override
             public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnMessageActionResult) {
+
+            }
+
+            @Override
+            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
 
             }
         });
@@ -2927,6 +3133,11 @@ public class SubscriptionManagerTest extends TestHarness {
 
             @Override
             public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnMessageActionResult) {
+
+            }
+
+            @Override
+            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
 
             }
         });
@@ -3037,6 +3248,11 @@ public class SubscriptionManagerTest extends TestHarness {
 
             @Override
             public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnMessageActionResult) {
+
+            }
+
+            @Override
+            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
 
             }
         };

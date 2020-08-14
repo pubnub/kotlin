@@ -1,6 +1,5 @@
 package com.pubnub.api;
 
-
 import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.vendor.Base64;
 import lombok.extern.java.Log;
@@ -16,11 +15,7 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 @Log
 public class PubNubUtil {
@@ -244,5 +239,4 @@ public class PubNubUtil {
         }
         return "";
     }
-
 }

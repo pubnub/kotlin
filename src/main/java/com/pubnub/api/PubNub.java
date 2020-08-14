@@ -17,6 +17,12 @@ import com.pubnub.api.endpoints.channel_groups.AllChannelsChannelGroup;
 import com.pubnub.api.endpoints.channel_groups.DeleteChannelGroup;
 import com.pubnub.api.endpoints.channel_groups.ListAllChannelGroup;
 import com.pubnub.api.endpoints.channel_groups.RemoveChannelChannelGroup;
+import com.pubnub.api.endpoints.files.DeleteFile;
+import com.pubnub.api.endpoints.files.DownloadFile;
+import com.pubnub.api.endpoints.files.GetFileUrl;
+import com.pubnub.api.endpoints.files.ListFiles;
+import com.pubnub.api.endpoints.files.PublishFileMessage;
+import com.pubnub.api.endpoints.files.SendFile;
 import com.pubnub.api.endpoints.message_actions.AddMessageAction;
 import com.pubnub.api.endpoints.message_actions.GetMessageActions;
 import com.pubnub.api.endpoints.message_actions.RemoveMessageAction;
@@ -54,16 +60,16 @@ import com.pubnub.api.managers.token_manager.PNResourceType;
 import com.pubnub.api.managers.token_manager.TokenManager;
 import com.pubnub.api.managers.token_manager.TokenManagerProperties;
 import com.pubnub.api.vendor.Crypto;
-
+import com.pubnub.api.vendor.FileEncryptionUtil;
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.InputStream;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
-
-import lombok.Getter;
 
 
 public class PubNub {
@@ -91,7 +97,7 @@ public class PubNub {
     private static final int TIMESTAMP_DIVIDER = 1000;
     private static final int MAX_SEQUENCE = 65535;
 
-    private static final String SDK_VERSION = "4.31.3";
+    private static final String SDK_VERSION = "4.32.0";
 
     public PubNub(@NotNull PNConfiguration initialConfig) {
         this.configuration = initialConfig;
@@ -341,6 +347,43 @@ public class PubNub {
 
     // End Message Actions API
 
+    @NotNull
+    public SendFile.Builder sendFile() {
+        return SendFile.builder(this, telemetryManager, retrofitManager);
+    }
+
+    public ListFiles.Builder listFiles() {
+        return new ListFiles.Builder(this, telemetryManager, retrofitManager);
+    }
+
+    public GetFileUrl.Builder getFileUrl() {
+        return GetFileUrl.builder(
+                this,
+                telemetryManager,
+                retrofitManager);
+    }
+
+    public DownloadFile.Builder downloadFile() {
+        return DownloadFile.builder(
+                this,
+                telemetryManager,
+                retrofitManager);
+    }
+
+    public DeleteFile.Builder deleteFile() {
+        return DeleteFile.builder(
+                this,
+                telemetryManager,
+                retrofitManager);
+    }
+
+    public PublishFileMessage.Builder publishFileMessage() {
+        return PublishFileMessage.builder(
+                this,
+                telemetryManager,
+                retrofitManager);
+    }
+
     // public methods
 
     /**
@@ -375,6 +418,14 @@ public class PubNub {
         return new Crypto(cipherKey).decrypt(inputString);
     }
 
+    public InputStream decryptInputStream(InputStream inputStream) throws PubNubException {
+        return decryptInputStream(inputStream, this.getConfiguration().getCipherKey());
+    }
+
+    public InputStream decryptInputStream(InputStream inputStream, String cipherKey) throws PubNubException {
+        return FileEncryptionUtil.decrypt(cipherKey, inputStream);
+    }
+
     /**
      * Perform Cryptographic encryption of an input string and the cipher key provided by PNConfiguration
      *
@@ -405,6 +456,14 @@ public class PubNub {
         }
 
         return new Crypto(cipherKey).encrypt(inputString);
+    }
+
+    public InputStream encryptInputSteram(InputStream inputStream) throws PubNubException {
+        return encryptInputSteram(inputStream, this.getConfiguration().getCipherKey());
+    }
+
+    public InputStream encryptInputSteram(InputStream inputStream, String cipherKey) throws PubNubException {
+        return FileEncryptionUtil.encrypt(cipherKey, inputStream);
     }
 
     public int getTimestamp() {

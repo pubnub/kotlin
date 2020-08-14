@@ -8,6 +8,7 @@ import com.pubnub.api.enums.PNLogVerbosity;
 import com.pubnub.api.interceptors.SignatureInterceptor;
 import com.pubnub.api.services.AccessManagerService;
 import com.pubnub.api.services.ChannelGroupService;
+import com.pubnub.api.services.FilesService;
 import com.pubnub.api.services.HistoryService;
 import com.pubnub.api.services.MemberService;
 import com.pubnub.api.services.MembershipService;
@@ -15,6 +16,7 @@ import com.pubnub.api.services.MessageActionService;
 import com.pubnub.api.services.PresenceService;
 import com.pubnub.api.services.PublishService;
 import com.pubnub.api.services.PushService;
+import com.pubnub.api.services.S3Service;
 import com.pubnub.api.services.SignalService;
 import com.pubnub.api.services.SpaceService;
 import com.pubnub.api.services.SubscribeService;
@@ -37,6 +39,8 @@ public class RetrofitManager {
 
     private OkHttpClient transactionClientInstance;
     private OkHttpClient subscriptionClientInstance;
+    private OkHttpClient noSignatureClientInstance;
+
 
     // services
     @Getter
@@ -67,11 +71,17 @@ public class RetrofitManager {
     private MemberService memberService;
     @Getter
     private MessageActionService messageActionService;
+    @Getter
+    private final FilesService filesService;
 
     @Getter
-    private Retrofit transactionInstance;
+    private final S3Service s3Service;
     @Getter
-    private Retrofit subscriptionInstance;
+    private final Retrofit transactionInstance;
+    @Getter
+    private final Retrofit subscriptionInstance;
+    @Getter
+    private final Retrofit noSignatureInstance;
 
     public RetrofitManager(PubNub pubNubInstance) {
         this.pubnub = pubNubInstance;
@@ -80,18 +90,29 @@ public class RetrofitManager {
 
         if (!pubNubInstance.getConfiguration().isGoogleAppEngineNetworking()) {
             this.transactionClientInstance = createOkHttpClient(
-                    this.pubnub.getConfiguration().getNonSubscribeRequestTimeout(),
-                    this.pubnub.getConfiguration().getConnectTimeout()
+                    prepareOkHttpClient(
+                            this.pubnub.getConfiguration().getNonSubscribeRequestTimeout(),
+                            this.pubnub.getConfiguration().getConnectTimeout()
+                    ).addInterceptor(this.signatureInterceptor)
             );
 
             this.subscriptionClientInstance = createOkHttpClient(
-                    this.pubnub.getConfiguration().getSubscribeTimeout(),
-                    this.pubnub.getConfiguration().getConnectTimeout()
+                    prepareOkHttpClient(
+                            this.pubnub.getConfiguration().getSubscribeTimeout(),
+                            this.pubnub.getConfiguration().getConnectTimeout()
+                    ).addInterceptor(this.signatureInterceptor)
+            );
+
+            this.noSignatureClientInstance = createOkHttpClient(
+                    prepareOkHttpClient(this.pubnub.getConfiguration().getSubscribeTimeout(),
+                            this.pubnub.getConfiguration().getConnectTimeout()
+                    )
             );
         }
 
         this.transactionInstance = createRetrofit(this.transactionClientInstance);
         this.subscriptionInstance = createRetrofit(this.subscriptionClientInstance);
+        this.noSignatureInstance = createRetrofit(this.noSignatureClientInstance);
 
         this.presenceService = transactionInstance.create(PresenceService.class);
         this.historyService = transactionInstance.create(HistoryService.class);
@@ -107,9 +128,11 @@ public class RetrofitManager {
         this.membershipService = transactionInstance.create(MembershipService.class);
         this.memberService = transactionInstance.create(MemberService.class);
         this.messageActionService = transactionInstance.create(MessageActionService.class);
+        this.filesService = transactionInstance.create(FilesService.class);
+        this.s3Service = noSignatureInstance.create(S3Service.class);
     }
 
-    private OkHttpClient createOkHttpClient(int requestTimeout, int connectTimeOut) {
+    private OkHttpClient.Builder prepareOkHttpClient(int requestTimeout, int connectTimeOut) {
         PNConfiguration pnConfiguration = pubnub.getConfiguration();
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.retryOnConnectionFailure(true);
@@ -155,8 +178,11 @@ public class RetrofitManager {
             httpClient.certificatePinner(pubnub.getConfiguration().getCertificatePinner());
         }
 
-        httpClient.addInterceptor(this.signatureInterceptor);
 
+        return httpClient;
+    }
+
+    private OkHttpClient createOkHttpClient(OkHttpClient.Builder httpClient) {
         OkHttpClient constructedClient = httpClient.build();
 
         if (pubnub.getConfiguration().getMaximumConnections() != null) {
@@ -167,6 +193,10 @@ public class RetrofitManager {
     }
 
     private Retrofit createRetrofit(OkHttpClient client) {
+        return createRetrofit(client, pubnub.getBaseUrl());
+    }
+
+    private Retrofit createRetrofit(OkHttpClient client, String baseUrl) {
         Retrofit.Builder retrofitBuilder = new Retrofit.Builder();
 
         if (pubnub.getConfiguration().isGoogleAppEngineNetworking()) {
@@ -174,7 +204,7 @@ public class RetrofitManager {
         }
 
         retrofitBuilder = retrofitBuilder
-                .baseUrl(pubnub.getBaseUrl())
+                .baseUrl(baseUrl)
                 .addConverterFactory(this.pubnub.getMapper().getConverterFactory());
 
         if (!pubnub.getConfiguration().isGoogleAppEngineNetworking()) {
@@ -185,13 +215,8 @@ public class RetrofitManager {
     }
 
 
-    public void destroy(boolean force) {
-        if (this.transactionClientInstance != null) {
-            closeExecutor(this.transactionClientInstance, force);
-        }
-        if (this.subscriptionClientInstance != null) {
-            closeExecutor(this.subscriptionClientInstance, force);
-        }
+    public ExecutorService getTransactionClientExecutorService() {
+        return transactionClientInstance.dispatcher().executorService();
     }
 
     private void closeExecutor(OkHttpClient client, boolean force) {
@@ -200,6 +225,15 @@ public class RetrofitManager {
             client.connectionPool().evictAll();
             ExecutorService executorService = client.dispatcher().executorService();
             executorService.shutdown();
+        }
+    }
+
+    public void destroy(boolean force) {
+        if (this.transactionClientInstance != null) {
+            closeExecutor(this.transactionClientInstance, force);
+        }
+        if (this.subscriptionClientInstance != null) {
+            closeExecutor(this.subscriptionClientInstance, force);
         }
     }
 }

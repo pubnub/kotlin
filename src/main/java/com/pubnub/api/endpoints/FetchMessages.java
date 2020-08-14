@@ -47,6 +47,10 @@ public class FetchMessages extends Endpoint<FetchMessagesEnvelope, PNFetchMessag
     private Boolean includeMeta;
     @Setter
     private Boolean includeMessageActions;
+    @Setter
+    private boolean includeMessageType = true;
+    @Setter
+    private boolean includeUUID = true;
 
     public FetchMessages(PubNub pubnub, TelemetryManager telemetryManager, RetrofitManager retrofit) {
         super(pubnub, telemetryManager, retrofit);
@@ -113,6 +117,8 @@ public class FetchMessages extends Endpoint<FetchMessagesEnvelope, PNFetchMessag
         if (includeMeta) {
             params.put("include_meta", String.valueOf(includeMeta));
         }
+        params.put("include_uuid", Boolean.toString(includeUUID));
+        params.put("include_message_type", Boolean.toString(includeMessageType));
 
         if (!includeMessageActions) {
             return this.getRetrofit().getHistoryService().fetchMessages(
@@ -141,10 +147,7 @@ public class FetchMessages extends Endpoint<FetchMessagesEnvelope, PNFetchMessag
             List<PNFetchMessageItem> items = new ArrayList<>();
 
             for (PNFetchMessageItem item : entry.getValue()) {
-                PNFetchMessageItem.PNFetchMessageItemBuilder messageItemBuilder = PNFetchMessageItem.builder();
-                messageItemBuilder.message(processMessage(item.getMessage()));
-                messageItemBuilder.timetoken(item.getTimetoken());
-                messageItemBuilder.meta(item.getMeta());
+                PNFetchMessageItem.PNFetchMessageItemBuilder messageItemBuilder = item.toBuilder();
 
                 if (includeMessageActions) {
                     if (item.getActions() != null) {
@@ -152,8 +155,9 @@ public class FetchMessages extends Endpoint<FetchMessagesEnvelope, PNFetchMessag
                     } else {
                         messageItemBuilder.actions(new HashMap<>());
                     }
+                } else {
+                    messageItemBuilder.actions(null);
                 }
-
                 items.add(messageItemBuilder.build());
             }
 

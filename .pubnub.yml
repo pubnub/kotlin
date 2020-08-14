@@ -1,10 +1,15 @@
 name: java
-version: 4.31.3
+version: 4.32.0
 schema: 1
 scm: github.com/pubnub/java
 files:
-  - build/libs/pubnub-gson-4.31.3-all.jar
+  - build/libs/pubnub-gson-4.32.0-all.jar
 changelog:
+  - version: v4.32.0
+    date: 2020-08-14
+    changes:
+      - type: feature
+        text: "Allows to upload files to channels, download them with optional encryption support."
   - version: v4.31.3
     date: 2020-06-17
     changes:
@@ -537,6 +542,12 @@ features:
     - OBJECTS-REMOVE-MEMBERS
     - OBJECTS-UPDATE-MEMBERS
     - OBJECTS-FILTERING
+  files:
+    - FILES-DELETE-FILE
+    - FILES-DOWNLOAD-FILE
+    - FILES-GET-FILE-URL
+    - FILES-LIST-FILES
+    - FILES-SEND-FILE
   unsubscribe:
     - UNSUBSCRIBE-ALL
     - UNSUBSCRIBE-SUPPRESS-LEAVE-EVENTS

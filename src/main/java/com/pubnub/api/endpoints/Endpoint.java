@@ -7,6 +7,7 @@ import com.pubnub.api.PubNubException;
 import com.pubnub.api.PubNubUtil;
 import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.callbacks.PNCallback;
+import com.pubnub.api.endpoints.remoteaction.RemoteAction;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.enums.PNStatusCategory;
 import com.pubnub.api.managers.MapperManager;
@@ -21,6 +22,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
@@ -41,7 +43,7 @@ import retrofit2.Call;
 import retrofit2.Response;
 
 @Log
-public abstract class Endpoint<Input, Output> {
+public abstract class Endpoint<Input, Output> implements RemoteAction<Output> {
 
     @Getter(AccessLevel.PROTECTED)
     private PubNub pubnub;
@@ -68,10 +70,6 @@ public abstract class Endpoint<Input, Output> {
     @Getter(AccessLevel.NONE)
     private boolean silenceFailures;
 
-    private static final int SERVER_RESPONSE_SUCCESS = 200;
-    private static final int SERVER_RESPONSE_FORBIDDEN = 403;
-    private static final int SERVER_RESPONSE_BAD_REQUEST = 400;
-
     private MapperManager mapper;
 
     public Endpoint(PubNub pubnubInstance, TelemetryManager telemetry, RetrofitManager retrofitInstance) {
@@ -81,6 +79,7 @@ public abstract class Endpoint<Input, Output> {
         this.telemetryManager = telemetry;
     }
 
+    @Override
     @Nullable
     public Output sync() throws PubNubException {
         this.validateParams();
@@ -99,7 +98,7 @@ public abstract class Endpoint<Input, Output> {
                     .build();
         }
 
-        if (!serverResponse.isSuccessful() || serverResponse.code() != SERVER_RESPONSE_SUCCESS) {
+        if (isError(serverResponse)) {
             String responseBodyText;
             JsonElement responseBody;
 
@@ -130,6 +129,7 @@ public abstract class Endpoint<Input, Output> {
         return response;
     }
 
+    @Override
     public void async(@NotNull final PNCallback<Output> callback) {
         cachedCallback = callback;
 
@@ -149,7 +149,7 @@ public abstract class Endpoint<Input, Output> {
             public void onResponse(Call<Input> performedCall, Response<Input> response) {
                 Output callbackResponse;
 
-                if (!response.isSuccessful() || response.code() != SERVER_RESPONSE_SUCCESS) {
+                if (isError(response)) {
 
                     String responseBodyText;
                     JsonElement responseBody;
@@ -182,7 +182,7 @@ public abstract class Endpoint<Input, Output> {
                             .statusCode(response.code())
                             .build();
 
-                    if (response.code() == SERVER_RESPONSE_FORBIDDEN) {
+                    if (response.code() == HttpURLConnection.HTTP_FORBIDDEN) {
                         pnStatusCategory = PNStatusCategory.PNAccessDeniedCategory;
 
                         if (responseBodyPayload != null && mapper.hasField(responseBodyPayload, "channels")) {
@@ -207,7 +207,7 @@ public abstract class Endpoint<Input, Output> {
 
                     }
 
-                    if (response.code() == SERVER_RESPONSE_BAD_REQUEST) {
+                    if (response.code() == HttpURLConnection.HTTP_BAD_REQUEST) {
                         pnStatusCategory = PNStatusCategory.PNBadRequestCategory;
                     }
 
@@ -271,6 +271,7 @@ public abstract class Endpoint<Input, Output> {
         });
     }
 
+    @Override
     public void retry() {
         silenceFailures = false;
         async(cachedCallback);
@@ -279,11 +280,16 @@ public abstract class Endpoint<Input, Output> {
     /**
      * cancel the operation but do not alert anybody, useful for restarting the heartbeats and subscribe loops.
      */
+    @Override
     public void silentCancel() {
         if (call != null && !call.isCanceled()) {
             this.silenceFailures = true;
             call.cancel();
         }
+    }
+
+    protected boolean isError(Response<Input> response) {
+        return response.code() != HttpURLConnection.HTTP_OK;
     }
 
     private PNStatus createStatusResponse(PNStatusCategory category, Response<Input> response, Exception throwable,

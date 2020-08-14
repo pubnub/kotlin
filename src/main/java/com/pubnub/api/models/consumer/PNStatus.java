@@ -1,6 +1,6 @@
 package com.pubnub.api.models.consumer;
 
-import com.pubnub.api.endpoints.Endpoint;
+import com.pubnub.api.endpoints.remoteaction.RemoteAction;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.enums.PNStatusCategory;
 import lombok.AccessLevel;
@@ -11,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-@Builder
+@Builder(toBuilder = true)
 @Getter
 @ToString
 public class PNStatus {
@@ -40,7 +40,7 @@ public class PNStatus {
 
     @Getter(AccessLevel.NONE)
     @ToString.Exclude
-    private Endpoint executedEndpoint;
+    private RemoteAction<?> executedEndpoint;
 
 
     public void retry() {

@@ -19,6 +19,9 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.AlgorithmParameterSpec;
 
+import static com.pubnub.api.vendor.FileEncryptionUtil.CIPHER_TRANSFORMATION;
+import static com.pubnub.api.vendor.FileEncryptionUtil.ENCODING_UTF_8;
+
 
 @Slf4j
 public class Crypto {
@@ -41,15 +44,15 @@ public class Crypto {
         this.cipherKey = cipherKey;
     }
 
-    public void initCiphers() throws PubNubException {
+    private void initCiphers() throws PubNubException {
         if (INIT)
             return;
         try {
 
-            keyBytes = new String(hexEncode(sha256(this.cipherKey.getBytes("UTF-8"))), "UTF-8")
+            keyBytes = new String(hexEncode(sha256(this.cipherKey.getBytes(ENCODING_UTF_8))), ENCODING_UTF_8)
                     .substring(0, 32)
-                    .toLowerCase().getBytes("UTF-8");
-            ivBytes = initializationVector.getBytes("UTF-8");
+                    .toLowerCase().getBytes(ENCODING_UTF_8);
+            ivBytes = initializationVector.getBytes(ENCODING_UTF_8);
             INIT = true;
         } catch (UnsupportedEncodingException e) {
             throw PubNubException.builder().pubnubError(newCryptoError(11, e.toString())).errormsg(e.getMessage()).build();
@@ -61,7 +64,7 @@ public class Crypto {
         for (byte byt : input)
             result.append(Integer.toString((byt & 0xff) + 0x100, 16).substring(1));
         try {
-            return result.toString().getBytes("UTF-8");
+            return result.toString().getBytes(ENCODING_UTF_8);
         } catch (UnsupportedEncodingException e) {
             throw PubNubException.builder().pubnubError(newCryptoError(12, e.toString())).errormsg(e.getMessage()).build();
         }
@@ -78,9 +81,9 @@ public class Crypto {
             AlgorithmParameterSpec ivSpec = new IvParameterSpec(ivBytes);
             SecretKeySpec newKey = new SecretKeySpec(keyBytes, "AES");
             Cipher cipher = null;
-            cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+            cipher = Cipher.getInstance(CIPHER_TRANSFORMATION);
             cipher.init(Cipher.ENCRYPT_MODE, newKey, ivSpec);
-            return new String(Base64.encode(cipher.doFinal(input.getBytes("UTF-8")), 0), Charset.forName("UTF-8"));
+            return new String(Base64.encode(cipher.doFinal(input.getBytes(ENCODING_UTF_8)), 0), Charset.forName(ENCODING_UTF_8));
         } catch (NoSuchAlgorithmException e) {
             throw PubNubException.builder().errormsg(e.toString()).build();
         } catch (NoSuchPaddingException e) {
@@ -111,9 +114,9 @@ public class Crypto {
             initCiphers();
             AlgorithmParameterSpec ivSpec = new IvParameterSpec(ivBytes);
             SecretKeySpec newKey = new SecretKeySpec(keyBytes, "AES");
-            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+            Cipher cipher = Cipher.getInstance(CIPHER_TRANSFORMATION);
             cipher.init(Cipher.DECRYPT_MODE, newKey, ivSpec);
-            return new String(cipher.doFinal(Base64.decode(cipher_text, 0)), "UTF-8");
+            return new String(cipher.doFinal(Base64.decode(cipher_text, 0)), ENCODING_UTF_8);
         } catch (IllegalArgumentException e) {
             throw PubNubException.builder().errormsg(e.toString()).build();
         } catch (UnsupportedEncodingException e) {
@@ -153,7 +156,7 @@ public class Crypto {
         MessageDigest digest;
         try {
             digest = MessageDigest.getInstance("MD5");
-            byte[] hashedBytes = digest.digest(input.getBytes("UTF-8"));
+            byte[] hashedBytes = digest.digest(input.getBytes(ENCODING_UTF_8));
             return hashedBytes;
         } catch (NoSuchAlgorithmException e) {
             throw PubNubException.builder().pubnubError(newCryptoError(118, e.toString())).errormsg(e.getMessage()).build();

@@ -1,3 +1,10 @@
+## [v4.32.0](https://github.com/pubnub/java/releases/tag/v4.32.0)
+August-14-2020
+
+[Full Changelog](https://github.com/pubnub/java/compare/v4.31.3...v4.32.0)
+
+- 🌟️ Allows to upload files to channels, download them with optional encryption support. 
+
 ## [v4.31.3](https://github.com/pubnub/java/releases/tag/v4.31.3)
 June-17-2020
 

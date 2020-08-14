@@ -64,5 +64,7 @@ public enum PNOperationType {
     // Message Actions
     PNAddMessageAction,
     PNGetMessageActions,
-    PNDeleteMessageAction
+    PNDeleteMessageAction,
+
+    PNFileAction
 }
