@@ -14,10 +14,12 @@ import com.pubnub.api.models.server.files.FileUploadRequestDetails;
 import com.pubnub.api.models.server.files.FormField;
 import com.pubnub.api.services.S3Service;
 import com.pubnub.api.vendor.FileEncryptionUtil;
+import lombok.extern.slf4j.Slf4j;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -33,10 +35,11 @@ import java.util.List;
 import static com.pubnub.api.vendor.FileEncryptionUtil.effectiveCipherKey;
 import static com.pubnub.api.vendor.FileEncryptionUtil.loadFromInputStream;
 
+@Slf4j
 class UploadFile implements RemoteAction<Void> {
     private static final MediaType APPLICATION_OCTET_STREAM = MediaType.get("application/octet-stream");
+    private static final String CONTENT_TYPE_HEADER = "Content-Type";
     private static final String FILE_PART_MULTIPART = "file";
-    private static final int BUFFER_SIZE_BYTES = 8192;
     private final S3Service s3Service;
     private final String fileName;
     private final InputStream inputStream;
@@ -76,17 +79,42 @@ class UploadFile implements RemoteAction<Void> {
     private Call<Void> prepareCall() throws PubNubException, IOException {
         MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
         addFormParamsWithKeyFirst(key, formParams, builder);
+        MediaType mediaType = getMediaType(getContentType(formParams));
 
         RequestBody requestBody;
         if (cipherKey == null) {
-
-            requestBody = RequestBody.create(APPLICATION_OCTET_STREAM, loadFromInputStream(inputStream));
+            requestBody = RequestBody.create(mediaType, loadFromInputStream(inputStream));
         } else {
-            requestBody = RequestBody.create(APPLICATION_OCTET_STREAM, FileEncryptionUtil.encryptToBytes(cipherKey, inputStream));
+            requestBody = RequestBody.create(mediaType, FileEncryptionUtil.encryptToBytes(cipherKey, inputStream));
         }
 
         builder.addFormDataPart(FILE_PART_MULTIPART, fileName, requestBody);
         return s3Service.upload(baseUrl, builder.build());
+    }
+
+    @Nullable
+    private String getContentType(List<FormField> formFields) {
+        String contentType = null;
+        for (FormField field : formFields) {
+            if (field.getKey().equalsIgnoreCase(CONTENT_TYPE_HEADER)) {
+                contentType = field.getValue();
+                break;
+            }
+        }
+        return contentType;
+    }
+
+    private MediaType getMediaType(@Nullable String contentType) {
+        if (contentType == null) {
+            return APPLICATION_OCTET_STREAM;
+        }
+
+        try {
+            return MediaType.get(contentType);
+        }  catch (Throwable t) {
+            log.warn("Content-Type: " + contentType + " was not recognized by MediaType.get", t);
+            return APPLICATION_OCTET_STREAM;
+        }
     }
 
     @Override
@@ -142,8 +170,6 @@ class UploadFile implements RemoteAction<Void> {
                                 createStatusResponse(pnStatusCategory, response, ex));
                         return;
                     }
-                    //TODO should I add telemetry?
-                    //storeRequestLatency(response, getOperationType());
 
                     callback.onResponse(null,
                             createStatusResponse(PNStatusCategory.PNAcknowledgmentCategory, response,

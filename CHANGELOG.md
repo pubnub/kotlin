@@ -1,7 +1,12 @@
+## [v4.32.1](https://github.com/pubnub/java/releases/tag/v4.32.1)
+August-24-2020
+
+[Full Changelog](https://github.com/pubnub/java/compare/v4.32.0...v4.32.1)
+
+- 🐛 Fix for subscription loop to prevent unexpected disconnections caused by unhandled HTTP statuses. 
+
 ## [v4.32.0](https://github.com/pubnub/java/releases/tag/v4.32.0)
 August-14-2020
-
-[Full Changelog](https://github.com/pubnub/java/compare/v4.31.3...v4.32.0)
 
 - 🌟️ Allows to upload files to channels, download them with optional encryption support. 
 

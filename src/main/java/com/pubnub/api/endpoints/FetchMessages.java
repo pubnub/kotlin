@@ -149,6 +149,7 @@ public class FetchMessages extends Endpoint<FetchMessagesEnvelope, PNFetchMessag
             for (PNFetchMessageItem item : entry.getValue()) {
                 PNFetchMessageItem.PNFetchMessageItemBuilder messageItemBuilder = item.toBuilder();
 
+                messageItemBuilder.message(processMessage(item.getMessage()));
                 if (includeMessageActions) {
                     if (item.getActions() != null) {
                         messageItemBuilder.actions(item.getActions());

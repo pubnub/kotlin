@@ -97,7 +97,7 @@ public class PubNub {
     private static final int TIMESTAMP_DIVIDER = 1000;
     private static final int MAX_SEQUENCE = 65535;
 
-    private static final String SDK_VERSION = "4.32.0";
+    private static final String SDK_VERSION = "4.32.1";
 
     public PubNub(@NotNull PNConfiguration initialConfig) {
         this.configuration = initialConfig;
@@ -458,11 +458,11 @@ public class PubNub {
         return new Crypto(cipherKey).encrypt(inputString);
     }
 
-    public InputStream encryptInputSteram(InputStream inputStream) throws PubNubException {
-        return encryptInputSteram(inputStream, this.getConfiguration().getCipherKey());
+    public InputStream encryptInputStream(InputStream inputStream) throws PubNubException {
+        return encryptInputStream(inputStream, this.getConfiguration().getCipherKey());
     }
 
-    public InputStream encryptInputSteram(InputStream inputStream, String cipherKey) throws PubNubException {
+    public InputStream encryptInputStream(InputStream inputStream, String cipherKey) throws PubNubException {
         return FileEncryptionUtil.encrypt(cipherKey, inputStream);
     }
 

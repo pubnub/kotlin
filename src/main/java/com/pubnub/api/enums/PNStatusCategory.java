@@ -13,6 +13,7 @@ public enum PNStatusCategory {
     PNUnexpectedDisconnectCategory,
     PNCancelledCategory,
     PNBadRequestCategory,
+    PNURITooLongCategory,
     PNMalformedFilterExpressionCategory,
     PNMalformedResponseCategory,
     PNDecryptionErrorCategory,
@@ -20,6 +21,6 @@ public enum PNStatusCategory {
     PNTLSUntrustedCertificateCategory,
 
     PNRequestMessageCountExceededCategory,
-    PNReconnectionAttemptsExhausted
-
+    PNReconnectionAttemptsExhaustedCategory,
+    PNRateLimitExceededCategory;
 }

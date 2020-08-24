@@ -17,7 +17,7 @@ import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.server.SubscribeEnvelope;
 import com.pubnub.api.models.server.SubscribeMessage;
 import com.pubnub.api.workers.SubscribeMessageWorker;
-
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -26,8 +26,6 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.LinkedBlockingQueue;
-
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class SubscriptionManager {
@@ -62,6 +60,7 @@ public class SubscriptionManager {
     private StateManager subscriptionState;
     private ListenerManager listenerManager;
     private ReconnectionManager reconnectionManager;
+    private DelayedReconnectionManager delayedReconnectionManager;
     private RetrofitManager retrofitManager;
 
     private Thread consumerThread;
@@ -83,13 +82,14 @@ public class SubscriptionManager {
 
         this.listenerManager = new ListenerManager(this.pubnub);
         this.reconnectionManager = new ReconnectionManager(this.pubnub);
+        this.delayedReconnectionManager = new DelayedReconnectionManager(this.pubnub);
         this.retrofitManager = retrofitManagerInstance;
         this.duplicationManager = new DuplicationManager(this.pubnub.getConfiguration());
 
         this.timetoken = 0L;
         this.storedTimetoken = null;
 
-        this.reconnectionManager.setReconnectionListener(new ReconnectionCallback() {
+        final ReconnectionCallback reconnectionCallback = new ReconnectionCallback() {
             @Override
             public void onReconnection() {
                 reconnect();
@@ -108,7 +108,7 @@ public class SubscriptionManager {
             public void onMaxReconnectionExhaustion() {
                 PNStatus pnStatus = PNStatus.builder()
                         .error(false)
-                        .category(PNStatusCategory.PNReconnectionAttemptsExhausted)
+                        .category(PNStatusCategory.PNReconnectionAttemptsExhaustedCategory)
                         .affectedChannels(subscriptionState.prepareChannelList(true))
                         .affectedChannelGroups(subscriptionState.prepareChannelGroupList(true))
                         .build();
@@ -117,7 +117,10 @@ public class SubscriptionManager {
                 disconnect();
 
             }
-        });
+        };
+
+        this.delayedReconnectionManager.setReconnectionListener(reconnectionCallback);
+        this.reconnectionManager.setReconnectionListener(reconnectionCallback);
 
         if (this.pubnub.getConfiguration().isStartSubscriberThread()) {
             consumerThread = new Thread(new SubscribeMessageWorker(
@@ -282,55 +285,63 @@ public class SubscriptionManager {
             @Override
             public void onResponse(SubscribeEnvelope result, @NotNull PNStatus status) {
                 if (status.isError()) {
-                    if (status.getCategory() == PNStatusCategory.PNTimeoutCategory) {
-                        startSubscribeLoop();
-                        return;
+                    final PNStatusCategory category = status.getCategory();
+
+                    switch (category) {
+                        case PNTimeoutCategory:
+                            startSubscribeLoop();
+                            break;
+                        case PNUnexpectedDisconnectCategory:
+                            // stop all announcements and ask the reconnection manager to start polling for connection
+                            // restoration..
+                            disconnect();
+                            listenerManager.announce(status);
+                            reconnectionManager.startPolling();
+                            break;
+                        case PNBadRequestCategory:
+                        case PNURITooLongCategory:
+                            disconnect();
+                            listenerManager.announce(status);
+                            break;
+                        default:
+                            listenerManager.announce(status);
+                            delayedReconnectionManager.scheduleDelayedReconnection();
+                            break;
                     }
-
-                    disconnect();
-                    listenerManager.announce(status);
-
-                    if (status.getCategory() == PNStatusCategory.PNUnexpectedDisconnectCategory) {
-                        // stop all announcements and ask the reconnection manager to start polling for connection
-                        // restoration..
-                        reconnectionManager.startPolling(pubnub.getConfiguration());
-                    }
-
-                    return;
-                }
-
-                if (!subscriptionStatusAnnounced) {
-                    PNStatus pnStatus = createPublicStatus(status)
-                            .category(PNStatusCategory.PNConnectedCategory)
-                            .error(false)
-                            .build();
-                    subscriptionStatusAnnounced = true;
-                    listenerManager.announce(pnStatus);
-                }
-
-                Integer requestMessageCountThreshold = pubnub.getConfiguration().getRequestMessageCountThreshold();
-                if (requestMessageCountThreshold != null && requestMessageCountThreshold <= result.getMessages().size()) {
-                    PNStatus pnStatus = createPublicStatus(status)
-                            .category(PNStatusCategory.PNRequestMessageCountExceededCategory)
-                            .error(false)
-                            .build();
-
-                    listenerManager.announce(pnStatus);
-                }
-
-                if (result.getMessages().size() != 0) {
-                    messageQueue.addAll(result.getMessages());
-                }
-
-                if (storedTimetoken != null) {
-                    timetoken = storedTimetoken;
-                    storedTimetoken = null;
                 } else {
-                    timetoken = result.getMetadata().getTimetoken();
-                }
+                    if (!subscriptionStatusAnnounced) {
+                        PNStatus pnStatus = createPublicStatus(status)
+                                .category(PNStatusCategory.PNConnectedCategory)
+                                .error(false)
+                                .build();
+                        subscriptionStatusAnnounced = true;
+                        listenerManager.announce(pnStatus);
+                    }
 
-                region = result.getMetadata().getRegion();
-                startSubscribeLoop();
+                    Integer requestMessageCountThreshold = pubnub.getConfiguration().getRequestMessageCountThreshold();
+                    if (requestMessageCountThreshold != null && requestMessageCountThreshold <= result.getMessages().size()) {
+                        PNStatus pnStatus = createPublicStatus(status)
+                                .category(PNStatusCategory.PNRequestMessageCountExceededCategory)
+                                .error(false)
+                                .build();
+
+                        listenerManager.announce(pnStatus);
+                    }
+
+                    if (result.getMessages().size() != 0) {
+                        messageQueue.addAll(result.getMessages());
+                    }
+
+                    if (storedTimetoken != null) {
+                        timetoken = storedTimetoken;
+                        storedTimetoken = null;
+                    } else {
+                        timetoken = result.getMetadata().getTimetoken();
+                    }
+
+                    region = result.getMetadata().getRegion();
+                    startSubscribeLoop();
+                }
             }
         });
 

@@ -4,17 +4,23 @@ import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.PubNubUtil;
 import com.pubnub.api.builder.PubNubErrorBuilder;
+import com.pubnub.api.callbacks.PNCallback;
 import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.enums.PNOperationType;
+import com.pubnub.api.enums.PNStatusCategory;
 import com.pubnub.api.managers.MapperManager;
 import com.pubnub.api.managers.RetrofitManager;
+import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.server.SubscribeEnvelope;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import retrofit2.Call;
 import retrofit2.Response;
 
+import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +31,8 @@ import java.util.Map;
 @Slf4j
 @Accessors(chain = true, fluent = true)
 public class Subscribe extends Endpoint<SubscribeEnvelope, SubscribeEnvelope> {
-
+    static final int RATE_LIMIT_EXCEEDED = 429;
+    static final int URI_TOO_LONG = 414;
     /**
      * List of channels that will be called to subscribe.
      */
@@ -81,12 +88,48 @@ public class Subscribe extends Endpoint<SubscribeEnvelope, SubscribeEnvelope> {
 
     @Override
     protected void validateParams() throws PubNubException {
-        if (this.getPubnub().getConfiguration().getSubscribeKey() == null || this.getPubnub().getConfiguration().getSubscribeKey().isEmpty()) {
+        if (this.getPubnub().getConfiguration().getSubscribeKey() == null || this.getPubnub()
+                .getConfiguration()
+                .getSubscribeKey()
+                .isEmpty()) {
             throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_SUBSCRIBE_KEY_MISSING).build();
         }
         if (channels.size() == 0 && channelGroups.size() == 0) {
             throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_CHANNEL_AND_GROUP_MISSING).build();
         }
+    }
+
+    @Override
+    public void async(@NotNull PNCallback<SubscribeEnvelope> callback) {
+        super.async(new PNCallback<SubscribeEnvelope>() {
+            @Override
+            public void onResponse(@Nullable SubscribeEnvelope result, @NotNull PNStatus status) {
+                if (status.isError()) {
+                    final PNStatus maybeNewStatus;
+                    if (status.getStatusCode() == HttpURLConnection.HTTP_BAD_REQUEST && status.getErrorData()
+                            .getInformation()
+                            .contains("Filter syntax error")) {
+                        maybeNewStatus = status.toBuilder()
+                                .category(PNStatusCategory.PNMalformedFilterExpressionCategory)
+                                .build();
+                    } else if (status.getStatusCode() == URI_TOO_LONG) {
+                        maybeNewStatus = status.toBuilder()
+                                .category(PNStatusCategory.PNURITooLongCategory)
+                                .build();
+                    } else if (status.getStatusCode() == RATE_LIMIT_EXCEEDED) {
+                        maybeNewStatus = status.toBuilder()
+                                .category(PNStatusCategory.PNRateLimitExceededCategory)
+                                .build();
+                    } else {
+                        maybeNewStatus = status;
+                    }
+                    callback.onResponse(result, maybeNewStatus);
+                } else {
+                    callback.onResponse(result, status);
+                }
+
+            }
+        });
     }
 
     @Override

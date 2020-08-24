@@ -1,20 +1,17 @@
 package com.pubnub.api.managers;
 
-import com.pubnub.api.PNConfiguration;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.callbacks.PNCallback;
 import com.pubnub.api.callbacks.ReconnectionCallback;
 import com.pubnub.api.enums.PNReconnectionPolicy;
 import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.PNTimeResult;
-
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
-
-import lombok.extern.slf4j.Slf4j;
 
 
 @Slf4j
@@ -42,16 +39,15 @@ public class ReconnectionManager {
 
     public ReconnectionManager(PubNub pubnub) {
         this.pubnub = pubnub;
+        this.pnReconnectionPolicy = pubnub.getConfiguration().getReconnectionPolicy();
+        this.maxConnectionRetries = pubnub.getConfiguration().getMaximumReconnectionRetries();
     }
 
     public void setReconnectionListener(ReconnectionCallback reconnectionCallback) {
         this.callback = reconnectionCallback;
     }
 
-    public void startPolling(PNConfiguration pnConfiguration) {
-        this.pnReconnectionPolicy = pnConfiguration.getReconnectionPolicy();
-        this.maxConnectionRetries = pnConfiguration.getMaximumReconnectionRetries();
-
+    public void startPolling() {
         if (isReconnectionPolicyUndefined()) {
             return;
         }
@@ -82,13 +78,15 @@ public class ReconnectionManager {
             public void run() {
                 callTime();
             }
-        }, getBestInterval() * MILLISECONDS);
+        }, getNextInterval() * MILLISECONDS);
     }
 
-    private int getBestInterval() {
+    int getNextInterval() {
         int timerInterval = LINEAR_INTERVAL;
+        failedCalls++;
 
         if (pnReconnectionPolicy == PNReconnectionPolicy.EXPONENTIAL) {
+            exponentialMultiplier++;
             timerInterval = (int) (Math.pow(2, exponentialMultiplier) - 1);
             if (timerInterval > MAX_EXPONENTIAL_BACKOFF) {
                 timerInterval = MIN_EXPONENTIAL_BACKOFF;
@@ -123,8 +121,6 @@ public class ReconnectionManager {
                     callback.onReconnection();
                 } else {
                     log.debug("callTime() at: " + Calendar.getInstance().getTime().toString());
-                    exponentialMultiplier++;
-                    failedCalls++;
                     registerHeartbeatTimer();
                 }
             }

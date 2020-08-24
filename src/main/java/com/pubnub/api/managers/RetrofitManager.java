@@ -94,6 +94,7 @@ public class RetrofitManager {
                             this.pubnub.getConfiguration().getNonSubscribeRequestTimeout(),
                             this.pubnub.getConfiguration().getConnectTimeout()
                     ).addInterceptor(this.signatureInterceptor)
+                    .retryOnConnectionFailure(false)
             );
 
             this.subscriptionClientInstance = createOkHttpClient(
@@ -101,12 +102,13 @@ public class RetrofitManager {
                             this.pubnub.getConfiguration().getSubscribeTimeout(),
                             this.pubnub.getConfiguration().getConnectTimeout()
                     ).addInterceptor(this.signatureInterceptor)
+                    .retryOnConnectionFailure(false)
             );
 
             this.noSignatureClientInstance = createOkHttpClient(
                     prepareOkHttpClient(this.pubnub.getConfiguration().getSubscribeTimeout(),
                             this.pubnub.getConfiguration().getConnectTimeout()
-                    )
+                    ).retryOnConnectionFailure(false)
             );
         }
 
@@ -121,7 +123,7 @@ public class RetrofitManager {
         this.channelGroupService = transactionInstance.create(ChannelGroupService.class);
         this.publishService = transactionInstance.create(PublishService.class);
         this.subscribeService = subscriptionInstance.create(SubscribeService.class);
-        this.timeService = transactionInstance.create(TimeService.class);
+        this.timeService = subscriptionInstance.create(TimeService.class);
         this.signalService = transactionInstance.create(SignalService.class);
         this.userService = transactionInstance.create(UserService.class);
         this.spaceService = transactionInstance.create(SpaceService.class);
@@ -135,7 +137,6 @@ public class RetrofitManager {
     private OkHttpClient.Builder prepareOkHttpClient(int requestTimeout, int connectTimeOut) {
         PNConfiguration pnConfiguration = pubnub.getConfiguration();
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-        httpClient.retryOnConnectionFailure(true);
         httpClient.readTimeout(requestTimeout, TimeUnit.SECONDS);
         httpClient.connectTimeout(connectTimeOut, TimeUnit.SECONDS);
 

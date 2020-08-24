@@ -49,3 +49,5 @@ build
 .gradle
 out
 gradlew.bat
+
+/src/integrationTest/resources/config.properties
