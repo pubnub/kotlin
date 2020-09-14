@@ -11,7 +11,7 @@ plugins {
 }
 group = 'com.pubnub'
 
-version = '4.32.1'
+version = '4.33.0'
 
 description = """"""
 
@@ -69,7 +69,6 @@ dependencies {
     testImplementation group: 'org.awaitility', name: 'awaitility', version: '4.0.1'
     testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.4.0'
     integrationTestImplementation group: 'org.aeonbits.owner', name: 'owner', version: '1.0.8'
-    integrationTestImplementation group: 'junit', name: 'junit', version: '4.12'
     implementation group: 'org.json', name: 'json', version: '20190722'
 }
 

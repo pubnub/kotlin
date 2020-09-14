@@ -8,20 +8,18 @@ import com.pubnub.api.enums.PNLogVerbosity;
 import com.pubnub.api.interceptors.SignatureInterceptor;
 import com.pubnub.api.services.AccessManagerService;
 import com.pubnub.api.services.ChannelGroupService;
+import com.pubnub.api.services.ChannelMetadataService;
 import com.pubnub.api.services.FilesService;
 import com.pubnub.api.services.HistoryService;
-import com.pubnub.api.services.MemberService;
-import com.pubnub.api.services.MembershipService;
 import com.pubnub.api.services.MessageActionService;
 import com.pubnub.api.services.PresenceService;
 import com.pubnub.api.services.PublishService;
 import com.pubnub.api.services.PushService;
 import com.pubnub.api.services.S3Service;
 import com.pubnub.api.services.SignalService;
-import com.pubnub.api.services.SpaceService;
 import com.pubnub.api.services.SubscribeService;
 import com.pubnub.api.services.TimeService;
-import com.pubnub.api.services.UserService;
+import com.pubnub.api.services.UUIDMetadataService;
 import lombok.Getter;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -62,13 +60,9 @@ public class RetrofitManager {
     @Getter
     private SignalService signalService;
     @Getter
-    private UserService userService;
+    private UUIDMetadataService uuidMetadataService;
     @Getter
-    private SpaceService spaceService;
-    @Getter
-    private MembershipService membershipService;
-    @Getter
-    private MemberService memberService;
+    private ChannelMetadataService channelMetadataService;
     @Getter
     private MessageActionService messageActionService;
     @Getter
@@ -125,10 +119,8 @@ public class RetrofitManager {
         this.subscribeService = subscriptionInstance.create(SubscribeService.class);
         this.timeService = subscriptionInstance.create(TimeService.class);
         this.signalService = transactionInstance.create(SignalService.class);
-        this.userService = transactionInstance.create(UserService.class);
-        this.spaceService = transactionInstance.create(SpaceService.class);
-        this.membershipService = transactionInstance.create(MembershipService.class);
-        this.memberService = transactionInstance.create(MemberService.class);
+        this.uuidMetadataService = transactionInstance.create(UUIDMetadataService.class);
+        this.channelMetadataService = transactionInstance.create(ChannelMetadataService.class);
         this.messageActionService = transactionInstance.create(MessageActionService.class);
         this.filesService = transactionInstance.create(FilesService.class);
         this.s3Service = noSignatureInstance.create(S3Service.class);

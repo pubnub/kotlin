@@ -13,14 +13,14 @@ import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.access_manager.PNAccessManagerGrantResult;
 import com.pubnub.api.models.consumer.message_actions.PNAddMessageActionResult;
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction;
+import com.pubnub.api.models.consumer.objects_api.channel.PNChannelMetadataResult;
+import com.pubnub.api.models.consumer.objects_api.membership.PNMembershipResult;
+import com.pubnub.api.models.consumer.objects_api.uuid.PNUUIDMetadataResult;
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult;
 import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult;
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult;
-import com.pubnub.api.models.consumer.pubsub.objects.PNMembershipResult;
-import com.pubnub.api.models.consumer.pubsub.objects.PNSpaceResult;
-import com.pubnub.api.models.consumer.pubsub.objects.PNUserResult;
 import org.awaitility.Awaitility;
 import org.awaitility.Durations;
 import org.awaitility.pollinterval.FibonacciPollInterval;
@@ -37,7 +37,10 @@ import static com.pubnub.api.enums.PNStatusCategory.PNAccessDeniedCategory;
 import static com.pubnub.api.enums.PNStatusCategory.PNAcknowledgmentCategory;
 import static com.pubnub.api.integration.util.Utils.random;
 import static com.pubnub.api.integration.util.Utils.randomChannel;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 abstract class AccessManagerIntegrationTest extends BaseIntegrationTest {
 
@@ -46,14 +49,19 @@ abstract class AccessManagerIntegrationTest extends BaseIntegrationTest {
     static final String LEVEL_APP = "subkey";
     static final String LEVEL_USER = "user";
     static final String LEVEL_CHANNEL = "channel";
+    static final String LEVEL_UUID = "uuid";
 
     static final int READ = 1;
     static final int WRITE = 2;
     static final int MANAGE = 4;
     static final int DELETE = 8;
+    static final int GET = 16;
+    static final int UPDATE = 32;
+    static final int JOIN = 64;
 
     private String expectedChannel;
     private String authKey;
+    private String uuid;
 
     @Override
     protected void onPrePubNub() {
@@ -562,17 +570,17 @@ abstract class AccessManagerIntegrationTest extends BaseIntegrationTest {
             }
 
             @Override
-            public void user(@NotNull PubNub pubNub, @NotNull PNUserResult pnUserResult) {
+            public void uuid(@NotNull final PubNub pubnub, @NotNull final PNUUIDMetadataResult pnUUIDMetadataResult) {
 
             }
 
             @Override
-            public void space(@NotNull PubNub pubNub, @NotNull PNSpaceResult pnSpaceResult) {
+            public void channel(@NotNull final PubNub pubnub, @NotNull final PNChannelMetadataResult pnChannelMetadataResult) {
 
             }
 
             @Override
-            public void membership(@NotNull PubNub pubNub, @NotNull PNMembershipResult pnMembershipResult) {
+            public void membership(@NotNull final PubNub pubnub, @NotNull final PNMembershipResult pnMembershipResult) {
 
             }
 
@@ -985,6 +993,9 @@ abstract class AccessManagerIntegrationTest extends BaseIntegrationTest {
                 .write(bitList.contains(WRITE))
                 .manage(bitList.contains(MANAGE))
                 .delete(bitList.contains(DELETE))
+                .get(bitList.contains(GET))
+                .update(bitList.contains(UPDATE))
+                .join(bitList.contains(JOIN))
                 .ttl(1);
 
         if (!revokeAllAccess) {

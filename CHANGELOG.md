@@ -1,3 +1,11 @@
+## [v4.33.0](https://github.com/pubnub/java/releases/tag/v4.33.0)
+September-14-2020
+
+[Full Changelog](https://github.com/pubnub/java/compare/v4.32.1...v4.33.0)
+
+- 🌟️ Objects (v2) API exposed to enable metadata management. 
+- 🌟️ Enable Objects (v2) related permissions management via Grant method. 
+
 ## [v4.32.1](https://github.com/pubnub/java/releases/tag/v4.32.1)
 August-24-2020
 

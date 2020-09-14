@@ -5,9 +5,12 @@ import com.pubnub.api.PubNub;
 import com.pubnub.api.callbacks.SubscribeCallback;
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions;
 import com.pubnub.api.enums.PNOperationType;
-import com.pubnub.api.integration.util.RandomGenerator;
 import com.pubnub.api.integration.util.BaseIntegrationTest;
+import com.pubnub.api.integration.util.RandomGenerator;
 import com.pubnub.api.models.consumer.PNStatus;
+import com.pubnub.api.models.consumer.objects_api.channel.PNChannelMetadataResult;
+import com.pubnub.api.models.consumer.objects_api.membership.PNMembershipResult;
+import com.pubnub.api.models.consumer.objects_api.uuid.PNUUIDMetadataResult;
 import com.pubnub.api.models.consumer.presence.PNHereNowChannelData;
 import com.pubnub.api.models.consumer.presence.PNHereNowOccupantData;
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
@@ -15,9 +18,6 @@ import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult;
 import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult;
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult;
-import com.pubnub.api.models.consumer.pubsub.objects.PNMembershipResult;
-import com.pubnub.api.models.consumer.pubsub.objects.PNSpaceResult;
-import com.pubnub.api.models.consumer.pubsub.objects.PNUserResult;
 import org.awaitility.Awaitility;
 import org.awaitility.Durations;
 import org.hamcrest.core.IsEqual;
@@ -32,7 +32,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class PresenceIntegrationTests extends BaseIntegrationTest {
 
@@ -243,17 +245,17 @@ public class PresenceIntegrationTests extends BaseIntegrationTest {
             }
 
             @Override
-            public void user(@NotNull PubNub pubNub, @NotNull PNUserResult pnUserResult) {
+            public void uuid(@NotNull final PubNub pubnub, @NotNull final PNUUIDMetadataResult pnUUIDMetadataResult) {
 
             }
 
             @Override
-            public void space(@NotNull PubNub pubNub, @NotNull PNSpaceResult pnSpaceResult) {
+            public void channel(@NotNull final PubNub pubnub, @NotNull final PNChannelMetadataResult pnChannelMetadataResult) {
 
             }
 
             @Override
-            public void membership(@NotNull PubNub pubNub, @NotNull PNMembershipResult pnMembershipResult) {
+            public void membership(@NotNull final PubNub pubnub, @NotNull final PNMembershipResult pnMembershipResult) {
 
             }
 
@@ -341,12 +343,12 @@ public class PresenceIntegrationTests extends BaseIntegrationTest {
             }
 
             @Override
-            public void user(@NotNull PubNub pubNub, @NotNull PNUserResult pnUserResult) {
+            public void uuid(@NotNull final PubNub pubnub, @NotNull final PNUUIDMetadataResult pnUUIDMetadataResult) {
 
             }
 
             @Override
-            public void space(@NotNull PubNub pubNub, @NotNull PNSpaceResult pnSpaceResult) {
+            public void channel(@NotNull final PubNub pubnub, @NotNull final PNChannelMetadataResult pnChannelMetadataResult) {
 
             }
 
@@ -424,12 +426,12 @@ public class PresenceIntegrationTests extends BaseIntegrationTest {
             }
 
             @Override
-            public void user(@NotNull PubNub pubNub, @NotNull PNUserResult pnUserResult) {
+            public void uuid(@NotNull final PubNub pubnub, @NotNull final PNUUIDMetadataResult pnUUIDMetadataResult) {
 
             }
 
             @Override
-            public void space(@NotNull PubNub pubNub, @NotNull PNSpaceResult pnSpaceResult) {
+            public void channel(@NotNull final PubNub pubnub, @NotNull final PNChannelMetadataResult pnChannelMetadataResult) {
 
             }
 

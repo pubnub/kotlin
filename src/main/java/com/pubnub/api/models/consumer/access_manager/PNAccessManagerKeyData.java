@@ -1,15 +1,11 @@
 package com.pubnub.api.models.consumer.access_manager;
 
 import com.google.gson.annotations.SerializedName;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-import lombok.experimental.Accessors;
+import lombok.Builder;
+import lombok.Data;
 
-@Getter
-@Setter
-@ToString
-@Accessors(chain = true)
+@Data
+@Builder(toBuilder = true)
 public class PNAccessManagerKeyData {
 
     @SerializedName("r")
@@ -23,5 +19,14 @@ public class PNAccessManagerKeyData {
 
     @SerializedName("d")
     private boolean deleteEnabled;
+
+    @SerializedName("g")
+    private boolean getEnabled;
+
+    @SerializedName("u")
+    private boolean updateEnabled;
+
+    @SerializedName("j")
+    private boolean joinEnabled;
 
 }

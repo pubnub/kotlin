@@ -2,155 +2,137 @@ package com.pubnub.api.endpoints.objects_api.memberships;
 
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
-import com.pubnub.api.builder.PubNubErrorBuilder;
-import com.pubnub.api.endpoints.Endpoint;
-import com.pubnub.api.enums.PNMembershipFields;
+import com.pubnub.api.endpoints.objects_api.CompositeParameterEnricher;
+import com.pubnub.api.endpoints.objects_api.UUIDEndpoint;
+import com.pubnub.api.endpoints.objects_api.utils.Include.ChannelIncludeAware;
+import com.pubnub.api.endpoints.objects_api.utils.Include.CustomIncludeAware;
+import com.pubnub.api.endpoints.objects_api.utils.Include.HavingChannelInclude;
+import com.pubnub.api.endpoints.objects_api.utils.Include.HavingCustomInclude;
+import com.pubnub.api.endpoints.objects_api.utils.ListCapabilities.HavingListCapabilites;
+import com.pubnub.api.endpoints.objects_api.utils.ListCapabilities.ListCapabilitiesAware;
+import com.pubnub.api.endpoints.objects_api.utils.ObjectsBuilderSteps;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.TelemetryManager;
-import com.pubnub.api.managers.token_manager.PNResourceType;
-import com.pubnub.api.managers.token_manager.TokenManagerProperties;
-import com.pubnub.api.managers.token_manager.TokenManagerPropertyProvider;
-import com.pubnub.api.models.consumer.objects_api.PNPatchPayload;
-import com.pubnub.api.models.consumer.objects_api.membership.Membership;
-import com.pubnub.api.models.consumer.objects_api.membership.PNManageMembershipsResult;
+import com.pubnub.api.models.consumer.objects_api.membership.PNChannelMembership;
+import com.pubnub.api.models.consumer.objects_api.membership.PNManageMembershipResult;
 import com.pubnub.api.models.consumer.objects_api.membership.PNMembership;
-import com.pubnub.api.models.consumer.objects_api.util.InclusionParamsProvider;
-import com.pubnub.api.models.consumer.objects_api.util.ListingParamsProvider;
-import com.pubnub.api.models.consumer.objects_api.util.MembershipChainProvider;
+import com.pubnub.api.models.server.objects_api.PatchMembershipPayload;
 import com.pubnub.api.models.server.objects_api.EntityArrayEnvelope;
-import lombok.Setter;
-import lombok.experimental.Accessors;
+import lombok.AllArgsConstructor;
 import retrofit2.Call;
 import retrofit2.Response;
 
-import java.util.HashMap;
-import java.util.List;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 
-@Accessors(chain = true, fluent = true)
-public class ManageMemberships extends Endpoint<EntityArrayEnvelope<PNMembership>, PNManageMembershipsResult> implements
-        InclusionParamsProvider<ManageMemberships, PNMembershipFields>,
-        ListingParamsProvider<ManageMemberships>,
-        MembershipChainProvider<ManageMemberships, Membership>,
-        TokenManagerPropertyProvider {
+public abstract class ManageMemberships extends UUIDEndpoint<ManageMemberships, EntityArrayEnvelope<PNMembership>, PNManageMembershipResult>
+        implements CustomIncludeAware<ManageMemberships>, ChannelIncludeAware<ManageMemberships>,
+        ListCapabilitiesAware<ManageMemberships> {
 
-    private Map<String, String> extraParamsMap;
-    private PNPatchPayload<Membership> pnPatchPayload;
-
-    @Setter
-    private String userId;
-
-    public ManageMemberships(PubNub pubnubInstance, TelemetryManager telemetry, RetrofitManager retrofitInstance) {
-        super(pubnubInstance, telemetry, retrofitInstance);
-        extraParamsMap = new HashMap<>();
-        pnPatchPayload = new PNPatchPayload<>();
+    ManageMemberships(final PubNub pubnubInstance,
+                      final TelemetryManager telemetry,
+                      final RetrofitManager retrofitInstance,
+                      final CompositeParameterEnricher compositeParameterEnricher) {
+        super(pubnubInstance, telemetry, retrofitInstance, compositeParameterEnricher);
     }
 
-    @Override
-    protected List<String> getAffectedChannels() {
-        return null;
+    public static Builder builder(final PubNub pubnubInstance,
+                                  final TelemetryManager telemetry,
+                                  final RetrofitManager retrofitInstance) {
+        return new Builder(pubnubInstance, telemetry, retrofitInstance);
     }
 
-    @Override
-    protected List<String> getAffectedChannelGroups() {
-        return null;
-    }
+    @AllArgsConstructor
+    public static class Builder implements ObjectsBuilderSteps.RemoveOrSetStep<ManageMemberships, PNChannelMembership> {
+        private final PubNub pubnubInstance;
+        private final TelemetryManager telemetry;
+        private final RetrofitManager retrofitInstance;
 
-    @Override
-    protected void validateParams() throws PubNubException {
-        if (this.getPubnub().getConfiguration().getSubscribeKey() == null
-                || this.getPubnub().getConfiguration().getSubscribeKey().isEmpty()) {
-            throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_SUBSCRIBE_KEY_MISSING).build();
+        @Override
+        public RemoveStep<ManageMemberships, PNChannelMembership> set(final Collection<PNChannelMembership> channelsToSet) {
+            return new RemoveStep<ManageMemberships, PNChannelMembership>() {
+                @Override
+                public ManageMemberships remove(final Collection<PNChannelMembership> channelsToRemove) {
+                    final CompositeParameterEnricher compositeParameterEnricher = CompositeParameterEnricher
+                            .createDefault();
+                    return new ManageMembershipsCommand(channelsToSet,
+                            channelsToRemove,
+                            pubnubInstance,
+                            telemetry,
+                            retrofitInstance,
+                            compositeParameterEnricher);
+                }
+            };
         }
 
-        if (this.userId == null || this.userId.isEmpty()) {
-            throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_USER_ID_MISSING).build();
+        @Override
+        public SetStep<ManageMemberships, PNChannelMembership> remove(final Collection<PNChannelMembership> channelsToRemove) {
+            return new SetStep<ManageMemberships, PNChannelMembership>() {
+                @Override
+                public ManageMemberships set(final Collection<PNChannelMembership> channelsToSet) {
+                    final CompositeParameterEnricher compositeParameterEnricher = CompositeParameterEnricher
+                            .createDefault();
+                    return new ManageMembershipsCommand(channelsToSet,
+                            channelsToRemove,
+                            pubnubInstance,
+                            telemetry,
+                            retrofitInstance,
+                            compositeParameterEnricher);
+                }
+            };
         }
     }
+}
 
-    @Override
-    protected Call<EntityArrayEnvelope<PNMembership>> doWork(Map<String, String> params) {
+final class ManageMembershipsCommand extends ManageMemberships implements
+        HavingCustomInclude<ManageMemberships>,
+        HavingChannelInclude<ManageMemberships>,
+        HavingListCapabilites<ManageMemberships> {
+    private final Collection<PNChannelMembership> channelsToSet;
+    private final Collection<PNChannelMembership> channelsToRemove;
 
-        params.putAll(extraParamsMap);
-
-        params.putAll(encodeParams(params));
-
-        return this.getRetrofit()
-                .getMembershipService()
-                .manageMemberships(this.getPubnub().getConfiguration().getSubscribeKey(), userId, pnPatchPayload,
-                        params);
+    ManageMembershipsCommand(final Collection<PNChannelMembership> channelsToSet,
+                             final Collection<PNChannelMembership> channelsToRemove,
+                             final PubNub pubnubInstance,
+                             final TelemetryManager telemetry,
+                             final RetrofitManager retrofitInstance,
+                             final CompositeParameterEnricher compositeParameterEnricher) {
+        super(pubnubInstance, telemetry, retrofitInstance, compositeParameterEnricher);
+        this.channelsToSet = channelsToSet;
+        this.channelsToRemove = channelsToRemove;
     }
 
     @Override
-    protected PNManageMembershipsResult createResponse(Response<EntityArrayEnvelope<PNMembership>> input) throws PubNubException {
+    protected Call<EntityArrayEnvelope<PNMembership>> executeCommand(final Map<String, String> effectiveParams) throws PubNubException {
+        final PatchMembershipPayload patchMembershipBody = new PatchMembershipPayload(
+                (channelsToSet != null) ? channelsToSet : Collections.emptyList(),
+                (channelsToRemove != null) ? channelsToRemove : Collections.emptyList());
+
+        return getRetrofit()
+                .getUuidMetadataService()
+                .patchMembership(getPubnub().getConfiguration().getSubscribeKey(), effectiveUuid(), patchMembershipBody,
+                        effectiveParams);
+    }
+
+    @Override
+    protected PNManageMembershipResult createResponse(final Response<EntityArrayEnvelope<PNMembership>> input) throws PubNubException {
         if (input.body() != null) {
-            return PNManageMembershipsResult.create(input.body());
+            return new PNManageMembershipResult(input.body());
+        } else {
+            return new PNManageMembershipResult();
         }
-        return PNManageMembershipsResult.create();
     }
 
     @Override
     protected PNOperationType getOperationType() {
-        return PNOperationType.PNManageMemberships;
+        return PNOperationType.PNManageMembershipsOperation;
     }
 
     @Override
-    protected boolean isAuthRequired() {
-        return true;
-    }
-
-    @Override
-    public ManageMemberships includeFields(PNMembershipFields... params) {
-        return appendInclusionParams(extraParamsMap, params);
-    }
-
-    @Override
-    public ManageMemberships add(Membership... list) {
-        pnPatchPayload.setAdd(list);
-        return this;
-    }
-
-    @Override
-    public ManageMemberships update(Membership... list) {
-        pnPatchPayload.setUpdate(list);
-        return this;
-    }
-
-    @Override
-    public ManageMemberships remove(Membership... list) {
-        pnPatchPayload.setRemove(list);
-        return this;
-    }
-
-    @Override
-    public ManageMemberships limit(Integer limit) {
-        return appendLimitParam(extraParamsMap, limit);
-    }
-
-    @Override
-    public ManageMemberships start(String start) {
-        extraParamsMap.put("start", start);
-        return this;
-    }
-
-    @Override
-    public ManageMemberships end(String end) {
-        extraParamsMap.put("end", end);
-        return this;
-    }
-
-    @Override
-    public ManageMemberships withTotalCount(Boolean count) {
-        extraParamsMap.put("count", String.valueOf(count));
-        return this;
-    }
-
-    @Override
-    public TokenManagerProperties getTmsProperties() {
-        return TokenManagerProperties.builder()
-                .pnResourceType(PNResourceType.USER)
-                .resourceId(userId)
-                .build();
+    public CompositeParameterEnricher getCompositeParameterEnricher() {
+        return super.getCompositeParameterEnricher();
     }
 }
+

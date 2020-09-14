@@ -11,7 +11,6 @@ import com.pubnub.api.endpoints.History;
 import com.pubnub.api.endpoints.MessageCounts;
 import com.pubnub.api.endpoints.Time;
 import com.pubnub.api.endpoints.access.Grant;
-import com.pubnub.api.endpoints.access.GrantToken;
 import com.pubnub.api.endpoints.channel_groups.AddChannelChannelGroup;
 import com.pubnub.api.endpoints.channel_groups.AllChannelsChannelGroup;
 import com.pubnub.api.endpoints.channel_groups.DeleteChannelGroup;
@@ -26,20 +25,22 @@ import com.pubnub.api.endpoints.files.SendFile;
 import com.pubnub.api.endpoints.message_actions.AddMessageAction;
 import com.pubnub.api.endpoints.message_actions.GetMessageActions;
 import com.pubnub.api.endpoints.message_actions.RemoveMessageAction;
-import com.pubnub.api.endpoints.objects_api.members.GetMembers;
-import com.pubnub.api.endpoints.objects_api.members.ManageMembers;
+import com.pubnub.api.endpoints.objects_api.channel.GetAllChannelsMetadata;
+import com.pubnub.api.endpoints.objects_api.channel.GetChannelMetadata;
+import com.pubnub.api.endpoints.objects_api.channel.RemoveChannelMetadata;
+import com.pubnub.api.endpoints.objects_api.channel.SetChannelMetadata;
+import com.pubnub.api.endpoints.objects_api.members.GetChannelMembers;
+import com.pubnub.api.endpoints.objects_api.members.ManageChannelMembers;
+import com.pubnub.api.endpoints.objects_api.members.RemoveChannelMembers;
+import com.pubnub.api.endpoints.objects_api.members.SetChannelMembers;
 import com.pubnub.api.endpoints.objects_api.memberships.GetMemberships;
 import com.pubnub.api.endpoints.objects_api.memberships.ManageMemberships;
-import com.pubnub.api.endpoints.objects_api.spaces.CreateSpace;
-import com.pubnub.api.endpoints.objects_api.spaces.DeleteSpace;
-import com.pubnub.api.endpoints.objects_api.spaces.GetSpace;
-import com.pubnub.api.endpoints.objects_api.spaces.GetSpaces;
-import com.pubnub.api.endpoints.objects_api.spaces.UpdateSpace;
-import com.pubnub.api.endpoints.objects_api.users.CreateUser;
-import com.pubnub.api.endpoints.objects_api.users.DeleteUser;
-import com.pubnub.api.endpoints.objects_api.users.GetUser;
-import com.pubnub.api.endpoints.objects_api.users.GetUsers;
-import com.pubnub.api.endpoints.objects_api.users.UpdateUser;
+import com.pubnub.api.endpoints.objects_api.memberships.RemoveMemberships;
+import com.pubnub.api.endpoints.objects_api.memberships.SetMemberships;
+import com.pubnub.api.endpoints.objects_api.uuid.GetAllUUIDMetadata;
+import com.pubnub.api.endpoints.objects_api.uuid.GetUUIDMetadata;
+import com.pubnub.api.endpoints.objects_api.uuid.RemoveUUIDMetadata;
+import com.pubnub.api.endpoints.objects_api.uuid.SetUUIDMetadata;
 import com.pubnub.api.endpoints.presence.GetState;
 import com.pubnub.api.endpoints.presence.HereNow;
 import com.pubnub.api.endpoints.presence.SetState;
@@ -56,9 +57,6 @@ import com.pubnub.api.managers.PublishSequenceManager;
 import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.SubscriptionManager;
 import com.pubnub.api.managers.TelemetryManager;
-import com.pubnub.api.managers.token_manager.PNResourceType;
-import com.pubnub.api.managers.token_manager.TokenManager;
-import com.pubnub.api.managers.token_manager.TokenManagerProperties;
 import com.pubnub.api.vendor.Crypto;
 import com.pubnub.api.vendor.FileEncryptionUtil;
 import lombok.Getter;
@@ -67,7 +65,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.InputStream;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -92,12 +89,10 @@ public class PubNub {
 
     private RetrofitManager retrofitManager;
 
-    private TokenManager tokenManager;
-
     private static final int TIMESTAMP_DIVIDER = 1000;
     private static final int MAX_SEQUENCE = 65535;
 
-    private static final String SDK_VERSION = "4.32.1";
+    private static final String SDK_VERSION = "4.33.0";
 
     public PubNub(@NotNull PNConfiguration initialConfig) {
         this.configuration = initialConfig;
@@ -105,7 +100,6 @@ public class PubNub {
         this.telemetryManager = new TelemetryManager();
         this.basePathManager = new BasePathManager(initialConfig);
         this.retrofitManager = new RetrofitManager(this);
-        this.tokenManager = new TokenManager();
         this.subscriptionManager = new SubscriptionManager(this, retrofitManager, this.telemetryManager);
         this.publishSequenceManager = new PublishSequenceManager(MAX_SEQUENCE);
         instanceId = UUID.randomUUID().toString();
@@ -205,11 +199,6 @@ public class PubNub {
     }
 
     @NotNull
-    public GrantToken grantToken() {
-        return new GrantToken(this, this.telemetryManager, this.retrofitManager);
-    }
-
-    @NotNull
     public GetState getPresenceState() {
         return new GetState(this, this.telemetryManager, this.retrofitManager);
     }
@@ -256,74 +245,81 @@ public class PubNub {
 
     // Start Objects API
 
-    @NotNull
-    public GetUsers getUsers() {
-        return new GetUsers(this, this.telemetryManager, this.retrofitManager);
+    public SetUUIDMetadata setUUIDMetadata() {
+        return SetUUIDMetadata.create(this, this.telemetryManager, this.retrofitManager);
     }
 
     @NotNull
-    public GetUser getUser() {
-        return new GetUser(this, this.telemetryManager, this.retrofitManager);
+    public GetAllUUIDMetadata getAllUUIDMetadata() {
+        return GetAllUUIDMetadata.create(this, this.telemetryManager, this.retrofitManager);
     }
 
     @NotNull
-    public CreateUser createUser() {
-        return new CreateUser(this, this.telemetryManager, this.retrofitManager);
+    public GetUUIDMetadata getUUIDMetadata() {
+        return GetUUIDMetadata.create(this, this.telemetryManager, this.retrofitManager);
     }
 
     @NotNull
-    public UpdateUser updateUser() {
-        return new UpdateUser(this, this.telemetryManager, this.retrofitManager);
+    public RemoveUUIDMetadata removeUUIDMetadata() {
+        return new RemoveUUIDMetadata(this, this.telemetryManager, this.retrofitManager);
+    }
+
+    public SetChannelMetadata.Builder setChannelMetadata() {
+        return SetChannelMetadata.builder(this, this.telemetryManager, this.retrofitManager);
     }
 
     @NotNull
-    public DeleteUser deleteUser() {
-        return new DeleteUser(this, this.telemetryManager, this.retrofitManager);
+    public GetAllChannelsMetadata getAllChannelsMetadata() {
+        return GetAllChannelsMetadata.create(this, this.telemetryManager, this.retrofitManager);
     }
 
     @NotNull
-    public GetSpaces getSpaces() {
-        return new GetSpaces(this, this.telemetryManager, this.retrofitManager);
+    public GetChannelMetadata.Builder getChannelMetadata() {
+        return GetChannelMetadata.builder(this, this.telemetryManager, this.retrofitManager);
     }
 
-    @NotNull
-    public GetSpace getSpace() {
-        return new GetSpace(this, this.telemetryManager, this.retrofitManager);
-    }
-
-    @NotNull
-    public CreateSpace createSpace() {
-        return new CreateSpace(this, this.telemetryManager, this.retrofitManager);
-    }
-
-    @NotNull
-    public UpdateSpace updateSpace() {
-        return new UpdateSpace(this, this.telemetryManager, this.retrofitManager);
-    }
-
-    @NotNull
-    public DeleteSpace deleteSpace() {
-        return new DeleteSpace(this, this.telemetryManager, this.retrofitManager);
+    public RemoveChannelMetadata.Builder removeChannelMetadata() {
+        return RemoveChannelMetadata.builder(this, this.telemetryManager, this.retrofitManager);
     }
 
     @NotNull
     public GetMemberships getMemberships() {
-        return new GetMemberships(this, this.telemetryManager, this.retrofitManager);
+        return GetMemberships.create(this, this.telemetryManager, this.retrofitManager);
     }
 
     @NotNull
-    public GetMembers getMembers() {
-        return new GetMembers(this, this.telemetryManager, this.retrofitManager);
+    public SetMemberships.Builder setMemberships() {
+        return SetMemberships.builder(this, this.telemetryManager, this.retrofitManager);
     }
 
     @NotNull
-    public ManageMemberships manageMemberships() {
-        return new ManageMemberships(this, this.telemetryManager, this.retrofitManager);
+    public RemoveMemberships.Builder removeMemberships() {
+        return RemoveMemberships.builder(this, this.telemetryManager, this.retrofitManager);
     }
 
     @NotNull
-    public ManageMembers manageMembers() {
-        return new ManageMembers(this, this.telemetryManager, this.retrofitManager);
+    public ManageMemberships.Builder manageMemberships() {
+        return ManageMemberships.builder(this, this.telemetryManager, this.retrofitManager);
+    }
+
+    @NotNull
+    public GetChannelMembers.Builder getChannelMembers() {
+        return GetChannelMembers.builder(this, this.telemetryManager, this.retrofitManager);
+    }
+
+    @NotNull
+    public SetChannelMembers.Builder setChannelMembers() {
+        return SetChannelMembers.builder(this, this.telemetryManager, this.retrofitManager);
+    }
+
+    @NotNull
+    public RemoveChannelMembers.Builder removeChannelMembers() {
+        return RemoveChannelMembers.builder(this, this.telemetryManager, this.retrofitManager);
+    }
+
+    @NotNull
+    public ManageChannelMembers.Builder manageChannelMembers() {
+        return ManageChannelMembers.builder(this, this.telemetryManager, this.retrofitManager);
     }
 
     // End Objects API
@@ -558,36 +554,5 @@ public class PubNub {
 
     public void unsubscribeAll() {
         subscriptionManager.unsubscribeAll();
-    }
-
-    public void setToken(String token) throws PubNubException {
-        tokenManager.setToken(token);
-    }
-
-    public void setTokens(@NotNull List<String> tokens) throws PubNubException {
-        tokenManager.setTokens(tokens);
-    }
-
-    @Nullable
-    public String getToken(@NotNull String resourceId, @NotNull PNResourceType resourceType) {
-        return tokenManager.getToken(TokenManagerProperties.builder()
-                .resourceId(resourceId)
-                .pnResourceType(resourceType)
-                .build());
-    }
-
-    @Nullable
-    public String getToken(@NotNull TokenManagerProperties tokenManagerProperties) {
-        return tokenManager.getToken(tokenManagerProperties);
-    }
-
-    @NotNull
-    public HashMap<String, HashMap<String, HashMap<String, String>>> getTokens() {
-        return tokenManager.getTokens();
-    }
-
-    @NotNull
-    public HashMap<String, HashMap<String, String>> getTokensByResource(@NotNull PNResourceType resourceType) {
-        return tokenManager.getTokensByResource(resourceType);
     }
 }

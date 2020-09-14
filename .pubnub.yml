@@ -1,10 +1,17 @@
 name: java
-version: 4.32.1
+version: 4.33.0
 schema: 1
 scm: github.com/pubnub/java
 files:
-  - build/libs/pubnub-gson-4.32.1-all.jar
+  - build/libs/pubnub-gson-4.33.0-all.jar
 changelog:
+  - version: v4.33.0
+    date: 2020-09-14
+    changes:
+      - type: feature
+        text: "Objects (v2) API exposed to enable metadata management."
+      - type: feature
+        text: "Enable Objects (v2) related permissions management via Grant method."
   - version: v4.32.1
     date: 2020-08-24
     changes:

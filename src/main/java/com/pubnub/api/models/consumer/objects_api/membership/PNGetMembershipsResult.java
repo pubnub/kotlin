@@ -2,20 +2,18 @@ package com.pubnub.api.models.consumer.objects_api.membership;
 
 import com.pubnub.api.models.server.objects_api.EntityArrayEnvelope;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
+@NoArgsConstructor
 @Getter
+@ToString
 public class PNGetMembershipsResult extends EntityArrayEnvelope<PNMembership> {
-
-    public static PNGetMembershipsResult create(EntityArrayEnvelope<PNMembership> envelope) {
-        PNGetMembershipsResult result = new PNGetMembershipsResult();
-        result.totalCount = envelope.getTotalCount();
-        result.next = envelope.getNext();
-        result.prev = envelope.getPrev();
-        result.data = envelope.getData();
-        return result;
-    }
-
-    public static PNGetMembershipsResult create() {
-        return new PNGetMembershipsResult();
+    public PNGetMembershipsResult(EntityArrayEnvelope<PNMembership> body) {
+        this.data = body.getData();
+        this.next = body.getNext();
+        this.prev = body.getPrev();
+        this.status = body.getStatus();
+        this.totalCount = body.getTotalCount();
     }
 }

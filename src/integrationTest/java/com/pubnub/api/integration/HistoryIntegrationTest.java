@@ -2,8 +2,8 @@ package com.pubnub.api.integration;
 
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
-import com.pubnub.api.integration.util.RandomGenerator;
 import com.pubnub.api.integration.util.BaseIntegrationTest;
+import com.pubnub.api.integration.util.RandomGenerator;
 import com.pubnub.api.models.consumer.PNPublishResult;
 import com.pubnub.api.models.consumer.history.PNFetchMessageItem;
 import com.pubnub.api.models.consumer.history.PNFetchMessagesResult;
@@ -20,8 +20,14 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.pubnub.api.builder.PubNubErrorBuilder.PNERROBJ_HISTORY_MESSAGE_ACTIONS_MULTIPLE_CHANNELS;
-import static com.pubnub.api.integration.util.Utils.*;
-import static org.junit.Assert.*;
+import static com.pubnub.api.integration.util.Utils.publishMixed;
+import static com.pubnub.api.integration.util.Utils.queryParam;
+import static com.pubnub.api.integration.util.Utils.random;
+import static com.pubnub.api.integration.util.Utils.randomChannel;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 public class HistoryIntegrationTest extends BaseIntegrationTest {
 

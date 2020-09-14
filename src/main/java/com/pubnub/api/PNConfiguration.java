@@ -188,8 +188,6 @@ public class PNConfiguration {
     @Setter
     private Integer maximumMessagesCacheSize;
 
-    private boolean disableTokenManager;
-
     /**
      * Initialize the PNConfiguration with default values
      */
@@ -220,8 +218,6 @@ public class PNConfiguration {
         dedupOnSubscribe = false;
         suppressLeaveEvents = false;
         maximumMessagesCacheSize = DEFAULT_DEDUPE_SIZE;
-
-        disableTokenManager = false;
     }
 
     /**

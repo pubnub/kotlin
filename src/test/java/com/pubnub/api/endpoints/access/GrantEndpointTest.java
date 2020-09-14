@@ -43,6 +43,7 @@ public class GrantEndpointTest extends TestHarness {
 
     private Grant partialGrant;
     private PubNub pubnub;
+    private String uuid = "myUUID";
 
     @Before
     public void beforeEach() throws IOException {
@@ -68,7 +69,7 @@ public class GrantEndpointTest extends TestHarness {
                 .withQueryParam("auth", matching("key1"))
                 .withQueryParam("instanceid", matching("PubNubInstanceId"))
                 .withQueryParam("requestid", matching("PubNubRequestId"))
-                .withQueryParam("uuid", matching("myUUID"))
+                .withQueryParam("uuid", matching(uuid))
                 .withQueryParam("timestamp", matching("1337"))
                 .withQueryParam("r", matching("0"))
                 .withQueryParam("w", matching("0"))
@@ -92,8 +93,6 @@ public class GrantEndpointTest extends TestHarness {
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/auth/grant/sub-key/mySubscribeKey.*")));
         assertEquals(1, requests.size());
-        String signature = requests.get(0).queryParameter("signature").firstValue();
-        assertEquals("v2.Jk1QUqQGThbRFvLCNuW16YwPa6WmPrHDHJwz61py0nU", signature);
 
     }
 
@@ -106,7 +105,7 @@ public class GrantEndpointTest extends TestHarness {
                 .withQueryParam("auth", matching("key1,key2"))
                 .withQueryParam("instanceid", matching("PubNubInstanceId"))
                 .withQueryParam("requestid", matching("PubNubRequestId"))
-                .withQueryParam("uuid", matching("myUUID"))
+                .withQueryParam("uuid", matching(uuid))
                 .withQueryParam("timestamp", matching("1337"))
                 .withQueryParam("r", matching("0"))
                 .withQueryParam("w", matching("0"))
@@ -130,8 +129,6 @@ public class GrantEndpointTest extends TestHarness {
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/auth/grant/sub-key/mySubscribeKey.*")));
         assertEquals(1, requests.size());
-        String signature = requests.get(0).queryParameter("signature").firstValue();
-        assertEquals("v2.I69785IpOV4l33i-Co3MptUGCbYWH5IlSZ41hfC1xXI", signature);
     }
 
     @Test
@@ -143,7 +140,7 @@ public class GrantEndpointTest extends TestHarness {
                 .withQueryParam("auth", matching("key1"))
                 .withQueryParam("instanceid", matching("PubNubInstanceId"))
                 .withQueryParam("requestid", matching("PubNubRequestId"))
-                .withQueryParam("uuid", matching("myUUID"))
+                .withQueryParam("uuid", matching(uuid))
                 .withQueryParam("timestamp", matching("1337"))
                 .withQueryParam("r", matching("0"))
                 .withQueryParam("w", matching("0"))
@@ -169,8 +166,6 @@ public class GrantEndpointTest extends TestHarness {
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/auth/grant/sub-key/mySubscribeKey.*")));
         assertEquals(1, requests.size());
-        String signature = requests.get(0).queryParameter("signature").firstValue();
-        assertEquals("v2.EBDqRJIIMsiEdX_Rn241b5RFM15E7_hh7GcJF-5Pyxk", signature);
     }
 
     @Test
@@ -182,7 +177,7 @@ public class GrantEndpointTest extends TestHarness {
                 .withQueryParam("auth", matching("key1,key2"))
                 .withQueryParam("instanceid", matching("PubNubInstanceId"))
                 .withQueryParam("requestid", matching("PubNubRequestId"))
-                .withQueryParam("uuid", matching("myUUID"))
+                .withQueryParam("uuid", matching(uuid))
                 .withQueryParam("timestamp", matching("1337"))
                 .withQueryParam("r", matching("0"))
                 .withQueryParam("w", matching("0"))
@@ -210,8 +205,6 @@ public class GrantEndpointTest extends TestHarness {
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/auth/grant/sub-key/mySubscribeKey.*")));
         assertEquals(1, requests.size());
-        String signature = requests.get(0).queryParameter("signature").firstValue();
-        assertEquals("v2.j74xJ4Vm3xLCd23zHp4USuL-a5CtLyeKpue8l-OkwEg", signature);
     }
 
     @Test
@@ -223,7 +216,7 @@ public class GrantEndpointTest extends TestHarness {
                 .withQueryParam("auth", matching("key1"))
                 .withQueryParam("instanceid", matching("PubNubInstanceId"))
                 .withQueryParam("requestid", matching("PubNubRequestId"))
-                .withQueryParam("uuid", matching("myUUID"))
+                .withQueryParam("uuid", matching(uuid))
                 .withQueryParam("timestamp", matching("1337"))
                 .withQueryParam("r", matching("0"))
                 .withQueryParam("w", matching("0"))
@@ -247,8 +240,6 @@ public class GrantEndpointTest extends TestHarness {
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/auth/grant/sub-key/mySubscribeKey.*")));
         assertEquals(1, requests.size());
-        String signature = requests.get(0).queryParameter("signature").firstValue();
-        assertEquals("v2.JC-H8cdXrPmuvxaO1GS-lQyKcDgN9YeWLoGMUt53uL4", signature);
     }
 
     @Test
@@ -260,7 +251,7 @@ public class GrantEndpointTest extends TestHarness {
                 .withQueryParam("auth", matching("key1,key2"))
                 .withQueryParam("instanceid", matching("PubNubInstanceId"))
                 .withQueryParam("requestid", matching("PubNubRequestId"))
-                .withQueryParam("uuid", matching("myUUID"))
+                .withQueryParam("uuid", matching(uuid))
                 .withQueryParam("timestamp", matching("1337"))
                 .withQueryParam("r", matching("0"))
                 .withQueryParam("w", matching("0"))
@@ -285,8 +276,6 @@ public class GrantEndpointTest extends TestHarness {
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/auth/grant/sub-key/mySubscribeKey.*")));
         assertEquals(1, requests.size());
-        String signature = requests.get(0).queryParameter("signature").firstValue();
-        assertEquals("v2.f0CAiVJmacjdFpH1WR1sO77i2GRYcSeGegqju3rT6UE", signature);
     }
 
     @Test
@@ -299,7 +288,7 @@ public class GrantEndpointTest extends TestHarness {
                 .withQueryParam("auth", matching("key1"))
                 .withQueryParam("instanceid", matching("PubNubInstanceId"))
                 .withQueryParam("requestid", matching("PubNubRequestId"))
-                .withQueryParam("uuid", matching("myUUID"))
+                .withQueryParam("uuid", matching(uuid))
                 .withQueryParam("timestamp", matching("1337"))
                 .withQueryParam("r", matching("0"))
                 .withQueryParam("w", matching("0"))
@@ -327,8 +316,6 @@ public class GrantEndpointTest extends TestHarness {
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/auth/grant/sub-key/mySubscribeKey.*")));
         assertEquals(1, requests.size());
-        String signature = requests.get(0).queryParameter("signature").firstValue();
-        assertEquals("v2.94iSHM2KQGyv96J6YsrjccEVdvtma1Xz1tee7Nzbscs", signature);
     }
 
     @Test
@@ -341,7 +328,7 @@ public class GrantEndpointTest extends TestHarness {
                 .withQueryParam("auth", matching("key1,key2"))
                 .withQueryParam("instanceid", matching("PubNubInstanceId"))
                 .withQueryParam("requestid", matching("PubNubRequestId"))
-                .withQueryParam("uuid", matching("myUUID"))
+                .withQueryParam("uuid", matching(uuid))
                 .withQueryParam("timestamp", matching("1337"))
                 .withQueryParam("r", matching("0"))
                 .withQueryParam("w", matching("0"))
@@ -371,8 +358,6 @@ public class GrantEndpointTest extends TestHarness {
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/auth/grant/sub-key/mySubscribeKey.*")));
         assertEquals(1, requests.size());
-        String signature = requests.get(0).queryParameter("signature").firstValue();
-        assertEquals("v2.g8sVq5n0Lzv4aQCRQi1gNFq2NWPgU1ACOzQ053z8nSY", signature);
 
     }
 
@@ -386,7 +371,7 @@ public class GrantEndpointTest extends TestHarness {
                 .withQueryParam("auth", matching("key1"))
                 .withQueryParam("instanceid", matching("PubNubInstanceId"))
                 .withQueryParam("requestid", matching("PubNubRequestId"))
-                .withQueryParam("uuid", matching("myUUID"))
+                .withQueryParam("uuid", matching(uuid))
                 .withQueryParam("timestamp", matching("1337"))
                 .withQueryParam("r", matching("0"))
                 .withQueryParam("w", matching("0"))
@@ -416,8 +401,6 @@ public class GrantEndpointTest extends TestHarness {
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/auth/grant/sub-key/mySubscribeKey.*")));
         assertEquals(1, requests.size());
-        String signature = requests.get(0).queryParameter("signature").firstValue();
-        assertEquals("v2.OQkQolRdwVGQXEfufd1bSbLN4WJI62VI-xR0cdYrDt0", signature);
 
     }
 
@@ -431,7 +414,7 @@ public class GrantEndpointTest extends TestHarness {
                 .withQueryParam("auth", matching("key1,key2"))
                 .withQueryParam("instanceid", matching("PubNubInstanceId"))
                 .withQueryParam("requestid", matching("PubNubRequestId"))
-                .withQueryParam("uuid", matching("myUUID"))
+                .withQueryParam("uuid", matching(uuid))
                 .withQueryParam("timestamp", matching("1337"))
                 .withQueryParam("r", matching("0"))
                 .withQueryParam("w", matching("0"))
@@ -466,8 +449,6 @@ public class GrantEndpointTest extends TestHarness {
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/auth/grant/sub-key/mySubscribeKey.*")));
         assertEquals(1, requests.size());
-        String signature = requests.get(0).queryParameter("signature").firstValue();
-        assertEquals("v2.q_pwr2gyi6FV3dy_3ochQPq7Ppf34tOUssjlleFyhoo", signature);
     }
 
 
@@ -480,7 +461,7 @@ public class GrantEndpointTest extends TestHarness {
                 .withQueryParam("auth", matching("key1"))
                 .withQueryParam("instanceid", matching("PubNubInstanceId"))
                 .withQueryParam("requestid", matching("PubNubRequestId"))
-                .withQueryParam("uuid", matching("myUUID"))
+                .withQueryParam("uuid", matching(uuid))
                 .withQueryParam("timestamp", matching("1337"))
                 .withQueryParam("r", matching("0"))
                 .withQueryParam("w", matching("0"))
@@ -488,8 +469,8 @@ public class GrantEndpointTest extends TestHarness {
                 .willReturn(aResponse().withBody("{\"message\":\"Success\"," +
                         "\"payload\":{\"level\":\"channel-group+auth\"," +
                         "\"subscribe_key\":\"sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f\",\"ttl\":1," +
-                        "\"channel-groups\":{\"cg1\":{\"auths\":{\"key1\":{\"r\":0,\"w\":0,\"m\":0}}}," +
-                        "\"cg2\":{\"auths\":{\"key1\":{\"r\":0,\"w\":0,\"m\":0}}}}},\"service\":\"Access Manager\"," +
+                        "\"channel-groups\":{\"cg1\":{\"auths\":{\"key1\":{\"r\":0,\"d\":0,\"g\":0,\"u\":0,\"j\":0,\"w\":0,\"m\":0}}}," +
+                        "\"cg2\":{\"auths\":{\"key1\":{\"r\":0,\"d\":0,\"g\":0,\"u\":0,\"j\":0,\"w\":0,\"m\":0}}}}},\"service\":\"Access Manager\"," +
                         "\"status\":200}\n")));
 
         PNAccessManagerGrantResult result = partialGrant.authKeys(Arrays.asList("key1")).channelGroups(Arrays.asList(
@@ -507,8 +488,6 @@ public class GrantEndpointTest extends TestHarness {
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/auth/grant/sub-key/mySubscribeKey.*")));
         assertEquals(1, requests.size());
-        String signature = requests.get(0).queryParameter("signature").firstValue();
-        assertEquals("v2.J_5Lvuq7sdA-vXUQWQzf7qB8Embx7dlAk1XO4RyONYU", signature);
     }
 
     @Test
@@ -520,7 +499,7 @@ public class GrantEndpointTest extends TestHarness {
                 .withQueryParam("auth", matching("key1,key2"))
                 .withQueryParam("instanceid", matching("PubNubInstanceId"))
                 .withQueryParam("requestid", matching("PubNubRequestId"))
-                .withQueryParam("uuid", matching("myUUID"))
+                .withQueryParam("uuid", matching(uuid))
                 .withQueryParam("timestamp", matching("1337"))
                 .withQueryParam("r", matching("0"))
                 .withQueryParam("w", matching("0"))
@@ -528,9 +507,9 @@ public class GrantEndpointTest extends TestHarness {
                 .willReturn(aResponse().withBody("{\"message\":\"Success\"," +
                         "\"payload\":{\"level\":\"channel-group+auth\"," +
                         "\"subscribe_key\":\"sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f\",\"ttl\":1," +
-                        "\"channel-groups\":{\"cg1\":{\"auths\":{\"key1\":{\"r\":0,\"w\":0,\"m\":0}," +
-                        "\"key2\":{\"r\":0,\"w\":0,\"m\":0}}},\"cg2\":{\"auths\":{\"key1\":{\"r\":0,\"w\":0,\"m\":0}," +
-                        "\"key2\":{\"r\":0,\"w\":0,\"m\":0}}}}},\"service\":\"Access Manager\",\"status\":200}\n")));
+                        "\"channel-groups\":{\"cg1\":{\"auths\":{\"key1\":{\"r\":0,\"d\":0,\"g\":0,\"u\":0,\"j\":0,\"w\":0,\"m\":0}," +
+                        "\"key2\":{\"r\":0,\"d\":0,\"g\":0,\"u\":0,\"j\":0,\"w\":0,\"m\":0}}},\"cg2\":{\"auths\":{\"key1\":{\"r\":0,\"d\":0,\"g\":0,\"u\":0,\"j\":0,\"w\":0,\"m\":0}," +
+                        "\"key2\":{\"r\":0,\"d\":0,\"g\":0,\"u\":0,\"j\":0,\"w\":0,\"m\":0}}}}},\"service\":\"Access Manager\",\"status\":200}\n")));
 
         PNAccessManagerGrantResult result =
                 partialGrant.authKeys(Arrays.asList("key1", "key2")).channelGroups(Arrays.asList("cg1", "cg2")).sync();
@@ -548,8 +527,6 @@ public class GrantEndpointTest extends TestHarness {
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/auth/grant/sub-key/mySubscribeKey.*")));
         assertEquals(1, requests.size());
-        String signature = requests.get(0).queryParameter("signature").firstValue();
-        assertEquals("v2.sW6tFGYkaMCjkZkcWGNW2s8yJZz8LPqTfVGCdi51znI", signature);
     }
 
     @Test
@@ -562,7 +539,7 @@ public class GrantEndpointTest extends TestHarness {
                 .withQueryParam("auth", matching("key1"))
                 .withQueryParam("instanceid", matching("PubNubInstanceId"))
                 .withQueryParam("requestid", matching("PubNubRequestId"))
-                .withQueryParam("uuid", matching("myUUID"))
+                .withQueryParam("uuid", matching(uuid))
                 .withQueryParam("timestamp", matching("1337"))
                 .withQueryParam("r", matching("0"))
                 .withQueryParam("w", matching("0"))
@@ -570,9 +547,9 @@ public class GrantEndpointTest extends TestHarness {
                 .willReturn(aResponse().withBody("{\"message\":\"Success\"," +
                         "\"payload\":{\"level\":\"channel-group+auth\"," +
                         "\"subscribe_key\":\"sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f\",\"ttl\":1," +
-                        "\"channel\":\"ch1\",\"auths\":{\"key1\":{\"r\":0,\"w\":0,\"m\":0}}," +
-                        "\"channel-groups\":{\"cg1\":{\"auths\":{\"key1\":{\"r\":0,\"w\":0,\"m\":0}}}," +
-                        "\"cg2\":{\"auths\":{\"key1\":{\"r\":0,\"w\":0,\"m\":0}}}}},\"service\":\"Access Manager\"," +
+                        "\"channel\":\"ch1\",\"auths\":{\"key1\":{\"r\":0,\"d\":0,\"g\":0,\"u\":0,\"j\":0,\"w\":0,\"m\":0}}," +
+                        "\"channel-groups\":{\"cg1\":{\"auths\":{\"key1\":{\"r\":0,\"d\":0,\"g\":0,\"u\":0,\"j\":0,\"w\":0,\"m\":0}}}," +
+                        "\"cg2\":{\"auths\":{\"key1\":{\"r\":0,\"d\":0,\"g\":0,\"u\":0,\"j\":0,\"w\":0,\"m\":0}}}}},\"service\":\"Access Manager\"," +
                         "\"status\":200}\n")));
 
         PNAccessManagerGrantResult result = partialGrant.authKeys(Arrays.asList("key1")).channelGroups(Arrays.asList(
@@ -593,8 +570,6 @@ public class GrantEndpointTest extends TestHarness {
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/auth/grant/sub-key/mySubscribeKey.*")));
         assertEquals(1, requests.size());
-        String signature = requests.get(0).queryParameter("signature").firstValue();
-        assertEquals("v2.4p7-sNppRHYytAKkbombqnLyNOF2PZwZOcCBwcCwk7g", signature);
     }
 
     @Test
@@ -607,7 +582,7 @@ public class GrantEndpointTest extends TestHarness {
                 .withQueryParam("auth", matching("key1,key2"))
                 .withQueryParam("instanceid", matching("PubNubInstanceId"))
                 .withQueryParam("requestid", matching("PubNubRequestId"))
-                .withQueryParam("uuid", matching("myUUID"))
+                .withQueryParam("uuid", matching(uuid))
                 .withQueryParam("timestamp", matching("1337"))
                 .withQueryParam("r", matching("0"))
                 .withQueryParam("w", matching("0"))
@@ -615,10 +590,10 @@ public class GrantEndpointTest extends TestHarness {
                 .willReturn(aResponse().withBody("{\"message\":\"Success\"," +
                         "\"payload\":{\"level\":\"channel-group+auth\"," +
                         "\"subscribe_key\":\"sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f\",\"ttl\":1," +
-                        "\"channel\":\"ch1\",\"auths\":{\"key1\":{\"r\":0,\"w\":0,\"m\":0},\"key2\":{\"r\":0,\"w\":0," +
-                        "\"m\":0}},\"channel-groups\":{\"cg1\":{\"auths\":{\"key1\":{\"r\":0,\"w\":0,\"m\":0}," +
-                        "\"key2\":{\"r\":0,\"w\":0,\"m\":0}}},\"cg2\":{\"auths\":{\"key1\":{\"r\":0,\"w\":0,\"m\":0}," +
-                        "\"key2\":{\"r\":0,\"w\":0,\"m\":0}}}}},\"service\":\"Access Manager\",\"status\":200}\n")));
+                        "\"channel\":\"ch1\",\"auths\":{\"key1\":{\"r\":0,\"d\":0,\"g\":0,\"u\":0,\"j\":0,\"w\":0,\"m\":0},\"key2\":{\"r\":0,\"d\":0,\"g\":0,\"u\":0,\"j\":0,\"w\":0," +
+                        "\"m\":0}},\"channel-groups\":{\"cg1\":{\"auths\":{\"key1\":{\"r\":0,\"d\":0,\"g\":0,\"u\":0,\"j\":0,\"w\":0,\"m\":0}," +
+                        "\"key2\":{\"r\":0,\"d\":0,\"g\":0,\"u\":0,\"j\":0,\"w\":0,\"m\":0}}},\"cg2\":{\"auths\":{\"key1\":{\"r\":0,\"d\":0,\"g\":0,\"u\":0,\"j\":0,\"w\":0,\"m\":0}," +
+                        "\"key2\":{\"r\":0,\"d\":0,\"g\":0,\"u\":0,\"j\":0,\"w\":0,\"m\":0}}}}},\"service\":\"Access Manager\",\"status\":200}\n")));
 
         PNAccessManagerGrantResult result =
                 partialGrant.authKeys(Arrays.asList("key1", "key2")).channelGroups(
@@ -642,8 +617,6 @@ public class GrantEndpointTest extends TestHarness {
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/auth/grant/sub-key/mySubscribeKey.*")));
         assertEquals(1, requests.size());
-        String signature = requests.get(0).queryParameter("signature").firstValue();
-        assertEquals("v2.VWNSybYnL6DlXGIRSuuYRC9BUZVMbVTjkllyXxvpTRE", signature);
     }
 
     @Test
@@ -655,7 +628,7 @@ public class GrantEndpointTest extends TestHarness {
                 .withQueryParam("auth", matching("key1"))
                 .withQueryParam("instanceid", matching("PubNubInstanceId"))
                 .withQueryParam("requestid", matching("PubNubRequestId"))
-                .withQueryParam("uuid", matching("myUUID"))
+                .withQueryParam("uuid", matching(uuid))
                 .withQueryParam("timestamp", matching("1337"))
                 .withQueryParam("r", matching("0"))
                 .withQueryParam("w", matching("0"))
@@ -663,10 +636,10 @@ public class GrantEndpointTest extends TestHarness {
                 .willReturn(aResponse().withBody("{\"message\":\"Success\"," +
                         "\"payload\":{\"level\":\"channel-group+auth\"," +
                         "\"subscribe_key\":\"sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f\",\"ttl\":1," +
-                        "\"channels\":{\"ch1\":{\"auths\":{\"key1\":{\"r\":0,\"w\":0,\"m\":0}}}," +
-                        "\"ch2\":{\"auths\":{\"key1\":{\"r\":0,\"w\":0,\"m\":0}}}}," +
-                        "\"channel-groups\":{\"cg1\":{\"auths\":{\"key1\":{\"r\":0,\"w\":0,\"m\":0}}}," +
-                        "\"cg2\":{\"auths\":{\"key1\":{\"r\":0,\"w\":0,\"m\":0}}}}},\"service\":\"Access Manager\"," +
+                        "\"channels\":{\"ch1\":{\"auths\":{\"key1\":{\"r\":0,\"d\":0,\"g\":0,\"u\":0,\"j\":0,\"w\":0,\"m\":0}}}," +
+                        "\"ch2\":{\"auths\":{\"key1\":{\"r\":0,\"d\":0,\"g\":0,\"u\":0,\"j\":0,\"w\":0,\"m\":0}}}}," +
+                        "\"channel-groups\":{\"cg1\":{\"auths\":{\"key1\":{\"r\":0,\"d\":0,\"g\":0,\"u\":0,\"j\":0,\"w\":0,\"m\":0}}}," +
+                        "\"cg2\":{\"auths\":{\"key1\":{\"r\":0,\"d\":0,\"g\":0,\"u\":0,\"j\":0,\"w\":0,\"m\":0}}}}},\"service\":\"Access Manager\"," +
                         "\"status\":200}\n")));
 
         PNAccessManagerGrantResult result = partialGrant.authKeys(Arrays.asList("key1")).channelGroups(Arrays.asList(
@@ -689,8 +662,6 @@ public class GrantEndpointTest extends TestHarness {
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/auth/grant/sub-key/mySubscribeKey.*")));
         assertEquals(1, requests.size());
-        String signature = requests.get(0).queryParameter("signature").firstValue();
-        assertEquals("v2.vRg18jL223FllrGWzODmY_39HYQ0rB9y0AZvPY8JKG8", signature);
     }
 
     @Test
@@ -703,7 +674,7 @@ public class GrantEndpointTest extends TestHarness {
                 .withQueryParam("auth", matching("key1,key2"))
                 .withQueryParam("instanceid", matching("PubNubInstanceId"))
                 .withQueryParam("requestid", matching("PubNubRequestId"))
-                .withQueryParam("uuid", matching("myUUID"))
+                .withQueryParam("uuid", matching(uuid))
                 .withQueryParam("timestamp", matching("1337"))
                 .withQueryParam("r", matching("0"))
                 .withQueryParam("w", matching("0"))
@@ -711,11 +682,11 @@ public class GrantEndpointTest extends TestHarness {
                 .willReturn(aResponse().withBody("{\"message\":\"Success\"," +
                         "\"payload\":{\"level\":\"channel-group+auth\"," +
                         "\"subscribe_key\":\"sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f\",\"ttl\":1," +
-                        "\"channels\":{\"ch1\":{\"auths\":{\"key1\":{\"r\":0,\"w\":0,\"m\":0},\"key2\":{\"r\":0," +
-                        "\"w\":0,\"m\":0}}},\"ch2\":{\"auths\":{\"key1\":{\"r\":0,\"w\":0,\"m\":0},\"key2\":{\"r\":0," +
-                        "\"w\":0,\"m\":0}}}},\"channel-groups\":{\"cg1\":{\"auths\":{\"key1\":{\"r\":0,\"w\":0," +
-                        "\"m\":0},\"key2\":{\"r\":0,\"w\":0,\"m\":0}}},\"cg2\":{\"auths\":{\"key1\":{\"r\":0,\"w\":0," +
-                        "\"m\":0},\"key2\":{\"r\":0,\"w\":0,\"m\":0}}}}},\"service\":\"Access Manager\"," +
+                        "\"channels\":{\"ch1\":{\"auths\":{\"key1\":{\"r\":0,\"d\":0,\"g\":0,\"u\":0,\"j\":0,\"w\":0,\"m\":0},\"key2\":{\"r\":0,\"d\":0,\"g\":0,\"u\":0,\"j\":0," +
+                        "\"w\":0,\"m\":0}}},\"ch2\":{\"auths\":{\"key1\":{\"r\":0,\"d\":0,\"g\":0,\"u\":0,\"j\":0,\"w\":0,\"m\":0},\"key2\":{\"r\":0,\"d\":0,\"g\":0,\"u\":0,\"j\":0," +
+                        "\"w\":0,\"m\":0}}}},\"channel-groups\":{\"cg1\":{\"auths\":{\"key1\":{\"r\":0,\"d\":0,\"g\":0,\"u\":0,\"j\":0,\"w\":0," +
+                        "\"m\":0},\"key2\":{\"r\":0,\"d\":0,\"g\":0,\"u\":0,\"j\":0,\"w\":0,\"m\":0}}},\"cg2\":{\"auths\":{\"key1\":{\"r\":0,\"d\":0,\"g\":0,\"u\":0,\"j\":0,\"w\":0," +
+                        "\"m\":0},\"key2\":{\"r\":0,\"d\":0,\"g\":0,\"u\":0,\"j\":0,\"w\":0,\"m\":0}}}}},\"service\":\"Access Manager\"," +
                         "\"status\":200}\n")));
 
         PNAccessManagerGrantResult result =
@@ -743,8 +714,6 @@ public class GrantEndpointTest extends TestHarness {
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/auth/grant/sub-key/mySubscribeKey.*")));
         assertEquals(1, requests.size());
-        String signature = requests.get(0).queryParameter("signature").firstValue();
-        assertEquals("v2.AFBUh22R8jTC6xbE3uJonhSmQgSGVECtJ0U-tjlEGuA", signature);
     }
 
     @Test
@@ -756,7 +725,7 @@ public class GrantEndpointTest extends TestHarness {
                 .withQueryParam("auth", matching("key1"))
                 .withQueryParam("instanceid", matching("PubNubInstanceId"))
                 .withQueryParam("requestid", matching("PubNubRequestId"))
-                .withQueryParam("uuid", matching("myUUID"))
+                .withQueryParam("uuid", matching(uuid))
                 .withQueryParam("timestamp", matching("1337"))
                 .withQueryParam("r", matching("0"))
                 .withQueryParam("w", matching("0"))
@@ -764,7 +733,7 @@ public class GrantEndpointTest extends TestHarness {
                 .withQueryParam("ttl", matching("1334"))
                 .willReturn(aResponse().withBody("{\"message\":\"Success\",\"payload\":{\"level\":\"user\"," +
                         "\"subscribe_key\":\"sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f\",\"ttl\":1," +
-                        "\"channel\":\"ch1\",\"auths\":{\"key1\":{\"r\":0,\"w\":0,\"m\":0}}},\"service\":\"Access " +
+                        "\"channel\":\"ch1\",\"auths\":{\"key1\":{\"r\":0,\"d\":0,\"g\":0,\"u\":0,\"j\":0,\"w\":0,\"m\":0}}},\"service\":\"Access " +
                         "Manager\",\"status\":200}")));
 
         PNAccessManagerGrantResult result =
@@ -780,8 +749,6 @@ public class GrantEndpointTest extends TestHarness {
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/auth/grant/sub-key/mySubscribeKey.*")));
         assertEquals(1, requests.size());
-        String signature = requests.get(0).queryParameter("signature").firstValue();
-        assertEquals("v2.cjwNcrqRqzLdYfKYImmznO76CTky1qU0K88kbBvLhOs", signature);
     }
 
     @Test
@@ -793,14 +760,14 @@ public class GrantEndpointTest extends TestHarness {
                 .withQueryParam("auth", matching("key1"))
                 .withQueryParam("instanceid", matching("PubNubInstanceId"))
                 .withQueryParam("requestid", matching("PubNubRequestId"))
-                .withQueryParam("uuid", matching("myUUID"))
+                .withQueryParam("uuid", matching(uuid))
                 .withQueryParam("timestamp", matching("1337"))
                 .withQueryParam("r", matching("1"))
                 .withQueryParam("w", matching("0"))
                 .withQueryParam("m", matching("0"))
                 .willReturn(aResponse().withBody("{\"message\":\"Success\",\"payload\":{\"level\":\"user\"," +
                         "\"subscribe_key\":\"sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f\",\"ttl\":1," +
-                        "\"channel\":\"ch1\",\"auths\":{\"key1\":{\"r\":0,\"w\":0,\"m\":0}}},\"service\":\"Access " +
+                        "\"channel\":\"ch1\",\"auths\":{\"key1\":{\"r\":0,\"d\":0,\"g\":0,\"u\":0,\"j\":0,\"w\":0,\"m\":0}}},\"service\":\"Access " +
                         "Manager\",\"status\":200}")));
 
         PNAccessManagerGrantResult result =
@@ -816,8 +783,6 @@ public class GrantEndpointTest extends TestHarness {
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/auth/grant/sub-key/mySubscribeKey.*")));
         assertEquals(1, requests.size());
-        String signature = requests.get(0).queryParameter("signature").firstValue();
-        assertEquals("v2.tBkN3-YCCxzK8xZ_iY0bpIV2KHhJgHem1jSza_W7EJs", signature);
     }
 
     @Test
@@ -829,14 +794,14 @@ public class GrantEndpointTest extends TestHarness {
                 .withQueryParam("auth", matching("key1"))
                 .withQueryParam("instanceid", matching("PubNubInstanceId"))
                 .withQueryParam("requestid", matching("PubNubRequestId"))
-                .withQueryParam("uuid", matching("myUUID"))
+                .withQueryParam("uuid", matching(uuid))
                 .withQueryParam("timestamp", matching("1337"))
                 .withQueryParam("r", matching("0"))
                 .withQueryParam("w", matching("1"))
                 .withQueryParam("m", matching("0"))
                 .willReturn(aResponse().withBody("{\"message\":\"Success\",\"payload\":{\"level\":\"user\"," +
                         "\"subscribe_key\":\"sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f\",\"ttl\":1," +
-                        "\"channel\":\"ch1\",\"auths\":{\"key1\":{\"r\":0,\"w\":0,\"m\":0}}},\"service\":\"Access " +
+                        "\"channel\":\"ch1\",\"auths\":{\"key1\":{\"r\":0,\"d\":0,\"g\":0,\"u\":0,\"j\":0,\"w\":0,\"m\":0}}},\"service\":\"Access " +
                         "Manager\",\"status\":200}")));
 
         PNAccessManagerGrantResult result =
@@ -852,8 +817,6 @@ public class GrantEndpointTest extends TestHarness {
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/auth/grant/sub-key/mySubscribeKey.*")));
         assertEquals(1, requests.size());
-        String signature = requests.get(0).queryParameter("signature").firstValue();
-        assertEquals("v2.BcptQPeSMRi7fwyjVmWhNxjHRXU0TL48lpKtrV1U4I8", signature);
     }
 
     @Test
@@ -865,7 +828,7 @@ public class GrantEndpointTest extends TestHarness {
                 .withQueryParam("auth", matching("key1"))
                 .withQueryParam("instanceid", matching("PubNubInstanceId"))
                 .withQueryParam("requestid", matching("PubNubRequestId"))
-                .withQueryParam("uuid", matching("myUUID"))
+                .withQueryParam("uuid", matching(uuid))
                 .withQueryParam("timestamp", matching("1337"))
                 .withQueryParam("r", matching("0"))
                 .withQueryParam("w", matching("0"))
@@ -873,7 +836,7 @@ public class GrantEndpointTest extends TestHarness {
                 .withQueryParam("d", matching("1"))
                 .willReturn(aResponse().withBody("{\"message\":\"Success\",\"payload\":{\"level\":\"user\"," +
                         "\"subscribe_key\":\"sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f\",\"ttl\":1," +
-                        "\"channel\":\"ch1\",\"auths\":{\"key1\":{\"r\":0,\"w\":0,\"m\":0}}},\"service\":\"Access " +
+                        "\"channel\":\"ch1\",\"auths\":{\"key1\":{\"r\":0,\"d\":0,\"g\":0,\"u\":0,\"j\":0,\"w\":0,\"m\":0}}},\"service\":\"Access " +
                         "Manager\",\"status\":200}")));
 
         PNAccessManagerGrantResult result =
@@ -889,8 +852,6 @@ public class GrantEndpointTest extends TestHarness {
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/auth/grant/sub-key/mySubscribeKey.*")));
         assertEquals(1, requests.size());
-        String signature = requests.get(0).queryParameter("signature").firstValue();
-        assertEquals("v2.Fi3Va280ocS40WGPsZ4jBVPfXoXUAXcCTeRAiIuQgWk", signature);
     }
 
     @Test
@@ -902,14 +863,14 @@ public class GrantEndpointTest extends TestHarness {
                 .withQueryParam("auth", matching("key1"))
                 .withQueryParam("instanceid", matching("PubNubInstanceId"))
                 .withQueryParam("requestid", matching("PubNubRequestId"))
-                .withQueryParam("uuid", matching("myUUID"))
+                .withQueryParam("uuid", matching(uuid))
                 .withQueryParam("timestamp", matching("1337"))
                 .withQueryParam("r", matching("0"))
                 .withQueryParam("w", matching("0"))
                 .withQueryParam("m", matching("1"))
                 .willReturn(aResponse().withBody("{\"message\":\"Success\",\"payload\":{\"level\":\"user\"," +
                         "\"subscribe_key\":\"sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f\",\"ttl\":1," +
-                        "\"channel\":\"ch1\",\"auths\":{\"key1\":{\"r\":0,\"w\":0,\"m\":0}}},\"service\":\"Access " +
+                        "\"channel\":\"ch1\",\"auths\":{\"key1\":{\"r\":0,\"d\":0,\"g\":0,\"u\":0,\"j\":0,\"w\":0,\"m\":0}}},\"service\":\"Access " +
                         "Manager\",\"status\":200}")));
 
         PNAccessManagerGrantResult result =
@@ -925,8 +886,6 @@ public class GrantEndpointTest extends TestHarness {
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/auth/grant/sub-key/mySubscribeKey.*")));
         assertEquals(1, requests.size());
-        String signature = requests.get(0).queryParameter("signature").firstValue();
-        assertEquals("v2.fxKxvKRYoURgJ-UgTBEWlVX3b9Rnh7cAd8Ha7Ht7z4g", signature);
     }
 
     @Test
@@ -938,14 +897,14 @@ public class GrantEndpointTest extends TestHarness {
                 .withQueryParam("auth", matching("key1"))
                 .withQueryParam("instanceid", matching("PubNubInstanceId"))
                 .withQueryParam("requestid", matching("PubNubRequestId"))
-                .withQueryParam("uuid", matching("myUUID"))
+                .withQueryParam("uuid", matching(uuid))
                 .withQueryParam("timestamp", matching("1337"))
                 .withQueryParam("r", matching("0"))
                 .withQueryParam("w", matching("0"))
                 .withQueryParam("m", matching("0"))
                 .willReturn(aResponse().withBody("{\"message\":\"Success\",\"payload\":{\"level\":\"user\"," +
                         "\"subscribe_key\":\"sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f\",\"ttl\":1," +
-                        "\"channel\":\"ch1\",\"auths\":{\"key1\":{\"r\":0,\"w\":0,\"m\":0}}},\"service\":\"Access " +
+                        "\"channel\":\"ch1\",\"auths\":{\"key1\":{\"r\":0,\"d\":0,\"g\":0,\"u\":0,\"j\":0,\"w\":0,\"m\":0}}},\"service\":\"Access " +
                         "Manager\",\"status\":200}")));
 
         pubnub.getConfiguration().setAuthKey("myKey");
@@ -953,8 +912,6 @@ public class GrantEndpointTest extends TestHarness {
 
         List<LoggedRequest> requests = findAll(getRequestedFor(urlMatching("/v2/auth/grant/sub-key/mySubscribeKey.*")));
         assertEquals(1, requests.size());
-        String signature = requests.get(0).queryParameter("signature").firstValue();
-        assertEquals("v2.Jk1QUqQGThbRFvLCNuW16YwPa6WmPrHDHJwz61py0nU", signature);
     }
 
     @Test
@@ -965,15 +922,14 @@ public class GrantEndpointTest extends TestHarness {
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 .withQueryParam("channel", matching("ch1"))
                 .withQueryParam("auth", matching("key1"))
-                .withQueryParam("signature", matching("v2.P28cNou37m624BETKNaGaXO_wFR6zVNdBCGD0gQaIu0"))
-                .withQueryParam("uuid", matching("myUUID"))
+                .withQueryParam("uuid", matching(uuid))
                 .withQueryParam("timestamp", matching("1337"))
                 .withQueryParam("r", matching("0"))
                 .withQueryParam("w", matching("0"))
                 .withQueryParam("m", matching("0"))
                 .willReturn(aResponse().withBody("{\"message\":\"Success\",\"payload\":{\"level\":\"user\"," +
                         "\"subscribe_key\":\"sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f\",\"ttl\":1," +
-                        "\"channel\":\"ch1\",\"auths\":{\"key1\":{\"r\":0,\"w\":0,\"m\":0}}},\"service\":\"Access " +
+                        "\"channel\":\"ch1\",\"auths\":{\"key1\":{\"r\":0,\"d\":0,\"g\":0,\"u\":0,\"j\":0,\"w\":0,\"m\":0}}},\"service\":\"Access " +
                         "Manager\",\"status\":200}")));
 
         partialGrant.authKeys(Collections.singletonList("key1")).channels(Collections.singletonList("ch1")).async(
@@ -1067,12 +1023,11 @@ public class GrantEndpointTest extends TestHarness {
 
         stubFor(get(urlPathEqualTo("/v2/auth/grant/sub-key/mySubscribeKey"))
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
-                .withQueryParam("uuid", matching("myUUID"))
+                .withQueryParam("uuid", matching(uuid))
                 .withQueryParam("timestamp", matching("1337"))
                 .withQueryParam("r", matching("0"))
                 .withQueryParam("w", matching("0"))
                 .withQueryParam("m", matching("0"))
-                .withQueryParam("signature", matching("v2.aPDDeiJA2CX1QKIIjY3LlgD1p-MjwBozZgMX995E0u8"))
                 .willReturn(aResponse().withStatus(200).withBody("{\"message\":\"Success\"," +
                         "\"payload\":{\"level\":\"subkey\",\"subscribe_key\":\"mySubscribeKey\",\"ttl\":1440,\"r\":0," +
                         "\"w\":1,\"m\":0,\"d\":0},\"service\":\"Access Manager\",\"status\":200}")));
@@ -1097,7 +1052,7 @@ public class GrantEndpointTest extends TestHarness {
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 .withQueryParam("channel", matching("ch1"))
                 .withQueryParam("auth", matching("key1"))
-                .withQueryParam("uuid", matching("myUUID"))
+                .withQueryParam("uuid", matching(uuid))
                 .withQueryParam("timestamp", matching("1337"))
                 .withQueryParam("r", matching("0"))
                 .withQueryParam("w", matching("0"))
@@ -1120,15 +1075,14 @@ public class GrantEndpointTest extends TestHarness {
         stubFor(get(urlPathEqualTo("/v2/auth/grant/sub-key/mySubscribeKey"))
                 .withQueryParam("pnsdk", matching("PubNub-Java-Unified/suchJava"))
                 .withQueryParam("channel", matching("ch1"))
-                .withQueryParam("signature", matching("v2.gvSzmBMnSxdQnMXWLWGXyLwN6YZdcH9H71froaHgKWc"))
-                .withQueryParam("uuid", matching("myUUID"))
+                .withQueryParam("uuid", matching(uuid))
                 .withQueryParam("timestamp", matching("1337"))
                 .withQueryParam("r", matching("0"))
                 .withQueryParam("w", matching("0"))
                 .withQueryParam("m", matching("0"))
                 .willReturn(aResponse().withBody("{\"message\":\"Success\",\"payload\":{\"level\":\"user\"," +
                         "\"subscribe_key\":\"sub-c-82ab2196-b64f-11e5-8622-0619f8945a4f\",\"ttl\":1," +
-                        "\"channel\":\"ch1\",\"auths\":{\"key1\":{\"r\":0,\"w\":0,\"m\":0}}},\"service\":\"Access " +
+                        "\"channel\":\"ch1\",\"auths\":{\"key1\":{\"r\":0,\"d\":0,\"g\":0,\"u\":0,\"j\":0,\"w\":0,\"m\":0}}},\"service\":\"Access " +
                         "Manager\",\"status\":200}")));
 
         partialGrant.channels(Collections.singletonList("ch1")).async(new PNCallback<PNAccessManagerGrantResult>() {
@@ -1144,4 +1098,31 @@ public class GrantEndpointTest extends TestHarness {
         Awaitility.await().atMost(5, TimeUnit.SECONDS).untilTrue(atomic);
     }
 
+    @Test(expected = PubNubException.class)
+    public void grantsForUUIDRequireAuthKey() throws PubNubException {
+        pubnub.grant()
+                .uuids(Collections.singletonList(uuid))
+                .update(true)
+                .sync();
+    }
+
+    @Test(expected = PubNubException.class)
+    public void grantsForUUIDCannotBeMadeWithChannels() throws PubNubException {
+        pubnub.grant()
+                .uuids(Collections.singletonList(uuid))
+                .authKeys(Collections.singletonList("authKey"))
+                .update(true)
+                .channels(Collections.singletonList("channel"))
+                .sync();
+    }
+
+    @Test(expected = PubNubException.class)
+    public void grantsForUUIDCannotBeMadeWithChannelGroups() throws PubNubException {
+        pubnub.grant()
+                .uuids(Collections.singletonList(uuid))
+                .authKeys(Collections.singletonList("authKey"))
+                .update(true)
+                .channelGroups(Collections.singletonList("channelGroup"))
+                .sync();
+    }
 }

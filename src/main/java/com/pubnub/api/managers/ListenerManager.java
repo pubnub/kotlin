@@ -3,14 +3,14 @@ package com.pubnub.api.managers;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.callbacks.SubscribeCallback;
 import com.pubnub.api.models.consumer.PNStatus;
+import com.pubnub.api.models.consumer.objects_api.channel.PNChannelMetadataResult;
+import com.pubnub.api.models.consumer.objects_api.membership.PNMembershipResult;
+import com.pubnub.api.models.consumer.objects_api.uuid.PNUUIDMetadataResult;
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult;
 import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult;
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult;
-import com.pubnub.api.models.consumer.pubsub.objects.PNMembershipResult;
-import com.pubnub.api.models.consumer.pubsub.objects.PNSpaceResult;
-import com.pubnub.api.models.consumer.pubsub.objects.PNUserResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,21 +74,21 @@ public class ListenerManager {
         }
     }
 
-    public void announce(PNUserResult user) {
-        for (SubscribeCallback subscribeCallback : getListeners()) {
-            subscribeCallback.user(this.pubnub, user);
+    public void announce(final PNUUIDMetadataResult uuidMetadataResult) {
+        for (final SubscribeCallback subscribeCallback: getListeners()) {
+            subscribeCallback.uuid(this.pubnub, uuidMetadataResult);
         }
     }
 
-    public void announce(PNSpaceResult space) {
-        for (SubscribeCallback subscribeCallback : getListeners()) {
-            subscribeCallback.space(this.pubnub, space);
+    public void announce(final PNChannelMetadataResult channelMetadataResult) {
+        for (final SubscribeCallback subscribeCallback: getListeners()) {
+            subscribeCallback.channel(this.pubnub, channelMetadataResult);
         }
     }
 
-    public void announce(PNMembershipResult membership) {
-        for (SubscribeCallback subscribeCallback : getListeners()) {
-            subscribeCallback.membership(this.pubnub, membership);
+    public void announce(final PNMembershipResult membershipResult) {
+        for (final SubscribeCallback subscribeCallback: getListeners()) {
+            subscribeCallback.membership(this.pubnub, membershipResult);
         }
     }
 

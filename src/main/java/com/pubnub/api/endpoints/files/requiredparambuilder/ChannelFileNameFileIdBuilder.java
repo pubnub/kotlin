@@ -1,8 +1,8 @@
 package com.pubnub.api.endpoints.files.requiredparambuilder;
 
-import com.pubnub.api.endpoints.files.requiredparambuilder.BuilderSteps.ChannelStep;
-import com.pubnub.api.endpoints.files.requiredparambuilder.BuilderSteps.FileIdStep;
-import com.pubnub.api.endpoints.files.requiredparambuilder.BuilderSteps.FileNameStep;
+import com.pubnub.api.endpoints.BuilderSteps.ChannelStep;
+import com.pubnub.api.endpoints.files.requiredparambuilder.FilesBuilderSteps.FileIdStep;
+import com.pubnub.api.endpoints.files.requiredparambuilder.FilesBuilderSteps.FileNameStep;
 import com.pubnub.api.endpoints.remoteaction.PNFunction3;
 
 public abstract class ChannelFileNameFileIdBuilder<T> implements

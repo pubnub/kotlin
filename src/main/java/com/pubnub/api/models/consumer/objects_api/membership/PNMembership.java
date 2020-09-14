@@ -1,16 +1,23 @@
 package com.pubnub.api.models.consumer.objects_api.membership;
 
-import com.pubnub.api.models.consumer.objects_api.PNObject;
-import com.pubnub.api.models.consumer.objects_api.space.PNSpace;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import com.google.gson.annotations.JsonAdapter;
+import com.pubnub.api.models.consumer.objects_api.channel.PNChannelMetadata;
+import com.pubnub.api.models.consumer.objects_api.util.CustomPayloadJsonInterceptor;
+import lombok.*;
+import lombok.experimental.Accessors;
 
 @Getter
-@EqualsAndHashCode(callSuper = true)
-public class PNMembership extends PNObject {
+@Accessors(chain = true)
+@EqualsAndHashCode
+@ToString
+@RequiredArgsConstructor
+public class PNMembership {
+    @NonNull
+    private PNChannelMetadata channel;
 
-    private PNSpace space;
+    @JsonAdapter(CustomPayloadJsonInterceptor.class)
+    protected Object custom;
 
-    private PNMembership() {
-    }
+    protected String updated;
+    protected String eTag;
 }

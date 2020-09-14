@@ -242,9 +242,9 @@ public final class PubNubErrorBuilder {
     public static final int PNERR_CHANNELS_TIMETOKEN_MISMATCH = 146;
 
     /**
-     * User missing
+     * UUID missing
      */
-    public static final int PNERR_USER_MISSING = 147;
+    public static final int PNERR_UUID_MISSING = 147;
 
     /**
      * User ID missing
@@ -330,6 +330,16 @@ public final class PubNubErrorBuilder {
      * Push topic missing
      */
     public static final int PNERR_PUSH_TOPIC_MISSING = 164;
+
+    /**
+     * No more pages to load after last one
+     */
+    public static final int PNERR_PAGINATION_NEXT_OUT_OF_BOUNDS = 165;
+
+    /**
+     * No pages to load before first one
+     */
+    public static final int PNERR_PAGINATION_PREV_OUT_OF_BOUNDS = 166;
 
     // Error Objects
     public static final PubNubError PNERROBJ_TIMEOUT = PubNubError.builder()
@@ -569,9 +579,9 @@ public final class PubNubErrorBuilder {
             .message("Channels and timetokens are not equal in size.")
             .build();
 
-    public static final PubNubError PNERROBJ_USER_MISSING = PubNubError.builder()
-            .errorCode(PNERR_USER_MISSING)
-            .message("User is missing")
+    public static final PubNubError PNERROBJ_UUID_MISSING = PubNubError.builder()
+            .errorCode(PNERR_UUID_MISSING)
+            .message("UUID is missing")
             .build();
 
     public static final PubNubError PNERROBJ_USER_ID_MISSING = PubNubError.builder()
@@ -658,6 +668,16 @@ public final class PubNubErrorBuilder {
     public static final PubNubError PNERROBJ_PUSH_TOPIC_MISSING = PubNubError.builder()
             .errorCode(PNERR_PUSH_TOPIC_MISSING)
             .message("Push notification topic is missing. Required only if push type is APNS2.")
+            .build();
+
+    public static final PubNubError PNERROBJ_PAGINATION_NEXT_OUT_OF_BOUNDS = PubNubError.builder()
+            .errorCode(PNERR_PAGINATION_NEXT_OUT_OF_BOUNDS)
+            .message("No more pages to load after last one.")
+            .build();
+
+    public static final PubNubError PNERROBJ_PAGINATION_PREV_OUT_OF_BOUNDS = PubNubError.builder()
+            .errorCode(PNERR_PAGINATION_PREV_OUT_OF_BOUNDS)
+            .message("No pages to load before first one.")
             .build();
 
     private PubNubErrorBuilder() {

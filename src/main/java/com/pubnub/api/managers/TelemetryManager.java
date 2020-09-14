@@ -165,26 +165,22 @@ public class TelemetryManager {
             case PNSignalOperation:
                 endpoint = "sig";
                 break;
-            case PNCreateUserOperation:
-            case PNGetUserOperation:
-            case PNGetUsersOperation:
-            case PNUpdateUserOperation:
-            case PNDeleteUserOperation:
-                endpoint = "obj";
-                break;
-            case PNCreateSpaceOperation:
-            case PNGetSpaceOperation:
-            case PNGetSpacesOperation:
-            case PNUpdateSpaceOperation:
-            case PNDeleteSpaceOperation:
-                endpoint = "obj";
-                break;
-            case PNGetMembers:
-            case PNManageMembers:
-                endpoint = "obj";
-                break;
-            case PNGetMemberships:
-            case PNManageMemberships:
+            case PNSetUuidMetadataOperation:
+            case PNGetUuidMetadataOperation:
+            case PNGetAllUuidMetadataOperation:
+            case PNRemoveUuidMetadataOperation:
+            case PNSetChannelMetadataOperation:
+            case PNGetChannelMetadataOperation:
+            case PNGetAllChannelsMetadataOperation:
+            case PNRemoveChannelMetadataOperation:
+            case PNSetMembershipsOperation:
+            case PNGetMembershipsOperation:
+            case PNRemoveMembershipsOperation:
+            case PNManageMembershipsOperation:
+            case PNSetChannelMembersOperation:
+            case PNGetChannelMembersOperation:
+            case PNRemoveChannelMembersOperation:
+            case PNManageChannelMembersOperation:
                 endpoint = "obj";
                 break;
             case PNAccessManagerGrantToken:

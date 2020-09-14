@@ -9,15 +9,16 @@ import com.pubnub.api.callbacks.SubscribeCallback;
 import com.pubnub.api.enums.PNLogVerbosity;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.models.consumer.PNStatus;
+import com.pubnub.api.models.consumer.objects_api.channel.PNChannelMetadataResult;
+import com.pubnub.api.models.consumer.objects_api.membership.PNMembershipResult;
+import com.pubnub.api.models.consumer.objects_api.uuid.PNUUIDMetadataResult;
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult;
 import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult;
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult;
-import com.pubnub.api.models.consumer.pubsub.objects.PNMembershipResult;
-import com.pubnub.api.models.consumer.pubsub.objects.PNSpaceResult;
-import com.pubnub.api.models.consumer.pubsub.objects.PNUserResult;
 import okhttp3.logging.HttpLoggingInterceptor;
+import org.aeonbits.owner.ConfigFactory;
 import org.awaitility.Awaitility;
 import org.awaitility.Durations;
 import org.awaitility.pollinterval.FibonacciPollInterval;
@@ -30,8 +31,13 @@ import org.junit.BeforeClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -58,17 +64,12 @@ public abstract class BaseIntegrationTest {
 
     @BeforeClass
     public static void onlyOnce() {
-        final Properties properties = new Properties();
-        try {
-            properties.load(ClassLoader.getSystemClassLoader().getResourceAsStream("config.properties"));
-            SUB_KEY = properties.getProperty("sub_key");
-            PUB_KEY = properties.getProperty("pub_key");
-            PAM_SUB_KEY = properties.getProperty("pam_sub_key");
-            PAM_PUB_KEY = properties.getProperty("pam_pub_key");
-            PAM_SEC_KEY = properties.getProperty("pam_sec_key");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        final ITTestConfig itTestConfig = ConfigFactory.create(ITTestConfig.class, System.getenv());
+        SUB_KEY = itTestConfig.subscribeKey();
+        PUB_KEY = itTestConfig.publishKey();
+        PAM_SUB_KEY = itTestConfig.pamSubKey();
+        PAM_PUB_KEY = itTestConfig.pamPubKey();
+        PAM_SEC_KEY = itTestConfig.pamSecKey();
     }
 
     @Before
@@ -203,17 +204,17 @@ public abstract class BaseIntegrationTest {
             }
 
             @Override
-            public void user(@NotNull PubNub pubNub, @NotNull PNUserResult pnUserResult) {
+            public void uuid(@NotNull final PubNub pubnub, @NotNull final PNUUIDMetadataResult pnUUIDMetadataResult) {
 
             }
 
             @Override
-            public void space(@NotNull PubNub pubNub, @NotNull PNSpaceResult pnSpaceResult) {
+            public void channel(@NotNull final PubNub pubnub, @NotNull final PNChannelMetadataResult pnChannelMetadataResult) {
 
             }
 
             @Override
-            public void membership(@NotNull PubNub pubNub, @NotNull PNMembershipResult pnMembershipResult) {
+            public void membership(@NotNull final PubNub pubnub, @NotNull final PNMembershipResult pnMembershipResult) {
 
             }
 
@@ -345,38 +346,9 @@ public abstract class BaseIntegrationTest {
                 .until(callable);
     }
 
-    protected PNConfiguration getBronzeConfiguration(boolean includeSecret) {
-        return new PNConfiguration()
-                .setPublishKey("pub-c-03f156ea-a2e3-4c35-a733-9535824be897")
-                .setSubscribeKey("sub-c-d7da9e58-c997-11e9-a139-dab2c75acd6f")
-                .setSecretKey("sec-c-MmUxNTZjMmYtNzFkNS00ODkzLWE2YjctNmQ4YzE5NWNmZDA3")
-                .setSecure(false)
-                .setOrigin("ingress.bronze.aws-pdx-1.ps.pn/")
-                .setLogVerbosity(PNLogVerbosity.BODY);
-    }
-
-    protected PNConfiguration getBronzeConfigurationDemo() {
-        return new PNConfiguration()
-                .setPublishKey("demo-36")
-                .setSubscribeKey("demo-36")
-                .setSecure(false)
-                .setOrigin("ingress.bronze.aws-pdx-1.ps.pn/")
-                .setLogVerbosity(PNLogVerbosity.BODY);
-    }
-
-    protected PNConfiguration getStorageReaderConfiguration() {
-        return new PNConfiguration()
-                .setPublishKey("demo-36")
-                .setSubscribeKey("demo-36")
-                .setSecure(false)
-                .setOrigin("storagereader-blue1.aws-pdx-3.ps.pn:9000/")
-                .setLogVerbosity(PNLogVerbosity.BODY);
-    }
-
     protected void assertException(PubNubError pubNubError, PubNubException e) {
         assertEquals(pubNubError, e.getPubnubError());
     }
-
 
     protected void onBefore() {
 

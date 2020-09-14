@@ -25,6 +25,9 @@ public class AccessManagerGrantPayload {
     @SerializedName("channel-groups")
     private JsonElement channelGroups;
 
+    @SerializedName("uuids")
+    private Map<String, PNAccessManagerKeysData> uuids;
+
     @SerializedName("auths")
     private Map<String, PNAccessManagerKeyData> authKeys;
 

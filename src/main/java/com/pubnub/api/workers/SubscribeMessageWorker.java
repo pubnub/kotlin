@@ -15,8 +15,12 @@ import com.pubnub.api.models.consumer.PNErrorData;
 import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.files.PNDownloadableFile;
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction;
-import com.pubnub.api.models.consumer.objects_api.space.PNSpace;
-import com.pubnub.api.models.consumer.objects_api.user.PNUser;
+import com.pubnub.api.models.consumer.objects_api.channel.PNChannelMetadataResult;
+import com.pubnub.api.models.consumer.objects_api.membership.PNMembershipResult;
+import com.pubnub.api.models.consumer.objects_api.uuid.PNUUIDMetadataResult;
+import com.pubnub.api.models.consumer.objects_api.channel.PNChannelMetadata;
+import com.pubnub.api.models.consumer.objects_api.membership.PNMembership;
+import com.pubnub.api.models.consumer.objects_api.uuid.PNUUIDMetadata;
 import com.pubnub.api.models.consumer.pubsub.BasePubSubResult;
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
@@ -24,9 +28,6 @@ import com.pubnub.api.models.consumer.pubsub.PNSignalResult;
 import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult;
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult;
 import com.pubnub.api.models.consumer.pubsub.objects.ObjectPayload;
-import com.pubnub.api.models.consumer.pubsub.objects.PNMembershipResult;
-import com.pubnub.api.models.consumer.pubsub.objects.PNSpaceResult;
-import com.pubnub.api.models.consumer.pubsub.objects.PNUserResult;
 import com.pubnub.api.models.server.PresenceEnvelope;
 import com.pubnub.api.models.server.PublishMetaData;
 import com.pubnub.api.models.server.SubscribeMessage;
@@ -229,29 +230,28 @@ public class SubscribeMessageWorker implements Runnable {
             } else if (message.getType() == typeObject) {
                 ObjectPayload objectPayload = mapper.convertValue(extractedMessage, ObjectPayload.class);
                 String type = objectPayload.getType();
-                switch (type) {
-                    case "user":
-                        listenerManager.announce(PNUserResult.userBuilder()
-                                .result(result)
-                                .event(objectPayload.getEvent())
-                                .user(mapper.convertValue(objectPayload.getData(), PNUser.class))
-                                .build());
-                        break;
-                    case "space":
-                        listenerManager.announce(PNSpaceResult.spaceBuilder()
-                                .result(result)
-                                .event(objectPayload.getEvent())
-                                .space(mapper.convertValue(objectPayload.getData(), PNSpace.class))
-                                .build());
-                        break;
-                    case "membership":
-                        listenerManager.announce(PNMembershipResult.membershipBuilder()
-                                .result(result)
-                                .event(objectPayload.getEvent())
-                                .data(objectPayload.getData())
-                                .build());
-                        break;
-                    default:
+                if (canHandleObjectCallback(objectPayload)) {
+                    switch (type) {
+                        case "channel":
+                            final PNChannelMetadataResult channelMetadataResult = new PNChannelMetadataResult(result,
+                                    objectPayload.getEvent(), mapper.convertValue(objectPayload.getData(),
+                                    PNChannelMetadata.class));
+                            listenerManager.announce(channelMetadataResult);
+                            break;
+                        case "membership":
+                            final PNMembershipResult membershipResult = new PNMembershipResult(result,
+                                    objectPayload.getEvent(), mapper.convertValue(objectPayload.getData(),
+                                    PNMembership.class));
+                            listenerManager.announce(membershipResult);
+                            break;
+                        case "uuid":
+                            final PNUUIDMetadataResult uuidMetadataResult = new PNUUIDMetadataResult(result,
+                                    objectPayload.getEvent(),
+                                    mapper.convertValue(objectPayload.getData(), PNUUIDMetadata.class));
+                            listenerManager.announce(uuidMetadataResult);
+                            break;
+                        default:
+                    }
                 }
             } else if (message.getType() == typeMessageAction) {
                 ObjectPayload objectPayload = mapper.convertValue(extractedMessage, ObjectPayload.class);
@@ -293,6 +293,10 @@ public class SubscribeMessageWorker implements Runnable {
                 fileName);
     }
 
+    private boolean canHandleObjectCallback(final ObjectPayload objectPayload) {
+        return objectPayload.getVersion().equals("2.0");
+    }
+
     private List<String> getDelta(JsonElement delta) {
         List<String> list = new ArrayList<>();
         if (delta != null) {
@@ -303,6 +307,5 @@ public class SubscribeMessageWorker implements Runnable {
         }
 
         return list;
-
     }
 }

@@ -13,14 +13,19 @@ import com.pubnub.api.enums.PNStatusCategory;
 import com.pubnub.api.managers.MapperManager;
 import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.TelemetryManager;
-import com.pubnub.api.managers.token_manager.TokenManagerProperties;
-import com.pubnub.api.managers.token_manager.TokenManagerPropertyProvider;
 import com.pubnub.api.models.consumer.PNErrorData;
 import com.pubnub.api.models.consumer.PNStatus;
-
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+import lombok.extern.java.Log;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import retrofit2.Call;
+import retrofit2.Response;
 
+import javax.net.ssl.SSLException;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.SocketException;
@@ -31,16 +36,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
-import javax.net.ssl.SSLException;
-
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.Accessors;
-import lombok.extern.java.Log;
-import retrofit2.Call;
-import retrofit2.Response;
 
 @Log
 public abstract class Endpoint<Input, Output> implements RemoteAction<Output> {
@@ -363,19 +358,6 @@ public abstract class Endpoint<Input, Output> implements RemoteAction<Output> {
             params.put("auth", pubnub.getConfiguration().getAuthKey());
         }
 
-        if (!this.pubnub.getConfiguration().isDisableTokenManager() && this.pubnub.getConfiguration().getSecretKey() == null) {
-            if (this instanceof TokenManagerPropertyProvider) {
-                TokenManagerProperties tokenManagerProperties =
-                        ((TokenManagerPropertyProvider) this).getTmsProperties();
-                String token = this.pubnub.getToken(tokenManagerProperties);
-                if (token != null) {
-                    params.put("auth", token);
-                } else {
-                    log.warning("No token found for: ".concat(tokenManagerProperties.toString()));
-                }
-            }
-        }
-
         if (this.telemetryManager != null) {
             params.putAll(this.telemetryManager.operationsLatency());
         }
@@ -389,30 +371,6 @@ public abstract class Endpoint<Input, Output> implements RemoteAction<Output> {
             encodedParams.put("auth", PubNubUtil.urlEncode(encodedParams.get("auth")));
         }
         return encodedParams;
-    }
-
-    protected <T extends Endpoint<Input, Output>> T appendInclusionParams(Map<String, String> map, Enum... params) {
-        if (params.length == 0) {
-            return (T) this;
-        }
-        List<String> list = new ArrayList<>();
-        for (Enum param : params) {
-            list.add(param.toString());
-        }
-        map.put("include", PubNubUtil.joinString(list, ","));
-        return (T) this;
-    }
-
-    protected <T extends Endpoint<Input, Output>> T appendLimitParam(Map<String, String> map, Integer limit) {
-        final int maxLimit = 100;
-
-        if (limit != null && limit > 0 && limit <= maxLimit) {
-            map.put("limit", String.valueOf(limit));
-        } else {
-            map.put("limit", String.valueOf(maxLimit));
-        }
-        map.put("limit", String.valueOf(limit));
-        return (T) this;
     }
 
     protected abstract List<String> getAffectedChannels();

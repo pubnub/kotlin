@@ -36,27 +36,29 @@ public enum PNOperationType {
     PNAccessManagerAudit,
     PNAccessManagerGrant,
 
-    // Users
-    PNCreateUserOperation,
-    PNGetUserOperation,
-    PNGetUsersOperation,
-    PNUpdateUserOperation,
-    PNDeleteUserOperation,
+    // UUID Metadata
+    PNSetUuidMetadataOperation,
+    PNGetUuidMetadataOperation,
+    PNGetAllUuidMetadataOperation,
+    PNRemoveUuidMetadataOperation,
 
-    // Spaces
-    PNCreateSpaceOperation,
-    PNGetSpaceOperation,
-    PNGetSpacesOperation,
-    PNUpdateSpaceOperation,
-    PNDeleteSpaceOperation,
-
-    // Members
-    PNGetMembers,
-    PNManageMembers,
+    // Channel Metadata
+    PNSetChannelMetadataOperation,
+    PNGetChannelMetadataOperation,
+    PNGetAllChannelsMetadataOperation,
+    PNRemoveChannelMetadataOperation,
 
     // Memberships
-    PNGetMemberships,
-    PNManageMemberships,
+    PNSetMembershipsOperation,
+    PNGetMembershipsOperation,
+    PNRemoveMembershipsOperation,
+    PNManageMembershipsOperation,
+
+    // Members
+    PNSetChannelMembersOperation,
+    PNGetChannelMembersOperation,
+    PNRemoveChannelMembersOperation,
+    PNManageChannelMembersOperation,
 
     // PAMv3
     PNAccessManagerGrantToken,

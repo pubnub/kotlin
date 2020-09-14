@@ -50,4 +50,19 @@
         <Method name="execute"/>
         <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
     </Match>
+    <Match>
+        <Class name="com.pubnub.api.models.consumer.objects_api.member.PNMembers"/>
+        <Field name="uuid"/>
+        <Bug pattern="UWF_UNWRITTEN_FIELD"/>
+    </Match>
+    <Match>
+        <Class name="com.pubnub.api.models.consumer.objects_api.member.PNMembers"/>
+        <Field name="eTag"/>
+        <Bug pattern="UWF_UNWRITTEN_PUBLIC_OR_PROTECTED_FIELD"/>
+    </Match>
+    <Match>
+        <Class name="com.pubnub.api.models.consumer.objects_api.member.PNMembers"/>
+        <Field name="updated"/>
+        <Bug pattern="UWF_UNWRITTEN_PUBLIC_OR_PROTECTED_FIELD"/>
+    </Match>
 </FindBugsFilter>

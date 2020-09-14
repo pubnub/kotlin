@@ -5,11 +5,13 @@ import com.pubnub.api.models.consumer.objects_api.util.CustomPayloadJsonIntercep
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 @Getter
 @Accessors(chain = true)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString
 public class PNObject {
 
     @EqualsAndHashCode.Include
@@ -19,7 +21,6 @@ public class PNObject {
     @Setter
     protected Object custom;
 
-    protected String created;
     protected String updated;
     protected String eTag;
 

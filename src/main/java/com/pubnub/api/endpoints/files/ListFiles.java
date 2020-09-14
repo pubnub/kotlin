@@ -5,7 +5,7 @@ import com.pubnub.api.PubNubException;
 import com.pubnub.api.PubNubUtil;
 import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.Endpoint;
-import com.pubnub.api.endpoints.files.requiredparambuilder.BuilderSteps;
+import com.pubnub.api.endpoints.BuilderSteps;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.TelemetryManager;
@@ -73,7 +73,7 @@ public class ListFiles extends Endpoint<ListFilesResult, PNListFilesResult> {
                     .build();
         }
 
-        if (next != null && next.getHash().isEmpty()) {
+        if (next != null && (next.getHash() == null || next.getHash().isEmpty())) {
             throw PubNubException.builder()
                     .pubnubError(PubNubErrorBuilder.PNERROBJ_INVALID_ARGUMENTS)
                     .errormsg("Next should not be an empty string")
