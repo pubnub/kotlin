@@ -17,6 +17,11 @@ public class PubNubException extends Exception {
     private String response;
     private int statusCode;
 
+    @Override
+    public String getMessage() {
+        return errormsg;
+    }
+
     @Getter(AccessLevel.NONE)
     @ToString.Exclude
     private Call affectedCall;

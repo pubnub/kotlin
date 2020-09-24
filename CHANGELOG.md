@@ -1,3 +1,10 @@
+## [v4.33.1](https://github.com/pubnub/java/releases/tag/v4.33.1)
+September-24-2020
+
+[Full Changelog](https://github.com/pubnub/java/compare/v4.33.0...v4.33.1)
+
+- 🐛 PubNubException now overrides Throwable's `getMessage` so the `status.errorData.throwablemessage` can be properly set. 
+
 ## [v4.33.0](https://github.com/pubnub/java/releases/tag/v4.33.0)
 September-14-2020
 

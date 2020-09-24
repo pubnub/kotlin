@@ -1,10 +1,15 @@
 name: java
-version: 4.33.0
+version: 4.33.1
 schema: 1
 scm: github.com/pubnub/java
 files:
-  - build/libs/pubnub-gson-4.33.0-all.jar
+  - build/libs/pubnub-gson-4.33.1-all.jar
 changelog:
+  - version: v4.33.1
+    date: 2020-09-24
+    changes:
+      - type: bug
+        text: "PubNubException now overrides Throwable's `getMessage` so the `status.errorData.throwablemessage` can be properly set."
   - version: v4.33.0
     date: 2020-09-14
     changes:
