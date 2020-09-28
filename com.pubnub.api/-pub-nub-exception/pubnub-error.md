@@ -2,7 +2,7 @@
 
 # pubnubError
 
-`var pubnubError: `[`PubNubError`](../-pub-nub-error/index.md)`?`
+`val pubnubError: `[`PubNubError`](../-pub-nub-error/index.md)`?`
 
 The appropriate matching PubNub error.
 

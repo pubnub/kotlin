@@ -2,7 +2,7 @@
 
 # affectedCall
 
-`var affectedCall: Call<*>?`
+`val affectedCall: Call<*>?`
 
 A reference to the affected call. Useful for calling [retry](#).
 

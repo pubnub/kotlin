@@ -6,7 +6,7 @@
 
 **See Also**
 
-[PubNub.setUUIDMetadata](#)
+[PubNub.setUUIDMetadata](../../com.pubnub.api/-pub-nub/set-u-u-i-d-metadata.md)
 
 ### Functions
 

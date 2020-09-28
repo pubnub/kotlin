@@ -16,8 +16,8 @@ Custom exception wrapper for errors occurred during execution or processing of a
 
 | Name | Summary |
 |---|---|
-| [affectedCall](affected-call.md) | A reference to the affected call. Useful for calling [retry](#).`var affectedCall: Call<*>?` |
-| [errorMessage](error-message.md) | The error message received from the server, if any.`var errorMessage: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`?` |
-| [jso](jso.md) | The error json received from the server, if any.`var jso: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`?` |
-| [pubnubError](pubnub-error.md) | The appropriate matching PubNub error.`var pubnubError: `[`PubNubError`](../-pub-nub-error/index.md)`?` |
-| [statusCode](status-code.md) | HTTP status code.`var statusCode: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html) |
+| [affectedCall](affected-call.md) | A reference to the affected call. Useful for calling [retry](#).`val affectedCall: Call<*>?` |
+| [errorMessage](error-message.md) | The error message received from the server, if any.`val errorMessage: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`?` |
+| [jso](jso.md) | The error json received from the server, if any.`val jso: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`?` |
+| [pubnubError](pubnub-error.md) | The appropriate matching PubNub error.`val pubnubError: `[`PubNubError`](../-pub-nub-error/index.md)`?` |
+| [statusCode](status-code.md) | HTTP status code.`val statusCode: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html) |

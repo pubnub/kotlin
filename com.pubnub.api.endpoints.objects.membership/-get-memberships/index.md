@@ -6,7 +6,7 @@
 
 **See Also**
 
-[PubNub.getMemberships](#)
+[PubNub.getMemberships](../../com.pubnub.api/-pub-nub/get-memberships.md)
 
 ### Functions
 

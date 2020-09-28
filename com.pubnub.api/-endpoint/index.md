@@ -23,7 +23,7 @@ Base class for all PubNub API operation implementations.
 | Name | Summary |
 |---|---|
 | [pubnub](pubnub.md) | The client instance.`val pubnub: `[`PubNub`](../-pub-nub/index.md) |
-| [queryParam](query-param.md) | Key-value object to pass with every PubNub API operation. Used for debugging purposes.`val queryParam: `[`MutableMap`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-map/index.html)`<`[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`, `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`>` |
+| [queryParam](query-param.md) | Key-value object to pass with every PubNub API operation. Used for debugging purposes. todo: it should be removed!`val queryParam: `[`MutableMap`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-map/index.html)`<`[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`, `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`>` |
 
 ### Functions
 

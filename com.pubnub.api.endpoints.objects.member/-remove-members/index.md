@@ -6,7 +6,7 @@
 
 **See Also**
 
-[PubNub.removeMembers](#)
+[PubNub.removeMembers](../../com.pubnub.api/-pub-nub/remove-members.md)
 
 ### Functions
 

@@ -6,7 +6,7 @@
 
 **See Also**
 
-[PubNub.getMembers](#)
+[PubNub.getMembers](../../com.pubnub.api/-pub-nub/get-members.md)
 
 ### Functions
 

@@ -2,7 +2,7 @@
 
 # jso
 
-`var jso: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`?`
+`val jso: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`?`
 
 The error json received from the server, if any.
 

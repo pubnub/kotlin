@@ -6,7 +6,7 @@
 
 **See Also**
 
-[PubNub.getUUIDMetadata](#)
+[PubNub.getUUIDMetadata](../../com.pubnub.api/-pub-nub/get-u-u-i-d-metadata.md)
 
 ### Properties
 

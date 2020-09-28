@@ -2,4 +2,4 @@
 
 # updated
 
-`val updated: Instant`
+`val updated: Instant?`

@@ -6,7 +6,7 @@
 
 **See Also**
 
-[PubNub.getChannelMetadata](#)
+[PubNub.getChannelMetadata](../../com.pubnub.api/-pub-nub/get-channel-metadata.md)
 
 ### Functions
 

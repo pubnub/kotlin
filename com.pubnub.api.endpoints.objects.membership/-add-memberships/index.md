@@ -6,7 +6,7 @@
 
 **See Also**
 
-[PubNub.addMemberships](#)
+[PubNub.addMemberships](../../com.pubnub.api/-pub-nub/add-memberships.md)
 
 ### Functions
 
