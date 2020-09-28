@@ -119,9 +119,10 @@ class MapperManager {
         return try {
             this.objectMapper.fromJson<T>(input, clazz)
         } catch (e: JsonParseException) {
-            throw PubNubException(PubNubError.PARSING_ERROR).apply {
+            throw PubNubException(
+                pubnubError = PubNubError.PARSING_ERROR,
                 errorMessage = e.message
-            }
+            )
         }
     }
 
@@ -129,9 +130,10 @@ class MapperManager {
         return try {
             this.objectMapper.fromJson<T>(input, typeOfT)
         } catch (e: JsonParseException) {
-            throw PubNubException(PubNubError.PARSING_ERROR).apply {
+            throw PubNubException(
+                pubnubError = PubNubError.PARSING_ERROR,
                 errorMessage = e.message
-            }
+                )
         }
     }
 
@@ -147,9 +149,10 @@ class MapperManager {
         return try {
             this.objectMapper.toJson(input)
         } catch (e: JsonParseException) {
-            throw PubNubException(PubNubError.JSON_ERROR).apply {
+            throw PubNubException(
+                pubnubError = PubNubError.JSON_ERROR,
                 errorMessage = e.message
-            }
+            )
         }
     }
 

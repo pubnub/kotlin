@@ -7,6 +7,6 @@ data class PNChannelMetadata(
     val name: String?,
     val description: String?,
     val custom: Any?,
-    val updated: Instant,
-    val eTag: String
+    val updated: Instant?,
+    val eTag: String?
 )

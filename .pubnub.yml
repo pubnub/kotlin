@@ -1,10 +1,20 @@
 name: kotlin
-version: 5.0.0
+version: 5.0.1
 schema: 1
 scm: github.com/pubnub/kotlin
 files:
-  - build/libs/pubnub-kotlin-5.0.0-all.jar
+  - build/libs/pubnub-kotlin-5.0.1-all.jar
 changelog:
+  -
+    version: 5.0.1
+    date: 2020-09-28
+    changes:
+      -
+        type: feature
+        text: "Add simplified Objects API support with UUID and Channel metadata / membership management."
+      -
+        type: bug
+        text: "Fix crashing Telemetry Manager."
   -
     version: v5.0.0
     date: 2020-08-12

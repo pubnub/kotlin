@@ -264,6 +264,7 @@ class EndpointTest : BaseTest() {
         val p = PubNub(PNConfiguration())
         assertEquals(300, p.configuration.presenceTimeout)
         assertEquals(0, p.configuration.heartbeatInterval)
+        p.forceDestroy()
     }
 
     @Test
@@ -272,6 +273,7 @@ class EndpointTest : BaseTest() {
         p.configuration.presenceTimeout = 100
         assertEquals(100, p.configuration.presenceTimeout)
         assertEquals(49, p.configuration.heartbeatInterval)
+        p.forceDestroy()
     }
 
     @Test
@@ -280,6 +282,7 @@ class EndpointTest : BaseTest() {
         p.configuration.heartbeatInterval = 100
         assertEquals(300, p.configuration.presenceTimeout)
         assertEquals(100, p.configuration.heartbeatInterval)
+        p.forceDestroy()
     }
 
     @Test
@@ -289,6 +292,7 @@ class EndpointTest : BaseTest() {
         p.configuration.presenceTimeout = 50
         assertEquals(50, p.configuration.presenceTimeout)
         assertEquals(24, p.configuration.heartbeatInterval)
+        p.forceDestroy()
     }
 
     private fun fakeEndpoint(

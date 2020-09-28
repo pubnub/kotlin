@@ -5,22 +5,17 @@ import java.math.RoundingMode
 import java.text.NumberFormat
 import java.util.Date
 import java.util.Locale
-import java.util.Timer
-import java.util.TimerTask
 import kotlin.collections.set
 
 internal class TelemetryManager {
 
     private companion object {
         private const val MAX_FRACTION_DIGITS = 3
-        private const val TIMESTAMP_DIVIDER = 1000
+        private const val TIMESTAMP_DIVIDER = 1_000
         private const val MAXIMUM_LATENCY_DATA_AGE = 60.0
-        private const val CLEAN_UP_INTERVAL = 1
-        private const val CLEAN_UP_INTERVAL_MULTIPLIER = 1000
     }
 
-    private var timer: Timer? = Timer()
-    private val latencies: HashMap<String, MutableList<Map<String, Double>>> = HashMap()
+    private val latencies: HashMap<String, MutableList<Latency>> = HashMap()
     private val numberFormat by lazy {
         NumberFormat.getNumberInstance(Locale.US).apply {
             maximumFractionDigits = MAX_FRACTION_DIGITS
@@ -29,12 +24,9 @@ internal class TelemetryManager {
         }
     }
 
-    init {
-        startCleanUpTimer()
-    }
-
     @Synchronized
-    fun operationsLatency(): Map<String, String> {
+    internal fun operationsLatency(currentDate: Long = Date().time): Map<String, String> {
+        cleanUpTelemetryData(currentDate)
         val operationLatencies = HashMap<String, String>()
         latencies.entries.forEach {
             val latencyKey = "l_${it.key}"
@@ -46,74 +38,50 @@ internal class TelemetryManager {
         return operationLatencies
     }
 
-    private fun startCleanUpTimer() {
-        val interval = (CLEAN_UP_INTERVAL * CLEAN_UP_INTERVAL_MULTIPLIER).toLong()
-
-        stopCleanUpTimer()
-        timer = Timer()
-        timer?.schedule(object : TimerTask() {
-            override fun run() {
-                cleanUpTelemetryData()
-            }
-        }, interval, interval)
-    }
-
-    internal fun stopCleanUpTimer() {
-        this.timer?.cancel()
-    }
-
     @Synchronized
-    private fun cleanUpTelemetryData() {
-        val currentDate = Date().time / TIMESTAMP_DIVIDER.toDouble()
+    private fun cleanUpTelemetryData(currentDate: Long = Date().time) {
+        val date = currentDate / TIMESTAMP_DIVIDER.toDouble()
 
-        latencies.forEach { (endpoint, _) ->
-            val outdatedLatencies = mutableListOf<Map<String, Double>>()
-            val operationLatencies = latencies[endpoint]
-            operationLatencies?.run {
-                forEach { latencyInformation ->
-                    if (currentDate - latencyInformation["d"]!! > MAXIMUM_LATENCY_DATA_AGE) {
-                        outdatedLatencies.add(latencyInformation)
-                    }
-                }
-                if (outdatedLatencies.isNotEmpty()) {
-                    removeAll(outdatedLatencies)
-                }
-                if (operationLatencies.isEmpty()) {
-                    latencies.remove(endpoint)
-                }
-            }
+        // remove outdated latencies
+        latencies.forEach { (_, operationLatencies) ->
+            val outdated = operationLatencies.filter { it.isOutdated(date) }
+            operationLatencies -= outdated
         }
+
+        // remove empty latency list
+        latencies.filterValues { it.isNullOrEmpty() }
+            .forEach { (endpoint, _) ->
+                latencies -= endpoint
+            }
     }
 
-    private fun averageLatencyFromData(endpointLatencies: List<Map<String, Double>>): Double {
-        var totalLatency = 0.0
-        endpointLatencies.forEach {
-            it["l"]?.let { l: Double ->
-                totalLatency += l
-            }
-        }
+    private fun averageLatencyFromData(endpointLatencies: List<Latency>): Double {
+        val totalLatency: Double = endpointLatencies.map { it.latency ?: 0.0 }.sum()
         return totalLatency / endpointLatencies.size
     }
 
     @Synchronized
-    internal fun storeLatency(latency: Long, type: PNOperationType) {
+    internal fun storeLatency(latency: Long, type: PNOperationType, currentDate: Long = Date().time) {
         type.queryParam?.let { queryParam: String ->
             if (latency > 0) {
-                val storeDate = Date().time / (TIMESTAMP_DIVIDER.toDouble())
-
+                val storeDate = currentDate / (TIMESTAMP_DIVIDER.toDouble())
                 if (latencies[queryParam] == null) {
                     latencies[queryParam] = ArrayList()
                 }
 
                 latencies[queryParam]?.let {
-                    latencies[queryParam] = it
-
-                    val latencyEntry = java.util.HashMap<String, Double>()
-                    latencyEntry["d"] = storeDate
-                    latencyEntry["l"] = latency.toDouble() / TIMESTAMP_DIVIDER
+                    val latencyEntry = Latency(
+                        date = storeDate,
+                        latency = latency.toDouble() / TIMESTAMP_DIVIDER
+                    )
                     it.add(latencyEntry)
                 }
             }
         }
+    }
+
+    private data class Latency(val latency: Double?, val date: Double?) {
+        fun isOutdated(currentDate: Double) =
+            date?.let { currentDate - it > MAXIMUM_LATENCY_DATA_AGE } ?: true
     }
 }

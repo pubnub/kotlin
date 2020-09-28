@@ -1,6 +1,5 @@
 package com.pubnub.api.legacy
 
-import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubException
 import com.pubnub.api.callbacks.SubscribeCallback
@@ -18,22 +17,15 @@ import java.util.concurrent.Executors
 
 class PubNubTest : BaseTest() {
 
-    lateinit var config: PNConfiguration
-
     override fun onBefore() {
-        config = PNConfiguration().apply {
-            subscribeKey = "demo"
-            publishKey = "demo"
-        }
-    }
-
-    override fun onAfter() {
-        pubnub.destroy()
+        clearConfiguration()
+        initPubNub()
+        config.subscribeKey = "demo"
+        config.publishKey = "demo"
     }
 
     @Test
     fun testCreateSuccess() {
-        pubnub = PubNub(config)
         assertEquals(true, pubnub.configuration.secure)
         assertEquals("https://ps.pndsn.com", pubnub.baseUrl())
     }
@@ -41,7 +33,6 @@ class PubNubTest : BaseTest() {
     @Test
     @Throws(PubNubException::class)
     fun testEncryptCustomKey() {
-        pubnub = PubNub(config)
         assertEquals("iALQtn3PfIXe74CT/wrS7g==", pubnub.encrypt("test1", "cipherKey").trim())
     }
 
@@ -49,14 +40,13 @@ class PubNubTest : BaseTest() {
     @Throws(PubNubException::class)
     fun testEncryptConfigurationKey() {
         config.cipherKey = "cipherKey"
-        pubnub = PubNub(config)
+        initPubNub()
         assertEquals("iALQtn3PfIXe74CT/wrS7g==", pubnub.encrypt("test1").trim())
     }
 
     @Test
     @Throws(PubNubException::class)
     fun testDecryptCustomKey() {
-        pubnub = PubNub(config)
         assertEquals("test1", pubnub.decrypt("iALQtn3PfIXe74CT/wrS7g==", "cipherKey").trim())
     }
 
@@ -64,7 +54,7 @@ class PubNubTest : BaseTest() {
     @Throws(PubNubException::class)
     fun testDecryptConfigurationKey() {
         config.cipherKey = "cipherKey"
-        pubnub = PubNub(config)
+        initPubNub()
         assertEquals("test1", pubnub.decrypt("iALQtn3PfIXe74CT/wrS7g==").trim())
     }
 
@@ -74,7 +64,8 @@ class PubNubTest : BaseTest() {
         config.connectTimeout = 4000
         config.nonSubscribeRequestTimeout = 5000
         config.reconnectionPolicy = PNReconnectionPolicy.NONE
-        pubnub = PubNub(config)
+        initPubNub()
+
         assertEquals("https://ps.pndsn.com", pubnub.baseUrl())
         assertEquals(3000, config.subscribeTimeout)
         assertEquals(4000, config.connectTimeout)
@@ -83,10 +74,9 @@ class PubNubTest : BaseTest() {
 
     @Test
     fun getVersionAndTimeStamp() {
-        pubnub = PubNub(config)
         val version = pubnub.version
         val timeStamp = pubnub.timestamp()
-        assertEquals("5.0.0", version)
+        assertEquals("5.0.1", version)
         assertTrue(timeStamp > 0)
     }
 

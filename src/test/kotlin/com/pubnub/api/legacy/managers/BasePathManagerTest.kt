@@ -1,6 +1,5 @@
 package com.pubnub.api.legacy.managers
 
-import com.pubnub.api.PNConfiguration
 import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.managers.BasePathManager
 import org.junit.Assert.assertEquals
@@ -8,15 +7,14 @@ import org.junit.Test
 
 class BasePathManagerTest : BaseTest() {
 
-    lateinit var config: PNConfiguration
-
     override fun onBefore() {
-        config = PNConfiguration()
+        clearConfiguration()
     }
 
     @Test
     fun stdOriginNotSecure() {
         config.secure = false
+        initPubNub()
         val basePathManager = BasePathManager(config)
         assertEquals("http://ps.pndsn.com", basePathManager.basePath())
     }
@@ -24,6 +22,7 @@ class BasePathManagerTest : BaseTest() {
     @Test
     fun stdOriginSecure() {
         config.secure = true
+        initPubNub()
         val basePathManager = BasePathManager(config)
         assertEquals("https://ps.pndsn.com", basePathManager.basePath())
     }
@@ -32,6 +31,7 @@ class BasePathManagerTest : BaseTest() {
     fun customOriginNotSecure() {
         config.origin = "custom.origin.com"
         config.secure = false
+        initPubNub()
         val basePathManager = BasePathManager(config)
         assertEquals("http://custom.origin.com", basePathManager.basePath())
     }
@@ -40,6 +40,7 @@ class BasePathManagerTest : BaseTest() {
     fun customOriginSecure() {
         config.origin = "custom.origin.com"
         config.secure = true
+        initPubNub()
         val basePathManager = BasePathManager(config)
         assertEquals("https://custom.origin.com", basePathManager.basePath())
     }
@@ -49,6 +50,7 @@ class BasePathManagerTest : BaseTest() {
         config.origin = "custom.origin.com"
         config.cacheBusting = true
         config.secure = false
+        initPubNub()
         val basePathManager = BasePathManager(config)
         assertEquals("http://custom.origin.com", basePathManager.basePath())
     }
@@ -58,6 +60,7 @@ class BasePathManagerTest : BaseTest() {
         config.origin = "custom.origin.com"
         config.secure = true
         config.cacheBusting = true
+        initPubNub()
         val basePathManager = BasePathManager(config)
         assertEquals("https://custom.origin.com", basePathManager.basePath())
     }
@@ -66,6 +69,7 @@ class BasePathManagerTest : BaseTest() {
     fun cacheBustingNotSecure() {
         config.cacheBusting = true
         config.secure = false
+        initPubNub()
         val basePathManager = BasePathManager(config)
         assertEquals("http://ps1.pndsn.com", basePathManager.basePath())
         assertEquals("http://ps2.pndsn.com", basePathManager.basePath())
@@ -93,6 +97,7 @@ class BasePathManagerTest : BaseTest() {
     @Test
     fun cacheBustingSecure() {
         config.cacheBusting = true
+        initPubNub()
         val basePathManager = BasePathManager(config)
         assertEquals("https://ps1.pndsn.com", basePathManager.basePath())
         assertEquals("https://ps2.pndsn.com", basePathManager.basePath())

@@ -12,11 +12,11 @@ import retrofit2.Call
  * @property affectedCall A reference to the affected call. Useful for calling [retry][Endpoint.retry].
  */
 data class PubNubException(
-    var errorMessage: String? = null,
-    var pubnubError: PubNubError? = null,
-    var jso: String? = null,
-    var statusCode: Int = 0,
-    var affectedCall: Call<*>? = null
+    val errorMessage: String? = null,
+    val pubnubError: PubNubError? = null,
+    val jso: String? = null,
+    val statusCode: Int = 0,
+    val affectedCall: Call<*>? = null
 ) : Exception(errorMessage) {
 
     internal constructor(pubnubError: PubNubError) : this(

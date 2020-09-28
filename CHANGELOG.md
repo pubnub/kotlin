@@ -1,8 +1,9 @@
-## [v5.0.0](https://github.com/pubnub/kotlin/releases/tag/v5.0.0)
-August 12 2020
+## [5.0.1](https://github.com/pubnub/kotlin/releases/tag/5.0.1)
+September 28 2020
 
-[Full Changelog](https://github.com/pubnub/kotlin/compare/v1.0.0...v5.0.0)
+[Full Changelog](https://github.com/pubnub/kotlin/compare/v5.0.0...5.0.1)
 
-- PubNub methods will no longer support builder style calls and will use named arguments instead. 
+- Add simplified Objects API support with UUID and Channel metadata / membership management. 
+- Fix crashing Telemetry Manager. 
 
 

@@ -68,7 +68,7 @@ class PubNub(val configuration: PNConfiguration) {
 
     private companion object Constants {
         private const val TIMESTAMP_DIVIDER = 1000
-        private const val SDK_VERSION = "5.0.0"
+        private const val SDK_VERSION = "5.0.1"
         private const val MAX_SEQUENCE = 65535
     }
 
@@ -810,7 +810,7 @@ class PubNub(val configuration: PNConfiguration) {
      *                     Default is `false`.
      * @param includeCustom Include respective additional fields in the response.
      */
-    internal fun getAllChannelMetadata(
+    fun getAllChannelMetadata(
         limit: Int? = null,
         page: PNPage? = null,
         filter: String? = null,
@@ -835,7 +835,7 @@ class PubNub(val configuration: PNConfiguration) {
      * @param channel Channel name.
      * @param includeCustom Include respective additional fields in the response.
      */
-    internal fun getChannelMetadata(channel: String, includeCustom: Boolean = false) = GetChannelMetadata(
+    fun getChannelMetadata(channel: String, includeCustom: Boolean = false) = GetChannelMetadata(
         pubnub = this,
         channel = channel,
         withCustom = ReturningCustom(includeCustom = includeCustom)
@@ -850,7 +850,7 @@ class PubNub(val configuration: PNConfiguration) {
      * @param custom Object with supported data types.
      * @param includeCustom Include respective additional fields in the response.
      */
-    internal fun setChannelMetadata(
+    fun setChannelMetadata(
         channel: String,
         name: String? = null,
         description: String? = null,
@@ -870,7 +870,7 @@ class PubNub(val configuration: PNConfiguration) {
      *
      * @param channel Channel name.
      */
-    internal fun removeChannelMetadata(channel: String) = RemoveChannelMetadata(this, channel = channel)
+    fun removeChannelMetadata(channel: String) = RemoveChannelMetadata(this, channel = channel)
 
     /**
      * Returns a paginated list of UUID Metadata objects, optionally including the custom data object for each.
@@ -890,7 +890,7 @@ class PubNub(val configuration: PNConfiguration) {
      *                     Default is `false`.
      * @param includeCustom Include respective additional fields in the response.
      */
-    internal fun getAllUUIDMetadata(
+    fun getAllUUIDMetadata(
         limit: Int? = null,
         page: PNPage? = null,
         filter: String? = null,
@@ -915,7 +915,7 @@ class PubNub(val configuration: PNConfiguration) {
      * @param uuid Unique user identifier. If not supplied then current user’s uuid is used.
      * @param includeCustom Include respective additional fields in the response.
      */
-    internal fun getUUIDMetadata(
+    fun getUUIDMetadata(
         uuid: String? = null,
         includeCustom: Boolean = false
     ) = GetUUIDMetadata(
@@ -935,7 +935,7 @@ class PubNub(val configuration: PNConfiguration) {
      * @param custom Object with supported data types.
      * @param includeCustom Include respective additional fields in the response.
      */
-    internal fun setUUIDMetadata(
+    fun setUUIDMetadata(
         uuid: String? = null,
         name: String? = null,
         externalId: String? = null,
@@ -959,7 +959,7 @@ class PubNub(val configuration: PNConfiguration) {
      *
      * @param uuid Unique user identifier. If not supplied then current user’s uuid is used.
      */
-    internal fun removeUUIDMetadata(uuid: String? = null) = RemoveUUIDMetadata(pubnub = this, uuid = uuid)
+    fun removeUUIDMetadata(uuid: String? = null) = RemoveUUIDMetadata(pubnub = this, uuid = uuid)
 
     /**
      * The method returns a list of channel memberships for a user. This method doesn't return a user's subscriptions.
@@ -981,7 +981,7 @@ class PubNub(val configuration: PNConfiguration) {
      * @param includeCustom Include respective additional fields in the response.
      * @param includeChannelDetails Include custom fields for channels metadata.
      */
-    internal fun getMemberships(
+    fun getMemberships(
         uuid: String? = null,
         limit: Int? = null,
         page: PNPage? = null,
@@ -1028,7 +1028,7 @@ class PubNub(val configuration: PNConfiguration) {
      * @param includeCustom Include respective additional fields in the response.
      * @param includeChannelDetails Include custom fields for channels metadata.
      */
-    internal fun addMemberships(
+    fun addMemberships(
         channels: List<PNChannelWithCustom>,
         uuid: String? = null,
         limit: Int? = null,
@@ -1076,7 +1076,7 @@ class PubNub(val configuration: PNConfiguration) {
      * @param includeCustom Include respective additional fields in the response.
      * @param includeChannelDetails Include custom fields for channels metadata.
      */
-    internal fun removeMemberships(
+    fun removeMemberships(
         channels: List<String>,
         uuid: String? = null,
         limit: Int? = null,
@@ -1124,7 +1124,7 @@ class PubNub(val configuration: PNConfiguration) {
      * @param includeCustom Include respective additional fields in the response.
      * @param includeUUIDDetails Include custom fields for UUIDs metadata.
      */
-    internal fun getMembers(
+    fun getMembers(
         channel: String,
         limit: Int? = null,
         page: PNPage? = null,
@@ -1171,7 +1171,7 @@ class PubNub(val configuration: PNConfiguration) {
      * @param includeCustom Include respective additional fields in the response.
      * @param includeUUIDDetails Include custom fields for UUIDs metadata.
      */
-    internal fun addMembers(
+    fun addMembers(
         channel: String,
         uuids: List<PNUUIDWithCustom>,
         limit: Int? = null,
@@ -1219,7 +1219,7 @@ class PubNub(val configuration: PNConfiguration) {
      * @param includeCustom Include respective additional fields in the response.
      * @param includeUUIDDetails Include custom fields for UUIDs metadata.
      */
-    internal fun removeMembers(
+    fun removeMembers(
         channel: String,
         uuids: List<String>,
         limit: Int? = null,
@@ -1341,6 +1341,5 @@ class PubNub(val configuration: PNConfiguration) {
     fun forceDestroy() {
         subscriptionManager.destroy(true)
         retrofitManager.destroy(true)
-        telemetryManager.stopCleanUpTimer()
     }
 }

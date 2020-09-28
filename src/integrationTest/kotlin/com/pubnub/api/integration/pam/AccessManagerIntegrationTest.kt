@@ -485,7 +485,8 @@ abstract class AccessManagerIntegrationTest : BaseIntegrationTest() {
                 value = emoji(),
                 messageTimetoken = 1L
             )
-        ).retryForbidden({ requestAccess(WRITE) }) { _, status ->
+        ).asyncRetry { _, status ->
+            requestAccess(WRITE)
             assertAuthKey(status)
             assertUuid(status)
             assertStatusSuccess(status)

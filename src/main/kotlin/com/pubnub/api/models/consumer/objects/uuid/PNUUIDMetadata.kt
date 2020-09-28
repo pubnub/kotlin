@@ -4,11 +4,11 @@ import java.time.Instant
 
 data class PNUUIDMetadata(
     val id: String,
-    val name: String? = null,
+    val name: String?,
     val externalId: String?,
     val profileUrl: String?,
     val email: String?,
     val custom: Any?,
-    val updated: Instant,
-    val eTag: String
+    val updated: Instant?,
+    val eTag: String?
 )

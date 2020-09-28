@@ -96,9 +96,10 @@ class History internal constructor(
                 messages.add(historyItem)
             }
         } else {
-            throw PubNubException(PubNubError.HTTP_ERROR).apply {
+            throw PubNubException(
+                pubnubError = PubNubError.HTTP_ERROR,
                 errorMessage = "History is disabled"
-            }
+            )
         }
 
         return historyData

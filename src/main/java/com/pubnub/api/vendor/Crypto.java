@@ -59,10 +59,13 @@ public class Crypto {
     }
 
     public static PubNubException newCryptoError(int code, Exception exception) {
-        PubNubException pubNubException = new PubNubException();
-        pubNubException.setPubnubError(PubNubError.CRYPTO_ERROR);
-        pubNubException.setErrorMessage(exception.getClass().getSimpleName() + " " + exception.getMessage() + " " + code);
-        return pubNubException;
+        return new PubNubException(
+                exception.getClass().getSimpleName() + " " + exception.getMessage() + " " + code,
+                PubNubError.CRYPTO_ERROR,
+                null,
+                0,
+                null
+        );
     }
 
     public String encrypt(String input) throws PubNubException {

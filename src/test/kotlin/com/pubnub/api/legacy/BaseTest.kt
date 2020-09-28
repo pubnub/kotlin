@@ -16,6 +16,9 @@ abstract class BaseTest {
 
     lateinit var wireMockServer: WireMockServer
     protected lateinit var pubnub: PubNub
+    private set
+    protected lateinit var config: PNConfiguration
+    private set
 
     @Before
     fun beforeEach() {
@@ -26,15 +29,8 @@ abstract class BaseTest {
         )
         wireMockServer.start()
         WireMock.configureFor("http", "localhost", wireMockServer.port())
-        pubnub = PubNub(PNConfiguration().apply {
-            subscribeKey = "mySubscribeKey"
-            publishKey = "myPublishKey"
-            uuid = "myUUID"
-            origin = HttpUrl.parse(wireMockServer.baseUrl())!!.run { "${host()}:${port()}" }
-            secure = false
-            logVerbosity = PNLogVerbosity.BODY
-        })
         DEFAULT_LISTEN_DURATION = 2
+
         onBefore()
     }
 
@@ -46,12 +42,34 @@ abstract class BaseTest {
         }
         assertTrue(wireMockServer.findAllUnmatchedRequests().isEmpty())
         onAfter()
-        pubnub.forceDestroy()
     }
 
     open fun onBefore() {
+        initConfiguration()
+        initPubNub()
     }
 
     open fun onAfter() {
+        pubnub.forceDestroy()
+    }
+
+    fun initConfiguration() {
+        config = PNConfiguration().apply {
+            subscribeKey = "mySubscribeKey"
+            publishKey = "myPublishKey"
+            uuid = "myUUID"
+            origin = HttpUrl.parse(wireMockServer.baseUrl())!!.run { "${host()}:${port()}" }
+            secure = false
+            logVerbosity = PNLogVerbosity.BODY
+        }
+    }
+
+    fun clearConfiguration() {
+        config = PNConfiguration()
+    }
+
+    fun initPubNub() {
+        if (::pubnub.isInitialized) pubnub.destroy()
+        pubnub = PubNub(config)
     }
 }

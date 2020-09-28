@@ -26,6 +26,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 class GrantEndpointTest : BaseTest() {
 
     override fun onBefore() {
+        super.onBefore()
         pubnub.configuration.secretKey = "secretKey"
         pubnub.configuration.includeInstanceIdentifier = true
         pubnub.configuration.includeRequestIdentifier = true
