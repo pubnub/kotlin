@@ -106,7 +106,7 @@ public class Publish extends Endpoint<List<Object>, PNPublishResult> {
         }
 
         if (this.getPubnub().getConfiguration().getCipherKey() != null) {
-            Crypto crypto = new Crypto(this.getPubnub().getConfiguration().getCipherKey());
+            Crypto crypto = new Crypto(this.getPubnub().getConfiguration().getCipherKey(), this.getPubnub().getConfiguration().isUseRandomInitializationVector());
             stringifiedMessage = crypto.encrypt(stringifiedMessage).replace("\n", "");
         }
 

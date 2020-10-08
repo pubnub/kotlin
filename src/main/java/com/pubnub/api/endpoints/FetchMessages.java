@@ -186,7 +186,7 @@ public class FetchMessages extends Endpoint<FetchMessagesEnvelope, PNFetchMessag
             return message;
         }
 
-        Crypto crypto = new Crypto(this.getPubnub().getConfiguration().getCipherKey());
+        Crypto crypto = new Crypto(this.getPubnub().getConfiguration().getCipherKey(), this.getPubnub().getConfiguration().isUseRandomInitializationVector());
         MapperManager mapper = this.getPubnub().getMapper();
         String inputText;
         String outputText;

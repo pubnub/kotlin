@@ -100,7 +100,7 @@ public class SubscribeMessageWorker implements Runnable {
             return input;
         }
 
-        Crypto crypto = new Crypto(pubnub.getConfiguration().getCipherKey());
+        Crypto crypto = new Crypto(pubnub.getConfiguration().getCipherKey(), pubnub.getConfiguration().isUseRandomInitializationVector());
         MapperManager mapper = this.pubnub.getMapper();
         String inputText;
         String outputText;

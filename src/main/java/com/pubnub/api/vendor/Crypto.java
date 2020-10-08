@@ -12,12 +12,14 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.UnsupportedEncodingException;
+import java.nio.Buffer;
 import java.nio.charset.Charset;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.AlgorithmParameterSpec;
+import java.util.Random;
 
 import static com.pubnub.api.vendor.FileEncryptionUtil.CIPHER_TRANSFORMATION;
 import static com.pubnub.api.vendor.FileEncryptionUtil.ENCODING_UTF_8;
@@ -31,9 +33,15 @@ public class Crypto {
     String initializationVector = "0123456789012345";
     String cipherKey;
     boolean INIT = false;
+    boolean dynamicIV = false;
 
     public Crypto(String cipherKey) {
+        this(cipherKey, false);
+    }
+
+    public Crypto(String cipherKey, boolean dynamicIV) {
         this.cipherKey = cipherKey;
+        this.dynamicIV = dynamicIV;
     }
 
     public Crypto(String cipherKey, String customInitializationVector) {
@@ -45,15 +53,21 @@ public class Crypto {
     }
 
     private void initCiphers() throws PubNubException {
-        if (INIT)
+        if (INIT && !dynamicIV)
             return;
         try {
 
             keyBytes = new String(hexEncode(sha256(this.cipherKey.getBytes(ENCODING_UTF_8))), ENCODING_UTF_8)
                     .substring(0, 32)
                     .toLowerCase().getBytes(ENCODING_UTF_8);
-            ivBytes = initializationVector.getBytes(ENCODING_UTF_8);
-            INIT = true;
+            if (dynamicIV){
+                ivBytes = new byte[16];
+                new Random().nextBytes(ivBytes);
+            }
+            else {
+                ivBytes = initializationVector.getBytes(ENCODING_UTF_8);
+                INIT = true;
+            }
         } catch (UnsupportedEncodingException e) {
             throw PubNubException.builder().pubnubError(newCryptoError(11, e.toString())).errormsg(e.getMessage()).build();
         }
@@ -83,7 +97,16 @@ public class Crypto {
             Cipher cipher = null;
             cipher = Cipher.getInstance(CIPHER_TRANSFORMATION);
             cipher.init(Cipher.ENCRYPT_MODE, newKey, ivSpec);
-            return new String(Base64.encode(cipher.doFinal(input.getBytes(ENCODING_UTF_8)), 0), Charset.forName(ENCODING_UTF_8));
+            if (dynamicIV){
+                byte[] outputBytes = input.getBytes(ENCODING_UTF_8);
+                byte[] newOutputBytes = new byte[ivBytes.length+ outputBytes.length];
+                System.arraycopy(ivBytes, 0, newOutputBytes, 0, ivBytes.length);
+                System.arraycopy(outputBytes, 0, newOutputBytes, ivBytes.length, outputBytes.length);
+                return new String(Base64.encode(cipher.doFinal(newOutputBytes), 0), Charset.forName(ENCODING_UTF_8));
+            }
+            else {
+                return new String(Base64.encode(cipher.doFinal(input.getBytes(ENCODING_UTF_8)), 0), Charset.forName(ENCODING_UTF_8));
+            }
         } catch (NoSuchAlgorithmException e) {
             throw PubNubException.builder().errormsg(e.toString()).build();
         } catch (NoSuchPaddingException e) {
@@ -111,12 +134,23 @@ public class Crypto {
      */
     public String decrypt(String cipher_text) throws PubNubException {
         try {
+            byte[] dataBytes = null;
             initCiphers();
+            if (dynamicIV){
+                dataBytes = Base64.decode(cipher_text, 0);
+                System.arraycopy(dataBytes, 0, ivBytes, 0, 16);
+                byte[] receivedCipherBytes = new byte[dataBytes.length - 16];
+                System.arraycopy(dataBytes, 16, receivedCipherBytes, 0, dataBytes.length-16);
+                dataBytes = receivedCipherBytes;
+            }
+            else {
+                dataBytes = Base64.decode(cipher_text, 0);
+            }
             AlgorithmParameterSpec ivSpec = new IvParameterSpec(ivBytes);
             SecretKeySpec newKey = new SecretKeySpec(keyBytes, "AES");
             Cipher cipher = Cipher.getInstance(CIPHER_TRANSFORMATION);
             cipher.init(Cipher.DECRYPT_MODE, newKey, ivSpec);
-            return new String(cipher.doFinal(Base64.decode(cipher_text, 0)), ENCODING_UTF_8);
+            return new String(cipher.doFinal(dataBytes), ENCODING_UTF_8);
         } catch (IllegalArgumentException e) {
             throw PubNubException.builder().errormsg(e.toString()).build();
         } catch (UnsupportedEncodingException e) {

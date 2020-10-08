@@ -1,3 +1,10 @@
+## [v4.33.2](https://github.com/pubnub/java/releases/tag/v4.33.2)
+October-08-2020
+
+[Full Changelog](https://github.com/pubnub/java/compare/v4.33.1...v4.33.2)
+
+- 🐛 To improve security of messages, added support for random initialization vector to encrypt and decrypt messages. 
+
 ## [v4.33.1](https://github.com/pubnub/java/releases/tag/v4.33.1)
 September-24-2020
 

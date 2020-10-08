@@ -187,6 +187,8 @@ public class PNConfiguration {
     private boolean dedupOnSubscribe;
     @Setter
     private Integer maximumMessagesCacheSize;
+    @Setter
+    private boolean useRandomInitializationVector;
 
     /**
      * Initialize the PNConfiguration with default values
@@ -218,6 +220,7 @@ public class PNConfiguration {
         dedupOnSubscribe = false;
         suppressLeaveEvents = false;
         maximumMessagesCacheSize = DEFAULT_DEDUPE_SIZE;
+        useRandomInitializationVector = false;
     }
 
     /**

@@ -87,7 +87,7 @@ public class PublishFileMessage extends Endpoint<List<Object>, PNPublishFileMess
         String stringifiedMessage = mapper.toJsonUsinJackson(new FileUploadNotification(this.message, pnFile));
         String messageAsString;
         if (getPubnub().getConfiguration().getCipherKey() != null) {
-            Crypto crypto = new Crypto(getPubnub().getConfiguration().getCipherKey());
+            Crypto crypto = new Crypto(getPubnub().getConfiguration().getCipherKey(), getPubnub().getConfiguration().isUseRandomInitializationVector());
             messageAsString = "\"".concat(crypto.encrypt(stringifiedMessage)).concat("\"");
         } else {
             messageAsString = PubNubUtil.urlEncode(stringifiedMessage);

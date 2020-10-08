@@ -171,7 +171,7 @@ public class History extends Endpoint<JsonElement, PNHistoryResult> {
             return message;
         }
 
-        Crypto crypto = new Crypto(this.getPubnub().getConfiguration().getCipherKey());
+        Crypto crypto = new Crypto(this.getPubnub().getConfiguration().getCipherKey(), this.getPubnub().getConfiguration().isUseRandomInitializationVector());
         MapperManager mapper = getPubnub().getMapper();
         String inputText;
         String outputText;

@@ -92,7 +92,7 @@ public class PubNub {
     private static final int TIMESTAMP_DIVIDER = 1000;
     private static final int MAX_SEQUENCE = 65535;
 
-    private static final String SDK_VERSION = "4.33.1";
+    private static final String SDK_VERSION = "4.33.2";
 
     public PubNub(@NotNull PNConfiguration initialConfig) {
         this.configuration = initialConfig;
@@ -410,8 +410,8 @@ public class PubNub {
         if (inputString == null) {
             throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_INVALID_ARGUMENTS).build();
         }
-
-        return new Crypto(cipherKey).decrypt(inputString);
+        boolean dynamicIV = this.getConfiguration().isUseRandomInitializationVector();
+        return new Crypto(cipherKey, dynamicIV).decrypt(inputString);
     }
 
     public InputStream decryptInputStream(InputStream inputStream) throws PubNubException {
@@ -451,7 +451,8 @@ public class PubNub {
             throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_INVALID_ARGUMENTS).build();
         }
 
-        return new Crypto(cipherKey).encrypt(inputString);
+        boolean dynamicIV = this.getConfiguration().isUseRandomInitializationVector();
+        return new Crypto(cipherKey, dynamicIV).encrypt(inputString);
     }
 
     public InputStream encryptInputStream(InputStream inputStream) throws PubNubException {
