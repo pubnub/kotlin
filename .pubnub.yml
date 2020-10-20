@@ -1,12 +1,19 @@
 name: kotlin
-version: 5.0.1
+version: 5.0.2
 schema: 1
 scm: github.com/pubnub/kotlin
 files:
-  - build/libs/pubnub-kotlin-5.0.1-all.jar
+  - build/libs/pubnub-kotlin-5.0.2-all.jar
 changelog:
   -
-    version: 5.0.1
+    version: v5.0.2
+    date: 2020-10-20
+    changes:
+      -
+        type: bug
+        text: "Remove Instant to improve Android version compatibility."
+  -
+    version: 5.0.2
     date: 2020-09-28
     changes:
       -

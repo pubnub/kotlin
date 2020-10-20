@@ -22,7 +22,6 @@ import org.json.JSONObject
 import retrofit2.Converter
 import retrofit2.converter.gson.GsonConverterFactory
 import java.lang.reflect.Type
-import java.time.Instant
 
 class MapperManager {
 
@@ -50,26 +49,12 @@ class MapperManager {
             }
         }
 
-        val instantAdapter = object : TypeAdapter<Instant>() {
-            override fun write(out: JsonWriter, value: Instant) {
-                out.value(value.toString())
-            }
-
-            override fun read(_in: JsonReader): Instant {
-                return when (val peek: JsonToken = _in.peek()) {
-                    JsonToken.STRING -> Instant.parse(_in.nextString())
-                    else -> throw IllegalStateException("Expected STRING but was $peek")
-                }
-            }
-        }.nullSafe()
-
         objectMapper = GsonBuilder()
             .registerTypeAdapter(Boolean::class.javaObjectType, booleanAsIntAdapter)
             .registerTypeAdapter(Boolean::class.javaPrimitiveType, booleanAsIntAdapter)
             .registerTypeAdapter(Boolean::class.java, booleanAsIntAdapter)
             .registerTypeAdapter(JSONObject::class.java, JSONObjectAdapter())
             .registerTypeAdapter(JSONArray::class.java, JSONArrayAdapter())
-            .registerTypeAdapter(Instant::class.java, instantAdapter)
             .create()
         converterFactory = GsonConverterFactory.create(objectMapper)
     }

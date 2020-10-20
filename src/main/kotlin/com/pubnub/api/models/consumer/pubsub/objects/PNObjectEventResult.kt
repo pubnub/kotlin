@@ -8,7 +8,6 @@ import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
 import com.pubnub.api.models.consumer.pubsub.BasePubSubResult
 import com.pubnub.api.utils.PolymorphicDeserializer
 import com.pubnub.api.utils.UnwrapSingleField
-import java.time.Instant
 
 data class PNObjectEventResult(
     val result: BasePubSubResult,
@@ -93,7 +92,7 @@ data class PNSetMembershipEvent(
     @JsonAdapter(UnwrapSingleField::class)
     val uuid: String,
     val eTag: String,
-    val updated: Instant
+    val updated: String
 )
 
 data class PNDeleteMembershipEvent(

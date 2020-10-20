@@ -1,7 +1,5 @@
 package com.pubnub.api.models.consumer.objects.uuid
 
-import java.time.Instant
-
 data class PNUUIDMetadata(
     val id: String,
     val name: String?,
@@ -9,6 +7,6 @@ data class PNUUIDMetadata(
     val profileUrl: String?,
     val email: String?,
     val custom: Any?,
-    val updated: Instant?,
+    val updated: String?,
     val eTag: String?
 )
