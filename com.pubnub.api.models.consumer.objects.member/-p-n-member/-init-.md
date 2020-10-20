@@ -2,4 +2,4 @@
 
 # &lt;init&gt;
 
-`PNMember(uuid: `[`PNUUIDMetadata`](../../com.pubnub.api.models.consumer.objects.uuid/-p-n-u-u-i-d-metadata/index.md)`?, custom: `[`Any`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)`? = null, updated: Instant, eTag: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`)`
+`PNMember(uuid: `[`PNUUIDMetadata`](../../com.pubnub.api.models.consumer.objects.uuid/-p-n-u-u-i-d-metadata/index.md)`?, custom: `[`Any`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)`? = null, updated: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`, eTag: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`)`

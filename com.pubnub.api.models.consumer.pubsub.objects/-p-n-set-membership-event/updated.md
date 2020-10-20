@@ -2,4 +2,4 @@
 
 # updated
 
-`val updated: Instant`
+`val updated: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
