@@ -12,7 +12,6 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.UnsupportedEncodingException;
-import java.nio.Buffer;
 import java.nio.charset.Charset;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -97,12 +96,12 @@ public class Crypto {
             Cipher cipher = null;
             cipher = Cipher.getInstance(CIPHER_TRANSFORMATION);
             cipher.init(Cipher.ENCRYPT_MODE, newKey, ivSpec);
-            if (dynamicIV){
-                byte[] outputBytes = input.getBytes(ENCODING_UTF_8);
-                byte[] newOutputBytes = new byte[ivBytes.length+ outputBytes.length];
-                System.arraycopy(ivBytes, 0, newOutputBytes, 0, ivBytes.length);
-                System.arraycopy(outputBytes, 0, newOutputBytes, ivBytes.length, outputBytes.length);
-                return new String(Base64.encode(cipher.doFinal(newOutputBytes), 0), Charset.forName(ENCODING_UTF_8));
+            if (dynamicIV) {
+                byte[] encrypted = cipher.doFinal(input.getBytes(ENCODING_UTF_8));
+                byte[] encryptedWithIV = new byte[ivBytes.length + encrypted.length];
+                System.arraycopy(ivBytes, 0, encryptedWithIV, 0, ivBytes.length);
+                System.arraycopy(encrypted, 0, encryptedWithIV, ivBytes.length, encrypted.length);
+                return new String(Base64.encode(encryptedWithIV, 0), Charset.forName(ENCODING_UTF_8));
             }
             else {
                 return new String(Base64.encode(cipher.doFinal(input.getBytes(ENCODING_UTF_8)), 0), Charset.forName(ENCODING_UTF_8));

@@ -341,6 +341,11 @@ public final class PubNubErrorBuilder {
      */
     public static final int PNERR_PAGINATION_PREV_OUT_OF_BOUNDS = 166;
 
+    /**
+     * Payload too large
+     */
+    public static final int PNERR_PAYLOAD_TOO_LARGE = 167;
+
     // Error Objects
     public static final PubNubError PNERROBJ_TIMEOUT = PubNubError.builder()
             .errorCode(PNERR_TIMEOUT)
@@ -678,6 +683,11 @@ public final class PubNubErrorBuilder {
     public static final PubNubError PNERROBJ_PAGINATION_PREV_OUT_OF_BOUNDS = PubNubError.builder()
             .errorCode(PNERR_PAGINATION_PREV_OUT_OF_BOUNDS)
             .message("No pages to load before first one.")
+            .build();
+
+    public static final PubNubError PNERROBJ_PAYLOAD_TOO_LARGE = PubNubError.builder()
+            .errorCode(PNERR_PAYLOAD_TOO_LARGE)
+            .message("Payload too large.")
             .build();
 
     private PubNubErrorBuilder() {

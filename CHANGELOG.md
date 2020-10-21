@@ -1,3 +1,12 @@
+## [v4.33.3](https://github.com/pubnub/java/releases/tag/v4.33.3)
+October-21-2020
+
+[Full Changelog](https://github.com/pubnub/java/compare/v4.33.2...v4.33.3)
+
+- 🐛 Improved handling of random initialization vector for encrypting messages. 
+- 🐛 Restore Android compatibility for Gradle 3.X by removing Stringjoin(). 
+- 🐛 Return appropriate error information when payload is too large. 
+
 ## [v4.33.2](https://github.com/pubnub/java/releases/tag/v4.33.2)
 October-08-2020
 

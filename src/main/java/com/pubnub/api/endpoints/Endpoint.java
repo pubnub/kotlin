@@ -109,13 +109,7 @@ public abstract class Endpoint<Input, Output> implements RemoteAction<Output> {
                 responseBody = null;
             }
 
-            throw PubNubException.builder()
-                    .pubnubError(PubNubErrorBuilder.PNERROBJ_HTTP_ERROR)
-                    .errormsg(responseBodyText)
-                    .jso(responseBody)
-                    .statusCode(serverResponse.code())
-                    .affectedCall(call)
-                    .build();
+            throw createPubNubException(serverResponse, responseBodyText, responseBody);
         }
 
         storeRequestLatency(serverResponse, getOperationType());
@@ -170,12 +164,7 @@ public abstract class Endpoint<Input, Output> implements RemoteAction<Output> {
                     }
 
                     PNStatusCategory pnStatusCategory = PNStatusCategory.PNUnknownCategory;
-                    PubNubException ex = PubNubException.builder()
-                            .pubnubError(PubNubErrorBuilder.PNERROBJ_HTTP_ERROR)
-                            .errormsg(responseBodyText)
-                            .jso(responseBody)
-                            .statusCode(response.code())
-                            .build();
+                    final PubNubException ex = createPubNubException(response, responseBodyText, responseBody);
 
                     if (response.code() == HttpURLConnection.HTTP_FORBIDDEN) {
                         pnStatusCategory = PNStatusCategory.PNAccessDeniedCategory;
@@ -264,6 +253,29 @@ public abstract class Endpoint<Input, Output> implements RemoteAction<Output> {
 
             }
         });
+    }
+
+    private PubNubException createPubNubException(Response<Input> response,
+                                                  String responseBodyText,
+                                                  JsonElement responseBody) {
+        if (response.code() == HttpURLConnection.HTTP_ENTITY_TOO_LARGE
+                || response.code() == HttpURLConnection.HTTP_REQ_TOO_LONG) {
+            return PubNubException.builder()
+                    .pubnubError(PubNubErrorBuilder.PNERROBJ_PAYLOAD_TOO_LARGE)
+                    .affectedCall(call)
+                    .statusCode(response.code())
+                    .jso(responseBody)
+                    .errormsg(PubNubErrorBuilder.PNERROBJ_PAYLOAD_TOO_LARGE.getMessage())
+                    .build();
+        }
+
+        return PubNubException.builder()
+                .pubnubError(PubNubErrorBuilder.PNERROBJ_HTTP_ERROR)
+                .errormsg(responseBodyText)
+                .jso(responseBody)
+                .statusCode(response.code())
+                .affectedCall(call)
+                .build();
     }
 
     @Override

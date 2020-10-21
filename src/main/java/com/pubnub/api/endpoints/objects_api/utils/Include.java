@@ -3,7 +3,9 @@ package com.pubnub.api.endpoints.objects_api.utils;
 import com.pubnub.api.endpoints.Endpoint;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -90,8 +92,21 @@ public class Include implements ParameterEnricher {
     public Map<String, String> enrichParameters(Map<String, String> baseParams) {
         final Map<String, String> enrichedMap = new HashMap<>(baseParams);
         if (!inclusionFlags.isEmpty()) {
-            enrichedMap.put(INCLUDE_PARAM_NAME, String.join(",", inclusionFlags));
+            enrichedMap.put(INCLUDE_PARAM_NAME, join(inclusionFlags));
         }
         return enrichedMap;
+    }
+
+    private String join(Collection<String> values) {
+        final StringBuilder builder = new StringBuilder();
+        Iterator<String> flagsIterator = values.iterator();
+
+        while (flagsIterator.hasNext()) {
+            builder.append(flagsIterator.next());
+            if (flagsIterator.hasNext()) {
+                builder.append(",");
+            }
+        }
+        return builder.toString();
     }
 }
