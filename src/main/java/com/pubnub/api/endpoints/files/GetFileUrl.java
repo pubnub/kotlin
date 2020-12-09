@@ -131,7 +131,7 @@ public class GetFileUrl extends Endpoint<ResponseBody, PNFileUrlResult> {
 
     @Override
     protected boolean isAuthRequired() {
-        return false;
+        return true;
     }
 
     public static class Builder extends ChannelFileNameFileIdBuilder<GetFileUrl> {

@@ -1,10 +1,21 @@
 name: java
-version: 4.33.3
+version: 4.35.0
 schema: 1
 scm: github.com/pubnub/java
 files:
-  - build/libs/pubnub-gson-4.33.3-all.jar
+  - build/libs/pubnub-gson-4.35.0-all.jar
 changelog:
+  - version: v4.35.0
+    date: 2020-11-24
+    changes:
+      - type: feature
+        text: "Support for fileMessagePublishRetryLimit."
+      - type: bug
+        text: "Enable SDK users either to ignore PNAccessDeniedCategoryError occurred inside Subscription Loop or to react to in inside status callback."
+      - type: bug
+        text: "Report proper error message when upload file too large."
+      - type: bug
+        text: "Add missing auth and signature in generated URLs."
   - version: v4.33.3
     date: 2020-10-21
     changes:

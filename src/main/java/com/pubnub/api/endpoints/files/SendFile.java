@@ -11,6 +11,8 @@ import com.pubnub.api.endpoints.files.requiredparambuilder.FilesBuilderSteps.Inp
 import com.pubnub.api.endpoints.remoteaction.ComposableRemoteAction;
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.endpoints.remoteaction.RemoteAction;
+import com.pubnub.api.endpoints.remoteaction.RetryingRemoteAction;
+import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.TelemetryManager;
 import com.pubnub.api.models.consumer.PNErrorData;
@@ -19,6 +21,7 @@ import com.pubnub.api.models.consumer.files.PNBaseFile;
 import com.pubnub.api.models.consumer.files.PNFileUploadResult;
 import com.pubnub.api.models.consumer.files.PNPublishFileMessageResult;
 import com.pubnub.api.models.server.files.FileUploadRequestDetails;
+import lombok.Data;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
@@ -36,6 +39,7 @@ public class SendFile implements RemoteAction<PNFileUploadResult> {
     private final String fileName;
     private final InputStream inputStream;
     private final ExecutorService executorService;
+    private final int fileMessagePublishRetryLimit;
     @Setter
     private Object message;
     @Setter
@@ -47,17 +51,17 @@ public class SendFile implements RemoteAction<PNFileUploadResult> {
     @Setter
     private String cipherKey;
 
-    SendFile(String channel,
-             String fileName,
-             InputStream inputStream,
+    SendFile(Builder.SendFileRequiredParams requiredParams,
              GenerateUploadUrl.Factory generateUploadUrlFactory,
              ChannelStep<FileNameStep<FileIdStep<PublishFileMessage>>> publishFileMessageBuilder,
              UploadFile.Factory sendFileToS3Factory,
-             ExecutorService executorService) {
-        this.channel = channel;
-        this.fileName = fileName;
-        this.inputStream = inputStream;
+             ExecutorService executorService,
+             int fileMessagePublishRetryLimit) {
+        this.channel = requiredParams.channel();
+        this.fileName = requiredParams.fileName();
+        this.inputStream = requiredParams.inputStream();
         this.executorService = executorService;
+        this.fileMessagePublishRetryLimit = fileMessagePublishRetryLimit;
         this.sendFileMultistepAction = sendFileComposedActions(
                 generateUploadUrlFactory,
                 publishFileMessageBuilder,
@@ -113,14 +117,27 @@ public class SendFile implements RemoteAction<PNFileUploadResult> {
                     return sendToS3(res, sendFileToS3Factory);
                 })
                 .checkpoint()
-                .then(res -> publishFileMessageBuilder.channel(channel)
-                        .fileName(result.get().getData().getName())
-                        .fileId(result.get().getData().getId())
-                        .message(message)
-                        .meta(meta)
-                        .ttl(ttl)
-                        .shouldStore(shouldStore))
+                .then(res -> autoRetry(publishFileMessage(publishFileMessageBuilder, result),
+                        fileMessagePublishRetryLimit))
                 .then(res -> mapPublishFileMessageToFileUpload(result, res));
+    }
+
+    private PublishFileMessage publishFileMessage(ChannelStep<FileNameStep<FileIdStep<PublishFileMessage>>> publishFileMessageBuilder,
+                                                  AtomicReference<FileUploadRequestDetails> result) {
+        return publishFileMessageBuilder.channel(channel)
+                .fileName(result.get().getData().getName())
+                .fileId(result.get().getData().getId())
+                .message(message)
+                .meta(meta)
+                .ttl(ttl)
+                .shouldStore(shouldStore);
+    }
+
+    private <T> RemoteAction<T> autoRetry(RemoteAction<T> remoteAction, int maxNumberOfRetries) {
+        return RetryingRemoteAction.autoRetry(remoteAction,
+                maxNumberOfRetries,
+                PNOperationType.PNFileAction,
+                executorService);
     }
 
     @NotNull
@@ -177,6 +194,7 @@ public class SendFile implements RemoteAction<PNFileUploadResult> {
                 ChannelStep<FileNameStep<InputStreamStep<SendFile>>>,
                 FileNameStep<InputStreamStep<SendFile>>,
                 InputStreamStep<SendFile> {
+            private final PubNub pubnub;
             private final RetrofitManager retrofit;
             private String channelValue;
             private String fileNameValue;
@@ -187,6 +205,7 @@ public class SendFile implements RemoteAction<PNFileUploadResult> {
             private InnerBuilder(PubNub pubnub,
                                  TelemetryManager telemetry,
                                  RetrofitManager retrofit) {
+                this.pubnub = pubnub;
                 this.retrofit = retrofit;
                 this.publishFileMessageBuilder = PublishFileMessage.builder(pubnub, telemetry, retrofit);
                 this.uploadFileFactory = new UploadFile.Factory(pubnub, retrofit);
@@ -207,14 +226,20 @@ public class SendFile implements RemoteAction<PNFileUploadResult> {
 
             @Override
             public SendFile inputStream(InputStream inputStream) {
-                return new SendFile(channelValue,
-                        fileNameValue,
-                        inputStream,
+                return new SendFile(new SendFileRequiredParams(channelValue, fileNameValue, inputStream),
                         generateUploadUrlFactory,
                         publishFileMessageBuilder,
                         uploadFileFactory,
-                        retrofit.getTransactionClientExecutorService());
+                        retrofit.getTransactionClientExecutorService(),
+                        pubnub.getConfiguration().getFileMessagePublishRetryLimit());
             }
+        }
+
+        @Data
+        public static class SendFileRequiredParams {
+            private final String channel;
+            private final String fileName;
+            private final InputStream inputStream;
         }
     }
 

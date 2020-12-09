@@ -318,7 +318,7 @@ public abstract class Endpoint<Input, Output> implements RemoteAction<Output> {
             pnStatus.tlsEnabled(response.raw().request().url().isHttps());
             pnStatus.origin(response.raw().request().url().host());
             pnStatus.uuid(response.raw().request().url().queryParameter("uuid"));
-            pnStatus.authKey(response.raw().request().url().queryParameter("auth"));
+            pnStatus.authKey(response.raw().request().url().queryParameter(PubNubUtil.AUTH_QUERY_PARAM_NAME));
             pnStatus.clientRequest(response.raw().request());
         }
 
@@ -367,7 +367,7 @@ public abstract class Endpoint<Input, Output> implements RemoteAction<Output> {
 
         // add the auth key for publish and subscribe.
         if (this.pubnub.getConfiguration().getAuthKey() != null && isAuthRequired()) {
-            params.put("auth", pubnub.getConfiguration().getAuthKey());
+            params.put(PubNubUtil.AUTH_QUERY_PARAM_NAME, pubnub.getConfiguration().getAuthKey());
         }
 
         if (this.telemetryManager != null) {
@@ -379,8 +379,8 @@ public abstract class Endpoint<Input, Output> implements RemoteAction<Output> {
 
     protected Map<String, String> encodeParams(Map<String, String> params) {
         Map<String, String> encodedParams = new HashMap<>(params);
-        if (encodedParams.containsKey("auth")) {
-            encodedParams.put("auth", PubNubUtil.urlEncode(encodedParams.get("auth")));
+        if (encodedParams.containsKey(PubNubUtil.AUTH_QUERY_PARAM_NAME)) {
+            encodedParams.put(PubNubUtil.AUTH_QUERY_PARAM_NAME, PubNubUtil.urlEncode(encodedParams.get(PubNubUtil.AUTH_QUERY_PARAM_NAME)));
         }
         return encodedParams;
     }

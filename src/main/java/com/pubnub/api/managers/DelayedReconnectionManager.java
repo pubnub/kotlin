@@ -20,7 +20,7 @@ public class DelayedReconnectionManager {
     /**
      * Timer for heartbeat operations.
      */
-    protected Timer timer;
+    private Timer timer;
 
     public DelayedReconnectionManager(PubNub pubnub) {
         this.pubnub = pubnub;
@@ -28,7 +28,7 @@ public class DelayedReconnectionManager {
     }
 
     public void scheduleDelayedReconnection() {
-        stopHeartbeatTimer();
+        stop();
         if (isReconnectionPolicyUndefined()) {
             return;
         }
@@ -46,7 +46,7 @@ public class DelayedReconnectionManager {
         this.callback = reconnectionCallback;
     }
 
-    private void stopHeartbeatTimer() {
+    void stop() {
         if (timer != null) {
             timer.cancel();
             timer = null;
@@ -62,7 +62,7 @@ public class DelayedReconnectionManager {
     }
 
     private void callTime() {
-        stopHeartbeatTimer();
+        stop();
         callback.onReconnection();
     }
 }

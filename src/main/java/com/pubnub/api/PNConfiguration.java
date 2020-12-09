@@ -35,6 +35,7 @@ public class PNConfiguration {
     private static final int NON_SUBSCRIBE_REQUEST_TIMEOUT = 10;
     private static final int SUBSCRIBE_TIMEOUT = 310;
     private static final int CONNECT_TIMEOUT = 5;
+    private static final int FILE_MESSAGE_PUBLISH_RETRY_LIMIT = 5;
 
     @Getter
     private SSLSocketFactory sslSocketFactory;
@@ -190,6 +191,9 @@ public class PNConfiguration {
     @Setter
     private boolean useRandomInitializationVector;
 
+    @Setter
+    private int fileMessagePublishRetryLimit;
+
     /**
      * Initialize the PNConfiguration with default values
      */
@@ -221,6 +225,7 @@ public class PNConfiguration {
         suppressLeaveEvents = false;
         maximumMessagesCacheSize = DEFAULT_DEDUPE_SIZE;
         useRandomInitializationVector = false;
+        fileMessagePublishRetryLimit = FILE_MESSAGE_PUBLISH_RETRY_LIMIT;
     }
 
     /**

@@ -20,10 +20,16 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 import retrofit2.Call;
 import retrofit2.Response;
 
 import javax.net.ssl.SSLException;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -231,19 +237,31 @@ class UploadFile implements RemoteAction<Void> {
     }
 
     private PubNubException createException(Response<Void> response) {
-        String responseBodyText;
-
         try {
-            responseBodyText = response.errorBody().string();
-        } catch (IOException e) {
-            responseBodyText = "N/A";
-        }
+            String responseBodyText = "N/A";
+            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            Document doc = dBuilder.parse(response.errorBody().byteStream());
+            doc.getDocumentElement().normalize();
+            NodeList elements = doc.getElementsByTagName("Message");
+            for (int i = 0; i < elements.getLength(); i++) {
+                responseBodyText = elements.item(0).getFirstChild().getNodeValue();
+            }
 
-        return PubNubException.builder()
-                .pubnubError(PubNubErrorBuilder.PNERROBJ_HTTP_ERROR)
-                .errormsg(responseBodyText)
-                .statusCode(response.code())
-                .build();
+            return PubNubException.builder()
+                    .pubnubError(PubNubErrorBuilder.PNERROBJ_HTTP_ERROR)
+                    .errormsg(responseBodyText)
+                    .affectedCall(call)
+                    .statusCode(response.code())
+                    .build();
+        } catch (IOException | ParserConfigurationException | SAXException | NullPointerException e) {
+            return PubNubException.builder()
+                    .pubnubError(PubNubErrorBuilder.PNERROBJ_HTTP_ERROR)
+                    .errormsg(e.getMessage())
+                    .affectedCall(call)
+                    .statusCode(response.code())
+                    .build();
+        }
     }
 
     private PNStatus createStatusResponse(PNStatusCategory category, Response<Void> response, Exception throwable) {

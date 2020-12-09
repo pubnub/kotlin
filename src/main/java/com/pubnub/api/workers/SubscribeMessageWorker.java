@@ -3,6 +3,7 @@ package com.pubnub.api.workers;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.pubnub.api.PNConfiguration;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.PubNubUtil;
@@ -15,12 +16,12 @@ import com.pubnub.api.models.consumer.PNErrorData;
 import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.files.PNDownloadableFile;
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction;
-import com.pubnub.api.models.consumer.objects_api.channel.PNChannelMetadataResult;
-import com.pubnub.api.models.consumer.objects_api.membership.PNMembershipResult;
-import com.pubnub.api.models.consumer.objects_api.uuid.PNUUIDMetadataResult;
 import com.pubnub.api.models.consumer.objects_api.channel.PNChannelMetadata;
+import com.pubnub.api.models.consumer.objects_api.channel.PNChannelMetadataResult;
 import com.pubnub.api.models.consumer.objects_api.membership.PNMembership;
+import com.pubnub.api.models.consumer.objects_api.membership.PNMembershipResult;
 import com.pubnub.api.models.consumer.objects_api.uuid.PNUUIDMetadata;
+import com.pubnub.api.models.consumer.objects_api.uuid.PNUUIDMetadataResult;
 import com.pubnub.api.models.consumer.pubsub.BasePubSubResult;
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
@@ -37,6 +38,7 @@ import com.pubnub.api.vendor.Crypto;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -100,7 +102,8 @@ public class SubscribeMessageWorker implements Runnable {
             return input;
         }
 
-        Crypto crypto = new Crypto(pubnub.getConfiguration().getCipherKey(), pubnub.getConfiguration().isUseRandomInitializationVector());
+        Crypto crypto = new Crypto(pubnub.getConfiguration().getCipherKey(),
+                pubnub.getConfiguration().isUseRandomInitializationVector());
         MapperManager mapper = this.pubnub.getMapper();
         String inputText;
         String outputText;
@@ -281,16 +284,51 @@ public class SubscribeMessageWorker implements Runnable {
 
         }
     }
+
     @SuppressWarnings("RegExpRedundantEscape")
     private final String formatFriendlyGetFileUrl = "%s" + FilesService.GET_FILE_URL.replaceAll("\\{.*?\\}", "%s");
 
     private String buildFileUrl(String channel, String fileId, String fileName) {
-        return String.format(formatFriendlyGetFileUrl,
+        String basePath = String.format(formatFriendlyGetFileUrl,
                 pubnub.getBaseUrl(),
                 pubnub.getConfiguration().getSubscribeKey(),
                 channel,
                 fileId,
                 fileName);
+
+        ArrayList<String> queryParams = new ArrayList<>();
+        String authKey = pubnub.getConfiguration().getAuthKey();
+
+        if (PubNubUtil.shouldSignRequest(pubnub.getConfiguration())) {
+            int timestamp = pubnub.getTimestamp();
+            String signature = generateSignature(pubnub.getConfiguration(), basePath, authKey, timestamp);
+            queryParams.add(PubNubUtil.TIMESTAMP_QUERY_PARAM_NAME + "=" + timestamp);
+            queryParams.add(PubNubUtil.SIGNATURE_QUERY_PARAM_NAME + "=" + signature);
+        }
+
+        if (authKey != null) {
+            queryParams.add(PubNubUtil.AUTH_QUERY_PARAM_NAME + "=" + authKey);
+        }
+
+        if (queryParams.isEmpty()) {
+            return basePath;
+        } else {
+            return basePath + "?" + PubNubUtil.joinString(queryParams, "&");
+        }
+    }
+
+    private String generateSignature(PNConfiguration configuration, String url, String authKey, int timestamp) {
+        HashMap<String, String> queryParams = new HashMap<>();
+        if (authKey != null) {
+            queryParams.put("auth", authKey);
+        }
+        return PubNubUtil.generateSignature(configuration,
+                url,
+                queryParams,
+                "get",
+                null,
+                timestamp
+        );
     }
 
     private boolean canHandleObjectCallback(final ObjectPayload objectPayload) {

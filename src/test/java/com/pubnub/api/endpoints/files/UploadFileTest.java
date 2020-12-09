@@ -5,7 +5,9 @@ import com.pubnub.api.models.server.files.FormField;
 import com.pubnub.api.services.S3Service;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
+import okhttp3.ResponseBody;
 import org.jetbrains.annotations.NotNull;
+import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -17,14 +19,19 @@ import retrofit2.Response;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
+import java.util.Scanner;
 import java.util.function.Supplier;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class UploadFileTest implements TestsWithFiles {
     private final S3Service s3Service = mock(S3Service.class);
@@ -35,6 +42,15 @@ public class UploadFileTest implements TestsWithFiles {
         return invocation -> {
             final Call<T> mockCall = mock(Call.class);
             when(mockCall.execute()).thenAnswer(blockInvocation -> Response.success(block.get()));
+            return mockCall;
+        };
+    }
+
+    @NotNull
+    protected static <T extends String> Answer<Call<T>> mockRetrofitErrorCall(final Supplier<T> block) {
+        return invocation -> {
+            final Call<T> mockCall = mock(Call.class);
+            when(mockCall.execute()).thenAnswer(blockInvocation -> Response.error(400, ResponseBody.create(MediaType.get("application/xml"), block.get())));
             return mockCall;
         };
     }
@@ -130,6 +146,38 @@ public class UploadFileTest implements TestsWithFiles {
         assertPartExist("file", capturedBody.parts());
         MultipartBody.Part filePart = getPart("file", capturedBody.parts());
         assertEquals(MediaType.get("application/octet-stream"), filePart.body().contentType());
+    }
+
+    @Test
+    public void errorMessageIsCopiedFromS3XMLResponse() throws IOException{
+        //given
+        File file = getTemporaryFile("file.txt");
+        try (FileInputStream fileInputStream = new FileInputStream(file)) {
+            UploadFile uploadFile = new UploadFile(s3Service,
+                    file.getName(),
+                    fileInputStream,
+                    null,
+                    new FormField("key", "keyValue"),
+                    Collections.emptyList(),
+                    "https://s3.aws.com/bucket"
+            );
+
+            when(s3Service.upload(any(), any())).then(mockRetrofitErrorCall(() -> readToString(UploadFileTest.class.getResourceAsStream("/entityTooLarge.xml"))));
+
+            //when
+            try {
+                uploadFile.sync();
+                Assert.fail("Exception expected");
+            } catch (PubNubException ex) {
+                //then
+                Assert.assertEquals("Your proposed upload exceeds the maximum allowed size", ex.getErrormsg());
+            }
+        }
+    }
+
+    private String readToString(InputStream inputStream) {
+        Scanner s = new Scanner(inputStream).useDelimiter("\\A");
+        return s.hasNext() ? s.next() : "";
     }
 
 

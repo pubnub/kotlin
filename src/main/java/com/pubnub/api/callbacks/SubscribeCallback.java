@@ -31,4 +31,51 @@ public abstract class SubscribeCallback {
 
     public abstract void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult);
 
+    public static class BaseSubscribeCallback extends SubscribeCallback {
+
+        @Override
+        public void status(@NotNull PubNub pubnub, @NotNull PNStatus pnStatus) {
+
+        }
+
+        @Override
+        public void message(@NotNull PubNub pubnub, @NotNull PNMessageResult pnMessageResult) {
+
+        }
+
+        @Override
+        public void presence(@NotNull PubNub pubnub, @NotNull PNPresenceEventResult pnPresenceEventResult) {
+
+        }
+
+        @Override
+        public void signal(@NotNull PubNub pubnub, @NotNull PNSignalResult pnSignalResult) {
+
+        }
+
+        @Override
+        public void uuid(@NotNull PubNub pubnub, @NotNull PNUUIDMetadataResult pnUUIDMetadataResult) {
+
+        }
+
+        @Override
+        public void channel(@NotNull PubNub pubnub, @NotNull PNChannelMetadataResult pnChannelMetadataResult) {
+
+        }
+
+        @Override
+        public void membership(@NotNull PubNub pubnub, @NotNull PNMembershipResult pnMembershipResult) {
+
+        }
+
+        @Override
+        public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnMessageActionResult) {
+
+        }
+
+        @Override
+        public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
+
+        }
+    }
 }

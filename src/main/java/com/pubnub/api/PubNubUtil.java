@@ -15,12 +15,19 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 @Log
 public class PubNubUtil {
 
     private static final String CHARSET = "UTF-8";
+    public static final String SIGNATURE_QUERY_PARAM_NAME = "signature";
+    public static final String TIMESTAMP_QUERY_PARAM_NAME = "timestamp";
+    public static final String AUTH_QUERY_PARAM_NAME = "auth";
 
     private PubNubUtil() {
     }
@@ -29,7 +36,7 @@ public class PubNubUtil {
         StringBuilder builder = new StringBuilder();
         for (String l : val) {
             builder.append(l);
-            builder.append(",");
+            builder.append(delim);
         }
 
         return builder.toString().substring(0, builder.toString().length() - 1);
@@ -161,34 +168,38 @@ public class PubNubUtil {
 
     public static Request signRequest(Request originalRequest, PNConfiguration pnConfiguration, int timestamp) {
         // only sign if we have a secret key in place.
-        if (pnConfiguration.getSecretKey() == null) {
+        if (!shouldSignRequest(pnConfiguration)) {
             return originalRequest;
         }
 
         String signature = generateSignature(pnConfiguration, originalRequest, timestamp);
 
         HttpUrl rebuiltUrl = originalRequest.url().newBuilder()
-                .addQueryParameter("timestamp", String.valueOf(timestamp))
-                .addQueryParameter("signature", signature)
+                .addQueryParameter(TIMESTAMP_QUERY_PARAM_NAME, String.valueOf(timestamp))
+                .addQueryParameter(SIGNATURE_QUERY_PARAM_NAME, signature)
                 .build();
 
         return originalRequest.newBuilder().url(rebuiltUrl).build();
     }
 
-    private static String generateSignature(PNConfiguration configuration, Request request, int timestamp) {
+    public static boolean shouldSignRequest(PNConfiguration pnConfiguration) {
+        return pnConfiguration.getSecretKey() != null;
+    }
+
+    public static String generateSignature(PNConfiguration configuration,
+                                           String requestURL,
+                                           Map<String, String> queryParams,
+                                           String method,
+                                           String requestBody,
+                                           int timestamp) {
         boolean isV2Signature;
 
         StringBuilder signatureBuilder = new StringBuilder();
-        String requestURL = request.url().encodedPath();
 
-        Map<String, String> queryParams = new HashMap<>();
-        for (String queryKey : request.url().queryParameterNames()) {
-            queryParams.put(queryKey, request.url().queryParameter(queryKey));
-        }
-        queryParams.put("timestamp", String.valueOf(timestamp));
+        queryParams.put(TIMESTAMP_QUERY_PARAM_NAME, String.valueOf(timestamp));
         String encodedQueryString = PubNubUtil.preparePamArguments(queryParams);
 
-        isV2Signature = !(requestURL.startsWith("/publish") && request.method().equalsIgnoreCase("post"));
+        isV2Signature = !(requestURL.startsWith("/publish") && method.equalsIgnoreCase("post"));
 
         if (!isV2Signature) {
             signatureBuilder.append(configuration.getSubscribeKey()).append("\n");
@@ -196,11 +207,11 @@ public class PubNubUtil {
             signatureBuilder.append(requestURL).append("\n");
             signatureBuilder.append(encodedQueryString);
         } else {
-            signatureBuilder.append(request.method().toUpperCase()).append("\n");
+            signatureBuilder.append(method.toUpperCase()).append("\n");
             signatureBuilder.append(configuration.getPublishKey()).append("\n");
             signatureBuilder.append(requestURL).append("\n");
             signatureBuilder.append(encodedQueryString).append("\n");
-            signatureBuilder.append(requestBodyToString(request));
+            signatureBuilder.append(requestBody);
         }
 
         String signature = "";
@@ -215,6 +226,20 @@ public class PubNubUtil {
         }
 
         return signature;
+    }
+
+    private static String generateSignature(PNConfiguration configuration, Request request, int timestamp) {
+        Map<String, String> queryParams = new HashMap<>();
+        for (String queryKey : request.url().queryParameterNames()) {
+            queryParams.put(queryKey, request.url().queryParameter(queryKey));
+        }
+        return generateSignature(configuration,
+                request.url().encodedPath(),
+                queryParams,
+                request.method(),
+                requestBodyToString(request),
+                timestamp);
+
     }
 
     public static String removeTrailingEqualSigns(String signature) {

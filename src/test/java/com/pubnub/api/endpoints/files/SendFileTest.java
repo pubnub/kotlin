@@ -5,7 +5,6 @@ import com.pubnub.api.PubNubException;
 import com.pubnub.api.callbacks.PNCallback;
 import com.pubnub.api.endpoints.remoteaction.TestRemoteAction;
 import com.pubnub.api.managers.RetrofitManager;
-import com.pubnub.api.managers.TelemetryManager;
 import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.files.PNBaseFile;
 import com.pubnub.api.models.consumer.files.PNFileUploadResult;
@@ -27,12 +26,16 @@ import java.util.Collections;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class SendFileTest implements TestsWithFiles {
@@ -103,6 +106,65 @@ public class SendFileTest implements TestsWithFiles {
 
         assertTrue(countDownLatch.await(1, TimeUnit.SECONDS));
     }
+    @Test
+    public void async_publishFileMessageRetry() throws InterruptedException, IOException {
+        //given
+        CountDownLatch countDownLatch = new CountDownLatch(1);
+        File file = getTemporaryFile(filename);
+        FileUploadRequestDetails fileUploadRequestDetails = generateUploadUrlProperResponse();
+        PNFileUploadResult expectedResponse = pnFileUploadResult();
+        PNPublishFileMessageResult publishFileMessageResult = new PNPublishFileMessageResult(expectedResponse.getTimetoken());
+        int numberOfRetries = 5;
+
+        when(generateUploadUrlFactory.create(any(), any())).thenReturn(TestRemoteAction.successful(
+                fileUploadRequestDetails));
+        when(sendFileToS3Factory.create(any(), any(), any(), any())).thenReturn(TestRemoteAction.successful(null));
+        PublishFileMessage publishFileMessage = spy(FailingPublishFileMessage.create(publishFileMessageResult, numberOfRetries - 1));
+        when(publishFileMessageBuilder.channel(any()).fileName(any()).fileId(any()))
+                .thenReturn(publishFileMessage);
+
+        //when
+        try (FileInputStream fileInputStream = new FileInputStream(file)) {
+            sendFile(channel, file.getName(), fileInputStream, numberOfRetries).async(
+                    (result, status) -> {
+                        assertEquals(expectedResponse, result);
+                        countDownLatch.countDown();
+                    }
+            );
+        }
+
+        //then
+        assertTrue(countDownLatch.await(1, TimeUnit.SECONDS));
+        verify(publishFileMessage, times(numberOfRetries)).async(any());
+    }
+
+    @Test
+    public void sync_publishFileMessageRetry() throws InterruptedException, IOException, PubNubException {
+        //given
+        File file = getTemporaryFile(filename);
+        FileUploadRequestDetails fileUploadRequestDetails = generateUploadUrlProperResponse();
+        PNFileUploadResult expectedResponse = pnFileUploadResult();
+        PNPublishFileMessageResult publishFileMessageResult = new PNPublishFileMessageResult(expectedResponse.getTimetoken());
+        int numberOfRetries = 5;
+
+        when(generateUploadUrlFactory.create(any(), any())).thenReturn(TestRemoteAction.successful(
+                fileUploadRequestDetails));
+        when(sendFileToS3Factory.create(any(), any(), any(), any())).thenReturn(TestRemoteAction.successful(null));
+        PublishFileMessage publishFileMessage = spy(FailingPublishFileMessage.create(publishFileMessageResult, numberOfRetries - 1));
+        when(publishFileMessageBuilder.channel(any()).fileName(any()).fileId(any()))
+                .thenReturn(publishFileMessage);
+
+        //when
+        PNFileUploadResult result;
+        try (FileInputStream fileInputStream = new FileInputStream(file)) {
+            result = sendFile(channel, file.getName(), fileInputStream, numberOfRetries).sync();
+        }
+
+        //then
+        assertEquals(expectedResponse, result);
+        verify(publishFileMessage, times(numberOfRetries)).sync();
+
+    }
 
     private FileUploadRequestDetails generateUploadUrlProperResponse() {
         return new FileUploadRequestDetails(200,
@@ -118,14 +180,55 @@ public class SendFileTest implements TestsWithFiles {
         return new PNFileUploadResult(1337L, 200, new PNBaseFile("id", "name"));
     }
 
-    private SendFile sendFile(String channel, String fileName, InputStream inputStream) {
-        return new SendFile(channel,
-                fileName,
-                inputStream,
+    private SendFile sendFile(String channel, String fileName, InputStream inputStream, int numberOfRetries) {
+        return new SendFile(new SendFile.Builder.SendFileRequiredParams(channel, fileName, inputStream),
                 generateUploadUrlFactory,
                 publishFileMessageBuilder,
                 sendFileToS3Factory,
-                Executors.newSingleThreadExecutor());
+                Executors.newSingleThreadExecutor(),
+                numberOfRetries
+        );
+    }
+
+    private SendFile sendFile(String channel, String fileName, InputStream inputStream) {
+        return sendFile(channel, fileName, inputStream, 1);
+    }
+
+    static class FailingPublishFileMessage extends PublishFileMessage {
+
+        private final PNPublishFileMessageResult result;
+        private final int numberOfFailsBeforeSuccess;
+        private AtomicInteger numberOfFails = new AtomicInteger(0);
+
+
+        public static PublishFileMessage create(PNPublishFileMessageResult result, int numberOfFailsBeforeSuccess) {
+            return new FailingPublishFileMessage(result, numberOfFailsBeforeSuccess);
+        }
+
+
+        public FailingPublishFileMessage(PNPublishFileMessageResult result,
+                                         int numberOfFailsBeforeSuccess)  {
+            super("channel", "fileName", "fileId", mock(PubNub.class), null, mock(RetrofitManager.class));
+            this.result = result;
+            this.numberOfFailsBeforeSuccess = numberOfFailsBeforeSuccess;
+        }
+
+        @Override
+        public void async(@NotNull PNCallback<PNPublishFileMessageResult> callback) {
+            if (numberOfFails.getAndAdd(1) < numberOfFailsBeforeSuccess) {
+                callback.onResponse(null, PNStatus.builder().error(true).statusCode(400).build());
+            } else {
+                callback.onResponse(result, PNStatus.builder().statusCode(200).build());
+            }
+        }
+
+        @Override
+        public @Nullable PNPublishFileMessageResult sync() throws PubNubException {
+            if (numberOfFails.getAndAdd(1) < numberOfFailsBeforeSuccess) {
+                throw PubNubException.builder().build();
+            }
+            return result;
+        }
     }
 
     static class AlwaysSuccessfulPublishFileMessage extends PublishFileMessage {
@@ -136,22 +239,14 @@ public class SendFileTest implements TestsWithFiles {
             PubNub pubNub = mock(PubNub.class);
             RetrofitManager retrofitManager = mock(RetrofitManager.class);
             return new AlwaysSuccessfulPublishFileMessage(result,
-                    "channel",
-                    "fileName",
-                    "fileId",
                     pubNub,
-                    null,
                     retrofitManager);
         }
 
         AlwaysSuccessfulPublishFileMessage(PNPublishFileMessageResult result,
-                                           String channel,
-                                           String fileName,
-                                           String fileId,
                                            PubNub pubnubInstance,
-                                           TelemetryManager telemetry,
                                            RetrofitManager retrofitInstance) {
-            super(channel, fileName, fileId, pubnubInstance, telemetry, retrofitInstance);
+            super("channel", "fileName", "fileId", mock(PubNub.class), null, mock(RetrofitManager.class));
             this.result = result;
         }
 

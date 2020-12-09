@@ -10,7 +10,6 @@ import com.pubnub.api.endpoints.BuilderSteps.ChannelStep;
 import com.pubnub.api.endpoints.files.requiredparambuilder.FilesBuilderSteps.FileIdStep;
 import com.pubnub.api.endpoints.files.requiredparambuilder.FilesBuilderSteps.FileNameStep;
 import com.pubnub.api.endpoints.files.requiredparambuilder.ChannelFileNameFileIdBuilder;
-import com.pubnub.api.endpoints.remoteaction.RemoteAction;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.managers.MapperManager;
 import com.pubnub.api.managers.RetrofitManager;
@@ -153,35 +152,5 @@ public class PublishFileMessage extends Endpoint<List<Object>, PNPublishFileMess
                                   RetrofitManager retrofitManager) {
         return new Builder(ChannelFileNameFileIdBuilder.create((channel, fileName, fileId) ->
                 new PublishFileMessage(channel, fileName, fileId, pubNub, telemetryManager, retrofitManager)));
-    }
-
-    public static class Factory {
-        private final PubNub pubNub;
-        private final TelemetryManager telemetryManager;
-        private final RetrofitManager retrofitManager;
-
-        public Factory(PubNub pubNub, TelemetryManager telemetryManager, RetrofitManager retrofitManager) {
-
-            this.pubNub = pubNub;
-            this.telemetryManager = telemetryManager;
-            this.retrofitManager = retrofitManager;
-        }
-
-        public RemoteAction<PNPublishFileMessageResult> create(String channel,
-                                                               String fileName,
-                                                               String fileId,
-                                                               Object message,
-                                                               Object meta,
-                                                               Integer ttl,
-                                                               Boolean shouldStore) {
-            return new PublishFileMessage(channel,
-                    fileName,
-                    fileId,
-                    pubNub, telemetryManager, retrofitManager)
-                    .message(message)
-                    .ttl(ttl)
-                    .shouldStore(shouldStore)
-                    .meta(meta);
-        }
     }
 }
