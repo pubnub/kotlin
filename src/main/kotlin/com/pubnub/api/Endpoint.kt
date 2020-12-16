@@ -1,7 +1,7 @@
 package com.pubnub.api
 
 import com.google.gson.JsonElement
-import com.pubnub.api.enums.PNOperationType
+import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.enums.PNStatusCategory.PNAccessDeniedCategory
 import com.pubnub.api.enums.PNStatusCategory.PNAcknowledgmentCategory
@@ -29,7 +29,7 @@ import java.util.HashMap
  * @param Output Parsed and encapsulated response for endusers.
  * @property pubnub The client instance.
  */
-abstract class Endpoint<Input, Output> protected constructor(protected val pubnub: PubNub) {
+abstract class Endpoint<Input, Output> protected constructor(protected val pubnub: PubNub) : ExtendedRemoteAction<Output> {
 
     private companion object {
         private const val SERVER_RESPONSE_BAD_REQUEST = 400
@@ -54,7 +54,7 @@ abstract class Endpoint<Input, Output> protected constructor(protected val pubnu
      *
      * @throws [PubNubException] if anything goes wrong with the request.
      */
-    fun sync(): Output? {
+    override fun sync(): Output? {
         validateParams()
 
         call = doWork(createBaseParams())
@@ -93,7 +93,7 @@ abstract class Endpoint<Input, Output> protected constructor(protected val pubnu
      *
      * @param callback The callback to receive the response in.
      */
-    fun async(callback: (result: Output?, status: PNStatus) -> Unit) {
+    override fun async(callback: (result: Output?, status: PNStatus) -> Unit) {
         cachedCallback = callback
 
         try {
@@ -212,7 +212,7 @@ abstract class Endpoint<Input, Output> protected constructor(protected val pubnu
         )
     }
 
-    private fun createBaseParams(): HashMap<String, String> {
+    protected fun createBaseParams(): HashMap<String, String> {
         val map = hashMapOf<String, String>()
 
         map += queryParam
@@ -239,7 +239,7 @@ abstract class Endpoint<Input, Output> protected constructor(protected val pubnu
     /**
      * Cancel the operation but do not alert anybody, useful for restarting the heartbeats and subscribe loops.
      */
-    fun silentCancel() {
+    override fun silentCancel() {
         if (::call.isInitialized) {
             if (!call.isCanceled) {
                 silenceFailures = true
@@ -339,7 +339,7 @@ abstract class Endpoint<Input, Output> protected constructor(protected val pubnu
         return pnStatus
     }
 
-    internal fun retry() {
+    override fun retry() {
         silenceFailures = false
         async(cachedCallback)
     }
@@ -450,8 +450,6 @@ abstract class Endpoint<Input, Output> protected constructor(protected val pubnu
 
     protected abstract fun doWork(queryParams: HashMap<String, String>): Call<Input>
     protected abstract fun createResponse(input: Response<Input>): Output?
-
-    protected abstract fun operationType(): PNOperationType
 
     protected open fun isSubKeyRequired() = true
     protected open fun isPubKeyRequired() = false

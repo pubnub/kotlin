@@ -3,6 +3,7 @@ package com.pubnub.api.models.consumer.pubsub.message_actions
 import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 import com.pubnub.api.models.consumer.pubsub.BasePubSubResult
+import com.pubnub.api.models.consumer.pubsub.PubSubResult
 import com.pubnub.api.models.consumer.pubsub.objects.ObjectResult
 
 /**
@@ -11,10 +12,10 @@ import com.pubnub.api.models.consumer.pubsub.objects.ObjectResult
  * @property event The message action event. Could be `added` or `removed`.
  * @property data The actual message action.
  */
-class PNMessageActionResult internal constructor(
-    result: BasePubSubResult,
+data class PNMessageActionResult(
+    private val result: BasePubSubResult,
     override val event: String,
-    data: PNMessageAction
-) : ObjectResult<PNMessageAction>(result, event, data) {
-    val messageAction = data
+    override val data: PNMessageAction
+) : ObjectResult<PNMessageAction>, PubSubResult by result {
+    val messageAction: PNMessageAction = data
 }

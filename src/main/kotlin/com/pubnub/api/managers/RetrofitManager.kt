@@ -5,25 +5,30 @@ import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.interceptor.SignatureInterceptor
 import com.pubnub.api.services.AccessManagerService
 import com.pubnub.api.services.ChannelGroupService
+import com.pubnub.api.services.FilesService
 import com.pubnub.api.services.HistoryService
 import com.pubnub.api.services.MessageActionService
 import com.pubnub.api.services.ObjectsService
 import com.pubnub.api.services.PresenceService
 import com.pubnub.api.services.PublishService
 import com.pubnub.api.services.PushService
+import com.pubnub.api.services.S3Service
 import com.pubnub.api.services.SignalService
 import com.pubnub.api.services.SubscribeService
 import com.pubnub.api.services.TimeService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
+import java.util.concurrent.ExecutorService
 import java.util.concurrent.TimeUnit
 
-internal class RetrofitManager(val pubnub: PubNub) {
+class RetrofitManager(val pubnub: PubNub) {
 
     private lateinit var transactionClientInstance: OkHttpClient
 
     private lateinit var subscriptionClientInstance: OkHttpClient
+
+    private lateinit var noSignatureClientInstance: OkHttpClient
 
     private var signatureInterceptor: SignatureInterceptor
 
@@ -39,6 +44,8 @@ internal class RetrofitManager(val pubnub: PubNub) {
 
     internal val subscribeService: SubscribeService
     internal val objectsService: ObjectsService
+    internal val filesService: FilesService
+    internal val s3Service: S3Service
 
     init {
         signatureInterceptor = SignatureInterceptor(pubnub)
@@ -46,10 +53,12 @@ internal class RetrofitManager(val pubnub: PubNub) {
         if (!pubnub.configuration.googleAppEngineNetworking) {
             transactionClientInstance = createOkHttpClient(pubnub.configuration.nonSubscribeRequestTimeout)
             subscriptionClientInstance = createOkHttpClient(pubnub.configuration.subscribeTimeout)
+            noSignatureClientInstance = createOkHttpClient(pubnub.configuration.nonSubscribeRequestTimeout, withSignature = false)
         }
 
         val transactionInstance = createRetrofit(transactionClientInstance)
         val subscriptionInstance = createRetrofit(subscriptionClientInstance)
+        val noSignatureInstance = createRetrofit(noSignatureClientInstance)
 
         timeService = transactionInstance.create(TimeService::class.java)
         publishService = transactionInstance.create(PublishService::class.java)
@@ -61,11 +70,17 @@ internal class RetrofitManager(val pubnub: PubNub) {
         pushService = transactionInstance.create(PushService::class.java)
         accessManagerService = transactionInstance.create(AccessManagerService::class.java)
         objectsService = transactionInstance.create(ObjectsService::class.java)
+        filesService = transactionInstance.create(FilesService::class.java)
+        s3Service = noSignatureInstance.create(S3Service::class.java)
 
         subscribeService = subscriptionInstance.create(SubscribeService::class.java)
     }
 
-    private fun createOkHttpClient(readTimeout: Int): OkHttpClient {
+    fun getTransactionClientExecutorService(): ExecutorService {
+        return transactionClientInstance.dispatcher().executorService()
+    }
+
+    private fun createOkHttpClient(readTimeout: Int, withSignature: Boolean = true): OkHttpClient {
         val okHttpBuilder = OkHttpClient.Builder()
             .retryOnConnectionFailure(true)
             .readTimeout(readTimeout.toLong(), TimeUnit.SECONDS)
@@ -84,8 +99,8 @@ internal class RetrofitManager(val pubnub: PubNub) {
 
             if (sslSocketFactory != null && x509ExtendedTrustManager != null) {
                 okHttpBuilder.sslSocketFactory(
-                    pubnub.configuration.sslSocketFactory!!,
-                    pubnub.configuration.x509ExtendedTrustManager!!
+                        pubnub.configuration.sslSocketFactory!!,
+                        pubnub.configuration.x509ExtendedTrustManager!!
                 )
             }
             connectionSpec?.let { okHttpBuilder.connectionSpecs(listOf(it)) }
@@ -96,7 +111,9 @@ internal class RetrofitManager(val pubnub: PubNub) {
             certificatePinner?.let { okHttpBuilder.certificatePinner(it) }
         }
 
-        okHttpBuilder.addInterceptor(signatureInterceptor)
+        if (withSignature) {
+            okHttpBuilder.addInterceptor(signatureInterceptor)
+        }
 
         val okHttpClient = okHttpBuilder.build()
 

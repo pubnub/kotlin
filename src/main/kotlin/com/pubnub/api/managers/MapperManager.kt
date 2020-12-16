@@ -1,5 +1,7 @@
 package com.pubnub.api.managers
 
+import com.fasterxml.jackson.core.JsonProcessingException
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonArray
@@ -27,6 +29,7 @@ class MapperManager {
 
     private val objectMapper: Gson
     internal val converterFactory: Converter.Factory
+    private val jacksonObjectMapper = jacksonObjectMapper()
 
     init {
         val booleanAsIntAdapter = object : TypeAdapter<Boolean>() {
@@ -57,6 +60,15 @@ class MapperManager {
             .registerTypeAdapter(JSONArray::class.java, JSONArrayAdapter())
             .create()
         converterFactory = GsonConverterFactory.create(objectMapper)
+    }
+
+    @Throws(PubNubException::class)
+    fun toJsonUsingJackson(input: Any): String {
+        return try {
+            this.jacksonObjectMapper.writeValueAsString(input)
+        } catch (e: JsonProcessingException) {
+            throw PubNubException(PubNubError.JSON_ERROR).copy(errorMessage = e.message ?: PubNubError.JSON_ERROR.message)
+        }
     }
 
     fun hasField(element: JsonElement, field: String) = element.asJsonObject.has(field)
@@ -105,8 +117,8 @@ class MapperManager {
             this.objectMapper.fromJson<T>(input, clazz)
         } catch (e: JsonParseException) {
             throw PubNubException(
-                pubnubError = PubNubError.PARSING_ERROR,
-                errorMessage = e.message
+                    pubnubError = PubNubError.PARSING_ERROR,
+                    errorMessage = e.message
             )
         }
     }
@@ -116,9 +128,9 @@ class MapperManager {
             this.objectMapper.fromJson<T>(input, typeOfT)
         } catch (e: JsonParseException) {
             throw PubNubException(
-                pubnubError = PubNubError.PARSING_ERROR,
-                errorMessage = e.message
-                )
+                    pubnubError = PubNubError.PARSING_ERROR,
+                    errorMessage = e.message
+            )
         }
     }
 
@@ -135,8 +147,8 @@ class MapperManager {
             this.objectMapper.toJson(input)
         } catch (e: JsonParseException) {
             throw PubNubException(
-                pubnubError = PubNubError.JSON_ERROR,
-                errorMessage = e.message
+                    pubnubError = PubNubError.JSON_ERROR,
+                    errorMessage = e.message
             )
         }
     }

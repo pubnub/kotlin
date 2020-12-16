@@ -98,7 +98,7 @@ class TelemetryManagerTest {
         val latency = 100L to PNOperationType.PNHistoryOperation
         telemetryManager.storeLatency(latency.first, latency.second)
 
-        val operations = telemetryManager.operationsLatency(System.currentTimeMillis() + 60_000L)
+        val operations = telemetryManager.operationsLatency(System.currentTimeMillis() + 65_000L)
         assertThat(operations, IsMapWithSize.anEmptyMap<String, String>())
     }
 }

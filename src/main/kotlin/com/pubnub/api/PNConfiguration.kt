@@ -224,6 +224,13 @@ class PNConfiguration {
     var startSubscriberThread = true
 
     /**
+     * Should initialization vector for encrypted messages be random.
+     *
+     * Defaults to `false`.
+     */
+    var useRandomInitializationVector = false
+
+    /**
      * Instructs the SDK to use a proxy configuration when communicating with PubNub servers.
      *
      * @see [Proxy]
@@ -271,6 +278,13 @@ class PNConfiguration {
      * @see [javax.net.ssl.HostnameVerifier]
      */
     var hostnameVerifier: HostnameVerifier? = null
+
+    /**
+     * How many times publishing file message should automatically retry before marking the action as failed
+     *
+     * Defaults to `5`
+     */
+    var fileMessagePublishRetryLimit = 5
 
     var dedupOnSubscribe = false
     var maximumMessagesCacheSize = DEFAULT_DEDUPE_SIZE

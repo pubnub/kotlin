@@ -5,23 +5,25 @@ import com.pubnub.api.PubNub
 import com.pubnub.api.endpoints.objects.internal.ReturningChannelDetailsCustom
 import com.pubnub.api.endpoints.objects.internal.ReturningCollection
 import com.pubnub.api.enums.PNOperationType
-import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.membership.PNChannelMembership
 import com.pubnub.api.models.consumer.objects.membership.PNChannelMembershipArrayResult
+import com.pubnub.api.models.consumer.objects.membership.PNChannelWithCustom
 import com.pubnub.api.models.server.objects_api.ChangeMembershipInput
 import com.pubnub.api.models.server.objects_api.ChannelId
 import com.pubnub.api.models.server.objects_api.EntityArrayEnvelope
 import com.pubnub.api.models.server.objects_api.MembershipInput
+import com.pubnub.extension.toPNChannelMembershipArrayResult
 import retrofit2.Call
 import retrofit2.Response
 import java.util.HashMap
 
 /**
- * @see [PubNub.removeMemberships]
+ * @see [PubNub.manageMemberships]
  */
-class RemoveMemberships internal constructor(
+class ManageMemberships internal constructor(
     pubnub: PubNub,
-    private val channels: Collection<String>,
+    private val channelsToSet: Collection<PNChannelWithCustom>,
+    private val channelsToRemove: Collection<String>,
     private val uuid: String,
     private val returningCollection: ReturningCollection,
     private val withChannelDetailsCustom: ReturningChannelDetailsCustom
@@ -29,35 +31,20 @@ class RemoveMemberships internal constructor(
 
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityArrayEnvelope<PNChannelMembership>> {
         val params = queryParams + returningCollection.createCollectionQueryParams() +
-                withChannelDetailsCustom.createIncludeQueryParams()
-
+            withChannelDetailsCustom.createIncludeQueryParams()
         return pubnub.retrofitManager.objectsService.patchMemberships(
             uuid = uuid,
             subKey = pubnub.configuration.subscribeKey,
             options = params,
-            body = ChangeMembershipInput(delete = channels.map {
-                MembershipInput(
-                    channel = ChannelId(
-                        it
-                    )
-                )
-            })
+            body = ChangeMembershipInput(
+                set = channelsToSet.map { MembershipInput(channel = ChannelId(it.channel), custom = it.custom) },
+                delete = channelsToRemove.map { MembershipInput(channel = ChannelId(id = it)) }
+            )
         )
     }
 
-    override fun createResponse(input: Response<EntityArrayEnvelope<PNChannelMembership>>): PNChannelMembershipArrayResult? {
-        return input.body()?.let { arrayEnvelope ->
-            PNChannelMembershipArrayResult(
-                    status = arrayEnvelope.status,
-                    data = arrayEnvelope.data,
-                    totalCount = arrayEnvelope.totalCount,
-                    next = arrayEnvelope.next?.let { PNPage.PNNext(it) },
-                    prev = arrayEnvelope.prev?.let { PNPage.PNPrev(it) }
-            )
-        }
-    }
+    override fun createResponse(input: Response<EntityArrayEnvelope<PNChannelMembership>>): PNChannelMembershipArrayResult? =
+        input.toPNChannelMembershipArrayResult()
 
-    override fun operationType(): PNOperationType {
-        return PNOperationType.PNUpdateMembershipsOperation
-    }
+    override fun operationType(): PNOperationType = PNOperationType.ObjectsOperation()
 }

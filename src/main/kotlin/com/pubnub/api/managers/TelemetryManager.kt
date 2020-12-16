@@ -7,7 +7,7 @@ import java.util.Date
 import java.util.Locale
 import kotlin.collections.set
 
-internal class TelemetryManager {
+class TelemetryManager {
 
     private companion object {
         private const val MAX_FRACTION_DIGITS = 3
@@ -56,8 +56,8 @@ internal class TelemetryManager {
     }
 
     private fun averageLatencyFromData(endpointLatencies: List<Latency>): Double {
-        val totalLatency: Double = endpointLatencies.map { it.latency ?: 0.0 }.sum()
-        return totalLatency / endpointLatencies.size
+        val sumOfLatencies = endpointLatencies.sumByDouble { it.latency }
+        return sumOfLatencies / endpointLatencies.size
     }
 
     @Synchronized
@@ -65,9 +65,7 @@ internal class TelemetryManager {
         type.queryParam?.let { queryParam: String ->
             if (latency > 0) {
                 val storeDate = currentDate / (TIMESTAMP_DIVIDER.toDouble())
-                if (latencies[queryParam] == null) {
-                    latencies[queryParam] = ArrayList()
-                }
+                latencies.putIfAbsent(queryParam, mutableListOf())
 
                 latencies[queryParam]?.let {
                     val latencyEntry = Latency(
@@ -80,8 +78,7 @@ internal class TelemetryManager {
         }
     }
 
-    private data class Latency(val latency: Double?, val date: Double?) {
-        fun isOutdated(currentDate: Double) =
-            date?.let { currentDate - it > MAXIMUM_LATENCY_DATA_AGE } ?: true
+    private data class Latency(val latency: Double, val date: Double) {
+        fun isOutdated(currentDate: Double) = currentDate - date > MAXIMUM_LATENCY_DATA_AGE
     }
 }

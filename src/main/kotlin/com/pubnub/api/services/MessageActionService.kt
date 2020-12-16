@@ -1,5 +1,6 @@
 package com.pubnub.api.services
 
+import com.pubnub.api.models.consumer.message_actions.PNGetMessageActionsResult
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 import com.pubnub.api.models.server.objects_api.EntityEnvelope
 import retrofit2.Call
@@ -28,7 +29,7 @@ internal interface MessageActionService {
         @Path("subKey") subKey: String,
         @Path("channel") channel: String,
         @QueryMap options: Map<String, String>
-    ): Call<EntityEnvelope<List<PNMessageAction>>>
+    ): Call<PNGetMessageActionsResult>
 
     @DELETE("v1/message-actions/{subKey}/channel/{channel}/message/{messageTimetoken}/action/{actionTimetoken}")
     fun deleteMessageAction(

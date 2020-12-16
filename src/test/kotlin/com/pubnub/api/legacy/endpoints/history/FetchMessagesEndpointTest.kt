@@ -7,12 +7,28 @@ import com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.stubFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlMatching
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
+import com.pubnub.api.endpoints.FetchMessages
 import com.pubnub.api.legacy.BaseTest
+import com.pubnub.api.models.consumer.PNBoundedPage
+import org.hamcrest.Matchers
+import org.junit.Assert
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import kotlin.random.Random.Default.nextInt
 
 class FetchMessagesEndpointTest : BaseTest() {
+
+    companion object {
+        private const val MAX_FOR_FETCH_MESSAGES = 100
+        private const val MAX_FOR_FETCH_MESSAGES_WITH_ACTIONS = 25
+        private const val MULTIPLE_CHANNELS_MAX_FOR_FETCH_MESSAGES = 25
+        private const val EXPECTED_SINGLE_CHANNEL_DEFAULT_MESSAGES = 100
+        private const val EXPECTED_MULTIPLE_CHANNEL_DEFAULT_MESSAGES = 25
+        private const val EXPECTED_DEFAULT_MESSAGES_WITH_ACTIONS = 25
+        private const val EXPECTED_MAX_MESSAGES_WITH_ACTIONS = 25
+        private const val DEFAULT_INCLUDE_MESSAGE_ACTIONS = false
+    }
 
     @Test
     fun testSyncSuccess() {
@@ -51,7 +67,9 @@ class FetchMessagesEndpointTest : BaseTest() {
 
         val response = pubnub.fetchMessages(
             channels = listOf("mychannel", "my_channel"),
-            maximumPerChannel = 25
+            page = PNBoundedPage(
+                limit = 25
+            )
         ).sync()!!
 
         assertEquals(response.channels.size, 2)
@@ -100,7 +118,9 @@ class FetchMessagesEndpointTest : BaseTest() {
 
         val response = pubnub.fetchMessages(
             channels = listOf("mychannel", "my_channel"),
-            maximumPerChannel = 25
+            page = PNBoundedPage(
+                limit = 25
+            )
         ).sync()!!
 
         assertEquals(response.channels.size, 2)
@@ -148,7 +168,9 @@ class FetchMessagesEndpointTest : BaseTest() {
 
         val response = pubnub.fetchMessages(
             channels = listOf("mychannel", "my_channel"),
-            maximumPerChannel = 25
+            page = PNBoundedPage(
+                limit = 25
+            )
         ).sync()!!
 
         assertEquals(response.channels.size, 2)
@@ -157,4 +179,183 @@ class FetchMessagesEndpointTest : BaseTest() {
         assertEquals(response.channels["mychannel"]!!.size, 1)
         assertEquals(response.channels["my_channel"]!!.size, 1)
     }
+
+    @Test
+    fun forSingleChannelFetchMessagesAlwaysPassMaxWhenItIsInBound() {
+        // given
+        val maximumPerChannel = randomInt(MAX_FOR_FETCH_MESSAGES)
+
+        // when
+        val result = FetchMessages.effectiveMax(
+            maximumPerChannel = maximumPerChannel,
+            includeMessageActions = DEFAULT_INCLUDE_MESSAGE_ACTIONS,
+            numberOfChannels = 1
+        )
+
+        // then
+        Assert.assertThat(result, Matchers.equalTo(maximumPerChannel))
+    }
+
+    @Test
+    fun forSingleChannelFetchMessagesAlwaysPassDefaultWhenNonPositiveMaxSpecified() {
+        // given
+        val maximumPerChannel = -(randomInt(100) - 1)
+
+        // when
+        val result = FetchMessages.effectiveMax(
+            maximumPerChannel = maximumPerChannel,
+            includeMessageActions = DEFAULT_INCLUDE_MESSAGE_ACTIONS,
+            numberOfChannels = 1
+        )
+
+        // then
+        Assert.assertThat(result, Matchers.equalTo(EXPECTED_SINGLE_CHANNEL_DEFAULT_MESSAGES))
+    }
+    @Test
+    fun forSingleChannelFetchMessagesAlwaysPassDefaultWhenMaxNotSpecified() {
+        // given
+        val maximumPerChannel = null
+
+        // when
+        val result = FetchMessages.effectiveMax(
+            maximumPerChannel = maximumPerChannel,
+            includeMessageActions = DEFAULT_INCLUDE_MESSAGE_ACTIONS,
+            numberOfChannels = 1
+        )
+
+        // then
+        Assert.assertThat(result, Matchers.equalTo(EXPECTED_SINGLE_CHANNEL_DEFAULT_MESSAGES))
+    }
+
+    @Test
+    fun forSingleChannelFetchMessagesAlwaysPassDefaultMaxWhenMaxExceeds() {
+        // given
+        val maximumPerChannel = MAX_FOR_FETCH_MESSAGES + randomInt(MAX_FOR_FETCH_MESSAGES)
+
+        // when
+        val result = FetchMessages.effectiveMax(
+            maximumPerChannel = maximumPerChannel,
+            includeMessageActions = DEFAULT_INCLUDE_MESSAGE_ACTIONS,
+            numberOfChannels = 1
+        )
+
+        // then
+        Assert.assertThat(result, Matchers.equalTo(EXPECTED_SINGLE_CHANNEL_DEFAULT_MESSAGES))
+    }
+
+    @Test
+    fun forMultipleChannelsFetchMessagesAlwaysPassMaxWhenItIsInBound() {
+        // given
+        val maximumPerChannel = randomInt(MULTIPLE_CHANNELS_MAX_FOR_FETCH_MESSAGES)
+
+        // when
+        val result = FetchMessages.effectiveMax(
+            maximumPerChannel = maximumPerChannel,
+            includeMessageActions = DEFAULT_INCLUDE_MESSAGE_ACTIONS,
+            numberOfChannels = 2
+        )
+
+        // then
+        Assert.assertThat(result, Matchers.equalTo(maximumPerChannel))
+    }
+
+    @Test
+    fun forMultipleChannelsFetchMessagesAlwaysPassDefaultWhenNonPositiveMaxSpecified() {
+        // given
+        val maximumPerChannel = -(randomInt(100) - 1)
+
+        // when
+        val result = FetchMessages.effectiveMax(
+            maximumPerChannel = maximumPerChannel,
+            includeMessageActions = DEFAULT_INCLUDE_MESSAGE_ACTIONS,
+            numberOfChannels = 2
+        )
+
+        // then
+        Assert.assertThat(result, Matchers.equalTo(EXPECTED_MULTIPLE_CHANNEL_DEFAULT_MESSAGES))
+    }
+
+    @Test
+    fun forMultipleChannelsFetchMessagesAlwaysPassDefaultWhenMaxNotSpecified() {
+        // given
+        val maximumPerChannel = null
+
+        // when
+        val result = FetchMessages.effectiveMax(
+            maximumPerChannel = maximumPerChannel,
+            includeMessageActions = DEFAULT_INCLUDE_MESSAGE_ACTIONS,
+            numberOfChannels = 2
+        )
+
+        // then
+        Assert.assertThat(result, Matchers.equalTo(EXPECTED_MULTIPLE_CHANNEL_DEFAULT_MESSAGES))
+    }
+
+    @Test
+    fun forMultipleChannelsFetchMessagesAlwaysPassDefaultMaxWhenMaxExceeds() {
+        // given
+        val maximumPerChannel =
+            MULTIPLE_CHANNELS_MAX_FOR_FETCH_MESSAGES + randomInt(MULTIPLE_CHANNELS_MAX_FOR_FETCH_MESSAGES)
+
+        // when
+        val result = FetchMessages.effectiveMax(
+            maximumPerChannel = maximumPerChannel,
+            includeMessageActions = DEFAULT_INCLUDE_MESSAGE_ACTIONS,
+            numberOfChannels = 2
+        )
+
+        // then
+        Assert.assertThat(result, Matchers.equalTo(EXPECTED_MULTIPLE_CHANNEL_DEFAULT_MESSAGES))
+    }
+
+    @Test
+    fun forSingleChannelFetchMessagesWithActionAlwaysPassMaxWhenItIsInBound() {
+        // given
+        val maximumPerChannel = randomInt(MAX_FOR_FETCH_MESSAGES_WITH_ACTIONS)
+
+        // when
+        val result = FetchMessages.effectiveMax(
+            maximumPerChannel = maximumPerChannel,
+            includeMessageActions = true,
+            numberOfChannels = 1
+        )
+
+        // then
+        Assert.assertThat(result, Matchers.equalTo(maximumPerChannel))
+    }
+
+    @Test
+    fun forSingleChannelFetchMessagesWithActionAlwaysPassDefaultWhenMaxNotSpecified() {
+        // given
+        val maximumPerChannel = null
+
+        // when
+        val result = FetchMessages.effectiveMax(
+            maximumPerChannel = maximumPerChannel,
+            includeMessageActions = true,
+            numberOfChannels = 1
+        )
+
+        // then
+        Assert.assertThat(result, Matchers.equalTo(EXPECTED_DEFAULT_MESSAGES_WITH_ACTIONS))
+    }
+
+    @Test
+    fun forSingleChannelFetchMessagesWithActionAlwaysPassDefaultMaxWhenMaxExceeds() {
+        // given
+        val maximumPerChannel = MAX_FOR_FETCH_MESSAGES_WITH_ACTIONS +
+            randomInt(MAX_FOR_FETCH_MESSAGES_WITH_ACTIONS)
+
+        // when
+        val result = FetchMessages.effectiveMax(
+            maximumPerChannel = maximumPerChannel,
+            includeMessageActions = true,
+            numberOfChannels = 1
+        )
+
+        // then
+        Assert.assertThat(result, Matchers.equalTo(EXPECTED_MAX_MESSAGES_WITH_ACTIONS))
+    }
+
+    private fun randomInt(max: Int): Int = nextInt(max) + 1
 }

@@ -13,6 +13,14 @@ import com.pubnub.api.endpoints.channel_groups.AllChannelsChannelGroup
 import com.pubnub.api.endpoints.channel_groups.DeleteChannelGroup
 import com.pubnub.api.endpoints.channel_groups.ListAllChannelGroup
 import com.pubnub.api.endpoints.channel_groups.RemoveChannelChannelGroup
+import com.pubnub.api.endpoints.files.DeleteFile
+import com.pubnub.api.endpoints.files.DownloadFile
+import com.pubnub.api.endpoints.files.GenerateUploadUrl
+import com.pubnub.api.endpoints.files.GetFileUrl
+import com.pubnub.api.endpoints.files.ListFiles
+import com.pubnub.api.endpoints.files.PublishFileMessage
+import com.pubnub.api.endpoints.files.SendFile
+import com.pubnub.api.endpoints.files.UploadFile
 import com.pubnub.api.endpoints.message_actions.AddMessageAction
 import com.pubnub.api.endpoints.message_actions.GetMessageActions
 import com.pubnub.api.endpoints.message_actions.RemoveMessageAction
@@ -24,12 +32,10 @@ import com.pubnub.api.endpoints.objects.internal.ReturningChannelDetailsCustom
 import com.pubnub.api.endpoints.objects.internal.ReturningCollection
 import com.pubnub.api.endpoints.objects.internal.ReturningCustom
 import com.pubnub.api.endpoints.objects.internal.ReturningUUIDDetailsCustom
-import com.pubnub.api.endpoints.objects.member.AddMembers
-import com.pubnub.api.endpoints.objects.member.GetMembers
-import com.pubnub.api.endpoints.objects.member.RemoveMembers
-import com.pubnub.api.endpoints.objects.membership.AddMemberships
+import com.pubnub.api.endpoints.objects.member.GetChannelMembers
+import com.pubnub.api.endpoints.objects.member.ManageChannelMembers
 import com.pubnub.api.endpoints.objects.membership.GetMemberships
-import com.pubnub.api.endpoints.objects.membership.RemoveMemberships
+import com.pubnub.api.endpoints.objects.membership.ManageMemberships
 import com.pubnub.api.endpoints.objects.uuid.GetAllUUIDMetadata
 import com.pubnub.api.endpoints.objects.uuid.GetUUIDMetadata
 import com.pubnub.api.endpoints.objects.uuid.RemoveUUIDMetadata
@@ -54,6 +60,7 @@ import com.pubnub.api.managers.RetrofitManager
 import com.pubnub.api.managers.SubscriptionManager
 import com.pubnub.api.managers.TelemetryManager
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
+import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.PNSortKey
 import com.pubnub.api.models.consumer.objects.member.PNUUIDDetailsLevel
@@ -61,6 +68,9 @@ import com.pubnub.api.models.consumer.objects.member.PNUUIDWithCustom
 import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
 import com.pubnub.api.models.consumer.objects.membership.PNChannelWithCustom
 import com.pubnub.api.vendor.Crypto
+import com.pubnub.api.vendor.FileEncryptionUtil.decrypt
+import com.pubnub.api.vendor.FileEncryptionUtil.encrypt
+import java.io.InputStream
 import java.util.Date
 import java.util.UUID
 
@@ -68,7 +78,7 @@ class PubNub(val configuration: PNConfiguration) {
 
     private companion object Constants {
         private const val TIMESTAMP_DIVIDER = 1000
-        private const val SDK_VERSION = "5.0.2"
+        private const val SDK_VERSION = "5.1.0"
         private const val MAX_SEQUENCE = 65535
     }
 
@@ -489,6 +499,14 @@ class PubNub(val configuration: PNConfiguration) {
      * @param includeMessageActions Whether to include message actions in response.
      *                              Defaults to `false`.
      */
+    @Deprecated(
+        replaceWith = ReplaceWith(
+            "fetchMessages(channels = channels, page = PNBoundedPage(start = start, end = end, limit = maximumPerChannel),includeMeta = includeMeta, includeMessageActions = includeMessageActions)",
+            "com.pubnub.api.models.consumer.PNBoundedPage"
+        ),
+        level = DeprecationLevel.WARNING,
+        message = "Use fetchMessages(String, PNBoundedPage, Boolean, Boolean) instead"
+    )
     fun fetchMessages(
         channels: List<String>,
         maximumPerChannel: Int = 0,
@@ -496,12 +514,54 @@ class PubNub(val configuration: PNConfiguration) {
         end: Long? = null,
         includeMeta: Boolean = false,
         includeMessageActions: Boolean = false
+    ) = fetchMessages(
+        channels = channels,
+        page = PNBoundedPage(start = start, end = end, limit = maximumPerChannel),
+        includeMeta = includeMeta,
+        includeMessageActions = includeMessageActions
+    )
+
+    /**
+     * Fetch historical messages from multiple channels.
+     * The `includeMessageActions` flag also allows you to fetch message actions along with the messages.
+     *
+     * It's possible to control how messages are returned and in what order. For example, you can:
+     * - Search for messages starting on the newest end of the timeline.
+     * - Search for messages from the oldest end of the timeline.
+     * - Page through results by providing a `start` OR `end` time token.
+     * - Retrieve a slice of the time line by providing both a `start` AND `end` time token.
+     * - Limit the number of messages to a specific quantity using the `limit` parameter.
+     * - Batch history returns up to 25 messages per channel, on a maximum of 500 channels.
+     * Use the start and end timestamps to page through the next batch of messages.
+     *
+     * **Start & End parameter usage clarity:**
+     * - If you specify only the `start` parameter (without `end`),
+     * you will receive messages that are older than and up to that `start` timetoken.
+     * - If you specify only the `end` parameter (without `start`),
+     * you will receive messages from that `end` timetoken and newer.
+     * - Specify values for both `start` and `end` parameters to retrieve messages between those timetokens
+     * (inclusive of the `end` value).
+     * - Keep in mind that you will still receive a maximum of 25 messages
+     * even if there are more messages that meet the timetoken values.
+     * - Iterative calls to history adjusting the start timetoken is necessary to page through the full set of results
+     * if more than 25 messages meet the timetoken values.
+     *
+     * @param channels Channels to return history messages from.
+     * @param page The paging object used for pagination. @see [PNBoundedPage]
+     * @param includeMeta Whether to include message metadata in response.
+     *                    Defaults to `false`.
+     * @param includeMessageActions Whether to include message actions in response.
+     *                              Defaults to `false`.
+     */
+    fun fetchMessages(
+        channels: List<String>,
+        page: PNBoundedPage = PNBoundedPage(),
+        includeMeta: Boolean = false,
+        includeMessageActions: Boolean = false
     ) = FetchMessages(
         pubnub = this,
         channels = channels,
-        maximumPerChannel = maximumPerChannel,
-        start = start,
-        end = end,
+        page = page,
         includeMeta = includeMeta,
         includeMessageActions = includeMessageActions
     )
@@ -669,14 +729,32 @@ class PubNub(val configuration: PNConfiguration) {
      * @param end Message Action timetoken denoting the end of the range requested
      *            (return values will be greater than or equal to end).
      * @param limit Specifies the number of message actions to return in response.
-     *              Default (and the maximum value) is 100.
      */
+    @Deprecated(
+        replaceWith = ReplaceWith(
+            "getMessageActions(channel = channel, page = PNBoundedPage(start = start, end = end, limit = limit))",
+            "com.pubnub.api.models.consumer.PNBoundedPage"
+        ),
+        level = DeprecationLevel.WARNING,
+        message = "Use getMessageActions(String, PNBoundedPage) instead"
+    )
     fun getMessageActions(
         channel: String,
         start: Long? = null,
         end: Long? = null,
         limit: Int? = null
-    ) = GetMessageActions(pubnub = this, channel = channel, start = start, end = end, limit = limit)
+    ) = getMessageActions(channel = channel, page = PNBoundedPage(start = start, end = end, limit = limit))
+
+    /**
+     * Get a list of message actions in a channel. Returns a list of actions in the response.
+     *
+     * @param channel Channel to fetch message actions from.
+     * @param page The paging object used for pagination. @see [PNBoundedPage]
+     */
+    fun getMessageActions(
+        channel: String,
+        page: PNBoundedPage = PNBoundedPage()
+    ) = GetMessageActions(pubnub = this, channel = channel, page = page)
     //endregion
 
     //region ChannelGroups
@@ -1007,6 +1085,40 @@ class PubNub(val configuration: PNConfiguration) {
     )
 
     /**
+     * @see [PubNub.setMemberships]
+     */
+    @Deprecated(
+        replaceWith = ReplaceWith(
+            "setMemberships(channels = channels, uuid = uuid, limit = limit, " +
+                "page = page, filter = filter, sort = sort, includeCount = includeCount, includeCustom = includeCustom," +
+                "includeChannelDetails = includeChannelDetails)"
+        ),
+        level = DeprecationLevel.WARNING,
+        message = "Use setMemberships instead"
+    )
+    fun addMemberships(
+        channels: List<PNChannelWithCustom>,
+        uuid: String? = null,
+        limit: Int? = null,
+        page: PNPage? = null,
+        filter: String? = null,
+        sort: Collection<PNSortKey> = listOf(),
+        includeCount: Boolean = false,
+        includeCustom: Boolean = false,
+        includeChannelDetails: PNChannelDetailsLevel? = null
+    ) = setMemberships(
+        channels = channels,
+        uuid = uuid ?: configuration.uuid,
+        limit = limit,
+        page = page,
+        filter = filter,
+        sort = sort,
+        includeCount = includeCount,
+        includeCustom = includeCustom,
+        includeChannelDetails = includeChannelDetails
+    )
+
+    /**
      * Set channel memberships for a UUID.
      *
      * @param channels List of channels to add to membership. List can contain strings (channel-name only)
@@ -1028,7 +1140,7 @@ class PubNub(val configuration: PNConfiguration) {
      * @param includeCustom Include respective additional fields in the response.
      * @param includeChannelDetails Include custom fields for channels metadata.
      */
-    fun addMemberships(
+    fun setMemberships(
         channels: List<PNChannelWithCustom>,
         uuid: String? = null,
         limit: Int? = null,
@@ -1038,21 +1150,17 @@ class PubNub(val configuration: PNConfiguration) {
         includeCount: Boolean = false,
         includeCustom: Boolean = false,
         includeChannelDetails: PNChannelDetailsLevel? = null
-    ) = AddMemberships(
-        pubnub = this,
-        channels = channels,
+    ) = manageMemberships(
+        channelsToSet = channels,
+        channelsToRemove = listOf(),
         uuid = uuid ?: configuration.uuid,
-        returningCollection = ReturningCollection(
-            limit = limit,
-            page = page,
-            filter = filter,
-            sort = sort,
-            includeCount = includeCount
-        ),
-        withChannelDetailsCustom = ReturningChannelDetailsCustom(
-            includeCustom = includeCustom,
-            includeChannelDetails = includeChannelDetails
-        )
+        limit = limit,
+        page = page,
+        filter = filter,
+        sort = sort,
+        includeCount = includeCount,
+        includeCustom = includeCustom,
+        includeChannelDetails = includeChannelDetails
     )
 
     /**
@@ -1086,9 +1194,56 @@ class PubNub(val configuration: PNConfiguration) {
         includeCount: Boolean = false,
         includeCustom: Boolean = false,
         includeChannelDetails: PNChannelDetailsLevel? = null
-    ) = RemoveMemberships(
+    ) = manageMemberships(
+        channelsToSet = listOf(),
+        channelsToRemove = channels,
+        uuid = uuid ?: configuration.uuid,
+        limit = limit,
+        page = page,
+        filter = filter,
+        sort = sort,
+        includeCount = includeCount,
+        includeCustom = includeCustom,
+        includeChannelDetails = includeChannelDetails
+    )
+
+    /**
+     * Add and remove channel memberships for a UUID.
+     *
+     * @param channelsToSet Collection of channels to add to membership. @see [PNChannelWithCustom]
+     * @param channelsToRemove Channels to remove from membership.
+     * @param uuid Unique user identifier. If not supplied then current user’s uuid is used.
+     * @param limit Number of objects to return in the response.
+     *              Default is 100, which is also the maximum value.
+     *              Set limit to 0 (zero) and includeCount to true if you want to retrieve only a result count.
+     * @param page Use for pagination.
+     *              - [PNNext] : Previously-returned cursor bookmark for fetching the next page.
+     *              - [PNPrev] : Previously-returned cursor bookmark for fetching the previous page.
+     *                           Ignored if you also supply the start parameter.
+     * @param filter Expression used to filter the results. Only objects whose properties satisfy the given
+     *               expression are returned.
+     * @param sort List of properties to sort by. Available options are id, name, and updated.
+     *             @see [PNAsc], [PNDesc]
+     * @param includeCount Request totalCount to be included in paginated response. By default, totalCount is omitted.
+     *                     Default is `false`.
+     * @param includeCustom Include respective additional fields in the response.
+     * @param includeChannelDetails Include custom fields for channels metadata.
+     */
+    fun manageMemberships(
+        channelsToSet: List<PNChannelWithCustom>,
+        channelsToRemove: List<String>,
+        uuid: String? = null,
+        limit: Int? = null,
+        page: PNPage? = null,
+        filter: String? = null,
+        sort: Collection<PNSortKey> = listOf(),
+        includeCount: Boolean = false,
+        includeCustom: Boolean = false,
+        includeChannelDetails: PNChannelDetailsLevel? = null
+    ) = ManageMemberships(
         pubnub = this,
-        channels = channels,
+        channelsToSet = channelsToSet,
+        channelsToRemove = channelsToRemove,
         uuid = uuid ?: configuration.uuid,
         returningCollection = ReturningCollection(
             limit = limit,
@@ -1101,6 +1256,38 @@ class PubNub(val configuration: PNConfiguration) {
             includeCustom = includeCustom,
             includeChannelDetails = includeChannelDetails
         )
+    )
+
+    /**
+     * @see [PubNub.getChannelMembers]
+     */
+    @Deprecated(
+        replaceWith = ReplaceWith(
+            "getChannelMembers(channel = channel, limit = limit, " +
+                "page = page, filter = filter, sort = sort, includeCount = includeCount, includeCustom = includeCustom," +
+                "includeUUIDDetails = includeUUIDDetails)"
+        ),
+        level = DeprecationLevel.WARNING,
+        message = "Use getChannelMembers instead"
+    )
+    fun getMembers(
+        channel: String,
+        limit: Int? = null,
+        page: PNPage? = null,
+        filter: String? = null,
+        sort: Collection<PNSortKey> = listOf(),
+        includeCount: Boolean = false,
+        includeCustom: Boolean = false,
+        includeUUIDDetails: PNUUIDDetailsLevel? = null
+    ) = getChannelMembers(
+        channel = channel,
+        limit = limit,
+        page = page,
+        filter = filter,
+        sort = sort,
+        includeCount = includeCount,
+        includeCustom = includeCustom,
+        includeUUIDDetails = includeUUIDDetails
     )
 
     /**
@@ -1124,7 +1311,7 @@ class PubNub(val configuration: PNConfiguration) {
      * @param includeCustom Include respective additional fields in the response.
      * @param includeUUIDDetails Include custom fields for UUIDs metadata.
      */
-    fun getMembers(
+    fun getChannelMembers(
         channel: String,
         limit: Int? = null,
         page: PNPage? = null,
@@ -1133,7 +1320,7 @@ class PubNub(val configuration: PNConfiguration) {
         includeCount: Boolean = false,
         includeCustom: Boolean = false,
         includeUUIDDetails: PNUUIDDetailsLevel? = null
-    ) = GetMembers(
+    ) = GetChannelMembers(
         pubnub = this,
         channel = channel,
         returningCollection = ReturningCollection(
@@ -1147,6 +1334,40 @@ class PubNub(val configuration: PNConfiguration) {
             includeCustom = includeCustom,
             includeUUIDDetails = includeUUIDDetails
         )
+    )
+
+    /**
+     * @see [PubNub.setChannelMembers]
+     */
+    @Deprecated(
+        replaceWith = ReplaceWith(
+            "setChannelMembers(channel = channel, uuids = uuids, limit = limit, " +
+                "page = page, filter = filter, sort = sort, includeCount = includeCount, includeCustom = includeCustom," +
+                "includeUUIDDetails = includeUUIDDetails)"
+        ),
+        level = DeprecationLevel.WARNING,
+        message = "Use setChannelMembers instead"
+    )
+    fun addMembers(
+        channel: String,
+        uuids: List<PNUUIDWithCustom>,
+        limit: Int? = null,
+        page: PNPage? = null,
+        filter: String? = null,
+        sort: Collection<PNSortKey> = listOf(),
+        includeCount: Boolean = false,
+        includeCustom: Boolean = false,
+        includeUUIDDetails: PNUUIDDetailsLevel? = null
+    ) = setChannelMembers(
+        channel = channel,
+        uuids = uuids,
+        limit = limit,
+        page = page,
+        filter = filter,
+        sort = sort,
+        includeCount = includeCount,
+        includeCustom = includeCustom,
+        includeUUIDDetails = includeUUIDDetails
     )
 
     /**
@@ -1171,7 +1392,7 @@ class PubNub(val configuration: PNConfiguration) {
      * @param includeCustom Include respective additional fields in the response.
      * @param includeUUIDDetails Include custom fields for UUIDs metadata.
      */
-    fun addMembers(
+    fun setChannelMembers(
         channel: String,
         uuids: List<PNUUIDWithCustom>,
         limit: Int? = null,
@@ -1181,21 +1402,51 @@ class PubNub(val configuration: PNConfiguration) {
         includeCount: Boolean = false,
         includeCustom: Boolean = false,
         includeUUIDDetails: PNUUIDDetailsLevel? = null
-    ) = AddMembers(
-        pubnub = this,
+    ) = manageChannelMembers(
+        channel = channel,
+        uuidsToSet = uuids,
+        uuidsToRemove = listOf(),
+        limit = limit,
+        page = page,
+        filter = filter,
+        sort = sort,
+        includeCount = includeCount,
+        includeCustom = includeCustom,
+        includeUUIDDetails = includeUUIDDetails
+    )
+
+    /**
+     * @see [PubNub.removeChannelMembers]
+     */
+    @Deprecated(
+        replaceWith = ReplaceWith(
+            "removeChannelMembers(channel = channel, uuids = uuids, limit = limit, " +
+                "page = page, filter = filter, sort = sort, includeCount = includeCount, includeCustom = includeCustom," +
+                "includeUUIDDetails = includeUUIDDetails)"
+        ),
+        level = DeprecationLevel.WARNING,
+        message = "Use removeChannelMembers instead"
+    )
+    fun removeMembers(
+        channel: String,
+        uuids: List<String>,
+        limit: Int? = null,
+        page: PNPage? = null,
+        filter: String? = null,
+        sort: Collection<PNSortKey> = listOf(),
+        includeCount: Boolean = false,
+        includeCustom: Boolean = false,
+        includeUUIDDetails: PNUUIDDetailsLevel? = null
+    ) = removeChannelMembers(
         channel = channel,
         uuids = uuids,
-        returningCollection = ReturningCollection(
-            limit = limit,
-            page = page,
-            filter = filter,
-            sort = sort,
-            includeCount = includeCount
-        ),
-        withUUIDDetailsCustom = ReturningUUIDDetailsCustom(
-            includeCustom = includeCustom,
-            includeUUIDDetails = includeUUIDDetails
-        )
+        limit = limit,
+        page = page,
+        filter = filter,
+        sort = sort,
+        includeCount = includeCount,
+        includeCustom = includeCustom,
+        includeUUIDDetails = includeUUIDDetails
     )
 
     /**
@@ -1219,7 +1470,7 @@ class PubNub(val configuration: PNConfiguration) {
      * @param includeCustom Include respective additional fields in the response.
      * @param includeUUIDDetails Include custom fields for UUIDs metadata.
      */
-    fun removeMembers(
+    fun removeChannelMembers(
         channel: String,
         uuids: List<String>,
         limit: Int? = null,
@@ -1229,10 +1480,57 @@ class PubNub(val configuration: PNConfiguration) {
         includeCount: Boolean = false,
         includeCustom: Boolean = false,
         includeUUIDDetails: PNUUIDDetailsLevel? = null
-    ) = RemoveMembers(
+    ) = manageChannelMembers(
+        channel = channel,
+        uuidsToSet = listOf(),
+        uuidsToRemove = uuids,
+        limit = limit,
+        page = page,
+        filter = filter,
+        sort = sort,
+        includeCount = includeCount,
+        includeCustom = includeCustom,
+        includeUUIDDetails = includeUUIDDetails
+    )
+
+    /**
+     * Set or remove members in a channel.
+     *
+     * @param channel Channel name
+     * @param uuidsToSet Collection of members to add to the channel. @see [PNUUIDWithCustom]
+     * @param uuidsToRemove Members to remove from channel.
+     * @param limit Number of objects to return in the response.
+     *              Default is 100, which is also the maximum value.
+     *              Set limit to 0 (zero) and includeCount to true if you want to retrieve only a result count.
+     * @param page Use for pagination.
+     *              - [PNNext] : Previously-returned cursor bookmark for fetching the next page.
+     *              - [PNPrev] : Previously-returned cursor bookmark for fetching the previous page.
+     *                           Ignored if you also supply the start parameter.
+     * @param filter Expression used to filter the results. Only objects whose properties satisfy the given
+     *               expression are returned.
+     * @param sort List of properties to sort by. Available options are id, name, and updated.
+     *             @see [PNAsc], [PNDesc]
+     * @param includeCount Request totalCount to be included in paginated response. By default, totalCount is omitted.
+     *                     Default is `false`.
+     * @param includeCustom Include respective additional fields in the response.
+     * @param includeUUIDDetails Include custom fields for UUIDs metadata.
+     */
+    fun manageChannelMembers(
+        channel: String,
+        uuidsToSet: Collection<PNUUIDWithCustom>,
+        uuidsToRemove: Collection<String>,
+        limit: Int? = null,
+        page: PNPage? = null,
+        filter: String? = null,
+        sort: Collection<PNSortKey> = listOf(),
+        includeCount: Boolean = false,
+        includeCustom: Boolean = false,
+        includeUUIDDetails: PNUUIDDetailsLevel? = null
+    ) = ManageChannelMembers(
         pubnub = this,
         channel = channel,
-        uuids = uuids,
+        uuidsToSet = uuidsToSet,
+        uuidsToRemove = uuidsToRemove,
         returningCollection = ReturningCollection(
             limit = limit,
             page = page,
@@ -1245,7 +1543,194 @@ class PubNub(val configuration: PNConfiguration) {
             includeUUIDDetails = includeUUIDDetails
         )
     )
+
     //endregion ObjectsAPI
+
+    //region files
+    /**
+     * Upload file / data to specified Channel.
+     *
+     * @param channel Channel name
+     * @param fileName Name of the file to send.
+     * @param inputStream Input stream with file content.
+     * @param message The payload.
+     *                **Warning:** It is important to note that you should not serialize JSON
+     *                when sending signals/messages via PubNub.
+     *                Why? Because the serialization is done for you automatically.
+     *                Instead just pass the full object as the message payload.
+     *                PubNub takes care of everything for you.
+     * @param meta Metadata object which can be used with the filtering ability.
+     * @param ttl Set a per message time to live in storage.
+     *            - If `shouldStore = true`, and `ttl = 0`, the message is stored
+     *              with no expiry time.
+     *            - If `shouldStore = true` and `ttl = X` (`X` is an Integer value),
+     *              the message is stored with an expiry time of `X` hours.
+     *            - If `shouldStore = false`, the `ttl` parameter is ignored.
+     *            - If ttl isn't specified, then expiration of the message defaults
+     *              back to the expiry value for the key.
+     * @param shouldStore Store in history.
+     *                    If not specified, then the history configuration of the key is used.
+     * @param cipherKey Key to be used to encrypt uploaded data. If not provided,
+     *                  cipherKey in @see [PNConfiguration] will be used, if provided.
+     */
+    fun sendFile(
+        channel: String,
+        fileName: String,
+        inputStream: InputStream,
+        message: Any? = null,
+        meta: Any? = null,
+        ttl: Int? = null,
+        shouldStore: Boolean? = null,
+        cipherKey: String? = null
+    ): SendFile {
+        return SendFile(
+            channel = channel,
+            fileName = fileName,
+            inputStream = inputStream,
+            message = message,
+            meta = meta,
+            ttl = ttl,
+            shouldStore = shouldStore,
+            cipherKey = cipherKey,
+            executorService = retrofitManager.getTransactionClientExecutorService(),
+            fileMessagePublishRetryLimit = configuration.fileMessagePublishRetryLimit,
+            generateUploadUrlFactory = GenerateUploadUrl.Factory(this),
+            publishFileMessageFactory = PublishFileMessage.Factory(this),
+            sendFileToS3Factory = UploadFile.Factory(this)
+        )
+    }
+
+    /**
+     * Retrieve list of files uploaded to Channel.
+     *
+     * @param channel Channel name
+     * @param limit Number of files to return. Minimum value is 1, and maximum is 100. Default value is 100.
+     * @param next Previously-returned cursor bookmark for fetching the next page. @see [PNPage.PNNext]
+     */
+    fun listFiles(
+        channel: String,
+        limit: Int? = null,
+        next: PNPage.PNNext? = null
+    ): ListFiles {
+        return ListFiles(
+            pubNub = this,
+            channel = channel,
+            limit = limit,
+            next = next
+        )
+    }
+
+    /**
+     * Generate URL which can be used to download file from target Channel.
+     *
+     * @param channel Name of channel to which the file has been uploaded.
+     * @param fileName Name under which the uploaded file is stored.
+     * @param fileId Unique identifier for the file, assigned during upload.
+     */
+    fun getFileUrl(
+        channel: String,
+        fileName: String,
+        fileId: String
+    ): GetFileUrl {
+        return GetFileUrl(
+            pubNub = this,
+            channel = channel,
+            fileName = fileName,
+            fileId = fileId
+        )
+    }
+
+    /**
+     * Download file from specified Channel.
+     *
+     * @param channel Name of channel to which the file has been uploaded.
+     * @param fileName Name under which the uploaded file is stored.
+     * @param fileId Unique identifier for the file, assigned during upload.
+     * @param cipherKey Key to be used to decrypt downloaded data. If a key is not provided,
+     *                  the SDK uses the cipherKey from the @see [PNConfiguration].
+     */
+    fun downloadFile(
+        channel: String,
+        fileName: String,
+        fileId: String,
+        cipherKey: String? = null
+    ): DownloadFile {
+        return DownloadFile(
+            pubNub = this,
+            channel = channel,
+            fileName = fileName,
+            fileId = fileId,
+            cipherKey = cipherKey
+        )
+    }
+
+    /**
+     * Delete file from specified Channel.
+     *
+     * @param channel Name of channel to which the file has been uploaded.
+     * @param fileName Name under which the uploaded file is stored.
+     * @param fileId Unique identifier for the file, assigned during upload.
+     */
+    fun deleteFile(
+        channel: String,
+        fileName: String,
+        fileId: String
+    ): DeleteFile {
+        return DeleteFile(
+            pubNub = this,
+            channel = channel,
+            fileName = fileName,
+            fileId = fileId
+        )
+    }
+
+    /**
+     * Publish file message from specified Channel.
+     * @param channel Name of channel to which the file has been uploaded.
+     * @param fileName Name under which the uploaded file is stored.
+     * @param fileId Unique identifier for the file, assigned during upload.
+     * @param message The payload.
+     *                **Warning:** It is important to note that you should not serialize JSON
+     *                when sending signals/messages via PubNub.
+     *                Why? Because the serialization is done for you automatically.
+     *                Instead just pass the full object as the message payload.
+     *                PubNub takes care of everything for you.
+     * @param meta Metadata object which can be used with the filtering ability.
+     * @param ttl Set a per message time to live in storage.
+     *            - If `shouldStore = true`, and `ttl = 0`, the message is stored
+     *              with no expiry time.
+     *            - If `shouldStore = true` and `ttl = X` (`X` is an Integer value),
+     *              the message is stored with an expiry time of `X` hours.
+     *            - If `shouldStore = false`, the `ttl` parameter is ignored.
+     *            - If ttl isn't specified, then expiration of the message defaults
+     *              back to the expiry value for the key.
+     * @param shouldStore Store in history.
+     *                    If not specified, then the history configuration of the key is used.
+     *
+     */
+    fun publishFileMessage(
+        channel: String,
+        fileName: String,
+        fileId: String,
+        message: Any? = null,
+        meta: Any? = null,
+        ttl: Int? = null,
+        shouldStore: Boolean? = null
+    ): PublishFileMessage {
+        return PublishFileMessage(
+            pubNub = this,
+            channel = channel,
+            fileName = fileName,
+            fileId = fileId,
+            message = message,
+            meta = meta,
+            ttl = ttl,
+            shouldStore = shouldStore
+        )
+    }
+    //endregion
+
+    // public meth
 
     /**
      * Add a listener.
@@ -1269,24 +1754,38 @@ class PubNub(val configuration: PNConfiguration) {
     /**
      * Perform Cryptographic decryption of an input string using cipher key provided by [PNConfiguration.cipherKey].
      *
-     * @param inputString String to be encrypted.
+     * @param inputString String to be decrypted.
      *
-     * @return String containing the encryption of `inputString` using `cipherKey`.
-     * @throws PubNubException throws exception in case of failed encryption.
+     * @return String containing the decryption of `inputString` using `cipherKey`.
+     * @throws PubNubException throws exception in case of failed decryption.
      */
     fun decrypt(inputString: String): String = decrypt(inputString, configuration.cipherKey)
 
     /**
      * Perform Cryptographic decryption of an input string using a cipher key.
      *
-     * @param inputString String to be encrypted.
-     * @param cipherKey cipher key to be used for encryption.
+     * @param inputString String to be decrypted.
+     * @param cipherKey cipher key to be used for decryption.
      *
-     * @return String containing the encryption of `inputString` using `cipherKey`.
-     * @throws PubNubException throws exception in case of failed encryption.
+     * @return String containing the decryption of `inputString` using `cipherKey`.
+     * @throws PubNubException throws exception in case of failed decryption.
      */
     fun decrypt(inputString: String, cipherKey: String): String =
         Crypto(cipherKey).decrypt(inputString)
+
+    /**
+     * Perform Cryptographic decryption of an input stream using provided cipher key.
+     *
+     * @param inputStream InputStream to be encrypted.
+     * @param cipherKey Cipher key to be used for decryption. If not provided [PNConfiguration.cipherKey] is used.
+     *
+     * @return InputStream containing the encryption of `inputStream` using `cipherKey`.
+     * @throws PubNubException Throws exception in case of failed decryption.
+     */
+    fun decryptInputStream(
+        inputStream: InputStream,
+        cipherKey: String = configuration.cipherKey
+    ): InputStream = decrypt(inputStream, cipherKey)
 
     /**
      * Perform Cryptographic encryption of an input string and the cipher key provided by [PNConfiguration.cipherKey].
@@ -1309,6 +1808,20 @@ class PubNub(val configuration: PNConfiguration) {
      */
     fun encrypt(inputString: String, cipherKey: String): String =
         Crypto(cipherKey).encrypt(inputString)
+
+    /**
+     * Perform Cryptographic encryption of an input stream using provided cipher key.
+     *
+     * @param inputStream InputStream to be encrypted.
+     * @param cipherKey Cipher key to be used for encryption. If not provided [PNConfiguration.cipherKey] is used.
+     *
+     * @return InputStream containing the encryption of `inputStream` using `cipherKey`.
+     * @throws PubNubException Throws exception in case of failed encryption.
+     */
+    fun encryptInputStream(
+        inputStream: InputStream,
+        cipherKey: String = configuration.cipherKey
+    ): InputStream = encrypt(inputStream, cipherKey)
     //endregion
 
     /**

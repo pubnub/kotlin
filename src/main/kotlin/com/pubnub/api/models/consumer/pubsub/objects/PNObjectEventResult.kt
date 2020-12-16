@@ -6,13 +6,14 @@ import com.google.gson.annotations.SerializedName
 import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
 import com.pubnub.api.models.consumer.pubsub.BasePubSubResult
+import com.pubnub.api.models.consumer.pubsub.PubSubResult
 import com.pubnub.api.utils.PolymorphicDeserializer
 import com.pubnub.api.utils.UnwrapSingleField
 
 data class PNObjectEventResult(
-    val result: BasePubSubResult,
+    private val result: BasePubSubResult,
     val extractedMessage: PNObjectEventMessage
-)
+) : PubSubResult by result
 
 internal object ObjectExtractedMessageDeserializer : JsonDeserializer<PNObjectEventMessage> by PolymorphicDeserializer.dispatchByFieldsValues(
         fields = listOf("event", "type"),

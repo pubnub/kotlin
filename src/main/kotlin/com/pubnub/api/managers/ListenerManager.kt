@@ -6,6 +6,7 @@ import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult
+import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
 import java.util.ArrayList
@@ -61,5 +62,10 @@ internal class ListenerManager(val pubnub: PubNub) {
     @Synchronized
     fun announce(pnObjectEventResult: PNObjectEventResult) {
         getListeners().forEach { it.objects(pubnub, pnObjectEventResult) }
+    }
+
+    @Synchronized
+    fun announce(pnFileEventResult: PNFileEventResult) {
+        getListeners().forEach { it.file(pubnub, pnFileEventResult) }
     }
 }

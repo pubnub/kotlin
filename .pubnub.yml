@@ -1,10 +1,32 @@
 name: kotlin
-version: 5.0.2
+version: 5.1.0
 schema: 1
 scm: github.com/pubnub/kotlin
 files:
-  - build/libs/pubnub-kotlin-5.0.2-all.jar
+  - build/libs/pubnub-kotlin-5.1.0-all.jar
 changelog:
+  -
+    version: v5.1.0
+    date: 2020-12-16
+    changes:
+      -
+        type: feature
+        text: "Files support includes sending, downloading, listing, deleting together with notifications about file events."
+      -
+        type: feature
+        text: "New methods can set and remove memberships/channelMembers in one call."
+      -
+        type: feature
+        text: "New field `page` can be returned from the backend in case there's more data to fetch for the original query. This new field can be used directly in new `fetchMessages` and `getMessagesActions` method versions. The old versions in which paging information was in separate arguments has been deprecated."
+      -
+        type: feature
+        text: "FetchMessages has a default limit of 100 for single-channel call."
+      -
+        type: bug
+        text: "Make PNMessageActionResultevent accessible (no longer internal)."
+      -
+        type: bug
+        text: "Method `addMemberships` has been deprecated and shouldn't be used in the future."
   -
     version: v5.0.2
     date: 2020-10-20
@@ -13,7 +35,7 @@ changelog:
         type: bug
         text: "Remove Instant to improve Android version compatibility."
   -
-    version: 5.0.2
+    version: 5.1.0
     date: 2020-09-28
     changes:
       -
@@ -104,6 +126,31 @@ features:
     - SUBSCRIBE-MESSAGE-ACTIONS-LISTENER
   signal:
     - SIGNAL-SEND
+  objects:
+    - OBJECTS-FILTERING
+    - OBJECTS-SORTING
+    - OBJECTS-GET-ALL-UUID-METADATA
+    - OBJECTS-GET-UUID-METADATA
+    - OBJECTS-SET-UUID-METADATA
+    - OBJECTS-REMOVE-UUID-METADATA
+    - OBJECTS-GET-ALL-CHANNEL-METADATA
+    - OBJECTS-GET-CHANNEL-METADATA
+    - OBJECTS-SET-CHANNEL-METADATA
+    - OBJECTS-REMOVE-CHANNEL-METADATA
+    - OBJECTS-GET-MEMBERSHIPS-V2
+    - OBJECTS-SET-MEMBERSHIPS-V2
+    - OBJECTS-REMOVE-MEMBERSHIPS-V2
+    - OBJECTS-GET-CHANNEL-MEMBERS-V2
+    - OBJECTS-SET-CHANNEL-MEMBERS-V2
+    - OBJECTS-REMOVE-CHANNEL-MEMBERS-V2
+    - OBJECTS-MANAGE-MEMBERSHIPS-V2
+    - OBJECTS-MANAGE-CHANNEL-MEMBERS-V2
+  files:
+    - FILES-DELETE-FILE
+    - FILES-DOWNLOAD-FILE
+    - FILES-GET-FILE-URL
+    - FILES-LIST-FILES
+    - FILES-SEND-FILE
   unsubscribe:
     - UNSUBSCRIBE-ALL
     - UNSUBSCRIBE-SUPPRESS-LEAVE-EVENTS

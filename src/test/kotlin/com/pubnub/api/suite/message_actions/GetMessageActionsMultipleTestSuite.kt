@@ -5,6 +5,7 @@ import com.github.tomakehurst.wiremock.client.WireMock.get
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 import com.pubnub.api.endpoints.message_actions.GetMessageActions
 import com.pubnub.api.enums.PNOperationType
+import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.message_actions.PNGetMessageActionsResult
 import com.pubnub.api.suite.AUTH
 import com.pubnub.api.suite.EndpointTestSuite
@@ -22,9 +23,11 @@ class GetMessageActionsMultipleTestSuite : EndpointTestSuite<GetMessageActions, 
     override fun snippet(): GetMessageActions =
         pubnub.getMessageActions(
             channel = "ch1",
-            limit = 5,
-            start = 991,
-            end = 969
+            page = PNBoundedPage(
+                start = 991,
+                end = 969,
+                limit = 5
+            )
         )
 
     override fun successfulResponseBody() = """

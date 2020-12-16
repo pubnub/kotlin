@@ -5,52 +5,45 @@ import com.pubnub.api.PubNub
 import com.pubnub.api.endpoints.objects.internal.ReturningCollection
 import com.pubnub.api.endpoints.objects.internal.ReturningUUIDDetailsCustom
 import com.pubnub.api.enums.PNOperationType
-import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.member.PNMember
 import com.pubnub.api.models.consumer.objects.member.PNMemberArrayResult
+import com.pubnub.api.models.consumer.objects.member.PNUUIDWithCustom
 import com.pubnub.api.models.server.objects_api.ChangeMemberInput
 import com.pubnub.api.models.server.objects_api.EntityArrayEnvelope
 import com.pubnub.api.models.server.objects_api.MemberInput
 import com.pubnub.api.models.server.objects_api.UUIDId
+import com.pubnub.extension.toPNMemberArrayResult
 import retrofit2.Call
 import retrofit2.Response
 import java.util.HashMap
 
 /**
- * @see [PubNub.removeMembers]
+ * @see [PubNub.manageChannelMembers]
  */
-class RemoveMembers internal constructor(
+class ManageChannelMembers(
     pubnub: PubNub,
+    private val uuidsToSet: Collection<PNUUIDWithCustom>,
+    private val uuidsToRemove: Collection<String>,
     private val channel: String,
-    private val uuids: Collection<String>,
     private val returningCollection: ReturningCollection,
     private val withUUIDDetailsCustom: ReturningUUIDDetailsCustom
 ) : Endpoint<EntityArrayEnvelope<PNMember>, PNMemberArrayResult>(pubnub) {
-
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityArrayEnvelope<PNMember>> {
         val params = queryParams + returningCollection.createCollectionQueryParams() +
-                withUUIDDetailsCustom.createIncludeQueryParams()
-        return pubnub.retrofitManager.objectsService.patchMembers(
+            withUUIDDetailsCustom.createIncludeQueryParams()
+        return pubnub.retrofitManager.objectsService.patchChannelMembers(
             channel = channel,
             subKey = pubnub.configuration.subscribeKey,
             options = params,
-            body = ChangeMemberInput(delete = uuids.map { MemberInput(UUIDId(id = it)) })
+            body = ChangeMemberInput(
+                delete = uuidsToRemove.map { MemberInput(UUIDId(id = it)) },
+                set = uuidsToSet.map { MemberInput(uuid = UUIDId(id = it.uuid), custom = it.custom) }
+            )
         )
     }
 
-    override fun createResponse(input: Response<EntityArrayEnvelope<PNMember>>): PNMemberArrayResult? {
-        return input.body()?.let { arrayEnvelope ->
-            PNMemberArrayResult(
-                    status = arrayEnvelope.status,
-                    data = arrayEnvelope.data,
-                    totalCount = arrayEnvelope.totalCount,
-                    next = arrayEnvelope.next?.let { PNPage.PNNext(it) },
-                    prev = arrayEnvelope.prev?.let { PNPage.PNPrev(it) }
-            )
-        }
-    }
+    override fun createResponse(input: Response<EntityArrayEnvelope<PNMember>>): PNMemberArrayResult? =
+        input.toPNMemberArrayResult()
 
-    override fun operationType(): PNOperationType {
-        return PNOperationType.PNUpdateMembershipsOperation
-    }
+    override fun operationType(): PNOperationType = PNOperationType.ObjectsOperation()
 }

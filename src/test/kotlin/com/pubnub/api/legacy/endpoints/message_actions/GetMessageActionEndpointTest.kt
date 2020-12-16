@@ -17,6 +17,7 @@ import com.pubnub.api.PubNubError
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.listen
+import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.param
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -379,9 +380,11 @@ class GetMessageActionEndpointTest : BaseTest() {
 
         pubnub.getMessageActions(
             channel = "coolChannel",
-            limit = 10,
-            start = 15,
-            end = 20
+            page = PNBoundedPage(
+                start = 15,
+                end = 20,
+                limit = 10
+            )
         ).sync()!!
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))

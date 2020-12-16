@@ -6,7 +6,7 @@ import com.pubnub.api.callbacks.SubscribeCallback
 /**
  * Wrapper around a signal received in [SubscribeCallback.signal].
  */
-class PNSignalResult(
-    basePubSubResult: BasePubSubResult,
-    messageResult: JsonElement
-) : MessageResult(basePubSubResult, messageResult)
+data class PNSignalResult internal constructor(
+    private val basePubSubResult: PubSubResult,
+    override val message: JsonElement
+) : MessageResult, PubSubResult by basePubSubResult

@@ -25,7 +25,7 @@ import com.pubnub.api.callbacks.SubscribeCallback
  * the complete list of users present in the channel.
  * @property userMetadata User metadata if any.
  */
-class PNPresenceEventResult(
+data class PNPresenceEventResult(
     val event: String? = null,
     val uuid: String? = null,
     val timestamp: Long? = null,

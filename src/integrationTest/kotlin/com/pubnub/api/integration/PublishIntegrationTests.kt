@@ -12,6 +12,7 @@ import com.pubnub.api.await
 import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.listen
+import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.subscribeToBlocking
@@ -59,7 +60,9 @@ class PublishIntegrationTests : BaseIntegrationTest() {
 
         pubnub.fetchMessages(
             channels = listOf(expectedChannel),
-            maximumPerChannel = 1
+            page = PNBoundedPage(
+                limit = 1
+            )
         ).asyncRetry { result, status ->
             assertFalse(status.error)
             assertEquals(1, result!!.channels.size)
@@ -367,7 +370,9 @@ class PublishIntegrationTests : BaseIntegrationTest() {
 
         pubnub.fetchMessages(
             channels = listOf(expectedChannel),
-            maximumPerChannel = 1
+            page = PNBoundedPage(
+                limit = 1
+            )
         ).sync()!!.run {
             assertEquals(
                 expectedPayload.toString(),

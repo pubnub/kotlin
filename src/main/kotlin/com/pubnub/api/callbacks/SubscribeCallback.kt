@@ -6,6 +6,7 @@ import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult
+import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
 
@@ -62,4 +63,5 @@ abstract class SubscribeCallback {
     open fun messageAction(pubnub: PubNub, pnMessageActionResult: PNMessageActionResult) {}
 
     open fun objects(pubnub: PubNub, objectEvent: PNObjectEventResult) {}
+    open fun file(pubnub: PubNub, pnFileEventResult: PNFileEventResult) {}
 }

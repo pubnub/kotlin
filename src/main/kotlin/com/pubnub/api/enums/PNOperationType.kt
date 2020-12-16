@@ -14,6 +14,7 @@ sealed class PNOperationType(open val queryParam: String? = null) {
     open class PAMV3Operation : PNOperationType("pamv3")
     open class MessageActionsOperation : PNOperationType("msga")
     open class TimeOperation : PNOperationType("time")
+    object FileOperation : PNOperationType("file")
 
     object PNSubscribeOperation : PNOperationType()
 
@@ -57,11 +58,8 @@ sealed class PNOperationType(open val queryParam: String? = null) {
     object PNGetAllChannelsMetadataOperation : ObjectsOperation()
     object PNRemoveChannelMetadataOperation : ObjectsOperation()
     object PNGetMembershipsOperation : ObjectsOperation()
-    object PNAddMembershipsOperation : ObjectsOperation()
+    object PNSetMembershipsOperation : ObjectsOperation()
     object PNUpdateMembershipsOperation : ObjectsOperation()
-    object PNGetMembers : ObjectsOperation()
-    object PNAddMembers : ObjectsOperation()
-    object PNManageMembers : ObjectsOperation()
     object PNManageMemberships : ObjectsOperation()
 
     object PNAccessManagerGrantToken : PAMV3Operation()

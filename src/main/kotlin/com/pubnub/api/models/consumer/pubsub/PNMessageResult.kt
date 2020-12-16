@@ -6,7 +6,7 @@ import com.pubnub.api.callbacks.SubscribeCallback
 /**
  * Wrapper around an actual message received in [SubscribeCallback.message].
  */
-class PNMessageResult internal constructor(
-    basePubSubResult: BasePubSubResult,
-    messageResult: JsonElement
-) : MessageResult(basePubSubResult, messageResult)
+data class PNMessageResult internal constructor(
+    private val basePubSubResult: PubSubResult,
+    override val message: JsonElement
+) : MessageResult, PubSubResult by basePubSubResult

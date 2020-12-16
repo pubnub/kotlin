@@ -93,7 +93,7 @@ internal interface ObjectsService {
     ): Call<EntityArrayEnvelope<PNChannelMembership>>
 
     @GET("/v2/objects/{subKey}/channels/{channel}/uuids")
-    fun getMembers(
+    fun getChannelMembers(
         @Path("subKey") subKey: String,
         @Path("channel") channel: String,
         @QueryMap(encoded = true) options: Map<String, String> = mapOf()
@@ -101,7 +101,7 @@ internal interface ObjectsService {
 
     @PATCH("/v2/objects/{subKey}/channels/{channel}/uuids")
     @Headers("Content-Type: application/json; charset=UTF-8")
-    fun patchMembers(
+    fun patchChannelMembers(
         @Path("subKey") subKey: String,
         @Path("channel") channel: String,
         @Body body: ChangeMemberInput,

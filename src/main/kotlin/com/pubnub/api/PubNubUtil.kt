@@ -21,6 +21,9 @@ internal object PubNubUtil {
     private val log = LoggerFactory.getLogger("PubNubUtil")
 
     private const val CHARSET = "UTF-8"
+    const val SIGNATURE_QUERY_PARAM_NAME = "signature"
+    const val TIMESTAMP_QUERY_PARAM_NAME = "timestamp"
+    const val AUTH_QUERY_PARAM_NAME = "auth"
 
     fun replaceLast(string: String, toReplace: String, replacement: String): String {
         val pos = string.lastIndexOf(toReplace)
@@ -65,63 +68,41 @@ internal object PubNubUtil {
         return originalRequest.newBuilder().url(rebuiltUrl).build()
     }
 
-    internal fun signSHA256(key: String, data: String): String {
-        val sha256HMAC: Mac
-        val hmacData: ByteArray
-        val secretKey = SecretKeySpec(key.toByteArray(charset(CHARSET)), "HmacSHA256")
-        sha256HMAC = try {
-            Mac.getInstance("HmacSHA256")
-        } catch (e: NoSuchAlgorithmException) {
-            throw Crypto.newCryptoError(0, e)
-        }
-        try {
-            sha256HMAC.init(secretKey)
-        } catch (e: InvalidKeyException) {
-            throw Crypto.newCryptoError(0, e)
-        }
-        hmacData = sha256HMAC.doFinal(data.toByteArray(charset(CHARSET)))
-        val signed = String(Base64.encode(hmacData, 0), Charset.forName(CHARSET))
-            .replace('+', '-')
-            .replace('/', '_')
-            .replace("\n", "")
-        return signed
+    fun shouldSignRequest(configuration: PNConfiguration): Boolean {
+        return configuration.isSecretKeyValid()
     }
 
-    private fun generateSignature(
+    fun generateSignature(
         configuration: PNConfiguration,
-        request: Request,
+        requestURL: String,
+        queryParams: MutableMap<String, String>,
+        method: String,
+        requestBody: String?,
         timestamp: Int
-    ): String? {
-        val isV2Signature: Boolean
+    ): String {
+
         val signatureBuilder = StringBuilder()
-        val requestURL = request.url().encodedPath()
-        val queryParams = mutableMapOf<String, String>()
-        for (queryKey in request.url().queryParameterNames()) {
-            queryParams[queryKey] = request.url().queryParameter(queryKey)!!
-            // queryParams[queryKey] = request.url().encoded
-        }
         queryParams["timestamp"] = timestamp.toString()
 
-        // todo AB testing
         val classic = true
         val encodedQueryString = if (classic) {
             preparePamArguments(queryParams)
         } else {
-            preparePamArguments("${request.url().encodedQuery()}&timestamp=$timestamp")
+            preparePamArguments("$requestURL&timestamp=$timestamp")
         }
 
-        isV2Signature = !(requestURL.startsWith("/publish") && request.method().equals("post", ignoreCase = true))
+        val isV2Signature: Boolean = !(requestURL.startsWith("/publish") && method.equals("post", ignoreCase = true))
         if (!isV2Signature) {
             signatureBuilder.append(configuration.subscribeKey).append("\n")
             signatureBuilder.append(configuration.publishKey).append("\n")
             signatureBuilder.append(requestURL).append("\n")
             signatureBuilder.append(encodedQueryString)
         } else {
-            signatureBuilder.append(request.method().toUpperCase()).append("\n")
+            signatureBuilder.append(method.toUpperCase()).append("\n")
             signatureBuilder.append(configuration.publishKey).append("\n")
             signatureBuilder.append(requestURL).append("\n")
             signatureBuilder.append(encodedQueryString).append("\n")
-            signatureBuilder.append(requestBodyToString(request))
+            signatureBuilder.append(requestBody)
         }
 
         var signature = ""
@@ -137,6 +118,50 @@ internal object PubNubUtil {
             log.warn("signature failed on SignatureInterceptor: $e")
         }
         return signature
+    }
+
+    internal fun signSHA256(key: String, data: String): String {
+        val sha256HMAC: Mac
+        val hmacData: ByteArray
+        val secretKey = SecretKeySpec(key.toByteArray(charset(CHARSET)), "HmacSHA256")
+        sha256HMAC = try {
+            Mac.getInstance("HmacSHA256")
+        } catch (e: NoSuchAlgorithmException) {
+            throw Crypto.newCryptoError(0, e)
+        }
+        try {
+            sha256HMAC.init(secretKey)
+        } catch (e: InvalidKeyException) {
+            throw Crypto.newCryptoError(0, e)
+        }
+        hmacData = sha256HMAC.doFinal(data.toByteArray(charset(CHARSET)))
+
+        val signed = String(Base64.encode(hmacData, Base64.NO_WRAP), Charset.forName(CHARSET))
+            .replace('+', '-')
+            .replace('/', '_')
+        return signed
+    }
+
+    private fun generateSignature(
+        configuration: PNConfiguration,
+        request: Request,
+        timestamp: Int
+    ): String? {
+        val queryParams: MutableMap<String, String> = mutableMapOf()
+        for (queryKey: String in request.url().queryParameterNames()) {
+            val value = request.url().queryParameter(queryKey)
+            if (value != null) {
+                queryParams[queryKey] = value
+            }
+        }
+        return generateSignature(
+            configuration,
+            request.url().encodedPath(),
+            queryParams,
+            request.method(),
+            requestBodyToString(request),
+            timestamp
+        )
     }
 
     fun removeTrailingEqualSigns(signature: String): String {

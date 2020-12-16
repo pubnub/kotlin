@@ -8,7 +8,7 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.history.PNHistoryItemResult
 import com.pubnub.api.models.consumer.history.PNHistoryResult
-import com.pubnub.api.vendor.Crypto
+import com.pubnub.extension.processHistoryMessage
 import retrofit2.Call
 import retrofit2.Response
 import java.util.HashMap
@@ -76,7 +76,7 @@ class History internal constructor(
                 var meta: JsonElement? = null
 
                 if (includeTimetoken || includeMeta) {
-                    message = processMessage(pubnub.mapper.getField(historyEntry, "message")!!)
+                    message = pubnub.mapper.getField(historyEntry, "message")!!.processHistoryMessage(pubnub.configuration, pubnub.mapper)
                     if (includeTimetoken) {
                         timetoken = pubnub.mapper.elementToLong(historyEntry, "timetoken")
                     }
@@ -84,7 +84,7 @@ class History internal constructor(
                         meta = pubnub.mapper.getField(historyEntry, "meta")
                     }
                 } else {
-                    message = processMessage(historyEntry)
+                    message = historyEntry.processHistoryMessage(pubnub.configuration, pubnub.mapper)
                 }
 
                 val historyItem = PNHistoryItemResult(
@@ -106,36 +106,6 @@ class History internal constructor(
     }
 
     override fun operationType() = PNOperationType.PNHistoryOperation
-
-    private fun processMessage(message: JsonElement): JsonElement {
-        if (!pubnub.configuration.isCipherKeyValid())
-            return message
-
-        val crypto = Crypto(pubnub.configuration.cipherKey)
-
-        val inputText =
-            if (pubnub.mapper.isJsonObject(message) && pubnub.mapper.hasField(
-                    message,
-                    "pn_other"
-                )
-            ) {
-                pubnub.mapper.elementToString(message, "pn_other")
-            } else {
-                pubnub.mapper.elementToString(message)
-            }
-
-        val outputText = crypto.decrypt(inputText!!)
-
-        var outputObject = pubnub.mapper.fromJson(outputText, JsonElement::class.java)
-
-        pubnub.mapper.getField(message, "pn_other")?.let {
-            val objectNode = pubnub.mapper.getAsObject(message)
-            pubnub.mapper.putOnObject(objectNode, "pn_other", outputObject)
-            outputObject = objectNode
-        }
-
-        return outputObject
-    }
 
     private fun addQueryParams(queryParams: MutableMap<String, String>) {
         queryParams["reverse"] = reverse.toString()

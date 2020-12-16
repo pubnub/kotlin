@@ -8,6 +8,7 @@ import com.pubnub.api.CommonUtils.randomValue
 import com.pubnub.api.CommonUtils.retry
 import com.pubnub.api.PubNubError
 import com.pubnub.api.await
+import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 import com.pubnub.api.param
 import org.junit.Assert.assertEquals
@@ -124,7 +125,9 @@ class HistoryIntegrationTest : BaseIntegrationTest() {
         retry {
             pubnub.fetchMessages(
                 channels = listOf(expectedChannelName),
-                maximumPerChannel = 25
+                page = PNBoundedPage(
+                    limit = 25
+                )
             ).sync()!!.run {
                 channels[expectedChannelName]!!.forEach {
                     assertNotNull(it.message)
@@ -144,7 +147,7 @@ class HistoryIntegrationTest : BaseIntegrationTest() {
         retry {
             pubnub.fetchMessages(
                 channels = listOf(expectedChannelName),
-                maximumPerChannel = 25,
+                page = PNBoundedPage(limit = 25),
                 includeMeta = true
             ).sync()!!.run {
                 channels[expectedChannelName]!!.forEach {
@@ -176,9 +179,9 @@ class HistoryIntegrationTest : BaseIntegrationTest() {
         retry {
             pubnub.fetchMessages(
                 channels = listOf(expectedChannelName),
-                maximumPerChannel = 25,
-                includeMessageActions = true,
-                includeMeta = false
+                page = PNBoundedPage(limit = 25),
+                includeMeta = false,
+                includeMessageActions = true
             ).sync()!!.run {
                 channels[expectedChannelName]!!.forEach {
                     assertNotNull(it.message)
@@ -211,9 +214,9 @@ class HistoryIntegrationTest : BaseIntegrationTest() {
         retry {
             pubnub.fetchMessages(
                 channels = listOf(expectedChannelName),
-                maximumPerChannel = 25,
-                includeMessageActions = true,
-                includeMeta = true
+                page = PNBoundedPage(limit = 25),
+                includeMeta = true,
+                includeMessageActions = true
             ).sync()!!.run {
                 channels[expectedChannelName]!!.forEach {
                     assertNotNull(it.message)
@@ -242,7 +245,9 @@ class HistoryIntegrationTest : BaseIntegrationTest() {
         retry {
             pubnub.fetchMessages(
                 channels = expectedChannelNames,
-                maximumPerChannel = 25
+                page = PNBoundedPage(
+                    limit = 25
+                )
             ).sync()!!.run {
                 expectedChannelNames.forEach { expectedChannel ->
                     channels[expectedChannel]!!.forEach {
@@ -285,7 +290,9 @@ class HistoryIntegrationTest : BaseIntegrationTest() {
         retry {
             pubnub.fetchMessages(
                 channels = listOf(expectedChannelName),
-                maximumPerChannel = 100
+                page = PNBoundedPage(
+                    limit = 100
+                )
             ).sync()!!.apply {
                 assertEquals(10, channels[expectedChannelName]!!.size)
                 channels[expectedChannelName]!!.forEach {
@@ -447,7 +454,9 @@ class HistoryIntegrationTest : BaseIntegrationTest() {
     fun testFetchSingleChannel_NoActions_Limit_Low() {
         pubnub.fetchMessages(
             channels = listOf(randomValue()),
-            maximumPerChannel = -1
+            page = PNBoundedPage(
+                limit = -1
+            )
         ).await { _, status ->
             assertEquals("1", status.param("max"))
         }
@@ -457,7 +466,9 @@ class HistoryIntegrationTest : BaseIntegrationTest() {
     fun testFetchSingleChannel_NoActions_Limit_Valid() {
         pubnub.fetchMessages(
             channels = listOf(randomValue()),
-            maximumPerChannel = 15
+            page = PNBoundedPage(
+                limit = 15
+            )
         ).await { _, status ->
             assertEquals("15", status.param("max"))
         }
@@ -467,7 +478,9 @@ class HistoryIntegrationTest : BaseIntegrationTest() {
     fun testFetchSingleChannel_NoActions_Limit_High() {
         pubnub.fetchMessages(
             channels = listOf(randomValue()),
-            maximumPerChannel = 100
+            page = PNBoundedPage(
+                limit = 100
+            )
         ).await { _, status ->
             assertEquals("25", status.param("max"))
         }
@@ -487,8 +500,10 @@ class HistoryIntegrationTest : BaseIntegrationTest() {
     fun testFetchSingleChannel_WithActions_Limit_Low() {
         pubnub.fetchMessages(
             channels = listOf(randomValue()),
-            includeMessageActions = true,
-            maximumPerChannel = -1
+            page = PNBoundedPage(
+                limit = -1
+            ),
+            includeMessageActions = true
         ).await { _, status ->
             assertEquals("25", status.param("max"))
         }
@@ -498,8 +513,10 @@ class HistoryIntegrationTest : BaseIntegrationTest() {
     fun testFetchSingleChannel_WithActions_Limit_High() {
         pubnub.fetchMessages(
             channels = listOf(randomValue()),
-            includeMessageActions = true,
-            maximumPerChannel = 200
+            page = PNBoundedPage(
+                limit = 200
+            ),
+            includeMessageActions = true
         ).await { _, status ->
             assertEquals("25", status.param("max"))
         }
@@ -509,8 +526,10 @@ class HistoryIntegrationTest : BaseIntegrationTest() {
     fun testFetchSingleChannel_WithActions_Limit_Valid() {
         pubnub.fetchMessages(
             channels = listOf(randomValue()),
-            includeMessageActions = true,
-            maximumPerChannel = 15
+            page = PNBoundedPage(
+                limit = 15
+            ),
+            includeMessageActions = true
         ).await { _, status ->
             assertEquals("15", status.param("max"))
         }

@@ -7,13 +7,18 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.spec.AlgorithmParameterSpec;
+import java.util.Random;
+
+import static com.pubnub.api.vendor.FileEncryptionUtil.CIPHER_TRANSFORMATION;
+import static com.pubnub.api.vendor.FileEncryptionUtil.ENCODING_UTF_8;
 
 
 public class Crypto {
 
+    private final boolean dynamicIV;
     byte[] keyBytes = null;
     byte[] ivBytes = null;
     String initializationVector = "0123456789012345";
@@ -21,27 +26,37 @@ public class Crypto {
     boolean INIT = false;
 
     public Crypto(String cipherKey) {
-        this.cipherKey = cipherKey;
+        this(cipherKey, false);
     }
 
     public Crypto(String cipherKey, String customInitializationVector) {
+        this(cipherKey, false);
         if (customInitializationVector != null) {
             this.initializationVector = customInitializationVector;
         }
+    }
 
+    public Crypto(String cipherKey, boolean dynamicIV) { //TODO include necessary Crypto changes
         this.cipherKey = cipherKey;
+        this.dynamicIV = dynamicIV;
     }
 
     public void initCiphers() throws PubNubException {
-        if (INIT)
+        if (INIT && !dynamicIV)
             return;
         try {
 
-            keyBytes = new String(hexEncode(sha256(this.cipherKey.getBytes("UTF-8"))), "UTF-8")
+            keyBytes = new String(hexEncode(sha256(this.cipherKey.getBytes(ENCODING_UTF_8))), ENCODING_UTF_8)
                     .substring(0, 32)
-                    .toLowerCase().getBytes("UTF-8");
-            ivBytes = initializationVector.getBytes("UTF-8");
-            INIT = true;
+                    .toLowerCase().getBytes(ENCODING_UTF_8);
+            if (dynamicIV){
+                ivBytes = new byte[16];
+                new Random().nextBytes(ivBytes);
+            }
+            else {
+                ivBytes = initializationVector.getBytes(ENCODING_UTF_8);
+                INIT = true;
+            }
         } catch (UnsupportedEncodingException e) {
             throw newCryptoError(11, e);
         }
@@ -52,7 +67,7 @@ public class Crypto {
         for (byte byt : input)
             result.append(Integer.toString((byt & 0xff) + 0x100, 16).substring(1));
         try {
-            return result.toString().getBytes("UTF-8");
+            return result.toString().getBytes(ENCODING_UTF_8);
         } catch (UnsupportedEncodingException e) {
             throw newCryptoError(12, e);
         }
@@ -73,10 +88,18 @@ public class Crypto {
             initCiphers();
             AlgorithmParameterSpec ivSpec = new IvParameterSpec(ivBytes);
             SecretKeySpec newKey = new SecretKeySpec(keyBytes, "AES");
-            Cipher cipher = null;
-            cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+            Cipher cipher = Cipher.getInstance(CIPHER_TRANSFORMATION);
             cipher.init(Cipher.ENCRYPT_MODE, newKey, ivSpec);
-            return new String(Base64.encode(cipher.doFinal(input.getBytes("UTF-8")), 0), Charset.forName("UTF-8"));
+            if (dynamicIV) {
+                byte[] encrypted = cipher.doFinal(input.getBytes(ENCODING_UTF_8));
+                byte[] encryptedWithIV = new byte[ivBytes.length + encrypted.length];
+                System.arraycopy(ivBytes, 0, encryptedWithIV, 0, ivBytes.length);
+                System.arraycopy(encrypted, 0, encryptedWithIV, ivBytes.length, encrypted.length);
+                return new String(Base64.encode(encryptedWithIV, 0), ENCODING_UTF_8);
+            }
+            else {
+                return new String(Base64.encode(cipher.doFinal(input.getBytes(ENCODING_UTF_8)), 0), ENCODING_UTF_8);
+            }
         } catch (Exception e) {
             throw newCryptoError(0, e);
         }
@@ -92,12 +115,23 @@ public class Crypto {
      */
     public String decrypt(String cipher_text) throws PubNubException {
         try {
+            byte[] dataBytes;
             initCiphers();
+            if (dynamicIV){
+                dataBytes = Base64.decode(cipher_text, 0);
+                System.arraycopy(dataBytes, 0, ivBytes, 0, 16);
+                byte[] receivedCipherBytes = new byte[dataBytes.length - 16];
+                System.arraycopy(dataBytes, 16, receivedCipherBytes, 0, dataBytes.length-16);
+                dataBytes = receivedCipherBytes;
+            }
+            else {
+                dataBytes = Base64.decode(cipher_text, 0);
+            }
             AlgorithmParameterSpec ivSpec = new IvParameterSpec(ivBytes);
             SecretKeySpec newKey = new SecretKeySpec(keyBytes, "AES");
-            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+            Cipher cipher = Cipher.getInstance(CIPHER_TRANSFORMATION);
             cipher.init(Cipher.DECRYPT_MODE, newKey, ivSpec);
-            return new String(cipher.doFinal(Base64.decode(cipher_text, 0)), "UTF-8");
+            return new String(cipher.doFinal(dataBytes), ENCODING_UTF_8);
         } catch (Exception e) {
             throw newCryptoError(0, e);
         }
@@ -123,7 +157,7 @@ public class Crypto {
         MessageDigest digest;
         try {
             digest = MessageDigest.getInstance("MD5");
-            byte[] hashedBytes = digest.digest(input.getBytes("UTF-8"));
+            byte[] hashedBytes = digest.digest(input.getBytes(ENCODING_UTF_8));
             return hashedBytes;
         } catch (Exception e) {
             throw newCryptoError(0, e);

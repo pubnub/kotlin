@@ -18,6 +18,7 @@ import com.pubnub.api.endpoints.message_actions.GetMessageActions
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.listen
+import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.PNPublishResult
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.history.Action
@@ -38,7 +39,6 @@ import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.util.Collections
-import java.util.HashMap
 import java.util.UUID
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
@@ -220,8 +220,10 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
     private fun page(channel: String, start: Long, callback: Callback) {
         pubnub.getMessageActions(
             channel = channel,
-            start = start,
-            limit = 3
+            page = PNBoundedPage(
+                start = start,
+                limit = 3
+            )
         ).await { result, status ->
             if (!status.error && result!!.actions.isNotEmpty()) {
                 callback.onMore(result.actions)
@@ -277,9 +279,11 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
 
     private fun pageActions(chunk: Int, channel: String, start: Long?, callback: Callback) {
         val builder: GetMessageActions = pubnub.getMessageActions(
-            limit = chunk,
             channel = channel,
-            start = start
+            page = PNBoundedPage(
+                start = start,
+                limit = chunk
+            )
         )
         val messageActionsResult = builder.sync()
         if (messageActionsResult!!.actions.isNotEmpty()) {
@@ -356,9 +360,9 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
                     return@Consumer
                 }
                 println("\t\tTotal action types: " + pnFetchMessageItem.actions!!.size)
-                pnFetchMessageItem.actions!!.forEach { (type, map: HashMap<String, List<Action>>) ->
+                pnFetchMessageItem.actions!!.forEach { (type, map) ->
                     println("\t\t\tAction type: $type")
-                    map.forEach { (value, actions: List<Action>) ->
+                    map.forEach { (value, actions) ->
                         println("\t\t\t\tAction value: $value")
                         actions.forEach(Consumer { action: Action ->
                             println("\t\t\t\tAction uuid: " + action.uuid)

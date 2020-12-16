@@ -30,7 +30,7 @@ internal class ReconnectionManager(val pubnub: PubNub) {
     private lateinit var pnReconnectionPolicy: PNReconnectionPolicy
     private var maxConnectionRetries = -1
 
-    private val timer = Timer()
+    private var timer = Timer()
 
     internal fun startPolling(pnConfiguration: PNConfiguration) {
         pnReconnectionPolicy = pnConfiguration.reconnectionPolicy
@@ -57,6 +57,7 @@ internal class ReconnectionManager(val pubnub: PubNub) {
             reconnectionCallback.onMaxReconnectionExhaustion()
             return
         }
+        timer = Timer()
         timer.schedule(object : TimerTask() {
             override fun run() {
                 callTime()
