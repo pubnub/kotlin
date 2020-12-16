@@ -2,4 +2,4 @@
 
 # operationType
 
-`protected fun operationType(): PNAddMessageAction`
+`fun operationType(): PNAddMessageAction`

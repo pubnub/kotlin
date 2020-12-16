@@ -1,0 +1,5 @@
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.services](../index.md) / [FilesService](index.md) / [generateUploadUrl](./generate-upload-url.md)
+
+# generateUploadUrl
+
+`@POST("/v1/files/{subKey}/channels/{channel}/generate-upload-url") abstract fun generateUploadUrl(@Path("subKey") subKey: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`, @Path("channel") channel: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`, @Body body: `[`GenerateUploadUrlPayload`](../../com.pubnub.api.models.server.files/-generate-upload-url-payload/index.md)`, @QueryMap options: `[`Map`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html)`<`[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`, `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`>): Call<`[`GeneratedUploadUrlResponse`](../../com.pubnub.api.models.server.files/-generated-upload-url-response/index.md)`>`

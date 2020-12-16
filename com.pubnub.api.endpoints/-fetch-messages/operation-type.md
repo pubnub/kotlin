@@ -2,4 +2,4 @@
 
 # operationType
 
-`protected fun operationType(): PNFetchMessagesOperation`
+`fun operationType(): PNFetchMessagesOperation`

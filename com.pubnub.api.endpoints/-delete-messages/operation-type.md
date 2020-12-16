@@ -2,4 +2,4 @@
 
 # operationType
 
-`protected fun operationType(): PNDeleteMessagesOperation`
+`fun operationType(): PNDeleteMessagesOperation`

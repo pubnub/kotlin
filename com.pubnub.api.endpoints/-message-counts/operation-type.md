@@ -2,4 +2,4 @@
 
 # operationType
 
-`protected fun operationType(): PNMessageCountOperation`
+`fun operationType(): PNMessageCountOperation`

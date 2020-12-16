@@ -8,14 +8,14 @@ Perform Cryptographic decryption of an input string using cipher key provided by
 
 ### Parameters
 
-`inputString` - String to be encrypted.
+`inputString` - String to be decrypted.
 
 ### Exceptions
 
-`PubNubException` - throws exception in case of failed encryption.
+`PubNubException` - throws exception in case of failed decryption.
 
 **Return**
-String containing the encryption of `inputString` using `cipherKey`.
+String containing the decryption of `inputString` using `cipherKey`.
 
 `fun decrypt(inputString: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`, cipherKey: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`): `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
 
@@ -23,14 +23,14 @@ Perform Cryptographic decryption of an input string using a cipher key.
 
 ### Parameters
 
-`inputString` - String to be encrypted.
+`inputString` - String to be decrypted.
 
-`cipherKey` - cipher key to be used for encryption.
+`cipherKey` - cipher key to be used for decryption.
 
 ### Exceptions
 
-`PubNubException` - throws exception in case of failed encryption.
+`PubNubException` - throws exception in case of failed decryption.
 
 **Return**
-String containing the encryption of `inputString` using `cipherKey`.
+String containing the decryption of `inputString` using `cipherKey`.
 

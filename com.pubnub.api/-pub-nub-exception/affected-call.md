@@ -4,8 +4,8 @@
 
 `val affectedCall: Call<*>?`
 
-A reference to the affected call. Useful for calling [retry](#).
+A reference to the affected call. Useful for calling [retry](../-endpoint/retry.md).
 
 ### Property
 
-`affectedCall` - A reference to the affected call. Useful for calling [retry](#).
+`affectedCall` - A reference to the affected call. Useful for calling [retry](../-endpoint/retry.md).

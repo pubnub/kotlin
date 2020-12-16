@@ -2,4 +2,4 @@
 
 # operationType
 
-`protected fun operationType(): PNTimeOperation`
+`fun operationType(): PNTimeOperation`

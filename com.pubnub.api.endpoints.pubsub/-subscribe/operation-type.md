@@ -2,4 +2,4 @@
 
 # operationType
 
-`protected fun operationType(): PNSubscribeOperation`
+`fun operationType(): PNSubscribeOperation`

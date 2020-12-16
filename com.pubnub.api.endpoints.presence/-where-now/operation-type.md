@@ -2,4 +2,4 @@
 
 # operationType
 
-`protected fun operationType(): PNWhereNowOperation`
+`fun operationType(): PNWhereNowOperation`

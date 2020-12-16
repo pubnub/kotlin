@@ -7,7 +7,8 @@
 | Name | Summary |
 |---|---|
 | [Envelope](-envelope/index.md) | `class Envelope<T>` |
-| [FetchMessagesEnvelope](-fetch-messages-envelope/index.md) | `class FetchMessagesEnvelope` |
+| [FetchMessagesEnvelope](-fetch-messages-envelope/index.md) | `data class FetchMessagesEnvelope` |
+| [FetchMessagesPage](-fetch-messages-page/index.md) | `data class FetchMessagesPage` |
 | [OriginationMetaData](-origination-meta-data/index.md) | `class OriginationMetaData` |
 | [PresenceEnvelope](-presence-envelope/index.md) | `class PresenceEnvelope` |
 | [PublishMetaData](-publish-meta-data/index.md) | `class PublishMetaData` |

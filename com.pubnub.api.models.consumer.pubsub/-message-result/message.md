@@ -2,7 +2,7 @@
 
 # message
 
-`val message: JsonElement`
+`abstract val message: JsonElement`
 
 The actual message content
 

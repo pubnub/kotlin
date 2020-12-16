@@ -2,7 +2,7 @@
 
 # PNObjectEventResult
 
-`data class PNObjectEventResult`
+`data class PNObjectEventResult : `[`PubSubResult`](../../com.pubnub.api.models.consumer.pubsub/-pub-sub-result/index.md)
 
 ### Constructors
 
@@ -15,4 +15,3 @@
 | Name | Summary |
 |---|---|
 | [extractedMessage](extracted-message.md) | `val extractedMessage: `[`PNObjectEventMessage`](../-p-n-object-event-message/index.md) |
-| [result](result.md) | `val result: `[`BasePubSubResult`](../../com.pubnub.api.models.consumer.pubsub/-base-pub-sub-result/index.md) |

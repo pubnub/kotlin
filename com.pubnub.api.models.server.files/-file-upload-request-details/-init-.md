@@ -1,0 +1,5 @@
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.models.server.files](../index.md) / [FileUploadRequestDetails](index.md) / [&lt;init&gt;](./-init-.md)
+
+# &lt;init&gt;
+
+`FileUploadRequestDetails(status: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)`, data: `[`PNFile`](../../com.pubnub.api.models.consumer.files/-p-n-file/index.md)`, url: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`, method: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`, expirationDate: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`, keyFormField: `[`FormField`](../-form-field/index.md)`, formFields: `[`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)`<`[`FormField`](../-form-field/index.md)`>)`

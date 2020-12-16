@@ -2,12 +2,12 @@
 
 # PNSignalResult
 
-`class PNSignalResult : `[`MessageResult`](../-message-result/index.md)
+`data class PNSignalResult : `[`MessageResult`](../-message-result/index.md)`, `[`PubSubResult`](../-pub-sub-result/index.md)
 
 Wrapper around a signal received in [SubscribeCallback.signal](../../com.pubnub.api.callbacks/-subscribe-callback/signal.md).
 
-### Constructors
+### Properties
 
 | Name | Summary |
 |---|---|
-| [&lt;init&gt;](-init-.md) | Wrapper around a signal received in [SubscribeCallback.signal](../../com.pubnub.api.callbacks/-subscribe-callback/signal.md).`PNSignalResult(basePubSubResult: `[`BasePubSubResult`](../-base-pub-sub-result/index.md)`, messageResult: JsonElement)` |
+| [message](message.md) | The actual message content`val message: JsonElement` |

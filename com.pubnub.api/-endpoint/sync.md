@@ -2,7 +2,7 @@
 
 # sync
 
-`fun sync(): Output?`
+`open fun sync(): Output?`
 
 Executes the call synchronously. This function blocks the thread.
 

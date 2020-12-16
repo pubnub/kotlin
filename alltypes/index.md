@@ -28,16 +28,6 @@ Encapsulates a message action in terms of batch history.
 
 |
 
-##### [com.pubnub.api.endpoints.objects.member.AddMembers](../com.pubnub.api.endpoints.objects.member/-add-members/index.md)
-
-
-|
-
-##### [com.pubnub.api.endpoints.objects.membership.AddMemberships](../com.pubnub.api.endpoints.objects.membership/-add-memberships/index.md)
-
-
-|
-
 ##### [com.pubnub.api.endpoints.message_actions.AddMessageAction](../com.pubnub.api.endpoints.message_actions/-add-message-action/index.md)
 
 
@@ -75,7 +65,17 @@ Utilities for encoding and decoding the Base64 representation of binary data. Se
 
 |
 
+##### [com.pubnub.api.endpoints.files.DeleteFile](../com.pubnub.api.endpoints.files/-delete-file/index.md)
+
+
+|
+
 ##### [com.pubnub.api.endpoints.DeleteMessages](../com.pubnub.api.endpoints/-delete-messages/index.md)
+
+
+|
+
+##### [com.pubnub.api.endpoints.files.DownloadFile](../com.pubnub.api.endpoints.files/-download-file/index.md)
 
 
 |
@@ -112,6 +112,46 @@ Base class for all PubNub API operation implementations.
 
 |
 
+##### [com.pubnub.api.models.server.FetchMessagesPage](../com.pubnub.api.models.server/-fetch-messages-page/index.md)
+
+
+|
+
+##### [com.pubnub.api.vendor.FileEncryptionUtil](../com.pubnub.api.vendor/-file-encryption-util/index.md)
+
+
+|
+
+##### [com.pubnub.api.services.FilesService](../com.pubnub.api.services/-files-service/index.md)
+
+
+|
+
+##### [com.pubnub.api.models.server.files.FileUploadNotification](../com.pubnub.api.models.server.files/-file-upload-notification/index.md)
+
+
+|
+
+##### [com.pubnub.api.models.server.files.FileUploadRequestDetails](../com.pubnub.api.models.server.files/-file-upload-request-details/index.md)
+
+
+|
+
+##### [com.pubnub.api.models.server.files.FormField](../com.pubnub.api.models.server.files/-form-field/index.md)
+
+
+|
+
+##### [com.pubnub.api.models.server.files.GeneratedUploadUrlResponse](../com.pubnub.api.models.server.files/-generated-upload-url-response/index.md)
+
+
+|
+
+##### [com.pubnub.api.models.server.files.GenerateUploadUrlPayload](../com.pubnub.api.models.server.files/-generate-upload-url-payload/index.md)
+
+
+|
+
 ##### [com.pubnub.api.endpoints.objects.channel.GetAllChannelMetadata](../com.pubnub.api.endpoints.objects.channel/-get-all-channel-metadata/index.md)
 
 
@@ -122,12 +162,17 @@ Base class for all PubNub API operation implementations.
 
 |
 
+##### [com.pubnub.api.endpoints.objects.member.GetChannelMembers](../com.pubnub.api.endpoints.objects.member/-get-channel-members/index.md)
+
+
+|
+
 ##### [com.pubnub.api.endpoints.objects.channel.GetChannelMetadata](../com.pubnub.api.endpoints.objects.channel/-get-channel-metadata/index.md)
 
 
 |
 
-##### [com.pubnub.api.endpoints.objects.member.GetMembers](../com.pubnub.api.endpoints.objects.member/-get-members/index.md)
+##### [com.pubnub.api.endpoints.files.GetFileUrl](../com.pubnub.api.endpoints.files/-get-file-url/index.md)
 
 
 |
@@ -170,6 +215,11 @@ Base class for all PubNub API operation implementations.
 ##### [com.pubnub.api.endpoints.History](../com.pubnub.api.endpoints/-history/index.md)
 
 
+| (extensions in package com.pubnub.extension)
+
+##### [kotlin.Int](../com.pubnub.extension/kotlin.-int/index.md)
+
+
 |
 
 ##### [com.pubnub.api.endpoints.presence.Leave](../com.pubnub.api.endpoints.presence/-leave/index.md)
@@ -182,12 +232,42 @@ Base class for all PubNub API operation implementations.
 
 |
 
+##### [com.pubnub.api.endpoints.files.ListFiles](../com.pubnub.api.endpoints.files/-list-files/index.md)
+
+
+|
+
+##### [com.pubnub.api.models.server.files.ListFilesResult](../com.pubnub.api.models.server.files/-list-files-result/index.md)
+
+
+|
+
 ##### [com.pubnub.api.endpoints.push.ListPushProvisions](../com.pubnub.api.endpoints.push/-list-push-provisions/index.md)
 
 
 |
 
+##### [com.pubnub.api.endpoints.objects.member.ManageChannelMembers](../com.pubnub.api.endpoints.objects.member/-manage-channel-members/index.md)
+
+
+|
+
+##### [com.pubnub.api.endpoints.objects.membership.ManageMemberships](../com.pubnub.api.endpoints.objects.membership/-manage-memberships/index.md)
+
+
+|
+
 ##### [com.pubnub.api.managers.MapperManager](../com.pubnub.api.managers/-mapper-manager/index.md)
+
+
+|
+
+##### [com.pubnub.api.endpoints.remoteaction.MappingRemoteAction](../com.pubnub.api.endpoints.remoteaction/-mapping-remote-action/index.md)
+
+
+|
+
+##### [com.pubnub.api.models.server.message_actions.MessageActionsResponse](../com.pubnub.api.models.server.message_actions/-message-actions-response/index.md)
 
 
 |
@@ -237,6 +317,18 @@ Result of the [PubNub.grant](../com.pubnub.api/-pub-nub/grant.md) operation
 ##### [com.pubnub.api.models.consumer.message_actions.PNAddMessageActionResult](../com.pubnub.api.models.consumer.message_actions/-p-n-add-message-action-result.md)
 
 Result for the [PubNub.addMessageAction](../com.pubnub.api/-pub-nub/add-message-action.md) API operation.
+
+
+|
+
+##### [com.pubnub.api.models.consumer.files.PNBaseFile](../com.pubnub.api.models.consumer.files/-p-n-base-file/index.md)
+
+
+|
+
+##### [com.pubnub.api.models.consumer.PNBoundedPage](../com.pubnub.api.models.consumer/-p-n-bounded-page/index.md)
+
+The paging object used for pagination
 
 
 |
@@ -325,6 +417,11 @@ allow to perform precise PubNub client configuration.
 
 |
 
+##### [com.pubnub.api.models.consumer.files.PNDeleteFileResult](../com.pubnub.api.models.consumer.files/-p-n-delete-file-result/index.md)
+
+
+|
+
 ##### [com.pubnub.api.models.consumer.pubsub.objects.PNDeleteMembershipEvent](../com.pubnub.api.models.consumer.pubsub.objects/-p-n-delete-membership-event/index.md)
 
 
@@ -347,6 +444,16 @@ Result of the [PubNub.deleteMessages](../com.pubnub.api/-pub-nub/delete-messages
 
 |
 
+##### [com.pubnub.api.models.consumer.files.PNDownloadableFile](../com.pubnub.api.models.consumer.files/-p-n-downloadable-file/index.md)
+
+
+|
+
+##### [com.pubnub.api.models.consumer.files.PNDownloadFileResult](../com.pubnub.api.models.consumer.files/-p-n-download-file-result/index.md)
+
+
+|
+
 ##### [com.pubnub.api.models.consumer.history.PNFetchMessageItem](../com.pubnub.api.models.consumer.history/-p-n-fetch-message-item/index.md)
 
 Encapsulates a message in terms of a batch history entry.
@@ -357,6 +464,26 @@ Encapsulates a message in terms of a batch history entry.
 ##### [com.pubnub.api.models.consumer.history.PNFetchMessagesResult](../com.pubnub.api.models.consumer.history/-p-n-fetch-messages-result/index.md)
 
 Result of the [PubNub.fetchMessages](../com.pubnub.api/-pub-nub/fetch-messages.md) operation.
+
+
+|
+
+##### [com.pubnub.api.models.consumer.files.PNFile](../com.pubnub.api.models.consumer.files/-p-n-file/index.md)
+
+
+|
+
+##### [com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult](../com.pubnub.api.models.consumer.pubsub.files/-p-n-file-event-result/index.md)
+
+
+|
+
+##### [com.pubnub.api.models.consumer.files.PNFileUploadResult](../com.pubnub.api.models.consumer.files/-p-n-file-upload-result/index.md)
+
+
+|
+
+##### [com.pubnub.api.models.consumer.files.PNFileUrlResult](../com.pubnub.api.models.consumer.files/-p-n-file-url-result/index.md)
 
 
 |
@@ -420,6 +547,11 @@ Result of the [PubNub.history](../com.pubnub.api/-pub-nub/history.md) operation.
 
 |
 
+##### [com.pubnub.api.models.consumer.files.PNListFilesResult](../com.pubnub.api.models.consumer.files/-p-n-list-files-result/index.md)
+
+
+|
+
 ##### [com.pubnub.api.enums.PNLogVerbosity](../com.pubnub.api.enums/-p-n-log-verbosity/index.md)
 
 
@@ -456,7 +588,7 @@ Result of the [PubNub.messageCounts](../com.pubnub.api/-pub-nub/message-counts.m
 
 |
 
-##### [com.pubnub.api.models.consumer.pubsub.PNMessageResult](../com.pubnub.api.models.consumer.pubsub/-p-n-message-result.md)
+##### [com.pubnub.api.models.consumer.pubsub.PNMessageResult](../com.pubnub.api.models.consumer.pubsub/-p-n-message-result/index.md)
 
 Wrapper around an actual message received in [SubscribeCallback.message](../com.pubnub.api.callbacks/-subscribe-callback/message.md).
 
@@ -486,6 +618,11 @@ Wrapper around an actual message received in [SubscribeCallback.message](../com.
 ##### [com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult](../com.pubnub.api.models.consumer.pubsub/-p-n-presence-event-result/index.md)
 
 Wrapper around a presence event received in [SubscribeCallback.presence](../com.pubnub.api.callbacks/-subscribe-callback/presence.md).
+
+
+|
+
+##### [com.pubnub.api.models.consumer.files.PNPublishFileMessageResult](../com.pubnub.api.models.consumer.files/-p-n-publish-file-message-result/index.md)
 
 
 |
@@ -607,6 +744,11 @@ Result of the [PubNub.time](../com.pubnub.api/-pub-nub/time.md) operation.
 
 |
 
+##### [com.pubnub.api.models.consumer.files.PNUploadedFile](../com.pubnub.api.models.consumer.files/-p-n-uploaded-file/index.md)
+
+
+|
+
 ##### [com.pubnub.api.models.consumer.objects.member.PNUUIDDetailsLevel](../com.pubnub.api.models.consumer.objects.member/-p-n-u-u-i-d-details-level/index.md)
 
 
@@ -649,6 +791,11 @@ Result of the [PubNub.whereNow](../com.pubnub.api/-pub-nub/where-now.md) operati
 
 |
 
+##### [com.pubnub.api.endpoints.files.PublishFileMessage](../com.pubnub.api.endpoints.files/-publish-file-message/index.md)
+
+
+|
+
 ##### [com.pubnub.api.models.server.PublishMetaData](../com.pubnub.api.models.server/-publish-meta-data/index.md)
 
 
@@ -678,12 +825,22 @@ Custom exception wrapper for errors occurred during execution or processing of a
 
 |
 
+##### [com.pubnub.api.models.consumer.pubsub.PubSubResult](../com.pubnub.api.models.consumer.pubsub/-pub-sub-result/index.md)
+
+
+|
+
 ##### [com.pubnub.api.models.consumer.push.payload.PushPayloadHelper](../com.pubnub.api.models.consumer.push.payload/-push-payload-helper/index.md)
 
 
 |
 
 ##### [com.pubnub.api.models.consumer.push.payload.PushPayloadSerializer](../com.pubnub.api.models.consumer.push.payload/-push-payload-serializer/index.md)
+
+
+|
+
+##### [com.pubnub.api.endpoints.remoteaction.RemoteAction](../com.pubnub.api.endpoints.remoteaction/-remote-action/index.md)
 
 
 |
@@ -708,22 +865,17 @@ Custom exception wrapper for errors occurred during execution or processing of a
 
 |
 
-##### [com.pubnub.api.endpoints.objects.member.RemoveMembers](../com.pubnub.api.endpoints.objects.member/-remove-members/index.md)
-
-
-|
-
-##### [com.pubnub.api.endpoints.objects.membership.RemoveMemberships](../com.pubnub.api.endpoints.objects.membership/-remove-memberships/index.md)
-
-
-|
-
 ##### [com.pubnub.api.endpoints.message_actions.RemoveMessageAction](../com.pubnub.api.endpoints.message_actions/-remove-message-action/index.md)
 
 
 |
 
 ##### [com.pubnub.api.endpoints.objects.uuid.RemoveUUIDMetadata](../com.pubnub.api.endpoints.objects.uuid/-remove-u-u-i-d-metadata/index.md)
+
+
+|
+
+##### [com.pubnub.api.managers.RetrofitManager](../com.pubnub.api.managers/-retrofit-manager/index.md)
 
 
 |
@@ -744,6 +896,16 @@ Custom exception wrapper for errors occurred during execution or processing of a
 |
 
 ##### [com.pubnub.api.endpoints.objects.internal.ReturningUUIDDetailsCustom](../com.pubnub.api.endpoints.objects.internal/-returning-u-u-i-d-details-custom/index.md)
+
+
+|
+
+##### [com.pubnub.api.services.S3Service](../com.pubnub.api.services/-s3-service/index.md)
+
+
+|
+
+##### [com.pubnub.api.endpoints.files.SendFile](../com.pubnub.api.endpoints.files/-send-file/index.md)
 
 
 |
@@ -799,6 +961,11 @@ Custom exception wrapper for errors occurred during execution or processing of a
 |
 
 ##### [com.pubnub.api.managers.SubscriptionManager](../com.pubnub.api.managers/-subscription-manager/index.md)
+
+
+|
+
+##### [com.pubnub.api.managers.TelemetryManager](../com.pubnub.api.managers/-telemetry-manager/index.md)
 
 
 |

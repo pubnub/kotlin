@@ -2,4 +2,4 @@
 
 # operationType
 
-`protected fun operationType(): PNSetStateOperation`
+`fun operationType(): PNSetStateOperation`

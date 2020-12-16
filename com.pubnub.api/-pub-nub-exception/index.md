@@ -16,7 +16,7 @@ Custom exception wrapper for errors occurred during execution or processing of a
 
 | Name | Summary |
 |---|---|
-| [affectedCall](affected-call.md) | A reference to the affected call. Useful for calling [retry](#).`val affectedCall: Call<*>?` |
+| [affectedCall](affected-call.md) | A reference to the affected call. Useful for calling [retry](../-endpoint/retry.md).`val affectedCall: Call<*>?` |
 | [errorMessage](error-message.md) | The error message received from the server, if any.`val errorMessage: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`?` |
 | [jso](jso.md) | The error json received from the server, if any.`val jso: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`?` |
 | [pubnubError](pubnub-error.md) | The appropriate matching PubNub error.`val pubnubError: `[`PubNubError`](../-pub-nub-error/index.md)`?` |

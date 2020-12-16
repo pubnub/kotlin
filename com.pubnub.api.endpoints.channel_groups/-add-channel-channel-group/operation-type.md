@@ -2,4 +2,4 @@
 
 # operationType
 
-`protected fun operationType(): PNAddChannelsToGroupOperation`
+`fun operationType(): PNAddChannelsToGroupOperation`

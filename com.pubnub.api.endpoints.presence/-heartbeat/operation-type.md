@@ -2,4 +2,4 @@
 
 # operationType
 
-`protected fun operationType(): PNHeartbeatOperation`
+`fun operationType(): PNHeartbeatOperation`

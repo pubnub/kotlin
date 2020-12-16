@@ -2,4 +2,4 @@
 
 # operationType
 
-`protected fun operationType(): PNRemoveChannelsFromGroupOperation`
+`fun operationType(): PNRemoveChannelsFromGroupOperation`

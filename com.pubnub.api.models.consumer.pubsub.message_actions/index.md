@@ -6,4 +6,4 @@
 
 | Name | Summary |
 |---|---|
-| [PNMessageActionResult](-p-n-message-action-result/index.md) | Wrapper around message actions received in [SubscribeCallback.messageAction](../com.pubnub.api.callbacks/-subscribe-callback/message-action.md).`class PNMessageActionResult : `[`ObjectResult`](../com.pubnub.api.models.consumer.pubsub.objects/-object-result/index.md)`<`[`PNMessageAction`](../com.pubnub.api.models.consumer.message_actions/-p-n-message-action/index.md)`>` |
+| [PNMessageActionResult](-p-n-message-action-result/index.md) | Wrapper around message actions received in [SubscribeCallback.messageAction](../com.pubnub.api.callbacks/-subscribe-callback/message-action.md).`data class PNMessageActionResult : `[`ObjectResult`](../com.pubnub.api.models.consumer.pubsub.objects/-object-result/index.md)`<`[`PNMessageAction`](../com.pubnub.api.models.consumer.message_actions/-p-n-message-action/index.md)`>, `[`PubSubResult`](../com.pubnub.api.models.consumer.pubsub/-pub-sub-result/index.md) |

@@ -2,7 +2,7 @@
 
 # ObjectPayload
 
-`class ObjectPayload`
+`data class ObjectPayload`
 
 ### Constructors
 

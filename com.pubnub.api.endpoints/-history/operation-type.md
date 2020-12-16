@@ -2,4 +2,4 @@
 
 # operationType
 
-`protected fun operationType(): PNHistoryOperation`
+`fun operationType(): PNHistoryOperation`

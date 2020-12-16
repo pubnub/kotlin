@@ -2,4 +2,4 @@
 
 # operationType
 
-`protected fun operationType(): PNPushNotificationEnabledChannelsOperation`
+`fun operationType(): PNPushNotificationEnabledChannelsOperation`

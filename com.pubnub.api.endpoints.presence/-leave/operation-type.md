@@ -2,4 +2,4 @@
 
 # operationType
 
-`protected fun operationType(): PNUnsubscribeOperation`
+`fun operationType(): PNUnsubscribeOperation`

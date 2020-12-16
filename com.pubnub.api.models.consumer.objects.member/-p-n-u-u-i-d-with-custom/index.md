@@ -4,6 +4,12 @@
 
 `data class PNUUIDWithCustom`
 
+### Constructors
+
+| Name | Summary |
+|---|---|
+| [&lt;init&gt;](-init-.md) | `PNUUIDWithCustom(uuid: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`, custom: `[`Any`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)`? = null)` |
+
 ### Properties
 
 | Name | Summary |
@@ -15,4 +21,4 @@
 
 | Name | Summary |
 |---|---|
-| [of](of.md) | `fun of(uuid: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`, custom: `[`Any`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)`? = null): `[`PNUUIDWithCustom`](./index.md) |
+| [of](of.md) | `fun ~~of~~(uuid: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`, custom: `[`Any`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)`? = null): `[`PNUUIDWithCustom`](./index.md) |

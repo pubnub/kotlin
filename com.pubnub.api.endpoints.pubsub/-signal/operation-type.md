@@ -2,4 +2,4 @@
 
 # operationType
 
-`protected fun operationType(): PNSignalOperation`
+`fun operationType(): PNSignalOperation`

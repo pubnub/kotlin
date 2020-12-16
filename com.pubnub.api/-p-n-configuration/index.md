@@ -25,6 +25,7 @@ allow to perform precise PubNub client configuration.
 | [connectionSpec](connection-spec.md) | `var connectionSpec: ConnectionSpec?` |
 | [connectTimeout](connect-timeout.md) | How long before the client gives up trying to connect with a subscribe call.`var connectTimeout: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html) |
 | [dedupOnSubscribe](dedup-on-subscribe.md) | `var dedupOnSubscribe: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) |
+| [fileMessagePublishRetryLimit](file-message-publish-retry-limit.md) | How many times publishing file message should automatically retry before marking the action as failed`var fileMessagePublishRetryLimit: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html) |
 | [filterExpression](filter-expression.md) | Feature to subscribe with a custom filter expression.`lateinit var filterExpression: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
 | [googleAppEngineNetworking](google-app-engine-networking.md) | Enable Google App Engine networking.`var googleAppEngineNetworking: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) |
 | [heartbeatInterval](heartbeat-interval.md) | How often the client will announce itself to server.`var heartbeatInterval: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html) |
@@ -53,5 +54,6 @@ allow to perform precise PubNub client configuration.
 | [subscribeKey](subscribe-key.md) | The subscribe key from the admin panel.`lateinit var subscribeKey: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
 | [subscribeTimeout](subscribe-timeout.md) | The subscribe request timeout.`var subscribeTimeout: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html) |
 | [suppressLeaveEvents](suppress-leave-events.md) | When `true` the SDK doesn't send out the leave requests.`var suppressLeaveEvents: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) |
+| [useRandomInitializationVector](use-random-initialization-vector.md) | Should initialization vector for encrypted messages be random.`var useRandomInitializationVector: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) |
 | [uuid](uuid.md) | UUID to use. You should set a unique UUID to identify the user or the device that connects to PubNub.`var uuid: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
 | [x509ExtendedTrustManager](x509-extended-trust-manager.md) | `var x509ExtendedTrustManager: `[`X509ExtendedTrustManager`](https://docs.oracle.com/javase/6/docs/api/javax/net/ssl/X509ExtendedTrustManager.html)`?` |

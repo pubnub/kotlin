@@ -2,4 +2,4 @@
 
 # operationType
 
-`protected fun operationType(): PNPublishOperation`
+`fun operationType(): PNPublishOperation`

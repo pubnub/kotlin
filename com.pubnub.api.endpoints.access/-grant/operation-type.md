@@ -2,4 +2,4 @@
 
 # operationType
 
-`protected fun operationType(): PNAccessManagerGrant`
+`fun operationType(): PNAccessManagerGrant`

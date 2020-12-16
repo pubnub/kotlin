@@ -2,4 +2,4 @@
 
 # operationType
 
-`protected fun operationType(): PNAddPushNotificationsOnChannelsOperation`
+`fun operationType(): PNAddPushNotificationsOnChannelsOperation`

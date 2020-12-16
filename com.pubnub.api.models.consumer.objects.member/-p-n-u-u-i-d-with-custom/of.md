@@ -2,4 +2,6 @@
 
 # of
 
-`fun of(uuid: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`, custom: `[`Any`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)`? = null): `[`PNUUIDWithCustom`](index.md)
+`fun ~~of~~(uuid: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`, custom: `[`Any`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)`? = null): `[`PNUUIDWithCustom`](index.md)
+**Deprecated:** Use constructor instead
+

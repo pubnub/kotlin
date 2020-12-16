@@ -2,4 +2,4 @@
 
 # operationType
 
-`protected fun operationType(): PNGetState`
+`fun operationType(): PNGetState`

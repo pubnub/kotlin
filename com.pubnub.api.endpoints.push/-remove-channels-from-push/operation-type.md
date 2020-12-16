@@ -2,4 +2,4 @@
 
 # operationType
 
-`protected fun operationType(): PNRemovePushNotificationsFromChannelsOperation`
+`fun operationType(): PNRemovePushNotificationsFromChannelsOperation`

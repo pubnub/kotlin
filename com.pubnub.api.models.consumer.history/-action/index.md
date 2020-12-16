@@ -2,7 +2,7 @@
 
 # Action
 
-`class Action`
+`data class Action`
 
 Encapsulates a message action in terms of batch history.
 

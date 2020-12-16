@@ -2,4 +2,4 @@
 
 # operationType
 
-`protected fun operationType(): PNRemoveAllPushNotificationsOperation`
+`fun operationType(): PNRemoveAllPushNotificationsOperation`

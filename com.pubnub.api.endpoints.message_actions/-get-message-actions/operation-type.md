@@ -2,4 +2,4 @@
 
 # operationType
 
-`protected fun operationType(): PNGetMessageActions`
+`fun operationType(): PNGetMessageActions`

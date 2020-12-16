@@ -2,4 +2,4 @@
 
 # operationType
 
-`protected fun operationType(): PNRemoveGroupOperation`
+`fun operationType(): PNRemoveGroupOperation`

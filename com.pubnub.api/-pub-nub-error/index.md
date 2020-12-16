@@ -14,7 +14,9 @@ List of known PubNub errors. Observe them in [PubNubException.pubnubError](../-p
 | [CONNECT_EXCEPTION](-c-o-n-n-e-c-t_-e-x-c-e-p-t-i-o-n.md) |  |
 | [SECRET_KEY_MISSING](-s-e-c-r-e-t_-k-e-y_-m-i-s-s-i-n-g.md) |  |
 | [JSON_ERROR](-j-s-o-n_-e-r-r-o-r.md) |  |
+| [INTERNAL_ERROR](-i-n-t-e-r-n-a-l_-e-r-r-o-r.md) |  |
 | [PARSING_ERROR](-p-a-r-s-i-n-g_-e-r-r-o-r.md) |  |
+| [INVALID_ARGUMENTS](-i-n-v-a-l-i-d_-a-r-g-u-m-e-n-t-s.md) |  |
 | [CONNECTION_NOT_SET](-c-o-n-n-e-c-t-i-o-n_-n-o-t_-s-e-t.md) |  |
 | [GROUP_MISSING](-g-r-o-u-p_-m-i-s-s-i-n-g.md) |  |
 | [SUBSCRIBE_KEY_MISSING](-s-u-b-s-c-r-i-b-e_-k-e-y_-m-i-s-s-i-n-g.md) |  |
