@@ -17,7 +17,7 @@ Perform Cryptographic decryption of an input string using cipher key provided by
 **Return**
 String containing the decryption of `inputString` using `cipherKey`.
 
-`fun decrypt(inputString: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`, cipherKey: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`): `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
+`fun decrypt(inputString: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`, cipherKey: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)` = configuration.cipherKey): `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
 
 Perform Cryptographic decryption of an input string using a cipher key.
 
@@ -25,7 +25,7 @@ Perform Cryptographic decryption of an input string using a cipher key.
 
 `inputString` - String to be decrypted.
 
-`cipherKey` - cipher key to be used for decryption.
+`cipherKey` - cipher key to be used for decryption. Default is [PNConfiguration.cipherKey](../-p-n-configuration/cipher-key.md)
 
 ### Exceptions
 
