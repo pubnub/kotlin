@@ -123,6 +123,5 @@ class Publish internal constructor(
     private fun encryptMessage(message: String): String =
         Crypto(pubnub.configuration.cipherKey)
             .encrypt(message)
-            .replace("\n", "")
     // endregion
 }

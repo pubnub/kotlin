@@ -67,6 +67,7 @@ import com.pubnub.api.models.consumer.objects.member.PNUUIDDetailsLevel
 import com.pubnub.api.models.consumer.objects.member.PNUUIDWithCustom
 import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
 import com.pubnub.api.models.consumer.objects.membership.PNChannelWithCustom
+import com.pubnub.api.vendor.Base64
 import com.pubnub.api.vendor.Crypto
 import com.pubnub.api.vendor.FileEncryptionUtil.decrypt
 import com.pubnub.api.vendor.FileEncryptionUtil.encrypt
@@ -78,7 +79,7 @@ class PubNub(val configuration: PNConfiguration) {
 
     private companion object Constants {
         private const val TIMESTAMP_DIVIDER = 1000
-        private const val SDK_VERSION = "5.1.0"
+        private const val SDK_VERSION = "5.1.1"
         private const val MAX_SEQUENCE = 65535
     }
 
@@ -1765,13 +1766,13 @@ class PubNub(val configuration: PNConfiguration) {
      * Perform Cryptographic decryption of an input string using a cipher key.
      *
      * @param inputString String to be decrypted.
-     * @param cipherKey cipher key to be used for decryption.
+     * @param cipherKey cipher key to be used for decryption. Default is [PNConfiguration.cipherKey]
      *
      * @return String containing the decryption of `inputString` using `cipherKey`.
      * @throws PubNubException throws exception in case of failed decryption.
      */
-    fun decrypt(inputString: String, cipherKey: String): String =
-        Crypto(cipherKey).decrypt(inputString)
+    fun decrypt(inputString: String, cipherKey: String = configuration.cipherKey): String =
+        Crypto(cipherKey).decrypt(inputString, Base64.DEFAULT)
 
     /**
      * Perform Cryptographic decryption of an input stream using provided cipher key.
@@ -1788,26 +1789,16 @@ class PubNub(val configuration: PNConfiguration) {
     ): InputStream = decrypt(inputStream, cipherKey)
 
     /**
-     * Perform Cryptographic encryption of an input string and the cipher key provided by [PNConfiguration.cipherKey].
-     *
-     * @param inputString String to be encrypted.
-     *
-     * @return String containing the encryption of `inputString` using `cipherKey`.
-     * @throws PubNubException Throws exception in case of failed encryption.
-     */
-    fun encrypt(inputString: String): String = encrypt(inputString, configuration.cipherKey)
-
-    /**
      * Perform Cryptographic encryption of an input string and a cipher key.
      *
      * @param inputString String to be encrypted.
-     * @param cipherKey Cipher key to be used for encryption.
+     * @param cipherKey Cipher key to be used for encryption. Default is [PNConfiguration.cipherKey]
      *
      * @return String containing the encryption of `inputString` using `cipherKey`.
      * @throws PubNubException Throws exception in case of failed encryption.
      */
-    fun encrypt(inputString: String, cipherKey: String): String =
-        Crypto(cipherKey).encrypt(inputString)
+    fun encrypt(inputString: String, cipherKey: String = configuration.cipherKey): String =
+        Crypto(cipherKey).encrypt(inputString, Base64.DEFAULT)
 
     /**
      * Perform Cryptographic encryption of an input stream using provided cipher key.

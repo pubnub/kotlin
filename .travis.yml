@@ -1,3 +1,4 @@
+jdk: oraclejdk8
 language: java
 dist: trusty
 os: linux
@@ -26,15 +27,11 @@ jobs:
   include:
     - stage: "test"
       name: "Build & test"
-      jdk: oraclejdk8
-      dist: trusty
       script: 
         - ./gradlew assemble
         - ./gradlew check
     - stage: "code coverage"
       name: "Code coverage"
-      jdk: oraclejdk8
-      dist: trusty
       script: 
         - ./gradlew assemble
         - ./gradlew check
@@ -42,6 +39,4 @@ jobs:
         - java -cp ~/codacy-coverage-reporter-2.0.0-assembly.jar com.codacy.CodacyCoverageReporter -l Java -r build/reports/jacoco/test/jacocoTestReport.xml
     - stage: "validate"
       name: "Validate clean build & test"
-      jdk: oraclejdk8
-      dist: trusty
       script: ./gradlew clean build

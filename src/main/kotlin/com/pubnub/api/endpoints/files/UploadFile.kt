@@ -104,7 +104,7 @@ internal class UploadFile(
                         return
                     }
                     callback(
-                        null,
+                        Unit,
                         createStatusResponse(
                             PNStatusCategory.PNAcknowledgmentCategory, response,
                             null

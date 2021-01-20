@@ -65,7 +65,9 @@ class TelemetryManager {
         type.queryParam?.let { queryParam: String ->
             if (latency > 0) {
                 val storeDate = currentDate / (TIMESTAMP_DIVIDER.toDouble())
-                latencies.putIfAbsent(queryParam, mutableListOf())
+                if (latencies[queryParam] == null) {
+                    latencies[queryParam] = ArrayList()
+                }
 
                 latencies[queryParam]?.let {
                     val latencyEntry = Latency(

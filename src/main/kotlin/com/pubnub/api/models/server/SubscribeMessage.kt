@@ -2,6 +2,8 @@ package com.pubnub.api.models.server
 
 import com.google.gson.JsonElement
 import com.google.gson.annotations.SerializedName
+import com.pubnub.api.workers.SubscribeMessageWorker.Companion.TYPE_FILES
+import com.pubnub.api.workers.SubscribeMessageWorker.Companion.TYPE_MESSAGE
 
 class SubscribeMessage(
     @SerializedName("a")
@@ -39,5 +41,5 @@ class SubscribeMessage(
 
 ) {
 
-    fun supportsEncryption() = type == null || type == 0
+    fun supportsEncryption() = type in arrayOf(null, TYPE_MESSAGE, TYPE_FILES)
 }

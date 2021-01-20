@@ -43,11 +43,11 @@ internal class SubscribeMessageWorker(
     private var running = false
 
     companion object {
-        private const val TYPE_MESSAGE = 0
-        private const val TYPE_SIGNAL = 1
-        private const val TYPE_OBJECT = 2
-        private const val TYPE_MESSAGE_ACTION = 3
-        private const val TYPE_FILES = 4
+        internal const val TYPE_MESSAGE = 0
+        internal const val TYPE_SIGNAL = 1
+        internal const val TYPE_OBJECT = 2
+        internal const val TYPE_MESSAGE_ACTION = 3
+        internal const val TYPE_FILES = 4
     }
 
     override fun run() {
@@ -90,7 +90,8 @@ internal class SubscribeMessageWorker(
         }
 
         if (message.channel.endsWith("-pnpres")) {
-            val presencePayload = pubnub.mapper.convertValue(message.payload, PresenceEnvelope::class.java)
+            val presencePayload =
+                pubnub.mapper.convertValue(message.payload, PresenceEnvelope::class.java)
             val strippedPresenceChannel = PubNubUtil.replaceLast(channel, "-pnpres", "")
             val strippedPresenceSubscription = subscriptionMatch?.let {
                 PubNubUtil.replaceLast(it, "-pnpres", "")
@@ -143,12 +144,16 @@ internal class SubscribeMessageWorker(
                     listenerManager.announce(
                         PNObjectEventResult(
                             result,
-                            pubnub.mapper.convertValue(extractedMessage, PNObjectEventMessage::class.java)
+                            pubnub.mapper.convertValue(
+                                extractedMessage,
+                                PNObjectEventMessage::class.java
+                            )
                         )
                     )
                 }
                 TYPE_MESSAGE_ACTION -> {
-                    val objectPayload = pubnub.mapper.convertValue(extractedMessage, ObjectPayload::class.java)
+                    val objectPayload =
+                        pubnub.mapper.convertValue(extractedMessage, ObjectPayload::class.java)
                     val data = objectPayload.data.asJsonObject
                     if (!data.has("uuid")) {
                         data.addProperty("uuid", result.publisher)
@@ -188,7 +193,8 @@ internal class SubscribeMessageWorker(
         }
     }
 
-    private val formatFriendlyGetFileUrl = "%s" + FilesService.GET_FILE_URL.replace("\\{.*?\\}".toRegex(), "%s")
+    private val formatFriendlyGetFileUrl =
+        "%s" + FilesService.GET_FILE_URL.replace("\\{.*?\\}".toRegex(), "%s")
 
     private fun buildFileUrl(channel: String, fileId: String, fileName: String): String {
         val basePath: String = java.lang.String.format(
@@ -200,17 +206,19 @@ internal class SubscribeMessageWorker(
             fileName
         )
         val queryParams = ArrayList<String>()
-        val authKey = pubnub.configuration.authKey
+        val authKey =
+            if (pubnub.configuration.isAuthKeyValid()) pubnub.configuration.authKey else null
 
         if (PubNubUtil.shouldSignRequest(pubnub.configuration)) {
             val timestamp: Int = pubnub.timestamp()
-            val signature: String = generateSignature(pubnub.configuration, basePath, authKey, timestamp)
+            val signature: String =
+                generateSignature(pubnub.configuration, basePath, authKey, timestamp)
             queryParams.add(PubNubUtil.TIMESTAMP_QUERY_PARAM_NAME + "=" + timestamp)
             queryParams.add(PubNubUtil.SIGNATURE_QUERY_PARAM_NAME + "=" + signature)
         }
-        if (pubnub.configuration.isAuthKeyValid()) {
-            queryParams.add(PubNubUtil.AUTH_QUERY_PARAM_NAME + "=" + pubnub.configuration.authKey)
-        }
+
+        authKey?.run { queryParams.add(PubNubUtil.AUTH_QUERY_PARAM_NAME + "=" + authKey) }
+
         return if (queryParams.isEmpty()) {
             basePath
         } else {
@@ -252,7 +260,10 @@ internal class SubscribeMessageWorker(
             return input
         }
 
-        val crypto = Crypto(pubnub.configuration.cipherKey, pubnub.configuration.useRandomInitializationVector)
+        val crypto = Crypto(
+            pubnub.configuration.cipherKey,
+            pubnub.configuration.useRandomInitializationVector
+        )
 
         val inputText =
             if (pubnub.mapper.isJsonObject(input!!) && pubnub.mapper.hasField(input, "pn_other")) {

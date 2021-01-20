@@ -1,10 +1,23 @@
 name: kotlin
-version: 5.1.0
+version: 5.1.1
 schema: 1
 scm: github.com/pubnub/kotlin
 files:
-  - build/libs/pubnub-kotlin-5.1.0-all.jar
+  - build/libs/pubnub-kotlin-5.1.1-all.jar
 changelog:
+  -
+    version: v5.1.1
+    date: 2021-01-20
+    changes:
+      -
+        type: bug
+        text: "File upload encryption fix."
+      -
+        type: bug
+        text: "Asynchronous file upload encryption fix."
+      -
+        type: bug
+        text: "Telemetry fix - removal of `putIfAbsent`."
   -
     version: v5.1.0
     date: 2020-12-16

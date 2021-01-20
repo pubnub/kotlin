@@ -20,6 +20,7 @@ import java.nio.charset.StandardCharsets
 import java.util.Scanner
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicReference
 
 class FilesIntegrationTest : BaseIntegrationTest() {
     @Test
@@ -30,6 +31,48 @@ class FilesIntegrationTest : BaseIntegrationTest() {
     @Test
     fun uploadListDownloadDeleteWithoutCipher() {
         uploadListDownloadDelete(false)
+    }
+
+    @Test
+    fun uploadAsyncAndDelete() {
+        val channel: String = randomChannel()
+        val content = "This is content"
+        val message = "This is message"
+        val meta = "This is meta"
+        val fileName = "fileName$channel.txt"
+        val fileSent = CountDownLatch(1)
+        pubnub.subscribe(channels = listOf(channel))
+        val sendResultReference: AtomicReference<PNFileUploadResult> = AtomicReference()
+        ByteArrayInputStream(content.toByteArray(StandardCharsets.UTF_8)).use {
+            pubnub.sendFile(
+                channel = channel,
+                fileName = fileName,
+                inputStream = it,
+                message = message,
+                meta = meta
+            ).async { r, s ->
+                if (!s.error) {
+                    sendResultReference.set(r)
+                }
+                fileSent.countDown()
+            }
+        }
+
+        if (!fileSent.await(3, TimeUnit.SECONDS)) {
+            Assert.fail()
+            return
+        }
+        val sendResult = sendResultReference.get()
+
+        if (sendResult == null) {
+            Assert.fail()
+            return
+        }
+
+        pubnub.deleteFile(channel = channel,
+            fileName = fileName,
+            fileId = sendResult.file.id)
+            .sync()
     }
 
     private fun uploadListDownloadDelete(withCipher: Boolean) {

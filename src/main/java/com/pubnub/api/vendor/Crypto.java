@@ -7,7 +7,6 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.UnsupportedEncodingException;
-import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.spec.AlgorithmParameterSpec;
 import java.util.Random;
@@ -84,6 +83,10 @@ public class Crypto {
     }
 
     public String encrypt(String input) throws PubNubException {
+        return encrypt(input, Base64.NO_WRAP);
+    }
+
+    public String encrypt(String input, Integer flags) throws PubNubException {
         try {
             initCiphers();
             AlgorithmParameterSpec ivSpec = new IvParameterSpec(ivBytes);
@@ -95,10 +98,10 @@ public class Crypto {
                 byte[] encryptedWithIV = new byte[ivBytes.length + encrypted.length];
                 System.arraycopy(ivBytes, 0, encryptedWithIV, 0, ivBytes.length);
                 System.arraycopy(encrypted, 0, encryptedWithIV, ivBytes.length, encrypted.length);
-                return new String(Base64.encode(encryptedWithIV, 0), ENCODING_UTF_8);
+                return new String(Base64.encode(encryptedWithIV, flags), ENCODING_UTF_8);
             }
             else {
-                return new String(Base64.encode(cipher.doFinal(input.getBytes(ENCODING_UTF_8)), 0), ENCODING_UTF_8);
+                return new String(Base64.encode(cipher.doFinal(input.getBytes(ENCODING_UTF_8)), flags), ENCODING_UTF_8);
             }
         } catch (Exception e) {
             throw newCryptoError(0, e);
@@ -106,26 +109,23 @@ public class Crypto {
 
     }
 
-    /**
-     * Decrypt
-     *
-     * @param cipher_text
-     * @return String
-     * @throws PubNubException
-     */
     public String decrypt(String cipher_text) throws PubNubException {
+        return decrypt(cipher_text, Base64.NO_WRAP);
+    }
+
+    public String decrypt(String cipher_text, Integer flags) throws PubNubException {
         try {
             byte[] dataBytes;
             initCiphers();
             if (dynamicIV){
-                dataBytes = Base64.decode(cipher_text, 0);
+                dataBytes = Base64.decode(cipher_text, flags);
                 System.arraycopy(dataBytes, 0, ivBytes, 0, 16);
                 byte[] receivedCipherBytes = new byte[dataBytes.length - 16];
                 System.arraycopy(dataBytes, 16, receivedCipherBytes, 0, dataBytes.length-16);
                 dataBytes = receivedCipherBytes;
             }
             else {
-                dataBytes = Base64.decode(cipher_text, 0);
+                dataBytes = Base64.decode(cipher_text, flags);
             }
             AlgorithmParameterSpec ivSpec = new IvParameterSpec(ivBytes);
             SecretKeySpec newKey = new SecretKeySpec(keyBytes, "AES");
