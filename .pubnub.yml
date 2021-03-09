@@ -1,10 +1,20 @@
 name: kotlin
-version: 5.1.1
+version: 5.1.2
 schema: 1
 scm: github.com/pubnub/kotlin
 files:
-  - build/libs/pubnub-kotlin-5.1.1-all.jar
+  - build/libs/pubnub-kotlin-5.1.2-all.jar
 changelog:
+  -
+    version: v5.1.2
+    date: 2021-03-09
+    changes:
+      -
+        type: bug
+        text: "In some specific timing conditions subscription loop could loose reference to one of the retrofit call and we would loose posibility to control it. In the meantime we'd start yet another subscription call. One of them is obviously not necessary Synchronization has been improved so it's no longer possible."
+      -
+        type: bug
+        text: "It was not possible to properly cancel the OkHttp connection when Google Security Provider (ProviderInstaller) is being used."
   -
     version: v5.1.1
     date: 2021-01-20

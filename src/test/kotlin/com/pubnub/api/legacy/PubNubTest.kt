@@ -1,19 +1,10 @@
 package com.pubnub.api.legacy
 
-import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubException
-import com.pubnub.api.callbacks.SubscribeCallback
-import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNReconnectionPolicy
-import com.pubnub.api.enums.PNStatusCategory
-import com.pubnub.api.models.consumer.PNStatus
-import org.awaitility.Awaitility
-import org.awaitility.Durations
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
-import java.text.SimpleDateFormat
-import java.util.concurrent.Executors
 
 class PubNubTest : BaseTest() {
 
@@ -76,46 +67,7 @@ class PubNubTest : BaseTest() {
     fun getVersionAndTimeStamp() {
         val version = pubnub.version
         val timeStamp = pubnub.timestamp()
-        assertEquals("5.1.1", version)
+        assertEquals("5.1.2", version)
         assertTrue(timeStamp > 0)
-    }
-
-    @Test
-    fun testSynchronizedAccess() {
-        val size = 500
-        var counter = 0
-
-        pubnub.addListener(object : SubscribeCallback() {
-            override fun status(pubnub: PubNub, pnStatus: PNStatus) {
-                counter++
-                val time = SimpleDateFormat("HH:mm:ss:SSS").format(System.currentTimeMillis())
-                println("$time ${pnStatus.authKey} [$counter]")
-            }
-        })
-
-        val pool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors())
-
-        repeat(size) {
-            pool.execute {
-                pubnub.subscriptionManager.listenerManager.announce(
-                    PNStatus(
-                        category = PNStatusCategory.PNUnknownCategory,
-                        error = false,
-                        operation = PNOperationType.PNTimeOperation
-                    ).apply {
-                        authKey = Thread.currentThread().name
-                    }
-                )
-            }
-        }
-
-        Awaitility.await()
-            .atMost(Durations.TEN_SECONDS)
-            .conditionEvaluationListener {
-                if (it.remainingTimeInMS < 300) {
-                    println("Almost done. Counter value: $counter")
-                }
-            }
-            .until { counter == size }
     }
 }

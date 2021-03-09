@@ -1,9 +1,13 @@
 package com.pubnub.api.managers
 
 import com.pubnub.api.PubNub
+import com.pubnub.api.builder.ConnectedStatusAnnouncedOperation
+import com.pubnub.api.builder.NoOpOperation
 import com.pubnub.api.builder.PresenceOperation
+import com.pubnub.api.builder.PubSubOperation
 import com.pubnub.api.builder.StateOperation
 import com.pubnub.api.builder.SubscribeOperation
+import com.pubnub.api.builder.TimetokenRegionOperation
 import com.pubnub.api.builder.UnsubscribeOperation
 import com.pubnub.api.callbacks.ReconnectionCallback
 import com.pubnub.api.callbacks.SubscribeCallback
@@ -16,12 +20,11 @@ import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.server.SubscribeMessage
 import com.pubnub.api.workers.SubscribeMessageWorker
-import java.util.ArrayList
 import java.util.Timer
 import java.util.concurrent.LinkedBlockingQueue
 import kotlin.concurrent.timerTask
 
-class SubscriptionManager(val pubnub: PubNub) {
+class SubscriptionManager(val pubnub: PubNub, private val subscriptionState: StateManager = StateManager()) {
 
     private companion object {
         private const val HEARTBEAT_INTERVAL_MULTIPLIER = 1000L
@@ -35,60 +38,45 @@ class SubscriptionManager(val pubnub: PubNub) {
     private var duplicationManager: DuplicationManager = DuplicationManager(pubnub.configuration)
 
     /**
-     * Store the latest timetoken to subscribe with, null by default to get the latest timetoken.
-     */
-    private var timetoken = 0L
-    private var storedTimetoken: Long? = null // when changing the channel mix, store the timetoken for a later date.
-
-    /**
-     * Keep track of Region to support PSV2 specification.
-     */
-    private var region: String? = null
-
-    /**
      * Timer for heartbeat operations.
      */
     private var heartbeatTimer: Timer? = null
 
-    private val subscriptionState = StateManager()
     internal val listenerManager = ListenerManager(pubnub)
     private val reconnectionManager = ReconnectionManager(pubnub)
 
     private var consumerThread: Thread? = null
 
-    /**
-     * lever to indicate if an announcement to the user about the subscription should be made.
-     * the announcement happens only after the channel mix has been changed.
-     */
-    private var subscriptionStatusAnnounced: Boolean = false
-
     init {
-
         reconnectionManager.reconnectionCallback = object : ReconnectionCallback() {
             override fun onReconnection() {
                 reconnect()
-                listenerManager.announce(
-                    PNStatus(
-                        category = PNStatusCategory.PNReconnectedCategory,
-                        operation = PNOperationType.PNSubscribeOperation,
-                        error = false,
-                        affectedChannels = subscriptionState.prepareChannelList(true),
-                        affectedChannelGroups = subscriptionState.prepareChannelGroupList(true)
+                subscriptionState.subscriptionStateData(true).let {
+                    listenerManager.announce(
+                        PNStatus(
+                            category = PNStatusCategory.PNReconnectedCategory,
+                            operation = PNOperationType.PNSubscribeOperation,
+                            error = false,
+                            affectedChannels = it.channels,
+                            affectedChannelGroups = it.channelGroups
+                        )
                     )
-                )
-                subscriptionStatusAnnounced = true
+                }
             }
 
             override fun onMaxReconnectionExhaustion() {
-                listenerManager.announce(
-                    PNStatus(
-                        category = PNStatusCategory.PNReconnectionAttemptsExhausted,
-                        operation = PNOperationType.PNSubscribeOperation,
-                        error = false,
-                        affectedChannels = subscriptionState.prepareChannelList(true),
-                        affectedChannelGroups = subscriptionState.prepareChannelGroupList(true)
+                subscriptionState.subscriptionStateData(true).let {
+
+                    listenerManager.announce(
+                        PNStatus(
+                            category = PNStatusCategory.PNReconnectionAttemptsExhausted,
+                            operation = PNOperationType.PNSubscribeOperation,
+                            error = false,
+                            affectedChannels = it.channels,
+                            affectedChannelGroups = it.channelGroups
+                        )
                     )
-                )
+                }
 
                 disconnect()
             }
@@ -108,54 +96,38 @@ class SubscriptionManager(val pubnub: PubNub) {
         }
     }
 
-    @Synchronized
     fun getSubscribedChannels(): List<String> {
-        return subscriptionState.prepareChannelList(false)
+        return subscriptionState.subscriptionStateData(false).channels
     }
 
-    @Synchronized
     fun getSubscribedChannelGroups(): List<String> {
-        return subscriptionState.prepareChannelGroupList(false)
+        return subscriptionState.subscriptionStateData(false).channelGroups
     }
 
-    @Synchronized
-    internal fun adaptStateBuilder(stateOperation: StateOperation?) {
-        subscriptionState.adaptStateBuilder(stateOperation!!)
-        reconnect()
+    internal fun adaptStateBuilder(stateOperation: StateOperation) {
+        reconnect(stateOperation)
     }
 
-    @Synchronized
     internal fun adaptSubscribeBuilder(subscribeOperation: SubscribeOperation) {
-        subscriptionState.adaptSubscribeBuilder(subscribeOperation)
-
-        // the channel mix changed, on the successful subscribe, there is going to be announcement.
-        subscriptionStatusAnnounced = false
-        duplicationManager.clearHistory()
-
-        timetoken = subscribeOperation.timetoken
-
-        // if the timetoken is not at starting position, reset the timetoken to get a connected event
-        // and store the old timetoken to be reused later during subscribe.
-        if (timetoken != 0L) {
-            storedTimetoken = timetoken
-        }
-        timetoken = 0L
-        reconnect()
+        reconnect(subscribeOperation)
     }
 
-    @Synchronized
-    fun reconnect() {
-        startSubscribeLoop()
-        registerHeartbeatTimer()
+    internal fun reconnect(
+        pubSubOperation: PubSubOperation = NoOpOperation
+    ) {
+        startSubscribeLoop(pubSubOperation)
+        registerHeartbeatTimer(NoOpOperation)
     }
 
-    @Synchronized
     fun disconnect() {
         heartbeatTimer?.cancel()
         stopSubscribeLoop()
     }
 
-    private fun registerHeartbeatTimer() {
+    @Synchronized
+    private fun registerHeartbeatTimer(pubSubOperation: PubSubOperation) {
+        subscriptionState.handleOperation(pubSubOperation)
+
         // make sure only one timer is running at a time.
         heartbeatTimer?.cancel()
 
@@ -174,29 +146,22 @@ class SubscriptionManager(val pubnub: PubNub) {
         )
     }
 
+    @Synchronized
     private fun performHeartbeatLoop() {
         heartbeatCall?.silentCancel()
-        val presenceChannels = subscriptionState.prepareChannelList(false)
-        val presenceChannelGroups =
-            subscriptionState.prepareChannelGroupList(false)
-        val heartbeatChannels =
-            subscriptionState.prepareHeartbeatChannelList(false)
-        val heartbeatChannelGroups =
-            subscriptionState.prepareHeartbeatChannelGroupList(false)
+
+        val subscriptionStateData = subscriptionState.subscriptionStateData(false)
+
         // do not start the loop if we do not have any presence channels or channel groups enabled.
-        if (presenceChannels.isEmpty() &&
-            presenceChannelGroups.isEmpty() &&
-            heartbeatChannels.isEmpty() &&
-            heartbeatChannelGroups.isEmpty()
+        if (subscriptionStateData.channels.isEmpty() &&
+            subscriptionStateData.channelGroups.isEmpty() &&
+            subscriptionStateData.heartbeatChannels.isEmpty() &&
+            subscriptionStateData.heartbeatChannelGroups.isEmpty()
         ) {
             return
         }
-        val channels: MutableList<String> = ArrayList()
-        channels.addAll(presenceChannels)
-        channels.addAll(heartbeatChannels)
-        val groups: MutableList<String> = ArrayList()
-        groups.addAll(presenceChannelGroups)
-        groups.addAll(heartbeatChannelGroups)
+        val channels = subscriptionStateData.channels + subscriptionStateData.heartbeatChannels
+        val groups = subscriptionStateData.channelGroups + subscriptionStateData.heartbeatChannelGroups
         heartbeatCall = Heartbeat(pubnub, channels, groups)
         heartbeatCall?.async { _, status ->
             val heartbeatVerbosity = pubnub.configuration.heartbeatNotificationOptions
@@ -217,28 +182,33 @@ class SubscriptionManager(val pubnub: PubNub) {
         }
     }
 
-    private fun startSubscribeLoop() {
+    @Synchronized
+    private fun startSubscribeLoop(
+        vararg pubSubOperations: PubSubOperation = arrayOf(NoOpOperation)
+    ) {
         // this function can be called from different points, make sure any old loop is closed
         stopSubscribeLoop()
+        subscriptionState.handleOperation(*pubSubOperations)
 
-        val combinedChannels = subscriptionState.prepareChannelList(true)
-        val combinedChannelGroups = subscriptionState.prepareChannelGroupList(true)
-        val stateStorage = subscriptionState.createStatePayload()
+        if (pubSubOperations.any { it is SubscribeOperation }) {
+            duplicationManager.clearHistory()
+        }
 
+        val stateData = subscriptionState.subscriptionStateData(true)
         // do not start the subscribe loop if we have no channels to subscribe to.
-        if (combinedChannels.isEmpty() && combinedChannelGroups.isEmpty()) {
+        if (stateData.channels.isEmpty() && stateData.channelGroups.isEmpty()) {
             return
         }
 
         subscribeCall = Subscribe(pubnub).apply {
-            channels = combinedChannels
-            channelGroups = combinedChannelGroups
-            timetoken = this@SubscriptionManager.timetoken
-            region = this@SubscriptionManager.region
+            channels = stateData.channels
+            channelGroups = stateData.channelGroups
+            timetoken = stateData.timetoken
+            region = stateData.region
             pubnub.configuration.isFilterExpressionKeyValid {
                 filterExpression = this
             }
-            state = stateStorage
+            state = stateData.statePayload
         }
 
         subscribeCall?.async { result, status ->
@@ -259,14 +229,15 @@ class SubscriptionManager(val pubnub: PubNub) {
                 return@async
             }
 
-            if (!subscriptionStatusAnnounced) {
+            val announcedOperation = if (stateData.shouldAnnounce) {
                 val pnStatus = createPublicStatus(status).apply {
                     category = PNStatusCategory.PNConnectedCategory
                     error = false
                 }
-                subscriptionStatusAnnounced = true
+
                 listenerManager.announce(pnStatus)
-            }
+                ConnectedStatusAnnouncedOperation
+            } else null
 
             pubnub.configuration.requestMessageCountThreshold?.let {
                 // todo default value of size if all ?s are null
@@ -284,15 +255,12 @@ class SubscriptionManager(val pubnub: PubNub) {
                 messageQueue.addAll(result.messages)
             }
 
-            if (storedTimetoken != null) {
-                timetoken = storedTimetoken!!
-                storedTimetoken = null
-            } else {
-                timetoken = result.metadata.timetoken
-            }
-
-            region = result.metadata.region
-            startSubscribeLoop()
+            startSubscribeLoop(
+                TimetokenRegionOperation(
+                    timetoken = result.metadata.timetoken,
+                    region = result.metadata.region
+                ), announcedOperation ?: NoOpOperation
+            )
         }
     }
 
@@ -305,7 +273,6 @@ class SubscriptionManager(val pubnub: PubNub) {
     }
 
     internal fun adaptPresenceBuilder(presenceOperation: PresenceOperation) {
-        subscriptionState.adaptPresenceBuilder(presenceOperation)
 
         if (!pubnub.configuration.suppressLeaveEvents && !presenceOperation.connected) {
             Leave(pubnub).apply {
@@ -316,14 +283,10 @@ class SubscriptionManager(val pubnub: PubNub) {
             }
         }
 
-        registerHeartbeatTimer()
+        registerHeartbeatTimer(presenceOperation)
     }
 
-    @Synchronized
     internal fun adaptUnsubscribeBuilder(unsubscribeOperation: UnsubscribeOperation) {
-        subscriptionState.adaptUnsubscribeBuilder(unsubscribeOperation)
-        subscriptionStatusAnnounced = false
-
         if (!pubnub.configuration.suppressLeaveEvents) {
             Leave(pubnub).apply {
                 channels = unsubscribeOperation.channels
@@ -332,28 +295,18 @@ class SubscriptionManager(val pubnub: PubNub) {
                 listenerManager.announce(status)
             }
         }
-
-        // if we unsubscribed from all the channels, reset the timetoken back to zero and remove the region.
-        if (subscriptionState.isEmpty()) {
-            region = null
-            storedTimetoken = null
-            timetoken = 0L
-        } else {
-            storedTimetoken = timetoken
-            timetoken = 0L
-        }
-
-        reconnect()
+        reconnect(pubSubOperation = unsubscribeOperation)
     }
 
-    @Synchronized
     fun unsubscribeAll() {
-        adaptUnsubscribeBuilder(
-            UnsubscribeOperation(
-                channels = subscriptionState.prepareChannelList(false),
-                channelGroups = subscriptionState.prepareChannelGroupList(false)
+        subscriptionState.subscriptionStateData(false).let {
+            adaptUnsubscribeBuilder(
+                UnsubscribeOperation(
+                    channels = it.channels,
+                    channelGroups = it.channelGroups
+                )
             )
-        )
+        }
     }
 
     private fun createPublicStatus(privateStatus: PNStatus): PNStatus {

@@ -12,8 +12,10 @@ internal class DuplicationManager(private val config: PNConfiguration) {
             "${publishMetaData?.publishTimetoken}-${payload.hashCode()}"
         }
 
+    @Synchronized
     fun isDuplicate(message: SubscribeMessage) = hashHistory.contains(getKey(message))
 
+    @Synchronized
     fun addEntry(message: SubscribeMessage) {
         if (hashHistory.size >= config.maximumMessagesCacheSize) {
             hashHistory.removeAt(0)
@@ -21,5 +23,6 @@ internal class DuplicationManager(private val config: PNConfiguration) {
         hashHistory.add(getKey(message))
     }
 
+    @Synchronized
     fun clearHistory() = hashHistory.clear()
 }

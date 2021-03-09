@@ -1,34 +1,38 @@
 package com.pubnub.api.builder
 
 // basic publish/subscribe class
-
-internal abstract class PubSubOperation(
-    internal val channels: List<String> = emptyList(),
-    internal val channelGroups: List<String> = emptyList()
-)
+internal sealed class PubSubOperation
 
 // concrete publish/subscribe cases
+internal data class SubscribeOperation(
+    val channels: List<String> = emptyList(),
+    val channelGroups: List<String> = emptyList(),
+    val presenceEnabled: Boolean = false,
+    val timetoken: Long = 0L
+) : PubSubOperation()
 
-internal class SubscribeOperation(
-    channels: List<String> = emptyList(),
-    channelGroups: List<String> = emptyList(),
-    internal val presenceEnabled: Boolean = false,
-    internal val timetoken: Long = 0L
-) : PubSubOperation(channels, channelGroups)
+internal data class UnsubscribeOperation(
+    val channels: List<String> = emptyList(),
+    val channelGroups: List<String> = emptyList()
+) : PubSubOperation()
 
-internal class UnsubscribeOperation(
-    channels: List<String> = emptyList(),
-    channelGroups: List<String> = emptyList()
-) : PubSubOperation(channels, channelGroups)
+internal data class PresenceOperation(
+    val channels: List<String> = emptyList(),
+    val channelGroups: List<String> = emptyList(),
+    val connected: Boolean = false
+) : PubSubOperation()
 
-internal class PresenceOperation(
-    channels: List<String> = emptyList(),
-    channelGroups: List<String> = emptyList(),
-    internal val connected: Boolean = false
-) : PubSubOperation(channels, channelGroups)
-
-internal class StateOperation(
-    channels: List<String> = emptyList(),
-    channelGroups: List<String> = emptyList(),
+internal data class StateOperation(
+    val channels: List<String> = emptyList(),
+    val channelGroups: List<String> = emptyList(),
     val state: Any? = null
-) : PubSubOperation(channels, channelGroups)
+) : PubSubOperation()
+
+internal data class TimetokenRegionOperation(
+    val timetoken: Long = 0L,
+    val region: String
+) : PubSubOperation()
+
+internal object ConnectedStatusAnnouncedOperation : PubSubOperation()
+
+internal object NoOpOperation : PubSubOperation()

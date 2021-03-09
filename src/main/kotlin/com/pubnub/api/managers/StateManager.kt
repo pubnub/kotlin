@@ -1,12 +1,16 @@
 package com.pubnub.api.managers
 
+import com.pubnub.api.builder.ConnectedStatusAnnouncedOperation
+import com.pubnub.api.builder.NoOpOperation
 import com.pubnub.api.builder.PresenceOperation
+import com.pubnub.api.builder.PubSubOperation
 import com.pubnub.api.builder.StateOperation
 import com.pubnub.api.builder.SubscribeOperation
+import com.pubnub.api.builder.TimetokenRegionOperation
 import com.pubnub.api.builder.UnsubscribeOperation
 import com.pubnub.api.models.SubscriptionItem
 
-internal class StateManager {
+class StateManager {
 
     /**
      * Contains a list of subscribed channels
@@ -31,8 +35,68 @@ internal class StateManager {
     private val heartbeatChannels: HashMap<String, SubscriptionItem> = hashMapOf()
     private val heartbeatGroups: HashMap<String, SubscriptionItem> = hashMapOf()
 
+    /**
+     * Keep track of Region to support PSV2 specification.
+     */
+    private var region: String? = null
+    private var timetoken = 0L
+
+    /**
+     * Store the latest timetoken to subscribe with, null by default to get the latest timetoken.
+     */
+    private var storedTimetoken: Long? = null
+
+    private var shouldAnnounce: Boolean = false
+
     @Synchronized
-    internal fun adaptSubscribeBuilder(subscribeOperation: SubscribeOperation) {
+    internal fun handleOperation(vararg pubSubOperations: PubSubOperation) {
+        pubSubOperations.forEach { pubSubOperation ->
+            when (pubSubOperation) {
+                is SubscribeOperation -> {
+                    adaptSubscribeBuilder(subscribeOperation = pubSubOperation)
+                    shouldAnnounce = true
+                }
+                is UnsubscribeOperation -> {
+                    adaptUnsubscribeBuilder(unsubscribeOperation = pubSubOperation)
+                    shouldAnnounce = true
+                }
+                is PresenceOperation -> adaptPresenceBuilder(presenceOperation = pubSubOperation)
+                is StateOperation -> adaptStateBuilder(stateOperation = pubSubOperation)
+                is TimetokenRegionOperation -> {
+                    if (storedTimetoken != null) {
+                        timetoken = storedTimetoken!!
+                        storedTimetoken = null
+                    } else {
+                        timetoken = pubSubOperation.timetoken
+                    }
+
+                    region = pubSubOperation.region
+                }
+                ConnectedStatusAnnouncedOperation -> {
+                    shouldAnnounce = false
+                }
+                NoOpOperation -> {
+                    // do nothing
+                }
+            }
+        }
+    }
+
+    @Synchronized
+    internal fun subscriptionStateData(includePresence: Boolean): SubscriptionStateData {
+        return SubscriptionStateData(
+            channelGroups = prepareChannelGroupList(includePresence),
+            channels = prepareChannelList(includePresence),
+            heartbeatChannelGroups = prepareHeartbeatChannelGroupList(includePresence),
+            heartbeatChannels = prepareHeartbeatChannelList(includePresence),
+            timetoken = timetoken,
+            region = region,
+            statePayload = createStatePayload(),
+            shouldAnnounce = shouldAnnounce
+        )
+    }
+
+    private fun adaptSubscribeBuilder(subscribeOperation: SubscribeOperation) {
         for (channel in subscribeOperation.channels) {
             if (channel.isEmpty()) {
                 continue
@@ -57,10 +121,17 @@ internal class StateManager {
                 presenceGroups[channelGroup] = presenceSubscriptionItem
             }
         }
+        timetoken = subscribeOperation.timetoken
+
+        // if the timetoken is not at starting position, reset the timetoken to get a connected event
+        // and store the old timetoken to be reused later during subscribe.
+        if (timetoken != 0L) {
+            storedTimetoken = timetoken
+        }
+        timetoken = 0L
     }
 
-    @Synchronized
-    internal fun adaptStateBuilder(stateOperation: StateOperation) {
+    private fun adaptStateBuilder(stateOperation: StateOperation) {
         for (channel in stateOperation.channels) {
             val subscribedChannel = channels[channel]
             subscribedChannel?.state = stateOperation.state
@@ -71,8 +142,7 @@ internal class StateManager {
         }
     }
 
-    @Synchronized
-    internal fun adaptUnsubscribeBuilder(unsubscribeOperation: UnsubscribeOperation) {
+    private fun adaptUnsubscribeBuilder(unsubscribeOperation: UnsubscribeOperation) {
         for (channel in unsubscribeOperation.channels) {
             channels.remove(channel)
             presenceChannels.remove(channel)
@@ -81,10 +151,18 @@ internal class StateManager {
             groups.remove(channelGroup)
             presenceGroups.remove(channelGroup)
         }
+        // if we unsubscribed from all the channels, reset the timetoken back to zero and remove the region.
+        if (isEmpty()) {
+            region = null
+            storedTimetoken = null
+            timetoken = 0L
+        } else {
+            storedTimetoken = timetoken
+            timetoken = 0L
+        }
     }
 
-    @Synchronized
-    internal fun adaptPresenceBuilder(presenceOperation: PresenceOperation) {
+    private fun adaptPresenceBuilder(presenceOperation: PresenceOperation) {
         for (channel in presenceOperation.channels) {
             if (channel.isEmpty()) {
                 continue
@@ -109,8 +187,7 @@ internal class StateManager {
         }
     }
 
-    @Synchronized
-    fun createStatePayload(): Map<String, Any?> {
+    private fun createStatePayload(): Map<String, Any?> {
         val stateResponse: HashMap<String, Any?> = hashMapOf()
         for (channel in channels.values) {
             if (channel.state != null) {
@@ -125,32 +202,26 @@ internal class StateManager {
         return stateResponse
     }
 
-    @Synchronized
-    fun prepareChannelList(includePresence: Boolean): List<String> {
+    private fun prepareChannelList(includePresence: Boolean): List<String> {
         return prepareMembershipList(channels, presenceChannels, includePresence)
     }
 
-    @Synchronized
-    fun prepareChannelGroupList(includePresence: Boolean): List<String> {
+    private fun prepareChannelGroupList(includePresence: Boolean): List<String> {
         return prepareMembershipList(groups, presenceGroups, includePresence)
     }
 
-    @Synchronized
-    fun prepareHeartbeatChannelList(includePresence: Boolean): List<String> {
+    private fun prepareHeartbeatChannelList(includePresence: Boolean): List<String> {
         return prepareMembershipList(heartbeatChannels, presenceChannels, includePresence)
     }
 
-    @Synchronized
-    fun prepareHeartbeatChannelGroupList(includePresence: Boolean): List<String> {
+    private fun prepareHeartbeatChannelGroupList(includePresence: Boolean): List<String> {
         return prepareMembershipList(heartbeatGroups, presenceGroups, includePresence)
     }
 
-    @Synchronized
-    fun isEmpty(): Boolean {
+    private fun isEmpty(): Boolean {
         return channels.isEmpty() && presenceChannels.isEmpty() && groups.isEmpty() && presenceGroups.isEmpty()
     }
 
-    @Synchronized
     private fun prepareMembershipList(
         dataStorage: Map<String, SubscriptionItem>,
         presenceStorage: Map<String, SubscriptionItem>,
@@ -168,3 +239,14 @@ internal class StateManager {
         return response
     }
 }
+
+internal data class SubscriptionStateData(
+    val statePayload: Map<String, Any?>,
+    val heartbeatChannelGroups: List<String>,
+    val heartbeatChannels: List<String>,
+    val channelGroups: List<String>,
+    val channels: List<String>,
+    val timetoken: Long,
+    val region: String?,
+    val shouldAnnounce: Boolean
+)

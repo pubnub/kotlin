@@ -34,37 +34,30 @@ internal class ListenerManager(val pubnub: PubNub) {
         return tempCallbackList
     }
 
-    @Synchronized
     fun announce(status: PNStatus) {
         getListeners().forEach { it.status(pubnub, status) }
     }
 
-    @Synchronized
     fun announce(message: PNMessageResult) {
         getListeners().forEach { it.message(pubnub, message) }
     }
 
-    @Synchronized
     fun announce(presence: PNPresenceEventResult) {
         getListeners().forEach { it.presence(pubnub, presence) }
     }
 
-    @Synchronized
     fun announce(signal: PNSignalResult) {
         getListeners().forEach { it.signal(pubnub, signal) }
     }
 
-    @Synchronized
     fun announce(messageAction: PNMessageActionResult) {
         getListeners().forEach { it.messageAction(pubnub, messageAction) }
     }
 
-    @Synchronized
     fun announce(pnObjectEventResult: PNObjectEventResult) {
         getListeners().forEach { it.objects(pubnub, pnObjectEventResult) }
     }
 
-    @Synchronized
     fun announce(pnFileEventResult: PNFileEventResult) {
         getListeners().forEach { it.file(pubnub, pnFileEventResult) }
     }
