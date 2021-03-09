@@ -2,4 +2,4 @@
 
 # &lt;init&gt;
 
-`SubscriptionManager(pubnub: `[`PubNub`](../../com.pubnub.api/-pub-nub/index.md)`)`
+`SubscriptionManager(pubnub: `[`PubNub`](../../com.pubnub.api/-pub-nub/index.md)`, subscriptionState: `[`StateManager`](../-state-manager/index.md)` = StateManager())`

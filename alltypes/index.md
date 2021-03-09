@@ -935,6 +935,11 @@ Custom exception wrapper for errors occurred during execution or processing of a
 
 |
 
+##### [com.pubnub.api.managers.StateManager](../com.pubnub.api.managers/-state-manager/index.md)
+
+
+|
+
 ##### [com.pubnub.api.endpoints.pubsub.Subscribe](../com.pubnub.api.endpoints.pubsub/-subscribe/index.md)
 
 

@@ -8,5 +8,6 @@
 |---|---|
 | [MapperManager](-mapper-manager/index.md) | `class MapperManager` |
 | [RetrofitManager](-retrofit-manager/index.md) | `class RetrofitManager` |
+| [StateManager](-state-manager/index.md) | `class StateManager` |
 | [SubscriptionManager](-subscription-manager/index.md) | `class SubscriptionManager` |
 | [TelemetryManager](-telemetry-manager/index.md) | `class TelemetryManager` |
