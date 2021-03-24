@@ -18,7 +18,7 @@ import com.pubnub.api.services.SubscribeService
 import com.pubnub.api.services.TimeService
 import okhttp3.Call
 import okhttp3.OkHttpClient
-import okhttp3.PNCallFactory
+import com.pubnub.okhttp3.PNCallFactory
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import java.util.concurrent.ExecutorService
