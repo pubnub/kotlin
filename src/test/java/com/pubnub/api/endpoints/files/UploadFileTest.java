@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.function.Supplier;
 
+import static com.pubnub.api.PubNubUtil.readBytes;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.any;
@@ -62,7 +63,7 @@ public class UploadFileTest implements TestsWithFiles {
         try (FileInputStream fileInputStream = new FileInputStream(file)) {
             UploadFile uploadFile = new UploadFile(s3Service,
                     file.getName(),
-                    fileInputStream,
+                    readBytes(fileInputStream),
                     null,
 
                     new FormField("key", "keyValue"),
@@ -95,7 +96,7 @@ public class UploadFileTest implements TestsWithFiles {
         try (FileInputStream fileInputStream = new FileInputStream(file)) {
             UploadFile uploadFile = new UploadFile(s3Service,
                     file.getName(),
-                    fileInputStream,
+                    readBytes(fileInputStream),
                     null,
                     new FormField("key", "keyValue"),
                     Collections.singletonList(new FormField("Content-Type", contentTypeValue)),
@@ -125,7 +126,7 @@ public class UploadFileTest implements TestsWithFiles {
         try (FileInputStream fileInputStream = new FileInputStream(file)) {
             UploadFile uploadFile = new UploadFile(s3Service,
                     file.getName(),
-                    fileInputStream,
+                    readBytes(fileInputStream),
                     null,
                     new FormField("key", "keyValue"),
                     Collections.emptyList(),
@@ -155,7 +156,7 @@ public class UploadFileTest implements TestsWithFiles {
         try (FileInputStream fileInputStream = new FileInputStream(file)) {
             UploadFile uploadFile = new UploadFile(s3Service,
                     file.getName(),
-                    fileInputStream,
+                    readBytes(fileInputStream),
                     null,
                     new FormField("key", "keyValue"),
                     Collections.emptyList(),

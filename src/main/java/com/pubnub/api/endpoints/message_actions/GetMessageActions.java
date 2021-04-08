@@ -1,30 +1,24 @@
 package com.pubnub.api.endpoints.message_actions;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.enums.PNOperationType;
-import com.pubnub.api.managers.MapperManager;
 import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.TelemetryManager;
 import com.pubnub.api.models.consumer.message_actions.PNGetMessageActionsResult;
-import com.pubnub.api.models.consumer.message_actions.PNMessageAction;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import retrofit2.Call;
 import retrofit2.Response;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 @Accessors(chain = true, fluent = true)
-public class GetMessageActions extends Endpoint<JsonObject, PNGetMessageActionsResult> {
+public class GetMessageActions extends Endpoint<PNGetMessageActionsResult, PNGetMessageActionsResult> {
 
     @Setter
     private String channel;
@@ -66,7 +60,7 @@ public class GetMessageActions extends Endpoint<JsonObject, PNGetMessageActionsR
     }
 
     @Override
-    protected Call<JsonObject> doWork(Map<String, String> params) {
+    protected Call<PNGetMessageActionsResult> doWork(Map<String, String> params) {
 
         if (start != null) {
             params.put("start", Long.toString(start).toLowerCase());
@@ -88,23 +82,9 @@ public class GetMessageActions extends Endpoint<JsonObject, PNGetMessageActionsR
     }
 
     @Override
-    protected PNGetMessageActionsResult createResponse(Response<JsonObject> input) throws PubNubException {
-        PNGetMessageActionsResult.PNGetMessageActionsResultBuilder builder = PNGetMessageActionsResult.builder();
-
-        if (input.body() != null) {
-            MapperManager mapper = getPubnub().getMapper();
-            List<PNMessageAction> pnMessageActionList = new ArrayList<>();
-
-            Iterator<JsonElement> it = mapper.getArrayIterator(input.body(), "data");
-            while (it.hasNext()) {
-                JsonElement messageActionJson = it.next();
-                pnMessageActionList.add(mapper.convertValue(messageActionJson, PNMessageAction.class));
-            }
-
-            builder.actions(pnMessageActionList);
-        }
-
-        return builder.build();
+    protected PNGetMessageActionsResult createResponse(Response<PNGetMessageActionsResult> input) throws
+            PubNubException {
+        return input.body();
     }
 
     @Override

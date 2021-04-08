@@ -1,32 +1,34 @@
 package com.pubnub.api.managers;
 
 import com.pubnub.api.PubNub;
+import com.pubnub.api.builder.dto.ChangeTemporaryUnavailableOperation;
+import com.pubnub.api.builder.dto.ChangeTemporaryUnavailableOperation.ChangeTemporaryUnavailableOperationBuilder;
 import com.pubnub.api.builder.dto.PresenceOperation;
+import com.pubnub.api.builder.dto.PubSubOperation;
 import com.pubnub.api.builder.dto.StateOperation;
 import com.pubnub.api.builder.dto.SubscribeOperation;
+import com.pubnub.api.builder.dto.TimetokenAndRegionOperation;
 import com.pubnub.api.builder.dto.UnsubscribeOperation;
 import com.pubnub.api.callbacks.PNCallback;
 import com.pubnub.api.callbacks.ReconnectionCallback;
-import com.pubnub.api.callbacks.SubscribeCallback;
 import com.pubnub.api.endpoints.presence.Heartbeat;
 import com.pubnub.api.endpoints.presence.Leave;
 import com.pubnub.api.endpoints.pubsub.Subscribe;
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions;
 import com.pubnub.api.enums.PNStatusCategory;
 import com.pubnub.api.models.consumer.PNStatus;
-import com.pubnub.api.models.server.SubscribeEnvelope;
 import com.pubnub.api.models.server.SubscribeMessage;
 import com.pubnub.api.workers.SubscribeMessageWorker;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import static com.pubnub.api.managers.StateManager.ChannelFilter.WITHOUT_TEMPORARY_UNAVAILABLE;
 import static com.pubnub.api.managers.StateManager.MILLIS_IN_SECOND;
 
 @Slf4j
@@ -36,89 +38,76 @@ public class SubscriptionManager {
     private static final int HEARTBEAT_INTERVAL_MULTIPLIER = 1000;
 
     private volatile boolean connected;
+    private volatile boolean httpRequestPending = false;
 
-    private PubNub pubnub;
-    private TelemetryManager telemetryManager;
+    PubNub pubnub;
+    private final TelemetryManager telemetryManager;
     private Subscribe subscribeCall;
     private Heartbeat heartbeatCall;
 
-    private LinkedBlockingQueue<SubscribeMessage> messageQueue;
+    private final LinkedBlockingQueue<SubscribeMessage> messageQueue;
 
-    private DuplicationManager duplicationManager;
-
-    /**
-     * Store the latest timetoken to subscribe with, null by default to get the latest timetoken.
-     */
-    private Long timetoken;
-    private Long storedTimetoken; // when changing the channel mix, store the timetoken for a later date.
-
-    /**
-     * Keep track of Region to support PSV2 specification.
-     */
-    private String region;
+    private final DuplicationManager duplicationManager;
 
     /**
      * Timer for heartbeat operations.
      */
     private Timer timer;
 
-    private StateManager subscriptionState;
+    final StateManager subscriptionState;
 
-    private ListenerManager listenerManager;
-    private ReconnectionManager reconnectionManager;
-    private DelayedReconnectionManager delayedReconnectionManager;
-    private RetrofitManager retrofitManager;
+    private final ListenerManager listenerManager;
+    private final ReconnectionManager reconnectionManager;
+    private final DelayedReconnectionManager delayedReconnectionManager;
+    private final RetrofitManager retrofitManager;
 
     private Timer temporaryUnavailableChannelsDelayer;
 
     private Thread consumerThread;
 
-    /**
-     * lever to indicate if an announcement to the user about the subscription should be made.
-     * the announcement happens only after the channel mix has been changed.
-     */
-    private boolean subscriptionStatusAnnounced;
-
-    public SubscriptionManager(PubNub pubnubInstance, RetrofitManager retrofitManagerInstance,
-                               TelemetryManager telemetry) {
+    public SubscriptionManager(final PubNub pubnubInstance,
+                               final RetrofitManager retrofitManagerInstance,
+                               final TelemetryManager telemetry,
+                               final StateManager stateManager,
+                               final ListenerManager listenerManager,
+                               final ReconnectionManager reconnectionManager,
+                               final DelayedReconnectionManager delayedReconnectionManager,
+                               final DuplicationManager duplicationManager) {
         this.pubnub = pubnubInstance;
         this.telemetryManager = telemetry;
 
-        this.subscriptionStatusAnnounced = false;
         this.messageQueue = new LinkedBlockingQueue<>();
-        this.subscriptionState = new StateManager(pubnubInstance);
+        this.subscriptionState = stateManager;
 
-        this.listenerManager = new ListenerManager(this.pubnub);
-        this.reconnectionManager = new ReconnectionManager(this.pubnub);
-        this.delayedReconnectionManager = new DelayedReconnectionManager(this.pubnub);
+        this.listenerManager = listenerManager;
+        this.reconnectionManager = reconnectionManager;
+        this.delayedReconnectionManager = delayedReconnectionManager;
         this.retrofitManager = retrofitManagerInstance;
-        this.duplicationManager = new DuplicationManager(this.pubnub.getConfiguration());
-
-        this.timetoken = 0L;
-        this.storedTimetoken = null;
+        this.duplicationManager = duplicationManager;
 
         final ReconnectionCallback reconnectionCallback = new ReconnectionCallback() {
             @Override
             public void onReconnection() {
-                reconnect();
+                reconnect(PubSubOperation.NO_OP);
+                StateManager.SubscriptionStateData subscriptionStateData = subscriptionState.subscriptionStateData(true);
                 PNStatus pnStatus = PNStatus.builder()
                         .error(false)
-                        .affectedChannels(subscriptionState.prepareTargetChannelList(true))
-                        .affectedChannelGroups(subscriptionState.prepareTargetChannelGroupList(true))
+                        .affectedChannels(subscriptionStateData.getChannels())
+                        .affectedChannelGroups(subscriptionStateData.getChannelGroups())
                         .category(PNStatusCategory.PNReconnectedCategory)
                         .build();
 
-                subscriptionStatusAnnounced = true;
                 listenerManager.announce(pnStatus);
             }
 
             @Override
             public void onMaxReconnectionExhaustion() {
+                StateManager.SubscriptionStateData subscriptionStateData = subscriptionState.subscriptionStateData(true);
                 PNStatus pnStatus = PNStatus.builder()
                         .error(false)
                         .category(PNStatusCategory.PNReconnectionAttemptsExhaustedCategory)
-                        .affectedChannels(subscriptionState.prepareTargetChannelList(true))
-                        .affectedChannelGroups(subscriptionState.prepareTargetChannelGroupList(true))
+                        .affectedChannels(subscriptionStateData.getChannels())
+                        .affectedChannelGroups(subscriptionStateData.getChannelGroups())
                         .build();
                 listenerManager.announce(pnStatus);
 
@@ -138,25 +127,20 @@ public class SubscriptionManager {
         }
     }
 
-    public void addListener(SubscribeCallback listener) {
-        listenerManager.addListener(listener);
+    public void reconnect() {
+        reconnect(PubSubOperation.NO_OP);
     }
 
-    public void removeListener(SubscribeCallback listener) {
-        listenerManager.removeListener(listener);
-    }
-
-
-    public synchronized void reconnect() {
+    private void reconnect(PubSubOperation pubSubOperation) {
         connected = true;
-        this.startSubscribeLoop();
-        this.registerHeartbeatTimer();
+        this.startSubscribeLoop(pubSubOperation);
+        this.registerHeartbeatTimer(PubSubOperation.NO_OP);
     }
 
     public synchronized void disconnect() {
         connected = false;
         cancelDelayedLoopIterationForTemporaryUnavailableChannels();
-        subscriptionState.resetTemporaryUnavailableChannelsAndGroups();
+        subscriptionState.handleOperation(PubSubOperation.DISCONNECT);
         delayedReconnectionManager.stop();
         stopHeartbeatTimer();
         stopSubscribeLoop();
@@ -176,35 +160,15 @@ public class SubscriptionManager {
         }
     }
 
-    public synchronized void adaptStateBuilder(StateOperation stateOperation) {
-        this.subscriptionState.adaptStateBuilder(stateOperation);
-        reconnect();
+    public void adaptStateBuilder(StateOperation stateOperation) {
+        reconnect(stateOperation);
     }
 
-    public synchronized void adaptSubscribeBuilder(SubscribeOperation subscribeOperation) {
-        this.subscriptionState.adaptSubscribeBuilder(subscribeOperation);
-        // the channel mix changed, on the successful subscribe, there is going to be announcement.
-        this.subscriptionStatusAnnounced = false;
-
-        this.duplicationManager.clearHistory();
-
-        if (subscribeOperation.getTimetoken() != null) {
-            this.timetoken = subscribeOperation.getTimetoken();
-        }
-
-        // if the timetoken is not at starting position, reset the timetoken to get a connected event
-        // and store the old timetoken to be reused later during subscribe.
-        if (timetoken != 0L) {
-            storedTimetoken = timetoken;
-        }
-        timetoken = 0L;
-
-        reconnect();
+    public void adaptSubscribeBuilder(SubscribeOperation subscribeOperation) {
+        reconnect(subscribeOperation);
     }
 
     public void adaptPresenceBuilder(PresenceOperation presenceOperation) {
-        this.subscriptionState.adaptPresenceBuilder(presenceOperation);
-
         if (!this.pubnub.getConfiguration().isSuppressLeaveEvents() && !presenceOperation.isConnected()) {
             new Leave(pubnub, this.telemetryManager, this.retrofitManager)
                     .channels(presenceOperation.getChannels()).channelGroups(presenceOperation.getChannelGroups())
@@ -216,17 +180,14 @@ public class SubscriptionManager {
                     });
         }
 
-        registerHeartbeatTimer();
+        registerHeartbeatTimer(presenceOperation);
     }
 
-    public synchronized void adaptUnsubscribeBuilder(UnsubscribeOperation unsubscribeOperation) {
-        this.subscriptionState.adaptUnsubscribeBuilder(unsubscribeOperation);
-
-        this.subscriptionStatusAnnounced = false;
-
+    public void adaptUnsubscribeBuilder(UnsubscribeOperation unsubscribeOperation) {
         if (!this.pubnub.getConfiguration().isSuppressLeaveEvents()) {
             new Leave(pubnub, this.telemetryManager, this.retrofitManager)
-                    .channels(unsubscribeOperation.getChannels()).channelGroups(unsubscribeOperation.getChannelGroups())
+                    .channels(unsubscribeOperation.getChannels())
+                    .channelGroups(unsubscribeOperation.getChannelGroups())
                     .async(new PNCallback<Boolean>() {
                         @Override
                         public void onResponse(Boolean result, @NotNull PNStatus status) {
@@ -240,21 +201,10 @@ public class SubscriptionManager {
                     });
         }
 
-
-        // if we unsubscribed from all the channels, reset the timetoken back to zero and remove the region.
-        if (this.subscriptionState.isEmpty()) {
-            region = null;
-            storedTimetoken = null;
-            timetoken = 0L;
-        } else {
-            storedTimetoken = timetoken;
-            timetoken = 0L;
-        }
-
-        reconnect();
+        reconnect(unsubscribeOperation);
     }
 
-    private void registerHeartbeatTimer() {
+    private synchronized void registerHeartbeatTimer(PubSubOperation pubSubOperation) {
         // make sure only one timer is running at a time.
         stopHeartbeatTimer();
 
@@ -267,7 +217,7 @@ public class SubscriptionManager {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                performHeartbeatLoop();
+                performHeartbeatLoop(pubSubOperation);
             }
         }, 0, pubnub.getConfiguration().getHeartbeatInterval() * HEARTBEAT_INTERVAL_MULTIPLIER);
 
@@ -287,148 +237,173 @@ public class SubscriptionManager {
         }
     }
 
-    private synchronized void scheduleDelayedLoopIterationForTemporaryUnavailableChannels() {
+    private void scheduleDelayedLoopIterationForTemporaryUnavailableChannels() {
         cancelDelayedLoopIterationForTemporaryUnavailableChannels();
 
         temporaryUnavailableChannelsDelayer = new Timer();
         temporaryUnavailableChannelsDelayer.schedule(new TimerTask() {
             @Override
             public void run() {
-                startSubscribeLoop();
+                startSubscribeLoop(PubSubOperation.NO_OP);
             }
         }, TWO_SECONDS);
     }
 
-    private void startSubscribeLoop() {
+    /**
+     * user is calling subscribe:
+     *
+     * if the state has changed we should restart the subscribe loop
+     * if the state hasn't change but the loop is not running we should restart the loop
+     * if the state hasn't change and the loop is running fine, we should do nothing
+     *
+     */
+
+    synchronized void startSubscribeLoop(final PubSubOperation... pubSubOperations) {
         if (!connected) {
             return;
         }
-
-        // this function can be called from different points, make sure any old loop is closed
-        stopSubscribeLoop();
-
-        Map<String, Object> stateStorage = this.subscriptionState.createStatePayload();
-
-        synchronized (subscriptionState) {
-            if (!subscriptionState.hasAnythingToSubscribe()) {
-                return;
-            }
-
-            if (subscriptionState.subscribedToOnlyTemporaryUnavailable()) {
-                scheduleDelayedLoopIterationForTemporaryUnavailableChannels();
-                return;
-            }
-
-            final List<String> effectiveChannels = subscriptionState.effectiveChannels();
-            final List<String> effectiveChannelGroups = subscriptionState.effectiveChannelGroups();
-
-            subscribeCall = new Subscribe(pubnub, this.retrofitManager)
-                    .channels(effectiveChannels).channelGroups(effectiveChannelGroups)
-                    .timetoken(timetoken).region(region)
-                    .filterExpression(pubnub.getConfiguration().getFilterExpression())
-                    .state(stateStorage);
+        boolean subscriptionLoopStateChanged = subscriptionState.handleOperation(pubSubOperations);
+        if (!subscriptionLoopStateChanged && httpRequestPending) {
+            return;
         }
 
-        subscribeCall.async(new PNCallback<SubscribeEnvelope>() {
-            @Override
-            public void onResponse(SubscribeEnvelope result, @NotNull PNStatus status) {
-                if (status.isError()) {
-                    final PNStatusCategory category = status.getCategory();
+        stopSubscribeLoop();
 
-                    switch (category) {
-                        case PNTimeoutCategory:
-                            startSubscribeLoop();
-                            break;
-                        case PNUnexpectedDisconnectCategory:
-                            // stop all announcements and ask the reconnection manager to start polling for connection
-                            // restoration..
-                            disconnect();
-                            listenerManager.announce(status);
-                            reconnectionManager.startPolling();
-                            break;
-                        case PNBadRequestCategory:
-                        case PNURITooLongCategory:
-                            disconnect();
-                            listenerManager.announce(status);
-                            break;
-                        case PNAccessDeniedCategory:
-                            listenerManager.announce(status);
-                            final List<String> affectedChannels = status.getAffectedChannels();
-                            final List<String> affectedChannelGroups = status.getAffectedChannelGroups();
-                            if (affectedChannels != null || affectedChannelGroups != null) {
-                                if (affectedChannels != null) {
-                                    for (final String channelToMoveToTemporaryUnavailable : affectedChannels) {
-                                        subscriptionState.addTemporaryUnavailableChannel(channelToMoveToTemporaryUnavailable);
-                                    }
-                                }
-                                if (affectedChannelGroups != null) {
-                                    for (final String channelGroupToMoveToTemporaryUnavailable : affectedChannelGroups) {
-                                        subscriptionState.addTemporaryUnavailableChannelGroup(channelGroupToMoveToTemporaryUnavailable);
-                                    }
-                                }
-                                startSubscribeLoop();
-                            }
+        for (PubSubOperation pubSubOperation : pubSubOperations) {
+            if (pubSubOperation instanceof SubscribeOperation) {
+                duplicationManager.clearHistory();
+            }
+        }
 
-                            break;
-                        default:
-                            listenerManager.announce(status);
-                            delayedReconnectionManager.scheduleDelayedReconnection();
-                            break;
-                    }
-                } else {
-                    if (status.getCategory() == PNStatusCategory.PNAcknowledgmentCategory) {
-                        synchronized (subscriptionState) {
-                            final List<String> affectedChannels = status.getAffectedChannels();
-                            final List<String> affectedChannelGroups = status.getAffectedChannelGroups();
-                            if (affectedChannels != null) {
-                                for (final String affectedChannel : affectedChannels) {
-                                    subscriptionState.removeTemporaryUnavailableChannel(affectedChannel);
-                                }
-                            }
-                            if (affectedChannelGroups != null) {
-                                for (final String affectedChannelGroup : affectedChannelGroups) {
-                                    subscriptionState.removeTemporaryUnavailableChannelGroup(affectedChannelGroup);
-                                }
-                            }
+        final StateManager.SubscriptionStateData subscriptionStateData = subscriptionState.subscriptionStateData(
+                true,
+                WITHOUT_TEMPORARY_UNAVAILABLE);
+
+        if (!subscriptionStateData.isAnythingToSubscribe()) {
+            return;
+        }
+
+        if (subscriptionStateData.isSubscribedToOnlyTemporaryUnavailable()) {
+            scheduleDelayedLoopIterationForTemporaryUnavailableChannels();
+            return;
+        }
+
+        httpRequestPending = true;
+        subscribeCall = new Subscribe(pubnub, this.retrofitManager)
+                .channels(subscriptionStateData.getChannels())
+                .channelGroups(subscriptionStateData.getChannelGroups())
+                .timetoken(subscriptionStateData.getTimetoken())
+                .region(subscriptionStateData.getRegion())
+                .filterExpression(pubnub.getConfiguration().getFilterExpression())
+                .state(subscriptionStateData.getStatePayload());
+
+        subscribeCall.async((result, status) -> {
+            httpRequestPending = false;
+            if (status.isError()) {
+                handleError(status, pubSubOperations);
+            } else {
+                final ChangeTemporaryUnavailableOperationBuilder availableChannels = ChangeTemporaryUnavailableOperation
+                        .builder();
+                if (status.getCategory() == PNStatusCategory.PNAcknowledgmentCategory) {
+                    final List<String> affectedChannels = status.getAffectedChannels();
+                    final List<String> affectedChannelGroups = status.getAffectedChannelGroups();
+
+                    if (affectedChannels != null) {
+                        for (final String affectedChannel : affectedChannels) {
+                            availableChannels.availableChannel(affectedChannel);
                         }
                     }
-
-                    if (!subscriptionStatusAnnounced) {
-                        PNStatus pnStatus = createPublicStatus(status)
-                                .category(PNStatusCategory.PNConnectedCategory)
-                                .error(false)
-                                .build();
-                        subscriptionStatusAnnounced = true;
-                        listenerManager.announce(pnStatus);
+                    if (affectedChannelGroups != null) {
+                        for (final String affectedChannelGroup : affectedChannelGroups) {
+                            availableChannels.availableChannelGroup(affectedChannelGroup);
+                        }
                     }
-
-                    Integer requestMessageCountThreshold = pubnub.getConfiguration().getRequestMessageCountThreshold();
-                    if (requestMessageCountThreshold != null && requestMessageCountThreshold <= result.getMessages().size()) {
-                        PNStatus pnStatus = createPublicStatus(status)
-                                .category(PNStatusCategory.PNRequestMessageCountExceededCategory)
-                                .error(false)
-                                .build();
-
-                        listenerManager.announce(pnStatus);
-                    }
-
-                    if (result.getMessages().size() != 0) {
-                        messageQueue.addAll(result.getMessages());
-                    }
-
-                    if (storedTimetoken != null) {
-                        timetoken = storedTimetoken;
-                        storedTimetoken = null;
-                    } else {
-                        timetoken = result.getMetadata().getTimetoken();
-                    }
-
-                    region = result.getMetadata().getRegion();
-                    startSubscribeLoop();
                 }
+
+                final PubSubOperation statusAnnouncedOperation;
+                if (subscriptionStateData.isShouldAnnounce()) {
+                    PNStatus pnStatus = createPublicStatus(status)
+                            .category(PNStatusCategory.PNConnectedCategory)
+                            .error(false)
+                            .build();
+                    listenerManager.announce(pnStatus);
+                    statusAnnouncedOperation = PubSubOperation.STATUS_ANNOUNCED;
+                } else {
+                    statusAnnouncedOperation = PubSubOperation.NO_OP;
+                }
+
+                Integer requestMessageCountThreshold = pubnub.getConfiguration().getRequestMessageCountThreshold();
+                if (requestMessageCountThreshold != null && requestMessageCountThreshold <= result.getMessages()
+                        .size()) {
+                    PNStatus pnStatus = createPublicStatus(status)
+                            .category(PNStatusCategory.PNRequestMessageCountExceededCategory)
+                            .error(false)
+                            .build();
+
+                    listenerManager.announce(pnStatus);
+                }
+
+                if (result.getMessages().size() != 0) {
+                    messageQueue.addAll(result.getMessages());
+                }
+
+                final TimetokenAndRegionOperation timetokenAndRegionOperation = new TimetokenAndRegionOperation(
+                        result.getMetadata()
+                                .getTimetoken(),
+                        result.getMetadata().getRegion());
+                startSubscribeLoop(timetokenAndRegionOperation, availableChannels.build(), statusAnnouncedOperation);
             }
         });
 
+    }
+
+    private void handleError(@NotNull PNStatus status,
+                             PubSubOperation... pubSubOperations) {
+        final PNStatusCategory category = status.getCategory();
+
+        switch (category) {
+            case PNTimeoutCategory:
+                startSubscribeLoop(pubSubOperations);
+                break;
+            case PNUnexpectedDisconnectCategory:
+                // stop all announcements and ask the reconnection manager to start polling for connection
+                // restoration..
+                disconnect();
+                listenerManager.announce(status);
+                reconnectionManager.startPolling();
+                break;
+            case PNBadRequestCategory:
+            case PNURITooLongCategory:
+                disconnect();
+                listenerManager.announce(status);
+                break;
+            case PNAccessDeniedCategory:
+                listenerManager.announce(status);
+                final List<String> affectedChannels = status.getAffectedChannels();
+                final List<String> affectedChannelGroups = status.getAffectedChannelGroups();
+                final ChangeTemporaryUnavailableOperationBuilder unavailableChannels = ChangeTemporaryUnavailableOperation
+                        .builder();
+                if (affectedChannels != null || affectedChannelGroups != null) {
+                    if (affectedChannels != null) {
+                        for (final String channelToMoveToTemporaryUnavailable : affectedChannels) {
+                            unavailableChannels.unavailableChannel(channelToMoveToTemporaryUnavailable);
+                        }
+                    }
+                    if (affectedChannelGroups != null) {
+                        for (final String channelGroupToMoveToTemporaryUnavailable : affectedChannelGroups) {
+                            unavailableChannels.unavailableChannelGroup(
+                                    channelGroupToMoveToTemporaryUnavailable);
+                        }
+                    }
+                    startSubscribeLoop(unavailableChannels.build());
+                }
+
+                break;
+            default:
+                listenerManager.announce(status);
+                delayedReconnectionManager.scheduleDelayedReconnection();
+                break;
+        }
     }
 
     private void stopSubscribeLoop() {
@@ -439,38 +414,36 @@ public class SubscriptionManager {
         }
     }
 
-    private void performHeartbeatLoop() {
+    private synchronized void performHeartbeatLoop(PubSubOperation pubSubOperation) {
         if (heartbeatCall != null) {
             heartbeatCall.silentCancel();
             heartbeatCall = null;
         }
 
-        List<String> presenceChannels = this.subscriptionState.prepareTargetChannelList(false);
-        List<String> presenceChannelGroups = this.subscriptionState.prepareTargetChannelGroupList(false);
+        subscriptionState.handleOperation(pubSubOperation);
+        StateManager.HeartbeatStateData heartbeatStateData = subscriptionState.heartbeatStateData();
 
-        List<String> heartbeatChannels = this.subscriptionState.prepareTargetHeartbeatChannelList(false);
-        List<String> heartbeatChannelGroups = this.subscriptionState.prepareTargetHeartbeatChannelGroupList(false);
+        final List<String> heartbeatChannels = heartbeatStateData.getHeartbeatChannels();
+        final List<String> heartbeatChannelGroups = heartbeatStateData.getHeartbeatChannelGroups();
 
 
         // do not start the loop if we do not have any presence channels or channel groups enabled.
-        if (presenceChannels.isEmpty()
-                && presenceChannelGroups.isEmpty()
-                && heartbeatChannels.isEmpty()
+        if (heartbeatChannels.isEmpty()
                 && heartbeatChannelGroups.isEmpty()) {
             return;
         }
 
-        List<String> channels = new ArrayList<>();
-        channels.addAll(presenceChannels);
-        channels.addAll(heartbeatChannels);
-
-        List<String> groups = new ArrayList<>();
-        groups.addAll(presenceChannelGroups);
-        groups.addAll(heartbeatChannelGroups);
+        final Map<String, Object> statePayload;
+        if (heartbeatStateData.getStatePayload().isEmpty()) {
+            statePayload = null;
+        } else {
+            statePayload = heartbeatStateData.getStatePayload();
+        }
 
         heartbeatCall = new Heartbeat(pubnub, this.telemetryManager, this.retrofitManager)
-                .channels(channels)
-                .channelGroups(groups);
+                .channels(heartbeatChannels)
+                .channelGroups(heartbeatChannelGroups)
+                .state(statePayload);
 
         heartbeatCall.async(new PNCallback<Boolean>() {
             @Override
@@ -494,21 +467,14 @@ public class SubscriptionManager {
                 }
             }
         });
-
     }
 
-    public synchronized List<String> getSubscribedChannels() {
-        return subscriptionState.prepareTargetChannelList(false);
-    }
+    public void unsubscribeAll() {
+        StateManager.SubscriptionStateData subscriptionStateData = subscriptionState.subscriptionStateData(false);
 
-    public synchronized List<String> getSubscribedChannelGroups() {
-        return subscriptionState.prepareTargetChannelGroupList(false);
-    }
-
-    public synchronized void unsubscribeAll() {
         adaptUnsubscribeBuilder(UnsubscribeOperation.builder()
-                .channelGroups(subscriptionState.prepareTargetChannelGroupList(false))
-                .channels(subscriptionState.prepareTargetChannelList(false))
+                .channelGroups(subscriptionStateData.getChannelGroups())
+                .channels(subscriptionStateData.getChannels())
                 .build());
     }
 
@@ -523,5 +489,4 @@ public class SubscriptionManager {
                 .origin(privateStatus.getOrigin())
                 .tlsEnabled(privateStatus.isTlsEnabled());
     }
-
 }

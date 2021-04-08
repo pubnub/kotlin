@@ -11,6 +11,7 @@ import com.pubnub.api.models.consumer.files.PNFileUploadResult;
 import com.pubnub.api.models.consumer.files.PNPublishFileMessageResult;
 import com.pubnub.api.models.server.files.FileUploadRequestDetails;
 import com.pubnub.api.models.server.files.FormField;
+import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.junit.Rule;
@@ -28,6 +29,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static com.pubnub.api.PubNubUtil.readBytes;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -180,8 +182,9 @@ public class SendFileTest implements TestsWithFiles {
         return new PNFileUploadResult(1337L, 200, new PNBaseFile("id", "name"));
     }
 
+    @SneakyThrows
     private SendFile sendFile(String channel, String fileName, InputStream inputStream, int numberOfRetries) {
-        return new SendFile(new SendFile.Builder.SendFileRequiredParams(channel, fileName, inputStream),
+        return new SendFile(new SendFile.Builder.SendFileRequiredParams(channel, fileName, readBytes(inputStream), null),
                 generateUploadUrlFactory,
                 publishFileMessageBuilder,
                 sendFileToS3Factory,

@@ -26,10 +26,13 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicReference;
+
+import static com.pubnub.api.PubNubUtil.readBytes;
 
 @Accessors(chain = true, fluent = true)
 public class SendFile implements RemoteAction<PNFileUploadResult> {
@@ -37,7 +40,8 @@ public class SendFile implements RemoteAction<PNFileUploadResult> {
     private final RemoteAction<PNFileUploadResult> sendFileMultistepAction;
     private final String channel;
     private final String fileName;
-    private final InputStream inputStream;
+    private final byte[] content;
+    private final Exception byteContentReadingException;
     private final ExecutorService executorService;
     private final int fileMessagePublishRetryLimit;
     @Setter
@@ -59,7 +63,8 @@ public class SendFile implements RemoteAction<PNFileUploadResult> {
              int fileMessagePublishRetryLimit) {
         this.channel = requiredParams.channel();
         this.fileName = requiredParams.fileName();
-        this.inputStream = requiredParams.inputStream();
+        this.content = requiredParams.content();
+        this.byteContentReadingException = requiredParams.byteReadingException;
         this.executorService = executorService;
         this.fileMessagePublishRetryLimit = fileMessagePublishRetryLimit;
         this.sendFileMultistepAction = sendFileComposedActions(
@@ -94,9 +99,14 @@ public class SendFile implements RemoteAction<PNFileUploadResult> {
             throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_CHANNEL_MISSING).build();
         }
 
-        if (inputStream == null) {
+        if (byteContentReadingException != null) {
             throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_INVALID_ARGUMENTS)
-                    .errormsg("Input stream cannot be null").build();
+                    .errormsg(byteContentReadingException.getMessage()).build();
+        }
+
+        if (content == null) {
+            throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_INVALID_ARGUMENTS)
+                    .errormsg("Content cannot be null").build();
         }
 
         if (fileName == null || fileName.isEmpty()) {
@@ -161,7 +171,7 @@ public class SendFile implements RemoteAction<PNFileUploadResult> {
 
     private RemoteAction<Void> sendToS3(FileUploadRequestDetails result,
                                         UploadFile.Factory sendFileToS3Factory) {
-        return sendFileToS3Factory.create(fileName, inputStream, cipherKey, result);
+        return sendFileToS3Factory.create(fileName, content, cipherKey, result);
     }
 
     public static Builder builder(PubNub pubnub,
@@ -226,21 +236,37 @@ public class SendFile implements RemoteAction<PNFileUploadResult> {
 
             @Override
             public SendFile inputStream(InputStream inputStream) {
-                return new SendFile(new SendFileRequiredParams(channelValue, fileNameValue, inputStream),
-                        generateUploadUrlFactory,
-                        publishFileMessageBuilder,
-                        uploadFileFactory,
-                        retrofit.getTransactionClientExecutorService(),
-                        pubnub.getConfiguration().getFileMessagePublishRetryLimit());
+                try {
+                    return new SendFile(new SendFileRequiredParams(channelValue,
+                            fileNameValue,
+                            readBytes(inputStream),
+                            null),
+                            generateUploadUrlFactory,
+                            publishFileMessageBuilder,
+                            uploadFileFactory,
+                            retrofit.getTransactionClientExecutorService(),
+                            pubnub.getConfiguration().getFileMessagePublishRetryLimit());
+
+                } catch (IOException e) {
+                    return new SendFile(new SendFileRequiredParams(channelValue,
+                            fileNameValue,
+                            null,
+                            e),
+                            generateUploadUrlFactory,
+                            publishFileMessageBuilder,
+                            uploadFileFactory,
+                            retrofit.getTransactionClientExecutorService(),
+                            pubnub.getConfiguration().getFileMessagePublishRetryLimit());
+                }
             }
         }
 
         @Data
-        public static class SendFileRequiredParams {
+        static class SendFileRequiredParams {
             private final String channel;
             private final String fileName;
-            private final InputStream inputStream;
+            private final byte[] content;
+            private final Exception byteReadingException;
         }
     }
-
 }

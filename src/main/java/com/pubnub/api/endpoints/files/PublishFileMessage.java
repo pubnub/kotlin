@@ -137,7 +137,7 @@ public class PublishFileMessage extends Endpoint<List<Object>, PNPublishFileMess
 
     @Override
     protected boolean isAuthRequired() {
-        return false;
+        return true;
     }
 
     public static class Builder

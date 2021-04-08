@@ -1,17 +1,17 @@
 package com.pubnub.api.models.server;
 
 import com.google.gson.annotations.SerializedName;
-import lombok.Getter;
+import lombok.Data;
 
 import java.util.List;
 
-@Getter
+@Data
 public class SubscribeEnvelope {
 
     @SerializedName("m")
-    private List<SubscribeMessage> messages;
+    private final List<SubscribeMessage> messages;
 
     @SerializedName("t")
-    private SubscribeMetadata metadata;
+    private final SubscribeMetadata metadata;
 
 }

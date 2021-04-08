@@ -3,9 +3,11 @@ package com.pubnub.api.models.server;
 import com.google.gson.JsonElement;
 import com.google.gson.annotations.SerializedName;
 import com.pubnub.api.workers.SubscribeMessageWorker;
-import lombok.Getter;
+import lombok.Builder;
+import lombok.Data;
 
-@Getter
+@Builder
+@Data
 public class SubscribeMessage {
 
     @SerializedName("a")

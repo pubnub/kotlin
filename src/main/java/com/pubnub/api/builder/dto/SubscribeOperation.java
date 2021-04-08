@@ -1,17 +1,16 @@
 package com.pubnub.api.builder.dto;
 
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 
+import java.util.Collections;
 import java.util.List;
 
 @Builder
-@Getter
-public class SubscribeOperation {
-
-    private List<String> channels;
-    private List<String> channelGroups;
-    private boolean presenceEnabled;
-    private Long timetoken;
-
+@Data
+public class SubscribeOperation implements PubSubOperation {
+    @Builder.Default private final List<String> channels = Collections.emptyList();
+    @Builder.Default private final List<String> channelGroups = Collections.emptyList();
+    private final boolean presenceEnabled;
+    private final Long timetoken;
 }

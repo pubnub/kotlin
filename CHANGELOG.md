@@ -1,12 +1,9 @@
-## [v4.35.0](https://github.com/pubnub/java/releases/tag/v4.35.0)
-November-24-2020
+## [v4.36.0](https://github.com/pubnub/java/releases/tag/v4.36.0)
+April-08-2021
 
-[Full Changelog](https://github.com/pubnub/java/compare/v4.33.3...v4.35.0)
+[Full Changelog](https://github.com/pubnub/java/compare/v4.35.0...v4.36.0)
 
-- 🌟️ Support for fileMessagePublishRetryLimit. 
-- 🐛 Enable SDK users either to ignore PNAccessDeniedCategoryError occurred inside Subscription Loop or to react to in inside status callback. 
-- 🐛 Report proper error message when upload file too large. 
-- 🐛 Add missing auth and signature in generated URLs. 
+- 🌟️ New way of controlling Presence by Heartbeat calls for purpose of usage with dedicated server configuration (ACL). This feature can be used only with additional support from PubNub. 
 
 ## [v4.33.3](https://github.com/pubnub/java/releases/tag/v4.33.3)
 October-21-2020

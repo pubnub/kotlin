@@ -1,15 +1,15 @@
 package com.pubnub.api.models.server;
 
 import com.google.gson.annotations.SerializedName;
-import lombok.Getter;
+import lombok.Data;
 
-@Getter
+@Data
 public class SubscribeMetadata {
 
     @SerializedName("t")
-    private Long timetoken;
+    private final Long timetoken;
 
     @SerializedName("r")
-    private String region;
+    private final String region;
 
 }

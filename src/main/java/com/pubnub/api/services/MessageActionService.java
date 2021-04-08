@@ -1,6 +1,6 @@
 package com.pubnub.api.services;
 
-import com.google.gson.JsonObject;
+import com.pubnub.api.models.consumer.message_actions.PNGetMessageActionsResult;
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction;
 import com.pubnub.api.models.server.objects_api.EntityEnvelope;
 import retrofit2.Call;
@@ -25,9 +25,9 @@ public interface MessageActionService {
                                                            @QueryMap(encoded = true) Map<String, String> options);
 
     @GET("v1/message-actions/{subKey}/channel/{channel}")
-    Call<JsonObject> getMessageActions(@Path("subKey") String subKey,
-                                       @Path("channel") String channel,
-                                       @QueryMap(encoded = true) Map<String, String> options);
+    Call<PNGetMessageActionsResult> getMessageActions(@Path("subKey") String subKey,
+                                                      @Path("channel") String channel,
+                                                      @QueryMap(encoded = true) Map<String, String> options);
 
     @DELETE("v1/message-actions/{subKey}/channel/{channel}/message/{messageTimetoken}/action/{actionTimetoken}")
     Call<Object> deleteMessageAction(@Path("subKey") String subKey,

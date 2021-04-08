@@ -10,6 +10,7 @@ import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.managers.MapperManager;
 import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.TelemetryManager;
+import com.pubnub.api.models.consumer.PNBoundedPage;
 import com.pubnub.api.models.consumer.history.PNFetchMessageItem;
 import com.pubnub.api.models.consumer.history.PNFetchMessagesResult;
 import com.pubnub.api.models.server.FetchMessagesEnvelope;
@@ -30,9 +31,12 @@ import static com.pubnub.api.builder.PubNubErrorBuilder.PNERROBJ_HISTORY_MESSAGE
 @Slf4j
 @Accessors(chain = true, fluent = true)
 public class FetchMessages extends Endpoint<FetchMessagesEnvelope, PNFetchMessagesResult> {
-    private static final int DEFAULT_MESSAGES = 1;
-    private static final int MAX_MESSAGES = 25;
-    private static final int MAX_MESSAGES_ACTIONS = 100;
+    private static final int SINGLE_CHANNEL_DEFAULT_MESSAGES = 100;
+    private static final int SINGLE_CHANNEL_MAX_MESSAGES = 100;
+    private static final int MULTIPLE_CHANNEL_DEFAULT_MESSAGES = 25;
+    private static final int MULTIPLE_CHANNEL_MAX_MESSAGES = 25;
+    private static final int DEFAULT_MESSAGES_WITH_ACTIONS = 25;
+    private static final int MAX_MESSAGES_WITH_ACTIONS = 25;
 
     @Setter
     private List<String> channels;
@@ -88,16 +92,26 @@ public class FetchMessages extends Endpoint<FetchMessagesEnvelope, PNFetchMessag
         }
 
         if (!includeMessageActions) {
-            if (maximumPerChannel == null || maximumPerChannel < DEFAULT_MESSAGES) {
-                maximumPerChannel = DEFAULT_MESSAGES;
-                log.info("maximumPerChannel param defaulting to " + maximumPerChannel);
-            } else if (maximumPerChannel > MAX_MESSAGES) {
-                maximumPerChannel = MAX_MESSAGES;
-                log.info("maximumPerChannel param defaulting to " + maximumPerChannel);
+            if (channels.size() == 1) {
+                if (maximumPerChannel == null || maximumPerChannel < 1) {
+                    maximumPerChannel = SINGLE_CHANNEL_DEFAULT_MESSAGES;
+                    log.info("maximumPerChannel param defaulting to " + maximumPerChannel);
+                } else if (maximumPerChannel > SINGLE_CHANNEL_MAX_MESSAGES) {
+                    maximumPerChannel = SINGLE_CHANNEL_MAX_MESSAGES;
+                    log.info("maximumPerChannel param defaulting to " + maximumPerChannel);
+                }
+            } else {
+                if (maximumPerChannel == null || maximumPerChannel < 1) {
+                    maximumPerChannel = MULTIPLE_CHANNEL_DEFAULT_MESSAGES;
+                    log.info("maximumPerChannel param defaulting to " + maximumPerChannel);
+                } else if (maximumPerChannel > MULTIPLE_CHANNEL_MAX_MESSAGES) {
+                    maximumPerChannel = MULTIPLE_CHANNEL_MAX_MESSAGES;
+                    log.info("maximumPerChannel param defaulting to " + maximumPerChannel);
+                }
             }
         } else {
-            if (maximumPerChannel == null || maximumPerChannel < 1 || maximumPerChannel > MAX_MESSAGES_ACTIONS) {
-                maximumPerChannel = MAX_MESSAGES_ACTIONS;
+            if (maximumPerChannel == null || maximumPerChannel < 1 || maximumPerChannel > MAX_MESSAGES_WITH_ACTIONS) {
+                maximumPerChannel = DEFAULT_MESSAGES_WITH_ACTIONS;
                 log.info("maximumPerChannel param defaulting to " + maximumPerChannel);
             }
         }
@@ -139,8 +153,6 @@ public class FetchMessages extends Endpoint<FetchMessagesEnvelope, PNFetchMessag
             throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_PARSING_ERROR).build();
         }
 
-        PNFetchMessagesResult.PNFetchMessagesResultBuilder builder = PNFetchMessagesResult.builder();
-
         HashMap<String, List<PNFetchMessageItem>> channelsMap = new HashMap<>();
 
         for (Map.Entry<String, List<PNFetchMessageItem>> entry : input.body().getChannels().entrySet()) {
@@ -165,9 +177,16 @@ public class FetchMessages extends Endpoint<FetchMessagesEnvelope, PNFetchMessag
             channelsMap.put(entry.getKey(), items);
         }
 
-        builder.channels(channelsMap);
+        PNBoundedPage page = null;
+        FetchMessagesEnvelope.FetchMessagesPage more = input.body().getMore();
+        if (more != null) {
+            page = new PNBoundedPage(more.getStart(), more.getEnd(), more.getMax());
+        }
 
-        return builder.build();
+        return PNFetchMessagesResult.builder()
+                .channels(channelsMap)
+                .page(page)
+                .build();
     }
 
     @Override
@@ -186,7 +205,8 @@ public class FetchMessages extends Endpoint<FetchMessagesEnvelope, PNFetchMessag
             return message;
         }
 
-        Crypto crypto = new Crypto(this.getPubnub().getConfiguration().getCipherKey(), this.getPubnub().getConfiguration().isUseRandomInitializationVector());
+        Crypto crypto = new Crypto(this.getPubnub().getConfiguration().getCipherKey(),
+                this.getPubnub().getConfiguration().isUseRandomInitializationVector());
         MapperManager mapper = this.getPubnub().getMapper();
         String inputText;
         String outputText;

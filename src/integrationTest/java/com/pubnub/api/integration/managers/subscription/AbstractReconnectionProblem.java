@@ -4,6 +4,7 @@ import com.pubnub.api.PNConfiguration;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.enums.PNStatusCategory;
+import com.pubnub.api.integration.util.ITTestConfig;
 import com.pubnub.api.models.consumer.PNStatus;
 import org.aeonbits.owner.ConfigFactory;
 import org.jetbrains.annotations.NotNull;
@@ -17,13 +18,14 @@ import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
 
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.junit.Assert.assertThat;
@@ -32,7 +34,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 class AssumingProperConfig implements TestRule {
-    private ITPamTestConfig itPamTestConfig = ConfigFactory.create(ITPamTestConfig.class, System.getenv());
+    private ITTestConfig itPamTestConfig = ConfigFactory.create(ITTestConfig.class, System.getenv());
 
     @NotNull
     @Override
@@ -40,10 +42,7 @@ class AssumingProperConfig implements TestRule {
         return new Statement() {
             @Override
             public void evaluate() throws Throwable {
-                if (itPamTestConfig.publishKey() != null
-                        && itPamTestConfig.subscribeKey() != null
-                        && itPamTestConfig.secretKey() != null
-                        && itPamTestConfig.authKey() != null) {
+                if (itPamTestConfig.pamSecKey() != null) {
                     base.evaluate();
                 }
                 else {
@@ -55,7 +54,7 @@ class AssumingProperConfig implements TestRule {
 }
 
 public abstract class AbstractReconnectionProblem {
-    protected ITPamTestConfig itPamTestConfig = ConfigFactory.create(ITPamTestConfig.class, System.getenv());
+    protected ITTestConfig itPamTestConfig = ConfigFactory.create(ITTestConfig.class, System.getenv());
 
     @ClassRule
     public static AssumingProperConfig assumingProperConfig = new AssumingProperConfig();
@@ -64,11 +63,17 @@ public abstract class AbstractReconnectionProblem {
     protected final List<CollectedStatus> collectedStatuses = Collections.synchronizedList(new ArrayList<>());
     protected PubNub  pn;
 
+    protected String authKey = randomId();
+
+    private static String randomId() {
+        return UUID.randomUUID().toString();
+    }
+
     private void grantAccess(final String... protectedChannelNames) throws PubNubException {
         final PubNub pnAdmin = adminPubNub();
         pnAdmin.grant()
-                .authKeys(Collections.singletonList(itPamTestConfig.authKey()))
-                .channels(Arrays.asList(protectedChannelNames))
+                .authKeys(singletonList(authKey))
+                .channels(asList(protectedChannelNames))
                 .read(true)
                 .sync();
     }
@@ -76,8 +81,8 @@ public abstract class AbstractReconnectionProblem {
     private void grantAccessToChannelGroup(final String... protectedChannelGroupNames) throws PubNubException {
         final PubNub pnAdmin = adminPubNub();
         pnAdmin.grant()
-                .authKeys(Collections.singletonList(itPamTestConfig.authKey()))
-                .channelGroups(Arrays.asList(protectedChannelGroupNames))
+                .authKeys(singletonList(authKey))
+                .channelGroups(asList(protectedChannelGroupNames))
                 .read(true)
                 .sync();
     }
@@ -124,7 +129,7 @@ public abstract class AbstractReconnectionProblem {
             }
         });
 
-        pnClient.subscribe().channels(Arrays.asList(channels)).execute();
+        pnClient.subscribe().channels(asList(channels)).execute();
     }
 
     protected void subscribeToGroup(final PubNub pnClient, final boolean reportCallStack, final String... channelGroups) {
@@ -160,7 +165,7 @@ public abstract class AbstractReconnectionProblem {
         });
 
         pnClient.subscribe()
-                .channelGroups(Arrays.asList(channelGroups))
+                .channelGroups(asList(channelGroups))
                 .execute();
     }
 
@@ -169,7 +174,7 @@ public abstract class AbstractReconnectionProblem {
     protected void createChannelGroup(final PubNub pnClient, final String channelGroup, final String... channelNames) throws PubNubException {
         pnClient.addChannelsToChannelGroup()
                 .channelGroup(channelGroup)
-                .channels(Arrays.asList(channelNames))
+                .channels(asList(channelNames))
                 .sync();
     }
 
@@ -177,17 +182,17 @@ public abstract class AbstractReconnectionProblem {
 
     private PubNub adminPubNub() {
         final PNConfiguration pnConfiguration = new PNConfiguration();
-        pnConfiguration.setSubscribeKey(itPamTestConfig.subscribeKey());
-        pnConfiguration.setPublishKey(itPamTestConfig.publishKey());
-        pnConfiguration.setSecretKey(itPamTestConfig.secretKey());
+        pnConfiguration.setSubscribeKey(itPamTestConfig.pamSubKey());
+        pnConfiguration.setPublishKey(itPamTestConfig.pamPubKey());
+        pnConfiguration.setSecretKey(itPamTestConfig.pamSecKey());
         return new PubNub(pnConfiguration);
     }
 
     @Test
     public void alwaysContinueSubscriptionToChannelGroupIfNoActionTaken() throws PubNubException, InterruptedException {
-        final String channelGroup = "chg-1-" + UUID.randomUUID().toString();
+        final String channelGroup = "chg-1-" + randomId();
 
-        createChannelGroup(adminPubNub(), channelGroup, "ch-1-" + UUID.randomUUID().toString(), "ch-2-" + UUID.randomUUID().toString());
+        createChannelGroup(adminPubNub(), channelGroup, "ch-1-" + randomId(), "ch-2-" + randomId());
 
         subscribeToGroup(pn, true, channelGroup);
 
@@ -205,7 +210,7 @@ public abstract class AbstractReconnectionProblem {
 
     @Test
     public void alwaysContinueSubscriptionIfNoActionTaken() throws InterruptedException {
-        final String channel = "ch-" + UUID.randomUUID().toString();
+        final String channel = "ch-" + randomId();
 
         subscribe(pn, true, channel);
 
@@ -222,8 +227,8 @@ public abstract class AbstractReconnectionProblem {
 
     @Test
     public void continueSubscriptionAfterUnsubscribeFromForbiddenChannel() throws InterruptedException, PubNubException {
-        final String channel1 = "ch-1-" + UUID.randomUUID().toString();
-        final String channel2 = "ch-2-" + UUID.randomUUID().toString();
+        final String channel1 = "ch-1-" + randomId();
+        final String channel2 = "ch-2-" + randomId();
 
         grantAccess(channel1);
 
@@ -264,11 +269,11 @@ public abstract class AbstractReconnectionProblem {
 
     @Test
     public void continueSubscriptionToChannelGroupAfterUnsubscribeFromForbiddenChannel() throws InterruptedException, PubNubException {
-        final String channelGroup1 = "chg-1-" + UUID.randomUUID().toString();
-        final String channelGroup2 = "chg-2-" + UUID.randomUUID().toString();
+        final String channelGroup1 = "chg-1-" + randomId();
+        final String channelGroup2 = "chg-2-" + randomId();
 
-        createChannelGroup(adminPubNub(), channelGroup1, "ch-1-" + UUID.randomUUID().toString(), "ch-2-" + UUID.randomUUID().toString());
-        createChannelGroup(adminPubNub(), channelGroup2, "ch-1-" + UUID.randomUUID().toString(), "ch-2-" + UUID.randomUUID().toString());
+        createChannelGroup(adminPubNub(), channelGroup1, "ch-1-" + randomId(), "ch-2-" + randomId());
+        createChannelGroup(adminPubNub(), channelGroup2, "ch-1-" + randomId(), "ch-2-" + randomId());
 
         grantAccessToChannelGroup(channelGroup1);
 
@@ -310,7 +315,7 @@ public abstract class AbstractReconnectionProblem {
 
     @Test
     public void stopSubscriptionWhenRequestedToDisconnectOnAccessDenied() throws InterruptedException {
-        final String channel = "ch-" + UUID.randomUUID().toString();
+        final String channel = "ch-" + randomId();
 
         subscribe(pn, true, new BiConsumer<PubNub, PNStatus>() {
             @Override
@@ -337,7 +342,7 @@ public abstract class AbstractReconnectionProblem {
 
     @Test
     public void stopSubscriptionToChannelGroupWhenRequestedToDisconnectOnAccessDenied() throws InterruptedException {
-        final String channelGroup = "chg-" + UUID.randomUUID().toString();
+        final String channelGroup = "chg-" + randomId();
 
         subscribeToGroup(pn, true, new BiConsumer<PubNub, PNStatus>() {
             @Override
@@ -365,7 +370,7 @@ public abstract class AbstractReconnectionProblem {
 
     @Test
     public void stopSubscriptionWhenRequestedToForceDestroyOnAccessDenied() throws InterruptedException {
-        final String channel = "ch-" + UUID.randomUUID().toString();
+        final String channel = "ch-" + randomId();
 
         subscribe(pn, true, new BiConsumer<PubNub, PNStatus>() {
             @Override
@@ -392,7 +397,7 @@ public abstract class AbstractReconnectionProblem {
 
     @Test
     public void stopSubscriptionToChannelGroupWhenRequestedToForceDestroyOnAccessDenied() throws InterruptedException {
-        final String channelGroup = "chg-" + UUID.randomUUID().toString();
+        final String channelGroup = "chg-" + randomId();
 
         subscribeToGroup(pn, true, new BiConsumer<PubNub, PNStatus>() {
             @Override

@@ -1,5 +1,6 @@
 package com.pubnub.api.managers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.http.QueryParameter;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
@@ -36,9 +37,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.zip.CheckedOutputStream;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.findAll;
@@ -1327,9 +1330,6 @@ public class SubscriptionManagerTest extends TestHarness {
 
     @Test
     public void testSubscribeBuilderWithState() throws PubNubException {
-        final AtomicInteger subscribeHits = new AtomicInteger(0);
-        final AtomicInteger heartbeatHits = new AtomicInteger(0);
-
         final String expectedPayload = PubNubUtil.urlDecode("%7B%22ch1%22%3A%5B%22p1%22%2C%22p2%22%5D%2C%22cg2%22%3A" +
                 "%5B%22p1%22%2C%22p2%22%5D%7D");
         final Map<String, Object> expectedMap = pubnub.getMapper().fromJson(expectedPayload, Map.class);
@@ -1342,96 +1342,29 @@ public class SubscriptionManagerTest extends TestHarness {
 
         pubnub.getConfiguration().setPresenceTimeout(20);
         pubnub.getConfiguration().setHeartbeatNotificationOptions(PNHeartbeatNotificationOptions.ALL);
-        pubnub.addListener(new SubscribeCallback() {
-            @Override
-            public void status(@NotNull PubNub pubnub, @NotNull PNStatus status) {
 
-                List<LoggedRequest> heartbeatRequests = findAll(getRequestedFor(urlMatching(
-                        "/v2/presence/sub-key/" + pubnub.getConfiguration().getSubscribeKey() + "/channel/ch2," +
-                                "ch1/heartbeat.*")));
+        pubnub.subscribe().channels(Arrays.asList("ch1", "ch2")).channelGroups(Arrays.asList("cg1", "cg2")).execute();
+        pubnub.setPresenceState().channels(Arrays.asList("ch1")).channelGroups(Arrays.asList("cg2"))
+                .state(Arrays.asList("p1", "p2"))
+                .async((result, status) -> {
+                });
 
-                List<LoggedRequest> subscribeRequests = findAll(getRequestedFor(urlMatching(
-                        "/v2/subscribe/" + pubnub.getConfiguration().getSubscribeKey() + "/ch2,ch1/.*")));
-
-
-                for (LoggedRequest request : subscribeRequests) {
-                    String stateString = PubNubUtil.urlDecode(request.queryParameter("state").firstValue());
+        Awaitility.await().atMost(5, TimeUnit.SECONDS)
+                .until(() -> findAll(getRequestedFor(urlMatching(
+                        "/v2/subscribe/" + pubnub.getConfiguration().getSubscribeKey() + "/ch2,ch1/.*"))).stream().anyMatch(req -> {
+                    String stateString = PubNubUtil.urlDecode(req.queryParameter("state").firstValue());
                     Map<String, Object> actualMap = null;
                     try {
                         actualMap = pubnub.getMapper().fromJson(stateString, Map.class);
                     } catch (PubNubException e) {
                         e.printStackTrace();
                     }
-
-                    if (actualMap != null && actualMap.equals(expectedMap)) {
-                        subscribeHits.getAndAdd(1);
-                    }
-                }
-
-                for (LoggedRequest request : heartbeatRequests) {
-                    if (!request.getQueryParams().containsKey("state")) {
-                        heartbeatHits.getAndAdd(1);
-                    }
-                }
-            }
-
-            @Override
-            public void message(@NotNull PubNub pubnub, @NotNull PNMessageResult message) {
-            }
-
-            @Override
-            public void presence(@NotNull PubNub pubnub, @NotNull PNPresenceEventResult presence) {
-            }
-
-            @Override
-            public void signal(@NotNull PubNub pubnub, @NotNull PNSignalResult signal) {
-
-            }
-
-            @Override
-            public void uuid(@NotNull PubNub pubnub, @NotNull PNUUIDMetadataResult pnUUIDMetadataResult) {
-
-            }
-
-            @Override
-            public void channel(@NotNull PubNub pubnub, @NotNull PNChannelMetadataResult pnChannelMetadataResult) {
-
-            }
-
-            @Override
-            public void membership(@NotNull PubNub pubnub, @NotNull PNMembershipResult pnMembershipResult) {
-
-            }
-
-
-            @Override
-            public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnMessageActionResult) {
-
-            }
-
-            @Override
-            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
-
-            }
-        });
-
-
-        pubnub.subscribe().channels(Arrays.asList("ch1", "ch2")).channelGroups(Arrays.asList("cg1", "cg2")).execute();
-        pubnub.setPresenceState().channels(Arrays.asList("ch1")).channelGroups(Arrays.asList("cg2"))
-                .state(Arrays.asList("p1", "p2"))
-                .async(new PNCallback<PNSetStateResult>() {
-                    @Override
-                    public void onResponse(PNSetStateResult result, @NotNull PNStatus status) {
-                    }
-                });
-
+                    return actualMap != null && actualMap.equals(expectedMap);
+                }));
         Awaitility.await().atMost(5, TimeUnit.SECONDS)
-                .until(new Callable<Boolean>() {
-                    @Override
-                    public Boolean call() throws Exception {
-                        return subscribeHits.get() > 0 && heartbeatHits.get() > 0;
-                    }
-                });
+                .until(() -> findAll(getRequestedFor(urlMatching(
+                            "/v2/presence/sub-key/" + pubnub.getConfiguration().getSubscribeKey() + "/channel/ch2," +
+                                    "ch1/heartbeat.*"))).stream().anyMatch(req -> !req.getQueryParams().containsKey("state")));
 
     }
 
@@ -2406,10 +2339,9 @@ public class SubscriptionManagerTest extends TestHarness {
     }
 
     @Test
-    public void testUnsubscribe() {
-
-        final AtomicBoolean statusRecieved = new AtomicBoolean();
-        final AtomicBoolean messageRecieved = new AtomicBoolean();
+    public void testUnsubscribe() throws InterruptedException {
+        final CountDownLatch statusReceived = new CountDownLatch(1);
+        final CountDownLatch messageReceived = new CountDownLatch(1);
 
         stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1,ch2-pnpres,ch1-pnpres/0"))
                 .willReturn(aResponse().withBody("{\"t\":{\"t\":\"14607577960932487\",\"r\":1},\"m\":" +
@@ -2441,7 +2373,7 @@ public class SubscriptionManagerTest extends TestHarness {
 
                 if (affectedChannels.size() == 1 && status.getOperation() == PNOperationType.PNUnsubscribeOperation) {
                     if (affectedChannels.get(0).equals("ch1")) {
-                        statusRecieved.set(true);
+                        statusReceived.countDown();
                     }
                 }
             }
@@ -2452,7 +2384,7 @@ public class SubscriptionManagerTest extends TestHarness {
                         urlMatching("/v2/subscribe/mySubscribeKey/ch2,ch2-pnpres/0.*")));
 
                 if (!requests.isEmpty()) {
-                    messageRecieved.set(true);
+                    messageReceived.countDown();
                 }
 
             }
@@ -2497,18 +2429,16 @@ public class SubscriptionManagerTest extends TestHarness {
 
         pubnub.subscribe().channels(Arrays.asList("ch1", "ch2")).withPresence().execute();
 
-        Awaitility.await().atMost(2, TimeUnit.SECONDS).untilAtomic(messageRecieved,
-                org.hamcrest.core.IsEqual.equalTo(true));
-        Awaitility.await().atMost(2, TimeUnit.SECONDS).untilAtomic(statusRecieved,
-                org.hamcrest.core.IsEqual.equalTo(true));
+        assertTrue(statusReceived.await(2, TimeUnit.SECONDS));
+        assertTrue(messageReceived.await(2, TimeUnit.SECONDS));
     }
 
     @Test
-    public void testAllHeartbeats() {
+    public void testAllHeartbeats() throws InterruptedException {
 
-        final AtomicBoolean statusRecieved = new AtomicBoolean();
         pubnub.getConfiguration().setPresenceTimeout(20);
         pubnub.getConfiguration().setHeartbeatNotificationOptions(PNHeartbeatNotificationOptions.ALL);
+        final CountDownLatch statusReceived = new CountDownLatch(1);
 
         stubFor(get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1,ch2-pnpres,ch1-pnpres/0"))
                 .willReturn(aResponse().withBody("{\"t\":{\"t\":\"14607577960932487\",\"r\":1},\"m\":" +
@@ -2520,156 +2450,55 @@ public class SubscriptionManagerTest extends TestHarness {
                 .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\"," +
                         " \"action\": \"leave\"}")));
 
-        SubscribeCallback sub1 = new SubscribeCallback() {
-            @Override
-            public void status(@NotNull PubNub pubnub, @NotNull PNStatus status) {
-                if (status.getOperation() == PNOperationType.PNHeartbeatOperation && !status.isError()) {
-                    statusRecieved.set(true);
-                }
-            }
-
-            @Override
-            public void message(@NotNull PubNub pubnub, @NotNull PNMessageResult pnMessageResult) {
-
-            }
-
-            @Override
-            public void presence(@NotNull PubNub pubnub, @NotNull PNPresenceEventResult pnPresenceEventResult) {
-
-            }
-
-            @Override
-            public void signal(@NotNull PubNub pubnub, @NotNull PNSignalResult pnSignalResult) {
-
-            }
-
-            @Override
-            public void uuid(@NotNull PubNub pubnub, @NotNull PNUUIDMetadataResult pnUUIDMetadataResult) {
-
-            }
-
-            @Override
-            public void channel(@NotNull PubNub pubnub, @NotNull PNChannelMetadataResult pnChannelMetadataResult) {
-
-            }
-
-            @Override
-            public void membership(@NotNull PubNub pubnub, @NotNull PNMembershipResult pnMembershipResult) {
-
-            }
-
-
-            @Override
-            public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnMessageActionResult) {
-
-            }
-
-            @Override
-            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
-
-            }
-
-
-        };
-
-        pubnub.addListener(sub1);
+        pubnub.addListener(operationStatusReceivedListener(PNOperationType.PNHeartbeatOperation, statusReceived));
 
         pubnub.subscribe().channels(Arrays.asList("ch1", "ch2")).withPresence().execute();
 
-
-        Awaitility.await().atMost(2, TimeUnit.SECONDS).untilAtomic(statusRecieved,
-                org.hamcrest.core.IsEqual.equalTo(true));
+        assertTrue(statusReceived.await(2, TimeUnit.SECONDS));
     }
 
     @Test
-    public void testAllHeartbeatsViaPresence() {
+    public void testAllHeartbeatsViaPresence() throws InterruptedException {
 
-        final AtomicBoolean statusRecieved = new AtomicBoolean();
         pubnub.getConfiguration().setPresenceTimeout(20);
         pubnub.getConfiguration().setHeartbeatNotificationOptions(PNHeartbeatNotificationOptions.ALL);
+        final CountDownLatch statusReceived = new CountDownLatch(1);
+
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch2,ch1/heartbeat"))
                 .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\"," +
                         " \"action\": \"leave\"}")));
 
-        SubscribeCallback sub1 = new SubscribeCallback() {
-            @Override
-            public void status(@NotNull PubNub pubnub, @NotNull PNStatus status) {
-                if (status.getOperation() == PNOperationType.PNHeartbeatOperation && !status.isError()) {
-                    statusRecieved.set(true);
-                }
-            }
-
-            @Override
-            public void message(@NotNull PubNub pubnub, @NotNull PNMessageResult pnMessageResult) {
-
-            }
-
-            @Override
-            public void presence(@NotNull PubNub pubnub, @NotNull PNPresenceEventResult pnPresenceEventResult) {
-
-            }
-
-            @Override
-            public void signal(@NotNull PubNub pubnub, @NotNull PNSignalResult pnSignalResult) {
-
-            }
-
-            @Override
-            public void uuid(@NotNull PubNub pubnub, @NotNull PNUUIDMetadataResult pnUUIDMetadataResult) {
-
-            }
-
-            @Override
-            public void channel(@NotNull PubNub pubnub, @NotNull PNChannelMetadataResult pnChannelMetadataResult) {
-
-            }
-
-            @Override
-            public void membership(@NotNull PubNub pubnub, @NotNull PNMembershipResult pnMembershipResult) {
-
-            }
-
-
-            @Override
-            public void messageAction(@NotNull PubNub pubnub, @NotNull PNMessageActionResult pnMessageActionResult) {
-
-            }
-
-            @Override
-            public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
-
-            }
-
-
-        };
-
-        assertNotNull("callback is null", sub1);
-
-        pubnub.addListener(sub1);
+        pubnub.addListener(operationStatusReceivedListener(PNOperationType.PNHeartbeatOperation, statusReceived));
 
         pubnub.presence().channels(Arrays.asList("ch1", "ch2")).connected(true).execute();
 
-
-        Awaitility.await().atMost(2, TimeUnit.SECONDS).untilAtomic(statusRecieved,
-                org.hamcrest.core.IsEqual.equalTo(true));
+        assertTrue(statusReceived.await(2, TimeUnit.SECONDS));
     }
 
     @Test
-    public void testAllHeartbeatsLeaveViaPresence() {
+    public void testAllHeartbeatsLeaveViaPresence() throws InterruptedException {
 
-        final AtomicBoolean statusRecieved = new AtomicBoolean();
         pubnub.getConfiguration().setHeartbeatNotificationOptions(PNHeartbeatNotificationOptions.ALL);
 
         stubFor(get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch1,ch2/leave"))
                 .willReturn(aResponse().withBody("{\"status\": 200, \"message\": \"OK\", \"service\": \"Presence\"," +
                         " \"action\": \"leave\"}")));
+        final CountDownLatch statusReceived = new CountDownLatch(1);
 
-        SubscribeCallback sub1 = new SubscribeCallback() {
+        pubnub.addListener(operationStatusReceivedListener(PNOperationType.PNUnsubscribeOperation, statusReceived));
+
+        pubnub.presence().channels(Arrays.asList("ch1", "ch2")).connected(false).execute();
+
+        assertTrue(statusReceived.await(2, TimeUnit.SECONDS));
+    }
+
+    SubscribeCallback operationStatusReceivedListener(PNOperationType operationType, CountDownLatch statusReceived) {
+        return new SubscribeCallback() {
             @Override
             public void status(@NotNull PubNub pubnub, @NotNull PNStatus status) {
-                if (status.getOperation() == PNOperationType.PNUnsubscribeOperation && !status.isError()) {
-                    statusRecieved.set(true);
+                if (status.getOperation() == operationType && !status.isError()) {
+                    statusReceived.countDown();
                 }
             }
 
@@ -2713,19 +2542,7 @@ public class SubscriptionManagerTest extends TestHarness {
             public void file(@NotNull PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
 
             }
-
-
         };
-
-        assertNotNull("callback is null", sub1);
-
-        pubnub.addListener(sub1);
-
-        pubnub.presence().channels(Arrays.asList("ch1", "ch2")).connected(false).execute();
-
-
-        Awaitility.await().atMost(2, TimeUnit.SECONDS).untilAtomic(statusRecieved,
-                org.hamcrest.core.IsEqual.equalTo(true));
     }
 
     @Test

@@ -1,14 +1,13 @@
 package com.pubnub.api.builder.dto;
 
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 
 import java.util.List;
 
-@Getter
 @Builder
-public class UnsubscribeOperation {
-
-    private List<String> channels;
-    private List<String> channelGroups;
+@Data
+public class UnsubscribeOperation implements PubSubOperation {
+    private final List<String> channels;
+    private final List<String> channelGroups;
 }

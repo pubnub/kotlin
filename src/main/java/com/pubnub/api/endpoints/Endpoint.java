@@ -90,6 +90,7 @@ public abstract class Endpoint<Input, Output> implements RemoteAction<Output> {
                     .pubnubError(PubNubErrorBuilder.PNERROBJ_PARSING_ERROR)
                     .errormsg(e.toString())
                     .affectedCall(call)
+                    .cause(e)
                     .build();
         }
 
@@ -225,7 +226,8 @@ public abstract class Endpoint<Input, Output> implements RemoteAction<Output> {
                 PNStatusCategory pnStatusCategory;
 
                 PubNubException.PubNubExceptionBuilder pubnubException = PubNubException.builder()
-                        .errormsg(throwable.getMessage());
+                        .errormsg(throwable.getMessage())
+                        .cause(throwable);
 
                 try {
                     throw throwable;

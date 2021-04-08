@@ -25,7 +25,7 @@ public class CryptoTest {
 
         //when
         final byte[] encryptedByteArray = FileEncryptionUtil.encryptToBytes(cipherKey,
-                new ByteArrayInputStream(byteArrayToEncrypt));
+                byteArrayToEncrypt);
         try (InputStream decryptedInputStream = FileEncryptionUtil.decrypt(cipherKey,
                 new ByteArrayInputStream(encryptedByteArray))) {
             try (final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {

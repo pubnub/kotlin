@@ -1,15 +1,17 @@
 package com.pubnub.api.models.consumer.history;
 
+import com.pubnub.api.models.consumer.PNBoundedPage;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.ToString;
 
 import java.util.List;
 import java.util.Map;
 
-@Getter
-@Builder
 @ToString
+@Data
+@Builder
 public class PNFetchMessagesResult {
-    private Map<String, List<PNFetchMessageItem>> channels;
+    private final Map<String, List<PNFetchMessageItem>> channels;
+    private final PNBoundedPage page;
 }

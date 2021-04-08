@@ -1,16 +1,15 @@
 package com.pubnub.api.builder.dto;
 
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 
+import java.util.Collections;
 import java.util.List;
 
 @Builder
-@Getter
-public class StateOperation {
-
-    private List<String> channels;
-    private List<String> channelGroups;
-    private Object state;
-
+@Data
+public class StateOperation implements PubSubOperation {
+    @Builder.Default private final List<String> channels = Collections.emptyList();
+    @Builder.Default private final List<String> channelGroups = Collections.emptyList();
+    private final Object state;
 }

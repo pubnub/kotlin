@@ -82,7 +82,7 @@
     <!--   <property name="headerFile" value="${checkstyle.header.file}"/> -->
     <!--   <property name="fileExtensions" value="java"/> -->
     <!-- </module> -->
-
+    <module name="SuppressWarningsFilter" />
     <module name="TreeWalker">
 
         <!-- <module name="SuppressionCommentFilter"/> -->
@@ -91,6 +91,7 @@
             <property name="onCommentFormat" value="CHECKSTYLE_ON: ALMOST_ALL"/>
             <property name="checkFormat" value="^((?!(EqualsHashCode)).)*$"/>
         </module>
+        <module name="SuppressWarningsHolder" />
 
         <!-- Checks for Javadoc comments.                     -->
         <!-- See http://checkstyle.sf.net/config_javadoc.html
@@ -127,7 +128,9 @@
             <property name="max" value="130"/>
         </module>
         <module name="MethodLength"/>
-        <module name="ParameterNumber"/>
+        <module name="ParameterNumber">
+            <property name="max" value="10"/>
+        </module>
 
         <!-- Checks for whitespace                               -->
         <!-- See http://checkstyle.sf.net/config_whitespace.html -->
@@ -174,6 +177,7 @@
         <module name="InterfaceIsType"/>
         <module name="VisibilityModifier">
             <property name="protectedAllowed" value="true"/>
+            <property name="packageAllowed" value="true"/>
         </module>
 
         <!-- Miscellaneous other checks.                   -->

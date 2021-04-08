@@ -56,6 +56,7 @@ public class GrantTokenRequestBody {
             } catch (PubNubException e) {
                 throw PubNubException.builder()
                         .pubnubError(PubNubErrorBuilder.PNERROBJ_INVALID_META)
+                        .cause(e)
                         .build();
             }
         } else {

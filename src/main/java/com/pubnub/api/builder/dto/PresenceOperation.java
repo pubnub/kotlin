@@ -1,16 +1,15 @@
 package com.pubnub.api.builder.dto;
 
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 
+import java.util.Collections;
 import java.util.List;
 
 @Builder
-@Getter
-public class PresenceOperation {
-
-    private List<String> channels;
-    private List<String> channelGroups;
-    private boolean connected;
-
+@Data
+public class PresenceOperation implements PubSubOperation {
+    @Builder.Default private final List<String> channels = Collections.emptyList();
+    @Builder.Default private final List<String> channelGroups = Collections.emptyList();
+    private final boolean connected;
 }

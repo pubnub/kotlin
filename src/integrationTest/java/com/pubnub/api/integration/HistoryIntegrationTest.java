@@ -275,7 +275,7 @@ public class HistoryIntegrationTest extends BaseIntegrationTest {
                 .sync();
 
         assert fetchMessagesResult != null;
-        assertEquals(1, fetchMessagesResult.getChannels().get(expectedChannelName).size());
+        assertEquals(10, fetchMessagesResult.getChannels().get(expectedChannelName).size());
 
         for (PNFetchMessageItem messageItem : fetchMessagesResult.getChannels().get(expectedChannelName)) {
             assertNotNull(messageItem.getMessage());
@@ -442,7 +442,7 @@ public class HistoryIntegrationTest extends BaseIntegrationTest {
         pubNub.fetchMessages()
                 .channels(Collections.singletonList(random()))
                 .async((result, status) -> {
-                    assertEquals("1", queryParam(status, "max"));
+                    assertEquals("100", queryParam(status, "max"));
                     success.set(true);
                 });
 
@@ -457,7 +457,7 @@ public class HistoryIntegrationTest extends BaseIntegrationTest {
                 .channels(Collections.singletonList(random()))
                 .maximumPerChannel(-1)
                 .async((result, status) -> {
-                    assertEquals("1", queryParam(status, "max"));
+                    assertEquals("100", queryParam(status, "max"));
                     success.set(true);
                 });
 
@@ -487,7 +487,7 @@ public class HistoryIntegrationTest extends BaseIntegrationTest {
                 .channels(Collections.singletonList(random()))
                 .maximumPerChannel(100)
                 .async((result, status) -> {
-                    assertEquals("25", queryParam(status, "max"));
+                    assertEquals("100", queryParam(status, "max"));
                     success.set(true);
                 });
 
@@ -502,7 +502,7 @@ public class HistoryIntegrationTest extends BaseIntegrationTest {
                 .channels(Collections.singletonList(random()))
                 .includeMessageActions(true)
                 .async((result, status) -> {
-                    assertEquals("100", queryParam(status, "max"));
+                    assertEquals("25", queryParam(status, "max"));
                     success.set(true);
                 });
 
@@ -518,7 +518,7 @@ public class HistoryIntegrationTest extends BaseIntegrationTest {
                 .includeMessageActions(true)
                 .maximumPerChannel(-1)
                 .async((result, status) -> {
-                    assertEquals("100", queryParam(status, "max"));
+                    assertEquals("25", queryParam(status, "max"));
                     success.set(true);
                 });
 
@@ -534,7 +534,7 @@ public class HistoryIntegrationTest extends BaseIntegrationTest {
                 .includeMessageActions(true)
                 .maximumPerChannel(200)
                 .async((result, status) -> {
-                    assertEquals("100", queryParam(status, "max"));
+                    assertEquals("25", queryParam(status, "max"));
                     success.set(true);
                 });
 

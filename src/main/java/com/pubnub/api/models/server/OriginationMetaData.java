@@ -1,9 +1,9 @@
 package com.pubnub.api.models.server;
 
 import com.google.gson.annotations.SerializedName;
-import lombok.Getter;
+import lombok.Data;
 
-@Getter
+@Data
 public class OriginationMetaData {
 
     @SerializedName("t")

@@ -1,15 +1,20 @@
 package com.pubnub.api.managers;
 
-import com.pubnub.api.PubNub;
+import com.pubnub.api.PNConfiguration;
+import com.pubnub.api.builder.dto.ChangeTemporaryUnavailableOperation;
 import com.pubnub.api.builder.dto.PresenceOperation;
+import com.pubnub.api.builder.dto.PubSubOperation;
 import com.pubnub.api.builder.dto.StateOperation;
 import com.pubnub.api.builder.dto.SubscribeOperation;
+import com.pubnub.api.builder.dto.TimetokenAndRegionOperation;
 import com.pubnub.api.builder.dto.UnsubscribeOperation;
 import com.pubnub.api.models.SubscriptionItem;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -28,56 +33,160 @@ public class StateManager {
     /**
      * Contains a list of subscribed channels
      */
-    private Map<String, SubscriptionItem> channels;
+    private final Map<String, SubscriptionItem> channels = new HashMap<>();
     /**
      * Contains a list of subscribed presence channels.
      */
-    private Map<String, SubscriptionItem> presenceChannels;
+    private final Map<String, SubscriptionItem> presenceChannels = new HashMap<>();
 
     /**
      * Contains a list of subscribed channel groups.
      */
-    private Map<String, SubscriptionItem> groups;
+    private final Map<String, SubscriptionItem> groups = new HashMap<>();
 
     /**
      * Contains a list of subscribed presence channel groups.
      */
-    private Map<String, SubscriptionItem> presenceGroups;
+    private final Map<String, SubscriptionItem> presenceGroups = new HashMap<>();
 
-    private Map<String, SubscriptionItem> heartbeatChannels;
-    private Map<String, SubscriptionItem> heartbeatGroups;
+    private final Map<String, SubscriptionItem> heartbeatChannels = new HashMap<>();
+    private final Map<String, SubscriptionItem> heartbeatGroups = new HashMap<>();
 
-    private List<TemporaryUnavailableItem> temporaryUnavailableChannels = new ArrayList<>();
-    private List<TemporaryUnavailableItem> temporaryUnavailableChannelGroups = new ArrayList<>();
+    private final List<TemporaryUnavailableItem> temporaryUnavailableChannels = new ArrayList<>();
+    private final List<TemporaryUnavailableItem> temporaryUnavailableChannelGroups = new ArrayList<>();
 
-    private final PubNub pubnub;
+    /**
+     * Store the latest timetoken to subscribe with, null by default to get the latest timetoken.
+     */
+    private Long timetoken = 0L;
+    private Long storedTimetoken = null; // when changing the channel mix, store the timetoken for a later date.
 
-    public StateManager(final PubNub pubnub) {
-        this.pubnub = pubnub;
-        this.channels = new HashMap<>();
-        this.presenceChannels = new HashMap<>();
+    /**
+     * Keep track of Region to support PSV2 specification.
+     */
+    private String region = null;
 
-        this.groups = new HashMap<>();
-        this.presenceGroups = new HashMap<>();
+    private final PNConfiguration configuration;
+    private boolean shouldAnnounce = false;
 
-        this.heartbeatChannels = new HashMap<>();
-        this.heartbeatGroups = new HashMap<>();
+    public StateManager(final PNConfiguration configuration) {
+        this.configuration = configuration;
     }
 
-    public synchronized void adaptSubscribeBuilder(SubscribeOperation subscribeOperation) {
+    public synchronized boolean handleOperation(final PubSubOperation... pubSubOperations) {
+        boolean stateChanged = false;
+        for (PubSubOperation pubSubOperation : pubSubOperations) {
+            if (pubSubOperation instanceof SubscribeOperation) {
+                if (adaptSubscribeBuilder((SubscribeOperation) pubSubOperation)) {
+                    stateChanged = true;
+                    shouldAnnounce = true;
+                }
+            } else if (pubSubOperation instanceof UnsubscribeOperation) {
+                unsubscribe((UnsubscribeOperation) pubSubOperation);
+                stateChanged = true;
+                shouldAnnounce = true;
+            } else if (pubSubOperation instanceof StateOperation) {
+                adaptStateBuilder((StateOperation) pubSubOperation);
+            } else if (pubSubOperation instanceof PresenceOperation) {
+                adaptPresenceBuilder((PresenceOperation) pubSubOperation);
+            } else if (pubSubOperation instanceof TimetokenAndRegionOperation) {
+                TimetokenAndRegionOperation ttAndReg = (TimetokenAndRegionOperation) pubSubOperation;
+                updateTimetokenAndRegion(ttAndReg.getTimetoken(), ttAndReg.getRegion());
+                stateChanged = true;
+            } else if (pubSubOperation instanceof PubSubOperation.DisconnectOperation) {
+                resetTemporaryUnavailableChannelsAndGroups();
+            } else if (pubSubOperation instanceof ChangeTemporaryUnavailableOperation) {
+                changeTemporary((ChangeTemporaryUnavailableOperation) pubSubOperation);
+            } else if (pubSubOperation instanceof PubSubOperation.ConnectedStatusAnnouncedOperation) {
+                shouldAnnounce = false;
+            }
+        }
+        return stateChanged;
+    }
+
+    public synchronized SubscriptionStateData subscriptionStateData(Boolean includePresence) {
+        return subscriptionStateData(includePresence, ChannelFilter.WITH_TEMPORARY_UNAVAILABLE);
+    }
+
+    public synchronized SubscriptionStateData subscriptionStateData(Boolean includePresence,
+                                                                    ChannelFilter channelFilter) {
+        final List<String> channelsList;
+        final List<String> groupsList;
+        if (channelFilter == ChannelFilter.WITH_TEMPORARY_UNAVAILABLE) {
+            channelsList = prepareMembershipList(channels, presenceChannels, includePresence);
+            groupsList = prepareMembershipList(groups, presenceGroups, includePresence);
+        } else {
+            channelsList = effectiveChannels(includePresence);
+            groupsList = effectiveChannelGroups(includePresence);
+        }
+        return new SubscriptionStateData(
+                createStatePayload(),
+                groupsList,
+                channelsList,
+                timetoken,
+                region,
+                hasAnythingToSubscribe(),
+                subscribedToOnlyTemporaryUnavailable(),
+                shouldAnnounce
+        );
+    }
+
+    public synchronized HeartbeatStateData heartbeatStateData() {
+        //noinspection deprecation
+        if (configuration.isManagePresenceListManually()) {
+            return new HeartbeatStateData(createHeartbeatStatePayload(),
+                    getNames(heartbeatGroups),
+                    getNames(heartbeatChannels));
+        } else {
+            List<String> heartbeatGroupNames = getNames(heartbeatGroups);
+            heartbeatGroupNames.addAll(getNames(groups));
+            List<String> heartbeatChannelNames = getNames(heartbeatChannels);
+            heartbeatChannelNames.addAll(getNames(channels));
+            return new HeartbeatStateData(Collections.emptyMap(),
+                    heartbeatGroupNames,
+                    heartbeatChannelNames);
+        }
+    }
+
+    private void updateTimetokenAndRegion(final Long newTimetoken, final String region) {
+        if (storedTimetoken != null) {
+            timetoken = storedTimetoken;
+            storedTimetoken = null;
+        } else {
+            timetoken = newTimetoken;
+        }
+
+        this.region = region;
+    }
+
+    private void explicitlySetTimetoken(final Long timetokenToSet) {
+        if (timetokenToSet != null) {
+            this.timetoken = timetokenToSet;
+        }
+
+        // if the timetoken is not at starting position, reset the timetoken to get a connected event
+        // and store the old timetoken to be reused later during subscribe.
+        if (timetoken != 0L) {
+            storedTimetoken = timetoken;
+        }
+        timetoken = 0L;
+    }
+
+    private boolean adaptSubscribeBuilder(SubscribeOperation subscribeOperation) {
+        boolean changeDetected = false;
+
         for (String channel : subscribeOperation.getChannels()) {
             if (channel == null || channel.length() == 0) {
                 continue;
             }
 
-            SubscriptionItem subscriptionItem = new SubscriptionItem().setName(channel);
-            channels.put(channel, subscriptionItem);
+            final SubscriptionItem subscriptionItem = new SubscriptionItem().setName(channel);
+            changeDetected = putIfDifferent(channels, channel, subscriptionItem) || changeDetected;
 
             if (subscribeOperation.isPresenceEnabled()) {
-                SubscriptionItem presenceSubscriptionItem = new SubscriptionItem().setName(channel);
-                presenceChannels.put(channel, presenceSubscriptionItem);
+                final SubscriptionItem presenceSubscriptionItem = new SubscriptionItem().setName(channel);
+                changeDetected = putIfDifferent(presenceChannels, channel, presenceSubscriptionItem) || changeDetected;
             }
-
         }
 
         for (String channelGroup : subscribeOperation.getChannelGroups()) {
@@ -85,23 +194,50 @@ public class StateManager {
                 continue;
             }
 
-            SubscriptionItem subscriptionItem = new SubscriptionItem().setName(channelGroup);
-            groups.put(channelGroup, subscriptionItem);
+            final SubscriptionItem subscriptionItem = new SubscriptionItem().setName(channelGroup);
+            changeDetected = putIfDifferent(groups, channelGroup, subscriptionItem) || changeDetected;
 
             if (subscribeOperation.isPresenceEnabled()) {
-                SubscriptionItem presenceSubscriptionItem = new SubscriptionItem().setName(channelGroup);
-                presenceGroups.put(channelGroup, presenceSubscriptionItem);
+                final SubscriptionItem presenceSubscriptionItem = new SubscriptionItem().setName(channelGroup);
+                changeDetected = putIfDifferent(presenceGroups,
+                        channelGroup,
+                        presenceSubscriptionItem) || changeDetected;
             }
 
         }
+        if (changeDetected) {
+            explicitlySetTimetoken(subscribeOperation.getTimetoken());
+        }
+        return changeDetected;
     }
 
-    public synchronized void adaptStateBuilder(StateOperation stateOperation) {
+    private <T> boolean putIfDifferent(final Map<String, T> map, final String key, final T newValue) {
+        final T existingValue = map.get(key);
+        if (existingValue == null) {
+            map.put(key, newValue);
+            return true;
+        } else {
+            if (existingValue.equals(newValue)) {
+                return false;
+            } else {
+                map.put(key, newValue);
+                return true;
+            }
+        }
+    }
+
+    private void adaptStateBuilder(StateOperation stateOperation) {
         for (String channel : stateOperation.getChannels()) {
             SubscriptionItem subscribedChannel = channels.get(channel);
 
             if (subscribedChannel != null) {
                 subscribedChannel.setState(stateOperation.getState());
+            }
+
+            SubscriptionItem heartbeatChannel = heartbeatChannels.get(channel);
+
+            if (heartbeatChannel != null) {
+                heartbeatChannel.setState(stateOperation.getState());
             }
         }
 
@@ -111,24 +247,40 @@ public class StateManager {
             if (subscribedChannelGroup != null) {
                 subscribedChannelGroup.setState(stateOperation.getState());
             }
+
+            SubscriptionItem heartbeatChannelGroup = heartbeatGroups.get(channelGroup);
+
+            if (heartbeatChannelGroup != null) {
+                heartbeatChannelGroup.setState(stateOperation.getState());
+            }
         }
     }
 
 
-    public synchronized void adaptUnsubscribeBuilder(UnsubscribeOperation unsubscribeOperation) {
+    private void unsubscribe(UnsubscribeOperation unsubscribeOperation) {
         for (String channel : unsubscribeOperation.getChannels()) {
             this.channels.remove(channel);
             this.presenceChannels.remove(channel);
-            removeTemporaryUnavailableChannel(channel);
         }
+        removeTemporaryUnavailableChannels(unsubscribeOperation.getChannels());
 
         for (String channelGroup : unsubscribeOperation.getChannelGroups()) {
             this.groups.remove(channelGroup);
             this.presenceGroups.remove(channelGroup);
         }
+        removeTemporaryUnavailableChannelGroups(unsubscribeOperation.getChannelGroups());
+
+        // if we unsubscribed from all the channels, reset the timetoken back to zero and remove the region.
+        if (this.isEmpty()) {
+            region = null;
+            storedTimetoken = null;
+        } else {
+            storedTimetoken = timetoken;
+        }
+        timetoken = 0L;
     }
 
-    public synchronized void adaptPresenceBuilder(PresenceOperation presenceOperation) {
+    private void adaptPresenceBuilder(PresenceOperation presenceOperation) {
         for (String channel : presenceOperation.getChannels()) {
             if (channel == null || channel.length() == 0) {
                 continue;
@@ -158,7 +310,27 @@ public class StateManager {
         }
     }
 
-    public synchronized Map<String, Object> createStatePayload() {
+    private void changeTemporary(ChangeTemporaryUnavailableOperation operation) {
+        for (String channel : operation.getUnavailableChannels()) {
+            temporaryUnavailableChannels.add(new TemporaryUnavailableItem(channel, new Date()));
+        }
+        for (String channelGroup : operation.getUnavailableChannelGroups()) {
+            temporaryUnavailableChannelGroups.add(new TemporaryUnavailableItem(channelGroup, new Date()));
+        }
+
+        removeTemporaryUnavailableChannels(operation.getAvailableChannels());
+        removeTemporaryUnavailableChannelGroups(operation.getAvailableChannelGroups());
+    }
+
+    private Map<String, Object> createStatePayload() {
+        return createStatePayload(channels, groups);
+    }
+
+    private Map<String, Object> createHeartbeatStatePayload() {
+        return createStatePayload(heartbeatChannels, heartbeatGroups);
+    }
+
+    private Map<String, Object> createStatePayload(Map<String, SubscriptionItem> channels, Map<String, SubscriptionItem> groups) {
         Map<String, Object> stateResponse = new HashMap<>();
 
         for (SubscriptionItem channel : channels.values()) {
@@ -176,78 +348,60 @@ public class StateManager {
         return stateResponse;
     }
 
-    public synchronized List<String> prepareTargetChannelList(boolean includePresence) {
-        return prepareMembershipList(channels, presenceChannels, includePresence);
-    }
-
-    public synchronized List<String> prepareTargetChannelGroupList(boolean includePresence) {
-        return prepareMembershipList(groups, presenceGroups, includePresence);
-    }
-
-    public synchronized List<String> prepareTargetHeartbeatChannelList(boolean includePresence) {
-        return prepareMembershipList(heartbeatChannels, presenceChannels, includePresence);
-    }
-
-    public synchronized List<String> prepareTargetHeartbeatChannelGroupList(boolean includePresence) {
-        return prepareMembershipList(heartbeatGroups, presenceGroups, includePresence);
-    }
-
-    public boolean hasAnythingToSubscribe() {
-        final List<String> combinedChannels = prepareTargetChannelList(true);
-        final List<String> combinedChannelGroups = prepareTargetChannelGroupList(true);
+    private boolean hasAnythingToSubscribe() {
+        final List<String> combinedChannels = prepareMembershipList(channels, presenceChannels, true);
+        final List<String> combinedChannelGroups = prepareMembershipList(groups, presenceGroups, true);
 
         return !combinedChannels.isEmpty() || !combinedChannelGroups.isEmpty();
     }
 
-    public synchronized void resetTemporaryUnavailableChannelsAndGroups() {
+    private void resetTemporaryUnavailableChannelsAndGroups() {
         temporaryUnavailableChannels.clear();
         temporaryUnavailableChannelGroups.clear();
     }
 
-    public synchronized void removeTemporaryUnavailableChannel(String channel) {
-        TemporaryUnavailableItem temporaryUnavailableChannelsToBeRemoved = null;
-        for (final TemporaryUnavailableItem temporaryUnavailableChannel : temporaryUnavailableChannels) {
-            if (temporaryUnavailableChannel.getItem().equals(channel)) {
-                temporaryUnavailableChannelsToBeRemoved = temporaryUnavailableChannel;
+    private void removeTemporaryUnavailableChannels(Collection<String> channels) {
+        removeTemporaryUnavailable(channels, temporaryUnavailableChannels);
+    }
+
+    private void removeTemporaryUnavailableChannelGroups(Collection<String> channelGroups) {
+        removeTemporaryUnavailable(channelGroups, temporaryUnavailableChannelGroups);
+    }
+
+    private void removeTemporaryUnavailable(final Collection<String> toBeRemoved,
+                                            final Collection<TemporaryUnavailableItem> temporaryUnavailableItems) {
+        if (toBeRemoved.isEmpty()) {
+            return;
+        }
+        final List<TemporaryUnavailableItem> temporaryUnavailableItemsToBeRemoved = new ArrayList<>();
+        for (final TemporaryUnavailableItem temporaryUnavailableItem : temporaryUnavailableItems) {
+            if (toBeRemoved.contains(temporaryUnavailableItem.getItem())) {
+                temporaryUnavailableItemsToBeRemoved.add(temporaryUnavailableItem);
             }
         }
-        if (temporaryUnavailableChannelsToBeRemoved != null) {
-            temporaryUnavailableChannels.remove(temporaryUnavailableChannelsToBeRemoved);
-        }
+        temporaryUnavailableItems.removeAll(temporaryUnavailableItemsToBeRemoved);
     }
 
-    public synchronized void removeTemporaryUnavailableChannelGroup(String channelGroup) {
-        TemporaryUnavailableItem temporaryUnavailableChannelGroupsToBeRemoved = null;
-        for (final TemporaryUnavailableItem temporaryUnavailableChannelGroup : temporaryUnavailableChannelGroups) {
-            if (temporaryUnavailableChannelGroup.getItem().equals(channelGroup)) {
-                temporaryUnavailableChannelGroupsToBeRemoved = temporaryUnavailableChannelGroup;
-            }
-        }
-        if (temporaryUnavailableChannelGroupsToBeRemoved != null) {
-            temporaryUnavailableChannelGroups.remove(temporaryUnavailableChannelGroupsToBeRemoved);
-        }
-    }
-
-    public synchronized void addTemporaryUnavailableChannel(String channel) {
-        temporaryUnavailableChannels.add(new TemporaryUnavailableItem(channel, new Date()));
-    }
-
-    public synchronized void addTemporaryUnavailableChannelGroup(String channelGroupName) {
-        temporaryUnavailableChannelGroups.add(new TemporaryUnavailableItem(channelGroupName, new Date()));
-    }
-
-    public boolean subscribedToOnlyTemporaryUnavailable() {
+    private boolean subscribedToOnlyTemporaryUnavailable() {
         return effectiveChannels().isEmpty() && effectiveChannelGroups().isEmpty();
     }
 
-    public List<String> effectiveChannels() {
-        final List<String> effectiveChannelsList = prepareTargetChannelList(true);
+    private List<String> effectiveChannels() {
+        return effectiveChannels(true);
+    }
+
+    private List<String> effectiveChannels(boolean includePresence) {
+        final List<String> effectiveChannelsList = prepareMembershipList(channels, presenceChannels, includePresence);
         effectiveChannelsList.removeAll(channelsToPostponeSubscription(temporaryUnavailableChannels));
         return effectiveChannelsList;
     }
 
-    public List<String> effectiveChannelGroups() {
-        final List<String> effectiveChannelGroupsList = prepareTargetChannelGroupList(true);
+    private List<String> effectiveChannelGroups() {
+        return effectiveChannelGroups(true);
+    }
+
+    private List<String> effectiveChannelGroups(boolean includePresence) {
+        final List<String> effectiveChannelGroupsList = prepareMembershipList(groups, presenceGroups, includePresence);
         effectiveChannelGroupsList.removeAll(channelGroupsToPostponeSubscription(temporaryUnavailableChannelGroups));
         return effectiveChannelGroupsList;
     }
@@ -257,7 +411,7 @@ public class StateManager {
 
         for (TemporaryUnavailableItem temporaryUnavailableChannel : temporaryUnavailableChannels) {
             if (temporaryUnavailableChannel.getTimestamp()
-                    .after(new Date(System.currentTimeMillis() - pubnub.getConfiguration().getConnectTimeout() * MILLIS_IN_SECOND))) {
+                    .after(new Date(System.currentTimeMillis() - configuration.getConnectTimeout() * MILLIS_IN_SECOND))) {
                 result.add(temporaryUnavailableChannel.getItem());
             }
         }
@@ -269,33 +423,62 @@ public class StateManager {
 
         for (TemporaryUnavailableItem temporaryUnavailableChannelGroup : temporaryUnavailableChannelGroups) {
             if (temporaryUnavailableChannelGroup.getTimestamp()
-                    .after(new Date(System.currentTimeMillis() - pubnub.getConfiguration().getConnectTimeout() * MILLIS_IN_SECOND))) {
+                    .after(new Date(System.currentTimeMillis() - configuration.getConnectTimeout() * MILLIS_IN_SECOND))) {
                 result.add(temporaryUnavailableChannelGroup.getItem());
             }
         }
         return result;
     }
 
-    public synchronized boolean isEmpty() {
+    private boolean isEmpty() {
         return (channels.isEmpty() && presenceChannels.isEmpty() && groups.isEmpty() && presenceGroups.isEmpty());
     }
 
-    private synchronized List<String> prepareMembershipList(Map<String, SubscriptionItem> dataStorage, Map<String,
-            SubscriptionItem> presenceStorage, boolean includePresence) {
-        List<String> response = new ArrayList<>();
 
-        for (SubscriptionItem channelGroupItem : dataStorage.values()) {
-            response.add(channelGroupItem.getName());
+    private List<String> getNames(Map<String, SubscriptionItem> dataStorage) {
+        return new ArrayList<>(dataStorage.keySet());
+    }
+
+    private void addPresence(List<String> response, Map<String,
+            SubscriptionItem> presenceStorage) {
+        for (SubscriptionItem presenceChannelGroupItem : presenceStorage.values()) {
+            response.add(presenceChannelGroupItem.getName().concat("-pnpres"));
         }
+    }
+
+    private List<String> prepareMembershipList(Map<String, SubscriptionItem> dataStorage, Map<String,
+            SubscriptionItem> presenceStorage, boolean includePresence) {
+        List<String> response = getNames(dataStorage);
 
         if (includePresence) {
-            for (SubscriptionItem presenceChannelGroupItem : presenceStorage.values()) {
-                response.add(presenceChannelGroupItem.getName().concat("-pnpres"));
-            }
+            addPresence(response, presenceStorage);
         }
-
 
         return response;
     }
 
+    enum ChannelFilter {
+        WITH_TEMPORARY_UNAVAILABLE,
+        WITHOUT_TEMPORARY_UNAVAILABLE
+
+    }
+
+    @Data
+    public static class SubscriptionStateData {
+        private final Map<String, Object> statePayload;
+        private final List<String> channelGroups;
+        private final List<String> channels;
+        private final Long timetoken;
+        private final String region;
+        private final boolean anythingToSubscribe;
+        private final boolean subscribedToOnlyTemporaryUnavailable;
+        private final boolean shouldAnnounce;
+    }
+
+    @Data
+    public static class HeartbeatStateData {
+        private final Map<String, Object> statePayload;
+        private final List<String> heartbeatChannelGroups;
+        private final List<String> heartbeatChannels;
+    }
 }

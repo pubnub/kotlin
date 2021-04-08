@@ -1,21 +1,244 @@
 name: java
-version: 4.35.0
+version: 4.36.0
 schema: 1
 scm: github.com/pubnub/java
 files:
-  - build/libs/pubnub-gson-4.35.0-all.jar
+  - build/libs/pubnub-gson-4.36.0-all.jar
+sdks:
+  - 
+      type: library
+      full-name: Java SDK
+      short-name: Java
+      artifacts:
+        -
+          language: java
+          tags:
+            - Server
+            - Mobile
+          source-repository: https://github.com/pubnub/java
+          documentation: https://www.pubnub.com/docs/sdks/java/
+          tier: 1
+          artifact-type: library
+          distributions:
+            -
+              distribution-type: library
+              distribution-repository: git release
+              package-name: pubnub-gson-4.33.3-all
+              location: https://github.com/pubnub/java/releases/download/v4.33.3/pubnub-gson-4.33.3-all.jar
+              supported-platforms:
+                supported-operating-systems:
+                  Android:
+                    runtime-version:
+                      - ART
+                    target-api-level: 
+                      - 23
+                    minimum-api-level:
+                      - 23
+                    maximum-api-level:
+                      - 30  
+                    target-architecture:
+                      - armeabi-v7a
+                      - atom
+                      - armeabi
+                      - arm64-v8a
+                  Linux:
+                    runtime-version:
+                      - JVM 8 
+                    minimum-os-version:
+                      - Ubuntu 12.04
+                    maximum-os-version:
+                      - Ubuntu 20.04 LTS
+                    target-architecture:
+                      - x86
+                      - x86-64
+                  macOS:
+                    runtime-version:
+                      - JVM 8
+                    minimum-os-version:
+                      - macOS 10.12
+                    maximum-os-version:
+                      - macOS 11.0.1
+                    target-architecture:
+                      - x86-64
+                  Windows:
+                    runtime-version:
+                      - JVM 8
+                    minimum-os-version:
+                      - Windows Vista Ultimate
+                    maximum-os-version:
+                      - Windows 10 Home
+                    target-architecture:
+                      - x86
+                      - x86-64
+              requires:
+                -
+                  name: retrofit
+                  min-version: 2.6.2
+                  location: Shipped within library
+                  license: Apache License, Version 2.0
+                  license-url: https://github.com/square/retrofit/blob/parent-2.6.2/LICENSE.txt
+                  is-required: Required
+                -
+                  name: okhttp
+                  min-version: 3.12.6
+                  location: Shipped within library
+                  license: Apache License, Version 2.0
+                  license-url: https://github.com/square/okhttp/blob/parent-3.12.6/LICENSE.txt
+                  is-required: Required
+                -
+                  name: converter-gson
+                  min-version: 2.6.2
+                  location: Shipped within library
+                  license: Apache License, Version 2.0
+                  license-url: https://github.com/square/retrofit/blob/parent-2.6.2/LICENSE.txt
+                  is-required: Required
+                -
+                  name: gson
+                  min-version: 2.8.6
+                  location: Shipped within library
+                  license: Apache License, Version 2.0
+                  license-url: https://github.com/google/gson/blob/gson-parent-2.8.6/LICENSE
+                  is-required: Required
+                -
+                  name: jackson-databind
+                  min-version: 2.9.9
+                  location: Shipped within library
+                  license: Apache License, Version 2.0
+                  license-url: hhttps://github.com/FasterXML/jackson-databind/blob/jackson-databind-2.9.9/README.md
+                  is-required: Required
+                -
+                  name: jackson-module-kotlin
+                  min-version: 2.9.9
+                  location: Shipped within library
+                  license: Apache License, Version 2.0
+                  license-url: "" 
+                  is-required: Required
+                -
+                  name: json
+                  min-version: "20190722"
+                  location: Shipped within library
+                  license: ""
+                  license-url: https://github.com/stleary/JSON-java/blob/20190722/LICENSE
+                  is-required: Required
+
+        -
+
+          language: java 
+          tags:
+            - Server
+            - Mobile
+          source-repository: https://github.com/pubnub/java
+          documentation: https://www.pubnub.com/docs/sdks/java
+          tier: 1
+          artifact-type: library
+          distributions:
+            -
+              distribution-type: library
+              distribution-repository: maven 
+              package-name: pubnub-gson-4.33.3
+              location: https://repo.maven.apache.org/maven2/com/pubnub/pubnub-gson/4.33.3/pubnub-gson-4.33.3.jar
+              supported-platforms:
+                supported-operating-systems:
+                  Android:
+                    runtime-version:
+                      - ART
+                    target-api-level: 
+                      - 23
+                    minimum-api-level:
+                      - 23
+                    maximum-api-level:
+                      - 30  
+                    target-architecture:
+                      - armeabi-v7a
+                      - atom
+                      - armeabi
+                      - arm64-v8a
+                  Linux:
+                    runtime-version:
+                      - JVM 8 
+                    minimum-os-version:
+                      - Ubuntu 12.04
+                    maximum-os-version:
+                      - Ubuntu 20.04 LTS
+                    target-architecture:
+                      - x86
+                      - x86-64
+                  macOS:
+                    runtime-version:
+                      - JVM 8
+                    minimum-os-version:
+                      - macOS 10.12
+                    maximum-os-version:
+                      - macOS 11.0.1
+                    target-architecture:
+                      - x86-64
+                  Windows:
+                    runtime-version:
+                      - JVM 8
+                    minimum-os-version:
+                      - Windows Vista Ultimate
+                    maximum-os-version:
+                      - Windows 10 Home
+                    target-architecture:
+                      - x86
+                      - x86-64
+              requires:
+                -
+                  name: retrofit
+                  min-version: 2.6.2
+                  location: https://repo.maven.apache.org/maven2/com/squareup/retrofit2/retrofit/2.6.2/retrofit-2.6.2.jar
+                  license: Apache License, Version 2.0
+                  license-url: https://github.com/square/retrofit/blob/parent-2.6.2/LICENSE.txt
+                  is-required: Required
+                -
+                  name: okhttp
+                  min-version: 3.12.6
+                  location: https://repo.maven.apache.org/maven2/com/squareup/okhttp3/okhttp/3.12.6/okhttp-3.12.6.jar
+                  license: Apache License, Version 2.0
+                  license-url: https://github.com/square/okhttp/blob/parent-3.12.6/LICENSE.txt
+                  is-required: Required
+                -
+                  name: converter-gson
+                  min-version: 2.6.2
+                  location: https://repo.maven.apache.org/maven2/com/squareup/retrofit2/converter-gson/2.6.2/converter-gson-2.6.2.jar
+                  license: Apache License, Version 2.0
+                  license-url: https://github.com/square/retrofit/blob/parent-2.6.2/LICENSE.txt
+                  is-required: Required
+                -
+                  name: gson
+                  min-version: 2.8.6
+                  location: https://repo.maven.apache.org/maven2/com/google/code/gson/gson/2.8.6/gson-2.8.6.jar
+                  license: Apache License, Version 2.0
+                  license-url: https://github.com/google/gson/blob/gson-parent-2.8.6/LICENSE
+                  is-required: Required
+                -
+                  name: jackson-databind
+                  min-version: 2.9.9
+                  location: https://repo.maven.apache.org/maven2/com/fasterxml/jackson/core/jackson-databind/2.9.9/jackson-databind-2.9.9.jar
+                  license: Apache License, Version 2.0
+                  license-url: hhttps://github.com/FasterXML/jackson-databind/blob/jackson-databind-2.9.9/README.md
+                  is-required: Required
+                -
+                  name: jackson-module-kotlin
+                  min-version: 2.9.9
+                  location: https://repo.maven.apache.org/maven2/com/fasterxml/jackson/module/jackson-module-kotlin/2.9.9/jackson-module-kotlin-2.9.9.jar
+                  license: Apache License, Version 2.0
+                  license-url: "" 
+                  is-required: Required
+                -
+                  name: json
+                  min-version: "20190722"
+                  location: https://repo.maven.apache.org/maven2/org/json/json/20190722/json-20190722.jar
+                  license: ""
+                  license-url: https://github.com/stleary/JSON-java/blob/20190722/LICENSE
+                  is-required: Required
+
 changelog:
-  - version: v4.35.0
-    date: 2020-11-24
+  - version: v4.36.0
+    date: 2021-04-08
     changes:
       - type: feature
-        text: "Support for fileMessagePublishRetryLimit."
-      - type: bug
-        text: "Enable SDK users either to ignore PNAccessDeniedCategoryError occurred inside Subscription Loop or to react to in inside status callback."
-      - type: bug
-        text: "Report proper error message when upload file too large."
-      - type: bug
-        text: "Add missing auth and signature in generated URLs."
+        text: "New way of controlling Presence by Heartbeat calls for purpose of usage with dedicated server configuration (ACL). This feature can be used only with additional support from PubNub."
   - version: v4.33.3
     date: 2020-10-21
     changes:
@@ -138,14 +361,14 @@ changelog:
     changes:
       - type: feature
         text: Add Signals support
-      - type: bugfix
+      - type: bug
         text: Expose OkHttp logging interceptor library
   - version: v4.25.0
     date: 2019-06-06
     changes:
-      - type: bugfix
+      - type: bug
         text: Enable app level grants
-      - type: bugfix
+      - type: bug
         text: Custom encode auth key where it's not encoded automatically
       - type: feature
         text: Move state param from heartbeat to subscribe calls
@@ -470,16 +693,19 @@ changelog:
       - type: bug
         text: first GA.
   - version: v4.0.0-beta4
+    date: 2016-06-03
     changes:
       - type: improvement
         text: reconnects and minor adjustments.
   - version: v4.0.0-beta3
+    date: 2016-06-03
     changes:
       - type: bug
         text: fixing state not coming on the subscriber callback.
       - type: bug
         text: adjustments to URL encoding on publish, subscribe, set-state operations to avoid double encoding with retrofit.
   - version: v4.0.0-beta2
+    date: 2016-06-03
     changes:
       - type: improvement
         text: reworking of message queue.
@@ -488,6 +714,7 @@ changelog:
       - type: improvement
         text: reworking error notifications.
   - version: v4.0.0-beta1
+    date: 2016-06-03
     changes:
       - type: improvement
         text: initial beta1.
@@ -513,7 +740,6 @@ features:
     - PUSH-REMOVE-DEVICE
     - PUSH-TYPE-APNS
     - PUSH-TYPE-APNS2
-    - PUSH-TYPE-GCM
     - PUSH-TYPE-FCM
     - PUSH-TYPE-MPNS
   presence:

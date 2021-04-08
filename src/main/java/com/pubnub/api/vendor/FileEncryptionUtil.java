@@ -17,6 +17,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.AlgorithmParameterSpec;
 
+import static com.pubnub.api.PubNubUtil.readBytes;
 import static com.pubnub.api.vendor.Crypto.hexEncode;
 import static com.pubnub.api.vendor.Crypto.sha256;
 
@@ -44,14 +45,13 @@ public final class FileEncryptionUtil {
         }
     }
 
-    public static byte[] encryptToBytes(final String cipherKey, final InputStream inputStreamToEncrypt)
+    public static byte[] encryptToBytes(final String cipherKey, final byte[] bytesToEncrypt)
             throws PubNubException {
         try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
             final byte[] keyBytes = keyBytes(cipherKey);
             final byte[] randomIvBytes = randomIv();
             final Cipher encryptionCipher = encryptionCipher(keyBytes, randomIvBytes);
 
-            byte[] bytesToEncrypt = loadFromInputStream(inputStreamToEncrypt);
             byteArrayOutputStream.write(randomIvBytes);
             byteArrayOutputStream.write(encryptionCipher.doFinal(bytesToEncrypt));
             return byteArrayOutputStream.toByteArray();
@@ -63,7 +63,15 @@ public final class FileEncryptionUtil {
 
     public static InputStream encrypt(final String cipherKey, final InputStream inputStreamToEncrypt)
             throws PubNubException {
-        return new ByteArrayInputStream(encryptToBytes(cipherKey, inputStreamToEncrypt));
+
+        try {
+            return new ByteArrayInputStream(encryptToBytes(cipherKey, readBytes(inputStreamToEncrypt)));
+        } catch (IOException e) {
+            throw PubNubException.builder()
+                        .errormsg(e.getMessage())
+                        .cause(e)
+                        .build();
+        }
     }
 
     public static InputStream decrypt(final String cipherKey, final InputStream encryptedInputStream)
@@ -76,7 +84,7 @@ public final class FileEncryptionUtil {
             return new ByteArrayInputStream(decryptedBytes);
         } catch (NoSuchAlgorithmException | InvalidAlgorithmParameterException | NoSuchPaddingException
                 | InvalidKeyException | IOException | IllegalBlockSizeException | BadPaddingException e) {
-            throw PubNubException.builder().errormsg(e.toString()).build();
+            throw PubNubException.builder().errormsg(e.toString()).cause(e).build();
         }
     }
 
@@ -96,33 +104,7 @@ public final class FileEncryptionUtil {
                 }
             }
 
-            try (final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
-                byte[] dataToDecrypt = null;
-                int read;
-                final byte[] buffer = new byte[BUFFER_SIZE_BYTES];
-                do {
-                    read = inputStreamToEncrypt.read(buffer);
-                    if (read != -1) {
-                        byteArrayOutputStream.write(buffer, 0, read);
-                    }
-                } while (read != -1);
-                dataToDecrypt =  byteArrayOutputStream.toByteArray();
-                return new IvAndData(ivBytes, dataToDecrypt);
-            }
-    }
-
-    public static byte[] loadFromInputStream(final InputStream inputStreamToEncrypt) throws IOException {
-        try (final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
-            byte[] buffer = new byte[BUFFER_SIZE_BYTES];
-            int read;
-            do {
-                read = inputStreamToEncrypt.read(buffer);
-                if (read != -1) {
-                    byteArrayOutputStream.write(buffer, 0, read);
-                }
-            } while (read != -1);
-            return byteArrayOutputStream.toByteArray();
-        }
+            return new IvAndData(ivBytes, readBytes(inputStreamToEncrypt));
     }
 
     private static Cipher encryptionCipher(final byte[] keyBytes, final byte[] ivBytes)

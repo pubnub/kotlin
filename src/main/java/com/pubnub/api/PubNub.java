@@ -52,9 +52,14 @@ import com.pubnub.api.endpoints.push.ListPushProvisions;
 import com.pubnub.api.endpoints.push.RemoveAllPushChannelsForDevice;
 import com.pubnub.api.endpoints.push.RemoveChannelsFromPush;
 import com.pubnub.api.managers.BasePathManager;
+import com.pubnub.api.managers.DelayedReconnectionManager;
+import com.pubnub.api.managers.DuplicationManager;
+import com.pubnub.api.managers.ListenerManager;
 import com.pubnub.api.managers.MapperManager;
 import com.pubnub.api.managers.PublishSequenceManager;
+import com.pubnub.api.managers.ReconnectionManager;
 import com.pubnub.api.managers.RetrofitManager;
+import com.pubnub.api.managers.StateManager;
 import com.pubnub.api.managers.SubscriptionManager;
 import com.pubnub.api.managers.TelemetryManager;
 import com.pubnub.api.vendor.Crypto;
@@ -92,7 +97,9 @@ public class PubNub {
     private static final int TIMESTAMP_DIVIDER = 1000;
     private static final int MAX_SEQUENCE = 65535;
 
-    private static final String SDK_VERSION = "4.35.0";
+    private static final String SDK_VERSION = "4.36.0";
+    private final ListenerManager listenerManager;
+    private final StateManager stateManager;
 
     public PubNub(@NotNull PNConfiguration initialConfig) {
         this.configuration = initialConfig;
@@ -100,7 +107,19 @@ public class PubNub {
         this.telemetryManager = new TelemetryManager();
         this.basePathManager = new BasePathManager(initialConfig);
         this.retrofitManager = new RetrofitManager(this);
-        this.subscriptionManager = new SubscriptionManager(this, retrofitManager, this.telemetryManager);
+        this.listenerManager = new ListenerManager(this);
+        this.stateManager = new StateManager(this.configuration);
+        final ReconnectionManager reconnectionManager = new ReconnectionManager(this);
+        final DelayedReconnectionManager delayedReconnectionManager = new DelayedReconnectionManager(this);
+        final DuplicationManager duplicationManager = new DuplicationManager(this.configuration);
+        this.subscriptionManager = new SubscriptionManager(this,
+                retrofitManager,
+                this.telemetryManager,
+                stateManager,
+                listenerManager,
+                reconnectionManager,
+                delayedReconnectionManager,
+                duplicationManager);
         this.publishSequenceManager = new PublishSequenceManager(MAX_SEQUENCE);
         instanceId = UUID.randomUUID().toString();
     }
@@ -112,11 +131,11 @@ public class PubNub {
 
 
     public void addListener(@NotNull SubscribeCallback listener) {
-        subscriptionManager.addListener(listener);
+        listenerManager.addListener(listener);
     }
 
     public void removeListener(@NotNull SubscribeCallback listener) {
-        subscriptionManager.removeListener(listener);
+        listenerManager.removeListener(listener);
     }
 
     @NotNull
@@ -545,12 +564,12 @@ public class PubNub {
 
     @NotNull
     public List<String> getSubscribedChannels() {
-        return subscriptionManager.getSubscribedChannels();
+        return stateManager.subscriptionStateData(false).getChannels();
     }
 
     @NotNull
     public List<String> getSubscribedChannelGroups() {
-        return subscriptionManager.getSubscribedChannelGroups();
+        return this.stateManager.subscriptionStateData(false).getChannelGroups();
     }
 
     public void unsubscribeAll() {

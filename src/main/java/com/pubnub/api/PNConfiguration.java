@@ -195,6 +195,18 @@ public class PNConfiguration {
     private int fileMessagePublishRetryLimit;
 
     /**
+     * Enables explicit presence control.
+     * When set to true heartbeat calls will contain only channels and groups added explicitly
+     * using {@link PubNub#presence()}. Should be used only with ACL set on the server side.
+     * For more information please contact PubNub support
+     *
+     * @see PubNub#presence()
+     * @see PNConfiguration#heartbeatInterval
+     */
+    @Deprecated
+    @Setter
+    private boolean managePresenceListManually;
+    /**
      * Initialize the PNConfiguration with default values
      */
     public PNConfiguration() {
@@ -226,6 +238,7 @@ public class PNConfiguration {
         maximumMessagesCacheSize = DEFAULT_DEDUPE_SIZE;
         useRandomInitializationVector = false;
         fileMessagePublishRetryLimit = FILE_MESSAGE_PUBLISH_RETRY_LIMIT;
+        managePresenceListManually = false;
     }
 
     /**

@@ -129,6 +129,7 @@ public class MapperManager {
             throw PubNubException.builder()
                     .pubnubError(PubNubErrorBuilder.PNERROBJ_PARSING_ERROR)
                     .errormsg(e.getMessage())
+                    .cause(e)
                     .build();
         }
     }
@@ -150,6 +151,7 @@ public class MapperManager {
             throw PubNubException.builder()
                     .pubnubError(PubNubErrorBuilder.PNERROBJ_JSON_ERROR)
                     .errormsg(e.getMessage())
+                    .cause(e)
                     .build();
         }
     }
@@ -161,6 +163,7 @@ public class MapperManager {
             throw PubNubException.builder()
                     .pubnubError(PubNubErrorBuilder.PNERROBJ_JSON_ERROR)
                     .errormsg(e.getMessage())
+                    .cause(e)
                     .build();
         }
     }

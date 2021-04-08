@@ -9,7 +9,9 @@ import okio.Buffer;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -20,6 +22,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+
+import static com.pubnub.api.vendor.FileEncryptionUtil.BUFFER_SIZE_BYTES;
 
 @Log
 public class PubNubUtil {
@@ -136,6 +140,7 @@ public class PubNubUtil {
             throw PubNubException.builder()
                     .pubnubError(PubNubErrorBuilder.PNERROBJ_CRYPTO_ERROR)
                     .errormsg(e.getMessage())
+                    .cause(e)
                     .build();
         }
 
@@ -145,6 +150,7 @@ public class PubNubUtil {
             throw PubNubException.builder()
                     .pubnubError(PubNubErrorBuilder.PNERROBJ_CRYPTO_ERROR)
                     .errormsg(e.getMessage())
+                    .cause(e)
                     .build();
         }
 
@@ -264,4 +270,19 @@ public class PubNubUtil {
         }
         return "";
     }
+
+    public static byte[] readBytes(final InputStream inputStream) throws IOException {
+        try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
+            int read;
+            final byte[] buffer = new byte[BUFFER_SIZE_BYTES];
+            do {
+                read = inputStream.read(buffer);
+                if (read != -1) {
+                    byteArrayOutputStream.write(buffer, 0, read);
+                }
+            } while (read != -1);
+            return byteArrayOutputStream.toByteArray();
+        }
+    }
+
 }

@@ -11,12 +11,12 @@ public class ReconnectionProblemWithReconnectionPolicy extends AbstractReconnect
     @Override
     protected PubNub privilegedClientPubNub() {
         final PNConfiguration pnConfiguration = new PNConfiguration();
-        pnConfiguration.setSubscribeKey(itPamTestConfig.subscribeKey());
-        pnConfiguration.setPublishKey(itPamTestConfig.publishKey());
+        pnConfiguration.setSubscribeKey(itPamTestConfig.pamSubKey());
+        pnConfiguration.setPublishKey(itPamTestConfig.pamPubKey());
         pnConfiguration.setSubscribeTimeout(5);
         pnConfiguration.setLogVerbosity(PNLogVerbosity.BODY);
         pnConfiguration.setReconnectionPolicy(LINEAR);
-        pnConfiguration.setAuthKey(itPamTestConfig.authKey());
+        pnConfiguration.setAuthKey(authKey);
         return new PubNub(pnConfiguration);
     }
 }

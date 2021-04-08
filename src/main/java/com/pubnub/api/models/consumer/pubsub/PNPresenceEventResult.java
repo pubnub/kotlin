@@ -2,6 +2,7 @@ package com.pubnub.api.models.consumer.pubsub;
 
 import com.google.gson.JsonElement;
 import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -10,6 +11,7 @@ import java.util.List;
 @Getter
 @Builder
 @ToString
+@Data
 public class PNPresenceEventResult {
 
     private String event;

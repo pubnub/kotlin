@@ -25,6 +25,8 @@ public class Heartbeat extends Endpoint<Envelope, Boolean> {
     private List<String> channels;
     @Setter
     private List<String> channelGroups;
+    @Setter
+    private Object state;
 
     public Heartbeat(PubNub pubnub, TelemetryManager telemetryManager, RetrofitManager retrofit) {
         super(pubnub, telemetryManager, retrofit);
@@ -53,7 +55,7 @@ public class Heartbeat extends Endpoint<Envelope, Boolean> {
     }
 
     @Override
-    protected Call<Envelope> doWork(Map<String, String> params) {
+    protected Call<Envelope> doWork(Map<String, String> params) throws PubNubException {
         params.put("heartbeat", String.valueOf(this.getPubnub().getConfiguration().getPresenceTimeout()));
 
         if (channelGroups.size() > 0) {
@@ -66,6 +68,12 @@ public class Heartbeat extends Endpoint<Envelope, Boolean> {
             channelsCSV = PubNubUtil.joinString(channels, ",");
         } else {
             channelsCSV = ",";
+        }
+
+        if (state != null) {
+            String stringifiedState = this.getPubnub().getMapper().toJson(state);
+            stringifiedState = PubNubUtil.urlEncode(stringifiedState);
+            params.put("state", stringifiedState);
         }
 
         params.putAll(encodeParams(params));

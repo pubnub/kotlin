@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.ToString;
 import retrofit2.Call;
 
-@Builder
 @Getter
 @ToString
 public class PubNubException extends Exception {
@@ -16,6 +15,23 @@ public class PubNubException extends Exception {
     private JsonElement jso;
     private String response;
     private int statusCode;
+
+    @Builder
+    public PubNubException(final String errormsg,
+                           final PubNubError pubnubError,
+                           final JsonElement jso,
+                           final String response,
+                           final int statusCode,
+                           final Call affectedCall,
+                           final Throwable cause) {
+        super(cause);
+        this.errormsg = errormsg;
+        this.pubnubError = pubnubError;
+        this.jso = jso;
+        this.response = response;
+        this.statusCode = statusCode;
+        this.affectedCall = affectedCall;
+    }
 
     @Override
     public String getMessage() {

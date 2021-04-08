@@ -1,13 +1,18 @@
 package com.pubnub.api.models.consumer.message_actions;
 
+import com.google.gson.annotations.SerializedName;
+import com.pubnub.api.models.consumer.PNBoundedPage;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 
 import java.util.List;
 
 @Builder
-@Getter
+@Data
 public class PNGetMessageActionsResult {
 
-    private List<PNMessageAction> actions;
+    @SerializedName("data")
+    private final List<PNMessageAction> actions;
+    @SerializedName("more")
+    private final PNBoundedPage page;
 }

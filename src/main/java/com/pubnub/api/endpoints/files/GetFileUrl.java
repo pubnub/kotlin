@@ -86,7 +86,7 @@ public class GetFileUrl extends Endpoint<ResponseBody, PNFileUrlResult> {
                     getPubnub().getTimestamp());
             return new PNFileUrlResult(signedRequest.url().toString());
         } catch (Exception e) {
-            throw PubNubException.builder().build();
+            throw PubNubException.builder().cause(e).build();
         }
     }
 
