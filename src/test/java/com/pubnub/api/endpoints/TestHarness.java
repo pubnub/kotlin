@@ -15,6 +15,7 @@ public class TestHarness {
         pnConfiguration.setPublishKey("myPublishKey");
         pnConfiguration.setUuid("myUUID");
         pnConfiguration.setLogVerbosity(PNLogVerbosity.BODY);
+        pnConfiguration.setUseRandomInitializationVector(false);
 
         class MockedTimePubNub extends PubNub {
 

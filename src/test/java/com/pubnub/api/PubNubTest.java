@@ -17,6 +17,7 @@ public class PubNubTest {
         pnConfiguration = new PNConfiguration();
         pnConfiguration.setSubscribeKey("demo");
         pnConfiguration.setPublishKey("demo");
+        pnConfiguration.setUseRandomInitializationVector(false);
     }
 
     @After
@@ -98,7 +99,7 @@ public class PubNubTest {
         pubnub = new PubNub(pnConfiguration);
         String version = pubnub.getVersion();
         int timeStamp = pubnub.getTimestamp();
-        Assert.assertEquals("4.36.0", version);
+        Assert.assertEquals("5.0.0", version);
         Assert.assertTrue(timeStamp > 0);
     }
 

@@ -1,9 +1,9 @@
 name: java
-version: 4.36.0
+version: 5.0.0
 schema: 1
 scm: github.com/pubnub/java
 files:
-  - build/libs/pubnub-gson-4.36.0-all.jar
+  - build/libs/pubnub-gson-5.0.0-all.jar
 sdks:
   - 
       type: library
@@ -234,6 +234,13 @@ sdks:
                   is-required: Required
 
 changelog:
+  - version: v5.0.0
+    date: 2021-05-12
+    changes:
+      - type: feature
+        text: "Now random initialisation vector used when encryption enabled is now default behaviour."
+      - type: bug
+        text: "There were some non daemon threads running in background preventing VM from exiting. Now they are daemon threads."
   - version: v4.36.0
     date: 2021-04-08
     changes:

@@ -98,7 +98,7 @@ public class TelemetryManager {
         long interval = CLEAN_UP_INTERVAL * CLEAN_UP_INTERVAL_MULTIPLIER;
 
         stopCleanUpTimer();
-        this.timer = new Timer();
+        this.timer = new Timer("Telemetry Manager timer", true);
         this.timer.schedule(new TimerTask() {
             @Override
             public void run() {

@@ -228,5 +228,8 @@ public class RetrofitManager {
         if (this.subscriptionClientInstance != null) {
             closeExecutor(this.subscriptionClientInstance, force);
         }
+        if (this.noSignatureClientInstance != null) {
+            closeExecutor(this.noSignatureClientInstance, force);
+        }
     }
 }

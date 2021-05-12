@@ -236,7 +236,7 @@ public class PNConfiguration {
         dedupOnSubscribe = false;
         suppressLeaveEvents = false;
         maximumMessagesCacheSize = DEFAULT_DEDUPE_SIZE;
-        useRandomInitializationVector = false;
+        useRandomInitializationVector = true;
         fileMessagePublishRetryLimit = FILE_MESSAGE_PUBLISH_RETRY_LIMIT;
         managePresenceListManually = false;
     }

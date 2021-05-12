@@ -71,7 +71,7 @@ public class ReconnectionManager {
             return;
         }
 
-        timer = new Timer();
+        timer = new Timer("Reconnection Manager timer", true);
 
         timer.schedule(new TimerTask() {
             @Override

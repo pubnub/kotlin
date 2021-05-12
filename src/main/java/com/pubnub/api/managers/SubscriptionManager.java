@@ -123,6 +123,7 @@ public class SubscriptionManager {
             consumerThread = new Thread(new SubscribeMessageWorker(
                     this.pubnub, listenerManager, messageQueue, duplicationManager));
             consumerThread.setName("Subscription Manager Consumer Thread");
+            consumerThread.setDaemon(true);
             consumerThread.start();
         }
     }
@@ -213,7 +214,7 @@ public class SubscriptionManager {
             return;
         }
 
-        timer = new Timer();
+        timer = new Timer("Subscription Manager Heartbeat Timer", true);
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
@@ -240,7 +241,7 @@ public class SubscriptionManager {
     private void scheduleDelayedLoopIterationForTemporaryUnavailableChannels() {
         cancelDelayedLoopIterationForTemporaryUnavailableChannels();
 
-        temporaryUnavailableChannelsDelayer = new Timer();
+        temporaryUnavailableChannelsDelayer = new Timer("Subscription Manager TMP Unavailable Channel Delayer", true);
         temporaryUnavailableChannelsDelayer.schedule(new TimerTask() {
             @Override
             public void run() {

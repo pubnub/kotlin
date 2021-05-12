@@ -1,7 +1,13 @@
+## [v5.0.0](https://github.com/pubnub/java/releases/tag/v5.0.0)
+May-12-2021
+
+[Full Changelog](https://github.com/pubnub/java/compare/v4.36.0...v5.0.0)
+
+- 🌟️ Now random initialisation vector used when encryption enabled is now default behaviour. 
+- 🐛 There were some non daemon threads running in background preventing VM from exiting. Now they are daemon threads. 
+
 ## [v4.36.0](https://github.com/pubnub/java/releases/tag/v4.36.0)
 April-08-2021
-
-[Full Changelog](https://github.com/pubnub/java/compare/v4.35.0...v4.36.0)
 
 - 🌟️ New way of controlling Presence by Heartbeat calls for purpose of usage with dedicated server configuration (ACL). This feature can be used only with additional support from PubNub. 
 

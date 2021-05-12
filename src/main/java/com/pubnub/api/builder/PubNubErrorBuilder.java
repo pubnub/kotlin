@@ -159,7 +159,7 @@ public final class PubNubErrorBuilder {
     /**
      * Subscribe Timeout .
      */
-    public static final int PNERR_HTTP_SUBSCRIBE_TIMEOUT = 130;
+    public static final int PNERR_HTTP_SOCKET_TIMEOUT = 130;
 
     /**
      * Invalid arguments provided to API
@@ -509,9 +509,9 @@ public final class PubNubErrorBuilder {
             .message("Page Not Found Please verify if network is reachable. Please contact support with error details.")
             .build();
 
-    public static final PubNubError PNERROBJ_SUBSCRIBE_TIMEOUT = PubNubError.builder()
-            .errorCode(PNERR_HTTP_SUBSCRIBE_TIMEOUT)
-            .message("Subscribe Timeout.")
+    public static final PubNubError PNERROBJ_SOCKET_TIMEOUT = PubNubError.builder()
+            .errorCode(PNERR_HTTP_SOCKET_TIMEOUT)
+            .message("Socket Timeout.")
             .build();
 
     public static final PubNubError PNERROBJ_INVALID_ARGUMENTS = PubNubError.builder()

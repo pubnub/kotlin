@@ -57,8 +57,6 @@ public class SubscribeMessageWorker implements Runnable {
     private LinkedBlockingQueue<SubscribeMessage> queue;
     private DuplicationManager duplicationManager;
 
-    private boolean isRunning;
-
     public SubscribeMessageWorker(PubNub pubnubInstance,
                                   ListenerManager listenerManagerInstance,
                                   LinkedBlockingQueue<SubscribeMessage> queueInstance,
@@ -76,13 +74,11 @@ public class SubscribeMessageWorker implements Runnable {
 
 
     private void takeMessage() {
-        this.isRunning = true;
-
-        while (this.isRunning) {
+        while (!Thread.interrupted()) {
             try {
                 this.processIncomingPayload(this.queue.take());
             } catch (InterruptedException e) {
-                this.isRunning = false;
+                Thread.currentThread().interrupt();
                 log.trace("take message interrupted", e);
             }
         }

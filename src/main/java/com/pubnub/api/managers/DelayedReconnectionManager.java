@@ -33,7 +33,7 @@ public class DelayedReconnectionManager {
             return;
         }
 
-        timer = new Timer();
+        timer = new Timer("Delayed Reconnection Manager timer", true);
         timer.schedule(new TimerTask() {
             @Override
             public void run() {

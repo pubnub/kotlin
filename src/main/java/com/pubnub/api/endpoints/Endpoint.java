@@ -238,7 +238,7 @@ public abstract class Endpoint<Input, Output> implements RemoteAction<Output> {
                     pubnubException.pubnubError(PubNubErrorBuilder.PNERROBJ_CONNECT_EXCEPTION);
                     pnStatusCategory = PNStatusCategory.PNUnexpectedDisconnectCategory;
                 } catch (SocketTimeoutException socketTimeoutException) {
-                    pubnubException.pubnubError(PubNubErrorBuilder.PNERROBJ_SUBSCRIBE_TIMEOUT);
+                    pubnubException.pubnubError(PubNubErrorBuilder.PNERROBJ_SOCKET_TIMEOUT);
                     pnStatusCategory = PNStatusCategory.PNTimeoutCategory;
                 } catch (Throwable throwable1) {
                     pubnubException.pubnubError(PubNubErrorBuilder.PNERROBJ_HTTP_ERROR);
