@@ -1,14 +1,14 @@
 package com.pubnub.api.integration
 
+import com.pubnub.api.CommonUtils.randomValue
 import com.pubnub.api.PubNub
 import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.objects.member.PNUUIDDetailsLevel
 import com.pubnub.api.models.consumer.objects.member.PNUUIDWithCustom
 import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
-import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
-import com.pubnub.api.CommonUtils.randomValue
 import com.pubnub.api.models.consumer.objects.membership.PNChannelWithCustom
+import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
 import com.pubnub.api.subscribeToBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -85,8 +85,10 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
             includeChannelDetails = PNChannelDetailsLevel.CHANNEL
         ).sync()!!
 
-        assertTrue(getAllAfterRemovalResult.data.filter { it.channel != null }
-            .none { it.channel!!.id == channel })
+        assertTrue(
+            getAllAfterRemovalResult.data.filter { it.channel != null }
+                .none { it.channel!!.id == channel }
+        )
     }
 
     @Test
@@ -117,23 +119,29 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
             includeUUIDDetails = PNUUIDDetailsLevel.UUID
         ).sync()!!
 
-        assertTrue(getAllAfterRemovalResult.data.filter { it.uuid != null }
-            .none { it.uuid!!.id == testUuid })
+        assertTrue(
+            getAllAfterRemovalResult.data.filter { it.uuid != null }
+                .none { it.uuid!!.id == testUuid }
+        )
     }
 
     @Test
     fun testListeningToAllObjectsEvents() {
         val countDownLatch = CountDownLatch(8)
         val uuids = listOf(PNUUIDWithCustom(uuid = testUuid))
-        val channels = listOf(PNChannelWithCustom(channel = channel))
+        val channels = listOf(
+            PNChannelWithCustom(channel = channel)
+        )
 
-        pubnub.addListener(listener = object : SubscribeCallback() {
-            override fun status(pubnub: PubNub, pnStatus: PNStatus) {}
+        pubnub.addListener(
+            listener = object : SubscribeCallback() {
+                override fun status(pubnub: PubNub, pnStatus: PNStatus) {}
 
-            override fun objects(pubnub: PubNub, objectEvent: PNObjectEventResult) {
-                countDownLatch.countDown()
+                override fun objects(pubnub: PubNub, objectEvent: PNObjectEventResult) {
+                    countDownLatch.countDown()
+                }
             }
-        })
+        )
 
         pubnub.subscribeToBlocking(channel)
 

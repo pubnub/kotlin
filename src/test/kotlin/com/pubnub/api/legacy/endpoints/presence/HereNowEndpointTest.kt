@@ -70,7 +70,7 @@ class HereNowEndpointTest : BaseTest() {
                       },
                       "service": "Presence"
                     }
-                """.trimIndent()
+                    """.trimIndent()
                 )
             )
         )
@@ -239,7 +239,7 @@ class HereNowEndpointTest : BaseTest() {
                           },
                           "service": "Presence"
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )
@@ -494,7 +494,7 @@ class HereNowEndpointTest : BaseTest() {
                           },
                           "service": "Presence"
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )

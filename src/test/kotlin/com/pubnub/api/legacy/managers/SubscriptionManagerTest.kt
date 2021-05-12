@@ -1733,6 +1733,7 @@ class SubscriptionManagerTest : BaseTest() {
                 )
         )
         pubnub.configuration.cipherKey = "hello"
+        pubnub.configuration.useRandomInitializationVector = false
         pubnub.addListener(object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {}
             override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {
@@ -1787,6 +1788,7 @@ class SubscriptionManagerTest : BaseTest() {
                 )
         )
 
+        pubnub.configuration.useRandomInitializationVector = false
         pubnub.configuration.cipherKey = "hello"
 
         pubnub.addListener(object : SubscribeCallback() {
@@ -2938,7 +2940,7 @@ class SubscriptionManagerTest : BaseTest() {
                               },
                               "m": []
                             }
-                        """.trimIndent()
+                            """.trimIndent()
                         )
                         .withStatus(200)
                 )
@@ -2955,7 +2957,7 @@ class SubscriptionManagerTest : BaseTest() {
                               "message": "OK",
                               "service": "Presence"
                             }
-                        """.trimIndent()
+                            """.trimIndent()
                         )
                 )
         )
@@ -3011,7 +3013,7 @@ class SubscriptionManagerTest : BaseTest() {
                               },
                               "m": []
                             }
-                        """.trimIndent()
+                            """.trimIndent()
                         )
                         .withStatus(200)
                 )
@@ -3029,7 +3031,7 @@ class SubscriptionManagerTest : BaseTest() {
                               "message": "OK",
                               "service": "Presence"
                             }
-                        """.trimIndent()
+                            """.trimIndent()
                         )
                 )
         )

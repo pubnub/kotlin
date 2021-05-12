@@ -23,8 +23,7 @@ class GetAllUUIDMetadata internal constructor(
 ) : Endpoint<EntityArrayEnvelope<PNUUIDMetadata>, PNUUIDMetadataArrayResult>(pubnub) {
 
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityArrayEnvelope<PNUUIDMetadata>> {
-        val params = queryParams + returningCollection.createCollectionQueryParams() +
-                withCustom.createIncludeQueryParams()
+        val params = queryParams + returningCollection.createCollectionQueryParams() + withCustom.createIncludeQueryParams()
 
         return pubnub.retrofitManager.objectsService.getAllUUIDMetadata(
             subKey = pubnub.configuration.subscribeKey,
@@ -35,11 +34,11 @@ class GetAllUUIDMetadata internal constructor(
     override fun createResponse(input: Response<EntityArrayEnvelope<PNUUIDMetadata>>): PNUUIDMetadataArrayResult? {
         return input.body()?.let { arrayEnvelope ->
             PNUUIDMetadataArrayResult(
-                    status = arrayEnvelope.status,
-                    data = arrayEnvelope.data,
-                    prev = arrayEnvelope.prev?.let { PNPage.PNPrev(it) },
-                    next = arrayEnvelope.next?.let { PNPage.PNNext(it) },
-                    totalCount = arrayEnvelope.totalCount
+                status = arrayEnvelope.status,
+                data = arrayEnvelope.data,
+                prev = arrayEnvelope.prev?.let { PNPage.PNPrev(it) },
+                next = arrayEnvelope.next?.let { PNPage.PNNext(it) },
+                totalCount = arrayEnvelope.totalCount
             )
         }
     }

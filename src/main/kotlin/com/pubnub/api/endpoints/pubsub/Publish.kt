@@ -121,7 +121,7 @@ class Publish internal constructor(
         }
 
     private fun encryptMessage(message: String): String =
-        Crypto(pubnub.configuration.cipherKey)
+        Crypto(pubnub.configuration.cipherKey, pubnub.configuration.useRandomInitializationVector)
             .encrypt(message)
     // endregion
 }

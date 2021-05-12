@@ -6,7 +6,6 @@ import com.google.gson.JsonObject
 import com.google.gson.reflect.TypeToken
 import com.pubnub.api.models.consumer.PNPublishResult
 import com.pubnub.api.models.consumer.PNStatus
-
 import okhttp3.logging.HttpLoggingInterceptor
 import org.awaitility.Awaitility
 import org.awaitility.Durations
@@ -89,7 +88,8 @@ object CommonUtils {
                         } catch (t: Throwable) {
                             false
                         }
-                    })
+                    }
+                )
                 success.set(submit.get())
             } catch (t: Throwable) {
                 success.set(false)

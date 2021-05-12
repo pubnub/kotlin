@@ -33,7 +33,7 @@ class LeaveTest : BaseTest() {
                           "service": "Presence",
                           "action": "leave"
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )
@@ -59,7 +59,7 @@ class LeaveTest : BaseTest() {
                           "service": "Presence",
                           "action": "leave"
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )
@@ -85,7 +85,7 @@ class LeaveTest : BaseTest() {
                           "service": "Presence",
                           "action": "leave"
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )
@@ -114,7 +114,7 @@ class LeaveTest : BaseTest() {
                           "service": "Presence",
                           "action": "leave"
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )
@@ -148,7 +148,7 @@ class LeaveTest : BaseTest() {
                           "service": "Presence",
                           "action": "leave"
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )
@@ -175,7 +175,7 @@ class LeaveTest : BaseTest() {
                           "service": "Presence",
                           "action": "leave"
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )
@@ -227,7 +227,7 @@ class LeaveTest : BaseTest() {
                           "service": "Presence",
                           "action": "leave"
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )
@@ -254,7 +254,7 @@ class LeaveTest : BaseTest() {
                           "service": "Presence",
                           "action": "leave"
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )
@@ -281,7 +281,7 @@ class LeaveTest : BaseTest() {
                           "service": "Presence",
                           "action": "leave"
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )

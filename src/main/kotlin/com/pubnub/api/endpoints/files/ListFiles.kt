@@ -27,12 +27,14 @@ class ListFiles(
             throw PubNubException(PubNubError.CHANNEL_MISSING)
         }
         if (limit != null && limit !in MIN_LIMIT..MAX_LIMIT) {
-            throw PubNubException(PubNubError.INVALID_ARGUMENTS)
-                    .copy(errorMessage = "Limit should be in range from 1 to 100 (both inclusive)")
+            throw PubNubException(PubNubError.INVALID_ARGUMENTS).copy(
+                errorMessage = "Limit should be in range from 1 to 100 (both inclusive)"
+            )
         }
         if (next != null && (next.pageHash.isBlank())) {
-            throw PubNubException(PubNubError.INVALID_ARGUMENTS)
-                    .copy(errorMessage = "Next should not be an empty string")
+            throw PubNubException(PubNubError.INVALID_ARGUMENTS).copy(
+                errorMessage = "Next should not be an empty string"
+            )
         }
     }
 
@@ -42,18 +44,21 @@ class ListFiles(
         if (next != null) {
             queryParams[NEXT_PAGE_QUERY_PARAM] = next.pageHash
         }
-        return pubnub.retrofitManager.filesService.listFiles(pubnub.configuration.subscribeKey,
-                channel,
-                queryParams)
+        return pubnub.retrofitManager.filesService.listFiles(
+            pubnub.configuration.subscribeKey,
+            channel,
+            queryParams
+        )
     }
 
     @Throws(PubNubException::class)
     override fun createResponse(input: Response<ListFilesResult>): PNListFilesResult {
         return input.body()?.let { body ->
-            PNListFilesResult(body.count,
-                    body.next,
-                    body.status,
-                    body.data
+            PNListFilesResult(
+                body.count,
+                body.next,
+                body.status,
+                body.data
             )
         } ?: throw PubNubException(PubNubError.INTERNAL_ERROR)
     }

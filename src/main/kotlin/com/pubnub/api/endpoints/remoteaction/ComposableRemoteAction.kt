@@ -51,7 +51,8 @@ internal class ComposableRemoteAction<T, U>(
                     }
                 } catch (ex: PubNubException) {
                     callback(
-                        null, PNStatus(
+                        null,
+                        PNStatus(
                             category = PNStatusCategory.PNBadRequestCategory,
                             error = true,
                             operation = operationType()

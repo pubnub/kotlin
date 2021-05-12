@@ -19,10 +19,14 @@ class MappingRemoteAction<T, U> private constructor(
 
     override fun async(callback: (result: U?, status: PNStatus) -> Unit) {
         cachedCallback = callback
-        callback(function.invoke(result),
-                PNStatus(category = PNStatusCategory.PNAcknowledgmentCategory,
-                        error = false,
-                        operation = operationType))
+        callback(
+            function.invoke(result),
+            PNStatus(
+                category = PNStatusCategory.PNAcknowledgmentCategory,
+                error = false,
+                operation = operationType
+            )
+        )
     }
 
     override fun retry() {

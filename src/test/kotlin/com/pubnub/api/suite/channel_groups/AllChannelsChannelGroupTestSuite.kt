@@ -75,7 +75,7 @@ class AllChannelsChannelGroupTestSuite :
                       "group": "cg1"
                      }
                     }
-                """.trimIndent()
+                    """.trimIndent()
                 )
             }
             additionalChecks = { status: PNStatus, result: PNChannelGroupsAllChannelsResult? ->
@@ -92,7 +92,7 @@ class AllChannelsChannelGroupTestSuite :
                       "group": "cg1"
                      }
                     }
-                """.trimIndent()
+                    """.trimIndent()
                 )
             }
             pnError = PubNubError.PARSING_ERROR

@@ -228,7 +228,7 @@ class PNConfiguration {
      *
      * Defaults to `false`.
      */
-    var useRandomInitializationVector = false
+    var useRandomInitializationVector = true
 
     /**
      * Instructs the SDK to use a proxy configuration when communicating with PubNub servers.

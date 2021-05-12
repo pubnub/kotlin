@@ -69,10 +69,11 @@ class FilesIntegrationTest : BaseIntegrationTest() {
             return
         }
 
-        pubnub.deleteFile(channel = channel,
+        pubnub.deleteFile(
+            channel = channel,
             fileName = fileName,
-            fileId = sendResult.file.id)
-            .sync()
+            fileId = sendResult.file.id
+        ).sync()
     }
 
     private fun uploadListDownloadDelete(withCipher: Boolean) {
@@ -121,18 +122,19 @@ class FilesIntegrationTest : BaseIntegrationTest() {
 
         Assert.assertTrue(fileFoundOnList)
         val (_, byteStream) = pubnub.downloadFile(
-                channel = channel,
-                fileName = fileName,
-                fileId = sendResult.file.id
-            )
-            .sync()!!
+            channel = channel,
+            fileName = fileName,
+            fileId = sendResult.file.id
+        ).sync()!!
+
         byteStream?.use {
             Assert.assertEquals(content, readToString(it))
         }
-        pubnub.deleteFile(channel = channel,
+        pubnub.deleteFile(
+            channel = channel,
             fileName = fileName,
-            fileId = sendResult.file.id)
-            .sync()
+            fileId = sendResult.file.id
+        ).sync()
     }
 
     private fun readToString(inputStream: InputStream): String {

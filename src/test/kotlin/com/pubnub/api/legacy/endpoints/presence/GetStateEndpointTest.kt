@@ -36,7 +36,7 @@ class GetStateEndpointTest : BaseTest() {
                           },
                           "service": "Presence"
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )
@@ -67,7 +67,7 @@ class GetStateEndpointTest : BaseTest() {
                           },
                           "service": "Presence"
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )
@@ -89,7 +89,7 @@ class GetStateEndpointTest : BaseTest() {
                     aResponse().withBody(
                         """
                         { "status": 200, "message": "OK", "payload": "age" : 20
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )
@@ -126,7 +126,7 @@ class GetStateEndpointTest : BaseTest() {
                           },
                           "service": "Presence"
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )
@@ -167,7 +167,7 @@ class GetStateEndpointTest : BaseTest() {
                           },
                           "service": "Presence"
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )
@@ -212,7 +212,7 @@ class GetStateEndpointTest : BaseTest() {
                           },
                           "service": "Presence"
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )
@@ -257,7 +257,7 @@ class GetStateEndpointTest : BaseTest() {
                           },
                           "service": "Presence"
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )
@@ -297,7 +297,7 @@ class GetStateEndpointTest : BaseTest() {
                           },
                           "service": "Presence"
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )
@@ -327,7 +327,7 @@ class GetStateEndpointTest : BaseTest() {
                           },
                           "service": "Presence"
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )
@@ -360,7 +360,7 @@ class GetStateEndpointTest : BaseTest() {
                           },
                           "service": "Presence"
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )
@@ -397,7 +397,7 @@ class GetStateEndpointTest : BaseTest() {
                           },
                           "service": "Presence"
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )
@@ -430,7 +430,7 @@ class GetStateEndpointTest : BaseTest() {
                           },
                           "service": "Presence"
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )

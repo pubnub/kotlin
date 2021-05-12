@@ -42,7 +42,8 @@ class HistoryMetaTestSuite : EndpointTestSuite<History, PNHistoryResult>() {
         assertEquals("msg2", result.messages[1].entry.asString)
         assertTrue(result.messages[0].meta!!.asString.isBlank())
         assertEquals(
-            mapOf("color" to "red"), Gson().fromJson(
+            mapOf("color" to "red"),
+            Gson().fromJson(
                 result.messages[1].meta!!.asJsonObject,
                 object : TypeToken<Map<String, String>?>() {}.type
             )

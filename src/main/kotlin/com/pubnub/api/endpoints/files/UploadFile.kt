@@ -127,10 +127,12 @@ internal class UploadFile(
                         }
                     }
                     callback(
-                        null, createStatusResponse(
-                            statusCategory, null, PubNubException(error).copy(
-                                errorMessage = throwable.message
-                                    ?: error.message
+                        null,
+                        createStatusResponse(
+                            statusCategory,
+                            null,
+                            PubNubException(error).copy(
+                                errorMessage = throwable.message ?: error.message
                             )
                         )
                     )

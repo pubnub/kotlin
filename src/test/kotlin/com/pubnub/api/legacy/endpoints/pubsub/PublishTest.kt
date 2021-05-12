@@ -281,6 +281,7 @@ class PublishTest : BaseTest() {
                 .willReturn(aResponse().withBody("""[1,"Sent","15883272000000000"]"""))
         )
         pubnub.configuration.cipherKey = "testCipher"
+        pubnub.configuration.useRandomInitializationVector = false
 
         pubnub.publish(
             channel = "coolChannel",
@@ -299,6 +300,7 @@ class PublishTest : BaseTest() {
                 .willReturn(aResponse().withBody("""[1,"Sent","15883272000000000"]"""))
         )
         pubnub.configuration.cipherKey = "testCipher"
+        pubnub.configuration.useRandomInitializationVector = false
 
         pubnub.publish(
             channel = "coolChannel",

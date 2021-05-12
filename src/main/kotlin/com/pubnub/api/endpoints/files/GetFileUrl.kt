@@ -43,14 +43,18 @@ class GetFileUrl(
         return try {
             val baseParams: Map<String, String> = createBaseParams()
             val call: Call<ResponseBody> = pubnub.retrofitManager.filesService
-                    .downloadFile(pubnub.configuration.subscribeKey,
-                            channel,
-                            fileId,
-                            fileName,
-                            baseParams)
-            val signedRequest = PubNubUtil.signRequest(call.request(),
-                    pubnub.configuration,
-                    pubnub.timestamp())
+                .downloadFile(
+                    pubnub.configuration.subscribeKey,
+                    channel,
+                    fileId,
+                    fileName,
+                    baseParams
+                )
+            val signedRequest = PubNubUtil.signRequest(
+                call.request(),
+                pubnub.configuration,
+                pubnub.timestamp()
+            )
             PNFileUrlResult(signedRequest.url().toString())
         } catch (e: Exception) {
             throw PubNubException(errorMessage = e.message)
@@ -66,16 +70,25 @@ class GetFileUrl(
         executorService.execute {
             try {
                 val res: PNFileUrlResult? = sync()
-                callback(res, PNStatus(category = PNStatusCategory.PNAcknowledgmentCategory,
+                callback(
+                    res,
+                    PNStatus(
+                        category = PNStatusCategory.PNAcknowledgmentCategory,
                         operation = this.operationType(),
-                        error = false))
+                        error = false
+                    )
+                )
             } catch (ex: PubNubException) {
-                callback(null, PNStatus(category = PNStatusCategory.PNUnknownCategory,
+                callback(
+                    null,
+                    PNStatus(
+                        category = PNStatusCategory.PNUnknownCategory,
                         operation = this.operationType(),
                         error = true,
                         exception = ex,
                         affectedChannels = getAffectedChannels()
-                ).apply { executedEndpoint = this@GetFileUrl })
+                    ).apply { executedEndpoint = this@GetFileUrl }
+                )
             }
         }
     }

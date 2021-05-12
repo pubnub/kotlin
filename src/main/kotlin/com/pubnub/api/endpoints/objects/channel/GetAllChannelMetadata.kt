@@ -23,8 +23,7 @@ class GetAllChannelMetadata internal constructor(
 ) : Endpoint<EntityArrayEnvelope<PNChannelMetadata>, PNChannelMetadataArrayResult>(pubnub) {
 
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityArrayEnvelope<PNChannelMetadata>> {
-        val params = queryParams + returningCollection.createCollectionQueryParams() +
-                withCustom.createIncludeQueryParams()
+        val params = queryParams + returningCollection.createCollectionQueryParams() + withCustom.createIncludeQueryParams()
 
         return pubnub.retrofitManager.objectsService.getAllChannelMetadata(
             subKey = pubnub.configuration.subscribeKey,
@@ -35,11 +34,11 @@ class GetAllChannelMetadata internal constructor(
     override fun createResponse(input: Response<EntityArrayEnvelope<PNChannelMetadata>>): PNChannelMetadataArrayResult? {
         return input.body()?.let { arrayEnvelope ->
             PNChannelMetadataArrayResult(
-                    status = arrayEnvelope.status,
-                    data = arrayEnvelope.data,
-                    prev = arrayEnvelope.prev?.let { PNPage.PNPrev(it) },
-                    next = arrayEnvelope.next?.let { PNPage.PNNext(it) },
-                    totalCount = arrayEnvelope.totalCount
+                status = arrayEnvelope.status,
+                data = arrayEnvelope.data,
+                prev = arrayEnvelope.prev?.let { PNPage.PNPrev(it) },
+                next = arrayEnvelope.next?.let { PNPage.PNNext(it) },
+                totalCount = arrayEnvelope.totalCount
             )
         }
     }

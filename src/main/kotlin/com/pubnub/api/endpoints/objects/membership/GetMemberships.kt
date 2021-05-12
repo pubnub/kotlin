@@ -24,8 +24,7 @@ class GetMemberships internal constructor(
 ) : Endpoint<EntityArrayEnvelope<PNChannelMembership>, PNChannelMembershipArrayResult>(pubnub) {
 
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityArrayEnvelope<PNChannelMembership>> {
-        val params = queryParams + returningCollection.createCollectionQueryParams() +
-                withChannelDetailsCustom.createIncludeQueryParams()
+        val params = queryParams + returningCollection.createCollectionQueryParams() + withChannelDetailsCustom.createIncludeQueryParams()
 
         return pubnub.retrofitManager.objectsService.getMemberships(
             uuid = uuid,

@@ -29,7 +29,8 @@ import java.util.HashMap
  * @param Output Parsed and encapsulated response for endusers.
  * @property pubnub The client instance.
  */
-abstract class Endpoint<Input, Output> protected constructor(protected val pubnub: PubNub) : ExtendedRemoteAction<Output> {
+abstract class Endpoint<Input, Output> protected constructor(protected val pubnub: PubNub) :
+    ExtendedRemoteAction<Output> {
 
     private companion object {
         private const val SERVER_RESPONSE_BAD_REQUEST = 400
@@ -167,29 +168,30 @@ abstract class Endpoint<Input, Output> protected constructor(protected val pubnu
 
             override fun onFailure(call: Call<Input>, t: Throwable) {
 
-                if (silenceFailures) return
+                if (silenceFailures)
+                    return
 
                 val (error: PubNubError, category: PNStatusCategory) =
-                when (t) {
-                    is UnknownHostException -> {
-                        PubNubError.CONNECTION_NOT_SET to PNUnexpectedDisconnectCategory
+                    when (t) {
+                        is UnknownHostException -> {
+                            PubNubError.CONNECTION_NOT_SET to PNUnexpectedDisconnectCategory
+                        }
+                        is ConnectException -> {
+                            PubNubError.CONNECT_EXCEPTION to PNUnexpectedDisconnectCategory
+                        }
+                        is SocketTimeoutException -> {
+                            PubNubError.SUBSCRIBE_TIMEOUT to PNTimeoutCategory
+                        }
+                        is IOException -> {
+                            PubNubError.PARSING_ERROR to PNMalformedResponseCategory
+                        }
+                        is IllegalStateException -> {
+                            PubNubError.PARSING_ERROR to PNMalformedResponseCategory
+                        }
+                        else -> {
+                            PubNubError.HTTP_ERROR to if (call.isCanceled) PNCancelledCategory else PNBadRequestCategory
+                        }
                     }
-                    is ConnectException -> {
-                        PubNubError.CONNECT_EXCEPTION to PNUnexpectedDisconnectCategory
-                    }
-                    is SocketTimeoutException -> {
-                        PubNubError.SUBSCRIBE_TIMEOUT to PNTimeoutCategory
-                    }
-                    is IOException -> {
-                        PubNubError.PARSING_ERROR to PNMalformedResponseCategory
-                    }
-                    is IllegalStateException -> {
-                        PubNubError.PARSING_ERROR to PNMalformedResponseCategory
-                    }
-                    else -> {
-                        PubNubError.HTTP_ERROR to if (call.isCanceled) PNCancelledCategory else PNBadRequestCategory
-                    }
-                }
 
                 val pubnubException = PubNubException(errorMessage = t.toString(), pubnubError = error)
                 callback.invoke(

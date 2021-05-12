@@ -31,7 +31,7 @@ class DeleteMessagesEndpointTest : BaseTest() {
                           "error": false,
                           "error_message": ""
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )
@@ -53,7 +53,7 @@ class DeleteMessagesEndpointTest : BaseTest() {
                           "error": false,
                           "error_message": ""
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )
@@ -81,7 +81,7 @@ class DeleteMessagesEndpointTest : BaseTest() {
                           "error": false,
                           "error_message": "wut"
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )
@@ -107,7 +107,7 @@ class DeleteMessagesEndpointTest : BaseTest() {
                           "error": false,
                           "error_message": ""
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )

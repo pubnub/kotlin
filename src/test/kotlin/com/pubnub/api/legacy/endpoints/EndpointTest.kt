@@ -16,6 +16,7 @@ import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.listen
 import com.pubnub.api.param
 import okhttp3.Request
+import okio.Timeout
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
@@ -152,10 +153,13 @@ class EndpointTest : BaseTest() {
                         .withStatus(400)
                         .withBody(
                             JsonObject().apply {
-                                add("payload", JsonObject().apply {
-                                    add("channels", JsonArray().apply { add("ch1"); add("ch2") })
-                                    add("channel-groups", JsonArray().apply { add("cg1") })
-                                })
+                                add(
+                                    "payload",
+                                    JsonObject().apply {
+                                        add("channels", JsonArray().apply { add("ch1"); add("ch2") })
+                                        add("channel-groups", JsonArray().apply { add("cg1") })
+                                    }
+                                )
                             }.toString()
                         )
                 )
@@ -319,5 +323,6 @@ class EndpointTest : BaseTest() {
         override fun cancel() {}
         override fun execute(): Response<Any> = Response.success(null)
         override fun request() = Request.Builder().build()
+        override fun timeout(): Timeout = Timeout.NONE
     }
 }

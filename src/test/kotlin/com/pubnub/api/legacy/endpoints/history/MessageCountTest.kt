@@ -254,7 +254,7 @@ class MessageCountTest : BaseTest() {
                           "my_channel": 19
                          }
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )

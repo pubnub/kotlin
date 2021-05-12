@@ -43,7 +43,7 @@ class WhereNowEndpointTest : BaseTest() {
                           },
                           "service": "Presence"
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )
@@ -244,7 +244,7 @@ class WhereNowEndpointTest : BaseTest() {
                               },
                               "service": "Presence"
                             }
-                        """.trimIndent()
+                            """.trimIndent()
                         )
                 )
         )
@@ -369,7 +369,7 @@ class WhereNowEndpointTest : BaseTest() {
                           "message": "OK",
                           "service": "Presence"
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )

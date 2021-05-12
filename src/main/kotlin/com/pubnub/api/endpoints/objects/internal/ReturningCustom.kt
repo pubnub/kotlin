@@ -35,8 +35,10 @@ data class ReturningChannelDetailsCustom(
     }
 
     internal fun createIncludeQueryParams(): Map<String, String> {
-        val includeList = includeList(includeCustom = includeCustom,
-                channelDetailsLevel = includeChannelDetails)
+        val includeList = includeList(
+            includeCustom = includeCustom,
+            channelDetailsLevel = includeChannelDetails
+        )
         return if (includeList.isNotEmpty()) {
             mapOf("include" to includeList.joinToString(","))
         } else {
@@ -64,8 +66,10 @@ data class ReturningUUIDDetailsCustom(
     }
 
     internal fun createIncludeQueryParams(): Map<String, String> {
-        val includeList = includeList(includeCustom = includeCustom,
-                uuidDetailsLevel = includeUUIDDetails)
+        val includeList = includeList(
+            includeCustom = includeCustom,
+            uuidDetailsLevel = includeUUIDDetails
+        )
         return if (includeList.isNotEmpty()) {
             mapOf("include" to includeList.joinToString(","))
         } else {

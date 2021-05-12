@@ -30,16 +30,16 @@ enum class PubNubError(private val code: Int, val message: String) {
         "JSON Error while processing API response"
     ),
     INTERNAL_ERROR(
-            125,
-            "Internal Error"
+        125,
+        "Internal Error"
     ),
     PARSING_ERROR(
         126,
         "Parsing Error"
     ),
     INVALID_ARGUMENTS(
-            131,
-            "Invalid arguments"
+        131,
+        "Invalid arguments"
     ),
     CONNECTION_NOT_SET(
         133,

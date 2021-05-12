@@ -16,9 +16,9 @@ import com.pubnub.api.services.S3Service
 import com.pubnub.api.services.SignalService
 import com.pubnub.api.services.SubscribeService
 import com.pubnub.api.services.TimeService
+import com.pubnub.okhttp3.PNCallFactory
 import okhttp3.Call
 import okhttp3.OkHttpClient
-import com.pubnub.okhttp3.PNCallFactory
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import java.util.concurrent.ExecutorService
@@ -90,9 +90,11 @@ class RetrofitManager(val pubnub: PubNub) {
 
         with(pubnub.configuration) {
             if (logVerbosity == PNLogVerbosity.BODY) {
-                okHttpBuilder.addInterceptor(HttpLoggingInterceptor().apply {
-                    level = HttpLoggingInterceptor.Level.BODY
-                })
+                okHttpBuilder.addInterceptor(
+                    HttpLoggingInterceptor().apply {
+                        level = HttpLoggingInterceptor.Level.BODY
+                    }
+                )
             }
 
             if (httpLoggingInterceptor != null) {
@@ -101,8 +103,8 @@ class RetrofitManager(val pubnub: PubNub) {
 
             if (sslSocketFactory != null && x509ExtendedTrustManager != null) {
                 okHttpBuilder.sslSocketFactory(
-                        pubnub.configuration.sslSocketFactory!!,
-                        pubnub.configuration.x509ExtendedTrustManager!!
+                    pubnub.configuration.sslSocketFactory!!,
+                    pubnub.configuration.x509ExtendedTrustManager!!
                 )
             }
             connectionSpec?.let { okHttpBuilder.connectionSpecs(listOf(it)) }
@@ -136,6 +138,7 @@ class RetrofitManager(val pubnub: PubNub) {
     fun destroy(force: Boolean = false) {
         closeExecutor(transactionClientInstance, force)
         closeExecutor(subscriptionClientInstance, force)
+        closeExecutor(noSignatureClientInstance, force)
     }
 
     private fun closeExecutor(client: OkHttpClient, force: Boolean) {

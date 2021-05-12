@@ -42,7 +42,7 @@ class SignalTest : BaseTest() {
                               "Sent",
                               "1000"
                             ]
-                        """.trimIndent()
+                            """.trimIndent()
                         )
                 )
         )
@@ -80,7 +80,7 @@ class SignalTest : BaseTest() {
                               "Sent",
                               "1000"
                             ]
-                        """.trimIndent()
+                            """.trimIndent()
                         )
                 )
         )
@@ -183,7 +183,7 @@ class SignalTest : BaseTest() {
                       "Sent",
                       "1000"
                     ]
-                """.trimIndent()
+                    """.trimIndent()
                 )
             )
         )

@@ -15,10 +15,8 @@ import org.junit.Before
 abstract class BaseTest {
 
     lateinit var wireMockServer: WireMockServer
-    protected lateinit var pubnub: PubNub
-    private set
-    protected lateinit var config: PNConfiguration
-    private set
+    protected lateinit var pubnub: PubNub private set
+    protected lateinit var config: PNConfiguration private set
 
     @Before
     fun beforeEach() {

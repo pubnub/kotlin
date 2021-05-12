@@ -36,7 +36,7 @@ class RemoveMessageActionEndpointTest : BaseTest() {
                           "status": 200,
                           "data": {}
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )
@@ -59,7 +59,7 @@ class RemoveMessageActionEndpointTest : BaseTest() {
                           "status": 200,
                           "data": {}
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )
@@ -90,7 +90,7 @@ class RemoveMessageActionEndpointTest : BaseTest() {
                           "status": 200
                           "data": {
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )
@@ -152,7 +152,7 @@ class RemoveMessageActionEndpointTest : BaseTest() {
                         {
                           "status": 200
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )
@@ -179,7 +179,7 @@ class RemoveMessageActionEndpointTest : BaseTest() {
                           "status": 200,
                           "data": null
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )
@@ -235,7 +235,7 @@ class RemoveMessageActionEndpointTest : BaseTest() {
                           "status": 200,
                           "data": {}
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )
@@ -267,7 +267,7 @@ class RemoveMessageActionEndpointTest : BaseTest() {
                           "status": 200,
                           "data": {}
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )

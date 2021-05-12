@@ -40,8 +40,6 @@ internal class SubscribeMessageWorker(
 
     private val log = LoggerFactory.getLogger("SubscribeMessageWorker")
 
-    private var running = false
-
     companion object {
         internal const val TYPE_MESSAGE = 0
         internal const val TYPE_SIGNAL = 1
@@ -55,15 +53,12 @@ internal class SubscribeMessageWorker(
     }
 
     private fun takeMessage() {
-        running = true
-
-        while (running) {
+        while (!Thread.interrupted()) {
             try {
                 processIncomingPayload(queue.take())
             } catch (e: InterruptedException) {
-                running = false
-                log.trace("take message interrupted!")
-                e.printStackTrace()
+                Thread.currentThread().interrupt()
+                log.trace("take message interrupted!", e)
             }
         }
     }

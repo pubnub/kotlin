@@ -36,7 +36,7 @@ class SetStateEndpointTest : BaseTest() {
                           },
                           "service": "Presence"
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )
@@ -71,7 +71,7 @@ class SetStateEndpointTest : BaseTest() {
                           },
                           "service": "Presence"
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )
@@ -107,7 +107,7 @@ class SetStateEndpointTest : BaseTest() {
                           },
                           "service": "Presence"
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )
@@ -376,7 +376,7 @@ class SetStateEndpointTest : BaseTest() {
                           },
                           "service": "Presence"
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )
@@ -405,7 +405,7 @@ class SetStateEndpointTest : BaseTest() {
                           "message": "OK",
                           "service": "Presence"
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )

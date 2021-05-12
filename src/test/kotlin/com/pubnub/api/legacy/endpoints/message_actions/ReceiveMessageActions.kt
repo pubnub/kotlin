@@ -59,7 +59,7 @@ class ReceiveMessageActions : BaseTest() {
                           }
                          ]
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )
@@ -161,7 +161,7 @@ class ReceiveMessageActions : BaseTest() {
                           }
                          ]
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )

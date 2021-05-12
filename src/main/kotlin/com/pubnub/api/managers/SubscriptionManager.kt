@@ -92,6 +92,7 @@ class SubscriptionManager(val pubnub: PubNub, private val subscriptionState: Sta
                 )
             )
             consumerThread?.name = "Subscription Manager Consumer Thread"
+            consumerThread?.isDaemon = true
             consumerThread?.start()
         }
     }
@@ -136,7 +137,7 @@ class SubscriptionManager(val pubnub: PubNub, private val subscriptionState: Sta
             return
         }
 
-        heartbeatTimer = Timer()
+        heartbeatTimer = Timer("Subscription Manager Heartbeat Timer", true)
         heartbeatTimer?.schedule(
             timerTask {
                 performHeartbeatLoop()
@@ -259,7 +260,8 @@ class SubscriptionManager(val pubnub: PubNub, private val subscriptionState: Sta
                 TimetokenRegionOperation(
                     timetoken = result.metadata.timetoken,
                     region = result.metadata.region
-                ), announcedOperation ?: NoOpOperation
+                ),
+                announcedOperation ?: NoOpOperation
             )
         }
     }

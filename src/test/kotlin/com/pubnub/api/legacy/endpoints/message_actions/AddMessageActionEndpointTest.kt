@@ -45,7 +45,7 @@ class AddMessageActionEndpointTest : BaseTest() {
                             "actionTimetoken": "1000"
                           }
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )
@@ -84,7 +84,7 @@ class AddMessageActionEndpointTest : BaseTest() {
                             "actionTimetoken": "1000"
                           }
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )
@@ -129,7 +129,7 @@ class AddMessageActionEndpointTest : BaseTest() {
                             "value": "smiley",
                             "actionTimetoken": "1000"
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )
@@ -206,7 +206,7 @@ class AddMessageActionEndpointTest : BaseTest() {
                         {
                           "status": 200
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )
@@ -238,7 +238,7 @@ class AddMessageActionEndpointTest : BaseTest() {
                           "status": 200,
                           "data": null
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )
@@ -345,7 +345,7 @@ class AddMessageActionEndpointTest : BaseTest() {
                             "actionTimetoken": "1000"
                           }
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )
@@ -387,7 +387,7 @@ class AddMessageActionEndpointTest : BaseTest() {
                             "actionTimetoken": "1000"
                           }
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )

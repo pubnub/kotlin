@@ -41,7 +41,7 @@ class AddMessageActionTestSuite : EndpointTestSuite<AddMessageAction, PNAddMessa
               "actionTimetoken": "1000"
              }
             }
-        """.trimIndent()
+    """.trimIndent()
 
     override fun unsuccessfulResponseBodyList() = listOf(
         """{"status":200,"data":null}""",

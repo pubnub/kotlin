@@ -66,7 +66,7 @@ class ListAllChannelGroupEndpointTest : BaseTest() {
                          "message": "OK",
                          "service": "ChannelGroups"
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )

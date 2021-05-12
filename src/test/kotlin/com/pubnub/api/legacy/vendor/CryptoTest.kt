@@ -38,7 +38,8 @@ class CryptoTest {
 
         // then
         Assert.assertThat(
-            decryptedByteArray, Matchers.allOf(
+            decryptedByteArray,
+            Matchers.allOf(
                 Matchers.equalTo(byteArrayToEncrypt),
                 Matchers.not(Matchers.equalTo(encryptedByteArray))
             )

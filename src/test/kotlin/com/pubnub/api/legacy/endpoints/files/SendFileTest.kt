@@ -221,17 +221,22 @@ class SendFileTest : TestsWithFiles {
         private val numberOfFails = AtomicInteger(0)
         override fun async(callback: (result: PNPublishFileMessageResult?, status: PNStatus) -> Unit) {
             if (numberOfFails.getAndAdd(1) < numberOfFailsBeforeSuccess) {
-                callback(null, PNStatus(
-                    category = PNStatusCategory.PNBadRequestCategory,
-                    error = true,
-                    operation = PNOperationType.FileOperation
-                ))
-            } else {
-                callback(result, PNStatus(
-                    category = PNStatusCategory.PNAcknowledgmentCategory,
-                    error = false,
-                    operation = PNOperationType.FileOperation
+                callback(
+                    null,
+                    PNStatus(
+                        category = PNStatusCategory.PNBadRequestCategory,
+                        error = true,
+                        operation = PNOperationType.FileOperation
+                    )
                 )
+            } else {
+                callback(
+                    result,
+                    PNStatus(
+                        category = PNStatusCategory.PNAcknowledgmentCategory,
+                        error = false,
+                        operation = PNOperationType.FileOperation
+                    )
                 )
             }
         }
@@ -270,7 +275,8 @@ class SendFileTest : TestsWithFiles {
 
         override fun async(callback: (result: PNPublishFileMessageResult?, status: PNStatus) -> Unit) {
             callback(
-                result, PNStatus(
+                result,
+                PNStatus(
                     category = PNStatusCategory.PNAcknowledgmentCategory,
                     error = false,
                     operation = PNOperationType.FileOperation

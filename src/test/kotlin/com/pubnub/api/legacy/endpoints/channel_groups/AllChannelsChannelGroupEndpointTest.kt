@@ -48,7 +48,7 @@ class AllChannelsChannelGroupEndpointTest : BaseTest() {
                           },
                           "service": "ChannelGroups"
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )

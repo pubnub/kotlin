@@ -66,7 +66,7 @@ object SignatureUtils {
                 ${httpUrl.encodedPath()}
                 $sortedQueryString
                 $body
-            """.trimIndent()
+                """.trimIndent()
             } else {
                 v2Signature = false
                 """

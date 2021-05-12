@@ -31,7 +31,7 @@ class HeartbeatEndpointTest : BaseTest() {
                           "message": "OK",
                           "service": "Presence"
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )
@@ -60,7 +60,7 @@ class HeartbeatEndpointTest : BaseTest() {
                           "message": "OK",
                           "service": "Presence"
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )
@@ -88,7 +88,7 @@ class HeartbeatEndpointTest : BaseTest() {
                           "message": "OK",
                           "service": "Presence"
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )
@@ -118,7 +118,7 @@ class HeartbeatEndpointTest : BaseTest() {
                           "message": "OK",
                           "service": "Presence"
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )
@@ -148,7 +148,7 @@ class HeartbeatEndpointTest : BaseTest() {
                           "message": "OK",
                           "service": "Presence"
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )
@@ -176,7 +176,7 @@ class HeartbeatEndpointTest : BaseTest() {
                           "message": "OK",
                           "service": "Presence"
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )
@@ -204,7 +204,7 @@ class HeartbeatEndpointTest : BaseTest() {
                           "message": "OK",
                           "service": "Presence"
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )
@@ -235,7 +235,7 @@ class HeartbeatEndpointTest : BaseTest() {
                           "message": "OK",
                           "service": "Presence"
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )

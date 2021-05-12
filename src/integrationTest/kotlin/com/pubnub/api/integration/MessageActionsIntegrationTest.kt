@@ -199,15 +199,19 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
             assertEquals(messageCount, messages.size)
         }
 
-        page(expectedChannelName, System.currentTimeMillis() * 10_000, object : Callback {
-            override fun onMore(actions: List<PNMessageAction>) {
-                count.set(count.get() + actions.size)
-            }
+        page(
+            expectedChannelName,
+            System.currentTimeMillis() * 10_000,
+            object : Callback {
+                override fun onMore(actions: List<PNMessageAction>) {
+                    count.set(count.get() + actions.size)
+                }
 
-            override fun onDone() {
-                success.set(count.get() == messageCount)
+                override fun onDone() {
+                    success.set(count.get() == messageCount)
+                }
             }
-        })
+        )
 
         success.listen()
     }
@@ -265,16 +269,21 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
 
         val pnActionList = mutableListOf<PNMessageAction>()
 
-        pageActions(3, expectedChannel, null, object : Callback {
-            override fun onMore(actions: List<PNMessageAction>) {
-                pnActionList.addAll(actions.reversed())
-            }
+        pageActions(
+            3,
+            expectedChannel,
+            null,
+            object : Callback {
+                override fun onMore(actions: List<PNMessageAction>) {
+                    pnActionList.addAll(actions.reversed())
+                }
 
-            override fun onDone() {
-                val tts = pnActionList.map { it.actionTimetoken!! }.toList()
-                assertTrue(tts == tts.sorted().reversed())
+                override fun onDone() {
+                    val tts = pnActionList.map { it.actionTimetoken!! }.toList()
+                    assertTrue(tts == tts.sorted().reversed())
+                }
             }
-        })
+        )
     }
 
     private fun pageActions(chunk: Int, channel: String, start: Long?, callback: Callback) {
@@ -351,27 +360,31 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
 
         fetchMessagesResultWithActions.channels.forEach { (channel, item: List<PNFetchMessageItem>) ->
             println("Channel: " + channel + ". Messages: " + item.size)
-            item.forEach(Consumer { pnFetchMessageItem: PNFetchMessageItem ->
-                println("\tMessage: " + pnFetchMessageItem.message)
-                println("\tTimetoken: " + pnFetchMessageItem.timetoken)
-                println("\tMeta: " + pnFetchMessageItem.meta)
-                if (pnFetchMessageItem.actions == null) {
-                    println("\t\tNo actions here.")
-                    return@Consumer
-                }
-                println("\t\tTotal action types: " + pnFetchMessageItem.actions!!.size)
-                pnFetchMessageItem.actions!!.forEach { (type, map) ->
-                    println("\t\t\tAction type: $type")
-                    map.forEach { (value, actions) ->
-                        println("\t\t\t\tAction value: $value")
-                        actions.forEach(Consumer { action: Action ->
-                            println("\t\t\t\tAction uuid: " + action.uuid)
-                            println("\t\t\t\tAction timetoken: " + action.actionTimetoken)
-                        })
+            item.forEach(
+                Consumer { pnFetchMessageItem: PNFetchMessageItem ->
+                    println("\tMessage: " + pnFetchMessageItem.message)
+                    println("\tTimetoken: " + pnFetchMessageItem.timetoken)
+                    println("\tMeta: " + pnFetchMessageItem.meta)
+                    if (pnFetchMessageItem.actions == null) {
+                        println("\t\tNo actions here.")
+                        return@Consumer
                     }
+                    println("\t\tTotal action types: " + pnFetchMessageItem.actions!!.size)
+                    pnFetchMessageItem.actions!!.forEach { (type, map) ->
+                        println("\t\t\tAction type: $type")
+                        map.forEach { (value, actions) ->
+                            println("\t\t\t\tAction value: $value")
+                            actions.forEach(
+                                Consumer { action: Action ->
+                                    println("\t\t\t\tAction uuid: " + action.uuid)
+                                    println("\t\t\t\tAction timetoken: " + action.actionTimetoken)
+                                }
+                            )
+                        }
+                    }
+                    println("--------------------")
                 }
-                println("--------------------")
-            })
+            )
         }
         fetchMessagesResultWithActions.channels.forEach { (_: String?, pnFetchMessageItems: List<PNFetchMessageItem>) ->
             pnFetchMessageItems.forEach(

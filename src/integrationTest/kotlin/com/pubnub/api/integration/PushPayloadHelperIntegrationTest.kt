@@ -59,5 +59,5 @@ class PushPayloadHelperIntegrationTest : BaseIntegrationTest() {
                 "summary": "Liverpool - Chelsea 2:1"
               }
             }
-        """.trimIndent()
+    """.trimIndent()
 }

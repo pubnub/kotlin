@@ -33,31 +33,35 @@ internal class RetryingRemoteAction<T>(
 
     override fun async(callback: (result: T?, status: PNStatus) -> Unit) {
         cachedCallback = callback
-        executorService.execute(Runnable {
-            try {
-                validate()
-            } catch (ex: PubNubException) {
-                callback(null,
-                    PNStatus(
-                        operation = operationType,
-                        error = true,
-                        exception = ex,
-                        category = PNStatusCategory.PNBadRequestCategory
-                    ).apply {
-                        executedEndpoint = this@RetryingRemoteAction
-                    })
-                return@Runnable
-            }
-            var lastResultAndStatus: ResultAndStatus<T>? = null
-            for (i in 0 until maxNumberOfAutomaticRetries) {
-                lastResultAndStatus = syncAsync()
-                if (!lastResultAndStatus.status.error) {
-                    callback(lastResultAndStatus.result, lastResultAndStatus.status)
+        executorService.execute(
+            Runnable {
+                try {
+                    validate()
+                } catch (ex: PubNubException) {
+                    callback(
+                        null,
+                        PNStatus(
+                            operation = operationType,
+                            error = true,
+                            exception = ex,
+                            category = PNStatusCategory.PNBadRequestCategory
+                        ).apply {
+                            executedEndpoint = this@RetryingRemoteAction
+                        }
+                    )
                     return@Runnable
                 }
+                var lastResultAndStatus: ResultAndStatus<T>? = null
+                for (i in 0 until maxNumberOfAutomaticRetries) {
+                    lastResultAndStatus = syncAsync()
+                    if (!lastResultAndStatus.status.error) {
+                        callback(lastResultAndStatus.result, lastResultAndStatus.status)
+                        return@Runnable
+                    }
+                }
+                callback(lastResultAndStatus!!.result, lastResultAndStatus.status)
             }
-            callback(lastResultAndStatus!!.result, lastResultAndStatus.status)
-        })
+        )
     }
 
     override fun retry() {
@@ -82,8 +86,10 @@ internal class RetryingRemoteAction<T>(
         val atomicResultAndStatus = AtomicReference<ResultAndStatus<T>>()
         remoteAction.async { result: T?, status: PNStatus ->
             atomicResultAndStatus.set(
-                ResultAndStatus(result,
-                    status.copy().apply { executedEndpoint = this@RetryingRemoteAction })
+                ResultAndStatus(
+                    result,
+                    status.copy().apply { executedEndpoint = this@RetryingRemoteAction }
+                )
             )
             latch.countDown()
         }
@@ -93,13 +99,15 @@ internal class RetryingRemoteAction<T>(
             atomicResultAndStatus.get()
         } catch (e: InterruptedException) {
             remoteAction.silentCancel()
-            ResultAndStatus(null,
+            ResultAndStatus(
+                null,
                 PNStatus(
                     category = PNStatusCategory.PNUnknownCategory,
                     operation = operationType,
                     error = true,
                     exception = PubNubException(errorMessage = e.message)
-                ).apply { executedEndpoint = this@RetryingRemoteAction })
+                ).apply { executedEndpoint = this@RetryingRemoteAction }
+            )
         }
     }
 

@@ -36,7 +36,8 @@ class TestRemoteAction<Output> internal constructor(
         executor.execute {
             if (failingStrategy == FailingStrategy.ALWAYS_FAIL) {
                 callback(
-                    null, PNStatus(
+                    null,
+                    PNStatus(
                         error = true,
                         operation = operationType(),
                         category = PNStatusCategory.PNBadRequestCategory
@@ -44,7 +45,8 @@ class TestRemoteAction<Output> internal constructor(
                 )
             } else if (failingStrategy == FailingStrategy.FAIL_FIRST_CALLS && callsToFail.getAndDecrement() > 0) {
                 callback(
-                    null, PNStatus(
+                    null,
+                    PNStatus(
                         error = true,
                         operation = operationType(),
                         category = PNStatusCategory.PNBadRequestCategory
@@ -52,7 +54,8 @@ class TestRemoteAction<Output> internal constructor(
                 )
             } else {
                 callback(
-                    output, PNStatus(
+                    output,
+                    PNStatus(
                         error = false,
                         operation = operationType(),
                         category = PNStatusCategory.PNAcknowledgmentCategory

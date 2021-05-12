@@ -404,7 +404,7 @@ class GrantEndpointTest : BaseTest() {
                          "service": "Access Manager",
                          "status": 200
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )
@@ -620,7 +620,7 @@ class GrantEndpointTest : BaseTest() {
                           "service": "Access Manager",
                           "status": 200
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )
@@ -720,7 +720,7 @@ class GrantEndpointTest : BaseTest() {
                           "service": "Access Manager",
                           "status": 200
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )
@@ -800,7 +800,7 @@ class GrantEndpointTest : BaseTest() {
                           "service": "Access Manager",
                           "status": 200
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )
@@ -970,7 +970,7 @@ class GrantEndpointTest : BaseTest() {
                           "service": "Access Manager",
                           "status": 200
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )
@@ -1069,7 +1069,7 @@ class GrantEndpointTest : BaseTest() {
                           "service": "Access Manager",
                           "status": 200
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )
@@ -1170,7 +1170,7 @@ class GrantEndpointTest : BaseTest() {
                           "service": "Access Manager",
                           "status": 200
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )
@@ -1288,7 +1288,7 @@ class GrantEndpointTest : BaseTest() {
                           "service": "Access Manager",
                           "status": 200
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )
@@ -1418,7 +1418,7 @@ class GrantEndpointTest : BaseTest() {
                           "service": "Access Manager",
                           "status": 200
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )
@@ -1475,7 +1475,7 @@ class GrantEndpointTest : BaseTest() {
                           "service": "Access Manager",
                           "status": 200
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )
@@ -1533,7 +1533,7 @@ class GrantEndpointTest : BaseTest() {
                           "service": "Access Manager",
                           "status": 200
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )
@@ -1590,7 +1590,7 @@ class GrantEndpointTest : BaseTest() {
                           "service": "Access Manager",
                           "status": 200
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )
@@ -1647,7 +1647,7 @@ class GrantEndpointTest : BaseTest() {
                           "service": "Access Manager",
                           "status": 200
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )
@@ -1697,7 +1697,7 @@ class GrantEndpointTest : BaseTest() {
                           "service": "Access Manager",
                           "status": 200
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )
@@ -1870,7 +1870,7 @@ class GrantEndpointTest : BaseTest() {
                           "service": "Access Manager",
                           "status": 200
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )

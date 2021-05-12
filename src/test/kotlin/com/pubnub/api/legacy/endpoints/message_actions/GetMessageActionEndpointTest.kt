@@ -46,7 +46,7 @@ class GetMessageActionEndpointTest : BaseTest() {
                             }
                           ]
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )
@@ -96,7 +96,7 @@ class GetMessageActionEndpointTest : BaseTest() {
                             }
                           ]
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )
@@ -145,7 +145,7 @@ class GetMessageActionEndpointTest : BaseTest() {
                             }
                           ]
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )
@@ -188,7 +188,7 @@ class GetMessageActionEndpointTest : BaseTest() {
                             }
                           ]
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )
@@ -247,7 +247,7 @@ class GetMessageActionEndpointTest : BaseTest() {
                         {
                           "status": 200
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )
@@ -273,7 +273,7 @@ class GetMessageActionEndpointTest : BaseTest() {
                           "status": 200
                           "data": []
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )
@@ -332,7 +332,7 @@ class GetMessageActionEndpointTest : BaseTest() {
                             }
                           ]
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )
@@ -371,7 +371,7 @@ class GetMessageActionEndpointTest : BaseTest() {
                             }
                           ]
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )
@@ -417,7 +417,7 @@ class GetMessageActionEndpointTest : BaseTest() {
                             }
                           ]
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )
@@ -457,7 +457,7 @@ class GetMessageActionEndpointTest : BaseTest() {
                             }
                           ]
                         }
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )

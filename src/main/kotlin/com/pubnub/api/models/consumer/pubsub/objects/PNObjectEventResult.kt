@@ -15,16 +15,18 @@ data class PNObjectEventResult(
     val extractedMessage: PNObjectEventMessage
 ) : PubSubResult by result
 
-internal object ObjectExtractedMessageDeserializer : JsonDeserializer<PNObjectEventMessage> by PolymorphicDeserializer.dispatchByFieldsValues(
+internal object ObjectExtractedMessageDeserializer :
+    JsonDeserializer<PNObjectEventMessage> by PolymorphicDeserializer.dispatchByFieldsValues(
         fields = listOf("event", "type"),
         mappingFieldValuesToClass = mapOf(
-                listOf("set", "channel") to PNSetChannelMetadataEventMessage::class.java,
-                listOf("set", "uuid") to PNSetUUIDMetadataEventMessage::class.java,
-                listOf("set", "membership") to PNSetMembershipEventMessage::class.java,
-                listOf("delete", "channel") to PNDeleteChannelMetadataEventMessage::class.java,
-                listOf("delete", "uuid") to PNDeleteUUIDMetadataEventMessage::class.java,
-                listOf("delete", "membership") to PNDeleteMembershipEventMessage::class.java)
-)
+            listOf("set", "channel") to PNSetChannelMetadataEventMessage::class.java,
+            listOf("set", "uuid") to PNSetUUIDMetadataEventMessage::class.java,
+            listOf("set", "membership") to PNSetMembershipEventMessage::class.java,
+            listOf("delete", "channel") to PNDeleteChannelMetadataEventMessage::class.java,
+            listOf("delete", "uuid") to PNDeleteUUIDMetadataEventMessage::class.java,
+            listOf("delete", "membership") to PNDeleteMembershipEventMessage::class.java
+        )
+    )
 
 @JsonAdapter(ObjectExtractedMessageDeserializer::class)
 sealed class PNObjectEventMessage {

@@ -30,7 +30,7 @@ internal class ReconnectionManager(val pubnub: PubNub) {
     private lateinit var pnReconnectionPolicy: PNReconnectionPolicy
     private var maxConnectionRetries = -1
 
-    private var timer = Timer()
+    private var timer: Timer? = null
 
     internal fun startPolling(pnConfiguration: PNConfiguration) {
         pnReconnectionPolicy = pnConfiguration.reconnectionPolicy
@@ -57,12 +57,15 @@ internal class ReconnectionManager(val pubnub: PubNub) {
             reconnectionCallback.onMaxReconnectionExhaustion()
             return
         }
-        timer = Timer()
-        timer.schedule(object : TimerTask() {
-            override fun run() {
-                callTime()
-            }
-        }, getBestInterval() * MILLISECONDS.toLong())
+        timer = Timer("Reconnection Manager timer", true)
+        timer?.schedule(
+            object : TimerTask() {
+                override fun run() {
+                    callTime()
+                }
+            },
+            getBestInterval() * MILLISECONDS.toLong()
+        )
     }
 
     private fun getBestInterval(): Int {
@@ -85,7 +88,7 @@ internal class ReconnectionManager(val pubnub: PubNub) {
     }
 
     private fun stopHeartbeatTimer() {
-        timer.cancel()
+        timer?.cancel()
     }
 
     private fun callTime() {

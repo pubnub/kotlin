@@ -246,7 +246,7 @@ class HistoryEndpointTest : BaseTest() {
                           14606134331557852,
                           14606134485013970
                         ]
-                    """.trimIndent()
+                        """.trimIndent()
                     )
                 )
         )
@@ -445,8 +445,7 @@ class HistoryEndpointTest : BaseTest() {
 
         val requests = findAll(
             getRequestedFor(
-                urlMatching
-                    ("/v2/history/sub-key/mySubscribeKey/channel/niceChannel.*")
+                urlMatching("/v2/history/sub-key/mySubscribeKey/channel/niceChannel.*")
             )
         )
 
