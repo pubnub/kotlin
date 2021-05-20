@@ -11,6 +11,7 @@ import com.pubnub.api.endpoints.History;
 import com.pubnub.api.endpoints.MessageCounts;
 import com.pubnub.api.endpoints.Time;
 import com.pubnub.api.endpoints.access.Grant;
+import com.pubnub.api.endpoints.access.GrantToken;
 import com.pubnub.api.endpoints.channel_groups.AddChannelChannelGroup;
 import com.pubnub.api.endpoints.channel_groups.AllChannelsChannelGroup;
 import com.pubnub.api.endpoints.channel_groups.DeleteChannelGroup;
@@ -62,6 +63,8 @@ import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.StateManager;
 import com.pubnub.api.managers.SubscriptionManager;
 import com.pubnub.api.managers.TelemetryManager;
+import com.pubnub.api.managers.token_manager.TokenParser;
+import com.pubnub.api.models.consumer.access_manager.v3.PNToken;
 import com.pubnub.api.vendor.Crypto;
 import com.pubnub.api.vendor.FileEncryptionUtil;
 import lombok.Getter;
@@ -94,10 +97,12 @@ public class PubNub {
 
     private RetrofitManager retrofitManager;
 
+    private final TokenParser tokenParser;
+
     private static final int TIMESTAMP_DIVIDER = 1000;
     private static final int MAX_SEQUENCE = 65535;
 
-    private static final String SDK_VERSION = "5.0.0";
+    private static final String SDK_VERSION = "5.1.0";
     private final ListenerManager listenerManager;
     private final StateManager stateManager;
 
@@ -121,6 +126,7 @@ public class PubNub {
                 delayedReconnectionManager,
                 duplicationManager);
         this.publishSequenceManager = new PublishSequenceManager(MAX_SEQUENCE);
+        this.tokenParser = new TokenParser();
         instanceId = UUID.randomUUID().toString();
     }
 
@@ -215,6 +221,11 @@ public class PubNub {
     @NotNull
     public Grant grant() {
         return new Grant(this, this.telemetryManager, this.retrofitManager);
+    }
+
+    @NotNull
+    public GrantToken grantToken() {
+        return new GrantToken(this, this.telemetryManager, this.retrofitManager);
     }
 
     @NotNull
@@ -574,5 +585,9 @@ public class PubNub {
 
     public void unsubscribeAll() {
         subscriptionManager.unsubscribeAll();
+    }
+
+    public PNToken parseToken(String token) throws PubNubException {
+        return tokenParser.unwrapToken(token);
     }
 }

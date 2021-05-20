@@ -17,6 +17,7 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -283,6 +284,10 @@ public class PubNubUtil {
             } while (read != -1);
             return byteArrayOutputStream.toByteArray();
         }
+    }
+
+    public static <T> boolean isNullOrEmpty(final Collection<T> collection) {
+        return collection == null || collection.isEmpty();
     }
 
 }

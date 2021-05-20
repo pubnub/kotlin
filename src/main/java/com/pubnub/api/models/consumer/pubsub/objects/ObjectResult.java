@@ -9,6 +9,7 @@ public abstract class ObjectResult<T> extends BasePubSubResult {
 
     @Getter
     protected String event;
+    @Getter
     protected T data;
 
     public ObjectResult(BasePubSubResult result, String event, T data) {

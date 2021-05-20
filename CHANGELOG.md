@@ -1,7 +1,13 @@
+## [v5.1.0](https://github.com/pubnub/java/releases/tag/v5.1.0)
+May-20-2021
+
+[Full Changelog](https://github.com/pubnub/java/compare/v5.0.0...v5.1.0)
+
+- 🌟️ Method grantToken has beed added. It allows generation of signed token with permissions for channels and channel groups. 
+- 🐛 UUID is now exposed as PNMembership field which make is accessible from PNMembershipResult argument of SubscribeCallback.membership() method. 
+
 ## [v5.0.0](https://github.com/pubnub/java/releases/tag/v5.0.0)
 May-12-2021
-
-[Full Changelog](https://github.com/pubnub/java/compare/v4.36.0...v5.0.0)
 
 - 🌟️ Now random initialisation vector used when encryption enabled is now default behaviour. 
 - 🐛 There were some non daemon threads running in background preventing VM from exiting. Now they are daemon threads. 

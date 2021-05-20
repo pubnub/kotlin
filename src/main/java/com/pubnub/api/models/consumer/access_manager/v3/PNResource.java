@@ -3,7 +3,7 @@ package com.pubnub.api.models.consumer.access_manager.v3;
 import lombok.AccessLevel;
 import lombok.Getter;
 
-@Getter()
+@Getter
 public abstract class PNResource<T> {
 
     @Getter(AccessLevel.NONE)

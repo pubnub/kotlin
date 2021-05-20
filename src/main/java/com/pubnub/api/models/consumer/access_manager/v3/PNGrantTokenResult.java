@@ -1,13 +1,10 @@
 package com.pubnub.api.models.consumer.access_manager.v3;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.Data;
+import lombok.NonNull;
 
-@Builder
-@ToString
-@Getter
+@Data
 public class PNGrantTokenResult {
-
-    private String token;
+    @NonNull
+    private final String token;
 }

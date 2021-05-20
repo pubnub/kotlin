@@ -1,9 +1,9 @@
 name: java
-version: 5.0.0
+version: 5.1.0
 schema: 1
 scm: github.com/pubnub/java
 files:
-  - build/libs/pubnub-gson-5.0.0-all.jar
+  - build/libs/pubnub-gson-5.1.0-all.jar
 sdks:
   - 
       type: library
@@ -234,6 +234,13 @@ sdks:
                   is-required: Required
 
 changelog:
+  - version: v5.1.0
+    date: 2021-05-20
+    changes:
+      - type: feature
+        text: "Method grantToken has beed added. It allows generation of signed token with permissions for channels and channel groups."
+      - type: bug
+        text: "UUID is now exposed as PNMembership field which make is accessible from PNMembershipResult argument of SubscribeCallback.membership() method."
   - version: v5.0.0
     date: 2021-05-12
     changes:

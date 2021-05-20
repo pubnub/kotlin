@@ -1,121 +1,90 @@
 package com.pubnub.api.models.server.access_manager.v3;
 
-import com.google.gson.JsonObject;
-import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.builder.PubNubErrorBuilder;
-import com.pubnub.api.models.consumer.access_manager.v3.Channel;
-import com.pubnub.api.models.consumer.access_manager.v3.Group;
+import com.pubnub.api.models.TokenBitmask;
+import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant;
+import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant;
 import com.pubnub.api.models.consumer.access_manager.v3.PNResource;
-import com.pubnub.api.models.consumer.access_manager.v3.Space;
-import com.pubnub.api.models.consumer.access_manager.v3.User;
 import lombok.Builder;
-import lombok.extern.java.Log;
+import lombok.Data;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-@Log
-@Builder
+@Data
 public class GrantTokenRequestBody {
+    private final Integer ttl;
+    private final GrantTokenPermissions permissions;
 
-    private static final int READ = 1;
-    private static final int WRITE = 2;
-    private static final int MANAGE = 4;
-    private static final int DELETE = 8;
-    private static final int CREATE = 16;
-
-    private Integer ttl;
-    private List<Channel> channels;
-    private List<Group> groups;
-    private List<User> users;
-    private List<Space> spaces;
-    private Object meta;
-    private PubNub pubNub;
-
-    public JsonObject assemble() throws PubNubException {
-        JsonObject payload = new JsonObject();
-
-        payload.addProperty("ttl", this.ttl);
-
-        JsonObject permissions = new JsonObject();
-
-        JsonObject resources = new JsonObject();
-        JsonObject patterns = new JsonObject();
-
-        parse(channels, "channels", resources, patterns);
-        parse(groups, "groups", resources, patterns);
-        parse(users, "users", resources, patterns);
-        parse(spaces, "spaces", resources, patterns);
-
-        permissions.add("resources", resources);
-        permissions.add("patterns", patterns);
-
-        if (this.meta != null) {
-            try {
-                permissions.add("meta", pubNub.getMapper().convertValue(this.meta, JsonObject.class));
-            } catch (PubNubException e) {
-                throw PubNubException.builder()
-                        .pubnubError(PubNubErrorBuilder.PNERROBJ_INVALID_META)
-                        .cause(e)
-                        .build();
-            }
-        } else {
-            permissions.add("meta", new JsonObject());
-        }
-
-        payload.add("permissions", permissions);
-
-        return payload;
+    @Data
+    private static class GrantTokenPermissions {
+        private final GrantTokenPermission resources;
+        private final GrantTokenPermission patterns;
+        private final Object meta;
     }
 
-    private void parse(List<? extends PNResource> list, String resourceSetName, JsonObject resources,
-                       JsonObject patterns) throws PubNubException {
-        if (list != null) {
-            for (PNResource pnResource : list) {
-                JsonObject resourceObject = new JsonObject();
-
-                JsonObject determinedObject;
-
-                if (pnResource.isPatternResource()) {
-                    determinedObject = patterns;
-                } else {
-                    determinedObject = resources;
-                }
-
-                if (determinedObject.has(resourceSetName)) {
-                    determinedObject.get(resourceSetName).getAsJsonObject()
-                            .addProperty(pnResource.getId(), calculateBitmask(pnResource));
-                } else {
-                    resourceObject.addProperty(pnResource.getId(), calculateBitmask(pnResource));
-                    determinedObject.add(resourceSetName, resourceObject);
-                }
-            }
-        }
-
-        if (!resources.has(resourceSetName)) {
-            resources.add(resourceSetName, new JsonObject());
-        }
-        if (!patterns.has(resourceSetName)) {
-            patterns.add(resourceSetName, new JsonObject());
-        }
+    @Data
+    public static class GrantTokenPermission {
+        private final Map<String, Integer> channels;
+        private final Map<String, Integer> groups;
+        private final Map<String, Integer> spaces = Collections.emptyMap();
+        private final Map<String, Integer> users = Collections.emptyMap();
     }
 
-    private int calculateBitmask(PNResource resource) throws PubNubException {
+    @Builder
+    public static GrantTokenRequestBody of(Integer ttl,
+                                           List<ChannelGrant> channels,
+                                           List<ChannelGroupGrant> groups,
+                                           Object meta) throws PubNubException {
+
+        GrantTokenPermission resources = new GrantTokenPermission(getResources(channels),
+                getResources(groups));
+        GrantTokenPermission patterns = new GrantTokenPermission(getPatterns(channels),
+                getPatterns(groups));
+        GrantTokenPermissions permissions = new GrantTokenPermissions(resources, patterns, meta == null ? Collections.emptyMap() : meta);
+        return new GrantTokenRequestBody(ttl, permissions);
+    }
+
+    private static <T extends PNResource<?>> Map<String, Integer> getResources(List<T> resources) throws PubNubException {
+        final Map<String, Integer> result = new HashMap<>();
+        for (T resource : resources) {
+            if (!resource.isPatternResource()) {
+                result.put(resource.getId(), calculateBitmask(resource));
+            }
+        }
+        return result;
+    }
+
+    private static <T extends PNResource<?>> Map<String, Integer> getPatterns(List<T> resources) throws PubNubException {
+        final Map<String, Integer> result = new HashMap<>();
+        for (T resource : resources) {
+            if (resource.isPatternResource()) {
+                result.put(resource.getId(), calculateBitmask(resource));
+            }
+        }
+        return result;
+
+    }
+
+    private static int calculateBitmask(PNResource<?> resource) throws PubNubException {
         int sum = 0;
         if (resource.isRead()) {
-            sum += READ;
+            sum += TokenBitmask.READ;
         }
         if (resource.isWrite()) {
-            sum += WRITE;
+            sum += TokenBitmask.WRITE;
         }
         if (resource.isManage()) {
-            sum += MANAGE;
+            sum += TokenBitmask.MANAGE;
         }
         if (resource.isDelete()) {
-            sum += DELETE;
+            sum += TokenBitmask.DELETE;
         }
         if (resource.isCreate()) {
-            sum += CREATE;
+            sum += TokenBitmask.CREATE;
         }
         if (sum == 0) {
             throw PubNubException.builder()

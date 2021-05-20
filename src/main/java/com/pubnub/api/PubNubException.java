@@ -34,6 +34,12 @@ public class PubNubException extends Exception {
     }
 
     @Override
+    @ToString.Include
+    public Throwable getCause() {
+        return super.getCause();
+    }
+
+    @Override
     public String getMessage() {
         return errormsg;
     }
@@ -42,3 +48,4 @@ public class PubNubException extends Exception {
     @ToString.Exclude
     private Call affectedCall;
 }
+
