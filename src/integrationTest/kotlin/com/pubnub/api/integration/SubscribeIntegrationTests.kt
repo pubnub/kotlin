@@ -107,10 +107,18 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
     @Test
     fun testUnsubscribeFromAllChannels() {
         val success = AtomicBoolean()
+        val randomChannel = randomChannel()
+
+        pubnub.subscribeToBlocking(randomChannel)
 
         pubnub.addListener(object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
-                success.set(pubnub.getSubscribedChannels().isEmpty())
+                if (pnStatus.category == PNStatusCategory.PNAcknowledgmentCategory &&
+                    pnStatus.affectedChannels.contains(randomChannel) &&
+                    pnStatus.operation == PNOperationType.PNUnsubscribeOperation
+                ) {
+                    success.set(pubnub.getSubscribedChannels().isEmpty())
+                }
             }
         })
 

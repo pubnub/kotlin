@@ -23,7 +23,7 @@ You will need the publish and subscribe keys to authenticate your app. Get your 
      <dependency>
         <groupId>com.pubnub</groupId>
         <artifactId>pubnub-gson</artifactId>
-        <version>6.0.0</version>
+        <version>6.0.1</version>
      </dependency>
      ```
 

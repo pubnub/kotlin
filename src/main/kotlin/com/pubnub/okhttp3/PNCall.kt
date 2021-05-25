@@ -4,6 +4,7 @@ import okhttp3.Call
 import okhttp3.Connection
 import org.slf4j.LoggerFactory
 import java.net.SocketException
+import javax.net.ssl.SSLException
 import kotlin.reflect.full.declaredMemberFunctions
 import kotlin.reflect.jvm.isAccessible
 
@@ -17,6 +18,8 @@ internal class PNCall(
             realCall.getConnection()?.socket()?.shutdownInput()
         } catch (se: SocketException) {
             log.warn("Caught exception when canceling call", se)
+        } catch (_: SSLException) {
+            // we have to swallow this exception, otherwise cancel will break status delivery
         } catch (uoe: UnsupportedOperationException) {
             // silent catch
         }

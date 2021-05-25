@@ -1,10 +1,8 @@
-## [v6.0.0](https://github.com/pubnub/kotlin/releases/tag/v6.0.0)
-May 12 2021
+## [v6.0.1](https://github.com/pubnub/kotlin/releases/tag/v6.0.1)
+May 25 2021
 
-[Full Changelog](https://github.com/pubnub/kotlin/compare/v5.1.3...v6.0.0)
+[Full Changelog](https://github.com/pubnub/kotlin/compare/v6.0.0...v6.0.1)
 
-- Random initialisation vector used when encryption enabled is now default behaviour. 
-- Bumping versions of used dependencies. 
-- There were some non daemon threads running in background preventing VM from exiting. Now they are daemon threads. 
+- There was missing PNAcknowledgmentCategory status callback after unsubscribe operation. Problem was caused by ungaught SSLException. This release provides a fix for the issue. 
 
 
