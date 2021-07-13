@@ -1,7 +1,12 @@
+## [v5.1.1](https://github.com/pubnub/java/releases/tag/v5.1.1)
+July-13-2021
+
+[Full Changelog](https://github.com/pubnub/java/compare/v5.1.0...v5.1.1)
+
+- 🐛 Update Jackson libraries to avoid known vulnerabilities. 
+
 ## [v5.1.0](https://github.com/pubnub/java/releases/tag/v5.1.0)
 May-20-2021
-
-[Full Changelog](https://github.com/pubnub/java/compare/v5.0.0...v5.1.0)
 
 - 🌟️ Method grantToken has beed added. It allows generation of signed token with permissions for channels and channel groups. 
 - 🐛 UUID is now exposed as PNMembership field which make is accessible from PNMembershipResult argument of SubscribeCallback.membership() method. 

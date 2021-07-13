@@ -1,9 +1,9 @@
 name: java
-version: 5.1.0
+version: 5.1.1
 schema: 1
 scm: github.com/pubnub/java
 files:
-  - build/libs/pubnub-gson-5.1.0-all.jar
+  - build/libs/pubnub-gson-5.1.1-all.jar
 sdks:
   - 
       type: library
@@ -234,6 +234,11 @@ sdks:
                   is-required: Required
 
 changelog:
+  - version: v5.1.1
+    date: 2021-07-13
+    changes:
+      - type: bug
+        text: "Update Jackson libraries to avoid known vulnerabilities."
   - version: v5.1.0
     date: 2021-05-20
     changes:
