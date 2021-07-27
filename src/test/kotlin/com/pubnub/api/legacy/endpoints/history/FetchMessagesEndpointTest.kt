@@ -45,6 +45,63 @@ class FetchMessagesEndpointTest : BaseTest() {
                                 "my_channel": [
                                   {
                                     "message": "hihi",
+                                    "uuid": "my-uuid",
+                                    "timetoken": "14698320467224036"
+                                  },
+                                  {
+                                    "message": "Hey",
+                                    "uuid": "my-uuid",
+                                    "timetoken": "14698320468265639"
+                                  }
+                                ],
+                                "mychannel": [
+                                  {
+                                    "message": "sample message",
+                                    "uuid": "my-uuid",
+                                    "timetoken": "14369823849575729"
+                                  }
+                                ]
+                              }
+                            }
+                        """.trimIndent()
+                    )
+                )
+        )
+
+        val response = pubnub.fetchMessages(
+            channels = listOf("mychannel", "my_channel"),
+            page = PNBoundedPage(
+                limit = 25
+            )
+        ).sync()!!
+
+        assertEquals(response.channels.size, 2)
+
+        assertTrue(response.channels.containsKey("mychannel"))
+        assertTrue(response.channels.containsKey("my_channel"))
+
+        assertEquals(response.channels["mychannel"]!!.size, 1)
+        assertEquals(response.channels["my_channel"]!!.size, 2)
+
+        assertEquals(response.channels["mychannel"]!!.count { it.uuid == "my-uuid" }, 1)
+        assertEquals(response.channels["my_channel"]!!.count { it.uuid == "my-uuid" }, 2)
+    }
+
+    @Test
+    fun testSyncWithoutUUIDSuccess() {
+        stubFor(
+            get(urlPathEqualTo("/v3/history/sub-key/mySubscribeKey/channel/mychannel,my_channel"))
+                .willReturn(
+                    aResponse().withBody(
+                        """
+                            {
+                              "status": 200,
+                              "error": false,
+                              "error_message": "",
+                              "channels": {
+                                "my_channel": [
+                                  {
+                                    "message": "hihi",
                                     "timetoken": "14698320467224036"
                                   },
                                   {
@@ -69,14 +126,19 @@ class FetchMessagesEndpointTest : BaseTest() {
             channels = listOf("mychannel", "my_channel"),
             page = PNBoundedPage(
                 limit = 25
-            )
+            ),
+            includeUUID = false
         ).sync()!!
 
         assertEquals(response.channels.size, 2)
         assertTrue(response.channels.containsKey("mychannel"))
         assertTrue(response.channels.containsKey("my_channel"))
+
         assertEquals(response.channels["mychannel"]!!.size, 1)
         assertEquals(response.channels["my_channel"]!!.size, 2)
+
+        assertEquals(response.channels["mychannel"]!!.count { it.uuid == null }, 1)
+        assertEquals(response.channels["my_channel"]!!.count { it.uuid == null }, 2)
     }
 
     @Test
@@ -136,6 +198,7 @@ class FetchMessagesEndpointTest : BaseTest() {
     @Test
     fun testSyncEncryptedSuccess() {
         pubnub.configuration.cipherKey = "testCipher"
+        pubnub.configuration.useRandomInitializationVector = false
 
         stubFor(
             get(urlPathEqualTo("/v3/history/sub-key/mySubscribeKey/channel/mychannel,my_channel"))

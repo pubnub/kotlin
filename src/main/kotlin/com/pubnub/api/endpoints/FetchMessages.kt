@@ -24,6 +24,7 @@ class FetchMessages internal constructor(
     pubnub: PubNub,
     val channels: List<String>,
     val page: PNBoundedPage,
+    val includeUUID: Boolean,
     val includeMeta: Boolean,
     val includeMessageActions: Boolean
 ) : Endpoint<FetchMessagesEnvelope, PNFetchMessagesResult>(pubnub) {
@@ -98,7 +99,9 @@ class FetchMessages internal constructor(
     override fun operationType() = PNOperationType.PNFetchMessagesOperation
 
     private fun addQueryParams(queryParams: MutableMap<String, String>) {
-        queryParams["max"] = effectiveMax(page.limit, includeMessageActions, channels.size).toString()
+        queryParams["max"] =
+            effectiveMax(page.limit, includeMessageActions, channels.size).toString()
+        queryParams["include_uuid"] = includeUUID.toString()
 
         page.start?.run { queryParams["start"] = this.toString().toLowerCase(Locale.US) }
         page.end?.run { queryParams["end"] = this.toString().toLowerCase(Locale.US) }

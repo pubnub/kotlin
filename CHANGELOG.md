@@ -1,8 +1,8 @@
-## [v6.0.2](https://github.com/pubnub/kotlin/releases/tag/v6.0.2)
-July 6 2021
+## [v6.0.3](https://github.com/pubnub/kotlin/releases/tag/v6.0.3)
+July 26 2021
 
-[Full Changelog](https://github.com/pubnub/kotlin/compare/v6.0.1...v6.0.2)
+[Full Changelog](https://github.com/pubnub/kotlin/compare/v6.0.2...v6.0.3)
 
-- Handle socket exception causing crash while canceling the call. 
+- Using random initialization vector according to 'useRandomInitializationVector' flag setting. 
 
 

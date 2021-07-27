@@ -24,6 +24,7 @@ class PubNubTest : BaseTest() {
     @Test
     @Throws(PubNubException::class)
     fun testEncryptCustomKey() {
+        config.useRandomInitializationVector = false
         assertEquals("iALQtn3PfIXe74CT/wrS7g==", pubnub.encrypt("test1", "cipherKey").trim())
     }
 
@@ -31,6 +32,7 @@ class PubNubTest : BaseTest() {
     @Throws(PubNubException::class)
     fun testEncryptConfigurationKey() {
         config.cipherKey = "cipherKey"
+        config.useRandomInitializationVector = false
         initPubNub()
         assertEquals("iALQtn3PfIXe74CT/wrS7g==", pubnub.encrypt("test1").trim())
     }
@@ -38,6 +40,7 @@ class PubNubTest : BaseTest() {
     @Test
     @Throws(PubNubException::class)
     fun testDecryptCustomKey() {
+        config.useRandomInitializationVector = false
         assertEquals("test1", pubnub.decrypt("iALQtn3PfIXe74CT/wrS7g==", "cipherKey").trim())
     }
 
@@ -45,6 +48,7 @@ class PubNubTest : BaseTest() {
     @Throws(PubNubException::class)
     fun testDecryptConfigurationKey() {
         config.cipherKey = "cipherKey"
+        config.useRandomInitializationVector = false
         initPubNub()
         assertEquals("test1", pubnub.decrypt("iALQtn3PfIXe74CT/wrS7g==").trim())
     }
@@ -67,7 +71,7 @@ class PubNubTest : BaseTest() {
     fun getVersionAndTimeStamp() {
         val version = pubnub.version
         val timeStamp = pubnub.timestamp()
-        assertEquals("6.0.2", version)
+        assertEquals("6.0.3", version)
         assertTrue(timeStamp > 0)
     }
 }

@@ -79,7 +79,7 @@ class PubNub(val configuration: PNConfiguration) {
 
     private companion object Constants {
         private const val TIMESTAMP_DIVIDER = 1000
-        private const val SDK_VERSION = "6.0.2"
+        private const val SDK_VERSION = "6.0.3"
         private const val MAX_SEQUENCE = 65535
     }
 
@@ -549,6 +549,7 @@ class PubNub(val configuration: PNConfiguration) {
      *
      * @param channels Channels to return history messages from.
      * @param page The paging object used for pagination. @see [PNBoundedPage]
+     * @param includeUUID Whether to include publisher uuid with each history message. Defaults to `true`.
      * @param includeMeta Whether to include message metadata in response.
      *                    Defaults to `false`.
      * @param includeMessageActions Whether to include message actions in response.
@@ -557,12 +558,14 @@ class PubNub(val configuration: PNConfiguration) {
     fun fetchMessages(
         channels: List<String>,
         page: PNBoundedPage = PNBoundedPage(),
+        includeUUID: Boolean = true,
         includeMeta: Boolean = false,
         includeMessageActions: Boolean = false
     ) = FetchMessages(
         pubnub = this,
         channels = channels,
         page = page,
+        includeUUID = includeUUID,
         includeMeta = includeMeta,
         includeMessageActions = includeMessageActions
     )
@@ -1772,7 +1775,7 @@ class PubNub(val configuration: PNConfiguration) {
      * @throws PubNubException throws exception in case of failed decryption.
      */
     fun decrypt(inputString: String, cipherKey: String = configuration.cipherKey): String =
-        Crypto(cipherKey).decrypt(inputString, Base64.DEFAULT)
+        Crypto(cipherKey, configuration.useRandomInitializationVector).decrypt(inputString, Base64.DEFAULT)
 
     /**
      * Perform Cryptographic decryption of an input stream using provided cipher key.
@@ -1798,7 +1801,7 @@ class PubNub(val configuration: PNConfiguration) {
      * @throws PubNubException Throws exception in case of failed encryption.
      */
     fun encrypt(inputString: String, cipherKey: String = configuration.cipherKey): String =
-        Crypto(cipherKey).encrypt(inputString, Base64.DEFAULT)
+        Crypto(cipherKey, configuration.useRandomInitializationVector).encrypt(inputString, Base64.DEFAULT)
 
     /**
      * Perform Cryptographic encryption of an input stream using provided cipher key.

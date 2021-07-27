@@ -9,7 +9,7 @@ internal fun JsonElement.processHistoryMessage(configuration: PNConfiguration, m
     if (!configuration.isCipherKeyValid())
         return this
 
-    val crypto = Crypto(configuration.cipherKey)
+    val crypto = Crypto(configuration.cipherKey, configuration.useRandomInitializationVector)
 
     val inputText =
         if (mapper.isJsonObject(this) && mapper.hasField(

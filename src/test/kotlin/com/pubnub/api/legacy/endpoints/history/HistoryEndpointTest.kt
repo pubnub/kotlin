@@ -181,6 +181,7 @@ class HistoryEndpointTest : BaseTest() {
     @Test
     fun testSyncEncryptedSuccess() {
         pubnub.configuration.cipherKey = "testCipher"
+        pubnub.configuration.useRandomInitializationVector = false
 
         stubFor(
             get(urlPathEqualTo("/v2/history/sub-key/mySubscribeKey/channel/niceChannel"))
@@ -231,6 +232,7 @@ class HistoryEndpointTest : BaseTest() {
     @Test
     fun testSyncEncryptedWithPNOtherSuccess() {
         pubnub.configuration.cipherKey = "hello"
+        pubnub.configuration.useRandomInitializationVector = false
 
         stubFor(
             get(urlPathEqualTo("/v2/history/sub-key/mySubscribeKey/channel/niceChannel"))

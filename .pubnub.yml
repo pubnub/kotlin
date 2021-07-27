@@ -1,9 +1,9 @@
 name: kotlin
-version: 6.0.2
+version: 6.0.3
 schema: 1
 scm: github.com/pubnub/kotlin
 files:
-  - build/libs/pubnub-kotlin-6.0.2-all.jar
+  - build/libs/pubnub-kotlin-6.0.3-all.jar
 sdks:
   - 
       type: library
@@ -233,6 +233,13 @@ sdks:
                   license-url: https://github.com/stleary/JSON-java/blob/20210307/LICENSE
                   is-required: Required
 changelog:
+  -
+    version: v6.0.3
+    date: 2021-07-26
+    changes:
+      -
+        type: bug
+        text: "Using random initialization vector according to 'useRandomInitializationVector' flag setting."
   -
     version: v6.0.2
     date: 2021-07-06

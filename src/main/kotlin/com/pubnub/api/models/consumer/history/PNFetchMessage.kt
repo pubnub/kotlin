@@ -18,6 +18,7 @@ data class PNFetchMessagesResult(
 /**
  * Encapsulates a message in terms of a batch history entry.
  *
+ * @property uuid Publisher uuid. Is `null` if not requested.
  * @property message The actual message content.
  * @property timetoken Publish timetoken of the message.
  * @property meta Metadata of the message, if requested via [FetchMessages.includeMeta].
@@ -31,6 +32,7 @@ data class PNFetchMessagesResult(
  * @see [Action]
  */
 data class PNFetchMessageItem(
+    val uuid: String?,
     val message: JsonElement,
     val meta: JsonElement?,
     val timetoken: Long,

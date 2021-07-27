@@ -35,7 +35,7 @@ public class Crypto {
         }
     }
 
-    public Crypto(String cipherKey, boolean dynamicIV) { //TODO include necessary Crypto changes
+    public Crypto(String cipherKey, boolean dynamicIV) {
         this.cipherKey = cipherKey;
         this.dynamicIV = dynamicIV;
     }
