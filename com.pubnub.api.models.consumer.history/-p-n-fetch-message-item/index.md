@@ -10,7 +10,7 @@ Encapsulates a message in terms of a batch history entry.
 
 | Name | Summary |
 |---|---|
-| [&lt;init&gt;](-init-.md) | Encapsulates a message in terms of a batch history entry.`PNFetchMessageItem(message: JsonElement, meta: JsonElement?, timetoken: `[`Long`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)`, actions: `[`Map`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html)`<`[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`, `[`Map`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html)`<`[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`, `[`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)`<`[`Action`](../-action/index.md)`>>>? = null)` |
+| [&lt;init&gt;](-init-.md) | Encapsulates a message in terms of a batch history entry.`PNFetchMessageItem(uuid: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`?, message: JsonElement, meta: JsonElement?, timetoken: `[`Long`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)`, actions: `[`Map`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html)`<`[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`, `[`Map`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html)`<`[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`, `[`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)`<`[`Action`](../-action/index.md)`>>>? = null)` |
 
 ### Properties
 
@@ -20,3 +20,4 @@ Encapsulates a message in terms of a batch history entry.
 | [message](message.md) | The actual message content.`val message: JsonElement` |
 | [meta](meta.md) | Metadata of the message, if requested via [FetchMessages.includeMeta](../../com.pubnub.api.endpoints/-fetch-messages/include-meta.md). Is `null` if not requested, otherwise an empty string if requested but no associated metadata.`val meta: JsonElement?` |
 | [timetoken](timetoken.md) | Publish timetoken of the message.`val timetoken: `[`Long`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html) |
+| [uuid](uuid.md) | Publisher uuid. Is `null` if not requested.`val uuid: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`?` |

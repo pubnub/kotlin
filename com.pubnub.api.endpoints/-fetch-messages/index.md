@@ -15,6 +15,7 @@
 | [channels](channels.md) | `val channels: `[`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)`<`[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`>` |
 | [includeMessageActions](include-message-actions.md) | `val includeMessageActions: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) |
 | [includeMeta](include-meta.md) | `val includeMeta: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) |
+| [includeUUID](include-u-u-i-d.md) | `val includeUUID: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) |
 | [page](page.md) | `val page: `[`PNBoundedPage`](../../com.pubnub.api.models.consumer/-p-n-bounded-page/index.md) |
 
 ### Functions

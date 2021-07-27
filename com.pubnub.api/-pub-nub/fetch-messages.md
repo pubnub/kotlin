@@ -47,7 +47,7 @@ if more than 25 messages meet the timetoken values.
     Defaults to `false`.
 
 `includeMessageActions` - Whether to include message actions in response.
-    Defaults to `false`.`fun fetchMessages(channels: `[`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)`<`[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`>, page: `[`PNBoundedPage`](../../com.pubnub.api.models.consumer/-p-n-bounded-page/index.md)` = PNBoundedPage(), includeMeta: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)` = false, includeMessageActions: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)` = false): `[`FetchMessages`](../../com.pubnub.api.endpoints/-fetch-messages/index.md)
+    Defaults to `false`.`fun fetchMessages(channels: `[`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)`<`[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`>, page: `[`PNBoundedPage`](../../com.pubnub.api.models.consumer/-p-n-bounded-page/index.md)` = PNBoundedPage(), includeUUID: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)` = true, includeMeta: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)` = false, includeMessageActions: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)` = false): `[`FetchMessages`](../../com.pubnub.api.endpoints/-fetch-messages/index.md)
 
 Fetch historical messages from multiple channels.
 The `includeMessageActions` flag also allows you to fetch message actions along with the messages.
@@ -80,6 +80,8 @@ if more than 25 messages meet the timetoken values.
 `channels` - Channels to return history messages from.
 
 `page` - The paging object used for pagination. @see [PNBoundedPage](../../com.pubnub.api.models.consumer/-p-n-bounded-page/index.md)
+
+`includeUUID` - Whether to include publisher uuid with each history message. Defaults to `true`.
 
 `includeMeta` - Whether to include message metadata in response.
     Defaults to `false`.
