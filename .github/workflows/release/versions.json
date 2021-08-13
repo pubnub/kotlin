@@ -1,0 +1,24 @@
+{
+  ".pubnub.yml": [
+    { "pattern": "^version: (.+)$", "cleared": true },
+    { "pattern": "^\\s+\\-\\s+build/libs/pubnub-kotlin-(.*)-all.jar$", "cleared": true },
+    { "pattern": "\\s+package-name: pubnub-kotlin-(.*)(-all)?$", "cleared": true },
+    { "pattern": "/releases/download/(.*)/pubnub-kotlin-.*-all.jar$", "cleared": false },
+    { "pattern": "/releases/download/.*/pubnub-kotlin-(.*)-all.jar$", "cleared": true },
+    { "pattern": "/pubnub/pubnub-kotlin/(.*)/pubnub-kotlin-.*.jar$", "cleared": true },
+    { "pattern": "/pubnub/pubnub-kotlin/.*/pubnub-kotlin-(.*).jar$", "cleared": true }
+  ],
+  "build.gradle": [
+    { "pattern": "^version\\s=\\s'(.*)'$", "cleared": true }
+  ],
+  "README.md": [
+    { "pattern": "^\\s{2,}<version>(.+)<\\/version>$", "cleared": true },
+    { "pattern": "^\\s{2,}implementation 'com\\.pubnub:pubnub-kotlin:(.+)'$", "cleared": true }
+  ],
+  "src/main/kotlin/com/pubnub/api/PubNub.kt": [
+    { "pattern": "private const val SDK_VERSION.*\"(.*)\"$", "cleared": true }
+  ],
+  "src/test/kotlin/com/pubnub/api/legacy/PubNubTest.kt": [
+    { "pattern": "assertEquals\\(\"(.*)\", version\\))$", "cleared": true }
+  ]
+}
