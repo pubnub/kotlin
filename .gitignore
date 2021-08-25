@@ -10,3 +10,7 @@ gen/
 out/
 /src/test/resources/config.properties
 *.DS_STORE
+
+# GitHub Actions #
+##################
+.github/.release
