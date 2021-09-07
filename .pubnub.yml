@@ -9,6 +9,7 @@ sdks:
       type: library
       full-name: Kotlin SDK
       short-name: Kotlin
+      tier: 2
       artifacts:
         -
           language: kotlin
@@ -17,7 +18,6 @@ sdks:
             - Mobile
           source-repository: https://github.com/pubnub/kotlin
           documentation: https://www.pubnub.com/docs/sdks/kotlin/
-          tier: 2
           artifact-type: library
           distributions:
             -
@@ -129,7 +129,6 @@ sdks:
             - Mobile
           source-repository: https://github.com/pubnub/kotlin
           documentation: https://www.pubnub.com/docs/sdks/kotlin/
-          tier: 2
           artifact-type: library
           distributions:
             -
