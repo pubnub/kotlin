@@ -11,3 +11,4 @@
 | [StateManager](-state-manager/index.md) | `class StateManager` |
 | [SubscriptionManager](-subscription-manager/index.md) | `class SubscriptionManager` |
 | [TelemetryManager](-telemetry-manager/index.md) | `class TelemetryManager` |
+| [TokenManager](-token-manager/index.md) | `class TokenManager` |

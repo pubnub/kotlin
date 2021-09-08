@@ -35,6 +35,9 @@ List of known PubNub errors. Observe them in [PubNubException.pubnubError](../-p
 | [USER_MISSING](-u-s-e-r_-m-i-s-s-i-n-g.md) |  |
 | [USER_ID_MISSING](-u-s-e-r_-i-d_-m-i-s-s-i-n-g.md) |  |
 | [USER_NAME_MISSING](-u-s-e-r_-n-a-m-e_-m-i-s-s-i-n-g.md) |  |
+| [RESOURCES_MISSING](-r-e-s-o-u-r-c-e-s_-m-i-s-s-i-n-g.md) |  |
+| [PERMISSION_MISSING](-p-e-r-m-i-s-s-i-o-n_-m-i-s-s-i-n-g.md) |  |
+| [INVALID_ACCESS_TOKEN](-i-n-v-a-l-i-d_-a-c-c-e-s-s_-t-o-k-e-n.md) |  |
 | [MESSAGE_ACTION_MISSING](-m-e-s-s-a-g-e_-a-c-t-i-o-n_-m-i-s-s-i-n-g.md) |  |
 | [MESSAGE_ACTION_TYPE_MISSING](-m-e-s-s-a-g-e_-a-c-t-i-o-n_-t-y-p-e_-m-i-s-s-i-n-g.md) |  |
 | [MESSAGE_ACTION_VALUE_MISSING](-m-e-s-s-a-g-e_-a-c-t-i-o-n_-v-a-l-u-e_-m-i-s-s-i-n-g.md) |  |

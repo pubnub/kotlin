@@ -50,6 +50,16 @@ Utilities for encoding and decoding the Base64 representation of binary data. Se
 
 |
 
+##### [com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant](../com.pubnub.api.models.consumer.access_manager.v3/-channel-grant/index.md)
+
+
+|
+
+##### [com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant](../com.pubnub.api.models.consumer.access_manager.v3/-channel-group-grant/index.md)
+
+
+|
+
 ##### [com.pubnub.api.models.server.objects_api.ChannelId](../com.pubnub.api.models.server.objects_api/-channel-id/index.md)
 
 
@@ -198,6 +208,26 @@ Base class for all PubNub API operation implementations.
 |
 
 ##### [com.pubnub.api.endpoints.access.Grant](../com.pubnub.api.endpoints.access/-grant/index.md)
+
+
+|
+
+##### [com.pubnub.api.endpoints.access.GrantToken](../com.pubnub.api.endpoints.access/-grant-token/index.md)
+
+
+|
+
+##### [com.pubnub.api.models.server.access_manager.v3.GrantTokenData](../com.pubnub.api.models.server.access_manager.v3/-grant-token-data/index.md)
+
+
+|
+
+##### [com.pubnub.api.models.server.access_manager.v3.GrantTokenRequestBody](../com.pubnub.api.models.server.access_manager.v3/-grant-token-request-body/index.md)
+
+
+|
+
+##### [com.pubnub.api.models.server.access_manager.v3.GrantTokenResponse](../com.pubnub.api.models.server.access_manager.v3/-grant-token-response/index.md)
 
 
 |
@@ -502,6 +532,16 @@ Result of the [PubNub.getPresenceState](../com.pubnub.api/-pub-nub/get-presence-
 
 |
 
+##### [com.pubnub.api.models.consumer.access_manager.v3.PNGrant](../com.pubnub.api.models.consumer.access_manager.v3/-p-n-grant/index.md)
+
+
+|
+
+##### [com.pubnub.api.models.consumer.access_manager.v3.PNGrantTokenResult](../com.pubnub.api.models.consumer.access_manager.v3/-p-n-grant-token-result/index.md)
+
+
+|
+
 ##### [com.pubnub.api.enums.PNHeartbeatNotificationOptions](../com.pubnub.api.enums/-p-n-heartbeat-notification-options/index.md)
 
 
@@ -744,6 +784,11 @@ Result of the [PubNub.time](../com.pubnub.api/-pub-nub/time.md) operation.
 
 |
 
+##### [com.pubnub.api.models.consumer.access_manager.v3.PNToken](../com.pubnub.api.models.consumer.access_manager.v3/-p-n-token/index.md)
+
+
+|
+
 ##### [com.pubnub.api.models.consumer.files.PNUploadedFile](../com.pubnub.api.models.consumer.files/-p-n-uploaded-file/index.md)
 
 
@@ -976,6 +1021,21 @@ Custom exception wrapper for errors occurred during execution or processing of a
 |
 
 ##### [com.pubnub.api.endpoints.Time](../com.pubnub.api.endpoints/-time/index.md)
+
+
+|
+
+##### [com.pubnub.api.models.TokenBitmask](../com.pubnub.api.models/-token-bitmask/index.md)
+
+
+|
+
+##### [com.pubnub.api.managers.TokenManager](../com.pubnub.api.managers/-token-manager/index.md)
+
+
+|
+
+##### [com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant](../com.pubnub.api.models.consumer.access_manager.v3/-u-u-i-d-grant/index.md)
 
 
 |

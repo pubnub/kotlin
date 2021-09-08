@@ -1,0 +1,5 @@
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.endpoints.access](../index.md) / [GrantToken](index.md) / [&lt;init&gt;](./-init-.md)
+
+# &lt;init&gt;
+
+`GrantToken(pubnub: `[`PubNub`](../../com.pubnub.api/-pub-nub/index.md)`, ttl: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)`, meta: `[`Any`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)`?, authorizedUUID: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`?, channels: `[`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)`<`[`ChannelGrant`](../../com.pubnub.api.models.consumer.access_manager.v3/-channel-grant/index.md)`>, channelGroups: `[`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)`<`[`ChannelGroupGrant`](../../com.pubnub.api.models.consumer.access_manager.v3/-channel-group-grant/index.md)`>, uuids: `[`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)`<`[`UUIDGrant`](../../com.pubnub.api.models.consumer.access_manager.v3/-u-u-i-d-grant/index.md)`>)`
