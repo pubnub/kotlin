@@ -13,7 +13,7 @@ plugins {
 }
 
 group = 'com.pubnub'
-version = '6.0.3'
+version = '6.1.0'
 
 repositories {
     mavenCentral()
@@ -42,7 +42,29 @@ configurations {
     testFixturesImplementation { extendsFrom allTest }
     integrationTestImplementation { extendsFrom allTest }
     testImplementation { extendsFrom allTest }
+    cucumberRuntime { extendsFrom testImplementation }
 }
+
+task cucumber() {
+    dependsOn assemble, testClasses
+    group = "verification"
+    doLast {
+        javaexec {
+            def localProperties = new Properties()
+            localProperties.load(new FileInputStream(rootProject.file("src/test/resources/config.properties")))
+
+            main = "io.cucumber.core.cli.Main"
+            classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+
+            if (localProperties['cucumber.tags'] != null) {
+                args = ['--tags', localProperties['cucumber.tags'], '--plugin', 'pretty', '--glue', 'com.pubnub.contract', localProperties['features.dir']]
+            } else {
+                args = ['--plugin', 'pretty', '--glue', 'com.pubnub.contract', localProperties['features.dir']]
+            }
+        }
+    }
+}
+
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
@@ -54,6 +76,7 @@ dependencies {
     api 'com.google.code.gson:gson:2.8.6'
     implementation "com.squareup.retrofit2:converter-gson:2.9.0"
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.2'
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-cbor:2.12.3'
     compile 'com.fasterxml.jackson.module:jackson-module-kotlin:2.12.2'
     implementation "org.slf4j:slf4j-api:1.7.30"
 
@@ -69,6 +92,9 @@ dependencies {
     allTest "dev.nohus:AutoKonfig:1.0.0"
 
     testImplementation "io.mockk:mockk:1.11.0"
+    testImplementation group: 'io.cucumber', name: 'cucumber-java', version: '6.10.4'
+    testImplementation group: 'io.cucumber', name: 'cucumber-junit', version: '6.10.4'
+    testImplementation group: 'io.cucumber', name: 'cucumber-picocontainer', version: '6.10.4'
 }
 
 shadowJar {

@@ -14,18 +14,14 @@ abstract class BaseIntegrationTest {
 
     protected val logger = LoggerFactory.getLogger(this.javaClass.simpleName)
 
-    lateinit var pubnub: PubNub
-    lateinit var server: PubNub
+    val pubnub: PubNub by lazy { createPubNub() }
+    val server: PubNub by lazy { createServer() }
 
     private var mGuestClients = mutableListOf<PubNub>()
 
     @Before
     fun before() {
         onPrePubnub()
-        pubnub = createPubNub()
-        if (needsServer()) {
-            server = createServer()
-        }
         onBefore()
     }
 

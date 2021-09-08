@@ -1,8 +1,8 @@
-## [v6.0.3](https://github.com/pubnub/kotlin/releases/tag/v6.0.3)
-July 26 2021
+## [v6.1.0](https://github.com/pubnub/kotlin/releases/tag/v6.1.0)
+September 8 2021
 
-[Full Changelog](https://github.com/pubnub/kotlin/compare/v6.0.2...v6.0.3)
+[Full Changelog](https://github.com/pubnub/kotlin/compare/v6.0.3...v6.1.0)
 
-- Using random initialization vector according to 'useRandomInitializationVector' flag setting. 
+- Method grantToken has beed added. It allows generation of signed token with permissions for channels and channel groups. 
 
 
