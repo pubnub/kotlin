@@ -8,6 +8,7 @@ import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.TelemetryManager;
+import com.pubnub.api.managers.token_manager.TokenManager;
 import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsRemoveChannelResult;
 import com.pubnub.api.models.server.Envelope;
 import lombok.Setter;
@@ -28,8 +29,11 @@ public class RemoveChannelChannelGroup extends Endpoint<Envelope, PNChannelGroup
     private List<String> channels;
 
 
-    public RemoveChannelChannelGroup(PubNub pubnub, TelemetryManager telemetryManager, RetrofitManager retrofit) {
-        super(pubnub, telemetryManager, retrofit);
+    public RemoveChannelChannelGroup(PubNub pubnub,
+                                     TelemetryManager telemetryManager,
+                                     RetrofitManager retrofit,
+                                     TokenManager tokenManager) {
+        super(pubnub, telemetryManager, retrofit, tokenManager);
         channels = new ArrayList<>();
     }
 

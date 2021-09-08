@@ -1,4 +1,5 @@
 plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.3.72'
     id 'io.franzbecker.gradle-lombok' version '1.14'
     id 'com.github.johnrengelman.shadow' version '4.0.2'
     id 'com.bmuschko.nexus' version '2.3.1'
@@ -11,14 +12,41 @@ plugins {
 }
 group = 'com.pubnub'
 
-version = '5.1.1'
+version = '5.2.0'
 
 description = """"""
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
+
 configurations.all {
+}
+
+configurations {
+    cucumberRuntime {
+        extendsFrom testImplementation
+    }
+}
+
+task cucumber() {
+    dependsOn assemble, testClasses
+    group = "verification"
+    doLast {
+        javaexec {
+            def localProperties = new Properties()
+            localProperties.load(new FileInputStream(rootProject.file("test.properties")))
+
+            main = "io.cucumber.core.cli.Main"
+            classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+
+            if (localProperties['cucumber.tags'] != null) {
+                args = ['--tags', localProperties['cucumber.tags'], '--plugin', 'pretty', '--glue', 'com.pubnub.contract', localProperties['features.dir']]
+            } else {
+                args = ['--plugin', 'pretty', '--glue', 'com.pubnub.contract', localProperties['features.dir']]
+            }
+        }
+    }
 }
 
 lombok {
@@ -70,6 +98,11 @@ dependencies {
     testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.6.0'
     integrationTestImplementation group: 'org.aeonbits.owner', name: 'owner', version: '1.0.8'
     implementation group: 'org.json', name: 'json', version: '20190722'
+    testImplementation group: 'io.cucumber', name: 'cucumber-java', version: '6.10.4'
+    testImplementation group: 'io.cucumber', name: 'cucumber-junit', version: '6.10.4'
+    testImplementation group: 'io.cucumber', name: 'cucumber-picocontainer', version: '6.10.4'
+    testImplementation group: 'org.aeonbits.owner', name: 'owner', version: '1.0.8'
+    testImplementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 }
 
 task integrationTest(type: Test) {

@@ -9,6 +9,7 @@ import com.pubnub.api.endpoints.BuilderSteps;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.TelemetryManager;
+import com.pubnub.api.managers.token_manager.TokenManager;
 import com.pubnub.api.models.consumer.PNPage;
 import com.pubnub.api.models.consumer.files.PNListFilesResult;
 import com.pubnub.api.models.server.files.ListFilesResult;
@@ -40,8 +41,8 @@ public class ListFiles extends Endpoint<ListFilesResult, PNListFilesResult> {
     public ListFiles(String channel,
                      PubNub pubnubInstance,
                      TelemetryManager telemetry,
-                     RetrofitManager retrofitInstance) {
-        super(pubnubInstance, telemetry, retrofitInstance);
+                     RetrofitManager retrofitInstance, TokenManager tokenManager) {
+        super(pubnubInstance, telemetry, retrofitInstance, tokenManager);
         this.channel = channel;
     }
 
@@ -130,19 +131,22 @@ public class ListFiles extends Endpoint<ListFilesResult, PNListFilesResult> {
         private final PubNub pubnubInstance;
         private final TelemetryManager telemetry;
         private final RetrofitManager retrofitInstance;
+        private final TokenManager tokenManager;
 
         public Builder(PubNub pubnubInstance,
                        TelemetryManager telemetry,
-                       RetrofitManager retrofitInstance) {
+                       RetrofitManager retrofitInstance,
+                       TokenManager tokenManager) {
 
             this.pubnubInstance = pubnubInstance;
             this.telemetry = telemetry;
             this.retrofitInstance = retrofitInstance;
+            this.tokenManager = tokenManager;
         }
 
         @Override
         public ListFiles channel(String channel) {
-            return new ListFiles(channel, pubnubInstance, telemetry, retrofitInstance);
+            return new ListFiles(channel, pubnubInstance, telemetry, retrofitInstance, tokenManager);
         }
     }
 

@@ -18,6 +18,7 @@ import com.pubnub.api.endpoints.objects_api.utils.ListCapabilities.ListCapabilit
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.TelemetryManager;
+import com.pubnub.api.managers.token_manager.TokenManager;
 import com.pubnub.api.models.consumer.PNPage;
 import com.pubnub.api.models.server.objects_api.EntityArrayEnvelope;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -52,7 +53,7 @@ public class ObjectsQueryParametersTest extends BaseObjectApiTest {
         Map<String, String> effectiveParams;
 
         public ExampleTestEndpoint(PubNub pubnubInstance, TelemetryManager telemetry, RetrofitManager retrofitInstance, CompositeParameterEnricher compositeParameterEnricher) {
-            super(pubnubInstance, telemetry, retrofitInstance, compositeParameterEnricher);
+            super(pubnubInstance, telemetry, retrofitInstance, compositeParameterEnricher, new TokenManager());
         }
     }
 

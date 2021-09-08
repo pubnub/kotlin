@@ -3,14 +3,11 @@ package com.pubnub.api.endpoints;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.builder.PubNubErrorBuilder;
-import com.pubnub.api.callbacks.PNCallback;
 import com.pubnub.api.enums.PNOperationType;
-import com.pubnub.api.models.consumer.PNStatus;
+import com.pubnub.api.managers.token_manager.TokenManager;
 import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.ResponseBody;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -43,7 +40,7 @@ public class EndpointTest extends TestHarness {
 
     @Test
     public void testBaseParams() throws PubNubException {
-        Endpoint<Object, Object> endpoint = new Endpoint<Object, Object>(pubnub, null, null) {
+        Endpoint<Object, Object> endpoint = new Endpoint<Object, Object>(pubnub, null, null, new TokenManager()) {
 
             @Override
             protected List<String> getAffectedChannels() {
@@ -117,7 +114,7 @@ public class EndpointTest extends TestHarness {
     }
 
     private Endpoint<Object, Object> testEndpoint(Call<Object> call) {
-        return new Endpoint<Object, Object>(pubnub, null, null) {
+        return new Endpoint<Object, Object>(pubnub, null, null, new TokenManager()) {
 
             @Override
             protected List<String> getAffectedChannels() {

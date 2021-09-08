@@ -11,6 +11,7 @@ import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.SubscriptionManager;
 import com.pubnub.api.managers.TelemetryManager;
+import com.pubnub.api.managers.token_manager.TokenManager;
 import com.pubnub.api.models.consumer.presence.PNSetStateResult;
 import com.pubnub.api.models.server.Envelope;
 import lombok.AccessLevel;
@@ -41,9 +42,12 @@ public class SetState extends Endpoint<Envelope<JsonElement>, PNSetStateResult> 
     private String uuid;
 
 
-    public SetState(PubNub pubnub, SubscriptionManager subscriptionManagerInstance,
-                    TelemetryManager telemetryManager, RetrofitManager retrofit) {
-        super(pubnub, telemetryManager, retrofit);
+    public SetState(PubNub pubnub,
+                    SubscriptionManager subscriptionManagerInstance,
+                    TelemetryManager telemetryManager,
+                    RetrofitManager retrofit,
+                    TokenManager tokenManager) {
+        super(pubnub, telemetryManager, retrofit, tokenManager);
         this.subscriptionManager = subscriptionManagerInstance;
         channels = new ArrayList<>();
         channelGroups = new ArrayList<>();

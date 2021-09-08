@@ -8,6 +8,7 @@ import com.pubnub.api.endpoints.remoteaction.RemoteAction;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.TelemetryManager;
+import com.pubnub.api.managers.token_manager.TokenManager;
 import com.pubnub.api.models.server.files.FileUploadRequestDetails;
 import com.pubnub.api.models.server.files.FormField;
 import com.pubnub.api.models.server.files.GenerateUploadUrlPayload;
@@ -27,8 +28,8 @@ class GenerateUploadUrl extends Endpoint<GeneratedUploadUrlResponse, FileUploadR
                       String fileName,
                       PubNub pubNub,
                       TelemetryManager telemetryManager,
-                      RetrofitManager retrofitManager) {
-        super(pubNub, telemetryManager, retrofitManager);
+                      RetrofitManager retrofitManager, TokenManager tokenManager) {
+        super(pubNub, telemetryManager, retrofitManager, tokenManager);
         this.channel = channel;
         this.fileName = fileName;
     }
@@ -117,16 +118,18 @@ class GenerateUploadUrl extends Endpoint<GeneratedUploadUrlResponse, FileUploadR
         private final PubNub pubNub;
         private final TelemetryManager telemetryManager;
         private final RetrofitManager retrofitManager;
+        private final TokenManager tokenManager;
 
-        Factory(PubNub pubNub, TelemetryManager telemetryManager, RetrofitManager retrofitManager) {
+        Factory(PubNub pubNub, TelemetryManager telemetryManager, RetrofitManager retrofitManager, TokenManager tokenManager) {
 
             this.pubNub = pubNub;
             this.telemetryManager = telemetryManager;
             this.retrofitManager = retrofitManager;
+            this.tokenManager = tokenManager;
         }
 
         RemoteAction<FileUploadRequestDetails> create(String channel, String fileName) {
-            return new GenerateUploadUrl(channel, fileName, pubNub, telemetryManager, retrofitManager);
+            return new GenerateUploadUrl(channel, fileName, pubNub, telemetryManager, retrofitManager, tokenManager);
         }
 
     }

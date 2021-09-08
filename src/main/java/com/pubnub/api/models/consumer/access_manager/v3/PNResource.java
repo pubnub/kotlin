@@ -16,6 +16,9 @@ public abstract class PNResource<T> {
     protected boolean create;
     protected boolean delete;
     protected boolean manage;
+    protected boolean get;
+    protected boolean update;
+    protected boolean join;
 
     protected T read() {
         this.read = true;
@@ -39,6 +42,21 @@ public abstract class PNResource<T> {
 
     protected T manage() {
         this.manage = true;
+        return (T) this;
+    }
+
+    protected T get() {
+        this.get = true;
+        return (T) this;
+    }
+
+    protected T update() {
+        this.update = true;
+        return (T) this;
+    }
+
+    protected T join() {
+        this.join = true;
         return (T) this;
     }
 

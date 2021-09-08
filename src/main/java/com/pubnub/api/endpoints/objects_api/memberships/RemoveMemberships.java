@@ -14,6 +14,7 @@ import com.pubnub.api.endpoints.objects_api.utils.ObjectsBuilderSteps;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.TelemetryManager;
+import com.pubnub.api.managers.token_manager.TokenManager;
 import com.pubnub.api.models.consumer.objects_api.membership.PNChannelMembership;
 import com.pubnub.api.models.consumer.objects_api.membership.PNMembership;
 import com.pubnub.api.models.consumer.objects_api.membership.PNRemoveMembershipResult;
@@ -35,14 +36,16 @@ public abstract class RemoveMemberships extends UUIDEndpoint<RemoveMemberships, 
     RemoveMemberships(final PubNub pubnubInstance,
                       final TelemetryManager telemetry,
                       final RetrofitManager retrofitInstance,
-                      final CompositeParameterEnricher compositeParameterEnricher) {
-        super(pubnubInstance, telemetry, retrofitInstance, compositeParameterEnricher);
+                      final CompositeParameterEnricher compositeParameterEnricher,
+                      final TokenManager tokenManager) {
+        super(pubnubInstance, telemetry, retrofitInstance, compositeParameterEnricher, tokenManager);
     }
 
     public static Builder builder(final PubNub pubnubInstance,
                                   final TelemetryManager telemetry,
-                                  final RetrofitManager retrofitInstance) {
-        return new Builder(pubnubInstance, telemetry, retrofitInstance);
+                                  final RetrofitManager retrofitInstance,
+                                  final TokenManager tokenManager) {
+        return new Builder(pubnubInstance, telemetry, retrofitInstance, tokenManager);
     }
 
     @AllArgsConstructor
@@ -50,11 +53,13 @@ public abstract class RemoveMemberships extends UUIDEndpoint<RemoveMemberships, 
         private final PubNub pubnubInstance;
         private final TelemetryManager telemetry;
         private final RetrofitManager retrofitInstance;
+        private final TokenManager tokenManager;
 
         @Override
         public RemoveMemberships channelMemberships(@NotNull final Collection<PNChannelMembership> channelMemberships) {
             final CompositeParameterEnricher compositeParameterEnricher = CompositeParameterEnricher.createDefault();
-            return new RemoveMembershipsCommand(channelMemberships, pubnubInstance, telemetry, retrofitInstance, compositeParameterEnricher);
+            return new RemoveMembershipsCommand(channelMemberships, pubnubInstance, telemetry, retrofitInstance, compositeParameterEnricher,
+                    tokenManager);
         }
     }
 }
@@ -68,8 +73,9 @@ final class RemoveMembershipsCommand extends RemoveMemberships
                              final PubNub pubNub,
                              final TelemetryManager telemetryManager,
                              final RetrofitManager retrofitManager,
-                             final CompositeParameterEnricher compositeParameterEnricher) {
-        super(pubNub, telemetryManager, retrofitManager, compositeParameterEnricher);
+                             final CompositeParameterEnricher compositeParameterEnricher,
+                             final TokenManager tokenManager) {
+        super(pubNub, telemetryManager, retrofitManager, compositeParameterEnricher, tokenManager);
         this.channels = channels;
     }
 

@@ -2,6 +2,7 @@ package com.pubnub.api.endpoints.objects_api.channel;
 
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.endpoints.objects_api.BaseObjectApiTest;
+import com.pubnub.api.managers.token_manager.TokenManager;
 import com.pubnub.api.models.consumer.objects_api.channel.PNSetChannelMetadataResult;
 import com.pubnub.api.models.server.objects_api.SetChannelMetadataPayload;
 import com.pubnub.api.services.ChannelMetadataService;
@@ -46,7 +47,7 @@ public class SetChannelMetadataTest extends BaseObjectApiTest {
     public void setNameTest() throws PubNubException {
         //given
         final SetChannelMetadata setChannelMetadataUnderTest = SetChannelMetadata
-                .builder(pubNubMock, telemetryManagerMock, retrofitManagerMock)
+                .builder(pubNubMock, telemetryManagerMock, retrofitManagerMock, new TokenManager())
                 .channel(testChannelMetadataId);
         final String testName = RandomStringUtils.randomAlphabetic(20);
 
@@ -69,7 +70,7 @@ public class SetChannelMetadataTest extends BaseObjectApiTest {
     public void setDescriptionTest() throws PubNubException {
         //given
         final SetChannelMetadata setChannelMetadataUnderTest = SetChannelMetadata
-                .builder(pubNubMock, telemetryManagerMock, retrofitManagerMock)
+                .builder(pubNubMock, telemetryManagerMock, retrofitManagerMock, new TokenManager())
                 .channel(testChannelMetadataId);
         final String testDescription = RandomStringUtils.randomAlphabetic(20);
 
@@ -92,7 +93,7 @@ public class SetChannelMetadataTest extends BaseObjectApiTest {
     public void setCustomTest() throws PubNubException {
         //given
         final SetChannelMetadata setChannelMetadataUnderTest = SetChannelMetadata
-                .builder(pubNubMock, telemetryManagerMock, retrofitManagerMock)
+                .builder(pubNubMock, telemetryManagerMock, retrofitManagerMock, new TokenManager())
                 .channel(testChannelMetadataId);
 
         final Map<String, Object> custom = new HashMap<>();

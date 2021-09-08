@@ -11,6 +11,7 @@ import com.pubnub.api.endpoints.files.requiredparambuilder.FilesBuilderSteps.Fil
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.TelemetryManager;
+import com.pubnub.api.managers.token_manager.TokenManager;
 import com.pubnub.api.models.consumer.files.PNDeleteFileResult;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -29,8 +30,8 @@ public class DeleteFile extends Endpoint<Void, PNDeleteFileResult> {
                       String fileId,
                       PubNub pubnubInstance,
                       TelemetryManager telemetry,
-                      RetrofitManager retrofitInstance) {
-        super(pubnubInstance, telemetry, retrofitInstance);
+                      RetrofitManager retrofitInstance, TokenManager tokenManager) {
+        super(pubnubInstance, telemetry, retrofitInstance, tokenManager);
         this.channel = channel;
         this.fileName = fileName;
         this.fileId = fileId;
@@ -98,8 +99,9 @@ public class DeleteFile extends Endpoint<Void, PNDeleteFileResult> {
 
     public static Builder builder(PubNub pubNub,
                                   TelemetryManager telemetryManager,
-                                  RetrofitManager retrofitManager) {
+                                  RetrofitManager retrofitManager,
+                                  TokenManager tokenManager) {
         return new Builder(ChannelFileNameFileIdBuilder.create((channel, fileName, fileId) ->
-                new DeleteFile(channel, fileName, fileId, pubNub, telemetryManager, retrofitManager)));
+                new DeleteFile(channel, fileName, fileId, pubNub, telemetryManager, retrofitManager, tokenManager)));
     }
 }

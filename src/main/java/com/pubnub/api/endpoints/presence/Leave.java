@@ -8,6 +8,7 @@ import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.TelemetryManager;
+import com.pubnub.api.managers.token_manager.TokenManager;
 import com.pubnub.api.models.server.Envelope;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -25,8 +26,11 @@ public class Leave extends Endpoint<Envelope, Boolean> {
     @Setter
     private List<String> channelGroups;
 
-    public Leave(PubNub pubnub, TelemetryManager telemetryManager, RetrofitManager retrofit) {
-        super(pubnub, telemetryManager, retrofit);
+    public Leave(PubNub pubnub,
+                 TelemetryManager telemetryManager,
+                 RetrofitManager retrofit,
+                 TokenManager tokenManager) {
+        super(pubnub, telemetryManager, retrofit, tokenManager);
         channels = new ArrayList<>();
         channelGroups = new ArrayList<>();
     }

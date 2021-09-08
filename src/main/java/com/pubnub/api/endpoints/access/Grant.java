@@ -10,6 +10,7 @@ import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.managers.MapperManager;
 import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.TelemetryManager;
+import com.pubnub.api.managers.token_manager.TokenManager;
 import com.pubnub.api.models.consumer.access_manager.PNAccessManagerGrantResult;
 import com.pubnub.api.models.consumer.access_manager.PNAccessManagerKeyData;
 import com.pubnub.api.models.server.Envelope;
@@ -56,8 +57,11 @@ public class Grant extends Endpoint<Envelope<AccessManagerGrantPayload>, PNAcces
     @Setter
     private List<String> uuids = Collections.emptyList();
 
-    public Grant(PubNub pubnub, TelemetryManager telemetryManager, RetrofitManager retrofit) {
-        super(pubnub, telemetryManager, retrofit);
+    public Grant(PubNub pubnub,
+                 TelemetryManager telemetryManager,
+                 RetrofitManager retrofit,
+                 TokenManager tokenManager) {
+        super(pubnub, telemetryManager, retrofit, tokenManager);
         authKeys = new ArrayList<>();
         channels = new ArrayList<>();
         channelGroups = new ArrayList<>();

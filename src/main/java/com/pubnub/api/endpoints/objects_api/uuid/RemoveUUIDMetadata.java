@@ -8,6 +8,7 @@ import com.pubnub.api.endpoints.objects_api.UUIDEndpoint;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.TelemetryManager;
+import com.pubnub.api.managers.token_manager.TokenManager;
 import com.pubnub.api.models.consumer.objects_api.uuid.PNRemoveUUIDMetadataResult;
 import com.pubnub.api.models.server.objects_api.EntityEnvelope;
 import retrofit2.Call;
@@ -20,8 +21,9 @@ public class RemoveUUIDMetadata extends UUIDEndpoint<RemoveUUIDMetadata, EntityE
 
     public RemoveUUIDMetadata(final PubNub pubnubInstance,
                               final TelemetryManager telemetry,
-                              final RetrofitManager retrofitInstance) {
-        super(pubnubInstance, telemetry, retrofitInstance, CompositeParameterEnricher.createDefault());
+                              final RetrofitManager retrofitInstance,
+                              TokenManager tokenManager) {
+        super(pubnubInstance, telemetry, retrofitInstance, CompositeParameterEnricher.createDefault(), tokenManager);
     }
 
     @Override

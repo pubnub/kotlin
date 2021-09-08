@@ -10,6 +10,7 @@ import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.enums.PNStatusCategory;
 import com.pubnub.api.managers.MapperManager;
 import com.pubnub.api.managers.RetrofitManager;
+import com.pubnub.api.managers.token_manager.TokenManager;
 import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.server.SubscribeEnvelope;
 import lombok.Setter;
@@ -70,8 +71,8 @@ public class Subscribe extends Endpoint<SubscribeEnvelope, SubscribeEnvelope> {
      *
      * @param pubnub supplied pubnub instance.
      */
-    public Subscribe(PubNub pubnub, RetrofitManager retrofit) {
-        super(pubnub, null, retrofit);
+    public Subscribe(PubNub pubnub, RetrofitManager retrofit, TokenManager tokenManager) {
+        super(pubnub, null, retrofit, tokenManager);
         channels = new ArrayList<>();
         channelGroups = new ArrayList<>();
     }

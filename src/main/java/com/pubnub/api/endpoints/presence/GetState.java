@@ -10,6 +10,7 @@ import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.managers.MapperManager;
 import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.TelemetryManager;
+import com.pubnub.api.managers.token_manager.TokenManager;
 import com.pubnub.api.models.consumer.presence.PNGetStateResult;
 import com.pubnub.api.models.server.Envelope;
 import lombok.Setter;
@@ -29,8 +30,11 @@ public class GetState extends Endpoint<Envelope<JsonElement>, PNGetStateResult> 
     @Setter
     private String uuid;
 
-    public GetState(PubNub pubnub, TelemetryManager telemetryManager, RetrofitManager retrofit) {
-        super(pubnub, telemetryManager, retrofit);
+    public GetState(PubNub pubnub,
+                    TelemetryManager telemetryManager,
+                    RetrofitManager retrofit,
+                    TokenManager tokenManager) {
+        super(pubnub, telemetryManager, retrofit, tokenManager);
         channels = new ArrayList<>();
         channelGroups = new ArrayList<>();
     }

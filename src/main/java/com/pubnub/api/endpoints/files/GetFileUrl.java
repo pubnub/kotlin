@@ -13,6 +13,7 @@ import com.pubnub.api.endpoints.files.requiredparambuilder.ChannelFileNameFileId
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.TelemetryManager;
+import com.pubnub.api.managers.token_manager.TokenManager;
 import com.pubnub.api.models.consumer.PNErrorData;
 import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.files.PNFileUrlResult;
@@ -41,8 +42,8 @@ public class GetFileUrl extends Endpoint<ResponseBody, PNFileUrlResult> {
                       String fileId,
                       PubNub pubnubInstance,
                       TelemetryManager telemetry,
-                      RetrofitManager retrofitInstance) {
-        super(pubnubInstance, telemetry, retrofitInstance);
+                      RetrofitManager retrofitInstance, TokenManager tokenManager) {
+        super(pubnubInstance, telemetry, retrofitInstance, tokenManager);
         this.channel = channel;
         this.fileId = fileId;
         this.fileName = fileName;
@@ -142,8 +143,9 @@ public class GetFileUrl extends Endpoint<ResponseBody, PNFileUrlResult> {
 
     public static Builder builder(PubNub pubNub,
                                   TelemetryManager telemetryManager,
-                                  RetrofitManager retrofitManager) {
+                                  RetrofitManager retrofitManager,
+                                  TokenManager tokenManager) {
         return new Builder(ChannelFileNameFileIdBuilder.create((channel, fileName, fileId) ->
-                new GetFileUrl(channel, fileName, fileId, pubNub, telemetryManager, retrofitManager)));
+                new GetFileUrl(channel, fileName, fileId, pubNub, telemetryManager, retrofitManager, tokenManager)));
     }
 }

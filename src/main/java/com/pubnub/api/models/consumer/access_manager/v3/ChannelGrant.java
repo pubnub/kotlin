@@ -32,4 +32,26 @@ public class ChannelGrant extends PNResource<ChannelGrant> {
     public ChannelGrant write() {
         return super.write();
     }
+
+    @Override
+    public ChannelGrant get() {
+        return super.get();
+    }
+
+    @Override
+    public ChannelGrant manage() {
+        return super.manage();
+    }
+
+    @Override
+    public ChannelGrant update() {
+        return super.update();
+    }
+
+    @Override
+    public ChannelGrant join() {
+        return super.join();
+    }
+
+
 }

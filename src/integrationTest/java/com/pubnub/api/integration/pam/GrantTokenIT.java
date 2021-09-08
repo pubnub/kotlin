@@ -3,6 +3,7 @@ package com.pubnub.api.integration.pam;
 import com.pubnub.api.PNConfiguration;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
+import com.pubnub.api.enums.PNLogVerbosity;
 import com.pubnub.api.integration.util.BaseIntegrationTest;
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant;
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant;
@@ -20,6 +21,7 @@ public class GrantTokenIT extends BaseIntegrationTest {
     @Test
     public void happyPath() throws PubNubException {
         //given
+        pubNubUnderTest.getConfiguration().setLogVerbosity(PNLogVerbosity.BODY);
         final int expectedTTL = 1337;
         final String expectedChannelResourceName = "channelResource";
         final String expectedChannelPattern = "channel.*";
@@ -40,13 +42,13 @@ public class GrantTokenIT extends BaseIntegrationTest {
 
         //then
         assertEquals(expectedTTL, pnToken.getTtl());
-        assertEquals(new PNToken.PNResourcePermissions(false, false, false, false, true),
+        assertEquals(new PNToken.PNResourcePermissions(false, false, false, false, false, false, false),
                 pnToken.getResources().getChannels().get(expectedChannelResourceName));
-        assertEquals(new PNToken.PNResourcePermissions(false, true, false, false, false),
+        assertEquals(new PNToken.PNResourcePermissions(false, true, false, false, false, false, false),
                 pnToken.getResources().getChannelGroups().get(expectedChannelGroupResourceId));
-        assertEquals(new PNToken.PNResourcePermissions(false, false, true, false, false),
+        assertEquals(new PNToken.PNResourcePermissions(false, false, true, false, false, false, false),
                 pnToken.getPatterns().getChannels().get(expectedChannelPattern));
-        assertEquals(new PNToken.PNResourcePermissions(false, false, false, true, false),
+        assertEquals(new PNToken.PNResourcePermissions(false, false, false, true, false, false, false),
                 pnToken.getPatterns().getChannelGroups().get(expectedChannelGroupPattern));
     }
 

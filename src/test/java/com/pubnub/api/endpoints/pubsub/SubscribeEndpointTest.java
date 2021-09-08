@@ -6,6 +6,7 @@ import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.endpoints.TestHarness;
 import com.pubnub.api.managers.RetrofitManager;
+import com.pubnub.api.managers.token_manager.TokenManager;
 import com.pubnub.api.models.server.SubscribeEnvelope;
 import com.pubnub.api.models.server.SubscribeMessage;
 import org.junit.After;
@@ -43,7 +44,7 @@ public class SubscribeEndpointTest extends TestHarness {
     public void beforeEach() throws IOException {
         pubnub = this.createPubNubInstance();
         RetrofitManager retrofitManager = new RetrofitManager(pubnub);
-        instance = new Subscribe(pubnub, retrofitManager);
+        instance = new Subscribe(pubnub, retrofitManager, new TokenManager());
         wireMockRule.start();
     }
 

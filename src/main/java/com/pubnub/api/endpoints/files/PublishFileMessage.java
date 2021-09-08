@@ -14,6 +14,7 @@ import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.managers.MapperManager;
 import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.TelemetryManager;
+import com.pubnub.api.managers.token_manager.TokenManager;
 import com.pubnub.api.models.consumer.files.PNBaseFile;
 import com.pubnub.api.models.consumer.files.PNPublishFileMessageResult;
 import com.pubnub.api.models.server.files.FileUploadNotification;
@@ -50,8 +51,9 @@ public class PublishFileMessage extends Endpoint<List<Object>, PNPublishFileMess
                               String fileId,
                               PubNub pubnubInstance,
                               TelemetryManager telemetry,
-                              RetrofitManager retrofitInstance) {
-        super(pubnubInstance, telemetry, retrofitInstance);
+                              RetrofitManager retrofitInstance,
+                              TokenManager tokenManager) {
+        super(pubnubInstance, telemetry, retrofitInstance, tokenManager);
         this.channel = channel;
         this.pnFile = new PNBaseFile(fileId, fileName);
         this.filesService = retrofitInstance.getFilesService();
@@ -149,8 +151,9 @@ public class PublishFileMessage extends Endpoint<List<Object>, PNPublishFileMess
 
     public static Builder builder(PubNub pubNub,
                                   TelemetryManager telemetryManager,
-                                  RetrofitManager retrofitManager) {
+                                  RetrofitManager retrofitManager,
+                                  TokenManager tokenManager) {
         return new Builder(ChannelFileNameFileIdBuilder.create((channel, fileName, fileId) ->
-                new PublishFileMessage(channel, fileName, fileId, pubNub, telemetryManager, retrofitManager)));
+                new PublishFileMessage(channel, fileName, fileId, pubNub, telemetryManager, retrofitManager, tokenManager)));
     }
 }

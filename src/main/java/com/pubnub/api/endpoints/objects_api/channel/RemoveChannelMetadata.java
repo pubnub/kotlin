@@ -9,6 +9,7 @@ import com.pubnub.api.endpoints.objects_api.CompositeParameterEnricher;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.TelemetryManager;
+import com.pubnub.api.managers.token_manager.TokenManager;
 import com.pubnub.api.models.consumer.objects_api.channel.PNRemoveChannelMetadataResult;
 import com.pubnub.api.models.server.objects_api.EntityEnvelope;
 import lombok.AllArgsConstructor;
@@ -19,10 +20,12 @@ import java.util.Map;
 
 public class RemoveChannelMetadata extends ChannelEnpoint<EntityEnvelope<JsonElement>, PNRemoveChannelMetadataResult> {
     RemoveChannelMetadata(final String channel,
-                                 final PubNub pubnubInstance,
-                                 final TelemetryManager telemetry,
-                                 final RetrofitManager retrofitInstance) {
-        super(channel, pubnubInstance, telemetry, retrofitInstance, CompositeParameterEnricher.createDefault());
+                          final PubNub pubnubInstance,
+                          final TelemetryManager telemetry,
+                          final RetrofitManager retrofitInstance,
+                          final TokenManager tokenManager) {
+        super(channel, pubnubInstance, telemetry, retrofitInstance, CompositeParameterEnricher.createDefault(),
+                tokenManager);
     }
 
     @Override
@@ -46,8 +49,9 @@ public class RemoveChannelMetadata extends ChannelEnpoint<EntityEnvelope<JsonEle
 
     public static Builder builder(final PubNub pubnubInstance,
                                   final TelemetryManager telemetry,
-                                  final RetrofitManager retrofitInstance) {
-        return new Builder(pubnubInstance, telemetry, retrofitInstance);
+                                  final RetrofitManager retrofitInstance,
+                                  final TokenManager tokenManager) {
+        return new Builder(pubnubInstance, telemetry, retrofitInstance, tokenManager);
     }
 
     @AllArgsConstructor
@@ -55,10 +59,11 @@ public class RemoveChannelMetadata extends ChannelEnpoint<EntityEnvelope<JsonEle
         private final PubNub pubnubInstance;
         private final TelemetryManager telemetry;
         private final RetrofitManager retrofitInstance;
+        private final TokenManager tokenManager;
 
         @Override
         public RemoveChannelMetadata channel(final String channel) {
-            return new RemoveChannelMetadata(channel, pubnubInstance, telemetry, retrofitInstance);
+            return new RemoveChannelMetadata(channel, pubnubInstance, telemetry, retrofitInstance, tokenManager);
         }
     }
 

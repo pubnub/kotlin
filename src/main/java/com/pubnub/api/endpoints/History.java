@@ -9,6 +9,7 @@ import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.managers.MapperManager;
 import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.TelemetryManager;
+import com.pubnub.api.managers.token_manager.TokenManager;
 import com.pubnub.api.models.consumer.history.PNHistoryItemResult;
 import com.pubnub.api.models.consumer.history.PNHistoryResult;
 import com.pubnub.api.vendor.Crypto;
@@ -41,8 +42,11 @@ public class History extends Endpoint<JsonElement, PNHistoryResult> {
     @Setter
     private Boolean includeMeta;
 
-    public History(PubNub pubnub, TelemetryManager telemetryManager, RetrofitManager retrofit) {
-        super(pubnub, telemetryManager, retrofit);
+    public History(PubNub pubnub,
+                   TelemetryManager telemetryManager,
+                   RetrofitManager retrofit,
+                   TokenManager tokenManager) {
+        super(pubnub, telemetryManager, retrofit, tokenManager);
     }
 
     @Override

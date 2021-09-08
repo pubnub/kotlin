@@ -2,21 +2,21 @@ package com.pubnub.api.integration.util;
 
 import org.aeonbits.owner.Config;
 
-@Config.Sources({"file:ittest.properties"})
+@Config.Sources({"file:test.properties"})
 public interface ITTestConfig extends Config {
 
-    @Config.Key("SUB_KEY")
+    @Config.Key("subKey")
     String subscribeKey();
 
-    @Config.Key("PUB_KEY")
+    @Config.Key("pubKey")
     String publishKey();
 
-    @Config.Key("PAM_SUB_KEY")
+    @Config.Key("pamSubKey")
     String pamSubKey();
 
-    @Config.Key("PAM_PUB_KEY")
+    @Config.Key("pamPubKey")
     String pamPubKey();
 
-    @Config.Key("PAM_SEC_KEY")
+    @Config.Key("pamSecKey")
     String pamSecKey();
 }

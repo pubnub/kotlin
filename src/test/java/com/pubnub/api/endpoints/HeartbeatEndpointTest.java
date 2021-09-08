@@ -6,6 +6,7 @@ import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.endpoints.presence.Heartbeat;
 import com.pubnub.api.managers.RetrofitManager;
+import com.pubnub.api.managers.token_manager.TokenManager;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -37,7 +38,7 @@ public class HeartbeatEndpointTest extends TestHarness {
     public void beforeEach() throws IOException {
         pubnub = this.createPubNubInstance();
         RetrofitManager retrofitManager = new RetrofitManager(pubnub);
-        partialHeartbeat = new Heartbeat(pubnub, null, retrofitManager);
+        partialHeartbeat = new Heartbeat(pubnub, null, retrofitManager, new TokenManager());
         wireMockRule.start();
     }
 

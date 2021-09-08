@@ -12,7 +12,6 @@ import org.junit.Test;
 import java.io.IOException;
 import java.util.Collections;
 
-import static com.pubnub.api.builder.PubNubErrorBuilder.PNERR_PERMISSION_MISSING;
 import static com.pubnub.api.builder.PubNubErrorBuilder.PNERR_RESOURCES_MISSING;
 import static com.pubnub.api.builder.PubNubErrorBuilder.PNERR_SECRET_KEY_MISSING;
 import static com.pubnub.api.builder.PubNubErrorBuilder.PNERR_SUBSCRIBE_KEY_MISSING;
@@ -47,30 +46,6 @@ public class GrantTokenEndpointTest extends TestHarness {
                     .sync();
         } catch (PubNubException e) {
             assertEquals(PNERR_TTL_MISSING, e.getPubnubError().getErrorCode());
-        }
-    }
-
-    @Test
-    public void validate_ChannelResourceMissingAnyPermissions() {
-        try {
-            pubnub.grantToken()
-                    .ttl(1)
-                    .channels(Collections.singletonList(ChannelGrant.name("test")))
-                    .sync();
-        } catch (PubNubException e) {
-            assertEquals(PNERR_PERMISSION_MISSING, e.getPubnubError().getErrorCode());
-        }
-    }
-
-    @Test
-    public void validate_ChannelGroupPatterMissingAnyPermissions() {
-        try {
-            pubnub.grantToken()
-                    .ttl(1)
-                    .channelGroups(Collections.singletonList(ChannelGroupGrant.id("test")))
-                    .sync();
-        } catch (PubNubException e) {
-            assertEquals(PNERR_PERMISSION_MISSING, e.getPubnubError().getErrorCode());
         }
     }
 

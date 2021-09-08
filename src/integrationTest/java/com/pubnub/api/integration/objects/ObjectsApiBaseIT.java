@@ -27,6 +27,6 @@ public abstract class ObjectsApiBaseIT {
 
     @Before
     public void assumeTestsAreConfiguredProperly() {
-        assumeThat("Subscription key must be set in ittest.properties", itTestConfig.subscribeKey(), not(isEmptyOrNullString()));
+        assumeThat("Subscription key must be set in test.properties", itTestConfig.subscribeKey(), not(isEmptyOrNullString()));
     }
 }

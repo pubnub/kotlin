@@ -13,6 +13,7 @@ import com.pubnub.api.endpoints.objects_api.utils.ListCapabilities.ListCapabilit
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.TelemetryManager;
+import com.pubnub.api.managers.token_manager.TokenManager;
 import com.pubnub.api.models.consumer.objects_api.membership.PNGetMembershipsResult;
 import com.pubnub.api.models.consumer.objects_api.membership.PNMembership;
 import com.pubnub.api.models.server.objects_api.EntityArrayEnvelope;
@@ -28,15 +29,18 @@ public abstract class GetMemberships extends UUIDEndpoint<GetMemberships, Entity
     public GetMemberships(final PubNub pubnubInstance,
                           final TelemetryManager telemetry,
                           final RetrofitManager retrofitInstance,
-                          final CompositeParameterEnricher compositeParameterEnricher) {
-        super(pubnubInstance, telemetry, retrofitInstance, compositeParameterEnricher);
+                          final CompositeParameterEnricher compositeParameterEnricher,
+                          final TokenManager tokenManager) {
+        super(pubnubInstance, telemetry, retrofitInstance, compositeParameterEnricher, tokenManager);
     }
 
     public static GetMemberships create(final PubNub pubnubInstance,
                                         final TelemetryManager telemetry,
-                                        final RetrofitManager retrofitInstance) {
+                                        final RetrofitManager retrofitInstance,
+                                        final TokenManager tokenManager) {
         final CompositeParameterEnricher compositeParameterEnricher = CompositeParameterEnricher.createDefault();
-        return new GetMembershipsCommand(pubnubInstance, telemetry, retrofitInstance, compositeParameterEnricher);
+        return new GetMembershipsCommand(pubnubInstance, telemetry, retrofitInstance, compositeParameterEnricher,
+                tokenManager);
     }
 }
 
@@ -46,8 +50,9 @@ final class GetMembershipsCommand extends GetMemberships
     GetMembershipsCommand(final PubNub pubnubInstance,
                           final TelemetryManager telemetry,
                           final RetrofitManager retrofitInstance,
-                          final CompositeParameterEnricher compositeParameterEnricher) {
-        super(pubnubInstance, telemetry, retrofitInstance, compositeParameterEnricher);
+                          final CompositeParameterEnricher compositeParameterEnricher,
+                          final TokenManager tokenManager) {
+        super(pubnubInstance, telemetry, retrofitInstance, compositeParameterEnricher, tokenManager);
     }
 
     @Override

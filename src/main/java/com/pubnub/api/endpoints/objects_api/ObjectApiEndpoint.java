@@ -6,6 +6,7 @@ import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.TelemetryManager;
+import com.pubnub.api.managers.token_manager.TokenManager;
 import lombok.Getter;
 import retrofit2.Call;
 
@@ -21,10 +22,11 @@ public abstract class ObjectApiEndpoint<INPUT, OUTPUT> extends Endpoint<INPUT, O
     private final CompositeParameterEnricher compositeParameterEnricher;
 
     protected ObjectApiEndpoint(final PubNub pubnubInstance,
-                             final TelemetryManager telemetry,
-                             final RetrofitManager retrofitInstance,
-                             final CompositeParameterEnricher compositeParameterEnricher) {
-        super(pubnubInstance, telemetry, retrofitInstance);
+                                final TelemetryManager telemetry,
+                                final RetrofitManager retrofitInstance,
+                                final CompositeParameterEnricher compositeParameterEnricher,
+                                final TokenManager tokenManager) {
+        super(pubnubInstance, telemetry, retrofitInstance, tokenManager);
         this.compositeParameterEnricher = compositeParameterEnricher;
     }
 

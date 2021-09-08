@@ -14,6 +14,7 @@ import com.pubnub.api.endpoints.objects_api.utils.ObjectsBuilderSteps;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.TelemetryManager;
+import com.pubnub.api.managers.token_manager.TokenManager;
 import com.pubnub.api.models.consumer.objects_api.member.PNManageChannelMembersResult;
 import com.pubnub.api.models.consumer.objects_api.member.PNMembers;
 import com.pubnub.api.models.consumer.objects_api.member.PNUUID;
@@ -30,17 +31,19 @@ import java.util.Map;
 public abstract class ManageChannelMembers extends ChannelEnpoint<EntityArrayEnvelope<PNMembers>, PNManageChannelMembersResult>
         implements CustomIncludeAware<ManageChannelMembers>, UUIDIncludeAware<ManageChannelMembers>, ListCapabilitiesAware<ManageChannelMembers> {
     ManageChannelMembers(final String channel,
-                                   final PubNub pubnubInstance,
-                                   final TelemetryManager telemetry,
-                                   final RetrofitManager retrofitInstance,
-                                   final CompositeParameterEnricher compositeParameterEnricher) {
-        super(channel, pubnubInstance, telemetry, retrofitInstance, compositeParameterEnricher);
+                         final PubNub pubnubInstance,
+                         final TelemetryManager telemetry,
+                         final RetrofitManager retrofitInstance,
+                         final CompositeParameterEnricher compositeParameterEnricher,
+                         final TokenManager tokenManager) {
+        super(channel, pubnubInstance, telemetry, retrofitInstance, compositeParameterEnricher, tokenManager);
     }
 
     public static Builder builder(final PubNub pubnubInstance,
                                   final TelemetryManager telemetry,
-                                  final RetrofitManager retrofitInstance) {
-        return new Builder(pubnubInstance, telemetry, retrofitInstance);
+                                  final RetrofitManager retrofitInstance,
+                                  final TokenManager tokenManager) {
+        return new Builder(pubnubInstance, telemetry, retrofitInstance, tokenManager);
     }
 
     @AllArgsConstructor
@@ -48,6 +51,7 @@ public abstract class ManageChannelMembers extends ChannelEnpoint<EntityArrayEnv
         private final PubNub pubnubInstance;
         private final TelemetryManager telemetry;
         private final RetrofitManager retrofitInstance;
+        private final TokenManager tokenManager;
 
         @Override
         public ObjectsBuilderSteps.RemoveOrSetStep<ManageChannelMembers, PNUUID> channel(final String channel) {
@@ -65,7 +69,8 @@ public abstract class ManageChannelMembers extends ChannelEnpoint<EntityArrayEnv
                                     pubnubInstance,
                                     telemetry,
                                     retrofitInstance,
-                                    compositeParameterEnricher);
+                                    compositeParameterEnricher,
+                                    tokenManager);
                         }
                     };
                 }
@@ -83,7 +88,8 @@ public abstract class ManageChannelMembers extends ChannelEnpoint<EntityArrayEnv
                                     pubnubInstance,
                                     telemetry,
                                     retrofitInstance,
-                                    compositeParameterEnricher);
+                                    compositeParameterEnricher,
+                                    tokenManager);
                         }
                     };
                 }
@@ -100,13 +106,14 @@ final class ManageChannelMembersCommand extends ManageChannelMembers implements
     private final Collection<PNUUID> uuidsToRemove;
 
     ManageChannelMembersCommand(final String channel,
-                                          final Collection<PNUUID> uuidsToSet,
-                                          final Collection<PNUUID> uuidsToRemove,
-                                          final PubNub pubnubInstance,
-                                          final TelemetryManager telemetry,
-                                          final RetrofitManager retrofitInstance,
-                                          final CompositeParameterEnricher compositeParameterEnricher) {
-        super(channel, pubnubInstance, telemetry, retrofitInstance, compositeParameterEnricher);
+                                final Collection<PNUUID> uuidsToSet,
+                                final Collection<PNUUID> uuidsToRemove,
+                                final PubNub pubnubInstance,
+                                final TelemetryManager telemetry,
+                                final RetrofitManager retrofitInstance,
+                                final CompositeParameterEnricher compositeParameterEnricher,
+                                final TokenManager tokenManager) {
+        super(channel, pubnubInstance, telemetry, retrofitInstance, compositeParameterEnricher, tokenManager);
         this.uuidsToSet = uuidsToSet;
         this.uuidsToRemove = uuidsToRemove;
     }

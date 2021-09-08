@@ -21,12 +21,17 @@ import com.pubnub.api.endpoints.TestHarness;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.enums.PNPushType;
 import com.pubnub.api.models.consumer.PNStatus;
+import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant;
+import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant;
+import com.pubnub.api.models.consumer.access_manager.v3.PNGrantTokenResult;
+import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant;
 import com.pubnub.api.models.consumer.push.PNPushAddChannelResult;
 import com.pubnub.api.models.consumer.push.PNPushRemoveAllChannelsResult;
 import com.pubnub.api.models.consumer.push.PNPushRemoveChannelResult;
 
 import org.awaitility.Awaitility;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -34,6 +39,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;

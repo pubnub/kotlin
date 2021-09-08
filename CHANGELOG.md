@@ -1,7 +1,12 @@
+## [v5.2.0](https://github.com/pubnub/java/releases/tag/v5.2.0)
+September-08-2021
+
+[Full Changelog](https://github.com/pubnub/java/compare/v5.1.1...v5.2.0)
+
+- 🌟️ Extend grantToken method to enable control of Objects API permission. Enhance granularity of permission control to enable permissions per UUID. 
+
 ## [v5.1.1](https://github.com/pubnub/java/releases/tag/v5.1.1)
 July-13-2021
-
-[Full Changelog](https://github.com/pubnub/java/compare/v5.1.0...v5.1.1)
 
 - 🐛 Update Jackson libraries to avoid known vulnerabilities. 
 

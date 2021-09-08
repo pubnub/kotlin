@@ -1,9 +1,9 @@
 name: java
-version: 5.1.1
+version: 5.2.0
 schema: 1
 scm: github.com/pubnub/java
 files:
-  - build/libs/pubnub-gson-5.1.1-all.jar
+  - build/libs/pubnub-gson-5.2.0-all.jar
 sdks:
   - 
       type: library
@@ -234,6 +234,11 @@ sdks:
                   is-required: Required
 
 changelog:
+  - version: v5.2.0
+    date: 2021-09-08
+    changes:
+      - type: feature
+        text: "Extend grantToken method to enable control of Objects API permission. Enhance granularity of permission control to enable permissions per UUID."
   - version: v5.1.1
     date: 2021-07-13
     changes:

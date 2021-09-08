@@ -5,6 +5,7 @@ import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.TelemetryManager;
+import com.pubnub.api.managers.token_manager.TokenManager;
 import com.pubnub.api.models.server.FetchMessagesEnvelope;
 import com.pubnub.api.services.HistoryService;
 import okhttp3.Request;
@@ -57,7 +58,8 @@ public class HistoryBatchEndpointTest {
     @Test
     public void forSingleChannelFetchMessagesAlwaysPassMaxWhenItIsInBound() throws PubNubException {
         //given
-        final FetchMessages fetchMessagesUnderTest = new FetchMessages(pubnub, telemetryManager, retrofitManager);
+        final FetchMessages fetchMessagesUnderTest = new FetchMessages(pubnub, telemetryManager, retrofitManager,
+                new TokenManager());
 
         final int maximumPerChannel = randomInt(MAX_FOR_FETCH_MESSAGES);
         //when
@@ -78,7 +80,8 @@ public class HistoryBatchEndpointTest {
     @Test
     public void forSingleChannelFetchMessagesAlwaysPassDefaultWhenNonPositiveMaxSpecified() throws PubNubException {
         //given
-        final FetchMessages fetchMessagesUnderTest = new FetchMessages(pubnub, telemetryManager, retrofitManager);
+        final FetchMessages fetchMessagesUnderTest = new FetchMessages(pubnub, telemetryManager, retrofitManager,
+                new TokenManager());
 
         final int maximumPerChannel = -(randomInt(100) - 1);
         //when
@@ -100,7 +103,8 @@ public class HistoryBatchEndpointTest {
     @Test
     public void forSingleChannelFetchMessagesAlwaysPassDefaultWhenMaxNotSpecified() throws PubNubException {
         //given
-        final FetchMessages fetchMessagesUnderTest = new FetchMessages(pubnub, telemetryManager, retrofitManager);
+        final FetchMessages fetchMessagesUnderTest = new FetchMessages(pubnub, telemetryManager, retrofitManager,
+                new TokenManager());
 
         //when
         fetchMessagesUnderTest
@@ -119,7 +123,8 @@ public class HistoryBatchEndpointTest {
     @Test
     public void forSingleChannelFetchMessagesAlwaysPassDefaultMaxWhenMaxExceeds() throws PubNubException {
         //given
-        final FetchMessages fetchMessagesUnderTest = new FetchMessages(pubnub, telemetryManager, retrofitManager);
+        final FetchMessages fetchMessagesUnderTest = new FetchMessages(pubnub, telemetryManager, retrofitManager,
+                new TokenManager());
 
         final int maximumPerChannel = MAX_FOR_FETCH_MESSAGES + randomInt(MAX_FOR_FETCH_MESSAGES);
         //when
@@ -140,7 +145,8 @@ public class HistoryBatchEndpointTest {
     @Test
     public void forMultipleChannelsFetchMessagesAlwaysPassMaxWhenItIsInBound() throws PubNubException {
         //given
-        final FetchMessages fetchMessagesUnderTest = new FetchMessages(pubnub, telemetryManager, retrofitManager);
+        final FetchMessages fetchMessagesUnderTest = new FetchMessages(pubnub, telemetryManager, retrofitManager,
+                new TokenManager());
 
         final int maximumPerChannel = randomInt(MULTIPLE_CHANNELS_MAX_FOR_FETCH_MESSAGES);
         //when
@@ -161,7 +167,8 @@ public class HistoryBatchEndpointTest {
     @Test
     public void forMultipleChannelsFetchMessagesAlwaysPassDefaultWhenNonPositiveMaxSpecified() throws PubNubException {
         //given
-        final FetchMessages fetchMessagesUnderTest = new FetchMessages(pubnub, telemetryManager, retrofitManager);
+        final FetchMessages fetchMessagesUnderTest = new FetchMessages(pubnub, telemetryManager, retrofitManager,
+                new TokenManager());
 
         final int maximumPerChannel = -(randomInt(100) - 1);
         //when
@@ -183,7 +190,8 @@ public class HistoryBatchEndpointTest {
     @Test
     public void forMultipleChannelsFetchMessagesAlwaysPassDefaultWhenMaxNotSpecified() throws PubNubException {
         //given
-        final FetchMessages fetchMessagesUnderTest = new FetchMessages(pubnub, telemetryManager, retrofitManager);
+        final FetchMessages fetchMessagesUnderTest = new FetchMessages(pubnub, telemetryManager, retrofitManager,
+                new TokenManager());
 
         //when
         fetchMessagesUnderTest
@@ -202,7 +210,8 @@ public class HistoryBatchEndpointTest {
     @Test
     public void forMultipleChannelsFetchMessagesAlwaysPassDefaultMaxWhenMaxExceeds() throws PubNubException {
         //given
-        final FetchMessages fetchMessagesUnderTest = new FetchMessages(pubnub, telemetryManager, retrofitManager);
+        final FetchMessages fetchMessagesUnderTest = new FetchMessages(pubnub, telemetryManager, retrofitManager,
+                new TokenManager());
 
         final int maximumPerChannel = MULTIPLE_CHANNELS_MAX_FOR_FETCH_MESSAGES + randomInt(MULTIPLE_CHANNELS_MAX_FOR_FETCH_MESSAGES);
         //when
@@ -223,7 +232,8 @@ public class HistoryBatchEndpointTest {
     @Test
     public void forSingleChannelFetchMessagesWithActionAlwaysPassMaxWhenItIsInBound() throws PubNubException {
         //given
-        final FetchMessages fetchMessagesUnderTest = new FetchMessages(pubnub, telemetryManager, retrofitManager);
+        final FetchMessages fetchMessagesUnderTest = new FetchMessages(pubnub, telemetryManager, retrofitManager,
+                new TokenManager());
 
         final int maximumPerChannel = randomInt(MAX_FOR_FETCH_MESSAGES_WITH_ACTIONS);
         //when
@@ -245,7 +255,8 @@ public class HistoryBatchEndpointTest {
     @Test
     public void forSingleChannelFetchMessagesWithActionAlwaysPassDefaultWhenMaxNotSpecified() throws PubNubException {
         //given
-        final FetchMessages fetchMessagesUnderTest = new FetchMessages(pubnub, telemetryManager, retrofitManager);
+        final FetchMessages fetchMessagesUnderTest = new FetchMessages(pubnub, telemetryManager, retrofitManager,
+                new TokenManager());
 
         //when
         fetchMessagesUnderTest
@@ -265,7 +276,8 @@ public class HistoryBatchEndpointTest {
     @Test
     public void forSingleChannelFetchMessagesWithActionAlwaysPassDefaultMaxWhenMaxExceeds() throws PubNubException {
         //given
-        final FetchMessages fetchMessagesUnderTest = new FetchMessages(pubnub, telemetryManager, retrofitManager);
+        final FetchMessages fetchMessagesUnderTest = new FetchMessages(pubnub, telemetryManager, retrofitManager,
+                new TokenManager());
 
         final int maximumPerChannel = MAX_FOR_FETCH_MESSAGES_WITH_ACTIONS +
                 randomInt(MAX_FOR_FETCH_MESSAGES_WITH_ACTIONS);

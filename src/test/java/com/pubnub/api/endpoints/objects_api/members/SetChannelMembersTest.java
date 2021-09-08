@@ -2,6 +2,7 @@ package com.pubnub.api.endpoints.objects_api.members;
 
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.endpoints.objects_api.BaseObjectApiTest;
+import com.pubnub.api.managers.token_manager.TokenManager;
 import com.pubnub.api.models.consumer.objects_api.member.PNMembers;
 import com.pubnub.api.models.consumer.objects_api.member.PNUUID;
 import com.pubnub.api.models.consumer.objects_api.member.PNUUID.UUIDWithCustom;
@@ -64,7 +65,8 @@ public class SetChannelMembersTest extends BaseObjectApiTest {
                 PNUUID.uuid(randomUUIDId()),
                 PNUUID.uuidWithCustom(randomUUIDId(), customObject));
         final SetChannelMembers.Builder setChannelMembersUnderTest = SetChannelMembers.builder(pubNubMock, telemetryManagerMock,
-                retrofitManagerMock);
+                retrofitManagerMock,
+                new TokenManager());
 
         //when
         setChannelMembersUnderTest
@@ -111,7 +113,7 @@ public class SetChannelMembersTest extends BaseObjectApiTest {
     public void getChannelMembersTest() throws PubNubException {
         //given
         final GetChannelMembers.Builder getChannelMembersUnderTest = GetChannelMembers
-                .builder(pubNubMock, telemetryManagerMock, retrofitManagerMock);
+                .builder(pubNubMock, telemetryManagerMock, retrofitManagerMock, new TokenManager());
 
         //when
         getChannelMembersUnderTest
@@ -136,7 +138,7 @@ public class SetChannelMembersTest extends BaseObjectApiTest {
 
         final ManageChannelMembers.Builder manageChannelMembersUnderTest = ManageChannelMembers.builder(pubNubMock,
                 telemetryManagerMock,
-                retrofitManagerMock);
+                retrofitManagerMock, new TokenManager());
 
         //when
         manageChannelMembersUnderTest
@@ -164,7 +166,7 @@ public class SetChannelMembersTest extends BaseObjectApiTest {
                 PNUUID.uuid(randomUUIDId()));
 
         final RemoveChannelMembers.Builder removeChannelMembersUnderTest = RemoveChannelMembers.builder(pubNubMock,
-                telemetryManagerMock, retrofitManagerMock);
+                telemetryManagerMock, retrofitManagerMock, new TokenManager());
 
         //when
         removeChannelMembersUnderTest

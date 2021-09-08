@@ -5,6 +5,7 @@ import com.pubnub.api.PubNubException;
 import com.pubnub.api.callbacks.PNCallback;
 import com.pubnub.api.endpoints.remoteaction.TestRemoteAction;
 import com.pubnub.api.managers.RetrofitManager;
+import com.pubnub.api.managers.token_manager.TokenManager;
 import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.files.PNBaseFile;
 import com.pubnub.api.models.consumer.files.PNFileUploadResult;
@@ -211,7 +212,7 @@ public class SendFileTest implements TestsWithFiles {
 
         public FailingPublishFileMessage(PNPublishFileMessageResult result,
                                          int numberOfFailsBeforeSuccess)  {
-            super("channel", "fileName", "fileId", mock(PubNub.class), null, mock(RetrofitManager.class));
+            super("channel", "fileName", "fileId", mock(PubNub.class), null, mock(RetrofitManager.class), new TokenManager());
             this.result = result;
             this.numberOfFailsBeforeSuccess = numberOfFailsBeforeSuccess;
         }
@@ -249,7 +250,7 @@ public class SendFileTest implements TestsWithFiles {
         AlwaysSuccessfulPublishFileMessage(PNPublishFileMessageResult result,
                                            PubNub pubnubInstance,
                                            RetrofitManager retrofitInstance) {
-            super("channel", "fileName", "fileId", mock(PubNub.class), null, mock(RetrofitManager.class));
+            super("channel", "fileName", "fileId", mock(PubNub.class), null, mock(RetrofitManager.class), new TokenManager());
             this.result = result;
         }
 

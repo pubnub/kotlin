@@ -7,6 +7,7 @@ import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.TelemetryManager;
+import com.pubnub.api.managers.token_manager.TokenManager;
 import com.pubnub.api.models.consumer.message_actions.PNRemoveMessageActionResult;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -29,8 +30,11 @@ public class RemoveMessageAction extends Endpoint<Object, PNRemoveMessageActionR
     @Setter
     private Long actionTimetoken;
 
-    public RemoveMessageAction(PubNub pubnubInstance, TelemetryManager telemetry, RetrofitManager retrofitInstance) {
-        super(pubnubInstance, telemetry, retrofitInstance);
+    public RemoveMessageAction(PubNub pubnubInstance,
+                               TelemetryManager telemetry,
+                               RetrofitManager retrofitInstance,
+                               TokenManager tokenManager) {
+        super(pubnubInstance, telemetry, retrofitInstance, tokenManager);
     }
 
     @Override

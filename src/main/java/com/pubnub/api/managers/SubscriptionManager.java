@@ -16,6 +16,7 @@ import com.pubnub.api.endpoints.presence.Leave;
 import com.pubnub.api.endpoints.pubsub.Subscribe;
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions;
 import com.pubnub.api.enums.PNStatusCategory;
+import com.pubnub.api.managers.token_manager.TokenManager;
 import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.server.SubscribeMessage;
 import com.pubnub.api.workers.SubscribeMessageWorker;
@@ -42,6 +43,7 @@ public class SubscriptionManager {
 
     PubNub pubnub;
     private final TelemetryManager telemetryManager;
+    private final TokenManager tokenManager;
     private Subscribe subscribeCall;
     private Heartbeat heartbeatCall;
 
@@ -72,7 +74,8 @@ public class SubscriptionManager {
                                final ListenerManager listenerManager,
                                final ReconnectionManager reconnectionManager,
                                final DelayedReconnectionManager delayedReconnectionManager,
-                               final DuplicationManager duplicationManager) {
+                               final DuplicationManager duplicationManager,
+                               final TokenManager tokenManager) {
         this.pubnub = pubnubInstance;
         this.telemetryManager = telemetry;
 
@@ -84,6 +87,8 @@ public class SubscriptionManager {
         this.delayedReconnectionManager = delayedReconnectionManager;
         this.retrofitManager = retrofitManagerInstance;
         this.duplicationManager = duplicationManager;
+        this.tokenManager = tokenManager;
+
 
         final ReconnectionCallback reconnectionCallback = new ReconnectionCallback() {
             @Override
@@ -171,7 +176,7 @@ public class SubscriptionManager {
 
     public void adaptPresenceBuilder(PresenceOperation presenceOperation) {
         if (!this.pubnub.getConfiguration().isSuppressLeaveEvents() && !presenceOperation.isConnected()) {
-            new Leave(pubnub, this.telemetryManager, this.retrofitManager)
+            new Leave(pubnub, this.telemetryManager, this.retrofitManager, tokenManager)
                     .channels(presenceOperation.getChannels()).channelGroups(presenceOperation.getChannelGroups())
                     .async(new PNCallback<Boolean>() {
                         @Override
@@ -186,7 +191,7 @@ public class SubscriptionManager {
 
     public void adaptUnsubscribeBuilder(UnsubscribeOperation unsubscribeOperation) {
         if (!this.pubnub.getConfiguration().isSuppressLeaveEvents()) {
-            new Leave(pubnub, this.telemetryManager, this.retrofitManager)
+            new Leave(pubnub, this.telemetryManager, this.retrofitManager, tokenManager)
                     .channels(unsubscribeOperation.getChannels())
                     .channelGroups(unsubscribeOperation.getChannelGroups())
                     .async(new PNCallback<Boolean>() {
@@ -290,7 +295,7 @@ public class SubscriptionManager {
         }
 
         httpRequestPending = true;
-        subscribeCall = new Subscribe(pubnub, this.retrofitManager)
+        subscribeCall = new Subscribe(pubnub, this.retrofitManager, tokenManager)
                 .channels(subscriptionStateData.getChannels())
                 .channelGroups(subscriptionStateData.getChannelGroups())
                 .timetoken(subscriptionStateData.getTimetoken())
@@ -441,7 +446,7 @@ public class SubscriptionManager {
             statePayload = heartbeatStateData.getStatePayload();
         }
 
-        heartbeatCall = new Heartbeat(pubnub, this.telemetryManager, this.retrofitManager)
+        heartbeatCall = new Heartbeat(pubnub, this.telemetryManager, this.retrofitManager, this.tokenManager)
                 .channels(heartbeatChannels)
                 .channelGroups(heartbeatChannelGroups)
                 .state(statePayload);

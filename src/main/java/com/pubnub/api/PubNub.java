@@ -63,6 +63,7 @@ import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.StateManager;
 import com.pubnub.api.managers.SubscriptionManager;
 import com.pubnub.api.managers.TelemetryManager;
+import com.pubnub.api.managers.token_manager.TokenManager;
 import com.pubnub.api.managers.token_manager.TokenParser;
 import com.pubnub.api.models.consumer.access_manager.v3.PNToken;
 import com.pubnub.api.vendor.Crypto;
@@ -102,9 +103,11 @@ public class PubNub {
     private static final int TIMESTAMP_DIVIDER = 1000;
     private static final int MAX_SEQUENCE = 65535;
 
-    private static final String SDK_VERSION = "5.1.1";
+    private static final String SDK_VERSION = "5.2.0";
     private final ListenerManager listenerManager;
     private final StateManager stateManager;
+
+    private final TokenManager tokenManager;
 
     public PubNub(@NotNull PNConfiguration initialConfig) {
         this.configuration = initialConfig;
@@ -114,6 +117,7 @@ public class PubNub {
         this.retrofitManager = new RetrofitManager(this);
         this.listenerManager = new ListenerManager(this);
         this.stateManager = new StateManager(this.configuration);
+        this.tokenManager = new TokenManager();
         final ReconnectionManager reconnectionManager = new ReconnectionManager(this);
         final DelayedReconnectionManager delayedReconnectionManager = new DelayedReconnectionManager(this);
         final DuplicationManager duplicationManager = new DuplicationManager(this.configuration);
@@ -124,7 +128,8 @@ public class PubNub {
                 listenerManager,
                 reconnectionManager,
                 delayedReconnectionManager,
-                duplicationManager);
+                duplicationManager,
+                tokenManager);
         this.publishSequenceManager = new PublishSequenceManager(MAX_SEQUENCE);
         this.tokenParser = new TokenParser();
         instanceId = UUID.randomUUID().toString();
@@ -163,193 +168,193 @@ public class PubNub {
 
     @NotNull
     public AddChannelsToPush addPushNotificationsOnChannels() {
-        return new AddChannelsToPush(this, this.telemetryManager, this.retrofitManager);
+        return new AddChannelsToPush(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
     }
 
     @NotNull
     public RemoveChannelsFromPush removePushNotificationsFromChannels() {
-        return new RemoveChannelsFromPush(this, this.telemetryManager, this.retrofitManager);
+        return new RemoveChannelsFromPush(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
     }
 
     @NotNull
     public RemoveAllPushChannelsForDevice removeAllPushNotificationsFromDeviceWithPushToken() {
-        return new RemoveAllPushChannelsForDevice(this, this.telemetryManager, this.retrofitManager);
+        return new RemoveAllPushChannelsForDevice(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
     }
 
     @NotNull
     public ListPushProvisions auditPushChannelProvisions() {
-        return new ListPushProvisions(this, this.telemetryManager, this.retrofitManager);
+        return new ListPushProvisions(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
     }
 
     // end push
 
     @NotNull
     public WhereNow whereNow() {
-        return new WhereNow(this, this.telemetryManager, this.retrofitManager);
+        return new WhereNow(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
     }
 
     @NotNull
     public HereNow hereNow() {
-        return new HereNow(this, this.telemetryManager, this.retrofitManager);
+        return new HereNow(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
     }
 
     @NotNull
     public Time time() {
-        return new Time(this, this.telemetryManager, this.retrofitManager);
+        return new Time(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
     }
 
     @NotNull
     public History history() {
-        return new History(this, this.telemetryManager, this.retrofitManager);
+        return new History(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
     }
 
     @NotNull
     public FetchMessages fetchMessages() {
-        return new FetchMessages(this, this.telemetryManager, this.retrofitManager);
+        return new FetchMessages(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
     }
 
     @NotNull
     public DeleteMessages deleteMessages() {
-        return new DeleteMessages(this, this.telemetryManager, this.retrofitManager);
+        return new DeleteMessages(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
     }
 
     @NotNull
     public MessageCounts messageCounts() {
-        return new MessageCounts(this, this.telemetryManager, this.retrofitManager);
+        return new MessageCounts(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
     }
 
     @NotNull
     public Grant grant() {
-        return new Grant(this, this.telemetryManager, this.retrofitManager);
+        return new Grant(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
     }
 
     @NotNull
     public GrantToken grantToken() {
-        return new GrantToken(this, this.telemetryManager, this.retrofitManager);
+        return new GrantToken(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
     }
 
     @NotNull
     public GetState getPresenceState() {
-        return new GetState(this, this.telemetryManager, this.retrofitManager);
+        return new GetState(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
     }
 
     @NotNull
     public SetState setPresenceState() {
-        return new SetState(this, subscriptionManager, this.telemetryManager, this.retrofitManager);
+        return new SetState(this, subscriptionManager, this.telemetryManager, this.retrofitManager, tokenManager);
     }
 
     @NotNull
     public Publish publish() {
-        return new Publish(this, publishSequenceManager, this.telemetryManager, this.retrofitManager);
+        return new Publish(this, publishSequenceManager, this.telemetryManager, this.retrofitManager, this.tokenManager);
     }
 
     @NotNull
     public Signal signal() {
-        return new Signal(this, this.telemetryManager, this.retrofitManager);
+        return new Signal(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
     }
 
     @NotNull
     public ListAllChannelGroup listAllChannelGroups() {
-        return new ListAllChannelGroup(this, this.telemetryManager, this.retrofitManager);
+        return new ListAllChannelGroup(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
     }
 
     @NotNull
     public AllChannelsChannelGroup listChannelsForChannelGroup() {
-        return new AllChannelsChannelGroup(this, this.telemetryManager, this.retrofitManager);
+        return new AllChannelsChannelGroup(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
     }
 
     @NotNull
     public AddChannelChannelGroup addChannelsToChannelGroup() {
-        return new AddChannelChannelGroup(this, this.telemetryManager, this.retrofitManager);
+        return new AddChannelChannelGroup(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
     }
 
     @NotNull
     public RemoveChannelChannelGroup removeChannelsFromChannelGroup() {
-        return new RemoveChannelChannelGroup(this, this.telemetryManager, this.retrofitManager);
+        return new RemoveChannelChannelGroup(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
     }
 
     @NotNull
     public DeleteChannelGroup deleteChannelGroup() {
-        return new DeleteChannelGroup(this, this.telemetryManager, this.retrofitManager);
+        return new DeleteChannelGroup(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
     }
 
     // Start Objects API
 
     public SetUUIDMetadata setUUIDMetadata() {
-        return SetUUIDMetadata.create(this, this.telemetryManager, this.retrofitManager);
+        return SetUUIDMetadata.create(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
     }
 
     @NotNull
     public GetAllUUIDMetadata getAllUUIDMetadata() {
-        return GetAllUUIDMetadata.create(this, this.telemetryManager, this.retrofitManager);
+        return GetAllUUIDMetadata.create(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
     }
 
     @NotNull
     public GetUUIDMetadata getUUIDMetadata() {
-        return GetUUIDMetadata.create(this, this.telemetryManager, this.retrofitManager);
+        return GetUUIDMetadata.create(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
     }
 
     @NotNull
     public RemoveUUIDMetadata removeUUIDMetadata() {
-        return new RemoveUUIDMetadata(this, this.telemetryManager, this.retrofitManager);
+        return new RemoveUUIDMetadata(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
     }
 
     public SetChannelMetadata.Builder setChannelMetadata() {
-        return SetChannelMetadata.builder(this, this.telemetryManager, this.retrofitManager);
+        return SetChannelMetadata.builder(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
     }
 
     @NotNull
     public GetAllChannelsMetadata getAllChannelsMetadata() {
-        return GetAllChannelsMetadata.create(this, this.telemetryManager, this.retrofitManager);
+        return GetAllChannelsMetadata.create(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
     }
 
     @NotNull
     public GetChannelMetadata.Builder getChannelMetadata() {
-        return GetChannelMetadata.builder(this, this.telemetryManager, this.retrofitManager);
+        return GetChannelMetadata.builder(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
     }
 
     public RemoveChannelMetadata.Builder removeChannelMetadata() {
-        return RemoveChannelMetadata.builder(this, this.telemetryManager, this.retrofitManager);
+        return RemoveChannelMetadata.builder(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
     }
 
     @NotNull
     public GetMemberships getMemberships() {
-        return GetMemberships.create(this, this.telemetryManager, this.retrofitManager);
+        return GetMemberships.create(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
     }
 
     @NotNull
     public SetMemberships.Builder setMemberships() {
-        return SetMemberships.builder(this, this.telemetryManager, this.retrofitManager);
+        return SetMemberships.builder(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
     }
 
     @NotNull
     public RemoveMemberships.Builder removeMemberships() {
-        return RemoveMemberships.builder(this, this.telemetryManager, this.retrofitManager);
+        return RemoveMemberships.builder(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
     }
 
     @NotNull
     public ManageMemberships.Builder manageMemberships() {
-        return ManageMemberships.builder(this, this.telemetryManager, this.retrofitManager);
+        return ManageMemberships.builder(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
     }
 
     @NotNull
     public GetChannelMembers.Builder getChannelMembers() {
-        return GetChannelMembers.builder(this, this.telemetryManager, this.retrofitManager);
+        return GetChannelMembers.builder(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
     }
 
     @NotNull
     public SetChannelMembers.Builder setChannelMembers() {
-        return SetChannelMembers.builder(this, this.telemetryManager, this.retrofitManager);
+        return SetChannelMembers.builder(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
     }
 
     @NotNull
     public RemoveChannelMembers.Builder removeChannelMembers() {
-        return RemoveChannelMembers.builder(this, this.telemetryManager, this.retrofitManager);
+        return RemoveChannelMembers.builder(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
     }
 
     @NotNull
     public ManageChannelMembers.Builder manageChannelMembers() {
-        return ManageChannelMembers.builder(this, this.telemetryManager, this.retrofitManager);
+        return ManageChannelMembers.builder(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
     }
 
     // End Objects API
@@ -358,56 +363,60 @@ public class PubNub {
 
     @NotNull
     public AddMessageAction addMessageAction() {
-        return new AddMessageAction(this, this.telemetryManager, this.retrofitManager);
+        return new AddMessageAction(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
     }
 
     @NotNull
     public GetMessageActions getMessageActions() {
-        return new GetMessageActions(this, this.telemetryManager, this.retrofitManager);
+        return new GetMessageActions(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
     }
 
     @NotNull
     public RemoveMessageAction removeMessageAction() {
-        return new RemoveMessageAction(this, this.telemetryManager, this.retrofitManager);
+        return new RemoveMessageAction(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
     }
 
     // End Message Actions API
 
     @NotNull
     public SendFile.Builder sendFile() {
-        return SendFile.builder(this, telemetryManager, retrofitManager);
+        return SendFile.builder(this, telemetryManager, retrofitManager, tokenManager);
     }
 
     public ListFiles.Builder listFiles() {
-        return new ListFiles.Builder(this, telemetryManager, retrofitManager);
+        return new ListFiles.Builder(this, telemetryManager, retrofitManager, tokenManager);
     }
 
     public GetFileUrl.Builder getFileUrl() {
         return GetFileUrl.builder(
                 this,
                 telemetryManager,
-                retrofitManager);
+                retrofitManager,
+                tokenManager);
     }
 
     public DownloadFile.Builder downloadFile() {
         return DownloadFile.builder(
                 this,
                 telemetryManager,
-                retrofitManager);
+                retrofitManager,
+                tokenManager);
     }
 
     public DeleteFile.Builder deleteFile() {
         return DeleteFile.builder(
                 this,
                 telemetryManager,
-                retrofitManager);
+                retrofitManager,
+                tokenManager);
     }
 
     public PublishFileMessage.Builder publishFileMessage() {
         return PublishFileMessage.builder(
                 this,
                 telemetryManager,
-                retrofitManager);
+                retrofitManager,
+                tokenManager);
     }
 
     // public methods
@@ -589,5 +598,9 @@ public class PubNub {
 
     public PNToken parseToken(String token) throws PubNubException {
         return tokenParser.unwrapToken(token);
+    }
+
+    public void setToken(String token) {
+        tokenManager.setToken(token);
     }
 }

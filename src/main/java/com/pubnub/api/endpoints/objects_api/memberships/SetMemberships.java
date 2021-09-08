@@ -14,6 +14,7 @@ import com.pubnub.api.endpoints.objects_api.utils.ObjectsBuilderSteps;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.TelemetryManager;
+import com.pubnub.api.managers.token_manager.TokenManager;
 import com.pubnub.api.models.consumer.objects_api.membership.PNSetMembershipResult;
 import com.pubnub.api.models.consumer.objects_api.membership.PNChannelMembership;
 import com.pubnub.api.models.consumer.objects_api.membership.PNMembership;
@@ -34,14 +35,16 @@ public abstract class SetMemberships extends UUIDEndpoint<SetMemberships, Entity
     SetMemberships(final PubNub pubnubInstance,
                    final TelemetryManager telemetry,
                    final RetrofitManager retrofitInstance,
-                   final CompositeParameterEnricher compositeParameterEnricher) {
-        super(pubnubInstance, telemetry, retrofitInstance, compositeParameterEnricher);
+                   final CompositeParameterEnricher compositeParameterEnricher,
+                   final TokenManager tokenManager) {
+        super(pubnubInstance, telemetry, retrofitInstance, compositeParameterEnricher, tokenManager);
     }
 
     public static  Builder builder(final PubNub pubnubInstance,
                                    final TelemetryManager telemetry,
-                                   final RetrofitManager retrofitInstance) {
-        return new Builder(pubnubInstance, telemetry, retrofitInstance);
+                                   final RetrofitManager retrofitInstance,
+                                   final TokenManager tokenManager) {
+        return new Builder(pubnubInstance, telemetry, retrofitInstance, tokenManager);
     }
 
     @AllArgsConstructor
@@ -49,11 +52,13 @@ public abstract class SetMemberships extends UUIDEndpoint<SetMemberships, Entity
         private final PubNub pubnubInstance;
         private final TelemetryManager telemetry;
         private final RetrofitManager retrofitInstance;
+        private final TokenManager tokenManager;
 
         @Override
         public SetMemberships channelMemberships(@NotNull final Collection<PNChannelMembership> channelMemberships) {
             final CompositeParameterEnricher compositeParameterEnricher = CompositeParameterEnricher.createDefault();
-            return new SetMembershipsCommand(channelMemberships, pubnubInstance, telemetry, retrofitInstance, compositeParameterEnricher);
+            return new SetMembershipsCommand(channelMemberships, pubnubInstance, telemetry, retrofitInstance, compositeParameterEnricher,
+                    tokenManager);
         }
     }
 }
@@ -67,8 +72,9 @@ final class SetMembershipsCommand extends SetMemberships implements HavingCustom
                           final PubNub pubNub,
                           final TelemetryManager telemetryManager,
                           final RetrofitManager retrofitManager,
-                          final CompositeParameterEnricher compositeParameterEnricher) {
-        super(pubNub, telemetryManager, retrofitManager, compositeParameterEnricher);
+                          final CompositeParameterEnricher compositeParameterEnricher,
+                          final TokenManager tokenManager) {
+        super(pubNub, telemetryManager, retrofitManager, compositeParameterEnricher, tokenManager);
         this.channelMemberships = channelMemberships;
     }
 

@@ -5,6 +5,7 @@ import com.pubnub.api.PubNubException;
 import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.TelemetryManager;
+import com.pubnub.api.managers.token_manager.TokenManager;
 
 public abstract class ChannelEnpoint<INPUT, OUTPUT> extends ObjectApiEndpoint<INPUT, OUTPUT> {
     protected String channel;
@@ -13,8 +14,9 @@ public abstract class ChannelEnpoint<INPUT, OUTPUT> extends ObjectApiEndpoint<IN
                              final PubNub pubnubInstance,
                              final TelemetryManager telemetry,
                              final RetrofitManager retrofitInstance,
-                             final CompositeParameterEnricher compositeParameterEnricher) {
-        super(pubnubInstance, telemetry, retrofitInstance, compositeParameterEnricher);
+                             final CompositeParameterEnricher compositeParameterEnricher,
+                             final TokenManager tokenManager) {
+        super(pubnubInstance, telemetry, retrofitInstance, compositeParameterEnricher, tokenManager);
         this.channel = channel;
     }
 

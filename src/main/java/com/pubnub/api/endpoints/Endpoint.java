@@ -13,6 +13,7 @@ import com.pubnub.api.enums.PNStatusCategory;
 import com.pubnub.api.managers.MapperManager;
 import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.TelemetryManager;
+import com.pubnub.api.managers.token_manager.TokenManager;
 import com.pubnub.api.models.consumer.PNErrorData;
 import com.pubnub.api.models.consumer.PNStatus;
 import lombok.AccessLevel;
@@ -67,9 +68,16 @@ public abstract class Endpoint<Input, Output> implements RemoteAction<Output> {
 
     private MapperManager mapper;
 
-    public Endpoint(PubNub pubnubInstance, TelemetryManager telemetry, RetrofitManager retrofitInstance) {
+    private final TokenManager tokenManager;
+
+    public Endpoint(PubNub pubnubInstance,
+                    TelemetryManager telemetry,
+                    RetrofitManager retrofitInstance,
+                    TokenManager tokenManager) {
         this.pubnub = pubnubInstance;
         this.retrofit = retrofitInstance;
+        this.tokenManager = tokenManager;
+
         this.mapper = this.pubnub.getMapper();
         this.telemetryManager = telemetry;
     }
@@ -367,9 +375,13 @@ public abstract class Endpoint<Input, Output> implements RemoteAction<Output> {
             params.put("requestid", pubnub.getRequestId());
         }
 
-        // add the auth key for publish and subscribe.
-        if (this.pubnub.getConfiguration().getAuthKey() != null && isAuthRequired()) {
-            params.put(PubNubUtil.AUTH_QUERY_PARAM_NAME, pubnub.getConfiguration().getAuthKey());
+        if (isAuthRequired()) {
+            final String token = tokenManager.getToken();
+            if (token != null) {
+                params.put(PubNubUtil.AUTH_QUERY_PARAM_NAME, token);
+            } else if (this.pubnub.getConfiguration().getAuthKey() != null) {
+                params.put(PubNubUtil.AUTH_QUERY_PARAM_NAME, pubnub.getConfiguration().getAuthKey());
+            }
         }
 
         if (this.telemetryManager != null) {

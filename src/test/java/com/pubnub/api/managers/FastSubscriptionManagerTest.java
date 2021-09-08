@@ -7,6 +7,7 @@ import com.pubnub.api.builder.dto.SubscribeOperation;
 import com.pubnub.api.managers.subscription.utils.RequestDetails;
 import com.pubnub.api.managers.subscription.utils.ResponseHolder;
 import com.pubnub.api.managers.subscription.utils.ResponseSupplier;
+import com.pubnub.api.managers.token_manager.TokenManager;
 import com.pubnub.api.models.server.SubscribeEnvelope;
 import com.pubnub.api.models.server.SubscribeMetadata;
 import com.pubnub.api.services.SubscribeService;
@@ -240,6 +241,7 @@ public class FastSubscriptionManagerTest {
                 listenerManagerMock,
                 reconnectionManagerMock,
                 delayedReconnectionManagerMock,
-                duplicationManager);
+                duplicationManager,
+                new TokenManager());
     }
 }

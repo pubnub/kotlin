@@ -7,6 +7,7 @@ import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.TelemetryManager;
+import com.pubnub.api.managers.token_manager.TokenManager;
 import com.pubnub.api.models.consumer.history.PNDeleteMessagesResult;
 import com.pubnub.api.models.server.DeleteMessagesEnvelope;
 import lombok.Setter;
@@ -31,8 +32,11 @@ public class DeleteMessages extends Endpoint<DeleteMessagesEnvelope, PNDeleteMes
     @Setter
     private Long end;
 
-    public DeleteMessages(PubNub pubnubInstance, TelemetryManager telemetryManager, RetrofitManager retrofitInstance) {
-        super(pubnubInstance, telemetryManager, retrofitInstance);
+    public DeleteMessages(PubNub pubnubInstance,
+                          TelemetryManager telemetryManager,
+                          RetrofitManager retrofitInstance,
+                          TokenManager tokenManager) {
+        super(pubnubInstance, telemetryManager, retrofitInstance, tokenManager);
         channels = new ArrayList<>();
     }
 

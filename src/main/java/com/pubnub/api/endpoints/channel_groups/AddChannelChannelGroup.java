@@ -8,6 +8,7 @@ import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.TelemetryManager;
+import com.pubnub.api.managers.token_manager.TokenManager;
 import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsAddChannelResult;
 import com.pubnub.api.models.server.Envelope;
 import lombok.Setter;
@@ -28,8 +29,11 @@ public class AddChannelChannelGroup extends Endpoint<Envelope, PNChannelGroupsAd
     private List<String> channels;
 
 
-    public AddChannelChannelGroup(PubNub pubnub, TelemetryManager telemetryManager, RetrofitManager retrofit) {
-        super(pubnub, telemetryManager, retrofit);
+    public AddChannelChannelGroup(PubNub pubnub,
+                                  TelemetryManager telemetryManager,
+                                  RetrofitManager retrofit,
+                                  TokenManager tokenManager) {
+        super(pubnub, telemetryManager, retrofit, tokenManager);
         channels = new ArrayList<>();
     }
 

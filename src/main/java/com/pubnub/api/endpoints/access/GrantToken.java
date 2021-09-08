@@ -8,9 +8,11 @@ import com.pubnub.api.endpoints.Endpoint;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.TelemetryManager;
+import com.pubnub.api.managers.token_manager.TokenManager;
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant;
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant;
 import com.pubnub.api.models.consumer.access_manager.v3.PNGrantTokenResult;
+import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant;
 import com.pubnub.api.models.server.access_manager.v3.GrantTokenRequestBody;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -32,12 +34,19 @@ public class GrantToken extends Endpoint<JsonObject, PNGrantTokenResult> {
     @Setter
     private Object meta;
     @Setter
+    private String authorizedUUID;
+    @Setter
     private List<ChannelGrant> channels = Collections.emptyList();
     @Setter
     private List<ChannelGroupGrant> channelGroups = Collections.emptyList();
+    @Setter
+    private List<UUIDGrant> uuids = Collections.emptyList();
 
-    public GrantToken(PubNub pubnub, TelemetryManager telemetryManager, RetrofitManager retrofit) {
-        super(pubnub, telemetryManager, retrofit);
+    public GrantToken(PubNub pubnub,
+                      TelemetryManager telemetryManager,
+                      RetrofitManager retrofit,
+                      TokenManager tokenManager) {
+        super(pubnub, telemetryManager, retrofit, tokenManager);
     }
 
     @Override
@@ -73,7 +82,8 @@ public class GrantToken extends Endpoint<JsonObject, PNGrantTokenResult> {
             throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_SUBSCRIBE_KEY_MISSING).build();
         }
         if (isNullOrEmpty(channels)
-                && isNullOrEmpty(channelGroups)) {
+                && isNullOrEmpty(channelGroups)
+                && isNullOrEmpty(uuids)) {
             throw PubNubException.builder()
                     .pubnubError(PubNubErrorBuilder.PNERROBJ_RESOURCES_MISSING)
                     .build();
@@ -91,7 +101,9 @@ public class GrantToken extends Endpoint<JsonObject, PNGrantTokenResult> {
                 .ttl(ttl)
                 .channels(channels)
                 .groups(channelGroups)
+                .uuids(uuids)
                 .meta(meta)
+                .uuid(authorizedUUID)
                 .build();
 
         return this.getRetrofit()

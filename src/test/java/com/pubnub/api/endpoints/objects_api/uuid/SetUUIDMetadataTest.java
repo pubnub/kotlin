@@ -2,6 +2,7 @@ package com.pubnub.api.endpoints.objects_api.uuid;
 
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.endpoints.objects_api.BaseObjectApiTest;
+import com.pubnub.api.managers.token_manager.TokenManager;
 import com.pubnub.api.models.consumer.objects_api.uuid.PNSetUUIDMetadataResult;
 import com.pubnub.api.models.server.objects_api.SetUUIDMetadataPayload;
 import com.pubnub.api.services.UUIDMetadataService;
@@ -45,7 +46,7 @@ public class SetUUIDMetadataTest extends BaseObjectApiTest {
     public void setNameTest() throws PubNubException {
         //given
         final SetUUIDMetadata setUUIDMetadataUnderTest = SetUUIDMetadata.create(pubNubMock,
-                telemetryManagerMock, retrofitManagerMock);
+                telemetryManagerMock, retrofitManagerMock, new TokenManager());
         final String testName = RandomStringUtils.randomAlphabetic(20);
 
         //when
@@ -66,7 +67,7 @@ public class SetUUIDMetadataTest extends BaseObjectApiTest {
     public void setEmailTest() throws PubNubException {
         //given
         final SetUUIDMetadata setUUIDMetadataUnderTest = SetUUIDMetadata.create(pubNubMock,
-                telemetryManagerMock, retrofitManagerMock);
+                telemetryManagerMock, retrofitManagerMock, new TokenManager());
         final String testEmail = RandomStringUtils.randomAlphabetic(10) + "@example.com";
 
         //when
@@ -87,7 +88,7 @@ public class SetUUIDMetadataTest extends BaseObjectApiTest {
     public void setExternalIdTest() throws PubNubException {
         //given
         final SetUUIDMetadata setUUIDMetadataUnderTest = SetUUIDMetadata.create(pubNubMock,
-                telemetryManagerMock, retrofitManagerMock);
+                telemetryManagerMock, retrofitManagerMock, new TokenManager());
         final String testExternalId = UUID.randomUUID().toString();
 
         //when
@@ -108,7 +109,7 @@ public class SetUUIDMetadataTest extends BaseObjectApiTest {
     public void setProfileUrlTest() throws PubNubException {
         //given
         final SetUUIDMetadata setUUIDMetadataUnderTest = SetUUIDMetadata.create(pubNubMock,
-                telemetryManagerMock, retrofitManagerMock);
+                telemetryManagerMock, retrofitManagerMock, new TokenManager());
         final String profileUrl = "http://" + RandomStringUtils.randomAlphabetic(5) + ".example.com";
 
         //when
@@ -129,7 +130,7 @@ public class SetUUIDMetadataTest extends BaseObjectApiTest {
     public void setCustomTest() throws PubNubException {
         //given
         final SetUUIDMetadata setUUIDMetadataUnderTest = SetUUIDMetadata.create(pubNubMock,
-                telemetryManagerMock, retrofitManagerMock);
+                telemetryManagerMock, retrofitManagerMock, new TokenManager());
         final Map<String, Object> custom = new HashMap<>();
         custom.put("key1", RandomStringUtils.random(10));
         custom.put("key2", RandomStringUtils.random(10));

@@ -9,6 +9,7 @@ import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.managers.MapperManager;
 import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.TelemetryManager;
+import com.pubnub.api.managers.token_manager.TokenManager;
 import com.pubnub.api.models.consumer.PNPublishResult;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -28,8 +29,11 @@ public class Signal extends Endpoint<List<Object>, PNPublishResult> {
     @Setter
     private String channel;
 
-    public Signal(PubNub pubnub, TelemetryManager telemetryManager, RetrofitManager retrofit) {
-        super(pubnub, telemetryManager, retrofit);
+    public Signal(PubNub pubnub,
+                  TelemetryManager telemetryManager,
+                  RetrofitManager retrofit,
+                  TokenManager tokenManager) {
+        super(pubnub, telemetryManager, retrofit, tokenManager);
     }
 
     @Override
