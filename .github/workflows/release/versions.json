@@ -2,7 +2,7 @@
   ".pubnub.yml": [
     { "pattern": "^version: (.+)$", "cleared": true },
     { "pattern": "^\\s+\\-\\s+build/libs/pubnub-kotlin-(.*)-all.jar$", "cleared": true },
-    { "pattern": "\\s+package-name: pubnub-kotlin-(.*)(-all)?$", "cleared": true },
+    { "pattern": "\\s+package-name: pubnub-kotlin-((\d+\.?){2,})(-all)?$", "cleared": true },
     { "pattern": "/releases/download/(.*)/pubnub-kotlin-.*-all.jar$", "cleared": false },
     { "pattern": "/releases/download/.*/pubnub-kotlin-(.*)-all.jar$", "cleared": true },
     { "pattern": "/pubnub/pubnub-kotlin/(.*)/pubnub-kotlin-.*.jar$", "cleared": true },
