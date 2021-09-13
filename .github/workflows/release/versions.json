@@ -19,6 +19,6 @@
     { "pattern": "private const val SDK_VERSION.*\"(.*)\"$", "cleared": true }
   ],
   "src/test/kotlin/com/pubnub/api/legacy/PubNubTest.kt": [
-    { "pattern": "assertEquals\\(\"(.*)\", version\\))$", "cleared": true }
+    { "pattern": "assertEquals\\(\"(.*)\", version\\)$", "cleared": true }
   ]
 }
