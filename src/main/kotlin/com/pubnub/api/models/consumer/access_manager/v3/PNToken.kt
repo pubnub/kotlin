@@ -10,7 +10,8 @@ data class PNToken(
     @JsonProperty("ttl") val ttl: Long = 0,
     @JsonProperty("uuid") val authorizedUUID: String? = null,
     @JsonProperty("res") val resources: PNTokenResources,
-    @JsonProperty("pat") val patterns: PNTokenResources
+    @JsonProperty("pat") val patterns: PNTokenResources,
+    @JsonProperty("meta") val meta: Any? = null
 ) {
 
     data class PNTokenResources(

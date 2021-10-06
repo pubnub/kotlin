@@ -1,8 +1,10 @@
-## [v6.1.0](https://github.com/pubnub/kotlin/releases/tag/v6.1.0)
-September 8 2021
+## [v6.2.0](https://github.com/pubnub/kotlin/releases/tag/v6.2.0)
+October 6 2021
 
-[Full Changelog](https://github.com/pubnub/kotlin/compare/v6.0.3...v6.1.0)
+[Full Changelog](https://github.com/pubnub/kotlin/compare/v6.1.0...v6.2.0)
 
-- Method grantToken has beed added. It allows generation of signed token with permissions for channels and channel groups. 
+- Acceptance tests plugged into CI pipeline. 
+- Internal telemetry enhancement. 
+- Meta field exposed correctly in PNToken class. 
 
 
