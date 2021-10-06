@@ -57,3 +57,9 @@ allow to perform precise PubNub client configuration.
 | [useRandomInitializationVector](use-random-initialization-vector.md) | Should initialization vector for encrypted messages be random.`var useRandomInitializationVector: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) |
 | [uuid](uuid.md) | UUID to use. You should set a unique UUID to identify the user or the device that connects to PubNub.`var uuid: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
 | [x509ExtendedTrustManager](x509-extended-trust-manager.md) | `var x509ExtendedTrustManager: `[`X509ExtendedTrustManager`](https://docs.oracle.com/javase/6/docs/api/javax/net/ssl/X509ExtendedTrustManager.html)`?` |
+
+### Functions
+
+| Name | Summary |
+|---|---|
+| [addPnsdkSuffix](add-pnsdk-suffix.md) | `fun ~~addPnsdkSuffix~~(vararg nameToSuffixes: `[`Pair`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-pair/index.html)`<`[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`, `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`>): `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html)<br>`fun ~~addPnsdkSuffix~~(nameToSuffixes: `[`Map`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html)`<`[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`, `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`>): `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html) |
