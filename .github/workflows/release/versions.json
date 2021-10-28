@@ -1,0 +1,64 @@
+{
+  ".pubnub.yml": [
+    { "pattern": "^version: (v?(\\d+\\.?){2,}([a-zA-Z0-9-]+(\\.?\\d+)?)?)$", "cleared": false },
+    {
+      "pattern": "^\\s+\\-\\s+build/libs/pubnub-kotlin-(v?(\\d+\\.?){2,}([a-zA-Z0-9-]+(\\.?\\d+)?)?)-all.jar$",
+      "clearedPrefix": true,
+      "clearedSuffix": false
+    },
+    {
+      "pattern": "\\s+package-name: pubnub-kotlin-(v?(\\d+\\.?){2,}([a-zA-Z0-9-]+(\\.?\\d+)?)?)(-all)?$",
+      "clearedPrefix": true,
+      "clearedSuffix": false
+    },
+    { "pattern": "/releases/download/(v?(\\d+\\.?){2,}([a-zA-Z0-9-]+(\\.?\\d+)?)?)/pubnub-kotlin-.*-all.jar$", "cleared": false },
+    {
+      "pattern": "/releases/download/.*/pubnub-kotlin-(v?(\\d+\\.?){2,}([a-zA-Z0-9-]+(\\.?\\d+)?)?)-all.jar$",
+      "clearedPrefix": true,
+      "clearedSuffix": false
+    },
+    {
+      "pattern": "/pubnub/pubnub-kotlin/(v?(\\d+\\.?){2,}([a-zA-Z0-9-]+(\\.?\\d+)?)?)/pubnub-kotlin-.*.jar$",
+      "clearedPrefix": true,
+      "clearedSuffix": false
+    },
+    {
+      "pattern": "/pubnub/pubnub-kotlin/.*/pubnub-kotlin-(v?(\\d+\\.?){2,}([a-zA-Z0-9-]+(\\.?\\d+)?)?).jar$",
+      "clearedPrefix": true,
+      "clearedSuffix": false
+    }
+  ],
+  "build.gradle": [
+    {
+      "pattern": "^version\\s=\\s'(v?(\\d+\\.?){2,}([a-zA-Z0-9-]+(\\.?\\d+)?)?)'$",
+      "clearedPrefix": true,
+      "clearedSuffix": false
+    }
+  ],
+  "README.md": [
+    {
+      "pattern": "^\\s{2,}<version>(v?(\\d+\\.?){2,}([a-zA-Z0-9-]+(\\.?\\d+)?)?)<\\/version>$",
+      "clearedPrefix": true,
+      "clearedSuffix": false
+    },
+    {
+      "pattern": "^\\s{2,}implementation 'com\\.pubnub:pubnub-kotlin:(v?(\\d+\\.?){2,}([a-zA-Z0-9-]+(\\.?\\d+)?)?)'$",
+      "clearedPrefix": true,
+      "clearedSuffix": false
+    }
+  ],
+  "src/main/kotlin/com/pubnub/api/PubNub.kt": [
+    {
+      "pattern": "private const val SDK_VERSION.*\"(v?(\\d+\\.?){2,}([a-zA-Z0-9-]+(\\.?\\d+)?)?)\"$",
+      "clearedPrefix": true,
+      "clearedSuffix": false
+    }
+  ],
+  "src/test/kotlin/com/pubnub/api/legacy/PubNubTest.kt": [
+    {
+      "pattern": "assertEquals\\(\"(v?(\\d+\\.?){2,}([a-zA-Z0-9-]+(\\.?\\d+)?)?)\", version\\)$",
+      "clearedPrefix": true,
+      "clearedSuffix": false
+    }
+  ]
+}
