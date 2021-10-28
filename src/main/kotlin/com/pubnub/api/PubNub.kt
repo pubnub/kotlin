@@ -8,6 +8,7 @@ import com.pubnub.api.endpoints.History
 import com.pubnub.api.endpoints.MessageCounts
 import com.pubnub.api.endpoints.Time
 import com.pubnub.api.endpoints.access.Grant
+import com.pubnub.api.endpoints.access.GrantToken
 import com.pubnub.api.endpoints.channel_groups.AddChannelChannelGroup
 import com.pubnub.api.endpoints.channel_groups.AllChannelsChannelGroup
 import com.pubnub.api.endpoints.channel_groups.DeleteChannelGroup
@@ -59,8 +60,14 @@ import com.pubnub.api.managers.PublishSequenceManager
 import com.pubnub.api.managers.RetrofitManager
 import com.pubnub.api.managers.SubscriptionManager
 import com.pubnub.api.managers.TelemetryManager
-import com.pubnub.api.models.consumer.message_actions.PNMessageAction
+import com.pubnub.api.managers.TokenManager
+import com.pubnub.api.managers.TokenParser
 import com.pubnub.api.models.consumer.PNBoundedPage
+import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant
+import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant
+import com.pubnub.api.models.consumer.access_manager.v3.PNToken
+import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant
+import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.PNSortKey
 import com.pubnub.api.models.consumer.objects.member.PNUUIDDetailsLevel
@@ -79,11 +86,12 @@ class PubNub(val configuration: PNConfiguration) {
 
     private companion object Constants {
         private const val TIMESTAMP_DIVIDER = 1000
-        private const val SDK_VERSION = "6.0.3"
+        private const val SDK_VERSION = "6.2.0"
         private const val MAX_SEQUENCE = 65535
     }
 
     //region Managers
+
     /**
      * Manage and parse JSON
      */
@@ -94,6 +102,9 @@ class PubNub(val configuration: PNConfiguration) {
     internal val publishSequenceManager = PublishSequenceManager(MAX_SEQUENCE)
     internal val telemetryManager = TelemetryManager()
     internal val subscriptionManager = SubscriptionManager(this)
+    internal val tokenManager: TokenManager = TokenManager()
+    private val tokenParser: TokenParser = TokenParser()
+
     //endregion
 
     /**
@@ -864,6 +875,25 @@ class PubNub(val configuration: PNConfiguration) {
         channels = channels,
         channelGroups = channelGroups
     )
+
+    fun grantToken(
+        ttl: Int,
+        meta: Any? = null,
+        authorizedUUID: String? = null,
+        channels: List<ChannelGrant> = emptyList(),
+        channelGroups: List<ChannelGroupGrant> = emptyList(),
+        uuids: List<UUIDGrant> = emptyList()
+    ): GrantToken {
+        return GrantToken(
+            pubnub = this,
+            ttl = ttl,
+            meta = meta,
+            authorizedUUID = authorizedUUID,
+            channels = channels,
+            channelGroups = channelGroups,
+            uuids = uuids
+        )
+    }
     //endregion
 
     //region Miscellaneous
@@ -1848,5 +1878,13 @@ class PubNub(val configuration: PNConfiguration) {
     fun forceDestroy() {
         subscriptionManager.destroy(true)
         retrofitManager.destroy(true)
+    }
+
+    fun parseToken(token: String): PNToken {
+        return tokenParser.unwrapToken(token)
+    }
+
+    fun setToken(token: String?) {
+        return tokenManager.setToken(token)
     }
 }

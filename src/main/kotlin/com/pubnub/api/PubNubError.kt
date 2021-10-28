@@ -131,6 +131,21 @@ enum class PubNubError(private val code: Int, val message: String) {
         "User name is missing"
     ),
 
+    RESOURCES_MISSING(
+        153,
+        "Resources missing"
+    ),
+
+    PERMISSION_MISSING(
+        156,
+        "Permission missing"
+    ),
+
+    INVALID_ACCESS_TOKEN(
+        157,
+        "Invalid access token"
+    ),
+
     MESSAGE_ACTION_MISSING(
         158,
         "Message action is missing."

@@ -20,7 +20,6 @@ import java.io.IOException
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
-import java.util.HashMap
 
 /**
  * Base class for all PubNub API operation implementations.
@@ -219,7 +218,7 @@ abstract class Endpoint<Input, Output> protected constructor(protected val pubnu
 
         map += queryParam
 
-        map["pnsdk"] = "PubNub-Kotlin/${pubnub.version}"
+        map["pnsdk"] = pubnub.configuration.generatePnsdk(pubnub.version)
         map["uuid"] = pubnub.configuration.uuid
 
         if (pubnub.configuration.includeInstanceIdentifier) {
@@ -230,8 +229,13 @@ abstract class Endpoint<Input, Output> protected constructor(protected val pubnu
             map["requestid"] = pubnub.requestId()
         }
 
-        if (isAuthRequired() && pubnub.configuration.isAuthKeyValid()) {
-            map["auth"] = pubnub.configuration.authKey
+        if (isAuthRequired()) {
+            val token = pubnub.tokenManager.getToken()
+            if (token != null) {
+                map["auth"] = token
+            } else if (pubnub.configuration.isAuthKeyValid()) {
+                map["auth"] = pubnub.configuration.authKey
+            }
         }
 
         map.putAll(pubnub.telemetryManager.operationsLatency())

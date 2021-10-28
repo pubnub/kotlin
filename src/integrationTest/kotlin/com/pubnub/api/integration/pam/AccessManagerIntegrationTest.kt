@@ -29,7 +29,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.util.concurrent.atomic.AtomicBoolean
 
-abstract class AccessManagerIntegrationTest : BaseIntegrationTest() {
+abstract class AccessManagerIntegrationTest() : BaseIntegrationTest() {
 
     companion object {
         const val LEVEL_APP = "subkey"
@@ -44,6 +44,7 @@ abstract class AccessManagerIntegrationTest : BaseIntegrationTest() {
 
     lateinit var expectedChannel: String
     lateinit var expectedAuthKey: String
+    open val pubnubToTest: PubNub = pubnub
 
     override fun onPrePubnub() {
         expectedChannel = randomChannel()
@@ -60,11 +61,9 @@ abstract class AccessManagerIntegrationTest : BaseIntegrationTest() {
 
     override fun onBefore() {
         // todo: why the heck we've got mutable configuration?!
-        pubnub.configuration.includeInstanceIdentifier = false
-        pubnub.configuration.includeRequestIdentifier = false
-        if (performOnServer()) {
-            pubnub = server
-        } else {
+        pubnubToTest.configuration.includeInstanceIdentifier = false
+        pubnubToTest.configuration.includeRequestIdentifier = false
+        if (!performOnServer()) {
             revokeAllAccess()
         }
     }
@@ -77,7 +76,7 @@ abstract class AccessManagerIntegrationTest : BaseIntegrationTest() {
 
     @Test
     fun testGetPublishMessageWithPermission() {
-        pubnub.publish(
+        pubnubToTest.publish(
             channel = expectedChannel,
             message = randomValue()
         ).asyncRetry { _, status ->
@@ -90,7 +89,7 @@ abstract class AccessManagerIntegrationTest : BaseIntegrationTest() {
 
     @Test
     fun testGetPublishMessageWithoutPermission() {
-        pubnub.publish(
+        pubnubToTest.publish(
             channel = expectedChannel,
             message = generateMap()
         ).asyncRetry { _, status ->
@@ -104,7 +103,7 @@ abstract class AccessManagerIntegrationTest : BaseIntegrationTest() {
 
     @Test
     fun testPostPublishMessageWithPermission() {
-        pubnub.publish(
+        pubnubToTest.publish(
             channel = expectedChannel,
             message = generatePayload(),
             usePost = true
@@ -118,7 +117,7 @@ abstract class AccessManagerIntegrationTest : BaseIntegrationTest() {
 
     @Test
     fun testPostPublishMessageWithoutPermission() {
-        pubnub.publish(
+        pubnubToTest.publish(
             channel = expectedChannel,
             message = generateMap(),
             usePost = true
@@ -135,7 +134,7 @@ abstract class AccessManagerIntegrationTest : BaseIntegrationTest() {
     fun testMessageCountsWithPermission() {
         requestAccess(READ, WRITE)
 
-        pubnub.messageCounts(
+        pubnubToTest.messageCounts(
             channels = listOf(expectedChannel),
             channelsTimetoken = listOf(System.currentTimeMillis())
         ).asyncRetry { _, status ->
@@ -148,7 +147,7 @@ abstract class AccessManagerIntegrationTest : BaseIntegrationTest() {
 
     @Test
     fun testMessageCountsWithoutPermission() {
-        pubnub.messageCounts(
+        pubnubToTest.messageCounts(
             channels = listOf(expectedChannel),
             channelsTimetoken = listOf(System.currentTimeMillis())
         ).asyncRetry { _, status ->
@@ -162,7 +161,7 @@ abstract class AccessManagerIntegrationTest : BaseIntegrationTest() {
 
     @Test
     fun testHistoryWithPermission() {
-        pubnub.history(
+        pubnubToTest.history(
             channel = expectedChannel
         ).asyncRetry { _, status ->
             requestAccess(READ)
@@ -174,7 +173,7 @@ abstract class AccessManagerIntegrationTest : BaseIntegrationTest() {
 
     @Test
     fun testHistoryWithoutPermission() {
-        pubnub.history(
+        pubnubToTest.history(
             channel = expectedChannel
         ).asyncRetry { _, status ->
             revokeAllAccess()
@@ -189,7 +188,7 @@ abstract class AccessManagerIntegrationTest : BaseIntegrationTest() {
     fun testPublishHistoryWithPermission() {
         val expectedMessagePayload = generatePayload()
 
-        pubnub.publish(
+        pubnubToTest.publish(
             channel = expectedChannel,
             message = expectedMessagePayload,
             shouldStore = true
@@ -200,7 +199,7 @@ abstract class AccessManagerIntegrationTest : BaseIntegrationTest() {
             assertStatusSuccess(status)
         }
 
-        pubnub.history(
+        pubnubToTest.history(
             channel = expectedChannel
         ).asyncRetry { result, status ->
             assertAuthKey(status)
@@ -214,7 +213,7 @@ abstract class AccessManagerIntegrationTest : BaseIntegrationTest() {
 
     @Test
     fun testHereNowWithPermission() {
-        pubnub.hereNow(
+        pubnubToTest.hereNow(
             channels = listOf(expectedChannel)
         ).asyncRetry { _, status ->
             requestAccess(READ)
@@ -226,7 +225,7 @@ abstract class AccessManagerIntegrationTest : BaseIntegrationTest() {
 
     @Test
     fun testHereNowWithoutPermission() {
-        pubnub.hereNow(
+        pubnubToTest.hereNow(
             channels = listOf(expectedChannel)
         ).asyncRetry { _, status ->
             revokeAllAccess()
@@ -241,9 +240,9 @@ abstract class AccessManagerIntegrationTest : BaseIntegrationTest() {
     fun testSetStateWithoutPermission() {
         val expectedStatePayload = generatePayload()
 
-        pubnub.setPresenceState(
+        pubnubToTest.setPresenceState(
             channels = listOf(expectedChannel),
-            uuid = pubnub.configuration.uuid,
+            uuid = pubnubToTest.configuration.uuid,
             state = expectedStatePayload
         ).asyncRetry { _, status ->
             revokeAllAccess()
@@ -258,9 +257,9 @@ abstract class AccessManagerIntegrationTest : BaseIntegrationTest() {
     fun testSetStateWithPermission() {
         val expectedStatePayload = generatePayload()
 
-        pubnub.setPresenceState(
+        pubnubToTest.setPresenceState(
             channels = listOf(expectedChannel),
-            uuid = pubnub.configuration.uuid,
+            uuid = pubnubToTest.configuration.uuid,
             state = expectedStatePayload
         ).asyncRetry { result, status ->
             requestAccess(READ)
@@ -273,9 +272,9 @@ abstract class AccessManagerIntegrationTest : BaseIntegrationTest() {
 
     @Test
     fun testGetSetStateWithoutPermission() {
-        pubnub.getPresenceState(
+        pubnubToTest.getPresenceState(
             channels = listOf(expectedChannel),
-            uuid = pubnub.configuration.uuid
+            uuid = pubnubToTest.configuration.uuid
         ).asyncRetry { _, status ->
             revokeAllAccess()
             assertAuthKey(status)
@@ -287,9 +286,9 @@ abstract class AccessManagerIntegrationTest : BaseIntegrationTest() {
 
     @Test
     fun testGetStateWithPermission() {
-        pubnub.getPresenceState(
+        pubnubToTest.getPresenceState(
             channels = listOf(expectedChannel),
-            uuid = pubnub.configuration.uuid
+            uuid = pubnubToTest.configuration.uuid
         ).asyncRetry { _, status ->
             requestAccess(READ)
             assertAuthKey(status)
@@ -302,9 +301,9 @@ abstract class AccessManagerIntegrationTest : BaseIntegrationTest() {
     fun testStateComboWithPermission() {
         val expectedStatePayload = generatePayload()
 
-        pubnub.setPresenceState(
+        pubnubToTest.setPresenceState(
             channels = listOf(expectedChannel),
-            uuid = pubnub.configuration.uuid,
+            uuid = pubnubToTest.configuration.uuid,
             state = expectedStatePayload
         ).asyncRetry { result, status ->
             requestAccess(READ)
@@ -314,9 +313,9 @@ abstract class AccessManagerIntegrationTest : BaseIntegrationTest() {
             assertEquals(expectedStatePayload, result!!.state)
         }
 
-        pubnub.getPresenceState(
+        pubnubToTest.getPresenceState(
             channels = listOf(expectedChannel),
-            uuid = pubnub.configuration.uuid
+            uuid = pubnubToTest.configuration.uuid
         ).asyncRetry { result, status ->
             requestAccess(READ)
             assertAuthKey(status)
@@ -330,12 +329,12 @@ abstract class AccessManagerIntegrationTest : BaseIntegrationTest() {
     fun testPresenceWithPermission() {
         val success = AtomicBoolean()
 
-        pubnub.addListener(object : SubscribeCallback() {
+        pubnubToTest.addListener(object : SubscribeCallback() {
 
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
                 if (pnStatus.category == PNStatusCategory.PNConnectedCategory &&
                     pnStatus.operation == PNOperationType.PNSubscribeOperation &&
-                    pnStatus.uuid == this@AccessManagerIntegrationTest.pubnub.configuration.uuid
+                    pnStatus.uuid == this@AccessManagerIntegrationTest.pubnubToTest.configuration.uuid
                 ) {
                     server.subscribe(
                         withPresence = true,
@@ -357,7 +356,7 @@ abstract class AccessManagerIntegrationTest : BaseIntegrationTest() {
 
         requestAccess(READ)
 
-        pubnub.subscribe(
+        pubnubToTest.subscribe(
             withPresence = true,
             channels = listOf(expectedChannel)
         )
@@ -373,7 +372,7 @@ abstract class AccessManagerIntegrationTest : BaseIntegrationTest() {
     fun testPublishSignalWithPermission() {
         val expectedPayload = randomValue(5)
 
-        pubnub.signal(
+        pubnubToTest.signal(
             channel = expectedChannel,
             message = expectedPayload
         ).asyncRetry { _, status ->
@@ -388,7 +387,7 @@ abstract class AccessManagerIntegrationTest : BaseIntegrationTest() {
     fun testPublishSignalWithoutPermission() {
         val expectedPayload = randomValue(5)
 
-        pubnub.signal(
+        pubnubToTest.signal(
             channel = expectedChannel,
             message = expectedPayload
         ).asyncRetry { _, status ->
@@ -402,7 +401,7 @@ abstract class AccessManagerIntegrationTest : BaseIntegrationTest() {
 
     @Test
     fun testDeleteMessageWithPermission() {
-        pubnub.deleteMessages(
+        pubnubToTest.deleteMessages(
             channels = listOf(expectedChannel)
         ).retryForbidden({ requestAccess(DELETE) }) { _, status ->
             assertAuthKey(status)
@@ -413,7 +412,7 @@ abstract class AccessManagerIntegrationTest : BaseIntegrationTest() {
 
     @Test
     fun testDeleteMessageWithoutPermission() {
-        pubnub.deleteMessages(
+        pubnubToTest.deleteMessages(
             channels = listOf(expectedChannel)
         ).asyncRetry { _, status ->
             revokeAllAccess()
@@ -426,7 +425,7 @@ abstract class AccessManagerIntegrationTest : BaseIntegrationTest() {
 
     @Test
     fun testFetchMessagesWithPermission() {
-        pubnub.fetchMessages(
+        pubnubToTest.fetchMessages(
             channels = listOf(expectedChannel)
         ).asyncRetry { _, status ->
             requestAccess(READ)
@@ -438,7 +437,7 @@ abstract class AccessManagerIntegrationTest : BaseIntegrationTest() {
 
     @Test
     fun testFetchMessagesWithoutPermission() {
-        pubnub.fetchMessages(
+        pubnubToTest.fetchMessages(
             channels = listOf(expectedChannel)
         ).asyncRetry { _, status ->
             revokeAllAccess()
@@ -451,7 +450,7 @@ abstract class AccessManagerIntegrationTest : BaseIntegrationTest() {
 
     @Test
     fun testFetchMessageActionsWithPermission() {
-        pubnub.fetchMessages(
+        pubnubToTest.fetchMessages(
             channels = listOf(expectedChannel),
             includeMessageActions = true
         ).asyncRetry { _, status ->
@@ -464,7 +463,7 @@ abstract class AccessManagerIntegrationTest : BaseIntegrationTest() {
 
     @Test
     fun testFetchMessageActionsWithoutPermission() {
-        pubnub.fetchMessages(
+        pubnubToTest.fetchMessages(
             channels = listOf(expectedChannel),
             includeMessageActions = true
         ).asyncRetry { _, status ->
@@ -478,7 +477,7 @@ abstract class AccessManagerIntegrationTest : BaseIntegrationTest() {
 
     @Test
     fun testAddAMessageActionWithPermission() {
-        pubnub.addMessageAction(
+        pubnubToTest.addMessageAction(
             channel = expectedChannel,
             messageAction = PNMessageAction(
                 type = "reaction",
@@ -495,7 +494,7 @@ abstract class AccessManagerIntegrationTest : BaseIntegrationTest() {
 
     @Test
     fun testAddMessageActionWithoutPermission() {
-        pubnub.addMessageAction(
+        pubnubToTest.addMessageAction(
             channel = expectedChannel,
             messageAction =
             PNMessageAction(
@@ -514,7 +513,7 @@ abstract class AccessManagerIntegrationTest : BaseIntegrationTest() {
 
     @Test
     fun testGetMessageActionsWithPermission() {
-        pubnub.getMessageActions(
+        pubnubToTest.getMessageActions(
             channel = expectedChannel
         ).retryForbidden({ requestAccess(READ) }) { _, status ->
             assertAuthKey(status)
@@ -525,7 +524,7 @@ abstract class AccessManagerIntegrationTest : BaseIntegrationTest() {
 
     @Test
     fun testGetMessageActionsWithoutPermission() {
-        pubnub.getMessageActions(
+        pubnubToTest.getMessageActions(
             channel = expectedChannel
         ).retryForbidden({ revokeAllAccess() }) { _, status ->
             assertAuthKey(status)
@@ -542,7 +541,7 @@ abstract class AccessManagerIntegrationTest : BaseIntegrationTest() {
         retry {
             requestAccess(WRITE)
 
-            addMessageActionResult = pubnub.addMessageAction(
+            addMessageActionResult = pubnubToTest.addMessageAction(
                 channel = expectedChannel,
                 messageAction = PNMessageAction(
                     type = ("reaction"),
@@ -554,7 +553,7 @@ abstract class AccessManagerIntegrationTest : BaseIntegrationTest() {
 
         revokeAllAccess()
 
-        pubnub.removeMessageAction(
+        pubnubToTest.removeMessageAction(
             channel = expectedChannel,
             messageTimetoken = addMessageActionResult.messageTimetoken,
             actionTimetoken = addMessageActionResult.actionTimetoken!!
@@ -573,14 +572,14 @@ abstract class AccessManagerIntegrationTest : BaseIntegrationTest() {
         retry {
             requestAccess(WRITE)
 
-            publishResult = pubnub.publish(
+            publishResult = pubnubToTest.publish(
                 channel = expectedChannel,
                 message = randomValue(),
                 shouldStore = true
             ).sync()!!
         }
 
-        val addMessageActionResult = pubnub.addMessageAction(
+        val addMessageActionResult = pubnubToTest.addMessageAction(
             channel = expectedChannel,
             messageAction = PNMessageAction(
                 type = "reaction",
@@ -591,7 +590,7 @@ abstract class AccessManagerIntegrationTest : BaseIntegrationTest() {
 
         revokeAllAccess()
 
-        pubnub.removeMessageAction(
+        pubnubToTest.removeMessageAction(
             channel = expectedChannel,
             messageTimetoken = addMessageActionResult!!.messageTimetoken,
             actionTimetoken = addMessageActionResult.actionTimetoken!!
@@ -689,7 +688,7 @@ abstract class AccessManagerIntegrationTest : BaseIntegrationTest() {
     }
 
     private fun assertUuid(pnStatus: PNStatus) {
-        assertEquals(pubnub.configuration.uuid, pnStatus.uuid)
+        assertEquals(pubnubToTest.configuration.uuid, pnStatus.uuid)
     }
 
     abstract fun getPamLevel(): String

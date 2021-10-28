@@ -11,6 +11,8 @@ import org.slf4j.LoggerFactory
 import java.net.Proxy
 import java.net.ProxySelector
 import java.util.UUID
+import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.ConcurrentMap
 import javax.net.ssl.HostnameVerifier
 import javax.net.ssl.SSLSocketFactory
 import javax.net.ssl.X509ExtendedTrustManager
@@ -300,4 +302,19 @@ class PNConfiguration {
             function.invoke(filterExpression)
         }
     }
+
+    private val pnsdkSuffixes: ConcurrentMap<String, String> = ConcurrentHashMap(mutableMapOf())
+
+    internal fun generatePnsdk(version: String): String {
+        val joinedSuffixes = pnsdkSuffixes.toSortedMap().values.joinToString(" ")
+        return "PubNub-Kotlin/$version" + if (joinedSuffixes.isNotBlank()) " $joinedSuffixes" else ""
+    }
+
+    @Deprecated("To be used by components", level = DeprecationLevel.WARNING)
+    public fun addPnsdkSuffix(vararg nameToSuffixes: Pair<String, String>) {
+        addPnsdkSuffix(nameToSuffixes.toMap())
+    }
+
+    @Deprecated("To be used by components", level = DeprecationLevel.WARNING)
+    public fun addPnsdkSuffix(nameToSuffixes: Map<String, String>) = pnsdkSuffixes.putAll(nameToSuffixes)
 }

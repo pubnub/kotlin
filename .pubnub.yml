@@ -1,9 +1,9 @@
 name: kotlin
-version: 6.0.3
+version: 6.2.0
 schema: 1
 scm: github.com/pubnub/kotlin
 files:
-  - build/libs/pubnub-kotlin-6.0.3-all.jar
+  - build/libs/pubnub-kotlin-6.2.0-all.jar
 sdks:
   - 
       type: library
@@ -234,6 +234,26 @@ sdks:
                   is-required: Required
 changelog:
   -
+    version: v6.2.0
+    date: 2021-10-06
+    changes:
+      -
+        type: feature
+        text: "Acceptance tests plugged into CI pipeline."
+      -
+        type: feature
+        text: "Internal telemetry enhancement."
+      -
+        type: bug
+        text: "Meta field exposed correctly in PNToken class."
+  -
+    version: v6.1.0
+    date: 2021-09-08
+    changes:
+      -
+        type: feature
+        text: "Method grantToken has beed added. It allows generation of signed token with permissions for channels and channel groups."
+  -
     version: v6.0.3
     date: 2021-07-26
     changes:
@@ -359,6 +379,9 @@ features:
     - ACCESS-GRANT-MANAGE
     - ACCESS-GRANT-DELETE
     - ACCESS-SECRET-KEY-ALL-ACCESS
+    - ACCESS-GRANT-TOKEN
+    - ACCESS-PARSE-TOKEN
+    - ACCESS-SET-TOKEN
   channel-groups:
     - CHANNEL-GROUPS-ADD-CHANNELS
     - CHANNEL-GROUPS-REMOVE-CHANNELS

@@ -1,8 +1,10 @@
-## [v6.0.3](https://github.com/pubnub/kotlin/releases/tag/v6.0.3)
-July 26 2021
+## [v6.2.0](https://github.com/pubnub/kotlin/releases/tag/v6.2.0)
+October 6 2021
 
-[Full Changelog](https://github.com/pubnub/kotlin/compare/v6.0.2...v6.0.3)
+[Full Changelog](https://github.com/pubnub/kotlin/compare/v6.1.0...v6.2.0)
 
-- Using random initialization vector according to 'useRandomInitializationVector' flag setting. 
+- Acceptance tests plugged into CI pipeline. 
+- Internal telemetry enhancement. 
+- Meta field exposed correctly in PNToken class. 
 
 
