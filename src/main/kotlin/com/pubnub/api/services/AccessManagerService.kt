@@ -3,8 +3,10 @@ package com.pubnub.api.services
 import com.pubnub.api.models.server.Envelope
 import com.pubnub.api.models.server.access_manager.AccessManagerGrantPayload
 import com.pubnub.api.models.server.access_manager.v3.GrantTokenResponse
+import com.pubnub.api.models.server.access_manager.v3.RevokeTokenResponse
 import retrofit2.Call
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
@@ -24,4 +26,11 @@ internal interface AccessManagerService {
         @Body body: Any?,
         @QueryMap options: Map<String, String>
     ): Call<GrantTokenResponse>
+
+    @DELETE("/v3/pam/{subKey}/grant/{token}")
+    fun revokeToken(
+        @Path("subKey") subKey: String,
+        @Path("token") token: String,
+        @QueryMap queryParams: Map<String, String>
+    ): Call<RevokeTokenResponse>
 }

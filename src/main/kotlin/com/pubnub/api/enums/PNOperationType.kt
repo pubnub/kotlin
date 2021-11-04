@@ -63,6 +63,7 @@ sealed class PNOperationType(open val queryParam: String? = null) {
     object PNManageMemberships : ObjectsOperation()
 
     object PNAccessManagerGrantToken : PAMV3Operation()
+    object PNAccessManagerRevokeToken : PAMV3Operation()
 
     object PNAddMessageAction : MessageActionsOperation()
     object PNGetMessageActions : MessageActionsOperation()
