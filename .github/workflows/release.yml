@@ -62,6 +62,6 @@ jobs:
         with:
           token: ${{ secrets.GH_TOKEN }}
           source-folder: build/dokka/pubnub-kotlin
-          command: "gradlew dokka"
+          jira-api-key: ${{ secrets.JIRA_API_KEY }}
           last-service: true
 
