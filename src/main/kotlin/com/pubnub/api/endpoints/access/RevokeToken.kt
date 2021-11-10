@@ -26,11 +26,15 @@ class RevokeToken(
     override fun doWork(queryParams: HashMap<String, String>): Call<RevokeTokenResponse> {
         return pubnub.retrofitManager
             .accessManagerService
-            .revokeToken(pubnub.configuration.subscribeKey, token, queryParams)
+            .revokeToken(pubnub.configuration.subscribeKey, repairEncoding(token), queryParams)
     }
 
     override fun createResponse(input: Response<RevokeTokenResponse>): Unit = Unit
 
     override fun operationType(): PNOperationType = PNOperationType.PNAccessManagerRevokeToken
     override fun isAuthRequired(): Boolean = false
+
+    private fun repairEncoding(token: String): String {
+        return token.replace("=", "%3D")
+    }
 }
