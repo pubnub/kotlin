@@ -1,16 +1,19 @@
 package com.pubnub.contract.access.step
 
-import com.pubnub.contract.access.state.GrantTokenState
-import com.pubnub.contract.state.World
 import com.pubnub.api.PubNubException
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant
 import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant
+import com.pubnub.contract.access.state.GrantTokenState
+import com.pubnub.contract.access.state.RevokeTokenState
+import com.pubnub.contract.state.World
+import io.cucumber.java.PendingException
 import io.cucumber.java.en.When
 import org.junit.Assert
 
 class WhenSteps(
     private val grantTokenState: GrantTokenState,
+    private val revokeTokenState: RevokeTokenState,
     private val world: World
 ) {
 
@@ -43,5 +46,26 @@ class WhenSteps(
     @When("I parse the token")
     fun i_parse_the_token() {
         grantTokenState.parsedToken = world.pubnub.parseToken(grantTokenState.result?.token!!)
+    }
+
+    @When("I revoke a token")
+    fun i_revoke_the_token() {
+        try {
+            world.pubnub.revokeToken(revokeTokenState.tokenString!!).sync()
+        } catch (e: PubNubException) {
+            world.pnException = e
+        }
+    }
+
+    @When("I publish a message using that auth token with channel {string}")
+    fun i_publish_a_message_using_that_auth_token_with_channel(string: String) {
+        // Write code here that turns the phrase above into concrete actions
+        throw PendingException()
+    }
+
+    @When("I attempt to publish a message using that auth token with channel {string}")
+    fun i_attempt_to_publish_a_message_using_that_auth_token_with_channel(string: String?) {
+        // Write code here that turns the phrase above into concrete actions
+        throw PendingException()
     }
 }

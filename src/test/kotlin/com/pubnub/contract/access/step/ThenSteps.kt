@@ -1,18 +1,21 @@
 package com.pubnub.contract.access.step
 
+import com.pubnub.api.models.consumer.access_manager.v3.PNToken
 import com.pubnub.contract.access.parameter.PermissionType
 import com.pubnub.contract.access.parameter.ResourceType
 import com.pubnub.contract.access.parameter.patternPermissionsMap
 import com.pubnub.contract.access.parameter.resourcePermissionsMap
 import com.pubnub.contract.access.state.GrantTokenState
+import com.pubnub.contract.access.state.RevokeTokenState
 import com.pubnub.contract.state.World
-import com.pubnub.api.models.consumer.access_manager.v3.PNToken
+import io.cucumber.java.PendingException
 import io.cucumber.java.en.Then
 import org.hamcrest.MatcherAssert
 import org.hamcrest.Matchers
 
 class ThenSteps(
     private val grantTokenState: GrantTokenState,
+    private val revokeTokenState: RevokeTokenState,
     private val world: World
 ) {
     @Then("the authorized UUID {string}")
@@ -79,6 +82,29 @@ class ThenSteps(
     @Then("token pattern permission {permissionType}")
     fun token_pattern_permission(permissionType: PermissionType) {
         assertPermissions(permissionType)
+    }
+
+    @Then("I get confirmation that token has been revoked")
+    fun i_get_confirmation_that_token_has_been_revoked() {
+        MatcherAssert.assertThat(world.pnException, Matchers.nullValue())
+    }
+
+    @Then("the result is successful")
+    fun the_result_is_successful() {
+        // Write code here that turns the phrase above into concrete actions
+        throw PendingException()
+    }
+
+    @Then("an auth error is returned")
+    fun an_auth_error_is_returned() {
+        // Write code here that turns the phrase above into concrete actions
+        throw PendingException()
+    }
+
+    @Then("the auth error message is {string}")
+    fun the_auth_error_message_is(string: String?) {
+        // Write code here that turns the phrase above into concrete actions
+        throw PendingException()
     }
 
     private fun assertPermissions(permissionType: PermissionType) {

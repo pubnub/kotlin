@@ -14,6 +14,16 @@ class World {
             logVerbosity = PNLogVerbosity.BODY
         }
     }
+
+    val clientConfiguration: PNConfiguration by lazy {
+        PNConfiguration().apply {
+            origin = ContractTestConfig.serverHostPort
+            secure = false
+            logVerbosity = PNLogVerbosity.BODY
+        }
+    }
+
     val pubnub: PubNub by lazy { PubNub(configuration) }
+    val clientPubnub: PubNub by lazy { PubNub(clientConfiguration) }
     var pnException: PubNubException? = null
 }
