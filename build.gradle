@@ -42,7 +42,6 @@ configurations {
     testFixturesImplementation { extendsFrom allTest }
     integrationTestImplementation { extendsFrom allTest }
     testImplementation { extendsFrom allTest }
-    cucumberRuntime { extendsFrom testImplementation }
 }
 
 dependencies {

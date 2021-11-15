@@ -6,7 +6,6 @@ import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant
 import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant
 import com.pubnub.contract.access.state.GrantTokenState
 import com.pubnub.contract.state.World
-import io.cucumber.java.PendingException
 import io.cucumber.java.en.When
 import org.junit.Assert
 
@@ -58,7 +57,7 @@ class WhenSteps(
     @When("I publish a message using that auth token with channel {string}")
     fun i_publish_a_message_using_that_auth_token_with_channel(channel: String) {
         world.pubnub.setToken(world.tokenString)
-        val result = world.pubnub.publish(
+        world.pubnub.publish(
             channel = channel,
             message = "Message"
         ).sync()

@@ -5,7 +5,6 @@ import dev.nohus.autokonfig.types.BooleanSetting
 import dev.nohus.autokonfig.types.StringSetting
 import dev.nohus.autokonfig.withEnvironmentVariables
 import dev.nohus.autokonfig.withResourceConfig
-import dev.nohus.autokonfig.withURLConfig
 
 object ContractTestConfig {
     private fun AutoKonfig.withSafeResourceConfig(resource: String) = apply {

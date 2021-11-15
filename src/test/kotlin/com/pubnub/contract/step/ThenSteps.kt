@@ -1,7 +1,6 @@
 package com.pubnub.contract.step
 
 import com.pubnub.contract.state.World
-import io.cucumber.java.PendingException
 import io.cucumber.java.en.Then
 import junit.framework.Assert.assertNull
 import org.json.JSONObject
@@ -72,8 +71,7 @@ class ThenSteps(private val world: World) {
             errorJsonObject().getJSONObject("error")
                 .getJSONArray("details")
                 .map { it as JSONObject }
-                .map { it.getString("message") }
-                .filterNotNull()
+                .mapNotNull { it.getString("message") }
                 .any { it.isNotBlank() }
         )
     }

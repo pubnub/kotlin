@@ -1,10 +1,10 @@
 package com.pubnub.contract.state
 
-import com.pubnub.contract.ContractTestConfig
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNLogVerbosity
+import com.pubnub.contract.ContractTestConfig
 
 class World {
     val configuration: PNConfiguration by lazy {
