@@ -31,7 +31,7 @@ jobs:
           export serverMock=true
           ./gradlew cucumber --tests RunBetaCucumberTest  -Dcucumber.features="sdk-specifications/features/" -i
         continue-on-error: true
-      - name: Run acceptance tests - main
+      - name: Run acceptance tests (required)
         run: |
           export pubKey=somePubKey
           export subKey=someSubKey
@@ -43,7 +43,8 @@ jobs:
           ./gradlew cucumber --tests RunMainCucumberTest  -Dcucumber.features="sdk-specifications/features/" -i
       - name: Expose acceptance tests reports
         uses: actions/upload-artifact@v2
+        if: always()
         with:
           name: acceptance-test-reports
           path: ./build/reports/cucumber-reports
-
+          retention-days: 7
