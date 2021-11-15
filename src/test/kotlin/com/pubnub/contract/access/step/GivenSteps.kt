@@ -14,13 +14,12 @@ import com.pubnub.contract.access.parameter.PermissionType
 import com.pubnub.contract.access.parameter.ResourceType
 import com.pubnub.contract.access.state.FutureCallGrant
 import com.pubnub.contract.access.state.GrantTokenState
-import com.pubnub.contract.access.state.RevokeTokenState
-import io.cucumber.java.PendingException
+import com.pubnub.contract.state.World
 import io.cucumber.java.en.And
 import io.cucumber.java.en.Given
 import kotlin.random.Random
 
-class GivenSteps(private val grantTokenState: GrantTokenState, private val revokeTokenState: RevokeTokenState) {
+class GivenSteps(private val grantTokenState: GrantTokenState, private val world: World) {
     private val tokenWithAll =
         "qEF2AkF0GmEI03xDdHRsGDxDcmVzpURjaGFuoWljaGFubmVsLTEY70NncnChb2NoYW5uZWxfZ3JvdXAtMQVDdXNyoENzcGOgRHV1aWShZnV1aWQtMRhoQ3BhdKVEY2hhbqFtXmNoYW5uZWwtXFMqJBjvQ2dycKF0XjpjaGFubmVsX2dyb3VwLVxTKiQFQ3VzcqBDc3BjoER1dWlkoWpedXVpZC1cUyokGGhEbWV0YaBEdXVpZHR0ZXN0LWF1dGhvcml6ZWQtdXVpZENzaWdYIPpU-vCe9rkpYs87YUrFNWkyNq8CVvmKwEjVinnDrJJc"
 
@@ -82,25 +81,23 @@ class GivenSteps(private val grantTokenState: GrantTokenState, private val revok
     @Given("a token")
     fun a_token() {
         val characters: List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9') + '-'
-        revokeTokenState.tokenString =
+        world.tokenString =
             (1..30).map { Random.nextInt(0, characters.size) }.map { characters[it] }.joinToString("")
     }
 
     @Given("a valid token with permissions to publish with channel {string}")
     fun a_valid_token_with_permissions_to_publish_with_channel(string: String?) {
-        // Write code here that turns the phrase above into concrete actions
-        throw PendingException()
+        return a_token()
     }
 
     @Given("an expired token with permissions to publish with channel {string}")
     fun an_expired_token_with_permissions_to_publish_with_channel(string: String) {
-        // Write code here that turns the phrase above into concrete actions
-        throw PendingException()
+        return a_token()
     }
 
     @Given("the token string {string}")
     fun the_token_string(string: String) {
-        revokeTokenState.tokenString = string
+        world.tokenString = string
     }
 
     private fun grant_permission(permissionType: PermissionType) {

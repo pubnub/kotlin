@@ -6,6 +6,7 @@ import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.server.access_manager.v3.RevokeTokenResponse
+import java.net.URLEncoder
 import retrofit2.Call
 import retrofit2.Response
 
@@ -35,6 +36,8 @@ class RevokeToken(
     override fun isAuthRequired(): Boolean = false
 
     private fun repairEncoding(token: String): String {
-        return token.replace("=", "%3D")
+        return token
+            .split(" ")
+            .joinToString(separator = "%20") { URLEncoder.encode(it, "utf-8") }
     }
 }

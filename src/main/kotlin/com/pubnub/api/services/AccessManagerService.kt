@@ -30,7 +30,7 @@ internal interface AccessManagerService {
     @DELETE("/v3/pam/{subKey}/grant/{token}")
     fun revokeToken(
         @Path("subKey") subKey: String,
-        @Path("token") token: String,
+        @Path("token", encoded = true) token: String,
         @QueryMap queryParams: Map<String, String>
     ): Call<RevokeTokenResponse>
 }

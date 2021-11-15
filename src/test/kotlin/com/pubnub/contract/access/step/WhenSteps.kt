@@ -5,7 +5,6 @@ import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant
 import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant
 import com.pubnub.contract.access.state.GrantTokenState
-import com.pubnub.contract.access.state.RevokeTokenState
 import com.pubnub.contract.state.World
 import io.cucumber.java.PendingException
 import io.cucumber.java.en.When
@@ -13,7 +12,6 @@ import org.junit.Assert
 
 class WhenSteps(
     private val grantTokenState: GrantTokenState,
-    private val revokeTokenState: RevokeTokenState,
     private val world: World
 ) {
 
@@ -51,21 +49,33 @@ class WhenSteps(
     @When("I revoke a token")
     fun i_revoke_the_token() {
         try {
-            world.pubnub.revokeToken(revokeTokenState.tokenString!!).sync()
+            world.pubnub.revokeToken(world.tokenString!!).sync()
         } catch (e: PubNubException) {
             world.pnException = e
         }
     }
 
     @When("I publish a message using that auth token with channel {string}")
-    fun i_publish_a_message_using_that_auth_token_with_channel(string: String) {
-        // Write code here that turns the phrase above into concrete actions
-        throw PendingException()
+    fun i_publish_a_message_using_that_auth_token_with_channel(channel: String) {
+        world.pubnub.setToken(world.tokenString)
+        val result = world.pubnub.publish(
+            channel = channel,
+            message = "Message"
+        ).sync()
+
     }
 
     @When("I attempt to publish a message using that auth token with channel {string}")
-    fun i_attempt_to_publish_a_message_using_that_auth_token_with_channel(string: String?) {
-        // Write code here that turns the phrase above into concrete actions
-        throw PendingException()
+    fun i_attempt_to_publish_a_message_using_that_auth_token_with_channel(channel: String) {
+        world.pubnub.setToken(world.tokenString)
+
+        try {
+            world.pubnub.publish(
+                channel = channel,
+                message = "Message"
+            ).sync()
+        } catch (e: PubNubException) {
+            world.pnException = e
+        }
     }
 }

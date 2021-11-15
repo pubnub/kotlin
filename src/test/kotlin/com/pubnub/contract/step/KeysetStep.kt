@@ -25,7 +25,7 @@ class KeysetStep(private val world: World) {
         MatcherAssert.assertThat(ContractTestConfig.pubKey, Matchers.notNullValue())
         MatcherAssert.assertThat(ContractTestConfig.subKey, Matchers.notNullValue())
 
-        world.clientConfiguration.apply {
+        world.configuration.apply {
             subscribeKey = ContractTestConfig.pamSubKey
             publishKey = ContractTestConfig.pamPubKey
             secretKey = ContractTestConfig.pamSecKey
