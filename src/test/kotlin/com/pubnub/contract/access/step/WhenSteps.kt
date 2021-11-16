@@ -61,7 +61,6 @@ class WhenSteps(
             channel = channel,
             message = "Message"
         ).sync()
-
     }
 
     @When("I attempt to publish a message using that auth token with channel {string}")
