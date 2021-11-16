@@ -131,11 +131,6 @@ enum class PubNubError(private val code: Int, val message: String) {
         "User name is missing"
     ),
 
-    TOKEN_MISSING(
-        152,
-        "Token missing"
-    ),
-
     RESOURCES_MISSING(
         153,
         "Resources missing"
@@ -184,6 +179,11 @@ enum class PubNubError(private val code: Int, val message: String) {
     PUSH_TOPIC_MISSING(
         164,
         "Push notification topic is missing. Required only if push type is APNS2."
+    ),
+
+    TOKEN_MISSING(
+        168,
+        "Token missing"
     );
 
     override fun toString(): String {
