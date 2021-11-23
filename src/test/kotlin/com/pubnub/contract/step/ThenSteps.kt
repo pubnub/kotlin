@@ -10,12 +10,12 @@ import org.junit.Assert.assertTrue
 
 class ThenSteps(private val world: World) {
 
-    @Then.Thens(Then("an error is returned"), Then("an auth error is returned"))
+    @Then.Thens(Then("an error is returned"), Then("an auth error is returned"), Then("I receive error response"))
     fun an_error_is_returned() {
         assertNotNull(world.pnException)
     }
 
-    @Then("the result is successful")
+    @Then.Thens(Then("the result is successful"), Then("I receive successful response"))
     fun the_result_is_successful() {
         assertNull(world.pnException)
     }
