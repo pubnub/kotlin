@@ -23,6 +23,8 @@ object ContractTestConfig {
     val pamSecKey by config.StringSetting()
     val pubKey by config.StringSetting()
     val subKey by config.StringSetting()
+    val demoPubKey by config.StringSetting()
+    val demoSubKey by config.StringSetting()
     val serverHostPort by config.StringSetting()
     val serverMock by config.BooleanSetting(true)
 }
