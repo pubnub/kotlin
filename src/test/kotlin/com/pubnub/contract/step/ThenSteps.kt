@@ -1,5 +1,7 @@
 package com.pubnub.contract.step
 
+import com.pubnub.contract.history.state.HistoryState
+import com.pubnub.contract.messageaction.state.MessageActionState
 import com.pubnub.contract.state.World
 import io.cucumber.java.en.Then
 import junit.framework.Assert.assertNull
@@ -7,8 +9,13 @@ import org.json.JSONObject
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
+import org.junit.Assert.fail
 
-class ThenSteps(private val world: World) {
+class ThenSteps(
+    private val world: World,
+    private val messageActionState: MessageActionState,
+    private val historyState: HistoryState
+) {
 
     @Then.Thens(Then("an error is returned"), Then("an auth error is returned"), Then("I receive error response"))
     fun an_error_is_returned() {
@@ -79,6 +86,17 @@ class ThenSteps(private val world: World) {
     @Then("the error service is {string}")
     fun the_error_service_is(string: String) {
         assertEquals(string, errorJsonObject().getString("service"))
+    }
+
+    @Then("the response contains pagination info")
+    fun the_response_contains_pagination_info() {
+        if (messageActionState.getMessageActionResult != null) {
+            assertNotNull(messageActionState.getMessageActionResult?.page)
+        } else if (historyState.pnFetchMessagesResult != null) {
+            assertNotNull(historyState.pnFetchMessagesResult?.page)
+        } else {
+            fail("None of the results contains pagination info")
+        }
     }
 
     private fun errorJsonObject(): JSONObject = JSONObject(world.pnException!!.errorMessage)
