@@ -56,7 +56,7 @@ class ListFiles(
         return input.body()?.let { body ->
             PNListFilesResult(
                 body.count,
-                body.next,
+                body.next?.let { PNPage.PNNext(it) },
                 body.status,
                 body.data
             )
