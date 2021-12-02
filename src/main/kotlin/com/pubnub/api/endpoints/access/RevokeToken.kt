@@ -36,8 +36,6 @@ class RevokeToken(
     override fun isAuthRequired(): Boolean = false
 
     private fun repairEncoding(token: String): String {
-        return token
-            .split(" ")
-            .joinToString(separator = "%20") { URLEncoder.encode(it, "utf-8") }
+        return URLEncoder.encode(token, "utf-8").replace("+", "%20")
     }
 }
