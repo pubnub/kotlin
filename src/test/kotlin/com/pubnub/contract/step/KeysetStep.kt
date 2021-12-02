@@ -45,4 +45,28 @@ class KeysetStep(private val world: World) {
             publishKey = ContractTestConfig.demoPubKey
         }
     }
+
+    @Given("the crypto keyset")
+    fun the_crypto_keyset() {
+        MatcherAssert.assertThat(ContractTestConfig.demoPubKey, Matchers.notNullValue())
+        MatcherAssert.assertThat(ContractTestConfig.demoSubKey, Matchers.notNullValue())
+
+        world.configuration.apply {
+            subscribeKey = ContractTestConfig.demoSubKey
+            publishKey = ContractTestConfig.demoPubKey
+            cipherKey = "enigma"
+        }
+    }
+
+    @Given("the invalid-crypto keyset")
+    fun the_invalid_crypto_keyset() {
+        MatcherAssert.assertThat(ContractTestConfig.demoPubKey, Matchers.notNullValue())
+        MatcherAssert.assertThat(ContractTestConfig.demoSubKey, Matchers.notNullValue())
+
+        world.configuration.apply {
+            subscribeKey = ContractTestConfig.demoSubKey
+            publishKey = ContractTestConfig.demoPubKey
+            cipherKey = "invalidKey"
+        }
+    }
 }

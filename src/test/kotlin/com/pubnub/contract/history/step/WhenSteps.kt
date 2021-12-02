@@ -23,13 +23,26 @@ class WhenSteps(
 
     @When("I fetch message history for multiple channels")
     fun i_fetch_message_history_for_multiple_channels() {
-        // Write code here that turns the phrase above into concrete actions
-        throw PendingException()
+        try {
+            historyState.pnFetchMessagesResult = world.pubnub
+                .fetchMessages(channels = listOf("channel1", "channel2"))
+                .sync()
+        } catch (ex: PubNubException) {
+            world.pnException = ex
+        }
     }
 
     @When("I fetch message history with message actions")
     fun i_fetch_message_history_with_message_actions() {
-        // Write code here that turns the phrase above into concrete actions
-        throw PendingException()
+        try {
+            historyState.pnFetchMessagesResult = world.pubnub
+                .fetchMessages(
+                    channels = listOf("channel1"),
+                    includeMessageActions = true
+                )
+                .sync()
+        } catch (ex: PubNubException) {
+            world.pnException = ex
+        }
     }
 }
