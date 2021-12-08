@@ -1,5 +1,6 @@
 package com.pubnub.contract
 
+import com.pubnub.contract.state.World
 import io.cucumber.java.After
 import io.cucumber.java.Before
 import io.cucumber.java.Scenario
@@ -9,7 +10,7 @@ import org.junit.Assert.fail
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class Hooks {
+class Hooks(private val world: World) {
     private val interceptor = HttpLoggingInterceptor()
     private val mockPubnubService: MockPubnubService = Retrofit.Builder()
         .client(OkHttpClient.Builder().addInterceptor(interceptor).build())
@@ -37,13 +38,11 @@ class Hooks {
             if (responseBody == null) {
                 fail("Expect response body is null")
             } else {
-                if (responseBody.expectations.pending.isNotEmpty() ||
-                    responseBody.expectations.failed.isNotEmpty()
-                ) {
+                if (serverExpectationsFailed(responseBody, world.failOnPending)) {
                     fail(
                         """Scenario ${responseBody.contract} considered failure: 
-                            pending - ${responseBody.expectations.pending.joinToString() },
-                            failed - ${responseBody.expectations.failed.joinToString() }
+                            pending - ${responseBody.expectations.pending.joinToString()},
+                            failed - ${responseBody.expectations.failed.joinToString()}
                         """.trimIndent()
                     )
                 }
@@ -51,10 +50,18 @@ class Hooks {
         }
     }
 
+    private fun serverExpectationsFailed(responseBody: ExpectResponse, failOnPending: Boolean): Boolean {
+        return if (failOnPending) {
+            responseBody.expectations.pending.isNotEmpty() || responseBody.expectations.failed.isNotEmpty()
+        } else {
+            responseBody.expectations.failed.isNotEmpty()
+        }
+    }
+
     private fun Scenario.contractName(): String? {
         return sourceTagNames
-            .filter { it: String -> it.startsWith("@contract") }
-            .map { it: String ->
+            .filter { it.startsWith("@contract") }
+            .map {
                 it.split("=").toTypedArray()[1]
             }
             .firstOrNull()

@@ -13,7 +13,7 @@ class RunMainCucumberTest
 
 @RunWith(Cucumber::class)
 @CucumberOptions(
-    features = ["../service-contract-mock/contract/features/access"],
+//    features = ["../service-contract-mock/contract/features/access"],
     //tags = "@contract=downloadingFile",
     //tags = "@contract=simpleSubscribe",
     plugin = ["pretty", "summary", "junit:build/reports/cucumber-reports/beta.xml"]

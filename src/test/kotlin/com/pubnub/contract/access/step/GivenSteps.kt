@@ -10,13 +10,17 @@ import com.pubnub.api.models.consumer.access_manager.v3.PNGrantTokenResult
 import com.pubnub.api.models.consumer.access_manager.v3.PNUUIDPatternGrant
 import com.pubnub.api.models.consumer.access_manager.v3.PNUUIDResourceGrant
 import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant
+import com.pubnub.api.vendor.Base64
 import com.pubnub.contract.access.parameter.PermissionType
 import com.pubnub.contract.access.parameter.ResourceType
 import com.pubnub.contract.access.state.FutureCallGrant
 import com.pubnub.contract.access.state.GrantTokenState
 import com.pubnub.contract.state.World
+import com.pubnub.contract.step.randomBase64EncodedString
+import io.cucumber.java.PendingException
 import io.cucumber.java.en.And
 import io.cucumber.java.en.Given
+import junit.framework.Assert.assertNull
 import kotlin.random.Random
 
 class GivenSteps(private val grantTokenState: GrantTokenState, private val world: World) {
@@ -76,28 +80,6 @@ class GivenSteps(private val grantTokenState: GrantTokenState, private val world
     @Given("deny resource permission GET")
     fun deny_resource_permission_get() {
         // in grant token everything is denied by default
-    }
-
-    @Given("a token")
-    fun a_token() {
-        val characters: List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9') + '-'
-        world.tokenString =
-            (1..30).map { Random.nextInt(0, characters.size) }.map { characters[it] }.joinToString("")
-    }
-
-    @Given("a valid token with permissions to publish with channel {string}")
-    fun a_valid_token_with_permissions_to_publish_with_channel(string: String?) {
-        return a_token()
-    }
-
-    @Given("an expired token with permissions to publish with channel {string}")
-    fun an_expired_token_with_permissions_to_publish_with_channel(string: String) {
-        return a_token()
-    }
-
-    @Given("the token string {string}")
-    fun the_token_string(string: String) {
-        world.tokenString = string
     }
 
     private fun grant_permission(permissionType: PermissionType) {
