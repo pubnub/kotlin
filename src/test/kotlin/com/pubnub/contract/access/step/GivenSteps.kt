@@ -10,18 +10,13 @@ import com.pubnub.api.models.consumer.access_manager.v3.PNGrantTokenResult
 import com.pubnub.api.models.consumer.access_manager.v3.PNUUIDPatternGrant
 import com.pubnub.api.models.consumer.access_manager.v3.PNUUIDResourceGrant
 import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant
-import com.pubnub.api.vendor.Base64
 import com.pubnub.contract.access.parameter.PermissionType
 import com.pubnub.contract.access.parameter.ResourceType
 import com.pubnub.contract.access.state.FutureCallGrant
 import com.pubnub.contract.access.state.GrantTokenState
 import com.pubnub.contract.state.World
-import com.pubnub.contract.step.randomBase64EncodedString
-import io.cucumber.java.PendingException
 import io.cucumber.java.en.And
 import io.cucumber.java.en.Given
-import junit.framework.Assert.assertNull
-import kotlin.random.Random
 
 class GivenSteps(private val grantTokenState: GrantTokenState, private val world: World) {
     private val tokenWithAll =

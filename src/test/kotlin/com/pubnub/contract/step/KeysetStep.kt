@@ -2,7 +2,6 @@ package com.pubnub.contract.step
 
 import com.pubnub.contract.ContractTestConfig
 import com.pubnub.contract.state.World
-import io.cucumber.java.PendingException
 import io.cucumber.java.en.Given
 import org.hamcrest.MatcherAssert
 import org.hamcrest.Matchers

@@ -3,7 +3,6 @@ package com.pubnub.contract.history.step
 import com.pubnub.api.PubNubException
 import com.pubnub.contract.history.state.HistoryState
 import com.pubnub.contract.state.World
-import io.cucumber.java.PendingException
 import io.cucumber.java.en.When
 
 class WhenSteps(

@@ -7,7 +7,6 @@ import com.pubnub.contract.access.parameter.patternPermissionsMap
 import com.pubnub.contract.access.parameter.resourcePermissionsMap
 import com.pubnub.contract.access.state.GrantTokenState
 import com.pubnub.contract.state.World
-import io.cucumber.java.PendingException
 import io.cucumber.java.en.Then
 import org.hamcrest.MatcherAssert
 import org.hamcrest.Matchers
