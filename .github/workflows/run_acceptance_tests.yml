@@ -20,6 +20,14 @@ jobs:
         uses: ./client-engineering-deployment-tools/actions/mock-server
         with:
           token: ${{ secrets.GH_TOKEN }}
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
       - name: Run acceptance tests (optional)
         run: |
           export pubKey=somePubKey
@@ -31,7 +39,7 @@ jobs:
           export demoSubKey=someSubKey
           export serverHostPort=localhost:8090
           export serverMock=true
-          ./gradlew cucumber --tests RunBetaCucumberTest  -Dcucumber.features="sdk-specifications/features/" -i
+          ./gradlew cucumber --tests RunBetaCucumberTest  -Dcucumber.features="sdk-specifications/features/" -i --no-daemon
         continue-on-error: true
       - name: Run acceptance tests (required)
         run: |
@@ -44,7 +52,7 @@ jobs:
           export demoSubKey=someSubKey
           export serverHostPort=localhost:8090
           export serverMock=true
-          ./gradlew cucumber --tests RunMainCucumberTest  -Dcucumber.features="sdk-specifications/features/" -i
+          ./gradlew cucumber --tests RunMainCucumberTest  -Dcucumber.features="sdk-specifications/features/" -i --no-daemon
       - name: Expose acceptance tests reports
         uses: actions/upload-artifact@v2
         if: always()
