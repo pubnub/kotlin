@@ -27,6 +27,8 @@ jobs:
           export pamPubKey=somePamPubKey
           export pamSubKey=somePamSubKey
           export pamSecKey=someSecKey
+          export demoPubKey=somePubKey
+          export demoSubKey=someSubKey
           export serverHostPort=localhost:8090
           export serverMock=true
           ./gradlew cucumber --tests RunBetaCucumberTest  -Dcucumber.features="sdk-specifications/features/" -i
@@ -38,6 +40,8 @@ jobs:
           export pamPubKey=somePamPubKey
           export pamSubKey=somePamSubKey
           export pamSecKey=someSecKey
+          export demoPubKey=somePubKey
+          export demoSubKey=someSubKey
           export serverHostPort=localhost:8090
           export serverMock=true
           ./gradlew cucumber --tests RunMainCucumberTest  -Dcucumber.features="sdk-specifications/features/" -i
