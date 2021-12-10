@@ -38,4 +38,3 @@ class ThenSteps(private val world: World) {
         Thread.sleep(2_000)
     }
 }
-

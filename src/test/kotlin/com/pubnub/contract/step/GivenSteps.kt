@@ -39,7 +39,8 @@ class GivenSteps(private val world: World) {
 fun randomBase64EncodedString(): String {
     val characters: List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9') + '-'
     return java.util.Base64.getUrlEncoder()
-        .encodeToString((1..30).map { Random.nextInt(0, characters.size) }.map { characters[it] }.joinToString("")
-            .toByteArray()
+        .encodeToString(
+            (1..30).map { Random.nextInt(0, characters.size) }.map { characters[it] }.joinToString("")
+                .toByteArray()
         )
 }

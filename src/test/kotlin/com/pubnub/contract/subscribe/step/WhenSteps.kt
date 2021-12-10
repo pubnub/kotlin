@@ -21,6 +21,5 @@ class WhenSteps(private val world: World) {
         })
 
         world.pubnub.subscribe(channels = listOf("channel"))
-
     }
 }

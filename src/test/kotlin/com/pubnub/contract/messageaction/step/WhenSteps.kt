@@ -20,7 +20,7 @@ class WhenSteps(private val world: World, private val messageActionState: Messag
                 )
                 .sync()
         } catch (ex: PubNubException) {
-            world.pnException = ex;
+            world.pnException = ex
         }
     }
 
@@ -33,7 +33,7 @@ class WhenSteps(private val world: World, private val messageActionState: Messag
                 )
                 .sync()
         } catch (ex: PubNubException) {
-            world.pnException = ex;
+            world.pnException = ex
         }
     }
 
@@ -48,7 +48,7 @@ class WhenSteps(private val world: World, private val messageActionState: Messag
                 )
                 .sync()
         } catch (ex: PubNubException) {
-            world.pnException = ex;
+            world.pnException = ex
         }
     }
 }
