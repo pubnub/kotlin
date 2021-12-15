@@ -52,7 +52,7 @@ abstract class BaseTest {
     }
 
     fun initConfiguration() {
-        config = PNConfiguration().apply {
+        config = PNConfiguration(PubNub.generateUUID()).apply {
             subscribeKey = "mySubscribeKey"
             publishKey = "myPublishKey"
             uuid = "myUUID"
@@ -63,7 +63,7 @@ abstract class BaseTest {
     }
 
     fun clearConfiguration() {
-        config = PNConfiguration()
+        config = PNConfiguration(PubNub.generateUUID())
     }
 
     fun initPubNub() {

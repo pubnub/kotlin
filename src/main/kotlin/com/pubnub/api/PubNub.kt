@@ -85,10 +85,15 @@ import java.util.UUID
 
 class PubNub(val configuration: PNConfiguration) {
 
-    private companion object Constants {
+    companion object {
         private const val TIMESTAMP_DIVIDER = 1000
         private const val SDK_VERSION = "6.3.0"
         private const val MAX_SEQUENCE = 65535
+
+        /**
+         * Generates random UUID to use. You should set a unique UUID to identify the user or the device that connects to PubNub.
+         */
+        fun generateUUID() = "pn-${UUID.randomUUID()}"
     }
 
     //region Managers

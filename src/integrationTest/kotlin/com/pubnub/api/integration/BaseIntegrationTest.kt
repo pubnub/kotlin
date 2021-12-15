@@ -55,7 +55,7 @@ abstract class BaseIntegrationTest {
     }
 
     protected open fun getBasicPnConfiguration(): PNConfiguration {
-        val pnConfiguration = PNConfiguration()
+        val pnConfiguration = PNConfiguration(PubNub.generateUUID())
         if (!needsServer()) {
             pnConfiguration.subscribeKey = Keys.subKey
             pnConfiguration.publishKey = Keys.pubKey
@@ -72,7 +72,7 @@ abstract class BaseIntegrationTest {
     }
 
     private fun getServerPnConfiguration(): PNConfiguration {
-        val pnConfiguration = PNConfiguration()
+        val pnConfiguration = PNConfiguration(PubNub.generateUUID())
         pnConfiguration.subscribeKey = Keys.pamSubKey
         pnConfiguration.publishKey = Keys.pamPubKey
         pnConfiguration.secretKey = Keys.pamSecKey
