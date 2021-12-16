@@ -13,7 +13,7 @@ plugins {
 }
 
 group = 'com.pubnub'
-version = '6.2.0'
+version = '6.3.0'
 
 repositories {
     mavenCentral()
@@ -42,45 +42,7 @@ configurations {
     testFixturesImplementation { extendsFrom allTest }
     integrationTestImplementation { extendsFrom allTest }
     testImplementation { extendsFrom allTest }
-    cucumberRuntime { extendsFrom testImplementation }
 }
-
-task cucumber() {
-    dependsOn assemble, testClasses
-    group = "verification"
-    doLast {
-        javaexec {
-            Properties localProperties = new Properties()
-            try {
-                localProperties.load(new FileInputStream(rootProject.file("src/test/resources/config.properties")))
-            }
-            catch (Exception e) {
-                localProperties.putAll(System.getenv())
-            }
-
-            main = "io.cucumber.core.cli.Main"
-            classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
-
-            if (localProperties['cucumber.tags'] != null) {
-                args = ['--tags', localProperties['cucumberTags'],
-                        '--plugin', 'pretty',
-                        '--plugin', 'json:build/reports/cucumber-reports/Cucumber.json',
-                        '--plugin', 'junit:build/reports/cucumber-reports/Cucumber.xml',
-                        '--plugin', 'html:build/reports/cucumber-reports/Cucumber.html',
-                        '--glue', 'com.pubnub.contract',
-                        localProperties['featuresDir']]
-            } else {
-                args = ['--plugin', 'pretty',
-                        '--plugin', 'json:build/reports/cucumber-reports/Cucumber.json',
-                        '--plugin', 'junit:build/reports/cucumber-reports/Cucumber.xml',
-                        '--plugin', 'html:build/reports/cucumber-reports/Cucumber.html',
-                        '--glue', 'com.pubnub.contract',
-                        localProperties['featuresDir']]
-            }
-        }
-    }
-}
-
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
@@ -123,8 +85,15 @@ shadowJar {
     }
 }
 
+task cucumber(type: Test) {
+    systemProperty "cucumber.filter.tags", System.getProperty("cucumber.filter.tags")
+    systemProperty "cucumber.features", System.getProperty("cucumber.features")
+    systemProperty "cucumber.plugins", System.getProperty("cucumber.plugins")
+}
+
 test {
     failFast = true
+    exclude '**/contract/*.class'
 }
 
 dokka {

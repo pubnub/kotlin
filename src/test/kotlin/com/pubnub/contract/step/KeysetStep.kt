@@ -19,4 +19,15 @@ class KeysetStep(private val world: World) {
             secretKey = ContractTestConfig.pamSecKey
         }
     }
+
+    @Given("I have a keyset with access manager enabled - without secret key")
+    fun i_have_a_keyset_with_access_manager_enabled_without_secret_key() {
+        MatcherAssert.assertThat(ContractTestConfig.pubKey, Matchers.notNullValue())
+        MatcherAssert.assertThat(ContractTestConfig.subKey, Matchers.notNullValue())
+
+        world.configuration.apply {
+            subscribeKey = ContractTestConfig.subKey
+            publishKey = ContractTestConfig.pubKey
+        }
+    }
 }

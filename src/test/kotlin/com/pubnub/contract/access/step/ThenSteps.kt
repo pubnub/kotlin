@@ -1,12 +1,12 @@
 package com.pubnub.contract.access.step
 
+import com.pubnub.api.models.consumer.access_manager.v3.PNToken
 import com.pubnub.contract.access.parameter.PermissionType
 import com.pubnub.contract.access.parameter.ResourceType
 import com.pubnub.contract.access.parameter.patternPermissionsMap
 import com.pubnub.contract.access.parameter.resourcePermissionsMap
 import com.pubnub.contract.access.state.GrantTokenState
 import com.pubnub.contract.state.World
-import com.pubnub.api.models.consumer.access_manager.v3.PNToken
 import io.cucumber.java.en.Then
 import org.hamcrest.MatcherAssert
 import org.hamcrest.Matchers
@@ -79,6 +79,11 @@ class ThenSteps(
     @Then("token pattern permission {permissionType}")
     fun token_pattern_permission(permissionType: PermissionType) {
         assertPermissions(permissionType)
+    }
+
+    @Then("I get confirmation that token has been revoked")
+    fun i_get_confirmation_that_token_has_been_revoked() {
+        MatcherAssert.assertThat(world.pnException, Matchers.nullValue())
     }
 
     private fun assertPermissions(permissionType: PermissionType) {

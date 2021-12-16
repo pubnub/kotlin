@@ -9,6 +9,7 @@ import com.pubnub.api.endpoints.MessageCounts
 import com.pubnub.api.endpoints.Time
 import com.pubnub.api.endpoints.access.Grant
 import com.pubnub.api.endpoints.access.GrantToken
+import com.pubnub.api.endpoints.access.RevokeToken
 import com.pubnub.api.endpoints.channel_groups.AddChannelChannelGroup
 import com.pubnub.api.endpoints.channel_groups.AllChannelsChannelGroup
 import com.pubnub.api.endpoints.channel_groups.DeleteChannelGroup
@@ -86,7 +87,7 @@ class PubNub(val configuration: PNConfiguration) {
 
     private companion object Constants {
         private const val TIMESTAMP_DIVIDER = 1000
-        private const val SDK_VERSION = "6.2.0"
+        private const val SDK_VERSION = "6.3.0"
         private const val MAX_SEQUENCE = 65535
     }
 
@@ -876,6 +877,24 @@ class PubNub(val configuration: PNConfiguration) {
         channelGroups = channelGroups
     )
 
+    /**
+     * This function generates a grant token for PubNub Access Manager (PAM).
+     *
+     * Permissions can be applied to any of the three type of resources:
+     * - channels
+     * - channel groups
+     * - uuid - metadata associated with particular UUID
+     *
+     * Each type of resource have different set of permissions. To know what's possible for each of them
+     * check ChannelGrant, ChannelGroupGrant and UUIDGrant.
+     *
+     * @param ttl Time in minutes for which granted permissions are valid.
+     * @param meta Additional metadata
+     * @param authorizedUUID Single uuid which is authorized to use the token to make API requests to PubNub
+     * @param channels List of all channel grants
+     * @param channelGroups List of all channel group grants
+     * @param uuids List of all uuid grants
+     */
     fun grantToken(
         ttl: Int,
         meta: Any? = null,
@@ -892,6 +911,18 @@ class PubNub(val configuration: PNConfiguration) {
             channels = channels,
             channelGroups = channelGroups,
             uuids = uuids
+        )
+    }
+
+    /**
+     * This method allows you to disable an existing token and revoke all permissions embedded within.
+     *
+     * @param token Existing token with embedded permissions.
+     */
+    fun revokeToken(token: String): RevokeToken {
+        return RevokeToken(
+            pubnub = this,
+            token = token
         )
     }
     //endregion
