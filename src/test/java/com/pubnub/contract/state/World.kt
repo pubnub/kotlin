@@ -14,4 +14,5 @@ class World {
     } }
     val pubnub: PubNub by lazy { PubNub(configuration) }
     var pnException: PubNubException? = null
+    var tokenString: String? = null
 }

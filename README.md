@@ -22,13 +22,13 @@ You will need the publish and subscribe keys to authenticate your app. Get your 
      <dependency>
        <groupId>com.pubnub</groupId>
        <artifactId>pubnub-gson</artifactId>
-       <version>5.2.4</version>
+       <version>5.3.0</version>
      </dependency>
      ```
 
    * for Gradle, add the following dependency in your `gradle.build`:
      ```groovy
-     compile group: 'com.pubnub', name: 'pubnub-gson', version: '5.2.1'
+     compile group: 'com.pubnub', name: 'pubnub-gson', version: '5.2.3'
      ```
 
 2. Configure your keys:
