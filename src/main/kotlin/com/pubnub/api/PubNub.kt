@@ -891,12 +891,10 @@ class PubNub(val configuration: PNConfiguration) {
      * @param ttl Time in minutes for which granted permissions are valid.
      * @param meta Additional metadata
      * @param authorizedUUID Single uuid which is authorized to use the token to make API requests to PubNub
-     * @param delete Set to `true` to request the *delete* permission. Defaults to `false`.
      * @param channels List of all channel grants
      * @param channelGroups List of all channel group grants
      * @param uuids List of all uuid grants
      */
-
     fun grantToken(
         ttl: Int,
         meta: Any? = null,
