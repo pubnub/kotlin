@@ -1,9 +1,9 @@
 name: kotlin
-version: 6.2.0
+version: v6.3.0
 schema: 1
 scm: github.com/pubnub/kotlin
 files:
-  - build/libs/pubnub-kotlin-6.2.0-all.jar
+  - build/libs/pubnub-kotlin-6.3.0-all.jar
 sdks:
   - 
       type: library
@@ -23,8 +23,8 @@ sdks:
             -
               distribution-type: library
               distribution-repository: git release
-              package-name: pubnub-kotlin-5.1.1-all
-              location: https://github.com/pubnub/kotlin/releases/download/v5.1.1/pubnub-kotlin-5.1.1-all.jar
+              package-name: pubnub-kotlin-6.3.0
+              location: https://github.com/pubnub/kotlin/releases/download/v6.3.0/pubnub-kotlin-6.3.0-all.jar
               supported-platforms:
                 supported-operating-systems:
                   Android:
@@ -135,8 +135,8 @@ sdks:
             -
               distribution-type: library
               distribution-repository: maven
-              package-name: pubnub-kotlin-5.1.2
-              location: https://repo.maven.apache.org/maven2/com/pubnub/pubnub-kotlin/5.1.2/pubnub-kotlin-5.1.2.jar
+              package-name: pubnub-kotlin-6.3.0
+              location: https://repo.maven.apache.org/maven2/com/pubnub/pubnub-kotlin/6.3.0/pubnub-kotlin-6.3.0.jar
               supported-platforms:
                 supported-operating-systems:
                   Android:
@@ -233,6 +233,11 @@ sdks:
                   license-url: https://github.com/stleary/JSON-java/blob/20210307/LICENSE
                   is-required: Required
 changelog:
+  - date: 2021-12-16
+    version: v6.3.0
+    changes:
+      - type: feature
+        text: "Add revoke token feature."
   -
     version: v6.2.0
     date: 2021-10-06

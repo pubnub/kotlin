@@ -1,3 +1,9 @@
+## v6.3.0
+December 16 2021
+
+#### Added
+- Add revoke token feature.
+
 ## [v6.2.0](https://github.com/pubnub/kotlin/releases/tag/v6.2.0)
 October 6 2021
 
