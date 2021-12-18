@@ -9,3 +9,5 @@
 | [GrantTokenData](-grant-token-data/index.md) | `data class GrantTokenData` |
 | [GrantTokenRequestBody](-grant-token-request-body/index.md) | `data class GrantTokenRequestBody` |
 | [GrantTokenResponse](-grant-token-response/index.md) | `data class GrantTokenResponse` |
+| [RevokeTokenData](-revoke-token-data/index.md) | `data class RevokeTokenData` |
+| [RevokeTokenResponse](-revoke-token-response/index.md) | `data class RevokeTokenResponse` |

@@ -19,6 +19,7 @@
 | [PNAccessManagerAudit](-p-n-access-manager-audit.md) | `object PNAccessManagerAudit : PAMOperation` |
 | [PNAccessManagerGrant](-p-n-access-manager-grant.md) | `object PNAccessManagerGrant : PAMOperation` |
 | [PNAccessManagerGrantToken](-p-n-access-manager-grant-token.md) | `object PNAccessManagerGrantToken : PAMV3Operation` |
+| [PNAccessManagerRevokeToken](-p-n-access-manager-revoke-token.md) | `object PNAccessManagerRevokeToken : PAMV3Operation` |
 | [PNAddChannelsToGroupOperation](-p-n-add-channels-to-group-operation.md) | `object PNAddChannelsToGroupOperation : ChannelGroupOperation` |
 | [PNAddMessageAction](-p-n-add-message-action.md) | `object PNAddMessageAction : MessageActionsOperation` |
 | [PNAddPushNotificationsOnChannelsOperation](-p-n-add-push-notifications-on-channels-operation.md) | `object PNAddPushNotificationsOnChannelsOperation : PushNotificationsOperation` |

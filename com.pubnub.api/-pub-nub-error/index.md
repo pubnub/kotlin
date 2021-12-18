@@ -45,6 +45,7 @@ List of known PubNub errors. Observe them in [PubNubException.pubnubError](../-p
 | [MESSAGE_ACTION_TIMETOKEN_MISSING](-m-e-s-s-a-g-e_-a-c-t-i-o-n_-t-i-m-e-t-o-k-e-n_-m-i-s-s-i-n-g.md) |  |
 | [HISTORY_MESSAGE_ACTIONS_MULTIPLE_CHANNELS](-h-i-s-t-o-r-y_-m-e-s-s-a-g-e_-a-c-t-i-o-n-s_-m-u-l-t-i-p-l-e_-c-h-a-n-n-e-l-s.md) |  |
 | [PUSH_TOPIC_MISSING](-p-u-s-h_-t-o-p-i-c_-m-i-s-s-i-n-g.md) |  |
+| [TOKEN_MISSING](-t-o-k-e-n_-m-i-s-s-i-n-g.md) |  |
 
 ### Properties
 

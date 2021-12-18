@@ -1,0 +1,5 @@
+[pubnub-kotlin](../../index.md) / [com.pubnub.api.endpoints.access](../index.md) / [RevokeToken](index.md) / [doWork](./do-work.md)
+
+# doWork
+
+`protected fun doWork(queryParams: `[`HashMap`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-hash-map/index.html)`<`[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`, `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`>): Call<`[`RevokeTokenResponse`](../../com.pubnub.api.models.server.access_manager.v3/-revoke-token-response/index.md)`>`

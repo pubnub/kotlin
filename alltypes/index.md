@@ -945,6 +945,21 @@ Custom exception wrapper for errors occurred during execution or processing of a
 
 |
 
+##### [com.pubnub.api.endpoints.access.RevokeToken](../com.pubnub.api.endpoints.access/-revoke-token/index.md)
+
+
+|
+
+##### [com.pubnub.api.models.server.access_manager.v3.RevokeTokenData](../com.pubnub.api.models.server.access_manager.v3/-revoke-token-data/index.md)
+
+
+|
+
+##### [com.pubnub.api.models.server.access_manager.v3.RevokeTokenResponse](../com.pubnub.api.models.server.access_manager.v3/-revoke-token-response/index.md)
+
+
+|
+
 ##### [com.pubnub.api.services.S3Service](../com.pubnub.api.services/-s3-service/index.md)
 
 
