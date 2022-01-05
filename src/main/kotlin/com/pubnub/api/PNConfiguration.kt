@@ -24,12 +24,12 @@ import javax.net.ssl.X509ExtendedTrustManager
 open class PNConfiguration(uuid: String) {
 
     init {
-        PubNubUtil.requirePN(uuid.isNotBlank(), PubNubError.UUID_NULL_OR_EMPTY)
+        PubNubUtil.require(uuid.isNotBlank(), PubNubError.UUID_NULL_OR_EMPTY)
     }
 
     var uuid: String = uuid
         set(value) {
-            PubNubUtil.requirePN(value.isNotBlank(), PubNubError.UUID_NULL_OR_EMPTY)
+            PubNubUtil.require(value.isNotBlank(), PubNubError.UUID_NULL_OR_EMPTY)
             field = value
         }
 

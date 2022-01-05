@@ -226,7 +226,7 @@ internal object PubNubUtil {
         }
     }
 
-    internal fun requirePN(value: Boolean, error: PubNubError) {
+    internal fun require(value: Boolean, error: PubNubError) {
         if (!value) {
             throw PubNubException(error)
         }
