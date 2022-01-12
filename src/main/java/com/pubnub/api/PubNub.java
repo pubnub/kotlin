@@ -104,7 +104,7 @@ public class PubNub {
     private static final int TIMESTAMP_DIVIDER = 1000;
     private static final int MAX_SEQUENCE = 65535;
 
-    private static final String SDK_VERSION = "5.3.0";
+    private static final String SDK_VERSION = "6.0.0";
     private final ListenerManager listenerManager;
     private final StateManager stateManager;
 
@@ -134,6 +134,11 @@ public class PubNub {
         this.publishSequenceManager = new PublishSequenceManager(MAX_SEQUENCE);
         this.tokenParser = new TokenParser();
         instanceId = UUID.randomUUID().toString();
+    }
+
+    @NotNull
+    public static String generateUUID() {
+        return "pn-" + UUID.randomUUID();
     }
 
     @NotNull
