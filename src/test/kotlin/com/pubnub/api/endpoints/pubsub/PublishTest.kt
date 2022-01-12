@@ -24,12 +24,12 @@ private const val TEST_PUBKEY = "pubKey"
 private const val CIPHER_KEY = "enigma"
 
 class PublishTest {
-    private val pnConfigurationHardcodedIV = PNConfiguration().apply {
+    private val pnConfigurationHardcodedIV = PNConfiguration(PubNub.generateUUID()).apply {
         subscribeKey = TEST_SUBKEY
         publishKey = TEST_PUBKEY
         cipherKey = CIPHER_KEY
     }
-    private val pnConfigurationRandomIV = PNConfiguration().apply {
+    private val pnConfigurationRandomIV = PNConfiguration(PubNub.generateUUID()).apply {
         subscribeKey = TEST_SUBKEY
         publishKey = TEST_PUBKEY
         cipherKey = CIPHER_KEY

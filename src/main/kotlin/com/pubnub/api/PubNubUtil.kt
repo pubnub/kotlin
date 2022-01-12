@@ -225,6 +225,12 @@ internal object PubNubUtil {
             replace("*", "%2A")
         }
     }
+
+    internal fun require(value: Boolean, error: PubNubError) {
+        if (!value) {
+            throw PubNubException(error)
+        }
+    }
 }
 
 internal fun <E> List<E>.toCsv(): String {

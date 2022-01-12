@@ -96,7 +96,7 @@ class GetFileUrlTest {
     }
 
     private fun config(): PNConfiguration {
-        val config = PNConfiguration()
+        val config = PNConfiguration(PubNub.generateUUID())
         config.publishKey = "pk"
         config.subscribeKey = "sk"
         return config

@@ -10,7 +10,6 @@ import okhttp3.logging.HttpLoggingInterceptor
 import org.slf4j.LoggerFactory
 import java.net.Proxy
 import java.net.ProxySelector
-import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentMap
 import javax.net.ssl.HostnameVerifier
@@ -22,7 +21,17 @@ import javax.net.ssl.X509ExtendedTrustManager
  * Configuration instance contains additional set of properties which
  * allow to perform precise PubNub client configuration.
  */
-class PNConfiguration {
+open class PNConfiguration(uuid: String) {
+
+    init {
+        PubNubUtil.require(uuid.isNotBlank(), PubNubError.UUID_NULL_OR_EMPTY)
+    }
+
+    var uuid: String = uuid
+        set(value) {
+            PubNubUtil.require(value.isNotBlank(), PubNubError.UUID_NULL_OR_EMPTY)
+            field = value
+        }
 
     private val log = LoggerFactory.getLogger("PNConfiguration")
 
@@ -68,13 +77,6 @@ class PNConfiguration {
      * Defaults to `ps.pndsn.com`
      */
     lateinit var origin: String
-
-    /**
-     * UUID to use. You should set a unique UUID to identify the user or the device that connects to PubNub.
-     *
-     * Defaults to an SDK generated UUID.
-     */
-    var uuid = "pn-${UUID.randomUUID()}"
 
     /**
      * If set to `true`,  requests will be made over HTTPS.

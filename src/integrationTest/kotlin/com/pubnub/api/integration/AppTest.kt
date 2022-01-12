@@ -31,7 +31,7 @@ class AppTest {
     @Before
     fun initPubnub() {
         pubnub = PubNub(
-            PNConfiguration().apply {
+            PNConfiguration(PubNub.generateUUID()).apply {
                 subscribeKey = Keys.subKey
                 publishKey = Keys.pubKey
                 logVerbosity = PNLogVerbosity.BODY
