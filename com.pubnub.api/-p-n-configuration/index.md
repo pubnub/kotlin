@@ -2,7 +2,7 @@
 
 # PNConfiguration
 
-`class PNConfiguration`
+`open class PNConfiguration`
 
 A storage for user-provided information which describe further PubNub client behaviour.
 Configuration instance contains additional set of properties which
@@ -12,7 +12,7 @@ allow to perform precise PubNub client configuration.
 
 | Name | Summary |
 |---|---|
-| [&lt;init&gt;](-init-.md) | A storage for user-provided information which describe further PubNub client behaviour. Configuration instance contains additional set of properties which allow to perform precise PubNub client configuration.`PNConfiguration()` |
+| [&lt;init&gt;](-init-.md) | A storage for user-provided information which describe further PubNub client behaviour. Configuration instance contains additional set of properties which allow to perform precise PubNub client configuration.`PNConfiguration(uuid: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`)` |
 
 ### Properties
 
@@ -55,7 +55,7 @@ allow to perform precise PubNub client configuration.
 | [subscribeTimeout](subscribe-timeout.md) | The subscribe request timeout.`var subscribeTimeout: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html) |
 | [suppressLeaveEvents](suppress-leave-events.md) | When `true` the SDK doesn't send out the leave requests.`var suppressLeaveEvents: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) |
 | [useRandomInitializationVector](use-random-initialization-vector.md) | Should initialization vector for encrypted messages be random.`var useRandomInitializationVector: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) |
-| [uuid](uuid.md) | UUID to use. You should set a unique UUID to identify the user or the device that connects to PubNub.`var uuid: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
+| [uuid](uuid.md) | `var uuid: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
 | [x509ExtendedTrustManager](x509-extended-trust-manager.md) | `var x509ExtendedTrustManager: `[`X509ExtendedTrustManager`](https://docs.oracle.com/javase/6/docs/api/javax/net/ssl/X509ExtendedTrustManager.html)`?` |
 
 ### Functions

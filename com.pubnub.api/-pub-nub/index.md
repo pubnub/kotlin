@@ -94,3 +94,9 @@
 | [unsubscribe](unsubscribe.md) | When subscribed to a single channel, this function causes the client to issue a leave from the channel and close any open socket to the PubNub Network.`fun unsubscribe(channels: `[`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)`<`[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`> = emptyList(), channelGroups: `[`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)`<`[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`> = emptyList()): `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html) |
 | [unsubscribeAll](unsubscribe-all.md) | Unsubscribe from all channels and all channel groups`fun unsubscribeAll(): `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html) |
 | [whereNow](where-now.md) | Obtain information about the current list of channels to which a UUID is subscribed to.`fun whereNow(uuid: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)` = configuration.uuid): `[`WhereNow`](../../com.pubnub.api.endpoints.presence/-where-now/index.md) |
+
+### Companion Object Functions
+
+| Name | Summary |
+|---|---|
+| [generateUUID](generate-u-u-i-d.md) | Generates random UUID to use. You should set a unique UUID to identify the user or the device that connects to PubNub.`fun generateUUID(): `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
