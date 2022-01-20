@@ -61,15 +61,15 @@ dependencies {
     implementation "org.json:json:20210307"
 
     allTest "junit:junit:4.13.2"
-    allTest "org.awaitility:awaitility-kotlin:4.0.3"
+    allTest 'org.awaitility:awaitility-kotlin:4.1.1'
     allTest "com.github.tomakehurst:wiremock:2.27.2"
 
-    allTest "ch.qos.logback:logback-classic:1.2.3"
-    allTest "ch.qos.logback:logback-core:1.2.3"
+    allTest 'ch.qos.logback:logback-classic:1.2.10'
+    allTest 'ch.qos.logback:logback-core:1.2.10'
     allTest "org.json:json:20210307"
-    allTest "dev.nohus:AutoKonfig:1.0.0"
+    allTest "dev.nohus:AutoKonfig:1.0.3"
 
-    testImplementation "io.mockk:mockk:1.11.0"
+    testImplementation 'io.mockk:mockk:1.12.2'
     testImplementation group: 'io.cucumber', name: 'cucumber-java', version: '6.10.4'
     testImplementation group: 'io.cucumber', name: 'cucumber-junit', version: '6.10.4'
     testImplementation group: 'io.cucumber', name: 'cucumber-picocontainer', version: '6.10.4'
