@@ -67,7 +67,7 @@ dependencies {
     allTest "ch.qos.logback:logback-classic:1.2.3"
     allTest "ch.qos.logback:logback-core:1.2.3"
     allTest "org.json:json:20210307"
-    allTest "dev.nohus:AutoKonfig:1.0.0"
+    allTest 'org.aeonbits.owner:owner:1.0.12'
 
     testImplementation "io.mockk:mockk:1.11.0"
     testImplementation group: 'io.cucumber', name: 'cucumber-java', version: '6.10.4'

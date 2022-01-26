@@ -1,28 +1,31 @@
 package com.pubnub.contract
 
-import dev.nohus.autokonfig.AutoKonfig
-import dev.nohus.autokonfig.types.BooleanSetting
-import dev.nohus.autokonfig.types.StringSetting
-import dev.nohus.autokonfig.withEnvironmentVariables
-import dev.nohus.autokonfig.withResourceConfig
+import org.aeonbits.owner.Config
+import org.aeonbits.owner.ConfigFactory
 
-object ContractTestConfig {
-    private fun AutoKonfig.withSafeResourceConfig(resource: String) = apply {
-        try {
-            withResourceConfig(resource)
-        } catch (e: Exception) {
-        }
-    }
+@Config.Sources("file:test.properties")
+interface ContractTestKeysConfig : Config {
+    @get:Config.Key("subKey")
+    val subKey: String
 
-    private val config = AutoKonfig()
-        .withSafeResourceConfig("config.properties")
-        .withEnvironmentVariables()
+    @get:Config.Key("pubKey")
+    val pubKey: String
 
-    val pamSubKey by config.StringSetting()
-    val pamPubKey by config.StringSetting()
-    val pamSecKey by config.StringSetting()
-    val pubKey by config.StringSetting()
-    val subKey by config.StringSetting()
-    val serverHostPort by config.StringSetting()
-    val serverMock by config.BooleanSetting(true)
+    @get:Config.Key("pamSubKey")
+    val pamSubKey: String
+
+    @get:Config.Key("pamPubKey")
+    val pamPubKey: String
+
+    @get:Config.Key("pamSecKey")
+    val pamSecKey: String
+
+    @get:Config.Key("serverHostPort")
+    val serverHostPort: String
+
+    @get:Config.Key("serverMock")
+    @get:Config.DefaultValue("true")
+    val serverMock: Boolean
 }
+
+val ContractTestConfig: ContractTestKeysConfig = ConfigFactory.create(ContractTestKeysConfig::class.java, System.getenv())
