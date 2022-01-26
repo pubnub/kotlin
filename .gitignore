@@ -8,7 +8,7 @@ build/
 bin/
 gen/
 out/
-/src/test/resources/config.properties
+test.properties
 *.DS_STORE
 
 # GitHub Actions #
