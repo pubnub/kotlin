@@ -287,9 +287,11 @@ object CommonUtils {
     )
 
     fun createInterceptor(logger: Logger) =
-        HttpLoggingInterceptor {
-            logger.debug(it)
-        }.apply {
+        HttpLoggingInterceptor(object : HttpLoggingInterceptor.Logger {
+            override fun log(message: String) {
+                logger.debug(message)
+            }
+        }).apply {
             level = HttpLoggingInterceptor.Level.BODY
         }
 }

@@ -79,7 +79,7 @@ class RetrofitManager(val pubnub: PubNub) {
     }
 
     fun getTransactionClientExecutorService(): ExecutorService {
-        return transactionClientInstance.dispatcher().executorService()
+        return transactionClientInstance.dispatcher.executorService
     }
 
     private fun createOkHttpClient(readTimeout: Int, withSignature: Boolean = true): OkHttpClient {
@@ -121,7 +121,7 @@ class RetrofitManager(val pubnub: PubNub) {
 
         val okHttpClient = okHttpBuilder.build()
 
-        pubnub.configuration.maximumConnections?.let { okHttpClient.dispatcher().maxRequestsPerHost = it }
+        pubnub.configuration.maximumConnections?.let { okHttpClient.dispatcher.maxRequestsPerHost = it }
 
         return okHttpClient
     }
@@ -142,10 +142,10 @@ class RetrofitManager(val pubnub: PubNub) {
     }
 
     private fun closeExecutor(client: OkHttpClient, force: Boolean) {
-        client.dispatcher().cancelAll()
+        client.dispatcher.cancelAll()
         if (force) {
-            client.connectionPool().evictAll()
-            val executorService = client.dispatcher().executorService()
+            client.connectionPool.evictAll()
+            val executorService = client.dispatcher.executorService
             executorService.shutdown()
         }
     }

@@ -19,7 +19,7 @@ import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
-import okhttp3.HttpUrl
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -59,10 +59,10 @@ class SignalTest : BaseTest() {
         val request = requests[0]
         assertEquals("myUUID", request.queryParameter("uuid").firstValue())
 
-        val httpUrl = HttpUrl.parse(request.absoluteUrl)
+        val httpUrl = request.absoluteUrl.toHttpUrlOrNull()
         var decodedSignalPayload: String? = null
         if (httpUrl != null) {
-            decodedSignalPayload = httpUrl.pathSegments()[httpUrl.pathSize() - 1]
+            decodedSignalPayload = httpUrl.pathSegments[httpUrl.pathSize - 1]
         }
         assertEquals(pubnub.mapper.toJson(payload), decodedSignalPayload)
     }

@@ -207,7 +207,7 @@ abstract class Endpoint<Input, Output> protected constructor(protected val pubnu
     private fun storeRequestLatency(response: Response<Input>) {
         pubnub.telemetryManager.storeLatency(
             latency = with(response.raw()) {
-                receivedResponseAtMillis() - sentRequestAtMillis()
+                receivedResponseAtMillis - sentRequestAtMillis
             },
             type = operationType()
         )
@@ -274,11 +274,11 @@ abstract class Endpoint<Input, Output> protected constructor(protected val pubnu
 
             with(pnStatus) {
                 statusCode = it.code()
-                tlsEnabled = it.raw().request().url().isHttps
-                origin = it.raw().request().url().host()
-                uuid = it.raw().request().url().queryParameter("uuid")
-                authKey = it.raw().request().url().queryParameter("auth")
-                clientRequest = it.raw().request()
+                tlsEnabled = it.raw().request.url.isHttps
+                origin = it.raw().request.url.host
+                uuid = it.raw().request.url.queryParameter("uuid")
+                authKey = it.raw().request.url.queryParameter("auth")
+                clientRequest = it.raw().request
             }
         }
 

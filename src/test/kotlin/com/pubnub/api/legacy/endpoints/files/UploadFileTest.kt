@@ -8,9 +8,9 @@ import com.pubnub.api.services.S3Service
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
-import okhttp3.ResponseBody
+import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.Assert
 import org.junit.Rule
 import org.junit.Test
@@ -34,7 +34,7 @@ class UploadFileTest : TestsWithFiles {
         FileInputStream(file).use { fileInputStream ->
             val uploadFile = UploadFile(
                 s3Service,
-                file!!.name,
+                file.name,
                 fileInputStream.readBytes(),
                 null,
                 FormField("key", "keyValue"), listOf(FormField("other", "otherValue")),
@@ -52,10 +52,10 @@ class UploadFileTest : TestsWithFiles {
         val capturedBody: MultipartBody = captured[0]
         Assert.assertEquals(
             "form-data; name=\"key\"",
-            capturedBody.part(0).headers()!!["Content-Disposition"]
+            capturedBody.part(0).headers!!["Content-Disposition"]
         )
-        assertPartExist("other", capturedBody.parts())
-        assertPartExist("file", capturedBody.parts())
+        assertPartExist("other", capturedBody.parts)
+        assertPartExist("file", capturedBody.parts)
     }
 
     @Test
@@ -68,7 +68,7 @@ class UploadFileTest : TestsWithFiles {
         FileInputStream(file).use { fileInputStream ->
             val uploadFile = UploadFile(
                 s3Service,
-                file!!.name,
+                file.name,
                 fileInputStream.readBytes(),
                 null,
                 FormField("key", "keyValue"), listOf(FormField("Content-Type", contentTypeValue)),
@@ -83,9 +83,9 @@ class UploadFileTest : TestsWithFiles {
             verify(exactly = 1) { s3Service.upload(any(), capture(captured)) }
         }
         val capturedBody: MultipartBody = captured[0]
-        assertPartExist("file", capturedBody.parts())
-        val filePart = getPart("file", capturedBody.parts())
-        Assert.assertEquals(MediaType.get(contentTypeValue), filePart!!.body().contentType())
+        assertPartExist("file", capturedBody.parts)
+        val filePart = getPart("file", capturedBody.parts)
+        Assert.assertEquals(contentTypeValue.toMediaType(), filePart!!.body.contentType())
     }
 
     @Test
@@ -97,7 +97,7 @@ class UploadFileTest : TestsWithFiles {
         FileInputStream(file).use { fileInputStream ->
             val uploadFile = UploadFile(
                 s3Service,
-                file!!.name,
+                file.name,
                 fileInputStream.readBytes(),
                 null,
                 FormField("key", "keyValue"), emptyList(),
@@ -112,9 +112,9 @@ class UploadFileTest : TestsWithFiles {
             verify(exactly = 1) { s3Service.upload(any(), capture(captured)) }
         }
         val capturedBody: MultipartBody = captured[0]
-        assertPartExist("file", capturedBody.parts())
-        val filePart = getPart("file", capturedBody.parts())
-        Assert.assertEquals(MediaType.get("application/octet-stream"), filePart!!.body().contentType())
+        assertPartExist("file", capturedBody.parts)
+        val filePart = getPart("file", capturedBody.parts)
+        Assert.assertEquals("application/octet-stream".toMediaType(), filePart!!.body.contentType())
     }
 
     @Test
@@ -125,7 +125,7 @@ class UploadFileTest : TestsWithFiles {
         FileInputStream(file).use { fileInputStream ->
             val uploadFile = UploadFile(
                 s3Service,
-                file!!.name,
+                file.name,
                 fileInputStream.readBytes(),
                 null,
                 FormField("key", "keyValue"), emptyList(),
@@ -133,7 +133,7 @@ class UploadFileTest : TestsWithFiles {
             )
             every { s3Service.upload(any(), any()) } returns mockRetrofitErrorCall {
                 readToString(
-                    UploadFileTest::class.java.getResourceAsStream("/entityTooLarge.xml")
+                    UploadFileTest::class.java.getResourceAsStream("/entityTooLarge.xml")!!
                 )
             }
 
@@ -156,7 +156,7 @@ class UploadFileTest : TestsWithFiles {
     private fun getPart(partName: String, parts: List<MultipartBody.Part>): MultipartBody.Part? {
         var result: MultipartBody.Part? = null
         for (part in parts) {
-            if (part.headers()!!["Content-Disposition"]!!.contains(partName)) {
+            if (part.headers!!["Content-Disposition"]!!.contains(partName)) {
                 result = part
                 break
             }
@@ -182,11 +182,11 @@ class UploadFileTest : TestsWithFiles {
             return mockCall
         }
 
-        protected fun <T : String?, U> mockRetrofitErrorCall(block: () -> T): Call<U> {
+        protected fun <U> mockRetrofitErrorCall(block: () -> String): Call<U> {
             val mockCall: Call<U> = mockk {}
             every { mockCall.execute() } returns Response.error<U>(
                 400,
-                ResponseBody.create(MediaType.get("application/xml"), block())
+                block().toResponseBody("application/xml".toMediaType())
             )
             return mockCall
         }
