@@ -21,7 +21,10 @@ import javax.net.ssl.X509ExtendedTrustManager
  * Configuration instance contains additional set of properties which
  * allow to perform precise PubNub client configuration.
  */
-open class PNConfiguration(uuid: String) {
+open class PNConfiguration(
+    uuid: String,
+    val enableSubscribeBeta: Boolean = false
+) {
 
     init {
         PubNubUtil.require(uuid.isNotBlank(), PubNubError.UUID_NULL_OR_EMPTY)

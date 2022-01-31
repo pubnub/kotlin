@@ -1,4 +1,4 @@
-package com.pubnub.api.presence
+package com.pubnub.api.presence.internal
 
 import com.pubnub.api.PubNub
 import com.pubnub.api.endpoints.presence.Heartbeat

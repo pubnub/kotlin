@@ -43,7 +43,6 @@ class Heartbeat internal constructor(
             queryParams["state"] = pubnub.mapper.toJson(it)
         }
 
-
         return pubnub.retrofitManager.presenceService.heartbeat(
             pubnub.configuration.subscribeKey,
             channelsCsv,
