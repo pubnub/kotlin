@@ -32,7 +32,7 @@ internal fun PubNub.receiveMessages(
         it.channelGroups = channelGroups
         it.timetoken = timetoken
         it.region = region
-        it.filterExpression = this.configuration.filterExpression?.ifBlank { null }
+        it.filterExpression = this.configuration.filterExpression.ifBlank { null }
         it.async(callback)
     }
 }

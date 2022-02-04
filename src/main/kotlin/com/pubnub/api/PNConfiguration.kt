@@ -182,7 +182,7 @@ open class PNConfiguration(
     /**
      * Feature to subscribe with a custom filter expression.
      */
-    var filterExpression: String? = null
+    var filterExpression: String = ""
 
     /**
      * Whether to include a [PubNub.instanceId] with every request.

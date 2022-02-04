@@ -206,7 +206,7 @@ class SubscriptionManager(val pubnub: PubNub, private val subscriptionState: Sta
             channelGroups = stateData.channelGroups
             timetoken = stateData.timetoken
             region = stateData.region
-            filterExpression = pubnub.configuration.filterExpression?.ifBlank { null }
+            filterExpression = pubnub.configuration.filterExpression.ifBlank { null }
             state = stateData.statePayload
         }
 
