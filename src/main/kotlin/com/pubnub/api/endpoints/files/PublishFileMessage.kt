@@ -1,6 +1,7 @@
 package com.pubnub.api.endpoints.files
 
 import com.pubnub.api.Endpoint
+import com.pubnub.api.PNConfiguration.Companion.isValid
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
@@ -40,7 +41,7 @@ open class PublishFileMessage(
     @Throws(PubNubException::class)
     override fun doWork(queryParams: HashMap<String, String>): Call<List<Any>> {
         val stringifiedMessage: String = pubnub.mapper.toJsonUsingJackson(FileUploadNotification(message, pnFile))
-        val messageAsString = if (pubnub.configuration.isCipherKeyValid()) {
+        val messageAsString = if (pubnub.configuration.cipherKey.isValid()) {
             val crypto = Crypto(pubnub.configuration.cipherKey, pubnub.configuration.useRandomInitializationVector)
             crypto.encrypt(stringifiedMessage).quoted()
         } else {

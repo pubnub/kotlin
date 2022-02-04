@@ -2,6 +2,7 @@ package com.pubnub.api.workers
 
 import com.google.gson.JsonElement
 import com.pubnub.api.PNConfiguration
+import com.pubnub.api.PNConfiguration.Companion.isValid
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubException
 import com.pubnub.api.PubNubUtil
@@ -202,7 +203,7 @@ internal class SubscribeMessageWorker(
         )
         val queryParams = ArrayList<String>()
         val authKey =
-            if (pubnub.configuration.isAuthKeyValid()) pubnub.configuration.authKey else null
+            if (pubnub.configuration.authKey.isValid()) pubnub.configuration.authKey else null
 
         if (PubNubUtil.shouldSignRequest(pubnub.configuration)) {
             val timestamp: Int = pubnub.timestamp()
@@ -245,7 +246,7 @@ internal class SubscribeMessageWorker(
         val input = subscribeMessage.payload
 
         // if we do not have a crypto key, there is no way to process the node; let's return.
-        if (!pubnub.configuration.isCipherKeyValid()) {
+        if (!pubnub.configuration.cipherKey.isValid()) {
             return input
         }
 

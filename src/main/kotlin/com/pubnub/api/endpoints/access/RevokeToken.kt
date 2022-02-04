@@ -1,6 +1,7 @@
 package com.pubnub.api.endpoints.access
 
 import com.pubnub.api.Endpoint
+import com.pubnub.api.PNConfiguration.Companion.isValid
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
@@ -16,7 +17,7 @@ class RevokeToken(
 ) : Endpoint<RevokeTokenResponse, Unit>(pubnub) {
     override fun validateParams() {
         super.validateParams()
-        if (!pubnub.configuration.isSecretKeyValid()) {
+        if (!pubnub.configuration.secretKey.isValid()) {
             throw PubNubException(PubNubError.SECRET_KEY_MISSING)
         }
         if (token.isBlank()) {

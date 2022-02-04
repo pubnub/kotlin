@@ -1,5 +1,6 @@
 package com.pubnub.api.vendor
 
+import com.pubnub.api.PNConfiguration.Companion.isValid
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubException
 import java.io.ByteArrayInputStream
@@ -61,7 +62,7 @@ object FileEncryptionUtil {
 
     internal fun effectiveCipherKey(pubNub: PubNub, cipherKey: String?): String? {
         return cipherKey
-            ?: if (pubNub.configuration.isCipherKeyValid()) {
+            ?: if (pubNub.configuration.cipherKey.isValid()) {
                 pubNub.configuration.cipherKey
             } else {
                 null

@@ -2,11 +2,12 @@ package com.pubnub.extension
 
 import com.google.gson.JsonElement
 import com.pubnub.api.PNConfiguration
+import com.pubnub.api.PNConfiguration.Companion.isValid
 import com.pubnub.api.managers.MapperManager
 import com.pubnub.api.vendor.Crypto
 
 internal fun JsonElement.processHistoryMessage(configuration: PNConfiguration, mapper: MapperManager): JsonElement {
-    if (!configuration.isCipherKeyValid())
+    if (!configuration.cipherKey.isValid())
         return this
 
     val crypto = Crypto(configuration.cipherKey, configuration.useRandomInitializationVector)
