@@ -38,7 +38,6 @@ open class PNConfiguration(
 
     private val log = LoggerFactory.getLogger("PNConfiguration")
 
-
     companion object {
         internal fun String.isValid() = isNotBlank()
         private const val DEFAULT_DEDUPE_SIZE = 100

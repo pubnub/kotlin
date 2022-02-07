@@ -5,7 +5,6 @@ import com.pubnub.api.endpoints.pubsub.Subscribe
 import com.pubnub.api.endpoints.remoteaction.Cancelable
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.server.SubscribeEnvelope
-import com.pubnub.extension.ifNotNullNorBlank
 
 internal fun PubNub.handshake(
     channels: List<String>,
