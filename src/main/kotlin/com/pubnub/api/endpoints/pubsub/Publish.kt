@@ -1,6 +1,7 @@
 package com.pubnub.api.endpoints.pubsub
 
 import com.pubnub.api.Endpoint
+import com.pubnub.api.PNConfiguration.Companion.isValid
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
@@ -26,7 +27,7 @@ class Publish internal constructor(
     val ttl: Int? = null
 ) : Endpoint<List<Any>, PNPublishResult>(pubnub) {
 
-    private val useEncryption: Boolean = pubnub.configuration.isCipherKeyValid()
+    private val useEncryption: Boolean = pubnub.configuration.cipherKey.isValid()
 
     override fun validateParams() {
         super.validateParams()

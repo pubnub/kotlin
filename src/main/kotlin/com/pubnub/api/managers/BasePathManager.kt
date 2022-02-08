@@ -1,6 +1,7 @@
 package com.pubnub.api.managers
 
 import com.pubnub.api.PNConfiguration
+import com.pubnub.api.PNConfiguration.Companion.isValid
 
 internal class BasePathManager(private val config: PNConfiguration) {
 
@@ -32,7 +33,7 @@ internal class BasePathManager(private val config: PNConfiguration) {
             .append("://")
 
         when {
-            config.isOriginValid() -> {
+            config.origin.isValid() -> {
                 basePathBuilder.append(config.origin)
             }
             config.cacheBusting -> {

@@ -12,7 +12,8 @@ import java.util.HashMap
 class Heartbeat internal constructor(
     pubnub: PubNub,
     val channels: List<String> = listOf(),
-    val channelGroups: List<String> = listOf()
+    val channelGroups: List<String> = listOf(),
+    val state: Any? = null
 ) : Endpoint<Void, Boolean>(pubnub) {
 
     override fun getAffectedChannels() = channels
@@ -37,6 +38,10 @@ class Heartbeat internal constructor(
                 channels.joinToString(",")
             else
                 ","
+
+        state?.let {
+            queryParams["state"] = pubnub.mapper.toJson(it)
+        }
 
         return pubnub.retrofitManager.presenceService.heartbeat(
             pubnub.configuration.subscribeKey,
