@@ -14,8 +14,7 @@ abstract class AbstractState<I : Input>(private val newState: (input: I) -> Pair
     fun transition(input: I): Pair<Collection<Effect>, AbstractState<I>> {
         val (effects, maybeNewState) = newState(input)
 
-        return maybeNewState?.let { (effects + this.onExit() + listOf(NewStateEffect(it.newState::class.java.name)) + it.onEntry()) to it } ?: (effects to this)
-
+        return maybeNewState?.let { (effects + this.onExit() + listOf(NewStateEffect(it::class.java.name)) + it.onEntry()) to it } ?: (effects to this)
     }
 }
 

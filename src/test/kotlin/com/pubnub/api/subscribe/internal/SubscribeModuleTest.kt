@@ -2,6 +2,9 @@ package com.pubnub.api.subscribe.internal
 
 import com.pubnub.api.models.server.SubscribeEnvelope
 import com.pubnub.api.models.server.SubscribeMetaData
+import com.pubnub.api.state.NewStateEffect
+import org.hamcrest.MatcherAssert.assertThat
+import org.hamcrest.Matchers
 import org.junit.Test
 
 
@@ -26,7 +29,7 @@ class SubscribeModuleTest {
             module.handle(it)
         }
 
-        println(effects)
+        assertThat(effects.mapNotNull { if (it is NewStateEffect) it.name else null }, Matchers.`is`(listOf(SubscribeStates.Handshaking::class.java.name, SubscribeStates.Receiving::class.java.name, SubscribeStates.Receiving::class.java.name)))
     }
 
 }
