@@ -1,4 +1,4 @@
-package com.pubnub.api.subscribe.internal
+package com.pubnub.api.network
 
 import com.pubnub.api.PubNub
 import com.pubnub.api.endpoints.pubsub.Subscribe

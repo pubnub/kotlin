@@ -1,10 +1,12 @@
 package com.pubnub.api.state
 
+import java.util.*
+
 interface Input
 
-interface Effect
+abstract class Effect(val id: String = UUID.randomUUID().toString())
 
-data class NewStateEffect(val name: String) : Effect
+data class NewStateEffect(val name: String) : Effect()
 
 abstract class AbstractState<I : Input>(private val newState: (input: I) -> Pair<Collection<Effect>, AbstractState<I>?>) {
 

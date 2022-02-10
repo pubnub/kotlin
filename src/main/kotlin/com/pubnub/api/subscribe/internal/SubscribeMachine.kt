@@ -4,13 +4,10 @@ import com.pubnub.api.models.server.SubscribeEnvelope
 import com.pubnub.api.state.AbstractState
 import com.pubnub.api.state.Effect
 import com.pubnub.api.state.Input
+import com.pubnub.api.subscribe.SInput
 import java.util.*
 
-interface SInput : Input
-
-interface SEffect : Effect
-
-data class SubscribeInput(val channels: List<String>) : SInput
+abstract class SEffect : Effect()
 
 sealed class HandshakeResult : SInput {
     data class HandshakeSuccess(val cursor: Cursor) : HandshakeResult()
@@ -20,6 +17,15 @@ sealed class HandshakeResult : SInput {
 sealed class ReceivingResult : SInput {
     data class ReceivingSuccess(val subscribeEnvelope: SubscribeEnvelope) : ReceivingResult()
     object ReceivingFail : ReceivingResult()
+}
+
+fun foldIt(inputs: Collection<SInput>) {
+    val currentState: AbstractState<SInput> = SubscribeStates.Unsubscribed()
+
+    inputs.fold<SInput, Pair<AbstractState<SInput>, Collection<Effect>>>(currentState to listOf()) { (s, efs), i ->
+        val (nEfs, ns) = s.transition(i)
+        ns to (efs + nEfs)
+    }
 }
 
 class SubscribeMachine {
@@ -36,50 +42,50 @@ internal sealed class SubscribeStates(
     handleBlock: (input: Input) -> Pair<Collection<Effect>, SubscribeStates?>
 ) : AbstractState<SInput>(handleBlock) {
 
-    abstract val subscribeStateBag: SubscribeStateBag
+    abstract val stateBag: SubscribeStateBag
 
-    data class Unsubscribed(override val subscribeStateBag: SubscribeStateBag = SubscribeStateBag()) : SubscribeStates({
+    data class Unsubscribed(override val stateBag: SubscribeStateBag = SubscribeStateBag()) : SubscribeStates({
         withNoEffects(
             when (it) {
                 is SubscribeInput -> {
-                    Handshaking(subscribeStateBag + it)
+                    Handshaking(stateBag + it)
                 }
                 else -> null
             }
         )
     })
 
-    data class Handshaking(override val subscribeStateBag: SubscribeStateBag) : SubscribeStates({
+    data class Handshaking(override val stateBag: SubscribeStateBag) : SubscribeStates({
         withNoEffects(
             when (it) {
                 is SubscribeInput -> {
-                    subscribeStateBag.ifStatesAreDifferent(it) { newBag ->
+                    stateBag.ifStatesAreDifferent(it) { newBag ->
                         Handshaking(newBag)
                     }
                 }
 
                 is HandshakeResult.HandshakeSuccess -> {
-                    Receiving(subscribeStateBag.copy(cursor = it.cursor))
+                    Receiving(stateBag.copy(cursor = it.cursor))
                 }
                 else -> null
             }
         )
     }) {
-        val call = HandshakeHttpCallEffect(subscribeStateBag = subscribeStateBag)
+        val call = HandshakeHttpCallEffect(subscribeStateBag = stateBag)
 
         override fun onEntry(): Collection<SEffect> = listOf(call)
 
         override fun onExit(): Collection<SEffect> = listOf(EndHttpCallEffect(call.id))
     }
 
-    data class Receiving(override val subscribeStateBag: SubscribeStateBag) : SubscribeStates({
+    data class Receiving(override val stateBag: SubscribeStateBag) : SubscribeStates({
         when (it) {
             is ReceivingResult.ReceivingSuccess -> {
-                withEffects(Receiving(subscribeStateBag), NewMessagesEffect(it.subscribeEnvelope))
+                withEffects(Receiving(stateBag), NewMessagesEffect(it.subscribeEnvelope))
             }
             else -> withNoEffects(when (it) {
                 is SubscribeInput -> {
-                    subscribeStateBag.ifStatesAreDifferent(it) { newBag ->
+                    stateBag.ifStatesAreDifferent(it) { newBag ->
                         Receiving(newBag)
                     }
                 }
@@ -88,7 +94,7 @@ internal sealed class SubscribeStates(
         }
     }) {
 
-        private val call = ReceiveMessagesHttpCallEffect(subscribeStateBag = subscribeStateBag)
+        private val call = ReceiveMessagesHttpCallEffect(subscribeStateBag = stateBag)
 
         override fun onEntry(): Collection<SEffect> = listOf(call)
 
@@ -108,26 +114,20 @@ internal fun withEffects(
     return Pair(effects.toList(), newState)
 }
 
-interface HttpCallEffect : SEffect {
-    val id: String
-}
+abstract class HttpCallEffect : SEffect()
 
 data class ReceiveMessagesHttpCallEffect(
-    val subscribeStateBag: SubscribeStateBag,
-    override val id: String = UUID.randomUUID().toString()
-) : HttpCallEffect
+    val subscribeStateBag: SubscribeStateBag
+) : HttpCallEffect()
 
 
 data class HandshakeHttpCallEffect(
-    val subscribeStateBag: SubscribeStateBag,
-    override val id: String = UUID.randomUUID().toString()
-) : HttpCallEffect
+    val subscribeStateBag: SubscribeStateBag
+) : HttpCallEffect()
 
-data class EndHttpCallEffect(
-    val id: String
-) : SEffect
+class EndHttpCallEffect(val idToCancel: String) : SEffect()
 
-data class NewMessagesEffect(val subscribeEnvelope: SubscribeEnvelope) : SEffect
+data class NewMessagesEffect(val subscribeEnvelope: SubscribeEnvelope) : SEffect()
 
 data class SubscribeStateBag(
     val channels: List<String> = listOf(),

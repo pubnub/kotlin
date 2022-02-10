@@ -3,6 +3,7 @@ package com.pubnub.api.subscribe.internal
 import com.pubnub.api.state.AbstractState
 import com.pubnub.api.state.Effect
 import com.pubnub.api.state.Input
+import com.pubnub.api.subscribe.SInput
 import kotlin.reflect.KClass
 
 
@@ -44,15 +45,21 @@ fun <I : Input, S : AbstractState<I>, II : I, SS : S> StateBuilder<I, S, SS>.for
 
 interface SingleStateTransitionBuilder<I : Input, S : AbstractState<I>, II : I>
 
-infix fun <I : Input, S : AbstractState<I>, II : I, SS : S> SingleStateTransitionBuilder<I, S, II>.doReturn(build: SingleStateTransitionBuilder<I, S, II>.(II, S) -> SS?) {
+infix fun <I : Input, S : AbstractState<I>, II : I, SS : S> SingleStateTransitionBuilder<I, S, II>.transitionTo(build: SingleStateTransitionBuilder<I, S, II>.(II, S) -> SS?) {
+
+}
+
+infix fun <I : Input, S : AbstractState<I>, II : I, SS : S> SingleStateTransitionBuilder<I, S, II>.transitionWithEffects(
+    build: SingleStateTransitionBuilder<I, S, II>.(II, S) -> Pair<SS?, Collection<Effect>>
+) {
 
 }
 
 fun aa() {
     startFSMWith<SInput, SubscribeStates> { SubscribeStates.Unsubscribed() } andThen {
         forState(SubscribeStates.Unsubscribed::class) {
-            forInput(SubscribeInput::class) doReturn { i, s ->
-                SubscribeStates.Handshaking(s.subscribeStateBag + i)
+            forInput(SubscribeInput::class) transitionTo { i, s ->
+                SubscribeStates.Handshaking(s.stateBag + i)
             }
         }
         forState(
@@ -60,14 +67,17 @@ fun aa() {
             onEntry = { listOf(call) },
             onExit = { listOf(EndHttpCallEffect(call.id)) }
         ) {
-            forInput(SubscribeInput::class) doReturn { i, s ->
-                s.subscribeStateBag.ifDifferent(s.subscribeStateBag + i) { newBag ->
+            forInput(SubscribeInput::class) transitionTo { i, s ->
+                s.stateBag.ifDifferent(s.stateBag + i) { newBag ->
                     SubscribeStates.Handshaking(newBag)
                 }
 
             }
-            forInput(HandshakeResult.HandshakeSuccess::class) doReturn { i, s ->
-                SubscribeStates.Receiving(s.subscribeStateBag.copy(cursor = i.cursor))
+            forInput(HandshakeResult.HandshakeSuccess::class) transitionTo { i, s ->
+                SubscribeStates.Receiving(s.stateBag.copy(cursor = i.cursor))
+            }
+            forInput(HandshakeResult.HandshakeSuccess::class) transitionWithEffects { i, s ->
+                SubscribeStates.Receiving(s.stateBag.copy(cursor = i.cursor)) to listOf()
             }
         }
     }
