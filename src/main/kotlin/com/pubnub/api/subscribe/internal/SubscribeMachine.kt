@@ -22,7 +22,7 @@ sealed class ReceivingResult : SInput {
     object ReceivingFail : ReceivingResult()
 }
 
-class SubscribeModule {
+class SubscribeMachine {
     private var currentState: AbstractState<SInput> = SubscribeStates.Unsubscribed()
 
     fun handle(input: SInput): Collection<Effect> {
@@ -53,7 +53,7 @@ internal sealed class SubscribeStates(
         withNoEffects(
             when (it) {
                 is SubscribeInput -> {
-                    subscribeStateBag.changeToIfDifferentState(it) { newBag ->
+                    subscribeStateBag.ifStatesAreDifferent(it) { newBag ->
                         Handshaking(newBag)
                     }
                 }
@@ -65,7 +65,7 @@ internal sealed class SubscribeStates(
             }
         )
     }) {
-        private val call = HandshakeHttpCallEffect(subscribeStateBag = subscribeStateBag)
+        val call = HandshakeHttpCallEffect(subscribeStateBag = subscribeStateBag)
 
         override fun onEntry(): Collection<SEffect> = listOf(call)
 
@@ -79,7 +79,7 @@ internal sealed class SubscribeStates(
             }
             else -> withNoEffects(when (it) {
                 is SubscribeInput -> {
-                    subscribeStateBag.changeToIfDifferentState(it) { newBag ->
+                    subscribeStateBag.ifStatesAreDifferent(it) { newBag ->
                         Receiving(newBag)
                     }
                 }
@@ -140,7 +140,7 @@ data class Cursor(
     val region: String
 )
 
-internal fun SubscribeStateBag.changeToIfDifferentState(
+internal fun SubscribeStateBag.ifStatesAreDifferent(
     input: SubscribeInput,
     newStateFactory: (SubscribeStateBag) -> SubscribeStates
 ): SubscribeStates? {

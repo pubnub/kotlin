@@ -8,11 +8,11 @@ import org.hamcrest.Matchers
 import org.junit.Test
 
 
-class SubscribeModuleTest {
+class SubscribeMachineTest {
 
     @Test
     fun firstTest() {
-        val module = SubscribeModule()
+        val module = SubscribeMachine()
 
         val inputs = listOf(
             SubscribeInput(channels = listOf("ch1")),
