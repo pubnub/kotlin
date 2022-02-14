@@ -41,7 +41,3 @@ data class StateDescription(
     val onExit: () -> Collection<Effect>,
     val transitions: Collection<TransitionsDescription<Input>>
 )
-
-fun yaa() {
-
-}

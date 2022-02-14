@@ -1,34 +1,34 @@
 package com.pubnub.api.subscribe
 
 import com.pubnub.api.models.server.SubscribeEnvelope
-import com.pubnub.api.state.Input
+import com.pubnub.api.state.Event
 import com.pubnub.api.subscribe.internal.Cursor
 
-sealed interface SubscribeInput : Input
+sealed interface SubscribeEvent : Event
 
-sealed class SubscribeCommands : SubscribeInput {
-    data class Subscribe(
+sealed class Commands : SubscribeEvent {
+    data class SubscribeCommandIssued(
         val channels: List<String>,
         val groups: List<String> = listOf(),
         val cursor: Cursor? = null
-    ) : SubscribeCommands()
+    ) : Commands()
 
-    data class Unsubscribe(
+    data class UnsubscribeCommandIssued(
         val channels: List<String>,
         val groups: List<String> = listOf()
-    ) : SubscribeCommands()
+    ) : Commands()
 
-    object UnsubscribeAll : SubscribeCommands()
+    object UnsubscribeAllCommandIssued : Commands()
 }
 
-sealed class HandshakeResult : SubscribeInput {
-    data class HandshakeSuccess(val cursor: Cursor) : HandshakeResult()
-    object HandshakeFail : HandshakeResult()
+sealed class HandshakeResult : SubscribeEvent {
+    data class HandshakeSucceeded(val cursor: Cursor) : HandshakeResult()
+    object HandshakeFailed : HandshakeResult()
 }
 
-sealed class ReceivingResult : SubscribeInput {
-    data class ReceivingSuccess(val subscribeEnvelope: SubscribeEnvelope) : ReceivingResult()
-    object ReceivingFail : ReceivingResult()
+sealed class ReceivingResult : SubscribeEvent {
+    data class ReceivingSucceeded(val subscribeEnvelope: SubscribeEnvelope) : ReceivingResult()
+    object ReceivingFailed : ReceivingResult()
 }
 
 

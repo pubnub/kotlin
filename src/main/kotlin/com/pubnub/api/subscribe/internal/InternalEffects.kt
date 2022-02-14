@@ -4,14 +4,12 @@ import com.pubnub.api.subscribe.AbstractSubscribeEffect
 
 sealed class SubscribeHttpEffect : AbstractSubscribeEffect() {
     data class ReceiveMessagesHttpCallEffect(
-        val subscribeStateBag: SubscribeStateBag
+        val subscriptionStatus: SubscriptionStatus
     ) : SubscribeHttpEffect()
 
     data class HandshakeHttpCallEffect(
-        val subscribeStateBag: SubscribeStateBag
+        val subscriptionStatus: SubscriptionStatus
     ) : SubscribeHttpEffect()
-
 }
 
 class EndHttpCallEffect(val idToCancel: String) : AbstractSubscribeEffect()
-

@@ -5,7 +5,9 @@ import com.pubnub.api.models.server.SubscribeMetaData
 import com.pubnub.api.subscribe.HandshakeResult
 import com.pubnub.api.subscribe.NewStateEffect
 import com.pubnub.api.subscribe.ReceivingResult
-import com.pubnub.api.subscribe.SubscribeCommands
+import com.pubnub.api.subscribe.Commands
+import com.pubnub.api.subscribe.internal.fsm.SubscribeMachine
+import com.pubnub.api.subscribe.internal.fsm.SubscribeStates
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers
 import org.junit.Test
@@ -18,9 +20,9 @@ class SubscribeMachineTest {
         val module = SubscribeMachine()
 
         val inputs = listOf(
-            SubscribeCommands.Subscribe(channels = listOf("ch1")),
-            HandshakeResult.HandshakeSuccess(cursor = Cursor(timetoken = 5, region = "12")),
-            ReceivingResult.ReceivingSuccess(
+            Commands.SubscribeCommandIssued(channels = listOf("ch1")),
+            HandshakeResult.HandshakeSucceeded(cursor = Cursor(timetoken = 5, region = "12")),
+            ReceivingResult.ReceivingSucceeded(
                 SubscribeEnvelope(
                     messages = listOf(),
                     metadata = SubscribeMetaData(timetoken = 5, region = "12")

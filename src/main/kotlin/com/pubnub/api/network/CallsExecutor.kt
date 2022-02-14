@@ -17,15 +17,15 @@ internal class CallsExecutor(
 
     fun handshake(
         id: String,
-        channels: List<String>,
-        channelGroups: List<String>,
+        channels: Collection<String>,
+        channelGroups: Collection<String>,
         callback: (result: SubscribeEnvelope?, status: PNStatus) -> Unit
     ) {
         val call = HttpCall(
             id = id,
             cancelable = pubNub.handshake(
-                channels = channels,
-                channelGroups = channelGroups,
+                channels = channels.toList(),
+                channelGroups = channelGroups.toList(),
                 callback = { r, s ->
                     synchronized(calls) {
                         calls.remove(id)
@@ -43,8 +43,8 @@ internal class CallsExecutor(
 
     fun receiveMessages(
         id: String,
-        channels: List<String>,
-        channelGroups: List<String>,
+        channels: Collection<String>,
+        channelGroups: Collection<String>,
         timetoken: Long,
         region: String,
         callback: (result: SubscribeEnvelope?, status: PNStatus) -> Unit
@@ -52,8 +52,8 @@ internal class CallsExecutor(
         val call = HttpCall(
             id = id,
             cancelable = pubNub.receiveMessages(
-                channels = channels,
-                channelGroups = channelGroups,
+                channels = channels.toList(),
+                channelGroups = channelGroups.toList(),
                 timetoken = timetoken,
                 region = region,
                 callback = { r, s ->

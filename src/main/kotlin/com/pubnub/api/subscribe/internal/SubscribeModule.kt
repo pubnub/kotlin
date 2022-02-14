@@ -5,6 +5,7 @@ import com.pubnub.api.state.Effect
 import com.pubnub.api.subscribe.*
 import com.pubnub.api.subscribe.internal.SubscribeHttpEffect.HandshakeHttpCallEffect
 import com.pubnub.api.subscribe.internal.SubscribeHttpEffect.ReceiveMessagesHttpCallEffect
+import com.pubnub.api.subscribe.internal.fsm.SubscribeMachine
 import org.slf4j.LoggerFactory
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.ExecutorService
@@ -13,7 +14,7 @@ import java.util.concurrent.LinkedBlockingQueue
 
 internal class SubscribeModule(
     private val callsExecutor: CallsExecutor,
-    private val inputQueue: LinkedBlockingQueue<SubscribeInput>,
+    private val inputQueue: LinkedBlockingQueue<SubscribeEvent>,
     private val subscribeMachine: SubscribeMachine = SubscribeMachine(),
     private val effectsQueue: LinkedBlockingQueue<Effect> = LinkedBlockingQueue(100),
     private val threadExecutor: ExecutorService = Executors.newFixedThreadPool(2)
@@ -43,12 +44,12 @@ internal class SubscribeModule(
                         is EndHttpCallEffect -> callsExecutor.cancel(effect.idToCancel)
                         is HandshakeHttpCallEffect -> callsExecutor.handshake(
                             id = effect.id,
-                            channels = effect.subscribeStateBag.channels,
-                            channelGroups = effect.subscribeStateBag.groups
+                            channels = effect.subscriptionStatus.channels,
+                            channelGroups = effect.subscriptionStatus.groups
                         ) { r, s ->
                             if (!s.error) {
                                 inputQueue.put(
-                                    HandshakeResult.HandshakeSuccess(
+                                    HandshakeResult.HandshakeSucceeded(
                                         Cursor(
                                             timetoken = r!!.metadata.timetoken, //TODO we could improve callback to avoid !! here
                                             region = r.metadata.region
@@ -57,26 +58,26 @@ internal class SubscribeModule(
                                 )
                             } else {
                                 inputQueue.put(
-                                    HandshakeResult.HandshakeFail
+                                    HandshakeResult.HandshakeFailed
                                 )
                             }
                         }
                         is ReceiveMessagesHttpCallEffect -> callsExecutor.receiveMessages(
                             id = effect.id,
-                            channels = effect.subscribeStateBag.channels,
-                            channelGroups = effect.subscribeStateBag.groups,
-                            timetoken = effect.subscribeStateBag.cursor!!.timetoken, //TODO figure out how to drop !! here
-                            region = effect.subscribeStateBag.cursor.region
+                            channels = effect.subscriptionStatus.channels,
+                            channelGroups = effect.subscriptionStatus.groups,
+                            timetoken = effect.subscriptionStatus.cursor!!.timetoken, //TODO figure out how to drop !! here
+                            region = effect.subscriptionStatus.cursor.region
                         ) { r, s ->
                             if (!s.error) {
                                 inputQueue.put(
-                                    ReceivingResult.ReceivingSuccess(
+                                    ReceivingResult.ReceivingSucceeded(
                                         r!!
                                     )
                                 )
                             } else {
                                 inputQueue.put(
-                                    ReceivingResult.ReceivingFail
+                                    ReceivingResult.ReceivingFailed
                                 )
                             }
                         }

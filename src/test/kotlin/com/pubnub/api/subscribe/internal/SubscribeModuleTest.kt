@@ -4,8 +4,8 @@ import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
 import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.network.CallsExecutor
-import com.pubnub.api.subscribe.SubscribeInput
-import com.pubnub.api.subscribe.SubscribeCommands.*
+import com.pubnub.api.subscribe.SubscribeEvent
+import com.pubnub.api.subscribe.Commands.*
 import org.junit.Test
 import java.util.concurrent.LinkedBlockingQueue
 
@@ -19,7 +19,7 @@ class SubscribeModuleTest {
             logVerbosity = PNLogVerbosity.BODY
         })
 
-        val inputQueue = LinkedBlockingQueue<SubscribeInput>(100)
+        val inputQueue = LinkedBlockingQueue<SubscribeEvent>(100)
 
         val subscribeModule = SubscribeModule(
             inputQueue = inputQueue,
@@ -28,20 +28,20 @@ class SubscribeModuleTest {
 
         subscribeModule.run()
 
-        inputQueue.put(Subscribe(channels = listOf("ch1")))
+        inputQueue.put(SubscribeCommandIssued(channels = listOf("ch1")))
 
         Thread.sleep(5_000)
 
-        inputQueue.put(Subscribe(channels = listOf("ch2")))
+        inputQueue.put(SubscribeCommandIssued(channels = listOf("ch2")))
         Thread.sleep(5_000)
 
-        inputQueue.put(Subscribe(channels = listOf("ch3")))
+        inputQueue.put(SubscribeCommandIssued(channels = listOf("ch3")))
         Thread.sleep(5_000)
 
-        inputQueue.put(Subscribe(channels = listOf("ch4")))
+        inputQueue.put(SubscribeCommandIssued(channels = listOf("ch4")))
         Thread.sleep(5_000)
 
-        inputQueue.put(Subscribe(channels = listOf("ch5", "ch6")))
+        inputQueue.put(SubscribeCommandIssued(channels = listOf("ch5", "ch6")))
         Thread.sleep(5_000)
     }
 }
