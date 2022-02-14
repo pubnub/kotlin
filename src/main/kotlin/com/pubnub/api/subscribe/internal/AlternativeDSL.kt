@@ -3,80 +3,84 @@ package com.pubnub.api.subscribe.internal
 import com.pubnub.api.state.AbstractState
 import com.pubnub.api.state.Effect
 import com.pubnub.api.state.Input
-import com.pubnub.api.subscribe.SInput
+import com.pubnub.api.subscribe.SubscribeInput
+import com.pubnub.api.subscribe.HandshakeResult.HandshakeSuccess
+import com.pubnub.api.subscribe.SubscribeCommands
+import com.pubnub.api.subscribe.internal.SubscribeStates.Handshaking
+import com.pubnub.api.subscribe.internal.SubscribeStates.Unsubscribed
 import kotlin.reflect.KClass
 
 
-interface StateMachineBuilder<I : Input, S : AbstractState<I>>
+interface StateMachineBuilder<I : Input, E : Effect, S : AbstractState<I, E>>
 
-fun <I : Input, S : AbstractState<I>> startFSMWith(stateCreator: () -> S): StateMachineBuilder<I, S> {
+fun <I : Input, E : Effect, S : AbstractState<I, E>> startFSMWith(stateCreator: () -> S): StateMachineBuilder<I, E, S> {
     TODO()
 }
 
-infix fun <I : Input, S : AbstractState<I>> StateMachineBuilder<I, S>.andThen(build: StateMachineBuilder<I, S>.() -> Unit) {
+infix fun <I : Input, E : Effect, S : AbstractState<I, E>> StateMachineBuilder<I, E, S>.andThen(build: StateMachineBuilder<I, E, S>.() -> Unit) {
 
 }
 
-class StateBuilder<I : Input, S : AbstractState<I>, SS : S> {
+class StateBuilder<I : Input, E : Effect, S : AbstractState<I, E>, SS : S> {
 
 }
 
-fun <I : Input, S : AbstractState<I>, II : I, SS : S> StateBuilder<I, S, SS>.onEntry(build: SS.() -> Collection<Effect>) {
+fun <I : Input, E : Effect, S : AbstractState<I, E>, II : I, SS : S> StateBuilder<I, E, S, SS>.onEntry(build: SS.() -> Collection<Effect>) {
 
 }
 
-fun <I : Input, S : AbstractState<I>, II : I, SS : S> StateBuilder<I, S, SS>.onExit(build: SS.() -> Collection<Effect>) {
+fun <I : Input, E : Effect, S : AbstractState<I, E>, II : I, SS : S> StateBuilder<I, E, S, SS>.onExit(build: SS.() -> Collection<Effect>) {
 
 }
 
 
-fun <I : Input, S : AbstractState<I>, SS : S> StateMachineBuilder<I, S>.forState(
+fun <I : Input, E : Effect, S : AbstractState<I, E>, SS : S> StateMachineBuilder<I, E, S>.forState(
     clazz: KClass<SS>,
     onEntry: SS.() -> Collection<Effect> = { listOf() },
     onExit: SS.() -> Collection<Effect> = { listOf() },
-    build: StateBuilder<I, S, SS>.() -> Unit
+    build: StateBuilder<I, E, S, SS>.() -> Unit
 ) {
 
 }
 
-fun <I : Input, S : AbstractState<I>, II : I, SS : S> StateBuilder<I, S, SS>.forInput(clazz: KClass<II>): SingleStateTransitionBuilder<I, S, II> {
+fun <I : Input, E : Effect, S : AbstractState<I, E>, II : I, SS : S> StateBuilder<I, E, S, SS>.forInput(clazz: KClass<II>): SingleStateTransitionBuilder<I, E, S, II> {
     TODO()
 }
 
-interface SingleStateTransitionBuilder<I : Input, S : AbstractState<I>, II : I>
+interface SingleStateTransitionBuilder<I : Input, E : Effect, S : AbstractState<I, E>, II : I>
 
-infix fun <I : Input, S : AbstractState<I>, II : I, SS : S> SingleStateTransitionBuilder<I, S, II>.transitionTo(build: SingleStateTransitionBuilder<I, S, II>.(II, S) -> SS?) {
+infix fun <I : Input, E : Effect, S : AbstractState<I, E>, II : I, SS : S> SingleStateTransitionBuilder<I, E, S, II>.transitionTo(build: SingleStateTransitionBuilder<I, E, S, II>.(II, S) -> SS?) {
 
 }
 
-infix fun <I : Input, S : AbstractState<I>, II : I, SS : S> SingleStateTransitionBuilder<I, S, II>.transitionWithEffects(
-    build: SingleStateTransitionBuilder<I, S, II>.(II, S) -> Pair<SS?, Collection<Effect>>
+infix fun <I : Input, E : Effect, S : AbstractState<I, E>, II : I, SS : S> SingleStateTransitionBuilder<I, E, S, II>.transitionWithEffects(
+    build: SingleStateTransitionBuilder<I, E, S, II>.(II, S) -> Pair<SS?, Collection<Effect>>
 ) {
 
 }
 
 fun aa() {
-    startFSMWith<SInput, SubscribeStates> { SubscribeStates.Unsubscribed() } andThen {
-        forState(SubscribeStates.Unsubscribed::class) {
-            forInput(SubscribeInput::class) transitionTo { i, s ->
-                SubscribeStates.Handshaking(s.stateBag + i)
+    startFSMWith<SubscribeInput, Effect, SubscribeStates> { Unsubscribed() } andThen {
+        forState(Unsubscribed::class) {
+            forInput(SubscribeCommands.Subscribe::class) transitionTo { i, s ->
+                Handshaking(s.stateBag + i)
             }
         }
         forState(
-            SubscribeStates.Handshaking::class,
+            Handshaking::class,
             onEntry = { listOf(call) },
             onExit = { listOf(EndHttpCallEffect(call.id)) }
         ) {
-            forInput(SubscribeInput::class) transitionTo { i, s ->
+            forInput(SubscribeCommands.Subscribe::class) transitionTo { i, s ->
                 s.stateBag.ifDifferent(s.stateBag + i) { newBag ->
-                    SubscribeStates.Handshaking(newBag)
+                    Handshaking(newBag)
                 }
 
             }
-            forInput(HandshakeResult.HandshakeSuccess::class) transitionTo { i, s ->
+            forInput(HandshakeSuccess::class) transitionTo { i, s ->
                 SubscribeStates.Receiving(s.stateBag.copy(cursor = i.cursor))
             }
-            forInput(HandshakeResult.HandshakeSuccess::class) transitionWithEffects { i, s ->
+            forInput(HandshakeSuccess::class) transitionWithEffects { i, s ->
                 SubscribeStates.Receiving(s.stateBag.copy(cursor = i.cursor)) to listOf()
             }
         }

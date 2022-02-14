@@ -2,8 +2,9 @@ package com.pubnub.api.subscribe.internal
 
 import com.pubnub.api.network.CallsExecutor
 import com.pubnub.api.state.Effect
-import com.pubnub.api.state.NewStateEffect
-import com.pubnub.api.subscribe.SInput
+import com.pubnub.api.subscribe.*
+import com.pubnub.api.subscribe.internal.SubscribeHttpEffect.HandshakeHttpCallEffect
+import com.pubnub.api.subscribe.internal.SubscribeHttpEffect.ReceiveMessagesHttpCallEffect
 import org.slf4j.LoggerFactory
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.ExecutorService
@@ -12,7 +13,7 @@ import java.util.concurrent.LinkedBlockingQueue
 
 internal class SubscribeModule(
     private val callsExecutor: CallsExecutor,
-    private val inputQueue: LinkedBlockingQueue<SInput>,
+    private val inputQueue: LinkedBlockingQueue<SubscribeInput>,
     private val subscribeMachine: SubscribeMachine = SubscribeMachine(),
     private val effectsQueue: LinkedBlockingQueue<Effect> = LinkedBlockingQueue(100),
     private val threadExecutor: ExecutorService = Executors.newFixedThreadPool(2)
@@ -21,7 +22,7 @@ internal class SubscribeModule(
     private val logger = LoggerFactory.getLogger(SubscribeModule::class.java)
 
     fun run() {
-        val handleInputs = CompletableFuture.runAsync(Runnable {
+        val handleInputs = CompletableFuture.runAsync({
             while (!Thread.interrupted()) {
                 try {
                     val input = inputQueue.take()
@@ -35,7 +36,7 @@ internal class SubscribeModule(
 
         }, threadExecutor)
 
-        val handleEffects = CompletableFuture.runAsync(Runnable {
+        val handleEffects = CompletableFuture.runAsync({
             while (!Thread.interrupted()) {
                 try {
                     when (val effect = effectsQueue.take()) {
@@ -81,7 +82,7 @@ internal class SubscribeModule(
                         }
                         is NewStateEffect -> logger.info("New state: ${effect.name}")
                         is NewMessagesEffect -> logger.info(
-                            "New messages. Hopefully they're fine ;) ${effect.subscribeEnvelope.messages}"
+                            "New messages. Hopefully they're fine ;) ${effect.messages}"
                         )
                     }
                 } catch (e: InterruptedException) {

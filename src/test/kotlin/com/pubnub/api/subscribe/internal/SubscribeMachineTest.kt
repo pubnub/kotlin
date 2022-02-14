@@ -2,7 +2,10 @@ package com.pubnub.api.subscribe.internal
 
 import com.pubnub.api.models.server.SubscribeEnvelope
 import com.pubnub.api.models.server.SubscribeMetaData
-import com.pubnub.api.state.NewStateEffect
+import com.pubnub.api.subscribe.HandshakeResult
+import com.pubnub.api.subscribe.NewStateEffect
+import com.pubnub.api.subscribe.ReceivingResult
+import com.pubnub.api.subscribe.SubscribeCommands
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers
 import org.junit.Test
@@ -15,7 +18,7 @@ class SubscribeMachineTest {
         val module = SubscribeMachine()
 
         val inputs = listOf(
-            SubscribeInput(channels = listOf("ch1")),
+            SubscribeCommands.Subscribe(channels = listOf("ch1")),
             HandshakeResult.HandshakeSuccess(cursor = Cursor(timetoken = 5, region = "12")),
             ReceivingResult.ReceivingSuccess(
                 SubscribeEnvelope(
@@ -29,7 +32,18 @@ class SubscribeMachineTest {
             module.handle(it)
         }
 
-        assertThat(effects.mapNotNull { if (it is NewStateEffect) it.name else null }, Matchers.`is`(listOf(SubscribeStates.Handshaking::class.java.name, SubscribeStates.Receiving::class.java.name, SubscribeStates.Receiving::class.java.name)))
+        println(effects)
+
+        assertThat(
+            effects.mapNotNull { if (it is NewStateEffect) it.name else null },
+            Matchers.`is`(
+                listOf(
+                    SubscribeStates.Handshaking::class.simpleName,
+                    SubscribeStates.Receiving::class.simpleName,
+                    SubscribeStates.Receiving::class.simpleName
+                )
+            )
+        )
     }
 
 }
