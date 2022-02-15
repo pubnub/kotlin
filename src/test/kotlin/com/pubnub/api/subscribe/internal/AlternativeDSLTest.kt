@@ -2,7 +2,6 @@ package com.pubnub.api.subscribe.internal
 
 import com.pubnub.api.models.server.SubscribeEnvelope
 import com.pubnub.api.models.server.SubscribeMetaData
-import com.pubnub.api.state.Event
 import com.pubnub.api.subscribe.*
 import com.pubnub.api.subscribe.internal.fsm.SubscribeStates
 import org.hamcrest.MatcherAssert
@@ -101,60 +100,56 @@ class AlternativeDSLTest {
     }
 
 
-    fun stateMachine(initState: EnumState, transitions: (EnumState, SubscribeEvent) -> Pair<EnumState, Collection<AbstractSubscribeEffect>>): (SubscribeEvent) -> Collection<AbstractSubscribeEffect> {
-        TODO()
+    fun stateMachine(
+        initState: EnumState,
+        transitions: (EnumState, SubscribeEvent) -> Pair<EnumState, Collection<AbstractSubscribeEffect>>
+    ): (SubscribeEvent) -> Collection<AbstractSubscribeEffect> {
+        var state = initState
+        return { event ->
+            val (ns, effects) = transitions(state, event)
+            state = ns
+            effects
+        }
     }
+
+
+
+    private fun TransitionsDescriptionContext.handshakingTransitions(notUsed: EnumState.Handshaking): Pair<EnumState, Collection<AbstractSubscribeEffect>> {
+        return when (event) {
+            is Commands.SubscribeCommandIssued -> transitionTo(EnumState.Handshaking(updatedStatus))
+            Commands.UnsubscribeAllCommandIssued -> transitionTo(EnumState.Unsubscribed)
+            is Commands.UnsubscribeCommandIssued -> transitionTo(EnumState.Handshaking(updatedStatus))
+            HandshakeResult.HandshakeFailed -> noTransition()
+            is HandshakeResult.HandshakeSucceeded -> transitionTo(EnumState.Receiving(updatedStatus))
+            else -> noTransition()
+        }
+    }
+
 
 
     @Test
     fun a() {
         val fn: (EnumState, SubscribeEvent) -> Pair<EnumState, Collection<AbstractSubscribeEffect>> =
-            transitions { st, ev ->
-                when (st) {
-                    is EnumState.Handshaking -> when (ev) {
-                        is Commands -> {
-                            transitionTo(
-                                when (ev) {
-                                    is Commands.SubscribeCommandIssued -> EnumState.Handshaking(updatedStatus)
-                                    Commands.UnsubscribeAllCommandIssued -> EnumState.Unsubscribed
-                                    is Commands.UnsubscribeCommandIssued -> EnumState.Handshaking(updatedStatus)
-                                }
-                            )
-                        }
-                        HandshakeResult.HandshakeFailed -> noTransition()
-                        is HandshakeResult.HandshakeSucceeded -> transitionTo(EnumState.Receiving(updatedStatus))
-                        else -> noTransition()
-                    }
-                    is EnumState.Receiving -> when (ev) {
-                        is Commands -> {
-                            transitionTo(
-                                when (ev) {
-                                    is Commands.SubscribeCommandIssued -> EnumState.Receiving(updatedStatus)
-                                    Commands.UnsubscribeAllCommandIssued -> EnumState.Unsubscribed
-                                    is Commands.UnsubscribeCommandIssued -> EnumState.Receiving(updatedStatus)
-                                }
-                            )
-                        }
+            transitions { state, event ->
+                when (state) {
+                    is EnumState.Handshaking -> handshakingTransitions(state)
+                    is EnumState.Receiving -> when (event) {
+                        is Commands.SubscribeCommandIssued -> transitionTo(EnumState.Receiving(updatedStatus))
+                        Commands.UnsubscribeAllCommandIssued -> transitionTo(EnumState.Unsubscribed)
+                        is Commands.UnsubscribeCommandIssued -> transitionTo(EnumState.Receiving(updatedStatus))
                         ReceivingResult.ReceivingFailed -> noTransition()
                         is ReceivingResult.ReceivingSucceeded -> transitionTo(
                             EnumState.Receiving(updatedStatus),
-                            NewMessagesEffect(ev.subscribeEnvelope.messages)
+                            NewMessagesEffect(event.subscribeEnvelope.messages)
                         )
                         else -> noTransition()
                     }
-                    EnumState.Unsubscribed -> when (ev) {
-                        is Commands.SubscribeCommandIssued -> transitionTo(EnumState.Handshaking(st.status + ev))
+                    EnumState.Unsubscribed -> when (event) {
+                        is Commands.SubscribeCommandIssued -> transitionTo(EnumState.Handshaking(updatedStatus))
                         else -> noTransition()
                     }
                 }
             }
-
-        val (ns, ef) = fn(EnumState.Unsubscribed, Commands.SubscribeCommandIssued(channels = listOf("ch1")))
-
-
-        println(ns to ef)
-        println(fn(ns, Commands.SubscribeCommandIssued(channels = listOf("ch2"))))
-        println(fn(ns, HandshakeResult.HandshakeFailed))
 
         val inputs = listOf(
             Commands.SubscribeCommandIssued(channels = listOf("ch1")),
@@ -162,10 +157,12 @@ class AlternativeDSLTest {
             ReceivingResult.ReceivingSucceeded(
                 SubscribeEnvelope(
                     messages = listOf(),
-                    metadata = SubscribeMetaData(timetoken = 5, region = "13")
+                    metadata = SubscribeMetaData(timetoken = 5, region = "12")
                 )
             )
         )
+
+
 
         val (s, effects) = inputs.fold<SubscribeEvent, Pair<EnumState, Collection<AbstractSubscribeEffect>>>(EnumState.Unsubscribed to listOf()) { (s, ef), ev ->
             val (ns, nEf) = fn(s, ev)
@@ -173,6 +170,8 @@ class AlternativeDSLTest {
         }
 
         println(effects)
+
+        println(effects.mapNotNull { if (it is NewStateEffect) it.name else null })
 
         MatcherAssert.assertThat(
             effects.mapNotNull { if (it is NewStateEffect) it.name else null },
