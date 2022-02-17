@@ -19,12 +19,11 @@ internal class SubscribeModule(
     ),
     private val effectsQueue: LinkedBlockingQueue<Effect> = LinkedBlockingQueue(100),
     private val threadExecutor: ExecutorService = Executors.newFixedThreadPool(2),
-    private val effects: MutableMap<String, () -> Unit> = mutableMapOf(),
+    private val longRunningEffectsTracker: LongRunningEffectsTracker = LongRunningEffectsTracker(),
     private val httpEffectExecutor: EffectExecutor<SubscribeHttpEffect> = HttpCallExecutor(
         callsExecutor,
-        eventQueue = inputQueue
-    ),
-    private val retryEffectExecturor: EffectExecutor<ScheduleRetry> = RetryEffectExecutor(effectQueue = effectsQueue)
+        eventQueue = inputQueue),
+    private val retryEffectExecutor: EffectExecutor<ScheduleRetry> = RetryEffectExecutor(effectQueue = effectsQueue)
 ) {
 
     private val logger = LoggerFactory.getLogger(SubscribeModule::class.java)
@@ -48,12 +47,13 @@ internal class SubscribeModule(
             while (!Thread.interrupted()) {
                 try {
                     when (val effect = effectsQueue.take()) {
-                        is SubscribeHttpEffect -> effects[effect.id] = httpEffectExecutor.execute(effect)
-                        is NewState -> logger.info("New state: ${effect.name}")
+                        is CancelEffect -> longRunningEffectsTracker.cancel(effect.idToCancel)
+                        is SubscribeHttpEffect -> longRunningEffectsTracker.track(effect, httpEffectExecutor.execute(effect, longRunningEffectDone = longRunningEffectsTracker::cancel))
+                        is NewState -> logger.info("New state: $effect")
                         is NewMessages -> logger.info(
                             "New messages. Hopefully they're fine ;) ${effect.messages}"
                         )
-                        is ScheduleRetry -> effects[effect.id] = retryEffectExecturor.execute(effect)
+                        is ScheduleRetry -> longRunningEffectsTracker.track(effect, retryEffectExecutor.execute(effect, longRunningEffectDone = longRunningEffectsTracker::cancel))
 
                     }
                 } catch (e: InterruptedException) {

@@ -8,15 +8,15 @@ fun subscribeTransitions(shouldRetry: (Int) -> Boolean): SubscribeTransitions =
             is Handshaking -> when (event) {
                 is Commands.SubscribeIssued -> transitionTo(
                     target = Handshaking(updatedStatus),
-                    onExit = cancel(state.retryWrapping, state.call)
+                    onExit = cancel(state.call)
                 )
                 Commands.UnsubscribeAllIssued -> transitionTo(
                     target = Unsubscribed,
-                    onExit = cancel(state.retryWrapping, state.call)
+                    onExit = cancel(state.call)
                 )
                 is Commands.UnsubscribeIssued -> transitionTo(
                     target = Handshaking(updatedStatus),
-                    onExit = cancel(state.retryWrapping, state.call)
+                    onExit = cancel(state.call)
                 )
                 is HandshakeResult.HandshakeSucceeded -> transitionTo(Receiving(updatedStatus))
                 is HandshakeResult.HandshakeFailed -> if (shouldRetry(state.retryCount)) {
@@ -68,17 +68,17 @@ fun subscribeTransitions(shouldRetry: (Int) -> Boolean): SubscribeTransitions =
                     is Commands.SubscribeIssued ->
                         transitionTo(
                             target = Reconnecting(updatedStatus),
-                            onExit = cancel(state.retryWrapping, state.call)
+                            onExit = cancel(state.call)
                         )
                     Commands.UnsubscribeAllIssued ->
                         transitionTo(
                             target = Unsubscribed,
-                            onExit = cancel(state.retryWrapping, state.call)
+                            onExit = cancel(state.call)
                         )
                     is Commands.UnsubscribeIssued -> {
                         transitionTo(
                             target = Reconnecting(updatedStatus),
-                            onExit = cancel(state.retryWrapping, state.call)
+                            onExit = cancel(state.call)
                         )
                     }
                     is ReceivingResult.ReceivingSucceeded ->

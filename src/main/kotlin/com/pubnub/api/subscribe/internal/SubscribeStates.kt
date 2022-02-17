@@ -26,22 +26,26 @@ data class Handshaking(
     override val status: SubscriptionStatus,
     val retryCount: Int = 0
 ) : SubscribeState() {
-    val call: SubscribeHttpEffect.HandshakeHttpCallEffect = SubscribeHttpEffect.HandshakeHttpCallEffect(
-        status
+    val call: ScheduleRetry = ScheduleRetry(
+        retryableEffect = SubscribeHttpEffect.HandshakeHttpCallEffect(
+            status
+        ), retryCount = retryCount
     )
-    val retryWrapping: ScheduleRetry = ScheduleRetry(retryableEffect = call, retryCount = retryCount)
-    override fun onEntry(): Collection<AbstractSubscribeEffect> = listOf(retryWrapping)
+
+    override fun onEntry(): Collection<AbstractSubscribeEffect> = listOf(call)
 }
 
 data class Reconnecting(
     override val status: SubscriptionStatus,
     val retryCount: Int = 1
 ) : SubscribeState() {
-    val call: SubscribeHttpEffect.ReceiveMessagesHttpCallEffect = SubscribeHttpEffect.ReceiveMessagesHttpCallEffect(
-        status
+    val call: ScheduleRetry = ScheduleRetry(
+        retryableEffect = SubscribeHttpEffect.ReceiveMessagesHttpCallEffect(
+            status
+        ), retryCount = retryCount
     )
-    val retryWrapping: ScheduleRetry = ScheduleRetry(retryableEffect = call, retryCount = retryCount)
-    override fun onEntry(): Collection<AbstractSubscribeEffect> = listOf(retryWrapping)
+
+    override fun onEntry(): Collection<AbstractSubscribeEffect> = listOf(call)
 }
 
 data class ReconnectingFailed(

@@ -14,4 +14,4 @@ sealed class SubscribeHttpEffect : AbstractSubscribeEffect() {
 
 data class CancelEffect(val idToCancel: String) : AbstractSubscribeEffect()
 
-data class ScheduleRetry(val retryableEffect: SubscribeHttpEffect, val retryCount: Int) : AbstractSubscribeEffect()
+data class ScheduleRetry(val retryableEffect: SubscribeHttpEffect, val retryCount: Int) : AbstractSubscribeEffect(retryableEffect)

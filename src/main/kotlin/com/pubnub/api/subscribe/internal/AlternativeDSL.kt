@@ -74,14 +74,17 @@ fun TransitionsDescriptionContext.transitionTo(
     return target to onExit
 }
 
-fun TransitionsDescriptionContext.cancel(vararg effects: AbstractSubscribeEffect): Collection<AbstractSubscribeEffect> {
-    return effects.map { CancelEffect(it.id) }
+fun TransitionsDescriptionContext.cancel(vararg effects: AbstractSubscribeEffect): Collection<CancelEffect> {
+    return effects.flatMap { (it.child?.let { child -> cancel(child) } ?: listOf()) + listOf(CancelEffect(it.id))  }
 }
 
 typealias SubscribeTransitions = Transitions<SubscribeState, SubscribeEvent, AbstractSubscribeEffect>
 
 typealias SubscribeMachine = Machine<SubscribeEvent, AbstractSubscribeEffect>
 
+/**
+ * Use from single thread only
+ */
 fun subscribeMachine(
     shouldRetry: (Int) -> Boolean,
     transitions: SubscribeTransitions = subscribeTransitions(shouldRetry),
