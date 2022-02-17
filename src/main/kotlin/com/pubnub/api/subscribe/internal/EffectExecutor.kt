@@ -26,6 +26,7 @@ internal class HttpCallExecutor(
                     channels = effect.subscriptionStatus.channels,
                     channelGroups = effect.subscriptionStatus.groups
                 ) { r, s ->
+                    println("Handshake done")
                     longRunningEffectDone(effect.id)
                     eventQueue.put(
                         if (!s.error) {
@@ -48,6 +49,7 @@ internal class HttpCallExecutor(
                 timetoken = effect.subscriptionStatus.cursor!!.timetoken, //TODO figure out how to drop !! here
                 region = effect.subscriptionStatus.cursor.region
             ) { r, s ->
+                println("Receiving done")
                 longRunningEffectDone(effect.id)
                 eventQueue.put(
                     if (!s.error) {

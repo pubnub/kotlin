@@ -23,8 +23,12 @@ internal class SubscribeModule(
     private val longRunningEffectsTracker: LongRunningEffectsTracker = LongRunningEffectsTracker(),
     private val httpEffectExecutor: EffectExecutor<SubscribeHttpEffect> = HttpCallExecutor(
         callsExecutor,
-        eventQueue = inputQueue),
-    private val retryEffectExecutor: EffectExecutor<ScheduleRetry> = RetryEffectExecutor(effectQueue = effectsQueue, retryPolicy = retryPolicy)
+        eventQueue = inputQueue
+    ),
+    private val retryEffectExecutor: EffectExecutor<ScheduleRetry> = RetryEffectExecutor(
+        effectQueue = effectsQueue,
+        retryPolicy = retryPolicy
+    )
 ) {
 
     private val logger = LoggerFactory.getLogger(SubscribeModule::class.java)
@@ -49,12 +53,24 @@ internal class SubscribeModule(
                 try {
                     when (val effect = effectsQueue.take()) {
                         is CancelEffect -> longRunningEffectsTracker.cancel(effect.idToCancel)
-                        is SubscribeHttpEffect -> longRunningEffectsTracker.track(effect, httpEffectExecutor.execute(effect, longRunningEffectDone = longRunningEffectsTracker::cancel))
+                        is SubscribeHttpEffect -> longRunningEffectsTracker.track(
+                            effect,
+                            httpEffectExecutor.execute(
+                                effect,
+                                longRunningEffectDone = longRunningEffectsTracker::stopTracking
+                            )
+                        )
                         is NewState -> logger.info("New state: $effect")
                         is NewMessages -> logger.info(
                             "New messages. Hopefully they're fine ;) ${effect.messages}"
                         )
-                        is ScheduleRetry -> longRunningEffectsTracker.track(effect, retryEffectExecutor.execute(effect, longRunningEffectDone = longRunningEffectsTracker::cancel))
+                        is ScheduleRetry -> longRunningEffectsTracker.track(
+                            effect,
+                            retryEffectExecutor.execute(
+                                effect,
+                                longRunningEffectDone = longRunningEffectsTracker::stopTracking
+                            )
+                        )
 
                     }
                 } catch (e: InterruptedException) {
