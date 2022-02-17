@@ -6,19 +6,21 @@ import com.pubnub.api.subscribe.internal.Cursor
 
 sealed interface SubscribeEvent : Event
 
+data class RetryEvent(val count: Int) : SubscribeEvent
+
 sealed class Commands : SubscribeEvent {
-    data class SubscribeCommandIssued(
+    data class SubscribeIssued(
         val channels: List<String>,
         val groups: List<String> = listOf(),
         val cursor: Cursor? = null
     ) : Commands()
 
-    data class UnsubscribeCommandIssued(
+    data class UnsubscribeIssued(
         val channels: List<String>,
         val groups: List<String> = listOf()
     ) : Commands()
 
-    object UnsubscribeAllCommandIssued : Commands()
+    object UnsubscribeAllIssued : Commands()
 }
 
 sealed class HandshakeResult : SubscribeEvent {

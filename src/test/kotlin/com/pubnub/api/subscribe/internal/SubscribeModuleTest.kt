@@ -28,20 +28,20 @@ class SubscribeModuleTest {
 
         subscribeModule.run()
 
-        inputQueue.put(SubscribeCommandIssued(channels = listOf("ch1")))
+        inputQueue.put(SubscribeIssued(channels = listOf("ch1")))
 
         Thread.sleep(5_000)
 
-        inputQueue.put(SubscribeCommandIssued(channels = listOf("ch2")))
+        inputQueue.put(SubscribeIssued(channels = listOf("ch2")))
         Thread.sleep(5_000)
 
-        inputQueue.put(SubscribeCommandIssued(channels = listOf("ch3")))
+        inputQueue.put(SubscribeIssued(channels = listOf("ch3")))
         Thread.sleep(5_000)
 
-        inputQueue.put(SubscribeCommandIssued(channels = listOf("ch4")))
+        inputQueue.put(SubscribeIssued(channels = listOf("ch4")))
         Thread.sleep(5_000)
 
-        inputQueue.put(SubscribeCommandIssued(channels = listOf("ch5", "ch6")))
+        inputQueue.put(SubscribeIssued(channels = listOf("ch5", "ch6")))
         Thread.sleep(5_000)
     }
 }

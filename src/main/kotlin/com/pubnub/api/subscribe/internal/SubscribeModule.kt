@@ -2,10 +2,9 @@ package com.pubnub.api.subscribe.internal
 
 import com.pubnub.api.network.CallsExecutor
 import com.pubnub.api.state.Effect
-import com.pubnub.api.subscribe.*
-import com.pubnub.api.subscribe.internal.SubscribeHttpEffect.HandshakeHttpCallEffect
-import com.pubnub.api.subscribe.internal.SubscribeHttpEffect.ReceiveMessagesHttpCallEffect
-import com.pubnub.api.subscribe.internal.fsm.SubscribeMachine
+import com.pubnub.api.subscribe.NewMessages
+import com.pubnub.api.subscribe.NewState
+import com.pubnub.api.subscribe.SubscribeEvent
 import org.slf4j.LoggerFactory
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.ExecutorService
@@ -15,9 +14,17 @@ import java.util.concurrent.LinkedBlockingQueue
 internal class SubscribeModule(
     private val callsExecutor: CallsExecutor,
     private val inputQueue: LinkedBlockingQueue<SubscribeEvent>,
-    private val subscribeMachine: SubscribeMachine = SubscribeMachine(),
+    private val subscribeMachine: SubscribeMachine = subscribeMachine(
+        shouldRetry = { it < 2 }
+    ),
     private val effectsQueue: LinkedBlockingQueue<Effect> = LinkedBlockingQueue(100),
-    private val threadExecutor: ExecutorService = Executors.newFixedThreadPool(2)
+    private val threadExecutor: ExecutorService = Executors.newFixedThreadPool(2),
+    private val effects: MutableMap<String, () -> Unit> = mutableMapOf(),
+    private val httpEffectExecutor: EffectExecutor<SubscribeHttpEffect> = HttpCallExecutor(
+        callsExecutor,
+        eventQueue = inputQueue
+    ),
+    private val retryEffectExecturor: EffectExecutor<ScheduleRetry> = RetryEffectExecutor(effectQueue = effectsQueue)
 ) {
 
     private val logger = LoggerFactory.getLogger(SubscribeModule::class.java)
@@ -27,7 +34,7 @@ internal class SubscribeModule(
             while (!Thread.interrupted()) {
                 try {
                     val input = inputQueue.take()
-                    val effects = subscribeMachine.handle(input)
+                    val effects = subscribeMachine(input)
                     effects.forEach { effectsQueue.put(it) }
                 } catch (e: InterruptedException) {
                     Thread.currentThread().interrupt()
@@ -41,50 +48,13 @@ internal class SubscribeModule(
             while (!Thread.interrupted()) {
                 try {
                     when (val effect = effectsQueue.take()) {
-                        is EndHttpCallEffect -> callsExecutor.cancel(effect.idToCancel)
-                        is HandshakeHttpCallEffect -> callsExecutor.handshake(
-                            id = effect.id,
-                            channels = effect.subscriptionStatus.channels,
-                            channelGroups = effect.subscriptionStatus.groups
-                        ) { r, s ->
-                            if (!s.error) {
-                                inputQueue.put(
-                                    HandshakeResult.HandshakeSucceeded(
-                                        Cursor(
-                                            timetoken = r!!.metadata.timetoken, //TODO we could improve callback to avoid !! here
-                                            region = r.metadata.region
-                                        )
-                                    )
-                                )
-                            } else {
-                                inputQueue.put(
-                                    HandshakeResult.HandshakeFailed
-                                )
-                            }
-                        }
-                        is ReceiveMessagesHttpCallEffect -> callsExecutor.receiveMessages(
-                            id = effect.id,
-                            channels = effect.subscriptionStatus.channels,
-                            channelGroups = effect.subscriptionStatus.groups,
-                            timetoken = effect.subscriptionStatus.cursor!!.timetoken, //TODO figure out how to drop !! here
-                            region = effect.subscriptionStatus.cursor.region
-                        ) { r, s ->
-                            if (!s.error) {
-                                inputQueue.put(
-                                    ReceivingResult.ReceivingSucceeded(
-                                        r!!
-                                    )
-                                )
-                            } else {
-                                inputQueue.put(
-                                    ReceivingResult.ReceivingFailed
-                                )
-                            }
-                        }
-                        is NewStateEffect -> logger.info("New state: ${effect.name}")
-                        is NewMessagesEffect -> logger.info(
+                        is SubscribeHttpEffect -> effects[effect.id] = httpEffectExecutor.execute(effect)
+                        is NewState -> logger.info("New state: ${effect.name}")
+                        is NewMessages -> logger.info(
                             "New messages. Hopefully they're fine ;) ${effect.messages}"
                         )
+                        is ScheduleRetry -> effects[effect.id] = retryEffectExecturor.execute(effect)
+
                     }
                 } catch (e: InterruptedException) {
                     Thread.currentThread().interrupt()

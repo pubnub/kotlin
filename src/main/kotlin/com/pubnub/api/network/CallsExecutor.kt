@@ -20,8 +20,8 @@ internal class CallsExecutor(
         channels: Collection<String>,
         channelGroups: Collection<String>,
         callback: (result: SubscribeEnvelope?, status: PNStatus) -> Unit
-    ) {
-        val call = HttpCall(
+    ): HttpCall {
+        return HttpCall(
             id = id,
             cancelable = pubNub.handshake(
                 channels = channels.toList(),
@@ -35,10 +35,6 @@ internal class CallsExecutor(
                 }
             )
         )
-
-        synchronized(calls) {
-            calls[id] = call
-        }
     }
 
     fun receiveMessages(
@@ -48,8 +44,8 @@ internal class CallsExecutor(
         timetoken: Long,
         region: String,
         callback: (result: SubscribeEnvelope?, status: PNStatus) -> Unit
-    ) {
-        val call = HttpCall(
+    ): HttpCall {
+        return HttpCall(
             id = id,
             cancelable = pubNub.receiveMessages(
                 channels = channels.toList(),
@@ -64,20 +60,5 @@ internal class CallsExecutor(
                 }
             )
         )
-
-        synchronized(calls) {
-            calls[id] = call
-        }
-
     }
-
-    fun cancel(id: String) {
-        val call = synchronized(calls) {
-            calls.remove(id)
-        }
-
-        call?.cancelable?.silentCancel()
-    }
-
-
 }

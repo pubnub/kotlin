@@ -12,4 +12,6 @@ sealed class SubscribeHttpEffect : AbstractSubscribeEffect() {
     ) : SubscribeHttpEffect()
 }
 
-class EndHttpCallEffect(val idToCancel: String) : AbstractSubscribeEffect()
+data class CancelEffect(val idToCancel: String) : AbstractSubscribeEffect()
+
+data class ScheduleRetry(val retryableEffect: SubscribeHttpEffect, val retryCount: Int) : AbstractSubscribeEffect()
