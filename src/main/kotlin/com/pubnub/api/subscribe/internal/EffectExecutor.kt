@@ -63,13 +63,14 @@ internal class HttpCallExecutor(
 
 internal class RetryEffectExecutor(
     private val effectQueue: LinkedBlockingQueue<Effect>,
-    private val executor: ScheduledExecutorService = Executors.newScheduledThreadPool(3)
+    private val executor: ScheduledExecutorService = Executors.newScheduledThreadPool(3),
+    private val retryPolicy: RetryPolicy = NoPolicy
 ) : EffectExecutor<ScheduleRetry> {
     override fun execute(effect: ScheduleRetry, longRunningEffectDone: (String) -> Unit): CancelFn {
         return executor.schedule(Callable {
             longRunningEffectDone(effect.id)
             effectQueue.put(effect.retryableEffect)
-        }, effect.retryCount.toLong(), TimeUnit.SECONDS).let {
+        }, retryPolicy.computeDelay(effect.retryCount).seconds, TimeUnit.SECONDS).let {
             {
                 it.cancel(true)
             }

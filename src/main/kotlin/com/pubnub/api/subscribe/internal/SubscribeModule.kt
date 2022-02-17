@@ -14,8 +14,9 @@ import java.util.concurrent.LinkedBlockingQueue
 internal class SubscribeModule(
     private val callsExecutor: CallsExecutor,
     private val inputQueue: LinkedBlockingQueue<SubscribeEvent>,
+    private val retryPolicy: RetryPolicy = ExponentialPolicy(),
     private val subscribeMachine: SubscribeMachine = subscribeMachine(
-        shouldRetry = { it < 2 }
+        shouldRetry = retryPolicy::shouldRetry
     ),
     private val effectsQueue: LinkedBlockingQueue<Effect> = LinkedBlockingQueue(100),
     private val threadExecutor: ExecutorService = Executors.newFixedThreadPool(2),
@@ -23,7 +24,7 @@ internal class SubscribeModule(
     private val httpEffectExecutor: EffectExecutor<SubscribeHttpEffect> = HttpCallExecutor(
         callsExecutor,
         eventQueue = inputQueue),
-    private val retryEffectExecutor: EffectExecutor<ScheduleRetry> = RetryEffectExecutor(effectQueue = effectsQueue)
+    private val retryEffectExecutor: EffectExecutor<ScheduleRetry> = RetryEffectExecutor(effectQueue = effectsQueue, retryPolicy = retryPolicy)
 ) {
 
     private val logger = LoggerFactory.getLogger(SubscribeModule::class.java)
