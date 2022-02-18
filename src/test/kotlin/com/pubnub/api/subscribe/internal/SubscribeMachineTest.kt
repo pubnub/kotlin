@@ -25,9 +25,17 @@ class SubscribeMachineTest {
             ReceivingResult.ReceivingSucceeded(
                 SubscribeEnvelope(
                     messages = listOf(),
-                    metadata = SubscribeMetaData(timetoken = 5, region = "13")
+                    metadata = SubscribeMetaData(timetoken = 5, region = "12")
                 )
-            )
+            ),
+            ReceivingResult.ReceivingSucceeded(
+                SubscribeEnvelope(
+                    messages = listOf(),
+                    metadata = SubscribeMetaData(timetoken = 5, region = "12")
+                )
+            ),
+            HandshakeResult.HandshakeFailed
+
         )
 
         val effects = inputs.flatMap {

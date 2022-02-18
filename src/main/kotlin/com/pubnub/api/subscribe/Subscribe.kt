@@ -1,31 +1,42 @@
 package com.pubnub.api.subscribe
 
-object Subscribe {
+import com.pubnub.api.subscribe.internal.SubscribeModule
+
+internal class Subscribe(private val subscribeModule: SubscribeModule) {
+
     fun subscribe(
         channels: List<String>,
         channelGroups: List<String>,
         withPresence: Boolean,
         withTimetoken: Long
     ) {
-        TODO("Not yet implemented")
+        subscribeModule.handleEvent(
+            Commands.SubscribeIssued(
+                channels = channels,
+                groups = channelGroups
+            )
+        )
     }
 
     fun unsubscribe(
         channels: List<String> = emptyList(),
         channelGroups: List<String> = emptyList()
     ) {
-        TODO("Not yet implemented")
+        subscribeModule.handleEvent(
+            Commands.UnsubscribeIssued(
+                channels = channels,
+                groups = channelGroups
+            )
+        )
     }
 
     fun unsubscribeAll() {
-        TODO("Not yet implemented")
+        subscribeModule.handleEvent(
+            Commands.UnsubscribeAllIssued
+        )
     }
 
-    fun getSubscribedChannels(): List<String> {
-        TODO("Not yet implemented")
-    }
+    fun getSubscribedChannels(): Collection<String> = subscribeModule.status().channels
 
-    fun getSubscribedChannelGroups(): List<String> {
-        TODO("Not yet implemented")
-    }
+    fun getSubscribedChannelGroups(): Collection<String> = subscribeModule.status().channels
 }

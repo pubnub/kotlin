@@ -1,17 +1,14 @@
 package com.pubnub.api.subscribe.internal
 
 import com.pubnub.api.network.CallsExecutor
+import com.pubnub.api.state.CancelFn
 import com.pubnub.api.state.Effect
+import com.pubnub.api.state.EffectExecutor
+import com.pubnub.api.subscribe.AbstractSubscribeEffect
 import com.pubnub.api.subscribe.HandshakeResult
 import com.pubnub.api.subscribe.ReceivingResult
 import com.pubnub.api.subscribe.SubscribeEvent
 import java.util.concurrent.*
-
-interface EffectExecutor<EF : Effect> {
-    fun execute(effect: EF, longRunningEffectDone: (String) -> Unit = {}): CancelFn
-}
-
-typealias CancelFn = () -> Unit
 
 internal class HttpCallExecutor(
     private val callsExecutor: CallsExecutor,
@@ -64,7 +61,7 @@ internal class HttpCallExecutor(
 }
 
 internal class RetryEffectExecutor(
-    private val effectQueue: LinkedBlockingQueue<Effect>,
+    private val effectQueue: LinkedBlockingQueue<AbstractSubscribeEffect>,
     private val executor: ScheduledExecutorService = Executors.newScheduledThreadPool(3),
     private val retryPolicy: RetryPolicy = NoPolicy
 ) : EffectExecutor<ScheduleRetry> {

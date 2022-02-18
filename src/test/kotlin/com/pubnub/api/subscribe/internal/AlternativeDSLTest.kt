@@ -20,7 +20,7 @@ class AlternativeDSLTest {
                 )
             )
         )
-        val fn = subscribeTransitions { true }
+        val fn = subscribeTransition { true }
 
         val (s, effects) = inputs.fold<SubscribeEvent, Pair<SubscribeState, Collection<AbstractSubscribeEffect>>>(Unsubscribed to listOf()) { (s, ef), ev ->
             val (ns, nEf) = fn(s, ev)

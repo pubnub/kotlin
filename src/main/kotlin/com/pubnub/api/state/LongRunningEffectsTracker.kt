@@ -1,28 +1,23 @@
-package com.pubnub.api.subscribe.internal
+package com.pubnub.api.state
 
-import com.pubnub.api.state.Effect
 import java.util.*
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
 
 
-data class TrackedEffect(
-    val cancelFn: CancelFn? = null
-)
-
 class LongRunningEffectsTracker(
-    private val effects: MutableMap<String, TrackedEffect> = Collections.synchronizedMap(mutableMapOf()),
+    private val effects: MutableMap<String, CancelFn> = Collections.synchronizedMap(mutableMapOf()),
     private val executorService: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor()
 ) {
 
-    fun track(effect: Effect, cancelFn: CancelFn) {
+    fun track(effect: Effect, cancelFnProvider: () -> CancelFn) {
         println("Tracking ${effect.id}")
         synchronized(effects) {
             if (!effects.contains(effect.id)) {
-                effects[effect.id] = TrackedEffect(cancelFn = cancelFn)
+                effects[effect.id] = cancelFnProvider()
             } else {
-                cancelFn()
+                //do nothing. Already tracked
             }
         }
     }
@@ -30,9 +25,7 @@ class LongRunningEffectsTracker(
     fun cancel(effectId: String) {
         println("Canceled tracking of $effectId")
         synchronized(effects) {
-            effects.getOrPut(effectId) { TrackedEffect() }.let {
-                it.cancelFn?.invoke()
-            }
+            effects.getOrPut(effectId) { {} }.invoke()
             executorService.schedule({ effects.remove(effectId) }, 1, TimeUnit.SECONDS)
         }
     }
@@ -41,7 +34,7 @@ class LongRunningEffectsTracker(
         println("Stopping tracking of $effectId")
 
         synchronized(effects) {
-            effects.getOrPut(effectId) { TrackedEffect() }
+            effects.getOrPut(effectId) { {} }
             executorService.schedule({ effects.remove(effectId) }, 1, TimeUnit.SECONDS)
         }
     }

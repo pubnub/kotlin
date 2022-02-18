@@ -19,29 +19,25 @@ class SubscribeModuleTest {
             logVerbosity = PNLogVerbosity.BODY
         })
 
-        val inputQueue = LinkedBlockingQueue<SubscribeEvent>(100)
 
-        val subscribeModule = SubscribeModule(
-            inputQueue = inputQueue,
+        val subscribeModule = SubscribeModule.create(
             callsExecutor = CallsExecutor(pubnub)
         )
 
-        subscribeModule.run()
-
-        inputQueue.put(SubscribeIssued(channels = listOf("ch1")))
+        subscribeModule.handleEvent(SubscribeIssued(channels = listOf("ch1")))
 
         Thread.sleep(5_000)
 
-        inputQueue.put(SubscribeIssued(channels = listOf("ch2")))
+        subscribeModule.handleEvent(SubscribeIssued(channels = listOf("ch2")))
         Thread.sleep(5_000)
 
-        inputQueue.put(SubscribeIssued(channels = listOf("ch3")))
+        subscribeModule.handleEvent(SubscribeIssued(channels = listOf("ch3")))
         Thread.sleep(5_000)
 
-        inputQueue.put(SubscribeIssued(channels = listOf("ch4")))
+        subscribeModule.handleEvent(SubscribeIssued(channels = listOf("ch4")))
         Thread.sleep(5_000)
 
-        inputQueue.put(SubscribeIssued(channels = listOf("ch5", "ch6")))
+        subscribeModule.handleEvent(SubscribeIssued(channels = listOf("ch5", "ch6")))
         Thread.sleep(5_000)
     }
 }

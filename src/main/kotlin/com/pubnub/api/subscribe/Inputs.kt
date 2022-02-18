@@ -6,7 +6,7 @@ import com.pubnub.api.subscribe.internal.Cursor
 
 sealed interface SubscribeEvent : Event
 
-data class RetryEvent(val count: Int) : SubscribeEvent
+object InitialEvent : SubscribeEvent
 
 sealed class Commands : SubscribeEvent {
     data class SubscribeIssued(
