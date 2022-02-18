@@ -1,12 +1,11 @@
 package com.pubnub.api.subscribe.internal
 
 import com.pubnub.api.state.State
-import com.pubnub.api.subscribe.AbstractSubscribeEffect
 
-sealed class SubscribeState : State<AbstractSubscribeEffect> {
+sealed class SubscribeState : State<SubscribeEffect> {
     abstract val status: SubscriptionStatus
-    override fun onEntry(): Collection<AbstractSubscribeEffect> = listOf()
-    override fun onExit(): Collection<AbstractSubscribeEffect> = listOf()
+    override fun onEntry(): Collection<SubscribeEffect> = listOf()
+    override fun onExit(): Collection<SubscribeEffect> = listOf()
 }
 
 object Unsubscribed : SubscribeState() {
@@ -19,7 +18,7 @@ data class Receiving(
         status
     ),
 ) : SubscribeState() {
-    override fun onEntry(): Collection<AbstractSubscribeEffect> = listOf(call)
+    override fun onEntry(): Collection<SubscribeEffect> = listOf(call)
 }
 
 data class Handshaking(
@@ -32,7 +31,7 @@ data class Handshaking(
         ), retryCount = retryCount
     )
 
-    override fun onEntry(): Collection<AbstractSubscribeEffect> = listOf(call)
+    override fun onEntry(): Collection<SubscribeEffect> = listOf(call)
 }
 
 data class Reconnecting(
@@ -45,7 +44,7 @@ data class Reconnecting(
         ), retryCount = retryCount
     )
 
-    override fun onEntry(): Collection<AbstractSubscribeEffect> = listOf(call)
+    override fun onEntry(): Collection<SubscribeEffect> = listOf(call)
 }
 
 data class ReconnectingFailed(

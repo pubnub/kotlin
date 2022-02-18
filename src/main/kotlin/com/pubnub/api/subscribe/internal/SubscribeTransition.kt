@@ -1,9 +1,8 @@
 package com.pubnub.api.subscribe.internal
 
-import com.pubnub.api.subscribe.*
-import com.pubnub.api.subscribe.Commands.*
-import com.pubnub.api.subscribe.HandshakeResult.*
-import com.pubnub.api.subscribe.ReceivingResult.*
+import com.pubnub.api.subscribe.internal.Commands.*
+import com.pubnub.api.subscribe.internal.HandshakeResult.*
+import com.pubnub.api.subscribe.internal.ReceivingResult.*
 
 fun subscribeTransition(shouldRetry: (Int) -> Boolean): SubscribeTransition =
     defnTransition { state, event ->
