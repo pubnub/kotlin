@@ -1,5 +1,6 @@
 package com.pubnub.api.subscribe.internal
 
+import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.server.SubscribeEnvelope
 import com.pubnub.api.state.Event
 
@@ -24,12 +25,12 @@ sealed class Commands : SubscribeEvent {
 
 sealed class HandshakeResult : SubscribeEvent {
     data class HandshakeSucceeded(val cursor: Cursor) : HandshakeResult()
-    object HandshakeFailed : HandshakeResult()
+    data class HandshakeFailed(val status: PNStatus) : HandshakeResult()
 }
 
 sealed class ReceivingResult : SubscribeEvent {
     data class ReceivingSucceeded(val subscribeEnvelope: SubscribeEnvelope) : ReceivingResult()
-    object ReceivingFailed : ReceivingResult()
+    data class ReceivingFailed(val status: PNStatus) : ReceivingResult()
 }
 
 

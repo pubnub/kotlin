@@ -20,7 +20,7 @@ class TestTest {
 
         pubnub.addListener(object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
-
+                println(pnStatus)
             }
 
             override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {

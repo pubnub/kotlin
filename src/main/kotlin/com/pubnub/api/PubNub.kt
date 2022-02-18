@@ -122,7 +122,8 @@ class PubNub(val configuration: PNConfiguration) {
                 pubnub = this,
                 listenerManager = listenerManager,
                 duplicationManager = DuplicationManager(this.configuration)
-            )
+            ),
+            listenerManager = listenerManager
         )
     )
 

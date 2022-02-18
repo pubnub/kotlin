@@ -30,7 +30,7 @@ internal class HttpCallExecutor(
                                 )
                             )
                         } else {
-                            HandshakeResult.HandshakeFailed
+                            HandshakeResult.HandshakeFailed(s)
                         }
                     )
                 }.let { { it.cancelable.silentCancel() } }
@@ -48,7 +48,7 @@ internal class HttpCallExecutor(
                     if (!s.error) {
                         ReceivingResult.ReceivingSucceeded(r!!)
                     } else {
-                        ReceivingResult.ReceivingFailed
+                        ReceivingResult.ReceivingFailed(s)
                     }
                 )
             }.let { { it.cancelable.silentCancel() } }

@@ -83,7 +83,7 @@ internal fun subscribeTransition(shouldRetry: (Int) -> Boolean): SubscribeTransi
                         onExit = cancel(state.call)
                     )
 
-                    ReceivingFailed -> transitionTo(Reconnecting(updatedStatus))
+                    is ReceivingFailed -> transitionTo(Reconnecting(updatedStatus))
                     is ReceivingSucceeded -> transitionTo(
                         target = Receiving(updatedStatus),
                         onExit = NewMessages(event.subscribeEnvelope.messages)

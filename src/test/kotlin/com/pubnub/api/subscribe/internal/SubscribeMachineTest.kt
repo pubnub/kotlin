@@ -1,5 +1,8 @@
 package com.pubnub.api.subscribe.internal
 
+import com.pubnub.api.enums.PNOperationType
+import com.pubnub.api.enums.PNStatusCategory
+import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.server.SubscribeEnvelope
 import com.pubnub.api.models.server.SubscribeMetaData
 import org.hamcrest.MatcherAssert.assertThat
@@ -12,13 +15,14 @@ class SubscribeMachineTest {
     @Test
     fun firstTest() {
         val module = subscribeMachine(shouldRetry = { it < 1 })
+        val status = PNStatus(category = PNStatusCategory.PNBadRequestCategory, error = true, PNOperationType.PNSubscribeOperation)
 
         val inputs = listOf(
             InitialEvent,
             Commands.SubscribeIssued(channels = listOf("ch1")),
-            HandshakeResult.HandshakeFailed,
+            HandshakeResult.HandshakeFailed(status),
             HandshakeResult.HandshakeSucceeded(cursor = Cursor(timetoken = 5, region = "12")),
-            ReceivingResult.ReceivingFailed,
+            ReceivingResult.ReceivingFailed(status),
             ReceivingResult.ReceivingSucceeded(
                 SubscribeEnvelope(
                     messages = listOf(),
@@ -31,7 +35,7 @@ class SubscribeMachineTest {
                     metadata = SubscribeMetaData(timetoken = 5, region = "12")
                 )
             ),
-            HandshakeResult.HandshakeFailed
+            HandshakeResult.HandshakeFailed(status)
 
         )
 

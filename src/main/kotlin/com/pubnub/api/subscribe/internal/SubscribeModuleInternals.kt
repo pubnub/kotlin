@@ -1,5 +1,6 @@
 package com.pubnub.api.subscribe.internal
 
+import com.pubnub.api.managers.ListenerManager
 import com.pubnub.api.network.CallsExecutor
 import com.pubnub.api.state.EffectExecutor
 import com.pubnub.api.state.LongRunningEffectsTracker
@@ -19,13 +20,15 @@ internal class SubscribeModuleInternals private constructor(
     private val longRunningEffectsTracker: LongRunningEffectsTracker,
     private val httpEffectExecutor: EffectExecutor<SubscribeHttpEffect>,
     private val retryEffectExecutor: EffectExecutor<ScheduleRetry>,
-    private val newMessagesEffectExecutor: EffectExecutor<NewMessages>
+    private val newMessagesEffectExecutor: EffectExecutor<NewMessages>,
+    private val newStateEffectExecutor: EffectExecutor<NewState>
 ) {
 
     companion object {
         fun create(
             callsExecutor: CallsExecutor,
             incomingPayloadProcessor: IncomingPayloadProcessor,
+            listenerManager: ListenerManager,
             eventQueue: LinkedBlockingQueue<SubscribeEvent> = LinkedBlockingQueue(100),
             effectsQueue: LinkedBlockingQueue<SubscribeEffect> = LinkedBlockingQueue(100),
             retryPolicy: RetryPolicy = ExponentialPolicy(),
@@ -40,7 +43,8 @@ internal class SubscribeModuleInternals private constructor(
                 effectQueue = effectsQueue, retryPolicy = retryPolicy
             ),
             executorService: ExecutorService = Executors.newFixedThreadPool(2),
-            newMessagesEffectExecutor: EffectExecutor<NewMessages> = NewMessagesEffectExecutor(incomingPayloadProcessor)
+            newMessagesEffectExecutor: EffectExecutor<NewMessages> = NewMessagesEffectExecutor(incomingPayloadProcessor),
+            newStateEffectExecutor: EffectExecutor<NewState> = NewStateEffectExecutor(listenerManager)
         ): SubscribeModuleInternals {
 
             val effects = subscrMachine(InitialEvent)
@@ -54,7 +58,8 @@ internal class SubscribeModuleInternals private constructor(
                 httpEffectExecutor = httpEffectExecutor,
                 retryEffectExecutor = retryEffectExecutor,
                 executorService = executorService,
-                newMessagesEffectExecutor = newMessagesEffectExecutor
+                newMessagesEffectExecutor = newMessagesEffectExecutor,
+                newStateEffectExecutor = newStateEffectExecutor
             ).apply {
                 effects.forEach {
                     processSingleEffect(it)
@@ -100,6 +105,7 @@ internal class SubscribeModuleInternals private constructor(
         }
         is NewState -> {
             status.set(effect.status)
+            newStateEffectExecutor.execute(effect)
             logger.info("New state: $effect")
         }
         is NewMessages -> {
@@ -127,7 +133,6 @@ internal class SubscribeModuleInternals private constructor(
             while (!Thread.interrupted()) {
                 effectsQueue.waitAndProcess { processSingleEffect(it) }
             }
-
         }, executorService)
     }
 }

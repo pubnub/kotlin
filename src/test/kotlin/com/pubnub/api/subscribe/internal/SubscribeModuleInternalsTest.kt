@@ -3,6 +3,7 @@ package com.pubnub.api.subscribe.internal
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
 import com.pubnub.api.enums.PNLogVerbosity
+import com.pubnub.api.managers.ListenerManager
 import com.pubnub.api.models.server.SubscribeMessage
 import com.pubnub.api.network.CallsExecutor
 import com.pubnub.api.subscribe.internal.Commands.*
@@ -25,7 +26,8 @@ class SubscribeModuleInternalsTest {
                 override fun processIncomingPayload(message: SubscribeMessage) {
                     //do nothing
                 }
-            }
+            },
+            listenerManager = ListenerManager(pubnub)
         )
 
         subscribeModule.handleEvent(SubscribeIssued(channels = listOf("ch1")))
