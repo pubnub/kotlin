@@ -2,10 +2,6 @@ package com.pubnub.api.subscribe.internal
 
 import com.pubnub.api.models.server.SubscribeEnvelope
 import com.pubnub.api.models.server.SubscribeMetaData
-import com.pubnub.api.subscribe.HandshakeResult
-import com.pubnub.api.subscribe.NewState
-import com.pubnub.api.subscribe.ReceivingResult
-import com.pubnub.api.subscribe.Commands
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers
 import org.junit.Test
@@ -18,6 +14,7 @@ class SubscribeMachineTest {
         val module = subscribeMachine(shouldRetry = { it < 1 })
 
         val inputs = listOf(
+            InitialEvent,
             Commands.SubscribeIssued(channels = listOf("ch1")),
             HandshakeResult.HandshakeFailed,
             HandshakeResult.HandshakeSucceeded(cursor = Cursor(timetoken = 5, region = "12")),

@@ -3,7 +3,6 @@ package com.pubnub.api.subscribe.internal
 import com.pubnub.api.network.CallsExecutor
 import com.pubnub.api.state.EffectExecutor
 import com.pubnub.api.state.LongRunningEffectsTracker
-import com.pubnub.api.subscribe.*
 import org.slf4j.LoggerFactory
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.ExecutorService
@@ -11,22 +10,24 @@ import java.util.concurrent.Executors
 import java.util.concurrent.LinkedBlockingQueue
 import java.util.concurrent.atomic.AtomicReference
 
-internal class SubscribeModule(
+internal class SubscribeModuleInternals private constructor(
     private val status: AtomicReference<SubscriptionStatus>,
     private val eventQueue: LinkedBlockingQueue<SubscribeEvent>,
     private val subscribeMachine: SubscribeMachine,
-    private val effectsQueue: LinkedBlockingQueue<AbstractSubscribeEffect>,
-    private val threadExecutor: ExecutorService,
+    private val effectsQueue: LinkedBlockingQueue<SubscribeEffect>,
+    private val executorService: ExecutorService,
     private val longRunningEffectsTracker: LongRunningEffectsTracker,
     private val httpEffectExecutor: EffectExecutor<SubscribeHttpEffect>,
-    private val retryEffectExecutor: EffectExecutor<ScheduleRetry>
+    private val retryEffectExecutor: EffectExecutor<ScheduleRetry>,
+    private val newMessagesEffectExecutor: EffectExecutor<NewMessages>
 ) {
 
     companion object {
         fun create(
             callsExecutor: CallsExecutor,
+            incomingPayloadProcessor: IncomingPayloadProcessor,
             eventQueue: LinkedBlockingQueue<SubscribeEvent> = LinkedBlockingQueue(100),
-            effectsQueue: LinkedBlockingQueue<AbstractSubscribeEffect> = LinkedBlockingQueue(100),
+            effectsQueue: LinkedBlockingQueue<SubscribeEffect> = LinkedBlockingQueue(100),
             retryPolicy: RetryPolicy = ExponentialPolicy(),
             subscrMachine: SubscribeMachine = subscribeMachine(
                 shouldRetry = retryPolicy::shouldRetry
@@ -38,12 +39,13 @@ internal class SubscribeModule(
             retryEffectExecutor: EffectExecutor<ScheduleRetry> = RetryEffectExecutor(
                 effectQueue = effectsQueue, retryPolicy = retryPolicy
             ),
-            threadExecutor: ExecutorService = Executors.newFixedThreadPool(2)
-        ): SubscribeModule {
+            executorService: ExecutorService = Executors.newFixedThreadPool(2),
+            newMessagesEffectExecutor: EffectExecutor<NewMessages> = NewMessagesEffectExecutor(incomingPayloadProcessor)
+        ): SubscribeModuleInternals {
 
             val effects = subscrMachine(InitialEvent)
 
-            return SubscribeModule(
+            return SubscribeModuleInternals(
                 status = AtomicReference(),
                 eventQueue = eventQueue,
                 subscribeMachine = subscrMachine,
@@ -51,7 +53,8 @@ internal class SubscribeModule(
                 longRunningEffectsTracker = longRunningEffectsTracker,
                 httpEffectExecutor = httpEffectExecutor,
                 retryEffectExecutor = retryEffectExecutor,
-                threadExecutor = threadExecutor
+                executorService = executorService,
+                newMessagesEffectExecutor = newMessagesEffectExecutor
             ).apply {
                 effects.forEach {
                     processSingleEffect(it)
@@ -62,7 +65,7 @@ internal class SubscribeModule(
     }
 
 
-    private val logger = LoggerFactory.getLogger(SubscribeModule::class.java)
+    private val logger = LoggerFactory.getLogger(SubscribeModuleInternals::class.java)
     private lateinit var handleEventsLoop: CompletableFuture<Void>
     private lateinit var handleEffects: CompletableFuture<Void>
 
@@ -88,7 +91,7 @@ internal class SubscribeModule(
         }
     }
 
-    private fun processSingleEffect(effect: AbstractSubscribeEffect) = when (effect) {
+    private fun processSingleEffect(effect: SubscribeEffect) = when (effect) {
         is CancelEffect -> longRunningEffectsTracker.cancel(effect.idToCancel)
         is SubscribeHttpEffect -> longRunningEffectsTracker.track(effect) {
             httpEffectExecutor.execute(
@@ -99,15 +102,17 @@ internal class SubscribeModule(
             status.set(effect.status)
             logger.info("New state: $effect")
         }
-        is NewMessages -> logger.info(
-            "New messages. Hopefully they're fine ;) ${effect.messages}"
-        )
+        is NewMessages -> {
+            newMessagesEffectExecutor.execute(effect)
+            logger.info(
+                "New messages. Hopefully they're fine ;) ${effect.messages}"
+            )
+        }
         is ScheduleRetry -> longRunningEffectsTracker.track(effect) {
             retryEffectExecutor.execute(
                 effect, longRunningEffectDone = longRunningEffectsTracker::stopTracking
             )
         }
-        else -> TODO("BUT WHY?!")
     }
 
     private fun run() {
@@ -116,13 +121,13 @@ internal class SubscribeModule(
                 eventQueue.waitAndProcess { processSingleEvent(it) }
             }
 
-        }, threadExecutor)
+        }, executorService)
 
         handleEffects = CompletableFuture.runAsync({
             while (!Thread.interrupted()) {
                 effectsQueue.waitAndProcess { processSingleEffect(it) }
             }
 
-        }, threadExecutor)
+        }, executorService)
     }
 }

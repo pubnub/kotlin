@@ -1,8 +1,7 @@
-package com.pubnub.api.subscribe
+package com.pubnub.api.subscribe.internal
 
 import com.pubnub.api.models.server.SubscribeEnvelope
 import com.pubnub.api.state.Event
-import com.pubnub.api.subscribe.internal.Cursor
 
 sealed interface SubscribeEvent : Event
 

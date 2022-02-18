@@ -27,44 +27,21 @@ import com.pubnub.api.models.server.PresenceEnvelope
 import com.pubnub.api.models.server.SubscribeMessage
 import com.pubnub.api.models.server.files.FileUploadNotification
 import com.pubnub.api.services.FilesService
+import com.pubnub.api.subscribe.internal.IncomingPayloadProcessor
 import com.pubnub.api.vendor.Crypto
 import org.slf4j.LoggerFactory
 import java.util.ArrayList
 import java.util.concurrent.LinkedBlockingQueue
 
-internal class SubscribeMessageWorker(
-    val pubnub: PubNub,
-    val listenerManager: ListenerManager,
-    val queue: LinkedBlockingQueue<SubscribeMessage>,
-    val duplicationManager: DuplicationManager
-) : Runnable {
+internal class IncomingPayloadProcessorImplementation(
+    private val pubnub: PubNub,
+    private val listenerManager: ListenerManager,
+    private val duplicationManager: DuplicationManager
+) : IncomingPayloadProcessor {
 
     private val log = LoggerFactory.getLogger("SubscribeMessageWorker")
 
-    companion object {
-        internal const val TYPE_MESSAGE = 0
-        internal const val TYPE_SIGNAL = 1
-        internal const val TYPE_OBJECT = 2
-        internal const val TYPE_MESSAGE_ACTION = 3
-        internal const val TYPE_FILES = 4
-    }
-
-    override fun run() {
-        takeMessage()
-    }
-
-    private fun takeMessage() {
-        while (!Thread.interrupted()) {
-            try {
-                processIncomingPayload(queue.take())
-            } catch (e: InterruptedException) {
-                Thread.currentThread().interrupt()
-                log.trace("take message interrupted!", e)
-            }
-        }
-    }
-
-    private fun processIncomingPayload(message: SubscribeMessage) {
+    override fun processIncomingPayload(message: SubscribeMessage) {
         if (message.channel == null) {
             return
         }
@@ -130,13 +107,13 @@ internal class SubscribeMessageWorker(
                 null -> {
                     listenerManager.announce(PNMessageResult(result, extractedMessage!!))
                 }
-                TYPE_MESSAGE -> {
+                SubscribeMessageWorker.TYPE_MESSAGE -> {
                     listenerManager.announce(PNMessageResult(result, extractedMessage!!))
                 }
-                TYPE_SIGNAL -> {
+                SubscribeMessageWorker.TYPE_SIGNAL -> {
                     listenerManager.announce(PNSignalResult(result, extractedMessage!!))
                 }
-                TYPE_OBJECT -> {
+                SubscribeMessageWorker.TYPE_OBJECT -> {
                     listenerManager.announce(
                         PNObjectEventResult(
                             result,
@@ -147,7 +124,7 @@ internal class SubscribeMessageWorker(
                         )
                     )
                 }
-                TYPE_MESSAGE_ACTION -> {
+                SubscribeMessageWorker.TYPE_MESSAGE_ACTION -> {
                     val objectPayload =
                         pubnub.mapper.convertValue(extractedMessage, ObjectPayload::class.java)
                     val data = objectPayload.data.asJsonObject
@@ -162,7 +139,7 @@ internal class SubscribeMessageWorker(
                         )
                     )
                 }
-                TYPE_FILES -> {
+                SubscribeMessageWorker.TYPE_FILES -> {
                     val fileUploadNotification = pubnub.mapper.convertValue(
                         extractedMessage,
                         FileUploadNotification::class.java
@@ -315,5 +292,39 @@ internal class SubscribeMessageWorker(
             }
         }
         return list
+    }
+}
+
+internal class SubscribeMessageWorker(
+    pubnub: PubNub,
+    listenerManager: ListenerManager,
+    val queue: LinkedBlockingQueue<SubscribeMessage>,
+    duplicationManager: DuplicationManager,
+    incomingPayloadProcessor: IncomingPayloadProcessor = IncomingPayloadProcessorImplementation(pubnub, listenerManager, duplicationManager)
+) : Runnable, IncomingPayloadProcessor by incomingPayloadProcessor {
+
+    private val log = LoggerFactory.getLogger("SubscribeMessageWorker")
+
+    companion object {
+        internal const val TYPE_MESSAGE = 0
+        internal const val TYPE_SIGNAL = 1
+        internal const val TYPE_OBJECT = 2
+        internal const val TYPE_MESSAGE_ACTION = 3
+        internal const val TYPE_FILES = 4
+    }
+
+    override fun run() {
+        takeMessage()
+    }
+
+    private fun takeMessage() {
+        while (!Thread.interrupted()) {
+            try {
+                processIncomingPayload(queue.take())
+            } catch (e: InterruptedException) {
+                Thread.currentThread().interrupt()
+                log.trace("take message interrupted!", e)
+            }
+        }
     }
 }

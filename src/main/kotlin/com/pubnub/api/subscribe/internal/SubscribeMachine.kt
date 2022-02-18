@@ -1,11 +1,51 @@
 package com.pubnub.api.subscribe.internal
 
+import com.pubnub.api.state.StateMachine
+import com.pubnub.api.state.Transition
 import com.pubnub.api.subscribe.internal.Commands.*
 import com.pubnub.api.subscribe.internal.HandshakeResult.*
 import com.pubnub.api.subscribe.internal.ReceivingResult.*
 
-fun subscribeTransition(shouldRetry: (Int) -> Boolean): SubscribeTransition =
-    defnTransition { state, event ->
+typealias SubscribeTransition = Transition<SubscribeState, SubscribeEvent, SubscribeEffect>
+
+typealias SubscribeMachine = StateMachine<SubscribeEvent, SubscribeEffect>
+
+/**
+ * Use from single thread only
+ */
+fun subscribeMachine(
+    shouldRetry: (Int) -> Boolean,
+    transitions: SubscribeTransition = subscribeTransition(shouldRetry),
+    initState: SubscribeState = Unsubscribed,
+): SubscribeMachine {
+    var state = initState
+    return { event ->
+        val (ns, effects) = transitions(state, event)
+        state = ns
+        effects
+    }
+}
+
+
+internal fun defineTransition(transitionFn: TransitionContext.(SubscribeState, SubscribeEvent) -> Pair<SubscribeState, Collection<SubscribeEffect>>): SubscribeTransition {
+    return { s, i ->
+        val context = TransitionContext(s, i)
+        if (i is InitialEvent) {
+            val (_, newEffects) = context.transitionTo(s)
+            s to (s.onEntry() + newEffects)
+        } else {
+            val (newState, newEffects) = context.transitionFn(s, i)
+            if (newEffects.any { it is NewState }) {
+                newState to (s.onExit() + newEffects + newState.onEntry())
+            } else {
+                newState to newEffects
+            }
+        }
+    }
+}
+
+internal fun subscribeTransition(shouldRetry: (Int) -> Boolean): SubscribeTransition =
+    defineTransition { state, event ->
         when (state) {
             is Handshaking -> when (event) {
                 is SubscribeIssued -> transitionTo(

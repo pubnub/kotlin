@@ -10,10 +10,7 @@ class HttpCall(
     val cancelable: Cancelable
 )
 
-internal class CallsExecutor(
-    val pubNub: PubNub,
-    private val calls: MutableMap<String, HttpCall> = mutableMapOf()
-) {
+internal class CallsExecutor(val pubNub: PubNub) {
 
     fun handshake(
         id: String,
@@ -26,13 +23,7 @@ internal class CallsExecutor(
             cancelable = pubNub.handshake(
                 channels = channels.toList(),
                 channelGroups = channelGroups.toList(),
-                callback = { r, s ->
-                    synchronized(calls) {
-                        calls.remove(id)
-                    }
-                    callback(r, s)
-
-                }
+                callback = callback
             )
         )
     }
@@ -52,12 +43,7 @@ internal class CallsExecutor(
                 channelGroups = channelGroups.toList(),
                 timetoken = timetoken,
                 region = region,
-                callback = { r, s ->
-                    synchronized(calls) {
-                        calls.remove(id)
-                    }
-                    callback(r, s)
-                }
+                callback = callback
             )
         )
     }

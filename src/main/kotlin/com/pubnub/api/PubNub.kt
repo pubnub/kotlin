@@ -55,13 +55,10 @@ import com.pubnub.api.endpoints.push.RemoveChannelsFromPush
 import com.pubnub.api.enums.PNPushEnvironment
 import com.pubnub.api.enums.PNPushType
 import com.pubnub.api.enums.PNReconnectionPolicy
+import com.pubnub.api.managers.*
 import com.pubnub.api.managers.BasePathManager
-import com.pubnub.api.managers.MapperManager
+import com.pubnub.api.managers.ListenerManager
 import com.pubnub.api.managers.PublishSequenceManager
-import com.pubnub.api.managers.RetrofitManager
-import com.pubnub.api.managers.SubscriptionManager
-import com.pubnub.api.managers.TelemetryManager
-import com.pubnub.api.managers.TokenManager
 import com.pubnub.api.managers.TokenParser
 import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant
@@ -75,12 +72,17 @@ import com.pubnub.api.models.consumer.objects.member.PNUUIDDetailsLevel
 import com.pubnub.api.models.consumer.objects.member.PNUUIDWithCustom
 import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
 import com.pubnub.api.models.consumer.objects.membership.PNChannelWithCustom
+import com.pubnub.api.network.CallsExecutor
 import com.pubnub.api.presence.Presence
-import com.pubnub.api.subscribe.Subscribe
+import com.pubnub.api.subscribe.NewSubscribeModule
+import com.pubnub.api.subscribe.internal.IncomingPayloadProcessor
+import com.pubnub.api.subscribe.internal.SubscribeModuleInternals
 import com.pubnub.api.vendor.Base64
 import com.pubnub.api.vendor.Crypto
 import com.pubnub.api.vendor.FileEncryptionUtil.decrypt
 import com.pubnub.api.vendor.FileEncryptionUtil.encrypt
+import com.pubnub.api.workers.IncomingPayloadProcessorImplementation
+import com.pubnub.api.workers.SubscribeMessageWorker
 import java.io.InputStream
 import java.util.Date
 import java.util.UUID
@@ -112,6 +114,17 @@ class PubNub(val configuration: PNConfiguration) {
     internal val subscriptionManager = SubscriptionManager(this)
     internal val tokenManager: TokenManager = TokenManager()
     private val tokenParser: TokenParser = TokenParser()
+    private val listenerManager = ListenerManager(this)
+    private val newSubscribeModule = NewSubscribeModule(
+        SubscribeModuleInternals.create(
+            callsExecutor = CallsExecutor(pubNub = this),
+            incomingPayloadProcessor = IncomingPayloadProcessorImplementation(
+                pubnub = this,
+                listenerManager = listenerManager,
+                duplicationManager = DuplicationManager(this.configuration)
+            )
+        )
+    )
 
     //endregion
 
@@ -285,7 +298,7 @@ class PubNub(val configuration: PNConfiguration) {
         withPresence: Boolean = false,
         withTimetoken: Long = 0L
     ) = if (configuration.enableSubscribeBeta)
-        Subscribe.subscribe(channels, channelGroups, withPresence, withTimetoken)
+        newSubscribeModule.subscribe(channels, channelGroups, withPresence, withTimetoken)
     else
         PubSub.subscribe(subscriptionManager, channels, channelGroups, withPresence, withTimetoken)
 
@@ -310,7 +323,7 @@ class PubNub(val configuration: PNConfiguration) {
         channels: List<String> = emptyList(),
         channelGroups: List<String> = emptyList()
     ) = if (configuration.enableSubscribeBeta)
-        Subscribe.unsubscribe(channels, channelGroups)
+        newSubscribeModule.unsubscribe(channels, channelGroups)
     else
         PubSub.unsubscribe(subscriptionManager, channels, channelGroups)
 
@@ -319,7 +332,7 @@ class PubNub(val configuration: PNConfiguration) {
      */
     fun unsubscribeAll() =
         if (configuration.enableSubscribeBeta)
-            Subscribe.unsubscribeAll()
+            newSubscribeModule.unsubscribeAll()
         else
             subscriptionManager.unsubscribeAll()
 
@@ -330,7 +343,7 @@ class PubNub(val configuration: PNConfiguration) {
      */
     fun getSubscribedChannels() =
         if (configuration.enableSubscribeBeta)
-            Subscribe.getSubscribedChannels()
+            newSubscribeModule.getSubscribedChannels()
         else
             subscriptionManager.getSubscribedChannels()
 
@@ -341,7 +354,7 @@ class PubNub(val configuration: PNConfiguration) {
      */
     fun getSubscribedChannelGroups() =
         if (configuration.enableSubscribeBeta)
-            Subscribe.getSubscribedChannelGroups()
+            newSubscribeModule.getSubscribedChannelGroups()
         else
             subscriptionManager.getSubscribedChannelGroups()
     //endregion
@@ -1187,8 +1200,8 @@ class PubNub(val configuration: PNConfiguration) {
     @Deprecated(
         replaceWith = ReplaceWith(
             "setMemberships(channels = channels, uuid = uuid, limit = limit, " +
-                "page = page, filter = filter, sort = sort, includeCount = includeCount, includeCustom = includeCustom," +
-                "includeChannelDetails = includeChannelDetails)"
+                    "page = page, filter = filter, sort = sort, includeCount = includeCount, includeCustom = includeCustom," +
+                    "includeChannelDetails = includeChannelDetails)"
         ),
         level = DeprecationLevel.WARNING,
         message = "Use setMemberships instead"
@@ -1361,8 +1374,8 @@ class PubNub(val configuration: PNConfiguration) {
     @Deprecated(
         replaceWith = ReplaceWith(
             "getChannelMembers(channel = channel, limit = limit, " +
-                "page = page, filter = filter, sort = sort, includeCount = includeCount, includeCustom = includeCustom," +
-                "includeUUIDDetails = includeUUIDDetails)"
+                    "page = page, filter = filter, sort = sort, includeCount = includeCount, includeCustom = includeCustom," +
+                    "includeUUIDDetails = includeUUIDDetails)"
         ),
         level = DeprecationLevel.WARNING,
         message = "Use getChannelMembers instead"
@@ -1439,8 +1452,8 @@ class PubNub(val configuration: PNConfiguration) {
     @Deprecated(
         replaceWith = ReplaceWith(
             "setChannelMembers(channel = channel, uuids = uuids, limit = limit, " +
-                "page = page, filter = filter, sort = sort, includeCount = includeCount, includeCustom = includeCustom," +
-                "includeUUIDDetails = includeUUIDDetails)"
+                    "page = page, filter = filter, sort = sort, includeCount = includeCount, includeCustom = includeCustom," +
+                    "includeUUIDDetails = includeUUIDDetails)"
         ),
         level = DeprecationLevel.WARNING,
         message = "Use setChannelMembers instead"
@@ -1518,8 +1531,8 @@ class PubNub(val configuration: PNConfiguration) {
     @Deprecated(
         replaceWith = ReplaceWith(
             "removeChannelMembers(channel = channel, uuids = uuids, limit = limit, " +
-                "page = page, filter = filter, sort = sort, includeCount = includeCount, includeCustom = includeCustom," +
-                "includeUUIDDetails = includeUUIDDetails)"
+                    "page = page, filter = filter, sort = sort, includeCount = includeCount, includeCustom = includeCustom," +
+                    "includeUUIDDetails = includeUUIDDetails)"
         ),
         level = DeprecationLevel.WARNING,
         message = "Use removeChannelMembers instead"
@@ -1835,7 +1848,11 @@ class PubNub(val configuration: PNConfiguration) {
      * @param listener The listener to be added.
      */
     fun addListener(listener: SubscribeCallback) {
-        subscriptionManager.addListener(listener)
+        if (configuration.enableSubscribeBeta) {
+            listenerManager.addListener(listener)
+        } else {
+            subscriptionManager.addListener(listener)
+        }
     }
 
     /**
@@ -1844,7 +1861,11 @@ class PubNub(val configuration: PNConfiguration) {
      * @param listener The listener to be removed.
      */
     fun removeListener(listener: SubscribeCallback) {
-        subscriptionManager.removeListener(listener)
+        if (configuration.enableSubscribeBeta) {
+            listenerManager.removeListener(listener)
+        } else {
+            subscriptionManager.removeListener(listener)
+        }
     }
 
     //region Encryption

@@ -3,13 +3,12 @@ package com.pubnub.api.subscribe.internal
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
 import com.pubnub.api.enums.PNLogVerbosity
+import com.pubnub.api.models.server.SubscribeMessage
 import com.pubnub.api.network.CallsExecutor
-import com.pubnub.api.subscribe.SubscribeEvent
-import com.pubnub.api.subscribe.Commands.*
+import com.pubnub.api.subscribe.internal.Commands.*
 import org.junit.Test
-import java.util.concurrent.LinkedBlockingQueue
 
-class SubscribeModuleTest {
+class SubscribeModuleInternalsTest {
 
     @Test
     fun testGlue() {
@@ -20,8 +19,13 @@ class SubscribeModuleTest {
         })
 
 
-        val subscribeModule = SubscribeModule.create(
-            callsExecutor = CallsExecutor(pubnub)
+        val subscribeModule = SubscribeModuleInternals.create(
+            callsExecutor = CallsExecutor(pubnub),
+            incomingPayloadProcessor = object : IncomingPayloadProcessor {
+                override fun processIncomingPayload(message: SubscribeMessage) {
+                    //do nothing
+                }
+            }
         )
 
         subscribeModule.handleEvent(SubscribeIssued(channels = listOf("ch1")))

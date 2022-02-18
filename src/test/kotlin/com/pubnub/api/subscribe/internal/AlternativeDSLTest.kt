@@ -2,7 +2,6 @@ package com.pubnub.api.subscribe.internal
 
 import com.pubnub.api.models.server.SubscribeEnvelope
 import com.pubnub.api.models.server.SubscribeMetaData
-import com.pubnub.api.subscribe.*
 import org.hamcrest.MatcherAssert
 import org.hamcrest.Matchers
 import org.junit.Test
@@ -22,7 +21,7 @@ class AlternativeDSLTest {
         )
         val fn = subscribeTransition { true }
 
-        val (s, effects) = inputs.fold<SubscribeEvent, Pair<SubscribeState, Collection<AbstractSubscribeEffect>>>(Unsubscribed to listOf()) { (s, ef), ev ->
+        val (s, effects) = inputs.fold<SubscribeEvent, Pair<SubscribeState, Collection<SubscribeEffect>>>(Unsubscribed to listOf()) { (s, ef), ev ->
             val (ns, nEf) = fn(s, ev)
             ns to (ef + nEf)
         }

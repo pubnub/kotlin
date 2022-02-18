@@ -1,8 +1,9 @@
 package com.pubnub.api.subscribe
 
-import com.pubnub.api.subscribe.internal.SubscribeModule
+import com.pubnub.api.subscribe.internal.Commands
+import com.pubnub.api.subscribe.internal.SubscribeModuleInternals
 
-internal class Subscribe(private val subscribeModule: SubscribeModule) {
+internal class NewSubscribeModule(private val internals: SubscribeModuleInternals) {
 
     fun subscribe(
         channels: List<String>,
@@ -10,7 +11,7 @@ internal class Subscribe(private val subscribeModule: SubscribeModule) {
         withPresence: Boolean,
         withTimetoken: Long
     ) {
-        subscribeModule.handleEvent(
+        internals.handleEvent(
             Commands.SubscribeIssued(
                 channels = channels,
                 groups = channelGroups
@@ -22,7 +23,7 @@ internal class Subscribe(private val subscribeModule: SubscribeModule) {
         channels: List<String> = emptyList(),
         channelGroups: List<String> = emptyList()
     ) {
-        subscribeModule.handleEvent(
+        internals.handleEvent(
             Commands.UnsubscribeIssued(
                 channels = channels,
                 groups = channelGroups
@@ -31,12 +32,12 @@ internal class Subscribe(private val subscribeModule: SubscribeModule) {
     }
 
     fun unsubscribeAll() {
-        subscribeModule.handleEvent(
+        internals.handleEvent(
             Commands.UnsubscribeAllIssued
         )
     }
 
-    fun getSubscribedChannels(): Collection<String> = subscribeModule.status().channels
+    fun getSubscribedChannels(): List<String> = internals.status().channels.toList()
 
-    fun getSubscribedChannelGroups(): Collection<String> = subscribeModule.status().channels
+    fun getSubscribedChannelGroups(): List<String> = internals.status().channels.toList()
 }

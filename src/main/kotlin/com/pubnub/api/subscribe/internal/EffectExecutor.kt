@@ -1,13 +1,9 @@
 package com.pubnub.api.subscribe.internal
 
+import com.pubnub.api.models.server.SubscribeMessage
 import com.pubnub.api.network.CallsExecutor
 import com.pubnub.api.state.CancelFn
-import com.pubnub.api.state.Effect
 import com.pubnub.api.state.EffectExecutor
-import com.pubnub.api.subscribe.AbstractSubscribeEffect
-import com.pubnub.api.subscribe.HandshakeResult
-import com.pubnub.api.subscribe.ReceivingResult
-import com.pubnub.api.subscribe.SubscribeEvent
 import java.util.concurrent.*
 
 internal class HttpCallExecutor(
@@ -61,7 +57,7 @@ internal class HttpCallExecutor(
 }
 
 internal class RetryEffectExecutor(
-    private val effectQueue: LinkedBlockingQueue<AbstractSubscribeEffect>,
+    private val effectQueue: LinkedBlockingQueue<SubscribeEffect>,
     private val executor: ScheduledExecutorService = Executors.newScheduledThreadPool(3),
     private val retryPolicy: RetryPolicy = NoPolicy
 ) : EffectExecutor<ScheduleRetry> {
@@ -75,4 +71,18 @@ internal class RetryEffectExecutor(
             }
         }
     }
+}
+
+internal interface IncomingPayloadProcessor {
+    fun processIncomingPayload(message: SubscribeMessage)
+}
+
+internal class NewMessagesEffectExecutor(private val processor: IncomingPayloadProcessor) : EffectExecutor<NewMessages> {
+    override fun execute(effect: NewMessages, longRunningEffectDone: (String) -> Unit): CancelFn {
+        effect.messages.forEach {
+            processor.processIncomingPayload(it)
+        }
+        return {}
+    }
+
 }
