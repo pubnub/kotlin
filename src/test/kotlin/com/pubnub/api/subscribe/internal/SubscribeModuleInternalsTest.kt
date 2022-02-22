@@ -1,5 +1,6 @@
 package com.pubnub.api.subscribe.internal
 
+import com.pubnub.api.Keys
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
 import com.pubnub.api.enums.PNLogVerbosity
@@ -14,8 +15,8 @@ class SubscribeModuleInternalsTest {
     @Test
     fun testGlue() {
         val pubnub = PubNub(PNConfiguration("something").apply {
-            publishKey = "demo-36"
-            subscribeKey = "demo-36"
+            publishKey = Keys.publishKey
+            subscribeKey = Keys.subscribeKey
             logVerbosity = PNLogVerbosity.BODY
         })
 
