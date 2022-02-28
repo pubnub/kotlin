@@ -1,7 +1,7 @@
 package com.pubnub.api.subscribe.internal
 
+import com.pubnub.api.PubNub
 import com.pubnub.api.managers.ListenerManager
-import com.pubnub.api.network.CallsExecutor
 import com.pubnub.api.state.EffectExecutor
 import com.pubnub.api.state.LongRunningEffectsTracker
 import org.slf4j.LoggerFactory
@@ -26,7 +26,7 @@ internal class SubscribeModuleInternals private constructor(
 
     companion object {
         fun create(
-            callsExecutor: CallsExecutor,
+            pubNub: PubNub,
             incomingPayloadProcessor: IncomingPayloadProcessor,
             listenerManager: ListenerManager,
             eventQueue: LinkedBlockingQueue<SubscribeEvent> = LinkedBlockingQueue(100),
@@ -37,7 +37,7 @@ internal class SubscribeModuleInternals private constructor(
             ),
             longRunningEffectsTracker: LongRunningEffectsTracker = LongRunningEffectsTracker(),
             httpEffectExecutor: EffectExecutor<SubscribeHttpEffect> = HttpCallExecutor(
-                callsExecutor, eventQueue = eventQueue
+                pubNub = pubNub, eventQueue = eventQueue
             ),
             retryEffectExecutor: EffectExecutor<ScheduleRetry> = RetryEffectExecutor(
                 effectQueue = effectsQueue, retryPolicy = retryPolicy

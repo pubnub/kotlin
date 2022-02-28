@@ -1,25 +1,23 @@
 package com.pubnub.api.subscribe.internal
 
+import com.pubnub.api.PubNub
 import com.pubnub.api.models.server.SubscribeMessage
-import com.pubnub.api.network.CallsExecutor
 import com.pubnub.api.state.CancelFn
 import com.pubnub.api.state.EffectExecutor
 import java.util.concurrent.*
 
 internal class HttpCallExecutor(
-    private val callsExecutor: CallsExecutor,
+    private val pubNub: PubNub,
     private val eventQueue: LinkedBlockingQueue<SubscribeEvent>
 ) : EffectExecutor<SubscribeHttpEffect> {
 
     override fun execute(effect: SubscribeHttpEffect, longRunningEffectDone: (String) -> Unit): CancelFn {
         return when (effect) {
             is SubscribeHttpEffect.HandshakeHttpCallEffect -> {
-                callsExecutor.handshake(
-                    id = effect.id,
-                    channels = effect.subscriptionStatus.channels,
-                    channelGroups = effect.subscriptionStatus.groups
+                pubNub.handshake(
+                    channels = effect.subscriptionStatus.channels.toList(),
+                    channelGroups = effect.subscriptionStatus.groups.toList()
                 ) { r, s ->
-                    println("Handshake done")
                     longRunningEffectDone(effect.id)
                     eventQueue.put(
                         if (!s.error) {
@@ -33,16 +31,14 @@ internal class HttpCallExecutor(
                             HandshakeResult.HandshakeFailed(s)
                         }
                     )
-                }.let { { it.cancelable.silentCancel() } }
+                }.let { { it.silentCancel() } }
             }
-            is SubscribeHttpEffect.ReceiveMessagesHttpCallEffect -> callsExecutor.receiveMessages(
-                id = effect.id,
-                channels = effect.subscriptionStatus.channels,
-                channelGroups = effect.subscriptionStatus.groups,
+            is SubscribeHttpEffect.ReceiveMessagesHttpCallEffect -> pubNub.receiveMessages(
+                channels = effect.subscriptionStatus.channels.toList(),
+                channelGroups = effect.subscriptionStatus.groups.toList(),
                 timetoken = effect.subscriptionStatus.cursor!!.timetoken, //TODO figure out how to drop !! here
                 region = effect.subscriptionStatus.cursor.region
             ) { r, s ->
-                println("Receiving done")
                 longRunningEffectDone(effect.id)
                 eventQueue.put(
                     if (!s.error) {
@@ -51,7 +47,7 @@ internal class HttpCallExecutor(
                         ReceivingResult.ReceivingFailed(s)
                     }
                 )
-            }.let { { it.cancelable.silentCancel() } }
+            }.let { { it.silentCancel() } }
         }
     }
 }
@@ -84,5 +80,4 @@ internal class NewMessagesEffectExecutor(private val processor: IncomingPayloadP
         }
         return {}
     }
-
 }
