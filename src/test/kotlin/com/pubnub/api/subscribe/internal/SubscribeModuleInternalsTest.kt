@@ -21,7 +21,7 @@ class SubscribeModuleInternalsTest {
 
 
         val subscribeModule = SubscribeModuleInternals.create(
-            callsExecutor = CallsExecutor(pubnub),
+            pubNub = pubnub,
             incomingPayloadProcessor = object : IncomingPayloadProcessor {
                 override fun processIncomingPayload(message: SubscribeMessage) {
                     //do nothing

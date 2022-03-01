@@ -72,7 +72,6 @@ import com.pubnub.api.models.consumer.objects.member.PNUUIDDetailsLevel
 import com.pubnub.api.models.consumer.objects.member.PNUUIDWithCustom
 import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
 import com.pubnub.api.models.consumer.objects.membership.PNChannelWithCustom
-import com.pubnub.api.subscribe.internal.CallsExecutor
 import com.pubnub.api.presence.Presence
 import com.pubnub.api.subscribe.NewSubscribeModule
 import com.pubnub.api.subscribe.internal.SubscribeModuleInternals
@@ -115,7 +114,7 @@ class PubNub(val configuration: PNConfiguration) {
     private val listenerManager = ListenerManager(this)
     private val newSubscribeModule = NewSubscribeModule(
         SubscribeModuleInternals.create(
-            callsExecutor = CallsExecutor(pubNub = this),
+            pubNub = this,
             incomingPayloadProcessor = IncomingPayloadProcessorImplementation(
                 pubnub = this,
                 listenerManager = listenerManager,

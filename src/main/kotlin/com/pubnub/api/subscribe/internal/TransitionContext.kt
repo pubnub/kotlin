@@ -1,13 +1,11 @@
 package com.pubnub.api.subscribe.internal
 
-import com.pubnub.api.state.StateMachine
-import com.pubnub.api.state.Transition
 import com.pubnub.api.subscribe.internal.Commands.*
-import com.pubnub.api.subscribe.internal.HandshakeResult.*
-import com.pubnub.api.subscribe.internal.ReceivingResult.*
+import com.pubnub.api.subscribe.internal.HandshakeResult.HandshakeSucceeded
+import com.pubnub.api.subscribe.internal.ReceivingResult.ReceivingSucceeded
 
 /**
- * A class used to improve
+ * A class used to improve TODO improve what exactly? ;)
  */
 
 @DslMarker
