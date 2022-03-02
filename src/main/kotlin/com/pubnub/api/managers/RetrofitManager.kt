@@ -33,21 +33,35 @@ class RetrofitManager(val pubnub: PubNub) {
     private lateinit var noSignatureClientInstance: OkHttpClient
 
     private var signatureInterceptor: SignatureInterceptor
+        get() = synchronized(this) { field }
 
-    internal val timeService: TimeService
-    internal val publishService: PublishService
-    internal val historyService: HistoryService
-    internal val presenceService: PresenceService
-    internal val messageActionService: MessageActionService
-    internal val signalService: SignalService
-    internal val channelGroupService: ChannelGroupService
-    internal val pushService: PushService
-    internal val accessManagerService: AccessManagerService
+    internal var timeService: TimeService
+        get() = synchronized(this) { field }
+    internal var publishService: PublishService
+        get() = synchronized(this) { field }
+    internal var historyService: HistoryService
+        get() = synchronized(this) { field }
+    internal var presenceService: PresenceService
+        get() = synchronized(this) { field }
+    internal var messageActionService: MessageActionService
+        get() = synchronized(this) { field }
+    internal var signalService: SignalService
+        get() = synchronized(this) { field }
+    internal var channelGroupService: ChannelGroupService
+        get() = synchronized(this) { field }
+    internal var pushService: PushService
+        get() = synchronized(this) { field }
+    internal var accessManagerService: AccessManagerService
+        get() = synchronized(this) { field }
 
-    internal val subscribeService: SubscribeService
-    internal val objectsService: ObjectsService
-    internal val filesService: FilesService
-    internal val s3Service: S3Service
+    internal var subscribeService: SubscribeService
+        get() = synchronized(this) { field }
+    internal var objectsService: ObjectsService
+        get() = synchronized(this) { field }
+    internal var filesService: FilesService
+        get() = synchronized(this) { field }
+    internal var s3Service: S3Service
+        get() = synchronized(this) { field }
 
     init {
         signatureInterceptor = SignatureInterceptor(pubnub)
@@ -55,7 +69,8 @@ class RetrofitManager(val pubnub: PubNub) {
         if (!pubnub.configuration.googleAppEngineNetworking) {
             transactionClientInstance = createOkHttpClient(pubnub.configuration.nonSubscribeRequestTimeout)
             subscriptionClientInstance = createOkHttpClient(pubnub.configuration.subscribeTimeout)
-            noSignatureClientInstance = createOkHttpClient(pubnub.configuration.nonSubscribeRequestTimeout, withSignature = false)
+            noSignatureClientInstance =
+                createOkHttpClient(pubnub.configuration.nonSubscribeRequestTimeout, withSignature = false)
         }
 
         val transactionInstance = createRetrofit(transactionClientInstance)
@@ -76,6 +91,41 @@ class RetrofitManager(val pubnub: PubNub) {
         s3Service = noSignatureInstance.create(S3Service::class.java)
 
         subscribeService = subscriptionInstance.create(SubscribeService::class.java)
+    }
+
+    fun rebuild() {
+        synchronized(this) {
+            transactionClientInstance.connectionPool().evictAll()
+            subscriptionClientInstance.connectionPool().evictAll()
+            noSignatureClientInstance.connectionPool().evictAll()
+            signatureInterceptor = SignatureInterceptor(pubnub)
+
+            if (!pubnub.configuration.googleAppEngineNetworking) {
+                transactionClientInstance = createOkHttpClient(pubnub.configuration.nonSubscribeRequestTimeout)
+                subscriptionClientInstance = createOkHttpClient(pubnub.configuration.subscribeTimeout)
+                noSignatureClientInstance =
+                    createOkHttpClient(pubnub.configuration.nonSubscribeRequestTimeout, withSignature = false)
+            }
+
+            val transactionInstance = createRetrofit(transactionClientInstance)
+            val subscriptionInstance = createRetrofit(PNCallFactory(subscriptionClientInstance))
+            val noSignatureInstance = createRetrofit(noSignatureClientInstance)
+
+            timeService = transactionInstance.create(TimeService::class.java)
+            publishService = transactionInstance.create(PublishService::class.java)
+            historyService = transactionInstance.create(HistoryService::class.java)
+            presenceService = transactionInstance.create(PresenceService::class.java)
+            messageActionService = transactionInstance.create(MessageActionService::class.java)
+            signalService = transactionInstance.create(SignalService::class.java)
+            channelGroupService = transactionInstance.create(ChannelGroupService::class.java)
+            pushService = transactionInstance.create(PushService::class.java)
+            accessManagerService = transactionInstance.create(AccessManagerService::class.java)
+            objectsService = transactionInstance.create(ObjectsService::class.java)
+            filesService = transactionInstance.create(FilesService::class.java)
+            s3Service = noSignatureInstance.create(S3Service::class.java)
+
+            subscribeService = subscriptionInstance.create(SubscribeService::class.java)
+        }
     }
 
     fun getTransactionClientExecutorService(): ExecutorService {

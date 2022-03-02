@@ -23,7 +23,9 @@ import javax.net.ssl.X509ExtendedTrustManager
  */
 open class PNConfiguration(
     uuid: String,
-    val enableSubscribeBeta: Boolean = false
+    val enableSubscribeBeta: Boolean = false,
+    var batchingMaxWindow: Long = 0,
+    var batchingNumberMessages: Int = 0
 ) {
 
     init {
@@ -311,4 +313,8 @@ open class PNConfiguration(
 
     @Deprecated("To be used by components", level = DeprecationLevel.WARNING)
     public fun addPnsdkSuffix(nameToSuffixes: Map<String, String>) = pnsdkSuffixes.putAll(nameToSuffixes)
+
+    override fun toString(): String {
+        return "PNConfiguration(enableSubscribeBeta=$enableSubscribeBeta, uuid='$uuid', log=$log, subscribeKey='$subscribeKey', publishKey='$publishKey', secretKey='$secretKey', authKey='$authKey', cipherKey='$cipherKey', origin='$origin', secure=$secure, logVerbosity=$logVerbosity, heartbeatNotificationOptions=$heartbeatNotificationOptions, reconnectionPolicy=$reconnectionPolicy, presenceTimeout=$presenceTimeout, heartbeatInterval=$heartbeatInterval, subscribeTimeout=$subscribeTimeout, connectTimeout=$connectTimeout, nonSubscribeRequestTimeout=$nonSubscribeRequestTimeout, cacheBusting=$cacheBusting, suppressLeaveEvents=$suppressLeaveEvents, filterExpression='$filterExpression', includeInstanceIdentifier=$includeInstanceIdentifier, includeRequestIdentifier=$includeRequestIdentifier, maximumReconnectionRetries=$maximumReconnectionRetries, maximumConnections=$maximumConnections, requestMessageCountThreshold=$requestMessageCountThreshold, googleAppEngineNetworking=$googleAppEngineNetworking, startSubscriberThread=$startSubscriberThread, useRandomInitializationVector=$useRandomInitializationVector, proxy=$proxy, proxySelector=$proxySelector, proxyAuthenticator=$proxyAuthenticator, certificatePinner=$certificatePinner, httpLoggingInterceptor=$httpLoggingInterceptor, sslSocketFactory=$sslSocketFactory, x509ExtendedTrustManager=$x509ExtendedTrustManager, connectionSpec=$connectionSpec, hostnameVerifier=$hostnameVerifier, fileMessagePublishRetryLimit=$fileMessagePublishRetryLimit, dedupOnSubscribe=$dedupOnSubscribe, maximumMessagesCacheSize=$maximumMessagesCacheSize, pnsdkSuffixes=$pnsdkSuffixes)"
+    }
 }

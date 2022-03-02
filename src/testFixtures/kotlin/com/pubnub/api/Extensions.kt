@@ -1,5 +1,6 @@
 package com.pubnub.api
 
+import com.pubnub.api.endpoints.remoteaction.RemoteAction
 import com.pubnub.api.models.consumer.PNStatus
 import org.awaitility.Awaitility
 import org.awaitility.Durations
@@ -11,7 +12,7 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 
-fun <Input, Output> Endpoint<Input, Output>.await(function: (result: Output?, status: PNStatus) -> Unit) {
+fun <Output> RemoteAction<Output>.await(function: (result: Output?, status: PNStatus) -> Unit) {
     val success = AtomicBoolean()
     async { result, status ->
         function.invoke(result, status)

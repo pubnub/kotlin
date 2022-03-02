@@ -5,6 +5,7 @@ import com.github.tomakehurst.wiremock.client.WireMock.get
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 import com.google.gson.Gson
 import com.pubnub.api.endpoints.pubsub.Publish
+import com.pubnub.api.endpoints.remoteaction.RemoteAction
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.PNPublishResult
 import com.pubnub.api.suite.AUTH
@@ -23,7 +24,7 @@ class PublishGetTestSuite : EndpointTestSuite<Publish, PNPublishResult>() {
 
     override fun requiredKeys() = SUB + PUB + AUTH
 
-    override fun snippet(): Publish {
+    override fun snippet(): RemoteAction<PNPublishResult> {
         return pubnub.publish(
             channel = "ch1",
             message = "ch2"
