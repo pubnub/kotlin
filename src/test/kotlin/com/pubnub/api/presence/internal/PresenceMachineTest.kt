@@ -15,7 +15,7 @@ class PresenceMachineTest {
             HeartbeatIntervalOver
         )
 
-        val effects = events.map { machine(it) }
+        val effects = events.flatMap { machine(it) }
 
         println(effects)
     }

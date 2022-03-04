@@ -27,7 +27,7 @@ import com.pubnub.api.models.server.PresenceEnvelope
 import com.pubnub.api.models.server.SubscribeMessage
 import com.pubnub.api.models.server.files.FileUploadNotification
 import com.pubnub.api.services.FilesService
-import com.pubnub.api.subscribe.internal.IncomingPayloadProcessor
+import com.pubnub.api.presence.internal.IncomingPayloadProcessor
 import com.pubnub.api.vendor.Crypto
 import org.slf4j.LoggerFactory
 import java.util.ArrayList
