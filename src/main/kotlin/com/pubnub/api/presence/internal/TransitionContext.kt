@@ -1,9 +1,5 @@
 package com.pubnub.api.presence.internal
 
-import com.pubnub.api.subscribe.internal.SubscriptionStatus
-import com.pubnub.api.subscribe.internal.plus
-
-
 @DslMarker
 annotation class StateMachineContext
 

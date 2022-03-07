@@ -72,7 +72,8 @@ import com.pubnub.api.models.consumer.objects.member.PNUUIDDetailsLevel
 import com.pubnub.api.models.consumer.objects.member.PNUUIDWithCustom
 import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
 import com.pubnub.api.models.consumer.objects.membership.PNChannelWithCustom
-import com.pubnub.api.presence.Presence
+import com.pubnub.api.presence.NewPresenceModule
+import com.pubnub.api.presence.internal.PresenceModuleInternals
 import com.pubnub.api.subscribe.NewSubscribeModule
 import com.pubnub.api.subscribe.internal.*
 import com.pubnub.api.subscribe.internal.SubscribeModuleInternals
@@ -139,18 +140,28 @@ class PubNub(val configuration: PNConfiguration) {
         initialState = SState.Unsubscribed
     )
 
-    private val newSubscribeModule = NewSubscribeModule(
-        SubscribeModuleInternals.create(
-            pubNub = this,
-            subscrMachine = interpreter::fitInDataDriven,
-            incomingPayloadProcessor = IncomingPayloadProcessorImplementation(
+    private val newSubscribeModule by lazy {
+        NewSubscribeModule(
+            SubscribeModuleInternals.create(
                 pubnub = this,
-                listenerManager = listenerManager,
-                duplicationManager = DuplicationManager(this.configuration)
-            ),
-            listenerManager = listenerManager
+                subscrMachine = interpreter::fitInDataDriven,
+                incomingPayloadProcessor = IncomingPayloadProcessorImplementation(
+                    pubnub = this,
+                    listenerManager = listenerManager,
+                    duplicationManager = DuplicationManager(this.configuration)
+                ),
+                listenerManager = listenerManager
+            )
         )
-    )
+    }
+
+    private val newPresenceModule by lazy {
+        NewPresenceModule(
+            PresenceModuleInternals.create(
+                pubnub = this
+            )
+        )
+    }
 
     //endregion
 
@@ -323,9 +334,10 @@ class PubNub(val configuration: PNConfiguration) {
         channelGroups: List<String> = emptyList(),
         withPresence: Boolean = false,
         withTimetoken: Long = 0L
-    ) = if (configuration.enableSubscribeBeta)
+    ) = if (configuration.enableSubscribeBeta) {
         newSubscribeModule.subscribe(channels, channelGroups, withPresence, withTimetoken)
-    else
+        newPresenceModule.presence(channels, channelGroups, connected = true)
+    } else
         PubSub.subscribe(subscriptionManager, channels, channelGroups, withPresence, withTimetoken)
 
     /**
@@ -348,17 +360,20 @@ class PubNub(val configuration: PNConfiguration) {
     fun unsubscribe(
         channels: List<String> = emptyList(),
         channelGroups: List<String> = emptyList()
-    ) = if (configuration.enableSubscribeBeta)
+    ) = if (configuration.enableSubscribeBeta) {
         newSubscribeModule.unsubscribe(channels, channelGroups)
-    else
+        newPresenceModule.presence(channels, channelGroups, connected = false)
+    } else
         PubSub.unsubscribe(subscriptionManager, channels, channelGroups)
 
     /**
      * Unsubscribe from all channels and all channel groups
      */
     fun unsubscribeAll() =
-        if (configuration.enableSubscribeBeta)
+        if (configuration.enableSubscribeBeta) {
             newSubscribeModule.unsubscribeAll()
+            newPresenceModule.unsubscribeAll()
+        }
         else
             subscriptionManager.unsubscribeAll()
 
@@ -771,7 +786,7 @@ class PubNub(val configuration: PNConfiguration) {
         channelGroups: List<String> = emptyList(),
         connected: Boolean = false
     ) = if (configuration.enableSubscribeBeta)
-        Presence.presence(
+        newPresenceModule.presence(
             channels = channels,
             channelGroups = channelGroups,
             connected = connected

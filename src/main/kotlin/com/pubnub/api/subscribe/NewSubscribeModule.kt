@@ -39,5 +39,5 @@ internal class NewSubscribeModule(private val internals: SubscribeModuleInternal
 
     fun getSubscribedChannels(): List<String> = internals.status().channels.toList()
 
-    fun getSubscribedChannelGroups(): List<String> = internals.status().channels.toList()
+    fun getSubscribedChannelGroups(): List<String> = internals.status().groups.toList()
 }

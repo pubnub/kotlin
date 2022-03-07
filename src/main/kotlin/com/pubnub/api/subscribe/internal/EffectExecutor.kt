@@ -2,7 +2,6 @@ package com.pubnub.api.subscribe.internal
 
 import com.pubnub.api.PubNub
 import com.pubnub.api.models.server.SubscribeMessage
-import com.pubnub.api.presence.internal.IncomingPayloadProcessor
 import com.pubnub.api.state.CancelFn
 import com.pubnub.api.state.EffectExecutor
 import java.util.concurrent.*

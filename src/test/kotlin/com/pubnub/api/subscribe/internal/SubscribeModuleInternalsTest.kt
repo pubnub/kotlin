@@ -6,7 +6,6 @@ import com.pubnub.api.PubNub
 import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.managers.ListenerManager
 import com.pubnub.api.models.server.SubscribeMessage
-import com.pubnub.api.presence.internal.IncomingPayloadProcessor
 import com.pubnub.api.subscribe.internal.Commands.*
 import org.junit.Test
 
@@ -22,7 +21,7 @@ class SubscribeModuleInternalsTest {
 
 
         val subscribeModule = SubscribeModuleInternals.create(
-            pubNub = pubnub,
+            pubnub = pubnub,
             incomingPayloadProcessor = object : IncomingPayloadProcessor {
                 override fun processIncomingPayload(message: SubscribeMessage) {
                     //do nothing
