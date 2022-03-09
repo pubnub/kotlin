@@ -1,23 +1,35 @@
 package com.pubnub.api.presence.internal
 
-import com.pubnub.api.state.StateMachine
+import com.pubnub.api.state.QueuedEventEngine
+import com.pubnub.api.state.EventEngine
 import com.pubnub.api.state.Transition
-
+import java.util.concurrent.LinkedBlockingQueue
 
 typealias PresenceTransition = Transition<PresenceState, PresenceEvent, PresenceEffect>
 
-typealias PresenceMachine = StateMachine<PresenceEvent, PresenceEffect>
+typealias PresenceStateMachine = EventEngine<PresenceState, PresenceEvent, PresenceEffect>
 
-fun presenceMachine(
-    transitions: PresenceTransition = presenceTransition(),
-    initState: PresenceState = Unsubscribed,
-): PresenceMachine {
-    var state = initState
-    return { event ->
-        val (ns, effects) = transitions(state, event)
-        state = ns
-        effects
-    }
+typealias QueuedPresenceEventEngine = QueuedEventEngine<PresenceState, PresenceEvent, PresenceEffect>
+
+fun presenceEventEngine(): Pair<PresenceStateMachine, Collection<PresenceEffect>> {
+    return EventEngine.create(
+        initialState = Unsubscribed,
+        transition = presenceTransition(),
+        initialEvent = InitialEvent
+    )
+}
+
+fun queuedPresenceEventEngine(
+    eventQueue: LinkedBlockingQueue<PresenceEvent>,
+    effectQueue: LinkedBlockingQueue<PresenceEffect>
+): QueuedPresenceEventEngine {
+    val (stateMachine, initialEffects) = presenceEventEngine()
+    return QueuedPresenceEventEngine.create(
+        eventEngine = stateMachine,
+        initialEffects = initialEffects,
+        eventQueue = eventQueue,
+        effectQueue = effectQueue
+    )
 }
 
 internal fun defineTransition(transitionFn: TransitionContext.(PresenceState, PresenceEvent) -> Pair<PresenceState, Collection<PresenceEffect>>): PresenceTransition {

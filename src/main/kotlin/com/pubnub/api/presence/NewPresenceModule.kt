@@ -1,23 +1,24 @@
 package com.pubnub.api.presence
 
-import com.pubnub.api.presence.internal.Commands
-import com.pubnub.api.presence.internal.PresenceModuleInternals
+import com.pubnub.api.PubNub
+import com.pubnub.api.presence.internal.InternalPresenceModule
 
-internal class NewPresenceModule(private val internals: PresenceModuleInternals) {
+interface NewPresenceModule {
+    companion object {
+        fun create(
+            pubnub: PubNub
+        ): NewPresenceModule {
+            return InternalPresenceModule.create(pubnub = pubnub)
+        }
+    }
 
     fun presence(
         channels: List<String> = emptyList(),
         channelGroups: List<String> = emptyList(),
         connected: Boolean = false
-    ) {
-        if (connected) {
-            internals.handleEvent(Commands.SubscribeIssued(channels = channels, groups = channelGroups))
-        } else {
-            internals.handleEvent(Commands.UnsubscribeIssued(channels = channels, groups = channelGroups))
-        }
-    }
+    )
 
-    fun unsubscribeAll() {
-        internals.handleEvent(Commands.UnsubscribeAllIssued)
-    }
+    fun unsubscribeAll()
+
+    fun cancel()
 }

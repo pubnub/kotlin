@@ -11,7 +11,6 @@ import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.server.SubscribeEnvelope
 import com.pubnub.api.models.server.SubscribeMetaData
-import junit.framework.Assert
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers
 import org.junit.Assert.fail
@@ -24,10 +23,14 @@ class SubscribeMachineTest {
 
     @Test
     fun firstTest() {
-        val module = subscribeMachine(shouldRetry = { it < 1 })
-        val status = PNStatus(category = PNStatusCategory.PNBadRequestCategory, error = true, PNOperationType.PNSubscribeOperation)
+        val transition = subscribeTransition { it < 1 }
+        val status = PNStatus(
+            category = PNStatusCategory.PNBadRequestCategory,
+            error = true,
+            PNOperationType.PNSubscribeOperation
+        )
 
-        val inputs = listOf(
+        val events = listOf(
             InitialEvent,
             Commands.SubscribeIssued(channels = listOf("ch1")),
             HandshakeResult.HandshakeFailed(status),
@@ -49,9 +52,11 @@ class SubscribeMachineTest {
 
         )
 
-        val effects = inputs.flatMap {
-            module(it)
-        }
+
+        val effects =
+            events.fold<SubscribeEvent, Pair<SubscribeState, Collection<SubscribeEffect>>>(Unsubscribed to listOf()) { acc, ev ->
+                transition(acc.first, ev).let { it.first to acc.second + it.second }
+            }.second
 
         println(effects)
 

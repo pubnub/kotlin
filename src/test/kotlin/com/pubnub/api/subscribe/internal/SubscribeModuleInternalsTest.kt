@@ -6,6 +6,7 @@ import com.pubnub.api.PubNub
 import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.managers.ListenerManager
 import com.pubnub.api.models.server.SubscribeMessage
+import com.pubnub.api.subscribe.NewSubscribeModule
 import com.pubnub.api.subscribe.internal.Commands.*
 import org.junit.Test
 
@@ -20,7 +21,7 @@ class SubscribeModuleInternalsTest {
         })
 
 
-        val subscribeModule = SubscribeModuleInternals.create(
+        val subscribeModule = NewSubscribeModule.create(
             pubnub = pubnub,
             incomingPayloadProcessor = object : IncomingPayloadProcessor {
                 override fun processIncomingPayload(message: SubscribeMessage) {
@@ -30,20 +31,20 @@ class SubscribeModuleInternalsTest {
             listenerManager = ListenerManager(pubnub)
         )
 
-        subscribeModule.handleEvent(SubscribeIssued(channels = listOf("ch1")))
+        subscribeModule.subscribe(channels = listOf("ch1"), channelGroups = listOf(), withPresence = true, withTimetoken = 0)
 
         Thread.sleep(5_000)
 
-        subscribeModule.handleEvent(SubscribeIssued(channels = listOf("ch2")))
+        subscribeModule.subscribe(channels = listOf("ch2"), channelGroups = listOf(), withPresence = true, withTimetoken = 0)
         Thread.sleep(5_000)
 
-        subscribeModule.handleEvent(SubscribeIssued(channels = listOf("ch3")))
+        subscribeModule.subscribe(channels = listOf("ch3"), channelGroups = listOf(), withPresence = true, withTimetoken = 0)
         Thread.sleep(5_000)
 
-        subscribeModule.handleEvent(SubscribeIssued(channels = listOf("ch4")))
+        subscribeModule.subscribe(channels = listOf("ch4"), channelGroups = listOf(), withPresence = true, withTimetoken = 0)
         Thread.sleep(5_000)
 
-        subscribeModule.handleEvent(SubscribeIssued(channels = listOf("ch5", "ch6")))
+        subscribeModule.subscribe(channels = listOf("ch5", "ch6"), channelGroups = listOf(), withPresence = true, withTimetoken = 0)
         Thread.sleep(5_000)
     }
 }

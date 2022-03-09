@@ -73,11 +73,7 @@ import com.pubnub.api.models.consumer.objects.member.PNUUIDWithCustom
 import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
 import com.pubnub.api.models.consumer.objects.membership.PNChannelWithCustom
 import com.pubnub.api.presence.NewPresenceModule
-import com.pubnub.api.presence.internal.PresenceModuleInternals
-import com.pubnub.api.subscribe.NewSubscribeModule
 import com.pubnub.api.subscribe.internal.*
-import com.pubnub.api.subscribe.internal.SubscribeModuleInternals
-import com.pubnub.api.subscribe.internal.data.*
 import com.pubnub.api.vendor.Base64
 import com.pubnub.api.vendor.Crypto
 import com.pubnub.api.vendor.FileEncryptionUtil.decrypt
@@ -115,52 +111,22 @@ class PubNub(val configuration: PNConfiguration) {
     internal val tokenManager: TokenManager = TokenManager()
     private val tokenParser: TokenParser = TokenParser()
     private val listenerManager = ListenerManager(this)
-    private val interpreter = Interpreter(
-        signature = signature, reducers = mapOf(
-            SAction.SetChannels to { ctx, ev ->
-                when (ev) {
-                    is Commands.SubscribeIssued -> ctx.copy(channels = ctx.channels + ev.channels)
-                    is Commands.UnsubscribeIssued -> ctx.copy(channels = ctx.channels - ev.channels.toSet())
-                    else -> ctx
-                }
-            },
-            SAction.SetCursor to { ctx, ev ->
-                when (ev) {
-                    is HandshakeResult.HandshakeSucceeded -> ctx.copy(cursor = ev.cursor)
-                    is ReceivingResult.ReceivingSucceeded -> ctx.copy(
-                        cursor = Cursor(
-                            timetoken = ev.subscribeEnvelope.metadata.timetoken,
-                            region = ev.subscribeEnvelope.metadata.region
-                        )
-                    )
-                    else -> ctx
-                }
-            }
-        ),
-        initialState = SState.Unsubscribed
-    )
 
     private val newSubscribeModule by lazy {
-        NewSubscribeModule(
-            SubscribeModuleInternals.create(
+        InternalSubscribeModule.create(
+            pubnub = this,
+            incomingPayloadProcessor = IncomingPayloadProcessorImplementation(
                 pubnub = this,
-                subscrMachine = interpreter::fitInDataDriven,
-                incomingPayloadProcessor = IncomingPayloadProcessorImplementation(
-                    pubnub = this,
-                    listenerManager = listenerManager,
-                    duplicationManager = DuplicationManager(this.configuration)
-                ),
-                listenerManager = listenerManager
-            )
+                listenerManager = listenerManager,
+                duplicationManager = DuplicationManager(this.configuration)
+            ),
+            listenerManager = listenerManager
         )
     }
 
+
     private val newPresenceModule by lazy {
-        NewPresenceModule(
-            PresenceModuleInternals.create(
-                pubnub = this
-            )
-        )
+        NewPresenceModule.create(pubnub = this)
     }
 
     //endregion
@@ -373,8 +339,7 @@ class PubNub(val configuration: PNConfiguration) {
         if (configuration.enableSubscribeBeta) {
             newSubscribeModule.unsubscribeAll()
             newPresenceModule.unsubscribeAll()
-        }
-        else
+        } else
             subscriptionManager.unsubscribeAll()
 
     /**

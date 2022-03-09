@@ -5,7 +5,7 @@ import org.junit.Test
 class PresenceMachineTest {
     @Test
     fun firstPresenceMachineTest() {
-        val machine = presenceMachine()
+        val (machine, initialEffects) = presenceEventEngine()
 
         val events = listOf(
             Commands.SubscribeIssued(channels = listOf("ch1")),
@@ -15,7 +15,7 @@ class PresenceMachineTest {
             HeartbeatIntervalOver
         )
 
-        val effects = events.flatMap { machine(it) }
+        val effects = initialEffects + events.flatMap { machine.transition(it) }
 
         println(effects)
     }

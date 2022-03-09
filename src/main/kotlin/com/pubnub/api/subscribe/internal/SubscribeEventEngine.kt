@@ -1,31 +1,42 @@
 package com.pubnub.api.subscribe.internal
 
-import com.pubnub.api.state.StateMachine
+import com.pubnub.api.state.QueuedEventEngine
+import com.pubnub.api.state.EventEngine
 import com.pubnub.api.state.Transition
 import com.pubnub.api.subscribe.internal.Commands.*
-import com.pubnub.api.subscribe.internal.HandshakeResult.*
-import com.pubnub.api.subscribe.internal.ReceivingResult.*
+import com.pubnub.api.subscribe.internal.HandshakeResult.HandshakeFailed
+import com.pubnub.api.subscribe.internal.HandshakeResult.HandshakeSucceeded
+import com.pubnub.api.subscribe.internal.ReceivingResult.ReceivingFailed
+import com.pubnub.api.subscribe.internal.ReceivingResult.ReceivingSucceeded
+import java.util.concurrent.LinkedBlockingQueue
 
 typealias SubscribeTransition = Transition<SubscribeState, SubscribeEvent, SubscribeEffect>
 
-typealias SubscribeMachine = StateMachine<SubscribeEvent, SubscribeEffect>
+typealias SubscribeEventEngine = EventEngine<SubscribeState, SubscribeEvent, SubscribeEffect>
 
-/**
- * Use from single thread only
- */
-fun subscribeMachine(
-    shouldRetry: (Int) -> Boolean,
-    transitions: SubscribeTransition = subscribeTransition(shouldRetry),
-    initState: SubscribeState = Unsubscribed,
-): SubscribeMachine {
-    var state = initState
-    return { event ->
-        val (ns, effects) = transitions(state, event)
-        state = ns
-        effects
-    }
+typealias QueuedSubscribeEventEngine = QueuedEventEngine<SubscribeState, SubscribeEvent, SubscribeEffect>
+
+internal fun subscribeEventEngine(shouldRetry: (Int) -> Boolean): Pair<SubscribeEventEngine, Collection<SubscribeEffect>> {
+    return EventEngine.create(
+        initialState = Unsubscribed,
+        transition = subscribeTransition(shouldRetry),
+        initialEvent = InitialEvent
+    )
 }
 
+internal fun queuedSubscribeEventEngine(
+    eventQueue: LinkedBlockingQueue<SubscribeEvent>,
+    effectQueue: LinkedBlockingQueue<SubscribeEffect>,
+    shouldRetry: (Int) -> Boolean
+): QueuedSubscribeEventEngine {
+    val (stateMachine, initialEffects) = subscribeEventEngine(shouldRetry)
+    return QueuedSubscribeEventEngine.create(
+        eventEngine = stateMachine,
+        initialEffects = initialEffects,
+        eventQueue = eventQueue,
+        effectQueue = effectQueue
+    )
+}
 
 internal fun defineTransition(transitionFn: TransitionContext.(SubscribeState, SubscribeEvent) -> Pair<SubscribeState, Collection<SubscribeEffect>>): SubscribeTransition {
     return { s, i ->

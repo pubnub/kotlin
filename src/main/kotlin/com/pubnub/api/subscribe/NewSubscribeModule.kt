@@ -1,43 +1,40 @@
 package com.pubnub.api.subscribe
 
-import com.pubnub.api.subscribe.internal.Commands
-import com.pubnub.api.subscribe.internal.SubscribeModuleInternals
+import com.pubnub.api.PubNub
+import com.pubnub.api.managers.ListenerManager
+import com.pubnub.api.subscribe.internal.IncomingPayloadProcessor
+import com.pubnub.api.subscribe.internal.InternalSubscribeModule
 
-internal class NewSubscribeModule(private val internals: SubscribeModuleInternals) {
+interface NewSubscribeModule {
+    companion object {
+        internal fun create(
+            pubnub: PubNub,
+            listenerManager: ListenerManager,
+            incomingPayloadProcessor: IncomingPayloadProcessor
+        ): NewSubscribeModule {
+            return InternalSubscribeModule.create(
+                pubnub = pubnub,
+                listenerManager = listenerManager,
+                incomingPayloadProcessor = incomingPayloadProcessor
+            )
+        }
+    }
 
     fun subscribe(
         channels: List<String>,
         channelGroups: List<String>,
         withPresence: Boolean,
         withTimetoken: Long
-    ) {
-        internals.handleEvent(
-            Commands.SubscribeIssued(
-                channels = channels,
-                groups = channelGroups
-            )
-        )
-    }
+    )
 
     fun unsubscribe(
         channels: List<String> = emptyList(),
         channelGroups: List<String> = emptyList()
-    ) {
-        internals.handleEvent(
-            Commands.UnsubscribeIssued(
-                channels = channels,
-                groups = channelGroups
-            )
-        )
-    }
+    )
 
-    fun unsubscribeAll() {
-        internals.handleEvent(
-            Commands.UnsubscribeAllIssued
-        )
-    }
-
-    fun getSubscribedChannels(): List<String> = internals.status().channels.toList()
-
-    fun getSubscribedChannelGroups(): List<String> = internals.status().groups.toList()
+    fun unsubscribeAll()
+    fun getSubscribedChannels(): List<String>
+    fun getSubscribedChannelGroups(): List<String>
+    fun cancel()
 }
+
