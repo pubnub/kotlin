@@ -12,14 +12,14 @@ import java.util.concurrent.*
 import java.util.concurrent.atomic.AtomicReference
 import kotlin.reflect.KClass
 
-internal class SubscribeEffectEngine(
+internal class SubscribeEffectDispatcher(
     private val queuedEngine: QueuedEngine<SubscribeEffect>,
     private val longRunningEffectsTracker: LongRunningEffectsTracker,
     private val httpEffectExecutor: EffectExecutor<SubscribeHttpEffect>,
     private val retryEffectExecutor: EffectExecutor<ScheduleRetry>,
     private val newMessagesEffectExecutor: EffectExecutor<NewMessages>,
     private val newStateEffectExecutor: EffectExecutor<NewState>
-) : EffectEngine<SubscribeEffect> {
+) : EffectDispatcher<SubscribeEffect> {
 
     companion object {
         fun create(
@@ -29,7 +29,7 @@ internal class SubscribeEffectEngine(
             retryPolicy: RetryPolicy,
             incomingPayloadProcessor: IncomingPayloadProcessor,
             listenerManager: ListenerManager
-        ): SubscribeEffectEngine {
+        ): SubscribeEffectDispatcher {
             val longRunningEffectsTracker = LongRunningEffectsTracker()
             val httpEffectExecutor = HttpCallExecutor(
                 pubNub = pubnub, eventQueue = eventQueue
@@ -42,7 +42,7 @@ internal class SubscribeEffectEngine(
             )
             val newStateEffectExecutor = NewStateEffectExecutor(listenerManager)
             val queuedEngine = QueuedEngine(inputQueue = effectQueue, executorService = Executors.newFixedThreadPool(1))
-            return SubscribeEffectEngine(
+            return SubscribeEffectDispatcher(
                 longRunningEffectsTracker = longRunningEffectsTracker,
                 httpEffectExecutor = httpEffectExecutor,
                 retryEffectExecutor = retryEffectExecutor,
@@ -50,14 +50,14 @@ internal class SubscribeEffectEngine(
                 newStateEffectExecutor = newStateEffectExecutor,
                 queuedEngine = queuedEngine
             ).apply {
-                queuedEngine.run(this::execute)
+                queuedEngine.run(this::dispatch)
             }
         }
     }
 
-    private val logger = LoggerFactory.getLogger(SubscribeEffectEngine::class.java)
+    private val logger = LoggerFactory.getLogger(SubscribeEffectDispatcher::class.java)
 
-    override fun execute(effect: SubscribeEffect) {
+    override fun dispatch(effect: SubscribeEffect) {
         when (effect) {
             is CancelEffect -> longRunningEffectsTracker.cancel(effect.idToCancel)
             is SubscribeHttpEffect -> longRunningEffectsTracker.track(effect) {

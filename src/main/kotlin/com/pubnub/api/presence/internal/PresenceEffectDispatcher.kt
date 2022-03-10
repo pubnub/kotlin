@@ -7,35 +7,35 @@ import java.util.concurrent.LinkedBlockingQueue
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
 
-internal class PresenceEffectEngine private constructor(
+internal class PresenceEffectDispatcher private constructor(
     private val eventQueue: LinkedBlockingQueue<PresenceEvent>,
     private val longRunningEffectsTracker: LongRunningEffectsTracker,
     private val httpExecutor: EffectExecutor<PresenceHttpEffect>,
     private val scheduledExecutorService: ScheduledExecutorService,
     private val queuedEngine: QueuedEngine<PresenceEffect>
-) : EffectEngine<PresenceEffect> {
+) : EffectDispatcher<PresenceEffect> {
     companion object {
         fun create(
             pubnub: PubNub,
             eventQueue: LinkedBlockingQueue<PresenceEvent>,
             effectQueue: LinkedBlockingQueue<PresenceEffect>
-        ): PresenceEffectEngine {
+        ): PresenceEffectDispatcher {
             val longRunningEffectsTracker = LongRunningEffectsTracker()
             val queuedEngine = QueuedEngine(inputQueue = effectQueue, executorService = Executors.newFixedThreadPool(1))
             val httpExecutor = HttpCallExecutor(pubnub = pubnub, eventQueue = eventQueue)
-            return PresenceEffectEngine(
+            return PresenceEffectDispatcher(
                 longRunningEffectsTracker = longRunningEffectsTracker,
                 httpExecutor = httpExecutor,
                 scheduledExecutorService = Executors.newScheduledThreadPool(2),
                 eventQueue = eventQueue,
                 queuedEngine = queuedEngine
             ).apply {
-                queuedEngine.run(this::execute)
+                queuedEngine.run(this::dispatch)
             }
         }
     }
 
-    override fun execute(effect: PresenceEffect) {
+    override fun dispatch(effect: PresenceEffect) {
         when (effect) {
             is CancelEffect -> {}
             is PresenceHttpEffect -> longRunningEffectsTracker.track(effect) {

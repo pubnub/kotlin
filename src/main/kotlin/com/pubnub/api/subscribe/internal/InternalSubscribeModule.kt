@@ -4,14 +4,14 @@ import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
 import com.pubnub.api.enums.PNReconnectionPolicy
 import com.pubnub.api.managers.ListenerManager
-import com.pubnub.api.state.EffectEngine
+import com.pubnub.api.state.EffectDispatcher
 import com.pubnub.api.state.QueuedEventEngine
 import com.pubnub.api.subscribe.NewSubscribeModule
 import java.util.concurrent.LinkedBlockingQueue
 
 internal class InternalSubscribeModule(
     private val eventEngine: QueuedEventEngine<SubscribeState, SubscribeEvent, SubscribeEffect>,
-    private val effectEngine: EffectEngine<SubscribeEffect>
+    private val effectDispatcher: EffectDispatcher<SubscribeEffect>
 ) : NewSubscribeModule {
 
     companion object {
@@ -34,7 +34,7 @@ internal class InternalSubscribeModule(
                 effectQueue = effectQueue,
                 shouldRetry = retryPolicy::shouldRetry
             )
-            val effectEngine = SubscribeEffectEngine.create(
+            val effectEngine = SubscribeEffectDispatcher.create(
                 pubnub = pubnub,
                 eventQueue = eventQueue,
                 effectQueue = effectQueue,
@@ -45,7 +45,7 @@ internal class InternalSubscribeModule(
 
             return InternalSubscribeModule(
                 eventEngine = eventEngine,
-                effectEngine = effectEngine
+                effectDispatcher = effectEngine
             )
         }
     }
@@ -92,6 +92,6 @@ internal class InternalSubscribeModule(
 
     override fun cancel() {
         eventEngine.cancel()
-        effectEngine.cancel()
+        effectDispatcher.cancel()
     }
 }

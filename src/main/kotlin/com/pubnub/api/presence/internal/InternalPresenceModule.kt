@@ -2,13 +2,13 @@ package com.pubnub.api.presence.internal
 
 import com.pubnub.api.PubNub
 import com.pubnub.api.presence.NewPresenceModule
-import com.pubnub.api.state.EffectEngine
+import com.pubnub.api.state.EffectDispatcher
 import com.pubnub.api.state.QueuedEventEngine
 import java.util.concurrent.*
 
 internal class InternalPresenceModule(
     private val eventEngine: QueuedEventEngine<PresenceState, PresenceEvent, PresenceEffect>,
-    private val effectEngine: EffectEngine<PresenceEffect>
+    private val effectDispatcher: EffectDispatcher<PresenceEffect>
 ) : NewPresenceModule {
 
     companion object {
@@ -16,11 +16,11 @@ internal class InternalPresenceModule(
             val eventQueue = LinkedBlockingQueue<PresenceEvent>(100)
             val effectQueue = LinkedBlockingQueue<PresenceEffect>(100)
             val eventEngine = queuedPresenceEventEngine(eventQueue = eventQueue, effectQueue = effectQueue)
-            val effectEngine = PresenceEffectEngine.create(
+            val effectEngine = PresenceEffectDispatcher.create(
                 pubnub = pubnub, eventQueue = eventQueue, effectQueue = effectQueue
             )
             return InternalPresenceModule(
-                eventEngine = eventEngine, effectEngine = effectEngine
+                eventEngine = eventEngine, effectDispatcher = effectEngine
             )
         }
     }
@@ -41,6 +41,6 @@ internal class InternalPresenceModule(
 
     override fun cancel() {
         eventEngine.cancel()
-        effectEngine.cancel()
+        effectDispatcher.cancel()
     }
 }

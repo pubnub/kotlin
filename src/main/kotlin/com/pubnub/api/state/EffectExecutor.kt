@@ -6,8 +6,8 @@ abstract class Effect(val id: String = UUID.randomUUID().toString()) {
     abstract val child: Effect?
 }
 
-interface EffectEngine<EF : Effect> {
-    fun execute(effect: EF)
+interface EffectDispatcher<EF : Effect> {
+    fun dispatch(effect: EF)
 
     fun cancel()
 }
