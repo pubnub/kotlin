@@ -10,10 +10,7 @@ flowchart TB
       
       subgraph effectDispatcher[Subscribe Effect Dispatcher]
             direction TB
-            effect --> HttpEffectExecutor
-            effect --> RetryEffectExecutor
-            effect --> NewMessagesEffectExecutor
-            effect --> NewStateEffectExecutor
+            dispatcher -- effect --> HttpEffectExecutor & RetryEffectExecutor & NewMessagesEffectExecutor & NewStateEffectExecutor
       end
   end
 
@@ -26,9 +23,7 @@ flowchart TB
     end
     subgraph presenceDispatcher[Presence Effect Dispatcher]
       direction TB
-      presenceEffect --> PresenceHttpEffectExecutor
-      presenceEffect --> TimerEffectExecutor
-      presenceEffect --> PresenceNewStateEffectExecutor
+      presenceDisp[dispatcher] -- effect --> PresenceHttpEffectExecutor & TimerEffectExecutor & PresenceNewStateEffectExecutor
     end    
     
   end
