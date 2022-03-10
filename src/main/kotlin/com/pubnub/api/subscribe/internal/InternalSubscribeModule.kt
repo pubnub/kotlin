@@ -82,9 +82,9 @@ internal class InternalSubscribeModule(
         )
     }
 
-    override fun getSubscribedChannels(): List<String> = eventEngine.state().status.channels.toList()
+    override fun getSubscribedChannels(): List<String> = status().channels.toList()
 
-    override fun getSubscribedChannelGroups(): List<String> = eventEngine.state().status.groups.toList()
+    override fun getSubscribedChannelGroups(): List<String> = status().groups.toList()
 
     fun status(): SubscriptionStatus {
         return eventEngine.state().status

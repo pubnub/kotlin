@@ -1,6 +1,7 @@
 ```mermaid
-flowchart LR
+flowchart TB
   subgraph subscribeModule[New Subscribe Module]
+      direction TB
       subgraph eventEngine[Subscribe Event Engine]
         subgraph subscribeTransition 
             state,event1[state, event] --> state,effects1[state, effects]
@@ -8,21 +9,23 @@ flowchart LR
       end
       
       subgraph effectDispatcher[Subscribe Effect Dispatcher]
+            direction TB
             effect --> HttpEffectExecutor
             effect --> RetryEffectExecutor
             effect --> NewMessagesEffectExecutor
             effect --> NewStateEffectExecutor
       end
-
   end
 
   subgraph presenceModule[New Presence Module]
+    direction TB
     subgraph presenceEventEngine[Presence Event Engine]
       subgraph presenceTransition 
             state,event2[state, event] --> state,effects2[state, effects]
       end
     end
     subgraph presenceDispatcher[Presence Effect Dispatcher]
+      direction TB
       presenceEffect --> PresenceHttpEffectExecutor
       presenceEffect --> TimerEffectExecutor
       presenceEffect --> PresenceNewStateEffectExecutor
@@ -32,10 +35,9 @@ flowchart LR
 
   eventEngine == effect queue ==> effectDispatcher
   effectDispatcher == event queue ==> eventEngine
-  
   presenceEventEngine == effect queue ==> presenceDispatcher
   presenceDispatcher == event queue ==> presenceEventEngine
-  user[/\_O_//] -- clicks --> pubnub
+  user[\\_O_//] -- clicks --> pubnub
   pubnub == event -> event queue ==> subscribeModule
   pubnub == event -> event queue ==> presenceModule
   subscribeModule -- messages --> listenerManager

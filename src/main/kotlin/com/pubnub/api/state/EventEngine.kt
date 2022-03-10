@@ -1,6 +1,5 @@
 package com.pubnub.api.state
 
-import org.slf4j.LoggerFactory
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -29,7 +28,7 @@ class EventEngine<S, EV, EF> private constructor(
         }
     }
 
-    fun state() = currentState.get()
+    fun state(): S = currentState.get()
 
     fun transition(event: EV): Collection<EF> {
         val (ns, effects) = transition(currentState.get(), event)
