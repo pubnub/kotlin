@@ -10,8 +10,6 @@ import com.pubnub.api.subscribe.internal.ReceivingResult.ReceivingFailed
 import com.pubnub.api.subscribe.internal.ReceivingResult.ReceivingSucceeded
 import java.util.concurrent.LinkedBlockingQueue
 
-typealias SubscribeTransition = Transition<SubscribeState, SubscribeEvent, SubscribeEffect>
-
 typealias SubscribeEventEngine = EventEngine<SubscribeState, SubscribeEvent, SubscribeEffect>
 
 typealias QueuedSubscribeEventEngine = QueuedEventEngine<SubscribeState, SubscribeEvent, SubscribeEffect>
@@ -54,93 +52,3 @@ internal fun defineTransition(transitionFn: TransitionContext.(SubscribeState, S
         }
     }
 }
-
-internal fun subscribeTransition(shouldRetry: (Int) -> Boolean): SubscribeTransition =
-    defineTransition { state, event ->
-        when (state) {
-            is Handshaking -> when (event) {
-                is SubscribeIssued -> transitionTo(
-                    target = Handshaking(updatedStatus),
-                    onExit = cancel(state.call)
-                )
-                UnsubscribeAllIssued -> transitionTo(
-                    target = Unsubscribed,
-                    onExit = cancel(state.call)
-                )
-                is UnsubscribeIssued -> transitionTo(
-                    target = Handshaking(updatedStatus),
-                    onExit = cancel(state.call)
-                )
-                is HandshakeSucceeded -> transitionTo(Receiving(updatedStatus))
-                is HandshakeFailed -> if (shouldRetry(state.retryCount)) {
-                    transitionTo(state.copy(retryCount = state.retryCount + 1))
-                } else {
-                    transitionTo(HandshakingFailed(updatedStatus))
-                }
-                else -> noTransition()
-            }
-            is Receiving -> {
-                when (event) {
-                    is SubscribeIssued -> transitionTo(
-                        target = Receiving(updatedStatus),
-                        onExit = cancel(state.call)
-                    )
-                    UnsubscribeAllIssued -> transitionTo(
-                        target = Unsubscribed,
-                        onExit = cancel(state.call)
-                    )
-                    is UnsubscribeIssued -> transitionTo(
-                        target = Receiving(updatedStatus),
-                        onExit = cancel(state.call)
-                    )
-
-                    is ReceivingFailed -> transitionTo(Reconnecting(updatedStatus))
-                    is ReceivingSucceeded -> transitionTo(
-                        target = Receiving(updatedStatus),
-                        onExit = NewMessages(event.subscribeEnvelope.messages)
-                    )
-                    else -> noTransition()
-                }
-            }
-            Unsubscribed -> when (event) {
-                is SubscribeIssued -> transitionTo(Handshaking(updatedStatus))
-                else -> noTransition()
-            }
-            is HandshakingFailed -> when (event) {
-                is SubscribeIssued -> transitionTo(Handshaking(updatedStatus))
-                UnsubscribeAllIssued -> transitionTo(Unsubscribed)
-                is UnsubscribeIssued -> transitionTo(Handshaking(updatedStatus))
-                else -> noTransition()
-            }
-            is Reconnecting ->
-                when (event) {
-                    is SubscribeIssued -> transitionTo(
-                        target = Reconnecting(updatedStatus),
-                        onExit = cancel(state.call)
-                    )
-                    UnsubscribeAllIssued -> transitionTo(
-                        target = Unsubscribed,
-                        onExit = cancel(state.call)
-                    )
-                    is UnsubscribeIssued -> transitionTo(
-                        target = Reconnecting(updatedStatus),
-                        onExit = cancel(state.call)
-                    )
-
-                    is ReceivingSucceeded -> transitionTo(
-                        target = Receiving(updatedStatus),
-                        onExit = NewMessages(event.subscribeEnvelope.messages)
-                    )
-                    is ReceivingFailed -> if (shouldRetry(state.retryCount)) {
-                        transitionTo(state.copy(retryCount = state.retryCount + 1))
-                    } else {
-                        transitionTo(ReconnectingFailed(updatedStatus))
-                    }
-                    else -> noTransition()
-
-                }
-            is ReconnectingFailed -> when (event) {
-                else -> noTransition() //TODO figure out transitions out of it
-            }
-        }
-    }
