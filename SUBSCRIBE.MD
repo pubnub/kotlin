@@ -1,43 +1,45 @@
+
 ```mermaid
 flowchart TB
-  subgraph subscribeModule[New Subscribe Module]
-      direction TB
-      subgraph eventEngine[Subscribe Event Engine]
-        subgraph subscribeTransition 
-            state,event1[state, event] --> state,effects1[state, effects]
-        end
-      end
-      
-      subgraph effectDispatcher[Subscribe Effect Dispatcher]
-            direction TB
-            dispatcher -- effect --> HttpEffectExecutor & RetryEffectExecutor & NewMessagesEffectExecutor & NewStateEffectExecutor
-      end
-  end
+  pubnub(PubNub)
+  listenerManager(ListenerManager)
+  subgraph subModule[Module]
 
-  subgraph presenceModule[New Presence Module]
-    direction TB
-    subgraph presenceEventEngine[Presence Event Engine]
-      subgraph presenceTransition 
-            state,event2[state, event] --> state,effects2[state, effects]
-      end
+    newSubscribeModule[New Subscribe Module]
+    subgraph subEventEngine[Event Engine]
+      subscribeEventEngine[Subscribe Event Engine]
+      subscribeTransition[Transition Function]
     end
-    subgraph presenceDispatcher[Presence Effect Dispatcher]
-      direction TB
-      presenceDisp[dispatcher] -- effect --> PresenceHttpEffectExecutor & TimerEffectExecutor & PresenceNewStateEffectExecutor
-    end    
-    
+    subscribeEventQueue[Event Queue]
+    subscribeEffectQueue[Effect Queue]
+    subgraph subEffectDispatcher[Effect Dispatcher]
+      subscribeEffectDispatcher[Subscribe Effect Dispatcher]
+      *Executor
+    end
   end
 
-  eventEngine == effect queue ==> effectDispatcher
-  effectDispatcher == event queue ==> eventEngine
-  presenceEventEngine == effect queue ==> presenceDispatcher
-  presenceDispatcher == event queue ==> presenceEventEngine
-  user[\\_O_//] -- clicks --> pubnub
-  pubnub == event -> event queue ==> subscribeModule
-  pubnub == event -> event queue ==> presenceModule
-  subscribeModule -- messages --> listenerManager
-  subscribeModule -- subscribe status --> listenerManager
+  subgraph presModule[Module]
+    direction TB
+    newPresenceModule[New Presence Module]
+    presenceEventQueue[Event Queue]
+    subgraph presEventEngine[Event Engine]
+      presenceEventEngine[Presence Event Engine]
+    end
+  end
+  eventTranslator
 
-  subscribeModule -. event -> event queue .-> presenceModule
+  
+  pubnub -- method calls --> newSubscribeModule -- event --> subscribeEventQueue 
+   subscribeEventEngine -- state,event --> subscribeTransition -- state --> subscribeEventEngine 
+  pubnub -- method calls --> newPresenceModule
+  newPresenceModule -- event --> presenceEventQueue
+  subscribeTransition -- effect --> subscribeEffectQueue -- effect --> subscribeEffectDispatcher -- effect --> *Executor
+  *Executor -- maybe event? --> subscribeEventQueue
+  *Executor -- messages, subscribe status, etc. --> listenerManager
+  subscribeEventQueue -- event --> subscribeEventEngine & eventTranslator
+  eventTranslator -- event --> presenceEventQueue
+  presenceEventQueue -- event --> presenceEventEngine
+  
 ```
+
 
