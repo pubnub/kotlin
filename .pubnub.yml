@@ -76,7 +76,7 @@ sdks:
                   min-version: 2.9.0
                   location: Shipped within library
                   license: Apache License, Version 2.0
-                  license-url: https://github.com/square/retrofit/blob/parent-2.9.0/LICENSE.txt
+                  license-url: https://github.com/square/retrofit/blob/2.9.0/LICENSE.txt
                   is-required: Required
                 -
                   name: okhttp
@@ -90,7 +90,7 @@ sdks:
                   min-version: 2.9.0
                   location: Shipped within library
                   license: Apache License, Version 2.0
-                  license-url: https://github.com/square/retrofit/blob/parent-2.9.0/LICENSE.txt
+                  license-url: https://github.com/square/retrofit/blob/2.9.0/LICENSE.txt
                   is-required: Required
                 -
                   name: gson
@@ -188,7 +188,7 @@ sdks:
                   min-version: 2.9.0
                   location: https://repo.maven.apache.org/maven2/com/squareup/retrofit2/retrofit/2.9.0/retrofit-2.9.0.jar
                   license: Apache License, Version 2.0
-                  license-url: https://github.com/square/retrofit/blob/parent-2.9.0/LICENSE.txt
+                  license-url: https://github.com/square/retrofit/blob/2.9.0/LICENSE.txt
                   is-required: Required
                 -
                   name: okhttp
@@ -202,7 +202,7 @@ sdks:
                   min-version: 2.9.0
                   location: https://repo.maven.apache.org/maven2/com/squareup/retrofit2/converter-gson/2.9.0/converter-gson-2.9.0.jar
                   license: Apache License, Version 2.0
-                  license-url: https://github.com/square/retrofit/blob/parent-2.9.0/LICENSE.txt
+                  license-url: https://github.com/square/retrofit/blob/2.9.0/LICENSE.txt
                   is-required: Required
                 -
                   name: gson
