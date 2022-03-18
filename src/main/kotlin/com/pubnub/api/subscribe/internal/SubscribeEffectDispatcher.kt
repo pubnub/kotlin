@@ -7,25 +7,26 @@ import com.pubnub.api.managers.ListenerManager
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.server.SubscribeMessage
 import com.pubnub.api.state.*
+import com.pubnub.api.state.internal.QueuedEngine
 import org.slf4j.LoggerFactory
 import java.util.concurrent.*
 import java.util.concurrent.atomic.AtomicReference
 import kotlin.reflect.KClass
 
 internal class SubscribeEffectDispatcher(
-    private val queuedEngine: QueuedEngine<SubscribeEffect>,
+    private val queuedEngine: QueuedEngine<SubscribeEffectInvocation>,
     private val longRunningEffectsTracker: LongRunningEffectsTracker,
-    private val httpEffectExecutor: EffectExecutor<SubscribeHttpEffect>,
+    private val httpEffectExecutor: EffectExecutor<SubscribeHttpEffectInvocation>,
     private val retryEffectExecutor: EffectExecutor<ScheduleRetry>,
     private val newMessagesEffectExecutor: EffectExecutor<NewMessages>,
     private val newStateEffectExecutor: EffectExecutor<NewState>
-) : EffectDispatcher<SubscribeEffect> {
+) : EffectDispatcher<SubscribeEffectInvocation> {
 
     companion object {
         fun create(
             pubnub: PubNub,
             eventQueue: LinkedBlockingQueue<SubscribeEvent>,
-            effectQueue: LinkedBlockingQueue<SubscribeEffect>,
+            effectQueue: LinkedBlockingQueue<SubscribeEffectInvocation>,
             retryPolicy: RetryPolicy,
             incomingPayloadProcessor: IncomingPayloadProcessor,
             listenerManager: ListenerManager
@@ -57,10 +58,10 @@ internal class SubscribeEffectDispatcher(
 
     private val logger = LoggerFactory.getLogger(SubscribeEffectDispatcher::class.java)
 
-    override fun dispatch(effect: SubscribeEffect) {
+    override fun dispatch(effect: SubscribeEffectInvocation) {
         when (effect) {
-            is CancelEffect -> longRunningEffectsTracker.cancel(effect.idToCancel)
-            is SubscribeHttpEffect -> longRunningEffectsTracker.track(effect) {
+            is CancelEffectInvocation -> longRunningEffectsTracker.cancel(effect.idToCancel)
+            is SubscribeHttpEffectInvocation -> longRunningEffectsTracker.track(effect) {
                 httpEffectExecutor.execute(
                     effect, longRunningEffectDone = longRunningEffectsTracker::stopTracking
                 )
@@ -139,11 +140,11 @@ internal class NewStateEffectExecutor(private val listenerManager: ListenerManag
 
 internal class HttpCallExecutor(
     private val pubNub: PubNub, private val eventQueue: LinkedBlockingQueue<SubscribeEvent>
-) : EffectExecutor<SubscribeHttpEffect> {
+) : EffectExecutor<SubscribeHttpEffectInvocation> {
 
-    override fun execute(effect: SubscribeHttpEffect, longRunningEffectDone: (String) -> Unit): CancelFn {
+    override fun execute(effect: SubscribeHttpEffectInvocation, longRunningEffectDone: (String) -> Unit): CancelFn {
         return when (effect) {
-            is SubscribeHttpEffect.HandshakeHttpCallEffect -> {
+            is SubscribeHttpEffectInvocation.HandshakeHttpCallEffectInvocation -> {
                 pubNub.handshake(
                     channels = effect.subscriptionStatus.channels.toList(),
                     channelGroups = effect.subscriptionStatus.groups.toList()
@@ -163,7 +164,7 @@ internal class HttpCallExecutor(
                     )
                 }.let { { it.silentCancel() } }
             }
-            is SubscribeHttpEffect.ReceiveMessagesHttpCallEffect -> pubNub.receiveMessages(
+            is SubscribeHttpEffectInvocation.ReceiveMessagesHttpCallEffectInvocation -> pubNub.receiveMessages(
                 channels = effect.subscriptionStatus.channels.toList(),
                 channelGroups = effect.subscriptionStatus.groups.toList(),
                 timetoken = effect.subscriptionStatus.cursor!!.timetoken, //TODO figure out how to drop !! here
@@ -183,7 +184,7 @@ internal class HttpCallExecutor(
 }
 
 internal class RetryEffectExecutor(
-    private val effectQueue: LinkedBlockingQueue<SubscribeEffect>,
+    private val effectQueue: LinkedBlockingQueue<SubscribeEffectInvocation>,
     private val executor: ScheduledExecutorService = Executors.newScheduledThreadPool(3),
     private val retryPolicy: RetryPolicy = NoPolicy
 ) : EffectExecutor<ScheduleRetry> {

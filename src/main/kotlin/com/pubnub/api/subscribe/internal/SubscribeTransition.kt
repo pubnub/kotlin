@@ -2,7 +2,7 @@ package com.pubnub.api.subscribe.internal
 
 import com.pubnub.api.state.Transition
 
-typealias SubscribeTransition = Transition<SubscribeState, SubscribeEvent, SubscribeEffect>
+typealias SubscribeTransition = Transition<SubscribeState, SubscribeEvent, SubscribeEffectInvocation>
 
 internal fun subscribeTransition(shouldRetry: (Int) -> Boolean): SubscribeTransition =
     defineTransition { state, event ->

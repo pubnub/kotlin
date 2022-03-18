@@ -3,15 +3,27 @@ package com.pubnub.api.subscribe.internal
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
 import com.pubnub.api.enums.PNReconnectionPolicy
-import com.pubnub.api.managers.ListenerManager
-import com.pubnub.api.state.EffectDispatcher
-import com.pubnub.api.state.QueuedEventEngine
+import com.pubnub.api.state.internal.IntModule
 import com.pubnub.api.subscribe.NewSubscribeModule
 import java.util.concurrent.LinkedBlockingQueue
 
+
 internal class InternalSubscribeModule(
-    private val eventEngine: QueuedEventEngine<SubscribeState, SubscribeEvent, SubscribeEffect>,
-    private val effectDispatcher: EffectDispatcher<SubscribeEffect>
+    pubnub: PubNub,
+    engineAndEffects: Pair<SubscribeEventEngine, List<SubscribeEffectInvocation>> = subscribeEventEngine(
+        createRetryPolicy(pubnub.configuration)::shouldRetry
+    ),
+    effectDispatcher: SubscribeEffectDispatcher,
+    private val eventQueue: LinkedBlockingQueue<SubscribeEvent> = LinkedBlockingQueue(100),
+    private val effectQueue: LinkedBlockingQueue<SubscribeEffectInvocation> = LinkedBlockingQueue<SubscribeEffectInvocation>(
+        100
+    ).apply { engineAndEffects.second.forEach(::put) },
+    val moduleInternals: IntModule<SubscribeState, SubscribeEvent, SubscribeEffectInvocation> = IntModule(
+        engine = engineAndEffects.first,
+        eventQueue = eventQueue,
+        effectDispatcher = effectDispatcher,
+        effectQueue = effectQueue
+    )
 ) : NewSubscribeModule {
 
     companion object {
@@ -19,34 +31,6 @@ internal class InternalSubscribeModule(
             PNReconnectionPolicy.NONE -> NoPolicy
             PNReconnectionPolicy.LINEAR -> LinearPolicy(configuration.maximumReconnectionRetries)
             PNReconnectionPolicy.EXPONENTIAL -> ExponentialPolicy(configuration.maximumReconnectionRetries)
-        }
-
-        fun create(
-            pubnub: PubNub,
-            incomingPayloadProcessor: IncomingPayloadProcessor,
-            listenerManager: ListenerManager
-        ): NewSubscribeModule {
-            val eventQueue = LinkedBlockingQueue<SubscribeEvent>(100)
-            val effectQueue = LinkedBlockingQueue<SubscribeEffect>(100)
-            val retryPolicy: RetryPolicy = createRetryPolicy(pubnub.configuration)
-            val eventEngine = queuedSubscribeEventEngine(
-                eventQueue = eventQueue,
-                effectQueue = effectQueue,
-                shouldRetry = retryPolicy::shouldRetry
-            )
-            val effectEngine = SubscribeEffectDispatcher.create(
-                pubnub = pubnub,
-                eventQueue = eventQueue,
-                effectQueue = effectQueue,
-                retryPolicy = retryPolicy,
-                incomingPayloadProcessor = incomingPayloadProcessor,
-                listenerManager = listenerManager
-            )
-
-            return InternalSubscribeModule(
-                eventEngine = eventEngine,
-                effectDispatcher = effectEngine
-            )
         }
     }
 
@@ -56,7 +40,7 @@ internal class InternalSubscribeModule(
         withPresence: Boolean,
         withTimetoken: Long
     ) {
-        eventEngine.handle(
+        eventQueue.put(
             Commands.SubscribeIssued(
                 channels = channels,
                 groups = channelGroups
@@ -68,7 +52,7 @@ internal class InternalSubscribeModule(
         channels: List<String>,
         channelGroups: List<String>
     ) {
-        eventEngine.handle(
+        eventQueue.put(
             Commands.UnsubscribeIssued(
                 channels = channels,
                 groups = channelGroups
@@ -77,7 +61,7 @@ internal class InternalSubscribeModule(
     }
 
     override fun unsubscribeAll() {
-        eventEngine.handle(
+        eventQueue.put(
             Commands.UnsubscribeAllIssued
         )
     }
@@ -87,11 +71,10 @@ internal class InternalSubscribeModule(
     override fun getSubscribedChannelGroups(): List<String> = status().groups.toList()
 
     fun status(): SubscriptionStatus {
-        return eventEngine.state().status
+        return moduleInternals.currentState().status
     }
 
     override fun cancel() {
-        eventEngine.cancel()
-        effectDispatcher.cancel()
+        moduleInternals.cancel()
     }
 }

@@ -1,25 +1,25 @@
 package com.pubnub.api.presence.internal
 
-import com.pubnub.api.state.Effect
+import com.pubnub.api.state.EffectInvocation
 
-sealed class PresenceEffect(override val child: PresenceEffect? = null) : Effect()
+sealed class PresenceEffectInvocation(override val child: PresenceEffectInvocation? = null) : EffectInvocation()
 
-sealed class PresenceHttpEffect : PresenceEffect()
+sealed class PresenceHttpEffectInvocation : PresenceEffectInvocation()
 
-data class IAmHereEffect(
+data class IAmHereEffectInvocation(
     val channels: Collection<String>,
     val channelGroups: Collection<String>
-) : PresenceHttpEffect()
+) : PresenceHttpEffectInvocation()
 
-data class IAmAwayEffect(
+data class IAmAwayEffectInvocation(
     val channels: Collection<String>,
     val channelGroups: Collection<String>
-) : PresenceHttpEffect()
+) : PresenceHttpEffectInvocation()
 
-data class TimerEffect(
+data class TimerEffectInvocation(
     val event: PresenceEvent
-) : PresenceEffect()
+) : PresenceEffectInvocation()
 
-data class NewState(val name: String) : PresenceEffect()
+data class NewState(val name: String) : PresenceEffectInvocation()
 
-data class CancelEffect(val idToCancel: String) : PresenceEffect()
+data class CancelEffectInvocation(val idToCancel: String) : PresenceEffectInvocation()

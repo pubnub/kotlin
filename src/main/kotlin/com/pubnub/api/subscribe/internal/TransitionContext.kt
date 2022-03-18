@@ -42,31 +42,31 @@ internal operator fun SubscriptionStatus.plus(event: SubscribeEvent): Subscripti
     }
 }
 
-internal fun TransitionContext.noTransition(): Pair<SubscribeState, Collection<SubscribeEffect>> {
+internal fun TransitionContext.noTransition(): Pair<SubscribeState, Collection<SubscribeEffectInvocation>> {
     return state to listOf()
 }
 
 internal fun TransitionContext.transitionTo(
     target: SubscribeState
-): Pair<SubscribeState, Collection<SubscribeEffect>> {
+): Pair<SubscribeState, Collection<SubscribeEffectInvocation>> {
     return target to listOf(NewState(target::class.simpleName!!, target.status))
 }
 
 internal fun TransitionContext.transitionTo(
     target: SubscribeState,
-    onExit: SubscribeEffect
-): Pair<SubscribeState, Collection<SubscribeEffect>> {
+    onExit: SubscribeEffectInvocation
+): Pair<SubscribeState, Collection<SubscribeEffectInvocation>> {
     return target to listOf(NewState(target::class.simpleName!!, target.status), onExit)
 }
 
 internal fun TransitionContext.transitionTo(
     target: SubscribeState,
-    onExit: Collection<SubscribeEffect> = listOf()
-): Pair<SubscribeState, Collection<SubscribeEffect>> {
+    onExit: Collection<SubscribeEffectInvocation> = listOf()
+): Pair<SubscribeState, Collection<SubscribeEffectInvocation>> {
     return target to listOf(NewState(target::class.simpleName!!, target.status)) + onExit
 }
 
-internal fun TransitionContext.cancel(vararg effects: SubscribeEffect): Collection<CancelEffect> {
-    return effects.flatMap { (it.child?.let { child -> cancel(child) } ?: listOf()) + listOf(CancelEffect(it.id)) }
+internal fun TransitionContext.cancel(vararg effects: SubscribeEffectInvocation): Collection<CancelEffectInvocation> {
+    return effects.flatMap { (it.child?.let { child -> cancel(child) } ?: listOf()) + listOf(CancelEffectInvocation(it.id)) }
 }
 

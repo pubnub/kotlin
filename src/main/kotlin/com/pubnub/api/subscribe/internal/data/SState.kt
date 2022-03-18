@@ -178,12 +178,12 @@ fun Context.toStatus(): SubscriptionStatus {
     cursor = cursor)
 }
 
-fun Interpreter.fitInDataDriven(event: SubscribeEvent): List<SubscribeEffect> {
+fun Interpreter.fitInDataDriven(event: SubscribeEvent): List<SubscribeEffectInvocation> {
     val (context, uncompatibleEffects) = handle(event)
     return uncompatibleEffects.map {
         when (it) {
-            SendHandshake -> SubscribeHttpEffect.HandshakeHttpCallEffect(subscriptionStatus = context.toStatus())
-            SendReceiveMessages -> SubscribeHttpEffect.ReceiveMessagesHttpCallEffect(subscriptionStatus = context.toStatus())
+            SendHandshake -> SubscribeHttpEffectInvocation.HandshakeHttpCallEffectInvocation(subscriptionStatus = context.toStatus())
+            SendReceiveMessages -> SubscribeHttpEffectInvocation.ReceiveMessagesHttpCallEffectInvocation(subscriptionStatus = context.toStatus())
             EmitEvents -> if (event is ReceivingResult.ReceivingSucceeded) {
                 NewMessages(event.subscribeEnvelope.messages)
             } else {

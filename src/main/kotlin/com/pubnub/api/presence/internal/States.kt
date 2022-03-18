@@ -2,10 +2,10 @@ package com.pubnub.api.presence.internal
 
 import com.pubnub.api.state.State
 
-sealed class PresenceState : State<PresenceEffect> {
+sealed class PresenceState : State<PresenceEffectInvocation> {
     abstract val status: PresenceStatus
-    override fun onEntry(): Collection<PresenceEffect> = listOf()
-    override fun onExit(): Collection<PresenceEffect> = listOf()
+    override fun onEntry(): Collection<PresenceEffectInvocation> = listOf()
+    override fun onExit(): Collection<PresenceEffectInvocation> = listOf()
 }
 
 object Unsubscribed : PresenceState() {
@@ -14,14 +14,14 @@ object Unsubscribed : PresenceState() {
 
 data class Waiting(
     override val status: PresenceStatus,
-    val timer: TimerEffect = TimerEffect(HeartbeatIntervalOver),
+    val timer: TimerEffectInvocation = TimerEffectInvocation(HeartbeatIntervalOver),
 ) : PresenceState() {
-    override fun onEntry(): Collection<PresenceEffect> = listOf(timer)
+    override fun onEntry(): Collection<PresenceEffectInvocation> = listOf(timer)
 }
 
 data class Notify(
     override val status: PresenceStatus,
-    val call: IAmHereEffect = IAmHereEffect(channels = status.channels, channelGroups = status.groups)
+    val call: IAmHereEffectInvocation = IAmHereEffectInvocation(channels = status.channels, channelGroups = status.groups)
 ) : PresenceState() {
-    override fun onEntry(): Collection<PresenceEffect> = listOf(call)
+    override fun onEntry(): Collection<PresenceEffectInvocation> = listOf(call)
 }

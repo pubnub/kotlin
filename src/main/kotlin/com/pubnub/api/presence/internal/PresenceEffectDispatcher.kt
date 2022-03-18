@@ -2,6 +2,7 @@ package com.pubnub.api.presence.internal
 
 import com.pubnub.api.PubNub
 import com.pubnub.api.state.*
+import com.pubnub.api.state.internal.QueuedEngine
 import java.util.concurrent.Executors
 import java.util.concurrent.LinkedBlockingQueue
 import java.util.concurrent.ScheduledExecutorService
@@ -10,15 +11,15 @@ import java.util.concurrent.TimeUnit
 internal class PresenceEffectDispatcher private constructor(
     private val eventQueue: LinkedBlockingQueue<PresenceEvent>,
     private val longRunningEffectsTracker: LongRunningEffectsTracker,
-    private val httpExecutor: EffectExecutor<PresenceHttpEffect>,
+    private val httpExecutor: EffectExecutor<PresenceHttpEffectInvocation>,
     private val scheduledExecutorService: ScheduledExecutorService,
-    private val queuedEngine: QueuedEngine<PresenceEffect>
-) : EffectDispatcher<PresenceEffect> {
+    private val queuedEngine: QueuedEngine<PresenceEffectInvocation>
+) : EffectDispatcher<PresenceEffectInvocation> {
     companion object {
         fun create(
             pubnub: PubNub,
             eventQueue: LinkedBlockingQueue<PresenceEvent>,
-            effectQueue: LinkedBlockingQueue<PresenceEffect>
+            effectQueue: LinkedBlockingQueue<PresenceEffectInvocation>
         ): PresenceEffectDispatcher {
             val longRunningEffectsTracker = LongRunningEffectsTracker()
             val queuedEngine = QueuedEngine(inputQueue = effectQueue, executorService = Executors.newFixedThreadPool(1))
@@ -35,14 +36,14 @@ internal class PresenceEffectDispatcher private constructor(
         }
     }
 
-    override fun dispatch(effect: PresenceEffect) {
+    override fun dispatch(effect: PresenceEffectInvocation) {
         when (effect) {
-            is CancelEffect -> {}
-            is PresenceHttpEffect -> longRunningEffectsTracker.track(effect) {
+            is CancelEffectInvocation -> {}
+            is PresenceHttpEffectInvocation -> longRunningEffectsTracker.track(effect) {
                 httpExecutor.execute(effect)
             }
             is NewState -> {}
-            is TimerEffect -> longRunningEffectsTracker.track(effect) {
+            is TimerEffectInvocation -> longRunningEffectsTracker.track(effect) {
                 scheduledExecutorService.schedule({
                     eventQueue.put(effect.event)
                 }, 1000, TimeUnit.MILLISECONDS).let {
@@ -61,11 +62,11 @@ internal class PresenceEffectDispatcher private constructor(
 
 internal class HttpCallExecutor(
     private val pubnub: PubNub, private val eventQueue: LinkedBlockingQueue<PresenceEvent>
-) : EffectExecutor<PresenceHttpEffect> {
+) : EffectExecutor<PresenceHttpEffectInvocation> {
 
-    override fun execute(effect: PresenceHttpEffect, longRunningEffectDone: (String) -> Unit): CancelFn {
+    override fun execute(effect: PresenceHttpEffectInvocation, longRunningEffectDone: (String) -> Unit): CancelFn {
         return when (effect) {
-            is IAmAwayEffect -> pubnub.iAmAway(
+            is IAmAwayEffectInvocation -> pubnub.iAmAway(
                 channels = effect.channels.toList(), channelGroups = effect.channelGroups.toList()
             ) { _, s ->
                 longRunningEffectDone(effect.id)
@@ -78,7 +79,7 @@ internal class HttpCallExecutor(
                 )
             }.let { { it.silentCancel() } }
 
-            is IAmHereEffect -> pubnub.iAmHere(
+            is IAmHereEffectInvocation -> pubnub.iAmHere(
                 channels = effect.channels.toList(), channelGroups = effect.channelGroups.toList()
             ) { _, s ->
                 longRunningEffectDone(effect.id)

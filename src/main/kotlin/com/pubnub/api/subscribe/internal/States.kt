@@ -2,10 +2,10 @@ package com.pubnub.api.subscribe.internal
 
 import com.pubnub.api.state.State
 
-sealed class SubscribeState : State<SubscribeEffect> {
+sealed class SubscribeState : State<SubscribeEffectInvocation> {
     abstract val status: SubscriptionStatus
-    override fun onEntry(): Collection<SubscribeEffect> = listOf()
-    override fun onExit(): Collection<SubscribeEffect> = listOf()
+    override fun onEntry(): Collection<SubscribeEffectInvocation> = listOf()
+    override fun onExit(): Collection<SubscribeEffectInvocation> = listOf()
 }
 
 object Unsubscribed : SubscribeState() {
@@ -14,11 +14,11 @@ object Unsubscribed : SubscribeState() {
 
 data class Receiving(
     override val status: SubscriptionStatus,
-    val call: SubscribeHttpEffect.ReceiveMessagesHttpCallEffect = SubscribeHttpEffect.ReceiveMessagesHttpCallEffect(
+    val call: SubscribeHttpEffectInvocation.ReceiveMessagesHttpCallEffectInvocation = SubscribeHttpEffectInvocation.ReceiveMessagesHttpCallEffectInvocation(
         status
     ),
 ) : SubscribeState() {
-    override fun onEntry(): Collection<SubscribeEffect> = listOf(call)
+    override fun onEntry(): Collection<SubscribeEffectInvocation> = listOf(call)
 }
 
 data class Handshaking(
@@ -26,12 +26,12 @@ data class Handshaking(
     val retryCount: Int = 0
 ) : SubscribeState() {
     val call: ScheduleRetry = ScheduleRetry(
-        retryableEffect = SubscribeHttpEffect.HandshakeHttpCallEffect(
+        retryableEffect = SubscribeHttpEffectInvocation.HandshakeHttpCallEffectInvocation(
             status
         ), retryCount = retryCount
     )
 
-    override fun onEntry(): Collection<SubscribeEffect> = listOf(call)
+    override fun onEntry(): Collection<SubscribeEffectInvocation> = listOf(call)
 }
 
 data class Reconnecting(
@@ -39,12 +39,12 @@ data class Reconnecting(
     val retryCount: Int = 1
 ) : SubscribeState() {
     val call: ScheduleRetry = ScheduleRetry(
-        retryableEffect = SubscribeHttpEffect.ReceiveMessagesHttpCallEffect(
+        retryableEffect = SubscribeHttpEffectInvocation.ReceiveMessagesHttpCallEffectInvocation(
             status
         ), retryCount = retryCount
     )
 
-    override fun onEntry(): Collection<SubscribeEffect> = listOf(call)
+    override fun onEntry(): Collection<SubscribeEffectInvocation> = listOf(call)
 }
 
 data class ReconnectingFailed(

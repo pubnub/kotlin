@@ -1,24 +1,24 @@
 package com.pubnub.api.subscribe.internal
 
 import com.pubnub.api.models.server.SubscribeMessage
-import com.pubnub.api.state.Effect
+import com.pubnub.api.state.EffectInvocation
 
-sealed class SubscribeEffect(override val child: SubscribeEffect? = null) : Effect()
+sealed class SubscribeEffectInvocation(override val child: SubscribeEffectInvocation? = null) : EffectInvocation()
 
-data class NewMessages(val messages: List<SubscribeMessage>) : SubscribeEffect()
+data class NewMessages(val messages: List<SubscribeMessage>) : SubscribeEffectInvocation()
 
-data class NewState(val name: String, val status: SubscriptionStatus) : SubscribeEffect()
+data class NewState(val name: String, val status: SubscriptionStatus) : SubscribeEffectInvocation()
 
-sealed class SubscribeHttpEffect : SubscribeEffect() {
-    data class ReceiveMessagesHttpCallEffect(
+sealed class SubscribeHttpEffectInvocation : SubscribeEffectInvocation() {
+    data class ReceiveMessagesHttpCallEffectInvocation(
         val subscriptionStatus: SubscriptionStatus
-    ) : SubscribeHttpEffect()
+    ) : SubscribeHttpEffectInvocation()
 
-    data class HandshakeHttpCallEffect(
+    data class HandshakeHttpCallEffectInvocation(
         val subscriptionStatus: SubscriptionStatus
-    ) : SubscribeHttpEffect()
+    ) : SubscribeHttpEffectInvocation()
 }
 
-data class CancelEffect(val idToCancel: String) : SubscribeEffect()
+data class CancelEffectInvocation(val idToCancel: String) : SubscribeEffectInvocation()
 
-data class ScheduleRetry(val retryableEffect: SubscribeHttpEffect, val retryCount: Int) : SubscribeEffect(retryableEffect)
+data class ScheduleRetry(val retryableEffect: SubscribeHttpEffectInvocation, val retryCount: Int) : SubscribeEffectInvocation(retryableEffect)

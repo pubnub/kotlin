@@ -26,32 +26,32 @@ internal operator fun PresenceStatus.plus(event: PresenceEvent): PresenceStatus 
 }
 
 
-internal fun TransitionContext.noTransition(): Pair<PresenceState, Collection<PresenceEffect>> {
+internal fun TransitionContext.noTransition(): Pair<PresenceState, Collection<PresenceEffectInvocation>> {
     return state to listOf()
 }
 
 internal fun TransitionContext.transitionTo(
     target: PresenceState
-): Pair<PresenceState, Collection<PresenceEffect>> {
+): Pair<PresenceState, Collection<PresenceEffectInvocation>> {
     return target to listOf(NewState(target::class.simpleName!!))
 }
 
 internal fun TransitionContext.transitionTo(
     target: PresenceState,
-    onExit: PresenceEffect
-): Pair<PresenceState, Collection<PresenceEffect>> {
+    onExit: PresenceEffectInvocation
+): Pair<PresenceState, Collection<PresenceEffectInvocation>> {
     return target to listOf(NewState(target::class.simpleName!!), onExit)
 }
 
 internal fun TransitionContext.transitionTo(
     target: PresenceState,
-    onExit: Collection<PresenceEffect> = listOf()
-): Pair<PresenceState, Collection<PresenceEffect>> {
+    onExit: Collection<PresenceEffectInvocation> = listOf()
+): Pair<PresenceState, Collection<PresenceEffectInvocation>> {
     return target to listOf(NewState(target::class.simpleName!!)) + onExit
 }
 
-internal fun TransitionContext.cancel(vararg effects: PresenceEffect): Collection<CancelEffect> {
-    return effects.flatMap { (it.child?.let { child -> cancel(child) } ?: listOf()) + listOf(CancelEffect(it.id)) }
+internal fun TransitionContext.cancel(vararg effects: PresenceEffectInvocation): Collection<CancelEffectInvocation> {
+    return effects.flatMap { (it.child?.let { child -> cancel(child) } ?: listOf()) + listOf(CancelEffectInvocation(it.id)) }
 }
 
 

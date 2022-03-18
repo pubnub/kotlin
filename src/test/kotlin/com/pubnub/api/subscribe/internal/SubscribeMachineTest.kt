@@ -54,7 +54,7 @@ class SubscribeMachineTest {
 
 
         val effects =
-            events.fold<SubscribeEvent, Pair<SubscribeState, Collection<SubscribeEffect>>>(Unsubscribed to listOf()) { acc, ev ->
+            events.fold<SubscribeEvent, Pair<SubscribeState, Collection<SubscribeEffectInvocation>>>(Unsubscribed to listOf()) { acc, ev ->
                 transition(acc.first, ev).let { it.first to acc.second + it.second }
             }.second
 

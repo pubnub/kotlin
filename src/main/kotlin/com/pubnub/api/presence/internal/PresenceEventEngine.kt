@@ -1,17 +1,16 @@
 package com.pubnub.api.presence.internal
 
-import com.pubnub.api.state.QueuedEventEngine
-import com.pubnub.api.state.EventEngine
-import com.pubnub.api.state.Transition
+import com.pubnub.api.state.internal.QueuedEventEngine
+import com.pubnub.api.state.internal.EventEngine
 import java.util.concurrent.LinkedBlockingQueue
 
 
 
-typealias PresenceStateMachine = EventEngine<PresenceState, PresenceEvent, PresenceEffect>
+typealias PresenceStateMachine = EventEngine<PresenceState, PresenceEvent, PresenceEffectInvocation>
 
-typealias QueuedPresenceEventEngine = QueuedEventEngine<PresenceState, PresenceEvent, PresenceEffect>
+typealias QueuedPresenceEventEngine = QueuedEventEngine<PresenceState, PresenceEvent, PresenceEffectInvocation>
 
-fun presenceEventEngine(): Pair<PresenceStateMachine, Collection<PresenceEffect>> {
+fun presenceEventEngine(): Pair<PresenceStateMachine, Collection<PresenceEffectInvocation>> {
     return EventEngine.create(
         initialState = Unsubscribed,
         transition = presenceTransition(),
@@ -21,7 +20,7 @@ fun presenceEventEngine(): Pair<PresenceStateMachine, Collection<PresenceEffect>
 
 fun queuedPresenceEventEngine(
     eventQueue: LinkedBlockingQueue<PresenceEvent>,
-    effectQueue: LinkedBlockingQueue<PresenceEffect>
+    effectQueue: LinkedBlockingQueue<PresenceEffectInvocation>
 ): QueuedPresenceEventEngine {
     val (stateMachine, initialEffects) = presenceEventEngine()
     return QueuedPresenceEventEngine.create(
@@ -32,7 +31,7 @@ fun queuedPresenceEventEngine(
     )
 }
 
-internal fun defineTransition(transitionFn: TransitionContext.(PresenceState, PresenceEvent) -> Pair<PresenceState, Collection<PresenceEffect>>): PresenceTransition {
+internal fun defineTransition(transitionFn: TransitionContext.(PresenceState, PresenceEvent) -> Pair<PresenceState, Collection<PresenceEffectInvocation>>): PresenceTransition {
     return { s, i ->
         val context = TransitionContext(s, i)
         if (i is InitialEvent) {
