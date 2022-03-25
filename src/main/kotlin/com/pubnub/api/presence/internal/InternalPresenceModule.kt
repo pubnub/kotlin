@@ -2,25 +2,37 @@ package com.pubnub.api.presence.internal
 
 import com.pubnub.api.PubNub
 import com.pubnub.api.presence.NewPresenceModule
-import com.pubnub.api.state.EffectDispatcher
-import com.pubnub.api.state.internal.QueuedEventEngine
+import com.pubnub.api.state.internal.IntModule
 import java.util.concurrent.*
 
 internal class InternalPresenceModule(
-    private val eventEngine: QueuedEventEngine<PresenceState, PresenceEvent, PresenceEffectInvocation>,
-    private val effectDispatcher: EffectDispatcher<PresenceEffectInvocation>
+    private val eventQueue: LinkedBlockingQueue<PresenceEvent>,
+    val moduleInternals: IntModule<PresenceState, PresenceEvent, PresenceEffectInvocation>
 ) : NewPresenceModule {
 
     companion object {
         fun create(pubnub: PubNub): NewPresenceModule {
             val eventQueue = LinkedBlockingQueue<PresenceEvent>(100)
-            val effectQueue = LinkedBlockingQueue<PresenceEffectInvocation>(100)
-            val eventEngine = queuedPresenceEventEngine(eventQueue = eventQueue, effectQueue = effectQueue)
-            val effectEngine = PresenceEffectDispatcher.create(
-                pubnub = pubnub, eventQueue = eventQueue, effectQueue = effectQueue
+            val engineAndEffects = presenceEventEngine()
+            val httpCallExecutor = HttpCallExecutor(pubnub = pubnub, eventQueue = eventQueue)
+            val effectDispatcher = PresenceEffectDispatcher(
+                eventQueue = eventQueue,
+                httpExecutor = httpCallExecutor
+            )
+            val effectQueue = LinkedBlockingQueue<PresenceEffectInvocation>(100).apply {
+                engineAndEffects.second.forEach { put(it) }
+            }
+
+
+            val moduleInternals = IntModule(
+                engine = engineAndEffects.first,
+                effectQueue = effectQueue,
+                eventQueue = eventQueue,
+                effectDispatcher = effectDispatcher
             )
             return InternalPresenceModule(
-                eventEngine = eventEngine, effectDispatcher = effectEngine
+                eventQueue = eventQueue,
+                moduleInternals = moduleInternals
             )
         }
     }
@@ -29,18 +41,17 @@ internal class InternalPresenceModule(
         channels: List<String>, channelGroups: List<String>, connected: Boolean
     ) {
         if (connected) {
-            eventEngine.handle(Commands.SubscribeIssued(channels = channels, groups = channelGroups))
+            eventQueue.put(Commands.SubscribeIssued(channels = channels, groups = channelGroups))
         } else {
-            eventEngine.handle(Commands.UnsubscribeIssued(channels = channels, groups = channelGroups))
+            eventQueue.put(Commands.UnsubscribeIssued(channels = channels, groups = channelGroups))
         }
     }
 
     override fun unsubscribeAll() {
-        eventEngine.handle(Commands.UnsubscribeAllIssued)
+        eventQueue.put(Commands.UnsubscribeAllIssued)
     }
 
     override fun cancel() {
-        eventEngine.cancel()
-        effectDispatcher.cancel()
+        moduleInternals.cancel()
     }
 }

@@ -1,39 +1,24 @@
 package com.pubnub.api.presence.internal
 
-import com.pubnub.api.state.internal.QueuedEventEngine
-import com.pubnub.api.state.internal.EventEngine
-import java.util.concurrent.LinkedBlockingQueue
+import com.pubnub.api.state.Engine
+import com.pubnub.api.state.EngineImplementation
+import com.pubnub.api.state.transitionTo
 
+typealias PresenceStateMachine = Engine<PresenceState, PresenceEvent, PresenceEffectInvocation>
 
-
-typealias PresenceStateMachine = EventEngine<PresenceState, PresenceEvent, PresenceEffectInvocation>
-
-typealias QueuedPresenceEventEngine = QueuedEventEngine<PresenceState, PresenceEvent, PresenceEffectInvocation>
-
-fun presenceEventEngine(): Pair<PresenceStateMachine, Collection<PresenceEffectInvocation>> {
-    return EventEngine.create(
+internal fun presenceEventEngine(): Pair<PresenceStateMachine, List<PresenceEffectInvocation>> {
+    val engine = EngineImplementation(
         initialState = Unsubscribed,
-        transition = presenceTransition(),
-        initialEvent = InitialEvent
+        transition = presenceTransition()
     )
+
+    val effects = engine.transition(InitialEvent)
+    return engine to effects
 }
 
-fun queuedPresenceEventEngine(
-    eventQueue: LinkedBlockingQueue<PresenceEvent>,
-    effectQueue: LinkedBlockingQueue<PresenceEffectInvocation>
-): QueuedPresenceEventEngine {
-    val (stateMachine, initialEffects) = presenceEventEngine()
-    return QueuedPresenceEventEngine.create(
-        eventEngine = stateMachine,
-        initialEffects = initialEffects,
-        eventQueue = eventQueue,
-        effectQueue = effectQueue
-    )
-}
-
-internal fun defineTransition(transitionFn: TransitionContext.(PresenceState, PresenceEvent) -> Pair<PresenceState, Collection<PresenceEffectInvocation>>): PresenceTransition {
+internal fun defineTransition(transitionFn: PresenceTransitionContext.(PresenceState, PresenceEvent) -> Pair<PresenceState, List<PresenceEffectInvocation>>): PresenceTransition {
     return { s, i ->
-        val context = TransitionContext(s, i)
+        val context = PresenceTransitionContext(s, i)
         if (i is InitialEvent) {
             val (_, newEffects) = context.transitionTo(s)
             s to (s.onEntry() + newEffects)

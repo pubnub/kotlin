@@ -2,32 +2,32 @@ package com.pubnub.api.subscribe.internal
 
 import com.pubnub.api.state.State
 
-sealed class SubscribeState : State<SubscribeEffectInvocation> {
-    abstract val status: SubscriptionStatus
+sealed class SubscribeState : State<SubscribeEffectInvocation, SubscriptionStatus> {
     override fun onEntry(): Collection<SubscribeEffectInvocation> = listOf()
     override fun onExit(): Collection<SubscribeEffectInvocation> = listOf()
 }
 
 object Unsubscribed : SubscribeState() {
-    override val status: SubscriptionStatus = SubscriptionStatus()
+    override val extendedState: SubscriptionStatus = SubscriptionStatus()
 }
 
 data class Receiving(
-    override val status: SubscriptionStatus,
+    override val extendedState: SubscriptionStatus,
     val call: SubscribeHttpEffectInvocation.ReceiveMessagesHttpCallEffectInvocation = SubscribeHttpEffectInvocation.ReceiveMessagesHttpCallEffectInvocation(
-        status
+        extendedState
     ),
+
 ) : SubscribeState() {
     override fun onEntry(): Collection<SubscribeEffectInvocation> = listOf(call)
 }
 
 data class Handshaking(
-    override val status: SubscriptionStatus,
+    override val extendedState: SubscriptionStatus,
     val retryCount: Int = 0
 ) : SubscribeState() {
     val call: ScheduleRetry = ScheduleRetry(
         retryableEffect = SubscribeHttpEffectInvocation.HandshakeHttpCallEffectInvocation(
-            status
+            extendedState
         ), retryCount = retryCount
     )
 
@@ -35,12 +35,12 @@ data class Handshaking(
 }
 
 data class Reconnecting(
-    override val status: SubscriptionStatus,
+    override val extendedState: SubscriptionStatus,
     val retryCount: Int = 1
 ) : SubscribeState() {
     val call: ScheduleRetry = ScheduleRetry(
         retryableEffect = SubscribeHttpEffectInvocation.ReceiveMessagesHttpCallEffectInvocation(
-            status
+            extendedState
         ), retryCount = retryCount
     )
 
@@ -48,10 +48,10 @@ data class Reconnecting(
 }
 
 data class ReconnectingFailed(
-    override val status: SubscriptionStatus,
+    override val extendedState: SubscriptionStatus,
 ) : SubscribeState()
 
 
 data class HandshakingFailed(
-    override val status: SubscriptionStatus,
+    override val extendedState: SubscriptionStatus,
 ) : SubscribeState()

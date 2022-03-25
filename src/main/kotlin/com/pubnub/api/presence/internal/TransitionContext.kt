@@ -1,14 +1,10 @@
 package com.pubnub.api.presence.internal
 
-@DslMarker
-annotation class StateMachineContext
+import com.pubnub.api.state.TransitionContext
 
-@StateMachineContext
-internal data class TransitionContext(
-    val state: PresenceState,
-    val event: PresenceEvent
-) {
-    val updatedStatus: PresenceStatus = state.status + event
+internal class PresenceTransitionContext(presenceState: PresenceState, presenceEvent: PresenceEvent) : TransitionContext<PresenceEffectInvocation, PresenceStatus, PresenceEvent, PresenceState>(presenceState, presenceEvent) {
+    override val updatedStatus: PresenceStatus = presenceState.extendedState + presenceEvent
+
 }
 
 internal operator fun PresenceStatus.plus(event: PresenceEvent): PresenceStatus {
@@ -26,32 +22,6 @@ internal operator fun PresenceStatus.plus(event: PresenceEvent): PresenceStatus 
 }
 
 
-internal fun TransitionContext.noTransition(): Pair<PresenceState, Collection<PresenceEffectInvocation>> {
-    return state to listOf()
+internal fun PresenceTransitionContext.cancel(vararg effects: PresenceEffectInvocation): List<PresenceEffectInvocation> {
+    return effects.flatMap { listOf(CancelEffectInvocation(it.id())) }
 }
-
-internal fun TransitionContext.transitionTo(
-    target: PresenceState
-): Pair<PresenceState, Collection<PresenceEffectInvocation>> {
-    return target to listOf(NewState(target::class.simpleName!!))
-}
-
-internal fun TransitionContext.transitionTo(
-    target: PresenceState,
-    onExit: PresenceEffectInvocation
-): Pair<PresenceState, Collection<PresenceEffectInvocation>> {
-    return target to listOf(NewState(target::class.simpleName!!), onExit)
-}
-
-internal fun TransitionContext.transitionTo(
-    target: PresenceState,
-    onExit: Collection<PresenceEffectInvocation> = listOf()
-): Pair<PresenceState, Collection<PresenceEffectInvocation>> {
-    return target to listOf(NewState(target::class.simpleName!!)) + onExit
-}
-
-internal fun TransitionContext.cancel(vararg effects: PresenceEffectInvocation): Collection<CancelEffectInvocation> {
-    return effects.flatMap { (it.child?.let { child -> cancel(child) } ?: listOf()) + listOf(CancelEffectInvocation(it.id)) }
-}
-
-

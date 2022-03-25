@@ -7,92 +7,36 @@ import com.pubnub.api.managers.ListenerManager
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.server.SubscribeMessage
 import com.pubnub.api.state.*
-import com.pubnub.api.state.internal.QueuedEngine
 import org.slf4j.LoggerFactory
 import java.util.concurrent.*
 import java.util.concurrent.atomic.AtomicReference
 import kotlin.reflect.KClass
 
 internal class SubscribeEffectDispatcher(
-    private val queuedEngine: QueuedEngine<SubscribeEffectInvocation>,
-    private val longRunningEffectsTracker: LongRunningEffectsTracker,
-    private val httpEffectExecutor: EffectExecutor<SubscribeHttpEffectInvocation>,
-    private val retryEffectExecutor: EffectExecutor<ScheduleRetry>,
-    private val newMessagesEffectExecutor: EffectExecutor<NewMessages>,
-    private val newStateEffectExecutor: EffectExecutor<NewState>
+    private val httpHandler: EffectHandlerFactory<SubscribeHttpEffectInvocation>,
+    private val retryEffectExecutor: EffectHandlerFactory<ScheduleRetry>,
+    private val newMessagesEffectExecutor: EffectHandlerFactory<NewMessages>,
+    private val newStateEffectExecutor: EffectHandlerFactory<NewState>
 ) : EffectDispatcher<SubscribeEffectInvocation> {
-
-    companion object {
-        fun create(
-            pubnub: PubNub,
-            eventQueue: LinkedBlockingQueue<SubscribeEvent>,
-            effectQueue: LinkedBlockingQueue<SubscribeEffectInvocation>,
-            retryPolicy: RetryPolicy,
-            incomingPayloadProcessor: IncomingPayloadProcessor,
-            listenerManager: ListenerManager
-        ): SubscribeEffectDispatcher {
-            val longRunningEffectsTracker = LongRunningEffectsTracker()
-            val httpEffectExecutor = HttpCallExecutor(
-                pubNub = pubnub, eventQueue = eventQueue
-            )
-            val retryEffectExecutor = RetryEffectExecutor(
-                effectQueue = effectQueue, retryPolicy = retryPolicy
-            )
-            val newMessagesEffectExecutor = NewMessagesEffectExecutor(
-                incomingPayloadProcessor
-            )
-            val newStateEffectExecutor = NewStateEffectExecutor(listenerManager)
-            val queuedEngine = QueuedEngine(inputQueue = effectQueue, executorService = Executors.newFixedThreadPool(1))
-            return SubscribeEffectDispatcher(
-                longRunningEffectsTracker = longRunningEffectsTracker,
-                httpEffectExecutor = httpEffectExecutor,
-                retryEffectExecutor = retryEffectExecutor,
-                newMessagesEffectExecutor = newMessagesEffectExecutor,
-                newStateEffectExecutor = newStateEffectExecutor,
-                queuedEngine = queuedEngine
-            ).apply {
-                queuedEngine.run(this::dispatch)
-            }
-        }
-    }
-
-    private val logger = LoggerFactory.getLogger(SubscribeEffectDispatcher::class.java)
 
     override fun dispatch(effect: SubscribeEffectInvocation) {
         when (effect) {
-            is CancelEffectInvocation -> longRunningEffectsTracker.cancel(effect.idToCancel)
-            is SubscribeHttpEffectInvocation -> longRunningEffectsTracker.track(effect) {
-                httpEffectExecutor.execute(
-                    effect, longRunningEffectDone = longRunningEffectsTracker::stopTracking
-                )
-            }
-            is NewState -> {
-                newStateEffectExecutor.execute(effect)
-                logger.info("New state: $effect")
-            }
-            is NewMessages -> {
-                newMessagesEffectExecutor.execute(effect)
-                logger.info(
-                    "New messages. Hopefully they're fine ;) ${effect.messages}"
-                )
-            }
-            is ScheduleRetry -> longRunningEffectsTracker.track(effect) {
-                retryEffectExecutor.execute(
-                    effect, longRunningEffectDone = longRunningEffectsTracker::stopTracking
-                )
-            }
+            is CancelEffectInvocation -> TODO()
+            is SubscribeHttpEffectInvocation -> httpHandler.handler(effect)
+            is NewState -> newStateEffectExecutor.handler(effect)
+            is NewMessages -> newMessagesEffectExecutor.handler(effect)
+            is ScheduleRetry -> retryEffectExecutor.handler(effect)
         }
     }
 
-    override fun cancel() {
-        queuedEngine.cancel()
+    fun cancel() {
     }
 }
 
-internal class NewStateEffectExecutor(private val listenerManager: ListenerManager) : EffectExecutor<NewState> {
+internal class NewStateEffectExecutor(private val listenerManager: ListenerManager) : EffectHandlerFactory<NewState> {
     private var previousStateRef: AtomicReference<NewState> = AtomicReference()
 
-    override fun execute(effect: NewState, longRunningEffectDone: (String) -> Unit): CancelFn {
+    override fun handler(effect: NewState): EffectHandler {
         val previousState = previousStateRef.getAndSet(effect)
 
         when {
@@ -123,8 +67,7 @@ internal class NewStateEffectExecutor(private val listenerManager: ListenerManag
             )
 
         }
-
-        return {}
+        TODO()
     }
 
     private fun <T : SubscribeState> state(new: NewState, state: KClass<T>): Boolean {
@@ -139,17 +82,16 @@ internal class NewStateEffectExecutor(private val listenerManager: ListenerManag
 }
 
 internal class HttpCallExecutor(
-    private val pubNub: PubNub, private val eventQueue: LinkedBlockingQueue<SubscribeEvent>
-) : EffectExecutor<SubscribeHttpEffectInvocation> {
+    private val pubnub: PubNub, private val eventQueue: LinkedBlockingQueue<SubscribeEvent>
+) : EffectHandlerFactory<SubscribeHttpEffectInvocation> {
 
-    override fun execute(effect: SubscribeHttpEffectInvocation, longRunningEffectDone: (String) -> Unit): CancelFn {
+    override fun handler(effect: SubscribeHttpEffectInvocation): EffectHandler {
         return when (effect) {
             is SubscribeHttpEffectInvocation.HandshakeHttpCallEffectInvocation -> {
-                pubNub.handshake(
+                pubnub.handshake(
                     channels = effect.subscriptionStatus.channels.toList(),
                     channelGroups = effect.subscriptionStatus.groups.toList()
                 ) { r, s ->
-                    longRunningEffectDone(effect.id)
                     eventQueue.put(
                         if (!s.error) {
                             HandshakeResult.HandshakeSucceeded(
@@ -162,23 +104,27 @@ internal class HttpCallExecutor(
                             HandshakeResult.HandshakeFailed(s)
                         }
                     )
-                }.let { { it.silentCancel() } }
+                }
+                TODO()
             }
-            is SubscribeHttpEffectInvocation.ReceiveMessagesHttpCallEffectInvocation -> pubNub.receiveMessages(
-                channels = effect.subscriptionStatus.channels.toList(),
-                channelGroups = effect.subscriptionStatus.groups.toList(),
-                timetoken = effect.subscriptionStatus.cursor!!.timetoken, //TODO figure out how to drop !! here
-                region = effect.subscriptionStatus.cursor.region
-            ) { r, s ->
-                longRunningEffectDone(effect.id)
-                eventQueue.put(
-                    if (!s.error) {
-                        ReceivingResult.ReceivingSucceeded(r!!)
-                    } else {
-                        ReceivingResult.ReceivingFailed(s)
-                    }
-                )
-            }.let { { it.silentCancel() } }
+            is SubscribeHttpEffectInvocation.ReceiveMessagesHttpCallEffectInvocation -> {
+                pubnub.receiveMessages(
+                    channels = effect.subscriptionStatus.channels.toList(),
+                    channelGroups = effect.subscriptionStatus.groups.toList(),
+                    timetoken = effect.subscriptionStatus.cursor!!.timetoken, //TODO figure out how to drop !! here
+                    region = effect.subscriptionStatus.cursor.region
+                ) { r, s ->
+                    eventQueue.put(
+                        if (!s.error) {
+                            ReceivingResult.ReceivingSucceeded(r!!)
+                        } else {
+                            ReceivingResult.ReceivingFailed(s)
+                        }
+                    )
+
+                }
+                TODO()
+            }
         }
     }
 }
@@ -187,16 +133,16 @@ internal class RetryEffectExecutor(
     private val effectQueue: LinkedBlockingQueue<SubscribeEffectInvocation>,
     private val executor: ScheduledExecutorService = Executors.newScheduledThreadPool(3),
     private val retryPolicy: RetryPolicy = NoPolicy
-) : EffectExecutor<ScheduleRetry> {
-    override fun execute(effect: ScheduleRetry, longRunningEffectDone: (String) -> Unit): CancelFn {
-        return executor.schedule(Callable {
-            longRunningEffectDone(effect.id)
+) : EffectHandlerFactory<ScheduleRetry> {
+    override fun handler(effect: ScheduleRetry): EffectHandler {
+        executor.schedule(Callable {
             effectQueue.put(effect.retryableEffect)
         }, retryPolicy.computeDelay(effect.retryCount).seconds, TimeUnit.SECONDS).let {
             {
                 it.cancel(true)
             }
         }
+        TODO()
     }
 }
 
@@ -205,11 +151,11 @@ internal interface IncomingPayloadProcessor {
 }
 
 internal class NewMessagesEffectExecutor(private val processor: IncomingPayloadProcessor) :
-    EffectExecutor<NewMessages> {
-    override fun execute(effect: NewMessages, longRunningEffectDone: (String) -> Unit): CancelFn {
+    EffectHandlerFactory<NewMessages> {
+    override fun handler(effect: NewMessages): EffectHandler {
         effect.messages.forEach {
             processor.processIncomingPayload(it)
         }
-        return {}
+        return TODO()
     }
 }

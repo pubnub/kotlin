@@ -2,7 +2,7 @@ package com.pubnub.api.presence.internal
 
 import com.pubnub.api.state.EffectInvocation
 
-sealed class PresenceEffectInvocation(override val child: PresenceEffectInvocation? = null) : EffectInvocation()
+sealed class PresenceEffectInvocation : EffectInvocation
 
 sealed class PresenceHttpEffectInvocation : PresenceEffectInvocation()
 

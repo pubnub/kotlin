@@ -1,5 +1,7 @@
 package com.pubnub.api.subscribe.internal
 
+import com.pubnub.api.state.*
+import com.pubnub.api.state.TransitionContext
 import com.pubnub.api.subscribe.internal.Commands.*
 import com.pubnub.api.subscribe.internal.HandshakeResult.HandshakeSucceeded
 import com.pubnub.api.subscribe.internal.ReceivingResult.ReceivingSucceeded
@@ -8,15 +10,13 @@ import com.pubnub.api.subscribe.internal.ReceivingResult.ReceivingSucceeded
  * A class used to improve TODO improve what exactly? ;)
  */
 
-@DslMarker
-annotation class StateMachineContext
 
 @StateMachineContext
-internal data class TransitionContext(
-    val state: SubscribeState,
-    val event: SubscribeEvent
-) {
-    val updatedStatus: SubscriptionStatus = state.status + event
+internal class SubscribeTransitionContext(
+    state: SubscribeState,
+    event: SubscribeEvent
+) : TransitionContext<SubscribeEffectInvocation, SubscriptionStatus, SubscribeEvent, SubscribeState>(state, event) {
+    override val updatedStatus: SubscriptionStatus = state.extendedState + event
 }
 
 internal operator fun SubscriptionStatus.plus(event: SubscribeEvent): SubscriptionStatus {
@@ -42,31 +42,8 @@ internal operator fun SubscriptionStatus.plus(event: SubscribeEvent): Subscripti
     }
 }
 
-internal fun TransitionContext.noTransition(): Pair<SubscribeState, Collection<SubscribeEffectInvocation>> {
-    return state to listOf()
-}
 
-internal fun TransitionContext.transitionTo(
-    target: SubscribeState
-): Pair<SubscribeState, Collection<SubscribeEffectInvocation>> {
-    return target to listOf(NewState(target::class.simpleName!!, target.status))
-}
-
-internal fun TransitionContext.transitionTo(
-    target: SubscribeState,
-    onExit: SubscribeEffectInvocation
-): Pair<SubscribeState, Collection<SubscribeEffectInvocation>> {
-    return target to listOf(NewState(target::class.simpleName!!, target.status), onExit)
-}
-
-internal fun TransitionContext.transitionTo(
-    target: SubscribeState,
-    onExit: Collection<SubscribeEffectInvocation> = listOf()
-): Pair<SubscribeState, Collection<SubscribeEffectInvocation>> {
-    return target to listOf(NewState(target::class.simpleName!!, target.status)) + onExit
-}
-
-internal fun TransitionContext.cancel(vararg effects: SubscribeEffectInvocation): Collection<CancelEffectInvocation> {
-    return effects.flatMap { (it.child?.let { child -> cancel(child) } ?: listOf()) + listOf(CancelEffectInvocation(it.id)) }
+internal fun SubscribeTransitionContext.cancel(vararg effects: SubscribeEffectInvocation): List<SubscribeEffectInvocation> {
+    return effects.flatMap { listOf(CancelEffectInvocation(it.id())) }
 }
 

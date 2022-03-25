@@ -73,6 +73,7 @@ import com.pubnub.api.models.consumer.objects.member.PNUUIDWithCustom
 import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
 import com.pubnub.api.models.consumer.objects.membership.PNChannelWithCustom
 import com.pubnub.api.presence.NewPresenceModule
+import com.pubnub.api.subscribe.NewSubscribeModule
 import com.pubnub.api.subscribe.internal.*
 import com.pubnub.api.vendor.Base64
 import com.pubnub.api.vendor.Crypto
@@ -112,8 +113,8 @@ class PubNub(val configuration: PNConfiguration) {
     private val tokenParser: TokenParser = TokenParser()
     private val listenerManager = ListenerManager(this)
 
-    private val newSubscribeModule by lazy {
-        InternalSubscribeModule.create(
+    private val newSubscribeModule: NewSubscribeModule by lazy {
+        NewSubscribeModule.create(
             pubnub = this,
             incomingPayloadProcessor = IncomingPayloadProcessorImplementation(
                 pubnub = this,

@@ -1,6 +1,8 @@
 package com.pubnub.api.subscribe.internal
 
 import com.pubnub.api.state.Transition
+import com.pubnub.api.state.noTransition
+import com.pubnub.api.state.transitionTo
 
 typealias SubscribeTransition = Transition<SubscribeState, SubscribeEvent, SubscribeEffectInvocation>
 
