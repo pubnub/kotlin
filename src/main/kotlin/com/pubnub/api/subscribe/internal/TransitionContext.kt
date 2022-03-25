@@ -42,8 +42,6 @@ internal operator fun SubscriptionStatus.plus(event: SubscribeEvent): Subscripti
     }
 }
 
-
 internal fun SubscribeTransitionContext.cancel(vararg effects: SubscribeEffectInvocation): List<SubscribeEffectInvocation> {
     return effects.flatMap { listOf(CancelEffectInvocation(it.id())) }
 }
-

@@ -20,13 +20,18 @@ internal class SubscribeEffectDispatcher(
 ) : EffectDispatcher<SubscribeEffectInvocation> {
 
     override fun dispatch(effect: SubscribeEffectInvocation) {
-        when (effect) {
-            is CancelEffectInvocation -> TODO()
+        val handler = when (effect) {
+            is CancelEffectInvocation -> {
+                null
+            }
             is SubscribeHttpEffectInvocation -> httpHandler.handler(effect)
             is NewState -> newStateEffectExecutor.handler(effect)
             is NewMessages -> newMessagesEffectExecutor.handler(effect)
             is ScheduleRetry -> retryEffectExecutor.handler(effect)
         }
+
+
+        handler?.start()
     }
 
     fun cancel() {
@@ -67,7 +72,7 @@ internal class NewStateEffectExecutor(private val listenerManager: ListenerManag
             )
 
         }
-        TODO()
+        return EffectHandler.create()
     }
 
     private fun <T : SubscribeState> state(new: NewState, state: KClass<T>): Boolean {
@@ -88,42 +93,46 @@ internal class HttpCallExecutor(
     override fun handler(effect: SubscribeHttpEffectInvocation): EffectHandler {
         return when (effect) {
             is SubscribeHttpEffectInvocation.HandshakeHttpCallEffectInvocation -> {
-                pubnub.handshake(
-                    channels = effect.subscriptionStatus.channels.toList(),
-                    channelGroups = effect.subscriptionStatus.groups.toList()
-                ) { r, s ->
-                    eventQueue.put(
-                        if (!s.error) {
-                            HandshakeResult.HandshakeSucceeded(
-                                Cursor(
-                                    timetoken = r!!.metadata.timetoken, //TODO we could improve callback to avoid !! here
-                                    region = r.metadata.region
+                EffectHandler.create(startFn = {
+                    pubnub.handshake(
+                        channels = effect.subscriptionStatus.channels.toList(),
+                        channelGroups = effect.subscriptionStatus.groups.toList()
+                    ) { r, s ->
+                        eventQueue.put(
+                            if (!s.error) {
+                                HandshakeResult.HandshakeSucceeded(
+                                    Cursor(
+                                        timetoken = r!!.metadata.timetoken, //TODO we could improve callback to avoid !! here
+                                        region = r.metadata.region
+                                    )
                                 )
-                            )
-                        } else {
-                            HandshakeResult.HandshakeFailed(s)
-                        }
-                    )
-                }
-                TODO()
+                            } else {
+                                HandshakeResult.HandshakeFailed(s)
+                            }
+                        )
+                    }
+                }, cancelFn = { silentCancel() })
+
             }
             is SubscribeHttpEffectInvocation.ReceiveMessagesHttpCallEffectInvocation -> {
-                pubnub.receiveMessages(
-                    channels = effect.subscriptionStatus.channels.toList(),
-                    channelGroups = effect.subscriptionStatus.groups.toList(),
-                    timetoken = effect.subscriptionStatus.cursor!!.timetoken, //TODO figure out how to drop !! here
-                    region = effect.subscriptionStatus.cursor.region
-                ) { r, s ->
-                    eventQueue.put(
-                        if (!s.error) {
-                            ReceivingResult.ReceivingSucceeded(r!!)
-                        } else {
-                            ReceivingResult.ReceivingFailed(s)
-                        }
-                    )
 
-                }
-                TODO()
+                EffectHandler.create(startFn = {
+                    pubnub.receiveMessages(
+                        channels = effect.subscriptionStatus.channels.toList(),
+                        channelGroups = effect.subscriptionStatus.groups.toList(),
+                        timetoken = effect.subscriptionStatus.cursor!!.timetoken, //TODO figure out how to drop !! here
+                        region = effect.subscriptionStatus.cursor.region
+                    ) { r, s ->
+                        eventQueue.put(
+                            if (!s.error) {
+                                ReceivingResult.ReceivingSucceeded(r!!)
+                            } else {
+                                ReceivingResult.ReceivingFailed(s)
+                            }
+                        )
+
+                    }
+                }, cancelFn = { silentCancel() })
             }
         }
     }
@@ -142,7 +151,7 @@ internal class RetryEffectExecutor(
                 it.cancel(true)
             }
         }
-        TODO()
+        return EffectHandler.create()
     }
 }
 
@@ -156,6 +165,6 @@ internal class NewMessagesEffectExecutor(private val processor: IncomingPayloadP
         effect.messages.forEach {
             processor.processIncomingPayload(it)
         }
-        return TODO()
+        return EffectHandler.create()
     }
 }

@@ -3,6 +3,8 @@ package com.pubnub.api.state.internal
 import com.pubnub.api.state.EffectDispatcher
 import com.pubnub.api.state.EffectInvocation
 import com.pubnub.api.state.Engine
+import org.slf4j.LoggerFactory
+import java.util.Queue
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -30,6 +32,8 @@ class Queued<IN, H> private constructor(
         }
     }
 
+    private val logger = LoggerFactory.getLogger(Queued::class.java)
+
     private lateinit var inputLoop: CompletableFuture<Void>
 
     private fun <T> LinkedBlockingQueue<T>.waitAndProcess(
@@ -42,6 +46,9 @@ class Queued<IN, H> private constructor(
                     handle(take())
                 } catch (e: InterruptedException) {
                     Thread.currentThread().interrupt()
+                } catch (e: Exception) {
+                    logger.error("Uncaught exception when handling message from queue", e)
+                    throw e
                 }
             }
 

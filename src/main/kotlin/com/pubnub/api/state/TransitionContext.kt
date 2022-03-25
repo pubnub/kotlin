@@ -19,20 +19,20 @@ internal fun <EF : EffectInvocation, EX : ExtendedState, EV : Event, S : State<E
 internal fun <EF : EffectInvocation, EX : ExtendedState, EV : Event, S : State<EF, EX>> TransitionContext<EF, EX, EV, S>.transitionTo(
     target: S
 ): Pair<S, List<EF>> {
-    return target to listOf()
+    return target to state.onExit() + target.onEntry()
 }
 
 internal fun <EF : EffectInvocation, EX : ExtendedState, EV : Event, S : State<EF, EX>> TransitionContext<EF, EX, EV, S>.transitionTo(
     target: S,
     onExit: EF
 ): Pair<S, List<EF>> {
-    return target to listOf(onExit)
+    return target to state.onExit() + onExit + target.onEntry()
 }
 
 internal fun <EF : EffectInvocation, EX : ExtendedState, EV : Event, S : State<EF, EX>> TransitionContext<EF, EX, EV, S>.transitionTo(
     target: S,
     onExit: List<EF> = listOf()
 ): Pair<S, List<EF>> {
-    return target to onExit
+    return target to state.onExit() + onExit + target.onEntry()
 }
 
