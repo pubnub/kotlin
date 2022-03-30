@@ -32,5 +32,3 @@ sealed class ReceivingResult : SubscribeEvent {
     data class ReceivingSucceeded(val subscribeEnvelope: SubscribeEnvelope) : ReceivingResult()
     data class ReceivingFailed(val status: PNStatus) : ReceivingResult()
 }
-
-

@@ -7,15 +7,13 @@ sealed class SubscribeEffectInvocation : EffectInvocation
 
 data class NewMessages(val messages: List<SubscribeMessage>) : SubscribeEffectInvocation()
 
-data class NewState(val name: String, val status: SubscriptionStatus) : SubscribeEffectInvocation()
-
 sealed class SubscribeHttpEffectInvocation : SubscribeEffectInvocation() {
     data class ReceiveMessagesHttpCallEffectInvocation(
-        val subscriptionStatus: SubscriptionStatus
+        val subscribeExtendedState: SubscribeExtendedState
     ) : SubscribeHttpEffectInvocation()
 
     data class HandshakeHttpCallEffectInvocation(
-        val subscriptionStatus: SubscriptionStatus
+        val subscribeExtendedState: SubscribeExtendedState
     ) : SubscribeHttpEffectInvocation()
 }
 
@@ -23,3 +21,12 @@ data class CancelEffectInvocation(val idToCancel: String) : SubscribeEffectInvoc
 
 data class ScheduleRetry(val retryableEffect: SubscribeHttpEffectInvocation, val retryCount: Int) :
     SubscribeEffectInvocation()
+
+
+sealed class NotificationEffect : SubscribeEffectInvocation()
+
+object Connected : NotificationEffect()
+
+data class Disconnected(val reason: String = "reason") : NotificationEffect()
+
+object Reconnected : NotificationEffect()

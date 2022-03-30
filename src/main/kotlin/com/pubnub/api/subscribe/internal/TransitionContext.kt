@@ -15,11 +15,11 @@ import com.pubnub.api.subscribe.internal.ReceivingResult.ReceivingSucceeded
 internal class SubscribeTransitionContext(
     state: SubscribeState,
     event: SubscribeEvent
-) : TransitionContext<SubscribeEffectInvocation, SubscriptionStatus, SubscribeEvent, SubscribeState>(state, event) {
-    override val updatedStatus: SubscriptionStatus = state.extendedState + event
+) : TransitionContext<SubscribeEffectInvocation, SubscribeExtendedState, SubscribeEvent, SubscribeState>(state, event) {
+    override val updatedStatus: SubscribeExtendedState = state.extendedState + event
 }
 
-internal operator fun SubscriptionStatus.plus(event: SubscribeEvent): SubscriptionStatus {
+internal operator fun SubscribeExtendedState.plus(event: SubscribeEvent): SubscribeExtendedState {
     return when (event) {
         is HandshakeSucceeded -> copy(cursor = event.cursor)
         is ReceivingSucceeded -> copy(
@@ -33,7 +33,7 @@ internal operator fun SubscriptionStatus.plus(event: SubscribeEvent): Subscripti
             groups = groups + event.groups.toSet(),
             cursor = event.cursor ?: cursor
         )
-        UnsubscribeAllIssued -> SubscriptionStatus()
+        UnsubscribeAllIssued -> SubscribeExtendedState()
         is UnsubscribeIssued -> copy(
             channels = channels - event.channels.toSet(),
             groups = groups - event.groups.toSet(),

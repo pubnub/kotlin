@@ -12,11 +12,11 @@ fun presenceTransition(): PresenceTransition = defineTransition { state, event -
             is Commands.SubscribeIssued -> transitionTo(Notify(extendedState = updatedStatus))
             is Commands.UnsubscribeIssued -> transitionTo(
                 target = Notify(extendedState = updatedStatus),
-                onExit = IAmAwayEffectInvocation(channels = event.channels, channelGroups = event.groups)
+                withEffects = IAmAwayEffectInvocation(channels = event.channels, channelGroups = event.groups)
             )
             is Commands.UnsubscribeAllIssued -> transitionTo(
                 target = Unsubscribed,
-                onExit = IAmAwayEffectInvocation(
+                withEffects = IAmAwayEffectInvocation(
                     channels = state.extendedState.channels,
                     channelGroups = state.extendedState.groups
                 )
@@ -33,15 +33,15 @@ fun presenceTransition(): PresenceTransition = defineTransition { state, event -
             HeartbeatIntervalOver -> transitionTo(Notify(updatedStatus))
             is Commands.SubscribeIssued -> transitionTo(
                 target = Notify(updatedStatus),
-                onExit = cancel(state.timer)
+                withEffects = cancel(state.timer)
             )
             is Commands.UnsubscribeIssued -> transitionTo(
                 target = Notify(updatedStatus),
-                onExit = cancel(state.timer)
+                withEffects = cancel(state.timer)
             )
             is Commands.UnsubscribeAllIssued -> transitionTo(
                 target = Notify(updatedStatus),
-                onExit = cancel(state.timer)
+                withEffects = cancel(state.timer)
             )
             else -> noTransition()
         }

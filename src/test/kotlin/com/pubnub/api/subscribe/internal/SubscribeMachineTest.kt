@@ -23,7 +23,7 @@ class SubscribeMachineTest {
 
     @Test
     fun firstTest() {
-        val transition = subscribeTransition { it < 1 }
+        val transition = subscribeTransition(LinearPolicy())
         val status = PNStatus(
             category = PNStatusCategory.PNBadRequestCategory,
             error = true,
@@ -61,12 +61,11 @@ class SubscribeMachineTest {
         println(effects)
 
         assertThat(
-            effects.mapNotNull { if (it is NewState) it.name else null },
+            effects.filterIsInstance<NotificationEffect>(),
             Matchers.`is`(
                 listOf(
-                    Handshaking::class.simpleName,
-                    Receiving::class.simpleName,
-                    Receiving::class.simpleName
+                    Connected,
+                    Reconnected
                 )
             )
         )

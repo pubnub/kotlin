@@ -7,7 +7,6 @@ import com.pubnub.api.managers.ListenerManager
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.server.SubscribeMessage
 import com.pubnub.api.state.*
-import org.slf4j.LoggerFactory
 import java.util.concurrent.*
 import java.util.concurrent.atomic.AtomicReference
 import kotlin.reflect.KClass
@@ -16,73 +15,64 @@ internal class SubscribeEffectDispatcher(
     private val httpHandler: EffectHandlerFactory<SubscribeHttpEffectInvocation>,
     private val retryEffectExecutor: EffectHandlerFactory<ScheduleRetry>,
     private val newMessagesEffectExecutor: EffectHandlerFactory<NewMessages>,
-    private val newStateEffectExecutor: EffectHandlerFactory<NewState>
-) : EffectDispatcher<SubscribeEffectInvocation> {
+    private val notificationEffectExecutor: EffectHandlerFactory<NotificationEffect>,
+    override val trackedHandlers: MutableMap<String, ManagedEffectHandler> = mutableMapOf()
+) : EffectDispatcher<SubscribeEffectInvocation>, EffectTracker {
 
     override fun dispatch(effect: SubscribeEffectInvocation) {
         val handler = when (effect) {
             is CancelEffectInvocation -> {
+                stopTracking(effect.idToCancel)
                 null
             }
             is SubscribeHttpEffectInvocation -> httpHandler.handler(effect)
-            is NewState -> newStateEffectExecutor.handler(effect)
             is NewMessages -> newMessagesEffectExecutor.handler(effect)
             is ScheduleRetry -> retryEffectExecutor.handler(effect)
+            is NotificationEffect -> notificationEffectExecutor.handler(effect)
         }
-
-
         handler?.start()
+        if (handler is ManagedEffectHandler) {
+            startTracking(effect.id(), handler)
+        }
     }
 
     fun cancel() {
     }
 }
 
-internal class NewStateEffectExecutor(private val listenerManager: ListenerManager) : EffectHandlerFactory<NewState> {
-    private var previousStateRef: AtomicReference<NewState> = AtomicReference()
+internal class NotificationExecutor(private val listenerManager: ListenerManager) :
+    EffectHandlerFactory<NotificationEffect> {
+    override fun handler(effect: NotificationEffect): EffectHandler {
+        return EffectHandler.create(
+            startFn = {
+                when (effect) {
+                    Connected -> listenerManager.announce(
+                        PNStatus(
+                            PNStatusCategory.PNConnectedCategory,
+                            error = false,
+                            operation = PNOperationType.PNSubscribeOperation
+                        )
+                    )
 
-    override fun handler(effect: NewState): EffectHandler {
-        val previousState = previousStateRef.getAndSet(effect)
+                    is Disconnected -> listenerManager.announce(
+                        PNStatus(
+                            PNStatusCategory.PNReconnectionAttemptsExhausted,
+                            error = true,
+                            operation = PNOperationType.PNSubscribeOperation
+                        )
+                    )
 
-        when {
-            transition(
-                previousState, effect, Handshaking::class, Receiving::class
-            ) -> listenerManager.announce(
-                PNStatus(
-                    PNStatusCategory.PNConnectedCategory,
-                    error = false,
-                    operation = PNOperationType.PNSubscribeOperation
-                )
-            )
-            transition(previousState, effect, Reconnecting::class, Receiving::class) -> listenerManager.announce(
-                PNStatus(
-                    PNStatusCategory.PNReconnectedCategory,
-                    error = false,
-                    operation = PNOperationType.PNSubscribeOperation
-                )
-            )
+                    Reconnected -> listenerManager.announce(
+                        PNStatus(
+                            PNStatusCategory.PNReconnectedCategory,
+                            error = false,
+                            operation = PNOperationType.PNSubscribeOperation
+                        )
+                    )
 
-            state(effect, ReconnectingFailed::class) -> listenerManager.announce(
-                PNStatus(
-                    PNStatusCategory.PNReconnectionAttemptsExhausted,
-                    error = true,
-                    operation = PNOperationType.PNSubscribeOperation
-                )
-
-            )
-
-        }
-        return EffectHandler.create()
-    }
-
-    private fun <T : SubscribeState> state(new: NewState, state: KClass<T>): Boolean {
-        return new.name == state.simpleName!!
-    }
-
-    private fun <T : SubscribeState, U : SubscribeState> transition(
-        prev: NewState?, new: NewState, from: KClass<T>, to: KClass<U>
-    ): Boolean {
-        return prev != null && prev.name == from.simpleName!! && new.name == to.simpleName!!
+                }
+            }
+        )
     }
 }
 
@@ -95,8 +85,8 @@ internal class HttpCallExecutor(
             is SubscribeHttpEffectInvocation.HandshakeHttpCallEffectInvocation -> {
                 EffectHandler.create(startFn = {
                     pubnub.handshake(
-                        channels = effect.subscriptionStatus.channels.toList(),
-                        channelGroups = effect.subscriptionStatus.groups.toList()
+                        channels = effect.subscribeExtendedState.channels.toList(),
+                        channelGroups = effect.subscribeExtendedState.groups.toList()
                     ) { r, s ->
                         eventQueue.put(
                             if (!s.error) {
@@ -118,10 +108,10 @@ internal class HttpCallExecutor(
 
                 EffectHandler.create(startFn = {
                     pubnub.receiveMessages(
-                        channels = effect.subscriptionStatus.channels.toList(),
-                        channelGroups = effect.subscriptionStatus.groups.toList(),
-                        timetoken = effect.subscriptionStatus.cursor!!.timetoken, //TODO figure out how to drop !! here
-                        region = effect.subscriptionStatus.cursor.region
+                        channels = effect.subscribeExtendedState.channels.toList(),
+                        channelGroups = effect.subscribeExtendedState.groups.toList(),
+                        timetoken = effect.subscribeExtendedState.cursor!!.timetoken, //TODO figure out how to drop !! here
+                        region = effect.subscribeExtendedState.cursor.region
                     ) { r, s ->
                         eventQueue.put(
                             if (!s.error) {

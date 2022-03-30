@@ -7,24 +7,35 @@ import java.util.concurrent.LinkedBlockingQueue
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
 
-internal class PresenceEffectDispatcher (
+internal class PresenceEffectDispatcher(
     private val eventQueue: LinkedBlockingQueue<PresenceEvent>,
     private val httpExecutor: EffectHandlerFactory<PresenceHttpEffectInvocation>,
-    private val scheduledExecutorService: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor()) : EffectDispatcher<PresenceEffectInvocation> {
+    private val scheduledExecutorService: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor(),
+    override val trackedHandlers: MutableMap<String, ManagedEffectHandler> = mutableMapOf(),
+) : EffectDispatcher<PresenceEffectInvocation>, EffectTracker {
 
     override fun dispatch(effect: PresenceEffectInvocation) {
-        when (effect) {
-            is CancelEffectInvocation -> {}
+        val handler = when (effect) {
+            is CancelEffectInvocation -> {
+                stopTracking(effect.idToCancel)
+                null
+            }
             is PresenceHttpEffectInvocation -> httpExecutor.handler(effect)
-
-            is NewState -> {}
+            is NewState -> {
+                null
+            }
             is TimerEffectInvocation -> {
                 scheduledExecutorService.schedule({
                     eventQueue.put(effect.event)
                 }, 1000, TimeUnit.MILLISECONDS).let {
                     { it.cancel(true) }
                 }
+                null
             }
+        }
+        handler?.start()
+        if (handler is ManagedEffectHandler) {
+            startTracking(effect.id(), handler)
         }
 
     }
@@ -32,7 +43,6 @@ internal class PresenceEffectDispatcher (
     fun cancel() {
 
     }
-
 }
 
 internal class HttpCallExecutor(

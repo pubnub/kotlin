@@ -44,12 +44,11 @@ internal class InternalSubscribeModule(
                 RetryEffectExecutor(effectQueue = effectQueue)
             val newMessagesEffectExecutor: EffectHandlerFactory<NewMessages> =
                 NewMessagesEffectExecutor(incomingPayloadProcessor)
-            val newStateEffectExecutor: EffectHandlerFactory<NewState> = NewStateEffectExecutor(listenerManager)
             val effectDispatcher = SubscribeEffectDispatcher(
                 httpHandler = httpHandler,
                 retryEffectExecutor = retryEffectExecutor,
                 newMessagesEffectExecutor = newMessagesEffectExecutor,
-                newStateEffectExecutor = newStateEffectExecutor
+                notificationEffectExecutor = NotificationExecutor(listenerManager)
             )
 
             val moduleInternals = IntModule(
@@ -99,7 +98,7 @@ internal class InternalSubscribeModule(
 
     override fun getSubscribedChannelGroups(): List<String> = status().groups.toList()
 
-    fun status(): SubscriptionStatus {
+    fun status(): SubscribeExtendedState {
         return moduleInternals.currentState().extendedState
     }
 

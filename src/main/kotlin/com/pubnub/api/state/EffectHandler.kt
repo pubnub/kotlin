@@ -2,23 +2,30 @@ package com.pubnub.api.state
 
 import java.util.concurrent.atomic.AtomicReference
 
+interface ManagedEffectHandler : EffectHandler {
+    fun cancel()
+}
+
 interface EffectHandler {
     fun start()
-    fun cancel()
 
     companion object {
-        fun create(): EffectHandlerImplementation<Unit> {
-            return EffectHandlerImplementation(startFn = {}, cancelFn = {})
+        fun create(): EffectHandler {
+            return EffectHandlerImplementation(startFn = {})
         }
 
-        fun <T> create(startFn: () -> T?, cancelFn: T.() -> Unit = {}): EffectHandlerImplementation<T> {
-            return EffectHandlerImplementation(startFn = startFn, cancelFn = cancelFn)
+        fun create(startFn: () -> Unit): EffectHandler {
+            return EffectHandlerImplementation(startFn = startFn)
+        }
+
+        fun <T> create(startFn: () -> T, cancelFn: T.() -> Unit): ManagedEffectHandler {
+            return ManagedEffectHandlerImplementation(startFn = startFn, cancelFn = cancelFn)
         }
     }
 
-    class EffectHandlerImplementation<T> internal constructor(
-        private val startFn: () -> T?, private val cancelFn: T.() -> Unit
-    ) : EffectHandler {
+    class ManagedEffectHandlerImplementation<T> internal constructor(
+        private val startFn: () -> T, private val cancelFn: T.() -> Unit
+    ) : ManagedEffectHandler {
         private var cancellable: AtomicReference<T?> = AtomicReference(null)
 
         override fun start() {
@@ -30,10 +37,16 @@ interface EffectHandler {
         }
     }
 
-}
+    class EffectHandlerImplementation internal constructor(
+        private val startFn: () -> Unit
+    ) : EffectHandler {
 
+        override fun start() {
+            startFn()
+        }
+    }
+}
 
 interface EffectHandlerFactory<EF> {
     fun handler(effect: EF): EffectHandler
 }
-

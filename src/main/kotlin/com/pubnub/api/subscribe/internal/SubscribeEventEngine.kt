@@ -10,7 +10,7 @@ typealias SubscribeEventEngine = Engine<SubscribeState, SubscribeEvent, Subscrib
 internal fun subscribeEventEngine(shouldRetry: (Int) -> Boolean): Pair<SubscribeEventEngine, List<SubscribeEffectInvocation>> {
     val engine = EngineImplementation(
         initialState = Unsubscribed,
-        transition = subscribeTransition(shouldRetry)
+        transition = subscribeTransition(LinearPolicy())
     )
 
     val effects = engine.transition(InitialEvent)
@@ -24,12 +24,7 @@ internal fun defineTransition(transitionFn: SubscribeTransitionContext.(Subscrib
             val (_, newEffects) = context.transitionTo(s)
             s to (s.onEntry() + newEffects)
         } else {
-            val (newState, newEffects) = context.transitionFn(s, i)
-            if (newEffects.any { it is NewState }) {
-                newState to (s.onExit() + newEffects + newState.onEntry())
-            } else {
-                newState to newEffects
-            }
+            context.transitionFn(s, i)
         }
     }
 }
