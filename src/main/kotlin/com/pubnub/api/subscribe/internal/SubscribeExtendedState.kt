@@ -6,7 +6,7 @@ data class SubscribeExtendedState(
     val channels: Collection<String> = setOf(),
     val groups: Collection<String> = setOf(),
     val cursor: Cursor? = null,
-    val retryCounter: Int = 0
+    val attempts: Int = 0
 ) : ExtendedState
 
 data class Cursor(

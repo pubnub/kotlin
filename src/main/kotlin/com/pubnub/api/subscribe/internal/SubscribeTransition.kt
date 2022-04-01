@@ -6,95 +6,99 @@ import com.pubnub.api.state.transitionTo
 
 typealias SubscribeTransition = Transition<SubscribeState, SubscribeEvent, SubscribeEffectInvocation>
 
-internal fun subscribeTransition(retryPolicy: RetryPolicy): SubscribeTransition =
+internal fun subscribeTransition(): SubscribeTransition =
     defineTransition { state, event ->
         when (state) {
             is Handshaking -> when (event) {
-                is Commands.SubscribeIssued -> transitionTo(
-                    target = Handshaking(updatedStatus),
-                    withEffects = cancel(state.call)
+                is SubscriptionChanged -> transitionTo(
+                    target = Handshaking(updatedExtendedState)
                 )
-                Commands.UnsubscribeAllIssued -> transitionTo(
-                    target = Unsubscribed,
-                    withEffects = cancel(state.call)
+                is Disconnect -> transitionTo(
+                    target = Preparing(updatedExtendedState)
                 )
-                is Commands.UnsubscribeIssued -> transitionTo(
-                    target = Handshaking(updatedStatus),
-                    withEffects = cancel(state.call)
+                is HandshakingFailure -> transitionTo(
+                    target = HandshakingReconnecting(updatedExtendedState)
                 )
-                is HandshakeResult.HandshakeSucceeded -> transitionTo(
-                    target = Receiving(updatedStatus),
+                is HandshakingSuccess -> transitionTo(
+                    target = Receiving(updatedExtendedState),
                     withEffects = Connected
                 )
-                is HandshakeResult.HandshakeFailed -> if (retryPolicy.shouldRetry(state.extendedState.retryCounter)) {
-                    transitionTo(state.copy(extendedState = state.extendedState.copy(retryCounter = state.extendedState.retryCounter + 1)))
-                } else {
-                    transitionTo(HandshakingFailed(updatedStatus))
-                }
                 else -> noTransition()
             }
             is Receiving -> {
                 when (event) {
-                    is Commands.SubscribeIssued -> transitionTo(
-                        target = Receiving(updatedStatus),
-                        withEffects = cancel(state.call)
+                    is SubscriptionChanged -> transitionTo(
+                        target = Receiving(updatedExtendedState)
                     )
-                    Commands.UnsubscribeAllIssued -> transitionTo(
-                        target = Unsubscribed,
-                        withEffects = cancel(state.call) + Disconnected("Unsubscribed")
+                    is Disconnect -> transitionTo(
+                        target = Preparing(updatedExtendedState)
                     )
-                    is Commands.UnsubscribeIssued -> transitionTo(
-                        target = Receiving(updatedStatus),
-                        withEffects = cancel(state.call)
+                    is ReceivingFailure -> transitionTo(
+                        target = Reconnecting(updatedExtendedState)
                     )
-
-                    is ReceivingResult.ReceivingFailed -> transitionTo(Reconnecting(updatedStatus))
-                    is ReceivingResult.ReceivingSucceeded -> transitionTo(
-                        target = Receiving(updatedStatus),
+                    is ReceivingSuccess -> transitionTo(
+                        target = Receiving(updatedExtendedState),
                         withEffects = NewMessages(event.subscribeEnvelope.messages)
                     )
                     else -> noTransition()
                 }
             }
             Unsubscribed -> when (event) {
-                is Commands.SubscribeIssued -> transitionTo(Handshaking(updatedStatus))
+                is SubscriptionChanged -> transitionTo(
+                    target = Handshaking(updatedExtendedState)
+                )
                 else -> noTransition()
             }
             is HandshakingFailed -> when (event) {
-                is Commands.SubscribeIssued -> transitionTo(Handshaking(updatedStatus))
-                Commands.UnsubscribeAllIssued -> transitionTo(Unsubscribed)
-                is Commands.UnsubscribeIssued -> transitionTo(Handshaking(updatedStatus))
+                is SubscriptionChanged -> transitionTo(
+                    target = Handshaking(updatedExtendedState)
+                )
+                is ReconnectingRetry -> transitionTo(
+                    target = HandshakingReconnecting(updatedExtendedState)
+                )
                 else -> noTransition()
             }
             is Reconnecting ->
                 when (event) {
-                    is Commands.SubscribeIssued -> transitionTo(
-                        target = Reconnecting(updatedStatus),
-                        withEffects = cancel(state.call)
+                    is SubscriptionChanged -> transitionTo(
+                        target = Reconnecting(updatedExtendedState)
                     )
-                    Commands.UnsubscribeAllIssued -> transitionTo(
-                        target = Unsubscribed,
-                        withEffects = cancel(state.call)
+                    is ReconnectingSuccess -> transitionTo(
+                        target = Receiving(updatedExtendedState),
+                        withEffects = listOf(NewMessages(event.subscribeEnvelope.messages), Reconnected)
                     )
-                    is Commands.UnsubscribeIssued -> transitionTo(
-                        target = Reconnecting(updatedStatus),
-                        withEffects = cancel(state.call)
+                    is ReconnectingFailure -> transitionTo(
+                        target = Reconnecting(updatedExtendedState)
                     )
-
-                    is ReceivingResult.ReceivingSucceeded -> transitionTo(
-                        target = Receiving(updatedStatus),
-                        withEffects = listOf(Reconnected, NewMessages(event.subscribeEnvelope.messages))
+                    is ReconnectingGiveUp -> transitionTo(
+                        target = ReconnectingFailed(updatedExtendedState)
                     )
-                    is ReceivingResult.ReceivingFailed -> if (retryPolicy.shouldRetry(state.extendedState.retryCounter)) {
-                        transitionTo(state.copy(extendedState = state.extendedState.copy(retryCounter = state.extendedState.retryCounter + 1)))
-                    } else {
-                        transitionTo(target = ReconnectingFailed(updatedStatus), withEffects = Disconnected())
-                    }
                     else -> noTransition()
-
                 }
             is ReconnectingFailed -> when (event) {
-                else -> noTransition() //TODO figure out transitions out of it
+                is ReconnectingRetry -> transitionTo(
+                    target = Reconnecting(updatedExtendedState)
+                )
+                else -> noTransition()
             }
+            is HandshakingReconnecting ->                 when (event) {
+                is SubscriptionChanged -> transitionTo(
+                    target = HandshakingReconnecting(updatedExtendedState)
+                )
+                is HandshakingReconnectingSuccess -> transitionTo(
+                    target = Receiving(updatedExtendedState),
+                    withEffects = Connected
+                )
+                is HandshakingReconnectingFailure -> transitionTo(
+                    target = HandshakingReconnecting(updatedExtendedState)
+                )
+                is HandshakingReconnectingGiveUp -> transitionTo(
+                    target = HandshakingFailed(updatedExtendedState)
+                )
+                is HandshakingReconnectingRetry -> noTransition()
+                else -> noTransition()
+            }
+            is Paused -> TODO()
+            is Preparing -> TODO()
         }
     }

@@ -8,27 +8,23 @@ sealed interface SubscribeEvent : Event
 
 object InitialEvent : SubscribeEvent
 
-sealed class Commands : SubscribeEvent {
-    data class SubscribeIssued(
-        val channels: List<String>,
-        val groups: List<String> = listOf(),
-        val cursor: Cursor? = null
-    ) : Commands()
+data class SubscriptionChanged(
+    val channels: List<String>,
+    val groups: List<String> = listOf()
+) : SubscribeEvent
 
-    data class UnsubscribeIssued(
-        val channels: List<String>,
-        val groups: List<String> = listOf()
-    ) : Commands()
-
-    object UnsubscribeAllIssued : Commands()
-}
-
-sealed class HandshakeResult : SubscribeEvent {
-    data class HandshakeSucceeded(val cursor: Cursor) : HandshakeResult()
-    data class HandshakeFailed(val status: PNStatus) : HandshakeResult()
-}
-
-sealed class ReceivingResult : SubscribeEvent {
-    data class ReceivingSucceeded(val subscribeEnvelope: SubscribeEnvelope) : ReceivingResult()
-    data class ReceivingFailed(val status: PNStatus) : ReceivingResult()
-}
+object Disconnect : SubscribeEvent
+object Reconnect : SubscribeEvent
+object Restore : SubscribeEvent
+data class HandshakingSuccess(val cursor: Cursor) : SubscribeEvent
+data class HandshakingFailure(val status: PNStatus) : SubscribeEvent
+data class HandshakingReconnectingSuccess(val cursor: Cursor) : SubscribeEvent
+object HandshakingReconnectingGiveUp : SubscribeEvent
+object HandshakingReconnectingFailure : SubscribeEvent
+object HandshakingReconnectingRetry : SubscribeEvent
+data class ReceivingSuccess(val subscribeEnvelope: SubscribeEnvelope) : SubscribeEvent
+data class ReceivingFailure(val status: PNStatus) : SubscribeEvent
+data class ReconnectingSuccess(val subscribeEnvelope: SubscribeEnvelope) : SubscribeEvent
+object ReconnectingGiveUp : SubscribeEvent
+object ReconnectingFailure : SubscribeEvent
+object ReconnectingRetry : SubscribeEvent

@@ -9,9 +9,9 @@ typealias PresenceTransition = Transition<PresenceState, PresenceEvent, Presence
 fun presenceTransition(): PresenceTransition = defineTransition { state, event ->
     when (state) {
         is Notify -> when (event) {
-            is Commands.SubscribeIssued -> transitionTo(Notify(extendedState = updatedStatus))
+            is Commands.SubscribeIssued -> transitionTo(Notify(extendedState = updatedExtendedState))
             is Commands.UnsubscribeIssued -> transitionTo(
-                target = Notify(extendedState = updatedStatus),
+                target = Notify(extendedState = updatedExtendedState),
                 withEffects = IAmAwayEffectInvocation(channels = event.channels, channelGroups = event.groups)
             )
             is Commands.UnsubscribeAllIssued -> transitionTo(
@@ -22,25 +22,25 @@ fun presenceTransition(): PresenceTransition = defineTransition { state, event -
                 )
 
             )
-            IAmHere.Succeed -> transitionTo(Waiting(extendedState = updatedStatus))
+            IAmHere.Succeed -> transitionTo(Waiting(extendedState = updatedExtendedState))
             else -> noTransition()
         }
         is Unsubscribed -> when (event) {
-            is Commands.SubscribeIssued -> transitionTo(Notify(extendedState = updatedStatus))
+            is Commands.SubscribeIssued -> transitionTo(Notify(extendedState = updatedExtendedState))
             else -> noTransition()
         }
         is Waiting -> when (event) {
-            HeartbeatIntervalOver -> transitionTo(Notify(updatedStatus))
+            HeartbeatIntervalOver -> transitionTo(Notify(updatedExtendedState))
             is Commands.SubscribeIssued -> transitionTo(
-                target = Notify(updatedStatus),
+                target = Notify(updatedExtendedState),
                 withEffects = cancel(state.timer)
             )
             is Commands.UnsubscribeIssued -> transitionTo(
-                target = Notify(updatedStatus),
+                target = Notify(updatedExtendedState),
                 withEffects = cancel(state.timer)
             )
             is Commands.UnsubscribeAllIssued -> transitionTo(
-                target = Notify(updatedStatus),
+                target = Notify(updatedExtendedState),
                 withEffects = cancel(state.timer)
             )
             else -> noTransition()

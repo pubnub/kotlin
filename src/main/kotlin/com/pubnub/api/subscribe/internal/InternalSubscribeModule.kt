@@ -27,9 +27,7 @@ internal class InternalSubscribeModule(
             listenerManager: ListenerManager,
             incomingPayloadProcessor: IncomingPayloadProcessor
         ): NewSubscribeModule {
-            val engineAndEffects: Pair<SubscribeEventEngine, List<SubscribeEffectInvocation>> = subscribeEventEngine(
-                createRetryPolicy(pubnub.configuration)::shouldRetry
-            )
+            val engineAndEffects: Pair<SubscribeEventEngine, List<SubscribeEffectInvocation>> = subscribeEventEngine()
             val eventQueue: LinkedBlockingQueue<SubscribeEvent> = LinkedBlockingQueue(100)
             val effectQueue:
                     LinkedBlockingQueue<SubscribeEffectInvocation> = LinkedBlockingQueue<SubscribeEffectInvocation>(
@@ -68,10 +66,18 @@ internal class InternalSubscribeModule(
         withPresence: Boolean,
         withTimetoken: Long
     ) {
+        val extendedSubscribeState = moduleInternals.currentState().extendedState
+        val newChannels = extendedSubscribeState.channels + channels.toSet()
+        val newGroups = extendedSubscribeState.groups + channelGroups.toSet()
+
+        if (newChannels == extendedSubscribeState.channels && newGroups == extendedSubscribeState.groups) {
+            return
+        }
+
         eventQueue.put(
-            Commands.SubscribeIssued(
-                channels = channels,
-                groups = channelGroups
+            SubscriptionChanged(
+                channels = newChannels,
+                groups = newGroups
             )
         )
     }
@@ -80,17 +86,31 @@ internal class InternalSubscribeModule(
         channels: List<String>,
         channelGroups: List<String>
     ) {
-        eventQueue.put(
-            Commands.UnsubscribeIssued(
-                channels = channels,
-                groups = channelGroups
+        val extendedSubscribeState = moduleInternals.currentState().extendedState
+        val newChannels = extendedSubscribeState.channels - channels.toSet()
+        val newGroups = extendedSubscribeState.groups - channelGroups.toSet()
+
+        if (newChannels == extendedSubscribeState.channels && newGroups == extendedSubscribeState.groups) {
+            return
+        }
+
+        if (newChannels.isEmpty() && newGroups.isEmpty()) {
+            eventQueue.put(
+                Disconnect
             )
-        )
+        } else {
+            eventQueue.put(
+                SubscriptionChanged(
+                    channels = extendedSubscribeState.channels + channels,
+                    groups = extendedSubscribeState.groups + channelGroups
+                )
+            )
+        }
     }
 
     override fun unsubscribeAll() {
         eventQueue.put(
-            Commands.UnsubscribeAllIssued
+            Disconnect
         )
     }
 

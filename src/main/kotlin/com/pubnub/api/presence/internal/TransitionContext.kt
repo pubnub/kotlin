@@ -3,7 +3,7 @@ package com.pubnub.api.presence.internal
 import com.pubnub.api.state.TransitionContext
 
 internal class PresenceTransitionContext(presenceState: PresenceState, presenceEvent: PresenceEvent) : TransitionContext<PresenceEffectInvocation, PresenceExtendedState, PresenceEvent, PresenceState>(presenceState, presenceEvent) {
-    override val updatedStatus: PresenceExtendedState = presenceState.extendedState + presenceEvent
+    override val updatedExtendedState: PresenceExtendedState = presenceState.extendedState + presenceEvent
 
 }
 

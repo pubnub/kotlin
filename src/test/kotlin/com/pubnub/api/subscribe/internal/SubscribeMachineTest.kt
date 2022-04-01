@@ -23,7 +23,7 @@ class SubscribeMachineTest {
 
     @Test
     fun firstTest() {
-        val transition = subscribeTransition(LinearPolicy())
+        val transition = subscribeTransition()
         val status = PNStatus(
             category = PNStatusCategory.PNBadRequestCategory,
             error = true,
@@ -32,26 +32,25 @@ class SubscribeMachineTest {
 
         val events = listOf(
             InitialEvent,
-            Commands.SubscribeIssued(channels = listOf("ch1")),
-            HandshakeResult.HandshakeFailed(status),
-            HandshakeResult.HandshakeSucceeded(cursor = Cursor(timetoken = 5, region = "12")),
-            ReceivingResult.ReceivingFailed(status),
-            ReceivingResult.ReceivingSucceeded(
+            SubscriptionChanged(channels = listOf("ch1")),
+            HandshakingFailure(status),
+            HandshakingReconnectingSuccess(cursor = Cursor(timetoken = 5, region = "12")),
+            ReceivingFailure(status),
+            ReconnectingSuccess(
                 SubscribeEnvelope(
                     messages = listOf(),
                     metadata = SubscribeMetaData(timetoken = 5, region = "12")
                 )
             ),
-            ReceivingResult.ReceivingSucceeded(
+            ReceivingSuccess(
                 SubscribeEnvelope(
                     messages = listOf(),
                     metadata = SubscribeMetaData(timetoken = 5, region = "12")
                 )
             ),
-            HandshakeResult.HandshakeFailed(status)
+            HandshakingFailure(status)
 
         )
-
 
         val effects =
             events.fold<SubscribeEvent, Pair<SubscribeState, Collection<SubscribeEffectInvocation>>>(Unsubscribed to listOf()) { acc, ev ->

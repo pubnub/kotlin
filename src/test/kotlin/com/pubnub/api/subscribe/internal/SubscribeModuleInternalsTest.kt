@@ -7,7 +7,6 @@ import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.managers.ListenerManager
 import com.pubnub.api.models.server.SubscribeMessage
 import com.pubnub.api.subscribe.NewSubscribeModule
-import com.pubnub.api.subscribe.internal.Commands.*
 import org.junit.Test
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit

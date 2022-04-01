@@ -2,46 +2,53 @@ package com.pubnub.api.subscribe.internal
 
 import com.pubnub.api.state.*
 import com.pubnub.api.state.TransitionContext
-import com.pubnub.api.subscribe.internal.Commands.*
-import com.pubnub.api.subscribe.internal.HandshakeResult.HandshakeSucceeded
-import com.pubnub.api.subscribe.internal.ReceivingResult.ReceivingSucceeded
-
-/**
- * A class used to improve TODO improve what exactly? ;)
- */
-
 
 @StateMachineContext
 internal class SubscribeTransitionContext(
     state: SubscribeState,
     event: SubscribeEvent
 ) : TransitionContext<SubscribeEffectInvocation, SubscribeExtendedState, SubscribeEvent, SubscribeState>(state, event) {
-    override val updatedStatus: SubscribeExtendedState = state.extendedState + event
+    override val updatedExtendedState: SubscribeExtendedState = state.extendedState + event
 }
 
 internal operator fun SubscribeExtendedState.plus(event: SubscribeEvent): SubscribeExtendedState {
     return when (event) {
-        is HandshakeSucceeded -> copy(cursor = event.cursor)
-        is ReceivingSucceeded -> copy(
+        is HandshakingSuccess -> copy(cursor = event.cursor)
+        is HandshakingFailure -> copy(attempts = 0)
+        is ReceivingFailure -> copy(attempts = 0)
+        is ReceivingSuccess -> copy(
             cursor = Cursor(
                 timetoken = event.subscribeEnvelope.metadata.timetoken,
                 region = event.subscribeEnvelope.metadata.region
             )
         )
-        is SubscribeIssued -> copy(
-            channels = channels + event.channels.toSet(),
-            groups = groups + event.groups.toSet(),
-            cursor = event.cursor ?: cursor
+        is SubscriptionChanged -> copy(
+            channels = event.channels.toSet(),
+            groups = event.groups.toSet(),
         )
-        UnsubscribeAllIssued -> SubscribeExtendedState()
-        is UnsubscribeIssued -> copy(
-            channels = channels - event.channels.toSet(),
-            groups = groups - event.groups.toSet(),
+        is ReconnectingFailure -> copy(
+            attempts = attempts + 1
+        )
+        is HandshakingReconnectingFailure -> copy(
+            attempts = attempts + 1
+        )
+        is HandshakingReconnectingSuccess -> copy(
+            cursor = event.cursor
+        )
+        is ReconnectingSuccess -> copy(
+            cursor = Cursor(
+                timetoken = event.subscribeEnvelope.metadata.timetoken,
+                region = event.subscribeEnvelope.metadata.region
+            )
+        )
+        is ReconnectingRetry -> copy(
+            attempts = 0
         )
         else -> this
     }
 }
 
-internal fun SubscribeTransitionContext.cancel(vararg effects: SubscribeEffectInvocation): List<SubscribeEffectInvocation> {
+internal fun SubscribeState.cancel(vararg effects: SubscribeEffectInvocation): List<SubscribeEffectInvocation> {
     return effects.flatMap { listOf(CancelEffectInvocation(it.id())) }
 }
+

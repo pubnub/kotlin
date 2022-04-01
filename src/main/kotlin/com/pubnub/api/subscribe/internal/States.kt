@@ -19,24 +19,30 @@ data class Receiving(
 
     ) : SubscribeState() {
     override fun onEntry(): Collection<SubscribeEffectInvocation> = listOf(call)
+    override fun onExit(): Collection<SubscribeEffectInvocation> = cancel(call)
+}
+
+data class Preparing(override val extendedState: SubscribeExtendedState) : SubscribeState()
+data class Paused(override val extendedState: SubscribeExtendedState) : SubscribeState()
+data class HandshakingReconnecting(override val extendedState: SubscribeExtendedState) : SubscribeState() {
+    val call: SubscribeEffectInvocation = SubscribeHttpEffectInvocation.HandshakeHttpCallEffectInvocation(
+        extendedState
+    )
+
+    override fun onEntry(): Collection<SubscribeEffectInvocation> = listOf(call)
+    override fun onExit(): Collection<SubscribeEffectInvocation> = cancel(call)
+
 }
 
 data class Handshaking(
     override val extendedState: SubscribeExtendedState,
 ) : SubscribeState() {
-    val call: SubscribeEffectInvocation = if (extendedState.retryCounter == 0) {
-        SubscribeHttpEffectInvocation.HandshakeHttpCallEffectInvocation(
-            extendedState
-        )
-    } else {
-        ScheduleRetry(
-            retryableEffect = SubscribeHttpEffectInvocation.HandshakeHttpCallEffectInvocation(
-                extendedState
-            ), retryCount = extendedState.retryCounter
-        )
-    }
+    val call: SubscribeEffectInvocation = SubscribeHttpEffectInvocation.HandshakeHttpCallEffectInvocation(
+        extendedState
+    )
 
     override fun onEntry(): Collection<SubscribeEffectInvocation> = listOf(call)
+    override fun onExit(): Collection<SubscribeEffectInvocation> = cancel(call)
 }
 
 data class Reconnecting(
@@ -45,10 +51,11 @@ data class Reconnecting(
     val call: ScheduleRetry = ScheduleRetry(
         retryableEffect = SubscribeHttpEffectInvocation.ReceiveMessagesHttpCallEffectInvocation(
             extendedState
-        ), retryCount = extendedState.retryCounter
+        ), retryCount = extendedState.attempts
     )
 
     override fun onEntry(): Collection<SubscribeEffectInvocation> = listOf(call)
+    override fun onExit(): Collection<SubscribeEffectInvocation> = cancel(call)
 }
 
 data class ReconnectingFailed(

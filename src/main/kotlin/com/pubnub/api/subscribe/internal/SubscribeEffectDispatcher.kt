@@ -90,14 +90,14 @@ internal class HttpCallExecutor(
                     ) { r, s ->
                         eventQueue.put(
                             if (!s.error) {
-                                HandshakeResult.HandshakeSucceeded(
+                                HandshakingSuccess(
                                     Cursor(
                                         timetoken = r!!.metadata.timetoken, //TODO we could improve callback to avoid !! here
                                         region = r.metadata.region
                                     )
                                 )
                             } else {
-                                HandshakeResult.HandshakeFailed(s)
+                                HandshakingFailure(s)
                             }
                         )
                     }
@@ -115,9 +115,9 @@ internal class HttpCallExecutor(
                     ) { r, s ->
                         eventQueue.put(
                             if (!s.error) {
-                                ReceivingResult.ReceivingSucceeded(r!!)
+                                ReceivingSuccess(r!!)
                             } else {
-                                ReceivingResult.ReceivingFailed(s)
+                                ReceivingFailure(s)
                             }
                         )
 

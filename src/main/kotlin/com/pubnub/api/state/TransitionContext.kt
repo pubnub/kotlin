@@ -7,7 +7,7 @@ annotation class StateMachineContext
 internal abstract class TransitionContext<EF : EffectInvocation, EX : ExtendedState, EV : Event, S : State<EF, EX>>(
     val state: S, val event: EV
 ) {
-    abstract val updatedStatus: EX
+    abstract val updatedExtendedState: EX
 }
 
 
