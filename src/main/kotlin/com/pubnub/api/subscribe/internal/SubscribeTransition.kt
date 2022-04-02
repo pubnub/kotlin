@@ -38,7 +38,7 @@ internal fun subscribeTransition(): SubscribeTransition =
                     )
                     is ReceivingSuccess -> transitionTo(
                         target = Receiving(updatedExtendedState),
-                        withEffects = NewMessages(event.subscribeEnvelope.messages)
+                        withEffects = EmitEvents(event.subscribeEnvelope.messages)
                     )
                     else -> noTransition()
                 }
@@ -65,7 +65,7 @@ internal fun subscribeTransition(): SubscribeTransition =
                     )
                     is ReconnectingSuccess -> transitionTo(
                         target = Receiving(updatedExtendedState),
-                        withEffects = listOf(NewMessages(event.subscribeEnvelope.messages), Reconnected)
+                        withEffects = listOf(EmitEvents(event.subscribeEnvelope.messages), Reconnected)
                     )
                     is ReconnectingFailure -> transitionTo(
                         target = Reconnecting(updatedExtendedState)

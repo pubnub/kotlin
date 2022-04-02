@@ -8,13 +8,12 @@ import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.server.SubscribeMessage
 import com.pubnub.api.state.*
 import java.util.concurrent.*
-import java.util.concurrent.atomic.AtomicReference
-import kotlin.reflect.KClass
 
 internal class SubscribeEffectDispatcher(
     private val httpHandler: EffectHandlerFactory<SubscribeHttpEffectInvocation>,
-    private val retryEffectExecutor: EffectHandlerFactory<ScheduleRetry>,
-    private val newMessagesEffectExecutor: EffectHandlerFactory<NewMessages>,
+    private val handshakeReconnectHandlerFactory: EffectHandlerFactory<HandshakeReconnect>,
+    private val receiveEventsReconnectHandlerFactory: EffectHandlerFactory<ReceiveEventsReconnect>,
+    private val emitEventsEffectExecutor: EffectHandlerFactory<EmitEvents>,
     private val notificationEffectExecutor: EffectHandlerFactory<NotificationEffect>,
     override val trackedHandlers: MutableMap<String, ManagedEffectHandler> = mutableMapOf()
 ) : EffectDispatcher<SubscribeEffectInvocation>, EffectTracker {
@@ -26,9 +25,10 @@ internal class SubscribeEffectDispatcher(
                 null
             }
             is SubscribeHttpEffectInvocation -> httpHandler.handler(effect)
-            is NewMessages -> newMessagesEffectExecutor.handler(effect)
-            is ScheduleRetry -> retryEffectExecutor.handler(effect)
+            is EmitEvents -> emitEventsEffectExecutor.handler(effect)
             is NotificationEffect -> notificationEffectExecutor.handler(effect)
+            is HandshakeReconnect -> handshakeReconnectHandlerFactory.handler(effect)
+            is ReceiveEventsReconnect -> receiveEventsReconnectHandlerFactory.handler(effect)
         }
         handler?.start()
         if (handler is ManagedEffectHandler) {
@@ -39,6 +39,97 @@ internal class SubscribeEffectDispatcher(
     fun cancel() {
     }
 }
+
+internal class ReceiveEventsReconnectHandlerFactory(
+    private val pubnub: PubNub,
+    private val eventQueue: LinkedBlockingQueue<SubscribeEvent>,
+    private val executor: ScheduledExecutorService
+) : EffectHandlerFactory<HandshakeReconnect> {
+    override fun handler(effect: HandshakeReconnect): EffectHandler {
+        return EffectHandler.create(startFn = {
+            val remoteAction = pubnub.handshake(
+                channels = effect.subscribeExtendedState.channels.toList(),
+                channelGroups = effect.subscribeExtendedState.groups.toList()
+            )
+            val scheduled = executor.schedule({
+                remoteAction.async { r, s ->
+                    eventQueue.put(
+                        if (!s.error) {
+                            HandshakingSuccess(
+                                Cursor(
+                                    timetoken = r!!.metadata.timetoken, //TODO we could improve callback to avoid !! here
+                                    region = r.metadata.region
+                                )
+                            )
+                        } else {
+                            HandshakingFailure(s)
+                        }
+                    )
+                }
+
+            }, 100, TimeUnit.MILLISECONDS)
+            scheduled to remoteAction
+        }, cancelFn = {
+            second.silentCancel()
+            first.cancel(true)
+        })
+    }
+
+}
+
+internal class ReconnectingHandlerFactory<EF>(
+    private val executor: ScheduledExecutorService,
+    private val internalHandlerFactory: EffectHandlerFactory<EF>
+) : EffectHandlerFactory<EF> {
+    override fun handler(effect: EF): EffectHandler {
+        val internalHandler = internalHandlerFactory.handler(effect)
+
+        EffectHandler.create(startFn = {
+            val scheduled = executor.schedule({
+                internalHandler.start()
+            }, 100, TimeUnit.MILLISECONDS)
+
+            scheduled to internalHandler
+        }, cancelFn = {
+            second.cancel()
+            first.cancel(true)
+        })
+
+    }
+
+}
+
+internal class HandshakeReconnectHandlerFactory(
+    private val pubnub: PubNub,
+    private val eventQueue: LinkedBlockingQueue<SubscribeEvent>,
+    private val executor: ScheduledExecutorService
+) : EffectHandlerFactory<HandshakeReconnect> {
+    override fun handler(effect: HandshakeReconnect): EffectHandler {
+        val remoteAction = pubnub.receiveMessages(
+            channels = effect.subscribeExtendedState.channels.toList(),
+            channelGroups = effect.subscribeExtendedState.groups.toList(),
+            timetoken = effect.subscribeExtendedState.cursor!!.timetoken, //TODO figure out how to drop !! here
+            region = effect.subscribeExtendedState.cursor.region
+        )
+
+        return EffectHandler.create(startFn = {
+                remoteAction.async { r, s ->
+                    eventQueue.put(
+                        if (!s.error) {
+                            ReconnectingSuccess(r!!)
+                        } else {
+                            ReconnectingFailure(s)
+                        }
+                    )
+                }
+            remoteAction
+        }, cancelFn = {
+            this.silentCancel()
+        })
+    }
+
+}
+
 
 internal class NotificationExecutor(private val listenerManager: ListenerManager) :
     EffectHandlerFactory<NotificationEffect> {
@@ -69,7 +160,6 @@ internal class NotificationExecutor(private val listenerManager: ListenerManager
                             operation = PNOperationType.PNSubscribeOperation
                         )
                     )
-
                 }
             }
         )
@@ -82,12 +172,14 @@ internal class HttpCallExecutor(
 
     override fun handler(effect: SubscribeHttpEffectInvocation): EffectHandler {
         return when (effect) {
-            is SubscribeHttpEffectInvocation.HandshakeHttpCallEffectInvocation -> {
+            is Handshake -> {
                 EffectHandler.create(startFn = {
-                    pubnub.handshake(
-                        channels = effect.subscribeExtendedState.channels.toList(),
-                        channelGroups = effect.subscribeExtendedState.groups.toList()
-                    ) { r, s ->
+                    val remoteAction =
+                        pubnub.handshake(
+                            channels = effect.subscribeExtendedState.channels.toList(),
+                            channelGroups = effect.subscribeExtendedState.groups.toList()
+                        )
+                    remoteAction.async { r, s ->
                         eventQueue.put(
                             if (!s.error) {
                                 HandshakingSuccess(
@@ -101,18 +193,20 @@ internal class HttpCallExecutor(
                             }
                         )
                     }
+                    remoteAction
                 }, cancelFn = { silentCancel() })
 
             }
-            is SubscribeHttpEffectInvocation.ReceiveMessagesHttpCallEffectInvocation -> {
+            is ReceiveEvents -> {
 
                 EffectHandler.create(startFn = {
-                    pubnub.receiveMessages(
+                    val remoteAction = pubnub.receiveMessages(
                         channels = effect.subscribeExtendedState.channels.toList(),
                         channelGroups = effect.subscribeExtendedState.groups.toList(),
                         timetoken = effect.subscribeExtendedState.cursor!!.timetoken, //TODO figure out how to drop !! here
                         region = effect.subscribeExtendedState.cursor.region
-                    ) { r, s ->
+                    )
+                    remoteAction.async { r, s ->
                         eventQueue.put(
                             if (!s.error) {
                                 ReceivingSuccess(r!!)
@@ -122,26 +216,10 @@ internal class HttpCallExecutor(
                         )
 
                     }
+                    remoteAction
                 }, cancelFn = { silentCancel() })
             }
         }
-    }
-}
-
-internal class RetryEffectExecutor(
-    private val effectQueue: LinkedBlockingQueue<SubscribeEffectInvocation>,
-    private val executor: ScheduledExecutorService = Executors.newScheduledThreadPool(3),
-    private val retryPolicy: RetryPolicy = NoPolicy
-) : EffectHandlerFactory<ScheduleRetry> {
-    override fun handler(effect: ScheduleRetry): EffectHandler {
-        executor.schedule(Callable {
-            effectQueue.put(effect.retryableEffect)
-        }, retryPolicy.computeDelay(effect.retryCount).seconds, TimeUnit.SECONDS).let {
-            {
-                it.cancel(true)
-            }
-        }
-        return EffectHandler.create()
     }
 }
 
@@ -150,8 +228,8 @@ internal interface IncomingPayloadProcessor {
 }
 
 internal class NewMessagesEffectExecutor(private val processor: IncomingPayloadProcessor) :
-    EffectHandlerFactory<NewMessages> {
-    override fun handler(effect: NewMessages): EffectHandler {
+    EffectHandlerFactory<EmitEvents> {
+    override fun handler(effect: EmitEvents): EffectHandler {
         effect.messages.forEach {
             processor.processIncomingPayload(it)
         }

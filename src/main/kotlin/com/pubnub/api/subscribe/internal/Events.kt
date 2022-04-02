@@ -26,5 +26,5 @@ data class ReceivingSuccess(val subscribeEnvelope: SubscribeEnvelope) : Subscrib
 data class ReceivingFailure(val status: PNStatus) : SubscribeEvent
 data class ReconnectingSuccess(val subscribeEnvelope: SubscribeEnvelope) : SubscribeEvent
 object ReconnectingGiveUp : SubscribeEvent
-object ReconnectingFailure : SubscribeEvent
+data class ReconnectingFailure(val status: PNStatus) : SubscribeEvent
 object ReconnectingRetry : SubscribeEvent

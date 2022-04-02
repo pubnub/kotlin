@@ -40,12 +40,12 @@ internal class InternalSubscribeModule(
 
             val retryEffectExecutor: EffectHandlerFactory<ScheduleRetry> =
                 RetryEffectExecutor(effectQueue = effectQueue)
-            val newMessagesEffectExecutor: EffectHandlerFactory<NewMessages> =
+            val emitEventsEffectExecutor: EffectHandlerFactory<EmitEvents> =
                 NewMessagesEffectExecutor(incomingPayloadProcessor)
             val effectDispatcher = SubscribeEffectDispatcher(
                 httpHandler = httpHandler,
                 retryEffectExecutor = retryEffectExecutor,
-                newMessagesEffectExecutor = newMessagesEffectExecutor,
+                emitEventsEffectExecutor = emitEventsEffectExecutor,
                 notificationEffectExecutor = NotificationExecutor(listenerManager)
             )
 

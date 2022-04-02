@@ -13,7 +13,7 @@ object Unsubscribed : SubscribeState() {
 
 data class Receiving(
     override val extendedState: SubscribeExtendedState,
-    val call: SubscribeHttpEffectInvocation.ReceiveMessagesHttpCallEffectInvocation = SubscribeHttpEffectInvocation.ReceiveMessagesHttpCallEffectInvocation(
+    val call: ReceiveEvents = ReceiveEvents(
         extendedState
     ),
 
@@ -25,7 +25,7 @@ data class Receiving(
 data class Preparing(override val extendedState: SubscribeExtendedState) : SubscribeState()
 data class Paused(override val extendedState: SubscribeExtendedState) : SubscribeState()
 data class HandshakingReconnecting(override val extendedState: SubscribeExtendedState) : SubscribeState() {
-    val call: SubscribeEffectInvocation = SubscribeHttpEffectInvocation.HandshakeHttpCallEffectInvocation(
+    val call: SubscribeEffectInvocation = Handshake(
         extendedState
     )
 
@@ -37,7 +37,7 @@ data class HandshakingReconnecting(override val extendedState: SubscribeExtended
 data class Handshaking(
     override val extendedState: SubscribeExtendedState,
 ) : SubscribeState() {
-    val call: SubscribeEffectInvocation = SubscribeHttpEffectInvocation.HandshakeHttpCallEffectInvocation(
+    val call: SubscribeEffectInvocation = Handshake(
         extendedState
     )
 
@@ -49,7 +49,7 @@ data class Reconnecting(
     override val extendedState: SubscribeExtendedState,
 ) : SubscribeState() {
     val call: ScheduleRetry = ScheduleRetry(
-        retryableEffect = SubscribeHttpEffectInvocation.ReceiveMessagesHttpCallEffectInvocation(
+        retryableEffect = ReceiveEvents(
             extendedState
         ), retryCount = extendedState.attempts
     )
