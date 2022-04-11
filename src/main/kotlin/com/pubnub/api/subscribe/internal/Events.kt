@@ -24,7 +24,7 @@ object HandshakingReconnectingFailure : SubscribeEvent
 object HandshakingReconnectingRetry : SubscribeEvent
 data class ReceivingSuccess(val subscribeEnvelope: SubscribeEnvelope) : SubscribeEvent
 data class ReceivingFailure(val status: PNStatus) : SubscribeEvent
-data class ReconnectingSuccess(val subscribeEnvelope: SubscribeEnvelope) : SubscribeEvent
-object ReconnectingGiveUp : SubscribeEvent
-data class ReconnectingFailure(val status: PNStatus) : SubscribeEvent
-object ReconnectingRetry : SubscribeEvent
+data class ReceiveReconnectingSuccess(val subscribeEnvelope: SubscribeEnvelope) : SubscribeEvent
+object ReceiveReconnectingGiveUp : SubscribeEvent
+data class ReceiveReconnectingFailure(val status: PNStatus) : SubscribeEvent
+object ReceiveReconnectingRetry : SubscribeEvent

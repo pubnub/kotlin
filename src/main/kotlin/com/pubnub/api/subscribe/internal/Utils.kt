@@ -2,9 +2,7 @@ package com.pubnub.api.subscribe.internal
 
 import com.pubnub.api.PubNub
 import com.pubnub.api.endpoints.pubsub.Subscribe
-import com.pubnub.api.endpoints.remoteaction.Cancelable
 import com.pubnub.api.endpoints.remoteaction.RemoteAction
-import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.server.SubscribeEnvelope
 
 internal fun PubNub.handshake(
@@ -18,7 +16,7 @@ internal fun PubNub.handshake(
     }
 }
 
-internal fun PubNub.receiveMessages(
+internal fun PubNub.receiveEvents(
     channels: List<String>,
     channelGroups: List<String>,
     timetoken: Long,

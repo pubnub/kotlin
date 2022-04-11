@@ -1,8 +1,8 @@
 package com.pubnub.api.subscribe.internal
 
-import org.junit.Assert.*
 import org.junit.Test
 import java.time.Duration
+import org.junit.Assert.assertEquals
 
 class RetryPolicyTest {
 

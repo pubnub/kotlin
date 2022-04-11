@@ -14,4 +14,3 @@ internal interface EffectTracker {
 interface EffectDispatcher<EF : EffectInvocation> {
     fun dispatch(effect: EF)
 }
-

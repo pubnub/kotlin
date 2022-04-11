@@ -37,4 +37,3 @@ interface NewSubscribeModule {
     fun getSubscribedChannelGroups(): List<String>
     fun cancel()
 }
-

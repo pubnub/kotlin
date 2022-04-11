@@ -18,13 +18,11 @@ data class Handshake(
 ) : SubscribeHttpEffectInvocation()
 
 data class ReceiveEventsReconnect(
-    val subscribeExtendedState: SubscribeExtendedState,
-    val attempt: Int
+    val subscribeExtendedState: SubscribeExtendedState
 ) : SubscribeEffectInvocation()
 
 data class HandshakeReconnect(
     val subscribeExtendedState: SubscribeExtendedState,
-    val attempt: Int
 ) : SubscribeEffectInvocation()
 
 data class CancelEffectInvocation(val idToCancel: String) : SubscribeEffectInvocation()

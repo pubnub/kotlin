@@ -2,9 +2,7 @@ package com.pubnub.api.state
 
 import java.util.concurrent.atomic.AtomicReference
 
-interface ManagedEffectHandler : EffectHandler {
-
-}
+interface ManagedEffectHandler : EffectHandler
 
 interface EffectHandler {
     fun start()
@@ -20,20 +18,22 @@ interface EffectHandler {
         }
 
         fun <T> create(startFn: () -> T, cancelFn: T.() -> Unit): ManagedEffectHandler {
-            return ManagedEffectHandlerImplementation(startFn = startFn, cancelFn = cancelFn)
+            return ManagedEffectHandlerImplementation<T>(startFn = startFn, cancelFn = cancelFn)
         }
     }
 
-    class ManagedEffectHandlerImplementation internal constructor(
-        private val startFn: () -> Unit, private val cancelFn: () -> Unit
+    class ManagedEffectHandlerImplementation<T> internal constructor(
+        private val startFn: () -> T,
+        private val cancelFn: T.() -> Unit
     ) : ManagedEffectHandler {
+        private var cancellable: AtomicReference<T?> = AtomicReference(null)
 
         override fun start() {
-            startFn()
+            cancellable.compareAndSet(null, startFn())
         }
 
         override fun cancel() {
-            cancelFn()
+            cancellable.get()?.cancelFn()
         }
     }
 
@@ -46,7 +46,6 @@ interface EffectHandler {
         }
 
         override fun cancel() {
-
         }
     }
 }

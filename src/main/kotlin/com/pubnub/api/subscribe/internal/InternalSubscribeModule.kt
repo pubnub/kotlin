@@ -7,8 +7,8 @@ import com.pubnub.api.managers.ListenerManager
 import com.pubnub.api.state.EffectHandlerFactory
 import com.pubnub.api.state.internal.IntModule
 import com.pubnub.api.subscribe.NewSubscribeModule
+import java.util.concurrent.Executors
 import java.util.concurrent.LinkedBlockingQueue
-
 
 internal class InternalSubscribeModule(
     private val eventQueue: LinkedBlockingQueue<SubscribeEvent>,
@@ -29,22 +29,29 @@ internal class InternalSubscribeModule(
         ): NewSubscribeModule {
             val engineAndEffects: Pair<SubscribeEventEngine, List<SubscribeEffectInvocation>> = subscribeEventEngine()
             val eventQueue: LinkedBlockingQueue<SubscribeEvent> = LinkedBlockingQueue(100)
-            val effectQueue:
-                    LinkedBlockingQueue<SubscribeEffectInvocation> = LinkedBlockingQueue<SubscribeEffectInvocation>(
-                100
-            ).apply { engineAndEffects.second.forEach(::put) }
+            val effectQueue: LinkedBlockingQueue<SubscribeEffectInvocation> =
+                LinkedBlockingQueue<SubscribeEffectInvocation>(
+                    100
+                ).apply { engineAndEffects.second.forEach(::put) }
             val httpHandler: EffectHandlerFactory<SubscribeHttpEffectInvocation> = HttpCallExecutor(
-                pubnub = pubnub,
-                eventQueue = eventQueue
+                pubnub = pubnub, eventQueue = eventQueue
             )
 
-            val retryEffectExecutor: EffectHandlerFactory<ScheduleRetry> =
-                RetryEffectExecutor(effectQueue = effectQueue)
+            val scheduleExecutorService = Executors.newScheduledThreadPool(2)
             val emitEventsEffectExecutor: EffectHandlerFactory<EmitEvents> =
                 NewMessagesEffectExecutor(incomingPayloadProcessor)
+            val handshakeReconnectHandlerFactory: EffectHandlerFactory<HandshakeReconnect> =
+                HandshakeReconnectHandlerFactory(
+                    pubnub = pubnub, eventQueue = eventQueue, executor = scheduleExecutorService
+                )
+            val receiveEventsReconnectHandlerFactory: EffectHandlerFactory<ReceiveEventsReconnect> =
+                ReceiveEventsReconnectHandlerFactory(
+                    pubnub = pubnub, eventQueue = eventQueue, executor = scheduleExecutorService
+                )
             val effectDispatcher = SubscribeEffectDispatcher(
                 httpHandler = httpHandler,
-                retryEffectExecutor = retryEffectExecutor,
+                handshakeReconnectHandlerFactory = handshakeReconnectHandlerFactory,
+                receiveEventsReconnectHandlerFactory = receiveEventsReconnectHandlerFactory,
                 emitEventsEffectExecutor = emitEventsEffectExecutor,
                 notificationEffectExecutor = NotificationExecutor(listenerManager)
             )
@@ -57,7 +64,6 @@ internal class InternalSubscribeModule(
             )
             return InternalSubscribeModule(eventQueue, moduleInternals = moduleInternals)
         }
-
     }
 
     override fun subscribe(
@@ -76,8 +82,7 @@ internal class InternalSubscribeModule(
 
         eventQueue.put(
             SubscriptionChanged(
-                channels = newChannels,
-                groups = newGroups
+                channels = newChannels, groups = newGroups
             )
         )
     }

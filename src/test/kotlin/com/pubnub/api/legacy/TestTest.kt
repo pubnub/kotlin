@@ -18,10 +18,8 @@ class TestTest {
 
         val pn = PubNub(config)
 
-
         pn.subscribe(channels = listOf("ch1"))
 
         Thread.sleep(3000)
-
     }
 }

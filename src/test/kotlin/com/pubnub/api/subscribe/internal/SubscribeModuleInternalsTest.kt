@@ -15,30 +15,34 @@ class SubscribeModuleInternalsTest {
 
     @Test
     fun testGlue() {
-        val pubnub = PubNub(PNConfiguration("something").apply {
-            publishKey = Keys.publishKey
-            subscribeKey = Keys.subscribeKey
-            logVerbosity = PNLogVerbosity.BODY
-        })
-
+        val pubnub = PubNub(
+            PNConfiguration("something").apply {
+                publishKey = Keys.publishKey
+                subscribeKey = Keys.subscribeKey
+                logVerbosity = PNLogVerbosity.BODY
+            }
+        )
 
         val subscribeModule = NewSubscribeModule.create(
             pubnub = pubnub,
             incomingPayloadProcessor = object : IncomingPayloadProcessor {
                 override fun processIncomingPayload(message: SubscribeMessage) {
-                    //do nothing
+                    // do nothing
                 }
             },
             listenerManager = ListenerManager(pubnub)
         )
 
-        Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate({
-            val ch = listOf("ch1", "ch2", "ch3", "ch4", "ch5", "ch6").random()
-            pubnub.publish(
-                channel = ch,
-                message = "message"
-            ).sync()
-        }, 1000, 1000, TimeUnit.MILLISECONDS)
+        Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(
+            {
+                val ch = listOf("ch1", "ch2", "ch3", "ch4", "ch5", "ch6").random()
+                pubnub.publish(
+                    channel = ch,
+                    message = "message"
+                ).sync()
+            },
+            1000, 1000, TimeUnit.MILLISECONDS
+        )
 
         subscribeModule.subscribe(
             channels = listOf("ch1"),

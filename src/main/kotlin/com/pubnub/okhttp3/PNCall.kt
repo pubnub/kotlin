@@ -15,7 +15,7 @@ internal class PNCall(
         try {
             realCall.getConnection()?.socket()?.shutdownInput()
         } catch (t: Throwable) {
-            //log.warn("Caught throwable when canceling call", t)
+            // log.warn("Caught throwable when canceling call", t)
         }
         realCall.cancel()
     }

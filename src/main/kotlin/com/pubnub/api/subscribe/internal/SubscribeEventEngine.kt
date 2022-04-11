@@ -6,7 +6,6 @@ import com.pubnub.api.state.transitionTo
 
 typealias SubscribeEventEngine = Engine<SubscribeState, SubscribeEvent, SubscribeEffectInvocation>
 
-
 internal fun subscribeEventEngine(): Pair<SubscribeEventEngine, List<SubscribeEffectInvocation>> {
     val engine = EngineImplementation(
         initialState = Unsubscribed,

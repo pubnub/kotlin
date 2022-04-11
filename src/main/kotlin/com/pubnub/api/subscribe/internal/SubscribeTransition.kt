@@ -17,7 +17,7 @@ internal fun subscribeTransition(): SubscribeTransition =
                     target = Preparing(updatedExtendedState)
                 )
                 is HandshakingFailure -> transitionTo(
-                    target = HandshakingReconnecting(updatedExtendedState)
+                    target = HandshakeReconnecting(updatedExtendedState)
                 )
                 is HandshakingSuccess -> transitionTo(
                     target = Receiving(updatedExtendedState),
@@ -34,7 +34,7 @@ internal fun subscribeTransition(): SubscribeTransition =
                         target = Preparing(updatedExtendedState)
                     )
                     is ReceivingFailure -> transitionTo(
-                        target = Reconnecting(updatedExtendedState)
+                        target = ReceiveReconnecting(updatedExtendedState)
                     )
                     is ReceivingSuccess -> transitionTo(
                         target = Receiving(updatedExtendedState),
@@ -53,44 +53,44 @@ internal fun subscribeTransition(): SubscribeTransition =
                 is SubscriptionChanged -> transitionTo(
                     target = Handshaking(updatedExtendedState)
                 )
-                is ReconnectingRetry -> transitionTo(
-                    target = HandshakingReconnecting(updatedExtendedState)
+                is ReceiveReconnectingRetry -> transitionTo(
+                    target = HandshakeReconnecting(updatedExtendedState)
                 )
                 else -> noTransition()
             }
-            is Reconnecting ->
+            is ReceiveReconnecting ->
                 when (event) {
                     is SubscriptionChanged -> transitionTo(
-                        target = Reconnecting(updatedExtendedState)
+                        target = ReceiveReconnecting(updatedExtendedState)
                     )
-                    is ReconnectingSuccess -> transitionTo(
+                    is ReceiveReconnectingSuccess -> transitionTo(
                         target = Receiving(updatedExtendedState),
                         withEffects = listOf(EmitEvents(event.subscribeEnvelope.messages), Reconnected)
                     )
-                    is ReconnectingFailure -> transitionTo(
-                        target = Reconnecting(updatedExtendedState)
+                    is ReceiveReconnectingFailure -> transitionTo(
+                        target = ReceiveReconnecting(updatedExtendedState)
                     )
-                    is ReconnectingGiveUp -> transitionTo(
+                    is ReceiveReconnectingGiveUp -> transitionTo(
                         target = ReconnectingFailed(updatedExtendedState)
                     )
                     else -> noTransition()
                 }
             is ReconnectingFailed -> when (event) {
-                is ReconnectingRetry -> transitionTo(
-                    target = Reconnecting(updatedExtendedState)
+                is ReceiveReconnectingRetry -> transitionTo(
+                    target = ReceiveReconnecting(updatedExtendedState)
                 )
                 else -> noTransition()
             }
-            is HandshakingReconnecting ->                 when (event) {
+            is HandshakeReconnecting -> when (event) {
                 is SubscriptionChanged -> transitionTo(
-                    target = HandshakingReconnecting(updatedExtendedState)
+                    target = HandshakeReconnecting(updatedExtendedState)
                 )
                 is HandshakingReconnectingSuccess -> transitionTo(
                     target = Receiving(updatedExtendedState),
                     withEffects = Connected
                 )
                 is HandshakingReconnectingFailure -> transitionTo(
-                    target = HandshakingReconnecting(updatedExtendedState)
+                    target = HandshakeReconnecting(updatedExtendedState)
                 )
                 is HandshakingReconnectingGiveUp -> transitionTo(
                     target = HandshakingFailed(updatedExtendedState)

@@ -2,8 +2,6 @@ package com.pubnub.api.presence.internal
 
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.state.Event
-import com.pubnub.api.subscribe.internal.Cursor
-import com.pubnub.api.subscribe.internal.SubscribeEvent
 
 sealed class PresenceEvent : Event
 
@@ -34,6 +32,3 @@ sealed class Commands : PresenceEvent() {
 
     object UnsubscribeAllIssued : Commands()
 }
-
-
-

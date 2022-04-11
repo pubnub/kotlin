@@ -4,7 +4,6 @@ import com.pubnub.api.state.EffectDispatcher
 import com.pubnub.api.state.EffectInvocation
 import com.pubnub.api.state.Engine
 import org.slf4j.LoggerFactory
-import java.util.Queue
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -40,19 +39,21 @@ class Queued<IN, H> private constructor(
         executorService: ExecutorService,
         handle: (T) -> Unit
     ): CompletableFuture<Void> {
-        return CompletableFuture.runAsync({
-            while (!Thread.interrupted()) {
-                try {
-                    handle(take())
-                } catch (e: InterruptedException) {
-                    Thread.currentThread().interrupt()
-                } catch (e: Exception) {
-                    logger.error("Uncaught exception when handling message from queue", e)
-                    throw e
+        return CompletableFuture.runAsync(
+            {
+                while (!Thread.interrupted()) {
+                    try {
+                        handle(take())
+                    } catch (e: InterruptedException) {
+                        Thread.currentThread().interrupt()
+                    } catch (e: Exception) {
+                        logger.error("Uncaught exception when handling message from queue", e)
+                        throw e
+                    }
                 }
-            }
-
-        }, executorService)
+            },
+            executorService
+        )
     }
 
     private fun run() {
@@ -62,7 +63,6 @@ class Queued<IN, H> private constructor(
     fun cancel() {
         inputLoop.cancel(true)
     }
-
 }
 
 internal class IntModule<S, EV, EF : EffectInvocation>(
@@ -92,6 +92,4 @@ internal class IntModule<S, EV, EF : EffectInvocation>(
         queuedEngine.cancel()
         queuedEffectDispatcher.cancel()
     }
-
 }
-

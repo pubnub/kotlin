@@ -6,8 +6,14 @@ import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.managers.ListenerManager
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.server.SubscribeMessage
-import com.pubnub.api.state.*
-import java.util.concurrent.*
+import com.pubnub.api.state.EffectDispatcher
+import com.pubnub.api.state.EffectHandler
+import com.pubnub.api.state.EffectHandlerFactory
+import com.pubnub.api.state.EffectTracker
+import com.pubnub.api.state.ManagedEffectHandler
+import java.util.concurrent.LinkedBlockingQueue
+import java.util.concurrent.ScheduledExecutorService
+import java.util.concurrent.TimeUnit
 
 internal class SubscribeEffectDispatcher(
     private val httpHandler: EffectHandlerFactory<SubscribeHttpEffectInvocation>,
@@ -44,37 +50,41 @@ internal class ReceiveEventsReconnectHandlerFactory(
     private val pubnub: PubNub,
     private val eventQueue: LinkedBlockingQueue<SubscribeEvent>,
     private val executor: ScheduledExecutorService
-) : EffectHandlerFactory<HandshakeReconnect> {
-    override fun handler(effect: HandshakeReconnect): EffectHandler {
-        return EffectHandler.create(startFn = {
-            val remoteAction = pubnub.handshake(
-                channels = effect.subscribeExtendedState.channels.toList(),
-                channelGroups = effect.subscribeExtendedState.groups.toList()
-            )
-            val scheduled = executor.schedule({
-                remoteAction.async { r, s ->
-                    eventQueue.put(
-                        if (!s.error) {
-                            HandshakingSuccess(
-                                Cursor(
-                                    timetoken = r!!.metadata.timetoken, //TODO we could improve callback to avoid !! here
-                                    region = r.metadata.region
-                                )
+) : EffectHandlerFactory<ReceiveEventsReconnect> {
+    override fun handler(effect: ReceiveEventsReconnect): EffectHandler {
+        return EffectHandler.create(
+            startFn = {
+                val remoteAction = pubnub.receiveEvents(
+                    channels = effect.subscribeExtendedState.channels.toList(),
+                    channelGroups = effect.subscribeExtendedState.groups.toList(),
+                    timetoken = effect.subscribeExtendedState.cursor?.timetoken!!,
+                    region = effect.subscribeExtendedState.cursor.region
+                )
+
+                val scheduled = executor.schedule(
+                    {
+                        remoteAction.async { r, s ->
+                            eventQueue.put(
+                                if (!s.error) {
+                                    ReceiveReconnectingSuccess(
+                                        r!!
+                                    )
+                                } else {
+                                    ReceiveReconnectingFailure(s)
+                                }
                             )
-                        } else {
-                            HandshakingFailure(s)
                         }
-                    )
-                }
-
-            }, 100, TimeUnit.MILLISECONDS)
-            scheduled to remoteAction
-        }, cancelFn = {
-            second.silentCancel()
-            first.cancel(true)
-        })
+                    },
+                    100, TimeUnit.MILLISECONDS
+                )
+                scheduled to remoteAction
+            },
+            cancelFn = {
+                second.silentCancel()
+                first.cancel(true)
+            }
+        )
     }
-
 }
 
 internal class ReconnectingHandlerFactory<EF>(
@@ -82,21 +92,25 @@ internal class ReconnectingHandlerFactory<EF>(
     private val internalHandlerFactory: EffectHandlerFactory<EF>
 ) : EffectHandlerFactory<EF> {
     override fun handler(effect: EF): EffectHandler {
-        val internalHandler = internalHandlerFactory.handler(effect)
 
-        EffectHandler.create(startFn = {
-            val scheduled = executor.schedule({
-                internalHandler.start()
-            }, 100, TimeUnit.MILLISECONDS)
+        return EffectHandler.create(
+            startFn = {
+                val internalHandler = internalHandlerFactory.handler(effect)
+                val scheduled = executor.schedule(
+                    {
+                        internalHandler.start()
+                    },
+                    100, TimeUnit.MILLISECONDS
+                )
 
-            scheduled to internalHandler
-        }, cancelFn = {
-            second.cancel()
-            first.cancel(true)
-        })
-
+                scheduled to internalHandler
+            },
+            cancelFn = {
+                second.cancel()
+                first.cancel(true)
+            }
+        )
     }
-
 }
 
 internal class HandshakeReconnectHandlerFactory(
@@ -105,31 +119,41 @@ internal class HandshakeReconnectHandlerFactory(
     private val executor: ScheduledExecutorService
 ) : EffectHandlerFactory<HandshakeReconnect> {
     override fun handler(effect: HandshakeReconnect): EffectHandler {
-        val remoteAction = pubnub.receiveMessages(
-            channels = effect.subscribeExtendedState.channels.toList(),
-            channelGroups = effect.subscribeExtendedState.groups.toList(),
-            timetoken = effect.subscribeExtendedState.cursor!!.timetoken, //TODO figure out how to drop !! here
-            region = effect.subscribeExtendedState.cursor.region
-        )
+        return EffectHandler.create(
+            startFn = {
+                val remoteAction = pubnub.handshake(
+                    channels = effect.subscribeExtendedState.channels.toList(),
+                    channelGroups = effect.subscribeExtendedState.groups.toList()
+                )
 
-        return EffectHandler.create(startFn = {
-                remoteAction.async { r, s ->
-                    eventQueue.put(
-                        if (!s.error) {
-                            ReconnectingSuccess(r!!)
-                        } else {
-                            ReconnectingFailure(s)
+                val scheduled = executor.schedule(
+                    {
+                        remoteAction.async { r, s ->
+                            eventQueue.put(
+                                if (!s.error) {
+                                    HandshakingSuccess(
+                                        Cursor(
+                                            timetoken = r!!.metadata.timetoken, // TODO we could improve callback to avoid !! here
+                                            region = r.metadata.region
+                                        )
+                                    )
+                                } else {
+                                    HandshakingFailure(s)
+                                }
+                            )
                         }
-                    )
-                }
-            remoteAction
-        }, cancelFn = {
-            this.silentCancel()
-        })
+                    },
+                    100, TimeUnit.MILLISECONDS
+                )
+                scheduled to remoteAction
+            },
+            cancelFn = {
+                second.silentCancel()
+                first.cancel(true)
+            }
+        )
     }
-
 }
-
 
 internal class NotificationExecutor(private val listenerManager: ListenerManager) :
     EffectHandlerFactory<NotificationEffect> {
@@ -167,57 +191,62 @@ internal class NotificationExecutor(private val listenerManager: ListenerManager
 }
 
 internal class HttpCallExecutor(
-    private val pubnub: PubNub, private val eventQueue: LinkedBlockingQueue<SubscribeEvent>
+    private val pubnub: PubNub,
+    private val eventQueue: LinkedBlockingQueue<SubscribeEvent>
 ) : EffectHandlerFactory<SubscribeHttpEffectInvocation> {
 
     override fun handler(effect: SubscribeHttpEffectInvocation): EffectHandler {
         return when (effect) {
             is Handshake -> {
-                EffectHandler.create(startFn = {
-                    val remoteAction =
-                        pubnub.handshake(
-                            channels = effect.subscribeExtendedState.channels.toList(),
-                            channelGroups = effect.subscribeExtendedState.groups.toList()
-                        )
-                    remoteAction.async { r, s ->
-                        eventQueue.put(
-                            if (!s.error) {
-                                HandshakingSuccess(
-                                    Cursor(
-                                        timetoken = r!!.metadata.timetoken, //TODO we could improve callback to avoid !! here
-                                        region = r.metadata.region
+                EffectHandler.create(
+                    startFn = {
+                        val remoteAction =
+                            pubnub.handshake(
+                                channels = effect.subscribeExtendedState.channels.toList(),
+                                channelGroups = effect.subscribeExtendedState.groups.toList()
+                            )
+                        remoteAction.async { r, s ->
+                            eventQueue.put(
+                                if (!s.error) {
+                                    HandshakingSuccess(
+                                        Cursor(
+                                            timetoken = r!!.metadata.timetoken, // TODO we could improve callback to avoid !! here
+                                            region = r.metadata.region
+                                        )
                                     )
-                                )
-                            } else {
-                                HandshakingFailure(s)
-                            }
-                        )
-                    }
-                    remoteAction
-                }, cancelFn = { silentCancel() })
-
+                                } else {
+                                    HandshakingFailure(s)
+                                }
+                            )
+                        }
+                        remoteAction
+                    },
+                    cancelFn = { silentCancel() }
+                )
             }
             is ReceiveEvents -> {
 
-                EffectHandler.create(startFn = {
-                    val remoteAction = pubnub.receiveMessages(
-                        channels = effect.subscribeExtendedState.channels.toList(),
-                        channelGroups = effect.subscribeExtendedState.groups.toList(),
-                        timetoken = effect.subscribeExtendedState.cursor!!.timetoken, //TODO figure out how to drop !! here
-                        region = effect.subscribeExtendedState.cursor.region
-                    )
-                    remoteAction.async { r, s ->
-                        eventQueue.put(
-                            if (!s.error) {
-                                ReceivingSuccess(r!!)
-                            } else {
-                                ReceivingFailure(s)
-                            }
+                EffectHandler.create(
+                    startFn = {
+                        val remoteAction = pubnub.receiveEvents(
+                            channels = effect.subscribeExtendedState.channels.toList(),
+                            channelGroups = effect.subscribeExtendedState.groups.toList(),
+                            timetoken = effect.subscribeExtendedState.cursor!!.timetoken, // TODO figure out how to drop !! here
+                            region = effect.subscribeExtendedState.cursor.region
                         )
-
-                    }
-                    remoteAction
-                }, cancelFn = { silentCancel() })
+                        remoteAction.async { r, s ->
+                            eventQueue.put(
+                                if (!s.error) {
+                                    ReceivingSuccess(r!!)
+                                } else {
+                                    ReceivingFailure(s)
+                                }
+                            )
+                        }
+                        remoteAction
+                    },
+                    cancelFn = { silentCancel() }
+                )
             }
         }
     }

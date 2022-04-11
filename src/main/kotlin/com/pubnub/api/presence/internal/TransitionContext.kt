@@ -4,7 +4,6 @@ import com.pubnub.api.state.TransitionContext
 
 internal class PresenceTransitionContext(presenceState: PresenceState, presenceEvent: PresenceEvent) : TransitionContext<PresenceEffectInvocation, PresenceExtendedState, PresenceEvent, PresenceState>(presenceState, presenceEvent) {
     override val updatedExtendedState: PresenceExtendedState = presenceState.extendedState + presenceEvent
-
 }
 
 internal operator fun PresenceExtendedState.plus(event: PresenceEvent): PresenceExtendedState {
@@ -20,7 +19,6 @@ internal operator fun PresenceExtendedState.plus(event: PresenceEvent): Presence
         else -> this
     }
 }
-
 
 internal fun PresenceTransitionContext.cancel(vararg effects: PresenceEffectInvocation): List<PresenceEffectInvocation> {
     return effects.flatMap { listOf(CancelEffectInvocation(it.id())) }

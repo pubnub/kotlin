@@ -1,6 +1,6 @@
 package com.pubnub.api.subscribe.internal
 
-import com.pubnub.api.state.*
+import com.pubnub.api.state.StateMachineContext
 import com.pubnub.api.state.TransitionContext
 
 @StateMachineContext
@@ -14,8 +14,8 @@ internal class SubscribeTransitionContext(
 internal operator fun SubscribeExtendedState.plus(event: SubscribeEvent): SubscribeExtendedState {
     return when (event) {
         is HandshakingSuccess -> copy(cursor = event.cursor)
-        is HandshakingFailure -> copy(attempts = 0)
-        is ReceivingFailure -> copy(attempts = 0)
+        is HandshakingFailure -> copy(attempt = 0)
+        is ReceivingFailure -> copy(attempt = 0)
         is ReceivingSuccess -> copy(
             cursor = Cursor(
                 timetoken = event.subscribeEnvelope.metadata.timetoken,
@@ -26,23 +26,23 @@ internal operator fun SubscribeExtendedState.plus(event: SubscribeEvent): Subscr
             channels = event.channels.toSet(),
             groups = event.groups.toSet(),
         )
-        is ReconnectingFailure -> copy(
-            attempts = attempts + 1
+        is ReceiveReconnectingFailure -> copy(
+            attempt = attempt + 1
         )
         is HandshakingReconnectingFailure -> copy(
-            attempts = attempts + 1
+            attempt = attempt + 1
         )
         is HandshakingReconnectingSuccess -> copy(
             cursor = event.cursor
         )
-        is ReconnectingSuccess -> copy(
+        is ReceiveReconnectingSuccess -> copy(
             cursor = Cursor(
                 timetoken = event.subscribeEnvelope.metadata.timetoken,
                 region = event.subscribeEnvelope.metadata.region
             )
         )
-        is ReconnectingRetry -> copy(
-            attempts = 0
+        is ReceiveReconnectingRetry -> copy(
+            attempt = 0
         )
         else -> this
     }
@@ -51,4 +51,3 @@ internal operator fun SubscribeExtendedState.plus(event: SubscribeEvent): Subscr
 internal fun SubscribeState.cancel(vararg effects: SubscribeEffectInvocation): List<SubscribeEffectInvocation> {
     return effects.flatMap { listOf(CancelEffectInvocation(it.id())) }
 }
-

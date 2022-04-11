@@ -32,5 +32,3 @@ internal fun defineTransition(transitionFn: PresenceTransitionContext.(PresenceS
         }
     }
 }
-
-

@@ -3,7 +3,7 @@ package com.pubnub.api.presence.internal
 import com.pubnub.api.PubNub
 import com.pubnub.api.presence.NewPresenceModule
 import com.pubnub.api.state.internal.IntModule
-import java.util.concurrent.*
+import java.util.concurrent.LinkedBlockingQueue
 
 internal class InternalPresenceModule(
     private val eventQueue: LinkedBlockingQueue<PresenceEvent>,
@@ -23,7 +23,6 @@ internal class InternalPresenceModule(
                 engineAndEffects.second.forEach { put(it) }
             }
 
-
             val moduleInternals = IntModule(
                 engine = engineAndEffects.first,
                 effectQueue = effectQueue,
@@ -38,7 +37,9 @@ internal class InternalPresenceModule(
     }
 
     override fun presence(
-        channels: List<String>, channelGroups: List<String>, connected: Boolean
+        channels: List<String>,
+        channelGroups: List<String>,
+        connected: Boolean
     ) {
         if (connected) {
             eventQueue.put(Commands.SubscribeIssued(channels = channels, groups = channelGroups))

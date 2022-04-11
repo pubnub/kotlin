@@ -1,7 +1,11 @@
 package com.pubnub.api.presence.internal
 
 import com.pubnub.api.PubNub
-import com.pubnub.api.state.*
+import com.pubnub.api.state.EffectDispatcher
+import com.pubnub.api.state.EffectHandler
+import com.pubnub.api.state.EffectHandlerFactory
+import com.pubnub.api.state.EffectTracker
+import com.pubnub.api.state.ManagedEffectHandler
 import java.util.concurrent.Executors
 import java.util.concurrent.LinkedBlockingQueue
 import java.util.concurrent.ScheduledExecutorService
@@ -25,9 +29,12 @@ internal class PresenceEffectDispatcher(
                 null
             }
             is TimerEffectInvocation -> {
-                scheduledExecutorService.schedule({
-                    eventQueue.put(effect.event)
-                }, 1000, TimeUnit.MILLISECONDS).let {
+                scheduledExecutorService.schedule(
+                    {
+                        eventQueue.put(effect.event)
+                    },
+                    1000, TimeUnit.MILLISECONDS
+                ).let {
                     { it.cancel(true) }
                 }
                 null
@@ -37,16 +44,15 @@ internal class PresenceEffectDispatcher(
         if (handler is ManagedEffectHandler) {
             startTracking(effect.id(), handler)
         }
-
     }
 
     fun cancel() {
-
     }
 }
 
 internal class HttpCallExecutor(
-    private val pubnub: PubNub, private val eventQueue: LinkedBlockingQueue<PresenceEvent>
+    private val pubnub: PubNub,
+    private val eventQueue: LinkedBlockingQueue<PresenceEvent>
 ) : EffectHandlerFactory<PresenceHttpEffectInvocation> {
 
     override fun handler(effect: PresenceHttpEffectInvocation): EffectHandler {

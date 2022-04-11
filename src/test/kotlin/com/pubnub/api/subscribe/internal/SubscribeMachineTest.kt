@@ -18,16 +18,13 @@ import org.junit.Test
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
-
 class SubscribeMachineTest {
 
     @Test
     fun firstTest() {
         val transition = subscribeTransition()
         val status = PNStatus(
-            category = PNStatusCategory.PNBadRequestCategory,
-            error = true,
-            PNOperationType.PNSubscribeOperation
+            category = PNStatusCategory.PNBadRequestCategory, error = true, PNOperationType.PNSubscribeOperation
         )
 
         val events = listOf(
@@ -36,16 +33,14 @@ class SubscribeMachineTest {
             HandshakingFailure(status),
             HandshakingReconnectingSuccess(cursor = Cursor(timetoken = 5, region = "12")),
             ReceivingFailure(status),
-            ReconnectingSuccess(
+            ReceiveReconnectingSuccess(
                 SubscribeEnvelope(
-                    messages = listOf(),
-                    metadata = SubscribeMetaData(timetoken = 5, region = "12")
+                    messages = listOf(), metadata = SubscribeMetaData(timetoken = 5, region = "12")
                 )
             ),
             ReceivingSuccess(
                 SubscribeEnvelope(
-                    messages = listOf(),
-                    metadata = SubscribeMetaData(timetoken = 5, region = "12")
+                    messages = listOf(), metadata = SubscribeMetaData(timetoken = 5, region = "12")
                 )
             ),
             HandshakingFailure(status)
@@ -63,8 +58,7 @@ class SubscribeMachineTest {
             effects.filterIsInstance<NotificationEffect>(),
             Matchers.`is`(
                 listOf(
-                    Connected,
-                    Reconnected
+                    Connected, Reconnected
                 )
             )
         )
@@ -74,11 +68,13 @@ class SubscribeMachineTest {
     fun receiveMessages() {
         val latch = CountDownLatch(1)
 
-        val pubnub = PubNub(PNConfiguration("not_random_uuid", enableSubscribeBeta = true).apply {
-            subscribeKey = Keys.subscribeKey
-            publishKey = Keys.publishKey
-            logVerbosity = PNLogVerbosity.BODY
-        })
+        val pubnub = PubNub(
+            PNConfiguration("not_random_uuid", enableSubscribeBeta = true).apply {
+                subscribeKey = Keys.subscribeKey
+                publishKey = Keys.publishKey
+                logVerbosity = PNLogVerbosity.BODY
+            }
+        )
 
         pubnub.addListener(object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
@@ -90,8 +86,6 @@ class SubscribeMachineTest {
                 latch.countDown()
             }
         })
-
-
         pubnub.subscribe(channels = listOf("ch1"))
 
         Thread.sleep(500)
@@ -101,8 +95,5 @@ class SubscribeMachineTest {
         if (!latch.await(5, TimeUnit.SECONDS)) {
             fail("The message was not received")
         }
-
     }
-
-
 }

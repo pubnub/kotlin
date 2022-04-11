@@ -55,10 +55,15 @@ import com.pubnub.api.endpoints.push.RemoveChannelsFromPush
 import com.pubnub.api.enums.PNPushEnvironment
 import com.pubnub.api.enums.PNPushType
 import com.pubnub.api.enums.PNReconnectionPolicy
-import com.pubnub.api.managers.*
 import com.pubnub.api.managers.BasePathManager
+import com.pubnub.api.managers.DuplicationManager
 import com.pubnub.api.managers.ListenerManager
+import com.pubnub.api.managers.MapperManager
 import com.pubnub.api.managers.PublishSequenceManager
+import com.pubnub.api.managers.RetrofitManager
+import com.pubnub.api.managers.SubscriptionManager
+import com.pubnub.api.managers.TelemetryManager
+import com.pubnub.api.managers.TokenManager
 import com.pubnub.api.managers.TokenParser
 import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant
@@ -74,7 +79,6 @@ import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
 import com.pubnub.api.models.consumer.objects.membership.PNChannelWithCustom
 import com.pubnub.api.presence.NewPresenceModule
 import com.pubnub.api.subscribe.NewSubscribeModule
-import com.pubnub.api.subscribe.internal.*
 import com.pubnub.api.vendor.Base64
 import com.pubnub.api.vendor.Crypto
 import com.pubnub.api.vendor.FileEncryptionUtil.decrypt
@@ -124,7 +128,6 @@ class PubNub(val configuration: PNConfiguration) {
             listenerManager = listenerManager
         )
     }
-
 
     private val newPresenceModule by lazy {
         NewPresenceModule.create(pubnub = this)
@@ -1207,8 +1210,8 @@ class PubNub(val configuration: PNConfiguration) {
     @Deprecated(
         replaceWith = ReplaceWith(
             "setMemberships(channels = channels, uuid = uuid, limit = limit, " +
-                    "page = page, filter = filter, sort = sort, includeCount = includeCount, includeCustom = includeCustom," +
-                    "includeChannelDetails = includeChannelDetails)"
+                "page = page, filter = filter, sort = sort, includeCount = includeCount, includeCustom = includeCustom," +
+                "includeChannelDetails = includeChannelDetails)"
         ),
         level = DeprecationLevel.WARNING,
         message = "Use setMemberships instead"
@@ -1381,8 +1384,8 @@ class PubNub(val configuration: PNConfiguration) {
     @Deprecated(
         replaceWith = ReplaceWith(
             "getChannelMembers(channel = channel, limit = limit, " +
-                    "page = page, filter = filter, sort = sort, includeCount = includeCount, includeCustom = includeCustom," +
-                    "includeUUIDDetails = includeUUIDDetails)"
+                "page = page, filter = filter, sort = sort, includeCount = includeCount, includeCustom = includeCustom," +
+                "includeUUIDDetails = includeUUIDDetails)"
         ),
         level = DeprecationLevel.WARNING,
         message = "Use getChannelMembers instead"
@@ -1459,8 +1462,8 @@ class PubNub(val configuration: PNConfiguration) {
     @Deprecated(
         replaceWith = ReplaceWith(
             "setChannelMembers(channel = channel, uuids = uuids, limit = limit, " +
-                    "page = page, filter = filter, sort = sort, includeCount = includeCount, includeCustom = includeCustom," +
-                    "includeUUIDDetails = includeUUIDDetails)"
+                "page = page, filter = filter, sort = sort, includeCount = includeCount, includeCustom = includeCustom," +
+                "includeUUIDDetails = includeUUIDDetails)"
         ),
         level = DeprecationLevel.WARNING,
         message = "Use setChannelMembers instead"
@@ -1538,8 +1541,8 @@ class PubNub(val configuration: PNConfiguration) {
     @Deprecated(
         replaceWith = ReplaceWith(
             "removeChannelMembers(channel = channel, uuids = uuids, limit = limit, " +
-                    "page = page, filter = filter, sort = sort, includeCount = includeCount, includeCustom = includeCustom," +
-                    "includeUUIDDetails = includeUUIDDetails)"
+                "page = page, filter = filter, sort = sort, includeCount = includeCount, includeCustom = includeCustom," +
+                "includeUUIDDetails = includeUUIDDetails)"
         ),
         level = DeprecationLevel.WARNING,
         message = "Use removeChannelMembers instead"
