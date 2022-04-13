@@ -48,12 +48,21 @@ internal class SubscribeEffectDispatcher(
 
 internal class ReceiveEventsReconnectHandlerFactory(
     private val pubnub: PubNub,
+    private val retryPolicy: RetryPolicy,
     private val eventQueue: LinkedBlockingQueue<SubscribeEvent>,
     private val executor: ScheduledExecutorService
 ) : EffectHandlerFactory<ReceiveEventsReconnect> {
+
     override fun handler(effect: ReceiveEventsReconnect): EffectHandler {
         return EffectHandler.create(
             startFn = {
+
+                if (!retryPolicy.shouldRetry(effect.subscribeExtendedState.attempt)) {
+                    eventQueue.put(
+                        ReceiveReconnectingGiveUp
+                    )
+                }
+
                 val remoteAction = pubnub.receiveEvents(
                     channels = effect.subscribeExtendedState.channels.toList(),
                     channelGroups = effect.subscribeExtendedState.groups.toList(),
@@ -61,6 +70,7 @@ internal class ReceiveEventsReconnectHandlerFactory(
                     region = effect.subscribeExtendedState.cursor.region
                 )
 
+                val delay = retryPolicy.computeDelay(effect.subscribeExtendedState.attempt)
                 val scheduled = executor.schedule(
                     {
                         remoteAction.async { r, s ->
@@ -75,7 +85,7 @@ internal class ReceiveEventsReconnectHandlerFactory(
                             )
                         }
                     },
-                    100, TimeUnit.MILLISECONDS
+                    delay.toMillis(), TimeUnit.MILLISECONDS
                 )
                 scheduled to remoteAction
             },
@@ -87,45 +97,27 @@ internal class ReceiveEventsReconnectHandlerFactory(
     }
 }
 
-internal class ReconnectingHandlerFactory<EF>(
-    private val executor: ScheduledExecutorService,
-    private val internalHandlerFactory: EffectHandlerFactory<EF>
-) : EffectHandlerFactory<EF> {
-    override fun handler(effect: EF): EffectHandler {
-
-        return EffectHandler.create(
-            startFn = {
-                val internalHandler = internalHandlerFactory.handler(effect)
-                val scheduled = executor.schedule(
-                    {
-                        internalHandler.start()
-                    },
-                    100, TimeUnit.MILLISECONDS
-                )
-
-                scheduled to internalHandler
-            },
-            cancelFn = {
-                second.cancel()
-                first.cancel(true)
-            }
-        )
-    }
-}
-
 internal class HandshakeReconnectHandlerFactory(
     private val pubnub: PubNub,
+    private val retryPolicy: RetryPolicy,
     private val eventQueue: LinkedBlockingQueue<SubscribeEvent>,
     private val executor: ScheduledExecutorService
 ) : EffectHandlerFactory<HandshakeReconnect> {
     override fun handler(effect: HandshakeReconnect): EffectHandler {
         return EffectHandler.create(
             startFn = {
+                if (!retryPolicy.shouldRetry(effect.subscribeExtendedState.attempt)) {
+                    eventQueue.put(
+                        ReceiveReconnectingGiveUp
+                    )
+                }
+
                 val remoteAction = pubnub.handshake(
                     channels = effect.subscribeExtendedState.channels.toList(),
                     channelGroups = effect.subscribeExtendedState.groups.toList()
                 )
 
+                val delay = retryPolicy.computeDelay(effect.subscribeExtendedState.attempt)
                 val scheduled = executor.schedule(
                     {
                         remoteAction.async { r, s ->
@@ -143,7 +135,7 @@ internal class HandshakeReconnectHandlerFactory(
                             )
                         }
                     },
-                    100, TimeUnit.MILLISECONDS
+                    delay.toMillis(), TimeUnit.MILLISECONDS
                 )
                 scheduled to remoteAction
             },

@@ -4,11 +4,13 @@ import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
 import com.pubnub.api.enums.PNReconnectionPolicy
 import com.pubnub.api.managers.ListenerManager
+import com.pubnub.api.state.EffectDispatcher
 import com.pubnub.api.state.EffectHandlerFactory
 import com.pubnub.api.state.internal.IntModule
 import com.pubnub.api.subscribe.NewSubscribeModule
 import java.util.concurrent.Executors
 import java.util.concurrent.LinkedBlockingQueue
+import java.util.concurrent.ScheduledExecutorService
 
 internal class InternalSubscribeModule(
     private val eventQueue: LinkedBlockingQueue<SubscribeEvent>,
@@ -25,36 +27,35 @@ internal class InternalSubscribeModule(
         fun create(
             pubnub: PubNub,
             listenerManager: ListenerManager,
-            incomingPayloadProcessor: IncomingPayloadProcessor
-        ): NewSubscribeModule {
-            val engineAndEffects: Pair<SubscribeEventEngine, List<SubscribeEffectInvocation>> = subscribeEventEngine()
-            val eventQueue: LinkedBlockingQueue<SubscribeEvent> = LinkedBlockingQueue(100)
-            val effectQueue: LinkedBlockingQueue<SubscribeEffectInvocation> =
+            incomingPayloadProcessor: IncomingPayloadProcessor,
+            scheduleExecutorService: ScheduledExecutorService = Executors.newScheduledThreadPool(2),
+            retryPolicy: RetryPolicy = createRetryPolicy(pubnub.configuration),
+            engineAndEffects: Pair<SubscribeEventEngine, List<SubscribeEffectInvocation>> = subscribeEventEngine(),
+            eventQueue: LinkedBlockingQueue<SubscribeEvent> = LinkedBlockingQueue(100),
+            effectQueue: LinkedBlockingQueue<SubscribeEffectInvocation> =
                 LinkedBlockingQueue<SubscribeEffectInvocation>(
                     100
-                ).apply { engineAndEffects.second.forEach(::put) }
-            val httpHandler: EffectHandlerFactory<SubscribeHttpEffectInvocation> = HttpCallExecutor(
-                pubnub = pubnub, eventQueue = eventQueue
-            )
-
-            val scheduleExecutorService = Executors.newScheduledThreadPool(2)
-            val emitEventsEffectExecutor: EffectHandlerFactory<EmitEvents> =
-                NewMessagesEffectExecutor(incomingPayloadProcessor)
-            val handshakeReconnectHandlerFactory: EffectHandlerFactory<HandshakeReconnect> =
-                HandshakeReconnectHandlerFactory(
-                    pubnub = pubnub, eventQueue = eventQueue, executor = scheduleExecutorService
-                )
-            val receiveEventsReconnectHandlerFactory: EffectHandlerFactory<ReceiveEventsReconnect> =
-                ReceiveEventsReconnectHandlerFactory(
-                    pubnub = pubnub, eventQueue = eventQueue, executor = scheduleExecutorService
-                )
-            val effectDispatcher = SubscribeEffectDispatcher(
-                httpHandler = httpHandler,
-                handshakeReconnectHandlerFactory = handshakeReconnectHandlerFactory,
-                receiveEventsReconnectHandlerFactory = receiveEventsReconnectHandlerFactory,
-                emitEventsEffectExecutor = emitEventsEffectExecutor,
+                ).apply { engineAndEffects.second.forEach(::put) },
+            effectDispatcher: EffectDispatcher<SubscribeEffectInvocation> = SubscribeEffectDispatcher(
+                httpHandler = HttpCallExecutor(
+                    pubnub = pubnub, eventQueue = eventQueue
+                ),
+                handshakeReconnectHandlerFactory = HandshakeReconnectHandlerFactory(
+                    pubnub = pubnub,
+                    eventQueue = eventQueue,
+                    executor = scheduleExecutorService,
+                    retryPolicy = retryPolicy
+                ),
+                receiveEventsReconnectHandlerFactory = ReceiveEventsReconnectHandlerFactory(
+                    pubnub = pubnub,
+                    eventQueue = eventQueue,
+                    executor = scheduleExecutorService,
+                    retryPolicy = retryPolicy
+                ),
+                emitEventsEffectExecutor = NewMessagesEffectExecutor(incomingPayloadProcessor),
                 notificationEffectExecutor = NotificationExecutor(listenerManager)
             )
+        ): NewSubscribeModule {
 
             val moduleInternals = IntModule(
                 engine = engineAndEffects.first,

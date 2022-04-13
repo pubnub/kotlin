@@ -11,7 +11,7 @@ import org.junit.Test
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
-class SubscribeModuleInternalsTest {
+class InternalSubscribeModuleTest {
 
     @Test
     fun testGlue() {
