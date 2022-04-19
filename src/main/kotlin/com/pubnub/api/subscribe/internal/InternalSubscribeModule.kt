@@ -5,7 +5,6 @@ import com.pubnub.api.PubNub
 import com.pubnub.api.enums.PNReconnectionPolicy
 import com.pubnub.api.managers.ListenerManager
 import com.pubnub.api.state.EffectDispatcher
-import com.pubnub.api.state.EffectHandlerFactory
 import com.pubnub.api.state.internal.IntModule
 import com.pubnub.api.subscribe.NewSubscribeModule
 import java.util.concurrent.Executors
