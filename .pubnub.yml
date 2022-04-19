@@ -1,5 +1,5 @@
 name: kotlin
-version: v7.0.0
+version: 7.0.0
 schema: 1
 scm: github.com/pubnub/kotlin
 files:
