@@ -6,5 +6,6 @@
 
 | Name | Summary |
 |---|---|
+| [Cancelable](-cancelable/index.md) | `interface Cancelable` |
 | [MappingRemoteAction](-mapping-remote-action/index.md) | `class MappingRemoteAction<T, U> : ExtendedRemoteAction<U>` |
-| [RemoteAction](-remote-action/index.md) | `interface RemoteAction<Output>` |
+| [RemoteAction](-remote-action/index.md) | `interface RemoteAction<Output> : `[`Cancelable`](-cancelable/index.md) |

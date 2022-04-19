@@ -51,7 +51,9 @@
 | [com.pubnub.api.models.server.message_actions](com.pubnub.api.models.server.message_actions/index.md) |  |
 | [com.pubnub.api.models.server.objects_api](com.pubnub.api.models.server.objects_api/index.md) |  |
 | [com.pubnub.api.models.server.presence](com.pubnub.api.models.server.presence/index.md) |  |
+| [com.pubnub.api.presence](com.pubnub.api.presence/index.md) |  |
 | [com.pubnub.api.services](com.pubnub.api.services/index.md) |  |
+| [com.pubnub.api.subscribe](com.pubnub.api.subscribe/index.md) |  |
 | [com.pubnub.api.vendor](com.pubnub.api.vendor/index.md) |  |
 | [com.pubnub.extension](com.pubnub.extension/index.md) |  |
 

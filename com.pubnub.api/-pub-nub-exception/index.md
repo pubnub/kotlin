@@ -2,7 +2,7 @@
 
 # PubNubException
 
-`data class PubNubException : `[`Exception`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-exception/index.html)
+`data class PubNubException : `[`Exception`](https://docs.oracle.com/javase/6/docs/api/java/lang/Exception.html)
 
 Custom exception wrapper for errors occurred during execution or processing of a PubNub API operation.
 

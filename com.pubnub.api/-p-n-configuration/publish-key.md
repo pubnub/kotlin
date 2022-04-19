@@ -2,7 +2,7 @@
 
 # publishKey
 
-`lateinit var publishKey: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
+`var publishKey: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
 
 The publish key from the admin panel (only required if publishing).
 

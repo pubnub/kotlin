@@ -2,7 +2,7 @@
 
 # cipherKey
 
-`lateinit var cipherKey: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
+`var cipherKey: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
 
 If set, all communications to and from PubNub will be encrypted.
 

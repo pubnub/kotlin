@@ -2,4 +2,4 @@
 
 # doWork
 
-`protected fun doWork(queryParams: `[`HashMap`](https://docs.oracle.com/javase/6/docs/api/java/util/HashMap.html)`<`[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`, `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`>): Call<`[`PNGetMessageActionsResult`](../../com.pubnub.api.models.consumer.message_actions/-p-n-get-message-actions-result/index.md)`>`
+`fun doWork(queryParams: `[`HashMap`](https://docs.oracle.com/javase/6/docs/api/java/util/HashMap.html)`<`[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`, `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`>): Call<`[`PNGetMessageActionsResult`](../../com.pubnub.api.models.consumer.message_actions/-p-n-get-message-actions-result/index.md)`>`

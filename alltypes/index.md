@@ -50,6 +50,11 @@ Utilities for encoding and decoding the Base64 representation of binary data. Se
 
 |
 
+##### [com.pubnub.api.endpoints.remoteaction.Cancelable](../com.pubnub.api.endpoints.remoteaction/-cancelable/index.md)
+
+
+|
+
 ##### [com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant](../com.pubnub.api.models.consumer.access_manager.v3/-channel-grant/index.md)
 
 
@@ -826,6 +831,11 @@ Result of the [PubNub.whereNow](../com.pubnub.api/-pub-nub/where-now.md) operati
 
 |
 
+##### [com.pubnub.api.presence.Presence](../com.pubnub.api.presence/-presence/index.md)
+
+
+|
+
 ##### [com.pubnub.api.models.server.PresenceEnvelope](../com.pubnub.api.models.server/-presence-envelope/index.md)
 
 
@@ -1001,6 +1011,11 @@ Custom exception wrapper for errors occurred during execution or processing of a
 |
 
 ##### [com.pubnub.api.endpoints.pubsub.Subscribe](../com.pubnub.api.endpoints.pubsub/-subscribe/index.md)
+
+
+|
+
+##### [com.pubnub.api.subscribe.Subscribe](../com.pubnub.api.subscribe/-subscribe/index.md)
 
 
 |

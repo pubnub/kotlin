@@ -49,6 +49,8 @@ com.pubnub.api.models.server.files
 com.pubnub.api.models.server.message_actions
 com.pubnub.api.models.server.objects_api
 com.pubnub.api.models.server.presence
+com.pubnub.api.presence
 com.pubnub.api.services
+com.pubnub.api.subscribe
 com.pubnub.api.vendor
 com.pubnub.extension

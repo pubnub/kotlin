@@ -2,4 +2,4 @@
 
 # doWork
 
-`protected fun doWork(queryParams: `[`HashMap`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-hash-map/index.html)`<`[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`, `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`>): Call<`[`RevokeTokenResponse`](../../com.pubnub.api.models.server.access_manager.v3/-revoke-token-response/index.md)`>`
+`protected fun doWork(queryParams: <ERROR CLASS><`[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`, `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`>): Call<`[`RevokeTokenResponse`](../../com.pubnub.api.models.server.access_manager.v3/-revoke-token-response/index.md)`>`

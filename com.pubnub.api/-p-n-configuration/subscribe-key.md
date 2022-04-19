@@ -2,7 +2,7 @@
 
 # subscribeKey
 
-`lateinit var subscribeKey: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
+`var subscribeKey: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
 
 The subscribe key from the admin panel.
 

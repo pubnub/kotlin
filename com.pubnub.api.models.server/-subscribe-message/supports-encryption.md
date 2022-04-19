@@ -2,4 +2,4 @@
 
 # supportsEncryption
 
-`fun supportsEncryption(): `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)
+`fun supportsEncryption(): <ERROR CLASS>`

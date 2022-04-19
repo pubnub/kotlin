@@ -14,4 +14,4 @@
 
 | Name | Summary |
 |---|---|
-| [supportsEncryption](supports-encryption.md) | `fun supportsEncryption(): `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) |
+| [supportsEncryption](supports-encryption.md) | `fun supportsEncryption(): <ERROR CLASS>` |

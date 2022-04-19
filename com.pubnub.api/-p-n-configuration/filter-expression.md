@@ -2,7 +2,7 @@
 
 # filterExpression
 
-`lateinit var filterExpression: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
+`var filterExpression: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
 
 Feature to subscribe with a custom filter expression.
 
