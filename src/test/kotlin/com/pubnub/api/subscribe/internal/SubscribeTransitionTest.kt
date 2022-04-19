@@ -124,6 +124,71 @@ class SubscribeTransitionTest {
         )
     }
 
+    @Test
+    fun testHandshakingReconnection() {
+        //given
+        val initialState = Handshaking(SubscribeExtendedState(channels = setOf(channel)))
+        val events = listOf(
+            HandshakingFailure(
+                PNStatus(
+                    category = PNStatusCategory.PNTimeoutCategory,
+                    error = true,
+                    operation = PNOperationType.PNSubscribeOperation
+                )
+            ),
+            HandshakingReconnectingFailure(
+                PNStatus(
+                    category = PNStatusCategory.PNTimeoutCategory,
+                    error = true,
+                    operation = PNOperationType.PNSubscribeOperation
+                )
+            ),
+            HandshakingReconnectingFailure(
+                PNStatus(
+                    category = PNStatusCategory.PNTimeoutCategory,
+                    error = true,
+                    operation = PNOperationType.PNSubscribeOperation
+                )
+            ),
+            HandshakingReconnectingGiveUp
+        )
+
+        //when
+        val (endState, effects) = events.foldIt(
+            initialState = initialState,
+            transition = transition
+        )
+
+        //then
+        assertThat(endState, Matchers.isA(HandshakingFailed::class.java))
+        val extendedState = SubscribeExtendedState(
+            channels = setOf(channel)
+        )
+
+        val handshakeReconnect = HandshakeReconnect(
+            subscribeExtendedState = extendedState
+        )
+
+        println(effects)
+        assertThat(
+            effects, Matchers.contains(
+                CancelEffectInvocation(idToCancel = initialState.call.id()),
+                handshakeReconnect,
+                CancelEffectInvocation(idToCancel = handshakeReconnect.id()),
+                HandshakeReconnect(
+                    subscribeExtendedState = extendedState.copy(attempt = 1)
+                ),
+                CancelEffectInvocation(idToCancel = handshakeReconnect.id()),
+                HandshakeReconnect(
+                    subscribeExtendedState = extendedState.copy(attempt = 2)
+                ),
+                CancelEffectInvocation(idToCancel = handshakeReconnect.id()),
+                HandshakeFailed
+            )
+        )
+
+    }
+
     private fun List<SubscribeEvent>.foldIt(
         initialState: SubscribeState = Unsubscribed,
         transition: SubscribeTransition

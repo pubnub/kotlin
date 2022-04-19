@@ -20,7 +20,7 @@ data class HandshakingSuccess(val cursor: Cursor) : SubscribeEvent
 data class HandshakingFailure(val status: PNStatus) : SubscribeEvent
 data class HandshakingReconnectingSuccess(val cursor: Cursor) : SubscribeEvent
 object HandshakingReconnectingGiveUp : SubscribeEvent
-object HandshakingReconnectingFailure : SubscribeEvent
+data class HandshakingReconnectingFailure(val status: PNStatus) : SubscribeEvent
 object HandshakingReconnectingRetry : SubscribeEvent
 data class ReceivingSuccess(val subscribeEnvelope: SubscribeEnvelope) : SubscribeEvent
 data class ReceivingFailure(val status: PNStatus) : SubscribeEvent

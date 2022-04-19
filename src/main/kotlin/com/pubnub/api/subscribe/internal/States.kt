@@ -64,4 +64,6 @@ data class ReconnectingFailed(
 
 data class HandshakingFailed(
     override val extendedState: SubscribeExtendedState,
-) : SubscribeState()
+) : SubscribeState() {
+    override fun onEntry(): Collection<SubscribeEffectInvocation> = listOf(HandshakeFailed)
+}
