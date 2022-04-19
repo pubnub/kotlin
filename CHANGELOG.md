@@ -1,3 +1,9 @@
+## v7.0.1
+April 19 2022
+
+#### Fixed
+- Update Jackson library .
+
 ## v7.0.0
 January 12 2022
 
