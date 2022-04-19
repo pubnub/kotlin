@@ -29,7 +29,7 @@ class SubscribeMachineTest {
 
         val events = listOf(
             InitialEvent,
-            SubscriptionChanged(channels = listOf("ch1")),
+            SubscriptionChanged(channels = setOf("ch1")),
             HandshakingFailure(status),
             HandshakingReconnectingSuccess(cursor = Cursor(timetoken = 5, region = "12")),
             ReceivingFailure(status),

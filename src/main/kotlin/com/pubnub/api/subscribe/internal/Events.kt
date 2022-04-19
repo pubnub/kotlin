@@ -9,8 +9,8 @@ sealed interface SubscribeEvent : Event
 object InitialEvent : SubscribeEvent
 
 data class SubscriptionChanged(
-    val channels: List<String>,
-    val groups: List<String> = listOf()
+    val channels: Set<String>,
+    val groups: Set<String> = setOf()
 ) : SubscribeEvent
 
 object Disconnect : SubscribeEvent

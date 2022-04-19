@@ -31,6 +31,8 @@ sealed class NotificationEffect : SubscribeEffectInvocation()
 
 object Connected : NotificationEffect()
 
+object ReconnectionFailed : NotificationEffect()
+
 data class Disconnected(val reason: String = "reason") : NotificationEffect()
 
 object Reconnected : NotificationEffect()
