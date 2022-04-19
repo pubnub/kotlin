@@ -237,6 +237,11 @@ changelog:
     version: v7.0.1
     changes:
       - type: bug
+        text: "Update Jackson library with fixes for CVE-2020-36518."
+  - date: 2022-04-19
+    version: v7.0.1
+    changes:
+      - type: bug
         text: "Update Jackson library ."
   - date: 2022-01-12
     version: v7.0.0
