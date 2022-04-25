@@ -20,33 +20,32 @@ class SubscribeTransitionTest {
 
     @Test
     fun happyPath() {
-        //given
+        // given
         val events = listOf(
             SubscriptionChanged(channels = setOf(channel)),
             HandshakingSuccess(cursor = Cursor(timetoken = tt, region = reg)),
             ReceivingSuccess(
                 subscribeEnvelope = SubscribeEnvelope(
-                    messages = listOf(),
-                    metadata = SubscribeMetaData(timetoken = tt, region = reg)
+                    messages = listOf(), metadata = SubscribeMetaData(timetoken = tt, region = reg)
                 )
             )
         )
 
-        //when
+        // when
         val (endState, effects) = events.foldIt(transition = transition)
-        //then
+        // then
         assertThat(endState, Matchers.isA(Receiving::class.java))
 
         val handshake = Handshake(SubscribeExtendedState(channels = setOf(channel)))
         val receiveEvents = ReceiveEvents(
             SubscribeExtendedState(
-                channels = setOf(channel),
-                cursor = Cursor(timetoken = tt, region = reg)
+                channels = setOf(channel), cursor = Cursor(timetoken = tt, region = reg)
             )
         )
 
         assertThat(
-            effects, Matchers.contains(
+            effects,
+            Matchers.contains(
                 handshake,
                 CancelEffectInvocation(idToCancel = handshake.id()),
                 Connected,
@@ -54,14 +53,13 @@ class SubscribeTransitionTest {
                 CancelEffectInvocation(idToCancel = receiveEvents.id()),
                 EmitEvents(listOf()),
                 receiveEvents,
-
-                )
+            )
         )
     }
 
     @Test
     fun testReceiveEventsReconnect() {
-        //given
+        // given
         val initialState = Receiving(SubscribeExtendedState(channels = setOf(channel), cursor = cursor))
         val events = listOf(
             ReceivingFailure(
@@ -88,17 +86,15 @@ class SubscribeTransitionTest {
             ReceiveReconnectingGiveUp
         )
 
-        //when
+        // when
         val (endState, effects) = events.foldIt(
-            initialState = initialState,
-            transition = transition
+            initialState = initialState, transition = transition
         )
 
-        //then
+        // then
         assertThat(endState, Matchers.isA(ReconnectingFailed::class.java))
         val extendedState = SubscribeExtendedState(
-            channels = setOf(channel),
-            cursor = Cursor(timetoken = tt, region = reg)
+            channels = setOf(channel), cursor = Cursor(timetoken = tt, region = reg)
         )
 
         val receiveEventsReconnect = ReceiveEventsReconnect(
@@ -107,7 +103,8 @@ class SubscribeTransitionTest {
 
         println(effects)
         assertThat(
-            effects, Matchers.contains(
+            effects,
+            Matchers.contains(
                 CancelEffectInvocation(idToCancel = initialState.call.id()),
                 receiveEventsReconnect,
                 CancelEffectInvocation(idToCancel = receiveEventsReconnect.id()),
@@ -126,7 +123,7 @@ class SubscribeTransitionTest {
 
     @Test
     fun testHandshakingReconnection() {
-        //given
+        // given
         val initialState = Handshaking(SubscribeExtendedState(channels = setOf(channel)))
         val events = listOf(
             HandshakingFailure(
@@ -153,13 +150,12 @@ class SubscribeTransitionTest {
             HandshakingReconnectingGiveUp
         )
 
-        //when
+        // when
         val (endState, effects) = events.foldIt(
-            initialState = initialState,
-            transition = transition
+            initialState = initialState, transition = transition
         )
 
-        //then
+        // then
         assertThat(endState, Matchers.isA(HandshakingFailed::class.java))
         val extendedState = SubscribeExtendedState(
             channels = setOf(channel)
@@ -171,7 +167,8 @@ class SubscribeTransitionTest {
 
         println(effects)
         assertThat(
-            effects, Matchers.contains(
+            effects,
+            Matchers.contains(
                 CancelEffectInvocation(idToCancel = initialState.call.id()),
                 handshakeReconnect,
                 CancelEffectInvocation(idToCancel = handshakeReconnect.id()),
@@ -186,7 +183,6 @@ class SubscribeTransitionTest {
                 HandshakeFailed
             )
         )
-
     }
 
     private fun List<SubscribeEvent>.foldIt(
