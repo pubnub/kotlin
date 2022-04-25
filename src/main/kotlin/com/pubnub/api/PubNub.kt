@@ -92,7 +92,7 @@ class PubNub(val configuration: PNConfiguration) {
 
     companion object {
         private const val TIMESTAMP_DIVIDER = 1000
-        private const val SDK_VERSION = "7.0.0"
+        private const val SDK_VERSION = "7.0.1"
         private const val MAX_SEQUENCE = 65535
 
         /**
@@ -1858,11 +1858,7 @@ class PubNub(val configuration: PNConfiguration) {
      * @param listener The listener to be added.
      */
     fun addListener(listener: SubscribeCallback) {
-        if (configuration.enableSubscribeBeta) {
-            listenerManager.addListener(listener)
-        } else {
-            subscriptionManager.addListener(listener)
-        }
+        subscriptionManager.addListener(listener)
     }
 
     /**
@@ -1871,11 +1867,7 @@ class PubNub(val configuration: PNConfiguration) {
      * @param listener The listener to be removed.
      */
     fun removeListener(listener: SubscribeCallback) {
-        if (configuration.enableSubscribeBeta) {
-            listenerManager.removeListener(listener)
-        } else {
-            subscriptionManager.removeListener(listener)
-        }
+        subscriptionManager.removeListener(listener)
     }
 
     //region Encryption
