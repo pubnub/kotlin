@@ -25,7 +25,7 @@ class SubscribeMachineTest {
     fun firstTest() {
         val transition = subscribeTransition()
         val status = PNStatus(
-            category = PNStatusCategory.PNBadRequestCategory, error = true, PNOperationType.PNSubscribeOperation
+            category = PNStatusCategory.PNBadRequestCategory, error = true, operation = PNOperationType.PNSubscribeOperation
         )
 
         val events = listOf(

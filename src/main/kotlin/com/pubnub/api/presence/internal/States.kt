@@ -13,7 +13,7 @@ object Unsubscribed : PresenceState() {
 
 data class Waiting(
     override val extendedState: PresenceExtendedState,
-    val timer: TimerEffectInvocation = TimerEffectInvocation(HeartbeatIntervalOver),
+    val timer: TimerEffectInvocation = TimerEffectInvocation(HeartbeatIntervalOver)
 ) : PresenceState() {
     override fun onEntry(): Collection<PresenceEffectInvocation> = listOf(timer)
 }

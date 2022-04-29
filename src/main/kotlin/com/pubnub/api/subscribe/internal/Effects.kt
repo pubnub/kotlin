@@ -22,7 +22,7 @@ data class ReceiveEventsReconnect(
 ) : SubscribeEffectInvocation()
 
 data class HandshakeReconnect(
-    val subscribeExtendedState: SubscribeExtendedState,
+    val subscribeExtendedState: SubscribeExtendedState
 ) : SubscribeEffectInvocation()
 
 data class CancelEffectInvocation(val idToCancel: String) : SubscribeEffectInvocation()

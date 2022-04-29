@@ -22,7 +22,7 @@ sealed class IAmAway : PresenceEvent() {
 sealed class Commands : PresenceEvent() {
     data class SubscribeIssued(
         val channels: List<String>,
-        val groups: List<String> = listOf(),
+        val groups: List<String> = listOf()
     ) : Commands()
 
     data class UnsubscribeIssued(

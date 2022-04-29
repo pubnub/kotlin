@@ -20,7 +20,7 @@ internal fun PubNub.receiveEvents(
     channels: List<String>,
     channelGroups: List<String>,
     timetoken: Long,
-    region: String,
+    region: String
 ): RemoteAction<SubscribeEnvelope> {
     return Subscribe(this).also {
         it.channels = channels

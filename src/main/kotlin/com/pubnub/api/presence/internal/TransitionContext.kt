@@ -10,11 +10,11 @@ internal operator fun PresenceExtendedState.plus(event: PresenceEvent): Presence
     return when (event) {
         is Commands.SubscribeIssued -> copy(
             channels = channels + event.channels.toSet(),
-            groups = groups + event.groups.toSet(),
+            groups = groups + event.groups.toSet()
         )
         Commands.UnsubscribeAllIssued -> PresenceExtendedState()
         is Commands.UnsubscribeIssued -> copy(
-            groups = groups - event.groups.toSet(),
+            groups = groups - event.groups.toSet()
         )
         else -> this
     }

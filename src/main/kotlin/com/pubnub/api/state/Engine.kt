@@ -9,7 +9,7 @@ interface Engine<S, EV, EF> {
 
 class EngineImplementation<S, EV, EF>(
     initialState: S,
-    private val transition: Transition<S, EV, EF>,
+    private val transition: Transition<S, EV, EF>
 ) : Engine<S, EV, EF> {
     private var state: AtomicReference<S> = AtomicReference(initialState)
     override fun currentState(): S = state.get()

@@ -4,7 +4,7 @@ import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.server.SubscribeEnvelope
 import com.pubnub.api.state.Event
 
-sealed interface SubscribeEvent : Event
+interface SubscribeEvent : Event
 
 object InitialEvent : SubscribeEvent
 

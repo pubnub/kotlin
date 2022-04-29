@@ -24,7 +24,7 @@ internal operator fun SubscribeExtendedState.plus(event: SubscribeEvent): Subscr
         )
         is SubscriptionChanged -> copy(
             channels = event.channels.toSet(),
-            groups = event.groups.toSet(),
+            groups = event.groups.toSet()
         )
         is ReceiveReconnectingFailure -> copy(
             attempt = attempt + 1

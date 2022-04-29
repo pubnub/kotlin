@@ -15,7 +15,7 @@ internal class PresenceEffectDispatcher(
     private val eventQueue: LinkedBlockingQueue<PresenceEvent>,
     private val httpExecutor: EffectHandlerFactory<PresenceHttpEffectInvocation>,
     private val scheduledExecutorService: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor(),
-    override val trackedHandlers: MutableMap<String, ManagedEffectHandler> = mutableMapOf(),
+    override val trackedHandlers: MutableMap<String, ManagedEffectHandler> = mutableMapOf()
 ) : EffectDispatcher<PresenceEffectInvocation>, EffectTracker {
 
     override fun dispatch(effect: PresenceEffectInvocation) {

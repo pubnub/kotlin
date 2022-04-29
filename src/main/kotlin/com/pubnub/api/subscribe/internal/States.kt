@@ -15,7 +15,7 @@ data class Receiving(
     override val extendedState: SubscribeExtendedState,
     val call: ReceiveEvents = ReceiveEvents(
         extendedState
-    ),
+    )
 
 ) : SubscribeState() {
     override fun onEntry(): Collection<SubscribeEffectInvocation> = listOf(call)
@@ -34,7 +34,7 @@ data class HandshakeReconnecting(override val extendedState: SubscribeExtendedSt
 }
 
 data class Handshaking(
-    override val extendedState: SubscribeExtendedState,
+    override val extendedState: SubscribeExtendedState
 ) : SubscribeState() {
     val call: SubscribeEffectInvocation = Handshake(
         extendedState
@@ -45,11 +45,10 @@ data class Handshaking(
 }
 
 data class ReceiveReconnecting(
-    override val extendedState: SubscribeExtendedState,
+    override val extendedState: SubscribeExtendedState
 ) : SubscribeState() {
     val call = ReceiveEventsReconnect(
-        extendedState,
-
+        extendedState
     )
 
     override fun onEntry(): Collection<SubscribeEffectInvocation> = listOf(call)
@@ -57,13 +56,13 @@ data class ReceiveReconnecting(
 }
 
 data class ReconnectingFailed(
-    override val extendedState: SubscribeExtendedState,
+    override val extendedState: SubscribeExtendedState
 ) : SubscribeState() {
     override fun onEntry(): Collection<SubscribeEffectInvocation> = listOf(ReconnectionFailed)
 }
 
 data class HandshakingFailed(
-    override val extendedState: SubscribeExtendedState,
+    override val extendedState: SubscribeExtendedState
 ) : SubscribeState() {
     override fun onEntry(): Collection<SubscribeEffectInvocation> = listOf(HandshakeFailed)
 }

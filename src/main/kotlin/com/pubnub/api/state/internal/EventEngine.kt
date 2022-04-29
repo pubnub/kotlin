@@ -40,7 +40,7 @@ class Queued<IN, H> private constructor(
         handle: (T) -> Unit
     ): CompletableFuture<Void> {
         return CompletableFuture.runAsync(
-            {
+            Runnable {
                 while (!Thread.interrupted()) {
                     try {
                         handle(take())
@@ -72,7 +72,7 @@ internal class IntModule<S, EV, EF : EffectInvocation>(
     private val effectQueue: LinkedBlockingQueue<EF>,
     private val queuedEngine: Queued<EV, Engine<S, EV, EF>> = Queued.createAndRun(
         syncHandler = engine,
-        inputQueue = eventQueue,
+        inputQueue = eventQueue
     ) { event ->
         transition(event).forEach {
             effectQueue.put(it)

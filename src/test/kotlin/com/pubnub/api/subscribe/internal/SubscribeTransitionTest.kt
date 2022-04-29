@@ -32,7 +32,7 @@ class SubscribeTransitionTest {
         )
 
         // when
-        val (endState, effects) = events.foldIt(transition = transition)
+        val (endState, effects: List<EffectInvocation>) = events.foldIt(transition = transition)
         // then
         assertThat(endState, Matchers.isA(Receiving::class.java))
 
@@ -52,7 +52,7 @@ class SubscribeTransitionTest {
                 receiveEvents,
                 CancelEffectInvocation(idToCancel = receiveEvents.id()),
                 EmitEvents(listOf()),
-                receiveEvents,
+                receiveEvents
             )
         )
     }
