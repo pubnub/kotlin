@@ -5,7 +5,7 @@ import com.pubnub.api.endpoints.objects.uuid.RemoveUUIDMetadata
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.PNSortKey
 
-fun PubNub.getAllUserMetadata(
+fun PubNub.getUsers(
     limit: Int? = null,
     page: PNPage? = null,
     filter: String? = null,
@@ -21,7 +21,7 @@ fun PubNub.getAllUserMetadata(
     includeCustom = includeCustom
 )
 
-fun PubNub.getUserMetadata(
+fun PubNub.getUser(
     user: String? = null,
     includeCustom: Boolean = false
 ) = getUUIDMetadata(
@@ -29,7 +29,7 @@ fun PubNub.getUserMetadata(
     includeCustom = includeCustom
 )
 
-fun PubNub.setUserMetadata(
+fun PubNub.setUser(
     user: String? = null,
     name: String? = null,
     externalId: String? = null,
@@ -47,4 +47,4 @@ fun PubNub.setUserMetadata(
     includeCustom = includeCustom
 )
 
-fun PubNub.removeUserMetadata(user: String? = null) = removeUUIDMetadata(uuid = user)
+fun PubNub.deleteUser(user: String? = null) = removeUUIDMetadata(uuid = user)

@@ -4,7 +4,7 @@ import com.pubnub.api.PubNub
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.PNSortKey
 
-fun PubNub.getAllSpaceMetadata(
+fun PubNub.getSpaces(
     limit: Int? = null,
     page: PNPage? = null,
     filter: String? = null,
@@ -15,7 +15,7 @@ fun PubNub.getAllSpaceMetadata(
     limit = limit, page = page, filter = filter, sort = sort, includeCount = includeCount, includeCustom = includeCustom
 )
 
-fun PubNub.getSpaceMetadata(
+fun PubNub.getSpace(
     space: String,
     includeCustom: Boolean = false
 ) = getChannelMetadata(
@@ -23,7 +23,7 @@ fun PubNub.getSpaceMetadata(
     includeCustom = includeCustom
 )
 
-fun PubNub.setSpaceMetadata(
+fun PubNub.setSpace(
     space: String,
     name: String? = null,
     description: String? = null,
@@ -37,4 +37,4 @@ fun PubNub.setSpaceMetadata(
     includeCustom = includeCustom
 )
 
-fun PubNub.removeChannelMetadata(space: String) = removeChannelMetadata(channel = space)
+fun PubNub.deleteSpace(space: String) = removeChannelMetadata(channel = space)
