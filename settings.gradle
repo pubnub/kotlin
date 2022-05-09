@@ -1,3 +1,4 @@
 rootProject.name = 'pubnub-kotlin'
 include 'pubnub-entities'
+include 'pubnub-gson'
 
