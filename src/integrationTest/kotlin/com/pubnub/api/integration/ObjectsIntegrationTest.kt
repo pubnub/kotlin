@@ -28,7 +28,7 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
         ).sync()!!
 
         val getAllResult = pubnub.getAllChannelMetadata().sync()!!
-        val getSingleResult = pubnub.getChannelMetadata(channel = channel).sync()!!
+        val getSingleResult = pubnub.getSpace(channel = channel).sync()!!
         pubnub.removeChannelMetadata(channel = channel).sync()!!
 
         assertTrue(getAllResult.data.any { it.id == channel })

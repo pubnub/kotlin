@@ -1,8 +1,12 @@
 package com.pubnub.entities
 
 import com.pubnub.api.PubNub
-import com.pubnub.api.models.consumer.objects.PNPage
-import com.pubnub.api.models.consumer.objects.PNSortKey
+import com.pubnub.entities.objects.endpoint.channel.GetSpace
+import com.pubnub.entities.objects.endpoint.internal.ReturningCustom
+import com.pubnub.api.endpoints.remoteaction.RemoteAction
+import com.pubnub.entities.objects.PNPage
+import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadataArrayResult
+import com.pubnub.entities.objects.PNSortKey
 
 fun PubNub.getSpaces(
     limit: Int? = null,
@@ -11,16 +15,15 @@ fun PubNub.getSpaces(
     sort: Collection<PNSortKey> = listOf(),
     includeCount: Boolean = false,
     includeCustom: Boolean = false
-) = getAllChannelMetadata(
-    limit = limit, page = page, filter = filter, sort = sort, includeCount = includeCount, includeCustom = includeCustom
-)
+): RemoteAction<PNChannelMetadataArrayResult> = TODO()
 
 fun PubNub.getSpace(
     space: String,
     includeCustom: Boolean = false
-) = getChannelMetadata(
+) = GetSpace(
+    pubnub = this,
     channel = space,
-    includeCustom = includeCustom
+    withCustom = ReturningCustom(includeCustom = includeCustom)
 )
 
 fun PubNub.setSpace(

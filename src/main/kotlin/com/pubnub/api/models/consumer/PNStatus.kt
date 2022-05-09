@@ -3,7 +3,7 @@ package com.pubnub.api.models.consumer
 import com.pubnub.api.Endpoint
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNubException
-import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
+import com.pubnub.api.endpoints.remoteaction.RemoteAction
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
 import okhttp3.Request
@@ -40,7 +40,7 @@ data class PNStatus(
     var affectedChannelGroups: List<String?> = emptyList()
 
 ) {
-    internal var executedEndpoint: ExtendedRemoteAction<*>? = null
+    internal var executedEndpoint: RemoteAction<*>? = null
 
     var clientRequest: Request? = null
 

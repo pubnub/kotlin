@@ -1,10 +1,10 @@
 package com.pubnub.api.legacy.endpoints.remoteaction
 
-import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
+import com.pubnub.api.endpoints.remoteaction.RemoteAction
 import com.pubnub.api.models.consumer.PNStatus
 import java.util.concurrent.Executors
 
-internal interface CancellableRemoteAction<T> : ExtendedRemoteAction<T> {
+internal interface CancellableRemoteAction<T> : RemoteAction<T> {
     override fun sync(): T? {
         return null
     }

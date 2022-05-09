@@ -1,9 +1,10 @@
 package com.pubnub.entities
 
 import com.pubnub.api.PubNub
-import com.pubnub.api.endpoints.objects.uuid.RemoveUUIDMetadata
-import com.pubnub.api.models.consumer.objects.PNPage
-import com.pubnub.api.models.consumer.objects.PNSortKey
+import com.pubnub.api.endpoints.objects.uuid.GetAllUUIDMetadata
+import com.pubnub.api.endpoints.remoteaction.RemoteAction
+import com.pubnub.entities.objects.PNPage
+import com.pubnub.entities.objects.PNSortKey
 
 fun PubNub.getUsers(
     limit: Int? = null,
@@ -12,14 +13,7 @@ fun PubNub.getUsers(
     sort: Collection<PNSortKey> = listOf(),
     includeCount: Boolean = false,
     includeCustom: Boolean = false
-) = getAllUUIDMetadata(
-    limit = limit,
-    page = page,
-    filter = filter,
-    sort = sort,
-    includeCount = includeCount,
-    includeCustom = includeCustom
-)
+) : RemoteAction<GetAllUUIDMetadata> = TODO()
 
 fun PubNub.getUser(
     user: String? = null,

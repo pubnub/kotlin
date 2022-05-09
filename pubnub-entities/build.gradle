@@ -1,8 +1,9 @@
 plugins {
     id 'org.jetbrains.kotlin.jvm'
+    id 'maven-publish'
 }
 
-group 'com.pubnub.entities'
+group 'com.pubnub'
 version '7.0.1'
 
 repositories {
@@ -11,8 +12,21 @@ repositories {
 
 dependencies {
     implementation project(":")
+    implementation "com.squareup.retrofit2:retrofit:2.9.0"
 }
 
 test {
     useJUnitPlatform()
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = 'com.pubnub'
+            artifactId = 'pubnub-entities'
+            version = '10.0.0-SNAPSHOT'
+
+            from components.java
+        }
+    }
 }

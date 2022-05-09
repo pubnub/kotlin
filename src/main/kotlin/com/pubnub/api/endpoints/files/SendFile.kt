@@ -4,7 +4,7 @@ import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.remoteaction.ComposableRemoteAction
-import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
+import com.pubnub.api.endpoints.remoteaction.RemoteAction
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction
 import com.pubnub.api.endpoints.remoteaction.RetryingRemoteAction
 import com.pubnub.api.enums.PNOperationType
@@ -36,9 +36,9 @@ class SendFile internal constructor(
     generateUploadUrlFactory: GenerateUploadUrl.Factory,
     publishFileMessageFactory: PublishFileMessage.Factory,
     sendFileToS3Factory: UploadFile.Factory
-) : ExtendedRemoteAction<PNFileUploadResult> {
+) : RemoteAction<PNFileUploadResult> {
 
-    private val sendFileMultistepAction: ExtendedRemoteAction<PNFileUploadResult> = sendFileComposedActions(
+    private val sendFileMultistepAction: RemoteAction<PNFileUploadResult> = sendFileComposedActions(
         generateUploadUrlFactory,
         publishFileMessageFactory,
         sendFileToS3Factory,
@@ -86,7 +86,7 @@ class SendFile internal constructor(
         publishFileMessageFactory: PublishFileMessage.Factory,
         sendFileToS3Factory: UploadFile.Factory,
         content: ByteArray
-    ): ExtendedRemoteAction<PNFileUploadResult> {
+    ): RemoteAction<PNFileUploadResult> {
         val result = AtomicReference<FileUploadRequestDetails>()
         return ComposableRemoteAction
             .firstDo(generateUploadUrlFactory.create(channel, fileName)) // generateUrl
@@ -120,7 +120,7 @@ class SendFile internal constructor(
     private fun mapPublishFileMessageToFileUpload(
         requestDetails: FileUploadRequestDetails,
         res: PNPublishFileMessageResult
-    ): ExtendedRemoteAction<PNFileUploadResult> = MappingRemoteAction.map(
+    ): RemoteAction<PNFileUploadResult> = MappingRemoteAction.map(
         res,
         operationType()
     ) { pnPublishFileMessageResult: PNPublishFileMessageResult ->

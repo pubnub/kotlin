@@ -10,6 +10,7 @@ plugins {
     id 'org.jetbrains.dokka' version '0.10.1'
     id 'org.unbroken-dome.test-sets' version '3.0.1'
     id "com.github.ben-manes.versions" version '0.38.0'
+    id "maven-publish"
 }
 
 group = 'com.pubnub'
@@ -168,3 +169,15 @@ modifyPom {
 }
 
 build.finalizedBy(dokka, shadowJar)
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = 'com.pubnub'
+            artifactId = 'pubnub-kotlin'
+            version = '10.0.0-SNAPSHOT'
+
+            from components.java
+        }
+    }
+}

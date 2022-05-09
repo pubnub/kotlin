@@ -106,11 +106,11 @@ class PubNub(val configuration: PNConfiguration) {
     val mapper = MapperManager()
 
     private val basePathManager = BasePathManager(configuration)
-    internal val retrofitManager = RetrofitManager(this)
+    val retrofitManager = RetrofitManager(this)
     internal val publishSequenceManager = PublishSequenceManager(MAX_SEQUENCE)
-    internal val telemetryManager = TelemetryManager()
+    val telemetryManager = TelemetryManager()
     internal val subscriptionManager = SubscriptionManager(this)
-    internal val tokenManager: TokenManager = TokenManager()
+    val tokenManager: TokenManager = TokenManager()
     private val tokenParser: TokenParser = TokenParser()
 
     //endregion
@@ -1010,7 +1010,7 @@ class PubNub(val configuration: PNConfiguration) {
      * @param channel Channel name.
      * @param includeCustom Include respective additional fields in the response.
      */
-    fun getChannelMetadata(channel: String, includeCustom: Boolean = false) = GetChannelMetadata(
+    fun getSpace(channel: String, includeCustom: Boolean = false) = GetChannelMetadata(
         pubnub = this,
         channel = channel,
         withCustom = ReturningCustom(includeCustom = includeCustom)
@@ -1039,6 +1039,21 @@ class PubNub(val configuration: PNConfiguration) {
         custom = custom,
         withCustom = ReturningCustom(includeCustom = includeCustom)
     )
+
+    fun createSpace(
+        space: String,
+        name: String? = null,
+        description: String? = null,
+        custom: Any? = null,
+        includeCustom: Boolean = false
+    ) {
+    }
+
+    fun usage(pubnub: PubNub) {
+
+        pubnub.createSpace(space = "")
+
+    }
 
     /**
      * Removes the metadata from a specified channel.

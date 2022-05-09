@@ -10,11 +10,11 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.atomic.AtomicReference
 
 internal class RetryingRemoteAction<T>(
-    private val remoteAction: ExtendedRemoteAction<T>,
+    private val remoteAction: RemoteAction<T>,
     private val maxNumberOfAutomaticRetries: Int,
     private val operationType: PNOperationType,
     private val executorService: ExecutorService
-) : ExtendedRemoteAction<T> {
+) : RemoteAction<T> {
     private lateinit var cachedCallback: (result: T?, status: PNStatus) -> Unit
 
     @Throws(PubNubException::class)
@@ -120,7 +120,7 @@ internal class RetryingRemoteAction<T>(
 
     companion object {
         fun <T> autoRetry(
-            remoteAction: ExtendedRemoteAction<T>,
+            remoteAction: RemoteAction<T>,
             maxNumberOfAutomaticRetries: Int,
             operationType: PNOperationType,
             executorService: ExecutorService

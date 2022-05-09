@@ -12,7 +12,7 @@ import retrofit2.Response
 import java.util.HashMap
 
 /**
- * @see [PubNub.getChannelMetadata]
+ * @see [PubNub.getSpace]
  */
 class GetChannelMetadata internal constructor(
     pubnub: PubNub,

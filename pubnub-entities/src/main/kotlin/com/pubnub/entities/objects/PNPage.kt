@@ -1,4 +1,4 @@
-package com.pubnub.api.models.consumer.objects
+package com.pubnub.entities.objects
 
 sealed class PNPage : com.pubnub.api.models.consumer.PNPage {
     internal abstract val pageHash: String

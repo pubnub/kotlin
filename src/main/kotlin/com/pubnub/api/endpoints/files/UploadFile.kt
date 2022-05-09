@@ -3,7 +3,7 @@ package com.pubnub.api.endpoints.files
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
-import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
+import com.pubnub.api.endpoints.remoteaction.RemoteAction
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.models.consumer.PNStatus
@@ -34,7 +34,7 @@ internal class UploadFile(
     private val key: FormField,
     private val formParams: List<FormField>,
     private val baseUrl: String
-) : ExtendedRemoteAction<Unit> {
+) : RemoteAction<Unit> {
     private var call: Call<Unit>? = null
 
     @Throws(PubNubException::class)
@@ -211,7 +211,7 @@ internal class UploadFile(
             content: ByteArray,
             cipherKey: String?,
             fileUploadRequestDetails: FileUploadRequestDetails
-        ): ExtendedRemoteAction<Unit> {
+        ): RemoteAction<Unit> {
             val effectiveCipherKey = FileEncryptionUtil.effectiveCipherKey(pubNub, cipherKey)
             return UploadFile(
                 pubNub.retrofitManager.s3Service,

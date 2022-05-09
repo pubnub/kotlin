@@ -9,7 +9,7 @@ class MappingRemoteAction<T, U> private constructor(
     private val result: T,
     private val operationType: PNOperationType,
     private val function: (T) -> U
-) : ExtendedRemoteAction<U> {
+) : RemoteAction<U> {
     private lateinit var cachedCallback: (result: U?, status: PNStatus) -> Unit
 
     @Throws(PubNubException::class)
@@ -40,7 +40,7 @@ class MappingRemoteAction<T, U> private constructor(
     }
 
     companion object {
-        internal fun <T, U> map(result: T, operationType: PNOperationType, function: (T) -> U): ExtendedRemoteAction<U> {
+        internal fun <T, U> map(result: T, operationType: PNOperationType, function: (T) -> U): RemoteAction<U> {
             return MappingRemoteAction(result, operationType, function)
         }
     }
