@@ -30,7 +30,7 @@ class GetSpace internal constructor(
     override fun validateParams() {
     }
 
-    override fun doWork(queryParams: HashMap<String, String>): Call<EntityEnvelope<PNSpace>> {
+    override fun doWork(queryParams: MutableMap<String, String>): Call<EntityEnvelope<PNSpace>> {
         val params = queryParams + withCustom.createIncludeQueryParams()
         return pubnub.retrofitManager.objectsService.getChannelMetadata(
             subKey = pubnub.configuration.subscribeKey,
@@ -39,7 +39,7 @@ class GetSpace internal constructor(
         )
     }
 
-    override fun getOperationType(): PNOperationType = PNOperationType.ObjectsOperation()
+    override fun getOperationType(): PNOperationType? = PNOperationType.PNGetChannelMembersOperation
 
     override fun isAuthRequired(): Boolean = true
 

@@ -11,7 +11,7 @@ repositories {
 }
 
 dependencies {
-    implementation project(":")
+    implementation project(":pubnub-gson")
     implementation "com.squareup.retrofit2:retrofit:2.9.0"
 }
 

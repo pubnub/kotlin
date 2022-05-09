@@ -1,7 +1,5 @@
 package com.pubnub.entities.objects.user
 
-import com.pubnub.entities.objects.user.PNUser
-
 data class PNUserArrayResult(
     val status: Int,
     val data: Collection<PNUser>,

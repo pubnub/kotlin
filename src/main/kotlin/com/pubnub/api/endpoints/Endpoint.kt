@@ -449,7 +449,7 @@ abstract class Endpoint<Input, Output> protected constructor(
 
     protected abstract fun validateParams()
 
-    protected abstract fun doWork(baseParams: HashMap<String, String>): Call<Input>
+    protected abstract fun doWork(baseParams: MutableMap<String, String>): Call<Input>
 
     protected abstract fun createResponse(input: Response<Input>): Output?
 

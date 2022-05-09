@@ -4,6 +4,7 @@ import com.pubnub.api.PNConfiguration.Companion.isValid
 import com.pubnub.api.enums.PNOperationType
 import retrofit2.Call
 import retrofit2.Response
+import retrofit2.http.QueryMap
 
 /**
  * Base class for all PubNub API operation implementations.
@@ -29,6 +30,11 @@ abstract class Endpoint<Input, Output> protected constructor(pubnub: PubNub) :
         if (isPubKeyRequired() && !pubnub.configuration.publishKey.isValid()) {
             throw PubNubException(PubNubError.PUBLISH_KEY_MISSING)
         }
+    }
+
+    abstract fun doWork(queryMap: HashMap<String, String>): Call<Input>
+    override fun doWork(baseParams: MutableMap<String, String>): Call<Input> {
+        return doWork(HashMap(baseParams))
     }
 
     override fun getOperationType(): PNOperationType = operationType()
