@@ -5,7 +5,7 @@ import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.models.consumer.PNStatus
 
-internal class ComposableRemoteAction<T, U>(
+class ComposableRemoteAction<T, U>(
     private val remoteAction: ExtendedRemoteAction<T>,
     private val createNextRemoteAction: (T) -> ExtendedRemoteAction<U>,
     private var checkpoint: Boolean
