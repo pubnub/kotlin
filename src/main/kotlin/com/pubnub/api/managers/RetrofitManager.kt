@@ -16,7 +16,6 @@ import com.pubnub.api.services.S3Service
 import com.pubnub.api.services.SignalService
 import com.pubnub.api.services.SubscribeService
 import com.pubnub.api.services.TimeService
-import com.pubnub.okhttp3.PNCallFactory
 import okhttp3.Call
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -59,7 +58,7 @@ class RetrofitManager(val pubnub: PubNub) {
         }
 
         val transactionInstance = createRetrofit(transactionClientInstance)
-        val subscriptionInstance = createRetrofit(PNCallFactory(subscriptionClientInstance))
+        val subscriptionInstance = createRetrofit(subscriptionClientInstance)
         val noSignatureInstance = createRetrofit(noSignatureClientInstance)
 
         timeService = transactionInstance.create(TimeService::class.java)
