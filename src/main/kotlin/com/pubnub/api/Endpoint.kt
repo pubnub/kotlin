@@ -1,6 +1,7 @@
 package com.pubnub.api
 
 import com.google.gson.JsonElement
+import com.pubnub.api.PNConfiguration.Companion.isValid
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.enums.PNStatusCategory.PNAccessDeniedCategory
@@ -233,7 +234,7 @@ abstract class Endpoint<Input, Output> protected constructor(protected val pubnu
             val token = pubnub.tokenManager.getToken()
             if (token != null) {
                 map["auth"] = token
-            } else if (pubnub.configuration.isAuthKeyValid()) {
+            } else if (pubnub.configuration.authKey.isValid()) {
                 map["auth"] = pubnub.configuration.authKey
             }
         }
@@ -446,10 +447,10 @@ abstract class Endpoint<Input, Output> protected constructor(protected val pubnu
     protected open fun getAffectedChannelGroups(): List<String> = emptyList()
 
     protected open fun validateParams() {
-        if (isSubKeyRequired() && !pubnub.configuration.isSubscribeKeyValid()) {
+        if (isSubKeyRequired() && !pubnub.configuration.subscribeKey.isValid()) {
             throw PubNubException(PubNubError.SUBSCRIBE_KEY_MISSING)
         }
-        if (isPubKeyRequired() && !pubnub.configuration.isPublishKeyValid()) {
+        if (isPubKeyRequired() && !pubnub.configuration.publishKey.isValid()) {
             throw PubNubException(PubNubError.PUBLISH_KEY_MISSING)
         }
     }

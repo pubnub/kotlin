@@ -1,0 +1,18 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm'
+}
+
+group 'com.pubnub.entities'
+version '7.0.1'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation project(":")
+}
+
+test {
+    useJUnitPlatform()
+}

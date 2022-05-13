@@ -75,6 +75,8 @@ import com.pubnub.api.models.consumer.objects.member.PNUUIDDetailsLevel
 import com.pubnub.api.models.consumer.objects.member.PNUUIDWithCustom
 import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
 import com.pubnub.api.models.consumer.objects.membership.PNChannelWithCustom
+import com.pubnub.api.presence.Presence
+import com.pubnub.api.subscribe.Subscribe
 import com.pubnub.api.vendor.Base64
 import com.pubnub.api.vendor.Crypto
 import com.pubnub.api.vendor.FileEncryptionUtil.decrypt
@@ -87,7 +89,7 @@ class PubNub(val configuration: PNConfiguration) {
 
     companion object {
         private const val TIMESTAMP_DIVIDER = 1000
-        private const val SDK_VERSION = "7.0.0"
+        private const val SDK_VERSION = "7.0.1"
         private const val MAX_SEQUENCE = 65535
 
         /**
@@ -282,7 +284,10 @@ class PubNub(val configuration: PNConfiguration) {
         channelGroups: List<String> = emptyList(),
         withPresence: Boolean = false,
         withTimetoken: Long = 0L
-    ) = PubSub.subscribe(subscriptionManager, channels, channelGroups, withPresence, withTimetoken)
+    ) = if (configuration.enableSubscribeBeta)
+        Subscribe.subscribe(channels, channelGroups, withPresence, withTimetoken)
+    else
+        PubSub.subscribe(subscriptionManager, channels, channelGroups, withPresence, withTimetoken)
 
     /**
      * When subscribed to a single channel, this function causes the client to issue a leave from the channel
@@ -304,26 +309,41 @@ class PubNub(val configuration: PNConfiguration) {
     fun unsubscribe(
         channels: List<String> = emptyList(),
         channelGroups: List<String> = emptyList()
-    ) = PubSub.unsubscribe(subscriptionManager, channels, channelGroups)
+    ) = if (configuration.enableSubscribeBeta)
+        Subscribe.unsubscribe(channels, channelGroups)
+    else
+        PubSub.unsubscribe(subscriptionManager, channels, channelGroups)
 
     /**
      * Unsubscribe from all channels and all channel groups
      */
-    fun unsubscribeAll() = subscriptionManager.unsubscribeAll()
+    fun unsubscribeAll() =
+        if (configuration.enableSubscribeBeta)
+            Subscribe.unsubscribeAll()
+        else
+            subscriptionManager.unsubscribeAll()
 
     /**
      * Queries the local subscribe loop for channels currently in the mix.
      *
      * @return A list of channels the client is currently subscribed to.
      */
-    fun getSubscribedChannels() = subscriptionManager.getSubscribedChannels()
+    fun getSubscribedChannels() =
+        if (configuration.enableSubscribeBeta)
+            Subscribe.getSubscribedChannels()
+        else
+            subscriptionManager.getSubscribedChannels()
 
     /**
      * Queries the local subscribe loop for channel groups currently in the mix.
      *
      * @return A list of channel groups the client is currently subscribed to.
      */
-    fun getSubscribedChannelGroups() = subscriptionManager.getSubscribedChannelGroups()
+    fun getSubscribedChannelGroups() =
+        if (configuration.enableSubscribeBeta)
+            Subscribe.getSubscribedChannelGroups()
+        else
+            subscriptionManager.getSubscribedChannelGroups()
     //endregion
 
     //region MobilePush
@@ -711,7 +731,14 @@ class PubNub(val configuration: PNConfiguration) {
         channels: List<String> = emptyList(),
         channelGroups: List<String> = emptyList(),
         connected: Boolean = false
-    ) = PubSub.presence(subscriptionManager, channels, channelGroups, connected)
+    ) = if (configuration.enableSubscribeBeta)
+        Presence.presence(
+            channels = channels,
+            channelGroups = channelGroups,
+            connected = connected
+        )
+    else
+        PubSub.presence(subscriptionManager, channels, channelGroups, connected)
 
     //endregion
 

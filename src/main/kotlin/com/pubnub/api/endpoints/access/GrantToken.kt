@@ -1,6 +1,7 @@
 package com.pubnub.api.endpoints.access
 
 import com.pubnub.api.Endpoint
+import com.pubnub.api.PNConfiguration.Companion.isValid
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
@@ -27,10 +28,10 @@ class GrantToken(
     override fun getAffectedChannelGroups(): List<String> = channelGroups.map { it.id }
 
     override fun validateParams() {
-        if (!pubnub.configuration.isSecretKeyValid()) {
+        if (!pubnub.configuration.secretKey.isValid()) {
             throw PubNubException(PubNubError.SECRET_KEY_MISSING)
         }
-        if (!pubnub.configuration.isSubscribeKeyValid()) {
+        if (!pubnub.configuration.subscribeKey.isValid()) {
             throw PubNubException(PubNubError.SUBSCRIBE_KEY_MISSING)
         }
         if ((channels + channelGroups + uuids).isEmpty()) {

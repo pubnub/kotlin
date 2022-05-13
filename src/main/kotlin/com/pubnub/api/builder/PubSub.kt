@@ -31,6 +31,7 @@ object PubSub {
         withPresence: Boolean = false,
         withTimetoken: Long = 0L
     ) {
+
         val subscribeOperation = SubscribeOperation(
             channels = channels,
             channelGroups = channelGroups,

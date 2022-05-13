@@ -21,21 +21,25 @@ import javax.net.ssl.X509ExtendedTrustManager
  * Configuration instance contains additional set of properties which
  * allow to perform precise PubNub client configuration.
  */
-open class PNConfiguration(uuid: String) {
+open class PNConfiguration(
+    uuid: String,
+    val enableSubscribeBeta: Boolean = false
+) {
 
     init {
-        PubNubUtil.require(uuid.isNotBlank(), PubNubError.UUID_NULL_OR_EMPTY)
+        PubNubUtil.require(uuid.isValid(), PubNubError.UUID_NULL_OR_EMPTY)
     }
 
     var uuid: String = uuid
         set(value) {
-            PubNubUtil.require(value.isNotBlank(), PubNubError.UUID_NULL_OR_EMPTY)
+            PubNubUtil.require(value.isValid(), PubNubError.UUID_NULL_OR_EMPTY)
             field = value
         }
 
     private val log = LoggerFactory.getLogger("PNConfiguration")
 
-    private companion object Constants {
+    companion object {
+        internal fun String.isValid() = isNotBlank()
         private const val DEFAULT_DEDUPE_SIZE = 100
         private const val PRESENCE_TIMEOUT = 300
         private const val MINIMUM_PRESENCE_TIMEOUT = 20
@@ -47,36 +51,36 @@ open class PNConfiguration(uuid: String) {
     /**
      * The subscribe key from the admin panel.
      */
-    lateinit var subscribeKey: String
+    var subscribeKey: String = ""
 
     /**
      * The publish key from the admin panel (only required if publishing).
      */
-    lateinit var publishKey: String
+    var publishKey: String = ""
 
     /**
      * The secret key from the admin panel (only required for modifying/revealing access permissions).
      *
      * Keep away from Android.
      */
-    lateinit var secretKey: String
+    var secretKey: String = ""
 
     /**
      * If Access Manager is utilized, client will use this authKey in all restricted requests.
      */
-    lateinit var authKey: String
+    var authKey: String = ""
 
     /**
      * If set, all communications to and from PubNub will be encrypted.
      */
-    lateinit var cipherKey: String
+    var cipherKey: String = ""
 
     /**
      * Custom origin if needed.
      *
      * Defaults to `ps.pndsn.com`
      */
-    lateinit var origin: String
+    var origin: String = ""
 
     /**
      * If set to `true`,  requests will be made over HTTPS.
@@ -177,7 +181,7 @@ open class PNConfiguration(uuid: String) {
     /**
      * Feature to subscribe with a custom filter expression.
      */
-    lateinit var filterExpression: String
+    var filterExpression: String = ""
 
     /**
      * Whether to include a [PubNub.instanceId] with every request.
@@ -292,18 +296,6 @@ open class PNConfiguration(uuid: String) {
 
     var dedupOnSubscribe = false
     var maximumMessagesCacheSize = DEFAULT_DEDUPE_SIZE
-
-    internal fun isSubscribeKeyValid() = ::subscribeKey.isInitialized && !subscribeKey.isBlank()
-    internal fun isAuthKeyValid() = ::authKey.isInitialized && !authKey.isBlank()
-    internal fun isCipherKeyValid() = ::cipherKey.isInitialized && !cipherKey.isBlank()
-    internal fun isPublishKeyValid() = ::publishKey.isInitialized && !publishKey.isBlank()
-    internal fun isSecretKeyValid() = ::secretKey.isInitialized && !secretKey.isBlank()
-    internal fun isOriginValid() = ::origin.isInitialized && !origin.isBlank()
-    internal fun isFilterExpressionKeyValid(function: String.() -> Unit) {
-        if (::filterExpression.isInitialized && !filterExpression.isBlank()) {
-            function.invoke(filterExpression)
-        }
-    }
 
     private val pnsdkSuffixes: ConcurrentMap<String, String> = ConcurrentHashMap(mutableMapOf())
 

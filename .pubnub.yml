@@ -1,9 +1,9 @@
 name: kotlin
-version: v7.0.0
+version: 7.0.1
 schema: 1
 scm: github.com/pubnub/kotlin
 files:
-  - build/libs/pubnub-kotlin-7.0.0-all.jar
+  - build/libs/pubnub-kotlin-7.0.1-all.jar
 sdks:
   - 
       type: library
@@ -23,8 +23,8 @@ sdks:
             -
               distribution-type: library
               distribution-repository: GitHub
-              package-name: pubnub-kotlin-7.0.0
-              location: https://github.com/pubnub/kotlin/releases/download/v7.0.0/pubnub-kotlin-7.0.0-all.jar
+              package-name: pubnub-kotlin-7.0.1
+              location: https://github.com/pubnub/kotlin/releases/download/v7.0.1/pubnub-kotlin-7.0.1-all.jar
               supported-platforms:
                 supported-operating-systems:
                   Android:
@@ -76,7 +76,7 @@ sdks:
                   min-version: 2.9.0
                   location: Shipped within library
                   license: Apache License, Version 2.0
-                  license-url: https://github.com/square/retrofit/blob/parent-2.9.0/LICENSE.txt
+                  license-url: https://github.com/square/retrofit/blob/2.9.0/LICENSE.txt
                   is-required: Required
                 -
                   name: okhttp
@@ -90,7 +90,7 @@ sdks:
                   min-version: 2.9.0
                   location: Shipped within library
                   license: Apache License, Version 2.0
-                  license-url: https://github.com/square/retrofit/blob/parent-2.9.0/LICENSE.txt
+                  license-url: https://github.com/square/retrofit/blob/2.9.0/LICENSE.txt
                   is-required: Required
                 -
                   name: gson
@@ -135,8 +135,8 @@ sdks:
             -
               distribution-type: library
               distribution-repository: maven
-              package-name: pubnub-kotlin-7.0.0
-              location: https://repo.maven.apache.org/maven2/com/pubnub/pubnub-kotlin/7.0.0/pubnub-kotlin-7.0.0.jar
+              package-name: pubnub-kotlin-7.0.1
+              location: https://repo.maven.apache.org/maven2/com/pubnub/pubnub-kotlin/7.0.1/pubnub-kotlin-7.0.1.jar
               supported-platforms:
                 supported-operating-systems:
                   Android:
@@ -188,7 +188,7 @@ sdks:
                   min-version: 2.9.0
                   location: https://repo.maven.apache.org/maven2/com/squareup/retrofit2/retrofit/2.9.0/retrofit-2.9.0.jar
                   license: Apache License, Version 2.0
-                  license-url: https://github.com/square/retrofit/blob/parent-2.9.0/LICENSE.txt
+                  license-url: https://github.com/square/retrofit/blob/2.9.0/LICENSE.txt
                   is-required: Required
                 -
                   name: okhttp
@@ -202,7 +202,7 @@ sdks:
                   min-version: 2.9.0
                   location: https://repo.maven.apache.org/maven2/com/squareup/retrofit2/converter-gson/2.9.0/converter-gson-2.9.0.jar
                   license: Apache License, Version 2.0
-                  license-url: https://github.com/square/retrofit/blob/parent-2.9.0/LICENSE.txt
+                  license-url: https://github.com/square/retrofit/blob/2.9.0/LICENSE.txt
                   is-required: Required
                 -
                   name: gson
@@ -233,6 +233,11 @@ sdks:
                   license-url: https://github.com/stleary/JSON-java/blob/20210307/LICENSE
                   is-required: Required
 changelog:
+  - date: 2022-04-19
+    version: v7.0.1
+    changes:
+      - type: bug
+        text: "Update Jackson library with fixes for CVE-2020-36518."
   - date: 2022-01-12
     version: v7.0.0
     changes:
@@ -408,7 +413,6 @@ features:
     - PUSH-TYPE-APNS
     - PUSH-TYPE-APNS2
     - PUSH-TYPE-FCM
-    - PUSH-TYPE-MPNS
   presence:
     - PRESENCE-HERE-NOW
     - PRESENCE-WHERE-NOW

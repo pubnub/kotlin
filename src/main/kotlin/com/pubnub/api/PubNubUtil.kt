@@ -1,5 +1,6 @@
 package com.pubnub.api
 
+import com.pubnub.api.PNConfiguration.Companion.isValid
 import com.pubnub.api.vendor.Base64
 import com.pubnub.api.vendor.Crypto
 import okhttp3.Request
@@ -57,7 +58,7 @@ internal object PubNubUtil {
         timestamp: Int
     ): Request {
         // only sign if we have a secret key in place.
-        if (!pnConfiguration.isSecretKeyValid()) {
+        if (!pnConfiguration.secretKey.isValid()) {
             return originalRequest
         }
         val signature = generateSignature(pnConfiguration, originalRequest, timestamp)
@@ -69,7 +70,7 @@ internal object PubNubUtil {
     }
 
     fun shouldSignRequest(configuration: PNConfiguration): Boolean {
-        return configuration.isSecretKeyValid()
+        return configuration.secretKey.isValid()
     }
 
     fun generateSignature(
