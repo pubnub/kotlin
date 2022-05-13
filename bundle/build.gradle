@@ -1,0 +1,17 @@
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+}
+
+group 'com.pubnub'
+version '7.0.1'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    api project(":pubnub-entities")
+    api project(":")
+}
+

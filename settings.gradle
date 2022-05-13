@@ -1,3 +1,5 @@
 rootProject.name = 'pubnub-kotlin'
 include 'pubnub-entities'
+include 'pubnub-kotlin-bom'
+include 'bundle'
 
