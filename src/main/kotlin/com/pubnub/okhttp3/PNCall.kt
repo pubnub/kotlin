@@ -24,6 +24,7 @@ internal class PNCall(
         when {
             isTransmitterAvailable() -> accessField("transmitter")?.accessField("connection")
             isStreamAllocationAvailable() -> callPrivateFunction("streamAllocation")?.accessField("connection")
+            isConnectionAvailable() -> accessField("connection")
             else -> {
                 log.warn("Unrecognized version of OkHttp client. This may cause unexpected behavior when Security Provider updated on Android")
                 null
@@ -31,6 +32,8 @@ internal class PNCall(
         } as Connection?
 
     private fun <T : Call> T.isTransmitterAvailable(): Boolean = this::class.java.hasField("transmitter")
+
+    private fun <T : Call> T.isConnectionAvailable(): Boolean = this::class.java.hasField("connection")
 
     private fun <T : Call> T.isStreamAllocationAvailable(): Boolean = this::class.java
         .hasMethod("streamAllocation")
