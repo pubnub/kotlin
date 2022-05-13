@@ -16,6 +16,7 @@ sealed class PNOperationType(open val queryParam: String? = null) {
     open class TimeOperation : PNOperationType("time")
     object FileOperation : PNOperationType("file")
     object SpaceOperation : PNOperationType("obj")
+    object UserOperation : PNOperationType("obj")
 
     object PNSubscribeOperation : PNOperationType()
 
