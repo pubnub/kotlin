@@ -7,7 +7,12 @@ import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction.Companion.map
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.PNSortKey
-import com.pubnub.entities.models.consumer.space.*
+import com.pubnub.entities.models.consumer.space.PNRemoveSpaceResult
+import com.pubnub.entities.models.consumer.space.PNSpaceArrayResult
+import com.pubnub.entities.models.consumer.space.PNSpaceResult
+import com.pubnub.entities.models.consumer.space.toPNRemoveSpaceResult
+import com.pubnub.entities.models.consumer.space.toPNSpaceArrayResult
+import com.pubnub.entities.models.consumer.space.toPNSpaceResult
 
 fun PubNub.getSpaces(
     limit: Int? = null,
@@ -43,7 +48,6 @@ fun PubNub.getSpace(
         PNOperationType.SpaceOperation
     ) { pnChannelMetadataResult -> pnChannelMetadataResult.toPNSpaceResult() }
 }
-
 
 fun PubNub.setSpace(
     space: String,

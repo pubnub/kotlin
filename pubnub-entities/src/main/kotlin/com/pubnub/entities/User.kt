@@ -7,7 +7,12 @@ import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction.Companion.map
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.PNSortKey
-import com.pubnub.entities.models.consumer.user.*
+import com.pubnub.entities.models.consumer.user.PNRemoveUserResult
+import com.pubnub.entities.models.consumer.user.PNUserArrayResult
+import com.pubnub.entities.models.consumer.user.PNUserResult
+import com.pubnub.entities.models.consumer.user.toPNRemoveUserResult
+import com.pubnub.entities.models.consumer.user.toPNUserArrayResult
+import com.pubnub.entities.models.consumer.user.toPNUserResult
 
 fun PubNub.getUsers(
     limit: Int? = null,
@@ -30,7 +35,6 @@ fun PubNub.getUsers(
         it,
         PNOperationType.UserOperation
     ) { pnUuidMetadataArrayResult -> pnUuidMetadataArrayResult.toPNUserArrayResult() }
-
 }
 
 fun PubNub.getUser(
