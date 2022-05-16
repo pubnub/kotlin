@@ -6,15 +6,8 @@ import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction.Companion.map
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.objects.PNPage
-import com.pubnub.api.models.consumer.objects.PNRemoveMetadataResult
 import com.pubnub.api.models.consumer.objects.PNSortKey
-import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata
-import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadataArrayResult
-import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadataResult
-import com.pubnub.entities.model.PNRemoveSpaceResult
-import com.pubnub.entities.model.PNSpace
-import com.pubnub.entities.model.PNSpaceArrayResult
-import com.pubnub.entities.model.PNSpaceResult
+import com.pubnub.entities.models.consumer.space.*
 
 fun PubNub.getSpaces(
     limit: Int? = null,
@@ -23,7 +16,7 @@ fun PubNub.getSpaces(
     sort: Collection<PNSortKey> = listOf(),
     includeCount: Boolean = false,
     includeCustom: Boolean = false
-) : ExtendedRemoteAction<PNSpaceArrayResult?> = firstDo(
+): ExtendedRemoteAction<PNSpaceArrayResult?> = firstDo(
     getAllChannelMetadata(
         limit = limit,
         page = page,
@@ -82,40 +75,4 @@ fun PubNub.deleteSpace(
         it,
         PNOperationType.SpaceOperation
     ) { pnRemoveMetadataResult -> pnRemoveMetadataResult.toPNRemoveSpaceResult() }
-}
-
-
-internal fun PNChannelMetadataArrayResult?.toPNSpaceArrayResult(): PNSpaceArrayResult? {
-    if (this == null) {
-        return null
-    }
-
-    val pnSpaceList = data.map { pnChannelMetadata ->
-        pnChannelMetadata.toPNSpace()
-    }
-
-    return PNSpaceArrayResult(status = status, data = pnSpaceList, totalCount = totalCount, next = next, prev = prev)
-}
-
-internal fun PNChannelMetadataResult?.toPNSpaceResult(): PNSpaceResult? {
-    if (this == null) {
-        return null
-    }
-
-    return PNSpaceResult(status = status, data = data?.toPNSpace())
-}
-
-internal fun PNChannelMetadata.toPNSpace(): PNSpace {
-    return PNSpace(
-        id = id,
-        name = name,
-        description = description,
-        custom = custom,
-        updated = updated,
-        eTag = eTag
-    )
-}
-
-internal fun PNRemoveMetadataResult?.toPNRemoveSpaceResult(): PNRemoveSpaceResult? {
-    return this?.let { PNRemoveSpaceResult(status = it.status) }
 }

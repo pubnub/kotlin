@@ -6,15 +6,8 @@ import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction.Companion.map
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.objects.PNPage
-import com.pubnub.api.models.consumer.objects.PNRemoveMetadataResult
 import com.pubnub.api.models.consumer.objects.PNSortKey
-import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
-import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataArrayResult
-import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataResult
-import com.pubnub.entities.model.PNRemoveUserResult
-import com.pubnub.entities.model.PNUser
-import com.pubnub.entities.model.PNUserArrayResult
-import com.pubnub.entities.model.PNUserResult
+import com.pubnub.entities.models.consumer.user.*
 
 fun PubNub.getUsers(
     limit: Int? = null,
@@ -65,14 +58,14 @@ fun PubNub.setUser(
     includeCustom: Boolean = false
 ): ExtendedRemoteAction<PNUserResult?> = firstDo(
     setUUIDMetadata(
-    uuid = userId,
-    name = name,
-    externalId = externalId,
-    profileUrl = profileUrl,
-    email = email,
-    custom = custom,
-    includeCustom = includeCustom
-)
+        uuid = userId,
+        name = name,
+        externalId = externalId,
+        profileUrl = profileUrl,
+        email = email,
+        custom = custom,
+        includeCustom = includeCustom
+    )
 ).then {
     map(
         it,
@@ -88,39 +81,5 @@ fun PubNub.deleteUser(
     map(
         it,
         PNOperationType.UserOperation
-    ){ pnRemoveMetadataResult ->  pnRemoveMetadataResult.toPNRemoveUserResult()}
-}
-
-internal fun PNUUIDMetadataArrayResult.toPNUserArrayResult(): PNUserArrayResult? {
-    if (this == null) {
-        return null
-    }
-    val pnUserList = data.map { pnUserMetadata ->
-        pnUserMetadata.toPNUser()
-    }
-    return PNUserArrayResult(status = status, data = pnUserList, totalCount = totalCount, next = next, prev = prev)
-}
-
-internal fun PNUUIDMetadataResult.toPNUserResult() : PNUserResult? {
-    if(this == null){
-        return null
-    }
-    return PNUserResult(status = status, data = data?.toPNUser())
-}
-
-internal fun PNUUIDMetadata.toPNUser(): PNUser {
-    return PNUser(
-        id = id,
-        name = name,
-        externalId = externalId,
-        profileUrl = profileUrl,
-        email = email,
-        custom = custom,
-        updated = updated,
-        eTag = eTag
-    )
-}
-
-internal fun PNRemoveMetadataResult.toPNRemoveUserResult() : PNRemoveUserResult {
-    return this?.let { PNRemoveUserResult(status = it.status) }
+    ) { pnRemoveMetadataResult -> pnRemoveMetadataResult.toPNRemoveUserResult() }
 }
