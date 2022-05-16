@@ -1,0 +1,17 @@
+{
+  "pubnub-kotlin": {
+    "path": "./",
+    "name": "PubNub Kotlin SDK",
+    "main": true
+  },
+  "pubnub-entities": {
+    "path": "./pubnub-entities",
+    "name": "Pubnub Entities Module",
+    "main": false
+  },
+  "pubnub-kotlin-bom": {
+    "path": "./pubnub-kotlin-bom",
+    "name": "Pubnub Kotlin SDK BOM",
+    "main": false
+  }
+}
