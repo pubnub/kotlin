@@ -1,5 +1,5 @@
 {
-  "pubnub": {
+  "kotlin": {
     "path": "./",
     "name": "PubNub Kotlin SDK",
     "main": true
