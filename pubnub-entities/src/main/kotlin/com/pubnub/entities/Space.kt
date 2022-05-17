@@ -50,14 +50,14 @@ fun PubNub.getSpace(
 }
 
 fun PubNub.setSpace(
-    space: String,
+    spaceId: String,
     name: String? = null,
     description: String? = null,
     custom: Any? = null,
     includeCustom: Boolean = false
 ): ExtendedRemoteAction<PNSpaceResult?> = firstDo(
     setChannelMetadata(
-        channel = space,
+        channel = spaceId,
         name = name,
         description = description,
         custom = custom,
@@ -70,7 +70,7 @@ fun PubNub.setSpace(
     ) { pnChannelMetadataResult -> pnChannelMetadataResult.toPNSpaceResult() }
 }
 
-fun PubNub.deleteSpace(
+fun PubNub.removeSpace(
     spaceId: String
 ): ExtendedRemoteAction<PNRemoveSpaceResult?> = firstDo(
     removeChannelMetadata(channel = spaceId)

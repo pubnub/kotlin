@@ -77,7 +77,7 @@ fun PubNub.setUser(
     ) { pnUuidMetadataResult -> pnUuidMetadataResult.toPNUserResult() }
 }
 
-fun PubNub.deleteUser(
+fun PubNub.removeUser(
     userId: String? = null
 ): ExtendedRemoteAction<PNRemoveUserResult?> = firstDo(
     removeUUIDMetadata(uuid = userId)
