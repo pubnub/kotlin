@@ -1,9 +1,3 @@
-## v7.0.5
-May 16 2022
-
-#### Added
-- New module.
-
 ## v7.0.1
 April 19 2022
 
