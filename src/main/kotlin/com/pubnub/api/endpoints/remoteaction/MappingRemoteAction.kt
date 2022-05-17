@@ -40,7 +40,7 @@ class MappingRemoteAction<T, U> private constructor(
     }
 
     companion object {
-        internal fun <T, U> map(result: T, operationType: PNOperationType, function: (T) -> U): ExtendedRemoteAction<U> {
+        fun <T, U> map(result: T, operationType: PNOperationType, function: (T) -> U): ExtendedRemoteAction<U> {
             return MappingRemoteAction(result, operationType, function)
         }
     }

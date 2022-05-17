@@ -121,6 +121,14 @@ ktlint {
     }
 }
 
+subprojects {
+    apply plugin: "org.jlleitschuh.gradle.ktlint"
+    ktlint {
+        verbose = true
+        additionalEditorconfigFile = file("check/.editorconfig")
+    }
+}
+
 compileKotlin {
     kotlinOptions.jvmTarget = "1.8"
 }

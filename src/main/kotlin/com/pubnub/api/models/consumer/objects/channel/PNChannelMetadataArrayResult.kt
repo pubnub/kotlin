@@ -9,8 +9,3 @@ data class PNChannelMetadataArrayResult(
     val next: PNPage.PNNext?,
     val prev: PNPage.PNPrev?
 )
-
-data class PNChannelMetadataResult(
-    val status: Int,
-    val data: PNChannelMetadata?
-)
