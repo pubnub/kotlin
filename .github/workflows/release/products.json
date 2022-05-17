@@ -1,0 +1,22 @@
+{
+  "kotlin": {
+    "path": "./",
+    "name": "Kotlin SDK",
+    "main": true
+  },
+  "users": {
+    "path": "./pubnub-users",
+    "name": "Kotlin Users",
+    "main": false
+  },
+  "spaces": {
+    "path": "./pubnub-spaces",
+    "name": "Kotlin Spaces",
+    "main": false
+  },
+  "bom": {
+    "path": "./pubnub-kotlin-bom",
+    "name": "Kotlin SDK BOM",
+    "main": false
+  }
+}
