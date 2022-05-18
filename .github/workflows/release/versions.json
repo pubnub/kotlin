@@ -1,5 +1,12 @@
 {
-  "pubnub-entities/gradle.properties": [
+  "pubnub-spaces/gradle.properties": [
+    {
+      "pattern": "^VERSION_NAME=(v?(\\d+\\.?){2,}([a-zA-Z0-9-]+(\\.?\\d+)?)?)$",
+      "clearedPrefix": true,
+      "clearedSuffix": false
+    }
+  ],
+  "pubnub-users/gradle.properties": [
     {
       "pattern": "^VERSION_NAME=(v?(\\d+\\.?){2,}([a-zA-Z0-9-]+(\\.?\\d+)?)?)$",
       "clearedPrefix": true,
