@@ -14,7 +14,7 @@ import com.pubnub.entities.models.consumer.space.toPNRemoveSpaceResult
 import com.pubnub.entities.models.consumer.space.toPNSpaceArrayResult
 import com.pubnub.entities.models.consumer.space.toPNSpaceResult
 
-fun PubNub.getSpaces(
+fun PubNub.fetchSpaces(
     limit: Int? = null,
     page: PNPage? = null,
     filter: String? = null,
@@ -37,7 +37,7 @@ fun PubNub.getSpaces(
     ) { pnChannelMetadataArrayResult -> pnChannelMetadataArrayResult.toPNSpaceArrayResult() }
 }
 
-fun PubNub.getSpace(
+fun PubNub.fetchSpace(
     spaceId: String,
     includeCustom: Boolean = false
 ): ExtendedRemoteAction<PNSpaceResult?> = firstDo(
@@ -49,7 +49,28 @@ fun PubNub.getSpace(
     ) { pnChannelMetadataResult -> pnChannelMetadataResult.toPNSpaceResult() }
 }
 
-fun PubNub.setSpace(
+fun PubNub.createSpace(
+    spaceId: String,
+    name: String? = null,
+    description: String? = null,
+    custom: Any? = null,
+    includeCustom: Boolean = false
+): ExtendedRemoteAction<PNSpaceResult?> = firstDo(
+    setChannelMetadata(
+        channel = spaceId,
+        name = name,
+        description = description,
+        custom = custom,
+        includeCustom = includeCustom
+    )
+).then {
+    map(
+        it,
+        PNOperationType.SpaceOperation
+    ) { pnChannelMetadataResult -> pnChannelMetadataResult.toPNSpaceResult() }
+}
+
+fun PubNub.updateSpace(
     spaceId: String,
     name: String? = null,
     description: String? = null,
