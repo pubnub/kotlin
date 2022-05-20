@@ -1,0 +1,17 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm'
+}
+
+apply plugin: "com.vanniktech.maven.publish"
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation project(":")
+}
+
+test {
+    useJUnitPlatform()
+}
