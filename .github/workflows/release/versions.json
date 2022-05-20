@@ -1,6 +1,14 @@
 {
+  "gradle.properties": [
+    {
+      "pattern": "^VERSION_NAME=(v?(\\d+\\.?){2,}([a-zA-Z0-9-]+(\\.?\\d+)?)?)$",
+      "clearedPrefix": true,
+      "clearedSuffix": false
+    }
+  ],
   ".pubnub.yml": [
-    { "pattern": "^version: (v?(\\d+\\.?){2,}([a-zA-Z0-9-]+(\\.?\\d+)?)?)$",
+    {
+      "pattern": "^version: (v?(\\d+\\.?){2,}([a-zA-Z0-9-]+(\\.?\\d+)?)?)$",
       "clearedPrefix": true,
       "clearedSuffix": false
     },
@@ -14,7 +22,10 @@
       "clearedPrefix": true,
       "clearedSuffix": false
     },
-    { "pattern": "/releases/download/(v?(\\d+\\.?){2,}([a-zA-Z0-9-]+(\\.?\\d+)?)?)/pubnub-kotlin-.*-all.jar$", "cleared": false },
+    {
+      "pattern": "/releases/download/(v?(\\d+\\.?){2,}([a-zA-Z0-9-]+(\\.?\\d+)?)?)/pubnub-kotlin-.*-all.jar$",
+      "cleared": false
+    },
     {
       "pattern": "/releases/download/.*/pubnub-kotlin-(v?(\\d+\\.?){2,}([a-zA-Z0-9-]+(\\.?\\d+)?)?)-all.jar$",
       "clearedPrefix": true,
