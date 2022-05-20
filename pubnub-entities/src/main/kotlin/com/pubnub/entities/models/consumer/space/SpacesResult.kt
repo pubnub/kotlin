@@ -3,15 +3,15 @@ package com.pubnub.entities.models.consumer.space
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadataArrayResult
 
-data class PNSpaceArrayResult(
+data class SpacesResult(
     val status: Int,
-    val data: Collection<PNSpace>,
+    val data: Collection<Space>,
     val totalCount: Int?,
     val next: PNPage?,
     val prev: PNPage?
 )
 
-internal fun PNChannelMetadataArrayResult?.toPNSpaceArrayResult(): PNSpaceArrayResult? {
+internal fun PNChannelMetadataArrayResult?.toPNSpaceArrayResult(): SpacesResult? {
     if (this == null) {
         return null
     }
@@ -20,5 +20,5 @@ internal fun PNChannelMetadataArrayResult?.toPNSpaceArrayResult(): PNSpaceArrayR
         pnChannelMetadata.toPNSpace()
     }
 
-    return PNSpaceArrayResult(status = status, data = pnSpaceList, totalCount = totalCount, next = next, prev = prev)
+    return SpacesResult(status = status, data = pnSpaceList, totalCount = totalCount, next = next, prev = prev)
 }

@@ -2,14 +2,14 @@ package com.pubnub.entities.models.consumer.user
 
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataResult
 
-data class PNUserResult(
+data class UserResult(
     val status: Int,
-    val data: PNUser?
+    val data: User?
 )
 
-internal fun PNUUIDMetadataResult.toPNUserResult(): PNUserResult? {
+internal fun PNUUIDMetadataResult.toPNUserResult(): UserResult? {
     if (this == null) {
         return null
     }
-    return PNUserResult(status = status, data = data?.toPNUser())
+    return UserResult(status = status, data = data?.toPNUser())
 }

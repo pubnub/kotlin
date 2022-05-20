@@ -7,9 +7,9 @@ import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction.Companion.map
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.PNSortKey
-import com.pubnub.entities.models.consumer.user.PNRemoveUserResult
-import com.pubnub.entities.models.consumer.user.PNUserArrayResult
-import com.pubnub.entities.models.consumer.user.PNUserResult
+import com.pubnub.entities.models.consumer.user.RemoveUserResult
+import com.pubnub.entities.models.consumer.user.UserResult
+import com.pubnub.entities.models.consumer.user.UsersResult
 import com.pubnub.entities.models.consumer.user.toPNRemoveUserResult
 import com.pubnub.entities.models.consumer.user.toPNUserArrayResult
 import com.pubnub.entities.models.consumer.user.toPNUserResult
@@ -21,7 +21,7 @@ fun PubNub.fetchUsers(
     sort: Collection<PNSortKey> = listOf(),
     includeCount: Boolean = false,
     includeCustom: Boolean = false
-): ExtendedRemoteAction<PNUserArrayResult?> = firstDo(
+): ExtendedRemoteAction<UsersResult?> = firstDo(
     getAllUUIDMetadata(
         limit = limit,
         page = page,
@@ -38,11 +38,11 @@ fun PubNub.fetchUsers(
 }
 
 fun PubNub.fetchUser(
-    userId: String? = null,
+    userId: String? = configuration.uuid,
     includeCustom: Boolean = false
-): ExtendedRemoteAction<PNUserResult?> = firstDo(
+): ExtendedRemoteAction<UserResult?> = firstDo(
     getUUIDMetadata(
-        uuid = userId ?: configuration.uuid,
+        uuid = userId,
         includeCustom = includeCustom
     )
 ).then {
@@ -60,7 +60,7 @@ fun PubNub.createUser(
     email: String? = null,
     custom: Any? = null,
     includeCustom: Boolean = false
-): ExtendedRemoteAction<PNUserResult?> = firstDo(
+): ExtendedRemoteAction<UserResult?> = firstDo(
     setUUIDMetadata(
         uuid = userId,
         name = name,
@@ -85,7 +85,7 @@ fun PubNub.updateUser(
     email: String? = null,
     custom: Any? = null,
     includeCustom: Boolean = false
-): ExtendedRemoteAction<PNUserResult?> = firstDo(
+): ExtendedRemoteAction<UserResult?> = firstDo(
     setUUIDMetadata(
         uuid = userId,
         name = name,
@@ -104,7 +104,7 @@ fun PubNub.updateUser(
 
 fun PubNub.removeUser(
     userId: String? = null
-): ExtendedRemoteAction<PNRemoveUserResult?> = firstDo(
+): ExtendedRemoteAction<RemoveUserResult?> = firstDo(
     removeUUIDMetadata(uuid = userId)
 ).then {
     map(
