@@ -14,7 +14,7 @@ import com.pubnub.entities.models.consumer.membership.UserDetailsLevel
 import com.pubnub.entities.models.consumer.membership.toPNSpaceMembershipArrayResult
 import com.pubnub.entities.models.consumer.membership.toPNUserMembershipArrayResult
 
-fun PubNub.fetchMembershipOfUser(//fetch all spaces that user is in and roles in each space przedyskutować zmianę
+fun PubNub.fetchMembershipOfUser(
     userId: String = configuration.uuid,
     limit: Int? = null,
     page: PNPage? = null,
@@ -22,7 +22,7 @@ fun PubNub.fetchMembershipOfUser(//fetch all spaces that user is in and roles in
     sort: Collection<PNSortKey> = listOf(),
     includeCount: Boolean = false,
     includeCustom: Boolean = false,
-    includeSpaceDetails: SpaceDetailsLevel? = null //includeSpaceDetails
+    includeSpaceDetails: SpaceDetailsLevel? = null
 ): ExtendedRemoteAction<MembershipsResult?> = firstDo(
     getMemberships(
         uuid = userId,
@@ -43,7 +43,7 @@ fun PubNub.fetchMembershipOfUser(//fetch all spaces that user is in and roles in
     ) { pnChannelMembershipArrayResult -> pnChannelMembershipArrayResult.toPNUserMembershipArrayResult(userId) }
 }
 
-fun PubNub.fetchMembershipOfSpace(// fetch all users that space contains, przedyskutować zmianę
+fun PubNub.fetchMembershipOfSpace(
     spaceId: String,
     limit: Int? = null,
     page: PNPage? = null,
