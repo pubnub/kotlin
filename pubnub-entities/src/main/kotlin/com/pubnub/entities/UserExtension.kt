@@ -10,9 +10,9 @@ import com.pubnub.api.models.consumer.objects.PNSortKey
 import com.pubnub.entities.models.consumer.user.RemoveUserResult
 import com.pubnub.entities.models.consumer.user.UserResult
 import com.pubnub.entities.models.consumer.user.UsersResult
-import com.pubnub.entities.models.consumer.user.toPNRemoveUserResult
-import com.pubnub.entities.models.consumer.user.toPNUserArrayResult
-import com.pubnub.entities.models.consumer.user.toPNUserResult
+import com.pubnub.entities.models.consumer.user.toRemoveUserResult
+import com.pubnub.entities.models.consumer.user.toUserResult
+import com.pubnub.entities.models.consumer.user.toUsersResult
 
 fun PubNub.fetchUsers(
     limit: Int? = null,
@@ -34,7 +34,7 @@ fun PubNub.fetchUsers(
     map(
         it,
         PNOperationType.UserOperation
-    ) { pnUuidMetadataArrayResult -> pnUuidMetadataArrayResult.toPNUserArrayResult() }
+    ) { pnUuidMetadataArrayResult -> pnUuidMetadataArrayResult.toUsersResult() }
 }
 
 fun PubNub.fetchUser(
@@ -49,7 +49,7 @@ fun PubNub.fetchUser(
     map(
         it,
         PNOperationType.UserOperation
-    ) { pnUuidMetadataResult -> pnUuidMetadataResult.toPNUserResult() }
+    ) { pnUuidMetadataResult -> pnUuidMetadataResult.toUserResult() }
 }
 
 fun PubNub.createUser(
@@ -74,7 +74,7 @@ fun PubNub.createUser(
     map(
         it,
         PNOperationType.UserOperation
-    ) { pnUuidMetadataResult -> pnUuidMetadataResult.toPNUserResult() }
+    ) { pnUuidMetadataResult -> pnUuidMetadataResult.toUserResult() }
 }
 
 fun PubNub.updateUser(
@@ -99,7 +99,7 @@ fun PubNub.updateUser(
     map(
         it,
         PNOperationType.UserOperation
-    ) { pnUuidMetadataResult -> pnUuidMetadataResult.toPNUserResult() }
+    ) { pnUuidMetadataResult -> pnUuidMetadataResult.toUserResult() }
 }
 
 fun PubNub.removeUser(
@@ -110,5 +110,5 @@ fun PubNub.removeUser(
     map(
         it,
         PNOperationType.UserOperation
-    ) { pnRemoveMetadataResult -> pnRemoveMetadataResult.toPNRemoveUserResult() }
+    ) { pnRemoveMetadataResult -> pnRemoveMetadataResult.toRemoveUserResult() }
 }

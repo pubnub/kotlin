@@ -11,12 +11,12 @@ data class UsersResult(
     val prev: PNPage?
 )
 
-internal fun PNUUIDMetadataArrayResult.toPNUserArrayResult(): UsersResult? {
+internal fun PNUUIDMetadataArrayResult.toUsersResult(): UsersResult? {
     if (this == null) {
         return null
     }
-    val pnUserList = data.map { pnUserMetadata ->
-        pnUserMetadata.toPNUser()
+    val users = data.map { pnUserMetadata ->
+        pnUserMetadata.toUser()
     }
-    return UsersResult(status = status, data = pnUserList, totalCount = totalCount, next = next, prev = prev)
+    return UsersResult(status = status, data = users, totalCount = totalCount, next = next, prev = prev)
 }

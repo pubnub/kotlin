@@ -7,10 +7,10 @@ data class SpaceResult(
     val data: Space?
 )
 
-internal fun PNChannelMetadataResult?.toPNSpaceResult(): SpaceResult? {
+internal fun PNChannelMetadataResult?.toSpaceResult(): SpaceResult? {
     if (this == null) {
         return null
     }
 
-    return SpaceResult(status = status, data = data?.toPNSpace())
+    return SpaceResult(status = status, data = data?.toSpace())
 }

@@ -11,8 +11,8 @@ import com.pubnub.entities.models.consumer.membership.EntityDetailsLevelConverte
 import com.pubnub.entities.models.consumer.membership.MembershipsResult
 import com.pubnub.entities.models.consumer.membership.SpaceDetailsLevel
 import com.pubnub.entities.models.consumer.membership.UserDetailsLevel
-import com.pubnub.entities.models.consumer.membership.toPNSpaceMembershipArrayResult
-import com.pubnub.entities.models.consumer.membership.toPNUserMembershipArrayResult
+import com.pubnub.entities.models.consumer.membership.toSpaceMembershipResult
+import com.pubnub.entities.models.consumer.membership.toUserMembershipsResult
 
 fun PubNub.fetchMembershipOfUser(
     userId: String = configuration.uuid,
@@ -40,7 +40,7 @@ fun PubNub.fetchMembershipOfUser(
     map(
         it,
         PNOperationType.MembershipOperation
-    ) { pnChannelMembershipArrayResult -> pnChannelMembershipArrayResult.toPNUserMembershipArrayResult(userId) }
+    ) { pnChannelMembershipArrayResult -> pnChannelMembershipArrayResult.toUserMembershipsResult(userId) }
 }
 
 fun PubNub.fetchMembershipOfSpace(
@@ -67,5 +67,5 @@ fun PubNub.fetchMembershipOfSpace(
     map(
         it,
         PNOperationType.MembershipOperation
-    ) { pnMemberArrayResult -> pnMemberArrayResult.toPNSpaceMembershipArrayResult(spaceId) }
+    ) { pnMemberArrayResult -> pnMemberArrayResult.toSpaceMembershipResult(spaceId) }
 }

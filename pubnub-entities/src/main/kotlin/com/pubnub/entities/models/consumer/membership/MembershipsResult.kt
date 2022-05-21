@@ -12,27 +12,27 @@ data class MembershipsResult(
     val prev: PNPage?
 )
 
-internal fun PNChannelMembershipArrayResult.toPNUserMembershipArrayResult(userId: String): MembershipsResult {
-    val pnUserMembershipList: Collection<Membership> = data.map { pnChannelMembership ->
-        pnChannelMembership.toPNUserMembership(userId)
+internal fun PNChannelMembershipArrayResult.toUserMembershipsResult(userId: String): MembershipsResult {
+    val userMembershipList: Collection<Membership> = data.map { pnChannelMembership ->
+        pnChannelMembership.toUserMembership(userId)
     }
     return MembershipsResult(
         status = status,
-        data = pnUserMembershipList,
+        data = userMembershipList,
         totalCount = totalCount,
         next = next,
         prev = prev
     )
 }
 
-internal fun PNMemberArrayResult.toPNSpaceMembershipArrayResult(spaceId: String): MembershipsResult {
-    val pnSpaceMembershipList: Collection<Membership> = data.map { pnMember ->
-        pnMember.toPNSpaceMembership(spaceId)
+internal fun PNMemberArrayResult.toSpaceMembershipResult(spaceId: String): MembershipsResult {
+    val spaceMemberships: Collection<Membership> = data.map { pnMember ->
+        pnMember.toSpaceMembership(spaceId)
     }
 
     return MembershipsResult(
         status = status,
-        data = pnSpaceMembershipList,
+        data = spaceMemberships,
         totalCount = totalCount,
         next = next,
         prev = prev

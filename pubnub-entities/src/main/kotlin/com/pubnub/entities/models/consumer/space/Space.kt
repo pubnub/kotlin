@@ -11,7 +11,7 @@ data class Space(
     val eTag: String? = null
 )
 
-internal fun PNChannelMetadata.toPNSpace(): Space {
+internal fun PNChannelMetadata.toSpace(): Space {
     return Space(
         id = id,
         name = name,

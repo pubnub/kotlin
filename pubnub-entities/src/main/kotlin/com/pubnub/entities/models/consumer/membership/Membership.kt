@@ -3,9 +3,9 @@ package com.pubnub.entities.models.consumer.membership
 import com.pubnub.api.models.consumer.objects.member.PNMember
 import com.pubnub.api.models.consumer.objects.membership.PNChannelMembership
 import com.pubnub.entities.models.consumer.space.Space
-import com.pubnub.entities.models.consumer.space.toPNSpace
+import com.pubnub.entities.models.consumer.space.toSpace
 import com.pubnub.entities.models.consumer.user.User
-import com.pubnub.entities.models.consumer.user.toPNUser
+import com.pubnub.entities.models.consumer.user.toUser
 
 data class Membership(
     val user: User?,
@@ -15,19 +15,19 @@ data class Membership(
     val eTag: String
 )
 
-internal fun PNChannelMembership.toPNUserMembership(userId: String): Membership {
+internal fun PNChannelMembership.toUserMembership(userId: String): Membership {
     return Membership(
         user = User(id = userId),
-        space = channel?.toPNSpace(),
+        space = channel?.toSpace(),
         custom = custom,
         updated = updated,
         eTag = eTag
     )
 }
 
-internal fun PNMember.toPNSpaceMembership(spaceId: String): Membership {
+internal fun PNMember.toSpaceMembership(spaceId: String): Membership {
     return Membership(
-        user = uuid?.toPNUser(),
+        user = uuid?.toUser(),
         space = Space(id = spaceId),
         custom = custom,
         updated = updated,

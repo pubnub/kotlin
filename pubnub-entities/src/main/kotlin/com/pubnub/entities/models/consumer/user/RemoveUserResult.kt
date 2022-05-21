@@ -6,6 +6,6 @@ data class RemoveUserResult(
     val status: Int
 )
 
-internal fun PNRemoveMetadataResult.toPNRemoveUserResult(): RemoveUserResult {
+internal fun PNRemoveMetadataResult.toRemoveUserResult(): RemoveUserResult {
     return RemoveUserResult(status = this.status)
 }

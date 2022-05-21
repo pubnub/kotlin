@@ -11,14 +11,14 @@ data class SpacesResult(
     val prev: PNPage?
 )
 
-internal fun PNChannelMetadataArrayResult?.toPNSpaceArrayResult(): SpacesResult? {
+internal fun PNChannelMetadataArrayResult?.toSpacesResult(): SpacesResult? {
     if (this == null) {
         return null
     }
 
-    val pnSpaceList = data.map { pnChannelMetadata ->
-        pnChannelMetadata.toPNSpace()
+    val spaces = data.map { pnChannelMetadata ->
+        pnChannelMetadata.toSpace()
     }
 
-    return SpacesResult(status = status, data = pnSpaceList, totalCount = totalCount, next = next, prev = prev)
+    return SpacesResult(status = status, data = spaces, totalCount = totalCount, next = next, prev = prev)
 }

@@ -6,6 +6,6 @@ data class RemoveSpaceResult(
     val status: Int
 )
 
-internal fun PNRemoveMetadataResult?.toPNRemoveSpaceResult(): RemoveSpaceResult? {
+internal fun PNRemoveMetadataResult?.toRemoveSpaceResult(): RemoveSpaceResult? {
     return this?.let { RemoveSpaceResult(status = it.status) }
 }

@@ -10,9 +10,9 @@ import com.pubnub.api.models.consumer.objects.PNSortKey
 import com.pubnub.entities.models.consumer.space.RemoveSpaceResult
 import com.pubnub.entities.models.consumer.space.SpaceResult
 import com.pubnub.entities.models.consumer.space.SpacesResult
-import com.pubnub.entities.models.consumer.space.toPNRemoveSpaceResult
-import com.pubnub.entities.models.consumer.space.toPNSpaceArrayResult
-import com.pubnub.entities.models.consumer.space.toPNSpaceResult
+import com.pubnub.entities.models.consumer.space.toRemoveSpaceResult
+import com.pubnub.entities.models.consumer.space.toSpaceResult
+import com.pubnub.entities.models.consumer.space.toSpacesResult
 
 fun PubNub.fetchSpaces(
     limit: Int? = null,
@@ -34,7 +34,7 @@ fun PubNub.fetchSpaces(
     map(
         it,
         PNOperationType.SpaceOperation
-    ) { pnChannelMetadataArrayResult -> pnChannelMetadataArrayResult.toPNSpaceArrayResult() }
+    ) { pnChannelMetadataArrayResult -> pnChannelMetadataArrayResult.toSpacesResult() }
 }
 
 fun PubNub.fetchSpace(
@@ -46,7 +46,7 @@ fun PubNub.fetchSpace(
     map(
         it,
         PNOperationType.SpaceOperation
-    ) { pnChannelMetadataResult -> pnChannelMetadataResult.toPNSpaceResult() }
+    ) { pnChannelMetadataResult -> pnChannelMetadataResult.toSpaceResult() }
 }
 
 fun PubNub.createSpace(
@@ -67,7 +67,7 @@ fun PubNub.createSpace(
     map(
         it,
         PNOperationType.SpaceOperation
-    ) { pnChannelMetadataResult -> pnChannelMetadataResult.toPNSpaceResult() }
+    ) { pnChannelMetadataResult -> pnChannelMetadataResult.toSpaceResult() }
 }
 
 fun PubNub.updateSpace(
@@ -88,7 +88,7 @@ fun PubNub.updateSpace(
     map(
         it,
         PNOperationType.SpaceOperation
-    ) { pnChannelMetadataResult -> pnChannelMetadataResult.toPNSpaceResult() }
+    ) { pnChannelMetadataResult -> pnChannelMetadataResult.toSpaceResult() }
 }
 
 fun PubNub.removeSpace(
@@ -99,5 +99,5 @@ fun PubNub.removeSpace(
     map(
         it,
         PNOperationType.SpaceOperation
-    ) { pnRemoveMetadataResult -> pnRemoveMetadataResult.toPNRemoveSpaceResult() }
+    ) { pnRemoveMetadataResult -> pnRemoveMetadataResult.toRemoveSpaceResult() }
 }
