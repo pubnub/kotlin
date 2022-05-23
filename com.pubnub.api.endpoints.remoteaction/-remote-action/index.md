@@ -10,3 +10,9 @@
 |---|---|
 | [async](async.md) | `abstract fun async(callback: (result: Output?, status: `[`PNStatus`](../../com.pubnub.api.models.consumer/-p-n-status/index.md)`) -> `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html)`): `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html) |
 | [sync](sync.md) | `abstract fun sync(): Output?` |
+
+### Inheritors
+
+| Name | Summary |
+|---|---|
+| [ExtendedRemoteAction](../-extended-remote-action/index.md) | `interface ExtendedRemoteAction<Output> : `[`RemoteAction`](./index.md)`<Output>` |

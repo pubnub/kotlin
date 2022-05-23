@@ -62,7 +62,9 @@
 | [PublishOperation](-publish-operation/index.md) | `open class PublishOperation : `[`PNOperationType`](./index.md) |
 | [PushNotificationsOperation](-push-notifications-operation/index.md) | `open class PushNotificationsOperation : `[`PNOperationType`](./index.md) |
 | [SignalsOperation](-signals-operation/index.md) | `open class SignalsOperation : `[`PNOperationType`](./index.md) |
+| [SpaceOperation](-space-operation.md) | `object SpaceOperation : `[`PNOperationType`](./index.md) |
 | [TimeOperation](-time-operation/index.md) | `open class TimeOperation : `[`PNOperationType`](./index.md) |
+| [UserOperation](-user-operation.md) | `object UserOperation : `[`PNOperationType`](./index.md) |
 
 ### Properties
 

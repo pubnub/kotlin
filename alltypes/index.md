@@ -70,6 +70,11 @@ Utilities for encoding and decoding the Base64 representation of binary data. Se
 
 |
 
+##### [com.pubnub.api.endpoints.remoteaction.ComposableRemoteAction](../com.pubnub.api.endpoints.remoteaction/-composable-remote-action/index.md)
+
+
+|
+
 ##### [com.pubnub.api.vendor.Crypto](../com.pubnub.api.vendor/-crypto/index.md)
 
 
@@ -113,6 +118,11 @@ Base class for all PubNub API operation implementations.
 |
 
 ##### [com.pubnub.api.models.server.Envelope](../com.pubnub.api.models.server/-envelope/index.md)
+
+
+|
+
+##### [com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction](../com.pubnub.api.endpoints.remoteaction/-extended-remote-action/index.md)
 
 
 |

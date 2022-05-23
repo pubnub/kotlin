@@ -2,7 +2,7 @@
 
 # MappingRemoteAction
 
-`class MappingRemoteAction<T, U> : ExtendedRemoteAction<U>`
+`class MappingRemoteAction<T, U> : `[`ExtendedRemoteAction`](../-extended-remote-action/index.md)`<U>`
 
 ### Functions
 
@@ -13,3 +13,9 @@
 | [retry](retry.md) | `fun retry(): `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html) |
 | [silentCancel](silent-cancel.md) | `fun silentCancel(): `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html) |
 | [sync](sync.md) | `fun sync(): U` |
+
+### Companion Object Functions
+
+| Name | Summary |
+|---|---|
+| [map](map.md) | `fun <T, U> map(result: T, operationType: `[`PNOperationType`](../../com.pubnub.api.enums/-p-n-operation-type/index.md)`, function: (T) -> U): `[`ExtendedRemoteAction`](../-extended-remote-action/index.md)`<U>` |

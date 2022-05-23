@@ -2,7 +2,7 @@
 
 # Endpoint
 
-`abstract class Endpoint<Input, Output> : ExtendedRemoteAction<Output>`
+`abstract class Endpoint<Input, Output> : `[`ExtendedRemoteAction`](../../com.pubnub.api.endpoints.remoteaction/-extended-remote-action/index.md)`<Output>`
 
 Base class for all PubNub API operation implementations.
 

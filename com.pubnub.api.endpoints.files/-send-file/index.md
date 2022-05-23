@@ -2,7 +2,7 @@
 
 # SendFile
 
-`class SendFile : ExtendedRemoteAction<`[`PNFileUploadResult`](../../com.pubnub.api.models.consumer.files/-p-n-file-upload-result/index.md)`>`
+`class SendFile : `[`ExtendedRemoteAction`](../../com.pubnub.api.endpoints.remoteaction/-extended-remote-action/index.md)`<`[`PNFileUploadResult`](../../com.pubnub.api.models.consumer.files/-p-n-file-upload-result/index.md)`>`
 
 **See Also**
 
