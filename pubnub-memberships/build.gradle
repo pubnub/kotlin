@@ -10,6 +10,8 @@ repositories {
 
 dependencies {
     implementation project(":")
+    api project(":pubnub-spaces")
+    api project(":pubnub-users")
 }
 
 test {
