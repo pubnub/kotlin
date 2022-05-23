@@ -2,17 +2,17 @@ package com.pubnub.entities.models.consumer.space
 
 import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata
 
-data class PNSpace(
+data class Space(
     val id: String,
-    val name: String?,
-    val description: String?,
-    val custom: Any?,
-    val updated: String?,
-    val eTag: String?
+    val name: String? = null,
+    val description: String? = null,
+    val custom: Any? = null,
+    val updated: String? = null,
+    val eTag: String? = null
 )
 
-internal fun PNChannelMetadata.toPNSpace(): PNSpace {
-    return PNSpace(
+internal fun PNChannelMetadata.toSpace(): Space {
+    return Space(
         id = id,
         name = name,
         description = description,
