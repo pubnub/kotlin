@@ -62,7 +62,7 @@ internal object PubNubUtil {
             return originalRequest
         }
         val signature = generateSignature(pnConfiguration, originalRequest, timestamp)
-        val rebuiltUrl = originalRequest.url().newBuilder()
+        val rebuiltUrl = originalRequest.url.newBuilder()
             .addQueryParameter("timestamp", timestamp.toString())
             .addQueryParameter("signature", signature)
             .build()
@@ -149,17 +149,17 @@ internal object PubNubUtil {
         timestamp: Int
     ): String? {
         val queryParams: MutableMap<String, String> = mutableMapOf()
-        for (queryKey: String in request.url().queryParameterNames()) {
-            val value = request.url().queryParameter(queryKey)
+        for (queryKey: String in request.url.queryParameterNames) {
+            val value = request.url.queryParameter(queryKey)
             if (value != null) {
                 queryParams[queryKey] = value
             }
         }
         return generateSignature(
             configuration,
-            request.url().encodedPath(),
+            request.url.encodedPath,
             queryParams,
-            request.method(),
+            request.method,
             requestBodyToString(request),
             timestamp
         )
@@ -174,12 +174,12 @@ internal object PubNubUtil {
     }
 
     internal fun requestBodyToString(request: Request): String? {
-        if (request.body() == null) {
+        if (request.body == null) {
             return ""
         }
         try {
             val buffer = Buffer()
-            request.body()!!.writeTo(buffer)
+            request.body!!.writeTo(buffer)
             return buffer.readUtf8()
         } catch (e: IOException) {
             e.printStackTrace()

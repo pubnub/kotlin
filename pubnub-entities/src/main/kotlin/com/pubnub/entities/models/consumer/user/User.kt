@@ -2,19 +2,19 @@ package com.pubnub.entities.models.consumer.user
 
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
 
-data class PNUser(
+data class User(
     val id: String,
-    val name: String?,
-    val externalId: String?,
-    val profileUrl: String?,
-    val email: String?,
-    val custom: Any?,
-    val updated: String?,
-    val eTag: String?
+    val name: String? = null,
+    val externalId: String? = null,
+    val profileUrl: String? = null,
+    val email: String? = null,
+    val custom: Any? = null,
+    val updated: String? = null,
+    val eTag: String? = null
 )
 
-internal fun PNUUIDMetadata.toPNUser(): PNUser {
-    return PNUser(
+internal fun PNUUIDMetadata.toUser(): User {
+    return User(
         id = id,
         name = name,
         externalId = externalId,

@@ -2,15 +2,15 @@ package com.pubnub.entities.models.consumer.space
 
 import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadataResult
 
-data class PNSpaceResult(
+data class SpaceResult(
     val status: Int,
-    val data: PNSpace?
+    val data: Space?
 )
 
-internal fun PNChannelMetadataResult?.toPNSpaceResult(): PNSpaceResult? {
+internal fun PNChannelMetadataResult?.toSpaceResult(): SpaceResult? {
     if (this == null) {
         return null
     }
 
-    return PNSpaceResult(status = status, data = data?.toPNSpace())
+    return SpaceResult(status = status, data = data?.toSpace())
 }
