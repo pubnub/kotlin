@@ -15,6 +15,7 @@ data class Membership(
     val eTag: String
 )
 
+// this comment will be removed
 internal fun PNChannelMembership.toUserMembership(userId: String): Membership {
     return Membership(
         user = User(id = userId),
