@@ -7,7 +7,7 @@ import com.pubnub.api.CommonUtils.DEFAULT_LISTEN_DURATION
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
 import com.pubnub.api.enums.PNLogVerbosity
-import okhttp3.HttpUrl
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import org.junit.After
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -56,7 +56,7 @@ abstract class BaseTest {
             subscribeKey = "mySubscribeKey"
             publishKey = "myPublishKey"
             uuid = "myUUID"
-            origin = HttpUrl.parse(wireMockServer.baseUrl())!!.run { "${host()}:${port()}" }
+            origin = wireMockServer.baseUrl().toHttpUrlOrNull()!!.run { "$host:$port" }
             secure = false
             logVerbosity = PNLogVerbosity.BODY
         }

@@ -1,3 +1,9 @@
+## v7.1.0
+May 23 2022
+
+#### Added
+- Upgrade okhttp library .
+
 ## v7.0.1
 April 19 2022
 

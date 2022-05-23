@@ -55,7 +55,7 @@ class GetFileUrl(
                 pubnub.configuration,
                 pubnub.timestamp()
             )
-            PNFileUrlResult(signedRequest.url().toString())
+            PNFileUrlResult(signedRequest.url.toString())
         } catch (e: Exception) {
             throw PubNubException(errorMessage = e.message)
         }

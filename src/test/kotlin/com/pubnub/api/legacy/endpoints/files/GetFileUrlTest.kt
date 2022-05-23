@@ -3,8 +3,9 @@ package com.pubnub.api.legacy.endpoints.files
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubException
-import okhttp3.HttpUrl
+import okhttp3.HttpUrl.Companion.toHttpUrl
 import org.hamcrest.Matchers
+import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Assert
 import org.junit.Test
 import java.util.Arrays
@@ -50,7 +51,7 @@ class GetFileUrlTest {
         // then
         val queryParamNames = queryParameterNames(url)
         queryParamNames.removeAll(defaultQueryParams)
-        Assert.assertThat<Collection<String>>(queryParamNames, Matchers.containsInAnyOrder("signature", "timestamp"))
+        assertThat<Collection<String>>(queryParamNames, Matchers.containsInAnyOrder("signature", "timestamp"))
     }
 
     @Test
@@ -69,7 +70,7 @@ class GetFileUrlTest {
         // then
         val queryParamNames = queryParameterNames(url)
         queryParamNames.removeAll(defaultQueryParams)
-        Assert.assertThat<Collection<String>>(queryParamNames, Matchers.containsInAnyOrder("auth"))
+        assertThat<Collection<String>>(queryParamNames, Matchers.containsInAnyOrder("auth"))
     }
 
     @Test
@@ -89,7 +90,7 @@ class GetFileUrlTest {
         println(url)
         val queryParamNames = queryParameterNames(url)
         queryParamNames.removeAll(defaultQueryParams)
-        Assert.assertThat<Collection<String>>(
+        assertThat<Collection<String>>(
             queryParamNames,
             Matchers.containsInAnyOrder("auth", "signature", "timestamp")
         )
@@ -113,6 +114,6 @@ class GetFileUrlTest {
     }
 
     private fun queryParameterNames(url: String): MutableCollection<String> {
-        return HashSet(HttpUrl.get(url).queryParameterNames())
+        return HashSet(url.toHttpUrl().queryParameterNames)
     }
 }
