@@ -3,7 +3,7 @@ package com.pubnub.api
 import com.github.tomakehurst.wiremock.verification.LoggedRequest
 import com.pubnub.api.vendor.Base64
 import com.pubnub.api.vendor.Crypto
-import okhttp3.HttpUrl
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.Request
 import okio.Buffer
 import org.junit.Assert.assertEquals
@@ -31,8 +31,8 @@ object SignatureUtils {
     fun decomposeAndVerifySignature(configuration: PNConfiguration, request: Request) {
         decomposeAndVerifySignature(
             configuration = configuration,
-            url = request.url().toString(),
-            method = request.method(),
+            url = request.url.toString(),
+            method = request.method,
             body = requestBodyToString(request)
         )
     }
@@ -43,13 +43,15 @@ object SignatureUtils {
         method: String,
         body: String = ""
     ) {
-        val httpUrl = HttpUrl.parse(url)
+        val httpUrl = url.toHttpUrlOrNull()
         println(httpUrl)
 
         val sortedQueryString = httpUrl!!.run {
-            queryParameterNames()
+            queryParameterNames
                 .filter { it != "signature" }
-                .map { it to pamEncode(queryParameterValues(it).first()) }
+                .mapNotNull { queryParameterName ->
+                    queryParameterValues(queryParameterName).first()?.let { queryParameterName to pamEncode(it) }
+                }
                 .toMap()
                 .toSortedMap()
                 .map { "${it.key}=${it.value}" }
@@ -59,11 +61,11 @@ object SignatureUtils {
         var v2Signature = true
 
         val input =
-            if (!(httpUrl.encodedPath().startsWith("/publish") && method.toLowerCase() == "post")) {
+            if (!(httpUrl.encodedPath.startsWith("/publish") && method.toLowerCase() == "post")) {
                 """
                 ${method.toUpperCase()}
                 ${configuration.publishKey}
-                ${httpUrl.encodedPath()}
+                ${httpUrl.encodedPath}
                 $sortedQueryString
                 $body
                 """.trimIndent()
@@ -72,7 +74,7 @@ object SignatureUtils {
                 """
                 ${configuration.subscribeKey}
                 ${configuration.publishKey}
-                ${httpUrl.encodedPath()}
+                ${httpUrl.encodedPath}
                 $sortedQueryString
                 """.trimIndent()
             }
@@ -126,12 +128,12 @@ object SignatureUtils {
     }
 
     private fun requestBodyToString(request: Request): String {
-        if (request.body() == null) {
+        if (request.body == null) {
             return ""
         }
         try {
             val buffer = Buffer()
-            request.body()!!.writeTo(buffer)
+            request.body!!.writeTo(buffer)
             return buffer.readUtf8()
         } catch (e: IOException) {
             e.printStackTrace()
