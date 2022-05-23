@@ -7,14 +7,15 @@ import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction.Companion.map
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.PNSortKey
-import com.pubnub.entities.models.consumer.membership.EntityDetailsLevelConverter
 import com.pubnub.entities.models.consumer.membership.MembershipsResult
 import com.pubnub.entities.models.consumer.membership.SpaceDetailsLevel
 import com.pubnub.entities.models.consumer.membership.UserDetailsLevel
+import com.pubnub.entities.models.consumer.membership.toPNChannelDetailsLevel
+import com.pubnub.entities.models.consumer.membership.toPNUUIDDetailsLevel
 import com.pubnub.entities.models.consumer.membership.toSpaceMembershipResult
 import com.pubnub.entities.models.consumer.membership.toUserMembershipsResult
 
-fun PubNub.fetchMembershipOfUser(
+fun PubNub.fetchMembershipsOfUser(
     userId: String = configuration.uuid,
     limit: Int? = null,
     page: PNPage? = null,
@@ -32,9 +33,7 @@ fun PubNub.fetchMembershipOfUser(
         sort = sort,
         includeCount = includeCount,
         includeCustom = includeCustom,
-        includeChannelDetails = EntityDetailsLevelConverter.convertSpaceDetailsLevelToPNChannelDetailsLevel(
-            includeSpaceDetails
-        )
+        includeChannelDetails = includeSpaceDetails?.toPNChannelDetailsLevel()
     )
 ).then {
     map(
@@ -43,7 +42,7 @@ fun PubNub.fetchMembershipOfUser(
     ) { pnChannelMembershipArrayResult -> pnChannelMembershipArrayResult.toUserMembershipsResult(userId) }
 }
 
-fun PubNub.fetchMembershipOfSpace(
+fun PubNub.fetchMembershipsOfSpace(
     spaceId: String,
     limit: Int? = null,
     page: PNPage? = null,
@@ -61,7 +60,7 @@ fun PubNub.fetchMembershipOfSpace(
         sort = sort,
         includeCount = includeCount,
         includeCustom = includeCustom,
-        includeUUIDDetails = EntityDetailsLevelConverter.convertUserDetailsLevelToPNUUIDDetailsLevel(includeUserDetails)
+        includeUUIDDetails = includeUserDetails?.toPNUUIDDetailsLevel()
     )
 ).then {
     map(
