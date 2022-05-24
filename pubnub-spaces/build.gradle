@@ -2,8 +2,7 @@ plugins {
     id 'org.jetbrains.kotlin.jvm'
 }
 
-group 'com.pubnub.entities'
-version '7.0.1'
+apply plugin: "com.vanniktech.maven.publish"
 
 repositories {
     mavenCentral()

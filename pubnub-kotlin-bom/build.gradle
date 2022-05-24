@@ -1,0 +1,27 @@
+plugins {
+    id 'java-platform'
+}
+
+apply plugin: "com.vanniktech.maven.publish"
+
+repositories {
+    mavenCentral()
+}
+
+publishing {
+    publications {
+        myPlatform(MavenPublication) {
+            from components.javaPlatform
+        }
+    }
+}
+
+dependencies {
+    constraints {
+        api project(":pubnub-users")
+        api project(":pubnub-spaces")
+        api project(":pubnub-memberships")
+        api project(":")
+    }
+}
+

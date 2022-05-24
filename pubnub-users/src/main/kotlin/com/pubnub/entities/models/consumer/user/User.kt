@@ -13,7 +13,7 @@ data class User(
     val eTag: String? = null
 )
 
-internal fun PNUUIDMetadata.toUser(): User {
+fun PNUUIDMetadata.toUser(): User {
     return User(
         id = id,
         name = name,
