@@ -52,7 +52,7 @@ jobs:
           gpg-key-id: ${{ secrets.GPG_KEY_ID }}
           gpg-key-name: ${{ secrets.GPG_KEY_NAME }}
           gpg-key-passphrase: ${{ secrets.GPG_KEY_PASSPHRASE }}
-        run: |
+        run:
           export PRODUCT_PATH="${${{ product-path }}:2}"
           echo $PRODUCT_PATH
           ./gradlew :$PRODUCT_PATH:publishToMavenLocal --no-daemon --no-parallel
