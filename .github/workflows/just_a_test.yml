@@ -53,7 +53,7 @@ jobs:
           gpg-key-name: ${{ secrets.GPG_KEY_NAME }}
           gpg-key-passphrase: ${{ secrets.GPG_KEY_PASSPHRASE }}
         run:
-          export PRODUCT_PATH=`echo ${{ env.product-path }} | cut -c3-`
-          echo $PRODUCT_PATH
-          ./gradlew :$PRODUCT_PATH:publishToMavenLocal --no-daemon --no-parallel
+          export PRODUCT_PATH=`echo ${{ env.product-path }} | cut -c3-` &&
+          echo $PRODUCT_PATH &&
+          ./gradlew :$PRODUCT_PATH:publishToMavenLocal --no-daemon --no-parallel &&
           ls -la ~/.m2/repository/com/pubnub/
