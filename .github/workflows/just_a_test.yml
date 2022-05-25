@@ -1,0 +1,31 @@
+name: Automated product release
+
+on: [push]
+
+jobs:
+  read-info:
+    name: Reads info
+    runs-on: ubuntu-latest
+    outputs:
+      productName: ${{ steps.read.outputs.productName }}
+    steps:
+      - name: Checkout actions
+        uses: actions/checkout@v2
+        with:
+          repository: pubnub/client-engineering-deployment-tools
+          ref: 42b3a6463c65ad3d6a976622b26ba670f6cd46b3
+          token: ${{ secrets.GH_TOKEN }}
+          path: .github/.release/actions
+      - id: read
+        name: Read release info
+        uses: ./.github/.release/actions/actions/helpers/read-release-info
+        with:
+          token: ${{ secrets.GH_TOKEN }}
+  print-info:
+    name: Prints info
+    runs-on: ubuntu-latest
+    needs: read-info
+    steps:
+      - name: Print out product name
+        run: echo ${{ needs.read-info.outputs.productName }}
+
