@@ -61,5 +61,5 @@ jobs:
           export PRODUCT_PATH=`echo ${{ env.product-path }} | cut -c3-`
           pwd 
           echo $PRODUCT_PATH
-          ./gradlew :$PRODUCT_PATH:publishToMavenLocal --no-daemon --no-parallel -Psigning.secretKeyRingFile=$PWD/.github/.release/actions/resources/maven/${{ secrets.GPG_KEY_ID }}.gpg -Psigning.keyId=${{ secrets.GPG_KEY_ID }} -Psigning.password=${{ secrets.GPG_KEY_PASSPHRASE }}
+          ./gradlew :$PRODUCT_PATH:publishToMavenLocal --no-daemon --no-parallel -Psigning.secretKeyRingFile=$PWD/.github/.release/actions/resources/maven/`${{ secrets.GPG_KEY_ID }} | cut -c-8`.gpg -Psigning.keyId=${{ secrets.GPG_KEY_ID }} -Psigning.password=${{ secrets.GPG_KEY_PASSPHRASE }}
           ls -la ~/.m2/repository/com/pubnub/
