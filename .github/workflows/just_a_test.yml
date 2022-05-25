@@ -44,7 +44,7 @@ jobs:
           token: ${{ secrets.GH_TOKEN }}
           pr-number: ${{ github.event.number }}
       - name: Publish to maven local
-        with:
+        env:
           product-path: ${{ steps.read.outputs.productPath }}
           token: ${{ secrets.GH_TOKEN }}
           nexus-username: ${{ secrets.NEXUS_USERNAME }}
