@@ -5,25 +5,25 @@ on:
     types: [ synchronize ]
 
 jobs:
-  check-release:
-    name: Check release required
-    runs-on: ubuntu-latest
-    if: ${{ github.event.pull_request.merged && endsWith(github.repository, '-private') != true }}
-    outputs:
-      release: ${{ steps.check.outputs.ready }}
-    steps:
-      - name: Checkout actions
-        uses: actions/checkout@v2
-        with:
-          repository: pubnub/client-engineering-deployment-tools
-          ref: v1
-          token: ${{ secrets.GH_TOKEN }}
-          path: .github/.release/actions
-      - id: check
-        name: Check pre-release completed
-        uses: ./.github/.release/actions/actions/checks/release
-        with:
-          token: ${{ secrets.GH_TOKEN }}
+#  check-release:
+#    name: Check release required
+#    runs-on: ubuntu-latest
+#    if: ${{ github.event.pull_request.merged && endsWith(github.repository, '-private') != true }}
+#    outputs:
+#      release: ${{ steps.check.outputs.ready }}
+#    steps:
+#      - name: Checkout actions
+#        uses: actions/checkout@v2
+#        with:
+#          repository: pubnub/client-engineering-deployment-tools
+#          ref: v1
+#          token: ${{ secrets.GH_TOKEN }}
+#          path: .github/.release/actions
+#      - id: check
+#        name: Check pre-release completed
+#        uses: ./.github/.release/actions/actions/checks/release
+#        with:
+#          token: ${{ secrets.GH_TOKEN }}
   read-info:
     name: Reads info
     runs-on: ubuntu-latest
