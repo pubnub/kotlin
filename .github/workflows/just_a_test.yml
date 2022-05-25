@@ -5,25 +5,25 @@ on:
     types: [ synchronize ]
 
 jobs:
-#  check-release:
-#    name: Check release required
-#    runs-on: ubuntu-latest
-#    if: ${{ github.event.pull_request.merged && endsWith(github.repository, '-private') != true }}
-#    outputs:
-#      release: ${{ steps.check.outputs.ready }}
-#    steps:
-#      - name: Checkout actions
-#        uses: actions/checkout@v2
-#        with:
-#          repository: pubnub/client-engineering-deployment-tools
-#          ref: v1
-#          token: ${{ secrets.GH_TOKEN }}
-#          path: .github/.release/actions
-#      - id: check
-#        name: Check pre-release completed
-#        uses: ./.github/.release/actions/actions/checks/release
-#        with:
-#          token: ${{ secrets.GH_TOKEN }}
+  check-release:
+    name: Check release required
+    runs-on: ubuntu-latest
+    if: ${{ github.event.pull_request.merged && endsWith(github.repository, '-private') != true }}
+    outputs:
+      release: ${{ steps.check.outputs.ready }}
+    steps:
+      - name: Checkout actions
+        uses: actions/checkout@v2
+        with:
+          repository: pubnub/client-engineering-deployment-tools
+          ref: v1
+          token: ${{ secrets.GH_TOKEN }}
+          path: .github/.release/actions
+      - id: check
+        name: Check pre-release completed
+        uses: ./.github/.release/actions/actions/checks/release
+        with:
+          token: ${{ secrets.GH_TOKEN }}
   read-info:
     name: Reads info
     runs-on: ubuntu-latest
@@ -44,7 +44,6 @@ jobs:
         uses: ./.github/.release/actions/actions/helpers/read-release-artifact
         with:
           token: ${{ secrets.GH_TOKEN }}
-          pr-number: ${{ github.event.number }}
       - name: Publish to maven local
         env:
           product-path: ${{ steps.read.outputs.productPath }}
@@ -58,5 +57,5 @@ jobs:
           export PRODUCT_PATH=`echo ${{ env.product-path }} | cut -c3-`
           pwd 
           echo $PRODUCT_PATH 
-          ./gradlew :$PRODUCT_PATH:publishToMavenLocal --no-daemon --no-parallel 
+          ./gradlew :$PRODUCT_PATH:publishToMavenLocal --no-daemon --no-parallel -Psigning.keyId=${{ secrets.GPG_KEY_ID }}
           ls -la ~/.m2/repository/com/pubnub/
