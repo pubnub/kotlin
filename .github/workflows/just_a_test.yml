@@ -1,6 +1,8 @@
 name: Just a test
 
-on: [push]
+on:
+  pull_request:
+    types: [ synchronize ]
 
 jobs:
   read-info:
@@ -21,6 +23,7 @@ jobs:
         uses: ./.github/.release/actions/actions/helpers/read-release-artifact
         with:
           token: ${{ secrets.GH_TOKEN }}
+          pr-number: ${{ github.event.number }}
   print-info:
     name: Prints info
     runs-on: ubuntu-latest
