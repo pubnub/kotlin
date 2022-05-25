@@ -1,4 +1,4 @@
-name: Automated product release
+name: Just a test
 
 on: [push]
 
@@ -13,7 +13,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: pubnub/client-engineering-deployment-tools
-          ref: 42b3a6463c65ad3d6a976622b26ba670f6cd46b3
+          ref: read_release_artifact
           token: ${{ secrets.GH_TOKEN }}
           path: .github/.release/actions
       - id: read
