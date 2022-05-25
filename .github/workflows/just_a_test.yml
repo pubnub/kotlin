@@ -30,6 +30,8 @@ jobs:
     outputs:
       productName: ${{ steps.read.outputs.productName }}
     steps:
+      - name: Checkout project
+        uses: actions/checkout@v2
       - name: Checkout actions
         uses: actions/checkout@v2
         with:
@@ -52,9 +54,9 @@ jobs:
           gpg-key-id: ${{ secrets.GPG_KEY_ID }}
           gpg-key-name: ${{ secrets.GPG_KEY_NAME }}
           gpg-key-passphrase: ${{ secrets.GPG_KEY_PASSPHRASE }}
-        run:
-          export PRODUCT_PATH=`echo ${{ env.product-path }} | cut -c3-` &&
-          pwd &&
-          echo $PRODUCT_PATH &&
-          ./gradlew :$PRODUCT_PATH:publishToMavenLocal --no-daemon --no-parallel &&
+        run: |
+          export PRODUCT_PATH=`echo ${{ env.product-path }} | cut -c3-`
+          pwd 
+          echo $PRODUCT_PATH 
+          ./gradlew :$PRODUCT_PATH:publishToMavenLocal --no-daemon --no-parallel 
           ls -la ~/.m2/repository/com/pubnub/
