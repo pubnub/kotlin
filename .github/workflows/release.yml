@@ -1,8 +1,10 @@
-name: Just a test
+name: Automated product release
 
 on:
   pull_request:
-    types: [ synchronize ]
+    branches: [ master ]
+    types: [ closed ]
+
 
 jobs:
   check-release:
@@ -24,36 +26,43 @@ jobs:
         uses: ./.github/.release/actions/actions/checks/release
         with:
           token: ${{ secrets.GH_TOKEN }}
-  read-info:
-    name: Reads info
+  publish:
+    name: Publish package
     runs-on: ubuntu-latest
-    outputs:
-      productName: ${{ steps.read.outputs.productName }}
+    needs: check-release
+    if: ${{ needs.check-release.outputs.release == 'true' }}
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          # This should be the same as the one specified for on.pull_request.branches
+          ref: master
       - name: Checkout actions
         uses: actions/checkout@v2
         with:
           repository: pubnub/client-engineering-deployment-tools
-          ref: read_release_artifact
+          ref: v1
           token: ${{ secrets.GH_TOKEN }}
           path: .github/.release/actions
-      - id: read
-        name: Read release info
-        uses: ./.github/.release/actions/actions/helpers/read-release-artifact
+      - name: Publish to Maven
+        uses: ./.github/.release/actions/actions/services/maven
         with:
-          token: ${{ secrets.GH_TOKEN }}
-          pr-number: ${{ github.event.number }}
-      - name: Publish to maven local
-        with:
-          product-path: ${{ steps.read.outputs.productPath }}
           token: ${{ secrets.GH_TOKEN }}
           nexus-username: ${{ secrets.NEXUS_USERNAME }}
           nexus-password: ${{ secrets.NEXUS_PASSWORD }}
           gpg-key-id: ${{ secrets.GPG_KEY_ID }}
           gpg-key-name: ${{ secrets.GPG_KEY_NAME }}
           gpg-key-passphrase: ${{ secrets.GPG_KEY_PASSPHRASE }}
-        run: |
-          export PRODUCT_PATH="${${{ product-path }}:2}"
-          echo $PRODUCT_PATH
-          ./gradlew :$PRODUCT_PATH:publishToMavenLocal --no-daemon --no-parallel
-          ls -la ~/.m2/repository/com/pubnub/
+          maven-plugin: "gradle-maven-publish-plugin"
+      - name: Create Release
+        uses: ./.github/.release/actions/actions/services/github-release
+        with:
+          token: ${{ secrets.GH_TOKEN }}
+      - name: Update Pages
+        uses: ./.github/.release/actions/actions/services/github-pages
+        with:
+          token: ${{ secrets.GH_TOKEN }}
+          source-folder: build/dokka/pubnub-kotlin
+          jira-api-key: ${{ secrets.JIRA_API_KEY }}
+          last-service: true
+
