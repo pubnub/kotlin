@@ -44,6 +44,16 @@ jobs:
         uses: ./.github/.release/actions/actions/helpers/read-release-artifact
         with:
           token: ${{ secrets.GH_TOKEN }}
+      - id: decrypt
+        name: Decrypt
+        uses: ./.github/.release/actions/actions/helpers/decrypt
+        with:
+          token: ${{ secrets.GH_TOKEN }}
+          nexus-username: ${{ secrets.NEXUS_USERNAME }}
+          nexus-password: ${{ secrets.NEXUS_PASSWORD }}
+          gpg-key-id: ${{ secrets.GPG_KEY_ID }}
+          gpg-key-name: ${{ secrets.GPG_KEY_NAME }}
+          gpg-key-passphrase: ${{ secrets.GPG_KEY_PASSPHRASE }}
       - name: Publish to maven local
         env:
           product-path: ${{ steps.read.outputs.productPath }}
@@ -56,6 +66,6 @@ jobs:
         run: |
           export PRODUCT_PATH=`echo ${{ env.product-path }} | cut -c3-`
           pwd 
-          echo $PRODUCT_PATH 
-          ./gradlew :$PRODUCT_PATH:publishToMavenLocal --no-daemon --no-parallel -Psigning.keyId=${{ secrets.GPG_KEY_ID }}
+          echo $PRODUCT_PATH
+          ./gradlew :$PRODUCT_PATH:publishToMavenLocal --no-daemon --no-parallel -Psigning.secretKeyRingFile=./.github/.release/actions/resources/maven/${{ secrets.GPG_KEY_ID }}.gpg -Psigning.keyId=${{ secrets.GPG_KEY_ID }} -Psigning.password=${{ secrets.GPG_KEY_PASSPHRASE }}
           ls -la ~/.m2/repository/com/pubnub/
