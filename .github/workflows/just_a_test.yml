@@ -27,8 +27,6 @@ jobs:
   read-info:
     name: Reads info
     runs-on: ubuntu-latest
-    outputs:
-      productName: ${{ steps.read.outputs.productName }}
     steps:
       - name: Checkout project
         uses: actions/checkout@v2
@@ -39,26 +37,39 @@ jobs:
           ref: read_release_artifact
           token: ${{ secrets.GH_TOKEN }}
           path: .github/.release/actions
-      - id: read
-        name: Read release info
-        uses: ./.github/.release/actions/actions/helpers/read-release-artifact
+#      - id: read
+#        name: Read release info
+#        uses: ./.github/.release/actions/actions/helpers/read-release-artifact
+#        with:
+#          token: ${{ secrets.GH_TOKEN }}
+#      - id: decrypt
+#        name: Decrypt
+#        uses: ./.github/.release/actions/actions/helpers/decrypt
+#        with:
+#          gpg-key-id: ${{ secrets.GPG_KEY_ID }}
+#          gpg-key-name: ${{ secrets.GPG_KEY_NAME }}
+#          gpg-key-passphrase: ${{ secrets.GPG_KEY_PASSPHRASE }}
+#      - name: Publish to maven local
+#        env:
+#          product-path: ${{ steps.read.outputs.product-path }}
+#          token: ${{ secrets.GH_TOKEN }}
+#          nexus-username: ${{ secrets.NEXUS_USERNAME }}
+#          nexus-password: ${{ secrets.NEXUS_PASSWORD }}
+#        run: |
+#          export PRODUCT_PATH=`echo ${{ env.product-path }} | cut -c3-`
+#          echo ${{ steps.read.outputs.product-path }}
+#          echo ${{ steps.read.outputs.product-main }}
+#          echo ${{ steps.read.outputs.product-name }}
+#          export KEY_ID=`echo ${{ secrets.GPG_KEY_ID }} | rev | cut -c1-8 | rev`
+#          ./gradlew :$PRODUCT_PATH:publishToMavenLocal --no-daemon --no-parallel -Psigning.secretKeyRingFile=$PWD/${{ steps.decrypt.outputs.decrypted-path }} -Psigning.keyId=$KEY_ID -Psigning.password=${{ secrets.GPG_KEY_PASSPHRASE }}
+#          ls -la ~/.m2/repository/com/pubnub/
+      - name: Publish to Maven
+        uses: ./.github/.release/actions/actions/services/gradle-maven-publish
         with:
-          token: ${{ secrets.GH_TOKEN }}
-      - id: decrypt
-        name: Decrypt
-        uses: ./.github/.release/actions/actions/helpers/decrypt
-        with:
-          gpg-key-id: ${{ secrets.GPG_KEY_ID }}
-          gpg-key-name: ${{ secrets.GPG_KEY_NAME }}
-          gpg-key-passphrase: ${{ secrets.GPG_KEY_PASSPHRASE }}
-      - name: Publish to maven local
-        env:
-          product-path: ${{ steps.read.outputs.product-path }}
           token: ${{ secrets.GH_TOKEN }}
           nexus-username: ${{ secrets.NEXUS_USERNAME }}
           nexus-password: ${{ secrets.NEXUS_PASSWORD }}
-        run: |
-          export PRODUCT_PATH=`echo ${{ env.product-path }} | cut -c3-`
-          export KEY_ID=`echo ${{ secrets.GPG_KEY_ID }} | rev | cut -c1-8 | rev`
-          ./gradlew :$PRODUCT_PATH:publishToMavenLocal --no-daemon --no-parallel -Psigning.secretKeyRingFile=$PWD/${{ steps.decrypt.outputs.decrypted-path }} -Psigning.keyId=$KEY_ID -Psigning.password=${{ secrets.GPG_KEY_PASSPHRASE }}
-          ls -la ~/.m2/repository/com/pubnub/
+          gpg-key-id: ${{ secrets.GPG_KEY_ID }}
+          gpg-key-name: ${{ secrets.GPG_KEY_NAME }}
+          gpg-key-passphrase: ${{ secrets.GPG_KEY_PASSPHRASE }}
+          last-service: true
