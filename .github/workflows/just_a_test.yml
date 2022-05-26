@@ -44,12 +44,12 @@ jobs:
           token: ${{ secrets.GH_TOKEN }}
       - id: only-users
         name: Run only for users
-        if: ${{ steps.read.outputs.product-name == 'users' }}
+        if: ${{ steps.read.outputs.product-name == 'Kotlin Users' }}
         run: |
           echo Release users
       - id: only-spaces
         name: Run only for space
-        if: ${{ steps.read.outputs.product-name == 'space' }}
+        if: ${{ steps.read.outputs.product-name == 'Kotlin Spaces' }}
         run: |
           echo Release spaces
       - id: for-all
