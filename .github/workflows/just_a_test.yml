@@ -59,5 +59,6 @@ jobs:
           nexus-password: ${{ secrets.NEXUS_PASSWORD }}
         run: |
           export PRODUCT_PATH=`echo ${{ env.product-path }} | cut -c3-`
-          ./gradlew :$PRODUCT_PATH:publishToMavenLocal --no-daemon --no-parallel -Psigning.secretKeyRingFile=$PWD/${{ steps.decrypt.outputs.decrypted-path }} -Psigning.keyId=${{ secrets.GPG_KEY_ID }} -Psigning.password=${{ secrets.GPG_KEY_PASSPHRASE }}
+          export KEY_ID=`echo ${{ secrets.GPG_KEY_ID }} | rev | cut -c1-8 | rev`
+          ./gradlew :$PRODUCT_PATH:publishToMavenLocal --no-daemon --no-parallel -Psigning.secretKeyRingFile=$PWD/${{ steps.decrypt.outputs.decrypted-path }} -Psigning.keyId=$KEY_ID -Psigning.password=${{ secrets.GPG_KEY_PASSPHRASE }}
           ls -la ~/.m2/repository/com/pubnub/
