@@ -37,11 +37,26 @@ jobs:
           ref: read_release_artifact
           token: ${{ secrets.GH_TOKEN }}
           path: .github/.release/actions
-#      - id: read
-#        name: Read release info
-#        uses: ./.github/.release/actions/actions/helpers/read-release-artifact
-#        with:
-#          token: ${{ secrets.GH_TOKEN }}
+      - id: read
+        name: Read release info
+        uses: ./.github/.release/actions/actions/helpers/read-release-artifact
+        with:
+          token: ${{ secrets.GH_TOKEN }}
+      - id: only-users
+        name: Run only for users
+        if: ${{ steps.read.outputs.product-name == 'users' }}
+        run: |
+          echo Release users
+      - id: only-spaces
+        name: Run only for space
+        if: ${{ steps.read.outputs.product-name == 'space' }}
+        run: |
+          echo Release spaces
+      - id: for-all
+        name: Run for all
+        run: |
+          echo For all
+
 #      - id: decrypt
 #        name: Decrypt
 #        uses: ./.github/.release/actions/actions/helpers/decrypt
@@ -63,13 +78,13 @@ jobs:
 #          export KEY_ID=`echo ${{ secrets.GPG_KEY_ID }} | rev | cut -c1-8 | rev`
 #          ./gradlew :$PRODUCT_PATH:publishToMavenLocal --no-daemon --no-parallel -Psigning.secretKeyRingFile=$PWD/${{ steps.decrypt.outputs.decrypted-path }} -Psigning.keyId=$KEY_ID -Psigning.password=${{ secrets.GPG_KEY_PASSPHRASE }}
 #          ls -la ~/.m2/repository/com/pubnub/
-      - name: Publish to Maven
-        uses: ./.github/.release/actions/actions/services/gradle-maven-publish
-        with:
-          token: ${{ secrets.GH_TOKEN }}
-          nexus-username: ${{ secrets.NEXUS_USERNAME }}
-          nexus-password: ${{ secrets.NEXUS_PASSWORD }}
-          gpg-key-id: ${{ secrets.GPG_KEY_ID }}
-          gpg-key-name: ${{ secrets.GPG_KEY_NAME }}
-          gpg-key-passphrase: ${{ secrets.GPG_KEY_PASSPHRASE }}
-          last-service: true
+#      - name: Publish to Maven
+#        uses: ./.github/.release/actions/actions/services/gradle-maven-publish
+#        with:
+#          token: ${{ secrets.GH_TOKEN }}
+#          nexus-username: ${{ secrets.NEXUS_USERNAME }}
+#          nexus-password: ${{ secrets.NEXUS_PASSWORD }}
+#          gpg-key-id: ${{ secrets.GPG_KEY_ID }}
+#          gpg-key-name: ${{ secrets.GPG_KEY_NAME }}
+#          gpg-key-passphrase: ${{ secrets.GPG_KEY_PASSPHRASE }}
+#          last-service: true
