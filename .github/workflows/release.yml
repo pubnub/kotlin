@@ -69,6 +69,8 @@ jobs:
         uses: ./.github/.release/actions/actions/helpers/create-git-tag
         with:
           prefix: users
+      - name: Send slack notification
+        uses: ./.github/.release/actions/actions/helpers/notify-completed
 
   release-spaces:
     name: Release spaces module
