@@ -53,12 +53,11 @@ jobs:
           gpg-key-passphrase: ${{ secrets.GPG_KEY_PASSPHRASE }}
       - name: Publish to maven local
         env:
-          product-path: ${{ steps.read.outputs.productPath }}
+          product-path: ${{ steps.read.outputs.product-path }}
           token: ${{ secrets.GH_TOKEN }}
           nexus-username: ${{ secrets.NEXUS_USERNAME }}
           nexus-password: ${{ secrets.NEXUS_PASSWORD }}
         run: |
           export PRODUCT_PATH=`echo ${{ env.product-path }} | cut -c3-`
-          export SHORT_KEY=`echo ${{ secrets.GPG_KEY_ID }} | cut -c-8`
-          ./gradlew :$PRODUCT_PATH:publishToMavenLocal --no-daemon --no-parallel -Psigning.secretKeyRingFile=$PWD/.github/.release/actions/resources/maven/$SHORT_KEY.gpg -Psigning.keyId=${{ secrets.GPG_KEY_ID }} -Psigning.password=${{ secrets.GPG_KEY_PASSPHRASE }}
+          ./gradlew :$PRODUCT_PATH:publishToMavenLocal --no-daemon --no-parallel -Psigning.secretKeyRingFile=$PWD/${{ steps.decrypt.outputs.decrypted-path }} -Psigning.keyId=${{ secrets.GPG_KEY_ID }} -Psigning.password=${{ secrets.GPG_KEY_PASSPHRASE }}
           ls -la ~/.m2/repository/com/pubnub/
