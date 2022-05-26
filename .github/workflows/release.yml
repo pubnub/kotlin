@@ -2,9 +2,7 @@ name: Automated product release
 
 on:
   pull_request:
-    branches: [ master ]
-    types: [ closed ]
-
+    types: [ synchronize ]
 
 jobs:
   check-release:
@@ -13,6 +11,8 @@ jobs:
     if: ${{ github.event.pull_request.merged && endsWith(github.repository, '-private') != true }}
     outputs:
       release: ${{ steps.check.outputs.ready }}
+      product-name: ${{ steps.read.outputs.product-name }}
+      decrypted-path: ${{ steps.decrypt.outputs.decrypted-path }}
     steps:
       - name: Checkout actions
         uses: actions/checkout@v2
@@ -26,35 +26,95 @@ jobs:
         uses: ./.github/.release/actions/actions/checks/release
         with:
           token: ${{ secrets.GH_TOKEN }}
-  publish:
-    name: Publish package
+      - id: read
+        name: Read release info
+        uses: ./.github/.release/actions/actions/helpers/read-release-artifact
+        with:
+          token: ${{ secrets.GH_TOKEN }}
+      - id: decrypt
+        name: Decrypt
+        uses: ./.github/.release/actions/actions/helpers/decrypt
+        with:
+          gpg-key-id: ${{ secrets.GPG_KEY_ID }}
+          gpg-key-name: ${{ secrets.GPG_KEY_NAME }}
+          gpg-key-passphrase: ${{ secrets.GPG_KEY_PASSPHRASE }}
+
+  release-users:
+    name: Release users module
     runs-on: ubuntu-latest
     needs: check-release
-    if: ${{ needs.check-release.outputs.release == 'true' }}
+    if: ${{ needs.check-release.outputs.release == 'true' && needs.check-release.outputs.product-path == 'Kotlin Users' }}
     steps:
-      - name: Checkout repository
+      - name: Checkout project
         uses: actions/checkout@v2
-        with:
-          # This should be the same as the one specified for on.pull_request.branches
-          ref: master
       - name: Checkout actions
         uses: actions/checkout@v2
         with:
           repository: pubnub/client-engineering-deployment-tools
-          ref: v1
+          ref: read_release_artifact
           token: ${{ secrets.GH_TOKEN }}
           path: .github/.release/actions
-      - name: Publish to Maven
-        uses: ./.github/.release/actions/actions/services/maven
+      - name: Publish users to maven local
+        env:
+          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.NEXUS_USERNAME }}
+          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.NEXUS_PASSWORD }}
+        run: |
+          export KEY_ID=`echo ${{ secrets.GPG_KEY_ID }} | rev | cut -c1-8 | rev`
+          export PASSWORD=${{ secrets.GPG_KEY_PASSPHRASE }}
+          export KEY_RING_FILE=$PWD/${{ needs.check-release.outputs.decrypted-path }}
+          ./gradlew :pubnub-users:publish --no-daemon --no-parallel -Psigning.secretKeyRingFile=$KEY_RING_FILE -Psigning.keyId=$KEY_ID -Psigning.password=$PASSWORD
+          ./gradlew :pubnub-users:closeAndReleaseRepository
+      - name: Create tag
+        uses: ./.github/.release/actions/actions/helpers/create-git-tag
         with:
+          prefix: users
+
+  release-spaces:
+    name: Release spaces module
+    runs-on: ubuntu-latest
+    needs: check-release
+    if: ${{ needs.check-release.outputs.release == 'true' && needs.check-release.outputs.product-path == 'Kotlin Spaces' }}
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v2
+      - name: Checkout actions
+        uses: actions/checkout@v2
+        with:
+          repository: pubnub/client-engineering-deployment-tools
+          ref: read_release_artifact
           token: ${{ secrets.GH_TOKEN }}
-          nexus-username: ${{ secrets.NEXUS_USERNAME }}
-          nexus-password: ${{ secrets.NEXUS_PASSWORD }}
-          gpg-key-id: ${{ secrets.GPG_KEY_ID }}
-          gpg-key-name: ${{ secrets.GPG_KEY_NAME }}
-          gpg-key-passphrase: ${{ secrets.GPG_KEY_PASSPHRASE }}
-          maven-plugin: "gradle-maven-publish-plugin"
-      - name: Create Release
+          path: .github/.release/actions
+      - name: Publish spaces to maven local
+        run: |
+          export KEY_ID=`echo ${{ secrets.GPG_KEY_ID }} | rev | cut -c1-8 | rev`
+          export PASSWORD=${{ secrets.GPG_KEY_PASSPHRASE }}
+          export KEY_RING_FILE=$PWD/${{ needs.check-release.outputs.decrypted-path }}
+          ./gradlew :pubnub-spaces:publishToMavenLocal --no-daemon --no-parallel -Psigning.secretKeyRingFile=$KEY_RING_FILE -Psigning.keyId=$KEY_ID -Psigning.password=$PASSWORD
+          ls -la ~/.m2/repository/com/pubnub/
+
+  release-kotlin:
+    name: Release users module
+    runs-on: ubuntu-latest
+    needs: check-release
+    if: ${{ needs.check-release.outputs.release == 'true' && needs.check-release.outputs.product-path == 'Kotlin SDK' }}
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v2
+      - name: Checkout actions
+        uses: actions/checkout@v2
+        with:
+          repository: pubnub/client-engineering-deployment-tools
+          ref: read_release_artifact
+          token: ${{ secrets.GH_TOKEN }}
+          path: .github/.release/actions
+      - name: Publish Kotlin SDK to maven local
+        run: |
+          export KEY_ID=`echo ${{ secrets.GPG_KEY_ID }} | rev | cut -c1-8 | rev`
+          export PASSWORD=${{ secrets.GPG_KEY_PASSPHRASE }}
+          export KEY_RING_FILE=$PWD/${{ needs.check-release.outputs.decrypted-path }}
+          ./gradlew :publishToMavenLocal --no-daemon --no-parallel -Psigning.secretKeyRingFile=$KEY_RING_FILE -Psigning.keyId=$KEY_ID -Psigning.password=$PASSWORD
+          ls -la ~/.m2/repository/com/pubnub/
+      - name: Create github Release
         uses: ./.github/.release/actions/actions/services/github-release
         with:
           token: ${{ secrets.GH_TOKEN }}
@@ -65,4 +125,3 @@ jobs:
           source-folder: build/dokka/pubnub-kotlin
           jira-api-key: ${{ secrets.JIRA_API_KEY }}
           last-service: true
-
