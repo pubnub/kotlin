@@ -1,5 +1,6 @@
 plugins {
     id 'org.jetbrains.kotlin.jvm'
+    id 'org.unbroken-dome.test-sets'
 }
 
 apply plugin: "com.vanniktech.maven.publish"
@@ -8,10 +9,23 @@ repositories {
     mavenCentral()
 }
 
+testSets {
+    integrationTest
+}
+
 dependencies {
     implementation project(":")
     api project(":pubnub-spaces")
     api project(":pubnub-users")
+    testImplementation "org.junit.jupiter:junit-jupiter-engine:5.8.2"
+    testImplementation "io.mockk:mockk:1.11.0"
+    testImplementation "org.aeonbits.owner:owner:1.0.12"
+}
+
+configurations {
+    allTest
+    integrationTestImplementation { extendsFrom allTest }
+    testImplementation { extendsFrom allTest }
 }
 
 test {
