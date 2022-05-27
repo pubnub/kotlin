@@ -21,7 +21,7 @@ class SpaceIntegTest() {
     private val SPACE_ID_02: String = SPACE_ID + "2"
     private val SPACE_NAME = "unitTestKT_spaceName"
     private val DESCRIPTION = "space description"
-    private val CUSTOM = "{\"favouritePet\" : \"mouse\"}"
+    private val CUSTOM: Map<String, String > = mapOf("favouritePet" to "mouse")
 
     @BeforeEach
     fun setUp() {
@@ -44,7 +44,7 @@ class SpaceIntegTest() {
         assertEquals(spaceId, spaceResult?.data?.id)
         assertEquals(SPACE_NAME, spaceResult?.data?.name)
         assertEquals(DESCRIPTION, spaceResult?.data?.description)
-//        assertEquals(spaceId, spaceResult?.data?.custom)
+        assertEquals(CUSTOM, spaceResult?.data?.custom)
         assertTrue(spaceResult?.data?.updated != null)
         assertTrue(spaceResult?.data?.eTag != null)
     }
@@ -60,7 +60,7 @@ class SpaceIntegTest() {
         assertEquals(spaceId, spaceResult?.data?.id)
         assertEquals(SPACE_NAME, spaceResult?.data?.name)
         assertEquals(DESCRIPTION, spaceResult?.data?.description)
-//        assertEquals(spaceId, pnSpaceResult?.data?.custom)
+        assertEquals(CUSTOM, spaceResult?.data?.custom)
         assertTrue(spaceResult?.data?.updated != null)
         assertTrue(spaceResult?.data?.eTag != null)
     }
@@ -118,8 +118,8 @@ class SpaceIntegTest() {
             spaceId = spaceId,
             name = SPACE_NAME,
             description = DESCRIPTION,
-//            custom = CUSTOM,
-//            includeCustom = true
+            custom = CUSTOM,
+            includeCustom = true
         ).sync()
     }
 }

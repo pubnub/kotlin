@@ -24,7 +24,7 @@ class UserIntegTest() {
     private val EXTERNAL_ID = "externalId"
     private val PROFILE_URL = "profileUrl"
     private val EMAIL = "email"
-    private val CUSTOM = "{favouritePet = \"mouse\"}"
+    private val CUSTOM: Map<String, Any> = mapOf("favouriteNumber" to 1, "favouriteColour" to "green" )
 
     @BeforeEach
     fun setUp() {
@@ -38,38 +38,19 @@ class UserIntegTest() {
     }
 
     @Test
-    internal fun demo() {
-        var config: PNConfiguration = PNConfiguration("kotlin").apply {
-            subscribeKey = IntegTestConf.subscribeKey
-            publishKey = IntegTestConf.publishKey
-        }
-        val pubNub = PubNub(config)
-        pubnub.createUser(
-            userId = "userId",
-            name = USER_NAME,
-            externalId = EXTERNAL_ID,
-            profileUrl = PROFILE_URL,
-            email = EMAIL,
-            //custom = CUSTOM
-        ).sync()
-
-        println()
-    }
-
-    @Test
     internal fun can_createUser() {
         val userId = USER_ID_01
-        val setPnUserResult: UserResult? = createUser(userId)
+        val userResult: UserResult? = createUser(userId)
 
-        assertEquals(200, setPnUserResult?.status)
-        assertEquals(userId, setPnUserResult?.data?.id)
-        assertEquals(USER_NAME, setPnUserResult?.data?.name)
-        assertEquals(EXTERNAL_ID, setPnUserResult?.data?.externalId)
-        assertEquals(PROFILE_URL, setPnUserResult?.data?.profileUrl)
-        assertEquals(EMAIL, setPnUserResult?.data?.email)
-//        assertEquals(CUSTOM, getPnUserResult?.data?.custom )
-        assertTrue(setPnUserResult?.data?.updated != null)
-        assertTrue(setPnUserResult?.data?.eTag != null)
+        assertEquals(200, userResult?.status)
+        assertEquals(userId, userResult?.data?.id)
+        assertEquals(USER_NAME, userResult?.data?.name)
+        assertEquals(EXTERNAL_ID, userResult?.data?.externalId)
+        assertEquals(PROFILE_URL, userResult?.data?.profileUrl)
+        assertEquals(EMAIL, userResult?.data?.email)
+        assertEquals(CUSTOM, userResult?.data?.custom )
+        assertTrue(userResult?.data?.updated != null)
+        assertTrue(userResult?.data?.eTag != null)
     }
 
     @Test
@@ -77,17 +58,17 @@ class UserIntegTest() {
         val userId = USER_ID_01
         createUser(userId)
 
-        val getPnUserResult: UserResult? = pubnub.fetchUser(userId).sync()
+        val userResult: UserResult? = pubnub.fetchUser(userId).sync()
 
-        assertEquals(200, getPnUserResult?.status)
-        assertEquals(userId, getPnUserResult?.data?.id)
-        assertEquals(USER_NAME, getPnUserResult?.data?.name)
-        assertEquals(EXTERNAL_ID, getPnUserResult?.data?.externalId)
-        assertEquals(PROFILE_URL, getPnUserResult?.data?.profileUrl)
-        assertEquals(EMAIL, getPnUserResult?.data?.email)
-//        assertEquals(CUSTOM, getPnUserResult?.data?.custom )
-        assertTrue(getPnUserResult?.data?.updated != null)
-        assertTrue(getPnUserResult?.data?.eTag != null)
+        assertEquals(200, userResult?.status)
+        assertEquals(userId, userResult?.data?.id)
+        assertEquals(USER_NAME, userResult?.data?.name)
+        assertEquals(EXTERNAL_ID, userResult?.data?.externalId)
+        assertEquals(PROFILE_URL, userResult?.data?.profileUrl)
+        assertEquals(EMAIL, userResult?.data?.email)
+        assertEquals(CUSTOM, userResult?.data?.custom )
+        assertTrue(userResult?.data?.updated != null)
+        assertTrue(userResult?.data?.eTag != null)
     }
 
     @Test
@@ -97,13 +78,13 @@ class UserIntegTest() {
         val userId02 = USER_ID_02
         createUser(userId02)
 
-        val pnUserArrayResult: UsersResult? = pubnub.fetchUsers(limit = 100, includeCount = true).sync()
+        val usersResult: UsersResult? = pubnub.fetchUsers(limit = 100, includeCount = true).sync()
 
-        assertEquals(200, pnUserArrayResult?.status)
-        assertEquals(2, pnUserArrayResult?.data?.size)
-        assertEquals(2, pnUserArrayResult?.totalCount)
-        assertEquals(USER_ID_01, pnUserArrayResult?.data?.first()?.id)
-        assertEquals(USER_ID_02, pnUserArrayResult?.data?.elementAt(1)?.id)
+        assertEquals(200, usersResult?.status)
+        assertEquals(2, usersResult?.data?.size)
+        assertEquals(2, usersResult?.totalCount)
+        assertEquals(USER_ID_01, usersResult?.data?.first()?.id)
+        assertEquals(USER_ID_02, usersResult?.data?.elementAt(1)?.id)
     }
 
     @Test
@@ -136,11 +117,11 @@ class UserIntegTest() {
             email = newEmail
         ).sync()
 
-        val pnUserResult: UserResult? = pubnub.fetchUser(userId).sync()
-        assertEquals(newName, pnUserResult?.data?.name)
-        assertEquals(newExternalId, pnUserResult?.data?.externalId)
-        assertEquals(newProfileUrl, pnUserResult?.data?.profileUrl)
-        assertEquals(newEmail, pnUserResult?.data?.email)
+        val userResult: UserResult? = pubnub.fetchUser(userId).sync()
+        assertEquals(newName, userResult?.data?.name)
+        assertEquals(newExternalId, userResult?.data?.externalId)
+        assertEquals(newProfileUrl, userResult?.data?.profileUrl)
+        assertEquals(newEmail, userResult?.data?.email)
     }
 
     @AfterEach
@@ -156,8 +137,8 @@ class UserIntegTest() {
             externalId = EXTERNAL_ID,
             profileUrl = PROFILE_URL,
             email = EMAIL,
-            //custom = CUSTOM,
-            //includeCustom = true
+            custom = CUSTOM,
+            includeCustom = true
         ).sync()
     }
 }
