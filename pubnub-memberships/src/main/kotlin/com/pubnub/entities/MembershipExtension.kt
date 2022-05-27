@@ -35,7 +35,7 @@ fun PubNub.addMembershipOfUser(
     map(
         it,
         PNOperationType.MembershipOperation
-    ) { pnChannelMembershipArrayResult -> pnChannelMembershipArrayResult.toUserMembershipsResult(userid) }
+    ) { pnChannelMembershipArrayResult -> pnChannelMembershipArrayResult.toUserMembershipsResult() }
 }
 
 fun PubNub.addMembershipOfSpace(
@@ -51,7 +51,7 @@ fun PubNub.addMembershipOfSpace(
     map(
         it,
         PNOperationType.MembershipOperation
-    ) { pnMemberArrayResult -> pnMemberArrayResult.toSpaceMembershipResult(spaceId) }
+    ) { pnMemberArrayResult -> pnMemberArrayResult.toSpaceMembershipResult() }
 }
 
 fun PubNub.fetchMembershipsOfUser(
@@ -121,7 +121,7 @@ fun PubNub.removeMembershipOfUser(
     map(
         it,
         PNOperationType.MembershipOperation
-    ) { pnChannelMembershipArrayResult -> pnChannelMembershipArrayResult.toUserMembershipsResult(userId) }
+    ) { pnChannelMembershipArrayResult -> pnChannelMembershipArrayResult.toUserMembershipsResult() }
 }
 
 fun PubNub.removeMembershipOfSpace(
@@ -137,5 +137,5 @@ fun PubNub.removeMembershipOfSpace(
     map(
         it,
         PNOperationType.MembershipOperation
-    ) { pnMemberArrayResult -> pnMemberArrayResult.toSpaceMembershipResult(spaceId) }
+    ) { pnMemberArrayResult -> pnMemberArrayResult.toSpaceMembershipResult() }
 }

@@ -7,13 +7,13 @@ data class MembershipsResult(
     val status: Int
 )
 
-internal fun PNChannelMembershipArrayResult.toUserMembershipsResult(userId: String): MembershipsResult {
+internal fun PNChannelMembershipArrayResult.toUserMembershipsResult(): MembershipsResult {
     return MembershipsResult(
         status = status
     )
 }
 
-internal fun PNMemberArrayResult.toSpaceMembershipResult(spaceId: String): MembershipsResult {
+internal fun PNMemberArrayResult.toSpaceMembershipResult(): MembershipsResult {
     return MembershipsResult(
         status = status
     )

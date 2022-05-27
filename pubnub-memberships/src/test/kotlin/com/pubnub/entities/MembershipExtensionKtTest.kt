@@ -72,12 +72,12 @@ internal class MembershipExtensionKtTest {
     @Test
     internal fun can_fetchMembershipOfUser() {
         val pnChannelMembershipArrayResult = createPNChannelMembershipArrayResult()
-        every { pubNub?.getMemberships(any(), any(), any(), any(), any(), any(),any(), any()) } returns getMembershipsEndpoint
+        every { pubNub.getMemberships(any(), any(), any(), any(), any(), any(),any(), any()) } returns getMembershipsEndpoint
         every { getMembershipsEndpoint.sync() } returns pnChannelMembershipArrayResult
 
-        val fetchMembershipOfUserEndpoint: ExtendedRemoteAction<FetchMembershipsResult?>? =
-            pubNub?.fetchMembershipsOfUser(userId = USER_ID)
-        val fetchMembershipsResult = fetchMembershipOfUserEndpoint?.sync()
+        val fetchMembershipOfUserEndpoint: ExtendedRemoteAction<FetchMembershipsResult?> =
+            pubNub.fetchMembershipsOfUser(userId = USER_ID)
+        val fetchMembershipsResult = fetchMembershipOfUserEndpoint.sync()
 
         assertMembershipResultOfUser(fetchMembershipsResult)
     }
@@ -85,12 +85,12 @@ internal class MembershipExtensionKtTest {
     @Test
     internal fun can_fetchMembershipOfSpace() {
         val pnMemberArrayResult = createPNMemberArrayResult()
-        every { pubNub?.getChannelMembers(any(), any(), any(), any(), any(), any(), any(), any() ) } returns getChannelMembersEndpoint
+        every { pubNub.getChannelMembers(any(), any(), any(), any(), any(), any(), any(), any() ) } returns getChannelMembersEndpoint
         every { getChannelMembersEndpoint.sync() } returns pnMemberArrayResult
 
-        val fetchMembershipOfSpaceEndpoint: ExtendedRemoteAction<FetchMembershipsResult?>? =
-            pubNub?.fetchMembershipsOfSpace(spaceId = SPACE_ID)
-        val fetchMembershipsResult = fetchMembershipOfSpaceEndpoint?.sync()
+        val fetchMembershipOfSpaceEndpoint: ExtendedRemoteAction<FetchMembershipsResult?> =
+            pubNub.fetchMembershipsOfSpace(spaceId = SPACE_ID)
+        val fetchMembershipsResult = fetchMembershipOfSpaceEndpoint.sync()
 
         assertMembershipResultOfSpace(fetchMembershipsResult)
     }
@@ -98,12 +98,13 @@ internal class MembershipExtensionKtTest {
     @Test
     internal fun can_addMembershipOfUser() {
         val pnChannelMembershipArrayResult = createPNChannelMembershipArrayResult()
-        every { pubNub?.setMemberships(any(), any(), any(), any(), any(), any(), any(), any(), any()) } returns manageMembershipsEndpoint
+        every { pubNub.setMemberships(any(), any(), any(), any(), any(), any(), any(), any(), any()) } returns manageMembershipsEndpoint
         every { manageMembershipsEndpoint.sync() } returns pnChannelMembershipArrayResult
 
         val spaceIdWithCustomList = listOf(SpaceIdWithCustom(SPACE_ID, SPACE_CUSTOM), SpaceIdWithCustom(SPACE_ID_02, SPACE_CUSTOM))
-        val addMembershipOfUserEndpoint: ExtendedRemoteAction<MembershipsResult>? = pubNub?.addMembershipOfUser(spaceIdWithCustomList = spaceIdWithCustomList, userid = USER_ID)
-        val membershipsResult = addMembershipOfUserEndpoint?.sync()
+        val addMembershipOfUserEndpoint: ExtendedRemoteAction<MembershipsResult> =
+            pubNub.addMembershipOfUser(spaceIdWithCustomList = spaceIdWithCustomList, userid = USER_ID)
+        val membershipsResult = addMembershipOfUserEndpoint.sync()
 
         assertEquals(200, membershipsResult?.status)
     }
@@ -111,13 +112,14 @@ internal class MembershipExtensionKtTest {
     @Test
     internal fun can_addMembershipOfSpace() {
         val pnMemberArrayResult = createPNMemberArrayResult()
-        every { pubNub?.setChannelMembers(any(), any(), any(), any(), any(), any(), any(), any(), any()) } returns manageChannelMembersEndpoint
+        every { pubNub.setChannelMembers(any(), any(), any(), any(), any(), any(), any(), any(), any()) } returns manageChannelMembersEndpoint
         every { manageChannelMembersEndpoint.sync() } returns pnMemberArrayResult
 
 
         val userIdWithCustomList = listOf(UserIdWithCustom(USER_ID, USER_CUSTOM), UserIdWithCustom(USER_ID_02, USER_CUSTOM))
-        val addMembershipOfSpaceEndpoint : ExtendedRemoteAction<MembershipsResult>? = pubNub?.addMembershipOfSpace(spaceId = SPACE_ID, userIdWithCustomList = userIdWithCustomList)
-        val membershipsResult = addMembershipOfSpaceEndpoint?.sync()
+        val addMembershipOfSpaceEndpoint : ExtendedRemoteAction<MembershipsResult> =
+            pubNub.addMembershipOfSpace(spaceId = SPACE_ID, userIdWithCustomList = userIdWithCustomList)
+        val membershipsResult = addMembershipOfSpaceEndpoint.sync()
 
         assertEquals(200, membershipsResult?.status)
     }
@@ -126,12 +128,13 @@ internal class MembershipExtensionKtTest {
     @Test
     internal fun can_removeMembershipOfUser() {
         val pnChannelMembershipArrayResult = PNChannelMembershipArrayResult(status = 200, data = listOf(), totalCount = 0, prev = null, next = null)
-        every { pubNub?.removeMemberships(any(), any(), any(), any(), any(), any(), any(), any(), any()) } returns manageMembershipsEndpoint
+        every { pubNub.removeMemberships(any(), any(), any(), any(), any(), any(), any(), any(), any()) } returns manageMembershipsEndpoint
         every { manageMembershipsEndpoint.sync() } returns pnChannelMembershipArrayResult
 
         val spaceIdList = listOf(SPACE_ID, SPACE_ID_02)
-        val removeMembershipOfUserEndpoint: ExtendedRemoteAction<MembershipsResult>? = pubNub?.removeMembershipOfUser(spaceIds = spaceIdList, userId = USER_ID)
-        val membershipsResult = removeMembershipOfUserEndpoint?.sync()
+        val removeMembershipOfUserEndpoint: ExtendedRemoteAction<MembershipsResult> =
+            pubNub.removeMembershipOfUser(spaceIds = spaceIdList, userId = USER_ID)
+        val membershipsResult = removeMembershipOfUserEndpoint.sync()
 
         assertEquals(200, membershipsResult?.status)
 
@@ -140,12 +143,13 @@ internal class MembershipExtensionKtTest {
     @Test
     internal fun can_removeMembershipOfSpace() {
         val pnMemberArrayResult = PNMemberArrayResult(status = 200, data = listOf(), totalCount = 0, prev = null, next = null)
-        every { pubNub?.removeChannelMembers(any(), any(), any(), any(), any(), any(), any(), any(), any()) } returns manageChannelMembersEndpoint
+        every { pubNub.removeChannelMembers(any(), any(), any(), any(), any(), any(), any(), any(), any()) } returns manageChannelMembersEndpoint
         every { manageChannelMembersEndpoint.sync() }  returns pnMemberArrayResult
 
         val userIdList = listOf(USER_ID, USER_ID_02)
-        val removeMembershipOfSpaceEndpoint: ExtendedRemoteAction<MembershipsResult>? = pubNub?.removeMembershipOfSpace(spaceId = SPACE_ID, userIdList)
-        val membershipsResult = removeMembershipOfSpaceEndpoint?.sync()
+        val removeMembershipOfSpaceEndpoint: ExtendedRemoteAction<MembershipsResult> =
+            pubNub.removeMembershipOfSpace(spaceId = SPACE_ID, userIdList)
+        val membershipsResult = removeMembershipOfSpaceEndpoint.sync()
 
         assertEquals(200, membershipsResult?.status)
     }
