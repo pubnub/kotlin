@@ -26,7 +26,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 internal class MembershipExtensionKtTest {
-    private var pubNub: PubNub? = null
+    private lateinit var pubNub: PubNub
 
     private val USER_ID = "pn-11111111-d67b-4e20-8b59-03f98990f247";
     private val USER_NAME = "user name";
@@ -77,9 +77,9 @@ internal class MembershipExtensionKtTest {
 
         val fetchMembershipOfUserEndpoint: ExtendedRemoteAction<FetchMembershipsResult?>? =
             pubNub?.fetchMembershipsOfUser(userId = USER_ID)
-        val membershipsResult = fetchMembershipOfUserEndpoint?.sync()
+        val fetchMembershipsResult = fetchMembershipOfUserEndpoint?.sync()
 
-        assertEquals(200, membershipsResult?.status)
+        assertMembershipResultOfUser(fetchMembershipsResult)
     }
 
     @Test
@@ -90,9 +90,9 @@ internal class MembershipExtensionKtTest {
 
         val fetchMembershipOfSpaceEndpoint: ExtendedRemoteAction<FetchMembershipsResult?>? =
             pubNub?.fetchMembershipsOfSpace(spaceId = SPACE_ID)
-        val membershipsResult = fetchMembershipOfSpaceEndpoint?.sync()
+        val fetchMembershipsResult = fetchMembershipOfSpaceEndpoint?.sync()
 
-        assertEquals(200, membershipsResult?.status)
+        assertMembershipResultOfSpace(fetchMembershipsResult)
     }
 
     @Test
@@ -149,6 +149,68 @@ internal class MembershipExtensionKtTest {
 
         assertEquals(200, membershipsResult?.status)
     }
+
+    private fun assertMembershipResultOfSpace(fetchMembershipsResult: FetchMembershipsResult?) {
+        assertEquals(200, fetchMembershipsResult?.status)
+        val membership01 = fetchMembershipsResult?.data?.first()
+        assertEquals(USER_ID, membership01?.user?.id)
+        assertEquals(USER_NAME, membership01?.user?.name)
+        assertEquals(EXTERNAL_ID, membership01?.user?.externalId)
+        assertEquals(PROFILE_URL, membership01?.user?.profileUrl)
+        assertEquals(EMAIL, membership01?.user?.email)
+        assertEquals(USER_CUSTOM, membership01?.user?.custom)
+        assertEquals(UPDATED, membership01?.user?.updated)
+        assertEquals(E_TAG, membership01?.user?.eTag)
+        assertEquals(SPACE_ID, membership01?.space?.id)
+        assertEquals(MEMBERSHIP_CUSTOM, membership01?.custom)
+        assertEquals(UPDATED, membership01?.updated)
+        assertEquals(E_TAG, membership01?.eTag)
+
+        val membership02 = fetchMembershipsResult?.data?.elementAt(1)
+        assertEquals(USER_ID_02, membership02?.user?.id)
+        assertEquals(USER_NAME_02, membership02?.user?.name)
+        assertEquals(EXTERNAL_ID, membership02?.user?.externalId)
+        assertEquals(PROFILE_URL, membership02?.user?.profileUrl)
+        assertEquals(EMAIL, membership02?.user?.email)
+        assertEquals(USER_CUSTOM, membership02?.user?.custom)
+        assertEquals(UPDATED, membership02?.user?.updated)
+        assertEquals(E_TAG, membership02?.user?.eTag)
+        assertEquals(SPACE_ID, membership02?.space?.id)
+        assertEquals(MEMBERSHIP_CUSTOM, membership02?.custom)
+        assertEquals(UPDATED, membership02?.updated)
+        assertEquals(E_TAG, membership02?.eTag)
+
+        assertEquals(2, fetchMembershipsResult?.totalCount)
+    }
+
+    private fun assertMembershipResultOfUser(fetchMembershipsResult: FetchMembershipsResult?) {
+        val membership01 = fetchMembershipsResult?.data?.first()
+        assertEquals(200, fetchMembershipsResult?.status)
+        assertEquals(USER_ID, membership01?.user?.id)
+        assertEquals(SPACE_ID, membership01?.space?.id)
+        assertEquals(SPACE_NAME, membership01?.space?.name)
+        assertEquals(SPACE_DESCRIPTION, membership01?.space?.description)
+        assertEquals(SPACE_CUSTOM, membership01?.space?.custom)
+        assertEquals(UPDATED, membership01?.space?.updated)
+        assertEquals(E_TAG, membership01?.space?.eTag)
+        assertEquals(MEMBERSHIP_CUSTOM, membership01?.custom)
+        assertEquals(UPDATED, membership01?.updated)
+        assertEquals(E_TAG, membership01?.eTag)
+
+        val membership02 = fetchMembershipsResult?.data?.elementAt(1)
+        assertEquals(USER_ID, membership02?.user?.id)
+        assertEquals(SPACE_ID_02, membership02?.space?.id)
+        assertEquals(SPACE_NAME_02, membership02?.space?.name)
+        assertEquals(SPACE_DESCRIPTION, membership02?.space?.description)
+        assertEquals(SPACE_CUSTOM, membership02?.space?.custom)
+        assertEquals(UPDATED, membership02?.space?.updated)
+        assertEquals(E_TAG, membership02?.space?.eTag)
+        assertEquals(UPDATED, membership02?.updated)
+        assertEquals(E_TAG, membership02?.eTag)
+
+        assertEquals(2, fetchMembershipsResult?.totalCount)
+    }
+
 
     private fun createPNMemberArrayResult(): PNMemberArrayResult {
         val pnMemberList = listOf(
