@@ -22,7 +22,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class SpaceExtensionKtTest {
-    private var pubNub: PubNub? = null;
+    private var pubNub: PubNub? = null
 
     private val SPACE_ID = "unitTestKT_spaceId1"
     private val SPACE_ID_02 = "unitTestKT_spaceId2"
@@ -43,7 +43,6 @@ class SpaceExtensionKtTest {
 
     @MockK
     lateinit var getAllChannelMetadataEndpoint: GetAllChannelMetadata
-
 
     @BeforeEach
     fun setUp() {
@@ -130,14 +129,12 @@ class SpaceExtensionKtTest {
         assertEquals(CUSTOM, spaceResult?.data?.custom)
         assertEquals(UPDATED, spaceResult?.data?.updated)
         assertEquals(E_TAG, spaceResult?.data?.eTag)
-
     }
 
     @Test
     internal fun can_removeSpace() {
         every { pubNub?.removeChannelMetadata(any()) } returns removeChannelMetadataEndpoint
         every { removeChannelMetadataEndpoint.sync() } returns PNRemoveMetadataResult(200)
-
 
         val removeSpaceEndpoint: ExtendedRemoteAction<RemoveSpaceResult?>? =
             pubNub?.removeSpace(spaceId = SPACE_ID)
