@@ -12,7 +12,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
-
 class SpaceIntegTest() {
     private lateinit var pubnub: PubNub
 
