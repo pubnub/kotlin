@@ -8,7 +8,9 @@ data class Space(
     val description: String? = null,
     val custom: Map<String, Any>? = null,
     val updated: String? = null,
-    val eTag: String? = null
+    val eTag: String? = null,
+    val type: String? = null,
+    val status: String? = null
 )
 
 fun PNChannelMetadata.toSpace(): Space {
@@ -18,6 +20,8 @@ fun PNChannelMetadata.toSpace(): Space {
         description = description,
         custom = custom as Map<String, Any>?,
         updated = updated,
-        eTag = eTag
+        eTag = eTag,
+        type = type,
+        status = status
     )
 }

@@ -1,6 +1,7 @@
 plugins {
     id 'org.jetbrains.kotlin.jvm'
     id 'org.unbroken-dome.test-sets'
+    id 'com.github.johnrengelman.shadow'
 }
 
 apply plugin: "com.vanniktech.maven.publish"

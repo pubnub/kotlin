@@ -21,7 +21,9 @@ class SetChannelMetadata internal constructor(
     private val description: String?,
     private val custom: Any?,
     private val channel: String,
-    private val withCustom: ReturningCustom
+    private val withCustom: ReturningCustom,
+    private val type: String?,
+    private val status: String?
 ) : Endpoint<EntityEnvelope<PNChannelMetadata>, PNChannelMetadataResult>(pubnub) {
 
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityEnvelope<PNChannelMetadata>> {
@@ -31,7 +33,9 @@ class SetChannelMetadata internal constructor(
             body = ChannelMetadataInput(
                 name = name,
                 custom = custom,
-                description = description
+                description = description,
+                status = status,
+                type = type
             ),
             channel = channel,
             options = params

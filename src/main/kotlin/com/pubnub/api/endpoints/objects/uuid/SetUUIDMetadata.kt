@@ -23,7 +23,9 @@ class SetUUIDMetadata internal constructor(
     private val profileUrl: String?,
     private val email: String?,
     private val custom: Any?,
-    private val withCustom: ReturningCustom
+    private val withCustom: ReturningCustom,
+    private val type: String?,
+    private val status: String?
 ) : Endpoint<EntityEnvelope<PNUUIDMetadata>, PNUUIDMetadataResult>(pubnub) {
 
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityEnvelope<PNUUIDMetadata>> {
@@ -35,7 +37,9 @@ class SetUUIDMetadata internal constructor(
                 custom = custom,
                 email = email,
                 externalId = externalId,
-                profileUrl = profileUrl
+                profileUrl = profileUrl,
+                type = type,
+                status = status
             ),
             uuid = uuid ?: pubnub.configuration.uuid,
             options = params

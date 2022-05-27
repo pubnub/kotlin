@@ -50,6 +50,8 @@ internal class MembershipExtensionKtTest {
     private val EXTERNAL_ID = "externalId"
     private val EMAIL = "email@mail.com"
     private val PROFILE_URL = "profileUrl"
+    private val TYPE = "type"
+    private val STATUS = "status"
 
     @MockK
     private lateinit var getMembershipsEndpoint: GetMemberships
@@ -222,7 +224,9 @@ internal class MembershipExtensionKtTest {
             email = EMAIL,
             custom = USER_CUSTOM,
             updated = UPDATED,
-            eTag = E_TAG
+            eTag = E_TAG,
+            type = TYPE,
+            status = STATUS
         )
         return PNMember(uuid = pnUUIDMetadata, custom = MEMBERSHIP_CUSTOM, updated = UPDATED, eTag = E_TAG)
     }
@@ -252,7 +256,9 @@ internal class MembershipExtensionKtTest {
             description = SPACE_DESCRIPTION,
             custom = SPACE_CUSTOM,
             updated = UPDATED,
-            eTag = E_TAG
+            eTag = E_TAG,
+            type = TYPE,
+            status = STATUS
         )
         return PNChannelMembership(
             channel = pnChannelMetadata,

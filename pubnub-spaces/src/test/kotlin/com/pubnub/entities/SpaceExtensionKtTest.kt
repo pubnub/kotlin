@@ -12,7 +12,9 @@ import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata
 import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadataArrayResult
 import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadataResult
 import com.pubnub.entities.models.consumer.space.RemoveSpaceResult
+import com.pubnub.entities.models.consumer.space.Space
 import com.pubnub.entities.models.consumer.space.SpaceResult
+import com.pubnub.entities.models.consumer.space.SpacesResult
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
@@ -31,6 +33,10 @@ class SpaceExtensionKtTest {
     private val CUSTOM = mapOf("My favourite car" to "Syrena")
     private val UPDATED = "2022-05-24T08:11:49.398709Z"
     private val E_TAG = "AeWNuf6b3aHYeg"
+    private val TYPE = "type"
+    private val STATUS = "status"
+    private val expectedSpace01 = createSpace(SPACE_ID)
+    private val expectedSpace02 = createSpace(SPACE_ID_02)
 
     @MockK
     lateinit var getChannelMetadataEndpoint: GetChannelMetadata
@@ -54,7 +60,7 @@ class SpaceExtensionKtTest {
     @Test
     internal fun can_createSpace() {
         val pnChannelMetadataResult = PNChannelMetadataResult(200, createPnChannelMetadata(SPACE_ID))
-        every { pubNub.setChannelMetadata(any(), any(), any(), any(), any()) } returns setChannelMetadataEndpoint
+        every { pubNub.setChannelMetadata(any(), any(), any(), any(), any(), any(), any()) } returns setChannelMetadataEndpoint
         every { setChannelMetadataEndpoint.sync() } returns pnChannelMetadataResult
 
         val createSpaceEndpoint: ExtendedRemoteAction<SpaceResult?> = pubNub.createSpace(
@@ -62,17 +68,13 @@ class SpaceExtensionKtTest {
             name = SPACE_NAME,
             description = SPACE_DESCRIPTION,
             custom = CUSTOM,
-            includeCustom = true
+            includeCustom = true,
+            type = TYPE,
+            status = STATUS
         )
         val spaceResult = createSpaceEndpoint.sync()
 
-        assertEquals(200, spaceResult?.status)
-        assertEquals(SPACE_ID, spaceResult?.data?.id)
-        assertEquals(SPACE_NAME, spaceResult?.data?.name)
-        assertEquals(SPACE_DESCRIPTION, spaceResult?.data?.description)
-        assertEquals(CUSTOM, spaceResult?.data?.custom)
-        assertEquals(UPDATED, spaceResult?.data?.updated)
-        assertEquals(E_TAG, spaceResult?.data?.eTag)
+        assertEquals(SpaceResult(status = 200, data = expectedSpace01), spaceResult)
     }
 
     @Test
@@ -84,12 +86,7 @@ class SpaceExtensionKtTest {
         val fetchSpaceEndpoint: ExtendedRemoteAction<SpaceResult?> = pubNub.fetchSpace(spaceId = SPACE_ID)
         val spaceResult: SpaceResult? = fetchSpaceEndpoint.sync()
 
-        assertEquals(200, spaceResult?.status)
-        assertEquals(SPACE_ID, spaceResult?.data?.id)
-        assertEquals(SPACE_NAME, spaceResult?.data?.name)
-        assertEquals(SPACE_DESCRIPTION, spaceResult?.data?.description)
-        assertEquals(UPDATED, spaceResult?.data?.updated)
-        assertEquals(E_TAG, spaceResult?.data?.eTag)
+        assertEquals(SpaceResult(status = 200, data = expectedSpace01), spaceResult)
     }
 
     @Test
@@ -99,20 +96,11 @@ class SpaceExtensionKtTest {
         every { setChannelMetadataEndpoint.sync() } returns pnChannelMetadataResult
 
         val updateSpaceEndpoint: ExtendedRemoteAction<SpaceResult?> = pubNub.updateSpace(
-            spaceId = SPACE_ID,
-            name = SPACE_NAME,
-            custom = CUSTOM,
-            description = SPACE_DESCRIPTION
+            spaceId = SPACE_ID, name = SPACE_NAME, custom = CUSTOM, description = SPACE_DESCRIPTION
         )
         val spaceResult = updateSpaceEndpoint.sync()
 
-        assertEquals(200, spaceResult?.status)
-        assertEquals(SPACE_ID, spaceResult?.data?.id)
-        assertEquals(SPACE_NAME, spaceResult?.data?.name)
-        assertEquals(SPACE_DESCRIPTION, spaceResult?.data?.description)
-        assertEquals(CUSTOM, spaceResult?.data?.custom)
-        assertEquals(UPDATED, spaceResult?.data?.updated)
-        assertEquals(E_TAG, spaceResult?.data?.eTag)
+        assertEquals(SpaceResult(status = 200, data = expectedSpace01), spaceResult)
     }
 
     @Test
@@ -120,8 +108,7 @@ class SpaceExtensionKtTest {
         every { pubNub.removeChannelMetadata(any()) } returns removeChannelMetadataEndpoint
         every { removeChannelMetadataEndpoint.sync() } returns PNRemoveMetadataResult(200)
 
-        val removeSpaceEndpoint: ExtendedRemoteAction<RemoveSpaceResult?> =
-            pubNub.removeSpace(spaceId = SPACE_ID)
+        val removeSpaceEndpoint: ExtendedRemoteAction<RemoveSpaceResult?> = pubNub.removeSpace(spaceId = SPACE_ID)
         val removeSpaceResult = removeSpaceEndpoint.sync()
 
         assertEquals(200, removeSpaceResult?.status)
@@ -137,15 +124,12 @@ class SpaceExtensionKtTest {
         val fetchSpacesEndpoint = pubNub.fetchSpaces(limit = 10)
         val spacesResult = fetchSpacesEndpoint.sync()
 
-        assertEquals(200, spacesResult?.status)
-        assertEquals(2, spacesResult?.totalCount)
-        assertEquals(SPACE_ID, spacesResult?.data?.first()?.id)
-        assertEquals(SPACE_NAME, spacesResult?.data?.first()?.name)
-        assertEquals(SPACE_DESCRIPTION, spacesResult?.data?.first()?.description)
-        assertEquals(CUSTOM, spacesResult?.data?.first()?.custom)
-        assertEquals(UPDATED, spacesResult?.data?.first()?.updated)
-        assertEquals(E_TAG, spacesResult?.data?.first()?.eTag)
-        assertEquals(SPACE_ID_02, spacesResult?.data?.elementAt(1)?.id)
+        assertEquals(
+            SpacesResult(
+                status = 200, totalCount = 2, data = listOf(expectedSpace01, expectedSpace02), next = null, prev = null
+            ),
+            spacesResult
+        )
     }
 
     private fun createPnChannelMetadata(id: String): PNChannelMetadata {
@@ -155,7 +139,20 @@ class SpaceExtensionKtTest {
             description = SPACE_DESCRIPTION,
             custom = CUSTOM,
             updated = UPDATED,
-            eTag = E_TAG
+            eTag = E_TAG,
+            type = TYPE,
+            status = STATUS
         )
     }
+
+    private fun createSpace(id: String) = Space(
+        id = id,
+        name = SPACE_NAME,
+        description = SPACE_DESCRIPTION,
+        updated = UPDATED,
+        eTag = E_TAG,
+        custom = CUSTOM,
+        type = TYPE,
+        status = STATUS
+    )
 }

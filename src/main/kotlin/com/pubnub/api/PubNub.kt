@@ -1030,14 +1030,18 @@ class PubNub(val configuration: PNConfiguration) {
         name: String? = null,
         description: String? = null,
         custom: Any? = null,
-        includeCustom: Boolean = false
+        includeCustom: Boolean = false,
+        type: String? = null,
+        status: String? = null
     ) = SetChannelMetadata(
         pubnub = this,
         channel = channel,
         name = name,
         description = description,
         custom = custom,
-        withCustom = ReturningCustom(includeCustom = includeCustom)
+        withCustom = ReturningCustom(includeCustom = includeCustom),
+        type = type,
+        status = status
     )
 
     /**
@@ -1117,7 +1121,9 @@ class PubNub(val configuration: PNConfiguration) {
         profileUrl: String? = null,
         email: String? = null,
         custom: Any? = null,
-        includeCustom: Boolean = false
+        includeCustom: Boolean = false,
+        type: String? = null,
+        status: String? = null
     ) = SetUUIDMetadata(
         pubnub = this,
         uuid = uuid,
@@ -1126,7 +1132,9 @@ class PubNub(val configuration: PNConfiguration) {
         profileUrl = profileUrl,
         email = email,
         custom = custom,
-        withCustom = ReturningCustom(includeCustom = includeCustom)
+        withCustom = ReturningCustom(includeCustom = includeCustom),
+        type = type,
+        status = status
     )
 
     /**

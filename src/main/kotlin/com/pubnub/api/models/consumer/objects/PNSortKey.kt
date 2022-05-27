@@ -1,7 +1,11 @@
 package com.pubnub.api.models.consumer.objects
 
 enum class PNKey(internal val fieldName: String) {
-    ID("id"), NAME("name"), UPDATED("updated");
+    ID("id"),
+    NAME("name"),
+    UPDATED("updated"),
+    TYPE("type"),
+    STATUS("status");
 }
 
 sealed class PNSortKey(

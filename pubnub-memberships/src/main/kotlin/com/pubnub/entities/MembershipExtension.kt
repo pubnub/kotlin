@@ -6,7 +6,6 @@ import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction.Companion.map
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.objects.PNPage
-import com.pubnub.api.models.consumer.objects.PNSortKey
 import com.pubnub.entities.models.consumer.membership.FetchMembershipsResult
 import com.pubnub.entities.models.consumer.membership.MembershipsResult
 import com.pubnub.entities.models.consumer.membership.SpaceDetailsLevel
@@ -94,7 +93,6 @@ fun PubNub.fetchMembershipsOfUser(
     limit: Int? = null,
     page: PNPage? = null,
     filter: String? = null,
-    sort: Collection<PNSortKey> = listOf(),
     includeCount: Boolean = false,
     includeCustom: Boolean = false,
     includeSpaceDetails: SpaceDetailsLevel? = null
@@ -104,7 +102,6 @@ fun PubNub.fetchMembershipsOfUser(
         limit = limit,
         page = page,
         filter = filter,
-        sort = sort,
         includeCount = includeCount,
         includeCustom = includeCustom,
         includeChannelDetails = includeSpaceDetails?.toPNChannelDetailsLevel()
@@ -142,7 +139,6 @@ fun PubNub.fetchMembershipsOfSpace(
     limit: Int? = null,
     page: PNPage? = null,
     filter: String? = null,
-    sort: Collection<PNSortKey> = listOf(),
     includeCount: Boolean = false,
     includeCustom: Boolean = false,
     includeUserDetails: UserDetailsLevel? = null
@@ -152,7 +148,6 @@ fun PubNub.fetchMembershipsOfSpace(
         limit = limit,
         page = page,
         filter = filter,
-        sort = sort,
         includeCount = includeCount,
         includeCustom = includeCustom,
         includeUUIDDetails = includeUserDetails?.toPNUUIDDetailsLevel()
