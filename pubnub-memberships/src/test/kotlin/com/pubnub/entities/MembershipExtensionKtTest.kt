@@ -133,14 +133,13 @@ internal class MembershipExtensionKtTest {
         val membershipsResult = removeMembershipOfUserEndpoint.sync()
 
         assertEquals(200, membershipsResult?.status)
-
     }
 
     @Test
     internal fun can_removeMembershipOfSpace() {
         val pnMemberArrayResult = PNMemberArrayResult(status = 200, data = listOf(), totalCount = 0, prev = null, next = null)
         every { pubNub.removeChannelMembers(any(), any(), any(), any(), any(), any(), any(), any(), any()) } returns manageChannelMembersEndpoint
-        every { manageChannelMembersEndpoint.sync() }  returns pnMemberArrayResult
+        every { manageChannelMembersEndpoint.sync() } returns pnMemberArrayResult
 
         val userIdList = listOf(USER_ID, USER_ID_02)
         val removeMembershipOfSpaceEndpoint: ExtendedRemoteAction<MembershipsResult> =
