@@ -28,7 +28,7 @@ class SpaceExtensionKtTest {
     private val SPACE_ID_02 = "unitTestKT_spaceId2"
     private val SPACE_NAME = "unitTestKT_spaceName"
     private val SPACE_DESCRIPTION = "space description"
-    private val CUSTOM = "My custom"
+    private val CUSTOM = mapOf("My favourite car" to "Syrena")
     private val UPDATED = "2022-05-24T08:11:49.398709Z"
     private val E_TAG = "AeWNuf6b3aHYeg"
 

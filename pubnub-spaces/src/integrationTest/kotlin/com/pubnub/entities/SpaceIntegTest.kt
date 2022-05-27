@@ -54,7 +54,7 @@ class SpaceIntegTest() {
         val spaceId = SPACE_ID_01
         createSpace(spaceId)
 
-        val spaceResult: SpaceResult? = pubnub.fetchSpace(spaceId).sync()
+        val spaceResult: SpaceResult? = pubnub.fetchSpace(spaceId = spaceId, includeCustom = true).sync()
 
         assertEquals(200, spaceResult?.status)
         assertEquals(spaceId, spaceResult?.data?.id)

@@ -31,7 +31,7 @@ internal class UserExtensionKtTest {
     private val EXTERNAL_ID = "externalId"
     private val PROFILE_URL = "profileUrl"
     private val EMAIL = "user@user.com"
-    private val CUSTOM = "Custom something"
+    private val CUSTOM = mapOf("My favourite sport" to "windsurfing")
     private val INCLUDE_CUSOTM = true
     private val UPDATED = "2022-05-24T08:11:49.398709Z"
     private val E_TAG = "AeWNuf6b3aHYeg"

@@ -2,6 +2,7 @@ package com.pubnub.entities
 
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
+import com.pubnub.entities.models.consumer.membership.SpaceDetailsLevel
 import com.pubnub.entities.models.consumer.membership.SpaceIdWithCustom
 import com.pubnub.entities.models.consumer.space.SpaceResult
 import com.pubnub.entities.models.consumer.space.SpacesResult
@@ -46,21 +47,20 @@ class MembershipIntegTest {
 
     @Test
     internal fun can_addMembershipOfUser() {
+        val userResult = createUser(USER_ID)
+        val spaceResult01 = createSpace(SPACE_ID)
+        val spaceResult02 = createSpace(SPACE_ID_02)
+        val spaceIdWithCustomList: List<SpaceIdWithCustom> = listOf(SpaceIdWithCustom(SPACE_ID, CUSTOM), SpaceIdWithCustom(SPACE_ID_02, CUSTOM))
+        val addMembershipsResult = pubnub.addMembershipOfUser(spaceIdWithCustomList = spaceIdWithCustomList, userid = USER_ID).sync()
+
+        assertEquals(200, addMembershipsResult?.status)
+
+        val membershipsResult = pubnub.fetchMembershipsOfUser(userId = USER_ID, includeCustom = true, includeSpaceDetails = SpaceDetailsLevel.SPACE_WITH_CUSTOM).sync()
+        val pnChannelMembershipArrayResult = pubnub.getMemberships(uuid = USER_ID).sync()
+
         val spacesResult: SpacesResult? = pubnub.fetchSpaces(limit = 100, includeCount = true).sync()
         val usersResult: UsersResult? = pubnub.fetchUsers(limit = 100, includeCount = true).sync()
         println("")
-        //create user
-        val userResult = createUser(USER_ID)
-        //create space1
-        val spaceResult01 = createSpace(SPACE_ID)
-        //create space2
-        val spaceResult02 = createSpace(SPACE_ID_02)
-
-        //add user to space1 and space2
-        val spaceIdWithCustomList: List<SpaceIdWithCustom> = listOf(SpaceIdWithCustom(SPACE_ID, CUSTOM), SpaceIdWithCustom(SPACE_ID_02, CUSTOM))
-        val membershipsResult = pubnub.addMembershipOfUser(spaceIdWithCustomList = spaceIdWithCustomList, userid = USER_ID).sync()
-
-        assertEquals(200, membershipsResult?.status)
     }
 
 

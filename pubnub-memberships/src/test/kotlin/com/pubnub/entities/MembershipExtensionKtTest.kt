@@ -13,6 +13,7 @@ import com.pubnub.api.models.consumer.objects.member.PNMemberArrayResult
 import com.pubnub.api.models.consumer.objects.membership.PNChannelMembership
 import com.pubnub.api.models.consumer.objects.membership.PNChannelMembershipArrayResult
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
+import com.pubnub.entities.models.consumer.membership.FetchMembershipsResult
 import com.pubnub.entities.models.consumer.membership.MembershipsResult
 import com.pubnub.entities.models.consumer.membership.SpaceIdWithCustom
 import com.pubnub.entities.models.consumer.membership.UserIdWithCustom
@@ -37,10 +38,10 @@ internal class MembershipExtensionKtTest {
     private val SPACE_NAME = "spaceName"
     private val SPACE_NAME_02 = "spaceName02"
     private val SPACE_DESCRIPTION = "spaceDescription"
-    private val SPACE_CUSTOM = "spaceCustom"
-    private val MEMBERSHIP_CUSTOM = "membershipCustom"
-    private val MEMBERSHIP_CUSTOM_02 = "membershipCustom02"
-    private val USER_CUSTOM = "userCustom"
+    private val SPACE_CUSTOM = mapOf("favouriteColour" to "green")
+    private val MEMBERSHIP_CUSTOM = mapOf("membershipCustom" to "green")
+    private val MEMBERSHIP_CUSTOM_02 = mapOf("membershipCustom02" to "green")
+    private val USER_CUSTOM = mapOf("favouriteColour" to "green")
     private val UPDATED = "updated"
     private val E_TAG = "eTag"
     private val EXTERNAL_ID = "externalId"
@@ -74,11 +75,11 @@ internal class MembershipExtensionKtTest {
         every { pubNub?.getMemberships(any(), any(), any(), any(), any(), any(),any(), any()) } returns getMembershipsEndpoint
         every { getMembershipsEndpoint.sync() } returns pnChannelMembershipArrayResult
 
-        val fetchMembershipOfUserEndpoint: ExtendedRemoteAction<MembershipsResult?>? =
+        val fetchMembershipOfUserEndpoint: ExtendedRemoteAction<FetchMembershipsResult?>? =
             pubNub?.fetchMembershipsOfUser(userId = USER_ID)
         val membershipsResult = fetchMembershipOfUserEndpoint?.sync()
 
-        assertMembershipResultOfUser(membershipsResult)
+        assertEquals(200, membershipsResult?.status)
     }
 
     @Test
@@ -87,11 +88,11 @@ internal class MembershipExtensionKtTest {
         every { pubNub?.getChannelMembers(any(), any(), any(), any(), any(), any(), any(), any() ) } returns getChannelMembersEndpoint
         every { getChannelMembersEndpoint.sync() } returns pnMemberArrayResult
 
-        val fetchMembershipOfSpaceEndpoint: ExtendedRemoteAction<MembershipsResult?>? =
+        val fetchMembershipOfSpaceEndpoint: ExtendedRemoteAction<FetchMembershipsResult?>? =
             pubNub?.fetchMembershipsOfSpace(spaceId = SPACE_ID)
         val membershipsResult = fetchMembershipOfSpaceEndpoint?.sync()
 
-        assertMembershipResultOfSpace(membershipsResult)
+        assertEquals(200, membershipsResult?.status)
     }
 
     @Test
@@ -104,7 +105,7 @@ internal class MembershipExtensionKtTest {
         val addMembershipOfUserEndpoint: ExtendedRemoteAction<MembershipsResult>? = pubNub?.addMembershipOfUser(spaceIdWithCustomList = spaceIdWithCustomList, userid = USER_ID)
         val membershipsResult = addMembershipOfUserEndpoint?.sync()
 
-        assertMembershipResultOfUser(membershipsResult)
+        assertEquals(200, membershipsResult?.status)
     }
 
     @Test
@@ -118,7 +119,7 @@ internal class MembershipExtensionKtTest {
         val addMembershipOfSpaceEndpoint : ExtendedRemoteAction<MembershipsResult>? = pubNub?.addMembershipOfSpace(spaceId = SPACE_ID, userIdWithCustomList = userIdWithCustomList)
         val membershipsResult = addMembershipOfSpaceEndpoint?.sync()
 
-        assertMembershipResultOfSpace(membershipsResult)
+        assertEquals(200, membershipsResult?.status)
     }
 
 
@@ -133,7 +134,6 @@ internal class MembershipExtensionKtTest {
         val membershipsResult = removeMembershipOfUserEndpoint?.sync()
 
         assertEquals(200, membershipsResult?.status)
-        assertEquals(0, membershipsResult?.totalCount)
 
     }
 
@@ -148,40 +148,6 @@ internal class MembershipExtensionKtTest {
         val membershipsResult = removeMembershipOfSpaceEndpoint?.sync()
 
         assertEquals(200, membershipsResult?.status)
-        assertEquals(0, membershipsResult?.totalCount)
-    }
-
-    private fun assertMembershipResultOfSpace(membershipsResult: MembershipsResult?) {
-        assertEquals(200, membershipsResult?.status)
-        val membership01 = membershipsResult?.data?.first()
-        assertEquals(USER_ID, membership01?.user?.id)
-        assertEquals(USER_NAME, membership01?.user?.name)
-        assertEquals(EXTERNAL_ID, membership01?.user?.externalId)
-        assertEquals(PROFILE_URL, membership01?.user?.profileUrl)
-        assertEquals(EMAIL, membership01?.user?.email)
-        assertEquals(USER_CUSTOM, membership01?.user?.custom)
-        assertEquals(UPDATED, membership01?.user?.updated)
-        assertEquals(E_TAG, membership01?.user?.eTag)
-        assertEquals(SPACE_ID, membership01?.space?.id)
-        assertEquals(MEMBERSHIP_CUSTOM, membership01?.custom)
-        assertEquals(UPDATED, membership01?.updated)
-        assertEquals(E_TAG, membership01?.eTag)
-
-        val membership02 = membershipsResult?.data?.elementAt(1)
-        assertEquals(USER_ID_02, membership02?.user?.id)
-        assertEquals(USER_NAME_02, membership02?.user?.name)
-        assertEquals(EXTERNAL_ID, membership02?.user?.externalId)
-        assertEquals(PROFILE_URL, membership02?.user?.profileUrl)
-        assertEquals(EMAIL, membership02?.user?.email)
-        assertEquals(USER_CUSTOM, membership02?.user?.custom)
-        assertEquals(UPDATED, membership02?.user?.updated)
-        assertEquals(E_TAG, membership02?.user?.eTag)
-        assertEquals(SPACE_ID, membership02?.space?.id)
-        assertEquals(MEMBERSHIP_CUSTOM, membership02?.custom)
-        assertEquals(UPDATED, membership02?.updated)
-        assertEquals(E_TAG, membership02?.eTag)
-
-        assertEquals(2, membershipsResult?.totalCount)
     }
 
     private fun createPNMemberArrayResult(): PNMemberArrayResult {
@@ -192,34 +158,6 @@ internal class MembershipExtensionKtTest {
         val pnMemberArrayResult =
             PNMemberArrayResult(status = 200, data = pnMemberList, totalCount = 2, next = null, prev = null)
         return pnMemberArrayResult
-    }
-
-    private fun assertMembershipResultOfUser(membershipsResult: MembershipsResult?) {
-        val membership01 = membershipsResult?.data?.first()
-        assertEquals(200, membershipsResult?.status)
-        assertEquals(USER_ID, membership01?.user?.id)
-        assertEquals(SPACE_ID, membership01?.space?.id)
-        assertEquals(SPACE_NAME, membership01?.space?.name)
-        assertEquals(SPACE_DESCRIPTION, membership01?.space?.description)
-        assertEquals(SPACE_CUSTOM, membership01?.space?.custom)
-        assertEquals(UPDATED, membership01?.space?.updated)
-        assertEquals(E_TAG, membership01?.space?.eTag)
-        assertEquals(MEMBERSHIP_CUSTOM, membership01?.custom)
-        assertEquals(UPDATED, membership01?.updated)
-        assertEquals(E_TAG, membership01?.eTag)
-
-        val membership02 = membershipsResult?.data?.elementAt(1)
-        assertEquals(USER_ID, membership02?.user?.id)
-        assertEquals(SPACE_ID_02, membership02?.space?.id)
-        assertEquals(SPACE_NAME_02, membership02?.space?.name)
-        assertEquals(SPACE_DESCRIPTION, membership02?.space?.description)
-        assertEquals(SPACE_CUSTOM, membership02?.space?.custom)
-        assertEquals(UPDATED, membership02?.space?.updated)
-        assertEquals(E_TAG, membership02?.space?.eTag)
-        assertEquals(UPDATED, membership02?.updated)
-        assertEquals(E_TAG, membership02?.eTag)
-
-        assertEquals(2, membershipsResult?.totalCount)
     }
 
     private fun createPNMember(uuid: String, uuidName: String): PNMember {

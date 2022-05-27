@@ -8,7 +8,7 @@ data class User(
     val externalId: String? = null,
     val profileUrl: String? = null,
     val email: String? = null,
-    val custom: Any? = null,
+    val custom: Map<String, Any>? = null,
     val updated: String? = null,
     val eTag: String? = null
 )
@@ -20,7 +20,7 @@ fun PNUUIDMetadata.toUser(): User {
         externalId = externalId,
         profileUrl = profileUrl,
         email = email,
-        custom = custom,
+        custom = custom as Map<String, Any>?,
         updated = updated,
         eTag = eTag
     )

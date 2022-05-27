@@ -48,7 +48,8 @@ class UserIntegTest() {
         assertEquals(EXTERNAL_ID, userResult?.data?.externalId)
         assertEquals(PROFILE_URL, userResult?.data?.profileUrl)
         assertEquals(EMAIL, userResult?.data?.email)
-        assertEquals(CUSTOM, userResult?.data?.custom )
+        assertTrue(userResult?.data?.custom?.containsKey("favouriteNumber")!!)
+        assertTrue(userResult?.data?.custom?.containsKey("favouriteColour")!!)
         assertTrue(userResult?.data?.updated != null)
         assertTrue(userResult?.data?.eTag != null)
     }
@@ -58,7 +59,7 @@ class UserIntegTest() {
         val userId = USER_ID_01
         createUser(userId)
 
-        val userResult: UserResult? = pubnub.fetchUser(userId).sync()
+        val userResult: UserResult? = pubnub.fetchUser(userId = userId, includeCustom = true).sync()
 
         assertEquals(200, userResult?.status)
         assertEquals(userId, userResult?.data?.id)
@@ -66,7 +67,8 @@ class UserIntegTest() {
         assertEquals(EXTERNAL_ID, userResult?.data?.externalId)
         assertEquals(PROFILE_URL, userResult?.data?.profileUrl)
         assertEquals(EMAIL, userResult?.data?.email)
-        assertEquals(CUSTOM, userResult?.data?.custom )
+        assertTrue(userResult?.data?.custom?.containsKey("favouriteNumber")!!)
+        assertTrue(userResult?.data?.custom?.containsKey("favouriteColour")!!)
         assertTrue(userResult?.data?.updated != null)
         assertTrue(userResult?.data?.eTag != null)
     }
