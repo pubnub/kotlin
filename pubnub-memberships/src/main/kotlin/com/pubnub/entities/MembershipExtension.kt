@@ -27,7 +27,7 @@ import com.pubnub.entities.models.consumer.membership.toUserMembershipsResult
  *
  * @param spaceIdsWithCustoms List of spaces to add the user to. List can contain only space ids or ids along with custom data
  *                            @see [SpaceIdWithCustom]
- * @param userId Unique user identifier. If not supplied then current user’s uuid is used.
+ * @param userId Unique user identifier. If not supplied then current user’s userId is used.
  *
 */
 fun PubNub.addMembershipsOfUser(
@@ -72,7 +72,7 @@ fun PubNub.addMembershipsOfSpace(
 /**
  * The method returns a list of space memberships for a user. This method doesn't return a user's subscriptions.
  *
- * @param userId Unique user identifier. If not supplied then current user’s uuid is used.
+ * @param userId Unique user identifier. If not supplied then current user’s userId is used.
  * @param limit Number of objects to return in the response.
  *              Default is 100, which is also the maximum value.
  *              Set limit to 0 (zero) and includeCount to true if you want to retrieve only a result count.
@@ -168,7 +168,7 @@ fun PubNub.fetchMembershipsOfSpace(
  * Remove memberships of user
  *
  * @param spaceIds List of space ids to remove the user from.
- * @param userId Unique user identifier. If not supplied then current user’s uuid is used.
+ * @param userId Unique user identifier. If not supplied then current user’s userId is used.
  *
  */
 fun PubNub.removeMembershipsOfUser(
@@ -214,7 +214,7 @@ fun PubNub.removeMembershipsOfSpace(
  *
  * @param spaceIdsWithCustoms List of spaces to add the user to. List can contain only space ids or ids along with custom data
  *                            @see [SpaceIdWithCustom]
- * @param userId Unique user identifier. If not supplied then current user’s uuid is used.
+ * @param userId Unique user identifier. If not supplied then current user’s userId is used.
  *
  */
 fun PubNub.updateMembershipsOfUser(
