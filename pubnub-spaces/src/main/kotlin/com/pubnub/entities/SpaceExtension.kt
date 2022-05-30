@@ -53,7 +53,7 @@ fun PubNub.createSpace(
     spaceId: String,
     name: String? = null,
     description: String? = null,
-    custom: Any? = null,
+    custom: Map<String, Any>? = null,
     includeCustom: Boolean = false
 ): ExtendedRemoteAction<SpaceResult?> = firstDo(
     setChannelMetadata(
@@ -74,7 +74,7 @@ fun PubNub.updateSpace(
     spaceId: String,
     name: String? = null,
     description: String? = null,
-    custom: Any? = null,
+    custom: Map<String, Any>? = null,
     includeCustom: Boolean = false
 ): ExtendedRemoteAction<SpaceResult?> = firstDo(
     setChannelMetadata(

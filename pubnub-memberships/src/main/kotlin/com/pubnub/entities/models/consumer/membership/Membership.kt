@@ -10,17 +10,16 @@ import com.pubnub.entities.models.consumer.user.toUser
 data class Membership(
     val user: User?,
     val space: Space?,
-    val custom: Any?,
+    val custom: Map<String, Any>?,
     val updated: String,
     val eTag: String
 )
 
-// this comment will be removed
 internal fun PNChannelMembership.toUserMembership(userId: String): Membership {
     return Membership(
         user = User(id = userId),
         space = channel?.toSpace(),
-        custom = custom,
+        custom = custom as Map<String, Any>?,
         updated = updated,
         eTag = eTag
     )
@@ -30,7 +29,7 @@ internal fun PNMember.toSpaceMembership(spaceId: String): Membership {
     return Membership(
         user = uuid?.toUser(),
         space = Space(id = spaceId),
-        custom = custom,
+        custom = custom as Map<String, Any>?,
         updated = updated,
         eTag = eTag
     )

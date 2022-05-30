@@ -7,13 +7,52 @@ import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction.Companion.map
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.PNSortKey
+import com.pubnub.entities.models.consumer.membership.FetchMembershipsResult
 import com.pubnub.entities.models.consumer.membership.MembershipsResult
 import com.pubnub.entities.models.consumer.membership.SpaceDetailsLevel
+import com.pubnub.entities.models.consumer.membership.SpaceIdWithCustom
 import com.pubnub.entities.models.consumer.membership.UserDetailsLevel
+import com.pubnub.entities.models.consumer.membership.UserIdWithCustom
 import com.pubnub.entities.models.consumer.membership.toPNChannelDetailsLevel
+import com.pubnub.entities.models.consumer.membership.toPNChannelWithCustomList
 import com.pubnub.entities.models.consumer.membership.toPNUUIDDetailsLevel
+import com.pubnub.entities.models.consumer.membership.toPNUUIDWithCustomList
+import com.pubnub.entities.models.consumer.membership.toSpaceFetchMembershipResult
 import com.pubnub.entities.models.consumer.membership.toSpaceMembershipResult
+import com.pubnub.entities.models.consumer.membership.toUserFetchMembershipsResult
 import com.pubnub.entities.models.consumer.membership.toUserMembershipsResult
+
+fun PubNub.addMembershipOfUser(
+    spaceIdWithCustomList: List<SpaceIdWithCustom>,
+    userid: String = configuration.uuid
+): ExtendedRemoteAction<MembershipsResult> = firstDo(
+    setMemberships(
+        channels = spaceIdWithCustomList.toPNChannelWithCustomList(),
+        uuid = userid,
+        limit = 0
+    )
+).then {
+    map(
+        it,
+        PNOperationType.MembershipOperation
+    ) { pnChannelMembershipArrayResult -> pnChannelMembershipArrayResult.toUserMembershipsResult() }
+}
+
+fun PubNub.addMembershipOfSpace(
+    spaceId: String,
+    userIdWithCustomList: List<UserIdWithCustom>
+): ExtendedRemoteAction<MembershipsResult> = firstDo(
+    setChannelMembers(
+        channel = spaceId,
+        uuids = userIdWithCustomList.toPNUUIDWithCustomList(),
+        limit = 0
+    )
+).then {
+    map(
+        it,
+        PNOperationType.MembershipOperation
+    ) { pnMemberArrayResult -> pnMemberArrayResult.toSpaceMembershipResult() }
+}
 
 fun PubNub.fetchMembershipsOfUser(
     userId: String = configuration.uuid,
@@ -24,7 +63,7 @@ fun PubNub.fetchMembershipsOfUser(
     includeCount: Boolean = false,
     includeCustom: Boolean = false,
     includeSpaceDetails: SpaceDetailsLevel? = null
-): ExtendedRemoteAction<MembershipsResult?> = firstDo(
+): ExtendedRemoteAction<FetchMembershipsResult?> = firstDo(
     getMemberships(
         uuid = userId,
         limit = limit,
@@ -39,7 +78,7 @@ fun PubNub.fetchMembershipsOfUser(
     map(
         it,
         PNOperationType.MembershipOperation
-    ) { pnChannelMembershipArrayResult -> pnChannelMembershipArrayResult.toUserMembershipsResult(userId) }
+    ) { pnChannelMembershipArrayResult -> pnChannelMembershipArrayResult.toUserFetchMembershipsResult(userId) }
 }
 
 fun PubNub.fetchMembershipsOfSpace(
@@ -51,7 +90,7 @@ fun PubNub.fetchMembershipsOfSpace(
     includeCount: Boolean = false,
     includeCustom: Boolean = false,
     includeUserDetails: UserDetailsLevel? = null
-): ExtendedRemoteAction<MembershipsResult> = firstDo(
+): ExtendedRemoteAction<FetchMembershipsResult?> = firstDo(
     getChannelMembers(
         channel = spaceId,
         limit = limit,
@@ -66,5 +105,37 @@ fun PubNub.fetchMembershipsOfSpace(
     map(
         it,
         PNOperationType.MembershipOperation
-    ) { pnMemberArrayResult -> pnMemberArrayResult.toSpaceMembershipResult(spaceId) }
+    ) { pnMemberArrayResult -> pnMemberArrayResult.toSpaceFetchMembershipResult(spaceId) }
+}
+
+fun PubNub.removeMembershipOfUser(
+    spaceIds: List<String>,
+    userId: String = configuration.uuid,
+): ExtendedRemoteAction<MembershipsResult> = firstDo(
+    removeMemberships(
+        channels = spaceIds,
+        uuid = userId,
+        limit = 0
+    )
+).then {
+    map(
+        it,
+        PNOperationType.MembershipOperation
+    ) { pnChannelMembershipArrayResult -> pnChannelMembershipArrayResult.toUserMembershipsResult() }
+}
+
+fun PubNub.removeMembershipOfSpace(
+    spaceId: String,
+    userIds: List<String>,
+): ExtendedRemoteAction<MembershipsResult> = firstDo(
+    removeChannelMembers(
+        channel = spaceId,
+        uuids = userIds,
+        limit = 0
+    )
+).then {
+    map(
+        it,
+        PNOperationType.MembershipOperation
+    ) { pnMemberArrayResult -> pnMemberArrayResult.toSpaceMembershipResult() }
 }
