@@ -12,7 +12,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
-
 class UserIntegTest() {
     private lateinit var pubnub: PubNub
 
@@ -24,7 +23,7 @@ class UserIntegTest() {
     private val EXTERNAL_ID = "externalId"
     private val PROFILE_URL = "profileUrl"
     private val EMAIL = "email"
-    private val CUSTOM: Map<String, Any> = mapOf("favouriteNumber" to 1, "favouriteColour" to "green" )
+    private val CUSTOM: Map<String, Any> = mapOf("favouriteNumber" to 1, "favouriteColour" to "green")
 
     @BeforeEach
     fun setUp() {
@@ -95,7 +94,6 @@ class UserIntegTest() {
         createUser(userId)
 
         pubnub.removeUser(userId = userId).sync()
-
 
         val exception = assertThrows<PubNubException> {
             pubnub.fetchUser(userId).sync()
