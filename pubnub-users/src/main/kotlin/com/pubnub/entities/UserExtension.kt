@@ -58,7 +58,7 @@ fun PubNub.createUser(
     externalId: String? = null,
     profileUrl: String? = null,
     email: String? = null,
-    custom: Map<String,Any>? = null,
+    custom: Map<String, Any>? = null,
     includeCustom: Boolean = false
 ): ExtendedRemoteAction<UserResult?> = firstDo(
     setUUIDMetadata(
