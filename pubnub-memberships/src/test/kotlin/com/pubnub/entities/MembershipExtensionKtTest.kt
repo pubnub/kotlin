@@ -118,7 +118,7 @@ internal class MembershipExtensionKtTest {
 
         val userIdWithCustomList = listOf(UserIdWithCustom(USER_ID, USER_CUSTOM), UserIdWithCustom(USER_ID_02, USER_CUSTOM))
         val addMembershipOfSpaceEndpoint: ExtendedRemoteAction<MembershipsResult> =
-            pubNub.addMembershipsOfSpace(spaceId = SPACE_ID, userIdWithCustomList = userIdWithCustomList)
+            pubNub.addMembershipsOfSpace(spaceId = SPACE_ID, userIdsWithCustoms = userIdWithCustomList)
         val membershipsResult = addMembershipOfSpaceEndpoint.sync()
 
         assertEquals(200, membershipsResult?.status)

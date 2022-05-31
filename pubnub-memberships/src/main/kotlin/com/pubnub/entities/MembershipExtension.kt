@@ -50,16 +50,16 @@ fun PubNub.addMembershipsOfUser(
  * Add memberships of space i.e. add a users to a space, make users members of space
  *
  * @param spaceId Unique space identifier.
- * @param userIdWithCustomList List of users to add to the space. List can contain only user ids or ids along with custom data
+ * @param userIdsWithCustoms List of users to add to the space. List can contain only user ids or ids along with custom data
  *                             @see [UserIdWithCustom]
  */
 fun PubNub.addMembershipsOfSpace(
     spaceId: String,
-    userIdWithCustomList: List<UserIdWithCustom>
+    userIdsWithCustoms: List<UserIdWithCustom>
 ): ExtendedRemoteAction<MembershipsResult> = firstDo(
     setChannelMembers(
         channel = spaceId,
-        uuids = userIdWithCustomList.toPNUUIDWithCustomList(),
+        uuids = userIdsWithCustoms.toPNUUIDWithCustomList(),
         limit = 0
     )
 ).then {
