@@ -181,9 +181,9 @@ internal class MembershipExtensionKtTest {
     }
 
     private fun assertMembershipResultOfSpace(fetchMembershipsResult: FetchMembershipsResult?) {
-        val user01 = User(id = USER_ID, name = USER_NAME, externalId = EXTERNAL_ID, profileUrl = PROFILE_URL, email = EMAIL, custom = USER_CUSTOM, updated = UPDATED, eTag = E_TAG)
+        val user01 = User(id = USER_ID, name = USER_NAME, externalId = EXTERNAL_ID, profileUrl = PROFILE_URL, email = EMAIL, custom = USER_CUSTOM, updated = UPDATED, eTag = E_TAG, type = TYPE, status = STATUS)
         val space01 = Space(id = SPACE_ID)
-        val user02 = User(id = USER_ID_02, name = USER_NAME_02, externalId = EXTERNAL_ID, profileUrl = PROFILE_URL, email = EMAIL, custom = USER_CUSTOM, updated = UPDATED, eTag = E_TAG)
+        val user02 = User(id = USER_ID_02, name = USER_NAME_02, externalId = EXTERNAL_ID, profileUrl = PROFILE_URL, email = EMAIL, custom = USER_CUSTOM, updated = UPDATED, eTag = E_TAG, type = TYPE, status = STATUS)
         val space02 = Space(id = SPACE_ID)
         val membership01 = Membership(user = user01, space = space01, custom = MEMBERSHIP_CUSTOM, updated = UPDATED, eTag = E_TAG)
         val membership02 = Membership(user = user02, space = space02, custom = MEMBERSHIP_CUSTOM, updated = UPDATED, eTag = E_TAG)
@@ -195,9 +195,9 @@ internal class MembershipExtensionKtTest {
 
     private fun assertMembershipResultOfUser(fetchMembershipsResult: FetchMembershipsResult?) {
         val user01 = User(id = USER_ID)
-        val space01 = Space(id = SPACE_ID, name = SPACE_NAME, description = SPACE_DESCRIPTION, custom = SPACE_CUSTOM, updated = UPDATED, eTag = E_TAG)
+        val space01 = Space(id = SPACE_ID, name = SPACE_NAME, description = SPACE_DESCRIPTION, custom = SPACE_CUSTOM, updated = UPDATED, eTag = E_TAG, type = TYPE, status = STATUS)
         val user02 = User(id = USER_ID)
-        val space02 = Space(id = SPACE_ID_02, name = SPACE_NAME_02, description = SPACE_DESCRIPTION, custom = SPACE_CUSTOM, updated = UPDATED, eTag = E_TAG)
+        val space02 = Space(id = SPACE_ID_02, name = SPACE_NAME_02, description = SPACE_DESCRIPTION, custom = SPACE_CUSTOM, updated = UPDATED, eTag = E_TAG, type = TYPE, status = STATUS)
         val membership01 = Membership(user = user01, space = space01, custom = MEMBERSHIP_CUSTOM, updated = UPDATED, eTag = E_TAG)
         val membership02 = Membership(user = user02, space = space02, custom = MEMBERSHIP_CUSTOM_02, updated = UPDATED, eTag = E_TAG)
         val memberships = listOf(membership01, membership02)
