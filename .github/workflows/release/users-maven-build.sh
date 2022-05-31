@@ -1,0 +1,1 @@
+echo "Build Kotlin Users module artifacts"
