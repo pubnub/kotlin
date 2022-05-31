@@ -14,6 +14,24 @@ import com.pubnub.entities.models.consumer.space.toRemoveSpaceResult
 import com.pubnub.entities.models.consumer.space.toSpaceResult
 import com.pubnub.entities.models.consumer.space.toSpacesResult
 
+/**
+ * Returns a paginated list of Spaces metadata, optionally including the custom data object for each.
+ *
+ * @param limit Number of objects to return in the response.
+ *              Default is 100, which is also the maximum value.
+ *              Set limit to 0 (zero) and includeCount to true if you want to retrieve only a result count.
+ * @param page Use for pagination.
+ *              - [PNNext] : Previously-returned cursor bookmark for fetching the next page.
+ *              - [PNPrev] : Previously-returned cursor bookmark for fetching the previous page.
+ *                           Ignored if you also supply the start parameter.
+ * @param filter Expression used to filter the results. Only objects whose properties satisfy the given
+ *               expression are returned.
+ * @param sort List of properties to sort by. Available options are id, name, and updated.
+ *             @see [PNAsc], [PNDesc]
+ * @param includeCount Request totalCount to be included in paginated response. By default, totalCount is omitted.
+ *                     Default is `false`.
+ * @param includeCustom Include respective additional fields in the response.
+ */
 fun PubNub.fetchSpaces(
     limit: Int? = null,
     page: PNPage? = null,
@@ -37,6 +55,12 @@ fun PubNub.fetchSpaces(
     ) { pnChannelMetadataArrayResult -> pnChannelMetadataArrayResult.toSpacesResult() }
 }
 
+/**
+ * Returns metadata for the specified Space, optionally including the custom data object for each.
+ *
+ * @param spaceId Space ID.
+ * @param includeCustom Include respective additional fields in the response.
+ */
 fun PubNub.fetchSpace(
     spaceId: String,
     includeCustom: Boolean = false
@@ -49,6 +73,15 @@ fun PubNub.fetchSpace(
     ) { pnChannelMetadataResult -> pnChannelMetadataResult.toSpaceResult() }
 }
 
+/**
+ * Create metadata for a Space in the database, optionally including the custom data object for each.
+ *
+ * @param spaceId Space ID.
+ * @param name Name of a space.
+ * @param description Description of a channel.
+ * @param custom Object with supported data types.
+ * @param includeCustom Include respective additional fields in the response.
+ */
 fun PubNub.createSpace(
     spaceId: String,
     name: String? = null,
@@ -70,6 +103,15 @@ fun PubNub.createSpace(
     ) { pnChannelMetadataResult -> pnChannelMetadataResult.toSpaceResult() }
 }
 
+/**
+ * Update existing metadata for a Space in the database, optionally including the custom data object for each.
+ *
+ * @param spaceId Space ID.
+ * @param name Name of a space.
+ * @param description Description of a channel.
+ * @param custom Object with supported data types.
+ * @param includeCustom Include respective additional fields in the response.
+ */
 fun PubNub.updateSpace(
     spaceId: String,
     name: String? = null,
@@ -91,6 +133,11 @@ fun PubNub.updateSpace(
     ) { pnChannelMetadataResult -> pnChannelMetadataResult.toSpaceResult() }
 }
 
+/**
+ * Removes the metadata from a specified Space.
+ *
+ * @param spaceId Space ID.
+ */
 fun PubNub.removeSpace(
     spaceId: String
 ): ExtendedRemoteAction<RemoveSpaceResult?> = firstDo(

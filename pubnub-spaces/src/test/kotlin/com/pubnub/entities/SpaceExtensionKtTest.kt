@@ -22,7 +22,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class SpaceExtensionKtTest {
-    private var pubNub: PubNub? = null
+    private lateinit var pubNub: PubNub
 
     private val SPACE_ID = "unitTestKT_spaceId1"
     private val SPACE_ID_02 = "unitTestKT_spaceId2"
@@ -54,25 +54,17 @@ class SpaceExtensionKtTest {
     @Test
     internal fun can_createSpace() {
         val pnChannelMetadataResult = PNChannelMetadataResult(200, createPnChannelMetadata(SPACE_ID))
-        every {
-            pubNub?.setChannelMetadata(
-                any(),
-                any(),
-                any(),
-                any(),
-                any()
-            )
-        } returns setChannelMetadataEndpoint
+        every { pubNub.setChannelMetadata(any(), any(), any(), any(), any()) } returns setChannelMetadataEndpoint
         every { setChannelMetadataEndpoint.sync() } returns pnChannelMetadataResult
 
-        val createSpaceEndpoint: ExtendedRemoteAction<SpaceResult?>? = pubNub?.createSpace(
+        val createSpaceEndpoint: ExtendedRemoteAction<SpaceResult?> = pubNub.createSpace(
             spaceId = SPACE_ID,
             name = SPACE_NAME,
             description = SPACE_DESCRIPTION,
             custom = CUSTOM,
             includeCustom = true
         )
-        val spaceResult = createSpaceEndpoint?.sync()
+        val spaceResult = createSpaceEndpoint.sync()
 
         assertEquals(200, spaceResult?.status)
         assertEquals(SPACE_ID, spaceResult?.data?.id)
@@ -86,11 +78,11 @@ class SpaceExtensionKtTest {
     @Test
     internal fun can_fetchSpace() {
         val pnChannelMetadataResult = PNChannelMetadataResult(200, createPnChannelMetadata(SPACE_ID))
-        every { pubNub?.getChannelMetadata(any(), any()) } returns getChannelMetadataEndpoint
+        every { pubNub.getChannelMetadata(any(), any()) } returns getChannelMetadataEndpoint
         every { getChannelMetadataEndpoint.sync() } returns pnChannelMetadataResult
 
-        val fetchSpaceEndpoint: ExtendedRemoteAction<SpaceResult?>? = pubNub?.fetchSpace(spaceId = SPACE_ID)
-        val spaceResult: SpaceResult? = fetchSpaceEndpoint?.sync()
+        val fetchSpaceEndpoint: ExtendedRemoteAction<SpaceResult?> = pubNub.fetchSpace(spaceId = SPACE_ID)
+        val spaceResult: SpaceResult? = fetchSpaceEndpoint.sync()
 
         assertEquals(200, spaceResult?.status)
         assertEquals(SPACE_ID, spaceResult?.data?.id)
@@ -103,24 +95,16 @@ class SpaceExtensionKtTest {
     @Test
     internal fun can_updateSpace() {
         val pnChannelMetadataResult = PNChannelMetadataResult(200, createPnChannelMetadata(SPACE_ID))
-        every {
-            pubNub?.setChannelMetadata(
-                any(),
-                any(),
-                any(),
-                any(),
-                any()
-            )
-        } returns setChannelMetadataEndpoint
+        every { pubNub.setChannelMetadata(any(), any(), any(), any(), any()) } returns setChannelMetadataEndpoint
         every { setChannelMetadataEndpoint.sync() } returns pnChannelMetadataResult
 
-        val updateSpaceEndpoint: ExtendedRemoteAction<SpaceResult?>? = pubNub?.updateSpace(
+        val updateSpaceEndpoint: ExtendedRemoteAction<SpaceResult?> = pubNub.updateSpace(
             spaceId = SPACE_ID,
             name = SPACE_NAME,
             custom = CUSTOM,
             description = SPACE_DESCRIPTION
         )
-        val spaceResult = updateSpaceEndpoint?.sync()
+        val spaceResult = updateSpaceEndpoint.sync()
 
         assertEquals(200, spaceResult?.status)
         assertEquals(SPACE_ID, spaceResult?.data?.id)
@@ -133,12 +117,12 @@ class SpaceExtensionKtTest {
 
     @Test
     internal fun can_removeSpace() {
-        every { pubNub?.removeChannelMetadata(any()) } returns removeChannelMetadataEndpoint
+        every { pubNub.removeChannelMetadata(any()) } returns removeChannelMetadataEndpoint
         every { removeChannelMetadataEndpoint.sync() } returns PNRemoveMetadataResult(200)
 
-        val removeSpaceEndpoint: ExtendedRemoteAction<RemoveSpaceResult?>? =
-            pubNub?.removeSpace(spaceId = SPACE_ID)
-        val removeSpaceResult = removeSpaceEndpoint?.sync()
+        val removeSpaceEndpoint: ExtendedRemoteAction<RemoveSpaceResult?> =
+            pubNub.removeSpace(spaceId = SPACE_ID)
+        val removeSpaceResult = removeSpaceEndpoint.sync()
 
         assertEquals(200, removeSpaceResult?.status)
     }
@@ -147,20 +131,11 @@ class SpaceExtensionKtTest {
     internal fun can_fetchSpaces() {
         val pnChannelMetadataList = listOf(createPnChannelMetadata(SPACE_ID), createPnChannelMetadata(SPACE_ID_02))
         val pnChannelMetadataArrayResult = PNChannelMetadataArrayResult(status = 200, data = pnChannelMetadataList, totalCount = 2, null, null)
-        every {
-            pubNub?.getAllChannelMetadata(
-                any(),
-                any(),
-                any(),
-                any(),
-                any(),
-                any()
-            )
-        } returns getAllChannelMetadataEndpoint
+        every { pubNub.getAllChannelMetadata(any(), any(), any(), any(), any(), any()) } returns getAllChannelMetadataEndpoint
         every { getAllChannelMetadataEndpoint.sync() } returns pnChannelMetadataArrayResult
 
-        val fetchSpacesEndpoint = pubNub?.fetchSpaces(limit = 10)
-        val spacesResult = fetchSpacesEndpoint?.sync()
+        val fetchSpacesEndpoint = pubNub.fetchSpaces(limit = 10)
+        val spacesResult = fetchSpacesEndpoint.sync()
 
         assertEquals(200, spacesResult?.status)
         assertEquals(2, spacesResult?.totalCount)

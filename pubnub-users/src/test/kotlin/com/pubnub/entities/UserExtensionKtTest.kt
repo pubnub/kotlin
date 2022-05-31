@@ -23,7 +23,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 internal class UserExtensionKtTest {
-    private var pubNub: PubNub? = null
+    private lateinit var pubNub: PubNub
 
     private val USER_ID = "userId"
     private val USER_ID_02 = "userId02"
@@ -59,20 +59,10 @@ internal class UserExtensionKtTest {
     internal fun can_createUser() {
         val pnUUIDMetadata = createPnuuidMetadata(USER_ID)
         val pnUUIDMetadataResult = PNUUIDMetadataResult(status = 200, data = pnUUIDMetadata)
-        every {
-            pubNub?.setUUIDMetadata(
-                any(),
-                any(),
-                any(),
-                any(),
-                any(),
-                any(),
-                any()
-            )
-        } returns setUUIDMetadataEndpoint
+        every { pubNub.setUUIDMetadata(any(), any(), any(), any(), any(), any(), any()) } returns setUUIDMetadataEndpoint
         every { setUUIDMetadataEndpoint.sync() } returns pnUUIDMetadataResult
 
-        val createUserEndpoint: ExtendedRemoteAction<UserResult?>? = pubNub?.createUser(
+        val createUserEndpoint: ExtendedRemoteAction<UserResult?> = pubNub.createUser(
             userId = USER_ID,
             name = USER_NAME,
             externalId = EXTERNAL_ID,
@@ -81,7 +71,7 @@ internal class UserExtensionKtTest {
             custom = CUSTOM,
             includeCustom = INCLUDE_CUSOTM
         )
-        val userResult = createUserEndpoint?.sync()
+        val userResult = createUserEndpoint.sync()
 
         assertEquals(200, userResult?.status)
         assertEquals(USER_ID, userResult?.data?.id)
@@ -98,12 +88,12 @@ internal class UserExtensionKtTest {
     internal fun can_fetchUser() {
         val pnUUIDMetadata = createPnuuidMetadata(USER_ID)
         val pnUUIDMetadataResult = PNUUIDMetadataResult(status = 200, data = pnUUIDMetadata)
-        every { pubNub?.getUUIDMetadata(any(), any()) } returns getUUIDMetadataEndpoint
+        every { pubNub.getUUIDMetadata(any(), any()) } returns getUUIDMetadataEndpoint
         every { getUUIDMetadataEndpoint.sync() } returns pnUUIDMetadataResult
 
-        val fetchUserEndpoint: ExtendedRemoteAction<UserResult?>? =
-            pubNub?.fetchUser(userId = USER_ID, includeCustom = true)
-        val userResult = fetchUserEndpoint?.sync()
+        val fetchUserEndpoint: ExtendedRemoteAction<UserResult?> =
+            pubNub.fetchUser(userId = USER_ID, includeCustom = true)
+        val userResult = fetchUserEndpoint.sync()
 
         assertEquals(200, userResult?.status)
         assertEquals(USER_ID, userResult?.data?.id)
@@ -119,21 +109,11 @@ internal class UserExtensionKtTest {
     @Test
     internal fun can_updateUser() {
         val pnUUIDMetadata = createPnuuidMetadata(USER_ID)
-        val pnUUIDMetadataResult: PNUUIDMetadataResult = PNUUIDMetadataResult(status = 200, data = pnUUIDMetadata)
-        every {
-            pubNub?.setUUIDMetadata(
-                any(),
-                any(),
-                any(),
-                any(),
-                any(),
-                any(),
-                any()
-            )
-        } returns setUUIDMetadataEndpoint
+        val pnUUIDMetadataResult = PNUUIDMetadataResult(status = 200, data = pnUUIDMetadata)
+        every { pubNub.setUUIDMetadata(any(), any(), any(), any(), any(), any(), any()) } returns setUUIDMetadataEndpoint
         every { setUUIDMetadataEndpoint.sync() } returns pnUUIDMetadataResult
 
-        val updateUserEndpoint: ExtendedRemoteAction<UserResult?>? = pubNub?.updateUser(
+        val updateUserEndpoint: ExtendedRemoteAction<UserResult?> = pubNub.updateUser(
             userId = USER_ID,
             name = USER_NAME,
             externalId = EXTERNAL_ID,
@@ -142,7 +122,7 @@ internal class UserExtensionKtTest {
             custom = CUSTOM,
             includeCustom = INCLUDE_CUSOTM
         )
-        val userResult = updateUserEndpoint?.sync()
+        val userResult = updateUserEndpoint.sync()
 
         assertEquals(200, userResult?.status)
         assertEquals(USER_ID, userResult?.data?.id)
@@ -158,11 +138,11 @@ internal class UserExtensionKtTest {
     @Test
     internal fun can_removeUser() {
         val pnRemoveMetadataResult = PNRemoveMetadataResult(status = 200)
-        every { pubNub?.removeUUIDMetadata(any()) } returns removeUUIDMetadataEndpoint
+        every { pubNub.removeUUIDMetadata(any()) } returns removeUUIDMetadataEndpoint
         every { removeUUIDMetadataEndpoint.sync() } returns pnRemoveMetadataResult
 
-        val removeUserEndpoint: ExtendedRemoteAction<RemoveUserResult?>? = pubNub?.removeUser(userId = USER_ID)
-        val removeUserResult = removeUserEndpoint?.sync()
+        val removeUserEndpoint: ExtendedRemoteAction<RemoveUserResult?> = pubNub.removeUser(userId = USER_ID)
+        val removeUserResult = removeUserEndpoint.sync()
 
         assertEquals(200, removeUserResult?.status)
     }
@@ -171,11 +151,11 @@ internal class UserExtensionKtTest {
     internal fun can_fetchUsers() {
         val pnUUIDMetadataList = listOf(createPnuuidMetadata(USER_ID), createPnuuidMetadata(USER_ID_02))
         val pnUUIDMetadataArrayResult = PNUUIDMetadataArrayResult(status = 200, data = pnUUIDMetadataList, totalCount = 2, next = null, prev = null)
-        every { pubNub?.getAllUUIDMetadata(any(), any(), any(), any(), any(), any()) } returns getAllUUIDMetadataEndpoint
+        every { pubNub.getAllUUIDMetadata(any(), any(), any(), any(), any(), any()) } returns getAllUUIDMetadataEndpoint
         every { getAllUUIDMetadataEndpoint.sync() } returns pnUUIDMetadataArrayResult
 
-        val fetchUsersEndpoint: ExtendedRemoteAction<UsersResult?>? = pubNub?.fetchUsers()
-        val usersResult = fetchUsersEndpoint?.sync()
+        val fetchUsersEndpoint: ExtendedRemoteAction<UsersResult?> = pubNub.fetchUsers()
+        val usersResult = fetchUsersEndpoint.sync()
 
         assertEquals(200, usersResult?.status)
         assertEquals(USER_ID, usersResult?.data?.first()?.id)
