@@ -81,6 +81,8 @@ fun PubNub.fetchSpace(
  * @param description Description of a channel.
  * @param custom Object with supported data types.
  * @param includeCustom Include respective additional fields in the response.
+ * @param type Type of the space.
+ * @param status Status of the space.
  */
 fun PubNub.createSpace(
     spaceId: String,

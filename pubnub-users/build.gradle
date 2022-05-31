@@ -1,7 +1,6 @@
 plugins {
     id 'org.jetbrains.kotlin.jvm'
     id 'org.unbroken-dome.test-sets'
-    id 'com.github.johnrengelman.shadow'
 }
 
 apply plugin: "com.vanniktech.maven.publish"
@@ -16,6 +15,7 @@ testSets {
 
 dependencies {
     implementation project(":")
+    implementation "com.pubnub:pubnub-spaces:0.1.0"
     testImplementation "org.junit.jupiter:junit-jupiter-engine:5.8.2"
     testImplementation "io.mockk:mockk:1.11.0"
     testImplementation "org.aeonbits.owner:owner:1.0.12"

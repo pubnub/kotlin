@@ -86,6 +86,8 @@ fun PubNub.fetchUser(
  * @param email The user's email address. Maximum 80 characters.
  * @param custom Object with supported data types.
  * @param includeCustom Include respective additional fields in the response.
+ * @param type Type of the space.
+ * @param status Status of the space.
  */
 fun PubNub.createUser(
     userId: String? = null,

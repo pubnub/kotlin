@@ -1,0 +1,1 @@
+echo "Build Kotlin Memberships module artifacts"

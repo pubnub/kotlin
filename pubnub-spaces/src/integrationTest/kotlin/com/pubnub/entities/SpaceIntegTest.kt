@@ -118,7 +118,9 @@ class SpaceIntegTest() {
             name = SPACE_NAME,
             description = DESCRIPTION,
             custom = CUSTOM,
-            includeCustom = true
+            includeCustom = true,
+            type = "type",
+            status = "status"
         ).sync()
     }
 }
