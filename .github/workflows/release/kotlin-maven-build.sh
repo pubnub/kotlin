@@ -1,1 +1,1 @@
-echo "Build Kotlin Spaces momdule artifacts"
+echo "Build Kotlin SDK module artifacts"
