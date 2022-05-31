@@ -14,6 +14,24 @@ import com.pubnub.entities.models.consumer.user.toRemoveUserResult
 import com.pubnub.entities.models.consumer.user.toUserResult
 import com.pubnub.entities.models.consumer.user.toUsersResult
 
+/**
+ * Returns a paginated list of User metadata, optionally including the custom data object for each.
+ *
+ * @param limit Number of objects to return in the response.
+ *              Default is 100, which is also the maximum value.
+ *              Set limit to 0 (zero) and includeCount to true if you want to retrieve only a result count.
+ * @param page Use for pagination.
+ *              - [PNNext] : Previously-returned cursor bookmark for fetching the next page.
+ *              - [PNPrev] : Previously-returned cursor bookmark for fetching the previous page.
+ *                           Ignored if you also supply the start parameter.
+ * @param filter Expression used to filter the results. Only objects whose properties satisfy the given
+ *               expression are returned.
+ * @param sort List of properties to sort by. Available options are id, name, and updated.
+ *             @see [PNAsc], [PNDesc]
+ * @param includeCount Request totalCount to be included in paginated response. By default, totalCount is omitted.
+ *                     Default is `false`.
+ * @param includeCustom Include respective additional fields in the response.
+ */
 fun PubNub.fetchUsers(
     limit: Int? = null,
     page: PNPage? = null,
@@ -37,6 +55,12 @@ fun PubNub.fetchUsers(
     ) { pnUuidMetadataArrayResult -> pnUuidMetadataArrayResult.toUsersResult() }
 }
 
+/**
+ * Returns metadata for the specified User, optionally including the custom data object for each.
+ *
+ * @param userId Unique user identifier. If not supplied then current user’s userId is used.
+ * @param includeCustom Include respective additional fields in the response.
+ */
 fun PubNub.fetchUser(
     userId: String? = configuration.uuid,
     includeCustom: Boolean = false
@@ -52,6 +76,17 @@ fun PubNub.fetchUser(
     ) { pnUuidMetadataResult -> pnUuidMetadataResult.toUserResult() }
 }
 
+/**
+ * Create metadata for a User in the database, optionally including the custom data object for each.
+ *
+ * @param userId Unique user identifier. If not supplied then current user’s userId is used.
+ * @param name Display name for the user. Maximum 200 characters.
+ * @param externalId User's identifier in an external system
+ * @param profileUrl The URL of the user's profile picture
+ * @param email The user's email address. Maximum 80 characters.
+ * @param custom Object with supported data types.
+ * @param includeCustom Include respective additional fields in the response.
+ */
 fun PubNub.createUser(
     userId: String? = null,
     name: String? = null,
@@ -77,6 +112,17 @@ fun PubNub.createUser(
     ) { pnUuidMetadataResult -> pnUuidMetadataResult.toUserResult() }
 }
 
+/**
+ * Update existing metadata for a User in the database, optionally including the custom data object for each.
+ *
+ * @param userId Unique user identifier. If not supplied then current user’s userId is used.
+ * @param name Display name for the user. Maximum 200 characters.
+ * @param externalId User's identifier in an external system
+ * @param profileUrl The URL of the user's profile picture
+ * @param email The user's email address. Maximum 80 characters.
+ * @param custom Object with supported data types.
+ * @param includeCustom Include respective additional fields in the response.
+ */
 fun PubNub.updateUser(
     userId: String? = null,
     name: String? = null,
@@ -102,6 +148,11 @@ fun PubNub.updateUser(
     ) { pnUuidMetadataResult -> pnUuidMetadataResult.toUserResult() }
 }
 
+/**
+ * Removes the metadata from a specified User.
+ *
+ * @param userId Unique user identifier. If not supplied then current user’s userId is used.
+ */
 fun PubNub.removeUser(
     userId: String? = null
 ): ExtendedRemoteAction<RemoveUserResult?> = firstDo(
