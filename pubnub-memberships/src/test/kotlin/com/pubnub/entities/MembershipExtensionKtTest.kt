@@ -107,7 +107,7 @@ internal class MembershipExtensionKtTest {
             pubNub.addMembershipsOfUser(spaceIdsWithCustoms = spaceIdWithCustomList, userId = USER_ID)
         val membershipsResult = addMembershipOfUserEndpoint.sync()
 
-        assertEquals(200, membershipsResult?.status)
+        assertEquals(300, membershipsResult?.status)
     }
 
     @Test

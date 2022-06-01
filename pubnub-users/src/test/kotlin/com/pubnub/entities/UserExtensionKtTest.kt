@@ -144,7 +144,7 @@ internal class UserExtensionKtTest {
         val removeUserEndpoint: ExtendedRemoteAction<RemoveUserResult?> = pubNub.removeUser(userId = USER_ID)
         val removeUserResult = removeUserEndpoint.sync()
 
-        assertEquals(200, removeUserResult?.status)
+        assertEquals(300, removeUserResult?.status)
     }
 
     @Test
