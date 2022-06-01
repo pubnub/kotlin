@@ -30,7 +30,7 @@ class UserIntegTest() {
     @BeforeEach
     fun setUp() {
         val config = PNConfiguration("kotlin").apply {
-            subscribeKey =  IntegTestConf.subscribeKey
+            subscribeKey = IntegTestConf.subscribeKey
             publishKey = IntegTestConf.publishKey
             IntegTestConf.origin?.let {
                 origin = it
