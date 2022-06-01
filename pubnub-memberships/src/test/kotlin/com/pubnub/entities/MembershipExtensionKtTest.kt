@@ -241,7 +241,7 @@ internal class MembershipExtensionKtTest {
             data = pnChannelMembershipList,
             totalCount = 2,
             next = null,
-            prev = null,
+            prev = null
         )
     }
 

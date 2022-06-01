@@ -3,7 +3,6 @@ package com.pubnub.entities
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubException
-import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.entities.models.consumer.user.UserResult
 import com.pubnub.entities.models.consumer.user.UsersResult
 import org.junit.jupiter.api.AfterEach
@@ -33,6 +32,9 @@ class UserIntegTest() {
         val config = PNConfiguration("kotlin").apply {
             subscribeKey =  IntegTestConf.subscribeKey
             publishKey = IntegTestConf.publishKey
+            IntegTestConf.origin?.let {
+                origin = it
+            }
         }
         pubnub = PubNub(config)
         pubnub.removeUser(userId = USER_ID_01).sync()

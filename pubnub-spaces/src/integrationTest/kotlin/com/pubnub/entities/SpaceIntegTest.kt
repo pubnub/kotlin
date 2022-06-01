@@ -27,6 +27,9 @@ class SpaceIntegTest() {
         val config = PNConfiguration("kotlin").apply {
             subscribeKey = IntegTestConf.subscribeKey
             publishKey = IntegTestConf.publishKey
+            IntegTestConf.origin?.let {
+                origin = it
+            }
         }
         pubnub = PubNub(config)
 

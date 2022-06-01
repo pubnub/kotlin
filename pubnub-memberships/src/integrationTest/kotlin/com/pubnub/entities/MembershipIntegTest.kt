@@ -43,6 +43,9 @@ class MembershipIntegTest {
         val config = PNConfiguration(USER_ID).apply {
             subscribeKey = IntegTestConf.subscribeKey
             publishKey = IntegTestConf.publishKey
+            IntegTestConf.origin?.let {
+                origin = it
+            }
         }
         pubnub = PubNub(config)
 
