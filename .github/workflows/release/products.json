@@ -17,12 +17,6 @@
     "main": false,
     "overrideRelease": true
   },
-  "memberships": {
-    "path": "./pubnub-memberships",
-    "name": "Kotlin Memberships",
-    "main": false,
-    "overrideRelease": true
-  },
   "bom": {
     "path": "./pubnub-kotlin-bom",
     "name": "Kotlin SDK BOM",

@@ -31,11 +31,8 @@ class UserIntegTest() {
     @BeforeEach
     fun setUp() {
         val config = PNConfiguration("kotlin").apply {
-            subscribeKey = "sub-c-645d1439-e412-4123-be12-265bda8711a5"
+            subscribeKey =  IntegTestConf.subscribeKey
             publishKey = IntegTestConf.publishKey
-            origin = "ingress-tcp-pub.pdx1.aws.int.ps.pn"
-            secure = false
-            logVerbosity = PNLogVerbosity.BODY
         }
         pubnub = PubNub(config)
         pubnub.removeUser(userId = USER_ID_01).sync()
