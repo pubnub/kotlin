@@ -1254,7 +1254,8 @@ class PubNub(val configuration: PNConfiguration) {
         sort: Collection<PNSortKey> = listOf(),
         includeCount: Boolean = false,
         includeCustom: Boolean = false,
-        includeChannelDetails: PNChannelDetailsLevel? = null
+        includeChannelDetails: PNChannelDetailsLevel? = null,
+        status: String? = null
     ) = manageMemberships(
         channelsToSet = channels,
         channelsToRemove = listOf(),
@@ -1265,7 +1266,8 @@ class PubNub(val configuration: PNConfiguration) {
         sort = sort,
         includeCount = includeCount,
         includeCustom = includeCustom,
-        includeChannelDetails = includeChannelDetails
+        includeChannelDetails = includeChannelDetails,
+        status = status
     )
 
     /**
@@ -1344,7 +1346,8 @@ class PubNub(val configuration: PNConfiguration) {
         sort: Collection<PNSortKey> = listOf(),
         includeCount: Boolean = false,
         includeCustom: Boolean = false,
-        includeChannelDetails: PNChannelDetailsLevel? = null
+        includeChannelDetails: PNChannelDetailsLevel? = null,
+        status: String? = null
     ) = ManageMemberships(
         pubnub = this,
         channelsToSet = channelsToSet,
@@ -1360,7 +1363,8 @@ class PubNub(val configuration: PNConfiguration) {
         withChannelDetailsCustom = ReturningChannelDetailsCustom(
             includeCustom = includeCustom,
             includeChannelDetails = includeChannelDetails
-        )
+        ),
+        status = status
     )
 
     /**
@@ -1506,7 +1510,8 @@ class PubNub(val configuration: PNConfiguration) {
         sort: Collection<PNSortKey> = listOf(),
         includeCount: Boolean = false,
         includeCustom: Boolean = false,
-        includeUUIDDetails: PNUUIDDetailsLevel? = null
+        includeUUIDDetails: PNUUIDDetailsLevel? = null,
+        status: String? = null
     ) = manageChannelMembers(
         channel = channel,
         uuidsToSet = uuids,
@@ -1517,7 +1522,8 @@ class PubNub(val configuration: PNConfiguration) {
         sort = sort,
         includeCount = includeCount,
         includeCustom = includeCustom,
-        includeUUIDDetails = includeUUIDDetails
+        includeUUIDDetails = includeUUIDDetails,
+        status = status
     )
 
     /**
@@ -1595,7 +1601,8 @@ class PubNub(val configuration: PNConfiguration) {
         sort = sort,
         includeCount = includeCount,
         includeCustom = includeCustom,
-        includeUUIDDetails = includeUUIDDetails
+        includeUUIDDetails = includeUUIDDetails,
+        status = null
     )
 
     /**
@@ -1630,7 +1637,8 @@ class PubNub(val configuration: PNConfiguration) {
         sort: Collection<PNSortKey> = listOf(),
         includeCount: Boolean = false,
         includeCustom: Boolean = false,
-        includeUUIDDetails: PNUUIDDetailsLevel? = null
+        includeUUIDDetails: PNUUIDDetailsLevel? = null,
+        status: String?
     ) = ManageChannelMembers(
         pubnub = this,
         channel = channel,
@@ -1646,7 +1654,8 @@ class PubNub(val configuration: PNConfiguration) {
         withUUIDDetailsCustom = ReturningUUIDDetailsCustom(
             includeCustom = includeCustom,
             includeUUIDDetails = includeUUIDDetails
-        )
+        ),
+        status = status
     )
 
     //endregion ObjectsAPI

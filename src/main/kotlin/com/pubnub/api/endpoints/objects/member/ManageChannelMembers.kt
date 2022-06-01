@@ -26,7 +26,8 @@ class ManageChannelMembers(
     private val uuidsToRemove: Collection<String>,
     private val channel: String,
     private val returningCollection: ReturningCollection,
-    private val withUUIDDetailsCustom: ReturningUUIDDetailsCustom
+    private val withUUIDDetailsCustom: ReturningUUIDDetailsCustom,
+    private val status: String?
 ) : Endpoint<EntityArrayEnvelope<PNMember>, PNMemberArrayResult>(pubnub) {
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityArrayEnvelope<PNMember>> {
         val params = queryParams + returningCollection.createCollectionQueryParams() +
@@ -37,7 +38,7 @@ class ManageChannelMembers(
             options = params,
             body = ChangeMemberInput(
                 delete = uuidsToRemove.map { MemberInput(UUIDId(id = it)) },
-                set = uuidsToSet.map { MemberInput(uuid = UUIDId(id = it.uuid), custom = it.custom) }
+                set = uuidsToSet.map { MemberInput(uuid = UUIDId(id = it.uuid), custom = it.custom, status = status) }
             )
         )
     }

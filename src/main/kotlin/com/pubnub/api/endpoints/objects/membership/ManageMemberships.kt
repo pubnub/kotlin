@@ -26,7 +26,8 @@ class ManageMemberships internal constructor(
     private val channelsToRemove: Collection<String>,
     private val uuid: String,
     private val returningCollection: ReturningCollection,
-    private val withChannelDetailsCustom: ReturningChannelDetailsCustom
+    private val withChannelDetailsCustom: ReturningChannelDetailsCustom,
+    private val status: String?
 ) : Endpoint<EntityArrayEnvelope<PNChannelMembership>, PNChannelMembershipArrayResult>(pubnub) {
 
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityArrayEnvelope<PNChannelMembership>> {
@@ -37,7 +38,7 @@ class ManageMemberships internal constructor(
             subKey = pubnub.configuration.subscribeKey,
             options = params,
             body = ChangeMembershipInput(
-                set = channelsToSet.map { MembershipInput(channel = ChannelId(it.channel), custom = it.custom) },
+                set = channelsToSet.map { MembershipInput(channel = ChannelId(it.channel), custom = it.custom, status = status) },
                 delete = channelsToRemove.map { MembershipInput(channel = ChannelId(id = it)) }
             )
         )

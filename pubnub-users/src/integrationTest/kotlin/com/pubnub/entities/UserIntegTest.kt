@@ -3,6 +3,7 @@ package com.pubnub.entities
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubException
+import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.entities.models.consumer.user.UserResult
 import com.pubnub.entities.models.consumer.user.UsersResult
 import org.junit.jupiter.api.AfterEach
@@ -23,13 +24,18 @@ class UserIntegTest() {
     private val EXTERNAL_ID = "externalId"
     private val PROFILE_URL = "profileUrl"
     private val EMAIL = "email"
-    private val CUSTOM: Map<String, Any> = mapOf("favouriteNumber" to 1, "favouriteColour" to "green")
+    private val CUSTOM = mapOf("favouriteNumber" to 1, "favouriteColour" to "green")
+    private val TYPE = "type"
+    private val STATUS = "status"
 
     @BeforeEach
     fun setUp() {
         val config = PNConfiguration("kotlin").apply {
-            subscribeKey = IntegTestConf.subscribeKey
+            subscribeKey = "sub-c-645d1439-e412-4123-be12-265bda8711a5"
             publishKey = IntegTestConf.publishKey
+            origin = "ingress-tcp-pub.pdx1.aws.int.ps.pn"
+            secure = false
+            logVerbosity = PNLogVerbosity.BODY
         }
         pubnub = PubNub(config)
         pubnub.removeUser(userId = USER_ID_01).sync()
@@ -138,7 +144,9 @@ class UserIntegTest() {
             profileUrl = PROFILE_URL,
             email = EMAIL,
             custom = CUSTOM,
-            includeCustom = true
+            includeCustom = true,
+            type = TYPE,
+            status = STATUS
         ).sync()
     }
 }

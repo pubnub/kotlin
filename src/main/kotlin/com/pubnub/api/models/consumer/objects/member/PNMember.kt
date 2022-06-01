@@ -6,5 +6,6 @@ data class PNMember(
     val uuid: PNUUIDMetadata?,
     val custom: Any? = null,
     val updated: String,
-    val eTag: String
+    val eTag: String,
+    val status: String?
 )

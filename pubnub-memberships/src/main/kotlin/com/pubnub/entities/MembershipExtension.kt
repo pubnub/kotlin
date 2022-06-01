@@ -31,12 +31,14 @@ import com.pubnub.entities.models.consumer.membership.toUserMembershipsResult
 */
 fun PubNub.addMembershipsOfUser(
     spaceIdsWithCustoms: List<SpaceIdWithCustom>,
-    userId: String = configuration.uuid
+    userId: String = configuration.uuid,
+    status: String? = null
 ): ExtendedRemoteAction<MembershipsResult> = firstDo(
     setMemberships(
         channels = spaceIdsWithCustoms.toPNChannelWithCustomList(),
         uuid = userId,
-        limit = 0
+        limit = 0,
+        status = status
     )
 ).then {
     map(
@@ -54,12 +56,14 @@ fun PubNub.addMembershipsOfUser(
  */
 fun PubNub.addMembershipsOfSpace(
     spaceId: String,
-    userIdsWithCustoms: List<UserIdWithCustom>
+    userIdsWithCustoms: List<UserIdWithCustom>,
+    status: String? = null
 ): ExtendedRemoteAction<MembershipsResult> = firstDo(
     setChannelMembers(
         channel = spaceId,
         uuids = userIdsWithCustoms.toPNUUIDWithCustomList(),
-        limit = 0
+        limit = 0,
+        status = status
     )
 ).then {
     map(
@@ -214,12 +218,14 @@ fun PubNub.removeMembershipsOfSpace(
  */
 fun PubNub.updateMembershipsOfUser(
     spaceIdsWithCustoms: List<SpaceIdWithCustom>,
-    userId: String = configuration.uuid
+    userId: String = configuration.uuid,
+    status: String? = null
 ): ExtendedRemoteAction<MembershipsResult> = firstDo(
     setMemberships(
         channels = spaceIdsWithCustoms.toPNChannelWithCustomList(),
         uuid = userId,
-        limit = 0
+        limit = 0,
+        status = status
     )
 ).then {
     map(
@@ -237,12 +243,14 @@ fun PubNub.updateMembershipsOfUser(
  */
 fun PubNub.updateMembershipsOfSpace(
     spaceId: String,
-    userIdsWithCustoms: List<UserIdWithCustom>
+    userIdsWithCustoms: List<UserIdWithCustom>,
+    status: String? = null
 ): ExtendedRemoteAction<MembershipsResult> = firstDo(
     setChannelMembers(
         channel = spaceId,
         uuids = userIdsWithCustoms.toPNUUIDWithCustomList(),
-        limit = 0
+        limit = 0,
+        status = status
     )
 ).then {
     map(

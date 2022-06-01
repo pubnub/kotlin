@@ -6,5 +6,6 @@ data class PNChannelMembership(
     val channel: PNChannelMetadata?,
     val custom: Any?,
     val updated: String,
-    val eTag: String
+    val eTag: String,
+    val status: String?
 )

@@ -185,8 +185,8 @@ internal class MembershipExtensionKtTest {
         val space01 = Space(id = SPACE_ID)
         val user02 = User(id = USER_ID_02, name = USER_NAME_02, externalId = EXTERNAL_ID, profileUrl = PROFILE_URL, email = EMAIL, custom = USER_CUSTOM, updated = UPDATED, eTag = E_TAG, type = TYPE, status = STATUS)
         val space02 = Space(id = SPACE_ID)
-        val membership01 = Membership(user = user01, space = space01, custom = MEMBERSHIP_CUSTOM, updated = UPDATED, eTag = E_TAG)
-        val membership02 = Membership(user = user02, space = space02, custom = MEMBERSHIP_CUSTOM, updated = UPDATED, eTag = E_TAG)
+        val membership01 = Membership(user = user01, space = space01, custom = MEMBERSHIP_CUSTOM, updated = UPDATED, eTag = E_TAG, status = STATUS)
+        val membership02 = Membership(user = user02, space = space02, custom = MEMBERSHIP_CUSTOM, updated = UPDATED, eTag = E_TAG, status = STATUS)
         val memberships = listOf(membership01, membership02)
         val expectedFetchMembershipsResult = FetchMembershipsResult(status = 200, data = memberships, totalCount = 2, next = null, prev = null)
 
@@ -198,8 +198,8 @@ internal class MembershipExtensionKtTest {
         val space01 = Space(id = SPACE_ID, name = SPACE_NAME, description = SPACE_DESCRIPTION, custom = SPACE_CUSTOM, updated = UPDATED, eTag = E_TAG, type = TYPE, status = STATUS)
         val user02 = User(id = USER_ID)
         val space02 = Space(id = SPACE_ID_02, name = SPACE_NAME_02, description = SPACE_DESCRIPTION, custom = SPACE_CUSTOM, updated = UPDATED, eTag = E_TAG, type = TYPE, status = STATUS)
-        val membership01 = Membership(user = user01, space = space01, custom = MEMBERSHIP_CUSTOM, updated = UPDATED, eTag = E_TAG)
-        val membership02 = Membership(user = user02, space = space02, custom = MEMBERSHIP_CUSTOM_02, updated = UPDATED, eTag = E_TAG)
+        val membership01 = Membership(user = user01, space = space01, custom = MEMBERSHIP_CUSTOM, updated = UPDATED, eTag = E_TAG, status = STATUS)
+        val membership02 = Membership(user = user02, space = space02, custom = MEMBERSHIP_CUSTOM_02, updated = UPDATED, eTag = E_TAG, status = STATUS)
         val memberships = listOf(membership01, membership02)
         val expectedFetchMembershipsResult = FetchMembershipsResult(status = 200, data = memberships, totalCount = 2, next = null, prev = null)
 
@@ -228,7 +228,7 @@ internal class MembershipExtensionKtTest {
             type = TYPE,
             status = STATUS
         )
-        return PNMember(uuid = pnUUIDMetadata, custom = MEMBERSHIP_CUSTOM, updated = UPDATED, eTag = E_TAG)
+        return PNMember(uuid = pnUUIDMetadata, custom = MEMBERSHIP_CUSTOM, updated = UPDATED, eTag = E_TAG, status = STATUS)
     }
 
     private fun createPNChannelMembershipArrayResult(): PNChannelMembershipArrayResult {
@@ -241,7 +241,7 @@ internal class MembershipExtensionKtTest {
             data = pnChannelMembershipList,
             totalCount = 2,
             next = null,
-            prev = null
+            prev = null,
         )
     }
 
@@ -264,7 +264,8 @@ internal class MembershipExtensionKtTest {
             channel = pnChannelMetadata,
             custom = membershipCustom,
             updated = UPDATED,
-            eTag = E_TAG
+            eTag = E_TAG,
+            status = STATUS
         )
     }
 }

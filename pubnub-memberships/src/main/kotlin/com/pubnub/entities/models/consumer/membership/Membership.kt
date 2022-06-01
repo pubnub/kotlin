@@ -12,7 +12,8 @@ data class Membership(
     val space: Space?,
     val custom: Map<String, Any>?,
     val updated: String,
-    val eTag: String
+    val eTag: String,
+    val status: String?
 )
 
 internal fun PNChannelMembership.toUserMembership(userId: String): Membership {
@@ -21,7 +22,8 @@ internal fun PNChannelMembership.toUserMembership(userId: String): Membership {
         space = channel?.toSpace(),
         custom = custom as Map<String, Any>?,
         updated = updated,
-        eTag = eTag
+        eTag = eTag,
+        status = status
     )
 }
 
@@ -31,6 +33,7 @@ internal fun PNMember.toSpaceMembership(spaceId: String): Membership {
         space = Space(id = spaceId),
         custom = custom as Map<String, Any>?,
         updated = updated,
-        eTag = eTag
+        eTag = eTag,
+        status = status
     )
 }
