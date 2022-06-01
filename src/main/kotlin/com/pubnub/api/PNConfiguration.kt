@@ -21,20 +21,33 @@ import javax.net.ssl.X509ExtendedTrustManager
  * Configuration instance contains additional set of properties which
  * allow to perform precise PubNub client configuration.
  */
-open class PNConfiguration(
-    uuid: String,
-    val enableSubscribeBeta: Boolean = false
-) {
+open class PNConfiguration(userId: String, val enableSubscribeBeta: Boolean = false) {
+    @Deprecated(
+        message = "Please use userId instead of uuid",
+        ReplaceWith("PNConfiguration(userId = uuid, enableSubscribeBeta = enableSubscribeBeta)")
+    )
+    constructor(
+        uuid: String,
+        enableSubscribeBeta: Boolean = false,
+        userId: String = uuid
+    ) : this(userId = userId, enableSubscribeBeta = enableSubscribeBeta)
 
-    init {
-        PubNubUtil.require(uuid.isValid(), PubNubError.UUID_NULL_OR_EMPTY)
-    }
-
-    var uuid: String = uuid
+    var userId: String = userId
         set(value) {
             PubNubUtil.require(value.isValid(), PubNubError.UUID_NULL_OR_EMPTY)
             field = value
         }
+
+    @Deprecated(
+        message = "Please use userId instead of uuid",
+        ReplaceWith("userId")
+    )
+    var uuid: String = userId
+
+    init {
+        PubNubUtil.require(userId.isValid(), PubNubError.UUID_NULL_OR_EMPTY)
+    }
+
 
     private val log = LoggerFactory.getLogger("PNConfiguration")
 
