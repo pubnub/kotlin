@@ -66,7 +66,7 @@ class SpaceExtensionKtTest {
         )
         val spaceResult = createSpaceEndpoint.sync()
 
-        assertEquals(300, spaceResult?.status)
+        assertEquals(200, spaceResult?.status)
         assertEquals(SPACE_ID, spaceResult?.data?.id)
         assertEquals(SPACE_NAME, spaceResult?.data?.name)
         assertEquals(SPACE_DESCRIPTION, spaceResult?.data?.description)
