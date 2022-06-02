@@ -1,6 +1,7 @@
 package com.pubnub.api
 
 import com.pubnub.api.builder.PubSub
+import com.pubnub.api.callbacks.Listener
 import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.endpoints.DeleteMessages
 import com.pubnub.api.endpoints.FetchMessages
@@ -1857,7 +1858,7 @@ class PubNub(val configuration: PNConfiguration) {
      *
      * @param listener The listener to be removed.
      */
-    fun removeListener(listener: SubscribeCallback) {
+    fun removeListener(listener: Listener) {
         subscriptionManager.removeListener(listener)
     }
 

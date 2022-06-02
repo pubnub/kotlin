@@ -18,6 +18,7 @@ import com.google.gson.stream.JsonToken
 import com.google.gson.stream.JsonWriter
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
+import com.pubnub.api.utils.OptionalChangeDeserializer
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject

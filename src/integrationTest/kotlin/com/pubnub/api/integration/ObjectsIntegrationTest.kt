@@ -138,6 +138,7 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
                 override fun status(pubnub: PubNub, pnStatus: PNStatus) {}
 
                 override fun objects(pubnub: PubNub, objectEvent: PNObjectEventResult) {
+                    println(objectEvent)
                     countDownLatch.countDown()
                 }
             }

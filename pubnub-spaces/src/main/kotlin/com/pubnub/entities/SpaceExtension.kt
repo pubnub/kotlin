@@ -1,6 +1,11 @@
 package com.pubnub.entities
 
+import com.google.gson.JsonElement
+import com.google.gson.JsonObject
+import com.google.gson.JsonPrimitive
 import com.pubnub.api.PubNub
+import com.pubnub.api.callbacks.Listener
+import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.endpoints.remoteaction.ComposableRemoteAction.Companion.firstDo
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction.Companion.map
@@ -9,6 +14,10 @@ import com.pubnub.api.models.consumer.objects.PNKey
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.PNSortKey
 import com.pubnub.api.models.consumer.objects.ResultSortKey
+import com.pubnub.api.models.consumer.PNStatus
+import com.pubnub.api.models.consumer.pubsub.objects.PNDeleteMembershipEventMessage
+import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
+import com.pubnub.api.models.consumer.pubsub.objects.PNSetChannelMetadataEventMessage
 import com.pubnub.entities.models.consumer.space.RemoveSpaceResult
 import com.pubnub.entities.models.consumer.space.Space
 import com.pubnub.entities.models.consumer.space.SpaceKey
@@ -166,4 +175,100 @@ fun PubNub.removeSpace(
     map(
         it, PNOperationType.SpaceOperation
     ) { pnRemoveMetadataResult -> pnRemoveMetadataResult.toRemoveSpaceResult() }
+}
+
+interface Stoppable {
+    fun stop()
+}
+
+class StoppableListener(
+    private val pubNub: PubNub,
+    private val listener: Listener
+) : Stoppable, Listener by listener {
+    override fun stop() {
+        pubNub.removeListener(listener)
+    }
+}
+
+//PNObjectEventResult(result=BasePubSubResult(channel=ThisIsMyChannel71340D6011, subscription=null, timetoken=16541757313672192, userMetadata=null, publisher=null), extractedMessage=PNDeleteMembershipEventMessage(source=objects, version=2.0, event=delete, type=membership, data=PNDeleteMembershipEvent(channelId=ThisIsMyChannel71340D6011, uuid=client-6be06195-dde5-419f-9a9f-5d5e798c26b6)))
+
+data class ExtractedMessage(
+    val source: String,
+    val version: String,
+    val event: String,
+    val type: String
+)
+
+data class SpaceEvent(
+    val spaceId: String,
+    val subscription: String?,
+    val timetoken: Long?,
+    val userMetadata: Map<String, Any>?,
+    val publisher: String?,
+    val extractedMessage: ExtractedMessage
+)
+
+fun JsonElement.toMap(): Map<String, Any> {
+    val map = mutableMapOf<String, Any>()
+
+    when (this) {
+        is JsonObject -> {
+            this.keySet().forEach {
+                when (val element = this.get(it)) {
+                    is JsonPrimitive -> {
+                        when {
+                            element.isBoolean -> {
+                                map[it] = element.asBoolean
+                            }
+                            element.isNumber -> {
+                                map[it] = element.asNumber
+                            }
+                            element.isString -> {
+                                map[it] = element.asString
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    return map
+}
+
+fun PNObjectEventResult.toSpaceEvent(): SpaceEvent? {
+    return if (this.extractedMessage is PNSetChannelMetadataEventMessage ||
+        this.extractedMessage is PNDeleteMembershipEventMessage
+    ) {
+        SpaceEvent(
+            spaceId = channel,
+            subscription = subscription,
+            timetoken = timetoken,
+            userMetadata = userMetadata?.toMap(),
+            publisher = publisher,
+            extractedMessage = extractedMessage.run {
+                ExtractedMessage(
+                    source = source,
+                    version = version,
+                    type = type,
+                    event = event
+                )
+            }
+        )
+    } else {
+        null
+    }
+}
+
+fun PubNub.addSpaceEventsListener(block: (SpaceEvent) -> Unit): Stoppable {
+    val listener = object : SubscribeCallback() {
+        override fun status(pubnub: PubNub, pnStatus: PNStatus) {
+        }
+
+        override fun objects(pubnub: PubNub, objectEvent: PNObjectEventResult) {
+            objectEvent.toSpaceEvent()?.let(block)
+        }
+    }
+    addListener(listener)
+    return StoppableListener(this, listener)
 }
