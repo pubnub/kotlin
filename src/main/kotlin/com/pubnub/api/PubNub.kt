@@ -30,10 +30,8 @@ import com.pubnub.api.endpoints.objects.channel.GetAllChannelMetadata
 import com.pubnub.api.endpoints.objects.channel.GetChannelMetadata
 import com.pubnub.api.endpoints.objects.channel.RemoveChannelMetadata
 import com.pubnub.api.endpoints.objects.channel.SetChannelMetadata
-import com.pubnub.api.endpoints.objects.internal.ReturningChannelDetailsCustom
+import com.pubnub.api.endpoints.objects.internal.Include
 import com.pubnub.api.endpoints.objects.internal.ReturningCollection
-import com.pubnub.api.endpoints.objects.internal.ReturningCustom
-import com.pubnub.api.endpoints.objects.internal.ReturningUUIDDetailsCustom
 import com.pubnub.api.endpoints.objects.member.GetChannelMembers
 import com.pubnub.api.endpoints.objects.member.ManageChannelMembers
 import com.pubnub.api.endpoints.objects.membership.GetMemberships
@@ -1001,7 +999,7 @@ class PubNub(val configuration: PNConfiguration) {
             sort = sort,
             includeCount = includeCount
         ),
-        withCustom = ReturningCustom(includeCustom = includeCustom)
+        withIncludes = Include(includeCustom = includeCustom)
     )
 
     /**
@@ -1013,7 +1011,7 @@ class PubNub(val configuration: PNConfiguration) {
     fun getChannelMetadata(channel: String, includeCustom: Boolean = false) = GetChannelMetadata(
         pubnub = this,
         channel = channel,
-        withCustom = ReturningCustom(includeCustom = includeCustom)
+        withIncludes = Include(includeCustom = includeCustom)
     )
 
     /**
@@ -1039,7 +1037,7 @@ class PubNub(val configuration: PNConfiguration) {
         name = name,
         description = description,
         custom = custom,
-        withCustom = ReturningCustom(includeCustom = includeCustom),
+        withIncludes = Include(includeCustom = includeCustom),
         type = type,
         status = status
     )
@@ -1085,7 +1083,7 @@ class PubNub(val configuration: PNConfiguration) {
             sort = sort,
             includeCount = includeCount
         ),
-        withCustom = ReturningCustom(includeCustom = includeCustom)
+        withIncludes = Include(includeCustom = includeCustom)
     )
 
     /**
@@ -1100,7 +1098,7 @@ class PubNub(val configuration: PNConfiguration) {
     ) = GetUUIDMetadata(
         pubnub = this,
         uuid = uuid ?: configuration.uuid,
-        withCustom = ReturningCustom(includeCustom = includeCustom)
+        withIncludes = Include(includeCustom = includeCustom)
     )
 
     /**
@@ -1132,7 +1130,7 @@ class PubNub(val configuration: PNConfiguration) {
         profileUrl = profileUrl,
         email = email,
         custom = custom,
-        withCustom = ReturningCustom(includeCustom = includeCustom),
+        withIncludes = Include(includeCustom = includeCustom),
         type = type,
         status = status
     )
@@ -1183,7 +1181,7 @@ class PubNub(val configuration: PNConfiguration) {
             sort = sort,
             includeCount = includeCount
         ),
-        withChannelDetailsCustom = ReturningChannelDetailsCustom(
+        withIncludes = Include(
             includeCustom = includeCustom,
             includeChannelDetails = includeChannelDetails
         )
@@ -1360,7 +1358,7 @@ class PubNub(val configuration: PNConfiguration) {
             sort = sort,
             includeCount = includeCount
         ),
-        withChannelDetailsCustom = ReturningChannelDetailsCustom(
+        withIncludes = Include(
             includeCustom = includeCustom,
             includeChannelDetails = includeChannelDetails
         ),
@@ -1439,7 +1437,7 @@ class PubNub(val configuration: PNConfiguration) {
             sort = sort,
             includeCount = includeCount
         ),
-        withUUIDDetailsCustom = ReturningUUIDDetailsCustom(
+        withIncludes = Include(
             includeCustom = includeCustom,
             includeUUIDDetails = includeUUIDDetails
         )
@@ -1651,7 +1649,7 @@ class PubNub(val configuration: PNConfiguration) {
             sort = sort,
             includeCount = includeCount
         ),
-        withUUIDDetailsCustom = ReturningUUIDDetailsCustom(
+        withIncludes = Include(
             includeCustom = includeCustom,
             includeUUIDDetails = includeUUIDDetails
         ),

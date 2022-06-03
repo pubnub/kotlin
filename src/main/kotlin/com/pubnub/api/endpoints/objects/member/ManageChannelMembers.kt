@@ -2,8 +2,8 @@ package com.pubnub.api.endpoints.objects.member
 
 import com.pubnub.api.Endpoint
 import com.pubnub.api.PubNub
+import com.pubnub.api.endpoints.objects.internal.Include
 import com.pubnub.api.endpoints.objects.internal.ReturningCollection
-import com.pubnub.api.endpoints.objects.internal.ReturningUUIDDetailsCustom
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.objects.member.PNMember
 import com.pubnub.api.models.consumer.objects.member.PNMemberArrayResult
@@ -26,12 +26,12 @@ class ManageChannelMembers(
     private val uuidsToRemove: Collection<String>,
     private val channel: String,
     private val returningCollection: ReturningCollection,
-    private val withUUIDDetailsCustom: ReturningUUIDDetailsCustom,
+    private val withIncludes: Include,
     private val status: String?
 ) : Endpoint<EntityArrayEnvelope<PNMember>, PNMemberArrayResult>(pubnub) {
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityArrayEnvelope<PNMember>> {
         val params = queryParams + returningCollection.createCollectionQueryParams() +
-            withUUIDDetailsCustom.createIncludeQueryParams()
+            withIncludes.createIncludeQueryParams()
         return pubnub.retrofitManager.objectsService.patchChannelMembers(
             channel = channel,
             subKey = pubnub.configuration.subscribeKey,

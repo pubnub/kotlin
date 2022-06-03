@@ -47,6 +47,10 @@ fun PubNub.addMembershipsOfUser(
     ) { pnChannelMembershipArrayResult -> pnChannelMembershipArrayResult.toUserMembershipsResult() }
 }
 
+fun PubNub.aaa() {
+    addMembershipsOfSpace(spaceId = "aaa", UserIdWithCustom("aaa"))
+}
+
 /**
  * Add memberships of space i.e. add a users to a space, make users members of space
  *
@@ -56,12 +60,14 @@ fun PubNub.addMembershipsOfUser(
  */
 fun PubNub.addMembershipsOfSpace(
     spaceId: String,
-    userIdsWithCustoms: List<UserIdWithCustom>,
-    status: String? = null
+    firstUserIdWithCustom: UserIdWithCustom,
+    vararg userIdsWithCustoms: UserIdWithCustom,
+    status: String? = null,
+
 ): ExtendedRemoteAction<MembershipsResult> = firstDo(
     setChannelMembers(
         channel = spaceId,
-        uuids = userIdsWithCustoms.toPNUUIDWithCustomList(),
+        uuids = userIdsWithCustoms.toList().toPNUUIDWithCustomList(),
         limit = 0,
         status = status
     )

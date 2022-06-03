@@ -3,6 +3,7 @@ package com.pubnub.entities
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubException
+import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.entities.models.consumer.space.SpaceResult
 import com.pubnub.entities.models.consumer.space.SpacesResult
 import org.junit.jupiter.api.AfterEach
@@ -30,6 +31,8 @@ class SpaceIntegTest() {
             IntegTestConf.origin?.let {
                 origin = it
             }
+            secure = false
+            logVerbosity = PNLogVerbosity.BODY
         }
         pubnub = PubNub(config)
 

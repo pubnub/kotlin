@@ -3,6 +3,7 @@ package com.pubnub.entities
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubException
+import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.entities.models.consumer.user.UserResult
 import com.pubnub.entities.models.consumer.user.UsersResult
 import org.junit.jupiter.api.AfterEach
@@ -35,6 +36,8 @@ class UserIntegTest() {
             IntegTestConf.origin?.let {
                 origin = it
             }
+            secure = false
+            logVerbosity = PNLogVerbosity.BODY
         }
         pubnub = PubNub(config)
         pubnub.removeUser(userId = USER_ID_01).sync()
@@ -84,7 +87,7 @@ class UserIntegTest() {
         val userId02 = USER_ID_02
         createUser(userId02)
 
-        val usersResult: UsersResult? = pubnub.fetchUsers(limit = 100, includeCount = true).sync()
+        val usersResult: UsersResult? = pubnub.fetchUsers(limit = 100, includeCount = true, includeCustom = true).sync()
 
         assertEquals(200, usersResult?.status)
         assertEquals(2, usersResult?.data?.size)
