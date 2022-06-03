@@ -5,14 +5,17 @@ import com.pubnub.api.endpoints.remoteaction.ComposableRemoteAction.Companion.fi
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction.Companion.map
 import com.pubnub.api.enums.PNOperationType
+import com.pubnub.api.models.consumer.objects.PNMemberSortKey
+import com.pubnub.api.models.consumer.objects.PNMembershipSortKey
 import com.pubnub.api.models.consumer.objects.PNPage
-import com.pubnub.api.models.consumer.objects.PNSortKey
-import com.pubnub.entities.models.consumer.membership.FetchMembershipsResult
 import com.pubnub.entities.models.consumer.membership.MembershipsResult
+import com.pubnub.entities.models.consumer.membership.MembershipsStatusResult
 import com.pubnub.entities.models.consumer.membership.SpaceDetailsLevel
 import com.pubnub.entities.models.consumer.membership.SpaceIdWithCustom
+import com.pubnub.entities.models.consumer.membership.SpaceMembershipsResultSortKey
 import com.pubnub.entities.models.consumer.membership.UserDetailsLevel
 import com.pubnub.entities.models.consumer.membership.UserIdWithCustom
+import com.pubnub.entities.models.consumer.membership.UserMembershipsResultSortKey
 import com.pubnub.entities.models.consumer.membership.toPNChannelDetailsLevel
 import com.pubnub.entities.models.consumer.membership.toPNChannelWithCustomList
 import com.pubnub.entities.models.consumer.membership.toPNUUIDDetailsLevel
@@ -33,7 +36,7 @@ import com.pubnub.entities.models.consumer.membership.toUserMembershipsResult
 fun PubNub.addMembershipsOfUser(
     spaceIdsWithCustoms: List<SpaceIdWithCustom>,
     userId: String = configuration.uuid
-): ExtendedRemoteAction<MembershipsResult> = firstDo(
+): ExtendedRemoteAction<MembershipsStatusResult> = firstDo(
     setMemberships(
         channels = spaceIdsWithCustoms.toPNChannelWithCustomList(),
         uuid = userId,
@@ -56,7 +59,7 @@ fun PubNub.addMembershipsOfUser(
 fun PubNub.addMembershipsOfSpace(
     spaceId: String,
     userIdsWithCustoms: List<UserIdWithCustom>
-): ExtendedRemoteAction<MembershipsResult> = firstDo(
+): ExtendedRemoteAction<MembershipsStatusResult> = firstDo(
     setChannelMembers(
         channel = spaceId,
         uuids = userIdsWithCustoms.toPNUUIDWithCustomList(),
@@ -94,17 +97,17 @@ fun PubNub.fetchMembershipsOfUser(
     limit: Int? = null,
     page: PNPage? = null,
     filter: String? = null,
-    sort: Collection<PNSortKey> = listOf(),
+    sort: Collection<UserMembershipsResultSortKey> = listOf(),
     includeCount: Boolean = false,
     includeCustom: Boolean = false,
     includeSpaceDetails: SpaceDetailsLevel? = null
-): ExtendedRemoteAction<FetchMembershipsResult?> = firstDo(
+): ExtendedRemoteAction<MembershipsResult?> = firstDo(
     getMemberships(
         uuid = userId,
         limit = limit,
         page = page,
         filter = filter,
-        sort = sort,
+        sort = toPNMembershipSortKeyList(sort),
         includeCount = includeCount,
         includeCustom = includeCustom,
         includeChannelDetails = includeSpaceDetails?.toPNChannelDetailsLevel()
@@ -114,6 +117,13 @@ fun PubNub.fetchMembershipsOfUser(
         it,
         PNOperationType.MembershipOperation
     ) { pnChannelMembershipArrayResult -> pnChannelMembershipArrayResult.toUserFetchMembershipsResult(userId) }
+}
+
+private fun toPNMembershipSortKeyList(sort: Collection<UserMembershipsResultSortKey>): Collection<PNMembershipSortKey> {
+    val pnMembershipSortKeyList = sort.map { userMembershipsResultSortKey ->
+        PNMembershipSortKey(key = userMembershipsResultSortKey.key.toPNMembershipKey(), dir = userMembershipsResultSortKey.dir)
+    }
+    return pnMembershipSortKeyList
 }
 
 /**
@@ -142,17 +152,17 @@ fun PubNub.fetchMembershipsOfSpace(
     limit: Int? = null,
     page: PNPage? = null,
     filter: String? = null,
-    sort: Collection<PNSortKey> = listOf(),
+    sort: Collection<SpaceMembershipsResultSortKey> = listOf(),
     includeCount: Boolean = false,
     includeCustom: Boolean = false,
     includeUserDetails: UserDetailsLevel? = null
-): ExtendedRemoteAction<FetchMembershipsResult?> = firstDo(
+): ExtendedRemoteAction<MembershipsResult?> = firstDo(
     getChannelMembers(
         channel = spaceId,
         limit = limit,
         page = page,
         filter = filter,
-        sort = sort,
+        sort = toPNMemberSortKeyList(sort),
         includeCount = includeCount,
         includeCustom = includeCustom,
         includeUUIDDetails = includeUserDetails?.toPNUUIDDetailsLevel()
@@ -162,6 +172,14 @@ fun PubNub.fetchMembershipsOfSpace(
         it,
         PNOperationType.MembershipOperation
     ) { pnMemberArrayResult -> pnMemberArrayResult.toSpaceFetchMembershipResult(spaceId) }
+}
+
+fun toPNMemberSortKeyList(sort: Collection<SpaceMembershipsResultSortKey>): Collection<PNMemberSortKey> {
+    val pnMemberSortKeyList = sort.map { spaceMembershipsResultSortKey ->
+        PNMemberSortKey(key = spaceMembershipsResultSortKey.key.toPNMemberKey(), dir = spaceMembershipsResultSortKey.dir)
+    }
+
+    return pnMemberSortKeyList
 }
 
 /**
@@ -174,7 +192,7 @@ fun PubNub.fetchMembershipsOfSpace(
 fun PubNub.removeMembershipsOfUser(
     spaceIds: List<String>,
     userId: String = configuration.uuid,
-): ExtendedRemoteAction<MembershipsResult> = firstDo(
+): ExtendedRemoteAction<MembershipsStatusResult> = firstDo(
     removeMemberships(
         channels = spaceIds,
         uuid = userId,
@@ -196,7 +214,7 @@ fun PubNub.removeMembershipsOfUser(
 fun PubNub.removeMembershipsOfSpace(
     spaceId: String,
     userIds: List<String>,
-): ExtendedRemoteAction<MembershipsResult> = firstDo(
+): ExtendedRemoteAction<MembershipsStatusResult> = firstDo(
     removeChannelMembers(
         channel = spaceId,
         uuids = userIds,
@@ -220,7 +238,7 @@ fun PubNub.removeMembershipsOfSpace(
 fun PubNub.updateMembershipsOfUser(
     spaceIdsWithCustoms: List<SpaceIdWithCustom>,
     userId: String = configuration.uuid
-): ExtendedRemoteAction<MembershipsResult> = firstDo(
+): ExtendedRemoteAction<MembershipsStatusResult> = firstDo(
     setMemberships(
         channels = spaceIdsWithCustoms.toPNChannelWithCustomList(),
         uuid = userId,
@@ -243,7 +261,7 @@ fun PubNub.updateMembershipsOfUser(
 fun PubNub.updateMembershipsOfSpace(
     spaceId: String,
     userIdsWithCustoms: List<UserIdWithCustom>
-): ExtendedRemoteAction<MembershipsResult> = firstDo(
+): ExtendedRemoteAction<MembershipsStatusResult> = firstDo(
     setChannelMembers(
         channel = spaceId,
         uuids = userIdsWithCustoms.toPNUUIDWithCustomList(),

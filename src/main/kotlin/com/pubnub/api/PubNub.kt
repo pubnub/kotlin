@@ -32,6 +32,8 @@ import com.pubnub.api.endpoints.objects.channel.RemoveChannelMetadata
 import com.pubnub.api.endpoints.objects.channel.SetChannelMetadata
 import com.pubnub.api.endpoints.objects.internal.ReturningChannelDetailsCustom
 import com.pubnub.api.endpoints.objects.internal.ReturningCollection
+import com.pubnub.api.endpoints.objects.internal.ReturningCollectionOfChannelMembers
+import com.pubnub.api.endpoints.objects.internal.ReturningCollectionOfMembership
 import com.pubnub.api.endpoints.objects.internal.ReturningCustom
 import com.pubnub.api.endpoints.objects.internal.ReturningUUIDDetailsCustom
 import com.pubnub.api.endpoints.objects.member.GetChannelMembers
@@ -69,6 +71,8 @@ import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant
 import com.pubnub.api.models.consumer.access_manager.v3.PNToken
 import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
+import com.pubnub.api.models.consumer.objects.PNMemberSortKey
+import com.pubnub.api.models.consumer.objects.PNMembershipSortKey
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.PNSortKey
 import com.pubnub.api.models.consumer.objects.member.PNUUIDDetailsLevel
@@ -1161,14 +1165,14 @@ class PubNub(val configuration: PNConfiguration) {
         limit: Int? = null,
         page: PNPage? = null,
         filter: String? = null,
-        sort: Collection<PNSortKey> = listOf(),
+        sort: Collection<PNMembershipSortKey> = listOf(),
         includeCount: Boolean = false,
         includeCustom: Boolean = false,
         includeChannelDetails: PNChannelDetailsLevel? = null
     ) = GetMemberships(
         pubnub = this,
         uuid = uuid ?: configuration.uuid,
-        returningCollection = ReturningCollection(
+        returningCollection = ReturningCollectionOfMembership(
             limit = limit,
             page = page,
             filter = filter,
@@ -1372,7 +1376,7 @@ class PubNub(val configuration: PNConfiguration) {
         limit: Int? = null,
         page: PNPage? = null,
         filter: String? = null,
-        sort: Collection<PNSortKey> = listOf(),
+        sort: Collection<PNMemberSortKey> = listOf(),
         includeCount: Boolean = false,
         includeCustom: Boolean = false,
         includeUUIDDetails: PNUUIDDetailsLevel? = null
@@ -1413,14 +1417,14 @@ class PubNub(val configuration: PNConfiguration) {
         limit: Int? = null,
         page: PNPage? = null,
         filter: String? = null,
-        sort: Collection<PNSortKey> = listOf(),
+        sort: Collection<PNMemberSortKey> = listOf(),
         includeCount: Boolean = false,
         includeCustom: Boolean = false,
         includeUUIDDetails: PNUUIDDetailsLevel? = null
     ) = GetChannelMembers(
         pubnub = this,
         channel = channel,
-        returningCollection = ReturningCollection(
+        returningCollection = ReturningCollectionOfChannelMembers(
             limit = limit,
             page = page,
             filter = filter,

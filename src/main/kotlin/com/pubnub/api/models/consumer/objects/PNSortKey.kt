@@ -4,15 +4,15 @@ enum class PNKey(internal val fieldName: String) {
     ID("id"), NAME("name"), UPDATED("updated");
 }
 
-sealed class PNSortKey(
-    private val key: PNKey,
-    private val dir: String = "asc"
-) {
+ open class PNSortKey(
+     val key: PNKey,
+     val dir: String = "asc"
+ ): SortBase() {
 
     class PNAsc(key: PNKey) : PNSortKey(key = key, dir = "asc")
     class PNDesc(key: PNKey) : PNSortKey(key = key, dir = "desc")
 
-    internal fun toSortParameter(): String {
+    override fun toSortParameter(): String {
         return key.fieldName + ":" + dir
     }
 
