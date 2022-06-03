@@ -9,8 +9,7 @@ abstract class ReturningCollectionBase(
     private val filter: String? = null,
     private val sort: Collection<SortBase> = listOf(),
     private val includeCount: Boolean = false
-)
-{
+) {
     internal open fun createCollectionQueryParams(): Map<String, String> {
         val additionalParams = mutableMapOf<String, String>()
         val f = filter

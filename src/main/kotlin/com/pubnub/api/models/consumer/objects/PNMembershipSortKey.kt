@@ -1,9 +1,9 @@
 package com.pubnub.api.models.consumer.objects
 
-open class PNMembershipSortKey (
-     val key: PNMembershipKey,
-     val dir: String = "asc"
-): SortBase(){
+open class PNMembershipSortKey(
+    val key: PNMembershipKey,
+    val dir: String = "asc"
+) : SortBase() {
     class PNAsc(key: PNMembershipKey) : PNMembershipSortKey(key = key, dir = "asc")
     class PNDesc(key: PNMembershipKey) : PNMembershipSortKey(key = key, dir = "desc")
 

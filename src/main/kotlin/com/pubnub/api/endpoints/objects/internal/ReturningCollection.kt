@@ -10,4 +10,3 @@ data class ReturningCollection(
     private val sort: Collection<SortBase> = listOf(),
     private val includeCount: Boolean = false,
 ) : ReturningCollectionBase(limit, page, filter, sort, includeCount)
-
