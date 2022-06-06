@@ -5,17 +5,19 @@ import com.pubnub.api.endpoints.remoteaction.ComposableRemoteAction.Companion.fi
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction.Companion.map
 import com.pubnub.api.enums.PNOperationType
-import com.pubnub.api.models.consumer.objects.PNMemberSortKey
-import com.pubnub.api.models.consumer.objects.PNMembershipSortKey
+import com.pubnub.api.models.consumer.objects.PNMemberKey
+import com.pubnub.api.models.consumer.objects.PNMembershipKey
 import com.pubnub.api.models.consumer.objects.PNPage
+import com.pubnub.api.models.consumer.objects.PNSortKey
+import com.pubnub.api.models.consumer.objects.ResultSortKey
+import com.pubnub.api.models.consumer.objects.SpaceMembershipResultKey
+import com.pubnub.api.models.consumer.objects.UserMembershipsResultKey
 import com.pubnub.entities.models.consumer.membership.MembershipsResult
 import com.pubnub.entities.models.consumer.membership.MembershipsStatusResult
 import com.pubnub.entities.models.consumer.membership.SpaceDetailsLevel
 import com.pubnub.entities.models.consumer.membership.SpaceIdWithCustom
-import com.pubnub.entities.models.consumer.membership.SpaceMembershipsResultSortKey
 import com.pubnub.entities.models.consumer.membership.UserDetailsLevel
 import com.pubnub.entities.models.consumer.membership.UserIdWithCustom
-import com.pubnub.entities.models.consumer.membership.UserMembershipsResultSortKey
 import com.pubnub.entities.models.consumer.membership.toPNChannelDetailsLevel
 import com.pubnub.entities.models.consumer.membership.toPNChannelWithCustomList
 import com.pubnub.entities.models.consumer.membership.toPNUUIDDetailsLevel
@@ -85,8 +87,9 @@ fun PubNub.addMembershipsOfSpace(
  *                           Ignored if you also supply the start parameter.
  * @param filter Expression used to filter the results. Only objects whose properties satisfy the given
  *               expression are returned.
- * @param sort List of properties to sort by. Available options are id, name, and updated.
- *             @see [PNAsc], [PNDesc]
+ * @param sort List of properties to sort by. Available options are space.id, space.name, space.updated and updated.
+ *             e.g. listOf(ResultSortKey.Desc(key = UserMembershipsResultKey.SPACE_NAME))
+ *             @see [ResultSortKey.Asc], [ResultSortKey.Desc]
  * @param includeCount Request totalCount to be included in paginated response. By default, totalCount is omitted.
  *                     Default is `false`.
  * @param includeCustom Include respective additional fields in the response.
@@ -97,7 +100,7 @@ fun PubNub.fetchMembershipsOfUser(
     limit: Int? = null,
     page: PNPage? = null,
     filter: String? = null,
-    sort: Collection<UserMembershipsResultSortKey> = listOf(),
+    sort: Collection<ResultSortKey<UserMembershipsResultKey>> = listOf(),
     includeCount: Boolean = false,
     includeCustom: Boolean = false,
     includeSpaceDetails: SpaceDetailsLevel? = null
@@ -119,9 +122,12 @@ fun PubNub.fetchMembershipsOfUser(
     ) { pnChannelMembershipArrayResult -> pnChannelMembershipArrayResult.toUserFetchMembershipsResult(userId) }
 }
 
-private fun toPNMembershipSortKeyList(sort: Collection<UserMembershipsResultSortKey>): Collection<PNMembershipSortKey> {
-    val pnMembershipSortKeyList = sort.map { userMembershipsResultSortKey ->
-        PNMembershipSortKey(key = userMembershipsResultSortKey.key.toPNMembershipKey(), dir = userMembershipsResultSortKey.dir)
+private fun toPNMembershipSortKeyList(sort: Collection<ResultSortKey<UserMembershipsResultKey>>): Collection<PNSortKey<PNMembershipKey>> {
+    val pnMembershipSortKeyList = sort.map { resultSortKey ->
+        when (resultSortKey) {
+            is ResultSortKey.Asc -> PNSortKey.PNAsc(key = resultSortKey.key.toPNMembershipKey())
+            is ResultSortKey.Desc -> PNSortKey.PNDesc(key = resultSortKey.key.toPNMembershipKey())
+        }
     }
     return pnMembershipSortKeyList
 }
@@ -140,7 +146,8 @@ private fun toPNMembershipSortKeyList(sort: Collection<UserMembershipsResultSort
  *                           Ignored if you also supply the start parameter.
  * @param filter Expression used to filter the results. Only objects whose properties satisfy the given
  *               expression are returned.
- * @param sort List of properties to sort by. Available options are id, name, and updated.
+ * @param sort List of properties to sort by. Available options are user.id, user.name, user.updated and updated.
+ *             e.g. listOf(ResultSortKey.Desc(key = SpaceMembershipResultKey.USER_ID))
  *             @see [PNAsc], [PNDesc]
  * @param includeCount Request totalCount to be included in paginated response. By default, totalCount is omitted.
  *                     Default is `false`.
@@ -152,7 +159,7 @@ fun PubNub.fetchMembershipsOfSpace(
     limit: Int? = null,
     page: PNPage? = null,
     filter: String? = null,
-    sort: Collection<SpaceMembershipsResultSortKey> = listOf(),
+    sort: Collection<ResultSortKey<SpaceMembershipResultKey>> = listOf(),
     includeCount: Boolean = false,
     includeCustom: Boolean = false,
     includeUserDetails: UserDetailsLevel? = null
@@ -162,7 +169,7 @@ fun PubNub.fetchMembershipsOfSpace(
         limit = limit,
         page = page,
         filter = filter,
-        sort = toPNMemberSortKeyList(sort),
+        sort = toPNSortKeyListWithPNMemberKey(sort),
         includeCount = includeCount,
         includeCustom = includeCustom,
         includeUUIDDetails = includeUserDetails?.toPNUUIDDetailsLevel()
@@ -174,11 +181,13 @@ fun PubNub.fetchMembershipsOfSpace(
     ) { pnMemberArrayResult -> pnMemberArrayResult.toSpaceFetchMembershipResult(spaceId) }
 }
 
-fun toPNMemberSortKeyList(sort: Collection<SpaceMembershipsResultSortKey>): Collection<PNMemberSortKey> {
-    val pnMemberSortKeyList = sort.map { spaceMembershipsResultSortKey ->
-        PNMemberSortKey(key = spaceMembershipsResultSortKey.key.toPNMemberKey(), dir = spaceMembershipsResultSortKey.dir)
+fun toPNSortKeyListWithPNMemberKey(sort: Collection<ResultSortKey<SpaceMembershipResultKey>>): Collection<PNSortKey<PNMemberKey>> {
+    val pnMemberSortKeyList = sort.map { resultSortKey ->
+        when (resultSortKey) {
+            is ResultSortKey.Asc -> PNSortKey.PNAsc(key = resultSortKey.key.toPNMemberKey())
+            is ResultSortKey.Desc -> PNSortKey.PNDesc(key = resultSortKey.key.toPNMemberKey())
+        }
     }
-
     return pnMemberSortKeyList
 }
 

@@ -2,15 +2,14 @@ package com.pubnub.entities
 
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
+import com.pubnub.api.models.consumer.objects.ResultSortKey
+import com.pubnub.api.models.consumer.objects.SpaceMembershipResultKey
+import com.pubnub.api.models.consumer.objects.UserMembershipsResultKey
 import com.pubnub.entities.models.consumer.membership.MembershipsResult
 import com.pubnub.entities.models.consumer.membership.SpaceDetailsLevel
 import com.pubnub.entities.models.consumer.membership.SpaceIdWithCustom
-import com.pubnub.entities.models.consumer.membership.SpaceMembershipResultKey
-import com.pubnub.entities.models.consumer.membership.SpaceMembershipsResultSortKey
 import com.pubnub.entities.models.consumer.membership.UserDetailsLevel
 import com.pubnub.entities.models.consumer.membership.UserIdWithCustom
-import com.pubnub.entities.models.consumer.membership.UserMembershipsResultKey
-import com.pubnub.entities.models.consumer.membership.UserMembershipsResultSortKey
 import com.pubnub.entities.models.consumer.space.SpaceResult
 import com.pubnub.entities.models.consumer.user.UserResult
 import org.junit.jupiter.api.AfterEach
@@ -251,21 +250,21 @@ class MembershipIntegTest {
 
         val membershipsResultSortSpaceIdAsc = pubnub.fetchMembershipsOfUser(
             userId = USER_ID,
-            sort = listOf(UserMembershipsResultSortKey.Asc(key = UserMembershipsResultKey.SPACE_ID))
+            sort = listOf(ResultSortKey.Asc(key = UserMembershipsResultKey.SPACE_ID))
         ).sync()
         assertEquals(SPACE_ID, membershipsResultSortSpaceIdAsc?.data?.first()?.space?.id)
         assertEquals(SPACE_ID_02, membershipsResultSortSpaceIdAsc?.data?.elementAt(1)?.space?.id)
 
         val membershipsResultSortSpaceIdDesc = pubnub.fetchMembershipsOfUser(
             userId = USER_ID,
-            sort = listOf(UserMembershipsResultSortKey.Desc(key = UserMembershipsResultKey.SPACE_ID))
+            sort = listOf(ResultSortKey.Desc(key = UserMembershipsResultKey.SPACE_ID))
         ).sync()
         assertEquals(SPACE_ID_02, membershipsResultSortSpaceIdDesc?.data?.first()?.space?.id)
         assertEquals(SPACE_ID, membershipsResultSortSpaceIdDesc?.data?.elementAt(1)?.space?.id)
 
         val membershipsResultSortSpaceNmeAsc = pubnub.fetchMembershipsOfUser(
             userId = USER_ID,
-            sort = listOf(UserMembershipsResultSortKey.Asc(key = UserMembershipsResultKey.SPACE_NAME)),
+            sort = listOf(ResultSortKey.Asc(key = UserMembershipsResultKey.SPACE_NAME)),
             includeSpaceDetails = SpaceDetailsLevel.SPACE_WITH_CUSTOM
         ).sync()
         assertEquals(SPACE_NAME, membershipsResultSortSpaceNmeAsc?.data?.first()?.space?.name)
@@ -273,7 +272,7 @@ class MembershipIntegTest {
 
         val membershipsResultSortSpaceNameDesc = pubnub.fetchMembershipsOfUser(
             userId = USER_ID,
-            sort = listOf(UserMembershipsResultSortKey.Desc(key = UserMembershipsResultKey.SPACE_NAME)),
+            sort = listOf(ResultSortKey.Desc(key = UserMembershipsResultKey.SPACE_NAME)),
             includeSpaceDetails = SpaceDetailsLevel.SPACE_WITH_CUSTOM
         ).sync()
         assertEquals(SPACE_NAME_02, membershipsResultSortSpaceNameDesc?.data?.first()?.space?.name)
@@ -290,21 +289,21 @@ class MembershipIntegTest {
 
         val membershipsResultSortUserIdAsc = pubnub.fetchMembershipsOfSpace(
             spaceId = SPACE_ID,
-            sort = listOf(SpaceMembershipsResultSortKey.Asc(key = SpaceMembershipResultKey.USER_ID))
+            sort = listOf(ResultSortKey.Asc(key = SpaceMembershipResultKey.USER_ID))
         ).sync()
         assertEquals(USER_ID, membershipsResultSortUserIdAsc?.data?.first()?.user?.id)
         assertEquals(USER_ID_02, membershipsResultSortUserIdAsc?.data?.elementAt(1)?.user?.id)
 
         val membershipsResultSortUserIdDesc = pubnub.fetchMembershipsOfSpace(
             spaceId = SPACE_ID,
-            sort = listOf(SpaceMembershipsResultSortKey.Desc(key = SpaceMembershipResultKey.USER_ID))
+            sort = listOf(ResultSortKey.Desc(key = SpaceMembershipResultKey.USER_ID))
         ).sync()
         assertEquals(USER_ID_02, membershipsResultSortUserIdDesc?.data?.first()?.user?.id)
         assertEquals(USER_ID, membershipsResultSortUserIdDesc?.data?.elementAt(1)?.user?.id)
 
         val membershipsResultSortUserNameAsc = pubnub.fetchMembershipsOfSpace(
             spaceId = SPACE_ID,
-            sort = listOf(SpaceMembershipsResultSortKey.Asc(key = SpaceMembershipResultKey.USER_NAME)),
+            sort = listOf(ResultSortKey.Asc(key = SpaceMembershipResultKey.USER_NAME)),
             includeUserDetails = UserDetailsLevel.USER_WITH_CUSTOM
         ).sync()
         assertEquals(USER_NAME, membershipsResultSortUserNameAsc?.data?.first()?.user?.name)
@@ -312,7 +311,7 @@ class MembershipIntegTest {
 
         val membershipsResultSortUserNameDesc = pubnub.fetchMembershipsOfSpace(
             spaceId = SPACE_ID,
-            sort = listOf(SpaceMembershipsResultSortKey.Desc(key = SpaceMembershipResultKey.USER_NAME)),
+            sort = listOf(ResultSortKey.Desc(key = SpaceMembershipResultKey.USER_NAME)),
             includeUserDetails = UserDetailsLevel.USER_WITH_CUSTOM
         ).sync()
         assertEquals(USER_NAME_02, membershipsResultSortUserNameDesc?.data?.first()?.user?.name)
@@ -401,7 +400,7 @@ class MembershipIntegTest {
 
         val membership02 = fetchMembershipsResult?.data?.elementAt(1)
         assertEquals(USER_ID_02, membership02?.user?.id)
-        assertEquals(USER_NAME, membership02?.user?.name)
+        assertEquals(USER_NAME_02, membership02?.user?.name)
         assertEquals(EXTERNAL_ID, membership02?.user?.externalId)
         assertEquals(PROFILE_URL, membership02?.user?.profileUrl)
         assertEquals(EMAIL, membership02?.user?.email)

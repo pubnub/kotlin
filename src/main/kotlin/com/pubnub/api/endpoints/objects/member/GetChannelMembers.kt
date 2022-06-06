@@ -2,7 +2,7 @@ package com.pubnub.api.endpoints.objects.member
 
 import com.pubnub.api.Endpoint
 import com.pubnub.api.PubNub
-import com.pubnub.api.endpoints.objects.internal.ReturningCollectionOfChannelMembers
+import com.pubnub.api.endpoints.objects.internal.ReturningCollection
 import com.pubnub.api.endpoints.objects.internal.ReturningUUIDDetailsCustom
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.objects.member.PNMember
@@ -18,7 +18,7 @@ import retrofit2.Response
 class GetChannelMembers internal constructor(
     pubnub: PubNub,
     private val channel: String,
-    private val returningCollection: ReturningCollectionOfChannelMembers,
+    private val returningCollection: ReturningCollection,
     private val withUUIDDetailsCustom: ReturningUUIDDetailsCustom
 ) : Endpoint<EntityArrayEnvelope<PNMember>, PNMemberArrayResult>(pubnub) {
 
