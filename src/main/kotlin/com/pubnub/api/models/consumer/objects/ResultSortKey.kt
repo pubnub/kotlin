@@ -1,18 +1,20 @@
 package com.pubnub.api.models.consumer.objects
 
-sealed class ResultSortKey<T : SortField>(
+interface SortableKey
+
+sealed class ResultSortKey<T : SortableKey>(
     val key: T,
     internal val dir: String = "asc"
 ) {
-    class Asc<T : SortField>(key: T) : ResultSortKey<T>(key = key, dir = "asc")
-    class Desc<T : SortField>(key: T) : ResultSortKey<T>(key = key, dir = "desc")
+    class Asc<T : SortableKey>(key: T) : ResultSortKey<T>(key = key, dir = "asc")
+    class Desc<T : SortableKey>(key: T) : ResultSortKey<T>(key = key, dir = "desc")
 
     fun toSortParameter(): String {
-        return key.fieldName + ":" + dir
+        return dir
     }
 }
-enum class ResultKey(override val fieldName: String) : SortField {
-    ID("id"), NAME("name"), UPDATED("updated");
+enum class ResultKey() : SortableKey {
+    ID(), NAME(), UPDATED();
 
     fun toPNSortKey(): PNKey {
         return when (this) {
@@ -23,8 +25,8 @@ enum class ResultKey(override val fieldName: String) : SortField {
     }
 }
 
-enum class SpaceMembershipResultKey(override val fieldName: String) : SortField {
-    USER_ID("user.id"), USER_NAME("user.name"), USER_UPDATED("user.updated"), UPDATED("updated");
+enum class SpaceMembershipResultKey() : SortableKey {
+    USER_ID(), USER_NAME(), USER_UPDATED(), UPDATED();
 
     fun toPNMemberKey(): PNMemberKey {
         return when (this) {
@@ -36,8 +38,8 @@ enum class SpaceMembershipResultKey(override val fieldName: String) : SortField 
     }
 }
 
-enum class UserMembershipsResultKey(override val fieldName: String) : SortField {
-    SPACE_ID("space.id"), SPACE_NAME("space.name"), SPACE_UPDATED("space.updated"), UPDATED("updated");
+enum class UserMembershipsResultKey() : SortableKey {
+    SPACE_ID(), SPACE_NAME(), SPACE_UPDATED(), UPDATED();
 
     fun toPNMembershipKey(): PNMembershipKey {
         return when (this) {

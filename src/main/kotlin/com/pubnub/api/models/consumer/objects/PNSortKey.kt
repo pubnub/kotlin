@@ -1,5 +1,9 @@
 package com.pubnub.api.models.consumer.objects
 
+interface SortField {
+    val fieldName: String
+}
+
 enum class PNKey(override val fieldName: String) : SortField {
     ID("id"), NAME("name"), UPDATED("updated");
 }
