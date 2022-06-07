@@ -30,8 +30,8 @@ import com.pubnub.api.endpoints.objects.channel.GetAllChannelMetadata
 import com.pubnub.api.endpoints.objects.channel.GetChannelMetadata
 import com.pubnub.api.endpoints.objects.channel.RemoveChannelMetadata
 import com.pubnub.api.endpoints.objects.channel.SetChannelMetadata
+import com.pubnub.api.endpoints.objects.internal.CollectionQueryParameters
 import com.pubnub.api.endpoints.objects.internal.ReturningChannelDetailsCustom
-import com.pubnub.api.endpoints.objects.internal.ReturningCollection
 import com.pubnub.api.endpoints.objects.internal.ReturningCustom
 import com.pubnub.api.endpoints.objects.internal.ReturningUUIDDetailsCustom
 import com.pubnub.api.endpoints.objects.member.GetChannelMembers
@@ -997,7 +997,7 @@ class PubNub(val configuration: PNConfiguration) {
         includeCustom: Boolean = false
     ) = GetAllChannelMetadata(
         pubnub = this,
-        returningCollection = ReturningCollection(
+        collectionQueryParameters = CollectionQueryParameters(
             limit = limit,
             page = page,
             filter = filter,
@@ -1077,7 +1077,7 @@ class PubNub(val configuration: PNConfiguration) {
         includeCustom: Boolean = false
     ) = GetAllUUIDMetadata(
         pubnub = this,
-        returningCollection = ReturningCollection(
+        collectionQueryParameters = CollectionQueryParameters(
             limit = limit,
             page = page,
             filter = filter,
@@ -1171,7 +1171,7 @@ class PubNub(val configuration: PNConfiguration) {
     ) = GetMemberships(
         pubnub = this,
         uuid = uuid ?: configuration.uuid,
-        returningCollection = ReturningCollection(
+        collectionQueryParameters = CollectionQueryParameters(
             limit = limit,
             page = page,
             filter = filter,
@@ -1345,7 +1345,7 @@ class PubNub(val configuration: PNConfiguration) {
         channelsToSet = channelsToSet,
         channelsToRemove = channelsToRemove,
         uuid = uuid ?: configuration.uuid,
-        returningCollection = ReturningCollection(
+        collectionQueryParameters = CollectionQueryParameters(
             limit = limit,
             page = page,
             filter = filter,
@@ -1423,7 +1423,7 @@ class PubNub(val configuration: PNConfiguration) {
     ) = GetChannelMembers(
         pubnub = this,
         channel = channel,
-        returningCollection = ReturningCollection(
+        collectionQueryParameters = CollectionQueryParameters(
             limit = limit,
             page = page,
             filter = filter,
@@ -1631,7 +1631,7 @@ class PubNub(val configuration: PNConfiguration) {
         channel = channel,
         uuidsToSet = uuidsToSet,
         uuidsToRemove = uuidsToRemove,
-        returningCollection = ReturningCollection(
+        collectionQueryParameters = CollectionQueryParameters(
             limit = limit,
             page = page,
             filter = filter,

@@ -3,7 +3,7 @@ package com.pubnub.api.endpoints.objects.internal
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.PNSortKey
 
-data class ReturningCollection(
+data class CollectionQueryParameters(
     private val limit: Int? = null,
     private val page: PNPage? = null,
     private val filter: String? = null,
