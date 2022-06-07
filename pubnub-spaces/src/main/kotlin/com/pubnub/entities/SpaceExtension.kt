@@ -5,9 +5,12 @@ import com.pubnub.api.endpoints.remoteaction.ComposableRemoteAction.Companion.fi
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction.Companion.map
 import com.pubnub.api.enums.PNOperationType
+import com.pubnub.api.models.consumer.objects.PNKey
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.PNSortKey
+import com.pubnub.api.models.consumer.objects.ResultSortKey
 import com.pubnub.entities.models.consumer.space.RemoveSpaceResult
+import com.pubnub.entities.models.consumer.space.SpaceKey
 import com.pubnub.entities.models.consumer.space.SpaceResult
 import com.pubnub.entities.models.consumer.space.SpacesResult
 import com.pubnub.entities.models.consumer.space.toRemoveSpaceResult
@@ -27,7 +30,8 @@ import com.pubnub.entities.models.consumer.space.toSpacesResult
  * @param filter Expression used to filter the results. Only objects whose properties satisfy the given
  *               expression are returned.
  * @param sort List of properties to sort by. Available options are id, name, and updated.
- *             @see [PNAsc], [PNDesc]
+ *             e.g. listOf(ResultSortKey.Desc(key = ResultKey.ID), listOf(ResultSortKey.Asc(key = ResultKey.NAME)
+ *             @see [Asc], [Desc]
  * @param includeCount Request totalCount to be included in paginated response. By default, totalCount is omitted.
  *                     Default is `false`.
  * @param includeCustom Include respective additional fields in the response.
@@ -36,7 +40,7 @@ fun PubNub.fetchSpaces(
     limit: Int? = null,
     page: PNPage? = null,
     filter: String? = null,
-    sort: Collection<PNSortKey> = listOf(),
+    sort: Collection<ResultSortKey<SpaceKey>> = listOf(),
     includeCount: Boolean = false,
     includeCustom: Boolean = false
 ): ExtendedRemoteAction<SpacesResult?> = firstDo(
@@ -44,7 +48,7 @@ fun PubNub.fetchSpaces(
         limit = limit,
         page = page,
         filter = filter,
-        sort = sort,
+        sort = toPNSortKey(sort),
         includeCount = includeCount,
         includeCustom = includeCustom
     )
@@ -53,6 +57,16 @@ fun PubNub.fetchSpaces(
         it,
         PNOperationType.SpaceOperation
     ) { pnChannelMetadataArrayResult -> pnChannelMetadataArrayResult.toSpacesResult() }
+}
+
+private fun toPNSortKey(sort: Collection<ResultSortKey<SpaceKey>>): Collection<PNSortKey<PNKey>> {
+    val pnSortKeyList = sort.map { resultSortKey ->
+        when (resultSortKey) {
+            is ResultSortKey.Asc -> PNSortKey.PNAsc(key = resultSortKey.key.toPNSortKey())
+            is ResultSortKey.Desc -> PNSortKey.PNDesc(key = resultSortKey.key.toPNSortKey())
+        }
+    }
+    return pnSortKeyList
 }
 
 /**

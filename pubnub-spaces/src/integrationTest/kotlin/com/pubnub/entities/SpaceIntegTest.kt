@@ -3,6 +3,8 @@ package com.pubnub.entities
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubException
+import com.pubnub.api.models.consumer.objects.ResultSortKey
+import com.pubnub.entities.models.consumer.space.SpaceKey
 import com.pubnub.entities.models.consumer.space.SpaceResult
 import com.pubnub.entities.models.consumer.space.SpacesResult
 import org.junit.jupiter.api.AfterEach
@@ -15,12 +17,12 @@ import org.junit.jupiter.api.assertThrows
 class SpaceIntegTest() {
     private lateinit var pubnub: PubNub
 
-    private val SPACE_ID = "unitTestKT_spaceId"
+    private val SPACE_ID = "spaceIntegId"
     private val SPACE_ID_01: String = SPACE_ID + "1"
     private val SPACE_ID_02: String = SPACE_ID + "2"
-    private val SPACE_NAME = "unitTestKT_spaceName"
+    private val SPACE_NAME = "spaceIntegName"
     private val DESCRIPTION = "space description"
-    private val CUSTOM: Map<String, String > = mapOf("favouritePet" to "mouse")
+    private val CUSTOM: Map<String, String> = mapOf("favouritePet" to "mouse")
 
     @BeforeEach
     fun setUp() {
@@ -104,6 +106,36 @@ class SpaceIntegTest() {
         val spaceResult: SpaceResult? = pubnub.fetchSpace(spaceId01).sync()
         assertEquals(newName, spaceResult?.data?.name)
         assertEquals(newDescription, spaceResult?.data?.description)
+    }
+
+    @Test
+    internal fun can_fetch_sorted_spaces() {
+        val spaceId01 = SPACE_ID_01
+        createSpace(spaceId01)
+        val spaceId02 = SPACE_ID_02
+        createSpace(spaceId02)
+
+        val spacesResultAsc: SpacesResult? = pubnub.fetchSpaces(
+            limit = 100,
+            includeCount = true,
+            sort = listOf(
+                ResultSortKey.Asc(key = SpaceKey.ID)
+            )
+        ).sync()
+
+        assertEquals(SPACE_ID_01, spacesResultAsc?.data?.first()?.id)
+        assertEquals(SPACE_ID_02, spacesResultAsc?.data?.elementAt(1)?.id)
+
+        val spacesResultDesc: SpacesResult? = pubnub.fetchSpaces(
+            limit = 100,
+            includeCount = true,
+            sort = listOf(
+                ResultSortKey.Desc(key = SpaceKey.ID)
+            )
+        ).sync()
+
+        assertEquals(SPACE_ID_02, spacesResultDesc?.data?.first()?.id)
+        assertEquals(SPACE_ID_01, spacesResultDesc?.data?.elementAt(1)?.id)
     }
 
     @AfterEach

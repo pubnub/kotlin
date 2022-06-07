@@ -3,6 +3,8 @@ package com.pubnub.entities
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubException
+import com.pubnub.api.models.consumer.objects.ResultSortKey
+import com.pubnub.entities.models.consumer.user.UserKey
 import com.pubnub.entities.models.consumer.user.UserResult
 import com.pubnub.entities.models.consumer.user.UsersResult
 import org.junit.jupiter.api.AfterEach
@@ -15,7 +17,7 @@ import org.junit.jupiter.api.assertThrows
 class UserIntegTest() {
     private lateinit var pubnub: PubNub
 
-    private val USER_ID = "unitTestKT_id"
+    private val USER_ID = "userInteg_id"
     private val USER_ID_01 = USER_ID + "1"
     private val USER_ID_02 = USER_ID + "2"
 
@@ -48,9 +50,9 @@ class UserIntegTest() {
         assertEquals(PROFILE_URL, userResult?.data?.profileUrl)
         assertEquals(EMAIL, userResult?.data?.email)
         assertTrue(userResult?.data?.custom?.containsKey("favouriteNumber")!!)
-        assertTrue(userResult?.data?.custom?.containsKey("favouriteColour")!!)
-        assertTrue(userResult?.data?.updated != null)
-        assertTrue(userResult?.data?.eTag != null)
+        assertTrue(userResult.data?.custom?.containsKey("favouriteColour")!!)
+        assertTrue(userResult.data?.updated != null)
+        assertTrue(userResult.data?.eTag != null)
     }
 
     @Test
@@ -67,9 +69,9 @@ class UserIntegTest() {
         assertEquals(PROFILE_URL, userResult?.data?.profileUrl)
         assertEquals(EMAIL, userResult?.data?.email)
         assertTrue(userResult?.data?.custom?.containsKey("favouriteNumber")!!)
-        assertTrue(userResult?.data?.custom?.containsKey("favouriteColour")!!)
-        assertTrue(userResult?.data?.updated != null)
-        assertTrue(userResult?.data?.eTag != null)
+        assertTrue(userResult.data?.custom?.containsKey("favouriteColour")!!)
+        assertTrue(userResult.data?.updated != null)
+        assertTrue(userResult.data?.eTag != null)
     }
 
     @Test
@@ -122,6 +124,32 @@ class UserIntegTest() {
         assertEquals(newExternalId, userResult?.data?.externalId)
         assertEquals(newProfileUrl, userResult?.data?.profileUrl)
         assertEquals(newEmail, userResult?.data?.email)
+    }
+
+    @Test
+    internal fun can_fetch_sorted_users() {
+        val userId01 = USER_ID_01
+        createUser(userId01)
+        val userId02 = USER_ID_02
+        createUser(userId02)
+
+        val usersResultAsc: UsersResult? = pubnub.fetchUsers(
+            limit = 100,
+            includeCount = true,
+            sort = listOf(ResultSortKey.Asc(key = UserKey.ID))
+        ).sync()
+
+        assertEquals(USER_ID_01, usersResultAsc?.data?.first()?.id)
+        assertEquals(USER_ID_02, usersResultAsc?.data?.elementAt(1)?.id)
+
+        val usersResultDesc: UsersResult? = pubnub.fetchUsers(
+            limit = 100,
+            includeCount = true,
+            sort = listOf(ResultSortKey.Desc(key = UserKey.ID))
+        ).sync()
+
+        assertEquals(USER_ID_02, usersResultDesc?.data?.first()?.id)
+        assertEquals(USER_ID_01, usersResultDesc?.data?.elementAt(1)?.id)
     }
 
     @AfterEach
