@@ -8,10 +8,10 @@ import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.PNSortKey
 import com.pubnub.entities.models.consumer.user.RemoveUserResult
-import com.pubnub.entities.models.consumer.user.UserResult
+import com.pubnub.entities.models.consumer.user.User
 import com.pubnub.entities.models.consumer.user.UsersResult
 import com.pubnub.entities.models.consumer.user.toRemoveUserResult
-import com.pubnub.entities.models.consumer.user.toUserResult
+import com.pubnub.entities.models.consumer.user.toUser
 import com.pubnub.entities.models.consumer.user.toUsersResult
 
 /**
@@ -64,7 +64,7 @@ fun PubNub.fetchUsers(
 fun PubNub.fetchUser(
     userId: String? = configuration.uuid,
     includeCustom: Boolean = false
-): ExtendedRemoteAction<UserResult?> = firstDo(
+): ExtendedRemoteAction<User?> = firstDo(
     getUUIDMetadata(
         uuid = userId,
         includeCustom = includeCustom
@@ -73,7 +73,7 @@ fun PubNub.fetchUser(
     map(
         it,
         PNOperationType.UserOperation
-    ) { pnUuidMetadataResult -> pnUuidMetadataResult.toUserResult() }
+    ) { pnUuidMetadataResult -> pnUuidMetadataResult.toUser() }
 }
 
 /**
@@ -95,7 +95,7 @@ fun PubNub.createUser(
     email: String? = null,
     custom: Map<String, Any>? = null,
     includeCustom: Boolean = false
-): ExtendedRemoteAction<UserResult?> = firstDo(
+): ExtendedRemoteAction<User?> = firstDo(
     setUUIDMetadata(
         uuid = userId,
         name = name,
@@ -109,7 +109,7 @@ fun PubNub.createUser(
     map(
         it,
         PNOperationType.UserOperation
-    ) { pnUuidMetadataResult -> pnUuidMetadataResult.toUserResult() }
+    ) { pnUuidMetadataResult -> pnUuidMetadataResult.toUser() }
 }
 
 /**
@@ -131,7 +131,7 @@ fun PubNub.updateUser(
     email: String? = null,
     custom: Map<String, Any>? = null,
     includeCustom: Boolean = false
-): ExtendedRemoteAction<UserResult?> = firstDo(
+): ExtendedRemoteAction<User?> = firstDo(
     setUUIDMetadata(
         uuid = userId,
         name = name,
@@ -145,7 +145,7 @@ fun PubNub.updateUser(
     map(
         it,
         PNOperationType.UserOperation
-    ) { pnUuidMetadataResult -> pnUuidMetadataResult.toUserResult() }
+    ) { pnUuidMetadataResult -> pnUuidMetadataResult.toUser() }
 }
 
 /**

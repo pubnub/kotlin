@@ -12,7 +12,7 @@ import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataArrayResult
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataResult
 import com.pubnub.entities.models.consumer.user.RemoveUserResult
-import com.pubnub.entities.models.consumer.user.UserResult
+import com.pubnub.entities.models.consumer.user.User
 import com.pubnub.entities.models.consumer.user.UsersResult
 import io.mockk.MockKAnnotations
 import io.mockk.every
@@ -59,10 +59,20 @@ internal class UserExtensionKtTest {
     internal fun can_createUser() {
         val pnUUIDMetadata = createPnuuidMetadata(USER_ID)
         val pnUUIDMetadataResult = PNUUIDMetadataResult(status = 200, data = pnUUIDMetadata)
-        every { pubNub.setUUIDMetadata(any(), any(), any(), any(), any(), any(), any()) } returns setUUIDMetadataEndpoint
+        every {
+            pubNub.setUUIDMetadata(
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        } returns setUUIDMetadataEndpoint
         every { setUUIDMetadataEndpoint.sync() } returns pnUUIDMetadataResult
 
-        val createUserEndpoint: ExtendedRemoteAction<UserResult?> = pubNub.createUser(
+        val createUserEndpoint: ExtendedRemoteAction<User?> = pubNub.createUser(
             userId = USER_ID,
             name = USER_NAME,
             externalId = EXTERNAL_ID,
@@ -71,17 +81,16 @@ internal class UserExtensionKtTest {
             custom = CUSTOM,
             includeCustom = INCLUDE_CUSOTM
         )
-        val userResult = createUserEndpoint.sync()
+        val user = createUserEndpoint.sync()
 
-        assertEquals(200, userResult?.status)
-        assertEquals(USER_ID, userResult?.data?.id)
-        assertEquals(USER_NAME, userResult?.data?.name)
-        assertEquals(EXTERNAL_ID, userResult?.data?.externalId)
-        assertEquals(PROFILE_URL, userResult?.data?.profileUrl)
-        assertEquals(EMAIL, userResult?.data?.email)
-        assertEquals(CUSTOM, userResult?.data?.custom)
-        assertEquals(UPDATED, userResult?.data?.updated)
-        assertEquals(E_TAG, userResult?.data?.eTag)
+        assertEquals(USER_ID, user?.id)
+        assertEquals(USER_NAME, user?.name)
+        assertEquals(EXTERNAL_ID, user?.externalId)
+        assertEquals(PROFILE_URL, user?.profileUrl)
+        assertEquals(EMAIL, user?.email)
+        assertEquals(CUSTOM, user?.custom)
+        assertEquals(UPDATED, user?.updated)
+        assertEquals(E_TAG, user?.eTag)
     }
 
     @Test
@@ -91,29 +100,38 @@ internal class UserExtensionKtTest {
         every { pubNub.getUUIDMetadata(any(), any()) } returns getUUIDMetadataEndpoint
         every { getUUIDMetadataEndpoint.sync() } returns pnUUIDMetadataResult
 
-        val fetchUserEndpoint: ExtendedRemoteAction<UserResult?> =
+        val fetchUserEndpoint: ExtendedRemoteAction<User?> =
             pubNub.fetchUser(userId = USER_ID, includeCustom = true)
-        val userResult = fetchUserEndpoint.sync()
+        val user = fetchUserEndpoint.sync()
 
-        assertEquals(200, userResult?.status)
-        assertEquals(USER_ID, userResult?.data?.id)
-        assertEquals(USER_NAME, userResult?.data?.name)
-        assertEquals(EXTERNAL_ID, userResult?.data?.externalId)
-        assertEquals(PROFILE_URL, userResult?.data?.profileUrl)
-        assertEquals(EMAIL, userResult?.data?.email)
-        assertEquals(CUSTOM, userResult?.data?.custom)
-        assertEquals(UPDATED, userResult?.data?.updated)
-        assertEquals(E_TAG, userResult?.data?.eTag)
+        assertEquals(USER_ID, user?.id)
+        assertEquals(USER_NAME, user?.name)
+        assertEquals(EXTERNAL_ID, user?.externalId)
+        assertEquals(PROFILE_URL, user?.profileUrl)
+        assertEquals(EMAIL, user?.email)
+        assertEquals(CUSTOM, user?.custom)
+        assertEquals(UPDATED, user?.updated)
+        assertEquals(E_TAG, user?.eTag)
     }
 
     @Test
     internal fun can_updateUser() {
         val pnUUIDMetadata = createPnuuidMetadata(USER_ID)
         val pnUUIDMetadataResult = PNUUIDMetadataResult(status = 200, data = pnUUIDMetadata)
-        every { pubNub.setUUIDMetadata(any(), any(), any(), any(), any(), any(), any()) } returns setUUIDMetadataEndpoint
+        every {
+            pubNub.setUUIDMetadata(
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        } returns setUUIDMetadataEndpoint
         every { setUUIDMetadataEndpoint.sync() } returns pnUUIDMetadataResult
 
-        val updateUserEndpoint: ExtendedRemoteAction<UserResult?> = pubNub.updateUser(
+        val updateUserEndpoint: ExtendedRemoteAction<User?> = pubNub.updateUser(
             userId = USER_ID,
             name = USER_NAME,
             externalId = EXTERNAL_ID,
@@ -122,17 +140,16 @@ internal class UserExtensionKtTest {
             custom = CUSTOM,
             includeCustom = INCLUDE_CUSOTM
         )
-        val userResult = updateUserEndpoint.sync()
+        val user = updateUserEndpoint.sync()
 
-        assertEquals(200, userResult?.status)
-        assertEquals(USER_ID, userResult?.data?.id)
-        assertEquals(USER_NAME, userResult?.data?.name)
-        assertEquals(EXTERNAL_ID, userResult?.data?.externalId)
-        assertEquals(PROFILE_URL, userResult?.data?.profileUrl)
-        assertEquals(EMAIL, userResult?.data?.email)
-        assertEquals(CUSTOM, userResult?.data?.custom)
-        assertEquals(UPDATED, userResult?.data?.updated)
-        assertEquals(E_TAG, userResult?.data?.eTag)
+        assertEquals(USER_ID, user?.id)
+        assertEquals(USER_NAME, user?.name)
+        assertEquals(EXTERNAL_ID, user?.externalId)
+        assertEquals(PROFILE_URL, user?.profileUrl)
+        assertEquals(EMAIL, user?.email)
+        assertEquals(CUSTOM, user?.custom)
+        assertEquals(UPDATED, user?.updated)
+        assertEquals(E_TAG, user?.eTag)
     }
 
     @Test
@@ -150,14 +167,14 @@ internal class UserExtensionKtTest {
     @Test
     internal fun can_fetchUsers() {
         val pnUUIDMetadataList = listOf(createPnuuidMetadata(USER_ID), createPnuuidMetadata(USER_ID_02))
-        val pnUUIDMetadataArrayResult = PNUUIDMetadataArrayResult(status = 200, data = pnUUIDMetadataList, totalCount = 2, next = null, prev = null)
+        val pnUUIDMetadataArrayResult =
+            PNUUIDMetadataArrayResult(status = 200, data = pnUUIDMetadataList, totalCount = 2, next = null, prev = null)
         every { pubNub.getAllUUIDMetadata(any(), any(), any(), any(), any(), any()) } returns getAllUUIDMetadataEndpoint
         every { getAllUUIDMetadataEndpoint.sync() } returns pnUUIDMetadataArrayResult
 
         val fetchUsersEndpoint: ExtendedRemoteAction<UsersResult?> = pubNub.fetchUsers()
         val usersResult = fetchUsersEndpoint.sync()
 
-        assertEquals(200, usersResult?.status)
         assertEquals(USER_ID, usersResult?.data?.first()?.id)
         assertEquals(USER_NAME, usersResult?.data?.first()?.name)
         assertEquals(EXTERNAL_ID, usersResult?.data?.first()?.externalId)

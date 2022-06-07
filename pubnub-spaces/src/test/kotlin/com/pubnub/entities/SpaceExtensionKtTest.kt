@@ -12,7 +12,7 @@ import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata
 import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadataArrayResult
 import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadataResult
 import com.pubnub.entities.models.consumer.space.RemoveSpaceResult
-import com.pubnub.entities.models.consumer.space.SpaceResult
+import com.pubnub.entities.models.consumer.space.Space
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
@@ -57,22 +57,21 @@ class SpaceExtensionKtTest {
         every { pubNub.setChannelMetadata(any(), any(), any(), any(), any()) } returns setChannelMetadataEndpoint
         every { setChannelMetadataEndpoint.sync() } returns pnChannelMetadataResult
 
-        val createSpaceEndpoint: ExtendedRemoteAction<SpaceResult?> = pubNub.createSpace(
+        val createSpaceEndpoint: ExtendedRemoteAction<Space?> = pubNub.createSpace(
             spaceId = SPACE_ID,
             name = SPACE_NAME,
             description = SPACE_DESCRIPTION,
             custom = CUSTOM,
             includeCustom = true
         )
-        val spaceResult = createSpaceEndpoint.sync()
+        val space = createSpaceEndpoint.sync()
 
-        assertEquals(200, spaceResult?.status)
-        assertEquals(SPACE_ID, spaceResult?.data?.id)
-        assertEquals(SPACE_NAME, spaceResult?.data?.name)
-        assertEquals(SPACE_DESCRIPTION, spaceResult?.data?.description)
-        assertEquals(CUSTOM, spaceResult?.data?.custom)
-        assertEquals(UPDATED, spaceResult?.data?.updated)
-        assertEquals(E_TAG, spaceResult?.data?.eTag)
+        assertEquals(SPACE_ID, space?.id)
+        assertEquals(SPACE_NAME, space?.name)
+        assertEquals(SPACE_DESCRIPTION, space?.description)
+        assertEquals(CUSTOM, space?.custom)
+        assertEquals(UPDATED, space?.updated)
+        assertEquals(E_TAG, space?.eTag)
     }
 
     @Test
@@ -81,15 +80,14 @@ class SpaceExtensionKtTest {
         every { pubNub.getChannelMetadata(any(), any()) } returns getChannelMetadataEndpoint
         every { getChannelMetadataEndpoint.sync() } returns pnChannelMetadataResult
 
-        val fetchSpaceEndpoint: ExtendedRemoteAction<SpaceResult?> = pubNub.fetchSpace(spaceId = SPACE_ID)
-        val spaceResult: SpaceResult? = fetchSpaceEndpoint.sync()
+        val fetchSpaceEndpoint: ExtendedRemoteAction<Space?> = pubNub.fetchSpace(spaceId = SPACE_ID)
+        val space: Space? = fetchSpaceEndpoint.sync()
 
-        assertEquals(200, spaceResult?.status)
-        assertEquals(SPACE_ID, spaceResult?.data?.id)
-        assertEquals(SPACE_NAME, spaceResult?.data?.name)
-        assertEquals(SPACE_DESCRIPTION, spaceResult?.data?.description)
-        assertEquals(UPDATED, spaceResult?.data?.updated)
-        assertEquals(E_TAG, spaceResult?.data?.eTag)
+        assertEquals(SPACE_ID, space?.id)
+        assertEquals(SPACE_NAME, space?.name)
+        assertEquals(SPACE_DESCRIPTION, space?.description)
+        assertEquals(UPDATED, space?.updated)
+        assertEquals(E_TAG, space?.eTag)
     }
 
     @Test
@@ -98,21 +96,20 @@ class SpaceExtensionKtTest {
         every { pubNub.setChannelMetadata(any(), any(), any(), any(), any()) } returns setChannelMetadataEndpoint
         every { setChannelMetadataEndpoint.sync() } returns pnChannelMetadataResult
 
-        val updateSpaceEndpoint: ExtendedRemoteAction<SpaceResult?> = pubNub.updateSpace(
+        val updateSpaceEndpoint: ExtendedRemoteAction<Space?> = pubNub.updateSpace(
             spaceId = SPACE_ID,
             name = SPACE_NAME,
             custom = CUSTOM,
             description = SPACE_DESCRIPTION
         )
-        val spaceResult = updateSpaceEndpoint.sync()
+        val space = updateSpaceEndpoint.sync()
 
-        assertEquals(200, spaceResult?.status)
-        assertEquals(SPACE_ID, spaceResult?.data?.id)
-        assertEquals(SPACE_NAME, spaceResult?.data?.name)
-        assertEquals(SPACE_DESCRIPTION, spaceResult?.data?.description)
-        assertEquals(CUSTOM, spaceResult?.data?.custom)
-        assertEquals(UPDATED, spaceResult?.data?.updated)
-        assertEquals(E_TAG, spaceResult?.data?.eTag)
+        assertEquals(SPACE_ID, space?.id)
+        assertEquals(SPACE_NAME, space?.name)
+        assertEquals(SPACE_DESCRIPTION, space?.description)
+        assertEquals(CUSTOM, space?.custom)
+        assertEquals(UPDATED, space?.updated)
+        assertEquals(E_TAG, space?.eTag)
     }
 
     @Test
@@ -137,7 +134,6 @@ class SpaceExtensionKtTest {
         val fetchSpacesEndpoint = pubNub.fetchSpaces(limit = 10)
         val spacesResult = fetchSpacesEndpoint.sync()
 
-        assertEquals(200, spacesResult?.status)
         assertEquals(2, spacesResult?.totalCount)
         assertEquals(SPACE_ID, spacesResult?.data?.first()?.id)
         assertEquals(SPACE_NAME, spacesResult?.data?.first()?.name)

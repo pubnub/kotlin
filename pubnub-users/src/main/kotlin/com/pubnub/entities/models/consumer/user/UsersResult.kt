@@ -2,9 +2,9 @@ package com.pubnub.entities.models.consumer.user
 
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataArrayResult
+import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataResult
 
 data class UsersResult(
-    val status: Int,
     val data: Collection<User>,
     val totalCount: Int?,
     val next: PNPage?,
@@ -12,11 +12,12 @@ data class UsersResult(
 )
 
 internal fun PNUUIDMetadataArrayResult.toUsersResult(): UsersResult? {
-    if (this == null) {
-        return null
-    }
     val users = data.map { pnUserMetadata ->
         pnUserMetadata.toUser()
     }
-    return UsersResult(status = status, data = users, totalCount = totalCount, next = next, prev = prev)
+    return UsersResult(data = users, totalCount = totalCount, next = next, prev = prev)
+}
+
+internal fun PNUUIDMetadataResult.toUser(): User? {
+    return data?.toUser()
 }
