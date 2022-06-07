@@ -7,9 +7,6 @@ data class UserResult(
     val data: User?
 )
 
-internal fun PNUUIDMetadataResult.toUserResult(): UserResult? {
-    if (this == null) {
-        return null
-    }
+internal fun PNUUIDMetadataResult.toUserResult(): UserResult {
     return UserResult(status = status, data = data?.toUser())
 }

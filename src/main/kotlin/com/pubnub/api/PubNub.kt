@@ -31,7 +31,7 @@ import com.pubnub.api.endpoints.objects.channel.GetChannelMetadata
 import com.pubnub.api.endpoints.objects.channel.RemoveChannelMetadata
 import com.pubnub.api.endpoints.objects.channel.SetChannelMetadata
 import com.pubnub.api.endpoints.objects.internal.Include
-import com.pubnub.api.endpoints.objects.internal.ReturningCollection
+import com.pubnub.api.endpoints.objects.internal.CollectionQueryParameters
 import com.pubnub.api.endpoints.objects.member.GetChannelMembers
 import com.pubnub.api.endpoints.objects.member.ManageChannelMembers
 import com.pubnub.api.endpoints.objects.membership.GetMemberships
@@ -67,6 +67,9 @@ import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant
 import com.pubnub.api.models.consumer.access_manager.v3.PNToken
 import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
+import com.pubnub.api.models.consumer.objects.PNKey
+import com.pubnub.api.models.consumer.objects.PNMemberKey
+import com.pubnub.api.models.consumer.objects.PNMembershipKey
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.PNSortKey
 import com.pubnub.api.models.consumer.objects.member.PNUUIDDetailsLevel
@@ -987,12 +990,12 @@ class PubNub(val configuration: PNConfiguration) {
         limit: Int? = null,
         page: PNPage? = null,
         filter: String? = null,
-        sort: Collection<PNSortKey> = listOf(),
+        sort: Collection<PNSortKey<PNKey>> = listOf(),
         includeCount: Boolean = false,
         includeCustom: Boolean = false
     ) = GetAllChannelMetadata(
         pubnub = this,
-        returningCollection = ReturningCollection(
+        collectionQueryParameters = CollectionQueryParameters(
             limit = limit,
             page = page,
             filter = filter,
@@ -1071,19 +1074,19 @@ class PubNub(val configuration: PNConfiguration) {
         limit: Int? = null,
         page: PNPage? = null,
         filter: String? = null,
-        sort: Collection<PNSortKey> = listOf(),
+        sort: Collection<PNSortKey<PNKey>> = listOf(),
         includeCount: Boolean = false,
         includeCustom: Boolean = false
     ) = GetAllUUIDMetadata(
         pubnub = this,
-        returningCollection = ReturningCollection(
+        collectionQueryParameters = CollectionQueryParameters(
             limit = limit,
             page = page,
             filter = filter,
             sort = sort,
             includeCount = includeCount
         ),
-        withIncludes = Include(includeCustom = includeCustom)
+        withInclude = Include(includeCustom = includeCustom)
     )
 
     /**
@@ -1130,7 +1133,7 @@ class PubNub(val configuration: PNConfiguration) {
         profileUrl = profileUrl,
         email = email,
         custom = custom,
-        withIncludes = Include(includeCustom = includeCustom),
+        withInclude = Include(includeCustom = includeCustom),
         type = type,
         status = status
     )
@@ -1167,21 +1170,21 @@ class PubNub(val configuration: PNConfiguration) {
         limit: Int? = null,
         page: PNPage? = null,
         filter: String? = null,
-        sort: Collection<PNSortKey> = listOf(),
+        sort: Collection<PNSortKey<PNMembershipKey>> = listOf(),
         includeCount: Boolean = false,
         includeCustom: Boolean = false,
         includeChannelDetails: PNChannelDetailsLevel? = null
     ) = GetMemberships(
         pubnub = this,
         uuid = uuid ?: configuration.uuid,
-        returningCollection = ReturningCollection(
+        collectionQueryParameters = CollectionQueryParameters(
             limit = limit,
             page = page,
             filter = filter,
             sort = sort,
             includeCount = includeCount
         ),
-        withIncludes = Include(
+        withChannelDetailsCustom = Include(
             includeCustom = includeCustom,
             includeChannelDetails = includeChannelDetails
         )
@@ -1205,7 +1208,7 @@ class PubNub(val configuration: PNConfiguration) {
         limit: Int? = null,
         page: PNPage? = null,
         filter: String? = null,
-        sort: Collection<PNSortKey> = listOf(),
+        sort: Collection<PNSortKey<PNMembershipKey>> = listOf(),
         includeCount: Boolean = false,
         includeCustom: Boolean = false,
         includeChannelDetails: PNChannelDetailsLevel? = null
@@ -1249,11 +1252,10 @@ class PubNub(val configuration: PNConfiguration) {
         limit: Int? = null,
         page: PNPage? = null,
         filter: String? = null,
-        sort: Collection<PNSortKey> = listOf(),
+        sort: Collection<PNSortKey<PNMembershipKey>> = listOf(),
         includeCount: Boolean = false,
         includeCustom: Boolean = false,
         includeChannelDetails: PNChannelDetailsLevel? = null,
-        status: String? = null
     ) = manageMemberships(
         channelsToSet = channels,
         channelsToRemove = listOf(),
@@ -1265,7 +1267,7 @@ class PubNub(val configuration: PNConfiguration) {
         includeCount = includeCount,
         includeCustom = includeCustom,
         includeChannelDetails = includeChannelDetails,
-        status = status
+        status = null
     )
 
     /**
@@ -1295,7 +1297,7 @@ class PubNub(val configuration: PNConfiguration) {
         limit: Int? = null,
         page: PNPage? = null,
         filter: String? = null,
-        sort: Collection<PNSortKey> = listOf(),
+        sort: Collection<PNSortKey<PNMembershipKey>> = listOf(),
         includeCount: Boolean = false,
         includeCustom: Boolean = false,
         includeChannelDetails: PNChannelDetailsLevel? = null
@@ -1341,7 +1343,7 @@ class PubNub(val configuration: PNConfiguration) {
         limit: Int? = null,
         page: PNPage? = null,
         filter: String? = null,
-        sort: Collection<PNSortKey> = listOf(),
+        sort: Collection<PNSortKey<PNMembershipKey>> = listOf(),
         includeCount: Boolean = false,
         includeCustom: Boolean = false,
         includeChannelDetails: PNChannelDetailsLevel? = null,
@@ -1351,7 +1353,7 @@ class PubNub(val configuration: PNConfiguration) {
         channelsToSet = channelsToSet,
         channelsToRemove = channelsToRemove,
         uuid = uuid ?: configuration.uuid,
-        returningCollection = ReturningCollection(
+        collectionQueryParameters = CollectionQueryParameters(
             limit = limit,
             page = page,
             filter = filter,
@@ -1361,8 +1363,7 @@ class PubNub(val configuration: PNConfiguration) {
         withIncludes = Include(
             includeCustom = includeCustom,
             includeChannelDetails = includeChannelDetails
-        ),
-        status = status
+        )
     )
 
     /**
@@ -1382,7 +1383,7 @@ class PubNub(val configuration: PNConfiguration) {
         limit: Int? = null,
         page: PNPage? = null,
         filter: String? = null,
-        sort: Collection<PNSortKey> = listOf(),
+        sort: Collection<PNSortKey<PNMemberKey>> = listOf(),
         includeCount: Boolean = false,
         includeCustom: Boolean = false,
         includeUUIDDetails: PNUUIDDetailsLevel? = null
@@ -1423,14 +1424,14 @@ class PubNub(val configuration: PNConfiguration) {
         limit: Int? = null,
         page: PNPage? = null,
         filter: String? = null,
-        sort: Collection<PNSortKey> = listOf(),
+        sort: Collection<PNSortKey<PNMemberKey>> = listOf(),
         includeCount: Boolean = false,
         includeCustom: Boolean = false,
         includeUUIDDetails: PNUUIDDetailsLevel? = null
     ) = GetChannelMembers(
         pubnub = this,
         channel = channel,
-        returningCollection = ReturningCollection(
+        collectionQueryParameters = CollectionQueryParameters(
             limit = limit,
             page = page,
             filter = filter,
@@ -1461,7 +1462,7 @@ class PubNub(val configuration: PNConfiguration) {
         limit: Int? = null,
         page: PNPage? = null,
         filter: String? = null,
-        sort: Collection<PNSortKey> = listOf(),
+        sort: Collection<PNSortKey<PNMemberKey>> = listOf(),
         includeCount: Boolean = false,
         includeCustom: Boolean = false,
         includeUUIDDetails: PNUUIDDetailsLevel? = null
@@ -1505,7 +1506,7 @@ class PubNub(val configuration: PNConfiguration) {
         limit: Int? = null,
         page: PNPage? = null,
         filter: String? = null,
-        sort: Collection<PNSortKey> = listOf(),
+        sort: Collection<PNSortKey<PNMemberKey>> = listOf(),
         includeCount: Boolean = false,
         includeCustom: Boolean = false,
         includeUUIDDetails: PNUUIDDetailsLevel? = null,
@@ -1542,7 +1543,7 @@ class PubNub(val configuration: PNConfiguration) {
         limit: Int? = null,
         page: PNPage? = null,
         filter: String? = null,
-        sort: Collection<PNSortKey> = listOf(),
+        sort: Collection<PNSortKey<PNMemberKey>> = listOf(),
         includeCount: Boolean = false,
         includeCustom: Boolean = false,
         includeUUIDDetails: PNUUIDDetailsLevel? = null
@@ -1585,7 +1586,7 @@ class PubNub(val configuration: PNConfiguration) {
         limit: Int? = null,
         page: PNPage? = null,
         filter: String? = null,
-        sort: Collection<PNSortKey> = listOf(),
+        sort: Collection<PNSortKey<PNMemberKey>> = listOf(),
         includeCount: Boolean = false,
         includeCustom: Boolean = false,
         includeUUIDDetails: PNUUIDDetailsLevel? = null
@@ -1632,7 +1633,7 @@ class PubNub(val configuration: PNConfiguration) {
         limit: Int? = null,
         page: PNPage? = null,
         filter: String? = null,
-        sort: Collection<PNSortKey> = listOf(),
+        sort: Collection<PNSortKey<PNMemberKey>> = listOf(),
         includeCount: Boolean = false,
         includeCustom: Boolean = false,
         includeUUIDDetails: PNUUIDDetailsLevel? = null,
@@ -1642,7 +1643,7 @@ class PubNub(val configuration: PNConfiguration) {
         channel = channel,
         uuidsToSet = uuidsToSet,
         uuidsToRemove = uuidsToRemove,
-        returningCollection = ReturningCollection(
+        collectionQueryParameters = CollectionQueryParameters(
             limit = limit,
             page = page,
             filter = filter,
@@ -1652,8 +1653,7 @@ class PubNub(val configuration: PNConfiguration) {
         withIncludes = Include(
             includeCustom = includeCustom,
             includeUUIDDetails = includeUUIDDetails
-        ),
-        status = status
+        )
     )
 
     //endregion ObjectsAPI

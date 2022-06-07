@@ -23,13 +23,13 @@ class SetUUIDMetadata internal constructor(
     private val profileUrl: String?,
     private val email: String?,
     private val custom: Any?,
-    private val withIncludes: Include,
+    private val withInclude: Include,
     private val type: String?,
     private val status: String?
 ) : Endpoint<EntityEnvelope<PNUUIDMetadata>, PNUUIDMetadataResult>(pubnub) {
 
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityEnvelope<PNUUIDMetadata>> {
-        val params = queryParams + withIncludes.createIncludeQueryParams()
+        val params = queryParams + withInclude.createIncludeQueryParams()
         return pubnub.retrofitManager.objectsService.setUUIDMetadata(
             subKey = pubnub.configuration.subscribeKey,
             body = UUIDMetadataInput(
