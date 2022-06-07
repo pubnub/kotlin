@@ -3,8 +3,8 @@ package com.pubnub.entities
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubException
-import com.pubnub.api.models.consumer.objects.ResultKey
 import com.pubnub.api.models.consumer.objects.ResultSortKey
+import com.pubnub.entities.models.consumer.space.SpaceKey
 import com.pubnub.entities.models.consumer.space.SpaceResult
 import com.pubnub.entities.models.consumer.space.SpacesResult
 import org.junit.jupiter.api.AfterEach
@@ -119,7 +119,7 @@ class SpaceIntegTest() {
             limit = 100,
             includeCount = true,
             sort = listOf(
-                ResultSortKey.Asc(key = ResultKey.ID)
+                ResultSortKey.Asc(key = SpaceKey.ID)
             )
         ).sync()
 
@@ -130,7 +130,7 @@ class SpaceIntegTest() {
             limit = 100,
             includeCount = true,
             sort = listOf(
-                ResultSortKey.Desc(key = ResultKey.ID)
+                ResultSortKey.Desc(key = SpaceKey.ID)
             )
         ).sync()
 

@@ -9,14 +9,3 @@ sealed class ResultSortKey<T : SortableKey>(
     class Asc<T : SortableKey>(key: T) : ResultSortKey<T>(key = key, dir = "asc")
     class Desc<T : SortableKey>(key: T) : ResultSortKey<T>(key = key, dir = "desc")
 }
-enum class ResultKey() : SortableKey {
-    ID(), NAME(), UPDATED();
-
-    fun toPNSortKey(): PNKey {
-        return when (this) {
-            ID -> PNKey.ID
-            NAME -> PNKey.NAME
-            UPDATED -> PNKey.UPDATED
-        }
-    }
-}

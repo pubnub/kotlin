@@ -8,9 +8,9 @@ import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.objects.PNKey
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.PNSortKey
-import com.pubnub.api.models.consumer.objects.ResultKey
 import com.pubnub.api.models.consumer.objects.ResultSortKey
 import com.pubnub.entities.models.consumer.space.RemoveSpaceResult
+import com.pubnub.entities.models.consumer.space.SpaceKey
 import com.pubnub.entities.models.consumer.space.SpaceResult
 import com.pubnub.entities.models.consumer.space.SpacesResult
 import com.pubnub.entities.models.consumer.space.toRemoveSpaceResult
@@ -40,7 +40,7 @@ fun PubNub.fetchSpaces(
     limit: Int? = null,
     page: PNPage? = null,
     filter: String? = null,
-    sort: Collection<ResultSortKey<ResultKey>> = listOf(),
+    sort: Collection<ResultSortKey<SpaceKey>> = listOf(),
     includeCount: Boolean = false,
     includeCustom: Boolean = false
 ): ExtendedRemoteAction<SpacesResult?> = firstDo(
@@ -59,7 +59,7 @@ fun PubNub.fetchSpaces(
     ) { pnChannelMetadataArrayResult -> pnChannelMetadataArrayResult.toSpacesResult() }
 }
 
-private fun toPNSortKey(sort: Collection<ResultSortKey<ResultKey>>): Collection<PNSortKey<PNKey>> {
+private fun toPNSortKey(sort: Collection<ResultSortKey<SpaceKey>>): Collection<PNSortKey<PNKey>> {
     val pnSortKeyList = sort.map { resultSortKey ->
         when (resultSortKey) {
             is ResultSortKey.Asc -> PNSortKey.PNAsc(key = resultSortKey.key.toPNSortKey())

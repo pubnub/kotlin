@@ -3,8 +3,8 @@ package com.pubnub.entities
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubException
-import com.pubnub.api.models.consumer.objects.ResultKey
 import com.pubnub.api.models.consumer.objects.ResultSortKey
+import com.pubnub.entities.models.consumer.user.UserKey
 import com.pubnub.entities.models.consumer.user.UserResult
 import com.pubnub.entities.models.consumer.user.UsersResult
 import org.junit.jupiter.api.AfterEach
@@ -50,9 +50,9 @@ class UserIntegTest() {
         assertEquals(PROFILE_URL, userResult?.data?.profileUrl)
         assertEquals(EMAIL, userResult?.data?.email)
         assertTrue(userResult?.data?.custom?.containsKey("favouriteNumber")!!)
-        assertTrue(userResult?.data?.custom?.containsKey("favouriteColour")!!)
-        assertTrue(userResult?.data?.updated != null)
-        assertTrue(userResult?.data?.eTag != null)
+        assertTrue(userResult.data?.custom?.containsKey("favouriteColour")!!)
+        assertTrue(userResult.data?.updated != null)
+        assertTrue(userResult.data?.eTag != null)
     }
 
     @Test
@@ -69,9 +69,9 @@ class UserIntegTest() {
         assertEquals(PROFILE_URL, userResult?.data?.profileUrl)
         assertEquals(EMAIL, userResult?.data?.email)
         assertTrue(userResult?.data?.custom?.containsKey("favouriteNumber")!!)
-        assertTrue(userResult?.data?.custom?.containsKey("favouriteColour")!!)
-        assertTrue(userResult?.data?.updated != null)
-        assertTrue(userResult?.data?.eTag != null)
+        assertTrue(userResult.data?.custom?.containsKey("favouriteColour")!!)
+        assertTrue(userResult.data?.updated != null)
+        assertTrue(userResult.data?.eTag != null)
     }
 
     @Test
@@ -136,7 +136,7 @@ class UserIntegTest() {
         val usersResultAsc: UsersResult? = pubnub.fetchUsers(
             limit = 100,
             includeCount = true,
-            sort = listOf(ResultSortKey.Asc(key = ResultKey.ID))
+            sort = listOf(ResultSortKey.Asc(key = UserKey.ID))
         ).sync()
 
         assertEquals(USER_ID_01, usersResultAsc?.data?.first()?.id)
@@ -145,7 +145,7 @@ class UserIntegTest() {
         val usersResultDesc: UsersResult? = pubnub.fetchUsers(
             limit = 100,
             includeCount = true,
-            sort = listOf(ResultSortKey.Desc(key = ResultKey.ID))
+            sort = listOf(ResultSortKey.Desc(key = UserKey.ID))
         ).sync()
 
         assertEquals(USER_ID_02, usersResultDesc?.data?.first()?.id)
