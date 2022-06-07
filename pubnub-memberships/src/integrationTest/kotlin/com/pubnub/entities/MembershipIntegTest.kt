@@ -3,13 +3,13 @@ package com.pubnub.entities
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
 import com.pubnub.api.models.consumer.objects.ResultSortKey
-import com.pubnub.api.models.consumer.objects.SpaceMembershipResultKey
-import com.pubnub.api.models.consumer.objects.UserMembershipsResultKey
 import com.pubnub.entities.models.consumer.membership.MembershipsResult
 import com.pubnub.entities.models.consumer.membership.SpaceDetailsLevel
 import com.pubnub.entities.models.consumer.membership.SpaceIdWithCustom
+import com.pubnub.entities.models.consumer.membership.SpaceMembershipResultKey
 import com.pubnub.entities.models.consumer.membership.UserDetailsLevel
 import com.pubnub.entities.models.consumer.membership.UserIdWithCustom
+import com.pubnub.entities.models.consumer.membership.UserMembershipsResultKey
 import com.pubnub.entities.models.consumer.space.SpaceResult
 import com.pubnub.entities.models.consumer.user.UserResult
 import org.junit.jupiter.api.AfterEach
@@ -284,7 +284,8 @@ class MembershipIntegTest {
         createUser(USER_ID, USER_NAME)
         createUser(USER_ID_02, USER_NAME_02)
         createSpace(SPACE_ID, SPACE_NAME)
-        val userIdsWithCustoms = listOf(UserIdWithCustom(USER_ID, MEMBERSHIP_CUSTOM), UserIdWithCustom(USER_ID_02, MEMBERSHIP_CUSTOM))
+        val userIdsWithCustoms =
+            listOf(UserIdWithCustom(USER_ID, MEMBERSHIP_CUSTOM), UserIdWithCustom(USER_ID_02, MEMBERSHIP_CUSTOM))
         pubnub.addMembershipsOfSpace(spaceId = SPACE_ID, userIdsWithCustoms = userIdsWithCustoms).sync()
 
         val membershipsResultSortUserIdAsc = pubnub.fetchMembershipsOfSpace(

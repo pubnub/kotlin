@@ -10,14 +10,14 @@ import com.pubnub.api.models.consumer.objects.PNMembershipKey
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.PNSortKey
 import com.pubnub.api.models.consumer.objects.ResultSortKey
-import com.pubnub.api.models.consumer.objects.SpaceMembershipResultKey
-import com.pubnub.api.models.consumer.objects.UserMembershipsResultKey
 import com.pubnub.entities.models.consumer.membership.MembershipsResult
 import com.pubnub.entities.models.consumer.membership.MembershipsStatusResult
 import com.pubnub.entities.models.consumer.membership.SpaceDetailsLevel
 import com.pubnub.entities.models.consumer.membership.SpaceIdWithCustom
+import com.pubnub.entities.models.consumer.membership.SpaceMembershipResultKey
 import com.pubnub.entities.models.consumer.membership.UserDetailsLevel
 import com.pubnub.entities.models.consumer.membership.UserIdWithCustom
+import com.pubnub.entities.models.consumer.membership.UserMembershipsResultKey
 import com.pubnub.entities.models.consumer.membership.toPNChannelDetailsLevel
 import com.pubnub.entities.models.consumer.membership.toPNChannelWithCustomList
 import com.pubnub.entities.models.consumer.membership.toPNUUIDDetailsLevel
@@ -34,7 +34,7 @@ import com.pubnub.entities.models.consumer.membership.toUserMembershipsResult
  *                            @see [SpaceIdWithCustom]
  * @param userId Unique user identifier. If not supplied then current user’s userId is used.
  *
-*/
+ */
 fun PubNub.addMembershipsOfUser(
     spaceIdsWithCustoms: List<SpaceIdWithCustom>,
     userId: String = configuration.uuid
@@ -110,7 +110,7 @@ fun PubNub.fetchMembershipsOfUser(
         limit = limit,
         page = page,
         filter = filter,
-        sort = toPNMembershipSortKeyList(sort),
+        sort = sort.toPNMembershipSortKeyList(),
         includeCount = includeCount,
         includeCustom = includeCustom,
         includeChannelDetails = includeSpaceDetails?.toPNChannelDetailsLevel()
@@ -122,14 +122,17 @@ fun PubNub.fetchMembershipsOfUser(
     ) { pnChannelMembershipArrayResult -> pnChannelMembershipArrayResult.toUserFetchMembershipsResult(userId) }
 }
 
-private fun toPNMembershipSortKeyList(sort: Collection<ResultSortKey<UserMembershipsResultKey>>): Collection<PNSortKey<PNMembershipKey>> {
-    val pnMembershipSortKeyList = sort.map { resultSortKey ->
-        when (resultSortKey) {
-            is ResultSortKey.Asc -> PNSortKey.PNAsc(key = resultSortKey.key.toPNMembershipKey())
-            is ResultSortKey.Desc -> PNSortKey.PNDesc(key = resultSortKey.key.toPNMembershipKey())
-        }
+private fun Collection<ResultSortKey<UserMembershipsResultKey>>.toPNMembershipSortKeyList(): Collection<PNSortKey<PNMembershipKey>> {
+    return this.map { resultSortKey ->
+        resultSortKey.toPNMembershipSortKey()
     }
-    return pnMembershipSortKeyList
+}
+
+private fun ResultSortKey<UserMembershipsResultKey>.toPNMembershipSortKey(): PNSortKey<PNMembershipKey> {
+    return when (this) {
+        is ResultSortKey.Asc -> PNSortKey.PNAsc(key = this.key.toPNMembershipKey())
+        is ResultSortKey.Desc -> PNSortKey.PNDesc(key = this.key.toPNMembershipKey())
+    }
 }
 
 /**
@@ -169,7 +172,7 @@ fun PubNub.fetchMembershipsOfSpace(
         limit = limit,
         page = page,
         filter = filter,
-        sort = toPNSortKeyListWithPNMemberKey(sort),
+        sort = sort.toPNMemberSortKeyList(),
         includeCount = includeCount,
         includeCustom = includeCustom,
         includeUUIDDetails = includeUserDetails?.toPNUUIDDetailsLevel()
@@ -181,14 +184,17 @@ fun PubNub.fetchMembershipsOfSpace(
     ) { pnMemberArrayResult -> pnMemberArrayResult.toSpaceFetchMembershipResult(spaceId) }
 }
 
-fun toPNSortKeyListWithPNMemberKey(sort: Collection<ResultSortKey<SpaceMembershipResultKey>>): Collection<PNSortKey<PNMemberKey>> {
-    val pnMemberSortKeyList = sort.map { resultSortKey ->
-        when (resultSortKey) {
-            is ResultSortKey.Asc -> PNSortKey.PNAsc(key = resultSortKey.key.toPNMemberKey())
-            is ResultSortKey.Desc -> PNSortKey.PNDesc(key = resultSortKey.key.toPNMemberKey())
-        }
+private fun Collection<ResultSortKey<SpaceMembershipResultKey>>.toPNMemberSortKeyList(): Collection<PNSortKey<PNMemberKey>> {
+    return this.map { resultSortKey ->
+        resultSortKey.toPNMemberSortKey()
     }
-    return pnMemberSortKeyList
+}
+
+private fun ResultSortKey<SpaceMembershipResultKey>.toPNMemberSortKey(): PNSortKey<PNMemberKey> {
+    return when (this) {
+        is ResultSortKey.Asc -> PNSortKey.PNAsc(key = this.key.toPNMemberKey())
+        is ResultSortKey.Desc -> PNSortKey.PNDesc(key = this.key.toPNMemberKey())
+    }
 }
 
 /**
