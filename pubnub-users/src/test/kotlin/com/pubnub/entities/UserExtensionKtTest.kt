@@ -13,6 +13,7 @@ import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataArrayResult
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataResult
 import com.pubnub.entities.models.consumer.user.RemoveUserResult
 import com.pubnub.entities.models.consumer.user.User
+import com.pubnub.entities.models.consumer.user.UserId
 import com.pubnub.entities.models.consumer.user.UsersResult
 import io.mockk.MockKAnnotations
 import io.mockk.every
@@ -25,8 +26,8 @@ import org.junit.jupiter.api.Test
 internal class UserExtensionKtTest {
     private lateinit var pubNub: PubNub
 
-    private val USER_ID = "userId"
-    private val USER_ID_02 = "userId02"
+    private val USER_ID = UserId("userId")
+    private val USER_ID_02 = UserId("userId02")
     private val USER_NAME = "userName"
     private val EXTERNAL_ID = "externalId"
     private val PROFILE_URL = "profileUrl"
@@ -162,9 +163,9 @@ internal class UserExtensionKtTest {
         )
     }
 
-    private fun createPnuuidMetadata(userId: String): PNUUIDMetadata {
+    private fun createPnuuidMetadata(userId: UserId): PNUUIDMetadata {
         val pnUUIDMetadata = PNUUIDMetadata(
-            id = userId,
+            id = userId.id,
             name = USER_NAME,
             externalId = EXTERNAL_ID,
             profileUrl = PROFILE_URL,
@@ -178,7 +179,7 @@ internal class UserExtensionKtTest {
         return pnUUIDMetadata
     }
 
-    private fun createUser(id: String) = User(
+    private fun createUser(id: UserId) = User(
         id = id,
         externalId = EXTERNAL_ID,
         profileUrl = PROFILE_URL,

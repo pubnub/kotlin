@@ -13,6 +13,7 @@ import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadataArrayResu
 import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadataResult
 import com.pubnub.entities.models.consumer.space.RemoveSpaceResult
 import com.pubnub.entities.models.consumer.space.Space
+import com.pubnub.entities.models.consumer.space.SpaceId
 import com.pubnub.entities.models.consumer.space.SpacesResult
 import io.mockk.MockKAnnotations
 import io.mockk.every
@@ -25,8 +26,8 @@ import org.junit.jupiter.api.Test
 class SpaceExtensionKtTest {
     private lateinit var pubNub: PubNub
 
-    private val SPACE_ID = "unitTestKT_spaceId1"
-    private val SPACE_ID_02 = "unitTestKT_spaceId2"
+    private val SPACE_ID = SpaceId("unitTestKT_spaceId1")
+    private val SPACE_ID_02 = SpaceId("unitTestKT_spaceId2")
     private val SPACE_NAME = "unitTestKT_spaceName"
     private val SPACE_DESCRIPTION = "space description"
     private val CUSTOM = mapOf("My favourite car" to "Syrena")
@@ -139,9 +140,9 @@ class SpaceExtensionKtTest {
         )
     }
 
-    private fun createPnChannelMetadata(id: String): PNChannelMetadata {
+    private fun createPnChannelMetadata(id: SpaceId): PNChannelMetadata {
         return PNChannelMetadata(
-            id = id,
+            id = id.id,
             name = SPACE_NAME,
             description = SPACE_DESCRIPTION,
             custom = CUSTOM,
@@ -152,7 +153,7 @@ class SpaceExtensionKtTest {
         )
     }
 
-    private fun createSpace(id: String) = Space(
+    private fun createSpace(id: SpaceId) = Space(
         id = id,
         name = SPACE_NAME,
         description = SPACE_DESCRIPTION,

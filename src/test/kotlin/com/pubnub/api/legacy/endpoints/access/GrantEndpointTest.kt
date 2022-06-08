@@ -39,7 +39,6 @@ class GrantEndpointTest : BaseTest() {
                 .withQueryParam("channel", matching("ch1"))
                 .withQueryParam("auth", matching("key1"))
                 .withQueryParam("uuid", matching("myUUID"))
-
                 .withQueryParam("r", matching("0"))
                 .withQueryParam("w", matching("0"))
                 .withQueryParam("m", matching("0"))
@@ -96,7 +95,6 @@ class GrantEndpointTest : BaseTest() {
                 .withQueryParam("channel", matching("ch1"))
                 .withQueryParam("auth", matching("key1,key2"))
                 .withQueryParam("uuid", matching("myUUID"))
-
                 .withQueryParam("r", matching("0"))
                 .withQueryParam("w", matching("0"))
                 .withQueryParam("m", matching("0"))
@@ -161,7 +159,6 @@ class GrantEndpointTest : BaseTest() {
                 .withQueryParam("channel", matching("ch1,ch2"))
                 .withQueryParam("auth", matching("key1"))
                 .withQueryParam("uuid", matching("myUUID"))
-
                 .withQueryParam("r", matching("0"))
                 .withQueryParam("w", matching("0"))
                 .withQueryParam("m", matching("0"))
@@ -233,7 +230,6 @@ class GrantEndpointTest : BaseTest() {
                 .withQueryParam("channel", matching("ch1,ch2"))
                 .withQueryParam("auth", matching("key1,key2"))
                 .withQueryParam("uuid", matching("myUUID"))
-
                 .withQueryParam("r", matching("0"))
                 .withQueryParam("w", matching("0"))
                 .withQueryParam("m", matching("0"))

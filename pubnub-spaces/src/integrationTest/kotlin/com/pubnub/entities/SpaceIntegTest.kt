@@ -5,6 +5,7 @@ import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubException
 import com.pubnub.api.models.consumer.objects.ResultSortKey
 import com.pubnub.entities.models.consumer.space.Space
+import com.pubnub.entities.models.consumer.space.SpaceId
 import com.pubnub.entities.models.consumer.space.SpaceKey
 import com.pubnub.entities.models.consumer.space.SpacesResult
 import org.junit.jupiter.api.AfterEach
@@ -17,9 +18,9 @@ import org.junit.jupiter.api.assertThrows
 class SpaceIntegTest() {
     private lateinit var pubnub: PubNub
 
-    private val SPACE_ID = "spaceIntegId"
-    private val SPACE_ID_01: String = SPACE_ID + "1"
-    private val SPACE_ID_02: String = SPACE_ID + "2"
+    private val SPACE_ID = SpaceId("spaceIntegId")
+    private val SPACE_ID_01 = SpaceId(SPACE_ID.id + "1")
+    private val SPACE_ID_02 = SpaceId(SPACE_ID.id + "2")
     private val SPACE_NAME = "spaceIntegName"
     private val DESCRIPTION = "space description"
     private val CUSTOM: Map<String, String> = mapOf("favouritePet" to "mouse")
@@ -148,7 +149,7 @@ class SpaceIntegTest() {
         pubnub.removeSpace(spaceId = SPACE_ID_02).sync()
     }
 
-    private fun createSpace(spaceId: String): Space? {
+    private fun createSpace(spaceId: SpaceId): Space? {
         return pubnub.createSpace(
             spaceId = spaceId,
             name = SPACE_NAME,
