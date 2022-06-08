@@ -3,7 +3,7 @@ package com.pubnub.api.endpoints.objects.channel
 import com.pubnub.api.Endpoint
 import com.pubnub.api.PubNub
 import com.pubnub.api.endpoints.objects.internal.CollectionQueryParameters
-import com.pubnub.api.endpoints.objects.internal.Include
+import com.pubnub.api.endpoints.objects.internal.IncludeQueryParam
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata
@@ -18,7 +18,7 @@ import retrofit2.Response
 class GetAllChannelMetadata internal constructor(
     pubnub: PubNub,
     private val collectionQueryParameters: CollectionQueryParameters,
-    private val withIncludes: Include
+    private val withIncludes: IncludeQueryParam
 ) : Endpoint<EntityArrayEnvelope<PNChannelMetadata>, PNChannelMetadataArrayResult>(pubnub) {
 
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityArrayEnvelope<PNChannelMetadata>> {

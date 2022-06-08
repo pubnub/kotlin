@@ -30,7 +30,7 @@ import com.pubnub.api.endpoints.objects.channel.GetAllChannelMetadata
 import com.pubnub.api.endpoints.objects.channel.GetChannelMetadata
 import com.pubnub.api.endpoints.objects.channel.RemoveChannelMetadata
 import com.pubnub.api.endpoints.objects.channel.SetChannelMetadata
-import com.pubnub.api.endpoints.objects.internal.Include
+import com.pubnub.api.endpoints.objects.internal.IncludeQueryParam
 import com.pubnub.api.endpoints.objects.internal.CollectionQueryParameters
 import com.pubnub.api.endpoints.objects.member.GetChannelMembers
 import com.pubnub.api.endpoints.objects.member.ManageChannelMembers
@@ -1003,7 +1003,7 @@ class PubNub(val configuration: PNConfiguration) {
             sort = sort,
             includeCount = includeCount
         ),
-        withIncludes = Include(includeCustom = includeCustom)
+        withIncludes = IncludeQueryParam(includeCustom = includeCustom)
     )
 
     /**
@@ -1015,7 +1015,7 @@ class PubNub(val configuration: PNConfiguration) {
     fun getChannelMetadata(channel: String, includeCustom: Boolean = false) = GetChannelMetadata(
         pubnub = this,
         channel = channel,
-        withIncludes = Include(includeCustom = includeCustom)
+        withIncludes = IncludeQueryParam(includeCustom = includeCustom)
     )
 
     /**
@@ -1041,7 +1041,7 @@ class PubNub(val configuration: PNConfiguration) {
         name = name,
         description = description,
         custom = custom,
-        withIncludes = Include(includeCustom = includeCustom),
+        withIncludes = IncludeQueryParam(includeCustom = includeCustom),
         type = type,
         status = status
     )
@@ -1087,7 +1087,7 @@ class PubNub(val configuration: PNConfiguration) {
             sort = sort,
             includeCount = includeCount
         ),
-        withInclude = Include(includeCustom = includeCustom)
+        withInclude = IncludeQueryParam(includeCustom = includeCustom)
     )
 
     /**
@@ -1102,7 +1102,7 @@ class PubNub(val configuration: PNConfiguration) {
     ) = GetUUIDMetadata(
         pubnub = this,
         uuid = uuid ?: configuration.uuid,
-        withIncludes = Include(includeCustom = includeCustom)
+        withIncludes = IncludeQueryParam(includeCustom = includeCustom)
     )
 
     /**
@@ -1134,7 +1134,7 @@ class PubNub(val configuration: PNConfiguration) {
         profileUrl = profileUrl,
         email = email,
         custom = custom,
-        withInclude = Include(includeCustom = includeCustom),
+        withInclude = IncludeQueryParam(includeCustom = includeCustom),
         type = type,
         status = status
     )
@@ -1185,9 +1185,10 @@ class PubNub(val configuration: PNConfiguration) {
             sort = sort,
             includeCount = includeCount
         ),
-        withChannelDetailsCustom = Include(
+        includeQueryParam = IncludeQueryParam(
             includeCustom = includeCustom,
-            includeChannelDetails = includeChannelDetails
+            includeChannelDetails = includeChannelDetails,
+            includeType = false
         )
     )
 
@@ -1359,9 +1360,10 @@ class PubNub(val configuration: PNConfiguration) {
             sort = sort,
             includeCount = includeCount
         ),
-        withIncludes = Include(
+        includeQueryParam = IncludeQueryParam(
             includeCustom = includeCustom,
-            includeChannelDetails = includeChannelDetails
+            includeChannelDetails = includeChannelDetails,
+            includeType = false
         )
     )
 
@@ -1437,9 +1439,10 @@ class PubNub(val configuration: PNConfiguration) {
             sort = sort,
             includeCount = includeCount
         ),
-        withIncludes = Include(
+        withIncludes = IncludeQueryParam(
             includeCustom = includeCustom,
-            includeUUIDDetails = includeUUIDDetails
+            includeUUIDDetails = includeUUIDDetails,
+            includeType = false
         )
     )
 
@@ -1645,9 +1648,10 @@ class PubNub(val configuration: PNConfiguration) {
             sort = sort,
             includeCount = includeCount
         ),
-        withIncludes = Include(
+        withIncludes = IncludeQueryParam(
             includeCustom = includeCustom,
-            includeUUIDDetails = includeUUIDDetails
+            includeUUIDDetails = includeUUIDDetails,
+            includeType = false
         )
     )
 

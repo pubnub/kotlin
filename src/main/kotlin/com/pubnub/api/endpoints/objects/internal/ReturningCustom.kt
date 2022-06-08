@@ -3,12 +3,12 @@ package com.pubnub.api.endpoints.objects.internal
 import com.pubnub.api.models.consumer.objects.member.PNUUIDDetailsLevel
 import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
 
-data class Include(
+data class IncludeQueryParam(
     private val includeCustom: Boolean = false,
     private val includeChannelDetails: PNChannelDetailsLevel? = null,
     private val includeUUIDDetails: PNUUIDDetailsLevel? = null,
-    private val includeType: Boolean = false,
-    private val includeStatus: Boolean = false
+    private val includeType: Boolean = true,
+    private val includeStatus: Boolean = true
 ) {
     internal fun createIncludeQueryParams(): Map<String, String> {
         val includeList = mutableListOf<String>()
@@ -31,8 +31,17 @@ data class Include(
     }
 }
 
-@Deprecated("use Include", ReplaceWith("Include"))
-data class ReturningCustom @Deprecated("use Include", ReplaceWith("Include(includeCustom = includeCustom)")) constructor(
+@Deprecated(
+    "use IncludeQueryParam",
+    ReplaceWith("IncludeQueryParam", "com.pubnub.api.endpoints.objects.internal.IncludeQueryParam")
+)
+data class ReturningCustom @Deprecated(
+    "use IncludeParam",
+    ReplaceWith(
+        expression = "IncludeQueryParam(includeCustom = includeCustom)",
+        "com.pubnub.api.endpoints.objects.internal.IncludeQueryParam"
+    )
+) constructor(
     private val includeCustom: Boolean = false
 ) {
 
@@ -45,8 +54,17 @@ data class ReturningCustom @Deprecated("use Include", ReplaceWith("Include(inclu
     }
 }
 
-@Deprecated("use Include", ReplaceWith("Include"))
-data class ReturningChannelDetailsCustom @Deprecated("use Include", ReplaceWith("Include(includeCustom = includeCustom, includeChannelDetails = includeChannelDetails)"))constructor(
+@Deprecated(
+    "use IncludeQueryParam",
+    ReplaceWith("IncludeQueryParam", "com.pubnub.api.endpoints.objects.internal.IncludeQueryParam")
+)
+data class ReturningChannelDetailsCustom @Deprecated(
+    "use IncludeParam",
+    ReplaceWith(
+        expression = "IncludeQueryParam(includeCustom = includeCustom)",
+        "com.pubnub.api.endpoints.objects.internal.IncludeQueryParam"
+    )
+) constructor(
     private val includeCustom: Boolean = false,
     private val includeChannelDetails: PNChannelDetailsLevel? = null
 ) {
@@ -66,8 +84,7 @@ data class ReturningChannelDetailsCustom @Deprecated("use Include", ReplaceWith(
 
     internal fun createIncludeQueryParams(): Map<String, String> {
         val includeList = includeList(
-            includeCustom = includeCustom,
-            channelDetailsLevel = includeChannelDetails
+            includeCustom = includeCustom, channelDetailsLevel = includeChannelDetails
         )
         return if (includeList.isNotEmpty()) {
             mapOf("include" to includeList.joinToString(","))
@@ -77,8 +94,17 @@ data class ReturningChannelDetailsCustom @Deprecated("use Include", ReplaceWith(
     }
 }
 
-@Deprecated("use Include", ReplaceWith("Include"))
-data class ReturningUUIDDetailsCustom @Deprecated("use Include", ReplaceWith("Include(includeCustom = includeCustom, includeUUIDDetails = includeUUIDDetails)")) constructor(
+@Deprecated(
+    "use IncludeQueryParam",
+    ReplaceWith("IncludeQueryParam", "com.pubnub.api.endpoints.objects.internal.IncludeQueryParam")
+)
+data class ReturningUUIDDetailsCustom @Deprecated(
+    "use IncludeParam",
+    ReplaceWith(
+        expression = "IncludeQueryParam(includeCustom = includeCustom)",
+        "com.pubnub.api.endpoints.objects.internal.IncludeQueryParam"
+    )
+) constructor(
     private val includeCustom: Boolean = false,
     private val includeUUIDDetails: PNUUIDDetailsLevel? = null
 ) {
@@ -98,8 +124,7 @@ data class ReturningUUIDDetailsCustom @Deprecated("use Include", ReplaceWith("In
 
     internal fun createIncludeQueryParams(): Map<String, String> {
         val includeList = includeList(
-            includeCustom = includeCustom,
-            uuidDetailsLevel = includeUUIDDetails
+            includeCustom = includeCustom, uuidDetailsLevel = includeUUIDDetails
         )
         return if (includeList.isNotEmpty()) {
             mapOf("include" to includeList.joinToString(","))

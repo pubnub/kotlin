@@ -2,7 +2,7 @@ package com.pubnub.api.endpoints.objects.channel
 
 import com.pubnub.api.Endpoint
 import com.pubnub.api.PubNub
-import com.pubnub.api.endpoints.objects.internal.Include
+import com.pubnub.api.endpoints.objects.internal.IncludeQueryParam
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata
 import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadataResult
@@ -21,7 +21,7 @@ class SetChannelMetadata internal constructor(
     private val description: String?,
     private val custom: Any?,
     private val channel: String,
-    private val withIncludes: Include,
+    private val withIncludes: IncludeQueryParam,
     private val type: String?,
     private val status: String?
 ) : Endpoint<EntityEnvelope<PNChannelMetadata>, PNChannelMetadataResult>(pubnub) {

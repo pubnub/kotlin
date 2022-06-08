@@ -3,7 +3,7 @@ package com.pubnub.api.endpoints.objects.membership
 import com.pubnub.api.Endpoint
 import com.pubnub.api.PubNub
 import com.pubnub.api.endpoints.objects.internal.CollectionQueryParameters
-import com.pubnub.api.endpoints.objects.internal.Include
+import com.pubnub.api.endpoints.objects.internal.IncludeQueryParam
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.objects.membership.ChannelMembershipInput
 import com.pubnub.api.models.consumer.objects.membership.PNChannelMembership
@@ -25,12 +25,12 @@ class ManageMemberships internal constructor(
     private val channelsToRemove: Collection<String>,
     private val uuid: String,
     private val collectionQueryParameters: CollectionQueryParameters,
-    private val withIncludes: Include
+    private val includeQueryParam: IncludeQueryParam
 ) : Endpoint<EntityArrayEnvelope<PNChannelMembership>, PNChannelMembershipArrayResult>(pubnub) {
 
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityArrayEnvelope<PNChannelMembership>> {
         val params = queryParams + collectionQueryParameters.createCollectionQueryParams() +
-            withIncludes.createIncludeQueryParams()
+            includeQueryParam.createIncludeQueryParams()
         return pubnub.retrofitManager.objectsService.patchMemberships(
             uuid = uuid,
             subKey = pubnub.configuration.subscribeKey,
