@@ -35,7 +35,7 @@ import com.pubnub.entities.models.consumer.membership.toUserMembershipsResult
  *
  */
 fun PubNub.addMembershipsOfUser(
-    spaceIdsWithCustoms: List<Membership.Partial>,
+    spaceIdsWithCustoms: List<Membership.PartialWithSpace>,
     userId: String = configuration.uuid
 ): ExtendedRemoteAction<MembershipsStatusResult> = firstDo(
     setMemberships(
@@ -59,7 +59,7 @@ fun PubNub.addMembershipsOfUser(
  */
 fun PubNub.addMembershipsOfSpace(
     spaceId: String,
-    userIdsWithCustoms: List<Membership.Partial>
+    userIdsWithCustoms: List<Membership.PartialWithUser>
 ): ExtendedRemoteAction<MembershipsStatusResult> = firstDo(
     setChannelMembers(
         channel = spaceId,
@@ -250,7 +250,7 @@ fun PubNub.removeMembershipsOfSpace(
  *
  */
 fun PubNub.updateMembershipsOfUser(
-    spaceIdsWithCustoms: List<Membership.Partial>,
+    spaceIdsWithCustoms: List<Membership.PartialWithSpace>,
     userId: String = configuration.uuid
 ): ExtendedRemoteAction<MembershipsStatusResult> = firstDo(
     setMemberships(
@@ -274,7 +274,7 @@ fun PubNub.updateMembershipsOfUser(
  */
 fun PubNub.updateMembershipsOfSpace(
     spaceId: String,
-    userIdsWithCustoms: List<Membership.Partial>
+    userIdsWithCustoms: List<Membership.PartialWithUser>
 ): ExtendedRemoteAction<MembershipsStatusResult> = firstDo(
     setChannelMembers(
         channel = spaceId,

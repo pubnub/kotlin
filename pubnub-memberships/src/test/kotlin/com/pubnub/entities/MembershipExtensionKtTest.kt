@@ -116,7 +116,7 @@ internal class MembershipExtensionKtTest {
         every { pubNub.setChannelMembers(any(), any(), any(), any(), any(), any(), any(), any(), any()) } returns manageChannelMembersEndpoint
         every { manageChannelMembersEndpoint.sync() } returns pnMemberArrayResult
 
-        val userIdsWithCustoms = listOf(Membership.partialWithUser(USER_ID, USER_CUSTOM), Membership.partialWithUser(USER_ID_02, USER_CUSTOM))
+        val userIdsWithCustoms = listOf(Membership.PartialWithUser(USER_ID, USER_CUSTOM), Membership.PartialWithUser(USER_ID_02, USER_CUSTOM))
         val addMembershipOfSpaceEndpoint: ExtendedRemoteAction<MembershipsStatusResult> =
             pubNub.addMembershipsOfSpace(spaceId = SPACE_ID, userIdsWithCustoms = userIdsWithCustoms)
         val membershipsResult = addMembershipOfSpaceEndpoint.sync()

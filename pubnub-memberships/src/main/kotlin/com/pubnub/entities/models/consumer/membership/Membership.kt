@@ -16,39 +16,16 @@ data class Membership(
     val status: String?
 ) {
 
-    companion object {
-        fun partialWithUser(
-            userId: String,
-            custom: Map<String, Any>? = null,
-            status: String? = null
-        ): Membership.Partial {
-            return Membership.Partial(
-                userId = userId,
-                spaceId = null,
-                custom = custom,
-                status = status
-            )
-        }
+    data class PartialWithUser(
+        val userId: String,
+        val custom: Map<String, Any>? = null,
+        val status: String? = null
+    )
 
-        fun partialWithSpace(
-            spaceId: String,
-            custom: Map<String, Any>? = null,
-            status: String? = null
-        ): Membership.Partial {
-            return Membership.Partial(
-                userId = null,
-                spaceId = spaceId,
-                custom = custom,
-                status = status
-            )
-        }
-    }
-
-    data class Partial internal constructor(
-        val userId: String?,
-        val spaceId: String?,
-        val custom: Map<String, Any>?,
-        val status: String?
+    data class PartialWithSpace(
+        val spaceId: String,
+        val custom: Map<String, Any>? = null,
+        val status: String? = null
     )
 }
 
@@ -72,4 +49,20 @@ internal fun PNMember.toSpaceMembership(spaceId: String): Membership {
         eTag = eTag,
         status = status
     )
+}
+
+internal fun List<Membership.PartialWithSpace>.toPNChannelWithCustomList(): List<PNChannelMembership.Partial> {
+    return map { it.toPNChannelWithCustom() }
+}
+
+internal fun Membership.PartialWithSpace.toPNChannelWithCustom(): PNChannelMembership.Partial {
+    return PNChannelMembership.Partial(channelId = spaceId, custom = custom)
+}
+
+internal fun List<Membership.PartialWithUser>.toPNUUIDWithCustomList(): List<PNMember.Partial> {
+    return map { it.toPNUUIDWithCustom() }
+}
+
+internal fun Membership.PartialWithUser.toPNUUIDWithCustom(): PNMember.Partial {
+    return PNMember.Partial(uuidId = userId, custom = custom, status = status)
 }
