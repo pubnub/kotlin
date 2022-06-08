@@ -1,16 +1,11 @@
 package com.pubnub.entities.models.consumer.membership
 
-import com.pubnub.api.models.consumer.objects.member.PNUUIDWithCustom
+import com.pubnub.api.models.consumer.objects.member.PNMember
 
-data class UserIdWithCustom(
-    val userId: String,
-    val custom: Map<String, Any>? = null
-)
-
-fun List<UserIdWithCustom>.toPNUUIDWithCustomList(): List<PNUUIDWithCustom> {
-    return map { userIdWithCustom -> userIdWithCustom.toPNUUIDWithCustom() }
+fun List<Membership.Partial>.toPNUUIDWithCustomList(): List<PNMember.Partial> {
+    return map { it.toPNUUIDWithCustom() }
 }
 
-fun UserIdWithCustom.toPNUUIDWithCustom(): PNUUIDWithCustom {
-    return PNUUIDWithCustom(uuid = userId, custom = custom)
+fun Membership.Partial.toPNUUIDWithCustom(): PNMember.Partial {
+    return PNMember.Partial(uuidId = userId!!, custom = custom, status = status)
 }

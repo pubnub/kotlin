@@ -8,4 +8,13 @@ data class PNMember(
     val updated: String,
     val eTag: String,
     val status: String?
-)
+) {
+    data class Partial(
+        val uuidId: String,
+        override val custom: Any?,
+        override val status: String?,
+
+    ) : MemberInput {
+        override val uuid: String = uuidId
+    }
+}

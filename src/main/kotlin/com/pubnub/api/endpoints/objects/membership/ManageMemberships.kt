@@ -5,9 +5,9 @@ import com.pubnub.api.PubNub
 import com.pubnub.api.endpoints.objects.internal.CollectionQueryParameters
 import com.pubnub.api.endpoints.objects.internal.Include
 import com.pubnub.api.enums.PNOperationType
+import com.pubnub.api.models.consumer.objects.membership.ChannelMembershipInput
 import com.pubnub.api.models.consumer.objects.membership.PNChannelMembership
 import com.pubnub.api.models.consumer.objects.membership.PNChannelMembershipArrayResult
-import com.pubnub.api.models.consumer.objects.membership.PNChannelWithCustom
 import com.pubnub.api.models.server.objects_api.ChangeMembershipInput
 import com.pubnub.api.models.server.objects_api.ChannelId
 import com.pubnub.api.models.server.objects_api.EntityArrayEnvelope
@@ -21,7 +21,7 @@ import retrofit2.Response
  */
 class ManageMemberships internal constructor(
     pubnub: PubNub,
-    private val channelsToSet: Collection<PNChannelWithCustom>,
+    private val channelsToSet: Collection<ChannelMembershipInput>,
     private val channelsToRemove: Collection<String>,
     private val uuid: String,
     private val collectionQueryParameters: CollectionQueryParameters,

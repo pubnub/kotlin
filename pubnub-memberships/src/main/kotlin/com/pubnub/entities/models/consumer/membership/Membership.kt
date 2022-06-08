@@ -14,7 +14,43 @@ data class Membership(
     val updated: String,
     val eTag: String,
     val status: String?
-)
+) {
+
+    companion object {
+        fun partialWithUser(
+            userId: String,
+            custom: Map<String, Any>? = null,
+            status: String? = null
+        ): Membership.Partial {
+            return Membership.Partial(
+                userId = userId,
+                spaceId = null,
+                custom = custom,
+                status = status
+            )
+        }
+
+        fun partialWithSpace(
+            spaceId: String,
+            custom: Map<String, Any>? = null,
+            status: String? = null
+        ): Membership.Partial {
+            return Membership.Partial(
+                userId = null,
+                spaceId = spaceId,
+                custom = custom,
+                status = status
+            )
+        }
+    }
+
+    data class Partial internal constructor(
+        val userId: String?,
+        val spaceId: String?,
+        val custom: Map<String, Any>?,
+        val status: String?
+    )
+}
 
 internal fun PNChannelMembership.toUserMembership(userId: String): Membership {
     return Membership(

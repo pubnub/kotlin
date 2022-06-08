@@ -1,16 +1,11 @@
 package com.pubnub.entities.models.consumer.membership
 
-import com.pubnub.api.models.consumer.objects.membership.PNChannelWithCustom
+import com.pubnub.api.models.consumer.objects.membership.PNChannelMembership
 
-data class SpaceIdWithCustom(
-    val spaceId: String,
-    val custom: Map<String, Any>? = null
-)
-
-internal fun List<SpaceIdWithCustom>.toPNChannelWithCustomList(): List<PNChannelWithCustom> {
-    return map { spaceIdWithCustom -> spaceIdWithCustom.toPNChannelWithCustom() }
+internal fun List<Membership.Partial>.toPNChannelWithCustomList(): List<PNChannelMembership.Partial> {
+    return map { it.toPNChannelWithCustom() }
 }
 
-internal fun SpaceIdWithCustom.toPNChannelWithCustom(): PNChannelWithCustom {
-    return PNChannelWithCustom(channel = spaceId, custom = custom)
+internal fun Membership.Partial.toPNChannelWithCustom(): PNChannelMembership.Partial {
+    return PNChannelMembership.Partial(channelId = spaceId!!, custom = custom)
 }
