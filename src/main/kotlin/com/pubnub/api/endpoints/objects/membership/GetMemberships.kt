@@ -4,7 +4,6 @@ import com.pubnub.api.Endpoint
 import com.pubnub.api.PubNub
 import com.pubnub.api.endpoints.objects.internal.CollectionQueryParameters
 import com.pubnub.api.endpoints.objects.internal.Include
-import com.pubnub.api.endpoints.objects.internal.ReturningChannelDetailsCustom
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.objects.membership.PNChannelMembership
 import com.pubnub.api.models.consumer.objects.membership.PNChannelMembershipArrayResult

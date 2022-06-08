@@ -180,13 +180,8 @@ internal class MembershipExtensionKtTest {
         assertEquals(200, membershipsResult?.status)
     }
 
-<<<<<<< HEAD
-    private fun assertMembershipResultOfSpace(fetchMembershipsResult: FetchMembershipsResult?) {
-        val user01 = User(id = USER_ID, name = USER_NAME, externalId = EXTERNAL_ID, profileUrl = PROFILE_URL, email = EMAIL, custom = USER_CUSTOM, updated = UPDATED, eTag = E_TAG, type = TYPE, status = STATUS)
-=======
     private fun assertMembershipResultOfSpace(fetchMembershipsResult: MembershipsResult?) {
-        val user01 = User(id = USER_ID, name = USER_NAME, externalId = EXTERNAL_ID, profileUrl = PROFILE_URL, email = EMAIL, custom = USER_CUSTOM, updated = UPDATED, eTag = E_TAG)
->>>>>>> origin/master
+        val user01 = User(id = USER_ID, name = USER_NAME, externalId = EXTERNAL_ID, profileUrl = PROFILE_URL, email = EMAIL, custom = USER_CUSTOM, updated = UPDATED, eTag = E_TAG, type = TYPE, status = STATUS)
         val space01 = Space(id = SPACE_ID)
         val user02 = User(id = USER_ID_02, name = USER_NAME_02, externalId = EXTERNAL_ID, profileUrl = PROFILE_URL, email = EMAIL, custom = USER_CUSTOM, updated = UPDATED, eTag = E_TAG, type = TYPE, status = STATUS)
         val space02 = Space(id = SPACE_ID)

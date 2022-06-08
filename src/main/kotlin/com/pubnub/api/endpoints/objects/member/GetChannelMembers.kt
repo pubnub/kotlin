@@ -4,7 +4,6 @@ import com.pubnub.api.Endpoint
 import com.pubnub.api.PubNub
 import com.pubnub.api.endpoints.objects.internal.CollectionQueryParameters
 import com.pubnub.api.endpoints.objects.internal.Include
-import com.pubnub.api.endpoints.objects.internal.ReturningUUIDDetailsCustom
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.objects.member.PNMember
 import com.pubnub.api.models.consumer.objects.member.PNMemberArrayResult
