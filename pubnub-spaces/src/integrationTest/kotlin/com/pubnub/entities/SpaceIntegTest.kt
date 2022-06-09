@@ -23,12 +23,17 @@ class SpaceIntegTest() {
     private val SPACE_NAME = "spaceIntegName"
     private val DESCRIPTION = "space description"
     private val CUSTOM: Map<String, String> = mapOf("favouritePet" to "mouse")
+    private val STATUS = "Status"
+    private val TYPE = "Type"
 
     @BeforeEach
     fun setUp() {
         val config = PNConfiguration("kotlin").apply {
             subscribeKey = IntegTestConf.subscribeKey
             publishKey = IntegTestConf.publishKey
+            IntegTestConf.origin?.let {
+                origin = it
+            }
         }
         pubnub = PubNub(config)
 
@@ -60,6 +65,8 @@ class SpaceIntegTest() {
         assertEquals(SPACE_NAME, space?.name)
         assertEquals(DESCRIPTION, space?.description)
         assertEquals(CUSTOM, space?.custom)
+        assertEquals(STATUS, space?.status)
+        assertEquals(TYPE, space?.type)
         assertTrue(space?.updated != null)
         assertTrue(space?.eTag != null)
     }
@@ -147,7 +154,9 @@ class SpaceIntegTest() {
             name = SPACE_NAME,
             description = DESCRIPTION,
             custom = CUSTOM,
-            includeCustom = true
+            includeCustom = true,
+            type = TYPE,
+            status = STATUS
         ).sync()
     }
 }

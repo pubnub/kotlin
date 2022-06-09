@@ -2,13 +2,13 @@ package com.pubnub.entities
 
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
+import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.models.consumer.objects.ResultSortKey
+import com.pubnub.entities.models.consumer.membership.Membership
 import com.pubnub.entities.models.consumer.membership.MembershipsResult
 import com.pubnub.entities.models.consumer.membership.SpaceDetailsLevel
-import com.pubnub.entities.models.consumer.membership.SpaceIdWithCustom
 import com.pubnub.entities.models.consumer.membership.SpaceMembershipResultKey
 import com.pubnub.entities.models.consumer.membership.UserDetailsLevel
-import com.pubnub.entities.models.consumer.membership.UserIdWithCustom
 import com.pubnub.entities.models.consumer.membership.UserMembershipsResultKey
 import com.pubnub.entities.models.consumer.space.Space
 import com.pubnub.entities.models.consumer.user.User
@@ -29,6 +29,8 @@ class MembershipIntegTest {
     private val PROFILE_URL = "prorileUrl"
     private val EMAIL = "emaiL@mail.com"
     private val USER_CUSTOM = mapOf("user favourite pet" to "mouse")
+    private val USER_STATUS = "user_status"
+    private val USER_TYPE = "user_type"
 
     private val SPACE_ID = "space_id"
     private val SPACE_ID_02 = "space_id02"
@@ -36,13 +38,21 @@ class MembershipIntegTest {
     private val SPACE_NAME_02 = "space_name02"
     private val SPACE_DESCRIPTION = "space_description"
     private val SPACE_CUSTOM = mapOf("space favourite pet" to "mouse")
+    private val SPACE_STATUS = "space_status"
+    private val SPACE_TYPE = "space_type"
     private val MEMBERSHIP_CUSTOM = mapOf("membership favourite pet" to "mouse")
+    private val MEMBERSHIP_STATUS = "membership_status"
 
     @BeforeEach
     fun setUp() {
         val config = PNConfiguration(USER_ID).apply {
             subscribeKey = IntegTestConf.subscribeKey
             publishKey = IntegTestConf.publishKey
+            IntegTestConf.origin?.let {
+                origin = it
+            }
+            secure = false
+            logVerbosity = PNLogVerbosity.BODY
         }
         pubnub = PubNub(config)
 
@@ -54,11 +64,11 @@ class MembershipIntegTest {
         createUser(USER_ID, USER_NAME)
         createSpace(SPACE_ID, SPACE_NAME)
         createSpace(SPACE_ID_02, SPACE_NAME_02)
-        val spaceIdWithCustomList: List<SpaceIdWithCustom> =
-            listOf(SpaceIdWithCustom(SPACE_ID, MEMBERSHIP_CUSTOM), SpaceIdWithCustom(SPACE_ID_02, MEMBERSHIP_CUSTOM))
+        val spaceIdWithCustomList: List<Membership.PartialWithSpace> =
+            listOf(Membership.PartialWithSpace(SPACE_ID, MEMBERSHIP_CUSTOM), Membership.PartialWithSpace(SPACE_ID_02, MEMBERSHIP_CUSTOM))
 
         val addMembershipsResult =
-            pubnub.addMembershipsOfUser(spaceIdsWithCustoms = spaceIdWithCustomList, userId = USER_ID).sync()
+            pubnub.addMembershipsOfUser(partialMembershipsWithSpace = spaceIdWithCustomList, userId = USER_ID).sync()
 
         assertEquals(200, addMembershipsResult?.status)
         val fetchMembershipsResult = pubnub.fetchMembershipsOfUser(
@@ -75,11 +85,11 @@ class MembershipIntegTest {
         createUser(USER_ID, USER_NAME)
         createUser(USER_ID_02, USER_NAME_02)
         createSpace(SPACE_ID, SPACE_NAME)
-        val userIdsWithCustoms: List<UserIdWithCustom> =
-            listOf(UserIdWithCustom(USER_ID, MEMBERSHIP_CUSTOM), UserIdWithCustom(USER_ID_02, MEMBERSHIP_CUSTOM))
+        val partialMembershipsWithUser: List<Membership.PartialWithUser> =
+            listOf(Membership.PartialWithUser(USER_ID, MEMBERSHIP_CUSTOM), Membership.PartialWithUser(USER_ID_02, MEMBERSHIP_CUSTOM))
 
         val addMembershipsResult =
-            pubnub.addMembershipsOfSpace(spaceId = SPACE_ID, userIdsWithCustoms = userIdsWithCustoms).sync()
+            pubnub.addMembershipsOfSpace(spaceId = SPACE_ID, partialMembershipsWithUser = partialMembershipsWithUser).sync()
 
         assertEquals(200, addMembershipsResult?.status)
         val fetchMembershipsResult = pubnub.fetchMembershipsOfSpace(
@@ -99,9 +109,9 @@ class MembershipIntegTest {
         createUser(USER_ID, USER_NAME)
         createSpace(SPACE_ID, SPACE_NAME)
         createSpace(SPACE_ID_02, SPACE_NAME_02)
-        val spaceIdWithCustomList: List<SpaceIdWithCustom> =
-            listOf(SpaceIdWithCustom(SPACE_ID, MEMBERSHIP_CUSTOM), SpaceIdWithCustom(SPACE_ID_02, MEMBERSHIP_CUSTOM))
-        pubnub.addMembershipsOfUser(spaceIdsWithCustoms = spaceIdWithCustomList, userId = USER_ID).sync()
+        val spaceIdWithCustomList: List<Membership.PartialWithSpace> =
+            listOf(Membership.PartialWithSpace(SPACE_ID, MEMBERSHIP_CUSTOM), Membership.PartialWithSpace(SPACE_ID_02, MEMBERSHIP_CUSTOM))
+        pubnub.addMembershipsOfUser(partialMembershipsWithSpace = spaceIdWithCustomList, userId = USER_ID).sync()
         val fetchMembershipsResultAfterAdd = pubnub.fetchMembershipsOfUser(userId = USER_ID, includeCount = true).sync()
         assertEquals(2, fetchMembershipsResultAfterAdd?.totalCount)
 
@@ -122,9 +132,9 @@ class MembershipIntegTest {
         createUser(USER_ID, USER_NAME)
         createUser(USER_ID_02, USER_NAME_02)
         createSpace(SPACE_ID, SPACE_NAME)
-        val userIdsWithCustoms: List<UserIdWithCustom> =
-            listOf(UserIdWithCustom(USER_ID, MEMBERSHIP_CUSTOM), UserIdWithCustom(USER_ID_02, MEMBERSHIP_CUSTOM))
-        pubnub.addMembershipsOfSpace(spaceId = SPACE_ID, userIdsWithCustoms = userIdsWithCustoms).sync()
+        val partialMembershipsWithUser: List<Membership.PartialWithUser> =
+            listOf(Membership.PartialWithUser(USER_ID, MEMBERSHIP_CUSTOM), Membership.PartialWithUser(USER_ID_02, MEMBERSHIP_CUSTOM))
+        pubnub.addMembershipsOfSpace(spaceId = SPACE_ID, partialMembershipsWithUser = partialMembershipsWithUser).sync()
         val fetchMembershipsResultAfterAdd =
             pubnub.fetchMembershipsOfSpace(spaceId = SPACE_ID, includeCount = true).sync()
         assertEquals(2, fetchMembershipsResultAfterAdd?.totalCount)
@@ -142,8 +152,8 @@ class MembershipIntegTest {
     internal fun can_updateMembershipOfUser_by_adding_membership() {
         createUser(USER_ID, USER_NAME)
         createSpace(SPACE_ID, SPACE_NAME)
-        val spaceIdWithCustomList = listOf(SpaceIdWithCustom(SPACE_ID, MEMBERSHIP_CUSTOM))
-        pubnub.addMembershipsOfUser(spaceIdsWithCustoms = spaceIdWithCustomList, userId = USER_ID).sync()
+        val spaceIdWithCustomList = listOf(Membership.PartialWithSpace(SPACE_ID, MEMBERSHIP_CUSTOM))
+        pubnub.addMembershipsOfUser(partialMembershipsWithSpace = spaceIdWithCustomList, userId = USER_ID).sync()
         val fetchMembershipsResult = pubnub.fetchMembershipsOfUser(
             userId = USER_ID,
             includeCustom = true,
@@ -155,7 +165,7 @@ class MembershipIntegTest {
         createSpace(SPACE_ID_02, SPACE_NAME)
         val updateMembershipsResult = pubnub.updateMembershipsOfUser(
             userId = USER_ID,
-            spaceIdsWithCustoms = listOf(SpaceIdWithCustom(SPACE_ID_02, MEMBERSHIP_CUSTOM))
+            partialMembershipsWithSpace = listOf(Membership.PartialWithSpace(SPACE_ID_02, MEMBERSHIP_CUSTOM))
         ).sync()
         assertEquals(200, updateMembershipsResult?.status)
 
@@ -173,12 +183,12 @@ class MembershipIntegTest {
     internal fun can_updateMembershipOfUser_by_adding_membership_custom() {
         createUser(USER_ID, USER_NAME)
         createSpace(SPACE_ID, SPACE_NAME)
-        val spaceIdWithCustomList = listOf(SpaceIdWithCustom(SPACE_ID))
-        pubnub.addMembershipsOfUser(spaceIdsWithCustoms = spaceIdWithCustomList, userId = USER_ID).sync()
+        val spaceIdWithCustomList = listOf(Membership.PartialWithSpace(SPACE_ID))
+        pubnub.addMembershipsOfUser(partialMembershipsWithSpace = spaceIdWithCustomList, userId = USER_ID).sync()
 
         pubnub.updateMembershipsOfUser(
             userId = USER_ID,
-            spaceIdsWithCustoms = listOf(SpaceIdWithCustom(SPACE_ID, MEMBERSHIP_CUSTOM))
+            partialMembershipsWithSpace = listOf(Membership.PartialWithSpace(SPACE_ID, MEMBERSHIP_CUSTOM))
         ).sync()
 
         val fetchMembershipsResultAfterUpdate = pubnub.fetchMembershipsOfUser(
@@ -195,15 +205,15 @@ class MembershipIntegTest {
     internal fun can_updateMembershipOfSpace() {
         createUser(USER_ID, USER_NAME)
         createSpace(SPACE_ID, SPACE_NAME)
-        val userIdsWithCustoms = listOf(UserIdWithCustom(userId = USER_ID, custom = MEMBERSHIP_CUSTOM))
-        pubnub.addMembershipsOfSpace(spaceId = SPACE_ID, userIdsWithCustoms = userIdsWithCustoms).sync()
+        val partialMembershipsWithUser = listOf(Membership.PartialWithUser(userId = USER_ID, custom = MEMBERSHIP_CUSTOM))
+        pubnub.addMembershipsOfSpace(spaceId = SPACE_ID, partialMembershipsWithUser = partialMembershipsWithUser).sync()
         val fetchMembershipsResult = pubnub.fetchMembershipsOfSpace(spaceId = SPACE_ID, includeCount = true).sync()
         assertEquals(1, fetchMembershipsResult?.totalCount)
 
         createUser(USER_ID_02, USER_NAME_02)
         val updateMembershipsResult = pubnub.updateMembershipsOfSpace(
             spaceId = SPACE_ID,
-            userIdsWithCustoms = listOf(UserIdWithCustom(USER_ID_02, MEMBERSHIP_CUSTOM))
+            partialMembershipsWithUser = listOf(Membership.PartialWithUser(USER_ID_02, MEMBERSHIP_CUSTOM))
         ).sync()
         assertEquals(200, updateMembershipsResult?.status)
 
@@ -221,12 +231,12 @@ class MembershipIntegTest {
     internal fun can_updateMembershipOfSpace_by_adding_membership_custom() {
         createUser(USER_ID, USER_NAME)
         createSpace(SPACE_ID, SPACE_NAME)
-        val userIdsWithCustoms = listOf(UserIdWithCustom(userId = USER_ID))
-        pubnub.addMembershipsOfSpace(spaceId = SPACE_ID, userIdsWithCustoms = userIdsWithCustoms).sync()
+        val partialMembershipsWithUser = listOf(Membership.PartialWithUser(userId = USER_ID))
+        pubnub.addMembershipsOfSpace(spaceId = SPACE_ID, partialMembershipsWithUser = partialMembershipsWithUser).sync()
 
         pubnub.updateMembershipsOfSpace(
             spaceId = SPACE_ID,
-            userIdsWithCustoms = listOf(UserIdWithCustom(USER_ID, MEMBERSHIP_CUSTOM))
+            partialMembershipsWithUser = listOf(Membership.PartialWithUser(USER_ID, MEMBERSHIP_CUSTOM))
         ).sync()
 
         val fetchMembershipsResultAfterUpdate = pubnub.fetchMembershipsOfSpace(
@@ -244,16 +254,18 @@ class MembershipIntegTest {
         createUser(USER_ID, USER_NAME)
         createSpace(SPACE_ID, SPACE_NAME)
         createSpace(SPACE_ID_02, SPACE_NAME_02)
-        val spaceIdWithCustomList: List<SpaceIdWithCustom> =
-            listOf(SpaceIdWithCustom(SPACE_ID, MEMBERSHIP_CUSTOM), SpaceIdWithCustom(SPACE_ID_02, MEMBERSHIP_CUSTOM))
-        pubnub.addMembershipsOfUser(spaceIdsWithCustoms = spaceIdWithCustomList, userId = USER_ID).sync()
+        val spaceIdWithCustomList: List<Membership.PartialWithSpace> =
+            listOf(Membership.PartialWithSpace(SPACE_ID, MEMBERSHIP_CUSTOM, MEMBERSHIP_STATUS), Membership.PartialWithSpace(SPACE_ID_02, MEMBERSHIP_CUSTOM, MEMBERSHIP_STATUS))
+        pubnub.addMembershipsOfUser(partialMembershipsWithSpace = spaceIdWithCustomList, userId = USER_ID).sync()
 
         val membershipsResultSortSpaceIdAsc = pubnub.fetchMembershipsOfUser(
             userId = USER_ID,
             sort = listOf(ResultSortKey.Asc(key = UserMembershipsResultKey.SPACE_ID))
         ).sync()
         assertEquals(SPACE_ID, membershipsResultSortSpaceIdAsc?.data?.first()?.space?.id)
+        assertEquals(MEMBERSHIP_STATUS, membershipsResultSortSpaceIdAsc?.data?.first()?.status)
         assertEquals(SPACE_ID_02, membershipsResultSortSpaceIdAsc?.data?.elementAt(1)?.space?.id)
+        assertEquals(MEMBERSHIP_STATUS, membershipsResultSortSpaceIdAsc?.data?.elementAt(1)?.status)
 
         val membershipsResultSortSpaceIdDesc = pubnub.fetchMembershipsOfUser(
             userId = USER_ID,
@@ -284,9 +296,9 @@ class MembershipIntegTest {
         createUser(USER_ID, USER_NAME)
         createUser(USER_ID_02, USER_NAME_02)
         createSpace(SPACE_ID, SPACE_NAME)
-        val userIdsWithCustoms =
-            listOf(UserIdWithCustom(USER_ID, MEMBERSHIP_CUSTOM), UserIdWithCustom(USER_ID_02, MEMBERSHIP_CUSTOM))
-        pubnub.addMembershipsOfSpace(spaceId = SPACE_ID, userIdsWithCustoms = userIdsWithCustoms).sync()
+        val partialMembershipsWithUser =
+            listOf(Membership.PartialWithUser(USER_ID, MEMBERSHIP_CUSTOM), Membership.PartialWithUser(USER_ID_02, MEMBERSHIP_CUSTOM))
+        pubnub.addMembershipsOfSpace(spaceId = SPACE_ID, partialMembershipsWithUser = partialMembershipsWithUser).sync()
 
         val membershipsResultSortUserIdAsc = pubnub.fetchMembershipsOfSpace(
             spaceId = SPACE_ID,
@@ -341,7 +353,9 @@ class MembershipIntegTest {
             profileUrl = PROFILE_URL,
             email = EMAIL,
             custom = USER_CUSTOM,
-            includeCustom = true
+            includeCustom = true,
+            status = USER_STATUS,
+            type = USER_TYPE
         ).sync()
     }
 
@@ -351,7 +365,9 @@ class MembershipIntegTest {
             name = spaceName,
             description = SPACE_DESCRIPTION,
             custom = SPACE_CUSTOM,
-            includeCustom = true
+            includeCustom = true,
+            status = SPACE_STATUS,
+            type = SPACE_TYPE
         ).sync()
     }
 

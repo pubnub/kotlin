@@ -10,7 +10,9 @@ data class User(
     val email: String? = null,
     val custom: Map<String, Any>? = null,
     val updated: String? = null,
-    val eTag: String? = null
+    val eTag: String? = null,
+    val type: String? = null,
+    val status: String? = null
 )
 
 fun PNUUIDMetadata.toUser(): User {
@@ -22,6 +24,8 @@ fun PNUUIDMetadata.toUser(): User {
         email = email,
         custom = custom as Map<String, Any>?,
         updated = updated,
-        eTag = eTag
+        eTag = eTag,
+        type = type,
+        status = status
     )
 }

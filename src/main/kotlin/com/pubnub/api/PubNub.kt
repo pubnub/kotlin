@@ -30,10 +30,8 @@ import com.pubnub.api.endpoints.objects.channel.GetAllChannelMetadata
 import com.pubnub.api.endpoints.objects.channel.GetChannelMetadata
 import com.pubnub.api.endpoints.objects.channel.RemoveChannelMetadata
 import com.pubnub.api.endpoints.objects.channel.SetChannelMetadata
+import com.pubnub.api.endpoints.objects.internal.IncludeQueryParam
 import com.pubnub.api.endpoints.objects.internal.CollectionQueryParameters
-import com.pubnub.api.endpoints.objects.internal.ReturningChannelDetailsCustom
-import com.pubnub.api.endpoints.objects.internal.ReturningCustom
-import com.pubnub.api.endpoints.objects.internal.ReturningUUIDDetailsCustom
 import com.pubnub.api.endpoints.objects.member.GetChannelMembers
 import com.pubnub.api.endpoints.objects.member.ManageChannelMembers
 import com.pubnub.api.endpoints.objects.membership.GetMemberships
@@ -74,8 +72,9 @@ import com.pubnub.api.models.consumer.objects.PNMemberKey
 import com.pubnub.api.models.consumer.objects.PNMembershipKey
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.PNSortKey
+import com.pubnub.api.models.consumer.objects.member.MemberInput
 import com.pubnub.api.models.consumer.objects.member.PNUUIDDetailsLevel
-import com.pubnub.api.models.consumer.objects.member.PNUUIDWithCustom
+import com.pubnub.api.models.consumer.objects.membership.ChannelMembershipInput
 import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
 import com.pubnub.api.models.consumer.objects.membership.PNChannelWithCustom
 import com.pubnub.api.presence.Presence
@@ -1004,7 +1003,7 @@ class PubNub(val configuration: PNConfiguration) {
             sort = sort,
             includeCount = includeCount
         ),
-        withCustom = ReturningCustom(includeCustom = includeCustom)
+        includeQueryParam = IncludeQueryParam(includeCustom = includeCustom)
     )
 
     /**
@@ -1016,7 +1015,7 @@ class PubNub(val configuration: PNConfiguration) {
     fun getChannelMetadata(channel: String, includeCustom: Boolean = false) = GetChannelMetadata(
         pubnub = this,
         channel = channel,
-        withCustom = ReturningCustom(includeCustom = includeCustom)
+        includeQueryParam = IncludeQueryParam(includeCustom = includeCustom)
     )
 
     /**
@@ -1033,14 +1032,18 @@ class PubNub(val configuration: PNConfiguration) {
         name: String? = null,
         description: String? = null,
         custom: Any? = null,
-        includeCustom: Boolean = false
+        includeCustom: Boolean = false,
+        type: String? = null,
+        status: String? = null
     ) = SetChannelMetadata(
         pubnub = this,
         channel = channel,
         name = name,
         description = description,
         custom = custom,
-        withCustom = ReturningCustom(includeCustom = includeCustom)
+        includeQueryParam = IncludeQueryParam(includeCustom = includeCustom),
+        type = type,
+        status = status
     )
 
     /**
@@ -1084,7 +1087,7 @@ class PubNub(val configuration: PNConfiguration) {
             sort = sort,
             includeCount = includeCount
         ),
-        withCustom = ReturningCustom(includeCustom = includeCustom)
+        withInclude = IncludeQueryParam(includeCustom = includeCustom)
     )
 
     /**
@@ -1099,7 +1102,7 @@ class PubNub(val configuration: PNConfiguration) {
     ) = GetUUIDMetadata(
         pubnub = this,
         uuid = uuid ?: configuration.uuid,
-        withCustom = ReturningCustom(includeCustom = includeCustom)
+        includeQueryParam = IncludeQueryParam(includeCustom = includeCustom)
     )
 
     /**
@@ -1120,7 +1123,9 @@ class PubNub(val configuration: PNConfiguration) {
         profileUrl: String? = null,
         email: String? = null,
         custom: Any? = null,
-        includeCustom: Boolean = false
+        includeCustom: Boolean = false,
+        type: String? = null,
+        status: String? = null
     ) = SetUUIDMetadata(
         pubnub = this,
         uuid = uuid,
@@ -1129,7 +1134,9 @@ class PubNub(val configuration: PNConfiguration) {
         profileUrl = profileUrl,
         email = email,
         custom = custom,
-        withCustom = ReturningCustom(includeCustom = includeCustom)
+        withInclude = IncludeQueryParam(includeCustom = includeCustom),
+        type = type,
+        status = status
     )
 
     /**
@@ -1178,9 +1185,10 @@ class PubNub(val configuration: PNConfiguration) {
             sort = sort,
             includeCount = includeCount
         ),
-        withChannelDetailsCustom = ReturningChannelDetailsCustom(
+        includeQueryParam = IncludeQueryParam(
             includeCustom = includeCustom,
-            includeChannelDetails = includeChannelDetails
+            includeChannelDetails = includeChannelDetails,
+            includeType = false
         )
     )
 
@@ -1197,7 +1205,7 @@ class PubNub(val configuration: PNConfiguration) {
         message = "Use setMemberships instead"
     )
     fun addMemberships(
-        channels: List<PNChannelWithCustom>,
+        channels: List<ChannelMembershipInput>,
         uuid: String? = null,
         limit: Int? = null,
         page: PNPage? = null,
@@ -1241,7 +1249,7 @@ class PubNub(val configuration: PNConfiguration) {
      * @param includeChannelDetails Include custom fields for channels metadata.
      */
     fun setMemberships(
-        channels: List<PNChannelWithCustom>,
+        channels: List<ChannelMembershipInput>,
         uuid: String? = null,
         limit: Int? = null,
         page: PNPage? = null,
@@ -1249,7 +1257,7 @@ class PubNub(val configuration: PNConfiguration) {
         sort: Collection<PNSortKey<PNMembershipKey>> = listOf(),
         includeCount: Boolean = false,
         includeCustom: Boolean = false,
-        includeChannelDetails: PNChannelDetailsLevel? = null
+        includeChannelDetails: PNChannelDetailsLevel? = null,
     ) = manageMemberships(
         channelsToSet = channels,
         channelsToRemove = listOf(),
@@ -1260,7 +1268,7 @@ class PubNub(val configuration: PNConfiguration) {
         sort = sort,
         includeCount = includeCount,
         includeCustom = includeCustom,
-        includeChannelDetails = includeChannelDetails
+        includeChannelDetails = includeChannelDetails,
     )
 
     /**
@@ -1330,7 +1338,7 @@ class PubNub(val configuration: PNConfiguration) {
      * @param includeChannelDetails Include custom fields for channels metadata.
      */
     fun manageMemberships(
-        channelsToSet: List<PNChannelWithCustom>,
+        channelsToSet: List<ChannelMembershipInput>,
         channelsToRemove: List<String>,
         uuid: String? = null,
         limit: Int? = null,
@@ -1339,7 +1347,7 @@ class PubNub(val configuration: PNConfiguration) {
         sort: Collection<PNSortKey<PNMembershipKey>> = listOf(),
         includeCount: Boolean = false,
         includeCustom: Boolean = false,
-        includeChannelDetails: PNChannelDetailsLevel? = null
+        includeChannelDetails: PNChannelDetailsLevel? = null,
     ) = ManageMemberships(
         pubnub = this,
         channelsToSet = channelsToSet,
@@ -1352,9 +1360,10 @@ class PubNub(val configuration: PNConfiguration) {
             sort = sort,
             includeCount = includeCount
         ),
-        withChannelDetailsCustom = ReturningChannelDetailsCustom(
+        includeQueryParam = IncludeQueryParam(
             includeCustom = includeCustom,
-            includeChannelDetails = includeChannelDetails
+            includeChannelDetails = includeChannelDetails,
+            includeType = false
         )
     )
 
@@ -1430,9 +1439,10 @@ class PubNub(val configuration: PNConfiguration) {
             sort = sort,
             includeCount = includeCount
         ),
-        withUUIDDetailsCustom = ReturningUUIDDetailsCustom(
+        includeQueryParam = IncludeQueryParam(
             includeCustom = includeCustom,
-            includeUUIDDetails = includeUUIDDetails
+            includeUUIDDetails = includeUUIDDetails,
+            includeType = false
         )
     )
 
@@ -1450,7 +1460,7 @@ class PubNub(val configuration: PNConfiguration) {
     )
     fun addMembers(
         channel: String,
-        uuids: List<PNUUIDWithCustom>,
+        uuids: List<MemberInput>,
         limit: Int? = null,
         page: PNPage? = null,
         filter: String? = null,
@@ -1475,7 +1485,7 @@ class PubNub(val configuration: PNConfiguration) {
      *
      * @param channel Channel name
      * @param uuids List of members to add to the channel. List can contain strings (uuid only)
-     *              or objects (which can include custom data). @see [PNUUIDWithCustom]
+     *              or objects (which can include custom data). @see [PNMember.Partial]
      * @param limit Number of objects to return in the response.
      *              Default is 100, which is also the maximum value.
      *              Set limit to 0 (zero) and includeCount to true if you want to retrieve only a result count.
@@ -1494,14 +1504,14 @@ class PubNub(val configuration: PNConfiguration) {
      */
     fun setChannelMembers(
         channel: String,
-        uuids: List<PNUUIDWithCustom>,
+        uuids: List<MemberInput>,
         limit: Int? = null,
         page: PNPage? = null,
         filter: String? = null,
         sort: Collection<PNSortKey<PNMemberKey>> = listOf(),
         includeCount: Boolean = false,
         includeCustom: Boolean = false,
-        includeUUIDDetails: PNUUIDDetailsLevel? = null
+        includeUUIDDetails: PNUUIDDetailsLevel? = null,
     ) = manageChannelMembers(
         channel = channel,
         uuidsToSet = uuids,
@@ -1512,7 +1522,7 @@ class PubNub(val configuration: PNConfiguration) {
         sort = sort,
         includeCount = includeCount,
         includeCustom = includeCustom,
-        includeUUIDDetails = includeUUIDDetails
+        includeUUIDDetails = includeUUIDDetails,
     )
 
     /**
@@ -1590,14 +1600,14 @@ class PubNub(val configuration: PNConfiguration) {
         sort = sort,
         includeCount = includeCount,
         includeCustom = includeCustom,
-        includeUUIDDetails = includeUUIDDetails
+        includeUUIDDetails = includeUUIDDetails,
     )
 
     /**
      * Set or remove members in a channel.
      *
      * @param channel Channel name
-     * @param uuidsToSet Collection of members to add to the channel. @see [PNUUIDWithCustom]
+     * @param uuidsToSet Collection of members to add to the channel. @see [PNMember.Partial]
      * @param uuidsToRemove Members to remove from channel.
      * @param limit Number of objects to return in the response.
      *              Default is 100, which is also the maximum value.
@@ -1617,7 +1627,7 @@ class PubNub(val configuration: PNConfiguration) {
      */
     fun manageChannelMembers(
         channel: String,
-        uuidsToSet: Collection<PNUUIDWithCustom>,
+        uuidsToSet: Collection<MemberInput>,
         uuidsToRemove: Collection<String>,
         limit: Int? = null,
         page: PNPage? = null,
@@ -1625,7 +1635,7 @@ class PubNub(val configuration: PNConfiguration) {
         sort: Collection<PNSortKey<PNMemberKey>> = listOf(),
         includeCount: Boolean = false,
         includeCustom: Boolean = false,
-        includeUUIDDetails: PNUUIDDetailsLevel? = null
+        includeUUIDDetails: PNUUIDDetailsLevel? = null,
     ) = ManageChannelMembers(
         pubnub = this,
         channel = channel,
@@ -1638,9 +1648,10 @@ class PubNub(val configuration: PNConfiguration) {
             sort = sort,
             includeCount = includeCount
         ),
-        withUUIDDetailsCustom = ReturningUUIDDetailsCustom(
+        includeQueryParam = IncludeQueryParam(
             includeCustom = includeCustom,
-            includeUUIDDetails = includeUUIDDetails
+            includeUUIDDetails = includeUUIDDetails,
+            includeType = false
         )
     )
 

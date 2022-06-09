@@ -54,8 +54,7 @@ fun PubNub.fetchSpaces(
     )
 ).then {
     map(
-        it,
-        PNOperationType.SpaceOperation
+        it, PNOperationType.SpaceOperation
     ) { pnChannelMetadataArrayResult -> pnChannelMetadataArrayResult.toSpacesResult() }
 }
 
@@ -82,8 +81,7 @@ fun PubNub.fetchSpace(
     getChannelMetadata(channel = spaceId, includeCustom = includeCustom)
 ).then {
     map(
-        it,
-        PNOperationType.SpaceOperation
+        it, PNOperationType.SpaceOperation
     ) { pnChannelMetadataResult -> pnChannelMetadataResult.toSpace() }
 }
 
@@ -95,25 +93,30 @@ fun PubNub.fetchSpace(
  * @param description Description of a channel.
  * @param custom Object with supported data types.
  * @param includeCustom Include respective additional fields in the response.
+ * @param type Type of the space.
+ * @param status Status of the space.
  */
 fun PubNub.createSpace(
     spaceId: String,
     name: String? = null,
     description: String? = null,
     custom: Map<String, Any>? = null,
-    includeCustom: Boolean = false
+    includeCustom: Boolean = false,
+    type: String? = null,
+    status: String? = null
 ): ExtendedRemoteAction<Space?> = firstDo(
     setChannelMetadata(
         channel = spaceId,
         name = name,
         description = description,
         custom = custom,
-        includeCustom = includeCustom
+        includeCustom = includeCustom,
+        type = type,
+        status = status
     )
 ).then {
     map(
-        it,
-        PNOperationType.SpaceOperation
+        it, PNOperationType.SpaceOperation
     ) { pnChannelMetadataResult -> pnChannelMetadataResult.toSpace() }
 }
 
@@ -131,19 +134,22 @@ fun PubNub.updateSpace(
     name: String? = null,
     description: String? = null,
     custom: Map<String, Any>? = null,
-    includeCustom: Boolean = false
+    includeCustom: Boolean = false,
+    type: String? = null,
+    status: String? = null
 ): ExtendedRemoteAction<Space?> = firstDo(
     setChannelMetadata(
         channel = spaceId,
         name = name,
         description = description,
         custom = custom,
-        includeCustom = includeCustom
+        includeCustom = includeCustom,
+        type = type,
+        status = status
     )
 ).then {
     map(
-        it,
-        PNOperationType.SpaceOperation
+        it, PNOperationType.SpaceOperation
     ) { pnChannelMetadataResult -> pnChannelMetadataResult.toSpace() }
 }
 
@@ -158,7 +164,6 @@ fun PubNub.removeSpace(
     removeChannelMetadata(channel = spaceId)
 ).then {
     map(
-        it,
-        PNOperationType.SpaceOperation
+        it, PNOperationType.SpaceOperation
     ) { pnRemoveMetadataResult -> pnRemoveMetadataResult.toRemoveSpaceResult() }
 }

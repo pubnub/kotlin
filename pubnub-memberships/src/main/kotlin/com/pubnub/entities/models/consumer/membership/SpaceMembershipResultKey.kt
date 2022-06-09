@@ -3,8 +3,8 @@ package com.pubnub.entities.models.consumer.membership
 import com.pubnub.api.models.consumer.objects.PNMemberKey
 import com.pubnub.api.models.consumer.objects.SortableKey
 
-enum class SpaceMembershipResultKey() : SortableKey {
-    USER_ID(), USER_NAME(), USER_UPDATED(), UPDATED();
+enum class SpaceMembershipResultKey : SortableKey {
+    USER_ID, USER_NAME, USER_UPDATED, UPDATED;
 
     fun toPNMemberKey(): PNMemberKey {
         return when (this) {

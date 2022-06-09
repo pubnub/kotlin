@@ -25,13 +25,18 @@ class UserIntegTest() {
     private val EXTERNAL_ID = "externalId"
     private val PROFILE_URL = "profileUrl"
     private val EMAIL = "email"
-    private val CUSTOM: Map<String, Any> = mapOf("favouriteNumber" to 1, "favouriteColour" to "green")
+    private val CUSTOM = mapOf("favouriteNumber" to 1, "favouriteColour" to "green")
+    private val TYPE = "type"
+    private val STATUS = "status"
 
     @BeforeEach
     fun setUp() {
         val config = PNConfiguration("kotlin").apply {
             subscribeKey = IntegTestConf.subscribeKey
             publishKey = IntegTestConf.publishKey
+            IntegTestConf.origin?.let {
+                origin = it
+            }
         }
         pubnub = PubNub(config)
         pubnub.removeUser(userId = USER_ID_01).sync()
@@ -66,6 +71,8 @@ class UserIntegTest() {
         assertEquals(EXTERNAL_ID, user?.externalId)
         assertEquals(PROFILE_URL, user?.profileUrl)
         assertEquals(EMAIL, user?.email)
+        assertEquals(STATUS, user?.status)
+        assertEquals(TYPE, user?.type)
         assertTrue(user?.custom?.containsKey("favouriteNumber")!!)
         assertTrue(user?.custom?.containsKey("favouriteColour")!!)
         assertTrue(user?.updated != null)
@@ -79,7 +86,7 @@ class UserIntegTest() {
         val userId02 = USER_ID_02
         createUser(userId02)
 
-        val usersResult: UsersResult? = pubnub.fetchUsers(limit = 100, includeCount = true).sync()
+        val usersResult: UsersResult? = pubnub.fetchUsers(limit = 100, includeCount = true, includeCustom = true).sync()
 
         assertEquals(2, usersResult?.data?.size)
         assertEquals(2, usersResult?.totalCount)
@@ -163,7 +170,9 @@ class UserIntegTest() {
             profileUrl = PROFILE_URL,
             email = EMAIL,
             custom = CUSTOM,
-            includeCustom = true
+            includeCustom = true,
+            type = TYPE,
+            status = STATUS
         ).sync()
     }
 }

@@ -5,7 +5,11 @@ interface SortField {
 }
 
 enum class PNKey(override val fieldName: String) : SortField {
-    ID("id"), NAME("name"), UPDATED("updated");
+    ID("id"),
+    NAME("name"),
+    UPDATED("updated"),
+    TYPE("type"),
+    STATUS("status");
 }
 
 enum class PNMembershipKey(override val fieldName: String) : SortField {
