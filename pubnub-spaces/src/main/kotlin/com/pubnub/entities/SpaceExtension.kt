@@ -10,11 +10,11 @@ import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.PNSortKey
 import com.pubnub.api.models.consumer.objects.ResultSortKey
 import com.pubnub.entities.models.consumer.space.RemoveSpaceResult
+import com.pubnub.entities.models.consumer.space.Space
 import com.pubnub.entities.models.consumer.space.SpaceKey
-import com.pubnub.entities.models.consumer.space.SpaceResult
 import com.pubnub.entities.models.consumer.space.SpacesResult
 import com.pubnub.entities.models.consumer.space.toRemoveSpaceResult
-import com.pubnub.entities.models.consumer.space.toSpaceResult
+import com.pubnub.entities.models.consumer.space.toSpace
 import com.pubnub.entities.models.consumer.space.toSpacesResult
 
 /**
@@ -78,13 +78,13 @@ private fun toPNSortKey(sort: Collection<ResultSortKey<SpaceKey>>): Collection<P
 fun PubNub.fetchSpace(
     spaceId: String,
     includeCustom: Boolean = false
-): ExtendedRemoteAction<SpaceResult?> = firstDo(
+): ExtendedRemoteAction<Space?> = firstDo(
     getChannelMetadata(channel = spaceId, includeCustom = includeCustom)
 ).then {
     map(
         it,
         PNOperationType.SpaceOperation
-    ) { pnChannelMetadataResult -> pnChannelMetadataResult.toSpaceResult() }
+    ) { pnChannelMetadataResult -> pnChannelMetadataResult.toSpace() }
 }
 
 /**
@@ -102,7 +102,7 @@ fun PubNub.createSpace(
     description: String? = null,
     custom: Map<String, Any>? = null,
     includeCustom: Boolean = false
-): ExtendedRemoteAction<SpaceResult?> = firstDo(
+): ExtendedRemoteAction<Space?> = firstDo(
     setChannelMetadata(
         channel = spaceId,
         name = name,
@@ -114,7 +114,7 @@ fun PubNub.createSpace(
     map(
         it,
         PNOperationType.SpaceOperation
-    ) { pnChannelMetadataResult -> pnChannelMetadataResult.toSpaceResult() }
+    ) { pnChannelMetadataResult -> pnChannelMetadataResult.toSpace() }
 }
 
 /**
@@ -132,7 +132,7 @@ fun PubNub.updateSpace(
     description: String? = null,
     custom: Map<String, Any>? = null,
     includeCustom: Boolean = false
-): ExtendedRemoteAction<SpaceResult?> = firstDo(
+): ExtendedRemoteAction<Space?> = firstDo(
     setChannelMetadata(
         channel = spaceId,
         name = name,
@@ -144,7 +144,7 @@ fun PubNub.updateSpace(
     map(
         it,
         PNOperationType.SpaceOperation
-    ) { pnChannelMetadataResult -> pnChannelMetadataResult.toSpaceResult() }
+    ) { pnChannelMetadataResult -> pnChannelMetadataResult.toSpace() }
 }
 
 /**

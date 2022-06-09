@@ -10,8 +10,8 @@ import com.pubnub.entities.models.consumer.membership.SpaceMembershipResultKey
 import com.pubnub.entities.models.consumer.membership.UserDetailsLevel
 import com.pubnub.entities.models.consumer.membership.UserIdWithCustom
 import com.pubnub.entities.models.consumer.membership.UserMembershipsResultKey
-import com.pubnub.entities.models.consumer.space.SpaceResult
-import com.pubnub.entities.models.consumer.user.UserResult
+import com.pubnub.entities.models.consumer.space.Space
+import com.pubnub.entities.models.consumer.user.User
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -333,7 +333,7 @@ class MembershipIntegTest {
         pubnub.removeMembershipsOfSpace(spaceId = SPACE_ID_02, listOf(USER_ID, USER_ID_02)).sync()
     }
 
-    private fun createUser(userId: String, userName: String): UserResult? {
+    private fun createUser(userId: String, userName: String): User? {
         return pubnub.createUser(
             userId = userId,
             name = userName,
@@ -345,7 +345,7 @@ class MembershipIntegTest {
         ).sync()
     }
 
-    private fun createSpace(spaceId: String, spaceName: String): SpaceResult? {
+    private fun createSpace(spaceId: String, spaceName: String): Space? {
         return pubnub.createSpace(
             spaceId = spaceId,
             name = spaceName,
@@ -357,7 +357,6 @@ class MembershipIntegTest {
 
     private fun assertMembershipResultOfUser(fetchMembershipsResult: MembershipsResult?) {
         val membership01 = fetchMembershipsResult?.data?.first()
-        assertEquals(200, fetchMembershipsResult?.status)
         assertEquals(USER_ID, membership01?.user?.id)
         assertEquals(SPACE_ID, membership01?.space?.id)
         assertEquals(SPACE_NAME, membership01?.space?.name)
@@ -384,7 +383,6 @@ class MembershipIntegTest {
     }
 
     private fun assertMembershipResultOfSpace(fetchMembershipsResult: MembershipsResult?) {
-        assertEquals(200, fetchMembershipsResult?.status)
         val membership01 = fetchMembershipsResult?.data?.first()
         assertEquals(USER_ID, membership01?.user?.id)
         assertEquals(USER_NAME, membership01?.user?.name)
