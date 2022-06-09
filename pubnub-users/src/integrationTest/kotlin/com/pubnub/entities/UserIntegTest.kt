@@ -3,7 +3,6 @@ package com.pubnub.entities
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubException
-import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.models.consumer.objects.ResultSortKey
 import com.pubnub.entities.models.consumer.user.User
 import com.pubnub.entities.models.consumer.user.UserKey
