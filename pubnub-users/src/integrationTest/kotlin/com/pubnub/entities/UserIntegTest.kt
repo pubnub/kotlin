@@ -38,8 +38,6 @@ class UserIntegTest() {
             IntegTestConf.origin?.let {
                 origin = it
             }
-            secure = false
-            logVerbosity = PNLogVerbosity.BODY
         }
         pubnub = PubNub(config)
         pubnub.removeUser(userId = USER_ID_01).sync()
@@ -74,6 +72,8 @@ class UserIntegTest() {
         assertEquals(EXTERNAL_ID, user?.externalId)
         assertEquals(PROFILE_URL, user?.profileUrl)
         assertEquals(EMAIL, user?.email)
+        assertEquals(STATUS, user?.status)
+        assertEquals(TYPE, user?.type)
         assertTrue(user?.custom?.containsKey("favouriteNumber")!!)
         assertTrue(user?.custom?.containsKey("favouriteColour")!!)
         assertTrue(user?.updated != null)

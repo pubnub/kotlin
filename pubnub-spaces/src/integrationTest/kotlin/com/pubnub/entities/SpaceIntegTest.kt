@@ -24,6 +24,8 @@ class SpaceIntegTest() {
     private val SPACE_NAME = "spaceIntegName"
     private val DESCRIPTION = "space description"
     private val CUSTOM: Map<String, String> = mapOf("favouritePet" to "mouse")
+    private val STATUS = "Status"
+    private val TYPE = "Type"
 
     @BeforeEach
     fun setUp() {
@@ -33,8 +35,6 @@ class SpaceIntegTest() {
             IntegTestConf.origin?.let {
                 origin = it
             }
-            secure = false
-            logVerbosity = PNLogVerbosity.BODY
         }
         pubnub = PubNub(config)
 
@@ -66,6 +66,8 @@ class SpaceIntegTest() {
         assertEquals(SPACE_NAME, space?.name)
         assertEquals(DESCRIPTION, space?.description)
         assertEquals(CUSTOM, space?.custom)
+        assertEquals(STATUS, space?.status)
+        assertEquals(TYPE, space?.type)
         assertTrue(space?.updated != null)
         assertTrue(space?.eTag != null)
     }
@@ -154,8 +156,8 @@ class SpaceIntegTest() {
             description = DESCRIPTION,
             custom = CUSTOM,
             includeCustom = true,
-            type = "type",
-            status = "status"
+            type = TYPE,
+            status = STATUS
         ).sync()
     }
 }

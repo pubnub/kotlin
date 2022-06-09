@@ -2,6 +2,7 @@ package com.pubnub.entities
 
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
+import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.models.consumer.objects.ResultSortKey
 import com.pubnub.entities.models.consumer.membership.Membership
 import com.pubnub.entities.models.consumer.membership.MembershipsResult
@@ -40,6 +41,7 @@ class MembershipIntegTest {
     private val SPACE_STATUS = "space_status"
     private val SPACE_TYPE = "space_type"
     private val MEMBERSHIP_CUSTOM = mapOf("membership favourite pet" to "mouse")
+    private val MEMBERSHIP_STATUS = "membership_status"
 
     @BeforeEach
     fun setUp() {
@@ -251,7 +253,7 @@ class MembershipIntegTest {
         createSpace(SPACE_ID, SPACE_NAME)
         createSpace(SPACE_ID_02, SPACE_NAME_02)
         val spaceIdWithCustomList: List<Membership.PartialWithSpace> =
-            listOf(Membership.PartialWithSpace(SPACE_ID, MEMBERSHIP_CUSTOM), Membership.PartialWithSpace(SPACE_ID_02, MEMBERSHIP_CUSTOM))
+            listOf(Membership.PartialWithSpace(SPACE_ID, MEMBERSHIP_CUSTOM, MEMBERSHIP_STATUS), Membership.PartialWithSpace(SPACE_ID_02, MEMBERSHIP_CUSTOM, MEMBERSHIP_STATUS))
         pubnub.addMembershipsOfUser(partialMembershipsWithSpace = spaceIdWithCustomList, userId = USER_ID).sync()
 
         val membershipsResultSortSpaceIdAsc = pubnub.fetchMembershipsOfUser(
@@ -259,7 +261,9 @@ class MembershipIntegTest {
             sort = listOf(ResultSortKey.Asc(key = UserMembershipsResultKey.SPACE_ID))
         ).sync()
         assertEquals(SPACE_ID, membershipsResultSortSpaceIdAsc?.data?.first()?.space?.id)
+        assertEquals(MEMBERSHIP_STATUS, membershipsResultSortSpaceIdAsc?.data?.first()?.status)
         assertEquals(SPACE_ID_02, membershipsResultSortSpaceIdAsc?.data?.elementAt(1)?.space?.id)
+        assertEquals(MEMBERSHIP_STATUS, membershipsResultSortSpaceIdAsc?.data?.elementAt(1)?.status)
 
         val membershipsResultSortSpaceIdDesc = pubnub.fetchMembershipsOfUser(
             userId = USER_ID,
