@@ -5,7 +5,6 @@ import com.pubnub.api.models.consumer.objects.member.PNMemberArrayResult
 import com.pubnub.api.models.consumer.objects.membership.PNChannelMembershipArrayResult
 
 data class MembershipsResult(
-    val status: Int,
     val data: Collection<Membership>,
     val totalCount: Int?,
     val next: PNPage?,
@@ -17,7 +16,6 @@ internal fun PNChannelMembershipArrayResult.toUserFetchMembershipsResult(userId:
         pnChannelMembership.toUserMembership(userId)
     }
     return MembershipsResult(
-        status = status,
         data = userMembershipList,
         totalCount = totalCount,
         next = next,
@@ -31,7 +29,6 @@ internal fun PNMemberArrayResult.toSpaceFetchMembershipResult(spaceId: String): 
     }
 
     return MembershipsResult(
-        status = status,
         data = spaceMemberships,
         totalCount = totalCount,
         next = next,

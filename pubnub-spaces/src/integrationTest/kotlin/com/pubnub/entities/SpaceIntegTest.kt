@@ -5,8 +5,8 @@ import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.models.consumer.objects.ResultSortKey
+import com.pubnub.entities.models.consumer.space.Space
 import com.pubnub.entities.models.consumer.space.SpaceKey
-import com.pubnub.entities.models.consumer.space.SpaceResult
 import com.pubnub.entities.models.consumer.space.SpacesResult
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -45,15 +45,14 @@ class SpaceIntegTest() {
     @Test
     internal fun can_createSpace() {
         val spaceId = SPACE_ID_01
-        val spaceResult: SpaceResult? = createSpace(spaceId)
+        val space: Space? = createSpace(spaceId)
 
-        assertEquals(200, spaceResult?.status)
-        assertEquals(spaceId, spaceResult?.data?.id)
-        assertEquals(SPACE_NAME, spaceResult?.data?.name)
-        assertEquals(DESCRIPTION, spaceResult?.data?.description)
-        assertEquals(CUSTOM, spaceResult?.data?.custom)
-        assertTrue(spaceResult?.data?.updated != null)
-        assertTrue(spaceResult?.data?.eTag != null)
+        assertEquals(spaceId, space?.id)
+        assertEquals(SPACE_NAME, space?.name)
+        assertEquals(DESCRIPTION, space?.description)
+        assertEquals(CUSTOM, space?.custom)
+        assertTrue(space?.updated != null)
+        assertTrue(space?.eTag != null)
     }
 
     @Test
@@ -61,15 +60,14 @@ class SpaceIntegTest() {
         val spaceId = SPACE_ID_01
         createSpace(spaceId)
 
-        val spaceResult: SpaceResult? = pubnub.fetchSpace(spaceId = spaceId, includeCustom = true).sync()
+        val space: Space? = pubnub.fetchSpace(spaceId = spaceId, includeCustom = true).sync()
 
-        assertEquals(200, spaceResult?.status)
-        assertEquals(spaceId, spaceResult?.data?.id)
-        assertEquals(SPACE_NAME, spaceResult?.data?.name)
-        assertEquals(DESCRIPTION, spaceResult?.data?.description)
-        assertEquals(CUSTOM, spaceResult?.data?.custom)
-        assertTrue(spaceResult?.data?.updated != null)
-        assertTrue(spaceResult?.data?.eTag != null)
+        assertEquals(spaceId, space?.id)
+        assertEquals(SPACE_NAME, space?.name)
+        assertEquals(DESCRIPTION, space?.description)
+        assertEquals(CUSTOM, space?.custom)
+        assertTrue(space?.updated != null)
+        assertTrue(space?.eTag != null)
     }
 
     @Test
@@ -81,7 +79,6 @@ class SpaceIntegTest() {
 
         val spacesResult: SpacesResult? = pubnub.fetchSpaces(limit = 100, includeCount = true).sync()
 
-        assertEquals(200, spacesResult?.status)
         assertEquals(2, spacesResult?.data?.size)
         assertEquals(2, spacesResult?.totalCount)
         assertEquals(spaceId01, spacesResult?.data?.first()?.id)
@@ -109,9 +106,9 @@ class SpaceIntegTest() {
         val newDescription = "NewDescription"
         pubnub.updateSpace(spaceId = spaceId01, name = newName, description = newDescription).sync()
 
-        val spaceResult: SpaceResult? = pubnub.fetchSpace(spaceId01).sync()
-        assertEquals(newName, spaceResult?.data?.name)
-        assertEquals(newDescription, spaceResult?.data?.description)
+        val space: Space? = pubnub.fetchSpace(spaceId01).sync()
+        assertEquals(newName, space?.name)
+        assertEquals(newDescription, space?.description)
     }
 
     @Test
@@ -150,7 +147,7 @@ class SpaceIntegTest() {
         pubnub.removeSpace(spaceId = SPACE_ID_02).sync()
     }
 
-    private fun createSpace(spaceId: String): SpaceResult? {
+    private fun createSpace(spaceId: String): Space? {
         return pubnub.createSpace(
             spaceId = spaceId,
             name = SPACE_NAME,

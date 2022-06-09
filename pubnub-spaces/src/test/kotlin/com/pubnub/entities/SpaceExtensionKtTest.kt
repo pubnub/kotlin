@@ -13,7 +13,6 @@ import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadataArrayResu
 import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadataResult
 import com.pubnub.entities.models.consumer.space.RemoveSpaceResult
 import com.pubnub.entities.models.consumer.space.Space
-import com.pubnub.entities.models.consumer.space.SpaceResult
 import com.pubnub.entities.models.consumer.space.SpacesResult
 import io.mockk.MockKAnnotations
 import io.mockk.every
@@ -60,10 +59,14 @@ class SpaceExtensionKtTest {
     @Test
     internal fun can_createSpace() {
         val pnChannelMetadataResult = PNChannelMetadataResult(200, createPnChannelMetadata(SPACE_ID))
-        every { pubNub.setChannelMetadata(any(), any(), any(), any(), any(), any(), any()) } returns setChannelMetadataEndpoint
+        every {
+            pubNub.setChannelMetadata(
+                any(), any(), any(), any(), any(), any(), any()
+            )
+        } returns setChannelMetadataEndpoint
         every { setChannelMetadataEndpoint.sync() } returns pnChannelMetadataResult
 
-        val createSpaceEndpoint: ExtendedRemoteAction<SpaceResult?> = pubNub.createSpace(
+        val createSpaceEndpoint: ExtendedRemoteAction<Space?> = pubNub.createSpace(
             spaceId = SPACE_ID,
             name = SPACE_NAME,
             description = SPACE_DESCRIPTION,
@@ -72,9 +75,9 @@ class SpaceExtensionKtTest {
             type = TYPE,
             status = STATUS
         )
-        val spaceResult = createSpaceEndpoint.sync()
 
-        assertEquals(SpaceResult(status = 200, data = expectedSpace01), spaceResult)
+        val space = createSpaceEndpoint.sync()
+        assertEquals(expectedSpace01, space)
     }
 
     @Test
@@ -83,10 +86,10 @@ class SpaceExtensionKtTest {
         every { pubNub.getChannelMetadata(any(), any()) } returns getChannelMetadataEndpoint
         every { getChannelMetadataEndpoint.sync() } returns pnChannelMetadataResult
 
-        val fetchSpaceEndpoint: ExtendedRemoteAction<SpaceResult?> = pubNub.fetchSpace(spaceId = SPACE_ID)
-        val spaceResult: SpaceResult? = fetchSpaceEndpoint.sync()
+        val fetchSpaceEndpoint: ExtendedRemoteAction<Space?> = pubNub.fetchSpace(spaceId = SPACE_ID)
+        val space: Space? = fetchSpaceEndpoint.sync()
 
-        assertEquals(SpaceResult(status = 200, data = expectedSpace01), spaceResult)
+        assertEquals(expectedSpace01, space)
     }
 
     @Test
@@ -95,12 +98,11 @@ class SpaceExtensionKtTest {
         every { pubNub.setChannelMetadata(any(), any(), any(), any(), any()) } returns setChannelMetadataEndpoint
         every { setChannelMetadataEndpoint.sync() } returns pnChannelMetadataResult
 
-        val updateSpaceEndpoint: ExtendedRemoteAction<SpaceResult?> = pubNub.updateSpace(
+        val updateSpaceEndpoint: ExtendedRemoteAction<Space?> = pubNub.updateSpace(
             spaceId = SPACE_ID, name = SPACE_NAME, custom = CUSTOM, description = SPACE_DESCRIPTION
         )
-        val spaceResult = updateSpaceEndpoint.sync()
-
-        assertEquals(SpaceResult(status = 200, data = expectedSpace01), spaceResult)
+        val space = updateSpaceEndpoint.sync()
+        assertEquals(expectedSpace01, space)
     }
 
     @Test
@@ -117,8 +119,13 @@ class SpaceExtensionKtTest {
     @Test
     internal fun can_fetchSpaces() {
         val pnChannelMetadataList = listOf(createPnChannelMetadata(SPACE_ID), createPnChannelMetadata(SPACE_ID_02))
-        val pnChannelMetadataArrayResult = PNChannelMetadataArrayResult(status = 200, data = pnChannelMetadataList, totalCount = 2, null, null)
-        every { pubNub.getAllChannelMetadata(any(), any(), any(), any(), any(), any()) } returns getAllChannelMetadataEndpoint
+        val pnChannelMetadataArrayResult =
+            PNChannelMetadataArrayResult(status = 200, data = pnChannelMetadataList, totalCount = 2, null, null)
+        every {
+            pubNub.getAllChannelMetadata(
+                any(), any(), any(), any(), any(), any()
+            )
+        } returns getAllChannelMetadataEndpoint
         every { getAllChannelMetadataEndpoint.sync() } returns pnChannelMetadataArrayResult
 
         val fetchSpacesEndpoint = pubNub.fetchSpaces(limit = 10)
@@ -126,7 +133,7 @@ class SpaceExtensionKtTest {
 
         assertEquals(
             SpacesResult(
-                status = 200, totalCount = 2, data = listOf(expectedSpace01, expectedSpace02), next = null, prev = null
+                totalCount = 2, data = listOf(expectedSpace01, expectedSpace02), next = null, prev = null
             ),
             spacesResult
         )

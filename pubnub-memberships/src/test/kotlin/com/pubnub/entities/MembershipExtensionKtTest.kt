@@ -186,7 +186,7 @@ internal class MembershipExtensionKtTest {
         val membership01 = Membership(user = user01, space = space01, custom = MEMBERSHIP_CUSTOM, updated = UPDATED, eTag = E_TAG, status = STATUS)
         val membership02 = Membership(user = user02, space = space02, custom = MEMBERSHIP_CUSTOM, updated = UPDATED, eTag = E_TAG, status = STATUS)
         val memberships = listOf(membership01, membership02)
-        val expectedFetchMembershipsResult = MembershipsResult(status = 200, data = memberships, totalCount = 2, next = null, prev = null)
+        val expectedFetchMembershipsResult = MembershipsResult(data = memberships, totalCount = 2, next = null, prev = null)
 
         assertEquals(expectedFetchMembershipsResult, fetchMembershipsResult)
     }
@@ -199,7 +199,7 @@ internal class MembershipExtensionKtTest {
         val membership01 = Membership(user = user01, space = space01, custom = MEMBERSHIP_CUSTOM, updated = UPDATED, eTag = E_TAG, status = STATUS)
         val membership02 = Membership(user = user02, space = space02, custom = MEMBERSHIP_CUSTOM_02, updated = UPDATED, eTag = E_TAG, status = STATUS)
         val memberships = listOf(membership01, membership02)
-        val expectedMembershipsResult = MembershipsResult(status = 200, data = memberships, totalCount = 2, next = null, prev = null)
+        val expectedMembershipsResult = MembershipsResult(data = memberships, totalCount = 2, next = null, prev = null)
 
         assertEquals(expectedMembershipsResult, fetchMembershipsResult)
     }
