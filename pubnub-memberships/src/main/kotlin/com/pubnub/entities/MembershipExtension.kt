@@ -34,7 +34,7 @@ import com.pubnub.entities.models.consumer.user.UserId
  * Add memberships of user i.e. assign spaces to user, add user to spaces
  *
  * @param partialMembershipsWithSpace List of spaces to add the user to. List can contain only space ids or ids along with custom data
- *                            @see [SpaceIdWithCustom]
+ *                            @see [Membership.PartialWithSpace]
  * @param userId Unique user identifier. If not supplied then current user’s userId is used.
  *
  */
@@ -67,7 +67,7 @@ fun PubNub.addMemberships(
  *
  * @param spaceId Unique space identifier.
  * @param partialMembershipsWithUser List of users to add to the space. List can contain only user ids or ids along with custom data
- *                             @see [UserIdWithCustom]
+ *                             @see [Membership.PartialWithUser]
  */
 fun PubNub.addMemberships(
     spaceId: SpaceId,
@@ -275,7 +275,7 @@ fun PubNub.removeMemberships(
  * Update memberships of user. Using this method you can add the user to spaces and/or update membership custom data.
  *
  * @param partialMembershipsWithSpace List of spaces to add the user to. List can contain only space ids or ids along with custom data
- *                            @see [SpaceIdWithCustom]
+ *                            @see [Membership.PartialWithSpace]
  * @param userId Unique user identifier. If not supplied then current user’s userId is used.
  *
  */
@@ -308,7 +308,7 @@ fun PubNub.updateMemberships(
  *
  * @param spaceId Unique space identifier.
  * @param partialMembershipsWithUser List of users to add to the space. List can contain only user ids or ids along with custom data
- *                             @see [UserIdWithCustom]
+ *                             @see [Membership.PartialWithUser]
  */
 fun PubNub.updateMemberships(
     spaceId: SpaceId,

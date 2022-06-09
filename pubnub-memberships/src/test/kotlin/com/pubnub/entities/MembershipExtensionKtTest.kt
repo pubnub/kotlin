@@ -104,9 +104,9 @@ internal class MembershipExtensionKtTest {
         every { pubNub.setMemberships(any(), any(), any(), any(), any(), any(), any(), any(), any()) } returns manageMembershipsEndpoint
         every { manageMembershipsEndpoint.sync() } returns pnChannelMembershipArrayResult
 
-        val spaceIdWithCustomList = listOf(Membership.Partial(SPACE_ID, SPACE_CUSTOM), Membership.Partial(SPACE_ID_02, SPACE_CUSTOM))
+        val partialMembershipsWithSpace = listOf(Membership.Partial(SPACE_ID, SPACE_CUSTOM), Membership.Partial(SPACE_ID_02, SPACE_CUSTOM))
         val addMembershipOfUserEndpoint: ExtendedRemoteAction<MembershipsStatusResult> =
-            pubNub.addMemberships(partialMembershipsWithSpace = spaceIdWithCustomList, userId = USER_ID)
+            pubNub.addMemberships(partialMembershipsWithSpace = partialMembershipsWithSpace, userId = USER_ID)
         val membershipsResult = addMembershipOfUserEndpoint.sync()
 
         assertEquals(200, membershipsResult?.status)
@@ -160,8 +160,8 @@ internal class MembershipExtensionKtTest {
         every { pubNub.setMemberships(any(), any(), any(), any(), any(), any(), any(), any(), any()) } returns manageMembershipsEndpoint
         every { manageMembershipsEndpoint.sync() } returns pnChannelMembershipArrayResult
 
-        val spaceIdWithCustomListToBeUpserted = listOf(Membership.Partial(SPACE_ID_02, SPACE_CUSTOM))
-        val updateMembershipOfUserEndpoint = pubNub.updateMemberships(partialMembershipsWithSpace = spaceIdWithCustomListToBeUpserted, userId = USER_ID)
+        val partialMembershipsWithSpaceToBeUpserted = listOf(Membership.Partial(SPACE_ID_02, SPACE_CUSTOM))
+        val updateMembershipOfUserEndpoint = pubNub.updateMemberships(partialMembershipsWithSpace = partialMembershipsWithSpaceToBeUpserted, userId = USER_ID)
         val membershipsResult = updateMembershipOfUserEndpoint.sync()
 
         assertEquals(200, membershipsResult?.status)
