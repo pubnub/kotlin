@@ -51,6 +51,8 @@ class MembershipIntegTest {
             IntegTestConf.origin?.let {
                 origin = it
             }
+            secure = false
+            logVerbosity = PNLogVerbosity.BODY
         }
         pubnub = PubNub(config)
 

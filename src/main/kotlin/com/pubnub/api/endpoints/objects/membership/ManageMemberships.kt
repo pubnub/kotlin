@@ -36,7 +36,7 @@ class ManageMemberships internal constructor(
             subKey = pubnub.configuration.subscribeKey,
             options = params,
             body = ChangeMembershipInput(
-                set = channelsToSet.map { MembershipInput(channel = ChannelId(it.channel), custom = it.custom, type = null) },
+                set = channelsToSet.map { MembershipInput(channel = ChannelId(it.channel), custom = it.custom, status = it.status) },
                 delete = channelsToRemove.map { MembershipInput(channel = ChannelId(id = it)) }
             )
         )

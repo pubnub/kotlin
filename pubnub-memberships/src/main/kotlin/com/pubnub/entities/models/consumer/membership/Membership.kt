@@ -56,7 +56,7 @@ internal fun List<Membership.PartialWithSpace>.toPNChannelWithCustomList(): List
 }
 
 internal fun Membership.PartialWithSpace.toPNChannelWithCustom(): PNChannelMembership.Partial {
-    return PNChannelMembership.Partial(channelId = spaceId, custom = custom)
+    return PNChannelMembership.Partial(channelId = spaceId, custom = custom, status = status)
 }
 
 internal fun List<Membership.PartialWithUser>.toPNUUIDWithCustomList(): List<PNMember.Partial> {
