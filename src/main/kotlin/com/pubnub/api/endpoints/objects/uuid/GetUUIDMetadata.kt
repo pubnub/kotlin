@@ -17,11 +17,11 @@ import java.util.HashMap
 class GetUUIDMetadata internal constructor(
     pubnub: PubNub,
     val uuid: String,
-    private val withIncludes: IncludeQueryParam
+    private val includeQueryParam: IncludeQueryParam
 ) : Endpoint<EntityEnvelope<PNUUIDMetadata>, PNUUIDMetadataResult>(pubnub) {
 
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityEnvelope<PNUUIDMetadata>> {
-        val params = queryParams + withIncludes.createIncludeQueryParams()
+        val params = queryParams + includeQueryParam.createIncludeQueryParams()
         return pubnub.retrofitManager.objectsService.getUUIDMetadata(
             subKey = pubnub.configuration.subscribeKey,
             uuid = uuid,

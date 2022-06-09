@@ -25,11 +25,11 @@ class ManageChannelMembers(
     private val uuidsToRemove: Collection<String>,
     private val channel: String,
     private val collectionQueryParameters: CollectionQueryParameters,
-    private val withIncludes: IncludeQueryParam
+    private val includeQueryParam: IncludeQueryParam
 ) : Endpoint<EntityArrayEnvelope<PNMember>, PNMemberArrayResult>(pubnub) {
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityArrayEnvelope<PNMember>> {
         val params = queryParams + collectionQueryParameters.createCollectionQueryParams() +
-            withIncludes.createIncludeQueryParams()
+            includeQueryParam.createIncludeQueryParams()
 
         return pubnub.retrofitManager.objectsService.patchChannelMembers(
             channel = channel,

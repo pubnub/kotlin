@@ -21,13 +21,13 @@ class SetChannelMetadata internal constructor(
     private val description: String?,
     private val custom: Any?,
     private val channel: String,
-    private val withIncludes: IncludeQueryParam,
+    private val includeQueryParam: IncludeQueryParam,
     private val type: String?,
     private val status: String?
 ) : Endpoint<EntityEnvelope<PNChannelMetadata>, PNChannelMetadataResult>(pubnub) {
 
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityEnvelope<PNChannelMetadata>> {
-        val params = queryParams + withIncludes.createIncludeQueryParams()
+        val params = queryParams + includeQueryParam.createIncludeQueryParams()
         return pubnub.retrofitManager.objectsService.setChannelMetadata(
             subKey = pubnub.configuration.subscribeKey,
             body = ChannelMetadataInput(

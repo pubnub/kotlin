@@ -1003,7 +1003,7 @@ class PubNub(val configuration: PNConfiguration) {
             sort = sort,
             includeCount = includeCount
         ),
-        withIncludes = IncludeQueryParam(includeCustom = includeCustom)
+        includeQueryParam = IncludeQueryParam(includeCustom = includeCustom)
     )
 
     /**
@@ -1015,7 +1015,7 @@ class PubNub(val configuration: PNConfiguration) {
     fun getChannelMetadata(channel: String, includeCustom: Boolean = false) = GetChannelMetadata(
         pubnub = this,
         channel = channel,
-        withIncludes = IncludeQueryParam(includeCustom = includeCustom)
+        includeQueryParam = IncludeQueryParam(includeCustom = includeCustom)
     )
 
     /**
@@ -1041,7 +1041,7 @@ class PubNub(val configuration: PNConfiguration) {
         name = name,
         description = description,
         custom = custom,
-        withIncludes = IncludeQueryParam(includeCustom = includeCustom),
+        includeQueryParam = IncludeQueryParam(includeCustom = includeCustom),
         type = type,
         status = status
     )
@@ -1102,7 +1102,7 @@ class PubNub(val configuration: PNConfiguration) {
     ) = GetUUIDMetadata(
         pubnub = this,
         uuid = uuid ?: configuration.uuid,
-        withIncludes = IncludeQueryParam(includeCustom = includeCustom)
+        includeQueryParam = IncludeQueryParam(includeCustom = includeCustom)
     )
 
     /**
@@ -1439,7 +1439,7 @@ class PubNub(val configuration: PNConfiguration) {
             sort = sort,
             includeCount = includeCount
         ),
-        withIncludes = IncludeQueryParam(
+        includeQueryParam = IncludeQueryParam(
             includeCustom = includeCustom,
             includeUUIDDetails = includeUUIDDetails,
             includeType = false
@@ -1648,7 +1648,7 @@ class PubNub(val configuration: PNConfiguration) {
             sort = sort,
             includeCount = includeCount
         ),
-        withIncludes = IncludeQueryParam(
+        includeQueryParam = IncludeQueryParam(
             includeCustom = includeCustom,
             includeUUIDDetails = includeUUIDDetails,
             includeType = false
