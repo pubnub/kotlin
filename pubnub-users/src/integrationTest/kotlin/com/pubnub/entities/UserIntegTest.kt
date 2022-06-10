@@ -13,6 +13,10 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.api.fail
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicReference
 
 class UserIntegTest() {
     private lateinit var pubnub: PubNub
@@ -154,6 +158,38 @@ class UserIntegTest() {
 
         assertEquals(USER_ID_02, usersResultDesc?.data?.first()?.id)
         assertEquals(USER_ID_01, usersResultDesc?.data?.elementAt(1)?.id)
+    }
+
+    @Test
+    internal fun can_receiveUserEvents() {
+        val allUpdatesDone = CountDownLatch(4)
+        val firstUpdate = "newName"
+        val lastUpdate = "lastUpdate"
+        val firstUpdateDone = CountDownLatch(1)
+        val user: AtomicReference<User> = AtomicReference(User(id = USER_ID_01))
+        pubnub.subscribe(channels = listOf(USER_ID_01))
+        pubnub.addUserEventsListener {
+            allUpdatesDone.countDown()
+            val data = message.data
+            if (data is UserEventData.UserModified) {
+                if (data.name == firstUpdate) {
+                    firstUpdateDone.countDown()
+                }
+                val uCopy = user.get()
+                user.set(uCopy.copy(name = data.name, custom = data.custom))
+            }
+        }
+        pubnub.createUser(USER_ID_01).sync()
+
+        pubnub.updateUser(userId = USER_ID_01, name = firstUpdate, custom = mapOf("aaa" to "bbb")).sync()
+        if (allUpdatesDone.await(5000, TimeUnit.MICROSECONDS)) {
+            fail("Didn't receive first update event")
+        }
+        pubnub.updateUser(userId = USER_ID_01, name = lastUpdate, custom = mapOf("ccc" to "ddd")).sync()
+        if (allUpdatesDone.await(5000, TimeUnit.MICROSECONDS)) {
+            fail("Didn't receive enough events")
+        }
+        assertEquals(User(id = USER_ID_01, name = lastUpdate, custom = mapOf("ccc" to "ddd")), user.get())
     }
 
     @AfterEach
