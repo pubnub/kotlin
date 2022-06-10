@@ -14,7 +14,6 @@ import java.lang.reflect.Type
 class OptionalChangeDeserializerTest {
     private val gson = GsonBuilder()
         .registerTypeAdapterFactory(OptionalChangeDeserializer.Factory())
-        .registerTypeAdapter(PNUUIDMetadataChange::class.java, PNUUIDMetadataChangeInstanceCreator())
         .registerTypeAdapter(TestPayload::class.java, TestPayloadInstanceCreator())
         .create()
     private val expected = "test"

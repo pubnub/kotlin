@@ -10,11 +10,13 @@ import com.pubnub.api.endpoints.remoteaction.ComposableRemoteAction.Companion.fi
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction.Companion.map
 import com.pubnub.api.enums.PNOperationType
+import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.objects.PNKey
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.PNSortKey
 import com.pubnub.api.models.consumer.objects.ResultSortKey
-import com.pubnub.api.models.consumer.PNStatus
+import com.pubnub.api.models.consumer.objects.channel.OptionalChange
+import com.pubnub.api.models.consumer.pubsub.objects.PNDeleteChannelMetadataEventMessage
 import com.pubnub.api.models.consumer.pubsub.objects.PNDeleteMembershipEventMessage
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
 import com.pubnub.api.models.consumer.pubsub.objects.PNSetChannelMetadataEventMessage
@@ -199,13 +201,28 @@ data class ExtractedMessage(
     val type: String
 )
 
+sealed class SpaceEventData {
+    abstract val event: String
+
+    data class SpaceModified(val spaceId: String,
+    val name: OptionalChange) : SpaceEventData() {
+        override val event: String = "modified"
+    }
+
+    data class SpaceRemoved(val spaceId: String) : SpaceEventData() {
+        override val event: String = "removed"
+    }
+}
+
+data class Message(val data: SpaceEventData) {
+    val type: String = "space"
+    val event: String = data.event
+}
+
 data class SpaceEvent(
     val spaceId: String,
-    val subscription: String?,
-    val timetoken: Long?,
-    val userMetadata: Map<String, Any>?,
-    val publisher: String?,
-    val extractedMessage: ExtractedMessage
+    val timetoken: Long,
+    val message: Message
 )
 
 fun JsonElement.toMap(): Map<String, Any> {
@@ -237,27 +254,31 @@ fun JsonElement.toMap(): Map<String, Any> {
 }
 
 fun PNObjectEventResult.toSpaceEvent(): SpaceEvent? {
-    return if (this.extractedMessage is PNSetChannelMetadataEventMessage ||
-        this.extractedMessage is PNDeleteMembershipEventMessage
-    ) {
-        SpaceEvent(
-            spaceId = channel,
-            subscription = subscription,
-            timetoken = timetoken,
-            userMetadata = userMetadata?.toMap(),
-            publisher = publisher,
-            extractedMessage = extractedMessage.run {
-                ExtractedMessage(
-                    source = source,
-                    version = version,
-                    type = type,
-                    event = event
+    val message = when (val m = extractedMessage) {
+        is PNSetChannelMetadataEventMessage -> {
+            Message(
+                SpaceEventData.SpaceModified(
+                    spaceId = m.source
                 )
-            }
-        )
-    } else {
-        null
+            )
+        }
+        is PNDeleteChannelMetadataEventMessage -> {
+            Message(
+                SpaceEventData.SpaceRemoved(
+                    spaceId = m.source
+                )
+            )
+        }
+        else -> {
+            return null
+        }
     }
+
+    return SpaceEvent(
+        spaceId = channel,
+        timetoken = timetoken ?: 0,
+        message = message
+    )
 }
 
 fun PubNub.addSpaceEventsListener(block: (SpaceEvent) -> Unit): Stoppable {
