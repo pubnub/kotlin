@@ -3,9 +3,6 @@ package com.pubnub.api.utils
 import com.google.gson.GsonBuilder
 import com.google.gson.InstanceCreator
 import com.pubnub.api.models.consumer.objects.channel.OptionalChange
-import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataChange
-import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataChangeInstanceCreator
-import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventMessage
 import com.pubnub.api.models.consumer.pubsub.objects.PNSetUUIDMetadataEventMessage
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -69,12 +66,6 @@ class OptionalChangeDeserializerTest {
     @Test
     fun dddd() {
         val result = gson.fromJson(json, PNSetUUIDMetadataEventMessage::class.java)
-        println(result)
-    }
-
-    @Test
-    fun eeee() {
-        val result = gson.fromJson(smallerJson, PNUUIDMetadataChange::class.java)
         println(result)
     }
 }

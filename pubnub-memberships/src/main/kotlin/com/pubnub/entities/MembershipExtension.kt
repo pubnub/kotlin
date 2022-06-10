@@ -38,7 +38,8 @@ import com.pubnub.entities.models.consumer.membership.toUserMembershipsResult
  *
  */
 fun PubNub.addMembershipsOfUser(
-    partialMembershipsWithSpace: List<Membership.PartialWithSpace>, userId: String = configuration.uuid
+    partialMembershipsWithSpace: List<Membership.PartialWithSpace>,
+    userId: String = configuration.uuid
 ): ExtendedRemoteAction<MembershipsStatusResult> = firstDo(
     setMemberships(
         channels = partialMembershipsWithSpace.toPNChannelWithCustomList(),
@@ -59,7 +60,8 @@ fun PubNub.addMembershipsOfUser(
  *                             @see [UserIdWithCustom]
  */
 fun PubNub.addMembershipsOfSpace(
-    spaceId: String, partialMembershipsWithUser: List<Membership.PartialWithUser>
+    spaceId: String,
+    partialMembershipsWithUser: List<Membership.PartialWithUser>
 ): ExtendedRemoteAction<MembershipsStatusResult> = firstDo(
     setChannelMembers(
         channel = spaceId, uuids = partialMembershipsWithUser.toList().toPNUUIDWithCustomList(), limit = 0
@@ -239,7 +241,8 @@ fun PubNub.removeMembershipsOfSpace(
  *
  */
 fun PubNub.updateMembershipsOfUser(
-    partialMembershipsWithSpace: List<Membership.PartialWithSpace>, userId: String = configuration.uuid
+    partialMembershipsWithSpace: List<Membership.PartialWithSpace>,
+    userId: String = configuration.uuid
 ): ExtendedRemoteAction<MembershipsStatusResult> = firstDo(
     setMemberships(
         channels = partialMembershipsWithSpace.toPNChannelWithCustomList(), uuid = userId, limit = 0
@@ -258,7 +261,8 @@ fun PubNub.updateMembershipsOfUser(
  *                             @see [UserIdWithCustom]
  */
 fun PubNub.updateMembershipsOfSpace(
-    spaceId: String, partialMembershipsWithUser: List<Membership.PartialWithUser>
+    spaceId: String,
+    partialMembershipsWithUser: List<Membership.PartialWithUser>
 ): ExtendedRemoteAction<MembershipsStatusResult> = firstDo(
     setChannelMembers(
         channel = spaceId,
@@ -272,7 +276,8 @@ fun PubNub.updateMembershipsOfSpace(
 }
 
 data class MembershipEvent(
-    val spaceId: String, val userId: String
+    val spaceId: String,
+    val userId: String
 )
 
 interface MembershipEventsListener {

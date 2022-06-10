@@ -51,7 +51,6 @@ data class PNChannelMetadataChange(
     override val eTag: String? = eTagChange.value
 }
 
-
 data class PNChannelMetadata(
     val id: String,
     val name: String?,

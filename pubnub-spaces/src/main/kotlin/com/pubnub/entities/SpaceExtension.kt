@@ -15,9 +15,7 @@ import com.pubnub.api.models.consumer.objects.PNKey
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.PNSortKey
 import com.pubnub.api.models.consumer.objects.ResultSortKey
-import com.pubnub.api.models.consumer.objects.channel.OptionalChange
 import com.pubnub.api.models.consumer.pubsub.objects.PNDeleteChannelMetadataEventMessage
-import com.pubnub.api.models.consumer.pubsub.objects.PNDeleteMembershipEventMessage
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
 import com.pubnub.api.models.consumer.pubsub.objects.PNSetChannelMetadataEventMessage
 import com.pubnub.entities.models.consumer.space.RemoveSpaceResult
@@ -192,7 +190,7 @@ class StoppableListener(
     }
 }
 
-//PNObjectEventResult(result=BasePubSubResult(channel=ThisIsMyChannel71340D6011, subscription=null, timetoken=16541757313672192, userMetadata=null, publisher=null), extractedMessage=PNDeleteMembershipEventMessage(source=objects, version=2.0, event=delete, type=membership, data=PNDeleteMembershipEvent(channelId=ThisIsMyChannel71340D6011, uuid=client-6be06195-dde5-419f-9a9f-5d5e798c26b6)))
+// PNObjectEventResult(result=BasePubSubResult(channel=ThisIsMyChannel71340D6011, subscription=null, timetoken=16541757313672192, userMetadata=null, publisher=null), extractedMessage=PNDeleteMembershipEventMessage(source=objects, version=2.0, event=delete, type=membership, data=PNDeleteMembershipEvent(channelId=ThisIsMyChannel71340D6011, uuid=client-6be06195-dde5-419f-9a9f-5d5e798c26b6)))
 
 data class ExtractedMessage(
     val source: String,
@@ -204,8 +202,7 @@ data class ExtractedMessage(
 sealed class SpaceEventData {
     abstract val event: String
 
-    data class SpaceModified(val spaceId: String,
-    val name: OptionalChange) : SpaceEventData() {
+    data class SpaceModified(val spaceId: String) : SpaceEventData() {
         override val event: String = "modified"
     }
 
