@@ -4,9 +4,11 @@ import com.pubnub.api.CommonUtils.randomValue
 import com.pubnub.api.PubNub
 import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.models.consumer.PNStatus
+import com.pubnub.api.models.consumer.objects.member.PNMember
 import com.pubnub.api.models.consumer.objects.member.PNUUIDDetailsLevel
 import com.pubnub.api.models.consumer.objects.member.PNUUIDWithCustom
 import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
+import com.pubnub.api.models.consumer.objects.membership.PNChannelMembership
 import com.pubnub.api.models.consumer.objects.membership.PNChannelWithCustom
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
 import com.pubnub.api.subscribeToBlocking
@@ -93,7 +95,7 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
 
     @Test
     fun addGetAndRemoveMember() {
-        val uuids = listOf(PNUUIDWithCustom(uuid = testUuid))
+        val uuids = listOf(PNMember.Partial(uuidId = testUuid, custom = null, null))
 
         val setResult = pubnub.setChannelMembers(
             channel = channel,
@@ -128,9 +130,9 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
     @Test
     fun testListeningToAllObjectsEvents() {
         val countDownLatch = CountDownLatch(8)
-        val uuids = listOf(PNUUIDWithCustom(uuid = testUuid))
+        val uuids = listOf(PNMember.Partial(uuidId = testUuid, custom = null, null))
         val channels = listOf(
-            PNChannelWithCustom(channel = channel)
+            PNChannelMembership.Partial(channelId = channel)
         )
 
         pubnub.addListener(
@@ -153,6 +155,7 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
         pubnub.setChannelMetadata(channel = channel, name = randomValue(15)).sync()!!
         pubnub.setUUIDMetadata(name = randomValue(15)).sync()!!
 
+        pubnub.setChannelMetadata(channel = channel, description = "aaa").sync()!!
         pubnub.removeChannelMetadata(channel = channel).sync()!!
         pubnub.removeUUIDMetadata().sync()!!
         pubnub.removeChannelMembers(channel = channel, uuids = uuids.map { it.uuid }).sync()!!

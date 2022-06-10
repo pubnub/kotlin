@@ -7,8 +7,6 @@ import com.google.gson.reflect.TypeToken
 import com.google.gson.stream.JsonReader
 import com.google.gson.stream.JsonToken
 import com.google.gson.stream.JsonWriter
-import com.pubnub.api.models.consumer.objects.channel.OptionalChange
-import com.pubnub.api.models.consumer.objects.channel.value
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 
@@ -23,10 +21,10 @@ class OptionalChangeDeserializer(private val gson: Gson, private val type: Type)
         return when (_in.peek()) {
             JsonToken.NULL -> {
                 _in.nextNull()
-                OptionalChange.None()
+                OptionalChange.Removed()
             }
             else -> {
-                OptionalChange.Some(
+                OptionalChange.Changed(
                     gson.fromJson(
                         _in,
                         (type as ParameterizedType).actualTypeArguments[0]

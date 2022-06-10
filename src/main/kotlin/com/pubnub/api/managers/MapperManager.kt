@@ -18,6 +18,9 @@ import com.google.gson.stream.JsonToken
 import com.google.gson.stream.JsonWriter
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
+import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadataChange
+import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadataChangeInstanceCreator
+import com.pubnub.api.utils.OptionalChangeDeserializer
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -58,6 +61,8 @@ class MapperManager {
             .registerTypeAdapter(Boolean::class.java, booleanAsIntAdapter)
             .registerTypeAdapter(JSONObject::class.java, JSONObjectAdapter())
             .registerTypeAdapter(JSONArray::class.java, JSONArrayAdapter())
+            .registerTypeAdapterFactory(OptionalChangeDeserializer.Factory())
+            .registerTypeAdapter(PNChannelMetadataChange::class.java, PNChannelMetadataChangeInstanceCreator())
             .create()
         converterFactory = GsonConverterFactory.create(objectMapper)
     }
