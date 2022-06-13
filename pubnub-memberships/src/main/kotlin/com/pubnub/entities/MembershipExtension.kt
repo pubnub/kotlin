@@ -280,6 +280,24 @@ data class MembershipEvent(
     val userId: String
 )
 
+fun PNObjectEventResult.toMembershipEvent(): MembershipEvent {
+    
+}
+
+fun PubNub.addMembershipEventsListener(block: MembershipEvent.() -> Unit): Stoppable {
+    val listener = object : SubscribeCallback() {
+        override fun status(pubnub: PubNub, pnStatus: PNStatus) {
+        }
+
+        override fun objects(pubnub: PubNub, objectEvent: PNObjectEventResult) {
+            objectEvent.toMembershipEvent()?.let(block)
+        }
+    }
+    addListener(listener)
+    return StoppableListener(this, listener)
+}
+
+
 interface MembershipEventsListener {
     fun handle(event: MembershipEvent) {
     }
