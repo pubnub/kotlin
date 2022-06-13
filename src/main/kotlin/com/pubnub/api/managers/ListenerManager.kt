@@ -1,6 +1,7 @@
 package com.pubnub.api.managers
 
 import com.pubnub.api.PubNub
+import com.pubnub.api.callbacks.Listener
 import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
@@ -20,7 +21,7 @@ internal class ListenerManager(val pubnub: PubNub) {
         }
     }
 
-    fun removeListener(listener: SubscribeCallback) {
+    fun removeListener(listener: Listener) {
         synchronized(listeners) {
             listeners.remove(listener)
         }

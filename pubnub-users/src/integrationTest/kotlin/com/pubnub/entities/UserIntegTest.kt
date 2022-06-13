@@ -3,9 +3,14 @@ package com.pubnub.entities
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubException
+import com.pubnub.api.callbacks.SubscribeCallback
+import com.pubnub.api.enums.PNStatusCategory
+import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.objects.ResultSortKey
 import com.pubnub.entities.models.consumer.user.User
+import com.pubnub.entities.models.consumer.user.UserId
 import com.pubnub.entities.models.consumer.user.UserKey
+import com.pubnub.entities.models.consumer.user.UserModified
 import com.pubnub.entities.models.consumer.user.UsersResult
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -13,13 +18,16 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.api.fail
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
 
 class UserIntegTest() {
     private lateinit var pubnub: PubNub
 
     private val USER_ID = "userInteg_id"
-    private val USER_ID_01 = USER_ID + "1"
-    private val USER_ID_02 = USER_ID + "2"
+    private val USER_ID_01 = UserId(USER_ID + "1")
+    private val USER_ID_02 = UserId(USER_ID + "2")
 
     private val USER_NAME = "unitTestKT_name"
     private val EXTERNAL_ID = "externalId"
@@ -156,13 +164,54 @@ class UserIntegTest() {
         assertEquals(USER_ID_01, usersResultDesc?.data?.elementAt(1)?.id)
     }
 
+    @Test
+    internal fun can_receiveUserEvents() {
+        val allUpdatesDone = CountDownLatch(2)
+        val lastUpdate = "lastUpdate"
+        val created = CountDownLatch(1)
+        var user = User(id = USER_ID_01)
+        val connected = CountDownLatch(1)
+        pubnub.addListener(object : SubscribeCallback() {
+            override fun status(pubnub: PubNub, pnStatus: PNStatus) {
+                if (pnStatus.category == PNStatusCategory.PNConnectedCategory) {
+                    connected.countDown()
+                }
+            }
+        })
+        pubnub.subscribe(channels = listOf(USER_ID_01.value))
+
+        pubnub.addUserEventsListener {
+            if (it is UserModified) {
+
+                user = user.copy(name = it.data.name, custom = it.data.custom)
+                if (it.data.name == null) {
+                    created.countDown()
+                }
+            }
+            allUpdatesDone.countDown()
+        }
+        if (!connected.await(5, TimeUnit.SECONDS)) {
+            fail("Didn't connect")
+        }
+
+        pubnub.createUser(USER_ID_01).sync()
+        if (!created.await(5, TimeUnit.SECONDS)) {
+            fail("Didn't receive created event")
+        }
+        pubnub.updateUser(userId = USER_ID_01, name = lastUpdate, custom = mapOf("ccc" to "ddd")).sync()
+        if (!allUpdatesDone.await(5, TimeUnit.SECONDS)) {
+            fail("Didn't receive enough events")
+        }
+        assertEquals(User(id = USER_ID_01, name = lastUpdate, custom = mapOf("ccc" to "ddd")), user)
+    }
+
     @AfterEach
     internal fun tearDown() {
         pubnub.removeUser(userId = USER_ID_01).sync()
         pubnub.removeUser(userId = USER_ID_02).sync()
     }
 
-    private fun createUser(userId: String): User? {
+    private fun createUser(userId: UserId): User? {
         return pubnub.createUser(
             userId = userId,
             name = USER_NAME,

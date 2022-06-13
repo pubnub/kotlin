@@ -2,9 +2,12 @@ package com.pubnub.entities
 
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
-import com.pubnub.api.enums.PNLogVerbosity
+import com.pubnub.api.callbacks.SubscribeCallback
+import com.pubnub.api.enums.PNStatusCategory
+import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.objects.ResultSortKey
 import com.pubnub.entities.models.consumer.membership.Membership
+import com.pubnub.entities.models.consumer.membership.MembershipModified
 import com.pubnub.entities.models.consumer.membership.MembershipsResult
 import com.pubnub.entities.models.consumer.membership.SpaceDetailsLevel
 import com.pubnub.entities.models.consumer.membership.SpaceMembershipResultKey
@@ -19,6 +22,9 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.fail
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
 
 class MembershipIntegTest {
     private lateinit var pubnub: PubNub
@@ -53,8 +59,6 @@ class MembershipIntegTest {
             IntegTestConf.origin?.let {
                 origin = it
             }
-            secure = false
-            logVerbosity = PNLogVerbosity.BODY
         }
         pubnub = PubNub(config)
 
@@ -333,6 +337,79 @@ class MembershipIntegTest {
         ).sync()
         assertEquals(USER_NAME_02, membershipsResultSortUserNameDesc?.data?.first()?.user?.name)
         assertEquals(USER_NAME, membershipsResultSortUserNameDesc?.data?.elementAt(1)?.user?.name)
+    }
+
+    @Test
+    internal fun can_receiveMembershipEventsForUser() {
+        val allUpdatesDone = CountDownLatch(2)
+        val lastUpdate = mapOf("this" to "that")
+        val created = CountDownLatch(1)
+        val user = User(id = USER_ID)
+        val space = Space(id = SPACE_ID)
+        var membership = Membership(
+            user = user,
+            space = space,
+            custom = mapOf(),
+            status = null
+        )
+        val connected = CountDownLatch(1)
+        pubnub.addListener(object : SubscribeCallback() {
+            override fun status(pubnub: PubNub, pnStatus: PNStatus) {
+                if (pnStatus.category == PNStatusCategory.PNConnectedCategory) {
+                    connected.countDown()
+                }
+            }
+        })
+
+        pubnub.addMembershipEventsListener {
+
+            if (it is MembershipModified) {
+                if (it.data.custom != lastUpdate) {
+                    created.countDown()
+                }
+                membership = membership.copy(
+                    user = it.data.user,
+                    space = it.data.space,
+                    custom = it.data.custom,
+                    status = it.data.status
+                )
+            }
+            allUpdatesDone.countDown()
+        }
+        pubnub.subscribe(channels = listOf(USER_ID.value))
+        if (!connected.await(5, TimeUnit.SECONDS)) {
+            fail("Didn't connect")
+        }
+
+        pubnub.addMemberships(
+            spaceId = SPACE_ID,
+            partialMembershipsWithUser = listOf(Membership.Partial(userId = USER_ID))
+        ).sync()
+
+        if (!created.await(5, TimeUnit.SECONDS)) {
+            fail("Didn't receive created event")
+        }
+        pubnub.updateMemberships(
+            spaceId = SPACE_ID,
+            partialMembershipsWithUser = listOf(
+                Membership.Partial(
+                    userId = USER_ID,
+                    custom = lastUpdate
+                )
+            )
+        ).sync()
+        if (!allUpdatesDone.await(5, TimeUnit.SECONDS)) {
+            fail("Didn't receive enough events")
+        }
+        assertEquals(
+            Membership(
+                user = user,
+                space = space,
+                custom = lastUpdate,
+                status = null
+            ),
+            membership
+        )
     }
 
     @AfterEach

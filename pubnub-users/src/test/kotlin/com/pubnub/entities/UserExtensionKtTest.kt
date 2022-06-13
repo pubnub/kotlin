@@ -19,6 +19,7 @@ import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.spyk
+import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -161,6 +162,20 @@ internal class UserExtensionKtTest {
             ),
             usersResult
         )
+    }
+
+    @Test
+    internal fun can_addListenerForUserEvents() {
+        pubNub.addUserEventsListener { }
+
+        verify { pubNub.addListener(any()) }
+    }
+
+    @Test
+    internal fun can_removeListenerForUserEvents() {
+        val listener = pubNub.addUserEventsListener { }
+        listener.dispose()
+        verify { pubNub.removeListener(any()) }
     }
 
     private fun createPnuuidMetadata(userId: UserId): PNUUIDMetadata {

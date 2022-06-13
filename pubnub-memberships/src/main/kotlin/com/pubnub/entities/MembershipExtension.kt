@@ -1,22 +1,28 @@
 package com.pubnub.entities
 
 import com.pubnub.api.PubNub
+import com.pubnub.api.callbacks.DisposableListener
+import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.endpoints.remoteaction.ComposableRemoteAction.Companion.firstDo
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction.Companion.map
 import com.pubnub.api.enums.PNOperationType
+import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.objects.PNMemberKey
 import com.pubnub.api.models.consumer.objects.PNMembershipKey
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.PNSortKey
 import com.pubnub.api.models.consumer.objects.ResultSortKey
+import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
 import com.pubnub.entities.models.consumer.membership.Membership
+import com.pubnub.entities.models.consumer.membership.MembershipEvent
 import com.pubnub.entities.models.consumer.membership.MembershipsResult
 import com.pubnub.entities.models.consumer.membership.MembershipsStatusResult
 import com.pubnub.entities.models.consumer.membership.SpaceDetailsLevel
 import com.pubnub.entities.models.consumer.membership.SpaceMembershipResultKey
 import com.pubnub.entities.models.consumer.membership.UserDetailsLevel
 import com.pubnub.entities.models.consumer.membership.UserMembershipsResultKey
+import com.pubnub.entities.models.consumer.membership.toMembershipEvent
 import com.pubnub.entities.models.consumer.membership.toPNChannelDetailsLevel
 import com.pubnub.entities.models.consumer.membership.toPNChannelMembershipPartialList
 import com.pubnub.entities.models.consumer.membership.toPNMemberPartialList
@@ -49,8 +55,7 @@ fun PubNub.addMemberships(
     )
 ).then {
     map(
-        it,
-        PNOperationType.MembershipOperation
+        it, PNOperationType.MembershipOperation
     ) { pnChannelMembershipArrayResult -> pnChannelMembershipArrayResult.toUserMembershipsResult() }
 }
 
@@ -58,8 +63,7 @@ fun PubNub.addMemberships(
     userId: UserId,
     vararg partialMembershipsWithSpace: Membership.PartialWithSpace
 ): ExtendedRemoteAction<MembershipsStatusResult> = addMemberships(
-    userId = userId,
-    partialMembershipsWithSpace = partialMembershipsWithSpace
+    userId = userId, partialMembershipsWithSpace = partialMembershipsWithSpace.toList()
 )
 
 /**
@@ -74,14 +78,11 @@ fun PubNub.addMemberships(
     partialMembershipsWithUser: List<Membership.PartialWithUser>
 ): ExtendedRemoteAction<MembershipsStatusResult> = firstDo(
     setChannelMembers(
-        channel = spaceId.value,
-        uuids = partialMembershipsWithUser.toList().toPNMemberPartialList(),
-        limit = 0
+        channel = spaceId.value, uuids = partialMembershipsWithUser.toPNMemberPartialList(), limit = 0
     )
 ).then {
     map(
-        it,
-        PNOperationType.MembershipOperation
+        it, PNOperationType.MembershipOperation
     ) { pnMemberArrayResult -> pnMemberArrayResult.toSpaceMembershipResult() }
 }
 
@@ -89,8 +90,7 @@ fun PubNub.addMemberships(
     spaceId: SpaceId,
     vararg partialMembershipsWithUser: Membership.PartialWithUser
 ): ExtendedRemoteAction<MembershipsStatusResult> = addMemberships(
-    spaceId = spaceId,
-    partialMembershipsWithUser = partialMembershipsWithUser
+    spaceId = spaceId, partialMembershipsWithUser = partialMembershipsWithUser.toList()
 )
 
 /**
@@ -136,8 +136,7 @@ fun PubNub.fetchMemberships(
     )
 ).then {
     map(
-        it,
-        PNOperationType.MembershipOperation
+        it, PNOperationType.MembershipOperation
     ) { pnChannelMembershipArrayResult -> pnChannelMembershipArrayResult.toUserFetchMembershipsResult(userId) }
 }
 
@@ -198,8 +197,7 @@ fun PubNub.fetchMemberships(
     )
 ).then {
     map(
-        it,
-        PNOperationType.MembershipOperation
+        it, PNOperationType.MembershipOperation
     ) { pnMemberArrayResult -> pnMemberArrayResult.toSpaceFetchMembershipResult(spaceId) }
 }
 
@@ -228,21 +226,18 @@ fun PubNub.removeMemberships(
     spaceIds: List<SpaceId>,
 ): ExtendedRemoteAction<MembershipsStatusResult> = firstDo(
     removeMemberships(
-        channels = spaceIds.map { it.value },
-        uuid = userId.value,
-        limit = 0
+        channels = spaceIds.map { it.value }, uuid = userId.value, limit = 0
     )
 ).then {
     map(
-        it,
-        PNOperationType.MembershipOperation
+        it, PNOperationType.MembershipOperation
     ) { pnChannelMembershipArrayResult -> pnChannelMembershipArrayResult.toUserMembershipsResult() }
 }
 
 fun PubNub.removeMemberships(
     userId: UserId,
     vararg spaceIds: ISpaceId
-) = removeMemberships(userId = userId, spaceIds = spaceIds as List<SpaceId>)
+) = removeMemberships(userId = userId, spaceIds = spaceIds.toList() as List<SpaceId>)
 
 /**
  * Remove memberships of space
@@ -255,21 +250,18 @@ fun PubNub.removeMemberships(
     userIds: List<UserId>,
 ): ExtendedRemoteAction<MembershipsStatusResult> = firstDo(
     removeChannelMembers(
-        channel = spaceId.value,
-        uuids = userIds.map { it.value },
-        limit = 0
+        channel = spaceId.value, uuids = userIds.map { it.value }, limit = 0
     )
 ).then {
     map(
-        it,
-        PNOperationType.MembershipOperation
+        it, PNOperationType.MembershipOperation
     ) { pnMemberArrayResult -> pnMemberArrayResult.toSpaceMembershipResult() }
 }
 
 fun PubNub.removeMemberships(
     spaceId: SpaceId,
     vararg userIds: IUserId
-) = removeMemberships(spaceId = spaceId, userIds = userIds as List<UserId>)
+) = removeMemberships(spaceId = spaceId, userIds = userIds.toList() as List<UserId>)
 
 /**
  * Update memberships of user. Using this method you can add the user to spaces and/or update membership custom data.
@@ -284,14 +276,11 @@ fun PubNub.updateMemberships(
     partialMembershipsWithSpace: List<Membership.PartialWithSpace>,
 ): ExtendedRemoteAction<MembershipsStatusResult> = firstDo(
     setMemberships(
-        channels = partialMembershipsWithSpace.toPNChannelMembershipPartialList(),
-        uuid = userId.value,
-        limit = 0
+        channels = partialMembershipsWithSpace.toPNChannelMembershipPartialList(), uuid = userId.value, limit = 0
     )
 ).then {
     map(
-        it,
-        PNOperationType.MembershipOperation
+        it, PNOperationType.MembershipOperation
     ) { pnChannelMembershipArrayResult -> pnChannelMembershipArrayResult.toUserMembershipsResult() }
 }
 
@@ -299,8 +288,7 @@ fun PubNub.updateMemberships(
     userId: UserId,
     vararg partialMembershipsWithSpace: Membership.PartialWithSpace
 ): ExtendedRemoteAction<MembershipsStatusResult> = updateMemberships(
-    userId = userId,
-    partialMembershipsWithSpace = partialMembershipsWithSpace
+    userId = userId, partialMembershipsWithSpace = partialMembershipsWithSpace.toList()
 )
 
 /**
@@ -321,8 +309,7 @@ fun PubNub.updateMemberships(
     )
 ).then {
     map(
-        it,
-        PNOperationType.MembershipOperation
+        it, PNOperationType.MembershipOperation
     ) { pnMemberArrayResult -> pnMemberArrayResult.toSpaceMembershipResult() }
 }
 
@@ -330,6 +317,25 @@ fun PubNub.updateMemberships(
     spaceId: SpaceId,
     vararg partialMembershipsWithUser: Membership.PartialWithUser
 ): ExtendedRemoteAction<MembershipsStatusResult> = updateMemberships(
-    spaceId = spaceId,
-    partialMembershipsWithUser = partialMembershipsWithUser
+    spaceId = spaceId, partialMembershipsWithUser = partialMembershipsWithUser.toList()
 )
+
+/**
+ * Add a listener for all membership events @see[MembershipEvent]. To receive any membership event it is required to subscribe to
+ * a specific spaceId or userId (passing them as a channel) @see[PubNub.subscribe]
+ *
+ * @param block Function that will be called for every membership event.
+ * @return DisposableListener that can be disposed or passed in to PubNub#removeListener method @see[PubNub.removeListener]
+ */
+fun PubNub.addMembershipEventsListener(block: (MembershipEvent) -> Unit): DisposableListener {
+    val listener = object : SubscribeCallback() {
+        override fun status(pubnub: PubNub, pnStatus: PNStatus) {
+        }
+
+        override fun objects(pubnub: PubNub, objectEvent: PNObjectEventResult) {
+            objectEvent.toMembershipEvent()?.let(block)
+        }
+    }
+    addListener(listener)
+    return DisposableListener(this, listener)
+}

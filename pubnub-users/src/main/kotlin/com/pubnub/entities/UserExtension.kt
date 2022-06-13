@@ -1,21 +1,27 @@
 package com.pubnub.entities
 
 import com.pubnub.api.PubNub
+import com.pubnub.api.callbacks.DisposableListener
+import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.endpoints.remoteaction.ComposableRemoteAction.Companion.firstDo
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction.Companion.map
 import com.pubnub.api.enums.PNOperationType
+import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.objects.PNKey
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.PNSortKey
 import com.pubnub.api.models.consumer.objects.ResultSortKey
+import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
 import com.pubnub.entities.models.consumer.user.RemoveUserResult
 import com.pubnub.entities.models.consumer.user.User
+import com.pubnub.entities.models.consumer.user.UserEvent
 import com.pubnub.entities.models.consumer.user.UserId
 import com.pubnub.entities.models.consumer.user.UserKey
 import com.pubnub.entities.models.consumer.user.UsersResult
 import com.pubnub.entities.models.consumer.user.toRemoveUserResult
 import com.pubnub.entities.models.consumer.user.toUser
+import com.pubnub.entities.models.consumer.user.toUserEvent
 import com.pubnub.entities.models.consumer.user.toUsersResult
 
 /**
@@ -80,8 +86,7 @@ fun PubNub.fetchUser(
     includeCustom: Boolean = false
 ): ExtendedRemoteAction<User?> = firstDo(
     getUUIDMetadata(
-        uuid = userId?.value,
-        includeCustom = includeCustom
+        uuid = userId?.value, includeCustom = includeCustom
     )
 ).then {
     map(
@@ -178,4 +183,24 @@ fun PubNub.removeUser(
     map(
         it, PNOperationType.UserOperation
     ) { pnRemoveMetadataResult -> pnRemoveMetadataResult.toRemoveUserResult() }
+}
+
+/**
+ * Add a listener for all user events @see[UserEvent]. To receive any user event it is required to subscribe to
+ * a specific userId (passing it as a channel) @see[PubNub.subscribe]
+ *
+ * @param block Function that will be called for every user event.
+ * @return DisposableListener that can be disposed or passed in to PubNub#removeListener method @see[PubNub.removeListener]
+ */
+fun PubNub.addUserEventsListener(block: (UserEvent) -> Unit): DisposableListener {
+    val listener = object : SubscribeCallback() {
+        override fun status(pubnub: PubNub, pnStatus: PNStatus) {
+        }
+
+        override fun objects(pubnub: PubNub, objectEvent: PNObjectEventResult) {
+            objectEvent.toUserEvent()?.let(block)
+        }
+    }
+    addListener(listener)
+    return DisposableListener(this, listener)
 }

@@ -19,6 +19,7 @@ import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.spyk
+import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -138,6 +139,20 @@ class SpaceExtensionKtTest {
             ),
             spacesResult
         )
+    }
+
+    @Test
+    internal fun can_addListenerForSpaceEvents() {
+        pubNub.addSpaceEventsListener { }
+
+        verify { pubNub.addListener(any()) }
+    }
+
+    @Test
+    internal fun can_removeListenerForSpaceEvents() {
+        val listener = pubNub.addSpaceEventsListener { }
+        listener.dispose()
+        verify { pubNub.removeListener(any()) }
     }
 
     private fun createPnChannelMetadata(id: SpaceId): PNChannelMetadata {

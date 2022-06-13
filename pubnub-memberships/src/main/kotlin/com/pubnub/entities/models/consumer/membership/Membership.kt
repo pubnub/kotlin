@@ -13,8 +13,8 @@ data class Membership(
     val user: User?,
     val space: Space?,
     val custom: Map<String, Any>?,
-    val updated: String,
-    val eTag: String,
+    val updated: String? = null,
+    val eTag: String? = null,
     val status: String?
 ) {
 

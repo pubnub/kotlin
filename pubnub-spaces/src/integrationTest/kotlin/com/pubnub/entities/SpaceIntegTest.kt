@@ -3,10 +3,15 @@ package com.pubnub.entities
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubException
+import com.pubnub.api.callbacks.SubscribeCallback
+import com.pubnub.api.enums.PNLogVerbosity
+import com.pubnub.api.enums.PNStatusCategory
+import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.objects.ResultSortKey
 import com.pubnub.entities.models.consumer.space.Space
 import com.pubnub.entities.models.consumer.space.SpaceId
 import com.pubnub.entities.models.consumer.space.SpaceKey
+import com.pubnub.entities.models.consumer.space.SpaceModified
 import com.pubnub.entities.models.consumer.space.SpacesResult
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -14,6 +19,9 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.api.fail
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
 
 class SpaceIntegTest() {
     private lateinit var pubnub: PubNub
@@ -35,6 +43,7 @@ class SpaceIntegTest() {
             IntegTestConf.origin?.let {
                 origin = it
             }
+            logVerbosity = PNLogVerbosity.BODY
         }
         pubnub = PubNub(config)
 
@@ -141,6 +150,47 @@ class SpaceIntegTest() {
 
         assertEquals(SPACE_ID_02, spacesResultDesc?.data?.first()?.id)
         assertEquals(SPACE_ID_01, spacesResultDesc?.data?.elementAt(1)?.id)
+    }
+
+    @Test
+    internal fun can_receiveSpaceEvents() {
+        val allUpdatesDone = CountDownLatch(2)
+        val lastUpdate = "lastUpdate"
+        val created = CountDownLatch(1)
+        var space = Space(id = SPACE_ID_01)
+        val connected = CountDownLatch(1)
+        pubnub.addListener(object : SubscribeCallback() {
+            override fun status(pubnub: PubNub, pnStatus: PNStatus) {
+                if (pnStatus.category == PNStatusCategory.PNConnectedCategory) {
+                    connected.countDown()
+                }
+            }
+        })
+
+        pubnub.addSpaceEventsListener {
+            if (it is SpaceModified) {
+                space = space.copy(name = it.data.name)
+                if (it.data.name == null) {
+                    created.countDown()
+                }
+            }
+            allUpdatesDone.countDown()
+        }
+
+        pubnub.subscribe(channels = listOf(SPACE_ID_01.value))
+        if (!connected.await(5, TimeUnit.SECONDS)) {
+            fail("Didn't connect")
+        }
+
+        pubnub.createSpace(SPACE_ID_01).sync()
+        if (!created.await(5, TimeUnit.SECONDS)) {
+            fail("Didn't receive created event")
+        }
+        pubnub.updateSpace(spaceId = SPACE_ID_01, name = lastUpdate).sync()
+        if (!allUpdatesDone.await(5, TimeUnit.SECONDS)) {
+            fail("Didn't receive enough events")
+        }
+        assertEquals(Space(id = SPACE_ID_01, name = lastUpdate), space)
     }
 
     @AfterEach
