@@ -3,6 +3,7 @@ package com.pubnub.entities
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubException
+import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.models.consumer.objects.ResultSortKey
 import com.pubnub.entities.models.consumer.space.Space
 import com.pubnub.entities.models.consumer.space.SpaceId
@@ -14,6 +15,9 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.api.fail
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
 
 class SpaceIntegTest() {
     private lateinit var pubnub: PubNub
@@ -35,6 +39,7 @@ class SpaceIntegTest() {
             IntegTestConf.origin?.let {
                 origin = it
             }
+            logVerbosity = PNLogVerbosity.BODY
         }
         pubnub = PubNub(config)
 
@@ -142,6 +147,40 @@ class SpaceIntegTest() {
         assertEquals(SPACE_ID_02, spacesResultDesc?.data?.first()?.id)
         assertEquals(SPACE_ID_01, spacesResultDesc?.data?.elementAt(1)?.id)
     }
+
+    @Test
+    internal fun can_receiveSpaceEvents() {
+        val allUpdatesDone = CountDownLatch(2)
+        val lastUpdate = "lastUpdate"
+        val created = CountDownLatch(1)
+        var space = Space(id = SPACE_ID_01)
+
+        pubnub.addSpaceEventsListener {
+            val data = data
+            if (data is SpaceEventData.SpaceModified) {
+                space = space.copy(name = data.name)
+                if (data.name == null) {
+                    created.countDown()
+                }
+
+            }
+            allUpdatesDone.countDown()
+        }
+
+        pubnub.subscribe(channels = listOf(SPACE_ID_01))
+
+        Thread.sleep(1000)
+        pubnub.createSpace(SPACE_ID_01).sync()
+        if (!created.await(5, TimeUnit.SECONDS)) {
+            fail("Didn't receive created event")
+        }
+        pubnub.updateSpace(spaceId = SPACE_ID_01, name = lastUpdate).sync()
+        if (!allUpdatesDone.await(5, TimeUnit.SECONDS)) {
+            fail("Didn't receive enough events")
+        }
+        assertEquals(Space(id = SPACE_ID_01, name = lastUpdate), space)
+    }
+
 
     @AfterEach
     internal fun tearDown() {

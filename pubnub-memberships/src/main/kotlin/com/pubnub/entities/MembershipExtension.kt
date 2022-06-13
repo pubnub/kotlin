@@ -1,15 +1,21 @@
 package com.pubnub.entities
 
 import com.pubnub.api.PubNub
+import com.pubnub.api.callbacks.Listener
+import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.endpoints.remoteaction.ComposableRemoteAction.Companion.firstDo
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction.Companion.map
 import com.pubnub.api.enums.PNOperationType
+import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.objects.PNMemberKey
 import com.pubnub.api.models.consumer.objects.PNMembershipKey
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.PNSortKey
 import com.pubnub.api.models.consumer.objects.ResultSortKey
+import com.pubnub.api.models.consumer.pubsub.objects.PNDeleteMembershipEventMessage
+import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
+import com.pubnub.api.models.consumer.pubsub.objects.PNSetMembershipEventMessage
 import com.pubnub.entities.models.consumer.membership.Membership
 import com.pubnub.entities.models.consumer.membership.MembershipsResult
 import com.pubnub.entities.models.consumer.membership.MembershipsStatusResult
@@ -29,6 +35,8 @@ import com.pubnub.entities.models.consumer.space.ISpaceId
 import com.pubnub.entities.models.consumer.space.SpaceId
 import com.pubnub.entities.models.consumer.user.IUserId
 import com.pubnub.entities.models.consumer.user.UserId
+import com.pubnub.entities.models.consumer.space.Space
+import com.pubnub.entities.models.consumer.user.User
 
 /**
  * Add memberships of user i.e. assign spaces to user, add user to spaces
@@ -49,8 +57,7 @@ fun PubNub.addMemberships(
     )
 ).then {
     map(
-        it,
-        PNOperationType.MembershipOperation
+        it, PNOperationType.MembershipOperation
     ) { pnChannelMembershipArrayResult -> pnChannelMembershipArrayResult.toUserMembershipsResult() }
 }
 
@@ -80,8 +87,7 @@ fun PubNub.addMemberships(
     )
 ).then {
     map(
-        it,
-        PNOperationType.MembershipOperation
+        it, PNOperationType.MembershipOperation
     ) { pnMemberArrayResult -> pnMemberArrayResult.toSpaceMembershipResult() }
 }
 
@@ -136,8 +142,7 @@ fun PubNub.fetchMemberships(
     )
 ).then {
     map(
-        it,
-        PNOperationType.MembershipOperation
+        it, PNOperationType.MembershipOperation
     ) { pnChannelMembershipArrayResult -> pnChannelMembershipArrayResult.toUserFetchMembershipsResult(userId) }
 }
 
@@ -198,8 +203,7 @@ fun PubNub.fetchMemberships(
     )
 ).then {
     map(
-        it,
-        PNOperationType.MembershipOperation
+        it, PNOperationType.MembershipOperation
     ) { pnMemberArrayResult -> pnMemberArrayResult.toSpaceFetchMembershipResult(spaceId) }
 }
 
@@ -234,8 +238,7 @@ fun PubNub.removeMemberships(
     )
 ).then {
     map(
-        it,
-        PNOperationType.MembershipOperation
+        it, PNOperationType.MembershipOperation
     ) { pnChannelMembershipArrayResult -> pnChannelMembershipArrayResult.toUserMembershipsResult() }
 }
 
@@ -261,8 +264,7 @@ fun PubNub.removeMemberships(
     )
 ).then {
     map(
-        it,
-        PNOperationType.MembershipOperation
+        it, PNOperationType.MembershipOperation
     ) { pnMemberArrayResult -> pnMemberArrayResult.toSpaceMembershipResult() }
 }
 
@@ -290,8 +292,7 @@ fun PubNub.updateMemberships(
     )
 ).then {
     map(
-        it,
-        PNOperationType.MembershipOperation
+        it, PNOperationType.MembershipOperation
     ) { pnChannelMembershipArrayResult -> pnChannelMembershipArrayResult.toUserMembershipsResult() }
 }
 
@@ -321,8 +322,7 @@ fun PubNub.updateMemberships(
     )
 ).then {
     map(
-        it,
-        PNOperationType.MembershipOperation
+        it, PNOperationType.MembershipOperation
     ) { pnMemberArrayResult -> pnMemberArrayResult.toSpaceMembershipResult() }
 }
 
@@ -333,3 +333,64 @@ fun PubNub.updateMemberships(
     spaceId = spaceId,
     partialMembershipsWithUser = partialMembershipsWithUser
 )
+
+sealed class MembershipDataEvent {
+    data class MembershipModified(
+        val space: Space, val user: User, val custom: Map<String, Any>?, val status: String?
+    ) : MembershipDataEvent()
+
+    data class MembershipRemoved(
+        val space: Space, val user: User
+    ) : MembershipDataEvent()
+}
+
+
+data class MembershipEvent(
+    val spaceId: String, val timetoken: Long, val data: MembershipDataEvent
+)
+
+fun PNObjectEventResult.toMembershipEvent(): MembershipEvent? {
+    val data = when (val m = extractedMessage) {
+        is PNSetMembershipEventMessage -> {
+            MembershipDataEvent.MembershipModified(
+                space = Space(id = SpaceId(m.data.channel)),
+                user = User(id = UserId(m.data.uuid)),
+                custom = m.data.custom as? Map<String, Any>,
+                status = m.data.status
+            )
+        }
+        is PNDeleteMembershipEventMessage -> {
+            MembershipDataEvent.MembershipRemoved(
+                space = Space(id = SpaceId(m.data.channelId)), user = User(id = UserId(m.data.uuid))
+            )
+        }
+        else -> {
+            return null
+        }
+    }
+
+    return MembershipEvent(
+        spaceId = channel, timetoken = timetoken ?: 0, data = data
+    )
+}
+
+class MembershipListener(
+    private val pubNub: PubNub, private val listener: Listener
+) : com.pubnub.api.callbacks.Stoppable, Listener by listener {
+    override fun stop() {
+        pubNub.removeListener(listener)
+    }
+}
+
+fun PubNub.addMembershipEventsListener(block: MembershipEvent.() -> Unit): MembershipListener {
+    val listener = object : SubscribeCallback() {
+        override fun status(pubnub: PubNub, pnStatus: PNStatus) {
+        }
+
+        override fun objects(pubnub: PubNub, objectEvent: PNObjectEventResult) {
+            objectEvent.toMembershipEvent()?.let(block)
+        }
+    }
+    addListener(listener)
+    return MembershipListener(this, listener)
+}

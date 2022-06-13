@@ -2,7 +2,6 @@ package com.pubnub.entities
 
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
-import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.models.consumer.objects.ResultSortKey
 import com.pubnub.entities.models.consumer.membership.Membership
 import com.pubnub.entities.models.consumer.membership.MembershipsResult
@@ -19,6 +18,10 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.fail
+import org.slf4j.LoggerFactory
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
 
 class MembershipIntegTest {
     private lateinit var pubnub: PubNub
@@ -53,8 +56,8 @@ class MembershipIntegTest {
             IntegTestConf.origin?.let {
                 origin = it
             }
-            secure = false
-            logVerbosity = PNLogVerbosity.BODY
+            // secure = false
+            // logVerbosity = PNLogVerbosity.BODY
         }
         pubnub = PubNub(config)
 
@@ -333,6 +336,71 @@ class MembershipIntegTest {
         ).sync()
         assertEquals(USER_NAME_02, membershipsResultSortUserNameDesc?.data?.first()?.user?.name)
         assertEquals(USER_NAME, membershipsResultSortUserNameDesc?.data?.elementAt(1)?.user?.name)
+    }
+
+    val log = LoggerFactory.getLogger("TestLogger")
+
+    @Test
+    internal fun can_receiveMembershipEventsForUser() {
+        val allUpdatesDone = CountDownLatch(2)
+        val lastUpdate = mapOf("this" to "that")
+        val created = CountDownLatch(1)
+        val user = User(id = USER_ID)
+        val space = Space(id = SPACE_ID)
+        var membership = Membership(
+                user = user,
+                space = space,
+                custom = mapOf(),
+                status = null
+        )
+        pubnub.addMembershipEventsListener {
+
+            val data = data
+            if (data is MembershipDataEvent.MembershipModified) {
+                if (data.custom != lastUpdate) {
+                    created.countDown()
+                }
+                membership = membership.copy(
+                        user = data.user,
+                        space = data.space,
+                        custom = data.custom,
+                        status = data.status
+                )
+            }
+            allUpdatesDone.countDown()
+        }
+        pubnub.subscribe(channels = listOf(USER_ID.value))
+
+        Thread.sleep(1000)
+
+        pubnub.addMemberships(
+            spaceId = SPACE_ID,
+            partialMembershipsWithUser = listOf(Membership.Partial(userId = USER_ID))
+        ).sync()
+
+        if (!created.await(5, TimeUnit.SECONDS)) {
+            fail("Didn't receive created event")
+        }
+        pubnub.updateMemberships(
+            spaceId = SPACE_ID,
+            partialMembershipsWithUser = listOf(
+                Membership.Partial(
+                    userId = USER_ID,
+                    custom = lastUpdate
+                )
+            )
+        ).sync()
+        if (!allUpdatesDone.await(5, TimeUnit.SECONDS)) {
+            fail("Didn't receive enough events")
+        }
+        assertEquals(
+            Membership(
+                user = user,
+                space = space,
+                custom = lastUpdate,
+                status = null
+            ), membership
+        )
     }
 
     @AfterEach

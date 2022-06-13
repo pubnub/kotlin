@@ -1,14 +1,20 @@
 package com.pubnub.entities
 
 import com.pubnub.api.PubNub
+import com.pubnub.api.callbacks.Listener
+import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.endpoints.remoteaction.ComposableRemoteAction.Companion.firstDo
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction.Companion.map
 import com.pubnub.api.enums.PNOperationType
+import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.objects.PNKey
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.PNSortKey
 import com.pubnub.api.models.consumer.objects.ResultSortKey
+import com.pubnub.api.models.consumer.pubsub.objects.PNDeleteUUIDMetadataEventMessage
+import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
+import com.pubnub.api.models.consumer.pubsub.objects.PNSetUUIDMetadataEventMessage
 import com.pubnub.entities.models.consumer.user.RemoveUserResult
 import com.pubnub.entities.models.consumer.user.User
 import com.pubnub.entities.models.consumer.user.UserId
@@ -179,3 +185,77 @@ fun PubNub.removeUser(
         it, PNOperationType.UserOperation
     ) { pnRemoveMetadataResult -> pnRemoveMetadataResult.toRemoveUserResult() }
 }
+
+sealed class UserEventData {
+    data class UserModified(
+        val userId: String,
+        val name: String?,
+        val externalId: String?,
+        val profileUrl: String?,
+        val email: String?,
+        val custom: Map<String, Any>?,
+        val status: String?,
+        val type: String?
+    ) : UserEventData()
+
+    data class UserRemoved(val userId: String) : UserEventData()
+}
+
+data class UserEvent(
+    val spaceId: String, val timetoken: Long, val data: UserEventData
+)
+
+fun PNObjectEventResult.toUserEvent(): UserEvent? {
+    val data = when (val m = extractedMessage) {
+        is PNSetUUIDMetadataEventMessage -> {
+            UserEventData.UserModified(
+                userId = m.data.id,
+                name = m.data.name,
+                profileUrl = m.data.profileUrl,
+                email = m.data.email,
+                status = m.data.status,
+                type = m.data.type,
+                custom = m.data.custom as? Map<String, Any>,
+                externalId = m.data.externalId
+            )
+        }
+        is PNDeleteUUIDMetadataEventMessage -> {
+            UserEventData.UserRemoved(
+                userId = m.source
+            )
+        }
+        else -> {
+            return null
+        }
+    }
+
+    return UserEvent(
+        spaceId = channel, timetoken = timetoken ?: 0, data = data
+    )
+}
+
+interface Stoppable {
+    fun stop()
+}
+
+class StoppableListener(
+    private val pubNub: PubNub, private val listener: Listener
+) : Stoppable, Listener by listener {
+    override fun stop() {
+        pubNub.removeListener(listener)
+    }
+}
+
+fun PubNub.addUserEventsListener(block: UserEvent.() -> Unit): Stoppable {
+    val listener = object : SubscribeCallback() {
+        override fun status(pubnub: PubNub, pnStatus: PNStatus) {
+        }
+
+        override fun objects(pubnub: PubNub, objectEvent: PNObjectEventResult) {
+            objectEvent.toUserEvent()?.let(block)
+        }
+    }
+    addListener(listener)
+    return StoppableListener(this, listener)
+}
+

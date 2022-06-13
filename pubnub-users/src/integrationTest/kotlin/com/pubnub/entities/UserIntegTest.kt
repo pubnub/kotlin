@@ -13,6 +13,9 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.api.fail
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
 
 class UserIntegTest() {
     private lateinit var pubnub: PubNub
@@ -154,6 +157,38 @@ class UserIntegTest() {
 
         assertEquals(USER_ID_02, usersResultDesc?.data?.first()?.id)
         assertEquals(USER_ID_01, usersResultDesc?.data?.elementAt(1)?.id)
+    }
+
+    @Test
+    internal fun can_receiveUserEvents() {
+        val allUpdatesDone = CountDownLatch(2)
+        val lastUpdate = "lastUpdate"
+        val created = CountDownLatch(1)
+        var user = User(id = USER_ID_01)
+        pubnub.subscribe(channels = listOf(USER_ID_01))
+
+        pubnub.addUserEventsListener {
+            val data = data
+            if (data is UserEventData.UserModified) {
+
+                user = user.copy(name = data.name, custom = data.custom)
+                if (data.name == null) {
+                    created.countDown()
+                }
+            }
+            allUpdatesDone.countDown()
+
+        }
+
+        pubnub.createUser(USER_ID_01).sync()
+        if (!created.await(5, TimeUnit.SECONDS)) {
+            fail("Didn't receive created event")
+        }
+        pubnub.updateUser(userId = USER_ID_01, name = lastUpdate, custom = mapOf("ccc" to "ddd")).sync()
+        if (!allUpdatesDone.await(5, TimeUnit.SECONDS)) {
+            fail("Didn't receive enough events")
+        }
+        assertEquals(User(id = USER_ID_01, name = lastUpdate, custom = mapOf("ccc" to "ddd")), user)
     }
 
     @AfterEach
