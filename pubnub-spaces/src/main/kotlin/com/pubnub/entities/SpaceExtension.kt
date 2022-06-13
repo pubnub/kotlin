@@ -79,7 +79,7 @@ fun PubNub.fetchSpace(
     spaceId: SpaceId,
     includeCustom: Boolean = false
 ): ExtendedRemoteAction<Space?> = firstDo(
-    getChannelMetadata(channel = spaceId.id, includeCustom = includeCustom)
+    getChannelMetadata(channel = spaceId.value, includeCustom = includeCustom)
 ).then {
     map(
         it, PNOperationType.SpaceOperation
@@ -107,7 +107,7 @@ fun PubNub.createSpace(
     status: String? = null
 ): ExtendedRemoteAction<Space?> = firstDo(
     setChannelMetadata(
-        channel = spaceId.id,
+        channel = spaceId.value,
         name = name,
         description = description,
         custom = custom,
@@ -140,7 +140,7 @@ fun PubNub.updateSpace(
     status: String? = null
 ): ExtendedRemoteAction<Space?> = firstDo(
     setChannelMetadata(
-        channel = spaceId.id,
+        channel = spaceId.value,
         name = name,
         description = description,
         custom = custom,
@@ -162,7 +162,7 @@ fun PubNub.updateSpace(
 fun PubNub.removeSpace(
     spaceId: SpaceId
 ): ExtendedRemoteAction<RemoveSpaceResult?> = firstDo(
-    removeChannelMetadata(channel = spaceId.id)
+    removeChannelMetadata(channel = spaceId.value)
 ).then {
     map(
         it, PNOperationType.SpaceOperation

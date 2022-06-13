@@ -3,10 +3,10 @@ package com.pubnub.entities.models.consumer.space
 import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata
 
 interface ISpaceId {
-    val id: String
+    val value: String
 }
 @JvmInline
-value class SpaceId(override val id: String) : ISpaceId
+value class SpaceId(override val value: String) : ISpaceId
 
 data class Space(
     val id: SpaceId,

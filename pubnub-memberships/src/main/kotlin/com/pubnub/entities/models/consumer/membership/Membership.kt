@@ -71,18 +71,18 @@ internal fun PNMember.toSpaceMembership(spaceId: SpaceId): Membership {
     )
 }
 
-internal fun List<Membership.PartialWithSpace>.toPNChannelWithCustomList(): List<PNChannelMembership.Partial> {
-    return map { it.toPNChannelWithCustom() }
+internal fun List<Membership.PartialWithSpace>.toPNChannelMembershipPartialList(): List<PNChannelMembership.Partial> {
+    return map { it.toPNChannelMembershipPartial() }
 }
 
-internal fun Membership.PartialWithSpace.toPNChannelWithCustom(): PNChannelMembership.Partial {
-    return PNChannelMembership.Partial(channelId = spaceId.id, custom = custom, status = status)
+internal fun Membership.PartialWithSpace.toPNChannelMembershipPartial(): PNChannelMembership.Partial {
+    return PNChannelMembership.Partial(channelId = spaceId.value, custom = custom, status = status)
 }
 
-internal fun List<Membership.PartialWithUser>.toPNUUIDWithCustomList(): List<PNMember.Partial> {
-    return map { it.toPNUUIDWithCustom() }
+internal fun List<Membership.PartialWithUser>.toPNMemberPartialList(): List<PNMember.Partial> {
+    return map { it.toPNMemberPartial() }
 }
 
-internal fun Membership.PartialWithUser.toPNUUIDWithCustom(): PNMember.Partial {
-    return PNMember.Partial(uuidId = userId.id, custom = custom, status = status)
+internal fun Membership.PartialWithUser.toPNMemberPartial(): PNMember.Partial {
+    return PNMember.Partial(uuidId = userId.value, custom = custom, status = status)
 }

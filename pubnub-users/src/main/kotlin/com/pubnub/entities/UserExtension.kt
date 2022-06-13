@@ -80,7 +80,7 @@ fun PubNub.fetchUser(
     includeCustom: Boolean = false
 ): ExtendedRemoteAction<User?> = firstDo(
     getUUIDMetadata(
-        uuid = userId?.id,
+        uuid = userId?.value,
         includeCustom = includeCustom
     )
 ).then {
@@ -114,7 +114,7 @@ fun PubNub.createUser(
     status: String? = null
 ): ExtendedRemoteAction<User?> = firstDo(
     setUUIDMetadata(
-        uuid = userId?.id,
+        uuid = userId?.value,
         name = name,
         externalId = externalId,
         profileUrl = profileUrl,
@@ -151,7 +151,7 @@ fun PubNub.updateUser(
     includeCustom: Boolean = false
 ): ExtendedRemoteAction<User?> = firstDo(
     setUUIDMetadata(
-        uuid = userId?.id,
+        uuid = userId?.value,
         name = name,
         externalId = externalId,
         profileUrl = profileUrl,
@@ -173,7 +173,7 @@ fun PubNub.updateUser(
 fun PubNub.removeUser(
     userId: UserId? = null
 ): ExtendedRemoteAction<RemoveUserResult?> = firstDo(
-    removeUUIDMetadata(uuid = userId?.id)
+    removeUUIDMetadata(uuid = userId?.value)
 ).then {
     map(
         it, PNOperationType.UserOperation

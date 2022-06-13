@@ -68,7 +68,7 @@ internal class MembershipExtensionKtTest {
     @BeforeEach
     internal fun setUp() {
         MockKAnnotations.init(this)
-        val pnConfiguration = PNConfiguration(USER_ID.id)
+        val pnConfiguration = PNConfiguration(USER_ID.value)
         pubNub = spyk(PubNub(configuration = pnConfiguration))
     }
 
@@ -217,7 +217,7 @@ internal class MembershipExtensionKtTest {
 
     private fun createPNMember(uuid: UserId, uuidName: String): PNMember {
         val pnUUIDMetadata = PNUUIDMetadata(
-            id = uuid.id,
+            id = uuid.value,
             name = uuidName,
             externalId = EXTERNAL_ID,
             profileUrl = PROFILE_URL,
@@ -251,7 +251,7 @@ internal class MembershipExtensionKtTest {
         membershipCustom: Any
     ): PNChannelMembership {
         val pnChannelMetadata = PNChannelMetadata(
-            id = channelId.id,
+            id = channelId.value,
             name = channelName,
             description = SPACE_DESCRIPTION,
             custom = SPACE_CUSTOM,

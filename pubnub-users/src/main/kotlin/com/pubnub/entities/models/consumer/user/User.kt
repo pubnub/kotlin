@@ -3,11 +3,11 @@ package com.pubnub.entities.models.consumer.user
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
 
 interface IUserId {
-    val id: String
+    val value: String
 }
 
 @JvmInline
-value class UserId(override val id: String) : IUserId
+value class UserId(override val value: String) : IUserId
 
 data class User(
     val id: UserId,

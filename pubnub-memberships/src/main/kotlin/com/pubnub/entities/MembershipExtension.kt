@@ -18,9 +18,9 @@ import com.pubnub.entities.models.consumer.membership.SpaceMembershipResultKey
 import com.pubnub.entities.models.consumer.membership.UserDetailsLevel
 import com.pubnub.entities.models.consumer.membership.UserMembershipsResultKey
 import com.pubnub.entities.models.consumer.membership.toPNChannelDetailsLevel
-import com.pubnub.entities.models.consumer.membership.toPNChannelWithCustomList
+import com.pubnub.entities.models.consumer.membership.toPNChannelMembershipPartialList
+import com.pubnub.entities.models.consumer.membership.toPNMemberPartialList
 import com.pubnub.entities.models.consumer.membership.toPNUUIDDetailsLevel
-import com.pubnub.entities.models.consumer.membership.toPNUUIDWithCustomList
 import com.pubnub.entities.models.consumer.membership.toSpaceFetchMembershipResult
 import com.pubnub.entities.models.consumer.membership.toSpaceMembershipResult
 import com.pubnub.entities.models.consumer.membership.toUserFetchMembershipsResult
@@ -43,8 +43,8 @@ fun PubNub.addMemberships(
     partialMembershipsWithSpace: List<Membership.PartialWithSpace>,
 ): ExtendedRemoteAction<MembershipsStatusResult> = firstDo(
     setMemberships(
-        channels = partialMembershipsWithSpace.toPNChannelWithCustomList(),
-        uuid = userId.id,
+        channels = partialMembershipsWithSpace.toPNChannelMembershipPartialList(),
+        uuid = userId.value,
         limit = 0,
     )
 ).then {
@@ -74,8 +74,8 @@ fun PubNub.addMemberships(
     partialMembershipsWithUser: List<Membership.PartialWithUser>
 ): ExtendedRemoteAction<MembershipsStatusResult> = firstDo(
     setChannelMembers(
-        channel = spaceId.id,
-        uuids = partialMembershipsWithUser.toList().toPNUUIDWithCustomList(),
+        channel = spaceId.value,
+        uuids = partialMembershipsWithUser.toList().toPNMemberPartialList(),
         limit = 0
     )
 ).then {
@@ -125,7 +125,7 @@ fun PubNub.fetchMemberships(
     includeSpaceDetails: SpaceDetailsLevel? = null
 ): ExtendedRemoteAction<MembershipsResult?> = firstDo(
     getMemberships(
-        uuid = userId.id,
+        uuid = userId.value,
         limit = limit,
         page = page,
         filter = filter,
@@ -187,7 +187,7 @@ fun PubNub.fetchMemberships(
     includeUserDetails: UserDetailsLevel? = null
 ): ExtendedRemoteAction<MembershipsResult?> = firstDo(
     getChannelMembers(
-        channel = spaceId.id,
+        channel = spaceId.value,
         limit = limit,
         page = page,
         filter = filter,
@@ -228,8 +228,8 @@ fun PubNub.removeMemberships(
     spaceIds: List<SpaceId>,
 ): ExtendedRemoteAction<MembershipsStatusResult> = firstDo(
     removeMemberships(
-        channels = spaceIds.map { it.id },
-        uuid = userId.id,
+        channels = spaceIds.map { it.value },
+        uuid = userId.value,
         limit = 0
     )
 ).then {
@@ -255,8 +255,8 @@ fun PubNub.removeMemberships(
     userIds: List<UserId>,
 ): ExtendedRemoteAction<MembershipsStatusResult> = firstDo(
     removeChannelMembers(
-        channel = spaceId.id,
-        uuids = userIds.map { it.id },
+        channel = spaceId.value,
+        uuids = userIds.map { it.value },
         limit = 0
     )
 ).then {
@@ -284,8 +284,8 @@ fun PubNub.updateMemberships(
     partialMembershipsWithSpace: List<Membership.PartialWithSpace>,
 ): ExtendedRemoteAction<MembershipsStatusResult> = firstDo(
     setMemberships(
-        channels = partialMembershipsWithSpace.toPNChannelWithCustomList(),
-        uuid = userId.id,
+        channels = partialMembershipsWithSpace.toPNChannelMembershipPartialList(),
+        uuid = userId.value,
         limit = 0
     )
 ).then {
@@ -315,8 +315,8 @@ fun PubNub.updateMemberships(
     partialMembershipsWithUser: List<Membership.PartialWithUser>
 ): ExtendedRemoteAction<MembershipsStatusResult> = firstDo(
     setChannelMembers(
-        channel = spaceId.id,
-        uuids = partialMembershipsWithUser.toPNUUIDWithCustomList(),
+        channel = spaceId.value,
+        uuids = partialMembershipsWithUser.toPNMemberPartialList(),
         limit = 0,
     )
 ).then {

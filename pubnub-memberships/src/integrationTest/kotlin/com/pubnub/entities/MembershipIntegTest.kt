@@ -47,7 +47,7 @@ class MembershipIntegTest {
 
     @BeforeEach
     fun setUp() {
-        val config = PNConfiguration(USER_ID.id).apply {
+        val config = PNConfiguration(USER_ID.value).apply {
             subscribeKey = IntegTestConf.subscribeKey
             publishKey = IntegTestConf.publishKey
             IntegTestConf.origin?.let {

@@ -165,7 +165,7 @@ internal class UserExtensionKtTest {
 
     private fun createPnuuidMetadata(userId: UserId): PNUUIDMetadata {
         val pnUUIDMetadata = PNUUIDMetadata(
-            id = userId.id,
+            id = userId.value,
             name = USER_NAME,
             externalId = EXTERNAL_ID,
             profileUrl = PROFILE_URL,

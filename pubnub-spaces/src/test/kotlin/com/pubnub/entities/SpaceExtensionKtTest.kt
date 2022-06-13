@@ -142,7 +142,7 @@ class SpaceExtensionKtTest {
 
     private fun createPnChannelMetadata(id: SpaceId): PNChannelMetadata {
         return PNChannelMetadata(
-            id = id.id,
+            id = id.value,
             name = SPACE_NAME,
             description = SPACE_DESCRIPTION,
             custom = CUSTOM,

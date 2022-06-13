@@ -19,8 +19,8 @@ class SpaceIntegTest() {
     private lateinit var pubnub: PubNub
 
     private val SPACE_ID = SpaceId("spaceIntegId")
-    private val SPACE_ID_01 = SpaceId(SPACE_ID.id + "1")
-    private val SPACE_ID_02 = SpaceId(SPACE_ID.id + "2")
+    private val SPACE_ID_01 = SpaceId(SPACE_ID.value + "1")
+    private val SPACE_ID_02 = SpaceId(SPACE_ID.value + "2")
     private val SPACE_NAME = "spaceIntegName"
     private val DESCRIPTION = "space description"
     private val CUSTOM: Map<String, String> = mapOf("favouritePet" to "mouse")
