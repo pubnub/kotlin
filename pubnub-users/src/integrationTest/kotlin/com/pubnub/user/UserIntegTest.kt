@@ -1,4 +1,4 @@
-package com.pubnub.entities
+package com.pubnub.user
 
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
@@ -7,11 +7,11 @@ import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.objects.ResultSortKey
-import com.pubnub.entities.models.consumer.user.User
-import com.pubnub.entities.models.consumer.user.UserId
-import com.pubnub.entities.models.consumer.user.UserKey
-import com.pubnub.entities.models.consumer.user.UserModified
-import com.pubnub.entities.models.consumer.user.UsersResult
+import com.pubnub.user.models.consumer.User
+import com.pubnub.user.models.consumer.UserId
+import com.pubnub.user.models.consumer.UserKey
+import com.pubnub.user.models.consumer.UserModified
+import com.pubnub.user.models.consumer.UsersResult
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue

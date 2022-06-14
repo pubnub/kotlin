@@ -4,7 +4,7 @@ import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.member.PNMemberArrayResult
 import com.pubnub.api.models.consumer.objects.membership.PNChannelMembershipArrayResult
 import com.pubnub.entities.models.consumer.space.SpaceId
-import com.pubnub.entities.models.consumer.user.UserId
+import com.pubnub.user.models.consumer.UserId
 
 data class MembershipsResult(
     val data: Collection<Membership>,

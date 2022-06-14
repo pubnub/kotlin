@@ -1,4 +1,4 @@
-package com.pubnub.entities.models.consumer.user
+package com.pubnub.user.models.consumer
 
 import com.pubnub.api.models.consumer.objects.PNRemoveMetadataResult
 
