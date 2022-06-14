@@ -3,7 +3,7 @@ package com.pubnub.api.endpoints.objects.membership
 import com.pubnub.api.Endpoint
 import com.pubnub.api.PubNub
 import com.pubnub.api.endpoints.objects.internal.CollectionQueryParameters
-import com.pubnub.api.endpoints.objects.internal.ReturningChannelDetailsCustom
+import com.pubnub.api.endpoints.objects.internal.IncludeQueryParam
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.objects.membership.PNChannelMembership
 import com.pubnub.api.models.consumer.objects.membership.PNChannelMembershipArrayResult
@@ -19,11 +19,11 @@ class GetMemberships internal constructor(
     pubnub: PubNub,
     private val uuid: String,
     private val collectionQueryParameters: CollectionQueryParameters,
-    private val withChannelDetailsCustom: ReturningChannelDetailsCustom
+    private val includeQueryParam: IncludeQueryParam
 ) : Endpoint<EntityArrayEnvelope<PNChannelMembership>, PNChannelMembershipArrayResult>(pubnub) {
 
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityArrayEnvelope<PNChannelMembership>> {
-        val params = queryParams + collectionQueryParameters.createCollectionQueryParams() + withChannelDetailsCustom.createIncludeQueryParams()
+        val params = queryParams + collectionQueryParameters.createCollectionQueryParams() + includeQueryParam.createIncludeQueryParams()
 
         return pubnub.retrofitManager.objectsService.getMemberships(
             uuid = uuid,

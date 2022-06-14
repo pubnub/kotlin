@@ -3,7 +3,7 @@ package com.pubnub.api.endpoints.objects.uuid
 import com.pubnub.api.Endpoint
 import com.pubnub.api.PubNub
 import com.pubnub.api.endpoints.objects.internal.CollectionQueryParameters
-import com.pubnub.api.endpoints.objects.internal.ReturningCustom
+import com.pubnub.api.endpoints.objects.internal.IncludeQueryParam
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
@@ -18,15 +18,15 @@ import retrofit2.Response
 class GetAllUUIDMetadata internal constructor(
     pubnub: PubNub,
     private val collectionQueryParameters: CollectionQueryParameters,
-    private val withCustom: ReturningCustom
+    private val withInclude: IncludeQueryParam
 ) : Endpoint<EntityArrayEnvelope<PNUUIDMetadata>, PNUUIDMetadataArrayResult>(pubnub) {
 
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityArrayEnvelope<PNUUIDMetadata>> {
-        val params = queryParams + collectionQueryParameters.createCollectionQueryParams() + withCustom.createIncludeQueryParams()
+        val params = queryParams + collectionQueryParameters.createCollectionQueryParams() + withInclude.createIncludeQueryParams()
 
         return pubnub.retrofitManager.objectsService.getAllUUIDMetadata(
             subKey = pubnub.configuration.subscribeKey,
-            options = params
+            options = params + mapOf("include" to "type,status")
         )
     }
 

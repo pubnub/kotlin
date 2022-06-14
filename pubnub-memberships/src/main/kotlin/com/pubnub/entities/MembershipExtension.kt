@@ -10,13 +10,12 @@ import com.pubnub.api.models.consumer.objects.PNMembershipKey
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.PNSortKey
 import com.pubnub.api.models.consumer.objects.ResultSortKey
+import com.pubnub.entities.models.consumer.membership.Membership
 import com.pubnub.entities.models.consumer.membership.MembershipsResult
 import com.pubnub.entities.models.consumer.membership.MembershipsStatusResult
 import com.pubnub.entities.models.consumer.membership.SpaceDetailsLevel
-import com.pubnub.entities.models.consumer.membership.SpaceIdWithCustom
 import com.pubnub.entities.models.consumer.membership.SpaceMembershipResultKey
 import com.pubnub.entities.models.consumer.membership.UserDetailsLevel
-import com.pubnub.entities.models.consumer.membership.UserIdWithCustom
 import com.pubnub.entities.models.consumer.membership.UserMembershipsResultKey
 import com.pubnub.entities.models.consumer.membership.toPNChannelDetailsLevel
 import com.pubnub.entities.models.consumer.membership.toPNChannelWithCustomList
@@ -30,19 +29,19 @@ import com.pubnub.entities.models.consumer.membership.toUserMembershipsResult
 /**
  * Add memberships of user i.e. assign spaces to user, add user to spaces
  *
- * @param spaceIdsWithCustoms List of spaces to add the user to. List can contain only space ids or ids along with custom data
+ * @param partialMembershipsWithSpace List of spaces to add the user to. List can contain only space ids or ids along with custom data
  *                            @see [SpaceIdWithCustom]
  * @param userId Unique user identifier. If not supplied then current user’s userId is used.
  *
  */
 fun PubNub.addMembershipsOfUser(
-    spaceIdsWithCustoms: List<SpaceIdWithCustom>,
+    partialMembershipsWithSpace: List<Membership.PartialWithSpace>,
     userId: String = configuration.uuid
 ): ExtendedRemoteAction<MembershipsStatusResult> = firstDo(
     setMemberships(
-        channels = spaceIdsWithCustoms.toPNChannelWithCustomList(),
+        channels = partialMembershipsWithSpace.toPNChannelWithCustomList(),
         uuid = userId,
-        limit = 0
+        limit = 0,
     )
 ).then {
     map(
@@ -55,16 +54,16 @@ fun PubNub.addMembershipsOfUser(
  * Add memberships of space i.e. add a users to a space, make users members of space
  *
  * @param spaceId Unique space identifier.
- * @param userIdsWithCustoms List of users to add to the space. List can contain only user ids or ids along with custom data
+ * @param partialMembershipsWithUser List of users to add to the space. List can contain only user ids or ids along with custom data
  *                             @see [UserIdWithCustom]
  */
 fun PubNub.addMembershipsOfSpace(
     spaceId: String,
-    userIdsWithCustoms: List<UserIdWithCustom>
+    partialMembershipsWithUser: List<Membership.PartialWithUser>
 ): ExtendedRemoteAction<MembershipsStatusResult> = firstDo(
     setChannelMembers(
         channel = spaceId,
-        uuids = userIdsWithCustoms.toPNUUIDWithCustomList(),
+        uuids = partialMembershipsWithUser.toList().toPNUUIDWithCustomList(),
         limit = 0
     )
 ).then {
@@ -245,17 +244,17 @@ fun PubNub.removeMembershipsOfSpace(
 /**
  * Update memberships of user. Using this method you can add the user to spaces and/or update membership custom data.
  *
- * @param spaceIdsWithCustoms List of spaces to add the user to. List can contain only space ids or ids along with custom data
+ * @param partialMembershipsWithSpace List of spaces to add the user to. List can contain only space ids or ids along with custom data
  *                            @see [SpaceIdWithCustom]
  * @param userId Unique user identifier. If not supplied then current user’s userId is used.
  *
  */
 fun PubNub.updateMembershipsOfUser(
-    spaceIdsWithCustoms: List<SpaceIdWithCustom>,
+    partialMembershipsWithSpace: List<Membership.PartialWithSpace>,
     userId: String = configuration.uuid
 ): ExtendedRemoteAction<MembershipsStatusResult> = firstDo(
     setMemberships(
-        channels = spaceIdsWithCustoms.toPNChannelWithCustomList(),
+        channels = partialMembershipsWithSpace.toPNChannelWithCustomList(),
         uuid = userId,
         limit = 0
     )
@@ -270,17 +269,17 @@ fun PubNub.updateMembershipsOfUser(
  * Update memberships of space. Using this method you can add users to the space and/or update membership custom data.
  *
  * @param spaceId Unique space identifier.
- * @param userIdsWithCustoms List of users to add to the space. List can contain only user ids or ids along with custom data
+ * @param partialMembershipsWithUser List of users to add to the space. List can contain only user ids or ids along with custom data
  *                             @see [UserIdWithCustom]
  */
 fun PubNub.updateMembershipsOfSpace(
     spaceId: String,
-    userIdsWithCustoms: List<UserIdWithCustom>
+    partialMembershipsWithUser: List<Membership.PartialWithUser>
 ): ExtendedRemoteAction<MembershipsStatusResult> = firstDo(
     setChannelMembers(
         channel = spaceId,
-        uuids = userIdsWithCustoms.toPNUUIDWithCustomList(),
-        limit = 0
+        uuids = partialMembershipsWithUser.toPNUUIDWithCustomList(),
+        limit = 0,
     )
 ).then {
     map(

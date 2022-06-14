@@ -2,9 +2,9 @@ package com.pubnub.entities.models.consumer.space
 
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadataArrayResult
+import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadataResult
 
 data class SpacesResult(
-    val status: Int,
     val data: Collection<Space>,
     val totalCount: Int?,
     val next: PNPage?,
@@ -20,5 +20,13 @@ internal fun PNChannelMetadataArrayResult?.toSpacesResult(): SpacesResult? {
         pnChannelMetadata.toSpace()
     }
 
-    return SpacesResult(status = status, data = spaces, totalCount = totalCount, next = next, prev = prev)
+    return SpacesResult(data = spaces, totalCount = totalCount, next = next, prev = prev)
+}
+
+internal fun PNChannelMetadataResult?.toSpace(): Space? {
+    if (this == null) {
+        return null
+    }
+
+    return data?.toSpace()
 }

@@ -12,8 +12,22 @@ data class Membership(
     val space: Space?,
     val custom: Map<String, Any>?,
     val updated: String,
-    val eTag: String
-)
+    val eTag: String,
+    val status: String?
+) {
+
+    data class PartialWithUser(
+        val userId: String,
+        val custom: Map<String, Any>? = null,
+        val status: String? = null
+    )
+
+    data class PartialWithSpace(
+        val spaceId: String,
+        val custom: Map<String, Any>? = null,
+        val status: String? = null
+    )
+}
 
 internal fun PNChannelMembership.toUserMembership(userId: String): Membership {
     return Membership(
@@ -21,7 +35,8 @@ internal fun PNChannelMembership.toUserMembership(userId: String): Membership {
         space = channel?.toSpace(),
         custom = custom as Map<String, Any>?,
         updated = updated,
-        eTag = eTag
+        eTag = eTag,
+        status = status
     )
 }
 
@@ -31,6 +46,23 @@ internal fun PNMember.toSpaceMembership(spaceId: String): Membership {
         space = Space(id = spaceId),
         custom = custom as Map<String, Any>?,
         updated = updated,
-        eTag = eTag
+        eTag = eTag,
+        status = status
     )
+}
+
+internal fun List<Membership.PartialWithSpace>.toPNChannelWithCustomList(): List<PNChannelMembership.Partial> {
+    return map { it.toPNChannelWithCustom() }
+}
+
+internal fun Membership.PartialWithSpace.toPNChannelWithCustom(): PNChannelMembership.Partial {
+    return PNChannelMembership.Partial(channelId = spaceId, custom = custom, status = status)
+}
+
+internal fun List<Membership.PartialWithUser>.toPNUUIDWithCustomList(): List<PNMember.Partial> {
+    return map { it.toPNUUIDWithCustom() }
+}
+
+internal fun Membership.PartialWithUser.toPNUUIDWithCustom(): PNMember.Partial {
+    return PNMember.Partial(uuidId = userId, custom = custom, status = status)
 }

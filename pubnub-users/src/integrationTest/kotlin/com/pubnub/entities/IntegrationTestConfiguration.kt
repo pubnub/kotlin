@@ -10,6 +10,9 @@ interface IntegrationTestConfiguration : Config {
 
     @get:Config.Key("pubKey")
     val publishKey: String
+
+    @get:Config.Key("origin")
+    val origin: String?
 }
 
 val IntegTestConf: IntegrationTestConfiguration = ConfigFactory.create(IntegrationTestConfiguration::class.java, System.getenv())

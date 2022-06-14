@@ -2,7 +2,7 @@ package com.pubnub.api.endpoints.objects.uuid
 
 import com.pubnub.api.Endpoint
 import com.pubnub.api.PubNub
-import com.pubnub.api.endpoints.objects.internal.ReturningCustom
+import com.pubnub.api.endpoints.objects.internal.IncludeQueryParam
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataResult
@@ -23,11 +23,13 @@ class SetUUIDMetadata internal constructor(
     private val profileUrl: String?,
     private val email: String?,
     private val custom: Any?,
-    private val withCustom: ReturningCustom
+    private val withInclude: IncludeQueryParam,
+    private val type: String?,
+    private val status: String?
 ) : Endpoint<EntityEnvelope<PNUUIDMetadata>, PNUUIDMetadataResult>(pubnub) {
 
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityEnvelope<PNUUIDMetadata>> {
-        val params = queryParams + withCustom.createIncludeQueryParams()
+        val params = queryParams + withInclude.createIncludeQueryParams()
         return pubnub.retrofitManager.objectsService.setUUIDMetadata(
             subKey = pubnub.configuration.subscribeKey,
             body = UUIDMetadataInput(
@@ -35,7 +37,9 @@ class SetUUIDMetadata internal constructor(
                 custom = custom,
                 email = email,
                 externalId = externalId,
-                profileUrl = profileUrl
+                profileUrl = profileUrl,
+                type = type,
+                status = status
             ),
             uuid = uuid ?: pubnub.configuration.uuid,
             options = params

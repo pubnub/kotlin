@@ -5,5 +5,7 @@ internal data class UUIDMetadataInput(
     val externalId: String? = null,
     val profileUrl: String? = null,
     val email: String? = null,
-    val custom: Any? = null
+    val custom: Any? = null,
+    val type: String? = null,
+    val status: String? = null
 )
