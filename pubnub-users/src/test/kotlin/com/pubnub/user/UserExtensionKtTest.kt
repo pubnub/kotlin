@@ -11,10 +11,10 @@ import com.pubnub.api.models.consumer.objects.PNRemoveMetadataResult
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataArrayResult
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataResult
-import com.pubnub.user.models.consumer.user.RemoveUserResult
-import com.pubnub.user.models.consumer.user.User
-import com.pubnub.user.models.consumer.user.UserId
-import com.pubnub.user.models.consumer.user.UsersResult
+import com.pubnub.user.models.consumer.RemoveUserResult
+import com.pubnub.user.models.consumer.User
+import com.pubnub.user.models.consumer.UserId
+import com.pubnub.user.models.consumer.UsersResult
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK

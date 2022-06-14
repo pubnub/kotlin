@@ -13,16 +13,16 @@ import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.PNSortKey
 import com.pubnub.api.models.consumer.objects.ResultSortKey
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
-import com.pubnub.user.models.consumer.user.RemoveUserResult
-import com.pubnub.user.models.consumer.user.User
-import com.pubnub.user.models.consumer.user.UserEvent
-import com.pubnub.user.models.consumer.user.UserId
-import com.pubnub.user.models.consumer.user.UserKey
-import com.pubnub.user.models.consumer.user.UsersResult
-import com.pubnub.user.models.consumer.user.toRemoveUserResult
-import com.pubnub.user.models.consumer.user.toUser
-import com.pubnub.user.models.consumer.user.toUserEvent
-import com.pubnub.user.models.consumer.user.toUsersResult
+import com.pubnub.user.models.consumer.RemoveUserResult
+import com.pubnub.user.models.consumer.User
+import com.pubnub.user.models.consumer.UserEvent
+import com.pubnub.user.models.consumer.UserId
+import com.pubnub.user.models.consumer.UserKey
+import com.pubnub.user.models.consumer.UsersResult
+import com.pubnub.user.models.consumer.toRemoveUserResult
+import com.pubnub.user.models.consumer.toUser
+import com.pubnub.user.models.consumer.toUserEvent
+import com.pubnub.user.models.consumer.toUsersResult
 
 /**
  * Returns a paginated list of User metadata, optionally including the custom data object for each.

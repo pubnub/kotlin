@@ -1,4 +1,4 @@
-package com.pubnub.user.models.consumer.user
+package com.pubnub.user.models.consumer
 
 import com.pubnub.api.models.consumer.pubsub.objects.PNDeleteUUIDMetadataEventMessage
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
