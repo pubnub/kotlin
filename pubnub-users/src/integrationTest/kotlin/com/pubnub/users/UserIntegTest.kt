@@ -1,4 +1,4 @@
-package com.pubnub.entities
+package com.pubnub.users
 
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
@@ -7,11 +7,17 @@ import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.objects.ResultSortKey
-import com.pubnub.entities.models.consumer.user.User
-import com.pubnub.entities.models.consumer.user.UserId
-import com.pubnub.entities.models.consumer.user.UserKey
-import com.pubnub.entities.models.consumer.user.UserModified
-import com.pubnub.entities.models.consumer.user.UsersResult
+import com.pubnub.users.models.consumer.user.User
+import com.pubnub.users.models.consumer.user.UserId
+import com.pubnub.users.models.consumer.user.UserKey
+import com.pubnub.users.models.consumer.user.UserModified
+import com.pubnub.users.models.consumer.user.UsersResult
+import com.pubnub.users.addUserEventsListener
+import com.pubnub.users.createUser
+import com.pubnub.users.fetchUser
+import com.pubnub.users.fetchUsers
+import com.pubnub.users.removeUser
+import com.pubnub.users.updateUser
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue

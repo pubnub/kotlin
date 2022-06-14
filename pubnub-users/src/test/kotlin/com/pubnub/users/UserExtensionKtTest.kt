@@ -1,4 +1,4 @@
-package com.pubnub.entities
+package com.pubnub.users
 
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
@@ -11,10 +11,16 @@ import com.pubnub.api.models.consumer.objects.PNRemoveMetadataResult
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataArrayResult
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataResult
-import com.pubnub.entities.models.consumer.user.RemoveUserResult
-import com.pubnub.entities.models.consumer.user.User
-import com.pubnub.entities.models.consumer.user.UserId
-import com.pubnub.entities.models.consumer.user.UsersResult
+import com.pubnub.users.models.consumer.user.RemoveUserResult
+import com.pubnub.users.models.consumer.user.User
+import com.pubnub.users.models.consumer.user.UserId
+import com.pubnub.users.models.consumer.user.UsersResult
+import com.pubnub.users.addUserEventsListener
+import com.pubnub.users.createUser
+import com.pubnub.users.fetchUser
+import com.pubnub.users.fetchUsers
+import com.pubnub.users.removeUser
+import com.pubnub.users.updateUser
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK

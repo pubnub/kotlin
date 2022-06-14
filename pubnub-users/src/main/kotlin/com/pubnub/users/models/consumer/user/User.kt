@@ -1,4 +1,4 @@
-package com.pubnub.entities.models.consumer.user
+package com.pubnub.users.models.consumer.user
 
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
 

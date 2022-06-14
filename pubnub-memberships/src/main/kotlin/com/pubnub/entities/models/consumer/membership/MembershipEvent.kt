@@ -5,8 +5,8 @@ import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
 import com.pubnub.api.models.consumer.pubsub.objects.PNSetMembershipEventMessage
 import com.pubnub.entities.models.consumer.space.Space
 import com.pubnub.entities.models.consumer.space.SpaceId
-import com.pubnub.entities.models.consumer.user.User
-import com.pubnub.entities.models.consumer.user.UserId
+import com.pubnub.users.models.consumer.user.User
+import com.pubnub.users.models.consumer.user.UserId
 
 sealed class MembershipEvent {
     abstract val spaceId: SpaceId

@@ -5,9 +5,9 @@ import com.pubnub.api.models.consumer.objects.membership.PNChannelMembership
 import com.pubnub.entities.models.consumer.space.Space
 import com.pubnub.entities.models.consumer.space.SpaceId
 import com.pubnub.entities.models.consumer.space.toSpace
-import com.pubnub.entities.models.consumer.user.User
-import com.pubnub.entities.models.consumer.user.UserId
-import com.pubnub.entities.models.consumer.user.toUser
+import com.pubnub.users.models.consumer.user.User
+import com.pubnub.users.models.consumer.user.UserId
+import com.pubnub.users.models.consumer.user.toUser
 
 data class Membership(
     val user: User?,

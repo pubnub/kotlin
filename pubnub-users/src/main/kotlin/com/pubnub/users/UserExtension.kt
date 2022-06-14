@@ -1,4 +1,4 @@
-package com.pubnub.entities
+package com.pubnub.users
 
 import com.pubnub.api.PubNub
 import com.pubnub.api.callbacks.DisposableListener
@@ -13,16 +13,16 @@ import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.PNSortKey
 import com.pubnub.api.models.consumer.objects.ResultSortKey
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
-import com.pubnub.entities.models.consumer.user.RemoveUserResult
-import com.pubnub.entities.models.consumer.user.User
-import com.pubnub.entities.models.consumer.user.UserEvent
-import com.pubnub.entities.models.consumer.user.UserId
-import com.pubnub.entities.models.consumer.user.UserKey
-import com.pubnub.entities.models.consumer.user.UsersResult
-import com.pubnub.entities.models.consumer.user.toRemoveUserResult
-import com.pubnub.entities.models.consumer.user.toUser
-import com.pubnub.entities.models.consumer.user.toUserEvent
-import com.pubnub.entities.models.consumer.user.toUsersResult
+import com.pubnub.users.models.consumer.user.RemoveUserResult
+import com.pubnub.users.models.consumer.user.User
+import com.pubnub.users.models.consumer.user.UserEvent
+import com.pubnub.users.models.consumer.user.UserId
+import com.pubnub.users.models.consumer.user.UserKey
+import com.pubnub.users.models.consumer.user.UsersResult
+import com.pubnub.users.models.consumer.user.toRemoveUserResult
+import com.pubnub.users.models.consumer.user.toUser
+import com.pubnub.users.models.consumer.user.toUserEvent
+import com.pubnub.users.models.consumer.user.toUsersResult
 
 /**
  * Returns a paginated list of User metadata, optionally including the custom data object for each.
