@@ -2,4 +2,4 @@
 
 # &lt;init&gt;
 
-`PNAsc(key: `[`PNKey`](../../-p-n-key/index.md)`)`
+`PNAsc(key: T)`

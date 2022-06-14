@@ -6,4 +6,7 @@
 
 | Name | Summary |
 |---|---|
-| [SubscribeCallback](-subscribe-callback/index.md) | `abstract class SubscribeCallback` |
+| [Disposable](-disposable/index.md) | `interface Disposable` |
+| [DisposableListener](-disposable-listener/index.md) | `class DisposableListener : `[`Disposable`](-disposable/index.md)`, `[`Listener`](-listener.md) |
+| [Listener](-listener.md) | `interface Listener` |
+| [SubscribeCallback](-subscribe-callback/index.md) | `abstract class SubscribeCallback : `[`Listener`](-listener.md) |

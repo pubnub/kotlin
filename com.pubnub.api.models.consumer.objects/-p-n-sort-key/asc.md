@@ -2,4 +2,4 @@
 
 # asc
 
-`fun asc(key: `[`PNKey`](../-p-n-key/index.md)`): `[`PNSortKey`](index.md)
+`fun asc(key: `[`PNKey`](../-p-n-key/index.md)`): `[`PNSortKey`](index.md)`<`[`PNKey`](../-p-n-key/index.md)`>`

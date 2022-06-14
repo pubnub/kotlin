@@ -2,7 +2,7 @@
 
 # SubscribeCallback
 
-`abstract class SubscribeCallback`
+`abstract class SubscribeCallback : `[`Listener`](../-listener.md)
 
 ### Constructors
 

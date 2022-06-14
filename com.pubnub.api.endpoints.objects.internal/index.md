@@ -6,7 +6,5 @@
 
 | Name | Summary |
 |---|---|
-| [ReturningChannelDetailsCustom](-returning-channel-details-custom/index.md) | `data class ReturningChannelDetailsCustom` |
-| [ReturningCollection](-returning-collection/index.md) | `data class ReturningCollection` |
-| [ReturningCustom](-returning-custom/index.md) | `data class ReturningCustom` |
-| [ReturningUUIDDetailsCustom](-returning-u-u-i-d-details-custom/index.md) | `data class ReturningUUIDDetailsCustom` |
+| [CollectionQueryParameters](-collection-query-parameters/index.md) | `data class CollectionQueryParameters` |
+| [IncludeQueryParam](-include-query-param/index.md) | `data class IncludeQueryParam` |

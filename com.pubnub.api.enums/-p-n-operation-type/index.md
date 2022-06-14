@@ -11,6 +11,7 @@
 | [ChannelGroupOperation](-channel-group-operation/index.md) | `open class ChannelGroupOperation : `[`PNOperationType`](./index.md) |
 | [FileOperation](-file-operation.md) | `object FileOperation : `[`PNOperationType`](./index.md) |
 | [HistoryOperation](-history-operation/index.md) | `open class HistoryOperation : `[`PNOperationType`](./index.md) |
+| [MembershipOperation](-membership-operation.md) | `object MembershipOperation : `[`PNOperationType`](./index.md) |
 | [MessageActionsOperation](-message-actions-operation/index.md) | `open class MessageActionsOperation : `[`PNOperationType`](./index.md) |
 | [MessageCountsOperation](-message-counts-operation/index.md) | `open class MessageCountsOperation : `[`PNOperationType`](./index.md) |
 | [ObjectsOperation](-objects-operation/index.md) | `open class ObjectsOperation : `[`PNOperationType`](./index.md) |

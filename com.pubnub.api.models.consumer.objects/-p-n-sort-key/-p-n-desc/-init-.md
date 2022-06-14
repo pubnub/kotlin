@@ -2,4 +2,4 @@
 
 # &lt;init&gt;
 
-`PNDesc(key: `[`PNKey`](../../-p-n-key/index.md)`)`
+`PNDesc(key: T)`

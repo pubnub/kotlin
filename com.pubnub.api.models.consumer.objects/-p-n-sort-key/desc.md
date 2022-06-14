@@ -2,4 +2,4 @@
 
 # desc
 
-`fun desc(key: `[`PNKey`](../-p-n-key/index.md)`): `[`PNSortKey`](index.md)
+`fun desc(key: `[`PNKey`](../-p-n-key/index.md)`): `[`PNSortKey`](index.md)`<`[`PNKey`](../-p-n-key/index.md)`>`

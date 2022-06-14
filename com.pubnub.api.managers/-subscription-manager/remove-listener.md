@@ -2,4 +2,4 @@
 
 # removeListener
 
-`fun removeListener(listener: `[`SubscribeCallback`](../../com.pubnub.api.callbacks/-subscribe-callback/index.md)`): `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html)
+`fun removeListener(listener: `[`Listener`](../../com.pubnub.api.callbacks/-listener.md)`): `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html)

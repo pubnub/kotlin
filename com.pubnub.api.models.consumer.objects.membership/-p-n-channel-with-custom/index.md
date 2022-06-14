@@ -2,7 +2,8 @@
 
 # PNChannelWithCustom
 
-`data class PNChannelWithCustom`
+`data class ~~PNChannelWithCustom~~ : `[`ChannelMembershipInput`](../-channel-membership-input/index.md)
+**Deprecated:** Use PNChannelMembership.Partial
 
 ### Constructors
 
@@ -16,6 +17,7 @@
 |---|---|
 | [channel](channel.md) | `val channel: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
 | [custom](custom.md) | `val custom: `[`Any`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)`?` |
+| [status](status.md) | `val status: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`?` |
 
 ### Companion Object Functions
 

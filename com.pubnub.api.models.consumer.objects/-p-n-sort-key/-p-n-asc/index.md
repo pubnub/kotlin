@@ -2,10 +2,10 @@
 
 # PNAsc
 
-`class PNAsc : `[`PNSortKey`](../index.md)
+`class PNAsc<T : `[`SortField`](../../-sort-field/index.md)`> : `[`PNSortKey`](../index.md)`<T>`
 
 ### Constructors
 
 | Name | Summary |
 |---|---|
-| [&lt;init&gt;](-init-.md) | `PNAsc(key: `[`PNKey`](../../-p-n-key/index.md)`)` |
+| [&lt;init&gt;](-init-.md) | `PNAsc(key: T)` |
