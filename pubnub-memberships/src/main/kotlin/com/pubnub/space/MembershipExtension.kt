@@ -14,6 +14,8 @@ import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.PNSortKey
 import com.pubnub.api.models.consumer.objects.ResultSortKey
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
+import com.pubnub.space.models.consumer.ISpaceId
+import com.pubnub.space.models.consumer.SpaceId
 import com.pubnub.space.models.consumer.membership.Membership
 import com.pubnub.space.models.consumer.membership.MembershipEvent
 import com.pubnub.space.models.consumer.membership.MembershipsResult
@@ -31,8 +33,6 @@ import com.pubnub.space.models.consumer.membership.toSpaceFetchMembershipResult
 import com.pubnub.space.models.consumer.membership.toSpaceMembershipResult
 import com.pubnub.space.models.consumer.membership.toUserFetchMembershipsResult
 import com.pubnub.space.models.consumer.membership.toUserMembershipsResult
-import com.pubnub.space.models.consumer.ISpaceId
-import com.pubnub.space.models.consumer.SpaceId
 import com.pubnub.user.models.consumer.IUserId
 import com.pubnub.user.models.consumer.UserId
 

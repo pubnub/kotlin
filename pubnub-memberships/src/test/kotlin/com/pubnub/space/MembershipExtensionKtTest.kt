@@ -13,11 +13,11 @@ import com.pubnub.api.models.consumer.objects.member.PNMemberArrayResult
 import com.pubnub.api.models.consumer.objects.membership.PNChannelMembership
 import com.pubnub.api.models.consumer.objects.membership.PNChannelMembershipArrayResult
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
+import com.pubnub.space.models.consumer.Space
+import com.pubnub.space.models.consumer.SpaceId
 import com.pubnub.space.models.consumer.membership.Membership
 import com.pubnub.space.models.consumer.membership.MembershipsResult
 import com.pubnub.space.models.consumer.membership.MembershipsStatusResult
-import com.pubnub.space.models.consumer.Space
-import com.pubnub.space.models.consumer.SpaceId
 import com.pubnub.user.models.consumer.User
 import com.pubnub.user.models.consumer.UserId
 import io.mockk.MockKAnnotations

@@ -8,17 +8,11 @@ import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.objects.ResultSortKey
-import com.pubnub.space.addSpaceEventsListener
-import com.pubnub.space.createSpace
-import com.pubnub.space.fetchSpace
-import com.pubnub.space.fetchSpaces
 import com.pubnub.space.models.consumer.Space
 import com.pubnub.space.models.consumer.SpaceId
 import com.pubnub.space.models.consumer.SpaceKey
 import com.pubnub.space.models.consumer.SpaceModified
 import com.pubnub.space.models.consumer.SpacesResult
-import com.pubnub.space.removeSpace
-import com.pubnub.space.updateSpace
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
