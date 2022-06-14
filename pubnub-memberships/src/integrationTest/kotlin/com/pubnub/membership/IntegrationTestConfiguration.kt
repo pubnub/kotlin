@@ -1,4 +1,4 @@
-package com.pubnub.space
+package com.pubnub.membership
 
 import org.aeonbits.owner.Config
 import org.aeonbits.owner.ConfigFactory

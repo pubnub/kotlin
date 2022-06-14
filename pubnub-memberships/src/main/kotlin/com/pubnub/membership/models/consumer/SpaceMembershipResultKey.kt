@@ -1,4 +1,4 @@
-package com.pubnub.space.models.consumer.membership
+package com.pubnub.membership.models.consumer
 
 import com.pubnub.api.models.consumer.objects.PNMemberKey
 import com.pubnub.api.models.consumer.objects.SortableKey

@@ -1,4 +1,4 @@
-package com.pubnub.space
+package com.pubnub.membership
 
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
@@ -6,15 +6,17 @@ import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.objects.ResultSortKey
+import com.pubnub.membership.models.consumer.Membership
+import com.pubnub.membership.models.consumer.MembershipModified
+import com.pubnub.membership.models.consumer.MembershipsResult
+import com.pubnub.membership.models.consumer.SpaceDetailsLevel
+import com.pubnub.membership.models.consumer.SpaceMembershipResultKey
+import com.pubnub.membership.models.consumer.UserDetailsLevel
+import com.pubnub.membership.models.consumer.UserMembershipsResultKey
+import com.pubnub.space.createSpace
 import com.pubnub.space.models.consumer.Space
 import com.pubnub.space.models.consumer.SpaceId
-import com.pubnub.space.models.consumer.membership.Membership
-import com.pubnub.space.models.consumer.membership.MembershipModified
-import com.pubnub.space.models.consumer.membership.MembershipsResult
-import com.pubnub.space.models.consumer.membership.SpaceDetailsLevel
-import com.pubnub.space.models.consumer.membership.SpaceMembershipResultKey
-import com.pubnub.space.models.consumer.membership.UserDetailsLevel
-import com.pubnub.space.models.consumer.membership.UserMembershipsResultKey
+import com.pubnub.space.removeSpace
 import com.pubnub.user.createUser
 import com.pubnub.user.models.consumer.User
 import com.pubnub.user.models.consumer.UserId
