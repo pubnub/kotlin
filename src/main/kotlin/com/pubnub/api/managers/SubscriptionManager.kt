@@ -9,6 +9,7 @@ import com.pubnub.api.builder.StateOperation
 import com.pubnub.api.builder.SubscribeOperation
 import com.pubnub.api.builder.TimetokenRegionOperation
 import com.pubnub.api.builder.UnsubscribeOperation
+import com.pubnub.api.callbacks.Listener
 import com.pubnub.api.callbacks.ReconnectionCallback
 import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.endpoints.presence.Heartbeat
@@ -331,7 +332,7 @@ class SubscriptionManager(val pubnub: PubNub, private val subscriptionState: Sta
         listenerManager.addListener(listener)
     }
 
-    fun removeListener(listener: SubscribeCallback) {
+    fun removeListener(listener: Listener) {
         listenerManager.removeListener(listener)
     }
 

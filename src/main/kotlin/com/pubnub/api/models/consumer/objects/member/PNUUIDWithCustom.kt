@@ -15,9 +15,9 @@ interface MemberInput {
     )
 )
 data class PNUUIDWithCustom(
-    val uuid: String,
-    val custom: Any? = null
-) {
+    override val uuid: String,
+    override val custom: Any? = null
+) : MemberInput {
     companion object {
         @Deprecated(
             message = "Use PNMember.Partial",
@@ -32,4 +32,6 @@ data class PNUUIDWithCustom(
             custom: Any? = null
         ) = PNUUIDWithCustom(uuid = uuid, custom = custom)
     }
+
+    override val status: String? = null
 }

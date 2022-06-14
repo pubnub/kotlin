@@ -1,21 +1,27 @@
 package com.pubnub.entities
 
 import com.pubnub.api.PubNub
+import com.pubnub.api.callbacks.DisposableListener
+import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.endpoints.remoteaction.ComposableRemoteAction.Companion.firstDo
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction.Companion.map
 import com.pubnub.api.enums.PNOperationType
+import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.objects.PNKey
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.PNSortKey
 import com.pubnub.api.models.consumer.objects.ResultSortKey
+import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
 import com.pubnub.entities.models.consumer.space.RemoveSpaceResult
 import com.pubnub.entities.models.consumer.space.Space
+import com.pubnub.entities.models.consumer.space.SpaceEvent
 import com.pubnub.entities.models.consumer.space.SpaceId
 import com.pubnub.entities.models.consumer.space.SpaceKey
 import com.pubnub.entities.models.consumer.space.SpacesResult
 import com.pubnub.entities.models.consumer.space.toRemoveSpaceResult
 import com.pubnub.entities.models.consumer.space.toSpace
+import com.pubnub.entities.models.consumer.space.toSpaceEvent
 import com.pubnub.entities.models.consumer.space.toSpacesResult
 
 /**
@@ -167,4 +173,24 @@ fun PubNub.removeSpace(
     map(
         it, PNOperationType.SpaceOperation
     ) { pnRemoveMetadataResult -> pnRemoveMetadataResult.toRemoveSpaceResult() }
+}
+
+/**
+ * Add a listener for all space events @see[SpaceEvent]. To receive any space event it is required to subscribe to
+ * a specific spaceId (passing it as a channel) @see[PubNub.subscribe]
+ *
+ * @param block Function that will be called for every space event.
+ * @return DisposableListener that can be disposed or passed in to PubNub#removeListener method @see[PubNub.removeListener]
+ */
+fun PubNub.addSpaceEventsListener(block: (SpaceEvent) -> Unit): DisposableListener {
+    val listener = object : SubscribeCallback() {
+        override fun status(pubnub: PubNub, pnStatus: PNStatus) {
+        }
+
+        override fun objects(pubnub: PubNub, objectEvent: PNObjectEventResult) {
+            objectEvent.toSpaceEvent()?.let(block)
+        }
+    }
+    addListener(listener)
+    return DisposableListener(this, listener)
 }

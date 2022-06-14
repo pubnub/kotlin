@@ -10,7 +10,22 @@ import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
 
-abstract class SubscribeCallback {
+interface Listener
+
+interface Disposable {
+    fun dispose()
+}
+
+class DisposableListener(
+    private val pubNub: PubNub,
+    private val listener: Listener
+) : Disposable, Listener by listener {
+    override fun dispose() {
+        pubNub.removeListener(listener)
+    }
+}
+
+abstract class SubscribeCallback : Listener {
 
     /**
      * Receive status events like

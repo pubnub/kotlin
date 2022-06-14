@@ -1,6 +1,7 @@
 package com.pubnub.api
 
 import com.pubnub.api.builder.PubSub
+import com.pubnub.api.callbacks.Listener
 import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.endpoints.DeleteMessages
 import com.pubnub.api.endpoints.FetchMessages
@@ -91,7 +92,7 @@ class PubNub(val configuration: PNConfiguration) {
 
     companion object {
         private const val TIMESTAMP_DIVIDER = 1000
-        private const val SDK_VERSION = "7.1.0"
+        private const val SDK_VERSION = "7.2.0"
         private const val MAX_SEQUENCE = 65535
 
         /**
@@ -1857,7 +1858,7 @@ class PubNub(val configuration: PNConfiguration) {
      *
      * @param listener The listener to be removed.
      */
-    fun removeListener(listener: SubscribeCallback) {
+    fun removeListener(listener: Listener) {
         subscriptionManager.removeListener(listener)
     }
 
