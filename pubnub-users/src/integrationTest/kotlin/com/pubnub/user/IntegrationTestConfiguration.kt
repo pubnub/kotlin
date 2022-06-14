@@ -1,4 +1,4 @@
-package com.pubnub.users
+package com.pubnub.user
 
 import org.aeonbits.owner.Config
 import org.aeonbits.owner.ConfigFactory

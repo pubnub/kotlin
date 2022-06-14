@@ -33,8 +33,8 @@ import com.pubnub.entities.models.consumer.membership.toUserFetchMembershipsResu
 import com.pubnub.entities.models.consumer.membership.toUserMembershipsResult
 import com.pubnub.entities.models.consumer.space.ISpaceId
 import com.pubnub.entities.models.consumer.space.SpaceId
-import com.pubnub.users.models.consumer.user.IUserId
-import com.pubnub.users.models.consumer.user.UserId
+import com.pubnub.user.models.consumer.user.IUserId
+import com.pubnub.user.models.consumer.user.UserId
 
 /**
  * Add memberships of user i.e. assign spaces to user, add user to spaces
