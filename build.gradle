@@ -1,10 +1,18 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "com.vanniktech:gradle-maven-publish-plugin:0.18.0"
+    }
+}
+
 plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.5.30'
     id 'maven'
     id 'com.github.johnrengelman.shadow' version '6.1.0'
     id 'java-library'
     id 'java-test-fixtures'
-    id 'com.bmuschko.nexus' version '2.3.1'
     id "org.jlleitschuh.gradle.ktlint" version "10.0.0"
     id "jacoco"
     id 'org.jetbrains.dokka' version '0.10.1'
@@ -12,8 +20,7 @@ plugins {
     id "com.github.ben-manes.versions" version '0.38.0'
 }
 
-group = 'com.pubnub'
-version = '7.0.1'
+apply plugin: "com.vanniktech.maven.publish"
 
 repositories {
     mavenCentral()
@@ -49,7 +56,7 @@ dependencies {
 
     implementation "com.squareup.retrofit2:retrofit:2.9.0"
 
-    api "com.squareup.okhttp3:logging-interceptor:3.14.9"
+    api 'com.squareup.okhttp3:logging-interceptor:4.9.3'
 
     api 'com.google.code.gson:gson:2.8.6'
     implementation "com.squareup.retrofit2:converter-gson:2.9.0"
@@ -114,6 +121,14 @@ ktlint {
     }
 }
 
+subprojects {
+    apply plugin: "org.jlleitschuh.gradle.ktlint"
+    ktlint {
+        verbose = true
+        additionalEditorconfigFile = file("check/.editorconfig")
+    }
+}
+
 compileKotlin {
     kotlinOptions.jvmTarget = "1.8"
 }
@@ -124,47 +139,5 @@ compileTestKotlin {
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-extraArchive {
-    sources = true
-    tests = true
-    javadoc = true
-}
-
-nexus {
-    sign = true
-    repositoryUrl = 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
-    snapshotRepositoryUrl = 'https://oss.sonatype.org/content/repositories/snapshots'
-}
-
-modifyPom {
-    project {
-        name 'PubNub Kotlin SDK'
-        description 'PubNub is a cross-platform client-to-client (1:1 and 1:many) push service in the cloud, capable of\n' +
-                '        broadcasting real-time messages to millions of web and mobile clients simultaneously, in less than a quarter\n' +
-                '        second!'
-        url 'https://github.com/pubnub/kotlin'
-        inceptionYear '2020'
-
-        scm {
-            url 'https://github.com/pubnub/kotlin'
-        }
-
-        licenses {
-            license {
-                name 'MIT License'
-                url 'https://github.com/pubnub/pubnub-api/blob/master/LICENSE'
-                distribution 'repo'
-            }
-        }
-
-        developers {
-            developer {
-                id 'PubNub'
-                name 'PubNub'
-                email 'support@pubnub.com'
-            }
-        }
-    }
-}
 
 build.finalizedBy(dokka, shadowJar)

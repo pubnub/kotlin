@@ -1,0 +1,1 @@
+echo "Build Kotlin SDK module artifacts"

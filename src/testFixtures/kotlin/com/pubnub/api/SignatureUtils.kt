@@ -3,17 +3,18 @@ package com.pubnub.api
 import com.github.tomakehurst.wiremock.verification.LoggedRequest
 import com.pubnub.api.vendor.Base64
 import com.pubnub.api.vendor.Crypto
-import okhttp3.HttpUrl
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.Request
 import okio.Buffer
+import org.apache.commons.codec.digest.HmacAlgorithms
+import org.apache.commons.codec.digest.HmacUtils
 import org.junit.Assert.assertEquals
-import java.io.BufferedReader
 import java.io.IOException
-import java.io.InputStreamReader
 import java.net.URLEncoder
 import java.nio.charset.Charset
 import java.security.InvalidKeyException
 import java.security.NoSuchAlgorithmException
+import java.util.Locale
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 
@@ -31,8 +32,8 @@ object SignatureUtils {
     fun decomposeAndVerifySignature(configuration: PNConfiguration, request: Request) {
         decomposeAndVerifySignature(
             configuration = configuration,
-            url = request.url().toString(),
-            method = request.method(),
+            url = request.url.toString(),
+            method = request.method,
             body = requestBodyToString(request)
         )
     }
@@ -43,13 +44,15 @@ object SignatureUtils {
         method: String,
         body: String = ""
     ) {
-        val httpUrl = HttpUrl.parse(url)
+        val httpUrl = url.toHttpUrlOrNull()
         println(httpUrl)
 
         val sortedQueryString = httpUrl!!.run {
-            queryParameterNames()
+            queryParameterNames
                 .filter { it != "signature" }
-                .map { it to pamEncode(queryParameterValues(it).first()) }
+                .mapNotNull { queryParameterName ->
+                    queryParameterValues(queryParameterName).first()?.let { queryParameterName to pamEncode(it) }
+                }
                 .toMap()
                 .toSortedMap()
                 .map { "${it.key}=${it.value}" }
@@ -59,11 +62,11 @@ object SignatureUtils {
         var v2Signature = true
 
         val input =
-            if (!(httpUrl.encodedPath().startsWith("/publish") && method.toLowerCase() == "post")) {
+            if (!(httpUrl.encodedPath.startsWith("/publish") && method.lowercase(Locale.getDefault()) == "post")) {
                 """
-                ${method.toUpperCase()}
+                ${method.uppercase(Locale.getDefault())}
                 ${configuration.publishKey}
-                ${httpUrl.encodedPath()}
+                ${httpUrl.encodedPath}
                 $sortedQueryString
                 $body
                 """.trimIndent()
@@ -72,13 +75,13 @@ object SignatureUtils {
                 """
                 ${configuration.subscribeKey}
                 ${configuration.publishKey}
-                ${httpUrl.encodedPath()}
+                ${httpUrl.encodedPath}
                 $sortedQueryString
                 """.trimIndent()
             }
 
         val actualSignature = httpUrl.queryParameter("signature")
-        val verifiedSignature = verifyViaPython(configuration.secretKey, input, v2Signature)
+        val verifiedSignature = verifyViaKotlin(configuration.secretKey, input, v2Signature)
 
         val rebuiltSignature = signSHA256(configuration.secretKey, input).run {
             if (v2Signature) "v2.${this.trim('=')}"
@@ -96,10 +99,9 @@ object SignatureUtils {
     }
 
     private fun signSHA256(key: String, data: String): String {
-        val sha256HMAC: Mac
         val hmacData: ByteArray
         val secretKey = SecretKeySpec(key.toByteArray(charset("UTF-8")), "HmacSHA256")
-        sha256HMAC = try {
+        val sha256HMAC: Mac = try {
             Mac.getInstance("HmacSHA256")
         } catch (e: NoSuchAlgorithmException) {
             throw Crypto.newCryptoError(0, e)
@@ -110,28 +112,31 @@ object SignatureUtils {
             throw Crypto.newCryptoError(0, e)
         }
         hmacData = sha256HMAC.doFinal(data.toByteArray(charset("UTF-8")))
-        val signedd = String(Base64.encode(hmacData, 0), Charset.forName("UTF-8"))
+        return String(Base64.encode(hmacData, 0), Charset.forName("UTF-8"))
             .replace('+', '-')
             .replace('/', '_')
             .replace("\n", "")
-        return signedd
     }
 
-    private fun verifyViaPython(key: String, input: String, v2Signature: Boolean): String {
-        val i = input.replace("\n", "###")
-        val path = ClassLoader.getSystemClassLoader().getResource("hmacsha256.py")!!.path
-        val command = "python $path $key $i $v2Signature"
-        val process = Runtime.getRuntime().exec(command)
-        return BufferedReader(InputStreamReader(process.inputStream)).readLine()
+    private fun verifyViaKotlin(key: String, input: String, v2Signature: Boolean): String {
+        val hmac = HmacUtils(HmacAlgorithms.HMAC_SHA_256, key.toByteArray())
+        hmac.hmacHex(input.toByteArray()).lowercase(Locale.getDefault())
+        val hmacResult = hmac.hmac(input)
+        val encoder = java.util.Base64.getUrlEncoder()
+        return if (v2Signature) {
+            "v2.${String(encoder.withoutPadding().encode(hmacResult))}"
+        } else {
+            String(encoder.encode(hmacResult))
+        }
     }
 
     private fun requestBodyToString(request: Request): String {
-        if (request.body() == null) {
+        if (request.body == null) {
             return ""
         }
         try {
             val buffer = Buffer()
-            request.body()!!.writeTo(buffer)
+            request.body!!.writeTo(buffer)
             return buffer.readUtf8()
         } catch (e: IOException) {
             e.printStackTrace()

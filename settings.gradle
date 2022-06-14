@@ -1,1 +1,6 @@
 rootProject.name = 'pubnub-kotlin'
+include 'pubnub-kotlin-bom'
+include 'pubnub-users'
+include 'pubnub-spaces'
+include 'pubnub-memberships'
+

@@ -20,10 +20,10 @@ fun <Input, Output> Endpoint<Input, Output>.await(function: (result: Output?, st
     success.listen()
 }
 
-fun PNStatus.param(param: String) = clientRequest!!.url().queryParameter(param)
+fun PNStatus.param(param: String) = clientRequest!!.url.queryParameter(param)
 
 fun PNStatus.encodedParam(param: String) =
-    clientRequest!!.url().encodedQuery()!!.encodedParamString(param)
+    clientRequest!!.url.encodedQuery!!.encodedParamString(param)
 
 fun String.encodedParamString(param: String): String {
     return split("&")

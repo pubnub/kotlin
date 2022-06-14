@@ -3,12 +3,12 @@ package com.pubnub.api.endpoints.objects.internal
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.PNSortKey
 
-data class ReturningCollection(
+data class CollectionQueryParameters(
     private val limit: Int? = null,
     private val page: PNPage? = null,
     private val filter: String? = null,
-    private val sort: Collection<PNSortKey> = listOf(),
-    private val includeCount: Boolean = false
+    private val sort: Collection<PNSortKey<*>> = listOf(),
+    private val includeCount: Boolean = false,
 ) {
 
     internal fun createCollectionQueryParams(): Map<String, String> {

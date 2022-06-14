@@ -2,12 +2,12 @@ package com.pubnub.api.endpoints.objects.membership
 
 import com.pubnub.api.Endpoint
 import com.pubnub.api.PubNub
-import com.pubnub.api.endpoints.objects.internal.ReturningChannelDetailsCustom
-import com.pubnub.api.endpoints.objects.internal.ReturningCollection
+import com.pubnub.api.endpoints.objects.internal.CollectionQueryParameters
+import com.pubnub.api.endpoints.objects.internal.IncludeQueryParam
 import com.pubnub.api.enums.PNOperationType
+import com.pubnub.api.models.consumer.objects.membership.ChannelMembershipInput
 import com.pubnub.api.models.consumer.objects.membership.PNChannelMembership
 import com.pubnub.api.models.consumer.objects.membership.PNChannelMembershipArrayResult
-import com.pubnub.api.models.consumer.objects.membership.PNChannelWithCustom
 import com.pubnub.api.models.server.objects_api.ChangeMembershipInput
 import com.pubnub.api.models.server.objects_api.ChannelId
 import com.pubnub.api.models.server.objects_api.EntityArrayEnvelope
@@ -15,29 +15,28 @@ import com.pubnub.api.models.server.objects_api.MembershipInput
 import com.pubnub.extension.toPNChannelMembershipArrayResult
 import retrofit2.Call
 import retrofit2.Response
-import java.util.HashMap
 
 /**
  * @see [PubNub.manageMemberships]
  */
 class ManageMemberships internal constructor(
     pubnub: PubNub,
-    private val channelsToSet: Collection<PNChannelWithCustom>,
+    private val channelsToSet: Collection<ChannelMembershipInput>,
     private val channelsToRemove: Collection<String>,
     private val uuid: String,
-    private val returningCollection: ReturningCollection,
-    private val withChannelDetailsCustom: ReturningChannelDetailsCustom
+    private val collectionQueryParameters: CollectionQueryParameters,
+    private val includeQueryParam: IncludeQueryParam
 ) : Endpoint<EntityArrayEnvelope<PNChannelMembership>, PNChannelMembershipArrayResult>(pubnub) {
 
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityArrayEnvelope<PNChannelMembership>> {
-        val params = queryParams + returningCollection.createCollectionQueryParams() +
-            withChannelDetailsCustom.createIncludeQueryParams()
+        val params = queryParams + collectionQueryParameters.createCollectionQueryParams() +
+            includeQueryParam.createIncludeQueryParams()
         return pubnub.retrofitManager.objectsService.patchMemberships(
             uuid = uuid,
             subKey = pubnub.configuration.subscribeKey,
             options = params,
             body = ChangeMembershipInput(
-                set = channelsToSet.map { MembershipInput(channel = ChannelId(it.channel), custom = it.custom) },
+                set = channelsToSet.map { MembershipInput(channel = ChannelId(it.channel), custom = it.custom, status = it.status) },
                 delete = channelsToRemove.map { MembershipInput(channel = ChannelId(id = it)) }
             )
         )

@@ -12,8 +12,9 @@ import com.pubnub.api.models.server.files.FormField
 import com.pubnub.api.services.S3Service
 import com.pubnub.api.vendor.FileEncryptionUtil
 import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import org.slf4j.LoggerFactory
 import retrofit2.Call
 import retrofit2.Callback
@@ -44,7 +45,7 @@ internal class UploadFile(
         val mediaType = getMediaType(formParams.findContentType())
 
         val bytes = prepareBytes(content, cipherKey)
-        builder.addFormDataPart(FILE_PART_MULTIPART, fileName, RequestBody.create(mediaType, bytes))
+        builder.addFormDataPart(FILE_PART_MULTIPART, fileName, bytes.toRequestBody(mediaType, 0, content.size))
         return s3Service.upload(baseUrl, builder.build())
     }
 
@@ -65,7 +66,7 @@ internal class UploadFile(
         return if (contentType == null) {
             APPLICATION_OCTET_STREAM
         } else try {
-            MediaType.get(contentType)
+            contentType.toMediaType()
         } catch (t: Throwable) {
             log.warn("Content-Type: $contentType was not recognized by MediaType.get", t)
             APPLICATION_OCTET_STREAM
@@ -199,8 +200,8 @@ internal class UploadFile(
             category = category,
             operation = operationType(),
             statusCode = response?.code(),
-            tlsEnabled = response?.raw()?.request()?.url()?.isHttps,
-            origin = response?.raw()?.request()?.url()?.host(),
+            tlsEnabled = response?.raw()?.request?.url?.isHttps,
+            origin = response?.raw()?.request?.url?.host,
             error = response == null || throwable != null
         ).apply { executedEndpoint = this@UploadFile }
     }
@@ -225,7 +226,7 @@ internal class UploadFile(
     }
 
     companion object {
-        private val APPLICATION_OCTET_STREAM = MediaType.get("application/octet-stream")
+        private val APPLICATION_OCTET_STREAM = "application/octet-stream".toMediaType()
         private const val CONTENT_TYPE_HEADER = "Content-Type"
         private const val FILE_PART_MULTIPART = "file"
         private val log = LoggerFactory.getLogger(UploadFile::class.java)

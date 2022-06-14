@@ -9,8 +9,3 @@ data class PNUUIDMetadataArrayResult(
     val next: PNPage.PNNext?,
     val prev: PNPage.PNPrev?
 )
-
-data class PNUUIDMetadataResult(
-    val status: Int,
-    val data: PNUUIDMetadata?
-)

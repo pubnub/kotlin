@@ -4,7 +4,8 @@ data class ChannelId(val id: String)
 
 internal data class MembershipInput(
     val channel: ChannelId,
-    val custom: Any? = null
+    val custom: Any? = null,
+    val status: String? = null
 )
 
 internal data class ChangeMembershipInput(
@@ -16,7 +17,8 @@ internal data class UUIDId(val id: String)
 
 internal data class MemberInput(
     val uuid: UUIDId,
-    val custom: Any? = null
+    val custom: Any? = null,
+    val type: String? = null
 )
 
 internal data class ChangeMemberInput(

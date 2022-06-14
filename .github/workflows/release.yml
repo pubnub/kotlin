@@ -53,10 +53,13 @@ jobs:
           gpg-key-id: ${{ secrets.GPG_KEY_ID }}
           gpg-key-name: ${{ secrets.GPG_KEY_NAME }}
           gpg-key-passphrase: ${{ secrets.GPG_KEY_PASSPHRASE }}
+          maven-plugin: "gradle-maven-publish-plugin"
+          prepend-product-to-tag: true
       - name: Create Release
         uses: ./.github/.release/actions/actions/services/github-release
         with:
           token: ${{ secrets.GH_TOKEN }}
+          prepend-product-to-tag: true
       - name: Update Pages
         uses: ./.github/.release/actions/actions/services/github-pages
         with:
