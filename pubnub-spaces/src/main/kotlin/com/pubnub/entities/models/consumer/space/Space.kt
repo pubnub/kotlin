@@ -2,8 +2,14 @@ package com.pubnub.entities.models.consumer.space
 
 import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata
 
+interface ISpaceId {
+    val value: String
+}
+@JvmInline
+value class SpaceId(override val value: String) : ISpaceId
+
 data class Space(
-    val id: String,
+    val id: SpaceId,
     val name: String? = null,
     val description: String? = null,
     val custom: Map<String, Any>? = null,
@@ -15,7 +21,7 @@ data class Space(
 
 fun PNChannelMetadata.toSpace(): Space {
     return Space(
-        id = id,
+        id = SpaceId(id),
         name = name,
         description = description,
         custom = custom as Map<String, Any>?,

@@ -11,6 +11,7 @@ import com.pubnub.api.models.consumer.objects.PNSortKey
 import com.pubnub.api.models.consumer.objects.ResultSortKey
 import com.pubnub.entities.models.consumer.space.RemoveSpaceResult
 import com.pubnub.entities.models.consumer.space.Space
+import com.pubnub.entities.models.consumer.space.SpaceId
 import com.pubnub.entities.models.consumer.space.SpaceKey
 import com.pubnub.entities.models.consumer.space.SpacesResult
 import com.pubnub.entities.models.consumer.space.toRemoveSpaceResult
@@ -75,10 +76,10 @@ private fun toPNSortKey(sort: Collection<ResultSortKey<SpaceKey>>): Collection<P
  * @param includeCustom Include respective additional fields in the response.
  */
 fun PubNub.fetchSpace(
-    spaceId: String,
+    spaceId: SpaceId,
     includeCustom: Boolean = false
 ): ExtendedRemoteAction<Space?> = firstDo(
-    getChannelMetadata(channel = spaceId, includeCustom = includeCustom)
+    getChannelMetadata(channel = spaceId.value, includeCustom = includeCustom)
 ).then {
     map(
         it, PNOperationType.SpaceOperation
@@ -97,7 +98,7 @@ fun PubNub.fetchSpace(
  * @param status Status of the space.
  */
 fun PubNub.createSpace(
-    spaceId: String,
+    spaceId: SpaceId,
     name: String? = null,
     description: String? = null,
     custom: Map<String, Any>? = null,
@@ -106,7 +107,7 @@ fun PubNub.createSpace(
     status: String? = null
 ): ExtendedRemoteAction<Space?> = firstDo(
     setChannelMetadata(
-        channel = spaceId,
+        channel = spaceId.value,
         name = name,
         description = description,
         custom = custom,
@@ -130,7 +131,7 @@ fun PubNub.createSpace(
  * @param includeCustom Include respective additional fields in the response.
  */
 fun PubNub.updateSpace(
-    spaceId: String,
+    spaceId: SpaceId,
     name: String? = null,
     description: String? = null,
     custom: Map<String, Any>? = null,
@@ -139,7 +140,7 @@ fun PubNub.updateSpace(
     status: String? = null
 ): ExtendedRemoteAction<Space?> = firstDo(
     setChannelMetadata(
-        channel = spaceId,
+        channel = spaceId.value,
         name = name,
         description = description,
         custom = custom,
@@ -159,9 +160,9 @@ fun PubNub.updateSpace(
  * @param spaceId Space ID.
  */
 fun PubNub.removeSpace(
-    spaceId: String
+    spaceId: SpaceId
 ): ExtendedRemoteAction<RemoveSpaceResult?> = firstDo(
-    removeChannelMetadata(channel = spaceId)
+    removeChannelMetadata(channel = spaceId.value)
 ).then {
     map(
         it, PNOperationType.SpaceOperation

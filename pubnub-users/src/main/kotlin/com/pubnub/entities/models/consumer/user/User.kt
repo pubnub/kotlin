@@ -2,8 +2,15 @@ package com.pubnub.entities.models.consumer.user
 
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
 
+interface IUserId {
+    val value: String
+}
+
+@JvmInline
+value class UserId(override val value: String) : IUserId
+
 data class User(
-    val id: String,
+    val id: UserId,
     val name: String? = null,
     val externalId: String? = null,
     val profileUrl: String? = null,
@@ -17,7 +24,7 @@ data class User(
 
 fun PNUUIDMetadata.toUser(): User {
     return User(
-        id = id,
+        id = UserId(id),
         name = name,
         externalId = externalId,
         profileUrl = profileUrl,
