@@ -15,9 +15,9 @@ import com.pubnub.entities.models.consumer.membership.UserDetailsLevel
 import com.pubnub.entities.models.consumer.membership.UserMembershipsResultKey
 import com.pubnub.entities.models.consumer.space.Space
 import com.pubnub.entities.models.consumer.space.SpaceId
+import com.pubnub.users.createUser
 import com.pubnub.users.models.consumer.user.User
 import com.pubnub.users.models.consumer.user.UserId
-import com.pubnub.users.createUser
 import com.pubnub.users.removeUser
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
