@@ -1,3 +1,13 @@
+## v7.2.0
+June 14 2022
+
+#### Added
+- PNChannelMetadata and PNUUIDMetadata has status and type now.
+- PNChannelMembership and PNMember has status now.
+
+#### Fixed
+- It's possible to sort memberships and members by nested fields.
+
 ## v7.1.0
 May 23 2022
 
