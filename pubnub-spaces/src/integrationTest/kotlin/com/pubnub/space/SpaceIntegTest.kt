@@ -3,6 +3,7 @@ package com.pubnub.space
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubException
+import com.pubnub.api.UserId
 import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.enums.PNStatusCategory
@@ -23,7 +24,7 @@ import org.junit.jupiter.api.fail
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
-class SpaceIntegTest() {
+class SpaceIntegTest {
     private lateinit var pubnub: PubNub
 
     private val SPACE_ID = SpaceId("spaceIntegId")
@@ -37,7 +38,7 @@ class SpaceIntegTest() {
 
     @BeforeEach
     fun setUp() {
-        val config = PNConfiguration("kotlin").apply {
+        val config = PNConfiguration(UserId("kotlin")).apply {
             subscribeKey = IntegTestConf.subscribeKey
             publishKey = IntegTestConf.publishKey
             IntegTestConf.origin?.let {

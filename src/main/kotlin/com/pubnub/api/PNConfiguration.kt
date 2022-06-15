@@ -27,13 +27,21 @@ open class PNConfiguration(
 ) {
 
     init {
-        PubNubUtil.require(uuid.isValid(), PubNubError.UUID_NULL_OR_EMPTY)
+        PubNubUtil.require(uuid.isValid(), PubNubError.USERID_NULL_OR_EMPTY)
     }
+
+    constructor(userId: UserId, enableSubscribeBeta: Boolean = false) : this(userId.value, enableSubscribeBeta)
 
     var uuid: String = uuid
         set(value) {
-            PubNubUtil.require(value.isValid(), PubNubError.UUID_NULL_OR_EMPTY)
+            PubNubUtil.require(value.isValid(), PubNubError.USERID_NULL_OR_EMPTY)
             field = value
+        }
+
+    var userId: UserId
+        get() = UserId(uuid)
+        set(value) {
+            uuid = value.value
         }
 
     private val log = LoggerFactory.getLogger("PNConfiguration")

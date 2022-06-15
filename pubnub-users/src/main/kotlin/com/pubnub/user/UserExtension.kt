@@ -1,6 +1,7 @@
 package com.pubnub.user
 
 import com.pubnub.api.PubNub
+import com.pubnub.api.UserId
 import com.pubnub.api.callbacks.DisposableListener
 import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.endpoints.remoteaction.ComposableRemoteAction.Companion.firstDo
@@ -16,7 +17,6 @@ import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
 import com.pubnub.user.models.consumer.RemoveUserResult
 import com.pubnub.user.models.consumer.User
 import com.pubnub.user.models.consumer.UserEvent
-import com.pubnub.user.models.consumer.UserId
 import com.pubnub.user.models.consumer.UserKey
 import com.pubnub.user.models.consumer.UsersResult
 import com.pubnub.user.models.consumer.toRemoveUserResult

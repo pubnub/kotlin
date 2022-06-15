@@ -1,6 +1,7 @@
 package com.pubnub.membership
 
 import com.pubnub.api.PubNub
+import com.pubnub.api.UserId
 import com.pubnub.api.callbacks.DisposableListener
 import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.endpoints.remoteaction.ComposableRemoteAction.Companion.firstDo
@@ -33,8 +34,6 @@ import com.pubnub.membership.models.consumer.toUserFetchMembershipsResult
 import com.pubnub.membership.models.consumer.toUserMembershipsResult
 import com.pubnub.space.models.consumer.ISpaceId
 import com.pubnub.space.models.consumer.SpaceId
-import com.pubnub.user.models.consumer.IUserId
-import com.pubnub.user.models.consumer.UserId
 
 /**
  * Add memberships of user i.e. assign spaces to user, add user to spaces
@@ -260,7 +259,7 @@ fun PubNub.removeMemberships(
 
 fun PubNub.removeMemberships(
     spaceId: SpaceId,
-    vararg userIds: IUserId
+    vararg userIds: UserId
 ) = removeMemberships(spaceId = spaceId, userIds = userIds.toList() as List<UserId>)
 
 /**

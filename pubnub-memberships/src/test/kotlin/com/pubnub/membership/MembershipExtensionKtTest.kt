@@ -2,6 +2,7 @@ package com.pubnub.membership
 
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
+import com.pubnub.api.UserId
 import com.pubnub.api.endpoints.objects.member.GetChannelMembers
 import com.pubnub.api.endpoints.objects.member.ManageChannelMembers
 import com.pubnub.api.endpoints.objects.membership.GetMemberships
@@ -19,7 +20,6 @@ import com.pubnub.membership.models.consumer.MembershipsStatusResult
 import com.pubnub.space.models.consumer.Space
 import com.pubnub.space.models.consumer.SpaceId
 import com.pubnub.user.models.consumer.User
-import com.pubnub.user.models.consumer.UserId
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK

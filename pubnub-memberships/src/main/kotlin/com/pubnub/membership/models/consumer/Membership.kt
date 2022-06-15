@@ -1,12 +1,12 @@
 package com.pubnub.membership.models.consumer
 
+import com.pubnub.api.UserId
 import com.pubnub.api.models.consumer.objects.member.PNMember
 import com.pubnub.api.models.consumer.objects.membership.PNChannelMembership
 import com.pubnub.space.models.consumer.Space
 import com.pubnub.space.models.consumer.SpaceId
 import com.pubnub.space.models.consumer.toSpace
 import com.pubnub.user.models.consumer.User
-import com.pubnub.user.models.consumer.UserId
 import com.pubnub.user.models.consumer.toUser
 
 data class Membership(

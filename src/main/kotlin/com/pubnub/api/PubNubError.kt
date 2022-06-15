@@ -186,9 +186,9 @@ enum class PubNubError(private val code: Int, val message: String) {
         "Token missing"
     ),
 
-    UUID_NULL_OR_EMPTY(
+    USERID_NULL_OR_EMPTY(
         169,
-        "Uuid can't be null nor empty"
+        "UserId can't have empty value"
     );
 
     override fun toString(): String {
