@@ -82,7 +82,7 @@ private fun toPNSortKey(sort: Collection<ResultSortKey<UserKey>>): Collection<PN
  * @param includeCustom Include respective additional fields in the response.
  */
 fun PubNub.fetchUser(
-    userId: UserId? = UserId(configuration.uuid),
+    userId: UserId? = configuration.userId,
     includeCustom: Boolean = false
 ): ExtendedRemoteAction<User?> = firstDo(
     getUUIDMetadata(
@@ -108,7 +108,7 @@ fun PubNub.fetchUser(
  * @param status Status of the space.
  */
 fun PubNub.createUser(
-    userId: UserId? = null,
+    userId: UserId = configuration.userId,
     name: String? = null,
     externalId: String? = null,
     profileUrl: String? = null,
@@ -119,7 +119,7 @@ fun PubNub.createUser(
     status: String? = null
 ): ExtendedRemoteAction<User?> = firstDo(
     setUUIDMetadata(
-        uuid = userId?.value,
+        uuid = userId.value,
         name = name,
         externalId = externalId,
         profileUrl = profileUrl,
@@ -147,7 +147,7 @@ fun PubNub.createUser(
  * @param includeCustom Include respective additional fields in the response.
  */
 fun PubNub.updateUser(
-    userId: UserId? = null,
+    userId: UserId = configuration.userId,
     name: String? = null,
     externalId: String? = null,
     profileUrl: String? = null,
@@ -156,7 +156,7 @@ fun PubNub.updateUser(
     includeCustom: Boolean = false
 ): ExtendedRemoteAction<User?> = firstDo(
     setUUIDMetadata(
-        uuid = userId?.value,
+        uuid = userId.value,
         name = name,
         externalId = externalId,
         profileUrl = profileUrl,
@@ -176,9 +176,9 @@ fun PubNub.updateUser(
  * @param userId Unique user identifier. If not supplied then current user’s userId is used.
  */
 fun PubNub.removeUser(
-    userId: UserId? = null
+    userId: UserId = configuration.userId,
 ): ExtendedRemoteAction<RemoveUserResult?> = firstDo(
-    removeUUIDMetadata(uuid = userId?.value)
+    removeUUIDMetadata(uuid = userId.value)
 ).then {
     map(
         it, PNOperationType.UserOperation
