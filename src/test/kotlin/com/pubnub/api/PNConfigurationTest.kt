@@ -12,7 +12,8 @@ class PNConfigurationTest {
         val suffix2 = "value2/2.0.0"
         val suffix11 = "value3/2.0.0"
 
-        val pnConfiguration = object : PNConfiguration(PubNub.generateUUID()) {
+        val pnConfiguration = object :
+            PNConfiguration(userId = UserId(PubNub.generateUUID())) {
             init {
                 addPnsdkSuffix(name1 to suffix1, name2 to suffix2)
                 addPnsdkSuffix(mapOf(name1 to suffix11))
@@ -25,21 +26,21 @@ class PNConfigurationTest {
 
     @Test(expected = PubNubException::class)
     fun setUUIDToEmptyString() {
-        PNConfiguration("")
+        PNConfiguration(userId = UserId(""))
     }
 
     @Test(expected = PubNubException::class)
     fun resetUUIDToEmptyString() {
-        val config = PNConfiguration(PubNub.generateUUID())
-        config.uuid = ""
+        val config = PNConfiguration(userId = UserId(PubNub.generateUUID()))
+        config.userId = UserId("")
     }
 
     @Test
     fun resetUUIDToNonEmptyString() {
-        val config = PNConfiguration(PubNub.generateUUID())
+        val config = PNConfiguration(userId = UserId(PubNub.generateUUID()))
         val newUUID = PubNub.generateUUID()
-        config.uuid = newUUID
+        config.userId = UserId(newUUID)
 
-        assertEquals(newUUID, config.uuid)
+        assertEquals(newUUID, config.userId.value)
     }
 }

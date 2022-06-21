@@ -32,10 +32,9 @@ You will need the publish and subscribe keys to authenticate your app. Get your 
 2. Configure your keys:
 
     ```kotlin
-    val config = PNConfiguration().apply{
+    val config = PNConfiguration(UserId("myUserId")).apply {
         subscribeKey = "mySubKey"
         publishKey = "myPubKey"
-        uuid = "myUniqueUuid"
     }
     ```
 

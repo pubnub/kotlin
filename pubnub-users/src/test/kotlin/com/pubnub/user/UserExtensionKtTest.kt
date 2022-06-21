@@ -2,6 +2,8 @@ package com.pubnub.user
 
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
+import com.pubnub.api.PubNubException
+import com.pubnub.api.UserId
 import com.pubnub.api.endpoints.objects.uuid.GetAllUUIDMetadata
 import com.pubnub.api.endpoints.objects.uuid.GetUUIDMetadata
 import com.pubnub.api.endpoints.objects.uuid.RemoveUUIDMetadata
@@ -13,7 +15,6 @@ import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataArrayResult
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataResult
 import com.pubnub.user.models.consumer.RemoveUserResult
 import com.pubnub.user.models.consumer.User
-import com.pubnub.user.models.consumer.UserId
 import com.pubnub.user.models.consumer.UsersResult
 import io.mockk.MockKAnnotations
 import io.mockk.every
@@ -23,6 +24,8 @@ import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
+import java.util.UUID
 
 internal class UserExtensionKtTest {
     private lateinit var pubNub: PubNub
@@ -57,7 +60,7 @@ internal class UserExtensionKtTest {
     @BeforeEach
     internal fun setUp() {
         MockKAnnotations.init(this)
-        val pnConfiguration = PNConfiguration(PubNub.generateUUID())
+        val pnConfiguration = PNConfiguration(userId = UserId(PubNub.generateUUID()))
         pubNub = spyk(PubNub(pnConfiguration))
     }
 
@@ -176,6 +179,23 @@ internal class UserExtensionKtTest {
         val listener = pubNub.addUserEventsListener { }
         listener.dispose()
         verify { pubNub.removeListener(any()) }
+    }
+
+    @Test
+    internal fun can_modify_userId() {
+        val modifiedUserId = "NewUserId-${UUID.randomUUID()}"
+        pubNub.configuration.userId = UserId(modifiedUserId)
+
+        assertEquals(modifiedUserId, pubNub.configuration.userId.value)
+    }
+
+    @Test
+    internal fun should_throw_exception_when_userId_is_empty() {
+        val exception = assertThrows<PubNubException> {
+            pubNub.configuration.userId = UserId("")
+        }
+
+        assertEquals("UserId can't have empty value", exception.errorMessage)
     }
 
     private fun createPnuuidMetadata(userId: UserId): PNUUIDMetadata {

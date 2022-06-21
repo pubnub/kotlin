@@ -1,6 +1,7 @@
 package com.pubnub.membership
 
 import com.pubnub.api.PubNub
+import com.pubnub.api.UserId
 import com.pubnub.api.callbacks.DisposableListener
 import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.endpoints.remoteaction.ComposableRemoteAction.Companion.firstDo
@@ -31,21 +32,17 @@ import com.pubnub.membership.models.consumer.toSpaceFetchMembershipResult
 import com.pubnub.membership.models.consumer.toSpaceMembershipResult
 import com.pubnub.membership.models.consumer.toUserFetchMembershipsResult
 import com.pubnub.membership.models.consumer.toUserMembershipsResult
-import com.pubnub.space.models.consumer.ISpaceId
 import com.pubnub.space.models.consumer.SpaceId
-import com.pubnub.user.models.consumer.IUserId
-import com.pubnub.user.models.consumer.UserId
 
 /**
  * Add memberships of user i.e. assign spaces to user, add user to spaces
  *
+ * @param userId Unique user identifier. If not supplied then current user’s userId is used.
  * @param partialMembershipsWithSpace List of spaces to add the user to. List can contain only space ids or ids along with custom data
  *                            @see [Membership.PartialWithSpace]
- * @param userId Unique user identifier. If not supplied then current user’s userId is used.
- *
  */
 fun PubNub.addMemberships(
-    userId: UserId = UserId(configuration.uuid),
+    userId: UserId = configuration.userId,
     partialMembershipsWithSpace: List<Membership.PartialWithSpace>,
 ): ExtendedRemoteAction<MembershipsStatusResult> = firstDo(
     setMemberships(
@@ -59,8 +56,15 @@ fun PubNub.addMemberships(
     ) { pnChannelMembershipArrayResult -> pnChannelMembershipArrayResult.toUserMembershipsResult() }
 }
 
+/**
+ * Add memberships of user i.e. assign spaces to user, add user to spaces
+ *
+ * @param userId Unique user identifier. If not supplied then current user’s userId is used.
+ * @param partialMembershipsWithSpace List of spaces to add the user to. List can contain only space ids or ids along with custom data
+ *                            @see [Membership.PartialWithSpace]
+ */
 fun PubNub.addMemberships(
-    userId: UserId,
+    userId: UserId = configuration.userId,
     vararg partialMembershipsWithSpace: Membership.PartialWithSpace
 ): ExtendedRemoteAction<MembershipsStatusResult> = addMemberships(
     userId = userId, partialMembershipsWithSpace = partialMembershipsWithSpace.toList()
@@ -86,6 +90,13 @@ fun PubNub.addMemberships(
     ) { pnMemberArrayResult -> pnMemberArrayResult.toSpaceMembershipResult() }
 }
 
+/**
+ * Add memberships of space i.e. add a users to a space, make users members of space
+ *
+ * @param spaceId Unique space identifier.
+ * @param partialMembershipsWithUser List of users to add to the space. List can contain only user ids or ids along with custom data
+ *                             @see [Membership.PartialWithUser]
+ */
 fun PubNub.addMemberships(
     spaceId: SpaceId,
     vararg partialMembershipsWithUser: Membership.PartialWithUser
@@ -115,7 +126,7 @@ fun PubNub.addMemberships(
  * @param includeSpaceDetails Include custom fields for spaces metadata.
  */
 fun PubNub.fetchMemberships(
-    userId: UserId = UserId(configuration.uuid),
+    userId: UserId = configuration.userId,
     limit: Int? = null,
     page: PNPage? = null,
     filter: String? = null,
@@ -217,12 +228,11 @@ private fun ResultSortKey<SpaceMembershipResultKey>.toPNMemberSortKey(): PNSortK
 /**
  * Remove memberships of user
  *
- * @param spaceIds List of space ids to remove the user from.
  * @param userId Unique user identifier. If not supplied then current user’s userId is used.
- *
+ * @param spaceIds List of space ids to remove the user from.
  */
 fun PubNub.removeMemberships(
-    userId: UserId = UserId(configuration.uuid),
+    userId: UserId = configuration.userId,
     spaceIds: List<SpaceId>,
 ): ExtendedRemoteAction<MembershipsStatusResult> = firstDo(
     removeMemberships(
@@ -233,11 +243,16 @@ fun PubNub.removeMemberships(
         it, PNOperationType.MembershipOperation
     ) { pnChannelMembershipArrayResult -> pnChannelMembershipArrayResult.toUserMembershipsResult() }
 }
-
+/**
+ * Remove memberships of user
+ *
+ * @param userId Unique user identifier. If not supplied then current user’s userId is used.
+ * @param spaceIds List of space ids to remove the user from.
+ */
 fun PubNub.removeMemberships(
-    userId: UserId,
-    vararg spaceIds: ISpaceId
-) = removeMemberships(userId = userId, spaceIds = spaceIds.toList() as List<SpaceId>)
+    userId: UserId = configuration.userId,
+    vararg spaceIds: SpaceId
+) = removeMemberships(userId = userId, spaceIds = spaceIds.toList())
 
 /**
  * Remove memberships of space
@@ -258,21 +273,26 @@ fun PubNub.removeMemberships(
     ) { pnMemberArrayResult -> pnMemberArrayResult.toSpaceMembershipResult() }
 }
 
+/**
+ * Remove memberships of space
+ *
+ * @param spaceId Unique space identifier.
+ * @param userIds List of users to remove from the channel.
+ */
 fun PubNub.removeMemberships(
     spaceId: SpaceId,
-    vararg userIds: IUserId
-) = removeMemberships(spaceId = spaceId, userIds = userIds.toList() as List<UserId>)
+    vararg userIds: UserId
+) = removeMemberships(spaceId = spaceId, userIds = userIds.toList())
 
 /**
  * Update memberships of user. Using this method you can add the user to spaces and/or update membership custom data.
  *
+ * @param userId Unique user identifier. If not supplied then current user’s userId is used.
  * @param partialMembershipsWithSpace List of spaces to add the user to. List can contain only space ids or ids along with custom data
  *                            @see [Membership.PartialWithSpace]
- * @param userId Unique user identifier. If not supplied then current user’s userId is used.
- *
  */
 fun PubNub.updateMemberships(
-    userId: UserId = UserId(configuration.uuid),
+    userId: UserId = configuration.userId,
     partialMembershipsWithSpace: List<Membership.PartialWithSpace>,
 ): ExtendedRemoteAction<MembershipsStatusResult> = firstDo(
     setMemberships(
@@ -284,8 +304,15 @@ fun PubNub.updateMemberships(
     ) { pnChannelMembershipArrayResult -> pnChannelMembershipArrayResult.toUserMembershipsResult() }
 }
 
+/**
+ * Update memberships of user. Using this method you can add the user to spaces and/or update membership custom data.
+ *
+ * @param userId Unique user identifier. If not supplied then current user’s userId is used.
+ * @param partialMembershipsWithSpace List of spaces to add the user to. List can contain only space ids or ids along with custom data
+ *                            @see [Membership.PartialWithSpace]
+ */
 fun PubNub.updateMemberships(
-    userId: UserId,
+    userId: UserId = configuration.userId,
     vararg partialMembershipsWithSpace: Membership.PartialWithSpace
 ): ExtendedRemoteAction<MembershipsStatusResult> = updateMemberships(
     userId = userId, partialMembershipsWithSpace = partialMembershipsWithSpace.toList()
@@ -313,6 +340,13 @@ fun PubNub.updateMemberships(
     ) { pnMemberArrayResult -> pnMemberArrayResult.toSpaceMembershipResult() }
 }
 
+/**
+ * Update memberships of space. Using this method you can add users to the space and/or update membership custom data.
+ *
+ * @param spaceId Unique space identifier.
+ * @param partialMembershipsWithUser List of users to add to the space. List can contain only user ids or ids along with custom data
+ *                             @see [Membership.PartialWithUser]
+ */
 fun PubNub.updateMemberships(
     spaceId: SpaceId,
     vararg partialMembershipsWithUser: Membership.PartialWithUser

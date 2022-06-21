@@ -2,6 +2,7 @@ package com.pubnub.membership
 
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
+import com.pubnub.api.UserId
 import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.models.consumer.PNStatus
@@ -19,7 +20,6 @@ import com.pubnub.space.models.consumer.SpaceId
 import com.pubnub.space.removeSpace
 import com.pubnub.user.createUser
 import com.pubnub.user.models.consumer.User
-import com.pubnub.user.models.consumer.UserId
 import com.pubnub.user.removeUser
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -57,7 +57,7 @@ class MembershipIntegTest {
 
     @BeforeEach
     fun setUp() {
-        val config = PNConfiguration(USER_ID.value).apply {
+        val config = PNConfiguration(USER_ID).apply {
             subscribeKey = IntegTestConf.subscribeKey
             publishKey = IntegTestConf.publishKey
             IntegTestConf.origin?.let {
@@ -265,7 +265,10 @@ class MembershipIntegTest {
         createSpace(SPACE_ID, SPACE_NAME)
         createSpace(SPACE_ID_02, SPACE_NAME_02)
         val partialMembershipsWithSpace: List<Membership.PartialWithSpace> =
-            listOf(Membership.Partial(SPACE_ID, MEMBERSHIP_CUSTOM, MEMBERSHIP_STATUS), Membership.Partial(SPACE_ID_02, MEMBERSHIP_CUSTOM, MEMBERSHIP_STATUS))
+            listOf(
+                Membership.Partial(SPACE_ID, MEMBERSHIP_CUSTOM, MEMBERSHIP_STATUS),
+                Membership.Partial(SPACE_ID_02, MEMBERSHIP_CUSTOM, MEMBERSHIP_STATUS)
+            )
         pubnub.addMemberships(partialMembershipsWithSpace = partialMembershipsWithSpace, userId = USER_ID).sync()
         listOf(Membership.Partial(SPACE_ID, MEMBERSHIP_CUSTOM), Membership.Partial(SPACE_ID_02, MEMBERSHIP_CUSTOM))
         pubnub.addMemberships(partialMembershipsWithSpace = partialMembershipsWithSpace, userId = USER_ID).sync()

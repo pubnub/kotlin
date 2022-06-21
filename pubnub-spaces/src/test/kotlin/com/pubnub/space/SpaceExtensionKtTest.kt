@@ -2,6 +2,7 @@ package com.pubnub.space
 
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
+import com.pubnub.api.UserId
 import com.pubnub.api.endpoints.objects.channel.GetAllChannelMetadata
 import com.pubnub.api.endpoints.objects.channel.GetChannelMetadata
 import com.pubnub.api.endpoints.objects.channel.RemoveChannelMetadata
@@ -54,7 +55,7 @@ class SpaceExtensionKtTest {
     @BeforeEach
     fun setUp() {
         MockKAnnotations.init(this)
-        val pnConfiguration = PNConfiguration(PubNub.generateUUID())
+        val pnConfiguration = PNConfiguration(userId = UserId(PubNub.generateUUID()))
         pubNub = spyk(PubNub(pnConfiguration))
     }
 
