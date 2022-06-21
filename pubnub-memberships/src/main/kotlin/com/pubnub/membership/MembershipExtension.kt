@@ -252,7 +252,7 @@ fun PubNub.removeMemberships(
 fun PubNub.removeMemberships(
     userId: UserId = configuration.userId,
     vararg spaceIds: SpaceId
-) = removeMemberships(userId = userId, spaceIds = spaceIds.toList() as List<SpaceId>)
+) = removeMemberships(userId = userId, spaceIds = spaceIds.toList())
 
 /**
  * Remove memberships of space
@@ -282,7 +282,7 @@ fun PubNub.removeMemberships(
 fun PubNub.removeMemberships(
     spaceId: SpaceId,
     vararg userIds: UserId
-) = removeMemberships(spaceId = spaceId, userIds = userIds.toList() as List<UserId>)
+) = removeMemberships(spaceId = spaceId, userIds = userIds.toList())
 
 /**
  * Update memberships of user. Using this method you can add the user to spaces and/or update membership custom data.

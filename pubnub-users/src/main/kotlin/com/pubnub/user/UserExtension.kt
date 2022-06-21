@@ -82,11 +82,11 @@ private fun toPNSortKey(sort: Collection<ResultSortKey<UserKey>>): Collection<PN
  * @param includeCustom Include respective additional fields in the response.
  */
 fun PubNub.fetchUser(
-    userId: UserId? = configuration.userId,
+    userId: UserId = configuration.userId,
     includeCustom: Boolean = false
 ): ExtendedRemoteAction<User?> = firstDo(
     getUUIDMetadata(
-        uuid = userId?.value, includeCustom = includeCustom
+        uuid = userId.value, includeCustom = includeCustom
     )
 ).then {
     map(

@@ -69,7 +69,7 @@ internal class MembershipExtensionKtTest {
     @BeforeEach
     internal fun setUp() {
         MockKAnnotations.init(this)
-        val pnConfiguration = PNConfiguration(USER_ID.value)
+        val pnConfiguration = PNConfiguration(userId = USER_ID)
         pubNub = spyk(PubNub(configuration = pnConfiguration))
     }
 

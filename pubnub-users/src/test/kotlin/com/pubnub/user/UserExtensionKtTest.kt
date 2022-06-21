@@ -25,6 +25,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import java.util.UUID
 
 internal class UserExtensionKtTest {
     private lateinit var pubNub: PubNub
@@ -59,7 +60,7 @@ internal class UserExtensionKtTest {
     @BeforeEach
     internal fun setUp() {
         MockKAnnotations.init(this)
-        val pnConfiguration = PNConfiguration(PubNub.generateUUID())
+        val pnConfiguration = PNConfiguration(userId = UserId(PubNub.generateUUID()))
         pubNub = spyk(PubNub(pnConfiguration))
     }
 
@@ -182,9 +183,10 @@ internal class UserExtensionKtTest {
 
     @Test
     internal fun can_modify_userId() {
-        pubNub.configuration.userId = UserId("modified")
+        val modifiedUserId = "NewUserId-${UUID.randomUUID()}"
+        pubNub.configuration.userId = UserId(modifiedUserId)
 
-        assertEquals("modified", pubNub.configuration.userId.value)
+        assertEquals(modifiedUserId, pubNub.configuration.userId.value)
     }
 
     @Test
