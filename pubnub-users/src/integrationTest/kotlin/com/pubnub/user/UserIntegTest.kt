@@ -3,12 +3,12 @@ package com.pubnub.user
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubException
+import com.pubnub.api.UserId
 import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.objects.ResultSortKey
 import com.pubnub.user.models.consumer.User
-import com.pubnub.user.models.consumer.UserId
 import com.pubnub.user.models.consumer.UserKey
 import com.pubnub.user.models.consumer.UserModified
 import com.pubnub.user.models.consumer.UsersResult
@@ -22,7 +22,7 @@ import org.junit.jupiter.api.fail
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
-class UserIntegTest() {
+class UserIntegTest {
     private lateinit var pubnub: PubNub
 
     private val USER_ID = "userInteg_id"
@@ -39,7 +39,7 @@ class UserIntegTest() {
 
     @BeforeEach
     fun setUp() {
-        val config = PNConfiguration("kotlin").apply {
+        val config = PNConfiguration(UserId("kotlin")).apply {
             subscribeKey = IntegTestConf.subscribeKey
             publishKey = IntegTestConf.publishKey
             IntegTestConf.origin?.let {
@@ -82,9 +82,9 @@ class UserIntegTest() {
         assertEquals(STATUS, user?.status)
         assertEquals(TYPE, user?.type)
         assertTrue(user?.custom?.containsKey("favouriteNumber")!!)
-        assertTrue(user?.custom?.containsKey("favouriteColour")!!)
-        assertTrue(user?.updated != null)
-        assertTrue(user?.eTag != null)
+        assertTrue(user.custom?.containsKey("favouriteColour")!!)
+        assertTrue(user.updated != null)
+        assertTrue(user.eTag != null)
     }
 
     @Test

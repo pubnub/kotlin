@@ -1,12 +1,12 @@
 package com.pubnub.membership.models.consumer
 
+import com.pubnub.api.UserId
 import com.pubnub.api.models.consumer.pubsub.objects.PNDeleteMembershipEventMessage
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
 import com.pubnub.api.models.consumer.pubsub.objects.PNSetMembershipEventMessage
 import com.pubnub.space.models.consumer.Space
 import com.pubnub.space.models.consumer.SpaceId
 import com.pubnub.user.models.consumer.User
-import com.pubnub.user.models.consumer.UserId
 
 sealed class MembershipEvent {
     abstract val spaceId: SpaceId

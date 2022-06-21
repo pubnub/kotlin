@@ -19,21 +19,37 @@ import javax.net.ssl.X509ExtendedTrustManager
 /**
  * A storage for user-provided information which describe further PubNub client behaviour.
  * Configuration instance contains additional set of properties which
- * allow to perform precise PubNub client configuration.
+ * allow performing precise PubNub client configuration.
  */
 open class PNConfiguration(
-    uuid: String,
+    userId: UserId,
     val enableSubscribeBeta: Boolean = false
 ) {
 
-    init {
-        PubNubUtil.require(uuid.isValid(), PubNubError.UUID_NULL_OR_EMPTY)
-    }
+    @Deprecated(
+        replaceWith = ReplaceWith(
+            "PNConfiguration(userId = UserId(uuid), enableSubscribeBeta = enableSubscribeBeta)",
+            "com.pubnub.api"
+        ),
+        level = DeprecationLevel.WARNING,
+        message = "Use PNConfiguration(UserId, Boolean) instead"
+    )
+    constructor(uuid: String, enableSubscribeBeta: Boolean = false) : this(UserId(uuid), enableSubscribeBeta)
 
-    var uuid: String = uuid
+    @Deprecated(
+        level = DeprecationLevel.WARNING,
+        message = """Use UserId instead e.g. config.userId = UserId("uuid")"""
+    )
+    var uuid: String = userId.value
         set(value) {
             PubNubUtil.require(value.isValid(), PubNubError.UUID_NULL_OR_EMPTY)
             field = value
+        }
+
+    var userId: UserId
+        get() = UserId(uuid)
+        set(value) {
+            uuid = value.value
         }
 
     private val log = LoggerFactory.getLogger("PNConfiguration")
