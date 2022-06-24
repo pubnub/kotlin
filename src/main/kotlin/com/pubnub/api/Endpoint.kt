@@ -2,7 +2,8 @@ package com.pubnub.api
 
 import com.google.gson.JsonElement
 import com.pubnub.api.PNConfiguration.Companion.isValid
-import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
+import com.pubnub.api.endpoints.remoteaction.RemoteAction
+import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.enums.PNStatusCategory.PNAccessDeniedCategory
 import com.pubnub.api.enums.PNStatusCategory.PNAcknowledgmentCategory
@@ -13,6 +14,10 @@ import com.pubnub.api.enums.PNStatusCategory.PNNotFoundCategory
 import com.pubnub.api.enums.PNStatusCategory.PNTimeoutCategory
 import com.pubnub.api.enums.PNStatusCategory.PNUnexpectedDisconnectCategory
 import com.pubnub.api.enums.PNStatusCategory.PNUnknownCategory
+import com.pubnub.api.managers.MapperManager
+import com.pubnub.api.managers.RetrofitManager
+import com.pubnub.api.managers.TelemetryManager
+import com.pubnub.api.managers.TokenManager
 import com.pubnub.api.models.consumer.PNStatus
 import retrofit2.Call
 import retrofit2.Callback
@@ -22,16 +27,14 @@ import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 
-/**
- * Base class for all PubNub API operation implementations.
- *
- * @param Input Server's response.
- * @param Output Parsed and encapsulated response for endusers.
- * @property pubnub The client instance.
- */
-abstract class Endpoint<Input, Output> protected constructor(protected val pubnub: PubNub) :
-    ExtendedRemoteAction<Output> {
+typealias PNCallback<Output> = (result: Output?, status: PNStatus) -> Unit
 
+typealias CoreEndpoint<Input, Output, OperationType> = com.pubnub.core.CoreEndpoint<Input, Output, PNCallback<Output>, PubNubException, OperationType, PNConfiguration, TokenManager, TelemetryManager, RetrofitManager, MapperManager>
+
+typealias ManagerManager = com.pubnub.core.ManagerManager<PNConfiguration, TokenManager, TelemetryManager, RetrofitManager, MapperManager>
+
+abstract class MoreAbstractEndpoint<Input, Output, OperationType : com.pubnub.core.OperationType> protected constructor(protected val pubnub: PubNub) :
+    CoreEndpoint<Input, Output, OperationType>(pubnub), RemoteAction<Output> {
     private companion object {
         private const val SERVER_RESPONSE_BAD_REQUEST = 400
         private const val SERVER_RESPONSE_FORBIDDEN = 403
@@ -60,16 +63,13 @@ abstract class Endpoint<Input, Output> protected constructor(protected val pubnu
 
         call = doWork(createBaseParams())
 
-        val response =
-            try {
-                call.execute()
-            } catch (e: Exception) {
-                throw PubNubException(
-                    pubnubError = PubNubError.PARSING_ERROR,
-                    errorMessage = e.toString(),
-                    affectedCall = call
-                )
-            }
+        val response = try {
+            call.execute()
+        } catch (e: Exception) {
+            throw PubNubException(
+                pubnubError = PubNubError.PARSING_ERROR, errorMessage = e.toString(), affectedCall = call
+            )
+        }
 
         when {
             response.isSuccessful -> {
@@ -104,8 +104,7 @@ abstract class Endpoint<Input, Output> protected constructor(protected val pubnu
             callback.invoke(
                 null,
                 createStatusResponse(
-                    category = PNBadRequestCategory,
-                    exception = pubnubException
+                    category = PNBadRequestCategory, exception = pubnubException
                 )
             )
             return
@@ -127,9 +126,7 @@ abstract class Endpoint<Input, Output> protected constructor(protected val pubnu
                             callback.invoke(
                                 it.second,
                                 createStatusResponse(
-                                    category = it.first,
-                                    response = response,
-                                    exception = it.third
+                                    category = it.first, response = response, exception = it.third
                                 )
                             )
                         }
@@ -168,37 +165,34 @@ abstract class Endpoint<Input, Output> protected constructor(protected val pubnu
 
             override fun onFailure(call: Call<Input>, t: Throwable) {
 
-                if (silenceFailures)
-                    return
+                if (silenceFailures) return
 
-                val (error: PubNubError, category: PNStatusCategory) =
-                    when (t) {
-                        is UnknownHostException -> {
-                            PubNubError.CONNECTION_NOT_SET to PNUnexpectedDisconnectCategory
-                        }
-                        is ConnectException -> {
-                            PubNubError.CONNECT_EXCEPTION to PNUnexpectedDisconnectCategory
-                        }
-                        is SocketTimeoutException -> {
-                            PubNubError.SUBSCRIBE_TIMEOUT to PNTimeoutCategory
-                        }
-                        is IOException -> {
-                            PubNubError.PARSING_ERROR to PNMalformedResponseCategory
-                        }
-                        is IllegalStateException -> {
-                            PubNubError.PARSING_ERROR to PNMalformedResponseCategory
-                        }
-                        else -> {
-                            PubNubError.HTTP_ERROR to if (call.isCanceled) PNCancelledCategory else PNBadRequestCategory
-                        }
+                val (error: PubNubError, category: PNStatusCategory) = when (t) {
+                    is UnknownHostException -> {
+                        PubNubError.CONNECTION_NOT_SET to PNUnexpectedDisconnectCategory
                     }
+                    is ConnectException -> {
+                        PubNubError.CONNECT_EXCEPTION to PNUnexpectedDisconnectCategory
+                    }
+                    is SocketTimeoutException -> {
+                        PubNubError.SUBSCRIBE_TIMEOUT to PNTimeoutCategory
+                    }
+                    is IOException -> {
+                        PubNubError.PARSING_ERROR to PNMalformedResponseCategory
+                    }
+                    is IllegalStateException -> {
+                        PubNubError.PARSING_ERROR to PNMalformedResponseCategory
+                    }
+                    else -> {
+                        PubNubError.HTTP_ERROR to if (call.isCanceled) PNCancelledCategory else PNBadRequestCategory
+                    }
+                }
 
                 val pubnubException = PubNubException(errorMessage = t.toString(), pubnubError = error)
                 callback.invoke(
                     null,
                     createStatusResponse(
-                        category = category,
-                        exception = pubnubException
+                        category = category, exception = pubnubException
                     )
                 )
             }
@@ -288,8 +282,7 @@ abstract class Endpoint<Input, Output> protected constructor(protected val pubnu
 
         if (errorBody != null) {
             if (pubnub.mapper.isJsonObject(errorBody) && pubnub.mapper.hasField(
-                    errorBody,
-                    "payload"
+                    errorBody, "payload"
                 )
             ) {
 
@@ -321,27 +314,25 @@ abstract class Endpoint<Input, Output> protected constructor(protected val pubnu
             }
         }
 
-        pnStatus.affectedChannels =
-            if (errorChannels.isNotEmpty()) {
-                errorChannels
-            } else {
-                try {
-                    getAffectedChannels()
-                } catch (e: UninitializedPropertyAccessException) {
-                    emptyList<String>()
-                }
+        pnStatus.affectedChannels = if (errorChannels.isNotEmpty()) {
+            errorChannels
+        } else {
+            try {
+                getAffectedChannels()
+            } catch (e: UninitializedPropertyAccessException) {
+                emptyList<String>()
             }
+        }
 
-        pnStatus.affectedChannelGroups =
-            if (errorGroups.isNotEmpty()) {
-                errorGroups
-            } else {
-                try {
-                    getAffectedChannelGroups()
-                } catch (e: UninitializedPropertyAccessException) {
-                    emptyList<String>()
-                }
+        pnStatus.affectedChannelGroups = if (errorGroups.isNotEmpty()) {
+            errorGroups
+        } else {
+            try {
+                getAffectedChannelGroups()
+            } catch (e: UninitializedPropertyAccessException) {
+                emptyList<String>()
             }
+        }
 
         return pnStatus
     }
@@ -350,6 +341,8 @@ abstract class Endpoint<Input, Output> protected constructor(protected val pubnu
         silenceFailures = false
         async(cachedCallback)
     }
+
+    abstract override fun operationType(): OperationType
 
     private fun extractErrorBody(response: Response<Input>): Pair<String?, JsonElement?> {
         val errorBodyString = try {
@@ -372,9 +365,7 @@ abstract class Endpoint<Input, Output> protected constructor(protected val pubnu
             return createResponse(input)
         } catch (pubnubException: PubNubException) {
             throw pubnubException.copy(
-                statusCode = input.code(),
-                jso = pubnub.mapper.toJson(input.body()),
-                affectedCall = call
+                statusCode = input.code(), jso = pubnub.mapper.toJson(input.body()), affectedCall = call
             )
         } catch (e: KotlinNullPointerException) {
             throw PubNubException(
@@ -443,10 +434,7 @@ abstract class Endpoint<Input, Output> protected constructor(protected val pubnu
         }
     }
 
-    protected open fun getAffectedChannels() = emptyList<String>()
-    protected open fun getAffectedChannelGroups(): List<String> = emptyList()
-
-    protected open fun validateParams() {
+    protected override fun validateParams() {
         if (isSubKeyRequired() && !pubnub.configuration.subscribeKey.isValid()) {
             throw PubNubException(PubNubError.SUBSCRIBE_KEY_MISSING)
         }
@@ -455,10 +443,17 @@ abstract class Endpoint<Input, Output> protected constructor(protected val pubnu
         }
     }
 
-    protected abstract fun doWork(queryParams: HashMap<String, String>): Call<Input>
-    protected abstract fun createResponse(input: Response<Input>): Output?
-
-    protected open fun isSubKeyRequired() = true
-    protected open fun isPubKeyRequired() = false
-    protected open fun isAuthRequired() = true
+    protected open fun doWork(queryParams: HashMap<String, String>): Call<Input> = doWork(queryParams as Map<String, String>)
+    override fun doWork(queryParams: Map<String, String>): Call<Input> = doWork(queryParams as HashMap<String, String>)
+    override fun isSubKeyRequired() = true
 }
+
+/**
+ * Base class for all PubNub API operation implementations.
+ *
+ * @param Input Server's response.
+ * @param Output Parsed and encapsulated response for endusers.
+ * @property pubnub The client instance.
+ */
+abstract class Endpoint<Input, Output> protected constructor(pubnub: PubNub) :
+    MoreAbstractEndpoint<Input, Output, PNOperationType>(pubnub)

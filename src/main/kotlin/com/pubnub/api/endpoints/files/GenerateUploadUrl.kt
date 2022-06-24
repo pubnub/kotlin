@@ -4,7 +4,7 @@ import com.pubnub.api.Endpoint
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
-import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
+import com.pubnub.api.endpoints.remoteaction.RemoteAction
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.server.files.FileUploadRequestDetails
 import com.pubnub.api.models.server.files.FormField
@@ -69,7 +69,7 @@ internal class GenerateUploadUrl(
     override fun isPubKeyRequired(): Boolean = false
 
     internal class Factory(private val pubNub: PubNub) {
-        fun create(channel: String, fileName: String): ExtendedRemoteAction<FileUploadRequestDetails> {
+        fun create(channel: String, fileName: String): RemoteAction<FileUploadRequestDetails> {
             return GenerateUploadUrl(channel, fileName, pubNub)
         }
     }

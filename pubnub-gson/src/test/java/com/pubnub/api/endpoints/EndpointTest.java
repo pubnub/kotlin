@@ -1,5 +1,6 @@
 package com.pubnub.api.endpoints;
 
+import com.pubnub.api.Endpoint;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.builder.PubNubErrorBuilder;
@@ -8,6 +9,7 @@ import com.pubnub.api.managers.token_manager.TokenManager;
 import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.ResponseBody;
+import okio.Timeout;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -168,6 +170,11 @@ public class EndpointTest extends TestHarness {
                 Executors.newSingleThreadExecutor().execute(
                         () -> callback.onResponse(that, response)
                 );
+            }
+
+            @Override
+            public Timeout timeout() {
+                return Timeout.NONE;
             }
 
             @Override

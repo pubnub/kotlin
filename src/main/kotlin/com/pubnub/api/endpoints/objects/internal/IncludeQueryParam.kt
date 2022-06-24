@@ -10,7 +10,7 @@ data class IncludeQueryParam(
     private val includeType: Boolean = true,
     private val includeStatus: Boolean = true
 ) {
-    internal fun createIncludeQueryParams(): Map<String, String> {
+    fun createIncludeQueryParams(): Map<String, String> {
         val includeList = mutableListOf<String>()
         if (includeCustom) includeList.add("custom")
         when (includeChannelDetails) {

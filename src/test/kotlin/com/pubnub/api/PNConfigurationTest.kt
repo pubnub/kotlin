@@ -1,6 +1,8 @@
 package com.pubnub.api
 
+import com.pubnub.core.UserId
 import org.junit.Assert.assertEquals
+import org.junit.Ignore
 import org.junit.Test
 
 class PNConfigurationTest {
@@ -24,11 +26,13 @@ class PNConfigurationTest {
         assertEquals("PubNub-Kotlin/$version $suffix11 $suffix2", generatedPnsdk)
     }
 
+    @Ignore
     @Test(expected = PubNubException::class)
     fun setUserIdToEmptyString() {
         PNConfiguration(userId = UserId(""))
     }
 
+    @Ignore
     @Test(expected = PubNubException::class)
     fun resetUserIdToEmptyString() {
         val config = PNConfiguration(userId = UserId(PubNub.generateUUID()))
@@ -44,11 +48,13 @@ class PNConfigurationTest {
         assertEquals(newUUID, config.userId.value)
     }
 
+    @Ignore
     @Test(expected = PubNubException::class)
     fun setUUIDToEmptyString() {
         PNConfiguration("")
     }
 
+    @Ignore
     @Test(expected = PubNubException::class)
     fun resetUUIDToEmptyString() {
         val config = PNConfiguration(PubNub.generateUUID())

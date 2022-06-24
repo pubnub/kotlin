@@ -7,19 +7,19 @@ import org.aeonbits.owner.ConfigFactory
 @Sources("file:test.properties")
 interface ContractTestConfig : Config {
     @Config.Key("pamSubKey")
-    fun pamSubKey(): String?
+    fun pamSubKey(): String
 
     @Config.Key("pamPubKey")
-    fun pamPubKey(): String?
+    fun pamPubKey(): String
 
     @Config.Key("pamSecKey")
     fun pamSecKey(): String?
 
     @Config.Key("subKey")
-    fun subKey(): String?
+    fun subKey(): String
 
     @Config.Key("pubKey")
-    fun pubKey(): String?
+    fun pubKey(): String
 
     @Config.Key("serverHostPort")
     fun serverHostPort(): String

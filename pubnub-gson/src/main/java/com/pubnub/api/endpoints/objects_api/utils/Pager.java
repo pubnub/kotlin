@@ -2,7 +2,7 @@ package com.pubnub.api.endpoints.objects_api.utils;
 
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.builder.PubNubErrorBuilder;
-import com.pubnub.api.endpoints.Endpoint;
+import com.pubnub.api.Endpoint;
 import com.pubnub.api.models.consumer.PNPage;
 
 import java.util.HashMap;

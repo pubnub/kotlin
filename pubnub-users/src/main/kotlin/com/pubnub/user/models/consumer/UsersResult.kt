@@ -1,8 +1,8 @@
 package com.pubnub.user.models.consumer
 
 import com.pubnub.api.models.consumer.objects.PNPage
-import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataArrayResult
-import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataResult
+import com.pubnub.user.PNUUIDMetadataArrayResult
+import com.pubnub.user.PNUUIDMetadataResult
 
 data class UsersResult(
     val data: Collection<User>,
@@ -16,6 +16,10 @@ internal fun PNUUIDMetadataArrayResult.toUsersResult(): UsersResult {
         pnUserMetadata.toUser()
     }
     return UsersResult(data = users, totalCount = totalCount, next = next, prev = prev)
+}
+
+internal fun com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataResult.toUser(): User? {
+    return data?.toUser()
 }
 
 internal fun PNUUIDMetadataResult.toUser(): User? {

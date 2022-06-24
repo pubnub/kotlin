@@ -1,7 +1,7 @@
 package com.pubnub.user.models.consumer
 
-import com.pubnub.api.UserId
-import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
+import com.pubnub.core.UserId
+import com.pubnub.user.PNUUIDMetadata
 
 data class User(
     val id: UserId,
@@ -15,6 +15,21 @@ data class User(
     val type: String? = null,
     val status: String? = null
 )
+
+fun com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata.toUser(): User {
+    return User(
+        id = UserId(id),
+        name = name,
+        externalId = externalId,
+        profileUrl = profileUrl,
+        email = email,
+        custom = custom as Map<String, Any>?,
+        updated = updated,
+        eTag = eTag,
+        type = type,
+        status = status
+    )
+}
 
 fun PNUUIDMetadata.toUser(): User {
     return User(

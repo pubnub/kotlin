@@ -16,6 +16,7 @@ import com.pubnub.api.services.S3Service
 import com.pubnub.api.services.SignalService
 import com.pubnub.api.services.SubscribeService
 import com.pubnub.api.services.TimeService
+import com.pubnub.core.RetrofitManager
 import okhttp3.Call
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -23,13 +24,19 @@ import retrofit2.Retrofit
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.TimeUnit
 
-class RetrofitManager(val pubnub: PubNub) {
+class RetrofitManager(val pubnub: PubNub) : RetrofitManager {
 
-    private lateinit var transactionClientInstance: OkHttpClient
+    private val transactionClientInstance: OkHttpClient by lazy {
+        createOkHttpClient(pubnub.configuration.nonSubscribeRequestTimeout)!!
+    }
 
-    private lateinit var subscriptionClientInstance: OkHttpClient
+    private val subscriptionClientInstance: OkHttpClient by lazy {
+        createOkHttpClient(pubnub.configuration.subscribeTimeout)!!
+    }
 
-    private lateinit var noSignatureClientInstance: OkHttpClient
+    private val noSignatureClientInstance: OkHttpClient by lazy {
+        createOkHttpClient(pubnub.configuration.nonSubscribeRequestTimeout, withSignature = false)!!
+    }
 
     private var signatureInterceptor: SignatureInterceptor
 
@@ -44,18 +51,14 @@ class RetrofitManager(val pubnub: PubNub) {
     internal val accessManagerService: AccessManagerService
 
     internal val subscribeService: SubscribeService
-    internal val objectsService: ObjectsService
+    val objectsService: ObjectsService
     internal val filesService: FilesService
     internal val s3Service: S3Service
 
+    override val transactionInstance by lazy { createRetrofit(transactionClientInstance) }
+
     init {
         signatureInterceptor = SignatureInterceptor(pubnub)
-
-        if (!pubnub.configuration.googleAppEngineNetworking) {
-            transactionClientInstance = createOkHttpClient(pubnub.configuration.nonSubscribeRequestTimeout)
-            subscriptionClientInstance = createOkHttpClient(pubnub.configuration.subscribeTimeout)
-            noSignatureClientInstance = createOkHttpClient(pubnub.configuration.nonSubscribeRequestTimeout, withSignature = false)
-        }
 
         val transactionInstance = createRetrofit(transactionClientInstance)
         val subscriptionInstance = createRetrofit(subscriptionClientInstance)
@@ -81,7 +84,8 @@ class RetrofitManager(val pubnub: PubNub) {
         return transactionClientInstance.dispatcher.executorService
     }
 
-    private fun createOkHttpClient(readTimeout: Int, withSignature: Boolean = true): OkHttpClient {
+    private fun createOkHttpClient(readTimeout: Int, withSignature: Boolean = true): OkHttpClient? {
+        if (pubnub.configuration.googleAppEngineNetworking) return null
         val okHttpBuilder = OkHttpClient.Builder()
             .retryOnConnectionFailure(true)
             .readTimeout(readTimeout.toLong(), TimeUnit.SECONDS)

@@ -69,6 +69,7 @@ import com.pubnub.api.managers.token_manager.TokenParser;
 import com.pubnub.api.models.consumer.access_manager.v3.PNToken;
 import com.pubnub.api.vendor.Crypto;
 import com.pubnub.api.vendor.FileEncryptionUtil;
+import com.pubnub.core.ManagerManager;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -79,7 +80,7 @@ import java.util.List;
 import java.util.UUID;
 
 
-public class PubNub {
+public class PubNub implements ManagerManager {
 
     @Getter
     private @NotNull PNConfiguration configuration;
@@ -95,8 +96,10 @@ public class PubNub {
 
     private PublishSequenceManager publishSequenceManager;
 
+    @Getter
     private TelemetryManager telemetryManager;
 
+    @Getter
     private RetrofitManager retrofitManager;
 
     private final TokenParser tokenParser;
@@ -108,6 +111,7 @@ public class PubNub {
     private final ListenerManager listenerManager;
     private final StateManager stateManager;
 
+    @Getter
     private final TokenManager tokenManager;
 
     public PubNub(@NotNull PNConfiguration initialConfig) {

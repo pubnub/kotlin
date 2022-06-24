@@ -21,13 +21,14 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-public class RetrofitManager {
+public class RetrofitManager implements com.pubnub.core.RetrofitManager {
 
 
     private PubNub pubnub;
 
     private SignatureInterceptor signatureInterceptor;
 
+    @Getter
     private OkHttpClient transactionClientInstance;
     private OkHttpClient subscriptionClientInstance;
     private OkHttpClient noSignatureClientInstance;

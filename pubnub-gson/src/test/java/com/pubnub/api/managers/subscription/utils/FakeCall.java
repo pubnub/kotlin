@@ -2,6 +2,7 @@ package com.pubnub.api.managers.subscription.utils;
 
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.Request;
+import okio.Timeout;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -86,5 +87,10 @@ public class FakeCall<T> implements Call<T> {
     @Override
     public Request request() {
         return request;
+    }
+
+    @Override
+    public Timeout timeout() {
+        return Timeout.NONE;
     }
 }

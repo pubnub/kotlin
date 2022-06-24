@@ -1,14 +1,9 @@
-package com.pubnub.api.endpoints;
-
+package com.pubnub.api;
 
 import com.google.gson.JsonElement;
-import com.pubnub.api.PubNub;
-import com.pubnub.api.PubNubException;
-import com.pubnub.api.PubNubUtil;
 import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.callbacks.PNCallback;
 import com.pubnub.api.endpoints.remoteaction.RemoteAction;
-import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.enums.PNStatusCategory;
 import com.pubnub.api.managers.MapperManager;
 import com.pubnub.api.managers.RetrofitManager;
@@ -16,11 +11,11 @@ import com.pubnub.api.managers.TelemetryManager;
 import com.pubnub.api.managers.token_manager.TokenManager;
 import com.pubnub.api.models.consumer.PNErrorData;
 import com.pubnub.api.models.consumer.PNStatus;
+import com.pubnub.core.CoreEndpoint;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import lombok.extern.java.Log;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import retrofit2.Call;
@@ -35,11 +30,9 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
-@Log
-public abstract class Endpoint<Input, Output> implements RemoteAction<Output> {
+public abstract class MoreAbstractEndpoint<Input, Output, OperationType extends com.pubnub.core.OperationType> extends CoreEndpoint<Input, Output, PNCallback<Output>, PubNubException, OperationType, PNConfiguration, TokenManager, TelemetryManager, RetrofitManager, MapperManager> implements RemoteAction<Output> {
 
     @Getter(AccessLevel.PROTECTED)
     private PubNub pubnub;
@@ -70,16 +63,24 @@ public abstract class Endpoint<Input, Output> implements RemoteAction<Output> {
 
     private final TokenManager tokenManager;
 
-    public Endpoint(PubNub pubnubInstance,
+    public MoreAbstractEndpoint(PubNub pubnubInstance,
                     TelemetryManager telemetry,
                     RetrofitManager retrofitInstance,
                     TokenManager tokenManager) {
+        super(pubnubInstance);
         this.pubnub = pubnubInstance;
         this.retrofit = retrofitInstance;
         this.tokenManager = tokenManager;
 
         this.mapper = this.pubnub.getMapper();
         this.telemetryManager = telemetry;
+    }
+
+    public MoreAbstractEndpoint(PubNub pubnub) {
+        this(pubnub,
+                pubnub.getTelemetryManager(),
+                pubnub.getRetrofitManager(),
+                pubnub.getTokenManager());
     }
 
     @Override
@@ -350,7 +351,7 @@ public abstract class Endpoint<Input, Output> implements RemoteAction<Output> {
         return pnStatus.build();
     }
 
-    private void storeRequestLatency(Response response, PNOperationType type) {
+    private void storeRequestLatency(Response response, com.pubnub.core.OperationType type) {
         if (this.telemetryManager != null) {
             long latency = response.raw().receivedResponseAtMillis() - response.raw().sentRequestAtMillis();
             this.telemetryManager.storeLatency(latency, type);
@@ -399,18 +400,13 @@ public abstract class Endpoint<Input, Output> implements RemoteAction<Output> {
         return encodedParams;
     }
 
-    protected abstract List<String> getAffectedChannels();
-
-    protected abstract List<String> getAffectedChannelGroups();
-
-    protected abstract void validateParams() throws PubNubException;
-
     protected abstract Call<Input> doWork(Map<String, String> baseParams) throws PubNubException;
 
     protected abstract Output createResponse(Response<Input> input) throws PubNubException;
 
-    protected abstract PNOperationType getOperationType();
+    protected OperationType getOperationType() {
+        return operationType();
+    }
 
-    protected abstract boolean isAuthRequired();
 
 }

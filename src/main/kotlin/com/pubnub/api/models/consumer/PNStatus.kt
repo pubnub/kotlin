@@ -3,9 +3,9 @@ package com.pubnub.api.models.consumer
 import com.pubnub.api.Endpoint
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNubException
-import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
-import com.pubnub.api.enums.PNOperationType
+import com.pubnub.api.endpoints.remoteaction.RemoteAction
 import com.pubnub.api.enums.PNStatusCategory
+import com.pubnub.core.OperationType
 import okhttp3.Request
 
 /**
@@ -26,7 +26,7 @@ import okhttp3.Request
 data class PNStatus(
     var category: PNStatusCategory,
     var error: Boolean,
-    val operation: PNOperationType,
+    val operation: OperationType, // TODO this is breaking change and I don't like it
 
     val exception: PubNubException? = null,
 
@@ -40,7 +40,7 @@ data class PNStatus(
     var affectedChannelGroups: List<String?> = emptyList()
 
 ) {
-    internal var executedEndpoint: ExtendedRemoteAction<*>? = null
+    internal var executedEndpoint: RemoteAction<*>? = null
 
     var clientRequest: Request? = null
 

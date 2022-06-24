@@ -2,19 +2,19 @@ package com.pubnub.api.endpoints.remoteaction
 
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
-import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.models.consumer.PNStatus
+import com.pubnub.core.OperationType
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.atomic.AtomicReference
 
 internal class RetryingRemoteAction<T>(
-    private val remoteAction: ExtendedRemoteAction<T>,
+    private val remoteAction: RemoteAction<T>,
     private val maxNumberOfAutomaticRetries: Int,
-    private val operationType: PNOperationType,
+    private val operationType: OperationType,
     private val executorService: ExecutorService
-) : ExtendedRemoteAction<T> {
+) : RemoteAction<T> {
     private lateinit var cachedCallback: (result: T?, status: PNStatus) -> Unit
 
     @Throws(PubNubException::class)
@@ -72,7 +72,7 @@ internal class RetryingRemoteAction<T>(
         remoteAction.silentCancel()
     }
 
-    override fun operationType(): PNOperationType {
+    override fun operationType(): OperationType {
         return remoteAction.operationType()
     }
 
@@ -120,9 +120,9 @@ internal class RetryingRemoteAction<T>(
 
     companion object {
         fun <T> autoRetry(
-            remoteAction: ExtendedRemoteAction<T>,
+            remoteAction: RemoteAction<T>,
             maxNumberOfAutomaticRetries: Int,
-            operationType: PNOperationType,
+            operationType: OperationType,
             executorService: ExecutorService
         ): RetryingRemoteAction<T> {
             return RetryingRemoteAction(remoteAction, maxNumberOfAutomaticRetries, operationType, executorService)

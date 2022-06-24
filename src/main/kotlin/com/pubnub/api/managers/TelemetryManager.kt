@@ -1,6 +1,6 @@
 package com.pubnub.api.managers
 
-import com.pubnub.api.enums.PNOperationType
+import com.pubnub.core.OperationType
 import java.math.RoundingMode
 import java.text.NumberFormat
 import java.util.Date
@@ -61,7 +61,7 @@ class TelemetryManager {
     }
 
     @Synchronized
-    internal fun storeLatency(latency: Long, type: PNOperationType, currentDate: Long = Date().time) {
+    internal fun storeLatency(latency: Long, type: OperationType, currentDate: Long = Date().time) {
         type.queryParam?.let { queryParam: String ->
             if (latency > 0) {
                 val storeDate = currentDate / (TIMESTAMP_DIVIDER.toDouble())

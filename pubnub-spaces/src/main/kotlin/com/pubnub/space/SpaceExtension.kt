@@ -5,8 +5,8 @@ import com.pubnub.api.SpaceId
 import com.pubnub.api.callbacks.DisposableListener
 import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.endpoints.remoteaction.ComposableRemoteAction.Companion.firstDo
-import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction.Companion.map
+import com.pubnub.api.endpoints.remoteaction.RemoteAction
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.objects.PNKey
@@ -50,7 +50,7 @@ fun PubNub.fetchSpaces(
     sort: Collection<ResultSortKey<SpaceKey>> = listOf(),
     includeCount: Boolean = false,
     includeCustom: Boolean = false
-): ExtendedRemoteAction<SpacesResult?> = firstDo(
+): RemoteAction<SpacesResult?> = firstDo(
     getAllChannelMetadata(
         limit = limit,
         page = page,
@@ -84,7 +84,7 @@ private fun toPNSortKey(sort: Collection<ResultSortKey<SpaceKey>>): Collection<P
 fun PubNub.fetchSpace(
     spaceId: SpaceId,
     includeCustom: Boolean = false
-): ExtendedRemoteAction<Space?> = firstDo(
+): RemoteAction<Space?> = firstDo(
     getChannelMetadata(channel = spaceId.value, includeCustom = includeCustom)
 ).then {
     map(
@@ -111,7 +111,7 @@ fun PubNub.createSpace(
     includeCustom: Boolean = false,
     type: String? = null,
     status: String? = null
-): ExtendedRemoteAction<Space?> = firstDo(
+): RemoteAction<Space?> = firstDo(
     setChannelMetadata(
         channel = spaceId.value,
         name = name,
@@ -144,7 +144,7 @@ fun PubNub.updateSpace(
     includeCustom: Boolean = false,
     type: String? = null,
     status: String? = null
-): ExtendedRemoteAction<Space?> = firstDo(
+): RemoteAction<Space?> = firstDo(
     setChannelMetadata(
         channel = spaceId.value,
         name = name,
@@ -167,7 +167,7 @@ fun PubNub.updateSpace(
  */
 fun PubNub.removeSpace(
     spaceId: SpaceId
-): ExtendedRemoteAction<RemoveSpaceResult?> = firstDo(
+): RemoteAction<RemoveSpaceResult?> = firstDo(
     removeChannelMetadata(channel = spaceId.value)
 ).then {
     map(

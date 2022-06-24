@@ -10,3 +10,7 @@ include 'pubnub-kotlin-bom'
 include 'pubnub-users'
 include 'pubnub-spaces'
 include 'pubnub-memberships'
+include 'pubnub-core'
+include 'pubnub-gson'
+include 'pubnub-java-test'
+

@@ -11,7 +11,7 @@ data class CollectionQueryParameters(
     private val includeCount: Boolean = false,
 ) {
 
-    internal fun createCollectionQueryParams(): Map<String, String> {
+    fun createCollectionQueryParams(): Map<String, String> {
         val additionalParams = mutableMapOf<String, String>()
         val f = filter
         if (f != null) additionalParams["filter"] = f
