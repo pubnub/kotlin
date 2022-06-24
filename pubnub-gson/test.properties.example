@@ -1,0 +1,11 @@
+# Substitute <<PLACEHOLDERS>> with value obtained from https://admin.pubnub.com/
+pubKey: <<PASTE_PUBLISH_KEY_HERE>>
+subKey: <<PASTE_SUBSCRIBE_KEY_HERE>>
+pamPubKey: <<PASTE_PAM_PUBLISH_KEY_HERE>>
+pamSubKey: <<PASTE_PAM_SUBSCRIBE_KEY_HERE>>
+pamSecKey: <<PASTE_PAM_SECRET_KEY_HERE>>
+featuresDir: <<PATH TO FEATURES>>
+cucumberTags: <<TAG FILTER>>
+serverHostPort: localhost:8090
+#server.hostPort: ps.pndsn.com
+serverMock: true

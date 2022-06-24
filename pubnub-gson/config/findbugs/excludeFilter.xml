@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FindBugsFilter>
+    <Match>
+        <Class name="com.pubnub.api.models.consumer.objects_api.member.PNMember"/>
+        <Field name="user"/>
+        <Bug pattern="UWF_UNWRITTEN_FIELD"/>
+    </Match>
+    <Match>
+        <Class name="com.pubnub.api.models.consumer.objects_api.membership.PNMembership"/>
+        <Field name="space"/>
+        <Bug pattern="UWF_UNWRITTEN_FIELD"/>
+    </Match>
+    <Match>
+        <Class name="com.pubnub.api.models.consumer.objects_api.PNObject"/>
+        <Field name="created"/>
+        <Bug pattern="UWF_UNWRITTEN_PUBLIC_OR_PROTECTED_FIELD"/>
+    </Match>
+    <Match>
+        <Class name="com.pubnub.api.models.consumer.objects_api.PNObject"/>
+        <Field name="eTag"/>
+        <Bug pattern="UWF_UNWRITTEN_PUBLIC_OR_PROTECTED_FIELD"/>
+    </Match>
+    <Match>
+        <Class name="com.pubnub.api.models.consumer.objects_api.PNObject"/>
+        <Field name="updated"/>
+        <Bug pattern="UWF_UNWRITTEN_PUBLIC_OR_PROTECTED_FIELD"/>
+    </Match>
+    <Match>
+        <Class name="com.pubnub.api.models.consumer.objects_api.PropertyEnvelope"/>
+        <Field name="id"/>
+        <Bug pattern="URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD"/>
+    </Match>
+    <Match>
+        <Class name="com.pubnub.api.models.consumer.history.PNFetchMessageItem$Action"/>
+        <Field name="uuid"/>
+        <Bug pattern="UWF_UNWRITTEN_FIELD"/>
+    </Match>
+    <Match>
+        <Class name="com.pubnub.api.models.consumer.history.PNFetchMessageItem$Action"/>
+        <Field name="actionTimetoken"/>
+        <Bug pattern="UWF_UNWRITTEN_FIELD"/>
+    </Match>
+    <Match>
+        <Class name="com.pubnub.api.PubNubUtil"/>
+        <Method name="requestBodyToString"/>
+        <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
+    </Match>
+    <Match>
+        <Class name="com.pubnub.api.endpoints.vendor.AppEngineFactory"/>
+        <Method name="execute"/>
+        <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
+    </Match>
+    <Match>
+        <Class name="com.pubnub.api.models.consumer.objects_api.member.PNMembers"/>
+        <Field name="uuid"/>
+        <Bug pattern="UWF_UNWRITTEN_FIELD"/>
+    </Match>
+    <Match>
+        <Class name="com.pubnub.api.models.consumer.objects_api.member.PNMembers"/>
+        <Field name="eTag"/>
+        <Bug pattern="UWF_UNWRITTEN_PUBLIC_OR_PROTECTED_FIELD"/>
+    </Match>
+    <Match>
+        <Class name="com.pubnub.api.models.consumer.objects_api.member.PNMembers"/>
+        <Field name="updated"/>
+        <Bug pattern="UWF_UNWRITTEN_PUBLIC_OR_PROTECTED_FIELD"/>
+    </Match>
+    <Match>
+        <Class name="com.pubnub.api.PubNubException"/>
+        <Field name="affectedCall"/>
+        <Bug pattern="URF_UNREAD_FIELD"/>
+    </Match>
+</FindBugsFilter>
+

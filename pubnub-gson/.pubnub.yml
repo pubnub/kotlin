@@ -1,0 +1,920 @@
+name: java
+version: 6.0.2
+schema: 1
+scm: github.com/pubnub/java
+files:
+  - build/libs/pubnub-gson-6.0.2-all.jar
+sdks:
+  - 
+      type: library
+      full-name: Java SDK
+      short-name: Java
+      artifacts:
+        -
+          language: java
+          tags:
+            - Server
+            - Mobile
+          source-repository: https://github.com/pubnub/java
+          documentation: https://www.pubnub.com/docs/sdks/java/
+          tier: 1
+          artifact-type: library
+          distributions:
+            -
+              distribution-type: library
+              distribution-repository: GitHub
+              package-name: pubnub-gson-6.0.2
+              location: https://github.com/pubnub/java/releases/download/v6.0.2/pubnub-gson-6.0.2-all.jar
+              supported-platforms:
+                supported-operating-systems:
+                  Android:
+                    runtime-version:
+                      - ART
+                    target-api-level: 
+                      - 23
+                    minimum-api-level:
+                      - 23
+                    maximum-api-level:
+                      - 30  
+                    target-architecture:
+                      - armeabi-v7a
+                      - atom
+                      - armeabi
+                      - arm64-v8a
+                  Linux:
+                    runtime-version:
+                      - JVM 8 
+                    minimum-os-version:
+                      - Ubuntu 12.04
+                    maximum-os-version:
+                      - Ubuntu 20.04 LTS
+                    target-architecture:
+                      - x86
+                      - x86-64
+                  macOS:
+                    runtime-version:
+                      - JVM 8
+                    minimum-os-version:
+                      - macOS 10.12
+                    maximum-os-version:
+                      - macOS 11.0.1
+                    target-architecture:
+                      - x86-64
+                  Windows:
+                    runtime-version:
+                      - JVM 8
+                    minimum-os-version:
+                      - Windows Vista Ultimate
+                    maximum-os-version:
+                      - Windows 10 Home
+                    target-architecture:
+                      - x86
+                      - x86-64
+              requires:
+                -
+                  name: retrofit
+                  min-version: 2.6.2
+                  location: Shipped within library
+                  license: Apache License, Version 2.0
+                  license-url: https://github.com/square/retrofit/blob/parent-2.6.2/LICENSE.txt
+                  is-required: Required
+                -
+                  name: okhttp
+                  min-version: 3.12.6
+                  location: Shipped within library
+                  license: Apache License, Version 2.0
+                  license-url: https://github.com/square/okhttp/blob/parent-3.12.6/LICENSE.txt
+                  is-required: Required
+                -
+                  name: converter-gson
+                  min-version: 2.6.2
+                  location: Shipped within library
+                  license: Apache License, Version 2.0
+                  license-url: https://github.com/square/retrofit/blob/parent-2.6.2/LICENSE.txt
+                  is-required: Required
+                -
+                  name: gson
+                  min-version: 2.8.6
+                  location: Shipped within library
+                  license: Apache License, Version 2.0
+                  license-url: https://github.com/google/gson/blob/gson-parent-2.8.6/LICENSE
+                  is-required: Required
+                -
+                  name: jackson-databind
+                  min-version: 2.9.9
+                  location: Shipped within library
+                  license: Apache License, Version 2.0
+                  license-url: hhttps://github.com/FasterXML/jackson-databind/blob/jackson-databind-2.9.9/README.md
+                  is-required: Required
+                -
+                  name: jackson-module-kotlin
+                  min-version: 2.9.9
+                  location: Shipped within library
+                  license: Apache License, Version 2.0
+                  license-url: "" 
+                  is-required: Required
+                -
+                  name: json
+                  min-version: "20190722"
+                  location: Shipped within library
+                  license: ""
+                  license-url: https://github.com/stleary/JSON-java/blob/20190722/LICENSE
+                  is-required: Required
+
+        -
+
+          language: java 
+          tags:
+            - Server
+            - Mobile
+          source-repository: https://github.com/pubnub/java
+          documentation: https://www.pubnub.com/docs/sdks/java
+          tier: 1
+          artifact-type: library
+          distributions:
+            -
+              distribution-type: library
+              distribution-repository: maven 
+              package-name: pubnub-gson-6.0.2
+              location: https://repo.maven.apache.org/maven2/com/pubnub/pubnub-gson/6.0.2/pubnub-gson-6.0.2.jar
+              supported-platforms:
+                supported-operating-systems:
+                  Android:
+                    runtime-version:
+                      - ART
+                    target-api-level: 
+                      - 23
+                    minimum-api-level:
+                      - 23
+                    maximum-api-level:
+                      - 30  
+                    target-architecture:
+                      - armeabi-v7a
+                      - atom
+                      - armeabi
+                      - arm64-v8a
+                  Linux:
+                    runtime-version:
+                      - JVM 8 
+                    minimum-os-version:
+                      - Ubuntu 12.04
+                    maximum-os-version:
+                      - Ubuntu 20.04 LTS
+                    target-architecture:
+                      - x86
+                      - x86-64
+                  macOS:
+                    runtime-version:
+                      - JVM 8
+                    minimum-os-version:
+                      - macOS 10.12
+                    maximum-os-version:
+                      - macOS 11.0.1
+                    target-architecture:
+                      - x86-64
+                  Windows:
+                    runtime-version:
+                      - JVM 8
+                    minimum-os-version:
+                      - Windows Vista Ultimate
+                    maximum-os-version:
+                      - Windows 10 Home
+                    target-architecture:
+                      - x86
+                      - x86-64
+              requires:
+                -
+                  name: retrofit
+                  min-version: 2.6.2
+                  location: https://repo.maven.apache.org/maven2/com/squareup/retrofit2/retrofit/2.6.2/retrofit-2.6.2.jar
+                  license: Apache License, Version 2.0
+                  license-url: https://github.com/square/retrofit/blob/parent-2.6.2/LICENSE.txt
+                  is-required: Required
+                -
+                  name: okhttp
+                  min-version: 3.12.6
+                  location: https://repo.maven.apache.org/maven2/com/squareup/okhttp3/okhttp/3.12.6/okhttp-3.12.6.jar
+                  license: Apache License, Version 2.0
+                  license-url: https://github.com/square/okhttp/blob/parent-3.12.6/LICENSE.txt
+                  is-required: Required
+                -
+                  name: converter-gson
+                  min-version: 2.6.2
+                  location: https://repo.maven.apache.org/maven2/com/squareup/retrofit2/converter-gson/2.6.2/converter-gson-2.6.2.jar
+                  license: Apache License, Version 2.0
+                  license-url: https://github.com/square/retrofit/blob/parent-2.6.2/LICENSE.txt
+                  is-required: Required
+                -
+                  name: gson
+                  min-version: 2.8.6
+                  location: https://repo.maven.apache.org/maven2/com/google/code/gson/gson/2.8.6/gson-2.8.6.jar
+                  license: Apache License, Version 2.0
+                  license-url: https://github.com/google/gson/blob/gson-parent-2.8.6/LICENSE
+                  is-required: Required
+                -
+                  name: jackson-databind
+                  min-version: 2.9.9
+                  location: https://repo.maven.apache.org/maven2/com/fasterxml/jackson/core/jackson-databind/2.9.9/jackson-databind-2.9.9.jar
+                  license: Apache License, Version 2.0
+                  license-url: hhttps://github.com/FasterXML/jackson-databind/blob/jackson-databind-2.9.9/README.md
+                  is-required: Required
+                -
+                  name: jackson-module-kotlin
+                  min-version: 2.9.9
+                  location: https://repo.maven.apache.org/maven2/com/fasterxml/jackson/module/jackson-module-kotlin/2.9.9/jackson-module-kotlin-2.9.9.jar
+                  license: Apache License, Version 2.0
+                  license-url: "" 
+                  is-required: Required
+                -
+                  name: json
+                  min-version: "20190722"
+                  location: https://repo.maven.apache.org/maven2/org/json/json/20190722/json-20190722.jar
+                  license: ""
+                  license-url: https://github.com/stleary/JSON-java/blob/20190722/LICENSE
+                  is-required: Required
+
+changelog:
+  - date: 2022-05-19
+    version: v6.0.2
+    changes:
+      - type: bug
+        text: "Upgraded gson to 2.9.0 to make SDK working under Java 17."
+  - date: 2022-05-09
+    version: v6.0.1
+    changes:
+      - type: bug
+        text: "Do heartbeat and leave calls sequentially to prevent race condition between these two calls and 'phantom' join after leave."
+  - date: 2022-01-12
+    version: v6.0.0
+    changes:
+      - type: improvement
+        text: "BREAKING CHANGES: uuid is required parameter in PNConfiguration constructor."
+  - date: 2021-12-16
+    version: v5.3.0
+    changes:
+      - type: feature
+        text: "Add revoke token feature."
+  - date: 2021-12-09
+    version: v5.2.4
+    changes:
+      - type: bug
+        text: "Emit PNReconnectedCategory in case of successful manual reconnection."
+  - date: 2021-11-17
+    version: v5.2.3
+    changes:
+      - type: bug
+        text: "Eviction of OkHttp connection pool after reestablishing connection (affects transactional calls)."
+  - date: 2021-11-04
+    version: v5.2.2
+    changes:
+      - type: bug
+        text: "Reconnect always restarts the subscription connection."
+  - version: v5.2.1
+    date: 2021-10-06
+    changes:
+      - type: feature
+        text: "Acceptance tests plugged into CI pipeline."
+      - type: bug
+        text: "Meta field exposed correctly in PNToken class."
+  - version: v5.2.0
+    date: 2021-09-08
+    changes:
+      - type: feature
+        text: "Extend grantToken method to enable control of Objects API permission. Enhance granularity of permission control to enable permissions per UUID."
+  - version: v5.1.1
+    date: 2021-07-13
+    changes:
+      - type: bug
+        text: "Update Jackson libraries to avoid known vulnerabilities."
+  - version: v5.1.0
+    date: 2021-05-20
+    changes:
+      - type: feature
+        text: "Method grantToken has beed added. It allows generation of signed token with permissions for channels and channel groups."
+      - type: bug
+        text: "UUID is now exposed as PNMembership field which make is accessible from PNMembershipResult argument of SubscribeCallback.membership() method."
+  - version: v5.0.0
+    date: 2021-05-12
+    changes:
+      - type: feature
+        text: "Now random initialisation vector used when encryption enabled is now default behaviour."
+      - type: bug
+        text: "There were some non daemon threads running in background preventing VM from exiting. Now they are daemon threads."
+  - version: v4.36.0
+    date: 2021-04-08
+    changes:
+      - type: feature
+        text: "New way of controlling Presence by Heartbeat calls for purpose of usage with dedicated server configuration (ACL). This feature can be used only with additional support from PubNub."
+  - version: v4.33.3
+    date: 2020-10-21
+    changes:
+      - type: bug
+        text: "Improved handling of random initialization vector for encrypting messages."
+      - type: bug
+        text: "Restore Android compatibility for Gradle 3.X by removing Stringjoin()."
+      - type: bug
+        text: "Return appropriate error information when payload is too large."
+  - version: v4.33.2
+    date: 2020-10-08
+    changes:
+      - type: bug
+        text: "To improve security of messages, added support for random initialization vector to encrypt and decrypt messages."
+  - version: v4.33.1
+    date: 2020-09-24
+    changes:
+      - type: bug
+        text: "PubNubException now overrides Throwable's `getMessage` so the `status.errorData.throwablemessage` can be properly set."
+  - version: v4.33.0
+    date: 2020-09-14
+    changes:
+      - type: feature
+        text: "Objects (v2) API exposed to enable metadata management."
+      - type: feature
+        text: "Enable Objects (v2) related permissions management via Grant method."
+  - version: v4.32.1
+    date: 2020-08-24
+    changes:
+      - type: bug
+        text: "Fix for subscription loop to prevent unexpected disconnections caused by unhandled HTTP statuses."
+  - version: v4.32.0
+    date: 2020-08-14
+    changes:
+      - type: feature
+        text: "Allows to upload files to channels, download them with optional encryption support."
+  - version: v4.31.3
+    date: 2020-06-17
+    changes:
+      - type: bug
+        text: "Fix typo in suppressLeaveEvents in PNConfiguration."
+  - version: v4.31.2
+    date: 2020-06-12
+    changes:
+      - type: feature
+        text: "Add \"click_action\" parameter to PushPayloadHelper in order to pass it to FCM."
+  - version: v4.31.1
+    date: 2020-04-16
+    changes:
+      - type: bug
+        text: Fix OkHttp reconnection policy
+  - version: v4.31.0
+    date: 2020-02-25
+    changes:
+      - type: feature
+        text: Implemented Objects Filtering API
+      - type: improvement
+        text: Handled more network events to keep the client subscribed
+      - type: improvement
+        text: Improved interaction with classes from org.json*
+      - type: improvement
+        text: Made PNCallback eligible for SAM/lambda conversion
+      - type: improvement
+        text: Deprecated PNPushType.GCM in favor of PNPushType.FCM
+  - version: v4.30.0
+    date: 2020-01-23
+    changes:
+      - type: feature
+        text: Add support for APNS2 Push API
+      - type: feature
+        text: Add a utility class to ease creating push payloads
+  - version: v4.29.2
+    date: 2019-12-02
+    changes:
+      - type: improvement
+        text: Disable OkHttp reconnection policy
+  - version: v4.29.1
+    date: 2019-10-22
+    changes:
+      - type: improvement
+        text: Made the SDK more Kotlin-friendly
+      - type: improvement
+        text: Categorized cancelled requests as such
+      - type: improvement
+        text: Removed the 'audit' method
+  - version: v4.29.0
+    date: 2019-10-08
+    changes:
+      - type: feature
+        text: Implemented Message Actions API
+      - type: feature
+        text: Added 'includeMeta' to history()
+      - type: feature
+        text: Added 'includeMeta' to fetchMessages()
+      - type: feature
+        text: Added 'includeMessageActions' to fetchMessages()
+  - version: v4.28.0
+    date: 2019-10-01
+    changes:
+      - type: feature
+        text: Add PAMv3 support
+      - type: feature
+        text: Implement TMS (Token Manager)
+      - type: feature
+        text: Upgrade PAM endpoints to v2
+      - type: feature
+        text: Introduce delete permission for grant
+  - version: v4.27.0
+    date: 2019-08-27
+    changes:
+      - type: feature
+        text: Add Objects API support
+  - version: v4.26.1
+    date: 2019-08-13
+    changes:
+      - type: feature
+        text: Introduce serialization class for Signals API
+  - version: v4.26.0
+    date: 2019-08-09
+    changes:
+      - type: feature
+        text: Add Signals support
+      - type: bug
+        text: Expose OkHttp logging interceptor library
+  - version: v4.25.0
+    date: 2019-06-06
+    changes:
+      - type: bug
+        text: Enable app level grants
+      - type: bug
+        text: Custom encode auth key where it's not encoded automatically
+      - type: feature
+        text: Move state param from heartbeat to subscribe calls
+  - version: v4.24.0
+    date: 2019-05-21
+    changes:
+      - type: feature
+        text: Enforce a minimum presence timeout value
+      - type: feature
+        text: Disable presence heartbeats by default
+  - version: v4.23.0
+    date: 2019-05-08
+    changes:
+      - type: bug
+        text: Fix reconnection issues by allowing it solely for network issues
+  - version: v4.22.0
+    date: 2019-04-26
+    changes:
+      - type: feature
+        text: Introduce Message Count API
+      - type: feature
+        text: Update 3rd party libraries
+  - version: v4.22.0-beta
+    date: 2019-01-31
+    changes:
+      - type: feature
+        text: Update 3rd party libraries
+  - version: v4.21.0
+    date: 2018-10-26
+    changes:
+      - type: feature
+        text: Support optional query parameters for every request
+      - type: feature
+        text: Update documentation
+  - version: v4.20.0
+    date: 2018-08-07
+    changes:
+      - type: bug
+        text: Fix an issue where the global-here-now response was interpreted incorrectly
+  - version: v4.19.0
+    date: 2018-03-29
+    changes:
+      - type: bug
+        text: Fix an issue where end of channel history was interpreted as an error
+  - version: v4.18.0
+    date: 2018-01-11
+    changes:
+      - type: improvement
+        text: lock down OkHttp version to support latest android version
+  - version: v4.17.0
+    date: 2017-12-19
+    changes:
+      - type: improvement
+        text: allow SDK to only send heartbeats without subscribing to the data channel.
+  - version: v4.16.0
+    date: 2017-11-21
+    changes:
+      - type: improvement
+        text: allow setting setMaximumConnections to open more connections to PubNub
+  - version: v4.15.0
+    date: 2017-11-17
+    changes:
+      - type: improvement
+        text: update gson dependency
+      - type: bug
+        text: make listeners thread safe
+      - type: bug
+        text: close hanging threads on shutdown
+  - version: v4.14.0
+    date: 2017-10-25
+    changes:
+      - type: improvement
+        text: add support to suppress leave events
+  - version: v4.13.0
+    date: 2017-10-23
+    changes:
+      - type: improvement
+        text: do not execute subscribe on empty string channel, channel groups
+      - type: improvement
+        text: stop heartbeat loop if an error shows up.
+  - version: v4.12.0
+    date: 2017-10-05
+    changes:
+      - type: bug
+        text: fix worker thread unloading.
+      - type: feature
+        text: prevent concurrent modification of listeners.
+  - version: v4.11.0
+    date: 2017-10-05
+    changes:
+      - type: bug
+        text: fix retrofit unloading.
+  - version: v4.10.0
+    date: 2017-09-17
+    changes:
+      - type: feature
+        text: rework the loading of services to load the classes once.
+  - version: v4.9.1
+    date: 2017-08-14
+    changes:
+      - type: feature
+        text: patch-up to the deduping algorithm
+  - version: v4.9.0
+    date: 2017-08-14
+    changes:
+      - type: feature
+        text: Internal deduping mechanism when devices cross regions (dedupOnSubscribe).
+  - version: v4.8.0
+    date: 2017-08-08
+    changes:
+      - type: feature
+        text: Allow certificate pinning via setCertificatePinner on PNConfiguration
+      - type: feature
+        text: Allow disabling of heartbeat by setting the interval to 0.
+      - type: feature
+        text: GAE fixes.
+  - version: v4.7.0
+    date: 2017-07-20
+    changes:
+      - type: feature
+        text: Allow injection of httpLoggingInterceptor for extra logging monitoring..
+  - version: v4.6.5
+    date: 2017-06-28
+    changes:
+      - type: bug
+        text: adjust queue exceeded notifications to be greater or equal of.
+  - version: v4.6.4
+    date: 2017-06-10
+    changes:
+      - type: bug
+        text: gracefully handle disabled history
+  - version: v4.6.3
+    date: 2017-06-03
+    changes:
+      - type: feature
+        text: on interval events, pass hereNowRefresh to indicate if a here_now fetch is needed.
+  - version: v4.6.2
+    date: 2017-04-13
+    changes:
+      - type: feature
+        text: set a name for Subscription Manager Consumer Thead.
+  - version: v4.6.1
+    date: 2017-04-06
+    changes:
+      - type: bug
+        text: SDK crash in Android with Airplane Mode
+      - type: feature
+        text: add deltas on interval action.
+  - version: v4.6.0
+    date: 2017-03-14
+    changes:
+      - type: feature
+        text: To distinguish UUID's that were generated by our SDK, we appended `pn-` before the UUID to signal that it's a randomly generated UUID.
+      - type: feature
+        text: Allow the passing of OkHttp connection spec via setConnectionSpec
+      - type: improvement
+        text: Bump retrofit to 2.2.0
+  - version: v4.5.0
+    date: 2017-02-15
+    changes:
+      - type: feature
+        text: add .toString methods to all public facing models and POJOs
+  - version: v4.4.4
+    date: 2017-02-06
+    changes:
+      - type: feature
+        text: Add support to configure host name verifier.
+  - version: v4.4.3
+    date: 2017-02-02
+    changes:
+      - type: feature
+        text: Add support to configure custom certificate pinning via SSLSocketFactory and X509 configuration objects.
+  - version: v4.4.2
+    date: 2017-01-31
+    changes:
+      - type: bug
+        text: SDK was not sending the user metadata on Message Callback
+  - version: v4.4.1
+    date: 2017-01-25
+    changes:
+      - type: bug
+        text: SDK did not honor the exhaustion of reconnections, it will now disconnect once max retries happened
+  - version: v4.4.0
+    date: 2017-01-24
+    changes:
+      - type: improvement
+        text: Support for maximum reconnection attempts
+      - type: improvement
+        text: Populate affectedChannel and affectedChannelGroups
+      - type: improvement
+        text: Support for GAE
+      - type: improvement
+        text: Emit pnconnected when adding / removing channels.
+  - version: v4.3.1
+    date: 2016-12-22
+    changes:
+      - type: improvement
+        text: support for key-level grant.
+  - version: v4.3.0
+    date: 2016-12-14
+    changes:
+      - type: improvement
+        text: JSON parser is switched to GSON, new artifact on nexus as pubnub-gson
+      - type: improvement
+        text: GetState, setState return a JsonElement instead of a plain object.
+  - version: v4.2.3
+    date:
+    changes:
+      - type: improvement
+        text: Swapping out logger for SLF4J API and removing final methods
+  - version: v4.2.2
+    date: 2016-12-09
+    changes:
+      - type: improvement
+        text: remove final identifiers from the public facing API.
+  - version: v4.2.1
+    date: 2016-11-23
+    changes:
+      - type: improvement
+        text: include publisher UUID on incoming message
+      - type: improvement
+        text: allow to set custom TTL on a publish
+  - version: v4.2.0
+    date: 2016-10-25
+    changes:
+      - type: improvement
+        text: Signatures are generated for all requests with secret key to ensure secure transmission of data
+      - type: improvement
+        text: support for alerting of queue exceeded (PNRequestMessageCountExceededCategory)
+      - type: improvement
+        text: signaling to OkHttp to stop the queues on termination.
+  - version: v4.1.0
+    date: 2016-10-12
+    changes:
+      - type: improvement
+        text: destroy now correctly forces the producer thread to shut down; stop is now deprecated for disconnect
+      - type: improvement
+        text: support for sending instance id for presence detection (disabled by default)
+      - type: improvement
+        text: support for sending request id to burst cache (enabled by default)
+      - type: improvement
+        text: proxy support via the native proxy configurator class.
+  - version: v4.0.14
+    date: 2016-09-20
+    changes:
+      - type: improvement
+        text: on PAM error, populate the affectedChannel or affectedChannelGroup to signal which channels are failing
+  - version: v4.0.13
+    date: 2016-09-14
+    changes:
+      - type: improvement
+        text: populate jso with the error.
+  - version: v4.0.12
+    date: 2016-09-13
+    changes:
+      - type: bug
+        text: fixing parsing of origination payload within the psv2 envelope
+  - version: v4.0.11
+    date: 2016-09-09
+    changes:
+      - type: improvement
+        text: bumping build process for gradle 3 / merging documentation into the repo and test adjustments
+  - version: v4.0.10
+    date: 2016-09-07
+    changes:
+      - type: improvement
+        text: adding channel / channelGroup fields when a message / presence event comes in.
+  - version: v4.0.9
+    date: 2016-08-24
+    changes:
+      - type: improvement
+        text: adjustments for handling pn_other and decryption
+      - type: improvement
+        text: retrofit version bumps.
+  - version: v4.0.8
+    date: 2016-08-16
+    changes:
+      - type: feature
+        text: added unsubscribeAll, getSubscribedChannels, getSubscribedChannelGroups
+      - type: feature
+        text: SDK will establish secure connections by default
+      - type: feature
+        text: added support for exponential backoff reconnection policies
+  - version: v4.0.7
+    date: 2016-08-11
+    changes:
+      - type: improvement
+        text: reduce overlap on error handling when returning exceptions.
+  - version: v4.0.6
+    date: 2016-07-18
+    changes:
+      - type: improvement
+        text: send heartbeat presence value when subscribing
+  - version: v4.0.5
+    date: 2016-07-07
+    changes:
+      - type: improvement
+        text: unified retrofit handling to lower amount of instances and sync'd the state methods.
+  - version: v4.0.4
+    date: 2016-06-24
+    changes:
+      - type: bug
+        text: setting State for other UUID's is now supported.
+  - version: v4.0.3
+    date: 2016-06-15
+    changes:
+      - type: feature
+        text: fire() method and no-replication options.
+  - version: v4.0.2
+    date: 2016-06-15
+    changes:
+      - type: bug
+        text: fix to the version fetching.
+  - version: v4.0.1
+    date: 2016-06-06
+    changes:
+      - type: bug
+        text: adjustment of the subscribe loop to alleviate duplicate dispatches.
+  - version: v4.0.0
+    date: 2016-06-03
+    changes:
+      - type: bug
+        text: first GA.
+  - version: v4.0.0-beta4
+    date: 2016-06-03
+    changes:
+      - type: improvement
+        text: reconnects and minor adjustments.
+  - version: v4.0.0-beta3
+    date: 2016-06-03
+    changes:
+      - type: bug
+        text: fixing state not coming on the subscriber callback.
+      - type: bug
+        text: adjustments to URL encoding on publish, subscribe, set-state operations to avoid double encoding with retrofit.
+  - version: v4.0.0-beta2
+    date: 2016-06-03
+    changes:
+      - type: improvement
+        text: reworking of message queue.
+      - type: improvement
+        text: checkstyle, findbugs.
+      - type: improvement
+        text: reworking error notifications.
+  - version: v4.0.0-beta1
+    date: 2016-06-03
+    changes:
+      - type: improvement
+        text: initial beta1.
+features:
+  access:
+    - ACCESS-GRANT
+    - ACCESS-GRANT-MANAGE
+    - ACCESS-GRANT-DELETE
+    - ACCESS-SECRET-KEY-ALL-ACCESS
+    - ACCESS-GRANT-TOKEN
+    - ACCESS-PARSE-TOKEN
+    - ACCESS-SET-TOKEN
+    - ACCESS-REVOKE-TOKEN
+  channel-groups:
+    - CHANNEL-GROUPS-ADD-CHANNELS
+    - CHANNEL-GROUPS-REMOVE-CHANNELS
+    - CHANNEL-GROUPS-REMOVE-GROUPS
+    - CHANNEL-GROUPS-LIST-CHANNELS-IN-GROUP
+  notify:
+    - REQUEST-MESSAGE-COUNT-EXCEEDED
+  push:
+    - PUSH-ADD-DEVICE-TO-CHANNELS
+    - PUSH-REMOVE-DEVICE-FROM-CHANNELS
+    - PUSH-LIST-CHANNELS-FROM-DEVICE
+    - PUSH-REMOVE-DEVICE
+    - PUSH-TYPE-APNS
+    - PUSH-TYPE-APNS2
+    - PUSH-TYPE-FCM
+  presence:
+    - PRESENCE-HERE-NOW
+    - PRESENCE-WHERE-NOW
+    - PRESENCE-SET-STATE
+    - PRESENCE-GET-STATE
+    - PRESENCE-HEARTBEAT
+  publish:
+    - PUBLISH-STORE-FLAG
+    - PUBLISH-RAW-JSON
+    - PUBLISH-WITH-METADATA
+    - PUBLISH-GET
+    - PUBLISH-POST
+    - PUBLISH-ASYNC
+    - PUBLISH-FIRE
+    - PUBLISH-REPLICATION-FLAG
+    - PUBLISH-MESSAGE-TTL
+  storage:
+    - STORAGE-REVERSE
+    - STORAGE-INCLUDE-TIMETOKEN
+    - STORAGE-START-END
+    - STORAGE-COUNT
+    - STORAGE-FETCH-MESSAGES
+    - STORAGE-DELETE-MESSAGES
+    - STORAGE-MESSAGE-COUNT
+    - STORAGE-HISTORY-WITH-META
+    - STORAGE-FETCH-WITH-META
+    - STORAGE-FETCH-WITH-MESSAGE-ACTIONS
+  time:
+    - TIME-TIME
+  subscribe:
+    - SUBSCRIBE-CHANNELS
+    - SUBSCRIBE-CHANNEL-GROUPS
+    - SUBSCRIBE-PRESENCE-CHANNELS
+    - SUBSCRIBE-PRESENCE-CHANNELS-GROUPS
+    - SUBSCRIBE-WITH-TIMETOKEN
+    - SUBSCRIBE-WILDCARD
+    - SUBSCRIBE-FILTER-EXPRESSION
+    - SUBSCRIBE-PUBLISHER-UUID
+    - SUBSCRIBE-PUBSUB-V2
+    - SUBSCRIBE-SIGNAL-LISTENER
+    - SUBSCRIBE-MEMBERSHIP-LISTENER
+    - SUBSCRIBE-SPACE-LISTENER
+    - SUBSCRIBE-USER-LISTENER
+    - SUBSCRIBE-MESSAGE-ACTIONS-LISTENER
+  signal:
+    - SIGNAL-SEND
+  objects:
+    - OBJECTS-FILTERING
+    - OBJECTS-SORTING
+    - OBJECTS-GET-ALL-UUID-METADATA
+    - OBJECTS-GET-UUID-METADATA
+    - OBJECTS-SET-UUID-METADATA
+    - OBJECTS-REMOVE-UUID-METADATA
+    - OBJECTS-GET-ALL-CHANNEL-METADATA
+    - OBJECTS-GET-CHANNEL-METADATA
+    - OBJECTS-SET-CHANNEL-METADATA
+    - OBJECTS-REMOVE-CHANNEL-METADATA
+    - OBJECTS-GET-MEMBERSHIPS-V2
+    - OBJECTS-SET-MEMBERSHIPS-V2
+    - OBJECTS-REMOVE-MEMBERSHIPS-V2
+    - OBJECTS-GET-CHANNEL-MEMBERS-V2
+    - OBJECTS-SET-CHANNEL-MEMBERS-V2
+    - OBJECTS-REMOVE-CHANNEL-MEMBERS-V2
+    - OBJECTS-MANAGE-MEMBERSHIPS-V2
+    - OBJECTS-MANAGE-CHANNEL-MEMBERS-V2
+  files:
+    - FILES-DELETE-FILE
+    - FILES-DOWNLOAD-FILE
+    - FILES-GET-FILE-URL
+    - FILES-LIST-FILES
+    - FILES-SEND-FILE
+  unsubscribe:
+    - UNSUBSCRIBE-ALL
+    - UNSUBSCRIBE-SUPPRESS-LEAVE-EVENTS
+  message-actions:
+    - MESSAGE-ACTIONS-GET
+    - MESSAGE-ACTIONS-ADD
+    - MESSAGE-ACTIONS-REMOVE
+  others:
+    - TELEMETRY
+    - QUERY-PARAM
+    - PN-OTHER-PROCESSING
+    - CREATE-PUSH-PAYLOAD
+supported-platforms:
+  - version: PubNub Java SDK
+    platforms:
+      - Windows 10 (8u51 and above)
+      - Windows 8.x (Desktop)
+      - Windows 7 SP1
+      - Windows Vista SP2
+      - Windows Server 2008 R2 SP1 (64-bit)
+      - Windows Server 2012 and 2012 R2 (64-bit)
+      - Intel-based Mac running Mac OS X 10.8.3+, 10.9+
+      - Oracle Linux 5.5+
+      - Oracle Linux 6.x
+      - Oracle Linux 7.x (64-bit) (8u20 and above)
+      - Red Hat Enterprise Linux 5.5+, 6.x
+      - Red Hat Enterprise Linux 7.x (64-bit) (8u20 and above)
+      - Suse Linux Enterprise Server 10 SP2+, 11.x
+      - Suse Linux Enterprise Server 12.x (64-bit) (8u31 and above)
+      - Ubuntu Linux 12.04 LTS, 13.x
+      - Ubuntu Linux 14.x (8u25 and above)
+      - Ubuntu Linux 15.04 (8u45 and above)
+      - Ubuntu Linux 15.10 (8u65 and above)
+    editors:
+      - Java8+
+  - version: PubNub Android SDK
+    platforms:
+      - Android 2.3.1+
