@@ -1,16 +1,70 @@
 package com.pubnub.api.integration.pam
 
 import com.pubnub.api.PubNub
+import com.pubnub.api.SpaceId
+import com.pubnub.api.UserId
 import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.integration.BaseIntegrationTest
+import com.pubnub.api.models.consumer.access_manager.sum.SpaceIdGrant
+import com.pubnub.api.models.consumer.access_manager.sum.UserIdGrant
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant
 import com.pubnub.api.models.consumer.access_manager.v3.PNToken.PNResourcePermissions
-import org.junit.Assert
+import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class GrantTokenIntegrationTest : BaseIntegrationTest() {
     private val pubNubUnderTest: PubNub = server
+
+    @Test
+    fun happyPath_SUM() {
+        // given
+        pubNubUnderTest.configuration.logVerbosity = PNLogVerbosity.BODY
+        val expectedTTL = 1337
+        val expectedAuthorizedUserId = UserId("authorizedUser01")
+        val expectedSpaceIdValue = "mySpace01"
+        val expectedSpaceIdPattern = "mySpace.*"
+        val expectedUserIdValue = "myUser01"
+        val expectedUserIdPattern = "myUser.*"
+
+        // when
+        val grantTokenEndpoint = pubNubUnderTest.grantToken(
+            ttl = expectedTTL,
+            authorizedUserId = expectedAuthorizedUserId,
+            spaces = listOf(
+                SpaceIdGrant.name(spaceId = SpaceId(expectedSpaceIdValue), read = true, delete = true),
+                SpaceIdGrant.pattern(pattern = expectedSpaceIdPattern, write = true, manage = true)
+            ),
+            userIds = listOf(
+                UserIdGrant.id(userId = UserId(expectedUserIdValue), delete = true),
+                UserIdGrant.pattern(pattern = expectedUserIdPattern, update = true)
+            )
+        )
+
+        val token = grantTokenEndpoint.sync()!!.token
+
+        // then
+        val (_, _, ttl, _, resources, patterns) = pubNubUnderTest.parseToken(token)
+        assertEquals(expectedTTL.toLong(), ttl)
+
+        assertEquals(expectedTTL.toLong(), ttl)
+        assertEquals(
+            PNResourcePermissions(
+                read = true,
+                delete = true
+            ),
+            resources.channels[expectedSpaceIdValue]
+        )
+        assertEquals(
+            PNResourcePermissions(
+                write = true,
+                manage = true
+            ),
+            patterns.channels[expectedSpaceIdPattern]
+        )
+        assertEquals(PNResourcePermissions(delete = true), resources.uuids[expectedUserIdValue])
+        assertEquals(PNResourcePermissions(update = true), patterns.uuids[expectedUserIdPattern])
+    }
 
     @Test
     fun happyPath() {
@@ -41,26 +95,26 @@ class GrantTokenIntegrationTest : BaseIntegrationTest() {
 
         println(pubNubUnderTest.parseToken(token))
         // then
-        Assert.assertEquals(expectedTTL.toLong(), ttl)
-        Assert.assertEquals(
+        assertEquals(expectedTTL.toLong(), ttl)
+        assertEquals(
             PNResourcePermissions(
                 delete = true
             ),
             resources.channels[expectedChannelResourceName]
         )
-        Assert.assertEquals(
+        assertEquals(
             PNResourcePermissions(
                 read = true
             ),
             resources.channelGroups[expectedChannelGroupResourceId]
         )
-        Assert.assertEquals(
+        assertEquals(
             PNResourcePermissions(
                 write = true
             ),
             patterns.channels[expectedChannelPattern]
         )
-        Assert.assertEquals(
+        assertEquals(
             PNResourcePermissions(
                 manage = true
             ),

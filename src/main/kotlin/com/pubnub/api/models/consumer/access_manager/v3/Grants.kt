@@ -1,5 +1,8 @@
 package com.pubnub.api.models.consumer.access_manager.v3
 
+import com.pubnub.api.models.consumer.access_manager.sum.SpaceIdGrant
+import com.pubnub.api.models.consumer.access_manager.sum.UserIdGrant
+
 interface PNGrant {
     val read: Boolean
     val write: Boolean
@@ -37,7 +40,19 @@ internal data class PNChannelResourceGrant(
     override val get: Boolean = false,
     override val join: Boolean = false,
     override val update: Boolean = false
-) : PNResourceGrant(), ChannelGrant
+) : PNResourceGrant(), ChannelGrant, SpaceIdGrant {
+    constructor(spaceIdGrant: SpaceIdGrant) : this(
+        id = spaceIdGrant.id,
+        read = spaceIdGrant.read,
+        write = spaceIdGrant.write,
+        manage = spaceIdGrant.manage,
+        delete = spaceIdGrant.delete,
+        create = spaceIdGrant.create,
+        get = spaceIdGrant.get,
+        join = spaceIdGrant.join,
+        update = spaceIdGrant.update
+    )
+}
 
 internal data class PNChannelPatternGrant(
     override val id: String,
@@ -49,7 +64,19 @@ internal data class PNChannelPatternGrant(
     override val get: Boolean = false,
     override val join: Boolean = false,
     override val update: Boolean = false
-) : PNPatternGrant(), ChannelGrant
+) : PNPatternGrant(), ChannelGrant, SpaceIdGrant {
+    constructor(spaceIdGrant: SpaceIdGrant) : this(
+        id = spaceIdGrant.id,
+        read = spaceIdGrant.read,
+        write = spaceIdGrant.write,
+        manage = spaceIdGrant.manage,
+        delete = spaceIdGrant.delete,
+        create = spaceIdGrant.create,
+        get = spaceIdGrant.get,
+        join = spaceIdGrant.join,
+        update = spaceIdGrant.update
+    )
+}
 
 internal data class PNChannelGroupResourceGrant(
     override val id: String,
@@ -68,11 +95,25 @@ internal data class PNUUIDResourceGrant(
     override val get: Boolean = false,
     override val update: Boolean = false,
     override val delete: Boolean = false
-) : PNResourceGrant(), UUIDGrant
+) : PNResourceGrant(), UUIDGrant, UserIdGrant {
+    constructor(userIdGrant: UserIdGrant) : this(
+        id = userIdGrant.id,
+        get = userIdGrant.get,
+        update = userIdGrant.update,
+        delete = userIdGrant.delete
+    )
+}
 
 internal data class PNUUIDPatternGrant(
     override val id: String,
     override val get: Boolean = false,
     override val update: Boolean = false,
     override val delete: Boolean = false
-) : PNPatternGrant(), UUIDGrant
+) : PNPatternGrant(), UUIDGrant, UserIdGrant {
+    constructor(userIdGrant: UserIdGrant) : this(
+        id = userIdGrant.id,
+        get = userIdGrant.get,
+        update = userIdGrant.update,
+        delete = userIdGrant.delete
+    )
+}

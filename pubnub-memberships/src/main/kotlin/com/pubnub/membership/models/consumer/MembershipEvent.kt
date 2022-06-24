@@ -1,11 +1,11 @@
 package com.pubnub.membership.models.consumer
 
+import com.pubnub.api.SpaceId
 import com.pubnub.api.UserId
 import com.pubnub.api.models.consumer.pubsub.objects.PNDeleteMembershipEventMessage
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
 import com.pubnub.api.models.consumer.pubsub.objects.PNSetMembershipEventMessage
 import com.pubnub.space.models.consumer.Space
-import com.pubnub.space.models.consumer.SpaceId
 import com.pubnub.user.models.consumer.User
 
 sealed class MembershipEvent {

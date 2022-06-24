@@ -39,7 +39,7 @@ class GrantToken(
         }
     }
 
-    override fun doWork(queryParams: HashMap<String, String>): Call<GrantTokenResponse> {
+    public override fun doWork(queryParams: HashMap<String, String>): Call<GrantTokenResponse> {
         val requestBody: GrantTokenRequestBody = GrantTokenRequestBody.of(
             ttl = ttl,
             channels = channels,

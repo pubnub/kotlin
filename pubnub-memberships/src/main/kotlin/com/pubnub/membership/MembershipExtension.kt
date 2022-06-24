@@ -1,6 +1,7 @@
 package com.pubnub.membership
 
 import com.pubnub.api.PubNub
+import com.pubnub.api.SpaceId
 import com.pubnub.api.UserId
 import com.pubnub.api.callbacks.DisposableListener
 import com.pubnub.api.callbacks.SubscribeCallback
@@ -32,7 +33,6 @@ import com.pubnub.membership.models.consumer.toSpaceFetchMembershipResult
 import com.pubnub.membership.models.consumer.toSpaceMembershipResult
 import com.pubnub.membership.models.consumer.toUserFetchMembershipsResult
 import com.pubnub.membership.models.consumer.toUserMembershipsResult
-import com.pubnub.space.models.consumer.SpaceId
 
 /**
  * Add memberships of user i.e. assign spaces to user, add user to spaces
@@ -243,6 +243,7 @@ fun PubNub.removeMemberships(
         it, PNOperationType.MembershipOperation
     ) { pnChannelMembershipArrayResult -> pnChannelMembershipArrayResult.toUserMembershipsResult() }
 }
+
 /**
  * Remove memberships of user
  *

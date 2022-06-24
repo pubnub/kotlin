@@ -31,8 +31,8 @@ import com.pubnub.api.endpoints.objects.channel.GetAllChannelMetadata
 import com.pubnub.api.endpoints.objects.channel.GetChannelMetadata
 import com.pubnub.api.endpoints.objects.channel.RemoveChannelMetadata
 import com.pubnub.api.endpoints.objects.channel.SetChannelMetadata
-import com.pubnub.api.endpoints.objects.internal.IncludeQueryParam
 import com.pubnub.api.endpoints.objects.internal.CollectionQueryParameters
+import com.pubnub.api.endpoints.objects.internal.IncludeQueryParam
 import com.pubnub.api.endpoints.objects.member.GetChannelMembers
 import com.pubnub.api.endpoints.objects.member.ManageChannelMembers
 import com.pubnub.api.endpoints.objects.membership.GetMemberships
@@ -63,6 +63,10 @@ import com.pubnub.api.managers.TelemetryManager
 import com.pubnub.api.managers.TokenManager
 import com.pubnub.api.managers.TokenParser
 import com.pubnub.api.models.consumer.PNBoundedPage
+import com.pubnub.api.models.consumer.access_manager.sum.SpaceIdGrant
+import com.pubnub.api.models.consumer.access_manager.sum.UserIdGrant
+import com.pubnub.api.models.consumer.access_manager.sum.toChannelGrants
+import com.pubnub.api.models.consumer.access_manager.sum.toUuidGrants
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant
 import com.pubnub.api.models.consumer.access_manager.v3.PNToken
@@ -946,6 +950,40 @@ class PubNub(val configuration: PNConfiguration) {
             channels = channels,
             channelGroups = channelGroups,
             uuids = uuids
+        )
+    }
+
+    /**
+     * This function generates a grant token for PubNub Access Manager (PAM).
+     *
+     * Permissions can be applied to any of the two type of resources:
+     * - spaces
+     * - userIds
+     *
+     * Each type of resource have different set of permissions. To know what's possible for each of them
+     * check SpaceIdGrant and UserIdGrant.
+     *
+     * @param ttl Time in minutes for which granted permissions are valid.
+     * @param meta Additional metadata
+     * @param authorizedUserId Single userId which is authorized to use the token to make API requests to PubNub
+     * @param spaces List of all channel grants
+     * @param userIds List of all uuid grants
+     */
+    fun grantToken(
+        ttl: Int,
+        meta: Any? = null,
+        authorizedUserId: UserId? = null,
+        spaces: List<SpaceIdGrant> = emptyList(),
+        userIds: List<UserIdGrant> = emptyList()
+    ): GrantToken {
+        return GrantToken(
+            pubnub = this,
+            ttl = ttl,
+            meta = meta,
+            authorizedUUID = authorizedUserId?.value,
+            channels = spaces.map { it.toChannelGrants() },
+            channelGroups = emptyList(),
+            uuids = userIds.map { it.toUuidGrants() }
         )
     }
 
