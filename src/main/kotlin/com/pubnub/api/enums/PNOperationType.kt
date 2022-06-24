@@ -1,6 +1,6 @@
 package com.pubnub.api.enums
 
-sealed class PNOperationType(open val queryParam: String? = null) {
+sealed class PNOperationType(open override val queryParam: String? = null) : com.pubnub.core.OperationType {
 
     open class PublishOperation : PNOperationType("pub")
     open class HistoryOperation : PNOperationType("hist")

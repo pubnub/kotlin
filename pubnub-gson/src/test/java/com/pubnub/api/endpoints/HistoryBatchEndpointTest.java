@@ -10,6 +10,7 @@ import com.pubnub.api.managers.token_manager.TokenManager;
 import com.pubnub.api.models.server.FetchMessagesEnvelope;
 import com.pubnub.api.services.HistoryService;
 import okhttp3.Request;
+import okio.Timeout;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -389,6 +390,11 @@ public class HistoryBatchEndpointTest {
         @Override
         public Request request() {
             return null;
+        }
+
+        @Override
+        public Timeout timeout() {
+            return Timeout.NONE;
         }
     }
 }

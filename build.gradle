@@ -15,7 +15,7 @@ plugins {
 allprojects {
     apply plugin: "com.vanniktech.maven.publish"
 
-    if (project.name != "pubnub-kotlin-bom") {
+    if (project.name != "pubnub-kotlin-bom" && project.name != "pubnub-gson") {
         apply plugin: 'org.unbroken-dome.test-sets'
         apply plugin: 'org.jetbrains.kotlin.jvm'
         apply plugin: "org.jlleitschuh.gradle.ktlint"
@@ -79,6 +79,8 @@ dependencies {
 
     implementation "com.squareup.retrofit2:retrofit:2.9.0"
     implementation "com.squareup.retrofit2:converter-gson:2.9.0"
+    implementation "com.squareup.okhttp3:okhttp:4.10.0"
+    api project(":pubnub-core")
 
     implementation 'org.json:json:20230227'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.2'

@@ -1,6 +1,6 @@
 package com.pubnub.api.models.server.objects_api
 
-internal data class UUIDMetadataInput(
+data class UUIDMetadataInput(
     val name: String? = null,
     val externalId: String? = null,
     val profileUrl: String? = null,

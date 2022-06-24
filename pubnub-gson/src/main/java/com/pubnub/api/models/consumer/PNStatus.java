@@ -1,7 +1,6 @@
 package com.pubnub.api.models.consumer;
 
 import com.pubnub.api.endpoints.remoteaction.RemoteAction;
-import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.enums.PNStatusCategory;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -23,7 +22,7 @@ public class PNStatus {
     // boolean automaticallyRetry;
 
     private int statusCode;
-    private PNOperationType operation;
+    private com.pubnub.core.OperationType operation;
 
     private boolean tlsEnabled;
 

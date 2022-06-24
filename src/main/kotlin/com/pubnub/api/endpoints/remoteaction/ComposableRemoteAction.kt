@@ -1,18 +1,17 @@
 package com.pubnub.api.endpoints.remoteaction
 
 import com.pubnub.api.PubNubException
-import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.models.consumer.PNStatus
 
 class ComposableRemoteAction<T, U>(
-    private val remoteAction: ExtendedRemoteAction<T>,
-    private val createNextRemoteAction: (T) -> ExtendedRemoteAction<U>,
+    private val remoteAction: RemoteAction<T>,
+    private val createNextRemoteAction: (T) -> RemoteAction<U>,
     private var checkpoint: Boolean
-) : ExtendedRemoteAction<U> {
-    private var nextRemoteAction: ExtendedRemoteAction<U>? = null
+) : RemoteAction<U> {
+    private var nextRemoteAction: RemoteAction<U>? = null
     private var isCancelled = false
-    fun <Y> then(factory: (U) -> ExtendedRemoteAction<Y>): ComposableRemoteAction<U, Y> {
+    fun <Y> then(factory: (U) -> RemoteAction<Y>): ComposableRemoteAction<U, Y> {
         return ComposableRemoteAction(this, factory, false)
     }
 
@@ -85,13 +84,13 @@ class ComposableRemoteAction<T, U>(
         }
     }
 
-    override fun operationType(): PNOperationType {
+    override fun operationType(): com.pubnub.core.OperationType {
         return nextRemoteAction?.operationType() ?: remoteAction.operationType()
     }
 
-    class ComposableBuilder<T>(private val remoteAction: ExtendedRemoteAction<T>) {
+    class ComposableBuilder<T>(private val remoteAction: RemoteAction<T>) {
         private var checkpoint = false
-        fun <U> then(factory: (T) -> ExtendedRemoteAction<U>): ComposableRemoteAction<T, U> {
+        fun <U> then(factory: (T) -> RemoteAction<U>): ComposableRemoteAction<T, U> {
             return ComposableRemoteAction(remoteAction, factory, checkpoint)
         }
 
@@ -102,7 +101,7 @@ class ComposableRemoteAction<T, U>(
     }
 
     companion object {
-        fun <T> firstDo(remoteAction: ExtendedRemoteAction<T>): ComposableBuilder<T> {
+        fun <T> firstDo(remoteAction: RemoteAction<T>): ComposableBuilder<T> {
             return ComposableBuilder(remoteAction)
         }
     }

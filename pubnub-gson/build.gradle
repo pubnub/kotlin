@@ -46,9 +46,12 @@ configurations {
 }
 
 dependencies {
-    implementation group: 'com.squareup.retrofit2', name: 'retrofit', version: '2.6.2'
+    implementation group: 'com.squareup.retrofit2', name: 'retrofit', version: '2.9.0'
     api group: 'com.squareup.okhttp3', name: 'logging-interceptor', version: '4.10.0'
+    implementation "com.squareup.okhttp3:okhttp:4.10.0"
 
+
+    api project(":pubnub-core")
     implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.28'
 
     // gson
@@ -79,7 +82,6 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter:5.8.2'
     testImplementation 'org.junit.vintage:junit-vintage-engine:5.8.2'
 }
-
 jacoco {
     toolVersion = "0.8.2"
 }

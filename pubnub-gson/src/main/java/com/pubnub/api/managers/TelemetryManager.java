@@ -54,9 +54,9 @@ public class TelemetryManager {
         return operationLatencies;
     }
 
-    public synchronized void storeLatency(long latency, PNOperationType type) {
+    public synchronized void storeLatency(long latency, com.pubnub.core.OperationType type) {
         if (type != PNOperationType.PNSubscribeOperation && latency > 0) {
-            String endpointName = TelemetryManager.endpointNameForOperation(type);
+            String endpointName = type.getQueryParam();
             if (endpointName != null) {
                 double storeDate = (new Date()).getTime() / (double) TIMESTAMP_DIVIDER;
 
@@ -123,83 +123,4 @@ public class TelemetryManager {
         return totalLatency / endpointLatencies.size();
     }
 
-    private static String endpointNameForOperation(PNOperationType type) {
-        String endpoint;
-        switch (type) {
-            case PNPublishOperation:
-                endpoint = "pub";
-                break;
-            case PNHistoryOperation:
-            case PNFetchMessagesOperation:
-            case PNDeleteMessagesOperation:
-                endpoint = "hist";
-                break;
-            case PNUnsubscribeOperation:
-            case PNWhereNowOperation:
-            case PNHereNowOperation:
-            case PNHeartbeatOperation:
-            case PNSetStateOperation:
-            case PNGetState:
-                endpoint = "pres";
-                break;
-            case PNAddChannelsToGroupOperation:
-            case PNRemoveChannelsFromGroupOperation:
-            case PNChannelGroupsOperation:
-            case PNRemoveGroupOperation:
-            case PNChannelsForGroupOperation:
-                endpoint = "cg";
-                break;
-            case PNPushNotificationEnabledChannelsOperation:
-            case PNAddPushNotificationsOnChannelsOperation:
-            case PNRemovePushNotificationsFromChannelsOperation:
-            case PNRemoveAllPushNotificationsOperation:
-                endpoint = "push";
-                break;
-            case PNAccessManagerAudit:
-            case PNAccessManagerGrant:
-                endpoint = "pam";
-                break;
-            case PNMessageCountOperation:
-                endpoint = "mc";
-                break;
-            case PNSignalOperation:
-                endpoint = "sig";
-                break;
-            case PNSetUuidMetadataOperation:
-            case PNGetUuidMetadataOperation:
-            case PNGetAllUuidMetadataOperation:
-            case PNRemoveUuidMetadataOperation:
-            case PNSetChannelMetadataOperation:
-            case PNGetChannelMetadataOperation:
-            case PNGetAllChannelsMetadataOperation:
-            case PNRemoveChannelMetadataOperation:
-            case PNSetMembershipsOperation:
-            case PNGetMembershipsOperation:
-            case PNRemoveMembershipsOperation:
-            case PNManageMembershipsOperation:
-            case PNSetChannelMembersOperation:
-            case PNGetChannelMembersOperation:
-            case PNRemoveChannelMembersOperation:
-            case PNManageChannelMembersOperation:
-                endpoint = "obj";
-                break;
-            case PNAccessManagerGrantToken:
-            case PNAccessManagerRevokeToken:
-                endpoint = "pamv3";
-                break;
-            case PNAddMessageAction:
-            case PNGetMessageActions:
-            case PNDeleteMessageAction:
-                endpoint = "msga";
-                break;
-            case PNFileAction:
-                endpoint = "file";
-                break;
-            default:
-                endpoint = "time";
-                break;
-        }
-
-        return endpoint;
-    }
 }

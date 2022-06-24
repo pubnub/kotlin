@@ -19,7 +19,7 @@ import retrofit2.http.PATCH
 import retrofit2.http.Path
 import retrofit2.http.QueryMap
 
-internal interface ObjectsService {
+interface ObjectsService {
     @GET("v2/objects/{subKey}/uuids")
     fun getAllUUIDMetadata(
         @Path("subKey") subKey: String,

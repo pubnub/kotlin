@@ -87,11 +87,12 @@ import com.pubnub.api.vendor.Base64
 import com.pubnub.api.vendor.Crypto
 import com.pubnub.api.vendor.FileEncryptionUtil.decrypt
 import com.pubnub.api.vendor.FileEncryptionUtil.encrypt
+import com.pubnub.core.UserId
 import java.io.InputStream
 import java.util.Date
 import java.util.UUID
 
-class PubNub(val configuration: PNConfiguration) {
+class PubNub(override val configuration: PNConfiguration) : ManagerManager {
 
     companion object {
         private const val TIMESTAMP_DIVIDER = 1000
@@ -109,14 +110,14 @@ class PubNub(val configuration: PNConfiguration) {
     /**
      * Manage and parse JSON
      */
-    val mapper = MapperManager()
+    override val mapper = MapperManager()
 
     private val basePathManager = BasePathManager(configuration)
-    internal val retrofitManager = RetrofitManager(this)
+    override val retrofitManager = RetrofitManager(this)
     internal val publishSequenceManager = PublishSequenceManager(MAX_SEQUENCE)
-    internal val telemetryManager = TelemetryManager()
+    override val telemetryManager = TelemetryManager()
     internal val subscriptionManager = SubscriptionManager(this)
-    internal val tokenManager: TokenManager = TokenManager()
+    override val tokenManager: TokenManager = TokenManager()
     private val tokenParser: TokenParser = TokenParser()
 
     //endregion

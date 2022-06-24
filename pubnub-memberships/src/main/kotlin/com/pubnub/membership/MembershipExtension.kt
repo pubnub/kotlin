@@ -2,12 +2,11 @@ package com.pubnub.membership
 
 import com.pubnub.api.PubNub
 import com.pubnub.api.SpaceId
-import com.pubnub.api.UserId
 import com.pubnub.api.callbacks.DisposableListener
 import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.endpoints.remoteaction.ComposableRemoteAction.Companion.firstDo
-import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction.Companion.map
+import com.pubnub.api.endpoints.remoteaction.RemoteAction
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.objects.PNMemberKey
@@ -16,6 +15,7 @@ import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.PNSortKey
 import com.pubnub.api.models.consumer.objects.ResultSortKey
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
+import com.pubnub.core.UserId
 import com.pubnub.membership.models.consumer.Membership
 import com.pubnub.membership.models.consumer.MembershipEvent
 import com.pubnub.membership.models.consumer.MembershipsResult
@@ -44,7 +44,7 @@ import com.pubnub.membership.models.consumer.toUserMembershipsResult
 fun PubNub.addMemberships(
     userId: UserId = configuration.userId,
     partialMembershipsWithSpace: List<Membership.PartialWithSpace>,
-): ExtendedRemoteAction<MembershipsStatusResult> = firstDo(
+): RemoteAction<MembershipsStatusResult> = firstDo(
     setMemberships(
         channels = partialMembershipsWithSpace.toPNChannelMembershipPartialList(),
         uuid = userId.value,
@@ -66,7 +66,7 @@ fun PubNub.addMemberships(
 fun PubNub.addMemberships(
     userId: UserId = configuration.userId,
     vararg partialMembershipsWithSpace: Membership.PartialWithSpace
-): ExtendedRemoteAction<MembershipsStatusResult> = addMemberships(
+): RemoteAction<MembershipsStatusResult> = addMemberships(
     userId = userId, partialMembershipsWithSpace = partialMembershipsWithSpace.toList()
 )
 
@@ -80,7 +80,7 @@ fun PubNub.addMemberships(
 fun PubNub.addMemberships(
     spaceId: SpaceId,
     partialMembershipsWithUser: List<Membership.PartialWithUser>
-): ExtendedRemoteAction<MembershipsStatusResult> = firstDo(
+): RemoteAction<MembershipsStatusResult> = firstDo(
     setChannelMembers(
         channel = spaceId.value, uuids = partialMembershipsWithUser.toPNMemberPartialList(), limit = 0
     )
@@ -100,7 +100,7 @@ fun PubNub.addMemberships(
 fun PubNub.addMemberships(
     spaceId: SpaceId,
     vararg partialMembershipsWithUser: Membership.PartialWithUser
-): ExtendedRemoteAction<MembershipsStatusResult> = addMemberships(
+): RemoteAction<MembershipsStatusResult> = addMemberships(
     spaceId = spaceId, partialMembershipsWithUser = partialMembershipsWithUser.toList()
 )
 
@@ -134,7 +134,7 @@ fun PubNub.fetchMemberships(
     includeCount: Boolean = false,
     includeCustom: Boolean = false,
     includeSpaceDetails: SpaceDetailsLevel? = null
-): ExtendedRemoteAction<MembershipsResult?> = firstDo(
+): RemoteAction<MembershipsResult?> = firstDo(
     getMemberships(
         uuid = userId.value,
         limit = limit,
@@ -195,7 +195,7 @@ fun PubNub.fetchMemberships(
     includeCount: Boolean = false,
     includeCustom: Boolean = false,
     includeUserDetails: UserDetailsLevel? = null
-): ExtendedRemoteAction<MembershipsResult?> = firstDo(
+): RemoteAction<MembershipsResult?> = firstDo(
     getChannelMembers(
         channel = spaceId.value,
         limit = limit,
@@ -234,7 +234,7 @@ private fun ResultSortKey<SpaceMembershipResultKey>.toPNMemberSortKey(): PNSortK
 fun PubNub.removeMemberships(
     userId: UserId = configuration.userId,
     spaceIds: List<SpaceId>,
-): ExtendedRemoteAction<MembershipsStatusResult> = firstDo(
+): RemoteAction<MembershipsStatusResult> = firstDo(
     removeMemberships(
         channels = spaceIds.map { it.value }, uuid = userId.value, limit = 0
     )
@@ -264,7 +264,7 @@ fun PubNub.removeMemberships(
 fun PubNub.removeMemberships(
     spaceId: SpaceId,
     userIds: List<UserId>,
-): ExtendedRemoteAction<MembershipsStatusResult> = firstDo(
+): RemoteAction<MembershipsStatusResult> = firstDo(
     removeChannelMembers(
         channel = spaceId.value, uuids = userIds.map { it.value }, limit = 0
     )
@@ -295,7 +295,7 @@ fun PubNub.removeMemberships(
 fun PubNub.updateMemberships(
     userId: UserId = configuration.userId,
     partialMembershipsWithSpace: List<Membership.PartialWithSpace>,
-): ExtendedRemoteAction<MembershipsStatusResult> = firstDo(
+): RemoteAction<MembershipsStatusResult> = firstDo(
     setMemberships(
         channels = partialMembershipsWithSpace.toPNChannelMembershipPartialList(), uuid = userId.value, limit = 0
     )
@@ -315,7 +315,7 @@ fun PubNub.updateMemberships(
 fun PubNub.updateMemberships(
     userId: UserId = configuration.userId,
     vararg partialMembershipsWithSpace: Membership.PartialWithSpace
-): ExtendedRemoteAction<MembershipsStatusResult> = updateMemberships(
+): RemoteAction<MembershipsStatusResult> = updateMemberships(
     userId = userId, partialMembershipsWithSpace = partialMembershipsWithSpace.toList()
 )
 
@@ -329,7 +329,7 @@ fun PubNub.updateMemberships(
 fun PubNub.updateMemberships(
     spaceId: SpaceId,
     partialMembershipsWithUser: List<Membership.PartialWithUser>
-): ExtendedRemoteAction<MembershipsStatusResult> = firstDo(
+): RemoteAction<MembershipsStatusResult> = firstDo(
     setChannelMembers(
         channel = spaceId.value,
         uuids = partialMembershipsWithUser.toPNMemberPartialList(),
@@ -351,7 +351,7 @@ fun PubNub.updateMemberships(
 fun PubNub.updateMemberships(
     spaceId: SpaceId,
     vararg partialMembershipsWithUser: Membership.PartialWithUser
-): ExtendedRemoteAction<MembershipsStatusResult> = updateMemberships(
+): RemoteAction<MembershipsStatusResult> = updateMemberships(
     spaceId = spaceId, partialMembershipsWithUser = partialMembershipsWithUser.toList()
 )
 

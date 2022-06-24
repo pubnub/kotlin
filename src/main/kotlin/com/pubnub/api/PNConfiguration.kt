@@ -3,6 +3,8 @@ package com.pubnub.api
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions
 import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.enums.PNReconnectionPolicy
+import com.pubnub.core.CoreConfiguration
+import com.pubnub.core.UserId
 import okhttp3.Authenticator
 import okhttp3.CertificatePinner
 import okhttp3.ConnectionSpec
@@ -24,12 +26,13 @@ import javax.net.ssl.X509ExtendedTrustManager
 open class PNConfiguration(
     userId: UserId,
     val enableSubscribeBeta: Boolean = false
-) {
+) : CoreConfiguration {
 
     @Deprecated(
         replaceWith = ReplaceWith(
             "PNConfiguration(userId = UserId(uuid), enableSubscribeBeta = enableSubscribeBeta)",
-            "com.pubnub.api.PNConfiguration"
+            "com.pubnub.api.PNConfiguration",
+            "com.pubnub.core.UserId"
         ),
         level = DeprecationLevel.WARNING,
         message = "Use PNConfiguration(UserId, Boolean) instead"
@@ -332,4 +335,7 @@ open class PNConfiguration(
 
     @Deprecated("To be used by components", level = DeprecationLevel.WARNING)
     fun addPnsdkSuffix(nameToSuffixes: Map<String, String>) = pnsdkSuffixes.putAll(nameToSuffixes)
+    override fun subKey(): String = subscribeKey
+
+    override fun pubKey(): String = publishKey
 }

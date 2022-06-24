@@ -2,7 +2,7 @@ package com.pubnub.api.legacy.endpoints.remoteaction
 
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
-import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
+import com.pubnub.api.endpoints.remoteaction.RemoteAction
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.models.consumer.PNStatus
@@ -13,7 +13,7 @@ import java.util.concurrent.atomic.AtomicInteger
 class TestRemoteAction<Output> internal constructor(
     private val output: Output?,
     private val failingStrategy: FailingStrategy
-) : ExtendedRemoteAction<Output> {
+) : RemoteAction<Output> {
     private val executor: Executor = Executors.newSingleThreadExecutor()
     private val asyncCallmeter = AtomicInteger(0)
     private val callsToFail: AtomicInteger

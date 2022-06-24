@@ -1,6 +1,7 @@
 package com.pubnub.api.endpoints;
 
 import com.google.gson.JsonElement;
+import com.pubnub.api.Endpoint;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.PubNubUtil;

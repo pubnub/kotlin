@@ -4,6 +4,7 @@ package com.pubnub.api;
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions;
 import com.pubnub.api.enums.PNLogVerbosity;
 import com.pubnub.api.enums.PNReconnectionPolicy;
+import com.pubnub.core.CoreConfiguration;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -29,7 +30,7 @@ import static com.pubnub.api.builder.PubNubErrorBuilder.PNERROBJ_UUID_NULL_OR_EM
 @Accessors(chain = true)
 
 @Log
-public class PNConfiguration {
+public class PNConfiguration implements CoreConfiguration {
     private static final int DEFAULT_DEDUPE_SIZE = 100;
     private static final int PRESENCE_TIMEOUT = 300;
     private static final int MINIMUM_PRESENCE_TIMEOUT = 20;
@@ -311,4 +312,15 @@ public class PNConfiguration {
         return validTimeout;
     }
 
+    @NotNull
+    @Override
+    public String subKey() {
+        return subscribeKey;
+    }
+
+    @NotNull
+    @Override
+    public String pubKey() {
+        return publishKey;
+    }
 }

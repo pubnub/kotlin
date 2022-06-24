@@ -1,6 +1,7 @@
 package com.pubnub.api;
 
 import com.google.gson.JsonElement;
+import com.pubnub.core.CorePubNubException;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,7 +10,7 @@ import retrofit2.Call;
 
 @Getter
 @ToString
-public class PubNubException extends Exception {
+public class PubNubException extends CorePubNubException {
     private String errormsg;
     private PubNubError pubnubError;
     private JsonElement jso;

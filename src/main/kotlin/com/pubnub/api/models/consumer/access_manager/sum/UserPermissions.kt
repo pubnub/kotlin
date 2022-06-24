@@ -2,13 +2,13 @@ package com.pubnub.api.models.consumer.access_manager.sum
 
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
-import com.pubnub.api.UserId
 import com.pubnub.api.models.consumer.access_manager.v3.PNGrant
 import com.pubnub.api.models.consumer.access_manager.v3.PNUUIDPatternGrant
 import com.pubnub.api.models.consumer.access_manager.v3.PNUUIDResourceGrant
 import com.pubnub.api.models.consumer.access_manager.v3.PNUserPatternPermissionsGrant
 import com.pubnub.api.models.consumer.access_manager.v3.PNUserPermissionsGrant
 import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant
+import com.pubnub.core.UserId
 
 interface UserPermissions : PNGrant {
     companion object {

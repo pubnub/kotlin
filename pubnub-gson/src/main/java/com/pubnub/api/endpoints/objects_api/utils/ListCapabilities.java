@@ -1,6 +1,6 @@
 package com.pubnub.api.endpoints.objects_api.utils;
 
-import com.pubnub.api.endpoints.Endpoint;
+import com.pubnub.api.Endpoint;
 import com.pubnub.api.endpoints.objects_api.utils.Filter.FilterAware;
 import com.pubnub.api.endpoints.objects_api.utils.Filter.HavingFilter;
 import com.pubnub.api.endpoints.objects_api.utils.Limiter.HavingLimiter;

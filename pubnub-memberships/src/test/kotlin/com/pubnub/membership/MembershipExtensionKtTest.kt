@@ -3,18 +3,18 @@ package com.pubnub.membership
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
 import com.pubnub.api.SpaceId
-import com.pubnub.api.UserId
 import com.pubnub.api.endpoints.objects.member.GetChannelMembers
 import com.pubnub.api.endpoints.objects.member.ManageChannelMembers
 import com.pubnub.api.endpoints.objects.membership.GetMemberships
 import com.pubnub.api.endpoints.objects.membership.ManageMemberships
-import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
+import com.pubnub.api.endpoints.remoteaction.RemoteAction
 import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata
 import com.pubnub.api.models.consumer.objects.member.PNMember
 import com.pubnub.api.models.consumer.objects.member.PNMemberArrayResult
 import com.pubnub.api.models.consumer.objects.membership.PNChannelMembership
 import com.pubnub.api.models.consumer.objects.membership.PNChannelMembershipArrayResult
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
+import com.pubnub.core.UserId
 import com.pubnub.membership.models.consumer.Membership
 import com.pubnub.membership.models.consumer.MembershipsResult
 import com.pubnub.membership.models.consumer.MembershipsStatusResult
@@ -90,7 +90,7 @@ internal class MembershipExtensionKtTest {
         } returns getMembershipsEndpoint
         every { getMembershipsEndpoint.sync() } returns pnChannelMembershipArrayResult
 
-        val fetchMembershipOfUserEndpoint: ExtendedRemoteAction<MembershipsResult?> =
+        val fetchMembershipOfUserEndpoint: RemoteAction<MembershipsResult?> =
             pubNub.fetchMemberships(userId = USER_ID)
         val fetchMembershipsResult = fetchMembershipOfUserEndpoint.sync()
 
@@ -114,7 +114,7 @@ internal class MembershipExtensionKtTest {
         } returns getChannelMembersEndpoint
         every { getChannelMembersEndpoint.sync() } returns pnMemberArrayResult
 
-        val fetchMembershipOfSpaceEndpoint: ExtendedRemoteAction<MembershipsResult?> =
+        val fetchMembershipOfSpaceEndpoint: RemoteAction<MembershipsResult?> =
             pubNub.fetchMemberships(spaceId = SPACE_ID)
         val fetchMembershipsResult = fetchMembershipOfSpaceEndpoint.sync()
 
@@ -141,7 +141,7 @@ internal class MembershipExtensionKtTest {
 
         val partialMembershipsWithSpace =
             listOf(Membership.Partial(SPACE_ID, SPACE_CUSTOM), Membership.Partial(SPACE_ID_02, SPACE_CUSTOM))
-        val addMembershipOfUserEndpoint: ExtendedRemoteAction<MembershipsStatusResult> =
+        val addMembershipOfUserEndpoint: RemoteAction<MembershipsStatusResult> =
             pubNub.addMemberships(partialMembershipsWithSpace = partialMembershipsWithSpace, userId = USER_ID)
         val membershipsResult = addMembershipOfUserEndpoint.sync()
 
@@ -168,7 +168,7 @@ internal class MembershipExtensionKtTest {
 
         val partialMembershipsWithUser =
             listOf(Membership.Partial(USER_ID, USER_CUSTOM), Membership.Partial(USER_ID_02, USER_CUSTOM))
-        val addMembershipOfSpaceEndpoint: ExtendedRemoteAction<MembershipsStatusResult> =
+        val addMembershipOfSpaceEndpoint: RemoteAction<MembershipsStatusResult> =
             pubNub.addMemberships(spaceId = SPACE_ID, partialMembershipsWithUser = partialMembershipsWithUser)
         val membershipsResult = addMembershipOfSpaceEndpoint.sync()
 
@@ -195,7 +195,7 @@ internal class MembershipExtensionKtTest {
         every { manageMembershipsEndpoint.sync() } returns pnChannelMembershipArrayResult
 
         val spaceIdList = listOf(SPACE_ID, SPACE_ID_02)
-        val removeMembershipOfUserEndpoint: ExtendedRemoteAction<MembershipsStatusResult> =
+        val removeMembershipOfUserEndpoint: RemoteAction<MembershipsStatusResult> =
             pubNub.removeMemberships(spaceIds = spaceIdList, userId = USER_ID)
         val membershipsResult = removeMembershipOfUserEndpoint.sync()
 
@@ -222,7 +222,7 @@ internal class MembershipExtensionKtTest {
         every { manageChannelMembersEndpoint.sync() } returns pnMemberArrayResult
 
         val userIdList = listOf(USER_ID, USER_ID_02)
-        val removeMembershipOfSpaceEndpoint: ExtendedRemoteAction<MembershipsStatusResult> =
+        val removeMembershipOfSpaceEndpoint: RemoteAction<MembershipsStatusResult> =
             pubNub.removeMemberships(spaceId = SPACE_ID, userIdList)
         val membershipsResult = removeMembershipOfSpaceEndpoint.sync()
 

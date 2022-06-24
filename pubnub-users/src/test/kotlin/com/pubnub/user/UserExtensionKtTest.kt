@@ -3,16 +3,16 @@ package com.pubnub.user
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubException
-import com.pubnub.api.UserId
 import com.pubnub.api.endpoints.objects.uuid.GetAllUUIDMetadata
 import com.pubnub.api.endpoints.objects.uuid.GetUUIDMetadata
 import com.pubnub.api.endpoints.objects.uuid.RemoveUUIDMetadata
 import com.pubnub.api.endpoints.objects.uuid.SetUUIDMetadata
-import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
+import com.pubnub.api.endpoints.remoteaction.RemoteAction
 import com.pubnub.api.models.consumer.objects.PNRemoveMetadataResult
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataArrayResult
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataResult
+import com.pubnub.core.UserId
 import com.pubnub.user.models.consumer.RemoveUserResult
 import com.pubnub.user.models.consumer.User
 import com.pubnub.user.models.consumer.UsersResult
@@ -83,7 +83,7 @@ internal class UserExtensionKtTest {
         } returns setUUIDMetadataEndpoint
         every { setUUIDMetadataEndpoint.sync() } returns pnUUIDMetadataResult
 
-        val createUserEndpoint: ExtendedRemoteAction<User?> = pubNub.createUser(
+        val createUserEndpoint: RemoteAction<User?> = pubNub.createUser(
             userId = USER_ID,
             name = USER_NAME,
             externalId = EXTERNAL_ID,
@@ -105,7 +105,7 @@ internal class UserExtensionKtTest {
         every { pubNub.getUUIDMetadata(any(), any()) } returns getUUIDMetadataEndpoint
         every { getUUIDMetadataEndpoint.sync() } returns pnUUIDMetadataResult
 
-        val fetchUserEndpoint: ExtendedRemoteAction<User?> = pubNub.fetchUser(userId = USER_ID, includeCustom = true)
+        val fetchUserEndpoint: RemoteAction<User?> = pubNub.fetchUser(userId = USER_ID, includeCustom = true)
         val user = fetchUserEndpoint.sync()
 
         assertEquals(expectedUser01, user)
@@ -122,7 +122,7 @@ internal class UserExtensionKtTest {
         } returns setUUIDMetadataEndpoint
         every { setUUIDMetadataEndpoint.sync() } returns pnUUIDMetadataResult
 
-        val updateUserEndpoint: ExtendedRemoteAction<User?> = pubNub.updateUser(
+        val updateUserEndpoint: RemoteAction<User?> = pubNub.updateUser(
             userId = USER_ID,
             name = USER_NAME,
             externalId = EXTERNAL_ID,
@@ -142,7 +142,7 @@ internal class UserExtensionKtTest {
         every { pubNub.removeUUIDMetadata(any()) } returns removeUUIDMetadataEndpoint
         every { removeUUIDMetadataEndpoint.sync() } returns pnRemoveMetadataResult
 
-        val removeUserEndpoint: ExtendedRemoteAction<RemoveUserResult?> = pubNub.removeUser(userId = USER_ID)
+        val removeUserEndpoint: RemoteAction<RemoveUserResult?> = pubNub.removeUser(userId = USER_ID)
         val removeUserResult = removeUserEndpoint.sync()
 
         assertEquals(200, removeUserResult?.status)
@@ -156,7 +156,7 @@ internal class UserExtensionKtTest {
         every { pubNub.getAllUUIDMetadata(any(), any(), any(), any(), any(), any()) } returns getAllUUIDMetadataEndpoint
         every { getAllUUIDMetadataEndpoint.sync() } returns pnUUIDMetadataArrayResult
 
-        val fetchUsersEndpoint: ExtendedRemoteAction<UsersResult?> = pubNub.fetchUsers()
+        val fetchUsersEndpoint = pubNub.fetchUsers()
         val usersResult = fetchUsersEndpoint.sync()
 
         assertEquals(

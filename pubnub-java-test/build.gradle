@@ -1,0 +1,4 @@
+dependencies {
+    implementation project(":pubnub-gson")
+    implementation project(":pubnub-users")
+}
