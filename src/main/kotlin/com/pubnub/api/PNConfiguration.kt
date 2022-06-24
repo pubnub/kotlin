@@ -36,30 +36,22 @@ open class PNConfiguration(
     )
     constructor(uuid: String, enableSubscribeBeta: Boolean = false) : this(UserId(uuid), enableSubscribeBeta)
 
-    @Volatile
-    private var uuidThreadSafe: String = userId.value
-        get() {
-            println()
-            return field
-        }
-
     @Deprecated(
         level = DeprecationLevel.WARNING,
         message = """Use UserId instead e.g. config.userId = UserId("uuid")"""
     )
-    var uuid: String
-        get() = uuidThreadSafe
+
+    @Volatile
+    var uuid: String = userId.value
         set(value) {
             PubNubUtil.require(value.isValid(), PubNubError.UUID_NULL_OR_EMPTY)
-            uuidThreadSafe = value
+            field = value
         }
 
     var userId: UserId
-        get() {
-            return UserId(uuidThreadSafe)
-        }
+        get() = UserId(uuid)
         set(value) {
-            uuidThreadSafe = value.value
+            uuid = value.value
         }
 
     private val log = LoggerFactory.getLogger("PNConfiguration")
