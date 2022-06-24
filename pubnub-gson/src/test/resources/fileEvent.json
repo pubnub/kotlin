@@ -1,0 +1,29 @@
+{
+  "t": {
+    "t": "16043981033884668",
+    "r": 12
+  },
+  "m": [
+    {
+      "a": "2",
+      "f": 0,
+      "e": 4,
+      "i": "client-e1bbfc9a-967a-4f35-a4d6-b004c30acc14",
+      "p": {
+        "t": "16043981033865509",
+        "r": 12
+      },
+      "k": "sub-c-b9fe0b18-a646-11ea-ae1a-36d49400aaff",
+      "c": "ch_vmwmwuyadt",
+      "u": "This is meta",
+      "d": {
+        "message": "This is message",
+        "file": {
+          "id": "5a38cc2b-0416-437e-ab14-f8b431f8383f",
+          "name": "fileNamech_vmwmwuyadt.txt"
+        }
+      }
+    }
+  ]
+}
+
