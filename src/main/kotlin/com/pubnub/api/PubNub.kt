@@ -971,8 +971,8 @@ class PubNub(val configuration: PNConfiguration) {
      * @param ttl Time in minutes for which granted permissions are valid.
      * @param meta Additional metadata
      * @param authorizedUserId Single userId which is authorized to use the token to make API requests to PubNub
-     * @param spaces List of all channel grants
-     * @param userIds List of all uuid grants
+     * @param spaces List of all space grants
+     * @param userIds List of all userId grants
      */
     fun grantToken(
         ttl: Int,
