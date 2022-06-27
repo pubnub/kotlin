@@ -31,7 +31,7 @@ class GrantTokenIntegrationTest : BaseIntegrationTest() {
         val grantTokenEndpoint = pubNubUnderTest.grantToken(
             ttl = expectedTTL,
             authorizedUserId = expectedAuthorizedUserId,
-            spaces = listOf(
+            spaceIds = listOf(
                 SpaceIdGrant.name(spaceId = SpaceId(expectedSpaceIdValue), read = true, delete = true),
                 SpaceIdGrant.pattern(pattern = expectedSpaceIdPattern, write = true, manage = true)
             ),

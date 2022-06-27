@@ -65,8 +65,8 @@ import com.pubnub.api.managers.TokenParser
 import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.access_manager.sum.SpaceIdGrant
 import com.pubnub.api.models.consumer.access_manager.sum.UserIdGrant
-import com.pubnub.api.models.consumer.access_manager.sum.toChannelGrants
-import com.pubnub.api.models.consumer.access_manager.sum.toUuidGrants
+import com.pubnub.api.models.consumer.access_manager.sum.toChannelGrant
+import com.pubnub.api.models.consumer.access_manager.sum.toUuidGrant
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant
 import com.pubnub.api.models.consumer.access_manager.v3.PNToken
@@ -934,6 +934,11 @@ class PubNub(val configuration: PNConfiguration) {
      * @param channelGroups List of all channel group grants
      * @param uuids List of all uuid grants
      */
+
+    @Deprecated(
+        level = DeprecationLevel.WARNING,
+        message = "Use grantToken(Int, Any?, String?, List<SpaceIdGrant>?, List<UserIdGrant>?) instead"
+    )
     fun grantToken(
         ttl: Int,
         meta: Any? = null,
@@ -973,7 +978,7 @@ class PubNub(val configuration: PNConfiguration) {
         ttl: Int,
         meta: Any? = null,
         authorizedUserId: UserId? = null,
-        spaces: List<SpaceIdGrant> = emptyList(),
+        spaceIds: List<SpaceIdGrant> = emptyList(),
         userIds: List<UserIdGrant> = emptyList()
     ): GrantToken {
         return GrantToken(
@@ -981,9 +986,9 @@ class PubNub(val configuration: PNConfiguration) {
             ttl = ttl,
             meta = meta,
             authorizedUUID = authorizedUserId?.value,
-            channels = spaces.map { it.toChannelGrants() },
+            channels = spaceIds.map { spaceIdGrant -> spaceIdGrant.toChannelGrant() },
             channelGroups = emptyList(),
-            uuids = userIds.map { it.toUuidGrants() }
+            uuids = userIds.map { userIdGrant -> userIdGrant.toUuidGrant() }
         )
     }
 

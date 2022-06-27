@@ -7,6 +7,8 @@ import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant
 import com.pubnub.api.models.consumer.access_manager.v3.PNChannelPatternGrant
 import com.pubnub.api.models.consumer.access_manager.v3.PNChannelResourceGrant
 import com.pubnub.api.models.consumer.access_manager.v3.PNGrant
+import com.pubnub.api.models.consumer.access_manager.v3.PNSpacePatternGrant
+import com.pubnub.api.models.consumer.access_manager.v3.PNSpaceResourceGrant
 
 interface SpaceIdGrant : PNGrant {
 
@@ -21,7 +23,7 @@ interface SpaceIdGrant : PNGrant {
             get: Boolean = false,
             join: Boolean = false,
             update: Boolean = false
-        ): SpaceIdGrant = PNChannelResourceGrant(
+        ): SpaceIdGrant = PNSpaceResourceGrant(
             id = spaceId.value,
             read = read,
             write = write,
@@ -43,7 +45,7 @@ interface SpaceIdGrant : PNGrant {
             get: Boolean = false,
             join: Boolean = false,
             update: Boolean = false
-        ): SpaceIdGrant = PNChannelPatternGrant(
+        ): SpaceIdGrant = PNSpacePatternGrant(
             id = pattern,
             read = read,
             write = write,
@@ -57,10 +59,10 @@ interface SpaceIdGrant : PNGrant {
     }
 }
 
-fun SpaceIdGrant.toChannelGrants(): ChannelGrant {
+fun SpaceIdGrant.toChannelGrant(): ChannelGrant {
     return when (this) {
-        is PNChannelResourceGrant -> PNChannelResourceGrant(spaceIdGrant = this)
-        is PNChannelPatternGrant -> PNChannelPatternGrant(spaceIdGrant = this)
-        else -> throw PubNubException(pubnubError = PubNubError.INVALID_ARGUMENTS) // to be changed
+        is PNSpaceResourceGrant -> PNChannelResourceGrant(spaceIdGrant = this)
+        is PNSpacePatternGrant -> PNChannelPatternGrant(spaceIdGrant = this)
+        else -> throw PubNubException(pubnubError = PubNubError.INVALID_ARGUMENTS)
     }
 }

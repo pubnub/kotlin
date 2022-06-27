@@ -6,6 +6,8 @@ import com.pubnub.api.UserId
 import com.pubnub.api.models.consumer.access_manager.v3.PNGrant
 import com.pubnub.api.models.consumer.access_manager.v3.PNUUIDPatternGrant
 import com.pubnub.api.models.consumer.access_manager.v3.PNUUIDResourceGrant
+import com.pubnub.api.models.consumer.access_manager.v3.PNUserIdPatternGrant
+import com.pubnub.api.models.consumer.access_manager.v3.PNUserIdResourceGrant
 import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant
 
 interface UserIdGrant : PNGrant {
@@ -15,7 +17,7 @@ interface UserIdGrant : PNGrant {
             get: Boolean = false,
             update: Boolean = false,
             delete: Boolean = false
-        ): UserIdGrant = PNUUIDResourceGrant(
+        ): UserIdGrant = PNUserIdResourceGrant(
             id = userId.value,
             delete = delete,
             get = get,
@@ -27,7 +29,7 @@ interface UserIdGrant : PNGrant {
             get: Boolean = false,
             update: Boolean = false,
             delete: Boolean = false
-        ): UserIdGrant = PNUUIDPatternGrant(
+        ): UserIdGrant = PNUserIdPatternGrant(
             id = pattern,
             delete = delete,
             get = get,
@@ -36,10 +38,10 @@ interface UserIdGrant : PNGrant {
     }
 }
 
-fun UserIdGrant.toUuidGrants(): UUIDGrant {
+fun UserIdGrant.toUuidGrant(): UUIDGrant {
     return when (this) {
-        is PNUUIDResourceGrant -> PNUUIDResourceGrant(userIdGrant = this)
-        is PNUUIDPatternGrant -> PNUUIDPatternGrant(userIdGrant = this)
-        else -> throw PubNubException(pubnubError = PubNubError.INVALID_ARGUMENTS) // to be changed
+        is PNUserIdResourceGrant -> PNUUIDResourceGrant(userIdGrant = this)
+        is PNUserIdPatternGrant -> PNUUIDPatternGrant(userIdGrant = this)
+        else -> throw PubNubException(pubnubError = PubNubError.INVALID_ARGUMENTS)
     }
 }

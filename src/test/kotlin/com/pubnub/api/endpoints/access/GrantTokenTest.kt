@@ -49,13 +49,13 @@ internal class GrantTokenTest {
         val authorizedUserId = UserId("authorizedUserId")
         val expectedToken = "token_value"
         val grantTokenResult = PNGrantTokenResult(token = expectedToken)
-        every { pubnub.grantToken(ttl = any(), authorizedUserId = any(), spaces = any()) } returns grantTokenEndpointMock
+        every { pubnub.grantToken(ttl = any(), authorizedUserId = any(), spaceIds = any()) } returns grantTokenEndpointMock
         every { grantTokenEndpointMock.sync() } returns grantTokenResult
 
         val grantTokenEndpoint = pubnub.grantToken(
             ttl = expectedTTL,
             authorizedUserId = authorizedUserId,
-            spaces = listOf(SpaceIdGrant.name(spaceId = SpaceId("mySpaceId"), read = true, delete = true))
+            spaceIds = listOf(SpaceIdGrant.name(spaceId = SpaceId("mySpaceId"), read = true, delete = true))
         )
         val actualGrantTokenResult: PNGrantTokenResult? = grantTokenEndpoint.sync()
         val token = actualGrantTokenResult!!.token
@@ -83,7 +83,7 @@ internal class GrantTokenTest {
             )
         )
 
-        every { pubnub.grantToken(ttl = any(), authorizedUserId = any(), spaces = any()) } returns grantTokenEndpointMock
+        every { pubnub.grantToken(ttl = any(), authorizedUserId = any(), spaceIds = any()) } returns grantTokenEndpointMock
         every { grantTokenEndpointMock.doWork(any()) } returns call
         every { call.execute() } returns responseFromServer
         every { responseFromServer.isSuccessful } returns true
@@ -95,7 +95,7 @@ internal class GrantTokenTest {
         val grantTokenEndpoint = pubnub.grantToken(
             ttl = expectedTTL,
             authorizedUserId = UserId(authorizedUserIdValue),
-            spaces = listOf(SpaceIdGrant.name(spaceId = SpaceId("mySpaceId"), read = true, delete = true))
+            spaceIds = listOf(SpaceIdGrant.name(spaceId = SpaceId("mySpaceId"), read = true, delete = true))
         )
         val actualGrantTokenResult: PNGrantTokenResult? = grantTokenEndpoint.sync()
         val token = actualGrantTokenResult!!.token
