@@ -58,7 +58,7 @@ internal class GrantTokenTest {
         val grantTokenEndpoint = pubnub.grantToken(
             ttl = expectedTTL,
             authorizedUserId = authorizedUserId,
-            spacesPermissions = listOf(SpacePermissions.name(spaceId = SpaceId("mySpaceId"), read = true, delete = true))
+            spacesPermissions = listOf(SpacePermissions.id(spaceId = SpaceId("mySpaceId"), read = true, delete = true))
         )
         val actualGrantTokenResult: PNGrantTokenResult? = grantTokenEndpoint.sync()
         val token = actualGrantTokenResult!!.token
@@ -87,7 +87,7 @@ internal class GrantTokenTest {
             ttl = expectedTTL,
             authorizedUserId = authorizedUserId,
             spacesPermissions = listOf(
-                SpacePermissions.name(
+                SpacePermissions.id(
                     spaceId = SpaceId(spaceIdValue),
                     read = true,
                     delete = true
