@@ -14,51 +14,51 @@ class DataClassAsValueTest {
 
     @Test
     fun deserializationHappyPath() {
-        val result = gson.fromJson(json, CorrectSingleValue.Wrapper::class.java)
-        assertEquals(CorrectSingleValue.Wrapper(CorrectSingleValue(expectedValue)), result)
+        val result = gson.fromJson(json, CorrectSingleValueNoJacoco.Wrapper::class.java)
+        assertEquals(CorrectSingleValueNoJacoco.Wrapper(CorrectSingleValueNoJacoco(expectedValue)), result)
     }
 
     @Test
     fun exceptionWhenDeserializingToClassWithMoreFields() {
         assertThrows<JsonSyntaxException> {
-            gson.fromJson(json, IncorrectTwoFields.Wrapper::class.java)
+            gson.fromJson(json, IncorrectTwoFieldsNoJacoco.Wrapper::class.java)
         }
     }
 
     @Test
-    fun exceptionWhenDeserializingToClassWithMoreCtors() {
+    fun exceptionWhenDeserializingToClassWithMoreConstructors() {
         assertThrows<JsonSyntaxException> {
-            gson.fromJson(json, IncorrectTwoCtors.Wrapper::class.java)
+            gson.fromJson(json, IncorrectTwoConstructorsNoJacoco.Wrapper::class.java)
         }
     }
 
     @Test
     fun serializationHappyPath() {
-        val result = gson.toJson(CorrectSingleValue.Wrapper(CorrectSingleValue(expectedValue)))
+        val result = gson.toJson(CorrectSingleValueNoJacoco.Wrapper(CorrectSingleValueNoJacoco(expectedValue)))
         assertEquals(json, result)
     }
 
     @Test
     fun exceptionWhenSerializingClassWithMoreFields() {
         assertThrows<IllegalStateException> {
-            gson.toJson(IncorrectTwoFields.Wrapper(IncorrectTwoFields(expectedValue, expectedValue)))
+            gson.toJson(IncorrectTwoFieldsNoJacoco.Wrapper(IncorrectTwoFieldsNoJacoco(expectedValue, expectedValue)))
         }
     }
 }
 
 @JsonAdapter(DataClassAsValue::class)
-data class CorrectSingleValue(val value: String) {
-    data class Wrapper(val field: CorrectSingleValue)
+data class CorrectSingleValueNoJacoco(val value: String) {
+    data class Wrapper(val field: CorrectSingleValueNoJacoco)
 }
 
 @JsonAdapter(DataClassAsValue::class)
-data class IncorrectTwoFields(val val1: String, val val2: String) {
-    data class Wrapper(val field: IncorrectTwoFields)
+data class IncorrectTwoFieldsNoJacoco(val val1: String, val val2: String) {
+    data class Wrapper(val field: IncorrectTwoFieldsNoJacoco)
 }
 
 @JsonAdapter(DataClassAsValue::class)
-data class IncorrectTwoCtors(val value: String) {
+data class IncorrectTwoConstructorsNoJacoco(val value: String) {
     constructor(value: Int) : this(value.toString())
 
-    data class Wrapper(val field: IncorrectTwoCtors)
+    data class Wrapper(val field: IncorrectTwoConstructorsNoJacoco)
 }

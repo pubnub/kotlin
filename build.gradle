@@ -43,6 +43,9 @@ allprojects {
         test {
             failFast = true
             exclude '**/contract/*.class'
+            jacoco {
+                excludes = ["*NoJacoco"]
+            }
         }
 
         ktlint {
