@@ -63,8 +63,8 @@ import com.pubnub.api.managers.TelemetryManager
 import com.pubnub.api.managers.TokenManager
 import com.pubnub.api.managers.TokenParser
 import com.pubnub.api.models.consumer.PNBoundedPage
-import com.pubnub.api.models.consumer.access_manager.sum.SpaceIdGrant
-import com.pubnub.api.models.consumer.access_manager.sum.UserIdGrant
+import com.pubnub.api.models.consumer.access_manager.sum.SpacePermissions
+import com.pubnub.api.models.consumer.access_manager.sum.UserPermissions
 import com.pubnub.api.models.consumer.access_manager.sum.toChannelGrant
 import com.pubnub.api.models.consumer.access_manager.sum.toUuidGrant
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant
@@ -937,7 +937,7 @@ class PubNub(val configuration: PNConfiguration) {
 
     @Deprecated(
         level = DeprecationLevel.WARNING,
-        message = "Use grantToken(Int, Any?, String?, List<SpaceIdGrant>?, List<UserIdGrant>?) instead"
+        message = "Use grantToken(Int, Any?, String?, List<SpacePermissions>?, List<UserPermissions>?) instead"
     )
     fun grantToken(
         ttl: Int,
@@ -962,33 +962,33 @@ class PubNub(val configuration: PNConfiguration) {
      * This function generates a grant token for PubNub Access Manager (PAM).
      *
      * Permissions can be applied to any of the two type of resources:
-     * - spaces
-     * - userIds
+     * - spacePermissions
+     * - userPermissions
      *
      * Each type of resource have different set of permissions. To know what's possible for each of them
-     * check SpaceIdGrant and UserIdGrant.
+     * check SpacePermissions and UserPermissions.
      *
      * @param ttl Time in minutes for which granted permissions are valid.
      * @param meta Additional metadata
      * @param authorizedUserId Single userId which is authorized to use the token to make API requests to PubNub
-     * @param spaces List of all space grants
-     * @param userIds List of all userId grants
+     * @param spacesPermissions List of all space grants
+     * @param usersPermissions List of all userId grants
      */
     fun grantToken(
         ttl: Int,
         meta: Any? = null,
         authorizedUserId: UserId? = null,
-        spaceIds: List<SpaceIdGrant> = emptyList(),
-        userIds: List<UserIdGrant> = emptyList()
+        spacesPermissions: List<SpacePermissions> = emptyList(),
+        usersPermissions: List<UserPermissions> = emptyList()
     ): GrantToken {
         return GrantToken(
             pubnub = this,
             ttl = ttl,
             meta = meta,
             authorizedUUID = authorizedUserId?.value,
-            channels = spaceIds.map { spaceIdGrant -> spaceIdGrant.toChannelGrant() },
+            channels = spacesPermissions.map { spacePermissions -> spacePermissions.toChannelGrant() },
             channelGroups = emptyList(),
-            uuids = userIds.map { userIdGrant -> userIdGrant.toUuidGrant() }
+            uuids = usersPermissions.map { userPermissions -> userPermissions.toUuidGrant() }
         )
     }
 

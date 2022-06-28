@@ -5,8 +5,8 @@ import com.pubnub.api.SpaceId
 import com.pubnub.api.UserId
 import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.integration.BaseIntegrationTest
-import com.pubnub.api.models.consumer.access_manager.sum.SpaceIdGrant
-import com.pubnub.api.models.consumer.access_manager.sum.UserIdGrant
+import com.pubnub.api.models.consumer.access_manager.sum.SpacePermissions
+import com.pubnub.api.models.consumer.access_manager.sum.UserPermissions
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant
 import com.pubnub.api.models.consumer.access_manager.v3.PNToken.PNResourcePermissions
@@ -31,13 +31,13 @@ class GrantTokenIntegrationTest : BaseIntegrationTest() {
         val grantTokenEndpoint = pubNubUnderTest.grantToken(
             ttl = expectedTTL,
             authorizedUserId = expectedAuthorizedUserId,
-            spaceIds = listOf(
-                SpaceIdGrant.name(spaceId = SpaceId(expectedSpaceIdValue), read = true, delete = true),
-                SpaceIdGrant.pattern(pattern = expectedSpaceIdPattern, write = true, manage = true)
+            spacesPermissions = listOf(
+                SpacePermissions.name(spaceId = SpaceId(expectedSpaceIdValue), read = true, delete = true),
+                SpacePermissions.pattern(pattern = expectedSpaceIdPattern, write = true, manage = true)
             ),
-            userIds = listOf(
-                UserIdGrant.id(userId = UserId(expectedUserIdValue), delete = true),
-                UserIdGrant.pattern(pattern = expectedUserIdPattern, update = true)
+            usersPermissions = listOf(
+                UserPermissions.id(userId = UserId(expectedUserIdValue), delete = true),
+                UserPermissions.pattern(pattern = expectedUserIdPattern, update = true)
             )
         )
 

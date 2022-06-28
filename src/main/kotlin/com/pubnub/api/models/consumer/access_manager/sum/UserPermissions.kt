@@ -6,18 +6,18 @@ import com.pubnub.api.UserId
 import com.pubnub.api.models.consumer.access_manager.v3.PNGrant
 import com.pubnub.api.models.consumer.access_manager.v3.PNUUIDPatternGrant
 import com.pubnub.api.models.consumer.access_manager.v3.PNUUIDResourceGrant
-import com.pubnub.api.models.consumer.access_manager.v3.PNUserIdPatternGrant
-import com.pubnub.api.models.consumer.access_manager.v3.PNUserIdResourceGrant
+import com.pubnub.api.models.consumer.access_manager.v3.PNUserPatternPermissionsGrant
+import com.pubnub.api.models.consumer.access_manager.v3.PNUserPermissionsGrant
 import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant
 
-interface UserIdGrant : PNGrant {
+interface UserPermissions : PNGrant {
     companion object {
         fun id(
             userId: UserId,
             get: Boolean = false,
             update: Boolean = false,
             delete: Boolean = false
-        ): UserIdGrant = PNUserIdResourceGrant(
+        ): UserPermissions = PNUserPermissionsGrant(
             id = userId.value,
             delete = delete,
             get = get,
@@ -29,7 +29,7 @@ interface UserIdGrant : PNGrant {
             get: Boolean = false,
             update: Boolean = false,
             delete: Boolean = false
-        ): UserIdGrant = PNUserIdPatternGrant(
+        ): UserPermissions = PNUserPatternPermissionsGrant(
             id = pattern,
             delete = delete,
             get = get,
@@ -38,10 +38,10 @@ interface UserIdGrant : PNGrant {
     }
 }
 
-fun UserIdGrant.toUuidGrant(): UUIDGrant {
+fun UserPermissions.toUuidGrant(): UUIDGrant {
     return when (this) {
-        is PNUserIdResourceGrant -> PNUUIDResourceGrant(userIdGrant = this)
-        is PNUserIdPatternGrant -> PNUUIDPatternGrant(userIdGrant = this)
+        is PNUserPermissionsGrant -> PNUUIDResourceGrant(userPermissions = this)
+        is PNUserPatternPermissionsGrant -> PNUUIDPatternGrant(userPermissions = this)
         else -> throw PubNubException(pubnubError = PubNubError.INVALID_ARGUMENTS)
     }
 }
