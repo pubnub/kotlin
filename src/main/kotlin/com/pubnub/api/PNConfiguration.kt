@@ -40,6 +40,8 @@ open class PNConfiguration(
         level = DeprecationLevel.WARNING,
         message = """Use UserId instead e.g. config.userId = UserId("uuid")"""
     )
+
+    @Volatile
     var uuid: String = userId.value
         set(value) {
             PubNubUtil.require(value.isValid(), PubNubError.UUID_NULL_OR_EMPTY)
