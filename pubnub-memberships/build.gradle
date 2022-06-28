@@ -1,3 +1,7 @@
+testSets {
+    integrationTest
+}
+
 dependencies {
     implementation project(":")
     api project(":pubnub-spaces")
