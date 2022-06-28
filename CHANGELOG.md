@@ -1,3 +1,9 @@
+## v7.3.0
+June 28 2022
+
+#### Added
+- Introduced new GrantToken method with no channel groups.
+
 ## v7.2.0
 June 14 2022
 
