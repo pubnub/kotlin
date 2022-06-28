@@ -3,7 +3,7 @@ package com.pubnub.api.utils
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonSyntaxException
 import com.google.gson.annotations.JsonAdapter
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.jupiter.api.assertThrows
 
@@ -48,17 +48,17 @@ class DataClassAsValueTest {
 
 @JsonAdapter(DataClassAsValue::class)
 data class CorrectSingleValue(val value: String) {
-    data class Wrapper (val field: CorrectSingleValue)
+    data class Wrapper(val field: CorrectSingleValue)
 }
 
 @JsonAdapter(DataClassAsValue::class)
 data class IncorrectTwoFields(val val1: String, val val2: String) {
-    data class Wrapper (val field: IncorrectTwoFields)
+    data class Wrapper(val field: IncorrectTwoFields)
 }
 
 @JsonAdapter(DataClassAsValue::class)
 data class IncorrectTwoCtors(val value: String) {
     constructor(value: Int) : this(value.toString())
 
-    data class Wrapper (val field: IncorrectTwoCtors)
+    data class Wrapper(val field: IncorrectTwoCtors)
 }
