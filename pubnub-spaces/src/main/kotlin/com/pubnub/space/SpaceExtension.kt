@@ -1,6 +1,7 @@
 package com.pubnub.space
 
 import com.pubnub.api.PubNub
+import com.pubnub.api.SpaceId
 import com.pubnub.api.callbacks.DisposableListener
 import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.endpoints.remoteaction.ComposableRemoteAction.Companion.firstDo
@@ -16,7 +17,6 @@ import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
 import com.pubnub.space.models.consumer.RemoveSpaceResult
 import com.pubnub.space.models.consumer.Space
 import com.pubnub.space.models.consumer.SpaceEvent
-import com.pubnub.space.models.consumer.SpaceId
 import com.pubnub.space.models.consumer.SpaceKey
 import com.pubnub.space.models.consumer.SpacesResult
 import com.pubnub.space.models.consumer.toRemoveSpaceResult

@@ -2,6 +2,7 @@ package com.pubnub.space
 
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
+import com.pubnub.api.SpaceId
 import com.pubnub.api.UserId
 import com.pubnub.api.endpoints.objects.channel.GetAllChannelMetadata
 import com.pubnub.api.endpoints.objects.channel.GetChannelMetadata
@@ -14,7 +15,6 @@ import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadataArrayResu
 import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadataResult
 import com.pubnub.space.models.consumer.RemoveSpaceResult
 import com.pubnub.space.models.consumer.Space
-import com.pubnub.space.models.consumer.SpaceId
 import com.pubnub.space.models.consumer.SpacesResult
 import io.mockk.MockKAnnotations
 import io.mockk.every
