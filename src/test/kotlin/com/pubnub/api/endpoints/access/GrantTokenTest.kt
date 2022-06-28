@@ -4,13 +4,17 @@ import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
 import com.pubnub.api.SpaceId
 import com.pubnub.api.UserId
+import com.pubnub.api.managers.RetrofitManager
 import com.pubnub.api.models.consumer.access_manager.sum.SpaceIdGrant
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant
 import com.pubnub.api.models.consumer.access_manager.v3.PNGrantTokenResult
+import com.pubnub.api.models.server.access_manager.v3.GrantTokenData
 import com.pubnub.api.models.server.access_manager.v3.GrantTokenResponse
+import com.pubnub.api.services.AccessManagerService
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
+import io.mockk.mockk
 import io.mockk.spyk
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
@@ -42,6 +46,33 @@ internal class GrantTokenTest {
 
     @MockK
     private lateinit var rawResponse: okhttp3.Response
+
+    @Test
+    fun can_beAnExample() {
+        val expectedTTL = 1337
+        val authorizedUserId = UserId("authorizedUserId")
+        val expectedToken = "token_value"
+        val grantTokenResult = PNGrantTokenResult(token = expectedToken)
+
+        val retrofitManager = mockk<RetrofitManager>(relaxed = true)
+        val accessManagerService = mockk<AccessManagerService>(relaxed = true)
+        val capturedBodies = mutableListOf<Any>()
+        val call = mockk<Call<GrantTokenResponse>>()
+
+        every { pubnub.retrofitManager } returns retrofitManager
+        every { retrofitManager.accessManagerService } returns accessManagerService
+        every { accessManagerService.grantToken(any(), capture(capturedBodies), any()) } returns call
+        every { call.execute() } returns Response.success(GrantTokenResponse(GrantTokenData(expectedToken)))
+
+        val result = pubnub.grantToken(
+            ttl = expectedTTL,
+            authorizedUserId = authorizedUserId,
+            spaces = listOf(SpaceIdGrant.name(spaceId = SpaceId("mySpaceId"), read = true, delete = true))
+        ).sync()
+
+        val capturedBody = capturedBodies[0]
+        // some assertions on body
+    }
 
     @Test
     fun can_createGrantTokenSimple() {
