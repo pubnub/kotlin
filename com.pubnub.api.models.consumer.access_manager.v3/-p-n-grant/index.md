@@ -24,4 +24,6 @@
 |---|---|
 | [ChannelGrant](../-channel-grant/index.md) | `interface ChannelGrant : `[`PNGrant`](./index.md) |
 | [ChannelGroupGrant](../-channel-group-grant/index.md) | `interface ChannelGroupGrant : `[`PNGrant`](./index.md) |
+| [SpacePermissions](../../com.pubnub.api.models.consumer.access_manager.sum/-space-permissions/index.md) | `interface SpacePermissions : `[`PNGrant`](./index.md) |
+| [UserPermissions](../../com.pubnub.api.models.consumer.access_manager.sum/-user-permissions/index.md) | `interface UserPermissions : `[`PNGrant`](./index.md) |
 | [UUIDGrant](../-u-u-i-d-grant/index.md) | `interface UUIDGrant : `[`PNGrant`](./index.md) |

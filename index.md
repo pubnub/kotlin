@@ -27,6 +27,7 @@
 | [com.pubnub.api.models](com.pubnub.api.models/index.md) |  |
 | [com.pubnub.api.models.consumer](com.pubnub.api.models.consumer/index.md) |  |
 | [com.pubnub.api.models.consumer.access_manager](com.pubnub.api.models.consumer.access_manager/index.md) |  |
+| [com.pubnub.api.models.consumer.access_manager.sum](com.pubnub.api.models.consumer.access_manager.sum/index.md) |  |
 | [com.pubnub.api.models.consumer.access_manager.v3](com.pubnub.api.models.consumer.access_manager.v3/index.md) |  |
 | [com.pubnub.api.models.consumer.channel_group](com.pubnub.api.models.consumer.channel_group/index.md) |  |
 | [com.pubnub.api.models.consumer.files](com.pubnub.api.models.consumer.files/index.md) |  |

@@ -25,6 +25,7 @@ com.pubnub.api.managers
 com.pubnub.api.models
 com.pubnub.api.models.consumer
 com.pubnub.api.models.consumer.access_manager
+com.pubnub.api.models.consumer.access_manager.sum
 com.pubnub.api.models.consumer.access_manager.v3
 com.pubnub.api.models.consumer.channel_group
 com.pubnub.api.models.consumer.files

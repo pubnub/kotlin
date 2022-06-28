@@ -2,9 +2,9 @@
 
 # &lt;init&gt;
 
-`PNConfiguration(uuid: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`, enableSubscribeBeta: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)` = false)`
+`PNConfiguration(uuid: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`, enableSubscribeBeta: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)` = false)``PNConfiguration(userId: `[`UserId`](../-user-id/index.md)`, enableSubscribeBeta: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)` = false)`
 
 A storage for user-provided information which describe further PubNub client behaviour.
 Configuration instance contains additional set of properties which
-allow to perform precise PubNub client configuration.
+allow performing precise PubNub client configuration.
 

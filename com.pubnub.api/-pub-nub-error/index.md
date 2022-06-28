@@ -47,6 +47,7 @@ List of known PubNub errors. Observe them in [PubNubException.pubnubError](../-p
 | [PUSH_TOPIC_MISSING](-p-u-s-h_-t-o-p-i-c_-m-i-s-s-i-n-g.md) |  |
 | [TOKEN_MISSING](-t-o-k-e-n_-m-i-s-s-i-n-g.md) |  |
 | [UUID_NULL_OR_EMPTY](-u-u-i-d_-n-u-l-l_-o-r_-e-m-p-t-y.md) |  |
+| [USERID_NULL_OR_EMPTY](-u-s-e-r-i-d_-n-u-l-l_-o-r_-e-m-p-t-y.md) |  |
 
 ### Properties
 

@@ -487,7 +487,7 @@ Result of the [PubNub.removeChannelsFromChannelGroup](../com.pubnub.api/-pub-nub
 
 A storage for user-provided information which describe further PubNub client behaviour.
 Configuration instance contains additional set of properties which
-allow to perform precise PubNub client configuration.
+allow performing precise PubNub client configuration.
 
 
 |
@@ -1055,6 +1055,16 @@ Custom exception wrapper for errors occurred during execution or processing of a
 
 |
 
+##### [com.pubnub.api.SpaceId](../com.pubnub.api/-space-id/index.md)
+
+
+|
+
+##### [com.pubnub.api.models.consumer.access_manager.sum.SpacePermissions](../com.pubnub.api.models.consumer.access_manager.sum/-space-permissions/index.md)
+
+
+|
+
 ##### [com.pubnub.api.managers.StateManager](../com.pubnub.api.managers/-state-manager/index.md)
 
 
@@ -1111,6 +1121,16 @@ Custom exception wrapper for errors occurred during execution or processing of a
 |
 
 ##### [com.pubnub.api.managers.TokenManager](../com.pubnub.api.managers/-token-manager/index.md)
+
+
+|
+
+##### [com.pubnub.api.UserId](../com.pubnub.api/-user-id/index.md)
+
+
+|
+
+##### [com.pubnub.api.models.consumer.access_manager.sum.UserPermissions](../com.pubnub.api.models.consumer.access_manager.sum/-user-permissions/index.md)
 
 
 |
