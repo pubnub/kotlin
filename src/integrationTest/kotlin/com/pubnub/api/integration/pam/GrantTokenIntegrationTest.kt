@@ -32,7 +32,7 @@ class GrantTokenIntegrationTest : BaseIntegrationTest() {
             ttl = expectedTTL,
             authorizedUserId = expectedAuthorizedUserId,
             spacesPermissions = listOf(
-                SpacePermissions.name(spaceId = SpaceId(expectedSpaceIdValue), read = true, delete = true),
+                SpacePermissions.id(spaceId = SpaceId(expectedSpaceIdValue), read = true, delete = true),
                 SpacePermissions.pattern(pattern = expectedSpaceIdPattern, write = true, manage = true)
             ),
             usersPermissions = listOf(

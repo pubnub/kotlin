@@ -13,7 +13,7 @@ import com.pubnub.api.models.consumer.access_manager.v3.PNSpacePermissionsGrant
 interface SpacePermissions : PNGrant {
 
     companion object {
-        fun name(
+        fun id(
             spaceId: SpaceId,
             read: Boolean = false,
             write: Boolean = false,
