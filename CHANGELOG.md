@@ -1,3 +1,9 @@
+## v7.3.1
+June 28 2022
+
+#### Fixed
+- Renamed name to id in SpacePermissions.
+
 ## v7.3.0
 June 28 2022
 
