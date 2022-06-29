@@ -233,6 +233,11 @@ sdks:
                   license-url: https://github.com/stleary/JSON-java/blob/20210307/LICENSE
                   is-required: Required
 changelog:
+  - date: 2022-06-29
+    version: v7.3.1
+    changes:
+      - type: bug
+        text: "Make build/release scripts executable."
   - date: 2022-06-28
     version: v7.3.1
     changes:

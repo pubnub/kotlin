@@ -1,4 +1,10 @@
 ## v7.3.1
+June 29 2022
+
+#### Fixed
+- Make build/release scripts executable.
+
+## v7.3.1
 June 28 2022
 
 #### Fixed
