@@ -5,10 +5,8 @@ import java.math.RoundingMode
 import java.text.NumberFormat
 import java.util.Date
 import java.util.Locale
-import kotlin.collections.set
 
 class TelemetryManager {
-
     private companion object {
         private const val MAX_FRACTION_DIGITS = 3
         private const val TIMESTAMP_DIVIDER = 1_000
@@ -24,8 +22,9 @@ class TelemetryManager {
         }
     }
 
+    @JvmOverloads
     @Synchronized
-    internal fun operationsLatency(currentDate: Long = Date().time): Map<String, String> {
+    fun operationsLatency(currentDate: Long = Date().time): Map<String, String> {
         cleanUpTelemetryData(currentDate)
         val operationLatencies = HashMap<String, String>()
         latencies.entries.forEach {
@@ -60,8 +59,9 @@ class TelemetryManager {
         return sumOfLatencies / endpointLatencies.size
     }
 
+    @JvmOverloads
     @Synchronized
-    internal fun storeLatency(latency: Long, type: OperationType, currentDate: Long = Date().time) {
+    fun storeLatency(latency: Long, type: OperationType, currentDate: Long = Date().time) {
         type.queryParam?.let { queryParam: String ->
             if (latency > 0) {
                 val storeDate = currentDate / (TIMESTAMP_DIVIDER.toDouble())

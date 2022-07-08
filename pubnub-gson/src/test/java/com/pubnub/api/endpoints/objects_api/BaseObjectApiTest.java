@@ -3,7 +3,6 @@ package com.pubnub.api.endpoints.objects_api;
 import com.pubnub.api.PNConfiguration;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.managers.RetrofitManager;
-import com.pubnub.api.managers.TelemetryManager;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
 import org.junit.runner.RunWith;

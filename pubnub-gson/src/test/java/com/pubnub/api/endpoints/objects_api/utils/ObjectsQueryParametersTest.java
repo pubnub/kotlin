@@ -17,7 +17,6 @@ import com.pubnub.api.endpoints.objects_api.utils.ListCapabilities.HavingListCap
 import com.pubnub.api.endpoints.objects_api.utils.ListCapabilities.ListCapabilitiesAware;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.managers.RetrofitManager;
-import com.pubnub.api.managers.TelemetryManager;
 import com.pubnub.api.managers.token_manager.TokenManager;
 import com.pubnub.api.models.consumer.PNPage;
 import com.pubnub.api.models.server.objects_api.EntityArrayEnvelope;

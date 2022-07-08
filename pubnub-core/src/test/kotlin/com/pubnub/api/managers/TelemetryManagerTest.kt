@@ -1,7 +1,6 @@
-package com.pubnub.api.manager
+package com.pubnub.api.managers
 
-import com.pubnub.api.enums.PNOperationType
-import com.pubnub.api.managers.TelemetryManager
+import com.pubnub.core.OperationType
 import io.mockk.MockKAnnotations
 import io.mockk.spyk
 import io.mockk.unmockkAll
@@ -100,5 +99,23 @@ class TelemetryManagerTest {
 
         val operations = telemetryManager.operationsLatency(System.currentTimeMillis() + 65_000L)
         assertThat(operations, IsMapWithSize.anEmptyMap<String, String>())
+    }
+}
+
+object PNOperationType {
+    object PNHistoryOperation : OperationType {
+        override val queryParam: String = "hist"
+    }
+
+    object PNPublishOperation : OperationType {
+        override val queryParam: String = "pub"
+    }
+
+    object PNSubscribeOperation : OperationType {
+        override val queryParam: String? = null
+    }
+
+    object PNAccessManagerGrant : OperationType {
+        override val queryParam: String = "am"
     }
 }
