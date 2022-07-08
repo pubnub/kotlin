@@ -9,11 +9,11 @@ import java.util.Map;
 
 public abstract class CoreEndpoint<Input, Output, Callback, E extends Throwable, OperationType extends com.pubnub.core.OperationType, Conf extends CoreConfiguration, TokenManager, TelemetryManager, RetrofitManager extends com.pubnub.core.RetrofitManager, Mapper> implements CoreRemoteAction<Output, Callback, E> {
 
-    private final ManagerManager<Conf, TokenManager, TelemetryManager, RetrofitManager, Mapper> managerManager;
+    private final ManagerHolder<Conf, TokenManager, TelemetryManager, RetrofitManager, Mapper> managerHolder;
 
-    public CoreEndpoint(ManagerManager<Conf, TokenManager, TelemetryManager, RetrofitManager, Mapper> managerManager) {
+    public CoreEndpoint(ManagerHolder<Conf, TokenManager, TelemetryManager, RetrofitManager, Mapper> managerHolder) {
 
-        this.managerManager = managerManager;
+        this.managerHolder = managerHolder;
     }
 
     protected boolean isAuthRequired() {
@@ -42,10 +42,10 @@ public abstract class CoreEndpoint<Input, Output, Callback, E extends Throwable,
     protected abstract Output createResponse(Response<Input> input) throws E;
 
     protected void validateParams() throws E {
-        if (isSubKeyRequired() && (managerManager.getConfiguration().subKey() == null || managerManager.getConfiguration().subKey().isEmpty())) {
+        if (isSubKeyRequired() && (managerHolder.getConfiguration().subKey() == null || managerHolder.getConfiguration().subKey().isEmpty())) {
             //
         }
-        if (isPubKeyRequired() && (managerManager.getConfiguration().pubKey() == null || managerManager.getConfiguration().pubKey().isEmpty())) {
+        if (isPubKeyRequired() && (managerHolder.getConfiguration().pubKey() == null || managerHolder.getConfiguration().pubKey().isEmpty())) {
             //
         }
     }

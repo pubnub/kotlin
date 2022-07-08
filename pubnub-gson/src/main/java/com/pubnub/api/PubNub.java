@@ -54,23 +54,13 @@ import com.pubnub.api.endpoints.push.AddChannelsToPush;
 import com.pubnub.api.endpoints.push.ListPushProvisions;
 import com.pubnub.api.endpoints.push.RemoveAllPushChannelsForDevice;
 import com.pubnub.api.endpoints.push.RemoveChannelsFromPush;
-import com.pubnub.api.managers.BasePathManager;
-import com.pubnub.api.managers.DelayedReconnectionManager;
-import com.pubnub.api.managers.DuplicationManager;
-import com.pubnub.api.managers.ListenerManager;
-import com.pubnub.api.managers.MapperManager;
-import com.pubnub.api.managers.PublishSequenceManager;
-import com.pubnub.api.managers.ReconnectionManager;
-import com.pubnub.api.managers.RetrofitManager;
-import com.pubnub.api.managers.StateManager;
-import com.pubnub.api.managers.SubscriptionManager;
-import com.pubnub.api.managers.TelemetryManager;
+import com.pubnub.api.managers.*;
 import com.pubnub.api.managers.token_manager.TokenManager;
 import com.pubnub.api.managers.token_manager.TokenParser;
 import com.pubnub.api.models.consumer.access_manager.v3.PNToken;
 import com.pubnub.api.vendor.Crypto;
 import com.pubnub.api.vendor.FileEncryptionUtil;
-import com.pubnub.core.ManagerManager;
+import com.pubnub.core.ManagerHolder;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -81,7 +71,7 @@ import java.util.List;
 import java.util.UUID;
 
 
-public class PubNub implements ManagerManager {
+public class PubNub implements ManagerHolder {
 
     @Getter
     private @NotNull PNConfiguration configuration;
@@ -585,7 +575,7 @@ public class PubNub implements ManagerManager {
         try {
             subscriptionManager.destroy(true);
             retrofitManager.destroy(true);
-            telemetryManager.stopCleanUpTimer();
+            //telemetryManager.stopCleanUpTimer();//TODO why it's not in Kotlin?
         } catch (Exception error) {
             //
         }

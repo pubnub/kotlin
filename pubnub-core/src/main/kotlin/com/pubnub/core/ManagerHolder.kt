@@ -1,6 +1,6 @@
 package com.pubnub.core
 
-interface ManagerManager<Configuration, TokenManager, TelemetryManager, RetrofitManager : com.pubnub.core.RetrofitManager, Mapper> :
+interface ManagerHolder<Configuration, TokenManager, TelemetryManager, RetrofitManager : com.pubnub.core.RetrofitManager, Mapper> :
     Instance {
     val configuration: Configuration
     val tokenManager: TokenManager

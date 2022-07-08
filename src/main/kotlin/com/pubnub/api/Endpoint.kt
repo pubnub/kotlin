@@ -31,7 +31,7 @@ typealias PNCallback<Output> = (result: Output?, status: PNStatus) -> Unit
 
 typealias CoreEndpoint<Input, Output, OperationType> = com.pubnub.core.CoreEndpoint<Input, Output, PNCallback<Output>, PubNubException, OperationType, PNConfiguration, TokenManager, TelemetryManager, RetrofitManager, MapperManager>
 
-typealias ManagerManager = com.pubnub.core.ManagerManager<PNConfiguration, TokenManager, TelemetryManager, RetrofitManager, MapperManager>
+typealias ManagerManager = com.pubnub.core.ManagerHolder<PNConfiguration, TokenManager, TelemetryManager, RetrofitManager, MapperManager>
 
 abstract class MoreAbstractEndpoint<Input, Output, OperationType : com.pubnub.core.OperationType> protected constructor(protected val pubnub: PubNub) :
     CoreEndpoint<Input, Output, OperationType>(pubnub), RemoteAction<Output> {
