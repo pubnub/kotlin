@@ -47,7 +47,7 @@ internal data class PNChannelResourceGrant(
         write = spacePermissions.write,
         manage = spacePermissions.manage,
         delete = spacePermissions.delete,
-        create = spacePermissions.create,
+        create = false,
         get = spacePermissions.get,
         join = spacePermissions.join,
         update = spacePermissions.update
@@ -60,7 +60,6 @@ internal data class PNSpacePermissionsGrant(
     override val write: Boolean = false,
     override val manage: Boolean = false,
     override val delete: Boolean = false,
-    override val create: Boolean = false,
     override val get: Boolean = false,
     override val join: Boolean = false,
     override val update: Boolean = false
@@ -83,7 +82,7 @@ internal data class PNChannelPatternGrant(
         write = spacePermissions.write,
         manage = spacePermissions.manage,
         delete = spacePermissions.delete,
-        create = spacePermissions.create,
+        create = false,
         get = spacePermissions.get,
         join = spacePermissions.join,
         update = spacePermissions.update
@@ -96,7 +95,6 @@ internal data class PNSpacePatternPermissionsGrant(
     override val write: Boolean = false,
     override val manage: Boolean = false,
     override val delete: Boolean = false,
-    override val create: Boolean = false,
     override val get: Boolean = false,
     override val join: Boolean = false,
     override val update: Boolean = false

@@ -19,7 +19,6 @@ interface SpacePermissions : PNGrant {
             write: Boolean = false,
             manage: Boolean = false,
             delete: Boolean = false,
-            create: Boolean = false,
             get: Boolean = false,
             join: Boolean = false,
             update: Boolean = false
@@ -29,7 +28,6 @@ interface SpacePermissions : PNGrant {
             write = write,
             manage = manage,
             delete = delete,
-            create = create,
             get = get,
             join = join,
             update = update
@@ -41,7 +39,6 @@ interface SpacePermissions : PNGrant {
             write: Boolean = false,
             manage: Boolean = false,
             delete: Boolean = false,
-            create: Boolean = false,
             get: Boolean = false,
             join: Boolean = false,
             update: Boolean = false
@@ -51,7 +48,6 @@ interface SpacePermissions : PNGrant {
             write = write,
             manage = manage,
             delete = delete,
-            create = create,
             get = get,
             join = join,
             update = update
