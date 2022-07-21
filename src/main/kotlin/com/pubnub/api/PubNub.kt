@@ -96,7 +96,7 @@ class PubNub(val configuration: PNConfiguration) {
 
     companion object {
         private const val TIMESTAMP_DIVIDER = 1000
-        private const val SDK_VERSION = "7.3.1"
+        private const val SDK_VERSION = "7.3.2"
         private const val MAX_SEQUENCE = 65535
 
         /**
