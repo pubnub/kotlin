@@ -25,7 +25,6 @@ allprojects {
 
         repositories {
             mavenCentral()
-            jcenter()
         }
 
         testSets {
@@ -90,12 +89,12 @@ dependencies {
     implementation "org.slf4j:slf4j-api:1.7.30"
 
     api 'com.squareup.okhttp3:logging-interceptor:4.9.3'
-    api 'com.google.code.gson:gson:2.8.6'
+    api 'com.google.code.gson:gson:2.9.0'
 
     allTest "com.github.tomakehurst:wiremock:2.27.2"
 
-    allTest "ch.qos.logback:logback-classic:1.2.3"
-    allTest "ch.qos.logback:logback-core:1.2.3"
+    allTest "ch.qos.logback:logback-classic:1.2.11"
+    allTest "ch.qos.logback:logback-core:1.2.11"
     allTest "org.json:json:20210307"
 
     testImplementation group: 'io.cucumber', name: 'cucumber-java', version: '6.10.4'
