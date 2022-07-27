@@ -239,7 +239,7 @@ changelog:
       - type: bug
         text: "Gson, logback."
       - type: bug
-        text: "Removed "create" for space as a valid permission that can be assigned to token."
+        text: "Removed CREATE for space as a valid permission that can be assigned to token."
   - date: 2022-06-28
     version: v7.3.1
     changes:
