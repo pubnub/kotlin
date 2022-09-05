@@ -1,3 +1,22 @@
+## v7.3.2
+July 21 2022
+
+#### Fixed
+- Gson, logback.
+- Removed "create" for space as a valid permission that can be assigned to token.
+
+## v7.3.1
+June 28 2022
+
+#### Fixed
+- Renamed name to id in SpacePermissions.
+
+## v7.3.0
+June 28 2022
+
+#### Added
+- Introduced new GrantToken method with no channel groups.
+
 ## v7.2.0
 June 14 2022
 

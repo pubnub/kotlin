@@ -25,22 +25,42 @@ class PNConfigurationTest {
     }
 
     @Test(expected = PubNubException::class)
-    fun setUUIDToEmptyString() {
+    fun setUserIdToEmptyString() {
         PNConfiguration(userId = UserId(""))
     }
 
     @Test(expected = PubNubException::class)
-    fun resetUUIDToEmptyString() {
+    fun resetUserIdToEmptyString() {
         val config = PNConfiguration(userId = UserId(PubNub.generateUUID()))
         config.userId = UserId("")
     }
 
     @Test
-    fun resetUUIDToNonEmptyString() {
+    fun resetUserIdToNonEmptyString() {
         val config = PNConfiguration(userId = UserId(PubNub.generateUUID()))
         val newUUID = PubNub.generateUUID()
         config.userId = UserId(newUUID)
 
         assertEquals(newUUID, config.userId.value)
+    }
+
+    @Test(expected = PubNubException::class)
+    fun setUUIDToEmptyString() {
+        PNConfiguration("")
+    }
+
+    @Test(expected = PubNubException::class)
+    fun resetUUIDToEmptyString() {
+        val config = PNConfiguration(PubNub.generateUUID())
+        config.uuid = ""
+    }
+
+    @Test
+    fun resetUUIDToNonEmptyString() {
+        val config = PNConfiguration(PubNub.generateUUID())
+        val newUUID = PubNub.generateUUID()
+        config.uuid = newUUID
+
+        assertEquals(newUUID, config.uuid)
     }
 }
