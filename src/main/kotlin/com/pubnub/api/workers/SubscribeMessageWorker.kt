@@ -1,6 +1,7 @@
 package com.pubnub.api.workers
 
 import com.google.gson.JsonElement
+import com.google.gson.JsonNull
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PNConfiguration.Companion.isValid
 import com.pubnub.api.PubNub
@@ -29,7 +30,6 @@ import com.pubnub.api.models.server.files.FileUploadNotification
 import com.pubnub.api.services.FilesService
 import com.pubnub.api.vendor.Crypto
 import org.slf4j.LoggerFactory
-import java.util.ArrayList
 import java.util.concurrent.LinkedBlockingQueue
 
 internal class SubscribeMessageWorker(
@@ -164,8 +164,7 @@ internal class SubscribeMessageWorker(
                 }
                 TYPE_FILES -> {
                     val fileUploadNotification = pubnub.mapper.convertValue(
-                        extractedMessage,
-                        FileUploadNotification::class.java
+                        extractedMessage, FileUploadNotification::class.java
                     )
                     listenerManager.announce(
                         PNFileEventResult(
@@ -175,13 +174,12 @@ internal class SubscribeMessageWorker(
                                 id = fileUploadNotification.file.id,
                                 name = fileUploadNotification.file.name,
                                 url = buildFileUrl(
-                                    message.channel,
-                                    fileUploadNotification.file.id,
-                                    fileUploadNotification.file.name
+                                    message.channel, fileUploadNotification.file.id, fileUploadNotification.file.name
                                 )
                             ),
                             publisher = message.issuingClientId,
-                            timetoken = result.timetoken
+                            timetoken = result.timetoken,
+                            jsonMessage = fileUploadNotification.message?.let { pubnub.mapper.toJsonTree(it) } ?: JsonNull.INSTANCE
                         )
                     )
                 }
