@@ -9,23 +9,18 @@ import com.google.gson.JsonPrimitive
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
 import com.pubnub.api.UserId
-import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.managers.DuplicationManager
-import com.pubnub.api.managers.ListenerManager
-import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
 import com.pubnub.api.models.server.SubscribeMessage
 import org.hamcrest.MatcherAssert.assertThat
+import org.hamcrest.Matchers.isA
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
-import java.util.concurrent.CompletableFuture
-import java.util.concurrent.LinkedBlockingQueue
-import java.util.concurrent.TimeUnit
 import org.hamcrest.core.Is.`is` as iz
 
 @RunWith(Parameterized::class)
-class SubscribeMessageWorkerJsonMessageParametrizedTest(
+class SubscribeMessageProcessorTest(
     private val messageJson: JsonElement
 ) {
 
@@ -67,47 +62,17 @@ class SubscribeMessageWorkerJsonMessageParametrizedTest(
     @Test
     fun testDifferentJsonMessages() {
         val gson = Gson()
-        val queue = LinkedBlockingQueue<SubscribeMessage>()
-        val subscribeMessage =
-            gson.fromJson(fileMessage(messageJson.toString()), SubscribeMessage::class.java)
-
-        val maybeResult = queue.getFirstFileEventResult()
-
-        queue.add(subscribeMessage)
-
-        val result = maybeResult.get(1_000, TimeUnit.MILLISECONDS)
-        assertThat(result.jsonMessage, iz(messageJson))
-    }
-
-    private fun LinkedBlockingQueue<SubscribeMessage>.getFirstFileEventResult(): CompletableFuture<PNFileEventResult> {
-        val completableFuture = CompletableFuture<PNFileEventResult>()
-
         val configuration = PNConfiguration(userId = UserId("test"))
-        val pubnub = PubNub(configuration)
-        val listenerManager = ListenerManager(pubnub)
 
-        val subscribeMessageWorker = SubscribeMessageWorker(
-            pubnub = pubnub,
-            listenerManager = listenerManager,
-            queue = this,
+        val messageProcessor = SubscribeMessageProcessor(
+            pubnub = PubNub(configuration),
             duplicationManager = DuplicationManager(configuration)
         )
-        val thread = Thread {
-            subscribeMessageWorker.run()
-        }.apply { start() }
 
-        listenerManager.addListener(object : SubscribeCallback() {
-            override fun status(pubnub: PubNub, pnStatus: PNStatus) {
-            }
+        val result = messageProcessor.processIncomingPayload(gson.fromJson(fileMessage(messageJson.toString()), SubscribeMessage::class.java))
 
-            override fun file(pubnub: PubNub, pnFileEventResult: PNFileEventResult) {
-                completableFuture.complete(pnFileEventResult)
-            }
-        })
-
-        return completableFuture.whenCompleteAsync { t, u ->
-            thread.interrupt()
-        }
+        assertThat(result, isA(PNFileEventResult::class.java))
+        assertThat((result as PNFileEventResult).jsonMessage, iz(messageJson))
     }
 
     private fun fileMessage(messageJson: String) =

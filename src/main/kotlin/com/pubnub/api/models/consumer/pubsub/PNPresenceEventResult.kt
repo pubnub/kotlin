@@ -39,4 +39,4 @@ data class PNPresenceEventResult(
     val timeout: List<String>? = null,
     val hereNowRefresh: Boolean? = null,
     val userMetadata: Any? = null
-)
+) : PNEvent
