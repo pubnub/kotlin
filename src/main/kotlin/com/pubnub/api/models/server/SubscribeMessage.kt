@@ -2,8 +2,8 @@ package com.pubnub.api.models.server
 
 import com.google.gson.JsonElement
 import com.google.gson.annotations.SerializedName
-import com.pubnub.api.workers.SubscribeMessageWorker.Companion.TYPE_FILES
-import com.pubnub.api.workers.SubscribeMessageWorker.Companion.TYPE_MESSAGE
+import com.pubnub.api.workers.SubscribeMessageProcessor.Companion.TYPE_FILES
+import com.pubnub.api.workers.SubscribeMessageProcessor.Companion.TYPE_MESSAGE
 
 class SubscribeMessage(
     @SerializedName("a")
