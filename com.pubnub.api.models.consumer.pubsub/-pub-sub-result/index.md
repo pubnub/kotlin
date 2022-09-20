@@ -2,7 +2,7 @@
 
 # PubSubResult
 
-`interface PubSubResult`
+`interface PubSubResult : `[`PNEvent`](../-p-n-event.md)
 
 ### Properties
 

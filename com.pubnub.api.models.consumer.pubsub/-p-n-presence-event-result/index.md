@@ -2,7 +2,7 @@
 
 # PNPresenceEventResult
 
-`data class PNPresenceEventResult`
+`data class PNPresenceEventResult : `[`PNEvent`](../-p-n-event.md)
 
 Wrapper around a presence event received in [SubscribeCallback.presence](../../com.pubnub.api.callbacks/-subscribe-callback/presence.md).
 

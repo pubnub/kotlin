@@ -2,13 +2,13 @@
 
 # PNFileEventResult
 
-`data class PNFileEventResult`
+`data class PNFileEventResult : `[`PNEvent`](../../com.pubnub.api.models.consumer.pubsub/-p-n-event.md)
 
 ### Constructors
 
 | Name | Summary |
 |---|---|
-| [&lt;init&gt;](-init-.md) | `PNFileEventResult(channel: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`, timetoken: `[`Long`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)`?, publisher: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`?, message: `[`Any`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)`?, file: `[`PNDownloadableFile`](../../com.pubnub.api.models.consumer.files/-p-n-downloadable-file/index.md)`)` |
+| [&lt;init&gt;](-init-.md) | `PNFileEventResult(channel: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`, timetoken: `[`Long`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)`?, publisher: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`?, message: `[`Any`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)`?, file: `[`PNDownloadableFile`](../../com.pubnub.api.models.consumer.files/-p-n-downloadable-file/index.md)`, jsonMessage: JsonElement)` |
 
 ### Properties
 
@@ -16,6 +16,7 @@
 |---|---|
 | [channel](channel.md) | `val channel: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
 | [file](file.md) | `val file: `[`PNDownloadableFile`](../../com.pubnub.api.models.consumer.files/-p-n-downloadable-file/index.md) |
+| [jsonMessage](json-message.md) | `val jsonMessage: JsonElement` |
 | [message](message.md) | `val message: `[`Any`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)`?` |
 | [publisher](publisher.md) | `val publisher: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`?` |
 | [timetoken](timetoken.md) | `val timetoken: `[`Long`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)`?` |

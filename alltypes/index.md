@@ -534,6 +534,11 @@ Result of the [PubNub.deleteMessages](../com.pubnub.api/-pub-nub/delete-messages
 
 |
 
+##### [com.pubnub.api.models.consumer.pubsub.PNEvent](../com.pubnub.api.models.consumer.pubsub/-p-n-event.md)
+
+
+|
+
 ##### [com.pubnub.api.models.consumer.history.PNFetchMessageItem](../com.pubnub.api.models.consumer.history/-p-n-fetch-message-item/index.md)
 
 Encapsulates a message in terms of a batch history entry.
