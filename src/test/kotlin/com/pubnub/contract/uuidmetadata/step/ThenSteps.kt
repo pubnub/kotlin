@@ -29,4 +29,8 @@ class ThenSteps(
     fun the_uuid_metadata_for_persona_contains_updated() {
         assertThat(uuidMetadataState.uuidMetadata?.updated, iz(Matchers.notNullValue()))
     }
+
+    @Then("the UUID metadata for {string} and {string} persona")
+    fun the_uuid_metadata_for_and_persona(personName: String, otherPersonName: String) {
+    }
 }

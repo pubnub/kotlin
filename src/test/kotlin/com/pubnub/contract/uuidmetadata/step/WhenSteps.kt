@@ -44,4 +44,14 @@ class WhenSteps(
     fun i_remove_uuid_metadata_of_current_user() {
         world.pubnub.removeUUIDMetadata().sync()
     }
+
+    @When("I get all UUID metadata")
+    fun i_get_all_uuid_metadata() {
+        uuidMetadataState.uuidMetadatas = world.pubnub.getAllUUIDMetadata().sync()?.data
+    }
+
+    @When("I get all UUID metadata with custom")
+    fun i_get_all_uuid_metadata_with_custom() {
+        uuidMetadataState.uuidMetadatas = world.pubnub.getAllUUIDMetadata(includeCustom = true).sync()?.data
+    }
 }
