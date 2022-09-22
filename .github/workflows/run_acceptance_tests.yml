@@ -1,4 +1,4 @@
-name: run_acceptance_tests
+name: Acceptance tests
 
 on: [push]
 
