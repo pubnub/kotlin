@@ -42,7 +42,7 @@ jobs:
           export pamSecKey=someSecKey
           export serverHostPort=localhost:8090
           export serverMock=true
-          ln -s /home/runner/work/kotlin/kotlin/service-contract-mock/contract/features /home/runner/work/kotlin/kotlin/src/test/kotlin/resources/features
+          cp -r /home/runner/work/kotlin/kotlin/service-contract-mock/contract/features src/test/kotlin/resources/features
           ./gradlew cucumber --tests RunMainCucumberTest  -Dcucumber.features="sdk-specifications/features/" -i
       - name: Expose acceptance tests reports
         uses: actions/upload-artifact@v2
