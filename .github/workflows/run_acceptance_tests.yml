@@ -34,6 +34,7 @@ jobs:
         continue-on-error: true
       - name: Run acceptance tests (required)
         run: |
+          pwd
           export pubKey=somePubKey
           export subKey=someSubKey
           export pamPubKey=somePamPubKey
