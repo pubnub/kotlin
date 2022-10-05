@@ -15,7 +15,7 @@ class RunMainCucumberTest
 @RunWith(Cucumber::class)
 @CucumberOptions(
     features = ["src/test/resources"],
-    tags = "not @skip and not @na=kotlin and @beta",
+    tags = "not @skip and not @na=kotlin and @beta and @featureSet=objectsV2",
     plugin = ["pretty", "summary", "junit:build/reports/cucumber-reports/beta.xml"]
 )
 class RunBetaCucumberTest

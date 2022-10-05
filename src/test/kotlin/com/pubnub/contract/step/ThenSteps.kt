@@ -2,6 +2,7 @@ package com.pubnub.contract.step
 
 import com.pubnub.contract.state.World
 import io.cucumber.java.en.Then
+import io.cucumber.java.en.Then.Thens
 import junit.framework.Assert.assertNull
 import org.json.JSONObject
 import org.junit.Assert.assertEquals
@@ -10,12 +11,18 @@ import org.junit.Assert.assertTrue
 
 class ThenSteps(private val world: World) {
 
-    @Then.Thens(Then("an error is returned"), Then("an auth error is returned"))
+    @Then.Thens(
+        Then("an error is returned"),
+        Then("an auth error is returned")
+    )
     fun an_error_is_returned() {
         assertNotNull(world.pnException)
     }
 
-    @Then("the result is successful")
+    @Thens(
+        Then("the result is successful"),
+        Then("I receive a successful response")
+    )
     fun the_result_is_successful() {
         assertNull(world.pnException)
     }
