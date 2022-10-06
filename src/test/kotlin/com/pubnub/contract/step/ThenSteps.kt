@@ -19,12 +19,15 @@ class ThenSteps(private val world: World) {
         assertNotNull(world.pnException)
     }
 
-    @Thens(
-        Then("the result is successful"),
-        Then("I receive a successful response")
-    )
+    @Then("the result is successful")
     fun the_result_is_successful() {
         assertNull(world.pnException)
+    }
+
+    @Then("I receive a successful response")
+    fun i_receive_a_successful_response() {
+        assertNull(world.pnException)
+        assertEquals(200, world.responseStatus)
     }
 
     @Then("the error status code is {int}")

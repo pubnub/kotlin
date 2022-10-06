@@ -11,19 +11,24 @@ class WhenSteps(
 
     @When("I get the UUID metadata")
     fun i_get_uuid_metadata() {
-        uuidMetadataState.uuidMetadata = world.pubnub.getUUIDMetadata(uuid = uuidMetadataState.uuid).sync()?.data
+        world.pubnub.getUUIDMetadata(uuid = uuidMetadataState.uuid).sync()?.let {
+            uuidMetadataState.uuidMetadata = it.data
+            world.responseStatus = it.status
+        }
     }
 
     @When("I get the UUID metadata with custom for current user")
     fun i_get_uuid_metadata_with_custom_for_current_user() {
-        uuidMetadataState.uuidMetadata = world.pubnub.getUUIDMetadata(includeCustom = true).sync()?.data
+        world.pubnub.getUUIDMetadata(includeCustom = true).sync()?.let {
+            uuidMetadataState.uuidMetadata = it.data
+            world.responseStatus = it.status
+        }
     }
 
     @When("I set the UUID metadata")
     fun i_set_the_uuid_metadata() {
         val uuidMetadata = uuidMetadataState.uuidMetadata!!
-        uuidMetadataState.uuidMetadata = null
-        uuidMetadataState.uuidMetadata = world.pubnub.setUUIDMetadata(
+        world.pubnub.setUUIDMetadata(
             uuid = uuidMetadata.id,
             custom = uuidMetadata.custom,
             externalId = uuidMetadata.externalId,
@@ -32,26 +37,35 @@ class WhenSteps(
             name = uuidMetadata.name,
             status = uuidMetadata.status,
             type = uuidMetadata.type
-        ).sync()?.data
+        ).sync()?.let {
+            uuidMetadataState.uuidMetadata = it.data
+            world.responseStatus = it.status
+        }
     }
 
     @When("I remove the UUID metadata")
     fun i_remove_uuid_metadata_for_id() {
-        world.pubnub.removeUUIDMetadata(uuid = uuidMetadataState.uuid).sync()
+        world.responseStatus = world.pubnub.removeUUIDMetadata(uuid = uuidMetadataState.uuid).sync()?.status
     }
 
     @When("I remove the UUID metadata for current user")
     fun i_remove_uuid_metadata_of_current_user() {
-        world.pubnub.removeUUIDMetadata().sync()
+        world.responseStatus = world.pubnub.removeUUIDMetadata().sync()?.status
     }
 
     @When("I get all UUID metadata")
     fun i_get_all_uuid_metadata() {
-        uuidMetadataState.uuidMetadatas = world.pubnub.getAllUUIDMetadata().sync()?.data
+        world.pubnub.getAllUUIDMetadata().sync()?.let {
+            uuidMetadataState.uuidMetadatas = it.data
+            world.responseStatus = it.status
+        }
     }
 
     @When("I get all UUID metadata with custom")
     fun i_get_all_uuid_metadata_with_custom() {
-        uuidMetadataState.uuidMetadatas = world.pubnub.getAllUUIDMetadata(includeCustom = true).sync()?.data
+        world.pubnub.getAllUUIDMetadata(includeCustom = true).sync()?.let {
+            uuidMetadataState.uuidMetadatas = it.data
+            world.responseStatus = it.status
+        }
     }
 }

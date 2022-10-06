@@ -7,6 +7,8 @@ import com.pubnub.contract.loadPersonaUUIDMetadata
 import com.pubnub.contract.state.World
 import com.pubnub.contract.uuidmetadata.state.UUIDMetadataState
 import io.cucumber.java.en.Given
+import org.hamcrest.MatcherAssert
+import org.hamcrest.Matchers
 
 class GivenSteps(
     private val world: World,
@@ -14,9 +16,9 @@ class GivenSteps(
 ) {
     @Given("I have a keyset with Objects V2 enabled")
     fun i_have_a_keyset_with_objects_v2_enabled() {
+        MatcherAssert.assertThat(ContractTestConfig.subKey, Matchers.notNullValue())
         world.pubnub.configuration.apply {
             subscribeKey = ContractTestConfig.subKey
-            publishKey = ContractTestConfig.pubKey
         }
     }
 

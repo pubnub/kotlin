@@ -11,8 +11,10 @@ class WhenSteps(
 
     @When("I get the channel metadata")
     fun i_get_the_channel_metadata() {
-        channelMetadataState.channelMetadata =
-            world.pubnub.getChannelMetadata(channel = channelMetadataState.channelId!!).sync()!!.data
+        world.pubnub.getChannelMetadata(channel = channelMetadataState.channelId!!).sync()?.let {
+            channelMetadataState.channelMetadata = it.data
+            world.responseStatus = it.status
+        }
     }
 
     @When("I set the channel metadata")
@@ -25,32 +27,44 @@ class WhenSteps(
             custom = channelMetadata.custom,
             type = channelMetadata.type,
             status = channelMetadata.status
-        ).sync()
+        ).sync()?.let {
+            channelMetadataState.channelMetadata = it.data
+            world.responseStatus = it.status
+        }
     }
 
     @When("I get the channel metadata with custom")
     fun i_get_the_channel_metadata_with_custom() {
-        channelMetadataState.channelMetadata = world.pubnub.getChannelMetadata(
+        world.pubnub.getChannelMetadata(
             channel = channelMetadataState.channelId!!, includeCustom = true
-        ).sync()!!.data
+        ).sync()?.let {
+            channelMetadataState.channelMetadata = it.data
+            world.responseStatus = it.status
+        }
     }
 
     @When("I remove the channel metadata")
     fun i_remove_the_channel_metadata() {
-        world.pubnub.removeChannelMetadata(
+        world.responseStatus = world.pubnub.removeChannelMetadata(
             channel = channelMetadataState.channelId!!
-        ).sync()!!
+        ).sync()?.status
     }
 
     @When("I get all channel metadata")
     fun i_get_all_channel_metadata() {
-        channelMetadataState.channelMetadatas = world.pubnub.getAllChannelMetadata().sync()!!.data
+        world.pubnub.getAllChannelMetadata().sync()?.let {
+            channelMetadataState.channelMetadatas = it.data
+            world.responseStatus = it.status
+        }
     }
 
     @When("I get all channel metadata with custom")
     fun i_get_all_channel_metadata_with_custom() {
-        channelMetadataState.channelMetadatas = world.pubnub.getAllChannelMetadata(
+        world.pubnub.getAllChannelMetadata(
             includeCustom = true
-        ).sync()!!.data
+        ).sync()?.let {
+            channelMetadataState.channelMetadatas = it.data
+            world.responseStatus = it.status
+        }
     }
 }
