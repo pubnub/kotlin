@@ -22,7 +22,6 @@ jobs:
           token: ${{ secrets.GH_TOKEN }}
       - name: Gradle wrapper cache
         uses: actions/cache@v3
-        id: gradle-cache
         with:
           path: |
             ${{ github.workspace }}/.gradle
@@ -31,7 +30,6 @@ jobs:
             gradle_wrapper-
       - name: Project dependencies cache
         uses: actions/cache@v3
-        id: project-cache
         with:
           path: |
             $HOME/.gradle/caches
