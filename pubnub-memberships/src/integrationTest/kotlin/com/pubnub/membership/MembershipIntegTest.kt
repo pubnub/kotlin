@@ -2,6 +2,7 @@ package com.pubnub.membership
 
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
+import com.pubnub.api.SpaceId
 import com.pubnub.api.UserId
 import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.enums.PNStatusCategory
@@ -16,7 +17,6 @@ import com.pubnub.membership.models.consumer.UserDetailsLevel
 import com.pubnub.membership.models.consumer.UserMembershipsResultKey
 import com.pubnub.space.createSpace
 import com.pubnub.space.models.consumer.Space
-import com.pubnub.space.models.consumer.SpaceId
 import com.pubnub.space.removeSpace
 import com.pubnub.user.createUser
 import com.pubnub.user.models.consumer.User
@@ -41,8 +41,8 @@ class MembershipIntegTest {
     private val PROFILE_URL = "prorileUrl"
     private val EMAIL = "emaiL@mail.com"
     private val USER_CUSTOM = mapOf("user favourite pet" to "mouse")
-    private val USER_STATUS = "user_status"
-    private val USER_TYPE = "user_type"
+    private val USER_STATUS = "userStatus"
+    private val USER_TYPE = "userType"
 
     private val SPACE_ID = SpaceId("space_id")
     private val SPACE_ID_02 = SpaceId("space_id02")
@@ -50,8 +50,8 @@ class MembershipIntegTest {
     private val SPACE_NAME_02 = "space_name02"
     private val SPACE_DESCRIPTION = "space_description"
     private val SPACE_CUSTOM = mapOf("space favourite pet" to "mouse")
-    private val SPACE_STATUS = "space_status"
-    private val SPACE_TYPE = "space_type"
+    private val SPACE_STATUS = "spaceStatus"
+    private val SPACE_TYPE = "spaceType"
     private val MEMBERSHIP_CUSTOM = mapOf("membership favourite pet" to "mouse")
     private val MEMBERSHIP_STATUS = "membership_status"
 
