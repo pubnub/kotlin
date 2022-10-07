@@ -30,4 +30,12 @@ class KeysetStep(private val world: World) {
             publishKey = ContractTestConfig.pubKey
         }
     }
+
+    @Given("I have a keyset with Objects V2 enabled")
+    fun i_have_a_keyset_with_objects_v2_enabled() {
+        MatcherAssert.assertThat(ContractTestConfig.subKey, Matchers.notNullValue())
+        world.pubnub.configuration.apply {
+            subscribeKey = ContractTestConfig.subKey
+        }
+    }
 }

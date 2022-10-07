@@ -6,5 +6,4 @@ class UUIDMetadataState {
     var uuidMetadatas: Collection<PNUUIDMetadata>? = null
     var uuidMetadata: PNUUIDMetadata? = null
     var uuid: String? = null
-    var name: String? = null
 }

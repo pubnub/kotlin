@@ -29,12 +29,11 @@ jobs:
           export pamSecKey=someSecKey
           export serverHostPort=localhost:8090
           export serverMock=true
-          ln -s /home/runner/work/kotlin/kotlin/sdk-specifications/features src/test/resources/features
+          ln -s /home/runner/work/kotlin/kotlin/sdk-specifications src/test/resources/sdk-specifications
           ./gradlew cucumber --tests RunBetaCucumberTest  -Dcucumber.features="sdk-specifications/features/" -i
         continue-on-error: true
       - name: Run acceptance tests (required)
         run: |
-          pwd
           export pubKey=somePubKey
           export subKey=someSubKey
           export pamPubKey=somePamPubKey
@@ -42,7 +41,7 @@ jobs:
           export pamSecKey=someSecKey
           export serverHostPort=localhost:8090
           export serverMock=true
-          ln -s /home/runner/work/kotlin/kotlin/sdk-specifications/features src/test/resources/features
+          ln -s /home/runner/work/kotlin/kotlin/sdk-specifications src/test/resources/sdk-specifications
           ./gradlew cucumber --tests RunMainCucumberTest  -Dcucumber.features="sdk-specifications/features/" -i
       - name: Expose acceptance tests reports
         uses: actions/upload-artifact@v2

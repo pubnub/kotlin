@@ -13,7 +13,7 @@ class ThenSteps(
 ) {
 
     @Then("the UUID metadata for {string} persona")
-    fun the_uuid_metadata_for_alice_persona(personaName: String) {
+    fun the_uuid_metadata_for_persona(personaName: String) {
         val alice: PNUUIDMetadata = loadPersonaUUIDMetadata(personaName)
         assertThat(uuidMetadataState.uuidMetadata, iz(alice))
     }
@@ -23,8 +23,8 @@ class ThenSteps(
         assertThat(uuidMetadataState.uuidMetadata?.updated, iz(Matchers.notNullValue()))
     }
 
-    @Then("The response contains list with {string} and {string} UUID metadata")
-    fun the_uuid_metadata_for_and_persona(personName: String, otherPersonName: String) {
+    @Then("the response contains list with {string} and {string} UUID metadata")
+    fun the_response_contains_list_with_UUID_metadata(personName: String, otherPersonName: String) {
         val firstPersona = loadPersonaUUIDMetadata(personName)
         val secondPersona = loadPersonaUUIDMetadata(otherPersonName)
         assertThat(uuidMetadataState.uuidMetadatas, Matchers.containsInAnyOrder(firstPersona, secondPersona))

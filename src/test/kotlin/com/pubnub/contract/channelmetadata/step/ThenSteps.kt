@@ -22,7 +22,7 @@ class ThenSteps(
         MatcherAssert.assertThat(channelMetadataState.channelMetadata?.updated, iz(Matchers.notNullValue()))
     }
 
-    @Then("The response contains list with {string} and {string} channel metadata")
+    @Then("the response contains list with {string} and {string} channel metadata")
     fun the_response_contains_list_with_and_channel_metadata(firstChannelName: String, secondChannelName: String) {
         val firstChannel = loadChannelMetadata(firstChannelName)
         val secondChannel = loadChannelMetadata(secondChannelName)

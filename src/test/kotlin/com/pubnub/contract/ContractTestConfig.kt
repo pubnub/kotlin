@@ -28,7 +28,7 @@ interface ContractTestKeysConfig : Config {
     val serverMock: Boolean
 
     @get:Config.Key("dataFilesLocation")
-    @get:Config.DefaultValue("src/test/resources/sdk-specifications/features/data/")
+    @get:Config.DefaultValue("src/test/resources/sdk-specifications/features/data")
     val dataFilesLocation: String
 }
 
