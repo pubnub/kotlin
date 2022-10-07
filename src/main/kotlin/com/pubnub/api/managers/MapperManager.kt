@@ -113,6 +113,8 @@ class MapperManager {
 
     fun getAsArray(element: JsonElement) = element.asJsonArray
 
+    fun toJsonTree(any: Any?) = objectMapper.toJsonTree(any)
+
     fun <T> fromJson(input: String?, clazz: Class<T>): T {
         return try {
             this.objectMapper.fromJson<T>(input, clazz)
