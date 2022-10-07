@@ -20,22 +20,15 @@ jobs:
         uses: ./client-engineering-deployment-tools/actions/mock-server
         with:
           token: ${{ secrets.GH_TOKEN }}
-      - name: Gradle wrapper cache
+      - name: Cache
         uses: actions/cache@v3
         with:
           path: |
-            ${{ github.workspace }}/.gradle
-          key: gradle_wrapper-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
-            gradle_wrapper-
-      - name: Project dependencies cache
-        uses: actions/cache@v3
-        with:
-          path: |
-            $HOME/.gradle/caches
-          key: build_gradle-${{ hashFiles('build.gradle') }}
-          restore-keys: |
-            build_gradle-
+            ${{ runner.os }}-gradle-
       - name: Run acceptance tests (optional)
         run: |
           export pubKey=somePubKey
