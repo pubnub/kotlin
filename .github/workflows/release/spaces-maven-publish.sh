@@ -1,2 +1,2 @@
-./gradlew :pubnub-spaces:publish --no-daemon --no-parallel
-./gradlew closeAndReleaseRepository
+./gradlew :pubnub-spaces:publish
+./gradlew :pubnub-bom:publish
