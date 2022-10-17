@@ -12,7 +12,6 @@ plugins {
 }
 
 
-
 allprojects {
     apply plugin: "com.vanniktech.maven.publish"
 
@@ -118,12 +117,13 @@ task cucumber(type: Test) {
 }
 
 
-//tasks.dokkaGfm.configure {
-//    dokkaSourceSets {
-//        includeNonPublic.set(false)
-//        skipEmptyPackages.set(true)
-//    }
-//}
+dokkaGfm {
+    dokkaSourceSets {
+        configureEach {
+            skipEmptyPackages.set(true)
+        }
+    }
+}
 
 sourceSets {
     test {
