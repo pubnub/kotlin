@@ -26,7 +26,7 @@ class GetAllChannelMetadata internal constructor(
 
         return pubnub.retrofitManager.objectsService.getAllChannelMetadata(
             subKey = pubnub.configuration.subscribeKey,
-            options = params + mapOf("include" to "type")
+            options = params
         )
     }
 
