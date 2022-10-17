@@ -14,5 +14,4 @@ test.properties
 # GitHub Actions #
 ##################
 .github/.release
-src/test/resources/features
-src/test/resources/feature-drafts
+src/test/resources/sdk-specifications
