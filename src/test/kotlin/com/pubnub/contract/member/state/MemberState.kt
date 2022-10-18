@@ -6,7 +6,7 @@ import com.pubnub.contract.channelmetadata.state.ChannelMetadataState
 class MemberState(
     private val channelMetadataState: ChannelMetadataState
 ) {
-    fun channelId(): String? = channelMetadataState.channelId
-    var member: PNMember? = null
-    var members: Collection<PNMember>? = null
+    fun channelId(): String = channelMetadataState.channelId
+    lateinit var member: PNMember
+    lateinit var members: Collection<PNMember>
 }

@@ -11,7 +11,7 @@ class WhenSteps(
 
     @When("I get the channel metadata")
     fun i_get_the_channel_metadata() {
-        world.pubnub.getChannelMetadata(channel = channelMetadataState.channelId!!).sync()?.let {
+        world.pubnub.getChannelMetadata(channel = channelMetadataState.channelId).sync()?.let {
             channelMetadataState.channelMetadata = it.data
             world.responseStatus = it.status
         }
@@ -36,7 +36,7 @@ class WhenSteps(
     @When("I get the channel metadata with custom")
     fun i_get_the_channel_metadata_with_custom() {
         world.pubnub.getChannelMetadata(
-            channel = channelMetadataState.channelId!!, includeCustom = true
+            channel = channelMetadataState.channelId, includeCustom = true
         ).sync()?.let {
             channelMetadataState.channelMetadata = it.data
             world.responseStatus = it.status
@@ -46,7 +46,7 @@ class WhenSteps(
     @When("I remove the channel metadata")
     fun i_remove_the_channel_metadata() {
         world.responseStatus = world.pubnub.removeChannelMetadata(
-            channel = channelMetadataState.channelId!!
+            channel = channelMetadataState.channelId
         ).sync()?.status
     }
 
