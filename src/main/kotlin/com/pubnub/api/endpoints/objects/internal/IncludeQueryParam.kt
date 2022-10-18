@@ -16,10 +16,12 @@ data class IncludeQueryParam(
         when (includeChannelDetails) {
             PNChannelDetailsLevel.CHANNEL -> includeList.add("channel")
             PNChannelDetailsLevel.CHANNEL_WITH_CUSTOM -> includeList.add("channel.custom")
+            null -> {}
         }
         when (includeUUIDDetails) {
             PNUUIDDetailsLevel.UUID -> includeList.add("uuid")
             PNUUIDDetailsLevel.UUID_WITH_CUSTOM -> includeList.add("uuid.custom")
+            null -> {}
         }
         if (includeType) includeList.add("type")
         if (includeStatus) includeList.add("status")
