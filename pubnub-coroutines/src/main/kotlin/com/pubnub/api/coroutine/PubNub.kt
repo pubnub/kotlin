@@ -69,17 +69,16 @@ class PubNub(configuration: PNConfiguration) {
         usePost: Boolean = false,
         replicate: Boolean = true,
         ttl: Int? = null
-    ): Result<Long> =
-        PublishImpl(
-            pubnub = oldPubNub,
-            channel = channel,
-            message = message,
-            meta = meta,
-            shouldStore = shouldStore,
-            usePost = usePost,
-            replicate = replicate,
-            ttl = ttl
-        ).awaitResult().map { it.timetoken }
+    ): Result<Long> = PublishImpl(
+        pubnub = oldPubNub,
+        channel = channel,
+        message = message,
+        meta = meta,
+        shouldStore = shouldStore,
+        usePost = usePost,
+        replicate = replicate,
+        ttl = ttl
+    ).awaitResult().map { it.timetoken }
 
     /**
      * Send a message to PubNub Functions Event Handlers.
@@ -140,7 +139,8 @@ class PubNub(configuration: PNConfiguration) {
     suspend fun signal(
         channel: String,
         message: Any
-    ) = SignalImpl(pubnub = oldPubNub, channel = channel, message = message).awaitResult()
+    ): Result<Long> =
+        SignalImpl(pubnub = oldPubNub, channel = channel, message = message).awaitResult().map { it.timetoken }
     //endregion
 
     //region StoragePlayback
@@ -262,7 +262,8 @@ class PubNub(configuration: PNConfiguration) {
         channels: List<String>,
         start: Long? = null,
         end: Long? = null
-    ) = DeleteMessagesImpl(pubnub = oldPubNub, channels = channels, start = start, end = end).awaitResult()
+    ): Result<Unit> =
+        DeleteMessagesImpl(pubnub = oldPubNub, channels = channels, start = start, end = end).awaitResult().map { }
 
     /**
      * Fetches the number of messages published on one or more channels since a given time.
@@ -311,10 +312,8 @@ class PubNub(configuration: PNConfiguration) {
      * @param uuid UUID of the user to get its current channel subscriptions. Defaults to the UUID of the client.
      * @see [PNConfiguration.uuid]
      */
-    suspend fun whereNow(uuid: String = oldPubNub.configuration.userId.value) =
-        WhereNowImpl(
-            pubnub = oldPubNub,
-            uuid = uuid
-        ).awaitResult()
+    suspend fun whereNow(uuid: String = oldPubNub.configuration.userId.value) = WhereNowImpl(
+        pubnub = oldPubNub, uuid = uuid
+    ).awaitResult()
     //endregion
 }
