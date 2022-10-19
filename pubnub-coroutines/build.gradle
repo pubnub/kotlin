@@ -1,0 +1,7 @@
+testSets {
+    integrationTest
+}
+
+dependencies {
+    implementation project(":")
+}
