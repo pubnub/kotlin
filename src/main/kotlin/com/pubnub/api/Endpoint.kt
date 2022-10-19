@@ -49,7 +49,7 @@ abstract class Endpoint<Input, Output> protected constructor(protected val pubnu
      */
     val queryParam: MutableMap<String, String> = mutableMapOf()
 
-    suspend fun justdoit(): Result<Output> {
+    suspend fun awaitResult(): Result<Output> {
         return try {
             validateParams()
             call = doWork(createBaseParams())

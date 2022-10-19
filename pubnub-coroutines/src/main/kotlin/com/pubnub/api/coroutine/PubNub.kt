@@ -25,5 +25,5 @@ class PubNub(configuration: PNConfiguration) {
             usePost = usePost,
             replicate = replicate,
             ttl = ttl
-        ).justdoit().map { it.timetoken }
+        ).awaitResult().map { it.timetoken }
 }
