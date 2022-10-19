@@ -5,6 +5,7 @@ import com.pubnub.api.PNConfiguration
 import com.pubnub.api.models.consumer.PNStatus
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
+import kotlin.reflect.full.callSuspend
 import kotlin.reflect.full.declaredMemberFunctions
 import kotlin.reflect.jvm.isAccessible
 
@@ -32,12 +33,13 @@ class PubNub(configuration: PNConfiguration) {
         ).suspended().map { it.timetoken }
 
 
-    private inline fun <reified T> T.callPrivateFunc(name: String, vararg args: Any?): Any? =
+    private suspend inline fun <reified T> T.callPrivateSuspend(name: String, vararg args: Any?): Any? =
         T::class
             .declaredMemberFunctions
             .firstOrNull { it.name == name }
             ?.apply { isAccessible = true }
-            ?.call(this, *args)
+            ?.apply { parameters.forEachIndexed { index, parameter ->  println("$index: $parameter") } }
+            ?.callSuspend(this, *args)
 
-    private suspend fun <Input, Output>  Endpoint<Input, Output>.suspended(): Result<Output> = this.callPrivateFunc("justdoit")!! as Result<Output>
+    private suspend fun <Input, Output>  Endpoint<Input, Output>.suspended(): Result<Output> = this.callPrivateSuspend("justdoit")!! as Result<Output>
 }
