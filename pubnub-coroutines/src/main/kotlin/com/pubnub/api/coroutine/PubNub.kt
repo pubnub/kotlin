@@ -1,7 +1,5 @@
 package com.pubnub.api.coroutine
 
-import com.pubnub.api.models.consumer.PNPublishResult
-
 class PubNub {
 
     suspend fun publish(
@@ -12,7 +10,7 @@ class PubNub {
         usePost: Boolean = false,
         replicate: Boolean = true,
         ttl: Int? = null
-    ): PNPublishResult {
+    ): Result<Long> {
         TODO()
     }
 }
