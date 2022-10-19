@@ -5,6 +5,7 @@ import com.pubnub.api.Endpoint
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
+import com.pubnub.api.endpoints.remoteaction.RemoteAction
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.history.PNHistoryItemResult
 import com.pubnub.api.models.consumer.history.PNHistoryResult
@@ -14,10 +15,16 @@ import retrofit2.Response
 import java.util.HashMap
 import java.util.Locale
 
+interface History : RemoteAction<PNHistoryResult> {
+    companion object {
+        const val MAX_COUNT = 100
+    }
+}
+
 /**
  * @see [PubNub.history]
  */
-class History internal constructor(
+class HistoryImpl(
     pubnub: PubNub,
     val channel: String,
     val start: Long? = null,
@@ -26,13 +33,9 @@ class History internal constructor(
     val reverse: Boolean,
     val includeTimetoken: Boolean,
     val includeMeta: Boolean
-) : Endpoint<JsonElement, PNHistoryResult>(pubnub) {
+) : Endpoint<JsonElement, PNHistoryResult>(pubnub), History {
 
-    internal companion object {
-        internal const val MAX_COUNT = 100
-    }
-
-    private val countParam: Int = if (count in 1..MAX_COUNT) count else MAX_COUNT
+    private val countParam: Int = if (count in 1..History.MAX_COUNT) count else History.MAX_COUNT
 
     override fun validateParams() {
         super.validateParams()

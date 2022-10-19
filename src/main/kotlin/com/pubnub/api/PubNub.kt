@@ -4,9 +4,13 @@ import com.pubnub.api.builder.PubSub
 import com.pubnub.api.callbacks.Listener
 import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.endpoints.DeleteMessages
+import com.pubnub.api.endpoints.DeleteMessagesImpl
 import com.pubnub.api.endpoints.FetchMessages
+import com.pubnub.api.endpoints.FetchMessagesImpl
 import com.pubnub.api.endpoints.History
+import com.pubnub.api.endpoints.HistoryImpl
 import com.pubnub.api.endpoints.MessageCounts
+import com.pubnub.api.endpoints.MessageCountsImpl
 import com.pubnub.api.endpoints.Time
 import com.pubnub.api.endpoints.access.Grant
 import com.pubnub.api.endpoints.access.GrantToken
@@ -43,11 +47,14 @@ import com.pubnub.api.endpoints.objects.uuid.RemoveUUIDMetadata
 import com.pubnub.api.endpoints.objects.uuid.SetUUIDMetadata
 import com.pubnub.api.endpoints.presence.GetState
 import com.pubnub.api.endpoints.presence.HereNow
+import com.pubnub.api.endpoints.presence.HereNowImpl
 import com.pubnub.api.endpoints.presence.SetState
 import com.pubnub.api.endpoints.presence.WhereNow
+import com.pubnub.api.endpoints.presence.WhereNowImpl
 import com.pubnub.api.endpoints.pubsub.Publish
 import com.pubnub.api.endpoints.pubsub.PublishImpl
 import com.pubnub.api.endpoints.pubsub.Signal
+import com.pubnub.api.endpoints.pubsub.SignalImpl
 import com.pubnub.api.endpoints.push.AddChannelsToPush
 import com.pubnub.api.endpoints.push.ListPushProvisions
 import com.pubnub.api.endpoints.push.RemoveAllPushChannelsForDevice
@@ -264,7 +271,7 @@ class PubNub(val configuration: PNConfiguration) {
     fun signal(
         channel: String,
         message: Any
-    ) = Signal(pubnub = this, channel = channel, message = message)
+    ): Signal = SignalImpl(pubnub = this, channel = channel, message = message)
     //endregion
 
     //region Subscribe
@@ -498,7 +505,7 @@ class PubNub(val configuration: PNConfiguration) {
         reverse: Boolean = false,
         includeTimetoken: Boolean = false,
         includeMeta: Boolean = false
-    ) = History(
+    ): History = HistoryImpl(
         pubnub = this,
         channel = channel,
         start = start,
@@ -606,7 +613,7 @@ class PubNub(val configuration: PNConfiguration) {
         includeUUID: Boolean = true,
         includeMeta: Boolean = false,
         includeMessageActions: Boolean = false
-    ) = FetchMessages(
+    ): FetchMessages = FetchMessagesImpl(
         pubnub = this,
         channels = channels,
         page = page,
@@ -632,7 +639,7 @@ class PubNub(val configuration: PNConfiguration) {
         channels: List<String>,
         start: Long? = null,
         end: Long? = null
-    ) = DeleteMessages(pubnub = this, channels = channels, start = start, end = end)
+    ): DeleteMessages = DeleteMessagesImpl(pubnub = this, channels = channels, start = start, end = end)
 
     /**
      * Fetches the number of messages published on one or more channels since a given time.
@@ -644,8 +651,8 @@ class PubNub(val configuration: PNConfiguration) {
      *                          Specify a single timetoken to apply it to all channels.
      *                          Otherwise, the list of timetokens must be the same length as the list of channels.
      */
-    fun messageCounts(channels: List<String>, channelsTimetoken: List<Long>) =
-        MessageCounts(pubnub = this, channels = channels, channelsTimetoken = channelsTimetoken)
+    fun messageCounts(channels: List<String>, channelsTimetoken: List<Long>): MessageCounts =
+        MessageCountsImpl(pubnub = this, channels = channels, channelsTimetoken = channelsTimetoken)
     //endregion
 
     //region Presence
@@ -667,7 +674,7 @@ class PubNub(val configuration: PNConfiguration) {
         channelGroups: List<String> = emptyList(),
         includeState: Boolean = false,
         includeUUIDs: Boolean = true
-    ) = HereNow(
+    ): HereNow = HereNowImpl(
         pubnub = this,
         channels = channels,
         channelGroups = channelGroups,
@@ -681,7 +688,7 @@ class PubNub(val configuration: PNConfiguration) {
      * @param uuid UUID of the user to get its current channel subscriptions. Defaults to the UUID of the client.
      * @see [PNConfiguration.uuid]
      */
-    fun whereNow(uuid: String = configuration.uuid) = WhereNow(pubnub = this, uuid = uuid)
+    fun whereNow(uuid: String = configuration.uuid): WhereNow = WhereNowImpl(pubnub = this, uuid = uuid)
 
     /**
      * Set state information specific to a subscriber UUID.

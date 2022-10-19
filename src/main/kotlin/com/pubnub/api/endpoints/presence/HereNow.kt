@@ -3,6 +3,7 @@ package com.pubnub.api.endpoints.presence
 import com.google.gson.JsonElement
 import com.pubnub.api.Endpoint
 import com.pubnub.api.PubNub
+import com.pubnub.api.endpoints.remoteaction.RemoteAction
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.presence.PNHereNowChannelData
 import com.pubnub.api.models.consumer.presence.PNHereNowOccupantData
@@ -13,16 +14,18 @@ import retrofit2.Call
 import retrofit2.Response
 import java.util.HashMap
 
+interface HereNow : RemoteAction<PNHereNowResult>
+
 /**
  * @see [PubNub.hereNow]
  */
-class HereNow internal constructor(
+class HereNowImpl(
     pubnub: PubNub,
     val channels: List<String> = emptyList(),
     val channelGroups: List<String> = emptyList(),
     val includeState: Boolean = false,
     val includeUUIDs: Boolean = true
-) : Endpoint<Envelope<JsonElement>, PNHereNowResult>(pubnub) {
+) : Endpoint<Envelope<JsonElement>, PNHereNowResult>(pubnub), HereNow {
 
     private fun isGlobalHereNow() = channels.isEmpty() && channelGroups.isEmpty()
 
