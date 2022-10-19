@@ -12,10 +12,15 @@ import com.pubnub.api.endpoints.presence.WhereNowImpl
 import com.pubnub.api.endpoints.pubsub.PublishImpl
 import com.pubnub.api.endpoints.pubsub.SignalImpl
 import com.pubnub.api.models.consumer.PNBoundedPage
+import com.pubnub.api.models.consumer.pubsub.PNMessageResult
+import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
+import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
+import kotlinx.coroutines.flow.Flow
 
 class PubNub(configuration: PNConfiguration) {
 
     private val oldPubNub = com.pubnub.api.PubNub(configuration)
+    private val subscribe = Subscribe(oldPubNub)
 
     /**
      * Send a message to all subscribers of a channel.
@@ -244,6 +249,14 @@ class PubNub(configuration: PNConfiguration) {
         includeMeta = includeMeta,
         includeMessageActions = includeMessageActions
     ).awaitResult()
+
+    private fun messageFlow(vararg channels: String): Flow<PNMessageResult> =
+        subscribe.messageFlow(channels = channels.toList())
+
+    fun presenceFlow(vararg channels: String): Flow<PNPresenceEventResult> =
+        subscribe.presenceFlow(channels = channels.toList())
+    fun messageActionFlow(vararg channels: String): Flow<PNMessageActionResult> =
+        subscribe.messageActionFlow(channels = channels.toList())
 
     /**
      * Removes messages from the history of a specific channel.
