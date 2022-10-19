@@ -46,6 +46,7 @@ import com.pubnub.api.endpoints.presence.HereNow
 import com.pubnub.api.endpoints.presence.SetState
 import com.pubnub.api.endpoints.presence.WhereNow
 import com.pubnub.api.endpoints.pubsub.Publish
+import com.pubnub.api.endpoints.pubsub.PublishImpl
 import com.pubnub.api.endpoints.pubsub.Signal
 import com.pubnub.api.endpoints.push.AddChannelsToPush
 import com.pubnub.api.endpoints.push.ListPushProvisions
@@ -193,7 +194,7 @@ class PubNub(val configuration: PNConfiguration) {
         usePost: Boolean = false,
         replicate: Boolean = true,
         ttl: Int? = null
-    ): Publish = Publish(
+    ): Publish = PublishImpl(
         pubnub = this,
         channel = channel,
         message = message,

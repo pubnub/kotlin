@@ -14,34 +14,12 @@ import com.pubnub.extension.valueString
 import retrofit2.Call
 import retrofit2.Response
 
-fun Publish(
-    pubnub: PubNub,
-    message: Any,
-    channel: String,
-    meta: Any? = null,
-    shouldStore: Boolean? = null,
-    usePost: Boolean = false,
-    replicate: Boolean = true,
-    ttl: Int? = null
-): PublishImpl {
-    return PublishImpl(
-        pubnub = pubnub,
-        message = message,
-        channel = channel,
-        meta = meta,
-        shouldStore = shouldStore,
-        usePost = usePost,
-        replicate = replicate,
-        ttl = ttl
-    )
-}
-
 interface Publish : RemoteAction<PNPublishResult>
 
 /**
  * @see [PubNub.publish]
  */
-class PublishImpl internal constructor(
+class PublishImpl(
     pubnub: PubNub,
     val message: Any,
     val channel: String,

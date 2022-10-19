@@ -1,7 +1,7 @@
 package com.pubnub.api.coroutine
 
 import com.pubnub.api.PNConfiguration
-import com.pubnub.api.endpoints.pubsub.Publish
+import com.pubnub.api.endpoints.pubsub.PublishImpl
 
 class PubNub(configuration: PNConfiguration) {
 
@@ -16,7 +16,7 @@ class PubNub(configuration: PNConfiguration) {
         replicate: Boolean = true,
         ttl: Int? = null
     ): Result<Long> =
-        Publish(
+        PublishImpl(
             pubnub = oldPubNub,
             channel = channel,
             message = message,
