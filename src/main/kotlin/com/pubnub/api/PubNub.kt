@@ -193,7 +193,7 @@ class PubNub(val configuration: PNConfiguration) {
         usePost: Boolean = false,
         replicate: Boolean = true,
         ttl: Int? = null
-    ) = Publish(
+    ): Publish = Publish(
         pubnub = this,
         channel = channel,
         message = message,

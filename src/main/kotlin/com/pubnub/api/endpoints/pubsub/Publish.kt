@@ -5,6 +5,7 @@ import com.pubnub.api.PNConfiguration.Companion.isValid
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
+import com.pubnub.api.endpoints.remoteaction.RemoteAction
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.PNPublishResult
 import com.pubnub.api.vendor.Crypto
@@ -13,10 +14,34 @@ import com.pubnub.extension.valueString
 import retrofit2.Call
 import retrofit2.Response
 
+fun Publish(
+    pubnub: PubNub,
+    message: Any,
+    channel: String,
+    meta: Any? = null,
+    shouldStore: Boolean? = null,
+    usePost: Boolean = false,
+    replicate: Boolean = true,
+    ttl: Int? = null
+): PublishImpl {
+    return PublishImpl(
+        pubnub = pubnub,
+        message = message,
+        channel = channel,
+        meta = meta,
+        shouldStore = shouldStore,
+        usePost = usePost,
+        replicate = replicate,
+        ttl = ttl
+    )
+}
+
+interface Publish : RemoteAction<PNPublishResult>
+
 /**
  * @see [PubNub.publish]
  */
-class Publish internal constructor(
+class PublishImpl internal constructor(
     pubnub: PubNub,
     val message: Any,
     val channel: String,
@@ -25,7 +50,7 @@ class Publish internal constructor(
     val usePost: Boolean = false,
     val replicate: Boolean = true,
     val ttl: Int? = null
-) : Endpoint<List<Any>, PNPublishResult>(pubnub) {
+) : Endpoint<List<Any>, PNPublishResult>(pubnub), Publish {
 
     private val useEncryption: Boolean = pubnub.configuration.cipherKey.isValid()
 

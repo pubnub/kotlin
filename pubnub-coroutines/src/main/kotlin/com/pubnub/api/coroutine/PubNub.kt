@@ -1,13 +1,7 @@
 package com.pubnub.api.coroutine
 
-import com.pubnub.api.Endpoint
 import com.pubnub.api.PNConfiguration
-import com.pubnub.api.models.consumer.PNStatus
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
-import kotlin.reflect.full.callSuspend
-import kotlin.reflect.full.declaredMemberFunctions
-import kotlin.reflect.jvm.isAccessible
+import com.pubnub.api.endpoints.pubsub.Publish
 
 class PubNub(configuration: PNConfiguration) {
 
@@ -22,7 +16,8 @@ class PubNub(configuration: PNConfiguration) {
         replicate: Boolean = true,
         ttl: Int? = null
     ): Result<Long> =
-        oldPubNub.publish(
+        Publish(
+            pubnub = oldPubNub,
             channel = channel,
             message = message,
             meta = meta,
@@ -30,16 +25,5 @@ class PubNub(configuration: PNConfiguration) {
             usePost = usePost,
             replicate = replicate,
             ttl = ttl
-        ).suspended().map { it.timetoken }
-
-
-    private suspend inline fun <reified T> T.callPrivateSuspend(name: String, vararg args: Any?): Any? =
-        T::class
-            .declaredMemberFunctions
-            .firstOrNull { it.name == name }
-            ?.apply { isAccessible = true }
-            ?.apply { parameters.forEachIndexed { index, parameter ->  println("$index: $parameter") } }
-            ?.callSuspend(this, *args)
-
-    private suspend fun <Input, Output>  Endpoint<Input, Output>.suspended(): Result<Output> = this.callPrivateSuspend("justdoit")!! as Result<Output>
+        ).justdoit().map { it.timetoken }
 }
