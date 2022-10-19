@@ -21,6 +21,7 @@ dependencies {
         api project(":pubnub-users")
         api project(":pubnub-spaces")
         api project(":pubnub-memberships")
+        api project(":pubnub-coroutines")
         api project(":")
     }
 }
