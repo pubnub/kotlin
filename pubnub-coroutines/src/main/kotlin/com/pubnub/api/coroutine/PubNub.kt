@@ -39,5 +39,5 @@ class PubNub(configuration: PNConfiguration) {
             ?.apply { isAccessible = true }
             ?.call(this, *args)
 
-    private suspend fun <Input, Output>  Endpoint<Input, Output>.suspended(): Result<Output> = this.callPrivateFunc("suspended")!! as Result<Output>
+    private suspend fun <Input, Output>  Endpoint<Input, Output>.suspended(): Result<Output> = this.callPrivateFunc("justdoit")!! as Result<Output>
 }
