@@ -5,6 +5,8 @@ import com.pubnub.api.PNConfiguration
 import com.pubnub.api.models.consumer.PNStatus
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
+import kotlin.reflect.full.declaredMemberFunctions
+import kotlin.reflect.jvm.isAccessible
 
 class PubNub(configuration: PNConfiguration) {
 
@@ -27,14 +29,15 @@ class PubNub(configuration: PNConfiguration) {
             usePost = usePost,
             replicate = replicate,
             ttl = ttl
-        ).coroutineResult().map { it.timetoken }
+        ).suspended().map { it.timetoken }
 
-    suspend fun <Input, Output> Endpoint<Input, Output>.coroutineResult(): Result<Output> =
-        suspendCoroutine { continuation ->
-            val callback = { result: Output?, status: PNStatus ->
-                if (status.error) continuation.resume(Result.failure(status.exception!!))
-                else continuation.resume(Result.success(result!!))
-            }
-            async(callback)
-        }
+
+    private inline fun <reified T> T.callPrivateFunc(name: String, vararg args: Any?): Any? =
+        T::class
+            .declaredMemberFunctions
+            .firstOrNull { it.name == name }
+            ?.apply { isAccessible = true }
+            ?.call(this, *args)
+
+    private suspend fun <Input, Output>  Endpoint<Input, Output>.suspended(): Result<Output> = this.callPrivateFunc("suspended")!! as Result<Output>
 }

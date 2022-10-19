@@ -17,6 +17,7 @@ import com.pubnub.api.models.consumer.PNStatus
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import retrofit2.awaitResponse
 import java.io.IOException
 import java.net.ConnectException
 import java.net.SocketTimeoutException
@@ -47,6 +48,33 @@ abstract class Endpoint<Input, Output> protected constructor(protected val pubnu
      * todo: it should be removed!
      */
     val queryParam: MutableMap<String, String> = mutableMapOf()
+
+    private suspend fun justdoit(): Result<Output> {
+        return try {
+            validateParams()
+            call = doWork(createBaseParams())
+            call.awaitResponse().toResult()
+        } catch (pubnubException: PubNubException) {
+            Result.failure(pubnubException)
+        }
+    }
+
+    private fun Response<Input>.toResult(): Result<Output> {
+        return if (isSuccessful) {
+            Result.success(createResponse(this)!!)
+        } else {
+            val (errorString, errorJson) = extractErrorBody(this)
+            Result.failure(
+                PubNubException(
+                    pubnubError = PubNubError.HTTP_ERROR,
+                    errorMessage = errorString,
+                    jso = errorJson.toString(),
+                    statusCode = code(),
+                    affectedCall = call
+                )
+            )
+        }
+    }
 
     /**
      * Executes the call synchronously. This function blocks the thread.
@@ -446,7 +474,7 @@ abstract class Endpoint<Input, Output> protected constructor(protected val pubnu
     protected open fun getAffectedChannels() = emptyList<String>()
     protected open fun getAffectedChannelGroups(): List<String> = emptyList()
 
-    protected open fun validateParams() {
+    internal open fun validateParams() {
         if (isSubKeyRequired() && !pubnub.configuration.subscribeKey.isValid()) {
             throw PubNubException(PubNubError.SUBSCRIBE_KEY_MISSING)
         }
