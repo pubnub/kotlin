@@ -1,6 +1,8 @@
-package com.pubnub.api.coroutine
+package com.pubnub.api.coroutine.internal
 
 import com.pubnub.api.callbacks.SubscribeCallback
+import com.pubnub.api.coroutine.model.MessageEvent
+import com.pubnub.api.coroutine.model.toMessageEvent
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
@@ -15,13 +17,13 @@ class Subscribe(private val pubNub: OldPubNub) {
 
     private val listenersAndChannels: MutableMap<SubscribeCallback, Collection<String>> = mutableMapOf()
 
-    fun messageFlow(channels: Collection<String>): Flow<PNMessageResult> =
+    fun messageFlow(channels: Collection<String>): Flow<MessageEvent> =
         callbackFlow {
             val callback: SubscribeCallback = object : SubscribeCallback() {
 
                 override fun message(pubnub: OldPubNub, pnMessageResult: PNMessageResult) {
                     if (pnMessageResult.channel in channels) {
-                        trySendBlocking(pnMessageResult)
+                        trySendBlocking(pnMessageResult.toMessageEvent())
                     }
                 }
 

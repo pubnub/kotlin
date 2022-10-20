@@ -1,6 +1,12 @@
 package com.pubnub.api.coroutine
 
 import com.pubnub.api.PNConfiguration
+import com.pubnub.api.coroutine.internal.Subscribe
+import com.pubnub.api.coroutine.model.FetchMessages
+import com.pubnub.api.coroutine.model.MessageEvent
+import com.pubnub.api.coroutine.model.PresenceEvent
+import com.pubnub.api.coroutine.model.toFetchMessages
+import com.pubnub.api.coroutine.model.toPresenceEvent
 import com.pubnub.api.endpoints.DeleteMessagesImpl
 import com.pubnub.api.endpoints.FetchMessagesImpl
 import com.pubnub.api.endpoints.History
@@ -24,10 +30,10 @@ import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 import com.pubnub.api.models.consumer.message_actions.PNRemoveMessageActionResult
 import com.pubnub.api.models.consumer.presence.PNHereNowResult
 import com.pubnub.api.models.consumer.presence.PNWhereNowResult
-import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 class PubNub(configuration: PNConfiguration) {
 
@@ -253,20 +259,20 @@ class PubNub(configuration: PNConfiguration) {
         includeUUID: Boolean = true,
         includeMeta: Boolean = false,
         includeMessageActions: Boolean = false
-    ): Result<PNFetchMessagesResult> = FetchMessagesImpl(
+    ): Result<FetchMessages> = FetchMessagesImpl(
         pubnub = oldPubNub,
         channels = channels,
         page = page,
         includeUUID = includeUUID,
         includeMeta = includeMeta,
         includeMessageActions = includeMessageActions
-    ).awaitResult()
+    ).awaitResult().map(PNFetchMessagesResult::toFetchMessages)
 
-    fun messageFlow(vararg channels: String): Flow<PNMessageResult> =
+    fun messageFlow(vararg channels: String): Flow<MessageEvent> =
         subscribe.messageFlow(channels = channels.toList())
 
-    fun presenceFlow(vararg channels: String): Flow<PNPresenceEventResult> =
-        subscribe.presenceFlow(channels = channels.toList())
+    fun presenceFlow(vararg channels: String): Flow<PresenceEvent> =
+        subscribe.presenceFlow(channels = channels.toList()).map(PNPresenceEventResult::toPresenceEvent)
 
     //region MessageActions
     /**
@@ -307,7 +313,8 @@ class PubNub(configuration: PNConfiguration) {
     suspend fun getMessageActions(
         channel: String,
         page: PNBoundedPage = PNBoundedPage()
-    ): Result<PNGetMessageActionsResult> = GetMessageActionsImpl(pubnub = oldPubNub, channel = channel, page = page).awaitResult()
+    ): Result<PNGetMessageActionsResult> =
+        GetMessageActionsImpl(pubnub = oldPubNub, channel = channel, page = page).awaitResult()
     //endregion
 
     fun messageActionFlow(vararg channels: String): Flow<PNMessageActionResult> =
