@@ -91,7 +91,7 @@ class Subscribe(private val pubNub: OldPubNub) {
         synchronized(listenersAndChannels) {
             listenersAndChannels.remove(callback)
             val channelsLeft = listenersAndChannels.values
-                .flatMap { it }
+                .flatten()
                 .distinct()
                 .toSet()
             val channelsToUnsubscribe = channels.filter {
