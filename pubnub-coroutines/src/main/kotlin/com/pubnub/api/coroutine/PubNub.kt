@@ -3,9 +3,11 @@ package com.pubnub.api.coroutine
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.coroutine.internal.Subscribe
 import com.pubnub.api.coroutine.model.FetchMessages
+import com.pubnub.api.coroutine.model.MessageActionEvent
 import com.pubnub.api.coroutine.model.MessageEvent
 import com.pubnub.api.coroutine.model.PresenceEvent
 import com.pubnub.api.coroutine.model.toFetchMessages
+import com.pubnub.api.coroutine.model.toMessageActionEvent
 import com.pubnub.api.coroutine.model.toPresenceEvent
 import com.pubnub.api.endpoints.DeleteMessagesImpl
 import com.pubnub.api.endpoints.FetchMessagesImpl
@@ -21,10 +23,8 @@ import com.pubnub.api.endpoints.pubsub.SignalImpl
 import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.history.PNFetchMessagesResult
 import com.pubnub.api.models.consumer.history.PNMessageCountResult
-import com.pubnub.api.models.consumer.message_actions.PNAddMessageActionResult
 import com.pubnub.api.models.consumer.message_actions.PNGetMessageActionsResult
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
-import com.pubnub.api.models.consumer.message_actions.PNRemoveMessageActionResult
 import com.pubnub.api.models.consumer.presence.PNHereNowResult
 import com.pubnub.api.models.consumer.presence.PNWhereNowResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
@@ -227,8 +227,9 @@ class PubNub(configuration: PNConfiguration) {
      * @param messageAction The message action object containing the message action's type,
      *                      value and the publish timetoken of the original message.
      */
-    suspend fun addMessageAction(channel: String, messageAction: PNMessageAction): Result<PNAddMessageActionResult> =
+    suspend fun addMessageAction(channel: String, messageAction: PNMessageAction): Result<MessageActionEvent> =
         AddMessageActionImpl(pubnub = oldPubNub, channel = channel, messageAction = messageAction).awaitResult()
+            .map(PNMessageAction::toMessageActionEvent)
 
     /**
      * Remove a previously added action on a published message. Returns an empty response.
@@ -241,13 +242,13 @@ class PubNub(configuration: PNConfiguration) {
         channel: String,
         messageTimetoken: Long,
         actionTimetoken: Long
-    ): Result<PNRemoveMessageActionResult> =
+    ): Result<Unit> =
         RemoveMessageActionImpl(
             pubnub = oldPubNub,
             channel = channel,
             messageTimetoken = messageTimetoken,
             actionTimetoken = actionTimetoken
-        ).awaitResult()
+        ).awaitResult().map { }
 
     /**
      * Get a list of message actions in a channel. Returns a list of actions in the response.

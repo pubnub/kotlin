@@ -36,7 +36,7 @@ internal fun Map<String, Map<String, List<Action>>>?.toMessageActionEvents(messa
                     type = type,
                     value = value,
                     actionTimetoken = it.actionTimetoken.toLong(),
-                    uuid = it.uuid,
+                    publisher = it.uuid,
                     messageTimetoken = messageTimetoken
                 )
             }

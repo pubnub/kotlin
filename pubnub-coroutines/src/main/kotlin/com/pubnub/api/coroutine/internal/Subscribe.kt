@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import com.pubnub.api.PubNub as OldPubNub
 
-class Subscribe(private val pubNub: OldPubNub) {
+internal class Subscribe(private val pubNub: OldPubNub) {
 
     private val listenersAndChannels: MutableMap<SubscribeCallback, Collection<String>> = mutableMapOf()
 
