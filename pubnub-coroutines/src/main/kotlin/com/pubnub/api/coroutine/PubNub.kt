@@ -7,13 +7,23 @@ import com.pubnub.api.endpoints.History
 import com.pubnub.api.endpoints.HistoryImpl
 import com.pubnub.api.endpoints.MessageCounts
 import com.pubnub.api.endpoints.MessageCountsImpl
-import com.pubnub.api.endpoints.message_actions.*
+import com.pubnub.api.endpoints.message_actions.AddMessageActionImpl
+import com.pubnub.api.endpoints.message_actions.GetMessageActionsImpl
+import com.pubnub.api.endpoints.message_actions.RemoveMessageActionImpl
 import com.pubnub.api.endpoints.presence.HereNowImpl
 import com.pubnub.api.endpoints.presence.WhereNowImpl
 import com.pubnub.api.endpoints.pubsub.PublishImpl
 import com.pubnub.api.endpoints.pubsub.SignalImpl
 import com.pubnub.api.models.consumer.PNBoundedPage
+import com.pubnub.api.models.consumer.history.PNFetchMessagesResult
+import com.pubnub.api.models.consumer.history.PNHistoryResult
+import com.pubnub.api.models.consumer.history.PNMessageCountResult
+import com.pubnub.api.models.consumer.message_actions.PNAddMessageActionResult
+import com.pubnub.api.models.consumer.message_actions.PNGetMessageActionsResult
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
+import com.pubnub.api.models.consumer.message_actions.PNRemoveMessageActionResult
+import com.pubnub.api.models.consumer.presence.PNHereNowResult
+import com.pubnub.api.models.consumer.presence.PNWhereNowResult
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
@@ -123,7 +133,7 @@ class PubNub(configuration: PNConfiguration) {
         meta: Any? = null,
         usePost: Boolean = false,
         ttl: Int? = null
-    ) = publish(
+    ): Result<Long> = publish(
         channel = channel,
         message = message,
         meta = meta,
@@ -193,7 +203,7 @@ class PubNub(configuration: PNConfiguration) {
         reverse: Boolean = false,
         includeTimetoken: Boolean = false,
         includeMeta: Boolean = false
-    ) = HistoryImpl(
+    ): Result<PNHistoryResult> = HistoryImpl(
         pubnub = oldPubNub,
         channel = channel,
         start = start,
@@ -243,7 +253,7 @@ class PubNub(configuration: PNConfiguration) {
         includeUUID: Boolean = true,
         includeMeta: Boolean = false,
         includeMessageActions: Boolean = false
-    ) = FetchMessagesImpl(
+    ): Result<PNFetchMessagesResult> = FetchMessagesImpl(
         pubnub = oldPubNub,
         channels = channels,
         page = page,
@@ -266,7 +276,7 @@ class PubNub(configuration: PNConfiguration) {
      * @param messageAction The message action object containing the message action's type,
      *                      value and the publish timetoken of the original message.
      */
-    suspend fun addMessageAction(channel: String, messageAction: PNMessageAction) =
+    suspend fun addMessageAction(channel: String, messageAction: PNMessageAction): Result<PNAddMessageActionResult> =
         AddMessageActionImpl(pubnub = oldPubNub, channel = channel, messageAction = messageAction).awaitResult()
 
     /**
@@ -276,7 +286,11 @@ class PubNub(configuration: PNConfiguration) {
      * @param messageTimetoken The publish timetoken of the original message.
      * @param actionTimetoken The publish timetoken of the message action to be removed.
      */
-    suspend fun removeMessageAction(channel: String, messageTimetoken: Long, actionTimetoken: Long) =
+    suspend fun removeMessageAction(
+        channel: String,
+        messageTimetoken: Long,
+        actionTimetoken: Long
+    ): Result<PNRemoveMessageActionResult> =
         RemoveMessageActionImpl(
             pubnub = oldPubNub,
             channel = channel,
@@ -293,7 +307,7 @@ class PubNub(configuration: PNConfiguration) {
     suspend fun getMessageActions(
         channel: String,
         page: PNBoundedPage = PNBoundedPage()
-    ) = GetMessageActionsImpl(pubnub = oldPubNub, channel = channel, page = page).awaitResult()
+    ): Result<PNGetMessageActionsResult> = GetMessageActionsImpl(pubnub = oldPubNub, channel = channel, page = page).awaitResult()
     //endregion
 
     fun messageActionFlow(vararg channels: String): Flow<PNMessageActionResult> =
@@ -329,7 +343,7 @@ class PubNub(configuration: PNConfiguration) {
      *                          Specify a single timetoken to apply it to all channels.
      *                          Otherwise, the list of timetokens must be the same length as the list of channels.
      */
-    suspend fun messageCounts(channels: List<String>, channelsTimetoken: List<Long>) =
+    suspend fun messageCounts(channels: List<String>, channelsTimetoken: List<Long>): Result<PNMessageCountResult> =
         MessageCountsImpl(pubnub = oldPubNub, channels = channels, channelsTimetoken = channelsTimetoken).awaitResult()
     //endregion
 
@@ -352,7 +366,7 @@ class PubNub(configuration: PNConfiguration) {
         channelGroups: List<String> = emptyList(),
         includeState: Boolean = false,
         includeUUIDs: Boolean = true
-    ) = HereNowImpl(
+    ): Result<PNHereNowResult> = HereNowImpl(
         pubnub = oldPubNub,
         channels = channels,
         channelGroups = channelGroups,
@@ -366,7 +380,7 @@ class PubNub(configuration: PNConfiguration) {
      * @param uuid UUID of the user to get its current channel subscriptions. Defaults to the UUID of the client.
      * @see [PNConfiguration.uuid]
      */
-    suspend fun whereNow(uuid: String = oldPubNub.configuration.userId.value) = WhereNowImpl(
+    suspend fun whereNow(uuid: String = oldPubNub.configuration.userId.value): Result<PNWhereNowResult> = WhereNowImpl(
         pubnub = oldPubNub, uuid = uuid
     ).awaitResult()
     //endregion
