@@ -764,7 +764,7 @@ class PubNub(val configuration: PNConfiguration) {
      *                      value and the publish timetoken of the original message.
      */
     fun addMessageAction(channel: String, messageAction: PNMessageAction) =
-        AddMessageAction(pubnub = this, channel = channel, messageAction = messageAction)
+        AddMessageActionImpl(pubnub = this, channel = channel, messageAction = messageAction)
 
     /**
      * Remove a previously added action on a published message. Returns an empty response.
