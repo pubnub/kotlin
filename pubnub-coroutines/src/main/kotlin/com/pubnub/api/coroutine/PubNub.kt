@@ -8,7 +8,6 @@ import com.pubnub.api.coroutine.model.MessageEvent
 import com.pubnub.api.coroutine.model.PresenceEvent
 import com.pubnub.api.coroutine.model.toFetchMessages
 import com.pubnub.api.coroutine.model.toMessageActionEvent
-import com.pubnub.api.coroutine.model.toPresenceEvent
 import com.pubnub.api.endpoints.DeleteMessagesImpl
 import com.pubnub.api.endpoints.FetchMessagesImpl
 import com.pubnub.api.endpoints.MessageCounts
@@ -27,7 +26,6 @@ import com.pubnub.api.models.consumer.message_actions.PNGetMessageActionsResult
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 import com.pubnub.api.models.consumer.presence.PNHereNowResult
 import com.pubnub.api.models.consumer.presence.PNWhereNowResult
-import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -217,7 +215,7 @@ class PubNub(configuration: PNConfiguration) {
         subscribe.messageFlow(channels = channels.toList())
 
     fun presenceFlow(vararg channels: String): Flow<PresenceEvent> =
-        subscribe.presenceFlow(channels = channels.toList()).map(PNPresenceEventResult::toPresenceEvent)
+        subscribe.presenceFlow(channels = channels.toList())
 
     //region MessageActions
     /**

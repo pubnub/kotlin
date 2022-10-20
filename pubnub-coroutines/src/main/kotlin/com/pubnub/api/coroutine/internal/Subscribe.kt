@@ -2,7 +2,9 @@ package com.pubnub.api.coroutine.internal
 
 import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.coroutine.model.MessageEvent
+import com.pubnub.api.coroutine.model.PresenceEvent
 import com.pubnub.api.coroutine.model.toMessageEvent
+import com.pubnub.api.coroutine.model.toPresenceEvent
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
@@ -39,13 +41,13 @@ internal class Subscribe(private val pubNub: OldPubNub) {
             }
         }
 
-    fun presenceFlow(channels: Collection<String>): Flow<PNPresenceEventResult> =
+    fun presenceFlow(channels: Collection<String>): Flow<PresenceEvent> =
         callbackFlow {
             val callback: SubscribeCallback = object : SubscribeCallback() {
 
                 override fun presence(pubnub: OldPubNub, pnPresenceEventResult: PNPresenceEventResult) {
                     if (pnPresenceEventResult.channel in channels) {
-                        trySendBlocking(pnPresenceEventResult)
+                        trySendBlocking(pnPresenceEventResult.toPresenceEvent())
                     }
                 }
 
