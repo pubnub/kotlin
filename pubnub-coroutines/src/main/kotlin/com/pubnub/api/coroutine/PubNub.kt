@@ -9,8 +9,6 @@ import com.pubnub.api.coroutine.model.toFetchMessages
 import com.pubnub.api.coroutine.model.toPresenceEvent
 import com.pubnub.api.endpoints.DeleteMessagesImpl
 import com.pubnub.api.endpoints.FetchMessagesImpl
-import com.pubnub.api.endpoints.History
-import com.pubnub.api.endpoints.HistoryImpl
 import com.pubnub.api.endpoints.MessageCounts
 import com.pubnub.api.endpoints.MessageCountsImpl
 import com.pubnub.api.endpoints.message_actions.AddMessageActionImpl
@@ -22,7 +20,6 @@ import com.pubnub.api.endpoints.pubsub.PublishImpl
 import com.pubnub.api.endpoints.pubsub.SignalImpl
 import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.history.PNFetchMessagesResult
-import com.pubnub.api.models.consumer.history.PNHistoryResult
 import com.pubnub.api.models.consumer.history.PNMessageCountResult
 import com.pubnub.api.models.consumer.message_actions.PNAddMessageActionResult
 import com.pubnub.api.models.consumer.message_actions.PNGetMessageActionsResult
@@ -167,58 +164,6 @@ class PubNub(configuration: PNConfiguration) {
     //endregion
 
     //region StoragePlayback
-    /**
-     * Fetch historical messages of a channel.
-     *
-     * It is possible to control how messages are returned and in what order, for example you can:
-     * - Search for messages starting on the newest end of the timeline (default behavior - `reverse = false`)
-     * - Search for messages from the oldest end of the timeline by setting `reverse` to `true`.
-     * - Page through results by providing a `start` OR `end` timetoken.
-     * - Retrieve a slice of the time line by providing both a `start` AND `end` timetoken.
-     * - Limit the number of messages to a specific quantity using the `count` parameter.
-     *
-     * **Start & End parameter usage clarity:**
-     * - If only the `start` parameter is specified (without `end`),
-     * you will receive messages that are older than and up to that `start` timetoken value.
-     * - If only the `end` parameter is specified (without `start`)
-     * you will receive messages that match that end timetoken value and newer.
-     * - Specifying values for both start and end parameters
-     * will return messages between those timetoken values (inclusive on the `end` value)
-     * - Keep in mind that you will still receive a maximum of 100 messages
-     * even if there are more messages that meet the timetoken values.
-     * Iterative calls to history adjusting the start timetoken is necessary to page through the full set of results
-     * if more than 100 messages meet the timetoken values.
-     *
-     * @param channel Channel to return history messages from.
-     * @param start Timetoken delimiting the start of time slice (exclusive) to pull messages from.
-     * @param end Timetoken delimiting the end of time slice (inclusive) to pull messages from.
-     * @param count Specifies the number of historical messages to return.
-     *              Default and maximum value is `100`.
-     * @param reverse Whether to traverse the time ine in reverse starting with the oldest message first.
-     *                Default is `false`.
-     * @param includeTimetoken Whether to include message timetokens in the response.
-     *                         Defaults to `false`.
-     * @param includeMeta Whether to include message metadata in response.
-     *                    Defaults to `false`.
-     */
-    suspend fun history(
-        channel: String,
-        start: Long? = null,
-        end: Long? = null,
-        count: Int = History.MAX_COUNT,
-        reverse: Boolean = false,
-        includeTimetoken: Boolean = false,
-        includeMeta: Boolean = false
-    ): Result<PNHistoryResult> = HistoryImpl(
-        pubnub = oldPubNub,
-        channel = channel,
-        start = start,
-        end = end,
-        count = count,
-        reverse = reverse,
-        includeTimetoken = includeTimetoken,
-        includeMeta = includeMeta
-    ).awaitResult()
 
     /**
      * Fetch historical messages from multiple channels.
