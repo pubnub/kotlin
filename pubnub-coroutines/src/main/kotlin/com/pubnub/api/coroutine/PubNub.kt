@@ -2,10 +2,11 @@ package com.pubnub.api.coroutine
 
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.coroutine.internal.Subscribe
-import com.pubnub.api.coroutine.model.FetchMessages
+import com.pubnub.api.coroutine.model.FetchMessagesResult
 import com.pubnub.api.coroutine.model.MessageActionEvent
 import com.pubnub.api.coroutine.model.MessageEvent
 import com.pubnub.api.coroutine.model.PresenceEvent
+import com.pubnub.api.coroutine.model.PublishResult
 import com.pubnub.api.coroutine.model.toFetchMessages
 import com.pubnub.api.coroutine.model.toMessageActionEvent
 import com.pubnub.api.endpoints.DeleteMessagesImpl
@@ -28,7 +29,6 @@ import com.pubnub.api.models.consumer.presence.PNHereNowResult
 import com.pubnub.api.models.consumer.presence.PNWhereNowResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 
 class PubNub(configuration: PNConfiguration) {
 
@@ -87,7 +87,7 @@ class PubNub(configuration: PNConfiguration) {
         usePost: Boolean = false,
         replicate: Boolean = true,
         ttl: Int? = null
-    ): Result<Long> = PublishImpl(
+    ): Result<PublishResult> = PublishImpl(
         pubnub = oldPubNub,
         channel = channel,
         message = message,
@@ -96,7 +96,7 @@ class PubNub(configuration: PNConfiguration) {
         usePost = usePost,
         replicate = replicate,
         ttl = ttl
-    ).awaitResult().map { it.timetoken }
+    ).awaitResult().map { PublishResult(it.timetoken) }
 
     /**
      * Send a message to PubNub Functions Event Handlers.
@@ -134,7 +134,7 @@ class PubNub(configuration: PNConfiguration) {
         meta: Any? = null,
         usePost: Boolean = false,
         ttl: Int? = null
-    ): Result<Long> = publish(
+    ): Result<PublishResult> = publish(
         channel = channel,
         message = message,
         meta = meta,
@@ -157,8 +157,9 @@ class PubNub(configuration: PNConfiguration) {
     suspend fun signal(
         channel: String,
         message: Any
-    ): Result<Long> =
-        SignalImpl(pubnub = oldPubNub, channel = channel, message = message).awaitResult().map { it.timetoken }
+    ): Result<PublishResult> =
+        SignalImpl(pubnub = oldPubNub, channel = channel, message = message).awaitResult()
+            .map { PublishResult(it.timetoken) }
     //endregion
 
     //region StoragePlayback
@@ -202,7 +203,7 @@ class PubNub(configuration: PNConfiguration) {
         includeUUID: Boolean = true,
         includeMeta: Boolean = false,
         includeMessageActions: Boolean = false
-    ): Result<FetchMessages> = FetchMessagesImpl(
+    ): Result<FetchMessagesResult> = FetchMessagesImpl(
         pubnub = oldPubNub,
         channels = channels,
         page = page,
@@ -225,8 +226,17 @@ class PubNub(configuration: PNConfiguration) {
      * @param messageAction The message action object containing the message action's type,
      *                      value and the publish timetoken of the original message.
      */
-    suspend fun addMessageAction(channel: String, messageAction: PNMessageAction): Result<MessageActionEvent> =
-        AddMessageActionImpl(pubnub = oldPubNub, channel = channel, messageAction = messageAction).awaitResult()
+    suspend fun addMessageAction(
+        channel: String,
+        type: String,
+        value: String,
+        messageTimetoken: Long,
+    ): Result<MessageActionEvent> =
+        AddMessageActionImpl(
+            pubnub = oldPubNub,
+            channel = channel,
+            messageAction = PNMessageAction(type, value, messageTimetoken)
+        ).awaitResult()
             .map(PNMessageAction::toMessageActionEvent)
 
     /**

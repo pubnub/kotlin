@@ -4,13 +4,13 @@ import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.history.Action
 import com.pubnub.api.models.consumer.history.PNFetchMessagesResult
 
-data class FetchMessages(
+data class FetchMessagesResult(
     val messages: Collection<MessageEvent>,
     val page: PNBoundedPage?
 )
 
-internal fun PNFetchMessagesResult.toFetchMessages(): FetchMessages {
-    return FetchMessages(
+internal fun PNFetchMessagesResult.toFetchMessages(): FetchMessagesResult {
+    return FetchMessagesResult(
         messages = channels.entries.flatMap { (channel, fetchMessageItems) ->
             fetchMessageItems.map { item ->
                 MessageEvent(
