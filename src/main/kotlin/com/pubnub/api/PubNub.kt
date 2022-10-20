@@ -28,9 +28,7 @@ import com.pubnub.api.endpoints.files.ListFiles
 import com.pubnub.api.endpoints.files.PublishFileMessage
 import com.pubnub.api.endpoints.files.SendFile
 import com.pubnub.api.endpoints.files.UploadFile
-import com.pubnub.api.endpoints.message_actions.AddMessageAction
-import com.pubnub.api.endpoints.message_actions.GetMessageActions
-import com.pubnub.api.endpoints.message_actions.RemoveMessageAction
+import com.pubnub.api.endpoints.message_actions.*
 import com.pubnub.api.endpoints.objects.channel.GetAllChannelMetadata
 import com.pubnub.api.endpoints.objects.channel.GetChannelMetadata
 import com.pubnub.api.endpoints.objects.channel.RemoveChannelMetadata
@@ -104,7 +102,7 @@ class PubNub(val configuration: PNConfiguration) {
 
     companion object {
         private const val TIMESTAMP_DIVIDER = 1000
-        private const val SDK_VERSION = "7.4.0"
+        private const val SDK_VERSION = "7.5.0"
         private const val MAX_SEQUENCE = 65535
 
         /**
@@ -776,7 +774,7 @@ class PubNub(val configuration: PNConfiguration) {
      * @param actionTimetoken The publish timetoken of the message action to be removed.
      */
     fun removeMessageAction(channel: String, messageTimetoken: Long, actionTimetoken: Long) =
-        RemoveMessageAction(
+        RemoveMessageActionImpl(
             pubnub = this,
             channel = channel,
             messageTimetoken = messageTimetoken,
@@ -817,7 +815,7 @@ class PubNub(val configuration: PNConfiguration) {
     fun getMessageActions(
         channel: String,
         page: PNBoundedPage = PNBoundedPage()
-    ) = GetMessageActions(pubnub = this, channel = channel, page = page)
+    ) = GetMessageActionsImpl(pubnub = this, channel = channel, page = page)
     //endregion
 
     //region ChannelGroups
