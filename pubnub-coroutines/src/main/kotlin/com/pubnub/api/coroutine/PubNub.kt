@@ -7,11 +7,13 @@ import com.pubnub.api.endpoints.History
 import com.pubnub.api.endpoints.HistoryImpl
 import com.pubnub.api.endpoints.MessageCounts
 import com.pubnub.api.endpoints.MessageCountsImpl
+import com.pubnub.api.endpoints.message_actions.*
 import com.pubnub.api.endpoints.presence.HereNowImpl
 import com.pubnub.api.endpoints.presence.WhereNowImpl
 import com.pubnub.api.endpoints.pubsub.PublishImpl
 import com.pubnub.api.endpoints.pubsub.SignalImpl
 import com.pubnub.api.models.consumer.PNBoundedPage
+import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
@@ -250,11 +252,50 @@ class PubNub(configuration: PNConfiguration) {
         includeMessageActions = includeMessageActions
     ).awaitResult()
 
-    private fun messageFlow(vararg channels: String): Flow<PNMessageResult> =
+    fun messageFlow(vararg channels: String): Flow<PNMessageResult> =
         subscribe.messageFlow(channels = channels.toList())
 
     fun presenceFlow(vararg channels: String): Flow<PNPresenceEventResult> =
         subscribe.presenceFlow(channels = channels.toList())
+
+    //region MessageActions
+    /**
+     * Add an action on a published message. Returns the added action in the response.
+     *
+     * @param channel Channel to publish message actions to.
+     * @param messageAction The message action object containing the message action's type,
+     *                      value and the publish timetoken of the original message.
+     */
+    suspend fun addMessageAction(channel: String, messageAction: PNMessageAction) =
+        AddMessageActionImpl(pubnub = oldPubNub, channel = channel, messageAction = messageAction).awaitResult()
+
+    /**
+     * Remove a previously added action on a published message. Returns an empty response.
+     *
+     * @param channel Channel to remove message actions from.
+     * @param messageTimetoken The publish timetoken of the original message.
+     * @param actionTimetoken The publish timetoken of the message action to be removed.
+     */
+    suspend fun removeMessageAction(channel: String, messageTimetoken: Long, actionTimetoken: Long) =
+        RemoveMessageActionImpl(
+            pubnub = oldPubNub,
+            channel = channel,
+            messageTimetoken = messageTimetoken,
+            actionTimetoken = actionTimetoken
+        ).awaitResult()
+
+    /**
+     * Get a list of message actions in a channel. Returns a list of actions in the response.
+     *
+     * @param channel Channel to fetch message actions from.
+     * @param page The paging object used for pagination. @see [PNBoundedPage]
+     */
+    suspend fun getMessageActions(
+        channel: String,
+        page: PNBoundedPage = PNBoundedPage()
+    ) = GetMessageActionsImpl(pubnub = oldPubNub, channel = channel, page = page).awaitResult()
+    //endregion
+
     fun messageActionFlow(vararg channels: String): Flow<PNMessageActionResult> =
         subscribe.messageActionFlow(channels = channels.toList())
 

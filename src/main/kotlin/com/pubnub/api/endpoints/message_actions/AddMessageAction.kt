@@ -5,6 +5,7 @@ import com.pubnub.api.Endpoint
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
+import com.pubnub.api.endpoints.remoteaction.RemoteAction
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.message_actions.PNAddMessageActionResult
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
@@ -13,14 +14,16 @@ import retrofit2.Call
 import retrofit2.Response
 import java.util.HashMap
 
+interface AddMessageAction : RemoteAction<PNAddMessageActionResult>
+
 /**
  * @see [PubNub.addMessageAction]
  */
-class AddMessageAction internal constructor(
+class AddMessageActionImpl (
     pubnub: PubNub,
     val channel: String,
     val messageAction: PNMessageAction
-) : Endpoint<EntityEnvelope<PNMessageAction>, PNAddMessageActionResult>(pubnub) {
+) : Endpoint<EntityEnvelope<PNMessageAction>, PNAddMessageActionResult>(pubnub), AddMessageAction {
 
     override fun validateParams() {
         super.validateParams()
