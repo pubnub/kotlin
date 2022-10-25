@@ -20,7 +20,7 @@ class GetState internal constructor(
     pubnub: PubNub,
     val channels: List<String>,
     val channelGroups: List<String>,
-    val uuid: String = pubnub.configuration.uuid
+    val uuid: String = pubnub.configuration.userId.value
 ) : Endpoint<Envelope<JsonElement>, PNGetStateResult>(pubnub) {
 
     override fun getAffectedChannels() = channels

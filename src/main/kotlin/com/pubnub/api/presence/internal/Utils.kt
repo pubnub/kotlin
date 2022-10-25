@@ -45,7 +45,7 @@ internal fun PubNub.setPresenceState(
         channels = channels,
         channelGroups = channelGroups,
         state = state,
-        uuid = this.configuration.uuid
+        uuid = this.configuration.userId.value
     ).also {
         it.async(callback)
     }

@@ -70,7 +70,7 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
                     assertTrue(value.occupants.size >= expectedClientsCount)
 
                     assertEquals(
-                        clients.map { it.configuration.uuid }.toList(),
+                        clients.map { it.configuration.userId.value }.toList(),
                         value.occupants.map { it.uuid }.toList()
                     )
                 }
@@ -113,7 +113,7 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
                     val uuid = occupant.uuid
                     var contains = false
                     for (client in clients) {
-                        if (client.configuration.uuid == uuid) {
+                        if (client.configuration.userId.value == uuid) {
                             contains = true
                             break
                         }
@@ -136,7 +136,7 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
             override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {
                 if (pnPresenceEventResult.event == "state-change" &&
                     pnPresenceEventResult.channel == expectedChannel &&
-                    pnPresenceEventResult.uuid == pubnub.configuration.uuid
+                    pnPresenceEventResult.uuid == pubnub.configuration.userId.value
                 ) {
                     assertEquals(expectedStatePayload, pnPresenceEventResult.state)
                     hits.incrementAndGet()

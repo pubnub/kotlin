@@ -12,6 +12,7 @@ import com.pubnub.api.toCsv
 import retrofit2.Call
 import retrofit2.Response
 import java.util.HashMap
+import java.util.Locale
 
 /**
  * @see [PubNub.removePushNotificationsFromChannels]
@@ -67,7 +68,7 @@ class RemoveChannelsFromPush internal constructor(
             return
         }
 
-        queryParams["environment"] = environment.name.toLowerCase()
+        queryParams["environment"] = environment.name.lowercase(Locale.getDefault())
         topic?.run { queryParams["topic"] = this }
     }
 }

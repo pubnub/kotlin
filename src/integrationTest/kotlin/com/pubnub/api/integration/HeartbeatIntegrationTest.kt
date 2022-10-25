@@ -31,7 +31,7 @@ class HeartbeatIntegrationTest : BaseIntegrationTest() {
         val expectedStatePayload = generatePayload()
 
         val observer = createPubNub().apply {
-            configuration.uuid = "observer_${System.currentTimeMillis()}"
+            configuration.userId.value = "observer_${System.currentTimeMillis()}"
         }
 
         pubnub.configuration.presenceTimeout = 20
@@ -51,7 +51,7 @@ class HeartbeatIntegrationTest : BaseIntegrationTest() {
             }
 
             override fun presence(p: PubNub, pnPresenceEventResult: PNPresenceEventResult) {
-                if (pnPresenceEventResult.uuid.equals(pubnub.configuration.uuid) &&
+                if (pnPresenceEventResult.uuid.equals(pubnub.configuration.userId.value) &&
                     pnPresenceEventResult.channel.equals(expectedChannel)
                 ) {
                     when (pnPresenceEventResult.event) {

@@ -56,7 +56,7 @@ class TelemetryManager {
     }
 
     private fun averageLatencyFromData(endpointLatencies: List<Latency>): Double {
-        val sumOfLatencies = endpointLatencies.sumByDouble { it.latency }
+        val sumOfLatencies = endpointLatencies.sumOf { it.latency }
         return sumOfLatencies / endpointLatencies.size
     }
 

@@ -4,8 +4,8 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.vendor.FileEncryptionUtil.decrypt
 import com.pubnub.api.vendor.FileEncryptionUtil.encryptToBytes
 import org.apache.commons.io.IOUtils
+import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers
-import org.junit.Assert
 import org.junit.Test
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
@@ -37,7 +37,7 @@ class CryptoTest {
         }
 
         // then
-        Assert.assertThat(
+        assertThat(
             decryptedByteArray,
             Matchers.allOf(
                 Matchers.equalTo(byteArrayToEncrypt),

@@ -69,7 +69,12 @@ class SubscribeMessageProcessorTest(
             duplicationManager = DuplicationManager(configuration)
         )
 
-        val result = messageProcessor.processIncomingPayload(gson.fromJson(fileMessage(messageJson.toString()), SubscribeMessage::class.java))
+        val result = messageProcessor.processIncomingPayload(
+            gson.fromJson(
+                fileMessage(messageJson.toString()),
+                SubscribeMessage::class.java
+            )
+        )
 
         assertThat(result, isA(PNFileEventResult::class.java))
         assertThat((result as PNFileEventResult).jsonMessage, iz(messageJson))

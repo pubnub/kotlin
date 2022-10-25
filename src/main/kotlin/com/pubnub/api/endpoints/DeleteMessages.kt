@@ -43,7 +43,7 @@ class DeleteMessages internal constructor(
     override fun operationType() = PNOperationType.PNDeleteMessagesOperation
 
     private fun addQueryParams(queryParams: MutableMap<String, String>) {
-        start?.run { queryParams["start"] = this.toString().toLowerCase(Locale.US) }
-        end?.run { queryParams["end"] = this.toString().toLowerCase(Locale.US) }
+        start?.run { queryParams["start"] = this.toString().lowercase(Locale.US) }
+        end?.run { queryParams["end"] = this.toString().lowercase(Locale.US) }
     }
 }

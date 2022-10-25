@@ -2,6 +2,7 @@ package com.pubnub.api.endpoints.pubsub
 
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
+import com.pubnub.api.UserId
 import com.pubnub.api.managers.RetrofitManager
 import com.pubnub.api.services.PublishService
 import io.mockk.every
@@ -9,9 +10,9 @@ import io.mockk.mockk
 import io.mockk.slot
 import okhttp3.Request
 import okio.Timeout
+import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.`is`
 import org.hamcrest.Matchers.not
-import org.junit.Assert.assertThat
 import org.junit.Test
 import retrofit2.Call
 import retrofit2.Callback
@@ -24,12 +25,12 @@ private const val TEST_PUBKEY = "pubKey"
 private const val CIPHER_KEY = "enigma"
 
 class PublishTest {
-    private val pnConfigurationHardcodedIV = PNConfiguration(PubNub.generateUUID()).apply {
+    private val pnConfigurationHardcodedIV = PNConfiguration(userId = UserId(PubNub.generateUUID())).apply {
         subscribeKey = TEST_SUBKEY
         publishKey = TEST_PUBKEY
         cipherKey = CIPHER_KEY
     }
-    private val pnConfigurationRandomIV = PNConfiguration(PubNub.generateUUID()).apply {
+    private val pnConfigurationRandomIV = PNConfiguration(userId = UserId(PubNub.generateUUID())).apply {
         subscribeKey = TEST_SUBKEY
         publishKey = TEST_PUBKEY
         cipherKey = CIPHER_KEY
@@ -65,7 +66,15 @@ class PublishTest {
     }
 
     init {
-        every { publishServiceMock.publish(any(), any(), any(), capture(encryptedMessageSlot), any()) } answers { FakeCall() }
+        every {
+            publishServiceMock.publish(
+                any(),
+                any(),
+                any(),
+                capture(encryptedMessageSlot),
+                any()
+            )
+        } answers { FakeCall() }
         every { retrofitManagerMock.publishService } returns publishServiceMock
 
         every { pubNubHardcodedIVMock.configuration } returns pnConfigurationHardcodedIV
@@ -77,12 +86,14 @@ class PublishTest {
 
     @Test
     fun `publish with encryption respects random IV setting`() {
-        val publishHardcodedIVUnderTest = Publish(pubnub = pubNubHardcodedIVMock, message = TEST_MESSAGE, channel = TEST_CHANNEL)
+        val publishHardcodedIVUnderTest =
+            Publish(pubnub = pubNubHardcodedIVMock, message = TEST_MESSAGE, channel = TEST_CHANNEL)
         publishHardcodedIVUnderTest.sync()
 
         val encryptedMessageHardcodedIV = encryptedMessageSlot.captured
 
-        val publishRandomIVUnderTest = Publish(pubnub = pubNubRandomIVMock, message = TEST_MESSAGE, channel = TEST_CHANNEL)
+        val publishRandomIVUnderTest =
+            Publish(pubnub = pubNubRandomIVMock, message = TEST_MESSAGE, channel = TEST_CHANNEL)
         publishRandomIVUnderTest.sync()
 
         val encryptedMessageRandomIV = encryptedMessageSlot.captured

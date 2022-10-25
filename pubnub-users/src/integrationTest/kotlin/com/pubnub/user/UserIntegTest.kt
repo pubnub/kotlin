@@ -1,6 +1,5 @@
 package com.pubnub.user
 
-import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubException
 import com.pubnub.api.UserId
@@ -39,7 +38,8 @@ class UserIntegTest {
 
     @BeforeEach
     fun setUp() {
-        val config = PNConfiguration(UserId("kotlin")).apply {
+        UserId("kotlin")
+        val config = PNConfiguration(userId = UserId(uuid)).apply {
             subscribeKey = IntegTestConf.subscribeKey
             publishKey = IntegTestConf.publishKey
             IntegTestConf.origin?.let {

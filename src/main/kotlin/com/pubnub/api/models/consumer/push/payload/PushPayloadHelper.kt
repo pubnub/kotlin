@@ -1,6 +1,7 @@
 package com.pubnub.api.models.consumer.push.payload
 
 import com.pubnub.api.enums.PNPushEnvironment
+import java.util.Locale
 
 class PushPayloadHelper {
 
@@ -99,7 +100,7 @@ class PushPayloadHelper {
                     return mutableMapOf<String, Any>().apply {
                         topic?.let { put("topic", it) }
                         excludeDevices?.let { put("excluded_devices", it) }
-                        environment?.let { put("environment", it.name.toLowerCase()) }
+                        environment?.let { put("environment", it.name.lowercase(Locale.getDefault())) }
                     }
                 }
             }

@@ -93,7 +93,7 @@ class RetryingRemoteActionTest {
         val asyncSynchronization = CountDownLatch(1)
 
         // when
-        retryingRemoteAction.async { result: Int?, status: PNStatus? ->
+        retryingRemoteAction.async { result: Int?, _: PNStatus? ->
             // then
             Assert.assertEquals(expectedValue, result)
             verify(exactly = 1) { remoteAction.async(any()) }
@@ -118,7 +118,7 @@ class RetryingRemoteActionTest {
         val asyncSynchronization = CountDownLatch(1)
 
         // when
-        retryingRemoteAction.async { result: Int?, status: PNStatus? ->
+        retryingRemoteAction.async { result: Int?, _: PNStatus? ->
             // then
             Assert.assertEquals(expectedValue, result)
             verify(exactly = numberOfRetries) { remoteAction.async(any()) }
@@ -143,7 +143,7 @@ class RetryingRemoteActionTest {
         val asyncSynchronization = CountDownLatch(1)
 
         // when
-        retryingRemoteAction.async { result: Int?, status: PNStatus ->
+        retryingRemoteAction.async { _: Int?, status: PNStatus ->
             // then
             Assert.assertTrue(status.error)
             verify(exactly = numberOfRetries) { remoteAction.async(any()) }
@@ -168,7 +168,7 @@ class RetryingRemoteActionTest {
         val asyncSynchronization = CountDownLatch(2)
 
         // when
-        retryingRemoteAction.async { result: Int?, status: PNStatus ->
+        retryingRemoteAction.async { _: Int?, status: PNStatus ->
             // then
             if (asyncSynchronization.count == 1L) {
                 Assert.assertTrue(status.error)

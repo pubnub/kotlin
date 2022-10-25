@@ -45,7 +45,6 @@ allprojects {
         ktlint {
             outputToConsole = true
             verbose = true
-            debug = true
             additionalEditorconfigFile = file("check/.editorconfig")
             kotlinScriptAdditionalPaths {
                 include fileTree("src/integrationTest/")

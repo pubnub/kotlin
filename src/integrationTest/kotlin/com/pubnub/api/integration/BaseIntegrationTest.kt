@@ -2,8 +2,8 @@ package com.pubnub.api.integration
 
 import com.pubnub.api.CommonUtils.createInterceptor
 import com.pubnub.api.Keys
-import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
+import com.pubnub.api.UserId
 import com.pubnub.api.enums.PNLogVerbosity
 import org.junit.After
 import org.junit.Before
@@ -55,7 +55,7 @@ abstract class BaseIntegrationTest {
     }
 
     protected open fun getBasicPnConfiguration(): PNConfiguration {
-        val pnConfiguration = PNConfiguration(PubNub.generateUUID())
+        val pnConfiguration = PNConfiguration(userId = UserId(PubNub.generateUUID()))
         if (!needsServer()) {
             pnConfiguration.subscribeKey = Keys.subKey
             pnConfiguration.publishKey = Keys.pubKey
@@ -67,19 +67,19 @@ abstract class BaseIntegrationTest {
         pnConfiguration.logVerbosity = PNLogVerbosity.NONE
         pnConfiguration.httpLoggingInterceptor = createInterceptor(logger)
 
-        pnConfiguration.uuid = "client-${UUID.randomUUID()}"
+        pnConfiguration.userId.value = "client-${UUID.randomUUID()}"
         return pnConfiguration
     }
 
     private fun getServerPnConfiguration(): PNConfiguration {
-        val pnConfiguration = PNConfiguration(PubNub.generateUUID())
+        val pnConfiguration = PNConfiguration(userId = UserId(PubNub.generateUUID()))
         pnConfiguration.subscribeKey = Keys.pamSubKey
         pnConfiguration.publishKey = Keys.pamPubKey
         pnConfiguration.secretKey = Keys.pamSecKey
         pnConfiguration.logVerbosity = PNLogVerbosity.NONE
         pnConfiguration.httpLoggingInterceptor = createInterceptor(logger)
 
-        pnConfiguration.uuid = "server-${UUID.randomUUID()}"
+        pnConfiguration.userId.value = "server-${UUID.randomUUID()}"
         return pnConfiguration
     }
 

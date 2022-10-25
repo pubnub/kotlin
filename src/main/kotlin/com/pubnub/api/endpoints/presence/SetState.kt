@@ -23,7 +23,7 @@ class SetState internal constructor(
     val channels: List<String>,
     val channelGroups: List<String>,
     val state: Any,
-    val uuid: String = pubnub.configuration.uuid
+    val uuid: String = pubnub.configuration.userId.value
 ) : Endpoint<Envelope<JsonElement>, PNSetStateResult>(pubnub) {
 
     override fun getAffectedChannels() = channels
@@ -36,7 +36,7 @@ class SetState internal constructor(
     }
 
     override fun doWork(queryParams: HashMap<String, String>): Call<Envelope<JsonElement>> {
-        if (uuid == pubnub.configuration.uuid) {
+        if (uuid == pubnub.configuration.userId.value) {
             pubnub.subscriptionManager.adaptStateBuilder(
                 StateOperation(
                     state = state,

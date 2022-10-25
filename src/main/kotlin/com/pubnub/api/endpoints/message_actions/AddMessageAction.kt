@@ -12,6 +12,7 @@ import com.pubnub.api.models.server.objects_api.EntityEnvelope
 import retrofit2.Call
 import retrofit2.Response
 import java.util.HashMap
+import java.util.Locale
 
 /**
  * @see [PubNub.addMessageAction]
@@ -41,7 +42,7 @@ class AddMessageAction internal constructor(
             .addMessageAction(
                 subKey = pubnub.configuration.subscribeKey,
                 channel = channel,
-                messageTimetoken = messageAction.messageTimetoken.toString().toLowerCase(),
+                messageTimetoken = messageAction.messageTimetoken.toString().lowercase(Locale.getDefault()),
                 body = body,
                 options = queryParams
             )

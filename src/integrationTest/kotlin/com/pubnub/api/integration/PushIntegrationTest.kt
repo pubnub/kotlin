@@ -6,6 +6,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import java.util.Locale
 import java.util.UUID
 
 class PushIntegrationTest : BaseIntegrationTest() {
@@ -16,7 +17,7 @@ class PushIntegrationTest : BaseIntegrationTest() {
 
     override fun onBefore() {
         expectedChannels =
-            generateSequence { UUID.randomUUID().toString().substring(0, 8).toUpperCase() }.take(3).toList()
+            generateSequence { UUID.randomUUID().toString().substring(0, 8).uppercase(Locale.getDefault()) }.take(3).toList()
         expectedDeviceId =
             generateSequence { (0..9).random() }.take(70).toList().shuffled().joinToString(separator = "")
         expectedTopic = UUID.randomUUID().toString()
