@@ -2,6 +2,7 @@ package com.pubnub.api.integration
 
 import com.pubnub.api.CommonUtils.createInterceptor
 import com.pubnub.api.Keys
+import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
 import com.pubnub.api.UserId
 import com.pubnub.api.enums.PNLogVerbosity
@@ -67,7 +68,7 @@ abstract class BaseIntegrationTest {
         pnConfiguration.logVerbosity = PNLogVerbosity.NONE
         pnConfiguration.httpLoggingInterceptor = createInterceptor(logger)
 
-        pnConfiguration.userId.value = "client-${UUID.randomUUID()}"
+        pnConfiguration.userId = UserId("client-${UUID.randomUUID()}")
         return pnConfiguration
     }
 
@@ -79,7 +80,7 @@ abstract class BaseIntegrationTest {
         pnConfiguration.logVerbosity = PNLogVerbosity.NONE
         pnConfiguration.httpLoggingInterceptor = createInterceptor(logger)
 
-        pnConfiguration.userId.value = "server-${UUID.randomUUID()}"
+        pnConfiguration.userId = UserId("server-${UUID.randomUUID()}")
         return pnConfiguration
     }
 

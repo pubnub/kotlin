@@ -66,6 +66,8 @@ allprojects {
         compileTestKotlin {
             kotlinOptions.jvmTarget = "1.8"
         }
+
+        compileKotlin.finalizedBy(task("compileIntegrationTest"))
     }
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
