@@ -11,8 +11,8 @@ data class PNMember(
 ) {
     data class Partial(
         val uuidId: String,
-        override val custom: Any?,
-        override val status: String?,
+        override val custom: Any? = null,
+        override val status: String? = null,
 
     ) : MemberInput {
         override val uuid: String = uuidId
