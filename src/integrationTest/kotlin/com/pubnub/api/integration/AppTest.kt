@@ -1,8 +1,8 @@
 package com.pubnub.api.integration
 
 import com.pubnub.api.Keys
-import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
+import com.pubnub.api.UserId
 import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.enums.PNOperationType
@@ -31,7 +31,7 @@ class AppTest {
     @Before
     fun initPubnub() {
         pubnub = PubNub(
-            PNConfiguration(PubNub.generateUUID()).apply {
+            PNConfiguration(userId = UserId(PubNub.generateUUID())).apply {
                 subscribeKey = Keys.subKey
                 publishKey = Keys.pubKey
                 logVerbosity = PNLogVerbosity.BODY
@@ -128,7 +128,7 @@ class AppTest {
             .with()
             .until {
                 pubnub.whereNow(
-                    uuid = pubnub.configuration.uuid
+                    uuid = pubnub.configuration.userId.value
                 ).sync()!!
                     .channels
                     .containsAll(expectedChannels)

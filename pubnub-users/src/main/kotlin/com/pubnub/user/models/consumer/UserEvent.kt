@@ -39,6 +39,7 @@ data class UserRemoved(
 fun PNObjectEventResult.toUserEvent(): UserEvent? {
     return when (val m = extractedMessage) {
         is PNSetUUIDMetadataEventMessage -> {
+            @Suppress("UNCHECKED_CAST")
             UserModified(
                 spaceId = channel,
                 timetoken = timetoken ?: 0,

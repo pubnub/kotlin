@@ -39,7 +39,7 @@ class UserIntegTest {
 
     @BeforeEach
     fun setUp() {
-        val config = PNConfiguration(UserId("kotlin")).apply {
+        val config = PNConfiguration(userId = UserId("kotlin")).apply {
             subscribeKey = IntegTestConf.subscribeKey
             publishKey = IntegTestConf.publishKey
             IntegTestConf.origin?.let {

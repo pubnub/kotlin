@@ -16,7 +16,7 @@ class RemoveUUIDMetadata(
     override fun doWork(queryParams: HashMap<String, String>): Call<EntityEnvelope<Any?>> {
         return pubnub.retrofitManager.objectsService.deleteUUIDMetadata(
             subKey = pubnub.configuration.subscribeKey,
-            uuid = uuid ?: pubnub.configuration.uuid
+            uuid = uuid ?: pubnub.configuration.userId.value
         )
     }
 

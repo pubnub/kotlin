@@ -41,7 +41,7 @@ class SetUUIDMetadata internal constructor(
                 type = type,
                 status = status
             ),
-            uuid = uuid ?: pubnub.configuration.uuid,
+            uuid = uuid ?: pubnub.configuration.userId.value,
             options = params
         )
     }

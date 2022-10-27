@@ -140,7 +140,7 @@ class PresenceEventsIntegrationTests : BaseIntegrationTest() {
 
             override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {
                 if (pnPresenceEventResult.event == "state-change") {
-                    assertEquals(pubnub.configuration.uuid, pnPresenceEventResult.uuid)
+                    assertEquals(pubnub.configuration.userId.value, pnPresenceEventResult.uuid)
                     success.set(true)
                 }
             }

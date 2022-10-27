@@ -3,9 +3,10 @@ package com.pubnub.api.legacy.endpoints.files
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubException
+import com.pubnub.api.UserId
 import okhttp3.HttpUrl.Companion.toHttpUrl
-import org.hamcrest.Matchers
 import org.hamcrest.MatcherAssert.assertThat
+import org.hamcrest.Matchers
 import org.junit.Assert
 import org.junit.Test
 import java.util.Arrays
@@ -97,7 +98,7 @@ class GetFileUrlTest {
     }
 
     private fun config(): PNConfiguration {
-        val config = PNConfiguration(PubNub.generateUUID())
+        val config = PNConfiguration(userId = UserId(PubNub.generateUUID()))
         config.publishKey = "pk"
         config.subscribeKey = "sk"
         return config

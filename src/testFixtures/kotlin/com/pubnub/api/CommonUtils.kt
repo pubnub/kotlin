@@ -16,6 +16,7 @@ import org.junit.Assert.fail
 import org.slf4j.Logger
 import java.io.BufferedReader
 import java.io.InputStreamReader
+import java.util.Locale
 import java.util.UUID
 import java.util.concurrent.Callable
 import java.util.concurrent.Executors
@@ -109,7 +110,7 @@ object CommonUtils {
         return UUID.randomUUID().toString()
             .replace("-", "")
             .take(length)
-            .toUpperCase()
+            .uppercase(Locale.getDefault())
     }
 
     fun randomChannel(): String {
@@ -148,7 +149,7 @@ object CommonUtils {
 
     fun generateMessage(pubnub: PubNub): JsonObject {
         return JsonObject().apply {
-            addProperty("publisher", pubnub.configuration.uuid)
+            addProperty("publisher", pubnub.configuration.userId.value)
             addProperty("text", randomValue())
             addProperty("uncd", unicode(8))
         }

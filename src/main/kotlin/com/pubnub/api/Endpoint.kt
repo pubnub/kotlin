@@ -220,7 +220,7 @@ abstract class Endpoint<Input, Output> protected constructor(protected val pubnu
         map += queryParam
 
         map["pnsdk"] = pubnub.configuration.generatePnsdk(pubnub.version)
-        map["uuid"] = pubnub.configuration.uuid
+        map["uuid"] = pubnub.configuration.userId.value
 
         if (pubnub.configuration.includeInstanceIdentifier) {
             map["instanceid"] = pubnub.instanceId

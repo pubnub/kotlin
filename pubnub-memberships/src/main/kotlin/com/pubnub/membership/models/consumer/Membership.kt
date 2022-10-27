@@ -50,6 +50,7 @@ data class Membership(
 }
 
 internal fun PNChannelMembership.toUserMembership(userId: UserId): Membership {
+    @Suppress("UNCHECKED_CAST")
     return Membership(
         user = User(id = userId),
         space = channel?.toSpace(),
@@ -61,6 +62,7 @@ internal fun PNChannelMembership.toUserMembership(userId: UserId): Membership {
 }
 
 internal fun PNMember.toSpaceMembership(spaceId: SpaceId): Membership {
+    @Suppress("UNCHECKED_CAST")
     return Membership(
         user = uuid?.toUser(),
         space = Space(id = spaceId),

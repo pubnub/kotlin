@@ -40,6 +40,7 @@ data class MembershipRemoved(
 fun PNObjectEventResult.toMembershipEvent(): MembershipEvent? {
     return when (val m = extractedMessage) {
         is PNSetMembershipEventMessage -> {
+            @Suppress("UNCHECKED_CAST")
             MembershipModified(
                 data = MembershipModified.Data(
                     space = Space(id = SpaceId(m.data.channel)),

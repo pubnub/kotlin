@@ -29,7 +29,7 @@ open class PNConfiguration(
     @Deprecated(
         replaceWith = ReplaceWith(
             "PNConfiguration(userId = UserId(uuid), enableSubscribeBeta = enableSubscribeBeta)",
-            "com.pubnub.api"
+            "com.pubnub.api.PNConfiguration"
         ),
         level = DeprecationLevel.WARNING,
         message = "Use PNConfiguration(UserId, Boolean) instead"
@@ -38,9 +38,9 @@ open class PNConfiguration(
 
     @Deprecated(
         level = DeprecationLevel.WARNING,
-        message = """Use UserId instead e.g. config.userId = UserId("uuid")"""
+        message = """Use UserId instead e.g. config.userId = UserId("uuid")""",
+        replaceWith = ReplaceWith("userId.value")
     )
-
     @Volatile
     var uuid: String = userId.value
         set(value) {
@@ -48,6 +48,7 @@ open class PNConfiguration(
             field = value
         }
 
+    @Suppress("DEPRECATION")
     var userId: UserId
         get() = UserId(uuid)
         set(value) {
@@ -323,10 +324,11 @@ open class PNConfiguration(
     }
 
     @Deprecated("To be used by components", level = DeprecationLevel.WARNING)
-    public fun addPnsdkSuffix(vararg nameToSuffixes: Pair<String, String>) {
+    fun addPnsdkSuffix(vararg nameToSuffixes: Pair<String, String>) {
+        @Suppress("DEPRECATION")
         addPnsdkSuffix(nameToSuffixes.toMap())
     }
 
     @Deprecated("To be used by components", level = DeprecationLevel.WARNING)
-    public fun addPnsdkSuffix(nameToSuffixes: Map<String, String>) = pnsdkSuffixes.putAll(nameToSuffixes)
+    fun addPnsdkSuffix(nameToSuffixes: Map<String, String>) = pnsdkSuffixes.putAll(nameToSuffixes)
 }
