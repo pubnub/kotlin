@@ -10,8 +10,8 @@ import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 import com.pubnub.api.endpoints.FetchMessages
 import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.models.consumer.PNBoundedPage
+import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers
-import org.junit.Assert
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -256,7 +256,7 @@ class FetchMessagesEndpointTest : BaseTest() {
         )
 
         // then
-        Assert.assertThat(result, Matchers.equalTo(maximumPerChannel))
+        assertThat(result, Matchers.equalTo(maximumPerChannel))
     }
 
     @Test
@@ -272,7 +272,7 @@ class FetchMessagesEndpointTest : BaseTest() {
         )
 
         // then
-        Assert.assertThat(result, Matchers.equalTo(EXPECTED_SINGLE_CHANNEL_DEFAULT_MESSAGES))
+        assertThat(result, Matchers.equalTo(EXPECTED_SINGLE_CHANNEL_DEFAULT_MESSAGES))
     }
     @Test
     fun forSingleChannelFetchMessagesAlwaysPassDefaultWhenMaxNotSpecified() {
@@ -287,7 +287,7 @@ class FetchMessagesEndpointTest : BaseTest() {
         )
 
         // then
-        Assert.assertThat(result, Matchers.equalTo(EXPECTED_SINGLE_CHANNEL_DEFAULT_MESSAGES))
+        assertThat(result, Matchers.equalTo(EXPECTED_SINGLE_CHANNEL_DEFAULT_MESSAGES))
     }
 
     @Test
@@ -303,7 +303,7 @@ class FetchMessagesEndpointTest : BaseTest() {
         )
 
         // then
-        Assert.assertThat(result, Matchers.equalTo(EXPECTED_SINGLE_CHANNEL_DEFAULT_MESSAGES))
+        assertThat(result, Matchers.equalTo(EXPECTED_SINGLE_CHANNEL_DEFAULT_MESSAGES))
     }
 
     @Test
@@ -319,7 +319,7 @@ class FetchMessagesEndpointTest : BaseTest() {
         )
 
         // then
-        Assert.assertThat(result, Matchers.equalTo(maximumPerChannel))
+        assertThat(result, Matchers.equalTo(maximumPerChannel))
     }
 
     @Test
@@ -335,7 +335,7 @@ class FetchMessagesEndpointTest : BaseTest() {
         )
 
         // then
-        Assert.assertThat(result, Matchers.equalTo(EXPECTED_MULTIPLE_CHANNEL_DEFAULT_MESSAGES))
+        assertThat(result, Matchers.equalTo(EXPECTED_MULTIPLE_CHANNEL_DEFAULT_MESSAGES))
     }
 
     @Test
@@ -351,7 +351,7 @@ class FetchMessagesEndpointTest : BaseTest() {
         )
 
         // then
-        Assert.assertThat(result, Matchers.equalTo(EXPECTED_MULTIPLE_CHANNEL_DEFAULT_MESSAGES))
+        assertThat(result, Matchers.equalTo(EXPECTED_MULTIPLE_CHANNEL_DEFAULT_MESSAGES))
     }
 
     @Test
@@ -368,7 +368,7 @@ class FetchMessagesEndpointTest : BaseTest() {
         )
 
         // then
-        Assert.assertThat(result, Matchers.equalTo(EXPECTED_MULTIPLE_CHANNEL_DEFAULT_MESSAGES))
+        assertThat(result, Matchers.equalTo(EXPECTED_MULTIPLE_CHANNEL_DEFAULT_MESSAGES))
     }
 
     @Test
@@ -384,7 +384,7 @@ class FetchMessagesEndpointTest : BaseTest() {
         )
 
         // then
-        Assert.assertThat(result, Matchers.equalTo(maximumPerChannel))
+        assertThat(result, Matchers.equalTo(maximumPerChannel))
     }
 
     @Test
@@ -400,7 +400,7 @@ class FetchMessagesEndpointTest : BaseTest() {
         )
 
         // then
-        Assert.assertThat(result, Matchers.equalTo(EXPECTED_DEFAULT_MESSAGES_WITH_ACTIONS))
+        assertThat(result, Matchers.equalTo(EXPECTED_DEFAULT_MESSAGES_WITH_ACTIONS))
     }
 
     @Test
@@ -417,7 +417,7 @@ class FetchMessagesEndpointTest : BaseTest() {
         )
 
         // then
-        Assert.assertThat(result, Matchers.equalTo(EXPECTED_MAX_MESSAGES_WITH_ACTIONS))
+        assertThat(result, Matchers.equalTo(EXPECTED_MAX_MESSAGES_WITH_ACTIONS))
     }
 
     private fun randomInt(max: Int): Int = nextInt(max) + 1

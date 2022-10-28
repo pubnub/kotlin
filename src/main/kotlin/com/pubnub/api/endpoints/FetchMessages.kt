@@ -103,8 +103,8 @@ class FetchMessages internal constructor(
             effectiveMax(page.limit, includeMessageActions, channels.size).toString()
         queryParams["include_uuid"] = includeUUID.toString()
 
-        page.start?.run { queryParams["start"] = this.toString().toLowerCase(Locale.US) }
-        page.end?.run { queryParams["end"] = this.toString().toLowerCase(Locale.US) }
+        page.start?.run { queryParams["start"] = this.toString().lowercase(Locale.US) }
+        page.end?.run { queryParams["end"] = this.toString().lowercase(Locale.US) }
 
         if (includeMeta) queryParams["include_meta"] = includeMeta.toString()
     }

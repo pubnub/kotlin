@@ -19,7 +19,7 @@ class ThenSteps(
     }
 
     @Then("the UUID metadata for {string} persona contains updated")
-    fun the_uuid_metadata_for_persona_contains_updated(personaName: String) {
+    fun the_uuid_metadata_for_persona_contains_updated(@Suppress("UNUSED_PARAMETER") personaName: String) {
         assertThat(uuidMetadataState.uuidMetadata?.updated, iz(Matchers.notNullValue()))
     }
 

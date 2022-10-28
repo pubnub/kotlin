@@ -2,11 +2,9 @@ package com.pubnub.contract.channelmetadata.step
 
 import com.pubnub.contract.channelmetadata.state.ChannelMetadataState
 import com.pubnub.contract.loadChannelMetadata
-import com.pubnub.contract.state.World
 import io.cucumber.java.en.Given
 
 class GivenSteps(
-    private val world: World,
     private val channelMetadataState: ChannelMetadataState
 ) {
 

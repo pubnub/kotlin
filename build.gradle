@@ -45,7 +45,6 @@ allprojects {
         ktlint {
             outputToConsole = true
             verbose = true
-            debug = true
             additionalEditorconfigFile = file("check/.editorconfig")
             kotlinScriptAdditionalPaths {
                 include fileTree("src/integrationTest/")
@@ -67,6 +66,8 @@ allprojects {
         compileTestKotlin {
             kotlinOptions.jvmTarget = "1.8"
         }
+
+        compileKotlin.finalizedBy(task("compileIntegrationTest"))
     }
     sourceCompatibility = 1.8
     targetCompatibility = 1.8

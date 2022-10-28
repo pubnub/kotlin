@@ -36,6 +36,7 @@ data class SpaceRemoved(
 fun PNObjectEventResult.toSpaceEvent(): SpaceEvent? {
     return when (val m = extractedMessage) {
         is PNSetChannelMetadataEventMessage -> {
+            @Suppress("UNCHECKED_CAST")
             SpaceModified(
                 spaceId = SpaceId(channel), timetoken = timetoken ?: 0,
                 data = SpaceModified.Data(

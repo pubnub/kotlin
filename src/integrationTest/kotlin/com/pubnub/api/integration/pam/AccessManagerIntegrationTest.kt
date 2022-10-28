@@ -27,6 +27,7 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import java.util.Locale
 import java.util.concurrent.atomic.AtomicBoolean
 
 abstract class AccessManagerIntegrationTest() : BaseIntegrationTest() {
@@ -48,7 +49,7 @@ abstract class AccessManagerIntegrationTest() : BaseIntegrationTest() {
 
     override fun onPrePubnub() {
         expectedChannel = randomChannel()
-        expectedAuthKey = "auth_${randomValue()}_${unicode()}".toLowerCase()
+        expectedAuthKey = "auth_${randomValue()}_${unicode()}".lowercase(Locale.getDefault())
 
         logger.info("Level: ${getPamLevel()}")
         if (::expectedChannel.isInitialized) {
@@ -242,7 +243,7 @@ abstract class AccessManagerIntegrationTest() : BaseIntegrationTest() {
 
         pubnubToTest.setPresenceState(
             channels = listOf(expectedChannel),
-            uuid = pubnubToTest.configuration.uuid,
+            uuid = pubnubToTest.configuration.userId.value,
             state = expectedStatePayload
         ).asyncRetry { _, status ->
             revokeAllAccess()
@@ -259,7 +260,7 @@ abstract class AccessManagerIntegrationTest() : BaseIntegrationTest() {
 
         pubnubToTest.setPresenceState(
             channels = listOf(expectedChannel),
-            uuid = pubnubToTest.configuration.uuid,
+            uuid = pubnubToTest.configuration.userId.value,
             state = expectedStatePayload
         ).asyncRetry { result, status ->
             requestAccess(READ)
@@ -274,7 +275,7 @@ abstract class AccessManagerIntegrationTest() : BaseIntegrationTest() {
     fun testGetSetStateWithoutPermission() {
         pubnubToTest.getPresenceState(
             channels = listOf(expectedChannel),
-            uuid = pubnubToTest.configuration.uuid
+            uuid = pubnubToTest.configuration.userId.value
         ).asyncRetry { _, status ->
             revokeAllAccess()
             assertAuthKey(status)
@@ -288,7 +289,7 @@ abstract class AccessManagerIntegrationTest() : BaseIntegrationTest() {
     fun testGetStateWithPermission() {
         pubnubToTest.getPresenceState(
             channels = listOf(expectedChannel),
-            uuid = pubnubToTest.configuration.uuid
+            uuid = pubnubToTest.configuration.userId.value
         ).asyncRetry { _, status ->
             requestAccess(READ)
             assertAuthKey(status)
@@ -303,7 +304,7 @@ abstract class AccessManagerIntegrationTest() : BaseIntegrationTest() {
 
         pubnubToTest.setPresenceState(
             channels = listOf(expectedChannel),
-            uuid = pubnubToTest.configuration.uuid,
+            uuid = pubnubToTest.configuration.userId.value,
             state = expectedStatePayload
         ).asyncRetry { result, status ->
             requestAccess(READ)
@@ -315,7 +316,7 @@ abstract class AccessManagerIntegrationTest() : BaseIntegrationTest() {
 
         pubnubToTest.getPresenceState(
             channels = listOf(expectedChannel),
-            uuid = pubnubToTest.configuration.uuid
+            uuid = pubnubToTest.configuration.userId.value
         ).asyncRetry { result, status ->
             requestAccess(READ)
             assertAuthKey(status)
@@ -334,7 +335,7 @@ abstract class AccessManagerIntegrationTest() : BaseIntegrationTest() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
                 if (pnStatus.category == PNStatusCategory.PNConnectedCategory &&
                     pnStatus.operation == PNOperationType.PNSubscribeOperation &&
-                    pnStatus.uuid == this@AccessManagerIntegrationTest.pubnubToTest.configuration.uuid
+                    pnStatus.uuid == this@AccessManagerIntegrationTest.pubnubToTest.configuration.userId.value
                 ) {
                     server.subscribe(
                         withPresence = true,
@@ -346,7 +347,7 @@ abstract class AccessManagerIntegrationTest() : BaseIntegrationTest() {
             override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {
                 if (pnPresenceEventResult.event == "join" &&
                     pnPresenceEventResult.channel == expectedChannel &&
-                    pnPresenceEventResult.uuid == server.configuration.uuid
+                    pnPresenceEventResult.uuid == server.configuration.userId.value
 
                 ) {
                     success.set(true)
@@ -688,7 +689,7 @@ abstract class AccessManagerIntegrationTest() : BaseIntegrationTest() {
     }
 
     private fun assertUuid(pnStatus: PNStatus) {
-        assertEquals(pubnubToTest.configuration.uuid, pnStatus.uuid)
+        assertEquals(pubnubToTest.configuration.userId.value, pnStatus.uuid)
     }
 
     abstract fun getPamLevel(): String

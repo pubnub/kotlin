@@ -6,6 +6,7 @@ import com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig
 import com.pubnub.api.CommonUtils.DEFAULT_LISTEN_DURATION
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
+import com.pubnub.api.UserId
 import com.pubnub.api.enums.PNLogVerbosity
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import org.junit.After
@@ -52,18 +53,19 @@ abstract class BaseTest {
     }
 
     fun initConfiguration() {
-        config = PNConfiguration(PubNub.generateUUID()).apply {
-            subscribeKey = "mySubscribeKey"
-            publishKey = "myPublishKey"
-            uuid = "myUUID"
-            origin = wireMockServer.baseUrl().toHttpUrlOrNull()!!.run { "$host:$port" }
-            secure = false
-            logVerbosity = PNLogVerbosity.BODY
+        config = run {
+            PNConfiguration(userId = UserId("myUUID")).apply {
+                subscribeKey = "mySubscribeKey"
+                publishKey = "myPublishKey"
+                origin = wireMockServer.baseUrl().toHttpUrlOrNull()!!.run { "$host:$port" }
+                secure = false
+                logVerbosity = PNLogVerbosity.BODY
+            }
         }
     }
 
     fun clearConfiguration() {
-        config = PNConfiguration(PubNub.generateUUID())
+        config = PNConfiguration(userId = UserId(PubNub.generateUUID()))
     }
 
     fun initPubNub() {
