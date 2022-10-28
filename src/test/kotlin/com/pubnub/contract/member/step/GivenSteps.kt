@@ -17,7 +17,7 @@ class GivenSteps(
         memberState.members.add(loadMember(memberName))
     }
 
-    @Given("the data for {string} member that we want to delete")
+    @Given("the data for {string} member that we want to remove")
     fun the_data_for_member_that_we_want_to_delete(memberName: String) {
         memberState.membersToRemove.add(loadMember(memberName))
     }
