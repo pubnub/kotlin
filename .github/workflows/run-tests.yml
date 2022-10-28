@@ -10,9 +10,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Checkout actions
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: pubnub/client-engineering-deployment-tools
           ref: v1
@@ -39,9 +39,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout project
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Checkout mock-server action
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: pubnub/client-engineering-deployment-tools
           ref: v1
@@ -84,7 +84,7 @@ jobs:
           ln -s /home/runner/work/kotlin/kotlin/sdk-specifications src/test/resources/sdk-specifications
           ./gradlew cucumber --tests RunMainCucumberTest -Dcucumber.features="sdk-specifications/features/" -i
       - name: Expose acceptance tests reports
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         if: always()
         with:
           name: acceptance-test-reports
