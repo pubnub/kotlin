@@ -1,6 +1,6 @@
 ### PubNub Kotlin-based SDKs for Android
 
-[![Build Status](https://travis-ci.com/pubnub/kotlin.svg?branch=master)]()
+[![Tests](https://github.com/pubnub/kotlin/actions/workflows/run-tests.yml/badge.svg)](https://github.com/pubnub/kotlin/actions/workflows/run-tests.yml)
 [![Maven Central](https://img.shields.io/maven-central/v/com.pubnub/pubnub-kotlin.svg)](https://maven-badges.herokuapp.com/maven-central/com.pubnub/pubnub-kotlin)
 
 This is the official PubNub Kotlin SDK repository.
