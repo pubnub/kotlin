@@ -13,7 +13,7 @@ class WhenSteps(
     @When("I get the memberships")
     fun i_get_the_memberships() {
         world.pubnub.getMemberships(uuid = membershipState.uuid()).sync()?.let {
-            membershipState.memberships = it.data
+            membershipState.returnedMemberships = it.data
             world.responseStatus = it.status
         }
     }
@@ -21,7 +21,7 @@ class WhenSteps(
     @When("I get the memberships for current user")
     fun i_get_the_memberships_for_current_user() {
         world.pubnub.getMemberships().sync()?.let {
-            membershipState.memberships = it.data
+            membershipState.returnedMemberships = it.data
             world.responseStatus = it.status
         }
     }
@@ -33,14 +33,14 @@ class WhenSteps(
             includeCustom = true,
             includeChannelDetails = PNChannelDetailsLevel.CHANNEL_WITH_CUSTOM
         ).sync()?.let {
-            membershipState.memberships = it.data
+            membershipState.returnedMemberships = it.data
             world.responseStatus = it.status
         }
     }
 
     @When("I set the membership")
     fun i_set_the_membership() {
-        val channelMembershipInput = membershipState.membership.let {
+        val channelMembershipInput = membershipState.memberships.map {
             PNChannelMembership.Partial(
                 channelId = it.channel!!.id,
                 custom = it.custom,
@@ -50,16 +50,16 @@ class WhenSteps(
 
         world.pubnub.setMemberships(
             uuid = membershipState.uuid(),
-            channels = listOf(channelMembershipInput),
+            channels = channelMembershipInput,
         ).sync()?.let {
             world.responseStatus = it.status
-            membershipState.memberships = it.data
+            membershipState.returnedMemberships = it.data
         }
     }
 
     @When("I set the membership for current user")
     fun i_set_the_membershipfor_current_user() {
-        val channelMembershipInput = membershipState.membership.let {
+        val channelMembershipInput = membershipState.memberships.map {
             PNChannelMembership.Partial(
                 channelId = it.channel!!.id,
                 custom = it.custom,
@@ -68,10 +68,10 @@ class WhenSteps(
         }
 
         world.pubnub.setMemberships(
-            channels = listOf(channelMembershipInput),
+            channels = channelMembershipInput,
         ).sync()?.let {
             world.responseStatus = it.status
-            membershipState.memberships = it.data
+            membershipState.returnedMemberships = it.data
         }
     }
 
@@ -79,20 +79,38 @@ class WhenSteps(
     fun i_remove_the_membership() {
         world.pubnub.removeMemberships(
             uuid = membershipState.uuid(),
-            channels = listOf(membershipState.membership.channel?.id!!),
+            channels = membershipState.memberships.map { it.channel!!.id },
         ).sync()?.let {
             world.responseStatus = it.status
-            membershipState.memberships = it.data
+            membershipState.returnedMemberships = it.data
         }
     }
 
     @When("I remove the membership for current user")
     fun i_remove_the_membership_for_current_user() {
         world.pubnub.removeMemberships(
-            channels = listOf(membershipState.membership.channel?.id!!),
+            channels = membershipState.memberships.map { it.channel!!.id }
         ).sync()?.let {
             world.responseStatus = it.status
-            membershipState.memberships = it.data
+            membershipState.returnedMemberships = it.data
+        }
+    }
+
+    @When("I manage memberships")
+    fun i_manage_memberships() {
+        world.pubnub.manageMemberships(
+            channelsToSet = membershipState.memberships.map {
+                PNChannelMembership.Partial(
+                    channelId = it.channel!!.id,
+                    custom = it.custom,
+                    status = it.status
+                )
+            },
+            channelsToRemove = membershipState.membershipsToRemove.map { it.channel!!.id },
+            uuid = membershipState.uuid()
+        ).sync()?.let {
+            world.responseStatus = it.status
+            membershipState.returnedMemberships = it.data
         }
     }
 }

@@ -5,6 +5,8 @@ import com.pubnub.contract.uuidmetadata.state.MembershipState
 import io.cucumber.java.en.Then
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.containsInAnyOrder
+import org.hamcrest.Matchers.hasItem
+import org.hamcrest.Matchers.not
 
 class ThenSteps(
     private val membershipState: MembershipState,
@@ -17,15 +19,22 @@ class ThenSteps(
         val firstChannelMembership = loadChannelMembership(firstChannelMembershipName)
         val secondChannelMembership = loadChannelMembership(secondChannelMembershipName)
 
-        assertThat(membershipState.memberships, containsInAnyOrder(firstChannelMembership, secondChannelMembership))
+        assertThat(membershipState.returnedMemberships, containsInAnyOrder(firstChannelMembership, secondChannelMembership))
     }
 
     @Then("the response contains list with {string} membership")
     fun the_response_contains_list_with_and_membership(
-        firstChannelMembershipName: String,
+        channelMembershipName: String,
     ) {
-        val firstChannelMembership = loadChannelMembership(firstChannelMembershipName)
+        val channelMembership = loadChannelMembership(channelMembershipName)
 
-        assertThat(membershipState.memberships, containsInAnyOrder(firstChannelMembership))
+        assertThat(membershipState.returnedMemberships, hasItem(channelMembership))
+    }
+
+    @Then("the response doesn't contain list with {string} membership")
+    fun the_response_doesn_t_contain_list_with_patient_membership_membership(channelMembershipName: String) {
+        val channelMembership = loadChannelMembership(channelMembershipName)
+
+        assertThat(membershipState.returnedMemberships, not(hasItem(channelMembership)))
     }
 }
