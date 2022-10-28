@@ -14,21 +14,20 @@ class WhenSteps(
     @When("I get the channel members")
     fun i_get_the_channel_members() {
         world.pubnub.getChannelMembers(channel = memberState.channelId()).sync()?.let {
-            memberState.members = it.data
+            memberState.returnedMembers = it.data
             world.responseStatus = it.status
         }
     }
 
     @When("I set a channel member including custom and UUID with custom")
     fun i_set_a_channel_member_including_custom_and_uuid_with_custom() {
-        val memberInput = PNMember.Partial(uuidId = memberState.member.uuid?.id!!)
         world.pubnub.setChannelMembers(
             channel = memberState.channelId(),
             includeCustom = true,
             includeUUIDDetails = PNUUIDDetailsLevel.UUID_WITH_CUSTOM,
-            uuids = listOf(memberInput)
+            uuids = memberState.members.map { PNMember.Partial(uuidId = it.uuid?.id!!) }
         ).sync()?.let {
-            memberState.members = it.data
+            memberState.returnedMembers = it.data
             world.responseStatus = it.status
         }
     }
@@ -40,19 +39,18 @@ class WhenSteps(
             includeCustom = true,
             includeUUIDDetails = PNUUIDDetailsLevel.UUID_WITH_CUSTOM
         ).sync()?.let {
-            memberState.members = it.data
+            memberState.returnedMembers = it.data
             world.responseStatus = it.status
         }
     }
 
     @When("I set a channel member")
     fun i_set_a_channel_member() {
-        val memberInput = PNMember.Partial(uuidId = memberState.member.uuid?.id!!)
         world.pubnub.setChannelMembers(
             channel = memberState.channelId(),
-            uuids = listOf(memberInput)
+            uuids = memberState.members.map { PNMember.Partial(uuidId = it.uuid?.id!!) }
         ).sync()?.let {
-            memberState.members = it.data
+            memberState.returnedMembers = it.data
             world.responseStatus = it.status
         }
     }
@@ -61,9 +59,21 @@ class WhenSteps(
     fun i_remove_a_channel_member() {
         world.pubnub.removeChannelMembers(
             channel = memberState.channelId(),
-            uuids = listOf(memberState.member.uuid?.id!!)
+            uuids = memberState.membersToRemove.map { it.uuid?.id!! }
         ).sync()?.let {
-            memberState.members = it.data
+            memberState.returnedMembers = it.data
+            world.responseStatus = it.status
+        }
+    }
+
+    @When("I manage channel members")
+    fun i_manage_channel_members() {
+        world.pubnub.manageChannelMembers(
+            channel = memberState.channelId(),
+            uuidsToSet = memberState.members.map { PNMember.Partial(uuidId = it.uuid?.id!!) },
+            uuidsToRemove = memberState.membersToRemove.map { it.uuid?.id!! }
+        ).sync()?.let {
+            memberState.returnedMembers = it.data
             world.responseStatus = it.status
         }
     }

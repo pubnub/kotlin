@@ -31,8 +31,8 @@ class ThenSteps(
         assertThat(membershipState.returnedMemberships, hasItem(channelMembership))
     }
 
-    @Then("the response doesn't contain list with {string} membership")
-    fun the_response_doesn_t_contain_list_with_patient_membership_membership(channelMembershipName: String) {
+    @Then("the response does not contain list with {string} membership")
+    fun the_response_does_not_contain_list_with_patient_membership_membership(channelMembershipName: String) {
         val channelMembership = loadChannelMembership(channelMembershipName)
 
         assertThat(membershipState.returnedMemberships, not(hasItem(channelMembership)))

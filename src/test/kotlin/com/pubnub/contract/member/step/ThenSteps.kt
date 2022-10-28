@@ -13,12 +13,18 @@ class ThenSteps(
     fun the_response_contains_list_with_and_members(firstMemberName: String, secondMemberName: String) {
         val firstMember = loadMember(firstMemberName)
         val secondMember = loadMember(secondMemberName)
-        assertThat(memberState.members, Matchers.containsInAnyOrder(firstMember, secondMember))
+        assertThat(memberState.returnedMembers, Matchers.containsInAnyOrder(firstMember, secondMember))
     }
 
     @Then("the response contains list with {string} member")
     fun the_response_contains_list_with_member(memberName: String) {
         val member = loadMember(memberName)
-        assertThat(memberState.members, Matchers.containsInAnyOrder(member))
+        assertThat(memberState.returnedMembers, Matchers.hasItem(member))
+    }
+
+    @Then("the response does not contain list with {string} member")
+    fun the_response_does_not_contain_list_with_member(memberName: String) {
+        val member = loadMember(memberName)
+        assertThat(memberState.returnedMembers, Matchers.not(Matchers.hasItem(member)))
     }
 }
