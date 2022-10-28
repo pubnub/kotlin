@@ -17,6 +17,7 @@ class WhenSteps(
     @When("I grant a token specifying those permissions")
     fun grant_token() {
         val definedGrants = grantTokenState.definedGrants.map { it.evaluate() }
+        @Suppress("DEPRECATION")
         grantTokenState.result = world.pubnub.grantToken(
             ttl = grantTokenState.TTL?.toInt() ?: throw RuntimeException("TTL expected"),
             authorizedUUID = grantTokenState.authorizedUUID,

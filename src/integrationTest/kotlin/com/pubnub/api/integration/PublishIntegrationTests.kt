@@ -38,7 +38,7 @@ class PublishIntegrationTests : BaseIntegrationTest() {
             message = generatePayload()
         ).await { _, status ->
             assertFalse(status.error)
-            assertEquals(status.uuid, pubnub.configuration.uuid)
+            assertEquals(status.uuid, pubnub.configuration.userId.value)
         }
     }
 
@@ -82,7 +82,7 @@ class PublishIntegrationTests : BaseIntegrationTest() {
             shouldStore = false
         ).await { _, status ->
             assertFalse(status.error)
-            assertEquals(status.uuid, pubnub.configuration.uuid)
+            assertEquals(status.uuid, pubnub.configuration.userId.value)
         }
 
         pubnub.history(
@@ -118,7 +118,7 @@ class PublishIntegrationTests : BaseIntegrationTest() {
 
             override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {
                 assertEquals(expectedChannel, pnMessageResult.channel)
-                assertEquals(observer.configuration.uuid, pnMessageResult.publisher)
+                assertEquals(observer.configuration.userId.value, pnMessageResult.publisher)
                 assertEquals(messagePayload, pnMessageResult.message)
                 success.set(true)
             }

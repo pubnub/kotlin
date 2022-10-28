@@ -9,6 +9,7 @@ import com.pubnub.api.models.consumer.message_actions.PNRemoveMessageActionResul
 import retrofit2.Call
 import retrofit2.Response
 import java.util.HashMap
+import java.util.Locale
 
 /**
  * @see [PubNub.removeMessageAction]
@@ -32,8 +33,8 @@ class RemoveMessageAction internal constructor(
             .deleteMessageAction(
                 subKey = pubnub.configuration.subscribeKey,
                 channel = channel,
-                messageTimetoken = messageTimetoken.toString().toLowerCase(),
-                actionTimetoken = actionTimetoken.toString().toLowerCase(),
+                messageTimetoken = messageTimetoken.toString().lowercase(Locale.getDefault()),
+                actionTimetoken = actionTimetoken.toString().lowercase(Locale.getDefault()),
                 options = queryParams
             )
     }

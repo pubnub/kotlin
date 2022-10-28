@@ -10,6 +10,7 @@ import com.google.gson.JsonObject
 import com.pubnub.api.Endpoint
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
+import com.pubnub.api.UserId
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.legacy.BaseTest
@@ -27,7 +28,6 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.util.HashMap
-import java.util.UUID
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 
@@ -97,11 +97,11 @@ class EndpointTest : BaseTest() {
 
     @Test
     fun testUuid() {
-        val expectedUuid = UUID.randomUUID().toString()
-        pubnub.configuration.uuid = expectedUuid
+        val expectedUuid = UserId(PubNub.generateUUID())
+        pubnub.configuration.userId = expectedUuid
 
         fakeEndpoint {
-            assertEquals(expectedUuid, it["uuid"])
+            assertEquals(expectedUuid.value, it["uuid"])
         }.sync()
     }
 
@@ -109,7 +109,7 @@ class EndpointTest : BaseTest() {
     fun testQueryParam() {
         fakeEndpoint {
             assertEquals("sf", it["city"])
-            assertEquals(pubnub.configuration.uuid, it["uuid"])
+            assertEquals(pubnub.configuration.userId.value, it["uuid"])
             assertEquals(4, it.size)
             assertTrue(it.contains("pnsdk"))
             assertTrue(it.contains("requestid"))
@@ -265,7 +265,7 @@ class EndpointTest : BaseTest() {
 
     @Test
     fun testDefaultTimeoutValues() {
-        val p = PubNub(PNConfiguration(PubNub.generateUUID()))
+        val p = PubNub(PNConfiguration(userId = UserId(PubNub.generateUUID())))
         assertEquals(300, p.configuration.presenceTimeout)
         assertEquals(0, p.configuration.heartbeatInterval)
         p.forceDestroy()
@@ -273,7 +273,7 @@ class EndpointTest : BaseTest() {
 
     @Test
     fun testCustomTimeoutValues1() {
-        val p = PubNub(PNConfiguration(PubNub.generateUUID()))
+        val p = PubNub(PNConfiguration(userId = UserId(PubNub.generateUUID())))
         p.configuration.presenceTimeout = 100
         assertEquals(100, p.configuration.presenceTimeout)
         assertEquals(49, p.configuration.heartbeatInterval)
@@ -282,7 +282,7 @@ class EndpointTest : BaseTest() {
 
     @Test
     fun testCustomTimeoutValues2() {
-        val p = PubNub(PNConfiguration(PubNub.generateUUID()))
+        val p = PubNub(PNConfiguration(userId = UserId(PubNub.generateUUID())))
         p.configuration.heartbeatInterval = 100
         assertEquals(300, p.configuration.presenceTimeout)
         assertEquals(100, p.configuration.heartbeatInterval)
@@ -291,7 +291,7 @@ class EndpointTest : BaseTest() {
 
     @Test
     fun testCustomTimeoutValues3() {
-        val p = PubNub(PNConfiguration(PubNub.generateUUID()))
+        val p = PubNub(PNConfiguration(userId = UserId(PubNub.generateUUID())))
         p.configuration.heartbeatInterval = 40
         p.configuration.presenceTimeout = 50
         assertEquals(50, p.configuration.presenceTimeout)

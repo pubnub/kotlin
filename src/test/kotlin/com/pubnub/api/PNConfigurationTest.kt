@@ -4,6 +4,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class PNConfigurationTest {
+    @Suppress("DEPRECATION")
     @Test
     fun pnConfigurationGeneratesPnsdkWithSuffixes() {
         val name1 = "key1"
@@ -38,29 +39,32 @@ class PNConfigurationTest {
     @Test
     fun resetUserIdToNonEmptyString() {
         val config = PNConfiguration(userId = UserId(PubNub.generateUUID()))
-        val newUUID = PubNub.generateUUID()
-        config.userId = UserId(newUUID)
+        val newUserId = UserId(PubNub.generateUUID())
+        config.userId = newUserId
 
-        assertEquals(newUUID, config.userId.value)
+        assertEquals(newUserId, config.userId)
     }
 
+    @Suppress("DEPRECATION")
     @Test(expected = PubNubException::class)
     fun setUUIDToEmptyString() {
         PNConfiguration("")
     }
 
+    @Suppress("DEPRECATION")
     @Test(expected = PubNubException::class)
     fun resetUUIDToEmptyString() {
         val config = PNConfiguration(PubNub.generateUUID())
         config.uuid = ""
     }
 
+    @Suppress("DEPRECATION")
     @Test
     fun resetUUIDToNonEmptyString() {
         val config = PNConfiguration(PubNub.generateUUID())
         val newUUID = PubNub.generateUUID()
         config.uuid = newUUID
 
-        assertEquals(newUUID, config.uuid)
+        assertEquals(newUUID, config.userId.value)
     }
 }

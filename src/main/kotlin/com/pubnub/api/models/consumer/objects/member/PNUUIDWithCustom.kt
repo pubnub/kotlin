@@ -30,7 +30,7 @@ data class PNUUIDWithCustom(
         fun of(
             uuid: String,
             custom: Any? = null
-        ) = PNUUIDWithCustom(uuid = uuid, custom = custom)
+        ) = PNMember.Partial(uuidId = uuid, custom = custom)
     }
 
     override val status: String? = null

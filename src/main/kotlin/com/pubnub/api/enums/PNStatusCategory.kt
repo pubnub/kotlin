@@ -1,8 +1,8 @@
 package com.pubnub.api.enums
 
 import com.pubnub.api.PubNub
-import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.callbacks.SubscribeCallback
+import com.pubnub.api.models.consumer.PNStatus
 
 /**
  * Check the status category via [PNStatus.category] in the `async` callback

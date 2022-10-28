@@ -2,11 +2,10 @@ package com.pubnub.contract.step
 
 import com.pubnub.contract.state.World
 import io.cucumber.java.en.Then
-import io.cucumber.java.en.Then.Thens
-import junit.framework.Assert.assertNull
 import org.json.JSONObject
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 
 class ThenSteps(private val world: World) {

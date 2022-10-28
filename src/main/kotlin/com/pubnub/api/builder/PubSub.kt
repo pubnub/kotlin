@@ -1,7 +1,7 @@
 package com.pubnub.api.builder
 
-import com.pubnub.api.managers.SubscriptionManager
 import com.pubnub.api.PubNub
+import com.pubnub.api.managers.SubscriptionManager
 
 object PubSub {
     /**

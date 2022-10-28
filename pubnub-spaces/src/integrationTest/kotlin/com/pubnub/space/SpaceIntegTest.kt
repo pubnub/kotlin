@@ -3,6 +3,7 @@ package com.pubnub.space
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubException
+import com.pubnub.api.SpaceId
 import com.pubnub.api.UserId
 import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.enums.PNLogVerbosity
@@ -10,7 +11,6 @@ import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.objects.ResultSortKey
 import com.pubnub.space.models.consumer.Space
-import com.pubnub.space.models.consumer.SpaceId
 import com.pubnub.space.models.consumer.SpaceKey
 import com.pubnub.space.models.consumer.SpaceModified
 import com.pubnub.space.models.consumer.SpacesResult
@@ -38,7 +38,7 @@ class SpaceIntegTest {
 
     @BeforeEach
     fun setUp() {
-        val config = PNConfiguration(UserId("kotlin")).apply {
+        val config = PNConfiguration(userId = UserId("kotlin")).apply {
             subscribeKey = IntegTestConf.subscribeKey
             publishKey = IntegTestConf.publishKey
             IntegTestConf.origin?.let {

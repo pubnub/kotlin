@@ -13,6 +13,7 @@ import java.net.URLEncoder
 import java.nio.charset.Charset
 import java.security.InvalidKeyException
 import java.security.NoSuchAlgorithmException
+import java.util.Locale
 import java.util.TreeSet
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
@@ -99,7 +100,7 @@ internal object PubNubUtil {
             signatureBuilder.append(requestURL).append("\n")
             signatureBuilder.append(encodedQueryString)
         } else {
-            signatureBuilder.append(method.toUpperCase()).append("\n")
+            signatureBuilder.append(method.uppercase(Locale.getDefault())).append("\n")
             signatureBuilder.append(configuration.publishKey).append("\n")
             signatureBuilder.append(requestURL).append("\n")
             signatureBuilder.append(encodedQueryString).append("\n")

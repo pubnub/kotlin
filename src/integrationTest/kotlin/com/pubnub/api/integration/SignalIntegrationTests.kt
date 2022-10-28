@@ -36,7 +36,7 @@ class SignalIntegrationTests : BaseIntegrationTest() {
         ).await { result, status ->
             assertFalse(status.error)
             assertEquals(PNOperationType.PNSignalOperation, status.operation)
-            assertEquals(status.uuid, pubnub.configuration.uuid)
+            assertEquals(status.uuid, pubnub.configuration.userId.value)
             assertNotNull(result)
         }
     }
@@ -66,14 +66,14 @@ class SignalIntegrationTests : BaseIntegrationTest() {
                     ).async { result, status ->
                         assertFalse(status.error)
                         assertEquals(PNOperationType.PNSignalOperation, status.operation)
-                        assertEquals(status.uuid, pubnub.configuration.uuid)
+                        assertEquals(status.uuid, pubnub.configuration.userId.value)
                         assertNotNull(result)
                     }
                 }
             }
 
             override fun signal(pubnub: PubNub, pnSignalResult: PNSignalResult) {
-                assertEquals(pubnub.configuration.uuid, pnSignalResult.publisher)
+                assertEquals(pubnub.configuration.userId.value, pnSignalResult.publisher)
                 assertEquals(expectedChannel, pnSignalResult.channel)
                 assertEquals(expectedPayload, Gson().fromJson(pnSignalResult.message, String::class.java))
                 success.set(true)
