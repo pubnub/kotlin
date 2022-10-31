@@ -1,16 +1,47 @@
-name: Acceptance tests
+name: Tests
 
-on: [push]
+on:
+  push:
+  workflow_dispatch:
 
 jobs:
+  tests:
+    name: Integration and Unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Checkout actions
+        uses: actions/checkout@v3
+        with:
+          repository: pubnub/client-engineering-deployment-tools
+          ref: v1
+          token: ${{ secrets.GH_TOKEN }}
+          path: .github/.release/actions
+      - name: Cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+      - name: Build and run tests
+        run: |
+          ./gradlew check
+      - name: Validate clean build
+        if: ${{ github.event_name != 'pull_request' && github.ref == 'refs/heads/master' }}
+        run: |
+          ./gradlew build
   build:
-    name: Perform Acceptance BDD tests
+    name: Acceptance tests
     runs-on: ubuntu-latest
     steps:
       - name: Checkout project
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Checkout mock-server action
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: pubnub/client-engineering-deployment-tools
           ref: v1
@@ -39,7 +70,7 @@ jobs:
           export serverHostPort=localhost:8090
           export serverMock=true
           ln -s /home/runner/work/kotlin/kotlin/sdk-specifications src/test/resources/sdk-specifications
-          ./gradlew cucumber --tests RunBetaCucumberTest  -Dcucumber.features="sdk-specifications/features/" -i
+          ./gradlew cucumber --tests RunBetaCucumberTest -Dcucumber.features="sdk-specifications/features/" -i
         continue-on-error: true
       - name: Run acceptance tests (required)
         run: |
@@ -51,9 +82,9 @@ jobs:
           export serverHostPort=localhost:8090
           export serverMock=true
           ln -s /home/runner/work/kotlin/kotlin/sdk-specifications src/test/resources/sdk-specifications
-          ./gradlew cucumber --tests RunMainCucumberTest  -Dcucumber.features="sdk-specifications/features/" -i
+          ./gradlew cucumber --tests RunMainCucumberTest -Dcucumber.features="sdk-specifications/features/" -i
       - name: Expose acceptance tests reports
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         if: always()
         with:
           name: acceptance-test-reports

@@ -9,6 +9,7 @@ bin/
 gen/
 out/
 test.properties
+local.properties
 *.DS_STORE
 
 # GitHub Actions #
