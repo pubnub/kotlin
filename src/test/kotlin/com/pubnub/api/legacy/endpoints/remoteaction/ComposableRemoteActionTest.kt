@@ -6,6 +6,7 @@ import com.pubnub.api.endpoints.remoteaction.RemoteAction
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.models.consumer.PNStatus
+import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers
 import org.junit.Assert
 import org.junit.Test
@@ -41,7 +42,7 @@ class ComposableRemoteActionTest {
             .then { TestRemoteAction.successful(it + 1) }
 
         // when
-        composedAction.async { r: Int?, s: PNStatus? ->
+        composedAction.async { r: Int?, _: PNStatus? ->
             if (r != null) {
                 result.set(r)
                 latch.countDown()
@@ -75,7 +76,7 @@ class ComposableRemoteActionTest {
 
         // then
         Assert.assertTrue(latch.await(1, TimeUnit.SECONDS))
-        Assert.assertThat(successful.howManyTimesAsyncCalled(), Matchers.`is`(0))
+        assertThat(successful.howManyTimesAsyncCalled(), Matchers.`is`(0))
     }
 
     @Test
@@ -105,8 +106,8 @@ class ComposableRemoteActionTest {
             }
         }
         val successful: TestRemoteAction<Int> = TestRemoteAction.successful(15)
-        val composedAction: RemoteAction<Int> = firstDo(longRunningTask).then({ integerResult -> successful })
-        composedAction.async { r: Int?, s: PNStatus? -> }
+        val composedAction: RemoteAction<Int> = firstDo(longRunningTask).then { successful }
+        composedAction.async { _: Int?, _: PNStatus? -> }
 
         // when
         composedAction.silentCancel()
@@ -114,7 +115,7 @@ class ComposableRemoteActionTest {
         // then
         Assert.assertTrue(resultSynchronisingLatch.await(1, TimeUnit.SECONDS))
         Assert.assertTrue(firstAsyncFinished.get())
-        Assert.assertThat(successful.howManyTimesAsyncCalled(), Matchers.`is`(0))
+        assertThat(successful.howManyTimesAsyncCalled(), Matchers.`is`(0))
     }
 
     @Test
@@ -126,11 +127,11 @@ class ComposableRemoteActionTest {
         val secondSuccessful: TestRemoteAction<Int> = TestRemoteAction.successful(1)
         val firstFailing: TestRemoteAction<Int> = TestRemoteAction.failingFirstCall(1)
         val composedAction: RemoteAction<Int> = firstDo(firstSuccessful)
-            .then({ integerResult -> secondSuccessful })
-            .then({ integerResult -> firstFailing })
+            .then { secondSuccessful }
+            .then { firstFailing }
 
         // when
-        composedAction.async { r: Int?, s: PNStatus ->
+        composedAction.async { _: Int?, s: PNStatus ->
             countDownLatch.countDown()
             if (s.error) {
                 s.retry()
@@ -139,9 +140,9 @@ class ComposableRemoteActionTest {
 
         // then
         Assert.assertTrue(countDownLatch.await(1000, TimeUnit.MILLISECONDS))
-        Assert.assertThat(firstSuccessful.howManyTimesAsyncCalled(), Matchers.`is`(2))
-        Assert.assertThat(secondSuccessful.howManyTimesAsyncCalled(), Matchers.`is`(2))
-        Assert.assertThat(firstFailing.howManyTimesAsyncCalled(), Matchers.`is`(2))
+        assertThat(firstSuccessful.howManyTimesAsyncCalled(), Matchers.`is`(2))
+        assertThat(secondSuccessful.howManyTimesAsyncCalled(), Matchers.`is`(2))
+        assertThat(firstFailing.howManyTimesAsyncCalled(), Matchers.`is`(2))
     }
 
     @Test
@@ -154,11 +155,11 @@ class ComposableRemoteActionTest {
         val firstFailing: TestRemoteAction<Int> = TestRemoteAction.failingFirstCall(1)
         val composedAction: RemoteAction<Int> = firstDo(firstSuccessful)
             .checkpoint()
-            .then({ integerResult -> secondSuccessful })
-            .then({ integerResult -> firstFailing })
+            .then { secondSuccessful }
+            .then { firstFailing }
 
         // when
-        composedAction.async { r: Int?, s: PNStatus ->
+        composedAction.async { _: Int?, s: PNStatus ->
             countDownLatch.countDown()
             if (s.error) {
                 s.retry()
@@ -167,8 +168,8 @@ class ComposableRemoteActionTest {
 
         // then
         Assert.assertTrue(countDownLatch.await(1000, TimeUnit.MILLISECONDS))
-        Assert.assertThat(firstSuccessful.howManyTimesAsyncCalled(), Matchers.`is`(1))
-        Assert.assertThat(secondSuccessful.howManyTimesAsyncCalled(), Matchers.`is`(2))
-        Assert.assertThat(firstFailing.howManyTimesAsyncCalled(), Matchers.`is`(2))
+        assertThat(firstSuccessful.howManyTimesAsyncCalled(), Matchers.`is`(1))
+        assertThat(secondSuccessful.howManyTimesAsyncCalled(), Matchers.`is`(2))
+        assertThat(firstFailing.howManyTimesAsyncCalled(), Matchers.`is`(2))
     }
 }

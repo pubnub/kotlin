@@ -32,6 +32,6 @@ data class PNChannelWithCustom(
         fun of(
             channel: String,
             custom: Any? = null
-        ) = PNChannelWithCustom(channel = channel, custom = custom)
+        ) = PNChannelMembership.Partial(channelId = channel, custom = custom)
     }
 }

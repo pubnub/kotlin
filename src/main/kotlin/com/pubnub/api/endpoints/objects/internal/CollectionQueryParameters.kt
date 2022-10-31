@@ -23,6 +23,7 @@ data class CollectionQueryParameters(
         when (p) {
             is PNPage.PNNext -> additionalParams["start"] = p.pageHash
             is PNPage.PNPrev -> additionalParams["end"] = p.pageHash
+            null -> {}
         }
         return additionalParams.toMap()
     }

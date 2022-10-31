@@ -15,7 +15,7 @@ import java.util.HashMap
  */
 class WhereNow internal constructor(
     pubnub: PubNub,
-    val uuid: String = pubnub.configuration.uuid
+    val uuid: String = pubnub.configuration.userId.value
 ) : Endpoint<Envelope<WhereNowPayload>, PNWhereNowResult>(pubnub) {
 
     override fun doWork(queryParams: HashMap<String, String>): Call<Envelope<WhereNowPayload>> {

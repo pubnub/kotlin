@@ -1,9 +1,9 @@
 name: kotlin
-version: 7.3.2
+version: 7.4.0
 schema: 1
 scm: github.com/pubnub/kotlin
 files:
-  - build/libs/pubnub-kotlin-7.3.2-all.jar
+  - build/libs/pubnub-kotlin-7.4.0-all.jar
 sdks:
   - 
       type: library
@@ -22,121 +22,9 @@ sdks:
           distributions:
             -
               distribution-type: library
-              distribution-repository: GitHub
-              package-name: pubnub-kotlin-7.3.2
-              location: https://github.com/pubnub/kotlin/releases/download/v7.3.2/pubnub-kotlin-7.3.2-all.jar
-              supported-platforms:
-                supported-operating-systems:
-                  Android:
-                    runtime-version:
-                      - ART
-                    target-api-level: 
-                      - 23
-                    minimum-api-level:
-                      - 23
-                    maximum-api-level:
-                      - 30  
-                    target-architecture:
-                      - armeabi-v7a
-                      - atom
-                      - armeabi
-                      - arm64-v8a
-                  Linux:
-                    runtime-version:
-                      - JVM 8 
-                    minimum-os-version:
-                      - Ubuntu 12.04
-                    maximum-os-version:
-                      - Ubuntu 20.04 LTS
-                    target-architecture:
-                      - x86
-                      - x86-64
-                  macOS:
-                    runtime-version:
-                      - JVM 8
-                    minimum-os-version:
-                      - macOS 10.12
-                    maximum-os-version:
-                      - macOS 11.0.1
-                    target-architecture:
-                      - x86-64
-                  Windows:
-                    runtime-version:
-                      - JVM 8
-                    minimum-os-version:
-                      - Windows Vista Ultimate
-                    maximum-os-version:
-                      - Windows 10 Home
-                    target-architecture:
-                      - x86
-                      - x86-64
-              requires:
-                -
-                  name: retrofit
-                  min-version: 2.9.0
-                  location: Shipped within library
-                  license: Apache License, Version 2.0
-                  license-url: https://github.com/square/retrofit/blob/2.9.0/LICENSE.txt
-                  is-required: Required
-                -
-                  name: okhttp
-                  min-version: 3.14.9
-                  location: Shipped within library
-                  license: Apache License, Version 2.0
-                  license-url: https://github.com/square/okhttp/blob/parent-3.14.9/LICENSE.txt
-                  is-required: Required
-                -
-                  name: converter-gson
-                  min-version: 2.9.0
-                  location: Shipped within library
-                  license: Apache License, Version 2.0
-                  license-url: https://github.com/square/retrofit/blob/2.9.0/LICENSE.txt
-                  is-required: Required
-                -
-                  name: gson
-                  min-version: 2.8.6
-                  location: Shipped within library
-                  license: Apache License, Version 2.0
-                  license-url: https://github.com/google/gson/blob/gson-parent-2.8.6/LICENSE
-                  is-required: Required
-                -
-                  name: jackson-databind
-                  min-version: 2.12.2
-                  location: Shipped within library
-                  license: Apache License, Version 2.0
-                  license-url: https://github.com/FasterXML/jackson-databind/blob/jackson-databind-2.12.2/README.md
-                  is-required: Required
-                -
-                  name: jackson-module-kotlin
-                  min-version: 2.12.2
-                  location: Shipped within library
-                  license: Apache License, Version 2.0
-                  license-url: "" 
-                  is-required: Required
-                -
-                  name: json
-                  min-version: "20210307"
-                  location: Shipped within library
-                  license: ""
-                  license-url: https://github.com/stleary/JSON-java/blob/20210307/LICENSE
-                  is-required: Required
-
-        -
-
-          language: kotlin
-          tags:
-            - Server
-            - Mobile
-          source-repository: https://github.com/pubnub/kotlin
-          documentation: https://www.pubnub.com/docs/sdks/kotlin/
-          tier: 2
-          artifact-type: library
-          distributions:
-            -
-              distribution-type: library
               distribution-repository: maven
-              package-name: pubnub-kotlin-7.3.2
-              location: https://repo.maven.apache.org/maven2/com/pubnub/pubnub-kotlin/7.3.2/pubnub-kotlin-7.3.2.jar
+              package-name: pubnub-kotlin-7.4.0
+              location: https://repo.maven.apache.org/maven2/com/pubnub/pubnub-kotlin/7.4.0/pubnub-kotlin-7.4.0.jar
               supported-platforms:
                 supported-operating-systems:
                   Android:
@@ -233,6 +121,11 @@ sdks:
                   license-url: https://github.com/stleary/JSON-java/blob/20210307/LICENSE
                   is-required: Required
 changelog:
+  - date: 2022-09-20
+    version: v7.4.0
+    changes:
+      - type: feature
+        text: "PNFileEventResult has messageJson field with the same JsonElement type as in other events."
   - date: 2022-07-21
     version: v7.3.2
     changes:

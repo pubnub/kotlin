@@ -11,6 +11,7 @@ import com.pubnub.api.models.consumer.push.PNPushRemoveAllChannelsResult
 import retrofit2.Call
 import retrofit2.Response
 import java.util.HashMap
+import java.util.Locale
 
 /**
  * @see [PubNub.removeAllPushNotificationsFromDeviceWithPushToken]
@@ -60,7 +61,7 @@ class RemoveAllPushChannelsForDevice internal constructor(
             return
         }
 
-        queryParams["environment"] = environment.name.toLowerCase()
+        queryParams["environment"] = environment.name.lowercase(Locale.getDefault())
         topic?.run { queryParams["topic"] = this }
     }
 }

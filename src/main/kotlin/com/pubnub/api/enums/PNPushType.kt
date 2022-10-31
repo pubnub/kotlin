@@ -12,6 +12,6 @@ enum class PNPushType(s: String) {
     private val value: String = s
 
     fun toParamString(): String {
-        return value.toLowerCase(Locale.US)
+        return value.lowercase(Locale.US)
     }
 }

@@ -2,7 +2,7 @@ package com.pubnub.api.models.consumer.pubsub
 
 import com.google.gson.JsonElement
 
-interface PubSubResult {
+interface PubSubResult : PNEvent {
     val channel: String
     val subscription: String?
     val timetoken: Long?

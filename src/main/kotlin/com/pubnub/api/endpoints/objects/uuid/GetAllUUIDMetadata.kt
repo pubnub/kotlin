@@ -26,7 +26,7 @@ class GetAllUUIDMetadata internal constructor(
 
         return pubnub.retrofitManager.objectsService.getAllUUIDMetadata(
             subKey = pubnub.configuration.subscribeKey,
-            options = params + mapOf("include" to "type,status")
+            options = params
         )
     }
 

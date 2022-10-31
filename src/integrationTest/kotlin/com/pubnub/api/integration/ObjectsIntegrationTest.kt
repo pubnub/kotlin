@@ -20,12 +20,16 @@ import java.util.concurrent.TimeUnit
 class ObjectsIntegrationTest : BaseIntegrationTest() {
     private val testUuid = "ThisIsMyId" + randomValue()
     val channel = "ThisIsMyChannel" + randomValue()
+    val status = "Status" + randomValue()
+    val type = "Type" + randomValue()
 
     @Test
     fun setGetAndRemoveChannelMetadata() {
         val setResult = pubnub.setChannelMetadata(
             channel = channel,
-            name = randomValue(15)
+            name = randomValue(15),
+            status = status,
+            type = type
         ).sync()!!
 
         val getAllResult = pubnub.getAllChannelMetadata().sync()!!
@@ -44,8 +48,13 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
     fun setGetAndRemoveUUIDMetadata() {
         val setResult = pubnub.setUUIDMetadata(
             uuid = testUuid,
-            name = randomValue(15)
+            name = randomValue(15),
+            status = status,
+            type = type
         ).sync()!!
+
+        assertEquals(status, setResult.data?.status)
+        assertEquals(type, setResult.data?.type)
 
         val getAllResult = pubnub.getAllUUIDMetadata().sync()!!
         val getSingleResult = pubnub.getUUIDMetadata(uuid = testUuid).sync()!!

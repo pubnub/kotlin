@@ -13,6 +13,7 @@ import java.security.InvalidKeyException
 import java.security.NoSuchAlgorithmException
 import java.security.SecureRandom
 import java.security.spec.AlgorithmParameterSpec
+import java.util.Locale
 import javax.crypto.BadPaddingException
 import javax.crypto.Cipher
 import javax.crypto.IllegalBlockSizeException
@@ -145,7 +146,7 @@ object FileEncryptionUtil {
             charset(ENCODING_UTF_8)
         )
             .substring(0, 32)
-            .toLowerCase().toByteArray(charset(ENCODING_UTF_8))
+            .lowercase(Locale.getDefault()).toByteArray(charset(ENCODING_UTF_8))
     }
 
     @Throws(NoSuchAlgorithmException::class)

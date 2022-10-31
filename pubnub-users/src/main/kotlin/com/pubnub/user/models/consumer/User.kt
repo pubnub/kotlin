@@ -17,6 +17,7 @@ data class User(
 )
 
 fun PNUUIDMetadata.toUser(): User {
+    @Suppress("UNCHECKED_CAST")
     return User(
         id = UserId(id),
         name = name,

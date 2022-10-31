@@ -504,7 +504,7 @@ class HereNowEndpointTest : BaseTest() {
         pubnub.hereNow().async { result, status ->
             if (status.operation == PNHereNowOperation) {
                 assertEquals(1, result!!.channels.size)
-                assertEquals(pubnub.configuration.uuid, result.channels["ch1"]!!.occupants[0].uuid)
+                assertEquals(pubnub.configuration.userId.value, result.channels["ch1"]!!.occupants[0].uuid)
                 atomic.incrementAndGet()
             }
         }

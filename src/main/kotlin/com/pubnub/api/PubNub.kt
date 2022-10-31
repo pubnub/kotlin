@@ -81,7 +81,6 @@ import com.pubnub.api.models.consumer.objects.member.MemberInput
 import com.pubnub.api.models.consumer.objects.member.PNUUIDDetailsLevel
 import com.pubnub.api.models.consumer.objects.membership.ChannelMembershipInput
 import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
-import com.pubnub.api.models.consumer.objects.membership.PNChannelWithCustom
 import com.pubnub.api.presence.Presence
 import com.pubnub.api.subscribe.Subscribe
 import com.pubnub.api.vendor.Base64
@@ -96,7 +95,7 @@ class PubNub(val configuration: PNConfiguration) {
 
     companion object {
         private const val TIMESTAMP_DIVIDER = 1000
-        private const val SDK_VERSION = "7.3.2"
+        private const val SDK_VERSION = "7.4.0"
         private const val MAX_SEQUENCE = 65535
 
         /**
@@ -680,7 +679,7 @@ class PubNub(val configuration: PNConfiguration) {
      * @param uuid UUID of the user to get its current channel subscriptions. Defaults to the UUID of the client.
      * @see [PNConfiguration.uuid]
      */
-    fun whereNow(uuid: String = configuration.uuid) = WhereNow(pubnub = this, uuid = uuid)
+    fun whereNow(uuid: String = configuration.userId.value) = WhereNow(pubnub = this, uuid = uuid)
 
     /**
      * Set state information specific to a subscriber UUID.
@@ -700,7 +699,7 @@ class PubNub(val configuration: PNConfiguration) {
         channels: List<String> = listOf(),
         channelGroups: List<String> = listOf(),
         state: Any,
-        uuid: String = configuration.uuid
+        uuid: String = configuration.userId.value
     ) = SetState(
         pubnub = this,
         channels = channels,
@@ -722,7 +721,7 @@ class PubNub(val configuration: PNConfiguration) {
     fun getPresenceState(
         channels: List<String> = listOf(),
         channelGroups: List<String> = listOf(),
-        uuid: String = configuration.uuid
+        uuid: String = configuration.userId.value
     ) = GetState(pubnub = this, channels = channels, channelGroups = channelGroups, uuid = uuid)
 
     /**
@@ -1145,7 +1144,7 @@ class PubNub(val configuration: PNConfiguration) {
         includeCustom: Boolean = false
     ) = GetUUIDMetadata(
         pubnub = this,
-        uuid = uuid ?: configuration.uuid,
+        uuid = uuid ?: configuration.userId.value,
         includeQueryParam = IncludeQueryParam(includeCustom = includeCustom)
     )
 
@@ -1221,7 +1220,7 @@ class PubNub(val configuration: PNConfiguration) {
         includeChannelDetails: PNChannelDetailsLevel? = null
     ) = GetMemberships(
         pubnub = this,
-        uuid = uuid ?: configuration.uuid,
+        uuid = uuid ?: configuration.userId.value,
         collectionQueryParameters = CollectionQueryParameters(
             limit = limit,
             page = page,
@@ -1260,7 +1259,7 @@ class PubNub(val configuration: PNConfiguration) {
         includeChannelDetails: PNChannelDetailsLevel? = null
     ) = setMemberships(
         channels = channels,
-        uuid = uuid ?: configuration.uuid,
+        uuid = uuid ?: configuration.userId.value,
         limit = limit,
         page = page,
         filter = filter,
@@ -1305,7 +1304,7 @@ class PubNub(val configuration: PNConfiguration) {
     ) = manageMemberships(
         channelsToSet = channels,
         channelsToRemove = listOf(),
-        uuid = uuid ?: configuration.uuid,
+        uuid = uuid ?: configuration.userId.value,
         limit = limit,
         page = page,
         filter = filter,
@@ -1349,7 +1348,7 @@ class PubNub(val configuration: PNConfiguration) {
     ) = manageMemberships(
         channelsToSet = listOf(),
         channelsToRemove = channels,
-        uuid = uuid ?: configuration.uuid,
+        uuid = uuid ?: configuration.userId.value,
         limit = limit,
         page = page,
         filter = filter,
@@ -1362,7 +1361,7 @@ class PubNub(val configuration: PNConfiguration) {
     /**
      * Add and remove channel memberships for a UUID.
      *
-     * @param channelsToSet Collection of channels to add to membership. @see [PNChannelWithCustom]
+     * @param channelsToSet Collection of channels to add to membership. @see [com.pubnub.api.models.consumer.objects.membership.PNChannelMembership.Partial]
      * @param channelsToRemove Channels to remove from membership.
      * @param uuid Unique user identifier. If not supplied then current user’s uuid is used.
      * @param limit Number of objects to return in the response.
@@ -1396,7 +1395,7 @@ class PubNub(val configuration: PNConfiguration) {
         pubnub = this,
         channelsToSet = channelsToSet,
         channelsToRemove = channelsToRemove,
-        uuid = uuid ?: configuration.uuid,
+        uuid = uuid ?: configuration.userId.value,
         collectionQueryParameters = CollectionQueryParameters(
             limit = limit,
             page = page,
@@ -1651,7 +1650,7 @@ class PubNub(val configuration: PNConfiguration) {
      * Set or remove members in a channel.
      *
      * @param channel Channel name
-     * @param uuidsToSet Collection of members to add to the channel. @see [PNMember.Partial]
+     * @param uuidsToSet Collection of members to add to the channel. @see [com.pubnub.api.models.consumer.objects.member.PNMember.Partial]
      * @param uuidsToRemove Members to remove from channel.
      * @param limit Number of objects to return in the response.
      *              Default is 100, which is also the maximum value.

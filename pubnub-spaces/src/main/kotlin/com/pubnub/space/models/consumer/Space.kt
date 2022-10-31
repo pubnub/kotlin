@@ -15,6 +15,7 @@ data class Space(
 )
 
 fun PNChannelMetadata.toSpace(): Space {
+    @Suppress("UNCHECKED_CAST")
     return Space(
         id = SpaceId(id),
         name = name,

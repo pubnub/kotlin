@@ -1,4 +1,4 @@
-name: validate-pubnub-yml
+name: Validations
 
 # Controls when the action will run. Workflow runs when manually triggered using the UI
 # or API.
@@ -6,12 +6,12 @@ on: [push]
 
 jobs:
   build:
-      name: Validate PubNub yml
+      name: "Validate .pubnub.yml"
       runs-on: ubuntu-latest
       steps:
-        - uses: actions/checkout@v2
+        - uses: actions/checkout@v3
         - name: Use Node.js
-          uses: actions/setup-node@v1
+          uses: actions/setup-node@v3
           with:
             node-version: '12.x'
         - name: Install dependencies

@@ -5,11 +5,12 @@ import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
-import com.pubnub.api.models.consumer.message_actions.PNGetMessageActionsResult
 import com.pubnub.api.models.consumer.PNBoundedPage
+import com.pubnub.api.models.consumer.message_actions.PNGetMessageActionsResult
 import retrofit2.Call
 import retrofit2.Response
 import java.util.HashMap
+import java.util.Locale
 
 /**
  * @see [PubNub.getMessageActions]
@@ -48,8 +49,8 @@ class GetMessageActions internal constructor(
     override fun operationType() = PNOperationType.PNGetMessageActions
 
     private fun addQueryParams(queryParams: MutableMap<String, String>) {
-        page.start?.run { queryParams["start"] = this.toString().toLowerCase() }
-        page.end?.run { queryParams["end"] = this.toString().toLowerCase() }
-        page.limit?.run { queryParams["limit"] = this.toString().toLowerCase() }
+        page.start?.run { queryParams["start"] = this.toString().lowercase(Locale.getDefault()) }
+        page.end?.run { queryParams["end"] = this.toString().lowercase(Locale.getDefault()) }
+        page.limit?.run { queryParams["limit"] = this.toString().lowercase(Locale.getDefault()) }
     }
 }

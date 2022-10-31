@@ -1,6 +1,6 @@
 ### PubNub Kotlin-based SDKs for Android
 
-[![Build Status](https://travis-ci.com/pubnub/kotlin.svg?branch=master)]()
+[![Tests](https://github.com/pubnub/kotlin/actions/workflows/run-tests.yml/badge.svg)](https://github.com/pubnub/kotlin/actions/workflows/run-tests.yml)
 [![Maven Central](https://img.shields.io/maven-central/v/com.pubnub/pubnub-kotlin.svg)](https://maven-badges.herokuapp.com/maven-central/com.pubnub/pubnub-kotlin)
 
 This is the official PubNub Kotlin SDK repository.
@@ -20,13 +20,13 @@ You will need the publish and subscribe keys to authenticate your app. Get your 
      <dependency>
         <groupId>com.pubnub</groupId>
         <artifactId>pubnub-gson</artifactId>
-        <version>7.3.2</version>
+        <version>7.4.0</version>
      </dependency>
      ```
 
    * for Gradle, add the following dependency in your `gradle.build`:
      ```groovy
-     implementation 'com.pubnub:pubnub-kotlin:7.3.2'
+     implementation 'com.pubnub:pubnub-kotlin:7.4.0'
      ```
 
 2. Configure your keys:
