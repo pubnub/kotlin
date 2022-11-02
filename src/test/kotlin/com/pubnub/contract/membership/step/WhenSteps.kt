@@ -40,7 +40,7 @@ class WhenSteps(
 
     @When("I set the membership")
     fun i_set_the_membership() {
-        val channelMembershipInput = membershipState.memberships.map {
+        val channels = membershipState.memberships.map {
             PNChannelMembership.Partial(
                 channelId = it.channel!!.id,
                 custom = it.custom,
@@ -50,7 +50,7 @@ class WhenSteps(
 
         world.pubnub.setMemberships(
             uuid = membershipState.uuid(),
-            channels = channelMembershipInput,
+            channels = channels,
         ).sync()?.let {
             world.responseStatus = it.status
             membershipState.returnedMemberships = it.data
@@ -58,8 +58,8 @@ class WhenSteps(
     }
 
     @When("I set the membership for current user")
-    fun i_set_the_membershipfor_current_user() {
-        val channelMembershipInput = membershipState.memberships.map {
+    fun i_set_the_membership_for_current_user() {
+        val channels = membershipState.memberships.map {
             PNChannelMembership.Partial(
                 channelId = it.channel!!.id,
                 custom = it.custom,
@@ -68,7 +68,7 @@ class WhenSteps(
         }
 
         world.pubnub.setMemberships(
-            channels = channelMembershipInput,
+            channels = channels,
         ).sync()?.let {
             world.responseStatus = it.status
             membershipState.returnedMemberships = it.data
@@ -77,9 +77,10 @@ class WhenSteps(
 
     @When("I remove the membership")
     fun i_remove_the_membership() {
+        val channels = membershipState.memberships.map { it.channel!!.id }
         world.pubnub.removeMemberships(
             uuid = membershipState.uuid(),
-            channels = membershipState.memberships.map { it.channel!!.id },
+            channels = channels,
         ).sync()?.let {
             world.responseStatus = it.status
             membershipState.returnedMemberships = it.data
@@ -88,8 +89,9 @@ class WhenSteps(
 
     @When("I remove the membership for current user")
     fun i_remove_the_membership_for_current_user() {
+        val channels = membershipState.memberships.map { it.channel!!.id }
         world.pubnub.removeMemberships(
-            channels = membershipState.memberships.map { it.channel!!.id }
+            channels = channels
         ).sync()?.let {
             world.responseStatus = it.status
             membershipState.returnedMemberships = it.data
@@ -98,15 +100,17 @@ class WhenSteps(
 
     @When("I manage memberships")
     fun i_manage_memberships() {
+        val channelsToSet = membershipState.memberships.map {
+            PNChannelMembership.Partial(
+                channelId = it.channel!!.id,
+                custom = it.custom,
+                status = it.status
+            )
+        }
+        val channelsToRemove = membershipState.membershipsToRemove.map { it.channel!!.id }
         world.pubnub.manageMemberships(
-            channelsToSet = membershipState.memberships.map {
-                PNChannelMembership.Partial(
-                    channelId = it.channel!!.id,
-                    custom = it.custom,
-                    status = it.status
-                )
-            },
-            channelsToRemove = membershipState.membershipsToRemove.map { it.channel!!.id },
+            channelsToSet = channelsToSet,
+            channelsToRemove = channelsToRemove,
             uuid = membershipState.uuid()
         ).sync()?.let {
             world.responseStatus = it.status

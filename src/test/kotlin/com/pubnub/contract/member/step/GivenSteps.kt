@@ -3,16 +3,12 @@ package com.pubnub.contract.member.step
 import com.pubnub.contract.loadMember
 import com.pubnub.contract.member.state.MemberState
 import io.cucumber.java.en.Given
-import io.cucumber.java.en.Given.Givens
 
 class GivenSteps(
     private val memberState: MemberState,
 ) {
 
-    @Givens(
-        Given("the data for {string} member"),
-        Given("the data for {string} member that we want to add")
-    )
+    @Given("the data for {string} member")
     fun the_data_for_member(memberName: String) {
         memberState.members.add(loadMember(memberName))
     }

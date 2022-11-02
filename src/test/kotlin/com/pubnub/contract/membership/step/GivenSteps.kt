@@ -3,16 +3,12 @@ package com.pubnub.contract.membership.step
 import com.pubnub.contract.loadChannelMembership
 import com.pubnub.contract.uuidmetadata.state.MembershipState
 import io.cucumber.java.en.Given
-import io.cucumber.java.en.Given.Givens
 
 class GivenSteps(
     private val membershipState: MembershipState,
 ) {
 
-    @Givens(
-        Given("the data for {string} membership"),
-        Given("the data for {string} membership that we want to add")
-    )
+    @Given("the data for {string} membership")
     fun the_data_for_membership(channelMembershipName: String) {
         membershipState.memberships.add(loadChannelMembership(channelMembershipName))
     }
