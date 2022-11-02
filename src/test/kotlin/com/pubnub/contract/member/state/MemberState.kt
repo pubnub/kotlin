@@ -7,6 +7,7 @@ class MemberState(
     private val channelMetadataState: ChannelMetadataState
 ) {
     fun channelId(): String = channelMetadataState.channelId
-    lateinit var member: PNMember
-    lateinit var members: Collection<PNMember>
+    val members: MutableCollection<PNMember> = mutableListOf()
+    val membersToRemove: MutableCollection<PNMember> = mutableListOf()
+    lateinit var returnedMembers: Collection<PNMember>
 }

@@ -6,6 +6,7 @@ class MembershipState(
     private val uuidMetadataState: UUIDMetadataState
 ) {
     fun uuid(): String? = uuidMetadataState.uuid
-    lateinit var membership: PNChannelMembership
-    lateinit var memberships: Collection<PNChannelMembership>
+    lateinit var returnedMemberships: Collection<PNChannelMembership>
+    val membershipsToRemove: MutableCollection<PNChannelMembership> = mutableListOf()
+    val memberships: MutableCollection<PNChannelMembership> = mutableListOf()
 }
