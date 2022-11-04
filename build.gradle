@@ -85,7 +85,6 @@ task integrationTest(type: Test) {
     testClassesDir = sourceSets.integrationTest.output.classesDir
     classpath += sourceSets.integrationTest.runtimeClasspath
 }
-
 jacoco {
     toolVersion = "0.8.2"
 }
