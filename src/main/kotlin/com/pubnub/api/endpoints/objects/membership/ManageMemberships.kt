@@ -9,7 +9,6 @@ import com.pubnub.api.models.consumer.objects.membership.ChannelMembershipInput
 import com.pubnub.api.models.consumer.objects.membership.PNChannelMembership
 import com.pubnub.api.models.consumer.objects.membership.PNChannelMembershipArrayResult
 import com.pubnub.api.models.server.objects_api.ChangeMembershipInput
-import com.pubnub.api.models.server.objects_api.ChannelId
 import com.pubnub.api.models.server.objects_api.EntityArrayEnvelope
 import com.pubnub.api.models.server.objects_api.MembershipInput
 import com.pubnub.extension.toPNChannelMembershipArrayResult
@@ -36,8 +35,8 @@ class ManageMemberships internal constructor(
             subKey = pubnub.configuration.subscribeKey,
             options = params,
             body = ChangeMembershipInput(
-                set = channelsToSet.map { MembershipInput(channel = ChannelId(it.channel), custom = it.custom, status = it.status) },
-                delete = channelsToRemove.map { MembershipInput(channel = ChannelId(id = it)) }
+                set = channelsToSet.map { MembershipInput(channel = it.channel, custom = it.custom, status = it.status) },
+                delete = channelsToRemove.map { MembershipInput(channel = it) }
             )
         )
     }

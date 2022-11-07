@@ -3,6 +3,7 @@ package com.pubnub.api.integration
 import com.pubnub.api.CommonUtils.generatePayload
 import com.pubnub.api.CommonUtils.randomChannel
 import com.pubnub.api.PubNub
+import com.pubnub.api.UserId
 import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.PNStatus
@@ -31,7 +32,7 @@ class HeartbeatIntegrationTest : BaseIntegrationTest() {
         val expectedStatePayload = generatePayload()
 
         val observer = createPubNub().apply {
-            configuration.userId.value = "observer_${System.currentTimeMillis()}"
+            configuration.userId = UserId("observer_${System.currentTimeMillis()}")
         }
 
         pubnub.configuration.presenceTimeout = 20
