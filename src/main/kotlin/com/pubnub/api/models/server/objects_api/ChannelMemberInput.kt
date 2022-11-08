@@ -1,7 +1,9 @@
 package com.pubnub.api.models.server.objects_api
 
-internal data class MemberInput(
-    val uuid: String,
+internal data class ChannelMemberInput(
+    val uuid: UUIDId,
     val custom: Any? = null,
     val status: String? = null
 )
+
+internal data class UUIDId(val id: String)
