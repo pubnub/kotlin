@@ -9,8 +9,8 @@ import com.pubnub.api.models.consumer.objects.member.MemberInput
 import com.pubnub.api.models.consumer.objects.member.PNMember
 import com.pubnub.api.models.consumer.objects.member.PNMemberArrayResult
 import com.pubnub.api.models.server.objects_api.ChangeMemberInput
-import com.pubnub.api.models.server.objects_api.ChannelMemberInput
 import com.pubnub.api.models.server.objects_api.EntityArrayEnvelope
+import com.pubnub.api.models.server.objects_api.ServerMemberInput
 import com.pubnub.api.models.server.objects_api.UUIDId
 import com.pubnub.extension.toPNMemberArrayResult
 import retrofit2.Call
@@ -36,8 +36,8 @@ class ManageChannelMembers(
             subKey = pubnub.configuration.subscribeKey,
             options = params,
             body = ChangeMemberInput(
-                delete = uuidsToRemove.map { ChannelMemberInput(UUIDId(id = it)) },
-                set = uuidsToSet.map { ChannelMemberInput(uuid = UUIDId(id = it.uuid), custom = it.custom, status = it.status) }
+                delete = uuidsToRemove.map { ServerMemberInput(UUIDId(id = it)) },
+                set = uuidsToSet.map { ServerMemberInput(uuid = UUIDId(id = it.uuid), custom = it.custom, status = it.status) }
             )
         )
     }
