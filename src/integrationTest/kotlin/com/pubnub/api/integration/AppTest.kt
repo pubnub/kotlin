@@ -1,6 +1,7 @@
 package com.pubnub.api.integration
 
 import com.pubnub.api.Keys
+import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
 import com.pubnub.api.UserId
 import com.pubnub.api.callbacks.SubscribeCallback

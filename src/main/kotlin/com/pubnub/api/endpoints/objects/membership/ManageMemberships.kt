@@ -11,7 +11,7 @@ import com.pubnub.api.models.consumer.objects.membership.PNChannelMembershipArra
 import com.pubnub.api.models.server.objects_api.ChangeMembershipInput
 import com.pubnub.api.models.server.objects_api.ChannelId
 import com.pubnub.api.models.server.objects_api.EntityArrayEnvelope
-import com.pubnub.api.models.server.objects_api.MembershipInput
+import com.pubnub.api.models.server.objects_api.ServerMembershipInput
 import com.pubnub.extension.toPNChannelMembershipArrayResult
 import retrofit2.Call
 import retrofit2.Response
@@ -36,8 +36,14 @@ class ManageMemberships internal constructor(
             subKey = pubnub.configuration.subscribeKey,
             options = params,
             body = ChangeMembershipInput(
-                set = channelsToSet.map { MembershipInput(channel = ChannelId(it.channel), custom = it.custom, status = it.status) },
-                delete = channelsToRemove.map { MembershipInput(channel = ChannelId(id = it)) }
+                set = channelsToSet.map {
+                    ServerMembershipInput(
+                        channel = ChannelId(id = it.channel),
+                        custom = it.custom,
+                        status = it.status
+                    )
+                },
+                delete = channelsToRemove.map { ServerMembershipInput(channel = ChannelId(id = it)) }
             )
         )
     }

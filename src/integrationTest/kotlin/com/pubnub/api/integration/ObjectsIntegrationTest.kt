@@ -4,13 +4,17 @@ import com.pubnub.api.CommonUtils.randomValue
 import com.pubnub.api.PubNub
 import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.models.consumer.PNStatus
+import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata
 import com.pubnub.api.models.consumer.objects.member.PNMember
 import com.pubnub.api.models.consumer.objects.member.PNUUIDDetailsLevel
 import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
 import com.pubnub.api.models.consumer.objects.membership.PNChannelMembership
-import com.pubnub.api.models.consumer.objects.membership.PNChannelWithCustom
+import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
 import com.pubnub.api.subscribeToBlocking
+import org.hamcrest.MatcherAssert.assertThat
+import org.hamcrest.Matchers.containsInAnyOrder
+import org.hamcrest.Matchers.not
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -19,17 +23,18 @@ import java.util.concurrent.TimeUnit
 
 class ObjectsIntegrationTest : BaseIntegrationTest() {
     private val testUuid = "ThisIsMyId" + randomValue()
+    private val otherTestUuid = "OtherTestId" + randomValue()
     val channel = "ThisIsMyChannel" + randomValue()
+    val otherChannel = "OtherChannel" + randomValue()
     val status = "Status" + randomValue()
     val type = "Type" + randomValue()
+    val noUpdated = ""
+    val noEtag = ""
 
     @Test
     fun setGetAndRemoveChannelMetadata() {
         val setResult = pubnub.setChannelMetadata(
-            channel = channel,
-            name = randomValue(15),
-            status = status,
-            type = type
+            channel = channel, name = randomValue(15), status = status, type = type
         ).sync()!!
 
         val getAllResult = pubnub.getAllChannelMetadata().sync()!!
@@ -47,10 +52,7 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
     @Test
     fun setGetAndRemoveUUIDMetadata() {
         val setResult = pubnub.setUUIDMetadata(
-            uuid = testUuid,
-            name = randomValue(15),
-            status = status,
-            type = type
+            uuid = testUuid, name = randomValue(15), status = status, type = type
         ).sync()!!
 
         assertEquals(status, setResult.data?.status)
@@ -70,16 +72,13 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
 
     @Test
     fun addGetAndRemoveMembership() {
-        val channels = listOf(PNChannelWithCustom(channel = channel))
+        val channels = listOf(PNChannelMembership.Partial(channelId = channel))
         val setResult = pubnub.setMemberships(
-            channels = channels,
-            uuid = testUuid,
-            includeChannelDetails = PNChannelDetailsLevel.CHANNEL
+            channels = channels, uuid = testUuid, includeChannelDetails = PNChannelDetailsLevel.CHANNEL
         ).sync()!!
 
         val getAllResult = pubnub.getMemberships(
-            uuid = testUuid,
-            includeChannelDetails = PNChannelDetailsLevel.CHANNEL
+            uuid = testUuid, includeChannelDetails = PNChannelDetailsLevel.CHANNEL
         ).sync()!!
 
         assertEquals(setResult, getAllResult)
@@ -91,14 +90,10 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
         ).sync()!!
 
         val getAllAfterRemovalResult = pubnub.getMemberships(
-            uuid = testUuid,
-            includeChannelDetails = PNChannelDetailsLevel.CHANNEL
+            uuid = testUuid, includeChannelDetails = PNChannelDetailsLevel.CHANNEL
         ).sync()!!
 
-        assertTrue(
-            getAllAfterRemovalResult.data.filter { it.channel != null }
-                .none { it.channel!!.id == channel }
-        )
+        assertTrue(getAllAfterRemovalResult.data.filter { it.channel != null }.none { it.channel!!.id == channel })
     }
 
     @Test
@@ -106,33 +101,24 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
         val uuids = listOf(PNMember.Partial(uuidId = testUuid, custom = null, null))
 
         val setResult = pubnub.setChannelMembers(
-            channel = channel,
-            uuids = uuids,
-            includeUUIDDetails = PNUUIDDetailsLevel.UUID
+            channel = channel, uuids = uuids, includeUUIDDetails = PNUUIDDetailsLevel.UUID
         ).sync()!!
 
         val getAllResult = pubnub.getChannelMembers(
-            channel = channel,
-            includeUUIDDetails = PNUUIDDetailsLevel.UUID
+            channel = channel, includeUUIDDetails = PNUUIDDetailsLevel.UUID
         ).sync()!!
 
         assertEquals(setResult, getAllResult)
 
         pubnub.removeChannelMembers(
-            channel = channel,
-            uuids = uuids.map { it.uuid },
-            includeUUIDDetails = PNUUIDDetailsLevel.UUID
+            channel = channel, uuids = uuids.map { it.uuid }, includeUUIDDetails = PNUUIDDetailsLevel.UUID
         ).sync()!!
 
         val getAllAfterRemovalResult = pubnub.getChannelMembers(
-            channel = channel,
-            includeUUIDDetails = PNUUIDDetailsLevel.UUID
+            channel = channel, includeUUIDDetails = PNUUIDDetailsLevel.UUID
         ).sync()!!
 
-        assertTrue(
-            getAllAfterRemovalResult.data.filter { it.uuid != null }
-                .none { it.uuid!!.id == testUuid }
-        )
+        assertTrue(getAllAfterRemovalResult.data.filter { it.uuid != null }.none { it.uuid!!.id == testUuid })
     }
 
     @Test
@@ -192,14 +178,128 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
             includeCustom = true
         ).apply {
             queryParam += "mydata" to "myval"
+        }.sync().apply {
+            assertEquals(this?.data?.id, expectedUUID)
+            assertEquals(this?.data?.name, expectedName)
+            assertEquals(this?.data?.email, expectedEmail)
+            assertEquals(this?.data?.externalId, expectedExternalId)
+            assertEquals(this?.data?.profileUrl, expectedProfileUrl)
+            assertEquals(this?.data?.custom, expectedCustom)
         }
-            .sync().apply {
-                assertEquals(this?.data?.id, expectedUUID)
-                assertEquals(this?.data?.name, expectedName)
-                assertEquals(this?.data?.email, expectedEmail)
-                assertEquals(this?.data?.externalId, expectedExternalId)
-                assertEquals(this?.data?.profileUrl, expectedProfileUrl)
-                assertEquals(this?.data?.custom, expectedCustom)
-            }
+    }
+
+    @Test
+    fun testManageMember() {
+        pubnub.setChannelMembers(
+            channel = channel, uuids = listOf(PNMember.Partial(uuidId = otherTestUuid, status = status))
+        ).sync()
+
+        pubnub.manageChannelMembers(
+            channel = channel,
+            uuidsToSet = listOf(PNMember.Partial(uuidId = testUuid, status = status)),
+            uuidsToRemove = listOf()
+        ).sync()
+
+        val getAllResult =
+            pubnub.getChannelMembers(channel = channel, includeUUIDDetails = PNUUIDDetailsLevel.UUID).sync()!!.data
+
+        val otherTestUuidMatcher = PNMember(
+            uuidMetadata(id = otherTestUuid),
+            custom = null,
+            status = status,
+            eTag = noEtag,
+            updated = noUpdated
+        )
+        val testUuidMatcher = PNMember(
+            uuidMetadata(id = testUuid),
+            custom = null,
+            status = status,
+            eTag = noEtag,
+            updated = noUpdated
+        )
+
+        assertThat(
+            getAllResult.map { it.copy(updated = noUpdated, eTag = noEtag) },
+            containsInAnyOrder(testUuidMatcher, otherTestUuidMatcher)
+        )
+
+        val removeResult = pubnub.manageChannelMembers(
+            channel = channel, uuidsToSet = listOf(), uuidsToRemove = listOf(testUuid, otherTestUuid)
+        ).sync()!!.data
+
+        assertThat(removeResult, not(containsInAnyOrder(testUuidMatcher, otherTestUuidMatcher)))
+    }
+
+    @Test
+    fun testManageMembership() {
+        pubnub.setMemberships(
+            uuid = testUuid, channels = listOf(PNChannelMembership.Partial(channelId = channel, status = status))
+        ).sync()
+
+        pubnub.manageMemberships(
+            uuid = testUuid,
+            channelsToSet = listOf(PNChannelMembership.Partial(channelId = otherChannel, status = status)),
+            channelsToRemove = listOf()
+        ).sync()
+
+        val getAllResult =
+            pubnub.getMemberships(uuid = testUuid, includeChannelDetails = PNChannelDetailsLevel.CHANNEL).sync()!!.data
+
+        val channelMatcher = PNChannelMembership(
+            channelMetadata(id = channel),
+            custom = null,
+            status = status,
+            eTag = noEtag,
+            updated = noUpdated
+        )
+        val otherChannelMatcher = PNChannelMembership(
+            channelMetadata(id = otherChannel),
+            custom = null,
+            status = status,
+            eTag = noEtag,
+            updated = noUpdated
+        )
+
+        assertThat(
+            getAllResult.map { it.copy(updated = noUpdated, eTag = noEtag) },
+            containsInAnyOrder(channelMatcher, otherChannelMatcher)
+        )
+
+        val removeResult = pubnub.manageMemberships(
+            uuid = testUuid, channelsToSet = listOf(), channelsToRemove = listOf(channel, otherChannel)
+        ).sync()!!.data
+
+        assertThat(
+            removeResult,
+            not(containsInAnyOrder(channelMatcher, otherChannelMatcher))
+        )
+    }
+
+    private fun uuidMetadata(id: String): PNUUIDMetadata {
+        return PNUUIDMetadata(
+            id = id,
+            name = null,
+            externalId = null,
+            profileUrl = null,
+            email = null,
+            custom = null,
+            updated = null,
+            eTag = null,
+            type = null,
+            status = null
+        )
+    }
+
+    private fun channelMetadata(id: String): PNChannelMetadata {
+        return PNChannelMetadata(
+            id = id,
+            name = null,
+            description = null,
+            custom = null,
+            updated = null,
+            eTag = null,
+            type = null,
+            status = null,
+        )
     }
 }
