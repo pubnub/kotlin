@@ -15,7 +15,7 @@ data class PNUUIDWithCustom(
     companion object {
         @Deprecated(
             message = "Use PNMember.Partial",
-            level = DeprecationLevel.WARNING,
+            level = DeprecationLevel.ERROR,
             replaceWith = ReplaceWith(
                 "PNMember.Partial(uuidId = uuid, custom = custom)",
                 "com.pubnub.api.models.consumer.objects.member.PNMember"

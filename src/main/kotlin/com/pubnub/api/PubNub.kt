@@ -548,7 +548,7 @@ class PubNub(val configuration: PNConfiguration) {
             "fetchMessages(channels = channels, page = PNBoundedPage(start = start, end = end, limit = maximumPerChannel),includeMeta = includeMeta, includeMessageActions = includeMessageActions)",
             "com.pubnub.api.models.consumer.PNBoundedPage"
         ),
-        level = DeprecationLevel.WARNING,
+        level = DeprecationLevel.ERROR,
         message = "Use fetchMessages(String, PNBoundedPage, Boolean, Boolean) instead"
     )
     fun fetchMessages(
@@ -789,7 +789,7 @@ class PubNub(val configuration: PNConfiguration) {
             "getMessageActions(channel = channel, page = PNBoundedPage(start = start, end = end, limit = limit))",
             "com.pubnub.api.models.consumer.PNBoundedPage"
         ),
-        level = DeprecationLevel.WARNING,
+        level = DeprecationLevel.ERROR,
         message = "Use getMessageActions(String, PNBoundedPage) instead"
     )
     fun getMessageActions(
@@ -934,8 +934,9 @@ class PubNub(val configuration: PNConfiguration) {
      * @param uuids List of all uuid grants
      */
 
+    @Suppress("DeprecatedCallableAddReplaceWith")
     @Deprecated(
-        level = DeprecationLevel.WARNING,
+        level = DeprecationLevel.ERROR,
         message = "Use grantToken(Int, Any?, String?, List<SpacePermissions>?, List<UserPermissions>?) instead"
     )
     fun grantToken(
@@ -1244,7 +1245,7 @@ class PubNub(val configuration: PNConfiguration) {
                 "page = page, filter = filter, sort = sort, includeCount = includeCount, includeCustom = includeCustom," +
                 "includeChannelDetails = includeChannelDetails)"
         ),
-        level = DeprecationLevel.WARNING,
+        level = DeprecationLevel.ERROR,
         message = "Use setMemberships instead"
     )
     fun addMemberships(
@@ -1419,7 +1420,7 @@ class PubNub(val configuration: PNConfiguration) {
                 "page = page, filter = filter, sort = sort, includeCount = includeCount, includeCustom = includeCustom," +
                 "includeUUIDDetails = includeUUIDDetails)"
         ),
-        level = DeprecationLevel.WARNING,
+        level = DeprecationLevel.ERROR,
         message = "Use getChannelMembers instead"
     )
     fun getMembers(
@@ -1498,7 +1499,7 @@ class PubNub(val configuration: PNConfiguration) {
                 "page = page, filter = filter, sort = sort, includeCount = includeCount, includeCustom = includeCustom," +
                 "includeUUIDDetails = includeUUIDDetails)"
         ),
-        level = DeprecationLevel.WARNING,
+        level = DeprecationLevel.ERROR,
         message = "Use setChannelMembers instead"
     )
     fun addMembers(
@@ -1577,7 +1578,7 @@ class PubNub(val configuration: PNConfiguration) {
                 "page = page, filter = filter, sort = sort, includeCount = includeCount, includeCustom = includeCustom," +
                 "includeUUIDDetails = includeUUIDDetails)"
         ),
-        level = DeprecationLevel.WARNING,
+        level = DeprecationLevel.ERROR,
         message = "Use removeChannelMembers instead"
     )
     fun removeMembers(

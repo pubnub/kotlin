@@ -17,7 +17,7 @@ data class PNChannelWithCustom(
     companion object {
         @Deprecated(
             message = "Use PNChannelMembership.Partial",
-            level = DeprecationLevel.WARNING,
+            level = DeprecationLevel.ERROR,
             replaceWith = ReplaceWith(
                 "PNChannelMembership.Partial(channelId = channel, custom = custom)",
                 "com.pubnub.api.models.consumer.objects.membership.PNChannelMembership"
