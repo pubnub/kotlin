@@ -5,7 +5,9 @@ import com.pubnub.api.PNConfiguration.Companion.isValid
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
+import com.pubnub.api.SpaceId
 import com.pubnub.api.enums.PNOperationType
+import com.pubnub.api.models.consumer.MessageType
 import com.pubnub.api.models.consumer.PNPublishResult
 import com.pubnub.api.vendor.Crypto
 import com.pubnub.extension.numericString
@@ -24,8 +26,15 @@ class Publish internal constructor(
     val shouldStore: Boolean? = null,
     val usePost: Boolean = false,
     val replicate: Boolean = true,
-    val ttl: Int? = null
+    val ttl: Int? = null,
+    val spaceId: SpaceId? = null,
+    val messageType: MessageType? = null
 ) : Endpoint<List<Any>, PNPublishResult>(pubnub) {
+
+    companion object {
+        internal const val SPACE_ID_QUERY_PARAM = "space-id"
+        internal const val MESSAGE_TYPE_QUERY_PARAM = "type"
+    }
 
     private val useEncryption: Boolean = pubnub.configuration.cipherKey.isValid()
 
@@ -88,6 +97,10 @@ class Publish internal constructor(
         ttl?.run { queryParams["ttl"] = this.toString() }
 
         if (!replicate) queryParams["norep"] = true.valueString
+
+        spaceId?.run { queryParams[SPACE_ID_QUERY_PARAM] = spaceId.value }
+
+        messageType?.run { queryParams[MESSAGE_TYPE_QUERY_PARAM] = messageType.type }
 
         queryParams["seqn"] = pubnub.publishSequenceManager.nextSequence().toString()
     }

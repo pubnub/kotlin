@@ -38,4 +38,15 @@ class KeysetStep(private val world: World) {
             subscribeKey = ContractTestConfig.subKey
         }
     }
+
+    @Given("the demo keyset")
+    fun the_demo_keyset() {
+        MatcherAssert.assertThat(ContractTestConfig.pubKey, Matchers.notNullValue())
+        MatcherAssert.assertThat(ContractTestConfig.subKey, Matchers.notNullValue())
+
+        world.configuration.apply {
+            subscribeKey = ContractTestConfig.subKey
+            publishKey = ContractTestConfig.pubKey
+        }
+    }
 }

@@ -15,9 +15,16 @@ import com.pubnub.api.CommonUtils.assertPnException
 import com.pubnub.api.CommonUtils.failTest
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
+import com.pubnub.api.SpaceId
+import com.pubnub.api.endpoints.pubsub.Publish
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.legacy.BaseTest
+import com.pubnub.api.models.consumer.MessageType
 import org.awaitility.Awaitility
+import org.hamcrest.MatcherAssert.assertThat
+import org.hamcrest.Matchers.hasEntry
+import org.hamcrest.Matchers.hasKey
+import org.hamcrest.Matchers.not
 import org.hamcrest.core.IsEqual
 import org.json.JSONArray
 import org.json.JSONObject
@@ -25,7 +32,6 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Test
 import java.nio.charset.Charset
-import java.util.HashMap
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -412,23 +418,6 @@ class PublishTest : BaseTest() {
         assertEquals(1, requests.size)
         assertEquals("myUUID", requests[0].queryParameter("uuid").firstValue())
     }
-//    @Deprecated("Channel is required parameter now")
-//    @Test
-//    fun testMissingChannel() {
-//        stubFor(
-//            get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22hi%22"))
-//                .willReturn(aResponse().withBody("""[1,"Sent","15883272000000000"]"""))
-//        )
-//
-//        try {
-//            pubnub.publish(
-//                message = "hi"
-//            ).sync()!!
-//            failTest()
-//        } catch (e: PubNubException) {
-//            assertPnException(PubNubError.CHANNEL_MISSING, e)
-//        }
-//    }
 
     @Test
     fun testEmptyChannel() {
@@ -447,23 +436,6 @@ class PublishTest : BaseTest() {
             assertPnException(PubNubError.CHANNEL_MISSING, e)
         }
     }
-
-//    @Deprecated("Message is required parameter now")
-//    @Test
-//    fun testMissingMessage() {
-//        stubFor(
-//            get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22hi%22"))
-//                .willReturn(aResponse().withBody("""[1,"Sent","15883272000000000"]"""))
-//        )
-//        try {
-//            pubnub.publish(
-//                channel = "coolChannel"
-//            ).sync()!!
-//            failTest()
-//        } catch (e: PubNubException) {
-//            assertPnException(PubNubError.MESSAGE_MISSING, e)
-//        }
-//    }
 
     @Test
     fun testOperationTypeSuccessAsync() {
@@ -561,5 +533,85 @@ class PublishTest : BaseTest() {
         assertEquals(1, requests.size)
         assertEquals("0", requests[0].queryParameter("store").firstValue())
         assertFalse(requests[0].queryParameter("ttl").isPresent)
+    }
+
+    @Test
+    fun testSpaceIdQueryParamIsPassedInPublish() {
+        val spaceIdValue = "thisIsSpaceId"
+
+        stubFor(
+            get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22hi%22"))
+                .willReturn(aResponse().withBody("""[1,"Sent","15883272000000000"]"""))
+        )
+
+        pubnub.publish(
+            channel = "coolChannel",
+            message = "hi",
+            spaceId = SpaceId(spaceIdValue)
+        ).sync()!!
+
+        val requests = findAll(getRequestedFor(urlMatching("/.*")))
+        assertEquals(1, requests.size)
+        assertThat(
+            requests[0].queryParams.map { (k, v) -> k to v.firstValue() }.toMap(),
+            hasEntry(Publish.SPACE_ID_QUERY_PARAM, spaceIdValue)
+        )
+    }
+
+    @Test
+    fun testMissingSpaceIdQueryParamIsNotSet() {
+        stubFor(
+            get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22hi%22"))
+                .willReturn(aResponse().withBody("""[1,"Sent","15883272000000000"]"""))
+        )
+
+        pubnub.publish(
+            channel = "coolChannel",
+            message = "hi"
+        ).sync()!!
+
+        val requests = findAll(getRequestedFor(urlMatching("/.*")))
+        assertEquals(1, requests.size)
+        assertThat(requests[0].queryParams, not(hasKey(Publish.SPACE_ID_QUERY_PARAM)))
+    }
+
+    @Test
+    fun testMessageTypeQueryParamIsPassedInPublish() {
+        val messageTypeValue = "thisIsSpaceId"
+
+        stubFor(
+            get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22hi%22"))
+                .willReturn(aResponse().withBody("""[1,"Sent","15883272000000000"]"""))
+        )
+
+        pubnub.publish(
+            channel = "coolChannel",
+            message = "hi",
+            messageType = MessageType(messageTypeValue)
+        ).sync()!!
+
+        val requests = findAll(getRequestedFor(urlMatching("/.*")))
+        assertEquals(1, requests.size)
+        assertThat(
+            requests[0].queryParams.map { (k, v) -> k to v.firstValue() }.toMap(),
+            hasEntry(Publish.MESSAGE_TYPE_QUERY_PARAM, messageTypeValue)
+        )
+    }
+
+    @Test
+    fun testMissingMessageTypeQueryParamIsNotSet() {
+        stubFor(
+            get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22hi%22"))
+                .willReturn(aResponse().withBody("""[1,"Sent","15883272000000000"]"""))
+        )
+
+        pubnub.publish(
+            channel = "coolChannel",
+            message = "hi"
+        ).sync()!!
+
+        val requests = findAll(getRequestedFor(urlMatching("/.*")))
+        assertEquals(1, requests.size)
+        assertThat(requests[0].queryParams, not(hasKey(Publish.MESSAGE_TYPE_QUERY_PARAM)))
     }
 }
