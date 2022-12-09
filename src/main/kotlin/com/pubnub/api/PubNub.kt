@@ -552,11 +552,11 @@ class PubNub(val configuration: PNConfiguration) {
      */
     @Deprecated(
         replaceWith = ReplaceWith(
-            "fetchMessages(channels = channels, page = PNBoundedPage(start = start, end = end, limit = maximumPerChannel),includeMeta = includeMeta, includeMessageActions = includeMessageActions)",
+            "fetchMessages(channels = channels, page = PNBoundedPage(start = start, end = end, limit = maximumPerChannel),includeMeta = includeMeta, includeMessageActions = includeMessageActions, includeSpaceId = includeSpaceId, includeMessageType = includeMessageType)",
             "com.pubnub.api.models.consumer.PNBoundedPage"
         ),
         level = DeprecationLevel.ERROR,
-        message = "Use fetchMessages(String, PNBoundedPage, Boolean, Boolean) instead"
+        message = "Use fetchMessages(String, PNBoundedPage, Boolean, Boolean, Boolean, Boolean) instead"
     )
     fun fetchMessages(
         channels: List<String>,
@@ -564,12 +564,16 @@ class PubNub(val configuration: PNConfiguration) {
         start: Long? = null,
         end: Long? = null,
         includeMeta: Boolean = false,
-        includeMessageActions: Boolean = false
+        includeMessageActions: Boolean = false,
+        includeSpaceId: Boolean = false,
+        includeMessageType: Boolean = false
     ) = fetchMessages(
         channels = channels,
         page = PNBoundedPage(start = start, end = end, limit = maximumPerChannel),
         includeMeta = includeMeta,
-        includeMessageActions = includeMessageActions
+        includeMessageActions = includeMessageActions,
+        includeMessageType = includeMessageType,
+        includeSpaceId = includeSpaceId
     )
 
     /**
@@ -604,20 +608,28 @@ class PubNub(val configuration: PNConfiguration) {
      *                    Defaults to `false`.
      * @param includeMessageActions Whether to include message actions in response.
      *                              Defaults to `false`.
+     * @param includeMessageType Whether to include message type in response.
+     *                           Defaults to `false`.
+     * @param includeSpaceId Whether to include space id in response.
+     *                       Defaults to `false`.
      */
     fun fetchMessages(
         channels: List<String>,
         page: PNBoundedPage = PNBoundedPage(),
         includeUUID: Boolean = true,
         includeMeta: Boolean = false,
-        includeMessageActions: Boolean = false
+        includeMessageActions: Boolean = false,
+        includeMessageType: Boolean = true,
+        includeSpaceId: Boolean = false
     ) = FetchMessages(
         pubnub = this,
         channels = channels,
         page = page,
         includeUUID = includeUUID,
         includeMeta = includeMeta,
-        includeMessageActions = includeMessageActions
+        includeMessageActions = includeMessageActions,
+        includeMessageType = includeMessageType,
+        includeSpaceId = includeSpaceId
     )
 
     /**

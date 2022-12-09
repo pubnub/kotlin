@@ -2,7 +2,9 @@ package com.pubnub.api.models.consumer.history
 
 import com.google.gson.JsonElement
 import com.pubnub.api.PubNub
+import com.pubnub.api.SpaceId
 import com.pubnub.api.endpoints.FetchMessages
+import com.pubnub.api.models.consumer.HistoryMessageType
 import com.pubnub.api.models.consumer.PNBoundedPage
 
 /**
@@ -28,6 +30,7 @@ data class PNFetchMessagesResult(
  * The key of the map is the action type. The value is another map,
  * which key is the actual value of the message action,
  * and the key being a list of actions, ie. a list of UUIDs which have posted such a message action.
+ * @property messageType The message type associated with the item.
  *
  * @see [Action]
  */
@@ -36,7 +39,9 @@ data class PNFetchMessageItem(
     val message: JsonElement,
     val meta: JsonElement?,
     val timetoken: Long,
-    val actions: Map<String, Map<String, List<Action>>>? = null
+    val actions: Map<String, Map<String, List<Action>>>? = null,
+    val messageType: HistoryMessageType?,
+    val spaceId: SpaceId?,
 )
 
 /**

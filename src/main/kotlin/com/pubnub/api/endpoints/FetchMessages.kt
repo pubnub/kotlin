@@ -4,8 +4,12 @@ import com.pubnub.api.Endpoint
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
+import com.pubnub.api.SpaceId
 import com.pubnub.api.enums.PNOperationType
+import com.pubnub.api.models.consumer.HistoryMessageType
+import com.pubnub.api.models.consumer.MessageType
 import com.pubnub.api.models.consumer.PNBoundedPage
+import com.pubnub.api.models.consumer.history.PNFetchMessageItem
 import com.pubnub.api.models.consumer.history.PNFetchMessagesResult
 import com.pubnub.api.models.server.FetchMessagesEnvelope
 import com.pubnub.api.toCsv
@@ -14,7 +18,6 @@ import com.pubnub.extension.nonPositiveToNull
 import com.pubnub.extension.processHistoryMessage
 import retrofit2.Call
 import retrofit2.Response
-import java.util.HashMap
 import java.util.Locale
 
 /**
@@ -26,7 +29,9 @@ class FetchMessages internal constructor(
     val page: PNBoundedPage,
     val includeUUID: Boolean,
     val includeMeta: Boolean,
-    val includeMessageActions: Boolean
+    val includeMessageActions: Boolean,
+    val includeMessageType: Boolean,
+    val includeSpaceId: Boolean
 ) : Endpoint<FetchMessagesEnvelope, PNFetchMessagesResult>(pubnub) {
 
     internal companion object {
@@ -36,6 +41,9 @@ class FetchMessages internal constructor(
         private const val MULTIPLE_CHANNEL_MAX_MESSAGES = 25
         private const val DEFAULT_MESSAGES_WITH_ACTIONS = 25
         private const val MAX_MESSAGES_WITH_ACTIONS = 25
+        internal const val INCLUDE_SPACE_ID_QUERY_PARAM = "include_space_id"
+        internal const val INCLUDE_MESSAGE_TYPE_QUERY_PARAM = "include_message_type"
+        internal const val INCLUDE_TYPE_QUERY_PARAM = "include_type"
 
         internal fun effectiveMax(
             maximumPerChannel: Int?,
@@ -45,9 +53,11 @@ class FetchMessages internal constructor(
             includeMessageActions ->
                 maximumPerChannel?.limit(MAX_MESSAGES_WITH_ACTIONS)?.nonPositiveToNull()
                     ?: DEFAULT_MESSAGES_WITH_ACTIONS
+
             numberOfChannels == 1 ->
                 maximumPerChannel?.limit(SINGLE_CHANNEL_MAX_MESSAGES)?.nonPositiveToNull()
                     ?: SINGLE_CHANNEL_DEFAULT_MESSAGES
+
             else ->
                 maximumPerChannel?.limit(MULTIPLE_CHANNEL_MAX_MESSAGES)?.nonPositiveToNull()
                     ?: MULTIPLE_CHANNEL_DEFAULT_MESSAGES
@@ -83,10 +93,24 @@ class FetchMessages internal constructor(
     override fun createResponse(input: Response<FetchMessagesEnvelope>): PNFetchMessagesResult {
         val body = input.body()!!
         val channelsMap = body.channels.mapValues { (_, value) ->
-            value.map { messageItem ->
-                val newMessage = messageItem.message.processHistoryMessage(pubnub.configuration, pubnub.mapper)
-                val newActions = if (includeMessageActions) messageItem.actions ?: mapOf() else messageItem.actions
-                messageItem.copy(actions = newActions, message = newMessage)
+            value.map { serverMessageItem ->
+                val newMessage = serverMessageItem.message.processHistoryMessage(pubnub.configuration, pubnub.mapper)
+                val newActions = if (includeMessageActions) serverMessageItem.actions ?: mapOf() else serverMessageItem.actions
+                val messageType = if (includeMessageType) {
+                    serverMessageItem.userDefinedMessageType?.let { MessageType.UserDefined(it) }
+                        ?: serverMessageItem.integerMessageType.let { HistoryMessageType.of(it) }
+                } else {
+                    null
+                }
+                PNFetchMessageItem(
+                    uuid = serverMessageItem.uuid,
+                    message = newMessage,
+                    meta = serverMessageItem.meta,
+                    timetoken = serverMessageItem.timetoken,
+                    actions = newActions,
+                    messageType = messageType,
+                    spaceId = serverMessageItem.spaceId?.let { SpaceId(it) },
+                )
             }
         }.toMap()
 
@@ -107,5 +131,10 @@ class FetchMessages internal constructor(
         page.end?.run { queryParams["end"] = this.toString().lowercase(Locale.US) }
 
         if (includeMeta) queryParams["include_meta"] = includeMeta.toString()
+        if (includeMessageType) {
+            queryParams[INCLUDE_MESSAGE_TYPE_QUERY_PARAM] = includeMessageType.toString()
+            queryParams[INCLUDE_TYPE_QUERY_PARAM] = includeMessageType.toString()
+        }
+        if (includeSpaceId) queryParams[INCLUDE_SPACE_ID_QUERY_PARAM] = includeSpaceId.toString()
     }
 }

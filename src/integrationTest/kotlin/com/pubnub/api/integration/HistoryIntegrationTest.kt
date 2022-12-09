@@ -1,5 +1,6 @@
 package com.pubnub.api.integration
 
+import com.pubnub.api.CommonUtils
 import com.pubnub.api.CommonUtils.assertPnException
 import com.pubnub.api.CommonUtils.emoji
 import com.pubnub.api.CommonUtils.publishMixed
@@ -7,16 +8,24 @@ import com.pubnub.api.CommonUtils.randomChannel
 import com.pubnub.api.CommonUtils.randomValue
 import com.pubnub.api.CommonUtils.retry
 import com.pubnub.api.PubNubError
+import com.pubnub.api.SpaceId
 import com.pubnub.api.await
+import com.pubnub.api.models.consumer.MessageType
 import com.pubnub.api.models.consumer.PNBoundedPage
+import com.pubnub.api.models.consumer.history.PNFetchMessagesResult
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 import com.pubnub.api.param
+import org.awaitility.kotlin.await
+import org.hamcrest.MatcherAssert.assertThat
+import org.hamcrest.Matchers.aMapWithSize
+import org.hamcrest.Matchers.not
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import java.time.Duration
 
 class HistoryIntegrationTest : BaseIntegrationTest() {
 
@@ -589,5 +598,39 @@ class HistoryIntegrationTest : BaseIntegrationTest() {
             assertFalse(status.error)
             assertEquals("100", status.param("count"))
         }
+    }
+
+    @Test
+    fun testFetchMessagesContainSpaceIdAndMessageType() {
+        val channel = randomChannel()
+        val expectedMessageType = MessageType("thisIsMessageType")
+        val expectedSpaceId = SpaceId("thisIsSpace")
+
+        val result = pubnub.publish(
+            channel = channel,
+            message = CommonUtils.generatePayload(),
+            spaceId = expectedSpaceId,
+            messageType = expectedMessageType
+        ).sync()
+
+        assertNotNull(result)
+
+        var fetchResult: PNFetchMessagesResult? = null
+
+        await
+            .pollInterval(Duration.ofMillis(1_000))
+            .pollDelay(Duration.ofMillis(1_000))
+            .atMost(Duration.ofMillis(10_000))
+            .untilAsserted {
+                fetchResult = pubnub.fetchMessages(
+                    includeSpaceId = true,
+                    channels = listOf(channel)
+                ).sync()
+                assertNotNull(fetchResult)
+                assertThat(fetchResult?.channels, aMapWithSize(not(0)))
+            }
+        val fetchMessageItem = fetchResult!!.channels.values.first().first()
+        assertEquals(expectedMessageType, fetchMessageItem.messageType)
+        assertEquals(expectedSpaceId, fetchMessageItem.spaceId)
     }
 }
