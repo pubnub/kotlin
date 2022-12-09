@@ -936,7 +936,7 @@ class PubNub(val configuration: PNConfiguration) {
 
     @Suppress("DeprecatedCallableAddReplaceWith")
     @Deprecated(
-        level = DeprecationLevel.ERROR,
+        level = DeprecationLevel.WARNING,
         message = "Use grantToken(Int, Any?, String?, List<SpacePermissions>?, List<UserPermissions>?) instead"
     )
     fun grantToken(
