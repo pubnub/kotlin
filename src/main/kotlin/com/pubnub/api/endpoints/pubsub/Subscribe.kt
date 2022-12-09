@@ -9,9 +9,13 @@ import com.pubnub.api.models.server.SubscribeEnvelope
 import com.pubnub.api.toCsv
 import retrofit2.Call
 import retrofit2.Response
-import java.util.HashMap
 
 class Subscribe internal constructor(pubnub: PubNub) : Endpoint<SubscribeEnvelope, SubscribeEnvelope>(pubnub) {
+
+    companion object {
+        internal const val INCLUDE_SPACE_ID_QUERY_PARAM = "include-space-id"
+        internal const val INCLUDE_MESSAGE_TYPE_QUERY_PARAM = "include-type"
+    }
 
     var channels = emptyList<String>()
     var channelGroups = emptyList<String>()
@@ -53,6 +57,12 @@ class Subscribe internal constructor(pubnub: PubNub) : Endpoint<SubscribeEnvelop
         state?.let {
             queryParams["state"] = pubnub.mapper.toJson(it)
         }
+
+        if (pubnub.configuration.includeMessageType) queryParams[INCLUDE_MESSAGE_TYPE_QUERY_PARAM] =
+            pubnub.configuration.includeMessageType.toString()
+
+        if (pubnub.configuration.includeSpaceId) queryParams[INCLUDE_SPACE_ID_QUERY_PARAM] =
+            pubnub.configuration.includeSpaceId.toString()
 
         return pubnub.retrofitManager.subscribeService.subscribe(
             pubnub.configuration.subscribeKey,

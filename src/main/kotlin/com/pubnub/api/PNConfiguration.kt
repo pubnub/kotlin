@@ -216,6 +216,10 @@ open class PNConfiguration(
      */
     var includeRequestIdentifier = true
 
+    internal var includeMessageType: Boolean = false
+
+    internal var includeSpaceId: Boolean = false
+
     /**
      * Sets how many times to retry to reconnect before giving up.
      * Must be used in combination with [reconnectionPolicy].
