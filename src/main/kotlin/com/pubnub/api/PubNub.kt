@@ -62,6 +62,7 @@ import com.pubnub.api.managers.SubscriptionManager
 import com.pubnub.api.managers.TelemetryManager
 import com.pubnub.api.managers.TokenManager
 import com.pubnub.api.managers.TokenParser
+import com.pubnub.api.models.consumer.MessageType
 import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.access_manager.sum.SpacePermissions
 import com.pubnub.api.models.consumer.access_manager.sum.UserPermissions
@@ -191,7 +192,9 @@ class PubNub(val configuration: PNConfiguration) {
         shouldStore: Boolean? = null,
         usePost: Boolean = false,
         replicate: Boolean = true,
-        ttl: Int? = null
+        ttl: Int? = null,
+        spaceId: SpaceId? = null,
+        messageType: MessageType? = null
     ) = Publish(
         pubnub = this,
         channel = channel,
@@ -200,7 +203,9 @@ class PubNub(val configuration: PNConfiguration) {
         shouldStore = shouldStore,
         usePost = usePost,
         replicate = replicate,
-        ttl = ttl
+        ttl = ttl,
+        spaceId = spaceId,
+        messageType = messageType
     )
 
     /**

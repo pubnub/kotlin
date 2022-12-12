@@ -7,11 +7,13 @@ import com.pubnub.api.CommonUtils.generatePayloadJSON
 import com.pubnub.api.CommonUtils.randomChannel
 import com.pubnub.api.CommonUtils.retry
 import com.pubnub.api.PubNub
+import com.pubnub.api.SpaceId
 import com.pubnub.api.asyncRetry
 import com.pubnub.api.await
 import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.listen
+import com.pubnub.api.models.consumer.MessageType
 import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
@@ -36,6 +38,21 @@ class PublishIntegrationTests : BaseIntegrationTest() {
         pubnub.publish(
             channel = expectedChannel,
             message = generatePayload()
+        ).await { _, status ->
+            assertFalse(status.error)
+            assertEquals(status.uuid, pubnub.configuration.userId.value)
+        }
+    }
+
+    @Test
+    fun testPublishMessageWithSpaceIdAndMessageType() {
+        val expectedChannel = randomChannel()
+
+        pubnub.publish(
+            channel = expectedChannel,
+            message = generatePayload(),
+            spaceId = SpaceId("thisIsSpace"),
+            messageType = MessageType("thisIsMessageType")
         ).await { _, status ->
             assertFalse(status.error)
             assertEquals(status.uuid, pubnub.configuration.userId.value)
