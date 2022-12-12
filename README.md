@@ -19,7 +19,7 @@ You will need the publish and subscribe keys to authenticate your app. Get your 
      ```xml
      <dependency>
         <groupId>com.pubnub</groupId>
-        <artifactId>pubnub-gson</artifactId>
+        <artifactId>pubnub-kotlin</artifactId>
         <version>7.4.0</version>
      </dependency>
      ```
