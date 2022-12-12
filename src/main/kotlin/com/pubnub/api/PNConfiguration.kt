@@ -323,6 +323,7 @@ open class PNConfiguration(
         return "PubNub-Kotlin/$version" + if (joinedSuffixes.isNotBlank()) " $joinedSuffixes" else ""
     }
 
+    @Suppress("DeprecatedCallableAddReplaceWith")
     @Deprecated("To be used by components", level = DeprecationLevel.WARNING)
     fun addPnsdkSuffix(vararg nameToSuffixes: Pair<String, String>) {
         @Suppress("DEPRECATION")
