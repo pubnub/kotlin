@@ -7,6 +7,12 @@ import com.pubnub.api.PNConfiguration.Companion.isValid
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubUtil
 import com.pubnub.api.managers.DuplicationManager
+import com.pubnub.api.models.consumer.File
+import com.pubnub.api.models.consumer.Message
+import com.pubnub.api.models.consumer.MessageAction
+import com.pubnub.api.models.consumer.MessageType
+import com.pubnub.api.models.consumer.Object
+import com.pubnub.api.models.consumer.Signal
 import com.pubnub.api.models.consumer.files.PNDownloadableFile
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 import com.pubnub.api.models.consumer.pubsub.BasePubSubResult
@@ -100,20 +106,20 @@ internal class SubscribeMessageProcessor(
                 publisher = message.issuingClientId
             )
 
-            return when (message.type) {
-                null -> {
-                    PNMessageResult(result, extractedMessage!!)
+            return when (MessageType.of(message.type)) {
+                is Message -> {
+                    PNMessageResult(
+                        basePubSubResult = result,
+                        message = extractedMessage!!,
+                        spaceId = message.spaceId,
+                        messageType = message.messageType?.let { MessageType(it) }
+                    )
                 }
-
-                TYPE_MESSAGE -> {
-                    PNMessageResult(result, extractedMessage!!)
-                }
-
-                TYPE_SIGNAL -> {
+                is Signal -> {
                     PNSignalResult(result, extractedMessage!!)
                 }
 
-                TYPE_OBJECT -> {
+                is Object -> {
                     PNObjectEventResult(
                         result,
                         pubnub.mapper.convertValue(
@@ -122,7 +128,7 @@ internal class SubscribeMessageProcessor(
                     )
                 }
 
-                TYPE_MESSAGE_ACTION -> {
+                is MessageAction -> {
                     val objectPayload = pubnub.mapper.convertValue(extractedMessage, ObjectPayload::class.java)
                     val data = objectPayload.data.asJsonObject
                     if (!data.has("uuid")) {
@@ -135,7 +141,7 @@ internal class SubscribeMessageProcessor(
                     )
                 }
 
-                TYPE_FILES -> {
+                is File -> {
                     val fileUploadNotification = pubnub.mapper.convertValue(
                         extractedMessage, FileUploadNotification::class.java
                     )

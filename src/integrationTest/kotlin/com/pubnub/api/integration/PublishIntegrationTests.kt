@@ -20,14 +20,18 @@ import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.subscribeToBlocking
 import org.awaitility.Awaitility
 import org.awaitility.Durations
+import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.core.IsEqual
 import org.json.JSONArray
 import org.json.JSONObject
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Test
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
+import org.hamcrest.core.Is.`is` as iz
 
 class PublishIntegrationTests : BaseIntegrationTest() {
 
@@ -48,15 +52,35 @@ class PublishIntegrationTests : BaseIntegrationTest() {
     fun testPublishMessageWithSpaceIdAndMessageType() {
         val expectedChannel = randomChannel()
 
+        val messageFuture = CompletableFuture<PNMessageResult>()
+        val expectedSpaceId = SpaceId("thisIsSpace")
+        val expectedMessageType = MessageType("thisIsMessageType")
+
+        pubnub.addListener(object : SubscribeCallback() {
+            override fun status(pubnub: PubNub, pnStatus: PNStatus) {
+            }
+
+            override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {
+                messageFuture.complete(pnMessageResult)
+            }
+        })
+
+        pubnub.subscribe(channels = listOf(expectedChannel))
+
         pubnub.publish(
             channel = expectedChannel,
             message = generatePayload(),
-            spaceId = SpaceId("thisIsSpace"),
-            messageType = MessageType("thisIsMessageType")
+            spaceId = expectedSpaceId,
+            messageType = expectedMessageType
         ).await { _, status ->
             assertFalse(status.error)
             assertEquals(status.uuid, pubnub.configuration.userId.value)
         }
+
+        val message = messageFuture.get(2_000, TimeUnit.MILLISECONDS)
+
+        assertThat(message.spaceId, iz(expectedSpaceId))
+        assertThat(message.messageType, iz(expectedMessageType))
     }
 
     @Test
