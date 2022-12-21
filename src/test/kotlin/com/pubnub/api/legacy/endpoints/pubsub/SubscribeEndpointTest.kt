@@ -11,8 +11,10 @@ import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 import com.pubnub.api.CommonUtils.assertPnException
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
+import com.pubnub.api.SpaceId
 import com.pubnub.api.endpoints.pubsub.Subscribe
 import com.pubnub.api.legacy.BaseTest
+import com.pubnub.api.models.consumer.MessageType
 import com.pubnub.api.models.server.SubscribeMessage
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -556,5 +558,58 @@ class SubscribeEndpointTest : BaseTest() {
             """{"CH1":"this-is-channel1","CH2":"this-is-channel2"}""",
             request.queryParameter("state").firstValue()
         )
+    }
+
+    @Test
+    fun subscribeCanReturnMessageTypeAndSpaceId() {
+        val expectedMessageType = MessageType("thisIsCustomMessageType")
+        val expectedSpaceId = SpaceId("thisIsSpaceId")
+        stubFor(
+            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/coolChannel/0"))
+                .willReturn(
+                    aResponse().withBody(
+                        """
+                            {
+                              "t": {
+                                "t": "14607577960932487",
+                                "r": 1
+                              },
+                              "m": [
+                                {
+                                  "a": "4",
+                                  "f": 0,
+                                  "i": "Client-g5d4g",
+                                  "p": {
+                                    "t": "14607577960925503",
+                                    "r": 1
+                                  },
+                                  "k": "someSubKey",
+                                  "c": "coolChannel",
+                                  "d": {
+                                    "text": "Enter Message Here"
+                                  },
+                                  "b": "coolChan-bnel",
+                                  "e": 0,
+                                  "mt": "${expectedMessageType.type}",
+                                  "si": "${expectedSpaceId.value}"
+                                }
+                              ]
+                            }
+                        """.trimIndent()
+                    )
+                )
+        )
+
+        val subscribeEnvelope = Subscribe(pubnub).apply {
+            channels = listOf("coolChannel")
+        }.sync()!!
+
+        val requests = findAll(getRequestedFor(urlMatching("/.*")))
+        assertEquals(1, requests.size)
+        assertEquals(1, subscribeEnvelope.messages.size)
+
+        val subscribeMessage: SubscribeMessage = subscribeEnvelope.messages[0]
+        assertEquals(expectedMessageType, subscribeMessage.userMessageType)
+        assertEquals(expectedSpaceId, subscribeMessage.spaceId)
     }
 }

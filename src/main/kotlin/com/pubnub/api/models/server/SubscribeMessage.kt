@@ -7,7 +7,7 @@ import com.pubnub.api.models.consumer.File
 import com.pubnub.api.models.consumer.Message
 import com.pubnub.api.models.consumer.MessageType
 
-class SubscribeMessage(
+data class SubscribeMessage(
     @SerializedName("a")
     internal val shard: String?,
 
