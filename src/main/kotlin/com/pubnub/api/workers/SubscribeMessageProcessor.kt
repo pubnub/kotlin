@@ -10,7 +10,6 @@ import com.pubnub.api.managers.DuplicationManager
 import com.pubnub.api.models.consumer.File
 import com.pubnub.api.models.consumer.Message
 import com.pubnub.api.models.consumer.MessageAction
-import com.pubnub.api.models.consumer.MessageType
 import com.pubnub.api.models.consumer.Object
 import com.pubnub.api.models.consumer.Signal
 import com.pubnub.api.models.consumer.files.PNDownloadableFile
@@ -38,14 +37,6 @@ internal class SubscribeMessageProcessor(
 ) {
 
     private val log = LoggerFactory.getLogger("SubscribeMessageProcessor")
-
-    companion object {
-        internal const val TYPE_MESSAGE = 0
-        internal const val TYPE_SIGNAL = 1
-        internal const val TYPE_OBJECT = 2
-        internal const val TYPE_MESSAGE_ACTION = 3
-        internal const val TYPE_FILES = 4
-    }
 
     fun processIncomingPayload(message: SubscribeMessage): PNEvent? {
         if (message.channel == null) {
@@ -106,13 +97,13 @@ internal class SubscribeMessageProcessor(
                 publisher = message.issuingClientId
             )
 
-            return when (MessageType.of(message.type)) {
+            return when (message.internalMessageType) {
                 is Message -> {
                     PNMessageResult(
                         basePubSubResult = result,
                         message = extractedMessage!!,
                         spaceId = message.spaceId,
-                        messageType = message.messageType?.let { MessageType(it) }
+                        messageType = message.userMessageType
                     )
                 }
                 is Signal -> {

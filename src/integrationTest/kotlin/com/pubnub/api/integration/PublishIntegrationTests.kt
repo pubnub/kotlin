@@ -26,8 +26,10 @@ import org.json.JSONArray
 import org.json.JSONObject
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.util.concurrent.CompletableFuture
+import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
@@ -53,11 +55,14 @@ class PublishIntegrationTests : BaseIntegrationTest() {
         val expectedChannel = randomChannel()
 
         val messageFuture = CompletableFuture<PNMessageResult>()
+        val connected = CountDownLatch(1)
         val expectedSpaceId = SpaceId("thisIsSpace")
         val expectedMessageType = MessageType("thisIsMessageType")
 
         pubnub.addListener(object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
+                println(pnStatus)
+                connected.countDown()
             }
 
             override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {
@@ -66,6 +71,8 @@ class PublishIntegrationTests : BaseIntegrationTest() {
         })
 
         pubnub.subscribe(channels = listOf(expectedChannel))
+
+        assertTrue(connected.await(1_000, TimeUnit.MILLISECONDS))
 
         pubnub.publish(
             channel = expectedChannel,

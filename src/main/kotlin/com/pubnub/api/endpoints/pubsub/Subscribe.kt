@@ -58,11 +58,8 @@ class Subscribe internal constructor(pubnub: PubNub) : Endpoint<SubscribeEnvelop
             queryParams["state"] = pubnub.mapper.toJson(it)
         }
 
-        if (pubnub.configuration.includeMessageType) queryParams[INCLUDE_MESSAGE_TYPE_QUERY_PARAM] =
-            pubnub.configuration.includeMessageType.toString()
-
-        if (pubnub.configuration.includeSpaceId) queryParams[INCLUDE_SPACE_ID_QUERY_PARAM] =
-            pubnub.configuration.includeSpaceId.toString()
+        queryParams[INCLUDE_MESSAGE_TYPE_QUERY_PARAM] = pubnub.configuration.includeMessageType.toString()
+        queryParams[INCLUDE_SPACE_ID_QUERY_PARAM] = pubnub.configuration.includeSpaceId.toString()
 
         return pubnub.retrofitManager.subscribeService.subscribe(
             pubnub.configuration.subscribeKey,
