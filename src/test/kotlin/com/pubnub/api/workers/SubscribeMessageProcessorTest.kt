@@ -19,7 +19,7 @@ import org.hamcrest.core.Is.`is` as iz
 class SubscribeMessageProcessorTest {
 
     @Test
-    fun somethingSomethingContainsSpaceId() {
+    fun pnMessageResultWillContainSpaceIdIfItsSetInSubscribeMessage() {
         val expectedSpaceId = SpaceId("spaceId")
         val subscribeMessage = subscribeMessage().copy(
             stringSpaceId = expectedSpaceId.value
@@ -31,7 +31,7 @@ class SubscribeMessageProcessorTest {
     }
 
     @Test
-    fun somethingSomethingContainsMessageType() {
+    fun pnMessageResultWillContainMessageTypeIfItsSetInSubscribeMessage() {
         val expectedMessageType = MessageType("messageType")
         val subscribeMessage = subscribeMessage().copy(
             userStringMessageType = expectedMessageType.type
@@ -43,7 +43,7 @@ class SubscribeMessageProcessorTest {
     }
 
     @Test
-    fun somethingMessageTypeIsNotSet() {
+    fun pnMessageResultWillNotContainMessageTypeIfItsNotSetInSubscribeMessage() {
         val expectedMessageType = MessageType("messageType")
         val subscribeMessage = subscribeMessage().copy(
             type = 0,
