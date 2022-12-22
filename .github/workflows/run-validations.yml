@@ -44,6 +44,4 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
       - name: Validate clean build
-        if: ${{ github.event_name != 'pull_request' && github.ref == 'refs/heads/master' }}
-        run: |
-          ./gradlew build
+        run: ./gradlew build
