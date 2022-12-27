@@ -11,6 +11,13 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+      - name: Checkout actions
+        uses: actions/checkout@v3
+        with:
+          repository: pubnub/client-engineering-deployment-tools
+          ref: v1
+          token: ${{ secrets.GH_TOKEN }}
+          path: .github/.release/actions
       - name: Cache
         uses: actions/cache@v3
         with:
@@ -23,9 +30,20 @@ jobs:
       - name: Build and run tests
         run: |
           ./gradlew check
+      - name: Cancel workflow runs for commit on error
+        if: failure()
+        uses: ./.github/.release/actions/actions/utils/fast-jobs-failure
   build:
     name: Acceptance tests
     runs-on: ubuntu-latest
+    env:
+      pubKey: somePubKey
+      subKey: someSubKey
+      pamPubKey: somePamPubKey
+      pamSubKey: somePamSubKey
+      pamSecKey: someSecKey
+      serverHostPort: "localhost:8090"
+      serverMock: true
     steps:
       - name: Checkout project
         uses: actions/checkout@v3
@@ -35,9 +53,9 @@ jobs:
           repository: pubnub/client-engineering-deployment-tools
           ref: v1
           token: ${{ secrets.GH_TOKEN }}
-          path: client-engineering-deployment-tools
+          path: .github/.release/actions
       - name: Run mock server action
-        uses: ./client-engineering-deployment-tools/actions/mock-server
+        uses: ./.github/.release/actions/actions/mock-server
         with:
           token: ${{ secrets.GH_TOKEN }}
       - name: Cache
@@ -51,27 +69,11 @@ jobs:
             ${{ runner.os }}-gradle-
       - name: Run acceptance tests (optional)
         run: |
-          export pubKey=somePubKey
-          export subKey=someSubKey
-          export pamPubKey=somePamPubKey
-          export pamSubKey=somePamSubKey
-          export pamSecKey=someSecKey
-          export serverHostPort=localhost:8090
-          export serverMock=true
           ln -s /home/runner/work/kotlin/kotlin/sdk-specifications src/test/resources/sdk-specifications
           ./gradlew cucumber --tests RunBetaCucumberTest -Dcucumber.features="sdk-specifications/features/" -i
         continue-on-error: true
       - name: Run acceptance tests (required)
-        run: |
-          export pubKey=somePubKey
-          export subKey=someSubKey
-          export pamPubKey=somePamPubKey
-          export pamSubKey=somePamSubKey
-          export pamSecKey=someSecKey
-          export serverHostPort=localhost:8090
-          export serverMock=true
-          ln -s /home/runner/work/kotlin/kotlin/sdk-specifications src/test/resources/sdk-specifications
-          ./gradlew cucumber --tests RunMainCucumberTest -Dcucumber.features="sdk-specifications/features/" -i
+        run: ./gradlew cucumber --tests RunMainCucumberTest -Dcucumber.features="sdk-specifications/features/" -i
       - name: Expose acceptance tests reports
         uses: actions/upload-artifact@v3
         if: always()
@@ -79,3 +81,6 @@ jobs:
           name: acceptance-test-reports
           path: ./build/reports/cucumber-reports
           retention-days: 7
+      - name: Cancel workflow runs for commit on error
+        if: failure()
+        uses: ./.github/.release/actions/actions/utils/fast-jobs-failure
