@@ -11,6 +11,13 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+      - name: Checkout actions
+        uses: actions/checkout@v3
+        with:
+          repository: pubnub/client-engineering-deployment-tools
+          ref: v1
+          token: ${{ secrets.GH_TOKEN }}
+          path: .github/.release/actions
       - name: Cache
         uses: actions/cache@v3
         with:
@@ -23,7 +30,10 @@ jobs:
       - name: Build and run tests
         run: |
           ./gradlew check
-  build:
+      - name: Cancel workflow runs for commit on error
+        if: failure()
+        uses: ./.github/.release/actions/actions/utils/fast-jobs-failure
+  acceptance-tests:
     name: Acceptance tests
     runs-on: ubuntu-latest
     steps:
@@ -35,9 +45,9 @@ jobs:
           repository: pubnub/client-engineering-deployment-tools
           ref: v1
           token: ${{ secrets.GH_TOKEN }}
-          path: client-engineering-deployment-tools
+          path: .github/.release/actions
       - name: Run mock server action
-        uses: ./client-engineering-deployment-tools/actions/mock-server
+        uses: ./.github/.release/actions/actions/mock-server
         with:
           token: ${{ secrets.GH_TOKEN }}
       - name: Cache
@@ -79,3 +89,13 @@ jobs:
           name: acceptance-test-reports
           path: ./build/reports/cucumber-reports
           retention-days: 7
+      - name: Cancel workflow runs for commit on error
+        if: failure()
+        uses: ./.github/.release/actions/actions/utils/fast-jobs-failure
+  all-tests:
+    name: Tests
+    runs-on: ubuntu-latest
+    needs: [tests, acceptance-tests]
+    steps:
+      - name: Tests summary
+        run: echo -e "\033[38;2;95;215;0m\033[1mAll tests successfully passed"
