@@ -36,6 +36,14 @@ jobs:
   acceptance-tests:
     name: Acceptance tests
     runs-on: ubuntu-latest
+    env:
+      pubKey: somePubKey
+      subKey: someSubKey
+      pamPubKey: somePamPubKey
+      pamSubKey: somePamSubKey
+      pamSecKey: someSecKey
+      serverHostPort: "localhost:8090"
+      serverMock: true
     steps:
       - name: Checkout project
         uses: actions/checkout@v3
@@ -61,27 +69,11 @@ jobs:
             ${{ runner.os }}-gradle-
       - name: Run acceptance tests (optional)
         run: |
-          export pubKey=somePubKey
-          export subKey=someSubKey
-          export pamPubKey=somePamPubKey
-          export pamSubKey=somePamSubKey
-          export pamSecKey=someSecKey
-          export serverHostPort=localhost:8090
-          export serverMock=true
           ln -s /home/runner/work/kotlin/kotlin/sdk-specifications src/test/resources/sdk-specifications
           ./gradlew cucumber --tests RunBetaCucumberTest -Dcucumber.features="sdk-specifications/features/" -i
         continue-on-error: true
       - name: Run acceptance tests (required)
-        run: |
-          export pubKey=somePubKey
-          export subKey=someSubKey
-          export pamPubKey=somePamPubKey
-          export pamSubKey=somePamSubKey
-          export pamSecKey=someSecKey
-          export serverHostPort=localhost:8090
-          export serverMock=true
-          ln -s /home/runner/work/kotlin/kotlin/sdk-specifications src/test/resources/sdk-specifications
-          ./gradlew cucumber --tests RunMainCucumberTest -Dcucumber.features="sdk-specifications/features/" -i
+        run: ./gradlew cucumber --tests RunMainCucumberTest -Dcucumber.features="sdk-specifications/features/" -i
       - name: Expose acceptance tests reports
         uses: actions/upload-artifact@v3
         if: always()
