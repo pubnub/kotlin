@@ -2,11 +2,12 @@ package com.pubnub.api.models.consumer
 
 import com.pubnub.api.PubNubException
 
+fun MessageType(value: String): MessageType {
+    return UserDefined(value)
+}
+
 sealed interface MessageType {
     companion object {
-        operator fun invoke(value: String): MessageType {
-            return UserDefined(value)
-        }
         internal fun of(value: Int?): MessageType = when (value) {
             null, 0 -> Message()
             1 -> Signal()
