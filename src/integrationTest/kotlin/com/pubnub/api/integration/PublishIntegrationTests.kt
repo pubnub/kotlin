@@ -84,7 +84,7 @@ class PublishIntegrationTests : BaseIntegrationTest() {
             assertEquals(status.uuid, pubnub.configuration.userId.value)
         }
 
-        val message = messageFuture.get(2_000, TimeUnit.MILLISECONDS)
+        val message = messageFuture.get(1_000, TimeUnit.MILLISECONDS)
 
         assertThat(message.spaceId, iz(expectedSpaceId))
         assertThat(message.messageType, iz(expectedMessageType))
