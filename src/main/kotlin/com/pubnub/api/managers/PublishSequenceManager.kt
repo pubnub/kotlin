@@ -1,17 +1,16 @@
 package com.pubnub.api.managers
 
+import java.util.concurrent.atomic.AtomicInteger
+
 internal class PublishSequenceManager(private val maxSequence: Int) {
 
-    private var nextSequence = 0
+    private val atomicSeq = AtomicInteger(1)
 
-    internal fun nextSequence(): Int {
-        synchronized(nextSequence) {
-            if (maxSequence == nextSequence) {
-                nextSequence = 1
-            } else {
-                nextSequence++
-            }
-            return nextSequence
+    internal fun nextSequence(): Int = atomicSeq.getAndUpdate {
+        if (maxSequence == it) {
+            1
+        } else {
+            it + 1
         }
     }
 }
