@@ -534,7 +534,6 @@ class HistoryIntegrationTest : BaseIntegrationTest() {
             assertEquals("15", status.param("max"))
         }
     }
-
     @Test
     fun testEmptyMeta() {
         val expectedChannel = randomChannel()

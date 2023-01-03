@@ -7,6 +7,11 @@ import com.pubnub.api.PNConfiguration.Companion.isValid
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubUtil
 import com.pubnub.api.managers.DuplicationManager
+import com.pubnub.api.models.consumer.File
+import com.pubnub.api.models.consumer.Message
+import com.pubnub.api.models.consumer.MessageAction
+import com.pubnub.api.models.consumer.Object
+import com.pubnub.api.models.consumer.Signal
 import com.pubnub.api.models.consumer.files.PNDownloadableFile
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 import com.pubnub.api.models.consumer.pubsub.BasePubSubResult
@@ -31,15 +36,12 @@ internal class SubscribeMessageProcessor(
     private val duplicationManager: DuplicationManager
 ) {
 
-    private val log = LoggerFactory.getLogger("SubscribeMessageProcessor")
-
     companion object {
-        internal const val TYPE_MESSAGE = 0
-        internal const val TYPE_SIGNAL = 1
-        internal const val TYPE_OBJECT = 2
-        internal const val TYPE_MESSAGE_ACTION = 3
-        internal const val TYPE_FILES = 4
+        private const val PRESENCE_SUFFIX = "-pnpres"
+        private const val PN_OTHER_FIELD = "pn_other"
     }
+
+    private val log = LoggerFactory.getLogger("SubscribeMessageProcessor")
 
     fun processIncomingPayload(message: SubscribeMessage): PNEvent? {
         if (message.channel == null) {
@@ -62,11 +64,11 @@ internal class SubscribeMessageProcessor(
             }
         }
 
-        if (message.channel.endsWith("-pnpres")) {
+        if (message.channel.endsWith(PRESENCE_SUFFIX)) {
             val presencePayload = pubnub.mapper.convertValue(message.payload, PresenceEnvelope::class.java)
-            val strippedPresenceChannel = PubNubUtil.replaceLast(channel, "-pnpres", "")
+            val strippedPresenceChannel = PubNubUtil.replaceLast(channel, PRESENCE_SUFFIX, "")
             val strippedPresenceSubscription = subscriptionMatch?.let {
-                PubNubUtil.replaceLast(it, "-pnpres", "")
+                PubNubUtil.replaceLast(it, PRESENCE_SUFFIX, "")
             }
 
             val isHereNowRefresh = message.payload?.asJsonObject?.get("here_now_refresh")
@@ -100,20 +102,20 @@ internal class SubscribeMessageProcessor(
                 publisher = message.issuingClientId
             )
 
-            return when (message.type) {
-                null -> {
-                    PNMessageResult(result, extractedMessage!!)
+            return when (message.pnMessageType) {
+                is Message -> {
+                    PNMessageResult(
+                        basePubSubResult = result,
+                        message = extractedMessage!!,
+                        spaceId = message.spaceId,
+                        messageType = message.userMessageType
+                    )
                 }
-
-                TYPE_MESSAGE -> {
-                    PNMessageResult(result, extractedMessage!!)
-                }
-
-                TYPE_SIGNAL -> {
+                is Signal -> {
                     PNSignalResult(result, extractedMessage!!)
                 }
 
-                TYPE_OBJECT -> {
+                is Object -> {
                     PNObjectEventResult(
                         result,
                         pubnub.mapper.convertValue(
@@ -122,7 +124,7 @@ internal class SubscribeMessageProcessor(
                     )
                 }
 
-                TYPE_MESSAGE_ACTION -> {
+                is MessageAction -> {
                     val objectPayload = pubnub.mapper.convertValue(extractedMessage, ObjectPayload::class.java)
                     val data = objectPayload.data.asJsonObject
                     if (!data.has("uuid")) {
@@ -135,7 +137,7 @@ internal class SubscribeMessageProcessor(
                     )
                 }
 
-                TYPE_FILES -> {
+                is File -> {
                     val fileUploadNotification = pubnub.mapper.convertValue(
                         extractedMessage, FileUploadNotification::class.java
                     )
@@ -219,8 +221,8 @@ internal class SubscribeMessageProcessor(
             pubnub.configuration.cipherKey, pubnub.configuration.useRandomInitializationVector
         )
 
-        val inputText = if (pubnub.mapper.isJsonObject(input!!) && pubnub.mapper.hasField(input, "pn_other")) {
-            pubnub.mapper.elementToString(input, "pn_other")
+        val inputText = if (pubnub.mapper.isJsonObject(input!!) && pubnub.mapper.hasField(input, PN_OTHER_FIELD)) {
+            pubnub.mapper.elementToString(input, PN_OTHER_FIELD)
         } else {
             pubnub.mapper.elementToString(input)
         }
@@ -228,9 +230,9 @@ internal class SubscribeMessageProcessor(
         val outputText = crypto.decrypt(inputText!!)
         var outputObject = pubnub.mapper.fromJson(outputText, JsonElement::class.java)
 
-        if (pubnub.mapper.isJsonObject(input) && pubnub.mapper.hasField(input, "pn_other")) {
+        if (pubnub.mapper.isJsonObject(input) && pubnub.mapper.hasField(input, PN_OTHER_FIELD)) {
             val objectNode = pubnub.mapper.getAsObject(input)
-            pubnub.mapper.putOnObject(objectNode, "pn_other", outputObject)
+            pubnub.mapper.putOnObject(objectNode, PN_OTHER_FIELD, outputObject)
             outputObject = objectNode
         }
 

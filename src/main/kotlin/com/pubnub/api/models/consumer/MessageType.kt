@@ -2,11 +2,12 @@ package com.pubnub.api.models.consumer
 
 import com.pubnub.api.PubNubException
 
+fun MessageType(value: String): MessageType {
+    return UserDefined(value)
+}
+
 sealed interface MessageType {
     companion object {
-        operator fun invoke(value: String): MessageType {
-            return UserDefined(value)
-        }
         internal fun of(value: Int?): MessageType = when (value) {
             null, 0 -> Message()
             1 -> Signal()
@@ -17,14 +18,14 @@ sealed interface MessageType {
         }
     }
 
-    val type: String
+    val value: String
 }
 
-data class UserDefined internal constructor(override val type: String) : MessageType
+data class UserDefined internal constructor(override val value: String) : MessageType
 
-sealed interface PubNubMessageType : MessageType
-data class Message internal constructor(override val type: String = "message") : PubNubMessageType
-data class Signal internal constructor(override val type: String = "signal") : PubNubMessageType
-data class File internal constructor(override val type: String = "file") : PubNubMessageType
-data class Object internal constructor(override val type: String = "object") : PubNubMessageType
-data class MessageAction internal constructor(override val type: String = "messageAction") : PubNubMessageType
+sealed interface PNMessageType : MessageType
+data class Message internal constructor(override val value: String = "message") : PNMessageType
+data class Signal internal constructor(override val value: String = "signal") : PNMessageType
+data class File internal constructor(override val value: String = "file") : PNMessageType
+data class Object internal constructor(override val value: String = "object") : PNMessageType
+data class MessageAction internal constructor(override val value: String = "messageAction") : PNMessageType

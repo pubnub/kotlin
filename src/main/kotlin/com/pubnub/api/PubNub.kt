@@ -184,6 +184,8 @@ class PubNub(val configuration: PNConfiguration) {
      *            - If `shouldStore = false`, the `ttl` parameter is ignored.
      *            - If ttl isn't specified, then expiration of the message defaults
      *              back to the expiry value for the key.
+     * @param spaceId ID of a space to which the message should be sent to.
+     * @param messageType The type associated with the message.
      */
     fun publish(
         channel: String,
