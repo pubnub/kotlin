@@ -34,7 +34,7 @@ class SubscribeMessageProcessorTest {
     fun pnMessageResultWillContainMessageTypeIfItsSetInSubscribeMessage() {
         val expectedMessageType = MessageType("messageType")
         val subscribeMessage = subscribeMessage().copy(
-            userStringMessageType = expectedMessageType.type
+            userMessageTypeString = expectedMessageType.value
         )
 
         val result = subscribeMessageProcessor().processIncomingPayload(subscribeMessage)
@@ -46,8 +46,8 @@ class SubscribeMessageProcessorTest {
     fun pnMessageResultWillNotContainMessageTypeIfItsNotSetInSubscribeMessage() {
         val expectedMessageType = MessageType("messageType")
         val subscribeMessage = subscribeMessage().copy(
-            type = 0,
-            userStringMessageType = null
+            pnMessageTypeInt = 0,
+            userMessageTypeString = null
         )
 
         val result = subscribeMessageProcessor().processIncomingPayload(subscribeMessage)
@@ -75,9 +75,9 @@ class SubscribeMessageProcessorTest {
         flags = "0",
         publishMetaData = PublishMetaData(16710463855524468, 21),
         channel = "testChannel",
-        userStringMessageType = null,
+        userMessageTypeString = null,
         stringSpaceId = null,
-        type = null,
+        pnMessageTypeInt = null,
         subscriptionMatch = null,
         issuingClientId = null,
         subscribeKey = "demo",

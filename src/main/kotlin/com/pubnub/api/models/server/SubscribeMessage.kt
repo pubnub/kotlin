@@ -39,23 +39,23 @@ data class SubscribeMessage(
     internal val userMetadata: JsonElement?,
 
     @SerializedName("e")
-    private val type: Int?,
+    private val pnMessageTypeInt: Int?,
 
     @SerializedName("mt")
-    private val userStringMessageType: String?,
+    private val userMessageTypeString: String?,
 
     @SerializedName("si")
     private val stringSpaceId: String?
 ) {
 
     internal val userMessageType: MessageType?
-        get() = userStringMessageType?.let { MessageType(it) }
+        get() = userMessageTypeString?.let { MessageType(it) }
 
-    internal val internalMessageType: MessageType
-        get() = MessageType.of(type)
+    internal val pnMessageType: MessageType
+        get() = MessageType.of(pnMessageTypeInt)
 
     internal val spaceId: SpaceId?
         get() = stringSpaceId?.let { SpaceId(it) }
 
-    fun supportsEncryption() = internalMessageType.let { it is Message || it is File }
+    fun supportsEncryption() = pnMessageType.let { it is Message || it is File }
 }

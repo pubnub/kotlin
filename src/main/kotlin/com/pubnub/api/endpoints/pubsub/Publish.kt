@@ -100,7 +100,7 @@ class Publish internal constructor(
 
         spaceId?.run { queryParams[SPACE_ID_QUERY_PARAM] = spaceId.value }
 
-        messageType?.run { queryParams[MESSAGE_TYPE_QUERY_PARAM] = messageType.type }
+        messageType?.run { queryParams[MESSAGE_TYPE_QUERY_PARAM] = messageType.value }
 
         queryParams["seqn"] = pubnub.publishSequenceManager.nextSequence().toString()
     }

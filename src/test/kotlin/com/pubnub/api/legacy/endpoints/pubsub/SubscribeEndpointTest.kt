@@ -590,7 +590,7 @@ class SubscribeEndpointTest : BaseTest() {
                                   },
                                   "b": "coolChan-bnel",
                                   "e": 0,
-                                  "mt": "${expectedMessageType.type}",
+                                  "mt": "${expectedMessageType.value}",
                                   "si": "${expectedSpaceId.value}"
                                 }
                               ]
