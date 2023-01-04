@@ -49,4 +49,15 @@ class KeysetStep(private val world: World) {
             publishKey = ContractTestConfig.pubKey
         }
     }
+
+    @Given("the demo keyset with enabled storage")
+    fun the_demo_keyset_with_enabled_storage() {
+        MatcherAssert.assertThat(ContractTestConfig.pubKey, Matchers.notNullValue())
+        MatcherAssert.assertThat(ContractTestConfig.subKey, Matchers.notNullValue())
+
+        world.configuration.apply {
+            subscribeKey = ContractTestConfig.subKey
+            publishKey = ContractTestConfig.pubKey
+        }
+    }
 }

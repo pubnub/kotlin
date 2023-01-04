@@ -64,11 +64,11 @@ class HereNow internal constructor(
 
         val pnHereNowChannelData = PNHereNowChannelData(
             channelName = channels[0],
-            occupancy = input.occupancy
+            occupancy = input.occupancy,
+            occupants = if (includeUUIDs) prepareOccupantData(input.uuids!!) else listOf()
         )
 
         if (includeUUIDs) {
-            pnHereNowChannelData.occupants = prepareOccupantData(input.uuids!!)
             pnHereNowResult.channels[channels[0]] = pnHereNowChannelData
         }
 
@@ -87,11 +87,9 @@ class HereNow internal constructor(
             val entry = it.next()
             val pnHereNowChannelData = PNHereNowChannelData(
                 channelName = entry.key,
-                occupancy = pubnub.mapper.elementToInt(entry.value, "occupancy")
+                occupancy = pubnub.mapper.elementToInt(entry.value, "occupancy"),
+                occupants = if (includeUUIDs) prepareOccupantData(pubnub.mapper.getField(entry.value, "uuids")!!) else listOf()
             )
-            if (includeUUIDs) {
-                pnHereNowChannelData.occupants = prepareOccupantData(pubnub.mapper.getField(entry.value, "uuids")!!)
-            }
             pnHereNowResult.channels[entry.key] = pnHereNowChannelData
         }
 

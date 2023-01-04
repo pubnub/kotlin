@@ -95,7 +95,8 @@ class FetchMessages internal constructor(
         val channelsMap = body.channels.mapValues { (_, value) ->
             value.map { serverMessageItem ->
                 val newMessage = serverMessageItem.message.processHistoryMessage(pubnub.configuration, pubnub.mapper)
-                val newActions = if (includeMessageActions) serverMessageItem.actions ?: mapOf() else serverMessageItem.actions
+                val newActions =
+                    if (includeMessageActions) serverMessageItem.actions ?: mapOf() else serverMessageItem.actions
                 val messageType = if (includeMessageType) {
                     serverMessageItem.userDefinedMessageType?.let { MessageType.UserDefined(it) }
                         ?: serverMessageItem.pnMessageType.let { HistoryMessageType.of(it) }
@@ -130,11 +131,10 @@ class FetchMessages internal constructor(
         page.start?.run { queryParams["start"] = this.toString().lowercase(Locale.US) }
         page.end?.run { queryParams["end"] = this.toString().lowercase(Locale.US) }
 
+        queryParams[INCLUDE_MESSAGE_TYPE_QUERY_PARAM] = includeMessageType.toString()
+        queryParams[INCLUDE_TYPE_QUERY_PARAM] = includeMessageType.toString()
+        queryParams[INCLUDE_SPACE_ID_QUERY_PARAM] = includeSpaceId.toString()
+
         if (includeMeta) queryParams["include_meta"] = "true"
-        if (includeMessageType) {
-            queryParams[INCLUDE_MESSAGE_TYPE_QUERY_PARAM] = "true"
-            queryParams[INCLUDE_TYPE_QUERY_PARAM] = "true"
-        }
-        if (includeSpaceId) queryParams[INCLUDE_SPACE_ID_QUERY_PARAM] = "true"
     }
 }

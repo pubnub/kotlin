@@ -24,7 +24,10 @@ class ThenSteps(private val world: World) {
         assertNull(world.pnException)
     }
 
-    @Then("I receive a successful response")
+    @Then.Thens(
+        Then("I receive a successful response"),
+        Then("I receive successful response"),
+    )
     fun i_receive_a_successful_response() {
         assertNull(world.pnException)
         assertEquals(200, world.responseStatus)
