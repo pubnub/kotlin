@@ -104,11 +104,17 @@ internal class SubscribeMessageProcessor(
                         basePubSubResult = result,
                         message = extractedMessage!!,
                         spaceId = message.spaceId,
-                        messageType = message.userMessageType
+                        messageType = message.userMessageType ?: message.pnMessageType
                     )
                 }
+
                 is MessageType.Signal -> {
-                    PNSignalResult(result, extractedMessage!!)
+                    PNSignalResult(
+                        basePubSubResult = result,
+                        message = extractedMessage!!,
+                        spaceId = message.spaceId,
+                        messageType = message.userMessageType ?: message.pnMessageType
+                    )
                 }
 
                 is MessageType.Object -> {

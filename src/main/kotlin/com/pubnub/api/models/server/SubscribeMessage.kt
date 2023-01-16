@@ -44,7 +44,7 @@ data class SubscribeMessage(
     private val userMessageTypeString: String?,
 
     @SerializedName("si")
-    private val stringSpaceId: String?
+    private val spaceIdString: String?
 ) {
 
     internal val userMessageType: MessageType?
@@ -54,7 +54,7 @@ data class SubscribeMessage(
         get() = MessageType.of(pnMessageTypeInt)
 
     internal val spaceId: SpaceId?
-        get() = stringSpaceId?.let { SpaceId(it) }
+        get() = spaceIdString?.let { SpaceId(it) }
 
     fun supportsEncryption() = pnMessageType.let { it is MessageType.Message || it is MessageType.File }
 }

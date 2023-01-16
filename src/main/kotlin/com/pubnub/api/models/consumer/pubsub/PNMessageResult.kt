@@ -11,6 +11,6 @@ import com.pubnub.api.models.consumer.MessageType
 data class PNMessageResult internal constructor(
     private val basePubSubResult: PubSubResult,
     override val message: JsonElement,
-    val spaceId: SpaceId?,
-    val messageType: MessageType?
+    override val spaceId: SpaceId?,
+    override val messageType: MessageType
 ) : MessageResult, PubSubResult by basePubSubResult
