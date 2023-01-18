@@ -7,11 +7,7 @@ import com.pubnub.api.PNConfiguration.Companion.isValid
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubUtil
 import com.pubnub.api.managers.DuplicationManager
-import com.pubnub.api.models.consumer.File
-import com.pubnub.api.models.consumer.Message
-import com.pubnub.api.models.consumer.MessageAction
-import com.pubnub.api.models.consumer.Object
-import com.pubnub.api.models.consumer.Signal
+import com.pubnub.api.models.consumer.MessageType
 import com.pubnub.api.models.consumer.files.PNDownloadableFile
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 import com.pubnub.api.models.consumer.pubsub.BasePubSubResult
@@ -103,7 +99,7 @@ internal class SubscribeMessageProcessor(
             )
 
             return when (message.pnMessageType) {
-                is Message -> {
+                is MessageType.Message -> {
                     PNMessageResult(
                         basePubSubResult = result,
                         message = extractedMessage!!,
@@ -111,11 +107,11 @@ internal class SubscribeMessageProcessor(
                         messageType = message.userMessageType
                     )
                 }
-                is Signal -> {
+                is MessageType.Signal -> {
                     PNSignalResult(result, extractedMessage!!)
                 }
 
-                is Object -> {
+                is MessageType.Object -> {
                     PNObjectEventResult(
                         result,
                         pubnub.mapper.convertValue(
@@ -124,7 +120,7 @@ internal class SubscribeMessageProcessor(
                     )
                 }
 
-                is MessageAction -> {
+                is MessageType.MessageAction -> {
                     val objectPayload = pubnub.mapper.convertValue(extractedMessage, ObjectPayload::class.java)
                     val data = objectPayload.data.asJsonObject
                     if (!data.has("uuid")) {
@@ -137,7 +133,7 @@ internal class SubscribeMessageProcessor(
                     )
                 }
 
-                is File -> {
+                is MessageType.File -> {
                     val fileUploadNotification = pubnub.mapper.convertValue(
                         extractedMessage, FileUploadNotification::class.java
                     )
@@ -157,8 +153,6 @@ internal class SubscribeMessageProcessor(
                             ?: JsonNull.INSTANCE
                     )
                 }
-
-                else -> null
             }
         }
     }

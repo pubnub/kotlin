@@ -3,9 +3,8 @@ package com.pubnub.api.models.server
 import com.google.gson.JsonElement
 import com.google.gson.annotations.SerializedName
 import com.pubnub.api.SpaceId
-import com.pubnub.api.models.consumer.File
-import com.pubnub.api.models.consumer.Message
 import com.pubnub.api.models.consumer.MessageType
+import com.pubnub.api.models.consumer.PNMessageType
 
 data class SubscribeMessage(
     @SerializedName("a")
@@ -51,11 +50,11 @@ data class SubscribeMessage(
     internal val userMessageType: MessageType?
         get() = userMessageTypeString?.let { MessageType(it) }
 
-    internal val pnMessageType: MessageType
+    internal val pnMessageType: PNMessageType
         get() = MessageType.of(pnMessageTypeInt)
 
     internal val spaceId: SpaceId?
         get() = stringSpaceId?.let { SpaceId(it) }
 
-    fun supportsEncryption() = pnMessageType.let { it is Message || it is File }
+    fun supportsEncryption() = pnMessageType.let { it is MessageType.Message || it is MessageType.File }
 }

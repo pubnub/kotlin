@@ -3,29 +3,54 @@ package com.pubnub.api.models.consumer
 import com.pubnub.api.PubNubException
 
 fun MessageType(value: String): MessageType {
-    return UserDefined(value)
+    return MessageType.UserDefined(value)
 }
 
 sealed interface MessageType {
     companion object {
-        internal fun of(value: Int?): MessageType = when (value) {
-            null, 0 -> Message()
-            1 -> Signal()
-            2 -> Object()
-            3 -> MessageAction()
-            4 -> File()
+        internal fun of(value: Int?): PNMessageType = when (value) {
+            null, 0 -> Message
+            1 -> Signal
+            2 -> Object
+            3 -> MessageAction
+            4 -> File
             else -> throw PubNubException("Unknown message type value $value")
         }
+    }
+
+    data class UserDefined internal constructor(override val value: String) : MessageType, HistoryMessageType
+
+    object Message : PNMessageType, HistoryMessageType {
+        override val value: String = "message"
+    }
+
+    object Signal : PNMessageType {
+        override val value: String = "signal"
+    }
+
+    object File : PNMessageType, HistoryMessageType {
+        override val value: String = "file"
+    }
+
+    object Object : PNMessageType {
+        override val value: String = "object"
+    }
+
+    object MessageAction : PNMessageType {
+        override val value: String = "messageAction"
     }
 
     val value: String
 }
 
-data class UserDefined internal constructor(override val value: String) : MessageType
+sealed interface HistoryMessageType : MessageType {
+    companion object {
+        internal fun of(value: Int?): HistoryMessageType = when (value) {
+            null, 0 -> MessageType.Message
+            4 -> MessageType.File
+            else -> throw PubNubException("Unknown message type value $value")
+        }
+    }
+}
 
 sealed interface PNMessageType : MessageType
-data class Message internal constructor(override val value: String = "message") : PNMessageType
-data class Signal internal constructor(override val value: String = "signal") : PNMessageType
-data class File internal constructor(override val value: String = "file") : PNMessageType
-data class Object internal constructor(override val value: String = "object") : PNMessageType
-data class MessageAction internal constructor(override val value: String = "messageAction") : PNMessageType
