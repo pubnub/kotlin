@@ -1,5 +1,6 @@
 package com.pubnub.api.legacy.endpoints.pubsub
 
+import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.client.WireMock.aResponse
 import com.github.tomakehurst.wiremock.client.WireMock.findAll
 import com.github.tomakehurst.wiremock.client.WireMock.get
@@ -10,16 +11,21 @@ import com.pubnub.api.CommonUtils.assertPnException
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
+import com.pubnub.api.SpaceId
 import com.pubnub.api.callbacks.SubscribeCallback
+import com.pubnub.api.endpoints.pubsub.Publish
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.listen
+import com.pubnub.api.models.consumer.MessageType
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
+import org.hamcrest.MatcherAssert
+import org.hamcrest.Matchers
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -29,10 +35,12 @@ import java.util.concurrent.atomic.AtomicBoolean
 
 class SignalTest : BaseTest() {
 
+    private val channel = "coolChannel"
+
     @Test
     fun testSignalGetSuccessSync() {
         stubFor(
-            get(urlMatching("/signal/myPublishKey/mySubscribeKey/0/coolChannel.*"))
+            get(urlMatching("/signal/myPublishKey/mySubscribeKey/0/$channel.*"))
                 .willReturn(
                     aResponse()
                         .withBody(
@@ -70,7 +78,7 @@ class SignalTest : BaseTest() {
     @Test
     fun testSignalGetSuccessAsync() {
         stubFor(
-            get(urlMatching("/signal/myPublishKey/mySubscribeKey/0/coolChannel.*"))
+            get(urlMatching("/signal/myPublishKey/mySubscribeKey/0/$channel.*"))
                 .willReturn(
                     aResponse()
                         .withBody(
@@ -175,7 +183,7 @@ class SignalTest : BaseTest() {
     @Test
     fun testSignalTelemetryParam() {
         stubFor(
-            get(urlMatching("/signal/myPublishKey/mySubscribeKey/0/coolChannel.*")).willReturn(
+            get(urlMatching("/signal/myPublishKey/mySubscribeKey/0/$channel.*")).willReturn(
                 aResponse().withBody(
                     """
                     [
@@ -203,5 +211,88 @@ class SignalTest : BaseTest() {
         assertEquals(1, requests.size)
         val request = requests[0]
         assertTrue(request.queryParameter("l_sig").isPresent)
+    }
+
+    @Test
+    fun testSpaceIdQueryParamIsPassed() {
+        val spaceIdValue = "thisIsSpaceId"
+
+        stubFor(
+            get(WireMock.urlPathEqualTo("/signal/myPublishKey/mySubscribeKey/0/$channel/0/%22hi%22"))
+                .willReturn(aResponse().withBody("""[1,"Sent","15883272000000000"]"""))
+        )
+
+        pubnub.signal(
+            channel = channel,
+            message = "hi",
+            spaceId = SpaceId(spaceIdValue)
+        ).sync()!!
+
+        val requests = findAll(getRequestedFor(urlMatching("/.*")))
+        assertEquals(1, requests.size)
+        MatcherAssert.assertThat(
+            requests[0].queryParams.map { (k, v) -> k to v.firstValue() }.toMap(),
+            Matchers.hasEntry(Publish.SPACE_ID_QUERY_PARAM, spaceIdValue)
+        )
+    }
+
+    @Test
+    fun testMissingSpaceIdQueryParamIsNotSet() {
+        stubFor(
+            get(WireMock.urlPathEqualTo("/signal/myPublishKey/mySubscribeKey/0/$channel/0/%22hi%22"))
+                .willReturn(aResponse().withBody("""[1,"Sent","15883272000000000"]"""))
+        )
+
+        pubnub.signal(
+            channel = channel,
+            message = "hi"
+        ).sync()!!
+
+        val requests = findAll(getRequestedFor(urlMatching("/.*")))
+        assertEquals(1, requests.size)
+        MatcherAssert.assertThat(requests[0].queryParams, Matchers.not(Matchers.hasKey(Publish.SPACE_ID_QUERY_PARAM)))
+    }
+
+    @Test
+    fun testMessageTypeQueryParamIsPassedInPublish() {
+        val messageTypeValue = "thisIsSpaceId"
+
+        stubFor(
+            get(WireMock.urlPathEqualTo("/signal/myPublishKey/mySubscribeKey/0/$channel/0/%22hi%22"))
+                .willReturn(aResponse().withBody("""[1,"Sent","15883272000000000"]"""))
+        )
+
+        pubnub.signal(
+            channel = channel,
+            message = "hi",
+            messageType = MessageType(messageTypeValue)
+        ).sync()!!
+
+        val requests = findAll(getRequestedFor(urlMatching("/.*")))
+        assertEquals(1, requests.size)
+        MatcherAssert.assertThat(
+            requests[0].queryParams.map { (k, v) -> k to v.firstValue() }.toMap(),
+            Matchers.hasEntry(Publish.MESSAGE_TYPE_QUERY_PARAM, messageTypeValue)
+        )
+    }
+
+    @Test
+    fun testMissingMessageTypeQueryParamIsNotSet() {
+        stubFor(
+            get(WireMock.urlPathEqualTo("/signal/myPublishKey/mySubscribeKey/0/$channel/0/%22hi%22"))
+                .willReturn(aResponse().withBody("""[1,"Sent","15883272000000000"]"""))
+        )
+
+        pubnub.signal(
+            channel = channel,
+            message = "hi"
+        ).sync()!!
+
+        val requests = findAll(getRequestedFor(urlMatching("/.*")))
+        assertEquals(1, requests.size)
+        MatcherAssert.assertThat(
+            requests[0].queryParams,
+            Matchers.not(Matchers.hasKey(Publish.MESSAGE_TYPE_QUERY_PARAM))
+        )
     }
 }

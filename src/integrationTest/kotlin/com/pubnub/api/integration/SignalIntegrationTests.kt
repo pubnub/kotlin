@@ -1,21 +1,30 @@
 package com.pubnub.api.integration
 
 import com.google.gson.Gson
+import com.pubnub.api.CommonUtils
 import com.pubnub.api.CommonUtils.assertPnException
 import com.pubnub.api.CommonUtils.randomChannel
 import com.pubnub.api.CommonUtils.randomValue
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubError
+import com.pubnub.api.SpaceId
 import com.pubnub.api.await
 import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.listen
+import com.pubnub.api.models.consumer.MessageType
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult
+import org.hamcrest.MatcherAssert
+import org.hamcrest.core.Is
+import org.junit.Assert
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
 import org.junit.Test
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 
 class SignalIntegrationTests : BaseIntegrationTest() {
@@ -98,5 +107,45 @@ class SignalIntegrationTests : BaseIntegrationTest() {
         } catch (e: Exception) {
             assertPnException(PubNubError.SUBSCRIBE_KEY_MISSING, e)
         }
+    }
+
+    @Test
+    fun testSignalWithSpaceIdAndMessageType() {
+        val expectedChannel = randomChannel()
+
+        val messageFuture = CompletableFuture<PNSignalResult>()
+        val connected = CountDownLatch(1)
+        val expectedSpaceId = SpaceId("thisIsSpace")
+        val expectedMessageType = MessageType("thisIsMessageType")
+
+        pubnub.addListener(object : SubscribeCallback() {
+            override fun status(pubnub: PubNub, pnStatus: PNStatus) {
+                println(pnStatus)
+                connected.countDown()
+            }
+
+            override fun signal(pubnub: PubNub, pnSignalResult: PNSignalResult) {
+                messageFuture.complete(pnSignalResult)
+            }
+        })
+
+        pubnub.subscribe(channels = listOf(expectedChannel))
+
+        Assert.assertTrue(connected.await(1_000, TimeUnit.MILLISECONDS))
+
+        pubnub.signal(
+            channel = expectedChannel,
+            message = CommonUtils.generatePayload(),
+            spaceId = expectedSpaceId,
+            messageType = expectedMessageType
+        ).await { _, status ->
+            assertFalse(status.error)
+            assertEquals(status.uuid, pubnub.configuration.userId.value)
+        }
+
+        val message = messageFuture.get(1_000, TimeUnit.MILLISECONDS)
+
+        MatcherAssert.assertThat(message.spaceId, Is.`is`(expectedSpaceId))
+        MatcherAssert.assertThat(message.messageType, Is.`is`(expectedMessageType))
     }
 }

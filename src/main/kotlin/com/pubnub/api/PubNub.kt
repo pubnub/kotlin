@@ -265,11 +265,15 @@ class PubNub(val configuration: PNConfiguration) {
      *
      * @param channel The channel which the signal will be sent to.
      * @param message The payload which will be serialized and sent.
+     * @param spaceId ID of a space to which the message should be sent to.
+     * @param messageType The type associated with the message.
      */
     fun signal(
         channel: String,
-        message: Any
-    ) = Signal(pubnub = this, channel = channel, message = message)
+        message: Any,
+        spaceId: SpaceId? = null,
+        messageType: MessageType? = null
+    ) = Signal(pubnub = this, channel = channel, message = message, spaceId = spaceId, messageType = messageType)
     //endregion
 
     //region Subscribe
