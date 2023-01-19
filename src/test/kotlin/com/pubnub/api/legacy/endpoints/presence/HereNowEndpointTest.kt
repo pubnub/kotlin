@@ -28,7 +28,7 @@ class HereNowEndpointTest : BaseTest() {
     @Test
     fun testMultipleChannelStateSync() {
         stubFor(
-            get(urlPathEqualTo("/v2/presence/sub_key/mySubscribeKey/channel/ch1,ch2")).willReturn(
+            get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch1,ch2")).willReturn(
                 aResponse().withBody(
                     """
                     {
@@ -105,7 +105,7 @@ class HereNowEndpointTest : BaseTest() {
     @Test
     fun testMultipleChannelSync() {
         stubFor(
-            get(urlPathEqualTo("/v2/presence/sub_key/mySubscribeKey/channel/ch1,ch2"))
+            get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch1,ch2"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -174,7 +174,7 @@ class HereNowEndpointTest : BaseTest() {
     @Test
     fun testMultipleChannelWithoutStateSync() {
         stubFor(
-            get(urlPathEqualTo("/v2/presence/sub_key/mySubscribeKey/channel/game1,game2"))
+            get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/game1,game2"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -221,7 +221,7 @@ class HereNowEndpointTest : BaseTest() {
     @Test
     fun testMultipleChannelWithoutStateUUIDsSync() {
         stubFor(
-            get(urlPathEqualTo("/v2/presence/sub_key/mySubscribeKey/channel/game1,game2"))
+            get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/game1,game2"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -265,7 +265,7 @@ class HereNowEndpointTest : BaseTest() {
     @Test
     fun testSingularChannelWithoutStateUUIDsSync() {
         stubFor(
-            get(urlPathEqualTo("/v2/presence/sub_key/mySubscribeKey/channel/game1"))
+            get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/game1"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -296,7 +296,7 @@ class HereNowEndpointTest : BaseTest() {
     @Test
     fun testSingularChannelWithoutStateSync() {
         stubFor(
-            get(urlPathEqualTo("/v2/presence/sub_key/mySubscribeKey/channel/game1"))
+            get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/game1"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -334,7 +334,7 @@ class HereNowEndpointTest : BaseTest() {
     @Test
     fun testSingularChannelSync() {
         stubFor(
-            get(urlPathEqualTo("/v2/presence/sub_key/mySubscribeKey/channel/game1"))
+            get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/game1"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -379,7 +379,7 @@ class HereNowEndpointTest : BaseTest() {
     @Test
     fun testSingularChannelAndGroupSync() {
         stubFor(
-            get(urlPathEqualTo("/v2/presence/sub_key/mySubscribeKey/channel/game1"))
+            get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/game1"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -410,7 +410,7 @@ class HereNowEndpointTest : BaseTest() {
     @Test
     fun testIsAuthRequiredSuccessSync() {
         stubFor(
-            get(urlPathEqualTo("/v2/presence/sub_key/mySubscribeKey/channel/ch1,ch2"))
+            get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch1,ch2"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -473,7 +473,7 @@ class HereNowEndpointTest : BaseTest() {
     @Test
     fun testOperationTypeSuccessAsync() {
         stubFor(
-            get(urlPathMatching("/v2/presence/sub_key/mySubscribeKey.*"))
+            get(urlPathMatching("/v2/presence/sub-key/mySubscribeKey.*"))
                 .willReturn(
                     aResponse().withBody(
                         """

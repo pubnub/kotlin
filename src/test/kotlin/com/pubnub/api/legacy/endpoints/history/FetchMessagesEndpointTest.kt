@@ -16,8 +16,6 @@ import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.contains
 import org.hamcrest.Matchers.equalTo
 import org.hamcrest.Matchers.hasEntry
-import org.hamcrest.Matchers.hasKey
-import org.hamcrest.Matchers.not
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -456,7 +454,10 @@ class FetchMessagesEndpointTest : BaseTest() {
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
         assertEquals(1, requests.size)
-        assertThat(requests[0].queryParams, not(hasKey(FetchMessages.INCLUDE_SPACE_ID_QUERY_PARAM)))
+        assertThat(
+            requests[0].queryParams.map { (k, v) -> k to v.firstValue() }.toMap(),
+            hasEntry(FetchMessages.INCLUDE_SPACE_ID_QUERY_PARAM, "false")
+        )
     }
 
     @Test
