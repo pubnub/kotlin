@@ -24,22 +24,22 @@ class HistorySteps(
             }
     }
 
-    @When("I fetch message history with 'includeMessageType` set to 'false' for {string} channel")
-    fun i_fetch_message_history_with_include_message_type_set_to_false_for_channel(channel: String) {
+    @When("I fetch message history with 'includeMessageType' set to {boolean} for {string} channel")
+    fun i_fetch_message_history_with_include_message_type_set_to_value_for_channel(value: Boolean, channel: String) {
         world.pubnub.fetchMessages(
             channels = listOf(channel),
-            includeMessageType = false
+            includeMessageType = value
         ).sync()?.also {
             historyState.fetchMessagesResult = it
             world.responseStatus = 200
         }
     }
 
-    @When("I fetch message history with 'includeSpaceId` set to 'true' for {string} channel")
-    fun i_fetch_message_history_with_include_space_id_set_to_true_for_vsp_channel_channel(channel: String) {
+    @When("I fetch message history with 'includeSpaceId' set to {boolean} for {string} channel")
+    fun i_fetch_message_history_with_include_space_id_set_to_value_for_channel(value: Boolean, channel: String) {
         world.pubnub.fetchMessages(
             channels = listOf(channel),
-            includeSpaceId = true
+            includeSpaceId = value
         ).sync()?.also {
             historyState.fetchMessagesResult = it
             world.responseStatus = 200
