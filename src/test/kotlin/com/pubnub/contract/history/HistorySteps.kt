@@ -6,7 +6,6 @@ import com.pubnub.contract.state.World
 import io.cucumber.java.en.Then
 import io.cucumber.java.en.When
 import org.hamcrest.MatcherAssert.assertThat
-import org.hamcrest.Matchers
 import org.hamcrest.Matchers.empty
 import org.hamcrest.Matchers.hasItems
 
@@ -57,15 +56,23 @@ class HistorySteps(
     @Then("history response contains messages with message types")
     fun history_response_contains_messages_with_message_types() {
         assertThat(
-            historyState.fetchMessagesResult?.allFetchMessageItems()?.map { it.messageType },
-            hasItems(Matchers.notNullValue())
+            historyState.fetchMessagesResult?.allFetchMessageItems()?.map { it.messageType }?.filter { it == null },
+            empty()
+        )
+    }
+
+    @Then("history response contains messages without space ids")
+    fun history_response_contains_messages_without_space_ids() {
+        assertThat(
+            historyState.fetchMessagesResult?.allFetchMessageItems()?.mapNotNull { it.spaceId },
+            empty()
         )
     }
 
     @Then("history response contains messages with space ids")
     fun history_response_contains_messages_with_space_ids() {
         assertThat(
-            historyState.fetchMessagesResult?.allFetchMessageItems()?.mapNotNull { it.spaceId },
+            historyState.fetchMessagesResult?.allFetchMessageItems()?.map { it.spaceId }?.filter { it == null },
             empty()
         )
     }
@@ -75,14 +82,6 @@ class HistorySteps(
         assertThat(
             historyState.fetchMessagesResult?.allFetchMessageItems()?.map { it.messageType?.value },
             hasItems(firstMessageType, secondMessageType)
-        )
-    }
-
-    @Then("history response contains messages without space ids")
-    fun history_response_contains_messages_without_space_ids() {
-        assertThat(
-            historyState.fetchMessagesResult?.allFetchMessageItems()?.mapNotNull { it.spaceId },
-            empty()
         )
     }
 
