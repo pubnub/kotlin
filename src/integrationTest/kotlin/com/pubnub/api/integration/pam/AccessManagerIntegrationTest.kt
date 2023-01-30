@@ -44,20 +44,17 @@ abstract class AccessManagerIntegrationTest() : BaseIntegrationTest() {
     }
 
     lateinit var expectedChannel: String
-    lateinit var expectedAuthKey: String
+    private val expectedAuthKey: String = "auth_${randomValue()}_${unicode()}".lowercase(Locale.getDefault())
     open val pubnubToTest: PubNub = pubnub
 
     override fun onPrePubnub() {
         expectedChannel = randomChannel()
-        expectedAuthKey = "auth_${randomValue()}_${unicode()}".lowercase(Locale.getDefault())
 
         logger.info("Level: ${getPamLevel()}")
         if (::expectedChannel.isInitialized) {
             logger.info("Channel: $expectedChannel")
         }
-        if (::expectedAuthKey.isInitialized) {
-            logger.info("AuthKey: $expectedAuthKey")
-        }
+        logger.info("AuthKey: $expectedAuthKey")
     }
 
     override fun onBefore() {
@@ -625,6 +622,7 @@ abstract class AccessManagerIntegrationTest() : BaseIntegrationTest() {
                     authKeys = listOf(expectedAuthKey)
                     channels = (listOf(expectedChannel, "$expectedChannel-pnpres"))
                 }
+
                 LEVEL_CHANNEL -> {
                     channels = (listOf(expectedChannel, "$expectedChannel-pnpres"))
                 }

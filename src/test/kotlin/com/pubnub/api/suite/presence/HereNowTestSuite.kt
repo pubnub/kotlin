@@ -51,7 +51,7 @@ class HereNowTestSuite : EndpointTestSuite<HereNow, PNHereNowResult>() {
     )
 
     override fun mappingBuilder() =
-        get(urlPathEqualTo("/v2/presence/sub_key/mySubscribeKey/channel/ch1"))
+        get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch1"))
             .withQueryParam("state", absent())
             .withQueryParam("disable_uuids", absent())
             .withQueryParam("channel-group", absent())

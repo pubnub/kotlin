@@ -31,14 +31,14 @@ internal interface PresenceService {
         @QueryMap options: Map<String, String>
     ): Call<Envelope<WhereNowPayload>>
 
-    @GET("v2/presence/sub_key/{subKey}/channel/{channel}")
+    @GET("v2/presence/sub-key/{subKey}/channel/{channel}")
     fun hereNow(
         @Path("subKey") subKey: String,
         @Path("channel") channel: String,
         @QueryMap options: Map<String, String>
     ): Call<Envelope<JsonElement>>
 
-    @GET("v2/presence/sub_key/{subKey}")
+    @GET("v2/presence/sub-key/{subKey}")
     fun globalHereNow(
         @Path("subKey") subKey: String,
         @QueryMap options: Map<String, String>

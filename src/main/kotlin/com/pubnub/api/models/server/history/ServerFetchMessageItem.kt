@@ -14,5 +14,6 @@ data class ServerFetchMessageItem(
     val pnMessageType: Int? = null,
     @SerializedName("type")
     val userDefinedMessageType: String? = null,
+    @SerializedName("space_id")
     val spaceId: String? = null,
 )

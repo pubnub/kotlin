@@ -24,10 +24,10 @@ class PNHereNowResult internal constructor(
  * @property occupancy Total number of UUIDs currently in the channel.
  * @property occupants List of [PNHereNowOccupantData] (users) currently in the channel.
  */
-class PNHereNowChannelData internal constructor(
+data class PNHereNowChannelData internal constructor(
     val channelName: String,
     val occupancy: Int,
-    var occupants: List<PNHereNowOccupantData> = emptyList()
+    val occupants: List<PNHereNowOccupantData> = emptyList()
 )
 
 /**
