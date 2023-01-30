@@ -1,4 +1,4 @@
-package com.pubnub.contract.publish.step
+package com.pubnub.contract.signal
 
 import com.pubnub.api.PubNubException
 import com.pubnub.api.SpaceId
@@ -6,14 +6,11 @@ import com.pubnub.api.models.consumer.MessageType
 import com.pubnub.contract.state.World
 import io.cucumber.java.en.When
 
-class WhenSteps(
-    private val world: World,
-) {
-
-    @When("I publish message with {spaceId} space id and {string} message type")
-    fun i_publish_message_with_space_id_and_message_type(spaceId: SpaceId, messageType: String) {
+class SignalSteps(private val world: World) {
+    @When("I send a signal with {spaceId} space id and {string} message type")
+    fun i_send_a_signal_with_space_id_and_message_type(spaceId: SpaceId, messageType: String) {
         try {
-            world.pubnub.publish(
+            world.pubnub.signal(
                 channel = "whatever",
                 message = "whatever",
                 spaceId = spaceId,

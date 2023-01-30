@@ -13,7 +13,8 @@ class ThenSteps(private val world: World) {
     @Then.Thens(
         Then("an error is returned"),
         Then("an auth error is returned"),
-        Then("I receive error response")
+        Then("I receive error response"),
+        Then("I receive an error response"),
     )
     fun an_error_is_returned() {
         assertNotNull(world.pnException)
