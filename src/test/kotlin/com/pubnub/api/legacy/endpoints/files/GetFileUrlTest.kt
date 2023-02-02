@@ -2,13 +2,12 @@ package com.pubnub.api.legacy.endpoints.files
 
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
-import com.pubnub.api.PubNubException
 import com.pubnub.api.UserId
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers
 import org.junit.Assert
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.util.Arrays
 
 class GetFileUrlTest {
@@ -18,7 +17,6 @@ class GetFileUrlTest {
     private val defaultQueryParams: Set<String> = HashSet(Arrays.asList("pnsdk", "requestid", "uuid"))
 
     @Test
-    @Throws(PubNubException::class)
     fun noAdditionalQueryParamsWhenNotSecretNorAuth() {
         // given
         val pubnub = PubNub(config())
@@ -37,7 +35,6 @@ class GetFileUrlTest {
     }
 
     @Test
-    @Throws(PubNubException::class)
     fun signatureAndTimestampQueryParamsAreSetWhenSecret() {
         // given
         val pubnub = PubNub(withSecret(config()))
@@ -56,7 +53,6 @@ class GetFileUrlTest {
     }
 
     @Test
-    @Throws(PubNubException::class)
     fun authQueryParamIsSetWhenAuth() {
         // given
         val pubnub = PubNub(withAuth(config()))
@@ -75,7 +71,6 @@ class GetFileUrlTest {
     }
 
     @Test
-    @Throws(PubNubException::class)
     fun signatureAndTimestampAndAuthQueryParamsAreSetWhenSecretAndAuth() {
         // given
         val pubnub = PubNub(withSecret(withAuth(config())))

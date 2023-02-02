@@ -5,8 +5,10 @@ import com.pubnub.api.PNConfiguration.Companion.isValid
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
+import com.pubnub.api.SpaceId
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
 import com.pubnub.api.enums.PNOperationType
+import com.pubnub.api.models.consumer.MessageType
 import com.pubnub.api.models.consumer.files.PNBaseFile
 import com.pubnub.api.models.consumer.files.PNPublishFileMessageResult
 import com.pubnub.api.models.server.files.FileUploadNotification
@@ -27,9 +29,16 @@ open class PublishFileMessage(
     private val meta: Any? = null,
     private val ttl: Int? = null,
     private val shouldStore: Boolean? = null,
+    private val spaceId: SpaceId? = null,
+    private val messageType: MessageType? = null,
     pubNub: PubNub
 ) : Endpoint<List<Any>, PNPublishFileMessageResult>(pubNub) {
     private val pnFile = PNBaseFile(fileId, fileName)
+
+    companion object {
+        internal const val SPACE_ID_QUERY_PARAM = "space-id"
+        internal const val MESSAGE_TYPE_QUERY_PARAM = "type"
+    }
 
     @Throws(PubNubException::class)
     override fun validateParams() {
@@ -40,7 +49,7 @@ open class PublishFileMessage(
 
     @Throws(PubNubException::class)
     override fun doWork(queryParams: HashMap<String, String>): Call<List<Any>> {
-        val stringifiedMessage: String = pubnub.mapper.toJsonUsingJackson(FileUploadNotification(message, pnFile))
+        val stringifiedMessage: String = pubnub.mapper.toJson(FileUploadNotification(message, pnFile))
         val messageAsString = if (pubnub.configuration.cipherKey.isValid()) {
             val crypto = Crypto(pubnub.configuration.cipherKey, pubnub.configuration.useRandomInitializationVector)
             crypto.encrypt(stringifiedMessage).quoted()
@@ -48,11 +57,13 @@ open class PublishFileMessage(
             stringifiedMessage
         }
         meta?.let {
-            val stringifiedMeta: String = pubnub.mapper.toJsonUsingJackson(it)
+            val stringifiedMeta: String = pubnub.mapper.toJson(it)
             queryParams["meta"] = stringifiedMeta
         }
         shouldStore?.numericString?.let { queryParams["store"] = it }
         ttl?.let { queryParams["ttl"] = it.toString() }
+        spaceId?.run { queryParams[SPACE_ID_QUERY_PARAM] = spaceId.value }
+        messageType?.run { queryParams[MESSAGE_TYPE_QUERY_PARAM] = messageType.value }
 
         return pubnub.retrofitManager.filesService.notifyAboutFileUpload(
             pubnub.configuration.publishKey,
@@ -86,7 +97,9 @@ open class PublishFileMessage(
             message: Any? = null,
             meta: Any? = null,
             ttl: Int? = null,
-            shouldStore: Boolean? = null
+            shouldStore: Boolean? = null,
+            spaceId: SpaceId? = null,
+            messageType: MessageType? = null,
         ): ExtendedRemoteAction<PNPublishFileMessageResult> {
             return PublishFileMessage(
                 channel = channel,
@@ -96,7 +109,9 @@ open class PublishFileMessage(
                 meta = meta,
                 ttl = ttl,
                 shouldStore = shouldStore,
-                pubNub = pubNub
+                pubNub = pubNub,
+                spaceId = spaceId,
+                messageType = messageType
             )
         }
     }
