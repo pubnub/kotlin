@@ -45,7 +45,7 @@ internal class UploadFile(
         val mediaType = getMediaType(formParams.findContentType())
 
         val bytes = prepareBytes(content, cipherKey)
-        builder.addFormDataPart(FILE_PART_MULTIPART, fileName, bytes.toRequestBody(mediaType, 0, content.size))
+        builder.addFormDataPart(FILE_PART_MULTIPART, fileName, bytes.toRequestBody(mediaType, 0, bytes.size))
         return s3Service.upload(baseUrl, builder.build())
     }
 

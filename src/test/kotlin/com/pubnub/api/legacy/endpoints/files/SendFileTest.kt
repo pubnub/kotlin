@@ -7,7 +7,6 @@ import com.pubnub.api.endpoints.files.SendFile
 import com.pubnub.api.endpoints.files.UploadFile
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
-import com.pubnub.api.legacy.endpoints.files.TestsWithFiles.Companion.folder
 import com.pubnub.api.legacy.endpoints.remoteaction.TestRemoteAction
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.files.PNBaseFile
@@ -20,11 +19,7 @@ import io.mockk.mockk
 import io.mockk.spyk
 import io.mockk.verify
 import org.junit.Assert
-import org.junit.Rule
-import org.junit.Test
-import org.junit.rules.TemporaryFolder
-import java.io.FileInputStream
-import java.io.IOException
+import org.junit.jupiter.api.Test
 import java.io.InputStream
 import java.time.Instant
 import java.util.concurrent.CountDownLatch
@@ -34,20 +29,13 @@ import java.util.concurrent.atomic.AtomicInteger
 
 class SendFileTest : TestsWithFiles {
     private val channel = "channel"
-    private val filename = "test.txt"
     private val generateUploadUrlFactory: GenerateUploadUrl.Factory = mockk {}
     private val publishFileMessageFactory: PublishFileMessage.Factory = mockk {}
     private val sendFileToS3Factory: UploadFile.Factory = mockk {}
 
-    @get:Rule
-    override val temporaryFolder: TemporaryFolder
-        get() = folder
-
     @Test
-    @Throws(PubNubException::class, IOException::class)
     fun sync_happyPath() {
         // given
-        val file = getTemporaryFile(filename)
         val fileUploadRequestDetails = generateUploadUrlProperResponse()
         val expectedResponse = pnFileUploadResult()
         val publishFileMessageResult = PNPublishFileMessageResult(expectedResponse.timetoken)
@@ -63,8 +51,8 @@ class SendFileTest : TestsWithFiles {
         every { publishFileMessageFactory.create(any(), any(), any()) } returns publishFileMessage
 
         // when
-        val result: PNFileUploadResult? = FileInputStream(file).use { fileInputStream ->
-            sendFile(channel, file.name, fileInputStream).sync()
+        val result: PNFileUploadResult? = inputStream().use { inputStream ->
+            sendFile(channel, fileName(), inputStream).sync()
         }
 
         // then
@@ -72,11 +60,52 @@ class SendFileTest : TestsWithFiles {
     }
 
     @Test
-    @Throws(InterruptedException::class, IOException::class)
+    fun spaceIdAndMessageTypeArePassedToPublishMessageFile() {
+        // given
+        val fileUploadRequestDetails = generateUploadUrlProperResponse()
+        val expectedResponse = pnFileUploadResult()
+        val publishFileMessageResult = PNPublishFileMessageResult(expectedResponse.timetoken)
+        every { generateUploadUrlFactory.create(any(), any()) } returns TestRemoteAction.successful(
+            fileUploadRequestDetails
+        )
+
+        every { sendFileToS3Factory.create(any(), any(), any(), any()) } returns TestRemoteAction.successful(Unit)
+        val publishFileMessage: PublishFileMessage =
+            AlwaysSuccessfulPublishFileMessage.create(
+                publishFileMessageResult
+            )
+        every {
+            publishFileMessageFactory.create(any(), any(), any(), any(), any(), any(), any())
+        } returns publishFileMessage
+
+        // when
+        val result: PNFileUploadResult? = inputStream().use { inputStream ->
+            sendFile(
+                channel,
+                fileName(),
+                inputStream,
+            ).sync()
+        }
+
+        // then
+        verify {
+            publishFileMessageFactory.create(
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+            )
+        }
+        Assert.assertEquals(expectedResponse, result)
+    }
+
+    @Test
     fun async_happyPath() {
         // given
         val countDownLatch = CountDownLatch(1)
-        val file = getTemporaryFile(filename)
         val fileUploadRequestDetails = generateUploadUrlProperResponse()
         val expectedResponse = pnFileUploadResult()
         val publishFileMessageResult = PNPublishFileMessageResult(expectedResponse.timetoken)
@@ -90,11 +119,11 @@ class SendFileTest : TestsWithFiles {
                 publishFileMessageResult
             )
         every { publishFileMessageFactory.create(any(), any(), any()) } returns publishFileMessage
-        FileInputStream(file).use { fileInputStream ->
+        inputStream().use { inputStream ->
             sendFile(
                 channel,
-                file.name,
-                fileInputStream
+                fileName(),
+                inputStream
             ).async { result: PNFileUploadResult?, _: PNStatus? ->
                 Assert.assertEquals(expectedResponse, result)
                 countDownLatch.countDown()
@@ -104,11 +133,9 @@ class SendFileTest : TestsWithFiles {
     }
 
     @Test
-    @Throws(InterruptedException::class, IOException::class)
     fun async_publishFileMessageRetry() {
         // given
         val countDownLatch = CountDownLatch(1)
-        val file = getTemporaryFile(filename)
         val fileUploadRequestDetails = generateUploadUrlProperResponse()
         val expectedResponse = pnFileUploadResult()
         val publishFileMessageResult = PNPublishFileMessageResult(expectedResponse.timetoken)
@@ -125,11 +152,11 @@ class SendFileTest : TestsWithFiles {
             )
         )
         every { publishFileMessageFactory.create(any(), any(), any()) } returns publishFileMessage
-        FileInputStream(file).use { fileInputStream ->
+        inputStream().use { inputStream ->
             sendFile(
                 channel,
-                file.name,
-                fileInputStream,
+                fileName(),
+                inputStream,
                 numberOfRetries
             ).async { result: PNFileUploadResult?, _: PNStatus? ->
                 Assert.assertEquals(expectedResponse, result)
@@ -143,10 +170,8 @@ class SendFileTest : TestsWithFiles {
     }
 
     @Test
-    @Throws(InterruptedException::class, IOException::class, PubNubException::class)
     fun sync_publishFileMessageRetry() {
         // given
-        val file = getTemporaryFile(filename)
         val fileUploadRequestDetails = generateUploadUrlProperResponse()
         val expectedResponse = pnFileUploadResult()
         val publishFileMessageResult = PNPublishFileMessageResult(expectedResponse.timetoken)
@@ -166,8 +191,8 @@ class SendFileTest : TestsWithFiles {
         every { publishFileMessageFactory.create(any(), any(), any()) } returns publishFileMessage
 
         // when
-        val result: PNFileUploadResult? = FileInputStream(file).use { fileInputStream ->
-            sendFile(channel, file.name, fileInputStream, numberOfRetries).sync()
+        val result: PNFileUploadResult? = inputStream().use { inputStream ->
+            sendFile(channel, fileName(), inputStream, numberOfRetries).sync()
         }
 
         // then
@@ -194,7 +219,7 @@ class SendFileTest : TestsWithFiles {
         channel: String,
         fileName: String,
         inputStream: InputStream,
-        numberOfRetries: Int = 1
+        numberOfRetries: Int = 1,
     ): SendFile {
         return SendFile(
             channel = channel,
