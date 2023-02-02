@@ -1,29 +1,20 @@
 package com.pubnub.api.legacy.endpoints.files
 
-import org.junit.rules.TemporaryFolder
-import java.io.File
-import java.io.IOException
-import java.nio.file.Files
-import java.util.ArrayList
-import java.util.Collections
+import org.junit.jupiter.api.BeforeEach
+import java.util.UUID
 
 interface TestsWithFiles {
-    val temporaryFolder: TemporaryFolder
 
-    fun getTemporaryFile(filename: String, vararg content: String?): File {
-        return try {
-            val file = temporaryFolder.newFile(filename)
-            val lines = ArrayList<String>()
-            Collections.addAll<String>(lines, *content)
-            Files.write(file.toPath(), lines)
-            file
-        } catch (ex: IOException) {
-            // fail
-            throw RuntimeException(ex.message, ex)
-        }
+    fun fileName() = _fileName
+
+    fun inputStream(content: String = "content") = content.byteInputStream()
+
+    @BeforeEach
+    fun beforeEach() {
+        _fileName = "file_${UUID.randomUUID()}"
     }
 
     companion object {
-        val folder = TemporaryFolder()
+        private lateinit var _fileName: String
     }
 }

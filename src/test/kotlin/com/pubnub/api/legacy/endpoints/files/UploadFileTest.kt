@@ -2,40 +2,38 @@ package com.pubnub.api.legacy.endpoints.files
 
 import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.files.UploadFile
-import com.pubnub.api.legacy.endpoints.files.TestsWithFiles.Companion.folder
 import com.pubnub.api.models.server.files.FormField
 import com.pubnub.api.services.S3Service
+import com.pubnub.api.vendor.FileEncryptionUtil
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.ResponseBody.Companion.toResponseBody
+import okio.Buffer
+import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Assert
-import org.junit.Rule
-import org.junit.Test
-import org.junit.rules.TemporaryFolder
+import org.junit.jupiter.api.Test
 import retrofit2.Call
 import retrofit2.Response
-import java.io.FileInputStream
-import java.io.IOException
 import java.io.InputStream
+import java.nio.charset.Charset
 import java.util.Scanner
+import org.hamcrest.Matchers.`is` as iz
 
 class UploadFileTest : TestsWithFiles {
     private val s3Service: S3Service = mockk {}
 
     @Test
-    @Throws(PubNubException::class, IOException::class)
     fun keyIsFirstInMultipart() {
         // given
-        val file = getTemporaryFile("file.txt")
         val captured = mutableListOf<MultipartBody>()
-        FileInputStream(file).use { fileInputStream ->
+        inputStream().use { inputStream ->
             val uploadFile = UploadFile(
                 s3Service,
-                file.name,
-                fileInputStream.readBytes(),
+                fileName(),
+                inputStream.readBytes(),
                 null,
                 FormField("key", "keyValue"), listOf(FormField("other", "otherValue")),
                 "https://s3.aws.com/bucket"
@@ -59,17 +57,15 @@ class UploadFileTest : TestsWithFiles {
     }
 
     @Test
-    @Throws(PubNubException::class, IOException::class)
     fun contentTypeIsUsedForFileIfPresentInFormFields() {
         // given
         val captured = mutableListOf<MultipartBody>()
-        val file = getTemporaryFile("file.txt")
         val contentTypeValue = "application/json"
-        FileInputStream(file).use { fileInputStream ->
+        inputStream().use { inputStream ->
             val uploadFile = UploadFile(
                 s3Service,
-                file.name,
-                fileInputStream.readBytes(),
+                fileName(),
+                inputStream.readBytes(),
                 null,
                 FormField("key", "keyValue"), listOf(FormField("Content-Type", contentTypeValue)),
                 "https://s3.aws.com/bucket"
@@ -89,16 +85,14 @@ class UploadFileTest : TestsWithFiles {
     }
 
     @Test
-    @Throws(PubNubException::class, IOException::class)
     fun defaultContentTypeIsUsedForFileIfNotPresentInFormFields() {
         // given
         val captured = mutableListOf<MultipartBody>()
-        val file = getTemporaryFile("file.txt")
-        FileInputStream(file).use { fileInputStream ->
+        inputStream().use { inputStream ->
             val uploadFile = UploadFile(
                 s3Service,
-                file.name,
-                fileInputStream.readBytes(),
+                fileName(),
+                inputStream.readBytes(),
                 null,
                 FormField("key", "keyValue"), emptyList(),
                 "https://s3.aws.com/bucket"
@@ -118,15 +112,47 @@ class UploadFileTest : TestsWithFiles {
     }
 
     @Test
-    @Throws(IOException::class)
-    fun errorMessageIsCopiedFromS3XMLResponse() {
+    fun testEncryptedFileContentIsSendProperly() {
         // given
-        val file = getTemporaryFile("file.txt")
-        FileInputStream(file).use { fileInputStream ->
+        val captured = mutableListOf<MultipartBody>()
+        val content = "content"
+        val cipher = "enigma"
+        inputStream(content).use { inputStream ->
             val uploadFile = UploadFile(
                 s3Service,
-                file.name,
-                fileInputStream.readBytes(),
+                fileName(),
+                inputStream.readBytes(),
+                cipher,
+                FormField("key", "keyValue"), emptyList(),
+                "https://s3.aws.com/bucket"
+            )
+            every { s3Service.upload(any(), any()) } returns mockRetrofitSuccessfulCall { null }
+
+            // when
+            uploadFile.sync()
+
+            // then
+            verify(exactly = 1) { s3Service.upload(any(), capture(captured)) }
+        }
+        val capturedBody: MultipartBody = captured[0]
+        assertPartExist("file", capturedBody.parts)
+        val filePart = getPart("file", capturedBody.parts)
+        val buffer = Buffer()
+        filePart?.body?.writeTo(buffer)
+        assertThat(
+            buffer.readByteArray(),
+            iz(FileEncryptionUtil.encrypt(content.byteInputStream(Charset.defaultCharset()), cipher).readBytes())
+        )
+    }
+
+    @Test
+    fun errorMessageIsCopiedFromS3XMLResponse() {
+        // given
+        inputStream().use { inputStream ->
+            val uploadFile = UploadFile(
+                s3Service,
+                fileName(),
+                inputStream.readBytes(),
                 null,
                 FormField("key", "keyValue"), emptyList(),
                 "https://s3.aws.com/bucket"
@@ -170,10 +196,6 @@ class UploadFileTest : TestsWithFiles {
             Assert.fail("There's no part $partName in parts $parts")
         }
     }
-
-    @get:Rule
-    override val temporaryFolder: TemporaryFolder
-        get() = folder
 
     companion object {
         protected fun <T> mockRetrofitSuccessfulCall(block: () -> T?): Call<T> {

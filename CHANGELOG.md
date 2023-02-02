@@ -1,3 +1,9 @@
+## v7.4.1
+February 02 2023
+
+#### Fixed
+- Uploading an encrypted file correctly sets the content size in the multipart body.
+
 ## v7.4.0
 September 20 2022
 
