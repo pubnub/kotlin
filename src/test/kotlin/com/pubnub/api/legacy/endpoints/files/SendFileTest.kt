@@ -60,49 +60,6 @@ class SendFileTest : TestsWithFiles {
     }
 
     @Test
-    fun spaceIdAndMessageTypeArePassedToPublishMessageFile() {
-        // given
-        val fileUploadRequestDetails = generateUploadUrlProperResponse()
-        val expectedResponse = pnFileUploadResult()
-        val publishFileMessageResult = PNPublishFileMessageResult(expectedResponse.timetoken)
-        every { generateUploadUrlFactory.create(any(), any()) } returns TestRemoteAction.successful(
-            fileUploadRequestDetails
-        )
-
-        every { sendFileToS3Factory.create(any(), any(), any(), any()) } returns TestRemoteAction.successful(Unit)
-        val publishFileMessage: PublishFileMessage =
-            AlwaysSuccessfulPublishFileMessage.create(
-                publishFileMessageResult
-            )
-        every {
-            publishFileMessageFactory.create(any(), any(), any(), any(), any(), any(), any())
-        } returns publishFileMessage
-
-        // when
-        val result: PNFileUploadResult? = inputStream().use { inputStream ->
-            sendFile(
-                channel,
-                fileName(),
-                inputStream,
-            ).sync()
-        }
-
-        // then
-        verify {
-            publishFileMessageFactory.create(
-                any(),
-                any(),
-                any(),
-                any(),
-                any(),
-                any(),
-                any(),
-            )
-        }
-        Assert.assertEquals(expectedResponse, result)
-    }
-
-    @Test
     fun async_happyPath() {
         // given
         val countDownLatch = CountDownLatch(1)
