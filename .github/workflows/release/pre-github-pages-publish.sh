@@ -1,1 +1,1 @@
-./gradlew dokka
+./gradlew dokkaGfm
