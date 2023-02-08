@@ -3,12 +3,14 @@ package com.pubnub.api.endpoints.files
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
+import com.pubnub.api.SpaceId
 import com.pubnub.api.endpoints.remoteaction.ComposableRemoteAction
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction
 import com.pubnub.api.endpoints.remoteaction.RetryingRemoteAction
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
+import com.pubnub.api.models.consumer.MessageType
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.files.PNBaseFile
 import com.pubnub.api.models.consumer.files.PNFileUploadResult
@@ -31,6 +33,8 @@ class SendFile internal constructor(
     private val ttl: Int? = null,
     private val shouldStore: Boolean? = null,
     private val cipherKey: String? = null,
+    private val spaceId: SpaceId? = null,
+    private val messageType: MessageType? = null,
     private val fileMessagePublishRetryLimit: Int,
     private val executorService: ExecutorService,
     generateUploadUrlFactory: GenerateUploadUrl.Factory,
@@ -105,7 +109,9 @@ class SendFile internal constructor(
                         message = message,
                         meta = meta,
                         ttl = ttl,
-                        shouldStore = shouldStore
+                        shouldStore = shouldStore,
+                        spaceId = spaceId,
+                        messageType = messageType
                     ),
                     fileMessagePublishRetryLimit,
                     PNOperationType.FileOperation,

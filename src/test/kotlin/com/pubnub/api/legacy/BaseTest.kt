@@ -12,6 +12,8 @@ import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import org.junit.After
 import org.junit.Assert.assertTrue
 import org.junit.Before
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
 
 abstract class BaseTest {
 
@@ -20,6 +22,7 @@ abstract class BaseTest {
     protected lateinit var config: PNConfiguration private set
 
     @Before
+    @BeforeEach
     fun beforeEach() {
         wireMockServer = WireMockServer(
             wireMockConfig()
@@ -34,6 +37,7 @@ abstract class BaseTest {
     }
 
     @After
+    @AfterEach
     fun afterEach() {
         wireMockServer.stop()
         wireMockServer.findAllUnmatchedRequests().forEach {

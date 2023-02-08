@@ -156,7 +156,10 @@ internal class SubscribeMessageProcessor(
                         publisher = message.issuingClientId,
                         timetoken = result.timetoken,
                         jsonMessage = fileUploadNotification.message?.let { pubnub.mapper.toJsonTree(it) }
-                            ?: JsonNull.INSTANCE
+                            ?: JsonNull.INSTANCE,
+                        spaceId = message.spaceId,
+                        messageType = message.userMessageType ?: message.pnMessageType,
+                        userMetadata = message.userMetadata
                     )
                 }
             }

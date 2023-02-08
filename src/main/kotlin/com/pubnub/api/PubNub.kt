@@ -1759,7 +1759,9 @@ class PubNub(val configuration: PNConfiguration) {
         meta: Any? = null,
         ttl: Int? = null,
         shouldStore: Boolean? = null,
-        cipherKey: String? = null
+        cipherKey: String? = null,
+        spaceId: SpaceId? = null,
+        messageType: MessageType? = null
     ): SendFile {
         return SendFile(
             channel = channel,
@@ -1770,6 +1772,8 @@ class PubNub(val configuration: PNConfiguration) {
             ttl = ttl,
             shouldStore = shouldStore,
             cipherKey = cipherKey,
+            spaceId = spaceId,
+            messageType = messageType,
             executorService = retrofitManager.getTransactionClientExecutorService(),
             fileMessagePublishRetryLimit = configuration.fileMessagePublishRetryLimit,
             generateUploadUrlFactory = GenerateUploadUrl.Factory(this),
@@ -1893,7 +1897,9 @@ class PubNub(val configuration: PNConfiguration) {
         message: Any? = null,
         meta: Any? = null,
         ttl: Int? = null,
-        shouldStore: Boolean? = null
+        shouldStore: Boolean? = null,
+        spaceId: SpaceId? = null,
+        messageType: MessageType? = null
     ): PublishFileMessage {
         return PublishFileMessage(
             pubNub = this,
@@ -1903,7 +1909,9 @@ class PubNub(val configuration: PNConfiguration) {
             message = message,
             meta = meta,
             ttl = ttl,
-            shouldStore = shouldStore
+            shouldStore = shouldStore,
+            spaceId = spaceId,
+            messageType = messageType
         )
     }
     //endregion

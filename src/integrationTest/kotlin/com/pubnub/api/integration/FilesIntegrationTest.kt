@@ -1,151 +1,75 @@
 package com.pubnub.api.integration
 
-import com.pubnub.api.CommonUtils.randomChannel
-import com.pubnub.api.PubNub
-import com.pubnub.api.callbacks.SubscribeCallback
-import com.pubnub.api.enums.PNStatusCategory
-import com.pubnub.api.models.consumer.PNStatus
-import com.pubnub.api.models.consumer.files.PNFileUploadResult
-import com.pubnub.api.models.consumer.pubsub.PNMessageResult
-import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
-import com.pubnub.api.models.consumer.pubsub.PNSignalResult
-import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
-import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
-import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
-import org.junit.Assert
-import org.junit.Test
-import java.io.ByteArrayInputStream
+import com.google.gson.JsonObject
+import com.pubnub.api.SpaceId
+import com.pubnub.api.models.consumer.MessageType
+import org.hamcrest.MatcherAssert.assertThat
+import org.hamcrest.Matchers.hasItem
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
 import java.io.InputStream
-import java.nio.charset.StandardCharsets
-import java.util.Scanner
-import java.util.concurrent.CountDownLatch
+import java.nio.charset.Charset
 import java.util.concurrent.TimeUnit
-import java.util.concurrent.atomic.AtomicReference
+import org.hamcrest.Matchers.`is` as iz
 
 class FilesIntegrationTest : BaseIntegrationTest() {
-    @Test
-    fun uploadListDownloadDeleteWithCipher() {
-        uploadListDownloadDelete(true)
-    }
 
-    @Test
-    fun uploadListDownloadDeleteWithoutCipher() {
-        uploadListDownloadDelete(false)
-    }
+    @ParameterizedTest
+    @ValueSource(strings = ["enigma", ""])
+    fun sendListDownloadDelete(cipher: String) {
+        pubnub.configuration.cipherKey = cipher
+        val expectedSpaceId = SpaceId("thisIsSpace")
+        val expectedMessageType = MessageType("thisIsMessageType")
+        val expectedPayload = JsonObject().apply { addProperty("this_is_payload", "value") }
+        val expectedMeta = JsonObject().apply { addProperty("this_is_meta", "value") }
+        val fileName = "filename"
+        val content = "This is the content"
 
-    @Test
-    fun uploadAsyncAndDelete() {
-        val channel: String = randomChannel()
-        val content = "This is content"
-        val message = "This is message"
-        val meta = "This is meta"
-        val fileName = "fileName$channel.txt"
-        val fileSent = CountDownLatch(1)
-        pubnub.subscribe(channels = listOf(channel))
-        val sendResultReference: AtomicReference<PNFileUploadResult> = AtomicReference()
-        ByteArrayInputStream(content.toByteArray(StandardCharsets.UTF_8)).use {
-            pubnub.sendFile(
-                channel = channel,
+        pubnub.doWhenSubscribedAndConnected { subscribeContext ->
+            val sendFileResult = content.byteInputStream().use { stream ->
+                pubnub.sendFile(
+                    channel = subscribeContext.channel,
+                    spaceId = expectedSpaceId,
+                    messageType = expectedMessageType,
+                    message = expectedPayload,
+                    fileName = fileName,
+                    inputStream = stream,
+                    meta = expectedMeta
+                ).sync()
+            }
+
+            val fileEvent = subscribeContext.receivedFiles.pollOrThrow(3_000, TimeUnit.MILLISECONDS)
+
+            assertThat(fileEvent.channel, iz(subscribeContext.channel))
+            assertThat(fileEvent.messageType, iz(expectedMessageType))
+            assertThat(fileEvent.spaceId, iz(expectedSpaceId))
+            assertThat(fileEvent.spaceId, iz(expectedSpaceId))
+            assertThat(fileEvent.jsonMessage, iz(expectedPayload))
+            assertThat(fileEvent.userMetadata, iz(expectedMeta))
+            assertThat(fileEvent.file.name, iz(fileName))
+            assertThat(fileEvent.file.id, iz(sendFileResult?.file?.id))
+
+            val (_, _, _, data) = pubnub.listFiles(channel = subscribeContext.channel).sync()!!
+            assertThat(data.map { it.id }, hasItem(fileEvent.file.id))
+
+            val (_, byteStream) = pubnub.downloadFile(
+                channel = subscribeContext.channel,
                 fileName = fileName,
-                inputStream = it,
-                message = message,
-                meta = meta
-            ).async { r, s ->
-                if (!s.error) {
-                    sendResultReference.set(r)
-                }
-                fileSent.countDown()
-            }
-        }
-
-        if (!fileSent.await(3, TimeUnit.SECONDS)) {
-            Assert.fail()
-            return
-        }
-        val sendResult = sendResultReference.get()
-
-        if (sendResult == null) {
-            Assert.fail()
-            return
-        }
-
-        pubnub.deleteFile(
-            channel = channel,
-            fileName = fileName,
-            fileId = sendResult.file.id
-        ).sync()
-    }
-
-    private fun uploadListDownloadDelete(withCipher: Boolean) {
-        if (withCipher) {
-            pubnub.configuration.cipherKey = "enigma"
-        }
-        val channel: String = randomChannel()
-        val content = "This is content"
-        val message = "This is message"
-        val meta = "This is meta"
-        val fileName = "fileName$channel.txt"
-        val connectedLatch = CountDownLatch(1)
-        val fileEventReceived = CountDownLatch(1)
-        pubnub.addListener(object : LimitedListener() {
-            override fun status(pubnub: PubNub, pnStatus: PNStatus) {
-                if (pnStatus.category === PNStatusCategory.PNConnectedCategory) {
-                    connectedLatch.countDown()
-                }
+                fileId = fileEvent.file.id
+            ).sync()!!
+            byteStream?.use {
+                assertThat(it.readToString(), iz(content))
             }
 
-            override fun file(pubnub: PubNub, pnFileEventResult: PNFileEventResult) {
-                if (pnFileEventResult.file.name == fileName) {
-                    fileEventReceived.countDown()
-                }
-            }
-        })
-        pubnub.subscribe(channels = listOf(channel))
-        connectedLatch.await(10, TimeUnit.SECONDS)
-        val sendResult: PNFileUploadResult? = ByteArrayInputStream(content.toByteArray(StandardCharsets.UTF_8)).use {
-            pubnub.sendFile(
-                channel = channel,
+            pubnub.deleteFile(
+                channel = subscribeContext.channel,
                 fileName = fileName,
-                inputStream = it,
-                message = message,
-                meta = meta
-            ).sync()
+                fileId = fileEvent.file.id
+            ).sync()!!
         }
-
-        if (sendResult == null) {
-            Assert.fail()
-            return
-        }
-        fileEventReceived.await(10, TimeUnit.SECONDS)
-        val (_, _, _, data) = pubnub.listFiles(channel = channel).sync()!!
-        val fileFoundOnList = data.find { it.id == sendResult.file.id } != null
-
-        Assert.assertTrue(fileFoundOnList)
-        val (_, byteStream) = pubnub.downloadFile(
-            channel = channel,
-            fileName = fileName,
-            fileId = sendResult.file.id
-        ).sync()!!
-
-        byteStream?.use {
-            Assert.assertEquals(content, readToString(it))
-        }
-        pubnub.deleteFile(
-            channel = channel,
-            fileName = fileName,
-            fileId = sendResult.file.id
-        ).sync()
     }
 
-    private fun readToString(inputStream: InputStream): String {
-        Scanner(inputStream).useDelimiter("\\A").use { s -> return if (s.hasNext()) s.next() else "" }
-    }
-
-    private abstract class LimitedListener : SubscribeCallback() {
-        override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {}
-        override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {}
-        override fun signal(pubnub: PubNub, pnSignalResult: PNSignalResult) {}
-        override fun objects(pubnub: PubNub, objectEvent: PNObjectEventResult) {}
-        override fun messageAction(pubnub: PubNub, pnMessageActionResult: PNMessageActionResult) {}
+    private fun InputStream.readToString(): String {
+        return readBytes().toString(Charset.defaultCharset())
     }
 }

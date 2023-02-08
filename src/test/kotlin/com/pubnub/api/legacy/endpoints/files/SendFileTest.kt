@@ -1,6 +1,7 @@
 package com.pubnub.api.legacy.endpoints.files
 
 import com.pubnub.api.PubNubException
+import com.pubnub.api.SpaceId
 import com.pubnub.api.endpoints.files.GenerateUploadUrl
 import com.pubnub.api.endpoints.files.PublishFileMessage
 import com.pubnub.api.endpoints.files.SendFile
@@ -9,6 +10,7 @@ import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.legacy.endpoints.files.TestsWithFiles.Companion.folder
 import com.pubnub.api.legacy.endpoints.remoteaction.TestRemoteAction
+import com.pubnub.api.models.consumer.MessageType
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.files.PNBaseFile
 import com.pubnub.api.models.consumer.files.PNFileUploadResult
@@ -24,7 +26,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
 import java.io.FileInputStream
-import java.io.IOException
 import java.io.InputStream
 import java.time.Instant
 import java.util.concurrent.CountDownLatch
@@ -44,7 +45,6 @@ class SendFileTest : TestsWithFiles {
         get() = folder
 
     @Test
-    @Throws(PubNubException::class, IOException::class)
     fun sync_happyPath() {
         // given
         val file = getTemporaryFile(filename)
@@ -72,7 +72,49 @@ class SendFileTest : TestsWithFiles {
     }
 
     @Test
-    @Throws(InterruptedException::class, IOException::class)
+    fun spaceIdAndMessageTypeArePassedToPublishMessageFile() {
+        // given
+        val file = getTemporaryFile(filename)
+        val expectedSpaceId = SpaceId("spaceId")
+        val expectedMessageType = MessageType("messageType")
+        val fileUploadRequestDetails = generateUploadUrlProperResponse()
+        val expectedResponse = pnFileUploadResult()
+        val publishFileMessageResult = PNPublishFileMessageResult(expectedResponse.timetoken)
+        every { generateUploadUrlFactory.create(any(), any()) } returns TestRemoteAction.successful(
+            fileUploadRequestDetails
+        )
+
+        every { sendFileToS3Factory.create(any(), any(), any(), any()) } returns TestRemoteAction.successful(Unit)
+        val publishFileMessage: PublishFileMessage =
+            AlwaysSuccessfulPublishFileMessage.create(
+                publishFileMessageResult
+            )
+        every {
+            publishFileMessageFactory.create(any(), any(), any(), any(), any(), any(), any(), any(), any())
+        } returns publishFileMessage
+
+        // when
+        val result: PNFileUploadResult? = FileInputStream(file).use { fileInputStream ->
+            sendFile(
+                channel,
+                file.name,
+                fileInputStream,
+                spaceId = expectedSpaceId,
+                messageType = expectedMessageType
+            ).sync()
+        }
+
+        // then
+        verify {
+            publishFileMessageFactory.create(
+                any(),
+                any(), any(), any(), any(), any(), any(), eq(expectedSpaceId), eq(expectedMessageType)
+            )
+        }
+        Assert.assertEquals(expectedResponse, result)
+    }
+
+    @Test
     fun async_happyPath() {
         // given
         val countDownLatch = CountDownLatch(1)
@@ -104,7 +146,6 @@ class SendFileTest : TestsWithFiles {
     }
 
     @Test
-    @Throws(InterruptedException::class, IOException::class)
     fun async_publishFileMessageRetry() {
         // given
         val countDownLatch = CountDownLatch(1)
@@ -143,7 +184,6 @@ class SendFileTest : TestsWithFiles {
     }
 
     @Test
-    @Throws(InterruptedException::class, IOException::class, PubNubException::class)
     fun sync_publishFileMessageRetry() {
         // given
         val file = getTemporaryFile(filename)
@@ -194,12 +234,16 @@ class SendFileTest : TestsWithFiles {
         channel: String,
         fileName: String,
         inputStream: InputStream,
-        numberOfRetries: Int = 1
+        numberOfRetries: Int = 1,
+        spaceId: SpaceId? = null,
+        messageType: MessageType? = null
     ): SendFile {
         return SendFile(
             channel = channel,
             fileName = fileName,
             inputStream = inputStream,
+            spaceId = spaceId,
+            messageType = messageType,
             generateUploadUrlFactory = generateUploadUrlFactory,
             publishFileMessageFactory = publishFileMessageFactory,
             sendFileToS3Factory = sendFileToS3Factory,
