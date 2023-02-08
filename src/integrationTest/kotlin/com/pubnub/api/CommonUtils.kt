@@ -1,17 +1,14 @@
 package com.pubnub.api
 
-import com.github.tomakehurst.wiremock.client.WireMock
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.reflect.TypeToken
 import com.pubnub.api.models.consumer.PNPublishResult
-import com.pubnub.api.models.consumer.PNStatus
 import okhttp3.logging.HttpLoggingInterceptor
 import org.awaitility.Awaitility
 import org.awaitility.Durations
 import org.json.JSONObject
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
 import org.junit.Assert.fail
 import org.slf4j.Logger
 import java.io.BufferedReader
@@ -34,17 +31,10 @@ object CommonUtils {
             .untilTrue(success)
     }
 
-    fun assertPnException(expectedPubNubError: PubNubError, pnStatus: PNStatus) {
-        assertTrue(pnStatus.error)
-        assertEquals(expectedPubNubError, pnStatus.exception!!.pubnubError)
-    }
-
     fun assertPnException(expectedPubNubError: PubNubError, exception: Exception) {
         exception as PubNubException
         assertEquals(expectedPubNubError, exception.pubnubError)
     }
-
-    fun emptyJson() = WireMock.aResponse().withBody("{}")
 
     fun failTest(message: String? = null) {
         fail(message)
@@ -115,11 +105,6 @@ object CommonUtils {
 
     fun randomChannel(): String {
         return "ch_${System.currentTimeMillis()}_${randomValue()}"
-    }
-
-    fun randomNumeric(length: Int = 10): String {
-        return generateSequence { (0..9).random() }.take(length).toList().shuffled()
-            .joinToString(separator = "")
     }
 
     fun publishMixed(pubnub: PubNub, count: Int, channel: String): List<PNPublishResult> {

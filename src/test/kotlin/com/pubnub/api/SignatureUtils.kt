@@ -4,12 +4,9 @@ import com.github.tomakehurst.wiremock.verification.LoggedRequest
 import com.pubnub.api.vendor.Base64
 import com.pubnub.api.vendor.Crypto
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
-import okhttp3.Request
-import okio.Buffer
 import org.apache.commons.codec.digest.HmacAlgorithms
 import org.apache.commons.codec.digest.HmacUtils
 import org.junit.Assert.assertEquals
-import java.io.IOException
 import java.net.URLEncoder
 import java.nio.charset.Charset
 import java.security.InvalidKeyException
@@ -26,15 +23,6 @@ object SignatureUtils {
             url = request.absoluteUrl,
             method = request.method.name,
             body = request.bodyAsString
-        )
-    }
-
-    fun decomposeAndVerifySignature(configuration: PNConfiguration, request: Request) {
-        decomposeAndVerifySignature(
-            configuration = configuration,
-            url = request.url.toString(),
-            method = request.method,
-            body = requestBodyToString(request)
         )
     }
 
@@ -128,20 +116,6 @@ object SignatureUtils {
         } else {
             String(encoder.encode(hmacResult))
         }
-    }
-
-    private fun requestBodyToString(request: Request): String {
-        if (request.body == null) {
-            return ""
-        }
-        try {
-            val buffer = Buffer()
-            request.body!!.writeTo(buffer)
-            return buffer.readUtf8()
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-        return ""
     }
 
     private fun pamEncode(stringToEncode: String, alreadyPercentEncoded: Boolean = false): String {
