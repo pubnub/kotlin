@@ -6,7 +6,7 @@ on:
 
 jobs:
   tests:
-    name: Integration and Unit tests
+    name: Unit tests
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -90,3 +90,27 @@ jobs:
           name: acceptance-test-reports
           path: ./build/reports/cucumber-reports
           retention-days: 7
+  integrationTests:
+    name: Integration tests
+    runs-on: ubuntu-latest
+    env:
+      subKey: ${{ secrets.SUB_KEY }}
+      pubKey: ${{ secrets.PUB_KEY }}
+      pamSubKey: ${{ secrets.PAM_SUB_KEY }}
+      pamPubKey: ${{ secrets.PAM_PUB_KEY }}
+      pamSecKey: ${{ secrets.PAM_SEC_KEY }}
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v3
+      - name: Cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+      - name: Run integration tests
+        run: ./gradlew -Dorg.gradle.parallel=false integrationTest -i
+
