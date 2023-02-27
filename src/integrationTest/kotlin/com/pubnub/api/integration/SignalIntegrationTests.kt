@@ -2,6 +2,7 @@ package com.pubnub.api.integration
 
 import com.google.gson.JsonObject
 import com.pubnub.api.SpaceId
+import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.models.consumer.MessageType
 import org.hamcrest.MatcherAssert
 import org.hamcrest.Matchers
@@ -13,6 +14,15 @@ class SignalIntegrationTests : BaseIntegrationTest() {
     private val expectedSpaceId = SpaceId("thisIsSpace")
     private val expectedMessageType = MessageType("thisIsMessageType")
     private val expectedPayload = JsonObject().apply { addProperty("this_is_payload", "value") }
+
+    @Test
+    fun grantTest() {
+        server.configuration.logVerbosity = PNLogVerbosity.BODY
+        server.grant(
+            authKeys = listOf("auth1", "auth2"),
+            channels = listOf("ch1", "ch2")
+        ).sync()
+    }
 
     @Test
     fun sendSignal() {

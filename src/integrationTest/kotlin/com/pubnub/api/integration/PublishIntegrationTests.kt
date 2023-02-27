@@ -27,7 +27,7 @@ import org.json.JSONObject
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
@@ -38,16 +38,24 @@ import org.hamcrest.core.Is.`is` as iz
 class PublishIntegrationTests : BaseIntegrationTest() {
 
     @Test
-    fun testPublishMessage() {
-        val expectedChannel = randomChannel()
+    fun testPublishMessage(@BetacamOrigin origin: String) {
 
+        // val expectedChannel = randomChannel()
+        pubnub.configuration.origin = origin
+        pubnub.configuration.secure = false
+        val pubnub = PubNub(pubnub.configuration)
+
+        // stubFor(requestMadeFor {  })
+        // 16772530390465121
         pubnub.publish(
-            channel = expectedChannel,
-            message = generatePayload()
-        ).await { _, status ->
+            channel = "ch",
+            message = 1
+        ).await { r, status ->
+            println(r)
             assertFalse(status.error)
             assertEquals(status.uuid, pubnub.configuration.userId.value)
         }
+        Thread.sleep(300)
     }
 
     @Test
