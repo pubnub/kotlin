@@ -21,23 +21,23 @@ sealed interface MessageType {
     data class UserDefined internal constructor(override val value: String) : MessageType, HistoryMessageType
 
     object Message : PNMessageType, HistoryMessageType {
-        override val value: String = "message"
+        override val value: String = "pn_message"
     }
 
     object Signal : PNMessageType {
-        override val value: String = "signal"
+        override val value: String = "pn_signal"
     }
 
     object File : PNMessageType, HistoryMessageType {
-        override val value: String = "file"
+        override val value: String = "pn_file"
     }
 
     object Object : PNMessageType {
-        override val value: String = "object"
+        override val value: String = "pn_object"
     }
 
     object MessageAction : PNMessageType {
-        override val value: String = "messageAction"
+        override val value: String = "pn_messageAction"
     }
 
     val value: String

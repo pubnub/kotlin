@@ -94,11 +94,11 @@ jobs:
     name: Integration tests
     runs-on: ubuntu-latest
     env:
-      subKey: ${{ secrets.SUB_KEY }}
-      pubKey: ${{ secrets.PUB_KEY }}
-      pamSubKey: ${{ secrets.PAM_SUB_KEY }}
-      pamPubKey: ${{ secrets.PAM_PUB_KEY }}
-      pamSecKey: ${{ secrets.PAM_SEC_KEY }}
+      subKey: ${{ secrets.SDK_SUB_KEY }}
+      pubKey: ${{ secrets.SDK_PUB_KEY }}
+      pamSubKey: ${{ secrets.SDK_PAM_SUB_KEY }}
+      pamPubKey: ${{ secrets.SDK_PAM_PUB_KEY }}
+      pamSecKey: ${{ secrets.SDK_PAM_SEC_KEY }}
     steps:
       - name: Checkout project
         uses: actions/checkout@v3
