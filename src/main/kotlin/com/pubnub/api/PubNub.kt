@@ -934,11 +934,6 @@ class PubNub(val configuration: PNConfiguration) {
      * @param uuids List of all uuid grants
      */
 
-    @Suppress("DeprecatedCallableAddReplaceWith")
-    @Deprecated(
-        level = DeprecationLevel.WARNING,
-        message = "Use grantToken(Int, Any?, String?, List<SpacePermissions>?, List<UserPermissions>?) instead"
-    )
     fun grantToken(
         ttl: Int,
         meta: Any? = null,
