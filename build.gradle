@@ -80,10 +80,10 @@ dependencies {
     implementation "com.squareup.retrofit2:retrofit:2.9.0"
     implementation "com.squareup.retrofit2:converter-gson:2.9.0"
 
-    implementation "org.json:json:20210307"
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.2.2'
-    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-cbor:2.13.2'
-    implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.13.2'
+    implementation 'org.json:json:20230227'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.2'
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-cbor:2.14.2'
+    implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.14.2'
 
     implementation "org.slf4j:slf4j-api:1.7.30"
 
@@ -94,7 +94,7 @@ dependencies {
 
     allTest "ch.qos.logback:logback-classic:1.2.11"
     allTest "ch.qos.logback:logback-core:1.2.11"
-    allTest "org.json:json:20210307"
+    allTest "org.json:json:20230227"
 
     testImplementation group: 'io.cucumber', name: 'cucumber-java', version: '6.10.4'
     testImplementation group: 'io.cucumber', name: 'cucumber-junit', version: '6.10.4'

@@ -1,3 +1,10 @@
+## v7.4.2
+March 07 2023
+
+#### Fixed
+- Remove deprecation for Grant Token methods.
+- Update Jackson and Json libraries to avoid vulnerabilities.
+
 ## v7.4.1
 February 02 2023
 
