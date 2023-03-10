@@ -47,6 +47,7 @@ dependencies {
     api group: 'com.squareup.okhttp3', name: 'logging-interceptor', version: '3.12.6'
 
     implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.28'
+    implementation project(":pubnub-entities")
 
     // jackson
     // compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version:'2.7.3'

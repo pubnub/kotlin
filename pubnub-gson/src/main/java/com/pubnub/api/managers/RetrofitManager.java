@@ -9,6 +9,8 @@ import com.pubnub.api.enums.PNStatusCategory;
 import com.pubnub.api.interceptors.SignatureInterceptor;
 import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.services.*;
+import com.pubnub.entities.PublishService;
+import com.pubnub.entities.PublishServiceProvider;
 import lombok.Getter;
 import okhttp3.Dispatcher;
 import okhttp3.OkHttpClient;
@@ -21,7 +23,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-public class RetrofitManager {
+public class RetrofitManager implements PublishServiceProvider {
 
 
     private PubNub pubnub;

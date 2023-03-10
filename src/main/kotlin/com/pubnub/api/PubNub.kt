@@ -194,7 +194,8 @@ class PubNub(val configuration: PNConfiguration) {
         shouldStore = shouldStore,
         usePost = usePost,
         replicate = replicate,
-        ttl = ttl
+        ttl = ttl,
+        publishServiceProvider = retrofitManager
     )
 
     /**
@@ -1052,7 +1053,6 @@ class PubNub(val configuration: PNConfiguration) {
     fun usage(pubnub: PubNub) {
 
         pubnub.createSpace(space = "")
-
     }
 
     /**

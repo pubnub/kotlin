@@ -3,7 +3,6 @@ package com.pubnub.api.endpoints.pubsub
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
 import com.pubnub.api.managers.RetrofitManager
-import com.pubnub.api.services.PublishService
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot

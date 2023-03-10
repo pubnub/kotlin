@@ -8,6 +8,7 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.PNPublishResult
 import com.pubnub.api.vendor.Crypto
+import com.pubnub.entities.PublishServiceProvider
 import com.pubnub.extension.numericString
 import com.pubnub.extension.valueString
 import retrofit2.Call
@@ -18,6 +19,7 @@ import retrofit2.Response
  */
 class Publish internal constructor(
     pubnub: PubNub,
+    val publishServiceProvider: PublishServiceProvider,
     val message: Any,
     val channel: String,
     val meta: Any? = null,
@@ -43,7 +45,7 @@ class Publish internal constructor(
         return if (usePost) {
             val payload = getBodyMessage(message, useEncryption)
 
-            pubnub.retrofitManager.publishService.publishWithPost(
+            publishServiceProvider.publishService.publishWithPost(
                 pubnub.configuration.publishKey,
                 pubnub.configuration.subscribeKey,
                 channel,
@@ -54,7 +56,7 @@ class Publish internal constructor(
             // HTTP GET request
             val stringifiedMessage = getParamMessage(message, useEncryption)
 
-            pubnub.retrofitManager.publishService.publish(
+            publishServiceProvider.publishService.publish(
                 pubnub.configuration.publishKey,
                 pubnub.configuration.subscribeKey,
                 channel,

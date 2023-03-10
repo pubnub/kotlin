@@ -10,12 +10,13 @@ import com.pubnub.api.services.HistoryService
 import com.pubnub.api.services.MessageActionService
 import com.pubnub.api.services.ObjectsService
 import com.pubnub.api.services.PresenceService
-import com.pubnub.api.services.PublishService
 import com.pubnub.api.services.PushService
 import com.pubnub.api.services.S3Service
 import com.pubnub.api.services.SignalService
 import com.pubnub.api.services.SubscribeService
 import com.pubnub.api.services.TimeService
+import com.pubnub.entities.PublishService
+import com.pubnub.entities.PublishServiceProvider
 import com.pubnub.okhttp3.PNCallFactory
 import okhttp3.Call
 import okhttp3.OkHttpClient
@@ -24,7 +25,7 @@ import retrofit2.Retrofit
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.TimeUnit
 
-class RetrofitManager(val pubnub: PubNub) {
+class RetrofitManager(val pubnub: PubNub) : PublishServiceProvider {
 
     private lateinit var transactionClientInstance: OkHttpClient
 
@@ -35,7 +36,7 @@ class RetrofitManager(val pubnub: PubNub) {
     private var signatureInterceptor: SignatureInterceptor
 
     internal val timeService: TimeService
-    internal val publishService: PublishService
+    override val publishService: PublishService
     internal val historyService: HistoryService
     internal val presenceService: PresenceService
     internal val messageActionService: MessageActionService

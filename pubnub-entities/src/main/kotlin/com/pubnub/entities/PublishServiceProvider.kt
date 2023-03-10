@@ -1,4 +1,4 @@
-package com.pubnub.api.services
+package com.pubnub.entities
 
 import retrofit2.Call
 import retrofit2.http.Body
@@ -8,7 +8,7 @@ import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.QueryMap
 
-internal interface PublishService {
+interface PublishService {
 
     @GET("publish/{pubKey}/{subKey}/0/{channel}/0/{message}")
     fun publish(
@@ -29,3 +29,8 @@ internal interface PublishService {
         @QueryMap(encoded = false) options: Map<String, String>
     ): Call<List<Any>>
 }
+
+interface PublishServiceProvider {
+    val publishService: PublishService
+}
+

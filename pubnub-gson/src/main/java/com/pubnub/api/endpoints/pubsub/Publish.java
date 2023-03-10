@@ -13,6 +13,7 @@ import com.pubnub.api.managers.TelemetryManager;
 import com.pubnub.api.managers.token_manager.TokenManager;
 import com.pubnub.api.models.consumer.PNPublishResult;
 import com.pubnub.api.vendor.Crypto;
+import com.pubnub.entities.PublishServiceProvider;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import retrofit2.Call;
@@ -40,14 +41,17 @@ public class Publish extends Endpoint<List<Object>, PNPublishResult> {
     @Setter
     private Integer ttl;
 
+    private PublishServiceProvider publishServiceProvider;
     private PublishSequenceManager publishSequenceManager;
 
     public Publish(PubNub pubnub,
+                   PublishServiceProvider publishServiceProvider,
                    PublishSequenceManager providedPublishSequenceManager,
                    TelemetryManager telemetryManager,
                    RetrofitManager retrofit,
                    TokenManager tokenManager) {
         super(pubnub, telemetryManager, retrofit, tokenManager);
+        this.publishServiceProvider = publishServiceProvider;
 
         this.publishSequenceManager = providedPublishSequenceManager;
         this.replicate = true;
@@ -125,7 +129,7 @@ public class Publish extends Endpoint<List<Object>, PNPublishResult> {
                 payloadToSend = message;
             }
 
-            return this.getRetrofit().getPublishService().publishWithPost(this.getPubnub().getConfiguration().getPublishKey(),
+            return this.publishServiceProvider.getPublishService().publishWithPost(this.getPubnub().getConfiguration().getPublishKey(),
                     this.getPubnub().getConfiguration().getSubscribeKey(),
                     channel, payloadToSend, params);
         } else {
@@ -136,7 +140,7 @@ public class Publish extends Endpoint<List<Object>, PNPublishResult> {
 
             stringifiedMessage = PubNubUtil.urlEncode(stringifiedMessage);
 
-            return this.getRetrofit().getPublishService().publish(this.getPubnub().getConfiguration().getPublishKey(),
+            return this.publishServiceProvider.getPublishService().publish(this.getPubnub().getConfiguration().getPublishKey(),
                     this.getPubnub().getConfiguration().getSubscribeKey(),
                     channel, stringifiedMessage, params);
         }
