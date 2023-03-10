@@ -3,6 +3,7 @@ package com.pubnub;
 import com.pubnub.api.PNConfiguration;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
+import com.pubnub.api.enums.PNLogVerbosity;
 import com.pubnub.user.models.consumer.UsersResult;
 import org.junit.Test;
 
@@ -13,6 +14,7 @@ public class TestTestTest {
     @Test
     public void test() throws PubNubException {
         PubNub pubnub = new PubNub(new PNConfiguration("aaa")
+                .setLogVerbosity(PNLogVerbosity.BODY)
                 .setSubscribeKey(TestConfiguration.instance.getSubscribeKey())
                 .setPublishKey(TestConfiguration.instance.getPublishKey()));
 
