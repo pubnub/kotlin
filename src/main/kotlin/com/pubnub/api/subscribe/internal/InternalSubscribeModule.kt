@@ -1,7 +1,5 @@
 package com.pubnub.api.subscribe.internal
 
-import com.pubnub.api.PNConfiguration
-import com.pubnub.api.PubNub
 import com.pubnub.api.enums.PNReconnectionPolicy
 import com.pubnub.api.managers.ListenerManager
 import com.pubnub.api.state.EffectDispatcher
@@ -17,14 +15,14 @@ internal class InternalSubscribeModule(
 ) : NewSubscribeModule {
 
     companion object {
-        private fun createRetryPolicy(configuration: PNConfiguration) = when (configuration.reconnectionPolicy) {
+        private fun createRetryPolicy(configuration: Config) = when (configuration.reconnectionPolicy) {
             PNReconnectionPolicy.NONE -> NoPolicy
             PNReconnectionPolicy.LINEAR -> LinearPolicy(configuration.maximumReconnectionRetries)
             PNReconnectionPolicy.EXPONENTIAL -> ExponentialPolicy(configuration.maximumReconnectionRetries)
         }
 
         fun create(
-            pubnub: PubNub,
+            pubnub: PN,
             listenerManager: ListenerManager,
             incomingPayloadProcessor: IncomingPayloadProcessor,
             scheduleExecutorService: ScheduledExecutorService = Executors.newScheduledThreadPool(2),

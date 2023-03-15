@@ -1,6 +1,5 @@
 package com.pubnub.api.subscribe.internal
 
-import com.pubnub.api.PubNub
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.managers.ListenerManager
@@ -47,7 +46,7 @@ internal class SubscribeEffectDispatcher(
 }
 
 internal class ReceiveEventsReconnectHandlerFactory(
-    private val pubnub: PubNub,
+    private val pubnub: PN,
     private val retryPolicy: RetryPolicy,
     private val eventQueue: LinkedBlockingQueue<SubscribeEvent>,
     private val executor: ScheduledExecutorService
@@ -98,7 +97,7 @@ internal class ReceiveEventsReconnectHandlerFactory(
 }
 
 internal class HandshakeReconnectHandlerFactory(
-    private val pubnub: PubNub,
+    private val pubnub: PN,
     private val retryPolicy: RetryPolicy,
     private val eventQueue: LinkedBlockingQueue<SubscribeEvent>,
     private val executor: ScheduledExecutorService
@@ -183,7 +182,7 @@ internal class NotificationExecutor(private val listenerManager: ListenerManager
 }
 
 internal class HttpCallExecutor(
-    private val pubnub: PubNub,
+    private val pubnub: PN,
     private val eventQueue: LinkedBlockingQueue<SubscribeEvent>
 ) : EffectHandlerFactory<SubscribeHttpEffectInvocation> {
 
