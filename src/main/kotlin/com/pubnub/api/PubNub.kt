@@ -45,8 +45,17 @@ import com.pubnub.api.endpoints.presence.GetState
 import com.pubnub.api.endpoints.presence.HereNow
 import com.pubnub.api.endpoints.presence.SetState
 import com.pubnub.api.endpoints.presence.WhereNow
+import com.pubnub.api.endpoints.pubsub.ConfigurationNeededForEndpointImpl
+import com.pubnub.api.endpoints.pubsub.ConfigurationNeededForPublishImpl
+import com.pubnub.api.endpoints.pubsub.JsonMapperManagerForEndpointImpl
+import com.pubnub.api.endpoints.pubsub.PNInstanceIdProviderImpl
 import com.pubnub.api.endpoints.pubsub.Publish
+import com.pubnub.api.endpoints.pubsub.PublishServiceExternalImpl
+import com.pubnub.api.endpoints.pubsub.SequenceManagerExternalImpl
 import com.pubnub.api.endpoints.pubsub.Signal
+import com.pubnub.api.endpoints.pubsub.TelemetryManagerExternalImpl
+import com.pubnub.api.endpoints.pubsub.ToJsonMapperImpl
+import com.pubnub.api.endpoints.pubsub.TokenRetrieverImpl
 import com.pubnub.api.endpoints.push.AddChannelsToPush
 import com.pubnub.api.endpoints.push.ListPushProvisions
 import com.pubnub.api.endpoints.push.RemoveAllPushChannelsForDevice
@@ -119,8 +128,6 @@ class PubNub(val configuration: PNConfiguration) {
     internal val tokenManager: TokenManager = TokenManager()
     private val tokenParser: TokenParser = TokenParser()
 
-    //endregion
-
     /**
      * The current version of the Kotlin SDK.
      */
@@ -132,6 +139,19 @@ class PubNub(val configuration: PNConfiguration) {
      * @see [PNConfiguration.includeInstanceIdentifier]
      */
     val instanceId = UUID.randomUUID().toString()
+
+    // publish
+    private val publishServiceExternal = PublishServiceExternalImpl(this.retrofitManager.publishService)
+    private val configurationNeededForPublish = ConfigurationNeededForPublishImpl(this.configuration)
+    private val toJsonMapper = ToJsonMapperImpl(this.mapper)
+    private val sequenceManagerExternal = SequenceManagerExternalImpl(this.publishSequenceManager)
+    private val telemetryManagerExternal = TelemetryManagerExternalImpl(this.telemetryManager)
+    private val configurationNeededForEndpoint = ConfigurationNeededForEndpointImpl(this.configuration, this.version)
+    private val pnInstanceIdProvider = PNInstanceIdProviderImpl(this.instanceId)
+    private val tokenRetriever = TokenRetrieverImpl(this.tokenManager)
+    private val jsonMapperManagerForEndpoint = JsonMapperManagerForEndpointImpl(this.mapper)
+
+    //endregion
 
     //region Internal
     internal fun baseUrl() = basePathManager.basePath()
@@ -193,14 +213,23 @@ class PubNub(val configuration: PNConfiguration) {
         replicate: Boolean = true,
         ttl: Int? = null
     ) = Publish(
-        pubnub = this,
+//        pubnub = this,
         channel = channel,
         message = message,
         meta = meta,
         shouldStore = shouldStore,
         usePost = usePost,
         replicate = replicate,
-        ttl = ttl
+        ttl = ttl,
+        publishServiceExternal = publishServiceExternal,
+        configurationNeededForPublish = configurationNeededForPublish,
+        toJsonMapper = toJsonMapper,
+        sequenceManagerExternal = sequenceManagerExternal,
+        telemetryManagerExternal = telemetryManagerExternal,
+        configurationNeededForEndpoint = configurationNeededForEndpoint,
+        pnInstanceIdProvider = pnInstanceIdProvider,
+        tokenRetriever = tokenRetriever,
+        jsonMapperManagerForEndpoint = jsonMapperManagerForEndpoint
     )
 
     /**

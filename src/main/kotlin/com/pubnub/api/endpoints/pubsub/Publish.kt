@@ -1,7 +1,6 @@
 package com.pubnub.api.endpoints.pubsub
 
-import com.pubnub.api.Endpoint
-import com.pubnub.api.PNConfiguration.Companion.isValid
+import com.pubnub.api.EndpointWithNoPubNub
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
@@ -17,17 +16,35 @@ import retrofit2.Response
  * @see [PubNub.publish]
  */
 class Publish internal constructor(
-    pubnub: PubNub,
+//    pubnub: PubNub,
     val message: Any,
     val channel: String,
     val meta: Any? = null,
     val shouldStore: Boolean? = null,
     val usePost: Boolean = false,
     val replicate: Boolean = true,
-    val ttl: Int? = null
-) : Endpoint<List<Any>, PNPublishResult>(pubnub) {
+    val ttl: Int? = null,
+    val publishServiceExternal: PublishServiceExternal,
+    val configurationNeededForPublish: ConfigurationNeededForPublish,
+    val toJsonMapper: ToJsonMapper,
+    val sequenceManagerExternal: SequenceManagerExternal,
+    telemetryManagerExternal: TelemetryManagerExternal,
+    configurationNeededForEndpoint: ConfigurationNeededForEndpoint,
+    pnInstanceIdProvider: PNInstanceIdProvider,
+    tokenRetriever: TokenRetriever,
+    jsonMapperManagerForEndpoint: JsonMapperManagerForEndpoint
 
-    private val useEncryption: Boolean = pubnub.configuration.cipherKey.isValid()
+) : EndpointWithNoPubNub<List<Any>, PNPublishResult>(
+//    pubnub,
+    telemetryManagerExternal,
+    configurationNeededForEndpoint,
+    pnInstanceIdProvider,
+    tokenRetriever,
+    jsonMapperManagerForEndpoint
+) {
+
+    //    private val useEncryption: Boolean = pubnub.configuration.cipherKey.isValid()
+    private val useEncryption: Boolean = configurationNeededForPublish.useEncryption()
 
     override fun validateParams() {
         super.validateParams()
@@ -43,9 +60,9 @@ class Publish internal constructor(
         return if (usePost) {
             val payload = getBodyMessage(message, useEncryption)
 
-            pubnub.retrofitManager.publishService.publishWithPost(
-                pubnub.configuration.publishKey,
-                pubnub.configuration.subscribeKey,
+            publishServiceExternal.publishWithPost(
+                configurationNeededForPublish.getPublishKey(),
+                configurationNeededForPublish.getSubscribeKey(),
                 channel,
                 payload,
                 queryParams
@@ -54,9 +71,9 @@ class Publish internal constructor(
             // HTTP GET request
             val stringifiedMessage = getParamMessage(message, useEncryption)
 
-            pubnub.retrofitManager.publishService.publish(
-                pubnub.configuration.publishKey,
-                pubnub.configuration.subscribeKey,
+            publishServiceExternal.publish(
+                configurationNeededForPublish.getPublishKey(),
+                configurationNeededForPublish.getSubscribeKey(),
                 channel,
                 stringifiedMessage,
                 queryParams
@@ -81,7 +98,7 @@ class Publish internal constructor(
      */
     private fun addQueryParams(queryParams: MutableMap<String, String>) {
 
-        meta?.run { queryParams["meta"] = pubnub.mapper.toJson(this) }
+        meta?.run { queryParams["meta"] = toJsonMapper.toJson(this) }
 
         shouldStore?.run { queryParams["store"] = this.numericString }
 
@@ -89,7 +106,7 @@ class Publish internal constructor(
 
         if (!replicate) queryParams["norep"] = true.valueString
 
-        queryParams["seqn"] = pubnub.publishSequenceManager.nextSequence().toString()
+        queryParams["seqn"] = sequenceManagerExternal.nextSequence().toString()
     }
     // endregion
 
@@ -113,7 +130,7 @@ class Publish internal constructor(
         useEncryption: Boolean,
         wrapEncrypted: Boolean = false
     ): String =
-        pubnub.mapper.toJson(message).also { json ->
+        toJsonMapper.toJson(message).also { json ->
             if (useEncryption)
                 return encryptMessage(json).also { encrypted ->
                     if (wrapEncrypted)
@@ -122,7 +139,13 @@ class Publish internal constructor(
         }
 
     private fun encryptMessage(message: String): String =
-        Crypto(pubnub.configuration.cipherKey, pubnub.configuration.useRandomInitializationVector)
+//        Crypto(pubnub.configuration.cipherKey, pubnub.configuration.useRandomInitializationVector)
+//            .encrypt(message)
+        Crypto(
+            configurationNeededForPublish.getCipherKey(),
+            configurationNeededForPublish.useRandomInitializationVector()
+        )
             .encrypt(message)
+
     // endregion
 }

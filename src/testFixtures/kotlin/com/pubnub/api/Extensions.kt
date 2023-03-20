@@ -20,6 +20,15 @@ fun <Input, Output> Endpoint<Input, Output>.await(function: (result: Output?, st
     success.listen()
 }
 
+fun <Input, Output> EndpointWithNoPubNub<Input, Output>.await(function: (result: Output?, status: PNStatus) -> Unit) {
+    val success = AtomicBoolean()
+    async { result, status ->
+        function.invoke(result, status)
+        success.set(true)
+    }
+    success.listen()
+}
+
 fun PNStatus.param(param: String) = clientRequest!!.url.queryParameter(param)
 
 fun PNStatus.encodedParam(param: String) =
@@ -42,6 +51,37 @@ fun AtomicBoolean.listen(function: () -> Boolean): AtomicBoolean {
 }
 
 fun <Input, Output> Endpoint<Input, Output>.asyncRetry(
+    function: (result: Output?, status: PNStatus) -> Unit
+) {
+    val hits = AtomicInteger(0)
+
+    val block = {
+        hits.incrementAndGet()
+        val latch = CountDownLatch(1)
+        val success = AtomicBoolean()
+        queryParam += mapOf("key" to UUID.randomUUID().toString())
+        async { result, status ->
+            try {
+                function.invoke(result, status)
+                success.set(true)
+            } catch (e: Throwable) {
+                success.set(false)
+            }
+            latch.countDown()
+        }
+        latch.await(2L, TimeUnit.SECONDS)
+        success.get()
+    }
+
+    Awaitility.await()
+        .atMost(CommonUtils.DEFAULT_LISTEN_DURATION.toLong(), TimeUnit.SECONDS)
+        .pollInterval(FibonacciPollInterval(TimeUnit.SECONDS))
+        .until {
+            block.invoke()
+        }
+}
+
+fun <Input, Output> EndpointWithNoPubNub<Input, Output>.asyncRetry(
     function: (result: Output?, status: PNStatus) -> Unit
 ) {
     val hits = AtomicInteger(0)

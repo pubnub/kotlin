@@ -3,8 +3,6 @@ package com.pubnub.api.endpoints.pubsub
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
 import com.pubnub.api.UserId
-import com.pubnub.api.managers.RetrofitManager
-import com.pubnub.api.services.PublishService
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
@@ -23,6 +21,7 @@ private const val TEST_CHANNEL = "testChannel"
 private const val TEST_SUBKEY = "subKey"
 private const val TEST_PUBKEY = "pubKey"
 private const val CIPHER_KEY = "enigma"
+private const val PN_VERSION = "PubNub-Kotlin/version"
 
 class PublishTest {
     private val pnConfigurationHardcodedIV = PNConfiguration(userId = UserId(PubNub.generateUUID())).apply {
@@ -37,11 +36,20 @@ class PublishTest {
         useRandomInitializationVector = true
     }
 
-    private val pubNubHardcodedIVMock = mockk<PubNub>(relaxed = true)
-    private val pubNubRandomIVMock = mockk<PubNub>(relaxed = true)
+    private val configurationNeededForPublishWithHardcodedIVImpl = ConfigurationNeededForPublishImpl(pnConfigurationHardcodedIV)
+    private val configurationNeededForPublishWithRandomIVImpl = ConfigurationNeededForPublishImpl(pnConfigurationRandomIV)
+    private val configurationNeededForEndpointImpl = ConfigurationNeededForEndpointImpl(pnConfigurationHardcodedIV, PN_VERSION)
 
-    private val retrofitManagerMock = mockk<RetrofitManager>()
-    private val publishServiceMock = mockk<PublishService>()
+    private val publishServiceExternal = mockk<PublishServiceExternal>(relaxed = true)
+    private val configurationNeededForPublishWithHardcodedIV = configurationNeededForPublishWithHardcodedIVImpl
+    private val configurationNeededForPublishWithRandomIV = configurationNeededForPublishWithRandomIVImpl
+    private val toJsonMapper = mockk<ToJsonMapper>(relaxed = true)
+    private val sequenceManagerExternal = mockk<SequenceManagerExternal>(relaxed = true)
+    private val telemetryManagerExternal = mockk<TelemetryManagerExternal>(relaxed = true)
+    private val configurationNeededForEndpoint = configurationNeededForEndpointImpl
+    private val pnInstanceIdProvider = mockk<PNInstanceIdProvider>(relaxed = true)
+    private val tokenRetriever = mockk<TokenRetriever>(relaxed = true)
+    private val jsonMapperManagerForEndpoint = mockk<JsonMapperManagerForEndpoint>(relaxed = true)
 
     private val encryptedMessageSlot = slot<String>()
 
@@ -67,7 +75,7 @@ class PublishTest {
 
     init {
         every {
-            publishServiceMock.publish(
+            publishServiceExternal.publish(
                 any(),
                 any(),
                 any(),
@@ -75,25 +83,42 @@ class PublishTest {
                 any()
             )
         } answers { FakeCall() }
-        every { retrofitManagerMock.publishService } returns publishServiceMock
-
-        every { pubNubHardcodedIVMock.configuration } returns pnConfigurationHardcodedIV
-        every { pubNubRandomIVMock.configuration } returns pnConfigurationRandomIV
-
-        every { pubNubHardcodedIVMock.retrofitManager } returns retrofitManagerMock
-        every { pubNubRandomIVMock.retrofitManager } returns retrofitManagerMock
     }
 
     @Test
     fun `publish with encryption respects random IV setting`() {
         val publishHardcodedIVUnderTest =
-            Publish(pubnub = pubNubHardcodedIVMock, message = TEST_MESSAGE, channel = TEST_CHANNEL)
+            Publish(
+                channel = TEST_CHANNEL,
+                message = TEST_MESSAGE,
+                publishServiceExternal = publishServiceExternal,
+                configurationNeededForPublish = configurationNeededForPublishWithHardcodedIV,
+                toJsonMapper = toJsonMapper,
+                sequenceManagerExternal = sequenceManagerExternal,
+                telemetryManagerExternal = telemetryManagerExternal,
+                configurationNeededForEndpoint = configurationNeededForEndpoint,
+                pnInstanceIdProvider = pnInstanceIdProvider,
+                tokenRetriever = tokenRetriever,
+                jsonMapperManagerForEndpoint = jsonMapperManagerForEndpoint
+            )
         publishHardcodedIVUnderTest.sync()
 
         val encryptedMessageHardcodedIV = encryptedMessageSlot.captured
 
         val publishRandomIVUnderTest =
-            Publish(pubnub = pubNubRandomIVMock, message = TEST_MESSAGE, channel = TEST_CHANNEL)
+            Publish(
+                channel = TEST_CHANNEL,
+                message = TEST_MESSAGE,
+                publishServiceExternal = publishServiceExternal,
+                configurationNeededForPublish = configurationNeededForPublishWithRandomIV,
+                toJsonMapper = toJsonMapper,
+                sequenceManagerExternal = sequenceManagerExternal,
+                telemetryManagerExternal = telemetryManagerExternal,
+                configurationNeededForEndpoint = configurationNeededForEndpoint,
+                pnInstanceIdProvider = pnInstanceIdProvider,
+                tokenRetriever = tokenRetriever,
+                jsonMapperManagerForEndpoint = jsonMapperManagerForEndpoint
+            )
         publishRandomIVUnderTest.sync()
 
         val encryptedMessageRandomIV = encryptedMessageSlot.captured

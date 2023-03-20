@@ -32,6 +32,11 @@ import java.util.concurrent.atomic.AtomicInteger
 class PublishTest : BaseTest() {
 
     @Test
+    fun name() {
+        println("dfa")
+    }
+
+    @Test
     fun testFireSuccessSync() {
         stubFor(
             get(urlPathEqualTo("/publish/myPublishKey/mySubscribeKey/0/coolChannel/0/%22hi%22"))
