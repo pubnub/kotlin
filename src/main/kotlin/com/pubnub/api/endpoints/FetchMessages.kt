@@ -7,7 +7,6 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.SpaceId
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.HistoryMessageType
-import com.pubnub.api.models.consumer.MessageType
 import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.history.PNFetchMessageItem
 import com.pubnub.api.models.consumer.history.PNFetchMessagesResult
@@ -31,6 +30,7 @@ class FetchMessages internal constructor(
     val includeMeta: Boolean,
     val includeMessageActions: Boolean,
     val includeMessageType: Boolean,
+    val includeType: Boolean,
     val includeSpaceId: Boolean
 ) : Endpoint<FetchMessagesEnvelope, PNFetchMessagesResult>(pubnub) {
 
@@ -50,17 +50,14 @@ class FetchMessages internal constructor(
             includeMessageActions: Boolean,
             numberOfChannels: Int
         ): Int = when {
-            includeMessageActions ->
-                maximumPerChannel?.limit(MAX_MESSAGES_WITH_ACTIONS)?.nonPositiveToNull()
-                    ?: DEFAULT_MESSAGES_WITH_ACTIONS
+            includeMessageActions -> maximumPerChannel?.limit(MAX_MESSAGES_WITH_ACTIONS)?.nonPositiveToNull()
+                ?: DEFAULT_MESSAGES_WITH_ACTIONS
 
-            numberOfChannels == 1 ->
-                maximumPerChannel?.limit(SINGLE_CHANNEL_MAX_MESSAGES)?.nonPositiveToNull()
-                    ?: SINGLE_CHANNEL_DEFAULT_MESSAGES
+            numberOfChannels == 1 -> maximumPerChannel?.limit(SINGLE_CHANNEL_MAX_MESSAGES)?.nonPositiveToNull()
+                ?: SINGLE_CHANNEL_DEFAULT_MESSAGES
 
-            else ->
-                maximumPerChannel?.limit(MULTIPLE_CHANNEL_MAX_MESSAGES)?.nonPositiveToNull()
-                    ?: MULTIPLE_CHANNEL_DEFAULT_MESSAGES
+            else -> maximumPerChannel?.limit(MULTIPLE_CHANNEL_MAX_MESSAGES)?.nonPositiveToNull()
+                ?: MULTIPLE_CHANNEL_DEFAULT_MESSAGES
         }
     }
 
@@ -77,15 +74,11 @@ class FetchMessages internal constructor(
 
         return if (!includeMessageActions) {
             pubnub.retrofitManager.historyService.fetchMessages(
-                subKey = pubnub.configuration.subscribeKey,
-                channels = channels.toCsv(),
-                options = queryParams
+                subKey = pubnub.configuration.subscribeKey, channels = channels.toCsv(), options = queryParams
             )
         } else {
             pubnub.retrofitManager.historyService.fetchMessagesWithActions(
-                subKey = pubnub.configuration.subscribeKey,
-                channel = channels.first(),
-                options = queryParams
+                subKey = pubnub.configuration.subscribeKey, channel = channels.first(), options = queryParams
             )
         }
     }
@@ -97,19 +90,14 @@ class FetchMessages internal constructor(
                 val newMessage = serverMessageItem.message.processHistoryMessage(pubnub.configuration, pubnub.mapper)
                 val newActions =
                     if (includeMessageActions) serverMessageItem.actions ?: mapOf() else serverMessageItem.actions
-                val messageType = if (includeMessageType) {
-                    serverMessageItem.userDefinedMessageType?.let { MessageType.UserDefined(it) }
-                        ?: serverMessageItem.pnMessageType.let { HistoryMessageType.of(it) }
-                } else {
-                    null
-                }
                 PNFetchMessageItem(
                     uuid = serverMessageItem.uuid,
                     message = newMessage,
                     meta = serverMessageItem.meta,
                     timetoken = serverMessageItem.timetoken,
                     actions = newActions,
-                    messageType = messageType,
+                    messageType = if (includeMessageType) HistoryMessageType.of(serverMessageItem.messageType) else null,
+                    type = serverMessageItem.type,
                     spaceId = serverMessageItem.spaceId?.let { SpaceId(it) },
                 )
             }
@@ -124,15 +112,14 @@ class FetchMessages internal constructor(
     override fun operationType() = PNOperationType.PNFetchMessagesOperation
 
     private fun addQueryParams(queryParams: MutableMap<String, String>) {
-        queryParams["max"] =
-            effectiveMax(page.limit, includeMessageActions, channels.size).toString()
+        queryParams["max"] = effectiveMax(page.limit, includeMessageActions, channels.size).toString()
         queryParams["include_uuid"] = includeUUID.toString()
 
         page.start?.run { queryParams["start"] = this.toString().lowercase(Locale.US) }
         page.end?.run { queryParams["end"] = this.toString().lowercase(Locale.US) }
 
         queryParams[INCLUDE_MESSAGE_TYPE_QUERY_PARAM] = includeMessageType.toString()
-        queryParams[INCLUDE_TYPE_QUERY_PARAM] = includeMessageType.toString()
+        queryParams[INCLUDE_TYPE_QUERY_PARAM] = includeType.toString()
         queryParams[INCLUDE_SPACE_ID_QUERY_PARAM] = includeSpaceId.toString()
 
         if (includeMeta) queryParams["include_meta"] = "true"

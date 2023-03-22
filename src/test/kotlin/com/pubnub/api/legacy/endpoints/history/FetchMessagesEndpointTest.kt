@@ -9,7 +9,7 @@ import com.github.tomakehurst.wiremock.client.WireMock.urlMatching
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 import com.pubnub.api.endpoints.FetchMessages
 import com.pubnub.api.legacy.BaseTest
-import com.pubnub.api.models.consumer.MessageType
+import com.pubnub.api.models.consumer.HistoryMessageType
 import com.pubnub.api.models.consumer.PNBoundedPage
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.allOf
@@ -528,7 +528,7 @@ class FetchMessagesEndpointTest : BaseTest() {
 
         assertThat(
             response.channels.values.flatMap { items -> items.map { it.messageType } },
-            contains(MessageType(customType), MessageType.of(0))
+            contains(HistoryMessageType.Message, HistoryMessageType.Message)
         )
     }
 

@@ -3,3 +3,7 @@ dependencies {
     api project(":pubnub-spaces")
     api project(":pubnub-users")
 }
+
+test {
+    useJUnitPlatform()
+}

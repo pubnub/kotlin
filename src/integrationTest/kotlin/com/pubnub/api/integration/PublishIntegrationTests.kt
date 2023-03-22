@@ -13,7 +13,6 @@ import com.pubnub.api.await
 import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.listen
-import com.pubnub.api.models.consumer.MessageType
 import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
@@ -51,13 +50,13 @@ class PublishIntegrationTests : BaseIntegrationTest() {
     }
 
     @Test
-    fun testPublishMessageWithSpaceIdAndMessageType() {
+    fun testPublishMessageWithSpaceIdAndType() {
         val expectedChannel = randomChannel()
 
         val messageFuture = CompletableFuture<PNMessageResult>()
         val connected = CountDownLatch(1)
         val expectedSpaceId = SpaceId("thisIsSpace")
-        val expectedMessageType = MessageType("thisIsMessageType")
+        val expectedType = "thisIsType"
 
         pubnub.addListener(object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
@@ -78,7 +77,7 @@ class PublishIntegrationTests : BaseIntegrationTest() {
             channel = expectedChannel,
             message = generatePayload(),
             spaceId = expectedSpaceId,
-            messageType = expectedMessageType
+            type = expectedType
         ).await { _, status ->
             assertFalse(status.error)
             assertEquals(status.uuid, pubnub.configuration.userId.value)
@@ -87,7 +86,7 @@ class PublishIntegrationTests : BaseIntegrationTest() {
         val message = messageFuture.get(1_000, TimeUnit.MILLISECONDS)
 
         assertThat(message.spaceId, iz(expectedSpaceId))
-        assertThat(message.messageType, iz(expectedMessageType))
+        assertThat(message.type, iz(expectedType))
     }
 
     @Test

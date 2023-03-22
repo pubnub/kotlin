@@ -2,7 +2,6 @@ package com.pubnub.api.integration
 
 import com.google.gson.JsonObject
 import com.pubnub.api.SpaceId
-import com.pubnub.api.models.consumer.MessageType
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.hasItem
 import org.junit.jupiter.params.ParameterizedTest
@@ -19,7 +18,7 @@ class FilesIntegrationTest : BaseIntegrationTest() {
     fun sendListDownloadDelete(cipher: String) {
         pubnub.configuration.cipherKey = cipher
         val expectedSpaceId = SpaceId("thisIsSpace")
-        val expectedMessageType = MessageType("thisIsMessageType")
+        val expectedType = "thisIsType"
         val expectedPayload = JsonObject().apply { addProperty("this_is_payload", "value") }
         val expectedMeta = JsonObject().apply { addProperty("this_is_meta", "value") }
         val fileName = "filename"
@@ -30,7 +29,7 @@ class FilesIntegrationTest : BaseIntegrationTest() {
                 pubnub.sendFile(
                     channel = subscribeContext.channel,
                     spaceId = expectedSpaceId,
-                    messageType = expectedMessageType,
+                    type = expectedType,
                     message = expectedPayload,
                     fileName = fileName,
                     inputStream = stream,
@@ -41,7 +40,7 @@ class FilesIntegrationTest : BaseIntegrationTest() {
             val fileEvent = subscribeContext.receivedFiles.pollOrThrow(3_000, TimeUnit.MILLISECONDS)
 
             assertThat(fileEvent.channel, iz(subscribeContext.channel))
-            assertThat(fileEvent.messageType, iz(expectedMessageType))
+            assertThat(fileEvent.type, iz(expectedType))
             assertThat(fileEvent.spaceId, iz(expectedSpaceId))
             assertThat(fileEvent.spaceId, iz(expectedSpaceId))
             assertThat(fileEvent.jsonMessage, iz(expectedPayload))

@@ -7,7 +7,6 @@ import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.SpaceId
 import com.pubnub.api.enums.PNOperationType
-import com.pubnub.api.models.consumer.MessageType
 import com.pubnub.api.models.consumer.PNPublishResult
 import com.pubnub.api.vendor.Crypto
 import com.pubnub.extension.numericString
@@ -28,7 +27,7 @@ class Publish internal constructor(
     val replicate: Boolean = true,
     val ttl: Int? = null,
     val spaceId: SpaceId? = null,
-    val messageType: MessageType? = null
+    val type: String? = null
 ) : Endpoint<List<Any>, PNPublishResult>(pubnub) {
 
     companion object {
@@ -98,9 +97,9 @@ class Publish internal constructor(
 
         if (!replicate) queryParams["norep"] = true.valueString
 
-        spaceId?.run { queryParams[SPACE_ID_QUERY_PARAM] = spaceId.value }
+        spaceId?.run { queryParams[SPACE_ID_QUERY_PARAM] = this.value }
 
-        messageType?.run { queryParams[MESSAGE_TYPE_QUERY_PARAM] = messageType.value }
+        type?.run { queryParams[MESSAGE_TYPE_QUERY_PARAM] = this }
 
         queryParams["seqn"] = pubnub.publishSequenceManager.nextSequence().toString()
     }

@@ -11,7 +11,6 @@ import com.github.tomakehurst.wiremock.matching.EqualToPattern
 import com.pubnub.api.SpaceId
 import com.pubnub.api.endpoints.files.PublishFileMessage
 import com.pubnub.api.legacy.BaseTest
-import com.pubnub.api.models.consumer.MessageType
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -58,32 +57,32 @@ class PublishFileMessageTest : BaseTest() {
     }
 
     @Test
-    fun testMessageTypeQueryParamIsPassedInPublish() {
-        val messageTypeValue = "messageType"
+    fun testTypeQueryParamIsPassedInPublish() {
+        val typeValue = "type"
 
         pubnub.publishFileMessage(
             channel = channel,
             message = message,
             fileId = fileId,
             fileName = filename,
-            messageType = MessageType(messageTypeValue)
+            type = typeValue
         ).sync()
 
         verify(
             getRequestedFor(filesUrlPathMatcher())
-                .withQueryParam(PublishFileMessage.MESSAGE_TYPE_QUERY_PARAM, EqualToPattern(messageTypeValue))
+                .withQueryParam(PublishFileMessage.TYPE_QUERY_PARAM, EqualToPattern(typeValue))
         )
     }
 
     @Test
-    fun testMissingMessageTypeQueryParamIsNotSet() {
+    fun testMissingTypeQueryParamIsNotSet() {
         pubnub.publishFileMessage(
             channel = channel, message = message, fileId = fileId, fileName = filename
         ).sync()
 
         verify(
             getRequestedFor(filesUrlPathMatcher())
-                .withQueryParam(PublishFileMessage.MESSAGE_TYPE_QUERY_PARAM, AbsentPattern.ABSENT)
+                .withQueryParam(PublishFileMessage.TYPE_QUERY_PARAM, AbsentPattern.ABSENT)
         )
     }
 

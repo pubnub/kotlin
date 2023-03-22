@@ -22,7 +22,6 @@ import com.pubnub.api.SpaceId
 import com.pubnub.api.endpoints.pubsub.Publish
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.legacy.BaseTest
-import com.pubnub.api.models.consumer.MessageType
 import org.awaitility.Awaitility
 import org.hamcrest.core.IsEqual
 import org.json.JSONArray
@@ -576,8 +575,8 @@ class PublishTest : BaseTest() {
     }
 
     @Test
-    fun testMessageTypeQueryParamIsPassedInPublish() {
-        val messageTypeValue = "messageType"
+    fun testTypeQueryParamIsPassedInPublish() {
+        val typeValue = "type"
 
         stubFor(
             get(publishUrl())
@@ -587,17 +586,17 @@ class PublishTest : BaseTest() {
         pubnub.publish(
             channel = channel,
             message = "hi",
-            messageType = MessageType(messageTypeValue)
+            type = typeValue
         ).sync()
 
         WireMock.verify(
             getRequestedFor(publishUrl())
-                .withQueryParam(Publish.MESSAGE_TYPE_QUERY_PARAM, EqualToPattern(messageTypeValue))
+                .withQueryParam(Publish.MESSAGE_TYPE_QUERY_PARAM, EqualToPattern(typeValue))
         )
     }
 
     @Test
-    fun testMissingMessageTypeQueryParamIsNotSet() {
+    fun testMissingTypeQueryParamIsNotSet() {
         stubFor(
             get(publishUrl())
                 .willReturn(aSuccessPublishResponse())

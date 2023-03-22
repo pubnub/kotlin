@@ -31,6 +31,8 @@ data class PNFetchMessagesResult(
  * which key is the actual value of the message action,
  * and the key being a list of actions, ie. a list of UUIDs which have posted such a message action.
  * @property messageType The message type associated with the item.
+ * @property type The type associated with the item.
+ * @property spaceId The spaceId associated with the item.
  *
  * @see [Action]
  */
@@ -41,6 +43,7 @@ data class PNFetchMessageItem(
     val timetoken: Long,
     val actions: Map<String, Map<String, List<Action>>>? = null,
     val messageType: HistoryMessageType?,
+    val type: String?,
     val spaceId: SpaceId?,
 )
 

@@ -65,22 +65,22 @@ class SubscribeSteps(
         }
     }
 
-    @Then("response contains messages with {string} and {string} message types")
+    @Then("response contains messages with {string} and {string} types")
     fun response_contains_messages_with_and_message_types(
-        firstMessageType: String,
-        secondMessageType: String
+        firstType: String,
+        secondType: String
     ) {
         assertThat(
             subscribeState.messagesList.mapNotNull {
                 when (it) {
                     is MessageResult -> {
-                        it.messageType.value
+                        it.type
                     }
 
                     else -> null
                 }
             },
-            hasItems(firstMessageType, secondMessageType)
+            hasItems(firstType, secondType)
         )
     }
 

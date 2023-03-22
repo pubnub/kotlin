@@ -10,7 +10,6 @@ import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.legacy.endpoints.files.TestsWithFiles.Companion.folder
 import com.pubnub.api.legacy.endpoints.remoteaction.TestRemoteAction
-import com.pubnub.api.models.consumer.MessageType
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.files.PNBaseFile
 import com.pubnub.api.models.consumer.files.PNFileUploadResult
@@ -72,11 +71,11 @@ class SendFileTest : TestsWithFiles {
     }
 
     @Test
-    fun spaceIdAndMessageTypeArePassedToPublishMessageFile() {
+    fun spaceIdAndTypeArePassedToPublishMessageFile() {
         // given
         val file = getTemporaryFile(filename)
         val expectedSpaceId = SpaceId("spaceId")
-        val expectedMessageType = MessageType("messageType")
+        val expectedType = "type"
         val fileUploadRequestDetails = generateUploadUrlProperResponse()
         val expectedResponse = pnFileUploadResult()
         val publishFileMessageResult = PNPublishFileMessageResult(expectedResponse.timetoken)
@@ -100,7 +99,7 @@ class SendFileTest : TestsWithFiles {
                 file.name,
                 fileInputStream,
                 spaceId = expectedSpaceId,
-                messageType = expectedMessageType
+                type = expectedType
             ).sync()
         }
 
@@ -108,7 +107,7 @@ class SendFileTest : TestsWithFiles {
         verify {
             publishFileMessageFactory.create(
                 any(),
-                any(), any(), any(), any(), any(), any(), eq(expectedSpaceId), eq(expectedMessageType)
+                any(), any(), any(), any(), any(), any(), eq(expectedSpaceId), eq(expectedType)
             )
         }
         Assert.assertEquals(expectedResponse, result)
@@ -236,14 +235,14 @@ class SendFileTest : TestsWithFiles {
         inputStream: InputStream,
         numberOfRetries: Int = 1,
         spaceId: SpaceId? = null,
-        messageType: MessageType? = null
+        type: String? = null
     ): SendFile {
         return SendFile(
             channel = channel,
             fileName = fileName,
             inputStream = inputStream,
             spaceId = spaceId,
-            messageType = messageType,
+            type = type,
             generateUploadUrlFactory = generateUploadUrlFactory,
             publishFileMessageFactory = publishFileMessageFactory,
             sendFileToS3Factory = sendFileToS3Factory,

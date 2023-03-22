@@ -45,18 +45,10 @@ class HistorySteps(
         }
     }
 
-    @Then("history response contains messages without message types")
-    fun history_response_contains_messages_without_message_types() {
+    @Then("history response contains messages without types")
+    fun history_response_contains_messages_without_types() {
         assertThat(
-            historyState.fetchMessagesResult?.allFetchMessageItems()?.mapNotNull { it.messageType },
-            empty()
-        )
-    }
-
-    @Then("history response contains messages with message types")
-    fun history_response_contains_messages_with_message_types() {
-        assertThat(
-            historyState.fetchMessagesResult?.allFetchMessageItems()?.map { it.messageType }?.filter { it == null },
+            historyState.fetchMessagesResult?.allFetchMessageItems()?.mapNotNull { it.type },
             empty()
         )
     }
@@ -77,8 +69,16 @@ class HistorySteps(
         )
     }
 
-    @Then("history response contains messages with {string} and {string} message types")
-    fun history_response_contains_messages_with_and_message_types(firstMessageType: String, secondMessageType: String) {
+    @Then("history response contains messages with {string} and {string} types")
+    fun history_response_contains_messages_with_and_types(firstType: String, secondType: String) {
+        assertThat(
+            historyState.fetchMessagesResult?.allFetchMessageItems()?.map { it.type },
+            hasItems(firstType, secondType)
+        )
+    }
+
+    @Then("history response contains messages with {integer} and {integer} message types")
+    fun history_response_contains_messages_with_and_message_types(firstMessageType: Int, secondMessageType: Int) {
         assertThat(
             historyState.fetchMessagesResult?.allFetchMessageItems()?.map { it.messageType?.value },
             hasItems(firstMessageType, secondMessageType)

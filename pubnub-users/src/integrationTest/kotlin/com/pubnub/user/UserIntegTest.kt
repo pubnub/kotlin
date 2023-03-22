@@ -5,6 +5,7 @@ import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubException
 import com.pubnub.api.UserId
 import com.pubnub.api.callbacks.SubscribeCallback
+import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.objects.ResultSortKey
@@ -171,6 +172,7 @@ class UserIntegTest {
         val created = CountDownLatch(1)
         var user = User(id = USER_ID_01)
         val connected = CountDownLatch(1)
+        pubnub.configuration.logVerbosity = PNLogVerbosity.BODY
         pubnub.addListener(object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
                 if (pnStatus.category == PNStatusCategory.PNConnectedCategory) {

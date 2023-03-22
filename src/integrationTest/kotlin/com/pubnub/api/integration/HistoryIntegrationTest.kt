@@ -10,7 +10,6 @@ import com.pubnub.api.CommonUtils.retry
 import com.pubnub.api.PubNubError
 import com.pubnub.api.SpaceId
 import com.pubnub.api.await
-import com.pubnub.api.models.consumer.MessageType
 import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.history.PNFetchMessagesResult
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
@@ -601,16 +600,16 @@ class HistoryIntegrationTest : BaseIntegrationTest() {
     }
 
     @Test
-    fun testFetchMessagesContainSpaceIdAndMessageType() {
+    fun testFetchMessagesContainSpaceIdAndType() {
         val channel = randomChannel()
-        val expectedMessageType = MessageType("thisIsMessageType")
+        val expectedType = "thisIsType"
         val expectedSpaceId = SpaceId("thisIsSpace")
 
         val result = pubnub.publish(
             channel = channel,
             message = CommonUtils.generatePayload(),
             spaceId = expectedSpaceId,
-            messageType = expectedMessageType
+            type = expectedType
         ).sync()
 
         assertNotNull(result)
@@ -630,7 +629,7 @@ class HistoryIntegrationTest : BaseIntegrationTest() {
                 assertThat(fetchResult?.channels, aMapWithSize(not(0)))
             }
         val fetchMessageItem = fetchResult!!.channels.values.first().first()
-        assertEquals(expectedMessageType, fetchMessageItem.messageType)
+        assertEquals(expectedType, fetchMessageItem.type)
         assertEquals(expectedSpaceId, fetchMessageItem.spaceId)
     }
 }

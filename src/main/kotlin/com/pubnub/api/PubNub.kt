@@ -62,7 +62,6 @@ import com.pubnub.api.managers.SubscriptionManager
 import com.pubnub.api.managers.TelemetryManager
 import com.pubnub.api.managers.TokenManager
 import com.pubnub.api.managers.TokenParser
-import com.pubnub.api.models.consumer.MessageType
 import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.access_manager.sum.SpacePermissions
 import com.pubnub.api.models.consumer.access_manager.sum.UserPermissions
@@ -185,7 +184,7 @@ class PubNub(val configuration: PNConfiguration) {
      *            - If ttl isn't specified, then expiration of the message defaults
      *              back to the expiry value for the key.
      * @param spaceId ID of a space to which the message should be sent to.
-     * @param messageType The type associated with the message.
+     * @param type The type associated with the message.
      */
     fun publish(
         channel: String,
@@ -196,7 +195,7 @@ class PubNub(val configuration: PNConfiguration) {
         replicate: Boolean = true,
         ttl: Int? = null,
         spaceId: SpaceId? = null,
-        messageType: MessageType? = null
+        type: String? = null
     ) = Publish(
         pubnub = this,
         channel = channel,
@@ -207,7 +206,7 @@ class PubNub(val configuration: PNConfiguration) {
         replicate = replicate,
         ttl = ttl,
         spaceId = spaceId,
-        messageType = messageType
+        type = type
     )
 
     /**
@@ -266,14 +265,14 @@ class PubNub(val configuration: PNConfiguration) {
      * @param channel The channel which the signal will be sent to.
      * @param message The payload which will be serialized and sent.
      * @param spaceId ID of a space to which the message should be sent to.
-     * @param messageType The type associated with the message.
+     * @param type The type associated with the message.
      */
     fun signal(
         channel: String,
         message: Any,
         spaceId: SpaceId? = null,
-        messageType: MessageType? = null
-    ) = Signal(pubnub = this, channel = channel, message = message, spaceId = spaceId, messageType = messageType)
+        type: String? = null
+    ) = Signal(pubnub = this, channel = channel, message = message, spaceId = spaceId, type = type)
     //endregion
 
     //region Subscribe
@@ -556,11 +555,11 @@ class PubNub(val configuration: PNConfiguration) {
      */
     @Deprecated(
         replaceWith = ReplaceWith(
-            "fetchMessages(channels = channels, page = PNBoundedPage(start = start, end = end, limit = maximumPerChannel),includeMeta = includeMeta, includeMessageActions = includeMessageActions, includeSpaceId = includeSpaceId, includeMessageType = includeMessageType)",
+            "fetchMessages(channels = channels, page = PNBoundedPage(start = start, end = end, limit = maximumPerChannel),includeMeta = includeMeta, includeMessageActions = includeMessageActions, includeSpaceId = includeSpaceId, includeMessageType = includeMessageType, includeUUID = includeUUID, includeType = includeType)",
             "com.pubnub.api.models.consumer.PNBoundedPage"
         ),
         level = DeprecationLevel.ERROR,
-        message = "Use fetchMessages(String, PNBoundedPage, Boolean, Boolean, Boolean, Boolean) instead"
+        message = "Use fetchMessages(String, PNBoundedPage, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean) instead"
     )
     fun fetchMessages(
         channels: List<String>,
@@ -570,14 +569,18 @@ class PubNub(val configuration: PNConfiguration) {
         includeMeta: Boolean = false,
         includeMessageActions: Boolean = false,
         includeSpaceId: Boolean = false,
-        includeMessageType: Boolean = false
+        includeMessageType: Boolean = true,
+        includeType: Boolean = true,
+        includeUUID: Boolean = true
     ) = fetchMessages(
         channels = channels,
         page = PNBoundedPage(start = start, end = end, limit = maximumPerChannel),
         includeMeta = includeMeta,
         includeMessageActions = includeMessageActions,
         includeMessageType = includeMessageType,
-        includeSpaceId = includeSpaceId
+        includeSpaceId = includeSpaceId,
+        includeType = includeType,
+        includeUUID = includeUUID
     )
 
     /**
@@ -624,6 +627,7 @@ class PubNub(val configuration: PNConfiguration) {
         includeMeta: Boolean = false,
         includeMessageActions: Boolean = false,
         includeMessageType: Boolean = true,
+        includeType: Boolean = true,
         includeSpaceId: Boolean = false
     ) = FetchMessages(
         pubnub = this,
@@ -633,6 +637,7 @@ class PubNub(val configuration: PNConfiguration) {
         includeMeta = includeMeta,
         includeMessageActions = includeMessageActions,
         includeMessageType = includeMessageType,
+        includeType = includeType,
         includeSpaceId = includeSpaceId
     )
 
@@ -1761,7 +1766,7 @@ class PubNub(val configuration: PNConfiguration) {
         shouldStore: Boolean? = null,
         cipherKey: String? = null,
         spaceId: SpaceId? = null,
-        messageType: MessageType? = null
+        type: String? = null
     ): SendFile {
         return SendFile(
             channel = channel,
@@ -1773,7 +1778,7 @@ class PubNub(val configuration: PNConfiguration) {
             shouldStore = shouldStore,
             cipherKey = cipherKey,
             spaceId = spaceId,
-            messageType = messageType,
+            type = type,
             executorService = retrofitManager.getTransactionClientExecutorService(),
             fileMessagePublishRetryLimit = configuration.fileMessagePublishRetryLimit,
             generateUploadUrlFactory = GenerateUploadUrl.Factory(this),
@@ -1899,7 +1904,7 @@ class PubNub(val configuration: PNConfiguration) {
         ttl: Int? = null,
         shouldStore: Boolean? = null,
         spaceId: SpaceId? = null,
-        messageType: MessageType? = null
+        type: String? = null
     ): PublishFileMessage {
         return PublishFileMessage(
             pubNub = this,
@@ -1911,7 +1916,7 @@ class PubNub(val configuration: PNConfiguration) {
             ttl = ttl,
             shouldStore = shouldStore,
             spaceId = spaceId,
-            messageType = messageType
+            type = type
         )
     }
     //endregion

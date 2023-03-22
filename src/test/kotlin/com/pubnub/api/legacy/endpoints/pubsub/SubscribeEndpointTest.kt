@@ -14,7 +14,6 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.SpaceId
 import com.pubnub.api.endpoints.pubsub.Subscribe
 import com.pubnub.api.legacy.BaseTest
-import com.pubnub.api.models.consumer.MessageType
 import com.pubnub.api.models.server.SubscribeMessage
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -561,8 +560,8 @@ class SubscribeEndpointTest : BaseTest() {
     }
 
     @Test
-    fun subscribeCanReturnMessageTypeAndSpaceId() {
-        val expectedMessageType = MessageType("thisIsCustomMessageType")
+    fun subscribeCanReturnTypeAndSpaceId() {
+        val expectedType = "thisIsCustomType"
         val expectedSpaceId = SpaceId("thisIsSpaceId")
         stubFor(
             get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/coolChannel/0"))
@@ -590,7 +589,7 @@ class SubscribeEndpointTest : BaseTest() {
                                   },
                                   "b": "coolChan-bnel",
                                   "e": 0,
-                                  "mt": "${expectedMessageType.value}",
+                                  "mt": "$expectedType",
                                   "si": "${expectedSpaceId.value}"
                                 }
                               ]
@@ -609,7 +608,7 @@ class SubscribeEndpointTest : BaseTest() {
         assertEquals(1, subscribeEnvelope.messages.size)
 
         val subscribeMessage: SubscribeMessage = subscribeEnvelope.messages[0]
-        assertEquals(expectedMessageType, subscribeMessage.userMessageType)
+        assertEquals(expectedType, subscribeMessage.type)
         assertEquals(expectedSpaceId, subscribeMessage.spaceId)
     }
 }
