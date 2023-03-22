@@ -23,11 +23,11 @@ class HistorySteps(
             }
     }
 
-    @When("I fetch message history with 'includeMessageType' set to {boolean} for {string} channel")
+    @When("I fetch message history with 'includeType' set to {boolean} for {string} channel")
     fun i_fetch_message_history_with_include_message_type_set_to_value_for_channel(value: Boolean, channel: String) {
         world.pubnub.fetchMessages(
             channels = listOf(channel),
-            includeMessageType = value
+            includeType = value
         ).sync()?.also {
             historyState.fetchMessagesResult = it
             world.responseStatus = 200
