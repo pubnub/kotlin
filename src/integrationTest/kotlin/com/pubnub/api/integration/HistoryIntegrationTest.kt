@@ -1,618 +1,99 @@
 package com.pubnub.api.integration
 
+import com.google.gson.JsonObject
+import com.google.gson.JsonPrimitive
 import com.pubnub.api.CommonUtils
-import com.pubnub.api.CommonUtils.assertPnException
 import com.pubnub.api.CommonUtils.emoji
-import com.pubnub.api.CommonUtils.publishMixed
 import com.pubnub.api.CommonUtils.randomChannel
-import com.pubnub.api.CommonUtils.randomValue
-import com.pubnub.api.CommonUtils.retry
-import com.pubnub.api.PubNubError
 import com.pubnub.api.SpaceId
-import com.pubnub.api.await
-import com.pubnub.api.models.consumer.PNBoundedPage
+import com.pubnub.api.models.consumer.history.Action
+import com.pubnub.api.models.consumer.history.HistoryMessageType
+import com.pubnub.api.models.consumer.history.PNFetchMessageItem
 import com.pubnub.api.models.consumer.history.PNFetchMessagesResult
+import com.pubnub.api.models.consumer.history.PNHistoryItemResult
+import com.pubnub.api.models.consumer.history.PNHistoryResult
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
-import com.pubnub.api.param
 import org.awaitility.kotlin.await
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.aMapWithSize
+import org.hamcrest.Matchers.hasSize
 import org.hamcrest.Matchers.not
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertNotNull
-import org.junit.Assert.assertNull
-import org.junit.Assert.assertTrue
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Test
 import java.time.Duration
 
 class HistoryIntegrationTest : BaseIntegrationTest() {
 
     @Test
-    fun testHistorySingleChannel() {
-        val expectedChannelName = randomValue()
-        val expectedMessageCount = 10
-
-        assertEquals(
-            expectedMessageCount,
-            publishMixed(pubnub, expectedMessageCount, expectedChannelName).size
-        )
-
-        retry {
-            pubnub.history(
-                channel = expectedChannelName
-            ).sync()!!.run {
-                messages.forEach {
-                    assertNotNull(it.entry)
-                    assertNull(it.meta)
-                    assertNull(it.timetoken)
-                }
-            }
-        }
-    }
-
-    @Test
-    fun testHistorySingleChannel_Timetoken() {
-        val expectedChannelName = randomValue()
-        val expectedMessageCount = 10
-
-        assertEquals(
-            expectedMessageCount,
-            publishMixed(pubnub, expectedMessageCount, expectedChannelName).size
-        )
-
-        retry {
-            pubnub.history(
-                channel = expectedChannelName,
-                includeTimetoken = true
-            ).sync()!!.run {
-                this.messages.forEach {
-                    assertNotNull(it.entry)
-                    assertNotNull(it.timetoken)
-                    assertNull(it.meta)
-                }
-            }
-        }
-    }
-
-    @Test
-    fun testHistorySingleChannel_Meta() {
-        val expectedChannelName = randomValue()
-        val expectedMessageCount = 10
-
-        assertEquals(
-            expectedMessageCount,
-            publishMixed(pubnub, expectedMessageCount, expectedChannelName).size
-        )
-
-        retry {
-            pubnub.history(
-                channel = expectedChannelName,
-                includeMeta = true
-            ).sync()!!.run {
-                messages.forEach {
-                    assertNotNull(it.entry)
-                    assertNull(it.timetoken)
-                    assertNotNull(it.meta)
-                }
-            }
-        }
-    }
-
-    @Test
-    fun testHistorySingleChannel_Meta_Timetoken() {
-        val expectedChannelName = randomValue()
-        val expectedMessageCount = 10
-
-        assertEquals(
-            expectedMessageCount,
-            publishMixed(pubnub, expectedMessageCount, expectedChannelName).size
-        )
-
-        retry {
-            pubnub.history(
-                channel = expectedChannelName,
-                includeMeta = true,
-                includeTimetoken = true
-            ).sync()!!.run {
-                messages.forEach {
-                    assertNotNull(it.entry)
-                    assertNotNull(it.timetoken)
-                    assertNotNull(it.meta)
-                }
-            }
-        }
-    }
-
-    @Test
-    fun testFetchSingleChannel() {
-        val expectedChannelName = randomValue()
-
-        publishMixed(pubnub, 10, expectedChannelName)
-
-        retry {
-            pubnub.fetchMessages(
-                channels = listOf(expectedChannelName),
-                page = PNBoundedPage(
-                    limit = 25
-                )
-            ).sync()!!.run {
-                channels[expectedChannelName]!!.forEach {
-                    assertNotNull(it.message)
-                    assertNotNull(it.timetoken)
-                    assertNull(it.meta)
-                    assertNull(it.actions)
-                }
-            }
-        }
-    }
-
-    @Test
-    fun testFetchSingleChannel_Meta() {
-        val expectedChannelName = randomValue()
-        publishMixed(pubnub, 10, expectedChannelName)
-
-        retry {
-            pubnub.fetchMessages(
-                channels = listOf(expectedChannelName),
-                page = PNBoundedPage(limit = 25),
-                includeMeta = true
-            ).sync()!!.run {
-                channels[expectedChannelName]!!.forEach {
-                    assertNotNull(it.message)
-                    assertNotNull(it.timetoken)
-                    assertNotNull(it.meta)
-                    assertNull(it.actions)
-                }
-            }
-        }
-    }
-
-    @Test
-    fun testFetchSingleChannel_Actions() {
-        val expectedChannelName = randomValue()
-        val results = publishMixed(pubnub, 120, expectedChannelName)
-
-        // todo check with executorservice
-
-        pubnub.addMessageAction(
-            channel = expectedChannelName,
-            messageAction = PNMessageAction(
-                type = "reaction",
-                value = emoji(),
-                messageTimetoken = results[0].timetoken
-            )
-        ).sync()!!
-
-        retry {
-            pubnub.fetchMessages(
-                channels = listOf(expectedChannelName),
-                page = PNBoundedPage(limit = 25),
-                includeMeta = false,
-                includeMessageActions = true
-            ).sync()!!.run {
-                channels[expectedChannelName]!!.forEach {
-                    assertNotNull(it.message)
-                    assertNotNull(it.timetoken)
-                    assertNull(it.meta)
-                    if (it.timetoken == results[0].timetoken) {
-                        assertNotNull(it.actions)
-                    } else {
-                        assertTrue(it.actions!!.isEmpty())
-                    }
-                }
-            }
-        }
-    }
-
-    @Test
-    fun testFetchSingleChannel_ActionsMeta() {
-        val expectedChannelName = randomValue()
-        val results = publishMixed(pubnub, 2, expectedChannelName)
-
-        pubnub.addMessageAction(
-            channel = expectedChannelName,
-            messageAction = PNMessageAction(
-                type = "reaction",
-                value = emoji(),
-                messageTimetoken = results[0].timetoken
-            )
-        ).sync()!!
-
-        retry {
-            pubnub.fetchMessages(
-                channels = listOf(expectedChannelName),
-                page = PNBoundedPage(limit = 25),
-                includeMeta = true,
-                includeMessageActions = true
-            ).sync()!!.run {
-                channels[expectedChannelName]!!.forEach {
-                    assertNotNull(it.message)
-                    assertNotNull(it.timetoken)
-                    assertNotNull(it.meta)
-                    if (it.timetoken == results[0].timetoken) {
-                        assertNotNull(it.actions)
-                    } else {
-                        assertTrue(it.actions!!.isEmpty())
-                    }
-                }
-            }
-        }
-    }
-
-    @Test
-    fun testFetchMultiChannel() {
-        val expectedChannelNames = generateSequence { randomValue() }
-            .take(2).toList()
-            .also {
-                it.forEach { channel ->
-                    publishMixed(pubnub, 10, channel)
-                }
-            }
-
-        retry {
-            pubnub.fetchMessages(
-                channels = expectedChannelNames,
-                page = PNBoundedPage(
-                    limit = 25
-                )
-            ).sync()!!.run {
-                expectedChannelNames.forEach { expectedChannel ->
-                    channels[expectedChannel]!!.forEach {
-                        assertNotNull(it.message)
-                        assertNotNull(it.timetoken)
-                        assertNull(it.meta)
-                        assertNull(it.actions)
-                    }
-                }
-            }
-        }
-    }
-
-    @Test
-    fun testFetchSingleChannel_NoLimit() {
-        val expectedChannelName = randomValue()
-        assertEquals(10, publishMixed(pubnub, 10, expectedChannelName).size)
-
-        retry {
-            pubnub.fetchMessages(
-                channels = listOf(expectedChannelName)
-            ).sync()!!.run {
-                assertEquals(1, channels[expectedChannelName]!!.size)
-                channels[expectedChannelName]!!.forEach {
-                    assertNotNull(it.message)
-                    assertNotNull(it.timetoken)
-                    assertNull(it.meta)
-                    assertNull(it.actions)
-                }
-            }
-        }
-    }
-
-    @Test
-    fun testFetchSingleChannel_OverflowLimit() {
-        val expectedChannelName = randomValue()
-
-        assertEquals(10, publishMixed(pubnub, 10, expectedChannelName).size)
-
-        retry {
-            pubnub.fetchMessages(
-                channels = listOf(expectedChannelName),
-                page = PNBoundedPage(
-                    limit = 100
-                )
-            ).sync()!!.apply {
-                assertEquals(10, channels[expectedChannelName]!!.size)
-                channels[expectedChannelName]!!.forEach {
-                    assertNotNull(it.message)
-                    assertNotNull(it.timetoken)
-                    assertNull(it.meta)
-                    assertNull(it.actions)
-                }
-            }
-        }
-    }
-
-    @Test
-    fun testHistorySingleChannel_IncludeAll_Crypto() {
-        val expectedCipherKey = randomValue()
-        pubnub.configuration.cipherKey = expectedCipherKey
-
-        val observer = createPubNub().apply {
-            configuration.cipherKey = expectedCipherKey
-        }
-
-        assertEquals(pubnub.configuration.cipherKey, observer.configuration.cipherKey)
-
-        val expectedChannelName = randomValue()
-        val expectedMessageCount = 10
-
-        assertEquals(
-            expectedMessageCount,
-            publishMixed(pubnub, expectedMessageCount, expectedChannelName).size
-        )
-
-        retry {
-            observer.history(
-                channel = expectedChannelName,
-                includeTimetoken = true,
-                includeMeta = true
-            ).sync()!!.run {
-                messages.forEach {
-                    assertNotNull(it.entry)
-                    assertNotNull(it.timetoken)
-                    assertNotNull(it.meta)
-                    assertTrue(it.entry.toString().contains("_msg"))
-                }
-            }
-        }
-    }
-
-    @Test
-    fun testFetchSingleChannel_IncludeAll_Crypto() {
-        val expectedCipherKey = randomValue()
-        pubnub.configuration.cipherKey = expectedCipherKey
-
-        val observer = createPubNub().apply {
-            configuration.cipherKey = expectedCipherKey
-        }
-
-        assertEquals(pubnub.configuration.cipherKey, observer.configuration.cipherKey)
-
-        val expectedChannelName = randomValue()
-        val expectedMessageCount = 10
-
-        assertEquals(
-            expectedMessageCount,
-            publishMixed(pubnub, expectedMessageCount, expectedChannelName).size
-        )
-
-        retry {
-            observer.fetchMessages(
-                channels = listOf(expectedChannelName),
-                includeMeta = true
-            ).sync()!!.run {
-                channels[expectedChannelName]!!.forEach {
-                    assertNotNull(it.message)
-                    assertNotNull(it.timetoken)
-                    assertNotNull(it.meta)
-                    assertNull(it.actions)
-                    assertTrue(it.message.toString().contains("_msg"))
-                }
-            }
-        }
-    }
-
-    @Test
-    fun testFetchSingleChannel_WithActions_IncludeAll_Crypto() {
-        val expectedCipherKey = randomValue()
-        pubnub.configuration.cipherKey = expectedCipherKey
-
-        val observer = createPubNub().apply {
-            configuration.cipherKey = expectedCipherKey
-        }
-
-        assertEquals(pubnub.configuration.cipherKey, observer.configuration.cipherKey)
-
-        val expectedChannelName = randomValue()
-        val expectedMessageCount = 10
-
-        val mixed = publishMixed(pubnub, expectedMessageCount, expectedChannelName)
-        assertEquals(expectedMessageCount, mixed.size)
-
-        val messagesWithActions = mutableListOf<Long>()
-
-        mixed.forEachIndexed { i, it ->
-            if (i % 2 == 0) {
-                val reaction = pubnub.addMessageAction(
-                    channel = expectedChannelName,
-                    messageAction = PNMessageAction(
-                        type = "reaction",
-                        value = emoji(),
-                        messageTimetoken = it.timetoken
-                    )
-                ).sync()!!
-                messagesWithActions.add(reaction.messageTimetoken)
-            }
-        }
-
-        retry {
-            observer.fetchMessages(
-                channels = listOf(expectedChannelName),
-                includeMeta = true,
-                includeMessageActions = true
-            ).sync()!!.run {
-                channels[expectedChannelName]!!.forEach {
-                    assertNotNull(it.message)
-                    assertNotNull(it.timetoken)
-                    assertNotNull(it.meta)
-                    if (messagesWithActions.contains(it.timetoken)) {
-                        assertNotNull(it.actions)
-                    } else {
-                        assertTrue(it.actions!!.isEmpty())
-                    }
-                    assertTrue(it.message.toString().contains("_msg"))
-                }
-            }
-        }
-    }
-
-    @Test
-    fun testFetchMultiChannel_WithMessageActions_Exception() {
-        try {
-            pubnub.fetchMessages(
-                channels = listOf(randomValue(), randomValue()),
-                includeMessageActions = true
-            ).sync()!!
-        } catch (e: Exception) {
-            assertPnException(PubNubError.HISTORY_MESSAGE_ACTIONS_MULTIPLE_CHANNELS, e)
-        }
-    }
-
-    @Test
-    fun testFetchSingleChannel_NoActions_Limit_Default() {
-        pubnub.fetchMessages(
-            channels = listOf(randomValue())
-        ).await { _, status ->
-            assertEquals("1", status.param("max"))
-        }
-    }
-
-    @Test
-    fun testFetchSingleChannel_NoActions_Limit_Low() {
-        pubnub.fetchMessages(
-            channels = listOf(randomValue()),
-            page = PNBoundedPage(
-                limit = -1
-            )
-        ).await { _, status ->
-            assertEquals("1", status.param("max"))
-        }
-    }
-
-    @Test
-    fun testFetchSingleChannel_NoActions_Limit_Valid() {
-        pubnub.fetchMessages(
-            channels = listOf(randomValue()),
-            page = PNBoundedPage(
-                limit = 15
-            )
-        ).await { _, status ->
-            assertEquals("15", status.param("max"))
-        }
-    }
-
-    @Test
-    fun testFetchSingleChannel_NoActions_Limit_High() {
-        pubnub.fetchMessages(
-            channels = listOf(randomValue()),
-            page = PNBoundedPage(
-                limit = 100
-            )
-        ).await { _, status ->
-            assertEquals("25", status.param("max"))
-        }
-    }
-
-    @Test
-    fun testFetchSingleChannel_WithActions_Limit_Default() {
-        pubnub.fetchMessages(
-            channels = listOf(randomValue()),
-            includeMessageActions = true
-        ).await { _, status ->
-            assertEquals("25", status.param("max"))
-        }
-    }
-
-    @Test
-    fun testFetchSingleChannel_WithActions_Limit_Low() {
-        pubnub.fetchMessages(
-            channels = listOf(randomValue()),
-            page = PNBoundedPage(
-                limit = -1
-            ),
-            includeMessageActions = true
-        ).await { _, status ->
-            assertEquals("25", status.param("max"))
-        }
-    }
-
-    @Test
-    fun testFetchSingleChannel_WithActions_Limit_High() {
-        pubnub.fetchMessages(
-            channels = listOf(randomValue()),
-            page = PNBoundedPage(
-                limit = 200
-            ),
-            includeMessageActions = true
-        ).await { _, status ->
-            assertEquals("25", status.param("max"))
-        }
-    }
-
-    @Test
-    fun testFetchSingleChannel_WithActions_Limit_Valid() {
-        pubnub.fetchMessages(
-            channels = listOf(randomValue()),
-            page = PNBoundedPage(
-                limit = 15
-            ),
-            includeMessageActions = true
-        ).await { _, status ->
-            assertEquals("15", status.param("max"))
-        }
-    }
-    @Test
-    fun testEmptyMeta() {
-        val expectedChannel = randomChannel()
-
-        // publish a message without any metadata
-        pubnub.publish(
-            message = randomValue(),
-            channel = expectedChannel
-        ).sync()!!
-
-        // /v2/history
-        retry {
-            pubnub.history(
-                channel = expectedChannel,
-                includeMeta = true
-            ).sync()!!.run {
-                assertEquals(1, messages.size)
-                assertNotNull(messages[0].meta)
-            }
-        }
-
-        // /v3/history
-        pubnub.fetchMessages(
-            channels = listOf(expectedChannel),
-            includeMeta = true
-        ).sync()!!.run {
-            assertEquals(1, channels[expectedChannel]!!.size)
-            assertNotNull(channels[expectedChannel]!![0].meta)
-        }
-
-        // /v3/history-with-actions
-        pubnub.fetchMessages(
-            channels = listOf(expectedChannel),
-            includeMeta = true,
-            includeMessageActions = true
-        ).sync()!!.run {
-            assertEquals(1, channels[expectedChannel]!!.size)
-            assertNotNull(channels[expectedChannel]!![0].meta)
-        }
-
-        // three responses from three different APIs will return a non-null meta field
-    }
-
-    @Test
-    fun testCountFallback() {
-        val expectedChannel = randomChannel()
-
-        pubnub.history(
-            channel = expectedChannel,
-            includeMeta = true,
-            count = -1
-        ).await { _, status ->
-            assertFalse(status.error)
-            assertEquals("100", status.param("count"))
-        }
-    }
-
-    @Test
-    fun testFetchMessagesContainSpaceIdAndType() {
+    fun historySingleScenario() {
         val channel = randomChannel()
         val expectedType = "thisIsType"
         val expectedSpaceId = SpaceId("thisIsSpace")
+        val expectedMeta = JsonObject().also { it.add("thisIsMeta", JsonPrimitive("thisIsMetaValue")) }
+        val expectedMessage = CommonUtils.generatePayload()
 
         val result = pubnub.publish(
             channel = channel,
-            message = CommonUtils.generatePayload(),
+            message = expectedMessage,
             spaceId = expectedSpaceId,
-            type = expectedType
-        ).sync()
+            type = expectedType,
+            meta = expectedMeta,
+            shouldStore = true,
+            ttl = 60
+        ).sync()!!
 
-        assertNotNull(result)
+        var historyResult: PNHistoryResult? = null
+
+        await
+            .pollInterval(Duration.ofMillis(1_000))
+            .pollDelay(Duration.ofMillis(1_000))
+            .atMost(Duration.ofMillis(10_000))
+            .untilAsserted {
+                historyResult = pubnub.history(
+                    channel = channel,
+                    includeMeta = true,
+                    includeTimetoken = true,
+                ).sync()
+
+                assertNotNull(historyResult)
+                assertThat(historyResult?.messages, hasSize(not(0)))
+            }
+
+        val expectedHistoryResultChannels =
+            listOf(PNHistoryItemResult(entry = expectedMessage, timetoken = result.timetoken, meta = expectedMeta))
+
+        assertEquals(expectedHistoryResultChannels, historyResult?.messages)
+    }
+
+    @Test
+    fun fetchMessagesSingleScenario() {
+        val channel = randomChannel()
+        val expectedType = "thisIsType"
+        val expectedSpaceId = SpaceId("thisIsSpace")
+        val expectedMeta = JsonObject().also { it.add("thisIsMeta", JsonPrimitive("thisIsMetaValue")) }
+        val expectedMessage = CommonUtils.generatePayload()
+        val expectedAction = "reaction"
+        val expectedActionValue = emoji()
+
+        val result = pubnub.publish(
+            channel = channel,
+            message = expectedMessage,
+            spaceId = expectedSpaceId,
+            type = expectedType,
+            meta = expectedMeta,
+            shouldStore = true,
+            ttl = 60
+        ).sync()!!
+
+        val actionResult = pubnub.addMessageAction(
+            channel = channel,
+            messageAction = PNMessageAction(
+                type = expectedAction,
+                value = expectedActionValue,
+                messageTimetoken = result.timetoken
+            )
+        ).sync()!!
 
         var fetchResult: PNFetchMessagesResult? = null
 
@@ -623,13 +104,64 @@ class HistoryIntegrationTest : BaseIntegrationTest() {
             .untilAsserted {
                 fetchResult = pubnub.fetchMessages(
                     includeSpaceId = true,
+                    includeMeta = true,
+                    includeMessageActions = true,
+                    includeType = true,
+                    includeMessageType = true,
+                    includeUUID = true,
                     channels = listOf(channel)
                 ).sync()
                 assertNotNull(fetchResult)
                 assertThat(fetchResult?.channels, aMapWithSize(not(0)))
             }
-        val fetchMessageItem = fetchResult!!.channels.values.first().first()
-        assertEquals(expectedType, fetchMessageItem.type)
-        assertEquals(expectedSpaceId, fetchMessageItem.spaceId)
+
+        val expectedItem = PNFetchMessageItem(
+            uuid = pubnub.configuration.userId.value,
+            message = expectedMessage,
+            timetoken = result.timetoken,
+            meta = expectedMeta,
+            type = expectedType,
+            spaceId = expectedSpaceId,
+            messageType = HistoryMessageType.Message,
+            actions = mapOf(
+                expectedAction to mapOf(
+                    expectedActionValue to listOf(
+                        Action(
+                            actionTimetoken = actionResult.actionTimetoken.toString(),
+                            uuid = pubnub.configuration.userId.value
+                        )
+                    )
+                )
+            ),
+        )
+
+        val expectedChannelsResponse: Map<String, List<PNFetchMessageItem>> =
+            mapOf(
+                channel to listOf(
+                    expectedItem
+                )
+            )
+
+        val fetchMessageItem = fetchResult!!
+        assertEquals(expectedChannelsResponse, fetchMessageItem.channels)
+
+        val fetchResultWithoutActions = pubnub.fetchMessages(
+            includeSpaceId = true,
+            includeMeta = true,
+            includeMessageActions = false,
+            includeType = true,
+            includeMessageType = true,
+            includeUUID = true,
+            channels = listOf(channel)
+        ).sync()!!
+
+        assertEquals(
+            mapOf(
+                channel to listOf(
+                    expectedItem.copy(actions = null)
+                )
+            ),
+            fetchResultWithoutActions.channels
+        )
     }
 }

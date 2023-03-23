@@ -13,7 +13,7 @@ import com.pubnub.api.suite.SUB
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 
-class SubscribeTestSuite : EndpointTestSuite<Subscribe, SubscribeEnvelope>() {
+internal class SubscribeTestSuite : EndpointTestSuite<Subscribe, SubscribeEnvelope>() {
 
     override fun telemetryParamName() = ""
 

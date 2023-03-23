@@ -22,6 +22,7 @@ import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
 import com.pubnub.api.models.server.PresenceEnvelope
 import com.pubnub.api.models.server.SubscribeMessage
 import com.pubnub.api.models.server.files.FileUploadNotification
+import com.pubnub.api.models.server.pubsub.MessageType
 import com.pubnub.api.services.FilesService
 import com.pubnub.api.vendor.Crypto
 import org.slf4j.LoggerFactory
@@ -97,8 +98,8 @@ internal class SubscribeMessageProcessor(
                 publisher = message.issuingClientId
             )
 
-            return when (message.pnMessageTypeInt) {
-                null, 0 -> {
+            return when (MessageType.of(message.messageTypeInt)) {
+                MessageType.Message -> {
                     PNMessageResult(
                         basePubSubResult = result,
                         message = extractedMessage!!,
@@ -107,7 +108,7 @@ internal class SubscribeMessageProcessor(
                     )
                 }
 
-                1 -> {
+                MessageType.Signal -> {
                     PNSignalResult(
                         basePubSubResult = result,
                         message = extractedMessage!!,
@@ -116,7 +117,7 @@ internal class SubscribeMessageProcessor(
                     )
                 }
 
-                2 -> {
+                MessageType.Object -> {
                     PNObjectEventResult(
                         result,
                         pubnub.mapper.convertValue(
@@ -125,7 +126,7 @@ internal class SubscribeMessageProcessor(
                     )
                 }
 
-                3 -> {
+                MessageType.MessageAction -> {
                     val objectPayload = pubnub.mapper.convertValue(extractedMessage, ObjectPayload::class.java)
                     val data = objectPayload.data.asJsonObject
                     if (!data.has("uuid")) {
@@ -138,7 +139,7 @@ internal class SubscribeMessageProcessor(
                     )
                 }
 
-                4 -> {
+                MessageType.File -> {
                     val fileUploadNotification = pubnub.mapper.convertValue(
                         extractedMessage, FileUploadNotification::class.java
                     )
@@ -160,10 +161,6 @@ internal class SubscribeMessageProcessor(
                         type = message.type,
                         userMetadata = message.userMetadata
                     )
-                }
-
-                else -> {
-                    TODO()
                 }
             }
         }

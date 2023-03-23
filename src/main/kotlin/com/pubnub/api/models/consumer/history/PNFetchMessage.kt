@@ -4,7 +4,6 @@ import com.google.gson.JsonElement
 import com.pubnub.api.PubNub
 import com.pubnub.api.SpaceId
 import com.pubnub.api.endpoints.FetchMessages
-import com.pubnub.api.models.consumer.HistoryMessageType
 import com.pubnub.api.models.consumer.PNBoundedPage
 
 /**

@@ -1,4 +1,4 @@
-package com.pubnub.api.models.consumer
+package com.pubnub.api.models.consumer.history
 
 import com.pubnub.api.PubNubException
 

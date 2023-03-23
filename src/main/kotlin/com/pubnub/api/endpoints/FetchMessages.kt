@@ -6,8 +6,8 @@ import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.SpaceId
 import com.pubnub.api.enums.PNOperationType
-import com.pubnub.api.models.consumer.HistoryMessageType
 import com.pubnub.api.models.consumer.PNBoundedPage
+import com.pubnub.api.models.consumer.history.HistoryMessageType
 import com.pubnub.api.models.consumer.history.PNFetchMessageItem
 import com.pubnub.api.models.consumer.history.PNFetchMessagesResult
 import com.pubnub.api.models.server.FetchMessagesEnvelope

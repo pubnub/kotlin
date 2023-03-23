@@ -2,7 +2,7 @@ package com.pubnub.api.models.server
 
 import com.google.gson.annotations.SerializedName
 
-class SubscribeEnvelope(
+internal class SubscribeEnvelope(
 
     @SerializedName("m")
     internal val messages: List<SubscribeMessage>,

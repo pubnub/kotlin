@@ -47,7 +47,7 @@ class SubscribeMessageProcessorTest {
     @Test
     fun pnMessageResultWillNotContainTypeIfItsNotSetInSubscribeMessage() {
         val subscribeMessage = subscribeMessage().copy(
-            pnMessageTypeInt = 0,
+            messageTypeInt = 0,
             type = null
         )
 
@@ -60,7 +60,7 @@ class SubscribeMessageProcessorTest {
     fun pnSignalResultWillContainSpaceIdIfItsSetInSubscribeMessage() {
         val expectedSpaceId = SpaceId("spaceId")
         val subscribeMessage = subscribeMessage().copy(
-            pnMessageTypeInt = 1,
+            messageTypeInt = 1,
             spaceIdString = expectedSpaceId.value
         )
 
@@ -73,7 +73,7 @@ class SubscribeMessageProcessorTest {
     fun pnSignalResultWillContainTypeIfItsSetInSubscribeMessage() {
         val expectedType = "type"
         val subscribeMessage = subscribeMessage().copy(
-            pnMessageTypeInt = 1,
+            messageTypeInt = 1,
             type = expectedType
         )
 
@@ -85,7 +85,7 @@ class SubscribeMessageProcessorTest {
     @Test
     fun pnSignalResultWillNotContainTypeIfItsNotSetInSubscribeMessage() {
         val subscribeMessage = subscribeMessage().copy(
-            pnMessageTypeInt = 1,
+            messageTypeInt = 1,
             type = null
         )
 
@@ -99,7 +99,7 @@ class SubscribeMessageProcessorTest {
         val expectedSpaceId = SpaceId("spaceId")
         val subscribeMessage = subscribeMessage().copy(
             spaceIdString = expectedSpaceId.value,
-            pnMessageTypeInt = 4,
+            messageTypeInt = 4,
             payload = filePayload()
         )
 
@@ -113,7 +113,7 @@ class SubscribeMessageProcessorTest {
         val expectedType = "type"
         val subscribeMessage = subscribeMessage().copy(
             type = expectedType,
-            pnMessageTypeInt = 4,
+            messageTypeInt = 4,
             payload = filePayload()
         )
 
@@ -125,7 +125,7 @@ class SubscribeMessageProcessorTest {
     @Test
     fun pnFileResultWillNotContainTypeIfItsNotSetInSubscribeMessage() {
         val subscribeMessage = subscribeMessage().copy(
-            pnMessageTypeInt = 4,
+            messageTypeInt = 4,
             payload = filePayload(),
             type = null
         )
@@ -157,7 +157,7 @@ class SubscribeMessageProcessorTest {
         channel = "testChannel",
         type = null,
         spaceIdString = null,
-        pnMessageTypeInt = null,
+        messageTypeInt = null,
         subscriptionMatch = null,
         issuingClientId = null,
         subscribeKey = "demo",
