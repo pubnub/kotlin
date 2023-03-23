@@ -9,16 +9,14 @@ import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.objects.ResultSortKey
-import com.pubnub.user.UserIntegTest.Companion.pubnub
 import com.pubnub.user.models.consumer.User
 import com.pubnub.user.models.consumer.UserKey
 import com.pubnub.user.models.consumer.UserModified
 import com.pubnub.user.models.consumer.UsersResult
-import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.fail
@@ -27,74 +25,49 @@ import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
 class UserIntegTest {
-    companion object {
-        private val randomTestRunIdentifier = UUID.randomUUID().toString()
-        private val USER_ID = "userInteg_id_${randomTestRunIdentifier}_"
-        private val USER_ID_01 = UserId(USER_ID + "1")
-        private val USER_ID_02 = UserId(USER_ID + "2")
-        private val USER_NAME = "unitTestKT_name"
-        private val EXTERNAL_ID = "externalId"
-        private val PROFILE_URL = "profileUrl"
-        private val EMAIL = "email"
-        private val CUSTOM = mapOf("favouriteNumber" to 1, "favouriteColour" to "green")
-        private val TYPE = "type"
-        private val STATUS = "status"
+    private lateinit var pubnub: PubNub
 
-        val pubnub: PubNub by lazy {
-            val config = PNConfiguration(userId = UserId("kotlin")).apply {
-                subscribeKey = IntegTestConf.subscribeKey
-                publishKey = IntegTestConf.publishKey
-                IntegTestConf.origin?.let {
-                    origin = it
-                }
+    private val randomTestUniqueId = UUID.randomUUID().toString()
+    private val USER_ID = "userInter_${randomTestUniqueId}_"
+    private val USER_ID_01 = UserId(USER_ID + "1")
+    private val USER_ID_02 = UserId(USER_ID + "2")
+
+    private val USER_NAME = "unitTestKT_name"
+    private val EXTERNAL_ID = "externalId"
+    private val PROFILE_URL = "profileUrl"
+    private val EMAIL = "email"
+    private val CUSTOM = mapOf("favouriteNumber" to 1, "favouriteColour" to "green")
+    private val TYPE = randomTestUniqueId.replace("-", "")
+    private val STATUS = "status"
+
+    @BeforeEach
+    fun setUp() {
+        val config = PNConfiguration(userId = UserId("kotlin")).apply {
+            subscribeKey = IntegTestConf.subscribeKey
+            publishKey = IntegTestConf.publishKey
+            IntegTestConf.origin?.let {
+                origin = it
             }
-            PubNub(config)
         }
-        @JvmStatic
-        @BeforeAll
-        fun beforeAll() {
-            createUser(userId = USER_ID_01)
-            createUser(userId = USER_ID_02)
-        }
-
-        @JvmStatic
-        @AfterAll
-        fun afterAll() {
-            pubnub.removeUser(userId = USER_ID_01).sync()
-            pubnub.removeUser(userId = USER_ID_02).sync()
-        }
-
-        private fun createUser(userId: UserId): User {
-            return pubnub.createUser(
-                userId = userId,
-                name = USER_NAME,
-                externalId = EXTERNAL_ID,
-                profileUrl = PROFILE_URL,
-                email = EMAIL,
-                custom = CUSTOM,
-                includeCustom = true,
-                type = TYPE,
-                status = STATUS
-            ).sync()!!
-        }
+        pubnub = PubNub(config)
+        pubnub.removeUser(userId = USER_ID_01).sync()
+        pubnub.removeUser(userId = USER_ID_02).sync()
     }
 
     @Test
     internal fun can_createUser() {
-        val userId = UserId(USER_ID)
-        val user: User = createUser(userId)
+        val userId = USER_ID_01
+        val user: User? = createUser(userId)
 
-        assertEquals(userId, user.id)
-        assertEquals(USER_NAME, user.name)
-        assertEquals(EXTERNAL_ID, user.externalId)
-        assertEquals(PROFILE_URL, user.profileUrl)
-        assertEquals(EMAIL, user.email)
-        assertTrue(user.custom?.containsKey("favouriteNumber")!!)
+        assertEquals(userId, user?.id)
+        assertEquals(USER_NAME, user?.name)
+        assertEquals(EXTERNAL_ID, user?.externalId)
+        assertEquals(PROFILE_URL, user?.profileUrl)
+        assertEquals(EMAIL, user?.email)
+        assertTrue(user?.custom?.containsKey("favouriteNumber")!!)
         assertTrue(user.custom?.containsKey("favouriteColour")!!)
         assertTrue(user.updated != null)
         assertTrue(user.eTag != null)
-
-        pubnub.removeUser(userId).sync()
     }
 
     @Test
@@ -124,7 +97,10 @@ class UserIntegTest {
         val userId02 = USER_ID_02
         createUser(userId02)
 
-        val usersResult: UsersResult? = pubnub.fetchUsers(limit = 100, includeCount = true, includeCustom = true).sync()
+        val usersResult: UsersResult? = pubnub.fetchUsers(
+            limit = 100, includeCount = true, includeCustom = true,
+            filter = "type == \"$TYPE\""
+        ).sync()
 
         assertEquals(2, usersResult?.data?.size)
         assertEquals(2, usersResult?.totalCount)
@@ -178,7 +154,8 @@ class UserIntegTest {
         val usersResultAsc: UsersResult? = pubnub.fetchUsers(
             limit = 100,
             includeCount = true,
-            sort = listOf(ResultSortKey.Asc(key = UserKey.ID))
+            sort = listOf(ResultSortKey.Asc(key = UserKey.ID)),
+            filter = "type == \"$TYPE\""
         ).sync()
 
         assertEquals(USER_ID_01, usersResultAsc?.data?.first()?.id)
@@ -240,5 +217,19 @@ class UserIntegTest {
     internal fun tearDown() {
         pubnub.removeUser(userId = USER_ID_01).sync()
         pubnub.removeUser(userId = USER_ID_02).sync()
+    }
+
+    private fun createUser(userId: UserId): User? {
+        return pubnub.createUser(
+            userId = userId,
+            name = USER_NAME,
+            externalId = EXTERNAL_ID,
+            profileUrl = PROFILE_URL,
+            email = EMAIL,
+            custom = CUSTOM,
+            includeCustom = true,
+            type = TYPE,
+            status = STATUS
+        ).sync()
     }
 }
