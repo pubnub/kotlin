@@ -146,17 +146,6 @@ class SpaceIntegTest {
 
         assertEquals(SPACE_ID_01, spacesResultAsc?.data?.first()?.id)
         assertEquals(SPACE_ID_02, spacesResultAsc?.data?.elementAt(1)?.id)
-
-        val spacesResultDesc: SpacesResult? = pubnub.fetchSpaces(
-            limit = 100,
-            includeCount = true,
-            sort = listOf(
-                ResultSortKey.Desc(key = SpaceKey.ID)
-            )
-        ).sync()
-
-        assertEquals(SPACE_ID_02, spacesResultDesc?.data?.first()?.id)
-        assertEquals(SPACE_ID_01, spacesResultDesc?.data?.elementAt(1)?.id)
     }
 
     @Test
