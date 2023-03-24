@@ -2,7 +2,6 @@ package com.pubnub.api.models.consumer.pubsub.files
 
 import com.google.gson.JsonElement
 import com.pubnub.api.SpaceId
-import com.pubnub.api.models.consumer.MessageType
 import com.pubnub.api.models.consumer.files.PNDownloadableFile
 import com.pubnub.api.models.consumer.pubsub.PNEvent
 
@@ -15,5 +14,5 @@ data class PNFileEventResult(
     val file: PNDownloadableFile,
     val jsonMessage: JsonElement,
     val spaceId: SpaceId?,
-    val messageType: MessageType?
+    val type: String?
 ) : PNEvent

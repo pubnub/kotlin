@@ -9,8 +9,8 @@ import com.github.tomakehurst.wiremock.client.WireMock.urlMatching
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 import com.pubnub.api.endpoints.FetchMessages
 import com.pubnub.api.legacy.BaseTest
-import com.pubnub.api.models.consumer.MessageType
 import com.pubnub.api.models.consumer.PNBoundedPage
+import com.pubnub.api.models.consumer.history.HistoryMessageType
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.contains
@@ -512,12 +512,10 @@ class FetchMessagesEndpointTest : BaseTest() {
 
     @Test
     fun testMessageTypesAreProperlyDeserialized() {
-        val customType = "customType"
-
         stubFor(
             get(urlPathEqualTo("/v3/history/sub-key/mySubscribeKey/channel/$channel")).willReturn(
                 aResponse().withBody(
-                    responseWithMessagesForChannelWithMessageType(channel, customType)
+                    responseWithMessagesForChannelWithMessageType(channel)
                 )
             )
         )
@@ -528,7 +526,7 @@ class FetchMessagesEndpointTest : BaseTest() {
 
         assertThat(
             response.channels.values.flatMap { items -> items.map { it.messageType } },
-            contains(MessageType(customType), MessageType.of(0))
+            contains(HistoryMessageType.Message, HistoryMessageType.File)
         )
     }
 
@@ -551,7 +549,7 @@ class FetchMessagesEndpointTest : BaseTest() {
         """.trimIndent()
     }
 
-    private fun responseWithMessagesForChannelWithMessageType(channel: String, customType: String): String {
+    private fun responseWithMessagesForChannelWithMessageType(channel: String): String {
         return """{
           "status": 200,
           "error": false,
@@ -561,13 +559,12 @@ class FetchMessagesEndpointTest : BaseTest() {
               {
                 "message": "thisIsMessage1",
                 "timetoken": "14797423056306675",
-                "message_type": 0,
-                "type": "$customType"
+                "message_type": 0
               },
               {
                 "message": "thisIsMessage2",
                 "timetoken": "14797423056306676",
-                "message_type": 0
+                "message_type": 4
               }
             ]
           }

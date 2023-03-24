@@ -8,7 +8,6 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.SpaceId
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
 import com.pubnub.api.enums.PNOperationType
-import com.pubnub.api.models.consumer.MessageType
 import com.pubnub.api.models.consumer.files.PNBaseFile
 import com.pubnub.api.models.consumer.files.PNPublishFileMessageResult
 import com.pubnub.api.models.server.files.FileUploadNotification
@@ -30,14 +29,14 @@ open class PublishFileMessage(
     private val ttl: Int? = null,
     private val shouldStore: Boolean? = null,
     private val spaceId: SpaceId? = null,
-    private val messageType: MessageType? = null,
+    private val type: String? = null,
     pubNub: PubNub
 ) : Endpoint<List<Any>, PNPublishFileMessageResult>(pubNub) {
     private val pnFile = PNBaseFile(fileId, fileName)
 
     companion object {
         internal const val SPACE_ID_QUERY_PARAM = "space-id"
-        internal const val MESSAGE_TYPE_QUERY_PARAM = "type"
+        internal const val TYPE_QUERY_PARAM = "type"
     }
 
     @Throws(PubNubException::class)
@@ -63,7 +62,7 @@ open class PublishFileMessage(
         shouldStore?.numericString?.let { queryParams["store"] = it }
         ttl?.let { queryParams["ttl"] = it.toString() }
         spaceId?.run { queryParams[SPACE_ID_QUERY_PARAM] = spaceId.value }
-        messageType?.run { queryParams[MESSAGE_TYPE_QUERY_PARAM] = messageType.value }
+        type?.run { queryParams[TYPE_QUERY_PARAM] = this }
 
         return pubnub.retrofitManager.filesService.notifyAboutFileUpload(
             pubnub.configuration.publishKey,
@@ -99,7 +98,7 @@ open class PublishFileMessage(
             ttl: Int? = null,
             shouldStore: Boolean? = null,
             spaceId: SpaceId? = null,
-            messageType: MessageType? = null,
+            type: String? = null,
         ): ExtendedRemoteAction<PNPublishFileMessageResult> {
             return PublishFileMessage(
                 channel = channel,
@@ -111,7 +110,7 @@ open class PublishFileMessage(
                 shouldStore = shouldStore,
                 pubNub = pubNub,
                 spaceId = spaceId,
-                messageType = messageType
+                type = type
             )
         }
     }

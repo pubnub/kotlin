@@ -5,6 +5,7 @@ import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubException
 import com.pubnub.api.UserId
 import com.pubnub.api.callbacks.SubscribeCallback
+import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.objects.ResultSortKey
@@ -19,13 +20,15 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.fail
+import java.util.UUID
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
 class UserIntegTest {
     private lateinit var pubnub: PubNub
 
-    private val USER_ID = "userInteg_id"
+    private val randomTestUniqueId = UUID.randomUUID().toString()
+    private val USER_ID = "userInter_${randomTestUniqueId}_"
     private val USER_ID_01 = UserId(USER_ID + "1")
     private val USER_ID_02 = UserId(USER_ID + "2")
 
@@ -34,7 +37,7 @@ class UserIntegTest {
     private val PROFILE_URL = "profileUrl"
     private val EMAIL = "email"
     private val CUSTOM = mapOf("favouriteNumber" to 1, "favouriteColour" to "green")
-    private val TYPE = "type"
+    private val TYPE = randomTestUniqueId.replace("-", "")
     private val STATUS = "status"
 
     @BeforeEach
@@ -94,7 +97,10 @@ class UserIntegTest {
         val userId02 = USER_ID_02
         createUser(userId02)
 
-        val usersResult: UsersResult? = pubnub.fetchUsers(limit = 100, includeCount = true, includeCustom = true).sync()
+        val usersResult: UsersResult? = pubnub.fetchUsers(
+            limit = 100, includeCount = true, includeCustom = true,
+            filter = "type == \"$TYPE\""
+        ).sync()
 
         assertEquals(2, usersResult?.data?.size)
         assertEquals(2, usersResult?.totalCount)
@@ -148,7 +154,8 @@ class UserIntegTest {
         val usersResultAsc: UsersResult? = pubnub.fetchUsers(
             limit = 100,
             includeCount = true,
-            sort = listOf(ResultSortKey.Asc(key = UserKey.ID))
+            sort = listOf(ResultSortKey.Asc(key = UserKey.ID)),
+            filter = "type == \"$TYPE\""
         ).sync()
 
         assertEquals(USER_ID_01, usersResultAsc?.data?.first()?.id)
@@ -171,6 +178,7 @@ class UserIntegTest {
         val created = CountDownLatch(1)
         var user = User(id = USER_ID_01)
         val connected = CountDownLatch(1)
+        pubnub.configuration.logVerbosity = PNLogVerbosity.BODY
         pubnub.addListener(object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
                 if (pnStatus.category == PNStatusCategory.PNConnectedCategory) {

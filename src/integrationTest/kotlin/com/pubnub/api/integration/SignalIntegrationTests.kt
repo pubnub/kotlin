@@ -2,7 +2,6 @@ package com.pubnub.api.integration
 
 import com.google.gson.JsonObject
 import com.pubnub.api.SpaceId
-import com.pubnub.api.models.consumer.MessageType
 import org.hamcrest.MatcherAssert
 import org.hamcrest.Matchers
 import org.junit.jupiter.api.Test
@@ -11,7 +10,7 @@ import java.util.concurrent.TimeUnit
 class SignalIntegrationTests : BaseIntegrationTest() {
 
     private val expectedSpaceId = SpaceId("thisIsSpace")
-    private val expectedMessageType = MessageType("thisIsMessageType")
+    private val expectedType = "thisIsType"
     private val expectedPayload = JsonObject().apply { addProperty("this_is_payload", "value") }
 
     @Test
@@ -22,13 +21,13 @@ class SignalIntegrationTests : BaseIntegrationTest() {
                 channel = it.channel,
                 message = expectedPayload,
                 spaceId = expectedSpaceId,
-                messageType = expectedMessageType,
+                type = expectedType,
             ).sync()!!
 
             val signal = it.receivedSignals.pollOrThrow(3_000, TimeUnit.MILLISECONDS)
 
             MatcherAssert.assertThat(signal.channel, Matchers.`is`(it.channel))
-            MatcherAssert.assertThat(signal.messageType, Matchers.`is`(expectedMessageType))
+            MatcherAssert.assertThat(signal.type, Matchers.`is`(expectedType))
             MatcherAssert.assertThat(signal.spaceId, Matchers.`is`(expectedSpaceId))
             MatcherAssert.assertThat(signal.message, Matchers.`is`(expectedPayload))
         }

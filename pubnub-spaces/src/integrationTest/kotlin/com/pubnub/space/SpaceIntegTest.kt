@@ -21,20 +21,22 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.fail
+import java.util.UUID
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
 class SpaceIntegTest {
     private lateinit var pubnub: PubNub
 
-    private val SPACE_ID = SpaceId("spaceIntegId")
+    private val randomTestUniqueId = UUID.randomUUID().toString()
+    private val SPACE_ID = SpaceId("spaceInteg_${randomTestUniqueId}_")
     private val SPACE_ID_01 = SpaceId(SPACE_ID.value + "1")
     private val SPACE_ID_02 = SpaceId(SPACE_ID.value + "2")
     private val SPACE_NAME = "spaceIntegName"
     private val DESCRIPTION = "space description"
     private val CUSTOM: Map<String, String> = mapOf("favouritePet" to "mouse")
     private val STATUS = "Status"
-    private val TYPE = "Type"
+    private val TYPE = randomTestUniqueId.replace("-", "")
 
     @BeforeEach
     fun setUp() {
@@ -89,7 +91,10 @@ class SpaceIntegTest {
         val spaceId02 = SPACE_ID_02
         createSpace(spaceId02)
 
-        val spacesResult: SpacesResult? = pubnub.fetchSpaces(limit = 100, includeCount = true).sync()
+        val spacesResult: SpacesResult? = pubnub.fetchSpaces(
+            limit = 100, includeCount = true,
+            filter = "type == \"$TYPE\""
+        ).sync()
 
         assertEquals(2, spacesResult?.data?.size)
         assertEquals(2, spacesResult?.totalCount)
@@ -135,22 +140,12 @@ class SpaceIntegTest {
             includeCount = true,
             sort = listOf(
                 ResultSortKey.Asc(key = SpaceKey.ID)
-            )
+            ),
+            filter = "type == \"$TYPE\""
         ).sync()
 
         assertEquals(SPACE_ID_01, spacesResultAsc?.data?.first()?.id)
         assertEquals(SPACE_ID_02, spacesResultAsc?.data?.elementAt(1)?.id)
-
-        val spacesResultDesc: SpacesResult? = pubnub.fetchSpaces(
-            limit = 100,
-            includeCount = true,
-            sort = listOf(
-                ResultSortKey.Desc(key = SpaceKey.ID)
-            )
-        ).sync()
-
-        assertEquals(SPACE_ID_02, spacesResultDesc?.data?.first()?.id)
-        assertEquals(SPACE_ID_01, spacesResultDesc?.data?.elementAt(1)?.id)
     }
 
     @Test

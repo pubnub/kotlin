@@ -17,7 +17,6 @@ import com.pubnub.api.endpoints.pubsub.Publish
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.listen
-import com.pubnub.api.models.consumer.MessageType
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
@@ -254,8 +253,8 @@ class SignalTest : BaseTest() {
     }
 
     @Test
-    fun testMessageTypeQueryParamIsPassedInPublish() {
-        val messageTypeValue = "thisIsSpaceId"
+    fun testTypeQueryParamIsPassedInPublish() {
+        val typeValue = "thisIsSpaceId"
 
         stubFor(
             get(WireMock.urlPathEqualTo("/signal/myPublishKey/mySubscribeKey/0/$channel/0/%22hi%22"))
@@ -265,19 +264,19 @@ class SignalTest : BaseTest() {
         pubnub.signal(
             channel = channel,
             message = "hi",
-            messageType = MessageType(messageTypeValue)
+            type = typeValue
         ).sync()!!
 
         val requests = findAll(getRequestedFor(urlMatching("/.*")))
         assertEquals(1, requests.size)
         MatcherAssert.assertThat(
             requests[0].queryParams.map { (k, v) -> k to v.firstValue() }.toMap(),
-            Matchers.hasEntry(Publish.MESSAGE_TYPE_QUERY_PARAM, messageTypeValue)
+            Matchers.hasEntry(Publish.MESSAGE_TYPE_QUERY_PARAM, typeValue)
         )
     }
 
     @Test
-    fun testMissingMessageTypeQueryParamIsNotSet() {
+    fun testMissingTypeQueryParamIsNotSet() {
         stubFor(
             get(WireMock.urlPathEqualTo("/signal/myPublishKey/mySubscribeKey/0/$channel/0/%22hi%22"))
                 .willReturn(aResponse().withBody("""[1,"Sent","15883272000000000"]"""))

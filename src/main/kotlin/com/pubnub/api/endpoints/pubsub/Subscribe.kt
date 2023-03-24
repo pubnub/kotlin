@@ -10,7 +10,7 @@ import com.pubnub.api.toCsv
 import retrofit2.Call
 import retrofit2.Response
 
-class Subscribe internal constructor(pubnub: PubNub) : Endpoint<SubscribeEnvelope, SubscribeEnvelope>(pubnub) {
+internal class Subscribe internal constructor(pubnub: PubNub) : Endpoint<SubscribeEnvelope, SubscribeEnvelope>(pubnub) {
 
     var channels = emptyList<String>()
     var channelGroups = emptyList<String>()

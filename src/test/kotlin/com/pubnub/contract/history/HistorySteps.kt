@@ -23,11 +23,11 @@ class HistorySteps(
             }
     }
 
-    @When("I fetch message history with 'includeMessageType' set to {boolean} for {string} channel")
+    @When("I fetch message history with 'includeType' set to {boolean} for {string} channel")
     fun i_fetch_message_history_with_include_message_type_set_to_value_for_channel(value: Boolean, channel: String) {
         world.pubnub.fetchMessages(
             channels = listOf(channel),
-            includeMessageType = value
+            includeType = value
         ).sync()?.also {
             historyState.fetchMessagesResult = it
             world.responseStatus = 200
@@ -45,18 +45,10 @@ class HistorySteps(
         }
     }
 
-    @Then("history response contains messages without message types")
-    fun history_response_contains_messages_without_message_types() {
+    @Then("history response contains messages without types")
+    fun history_response_contains_messages_without_types() {
         assertThat(
-            historyState.fetchMessagesResult?.allFetchMessageItems()?.mapNotNull { it.messageType },
-            empty()
-        )
-    }
-
-    @Then("history response contains messages with message types")
-    fun history_response_contains_messages_with_message_types() {
-        assertThat(
-            historyState.fetchMessagesResult?.allFetchMessageItems()?.map { it.messageType }?.filter { it == null },
+            historyState.fetchMessagesResult?.allFetchMessageItems()?.mapNotNull { it.type },
             empty()
         )
     }
@@ -77,8 +69,16 @@ class HistorySteps(
         )
     }
 
-    @Then("history response contains messages with {string} and {string} message types")
-    fun history_response_contains_messages_with_and_message_types(firstMessageType: String, secondMessageType: String) {
+    @Then("history response contains messages with {string} and {string} types")
+    fun history_response_contains_messages_with_and_types(firstType: String, secondType: String) {
+        assertThat(
+            historyState.fetchMessagesResult?.allFetchMessageItems()?.map { it.type },
+            hasItems(firstType, secondType)
+        )
+    }
+
+    @Then("history response contains messages with {integer} and {integer} message types")
+    fun history_response_contains_messages_with_and_message_types(firstMessageType: Int, secondMessageType: Int) {
         assertThat(
             historyState.fetchMessagesResult?.allFetchMessageItems()?.map { it.messageType?.value },
             hasItems(firstMessageType, secondMessageType)

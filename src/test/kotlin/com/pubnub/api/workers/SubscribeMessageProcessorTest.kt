@@ -7,7 +7,6 @@ import com.pubnub.api.PubNub
 import com.pubnub.api.SpaceId
 import com.pubnub.api.UserId
 import com.pubnub.api.managers.DuplicationManager
-import com.pubnub.api.models.consumer.MessageType
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult
 import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
@@ -15,6 +14,7 @@ import com.pubnub.api.models.server.PublishMetaData
 import com.pubnub.api.models.server.SubscribeMessage
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers
+import org.hamcrest.Matchers.nullValue
 import org.junit.Test
 import org.hamcrest.core.Is.`is` as iz
 
@@ -33,34 +33,34 @@ class SubscribeMessageProcessorTest {
     }
 
     @Test
-    fun pnMessageResultWillContainMessageTypeIfItsSetInSubscribeMessage() {
-        val expectedMessageType = MessageType("messageType")
+    fun pnMessageResultWillContainTypeIfItsSetInSubscribeMessage() {
+        val expectedType = "type"
         val subscribeMessage = subscribeMessage().copy(
-            userMessageTypeString = expectedMessageType.value
+            type = expectedType
         )
 
         val result = subscribeMessageProcessor().processIncomingPayload(subscribeMessage)
         assertThat(result, Matchers.instanceOf(PNMessageResult::class.java))
-        assertThat((result as PNMessageResult).messageType, iz(expectedMessageType))
+        assertThat((result as PNMessageResult).type, iz(expectedType))
     }
 
     @Test
-    fun pnMessageResultWillContainMessageMessageTypeIfItsNotSetInSubscribeMessage() {
+    fun pnMessageResultWillNotContainTypeIfItsNotSetInSubscribeMessage() {
         val subscribeMessage = subscribeMessage().copy(
-            pnMessageTypeInt = 0,
-            userMessageTypeString = null
+            messageTypeInt = 0,
+            type = null
         )
 
         val result = subscribeMessageProcessor().processIncomingPayload(subscribeMessage)
         assertThat(result, Matchers.instanceOf(PNMessageResult::class.java))
-        assertThat((result as PNMessageResult).messageType, iz(MessageType.Message))
+        assertThat((result as PNMessageResult).type, iz(nullValue()))
     }
 
     @Test
     fun pnSignalResultWillContainSpaceIdIfItsSetInSubscribeMessage() {
         val expectedSpaceId = SpaceId("spaceId")
         val subscribeMessage = subscribeMessage().copy(
-            pnMessageTypeInt = 1,
+            messageTypeInt = 1,
             spaceIdString = expectedSpaceId.value
         )
 
@@ -70,28 +70,28 @@ class SubscribeMessageProcessorTest {
     }
 
     @Test
-    fun pnSignalResultWillContainMessageTypeIfItsSetInSubscribeMessage() {
-        val expectedMessageType = MessageType("messageType")
+    fun pnSignalResultWillContainTypeIfItsSetInSubscribeMessage() {
+        val expectedType = "type"
         val subscribeMessage = subscribeMessage().copy(
-            pnMessageTypeInt = 1,
-            userMessageTypeString = expectedMessageType.value
+            messageTypeInt = 1,
+            type = expectedType
         )
 
         val result = subscribeMessageProcessor().processIncomingPayload(subscribeMessage)
         assertThat(result, Matchers.instanceOf(PNSignalResult::class.java))
-        assertThat((result as PNSignalResult).messageType, iz(expectedMessageType))
+        assertThat((result as PNSignalResult).type, iz(expectedType))
     }
 
     @Test
-    fun pnSignalResultWillContainSignalMessageTypeIfItsNotSetInSubscribeMessage() {
+    fun pnSignalResultWillNotContainTypeIfItsNotSetInSubscribeMessage() {
         val subscribeMessage = subscribeMessage().copy(
-            pnMessageTypeInt = 1,
-            userMessageTypeString = null
+            messageTypeInt = 1,
+            type = null
         )
 
         val result = subscribeMessageProcessor().processIncomingPayload(subscribeMessage)
         assertThat(result, Matchers.instanceOf(PNSignalResult::class.java))
-        assertThat((result as PNSignalResult).messageType, iz(MessageType.Signal))
+        assertThat((result as PNSignalResult).type, iz(nullValue()))
     }
 
     @Test
@@ -99,7 +99,7 @@ class SubscribeMessageProcessorTest {
         val expectedSpaceId = SpaceId("spaceId")
         val subscribeMessage = subscribeMessage().copy(
             spaceIdString = expectedSpaceId.value,
-            pnMessageTypeInt = 4,
+            messageTypeInt = 4,
             payload = filePayload()
         )
 
@@ -110,29 +110,29 @@ class SubscribeMessageProcessorTest {
 
     @Test
     fun pnFileResultWillContainMessageTypeIfItsSetInSubscribeMessage() {
-        val expectedMessageType = MessageType("messageType")
+        val expectedType = "type"
         val subscribeMessage = subscribeMessage().copy(
-            userMessageTypeString = expectedMessageType.value,
-            pnMessageTypeInt = 4,
+            type = expectedType,
+            messageTypeInt = 4,
             payload = filePayload()
         )
 
         val result = subscribeMessageProcessor().processIncomingPayload(subscribeMessage)
         assertThat(result, Matchers.instanceOf(PNFileEventResult::class.java))
-        assertThat((result as PNFileEventResult).messageType, iz(expectedMessageType))
+        assertThat((result as PNFileEventResult).type, iz(expectedType))
     }
 
     @Test
-    fun pnFileResultWillContainMessageMessageTypeIfItsNotSetInSubscribeMessage() {
+    fun pnFileResultWillNotContainTypeIfItsNotSetInSubscribeMessage() {
         val subscribeMessage = subscribeMessage().copy(
-            pnMessageTypeInt = 4,
+            messageTypeInt = 4,
             payload = filePayload(),
-            userMessageTypeString = null
+            type = null
         )
 
         val result = subscribeMessageProcessor().processIncomingPayload(subscribeMessage)
         assertThat(result, Matchers.instanceOf(PNFileEventResult::class.java))
-        assertThat((result as PNFileEventResult).messageType, iz(MessageType.File))
+        assertThat((result as PNFileEventResult).type, iz(nullValue()))
     }
 
     private fun subscribeMessageProcessor(): SubscribeMessageProcessor {
@@ -155,9 +155,9 @@ class SubscribeMessageProcessorTest {
         flags = "0",
         publishMetaData = PublishMetaData(16710463855524468, 21),
         channel = "testChannel",
-        userMessageTypeString = null,
+        type = null,
         spaceIdString = null,
-        pnMessageTypeInt = null,
+        messageTypeInt = null,
         subscriptionMatch = null,
         issuingClientId = null,
         subscribeKey = "demo",

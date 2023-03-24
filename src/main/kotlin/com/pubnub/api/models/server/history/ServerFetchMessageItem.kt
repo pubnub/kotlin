@@ -11,9 +11,9 @@ data class ServerFetchMessageItem(
     val timetoken: Long,
     val actions: Map<String, Map<String, List<Action>>>? = null,
     @SerializedName("message_type")
-    val pnMessageType: Int? = null,
+    val messageType: Int? = null,
     @SerializedName("type")
-    val userDefinedMessageType: String? = null,
+    val type: String? = null,
     @SerializedName("space_id")
     val spaceId: String? = null,
 )
