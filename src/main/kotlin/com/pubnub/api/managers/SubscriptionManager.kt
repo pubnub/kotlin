@@ -107,7 +107,7 @@ class SubscriptionManager(val pubnub: PubNub, private val subscriptionState: Sta
     }
 
     internal fun adaptStateBuilder(stateOperation: StateOperation) {
-        reconnect(stateOperation)
+        subscriptionState.handleOperation(stateOperation)
     }
 
     internal fun adaptSubscribeBuilder(subscribeOperation: SubscribeOperation) {
