@@ -1,3 +1,9 @@
+## v7.4.3
+April 11 2023
+
+#### Fixed
+- Do not cancel subscribe call on set state.
+
 ## v7.4.2
 March 07 2023
 
