@@ -99,6 +99,8 @@ dependencies {
     testImplementation group: 'io.cucumber', name: 'cucumber-java', version: '6.10.4'
     testImplementation group: 'io.cucumber', name: 'cucumber-junit', version: '6.10.4'
     testImplementation group: 'io.cucumber', name: 'cucumber-picocontainer', version: '6.10.4'
+//    testImplementation 'org.junit.jupiter:junit-jupiter:5.8.2'
+//    testImplementation 'org.junit.vintage:junit-vintage-engine:5.8.2'
 }
 
 shadowJar {
