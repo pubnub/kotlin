@@ -13,7 +13,6 @@ import com.pubnub.api.subscribe.eventengine.transition.transition
 import org.hamcrest.MatcherAssert
 import org.hamcrest.Matchers
 import org.hamcrest.core.IsInstanceOf
-import org.junit.Assert
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
