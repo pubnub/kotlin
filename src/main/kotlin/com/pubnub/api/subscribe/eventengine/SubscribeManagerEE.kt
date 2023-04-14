@@ -21,6 +21,4 @@ class SubscribeManagerEE {
     fun handleEvent(event: Event) {
         eventEngine.performTransitionEmitEffects(event)
     }
-
-
 }

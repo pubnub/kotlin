@@ -21,6 +21,4 @@ class EffectDispatcher {
         transitionConsumerThread.isDaemon = true
         transitionConsumerThread.start()
     }
-
-
 }

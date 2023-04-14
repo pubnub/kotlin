@@ -7,17 +7,23 @@ import com.pubnub.api.subscribe.eventengine.worker.EventConsumerWorker
 import java.util.concurrent.LinkedBlockingQueue
 
 class EventEngine {
-    private val eventQueue :LinkedBlockingQueue<Event>
-    private val effectQueue :LinkedBlockingQueue<EffectInvocation>
+    private val eventQueue: LinkedBlockingQueue<Event>
+    private val effectQueue: LinkedBlockingQueue<EffectInvocation>
     private val eventConsumerThread: Thread
     private val flowQueue: LinkedBlockingQueue<Any>
 
-    constructor(state: State, eventQueue: LinkedBlockingQueue<Event>, effectQueue: LinkedBlockingQueue<EffectInvocation>, flowQueue: LinkedBlockingQueue<Any> ){
+    constructor(
+        state: State,
+        eventQueue: LinkedBlockingQueue<Event>,
+        effectQueue: LinkedBlockingQueue<EffectInvocation>,
+        flowQueue: LinkedBlockingQueue<Any>
+    ) {
         this.eventQueue = eventQueue
         this.effectQueue = effectQueue
         this.flowQueue = flowQueue
-        //parametr w kontruktrze, może mieć defaultowa wartość
-        val eventEngineWorker: EventConsumerWorker = EventConsumerWorker(state, eventQueue, effectQueue, flowQueue, testMode = false)
+        // parametr w kontruktrze, może mieć defaultowa wartość
+        val eventEngineWorker: EventConsumerWorker =
+            EventConsumerWorker(state, eventQueue, effectQueue, flowQueue, testMode = false)
         this.eventConsumerThread = Thread(eventEngineWorker)
 
         eventConsumerThread.name = "EventConsumerThread Consumer Thread"
@@ -25,7 +31,7 @@ class EventEngine {
         eventConsumerThread.start()
     }
 
-    fun performTransitionEmitEffects(event: Event){
+    fun performTransitionEmitEffects(event: Event) {
         eventQueue.add(event)
     }
 }

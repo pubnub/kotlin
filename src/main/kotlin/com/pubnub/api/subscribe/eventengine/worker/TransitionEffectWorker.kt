@@ -16,17 +16,14 @@ class TransitionEffectWorker : Runnable {
         this.effectQueue = effectQueue
     }
 
-
     override fun run() {
         TODO("Not yet implemented")
     }
 
-
     private fun getEffectToEffectHandlerMap(): Map<EffectInvocation, EffectHandler> {
         val effectToEffectHandlerMap: MutableMap<EffectInvocation, EffectHandler> = HashMap()
-//        effectToEffectHandlerMap[Effect.HANDSHAKE_REQUEST] = HandshakeRequestEffectHandler()
-        //... add more
+        // effectToEffectHandlerMap[Effect.HANDSHAKE_REQUEST] = HandshakeRequestEffectHandler()
+        // ... add more
         return effectToEffectHandlerMap
     }
-
 }

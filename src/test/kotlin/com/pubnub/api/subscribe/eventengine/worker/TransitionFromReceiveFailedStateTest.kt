@@ -9,26 +9,25 @@ import org.hamcrest.Matchers
 import org.junit.Assert
 import org.junit.jupiter.api.Test
 
-class TransitionFromHandshakeStoppedStateTest {
-
+class TransitionFromReceiveFailedStateTest {
     @Test
-    fun can_transit_from_HANDSHAKE_STOPPED_to_HANDSHAKE_RECONNECTING_when_there_is_RECONNECT_Event() {
+    fun can_transit_from_RECEIVE_FAILED_to_RECEIVE_RECONNECTING_when_there_is_RECEIVE_RECONNECT_RETRY_Event() {
         // given
         val channels = listOf("Channel1")
         val channelGroups = listOf("ChannelGroup1")
 
         // when
-        val (handshakeReconnecting, effectInvocationsForTransitionFromHandshakeFailedToHandshakeReconnecting) = transition(
-            State.HandshakeStopped,
-            Event.Reconnect(channels, channelGroups)
+        val (receiveReconnecting, effectInvocationsForTransitionFromReceiveFailedToReceiveReconnecting) = transition(
+            State.ReceiveFailed(channels, channelGroups),
+            Event.ReceiveReconnectRetry()
         )
 
         // then
-        Assert.assertEquals(State.HandshakeReconnecting(channels, channelGroups), handshakeReconnecting)
+        Assert.assertEquals(State.ReceiveReconnecting(channels, channelGroups), receiveReconnecting)
         MatcherAssert.assertThat(
-            effectInvocationsForTransitionFromHandshakeFailedToHandshakeReconnecting,
+            effectInvocationsForTransitionFromReceiveFailedToReceiveReconnecting,
             Matchers.contains(
-                EffectInvocation.HandshakeReconnect(channels, channelGroups),
+                EffectInvocation.ReceiveReconnect(channels, channelGroups)
             )
         )
     }

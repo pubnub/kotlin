@@ -14,17 +14,17 @@ class TransitionFromHandshakeFailedStateTest {
 
     @Test
     fun can_transit_from_HANDSHAKE_FAILED_to_HANDSHAKE_RECONNECTING_when_there_is_HANDSHAKE_RECONNECT_RETRY_Event() {
-        //given
+        // given
         val channels = listOf("Channel1")
         val channelGroups = listOf("ChannelGroup1")
 
-        //when
+        // when
         val (handshakeReconnecting, effectInvocationsForTransitionFromHandshakeFailedToHandshakeReconnecting) = transition(
             State.HandshakeFailed,
             Event.HandshakeReconnectRetry(channels, channelGroups)
         )
 
-        //then
+        // then
         Assert.assertEquals(State.HandshakeReconnecting(channels, channelGroups), handshakeReconnecting)
         MatcherAssert.assertThat(
             effectInvocationsForTransitionFromHandshakeFailedToHandshakeReconnecting,
@@ -36,47 +36,45 @@ class TransitionFromHandshakeFailedStateTest {
 
     @Test
     fun can_transit_from_HANDSHAKE_FAILED_to_HANDSHAKE_RECONNECTING_when_there_is_SUBSCRIPTION_CHANGED_Event() {
-        //given
+        // given
         val channels = listOf("Channel1")
         val channelGroups = listOf("ChannelGroup1")
         val timeToken = 12345345452L
         val region = "42"
         val subscriptionCursor = SubscriptionCursor(timeToken, region)
 
-
-        //when
+        // when
         val (handshakeReconnecting, effectInvocationsForTransitionFromHandshakeFailedToHandshakeReconnecting) = transition(
             State.HandshakeFailed,
             Event.SubscriptionChanged(channels, channelGroups, subscriptionCursor)
         )
 
-        //then
+        // then
         Assert.assertEquals(State.HandshakeReconnecting(channels, channelGroups), handshakeReconnecting)
         MatcherAssert.assertThat(
             effectInvocationsForTransitionFromHandshakeFailedToHandshakeReconnecting,
             Matchers.contains(
                 EffectInvocation.HandshakeReconnect(channels, channelGroups),
-                )
+            )
         )
     }
 
     @Test
     fun can_transit_from_HANDSHAKE_FAILED_to_RECEIVE_RECONNECTING_when_there_is_SUBSCRIPTION_RESTORED_Event() {
-        //given
+        // given
         val channels = listOf("Channel1")
         val channelGroups = listOf("ChannelGroup1")
         val timeToken = 12345345452L
         val region = "42"
         val subscriptionCursor = SubscriptionCursor(timeToken, region)
 
-
-        //when
+        // when
         val (receiveReconnecting, effectInvocationsForTransitionFromHandshakeFailedToReceivingReconnecting) = transition(
             State.HandshakeFailed,
             Event.SubscriptionRestored(channels, channelGroups, subscriptionCursor)
         )
 
-        //then
+        // then
         Assert.assertEquals(State.ReceiveReconnecting(channels, channelGroups), receiveReconnecting)
         MatcherAssert.assertThat(
             effectInvocationsForTransitionFromHandshakeFailedToReceivingReconnecting,
@@ -88,18 +86,17 @@ class TransitionFromHandshakeFailedStateTest {
 
     @Test
     fun can_transit_from_HANDSHAKE_FAILED_to_HANDSHAKE_RECONNECTING_when_there_is_RECONNECT_Event() {
-        //given
+        // given
         val channels = listOf("Channel1")
         val channelGroups = listOf("ChannelGroup1")
 
-
-        //when
+        // when
         val (handshakeReconnecting, effectInvocationsForTransitionFromHandshakeFailedToHandshakeReconnecting) = transition(
             State.HandshakeFailed,
             Event.Reconnect(channels, channelGroups)
         )
 
-        //then
+        // then
         Assert.assertEquals(State.HandshakeReconnecting(channels, channelGroups), handshakeReconnecting)
         MatcherAssert.assertThat(
             effectInvocationsForTransitionFromHandshakeFailedToHandshakeReconnecting,
@@ -108,5 +105,4 @@ class TransitionFromHandshakeFailedStateTest {
             )
         )
     }
-
 }

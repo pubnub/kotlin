@@ -21,11 +21,11 @@ class HandshakeRequestEffectHandler : EffectHandler {
             try {
                 Thread.sleep(10000) // simulate 10s execution
                 result = "SUCCESS"
-                //jesli jest sukcess to dodaj do kolejki Eventów "RECONNECTION_SUCCESS"(Handshake Success)
+                // jesli jest sukcess to dodaj do kolejki Eventów "RECONNECTION_SUCCESS"(Handshake Success)
                 eventQueue?.add(Event.Success())
             } catch (e: InterruptedException) {
                 result = "ERROR"
-                //jeśli jest error to co dodaj do kolejki Eventów "RECONNECTION_FAILURE"(Handshake Success)
+                // jeśli jest error to co dodaj do kolejki Eventów "RECONNECTION_FAILURE"(Handshake Success)
                 eventQueue?.add(Event.Fail())
             }
             completableFuture.complete(result)

@@ -8,8 +8,7 @@ sealed class State {
     open fun onEntry(): List<EffectInvocation> = listOf()
     open fun onExit(): List<EffectInvocation> = listOf()
     open fun transition(event: Event): Pair<State, List<EffectInvocation>> =
-        this to listOf()     //zmienić na abstract ?
-
+        this to listOf() // zmienić na abstract ?
 
     object Unsubscribed : State() {
         override fun onEntry(): List<EffectInvocation> {
@@ -26,33 +25,31 @@ sealed class State {
 
             when (event) {
                 is Event.SubscriptionChanged -> {
-                    //na podstawie current stanu wyciągnij onExit effects
+                    // na podstawie current stanu wyciągnij onExit effects
                     println("---State:UNSUBSCRIBED, Event: SUBSCRIPTION_CHANGE, Transition to: HANDSHAKING, Transition effects: ..")
                     stateAfterTransition = Handshaking(event.channels, event.channelGroups)
 
-                    //transitionEffects.add() <--not transition effects here
+                    // transitionEffects.add() <--not transition effects here
                 }
                 is Event.SubscriptionRestored -> {
                     stateAfterTransition = Receiving(event.channels, event.channelGroups, event.subscriptionCursor)
                 }
                 else -> {
-                    //ignore it
+                    // ignore it
                     println("In UNSUBSCRIBED state ignoring event: $event")
                 }
             }
             return Pair(stateAfterTransition, transitionEffects)
-
-
         }
     }
 
     data class Handshaking(private val channels: List<String>, private val channelGroups: List<String>) : State() {
         override fun onEntry(): List<EffectInvocation> {
-            return listOf(EffectInvocation.HandshakeRequest(channels, channelGroups))
+            return listOf(EffectInvocation.Handshake(channels, channelGroups))
         }
 
         override fun onExit(): List<EffectInvocation> {
-            return listOf(EffectInvocation.CancelPendingHandshakeRequest)
+            return listOf(EffectInvocation.CancelHandshake)
         }
 
         override fun transition(event: Event): Pair<State, List<EffectInvocation>> {
@@ -64,8 +61,7 @@ sealed class State {
                     println("---State:, Event: , Transition to: , Transition effects: ..")
 
                     stateAfterTransition = Receiving(channels, channelGroups, event.subscriptionCursor)
-                    transitionEffects.add(EffectInvocation.EmitStatus("Connected")) //toDo change Connected
-
+                    transitionEffects.add(EffectInvocation.EmitStatus("Connected")) // toDo change Connected
                 }
                 is Event.SubscriptionRestored -> {
                     stateAfterTransition = Receiving(event.channels, event.channelGroups, event.subscriptionCursor)
@@ -80,7 +76,6 @@ sealed class State {
                     stateAfterTransition = HandshakeStopped
                 }
                 else -> {
-                    //ignore it
                     println("In UNSUBSCRIBED state ignoring event: $event")
                 }
             }
@@ -88,7 +83,6 @@ sealed class State {
             return Pair(stateAfterTransition, transitionEffects)
         }
     }
-
 
     data class HandshakeReconnecting(private val channels: List<String>, private val channelGroups: List<String>) :
         State() {
@@ -119,7 +113,7 @@ sealed class State {
                 }
                 is Event.HandshakeReconnectSuccess -> {
                     stateAfterTransition = Receiving(event.channels, event.channelGroups, event.subscriptionCursor)
-                    transitionEffects.add(EffectInvocation.EmitStatus("Connected")) //toDo change Connected
+                    transitionEffects.add(EffectInvocation.EmitStatus("Connected")) // toDo change Connected
                 }
                 is Event.SubscriptionRestored -> {
                     stateAfterTransition = Receiving(event.channels, event.channelGroups, event.subscriptionCursor)
@@ -193,12 +187,8 @@ sealed class State {
         }
     }
 
-
-    object RECONNECTING : State()
-    object RECONNECTING_FAILED : State()
-
-    data class ReceiveReconnecting(private val channels: List<String>, val channelGroups: List<String>) :
-        State() {  //toDo czy channels jest potrzebne?
+    data class ReceiveReconnecting(private val channels: List<String>, val channelGroups: List<String>, val attempts: Int = 0) :
+        State() {
         override fun onEntry(): List<EffectInvocation> {
             return listOf(EffectInvocation.ReceiveReconnect(channels, channelGroups))
         }
@@ -208,7 +198,38 @@ sealed class State {
         }
 
         override fun transition(event: Event): Pair<State, List<EffectInvocation>> {
-            return super.transition(event)
+            var stateAfterTransition: State = this
+            val transitionEffects = mutableListOf<EffectInvocation>()
+
+            when (event) {
+                is Event.ReceiveReconnectFailure -> {
+                    stateAfterTransition = ReceiveReconnecting(event.channels, event.channelGroups, attempts) // toDo attempts+1
+                }
+                is Event.SubscriptionChanged -> {
+                    stateAfterTransition = ReceiveReconnecting(event.channels, event.channelGroups) // todo sprawdzić czy to ma być z eventa czy ze stanu, we wszytskich przypadkach
+                }
+                is Event.Disconnect -> {
+                    stateAfterTransition = ReceiveStopped(channels, channelGroups)
+                }
+                is Event.ReceiveReconnectGiveUp -> {
+                    stateAfterTransition = ReceiveFailed(channels, channelGroups)
+                    transitionEffects.add(EffectInvocation.EmitStatus("Disconnected"))
+                }
+                is Event.ReceiveReconnectSuccess -> {
+                    stateAfterTransition = Receiving(channels, channelGroups, event.subscriptionCursor)
+                    transitionEffects.add(EffectInvocation.EmitMessages(event.messages))
+                    transitionEffects.add(EffectInvocation.EmitStatus("Connected"))
+                }
+                is Event.SubscriptionRestored -> {
+                    stateAfterTransition = ReceiveReconnecting(event.channels, event.channelGroups)
+                }
+
+                else -> {
+                    println("In ReceiveReconnecting state ignoring event: $event")
+                }
+            }
+
+            return Pair(stateAfterTransition, transitionEffects)
         }
     }
 
@@ -219,16 +240,16 @@ sealed class State {
     ) : State() {
         override fun onEntry(): List<EffectInvocation> {
             return listOf(
-                EffectInvocation.ReceiveMessagesRequest(
+                EffectInvocation.ReceiveMessages(
                     channels,
                     channelGroups,
                     subscriptionCursor
                 )
-            )  //rename to RECEIVE_EVENTS or what will be agreed
+            )
         }
 
         override fun onExit(): List<EffectInvocation> {
-            return listOf(EffectInvocation.CancelReceiveEvents)
+            return listOf(EffectInvocation.CancelReceiveMessages)
         }
 
         override fun transition(event: Event): Pair<State, List<EffectInvocation>> {
@@ -241,7 +262,7 @@ sealed class State {
                 }
 
                 is Event.Disconnect -> {
-                    stateAfterTransition = ReceiveStopped()
+                    stateAfterTransition = ReceiveStopped(channels, channelGroups)
                     transitionEffects.add(EffectInvocation.EmitStatus("Disconnected"))
                 }
                 is Event.SubscriptionChanged -> {
@@ -253,10 +274,10 @@ sealed class State {
                 is Event.ReceiveSuccess -> {
                     println("---State:, Event: , Transition to: , Transition effects: ..")
                     stateAfterTransition = Receiving(channels, channelGroups, event.subscriptionCursor)
+                    transitionEffects.add(EffectInvocation.EmitMessages(event.messages))
                     transitionEffects.add(EffectInvocation.EmitStatus("Connected"))
                 }
                 else -> {
-                    //ignore it
                     println("In UNSUBSCRIBED state ignoring event: $event")
                 }
             }
@@ -265,7 +286,7 @@ sealed class State {
         }
     }
 
-    class ReceiveStopped() : State() {
+    data class ReceiveStopped(private val channels: List<String>, val channelGroups: List<String>) : State() {
         override fun onEntry(): List<EffectInvocation> {
             return emptyList()
         }
@@ -275,12 +296,24 @@ sealed class State {
         }
 
         override fun transition(event: Event): Pair<State, List<EffectInvocation>> {
-            //todo
-            return super.transition(event)
+            var stateAfterTransition: State = this
+            val transitionEffects = mutableListOf<EffectInvocation>()
+
+            when (event) {
+                is Event.Reconnect -> {
+                    stateAfterTransition = ReceiveReconnecting(channels, channelGroups)
+                }
+
+                else -> {
+                    println("In ReceiveFailed state ignoring event: $event")
+                }
+            }
+
+            return Pair(stateAfterTransition, transitionEffects)
         }
     }
 
-    class ReceiveFailed() : State() {
+    data class ReceiveFailed(private val channels: List<String>, val channelGroups: List<String>) : State() {
         override fun onEntry(): List<EffectInvocation> {
             return emptyList()
         }
@@ -290,11 +323,20 @@ sealed class State {
         }
 
         override fun transition(event: Event): Pair<State, List<EffectInvocation>> {
-            //todo
-            return super.transition(event)
+            var stateAfterTransition: State = this
+            val transitionEffects = mutableListOf<EffectInvocation>()
+
+            when (event) {
+                is Event.ReceiveReconnectRetry -> {
+                    stateAfterTransition = ReceiveReconnecting(channels, channelGroups)
+                }
+
+                else -> {
+                    println("In ReceiveFailed state ignoring event: $event")
+                }
+            }
+
+            return Pair(stateAfterTransition, transitionEffects)
         }
     }
-
-    object STOPPED : State()
-    object PREPARING : State()
 }
