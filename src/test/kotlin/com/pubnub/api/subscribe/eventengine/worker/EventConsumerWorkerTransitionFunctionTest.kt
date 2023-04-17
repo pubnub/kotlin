@@ -1,5 +1,6 @@
 package com.pubnub.api.subscribe.eventengine.worker
 
+import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.models.consumer.pubsub.PNEvent
 import com.pubnub.api.subscribe.eventengine.effect.EffectInvocation
 import com.pubnub.api.subscribe.eventengine.event.Event
@@ -17,8 +18,8 @@ class EventConsumerWorkerTransitionFunctionTest {
         // given
         val channels = listOf("Channel1")
         val channelGroups = listOf("ChannelGroup1")
-        val timeToken = 12345345452L
-        val region = "42"
+        val timeToken = "12345345452"
+        val region = 42L
         val subscriptionCursor = SubscriptionCursor(timeToken, region)
 
         val subscriptionChangeEvent = Event.SubscriptionChanged(channels, channelGroups, subscriptionCursor)
@@ -29,7 +30,7 @@ class EventConsumerWorkerTransitionFunctionTest {
         val (receiving01, effectInvocationsForHandshakingSuccess) = transition(
             handshaking, Event.HandshakeSuccess(subscriptionCursor)
         )
-        val (receiving02, effectInvocationsForReceivingSuccess) = transition(
+        val (_, effectInvocationsForReceivingSuccess) = transition(
             receiving01,
             Event.ReceiveSuccess(messages, subscriptionCursor)
         )
@@ -40,11 +41,11 @@ class EventConsumerWorkerTransitionFunctionTest {
             contains(
                 EffectInvocation.Handshake(channels, channelGroups),
                 EffectInvocation.CancelHandshake,
-                EffectInvocation.EmitStatus("Connected"),
+                EffectInvocation.EmitStatus(PNStatusCategory.PNConnectedCategory),
                 EffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor),
                 EffectInvocation.CancelReceiveMessages,
                 EffectInvocation.EmitMessages(listOf()), // toDO brakuje listy Messagy
-                EffectInvocation.EmitStatus("Connected"),
+                EffectInvocation.EmitStatus(PNStatusCategory.PNConnectedCategory),
                 EffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor)
             )
         )

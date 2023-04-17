@@ -1,12 +1,12 @@
 package com.pubnub.api.subscribe.eventengine.worker
 
+import com.pubnub.api.PubNubException
 import com.pubnub.api.subscribe.eventengine.effect.EffectInvocation
 import com.pubnub.api.subscribe.eventengine.event.Event
+import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
 import com.pubnub.api.subscribe.eventengine.state.State
 import com.pubnub.api.subscribe.eventengine.transition.transition
-import org.hamcrest.MatcherAssert
-import org.hamcrest.Matchers
-import org.junit.Assert
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
 class TransitionFromReceiveStoppedStateTest {
@@ -15,20 +15,27 @@ class TransitionFromReceiveStoppedStateTest {
         // given
         val channels = listOf("Channel1")
         val channelGroups = listOf("ChannelGroup1")
+        val timeToken = 12345345452L
+        val region = "42"
+        val subscriptionCursor = SubscriptionCursor(timeToken, region)
+        val reason = PubNubException("Test")
 
         // when
-        val (receiveReconnecting, effectInvocationsForTransitionFromReceiveStoppedToReceiveReconnecting) = transition(
-            State.ReceiveStopped(channels, channelGroups),
-            Event.Reconnect(channels, channelGroups)
+        val (state, invocations) = transition(
+            State.ReceiveStopped(channels, channelGroups, subscriptionCursor),
+            Event.Reconnect
         )
 
         // then
-        Assert.assertEquals(State.ReceiveReconnecting(channels, channelGroups), receiveReconnecting)
-        MatcherAssert.assertThat(
-            effectInvocationsForTransitionFromReceiveStoppedToReceiveReconnecting,
-            Matchers.contains(
-                EffectInvocation.ReceiveReconnect(channels, channelGroups)
-            )
+        assertEquals(
+            State.ReceiveReconnecting(channels, channelGroups, subscriptionCursor, 0, null),
+            state
+        )
+        assertEquals(
+            listOf(
+                EffectInvocation.ReceiveReconnect(channels, channelGroups, subscriptionCursor, 0, null)
+            ),
+            invocations
         )
     }
 }

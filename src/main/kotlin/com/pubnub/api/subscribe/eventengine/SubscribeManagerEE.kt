@@ -12,9 +12,8 @@ class SubscribeManagerEE {
     constructor(state: State) {
         val eventQueue: LinkedBlockingQueue<Event> = LinkedBlockingQueue<Event>()
         val effectQueue: LinkedBlockingQueue<EffectInvocation> = LinkedBlockingQueue<EffectInvocation>()
-        val flowQueue: LinkedBlockingQueue<Any> = LinkedBlockingQueue<Any>()
 
-        this.eventEngine = EventEngine(state, eventQueue, effectQueue, flowQueue)
+        this.eventEngine = EventEngine(state, eventQueue, effectQueue)
         this.effectDispatcher = EffectDispatcher(eventQueue, effectQueue)
     }
 

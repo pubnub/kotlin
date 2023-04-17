@@ -4,9 +4,7 @@ import com.pubnub.api.subscribe.eventengine.effect.EffectInvocation
 import com.pubnub.api.subscribe.eventengine.event.Event
 import com.pubnub.api.subscribe.eventengine.state.State
 import com.pubnub.api.subscribe.eventengine.transition.transition
-import org.hamcrest.MatcherAssert
-import org.hamcrest.Matchers
-import org.junit.Assert
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
 class TransitionFromHandshakeStoppedStateTest {
@@ -18,18 +16,13 @@ class TransitionFromHandshakeStoppedStateTest {
         val channelGroups = listOf("ChannelGroup1")
 
         // when
-        val (handshakeReconnecting, effectInvocationsForTransitionFromHandshakeFailedToHandshakeReconnecting) = transition(
-            State.HandshakeStopped,
-            Event.Reconnect(channels, channelGroups)
+        val (state, invocations) = transition(
+            State.HandshakeStopped(channels, channelGroups, null),
+            Event.Reconnect
         )
 
         // then
-        Assert.assertEquals(State.HandshakeReconnecting(channels, channelGroups), handshakeReconnecting)
-        MatcherAssert.assertThat(
-            effectInvocationsForTransitionFromHandshakeFailedToHandshakeReconnecting,
-            Matchers.contains(
-                EffectInvocation.HandshakeReconnect(channels, channelGroups),
-            )
-        )
+        assertEquals(State.HandshakeReconnecting(channels, channelGroups, 0, null), state)
+        assertEquals(listOf(EffectInvocation.HandshakeReconnect(channels, channelGroups, 0, null)), invocations)
     }
 }

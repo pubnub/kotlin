@@ -14,7 +14,7 @@ class EffectDispatcher {
     constructor(eventQueue: LinkedBlockingQueue<Event>, effectQueue: LinkedBlockingQueue<EffectInvocation>) {
         this.eventQueue = eventQueue
         this.effectQueue = effectQueue
-        val transitionEffectWorker: TransitionEffectWorker = TransitionEffectWorker(eventQueue, effectQueue)
+        val transitionEffectWorker = TransitionEffectWorker(eventQueue, effectQueue)
         this.transitionConsumerThread = Thread(transitionEffectWorker)
 
         transitionConsumerThread.name = "TransitionEffectConsumer Consumer Thread"

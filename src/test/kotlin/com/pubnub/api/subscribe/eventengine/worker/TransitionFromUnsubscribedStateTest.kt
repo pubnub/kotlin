@@ -5,65 +5,47 @@ import com.pubnub.api.subscribe.eventengine.event.Event
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
 import com.pubnub.api.subscribe.eventengine.state.State
 import com.pubnub.api.subscribe.eventengine.transition.transition
-import org.hamcrest.MatcherAssert.assertThat
-import org.hamcrest.Matchers
-import org.junit.Assert.assertEquals
-import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
 class TransitionFromUnsubscribedStateTest {
+    val channels = listOf("Channel1")
+    val channelGroups = listOf("ChannelGroup1")
+    val timeToken = 12345345452L
+    val region = "42"
+    val subscriptionCursor = SubscriptionCursor(timeToken, region)
+
     @Test
     fun can_transit_from_UNSUBSRIBED_to_HANDSHAKING_when_there_is_subscriptionChangeEvent() {
-        // given
-        val currentState = State.Unsubscribed
-        val channels = listOf("Channel1")
-        val channelGroups = listOf("ChannelGroup1")
-        val timeToken = 12345345452L
-        val region = "42"
-        val subscriptionCursor = SubscriptionCursor(timeToken, region)
-
-        val subscriptionChange = Event.SubscriptionChanged(channels, channelGroups, subscriptionCursor)
-
         // when
-        val (handshaking, effectInvocationsForTransitionFromUnsubscribedToHandshaking) = transition(
-            currentState,
-            subscriptionChange
+        val (state, invocations) = transition(
+            State.Unsubscribed, Event.SubscriptionChanged(channels, channelGroups, subscriptionCursor)
         )
 
         // then
-        Assertions.assertEquals(State.Handshaking(channels, channelGroups), handshaking)
-        assertThat(
-            effectInvocationsForTransitionFromUnsubscribedToHandshaking,
-            Matchers.contains(
+        assertEquals(State.Handshaking(channels, channelGroups), state)
+        assertEquals(
+            listOf(
                 EffectInvocation.Handshake(channels, channelGroups)
-            )
+            ),
+            invocations
         )
     }
 
     @Test
     fun can_transit_from_UNSUBSRIBED_to_RECEIVING_when_there_is_subscriptionRestoredEvent() {
-        // given
-        val currentState = State.Unsubscribed
-        val channels = listOf("Channel1")
-        val channelGroups = listOf("ChannelGroup1")
-        val timeToken = 12345345452L
-        val region = "42"
-        val subscriptionCursor = SubscriptionCursor(timeToken, region)
-        val subscriptionRestoredEvent = Event.SubscriptionRestored(channels, channelGroups, subscriptionCursor)
-
         // when
-        val (receiving, effectInvocationsForTransitionFromUnsubscribedToReceiving) = transition(
-            currentState,
-            subscriptionRestoredEvent
+        val (state, invocations) = transition(
+            State.Unsubscribed, Event.SubscriptionRestored(channels, channelGroups, subscriptionCursor)
         )
 
         // then
-        assertEquals(State.Receiving(channels, channelGroups, subscriptionCursor), receiving)
-        assertThat(
-            effectInvocationsForTransitionFromUnsubscribedToReceiving,
-            Matchers.contains(
+        assertEquals(State.Receiving(channels, channelGroups, subscriptionCursor), state)
+        assertEquals(
+            listOf(
                 EffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor),
-            )
+            ),
+            invocations
         )
     }
 }
