@@ -3,7 +3,7 @@ package com.pubnub.api.endpoints.files;
 import com.pubnub.api.PNConfiguration;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
-import com.pubnub.api.UserId;
+import com.pubnub.core.UserId;
 import com.pubnub.api.models.consumer.files.PNFileUrlResult;
 import okhttp3.HttpUrl;
 import org.hamcrest.Matchers;

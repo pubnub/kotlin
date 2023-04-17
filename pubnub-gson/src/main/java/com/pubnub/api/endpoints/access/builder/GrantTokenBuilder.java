@@ -1,6 +1,6 @@
 package com.pubnub.api.endpoints.access.builder;
 
-import com.pubnub.api.UserId;
+import com.pubnub.core.UserId;
 import com.pubnub.api.endpoints.access.GrantToken;
 import com.pubnub.api.models.consumer.access_manager.sum.SpacePermissions;
 import com.pubnub.api.models.consumer.access_manager.sum.UserPermissions;

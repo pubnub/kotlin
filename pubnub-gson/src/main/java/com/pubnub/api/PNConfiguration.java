@@ -5,6 +5,7 @@ import com.pubnub.api.enums.PNHeartbeatNotificationOptions;
 import com.pubnub.api.enums.PNLogVerbosity;
 import com.pubnub.api.enums.PNReconnectionPolicy;
 import com.pubnub.core.CoreConfiguration;
+import com.pubnub.core.UserId;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;

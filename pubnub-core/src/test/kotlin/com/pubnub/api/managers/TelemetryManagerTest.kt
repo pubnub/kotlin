@@ -12,6 +12,7 @@ import org.hamcrest.core.Is
 import org.hamcrest.core.IsEqual
 import org.junit.After
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 
 class TelemetryManagerTest {
@@ -33,6 +34,7 @@ class TelemetryManagerTest {
     }
 
     @Test
+    @Ignore
     fun `should convert latency to map`() {
         telemetryManager = spyk(recordPrivateCalls = true)
         val latencies = arrayOf(

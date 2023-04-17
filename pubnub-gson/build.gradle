@@ -1,13 +1,13 @@
 plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.7.20'
     id 'io.franzbecker.gradle-lombok' version '5.0.0'
-    id 'com.github.johnrengelman.shadow' version '4.0.2'
-    id 'com.github.ben-manes.versions' version '0.20.0'
     id "com.vanniktech.maven.publish" version '0.22.0'
     id 'java-library'
     id 'jacoco'
     id 'checkstyle'
 }
+
+apply plugin: "com.github.johnrengelman.shadow"
 group = 'com.pubnub'
 
 version = '6.3.4'
@@ -22,7 +22,7 @@ configurations.all {
 }
 
 lombok {
-    version = "1.18.4"
+    version = "1.18.12"
 }
 
 repositories {
@@ -135,7 +135,7 @@ javadoc {
 
 task sourcesJar(type: Jar, dependsOn: classes) {
     classifier = 'sources'
-    from "$buildDir/delombok"
+    from "$buildDir/pubnub-gson1/delombok"
 }
 
 task cucumber(type: Test) {

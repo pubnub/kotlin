@@ -10,12 +10,12 @@ import com.google.gson.JsonObject
 import com.pubnub.api.Endpoint
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
-import com.pubnub.api.UserId
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.listen
 import com.pubnub.api.param
+import com.pubnub.core.UserId
 import okhttp3.Request
 import okio.Timeout
 import org.junit.Assert.assertEquals

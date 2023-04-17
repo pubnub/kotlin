@@ -3,9 +3,9 @@ package com.pubnub.contract.state
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubException
-import com.pubnub.api.UserId
 import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.contract.ContractTestConfig
+import com.pubnub.core.UserId
 
 class World {
     val configuration: PNConfiguration by lazy {

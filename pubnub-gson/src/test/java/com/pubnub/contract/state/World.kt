@@ -3,7 +3,7 @@ package com.pubnub.contract.state
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubException
-import com.pubnub.api.UserId
+import com.pubnub.core.UserId
 import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.contract.CONTRACT_TEST_CONFIG
 import java.util.*

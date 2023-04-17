@@ -1,10 +1,10 @@
 package com.pubnub.contract.uuidmetadata.step
 
-import com.pubnub.api.UserId
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
 import com.pubnub.contract.loadPersonaUUIDMetadata
 import com.pubnub.contract.state.World
 import com.pubnub.contract.uuidmetadata.state.UUIDMetadataState
+import com.pubnub.core.UserId
 import io.cucumber.java.en.Given
 
 class GivenSteps(

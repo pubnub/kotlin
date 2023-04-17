@@ -4,8 +4,8 @@ import com.pubnub.api.CommonUtils.createInterceptor
 import com.pubnub.api.Keys
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
-import com.pubnub.api.UserId
 import com.pubnub.api.enums.PNLogVerbosity
+import com.pubnub.core.UserId
 import org.junit.After
 import org.junit.Before
 import org.slf4j.LoggerFactory

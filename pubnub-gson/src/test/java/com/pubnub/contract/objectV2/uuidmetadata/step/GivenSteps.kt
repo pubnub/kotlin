@@ -1,6 +1,6 @@
 package com.pubnub.contract.objectV2.uuidmetadata.step
 
-import com.pubnub.api.UserId
+import com.pubnub.core.UserId
 import com.pubnub.contract.objectV2.membership.state.MembershipState
 import com.pubnub.contract.objectV2.uuidmetadata.state.GetUUIDMetadataState
 import com.pubnub.contract.objectV2.uuidmetadata.state.RemoveUUIDMetadataState

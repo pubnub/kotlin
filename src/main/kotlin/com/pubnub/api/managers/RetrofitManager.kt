@@ -51,7 +51,7 @@ class RetrofitManager(val pubnub: PubNub) : RetrofitManager {
     internal val accessManagerService: AccessManagerService
 
     internal val subscribeService: SubscribeService
-    val objectsService: ObjectsService
+    internal val objectsService: ObjectsService
     internal val filesService: FilesService
     internal val s3Service: S3Service
 

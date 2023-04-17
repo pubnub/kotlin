@@ -3,7 +3,6 @@ package com.pubnub.api.integration
 import com.pubnub.api.Keys
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
-import com.pubnub.api.UserId
 import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.enums.PNOperationType
@@ -14,6 +13,7 @@ import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
+import com.pubnub.core.UserId
 import org.awaitility.Awaitility
 import org.awaitility.Durations
 import org.junit.After

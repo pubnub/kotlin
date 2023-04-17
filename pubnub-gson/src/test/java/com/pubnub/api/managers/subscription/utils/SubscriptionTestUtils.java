@@ -2,7 +2,8 @@ package com.pubnub.api.managers.subscription.utils;
 
 import com.pubnub.api.PNConfiguration;
 import com.pubnub.api.PubNub;
-import com.pubnub.api.UserId;
+import com.pubnub.api.managers.TelemetryManager;
+import com.pubnub.core.UserId;
 import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.models.server.SubscribeEnvelope;
 import com.pubnub.api.services.SubscribeService;

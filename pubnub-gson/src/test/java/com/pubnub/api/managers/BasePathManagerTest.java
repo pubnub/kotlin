@@ -2,7 +2,7 @@ package com.pubnub.api.managers;
 
 import com.pubnub.api.PNConfiguration;
 import com.pubnub.api.PubNubException;
-import com.pubnub.api.UserId;
+import com.pubnub.core.UserId;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

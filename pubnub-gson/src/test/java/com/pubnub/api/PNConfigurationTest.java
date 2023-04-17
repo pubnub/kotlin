@@ -1,5 +1,6 @@
 package com.pubnub.api;
 
+import com.pubnub.core.UserId;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

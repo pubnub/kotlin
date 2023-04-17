@@ -4,7 +4,7 @@ import com.pubnub.api.PNConfiguration;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.SpaceId;
-import com.pubnub.api.UserId;
+import com.pubnub.core.UserId;
 import com.pubnub.api.endpoints.TestHarness;
 import com.pubnub.api.models.consumer.access_manager.sum.SpacePermissions;
 import com.pubnub.api.models.consumer.access_manager.sum.UserPermissions;

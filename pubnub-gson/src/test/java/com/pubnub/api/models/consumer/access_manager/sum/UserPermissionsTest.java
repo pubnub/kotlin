@@ -1,7 +1,7 @@
 package com.pubnub.api.models.consumer.access_manager.sum;
 
 import com.pubnub.api.PubNubException;
-import com.pubnub.api.UserId;
+import com.pubnub.core.UserId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

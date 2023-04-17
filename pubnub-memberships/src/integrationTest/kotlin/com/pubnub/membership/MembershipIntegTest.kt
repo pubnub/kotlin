@@ -2,11 +2,11 @@ package com.pubnub.membership
 
 import com.pubnub.api.PubNub
 import com.pubnub.api.SpaceId
-import com.pubnub.api.UserId
 import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.objects.ResultSortKey
+import com.pubnub.core.UserId
 import com.pubnub.membership.models.consumer.Membership
 import com.pubnub.membership.models.consumer.MembershipModified
 import com.pubnub.membership.models.consumer.MembershipsResult

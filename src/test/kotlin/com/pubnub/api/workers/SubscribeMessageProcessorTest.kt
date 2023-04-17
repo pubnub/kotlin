@@ -8,10 +8,10 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonPrimitive
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
-import com.pubnub.api.UserId
 import com.pubnub.api.managers.DuplicationManager
 import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
 import com.pubnub.api.models.server.SubscribeMessage
+import com.pubnub.core.UserId
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.isA
 import org.junit.Test

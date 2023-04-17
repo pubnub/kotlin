@@ -1,6 +1,7 @@
 package com.pubnub.api;
 
 import com.pubnub.api.enums.PNReconnectionPolicy;
+import com.pubnub.core.UserId;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;

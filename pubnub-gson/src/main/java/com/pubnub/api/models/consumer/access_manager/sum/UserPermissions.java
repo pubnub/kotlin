@@ -1,6 +1,6 @@
 package com.pubnub.api.models.consumer.access_manager.sum;
 
-import com.pubnub.api.UserId;
+import com.pubnub.core.UserId;
 import com.pubnub.api.models.consumer.access_manager.v3.PNResource;
 
 public class UserPermissions extends PNResource<UserPermissions> {

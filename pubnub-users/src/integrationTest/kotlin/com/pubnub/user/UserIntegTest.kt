@@ -3,11 +3,11 @@ package com.pubnub.user
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubException
-import com.pubnub.api.UserId
 import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.objects.ResultSortKey
+import com.pubnub.core.UserId
 import com.pubnub.user.models.consumer.User
 import com.pubnub.user.models.consumer.UserKey
 import com.pubnub.user.models.consumer.UserModified

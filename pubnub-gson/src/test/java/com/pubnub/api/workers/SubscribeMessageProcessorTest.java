@@ -10,7 +10,7 @@ import com.pubnub.api.PNConfiguration;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.PubNubUtil;
-import com.pubnub.api.UserId;
+import com.pubnub.core.UserId;
 import com.pubnub.api.managers.DuplicationManager;
 import com.pubnub.api.models.consumer.pubsub.PNEvent;
 import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult;

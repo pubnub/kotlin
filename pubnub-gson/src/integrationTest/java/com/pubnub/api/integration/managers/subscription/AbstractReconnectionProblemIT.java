@@ -3,7 +3,7 @@ package com.pubnub.api.integration.managers.subscription;
 import com.pubnub.api.PNConfiguration;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
-import com.pubnub.api.UserId;
+import com.pubnub.core.UserId;
 import com.pubnub.api.enums.PNStatusCategory;
 import com.pubnub.api.integration.util.ITTestConfig;
 import com.pubnub.api.models.consumer.PNStatus;
