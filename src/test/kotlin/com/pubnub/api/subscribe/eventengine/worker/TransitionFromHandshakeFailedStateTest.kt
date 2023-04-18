@@ -21,15 +21,13 @@ class TransitionFromHandshakeFailedStateTest {
     fun can_transit_from_HANDSHAKE_FAILED_to_HANDSHAKE_RECONNECTING_when_there_is_HANDSHAKE_RECONNECT_RETRY_Event() {
         // when
         val (state, invocations) = transition(
-            State.HandshakeFailed(channels, channelGroups, exception),
-            Event.HandshakeReconnectRetry
+            State.HandshakeFailed(channels, channelGroups, exception), Event.HandshakeReconnectRetry
         )
 
         // then
         assertEquals(State.HandshakeReconnecting(channels, channelGroups, 0, exception), state)
         assertEquals(
-            listOf(EffectInvocation.HandshakeReconnect(channels, channelGroups, 0, exception)),
-            invocations
+            listOf(EffectInvocation.HandshakeReconnect(channels, channelGroups, 0, exception)), invocations
         )
     }
 
@@ -44,8 +42,7 @@ class TransitionFromHandshakeFailedStateTest {
         // then
         assertEquals(State.HandshakeReconnecting(channels, channelGroups, 0, exception), state)
         assertEquals(
-            listOf(EffectInvocation.HandshakeReconnect(channels, channelGroups, 0, exception)),
-            invocations
+            listOf(EffectInvocation.HandshakeReconnect(channels, channelGroups, 0, exception)), invocations
         )
     }
 
@@ -59,12 +56,25 @@ class TransitionFromHandshakeFailedStateTest {
 
         // then
         assertEquals(
-            State.ReceiveReconnecting(channels, channelGroups, subscriptionCursor, 0, exception),
-            state
+            State.ReceiveReconnecting(channels, channelGroups, subscriptionCursor, 0, exception), state
         )
         assertEquals(
             listOf(EffectInvocation.ReceiveReconnect(channels, channelGroups, subscriptionCursor, 0, exception)),
             invocations
+        )
+    }
+
+    @Test
+    fun can_transit_from_HANDSHAKE_FAILED_to_HANDSHAKE_RECONNECTING_when_there_is_RECONNECT_Event() {
+        // when
+        val (state, invocations) = transition(
+            State.HandshakeFailed(channels, channelGroups, exception), Event.Reconnect
+        )
+
+        // then
+        assertEquals(State.HandshakeReconnecting(channels, channelGroups, 0, exception), state)
+        assertEquals(
+            listOf(EffectInvocation.HandshakeReconnect(channels, channelGroups, 0, exception)), invocations
         )
     }
 }
