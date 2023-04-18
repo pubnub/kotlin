@@ -14,7 +14,6 @@ import com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching
 import com.google.gson.reflect.TypeToken
 import com.pubnub.api.CommonUtils.emptyJson
 import com.pubnub.api.PubNub
-import com.pubnub.api.PubNubException
 import com.pubnub.api.PubNubUtil
 import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions
@@ -1400,25 +1399,20 @@ class SubscriptionManagerTest : BaseTest() {
             .atMost(5, TimeUnit.SECONDS)
             .untilAtomic(atomic, Matchers.greaterThan(0))
     }
-
     @Test
     fun testSubscribeBuilderWithState() {
-        val subscribeHits = AtomicInteger(0)
-        val heartbeatHits = AtomicInteger(0)
         val expectedPayload = PubNubUtil.urlDecode(
             """%7B%22ch1%22%3A%5B%22p1%22%2C%22p2%22%5D%2C%22cg2%22%3A%5B%22p1%22%2C%22p2%22%5D%7D"""
         )
 
-        val expectedMap = pubnub.mapper.fromJson<HashMap<String, Any>?>(
-            expectedPayload,
-            object : TypeToken<HashMap<String, Any>?>() {}.type
+        val expectedMap = pubnub.mapper.fromJson<HashMap<String, Any>>(
+            expectedPayload, object : TypeToken<HashMap<String, Any>?>() {}.type
         )
 
         stubFor(
-            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
-                .willReturn(
-                    aResponse().withBody(
-                        """
+            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1/0")).willReturn(
+                aResponse().withBody(
+                    """
                             {
                               "t": {
                                 "t": "14607577960932487",
@@ -1442,19 +1436,17 @@ class SubscriptionManagerTest : BaseTest() {
                                 }
                               ]
                             }
-                        """.trimIndent()
-                    )
+                    """.trimIndent()
                 )
+            )
         )
 
         stubFor(
-            get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch2,ch1/heartbeat"))
-                .willReturn(emptyJson())
+            get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch2,ch1/heartbeat")).willReturn(emptyJson())
         )
 
         stubFor(
-            get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch1/uuid/myUUID/data"))
-                .willReturn(emptyJson())
+            get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch1/uuid/myUUID/data")).willReturn(emptyJson())
         )
 
         pubnub.configuration.presenceTimeout = 20
@@ -1462,57 +1454,48 @@ class SubscriptionManagerTest : BaseTest() {
 
         pubnub.addListener(object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
-                val heartbeatRequests = findAll(
-                    getRequestedFor(
-                        urlMatching(
-                            """/v2/presence/sub-key/${pubnub.configuration.subscribeKey}/channel/ch2,ch1/heartbeat.*"""
-                        )
-                    )
-                )
-                val subscribeRequests = findAll(
-                    getRequestedFor(
-                        urlMatching(
-                            """/v2/subscribe/${pubnub.configuration.subscribeKey}/ch2,ch1/.*"""
-                        )
-                    )
-                )
-                for (request in subscribeRequests) {
-                    val stateString = PubNubUtil.urlDecode(request.queryParameter("state").firstValue())
-                    var actualMap: HashMap<String, Any>? = null
-                    try {
-                        actualMap = pubnub.mapper.fromJson(
-                            stateString,
-                            object : TypeToken<HashMap<String, Any>?>() {}.type
-                        )
-                    } catch (e: PubNubException) {
-                        e.printStackTrace()
-                    }
-                    if (actualMap != null && actualMap == expectedMap) {
-                        subscribeHits.getAndAdd(1)
-                    }
-                }
-                for (request in heartbeatRequests) {
-                    if (!request.queryParams.containsKey("state")) {
-                        heartbeatHits.getAndAdd(1)
-                    }
-                }
+                // do nothing
             }
         })
 
         pubnub.subscribe(
-            channels = listOf("ch1", "ch2"),
-            channelGroups = listOf("cg1", "cg2")
+            channels = listOf("ch1", "ch2"), channelGroups = listOf("cg1", "cg2")
         )
 
         pubnub.setPresenceState(
-            channels = listOf("ch1"),
-            channelGroups = listOf("cg2"),
-            state = listOf("p1", "p2")
+            channels = listOf("ch1"), channelGroups = listOf("cg2"), state = listOf("p1", "p2")
         ).async { _, _ -> }
 
-        Awaitility.await()
-            .atMost(5, TimeUnit.SECONDS)
-            .until { subscribeHits.get() > 0 && heartbeatHits.get() > 0 }
+        Awaitility.await().atMost(5, TimeUnit.SECONDS).until { verifyCalls(expectedMap) }
+    }
+
+    private fun verifyCalls(expectedMap: Map<String, Any>): Boolean {
+        val subscribeRequests = findAll(
+            getRequestedFor(
+                urlMatching(
+                    """/v2/subscribe/${pubnub.configuration.subscribeKey}/ch2,ch1/.*"""
+                )
+            )
+        )
+        val subCond = subscribeRequests.any {
+            val stateString = PubNubUtil.urlDecode(it.queryParameter("state").firstValue())
+            val actualMap: HashMap<String, Any> = pubnub.mapper.fromJson(
+                stateString, object : TypeToken<HashMap<String, Any>>() {}.type
+            )
+            actualMap == expectedMap
+        }
+        val heartbeatRequests = findAll(
+            getRequestedFor(
+                urlMatching(
+                    """/v2/presence/sub-key/${pubnub.configuration.subscribeKey}/channel/ch2,ch1/heartbeat.*"""
+                )
+            )
+        )
+        val heartbeatCond = heartbeatRequests.any {
+            !it.queryParams.containsKey("state")
+        }
+
+        return subCond && heartbeatCond
     }
 
     @Test
