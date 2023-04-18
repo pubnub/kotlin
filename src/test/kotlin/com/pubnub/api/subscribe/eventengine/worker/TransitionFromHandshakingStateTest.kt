@@ -70,7 +70,7 @@ class TransitionFromHandshakingStateTest {
         // when
         val (state, invocations) = transition(
             State.Handshaking(channels, channelGroups),
-            Event.SubscriptionChanged(newChannels, newChannelGroups, subscriptionCursor)
+            Event.SubscriptionChanged(newChannels, newChannelGroups)
         )
 
         // then

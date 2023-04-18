@@ -22,7 +22,7 @@ class EventConsumerWorkerTransitionFunctionTest {
         val region = 42L
         val subscriptionCursor = SubscriptionCursor(timeToken, region)
 
-        val subscriptionChangeEvent = Event.SubscriptionChanged(channels, channelGroups, subscriptionCursor)
+        val subscriptionChangeEvent = Event.SubscriptionChanged(channels, channelGroups)
         val messages = listOf<PNEvent>()
 
         // when

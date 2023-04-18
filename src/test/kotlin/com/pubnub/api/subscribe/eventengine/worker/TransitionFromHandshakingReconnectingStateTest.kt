@@ -41,7 +41,7 @@ class TransitionFromHandshakingReconnectingStateTest {
         // when
         val (state, invocations) = transition(
             State.HandshakeReconnecting(channels, channelGroups, 0, reason),
-            Event.SubscriptionChanged(channels, channelGroups, subscriptionCursor)
+            Event.SubscriptionChanged(channels, channelGroups)
         )
 
         // then

@@ -6,8 +6,7 @@ import com.pubnub.api.models.consumer.pubsub.PNEvent
 sealed class Event {
     class SubscriptionChanged(
         val channels: List<String>,
-        val channelGroups: List<String>,
-        val subscriptionCursor: SubscriptionCursor
+        val channelGroups: List<String>
     ) : Event()
 
     object Disconnect : Event()

@@ -66,7 +66,7 @@ class TransitionFromReceivingStateTest {
         // when
         val (state, invocations) = transition(
             State.Receiving(channels, channelGroups, subscriptionCursor),
-            Event.SubscriptionChanged(channels, channelGroups, subscriptionCursor)
+            Event.SubscriptionChanged(channels, channelGroups)
         )
 
         // then

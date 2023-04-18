@@ -46,7 +46,7 @@ class TransitionFromReceivingReconnectingStateTest {
         // when
         val (state, invocations) = transition(
             State.ReceiveReconnecting(channels, channelGroups, subscriptionCursor, 0, reason),
-            Event.SubscriptionChanged(channels, channelGroups, subscriptionCursor)
+            Event.SubscriptionChanged(channels, channelGroups)
         )
 
         // then

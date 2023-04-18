@@ -19,7 +19,7 @@ class TransitionFromUnsubscribedStateTest {
     fun can_transit_from_UNSUBSRIBED_to_HANDSHAKING_when_there_is_subscriptionChangeEvent() {
         // when
         val (state, invocations) = transition(
-            State.Unsubscribed, Event.SubscriptionChanged(channels, channelGroups, subscriptionCursor)
+            State.Unsubscribed, Event.SubscriptionChanged(channels, channelGroups)
         )
 
         // then

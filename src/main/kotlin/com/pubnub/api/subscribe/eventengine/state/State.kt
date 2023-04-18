@@ -266,7 +266,7 @@ sealed class State {
                 }
 
                 is Event.SubscriptionChanged -> {
-                    transitionTo(Receiving(event.channels, event.channelGroups, event.subscriptionCursor))
+                    transitionTo(Receiving(event.channels, event.channelGroups, subscriptionCursor))
                 }
 
                 is Event.SubscriptionRestored -> {

@@ -1,6 +1,5 @@
 package com.pubnub.api.subscribe.eventengine.worker
 
-import com.pubnub.api.PubNubException
 import com.pubnub.api.subscribe.eventengine.effect.EffectInvocation
 import com.pubnub.api.subscribe.eventengine.event.Event
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
@@ -18,7 +17,6 @@ class TransitionFromReceiveStoppedStateTest {
         val timeToken = 12345345452L
         val region = "42"
         val subscriptionCursor = SubscriptionCursor(timeToken, region)
-        val reason = PubNubException("Test")
 
         // when
         val (state, invocations) = transition(
