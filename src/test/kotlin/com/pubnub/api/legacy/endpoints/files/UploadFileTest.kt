@@ -139,10 +139,10 @@ class UploadFileTest : TestsWithFiles {
         val filePart = getPart("file", capturedBody.parts)
         val buffer = Buffer()
         filePart?.body?.writeTo(buffer)
-        assertThat(
-            buffer.readByteArray(),
-            iz(FileEncryptionUtil.encrypt(content.byteInputStream(Charset.defaultCharset()), cipher).readBytes())
+        val decrypted = FileEncryptionUtil.decrypt(buffer.readByteArray().inputStream(), cipher).readBytes().toString(
+            Charset.defaultCharset()
         )
+        assertThat(decrypted, iz(content))
     }
 
     @Test

@@ -89,4 +89,9 @@ enum class PNStatusCategory {
      * The subscriber got a 4xx code from the server, other than 400, 403 and 404
      */
     PNUnknownCategory,
+
+    /**
+     * The subscription has been stopped.
+     */
+    PNDisconnectedCategory,
 }
