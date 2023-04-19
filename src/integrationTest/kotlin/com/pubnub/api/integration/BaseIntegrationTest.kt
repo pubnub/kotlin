@@ -8,6 +8,8 @@ import com.pubnub.api.UserId
 import com.pubnub.api.enums.PNLogVerbosity
 import org.junit.After
 import org.junit.Before
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
 import org.slf4j.LoggerFactory
 import java.util.UUID
 
@@ -21,12 +23,14 @@ abstract class BaseIntegrationTest {
     private var mGuestClients = mutableListOf<PubNub>()
 
     @Before
+    @BeforeEach
     fun before() {
         onPrePubnub()
         onBefore()
     }
 
     @After
+    @AfterEach
     fun after() {
         onAfter()
         for (guestClient in mGuestClients) {

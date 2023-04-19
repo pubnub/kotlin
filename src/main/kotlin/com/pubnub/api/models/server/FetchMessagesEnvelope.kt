@@ -1,9 +1,9 @@
 package com.pubnub.api.models.server
 
-import com.pubnub.api.models.consumer.history.PNFetchMessageItem
+import com.pubnub.api.models.server.history.ServerFetchMessageItem
 
 data class FetchMessagesEnvelope(
-    val channels: Map<String, List<PNFetchMessageItem>>,
+    val channels: Map<String, List<ServerFetchMessageItem>>,
     val more: FetchMessagesPage?
 )
 

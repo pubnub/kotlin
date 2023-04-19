@@ -1,3 +1,9 @@
+## v7.5.0
+April 19 2023
+
+#### Added
+- It's now possible to return messageType in PNFetchMessageItem from fetchMessages method. Possible values are either Message or File .
+
 ## v7.4.3
 April 11 2023
 
