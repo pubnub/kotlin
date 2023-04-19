@@ -25,7 +25,7 @@ class PNHistoryResult internal constructor(
  * @property meta Metadata of the message, if requested via [History.includeMeta].
  * Is `null` if not requested, otherwise an empty string if requested but no associated metadata.
  */
-class PNHistoryItemResult(
+data class PNHistoryItemResult(
     val entry: JsonElement,
     val timetoken: Long? = null,
     val meta: JsonElement? = null

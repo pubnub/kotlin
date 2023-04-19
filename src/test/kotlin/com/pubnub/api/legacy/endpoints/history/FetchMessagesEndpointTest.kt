@@ -10,8 +10,12 @@ import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 import com.pubnub.api.endpoints.FetchMessages
 import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.models.consumer.PNBoundedPage
+import com.pubnub.api.models.consumer.history.HistoryMessageType
 import org.hamcrest.MatcherAssert.assertThat
-import org.hamcrest.Matchers
+import org.hamcrest.Matchers.allOf
+import org.hamcrest.Matchers.contains
+import org.hamcrest.Matchers.equalTo
+import org.hamcrest.Matchers.hasEntry
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -30,13 +34,14 @@ class FetchMessagesEndpointTest : BaseTest() {
         private const val DEFAULT_INCLUDE_MESSAGE_ACTIONS = false
     }
 
+    val channel = "mychannel"
+
     @Test
     fun testSyncSuccess() {
         stubFor(
-            get(urlPathEqualTo("/v3/history/sub-key/mySubscribeKey/channel/mychannel,my_channel"))
-                .willReturn(
-                    aResponse().withBody(
-                        """
+            get(urlPathEqualTo("/v3/history/sub-key/mySubscribeKey/channel/mychannel,my_channel")).willReturn(
+                aResponse().withBody(
+                    """
                             {
                               "status": 200,
                               "error": false,
@@ -63,9 +68,9 @@ class FetchMessagesEndpointTest : BaseTest() {
                                 ]
                               }
                             }
-                        """.trimIndent()
-                    )
+                    """.trimIndent()
                 )
+            )
         )
 
         val response = pubnub.fetchMessages(
@@ -90,10 +95,9 @@ class FetchMessagesEndpointTest : BaseTest() {
     @Test
     fun testSyncWithoutUUIDSuccess() {
         stubFor(
-            get(urlPathEqualTo("/v3/history/sub-key/mySubscribeKey/channel/mychannel,my_channel"))
-                .willReturn(
-                    aResponse().withBody(
-                        """
+            get(urlPathEqualTo("/v3/history/sub-key/mySubscribeKey/channel/mychannel,my_channel")).willReturn(
+                aResponse().withBody(
+                    """
                             {
                               "status": 200,
                               "error": false,
@@ -117,9 +121,9 @@ class FetchMessagesEndpointTest : BaseTest() {
                                 ]
                               }
                             }
-                        """.trimIndent()
-                    )
+                    """.trimIndent()
                 )
+            )
         )
 
         val response = pubnub.fetchMessages(
@@ -144,10 +148,9 @@ class FetchMessagesEndpointTest : BaseTest() {
     @Test
     fun testSyncAuthSuccess() {
         stubFor(
-            get(urlPathEqualTo("/v3/history/sub-key/mySubscribeKey/channel/mychannel,my_channel"))
-                .willReturn(
-                    aResponse().withBody(
-                        """
+            get(urlPathEqualTo("/v3/history/sub-key/mySubscribeKey/channel/mychannel,my_channel")).willReturn(
+                aResponse().withBody(
+                    """
                             {
                               "status": 200,
                               "error": false,
@@ -171,9 +174,9 @@ class FetchMessagesEndpointTest : BaseTest() {
                                 ]
                               }
                             }
-                        """.trimIndent()
-                    )
+                    """.trimIndent()
                 )
+            )
         )
 
         pubnub.configuration.authKey = "authKey"
@@ -201,10 +204,9 @@ class FetchMessagesEndpointTest : BaseTest() {
         pubnub.configuration.useRandomInitializationVector = false
 
         stubFor(
-            get(urlPathEqualTo("/v3/history/sub-key/mySubscribeKey/channel/mychannel,my_channel"))
-                .willReturn(
-                    aResponse().withBody(
-                        """
+            get(urlPathEqualTo("/v3/history/sub-key/mySubscribeKey/channel/mychannel,my_channel")).willReturn(
+                aResponse().withBody(
+                    """
                             {
                               "status": 200,
                               "error": false,
@@ -224,9 +226,9 @@ class FetchMessagesEndpointTest : BaseTest() {
                                 ]
                               }
                             }
-                        """.trimIndent()
-                    )
+                    """.trimIndent()
                 )
+            )
         )
 
         val response = pubnub.fetchMessages(
@@ -256,7 +258,7 @@ class FetchMessagesEndpointTest : BaseTest() {
         )
 
         // then
-        assertThat(result, Matchers.equalTo(maximumPerChannel))
+        assertThat(result, equalTo(maximumPerChannel))
     }
 
     @Test
@@ -272,8 +274,9 @@ class FetchMessagesEndpointTest : BaseTest() {
         )
 
         // then
-        assertThat(result, Matchers.equalTo(EXPECTED_SINGLE_CHANNEL_DEFAULT_MESSAGES))
+        assertThat(result, equalTo(EXPECTED_SINGLE_CHANNEL_DEFAULT_MESSAGES))
     }
+
     @Test
     fun forSingleChannelFetchMessagesAlwaysPassDefaultWhenMaxNotSpecified() {
         // given
@@ -287,7 +290,7 @@ class FetchMessagesEndpointTest : BaseTest() {
         )
 
         // then
-        assertThat(result, Matchers.equalTo(EXPECTED_SINGLE_CHANNEL_DEFAULT_MESSAGES))
+        assertThat(result, equalTo(EXPECTED_SINGLE_CHANNEL_DEFAULT_MESSAGES))
     }
 
     @Test
@@ -303,7 +306,7 @@ class FetchMessagesEndpointTest : BaseTest() {
         )
 
         // then
-        assertThat(result, Matchers.equalTo(EXPECTED_SINGLE_CHANNEL_DEFAULT_MESSAGES))
+        assertThat(result, equalTo(EXPECTED_SINGLE_CHANNEL_DEFAULT_MESSAGES))
     }
 
     @Test
@@ -319,7 +322,7 @@ class FetchMessagesEndpointTest : BaseTest() {
         )
 
         // then
-        assertThat(result, Matchers.equalTo(maximumPerChannel))
+        assertThat(result, equalTo(maximumPerChannel))
     }
 
     @Test
@@ -335,7 +338,7 @@ class FetchMessagesEndpointTest : BaseTest() {
         )
 
         // then
-        assertThat(result, Matchers.equalTo(EXPECTED_MULTIPLE_CHANNEL_DEFAULT_MESSAGES))
+        assertThat(result, equalTo(EXPECTED_MULTIPLE_CHANNEL_DEFAULT_MESSAGES))
     }
 
     @Test
@@ -351,7 +354,7 @@ class FetchMessagesEndpointTest : BaseTest() {
         )
 
         // then
-        assertThat(result, Matchers.equalTo(EXPECTED_MULTIPLE_CHANNEL_DEFAULT_MESSAGES))
+        assertThat(result, equalTo(EXPECTED_MULTIPLE_CHANNEL_DEFAULT_MESSAGES))
     }
 
     @Test
@@ -368,7 +371,7 @@ class FetchMessagesEndpointTest : BaseTest() {
         )
 
         // then
-        assertThat(result, Matchers.equalTo(EXPECTED_MULTIPLE_CHANNEL_DEFAULT_MESSAGES))
+        assertThat(result, equalTo(EXPECTED_MULTIPLE_CHANNEL_DEFAULT_MESSAGES))
     }
 
     @Test
@@ -378,13 +381,11 @@ class FetchMessagesEndpointTest : BaseTest() {
 
         // when
         val result = FetchMessages.effectiveMax(
-            maximumPerChannel = maximumPerChannel,
-            includeMessageActions = true,
-            numberOfChannels = 1
+            maximumPerChannel = maximumPerChannel, includeMessageActions = true, numberOfChannels = 1
         )
 
         // then
-        assertThat(result, Matchers.equalTo(maximumPerChannel))
+        assertThat(result, equalTo(maximumPerChannel))
     }
 
     @Test
@@ -394,31 +395,134 @@ class FetchMessagesEndpointTest : BaseTest() {
 
         // when
         val result = FetchMessages.effectiveMax(
-            maximumPerChannel = maximumPerChannel,
-            includeMessageActions = true,
-            numberOfChannels = 1
+            maximumPerChannel = maximumPerChannel, includeMessageActions = true, numberOfChannels = 1
         )
 
         // then
-        assertThat(result, Matchers.equalTo(EXPECTED_DEFAULT_MESSAGES_WITH_ACTIONS))
+        assertThat(result, equalTo(EXPECTED_DEFAULT_MESSAGES_WITH_ACTIONS))
     }
 
     @Test
     fun forSingleChannelFetchMessagesWithActionAlwaysPassDefaultMaxWhenMaxExceeds() {
         // given
-        val maximumPerChannel = MAX_FOR_FETCH_MESSAGES_WITH_ACTIONS +
-            randomInt(MAX_FOR_FETCH_MESSAGES_WITH_ACTIONS)
+        val maximumPerChannel = MAX_FOR_FETCH_MESSAGES_WITH_ACTIONS + randomInt(MAX_FOR_FETCH_MESSAGES_WITH_ACTIONS)
 
         // when
         val result = FetchMessages.effectiveMax(
-            maximumPerChannel = maximumPerChannel,
-            includeMessageActions = true,
-            numberOfChannels = 1
+            maximumPerChannel = maximumPerChannel, includeMessageActions = true, numberOfChannels = 1
         )
 
         // then
-        assertThat(result, Matchers.equalTo(EXPECTED_MAX_MESSAGES_WITH_ACTIONS))
+        assertThat(result, equalTo(EXPECTED_MAX_MESSAGES_WITH_ACTIONS))
+    }
+
+    @Test
+    fun testIncludeMessageTypeQueryParamIsPassedInFetchMessages() {
+        stubFor(
+            get(urlPathEqualTo("/v3/history/sub-key/mySubscribeKey/channel/$channel")).willReturn(
+                aResponse().withBody(
+                    responseWithOneMessageForChannel(channel)
+                )
+            )
+        )
+
+        pubnub.fetchMessages(
+            channels = listOf(channel), includeMessageType = true
+        ).sync()!!
+
+        val requests = findAll(getRequestedFor(urlMatching("/.*")))
+        assertEquals(1, requests.size)
+        assertThat(
+            requests[0].queryParams.map { (k, v) -> k to v.firstValue() }.toMap(),
+            allOf(
+                hasEntry(FetchMessages.INCLUDE_MESSAGE_TYPE_QUERY_PARAM, "true")
+            )
+        )
+    }
+
+    @Test
+    fun testMissingIncludeMessageTypeQueryParamIsSetToTrue() {
+        stubFor(
+            get(urlPathEqualTo("/v3/history/sub-key/mySubscribeKey/channel/$channel")).willReturn(
+                aResponse().withBody(
+                    responseWithOneMessageForChannel(channel)
+                )
+            )
+        )
+
+        pubnub.fetchMessages(
+            channels = listOf(channel)
+        ).sync()!!
+
+        val requests = findAll(getRequestedFor(urlMatching("/.*")))
+        assertEquals(1, requests.size)
+        assertThat(
+            requests[0].queryParams.map { (k, v) -> k to v.firstValue() }.toMap(),
+            allOf(
+                hasEntry(FetchMessages.INCLUDE_MESSAGE_TYPE_QUERY_PARAM, "true"),
+            )
+        )
+    }
+
+    @Test
+    fun testMessageTypesAreProperlyDeserialized() {
+        stubFor(
+            get(urlPathEqualTo("/v3/history/sub-key/mySubscribeKey/channel/$channel")).willReturn(
+                aResponse().withBody(
+                    responseWithMessagesForChannelWithMessageType(channel)
+                )
+            )
+        )
+
+        val response = pubnub.fetchMessages(
+            channels = listOf(channel), includeMessageType = true
+        ).sync()!!
+
+        assertThat(
+            response.channels.values.flatMap { items -> items.map { it.messageType } },
+            contains(HistoryMessageType.Message, HistoryMessageType.File)
+        )
     }
 
     private fun randomInt(max: Int): Int = nextInt(max) + 1
+
+    private fun responseWithOneMessageForChannel(channel: String): String {
+        return """{
+          "status": 200,
+          "error": false,
+          "error_message": "",
+          "channels": {
+            "$channel": [
+              {
+                "message": "thisIsMessage",
+                "timetoken": "14797423056306675"
+              }
+            ]
+          }
+        }
+        """.trimIndent()
+    }
+
+    private fun responseWithMessagesForChannelWithMessageType(channel: String): String {
+        return """{
+          "status": 200,
+          "error": false,
+          "error_message": "",
+          "channels": {
+            "$channel": [
+              {
+                "message": "thisIsMessage1",
+                "timetoken": "14797423056306675",
+                "message_type": 0
+              },
+              {
+                "message": "thisIsMessage2",
+                "timetoken": "14797423056306676",
+                "message_type": 4
+              }
+            ]
+          }
+        }
+        """.trimIndent()
+    }
 }

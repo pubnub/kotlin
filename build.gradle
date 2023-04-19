@@ -16,17 +16,18 @@ allprojects {
     apply plugin: "com.vanniktech.maven.publish"
 
     if (project.name != "pubnub-kotlin-bom") {
-        apply plugin: 'org.unbroken-dome.test-sets'
         apply plugin: 'org.jetbrains.kotlin.jvm'
         apply plugin: "org.jlleitschuh.gradle.ktlint"
 
+        testing {
+            suites {
+                integrationTest(JvmTestSuite) {
+                }
+            }
+        }
 
         repositories {
             mavenCentral()
-        }
-
-        testSets {
-            integrationTest
         }
 
         configurations {
@@ -56,9 +57,13 @@ allprojects {
             allTest "org.awaitility:awaitility-kotlin:4.0.3"
             allTest "junit:junit:4.13.2"
             allTest "org.junit.jupiter:junit-jupiter-engine:5.8.2"
+            allTest "org.junit.vintage:junit-vintage-engine:5.8.2"
             allTest 'org.junit.jupiter:junit-jupiter:5.8.2'
             allTest "io.mockk:mockk:1.11.0"
             allTest "org.aeonbits.owner:owner:1.0.12"
+
+            integrationTestImplementation project(":")
+            integrationTestImplementation project
         }
 
         test {
@@ -104,6 +109,7 @@ dependencies {
     testImplementation group: 'io.cucumber', name: 'cucumber-java', version: '6.10.4'
     testImplementation group: 'io.cucumber', name: 'cucumber-junit', version: '6.10.4'
     testImplementation group: 'io.cucumber', name: 'cucumber-picocontainer', version: '6.10.4'
+    integrationTestImplementation(testFixtures(project(":")))
 }
 
 shadowJar {
