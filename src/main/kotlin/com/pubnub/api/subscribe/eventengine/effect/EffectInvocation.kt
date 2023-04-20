@@ -13,9 +13,9 @@ sealed class EffectInvocation : CoreEffectInvocation {
     override val id: String = ReceiveReconnect::class.java.simpleName
 
     data class ReceiveMessages(
-        private val channels: List<String>,
-        private val channelGroups: List<String>,
-        private val subscriptionCursor: SubscriptionCursor
+        val channels: List<String>,
+        val channelGroups: List<String>,
+        val subscriptionCursor: SubscriptionCursor
     ) : EffectInvocation(),
         ManagedEffectInvocation
 
@@ -45,6 +45,7 @@ sealed class EffectInvocation : CoreEffectInvocation {
     object CancelHandshake : EffectInvocation(), CancelEffectInvocation {
         override val idToCancel: String = Handshake::class.java.simpleName
     }
+
     data class HandshakeReconnect(
         val channels: List<String>,
         val channelGroups: List<String>,
