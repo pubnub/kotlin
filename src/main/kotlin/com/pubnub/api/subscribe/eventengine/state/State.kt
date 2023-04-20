@@ -2,17 +2,17 @@ package com.pubnub.api.subscribe.eventengine.state
 
 import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNStatusCategory
-import com.pubnub.api.subscribe.eventengine.effect.EffectInvocation
+import com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectInvocation
 import com.pubnub.api.subscribe.eventengine.event.Event
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
 
 sealed class State {
-    open fun onEntry(): List<EffectInvocation> = listOf()
-    open fun onExit(): List<EffectInvocation> = listOf()
-    abstract fun transition(event: Event): Pair<State, List<EffectInvocation>>
+    open fun onEntry(): List<SubscribeEffectInvocation> = listOf()
+    open fun onExit(): List<SubscribeEffectInvocation> = listOf()
+    abstract fun transition(event: Event): Pair<State, List<SubscribeEffectInvocation>>
 
     object Unsubscribed : State() {
-        override fun transition(event: Event): Pair<State, List<EffectInvocation>> {
+        override fun transition(event: Event): Pair<State, List<SubscribeEffectInvocation>> {
             return when (event) {
                 is Event.SubscriptionChanged -> {
                     transitionTo(Handshaking(event.channels, event.channelGroups))
@@ -33,15 +33,15 @@ sealed class State {
         val channels: List<String>,
         val channelGroups: List<String>
     ) : State() {
-        override fun onEntry() = listOf(EffectInvocation.Handshake(channels, channelGroups))
-        override fun onExit() = listOf(EffectInvocation.CancelHandshake)
+        override fun onEntry() = listOf(SubscribeEffectInvocation.Handshake(channels, channelGroups))
+        override fun onExit() = listOf(SubscribeEffectInvocation.CancelHandshake)
 
-        override fun transition(event: Event): Pair<State, List<EffectInvocation>> {
+        override fun transition(event: Event): Pair<State, List<SubscribeEffectInvocation>> {
             return when (event) {
                 is Event.HandshakeSuccess -> {
                     transitionTo(
                         state = Receiving(this.channels, channelGroups, event.subscriptionCursor),
-                        EffectInvocation.EmitStatus(PNStatusCategory.PNConnectedCategory)
+                        SubscribeEffectInvocation.EmitStatus(PNStatusCategory.PNConnectedCategory)
                     )
                 }
 
@@ -74,11 +74,11 @@ sealed class State {
         val attempts: Int,
         val reason: PubNubException?
     ) : State() {
-        override fun onEntry() = listOf(EffectInvocation.HandshakeReconnect(channels, channelGroups, attempts, reason))
+        override fun onEntry() = listOf(SubscribeEffectInvocation.HandshakeReconnect(channels, channelGroups, attempts, reason))
 
-        override fun onExit() = listOf(EffectInvocation.CancelHandshakeReconnect)
+        override fun onExit() = listOf(SubscribeEffectInvocation.CancelHandshakeReconnect)
 
-        override fun transition(event: Event): Pair<State, List<EffectInvocation>> {
+        override fun transition(event: Event): Pair<State, List<SubscribeEffectInvocation>> {
             return when (event) {
                 is Event.HandshakeReconnectFailure -> {
                     transitionTo(
@@ -103,7 +103,7 @@ sealed class State {
                 is Event.HandshakeReconnectSuccess -> {
                     transitionTo(
                         state = Receiving(event.channels, event.channelGroups, event.subscriptionCursor),
-                        EffectInvocation.EmitStatus(PNStatusCategory.PNConnectedCategory)
+                        SubscribeEffectInvocation.EmitStatus(PNStatusCategory.PNConnectedCategory)
                     )
                 }
 
@@ -124,7 +124,7 @@ sealed class State {
         val reason: PubNubException?
     ) : State() {
 
-        override fun transition(event: Event): Pair<State, List<EffectInvocation>> {
+        override fun transition(event: Event): Pair<State, List<SubscribeEffectInvocation>> {
             return when (event) {
                 is Event.Reconnect -> {
                     transitionTo(HandshakeReconnecting(channels, channelGroups, 0, this.reason))
@@ -143,7 +143,7 @@ sealed class State {
         val reason: PubNubException
     ) : State() {
 
-        override fun transition(event: Event): Pair<State, List<EffectInvocation>> {
+        override fun transition(event: Event): Pair<State, List<SubscribeEffectInvocation>> {
             return when (event) {
                 is Event.HandshakeReconnectRetry -> {
                     transitionTo(HandshakeReconnecting(channels, channelGroups, 0, reason))
@@ -180,11 +180,11 @@ sealed class State {
         val reason: PubNubException?
     ) : State() {
         override fun onEntry() =
-            listOf(EffectInvocation.ReceiveReconnect(channels, channelGroups, subscriptionCursor, attempts, reason))
+            listOf(SubscribeEffectInvocation.ReceiveReconnect(channels, channelGroups, subscriptionCursor, attempts, reason))
 
-        override fun onExit() = listOf(EffectInvocation.CancelReceiveReconnect)
+        override fun onExit() = listOf(SubscribeEffectInvocation.CancelReceiveReconnect)
 
-        override fun transition(event: Event): Pair<State, List<EffectInvocation>> {
+        override fun transition(event: Event): Pair<State, List<SubscribeEffectInvocation>> {
             return when (event) {
                 is Event.ReceiveReconnectFailure -> {
                     transitionTo(
@@ -209,15 +209,15 @@ sealed class State {
                 is Event.ReceiveReconnectGiveUp -> {
                     transitionTo(
                         state = ReceiveFailed(channels, channelGroups, subscriptionCursor, event.reason),
-                        EffectInvocation.EmitStatus(PNStatusCategory.PNDisconnectedCategory)
+                        SubscribeEffectInvocation.EmitStatus(PNStatusCategory.PNDisconnectedCategory)
                     )
                 }
 
                 is Event.ReceiveReconnectSuccess -> {
                     transitionTo(
                         state = Receiving(channels, channelGroups, event.subscriptionCursor),
-                        EffectInvocation.EmitMessages(event.messages),
-                        EffectInvocation.EmitStatus(PNStatusCategory.PNConnectedCategory)
+                        SubscribeEffectInvocation.EmitMessages(event.messages),
+                        SubscribeEffectInvocation.EmitStatus(PNStatusCategory.PNConnectedCategory)
                     )
                 }
 
@@ -240,14 +240,14 @@ sealed class State {
         private val subscriptionCursor: SubscriptionCursor
     ) : State() {
         override fun onEntry() = listOf(
-            EffectInvocation.ReceiveMessages(
+            SubscribeEffectInvocation.ReceiveMessages(
                 channels, channelGroups, subscriptionCursor
             )
         )
 
-        override fun onExit() = listOf(EffectInvocation.CancelReceiveMessages)
+        override fun onExit() = listOf(SubscribeEffectInvocation.CancelReceiveMessages)
 
-        override fun transition(event: Event): Pair<State, List<EffectInvocation>> {
+        override fun transition(event: Event): Pair<State, List<SubscribeEffectInvocation>> {
 
             return when (event) {
                 is Event.ReceiveFailure -> {
@@ -261,7 +261,7 @@ sealed class State {
                 is Event.Disconnect -> {
                     transitionTo(
                         state = ReceiveStopped(channels, channelGroups, subscriptionCursor),
-                        EffectInvocation.EmitStatus(PNStatusCategory.PNDisconnectedCategory)
+                        SubscribeEffectInvocation.EmitStatus(PNStatusCategory.PNDisconnectedCategory)
                     )
                 }
 
@@ -276,8 +276,8 @@ sealed class State {
                 is Event.ReceiveSuccess -> {
                     transitionTo(
                         state = Receiving(channels, channelGroups, event.subscriptionCursor),
-                        EffectInvocation.EmitMessages(event.messages),
-                        EffectInvocation.EmitStatus(PNStatusCategory.PNConnectedCategory)
+                        SubscribeEffectInvocation.EmitMessages(event.messages),
+                        SubscribeEffectInvocation.EmitStatus(PNStatusCategory.PNConnectedCategory)
                     )
                 }
 
@@ -293,7 +293,7 @@ sealed class State {
         val channelGroups: List<String>,
         val subscriptionCursor: SubscriptionCursor
     ) : State() {
-        override fun transition(event: Event): Pair<State, List<EffectInvocation>> {
+        override fun transition(event: Event): Pair<State, List<SubscribeEffectInvocation>> {
             return when (event) {
                 is Event.Reconnect -> {
                     transitionTo(ReceiveReconnecting(channels, channelGroups, subscriptionCursor, 0, null))
@@ -312,7 +312,7 @@ sealed class State {
         val subscriptionCursor: SubscriptionCursor,
         val reason: PubNubException
     ) : State() {
-        override fun transition(event: Event): Pair<State, List<EffectInvocation>> {
+        override fun transition(event: Event): Pair<State, List<SubscribeEffectInvocation>> {
             return when (event) {
                 is Event.ReceiveReconnectRetry -> {
                     transitionTo(ReceiveReconnecting(channels, channelGroups, subscriptionCursor, 0, reason))
@@ -330,11 +330,11 @@ sealed class State {
     }
 }
 
-private fun State.noTransition(): Pair<State, List<EffectInvocation>> = Pair(this, emptyList())
+private fun State.noTransition(): Pair<State, List<SubscribeEffectInvocation>> = Pair(this, emptyList())
 private fun State.transitionTo(
     state: State,
-    vararg invocations: EffectInvocation
-): Pair<State, List<EffectInvocation>> {
+    vararg invocations: SubscribeEffectInvocation
+): Pair<State, List<SubscribeEffectInvocation>> {
     val effectInvocations = this.onExit() + invocations + state.onEntry()
     return Pair(state, effectInvocations)
 }

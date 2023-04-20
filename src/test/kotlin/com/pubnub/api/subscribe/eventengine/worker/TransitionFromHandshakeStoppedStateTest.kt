@@ -1,6 +1,6 @@
 package com.pubnub.api.subscribe.eventengine.worker
 
-import com.pubnub.api.subscribe.eventengine.effect.EffectInvocation
+import com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectInvocation
 import com.pubnub.api.subscribe.eventengine.event.Event
 import com.pubnub.api.subscribe.eventengine.state.State
 import com.pubnub.api.subscribe.eventengine.transition.transition
@@ -23,6 +23,6 @@ class TransitionFromHandshakeStoppedStateTest {
 
         // then
         assertEquals(State.HandshakeReconnecting(channels, channelGroups, 0, null), state)
-        assertEquals(listOf(EffectInvocation.HandshakeReconnect(channels, channelGroups, 0, null)), invocations)
+        assertEquals(listOf(SubscribeEffectInvocation.HandshakeReconnect(channels, channelGroups, 0, null)), invocations)
     }
 }

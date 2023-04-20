@@ -2,7 +2,7 @@ package com.pubnub.api.subscribe.eventengine.worker
 
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.models.consumer.pubsub.PNEvent
-import com.pubnub.api.subscribe.eventengine.effect.EffectInvocation
+import com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectInvocation
 import com.pubnub.api.subscribe.eventengine.event.Event
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
 import com.pubnub.api.subscribe.eventengine.state.State
@@ -39,14 +39,14 @@ class EventConsumerWorkerTransitionFunctionTest {
         assertThat(
             effectInvocationsForSubscriptionChange + effectInvocationsForHandshakingSuccess + effectInvocationsForReceivingSuccess,
             contains(
-                EffectInvocation.Handshake(channels, channelGroups),
-                EffectInvocation.CancelHandshake,
-                EffectInvocation.EmitStatus(PNStatusCategory.PNConnectedCategory),
-                EffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor),
-                EffectInvocation.CancelReceiveMessages,
-                EffectInvocation.EmitMessages(listOf()), // toDO brakuje listy Messagy
-                EffectInvocation.EmitStatus(PNStatusCategory.PNConnectedCategory),
-                EffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor)
+                SubscribeEffectInvocation.Handshake(channels, channelGroups),
+                SubscribeEffectInvocation.CancelHandshake,
+                SubscribeEffectInvocation.EmitStatus(PNStatusCategory.PNConnectedCategory),
+                SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor),
+                SubscribeEffectInvocation.CancelReceiveMessages,
+                SubscribeEffectInvocation.EmitMessages(listOf()), // toDO brakuje listy Messagy
+                SubscribeEffectInvocation.EmitStatus(PNStatusCategory.PNConnectedCategory),
+                SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor)
             )
         )
     }
