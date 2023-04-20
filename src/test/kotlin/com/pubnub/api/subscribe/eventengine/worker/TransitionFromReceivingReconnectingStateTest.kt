@@ -7,7 +7,7 @@ import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.models.consumer.pubsub.BasePubSubResult
 import com.pubnub.api.models.consumer.pubsub.PNEvent
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
-import com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectInvocation
+import com.pubnub.api.subscribe.eventengine.effect.EffectInvocation
 import com.pubnub.api.subscribe.eventengine.event.Event
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
 import com.pubnub.api.subscribe.eventengine.state.State
@@ -34,8 +34,8 @@ class TransitionFromReceivingReconnectingStateTest {
         assertEquals(State.ReceiveReconnecting(channels, channelGroups, subscriptionCursor, 1, reason), state)
         assertEquals(
             listOf(
-                SubscribeEffectInvocation.CancelReceiveReconnect,
-                SubscribeEffectInvocation.ReceiveReconnect(channels, channelGroups, subscriptionCursor, 1, reason),
+                EffectInvocation.CancelReceiveReconnect,
+                EffectInvocation.ReceiveReconnect(channels, channelGroups, subscriptionCursor, 1, reason),
             ),
             invocations
         )
@@ -53,8 +53,8 @@ class TransitionFromReceivingReconnectingStateTest {
         assertEquals(State.ReceiveReconnecting(channels, channelGroups, subscriptionCursor, 0, reason), state)
         assertEquals(
             listOf(
-                SubscribeEffectInvocation.CancelReceiveReconnect,
-                SubscribeEffectInvocation.ReceiveReconnect(channels, channelGroups, subscriptionCursor, 0, reason),
+                EffectInvocation.CancelReceiveReconnect,
+                EffectInvocation.ReceiveReconnect(channels, channelGroups, subscriptionCursor, 0, reason),
             ),
             invocations
         )
@@ -72,7 +72,7 @@ class TransitionFromReceivingReconnectingStateTest {
         assertEquals(State.ReceiveStopped(channels, channelGroups, subscriptionCursor), state)
         assertEquals(
             listOf(
-                SubscribeEffectInvocation.CancelReceiveReconnect,
+                EffectInvocation.CancelReceiveReconnect,
             ),
             invocations
         )
@@ -90,8 +90,8 @@ class TransitionFromReceivingReconnectingStateTest {
         assertEquals(State.ReceiveFailed(channels, channelGroups, subscriptionCursor, reason), state)
         assertEquals(
             listOf(
-                SubscribeEffectInvocation.CancelReceiveReconnect,
-                SubscribeEffectInvocation.EmitStatus(PNStatusCategory.PNDisconnectedCategory)
+                EffectInvocation.CancelReceiveReconnect,
+                EffectInvocation.EmitStatus(PNStatusCategory.PNDisconnectedCategory)
             ),
             invocations
         )
@@ -113,10 +113,10 @@ class TransitionFromReceivingReconnectingStateTest {
         assertEquals(State.Receiving(channels, channelGroups, subscriptionCursor), state)
         assertEquals(
             listOf(
-                SubscribeEffectInvocation.CancelReceiveReconnect,
-                SubscribeEffectInvocation.EmitMessages(messages),
-                SubscribeEffectInvocation.EmitStatus(PNStatusCategory.PNConnectedCategory),
-                SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor)
+                EffectInvocation.CancelReceiveReconnect,
+                EffectInvocation.EmitMessages(messages),
+                EffectInvocation.EmitStatus(PNStatusCategory.PNConnectedCategory),
+                EffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor)
             ),
             invocations
         )
@@ -134,8 +134,8 @@ class TransitionFromReceivingReconnectingStateTest {
         assertEquals(State.ReceiveReconnecting(channels, channelGroups, subscriptionCursor, 0, reason), state)
         assertEquals(
             listOf(
-                SubscribeEffectInvocation.CancelReceiveReconnect,
-                SubscribeEffectInvocation.ReceiveReconnect(channels, channelGroups, subscriptionCursor, 0, reason),
+                EffectInvocation.CancelReceiveReconnect,
+                EffectInvocation.ReceiveReconnect(channels, channelGroups, subscriptionCursor, 0, reason),
             ),
             invocations
         )

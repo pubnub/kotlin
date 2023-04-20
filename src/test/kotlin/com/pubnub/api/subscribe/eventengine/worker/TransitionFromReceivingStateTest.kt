@@ -7,7 +7,7 @@ import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.models.consumer.pubsub.BasePubSubResult
 import com.pubnub.api.models.consumer.pubsub.PNEvent
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
-import com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectInvocation
+import com.pubnub.api.subscribe.eventengine.effect.EffectInvocation
 import com.pubnub.api.subscribe.eventengine.event.Event
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
 import com.pubnub.api.subscribe.eventengine.state.State
@@ -34,8 +34,8 @@ class TransitionFromReceivingStateTest {
         assertEquals(State.ReceiveReconnecting(channels, channelGroups, subscriptionCursor, 0, reason), state)
         assertEquals(
             listOf(
-                SubscribeEffectInvocation.CancelReceiveMessages,
-                SubscribeEffectInvocation.ReceiveReconnect(channels, channelGroups, subscriptionCursor, 0, reason)
+                EffectInvocation.CancelReceiveMessages,
+                EffectInvocation.ReceiveReconnect(channels, channelGroups, subscriptionCursor, 0, reason)
             ),
             invocations
         )
@@ -53,8 +53,8 @@ class TransitionFromReceivingStateTest {
         assertEquals(State.ReceiveStopped(channels, channelGroups, subscriptionCursor), state)
         assertEquals(
             listOf(
-                SubscribeEffectInvocation.CancelReceiveMessages,
-                SubscribeEffectInvocation.EmitStatus(PNStatusCategory.PNDisconnectedCategory)
+                EffectInvocation.CancelReceiveMessages,
+                EffectInvocation.EmitStatus(PNStatusCategory.PNDisconnectedCategory)
             ),
             invocations
         )
@@ -73,8 +73,8 @@ class TransitionFromReceivingStateTest {
         assertEquals(State.Receiving(channels, channelGroups, subscriptionCursor), state)
         assertEquals(
             listOf(
-                SubscribeEffectInvocation.CancelReceiveMessages,
-                SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor),
+                EffectInvocation.CancelReceiveMessages,
+                EffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor),
             ),
             invocations
         )
@@ -92,8 +92,8 @@ class TransitionFromReceivingStateTest {
         assertEquals(State.Receiving(channels, channelGroups, subscriptionCursor), state)
         assertEquals(
             listOf(
-                SubscribeEffectInvocation.CancelReceiveMessages,
-                SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor),
+                EffectInvocation.CancelReceiveMessages,
+                EffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor),
             ),
             invocations
         )
@@ -115,10 +115,10 @@ class TransitionFromReceivingStateTest {
         assertEquals(State.Receiving(channels, channelGroups, subscriptionCursor), state)
         assertEquals(
             listOf(
-                SubscribeEffectInvocation.CancelReceiveMessages,
-                SubscribeEffectInvocation.EmitMessages(messages),
-                SubscribeEffectInvocation.EmitStatus(PNStatusCategory.PNConnectedCategory),
-                SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor),
+                EffectInvocation.CancelReceiveMessages,
+                EffectInvocation.EmitMessages(messages),
+                EffectInvocation.EmitStatus(PNStatusCategory.PNConnectedCategory),
+                EffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor),
             ),
             invocations
         )

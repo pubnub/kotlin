@@ -2,7 +2,7 @@ package com.pubnub.api.subscribe.eventengine.worker
 
 import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNStatusCategory
-import com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectInvocation
+import com.pubnub.api.subscribe.eventengine.effect.EffectInvocation
 import com.pubnub.api.subscribe.eventengine.event.Event
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
 import com.pubnub.api.subscribe.eventengine.state.State
@@ -29,8 +29,8 @@ class TransitionFromHandshakingReconnectingStateTest {
         assertEquals(State.HandshakeReconnecting(channels, channelGroups, 1, reason), state)
         assertEquals(
             listOf(
-                SubscribeEffectInvocation.CancelHandshakeReconnect,
-                SubscribeEffectInvocation.HandshakeReconnect(channels, channelGroups, 1, reason)
+                EffectInvocation.CancelHandshakeReconnect,
+                EffectInvocation.HandshakeReconnect(channels, channelGroups, 1, reason)
             ),
             invocations
         )
@@ -49,8 +49,8 @@ class TransitionFromHandshakingReconnectingStateTest {
 
         assertEquals(
             listOf(
-                SubscribeEffectInvocation.CancelHandshakeReconnect,
-                SubscribeEffectInvocation.HandshakeReconnect(channels, channelGroups, 0, reason),
+                EffectInvocation.CancelHandshakeReconnect,
+                EffectInvocation.HandshakeReconnect(channels, channelGroups, 0, reason),
             ),
             invocations
         )
@@ -67,7 +67,7 @@ class TransitionFromHandshakingReconnectingStateTest {
         assertEquals(State.HandshakeStopped(channels, channelGroups, reason), state)
         assertEquals(
             listOf(
-                SubscribeEffectInvocation.CancelHandshakeReconnect,
+                EffectInvocation.CancelHandshakeReconnect,
             ),
             invocations
         )
@@ -84,7 +84,7 @@ class TransitionFromHandshakingReconnectingStateTest {
         assertEquals(State.HandshakeFailed(channels, channelGroups, reason), state)
         assertEquals(
             listOf(
-                SubscribeEffectInvocation.CancelHandshakeReconnect,
+                EffectInvocation.CancelHandshakeReconnect,
             ),
             invocations
         )
@@ -102,9 +102,9 @@ class TransitionFromHandshakingReconnectingStateTest {
         assertEquals(State.Receiving(channels, channelGroups, subscriptionCursor), state)
         assertEquals(
             listOf(
-                SubscribeEffectInvocation.CancelHandshakeReconnect,
-                SubscribeEffectInvocation.EmitStatus(PNStatusCategory.PNConnectedCategory),
-                SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor)
+                EffectInvocation.CancelHandshakeReconnect,
+                EffectInvocation.EmitStatus(PNStatusCategory.PNConnectedCategory),
+                EffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor)
             ),
             invocations
         )
@@ -122,8 +122,8 @@ class TransitionFromHandshakingReconnectingStateTest {
         assertEquals(State.Receiving(channels, channelGroups, subscriptionCursor), state)
         assertEquals(
             listOf(
-                SubscribeEffectInvocation.CancelHandshakeReconnect,
-                SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor)
+                EffectInvocation.CancelHandshakeReconnect,
+                EffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor)
             ),
             invocations
         )

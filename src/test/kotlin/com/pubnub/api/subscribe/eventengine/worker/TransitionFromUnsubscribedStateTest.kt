@@ -1,6 +1,6 @@
 package com.pubnub.api.subscribe.eventengine.worker
 
-import com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectInvocation
+import com.pubnub.api.subscribe.eventengine.effect.EffectInvocation
 import com.pubnub.api.subscribe.eventengine.event.Event
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
 import com.pubnub.api.subscribe.eventengine.state.State
@@ -26,7 +26,7 @@ class TransitionFromUnsubscribedStateTest {
         assertEquals(State.Handshaking(channels, channelGroups), state)
         assertEquals(
             listOf(
-                SubscribeEffectInvocation.Handshake(channels, channelGroups)
+                EffectInvocation.Handshake(channels, channelGroups)
             ),
             invocations
         )
@@ -43,7 +43,7 @@ class TransitionFromUnsubscribedStateTest {
         assertEquals(State.Receiving(channels, channelGroups, subscriptionCursor), state)
         assertEquals(
             listOf(
-                SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor),
+                EffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor),
             ),
             invocations
         )

@@ -1,7 +1,7 @@
 package com.pubnub.api.subscribe.eventengine.worker
 
 import com.pubnub.api.PubNubException
-import com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectInvocation
+import com.pubnub.api.subscribe.eventengine.effect.EffectInvocation
 import com.pubnub.api.subscribe.eventengine.event.Event
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
 import com.pubnub.api.subscribe.eventengine.state.State
@@ -27,7 +27,7 @@ class TransitionFromHandshakeFailedStateTest {
         // then
         assertEquals(State.HandshakeReconnecting(channels, channelGroups, 0, exception), state)
         assertEquals(
-            listOf(SubscribeEffectInvocation.HandshakeReconnect(channels, channelGroups, 0, exception)), invocations
+            listOf(EffectInvocation.HandshakeReconnect(channels, channelGroups, 0, exception)), invocations
         )
     }
 
@@ -42,7 +42,7 @@ class TransitionFromHandshakeFailedStateTest {
         // then
         assertEquals(State.HandshakeReconnecting(channels, channelGroups, 0, exception), state)
         assertEquals(
-            listOf(SubscribeEffectInvocation.HandshakeReconnect(channels, channelGroups, 0, exception)), invocations
+            listOf(EffectInvocation.HandshakeReconnect(channels, channelGroups, 0, exception)), invocations
         )
     }
 
@@ -59,7 +59,7 @@ class TransitionFromHandshakeFailedStateTest {
             State.ReceiveReconnecting(channels, channelGroups, subscriptionCursor, 0, exception), state
         )
         assertEquals(
-            listOf(SubscribeEffectInvocation.ReceiveReconnect(channels, channelGroups, subscriptionCursor, 0, exception)),
+            listOf(EffectInvocation.ReceiveReconnect(channels, channelGroups, subscriptionCursor, 0, exception)),
             invocations
         )
     }
@@ -74,7 +74,7 @@ class TransitionFromHandshakeFailedStateTest {
         // then
         assertEquals(State.HandshakeReconnecting(channels, channelGroups, 0, exception), state)
         assertEquals(
-            listOf(SubscribeEffectInvocation.HandshakeReconnect(channels, channelGroups, 0, exception)), invocations
+            listOf(EffectInvocation.HandshakeReconnect(channels, channelGroups, 0, exception)), invocations
         )
     }
 }
