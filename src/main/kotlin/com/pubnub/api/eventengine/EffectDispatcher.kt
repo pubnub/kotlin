@@ -3,7 +3,6 @@ package com.pubnub.api.eventengine
 import java.util.concurrent.ConcurrentHashMap
 
 interface ManagedEffect {
-    val id: String
     fun run(completionBlock: () -> Unit = {})
     fun cancel()
 }
@@ -20,11 +19,11 @@ class EffectDispatcher<T : EffectInvocation>(
             }
 
             is ManagedEffectInvocation -> {
+                managedEffects.remove(effectInvocation.id)?.cancel()
                 val managedEffect = effectHandlerFactory.create(effectInvocation)
-                managedEffects.remove(managedEffect.id)?.cancel()
-                managedEffects[managedEffect.id] = managedEffect
+                managedEffects[effectInvocation.id] = managedEffect
                 managedEffect.run {
-                    managedEffects.remove(managedEffect.id)
+                    managedEffects.remove(effectInvocation.id)
                 }
             }
 

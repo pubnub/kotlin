@@ -27,7 +27,6 @@ class EffectDispatcherTest {
     class EffectHandlerFactoryImpl : EffectHandlerFactory<TestEffectInvocation> {
         override fun create(effectInvocation: TestEffectInvocation): ManagedEffect {
             return object : ManagedEffect {
-                override val id: String = effectInvocation.id
 
                 override fun run(completionBlock: () -> Unit) {
                     when (effectInvocation) {
