@@ -1,6 +1,5 @@
 package com.pubnub.api.eventengine
 
-import com.pubnub.api.subscribe.eventengine.effect.EffectHandlerFactory
 import java.util.concurrent.ConcurrentHashMap
 
 interface ManagedEffect {
