@@ -82,7 +82,6 @@ import com.pubnub.api.models.consumer.objects.member.PNUUIDDetailsLevel
 import com.pubnub.api.models.consumer.objects.membership.ChannelMembershipInput
 import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
 import com.pubnub.api.presence.Presence
-import com.pubnub.api.subscribe.Subscribe
 import com.pubnub.api.vendor.Base64
 import com.pubnub.api.vendor.Crypto
 import com.pubnub.api.vendor.FileEncryptionUtil.decrypt
@@ -291,7 +290,8 @@ class PubNub(val configuration: PNConfiguration) {
         withPresence: Boolean = false,
         withTimetoken: Long = 0L
     ) = if (configuration.enableSubscribeBeta)
-        Subscribe.subscribe(channels, channelGroups, withPresence, withTimetoken)
+        TODO()
+    // Subscribe.subscribe(channels, channelGroups, withPresence, withTimetoken)
     else
         PubSub.subscribe(subscriptionManager, channels, channelGroups, withPresence, withTimetoken)
 
@@ -316,7 +316,8 @@ class PubNub(val configuration: PNConfiguration) {
         channels: List<String> = emptyList(),
         channelGroups: List<String> = emptyList()
     ) = if (configuration.enableSubscribeBeta)
-        Subscribe.unsubscribe(channels, channelGroups)
+    // Subscribe.unsubscribe(channels, channelGroups)
+        TODO()
     else
         PubSub.unsubscribe(subscriptionManager, channels, channelGroups)
 
@@ -325,7 +326,8 @@ class PubNub(val configuration: PNConfiguration) {
      */
     fun unsubscribeAll() =
         if (configuration.enableSubscribeBeta)
-            Subscribe.unsubscribeAll()
+            TODO()
+        // Subscribe.unsubscribeAll()
         else
             subscriptionManager.unsubscribeAll()
 
@@ -336,7 +338,8 @@ class PubNub(val configuration: PNConfiguration) {
      */
     fun getSubscribedChannels() =
         if (configuration.enableSubscribeBeta)
-            Subscribe.getSubscribedChannels()
+            TODO()
+        // Subscribe.getSubscribedChannels()
         else
             subscriptionManager.getSubscribedChannels()
 
@@ -347,7 +350,8 @@ class PubNub(val configuration: PNConfiguration) {
      */
     fun getSubscribedChannelGroups() =
         if (configuration.enableSubscribeBeta)
-            Subscribe.getSubscribedChannelGroups()
+            TODO()
+        // Subscribe.getSubscribedChannelGroups()
         else
             subscriptionManager.getSubscribedChannelGroups()
     //endregion
