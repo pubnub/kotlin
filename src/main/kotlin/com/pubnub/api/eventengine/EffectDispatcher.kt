@@ -4,7 +4,7 @@ import org.slf4j.LoggerFactory
 import java.util.concurrent.ConcurrentHashMap
 
 interface ManagedEffect {
-    fun run(completionBlock: () -> Unit = {})
+    fun runEffect(completionBlock: () -> Unit = {})
     fun cancel()
 }
 
@@ -26,13 +26,13 @@ class EffectDispatcher<T : EffectInvocation>(
                 managedEffects.remove(effectInvocation.id)?.cancel()
                 val managedEffect = effectHandlerFactory.create(effectInvocation) ?: return
                 managedEffects[effectInvocation.id] = managedEffect
-                managedEffect.run {
+                managedEffect.runEffect {
                     managedEffects.remove(effectInvocation.id)
                 }
             }
 
             else -> {
-                effectHandlerFactory.create(effectInvocation)?.run()
+                effectHandlerFactory.create(effectInvocation)?.runEffect()
             }
         }
     }

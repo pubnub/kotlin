@@ -19,14 +19,14 @@ class DelayedManagedEffect(
     private var cancelled = false
 
     @Synchronized
-    override fun run(completionBlock: () -> Unit) {
+    override fun runEffect(completionBlock: () -> Unit) {
         if (cancelled) {
             return
         }
 
         scheduled = executorService.schedule({
             try {
-                managedEffect.run(completionBlock)
+                managedEffect.runEffect(completionBlock)
             } finally {
                 completionBlock()
             }

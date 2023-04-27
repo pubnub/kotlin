@@ -23,7 +23,7 @@ class RemoteActionManagedEffectTest {
         }
 
         // when
-        failingManagedEffect.run { latch.countDown() }
+        failingManagedEffect.runEffect { latch.countDown() }
 
         // then
         assertTrue(latch.await(100, TimeUnit.MILLISECONDS))
@@ -40,7 +40,7 @@ class RemoteActionManagedEffectTest {
         }
 
         // when
-        failingManagedEffect.run { latch.countDown() }
+        failingManagedEffect.runEffect { latch.countDown() }
 
         // then
         assertTrue(latch.await(100, TimeUnit.MILLISECONDS))

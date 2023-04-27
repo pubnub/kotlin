@@ -28,7 +28,7 @@ class EffectDispatcherTest {
         override fun create(effectInvocation: TestEffectInvocation): ManagedEffect {
             return object : ManagedEffect {
 
-                override fun run(completionBlock: () -> Unit) {
+                override fun runEffect(completionBlock: () -> Unit) {
                     when (effectInvocation) {
                         is ImmediateEndingTestEffect -> {
                             completionBlock()

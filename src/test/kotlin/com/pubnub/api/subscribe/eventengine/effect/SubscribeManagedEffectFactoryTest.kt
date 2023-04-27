@@ -19,12 +19,12 @@ class SubscribeManagedEffectFactoryTest {
         val latch = CountDownLatch(1)
         val testEventHandler = TestEventHandler()
         val expectedReason = PubNubException("test")
-        val factory = subscribeEffectHandlerFactory(
+        val factory = subscribeManagedEffectFactory(
             eventHandler = testEventHandler, handshakeProvider = failingHandshakeProvider(expectedReason)
         )
 
         // when
-        factory.create(EffectInvocation.Handshake(listOf(), listOf())).run { latch.countDown() }
+        factory.create(EffectInvocation.Handshake(listOf(), listOf()))?.runEffect { latch.countDown() }
 
         // then
         assertTrue(latch.await(100, TimeUnit.MILLISECONDS))
@@ -37,12 +37,12 @@ class SubscribeManagedEffectFactoryTest {
         val latch = CountDownLatch(1)
         val testEventHandler = TestEventHandler()
         val expectedResult = SubscriptionCursor(1337L, "1337")
-        val factory = subscribeEffectHandlerFactory(
+        val factory = subscribeManagedEffectFactory(
             eventHandler = testEventHandler, handshakeProvider = successfullHandshakeProvider(expectedResult)
         )
 
         // when
-        factory.create(EffectInvocation.Handshake(listOf(), listOf())).run { latch.countDown() }
+        factory.create(EffectInvocation.Handshake(listOf(), listOf()))?.runEffect { latch.countDown() }
 
         // then
         assertTrue(latch.await(100, TimeUnit.MILLISECONDS))
@@ -55,13 +55,13 @@ class SubscribeManagedEffectFactoryTest {
         val latch = CountDownLatch(1)
         val testEventHandler = TestEventHandler()
         val expectedReason = PubNubException("test")
-        val factory = subscribeEffectHandlerFactory(
+        val factory = subscribeManagedEffectFactory(
             eventHandler = testEventHandler, receiveMessagesProvider = failingReceiveMessagesProvider(expectedReason)
         )
 
         // when
         factory.create(EffectInvocation.ReceiveMessages(listOf(), listOf(), SubscriptionCursor(42L, "42")))
-            .run { latch.countDown() }
+            ?.runEffect { latch.countDown() }
 
         // then
         assertTrue(latch.await(100, TimeUnit.MILLISECONDS))
@@ -76,13 +76,13 @@ class SubscribeManagedEffectFactoryTest {
         val expectedResult = ReceiveMessagesResult(
             messages = listOf(), subscriptionCursor = SubscriptionCursor(42L, "42")
         )
-        val factory = subscribeEffectHandlerFactory(
+        val factory = subscribeManagedEffectFactory(
             eventHandler = testEventHandler, receiveMessagesProvider = successfulReceiveMessageProvider(expectedResult)
         )
 
         // when
         factory.create(EffectInvocation.ReceiveMessages(listOf(), listOf(), SubscriptionCursor(42L, "42")))
-            .run { latch.countDown() }
+            ?.runEffect { latch.countDown() }
 
         // then
         assertTrue(latch.await(100, TimeUnit.MILLISECONDS))
@@ -116,7 +116,7 @@ class SubscribeManagedEffectFactoryTest {
     private fun successfullHandshakeProvider(value: SubscriptionCursor = SubscriptionCursor(42L, "42")) =
         HandshakeProvider { _, _ -> successfullRemoteAction(value) }
 
-    private fun subscribeEffectHandlerFactory(
+    private fun subscribeManagedEffectFactory(
         eventHandler: EventHandler,
         handshakeProvider: HandshakeProvider = failingHandshakeProvider(exception = PubNubException("Unknown error")),
         receiveMessagesProvider: ReceiveMessagesProvider = failingReceiveMessagesProvider(exception = PubNubException("Unknown error"))
