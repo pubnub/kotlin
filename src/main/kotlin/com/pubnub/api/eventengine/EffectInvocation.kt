@@ -2,10 +2,13 @@ package com.pubnub.api.eventengine
 
 interface EffectInvocation {
     val id: String
+    val type: EffectInvocationType
 }
 
-interface CancelEffectInvocation {
-    val idToCancel: String
-}
+sealed interface EffectInvocationType
 
-interface ManagedEffectInvocation
+data class Cancel(val idToCancel: String) : EffectInvocationType
+
+object Managed : EffectInvocationType
+
+object NonManaged : EffectInvocationType

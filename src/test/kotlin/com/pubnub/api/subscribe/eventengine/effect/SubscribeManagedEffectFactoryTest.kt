@@ -24,7 +24,7 @@ class SubscribeManagedEffectFactoryTest {
         )
 
         // when
-        factory.create(EffectInvocation.Handshake(listOf(), listOf()))?.runEffect { latch.countDown() }
+        factory.create(SubscribeEffectInvocation.Handshake(listOf(), listOf()))?.runEffect { latch.countDown() }
 
         // then
         assertTrue(latch.await(100, TimeUnit.MILLISECONDS))
@@ -42,7 +42,7 @@ class SubscribeManagedEffectFactoryTest {
         )
 
         // when
-        factory.create(EffectInvocation.Handshake(listOf(), listOf()))?.runEffect { latch.countDown() }
+        factory.create(SubscribeEffectInvocation.Handshake(listOf(), listOf()))?.runEffect { latch.countDown() }
 
         // then
         assertTrue(latch.await(100, TimeUnit.MILLISECONDS))
@@ -60,7 +60,7 @@ class SubscribeManagedEffectFactoryTest {
         )
 
         // when
-        factory.create(EffectInvocation.ReceiveMessages(listOf(), listOf(), SubscriptionCursor(42L, "42")))
+        factory.create(SubscribeEffectInvocation.ReceiveMessages(listOf(), listOf(), SubscriptionCursor(42L, "42")))
             ?.runEffect { latch.countDown() }
 
         // then
@@ -81,7 +81,7 @@ class SubscribeManagedEffectFactoryTest {
         )
 
         // when
-        factory.create(EffectInvocation.ReceiveMessages(listOf(), listOf(), SubscriptionCursor(42L, "42")))
+        factory.create(SubscribeEffectInvocation.ReceiveMessages(listOf(), listOf(), SubscriptionCursor(42L, "42")))
             ?.runEffect { latch.countDown() }
 
         // then

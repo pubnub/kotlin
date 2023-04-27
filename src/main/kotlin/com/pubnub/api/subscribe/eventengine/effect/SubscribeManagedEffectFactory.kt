@@ -21,16 +21,16 @@ class SubscribeManagedEffectFactory(
     private val eventHandler: EventHandler,
     private val policy: RetryPolicy,
     private val executorService: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor(),
-) : ManagedEffectFactory<EffectInvocation> {
-    override fun create(effectInvocation: EffectInvocation): ManagedEffect? {
+) : ManagedEffectFactory<SubscribeEffectInvocation> {
+    override fun create(effectInvocation: SubscribeEffectInvocation): ManagedEffect? {
         return when (effectInvocation) {
-            is EffectInvocation.EmitMessages -> null // todo
-            is EffectInvocation.EmitStatus -> null // todo
-            is EffectInvocation.Handshake -> {
+            is SubscribeEffectInvocation.EmitMessages -> null // todo
+            is SubscribeEffectInvocation.EmitStatus -> null // todo
+            is SubscribeEffectInvocation.Handshake -> {
                 handleHandshake(effectInvocation.channels, effectInvocation.channelGroups)
             }
 
-            is EffectInvocation.HandshakeReconnect -> {
+            is SubscribeEffectInvocation.HandshakeReconnect -> {
                 scheduleManagedEffect(
                     attempt = effectInvocation.attempts,
                     reconnectFailureEvent = Event.HandshakeReconnectGiveUp(effectInvocation.reason!!), // todo figure this out here
@@ -40,7 +40,7 @@ class SubscribeManagedEffectFactory(
                 )
             }
 
-            is EffectInvocation.ReceiveMessages -> {
+            is SubscribeEffectInvocation.ReceiveMessages -> {
                 handleReceiveMessages(
                     effectInvocation.channels,
                     effectInvocation.channelGroups,
@@ -48,7 +48,7 @@ class SubscribeManagedEffectFactory(
                 )
             }
 
-            is EffectInvocation.ReceiveReconnect -> scheduleManagedEffect(
+            is SubscribeEffectInvocation.ReceiveReconnect -> scheduleManagedEffect(
                 attempt = effectInvocation.attempts,
                 reconnectFailureEvent = Event.ReceiveReconnectGiveUp(effectInvocation.reason!!), // todo figure this out here
                 managedEffect = handleReceiveMessages(
@@ -59,10 +59,10 @@ class SubscribeManagedEffectFactory(
 
             )
 
-            EffectInvocation.CancelHandshake,
-            EffectInvocation.CancelHandshakeReconnect,
-            EffectInvocation.CancelReceiveMessages,
-            EffectInvocation.CancelReceiveReconnect,
+            SubscribeEffectInvocation.CancelHandshake,
+            SubscribeEffectInvocation.CancelHandshakeReconnect,
+            SubscribeEffectInvocation.CancelReceiveMessages,
+            SubscribeEffectInvocation.CancelReceiveReconnect,
             -> null
         }
     }

@@ -1,8 +1,8 @@
 package com.pubnub.api.subscribe.eventengine.worker
 
-import com.pubnub.api.subscribe.eventengine.effect.EffectInvocation
+import com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectInvocation
 import com.pubnub.api.subscribe.eventengine.event.Event
-import com.pubnub.api.subscribe.eventengine.state.State
+import com.pubnub.api.subscribe.eventengine.state.SubscribeState
 import com.pubnub.api.subscribe.eventengine.transition.transition
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -17,12 +17,12 @@ class TransitionFromHandshakeStoppedStateTest {
 
         // when
         val (state, invocations) = transition(
-            State.HandshakeStopped(channels, channelGroups, null),
+            SubscribeState.HandshakeStopped(channels, channelGroups, null),
             Event.Reconnect
         )
 
         // then
-        assertEquals(State.HandshakeReconnecting(channels, channelGroups, 0, null), state)
-        assertEquals(listOf(EffectInvocation.HandshakeReconnect(channels, channelGroups, 0, null)), invocations)
+        assertEquals(SubscribeState.HandshakeReconnecting(channels, channelGroups, 0, null), state)
+        assertEquals(listOf(SubscribeEffectInvocation.HandshakeReconnect(channels, channelGroups, 0, null)), invocations)
     }
 }

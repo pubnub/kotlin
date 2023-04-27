@@ -10,19 +10,16 @@ import java.util.concurrent.ConcurrentHashMap
 
 class EffectDispatcherTest {
 
-    sealed class TestEffectInvocation : EffectInvocation {
+    sealed class TestEffectInvocation(override val type: EffectInvocationType) : EffectInvocation {
         override val id: String = this::class.java.simpleName
     }
 
     object TestEffect :
-        TestEffectInvocation(),
-        ManagedEffectInvocation
+        TestEffectInvocation(Managed)
+
     object ImmediateEndingTestEffect :
-        TestEffectInvocation(),
-        ManagedEffectInvocation
-    object CancelTestEffect : TestEffectInvocation(), CancelEffectInvocation {
-        override val idToCancel: String = TestEffect::class.java.simpleName
-    }
+        TestEffectInvocation(Managed)
+    object CancelTestEffect : TestEffectInvocation(Cancel(TestEffect::class.java.simpleName))
 
     class EffectHandlerFactoryImpl : ManagedEffectFactory<TestEffectInvocation> {
         override fun create(effectInvocation: TestEffectInvocation): ManagedEffect {
@@ -50,7 +47,7 @@ class EffectDispatcherTest {
         // given
         val managedEffects = ConcurrentHashMap<String, ManagedEffect>()
         val effectDispatcher = EffectDispatcher(
-            effectHandlerFactory = EffectHandlerFactoryImpl(),
+            managedEffectFactory = EffectHandlerFactoryImpl(),
             managedEffects = managedEffects
         )
 
@@ -66,7 +63,7 @@ class EffectDispatcherTest {
         // given
         val managedEffects = ConcurrentHashMap<String, ManagedEffect>()
         val effectDispatcher = EffectDispatcher(
-            effectHandlerFactory = EffectHandlerFactoryImpl(),
+            managedEffectFactory = EffectHandlerFactoryImpl(),
             managedEffects = managedEffects
         )
 
@@ -83,7 +80,7 @@ class EffectDispatcherTest {
         // given
         val managedEffects = ConcurrentHashMap<String, ManagedEffect>()
         val effectDispatcher = EffectDispatcher(
-            effectHandlerFactory = EffectHandlerFactoryImpl(),
+            managedEffectFactory = EffectHandlerFactoryImpl(),
             managedEffects = managedEffects
         )
 
@@ -99,7 +96,7 @@ class EffectDispatcherTest {
         // given
         val managedEffects = ConcurrentHashMap<String, ManagedEffect>()
         val effectDispatcher = EffectDispatcher(
-            effectHandlerFactory = EffectHandlerFactoryImpl(),
+            managedEffectFactory = EffectHandlerFactoryImpl(),
             managedEffects = managedEffects
         )
 
@@ -120,7 +117,7 @@ class EffectDispatcherTest {
         val managedEffect = spyk(effectHandlerFactory.create(TestEffect))
         managedEffects[TestEffect.id] = managedEffect
         val effectDispatcher = EffectDispatcher(
-            effectHandlerFactory = effectHandlerFactory,
+            managedEffectFactory = effectHandlerFactory,
             managedEffects = managedEffects
         )
 

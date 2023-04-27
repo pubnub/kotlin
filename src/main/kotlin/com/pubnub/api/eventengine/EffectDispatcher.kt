@@ -9,7 +9,7 @@ interface ManagedEffect {
 }
 
 class EffectDispatcher<T : EffectInvocation>(
-    private val effectHandlerFactory: ManagedEffectFactory<T>,
+    private val managedEffectFactory: ManagedEffectFactory<T>,
     private val managedEffects: ConcurrentHashMap<String, ManagedEffect> = ConcurrentHashMap()
 ) {
 
@@ -17,22 +17,21 @@ class EffectDispatcher<T : EffectInvocation>(
 
     fun dispatch(effectInvocation: T) {
         log.trace("Dispatching effect: {}", effectInvocation)
-        when (effectInvocation) {
-            is CancelEffectInvocation -> {
-                managedEffects.remove(effectInvocation.idToCancel)?.cancel()
+        when (val type = effectInvocation.type) {
+            is Cancel -> {
+                managedEffects.remove(type.idToCancel)?.cancel()
             }
 
-            is ManagedEffectInvocation -> {
+            is Managed -> {
                 managedEffects.remove(effectInvocation.id)?.cancel()
-                val managedEffect = effectHandlerFactory.create(effectInvocation) ?: return
+                val managedEffect = managedEffectFactory.create(effectInvocation) ?: return
                 managedEffects[effectInvocation.id] = managedEffect
                 managedEffect.runEffect {
                     managedEffects.remove(effectInvocation.id)
                 }
             }
-
-            else -> {
-                effectHandlerFactory.create(effectInvocation)?.runEffect()
+            is NonManaged -> {
+                managedEffectFactory.create(effectInvocation)?.runEffect()
             }
         }
     }
