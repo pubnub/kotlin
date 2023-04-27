@@ -4,29 +4,5 @@
     "name": "Kotlin SDK",
     "main": true,
     "overrideRelease": true
-  },
-  "users": {
-    "path": "./pubnub-users",
-    "name": "Kotlin Users",
-    "main": false,
-    "overrideRelease": true
-  },
-  "spaces": {
-    "path": "./pubnub-spaces",
-    "name": "Kotlin Spaces",
-    "main": false,
-    "overrideRelease": true
-  },
-  "memberships": {
-    "path": "./pubnub-memberships",
-    "name": "Kotlin Memberships",
-    "main": false,
-    "overrideRelease": true
-  },
-  "bom": {
-    "path": "./pubnub-kotlin-bom",
-    "name": "Kotlin SDK BOM",
-    "main": false,
-    "overrideRelease": true
   }
 }
