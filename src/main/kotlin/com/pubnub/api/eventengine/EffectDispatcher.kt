@@ -1,5 +1,6 @@
 package com.pubnub.api.eventengine
 
+import org.slf4j.LoggerFactory
 import java.util.concurrent.ConcurrentHashMap
 
 interface ManagedEffect {
@@ -8,11 +9,14 @@ interface ManagedEffect {
 }
 
 class EffectDispatcher<T : EffectInvocation>(
-    private val effectHandlerFactory: EffectHandlerFactory<T>,
+    private val effectHandlerFactory: ManagedEffectFactory<T>,
     private val managedEffects: ConcurrentHashMap<String, ManagedEffect> = ConcurrentHashMap()
 ) {
 
+    private val log = LoggerFactory.getLogger(EffectDispatcher::class.java)
+
     fun dispatch(effectInvocation: T) {
+        log.trace("Dispatching effect: {}", effectInvocation)
         when (effectInvocation) {
             is CancelEffectInvocation -> {
                 managedEffects.remove(effectInvocation.idToCancel)?.cancel()
@@ -20,7 +24,7 @@ class EffectDispatcher<T : EffectInvocation>(
 
             is ManagedEffectInvocation -> {
                 managedEffects.remove(effectInvocation.id)?.cancel()
-                val managedEffect = effectHandlerFactory.create(effectInvocation)
+                val managedEffect = effectHandlerFactory.create(effectInvocation) ?: return
                 managedEffects[effectInvocation.id] = managedEffect
                 managedEffect.run {
                     managedEffects.remove(effectInvocation.id)
@@ -28,7 +32,7 @@ class EffectDispatcher<T : EffectInvocation>(
             }
 
             else -> {
-                effectHandlerFactory.create(effectInvocation).run()
+                effectHandlerFactory.create(effectInvocation)?.run()
             }
         }
     }

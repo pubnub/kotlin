@@ -1,15 +1,17 @@
 package com.pubnub.api.subscribe.eventengine.effect
 
 import com.pubnub.api.PubNubException
+import com.pubnub.api.eventengine.EventHandler
 import com.pubnub.api.subscribe.eventengine.event.Event
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
+import java.time.Duration
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
-class SubscribeEffectHandlerFactoryTest {
+class SubscribeManagedEffectFactoryTest {
 
     @Test
     fun `failing handshake push HandshakeFailure event`() {
@@ -118,10 +120,17 @@ class SubscribeEffectHandlerFactoryTest {
         eventHandler: EventHandler,
         handshakeProvider: HandshakeProvider = failingHandshakeProvider(exception = PubNubException("Unknown error")),
         receiveMessagesProvider: ReceiveMessagesProvider = failingReceiveMessagesProvider(exception = PubNubException("Unknown error"))
-    ): SubscribeEffectHandlerFactory = SubscribeEffectHandlerFactory(
+    ): SubscribeManagedEffectFactory = SubscribeManagedEffectFactory(
         eventHandler = eventHandler,
         handshakeProvider = handshakeProvider,
-        receiveMessagesProvider = receiveMessagesProvider
+        receiveMessagesProvider = receiveMessagesProvider,
+        policy = object : RetryPolicy() {
+            override val maxRetries: Int = 100
+
+            override fun computeDelay(count: Int): Duration {
+                return Duration.ofMillis(10)
+            }
+        }
     )
 
     class TestEventHandler : EventHandler {

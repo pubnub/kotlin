@@ -24,7 +24,7 @@ class EffectDispatcherTest {
         override val idToCancel: String = TestEffect::class.java.simpleName
     }
 
-    class EffectHandlerFactoryImpl : EffectHandlerFactory<TestEffectInvocation> {
+    class EffectHandlerFactoryImpl : ManagedEffectFactory<TestEffectInvocation> {
         override fun create(effectInvocation: TestEffectInvocation): ManagedEffect {
             return object : ManagedEffect {
 

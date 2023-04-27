@@ -5,12 +5,9 @@ import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.subscribe.eventengine.effect.EffectInvocation
 import com.pubnub.api.subscribe.eventengine.event.Event
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
+import com.pubnub.api.eventengine.State as CoreState
 
-sealed class State {
-    open fun onEntry(): List<EffectInvocation> = listOf()
-    open fun onExit(): List<EffectInvocation> = listOf()
-    abstract fun transition(event: Event): Pair<State, List<EffectInvocation>>
-
+sealed class State : CoreState<EffectInvocation, Event, State> {
     object Unsubscribed : State() {
         override fun transition(event: Event): Pair<State, List<EffectInvocation>> {
             return when (event) {
