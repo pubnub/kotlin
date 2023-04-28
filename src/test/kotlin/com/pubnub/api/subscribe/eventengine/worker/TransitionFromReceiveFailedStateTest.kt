@@ -1,10 +1,10 @@
 package com.pubnub.api.subscribe.eventengine.worker
 
 import com.pubnub.api.PubNubException
-import com.pubnub.api.subscribe.eventengine.effect.EffectInvocation
+import com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectInvocation
 import com.pubnub.api.subscribe.eventengine.event.Event
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
-import com.pubnub.api.subscribe.eventengine.state.State
+import com.pubnub.api.subscribe.eventengine.state.SubscribeState
 import com.pubnub.api.subscribe.eventengine.transition.transition
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -22,16 +22,16 @@ class TransitionFromReceiveFailedStateTest {
 
         // when
         val (state, invocations) = transition(
-            State.ReceiveFailed(channels, channelGroups, subscriptionCursor, reason), Event.ReceiveReconnectRetry
+            SubscribeState.ReceiveFailed(channels, channelGroups, subscriptionCursor, reason), Event.ReceiveReconnectRetry
         )
 
         // then
         assertEquals(
-            State.ReceiveReconnecting(channels, channelGroups, subscriptionCursor, 0, reason), state
+            SubscribeState.ReceiveReconnecting(channels, channelGroups, subscriptionCursor, 0, reason), state
         )
         assertEquals(
             listOf(
-                EffectInvocation.ReceiveReconnect(channels, channelGroups, subscriptionCursor, 0, reason)
+                SubscribeEffectInvocation.ReceiveReconnect(channels, channelGroups, subscriptionCursor, 0, reason)
             ),
             invocations
         )
