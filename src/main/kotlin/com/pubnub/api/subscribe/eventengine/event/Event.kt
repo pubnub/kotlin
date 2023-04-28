@@ -2,9 +2,10 @@ package com.pubnub.api.subscribe.eventengine.event
 
 import com.pubnub.api.PubNubException
 import com.pubnub.api.models.consumer.pubsub.PNEvent
+import com.pubnub.api.eventengine.Event as CoreEvent
 
-sealed class Event {
-    class SubscriptionChanged(
+sealed class Event : CoreEvent {
+    data class SubscriptionChanged(
         val channels: List<String>,
         val channelGroups: List<String>
     ) : Event()
@@ -32,13 +33,11 @@ sealed class Event {
     data class ReceiveSuccess(val messages: List<PNEvent>, val subscriptionCursor: SubscriptionCursor) : Event()
     data class ReceiveFailure(val reason: PubNubException) : Event()
 
-    class ReceiveReconnectFailure(
+    data class ReceiveReconnectFailure(
         val reason: PubNubException
     ) : Event()
 
-    class ReceiveReconnectGiveUp(val reason: PubNubException) : Event()
-    class ReceiveReconnectSuccess(val messages: List<PNEvent>, val subscriptionCursor: SubscriptionCursor) : Event()
-    class ReceiveReconnectRetry : Event()
-    class Fail : Event()
-    class Success : Event()
+    data class ReceiveReconnectGiveUp(val reason: PubNubException) : Event()
+    data class ReceiveReconnectSuccess(val messages: List<PNEvent>, val subscriptionCursor: SubscriptionCursor) : Event()
+    object ReceiveReconnectRetry : Event()
 }
