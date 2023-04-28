@@ -8,7 +8,7 @@ class RemoteActionManagedEffect<T>(
     private val remoteAction: RemoteAction<T>,
     private val callback: (result: T?, status: PNStatus) -> Unit
 ) : ManagedEffect {
-    override fun run(completionBlock: () -> Unit) {
+    override fun runEffect(completionBlock: () -> Unit) {
         remoteAction.async { result, status ->
             try {
                 callback(result, status)

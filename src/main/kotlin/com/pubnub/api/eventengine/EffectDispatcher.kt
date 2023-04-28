@@ -1,34 +1,37 @@
 package com.pubnub.api.eventengine
 
+import org.slf4j.LoggerFactory
 import java.util.concurrent.ConcurrentHashMap
 
 interface ManagedEffect {
-    fun run(completionBlock: () -> Unit = {})
+    fun runEffect(completionBlock: () -> Unit = {})
     fun cancel()
 }
 
 class EffectDispatcher<T : EffectInvocation>(
-    private val effectHandlerFactory: EffectHandlerFactory<T>,
+    private val managedEffectFactory: ManagedEffectFactory<T>,
     private val managedEffects: ConcurrentHashMap<String, ManagedEffect> = ConcurrentHashMap()
 ) {
 
+    private val log = LoggerFactory.getLogger(EffectDispatcher::class.java)
+
     fun dispatch(effectInvocation: T) {
-        when (effectInvocation) {
-            is CancelEffectInvocation -> {
-                managedEffects.remove(effectInvocation.idToCancel)?.cancel()
+        log.trace("Dispatching effect: {}", effectInvocation)
+        when (val type = effectInvocation.type) {
+            is Cancel -> {
+                managedEffects.remove(type.idToCancel)?.cancel()
             }
 
-            is ManagedEffectInvocation -> {
+            is Managed -> {
                 managedEffects.remove(effectInvocation.id)?.cancel()
-                val managedEffect = effectHandlerFactory.create(effectInvocation)
+                val managedEffect = managedEffectFactory.create(effectInvocation) ?: return
                 managedEffects[effectInvocation.id] = managedEffect
-                managedEffect.run {
+                managedEffect.runEffect {
                     managedEffects.remove(effectInvocation.id)
                 }
             }
-
-            else -> {
-                effectHandlerFactory.create(effectInvocation).run()
+            is NonManaged -> {
+                managedEffectFactory.create(effectInvocation)?.runEffect()
             }
         }
     }

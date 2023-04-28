@@ -2,14 +2,14 @@ package com.pubnub.api.subscribe.eventengine.worker
 
 import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNStatusCategory
-import com.pubnub.api.subscribe.eventengine.effect.EffectInvocation.CancelHandshake
-import com.pubnub.api.subscribe.eventengine.effect.EffectInvocation.EmitStatus
-import com.pubnub.api.subscribe.eventengine.effect.EffectInvocation.Handshake
-import com.pubnub.api.subscribe.eventengine.effect.EffectInvocation.HandshakeReconnect
-import com.pubnub.api.subscribe.eventengine.effect.EffectInvocation.ReceiveMessages
+import com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectInvocation.CancelHandshake
+import com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectInvocation.EmitStatus
+import com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectInvocation.Handshake
+import com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectInvocation.HandshakeReconnect
+import com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectInvocation.ReceiveMessages
 import com.pubnub.api.subscribe.eventengine.event.Event
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
-import com.pubnub.api.subscribe.eventengine.state.State
+import com.pubnub.api.subscribe.eventengine.state.SubscribeState
 import com.pubnub.api.subscribe.eventengine.transition.transition
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.core.IsInstanceOf.instanceOf
@@ -28,11 +28,11 @@ class TransitionFromHandshakingStateTest {
     fun can_transit_from_HANDSHAKING_to_RECEIVING_when_there_is_handshakeSuccessEvent() {
         // when
         val (state, invocations) = transition(
-            State.Handshaking(channels, channelGroups), Event.HandshakeSuccess(subscriptionCursor)
+            SubscribeState.Handshaking(channels, channelGroups), Event.HandshakeSuccess(subscriptionCursor)
         )
 
         // then
-        assertEquals(State.Receiving(channels, channelGroups, subscriptionCursor), state)
+        assertEquals(SubscribeState.Receiving(channels, channelGroups, subscriptionCursor), state)
         assertEquals(
             listOf(
                 CancelHandshake,
@@ -47,12 +47,12 @@ class TransitionFromHandshakingStateTest {
     fun can_transit_from_HANDSHAKING_to_RECEIVING_when_there_is_subscriptionRestoredEvent() {
         // when
         val (state, invocations) = transition(
-            State.Handshaking(channels, channelGroups),
+            SubscribeState.Handshaking(channels, channelGroups),
             Event.SubscriptionRestored(channels, channelGroups, subscriptionCursor)
         )
 
         // then
-        assertEquals(State.Receiving(channels, channelGroups, subscriptionCursor), state)
+        assertEquals(SubscribeState.Receiving(channels, channelGroups, subscriptionCursor), state)
         assertEquals(
             listOf(
                 CancelHandshake, ReceiveMessages(channels, channelGroups, subscriptionCursor)
@@ -69,12 +69,12 @@ class TransitionFromHandshakingStateTest {
 
         // when
         val (state, invocations) = transition(
-            State.Handshaking(channels, channelGroups),
+            SubscribeState.Handshaking(channels, channelGroups),
             Event.SubscriptionChanged(newChannels, newChannelGroups)
         )
 
         // then
-        assertEquals(State.Handshaking(newChannels, newChannelGroups), state)
+        assertEquals(SubscribeState.Handshaking(newChannels, newChannelGroups), state)
         assertEquals(
             listOf(
                 CancelHandshake, Handshake(newChannels, newChannelGroups)
@@ -87,11 +87,11 @@ class TransitionFromHandshakingStateTest {
     fun can_transit_from_HANDSHAKING_to_HANDSHAKING_RECONNECTING_when_there_is_handshakingFailureEvent() {
         // when
         val (state, invocations) = transition(
-            State.Handshaking(channels, channelGroups), Event.HandshakeFailure(reason)
+            SubscribeState.Handshaking(channels, channelGroups), Event.HandshakeFailure(reason)
         )
 
         // then
-        assertEquals(State.HandshakeReconnecting(channels, channelGroups, 0, reason), state)
+        assertEquals(SubscribeState.HandshakeReconnecting(channels, channelGroups, 0, reason), state)
         assertEquals(
             listOf(
                 CancelHandshake, HandshakeReconnect(channels, channelGroups, 0, reason)
@@ -104,11 +104,11 @@ class TransitionFromHandshakingStateTest {
     fun can_transit_from_HANDSHAKING_to_HANDSHAKING_STOPPED_when_there_is_disconnectEvent() {
         // when
         val (state, invocations) = transition(
-            State.Handshaking(channels, channelGroups), Event.Disconnect
+            SubscribeState.Handshaking(channels, channelGroups), Event.Disconnect
         )
 
         // then
-        assertThat(state, instanceOf(State.HandshakeStopped::class.java))
+        assertThat(state, instanceOf(SubscribeState.HandshakeStopped::class.java))
         assertEquals(
             listOf(
                 CancelHandshake,
