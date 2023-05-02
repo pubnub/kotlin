@@ -33,7 +33,7 @@ class RemoteActionManagedEffectTest {
     fun `succeeding handshake runs the onCompletion block`() {
         // given
         val latch = CountDownLatch(2)
-        val failingManagedEffect = successfullRemoteAction(42).toManagedEffect { _, s ->
+        val failingManagedEffect = successfulRemoteAction(42).toManagedEffect { _, s ->
             if (!s.error) {
                 latch.countDown()
             }
@@ -47,7 +47,7 @@ class RemoteActionManagedEffectTest {
     }
 }
 
-fun <T> successfullRemoteAction(result: T): RemoteAction<T> = object : RemoteAction<T> {
+fun <T> successfulRemoteAction(result: T): RemoteAction<T> = object : RemoteAction<T> {
     private val executors = Executors.newSingleThreadExecutor()
 
     override fun sync(): T? {

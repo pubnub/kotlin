@@ -2,14 +2,14 @@ package com.pubnub.api.subscribe.eventengine.state
 
 import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNStatusCategory
+import com.pubnub.api.eventengine.State
 import com.pubnub.api.eventengine.noTransition
 import com.pubnub.api.eventengine.transitionTo
 import com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectInvocation
 import com.pubnub.api.subscribe.eventengine.event.Event
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
-import com.pubnub.api.eventengine.State as CoreState
 
-sealed class SubscribeState : CoreState<SubscribeEffectInvocation, Event, SubscribeState> {
+sealed class SubscribeState : State<SubscribeEffectInvocation, Event, SubscribeState> {
     object Unsubscribed : SubscribeState() {
         override fun transition(event: Event): Pair<SubscribeState, List<SubscribeEffectInvocation>> {
             return when (event) {
@@ -73,7 +73,8 @@ sealed class SubscribeState : CoreState<SubscribeEffectInvocation, Event, Subscr
         val attempts: Int,
         val reason: PubNubException?
     ) : SubscribeState() {
-        override fun onEntry() = listOf(SubscribeEffectInvocation.HandshakeReconnect(channels, channelGroups, attempts, reason))
+        override fun onEntry() =
+            listOf(SubscribeEffectInvocation.HandshakeReconnect(channels, channelGroups, attempts, reason))
 
         override fun onExit() = listOf(SubscribeEffectInvocation.CancelHandshakeReconnect)
 
@@ -149,19 +150,19 @@ sealed class SubscribeState : CoreState<SubscribeEffectInvocation, Event, Subscr
                 }
 
                 is Event.SubscriptionChanged -> {
-                    transitionTo(HandshakeReconnecting(event.channels, event.channelGroups, 0, reason))
+                    transitionTo(Handshaking(event.channels, event.channelGroups))
                 }
 
                 is Event.SubscriptionRestored -> {
                     transitionTo(
-                        ReceiveReconnecting(
-                            event.channels, event.channelGroups, event.subscriptionCursor, 0, reason
+                        Receiving(
+                            event.channels, event.channelGroups, event.subscriptionCursor
                         )
                     )
                 }
 
                 is Event.Reconnect -> {
-                    transitionTo(HandshakeReconnecting(channels, channelGroups, 0, reason))
+                    transitionTo(Handshaking(channels, channelGroups))
                 }
 
                 else -> {
@@ -179,7 +180,15 @@ sealed class SubscribeState : CoreState<SubscribeEffectInvocation, Event, Subscr
         val reason: PubNubException?
     ) : SubscribeState() {
         override fun onEntry() =
-            listOf(SubscribeEffectInvocation.ReceiveReconnect(channels, channelGroups, subscriptionCursor, attempts, reason))
+            listOf(
+                SubscribeEffectInvocation.ReceiveReconnect(
+                    channels,
+                    channelGroups,
+                    subscriptionCursor,
+                    attempts,
+                    reason
+                )
+            )
 
         override fun onExit() = listOf(SubscribeEffectInvocation.CancelReceiveReconnect)
 
@@ -318,9 +327,16 @@ sealed class SubscribeState : CoreState<SubscribeEffectInvocation, Event, Subscr
                 }
 
                 is Event.Reconnect -> {
-                    transitionTo(ReceiveReconnecting(channels, channelGroups, subscriptionCursor, 0, reason))
+                    transitionTo(Receiving(channels, channelGroups, subscriptionCursor))
                 }
 
+                is Event.SubscriptionChanged -> {
+                    transitionTo(Receiving(event.channels, event.channelGroups, subscriptionCursor))
+                }
+
+                is Event.SubscriptionRestored -> {
+                    transitionTo(Receiving(event.channels, event.channelGroups, event.subscriptionCursor))
+                }
                 else -> {
                     noTransition()
                 }

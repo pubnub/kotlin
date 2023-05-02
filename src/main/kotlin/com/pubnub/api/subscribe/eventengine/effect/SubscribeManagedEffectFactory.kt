@@ -1,7 +1,7 @@
 package com.pubnub.api.subscribe.eventengine.effect
 
 import com.pubnub.api.PubNubException
-import com.pubnub.api.eventengine.EventHandler
+import com.pubnub.api.eventengine.EventDeliver
 import com.pubnub.api.eventengine.ManagedEffect
 import com.pubnub.api.eventengine.ManagedEffectFactory
 import com.pubnub.api.models.consumer.pubsub.PNEvent
@@ -18,7 +18,7 @@ data class ReceiveMessagesResult(
 class SubscribeManagedEffectFactory(
     private val handshakeProvider: HandshakeProvider,
     private val receiveMessagesProvider: ReceiveMessagesProvider,
-    private val eventHandler: EventHandler,
+    private val eventDeliver: EventDeliver,  //todo move it to ManagedEffect implementation?
     private val policy: RetryPolicy,
     private val executorService: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor(),
 ) : ManagedEffectFactory<SubscribeEffectInvocation> {
@@ -27,21 +27,22 @@ class SubscribeManagedEffectFactory(
             is SubscribeEffectInvocation.EmitMessages -> null // todo
             is SubscribeEffectInvocation.EmitStatus -> null // todo
             is SubscribeEffectInvocation.Handshake -> {
-                handleHandshake(effectInvocation.channels, effectInvocation.channelGroups)
+                getHandshakeEffect(effectInvocation.channels, effectInvocation.channelGroups)
             }
 
             is SubscribeEffectInvocation.HandshakeReconnect -> {
                 scheduleManagedEffect(
                     attempt = effectInvocation.attempts,
                     reconnectFailureEvent = Event.HandshakeReconnectGiveUp(effectInvocation.reason!!), // todo figure this out here
-                    managedEffect =
-                    handleHandshake(effectInvocation.channels, effectInvocation.channelGroups)
-
+                    managedEffect = getHandshakeReconnectEffect(
+                        effectInvocation.channels,
+                        effectInvocation.channelGroups
+                    )
                 )
             }
 
             is SubscribeEffectInvocation.ReceiveMessages -> {
-                handleReceiveMessages(
+                getReceiveMessagesEffect(
                     effectInvocation.channels,
                     effectInvocation.channelGroups,
                     effectInvocation.subscriptionCursor
@@ -51,7 +52,7 @@ class SubscribeManagedEffectFactory(
             is SubscribeEffectInvocation.ReceiveReconnect -> scheduleManagedEffect(
                 attempt = effectInvocation.attempts,
                 reconnectFailureEvent = Event.ReceiveReconnectGiveUp(effectInvocation.reason!!), // todo figure this out here
-                managedEffect = handleReceiveMessages(
+                managedEffect = getReceiveReconnectEffect(
                     effectInvocation.channels,
                     effectInvocation.channelGroups,
                     effectInvocation.subscriptionCursor
@@ -75,45 +76,77 @@ class SubscribeManagedEffectFactory(
         val delay = policy.nextDelay(attempt)
 
         if (delay == null) {
-            eventHandler.handleEvent(event = reconnectFailureEvent)
+            eventDeliver.passEventForHandling(event = reconnectFailureEvent)
             return null
         }
 
         return DelayedManagedEffect(managedEffect, executorService, delay)
     }
 
-    private fun handleReceiveMessages(
+    private fun getReceiveMessagesEffect(
         channels: List<String>,
         channelGroups: List<String>,
         subscriptionCursor: SubscriptionCursor
-    ) =
-        receiveMessagesProvider.receiveMessages(
-            channels, channelGroups, subscriptionCursor
-        ).toManagedEffect { result, status ->
+    ): ManagedEffect = receiveMessagesProvider.receiveMessages(channels, channelGroups, subscriptionCursor)
+        .toManagedEffect { result, status ->
             if (status.error) {
-                eventHandler.handleEvent(
+                eventDeliver.passEventForHandling(
                     Event.ReceiveFailure(
                         status.exception
                             ?: PubNubException("Unknown error") // todo check it that can happen
                     )
                 )
             } else {
-                eventHandler.handleEvent(Event.ReceiveSuccess(result!!.messages, result.subscriptionCursor))
+                eventDeliver.passEventForHandling(Event.ReceiveSuccess(result!!.messages, result.subscriptionCursor))
             }
         }
 
-    private fun handleHandshake(channels: List<String>, channelGroups: List<String>) =
-        handshakeProvider.handshake(channels, channelGroups)
-            .toManagedEffect { result, status ->
-                if (status.error) {
-                    eventHandler.handleEvent(
-                        Event.HandshakeFailure(
-                            status.exception
-                                ?: PubNubException("Unknown error") // todo check it that can happen
-                        )
+    private fun getReceiveReconnectEffect(
+        channels: List<String>,
+        channelGroups: List<String>,
+        subscriptionCursor: SubscriptionCursor
+    ): ManagedEffect = receiveMessagesProvider.receiveMessages(channels, channelGroups, subscriptionCursor)
+        .toManagedEffect { result, status ->
+            if (status.error) {
+                eventDeliver.passEventForHandling(
+                    Event.ReceiveReconnectFailure(
+                        status.exception ?: PubNubException("dfa")
                     )
-                } else {
-                    eventHandler.handleEvent(Event.HandshakeSuccess(result!!))
-                }
+                )
+            } else {
+                eventDeliver.passEventForHandling(
+                    Event.ReceiveReconnectSuccess(
+                        result!!.messages,
+                        result.subscriptionCursor
+                    )
+                )
             }
+        }
+
+    private fun getHandshakeEffect(channels: List<String>, channelGroups: List<String>): ManagedEffect = handshakeProvider.handshake(channels, channelGroups)
+        .toManagedEffect { result, status ->
+            if (status.error) {
+                eventDeliver.passEventForHandling(
+                    Event.HandshakeFailure(
+                        status.exception
+                            ?: PubNubException("Unknown error") // todo check it that can happen
+                    )
+                )
+            } else {
+                eventDeliver.passEventForHandling(Event.HandshakeSuccess(result!!))
+            }
+        }
+
+    private fun getHandshakeReconnectEffect(channels: List<String>, channelGroups: List<String>): ManagedEffect = handshakeProvider.handshake(channels, channelGroups)
+        .toManagedEffect { result, status ->
+            if (status.error) {
+                eventDeliver.passEventForHandling(
+                    Event.HandshakeReconnectFailure(
+                        status.exception ?: PubNubException("Unknown error")
+                    )
+                )
+            } else {
+                eventDeliver.passEventForHandling(Event.HandshakeReconnectSuccess(channels, channelGroups, result!!))
+            }
+        }
 }
