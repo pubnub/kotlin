@@ -11,7 +11,6 @@ import java.time.Duration
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
-
 class SubscribeManagedEffectFactoryTest {
 
     @Test
@@ -104,7 +103,8 @@ class SubscribeManagedEffectFactoryTest {
         val latch = CountDownLatch(1)
         val testEventDeliver = TestEventDeliver()
         val expectedResult = ReceiveMessagesResult(
-            messages = listOf(), subscriptionCursor = SubscriptionCursor(42L, "42"))
+            messages = listOf(), subscriptionCursor = SubscriptionCursor(42L, "42")
+        )
         val subscribeManagedEffectFactory = createSubscribeManagedEffectFactory(
             eventDeliver = testEventDeliver,
             receiveMessagesProvider = successfulReceiveMessageProvider(expectedResult)
@@ -118,15 +118,20 @@ class SubscribeManagedEffectFactoryTest {
         )
 
         // when
-        subscribeManagedEffectFactory.create(receiveReconnectInvocation)?.runEffect {latch.countDown()}
+        subscribeManagedEffectFactory.create(receiveReconnectInvocation)?.runEffect { latch.countDown() }
 
-        //then
+        // then
         Thread.sleep(50)
         assertTrue(latch.await(100, TimeUnit.MILLISECONDS))
-        assertEquals(listOf(Event.ReceiveReconnectSuccess(
-            expectedResult.messages,
-            expectedResult.subscriptionCursor
-        )), testEventDeliver.events)
+        assertEquals(
+            listOf(
+                Event.ReceiveReconnectSuccess(
+                    expectedResult.messages,
+                    expectedResult.subscriptionCursor
+                )
+            ),
+            testEventDeliver.events
+        )
     }
 
     @Test
@@ -148,9 +153,9 @@ class SubscribeManagedEffectFactoryTest {
         )
 
         // when
-        subscribeManagedEffectFactory.create(receiveReconnectInvocation)?.runEffect {latch.countDown()}
+        subscribeManagedEffectFactory.create(receiveReconnectInvocation)?.runEffect { latch.countDown() }
 
-        //then
+        // then
         Thread.sleep(50)
         assertTrue(latch.await(100, TimeUnit.MILLISECONDS))
         assertEquals(listOf(Event.ReceiveReconnectFailure(expectedReason)), testEventDeliver.events)
@@ -175,13 +180,16 @@ class SubscribeManagedEffectFactoryTest {
             PubNubException("Unknown error")
         )
 
-        //when
-        subscribeManagedEffectFactory.create(handshakeReconnectInvocation)?.runEffect {latch.countDown()}
+        // when
+        subscribeManagedEffectFactory.create(handshakeReconnectInvocation)?.runEffect { latch.countDown() }
 
-        //then
+        // then
         Thread.sleep(50)
         assertTrue(latch.await(100, TimeUnit.MILLISECONDS))
-        assertEquals(listOf(Event.HandshakeReconnectSuccess(channels, channelGroups, expectedResult)), testEventDeliver.events)
+        assertEquals(
+            listOf(Event.HandshakeReconnectSuccess(channels, channelGroups, expectedResult)),
+            testEventDeliver.events
+        )
     }
 
     @Test
@@ -203,10 +211,10 @@ class SubscribeManagedEffectFactoryTest {
             PubNubException("Unknown error")
         )
 
-        //when
-        subscribeManagedEffectFactory.create(handshakeReconnectInvocation)?.runEffect {latch.countDown()}
+        // when
+        subscribeManagedEffectFactory.create(handshakeReconnectInvocation)?.runEffect { latch.countDown() }
 
-        //then
+        // then
         Thread.sleep(50)
         assertTrue(latch.await(100, TimeUnit.MILLISECONDS))
         assertEquals(listOf(Event.HandshakeReconnectFailure(expectedReason)), testEventDeliver.events)
@@ -219,8 +227,8 @@ class SubscribeManagedEffectFactoryTest {
 
     private fun successfulReceiveMessageProvider(value: ReceiveMessagesResult) =
         ReceiveMessagesProvider { _, _, _ ->
-        successfulRemoteAction(value)
-    }
+            successfulRemoteAction(value)
+        }
 
     private fun failingHandshakeProvider(exception: PubNubException = PubNubException("Unknown error")): HandshakeProvider =
         HandshakeProvider { _, _ -> failingRemoteAction(exception) }

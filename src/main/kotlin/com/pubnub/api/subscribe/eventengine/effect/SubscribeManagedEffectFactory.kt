@@ -18,7 +18,7 @@ data class ReceiveMessagesResult(
 class SubscribeManagedEffectFactory(
     private val handshakeProvider: HandshakeProvider,
     private val receiveMessagesProvider: ReceiveMessagesProvider,
-    private val eventDeliver: EventDeliver,  //todo move it to ManagedEffect implementation?
+    private val eventDeliver: EventDeliver, // todo move it to ManagedEffect implementation?
     private val policy: RetryPolicy,
     private val executorService: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor(),
 ) : ManagedEffectFactory<SubscribeEffectInvocation> {
