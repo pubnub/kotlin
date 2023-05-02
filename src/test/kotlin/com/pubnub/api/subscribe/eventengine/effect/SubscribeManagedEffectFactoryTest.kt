@@ -1,7 +1,7 @@
 package com.pubnub.api.subscribe.eventengine.effect
 
 import com.pubnub.api.PubNubException
-import com.pubnub.api.eventengine.EventSink
+import com.pubnub.api.eventengine.EventDeliver
 import com.pubnub.api.subscribe.eventengine.event.Event
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -11,16 +11,17 @@ import java.time.Duration
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
+
 class SubscribeManagedEffectFactoryTest {
 
     @Test
     fun `failing handshake push HandshakeFailure event`() {
         // given
         val latch = CountDownLatch(1)
-        val testEventSink = TestEventSink()
+        val testEventDeliver = TestEventDeliver()
         val expectedReason = PubNubException("test")
         val factory = createSubscribeManagedEffectFactory(
-            eventSink = testEventSink, handshakeProvider = failingHandshakeProvider(expectedReason)
+            eventDeliver = testEventDeliver, handshakeProvider = failingHandshakeProvider(expectedReason)
         )
 
         // when
@@ -28,17 +29,17 @@ class SubscribeManagedEffectFactoryTest {
 
         // then
         assertTrue(latch.await(100, TimeUnit.MILLISECONDS))
-        assertEquals(listOf(Event.HandshakeFailure(expectedReason)), testEventSink.events)
+        assertEquals(listOf(Event.HandshakeFailure(expectedReason)), testEventDeliver.events)
     }
 
     @Test
     fun `succeeding handshake push HandshakeSuccess event`() {
         // given
         val latch = CountDownLatch(1)
-        val testEventSink = TestEventSink()
+        val testEventDeliver = TestEventDeliver()
         val expectedResult = SubscriptionCursor(1337L, "1337")
         val factory = createSubscribeManagedEffectFactory(
-            eventSink = testEventSink, handshakeProvider = successfulHandshakeProvider(expectedResult)
+            eventDeliver = testEventDeliver, handshakeProvider = successfulHandshakeProvider(expectedResult)
         )
 
         // when
@@ -46,17 +47,17 @@ class SubscribeManagedEffectFactoryTest {
 
         // then
         assertTrue(latch.await(100, TimeUnit.MILLISECONDS))
-        assertEquals(listOf(Event.HandshakeSuccess(expectedResult)), testEventSink.events)
+        assertEquals(listOf(Event.HandshakeSuccess(expectedResult)), testEventDeliver.events)
     }
 
     @Test
     fun `failing receiveMessages push ReceiveFailure event`() {
         // given
         val latch = CountDownLatch(1)
-        val testEventSink = TestEventSink()
+        val testEventDeliver = TestEventDeliver()
         val expectedReason = PubNubException("test")
         val factory = createSubscribeManagedEffectFactory(
-            eventSink = testEventSink, receiveMessagesProvider = failingReceiveMessagesProvider(expectedReason)
+            eventDeliver = testEventDeliver, receiveMessagesProvider = failingReceiveMessagesProvider(expectedReason)
         )
 
         // when
@@ -65,19 +66,19 @@ class SubscribeManagedEffectFactoryTest {
 
         // then
         assertTrue(latch.await(100, TimeUnit.MILLISECONDS))
-        assertEquals(listOf(Event.ReceiveFailure(expectedReason)), testEventSink.events)
+        assertEquals(listOf(Event.ReceiveFailure(expectedReason)), testEventDeliver.events)
     }
 
     @Test
     fun `succeeding receiveMessages push ReceiveSuccess event`() {
         // given
         val latch = CountDownLatch(1)
-        val testEventSink = TestEventSink()
+        val testEventDeliver = TestEventDeliver()
         val expectedResult = ReceiveMessagesResult(
             messages = listOf(), subscriptionCursor = SubscriptionCursor(42L, "42")
         )
         val factory = createSubscribeManagedEffectFactory(
-            eventSink = testEventSink, receiveMessagesProvider = successfulReceiveMessageProvider(expectedResult)
+            eventDeliver = testEventDeliver, receiveMessagesProvider = successfulReceiveMessageProvider(expectedResult)
         )
 
         // when
@@ -93,20 +94,19 @@ class SubscribeManagedEffectFactoryTest {
                     subscriptionCursor = expectedResult.subscriptionCursor
                 )
             ),
-            testEventSink.events
+            testEventDeliver.events
         )
     }
 
     @Test
     fun `should pass RECEIVE_RECONNECT_SUCCESS event when ReceiveReconnect effect finishes successfully`() {
         // given
-        val latch = CountDownLatch(2)
-        val testEventSink = TestEventSink()
+        val latch = CountDownLatch(1)
+        val testEventDeliver = TestEventDeliver()
         val expectedResult = ReceiveMessagesResult(
-            messages = listOf(), subscriptionCursor = SubscriptionCursor(42L, "42")
-        )
+            messages = listOf(), subscriptionCursor = SubscriptionCursor(42L, "42"))
         val subscribeManagedEffectFactory = createSubscribeManagedEffectFactory(
-            eventSink = testEventSink,
+            eventDeliver = testEventDeliver,
             receiveMessagesProvider = successfulReceiveMessageProvider(expectedResult)
         )
         val receiveReconnectInvocation = SubscribeEffectInvocation.ReceiveReconnect(
@@ -118,29 +118,25 @@ class SubscribeManagedEffectFactoryTest {
         )
 
         // when
-        subscribeManagedEffectFactory.create(receiveReconnectInvocation)?.runEffect { latch.countDown() }
+        subscribeManagedEffectFactory.create(receiveReconnectInvocation)?.runEffect {latch.countDown()}
 
-        // then
+        //then
+        Thread.sleep(50)
         assertTrue(latch.await(100, TimeUnit.MILLISECONDS))
-        assertEquals(
-            listOf(
-                Event.ReceiveReconnectSuccess(
-                    expectedResult.messages,
-                    expectedResult.subscriptionCursor
-                )
-            ),
-            testEventSink.events
-        )
+        assertEquals(listOf(Event.ReceiveReconnectSuccess(
+            expectedResult.messages,
+            expectedResult.subscriptionCursor
+        )), testEventDeliver.events)
     }
 
     @Test
     fun `should pass RECEIVE_RECONNECT_FAILURE event when receiveReconnect effect finishes with failure`() {
         // given
-        val latch = CountDownLatch(2)
-        val testEventSink = TestEventSink()
+        val latch = CountDownLatch(1)
+        val testEventDeliver = TestEventDeliver()
         val expectedReason = PubNubException("test")
         val subscribeManagedEffectFactory = createSubscribeManagedEffectFactory(
-            eventSink = testEventSink,
+            eventDeliver = testEventDeliver,
             receiveMessagesProvider = failingReceiveMessagesProvider(expectedReason)
         )
         val receiveReconnectInvocation = SubscribeEffectInvocation.ReceiveReconnect(
@@ -152,23 +148,24 @@ class SubscribeManagedEffectFactoryTest {
         )
 
         // when
-        subscribeManagedEffectFactory.create(receiveReconnectInvocation)?.runEffect { latch.countDown() }
+        subscribeManagedEffectFactory.create(receiveReconnectInvocation)?.runEffect {latch.countDown()}
 
-        // then
+        //then
+        Thread.sleep(50)
         assertTrue(latch.await(100, TimeUnit.MILLISECONDS))
-        assertEquals(listOf(Event.ReceiveReconnectFailure(expectedReason)), testEventSink.events)
+        assertEquals(listOf(Event.ReceiveReconnectFailure(expectedReason)), testEventDeliver.events)
     }
 
     @Test
     fun `should pass HANDSHAKE_RECONNECT_SUCCESS event when handshakeReconnect effect finishes successfully`() {
         // given
-        val latch = CountDownLatch(2)
-        val testEventSink = TestEventSink()
+        val latch = CountDownLatch(1)
+        val testEventDeliver = TestEventDeliver()
         val expectedResult = SubscriptionCursor(1337L, "1337")
         val channels = listOf("channel1")
         val channelGroups = listOf("channelGroup1")
         val subscribeManagedEffectFactory = createSubscribeManagedEffectFactory(
-            eventSink = testEventSink,
+            eventDeliver = testEventDeliver,
             handshakeProvider = successfulHandshakeProvider(expectedResult)
         )
         val handshakeReconnectInvocation = SubscribeEffectInvocation.HandshakeReconnect(
@@ -178,27 +175,25 @@ class SubscribeManagedEffectFactoryTest {
             PubNubException("Unknown error")
         )
 
-        // when
-        subscribeManagedEffectFactory.create(handshakeReconnectInvocation)?.runEffect { latch.countDown() }
+        //when
+        subscribeManagedEffectFactory.create(handshakeReconnectInvocation)?.runEffect {latch.countDown()}
 
-        // then
+        //then
+        Thread.sleep(50)
         assertTrue(latch.await(100, TimeUnit.MILLISECONDS))
-        assertEquals(
-            listOf(Event.HandshakeReconnectSuccess(channels, channelGroups, expectedResult)),
-            testEventSink.events
-        )
+        assertEquals(listOf(Event.HandshakeReconnectSuccess(channels, channelGroups, expectedResult)), testEventDeliver.events)
     }
 
     @Test
     fun `should pass HANDSHAKE_RECONNECT_FAILURE event when handshakeReconnect effect finishes with failure`() {
         // given
-        val latch = CountDownLatch(2)
-        val testEventSink = TestEventSink()
+        val latch = CountDownLatch(1)
+        val testEventDeliver = TestEventDeliver()
         val expectedReason = PubNubException("test")
         val channels = listOf("channel1")
         val channelGroups = listOf("channelGroup1")
         val subscribeManagedEffectFactory = createSubscribeManagedEffectFactory(
-            eventSink = testEventSink,
+            eventDeliver = testEventDeliver,
             handshakeProvider = failingHandshakeProvider(expectedReason)
         )
         val handshakeReconnectInvocation = SubscribeEffectInvocation.HandshakeReconnect(
@@ -208,12 +203,13 @@ class SubscribeManagedEffectFactoryTest {
             PubNubException("Unknown error")
         )
 
-        // when
-        subscribeManagedEffectFactory.create(handshakeReconnectInvocation)?.runEffect { latch.countDown() }
+        //when
+        subscribeManagedEffectFactory.create(handshakeReconnectInvocation)?.runEffect {latch.countDown()}
 
-        // then
+        //then
+        Thread.sleep(50)
         assertTrue(latch.await(100, TimeUnit.MILLISECONDS))
-        assertEquals(listOf(Event.HandshakeReconnectFailure(expectedReason)), testEventSink.events)
+        assertEquals(listOf(Event.HandshakeReconnectFailure(expectedReason)), testEventDeliver.events)
     }
 
     private fun failingReceiveMessagesProvider(exception: PubNubException = PubNubException("Unknown error")) =
@@ -223,8 +219,8 @@ class SubscribeManagedEffectFactoryTest {
 
     private fun successfulReceiveMessageProvider(value: ReceiveMessagesResult) =
         ReceiveMessagesProvider { _, _, _ ->
-            successfulRemoteAction(value)
-        }
+        successfulRemoteAction(value)
+    }
 
     private fun failingHandshakeProvider(exception: PubNubException = PubNubException("Unknown error")): HandshakeProvider =
         HandshakeProvider { _, _ -> failingRemoteAction(exception) }
@@ -233,21 +229,21 @@ class SubscribeManagedEffectFactoryTest {
         HandshakeProvider { _, _ -> successfulRemoteAction(value) }
 
     private fun createSubscribeManagedEffectFactory(
-        eventSink: EventSink,
+        eventDeliver: EventDeliver,
         handshakeProvider: HandshakeProvider = failingHandshakeProvider(exception = PubNubException("Unknown error")),
         receiveMessagesProvider: ReceiveMessagesProvider = failingReceiveMessagesProvider(exception = PubNubException("Unknown error"))
     ): SubscribeManagedEffectFactory = SubscribeManagedEffectFactory(
-        eventSink = eventSink,
+        eventDeliver = eventDeliver,
         handshakeProvider = handshakeProvider,
         receiveMessagesProvider = receiveMessagesProvider,
         policy = TestPolicy()
     )
 
-    class TestEventSink : EventSink {
+    class TestEventDeliver : EventDeliver {
         val events = mutableListOf<Event>()
 
         @Synchronized
-        override fun put(event: Event) {
+        override fun passEventForHandling(event: Event) {
             events.add(event)
         }
     }

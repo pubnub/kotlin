@@ -1,7 +1,7 @@
 package com.pubnub.api.subscribe.eventengine.effect
 
 import com.pubnub.api.PubNubException
-import com.pubnub.api.eventengine.EventSink
+import com.pubnub.api.eventengine.EventDeliver
 import com.pubnub.api.eventengine.ManagedEffect
 import com.pubnub.api.eventengine.ManagedEffectFactory
 import com.pubnub.api.models.consumer.pubsub.PNEvent
@@ -18,7 +18,7 @@ data class ReceiveMessagesResult(
 class SubscribeManagedEffectFactory(
     private val handshakeProvider: HandshakeProvider,
     private val receiveMessagesProvider: ReceiveMessagesProvider,
-    private val eventSink: EventSink, // todo move it to ManagedEffect implementation?
+    private val eventDeliver: EventDeliver,  //todo move it to ManagedEffect implementation?
     private val policy: RetryPolicy,
     private val executorService: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor(),
 ) : ManagedEffectFactory<SubscribeEffectInvocation> {
@@ -76,7 +76,7 @@ class SubscribeManagedEffectFactory(
         val delay = policy.nextDelay(attempt)
 
         if (delay == null) {
-            eventSink.put(event = reconnectFailureEvent)
+            eventDeliver.passEventForHandling(event = reconnectFailureEvent)
             return null
         }
 
@@ -90,14 +90,14 @@ class SubscribeManagedEffectFactory(
     ): ManagedEffect = receiveMessagesProvider.receiveMessages(channels, channelGroups, subscriptionCursor)
         .toManagedEffect { result, status ->
             if (status.error) {
-                eventSink.put(
+                eventDeliver.passEventForHandling(
                     Event.ReceiveFailure(
                         status.exception
                             ?: PubNubException("Unknown error") // todo check it that can happen
                     )
                 )
             } else {
-                eventSink.put(Event.ReceiveSuccess(result!!.messages, result.subscriptionCursor))
+                eventDeliver.passEventForHandling(Event.ReceiveSuccess(result!!.messages, result.subscriptionCursor))
             }
         }
 
@@ -108,13 +108,13 @@ class SubscribeManagedEffectFactory(
     ): ManagedEffect = receiveMessagesProvider.receiveMessages(channels, channelGroups, subscriptionCursor)
         .toManagedEffect { result, status ->
             if (status.error) {
-                eventSink.put(
+                eventDeliver.passEventForHandling(
                     Event.ReceiveReconnectFailure(
-                        status.exception ?: PubNubException("Unknown error")
+                        status.exception ?: PubNubException("dfa")
                     )
                 )
             } else {
-                eventSink.put(
+                eventDeliver.passEventForHandling(
                     Event.ReceiveReconnectSuccess(
                         result!!.messages,
                         result.subscriptionCursor
@@ -126,27 +126,27 @@ class SubscribeManagedEffectFactory(
     private fun getHandshakeEffect(channels: List<String>, channelGroups: List<String>): ManagedEffect = handshakeProvider.handshake(channels, channelGroups)
         .toManagedEffect { result, status ->
             if (status.error) {
-                eventSink.put(
+                eventDeliver.passEventForHandling(
                     Event.HandshakeFailure(
                         status.exception
                             ?: PubNubException("Unknown error") // todo check it that can happen
                     )
                 )
             } else {
-                eventSink.put(Event.HandshakeSuccess(result!!))
+                eventDeliver.passEventForHandling(Event.HandshakeSuccess(result!!))
             }
         }
 
     private fun getHandshakeReconnectEffect(channels: List<String>, channelGroups: List<String>): ManagedEffect = handshakeProvider.handshake(channels, channelGroups)
         .toManagedEffect { result, status ->
             if (status.error) {
-                eventSink.put(
+                eventDeliver.passEventForHandling(
                     Event.HandshakeReconnectFailure(
                         status.exception ?: PubNubException("Unknown error")
                     )
                 )
             } else {
-                eventSink.put(Event.HandshakeReconnectSuccess(channels, channelGroups, result!!))
+                eventDeliver.passEventForHandling(Event.HandshakeReconnectSuccess(channels, channelGroups, result!!))
             }
         }
 }
