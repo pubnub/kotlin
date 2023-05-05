@@ -5,16 +5,20 @@ import com.pubnub.api.endpoints.remoteaction.RemoteAction
 import com.pubnub.api.models.consumer.pubsub.PNEvent
 import com.pubnub.api.subscribe.eventengine.event.Event
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
-import io.mockk.spyk
+import io.mockk.every
+import io.mockk.mockk
 import io.mockk.verify
-import org.awaitility.Awaitility
-import org.awaitility.Durations
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import java.time.Duration
 
 class ReceiveMessagesEffectTest : BaseEffectTest() {
+    private val channels = listOf("channel1")
+    private val channelGroups = listOf("channelGroup1")
     private val subscriptionCursor = SubscriptionCursor(1337L, "1337")
-    private val eventQueue = TestEventQueue()
+    private val receiveMessagesProvider = mockk<ReceiveMessagesProvider>()
+    private val eventDeliver = SubscribeManagedEffectFactoryTest.TestEventDeliver()
+    private val receiveMessagesInvocation =
+        SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor)
     private val messages: List<PNEvent> = createMessages()
     private val receiveMessageResult = ReceiveMessagesResult(messages, subscriptionCursor)
     private val reason = PubNubException("Test")
@@ -22,45 +26,87 @@ class ReceiveMessagesEffectTest : BaseEffectTest() {
     @Test
     fun `should deliver ReceiveSuccess event when ReceiveMessagesEffect succeeded `() {
         // given
-        val receiveMessagesEffect = ReceiveMessagesEffect(successfulRemoteAction(receiveMessageResult), eventQueue)
+        every {
+            receiveMessagesProvider.receiveMessages(
+                channels,
+                channelGroups,
+                subscriptionCursor
+            )
+        } returns successfulRemoteAction(receiveMessageResult)
+        val receiveMessagesEffect =
+            ReceiveMessagesEffect(receiveMessagesProvider, eventDeliver, receiveMessagesInvocation)
 
         // when
         receiveMessagesEffect.runEffect()
 
         // then
-        Awaitility.await()
-            .atMost(Durations.ONE_SECOND)
-            .with()
-            .pollInterval(Duration.ofMillis(20))
-            .until { listOf(Event.ReceiveSuccess(messages, subscriptionCursor)) == eventQueue.events }
+        Thread.sleep(50)
+        assertEquals(listOf(Event.ReceiveSuccess(messages, subscriptionCursor)), eventDeliver.events)
     }
 
     @Test
     fun `should deliver ReceiveFailure event when ReceiveMessagesEffect failed `() {
         // given
-        val receiveMessagesEffect = ReceiveMessagesEffect(failingRemoteAction(reason), eventQueue)
+        every {
+            receiveMessagesProvider.receiveMessages(
+                channels,
+                channelGroups,
+                subscriptionCursor
+            )
+        } returns failingRemoteAction(reason)
+        val receiveMessagesEffect =
+            ReceiveMessagesEffect(receiveMessagesProvider, eventDeliver, receiveMessagesInvocation)
 
         // when
         receiveMessagesEffect.runEffect()
 
         // then
-        Awaitility.await()
-            .atMost(Durations.ONE_SECOND)
-            .with()
-            .pollInterval(Duration.ofMillis(20))
-            .until { listOf(Event.ReceiveFailure(reason)) == eventQueue.events }
+        Thread.sleep(50)
+        assertEquals(listOf(Event.ReceiveFailure(reason)), eventDeliver.events)
     }
 
     @Test
     fun `should cancel remoteAction when cancel effect`() {
         // given
-        val remoteAction: RemoteAction<ReceiveMessagesResult> = spyk()
-        val receiveMessagesEffect = ReceiveMessagesEffect(remoteAction, eventQueue)
+        val remoteAction = mockk<RemoteAction<ReceiveMessagesResult>>()
+        every {
+            receiveMessagesProvider.receiveMessages(
+                channels,
+                channelGroups,
+                subscriptionCursor
+            )
+        } returns remoteAction
+        every { remoteAction.silentCancel() } returns Unit
+        val receiveMessagesEffect =
+            ReceiveMessagesEffect(receiveMessagesProvider, eventDeliver, receiveMessagesInvocation)
 
         // when
         receiveMessagesEffect.cancel()
 
         // then
         verify { remoteAction.silentCancel() }
+    }
+
+    @Test
+    fun `should execute completionBock when such block is provided`() {
+        // given
+        every {
+            receiveMessagesProvider.receiveMessages(
+                channels,
+                channelGroups,
+                subscriptionCursor
+            )
+        } returns successfulRemoteAction(receiveMessageResult)
+        val receiveMessagesEffect =
+            ReceiveMessagesEffect(receiveMessagesProvider, eventDeliver, receiveMessagesInvocation)
+        val completionBlock: () -> Unit = mockk()
+        every { completionBlock() } returns Unit
+
+        // when
+        receiveMessagesEffect.runEffect(completionBlock)
+
+        // then
+        Thread.sleep(50)
+        verify(exactly = 1) { completionBlock.invoke() }
     }
 }

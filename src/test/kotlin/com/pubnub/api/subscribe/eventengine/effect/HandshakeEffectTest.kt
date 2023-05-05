@@ -2,62 +2,58 @@ package com.pubnub.api.subscribe.eventengine.effect
 
 import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.remoteaction.RemoteAction
-import com.pubnub.api.enums.PNOperationType
-import com.pubnub.api.enums.PNStatusCategory
-import com.pubnub.api.eventengine.EventQueue
-import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.subscribe.eventengine.event.Event
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
-import io.mockk.spyk
+import io.mockk.every
+import io.mockk.mockk
 import io.mockk.verify
-import org.awaitility.Awaitility
-import org.awaitility.Durations
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import java.time.Duration
-import java.util.concurrent.Executors
 
 class HandshakeEffectTest {
-    private val eventQueue = TestEventQueue()
+    private val channels = listOf("channel1")
+    private val channelGroups = listOf("channelGroup1")
+    private val handshakeProvider = mockk<HandshakeProvider>()
+    private val eventDeliver = SubscribeManagedEffectFactoryTest.TestEventDeliver()
+    private val handshakeInvocation = SubscribeEffectInvocation.Handshake(channels, channelGroups)
     private val subscriptionCursor = SubscriptionCursor(1337L, "1337")
     private val reason = PubNubException("Unknown error")
 
     @Test
     fun `should deliver HandshakeSuccess event when HandshakeEffect succeeded `() {
         // given
-        val handshakeEffect = HandshakeEffect(successfulRemoteAction(subscriptionCursor), eventQueue)
+        every { handshakeProvider.handshake(any(), any()) } returns successfulRemoteAction(subscriptionCursor)
+        val handshakeEffect = HandshakeEffect(handshakeProvider, eventDeliver, handshakeInvocation)
 
         // when
         handshakeEffect.runEffect()
 
         // then
-        Awaitility.await()
-            .atMost(Durations.ONE_SECOND)
-            .with()
-            .pollInterval(Duration.ofMillis(20))
-            .until { listOf(Event.HandshakeSuccess(subscriptionCursor)) == eventQueue.events }
+        Thread.sleep(50)
+        assertEquals(listOf(Event.HandshakeSuccess(subscriptionCursor)), eventDeliver.events)
     }
 
     @Test
     fun `should deliver HandshakeFailure event when HandshakeEffect failed `() {
         // given
-        val handshakeEffect = HandshakeEffect(failingRemoteAction(reason), eventQueue)
+        every { handshakeProvider.handshake(any(), any()) } returns failingRemoteAction(reason)
+        val handshakeEffect = HandshakeEffect(handshakeProvider, eventDeliver, handshakeInvocation)
 
         // when
         handshakeEffect.runEffect()
 
         // then
-        Awaitility.await()
-            .atMost(Durations.ONE_SECOND)
-            .with()
-            .pollInterval(Duration.ofMillis(20))
-            .until { listOf(Event.HandshakeFailure(reason)) == eventQueue.events }
+        Thread.sleep(50)
+        assertEquals(listOf(Event.HandshakeFailure(reason)), eventDeliver.events)
     }
 
     @Test
     fun `should cancel remoteAction when cancel effect`() {
         // given
-        val remoteAction: RemoteAction<SubscriptionCursor> = spyk()
-        val handshakeEffect = HandshakeEffect(remoteAction, eventQueue)
+        val remoteAction = mockk<RemoteAction<SubscriptionCursor>>()
+        every { handshakeProvider.handshake(any(), any()) } returns remoteAction
+        every { remoteAction.silentCancel() } returns Unit
+        val handshakeEffect = HandshakeEffect(handshakeProvider, eventDeliver, handshakeInvocation)
 
         // when
         handshakeEffect.cancel()
@@ -65,66 +61,26 @@ class HandshakeEffectTest {
         // then
         verify { remoteAction.silentCancel() }
     }
-}
 
-class TestEventQueue : EventQueue {
-    val events = mutableListOf<Event>()
+    // todo add test to check completionBlock execution
 
-    override fun add(event: Event) {
-        events.add(event)
+    fun runEffect1(completionBlock: () -> Unit) {
+        completionBlock.invoke()
     }
 
-    override fun take(): Event {
-        return Event.Disconnect
-    }
-}
+    @Test
+    fun `should execute completionBock when such block is provided`() {
+        // given
+        every { handshakeProvider.handshake(any(), any()) } returns successfulRemoteAction(subscriptionCursor)
+        val handshakeEffect = HandshakeEffect(handshakeProvider, eventDeliver, handshakeInvocation)
+        val completionBlockMock: () -> Unit = mockk()
+        every { completionBlockMock.invoke() } returns Unit
 
-fun <T> successfulRemoteAction(result: T): RemoteAction<T> = object : RemoteAction<T> {
-    private val executors = Executors.newSingleThreadExecutor()
+        // when
+        handshakeEffect.runEffect(completionBlockMock)
 
-    override fun sync(): T? {
-        throw PubNubException("Sync not supported")
-    }
-
-    override fun silentCancel() {
-    }
-
-    override fun async(callback: (result: T?, status: PNStatus) -> Unit) {
-        executors.submit {
-            callback(
-                result,
-                PNStatus(
-                    PNStatusCategory.PNAcknowledgmentCategory,
-                    error = false,
-                    operation = PNOperationType.PNSubscribeOperation
-                )
-            )
-        }
+        // then
+        Thread.sleep(50)
+        verify(exactly = 1) { completionBlockMock.invoke() }
     }
 }
-
-fun <T> failingRemoteAction(exception: PubNubException = PubNubException("Exception")): RemoteAction<T> =
-    object : RemoteAction<T> {
-        private val executors = Executors.newSingleThreadExecutor()
-
-        override fun sync(): T? {
-            throw PubNubException("Sync not supported")
-        }
-
-        override fun silentCancel() {
-        }
-
-        override fun async(callback: (result: T?, status: PNStatus) -> Unit) {
-            executors.submit {
-                callback(
-                    null,
-                    PNStatus(
-                        PNStatusCategory.PNUnknownCategory,
-                        error = true,
-                        exception = exception,
-                        operation = PNOperationType.PNSubscribeOperation
-                    )
-                )
-            }
-        }
-    }
