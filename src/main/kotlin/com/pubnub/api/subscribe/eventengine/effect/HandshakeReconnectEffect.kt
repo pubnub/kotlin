@@ -2,7 +2,7 @@ package com.pubnub.api.subscribe.eventengine.effect
 
 import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.remoteaction.RemoteAction
-import com.pubnub.api.eventengine.EventDeliver
+import com.pubnub.api.eventengine.EventQueue
 import com.pubnub.api.eventengine.ManagedEffect
 import com.pubnub.api.subscribe.eventengine.event.Event
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
@@ -11,11 +11,11 @@ import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.TimeUnit
 
 class HandshakeReconnectEffect(
-    private val handshakeProvider: HandshakeProvider,
-    private val eventDeliver: EventDeliver,
+    private val remoteAction: RemoteAction<SubscriptionCursor>,
+    private val eventQueue: EventQueue,
     private val policy: RetryPolicy,
-    private val handshakeReconnectInvocation: SubscribeEffectInvocation.HandshakeReconnect,
     private val executorService: ScheduledExecutorService,
+    private val handshakeReconnectInvocation: SubscribeEffectInvocation.HandshakeReconnect,
 ) : ManagedEffect {
 
     @Transient
@@ -25,39 +25,34 @@ class HandshakeReconnectEffect(
     private var cancelled = false
 
     @Synchronized
-    override fun runEffect(completionBlock: () -> Unit) {
+    override fun runEffect() {
         if (cancelled) { // is it ok to be here or should be after "if (delay == null)"
             return
         }
 
         val delay = policy.nextDelay(handshakeReconnectInvocation.attempts)
         if (delay == null) {
-            eventDeliver.passEventForHandling(event = Event.HandshakeReconnectGiveUp(handshakeReconnectInvocation.reason!!))
+            eventQueue.add(event = Event.HandshakeReconnectGiveUp(handshakeReconnectInvocation.reason!!))
             return
         }
 
         scheduled = executorService.schedule({
-            try {
-                val handshakeRemoteAction = getHandshakeRemoteAction()
-                handshakeRemoteAction.async { result, status ->
-                    if (status.error) {
-                        eventDeliver.passEventForHandling(
-                            Event.HandshakeReconnectFailure(
-                                status.exception ?: PubNubException("Unknown error")
-                            )
+            remoteAction.async { result, status ->
+                if (status.error) {
+                    eventQueue.add(
+                        Event.HandshakeReconnectFailure(
+                            status.exception ?: PubNubException("Unknown error")
                         )
-                    } else {
-                        eventDeliver.passEventForHandling(
-                            Event.HandshakeReconnectSuccess(
-                                handshakeReconnectInvocation.channels,
-                                handshakeReconnectInvocation.channelGroups,
-                                result!!
-                            )
+                    )
+                } else {
+                    eventQueue.add(
+                        Event.HandshakeReconnectSuccess(
+                            handshakeReconnectInvocation.channels,
+                            handshakeReconnectInvocation.channelGroups,
+                            result!!
                         )
-                    }
+                    )
                 }
-            } finally {
-                completionBlock()
             }
         }, delay.toMillis(), TimeUnit.MILLISECONDS)
     }
@@ -68,15 +63,7 @@ class HandshakeReconnectEffect(
             return
         }
         cancelled = true
-        val handshakeRemoteAction = getHandshakeRemoteAction()
-        handshakeRemoteAction.silentCancel()
+        remoteAction.silentCancel()
         scheduled?.cancel(true)
-    }
-
-    private fun getHandshakeRemoteAction(): RemoteAction<SubscriptionCursor> {
-        return handshakeProvider.handshake(
-            handshakeReconnectInvocation.channels,
-            handshakeReconnectInvocation.channelGroups
-        )
     }
 }

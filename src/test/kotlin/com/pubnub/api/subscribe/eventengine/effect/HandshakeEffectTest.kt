@@ -67,6 +67,18 @@ class HandshakeEffectTest {
     }
 }
 
+class TestEventQueue : EventQueue {
+    val events = mutableListOf<Event>()
+
+    override fun add(event: Event) {
+        events.add(event)
+    }
+
+    override fun take(): Event {
+        return Event.Disconnect
+    }
+}
+
 fun <T> successfulRemoteAction(result: T): RemoteAction<T> = object : RemoteAction<T> {
     private val executors = Executors.newSingleThreadExecutor()
 
@@ -116,15 +128,3 @@ fun <T> failingRemoteAction(exception: PubNubException = PubNubException("Except
             }
         }
     }
-
-class TestEventQueue : EventQueue {
-    val events = mutableListOf<Event>()
-
-    override fun add(event: Event) {
-        events.add(event)
-    }
-
-    override fun take(): Event {
-        return Event.Disconnect
-    }
-}

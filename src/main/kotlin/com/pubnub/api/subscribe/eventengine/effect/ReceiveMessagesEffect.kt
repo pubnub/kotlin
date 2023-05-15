@@ -2,49 +2,35 @@ package com.pubnub.api.subscribe.eventengine.effect
 
 import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.remoteaction.RemoteAction
-import com.pubnub.api.eventengine.EventDeliver
+import com.pubnub.api.eventengine.EventQueue
 import com.pubnub.api.eventengine.ManagedEffect
 import com.pubnub.api.subscribe.eventengine.event.Event
 
 class ReceiveMessagesEffect(
-    private val receiveMessagesProvider: ReceiveMessagesProvider,
-    private val eventDeliver: EventDeliver,
-    private val receiveMessagesInvocation: SubscribeEffectInvocation.ReceiveMessages
+    private val remoteAction: RemoteAction<ReceiveMessagesResult>,
+    private val eventQueue: EventQueue,
 ) : ManagedEffect {
-    override fun runEffect(completionBlock: () -> Unit) {
-        val receiveMessagesRemoteAction = getReceiveMessagesRemoteAction()
-        receiveMessagesRemoteAction.async { result, status ->
-            try {
-                if (status.error) {
-                    eventDeliver.passEventForHandling(
-                        Event.ReceiveFailure(
-                            status.exception
-                                ?: PubNubException("Unknown error") // todo check it that can happen
-                        )
+    override fun runEffect() {
+        remoteAction.async { result, status ->
+            if (status.error) {
+                eventQueue.add(
+                    Event.ReceiveFailure(
+                        status.exception
+                            ?: PubNubException("Unknown error") // todo check it that can happen
                     )
-                } else {
-                    eventDeliver.passEventForHandling(
-                        Event.ReceiveSuccess(
-                            result!!.messages,
-                            result.subscriptionCursor
-                        )
+                )
+            } else {
+                eventQueue.add(
+                    Event.ReceiveSuccess(
+                        result!!.messages,
+                        result.subscriptionCursor
                     )
-                }
-            } finally {
-                completionBlock()
+                )
             }
         }
     }
 
     override fun cancel() {
-        val receiveMessagesRemoteAction = getReceiveMessagesRemoteAction()
-        receiveMessagesRemoteAction.silentCancel()
+        remoteAction.silentCancel()
     }
-
-    private fun getReceiveMessagesRemoteAction(): RemoteAction<ReceiveMessagesResult> =
-        receiveMessagesProvider.receiveMessages(
-            receiveMessagesInvocation.channels,
-            receiveMessagesInvocation.channelGroups,
-            receiveMessagesInvocation.subscriptionCursor
-        )
 }
