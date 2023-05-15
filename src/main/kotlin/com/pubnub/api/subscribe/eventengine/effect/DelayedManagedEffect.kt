@@ -26,7 +26,7 @@ class DelayedManagedEffect(
 
         scheduled = executorService.schedule({
             try {
-                managedEffect.runEffect(completionBlock)
+                managedEffect.runEffect(completionBlock) // toDo why we call completionBlock here and in finally block?
             } finally {
                 completionBlock()
             }
