@@ -2,7 +2,7 @@ package com.pubnub.api.subscribe.eventengine.effect
 
 import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.remoteaction.RemoteAction
-import com.pubnub.api.eventengine.EventDeliver
+import com.pubnub.api.eventengine.EventQueue
 import com.pubnub.api.eventengine.ManagedEffect
 import com.pubnub.api.subscribe.eventengine.event.Event
 import java.util.concurrent.ScheduledExecutorService
@@ -10,11 +10,12 @@ import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.TimeUnit
 
 class ReceiveReconnectEffect(
-    private val receiveMessagesProvider: ReceiveMessagesProvider,
-    private val eventDeliver: EventDeliver,
+    private val remoteAction: RemoteAction<ReceiveMessagesResult>,
+    private val eventQueue: EventQueue,
     private val policy: RetryPolicy,
-    private val receiveReconnectInvocation: SubscribeEffectInvocation.ReceiveReconnect,
     private val executorService: ScheduledExecutorService,
+    private val attempts: Int,
+    private val reason: PubNubException?
 ) : ManagedEffect {
 
     @Transient
@@ -22,38 +23,33 @@ class ReceiveReconnectEffect(
 
     @Transient
     private var cancelled = false
-    override fun runEffect(completionBlock: () -> Unit) {
+    override fun runEffect() {
         if (cancelled) {
             return
         }
 
-        val delay = policy.nextDelay(receiveReconnectInvocation.attempts)
+        val delay = policy.nextDelay(attempts)
         if (delay == null) {
-            eventDeliver.passEventForHandling(event = Event.ReceiveReconnectGiveUp(receiveReconnectInvocation.reason!!))
+            eventQueue.add(event = Event.ReceiveReconnectGiveUp(reason!!))
             return
         }
 
         scheduled = executorService.schedule({
-            try {
-                val receiveMessagesRemoteAction = getReceiveMessagesRemoteAction()
-                receiveMessagesRemoteAction.async { result, status ->
-                    if (status.error) {
-                        eventDeliver.passEventForHandling(
-                            Event.ReceiveReconnectFailure(
-                                status.exception ?: PubNubException("dfa")
-                            )
+            remoteAction.async { result, status ->
+                if (status.error) {
+                    eventQueue.add(
+                        Event.ReceiveReconnectFailure(
+                            status.exception ?: PubNubException("dfa")
                         )
-                    } else {
-                        eventDeliver.passEventForHandling(
-                            Event.ReceiveReconnectSuccess(
-                                result!!.messages,
-                                result.subscriptionCursor
-                            )
+                    )
+                } else {
+                    eventQueue.add(
+                        Event.ReceiveReconnectSuccess(
+                            result!!.messages,
+                            result.subscriptionCursor
                         )
-                    }
+                    )
                 }
-            } finally {
-                completionBlock()
             }
         }, delay.toMillis(), TimeUnit.MILLISECONDS)
     }
@@ -64,15 +60,7 @@ class ReceiveReconnectEffect(
         }
         cancelled = true
 
-        val receiveMessagesRemoteAction = getReceiveMessagesRemoteAction()
-        receiveMessagesRemoteAction.silentCancel()
+        remoteAction.silentCancel()
         scheduled?.cancel(true)
     }
-
-    private fun getReceiveMessagesRemoteAction(): RemoteAction<ReceiveMessagesResult> =
-        receiveMessagesProvider.receiveMessages(
-            receiveReconnectInvocation.channels,
-            receiveReconnectInvocation.channelGroups,
-            receiveReconnectInvocation.subscriptionCursor
-        )
 }
