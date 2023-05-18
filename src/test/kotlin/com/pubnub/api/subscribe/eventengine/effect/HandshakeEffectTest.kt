@@ -4,46 +4,79 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.remoteaction.RemoteAction
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
+import com.pubnub.api.eventengine.EventSink
 import com.pubnub.api.models.consumer.PNStatus
-import org.junit.jupiter.api.Assertions.assertTrue
+import com.pubnub.api.subscribe.eventengine.event.Event
+import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
+import io.mockk.spyk
+import io.mockk.verify
+import org.awaitility.Awaitility
+import org.awaitility.Durations
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import java.util.concurrent.CountDownLatch
+import java.time.Duration
 import java.util.concurrent.Executors
-import java.util.concurrent.TimeUnit
 
-class RemoteActionManagedEffectTest {
+class HandshakeEffectTest {
+    private val eventSink = TestEventSink()
+    private val subscriptionCursor = SubscriptionCursor(1337L, "1337")
+    private val reason = PubNubException("Unknown error")
+
     @Test
-    fun `failing handshake runs the onCompletion block`() {
+    fun `should deliver HandshakeSuccess event when HandshakeEffect succeeded`() {
         // given
-        val latch = CountDownLatch(2)
-        val failingManagedEffect = failingRemoteAction<Int>().toManagedEffect { _, s ->
-            if (s.error) {
-                latch.countDown()
-            }
-        }
+        val handshakeEffect = HandshakeEffect(successfulRemoteAction(subscriptionCursor), eventSink)
 
         // when
-        failingManagedEffect.runEffect { latch.countDown() }
+        handshakeEffect.runEffect()
 
         // then
-        assertTrue(latch.await(100, TimeUnit.MILLISECONDS))
+        Awaitility.await()
+            .atMost(Durations.ONE_SECOND)
+            .with()
+            .pollInterval(Duration.ofMillis(20))
+            .untilAsserted {
+                assertEquals(listOf(Event.HandshakeSuccess(subscriptionCursor)), eventSink.events)
+            }
     }
 
     @Test
-    fun `succeeding handshake runs the onCompletion block`() {
+    fun `should deliver HandshakeFailure event when HandshakeEffect failed`() {
         // given
-        val latch = CountDownLatch(2)
-        val failingManagedEffect = successfulRemoteAction(42).toManagedEffect { _, s ->
-            if (!s.error) {
-                latch.countDown()
-            }
-        }
+        val handshakeEffect = HandshakeEffect(failingRemoteAction(reason), eventSink)
 
         // when
-        failingManagedEffect.runEffect { latch.countDown() }
+        handshakeEffect.runEffect()
 
         // then
-        assertTrue(latch.await(100, TimeUnit.MILLISECONDS))
+        Awaitility.await()
+            .atMost(Durations.ONE_SECOND)
+            .with()
+            .pollInterval(Duration.ofMillis(20))
+            .untilAsserted {
+                assertEquals(listOf(Event.HandshakeFailure(reason)), eventSink.events)
+            }
+    }
+
+    @Test
+    fun `should cancel remoteAction when cancel effect`() {
+        // given
+        val remoteAction: RemoteAction<SubscriptionCursor> = spyk()
+        val handshakeEffect = HandshakeEffect(remoteAction, eventSink)
+
+        // when
+        handshakeEffect.cancel()
+
+        // then
+        verify { remoteAction.silentCancel() }
+    }
+}
+
+class TestEventSink : EventSink {
+    val events = mutableListOf<Event>()
+
+    override fun add(event: Event) {
+        events.add(event)
     }
 }
 

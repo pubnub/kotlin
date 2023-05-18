@@ -25,10 +25,9 @@ class EffectDispatcherTest {
         override fun create(effectInvocation: TestEffectInvocation): ManagedEffect {
             return object : ManagedEffect {
 
-                override fun runEffect(completionBlock: () -> Unit) {
+                override fun runEffect() {
                     when (effectInvocation) {
                         is ImmediateEndingTestEffect -> {
-                            completionBlock()
                         }
 
                         else -> {
@@ -73,22 +72,6 @@ class EffectDispatcherTest {
 
         // then
         assertThat(managedEffects, not(hasKey(TestEffect.id)))
-    }
-
-    @Test
-    fun managedEffectIsEvictingItselfAfterCompletion() {
-        // given
-        val managedEffects = ConcurrentHashMap<String, ManagedEffect>()
-        val effectDispatcher = EffectDispatcher(
-            managedEffectFactory = EffectHandlerFactoryImpl(),
-            managedEffects = managedEffects
-        )
-
-        // when
-        effectDispatcher.dispatch(ImmediateEndingTestEffect)
-
-        // then
-        assertThat(managedEffects, not(hasKey(ImmediateEndingTestEffect.id)))
     }
 
     @Test
