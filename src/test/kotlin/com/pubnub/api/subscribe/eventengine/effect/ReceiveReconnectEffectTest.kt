@@ -19,7 +19,7 @@ class ReceiveReconnectEffectTest : BaseEffectTest() {
     private val subscriptionCursor = SubscriptionCursor(1337L, "1337")
     private val reason = PubNubException("Unknown error")
     private val attempts = 1
-    private val eventQueue = TestEventQueue()
+    private val eventSink = TestEventSink()
     private val retryPolicy = LinearPolicy(fixedDelay = Duration.ofMillis(10))
     private val executorService = Executors.newSingleThreadScheduledExecutor()
     private val messages: List<PNEvent> = createMessages()
@@ -30,7 +30,7 @@ class ReceiveReconnectEffectTest : BaseEffectTest() {
         // given
         val receiveReconnectEffect = ReceiveReconnectEffect(
             successfulRemoteAction(receiveMessageResult),
-            eventQueue,
+            eventSink,
             retryPolicy,
             executorService,
             attempts,
@@ -45,7 +45,7 @@ class ReceiveReconnectEffectTest : BaseEffectTest() {
             .atMost(Durations.ONE_SECOND)
             .with()
             .pollInterval(Duration.ofMillis(20))
-            .until { listOf(Event.ReceiveReconnectSuccess(messages, subscriptionCursor)) == eventQueue.events }
+            .untilAsserted { listOf(Event.ReceiveReconnectSuccess(messages, subscriptionCursor)) == eventSink.events }
     }
 
     @Test
@@ -53,7 +53,7 @@ class ReceiveReconnectEffectTest : BaseEffectTest() {
         // given
         val receiveReconnectEffect = ReceiveReconnectEffect(
             failingRemoteAction(reason),
-            eventQueue,
+            eventSink,
             retryPolicy,
             executorService,
             attempts,
@@ -68,7 +68,7 @@ class ReceiveReconnectEffectTest : BaseEffectTest() {
             .atMost(Durations.ONE_SECOND)
             .with()
             .pollInterval(Duration.ofMillis(20))
-            .until { listOf(Event.ReceiveReconnectFailure(reason)) == eventQueue.events }
+            .untilAsserted { listOf(Event.ReceiveReconnectFailure(reason)) == eventSink.events }
     }
 
     @Test
@@ -77,7 +77,7 @@ class ReceiveReconnectEffectTest : BaseEffectTest() {
         val retryPolicy = NoRetriesPolicy
         val receiveReconnectEffect = ReceiveReconnectEffect(
             successfulRemoteAction(receiveMessageResult),
-            eventQueue,
+            eventSink,
             retryPolicy,
             executorService,
             attempts,
@@ -88,7 +88,7 @@ class ReceiveReconnectEffectTest : BaseEffectTest() {
         receiveReconnectEffect.runEffect()
 
         // then
-        assertEquals(listOf(Event.ReceiveReconnectGiveUp(reason)), eventQueue.events)
+        assertEquals(listOf(Event.ReceiveReconnectGiveUp(reason)), eventSink.events)
     }
 
     @Test
@@ -98,7 +98,7 @@ class ReceiveReconnectEffectTest : BaseEffectTest() {
         every { remoteAction.silentCancel() } returns Unit
         val receiveReconnectEffect = ReceiveReconnectEffect(
             remoteAction,
-            eventQueue,
+            eventSink,
             retryPolicy,
             executorService,
             attempts,

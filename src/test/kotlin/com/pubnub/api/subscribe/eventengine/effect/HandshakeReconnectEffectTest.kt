@@ -19,7 +19,7 @@ class HandshakeReconnectEffectTest {
     private val channelGroups = listOf("channelGroup1")
     private val reason = PubNubException("Unknown error")
     private val attempts = 1
-    private val eventQueue = TestEventQueue()
+    private val eventSink = TestEventSink()
     private val handshakeReconnectInvocation =
         SubscribeEffectInvocation.HandshakeReconnect(channels, channelGroups, attempts, reason)
     private val executorService = Executors.newSingleThreadScheduledExecutor()
@@ -31,7 +31,7 @@ class HandshakeReconnectEffectTest {
         // given
         val handshakeReconnectEffect = HandshakeReconnectEffect(
             successfulRemoteAction(subscriptionCursor),
-            eventQueue,
+            eventSink,
             policy,
             executorService,
             handshakeReconnectInvocation
@@ -45,14 +45,14 @@ class HandshakeReconnectEffectTest {
             .atMost(Durations.ONE_SECOND)
             .with()
             .pollInterval(Duration.ofMillis(20))
-            .until {
+            .untilAsserted {
                 listOf(
                     Event.HandshakeReconnectSuccess(
                         channels,
                         channelGroups,
                         subscriptionCursor
                     )
-                ) == eventQueue.events
+                ) == eventSink.events
             }
     }
 
@@ -61,7 +61,7 @@ class HandshakeReconnectEffectTest {
         // given
         val handshakeReconnectEffect = HandshakeReconnectEffect(
             failingRemoteAction(reason),
-            eventQueue,
+            eventSink,
             policy,
             executorService,
             handshakeReconnectInvocation
@@ -75,7 +75,7 @@ class HandshakeReconnectEffectTest {
             .atMost(Durations.ONE_SECOND)
             .with()
             .pollInterval(Duration.ofMillis(20))
-            .until { listOf(Event.HandshakeReconnectFailure(reason)) == eventQueue.events }
+            .untilAsserted { listOf(Event.HandshakeReconnectFailure(reason)) == eventSink.events }
     }
 
     @Test
@@ -84,7 +84,7 @@ class HandshakeReconnectEffectTest {
         val policy = NoRetriesPolicy
         val handshakeReconnectEffect = HandshakeReconnectEffect(
             failingRemoteAction(reason),
-            eventQueue,
+            eventSink,
             policy,
             executorService,
             handshakeReconnectInvocation
@@ -94,7 +94,7 @@ class HandshakeReconnectEffectTest {
         handshakeReconnectEffect.runEffect()
 
         // then
-        assertEquals(listOf(Event.HandshakeReconnectGiveUp(reason)), eventQueue.events)
+        assertEquals(listOf(Event.HandshakeReconnectGiveUp(reason)), eventSink.events)
     }
 
     @Test
@@ -104,7 +104,7 @@ class HandshakeReconnectEffectTest {
         every { remoteAction.silentCancel() } returns Unit
         val handshakeReconnectEffect = HandshakeReconnectEffect(
             remoteAction,
-            eventQueue,
+            eventSink,
             policy,
             executorService,
             handshakeReconnectInvocation

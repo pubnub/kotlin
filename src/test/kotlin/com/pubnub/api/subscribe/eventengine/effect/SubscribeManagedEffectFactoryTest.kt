@@ -2,7 +2,7 @@ package com.pubnub.api.subscribe.eventengine.effect
 
 import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.remoteaction.RemoteAction
-import com.pubnub.api.eventengine.EventQueue
+import com.pubnub.api.eventengine.EventSink
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
 import io.mockk.every
 import io.mockk.mockk
@@ -17,7 +17,7 @@ class SubscribeManagedEffectFactoryTest {
 
     private val handshakeProvider = mockk<HandshakeProvider>()
     private val receiveMessageProvider = mockk<ReceiveMessagesProvider>()
-    private val eventQueue = mockk<EventQueue>()
+    private val eventSink = mockk<EventSink>()
     private val policy = mockk<RetryPolicy>()
     private val executorService = mockk<ScheduledExecutorService>()
     private val channels = listOf("channel1")
@@ -34,7 +34,7 @@ class SubscribeManagedEffectFactoryTest {
         subscribeManagedEffectFactory = SubscribeManagedEffectFactory(
             handshakeProvider,
             receiveMessageProvider,
-            eventQueue,
+            eventSink,
             policy,
             executorService
         )
@@ -45,7 +45,7 @@ class SubscribeManagedEffectFactoryTest {
         // given
         val effectInvocation = SubscribeEffectInvocation.Handshake(channels, channelGroups)
         every {
-            handshakeProvider.getRemoteActionForHandshake(
+            handshakeProvider.getHandshakeRemoteAction(
                 effectInvocation.channels,
                 effectInvocation.channelGroups
             )
@@ -68,7 +68,7 @@ class SubscribeManagedEffectFactoryTest {
             reason
         )
         every {
-            handshakeProvider.getRemoteActionForHandshake(
+            handshakeProvider.getHandshakeRemoteAction(
                 effectInvocation.channels,
                 effectInvocation.channelGroups
             )
@@ -91,7 +91,7 @@ class SubscribeManagedEffectFactoryTest {
             subscriptionCursor
         )
         every {
-            receiveMessageProvider.getRemoteActionForReceiveMessages(
+            receiveMessageProvider.getReceiveMessagesRemoteAction(
                 effectInvocation.channels,
                 effectInvocation.channelGroups,
                 effectInvocation.subscriptionCursor
@@ -115,7 +115,7 @@ class SubscribeManagedEffectFactoryTest {
             subscriptionCursor
         )
         every {
-            receiveMessageProvider.getRemoteActionForReceiveMessages(
+            receiveMessageProvider.getReceiveMessagesRemoteAction(
                 effectInvocation.channels,
                 effectInvocation.channelGroups,
                 effectInvocation.subscriptionCursor

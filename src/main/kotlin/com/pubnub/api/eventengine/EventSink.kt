@@ -2,7 +2,6 @@ package com.pubnub.api.eventengine
 
 import com.pubnub.api.subscribe.eventengine.event.Event
 
-interface EventQueue {
+interface EventSink {
     fun add(event: Event)
-    fun take(): Event
 }

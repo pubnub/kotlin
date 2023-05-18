@@ -1,7 +1,7 @@
 package com.pubnub.api.subscribe.eventengine.effect
 
 import com.pubnub.api.endpoints.remoteaction.RemoteAction
-import com.pubnub.api.eventengine.EventQueue
+import com.pubnub.api.eventengine.EventSink
 import com.pubnub.api.eventengine.ManagedEffect
 import com.pubnub.api.eventengine.ManagedEffectFactory
 import com.pubnub.api.models.consumer.pubsub.PNEvent
@@ -17,7 +17,7 @@ data class ReceiveMessagesResult(
 class SubscribeManagedEffectFactory(
     private val handshakeProvider: HandshakeProvider,
     private val receiveMessagesProvider: ReceiveMessagesProvider,
-    private val eventQueue: EventQueue,
+    private val eventSink: EventSink,
     private val policy: RetryPolicy,
     private val executorService: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor(),
 ) : ManagedEffectFactory<SubscribeEffectInvocation> {
@@ -26,40 +26,40 @@ class SubscribeManagedEffectFactory(
             is SubscribeEffectInvocation.EmitMessages -> null // todo
             is SubscribeEffectInvocation.EmitStatus -> null // todo
             is SubscribeEffectInvocation.Handshake -> {
-                val remoteActionForHandshake =
-                    handshakeProvider.getRemoteActionForHandshake(effectInvocation.channels, effectInvocation.channelGroups)
-                HandshakeEffect(remoteActionForHandshake, eventQueue)
+                val handshakeRemoteAction =
+                    handshakeProvider.getHandshakeRemoteAction(effectInvocation.channels, effectInvocation.channelGroups)
+                HandshakeEffect(handshakeRemoteAction, eventSink)
             }
             is SubscribeEffectInvocation.HandshakeReconnect -> {
-                val remoteActionForHandshake =
-                    handshakeProvider.getRemoteActionForHandshake(effectInvocation.channels, effectInvocation.channelGroups)
+                val handshakeRemoteAction =
+                    handshakeProvider.getHandshakeRemoteAction(effectInvocation.channels, effectInvocation.channelGroups)
                 HandshakeReconnectEffect(
-                    remoteActionForHandshake,
-                    eventQueue,
+                    handshakeRemoteAction,
+                    eventSink,
                     policy,
                     executorService,
                     effectInvocation
                 )
             }
             is SubscribeEffectInvocation.ReceiveMessages -> {
-                val remoteActionForReceiveMessages: RemoteAction<ReceiveMessagesResult> =
-                    receiveMessagesProvider.getRemoteActionForReceiveMessages(
+                val receiveMessagesRemoteAction: RemoteAction<ReceiveMessagesResult> =
+                    receiveMessagesProvider.getReceiveMessagesRemoteAction(
                         effectInvocation.channels,
                         effectInvocation.channelGroups,
                         effectInvocation.subscriptionCursor
                     )
-                ReceiveMessagesEffect(remoteActionForReceiveMessages, eventQueue)
+                ReceiveMessagesEffect(receiveMessagesRemoteAction, eventSink)
             }
             is SubscribeEffectInvocation.ReceiveReconnect -> {
-                val remoteActionForReceiveMessages = receiveMessagesProvider.getRemoteActionForReceiveMessages(
+                val receiveMessagesRemoteAction = receiveMessagesProvider.getReceiveMessagesRemoteAction(
                     effectInvocation.channels,
                     effectInvocation.channelGroups,
                     effectInvocation.subscriptionCursor
                 )
 
                 ReceiveReconnectEffect(
-                    remoteActionForReceiveMessages,
-                    eventQueue,
+                    receiveMessagesRemoteAction,
+                    eventSink,
                     policy,
                     executorService,
                     effectInvocation.attempts,

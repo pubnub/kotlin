@@ -4,7 +4,7 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.remoteaction.RemoteAction
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
-import com.pubnub.api.eventengine.EventQueue
+import com.pubnub.api.eventengine.EventSink
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.subscribe.eventengine.event.Event
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
@@ -17,14 +17,14 @@ import java.time.Duration
 import java.util.concurrent.Executors
 
 class HandshakeEffectTest {
-    private val eventQueue = TestEventQueue()
+    private val eventSink = TestEventSink()
     private val subscriptionCursor = SubscriptionCursor(1337L, "1337")
     private val reason = PubNubException("Unknown error")
 
     @Test
-    fun `should deliver HandshakeSuccess event when HandshakeEffect succeeded `() {
+    fun `should deliver HandshakeSuccess event when HandshakeEffect succeeded`() {
         // given
-        val handshakeEffect = HandshakeEffect(successfulRemoteAction(subscriptionCursor), eventQueue)
+        val handshakeEffect = HandshakeEffect(successfulRemoteAction(subscriptionCursor), eventSink)
 
         // when
         handshakeEffect.runEffect()
@@ -34,13 +34,13 @@ class HandshakeEffectTest {
             .atMost(Durations.ONE_SECOND)
             .with()
             .pollInterval(Duration.ofMillis(20))
-            .until { listOf(Event.HandshakeSuccess(subscriptionCursor)) == eventQueue.events }
+            .untilAsserted { listOf(Event.HandshakeSuccess(subscriptionCursor)) == eventSink.events }
     }
 
     @Test
-    fun `should deliver HandshakeFailure event when HandshakeEffect failed `() {
+    fun `should deliver HandshakeFailure event when HandshakeEffect failed`() {
         // given
-        val handshakeEffect = HandshakeEffect(failingRemoteAction(reason), eventQueue)
+        val handshakeEffect = HandshakeEffect(failingRemoteAction(reason), eventSink)
 
         // when
         handshakeEffect.runEffect()
@@ -50,14 +50,14 @@ class HandshakeEffectTest {
             .atMost(Durations.ONE_SECOND)
             .with()
             .pollInterval(Duration.ofMillis(20))
-            .until { listOf(Event.HandshakeFailure(reason)) == eventQueue.events }
+            .untilAsserted { listOf(Event.HandshakeFailure(reason)) == eventSink.events }
     }
 
     @Test
     fun `should cancel remoteAction when cancel effect`() {
         // given
         val remoteAction: RemoteAction<SubscriptionCursor> = spyk()
-        val handshakeEffect = HandshakeEffect(remoteAction, eventQueue)
+        val handshakeEffect = HandshakeEffect(remoteAction, eventSink)
 
         // when
         handshakeEffect.cancel()
@@ -67,15 +67,11 @@ class HandshakeEffectTest {
     }
 }
 
-class TestEventQueue : EventQueue {
+class TestEventSink : EventSink {
     val events = mutableListOf<Event>()
 
     override fun add(event: Event) {
         events.add(event)
-    }
-
-    override fun take(): Event {
-        return Event.Disconnect
     }
 }
 
