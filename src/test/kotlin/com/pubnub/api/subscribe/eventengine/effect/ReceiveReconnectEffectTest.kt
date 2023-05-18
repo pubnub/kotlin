@@ -45,7 +45,12 @@ class ReceiveReconnectEffectTest : BaseEffectTest() {
             .atMost(Durations.ONE_SECOND)
             .with()
             .pollInterval(Duration.ofMillis(20))
-            .untilAsserted { listOf(Event.ReceiveReconnectSuccess(messages, subscriptionCursor)) == eventSink.events }
+            .untilAsserted {
+                assertEquals(
+                    listOf(Event.ReceiveReconnectSuccess(messages, subscriptionCursor)),
+                    eventSink.events
+                )
+            }
     }
 
     @Test
@@ -68,7 +73,7 @@ class ReceiveReconnectEffectTest : BaseEffectTest() {
             .atMost(Durations.ONE_SECOND)
             .with()
             .pollInterval(Duration.ofMillis(20))
-            .untilAsserted { listOf(Event.ReceiveReconnectFailure(reason)) == eventSink.events }
+            .untilAsserted { assertEquals(listOf(Event.ReceiveReconnectFailure(reason)), eventSink.events) }
     }
 
     @Test

@@ -9,6 +9,7 @@ import io.mockk.spyk
 import io.mockk.verify
 import org.awaitility.Awaitility
 import org.awaitility.Durations
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.time.Duration
 
@@ -32,7 +33,7 @@ class ReceiveMessagesEffectTest : BaseEffectTest() {
             .atMost(Durations.ONE_SECOND)
             .with()
             .pollInterval(Duration.ofMillis(20))
-            .untilAsserted { listOf(Event.ReceiveSuccess(messages, subscriptionCursor)) == eventSink.events }
+            .untilAsserted { assertEquals(listOf(Event.ReceiveSuccess(messages, subscriptionCursor)), eventSink.events) }
     }
 
     @Test
@@ -48,7 +49,7 @@ class ReceiveMessagesEffectTest : BaseEffectTest() {
             .atMost(Durations.ONE_SECOND)
             .with()
             .pollInterval(Duration.ofMillis(20))
-            .untilAsserted { listOf(Event.ReceiveFailure(reason)) == eventSink.events }
+            .untilAsserted { assertEquals(listOf(Event.ReceiveFailure(reason)), eventSink.events) }
     }
 
     @Test

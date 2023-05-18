@@ -12,6 +12,7 @@ import io.mockk.spyk
 import io.mockk.verify
 import org.awaitility.Awaitility
 import org.awaitility.Durations
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.time.Duration
 import java.util.concurrent.Executors
@@ -34,7 +35,9 @@ class HandshakeEffectTest {
             .atMost(Durations.ONE_SECOND)
             .with()
             .pollInterval(Duration.ofMillis(20))
-            .untilAsserted { listOf(Event.HandshakeSuccess(subscriptionCursor)) == eventSink.events }
+            .untilAsserted {
+                assertEquals(listOf(Event.HandshakeSuccess(subscriptionCursor)), eventSink.events)
+            }
     }
 
     @Test
@@ -50,7 +53,9 @@ class HandshakeEffectTest {
             .atMost(Durations.ONE_SECOND)
             .with()
             .pollInterval(Duration.ofMillis(20))
-            .untilAsserted { listOf(Event.HandshakeFailure(reason)) == eventSink.events }
+            .untilAsserted {
+                assertEquals(listOf(Event.HandshakeFailure(reason)), eventSink.events)
+            }
     }
 
     @Test
