@@ -19,8 +19,8 @@ class EffectDispatcher<T : EffectInvocation>(
 
             is Managed -> {
                 managedEffects.remove(effectInvocation.id)?.cancel()
-                val managedEffect = effectFactory.create(effectInvocation) ?: return
-                managedEffects[effectInvocation.id] = managedEffect as ManagedEffect
+                val managedEffect = effectFactory.create(effectInvocation) as? ManagedEffect ?: return
+                managedEffects[effectInvocation.id] = managedEffect
                 managedEffect.runEffect()
             }
             is NonManaged -> {

@@ -1,8 +1,11 @@
 package com.pubnub.api.subscribe.eventengine.effect
 
+import com.google.gson.JsonPrimitive
 import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.remoteaction.RemoteAction
+import com.pubnub.api.models.consumer.pubsub.BasePubSubResult
 import com.pubnub.api.models.consumer.pubsub.PNEvent
+import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.subscribe.eventengine.event.Event
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
 import io.mockk.spyk
@@ -13,7 +16,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.time.Duration
 
-class ReceiveMessagesEffectTest : BaseEffectTest() {
+class ReceiveMessagesEffectTest {
     private val subscriptionCursor = SubscriptionCursor(1337L, "1337")
     private val eventSink = TestEventSink()
     private val messages: List<PNEvent> = createPNMessageResultList()
@@ -64,4 +67,17 @@ class ReceiveMessagesEffectTest : BaseEffectTest() {
         // then
         verify { remoteAction.silentCancel() }
     }
+}
+
+fun createPNMessageResultList(message: String = "Test"): List<PNEvent> {
+    val basePubSubResult =
+        BasePubSubResult(
+            "channel1",
+            "my.*",
+            16832048617009353L,
+            null,
+            "client-c2804687-7d25-4f0b-a442-e3820265b46c"
+        )
+    val pnMessageResult = PNMessageResult(basePubSubResult, JsonPrimitive(message))
+    return listOf(pnMessageResult)
 }

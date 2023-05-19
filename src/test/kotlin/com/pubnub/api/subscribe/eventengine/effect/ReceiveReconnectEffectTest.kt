@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test
 import java.time.Duration
 import java.util.concurrent.Executors
 
-class ReceiveReconnectEffectTest : BaseEffectTest() {
+class ReceiveReconnectEffectTest {
     private val subscriptionCursor = SubscriptionCursor(1337L, "1337")
     private val reason = PubNubException("Unknown error")
     private val attempts = 1
