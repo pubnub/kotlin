@@ -22,7 +22,7 @@ class ReceiveReconnectEffectTest : BaseEffectTest() {
     private val eventSink = TestEventSink()
     private val retryPolicy = LinearPolicy(fixedDelay = Duration.ofMillis(10))
     private val executorService = Executors.newSingleThreadScheduledExecutor()
-    private val messages: List<PNEvent> = createMessages()
+    private val messages: List<PNEvent> = createPNMessageResultList()
     private val receiveMessageResult = ReceiveMessagesResult(messages, subscriptionCursor)
 
     @Test

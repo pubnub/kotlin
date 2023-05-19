@@ -5,8 +5,8 @@ import com.pubnub.api.models.consumer.pubsub.BasePubSubResult
 import com.pubnub.api.models.consumer.pubsub.PNEvent
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 
-open class BaseEffectTest {
-    protected fun createMessages(): List<PNEvent> {
+abstract class BaseEffectTest {
+    protected fun createPNMessageResultList(message: String = "Test"): List<PNEvent> {
         val basePubSubResult =
             BasePubSubResult(
                 "channel1",
@@ -15,7 +15,7 @@ open class BaseEffectTest {
                 null,
                 "client-c2804687-7d25-4f0b-a442-e3820265b46c"
             )
-        val pnMessageResult = PNMessageResult(basePubSubResult, JsonPrimitive("Test"))
+        val pnMessageResult = PNMessageResult(basePubSubResult, JsonPrimitive(message))
         return listOf(pnMessageResult)
     }
 }

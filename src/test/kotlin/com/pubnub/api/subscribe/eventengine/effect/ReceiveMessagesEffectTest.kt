@@ -16,7 +16,7 @@ import java.time.Duration
 class ReceiveMessagesEffectTest : BaseEffectTest() {
     private val subscriptionCursor = SubscriptionCursor(1337L, "1337")
     private val eventSink = TestEventSink()
-    private val messages: List<PNEvent> = createMessages()
+    private val messages: List<PNEvent> = createPNMessageResultList()
     private val receiveMessageResult = ReceiveMessagesResult(messages, subscriptionCursor)
     private val reason = PubNubException("Test")
 
