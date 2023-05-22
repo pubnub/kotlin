@@ -1,9 +1,9 @@
 package com.pubnub.api.subscribe.eventengine.effect
 
 import com.pubnub.api.endpoints.remoteaction.RemoteAction
+import com.pubnub.api.eventengine.Effect
+import com.pubnub.api.eventengine.EffectFactory
 import com.pubnub.api.eventengine.EventSink
-import com.pubnub.api.eventengine.ManagedEffect
-import com.pubnub.api.eventengine.ManagedEffectFactory
 import com.pubnub.api.models.consumer.pubsub.PNEvent
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
 import java.util.concurrent.Executors
@@ -20,19 +20,28 @@ class SubscribeManagedEffectFactory(
     private val eventSink: EventSink,
     private val policy: RetryPolicy,
     private val executorService: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor(),
-) : ManagedEffectFactory<SubscribeEffectInvocation> {
-    override fun create(effectInvocation: SubscribeEffectInvocation): ManagedEffect? {
+    private val messagesConsumer: MessagesConsumer,
+) : EffectFactory<SubscribeEffectInvocation> {
+    override fun create(effectInvocation: SubscribeEffectInvocation): Effect? {
         return when (effectInvocation) {
-            is SubscribeEffectInvocation.EmitMessages -> null // todo
+            is SubscribeEffectInvocation.EmitMessages -> {
+                EmitMessagesEffect(messagesConsumer, effectInvocation.messages)
+            }
             is SubscribeEffectInvocation.EmitStatus -> null // todo
             is SubscribeEffectInvocation.Handshake -> {
                 val handshakeRemoteAction =
-                    handshakeProvider.getHandshakeRemoteAction(effectInvocation.channels, effectInvocation.channelGroups)
+                    handshakeProvider.getHandshakeRemoteAction(
+                        effectInvocation.channels,
+                        effectInvocation.channelGroups
+                    )
                 HandshakeEffect(handshakeRemoteAction, eventSink)
             }
             is SubscribeEffectInvocation.HandshakeReconnect -> {
                 val handshakeRemoteAction =
-                    handshakeProvider.getHandshakeRemoteAction(effectInvocation.channels, effectInvocation.channelGroups)
+                    handshakeProvider.getHandshakeRemoteAction(
+                        effectInvocation.channels,
+                        effectInvocation.channelGroups
+                    )
                 HandshakeReconnectEffect(
                     handshakeRemoteAction,
                     eventSink,

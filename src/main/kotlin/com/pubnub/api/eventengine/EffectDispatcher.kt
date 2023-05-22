@@ -3,13 +3,8 @@ package com.pubnub.api.eventengine
 import org.slf4j.LoggerFactory
 import java.util.concurrent.ConcurrentHashMap
 
-interface ManagedEffect {
-    fun runEffect()
-    fun cancel()
-}
-
 class EffectDispatcher<T : EffectInvocation>(
-    private val managedEffectFactory: ManagedEffectFactory<T>,
+    private val effectFactory: EffectFactory<T>,
     private val managedEffects: ConcurrentHashMap<String, ManagedEffect> = ConcurrentHashMap()
 ) {
 
@@ -24,12 +19,12 @@ class EffectDispatcher<T : EffectInvocation>(
 
             is Managed -> {
                 managedEffects.remove(effectInvocation.id)?.cancel()
-                val managedEffect = managedEffectFactory.create(effectInvocation) ?: return
+                val managedEffect = effectFactory.create(effectInvocation) as? ManagedEffect ?: return
                 managedEffects[effectInvocation.id] = managedEffect
                 managedEffect.runEffect()
             }
             is NonManaged -> {
-                managedEffectFactory.create(effectInvocation)?.runEffect()
+                effectFactory.create(effectInvocation)?.runEffect()
             }
         }
     }

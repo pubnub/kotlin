@@ -2,7 +2,9 @@ package com.pubnub.api.subscribe.eventengine.effect
 
 import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.remoteaction.RemoteAction
+import com.pubnub.api.eventengine.Effect
 import com.pubnub.api.eventengine.EventSink
+import com.pubnub.api.eventengine.ManagedEffect
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
 import io.mockk.every
 import io.mockk.mockk
@@ -17,6 +19,7 @@ class SubscribeManagedEffectFactoryTest {
 
     private val handshakeProvider = mockk<HandshakeProvider>()
     private val receiveMessageProvider = mockk<ReceiveMessagesProvider>()
+    private val messagesConsumer = mockk<MessagesConsumer>()
     private val eventSink = mockk<EventSink>()
     private val policy = mockk<RetryPolicy>()
     private val executorService = mockk<ScheduledExecutorService>()
@@ -26,8 +29,8 @@ class SubscribeManagedEffectFactoryTest {
     private val attempts = 1
     private val reason = PubNubException("Unknown error")
     private val subscriptionCursor = SubscriptionCursor(1337L, "1337")
-    private val remoteActionForHandshake: RemoteAction<SubscriptionCursor> = mockk()
-    private val remoteActionForReceiveMessages: RemoteAction<ReceiveMessagesResult> = mockk()
+    private val handshakeRemoteAction: RemoteAction<SubscriptionCursor> = mockk()
+    private val receiveMessagesRemoteAction: RemoteAction<ReceiveMessagesResult> = mockk()
 
     @BeforeEach
     fun setUp() {
@@ -36,8 +39,19 @@ class SubscribeManagedEffectFactoryTest {
             receiveMessageProvider,
             eventSink,
             policy,
-            executorService
+            executorService,
+            messagesConsumer
         )
+    }
+
+    @Test
+    fun `should return emitMessages effect when getting EmitMessages invocation`() {
+        // when
+        val effect = subscribeManagedEffectFactory.create(SubscribeEffectInvocation.EmitMessages(messages = listOf()))
+
+        // then
+        assertThat(effect, instanceOf(EmitMessagesEffect::class.java))
+        assertThat(effect, instanceOf(Effect::class.java))
     }
 
     @Test
@@ -49,13 +63,14 @@ class SubscribeManagedEffectFactoryTest {
                 effectInvocation.channels,
                 effectInvocation.channelGroups
             )
-        } returns remoteActionForHandshake
+        } returns handshakeRemoteAction
         // when
         val managedEffect =
-            subscribeManagedEffectFactory.create(effectInvocation)
+            subscribeManagedEffectFactory.create(SubscribeEffectInvocation.Handshake(channels, channelGroups))
 
         // then
         assertThat(managedEffect, instanceOf(HandshakeEffect::class.java))
+        assertThat(managedEffect, instanceOf(ManagedEffect::class.java))
     }
 
     @Test
@@ -72,14 +87,21 @@ class SubscribeManagedEffectFactoryTest {
                 effectInvocation.channels,
                 effectInvocation.channelGroups
             )
-        } returns remoteActionForHandshake
+        } returns handshakeRemoteAction
 
         // when
-
-        val managedEffect = subscribeManagedEffectFactory.create(effectInvocation)
+        val managedEffect = subscribeManagedEffectFactory.create(
+            SubscribeEffectInvocation.HandshakeReconnect(
+                channels,
+                channelGroups,
+                attempts,
+                reason
+            )
+        )
 
         // then
         assertThat(managedEffect, instanceOf(HandshakeReconnectEffect::class.java))
+        assertThat(managedEffect, instanceOf(ManagedEffect::class.java))
     }
 
     @Test
@@ -96,14 +118,20 @@ class SubscribeManagedEffectFactoryTest {
                 effectInvocation.channelGroups,
                 effectInvocation.subscriptionCursor
             )
-        } returns remoteActionForReceiveMessages
+        } returns receiveMessagesRemoteAction
 
         // when
-
-        val managedEffect = subscribeManagedEffectFactory.create(effectInvocation)
+        val managedEffect = subscribeManagedEffectFactory.create(
+            SubscribeEffectInvocation.ReceiveMessages(
+                channels,
+                channelGroups,
+                subscriptionCursor
+            )
+        )
 
         // then
         assertThat(managedEffect, instanceOf(ReceiveMessagesEffect::class.java))
+        assertThat(managedEffect, instanceOf(ManagedEffect::class.java))
     }
 
     @Test
@@ -120,7 +148,7 @@ class SubscribeManagedEffectFactoryTest {
                 effectInvocation.channelGroups,
                 effectInvocation.subscriptionCursor
             )
-        } returns remoteActionForReceiveMessages
+        } returns receiveMessagesRemoteAction
 
         // when
         val managedEffect = subscribeManagedEffectFactory.create(
@@ -135,6 +163,7 @@ class SubscribeManagedEffectFactoryTest {
 
         // then
         assertThat(managedEffect, instanceOf(ReceiveReconnectEffect::class.java))
+        assertThat(managedEffect, instanceOf(ManagedEffect::class.java))
     }
 
     @Test

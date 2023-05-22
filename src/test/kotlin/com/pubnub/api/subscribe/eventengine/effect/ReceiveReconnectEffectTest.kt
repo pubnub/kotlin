@@ -15,14 +15,14 @@ import org.junit.jupiter.api.Test
 import java.time.Duration
 import java.util.concurrent.Executors
 
-class ReceiveReconnectEffectTest : BaseEffectTest() {
+class ReceiveReconnectEffectTest {
     private val subscriptionCursor = SubscriptionCursor(1337L, "1337")
     private val reason = PubNubException("Unknown error")
     private val attempts = 1
     private val eventSink = TestEventSink()
     private val retryPolicy = LinearPolicy(fixedDelay = Duration.ofMillis(10))
     private val executorService = Executors.newSingleThreadScheduledExecutor()
-    private val messages: List<PNEvent> = createMessages()
+    private val messages: List<PNEvent> = createPNMessageResultList()
     private val receiveMessageResult = ReceiveMessagesResult(messages, subscriptionCursor)
 
     @Test
