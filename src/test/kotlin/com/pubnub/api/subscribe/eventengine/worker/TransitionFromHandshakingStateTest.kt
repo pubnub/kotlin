@@ -1,7 +1,9 @@
 package com.pubnub.api.subscribe.eventengine.worker
 
 import com.pubnub.api.PubNubException
+import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
+import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectInvocation.CancelHandshake
 import com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectInvocation.EmitStatus
 import com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectInvocation.Handshake
@@ -36,7 +38,15 @@ class TransitionFromHandshakingStateTest {
         assertEquals(
             listOf(
                 CancelHandshake,
-                EmitStatus(PNStatusCategory.PNConnectedCategory),
+                EmitStatus(
+                    PNStatus(
+                        category = PNStatusCategory.PNConnectedCategory,
+                        operation = PNOperationType.PNSubscribeOperation,
+                        error = false,
+                        affectedChannels = channels,
+                        affectedChannelGroups = channelGroups
+                    )
+                ),
                 ReceiveMessages(channels, channelGroups, subscriptionCursor)
             ),
             invocations

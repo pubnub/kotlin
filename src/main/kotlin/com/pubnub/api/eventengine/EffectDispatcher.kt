@@ -23,6 +23,7 @@ class EffectDispatcher<T : EffectInvocation>(
                 managedEffects[effectInvocation.id] = managedEffect
                 managedEffect.runEffect()
             }
+
             is NonManaged -> {
                 effectFactory.create(effectInvocation)?.runEffect()
             }

@@ -1,5 +1,8 @@
 package com.pubnub.api.eventengine
 
+import com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectInvocation
+import io.mockk.every
+import io.mockk.mockk
 import io.mockk.spyk
 import io.mockk.verify
 import org.hamcrest.MatcherAssert.assertThat
@@ -19,6 +22,7 @@ class EffectDispatcherTest {
 
     object ImmediateEndingTestEffect :
         TestEffectInvocation(Managed)
+
     object CancelTestEffect : TestEffectInvocation(Cancel(TestEffect::class.java.simpleName))
 
     class EffectHandlerFactoryImpl : EffectFactory<TestEffectInvocation> {
@@ -110,5 +114,28 @@ class EffectDispatcherTest {
         // then
         verify(exactly = 1) { managedEffect.cancel() }
         assertThat(managedEffects, hasKey(TestEffect.id))
+    }
+
+    @Test
+    fun `can handle NonManaged effect`() {
+        // given
+        val managedEffects = ConcurrentHashMap<String, ManagedEffect>()
+        val emitMessagesInvocation: SubscribeEffectInvocation.EmitMessages =
+            SubscribeEffectInvocation.EmitMessages(listOf())
+        val effectFactory: EffectFactory<SubscribeEffectInvocation> = mockk()
+        val effectDispatcher = EffectDispatcher(
+            effectFactory = effectFactory,
+            managedEffects = managedEffects
+        )
+        val effect: Effect = mockk()
+        every { effect.runEffect() } returns Unit
+        every { effectFactory.create(emitMessagesInvocation) } returns effect
+
+        // when
+        effectDispatcher.dispatch(emitMessagesInvocation)
+
+        // then
+        verify { effectFactory.create(emitMessagesInvocation) }
+        verify { effect.runEffect() }
     }
 }
