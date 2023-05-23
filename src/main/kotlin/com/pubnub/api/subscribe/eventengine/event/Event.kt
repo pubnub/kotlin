@@ -13,7 +13,7 @@ sealed class Event : CoreEvent {
     object Disconnect : Event()
     object Reconnect : Event()
 
-    data class HandshakeSuccess(val subscriptionCursor: SubscriptionCursor) : Event() // zamienić na SubscriptionCursor
+    data class HandshakeSuccess(val subscriptionCursor: SubscriptionCursor) : Event()
     data class SubscriptionRestored(
         val channels: List<String>,
         val channelGroups: List<String>,
@@ -22,11 +22,7 @@ sealed class Event : CoreEvent {
 
     data class HandshakeFailure(val reason: PubNubException) : Event()
     data class HandshakeReconnectGiveUp(val reason: PubNubException) : Event()
-    data class HandshakeReconnectSuccess(
-        val channels: List<String>,
-        val channelGroups: List<String>,
-        val subscriptionCursor: SubscriptionCursor
-    ) : Event()
+    data class HandshakeReconnectSuccess(val subscriptionCursor: SubscriptionCursor) : Event()
 
     data class HandshakeReconnectFailure(val reason: PubNubException) : Event()
     object HandshakeReconnectRetry : Event()

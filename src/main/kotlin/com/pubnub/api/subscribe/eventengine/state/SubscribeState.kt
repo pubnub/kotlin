@@ -112,14 +112,14 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, Event, SubscribeS
 
                 is Event.HandshakeReconnectSuccess -> {
                     transitionTo(
-                        state = Receiving(event.channels, event.channelGroups, event.subscriptionCursor),
+                        state = Receiving(channels, channelGroups, event.subscriptionCursor),
                         SubscribeEffectInvocation.EmitStatus(
                             PNStatus(
                                 category = PNStatusCategory.PNConnectedCategory,
                                 operation = PNOperationType.PNSubscribeOperation, // todo is PNSubscribeOperation correct operation
                                 error = false,
-                                affectedChannels = event.channels,
-                                affectedChannelGroups = event.channelGroups
+                                affectedChannels = channels,
+                                affectedChannelGroups = channelGroups
                             )
                         )
                     )

@@ -45,13 +45,7 @@ class HandshakeReconnectEffect(
                         )
                     )
                 } else {
-                    eventSink.add(
-                        Event.HandshakeReconnectSuccess(
-                            handshakeReconnectInvocation.channels,
-                            handshakeReconnectInvocation.channelGroups,
-                            result!!
-                        )
-                    )
+                    eventSink.add(Event.HandshakeReconnectSuccess(result!!))
                 }
             }
         }, delay.toMillis(), TimeUnit.MILLISECONDS)

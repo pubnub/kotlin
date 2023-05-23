@@ -46,7 +46,7 @@ class HandshakeReconnectEffectTest {
             .with()
             .pollInterval(Duration.ofMillis(20))
             .untilAsserted {
-                assertEquals(listOf(Event.HandshakeReconnectSuccess(channels, channelGroups, subscriptionCursor)), eventSink.events)
+                assertEquals(listOf(Event.HandshakeReconnectSuccess(subscriptionCursor)), eventSink.events)
             }
     }
 
