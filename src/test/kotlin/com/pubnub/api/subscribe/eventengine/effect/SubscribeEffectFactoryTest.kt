@@ -56,7 +56,6 @@ class SubscribeEffectFactoryTest {
 
         // then
         assertThat(effect, instanceOf(EmitMessagesEffect::class.java))
-        assertThat(effect, instanceOf(Effect::class.java))
     }
 
     @Test
@@ -77,7 +76,6 @@ class SubscribeEffectFactoryTest {
 
         // then
         assertThat(effect, instanceOf(EmitStatusEffect::class.java))
-        assertThat(effect, instanceOf(Effect::class.java))
     }
 
     @Test
