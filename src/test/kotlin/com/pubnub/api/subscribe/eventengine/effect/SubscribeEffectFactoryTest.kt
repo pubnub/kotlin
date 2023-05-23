@@ -4,7 +4,6 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.remoteaction.RemoteAction
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
-import com.pubnub.api.eventengine.Effect
 import com.pubnub.api.eventengine.EventSink
 import com.pubnub.api.eventengine.ManagedEffect
 import com.pubnub.api.models.consumer.PNStatus
