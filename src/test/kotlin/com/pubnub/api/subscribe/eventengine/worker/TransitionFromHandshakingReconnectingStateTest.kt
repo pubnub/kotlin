@@ -24,7 +24,8 @@ class TransitionFromHandshakingReconnectingStateTest {
     fun can_transit_from_HANDSHAKE_RECONNECTING_to_HANDSHAKE_RECONNECTING_when_there_is_HANDSHAKE_RECONNECT_FAILURE_event() {
         // when
         val (state, invocations) = transition(
-            SubscribeState.HandshakeReconnecting(channels, channelGroups, 0, reason), Event.HandshakeReconnectFailure(reason)
+            SubscribeState.HandshakeReconnecting(channels, channelGroups, 0, reason),
+            Event.HandshakeReconnectFailure(reason)
         )
 
         // then
@@ -39,7 +40,7 @@ class TransitionFromHandshakingReconnectingStateTest {
     }
 
     @Test
-    fun can_transit_from_HANDSHAKE_RECONNECTING_to_HANDSHAKE_RECONNECTING_when_there_is_SUBSCRIPTION_CHANGED_event() {
+    fun can_transit_from_HANDSHAKE_RECONNECTING_to_HANDSHAKING_when_there_is_SUBSCRIPTION_CHANGED_event() {
         // when
         val (state, invocations) = transition(
             SubscribeState.HandshakeReconnecting(channels, channelGroups, 0, reason),
@@ -47,12 +48,11 @@ class TransitionFromHandshakingReconnectingStateTest {
         )
 
         // then
-        assertEquals(SubscribeState.HandshakeReconnecting(channels, channelGroups, 0, reason), state)
-
+        assertEquals(SubscribeState.Handshaking(channels, channelGroups), state)
         assertEquals(
             listOf(
                 SubscribeEffectInvocation.CancelHandshakeReconnect,
-                SubscribeEffectInvocation.HandshakeReconnect(channels, channelGroups, 0, reason),
+                SubscribeEffectInvocation.Handshake(channels, channelGroups)
             ),
             invocations
         )
@@ -79,7 +79,8 @@ class TransitionFromHandshakingReconnectingStateTest {
     fun can_transit_from_HANDSHAKE_RECONNECTING_to_HANDSHAKE_FAILED_when_there_is_HANDSHAKE_RECONNECT_GIVEUP_event() {
         // when
         val (state, invocations) = transition(
-            SubscribeState.HandshakeReconnecting(channels, channelGroups, 0, reason), Event.HandshakeReconnectGiveUp(reason)
+            SubscribeState.HandshakeReconnecting(channels, channelGroups, 0, reason),
+            Event.HandshakeReconnectGiveUp(reason)
         )
 
         // then
