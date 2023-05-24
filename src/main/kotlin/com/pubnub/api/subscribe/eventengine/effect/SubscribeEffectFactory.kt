@@ -14,20 +14,23 @@ data class ReceiveMessagesResult(
     val subscriptionCursor: SubscriptionCursor
 )
 
-class SubscribeManagedEffectFactory(
+class SubscribeEffectFactory(
     private val handshakeProvider: HandshakeProvider,
     private val receiveMessagesProvider: ReceiveMessagesProvider,
     private val eventSink: EventSink,
     private val policy: RetryPolicy,
     private val executorService: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor(),
     private val messagesConsumer: MessagesConsumer,
+    private val statusConsumer: StatusConsumer,
 ) : EffectFactory<SubscribeEffectInvocation> {
     override fun create(effectInvocation: SubscribeEffectInvocation): Effect? {
         return when (effectInvocation) {
             is SubscribeEffectInvocation.EmitMessages -> {
                 EmitMessagesEffect(messagesConsumer, effectInvocation.messages)
             }
-            is SubscribeEffectInvocation.EmitStatus -> null // todo
+            is SubscribeEffectInvocation.EmitStatus -> {
+                EmitStatusEffect(statusConsumer, effectInvocation.status)
+            }
             is SubscribeEffectInvocation.Handshake -> {
                 val handshakeRemoteAction =
                     handshakeProvider.getHandshakeRemoteAction(

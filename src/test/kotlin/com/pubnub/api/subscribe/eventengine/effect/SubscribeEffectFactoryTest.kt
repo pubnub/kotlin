@@ -2,9 +2,11 @@ package com.pubnub.api.subscribe.eventengine.effect
 
 import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.remoteaction.RemoteAction
-import com.pubnub.api.eventengine.Effect
+import com.pubnub.api.enums.PNOperationType
+import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.eventengine.EventSink
 import com.pubnub.api.eventengine.ManagedEffect
+import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
 import io.mockk.every
 import io.mockk.mockk
@@ -15,7 +17,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.util.concurrent.ScheduledExecutorService
 
-class SubscribeManagedEffectFactoryTest {
+class SubscribeEffectFactoryTest {
 
     private val handshakeProvider = mockk<HandshakeProvider>()
     private val receiveMessageProvider = mockk<ReceiveMessagesProvider>()
@@ -25,33 +27,54 @@ class SubscribeManagedEffectFactoryTest {
     private val executorService = mockk<ScheduledExecutorService>()
     private val channels = listOf("channel1")
     private val channelGroups = listOf("channelGroup1")
-    private lateinit var subscribeManagedEffectFactory: SubscribeManagedEffectFactory
+    private lateinit var subscribeEffectFactory: SubscribeEffectFactory
     private val attempts = 1
     private val reason = PubNubException("Unknown error")
     private val subscriptionCursor = SubscriptionCursor(1337L, "1337")
     private val handshakeRemoteAction: RemoteAction<SubscriptionCursor> = mockk()
     private val receiveMessagesRemoteAction: RemoteAction<ReceiveMessagesResult> = mockk()
+    private val statusConsumer = mockk<StatusConsumer>()
 
     @BeforeEach
     fun setUp() {
-        subscribeManagedEffectFactory = SubscribeManagedEffectFactory(
+        subscribeEffectFactory = SubscribeEffectFactory(
             handshakeProvider,
             receiveMessageProvider,
             eventSink,
             policy,
             executorService,
-            messagesConsumer
+            messagesConsumer,
+            statusConsumer
         )
     }
 
     @Test
     fun `should return emitMessages effect when getting EmitMessages invocation`() {
         // when
-        val effect = subscribeManagedEffectFactory.create(SubscribeEffectInvocation.EmitMessages(messages = listOf()))
+        val effect = subscribeEffectFactory.create(SubscribeEffectInvocation.EmitMessages(messages = listOf()))
 
         // then
         assertThat(effect, instanceOf(EmitMessagesEffect::class.java))
-        assertThat(effect, instanceOf(Effect::class.java))
+    }
+
+    @Test
+    fun `should return emitStatus effect when getting EmitStatus invocation`() {
+        // when
+        val effect = subscribeEffectFactory.create(
+            SubscribeEffectInvocation.EmitStatus(
+                status =
+                PNStatus(
+                    category = PNStatusCategory.PNConnectedCategory,
+                    operation = PNOperationType.PNSubscribeOperation,
+                    error = false,
+                    affectedChannels = channels,
+                    affectedChannelGroups = channelGroups
+                )
+            )
+        )
+
+        // then
+        assertThat(effect, instanceOf(EmitStatusEffect::class.java))
     }
 
     @Test
@@ -66,7 +89,7 @@ class SubscribeManagedEffectFactoryTest {
         } returns handshakeRemoteAction
         // when
         val managedEffect =
-            subscribeManagedEffectFactory.create(SubscribeEffectInvocation.Handshake(channels, channelGroups))
+            subscribeEffectFactory.create(SubscribeEffectInvocation.Handshake(channels, channelGroups))
 
         // then
         assertThat(managedEffect, instanceOf(HandshakeEffect::class.java))
@@ -90,7 +113,7 @@ class SubscribeManagedEffectFactoryTest {
         } returns handshakeRemoteAction
 
         // when
-        val managedEffect = subscribeManagedEffectFactory.create(
+        val managedEffect = subscribeEffectFactory.create(
             SubscribeEffectInvocation.HandshakeReconnect(
                 channels,
                 channelGroups,
@@ -121,7 +144,7 @@ class SubscribeManagedEffectFactoryTest {
         } returns receiveMessagesRemoteAction
 
         // when
-        val managedEffect = subscribeManagedEffectFactory.create(
+        val managedEffect = subscribeEffectFactory.create(
             SubscribeEffectInvocation.ReceiveMessages(
                 channels,
                 channelGroups,
@@ -151,7 +174,7 @@ class SubscribeManagedEffectFactoryTest {
         } returns receiveMessagesRemoteAction
 
         // when
-        val managedEffect = subscribeManagedEffectFactory.create(
+        val managedEffect = subscribeEffectFactory.create(
             SubscribeEffectInvocation.ReceiveReconnect(
                 channels,
                 channelGroups,
@@ -169,7 +192,7 @@ class SubscribeManagedEffectFactoryTest {
     @Test
     fun `should return null when getting CancelHandshake invocation`() {
         // when
-        val managedEffect = subscribeManagedEffectFactory.create(SubscribeEffectInvocation.CancelHandshake)
+        val managedEffect = subscribeEffectFactory.create(SubscribeEffectInvocation.CancelHandshake)
 
         // then
         assertNull(managedEffect)
@@ -178,7 +201,7 @@ class SubscribeManagedEffectFactoryTest {
     @Test
     fun `should return null when getting CancelHandshakeReconnect invocation`() {
         // when
-        val managedEffect = subscribeManagedEffectFactory.create(SubscribeEffectInvocation.CancelHandshakeReconnect)
+        val managedEffect = subscribeEffectFactory.create(SubscribeEffectInvocation.CancelHandshakeReconnect)
 
         // then
         assertNull(managedEffect)
@@ -187,7 +210,7 @@ class SubscribeManagedEffectFactoryTest {
     @Test
     fun `should return null when getting CancelReceiveMessages invocation`() {
         // when
-        val managedEffect = subscribeManagedEffectFactory.create(SubscribeEffectInvocation.CancelReceiveMessages)
+        val managedEffect = subscribeEffectFactory.create(SubscribeEffectInvocation.CancelReceiveMessages)
 
         // then
         assertNull(managedEffect)
@@ -196,7 +219,7 @@ class SubscribeManagedEffectFactoryTest {
     @Test
     fun `should return null when getting CancelReceiveReconnect invocation`() {
         // when
-        val managedEffect = subscribeManagedEffectFactory.create(SubscribeEffectInvocation.CancelReceiveReconnect)
+        val managedEffect = subscribeEffectFactory.create(SubscribeEffectInvocation.CancelReceiveReconnect)
 
         // then
         assertNull(managedEffect)

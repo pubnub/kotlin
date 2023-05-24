@@ -3,7 +3,9 @@ package com.pubnub.api.subscribe.eventengine.worker
 import com.google.gson.JsonObject
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
+import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
+import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.BasePubSubResult
 import com.pubnub.api.models.consumer.pubsub.PNEvent
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
@@ -91,7 +93,15 @@ class TransitionFromReceivingReconnectingStateTest {
         assertEquals(
             listOf(
                 SubscribeEffectInvocation.CancelReceiveReconnect,
-                SubscribeEffectInvocation.EmitStatus(PNStatusCategory.PNDisconnectedCategory)
+                SubscribeEffectInvocation.EmitStatus(
+                    PNStatus(
+                        category = PNStatusCategory.PNDisconnectedCategory,
+                        operation = PNOperationType.PNSubscribeOperation,
+                        error = false,
+                        affectedChannels = channels,
+                        affectedChannelGroups = channelGroups
+                    )
+                )
             ),
             invocations
         )
@@ -115,7 +125,15 @@ class TransitionFromReceivingReconnectingStateTest {
             listOf(
                 SubscribeEffectInvocation.CancelReceiveReconnect,
                 SubscribeEffectInvocation.EmitMessages(messages),
-                SubscribeEffectInvocation.EmitStatus(PNStatusCategory.PNConnectedCategory),
+                SubscribeEffectInvocation.EmitStatus(
+                    PNStatus(
+                        category = PNStatusCategory.PNConnectedCategory,
+                        operation = PNOperationType.PNSubscribeOperation,
+                        error = false,
+                        affectedChannels = channels,
+                        affectedChannelGroups = channelGroups
+                    )
+                ),
                 SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor)
             ),
             invocations

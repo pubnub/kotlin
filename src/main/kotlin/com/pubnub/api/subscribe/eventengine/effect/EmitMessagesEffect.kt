@@ -10,8 +10,8 @@ import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResu
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
 
 class EmitMessagesEffect(
-    val messagesConsumer: MessagesConsumer,
-    val messages: List<PNEvent>
+    private val messagesConsumer: MessagesConsumer,
+    private val messages: List<PNEvent>
 ) : Effect {
     override fun runEffect() {
         for (message in messages) {

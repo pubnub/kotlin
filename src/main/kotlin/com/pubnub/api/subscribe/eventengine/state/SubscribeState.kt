@@ -1,10 +1,12 @@
 package com.pubnub.api.subscribe.eventengine.state
 
 import com.pubnub.api.PubNubException
+import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.eventengine.State
 import com.pubnub.api.eventengine.noTransition
 import com.pubnub.api.eventengine.transitionTo
+import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectInvocation
 import com.pubnub.api.subscribe.eventengine.event.Event
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
@@ -39,8 +41,16 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, Event, SubscribeS
             return when (event) {
                 is Event.HandshakeSuccess -> {
                     transitionTo(
-                        state = Receiving(this.channels, channelGroups, event.subscriptionCursor),
-                        SubscribeEffectInvocation.EmitStatus(PNStatusCategory.PNConnectedCategory)
+                        state = Receiving(channels, channelGroups, event.subscriptionCursor),
+                        SubscribeEffectInvocation.EmitStatus(
+                            PNStatus(
+                                category = PNStatusCategory.PNConnectedCategory,
+                                operation = PNOperationType.PNSubscribeOperation, // todo is PNSubscribeOperation correct operation
+                                error = false,
+                                affectedChannels = channels,
+                                affectedChannelGroups = channelGroups
+                            )
+                        )
                     )
                 }
 
@@ -102,8 +112,16 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, Event, SubscribeS
 
                 is Event.HandshakeReconnectSuccess -> {
                     transitionTo(
-                        state = Receiving(event.channels, event.channelGroups, event.subscriptionCursor),
-                        SubscribeEffectInvocation.EmitStatus(PNStatusCategory.PNConnectedCategory)
+                        state = Receiving(channels, channelGroups, event.subscriptionCursor),
+                        SubscribeEffectInvocation.EmitStatus(
+                            PNStatus(
+                                category = PNStatusCategory.PNConnectedCategory,
+                                operation = PNOperationType.PNSubscribeOperation, // todo is PNSubscribeOperation correct operation
+                                error = false,
+                                affectedChannels = channels,
+                                affectedChannelGroups = channelGroups
+                            )
+                        )
                     )
                 }
 
@@ -217,7 +235,15 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, Event, SubscribeS
                 is Event.ReceiveReconnectGiveUp -> {
                     transitionTo(
                         state = ReceiveFailed(channels, channelGroups, subscriptionCursor, event.reason),
-                        SubscribeEffectInvocation.EmitStatus(PNStatusCategory.PNDisconnectedCategory)
+                        SubscribeEffectInvocation.EmitStatus(
+                            PNStatus(
+                                category = PNStatusCategory.PNDisconnectedCategory,
+                                operation = PNOperationType.PNSubscribeOperation, // todo is PNSubscribeOperation correct operation
+                                error = false, // todo is PNDisconnectedCategory error
+                                affectedChannels = channels,
+                                affectedChannelGroups = channelGroups
+                            )
+                        )
                     )
                 }
 
@@ -225,7 +251,15 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, Event, SubscribeS
                     transitionTo(
                         state = Receiving(channels, channelGroups, event.subscriptionCursor),
                         SubscribeEffectInvocation.EmitMessages(event.messages),
-                        SubscribeEffectInvocation.EmitStatus(PNStatusCategory.PNConnectedCategory)
+                        SubscribeEffectInvocation.EmitStatus(
+                            PNStatus(
+                                category = PNStatusCategory.PNConnectedCategory,
+                                operation = PNOperationType.PNSubscribeOperation, // todo is PNSubscribeOperation correct operation
+                                error = false,
+                                affectedChannels = channels,
+                                affectedChannelGroups = channelGroups
+                            )
+                        )
                     )
                 }
 
@@ -269,7 +303,15 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, Event, SubscribeS
                 is Event.Disconnect -> {
                     transitionTo(
                         state = ReceiveStopped(channels, channelGroups, subscriptionCursor),
-                        SubscribeEffectInvocation.EmitStatus(PNStatusCategory.PNDisconnectedCategory)
+                        SubscribeEffectInvocation.EmitStatus(
+                            PNStatus(
+                                category = PNStatusCategory.PNDisconnectedCategory,
+                                operation = PNOperationType.PNSubscribeOperation, // todo is PNSubscribeOperation correct operation
+                                error = false, // todo is PNDisconnectedCategory error
+                                affectedChannels = channels,
+                                affectedChannelGroups = channelGroups
+                            )
+                        )
                     )
                 }
 
@@ -285,7 +327,15 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, Event, SubscribeS
                     transitionTo(
                         state = Receiving(channels, channelGroups, event.subscriptionCursor),
                         SubscribeEffectInvocation.EmitMessages(event.messages),
-                        SubscribeEffectInvocation.EmitStatus(PNStatusCategory.PNConnectedCategory)
+                        SubscribeEffectInvocation.EmitStatus(
+                            PNStatus(
+                                category = PNStatusCategory.PNConnectedCategory,
+                                operation = PNOperationType.PNSubscribeOperation, // todo is PNSubscribeOperation correct operation
+                                error = false,
+                                affectedChannels = channels,
+                                affectedChannelGroups = channelGroups
+                            )
+                        )
                     )
                 }
 

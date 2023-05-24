@@ -1,7 +1,6 @@
 package com.pubnub.api.subscribe.eventengine.effect
 
 import com.google.gson.JsonPrimitive
-import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.files.PNDownloadableFile
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 import com.pubnub.api.models.consumer.pubsub.BasePubSubResult
@@ -218,9 +217,6 @@ class CreateMessagesConsumerImpl : MessagesConsumer {
     val pnMessageActionResultList = mutableListOf<PNMessageActionResult>()
     val pnObjectEventResultList = mutableListOf<PNObjectEventResult>()
     val pnFileEventResultList = mutableListOf<PNFileEventResult>()
-
-    override fun announce(status: PNStatus) { // toDo move to EmitStatus
-    }
 
     override fun announce(message: PNMessageResult) {
         pnMessageResultList.add(message)

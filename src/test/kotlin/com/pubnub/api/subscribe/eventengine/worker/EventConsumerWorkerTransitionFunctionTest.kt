@@ -1,6 +1,8 @@
 package com.pubnub.api.subscribe.eventengine.worker
 
+import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
+import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNEvent
 import com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectInvocation
 import com.pubnub.api.subscribe.eventengine.event.Event
@@ -41,11 +43,27 @@ class EventConsumerWorkerTransitionFunctionTest {
             contains(
                 SubscribeEffectInvocation.Handshake(channels, channelGroups),
                 SubscribeEffectInvocation.CancelHandshake,
-                SubscribeEffectInvocation.EmitStatus(PNStatusCategory.PNConnectedCategory),
+                SubscribeEffectInvocation.EmitStatus(
+                    PNStatus(
+                        category = PNStatusCategory.PNConnectedCategory,
+                        operation = PNOperationType.PNSubscribeOperation,
+                        error = false,
+                        affectedChannels = channels,
+                        affectedChannelGroups = channelGroups
+                    )
+                ),
                 SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor),
                 SubscribeEffectInvocation.CancelReceiveMessages,
                 SubscribeEffectInvocation.EmitMessages(listOf()), // toDO brakuje listy Messagy
-                SubscribeEffectInvocation.EmitStatus(PNStatusCategory.PNConnectedCategory),
+                SubscribeEffectInvocation.EmitStatus(
+                    PNStatus(
+                        category = PNStatusCategory.PNConnectedCategory,
+                        operation = PNOperationType.PNSubscribeOperation,
+                        error = false,
+                        affectedChannels = channels,
+                        affectedChannelGroups = channelGroups
+                    )
+                ),
                 SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor)
             )
         )

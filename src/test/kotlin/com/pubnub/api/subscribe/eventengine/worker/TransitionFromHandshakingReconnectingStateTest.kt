@@ -1,7 +1,9 @@
 package com.pubnub.api.subscribe.eventengine.worker
 
 import com.pubnub.api.PubNubException
+import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
+import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectInvocation
 import com.pubnub.api.subscribe.eventengine.event.Event
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
@@ -95,7 +97,7 @@ class TransitionFromHandshakingReconnectingStateTest {
         // when
         val (state, invocations) = transition(
             SubscribeState.HandshakeReconnecting(channels, channelGroups, 0, reason),
-            Event.HandshakeReconnectSuccess(channels, channelGroups, subscriptionCursor)
+            Event.HandshakeReconnectSuccess(subscriptionCursor)
         )
 
         // then
@@ -103,7 +105,15 @@ class TransitionFromHandshakingReconnectingStateTest {
         assertEquals(
             listOf(
                 SubscribeEffectInvocation.CancelHandshakeReconnect,
-                SubscribeEffectInvocation.EmitStatus(PNStatusCategory.PNConnectedCategory),
+                SubscribeEffectInvocation.EmitStatus(
+                    PNStatus(
+                        category = PNStatusCategory.PNConnectedCategory,
+                        operation = PNOperationType.PNSubscribeOperation,
+                        error = false,
+                        affectedChannels = channels,
+                        affectedChannelGroups = channelGroups
+                    )
+                ),
                 SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor)
             ),
             invocations
