@@ -44,7 +44,7 @@ class TransitionFromReceivingReconnectingStateTest {
     }
 
     @Test
-    fun can_transit_from_RECEIVE_RECONNECTING_to_RECEIVE_RECONNECTING_when_there_is_SUBSCRIPTION_CHANGED_Event() {
+    fun can_transit_from_RECEIVE_RECONNECTING_to_RECEIVING_when_there_is_SUBSCRIPTION_CHANGED_Event() {
         // when
         val (state, invocations) = transition(
             SubscribeState.ReceiveReconnecting(channels, channelGroups, subscriptionCursor, 0, reason),
@@ -52,11 +52,11 @@ class TransitionFromReceivingReconnectingStateTest {
         )
 
         // then
-        assertEquals(SubscribeState.ReceiveReconnecting(channels, channelGroups, subscriptionCursor, 0, reason), state)
+        assertEquals(SubscribeState.Receiving(channels, channelGroups, subscriptionCursor), state)
         assertEquals(
             listOf(
                 SubscribeEffectInvocation.CancelReceiveReconnect,
-                SubscribeEffectInvocation.ReceiveReconnect(channels, channelGroups, subscriptionCursor, 0, reason),
+                SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor),
             ),
             invocations
         )
@@ -141,7 +141,7 @@ class TransitionFromReceivingReconnectingStateTest {
     }
 
     @Test
-    fun can_transit_from_RECEIVE_RECONNECTING_to_RECEIVE_RECONNECTING_when_there_is_SUBSCRIPTION_RESTORED_Event() {
+    fun can_transit_from_RECEIVE_RECONNECTING_to_RECEIVING_when_there_is_SUBSCRIPTION_RESTORED_Event() {
         // when
         val (state, invocations) = transition(
             SubscribeState.ReceiveReconnecting(channels, channelGroups, subscriptionCursor, 0, reason),
@@ -149,11 +149,11 @@ class TransitionFromReceivingReconnectingStateTest {
         )
 
         // then
-        assertEquals(SubscribeState.ReceiveReconnecting(channels, channelGroups, subscriptionCursor, 0, reason), state)
+        assertEquals(SubscribeState.Receiving(channels, channelGroups, subscriptionCursor), state)
         assertEquals(
             listOf(
                 SubscribeEffectInvocation.CancelReceiveReconnect,
-                SubscribeEffectInvocation.ReceiveReconnect(channels, channelGroups, subscriptionCursor, 0, reason),
+                SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor),
             ),
             invocations
         )

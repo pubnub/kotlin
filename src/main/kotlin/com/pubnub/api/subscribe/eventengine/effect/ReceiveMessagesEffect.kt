@@ -20,12 +20,7 @@ class ReceiveMessagesEffect(
                     )
                 )
             } else {
-                eventSink.add(
-                    Event.ReceiveSuccess(
-                        result!!.messages,
-                        result.subscriptionCursor
-                    )
-                )
+                eventSink.add(Event.ReceiveSuccess(result!!.messages, result.subscriptionCursor))
             }
         }
     }

@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test
 
 class TransitionFromReceiveStoppedStateTest {
     @Test
-    fun can_transit_from_RECEIVE_STOPPED_to_RECEIVE_RECONNECTING_when_there_is_RECONNECT_Event() {
+    fun can_transit_from_RECEIVE_STOPPED_to_RECEIVING_when_there_is_RECONNECT_Event() {
         // given
         val channels = listOf("Channel1")
         val channelGroups = listOf("ChannelGroup1")
@@ -26,12 +26,12 @@ class TransitionFromReceiveStoppedStateTest {
 
         // then
         assertEquals(
-            SubscribeState.ReceiveReconnecting(channels, channelGroups, subscriptionCursor, 0, null),
+            SubscribeState.Receiving(channels, channelGroups, subscriptionCursor),
             state
         )
         assertEquals(
             listOf(
-                SubscribeEffectInvocation.ReceiveReconnect(channels, channelGroups, subscriptionCursor, 0, null)
+                SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor)
             ),
             invocations
         )
