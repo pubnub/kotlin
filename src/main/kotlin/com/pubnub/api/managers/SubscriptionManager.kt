@@ -25,7 +25,11 @@ import java.util.Timer
 import java.util.concurrent.LinkedBlockingQueue
 import kotlin.concurrent.timerTask
 
-class SubscriptionManager(val pubnub: PubNub, private val subscriptionState: StateManager = StateManager()) {
+class SubscriptionManager(
+    val pubnub: PubNub,
+    private val subscriptionState: StateManager = StateManager(),
+    internal val listenerManager: ListenerManager = ListenerManager(pubnub)
+) {
 
     private companion object {
         private const val HEARTBEAT_INTERVAL_MULTIPLIER = 1000L
@@ -43,7 +47,6 @@ class SubscriptionManager(val pubnub: PubNub, private val subscriptionState: Sta
      */
     private var heartbeatTimer: Timer? = null
 
-    internal val listenerManager = ListenerManager(pubnub)
     private val reconnectionManager = ReconnectionManager(pubnub)
 
     private var consumerThread: Thread? = null
@@ -86,10 +89,7 @@ class SubscriptionManager(val pubnub: PubNub, private val subscriptionState: Sta
         if (pubnub.configuration.startSubscriberThread) {
             consumerThread = Thread(
                 SubscribeMessageWorker(
-                    pubnub,
-                    listenerManager,
-                    messageQueue,
-                    duplicationManager
+                    pubnub, listenerManager, messageQueue, duplicationManager
                 )
             )
             consumerThread?.name = "Subscription Manager Consumer Thread"
@@ -143,8 +143,7 @@ class SubscriptionManager(val pubnub: PubNub, private val subscriptionState: Sta
             timerTask {
                 performHeartbeatLoop()
             },
-            0,
-            pubnub.configuration.heartbeatInterval * HEARTBEAT_INTERVAL_MULTIPLIER
+            0, pubnub.configuration.heartbeatInterval * HEARTBEAT_INTERVAL_MULTIPLIER
         )
     }
 
@@ -155,11 +154,7 @@ class SubscriptionManager(val pubnub: PubNub, private val subscriptionState: Sta
         val subscriptionStateData = subscriptionState.subscriptionStateData(false)
 
         // do not start the loop if we do not have any presence channels or channel groups enabled.
-        if (subscriptionStateData.channels.isEmpty() &&
-            subscriptionStateData.channelGroups.isEmpty() &&
-            subscriptionStateData.heartbeatChannels.isEmpty() &&
-            subscriptionStateData.heartbeatChannelGroups.isEmpty()
-        ) {
+        if (subscriptionStateData.channels.isEmpty() && subscriptionStateData.channelGroups.isEmpty() && subscriptionStateData.heartbeatChannels.isEmpty() && subscriptionStateData.heartbeatChannelGroups.isEmpty()) {
             return
         }
         val channels = subscriptionStateData.channels + subscriptionStateData.heartbeatChannels
@@ -169,9 +164,7 @@ class SubscriptionManager(val pubnub: PubNub, private val subscriptionState: Sta
             val heartbeatVerbosity = pubnub.configuration.heartbeatNotificationOptions
 
             if (status.error) {
-                if (heartbeatVerbosity == PNHeartbeatNotificationOptions.ALL ||
-                    heartbeatVerbosity == PNHeartbeatNotificationOptions.FAILURES
-                ) {
+                if (heartbeatVerbosity == PNHeartbeatNotificationOptions.ALL || heartbeatVerbosity == PNHeartbeatNotificationOptions.FAILURES) {
                     listenerManager.announce(status)
                 }
                 // stop the heartbeating logic since an error happened.
@@ -257,8 +250,7 @@ class SubscriptionManager(val pubnub: PubNub, private val subscriptionState: Sta
 
             startSubscribeLoop(
                 TimetokenRegionOperation(
-                    timetoken = result.metadata.timetoken,
-                    region = result.metadata.region
+                    timetoken = result.metadata.timetoken, region = result.metadata.region
                 ),
                 announcedOperation ?: NoOpOperation
             )
@@ -303,8 +295,7 @@ class SubscriptionManager(val pubnub: PubNub, private val subscriptionState: Sta
         subscriptionState.subscriptionStateData(false).let {
             adaptUnsubscribeBuilder(
                 UnsubscribeOperation(
-                    channels = it.channels,
-                    channelGroups = it.channelGroups
+                    channels = it.channels, channelGroups = it.channelGroups
                 )
             )
         }

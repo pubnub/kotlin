@@ -42,6 +42,8 @@ class Subscribe internal constructor(pubnub: PubNub) : Endpoint<SubscribeEnvelop
 
         timetoken?.let {
             queryParams["tt"] = it.toString()
+        } ?: run {
+            queryParams["tt"] = "0"
         }
 
         region?.let {
