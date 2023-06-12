@@ -1,11 +1,13 @@
 package com.pubnub.api.subscribe.eventengine.worker
 
+import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
+import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNEvent
-import com.pubnub.api.subscribe.eventengine.effect.EffectInvocation
+import com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectInvocation
 import com.pubnub.api.subscribe.eventengine.event.Event
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
-import com.pubnub.api.subscribe.eventengine.state.State
+import com.pubnub.api.subscribe.eventengine.state.SubscribeState
 import com.pubnub.api.subscribe.eventengine.transition.transition
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.contains
@@ -26,7 +28,7 @@ class EventConsumerWorkerTransitionFunctionTest {
         val messages = listOf<PNEvent>()
 
         // when
-        val (handshaking, effectInvocationsForSubscriptionChange) = transition(State.Unsubscribed, subscriptionChangeEvent)
+        val (handshaking, effectInvocationsForSubscriptionChange) = transition(SubscribeState.Unsubscribed, subscriptionChangeEvent)
         val (receiving01, effectInvocationsForHandshakingSuccess) = transition(
             handshaking, Event.HandshakeSuccess(subscriptionCursor)
         )
@@ -39,14 +41,30 @@ class EventConsumerWorkerTransitionFunctionTest {
         assertThat(
             effectInvocationsForSubscriptionChange + effectInvocationsForHandshakingSuccess + effectInvocationsForReceivingSuccess,
             contains(
-                EffectInvocation.Handshake(channels, channelGroups),
-                EffectInvocation.CancelHandshake,
-                EffectInvocation.EmitStatus(PNStatusCategory.PNConnectedCategory),
-                EffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor),
-                EffectInvocation.CancelReceiveMessages,
-                EffectInvocation.EmitMessages(listOf()), // toDO brakuje listy Messagy
-                EffectInvocation.EmitStatus(PNStatusCategory.PNConnectedCategory),
-                EffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor)
+                SubscribeEffectInvocation.Handshake(channels, channelGroups),
+                SubscribeEffectInvocation.CancelHandshake,
+                SubscribeEffectInvocation.EmitStatus(
+                    PNStatus(
+                        category = PNStatusCategory.PNConnectedCategory,
+                        operation = PNOperationType.PNSubscribeOperation,
+                        error = false,
+                        affectedChannels = channels,
+                        affectedChannelGroups = channelGroups
+                    )
+                ),
+                SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor),
+                SubscribeEffectInvocation.CancelReceiveMessages,
+                SubscribeEffectInvocation.EmitMessages(listOf()), // toDO brakuje listy Messagy
+                SubscribeEffectInvocation.EmitStatus(
+                    PNStatus(
+                        category = PNStatusCategory.PNConnectedCategory,
+                        operation = PNOperationType.PNSubscribeOperation,
+                        error = false,
+                        affectedChannels = channels,
+                        affectedChannelGroups = channelGroups
+                    )
+                ),
+                SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor)
             )
         )
     }
