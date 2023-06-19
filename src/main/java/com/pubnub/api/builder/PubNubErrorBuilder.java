@@ -366,6 +366,16 @@ public final class PubNubErrorBuilder {
      */
     public static final int PNERR_SPACEID_NULL_OR_EMPTY = 171;
 
+    /**
+     * State must be a JSON object.
+     */
+    public static final int PNERR_STATE_MUST_BE_JSON_OBJECT = 172;
+
+    /**
+     * UserId can't be different from UserId in configuration when flag withHeartbeat is set to true.
+     */
+    public static final int PNERR_USERID_CAN_NOT_BE_DIFFERENT = 173;
+
     // Error Objects
     public static final PubNubError PNERROBJ_TIMEOUT = PubNubError.builder()
             .errorCode(PNERR_TIMEOUT)
@@ -549,6 +559,11 @@ public final class PubNubErrorBuilder {
             .message("State Missing.")
             .build();
 
+    public static final PubNubError PNERROBJ_STATE_MUST_BE_JSON_OBJECT = PubNubError.builder()
+            .errorCode(PNERR_STATE_MUST_BE_JSON_OBJECT)
+            .message("State must be a JSON object.")
+            .build();
+
     public static final PubNubError PNERROBJ_MESSAGE_MISSING = PubNubError.builder()
             .errorCode(PNERR_MESSAGE_MISSING)
             .message("Message Missing.")
@@ -728,6 +743,11 @@ public final class PubNubErrorBuilder {
     public static final PubNubError PNERROBJ_SPACEID_NULL_OR_EMPTY = PubNubError.builder()
             .errorCode(PNERR_SPACEID_NULL_OR_EMPTY)
             .message("SpaceId can't be null nor empty.")
+            .build();
+
+    public static final PubNubError PNERROBJ_USERID_CAN_NOT_BE_DIFFERENT_FROM_IN_CONFIGURATION_WHEN_WITHHEARTBEAT_TRUE = PubNubError.builder()
+            .errorCode(PNERR_USERID_CAN_NOT_BE_DIFFERENT)
+            .message("UserId can't be different from UserId in configuration when flag withHeartbeat is set to true.")
             .build();
 
     private PubNubErrorBuilder() {
