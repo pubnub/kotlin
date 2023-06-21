@@ -10,9 +10,11 @@ import com.pubnub.api.models.consumer.pubsub.PNSignalResult
 import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
+import com.pubnub.api.subscribe.eventengine.effect.MessagesConsumer
+import com.pubnub.api.subscribe.eventengine.effect.StatusConsumer
 import java.util.ArrayList
 
-internal class ListenerManager(val pubnub: PubNub) {
+class ListenerManager(val pubnub: PubNub) : MessagesConsumer, StatusConsumer {
     private val listeners = mutableListOf<SubscribeCallback>()
 
     fun addListener(listener: SubscribeCallback) {
@@ -35,31 +37,31 @@ internal class ListenerManager(val pubnub: PubNub) {
         return tempCallbackList
     }
 
-    fun announce(status: PNStatus) {
+    override fun announce(status: PNStatus) {
         getListeners().forEach { it.status(pubnub, status) }
     }
 
-    fun announce(message: PNMessageResult) {
+    override fun announce(message: PNMessageResult) {
         getListeners().forEach { it.message(pubnub, message) }
     }
 
-    fun announce(presence: PNPresenceEventResult) {
+    override fun announce(presence: PNPresenceEventResult) {
         getListeners().forEach { it.presence(pubnub, presence) }
     }
 
-    fun announce(signal: PNSignalResult) {
+    override fun announce(signal: PNSignalResult) {
         getListeners().forEach { it.signal(pubnub, signal) }
     }
 
-    fun announce(messageAction: PNMessageActionResult) {
+    override fun announce(messageAction: PNMessageActionResult) {
         getListeners().forEach { it.messageAction(pubnub, messageAction) }
     }
 
-    fun announce(pnObjectEventResult: PNObjectEventResult) {
+    override fun announce(pnObjectEventResult: PNObjectEventResult) {
         getListeners().forEach { it.objects(pubnub, pnObjectEventResult) }
     }
 
-    fun announce(pnFileEventResult: PNFileEventResult) {
+    override fun announce(pnFileEventResult: PNFileEventResult) {
         getListeners().forEach { it.file(pubnub, pnFileEventResult) }
     }
 }

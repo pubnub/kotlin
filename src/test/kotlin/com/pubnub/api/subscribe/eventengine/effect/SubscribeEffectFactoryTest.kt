@@ -7,6 +7,8 @@ import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.eventengine.EventSink
 import com.pubnub.api.eventengine.ManagedEffect
 import com.pubnub.api.models.consumer.PNStatus
+import com.pubnub.api.subscribe.eventengine.effect.effectprovider.HandshakeProvider
+import com.pubnub.api.subscribe.eventengine.effect.effectprovider.ReceiveMessagesProvider
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
 import io.mockk.every
 import io.mockk.mockk

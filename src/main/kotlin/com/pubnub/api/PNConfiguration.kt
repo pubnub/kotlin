@@ -23,7 +23,7 @@ import javax.net.ssl.X509ExtendedTrustManager
  */
 open class PNConfiguration(
     userId: UserId,
-    val enableSubscribeBeta: Boolean = false
+    var enableSubscribeBeta: Boolean = false
 ) {
 
     @Deprecated(

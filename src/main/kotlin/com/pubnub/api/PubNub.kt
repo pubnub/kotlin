@@ -54,7 +54,9 @@ import com.pubnub.api.endpoints.push.RemoveChannelsFromPush
 import com.pubnub.api.enums.PNPushEnvironment
 import com.pubnub.api.enums.PNPushType
 import com.pubnub.api.enums.PNReconnectionPolicy
+import com.pubnub.api.eventengine.EventEngineConf
 import com.pubnub.api.managers.BasePathManager
+import com.pubnub.api.managers.ListenerManager
 import com.pubnub.api.managers.MapperManager
 import com.pubnub.api.managers.PublishSequenceManager
 import com.pubnub.api.managers.RetrofitManager
@@ -83,6 +85,7 @@ import com.pubnub.api.models.consumer.objects.membership.ChannelMembershipInput
 import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
 import com.pubnub.api.presence.Presence
 import com.pubnub.api.subscribe.Subscribe
+import com.pubnub.api.subscribe.eventengine.configuration.EventEngineConfImpl
 import com.pubnub.api.vendor.Base64
 import com.pubnub.api.vendor.Crypto
 import com.pubnub.api.vendor.FileEncryptionUtil.decrypt
@@ -92,6 +95,11 @@ import java.util.Date
 import java.util.UUID
 
 class PubNub(val configuration: PNConfiguration) {
+
+    internal constructor(configuration: PNConfiguration, eventEngineConf: EventEngineConf) : this(configuration) {
+        this.eventEngineConf = eventEngineConf
+        this.subscribe = Subscribe(this, listenerManager, eventEngineConf = eventEngineConf)
+    }
 
     companion object {
         private const val TIMESTAMP_DIVIDER = 1000
@@ -115,9 +123,12 @@ class PubNub(val configuration: PNConfiguration) {
     internal val retrofitManager = RetrofitManager(this)
     internal val publishSequenceManager = PublishSequenceManager(MAX_SEQUENCE)
     internal val telemetryManager = TelemetryManager()
-    internal val subscriptionManager = SubscriptionManager(this)
     internal val tokenManager: TokenManager = TokenManager()
     private val tokenParser: TokenParser = TokenParser()
+    private val listenerManager = ListenerManager(this)
+    internal val subscriptionManager = SubscriptionManager(this, listenerManager)
+    private var eventEngineConf: EventEngineConf = EventEngineConfImpl()
+    private var subscribe = Subscribe(this, listenerManager, eventEngineConf)
 
     //endregion
 
@@ -291,7 +302,7 @@ class PubNub(val configuration: PNConfiguration) {
         withPresence: Boolean = false,
         withTimetoken: Long = 0L
     ) = if (configuration.enableSubscribeBeta)
-        Subscribe.subscribe(channels, channelGroups, withPresence, withTimetoken)
+        subscribe.subscribe(channels, channelGroups, withPresence, withTimetoken)
     else
         PubSub.subscribe(subscriptionManager, channels, channelGroups, withPresence, withTimetoken)
 
@@ -316,7 +327,7 @@ class PubNub(val configuration: PNConfiguration) {
         channels: List<String> = emptyList(),
         channelGroups: List<String> = emptyList()
     ) = if (configuration.enableSubscribeBeta)
-        Subscribe.unsubscribe(channels, channelGroups)
+        subscribe.unsubscribe(channels, channelGroups)
     else
         PubSub.unsubscribe(subscriptionManager, channels, channelGroups)
 
@@ -325,7 +336,7 @@ class PubNub(val configuration: PNConfiguration) {
      */
     fun unsubscribeAll() =
         if (configuration.enableSubscribeBeta)
-            Subscribe.unsubscribeAll()
+            subscribe.unsubscribeAll()
         else
             subscriptionManager.unsubscribeAll()
 
@@ -336,7 +347,7 @@ class PubNub(val configuration: PNConfiguration) {
      */
     fun getSubscribedChannels() =
         if (configuration.enableSubscribeBeta)
-            Subscribe.getSubscribedChannels()
+            subscribe.getSubscribedChannels()
         else
             subscriptionManager.getSubscribedChannels()
 
@@ -347,7 +358,7 @@ class PubNub(val configuration: PNConfiguration) {
      */
     fun getSubscribedChannelGroups() =
         if (configuration.enableSubscribeBeta)
-            Subscribe.getSubscribedChannelGroups()
+            subscribe.getSubscribedChannelGroups()
         else
             subscriptionManager.getSubscribedChannelGroups()
     //endregion
@@ -1894,7 +1905,7 @@ class PubNub(val configuration: PNConfiguration) {
      * @param listener The listener to be added.
      */
     fun addListener(listener: SubscribeCallback) {
-        subscriptionManager.addListener(listener)
+        listenerManager.addListener(listener)
     }
 
     /**
@@ -1903,7 +1914,7 @@ class PubNub(val configuration: PNConfiguration) {
      * @param listener The listener to be removed.
      */
     fun removeListener(listener: Listener) {
-        subscriptionManager.removeListener(listener)
+        listenerManager.removeListener(listener)
     }
 
     //region Encryption

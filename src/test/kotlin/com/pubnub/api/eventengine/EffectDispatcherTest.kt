@@ -1,5 +1,6 @@
 package com.pubnub.api.eventengine
 
+import com.pubnub.api.subscribe.eventengine.effect.EffectSourceImpl
 import com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectInvocation
 import io.mockk.every
 import io.mockk.mockk
@@ -10,6 +11,7 @@ import org.hamcrest.Matchers.hasKey
 import org.hamcrest.Matchers.not
 import org.junit.jupiter.api.Test
 import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.LinkedBlockingQueue
 
 class EffectDispatcherTest {
 
@@ -49,9 +51,11 @@ class EffectDispatcherTest {
     fun managedEffectIsNotEvictedTillCancelled() {
         // given
         val managedEffects = ConcurrentHashMap<String, ManagedEffect>()
+        val queue = LinkedBlockingQueue<TestEffectInvocation>()
         val effectDispatcher = EffectDispatcher(
             effectFactory = EffectHandlerFactoryImpl(),
-            managedEffects = managedEffects
+            managedEffects = managedEffects,
+            effectSource = EffectSourceImpl(queue)
         )
 
         // when
@@ -65,9 +69,11 @@ class EffectDispatcherTest {
     fun managedEffectIsEvictedAfterCancel() {
         // given
         val managedEffects = ConcurrentHashMap<String, ManagedEffect>()
+        val queue = LinkedBlockingQueue<TestEffectInvocation>()
         val effectDispatcher = EffectDispatcher(
             effectFactory = EffectHandlerFactoryImpl(),
-            managedEffects = managedEffects
+            managedEffects = managedEffects,
+            effectSource = EffectSourceImpl(queue)
         )
 
         // when
@@ -82,9 +88,11 @@ class EffectDispatcherTest {
     fun canCancelEvictedEffect() {
         // given
         val managedEffects = ConcurrentHashMap<String, ManagedEffect>()
+        val queue = LinkedBlockingQueue<TestEffectInvocation>()
         val effectDispatcher = EffectDispatcher(
             effectFactory = EffectHandlerFactoryImpl(),
-            managedEffects = managedEffects
+            managedEffects = managedEffects,
+            effectSource = EffectSourceImpl(queue)
         )
 
         // when
@@ -100,12 +108,14 @@ class EffectDispatcherTest {
     fun puttingEffectWithSameIdCancelsTheFirstOne() {
         // given
         val managedEffects = ConcurrentHashMap<String, ManagedEffect>()
+        val queue = LinkedBlockingQueue<TestEffectInvocation>()
         val effectHandlerFactory = EffectHandlerFactoryImpl()
         val managedEffect = spyk(effectHandlerFactory.create(TestEffect))
         managedEffects[TestEffect.id] = managedEffect
         val effectDispatcher = EffectDispatcher(
             effectFactory = effectHandlerFactory,
-            managedEffects = managedEffects
+            managedEffects = managedEffects,
+            effectSource = EffectSourceImpl(queue)
         )
 
         // when
@@ -120,12 +130,14 @@ class EffectDispatcherTest {
     fun `can handle NonManaged effect`() {
         // given
         val managedEffects = ConcurrentHashMap<String, ManagedEffect>()
+        val queue = LinkedBlockingQueue<SubscribeEffectInvocation>()
         val emitMessagesInvocation: SubscribeEffectInvocation.EmitMessages =
             SubscribeEffectInvocation.EmitMessages(listOf())
         val effectFactory: EffectFactory<SubscribeEffectInvocation> = mockk()
         val effectDispatcher = EffectDispatcher(
             effectFactory = effectFactory,
-            managedEffects = managedEffects
+            managedEffects = managedEffects,
+            effectSource = EffectSourceImpl(queue)
         )
         val effect: Effect = mockk()
         every { effect.runEffect() } returns Unit
