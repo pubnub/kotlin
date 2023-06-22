@@ -94,12 +94,9 @@ import java.io.InputStream
 import java.util.Date
 import java.util.UUID
 
-class PubNub(val configuration: PNConfiguration) {
+class PubNub internal constructor(val configuration: PNConfiguration, eventEngineConf: EventEngineConf) {
 
-    internal constructor(configuration: PNConfiguration, eventEngineConf: EventEngineConf) : this(configuration) {
-        this.eventEngineConf = eventEngineConf
-        this.subscribe = Subscribe(this, listenerManager, eventEngineConf = eventEngineConf)
-    }
+    constructor(configuration: PNConfiguration) : this(configuration, EventEngineConfImpl())
 
     companion object {
         private const val TIMESTAMP_DIVIDER = 1000
@@ -127,7 +124,6 @@ class PubNub(val configuration: PNConfiguration) {
     private val tokenParser: TokenParser = TokenParser()
     private val listenerManager = ListenerManager(this)
     internal val subscriptionManager = SubscriptionManager(this, listenerManager)
-    private var eventEngineConf: EventEngineConf = EventEngineConfImpl()
     private var subscribe = Subscribe(this, listenerManager, eventEngineConf)
 
     //endregion
