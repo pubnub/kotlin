@@ -37,7 +37,7 @@ class HandshakeReconnectEffect(
 
         val delay = policy.nextDelay(handshakeReconnectInvocation.attempts)
         if (delay == null) {
-            eventSink.add(event = Event.HandshakeReconnectGiveUp(handshakeReconnectInvocation.reason ?: PubNubException("Unknown error")))
+            eventSink.add(Event.HandshakeReconnectGiveUp(handshakeReconnectInvocation.reason ?: PubNubException("Unknown error")))
             return
         }
 

@@ -10,7 +10,6 @@ import com.pubnub.contract.state.World
 import com.pubnub.contract.subscribe.eventEngine.state.EventEngineState
 import io.cucumber.java.en.When
 import org.junit.jupiter.api.fail
-import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
@@ -22,11 +21,9 @@ class WhenSteps(
 
     @When("I subscribe")
     fun I_subscribe() {
-        val eventEngineHappenings: CopyOnWriteArrayList<HashMap<String, String>> = CopyOnWriteArrayList()
         val pnConfiguration = world.configuration
-        world.pubnub = PubNub(pnConfiguration, EventEngineConfTestImpl(eventEngineHappenings))
+        world.pubnub = PubNub(pnConfiguration, EventEngineConfTestImpl(eventEngineState.queuedElements))
         world.pubnub.configuration.enableSubscribeBeta = true
-        eventEngineState.eventEngineHappenings = eventEngineHappenings
         val connected = CountDownLatch(1)
 
         world.pubnub.addListener(object : SubscribeCallback() {

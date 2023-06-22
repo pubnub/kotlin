@@ -37,7 +37,7 @@ class ReceiveReconnectEffect(
 
         val delay = policy.nextDelay(attempts)
         if (delay == null) {
-            eventSink.add(event = Event.ReceiveReconnectGiveUp(reason ?: PubNubException("Unknown error")))
+            eventSink.add(Event.ReceiveReconnectGiveUp(reason ?: PubNubException("Unknown error")))
             return
         }
 

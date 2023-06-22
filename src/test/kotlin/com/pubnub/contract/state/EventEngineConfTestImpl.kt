@@ -5,33 +5,22 @@ import com.pubnub.api.eventengine.EffectSource
 import com.pubnub.api.eventengine.EventEngineConf
 import com.pubnub.api.eventengine.EventSink
 import com.pubnub.api.eventengine.EventSource
-import com.pubnub.api.subscribe.eventengine.effect.EffectSourceImpl
+import com.pubnub.api.eventengine.QueueSinkSource
 import com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectInvocation
 import com.pubnub.api.subscribe.eventengine.event.Event
-import com.pubnub.api.subscribe.eventengine.event.EventSourceImpl
-import java.util.concurrent.CopyOnWriteArrayList
-import java.util.concurrent.LinkedBlockingQueue
 
 class EventEngineConfTestImpl(
-    private val happenings: CopyOnWriteArrayList<HashMap<String, String>>,
+    queuedElements: MutableList<String>
 ) : EventEngineConf {
-    private val eventQueue: LinkedBlockingQueue<Event> = LinkedBlockingQueue<Event>()
-    private val invocationQueue: LinkedBlockingQueue<SubscribeEffectInvocation> =
-        LinkedBlockingQueue<SubscribeEffectInvocation>()
 
-    override fun getEventSink(): EventSink {
-        return EventSinkTestImpl(eventQueue, happenings)
-    }
+    private val eventSinkSource: TestSinkSource<Event> = TestSinkSource(queuedElements, QueueSinkSource())
+    private val effectSinkSource: TestSinkSource<SubscribeEffectInvocation> = TestSinkSource(queuedElements, QueueSinkSource())
 
-    override fun getEventSource(): EventSource {
-        return EventSourceImpl(eventQueue)
-    }
+    override fun getEventSink(): EventSink = eventSinkSource
 
-    override fun getEffectSink(): EffectSink<SubscribeEffectInvocation> {
-        return EffectSinkTestImpl(invocationQueue, happenings)
-    }
+    override fun getEventSource(): EventSource = eventSinkSource
 
-    override fun getEffectSource(): EffectSource<SubscribeEffectInvocation> {
-        return EffectSourceImpl(invocationQueue)
-    }
+    override fun getEffectSink(): EffectSink<SubscribeEffectInvocation> = effectSinkSource
+
+    override fun getEffectSource(): EffectSource<SubscribeEffectInvocation> = effectSinkSource
 }
