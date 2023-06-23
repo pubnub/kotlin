@@ -19,6 +19,6 @@ class ThenSteps(
     @Then("I observe the following:")
     fun I_observe_the_following(dataTable: DataTable) {
         val expectedNames = dataTable.asMaps().map { it["type"] to it["name"] }.toList()
-        assertThat(eventEngineState.queuedElements.take(expectedNames.size), Matchers.`is`(expectedNames))
+        assertThat(eventEngineState.queuedElements, Matchers.`is`(expectedNames))
     }
 }
