@@ -16,7 +16,7 @@ data class ReceiveMessagesResult(
     val subscriptionCursor: SubscriptionCursor
 )
 
-class SubscribeEffectFactory(
+internal class SubscribeEffectFactory(
     private val handshakeProvider: HandshakeProvider,
     private val receiveMessagesProvider: ReceiveMessagesProvider,
     private val eventSink: EventSink,
