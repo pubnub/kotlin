@@ -10,7 +10,7 @@ import com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectInvocation
 import com.pubnub.api.subscribe.eventengine.event.Event
 
 class EventEngineConfTestImpl(
-    queuedElements: MutableList<String>
+    queuedElements: MutableList<Pair<String, String>>
 ) : EventEngineConf {
 
     private val eventSinkSource: TestSinkSource<Event> = TestSinkSource(queuedElements, QueueSinkSource())
