@@ -5,7 +5,7 @@ import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.remoteaction.ComposableRemoteAction
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
-import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction
+import com.pubnub.api.endpoints.remoteaction.ResultMappingWrapper.Companion.withMapping
 import com.pubnub.api.endpoints.remoteaction.RetryingRemoteAction
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
@@ -39,10 +39,7 @@ class SendFile internal constructor(
 ) : ExtendedRemoteAction<PNFileUploadResult> {
 
     private val sendFileMultistepAction: ExtendedRemoteAction<PNFileUploadResult> = sendFileComposedActions(
-        generateUploadUrlFactory,
-        publishFileMessageFactory,
-        sendFileToS3Factory,
-        inputStream.readBytes()
+        generateUploadUrlFactory, publishFileMessageFactory, sendFileToS3Factory, inputStream.readBytes()
     )
 
     @Throws(PubNubException::class)
@@ -76,8 +73,7 @@ class SendFile internal constructor(
             throw PubNubException(PubNubError.CHANNEL_MISSING)
         }
         if (fileName.isEmpty()) {
-            throw PubNubException(PubNubError.INVALID_ARGUMENTS)
-                .copy(errorMessage = "File name cannot be null nor empty")
+            throw PubNubException(PubNubError.INVALID_ARGUMENTS).copy(errorMessage = "File name cannot be null nor empty")
         }
     }
 
@@ -88,14 +84,11 @@ class SendFile internal constructor(
         content: ByteArray
     ): ExtendedRemoteAction<PNFileUploadResult> {
         val result = AtomicReference<FileUploadRequestDetails>()
-        return ComposableRemoteAction
-            .firstDo(generateUploadUrlFactory.create(channel, fileName)) // generateUrl
+        return ComposableRemoteAction.firstDo(generateUploadUrlFactory.create(channel, fileName)) // generateUrl
             .then { res ->
                 result.set(res)
                 sendFileToS3Factory.create(fileName, content, cipherKey, res) // upload to s3
-            }
-            .checkpoint()
-            .then {
+            }.checkpoint().then {
                 val details = result.get()
                 RetryingRemoteAction.autoRetry(
                     publishFileMessageFactory.create(
@@ -107,30 +100,17 @@ class SendFile internal constructor(
                         ttl = ttl,
                         shouldStore = shouldStore
                     ),
-                    fileMessagePublishRetryLimit,
-                    PNOperationType.FileOperation,
-                    executorService
+                    fileMessagePublishRetryLimit, PNOperationType.FileOperation, executorService
                 ) // publish file message
-            }
-            .then { res: PNPublishFileMessageResult ->
-                mapPublishFileMessageToFileUpload(result.get(), res) // prepare result to return
-            }
+            }.withMapping { mapPublishFileMessageToFileUpload(result.get(), it) }
     }
 
     private fun mapPublishFileMessageToFileUpload(
         requestDetails: FileUploadRequestDetails,
         res: PNPublishFileMessageResult
-    ): ExtendedRemoteAction<PNFileUploadResult> = MappingRemoteAction.map(
-        res,
-        operationType()
-    ) { pnPublishFileMessageResult: PNPublishFileMessageResult ->
-
-        PNFileUploadResult(
-            pnPublishFileMessageResult.timetoken,
-            HttpURLConnection.HTTP_OK,
-            PNBaseFile(requestDetails.data.id, requestDetails.data.name)
-        )
-    }
+    ) = PNFileUploadResult(
+        res.timetoken, HttpURLConnection.HTTP_OK, PNBaseFile(requestDetails.data.id, requestDetails.data.name)
+    )
 
     override fun retry() {
         sendFileMultistepAction.retry()
