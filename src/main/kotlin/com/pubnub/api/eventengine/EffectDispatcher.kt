@@ -7,16 +7,13 @@ import java.util.concurrent.Executors
 
 class EffectDispatcher<T : EffectInvocation>(
     private val effectFactory: EffectFactory<T>,
+    private val effectSource: Source<T>,
     private val managedEffects: ConcurrentHashMap<String, ManagedEffect> = ConcurrentHashMap(),
-    private val effectSource: EffectSource<T>,
     private val executorService: ExecutorService = Executors.newSingleThreadExecutor()
-
 ) {
     private val log = LoggerFactory.getLogger(EffectDispatcher::class.java)
-    internal var isStarted = false
 
     fun start() {
-        isStarted = true
         executorService.submit {
             try {
                 while (true) {
@@ -25,12 +22,15 @@ class EffectDispatcher<T : EffectInvocation>(
                 }
             } catch (e: InterruptedException) {
                 Thread.currentThread().interrupt()
-                isStarted = false
             }
         }
     }
 
-    fun dispatch(effectInvocation: T) {
+    fun stop() {
+        executorService.shutdownNow()
+    }
+
+    internal fun dispatch(effectInvocation: T) {
         log.trace("Dispatching effect: $effectInvocation thread: ${Thread.currentThread().id}")
         when (val type = effectInvocation.type) {
             is Cancel -> {

@@ -1,7 +1,7 @@
 package com.pubnub.api.subscribe.eventengine
 
-import com.pubnub.api.eventengine.EffectSink
-import com.pubnub.api.eventengine.EventSource
+import com.pubnub.api.eventengine.Sink
+import com.pubnub.api.eventengine.Source
 import com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectInvocation
 import com.pubnub.api.subscribe.eventengine.event.Event
 import com.pubnub.api.subscribe.eventengine.state.SubscribeState
@@ -10,29 +10,30 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 class SubscribeEventEngine(
-    val effectSink: EffectSink<SubscribeEffectInvocation>,
-    private val eventSource: EventSource,
+    val effectSink: Sink<SubscribeEffectInvocation>,
+    private val eventSource: Source<Event>,
     private var currenState: SubscribeState = SubscribeState.Unsubscribed,
     private val executorService: ExecutorService = Executors.newSingleThreadExecutor(),
 ) {
-    internal var isStarted = false
 
     fun start() {
-        isStarted = true
         executorService.submit {
-            while (true) {
+            while (true) { // todo może zmien na while (!Thread.interrupted()) ?
                 try {
                     val event = eventSource.take()
                     performTransitionAndEmitEffects(event)
                 } catch (e: InterruptedException) {
                     Thread.currentThread().interrupt()
-                    isStarted = false
                 }
             }
         }
     }
 
-    private fun performTransitionAndEmitEffects(event: Event) {
+    fun stop() {
+        executorService.shutdownNow()
+    }
+
+    internal fun performTransitionAndEmitEffects(event: Event) { // todo add unit tests
         val (newState, invocations) = transition(currenState, event)
         currenState = newState
         invocations.forEach { invocation -> effectSink.add(invocation) }

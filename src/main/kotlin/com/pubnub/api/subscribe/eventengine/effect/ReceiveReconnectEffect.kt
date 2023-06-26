@@ -3,8 +3,8 @@ package com.pubnub.api.subscribe.eventengine.effect
 import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.remoteaction.RemoteAction
 import com.pubnub.api.eventengine.EffectDispatcher
-import com.pubnub.api.eventengine.EventSink
 import com.pubnub.api.eventengine.ManagedEffect
+import com.pubnub.api.eventengine.Sink
 import com.pubnub.api.subscribe.eventengine.event.Event
 import org.slf4j.LoggerFactory
 import java.util.concurrent.ScheduledExecutorService
@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit
 
 class ReceiveReconnectEffect(
     private val remoteAction: RemoteAction<ReceiveMessagesResult>,
-    private val eventSink: EventSink,
+    private val eventSink: Sink<Event>,
     private val policy: RetryPolicy,
     private val executorService: ScheduledExecutorService,
     private val attempts: Int,

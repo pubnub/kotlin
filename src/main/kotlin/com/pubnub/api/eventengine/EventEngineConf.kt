@@ -1,11 +1,12 @@
 package com.pubnub.api.eventengine
 
 import com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectInvocation
+import com.pubnub.api.subscribe.eventengine.event.Event
 
 interface EventEngineConf {
-    fun getEventSink(): EventSink
-    fun getEventSource(): EventSource
+    fun getEventSink(): Sink<Event>
+    fun getEventSource(): Source<Event>
 
-    fun getEffectSink(): EffectSink<SubscribeEffectInvocation>
-    fun getEffectSource(): EffectSource<SubscribeEffectInvocation>
+    fun getEffectSink(): Sink<SubscribeEffectInvocation>
+    fun getEffectSource(): Source<SubscribeEffectInvocation>
 }

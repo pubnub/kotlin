@@ -12,6 +12,8 @@ internal class HandshakeProviderImpl(val subscribe: Subscribe) : HandshakeProvid
     ): RemoteAction<SubscriptionCursor> {
         subscribe.channels = channels
         subscribe.channelGroups = channelGroups
+        subscribe.timetoken = 0
+        subscribe.region = null
         return RemoteActionForHandshake(subscribe)
     }
 }

@@ -5,13 +5,12 @@ package com.pubnub.api.subscribe
 import com.pubnub.api.PubNub
 import com.pubnub.api.endpoints.pubsub.Subscribe
 import com.pubnub.api.enums.PNReconnectionPolicy
-import com.pubnub.api.eventengine.EffectFactory
+import com.pubnub.api.eventengine.EffectDispatcher
 import com.pubnub.api.eventengine.EventEngineConf
-import com.pubnub.api.eventengine.EventSink
-import com.pubnub.api.eventengine.ManagedEffect
+import com.pubnub.api.eventengine.Sink
 import com.pubnub.api.managers.EventEngineManager
 import com.pubnub.api.managers.ListenerManager
-import com.pubnub.api.subscribe.eventengine.configuration.EventEngineConfImpl
+import com.pubnub.api.subscribe.eventengine.SubscribeEventEngine
 import com.pubnub.api.subscribe.eventengine.effect.ExponentialPolicy
 import com.pubnub.api.subscribe.eventengine.effect.LinearPolicy
 import com.pubnub.api.subscribe.eventengine.effect.MessagesConsumer
@@ -19,27 +18,80 @@ import com.pubnub.api.subscribe.eventengine.effect.NoRetriesPolicy
 import com.pubnub.api.subscribe.eventengine.effect.RetryPolicy
 import com.pubnub.api.subscribe.eventengine.effect.StatusConsumer
 import com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectFactory
-import com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectInvocation
 import com.pubnub.api.subscribe.eventengine.effect.effectprovider.HandshakeProvider
 import com.pubnub.api.subscribe.eventengine.effect.effectprovider.HandshakeProviderImpl
 import com.pubnub.api.subscribe.eventengine.effect.effectprovider.ReceiveMessagesProvider
 import com.pubnub.api.subscribe.eventengine.effect.effectprovider.ReceiveMessagesProviderImpl
+import com.pubnub.api.subscribe.eventengine.event.Event
 import com.pubnub.api.subscribe.eventengine.event.Event.SubscriptionChanged
 import com.pubnub.api.subscribe.eventengine.event.Event.SubscriptionRestored
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
-import com.pubnub.api.subscribe.eventengine.state.SubscribeState
 import java.time.Duration
-import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 
 class Subscribe(
-    private val pubnub: PubNub,
-    private val listenerManager: ListenerManager,
-    private val eventEngineConf: EventEngineConf = EventEngineConfImpl()
+    private val eventEngineManager: EventEngineManager
 ) {
-    private val eventSink = eventEngineConf.getEventSink()
-    private val eventEngineManager: EventEngineManager = createEventEngineManager()
+
+    companion object {
+        fun create(
+            pubNub: PubNub,
+            listenerManager: ListenerManager,
+            eventEngineConf: EventEngineConf
+        ): com.pubnub.api.subscribe.Subscribe {
+            val subscribe = Subscribe(pubNub)
+            val handshakeProvider: HandshakeProvider = HandshakeProviderImpl(subscribe)
+            val receiveMessagesProvider: ReceiveMessagesProvider = ReceiveMessagesProviderImpl(subscribe, pubNub)
+            val eventSink: Sink<Event> = eventEngineConf.getEventSink()
+            val policy: RetryPolicy = getRetryPolicy(pubNub)
+            val executorService: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor()
+            val messagesConsumer: MessagesConsumer = listenerManager
+            val statusConsumer: StatusConsumer = listenerManager
+
+            val subscribeEffectFactory = SubscribeEffectFactory(
+                handshakeProvider,
+                receiveMessagesProvider,
+                eventSink,
+                policy,
+                executorService,
+                messagesConsumer,
+                statusConsumer
+            )
+
+            val subscribeEventEngine = SubscribeEventEngine(
+                effectSink = eventEngineConf.getEffectSink(),
+                eventSource = eventEngineConf.getEventSource()
+            )
+            val effectDispatcher = EffectDispatcher(
+                effectFactory = subscribeEffectFactory,
+                effectSource = eventEngineConf.getEffectSource()
+            )
+
+            val eventEngineManager = EventEngineManager(
+                subscribeEventEngine = subscribeEventEngine,
+                effectDispatcher = effectDispatcher,
+                eventSink = eventEngineConf.getEventSink()
+            ).apply {
+                if (pubNub.configuration.enableSubscribeBeta) {
+                    start()
+                }
+            }
+
+            return Subscribe(eventEngineManager)
+        }
+
+        private fun getRetryPolicy(pubNub: PubNub): RetryPolicy {
+            return when (pubNub.configuration.reconnectionPolicy) {
+                PNReconnectionPolicy.NONE -> NoRetriesPolicy
+                PNReconnectionPolicy.LINEAR -> LinearPolicy(
+                    maxRetries = pubNub.configuration.maximumReconnectionRetries,
+                    fixedDelay = Duration.ofSeconds(3)
+                )
+                PNReconnectionPolicy.EXPONENTIAL -> ExponentialPolicy(maxRetries = pubNub.configuration.maximumReconnectionRetries)
+            }
+        }
+    }
 
     fun subscribe(
         channels: List<String>,
@@ -79,48 +131,14 @@ class Subscribe(
         TODO("Not yet implemented")
     }
 
-    private fun createEventEngineManager(): EventEngineManager {
-        val currenState: SubscribeState = SubscribeState.Unsubscribed
-        val effectFactory = createSubscribeEffectFactory()
-        val managedEffects: ConcurrentHashMap<String, ManagedEffect> = ConcurrentHashMap()
-
-        return EventEngineManager(
-            currenState = currenState,
-            eventEngineConf = eventEngineConf,
-            effectFactory = effectFactory,
-            managedEffects = managedEffects,
-        )
+    fun disconnect() {
+        TODO("Not yet implemented")
     }
 
-    private fun createSubscribeEffectFactory(): EffectFactory<SubscribeEffectInvocation> {
-        val subscribe = Subscribe(pubnub)
-        val handshakeProvider: HandshakeProvider = HandshakeProviderImpl(subscribe)
-        val receiveMessagesProvider: ReceiveMessagesProvider = ReceiveMessagesProviderImpl(subscribe, pubnub)
-        val eventSink: EventSink = eventSink
-        val policy: RetryPolicy = getRetryPolicy()
-        val executorService: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor()
-        val messagesConsumer: MessagesConsumer = listenerManager
-        val statusConsumer: StatusConsumer = listenerManager
-
-        return SubscribeEffectFactory(
-            handshakeProvider,
-            receiveMessagesProvider,
-            eventSink,
-            policy,
-            executorService,
-            messagesConsumer,
-            statusConsumer
-        )
-    }
-
-    private fun getRetryPolicy(): RetryPolicy {
-        return when (pubnub.configuration.reconnectionPolicy) {
-            PNReconnectionPolicy.NONE -> NoRetriesPolicy
-            PNReconnectionPolicy.LINEAR -> LinearPolicy(
-                maxRetries = pubnub.configuration.maximumReconnectionRetries,
-                fixedDelay = Duration.ofSeconds(3)
-            )
-            PNReconnectionPolicy.EXPONENTIAL -> ExponentialPolicy(maxRetries = pubnub.configuration.maximumReconnectionRetries)
-        }
+    @Synchronized
+    fun destroy() {
+        // todo do we want to have "force" flag?
+        disconnect()
+        eventEngineManager.stop()
     }
 }

@@ -124,7 +124,7 @@ class PubNub internal constructor(val configuration: PNConfiguration, eventEngin
     private val tokenParser: TokenParser = TokenParser()
     private val listenerManager = ListenerManager(this)
     internal val subscriptionManager = SubscriptionManager(this, listenerManager)
-    private var subscribe = Subscribe(this, listenerManager, eventEngineConf)
+    private val subscribe = Subscribe.create(this, listenerManager, eventEngineConf)
 
     //endregion
 
@@ -1997,6 +1997,10 @@ class PubNub internal constructor(val configuration: PNConfiguration, eventEngin
      * Frees up threads and allows for a clean exit.
      */
     fun destroy() {
+        if (configuration.enableSubscribeBeta) {
+            subscribe.destroy()
+            // todo add presenceEventEngineDestroy
+        }
         subscriptionManager.destroy()
         retrofitManager.destroy()
     }
@@ -2005,6 +2009,10 @@ class PubNub internal constructor(val configuration: PNConfiguration, eventEngin
      * Same as [destroy] but immediately.
      */
     fun forceDestroy() {
+        if (configuration.enableSubscribeBeta) {
+            subscribe.destroy()
+            // todo add presenceEventEngineDestroy
+        }
         subscriptionManager.destroy(true)
         retrofitManager.destroy(true)
     }
