@@ -25,7 +25,7 @@ import java.util.Timer
 import java.util.concurrent.LinkedBlockingQueue
 import kotlin.concurrent.timerTask
 
-class SubscriptionManager(val pubnub: PubNub, private val listenerManager: ListenerManager, private val subscriptionState: StateManager = StateManager()) {
+internal class SubscriptionManager(val pubnub: PubNub, private val listenerManager: ListenerManager, private val subscriptionState: StateManager = StateManager()) {
 
     private companion object {
         private const val HEARTBEAT_INTERVAL_MULTIPLIER = 1000L

@@ -35,7 +35,7 @@ class Subscribe(
 ) {
 
     companion object {
-        fun create(
+        internal fun create(
             pubNub: PubNub,
             listenerManager: ListenerManager,
             eventEngineConf: EventEngineConf
@@ -43,7 +43,7 @@ class Subscribe(
             val subscribe = Subscribe(pubNub)
             val handshakeProvider: HandshakeProvider = HandshakeProviderImpl(subscribe)
             val receiveMessagesProvider: ReceiveMessagesProvider = ReceiveMessagesProviderImpl(subscribe, pubNub)
-            val eventSink: Sink<Event> = eventEngineConf.getEventSink()
+            val eventSink: Sink<Event> = eventEngineConf.eventSink
             val policy: RetryPolicy = getRetryPolicy(pubNub)
             val executorService: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor()
             val messagesConsumer: MessagesConsumer = listenerManager
@@ -60,18 +60,18 @@ class Subscribe(
             )
 
             val subscribeEventEngine = SubscribeEventEngine(
-                effectSink = eventEngineConf.getEffectSink(),
-                eventSource = eventEngineConf.getEventSource()
+                effectSink = eventEngineConf.effectSink,
+                eventSource = eventEngineConf.eventSource
             )
             val effectDispatcher = EffectDispatcher(
                 effectFactory = subscribeEffectFactory,
-                effectSource = eventEngineConf.getEffectSource()
+                effectSource = eventEngineConf.effectSource
             )
 
             val eventEngineManager = EventEngineManager(
                 subscribeEventEngine = subscribeEventEngine,
                 effectDispatcher = effectDispatcher,
-                eventSink = eventEngineConf.getEventSink()
+                eventSink = eventEngineConf.eventSink
             ).apply {
                 if (pubNub.configuration.enableSubscribeBeta) {
                     start()

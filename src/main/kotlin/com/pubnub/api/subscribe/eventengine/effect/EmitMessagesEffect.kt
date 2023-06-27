@@ -1,7 +1,6 @@
 package com.pubnub.api.subscribe.eventengine.effect
 
 import com.pubnub.api.eventengine.Effect
-import com.pubnub.api.eventengine.EffectDispatcher
 import com.pubnub.api.models.consumer.pubsub.PNEvent
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
@@ -15,7 +14,7 @@ class EmitMessagesEffect(
     private val messagesConsumer: MessagesConsumer,
     private val messages: List<PNEvent>
 ) : Effect {
-    private val log = LoggerFactory.getLogger(EffectDispatcher::class.java)
+    private val log = LoggerFactory.getLogger(EmitMessagesEffect::class.java)
 
     override fun runEffect() {
         log.trace("Running EmitMessagesEffect thread: ${Thread.currentThread().id}")

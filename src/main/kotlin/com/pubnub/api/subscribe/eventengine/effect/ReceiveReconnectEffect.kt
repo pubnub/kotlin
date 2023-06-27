@@ -2,7 +2,6 @@ package com.pubnub.api.subscribe.eventengine.effect
 
 import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.remoteaction.RemoteAction
-import com.pubnub.api.eventengine.EffectDispatcher
 import com.pubnub.api.eventengine.ManagedEffect
 import com.pubnub.api.eventengine.Sink
 import com.pubnub.api.subscribe.eventengine.event.Event
@@ -19,7 +18,7 @@ class ReceiveReconnectEffect(
     private val attempts: Int,
     private val reason: PubNubException?
 ) : ManagedEffect {
-    private val log = LoggerFactory.getLogger(EffectDispatcher::class.java)
+    private val log = LoggerFactory.getLogger(ReceiveReconnectEffect::class.java)
 
     @Transient
     private var scheduled: ScheduledFuture<*>? = null

@@ -23,7 +23,7 @@ import javax.net.ssl.X509ExtendedTrustManager
  */
 open class PNConfiguration(
     userId: UserId,
-    var enableSubscribeBeta: Boolean = false
+    enableSubscribeBeta: Boolean = false
 ) {
 
     @Deprecated(
@@ -35,6 +35,9 @@ open class PNConfiguration(
         message = "Use PNConfiguration(UserId, Boolean) instead"
     )
     constructor(uuid: String, enableSubscribeBeta: Boolean = false) : this(UserId(uuid), enableSubscribeBeta)
+
+    var enableSubscribeBeta: Boolean = enableSubscribeBeta
+        internal set
 
     @Deprecated(
         level = DeprecationLevel.WARNING,

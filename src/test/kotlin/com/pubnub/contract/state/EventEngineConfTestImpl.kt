@@ -15,11 +15,8 @@ class EventEngineConfTestImpl(
     private val effectSinkSource: TestSinkSource<SubscribeEffectInvocation> =
         TestSinkSource(queuedElements, QueueSinkSource())
 
-    override fun getEventSink(): Sink<Event> = eventSinkSource
-
-    override fun getEventSource(): Source<Event> = eventSinkSource
-
-    override fun getEffectSink(): Sink<SubscribeEffectInvocation> = effectSinkSource
-
-    override fun getEffectSource(): Source<SubscribeEffectInvocation> = effectSinkSource
+    override val eventSink: Sink<Event> = eventSinkSource
+    override val eventSource: Source<Event> = eventSinkSource
+    override val effectSink: Sink<SubscribeEffectInvocation> = effectSinkSource
+    override val effectSource: Source<SubscribeEffectInvocation> = effectSinkSource
 }
