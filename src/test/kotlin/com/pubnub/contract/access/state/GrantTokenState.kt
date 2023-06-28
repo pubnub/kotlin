@@ -3,8 +3,10 @@ package com.pubnub.contract.access.state
 import com.pubnub.api.models.consumer.access_manager.v3.PNGrant
 import com.pubnub.api.models.consumer.access_manager.v3.PNGrantTokenResult
 import com.pubnub.api.models.consumer.access_manager.v3.PNToken
+import com.pubnub.contract.state.World
+import com.pubnub.contract.state.WorldState
 
-class GrantTokenState {
+class GrantTokenState(world: World) : WorldState by world {
     var parsedToken: PNToken? = null
     var TTL: Long? = null
     var result: PNGrantTokenResult? = null

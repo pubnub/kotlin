@@ -6,14 +6,12 @@ import com.pubnub.contract.access.parameter.ResourceType
 import com.pubnub.contract.access.parameter.patternPermissionsMap
 import com.pubnub.contract.access.parameter.resourcePermissionsMap
 import com.pubnub.contract.access.state.GrantTokenState
-import com.pubnub.contract.state.World
 import io.cucumber.java.en.Then
 import org.hamcrest.MatcherAssert
 import org.hamcrest.Matchers
 
 class ThenSteps(
-    private val grantTokenState: GrantTokenState,
-    private val world: World
+    private val grantTokenState: GrantTokenState
 ) {
     @Then("the authorized UUID {string}")
     fun authorized_uuid(uuid: String) {
@@ -29,21 +27,21 @@ class ThenSteps(
     @Then("the token contains the authorized UUID {string}")
     fun the_token_contains_the_authorized_uuid(uuid: String) {
         val result = grantTokenState.result!!
-        val parsedToken = world.pubnub.parseToken(result.token)
+        val parsedToken = grantTokenState.pubnub.parseToken(result.token)
         MatcherAssert.assertThat(parsedToken.authorizedUUID, Matchers.`is`(uuid))
     }
 
     @Then("the token contains the TTL {ttl}")
     fun the_token_contains_the_ttl(ttl: Long) {
         val result = grantTokenState.result!!
-        val token = world.pubnub.parseToken(result.token)
+        val token = grantTokenState.pubnub.parseToken(result.token)
         MatcherAssert.assertThat(token.ttl, Matchers.`is`(ttl))
     }
 
     @Then("the token does not contain an authorized uuid")
     fun the_token_does_not_contain_an_authorized_uuid() {
         val result = grantTokenState.result!!
-        val token = world.pubnub.parseToken(result.token)
+        val token = grantTokenState.pubnub.parseToken(result.token)
         MatcherAssert.assertThat(token.authorizedUUID, Matchers.nullValue())
     }
 
@@ -83,7 +81,7 @@ class ThenSteps(
 
     @Then("I get confirmation that token has been revoked")
     fun i_get_confirmation_that_token_has_been_revoked() {
-        MatcherAssert.assertThat(world.pnException, Matchers.nullValue())
+        MatcherAssert.assertThat(grantTokenState.pnException, Matchers.nullValue())
     }
 
     private fun assertPermissions(permissionType: PermissionType) {
@@ -100,6 +98,6 @@ class ThenSteps(
     }
 
     private fun parsedToken(): PNToken? {
-        return grantTokenState.parsedToken ?: grantTokenState.result?.let { world.pubnub.parseToken(it.token) }
+        return grantTokenState.parsedToken ?: grantTokenState.result?.let { grantTokenState.pubnub.parseToken(it.token) }
     }
 }

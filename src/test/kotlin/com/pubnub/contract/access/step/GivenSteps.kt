@@ -14,12 +14,11 @@ import com.pubnub.contract.access.parameter.PermissionType
 import com.pubnub.contract.access.parameter.ResourceType
 import com.pubnub.contract.access.state.FutureCallGrant
 import com.pubnub.contract.access.state.GrantTokenState
-import com.pubnub.contract.state.World
 import io.cucumber.java.en.And
 import io.cucumber.java.en.Given
 import kotlin.random.Random
 
-class GivenSteps(private val grantTokenState: GrantTokenState, private val world: World) {
+class GivenSteps(private val grantTokenState: GrantTokenState) {
     private val tokenWithAll =
         "qEF2AkF0GmEI03xDdHRsGDxDcmVzpURjaGFuoWljaGFubmVsLTEY70NncnChb2NoYW5uZWxfZ3JvdXAtMQVDdXNyoENzcGOgRHV1aWShZnV1aWQtMRhoQ3BhdKVEY2hhbqFtXmNoYW5uZWwtXFMqJBjvQ2dycKF0XjpjaGFubmVsX2dyb3VwLVxTKiQFQ3VzcqBDc3BjoER1dWlkoWpedXVpZC1cUyokGGhEbWV0YaBEdXVpZHR0ZXN0LWF1dGhvcml6ZWQtdXVpZENzaWdYIPpU-vCe9rkpYs87YUrFNWkyNq8CVvmKwEjVinnDrJJc"
 
@@ -81,7 +80,7 @@ class GivenSteps(private val grantTokenState: GrantTokenState, private val world
     @Given("a token")
     fun a_token() {
         val characters: List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9') + '-'
-        world.tokenString =
+        grantTokenState.tokenString =
             (1..30).map { Random.nextInt(0, characters.size) }.map { characters[it] }.joinToString("")
     }
 
@@ -97,7 +96,7 @@ class GivenSteps(private val grantTokenState: GrantTokenState, private val world
 
     @Given("the token string {string}")
     fun the_token_string(string: String) {
-        world.tokenString = string
+        grantTokenState.tokenString = string
     }
 
     private fun grant_permission(permissionType: PermissionType) {

@@ -3,12 +3,10 @@ package com.pubnub.contract.uuidmetadata.step
 import com.pubnub.api.UserId
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
 import com.pubnub.contract.loadPersonaUUIDMetadata
-import com.pubnub.contract.state.World
 import com.pubnub.contract.uuidmetadata.state.UUIDMetadataState
 import io.cucumber.java.en.Given
 
 class GivenSteps(
-    private val world: World,
     private val uuidMetadataState: UUIDMetadataState
 ) {
 
@@ -21,7 +19,7 @@ class GivenSteps(
     @Given("current user is {string} persona")
     fun given_current_user_is_persona(personaName: String) {
         val pnUUIDMetadata: PNUUIDMetadata = loadPersonaUUIDMetadata(personaName)
-        world.pubnub.configuration.userId = UserId(pnUUIDMetadata.id)
+        uuidMetadataState.pubnub.configuration.userId = UserId(pnUUIDMetadata.id)
     }
 
     @Given("the data for {string} persona")

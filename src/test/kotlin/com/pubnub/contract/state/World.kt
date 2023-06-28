@@ -9,6 +9,7 @@ import com.pubnub.contract.ContractTestConfig
 
 interface WorldState {
     val configuration: PNConfiguration
+    val pubnub: PubNub
     var pnException: PubNubException?
     var tokenString: String?
     var responseStatus: Int?
@@ -23,7 +24,7 @@ class World : WorldState {
         }
     }
 
-    val pubnub: PubNub by lazy { PubNub(configuration) }
+    override val pubnub: PubNub by lazy { PubNub(configuration) }
     override var pnException: PubNubException? = null
     override var tokenString: String? = null
     override var responseStatus: Int? = null

@@ -13,7 +13,7 @@ class EventEngineState(world: World) : WorldState by world {
     val channelName: String = "MyChannel_01"
     val messagesList: MutableList<PNEvent> = CopyOnWriteArrayList()
     val statusesList: MutableList<PNStatus> = CopyOnWriteArrayList()
-    val pubnub: PubNub by lazy {
+    override val pubnub: PubNub by lazy {
         PubNub(
             configuration,
             eventEngineConf = EventEngineConfTestImpl(queuedElements),

@@ -21,55 +21,55 @@ import org.hamcrest.MatcherAssert
 import org.hamcrest.Matchers
 import java.util.concurrent.TimeUnit
 
-class EventEngineSteps(private val state: EventEngineState) {
+class EventEngineSteps(private val eventEngineState: EventEngineState) {
 
     @Given("a linear reconnection policy with {int} retries")
     fun a_linear_reconnection_policy_with_retries(maxRetries: Int) {
-        state.configuration.reconnectionPolicy = PNReconnectionPolicy.LINEAR
-        state.configuration.maximumReconnectionRetries = maxRetries - 1 // todo figure out who's wrong
+        eventEngineState.configuration.reconnectionPolicy = PNReconnectionPolicy.LINEAR
+        eventEngineState.configuration.maximumReconnectionRetries = maxRetries - 1 // todo figure out who's wrong
     }
 
     @When("I subscribe")
     fun i_subscribe() {
-        state.pubnub.configuration.enableSubscribeBeta = true
-        state.pubnub.addListener(object : SubscribeCallback() {
+        eventEngineState.pubnub.configuration.enableSubscribeBeta = true
+        eventEngineState.pubnub.addListener(object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
-                state.statusesList.add(pnStatus)
+                eventEngineState.statusesList.add(pnStatus)
             }
 
             override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {
-                state.messagesList.add(pnMessageResult)
+                eventEngineState.messagesList.add(pnMessageResult)
             }
 
             override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {
-                state.messagesList.add(pnPresenceEventResult)
+                eventEngineState.messagesList.add(pnPresenceEventResult)
             }
 
             override fun signal(pubnub: PubNub, pnSignalResult: PNSignalResult) {
-                state.messagesList.add(pnSignalResult)
+                eventEngineState.messagesList.add(pnSignalResult)
             }
 
             override fun messageAction(pubnub: PubNub, pnMessageActionResult: PNMessageActionResult) {
-                state.messagesList.add(pnMessageActionResult)
+                eventEngineState.messagesList.add(pnMessageActionResult)
             }
 
             override fun objects(pubnub: PubNub, objectEvent: PNObjectEventResult) {
-                state.messagesList.add(objectEvent)
+                eventEngineState.messagesList.add(objectEvent)
             }
 
             override fun file(pubnub: PubNub, pnFileEventResult: PNFileEventResult) {
-                state.messagesList.add(pnFileEventResult)
+                eventEngineState.messagesList.add(pnFileEventResult)
             }
         })
 
-        state.pubnub.subscribe(channels = listOf(state.channelName))
+        eventEngineState.pubnub.subscribe(channels = listOf(eventEngineState.channelName))
     }
 
     @Then("I receive the message in my subscribe response")
     fun i_receive_the_message_in_my_subscribe_response() {
         await.pollInterval(50, TimeUnit.MILLISECONDS).atMost(500, TimeUnit.MILLISECONDS).untilAsserted {
             MatcherAssert.assertThat(
-                state.messagesList.map { it::class.java },
+                eventEngineState.messagesList.map { it::class.java },
                 CoreMatchers.hasItems(PNMessageResult::class.java)
             )
         }
@@ -79,14 +79,14 @@ class EventEngineSteps(private val state: EventEngineState) {
     fun i_observe_the_following(dataTable: DataTable) {
         await.pollInterval(50, TimeUnit.MILLISECONDS).atMost(500, TimeUnit.MILLISECONDS).untilAsserted {
             val expectedNames = dataTable.asMaps().map { it["type"] to it["name"] }.toList()
-            MatcherAssert.assertThat(state.queuedElements, Matchers.`is`(expectedNames))
+            MatcherAssert.assertThat(eventEngineState.queuedElements, Matchers.`is`(expectedNames))
         }
     }
 
     @Then("I receive an error in my subscribe response")
     fun i_receive_an_error_in_my_subscribe_response() {
         await.pollInterval(50, TimeUnit.MILLISECONDS).atMost(500, TimeUnit.MILLISECONDS).untilAsserted {
-            MatcherAssert.assertThat(state.statusesList.map { it.error }, CoreMatchers.hasItems(true))
+            MatcherAssert.assertThat(eventEngineState.statusesList.map { it.error }, CoreMatchers.hasItems(true))
         }
     }
 }
