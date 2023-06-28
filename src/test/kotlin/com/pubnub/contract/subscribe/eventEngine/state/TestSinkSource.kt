@@ -1,4 +1,4 @@
-package com.pubnub.contract.state
+package com.pubnub.contract.subscribe.eventEngine.state
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy
 import com.pubnub.api.eventengine.EffectInvocation

@@ -1,4 +1,4 @@
-package com.pubnub.contract.state
+package com.pubnub.contract.subscribe.eventEngine.state
 
 import com.pubnub.api.eventengine.EventEngineConf
 import com.pubnub.api.eventengine.QueueSinkSource
