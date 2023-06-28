@@ -17,7 +17,7 @@ class EmitMessagesEffect(
     private val log = LoggerFactory.getLogger(EmitMessagesEffect::class.java)
 
     override fun runEffect() {
-        log.trace("Running EmitMessagesEffect thread: ${Thread.currentThread().id}")
+        log.trace("Running EmitMessagesEffect")
         for (message in messages) {
             when (message) {
                 is PNMessageResult -> messagesConsumer.announce(message)

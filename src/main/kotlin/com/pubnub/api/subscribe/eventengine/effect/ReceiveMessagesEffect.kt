@@ -14,7 +14,7 @@ class ReceiveMessagesEffect(
     private val log = LoggerFactory.getLogger(ReceiveMessagesEffect::class.java)
 
     override fun runEffect() {
-        log.trace("Running ReceiveMessagesEffect thread: ${Thread.currentThread().id}")
+        log.trace("Running ReceiveMessagesEffect")
 
         remoteAction.async { result, status ->
             if (status.error) {

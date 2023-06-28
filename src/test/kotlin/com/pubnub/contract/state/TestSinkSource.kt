@@ -6,21 +6,16 @@ import com.pubnub.api.eventengine.Event
 import com.pubnub.api.eventengine.QueueSinkSource
 import com.pubnub.api.eventengine.Sink
 import com.pubnub.api.eventengine.Source
-import java.util.concurrent.LinkedBlockingQueue
 
 class TestSinkSource<T>(
     private val testSink: MutableList<Pair<String, String>>,
-    private val sinkSource: QueueSinkSource<T> = QueueSinkSource(LinkedBlockingQueue())
+    private val sinkSource: QueueSinkSource<T> = QueueSinkSource()
 ) : Sink<T>, Source<T> by sinkSource {
 
     private val snakeCaseStrategy: SnakeCaseStrategy = SnakeCaseStrategy()
     override fun add(t: T) {
         testSink.add(t.type() to t.name())
         sinkSource.add(t)
-    }
-
-    override fun take(): T {
-        return sinkSource.take()
     }
 
     private fun T.name() = this!!::class.simpleName!!.toSnakeCase().uppercase()

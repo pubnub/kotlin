@@ -18,7 +18,7 @@ internal class RemoteActionForHandshake(
     }
 
     override fun async(callback: (result: SubscriptionCursor?, status: PNStatus) -> Unit) {
-        remoteAction.async { result: SubscribeEnvelope?, status: PNStatus -> // todo zmienić result na coś, żeby się nie pokrywało tym linijkę powyżej
+        remoteAction.async { result: SubscribeEnvelope?, status: PNStatus -> // todo name of result so that it not overlap with result from line above
             callback(SubscriptionCursor(result?.metadata?.timetoken!!, result.metadata.region), status)
         }
     }

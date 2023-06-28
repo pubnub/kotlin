@@ -18,13 +18,13 @@ class SubscribeEventEngine(
 
     fun start() {
         executorService.submit {
-            while (true) { // todo może zmien na while (!Thread.interrupted()) ?
-                try {
+            try {
+                while (true) { // todo added missing unit tests
                     val event = eventSource.take()
                     performTransitionAndEmitEffects(event)
-                } catch (e: InterruptedException) {
-                    Thread.currentThread().interrupt()
                 }
+            } catch (e: InterruptedException) {
+                Thread.currentThread().interrupt()
             }
         }
     }

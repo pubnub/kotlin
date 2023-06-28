@@ -28,7 +28,7 @@ class ReceiveReconnectEffect(
 
     @Synchronized
     override fun runEffect() {
-        log.trace("Running ReceiveReconnectEffect thread: ${Thread.currentThread().id}")
+        log.trace("Running ReceiveReconnectEffect")
 
         if (cancelled) {
             return

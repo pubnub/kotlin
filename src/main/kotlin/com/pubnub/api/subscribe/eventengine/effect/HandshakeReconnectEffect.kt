@@ -28,7 +28,7 @@ class HandshakeReconnectEffect(
 
     @Synchronized
     override fun runEffect() {
-        log.trace("Running HandshakeReconnectEffect thread: ${Thread.currentThread().id}")
+        log.trace("Running HandshakeReconnectEffect")
 
         if (cancelled) {
             return

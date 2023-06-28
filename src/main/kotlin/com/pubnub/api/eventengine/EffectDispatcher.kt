@@ -31,7 +31,7 @@ class EffectDispatcher<T : EffectInvocation>(
     }
 
     internal fun dispatch(effectInvocation: T) {
-        log.trace("Dispatching effect: $effectInvocation thread: ${Thread.currentThread().id}")
+        log.trace("Dispatching effect: $effectInvocation")
         when (val type = effectInvocation.type) {
             is Cancel -> {
                 managedEffects.remove(type.idToCancel)?.cancel()

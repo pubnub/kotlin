@@ -11,7 +11,7 @@ class EmitStatusEffect(
     private val log = LoggerFactory.getLogger(EmitStatusEffect::class.java)
 
     override fun runEffect() {
-        log.trace("Running EmitStatusEffect thread: ${Thread.currentThread().id}")
+        log.trace("Running EmitStatusEffect")
         statusConsumer.announce(status)
     }
 }

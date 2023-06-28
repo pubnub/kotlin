@@ -15,7 +15,7 @@ class HandshakeEffect(
     private val log = LoggerFactory.getLogger(HandshakeEffect::class.java)
 
     override fun runEffect() {
-        log.trace("Running HandshakeEffect thread: ${Thread.currentThread().id}")
+        log.trace("Running HandshakeEffect")
 
         remoteAction.async { result, status ->
             if (status.error) {

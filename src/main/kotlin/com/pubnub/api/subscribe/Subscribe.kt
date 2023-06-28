@@ -104,7 +104,7 @@ class Subscribe(
                 channels,
                 channelGroups,
                 SubscriptionCursor(withTimetoken, "42")
-            ) // todo skąd wziąć region?
+            ) // todo get region from somewhere
             eventEngineManager.addEventToQueue(subscriptionRestored)
         } else {
             val subscriptionChanged = SubscriptionChanged(channels, channelGroups)

@@ -6,15 +6,14 @@ import com.pubnub.api.eventengine.Sink
 import com.pubnub.api.eventengine.Source
 import com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectInvocation
 import com.pubnub.api.subscribe.eventengine.event.Event
-import java.util.concurrent.LinkedBlockingQueue
 
 class EventEngineConfImpl : EventEngineConf {
-    private val eventSinkSource = QueueSinkSource<Event>(LinkedBlockingQueue())
-    private val effectSinkSource = QueueSinkSource<SubscribeEffectInvocation>(LinkedBlockingQueue())
+    private val eventSinkSourceQueue = QueueSinkSource<Event>()
+    private val effectSinkSourceQueue = QueueSinkSource<SubscribeEffectInvocation>()
 
-    override val eventSink: Sink<Event> = eventSinkSource
-    override val eventSource: Source<Event> = eventSinkSource
+    override val eventSink: Sink<Event> = eventSinkSourceQueue
+    override val eventSource: Source<Event> = eventSinkSourceQueue
 
-    override val effectSink: Sink<SubscribeEffectInvocation> = effectSinkSource
-    override val effectSource: Source<SubscribeEffectInvocation> = effectSinkSource
+    override val effectSink: Sink<SubscribeEffectInvocation> = effectSinkSourceQueue
+    override val effectSource: Source<SubscribeEffectInvocation> = effectSinkSourceQueue
 }
