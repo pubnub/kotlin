@@ -80,7 +80,7 @@ class TransitionFromHandshakingReconnectingStateTest {
         // when
         val (state, invocations) = transition(
             SubscribeState.HandshakeReconnecting(channels, channelGroups, 0, reason),
-            Event.HandshakeReconnectGiveUp(reason)
+            Event.HandshakeReconnectGiveup(reason)
         )
 
         // then
@@ -88,6 +88,16 @@ class TransitionFromHandshakingReconnectingStateTest {
         assertEquals(
             listOf(
                 SubscribeEffectInvocation.CancelHandshakeReconnect,
+                SubscribeEffectInvocation.EmitStatus(
+                    PNStatus(
+                        category = PNStatusCategory.PNReconnectionAttemptsExhausted,
+                        operation = PNOperationType.PNSubscribeOperation,
+                        error = true,
+                        affectedChannels = channels,
+                        affectedChannelGroups = channelGroups,
+                        exception = reason
+                    )
+                )
             ),
             invocations
         )

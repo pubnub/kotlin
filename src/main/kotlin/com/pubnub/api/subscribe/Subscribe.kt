@@ -3,7 +3,6 @@
 package com.pubnub.api.subscribe
 
 import com.pubnub.api.PubNub
-import com.pubnub.api.endpoints.pubsub.Subscribe
 import com.pubnub.api.enums.PNReconnectionPolicy
 import com.pubnub.api.eventengine.EffectDispatcher
 import com.pubnub.api.eventengine.EventEngineConf
@@ -18,14 +17,13 @@ import com.pubnub.api.subscribe.eventengine.effect.NoRetriesPolicy
 import com.pubnub.api.subscribe.eventengine.effect.RetryPolicy
 import com.pubnub.api.subscribe.eventengine.effect.StatusConsumer
 import com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectFactory
-import com.pubnub.api.subscribe.eventengine.effect.effectprovider.HandshakeProvider
 import com.pubnub.api.subscribe.eventengine.effect.effectprovider.HandshakeProviderImpl
-import com.pubnub.api.subscribe.eventengine.effect.effectprovider.ReceiveMessagesProvider
 import com.pubnub.api.subscribe.eventengine.effect.effectprovider.ReceiveMessagesProviderImpl
 import com.pubnub.api.subscribe.eventengine.event.Event
 import com.pubnub.api.subscribe.eventengine.event.Event.SubscriptionChanged
 import com.pubnub.api.subscribe.eventengine.event.Event.SubscriptionRestored
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
+import com.pubnub.api.workers.SubscribeMessageProcessor
 import java.time.Duration
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
@@ -38,13 +36,13 @@ class Subscribe(
         internal fun create(
             pubNub: PubNub,
             listenerManager: ListenerManager,
-            eventEngineConf: EventEngineConf
-        ): com.pubnub.api.subscribe.Subscribe {
-            val subscribe = Subscribe(pubNub)
-            val handshakeProvider: HandshakeProvider = HandshakeProviderImpl(subscribe)
-            val receiveMessagesProvider: ReceiveMessagesProvider = ReceiveMessagesProviderImpl(subscribe, pubNub)
+            retryPolicy: RetryPolicy,
+            eventEngineConf: EventEngineConf,
+            messageProcessor: SubscribeMessageProcessor
+        ): Subscribe {
+            val handshakeProvider = HandshakeProviderImpl(pubNub)
+            val receiveMessagesProvider = ReceiveMessagesProviderImpl(pubNub, messageProcessor)
             val eventSink: Sink<Event> = eventEngineConf.eventSink
-            val policy: RetryPolicy = getRetryPolicy(pubNub)
             val executorService: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor()
             val messagesConsumer: MessagesConsumer = listenerManager
             val statusConsumer: StatusConsumer = listenerManager
@@ -53,7 +51,7 @@ class Subscribe(
                 handshakeProvider,
                 receiveMessagesProvider,
                 eventSink,
-                policy,
+                retryPolicy,
                 executorService,
                 messagesConsumer,
                 statusConsumer
@@ -88,6 +86,7 @@ class Subscribe(
                     maxRetries = pubNub.configuration.maximumReconnectionRetries,
                     fixedDelay = Duration.ofSeconds(3)
                 )
+
                 PNReconnectionPolicy.EXPONENTIAL -> ExponentialPolicy(maxRetries = pubNub.configuration.maximumReconnectionRetries)
             }
         }

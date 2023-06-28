@@ -83,7 +83,7 @@ class RetrofitManager(val pubnub: PubNub) {
 
     private fun createOkHttpClient(readTimeout: Int, withSignature: Boolean = true): OkHttpClient {
         val okHttpBuilder = OkHttpClient.Builder()
-            .retryOnConnectionFailure(true)
+            .retryOnConnectionFailure(false)
             .readTimeout(readTimeout.toLong(), TimeUnit.SECONDS)
             .connectTimeout(pubnub.configuration.connectTimeout.toLong(), TimeUnit.SECONDS)
 

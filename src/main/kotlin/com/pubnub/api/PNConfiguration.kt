@@ -3,6 +3,10 @@ package com.pubnub.api
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions
 import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.enums.PNReconnectionPolicy
+import com.pubnub.api.subscribe.eventengine.effect.ExponentialPolicy
+import com.pubnub.api.subscribe.eventengine.effect.LinearPolicy
+import com.pubnub.api.subscribe.eventengine.effect.NoRetriesPolicy
+import com.pubnub.api.subscribe.eventengine.effect.RetryPolicy
 import okhttp3.Authenticator
 import okhttp3.CertificatePinner
 import okhttp3.ConnectionSpec
@@ -10,6 +14,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import org.slf4j.LoggerFactory
 import java.net.Proxy
 import java.net.ProxySelector
+import java.time.Duration
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentMap
 import javax.net.ssl.HostnameVerifier
@@ -335,4 +340,15 @@ open class PNConfiguration(
 
     @Deprecated("To be used by components", level = DeprecationLevel.WARNING)
     fun addPnsdkSuffix(nameToSuffixes: Map<String, String>) = pnsdkSuffixes.putAll(nameToSuffixes)
+
+    internal fun retryPolicy(linearDelay: Duration = Duration.ofSeconds(3)): RetryPolicy {
+        return when (reconnectionPolicy) {
+            PNReconnectionPolicy.NONE -> NoRetriesPolicy
+            PNReconnectionPolicy.LINEAR -> LinearPolicy(
+                maxRetries = maximumReconnectionRetries,
+                fixedDelay = linearDelay
+            )
+            PNReconnectionPolicy.EXPONENTIAL -> ExponentialPolicy(maxRetries = maximumReconnectionRetries)
+        }
+    }
 }

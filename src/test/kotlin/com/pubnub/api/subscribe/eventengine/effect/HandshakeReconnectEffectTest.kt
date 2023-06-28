@@ -88,7 +88,7 @@ class HandshakeReconnectEffectTest {
         handshakeReconnectEffect.runEffect()
 
         // then
-        assertEquals(listOf(Event.HandshakeReconnectGiveUp(reason)), eventSink.events)
+        assertEquals(listOf(Event.HandshakeReconnectGiveup(reason)), eventSink.events)
     }
 
     @Test
