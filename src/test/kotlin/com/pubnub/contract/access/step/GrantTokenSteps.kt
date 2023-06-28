@@ -1,5 +1,6 @@
 package com.pubnub.contract.access.step
 
+import com.pubnub.api.PubNubException
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant
 import com.pubnub.api.models.consumer.access_manager.v3.PNChannelGroupPatternGrant
@@ -7,18 +8,26 @@ import com.pubnub.api.models.consumer.access_manager.v3.PNChannelGroupResourceGr
 import com.pubnub.api.models.consumer.access_manager.v3.PNChannelPatternGrant
 import com.pubnub.api.models.consumer.access_manager.v3.PNChannelResourceGrant
 import com.pubnub.api.models.consumer.access_manager.v3.PNGrantTokenResult
+import com.pubnub.api.models.consumer.access_manager.v3.PNToken
 import com.pubnub.api.models.consumer.access_manager.v3.PNUUIDPatternGrant
 import com.pubnub.api.models.consumer.access_manager.v3.PNUUIDResourceGrant
 import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant
 import com.pubnub.contract.access.parameter.PermissionType
 import com.pubnub.contract.access.parameter.ResourceType
+import com.pubnub.contract.access.parameter.patternPermissionsMap
+import com.pubnub.contract.access.parameter.resourcePermissionsMap
 import com.pubnub.contract.access.state.FutureCallGrant
 import com.pubnub.contract.access.state.GrantTokenState
 import io.cucumber.java.en.And
 import io.cucumber.java.en.Given
+import io.cucumber.java.en.Then
+import io.cucumber.java.en.When
+import org.hamcrest.MatcherAssert
+import org.hamcrest.Matchers
+import org.junit.Assert
 import kotlin.random.Random
 
-class GivenSteps(private val grantTokenState: GrantTokenState) {
+class GrantTokenSteps(private val grantTokenState: GrantTokenState) {
     private val tokenWithAll =
         "qEF2AkF0GmEI03xDdHRsGDxDcmVzpURjaGFuoWljaGFubmVsLTEY70NncnChb2NoYW5uZWxfZ3JvdXAtMQVDdXNyoENzcGOgRHV1aWShZnV1aWQtMRhoQ3BhdKVEY2hhbqFtXmNoYW5uZWwtXFMqJBjvQ2dycKF0XjpjaGFubmVsX2dyb3VwLVxTKiQFQ3VzcqBDc3BjoER1dWlkoWpedXVpZC1cUyokGGhEbWV0YaBEdXVpZHR0ZXN0LWF1dGhvcml6ZWQtdXVpZENzaWdYIPpU-vCe9rkpYs87YUrFNWkyNq8CVvmKwEjVinnDrJJc"
 
@@ -225,5 +234,157 @@ class GivenSteps(private val grantTokenState: GrantTokenState) {
                 }
             }
         }
+    }
+
+    @When("I grant a token specifying those permissions")
+    fun grant_token() {
+        val definedGrants = grantTokenState.definedGrants.map { it.evaluate() }
+        @Suppress("DEPRECATION")
+        grantTokenState.result = grantTokenState.pubnub.grantToken(
+            ttl = grantTokenState.TTL?.toInt() ?: throw RuntimeException("TTL expected"),
+            authorizedUUID = grantTokenState.authorizedUUID,
+            channels = definedGrants.filterIsInstance(ChannelGrant::class.java),
+            channelGroups = definedGrants.filterIsInstance(ChannelGroupGrant::class.java),
+            uuids = definedGrants.filterIsInstance(UUIDGrant::class.java)
+        ).sync()
+    }
+
+    @When("I attempt to grant a token specifying those permissions")
+    fun i_attempt_to_grant_a_token_specifying_those_permissions() {
+        try {
+            grant_token()
+            Assert.fail("Expected exception")
+        } catch (ex: PubNubException) {
+            grantTokenState.pnException = ex
+        } catch (ex: AssertionError) {
+            throw ex
+        } catch (t: Throwable) {
+            Assert.fail("Expected PubNubException but got throwable $t")
+        }
+    }
+
+    @When("I parse the token")
+    fun i_parse_the_token() {
+        grantTokenState.parsedToken = grantTokenState.pubnub.parseToken(grantTokenState.result?.token!!)
+    }
+
+    @When("I revoke a token")
+    fun i_revoke_the_token() {
+        try {
+            grantTokenState.pubnub.revokeToken(grantTokenState.tokenString!!).sync()
+        } catch (e: PubNubException) {
+            grantTokenState.pnException = e
+        }
+    }
+
+    @When("I publish a message using that auth token with channel {string}")
+    fun i_publish_a_message_using_that_auth_token_with_channel(channel: String) {
+        grantTokenState.pubnub.setToken(grantTokenState.tokenString)
+        grantTokenState.pubnub.publish(
+            channel = channel,
+            message = "Message"
+        ).sync()
+    }
+
+    @When("I attempt to publish a message using that auth token with channel {string}")
+    fun i_attempt_to_publish_a_message_using_that_auth_token_with_channel(channel: String) {
+        grantTokenState.pubnub.setToken(grantTokenState.tokenString)
+
+        try {
+            grantTokenState.pubnub.publish(
+                channel = channel,
+                message = "Message"
+            ).sync()
+        } catch (e: PubNubException) {
+            grantTokenState.pnException = e
+        }
+    }
+
+    @Then("the authorized UUID {string}")
+    fun authorized_uuid(uuid: String) {
+        grantTokenState.authorizedUUID = uuid
+    }
+
+    @Then("the parsed token output contains the authorized UUID {string}")
+    fun the_parsed_token_output_contains_the_authorized_uuid(uuid: String) {
+        val token = grantTokenState.parsedToken!!
+        MatcherAssert.assertThat(token.authorizedUUID, Matchers.`is`(uuid))
+    }
+
+    @Then("the token contains the authorized UUID {string}")
+    fun the_token_contains_the_authorized_uuid(uuid: String) {
+        val result = grantTokenState.result!!
+        val parsedToken = grantTokenState.pubnub.parseToken(result.token)
+        MatcherAssert.assertThat(parsedToken.authorizedUUID, Matchers.`is`(uuid))
+    }
+
+    @Then("the token contains the TTL {ttl}")
+    fun the_token_contains_the_ttl(ttl: Long) {
+        val result = grantTokenState.result!!
+        val token = grantTokenState.pubnub.parseToken(result.token)
+        MatcherAssert.assertThat(token.ttl, Matchers.`is`(ttl))
+    }
+
+    @Then("the token does not contain an authorized uuid")
+    fun the_token_does_not_contain_an_authorized_uuid() {
+        val result = grantTokenState.result!!
+        val token = grantTokenState.pubnub.parseToken(result.token)
+        MatcherAssert.assertThat(token.authorizedUUID, Matchers.nullValue())
+    }
+
+    @Then("the token has {string} {resourceType} resource access permissions")
+    fun the_token_has_channel_resource_access_permissions(name: String, resourceType: ResourceType) {
+        val token = parsedToken()!!
+        val permissions = token.resourcePermissionsMap(resourceType)[name]
+        MatcherAssert.assertThat(
+            "Token doesn't contain required permissions $token",
+            permissions,
+            Matchers.notNullValue()
+        )
+        grantTokenState.currentResourcePermissions = permissions
+    }
+
+    @Then("the token has {string} {resourceType} pattern access permissions")
+    fun the_token_has_channel_pattern_access_permissions(name: String, resourceType: ResourceType) {
+        val token = parsedToken()!!
+        val permissions = token.patternPermissionsMap(resourceType)[name]
+        MatcherAssert.assertThat(
+            "Token doesn't contain required permissions $token",
+            permissions,
+            Matchers.notNullValue()
+        )
+        grantTokenState.currentResourcePermissions = permissions
+    }
+
+    @Then("token resource permission {permissionType}")
+    fun token_resource_permission(permissionType: PermissionType) {
+        assertPermissions(permissionType)
+    }
+
+    @Then("token pattern permission {permissionType}")
+    fun token_pattern_permission(permissionType: PermissionType) {
+        assertPermissions(permissionType)
+    }
+
+    @Then("I get confirmation that token has been revoked")
+    fun i_get_confirmation_that_token_has_been_revoked() {
+        MatcherAssert.assertThat(grantTokenState.pnException, Matchers.nullValue())
+    }
+
+    private fun assertPermissions(permissionType: PermissionType) {
+        val permissions = grantTokenState.currentResourcePermissions!!
+        when (permissionType) {
+            PermissionType.READ -> MatcherAssert.assertThat(permissions.read, Matchers.`is`(true))
+            PermissionType.WRITE -> MatcherAssert.assertThat(permissions.write, Matchers.`is`(true))
+            PermissionType.GET -> MatcherAssert.assertThat(permissions.get, Matchers.`is`(true))
+            PermissionType.MANAGE -> MatcherAssert.assertThat(permissions.manage, Matchers.`is`(true))
+            PermissionType.UPDATE -> MatcherAssert.assertThat(permissions.update, Matchers.`is`(true))
+            PermissionType.JOIN -> MatcherAssert.assertThat(permissions.join, Matchers.`is`(true))
+            PermissionType.DELETE -> MatcherAssert.assertThat(permissions.delete, Matchers.`is`(true))
+        }
+    }
+
+    private fun parsedToken(): PNToken? {
+        return grantTokenState.parsedToken ?: grantTokenState.result?.let { grantTokenState.pubnub.parseToken(it.token) }
     }
 }

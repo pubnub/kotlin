@@ -2,12 +2,27 @@ package com.pubnub.contract.member.step
 
 import com.pubnub.api.models.consumer.objects.member.PNMember
 import com.pubnub.api.models.consumer.objects.member.PNUUIDDetailsLevel
+import com.pubnub.contract.loadMember
 import com.pubnub.contract.member.state.MemberState
+import io.cucumber.java.en.Given
+import io.cucumber.java.en.Then
 import io.cucumber.java.en.When
+import org.hamcrest.MatcherAssert
+import org.hamcrest.Matchers
 
-class WhenSteps(
+class MemberSteps(
     private val memberState: MemberState,
 ) {
+
+    @Given("the data for {string} member")
+    fun the_data_for_member(memberName: String) {
+        memberState.members.add(loadMember(memberName))
+    }
+
+    @Given("the data for {string} member that we want to remove")
+    fun the_data_for_member_that_we_want_to_delete(memberName: String) {
+        memberState.membersToRemove.add(loadMember(memberName))
+    }
 
     @When("I get the channel members")
     fun i_get_the_channel_members() {
@@ -79,5 +94,24 @@ class WhenSteps(
             memberState.returnedMembers = it.data
             memberState.responseStatus = it.status
         }
+    }
+
+    @Then("the response contains list with {string} and {string} members")
+    fun the_response_contains_list_with_and_members(firstMemberName: String, secondMemberName: String) {
+        val firstMember = loadMember(firstMemberName)
+        val secondMember = loadMember(secondMemberName)
+        MatcherAssert.assertThat(memberState.returnedMembers, Matchers.containsInAnyOrder(firstMember, secondMember))
+    }
+
+    @Then("the response contains list with {string} member")
+    fun the_response_contains_list_with_member(memberName: String) {
+        val member = loadMember(memberName)
+        MatcherAssert.assertThat(memberState.returnedMembers, Matchers.hasItem(member))
+    }
+
+    @Then("the response does not contain list with {string} member")
+    fun the_response_does_not_contain_list_with_member(memberName: String) {
+        val member = loadMember(memberName)
+        MatcherAssert.assertThat(memberState.returnedMembers, Matchers.not(Matchers.hasItem(member)))
     }
 }

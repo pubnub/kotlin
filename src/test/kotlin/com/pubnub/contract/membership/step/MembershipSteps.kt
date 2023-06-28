@@ -2,12 +2,28 @@ package com.pubnub.contract.membership.step
 
 import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
 import com.pubnub.api.models.consumer.objects.membership.PNChannelMembership
+import com.pubnub.contract.loadChannelMembership
 import com.pubnub.contract.uuidmetadata.state.MembershipState
+import io.cucumber.java.en.Given
+import io.cucumber.java.en.Then
 import io.cucumber.java.en.When
+import org.hamcrest.MatcherAssert
+import org.hamcrest.Matchers
 
-class WhenSteps(
-    private val membershipState: MembershipState
+class MembershipSteps(
+    private val membershipState: MembershipState,
 ) {
+
+    @Given("the data for {string} membership")
+    fun the_data_for_membership(channelMembershipName: String) {
+        membershipState.memberships.add(loadChannelMembership(channelMembershipName))
+    }
+
+    @Given("the data for {string} membership that we want to remove")
+    fun the_data_for_membership_that_we_want_to_remove(channelMembershipName: String) {
+        membershipState.membershipsToRemove.add(loadChannelMembership(channelMembershipName))
+    }
+
     @When("I get the memberships")
     fun i_get_the_memberships() {
         membershipState.pubnub.getMemberships(uuid = membershipState.uuid()).sync()?.let {
@@ -114,5 +130,35 @@ class WhenSteps(
             membershipState.responseStatus = it.status
             membershipState.returnedMemberships = it.data
         }
+    }
+
+    @Then("the response contains list with {string} and {string} memberships")
+    fun the_response_contains_list_with_and_memberships(
+        firstChannelMembershipName: String,
+        secondChannelMembershipName: String
+    ) {
+        val firstChannelMembership = loadChannelMembership(firstChannelMembershipName)
+        val secondChannelMembership = loadChannelMembership(secondChannelMembershipName)
+
+        MatcherAssert.assertThat(
+            membershipState.returnedMemberships,
+            Matchers.containsInAnyOrder(firstChannelMembership, secondChannelMembership)
+        )
+    }
+
+    @Then("the response contains list with {string} membership")
+    fun the_response_contains_list_with_and_membership(
+        channelMembershipName: String,
+    ) {
+        val channelMembership = loadChannelMembership(channelMembershipName)
+
+        MatcherAssert.assertThat(membershipState.returnedMemberships, Matchers.hasItem(channelMembership))
+    }
+
+    @Then("the response does not contain list with {string} membership")
+    fun the_response_does_not_contain_list_with_patient_membership_membership(channelMembershipName: String) {
+        val channelMembership = loadChannelMembership(channelMembershipName)
+
+        MatcherAssert.assertThat(membershipState.returnedMemberships, Matchers.not(Matchers.hasItem(channelMembership)))
     }
 }
