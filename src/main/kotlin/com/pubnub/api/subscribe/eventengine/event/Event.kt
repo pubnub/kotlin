@@ -24,12 +24,12 @@ sealed class Event : CoreEvent {
     data class HandshakeReconnectSuccess(val subscriptionCursor: SubscriptionCursor) : Event()
     data class HandshakeReconnectFailure(val reason: PubNubException) : Event()
     object HandshakeReconnectRetry : Event()
-    data class HandshakeReconnectGiveUp(val reason: PubNubException) : Event()
+    data class HandshakeReconnectGiveup(val reason: PubNubException) : Event()
 
     data class ReceiveSuccess(val messages: List<PNEvent>, val subscriptionCursor: SubscriptionCursor) : Event()
     data class ReceiveFailure(val reason: PubNubException) : Event()
     data class ReceiveReconnectSuccess(val messages: List<PNEvent>, val subscriptionCursor: SubscriptionCursor) : Event()
     data class ReceiveReconnectFailure(val reason: PubNubException) : Event()
     object ReceiveReconnectRetry : Event()
-    data class ReceiveReconnectGiveUp(val reason: PubNubException) : Event()
+    data class ReceiveReconnectGiveup(val reason: PubNubException) : Event()
 }

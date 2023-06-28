@@ -86,6 +86,7 @@ import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
 import com.pubnub.api.presence.Presence
 import com.pubnub.api.subscribe.Subscribe
 import com.pubnub.api.subscribe.eventengine.configuration.EventEngineConfImpl
+import com.pubnub.api.subscribe.eventengine.effect.RetryPolicy
 import com.pubnub.api.vendor.Base64
 import com.pubnub.api.vendor.Crypto
 import com.pubnub.api.vendor.FileEncryptionUtil.decrypt
@@ -94,7 +95,11 @@ import java.io.InputStream
 import java.util.Date
 import java.util.UUID
 
-class PubNub internal constructor(val configuration: PNConfiguration, eventEngineConf: EventEngineConf) {
+class PubNub internal constructor(
+    val configuration: PNConfiguration,
+    eventEngineConf: EventEngineConf,
+    retryPolicy: RetryPolicy = configuration.retryPolicy()
+) {
 
     constructor(configuration: PNConfiguration) : this(configuration, EventEngineConfImpl())
 
@@ -124,7 +129,7 @@ class PubNub internal constructor(val configuration: PNConfiguration, eventEngin
     private val tokenParser: TokenParser = TokenParser()
     private val listenerManager = ListenerManager(this)
     internal val subscriptionManager = SubscriptionManager(this, listenerManager)
-    private val subscribe = Subscribe.create(this, listenerManager, eventEngineConf)
+    private val subscribe = Subscribe.create(this, listenerManager, retryPolicy, eventEngineConf)
 
     //endregion
 

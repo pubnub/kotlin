@@ -38,13 +38,13 @@ class Subscribe(
         internal fun create(
             pubNub: PubNub,
             listenerManager: ListenerManager,
+            retryPolicy: RetryPolicy,
             eventEngineConf: EventEngineConf
         ): com.pubnub.api.subscribe.Subscribe {
             val subscribe = Subscribe(pubNub)
             val handshakeProvider: HandshakeProvider = HandshakeProviderImpl(subscribe)
             val receiveMessagesProvider: ReceiveMessagesProvider = ReceiveMessagesProviderImpl(subscribe, pubNub)
             val eventSink: Sink<Event> = eventEngineConf.eventSink
-            val policy: RetryPolicy = getRetryPolicy(pubNub)
             val executorService: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor()
             val messagesConsumer: MessagesConsumer = listenerManager
             val statusConsumer: StatusConsumer = listenerManager
@@ -53,7 +53,7 @@ class Subscribe(
                 handshakeProvider,
                 receiveMessagesProvider,
                 eventSink,
-                policy,
+                retryPolicy,
                 executorService,
                 messagesConsumer,
                 statusConsumer

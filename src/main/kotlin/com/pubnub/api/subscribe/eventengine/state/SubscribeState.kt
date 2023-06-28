@@ -106,8 +106,20 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, Event, SubscribeS
                     transitionTo(HandshakeStopped(channels, channelGroups, reason))
                 }
 
-                is Event.HandshakeReconnectGiveUp -> {
-                    transitionTo(HandshakeFailed(this.channels, this.channelGroups, event.reason))
+                is Event.HandshakeReconnectGiveup -> {
+                    transitionTo(
+                        HandshakeFailed(this.channels, this.channelGroups, event.reason),
+                        SubscribeEffectInvocation.EmitStatus(
+                            PNStatus(
+                                category = PNStatusCategory.PNDisconnectedCategory,
+                                operation = PNOperationType.PNSubscribeOperation,
+                                error = true,
+                                affectedChannels = channels,
+                                affectedChannelGroups = channelGroups,
+                                exception = event.reason
+                            )
+                        )
+                    )
                 }
 
                 is Event.HandshakeReconnectSuccess -> {
@@ -300,7 +312,7 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, Event, SubscribeS
                     transitionTo(ReceiveStopped(channels, channelGroups, subscriptionCursor))
                 }
 
-                is Event.ReceiveReconnectGiveUp -> {
+                is Event.ReceiveReconnectGiveup -> {
                     transitionTo(
                         state = ReceiveFailed(channels, channelGroups, subscriptionCursor, event.reason),
                         SubscribeEffectInvocation.EmitStatus(

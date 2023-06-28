@@ -93,7 +93,7 @@ class ReceiveReconnectEffectTest {
         receiveReconnectEffect.runEffect()
 
         // then
-        assertEquals(listOf(Event.ReceiveReconnectGiveUp(reason)), eventSink.events)
+        assertEquals(listOf(Event.ReceiveReconnectGiveup(reason)), eventSink.events)
     }
 
     @Test
