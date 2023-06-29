@@ -8,12 +8,16 @@ import com.pubnub.api.models.consumer.pubsub.PNSignalResult
 import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
+import org.slf4j.LoggerFactory
 
 class EmitMessagesEffect(
     private val messagesConsumer: MessagesConsumer,
     private val messages: List<PNEvent>
 ) : Effect {
+    private val log = LoggerFactory.getLogger(EmitMessagesEffect::class.java)
+
     override fun runEffect() {
+        log.trace("Running EmitMessagesEffect")
         for (message in messages) {
             when (message) {
                 is PNMessageResult -> messagesConsumer.announce(message)

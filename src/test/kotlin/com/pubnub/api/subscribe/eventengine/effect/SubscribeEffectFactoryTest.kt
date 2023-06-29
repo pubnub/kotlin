@@ -4,9 +4,12 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.remoteaction.RemoteAction
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
-import com.pubnub.api.eventengine.EventSink
 import com.pubnub.api.eventengine.ManagedEffect
+import com.pubnub.api.eventengine.Sink
 import com.pubnub.api.models.consumer.PNStatus
+import com.pubnub.api.subscribe.eventengine.effect.effectprovider.HandshakeProvider
+import com.pubnub.api.subscribe.eventengine.effect.effectprovider.ReceiveMessagesProvider
+import com.pubnub.api.subscribe.eventengine.event.Event
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
 import io.mockk.every
 import io.mockk.mockk
@@ -22,7 +25,7 @@ class SubscribeEffectFactoryTest {
     private val handshakeProvider = mockk<HandshakeProvider>()
     private val receiveMessageProvider = mockk<ReceiveMessagesProvider>()
     private val messagesConsumer = mockk<MessagesConsumer>()
-    private val eventSink = mockk<EventSink>()
+    private val eventSink = mockk<Sink<Event>>()
     private val policy = mockk<RetryPolicy>()
     private val executorService = mockk<ScheduledExecutorService>()
     private val channels = listOf("channel1")
