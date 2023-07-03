@@ -19,15 +19,15 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
 class TransitionFromHandshakingStateTest {
-    val channels = listOf("Channel1")
-    val channelGroups = listOf("ChannelGroup1")
-    val timeToken = 12345345452L
-    val region = "42"
-    val subscriptionCursor = SubscriptionCursor(timeToken, region)
-    val reason = PubNubException("test")
+    private val channels = listOf("Channel1")
+    private val channelGroups = listOf("ChannelGroup1")
+    private val timeToken = 12345345452L
+    private val region = "42"
+    private val subscriptionCursor = SubscriptionCursor(timeToken, region)
+    private val reason = PubNubException("test")
 
     @Test
-    fun can_transit_from_HANDSHAKING_to_RECEIVING_when_there_is_handshakeSuccessEvent() {
+    fun can_transit_from_HANDSHAKING_to_RECEIVING_when_there_is_HANDSHAKE_SUCCESS_event() {
         // when
         val (state, invocations) = transition(
             SubscribeState.Handshaking(channels, channelGroups), Event.HandshakeSuccess(subscriptionCursor)
@@ -54,7 +54,7 @@ class TransitionFromHandshakingStateTest {
     }
 
     @Test
-    fun can_transit_from_HANDSHAKING_to_RECEIVING_when_there_is_subscriptionRestoredEvent() {
+    fun can_transit_from_HANDSHAKING_to_RECEIVING_when_there_is_SUBSCRIPTION_RESTORED_event() {
         // when
         val (state, invocations) = transition(
             SubscribeState.Handshaking(channels, channelGroups),
@@ -65,14 +65,15 @@ class TransitionFromHandshakingStateTest {
         assertEquals(SubscribeState.Receiving(channels, channelGroups, subscriptionCursor), state)
         assertEquals(
             listOf(
-                CancelHandshake, ReceiveMessages(channels, channelGroups, subscriptionCursor)
+                CancelHandshake,
+                ReceiveMessages(channels, channelGroups, subscriptionCursor)
             ),
             invocations
         )
     }
 
     @Test
-    fun can_transit_from_HANDSHAKING_to_HANDSHAKING_when_there_is_subscriptionChangedEvent() {
+    fun can_transit_from_HANDSHAKING_to_HANDSHAKING_when_there_is_SUBSCRIPTION_CHANGED_event() {
         // given
         val newChannels = listOf("newChannel1")
         val newChannelGroups = listOf("newChannelGroup1")
@@ -87,14 +88,15 @@ class TransitionFromHandshakingStateTest {
         assertEquals(SubscribeState.Handshaking(newChannels, newChannelGroups), state)
         assertEquals(
             listOf(
-                CancelHandshake, Handshake(newChannels, newChannelGroups)
+                CancelHandshake,
+                Handshake(newChannels, newChannelGroups)
             ),
             invocations
         )
     }
 
     @Test
-    fun can_transit_from_HANDSHAKING_to_HANDSHAKING_RECONNECTING_when_there_is_handshakingFailureEvent() {
+    fun can_transit_from_HANDSHAKING_to_HANDSHAKING_RECONNECTING_when_there_is_HANDSHAKING_FAILURE_event() {
         // when
         val (state, invocations) = transition(
             SubscribeState.Handshaking(channels, channelGroups), Event.HandshakeFailure(reason)
@@ -104,26 +106,36 @@ class TransitionFromHandshakingStateTest {
         assertEquals(SubscribeState.HandshakeReconnecting(channels, channelGroups, 0, reason), state)
         assertEquals(
             listOf(
-                CancelHandshake, HandshakeReconnect(channels, channelGroups, 0, reason)
+                CancelHandshake,
+                HandshakeReconnect(channels, channelGroups, 0, reason)
             ),
             invocations
         )
     }
 
     @Test
-    fun can_transit_from_HANDSHAKING_to_HANDSHAKING_STOPPED_when_there_is_disconnectEvent() {
+    fun can_transit_from_HANDSHAKING_to_HANDSHAKING_STOPPED_when_there_is_DISCONNECT_event() {
         // when
         val (state, invocations) = transition(
-            SubscribeState.Handshaking(channels, channelGroups), Event.Disconnect
+            SubscribeState.Handshaking(channels, channelGroups),
+            Event.Disconnect
         )
 
         // then
         assertThat(state, instanceOf(SubscribeState.HandshakeStopped::class.java))
-        assertEquals(
-            listOf(
-                CancelHandshake,
-            ),
-            invocations
+        assertEquals(listOf(CancelHandshake), invocations)
+    }
+
+    @Test
+    fun can_transit_from_HANDSHAKING_to_UNSUBSRIBED_when_there_is_UNSUBSCRIBE_ALL_event() {
+        // when
+        val (state, invocations) = transition(
+            SubscribeState.Handshaking(channels, channelGroups),
+            Event.UnsubscribeAll
         )
+
+        // then
+        assertEquals(SubscribeState.Unsubscribed, state)
+        assertEquals(listOf(CancelHandshake), invocations)
     }
 }

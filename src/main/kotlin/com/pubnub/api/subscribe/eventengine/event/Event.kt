@@ -32,4 +32,5 @@ sealed class Event : CoreEvent {
     data class ReceiveReconnectFailure(val reason: PubNubException) : Event()
     object ReceiveReconnectRetry : Event()
     data class ReceiveReconnectGiveUp(val reason: PubNubException) : Event()
+    object UnsubscribeAll : Event()
 }

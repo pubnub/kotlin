@@ -18,11 +18,9 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, Event, SubscribeS
                 is Event.SubscriptionChanged -> {
                     transitionTo(Handshaking(event.channels, event.channelGroups))
                 }
-
                 is Event.SubscriptionRestored -> {
                     transitionTo(Receiving(event.channels, event.channelGroups, event.subscriptionCursor))
                 }
-
                 else -> {
                     noTransition()
                 }
@@ -57,19 +55,18 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, Event, SubscribeS
                 is Event.SubscriptionRestored -> {
                     transitionTo(Receiving(event.channels, event.channelGroups, event.subscriptionCursor))
                 }
-
                 is Event.HandshakeFailure -> {
                     transitionTo(HandshakeReconnecting(channels, channelGroups, 0, event.reason))
                 }
-
                 is Event.SubscriptionChanged -> {
                     transitionTo(Handshaking(event.channels, event.channelGroups))
                 }
-
                 is Event.Disconnect -> {
                     transitionTo(HandshakeStopped(channels, channelGroups, reason = null))
                 }
-
+                is Event.UnsubscribeAll -> {
+                    transitionTo(Unsubscribed)
+                }
                 else -> {
                     noTransition()
                 }
@@ -101,15 +98,12 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, Event, SubscribeS
                 is Event.SubscriptionChanged -> {
                     transitionTo(Handshaking(event.channels, event.channelGroups))
                 }
-
                 is Event.Disconnect -> {
                     transitionTo(HandshakeStopped(channels, channelGroups, reason))
                 }
-
                 is Event.HandshakeReconnectGiveUp -> {
                     transitionTo(HandshakeFailed(this.channels, this.channelGroups, event.reason))
                 }
-
                 is Event.HandshakeReconnectSuccess -> {
                     transitionTo(
                         state = Receiving(channels, channelGroups, event.subscriptionCursor),
@@ -128,7 +122,9 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, Event, SubscribeS
                 is Event.SubscriptionRestored -> {
                     transitionTo(Receiving(event.channels, event.channelGroups, event.subscriptionCursor))
                 }
-
+                is Event.UnsubscribeAll -> {
+                    transitionTo(Unsubscribed)
+                }
                 else -> {
                     noTransition()
                 }
@@ -147,7 +143,15 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, Event, SubscribeS
                 is Event.Reconnect -> {
                     transitionTo(Handshaking(channels, channelGroups))
                 }
-
+                is Event.SubscriptionChanged -> {
+                    transitionTo(Handshaking(event.channels, event.channelGroups))
+                }
+                is Event.SubscriptionRestored -> {
+                    transitionTo(Receiving(event.channels, event.channelGroups, event.subscriptionCursor))
+                }
+                is Event.UnsubscribeAll -> {
+                    transitionTo(Unsubscribed)
+                }
                 else -> {
                     noTransition()
                 }
@@ -166,11 +170,9 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, Event, SubscribeS
                 is Event.HandshakeReconnectRetry -> {
                     transitionTo(HandshakeReconnecting(channels, channelGroups, 0, reason))
                 }
-
                 is Event.SubscriptionChanged -> {
                     transitionTo(Handshaking(event.channels, event.channelGroups))
                 }
-
                 is Event.SubscriptionRestored -> {
                     transitionTo(
                         Receiving(
@@ -178,11 +180,12 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, Event, SubscribeS
                         )
                     )
                 }
-
                 is Event.Reconnect -> {
                     transitionTo(Handshaking(channels, channelGroups))
                 }
-
+                is Event.UnsubscribeAll -> {
+                    transitionTo(Unsubscribed)
+                }
                 else -> {
                     noTransition()
                 }
@@ -213,7 +216,6 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, Event, SubscribeS
                         )
                     )
                 }
-
                 is Event.Disconnect -> {
                     transitionTo(
                         state = ReceiveStopped(channels, channelGroups, subscriptionCursor),
@@ -228,15 +230,12 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, Event, SubscribeS
                         )
                     )
                 }
-
                 is Event.SubscriptionChanged -> {
                     transitionTo(Receiving(event.channels, event.channelGroups, subscriptionCursor))
                 }
-
                 is Event.SubscriptionRestored -> {
                     transitionTo(Receiving(event.channels, event.channelGroups, event.subscriptionCursor))
                 }
-
                 is Event.ReceiveSuccess -> {
                     transitionTo(
                         state = Receiving(channels, channelGroups, event.subscriptionCursor),
@@ -251,6 +250,9 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, Event, SubscribeS
                             )
                         )
                     )
+                }
+                is Event.UnsubscribeAll -> {
+                    transitionTo(Unsubscribed)
                 }
 
                 else -> {
@@ -289,17 +291,14 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, Event, SubscribeS
                         )
                     )
                 }
-
                 is Event.SubscriptionChanged -> {
                     transitionTo(
                         Receiving(event.channels, event.channelGroups, subscriptionCursor)
                     )
                 }
-
                 is Event.Disconnect -> {
                     transitionTo(ReceiveStopped(channels, channelGroups, subscriptionCursor))
                 }
-
                 is Event.ReceiveReconnectGiveUp -> {
                     transitionTo(
                         state = ReceiveFailed(channels, channelGroups, subscriptionCursor, event.reason),
@@ -314,7 +313,6 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, Event, SubscribeS
                         )
                     )
                 }
-
                 is Event.ReceiveReconnectSuccess -> {
                     transitionTo(
                         state = Receiving(channels, channelGroups, event.subscriptionCursor),
@@ -330,11 +328,12 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, Event, SubscribeS
                         )
                     )
                 }
-
                 is Event.SubscriptionRestored -> {
                     transitionTo(Receiving(event.channels, event.channelGroups, subscriptionCursor))
                 }
-
+                is Event.UnsubscribeAll -> {
+                    transitionTo(Unsubscribed)
+                }
                 else -> {
                     noTransition()
                 }
@@ -352,7 +351,15 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, Event, SubscribeS
                 is Event.Reconnect -> {
                     transitionTo(Receiving(channels, channelGroups, subscriptionCursor))
                 }
-
+                is Event.SubscriptionChanged -> {
+                    transitionTo(Receiving(event.channels, event.channelGroups, subscriptionCursor))
+                }
+                is Event.SubscriptionRestored -> {
+                    transitionTo(Receiving(event.channels, event.channelGroups, event.subscriptionCursor))
+                }
+                is Event.UnsubscribeAll -> {
+                    transitionTo(Unsubscribed)
+                }
                 else -> {
                     noTransition()
                 }
@@ -371,17 +378,17 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, Event, SubscribeS
                 is Event.ReceiveReconnectRetry -> {
                     transitionTo(ReceiveReconnecting(channels, channelGroups, subscriptionCursor, 0, reason))
                 }
-
                 is Event.Reconnect -> {
                     transitionTo(Receiving(channels, channelGroups, subscriptionCursor))
                 }
-
                 is Event.SubscriptionChanged -> {
                     transitionTo(Receiving(event.channels, event.channelGroups, subscriptionCursor))
                 }
-
                 is Event.SubscriptionRestored -> {
                     transitionTo(Receiving(event.channels, event.channelGroups, event.subscriptionCursor))
+                }
+                is Event.UnsubscribeAll -> {
+                    transitionTo(Unsubscribed)
                 }
                 else -> {
                     noTransition()
