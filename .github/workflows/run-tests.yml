@@ -9,7 +9,7 @@ jobs:
     name: Integration and Unit tests
     runs-on:
       group: Default Larger Runners
-      labels: ubuntu-latest
+      labels: ubuntu-latest-m
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -39,7 +39,7 @@ jobs:
     name: Acceptance tests
     runs-on:
       group: Default Larger Runners
-      labels: ubuntu-latest
+      labels: ubuntu-latest-m
     env:
       pubKey: somePubKey
       subKey: someSubKey
