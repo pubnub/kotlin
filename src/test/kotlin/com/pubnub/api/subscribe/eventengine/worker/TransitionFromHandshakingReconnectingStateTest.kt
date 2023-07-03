@@ -13,12 +13,12 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
 class TransitionFromHandshakingReconnectingStateTest {
-    val channels = listOf("Channel1")
-    val channelGroups = listOf("ChannelGroup1")
-    val timeToken = 12345345452L
-    val region = "42"
-    val subscriptionCursor = SubscriptionCursor(timeToken, region)
-    val reason = PubNubException("Test")
+    private val channels = listOf("Channel1")
+    private val channelGroups = listOf("ChannelGroup1")
+    private val timeToken = 12345345452L
+    private val region = "42"
+    private val subscriptionCursor = SubscriptionCursor(timeToken, region)
+    private val reason = PubNubException("Test")
 
     @Test
     fun can_transit_from_HANDSHAKE_RECONNECTING_to_HANDSHAKE_RECONNECTING_when_there_is_HANDSHAKE_RECONNECT_FAILURE_event() {
@@ -138,5 +138,18 @@ class TransitionFromHandshakingReconnectingStateTest {
             ),
             invocations
         )
+    }
+
+    @Test
+    fun can_transit_from_HANDSHAKE_RECONNECTING_to_UNSUBSRIBED_when_there_is_UNSUBSRIBED_ALL_event() {
+        // when
+        val (state, invocations) = transition(
+            SubscribeState.HandshakeReconnecting(channels, channelGroups, 0, reason),
+            Event.UnsubscribeAll
+        )
+
+        // then
+        assertEquals(SubscribeState.Unsubscribed, state)
+        assertEquals(listOf(SubscribeEffectInvocation.CancelHandshakeReconnect), invocations)
     }
 }
