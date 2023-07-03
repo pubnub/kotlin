@@ -7,7 +7,9 @@ on:
 jobs:
   tests:
     name: Integration and Unit tests
-    runs-on: ubuntu-latest
+    runs-on:
+      group: Default Larger Runners
+      labels: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -35,7 +37,9 @@ jobs:
         uses: ./.github/.release/actions/actions/utils/fast-jobs-failure
   acceptance-tests:
     name: Acceptance tests
-    runs-on: ubuntu-latest
+    runs-on:
+      group: Default Larger Runners
+      labels: ubuntu-latest
     env:
       pubKey: somePubKey
       subKey: someSubKey
