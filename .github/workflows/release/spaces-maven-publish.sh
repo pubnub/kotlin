@@ -1,1 +1,0 @@
-./gradlew :pubnub-spaces:publish

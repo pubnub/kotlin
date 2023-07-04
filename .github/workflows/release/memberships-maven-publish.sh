@@ -1,1 +1,0 @@
-./gradlew :pubnub-memberships:publish
