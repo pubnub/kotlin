@@ -17,7 +17,7 @@ class EffectDispatcher<T : EffectInvocation>(
         executorService.submit {
             try {
                 while (true) {
-                    val invocation = effectSource.take() // todo added missing unit tests
+                    val invocation = effectSource.take()
                     dispatch(invocation)
                 }
             } catch (e: InterruptedException) {
