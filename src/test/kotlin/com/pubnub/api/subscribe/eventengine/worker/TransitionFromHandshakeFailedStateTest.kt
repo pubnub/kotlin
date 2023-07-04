@@ -18,7 +18,7 @@ class TransitionFromHandshakeFailedStateTest {
     val subscriptionCursor = SubscriptionCursor(timetoken, region)
 
     @Test
-    fun can_transit_from_HANDSHAKE_FAILED_to_HANDSHAKE_RECONNECTING_when_there_is_HANDSHAKE_RECONNECT_RETRY_Event() {
+    fun can_transit_from_HANDSHAKE_FAILED_to_HANDSHAKE_RECONNECTING_when_there_is_HANDSHAKE_RECONNECT_RETRY_event() {
         // when
         val (state, invocations) = transition(
             SubscribeState.HandshakeFailed(channels, channelGroups, exception), Event.HandshakeReconnectRetry
@@ -32,7 +32,7 @@ class TransitionFromHandshakeFailedStateTest {
     }
 
     @Test
-    fun can_transit_from_HANDSHAKE_FAILED_to_HANDSHAKING_when_there_is_SUBSCRIPTION_CHANGED_Event() {
+    fun can_transit_from_HANDSHAKE_FAILED_to_HANDSHAKING_when_there_is_SUBSCRIPTION_CHANGED_event() {
         // given
         val newChannels: List<String> = channels + listOf("NewChannel")
         val newChannelGroup = channelGroups + listOf("NewChannelGroup")
@@ -51,7 +51,7 @@ class TransitionFromHandshakeFailedStateTest {
     }
 
     @Test
-    fun can_transit_from_HANDSHAKE_FAILED_to_RECEIVING_when_there_is_SUBSCRIPTION_RESTORED_Event() {
+    fun can_transit_from_HANDSHAKE_FAILED_to_RECEIVING_when_there_is_SUBSCRIPTION_RESTORED_event() {
         // when
         val (state, invocations) = transition(
             SubscribeState.HandshakeFailed(channels, channelGroups, exception),
@@ -69,7 +69,7 @@ class TransitionFromHandshakeFailedStateTest {
     }
 
     @Test
-    fun can_transit_from_HANDSHAKE_FAILED_to_HANDSHAKING_when_there_is_RECONNECT_Event() {
+    fun can_transit_from_HANDSHAKE_FAILED_to_HANDSHAKING_when_there_is_RECONNECT_event() {
         // when
         val (state, invocations) = transition(
             SubscribeState.HandshakeFailed(channels, channelGroups, exception), Event.Reconnect
@@ -80,5 +80,18 @@ class TransitionFromHandshakeFailedStateTest {
         assertEquals(
             listOf(SubscribeEffectInvocation.Handshake(channels, channelGroups)), invocations
         )
+    }
+
+    @Test
+    fun can_transit_from_HANDSHAKING_FAILED_to_UNSUBSRIBED_when_there_is_UNSUBSCRIBE_ALL_event() {
+        // when
+        val (state, invocations) = transition(
+            SubscribeState.HandshakeFailed(channels, channelGroups, exception),
+            Event.UnsubscribeAll
+        )
+
+        // then
+        assertEquals(SubscribeState.Unsubscribed, state)
+        assertEquals(0, invocations.size)
     }
 }

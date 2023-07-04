@@ -51,7 +51,8 @@ class EffectDispatcherTest {
         val managedEffects = ConcurrentHashMap<String, ManagedEffect>()
         val effectDispatcher = EffectDispatcher(
             effectFactory = EffectHandlerFactoryImpl(),
-            managedEffects = managedEffects
+            managedEffects = managedEffects,
+            effectSource = QueueSinkSource()
         )
 
         // when
@@ -67,7 +68,8 @@ class EffectDispatcherTest {
         val managedEffects = ConcurrentHashMap<String, ManagedEffect>()
         val effectDispatcher = EffectDispatcher(
             effectFactory = EffectHandlerFactoryImpl(),
-            managedEffects = managedEffects
+            managedEffects = managedEffects,
+            effectSource = QueueSinkSource()
         )
 
         // when
@@ -84,7 +86,8 @@ class EffectDispatcherTest {
         val managedEffects = ConcurrentHashMap<String, ManagedEffect>()
         val effectDispatcher = EffectDispatcher(
             effectFactory = EffectHandlerFactoryImpl(),
-            managedEffects = managedEffects
+            managedEffects = managedEffects,
+            effectSource = QueueSinkSource()
         )
 
         // when
@@ -105,7 +108,8 @@ class EffectDispatcherTest {
         managedEffects[TestEffect.id] = managedEffect
         val effectDispatcher = EffectDispatcher(
             effectFactory = effectHandlerFactory,
-            managedEffects = managedEffects
+            managedEffects = managedEffects,
+            effectSource = QueueSinkSource()
         )
 
         // when
@@ -125,7 +129,8 @@ class EffectDispatcherTest {
         val effectFactory: EffectFactory<SubscribeEffectInvocation> = mockk()
         val effectDispatcher = EffectDispatcher(
             effectFactory = effectFactory,
-            managedEffects = managedEffects
+            managedEffects = managedEffects,
+            effectSource = QueueSinkSource()
         )
         val effect: Effect = mockk()
         every { effect.runEffect() } returns Unit

@@ -4,7 +4,7 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.remoteaction.RemoteAction
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
-import com.pubnub.api.eventengine.EventSink
+import com.pubnub.api.eventengine.Sink
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.subscribe.eventengine.event.Event
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
@@ -72,7 +72,7 @@ class HandshakeEffectTest {
     }
 }
 
-class TestEventSink : EventSink {
+class TestEventSink : Sink<Event> {
     val events = mutableListOf<Event>()
 
     override fun add(event: Event) {

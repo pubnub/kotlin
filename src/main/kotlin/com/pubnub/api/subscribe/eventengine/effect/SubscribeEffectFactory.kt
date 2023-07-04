@@ -3,8 +3,11 @@ package com.pubnub.api.subscribe.eventengine.effect
 import com.pubnub.api.endpoints.remoteaction.RemoteAction
 import com.pubnub.api.eventengine.Effect
 import com.pubnub.api.eventengine.EffectFactory
-import com.pubnub.api.eventengine.EventSink
+import com.pubnub.api.eventengine.Sink
 import com.pubnub.api.models.consumer.pubsub.PNEvent
+import com.pubnub.api.subscribe.eventengine.effect.effectprovider.HandshakeProvider
+import com.pubnub.api.subscribe.eventengine.effect.effectprovider.ReceiveMessagesProvider
+import com.pubnub.api.subscribe.eventengine.event.Event
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
@@ -14,10 +17,10 @@ data class ReceiveMessagesResult(
     val subscriptionCursor: SubscriptionCursor
 )
 
-class SubscribeEffectFactory(
+internal class SubscribeEffectFactory(
     private val handshakeProvider: HandshakeProvider,
     private val receiveMessagesProvider: ReceiveMessagesProvider,
-    private val eventSink: EventSink,
+    private val eventSink: Sink<Event>,
     private val policy: RetryPolicy,
     private val executorService: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor(),
     private val messagesConsumer: MessagesConsumer,

@@ -19,7 +19,7 @@ class TransitionFromReceiveFailedStateTest {
     val reason = PubNubException("Test")
 
     @Test
-    fun can_transit_from_RECEIVE_FAILED_to_RECEIVE_RECONNECTING_when_there_is_RECEIVE_RECONNECT_RETRY_Event() {
+    fun can_transit_from_RECEIVE_FAILED_to_RECEIVE_RECONNECTING_when_there_is_RECEIVE_RECONNECT_RETRY_event() {
         // when
         val (state, invocations) = transition(
             SubscribeState.ReceiveFailed(channels, channelGroups, subscriptionCursor, reason),
@@ -39,7 +39,7 @@ class TransitionFromReceiveFailedStateTest {
     }
 
     @Test
-    fun can_transit_from_RECEIVE_FAILED_to_RECEIVING_when_there_is_SUBSCRIPTION_CHANGED_Event() {
+    fun can_transit_from_RECEIVE_FAILED_to_RECEIVING_when_there_is_SUBSCRIPTION_CHANGED_event() {
         // given
         val newChannels: List<String> = channels + listOf("NewChannel")
         val newChannelGroup = channelGroups + listOf("NewChannelGroup")
@@ -59,7 +59,7 @@ class TransitionFromReceiveFailedStateTest {
     }
 
     @Test
-    fun can_transit_from_RECEIVE_FAILED_to_RECEIVING_when_there_is_SUBSCRIPTION_RESTORED_Event() {
+    fun can_transit_from_RECEIVE_FAILED_to_RECEIVING_when_there_is_SUBSCRIPTION_RESTORED_event() {
         // when
         val (receivingState, effectInvocations) = transition(
             SubscribeState.ReceiveFailed(channels, channelGroups, subscriptionCursor, reason),
@@ -74,10 +74,11 @@ class TransitionFromReceiveFailedStateTest {
     }
 
     @Test
-    fun can_transit_from_RECEIVE_FAILED_to_RECEIVING_when_there_is_RECONNECT_Event() {
+    fun can_transit_from_RECEIVE_FAILED_to_RECEIVING_when_there_is_RECONNECT_event() {
         // when
         val (receivingState, effectInvocations) = transition(
-            SubscribeState.ReceiveFailed(channels, channelGroups, subscriptionCursor, reason), Event.Reconnect
+            SubscribeState.ReceiveFailed(channels, channelGroups, subscriptionCursor, reason),
+            Event.Reconnect
         )
 
         // then
@@ -86,5 +87,18 @@ class TransitionFromReceiveFailedStateTest {
             listOf(SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor)),
             effectInvocations
         )
+    }
+
+    @Test
+    fun can_transit_from_RECEIVE_FAILED_to_UNSUBSRIBED_when_there_is_UNSUBSRIBED_ALL_event() {
+        // when
+        val (state, invocations) = transition(
+            SubscribeState.ReceiveFailed(channels, channelGroups, subscriptionCursor, reason),
+            Event.UnsubscribeAll
+        )
+
+        // then
+        assertEquals(SubscribeState.Unsubscribed, state)
+        assertEquals(0, invocations.size)
     }
 }
