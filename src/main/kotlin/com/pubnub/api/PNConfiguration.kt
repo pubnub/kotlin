@@ -232,6 +232,8 @@ open class PNConfiguration(
      */
     var maximumReconnectionRetries = -1
 
+    internal var linearReconnectionDelay = Duration.ofSeconds(3)
+
     /**
      * @see [okhttp3.Dispatcher.setMaxRequestsPerHost]
      */
@@ -341,13 +343,14 @@ open class PNConfiguration(
     @Deprecated("To be used by components", level = DeprecationLevel.WARNING)
     fun addPnsdkSuffix(nameToSuffixes: Map<String, String>) = pnsdkSuffixes.putAll(nameToSuffixes)
 
-    internal fun retryPolicy(linearDelay: Duration = Duration.ofSeconds(3)): RetryPolicy {
-        return when (reconnectionPolicy) {
+    internal val retryPolicy: RetryPolicy by lazy {
+        when (reconnectionPolicy) {
             PNReconnectionPolicy.NONE -> NoRetriesPolicy
             PNReconnectionPolicy.LINEAR -> LinearPolicy(
                 maxRetries = maximumReconnectionRetries,
-                fixedDelay = linearDelay
+                fixedDelay = linearReconnectionDelay
             )
+
             PNReconnectionPolicy.EXPONENTIAL -> ExponentialPolicy(maxRetries = maximumReconnectionRetries)
         }
     }
