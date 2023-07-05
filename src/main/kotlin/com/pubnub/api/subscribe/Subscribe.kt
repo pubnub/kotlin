@@ -3,17 +3,13 @@
 package com.pubnub.api.subscribe
 
 import com.pubnub.api.PubNub
-import com.pubnub.api.enums.PNReconnectionPolicy
 import com.pubnub.api.eventengine.EffectDispatcher
 import com.pubnub.api.eventengine.EventEngineConf
 import com.pubnub.api.eventengine.Sink
 import com.pubnub.api.managers.EventEngineManager
 import com.pubnub.api.managers.ListenerManager
 import com.pubnub.api.subscribe.eventengine.SubscribeEventEngine
-import com.pubnub.api.subscribe.eventengine.effect.ExponentialPolicy
-import com.pubnub.api.subscribe.eventengine.effect.LinearPolicy
 import com.pubnub.api.subscribe.eventengine.effect.MessagesConsumer
-import com.pubnub.api.subscribe.eventengine.effect.NoRetriesPolicy
 import com.pubnub.api.subscribe.eventengine.effect.RetryPolicy
 import com.pubnub.api.subscribe.eventengine.effect.StatusConsumer
 import com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectFactory
@@ -24,7 +20,6 @@ import com.pubnub.api.subscribe.eventengine.event.Event.SubscriptionChanged
 import com.pubnub.api.subscribe.eventengine.event.Event.SubscriptionRestored
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
 import com.pubnub.api.workers.SubscribeMessageProcessor
-import java.time.Duration
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 
@@ -77,18 +72,6 @@ class Subscribe(
             }
 
             return Subscribe(eventEngineManager)
-        }
-
-        private fun getRetryPolicy(pubNub: PubNub): RetryPolicy {
-            return when (pubNub.configuration.reconnectionPolicy) {
-                PNReconnectionPolicy.NONE -> NoRetriesPolicy
-                PNReconnectionPolicy.LINEAR -> LinearPolicy(
-                    maxRetries = pubNub.configuration.maximumReconnectionRetries,
-                    fixedDelay = Duration.ofSeconds(3)
-                )
-
-                PNReconnectionPolicy.EXPONENTIAL -> ExponentialPolicy(maxRetries = pubNub.configuration.maximumReconnectionRetries)
-            }
         }
     }
 
