@@ -90,7 +90,7 @@ class TransitionFromHandshakingReconnectingStateTest {
                 SubscribeEffectInvocation.CancelHandshakeReconnect,
                 SubscribeEffectInvocation.EmitStatus(
                     PNStatus(
-                        category = PNStatusCategory.PNReconnectionAttemptsExhausted,
+                        category = PNStatusCategory.PNConnectionError,
                         operation = PNOperationType.PNSubscribeOperation,
                         error = true,
                         affectedChannels = channels,

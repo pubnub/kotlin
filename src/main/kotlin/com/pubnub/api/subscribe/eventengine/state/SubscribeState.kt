@@ -106,7 +106,7 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, Event, SubscribeS
                         HandshakeFailed(this.channels, this.channelGroups, event.reason),
                         SubscribeEffectInvocation.EmitStatus(
                             PNStatus(
-                                category = PNStatusCategory.PNReconnectionAttemptsExhausted,
+                                category = PNStatusCategory.PNConnectionError,
                                 operation = PNOperationType.PNSubscribeOperation,
                                 error = true,
                                 affectedChannels = channels,
