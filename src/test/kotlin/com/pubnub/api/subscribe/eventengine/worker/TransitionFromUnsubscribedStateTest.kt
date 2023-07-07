@@ -40,10 +40,10 @@ class TransitionFromUnsubscribedStateTest {
         )
 
         // then
-        assertEquals(SubscribeState.Receiving(channels, channelGroups, subscriptionCursor), state)
+        assertEquals(SubscribeState.Handshaking(channels, channelGroups, subscriptionCursor), state)
         assertEquals(
             setOf(
-                SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor),
+                SubscribeEffectInvocation.Handshake(channels, channelGroups),
             ),
             invocations
         )

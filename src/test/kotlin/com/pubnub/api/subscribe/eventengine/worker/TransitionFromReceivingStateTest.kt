@@ -127,15 +127,6 @@ class TransitionFromReceivingStateTest {
             setOf(
                 SubscribeEffectInvocation.CancelReceiveMessages,
                 SubscribeEffectInvocation.EmitMessages(messages),
-                SubscribeEffectInvocation.EmitStatus(
-                    PNStatus(
-                        category = PNStatusCategory.PNConnectedCategory,
-                        operation = PNOperationType.PNSubscribeOperation,
-                        error = false,
-                        affectedChannels = channels.toList(),
-                        affectedChannelGroups = channelGroups.toList()
-                    )
-                ),
                 SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor),
             ),
             invocations
