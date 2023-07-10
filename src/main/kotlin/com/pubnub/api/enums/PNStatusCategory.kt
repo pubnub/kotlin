@@ -94,4 +94,9 @@ enum class PNStatusCategory {
      * The subscription has been stopped.
      */
     PNDisconnectedCategory,
+
+    /**
+     * Previously started subscribe loop did fail and at this moment client disconnected from real-time data channels.
+     */
+    PNConnectionError,
 }

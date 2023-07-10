@@ -7,7 +7,7 @@ abstract class RetryPolicy {
     protected abstract val maxRetries: Int
     protected abstract fun computeDelay(count: Int): Duration
     fun nextDelay(attempt: Int): Duration? {
-        if (attempt > maxRetries) {
+        if (attempt >= maxRetries) {
             return null
         }
         return computeDelay(attempt)
