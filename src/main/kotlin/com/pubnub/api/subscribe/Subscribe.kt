@@ -10,8 +10,8 @@ import com.pubnub.api.eventengine.EventEngineConf
 import com.pubnub.api.eventengine.Sink
 import com.pubnub.api.managers.EventEngineManager
 import com.pubnub.api.managers.ListenerManager
-import com.pubnub.api.managers.SubscriptionData
 import com.pubnub.api.subscribe.eventengine.SubscribeEventEngine
+import com.pubnub.api.subscribe.eventengine.data.SubscriptionData
 import com.pubnub.api.subscribe.eventengine.effect.MessagesConsumer
 import com.pubnub.api.subscribe.eventengine.effect.RetryPolicy
 import com.pubnub.api.subscribe.eventengine.effect.StatusConsumer

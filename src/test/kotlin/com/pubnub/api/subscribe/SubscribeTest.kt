@@ -1,7 +1,7 @@
 package com.pubnub.api.subscribe
 
 import com.pubnub.api.managers.EventEngineManager
-import com.pubnub.api.managers.SubscriptionData
+import com.pubnub.api.subscribe.eventengine.data.SubscriptionData
 import com.pubnub.api.subscribe.eventengine.event.Event
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
 import io.mockk.CapturingSlot
@@ -54,8 +54,6 @@ internal class SubscribeTest {
             ),
             event.captured
         )
-        assertTrue(subscriptionData.channels.contains(CHANNEL_01))
-        assertTrue(subscriptionData.channelGroups.contains(CHANNEL_GROUPS_01))
     }
 
     @Test
@@ -79,8 +77,6 @@ internal class SubscribeTest {
             ),
             event.captured
         )
-        assertTrue(subscriptionData.channels.contains(CHANNEL_01))
-        assertTrue(subscriptionData.channelGroups.contains(CHANNEL_GROUPS_01))
     }
 
     @Test
@@ -92,12 +88,8 @@ internal class SubscribeTest {
 
         verify { eventEngineManager.addEventToQueue(any()) }
         assertEquals(Event.SubscriptionChanged(listOf(CHANNEL_02), listOf(CHANNEL_GROUPS_02)), event.captured)
-        assertTrue(subscriptionData.channels.size == 1 && subscriptionData.channels.contains(CHANNEL_02))
-        assertTrue(
-            subscriptionData.channelGroups.size == 1 && subscriptionData.channelGroups.contains(
-                CHANNEL_GROUPS_02
-            )
-        )
+        assertEquals(setOf(CHANNEL_02), subscriptionData.channels)
+        assertEquals(setOf(CHANNEL_GROUPS_02), subscriptionData.channelGroups)
     }
 
     @Test
