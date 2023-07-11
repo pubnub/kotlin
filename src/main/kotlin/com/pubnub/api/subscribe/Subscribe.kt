@@ -5,7 +5,6 @@ package com.pubnub.api.subscribe
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
-import com.pubnub.api.endpoints.pubsub.Subscribe
 import com.pubnub.api.eventengine.EffectDispatcher
 import com.pubnub.api.eventengine.EventEngineConf
 import com.pubnub.api.eventengine.Sink
