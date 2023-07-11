@@ -194,6 +194,11 @@ enum class PubNubError(private val code: Int, val message: String) {
     USERID_NULL_OR_EMPTY(
         170,
         "UserId can't have empty value"
+    ),
+
+    CHANNEL_OR_CHANNEL_GROUP_MISSING(
+        171,
+        "Please, provide channel or channelGroup"
     );
 
     override fun toString(): String {

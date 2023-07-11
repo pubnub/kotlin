@@ -1995,7 +1995,11 @@ class PubNub internal constructor(
      * Monitor the results in [SubscribeCallback.status]
      */
     fun disconnect() {
-        subscriptionManager.disconnect()
+        if (configuration.enableSubscribeBeta) {
+            subscribe.disconnect()
+        } else {
+            subscriptionManager.disconnect()
+        }
     }
 
     /**
@@ -2004,10 +2008,12 @@ class PubNub internal constructor(
     fun destroy() {
         if (configuration.enableSubscribeBeta) {
             subscribe.destroy()
+            retrofitManager.destroy()
             // todo add presenceEventEngineDestroy
+        } else {
+            subscriptionManager.destroy()
+            retrofitManager.destroy()
         }
-        subscriptionManager.destroy()
-        retrofitManager.destroy()
     }
 
     /**
@@ -2016,10 +2022,12 @@ class PubNub internal constructor(
     fun forceDestroy() {
         if (configuration.enableSubscribeBeta) {
             subscribe.destroy()
+            retrofitManager.destroy(true)
             // todo add presenceEventEngineDestroy
+        } else {
+            subscriptionManager.destroy(true)
+            retrofitManager.destroy(true)
         }
-        subscriptionManager.destroy(true)
-        retrofitManager.destroy(true)
     }
 
     fun parseToken(token: String): PNToken {

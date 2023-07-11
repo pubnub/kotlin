@@ -13,9 +13,9 @@ class TestSinkSource<T>(
 ) : Sink<T>, Source<T> by sinkSource {
 
     private val snakeCaseStrategy: SnakeCaseStrategy = SnakeCaseStrategy()
-    override fun add(t: T) {
-        testSink.add(t.type() to t.name())
-        sinkSource.add(t)
+    override fun add(item: T) {
+        testSink.add(item.type() to item.name())
+        sinkSource.add(item)
     }
 
     private fun T.name() = this!!::class.simpleName!!.toSnakeCase().uppercase()

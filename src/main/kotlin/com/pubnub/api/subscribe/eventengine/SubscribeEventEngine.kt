@@ -19,7 +19,7 @@ class SubscribeEventEngine(
     fun start() {
         executorService.submit {
             try {
-                while (true) { // todo added missing unit tests
+                while (true) {
                     val event = eventSource.take()
                     performTransitionAndEmitEffects(event)
                 }

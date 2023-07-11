@@ -75,8 +75,8 @@ class HandshakeEffectTest {
 class TestEventSink : Sink<Event> {
     val events = mutableListOf<Event>()
 
-    override fun add(event: Event) {
-        events.add(event)
+    override fun add(item: Event) {
+        events.add(item)
     }
 }
 
