@@ -11,8 +11,7 @@ import com.pubnub.api.eventengine.EventEngineConf
 import com.pubnub.api.eventengine.Sink
 import com.pubnub.api.managers.EventEngineManager
 import com.pubnub.api.managers.ListenerManager
-import com.pubnub.api.managers.SubscriptionState
-import com.pubnub.api.models.SubscriptionItem
+import com.pubnub.api.managers.SubscriptionData
 import com.pubnub.api.subscribe.eventengine.SubscribeEventEngine
 import com.pubnub.api.subscribe.eventengine.effect.MessagesConsumer
 import com.pubnub.api.subscribe.eventengine.effect.RetryPolicy
@@ -28,9 +27,11 @@ import com.pubnub.api.workers.SubscribeMessageProcessor
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 
+private const val PRESENCE_CHANNEL_SUFFIX = "-pnpres"
+
 class Subscribe(
     private val eventEngineManager: EventEngineManager,
-    private val stateManager: SubscriptionState = SubscriptionState()
+    private val subscriptionData: SubscriptionData = SubscriptionData()
 ) {
 
     companion object {
@@ -81,6 +82,7 @@ class Subscribe(
         }
     }
 
+    @Synchronized
     fun subscribe(
         channels: List<String>,
         channelGroups: List<String>,
@@ -88,50 +90,58 @@ class Subscribe(
         withTimetoken: Long = 0L,
     ) {
         throwExceptionIfChannelAndChannelGroupIsMissing(channels, channelGroups)
-        addChannelsToLocalStorage(channels)
-        addChannelGroupsToLocalStorage(channelGroups)
-        val channelsInLocalStorage = stateManager.channels.keys.toList()
-        val channelGroupsInLocalStorage = stateManager.channelGroups.keys.toList()
+        addChannelsToSubscriptionData(channels, withPresence)
+        addChannelGroupsToSubscriptionData(channelGroups, withPresence)
+        val channelsInLocalStorage = subscriptionData.channels.toList()
+        val channelGroupsInLocalStorage = subscriptionData.channelGroups.toList()
         if (withTimetoken != 0L) {
-            createAndPassForHandlingSubscriptionRestoredEvent(channelsInLocalStorage, channelGroupsInLocalStorage, withTimetoken)
+            createAndPassForHandlingSubscriptionRestoredEvent(
+                channelsInLocalStorage,
+                channelGroupsInLocalStorage,
+                withTimetoken
+            )
         } else {
             createAndPassForHandlingSubscriptionChangedEvent(channelsInLocalStorage, channelGroupsInLocalStorage)
         }
     }
 
+    @Synchronized
     fun unsubscribe(
         channels: List<String> = emptyList(),
         channelGroups: List<String> = emptyList()
     ) {
         throwExceptionIfChannelAndChannelGroupIsMissing(channels, channelGroups)
-        removeChannelsFromLocalStorage(channels)
-        removeChannelGroupsFromLocalStorage(channelGroups)
+        removeChannelsFromSubscriptionData(channels)
+        removeChannelGroupsFromSubscriptionData(channelGroups)
 
-        if (stateManager.channels.size > 0 || stateManager.channelGroups.size > 0) {
-            val channelsInLocalStorage = stateManager.channels.keys.toList()
-            val channelGroupsInLocalStorage = stateManager.channelGroups.keys.toList()
+        if (subscriptionData.channels.size > 0 || subscriptionData.channelGroups.size > 0) {
+            val channelsInLocalStorage = subscriptionData.channels.toList()
+            val channelGroupsInLocalStorage = subscriptionData.channelGroups.toList()
             eventEngineManager.addEventToQueue(SubscriptionChanged(channelsInLocalStorage, channelGroupsInLocalStorage))
         } else {
             eventEngineManager.addEventToQueue(Event.UnsubscribeAll)
         }
     }
 
+    @Synchronized
     fun unsubscribeAll() {
         removeAllChannelsFromLocalStorage()
         removeAllChannelGroupsFromLocalStorage()
         eventEngineManager.addEventToQueue(Event.UnsubscribeAll)
     }
 
+    @Synchronized
     fun getSubscribedChannels(): List<String> {
-        return stateManager.channels.keys.toList()
+        return subscriptionData.channels.toList()
     }
 
+    @Synchronized
     fun getSubscribedChannelGroups(): List<String> {
-        return stateManager.channelGroups.keys.toList()
+        return subscriptionData.channelGroups.toList()
     }
 
     fun disconnect() {
-        TODO("Not yet implemented")
+        eventEngineManager.addEventToQueue(Event.Disconnect)
     }
 
     @Synchronized
@@ -150,15 +160,23 @@ class Subscribe(
         }
     }
 
-    private fun addChannelsToLocalStorage(channels: List<String>) {
-        channels.forEach { channelName ->
-            stateManager.channels.putIfAbsent(channelName, SubscriptionItem(channelName))
+    private fun addChannelsToSubscriptionData(channels: List<String>, withPresence: Boolean) {
+        subscriptionData.channels.addAll(channels)
+        if (withPresence) {
+            channels.forEach {
+                val presenceChannel = "$it$PRESENCE_CHANNEL_SUFFIX"
+                subscriptionData.channels.add(presenceChannel)
+            }
         }
     }
 
-    private fun addChannelGroupsToLocalStorage(channelGroups: List<String>) {
-        channelGroups.forEach { channelGroupName ->
-            stateManager.channelGroups.putIfAbsent(channelGroupName, SubscriptionItem(channelGroupName))
+    private fun addChannelGroupsToSubscriptionData(channelGroups: List<String>, withPresence: Boolean) {
+        subscriptionData.channelGroups.addAll(channelGroups)
+        if (withPresence) {
+            channelGroups.forEach {
+                val presenceChannelGroup = "$it$PRESENCE_CHANNEL_SUFFIX"
+                subscriptionData.channelGroups.add(presenceChannelGroup)
+            }
         }
     }
 
@@ -183,23 +201,27 @@ class Subscribe(
         eventEngineManager.addEventToQueue(subscriptionChanged)
     }
 
-    private fun removeChannelGroupsFromLocalStorage(channelGroups: List<String>) {
-        channelGroups.forEach { channelGroupName ->
-            stateManager.channelGroups.remove(channelGroupName)
+    private fun removeChannelGroupsFromSubscriptionData(channelGroups: List<String>) {
+        channelGroups.forEach {
+            subscriptionData.channelGroups.remove(it)
+            val presenceChannelGroup = "$it$PRESENCE_CHANNEL_SUFFIX"
+            subscriptionData.channels.remove(presenceChannelGroup)
         }
     }
 
-    private fun removeChannelsFromLocalStorage(channels: List<String>) {
-        channels.forEach { channelName ->
-            stateManager.channels.remove(channelName)
+    private fun removeChannelsFromSubscriptionData(channels: List<String>) {
+        channels.forEach {
+            subscriptionData.channels.remove(it)
+            val presenceChannel = "$it$PRESENCE_CHANNEL_SUFFIX"
+            subscriptionData.channels.remove(presenceChannel)
         }
     }
 
     private fun removeAllChannelsFromLocalStorage() {
-        stateManager.channels = HashMap()
+        subscriptionData.channels.clear()
     }
 
     private fun removeAllChannelGroupsFromLocalStorage() {
-        stateManager.channelGroups = HashMap()
+        subscriptionData.channelGroups.clear()
     }
 }

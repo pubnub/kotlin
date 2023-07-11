@@ -1,8 +1,7 @@
 package com.pubnub.api.subscribe
 
 import com.pubnub.api.managers.EventEngineManager
-import com.pubnub.api.managers.SubscriptionState
-import com.pubnub.api.models.SubscriptionItem
+import com.pubnub.api.managers.SubscriptionData
 import com.pubnub.api.subscribe.eventengine.event.Event
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
 import io.mockk.CapturingSlot
@@ -24,11 +23,11 @@ private const val CHANNEL_GROUPS_02 = "channelGroups02"
 private const val CHANNEL_GROUPS_03 = "channelGroups03"
 
 internal class SubscribeTest {
-    private val channelsInLocalStorage = listOf(CHANNEL_01, CHANNEL_02)
-    private val channelGroupsInLocalStorage = listOf(CHANNEL_GROUPS_01, CHANNEL_GROUPS_02)
+    private val channelsInSubscriptionData = mutableSetOf(CHANNEL_01, CHANNEL_02)
+    private val channelGroupsInSubscriptionData = mutableSetOf(CHANNEL_GROUPS_01, CHANNEL_GROUPS_02)
     private lateinit var objectUnderTest: Subscribe
     private val eventEngineManager: EventEngineManager = mockk()
-    private var subscriptionState: SubscriptionState = createSubscriptionStateContainingValues()
+    private var subscriptionData: SubscriptionData = createSubscriptionStateContainingValues()
     private val withPresence = false
     private val withTimetoken = 12345345452L
     private val event: CapturingSlot<Event> = slot()
@@ -36,7 +35,7 @@ internal class SubscribeTest {
     @BeforeEach
     internal fun setUp() {
         every { eventEngineManager.addEventToQueue(capture(event)) } returns Unit
-        objectUnderTest = Subscribe(eventEngineManager, subscriptionState)
+        objectUnderTest = Subscribe(eventEngineManager, subscriptionData)
     }
 
     @Test
@@ -47,15 +46,16 @@ internal class SubscribeTest {
         objectUnderTest.subscribe(listOf(channelToSubscribe), listOf(channelGroupsToSubscribe), withPresence)
 
         verify { eventEngineManager.addEventToQueue(any()) }
+
         assertEquals(
             Event.SubscriptionChanged(
-                channelsInLocalStorage + listOf(channelToSubscribe),
-                channelGroupsInLocalStorage + listOf(channelGroupsToSubscribe)
+                (channelsInSubscriptionData + channelToSubscribe).toList(),
+                (channelGroupsInSubscriptionData + channelGroupsToSubscribe).toList()
             ),
             event.captured
         )
-        assertTrue(subscriptionState.channels.contains(CHANNEL_01))
-        assertTrue(subscriptionState.channelGroups.contains(CHANNEL_GROUPS_01))
+        assertTrue(subscriptionData.channels.contains(CHANNEL_01))
+        assertTrue(subscriptionData.channelGroups.contains(CHANNEL_GROUPS_01))
     }
 
     @Test
@@ -73,14 +73,14 @@ internal class SubscribeTest {
         verify { eventEngineManager.addEventToQueue(any()) }
         assertEquals(
             Event.SubscriptionRestored(
-                channelsInLocalStorage + listOf(channelToSubscribe),
-                channelGroupsInLocalStorage + listOf(channelGroupsToSubscribe),
+                (channelsInSubscriptionData + channelToSubscribe).toList(),
+                (channelGroupsInSubscriptionData + channelGroupsToSubscribe).toList(),
                 SubscriptionCursor(withTimetoken, "42") // todo magic number
             ),
             event.captured
         )
-        assertTrue(subscriptionState.channels.contains(CHANNEL_01))
-        assertTrue(subscriptionState.channelGroups.contains(CHANNEL_GROUPS_01))
+        assertTrue(subscriptionData.channels.contains(CHANNEL_01))
+        assertTrue(subscriptionData.channelGroups.contains(CHANNEL_GROUPS_01))
     }
 
     @Test
@@ -92,9 +92,9 @@ internal class SubscribeTest {
 
         verify { eventEngineManager.addEventToQueue(any()) }
         assertEquals(Event.SubscriptionChanged(listOf(CHANNEL_02), listOf(CHANNEL_GROUPS_02)), event.captured)
-        assertTrue(subscriptionState.channels.size == 1 && subscriptionState.channels.contains(CHANNEL_02))
+        assertTrue(subscriptionData.channels.size == 1 && subscriptionData.channels.contains(CHANNEL_02))
         assertTrue(
-            subscriptionState.channelGroups.size == 1 && subscriptionState.channelGroups.contains(
+            subscriptionData.channelGroups.size == 1 && subscriptionData.channelGroups.contains(
                 CHANNEL_GROUPS_02
             )
         )
@@ -109,8 +109,8 @@ internal class SubscribeTest {
 
         verify { eventEngineManager.addEventToQueue(any()) }
         assertEquals(Event.UnsubscribeAll, event.captured)
-        assertTrue(subscriptionState.channels.size == 0)
-        assertTrue(subscriptionState.channelGroups.size == 0)
+        assertTrue(subscriptionData.channels.size == 0)
+        assertTrue(subscriptionData.channelGroups.size == 0)
     }
 
     @Test
@@ -120,8 +120,8 @@ internal class SubscribeTest {
 
         verify { eventEngineManager.addEventToQueue(any()) }
         assertEquals(Event.UnsubscribeAll, event.captured)
-        assertTrue(subscriptionState.channels.size == 0)
-        assertTrue(subscriptionState.channelGroups.size == 0)
+        assertTrue(subscriptionData.channels.size == 0)
+        assertTrue(subscriptionData.channelGroups.size == 0)
     }
 
     @Test
@@ -129,7 +129,7 @@ internal class SubscribeTest {
 
         val subscribedChannels = objectUnderTest.getSubscribedChannels()
 
-        assertEquals(channelsInLocalStorage, subscribedChannels)
+        assertEquals(channelsInSubscriptionData.toList(), subscribedChannels)
     }
 
     @Test
@@ -137,21 +137,21 @@ internal class SubscribeTest {
 
         val subscribedChannelGroups = objectUnderTest.getSubscribedChannelGroups()
 
-        assertEquals(channelGroupsInLocalStorage, subscribedChannelGroups)
+        assertEquals(channelGroupsInSubscriptionData.toList(), subscribedChannelGroups)
     }
 
-    private fun createSubscriptionStateContainingValues(): SubscriptionState {
-        val channelsInLocalStorage = HashMap(
-            channelsInLocalStorage.map { channelName -> channelName to SubscriptionItem(channelName) }.toMap()
-        )
-        val channelGroupsInLocalStorage = HashMap(
-            channelGroupsInLocalStorage.map { channelGroupName -> channelGroupName to SubscriptionItem(channelGroupName) }
-                .toMap()
-        )
+    @Test
+    internal fun `should pass disconnect event for handling when disconnect`() {
 
-        subscriptionState = SubscriptionState()
-        subscriptionState.channels = channelsInLocalStorage
-        subscriptionState.channelGroups = channelGroupsInLocalStorage
-        return subscriptionState
+        objectUnderTest.disconnect()
+
+        assertEquals(Event.Disconnect, event.captured)
+    }
+
+    private fun createSubscriptionStateContainingValues(): SubscriptionData {
+        subscriptionData = SubscriptionData()
+        subscriptionData.channels.addAll(channelsInSubscriptionData)
+        subscriptionData.channelGroups.addAll(channelGroupsInSubscriptionData)
+        return subscriptionData
     }
 }
