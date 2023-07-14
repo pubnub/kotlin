@@ -66,14 +66,12 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-gson:2.9.0"
 
     implementation 'org.json:json:20230227'
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.2'
-    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-cbor:2.14.2'
-    implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.14.2'
 
     implementation "org.slf4j:slf4j-api:1.7.30"
 
     api 'com.squareup.okhttp3:logging-interceptor:4.9.3'
     api 'com.google.code.gson:gson:2.9.0'
+    implementation 'co.nstant.in:cbor:0.9'
 
     allTest "com.github.tomakehurst:wiremock:2.27.2"
 
