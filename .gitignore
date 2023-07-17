@@ -15,4 +15,4 @@ local.properties
 # GitHub Actions #
 ##################
 .github/.release
-src/test/resources/sdk-specifications
+kotlin/src/test/resources/sdk-specifications
