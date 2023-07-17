@@ -1,26 +1,23 @@
 package com.pubnub.api.subscribe
 
-import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubError
-import com.pubnub.api.PubNubException
 import com.pubnub.api.eventengine.EffectDispatcher
 import com.pubnub.api.eventengine.EventEngineConf
 import com.pubnub.api.eventengine.Sink
 import com.pubnub.api.managers.EventEngineManager
-import com.pubnub.api.managers.ListenerManager
 import com.pubnub.api.subscribe.eventengine.SubscribeEventEngine
 import com.pubnub.api.subscribe.eventengine.data.SubscriptionData
 import com.pubnub.api.subscribe.eventengine.effect.MessagesConsumer
 import com.pubnub.api.subscribe.eventengine.effect.RetryPolicy
 import com.pubnub.api.subscribe.eventengine.effect.StatusConsumer
 import com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectFactory
+import com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectInvocation
 import com.pubnub.api.subscribe.eventengine.effect.effectprovider.HandshakeProviderImpl
 import com.pubnub.api.subscribe.eventengine.effect.effectprovider.ReceiveMessagesProviderImpl
 import com.pubnub.api.subscribe.eventengine.event.Event
 import com.pubnub.api.subscribe.eventengine.event.Event.SubscriptionChanged
 import com.pubnub.api.subscribe.eventengine.event.Event.SubscriptionRestored
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
-import com.pubnub.api.workers.SubscribeMessageProcessor
 import com.pubnub.core.PubNubException
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
@@ -34,18 +31,17 @@ class Subscribe(
 
     companion object {
         internal fun create(
-            pubNub: PubNub,
-            listenerManager: ListenerManager,
             retryPolicy: RetryPolicy,
-            eventEngineConf: EventEngineConf,
-            messageProcessor: SubscribeMessageProcessor
+            eventEngineConf: EventEngineConf<Event, SubscribeEffectInvocation>,
+            messagesConsumer: MessagesConsumer,
+            statusConsumer: StatusConsumer,
+            handshakeProvider: HandshakeProviderImpl,
+            receiveMessagesProvider: ReceiveMessagesProviderImpl
         ): Subscribe {
-            val handshakeProvider = HandshakeProviderImpl(pubNub)
-            val receiveMessagesProvider = ReceiveMessagesProviderImpl(pubNub, messageProcessor)
+
             val eventSink: Sink<Event> = eventEngineConf.eventSink
             val executorService: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor()
-            val messagesConsumer: MessagesConsumer = listenerManager
-            val statusConsumer: StatusConsumer = listenerManager
+
 
             val subscribeEffectFactory = SubscribeEffectFactory(
                 handshakeProvider,

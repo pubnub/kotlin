@@ -1,11 +1,9 @@
 package com.pubnub.api.eventengine
 
-import com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectInvocation
+interface EventEngineConf<Ev : Event, Ef : EffectInvocation> {
+    val eventSink: Sink<Ev>
+    val eventSource: Source<Ev>
 
-interface EventEngineConf {
-    val eventSink: Sink<com.pubnub.api.eventengine.Event>
-    val eventSource: Source<com.pubnub.api.eventengine.Event>
-
-    val effectSink: Sink<SubscribeEffectInvocation>
-    val effectSource: Source<SubscribeEffectInvocation>
+    val effectSink: Sink<Ef>
+    val effectSource: Source<Ef>
 }

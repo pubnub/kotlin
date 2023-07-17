@@ -1,6 +1,5 @@
 package com.pubnub.api.eventengine
 
-import com.sun.org.slf4j.internal.LoggerFactory
 import org.slf4j.LoggerFactory
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ExecutorService
