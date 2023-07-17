@@ -4,9 +4,7 @@ import com.pubnub.api.PubNub
 import com.pubnub.api.endpoints.pubsub.Subscribe
 import com.pubnub.api.endpoints.remoteaction.RemoteAction
 import com.pubnub.api.endpoints.remoteaction.map
-import com.pubnub.api.subscribe.Subscribe
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
-import com.pubnub.core.RemoteAction
 
 internal class HandshakeProviderImpl(val pubNub: PubNub) : HandshakeProvider {
 

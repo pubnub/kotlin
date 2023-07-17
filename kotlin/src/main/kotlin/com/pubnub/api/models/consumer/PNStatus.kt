@@ -5,6 +5,7 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
+import com.pubnub.core.PNStatus
 import okhttp3.Request
 
 /**
@@ -24,10 +25,10 @@ import okhttp3.Request
  */
 data class PNStatus(
     var category: PNStatusCategory,
-    var error: Boolean,
+    override var error: Boolean,
     val operation: PNOperationType,
 
-    val exception: PubNubException? = null,
+    override val exception: PubNubException? = null,
 
     var statusCode: Int? = null,
     var tlsEnabled: Boolean? = null,
@@ -38,7 +39,7 @@ data class PNStatus(
     var affectedChannels: List<String?> = emptyList(),
     var affectedChannelGroups: List<String?> = emptyList()
 
-) {
+) : PNStatus {
     internal var executedEndpoint: ExtendedRemoteAction<*>? = null
 
     var clientRequest: Request? = null

@@ -8,7 +8,6 @@ import com.pubnub.api.models.consumer.pubsub.PNEvent
 import com.pubnub.api.subscribe.eventengine.effect.ReceiveMessagesResult
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
 import com.pubnub.api.workers.SubscribeMessageProcessor
-import com.pubnub.core.RemoteAction
 
 internal class ReceiveMessagesProviderImpl(val pubNub: PubNub, val messageProcessor: SubscribeMessageProcessor) : ReceiveMessagesProvider {
 

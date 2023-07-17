@@ -1,6 +1,6 @@
 package com.pubnub.core
 
-interface RemoteAction<Output> {
-    fun async(callback: (result: Output?, status: PNStatus) -> Unit)
+interface RemoteAction<Output, Status : PNStatus> {
+    fun async(callback: (result: Output?, status: Status) -> Unit)
     fun silentCancel()
 }

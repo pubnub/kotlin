@@ -9,10 +9,9 @@ interface ExtendedRemoteAction<Output> : RemoteAction<Output> {
     fun retry()
 }
 
-interface RemoteAction<Output> : Cancelable {
+interface RemoteAction<Output> : Cancelable, com.pubnub.core.RemoteAction<Output, PNStatus> {
     @Throws(PubNubException::class)
     fun sync(): Output?
-    fun async(callback: (result: Output?, status: PNStatus) -> Unit)
 }
 
 interface Cancelable {
