@@ -1,6 +1,6 @@
 package com.pubnub.api.subscribe.eventengine.state
 
-import com.pubnub.api.PubNubException
+import com.pubnub.core.PubNubException
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.eventengine.State

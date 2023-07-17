@@ -1,5 +1,3 @@
-@file:Suppress("UNUSED_PARAMETER")
-
 package com.pubnub.api.subscribe
 
 import com.pubnub.api.PubNub
@@ -23,6 +21,7 @@ import com.pubnub.api.subscribe.eventengine.event.Event.SubscriptionChanged
 import com.pubnub.api.subscribe.eventengine.event.Event.SubscriptionRestored
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
 import com.pubnub.api.workers.SubscribeMessageProcessor
+import com.pubnub.core.PubNubException
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 

@@ -2,6 +2,7 @@ package com.pubnub.api.subscribe.eventengine.event
 
 import com.pubnub.api.PubNubException
 import com.pubnub.api.models.consumer.pubsub.PNEvent
+import com.pubnub.core.PubNubException
 import com.pubnub.api.eventengine.Event as CoreEvent
 
 sealed class Event : CoreEvent {

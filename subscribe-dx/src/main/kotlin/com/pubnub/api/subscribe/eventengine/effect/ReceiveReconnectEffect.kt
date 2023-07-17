@@ -5,6 +5,7 @@ import com.pubnub.api.endpoints.remoteaction.RemoteAction
 import com.pubnub.api.eventengine.ManagedEffect
 import com.pubnub.api.eventengine.Sink
 import com.pubnub.api.subscribe.eventengine.event.Event
+import com.pubnub.core.RemoteAction
 import org.slf4j.LoggerFactory
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.ScheduledFuture

@@ -1,6 +1,6 @@
 package com.pubnub.api.subscribe.eventengine.effect
 
-import com.pubnub.api.PubNubException
+import com.pubnub.core.PubNubException
 import com.pubnub.api.eventengine.Cancel
 import com.pubnub.api.eventengine.EffectInvocation
 import com.pubnub.api.eventengine.EffectInvocationType
@@ -9,6 +9,7 @@ import com.pubnub.api.eventengine.NonManaged
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNEvent
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
+import com.pubnub.core.PNStatus
 
 sealed class SubscribeEffectInvocation(override val type: EffectInvocationType) : EffectInvocation {
 
