@@ -7,4 +7,5 @@ pluginManagement {
 
 rootProject.name = 'pubnub-kotlin'
 include 'kotlin'
+include 'java'
 
