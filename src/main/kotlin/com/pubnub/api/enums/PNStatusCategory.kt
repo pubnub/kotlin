@@ -96,7 +96,7 @@ enum class PNStatusCategory {
     PNDisconnectedCategory,
 
     /**
-     * Previously started subscribe loop did fail and at this moment client disconnected from real-time data channels.
+     * Previously started subscribe loop failed, and at this moment client disconnected from real-time data channels.
      */
     PNConnectionError,
 }
