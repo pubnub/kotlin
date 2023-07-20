@@ -5,14 +5,14 @@ import com.pubnub.api.eventengine.Sink
 import com.pubnub.api.subscribe.eventengine.event.Event
 import com.pubnub.core.PubNubException
 import com.pubnub.core.CoreException
-import com.pubnub.core.RemoteAction
+import com.pubnub.core.CoreRemoteAction
 import org.slf4j.LoggerFactory
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.TimeUnit
 
 class ReceiveReconnectEffect(
-    private val remoteAction: RemoteAction<ReceiveMessagesResult, *>,
+    private val remoteAction: CoreRemoteAction<ReceiveMessagesResult, *>,
     private val eventSink: Sink<Event>,
     private val policy: RetryPolicy,
     private val executorService: ScheduledExecutorService,

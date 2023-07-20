@@ -16,7 +16,7 @@ data class ReceiveMessagesResult(
     val messages: List<PNEvent>, val subscriptionCursor: SubscriptionCursor
 )
 
-internal class SubscribeEffectFactory(
+class SubscribeEffectFactory(
     private val handshakeProvider: HandshakeProvider,
     private val receiveMessagesProvider: ReceiveMessagesProvider,
     private val eventSink: Sink<Event>,

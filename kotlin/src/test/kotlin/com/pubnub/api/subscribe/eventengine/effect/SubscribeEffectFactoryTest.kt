@@ -1,7 +1,6 @@
 package com.pubnub.api.subscribe.eventengine.effect
 
 import com.pubnub.api.PubNubException
-import com.pubnub.api.endpoints.remoteaction.RemoteAction
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.eventengine.ManagedEffect
@@ -11,6 +10,8 @@ import com.pubnub.api.subscribe.eventengine.effect.effectprovider.HandshakeProvi
 import com.pubnub.api.subscribe.eventengine.effect.effectprovider.ReceiveMessagesProvider
 import com.pubnub.api.subscribe.eventengine.event.Event
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
+import com.pubnub.core.CoreRemoteAction
+import com.pubnub.core.Status
 import io.mockk.every
 import io.mockk.mockk
 import org.hamcrest.MatcherAssert.assertThat
@@ -34,8 +35,8 @@ class SubscribeEffectFactoryTest {
     private val attempts = 1
     private val reason = PubNubException("Unknown error")
     private val subscriptionCursor = SubscriptionCursor(1337L, "1337")
-    private val handshakeRemoteAction: RemoteAction<SubscriptionCursor> = mockk()
-    private val receiveMessagesRemoteAction: RemoteAction<ReceiveMessagesResult> = mockk()
+    private val handshakeRemoteAction: CoreRemoteAction<SubscriptionCursor, Status> = mockk()
+    private val receiveMessagesRemoteAction: CoreRemoteAction<ReceiveMessagesResult, Status> = mockk()
     private val statusConsumer = mockk<StatusConsumer>()
 
     @BeforeEach
