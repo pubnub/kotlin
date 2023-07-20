@@ -1,6 +1,5 @@
 package com.pubnub.api.subscribe
 
-import com.pubnub.api.PubNubError
 import com.pubnub.api.eventengine.EffectDispatcher
 import com.pubnub.api.eventengine.EventEngineConf
 import com.pubnub.api.eventengine.Sink
@@ -12,8 +11,8 @@ import com.pubnub.api.subscribe.eventengine.effect.RetryPolicy
 import com.pubnub.api.subscribe.eventengine.effect.StatusConsumer
 import com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectFactory
 import com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectInvocation
-import com.pubnub.api.subscribe.eventengine.effect.effectprovider.HandshakeProviderImpl
-import com.pubnub.api.subscribe.eventengine.effect.effectprovider.ReceiveMessagesProviderImpl
+import com.pubnub.api.subscribe.eventengine.effect.effectprovider.HandshakeProvider
+import com.pubnub.api.subscribe.eventengine.effect.effectprovider.ReceiveMessagesProvider
 import com.pubnub.api.subscribe.eventengine.event.Event
 import com.pubnub.api.subscribe.eventengine.event.Event.SubscriptionChanged
 import com.pubnub.api.subscribe.eventengine.event.Event.SubscriptionRestored
@@ -35,8 +34,8 @@ class Subscribe(
             eventEngineConf: EventEngineConf<Event, SubscribeEffectInvocation>,
             messagesConsumer: MessagesConsumer,
             statusConsumer: StatusConsumer,
-            handshakeProvider: HandshakeProviderImpl,
-            receiveMessagesProvider: ReceiveMessagesProviderImpl
+            handshakeProvider: HandshakeProvider,
+            receiveMessagesProvider: ReceiveMessagesProvider
         ): Subscribe {
 
             val eventSink: Sink<Event> = eventEngineConf.eventSink
@@ -150,7 +149,7 @@ class Subscribe(
         channelGroups: List<String>
     ) {
         if (channels.isEmpty() && channelGroups.isEmpty()) {
-            throw PubNubException(PubNubError.CHANNEL_OR_CHANNEL_GROUP_MISSING)
+            throw PubNubException(SubscribeError.CHANNEL_OR_CHANNEL_GROUP_MISSING)
         }
     }
 

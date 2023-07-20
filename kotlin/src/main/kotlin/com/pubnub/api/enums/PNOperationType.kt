@@ -1,6 +1,8 @@
 package com.pubnub.api.enums
 
-sealed class PNOperationType(open val queryParam: String? = null) {
+import com.pubnub.core.OperationType
+
+sealed class PNOperationType(override val queryParam: String? = null) : OperationType {
 
     open class PublishOperation : PNOperationType("pub")
     open class HistoryOperation : PNOperationType("hist")
@@ -36,7 +38,6 @@ sealed class PNOperationType(open val queryParam: String? = null) {
 
     object PNAddChannelsToGroupOperation : ChannelGroupOperation()
     object PNRemoveChannelsFromGroupOperation : ChannelGroupOperation()
-    object PNChannelGroupsOperation : ChannelGroupOperation()
     object PNRemoveGroupOperation : ChannelGroupOperation()
     object PNChannelsForGroupOperation : ChannelGroupOperation()
 

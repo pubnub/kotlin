@@ -3,6 +3,7 @@ package com.pubnub.api.models.consumer;
 import com.pubnub.api.endpoints.remoteaction.RemoteAction;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.enums.PNStatusCategory;
+import com.pubnub.core.Status;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,11 +11,12 @@ import lombok.ToString;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Optional;
 
 @Builder(toBuilder = true)
 @Getter
 @ToString
-public class PNStatus {
+public class PNStatus implements Status {
 
     private PNStatusCategory category;
     private PNErrorData errorData;
@@ -45,6 +47,15 @@ public class PNStatus {
 
     public void retry() {
         executedEndpoint.retry();
+    }
+
+    @Nullable
+    @Override
+    public Exception getException() {
+        if (errorData != null) {
+            return errorData.getThrowable();
+        }
+        return null;
     }
 
     /*

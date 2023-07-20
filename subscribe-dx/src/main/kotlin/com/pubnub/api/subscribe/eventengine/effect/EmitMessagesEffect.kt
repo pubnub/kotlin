@@ -9,7 +9,6 @@ import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
 import org.slf4j.LoggerFactory
-import java.util.ServiceLoader
 
 class EmitMessagesEffect(
     private val messagesConsumer: MessagesConsumer,

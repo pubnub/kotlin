@@ -1,13 +1,12 @@
 package com.pubnub.api.subscribe.eventengine.effect
 
 import com.pubnub.api.eventengine.Effect
-import com.pubnub.api.models.consumer.PNStatus
-import com.pubnub.core.PNStatus
+import com.pubnub.core.Status
 import org.slf4j.LoggerFactory
 
-class EmitStatusEffect(
-    private val statusConsumer: StatusConsumer,
-    private val status: PNStatus
+class EmitStatusEffect<S : Status>(
+    private val statusConsumer: StatusConsumer<S>,
+    private val status: S
 ) : Effect {
     private val log = LoggerFactory.getLogger(EmitStatusEffect::class.java)
 

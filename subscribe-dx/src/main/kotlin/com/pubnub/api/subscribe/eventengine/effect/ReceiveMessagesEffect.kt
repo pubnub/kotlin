@@ -1,6 +1,5 @@
 package com.pubnub.api.subscribe.eventengine.effect
 
-import com.pubnub.api.PubNubException
 import com.pubnub.api.eventengine.ManagedEffect
 import com.pubnub.api.eventengine.Sink
 import com.pubnub.api.subscribe.eventengine.event.Event
@@ -9,7 +8,7 @@ import com.pubnub.core.RemoteAction
 import org.slf4j.LoggerFactory
 
 class ReceiveMessagesEffect(
-    private val remoteAction: RemoteAction<ReceiveMessagesResult>,
+    private val remoteAction: RemoteAction<ReceiveMessagesResult, *>,
     private val eventSink: Sink<Event>,
 ) : ManagedEffect {
     private val log = LoggerFactory.getLogger(ReceiveMessagesEffect::class.java)

@@ -5,7 +5,8 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
-import com.pubnub.core.PNStatus
+import com.pubnub.core.PNErrorData
+import com.pubnub.core.Status
 import okhttp3.Request
 
 /**
@@ -24,22 +25,23 @@ import okhttp3.Request
  * @property affectedChannelGroups List of channel groups affected by the this API operation.
  */
 data class PNStatus(
-    var category: PNStatusCategory,
+    override var category: PNStatusCategory,
     override var error: Boolean,
-    val operation: PNOperationType,
+    override val operation: PNOperationType,
 
     override val exception: PubNubException? = null,
 
-    var statusCode: Int? = null,
-    var tlsEnabled: Boolean? = null,
-    var origin: String? = null,
-    var uuid: String? = null,
-    var authKey: String? = null,
+    override var statusCode: Int? = null,
+    override var tlsEnabled: Boolean? = null,
+    override var origin: String? = null,
+    override var uuid: String? = null,
+    override var authKey: String? = null,
 
-    var affectedChannels: List<String?> = emptyList(),
-    var affectedChannelGroups: List<String?> = emptyList()
+    override var affectedChannels: List<String> = emptyList(),
+    override var affectedChannelGroups: List<String> = emptyList(),
+    override val errorData: PNErrorData? = exception?.let { PNErrorData(it.message, it) }
 
-) : PNStatus {
+) : Status {
     internal var executedEndpoint: ExtendedRemoteAction<*>? = null
 
     var clientRequest: Request? = null

@@ -1,18 +1,18 @@
 package com.pubnub.api.subscribe.eventengine.state
 
-import com.pubnub.core.PubNubException
+import com.pubnub.core.CoreException
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.eventengine.State
 import com.pubnub.api.eventengine.noTransition
 import com.pubnub.api.eventengine.transitionTo
-import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectInvocation
 import com.pubnub.api.subscribe.eventengine.event.Event
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
+import com.pubnub.core.PNStatus
 
 sealed class SubscribeState : State<SubscribeEffectInvocation, Event, SubscribeState> {
-    object Unsubscribed : SubscribeState() {
+    class Unsubscribed : SubscribeState() {
         override fun transition(event: Event): Pair<SubscribeState, List<SubscribeEffectInvocation>> {
             return when (event) {
                 is Event.SubscriptionChanged -> {
@@ -25,6 +25,14 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, Event, SubscribeS
                     noTransition()
                 }
             }
+        }
+
+        override fun equals(other: Any?): Boolean {
+            return this === other
+        }
+
+        override fun hashCode(): Int {
+            return System.identityHashCode(this)
         }
     }
 
@@ -65,7 +73,7 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, Event, SubscribeS
                     transitionTo(HandshakeStopped(channels, channelGroups, reason = null))
                 }
                 is Event.UnsubscribeAll -> {
-                    transitionTo(Unsubscribed)
+                    transitionTo(Unsubscribed())
                 }
                 else -> {
                     noTransition()
@@ -78,7 +86,7 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, Event, SubscribeS
         val channels: List<String>,
         val channelGroups: List<String>,
         val attempts: Int,
-        val reason: PubNubException?
+        val reason: CoreException?
     ) : SubscribeState() {
         override fun onEntry() =
             listOf(SubscribeEffectInvocation.HandshakeReconnect(channels, channelGroups, attempts, reason))
@@ -135,7 +143,7 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, Event, SubscribeS
                     transitionTo(Receiving(event.channels, event.channelGroups, event.subscriptionCursor))
                 }
                 is Event.UnsubscribeAll -> {
-                    transitionTo(Unsubscribed)
+                    transitionTo(Unsubscribed())
                 }
                 else -> {
                     noTransition()
@@ -147,7 +155,7 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, Event, SubscribeS
     data class HandshakeStopped(
         val channels: List<String>,
         val channelGroups: List<String>,
-        val reason: PubNubException?
+        val reason: CoreException?
     ) : SubscribeState() {
 
         override fun transition(event: Event): Pair<SubscribeState, List<SubscribeEffectInvocation>> {
@@ -162,7 +170,7 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, Event, SubscribeS
                     transitionTo(Receiving(event.channels, event.channelGroups, event.subscriptionCursor))
                 }
                 is Event.UnsubscribeAll -> {
-                    transitionTo(Unsubscribed)
+                    transitionTo(Unsubscribed())
                 }
                 else -> {
                     noTransition()
@@ -174,7 +182,7 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, Event, SubscribeS
     data class HandshakeFailed(
         val channels: List<String>,
         val channelGroups: List<String>,
-        val reason: PubNubException
+        val reason: CoreException
     ) : SubscribeState() {
 
         override fun transition(event: Event): Pair<SubscribeState, List<SubscribeEffectInvocation>> {
@@ -196,7 +204,7 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, Event, SubscribeS
                     transitionTo(Handshaking(channels, channelGroups))
                 }
                 is Event.UnsubscribeAll -> {
-                    transitionTo(Unsubscribed)
+                    transitionTo(Unsubscribed())
                 }
                 else -> {
                     noTransition()
@@ -264,7 +272,7 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, Event, SubscribeS
                     )
                 }
                 is Event.UnsubscribeAll -> {
-                    transitionTo(Unsubscribed)
+                    transitionTo(Unsubscribed())
                 }
 
                 else -> {
@@ -279,7 +287,7 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, Event, SubscribeS
         val channelGroups: List<String>,
         val subscriptionCursor: SubscriptionCursor,
         val attempts: Int,
-        val reason: PubNubException?
+        val reason: CoreException?
     ) : SubscribeState() {
         override fun onEntry() =
             listOf(
@@ -344,7 +352,7 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, Event, SubscribeS
                     transitionTo(Receiving(event.channels, event.channelGroups, subscriptionCursor))
                 }
                 is Event.UnsubscribeAll -> {
-                    transitionTo(Unsubscribed)
+                    transitionTo(Unsubscribed())
                 }
                 else -> {
                     noTransition()
@@ -370,7 +378,7 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, Event, SubscribeS
                     transitionTo(Receiving(event.channels, event.channelGroups, event.subscriptionCursor))
                 }
                 is Event.UnsubscribeAll -> {
-                    transitionTo(Unsubscribed)
+                    transitionTo(Unsubscribed())
                 }
                 else -> {
                     noTransition()
@@ -383,7 +391,7 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, Event, SubscribeS
         private val channels: List<String>,
         val channelGroups: List<String>,
         val subscriptionCursor: SubscriptionCursor,
-        val reason: PubNubException
+        val reason: CoreException
     ) : SubscribeState() {
         override fun transition(event: Event): Pair<SubscribeState, List<SubscribeEffectInvocation>> {
             return when (event) {
@@ -400,7 +408,7 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, Event, SubscribeS
                     transitionTo(Receiving(event.channels, event.channelGroups, event.subscriptionCursor))
                 }
                 is Event.UnsubscribeAll -> {
-                    transitionTo(Unsubscribed)
+                    transitionTo(Unsubscribed())
                 }
                 else -> {
                     noTransition()

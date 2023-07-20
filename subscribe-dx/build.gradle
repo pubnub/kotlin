@@ -24,6 +24,7 @@ repositories {
 
 dependencies {
     implementation project(":core")
+    implementation "com.google.code.gson:gson:2.9.0"
     implementation "org.slf4j:slf4j-api:1.7.30"
     
     testImplementation platform('org.junit:junit-bom:5.9.1')

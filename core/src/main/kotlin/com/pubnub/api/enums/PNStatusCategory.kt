@@ -1,17 +1,8 @@
 package com.pubnub.api.enums
 
-import com.pubnub.api.PubNub
-import com.pubnub.api.callbacks.SubscribeCallback
-import com.pubnub.api.models.consumer.PNStatus
+import com.pubnub.core.StatusCategory
 
-/**
- * Check the status category via [PNStatus.category] in the `async` callback
- * when executing API methods like [PubNub.publish] or [PubNub.history].
- *
- * Or in the [SubscribeCallback.status] for API methods like [PubNub.subscribe] or [PubNub.unsubscribeAll] ie.
- * methods able to manage the channel mix.
- */
-enum class PNStatusCategory {
+enum class PNStatusCategory : StatusCategory {
 
     /**
      * Successful acknowledgment of an operation.
@@ -20,7 +11,7 @@ enum class PNStatusCategory {
 
     /**
      * Request failed because of access error (active PAM).
-     * [PNStatus.affectedChannels] or [PNStatus.affectedChannelGroups] contain list of channels and groups
+     * [com.pubnub.core.Status.affectedChannels] or [com.pubnub.core.Status.affectedChannelGroups] contain list of channels and groups
      * the client can't access to.
      */
     PNAccessDeniedCategory,
@@ -99,4 +90,14 @@ enum class PNStatusCategory {
      * Previously started subscribe loop did fail and at this moment client disconnected from real-time data channels.
      */
     PNConnectionError,
+
+    PNNetworkIssuesCategory, //JAVA SDK specific
+    PNURITooLongCategory, //JAVA SDK specific
+    PNMalformedFilterExpressionCategory, //JAVA SDK specific
+    PNDecryptionErrorCategory, //JAVA SDK specific
+    PNTLSConnectionFailedCategory, //JAVA SDK specific
+    PNTLSUntrustedCertificateCategory, //JAVA SDK specific
+
+    PNReconnectionAttemptsExhaustedCategory, //JAVA SDK specific
+    PNRateLimitExceededCategory, //JAVA SDK specific
 }

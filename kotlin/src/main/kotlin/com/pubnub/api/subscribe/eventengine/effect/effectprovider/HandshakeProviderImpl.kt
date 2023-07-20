@@ -4,9 +4,10 @@ import com.pubnub.api.PubNub
 import com.pubnub.api.endpoints.pubsub.Subscribe
 import com.pubnub.api.endpoints.remoteaction.RemoteAction
 import com.pubnub.api.endpoints.remoteaction.map
+import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
 
-internal class HandshakeProviderImpl(val pubNub: PubNub) : HandshakeProvider {
+internal class HandshakeProviderImpl(val pubNub: PubNub) : HandshakeProvider<PNStatus> {
 
     override fun getHandshakeRemoteAction(
         channels: List<String>,

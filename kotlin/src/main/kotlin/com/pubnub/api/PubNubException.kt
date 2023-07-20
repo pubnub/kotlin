@@ -1,6 +1,6 @@
 package com.pubnub.api
 
-import com.pubnub.core.PubNubException
+import com.pubnub.core.CoreException
 import retrofit2.Call
 
 /**
@@ -18,7 +18,7 @@ data class PubNubException(
     val jso: String? = null,
     val statusCode: Int = 0,
     val affectedCall: Call<*>? = null
-) : Exception(errorMessage), PubNubException {
+) : CoreException(errorMessage) {
 
     internal constructor(pubnubError: PubNubError) : this(
         errorMessage = pubnubError.message,

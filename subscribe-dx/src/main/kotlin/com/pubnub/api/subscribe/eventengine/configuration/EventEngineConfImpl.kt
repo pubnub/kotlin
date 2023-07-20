@@ -7,7 +7,7 @@ import com.pubnub.api.eventengine.Source
 import com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectInvocation
 import com.pubnub.api.subscribe.eventengine.event.Event
 
-class EventEngineConfImpl : EventEngineConf {
+class EventEngineConfImpl : EventEngineConf<Event, SubscribeEffectInvocation> {
     private val eventSinkSourceQueue = QueueSinkSource<Event>()
     private val effectSinkSourceQueue = QueueSinkSource<SubscribeEffectInvocation>()
 
