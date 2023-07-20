@@ -27,7 +27,8 @@ class TransitionFromHeartbeatWaitingStateTest {
             listOf(
                 PresenceEffectInvocation.CancelScheduleNextHeartbeat,
                 PresenceEffectInvocation.Leave(channels, channelGroups)
-            ), invocations
+            ),
+            invocations
         )
     }
 
@@ -50,7 +51,8 @@ class TransitionFromHeartbeatWaitingStateTest {
                 PresenceEffectInvocation.CancelScheduleNextHeartbeat,
                 PresenceEffectInvocation.Leave(newChannels, newChannelGroup),
                 PresenceEffectInvocation.Heartbeat(newChannels, newChannelGroup)
-            ), invocations
+            ),
+            invocations
         )
     }
 
@@ -68,7 +70,8 @@ class TransitionFromHeartbeatWaitingStateTest {
             listOf(
                 PresenceEffectInvocation.CancelScheduleNextHeartbeat,
                 PresenceEffectInvocation.Leave(channels, channelGroups)
-            ), invocations
+            ),
+            invocations
         )
     }
 
@@ -90,7 +93,8 @@ class TransitionFromHeartbeatWaitingStateTest {
             listOf(
                 PresenceEffectInvocation.CancelScheduleNextHeartbeat,
                 PresenceEffectInvocation.Heartbeat(newChannels, newChannelGroup)
-            ), invocations
+            ),
+            invocations
         )
     }
 
@@ -112,7 +116,8 @@ class TransitionFromHeartbeatWaitingStateTest {
             listOf(
                 PresenceEffectInvocation.CancelScheduleNextHeartbeat,
                 PresenceEffectInvocation.Heartbeat(newChannels, newChannelGroup)
-            ), invocations
+            ),
+            invocations
         )
     }
 
@@ -134,7 +139,8 @@ class TransitionFromHeartbeatWaitingStateTest {
             listOf(
                 PresenceEffectInvocation.CancelScheduleNextHeartbeat,
                 PresenceEffectInvocation.Heartbeat(newChannels, newChannelGroup)
-            ), invocations
+            ),
+            invocations
         )
     }
 }

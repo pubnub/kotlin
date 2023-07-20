@@ -12,7 +12,7 @@ class TransitionFromHeartbeatStoppedStateTest {
     val channelGroups = setOf("ChannelGroup01", "ChannelGroup02")
 
     @Test
-    fun `should transit from HEARTBEAT_STOPPED to INACTIVE when there is LEFT_ALL event`(){
+    fun `should transit from HEARTBEAT_STOPPED to INACTIVE when there is LEFT_ALL event`() {
         // when
         val (newState, invocations) = transition(PresenceState.HeartbeatStopped(channels, channelGroups), PresenceEvent.LeftAll)
 
@@ -22,7 +22,7 @@ class TransitionFromHeartbeatStoppedStateTest {
     }
 
     @Test
-    fun `should transit from HEARTBEAT_STOPPED to HEARTBEAT_STOPPED when there is JOIN event`(){
+    fun `should transit from HEARTBEAT_STOPPED to HEARTBEAT_STOPPED when there is JOIN event`() {
         // given
         val newChannels = channels + setOf("NewChannel")
         val newChannelGroup = channelGroups + setOf("NewChannelGroup")
@@ -36,7 +36,7 @@ class TransitionFromHeartbeatStoppedStateTest {
     }
 
     @Test
-    fun `should transit from HEARTBEAT_STOPPED to HEARTBEAT_STOPPED when there is LEFT event`(){
+    fun `should transit from HEARTBEAT_STOPPED to HEARTBEAT_STOPPED when there is LEFT event`() {
         // given
         val newChannels = channels + setOf("NewChannel")
         val newChannelGroup = channelGroups + setOf("NewChannelGroup")
@@ -50,7 +50,7 @@ class TransitionFromHeartbeatStoppedStateTest {
     }
 
     @Test
-    fun `should transit from HEARTBEAT_STOPPED to HEARTBEATING and creat HEARTBEAT invocation when there is SET_STATE event`(){
+    fun `should transit from HEARTBEAT_STOPPED to HEARTBEATING and creat HEARTBEAT invocation when there is SET_STATE event`() {
         // given
         val newChannels = setOf("NewChannel")
         val newChannelGroup = setOf("NewChannelGroup")
@@ -64,7 +64,7 @@ class TransitionFromHeartbeatStoppedStateTest {
     }
 
     @Test
-    fun `should transit from HEARTBEAT_STOPPED to HEARTBEATING and creat HEARTBEAT invocation when there is RECONNECT event`(){
+    fun `should transit from HEARTBEAT_STOPPED to HEARTBEATING and creat HEARTBEAT invocation when there is RECONNECT event`() {
         // when
         val (newState, invocations) = transition(PresenceState.HeartbeatStopped(channels, channelGroups), PresenceEvent.Reconnect)
 
