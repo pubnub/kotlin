@@ -4,12 +4,12 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.remoteaction.RemoteAction
 import com.pubnub.api.eventengine.ManagedEffect
 import com.pubnub.api.eventengine.Sink
-import com.pubnub.api.subscribe.eventengine.event.Event
+import com.pubnub.api.subscribe.eventengine.event.SubscribeEvent
 import org.slf4j.LoggerFactory
 
 class ReceiveMessagesEffect(
     private val remoteAction: RemoteAction<ReceiveMessagesResult>,
-    private val eventSink: Sink<Event>,
+    private val subscribeEventSink: Sink<SubscribeEvent>,
 ) : ManagedEffect {
     private val log = LoggerFactory.getLogger(ReceiveMessagesEffect::class.java)
 
@@ -18,14 +18,14 @@ class ReceiveMessagesEffect(
 
         remoteAction.async { result, status ->
             if (status.error) {
-                eventSink.add(
-                    Event.ReceiveFailure(
+                subscribeEventSink.add(
+                    SubscribeEvent.ReceiveFailure(
                         status.exception
                             ?: PubNubException("Unknown error") // todo check it that can happen
                     )
                 )
             } else {
-                eventSink.add(Event.ReceiveSuccess(result!!.messages, result.subscriptionCursor))
+                subscribeEventSink.add(SubscribeEvent.ReceiveSuccess(result!!.messages, result.subscriptionCursor))
             }
         }
     }

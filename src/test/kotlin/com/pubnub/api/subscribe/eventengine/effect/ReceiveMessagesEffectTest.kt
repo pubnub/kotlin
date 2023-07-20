@@ -6,7 +6,7 @@ import com.pubnub.api.endpoints.remoteaction.RemoteAction
 import com.pubnub.api.models.consumer.pubsub.BasePubSubResult
 import com.pubnub.api.models.consumer.pubsub.PNEvent
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
-import com.pubnub.api.subscribe.eventengine.event.Event
+import com.pubnub.api.subscribe.eventengine.event.SubscribeEvent
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
 import io.mockk.spyk
 import io.mockk.verify
@@ -36,7 +36,7 @@ class ReceiveMessagesEffectTest {
             .atMost(Durations.ONE_SECOND)
             .with()
             .pollInterval(Duration.ofMillis(20))
-            .untilAsserted { assertEquals(listOf(Event.ReceiveSuccess(messages, subscriptionCursor)), eventSink.events) }
+            .untilAsserted { assertEquals(listOf(SubscribeEvent.ReceiveSuccess(messages, subscriptionCursor)), eventSink.subscribeEvents) }
     }
 
     @Test
@@ -52,7 +52,7 @@ class ReceiveMessagesEffectTest {
             .atMost(Durations.ONE_SECOND)
             .with()
             .pollInterval(Duration.ofMillis(20))
-            .untilAsserted { assertEquals(listOf(Event.ReceiveFailure(reason)), eventSink.events) }
+            .untilAsserted { assertEquals(listOf(SubscribeEvent.ReceiveFailure(reason)), eventSink.subscribeEvents) }
     }
 
     @Test

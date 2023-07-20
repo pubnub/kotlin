@@ -4,7 +4,7 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.remoteaction.RemoteAction
 import com.pubnub.api.eventengine.ManagedEffect
 import com.pubnub.api.eventengine.Sink
-import com.pubnub.api.subscribe.eventengine.event.Event
+import com.pubnub.api.subscribe.eventengine.event.SubscribeEvent
 import org.slf4j.LoggerFactory
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.ScheduledFuture
@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit
 
 class ReceiveReconnectEffect(
     private val remoteAction: RemoteAction<ReceiveMessagesResult>,
-    private val eventSink: Sink<Event>,
+    private val subscribeEventSink: Sink<SubscribeEvent>,
     private val policy: RetryPolicy,
     private val executorService: ScheduledExecutorService,
     private val attempts: Int,
@@ -36,21 +36,21 @@ class ReceiveReconnectEffect(
 
         val delay = policy.nextDelay(attempts)
         if (delay == null) {
-            eventSink.add(Event.ReceiveReconnectGiveup(reason ?: PubNubException("Unknown error")))
+            subscribeEventSink.add(SubscribeEvent.ReceiveReconnectGiveup(reason ?: PubNubException("Unknown error")))
             return
         }
 
         scheduled = executorService.schedule({
             remoteAction.async { result, status ->
                 if (status.error) {
-                    eventSink.add(
-                        Event.ReceiveReconnectFailure(
+                    subscribeEventSink.add(
+                        SubscribeEvent.ReceiveReconnectFailure(
                             status.exception ?: PubNubException("Unknown error")
                         )
                     )
                 } else {
-                    eventSink.add(
-                        Event.ReceiveReconnectSuccess(
+                    subscribeEventSink.add(
+                        SubscribeEvent.ReceiveReconnectSuccess(
                             result!!.messages,
                             result.subscriptionCursor
                         )

@@ -86,7 +86,7 @@ import com.pubnub.api.models.consumer.objects.membership.ChannelMembershipInput
 import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
 import com.pubnub.api.presence.Presence
 import com.pubnub.api.subscribe.Subscribe
-import com.pubnub.api.subscribe.eventengine.configuration.EventEngineConfImpl
+import com.pubnub.api.subscribe.eventengine.configuration.SubscribeEventEngineConfImpl
 import com.pubnub.api.vendor.Base64
 import com.pubnub.api.vendor.Crypto
 import com.pubnub.api.vendor.FileEncryptionUtil.decrypt
@@ -101,7 +101,7 @@ class PubNub internal constructor(
     eventEngineConf: EventEngineConf
 ) {
 
-    constructor(configuration: PNConfiguration) : this(configuration, EventEngineConfImpl())
+    constructor(configuration: PNConfiguration) : this(configuration, SubscribeEventEngineConfImpl())
 
     companion object {
         private const val TIMESTAMP_DIVIDER = 1000
@@ -1986,7 +1986,12 @@ class PubNub internal constructor(
      * Force the SDK to try and reach out PubNub. Monitor the results in [SubscribeCallback.status]
      */
     fun reconnect() {
-        subscriptionManager.reconnect()
+        if (configuration.enableSubscribeBeta) {
+            // todo handle in Subscribe EE
+            subscribe.reconnect()
+        } else {
+            subscriptionManager.reconnect()
+        }
     }
 
     /**

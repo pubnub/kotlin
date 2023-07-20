@@ -4,7 +4,7 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.remoteaction.RemoteAction
 import com.pubnub.api.eventengine.ManagedEffect
 import com.pubnub.api.eventengine.Sink
-import com.pubnub.api.subscribe.eventengine.event.Event
+import com.pubnub.api.subscribe.eventengine.event.SubscribeEvent
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
 import org.slf4j.LoggerFactory
 import java.util.concurrent.ScheduledExecutorService
@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit
 
 class HandshakeReconnectEffect(
     private val remoteAction: RemoteAction<SubscriptionCursor>,
-    private val eventSink: Sink<Event>,
+    private val subscribeEventSink: Sink<SubscribeEvent>,
     private val policy: RetryPolicy,
     private val executorService: ScheduledExecutorService,
     private val handshakeReconnectInvocation: SubscribeEffectInvocation.HandshakeReconnect,
@@ -36,20 +36,20 @@ class HandshakeReconnectEffect(
 
         val delay = policy.nextDelay(handshakeReconnectInvocation.attempts)
         if (delay == null) {
-            eventSink.add(Event.HandshakeReconnectGiveup(handshakeReconnectInvocation.reason ?: PubNubException("Unknown error")))
+            subscribeEventSink.add(SubscribeEvent.HandshakeReconnectGiveup(handshakeReconnectInvocation.reason ?: PubNubException("Unknown error")))
             return
         }
 
         scheduled = executorService.schedule({
             remoteAction.async { result, status ->
                 if (status.error) {
-                    eventSink.add(
-                        Event.HandshakeReconnectFailure(
+                    subscribeEventSink.add(
+                        SubscribeEvent.HandshakeReconnectFailure(
                             status.exception ?: PubNubException("Unknown error")
                         )
                     )
                 } else {
-                    eventSink.add(Event.HandshakeReconnectSuccess(result!!))
+                    subscribeEventSink.add(SubscribeEvent.HandshakeReconnectSuccess(result!!))
                 }
             }
         }, delay.toMillis(), TimeUnit.MILLISECONDS)

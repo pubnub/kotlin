@@ -4,36 +4,36 @@ import com.pubnub.api.eventengine.EffectDispatcher
 import com.pubnub.api.eventengine.Sink
 import com.pubnub.api.subscribe.eventengine.SubscribeEventEngine
 import com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectInvocation
-import com.pubnub.api.subscribe.eventengine.event.Event
+import com.pubnub.api.subscribe.eventengine.event.SubscribeEvent
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-class EventEngineManagerTest {
+class SubscribeEventEngineManagerTest {
     private lateinit var objectUnderTest: EventEngineManager
 
     val subscribeEventEngine: SubscribeEventEngine = mockk()
     val effectDispatcher: EffectDispatcher<SubscribeEffectInvocation> = mockk()
-    val eventSink: Sink<Event> = mockk()
-    val event: Event = mockk()
+    val subscribeEventSink: Sink<SubscribeEvent> = mockk()
+    val subscribeEvent: SubscribeEvent = mockk()
 
     @BeforeEach
     fun setUp() {
-        objectUnderTest = EventEngineManager(subscribeEventEngine, effectDispatcher, eventSink)
+        objectUnderTest = EventEngineManager(subscribeEventEngine, effectDispatcher, subscribeEventSink)
     }
 
     @Test
     fun `should add event to eventSink when adding event to queue`() {
         // given
-        every { eventSink.add(event) } returns Unit
+        every { subscribeEventSink.add(subscribeEvent) } returns Unit
 
         // when
-        objectUnderTest.addEventToQueue(event)
+        objectUnderTest.addEventToQueue(subscribeEvent)
 
         // then
-        verify { eventSink.add(event) }
+        verify { subscribeEventSink.add(subscribeEvent) }
     }
 
     @Test

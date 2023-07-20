@@ -7,7 +7,7 @@ import com.pubnub.api.eventengine.Sink
 import com.pubnub.api.models.consumer.pubsub.PNEvent
 import com.pubnub.api.subscribe.eventengine.effect.effectprovider.HandshakeProvider
 import com.pubnub.api.subscribe.eventengine.effect.effectprovider.ReceiveMessagesProvider
-import com.pubnub.api.subscribe.eventengine.event.Event
+import com.pubnub.api.subscribe.eventengine.event.SubscribeEvent
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
@@ -20,7 +20,7 @@ data class ReceiveMessagesResult(
 internal class SubscribeEffectFactory(
     private val handshakeProvider: HandshakeProvider,
     private val receiveMessagesProvider: ReceiveMessagesProvider,
-    private val eventSink: Sink<Event>,
+    private val subscribeEventSink: Sink<SubscribeEvent>,
     private val policy: RetryPolicy,
     private val executorService: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor(),
     private val messagesConsumer: MessagesConsumer,
@@ -40,7 +40,7 @@ internal class SubscribeEffectFactory(
                         effectInvocation.channels,
                         effectInvocation.channelGroups
                     )
-                HandshakeEffect(handshakeRemoteAction, eventSink)
+                HandshakeEffect(handshakeRemoteAction, subscribeEventSink)
             }
             is SubscribeEffectInvocation.HandshakeReconnect -> {
                 val handshakeRemoteAction =
@@ -50,7 +50,7 @@ internal class SubscribeEffectFactory(
                     )
                 HandshakeReconnectEffect(
                     handshakeRemoteAction,
-                    eventSink,
+                    subscribeEventSink,
                     policy,
                     executorService,
                     effectInvocation
@@ -63,7 +63,7 @@ internal class SubscribeEffectFactory(
                         effectInvocation.channelGroups,
                         effectInvocation.subscriptionCursor
                     )
-                ReceiveMessagesEffect(receiveMessagesRemoteAction, eventSink)
+                ReceiveMessagesEffect(receiveMessagesRemoteAction, subscribeEventSink)
             }
             is SubscribeEffectInvocation.ReceiveReconnect -> {
                 val receiveMessagesRemoteAction = receiveMessagesProvider.getReceiveMessagesRemoteAction(
@@ -74,7 +74,7 @@ internal class SubscribeEffectFactory(
 
                 ReceiveReconnectEffect(
                     receiveMessagesRemoteAction,
-                    eventSink,
+                    subscribeEventSink,
                     policy,
                     executorService,
                     effectInvocation.attempts,

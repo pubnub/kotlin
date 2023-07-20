@@ -19,7 +19,7 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 
-class SetStateTestSuite : EndpointTestSuite<SetState, PNSetStateResult>() {
+class StateSetTestSuite : EndpointTestSuite<SetState, PNSetStateResult>() {
 
     override fun telemetryParamName() = "l_pres"
 

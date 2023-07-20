@@ -2,14 +2,14 @@ package com.pubnub.api.subscribe.eventengine.worker
 
 import com.pubnub.api.PubNubException
 import com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectInvocation
-import com.pubnub.api.subscribe.eventengine.event.Event
+import com.pubnub.api.subscribe.eventengine.event.SubscribeEvent
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
 import com.pubnub.api.subscribe.eventengine.state.SubscribeState
 import com.pubnub.api.subscribe.eventengine.transition.transition
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
-class TransitionFromHandshakeStoppedStateTest {
+class TransitionFromHandshakeHeartbeatStoppedStateTest {
 
     private val channels = listOf("Channel1")
     private val channelGroups = listOf("ChannelGroup1")
@@ -23,7 +23,7 @@ class TransitionFromHandshakeStoppedStateTest {
         // when
         val (state, invocations) = transition(
             SubscribeState.HandshakeStopped(channels, channelGroups, reason),
-            Event.Reconnect
+            SubscribeEvent.Reconnect
         )
 
         // then
@@ -36,7 +36,7 @@ class TransitionFromHandshakeStoppedStateTest {
         // when
         val (state, invocations) = transition(
             SubscribeState.HandshakeStopped(channels, channelGroups, reason),
-            Event.UnsubscribeAll
+            SubscribeEvent.UnsubscribeAll
         )
 
         // then
@@ -49,7 +49,7 @@ class TransitionFromHandshakeStoppedStateTest {
         // when
         val (state, invocations) = transition(
             SubscribeState.HandshakeStopped(channels, channelGroups, reason),
-            Event.SubscriptionChanged(channels, channelGroups)
+            SubscribeEvent.SubscriptionChanged(channels, channelGroups)
         )
 
         // then
@@ -62,7 +62,7 @@ class TransitionFromHandshakeStoppedStateTest {
         // when
         val (state, invocations) = transition(
             SubscribeState.HandshakeStopped(channels, channelGroups, reason),
-            Event.SubscriptionRestored(channels, channelGroups, subscriptionCursor)
+            SubscribeEvent.SubscriptionRestored(channels, channelGroups, subscriptionCursor)
         )
 
         // then

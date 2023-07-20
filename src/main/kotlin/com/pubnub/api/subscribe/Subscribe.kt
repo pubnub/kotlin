@@ -18,9 +18,9 @@ import com.pubnub.api.subscribe.eventengine.effect.StatusConsumer
 import com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectFactory
 import com.pubnub.api.subscribe.eventengine.effect.effectprovider.HandshakeProviderImpl
 import com.pubnub.api.subscribe.eventengine.effect.effectprovider.ReceiveMessagesProviderImpl
-import com.pubnub.api.subscribe.eventengine.event.Event
-import com.pubnub.api.subscribe.eventengine.event.Event.SubscriptionChanged
-import com.pubnub.api.subscribe.eventengine.event.Event.SubscriptionRestored
+import com.pubnub.api.subscribe.eventengine.event.SubscribeEvent
+import com.pubnub.api.subscribe.eventengine.event.SubscribeEvent.SubscriptionChanged
+import com.pubnub.api.subscribe.eventengine.event.SubscribeEvent.SubscriptionRestored
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
 import com.pubnub.api.workers.SubscribeMessageProcessor
 import java.util.concurrent.Executors
@@ -43,7 +43,7 @@ class Subscribe(
         ): Subscribe {
             val handshakeProvider = HandshakeProviderImpl(pubNub)
             val receiveMessagesProvider = ReceiveMessagesProviderImpl(pubNub, messageProcessor)
-            val eventSink: Sink<Event> = eventEngineConf.eventSink
+            val subscribeEventSink: Sink<SubscribeEvent> = eventEngineConf.subscribeEventSink
             val executorService: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor()
             val messagesConsumer: MessagesConsumer = listenerManager
             val statusConsumer: StatusConsumer = listenerManager
@@ -51,7 +51,7 @@ class Subscribe(
             val subscribeEffectFactory = SubscribeEffectFactory(
                 handshakeProvider,
                 receiveMessagesProvider,
-                eventSink,
+                subscribeEventSink,
                 retryPolicy,
                 executorService,
                 messagesConsumer,
@@ -60,7 +60,7 @@ class Subscribe(
 
             val subscribeEventEngine = SubscribeEventEngine(
                 effectSink = eventEngineConf.effectSink,
-                eventSource = eventEngineConf.eventSource
+                eventSource = eventEngineConf.subscribeEventSource
             )
             val effectDispatcher = EffectDispatcher(
                 effectFactory = subscribeEffectFactory,
@@ -70,7 +70,7 @@ class Subscribe(
             val eventEngineManager = EventEngineManager(
                 subscribeEventEngine = subscribeEventEngine,
                 effectDispatcher = effectDispatcher,
-                eventSink = eventEngineConf.eventSink
+                eventSink = eventEngineConf.subscribeEventSink
             ).apply {
                 if (pubNub.configuration.enableSubscribeBeta) {
                     start()
@@ -118,7 +118,7 @@ class Subscribe(
             val channelGroupsInLocalStorage = subscriptionData.channelGroups.toList()
             eventEngineManager.addEventToQueue(SubscriptionChanged(channelsInLocalStorage, channelGroupsInLocalStorage))
         } else {
-            eventEngineManager.addEventToQueue(Event.UnsubscribeAll)
+            eventEngineManager.addEventToQueue(SubscribeEvent.UnsubscribeAll)
         }
     }
 
@@ -126,7 +126,7 @@ class Subscribe(
     fun unsubscribeAll() {
         removeAllChannelsFromLocalStorage()
         removeAllChannelGroupsFromLocalStorage()
-        eventEngineManager.addEventToQueue(Event.UnsubscribeAll)
+        eventEngineManager.addEventToQueue(SubscribeEvent.UnsubscribeAll)
     }
 
     @Synchronized
@@ -140,7 +140,11 @@ class Subscribe(
     }
 
     fun disconnect() {
-        eventEngineManager.addEventToQueue(Event.Disconnect)
+        eventEngineManager.addEventToQueue(SubscribeEvent.Disconnect)
+    }
+
+    fun reconnect() {
+        // toDo shouldn't we add this?
     }
 
     @Synchronized
