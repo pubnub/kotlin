@@ -37,7 +37,7 @@ class Subscribe(
             statusConsumer: StatusConsumer<S>,
             handshakeProvider: HandshakeProvider,
             receiveMessagesProvider: ReceiveMessagesProvider,
-            enableSubscribeBeta: Boolean = false
+            enableSubscribeBeta: Boolean
         ): Subscribe {
 
             val eventSink: Sink<Event> = eventEngineConf.eventSink

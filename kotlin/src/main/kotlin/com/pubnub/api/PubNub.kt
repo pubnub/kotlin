@@ -134,14 +134,16 @@ class PubNub internal constructor(
     private val listenerManager = ListenerManager(this)
     internal val subscriptionManager = SubscriptionManager(this, listenerManager)
     private val subscribe = Subscribe.create(
-        retryPolicy = configuration.retryPolicy, eventEngineConf = eventEngineConf,
+        retryPolicy = configuration.retryPolicy,
+        eventEngineConf = eventEngineConf,
         statusConsumer = listenerManager,
         messagesConsumer = listenerManager,
         handshakeProvider = HandshakeProviderImpl(this),
         receiveMessagesProvider = ReceiveMessagesProviderImpl(
             this,
             SubscribeMessageProcessor(this, DuplicationManager(configuration))
-        )
+        ),
+        enableSubscribeBeta = configuration.enableSubscribeBeta
     )
 
     //endregion
