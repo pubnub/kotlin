@@ -51,5 +51,5 @@ class ManageMemberships internal constructor(
     override fun createResponse(input: Response<EntityArrayEnvelope<PNChannelMembership>>): PNChannelMembershipArrayResult? =
         input.toPNChannelMembershipArrayResult()
 
-    override fun operationType(): PNOperationType = PNOperationType.ObjectsOperation()
+    override fun operationType(): PNOperationType = PNOperationType.PNManageMembershipsOperation
 }

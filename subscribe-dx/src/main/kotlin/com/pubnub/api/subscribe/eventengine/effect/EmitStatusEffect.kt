@@ -4,7 +4,7 @@ import com.pubnub.api.eventengine.Effect
 import com.pubnub.core.Status
 import org.slf4j.LoggerFactory
 
-class EmitStatusEffect<S : Status>(
+class EmitStatusEffect<in S : Status>(
     private val statusConsumer: StatusConsumer<S>,
     private val status: S
 ) : Effect {

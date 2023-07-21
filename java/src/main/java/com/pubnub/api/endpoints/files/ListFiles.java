@@ -118,7 +118,7 @@ public class ListFiles extends Endpoint<ListFilesResult, PNListFilesResult> {
 
     @Override
     protected PNOperationType getOperationType() {
-        return PNOperationType.PNFileAction;
+        return PNOperationType.PNFileOperation;
     }
 
     @Override

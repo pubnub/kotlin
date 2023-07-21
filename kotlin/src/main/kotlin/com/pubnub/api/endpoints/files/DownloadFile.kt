@@ -56,7 +56,7 @@ class DownloadFile(
 
     override fun getAffectedChannels() = listOf(channel)
     override fun getAffectedChannelGroups(): List<String> = listOf()
-    override fun operationType(): PNOperationType = PNOperationType.FileOperation
+    override fun operationType(): PNOperationType = PNOperationType.PNFileOperation
     override fun isAuthRequired(): Boolean = true
     override fun isSubKeyRequired(): Boolean = true
     override fun isPubKeyRequired(): Boolean = false

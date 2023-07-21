@@ -147,7 +147,7 @@ public class SendFile implements RemoteAction<PNFileUploadResult> {
     private <T> RemoteAction<T> autoRetry(RemoteAction<T> remoteAction, int maxNumberOfRetries) {
         return RetryingRemoteAction.autoRetry(remoteAction,
                 maxNumberOfRetries,
-                PNOperationType.PNFileAction,
+                PNOperationType.PNFileOperation,
                 executorService);
     }
 

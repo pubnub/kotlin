@@ -102,7 +102,7 @@ class ComposableRemoteActionTest {
             }
 
             override fun operationType(): PNOperationType {
-                return PNOperationType.FileOperation
+                return PNOperationType.PNFileOperation
             }
         }
         val successful: TestRemoteAction<Int> = TestRemoteAction.successful(15)

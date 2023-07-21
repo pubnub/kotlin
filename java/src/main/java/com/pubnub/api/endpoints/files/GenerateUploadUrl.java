@@ -98,7 +98,7 @@ class GenerateUploadUrl extends Endpoint<GeneratedUploadUrlResponse, FileUploadR
 
     @Override
     protected PNOperationType getOperationType() {
-        return PNOperationType.PNFileAction;
+        return PNOperationType.PNFileOperation;
     }
 
     @Override

@@ -208,7 +208,7 @@ class SendFileTest : TestsWithFiles {
                     PNStatus(
                         category = PNStatusCategory.PNBadRequestCategory,
                         error = true,
-                        operation = PNOperationType.FileOperation
+                        operation = PNOperationType.PNFileOperation
                     )
                 )
             } else {
@@ -217,7 +217,7 @@ class SendFileTest : TestsWithFiles {
                     PNStatus(
                         category = PNStatusCategory.PNAcknowledgmentCategory,
                         error = false,
-                        operation = PNOperationType.FileOperation
+                        operation = PNOperationType.PNFileOperation
                     )
                 )
             }
@@ -261,7 +261,7 @@ class SendFileTest : TestsWithFiles {
                 PNStatus(
                     category = PNStatusCategory.PNAcknowledgmentCategory,
                     error = false,
-                    operation = PNOperationType.FileOperation
+                    operation = PNOperationType.PNFileOperation
                 )
             )
         }

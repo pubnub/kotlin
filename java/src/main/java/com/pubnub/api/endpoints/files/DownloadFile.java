@@ -98,7 +98,7 @@ public class DownloadFile extends Endpoint<ResponseBody, PNDownloadFileResult> {
 
     @Override
     protected PNOperationType getOperationType() {
-        return PNOperationType.PNFileAction;
+        return PNOperationType.PNFileOperation;
     }
 
     @Override

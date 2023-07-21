@@ -108,6 +108,6 @@ class TestRemoteAction<Output> internal constructor(
     }
 
     override fun operationType(): PNOperationType {
-        return PNOperationType.FileOperation
+        return PNOperationType.PNFileOperation
     }
 }

@@ -1,5 +1,7 @@
 package com.pubnub.core
 
+import com.pubnub.api.enums.PNOperationType
+import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.models.consumer.PNErrorData
 import java.util.ServiceLoader
 
@@ -12,7 +14,11 @@ interface Status {
     val operation: OperationType
     val affectedChannels: List<String>
     val affectedChannelGroups: List<String>
-    val exception: Exception?
+    val exception: CoreException?
+
+    // https://youtrack.jetbrains.com/issue/KT-31420
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @get:JvmName("__statusCode")
     val statusCode: Int?
 
     // https://youtrack.jetbrains.com/issue/KT-31420
@@ -32,9 +38,9 @@ interface Status {
 
 interface PNStatusFactory {
     fun createPNStatus(
-        category: StatusCategory,
+        category: PNStatusCategory,
         error: Boolean,
-        operation: OperationType,
+        operation: PNOperationType,
         affectedChannels: List<String>,
         affectedChannelGroups: List<String>,
         exception: CoreException? = null,
@@ -52,10 +58,10 @@ val pnStatusFactory: PNStatusFactory by lazy {
         .load(PNStatusFactory::class.java).first()
 }
 
-fun PNStatus(
-    category: StatusCategory,
+fun CreateStatus(
+    category: PNStatusCategory,
     error: Boolean,
-    operation: OperationType,
+    operation: PNOperationType,
     affectedChannels: List<String>,
     affectedChannelGroups: List<String>,
     exception: CoreException? = null,

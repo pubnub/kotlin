@@ -100,7 +100,7 @@ class SendFile internal constructor(
                         ttl = ttl,
                         shouldStore = shouldStore
                     ),
-                    fileMessagePublishRetryLimit, PNOperationType.FileOperation, executorService
+                    fileMessagePublishRetryLimit, PNOperationType.PNFileOperation, executorService
                 ) // publish file message
             }.map { mapPublishFileMessageToFileUpload(result.get(), it) }
     }
@@ -121,6 +121,6 @@ class SendFile internal constructor(
     }
 
     override fun operationType(): PNOperationType {
-        return PNOperationType.FileOperation
+        return PNOperationType.PNFileOperation
     }
 }

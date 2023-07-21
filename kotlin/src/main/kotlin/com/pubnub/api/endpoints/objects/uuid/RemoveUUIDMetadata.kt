@@ -25,6 +25,6 @@ class RemoveUUIDMetadata(
     }
 
     override fun operationType(): PNOperationType {
-        return PNOperationType.PNRemoveUUIDMetadataOperation
+        return PNOperationType.PNRemoveUuidMetadataOperation
     }
 }

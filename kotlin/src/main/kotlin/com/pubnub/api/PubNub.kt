@@ -87,6 +87,10 @@ import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
 import com.pubnub.api.presence.Presence
 import com.pubnub.api.subscribe.Subscribe
 import com.pubnub.api.subscribe.eventengine.configuration.EventEngineConfImpl
+import com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectInvocation
+import com.pubnub.api.subscribe.eventengine.effect.effectprovider.HandshakeProviderImpl
+import com.pubnub.api.subscribe.eventengine.effect.effectprovider.ReceiveMessagesProviderImpl
+import com.pubnub.api.subscribe.eventengine.event.Event
 import com.pubnub.api.vendor.Base64
 import com.pubnub.api.vendor.Crypto
 import com.pubnub.api.vendor.FileEncryptionUtil.decrypt
@@ -98,7 +102,7 @@ import java.util.UUID
 
 class PubNub internal constructor(
     val configuration: PNConfiguration,
-    eventEngineConf: EventEngineConf
+    eventEngineConf: EventEngineConf<Event, SubscribeEffectInvocation>
 ) {
 
     constructor(configuration: PNConfiguration) : this(configuration, EventEngineConfImpl())
@@ -129,7 +133,16 @@ class PubNub internal constructor(
     private val tokenParser: TokenParser = TokenParser()
     private val listenerManager = ListenerManager(this)
     internal val subscriptionManager = SubscriptionManager(this, listenerManager)
-    private val subscribe = Subscribe.create(this, listenerManager, configuration.retryPolicy, eventEngineConf, SubscribeMessageProcessor(this, DuplicationManager(configuration)))
+    private val subscribe = Subscribe.create(
+        retryPolicy = configuration.retryPolicy, eventEngineConf = eventEngineConf,
+        statusConsumer = listenerManager,
+        messagesConsumer = listenerManager,
+        handshakeProvider = HandshakeProviderImpl(this),
+        receiveMessagesProvider = ReceiveMessagesProviderImpl(
+            this,
+            SubscribeMessageProcessor(this, DuplicationManager(configuration))
+        )
+    )
 
     //endregion
 

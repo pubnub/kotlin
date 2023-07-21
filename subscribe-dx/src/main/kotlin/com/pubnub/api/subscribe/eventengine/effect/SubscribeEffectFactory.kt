@@ -16,14 +16,14 @@ data class ReceiveMessagesResult(
     val messages: List<PNEvent>, val subscriptionCursor: SubscriptionCursor
 )
 
-class SubscribeEffectFactory(
+class SubscribeEffectFactory<in S : Status>(
     private val handshakeProvider: HandshakeProvider,
     private val receiveMessagesProvider: ReceiveMessagesProvider,
     private val eventSink: Sink<Event>,
     private val policy: RetryPolicy,
     private val executorService: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor(),
     private val messagesConsumer: MessagesConsumer,
-    private val statusConsumer: StatusConsumer,
+    private val statusConsumer: StatusConsumer<S>,
 ) : EffectFactory<SubscribeEffectInvocation> {
     override fun create(effectInvocation: SubscribeEffectInvocation): Effect? {
         return when (effectInvocation) {
@@ -32,7 +32,7 @@ class SubscribeEffectFactory(
             }
 
             is SubscribeEffectInvocation.EmitStatus -> {
-                EmitStatusEffect(statusConsumer, effectInvocation.status)
+                EmitStatusEffect(statusConsumer, effectInvocation.status as S) //TODO is there really no better way?
             }
 
             is SubscribeEffectInvocation.Handshake -> {

@@ -36,6 +36,6 @@ class GetChannelMembers internal constructor(
         input.toPNMemberArrayResult()
 
     override fun operationType(): PNOperationType {
-        return PNOperationType.ObjectsOperation()
+        return PNOperationType.PNGetChannelMembersOperation
     }
 }

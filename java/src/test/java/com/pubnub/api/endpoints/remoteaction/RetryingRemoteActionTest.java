@@ -29,7 +29,7 @@ public class RetryingRemoteActionTest {
         TestRemoteAction<Integer> remoteAction = spy(TestRemoteAction.successful(expectedValue));
         RetryingRemoteAction<Integer> retryingRemoteAction = RetryingRemoteAction.autoRetry(remoteAction,
                 numberOfRetries,
-                PNOperationType.PNFileAction,
+                PNOperationType.PNFileOperation,
                 executorService);
 
         //when
@@ -46,7 +46,7 @@ public class RetryingRemoteActionTest {
         TestRemoteAction<Integer> remoteAction = spy(TestRemoteAction.failingFirstCall(expectedValue));
         RetryingRemoteAction<Integer> retryingRemoteAction = RetryingRemoteAction.autoRetry(remoteAction,
                 numberOfRetries,
-                PNOperationType.PNFileAction,
+                PNOperationType.PNFileOperation,
                 executorService);
 
         //when
@@ -63,7 +63,7 @@ public class RetryingRemoteActionTest {
         TestRemoteAction<Integer> remoteAction = spy(TestRemoteAction.failing());
         RetryingRemoteAction<Integer> retryingRemoteAction = RetryingRemoteAction.autoRetry(remoteAction,
                 numberOfRetries,
-                PNOperationType.PNFileAction,
+                PNOperationType.PNFileOperation,
                 executorService);
 
         //when
@@ -82,7 +82,7 @@ public class RetryingRemoteActionTest {
         TestRemoteAction<Integer> remoteAction = spy(TestRemoteAction.successful(expectedValue));
         RetryingRemoteAction<Integer> retryingRemoteAction = RetryingRemoteAction.autoRetry(remoteAction,
                 numberOfRetries,
-                PNOperationType.PNFileAction,
+                PNOperationType.PNFileOperation,
                 executorService);
         CountDownLatch asyncSynchronization = new CountDownLatch(1);
 
@@ -106,7 +106,7 @@ public class RetryingRemoteActionTest {
         TestRemoteAction<Integer> remoteAction = spy(TestRemoteAction.failingFirstCall(expectedValue));
         RetryingRemoteAction<Integer> retryingRemoteAction = RetryingRemoteAction.autoRetry(remoteAction,
                 numberOfRetries,
-                PNOperationType.PNFileAction,
+                PNOperationType.PNFileOperation,
                 executorService);
         CountDownLatch asyncSynchronization = new CountDownLatch(1);
 
@@ -130,7 +130,7 @@ public class RetryingRemoteActionTest {
         TestRemoteAction<Integer> remoteAction = spy(TestRemoteAction.failing());
         RetryingRemoteAction<Integer> retryingRemoteAction = RetryingRemoteAction.autoRetry(remoteAction,
                 numberOfRetries,
-                PNOperationType.PNFileAction,
+                PNOperationType.PNFileOperation,
                 executorService);
         CountDownLatch asyncSynchronization = new CountDownLatch(1);
 
@@ -154,7 +154,7 @@ public class RetryingRemoteActionTest {
         TestRemoteAction<Integer> remoteAction = spy(TestRemoteAction.failing());
         RetryingRemoteAction<Integer> retryingRemoteAction = RetryingRemoteAction.autoRetry(remoteAction,
                 numberOfRetries,
-                PNOperationType.PNFileAction,
+                PNOperationType.PNFileOperation,
                 executorService);
         CountDownLatch asyncSynchronization = new CountDownLatch(2);
 

@@ -122,7 +122,7 @@ public class GetFileUrl extends Endpoint<ResponseBody, PNFileUrlResult> {
 
     @Override
     protected PNOperationType getOperationType() {
-        return PNOperationType.PNFileAction;
+        return PNOperationType.PNFileOperation;
     }
 
     @Override

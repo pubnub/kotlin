@@ -31,13 +31,13 @@ class SubscribeEffectFactoryTest {
     private val executorService = mockk<ScheduledExecutorService>()
     private val channels = listOf("channel1")
     private val channelGroups = listOf("channelGroup1")
-    private lateinit var subscribeEffectFactory: SubscribeEffectFactory
+    private lateinit var subscribeEffectFactory: SubscribeEffectFactory<PNStatus>
     private val attempts = 1
     private val reason = PubNubException("Unknown error")
     private val subscriptionCursor = SubscriptionCursor(1337L, "1337")
     private val handshakeRemoteAction: CoreRemoteAction<SubscriptionCursor, Status> = mockk()
     private val receiveMessagesRemoteAction: CoreRemoteAction<ReceiveMessagesResult, Status> = mockk()
-    private val statusConsumer = mockk<StatusConsumer>()
+    private val statusConsumer = mockk<StatusConsumer<PNStatus>>()
 
     @BeforeEach
     fun setUp() {

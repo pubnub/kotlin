@@ -242,5 +242,5 @@ internal class UploadFile(
         }
     }
 
-    override fun operationType(): PNOperationType = PNOperationType.FileOperation
+    override fun operationType(): PNOperationType = PNOperationType.PNFileOperation
 }

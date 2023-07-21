@@ -1,6 +1,7 @@
 package com.pubnub.api
 
 import com.pubnub.api.models.consumer.PNStatus
+import com.pubnub.core.CoreError
 
 /**
  * List of known PubNub errors. Observe them in [PubNubException.pubnubError] in [PNStatus.exception].
@@ -8,7 +9,7 @@ import com.pubnub.api.models.consumer.PNStatus
  * @property code The error code.
  * @property message The error message.
  */
-enum class PubNubError(private val code: Int, val message: String) {
+enum class PubNubError(override val code: Int, override val message: String) : CoreError {
 
     TIMEOUT(
         100,

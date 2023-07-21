@@ -2,7 +2,14 @@ package com.pubnub.core
 
 import java.util.ServiceLoader
 
-abstract class CoreException(errorMessage: String? = null) : Exception(errorMessage)
+abstract class CoreException  @JvmOverloads constructor(throwable: Throwable? = null, errorMessage: String? = null) : Exception(errorMessage, throwable) {
+    // https://youtrack.jetbrains.com/issue/KT-31420
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @get:JvmName("getErrormsg")
+    abstract val errorMessage: String?
+    abstract val pubnubError: CoreError?
+    abstract val statusCode: Int
+}
 
 interface PubNubExceptionFactory {
     fun createPubNubException(message: String, cause: Throwable? = null): CoreException

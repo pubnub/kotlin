@@ -72,7 +72,7 @@ enum class PNOperationType(override val queryParam: String? = null) : OperationT
     PNGetMessageActions(MSGA),
     PNDeleteMessageAction(MSGA),
 
-    PNFileAction(FILE),
+    PNFileOperation(FILE),
 
     PNTimeOperation(TIME),
 

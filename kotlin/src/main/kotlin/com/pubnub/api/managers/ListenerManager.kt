@@ -14,7 +14,7 @@ import com.pubnub.api.subscribe.eventengine.effect.MessagesConsumer
 import com.pubnub.api.subscribe.eventengine.effect.StatusConsumer
 import java.util.ArrayList
 
-internal class ListenerManager(val pubnub: PubNub) : MessagesConsumer, StatusConsumer {
+internal class ListenerManager(val pubnub: PubNub) : MessagesConsumer, StatusConsumer<PNStatus> {
     private val listeners = mutableListOf<SubscribeCallback>()
 
     fun addListener(listener: SubscribeCallback) {

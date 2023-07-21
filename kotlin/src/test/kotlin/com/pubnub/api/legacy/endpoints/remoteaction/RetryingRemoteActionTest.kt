@@ -25,7 +25,7 @@ class RetryingRemoteActionTest {
         val retryingRemoteAction = RetryingRemoteAction.autoRetry(
             remoteAction,
             numberOfRetries,
-            PNOperationType.FileOperation,
+            PNOperationType.PNFileOperation,
             executorService
         )
 
@@ -45,7 +45,7 @@ class RetryingRemoteActionTest {
         val retryingRemoteAction = RetryingRemoteAction.autoRetry(
             remoteAction,
             numberOfRetries,
-            PNOperationType.FileOperation,
+            PNOperationType.PNFileOperation,
             executorService
         )
 
@@ -65,7 +65,7 @@ class RetryingRemoteActionTest {
         val retryingRemoteAction = RetryingRemoteAction.autoRetry(
             remoteAction,
             numberOfRetries,
-            PNOperationType.FileOperation,
+            PNOperationType.PNFileOperation,
             executorService
         )
 
@@ -87,7 +87,7 @@ class RetryingRemoteActionTest {
         val retryingRemoteAction = RetryingRemoteAction.autoRetry(
             remoteAction,
             numberOfRetries,
-            PNOperationType.FileOperation,
+            PNOperationType.PNFileOperation,
             executorService
         )
         val asyncSynchronization = CountDownLatch(1)
@@ -112,7 +112,7 @@ class RetryingRemoteActionTest {
         val retryingRemoteAction = RetryingRemoteAction.autoRetry(
             remoteAction,
             numberOfRetries,
-            PNOperationType.FileOperation,
+            PNOperationType.PNFileOperation,
             executorService
         )
         val asyncSynchronization = CountDownLatch(1)
@@ -137,7 +137,7 @@ class RetryingRemoteActionTest {
         val retryingRemoteAction = RetryingRemoteAction.autoRetry(
             remoteAction,
             numberOfRetries,
-            PNOperationType.FileOperation,
+            PNOperationType.PNFileOperation,
             executorService
         )
         val asyncSynchronization = CountDownLatch(1)
@@ -162,7 +162,7 @@ class RetryingRemoteActionTest {
         val retryingRemoteAction = RetryingRemoteAction.autoRetry(
             remoteAction,
             numberOfRetries,
-            PNOperationType.FileOperation,
+            PNOperationType.PNFileOperation,
             executorService
         )
         val asyncSynchronization = CountDownLatch(2)

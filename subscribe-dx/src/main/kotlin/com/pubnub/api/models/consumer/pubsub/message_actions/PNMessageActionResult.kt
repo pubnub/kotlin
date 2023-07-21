@@ -1,6 +1,5 @@
 package com.pubnub.api.models.consumer.pubsub.message_actions
 
-import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 import com.pubnub.api.models.consumer.pubsub.BasePubSubResult
 import com.pubnub.api.models.consumer.pubsub.PubSubResult

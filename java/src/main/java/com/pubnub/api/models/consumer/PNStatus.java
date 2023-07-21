@@ -3,6 +3,7 @@ package com.pubnub.api.models.consumer;
 import com.pubnub.api.endpoints.remoteaction.RemoteAction;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.enums.PNStatusCategory;
+import com.pubnub.core.CoreException;
 import com.pubnub.core.Status;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -11,7 +12,6 @@ import lombok.ToString;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.Optional;
 
 @Builder(toBuilder = true)
 @Getter
@@ -28,6 +28,11 @@ public class PNStatus implements Status {
     private PNOperationType operation;
 
     private boolean tlsEnabled;
+
+    @Override
+    public Boolean isTlsEnabled() {
+        return tlsEnabled;
+    }
 
     private String uuid;
     private String authKey;
@@ -51,11 +56,17 @@ public class PNStatus implements Status {
 
     @Nullable
     @Override
-    public Exception getException() {
+    public CoreException getException() {
         if (errorData != null) {
-            return errorData.getThrowable();
+            return (CoreException) errorData.getThrowable(); // TODO figure out way without casting
         }
         return null;
+    }
+
+    @Nullable
+    @Override
+    public Integer __statusCode() {
+        return statusCode;
     }
 
     /*

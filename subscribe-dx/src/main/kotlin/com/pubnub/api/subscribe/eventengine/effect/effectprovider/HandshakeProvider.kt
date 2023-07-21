@@ -5,5 +5,5 @@ import com.pubnub.core.CoreRemoteAction
 import com.pubnub.core.Status
 
 fun interface HandshakeProvider {
-    fun getHandshakeRemoteAction(channels: List<String>, channelGroups: List<String>): CoreRemoteAction<SubscriptionCursor, Status>
+    fun getHandshakeRemoteAction(channels: List<String>, channelGroups: List<String>): CoreRemoteAction<SubscriptionCursor, out Status>
 }

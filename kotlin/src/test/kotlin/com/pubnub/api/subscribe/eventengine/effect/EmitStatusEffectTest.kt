@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
 class EmitStatusEffectTest {
-    private val statusConsumer: StatusConsumer = mockk()
+    private val statusConsumer: StatusConsumer<PNStatus> = mockk()
     val status: PNStatus = mockk()
 
     @Test

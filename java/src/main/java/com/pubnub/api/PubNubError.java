@@ -2,6 +2,7 @@ package com.pubnub.api;
 
 
 import com.google.gson.JsonElement;
+import com.pubnub.core.CoreError;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
@@ -15,7 +16,7 @@ import lombok.ToString;
 @Getter
 @Builder
 @ToString
-public class PubNubError {
+public class PubNubError implements CoreError {
 
     private int errorCode;
     private int errorCodeExtended;

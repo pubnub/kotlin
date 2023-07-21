@@ -291,7 +291,7 @@ class UploadFile implements RemoteAction<Void> {
     }
 
     private PNOperationType getOperationType() {
-        return PNOperationType.PNFileAction;
+        return PNOperationType.PNFileOperation;
     }
 
     static class Factory {

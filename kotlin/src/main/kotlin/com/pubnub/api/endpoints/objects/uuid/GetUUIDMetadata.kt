@@ -39,6 +39,6 @@ class GetUUIDMetadata internal constructor(
     }
 
     override fun operationType(): PNOperationType {
-        return PNOperationType.PNGetUUIDMetadataOperation
+        return PNOperationType.PNGetUuidMetadataOperation
     }
 }

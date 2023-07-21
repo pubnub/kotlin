@@ -18,6 +18,7 @@ import com.pubnub.api.subscribe.eventengine.event.Event.SubscriptionChanged
 import com.pubnub.api.subscribe.eventengine.event.Event.SubscriptionRestored
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
 import com.pubnub.core.PubNubException
+import com.pubnub.core.Status
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 
@@ -29,13 +30,14 @@ class Subscribe(
 ) {
 
     companion object {
-        internal fun create(
+        fun <S : Status> create(
             retryPolicy: RetryPolicy,
             eventEngineConf: EventEngineConf<Event, SubscribeEffectInvocation>,
             messagesConsumer: MessagesConsumer,
-            statusConsumer: StatusConsumer,
+            statusConsumer: StatusConsumer<S>,
             handshakeProvider: HandshakeProvider,
-            receiveMessagesProvider: ReceiveMessagesProvider
+            receiveMessagesProvider: ReceiveMessagesProvider,
+            enableSubscribeBeta: Boolean = false
         ): Subscribe {
 
             val eventSink: Sink<Event> = eventEngineConf.eventSink
@@ -66,7 +68,7 @@ class Subscribe(
                 effectDispatcher = effectDispatcher,
                 eventSink = eventEngineConf.eventSink
             ).apply {
-                if (pubNub.configuration.enableSubscribeBeta) {
+                if (enableSubscribeBeta) {
                     start()
                 }
             }

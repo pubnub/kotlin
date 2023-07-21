@@ -134,7 +134,7 @@ public class PublishFileMessage extends Endpoint<List<Object>, PNPublishFileMess
 
     @Override
     protected PNOperationType getOperationType() {
-        return PNOperationType.PNFileAction;
+        return PNOperationType.PNFileOperation;
     }
 
     @Override

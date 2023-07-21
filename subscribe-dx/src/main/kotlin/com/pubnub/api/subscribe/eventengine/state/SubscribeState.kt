@@ -9,10 +9,10 @@ import com.pubnub.api.eventengine.transitionTo
 import com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectInvocation
 import com.pubnub.api.subscribe.eventengine.event.Event
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
-import com.pubnub.core.PNStatus
+import com.pubnub.core.CreateStatus
 
 sealed class SubscribeState : State<SubscribeEffectInvocation, Event, SubscribeState> {
-    class Unsubscribed : SubscribeState() {
+    object Unsubscribed : SubscribeState() {
         override fun transition(event: Event): Pair<SubscribeState, List<SubscribeEffectInvocation>> {
             return when (event) {
                 is Event.SubscriptionChanged -> {
@@ -25,14 +25,6 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, Event, SubscribeS
                     noTransition()
                 }
             }
-        }
-
-        override fun equals(other: Any?): Boolean {
-            return this === other
-        }
-
-        override fun hashCode(): Int {
-            return System.identityHashCode(this)
         }
     }
 
@@ -49,7 +41,7 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, Event, SubscribeS
                     transitionTo(
                         state = Receiving(channels, channelGroups, event.subscriptionCursor),
                         SubscribeEffectInvocation.EmitStatus(
-                            PNStatus(
+                            CreateStatus(
                                 category = PNStatusCategory.PNConnectedCategory,
                                 operation = PNOperationType.PNSubscribeOperation, // todo is PNSubscribeOperation correct operation
                                 error = false,
@@ -73,7 +65,7 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, Event, SubscribeS
                     transitionTo(HandshakeStopped(channels, channelGroups, reason = null))
                 }
                 is Event.UnsubscribeAll -> {
-                    transitionTo(Unsubscribed())
+                    transitionTo(Unsubscribed)
                 }
                 else -> {
                     noTransition()
@@ -113,7 +105,7 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, Event, SubscribeS
                     transitionTo(
                         HandshakeFailed(this.channels, this.channelGroups, event.reason),
                         SubscribeEffectInvocation.EmitStatus(
-                            PNStatus(
+                            CreateStatus(
                                 category = PNStatusCategory.PNConnectionError,
                                 operation = PNOperationType.PNSubscribeOperation,
                                 error = true,
@@ -128,7 +120,7 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, Event, SubscribeS
                     transitionTo(
                         state = Receiving(channels, channelGroups, event.subscriptionCursor),
                         SubscribeEffectInvocation.EmitStatus(
-                            PNStatus(
+                            CreateStatus(
                                 category = PNStatusCategory.PNConnectedCategory,
                                 operation = PNOperationType.PNSubscribeOperation, // todo is PNSubscribeOperation correct operation
                                 error = false,
@@ -143,7 +135,7 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, Event, SubscribeS
                     transitionTo(Receiving(event.channels, event.channelGroups, event.subscriptionCursor))
                 }
                 is Event.UnsubscribeAll -> {
-                    transitionTo(Unsubscribed())
+                    transitionTo(Unsubscribed)
                 }
                 else -> {
                     noTransition()
@@ -170,7 +162,7 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, Event, SubscribeS
                     transitionTo(Receiving(event.channels, event.channelGroups, event.subscriptionCursor))
                 }
                 is Event.UnsubscribeAll -> {
-                    transitionTo(Unsubscribed())
+                    transitionTo(Unsubscribed)
                 }
                 else -> {
                     noTransition()
@@ -204,7 +196,7 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, Event, SubscribeS
                     transitionTo(Handshaking(channels, channelGroups))
                 }
                 is Event.UnsubscribeAll -> {
-                    transitionTo(Unsubscribed())
+                    transitionTo(Unsubscribed)
                 }
                 else -> {
                     noTransition()
@@ -240,7 +232,7 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, Event, SubscribeS
                     transitionTo(
                         state = ReceiveStopped(channels, channelGroups, subscriptionCursor),
                         SubscribeEffectInvocation.EmitStatus(
-                            PNStatus(
+                            CreateStatus(
                                 category = PNStatusCategory.PNDisconnectedCategory,
                                 operation = PNOperationType.PNSubscribeOperation, // todo is PNSubscribeOperation correct operation
                                 error = false, // todo is PNDisconnectedCategory error
@@ -261,7 +253,7 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, Event, SubscribeS
                         state = Receiving(channels, channelGroups, event.subscriptionCursor),
                         SubscribeEffectInvocation.EmitMessages(event.messages),
                         SubscribeEffectInvocation.EmitStatus(
-                            PNStatus(
+                            CreateStatus(
                                 category = PNStatusCategory.PNConnectedCategory,
                                 operation = PNOperationType.PNSubscribeOperation, // todo is PNSubscribeOperation correct operation
                                 error = false,
@@ -272,7 +264,7 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, Event, SubscribeS
                     )
                 }
                 is Event.UnsubscribeAll -> {
-                    transitionTo(Unsubscribed())
+                    transitionTo(Unsubscribed)
                 }
 
                 else -> {
@@ -323,7 +315,7 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, Event, SubscribeS
                     transitionTo(
                         state = ReceiveFailed(channels, channelGroups, subscriptionCursor, event.reason),
                         SubscribeEffectInvocation.EmitStatus(
-                            PNStatus(
+                            CreateStatus(
                                 category = PNStatusCategory.PNDisconnectedCategory,
                                 operation = PNOperationType.PNSubscribeOperation, // todo is PNSubscribeOperation correct operation
                                 error = false, // todo is PNDisconnectedCategory error
@@ -338,7 +330,7 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, Event, SubscribeS
                         state = Receiving(channels, channelGroups, event.subscriptionCursor),
                         SubscribeEffectInvocation.EmitMessages(event.messages),
                         SubscribeEffectInvocation.EmitStatus(
-                            PNStatus(
+                            CreateStatus(
                                 category = PNStatusCategory.PNConnectedCategory,
                                 operation = PNOperationType.PNSubscribeOperation, // todo is PNSubscribeOperation correct operation
                                 error = false,
@@ -352,7 +344,7 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, Event, SubscribeS
                     transitionTo(Receiving(event.channels, event.channelGroups, subscriptionCursor))
                 }
                 is Event.UnsubscribeAll -> {
-                    transitionTo(Unsubscribed())
+                    transitionTo(Unsubscribed)
                 }
                 else -> {
                     noTransition()
@@ -378,7 +370,7 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, Event, SubscribeS
                     transitionTo(Receiving(event.channels, event.channelGroups, event.subscriptionCursor))
                 }
                 is Event.UnsubscribeAll -> {
-                    transitionTo(Unsubscribed())
+                    transitionTo(Unsubscribed)
                 }
                 else -> {
                     noTransition()
@@ -408,7 +400,7 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, Event, SubscribeS
                     transitionTo(Receiving(event.channels, event.channelGroups, event.subscriptionCursor))
                 }
                 is Event.UnsubscribeAll -> {
-                    transitionTo(Unsubscribed())
+                    transitionTo(Unsubscribed)
                 }
                 else -> {
                     noTransition()

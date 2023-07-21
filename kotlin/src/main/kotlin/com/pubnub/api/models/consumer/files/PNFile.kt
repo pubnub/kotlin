@@ -1,10 +1,5 @@
 package com.pubnub.api.models.consumer.files
 
-interface PNFile {
-    val id: String
-    val name: String
-}
-
 data class PNUploadedFile(
     override val id: String,
     override val name: String,

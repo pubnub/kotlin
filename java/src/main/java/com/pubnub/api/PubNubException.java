@@ -1,6 +1,7 @@
 package com.pubnub.api;
 
 import com.google.gson.JsonElement;
+import com.pubnub.core.CoreException;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,12 +10,12 @@ import retrofit2.Call;
 
 @Getter
 @ToString
-public class PubNubException extends Exception {
-    private String errormsg;
-    private PubNubError pubnubError;
-    private JsonElement jso;
-    private String response;
-    private int statusCode;
+public class PubNubException extends CoreException {
+    private final String errormsg;
+    private final PubNubError pubnubError;
+    private final JsonElement jso;
+    private final String response;
+    private final int statusCode;
 
     @Builder
     public PubNubException(final String errormsg,
@@ -24,7 +25,7 @@ public class PubNubException extends Exception {
                            final int statusCode,
                            final Call affectedCall,
                            final Throwable cause) {
-        super(cause);
+        super(cause, errormsg);
         this.errormsg = errormsg;
         this.pubnubError = pubnubError;
         this.jso = jso;
@@ -46,6 +47,6 @@ public class PubNubException extends Exception {
 
     @Getter(AccessLevel.NONE)
     @ToString.Exclude
-    private Call affectedCall;
+    private final Call affectedCall;
 }
 

@@ -10,5 +10,5 @@ fun interface ReceiveMessagesProvider {
         channels: List<String>,
         channelGroups: List<String>,
         subscriptionCursor: SubscriptionCursor
-    ): CoreRemoteAction<ReceiveMessagesResult, Status>
+    ): CoreRemoteAction<ReceiveMessagesResult, out Status>
 }

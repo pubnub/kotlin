@@ -83,7 +83,7 @@ public class DeleteFile extends Endpoint<Void, PNDeleteFileResult> {
 
     @Override
     protected PNOperationType getOperationType() {
-        return PNOperationType.PNFileAction;
+        return PNOperationType.PNFileOperation;
     }
 
     @Override

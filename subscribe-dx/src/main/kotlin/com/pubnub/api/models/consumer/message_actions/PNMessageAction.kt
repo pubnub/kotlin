@@ -19,7 +19,7 @@ open class PNMessageAction(
     val messageTimetoken: Long
 ) {
 
-    internal constructor(pnMessageAction: PNMessageAction) : this(
+    constructor(pnMessageAction: PNMessageAction) : this(
         pnMessageAction.type,
         pnMessageAction.value,
         pnMessageAction.messageTimetoken
