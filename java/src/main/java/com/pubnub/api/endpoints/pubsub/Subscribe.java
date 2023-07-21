@@ -13,6 +13,8 @@ import com.pubnub.api.managers.RetrofitManager;
 import com.pubnub.api.managers.token_manager.TokenManager;
 import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.server.SubscribeEnvelope;
+import kotlin.Unit;
+import kotlin.jvm.functions.Function2;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
@@ -194,5 +196,6 @@ public class Subscribe extends Endpoint<SubscribeEnvelope, SubscribeEnvelope> {
     protected boolean isAuthRequired() {
         return true;
     }
+
 
 }

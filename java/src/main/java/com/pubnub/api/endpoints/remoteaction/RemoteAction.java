@@ -9,5 +9,9 @@ import org.jetbrains.annotations.NotNull;
 public interface RemoteAction<Output> extends CoreRemoteAction<Output, PNStatus> {
     Output sync() throws PubNubException;
 
+    void async(PNCallback<Output> callback);
+
     void retry();
+
+    void silentCancel();
 }

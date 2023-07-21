@@ -68,6 +68,8 @@ public class FetchMessagesEndpointTest extends TestHarness {
 
         pubnub.getConfiguration().setAuthKey("authKey");
 
+        pubnub.publish().
+
         PNFetchMessagesResult response =
                 partialHistory.channels(Arrays.asList("mychannel,my_channel")).maximumPerChannel(25).sync();
 
