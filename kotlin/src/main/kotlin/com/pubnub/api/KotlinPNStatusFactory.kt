@@ -6,7 +6,6 @@ import com.pubnub.api.models.consumer.PNErrorData
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.core.CoreException
 import com.pubnub.core.PNStatusFactory
-import com.pubnub.core.PubNubException
 import com.pubnub.core.Status
 
 class KotlinPNStatusFactory : PNStatusFactory {
