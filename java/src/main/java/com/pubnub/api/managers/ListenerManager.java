@@ -11,11 +11,16 @@ import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult;
 import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult;
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult;
+import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult;
+import com.pubnub.api.subscribe.eventengine.effect.MessagesConsumer;
+import com.pubnub.api.subscribe.eventengine.effect.StatusConsumer;
+import org.jetbrains.annotations.NotNull;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListenerManager {
+public class ListenerManager implements StatusConsumer<PNStatus>, MessagesConsumer {
 
     private final List<SubscribeCallback> listeners;
     private final PubNub pubnub;
@@ -102,5 +107,10 @@ public class ListenerManager {
         for (SubscribeCallback subscribeCallback : getListeners()) {
             subscribeCallback.file(this.pubnub, fileEventResult);
         }
+    }
+
+    @Override
+    public void announce(@NotNull PNObjectEventResult pnObjectEventResult) {
+        throw new NotImplementedException(); // TODO: implement
     }
 }

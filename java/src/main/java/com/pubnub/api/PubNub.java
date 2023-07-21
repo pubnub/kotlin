@@ -5,26 +5,13 @@ import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.builder.SubscribeBuilder;
 import com.pubnub.api.builder.UnsubscribeBuilder;
 import com.pubnub.api.callbacks.SubscribeCallback;
-import com.pubnub.api.endpoints.DeleteMessages;
-import com.pubnub.api.endpoints.FetchMessages;
-import com.pubnub.api.endpoints.History;
-import com.pubnub.api.endpoints.MessageCounts;
-import com.pubnub.api.endpoints.Time;
+import com.pubnub.api.endpoints.*;
 import com.pubnub.api.endpoints.access.Grant;
 import com.pubnub.api.endpoints.access.GrantToken;
 import com.pubnub.api.endpoints.access.RevokeToken;
 import com.pubnub.api.endpoints.access.builder.GrantTokenBuilder;
-import com.pubnub.api.endpoints.channel_groups.AddChannelChannelGroup;
-import com.pubnub.api.endpoints.channel_groups.AllChannelsChannelGroup;
-import com.pubnub.api.endpoints.channel_groups.DeleteChannelGroup;
-import com.pubnub.api.endpoints.channel_groups.ListAllChannelGroup;
-import com.pubnub.api.endpoints.channel_groups.RemoveChannelChannelGroup;
-import com.pubnub.api.endpoints.files.DeleteFile;
-import com.pubnub.api.endpoints.files.DownloadFile;
-import com.pubnub.api.endpoints.files.GetFileUrl;
-import com.pubnub.api.endpoints.files.ListFiles;
-import com.pubnub.api.endpoints.files.PublishFileMessage;
-import com.pubnub.api.endpoints.files.SendFile;
+import com.pubnub.api.endpoints.channel_groups.*;
+import com.pubnub.api.endpoints.files.*;
 import com.pubnub.api.endpoints.message_actions.AddMessageAction;
 import com.pubnub.api.endpoints.message_actions.GetMessageActions;
 import com.pubnub.api.endpoints.message_actions.RemoveMessageAction;
@@ -54,30 +41,37 @@ import com.pubnub.api.endpoints.push.AddChannelsToPush;
 import com.pubnub.api.endpoints.push.ListPushProvisions;
 import com.pubnub.api.endpoints.push.RemoveAllPushChannelsForDevice;
 import com.pubnub.api.endpoints.push.RemoveChannelsFromPush;
-import com.pubnub.api.managers.BasePathManager;
-import com.pubnub.api.managers.DelayedReconnectionManager;
-import com.pubnub.api.managers.DuplicationManager;
-import com.pubnub.api.managers.ListenerManager;
-import com.pubnub.api.managers.MapperManager;
-import com.pubnub.api.managers.PublishSequenceManager;
-import com.pubnub.api.managers.ReconnectionManager;
-import com.pubnub.api.managers.RetrofitManager;
-import com.pubnub.api.managers.StateManager;
-import com.pubnub.api.managers.SubscriptionManager;
-import com.pubnub.api.managers.TelemetryManager;
+import com.pubnub.api.eventengine.EventEngineConf;
+import com.pubnub.api.managers.*;
 import com.pubnub.api.managers.token_manager.TokenManager;
 import com.pubnub.api.managers.token_manager.TokenParser;
 import com.pubnub.api.models.consumer.access_manager.v3.PNToken;
+import com.pubnub.api.models.consumer.pubsub.PNEvent;
+import com.pubnub.api.models.server.SubscribeMessage;
+import com.pubnub.api.subscribe.Subscribe;
+import com.pubnub.api.subscribe.eventengine.configuration.EventEngineConfImpl;
+import com.pubnub.api.subscribe.eventengine.effect.LinearPolicy;
+import com.pubnub.api.subscribe.eventengine.effect.ReceiveMessagesResult;
+import com.pubnub.api.subscribe.eventengine.effect.RetryPolicy;
+import com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectInvocation;
+import com.pubnub.api.subscribe.eventengine.effect.effectprovider.HandshakeProvider;
+import com.pubnub.api.subscribe.eventengine.effect.effectprovider.ReceiveMessagesProvider;
+import com.pubnub.api.subscribe.eventengine.event.Event;
+import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor;
 import com.pubnub.api.vendor.Crypto;
 import com.pubnub.api.vendor.FileEncryptionUtil;
+import com.pubnub.api.workers.SubscribeMessageProcessor;
+import com.pubnub.core.MappingRemoteAction;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 
 public class PubNub {
@@ -111,6 +105,8 @@ public class PubNub {
 
     private final TokenManager tokenManager;
 
+    private final Subscribe subscribe;
+
     public PubNub(@NotNull PNConfiguration initialConfig) {
         this.configuration = initialConfig;
         this.mapper = new MapperManager();
@@ -123,18 +119,46 @@ public class PubNub {
         final ReconnectionManager reconnectionManager = new ReconnectionManager(this);
         final DelayedReconnectionManager delayedReconnectionManager = new DelayedReconnectionManager(this);
         final DuplicationManager duplicationManager = new DuplicationManager(this.configuration);
-        this.subscriptionManager = new SubscriptionManager(this,
-                retrofitManager,
-                this.telemetryManager,
-                stateManager,
-                listenerManager,
-                reconnectionManager,
-                delayedReconnectionManager,
-                duplicationManager,
-                tokenManager);
+        this.subscriptionManager = new SubscriptionManager(this, retrofitManager, this.telemetryManager, stateManager, listenerManager, reconnectionManager, delayedReconnectionManager, duplicationManager, tokenManager);
         this.publishSequenceManager = new PublishSequenceManager(MAX_SEQUENCE);
         this.tokenParser = new TokenParser();
         instanceId = UUID.randomUUID().toString();
+        RetryPolicy retryPolicy = new LinearPolicy();
+        EventEngineConf<Event, SubscribeEffectInvocation> eventEngineConf = new EventEngineConfImpl();
+        PubNub pn = this;
+        HandshakeProvider handshakeProvider = (channels, channelGroups) -> {
+            com.pubnub.api.endpoints.pubsub.Subscribe sub = new com.pubnub.api.endpoints.pubsub.Subscribe(pn, retrofitManager, tokenManager)
+                    .channels(channels)
+                    .channelGroups(channelGroups)
+                    .timetoken(0L);
+
+            return MappingRemoteAction.map(sub, subscribeEnvelope -> new SubscriptionCursor(subscribeEnvelope.getMetadata().getTimetoken(), subscribeEnvelope.getMetadata().getRegion()));
+        };
+        SubscribeMessageProcessor subscribeMessageProcessor = new SubscribeMessageProcessor(pn, duplicationManager);
+
+
+        ReceiveMessagesProvider receiveMessagesProvider = (channels, channelGroups, subscriptionCursor) -> {
+            com.pubnub.api.endpoints.pubsub.Subscribe sub = new com.pubnub.api.endpoints.pubsub.Subscribe(pn, retrofitManager, tokenManager)
+                    .channels(channels)
+                    .channelGroups(channelGroups)
+                    .timetoken(0L);
+
+            return MappingRemoteAction.map(sub, subscribeEnvelope -> {
+                        SubscriptionCursor cursor = new SubscriptionCursor(subscribeEnvelope.getMetadata().getTimetoken(), subscribeEnvelope.getMetadata().getRegion());
+                        List<PNEvent> events = subscribeEnvelope.getMessages().stream()
+                                .map((SubscribeMessage message) -> {
+                                    try {
+                                        return subscribeMessageProcessor.processIncomingPayload(message);
+                                    } catch (PubNubException e) {
+                                        throw new RuntimeException(e);
+                                    }
+                                }).collect(Collectors.toList());
+                        return new ReceiveMessagesResult(events, cursor);
+                    }
+            );
+        };
+
+        subscribe = Subscribe.create(retryPolicy, eventEngineConf, listenerManager, listenerManager, handshakeProvider, receiveMessagesProvider, configuration.isEnableSubscribeBeta());
     }
 
     /**
@@ -161,12 +185,12 @@ public class PubNub {
 
     @NotNull
     public SubscribeBuilder subscribe() {
-        return new SubscribeBuilder(this.subscriptionManager);
+        return new SubscribeBuilder(this.subscriptionManager, this.subscribe, this.configuration.isEnableSubscribeBeta());
     }
 
     @NotNull
     public UnsubscribeBuilder unsubscribe() {
-        return new UnsubscribeBuilder(this.subscriptionManager);
+        return new UnsubscribeBuilder(this.subscriptionManager, this.subscribe, this.configuration.isEnableSubscribeBeta());
     }
 
     @NotNull
@@ -412,35 +436,19 @@ public class PubNub {
     }
 
     public GetFileUrl.Builder getFileUrl() {
-        return GetFileUrl.builder(
-                this,
-                telemetryManager,
-                retrofitManager,
-                tokenManager);
+        return GetFileUrl.builder(this, telemetryManager, retrofitManager, tokenManager);
     }
 
     public DownloadFile.Builder downloadFile() {
-        return DownloadFile.builder(
-                this,
-                telemetryManager,
-                retrofitManager,
-                tokenManager);
+        return DownloadFile.builder(this, telemetryManager, retrofitManager, tokenManager);
     }
 
     public DeleteFile.Builder deleteFile() {
-        return DeleteFile.builder(
-                this,
-                telemetryManager,
-                retrofitManager,
-                tokenManager);
+        return DeleteFile.builder(this, telemetryManager, retrofitManager, tokenManager);
     }
 
     public PublishFileMessage.Builder publishFileMessage() {
-        return PublishFileMessage.builder(
-                this,
-                telemetryManager,
-                retrofitManager,
-                tokenManager);
+        return PublishFileMessage.builder(this, telemetryManager, retrofitManager, tokenManager);
     }
 
     // public methods
@@ -591,14 +599,23 @@ public class PubNub {
      * Perform a Reconnect to the network
      */
     public void reconnect() {
-        subscriptionManager.reconnect();
+
+        if (this.configuration.isEnableSubscribeBeta()) {
+            throw new NotImplementedException(); // TODO: implement
+        } else {
+            subscriptionManager.reconnect();
+        }
     }
 
     /**
      * Perform a disconnect from the listeners
      */
     public void disconnect() {
-        subscriptionManager.disconnect();
+        if (this.configuration.isEnableSubscribeBeta()) {
+            subscribe.disconnect();
+        } else {
+            subscriptionManager.disconnect();
+        }
     }
 
     @NotNull
@@ -608,16 +625,29 @@ public class PubNub {
 
     @NotNull
     public List<String> getSubscribedChannels() {
-        return stateManager.subscriptionStateData(false).getChannels();
+        if (this.configuration.isEnableSubscribeBeta()) {
+            return subscribe.getSubscribedChannels();
+        } else {
+            return stateManager.subscriptionStateData(false).getChannels();
+        }
     }
 
     @NotNull
     public List<String> getSubscribedChannelGroups() {
-        return this.stateManager.subscriptionStateData(false).getChannelGroups();
+        if (this.configuration.isEnableSubscribeBeta()) {
+            return subscribe.getSubscribedChannelGroups();
+        } else {
+            return this.stateManager.subscriptionStateData(false).getChannelGroups();
+
+        }
     }
 
     public void unsubscribeAll() {
-        subscriptionManager.unsubscribeAll();
+        if (this.configuration.isEnableSubscribeBeta()) {
+            subscribe.unsubscribeAll();
+        } else {
+            subscriptionManager.unsubscribeAll();
+        }
     }
 
     public PNToken parseToken(String token) throws PubNubException {

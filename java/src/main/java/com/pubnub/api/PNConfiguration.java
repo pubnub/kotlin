@@ -38,6 +38,8 @@ public class PNConfiguration {
     private static final int CONNECT_TIMEOUT = 5;
     private static final int FILE_MESSAGE_PUBLISH_RETRY_LIMIT = 5;
 
+    private boolean enableSubscribeBeta;
+
     @Getter
     private SSLSocketFactory sslSocketFactory;
 
@@ -263,6 +265,7 @@ public class PNConfiguration {
         useRandomInitializationVector = true;
         fileMessagePublishRetryLimit = FILE_MESSAGE_PUBLISH_RETRY_LIMIT;
         managePresenceListManually = false;
+        enableSubscribeBeta = false;
     }
 
     /**

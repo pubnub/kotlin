@@ -30,6 +30,7 @@ class Subscribe(
 ) {
 
     companion object {
+        @JvmStatic
         fun <S : Status> create(
             retryPolicy: RetryPolicy,
             eventEngineConf: EventEngineConf<Event, SubscribeEffectInvocation>,

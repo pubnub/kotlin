@@ -2,6 +2,7 @@ package com.pubnub.api.builder;
 
 import com.pubnub.api.builder.dto.SubscribeOperation;
 import com.pubnub.api.managers.SubscriptionManager;
+import com.pubnub.api.subscribe.Subscribe;
 import lombok.AccessLevel;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -12,6 +13,8 @@ import java.util.List;
 @Accessors(chain = true, fluent = true)
 public class SubscribeBuilder extends PubSubBuilder {
 
+    private final Subscribe subscribe;
+    private final boolean enableSubscribeBeta;
     /**
      * Allow users to specify if they would also like to include the presence channels for those subscriptions.
      */
@@ -24,8 +27,10 @@ public class SubscribeBuilder extends PubSubBuilder {
     @Setter(AccessLevel.NONE)
     private Long timetoken;
 
-    public SubscribeBuilder(SubscriptionManager subscriptionManager) {
+    public SubscribeBuilder(SubscriptionManager subscriptionManager, Subscribe subscribe, boolean enableSubscribeBeta) {
         super(subscriptionManager);
+        this.subscribe = subscribe;
+        this.enableSubscribeBeta = enableSubscribeBeta;
     }
 
     public SubscribeBuilder withPresence() {
@@ -39,14 +44,21 @@ public class SubscribeBuilder extends PubSubBuilder {
     }
 
     public void execute() {
-        SubscribeOperation subscribeOperation = SubscribeOperation.builder()
-                .channels(this.getChannelSubscriptions())
-                .channelGroups(this.getChannelGroupSubscriptions())
-                .timetoken(timetoken)
-                .presenceEnabled(presenceEnabled)
-                .build();
+        if (enableSubscribeBeta) {
+            subscribe.subscribe(
+                    getChannelSubscriptions(), getChannelGroupSubscriptions(), presenceEnabled, timetoken
+            );
+        } else {
+            SubscribeOperation subscribeOperation = SubscribeOperation.builder()
+                    .channels(this.getChannelSubscriptions())
+                    .channelGroups(this.getChannelGroupSubscriptions())
+                    .timetoken(timetoken)
+                    .presenceEnabled(presenceEnabled)
+                    .build();
 
-        this.getSubscriptionManager().adaptSubscribeBuilder(subscribeOperation);
+            this.getSubscriptionManager().adaptSubscribeBuilder(subscribeOperation);
+        }
+
     }
 
     public SubscribeBuilder channels(List<String> channels) {

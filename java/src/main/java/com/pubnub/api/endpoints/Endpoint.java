@@ -16,6 +16,8 @@ import com.pubnub.api.managers.TelemetryManager;
 import com.pubnub.api.managers.token_manager.TokenManager;
 import com.pubnub.api.models.consumer.PNErrorData;
 import com.pubnub.api.models.consumer.PNStatus;
+import kotlin.Unit;
+import kotlin.jvm.functions.Function2;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -126,6 +128,11 @@ public abstract class Endpoint<Input, Output> implements RemoteAction<Output> {
         response = createResponse(serverResponse);
 
         return response;
+    }
+
+    @Override
+    public void async(@NotNull com.pubnub.core.PNCallback<Output, PNStatus> callback) {
+
     }
 
     @Override
