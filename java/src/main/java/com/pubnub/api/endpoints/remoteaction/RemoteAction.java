@@ -6,7 +6,7 @@ import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.core.CoreRemoteAction;
 import org.jetbrains.annotations.NotNull;
 
-public interface RemoteAction<Output> extends CoreRemoteAction<Output, PNStatus> {
+public interface RemoteAction<Output> {
     Output sync() throws PubNubException;
 
     void async(PNCallback<Output> callback);

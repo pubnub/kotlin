@@ -31,6 +31,7 @@ public class SubscribeBuilder extends PubSubBuilder {
         super(subscriptionManager);
         this.subscribe = subscribe;
         this.enableSubscribeBeta = enableSubscribeBeta;
+        this.timetoken = 0L;
     }
 
     public SubscribeBuilder withPresence() {

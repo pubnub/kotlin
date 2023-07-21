@@ -4,6 +4,7 @@ import com.pubnub.api.builder.PresenceBuilder;
 import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.builder.SubscribeBuilder;
 import com.pubnub.api.builder.UnsubscribeBuilder;
+import com.pubnub.api.callbacks.PNCallback;
 import com.pubnub.api.callbacks.SubscribeCallback;
 import com.pubnub.api.endpoints.*;
 import com.pubnub.api.endpoints.access.Grant;
@@ -45,8 +46,10 @@ import com.pubnub.api.eventengine.EventEngineConf;
 import com.pubnub.api.managers.*;
 import com.pubnub.api.managers.token_manager.TokenManager;
 import com.pubnub.api.managers.token_manager.TokenParser;
+import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.access_manager.v3.PNToken;
 import com.pubnub.api.models.consumer.pubsub.PNEvent;
+import com.pubnub.api.models.server.SubscribeEnvelope;
 import com.pubnub.api.models.server.SubscribeMessage;
 import com.pubnub.api.subscribe.Subscribe;
 import com.pubnub.api.subscribe.eventengine.configuration.EventEngineConfImpl;
@@ -61,7 +64,10 @@ import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor;
 import com.pubnub.api.vendor.Crypto;
 import com.pubnub.api.vendor.FileEncryptionUtil;
 import com.pubnub.api.workers.SubscribeMessageProcessor;
+import com.pubnub.core.CoreRemoteAction;
 import com.pubnub.core.MappingRemoteAction;
+import kotlin.Unit;
+import kotlin.jvm.functions.Function2;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -132,7 +138,20 @@ public class PubNub {
                     .channelGroups(channelGroups)
                     .timetoken(0L);
 
-            return MappingRemoteAction.map(sub, subscribeEnvelope -> new SubscriptionCursor(subscribeEnvelope.getMetadata().getTimetoken(), subscribeEnvelope.getMetadata().getRegion()));
+            CoreRemoteAction<SubscribeEnvelope, PNStatus> ra = new CoreRemoteAction<SubscribeEnvelope, PNStatus>() {
+
+                @Override
+                public void silentCancel() {
+                    sub.silentCancel();
+                }
+
+                @Override
+                public void async(@NotNull Function2<? super SubscribeEnvelope, ? super PNStatus, Unit> callback) {
+                    sub.async(callback::invoke);
+                }
+            };
+
+            return MappingRemoteAction.map(ra, subscribeEnvelope -> new SubscriptionCursor(subscribeEnvelope.getMetadata().getTimetoken(), subscribeEnvelope.getMetadata().getRegion()));
         };
         SubscribeMessageProcessor subscribeMessageProcessor = new SubscribeMessageProcessor(pn, duplicationManager);
 
@@ -143,7 +162,20 @@ public class PubNub {
                     .channelGroups(channelGroups)
                     .timetoken(0L);
 
-            return MappingRemoteAction.map(sub, subscribeEnvelope -> {
+            CoreRemoteAction<SubscribeEnvelope, PNStatus> ra = new CoreRemoteAction<SubscribeEnvelope, PNStatus>() {
+
+                @Override
+                public void silentCancel() {
+                    sub.silentCancel();
+                }
+
+                @Override
+                public void async(@NotNull Function2<? super SubscribeEnvelope, ? super PNStatus, Unit> callback) {
+                    sub.async(callback::invoke);
+                }
+            };
+
+            return MappingRemoteAction.map(ra, subscribeEnvelope -> {
                         SubscriptionCursor cursor = new SubscriptionCursor(subscribeEnvelope.getMetadata().getTimetoken(), subscribeEnvelope.getMetadata().getRegion());
                         List<PNEvent> events = subscribeEnvelope.getMessages().stream()
                                 .map((SubscribeMessage message) -> {

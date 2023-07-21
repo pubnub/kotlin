@@ -420,9 +420,4 @@ public abstract class Endpoint<Input, Output> implements RemoteAction<Output> {
     protected abstract PNOperationType getOperationType();
 
     protected abstract boolean isAuthRequired();
-
-    @Override
-    public void __do_not_use_in_java(@NotNull Function2<? super Output, ? super PNStatus, Unit> callback) {
-        async(callback::invoke);
-    }
 }

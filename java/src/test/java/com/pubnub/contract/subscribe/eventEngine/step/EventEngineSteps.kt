@@ -14,18 +14,22 @@ import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
 import com.pubnub.contract.subscribe.eventEngine.state.EventEngineState
 import io.cucumber.datatable.DataTable
+import io.cucumber.java.PendingException
 import io.cucumber.java.en.Given
 import io.cucumber.java.en.Then
 import io.cucumber.java.en.When
+import org.awaitility.Awaitility.await
 import org.hamcrest.CoreMatchers
 import org.hamcrest.MatcherAssert
 import org.hamcrest.Matchers
-import java.time.Duration
 import java.util.concurrent.TimeUnit
-import org.awaitility.Awaitility.await
-
 
 class EventEngineSteps(private val state: EventEngineState) {
+
+    @Given("the demo keyset with event engine enabled")
+    fun the_demo_keyset_with_event_engine_enabled() {
+        state.configuration.setEnableSubscribeBeta(true)
+    }
 
     @Given("a linear reconnection policy with {int} retries")
     fun a_linear_reconnection_policy_with_retries(maxRetries: Int) {
