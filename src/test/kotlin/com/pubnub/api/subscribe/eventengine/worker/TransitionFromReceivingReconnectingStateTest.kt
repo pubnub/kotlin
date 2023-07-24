@@ -5,15 +5,15 @@ import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
+import com.pubnub.api.eventengine.transition
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.BasePubSubResult
 import com.pubnub.api.models.consumer.pubsub.PNEvent
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectInvocation
-import com.pubnub.api.subscribe.eventengine.event.Event
+import com.pubnub.api.subscribe.eventengine.event.SubscribeEvent
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
 import com.pubnub.api.subscribe.eventengine.state.SubscribeState
-import com.pubnub.api.subscribe.eventengine.transition.transition
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
@@ -29,7 +29,7 @@ class TransitionFromReceivingReconnectingStateTest {
         // when
         val (state, invocations) = transition(
             SubscribeState.ReceiveReconnecting(channels, channelGroups, subscriptionCursor, 0, reason),
-            Event.ReceiveReconnectFailure(reason)
+            SubscribeEvent.ReceiveReconnectFailure(reason)
         )
 
         // then
@@ -48,7 +48,7 @@ class TransitionFromReceivingReconnectingStateTest {
         // when
         val (state, invocations) = transition(
             SubscribeState.ReceiveReconnecting(channels, channelGroups, subscriptionCursor, 0, reason),
-            Event.SubscriptionChanged(channels, channelGroups)
+            SubscribeEvent.SubscriptionChanged(channels, channelGroups)
         )
 
         // then
@@ -67,7 +67,7 @@ class TransitionFromReceivingReconnectingStateTest {
         // when
         val (state, invocations) = transition(
             SubscribeState.ReceiveReconnecting(channels, channelGroups, subscriptionCursor, 0, reason),
-            Event.Disconnect
+            SubscribeEvent.Disconnect
         )
 
         // then
@@ -85,7 +85,7 @@ class TransitionFromReceivingReconnectingStateTest {
         // when
         val (state, invocations) = transition(
             SubscribeState.ReceiveReconnecting(channels, channelGroups, subscriptionCursor, 0, reason),
-            Event.ReceiveReconnectGiveup(reason)
+            SubscribeEvent.ReceiveReconnectGiveup(reason)
         )
 
         // then
@@ -116,7 +116,7 @@ class TransitionFromReceivingReconnectingStateTest {
         // when
         val (state, invocations) = transition(
             SubscribeState.ReceiveReconnecting(channels, channelGroups, subscriptionCursor, 0, reason),
-            Event.ReceiveReconnectSuccess(messages, subscriptionCursor)
+            SubscribeEvent.ReceiveReconnectSuccess(messages, subscriptionCursor)
         )
 
         // then
@@ -145,7 +145,7 @@ class TransitionFromReceivingReconnectingStateTest {
         // when
         val (state, invocations) = transition(
             SubscribeState.ReceiveReconnecting(channels, channelGroups, subscriptionCursor, 0, reason),
-            Event.SubscriptionRestored(channels, channelGroups, subscriptionCursor)
+            SubscribeEvent.SubscriptionRestored(channels, channelGroups, subscriptionCursor)
         )
 
         // then
@@ -164,7 +164,7 @@ class TransitionFromReceivingReconnectingStateTest {
         // when
         val (state, invocations) = transition(
             SubscribeState.ReceiveReconnecting(channels, channelGroups, subscriptionCursor, 0, reason),
-            Event.UnsubscribeAll
+            SubscribeEvent.UnsubscribeAll
         )
 
         // then

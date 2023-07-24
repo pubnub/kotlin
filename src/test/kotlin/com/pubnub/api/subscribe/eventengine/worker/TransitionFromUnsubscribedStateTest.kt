@@ -1,10 +1,10 @@
 package com.pubnub.api.subscribe.eventengine.worker
 
+import com.pubnub.api.eventengine.transition
 import com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectInvocation
-import com.pubnub.api.subscribe.eventengine.event.Event
+import com.pubnub.api.subscribe.eventengine.event.SubscribeEvent
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
 import com.pubnub.api.subscribe.eventengine.state.SubscribeState
-import com.pubnub.api.subscribe.eventengine.transition.transition
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
@@ -19,7 +19,7 @@ class TransitionFromUnsubscribedStateTest {
     fun can_transit_from_UNSUBSRIBED_to_HANDSHAKING_when_there_is_subscriptionChangeEvent() {
         // when
         val (state, invocations) = transition(
-            SubscribeState.Unsubscribed, Event.SubscriptionChanged(channels, channelGroups)
+            SubscribeState.Unsubscribed, SubscribeEvent.SubscriptionChanged(channels, channelGroups)
         )
 
         // then
@@ -36,7 +36,7 @@ class TransitionFromUnsubscribedStateTest {
     fun can_transit_from_UNSUBSRIBED_to_RECEIVING_when_there_is_subscriptionRestoredEvent() {
         // when
         val (state, invocations) = transition(
-            SubscribeState.Unsubscribed, Event.SubscriptionRestored(channels, channelGroups, subscriptionCursor)
+            SubscribeState.Unsubscribed, SubscribeEvent.SubscriptionRestored(channels, channelGroups, subscriptionCursor)
         )
 
         // then

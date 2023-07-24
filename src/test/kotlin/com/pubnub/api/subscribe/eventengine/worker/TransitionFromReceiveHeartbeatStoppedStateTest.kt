@@ -1,14 +1,14 @@
 package com.pubnub.api.subscribe.eventengine.worker
 
+import com.pubnub.api.eventengine.transition
 import com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectInvocation
-import com.pubnub.api.subscribe.eventengine.event.Event
+import com.pubnub.api.subscribe.eventengine.event.SubscribeEvent
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
 import com.pubnub.api.subscribe.eventengine.state.SubscribeState
-import com.pubnub.api.subscribe.eventengine.transition.transition
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
-class TransitionFromReceiveStoppedStateTest {
+class TransitionFromReceiveHeartbeatStoppedStateTest {
     private val channels = listOf("Channel1")
     private val channelGroups = listOf("ChannelGroup1")
     private val timeToken = 12345345452L
@@ -20,7 +20,7 @@ class TransitionFromReceiveStoppedStateTest {
         // when
         val (state, invocations) = transition(
             SubscribeState.ReceiveStopped(channels, channelGroups, subscriptionCursor),
-            Event.Reconnect
+            SubscribeEvent.Reconnect
         )
 
         // then
@@ -41,7 +41,7 @@ class TransitionFromReceiveStoppedStateTest {
         // when
         val (state, invocations) = transition(
             SubscribeState.ReceiveStopped(channels, channelGroups, subscriptionCursor),
-            Event.UnsubscribeAll
+            SubscribeEvent.UnsubscribeAll
         )
 
         // then
@@ -54,7 +54,7 @@ class TransitionFromReceiveStoppedStateTest {
         // when
         val (state, invocations) = transition(
             SubscribeState.ReceiveStopped(channels, channelGroups, subscriptionCursor),
-            Event.SubscriptionChanged(channels, channelGroups)
+            SubscribeEvent.SubscriptionChanged(channels, channelGroups)
         )
 
         // then
@@ -67,7 +67,7 @@ class TransitionFromReceiveStoppedStateTest {
         // when
         val (state, invocations) = transition(
             SubscribeState.ReceiveStopped(channels, channelGroups, subscriptionCursor),
-            Event.SubscriptionRestored(channels, channelGroups, subscriptionCursor)
+            SubscribeEvent.SubscriptionRestored(channels, channelGroups, subscriptionCursor)
         )
 
         // then

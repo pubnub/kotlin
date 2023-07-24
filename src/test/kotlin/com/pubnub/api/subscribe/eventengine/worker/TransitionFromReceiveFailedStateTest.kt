@@ -1,11 +1,11 @@
 package com.pubnub.api.subscribe.eventengine.worker
 
 import com.pubnub.api.PubNubException
+import com.pubnub.api.eventengine.transition
 import com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectInvocation
-import com.pubnub.api.subscribe.eventengine.event.Event
+import com.pubnub.api.subscribe.eventengine.event.SubscribeEvent
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
 import com.pubnub.api.subscribe.eventengine.state.SubscribeState
-import com.pubnub.api.subscribe.eventengine.transition.transition
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
@@ -23,7 +23,7 @@ class TransitionFromReceiveFailedStateTest {
         // when
         val (state, invocations) = transition(
             SubscribeState.ReceiveFailed(channels, channelGroups, subscriptionCursor, reason),
-            Event.ReceiveReconnectRetry
+            SubscribeEvent.ReceiveReconnectRetry
         )
 
         // then
@@ -47,7 +47,7 @@ class TransitionFromReceiveFailedStateTest {
         // when
         val (receivingState, effectInvocations) = transition(
             SubscribeState.ReceiveFailed(channels, channelGroups, subscriptionCursor, reason),
-            Event.SubscriptionChanged(newChannels, newChannelGroup)
+            SubscribeEvent.SubscriptionChanged(newChannels, newChannelGroup)
         )
 
         // then
@@ -63,7 +63,7 @@ class TransitionFromReceiveFailedStateTest {
         // when
         val (receivingState, effectInvocations) = transition(
             SubscribeState.ReceiveFailed(channels, channelGroups, subscriptionCursor, reason),
-            Event.SubscriptionRestored(channels, channelGroups, subscriptionCursor)
+            SubscribeEvent.SubscriptionRestored(channels, channelGroups, subscriptionCursor)
         )
         // then
         assertEquals(SubscribeState.Receiving(channels, channelGroups, subscriptionCursor), receivingState)
@@ -78,7 +78,7 @@ class TransitionFromReceiveFailedStateTest {
         // when
         val (receivingState, effectInvocations) = transition(
             SubscribeState.ReceiveFailed(channels, channelGroups, subscriptionCursor, reason),
-            Event.Reconnect
+            SubscribeEvent.Reconnect
         )
 
         // then
@@ -94,7 +94,7 @@ class TransitionFromReceiveFailedStateTest {
         // when
         val (state, invocations) = transition(
             SubscribeState.ReceiveFailed(channels, channelGroups, subscriptionCursor, reason),
-            Event.UnsubscribeAll
+            SubscribeEvent.UnsubscribeAll
         )
 
         // then

@@ -1,11 +1,11 @@
 package com.pubnub.api.subscribe.eventengine.worker
 
 import com.pubnub.api.PubNubException
+import com.pubnub.api.eventengine.transition
 import com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectInvocation
-import com.pubnub.api.subscribe.eventengine.event.Event
+import com.pubnub.api.subscribe.eventengine.event.SubscribeEvent
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
 import com.pubnub.api.subscribe.eventengine.state.SubscribeState
-import com.pubnub.api.subscribe.eventengine.transition.transition
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
@@ -21,7 +21,7 @@ class TransitionFromHandshakeFailedStateTest {
     fun can_transit_from_HANDSHAKE_FAILED_to_HANDSHAKE_RECONNECTING_when_there_is_HANDSHAKE_RECONNECT_RETRY_event() {
         // when
         val (state, invocations) = transition(
-            SubscribeState.HandshakeFailed(channels, channelGroups, exception), Event.HandshakeReconnectRetry
+            SubscribeState.HandshakeFailed(channels, channelGroups, exception), SubscribeEvent.HandshakeReconnectRetry
         )
 
         // then
@@ -40,7 +40,7 @@ class TransitionFromHandshakeFailedStateTest {
         // when
         val (state, invocations) = transition(
             SubscribeState.HandshakeFailed(channels, channelGroups, exception),
-            Event.SubscriptionChanged(newChannels, newChannelGroup)
+            SubscribeEvent.SubscriptionChanged(newChannels, newChannelGroup)
         )
 
         // then
@@ -55,7 +55,7 @@ class TransitionFromHandshakeFailedStateTest {
         // when
         val (state, invocations) = transition(
             SubscribeState.HandshakeFailed(channels, channelGroups, exception),
-            Event.SubscriptionRestored(channels, channelGroups, subscriptionCursor)
+            SubscribeEvent.SubscriptionRestored(channels, channelGroups, subscriptionCursor)
         )
 
         // then
@@ -72,7 +72,7 @@ class TransitionFromHandshakeFailedStateTest {
     fun can_transit_from_HANDSHAKE_FAILED_to_HANDSHAKING_when_there_is_RECONNECT_event() {
         // when
         val (state, invocations) = transition(
-            SubscribeState.HandshakeFailed(channels, channelGroups, exception), Event.Reconnect
+            SubscribeState.HandshakeFailed(channels, channelGroups, exception), SubscribeEvent.Reconnect
         )
 
         // then
@@ -87,7 +87,7 @@ class TransitionFromHandshakeFailedStateTest {
         // when
         val (state, invocations) = transition(
             SubscribeState.HandshakeFailed(channels, channelGroups, exception),
-            Event.UnsubscribeAll
+            SubscribeEvent.UnsubscribeAll
         )
 
         // then

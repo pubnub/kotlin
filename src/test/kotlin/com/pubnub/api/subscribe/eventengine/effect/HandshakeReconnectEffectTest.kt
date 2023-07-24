@@ -2,7 +2,7 @@ package com.pubnub.api.subscribe.eventengine.effect
 
 import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.remoteaction.RemoteAction
-import com.pubnub.api.subscribe.eventengine.event.Event
+import com.pubnub.api.subscribe.eventengine.event.SubscribeEvent
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
 import io.mockk.every
 import io.mockk.mockk
@@ -46,7 +46,7 @@ class HandshakeReconnectEffectTest {
             .with()
             .pollInterval(Duration.ofMillis(20))
             .untilAsserted {
-                assertEquals(listOf(Event.HandshakeReconnectSuccess(subscriptionCursor)), eventSink.events)
+                assertEquals(listOf(SubscribeEvent.HandshakeReconnectSuccess(subscriptionCursor)), eventSink.subscribeEvents)
             }
     }
 
@@ -69,7 +69,7 @@ class HandshakeReconnectEffectTest {
             .atMost(Durations.ONE_SECOND)
             .with()
             .pollInterval(Duration.ofMillis(20))
-            .untilAsserted { assertEquals(listOf(Event.HandshakeReconnectFailure(reason)), eventSink.events) }
+            .untilAsserted { assertEquals(listOf(SubscribeEvent.HandshakeReconnectFailure(reason)), eventSink.subscribeEvents) }
     }
 
     @Test
@@ -88,7 +88,7 @@ class HandshakeReconnectEffectTest {
         handshakeReconnectEffect.runEffect()
 
         // then
-        assertEquals(listOf(Event.HandshakeReconnectGiveup(reason)), eventSink.events)
+        assertEquals(listOf(SubscribeEvent.HandshakeReconnectGiveup(reason)), eventSink.subscribeEvents)
     }
 
     @Test

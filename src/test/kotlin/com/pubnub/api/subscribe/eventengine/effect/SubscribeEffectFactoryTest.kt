@@ -9,7 +9,7 @@ import com.pubnub.api.eventengine.Sink
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.subscribe.eventengine.effect.effectprovider.HandshakeProvider
 import com.pubnub.api.subscribe.eventengine.effect.effectprovider.ReceiveMessagesProvider
-import com.pubnub.api.subscribe.eventengine.event.Event
+import com.pubnub.api.subscribe.eventengine.event.SubscribeEvent
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
 import io.mockk.every
 import io.mockk.mockk
@@ -25,7 +25,7 @@ class SubscribeEffectFactoryTest {
     private val handshakeProvider = mockk<HandshakeProvider>()
     private val receiveMessageProvider = mockk<ReceiveMessagesProvider>()
     private val messagesConsumer = mockk<MessagesConsumer>()
-    private val eventSink = mockk<Sink<Event>>()
+    private val subscribeEventSink = mockk<Sink<SubscribeEvent>>()
     private val policy = mockk<RetryPolicy>()
     private val executorService = mockk<ScheduledExecutorService>()
     private val channels = listOf("channel1")
@@ -43,7 +43,7 @@ class SubscribeEffectFactoryTest {
         subscribeEffectFactory = SubscribeEffectFactory(
             handshakeProvider,
             receiveMessageProvider,
-            eventSink,
+            subscribeEventSink,
             policy,
             executorService,
             messagesConsumer,

@@ -3,7 +3,7 @@ package com.pubnub.api.subscribe.eventengine.effect
 import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.remoteaction.RemoteAction
 import com.pubnub.api.models.consumer.pubsub.PNEvent
-import com.pubnub.api.subscribe.eventengine.event.Event
+import com.pubnub.api.subscribe.eventengine.event.SubscribeEvent
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
 import io.mockk.every
 import io.mockk.mockk
@@ -47,8 +47,8 @@ class ReceiveReconnectEffectTest {
             .pollInterval(Duration.ofMillis(20))
             .untilAsserted {
                 assertEquals(
-                    listOf(Event.ReceiveReconnectSuccess(messages, subscriptionCursor)),
-                    eventSink.events
+                    listOf(SubscribeEvent.ReceiveReconnectSuccess(messages, subscriptionCursor)),
+                    eventSink.subscribeEvents
                 )
             }
     }
@@ -73,7 +73,7 @@ class ReceiveReconnectEffectTest {
             .atMost(Durations.ONE_SECOND)
             .with()
             .pollInterval(Duration.ofMillis(20))
-            .untilAsserted { assertEquals(listOf(Event.ReceiveReconnectFailure(reason)), eventSink.events) }
+            .untilAsserted { assertEquals(listOf(SubscribeEvent.ReceiveReconnectFailure(reason)), eventSink.subscribeEvents) }
     }
 
     @Test
@@ -93,7 +93,7 @@ class ReceiveReconnectEffectTest {
         receiveReconnectEffect.runEffect()
 
         // then
-        assertEquals(listOf(Event.ReceiveReconnectGiveup(reason)), eventSink.events)
+        assertEquals(listOf(SubscribeEvent.ReceiveReconnectGiveup(reason)), eventSink.subscribeEvents)
     }
 
     @Test

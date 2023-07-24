@@ -3,12 +3,12 @@ package com.pubnub.api.subscribe.eventengine.worker
 import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
+import com.pubnub.api.eventengine.transition
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectInvocation
-import com.pubnub.api.subscribe.eventengine.event.Event
+import com.pubnub.api.subscribe.eventengine.event.SubscribeEvent
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
 import com.pubnub.api.subscribe.eventengine.state.SubscribeState
-import com.pubnub.api.subscribe.eventengine.transition.transition
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
@@ -25,7 +25,7 @@ class TransitionFromHandshakingReconnectingStateTest {
         // when
         val (state, invocations) = transition(
             SubscribeState.HandshakeReconnecting(channels, channelGroups, 0, reason),
-            Event.HandshakeReconnectFailure(reason)
+            SubscribeEvent.HandshakeReconnectFailure(reason)
         )
 
         // then
@@ -44,7 +44,7 @@ class TransitionFromHandshakingReconnectingStateTest {
         // when
         val (state, invocations) = transition(
             SubscribeState.HandshakeReconnecting(channels, channelGroups, 0, reason),
-            Event.SubscriptionChanged(channels, channelGroups)
+            SubscribeEvent.SubscriptionChanged(channels, channelGroups)
         )
 
         // then
@@ -62,7 +62,7 @@ class TransitionFromHandshakingReconnectingStateTest {
     fun can_transit_from_HANDSHAKE_RECONNECTING_to_HANDSHAKE_STOPPED_when_there_is_DISCONNECT_event() {
         // when
         val (state, invocations) = transition(
-            SubscribeState.HandshakeReconnecting(channels, channelGroups, 0, reason), Event.Disconnect
+            SubscribeState.HandshakeReconnecting(channels, channelGroups, 0, reason), SubscribeEvent.Disconnect
         )
 
         // then
@@ -80,7 +80,7 @@ class TransitionFromHandshakingReconnectingStateTest {
         // when
         val (state, invocations) = transition(
             SubscribeState.HandshakeReconnecting(channels, channelGroups, 0, reason),
-            Event.HandshakeReconnectGiveup(reason)
+            SubscribeEvent.HandshakeReconnectGiveup(reason)
         )
 
         // then
@@ -108,7 +108,7 @@ class TransitionFromHandshakingReconnectingStateTest {
         // when
         val (state, invocations) = transition(
             SubscribeState.HandshakeReconnecting(channels, channelGroups, 0, reason),
-            Event.HandshakeReconnectSuccess(subscriptionCursor)
+            SubscribeEvent.HandshakeReconnectSuccess(subscriptionCursor)
         )
 
         // then
@@ -136,7 +136,7 @@ class TransitionFromHandshakingReconnectingStateTest {
         // when
         val (state, invocations) = transition(
             SubscribeState.HandshakeReconnecting(channels, channelGroups, 0, reason),
-            Event.SubscriptionRestored(channels, channelGroups, subscriptionCursor)
+            SubscribeEvent.SubscriptionRestored(channels, channelGroups, subscriptionCursor)
         )
 
         // then
@@ -155,7 +155,7 @@ class TransitionFromHandshakingReconnectingStateTest {
         // when
         val (state, invocations) = transition(
             SubscribeState.HandshakeReconnecting(channels, channelGroups, 0, reason),
-            Event.UnsubscribeAll
+            SubscribeEvent.UnsubscribeAll
         )
 
         // then
