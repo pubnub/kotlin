@@ -73,7 +73,8 @@ jobs:
             ${{ runner.os }}-gradle-
       - name: Run acceptance tests (optional)
         run: |
-          ln -s /home/runner/work/kotlin/kotlin/sdk-specifications src/test/resources/sdk-specifications
+          ln -s /home/runner/work/kotlin/kotlin/sdk-specifications kotlin/src/test/resources/sdk-specifications
+          ln -s /home/runner/work/kotlin/kotlin/sdk-specifications java/src/test/resources/sdk-specifications
           ./gradlew cucumber --tests RunBetaCucumberTest -Dcucumber.features="sdk-specifications/features/" -i
         continue-on-error: true
       - name: Run acceptance tests (required)
@@ -83,7 +84,9 @@ jobs:
         if: always()
         with:
           name: acceptance-test-reports
-          path: ./build/reports/cucumber-reports
+          path: |
+            ./kotlin/build/reports/cucumber-reports
+            ./java/build/reports/cucumber-reports
           retention-days: 7
       - name: Cancel workflow runs for commit on error
         if: failure()
