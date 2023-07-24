@@ -87,7 +87,10 @@ internal class SubscribeTest {
         objectUnderTest.unsubscribe(channelsToUnsubscribe, channelGroupsToUnsubscribe)
 
         verify { eventEngineManager.addEventToQueue(any()) }
-        assertEquals(SubscribeEvent.SubscriptionChanged(listOf(CHANNEL_02), listOf(CHANNEL_GROUPS_02)), subscribeEvent.captured)
+        assertEquals(
+            SubscribeEvent.SubscriptionChanged(listOf(CHANNEL_02), listOf(CHANNEL_GROUPS_02)),
+            subscribeEvent.captured
+        )
         assertEquals(setOf(CHANNEL_02), subscriptionData.channels)
         assertEquals(setOf(CHANNEL_GROUPS_02), subscriptionData.channelGroups)
     }

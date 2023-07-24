@@ -2,13 +2,13 @@ package com.pubnub.api.subscribe.eventengine.worker
 
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
+import com.pubnub.api.eventengine.transition
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNEvent
 import com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectInvocation
 import com.pubnub.api.subscribe.eventengine.event.SubscribeEvent
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
 import com.pubnub.api.subscribe.eventengine.state.SubscribeState
-import com.pubnub.api.subscribe.eventengine.transition.transition
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.contains
 import org.junit.jupiter.api.Test

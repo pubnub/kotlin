@@ -2,10 +2,10 @@ package com.pubnub.api.subscribe.eventengine
 
 import com.pubnub.api.eventengine.Sink
 import com.pubnub.api.eventengine.Source
+import com.pubnub.api.eventengine.transition
 import com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectInvocation
 import com.pubnub.api.subscribe.eventengine.event.SubscribeEvent
 import com.pubnub.api.subscribe.eventengine.state.SubscribeState
-import com.pubnub.api.subscribe.eventengine.transition.transition
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 

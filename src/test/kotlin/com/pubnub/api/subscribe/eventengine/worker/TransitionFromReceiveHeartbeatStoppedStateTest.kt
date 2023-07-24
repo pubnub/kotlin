@@ -1,10 +1,10 @@
 package com.pubnub.api.subscribe.eventengine.worker
 
+import com.pubnub.api.eventengine.transition
 import com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectInvocation
 import com.pubnub.api.subscribe.eventengine.event.SubscribeEvent
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
 import com.pubnub.api.subscribe.eventengine.state.SubscribeState
-import com.pubnub.api.subscribe.eventengine.transition.transition
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 

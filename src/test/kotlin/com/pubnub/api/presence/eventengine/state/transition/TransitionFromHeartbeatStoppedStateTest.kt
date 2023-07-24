@@ -1,9 +1,9 @@
 package com.pubnub.api.presence.eventengine.state.transition
 
+import com.pubnub.api.eventengine.transition
 import com.pubnub.api.presence.eventengine.effect.PresenceEffectInvocation
 import com.pubnub.api.presence.eventengine.event.PresenceEvent
 import com.pubnub.api.presence.eventengine.state.PresenceState
-import com.pubnub.api.presence.eventengine.transition.transition
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
