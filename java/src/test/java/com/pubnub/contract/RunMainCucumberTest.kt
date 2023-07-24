@@ -15,7 +15,7 @@ class RunMainCucumberTest
 @RunWith(Cucumber::class)
 @CucumberOptions(
         features = ["../../sdk-specifications/features/subscribe/event-engine"],
-        tags = "not @skip and not @na=java and @beta and @featureSet=eventEngine",
+        tags = "not @skip and not @na=java and @beta",
         plugin = ["pretty", "summary", "junit:build/reports/cucumber-reports/beta.xml"]
 )
 class RunBetaCucumberTest

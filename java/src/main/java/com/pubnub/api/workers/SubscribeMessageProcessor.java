@@ -39,9 +39,9 @@ import java.util.List;
 @AllArgsConstructor
 public class SubscribeMessageProcessor {
     public static final int TYPE_MESSAGE = 0;
-    private static final int typeSignal = 1;
-    private static final int typeObject = 2;
-    private static final int typeMessageAction = 3;
+    private final int typeSignal = 1;
+    private final int typeObject = 2;
+    private final int typeMessageAction = 3;
     public static final int TYPE_FILES = 4;
 
     private final PubNub pubnub;
@@ -230,7 +230,7 @@ public class SubscribeMessageProcessor {
     }
 
     @SuppressWarnings("RegExpRedundantEscape")
-    private static final String formatFriendlyGetFileUrl = "%s" + FilesService.GET_FILE_URL.replaceAll("\\{.*?\\}", "%s");
+    private final String formatFriendlyGetFileUrl = "%s" + FilesService.GET_FILE_URL.replaceAll("\\{.*?\\}", "%s");
 
     private String buildFileUrl(String channel, String fileId, String fileName) {
         String basePath = String.format(formatFriendlyGetFileUrl,

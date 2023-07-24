@@ -71,7 +71,6 @@ import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.VisibleForTesting;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.InputStream;
 import java.util.Date;
@@ -641,7 +640,7 @@ public class PubNub {
     public void reconnect() {
 
         if (this.configuration.isEnableSubscribeBeta()) {
-            throw new NotImplementedException(); // TODO: implement
+            throw new UnsupportedOperationException(); // TODO: implement
         } else {
             subscriptionManager.reconnect();
         }

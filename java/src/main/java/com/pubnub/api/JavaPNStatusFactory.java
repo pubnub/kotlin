@@ -15,6 +15,7 @@ import java.util.List;
 public class JavaPNStatusFactory implements PNStatusFactory {
     @NotNull
     @Override
+    @SuppressWarnings("checkstyle:ParameterNumber")
     public Status createPNStatus(@NotNull PNStatusCategory category, boolean error, @NotNull PNOperationType operation, @NotNull List<String> affectedChannels, @NotNull List<String> affectedChannelGroups, @Nullable CoreException exception, @Nullable Integer statusCode, @Nullable Boolean tlsEnabled, @Nullable String origin, @Nullable String uuid, @Nullable String authKey, @Nullable PNErrorData errorData) {
         return PNStatus.builder().category(category).error(error).operation(operation).affectedChannels(affectedChannels).affectedChannelGroups(affectedChannelGroups).statusCode(statusCode == null ? 0 : statusCode).tlsEnabled(tlsEnabled != null && tlsEnabled).origin(origin).uuid(uuid).authKey(authKey).errorData(errorData).build();
     }

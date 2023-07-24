@@ -2,7 +2,6 @@ package com.pubnub.api.builder;
 
 import com.pubnub.api.builder.dto.PresenceOperation;
 import com.pubnub.api.managers.SubscriptionManager;
-import com.pubnub.api.subscribe.Subscribe;
 import lombok.AccessLevel;
 import lombok.Setter;
 import lombok.experimental.Accessors;

@@ -15,7 +15,6 @@ import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult;
 import com.pubnub.api.subscribe.eventengine.effect.MessagesConsumer;
 import com.pubnub.api.subscribe.eventengine.effect.StatusConsumer;
 import org.jetbrains.annotations.NotNull;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -111,6 +110,6 @@ public class ListenerManager implements StatusConsumer<PNStatus>, MessagesConsum
 
     @Override
     public void announce(@NotNull PNObjectEventResult pnObjectEventResult) {
-        throw new NotImplementedException(); // TODO: implement
+        throw new UnsupportedOperationException(); // TODO: implement
     }
 }
