@@ -35,22 +35,22 @@ class TransitionFromHeartbeatWaitingStateTest {
     @Test
     fun `should transit from HEARTBEAT_WAITING to HEARTBEATING and create CANCEL_SCHEDULE_NEXT_HEARTBEAT, LEAVE and HEARTBEAT invocations when there is LEFT event`() {
         // given
-        val newChannels = setOf("NewChannel")
-        val newChannelGroup = setOf("NewChannelGroup")
+        val channelToLeave = setOf("Channel01")
+        val channelGroupToLeave = setOf("ChannelGroup01")
 
         // when
         val (newState, invocations) = transition(
             PresenceState.HeartbeatWaiting(channels, channelGroups),
-            PresenceEvent.Left(newChannels, newChannelGroup)
+            PresenceEvent.Left(channelToLeave, channelGroupToLeave)
         )
 
         // then
-        Assertions.assertEquals(PresenceState.Heartbeating(newChannels, newChannelGroup), newState)
+        Assertions.assertEquals(PresenceState.Heartbeating(channels - channelToLeave, channelGroups - channelGroupToLeave), newState)
         Assertions.assertEquals(
             listOf(
                 PresenceEffectInvocation.CancelScheduleNextHeartbeat,
-                PresenceEffectInvocation.Leave(newChannels, newChannelGroup),
-                PresenceEffectInvocation.Heartbeat(newChannels, newChannelGroup)
+                PresenceEffectInvocation.Leave(channelToLeave, channelGroupToLeave),
+                PresenceEffectInvocation.Heartbeat(channels - channelToLeave, channelGroups - channelGroupToLeave)
             ),
             invocations
         )

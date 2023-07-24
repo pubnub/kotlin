@@ -14,7 +14,7 @@ class TransitionFromHeartbeatFailedStateTest {
     val reason = PubNubException("Test")
 
     @Test
-    fun `should transit from HEARTBEAT_FAILED to INACTIVE when there is LEFT_ALL event`() {
+    fun `should transit from HEARTBEAT_FAILED to INACTIVE and create LEAVE invocation when there is LEFT_ALL event`() {
         // when
         val (newState, invocations) = transition(
             PresenceState.HeartbeatFailed(channels, channelGroups, reason),
@@ -23,7 +23,9 @@ class TransitionFromHeartbeatFailedStateTest {
 
         // then
         Assertions.assertEquals(PresenceState.HearbeatInactive, newState)
-        Assertions.assertEquals(emptyList<PresenceEffectInvocation>(), invocations)
+        Assertions.assertEquals(
+            listOf<PresenceEffectInvocation>(PresenceEffectInvocation.Leave(channels, channelGroups)), invocations
+        )
     }
 
     @Test
@@ -80,17 +82,21 @@ class TransitionFromHeartbeatFailedStateTest {
     }
 
     @Test
-    fun `should transit from HEARTBEAT_FAILED to HEARTBEATING and creat HEARTBEAT invocation when there is LEFT event`() {
+    fun `should transit from HEARTBEAT_FAILED to HEARTBEATING and creat HEARTBEAT and LEAVE invocation when there is LEFT event`() {
+        // given
+        val channelToLeave = setOf("Channel01")
+        val channelGroupToLeave = setOf("ChannelGroup01")
+
         // when
         val (newState, invocations) = transition(
             PresenceState.HeartbeatFailed(channels, channelGroups, reason),
-            PresenceEvent.Left(channels, channelGroups)
+            PresenceEvent.Left(channelToLeave, channelGroupToLeave)
         )
 
         // then
-        Assertions.assertEquals(PresenceState.Heartbeating(channels, channelGroups), newState)
+        Assertions.assertEquals(PresenceState.Heartbeating(channels - channelToLeave, channelGroups - channelGroupToLeave), newState)
         Assertions.assertEquals(
-            listOf(PresenceEffectInvocation.Leave(channels, channelGroups), PresenceEffectInvocation.Heartbeat(channels, channelGroups)), invocations
+            listOf(PresenceEffectInvocation.Leave(channelToLeave, channelGroupToLeave), PresenceEffectInvocation.Heartbeat(channels - channelToLeave, channelGroups - channelGroupToLeave)), invocations
         )
     }
 
@@ -104,6 +110,8 @@ class TransitionFromHeartbeatFailedStateTest {
 
         // then
         Assertions.assertEquals(PresenceState.HeartbeatStopped(channels, channelGroups), newState)
-        Assertions.assertEquals(emptyList<PresenceEffectInvocation>(), invocations)
+        Assertions.assertEquals(
+            listOf(PresenceEffectInvocation.Leave(channels, channelGroups)), invocations
+        )
     }
 }

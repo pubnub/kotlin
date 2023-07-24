@@ -144,7 +144,7 @@ class Subscribe(
     }
 
     fun reconnect() {
-        // toDo shouldn't we add this?
+        eventEngineManager.addEventToQueue(SubscribeEvent.Reconnect)
     }
 
     @Synchronized
@@ -188,20 +188,20 @@ class Subscribe(
         channelGroups: List<String>,
         withTimetoken: Long
     ) {
-        val subscriptionRestored = SubscriptionRestored(
+        val subscriptionRestoredEvent = SubscriptionRestored(
             channels,
             channelGroups,
             SubscriptionCursor(withTimetoken, "42")
         ) // todo get region from somewhere
-        eventEngineManager.addEventToQueue(subscriptionRestored)
+        eventEngineManager.addEventToQueue(subscriptionRestoredEvent)
     }
 
     private fun createAndPassForHandlingSubscriptionChangedEvent(
         channels: List<String>,
         channelGroups: List<String>
     ) {
-        val subscriptionChanged = SubscriptionChanged(channels, channelGroups)
-        eventEngineManager.addEventToQueue(subscriptionChanged)
+        val subscriptionChangedEvent = SubscriptionChanged(channels, channelGroups)
+        eventEngineManager.addEventToQueue(subscriptionChangedEvent)
     }
 
     private fun removeChannelGroupsFromSubscriptionData(channelGroups: List<String>) {

@@ -36,10 +36,10 @@ sealed class PresenceState : State<PresenceEffectInvocation, PresenceEvent, Pres
                     transitionTo(HeartbeatStopped(channels, channelGroups), PresenceEffectInvocation.Leave(channels, channelGroups))
                 }
                 is PresenceEvent.Joined -> {
-                    transitionTo(Heartbeating(event.channels, event.channelGroups))
+                    transitionTo(Heartbeating(channels + event.channels, channelGroups + event.channelGroups))
                 }
                 is PresenceEvent.Left -> {
-                    transitionTo(Heartbeating(event.channels, event.channelGroups), PresenceEffectInvocation.Leave(event.channels, event.channelGroups))
+                    transitionTo(Heartbeating(channels - event.channels, channelGroups - event.channelGroups), PresenceEffectInvocation.Leave(event.channels, event.channelGroups))
                 }
                 is PresenceEvent.StateSet -> {
                     transitionTo(Heartbeating(event.channels, event.channelGroups))
@@ -69,10 +69,10 @@ sealed class PresenceState : State<PresenceEffectInvocation, PresenceEvent, Pres
         override fun transition(event: PresenceEvent): Pair<PresenceState, List<PresenceEffectInvocation>> {
             return when (event) {
                 is PresenceEvent.Joined -> {
-                    transitionTo(Heartbeating(event.channels, event.channelGroups))
+                    transitionTo(Heartbeating(channels + event.channels, channelGroups + event.channelGroups))
                 }
                 is PresenceEvent.Left -> {
-                    transitionTo(Heartbeating(event.channels, event.channelGroups), PresenceEffectInvocation.Leave(event.channels, event.channelGroups))
+                    transitionTo(Heartbeating(channels - event.channels, channelGroups - event.channelGroups), PresenceEffectInvocation.Leave(event.channels, event.channelGroups))
                 }
                 is PresenceEvent.StateSet -> {
                     transitionTo(Heartbeating(event.channels, event.channelGroups))
@@ -109,13 +109,13 @@ sealed class PresenceState : State<PresenceEffectInvocation, PresenceEvent, Pres
                     transitionTo(HearbeatInactive)
                 }
                 is PresenceEvent.Joined -> {
-                    transitionTo(HeartbeatStopped(event.channels, event.channelGroups))
+                    transitionTo(HeartbeatStopped(channels + event.channels, channelGroups + event.channelGroups))
                 }
                 is PresenceEvent.Left -> {
-                    transitionTo(HeartbeatStopped(event.channels, event.channelGroups))
+                    transitionTo(HeartbeatStopped(channels - event.channels, channelGroups - event.channelGroups))
                 }
                 is PresenceEvent.StateSet -> {
-                    transitionTo(Heartbeating(event.channels, event.channelGroups))
+                    transitionTo(HeartbeatStopped(event.channels, event.channelGroups))
                 }
                 is PresenceEvent.Reconnect -> {
                     transitionTo(Heartbeating(channels, channelGroups))
@@ -135,13 +135,13 @@ sealed class PresenceState : State<PresenceEffectInvocation, PresenceEvent, Pres
         override fun transition(event: PresenceEvent): Pair<PresenceState, List<PresenceEffectInvocation>> {
             return when (event) {
                 is PresenceEvent.LeftAll -> {
-                    transitionTo(HearbeatInactive)
+                    transitionTo(HearbeatInactive, PresenceEffectInvocation.Leave(channels, channelGroups))
                 }
                 is PresenceEvent.Joined -> {
-                    transitionTo(Heartbeating(event.channels, event.channelGroups))
+                    transitionTo(Heartbeating(channels + event.channels, channelGroups + event.channelGroups))
                 }
-                is PresenceEvent.Left -> { // todo check if doc contains creation of Leave invocation
-                    transitionTo(Heartbeating(event.channels, event.channelGroups), PresenceEffectInvocation.Leave(event.channels, event.channelGroups))
+                is PresenceEvent.Left -> {
+                    transitionTo(Heartbeating(channels - event.channels, channelGroups - event.channelGroups), PresenceEffectInvocation.Leave(event.channels, event.channelGroups))
                 }
                 is PresenceEvent.StateSet -> {
                     transitionTo(Heartbeating(event.channels, event.channelGroups))
@@ -150,7 +150,7 @@ sealed class PresenceState : State<PresenceEffectInvocation, PresenceEvent, Pres
                     transitionTo(Heartbeating(channels, channelGroups))
                 }
                 is PresenceEvent.Disconnect -> {
-                    transitionTo(HeartbeatStopped(channels, channelGroups))
+                    transitionTo(HeartbeatStopped(channels, channelGroups), PresenceEffectInvocation.Leave(channels, channelGroups))
                 }
                 else -> {
                     noTransition()
@@ -169,10 +169,10 @@ sealed class PresenceState : State<PresenceEffectInvocation, PresenceEvent, Pres
         override fun transition(event: PresenceEvent): Pair<PresenceState, List<PresenceEffectInvocation>> {
             return when (event) {
                 is PresenceEvent.Joined -> {
-                    transitionTo(Heartbeating(event.channels, event.channelGroups))
+                    transitionTo(Heartbeating(channels + event.channels, channelGroups + event.channelGroups))
                 }
                 is PresenceEvent.Left -> {
-                    transitionTo(Heartbeating(event.channels, event.channelGroups), PresenceEffectInvocation.Leave(event.channels, event.channelGroups))
+                    transitionTo(Heartbeating(channels - event.channels, channelGroups - event.channelGroups), PresenceEffectInvocation.Leave(event.channels, event.channelGroups))
                 }
                 is PresenceEvent.StateSet -> {
                     transitionTo(Heartbeating(event.channels, event.channelGroups))

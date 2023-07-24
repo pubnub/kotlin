@@ -56,10 +56,10 @@ class TransitionFromHeartbeatingStateTest {
         )
 
         // then
-        Assertions.assertEquals(PresenceState.Heartbeating(newChannels, newChannelGroup), newState)
+        Assertions.assertEquals(PresenceState.Heartbeating(channels + newChannels, channelGroups + newChannelGroup), newState)
         Assertions.assertEquals(
             listOf(
-                PresenceEffectInvocation.Heartbeat(newChannels, newChannelGroup)
+                PresenceEffectInvocation.Heartbeat(channels + newChannels, channelGroups + newChannelGroup)
             ),
             invocations
         )
@@ -68,21 +68,21 @@ class TransitionFromHeartbeatingStateTest {
     @Test
     fun `should transit from HEARTBEATING to HEARTBEATING and create LEAVE and HEARTBEAT invocations when there is LEFT event`() {
         // given
-        val newChannels = setOf("NewChannel")
-        val newChannelGroup = setOf("NewChannelGroup")
+        val channelToLeave = setOf("Channel01")
+        val channelGroupToLeave = setOf("ChannelGroup01")
 
         // when
         val (newState, invocations) = transition(
             PresenceState.Heartbeating(channels, channelGroups),
-            PresenceEvent.Left(newChannels, newChannelGroup)
+            PresenceEvent.Left(channelToLeave, channelGroupToLeave)
         )
 
         // then
-        Assertions.assertEquals(PresenceState.Heartbeating(newChannels, newChannelGroup), newState)
+        Assertions.assertEquals(PresenceState.Heartbeating(channels - channelToLeave, channelGroups - channelGroupToLeave), newState)
         Assertions.assertEquals(
             listOf(
-                PresenceEffectInvocation.Leave(newChannels, newChannelGroup),
-                PresenceEffectInvocation.Heartbeat(newChannels, newChannelGroup)
+                PresenceEffectInvocation.Leave(channelToLeave, channelGroupToLeave),
+                PresenceEffectInvocation.Heartbeat(channels - channelToLeave, channelGroups - channelGroupToLeave)
             ),
             invocations
         )

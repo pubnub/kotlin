@@ -39,7 +39,7 @@ internal class SubscribeTest {
     }
 
     @Test
-    internal fun `should store channels and channelGroups in local storage and pass SubscriptionChange event for handling when timeToken is zero`() {
+    fun `should store channels and channelGroups in local storage and pass SubscriptionChange event for handling when timeToken is zero`() {
         val channelToSubscribe = CHANNEL_03
         val channelGroupsToSubscribe = CHANNEL_GROUPS_03
 
@@ -57,7 +57,7 @@ internal class SubscribeTest {
     }
 
     @Test
-    internal fun `should store channels and channelGroups in local storage and pass SubscriptionRestored event for handling when timeToken is non zero`() {
+    fun `should store channels and channelGroups in local storage and pass SubscriptionRestored event for handling when timeToken is non zero`() {
         val channelToSubscribe = CHANNEL_03
         val channelGroupsToSubscribe = CHANNEL_GROUPS_03
 
@@ -80,7 +80,7 @@ internal class SubscribeTest {
     }
 
     @Test
-    internal fun `should remove channels and channelGroups from local storage and pass SubscriptionChange event for handling when at least one channel or channelGroup left in storage`() {
+    fun `should remove channels and channelGroups from local storage and pass SubscriptionChange event for handling when at least one channel or channelGroup left in storage`() {
         val channelsToUnsubscribe: List<String> = listOf(CHANNEL_01)
         val channelGroupsToUnsubscribe: List<String> = listOf(CHANNEL_GROUPS_01)
 
@@ -93,7 +93,7 @@ internal class SubscribeTest {
     }
 
     @Test
-    internal fun `should remove channels and channelGroups from local storage and pass UnsubscribeAll event for handling when no channel nor channelGroup left in storage`() {
+    fun `should remove channels and channelGroups from local storage and pass UnsubscribeAll event for handling when no channel nor channelGroup left in storage`() {
         val channelsToUnsubscribe: List<String> = listOf(CHANNEL_01, CHANNEL_02)
         val channelGroupsToUnsubscribe: List<String> = listOf(CHANNEL_GROUPS_01, CHANNEL_GROUPS_02)
 
@@ -106,7 +106,7 @@ internal class SubscribeTest {
     }
 
     @Test
-    internal fun `should remove all channels and channelGroups from local storage when unsubscribeAll`() {
+    fun `should remove all channels and channelGroups from local storage when unsubscribeAll`() {
 
         objectUnderTest.unsubscribeAll()
 
@@ -117,7 +117,7 @@ internal class SubscribeTest {
     }
 
     @Test
-    internal fun `should return subscribed channels from local storage when getSubscribedChannels`() {
+    fun `should return subscribed channels from local storage when getSubscribedChannels`() {
 
         val subscribedChannels = objectUnderTest.getSubscribedChannels()
 
@@ -125,7 +125,7 @@ internal class SubscribeTest {
     }
 
     @Test
-    internal fun `should return subscribed channelGroups from local storage when getSubscribedChannelGroups`() {
+    fun `should return subscribed channelGroups from local storage when getSubscribedChannelGroups`() {
 
         val subscribedChannelGroups = objectUnderTest.getSubscribedChannelGroups()
 
@@ -133,11 +133,18 @@ internal class SubscribeTest {
     }
 
     @Test
-    internal fun `should pass disconnect event for handling when disconnect`() {
+    fun `should pass disconnect event for handling when disconnect`() {
 
         objectUnderTest.disconnect()
 
         assertEquals(SubscribeEvent.Disconnect, subscribeEvent.captured)
+    }
+
+    @Test
+    fun `should pass reconnect event for handling when dsconnect`() {
+        objectUnderTest.reconnect()
+
+        assertEquals(SubscribeEvent.Reconnect, subscribeEvent.captured)
     }
 
     private fun createSubscriptionStateContainingValues(): SubscriptionData {

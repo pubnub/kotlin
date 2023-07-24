@@ -38,19 +38,19 @@ class TransitionFromHeartbeatStoppedStateTest {
     @Test
     fun `should transit from HEARTBEAT_STOPPED to HEARTBEAT_STOPPED when there is LEFT event`() {
         // given
-        val newChannels = channels + setOf("NewChannel")
-        val newChannelGroup = channelGroups + setOf("NewChannelGroup")
+        val channelToLeave = setOf("Channel01")
+        val channelGroupToLeave = setOf("ChannelGroup01")
 
         // when
-        val (newState, invocations) = transition(PresenceState.HeartbeatStopped(channels, channelGroups), PresenceEvent.Left(newChannels, newChannelGroup))
+        val (newState, invocations) = transition(PresenceState.HeartbeatStopped(channels, channelGroups), PresenceEvent.Left(channelToLeave, channelGroupToLeave))
 
         // then
-        assertEquals(PresenceState.HeartbeatStopped(newChannels, newChannelGroup), newState)
+        assertEquals(PresenceState.HeartbeatStopped(channels - channelToLeave, channelGroups - channelGroupToLeave), newState)
         assertEquals(emptyList<PresenceEffectInvocation>(), invocations)
     }
 
     @Test
-    fun `should transit from HEARTBEAT_STOPPED to HEARTBEATING and creat HEARTBEAT invocation when there is SET_STATE event`() {
+    fun `should transit from HEARTBEAT_STOPPED to HEARTBEAT_STOPPED invocation when there is SET_STATE event`() {
         // given
         val newChannels = setOf("NewChannel")
         val newChannelGroup = setOf("NewChannelGroup")
@@ -59,8 +59,8 @@ class TransitionFromHeartbeatStoppedStateTest {
         val (newState, invocations) = transition(PresenceState.HeartbeatStopped(channels, channelGroups), PresenceEvent.StateSet(newChannels, newChannelGroup))
 
         // then
-        assertEquals(PresenceState.Heartbeating(newChannels, newChannelGroup), newState)
-        assertEquals(listOf<PresenceEffectInvocation>(PresenceEffectInvocation.Heartbeat(newChannels, newChannelGroup)), invocations)
+        assertEquals(PresenceState.HeartbeatStopped(newChannels, newChannelGroup), newState)
+        assertEquals(emptyList<PresenceEffectInvocation>(), invocations)
     }
 
     @Test

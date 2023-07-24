@@ -4,19 +4,20 @@ import com.pubnub.api.eventengine.Cancel
 import com.pubnub.api.eventengine.EffectInvocation
 import com.pubnub.api.eventengine.EffectInvocationType
 import com.pubnub.api.eventengine.Managed
+import com.pubnub.api.eventengine.NonManaged
 
 sealed class PresenceEffectInvocation(override val type: EffectInvocationType) : EffectInvocation {
-    override val id: String = "any" // todo does value of this matter?
+    override val id: String = "any value for NonManged and Cancel effect"
 
     data class Heartbeat(
         val channels: Set<String>,
         val channelGroups: Set<String>,
-    ) : PresenceEffectInvocation(Managed)
+    ) : PresenceEffectInvocation(NonManaged)
 
     data class Leave(
         val channels: Set<String>,
         val channelGroups: Set<String>,
-    ) : PresenceEffectInvocation(Managed)
+    ) : PresenceEffectInvocation(NonManaged)
 
     class ScheduleNextHeartbeat : PresenceEffectInvocation(Managed) {
         override val id: String = ScheduleNextHeartbeat::class.java.simpleName

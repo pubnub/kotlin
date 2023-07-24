@@ -2,7 +2,7 @@ package com.pubnub.api.subscribe.eventengine
 
 import org.junit.jupiter.api.Test
 
-class SubscribeSubscribeEventEngineTest {
+class SubscribeEventEngineTest {
 
     @Test
     internal fun `should pass invocations for handling when event provided`() {
