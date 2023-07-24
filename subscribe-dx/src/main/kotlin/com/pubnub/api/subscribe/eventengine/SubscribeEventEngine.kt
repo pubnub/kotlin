@@ -25,6 +25,9 @@ class SubscribeEventEngine(
                 }
             } catch (e: InterruptedException) {
                 Thread.currentThread().interrupt()
+            } catch (t: Throwable) {
+                t.printStackTrace()
+                throw t
             }
         }
     }

@@ -5,6 +5,7 @@ import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.UserId;
 import com.pubnub.api.enums.PNLogVerbosity;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
@@ -33,16 +34,19 @@ public class TestHarness {
             }
 
             @Override
+            @NotNull
             public String getVersion() {
                 return "suchJava";
             }
 
             @Override
+            @NotNull
             public String getInstanceId() {
                 return "PubNubInstanceId";
             }
 
             @Override
+            @NotNull
             public String getRequestId() {
                 return "PubNubRequestId";
             }

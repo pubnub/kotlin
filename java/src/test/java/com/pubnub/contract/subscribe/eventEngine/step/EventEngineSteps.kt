@@ -26,10 +26,6 @@ import java.util.concurrent.TimeUnit
 
 class EventEngineSteps(private val state: EventEngineState) {
 
-    @Given("the demo keyset with event engine enabled")
-    fun the_demo_keyset_with_event_engine_enabled() {
-        state.configuration.setEnableSubscribeBeta(true)
-    }
 
     @Given("a linear reconnection policy with {int} retries")
     fun a_linear_reconnection_policy_with_retries(maxRetries: Int) {
@@ -101,7 +97,6 @@ class EventEngineSteps(private val state: EventEngineState) {
 
     @Then("I receive an error in my subscribe response")
     fun i_receive_an_error_in_my_subscribe_response() {
-
         await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(500, TimeUnit.MILLISECONDS).untilAsserted {
             MatcherAssert.assertThat(state.statusesList.map { it.error }, CoreMatchers.hasItems(true))
         }

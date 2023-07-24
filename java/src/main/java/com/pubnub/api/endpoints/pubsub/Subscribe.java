@@ -40,7 +40,7 @@ public class Subscribe extends Endpoint<SubscribeEnvelope, SubscribeEnvelope> {
      * List of channels that will be called to subscribe.
      */
     @Setter
-    private List<String> channels;
+    private List<String>  channels;
     /**
      * List of channel groups that will be called with subscribe.
      */

@@ -4,7 +4,6 @@ import com.pubnub.api.builder.PresenceBuilder;
 import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.builder.SubscribeBuilder;
 import com.pubnub.api.builder.UnsubscribeBuilder;
-import com.pubnub.api.callbacks.PNCallback;
 import com.pubnub.api.callbacks.SubscribeCallback;
 import com.pubnub.api.endpoints.*;
 import com.pubnub.api.endpoints.access.Grant;
@@ -71,6 +70,7 @@ import kotlin.jvm.functions.Function2;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.VisibleForTesting;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.InputStream;
@@ -114,6 +114,15 @@ public class PubNub {
     private final Subscribe subscribe;
 
     public PubNub(@NotNull PNConfiguration initialConfig) {
+        this(initialConfig, new LinearPolicy(), new EventEngineConfImpl());
+    }
+
+    @VisibleForTesting
+    public PubNub(@NotNull PNConfiguration initialConfig,
+                  @NotNull RetryPolicy retryPolicy,
+                  @NotNull EventEngineConf<Event, SubscribeEffectInvocation> eventEngineConf) {
+
+
         this.configuration = initialConfig;
         this.mapper = new MapperManager();
         this.telemetryManager = new TelemetryManager();
@@ -129,8 +138,6 @@ public class PubNub {
         this.publishSequenceManager = new PublishSequenceManager(MAX_SEQUENCE);
         this.tokenParser = new TokenParser();
         instanceId = UUID.randomUUID().toString();
-        RetryPolicy retryPolicy = new LinearPolicy();
-        EventEngineConf<Event, SubscribeEffectInvocation> eventEngineConf = new EventEngineConfImpl();
         PubNub pn = this;
         HandshakeProvider handshakeProvider = (channels, channelGroups) -> {
             com.pubnub.api.endpoints.pubsub.Subscribe sub = new com.pubnub.api.endpoints.pubsub.Subscribe(pn, retrofitManager, tokenManager)
@@ -160,7 +167,8 @@ public class PubNub {
             com.pubnub.api.endpoints.pubsub.Subscribe sub = new com.pubnub.api.endpoints.pubsub.Subscribe(pn, retrofitManager, tokenManager)
                     .channels(channels)
                     .channelGroups(channelGroups)
-                    .timetoken(0L);
+                    .timetoken(subscriptionCursor.getTimetoken())
+                    .region(subscriptionCursor.getRegion());
 
             CoreRemoteAction<SubscribeEnvelope, PNStatus> ra = new CoreRemoteAction<SubscribeEnvelope, PNStatus>() {
 
