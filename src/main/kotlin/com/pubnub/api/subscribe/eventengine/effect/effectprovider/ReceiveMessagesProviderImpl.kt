@@ -12,13 +12,13 @@ import com.pubnub.api.workers.SubscribeMessageProcessor
 internal class ReceiveMessagesProviderImpl(val pubNub: PubNub, val messageProcessor: SubscribeMessageProcessor) : ReceiveMessagesProvider {
 
     override fun getReceiveMessagesRemoteAction(
-        channels: List<String>,
-        channelGroups: List<String>,
+        channels: Set<String>,
+        channelGroups: Set<String>,
         subscriptionCursor: SubscriptionCursor
     ): RemoteAction<ReceiveMessagesResult> {
         val subscribe = Subscribe(pubNub)
-        subscribe.channels = channels
-        subscribe.channelGroups = channelGroups
+        subscribe.channels = channels.toList()
+        subscribe.channelGroups = channelGroups.toList()
         subscribe.timetoken = subscriptionCursor.timetoken
         subscribe.region = subscriptionCursor.region
         return subscribe.map {

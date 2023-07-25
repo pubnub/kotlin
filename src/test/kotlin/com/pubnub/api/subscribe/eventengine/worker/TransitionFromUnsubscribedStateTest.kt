@@ -9,8 +9,8 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
 class TransitionFromUnsubscribedStateTest {
-    val channels = listOf("Channel1")
-    val channelGroups = listOf("ChannelGroup1")
+    val channels = setOf("Channel1")
+    val channelGroups = setOf("ChannelGroup1")
     val timeToken = 12345345452L
     val region = "42"
     val subscriptionCursor = SubscriptionCursor(timeToken, region)
@@ -25,7 +25,7 @@ class TransitionFromUnsubscribedStateTest {
         // then
         assertEquals(SubscribeState.Handshaking(channels, channelGroups), state)
         assertEquals(
-            listOf(
+            setOf(
                 SubscribeEffectInvocation.Handshake(channels, channelGroups)
             ),
             invocations
@@ -42,7 +42,7 @@ class TransitionFromUnsubscribedStateTest {
         // then
         assertEquals(SubscribeState.Receiving(channels, channelGroups, subscriptionCursor), state)
         assertEquals(
-            listOf(
+            setOf(
                 SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor),
             ),
             invocations

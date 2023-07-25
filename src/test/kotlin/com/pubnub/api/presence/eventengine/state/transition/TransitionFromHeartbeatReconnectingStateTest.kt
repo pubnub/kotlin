@@ -29,7 +29,7 @@ class TransitionFromHeartbeatReconnectingStateTest {
         // then
         Assertions.assertEquals(PresenceState.HearbeatInactive, newState)
         Assertions.assertEquals(
-            listOf(
+            setOf(
                 PresenceEffectInvocation.CancelDelayedHeartbeat,
                 PresenceEffectInvocation.Leave(channels, channelGroups)
             ),
@@ -57,7 +57,7 @@ class TransitionFromHeartbeatReconnectingStateTest {
         // then
         Assertions.assertEquals(PresenceState.Heartbeating(channels - channelToLeave, channelGroups - channelGroupToLeave), newState)
         Assertions.assertEquals(
-            listOf(
+            setOf(
                 PresenceEffectInvocation.CancelDelayedHeartbeat,
                 PresenceEffectInvocation.Leave(channelToLeave, channelGroupToLeave),
                 PresenceEffectInvocation.Heartbeat(channels - channelToLeave, channelGroups - channelGroupToLeave)
@@ -82,7 +82,7 @@ class TransitionFromHeartbeatReconnectingStateTest {
         // then
         Assertions.assertEquals(PresenceState.HeartbeatStopped(channels, channelGroups), newState)
         Assertions.assertEquals(
-            listOf(
+            setOf(
                 PresenceEffectInvocation.CancelDelayedHeartbeat,
                 PresenceEffectInvocation.Leave(channels, channelGroups),
             ),
@@ -110,7 +110,7 @@ class TransitionFromHeartbeatReconnectingStateTest {
         // then
         Assertions.assertEquals(PresenceState.Heartbeating(channels + channelToJoin, channelGroups + channelGroupToJoin), newState)
         Assertions.assertEquals(
-            listOf(
+            setOf(
                 PresenceEffectInvocation.CancelDelayedHeartbeat,
                 PresenceEffectInvocation.Heartbeat(channels + channelToJoin, channelGroups + channelGroupToJoin)
             ),
@@ -138,7 +138,7 @@ class TransitionFromHeartbeatReconnectingStateTest {
         // then
         Assertions.assertEquals(PresenceState.Heartbeating(newChannels, newChannelGroup), newState)
         Assertions.assertEquals(
-            listOf(
+            setOf(
                 PresenceEffectInvocation.CancelDelayedHeartbeat,
                 PresenceEffectInvocation.Heartbeat(newChannels, newChannelGroup)
             ),
@@ -202,7 +202,7 @@ class TransitionFromHeartbeatReconnectingStateTest {
         // then
         Assertions.assertEquals(PresenceState.HeartbeatFailed(channels, channelGroups, reason), newState)
         Assertions.assertEquals(
-            listOf(
+            setOf(
                 PresenceEffectInvocation.CancelDelayedHeartbeat,
             ),
             invocations

@@ -9,12 +9,12 @@ import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
 internal class HandshakeProviderImpl(val pubNub: PubNub) : HandshakeProvider {
 
     override fun getHandshakeRemoteAction(
-        channels: List<String>,
-        channelGroups: List<String>
+        channels: Set<String>,
+        channelGroups: Set<String>
     ): RemoteAction<SubscriptionCursor> {
         val subscribe = Subscribe(pubNub)
-        subscribe.channels = channels
-        subscribe.channelGroups = channelGroups
+        subscribe.channels = channels.toList()
+        subscribe.channelGroups = channelGroups.toList()
         subscribe.timetoken = 0
         subscribe.region = null
         return subscribe.map { SubscriptionCursor(it.metadata.timetoken, it.metadata.region) }

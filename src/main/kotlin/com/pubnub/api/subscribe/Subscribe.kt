@@ -83,16 +83,16 @@ class Subscribe(
 
     @Synchronized
     fun subscribe(
-        channels: List<String>,
-        channelGroups: List<String>,
+        channels: Set<String>,
+        channelGroups: Set<String>,
         withPresence: Boolean,
         withTimetoken: Long = 0L,
     ) {
         throwExceptionIfChannelAndChannelGroupIsMissing(channels, channelGroups)
         addChannelsToSubscriptionData(channels, withPresence)
         addChannelGroupsToSubscriptionData(channelGroups, withPresence)
-        val channelsInLocalStorage = subscriptionData.channels.toList()
-        val channelGroupsInLocalStorage = subscriptionData.channelGroups.toList()
+        val channelsInLocalStorage = subscriptionData.channels
+        val channelGroupsInLocalStorage = subscriptionData.channelGroups
         if (withTimetoken != 0L) {
             createAndPassForHandlingSubscriptionRestoredEvent(
                 channelsInLocalStorage,
@@ -106,16 +106,16 @@ class Subscribe(
 
     @Synchronized
     fun unsubscribe(
-        channels: List<String> = emptyList(),
-        channelGroups: List<String> = emptyList()
+        channels: Set<String> = emptySet(),
+        channelGroups: Set<String> = emptySet()
     ) {
         throwExceptionIfChannelAndChannelGroupIsMissing(channels, channelGroups)
         removeChannelsFromSubscriptionData(channels)
         removeChannelGroupsFromSubscriptionData(channelGroups)
 
         if (subscriptionData.channels.size > 0 || subscriptionData.channelGroups.size > 0) {
-            val channelsInLocalStorage = subscriptionData.channels.toList()
-            val channelGroupsInLocalStorage = subscriptionData.channelGroups.toList()
+            val channelsInLocalStorage = subscriptionData.channels
+            val channelGroupsInLocalStorage = subscriptionData.channelGroups
             eventEngineManager.addEventToQueue(SubscriptionChanged(channelsInLocalStorage, channelGroupsInLocalStorage))
         } else {
             eventEngineManager.addEventToQueue(SubscribeEvent.UnsubscribeAll)
@@ -155,15 +155,15 @@ class Subscribe(
     }
 
     private fun throwExceptionIfChannelAndChannelGroupIsMissing(
-        channels: List<String>,
-        channelGroups: List<String>
+        channels: Set<String>,
+        channelGroups: Set<String>
     ) {
         if (channels.isEmpty() && channelGroups.isEmpty()) {
             throw PubNubException(PubNubError.CHANNEL_OR_CHANNEL_GROUP_MISSING)
         }
     }
 
-    private fun addChannelsToSubscriptionData(channels: List<String>, withPresence: Boolean) {
+    private fun addChannelsToSubscriptionData(channels: Set<String>, withPresence: Boolean) {
         subscriptionData.channels.addAll(channels)
         if (withPresence) {
             channels.forEach {
@@ -173,7 +173,7 @@ class Subscribe(
         }
     }
 
-    private fun addChannelGroupsToSubscriptionData(channelGroups: List<String>, withPresence: Boolean) {
+    private fun addChannelGroupsToSubscriptionData(channelGroups: Set<String>, withPresence: Boolean) {
         subscriptionData.channelGroups.addAll(channelGroups)
         if (withPresence) {
             channelGroups.forEach {
@@ -184,8 +184,8 @@ class Subscribe(
     }
 
     private fun createAndPassForHandlingSubscriptionRestoredEvent(
-        channels: List<String>,
-        channelGroups: List<String>,
+        channels: Set<String>,
+        channelGroups: Set<String>,
         withTimetoken: Long
     ) {
         val subscriptionRestoredEvent = SubscriptionRestored(
@@ -197,14 +197,14 @@ class Subscribe(
     }
 
     private fun createAndPassForHandlingSubscriptionChangedEvent(
-        channels: List<String>,
-        channelGroups: List<String>
+        channels: Set<String>,
+        channelGroups: Set<String>
     ) {
         val subscriptionChangedEvent = SubscriptionChanged(channels, channelGroups)
         eventEngineManager.addEventToQueue(subscriptionChangedEvent)
     }
 
-    private fun removeChannelGroupsFromSubscriptionData(channelGroups: List<String>) {
+    private fun removeChannelGroupsFromSubscriptionData(channelGroups: Set<String>) {
         channelGroups.forEach {
             subscriptionData.channelGroups.remove(it)
             val presenceChannelGroup = "$it$PRESENCE_CHANNEL_SUFFIX"
@@ -212,7 +212,7 @@ class Subscribe(
         }
     }
 
-    private fun removeChannelsFromSubscriptionData(channels: List<String>) {
+    private fun removeChannelsFromSubscriptionData(channels: Set<String>) {
         channels.forEach {
             subscriptionData.channels.remove(it)
             val presenceChannel = "$it$PRESENCE_CHANNEL_SUFFIX"

@@ -24,7 +24,7 @@ class TransitionFromHeartbeatingStateTest {
         // then
         Assertions.assertEquals(PresenceState.HearbeatInactive, newState)
         Assertions.assertEquals(
-            listOf(PresenceEffectInvocation.Leave(channels, channelGroups)), invocations
+            setOf(PresenceEffectInvocation.Leave(channels, channelGroups)), invocations
         )
     }
 
@@ -39,7 +39,7 @@ class TransitionFromHeartbeatingStateTest {
         // then
         Assertions.assertEquals(PresenceState.HeartbeatStopped(channels, channelGroups), newState)
         Assertions.assertEquals(
-            listOf(PresenceEffectInvocation.Leave(channels, channelGroups)), invocations
+            setOf(PresenceEffectInvocation.Leave(channels, channelGroups)), invocations
         )
     }
 
@@ -58,7 +58,7 @@ class TransitionFromHeartbeatingStateTest {
         // then
         Assertions.assertEquals(PresenceState.Heartbeating(channels + newChannels, channelGroups + newChannelGroup), newState)
         Assertions.assertEquals(
-            listOf(
+            setOf(
                 PresenceEffectInvocation.Heartbeat(channels + newChannels, channelGroups + newChannelGroup)
             ),
             invocations
@@ -80,7 +80,7 @@ class TransitionFromHeartbeatingStateTest {
         // then
         Assertions.assertEquals(PresenceState.Heartbeating(channels - channelToLeave, channelGroups - channelGroupToLeave), newState)
         Assertions.assertEquals(
-            listOf(
+            setOf(
                 PresenceEffectInvocation.Leave(channelToLeave, channelGroupToLeave),
                 PresenceEffectInvocation.Heartbeat(channels - channelToLeave, channelGroups - channelGroupToLeave)
             ),
@@ -103,7 +103,7 @@ class TransitionFromHeartbeatingStateTest {
         // then
         Assertions.assertEquals(PresenceState.Heartbeating(newChannels, newChannelGroup), newState)
         Assertions.assertEquals(
-            listOf(PresenceEffectInvocation.Heartbeat(newChannels, newChannelGroup)), invocations
+            setOf(PresenceEffectInvocation.Heartbeat(newChannels, newChannelGroup)), invocations
         )
     }
 

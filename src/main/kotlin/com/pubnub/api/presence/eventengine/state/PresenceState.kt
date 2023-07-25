@@ -9,7 +9,7 @@ import com.pubnub.api.presence.eventengine.event.PresenceEvent
 
 sealed class PresenceState : State<PresenceEffectInvocation, PresenceEvent, PresenceState> {
     object HearbeatInactive : PresenceState() {
-        override fun transition(event: PresenceEvent): Pair<PresenceState, List<PresenceEffectInvocation>> { // todo change to Set
+        override fun transition(event: PresenceEvent): Pair<PresenceState, Set<PresenceEffectInvocation>> {
             return when (event) {
                 is PresenceEvent.Joined -> {
                     transitionTo(Heartbeating(event.channels, event.channelGroups))
@@ -25,9 +25,9 @@ sealed class PresenceState : State<PresenceEffectInvocation, PresenceEvent, Pres
         val channels: Set<String>,
         val channelGroups: Set<String>
     ) : PresenceState() {
-        override fun onEntry(): List<PresenceEffectInvocation> = listOf(PresenceEffectInvocation.Heartbeat(channels, channelGroups))
+        override fun onEntry(): Set<PresenceEffectInvocation> = setOf(PresenceEffectInvocation.Heartbeat(channels, channelGroups))
 
-        override fun transition(event: PresenceEvent): Pair<PresenceState, List<PresenceEffectInvocation>> {
+        override fun transition(event: PresenceEvent): Pair<PresenceState, Set<PresenceEffectInvocation>> {
             return when (event) {
                 is PresenceEvent.LeftAll -> {
                     transitionTo(HearbeatInactive, PresenceEffectInvocation.Leave(channels, channelGroups))
@@ -63,10 +63,10 @@ sealed class PresenceState : State<PresenceEffectInvocation, PresenceEvent, Pres
         val attempts: Int,
         val reason: PubNubException?
     ) : PresenceState() {
-        override fun onEntry(): List<PresenceEffectInvocation> = listOf(PresenceEffectInvocation.DelayedHeartbeat())
-        override fun onExit(): List<PresenceEffectInvocation> = listOf(PresenceEffectInvocation.CancelDelayedHeartbeat)
+        override fun onEntry(): Set<PresenceEffectInvocation> = setOf(PresenceEffectInvocation.DelayedHeartbeat())
+        override fun onExit(): Set<PresenceEffectInvocation> = setOf(PresenceEffectInvocation.CancelDelayedHeartbeat)
 
-        override fun transition(event: PresenceEvent): Pair<PresenceState, List<PresenceEffectInvocation>> {
+        override fun transition(event: PresenceEvent): Pair<PresenceState, Set<PresenceEffectInvocation>> {
             return when (event) {
                 is PresenceEvent.Joined -> {
                     transitionTo(Heartbeating(channels + event.channels, channelGroups + event.channelGroups))
@@ -103,7 +103,7 @@ sealed class PresenceState : State<PresenceEffectInvocation, PresenceEvent, Pres
         val channels: Set<String>,
         val channelGroups: Set<String>
     ) : PresenceState() {
-        override fun transition(event: PresenceEvent): Pair<PresenceState, List<PresenceEffectInvocation>> {
+        override fun transition(event: PresenceEvent): Pair<PresenceState, Set<PresenceEffectInvocation>> {
             return when (event) {
                 is PresenceEvent.LeftAll -> {
                     transitionTo(HearbeatInactive)
@@ -132,7 +132,7 @@ sealed class PresenceState : State<PresenceEffectInvocation, PresenceEvent, Pres
         val channelGroups: Set<String>,
         val reason: PubNubException?
     ) : PresenceState() {
-        override fun transition(event: PresenceEvent): Pair<PresenceState, List<PresenceEffectInvocation>> {
+        override fun transition(event: PresenceEvent): Pair<PresenceState, Set<PresenceEffectInvocation>> {
             return when (event) {
                 is PresenceEvent.LeftAll -> {
                     transitionTo(HearbeatInactive, PresenceEffectInvocation.Leave(channels, channelGroups))
@@ -163,10 +163,10 @@ sealed class PresenceState : State<PresenceEffectInvocation, PresenceEvent, Pres
         val channels: Set<String>,
         val channelGroups: Set<String>
     ) : PresenceState() {
-        override fun onEntry(): List<PresenceEffectInvocation> = listOf(PresenceEffectInvocation.ScheduleNextHeartbeat())
-        override fun onExit(): List<PresenceEffectInvocation> = listOf(PresenceEffectInvocation.CancelScheduleNextHeartbeat)
+        override fun onEntry(): Set<PresenceEffectInvocation> = setOf(PresenceEffectInvocation.ScheduleNextHeartbeat())
+        override fun onExit(): Set<PresenceEffectInvocation> = setOf(PresenceEffectInvocation.CancelScheduleNextHeartbeat)
 
-        override fun transition(event: PresenceEvent): Pair<PresenceState, List<PresenceEffectInvocation>> {
+        override fun transition(event: PresenceEvent): Pair<PresenceState, Set<PresenceEffectInvocation>> {
             return when (event) {
                 is PresenceEvent.Joined -> {
                     transitionTo(Heartbeating(channels + event.channels, channelGroups + event.channelGroups))

@@ -18,7 +18,7 @@ class TransitionFromHeartbeatStoppedStateTest {
 
         // then
         assertEquals(PresenceState.HearbeatInactive, newState)
-        assertEquals(emptyList<PresenceEffectInvocation>(), invocations)
+        assertEquals(emptySet<PresenceEffectInvocation>(), invocations)
     }
 
     @Test
@@ -32,7 +32,7 @@ class TransitionFromHeartbeatStoppedStateTest {
 
         // then
         assertEquals(PresenceState.HeartbeatStopped(newChannels, newChannelGroup), newState)
-        assertEquals(emptyList<PresenceEffectInvocation>(), invocations)
+        assertEquals(emptySet<PresenceEffectInvocation>(), invocations)
     }
 
     @Test
@@ -46,7 +46,7 @@ class TransitionFromHeartbeatStoppedStateTest {
 
         // then
         assertEquals(PresenceState.HeartbeatStopped(channels - channelToLeave, channelGroups - channelGroupToLeave), newState)
-        assertEquals(emptyList<PresenceEffectInvocation>(), invocations)
+        assertEquals(emptySet<PresenceEffectInvocation>(), invocations)
     }
 
     @Test
@@ -60,7 +60,7 @@ class TransitionFromHeartbeatStoppedStateTest {
 
         // then
         assertEquals(PresenceState.HeartbeatStopped(newChannels, newChannelGroup), newState)
-        assertEquals(emptyList<PresenceEffectInvocation>(), invocations)
+        assertEquals(emptySet<PresenceEffectInvocation>(), invocations)
     }
 
     @Test
@@ -70,6 +70,6 @@ class TransitionFromHeartbeatStoppedStateTest {
 
         // then
         assertEquals(PresenceState.Heartbeating(channels, channelGroups), newState)
-        assertEquals(listOf<PresenceEffectInvocation>(PresenceEffectInvocation.Heartbeat(channels, channelGroups)), invocations)
+        assertEquals(setOf<PresenceEffectInvocation>(PresenceEffectInvocation.Heartbeat(channels, channelGroups)), invocations)
     }
 }

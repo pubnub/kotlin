@@ -15,8 +15,8 @@ sealed class SubscribeEffectInvocation(override val type: EffectInvocationType) 
     override val id: String = "any value for NonManged and Cancel effect"
 
     data class ReceiveMessages(
-        val channels: List<String>,
-        val channelGroups: List<String>,
+        val channels: Set<String>,
+        val channelGroups: Set<String>,
         val subscriptionCursor: SubscriptionCursor
     ) : SubscribeEffectInvocation(Managed) {
         override val id: String = ReceiveMessages::class.java.simpleName
@@ -26,8 +26,8 @@ sealed class SubscribeEffectInvocation(override val type: EffectInvocationType) 
         SubscribeEffectInvocation(Cancel(idToCancel = ReceiveMessages::class.java.simpleName))
 
     data class ReceiveReconnect(
-        val channels: List<String>,
-        val channelGroups: List<String>,
+        val channels: Set<String>,
+        val channelGroups: Set<String>,
         val subscriptionCursor: SubscriptionCursor,
         val attempts: Int,
         val reason: PubNubException?
@@ -39,8 +39,8 @@ sealed class SubscribeEffectInvocation(override val type: EffectInvocationType) 
         SubscribeEffectInvocation(Cancel(ReceiveReconnect::class.java.simpleName))
 
     data class Handshake(
-        val channels: List<String>,
-        val channelGroups: List<String>
+        val channels: Set<String>,
+        val channelGroups: Set<String>
     ) : SubscribeEffectInvocation(Managed) {
         override val id: String = Handshake::class.java.simpleName
     }
@@ -49,8 +49,8 @@ sealed class SubscribeEffectInvocation(override val type: EffectInvocationType) 
         SubscribeEffectInvocation(Cancel(idToCancel = Handshake::class.java.simpleName))
 
     data class HandshakeReconnect(
-        val channels: List<String>,
-        val channelGroups: List<String>,
+        val channels: Set<String>,
+        val channelGroups: Set<String>,
         val attempts: Int,
         val reason: PubNubException?
     ) : SubscribeEffectInvocation(Managed) {
