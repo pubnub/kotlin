@@ -147,7 +147,7 @@ class TransitionFromHeartbeatReconnectingStateTest {
     }
 
     @Test
-    fun `should transit from HEARTBEAT_RECONNECTING to HEARTBEAT_COOLDOWN and create CANCEL_DELEYED_HEARTBEAT and SCHEDULE_NEXT_HEARTBEAT invocations when there is HEARTBEAT_SUCCESS event`() {
+    fun `should transit from HEARTBEAT_RECONNECTING to HEARTBEAT_COOLDOWN and create CANCEL_DELEYED_HEARTBEAT and WAIT invocations when there is HEARTBEAT_SUCCESS event`() {
         // when
         val (newState, invocations) = transition(
             PresenceState.HeartbeatReconnecting(
@@ -161,7 +161,7 @@ class TransitionFromHeartbeatReconnectingStateTest {
 
         // then
         Assertions.assertEquals(PresenceState.HeartbeatCooldown(channels, channelGroups), newState)
-        Assertions.assertTrue(invocations.any { it is PresenceEffectInvocation.ScheduleNextHeartbeat })
+        Assertions.assertTrue(invocations.any { it is PresenceEffectInvocation.Wait })
         Assertions.assertTrue(invocations.any { it is PresenceEffectInvocation.CancelDelayedHeartbeat })
         Assertions.assertEquals(2, invocations.size)
     }

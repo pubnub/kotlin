@@ -163,8 +163,8 @@ sealed class PresenceState : State<PresenceEffectInvocation, PresenceEvent, Pres
         val channels: Set<String>,
         val channelGroups: Set<String>
     ) : PresenceState() {
-        override fun onEntry(): Set<PresenceEffectInvocation> = setOf(PresenceEffectInvocation.ScheduleNextHeartbeat())
-        override fun onExit(): Set<PresenceEffectInvocation> = setOf(PresenceEffectInvocation.CancelScheduleNextHeartbeat)
+        override fun onEntry(): Set<PresenceEffectInvocation> = setOf(PresenceEffectInvocation.Wait())
+        override fun onExit(): Set<PresenceEffectInvocation> = setOf(PresenceEffectInvocation.CancelWait)
 
         override fun transition(event: PresenceEvent): Pair<PresenceState, Set<PresenceEffectInvocation>> {
             return when (event) {

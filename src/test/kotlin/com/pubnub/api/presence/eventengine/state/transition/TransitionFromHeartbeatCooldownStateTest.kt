@@ -14,7 +14,7 @@ class TransitionFromHeartbeatCooldownStateTest {
     val reason = PubNubException("Test")
 
     @Test
-    fun `should transit from HEARTBEAT_COOLDOWN to INACTIVE and create CANCEL_SCHEDULE_NEXT_HEARTBEAT and LEAVE invocations when there is LEFT_ALL event`() {
+    fun `should transit from HEARTBEAT_COOLDOWN to INACTIVE and create CANCEL_WAIT and LEAVE invocations when there is LEFT_ALL event`() {
         // when
         val (newState, invocations) = transition(
             PresenceState.HeartbeatCooldown(channels, channelGroups),
@@ -25,7 +25,7 @@ class TransitionFromHeartbeatCooldownStateTest {
         Assertions.assertEquals(PresenceState.HearbeatInactive, newState)
         Assertions.assertEquals(
             setOf(
-                PresenceEffectInvocation.CancelScheduleNextHeartbeat,
+                PresenceEffectInvocation.CancelWait,
                 PresenceEffectInvocation.Leave(channels, channelGroups)
             ),
             invocations
@@ -33,7 +33,7 @@ class TransitionFromHeartbeatCooldownStateTest {
     }
 
     @Test
-    fun `should transit from HEARTBEAT_COOLDOWN to HEARTBEATING and create CANCEL_SCHEDULE_NEXT_HEARTBEAT, LEAVE and HEARTBEAT invocations when there is LEFT event`() {
+    fun `should transit from HEARTBEAT_COOLDOWN to HEARTBEATING and create CANCEL_WAIT, LEAVE and HEARTBEAT invocations when there is LEFT event`() {
         // given
         val channelToLeave = setOf("Channel01")
         val channelGroupToLeave = setOf("ChannelGroup01")
@@ -48,7 +48,7 @@ class TransitionFromHeartbeatCooldownStateTest {
         Assertions.assertEquals(PresenceState.Heartbeating(channels - channelToLeave, channelGroups - channelGroupToLeave), newState)
         Assertions.assertEquals(
             setOf(
-                PresenceEffectInvocation.CancelScheduleNextHeartbeat,
+                PresenceEffectInvocation.CancelWait,
                 PresenceEffectInvocation.Leave(channelToLeave, channelGroupToLeave),
                 PresenceEffectInvocation.Heartbeat(channels - channelToLeave, channelGroups - channelGroupToLeave)
             ),
@@ -57,7 +57,7 @@ class TransitionFromHeartbeatCooldownStateTest {
     }
 
     @Test
-    fun `should transit from HEARTBEAT_COOLDOWN to HEARTBEAT_STOPPED and create CANCEL_SCHEDULE_NEXT_HEARTBEAT and LEAVE invocations when there is DISCONNECT event`() {
+    fun `should transit from HEARTBEAT_COOLDOWN to HEARTBEAT_STOPPED and create CANCEL_WAIT and LEAVE invocations when there is DISCONNECT event`() {
         // when
         val (newState, invocations) = transition(
             PresenceState.HeartbeatCooldown(channels, channelGroups),
@@ -68,7 +68,7 @@ class TransitionFromHeartbeatCooldownStateTest {
         Assertions.assertEquals(PresenceState.HeartbeatStopped(channels, channelGroups), newState)
         Assertions.assertEquals(
             setOf(
-                PresenceEffectInvocation.CancelScheduleNextHeartbeat,
+                PresenceEffectInvocation.CancelWait,
                 PresenceEffectInvocation.Leave(channels, channelGroups)
             ),
             invocations
@@ -76,7 +76,7 @@ class TransitionFromHeartbeatCooldownStateTest {
     }
 
     @Test
-    fun `should transit from HEARTBEAT_COOLDOWN to HEARTBEATING and create CANCEL_SCHEDULE_NEXT_HEARTBEAT and HEARTBEAT invocations when there is JOINED event`() {
+    fun `should transit from HEARTBEAT_COOLDOWN to HEARTBEATING and create CANCEL_WAIT and HEARTBEAT invocations when there is JOINED event`() {
         // given
         val newChannels = channels + setOf("NewChannel")
         val newChannelGroup = channelGroups + setOf("NewChannelGroup")
@@ -91,7 +91,7 @@ class TransitionFromHeartbeatCooldownStateTest {
         Assertions.assertEquals(PresenceState.Heartbeating(newChannels, newChannelGroup), newState)
         Assertions.assertEquals(
             setOf(
-                PresenceEffectInvocation.CancelScheduleNextHeartbeat,
+                PresenceEffectInvocation.CancelWait,
                 PresenceEffectInvocation.Heartbeat(newChannels, newChannelGroup)
             ),
             invocations
@@ -99,7 +99,7 @@ class TransitionFromHeartbeatCooldownStateTest {
     }
 
     @Test
-    fun `should transit from HEARTBEAT_COOLDOWN to HEARTBEATING and create CANCEL_SCHEDULE_NEXT_HEARTBEAT and HEARTBEAT invocations when there is STATE_SET event`() {
+    fun `should transit from HEARTBEAT_COOLDOWN to HEARTBEATING and create CANCEL_WAIT and HEARTBEAT invocations when there is STATE_SET event`() {
         // given
         val newChannels = channels + setOf("NewChannel")
         val newChannelGroup = channelGroups + setOf("NewChannelGroup")
@@ -114,7 +114,7 @@ class TransitionFromHeartbeatCooldownStateTest {
         Assertions.assertEquals(PresenceState.Heartbeating(newChannels, newChannelGroup), newState)
         Assertions.assertEquals(
             setOf(
-                PresenceEffectInvocation.CancelScheduleNextHeartbeat,
+                PresenceEffectInvocation.CancelWait,
                 PresenceEffectInvocation.Heartbeat(newChannels, newChannelGroup)
             ),
             invocations
@@ -122,7 +122,7 @@ class TransitionFromHeartbeatCooldownStateTest {
     }
 
     @Test
-    fun `should transit from HEARTBEAT_COOLDOWN to HEARTBEATING and create CANCEL_SCHEDULE_NEXT_HEARTBEAT and HEARTBEAT invocations when there is TIMES_UP event`() {
+    fun `should transit from HEARTBEAT_COOLDOWN to HEARTBEATING and create CANCEL_WAIT and HEARTBEAT invocations when there is TIMES_UP event`() {
         // given
         val newChannels = channels + setOf("NewChannel")
         val newChannelGroup = channelGroups + setOf("NewChannelGroup")
@@ -137,7 +137,7 @@ class TransitionFromHeartbeatCooldownStateTest {
         Assertions.assertEquals(PresenceState.Heartbeating(newChannels, newChannelGroup), newState)
         Assertions.assertEquals(
             setOf(
-                PresenceEffectInvocation.CancelScheduleNextHeartbeat,
+                PresenceEffectInvocation.CancelWait,
                 PresenceEffectInvocation.Heartbeat(newChannels, newChannelGroup)
             ),
             invocations
