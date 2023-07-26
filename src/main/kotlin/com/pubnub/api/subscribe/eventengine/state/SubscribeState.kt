@@ -326,7 +326,7 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, SubscribeEvent, S
                         state = ReceiveFailed(channels, channelGroups, subscriptionCursor, event.reason),
                         SubscribeEffectInvocation.EmitStatus(
                             PNStatus(
-                                category = PNStatusCategory.PNDisconnectedUnexpectedly,
+                                category = PNStatusCategory.PNUnexpectedDisconnectCategory,
                                 operation = PNOperationType.PNSubscribeOperation,
                                 error = false, // todo is PNDisconnectedCategory error
                                 affectedChannels = channels.toList(),

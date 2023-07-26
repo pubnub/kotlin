@@ -99,9 +99,4 @@ enum class PNStatusCategory {
      * Previously started subscribe loop did fail and at this moment client disconnected from real-time data channels.
      */
     PNConnectionError,
-
-    /**
-     * It was not possible for Event Engine to regain connection to PN server.
-     */
-    PNDisconnectedUnexpectedly,
 }
