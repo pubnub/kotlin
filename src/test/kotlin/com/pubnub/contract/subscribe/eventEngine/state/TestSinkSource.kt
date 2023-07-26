@@ -1,5 +1,6 @@
 package com.pubnub.contract.subscribe.eventEngine.state
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategy.SnakeCaseStrategy
 import com.pubnub.api.eventengine.EffectInvocation
 import com.pubnub.api.eventengine.Event
 import com.pubnub.api.eventengine.QueueSinkSource
@@ -11,6 +12,7 @@ class TestSinkSource<T>(
     private val sinkSource: QueueSinkSource<T> = QueueSinkSource()
 ) : Sink<T>, Source<T> by sinkSource {
 
+    private val snakeCaseStrategy: SnakeCaseStrategy = SnakeCaseStrategy()
     override fun add(item: T) {
         testSink.add(item.type() to item.name())
         sinkSource.add(item)
@@ -18,7 +20,7 @@ class TestSinkSource<T>(
 
     private fun T.name() = this!!::class.simpleName!!.toSnakeCase().uppercase()
 
-    private fun String.toSnakeCase(): String = this
+    private fun String.toSnakeCase(): String = snakeCaseStrategy.translate(this)
 
     private fun T.type(): String = when (this) {
         is Event -> "event"
