@@ -75,6 +75,15 @@ class TransitionFromReceivingReconnectingStateTest {
         assertEquals(
             setOf(
                 SubscribeEffectInvocation.CancelReceiveReconnect,
+                SubscribeEffectInvocation.EmitStatus(
+                    PNStatus(
+                        category = PNStatusCategory.PNDisconnectedCategory,
+                        operation = PNOperationType.PNSubscribeOperation,
+                        error = false, // todo is PNDisconnectedCategory error
+                        affectedChannels = channels.toList(),
+                        affectedChannelGroups = channelGroups.toList()
+                    )
+                )
             ),
             invocations
         )
@@ -95,7 +104,7 @@ class TransitionFromReceivingReconnectingStateTest {
                 SubscribeEffectInvocation.CancelReceiveReconnect,
                 SubscribeEffectInvocation.EmitStatus(
                     PNStatus(
-                        category = PNStatusCategory.PNDisconnectedCategory,
+                        category = PNStatusCategory.PNDisconnectedUnexpectedly,
                         operation = PNOperationType.PNSubscribeOperation,
                         error = false,
                         affectedChannels = channels.toList(),
