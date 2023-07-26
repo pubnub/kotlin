@@ -10,7 +10,7 @@ sealed class PresenceEvent : Event {
     object Reconnect : PresenceEvent()
     object Disconnect : PresenceEvent()
     object LeftAll : PresenceEvent()
-    object NextHeartbeat : PresenceEvent()
+    object TimesUp : PresenceEvent() // End of waiting period between heartbeats. It's time for next heartbeat.
 
     object HeartbeatSuccess : PresenceEvent()
     data class HeartbeatFailure(val reason: PubNubException) : PresenceEvent()

@@ -45,7 +45,7 @@ sealed class PresenceState : State<PresenceEffectInvocation, PresenceEvent, Pres
                     transitionTo(Heartbeating(event.channels, event.channelGroups))
                 }
                 is PresenceEvent.HeartbeatSuccess -> {
-                    transitionTo(HeartbeatWaiting(channels, channelGroups))
+                    transitionTo(HeartbeatCooldown(channels, channelGroups))
                 }
                 is PresenceEvent.HeartbeatFailure -> {
                     transitionTo(HeartbeatReconnecting(channels, channelGroups, 0, event.reason))
@@ -77,10 +77,10 @@ sealed class PresenceState : State<PresenceEffectInvocation, PresenceEvent, Pres
                 is PresenceEvent.StateSet -> {
                     transitionTo(Heartbeating(event.channels, event.channelGroups))
                 }
-                is PresenceEvent.HeartbeatSuccess -> { // toDo shouldn't we introduce HeartbeatReconnectSuccess event?
-                    transitionTo(HeartbeatWaiting(channels, channelGroups))
+                is PresenceEvent.HeartbeatSuccess -> {
+                    transitionTo(HeartbeatCooldown(channels, channelGroups))
                 }
-                is PresenceEvent.HeartbeatFailure -> { // toDo shouldn't we introduce HeartbeatReconnectFailure event?
+                is PresenceEvent.HeartbeatFailure -> {
                     transitionTo(HeartbeatReconnecting(channels, channelGroups, attempts + 1, event.reason))
                 }
                 is PresenceEvent.HeartbeatGiveup -> {
@@ -159,12 +159,12 @@ sealed class PresenceState : State<PresenceEffectInvocation, PresenceEvent, Pres
         }
     }
 
-    data class HeartbeatWaiting(
+    data class HeartbeatCooldown(
         val channels: Set<String>,
         val channelGroups: Set<String>
     ) : PresenceState() {
-        override fun onEntry(): Set<PresenceEffectInvocation> = setOf(PresenceEffectInvocation.ScheduleNextHeartbeat())
-        override fun onExit(): Set<PresenceEffectInvocation> = setOf(PresenceEffectInvocation.CancelScheduleNextHeartbeat)
+        override fun onEntry(): Set<PresenceEffectInvocation> = setOf(PresenceEffectInvocation.Wait())
+        override fun onExit(): Set<PresenceEffectInvocation> = setOf(PresenceEffectInvocation.CancelWait)
 
         override fun transition(event: PresenceEvent): Pair<PresenceState, Set<PresenceEffectInvocation>> {
             return when (event) {
@@ -177,7 +177,7 @@ sealed class PresenceState : State<PresenceEffectInvocation, PresenceEvent, Pres
                 is PresenceEvent.StateSet -> {
                     transitionTo(Heartbeating(event.channels, event.channelGroups))
                 }
-                is PresenceEvent.NextHeartbeat -> {
+                is PresenceEvent.TimesUp -> {
                     transitionTo(Heartbeating(channels, channelGroups))
                 }
                 is PresenceEvent.Disconnect -> {

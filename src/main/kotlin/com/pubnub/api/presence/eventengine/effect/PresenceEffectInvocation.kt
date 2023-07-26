@@ -19,12 +19,11 @@ sealed class PresenceEffectInvocation(override val type: EffectInvocationType) :
         val channelGroups: Set<String>,
     ) : PresenceEffectInvocation(NonManaged)
 
-    class ScheduleNextHeartbeat : PresenceEffectInvocation(Managed) {
-        override val id: String = ScheduleNextHeartbeat::class.java.simpleName
+    class Wait : PresenceEffectInvocation(Managed) {
+        override val id: String = Wait::class.java.simpleName
     }
 
-    object CancelScheduleNextHeartbeat :
-        PresenceEffectInvocation(Cancel(idToCancel = ScheduleNextHeartbeat::class.java.simpleName))
+    object CancelWait : PresenceEffectInvocation(Cancel(idToCancel = Wait::class.java.simpleName))
 
     class DelayedHeartbeat : PresenceEffectInvocation(Managed) {
         override val id: String = DelayedHeartbeat::class.java.simpleName
