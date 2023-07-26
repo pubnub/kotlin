@@ -48,7 +48,7 @@ internal class TokenParser {
                 version = version,
                 timestamp = timestamp,
                 ttl = ttl,
-                authorizedUUID = firstLevelMap[AUTHORIZED_UUID_KEY].toString(),
+                authorizedUUID = firstLevelMap[AUTHORIZED_UUID_KEY]?.toString(),
                 resources = resourcesValue.toPNTokenResources(),
                 patterns = patternsValue.toPNTokenResources(),
                 meta = firstLevelMap[META_KEY]
