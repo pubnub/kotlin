@@ -5,21 +5,21 @@ import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
+import com.pubnub.api.eventengine.transition
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.BasePubSubResult
 import com.pubnub.api.models.consumer.pubsub.PNEvent
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectInvocation
-import com.pubnub.api.subscribe.eventengine.event.Event
+import com.pubnub.api.subscribe.eventengine.event.SubscribeEvent
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
 import com.pubnub.api.subscribe.eventengine.state.SubscribeState
-import com.pubnub.api.subscribe.eventengine.transition.transition
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
 class TransitionFromReceivingStateTest {
-    private val channels = listOf("Channel1")
-    private val channelGroups = listOf("ChannelGroup1")
+    private val channels = setOf("Channel1")
+    private val channelGroups = setOf("ChannelGroup1")
     private val timeToken = 12345345452L
     private val region = "42"
     private val subscriptionCursor = SubscriptionCursor(timeToken, region)
@@ -29,13 +29,13 @@ class TransitionFromReceivingStateTest {
         // when
         val (state, invocations) = transition(
             SubscribeState.Receiving(channels, channelGroups, subscriptionCursor),
-            Event.ReceiveFailure(reason)
+            SubscribeEvent.ReceiveFailure(reason)
         )
 
         // then
         assertEquals(SubscribeState.ReceiveReconnecting(channels, channelGroups, subscriptionCursor, 0, reason), state)
         assertEquals(
-            listOf(
+            setOf(
                 SubscribeEffectInvocation.CancelReceiveMessages,
                 SubscribeEffectInvocation.ReceiveReconnect(channels, channelGroups, subscriptionCursor, 0, reason)
             ),
@@ -48,21 +48,21 @@ class TransitionFromReceivingStateTest {
         // when
         val (state, invocations) = transition(
             SubscribeState.Receiving(channels, channelGroups, subscriptionCursor),
-            Event.Disconnect
+            SubscribeEvent.Disconnect
         )
 
         // then
         assertEquals(SubscribeState.ReceiveStopped(channels, channelGroups, subscriptionCursor), state)
         assertEquals(
-            listOf(
+            setOf(
                 SubscribeEffectInvocation.CancelReceiveMessages,
                 SubscribeEffectInvocation.EmitStatus(
                     PNStatus(
                         category = PNStatusCategory.PNDisconnectedCategory,
                         operation = PNOperationType.PNSubscribeOperation,
                         error = false,
-                        affectedChannels = channels,
-                        affectedChannelGroups = channelGroups
+                        affectedChannels = channels.toList(),
+                        affectedChannelGroups = channelGroups.toList()
                     )
                 )
             ),
@@ -76,13 +76,13 @@ class TransitionFromReceivingStateTest {
         // when
         val (state, invocations) = transition(
             SubscribeState.Receiving(channels, channelGroups, subscriptionCursor),
-            Event.SubscriptionChanged(channels, channelGroups)
+            SubscribeEvent.SubscriptionChanged(channels, channelGroups)
         )
 
         // then
         assertEquals(SubscribeState.Receiving(channels, channelGroups, subscriptionCursor), state)
         assertEquals(
-            listOf(
+            setOf(
                 SubscribeEffectInvocation.CancelReceiveMessages,
                 SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor),
             ),
@@ -95,13 +95,13 @@ class TransitionFromReceivingStateTest {
         // when
         val (state, invocations) = transition(
             SubscribeState.Receiving(channels, channelGroups, subscriptionCursor),
-            Event.SubscriptionRestored(channels, channelGroups, subscriptionCursor)
+            SubscribeEvent.SubscriptionRestored(channels, channelGroups, subscriptionCursor)
         )
 
         // then
         assertEquals(SubscribeState.Receiving(channels, channelGroups, subscriptionCursor), state)
         assertEquals(
-            listOf(
+            setOf(
                 SubscribeEffectInvocation.CancelReceiveMessages,
                 SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor),
             ),
@@ -118,13 +118,13 @@ class TransitionFromReceivingStateTest {
         // when
         val (state, invocations) = transition(
             SubscribeState.Receiving(channels, channelGroups, subscriptionCursor),
-            Event.ReceiveSuccess(messages, subscriptionCursor)
+            SubscribeEvent.ReceiveSuccess(messages, subscriptionCursor)
         )
 
         // then
         assertEquals(SubscribeState.Receiving(channels, channelGroups, subscriptionCursor), state)
         assertEquals(
-            listOf(
+            setOf(
                 SubscribeEffectInvocation.CancelReceiveMessages,
                 SubscribeEffectInvocation.EmitMessages(messages),
                 SubscribeEffectInvocation.EmitStatus(
@@ -132,8 +132,8 @@ class TransitionFromReceivingStateTest {
                         category = PNStatusCategory.PNConnectedCategory,
                         operation = PNOperationType.PNSubscribeOperation,
                         error = false,
-                        affectedChannels = channels,
-                        affectedChannelGroups = channelGroups
+                        affectedChannels = channels.toList(),
+                        affectedChannelGroups = channelGroups.toList()
                     )
                 ),
                 SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor),
@@ -147,12 +147,12 @@ class TransitionFromReceivingStateTest {
         // when
         val (state, invocations) = transition(
             SubscribeState.Receiving(channels, channelGroups, subscriptionCursor),
-            Event.UnsubscribeAll
+            SubscribeEvent.UnsubscribeAll
         )
 
         // then
         assertEquals(SubscribeState.Unsubscribed, state)
-        assertEquals(listOf(SubscribeEffectInvocation.CancelReceiveMessages), invocations)
+        assertEquals(setOf(SubscribeEffectInvocation.CancelReceiveMessages), invocations)
     }
 
     private fun createPnMessageResult(channel1: String): PNMessageResult {

@@ -12,42 +12,50 @@ import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
 
 sealed class SubscribeEffectInvocation(override val type: EffectInvocationType) : EffectInvocation {
 
-    override val id: String = ReceiveReconnect::class.java.simpleName
+    override val id: String = "any value for NonManged and Cancel effect"
 
     data class ReceiveMessages(
-        val channels: List<String>,
-        val channelGroups: List<String>,
+        val channels: Set<String>,
+        val channelGroups: Set<String>,
         val subscriptionCursor: SubscriptionCursor
-    ) : SubscribeEffectInvocation(Managed)
+    ) : SubscribeEffectInvocation(Managed) {
+        override val id: String = ReceiveMessages::class.java.simpleName
+    }
 
     object CancelReceiveMessages :
         SubscribeEffectInvocation(Cancel(idToCancel = ReceiveMessages::class.java.simpleName))
 
     data class ReceiveReconnect(
-        val channels: List<String>,
-        val channelGroups: List<String>,
+        val channels: Set<String>,
+        val channelGroups: Set<String>,
         val subscriptionCursor: SubscriptionCursor,
         val attempts: Int,
         val reason: PubNubException?
-    ) : SubscribeEffectInvocation(Managed)
+    ) : SubscribeEffectInvocation(Managed) {
+        override val id: String = ReceiveReconnect::class.java.simpleName
+    }
 
     object CancelReceiveReconnect :
         SubscribeEffectInvocation(Cancel(ReceiveReconnect::class.java.simpleName))
 
     data class Handshake(
-        val channels: List<String>,
-        val channelGroups: List<String>
-    ) : SubscribeEffectInvocation(Managed)
+        val channels: Set<String>,
+        val channelGroups: Set<String>
+    ) : SubscribeEffectInvocation(Managed) {
+        override val id: String = Handshake::class.java.simpleName
+    }
 
     object CancelHandshake :
         SubscribeEffectInvocation(Cancel(idToCancel = Handshake::class.java.simpleName))
 
     data class HandshakeReconnect(
-        val channels: List<String>,
-        val channelGroups: List<String>,
+        val channels: Set<String>,
+        val channelGroups: Set<String>,
         val attempts: Int,
         val reason: PubNubException?
-    ) : SubscribeEffectInvocation(Managed)
+    ) : SubscribeEffectInvocation(Managed) {
+        override val id: String = HandshakeReconnect::class.java.simpleName
+    }
 
     object CancelHandshakeReconnect :
         SubscribeEffectInvocation(Cancel(idToCancel = HandshakeReconnect::class.java.simpleName))

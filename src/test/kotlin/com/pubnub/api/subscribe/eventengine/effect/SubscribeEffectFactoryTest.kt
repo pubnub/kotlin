@@ -9,7 +9,7 @@ import com.pubnub.api.eventengine.Sink
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.subscribe.eventengine.effect.effectprovider.HandshakeProvider
 import com.pubnub.api.subscribe.eventengine.effect.effectprovider.ReceiveMessagesProvider
-import com.pubnub.api.subscribe.eventengine.event.Event
+import com.pubnub.api.subscribe.eventengine.event.SubscribeEvent
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
 import io.mockk.every
 import io.mockk.mockk
@@ -25,11 +25,11 @@ class SubscribeEffectFactoryTest {
     private val handshakeProvider = mockk<HandshakeProvider>()
     private val receiveMessageProvider = mockk<ReceiveMessagesProvider>()
     private val messagesConsumer = mockk<MessagesConsumer>()
-    private val eventSink = mockk<Sink<Event>>()
+    private val subscribeEventSink = mockk<Sink<SubscribeEvent>>()
     private val policy = mockk<RetryPolicy>()
     private val executorService = mockk<ScheduledExecutorService>()
-    private val channels = listOf("channel1")
-    private val channelGroups = listOf("channelGroup1")
+    private val channels = setOf("channel1")
+    private val channelGroups = setOf("channelGroup1")
     private lateinit var subscribeEffectFactory: SubscribeEffectFactory
     private val attempts = 1
     private val reason = PubNubException("Unknown error")
@@ -43,7 +43,7 @@ class SubscribeEffectFactoryTest {
         subscribeEffectFactory = SubscribeEffectFactory(
             handshakeProvider,
             receiveMessageProvider,
-            eventSink,
+            subscribeEventSink,
             policy,
             executorService,
             messagesConsumer,
@@ -70,8 +70,8 @@ class SubscribeEffectFactoryTest {
                     category = PNStatusCategory.PNConnectedCategory,
                     operation = PNOperationType.PNSubscribeOperation,
                     error = false,
-                    affectedChannels = channels,
-                    affectedChannelGroups = channelGroups
+                    affectedChannels = channels.toList(),
+                    affectedChannelGroups = channelGroups.toList()
                 )
             )
         )

@@ -6,7 +6,7 @@ import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.eventengine.Sink
 import com.pubnub.api.models.consumer.PNStatus
-import com.pubnub.api.subscribe.eventengine.event.Event
+import com.pubnub.api.subscribe.eventengine.event.SubscribeEvent
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
 import io.mockk.spyk
 import io.mockk.verify
@@ -36,7 +36,7 @@ class HandshakeEffectTest {
             .with()
             .pollInterval(Duration.ofMillis(20))
             .untilAsserted {
-                assertEquals(listOf(Event.HandshakeSuccess(subscriptionCursor)), eventSink.events)
+                assertEquals(listOf(SubscribeEvent.HandshakeSuccess(subscriptionCursor)), eventSink.subscribeEvents)
             }
     }
 
@@ -54,7 +54,7 @@ class HandshakeEffectTest {
             .with()
             .pollInterval(Duration.ofMillis(20))
             .untilAsserted {
-                assertEquals(listOf(Event.HandshakeFailure(reason)), eventSink.events)
+                assertEquals(listOf(SubscribeEvent.HandshakeFailure(reason)), eventSink.subscribeEvents)
             }
     }
 
@@ -72,11 +72,11 @@ class HandshakeEffectTest {
     }
 }
 
-class TestEventSink : Sink<Event> {
-    val events = mutableListOf<Event>()
+class TestEventSink : Sink<SubscribeEvent> {
+    val subscribeEvents = mutableListOf<SubscribeEvent>()
 
-    override fun add(item: Event) {
-        events.add(item)
+    override fun add(item: SubscribeEvent) {
+        subscribeEvents.add(item)
     }
 }
 

@@ -1,12 +1,12 @@
 package com.pubnub.api.eventengine
 
 import com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectInvocation
-import com.pubnub.api.subscribe.eventengine.event.Event
+import com.pubnub.api.subscribe.eventengine.event.SubscribeEvent
 
-interface EventEngineConf {
-    val eventSink: Sink<Event>
-    val eventSource: Source<Event>
+interface EventEngineConf { // todo introduce generic U, V for Event and EffectInvocation
+    val subscribeEventSink: Sink<SubscribeEvent> // todo maybe SubscribeEvent ->  Event
+    val subscribeEventSource: Source<SubscribeEvent>
 
-    val effectSink: Sink<SubscribeEffectInvocation>
+    val effectSink: Sink<SubscribeEffectInvocation> // todo maybe SubscribeEffectInvocation ->  EffectInvocation
     val effectSource: Source<SubscribeEffectInvocation>
 }

@@ -16,7 +16,7 @@ import com.pubnub.api.legacy.BaseTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
-class SetStateEndpointTest : BaseTest() {
+class StateSetEndpointTest : BaseTest() {
 
     @Test
     fun applyStateForChannelSync() {

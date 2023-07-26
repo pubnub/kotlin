@@ -2,7 +2,7 @@ package com.pubnub.api.subscribe
 
 import com.pubnub.api.managers.EventEngineManager
 import com.pubnub.api.subscribe.eventengine.data.SubscriptionData
-import com.pubnub.api.subscribe.eventengine.event.Event
+import com.pubnub.api.subscribe.eventengine.event.SubscribeEvent
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
 import io.mockk.CapturingSlot
 import io.mockk.every
@@ -30,94 +30,97 @@ internal class SubscribeTest {
     private var subscriptionData: SubscriptionData = createSubscriptionStateContainingValues()
     private val withPresence = false
     private val withTimetoken = 12345345452L
-    private val event: CapturingSlot<Event> = slot()
+    private val subscribeEvent: CapturingSlot<SubscribeEvent> = slot()
 
     @BeforeEach
     internal fun setUp() {
-        every { eventEngineManager.addEventToQueue(capture(event)) } returns Unit
+        every { eventEngineManager.addEventToQueue(capture(subscribeEvent)) } returns Unit
         objectUnderTest = Subscribe(eventEngineManager, subscriptionData)
     }
 
     @Test
-    internal fun `should store channels and channelGroups in local storage and pass SubscriptionChange event for handling when timeToken is zero`() {
+    fun `should store channels and channelGroups in local storage and pass SubscriptionChange event for handling when timeToken is zero`() {
         val channelToSubscribe = CHANNEL_03
         val channelGroupsToSubscribe = CHANNEL_GROUPS_03
 
-        objectUnderTest.subscribe(listOf(channelToSubscribe), listOf(channelGroupsToSubscribe), withPresence)
+        objectUnderTest.subscribe(setOf(channelToSubscribe), setOf(channelGroupsToSubscribe), withPresence)
 
         verify { eventEngineManager.addEventToQueue(any()) }
 
         assertEquals(
-            Event.SubscriptionChanged(
-                (channelsInSubscriptionData + channelToSubscribe).toList(),
-                (channelGroupsInSubscriptionData + channelGroupsToSubscribe).toList()
+            SubscribeEvent.SubscriptionChanged(
+                (channelsInSubscriptionData + channelToSubscribe),
+                (channelGroupsInSubscriptionData + channelGroupsToSubscribe)
             ),
-            event.captured
+            subscribeEvent.captured
         )
     }
 
     @Test
-    internal fun `should store channels and channelGroups in local storage and pass SubscriptionRestored event for handling when timeToken is non zero`() {
+    fun `should store channels and channelGroups in local storage and pass SubscriptionRestored event for handling when timeToken is non zero`() {
         val channelToSubscribe = CHANNEL_03
         val channelGroupsToSubscribe = CHANNEL_GROUPS_03
 
         objectUnderTest.subscribe(
-            listOf(channelToSubscribe),
-            listOf(channelGroupsToSubscribe),
+            setOf(channelToSubscribe),
+            setOf(channelGroupsToSubscribe),
             withPresence,
             withTimetoken
         )
 
         verify { eventEngineManager.addEventToQueue(any()) }
         assertEquals(
-            Event.SubscriptionRestored(
-                (channelsInSubscriptionData + channelToSubscribe).toList(),
-                (channelGroupsInSubscriptionData + channelGroupsToSubscribe).toList(),
+            SubscribeEvent.SubscriptionRestored(
+                (channelsInSubscriptionData + channelToSubscribe),
+                (channelGroupsInSubscriptionData + channelGroupsToSubscribe),
                 SubscriptionCursor(withTimetoken, "42") // todo magic number
             ),
-            event.captured
+            subscribeEvent.captured
         )
     }
 
     @Test
-    internal fun `should remove channels and channelGroups from local storage and pass SubscriptionChange event for handling when at least one channel or channelGroup left in storage`() {
-        val channelsToUnsubscribe: List<String> = listOf(CHANNEL_01)
-        val channelGroupsToUnsubscribe: List<String> = listOf(CHANNEL_GROUPS_01)
+    fun `should remove channels and channelGroups from local storage and pass SubscriptionChange event for handling when at least one channel or channelGroup left in storage`() {
+        val channelsToUnsubscribe: Set<String> = setOf(CHANNEL_01)
+        val channelGroupsToUnsubscribe: Set<String> = setOf(CHANNEL_GROUPS_01)
 
         objectUnderTest.unsubscribe(channelsToUnsubscribe, channelGroupsToUnsubscribe)
 
         verify { eventEngineManager.addEventToQueue(any()) }
-        assertEquals(Event.SubscriptionChanged(listOf(CHANNEL_02), listOf(CHANNEL_GROUPS_02)), event.captured)
+        assertEquals(
+            SubscribeEvent.SubscriptionChanged(setOf(CHANNEL_02), setOf(CHANNEL_GROUPS_02)),
+            subscribeEvent.captured
+        )
         assertEquals(setOf(CHANNEL_02), subscriptionData.channels)
         assertEquals(setOf(CHANNEL_GROUPS_02), subscriptionData.channelGroups)
     }
 
     @Test
-    internal fun `should remove channels and channelGroups from local storage and pass UnsubscribeAll event for handling when no channel nor channelGroup left in storage`() {
-        val channelsToUnsubscribe: List<String> = listOf(CHANNEL_01, CHANNEL_02)
-        val channelGroupsToUnsubscribe: List<String> = listOf(CHANNEL_GROUPS_01, CHANNEL_GROUPS_02)
+    fun `should remove channels and channelGroups from local storage and pass UnsubscribeAll event for handling when no channel nor channelGroup left in storage`() {
+        val channelsToUnsubscribe: Set<String> = setOf(CHANNEL_01, CHANNEL_02)
+        val channelGroupsToUnsubscribe: Set<String> = setOf(CHANNEL_GROUPS_01, CHANNEL_GROUPS_02)
 
         objectUnderTest.unsubscribe(channelsToUnsubscribe, channelGroupsToUnsubscribe)
 
         verify { eventEngineManager.addEventToQueue(any()) }
-        assertEquals(Event.UnsubscribeAll, event.captured)
+        assertEquals(SubscribeEvent.UnsubscribeAll, subscribeEvent.captured)
         assertTrue(subscriptionData.channels.size == 0)
         assertTrue(subscriptionData.channelGroups.size == 0)
     }
 
     @Test
-    internal fun `should remove all channels and channelGroups from local storage when unsubscribeAll`() {
+    fun `should remove all channels and channelGroups from local storage when unsubscribeAll`() {
 
         objectUnderTest.unsubscribeAll()
 
         verify { eventEngineManager.addEventToQueue(any()) }
-        assertEquals(Event.UnsubscribeAll, event.captured)
+        assertEquals(SubscribeEvent.UnsubscribeAll, subscribeEvent.captured)
         assertTrue(subscriptionData.channels.size == 0)
         assertTrue(subscriptionData.channelGroups.size == 0)
     }
 
     @Test
-    internal fun `should return subscribed channels from local storage when getSubscribedChannels`() {
+    fun `should return subscribed channels from local storage when getSubscribedChannels`() {
 
         val subscribedChannels = objectUnderTest.getSubscribedChannels()
 
@@ -125,7 +128,7 @@ internal class SubscribeTest {
     }
 
     @Test
-    internal fun `should return subscribed channelGroups from local storage when getSubscribedChannelGroups`() {
+    fun `should return subscribed channelGroups from local storage when getSubscribedChannelGroups`() {
 
         val subscribedChannelGroups = objectUnderTest.getSubscribedChannelGroups()
 
@@ -133,11 +136,18 @@ internal class SubscribeTest {
     }
 
     @Test
-    internal fun `should pass disconnect event for handling when disconnect`() {
+    fun `should pass disconnect event for handling when disconnect`() {
 
         objectUnderTest.disconnect()
 
-        assertEquals(Event.Disconnect, event.captured)
+        assertEquals(SubscribeEvent.Disconnect, subscribeEvent.captured)
+    }
+
+    @Test
+    fun `should pass reconnect event for handling when disconnect`() {
+        objectUnderTest.reconnect()
+
+        assertEquals(SubscribeEvent.Reconnect, subscribeEvent.captured)
     }
 
     private fun createSubscriptionStateContainingValues(): SubscriptionData {

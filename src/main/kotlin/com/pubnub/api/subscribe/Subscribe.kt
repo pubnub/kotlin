@@ -18,9 +18,9 @@ import com.pubnub.api.subscribe.eventengine.effect.StatusConsumer
 import com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectFactory
 import com.pubnub.api.subscribe.eventengine.effect.effectprovider.HandshakeProviderImpl
 import com.pubnub.api.subscribe.eventengine.effect.effectprovider.ReceiveMessagesProviderImpl
-import com.pubnub.api.subscribe.eventengine.event.Event
-import com.pubnub.api.subscribe.eventengine.event.Event.SubscriptionChanged
-import com.pubnub.api.subscribe.eventengine.event.Event.SubscriptionRestored
+import com.pubnub.api.subscribe.eventengine.event.SubscribeEvent
+import com.pubnub.api.subscribe.eventengine.event.SubscribeEvent.SubscriptionChanged
+import com.pubnub.api.subscribe.eventengine.event.SubscribeEvent.SubscriptionRestored
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
 import com.pubnub.api.workers.SubscribeMessageProcessor
 import java.util.concurrent.Executors
@@ -43,7 +43,7 @@ class Subscribe(
         ): Subscribe {
             val handshakeProvider = HandshakeProviderImpl(pubNub)
             val receiveMessagesProvider = ReceiveMessagesProviderImpl(pubNub, messageProcessor)
-            val eventSink: Sink<Event> = eventEngineConf.eventSink
+            val subscribeEventSink: Sink<SubscribeEvent> = eventEngineConf.subscribeEventSink
             val executorService: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor()
             val messagesConsumer: MessagesConsumer = listenerManager
             val statusConsumer: StatusConsumer = listenerManager
@@ -51,7 +51,7 @@ class Subscribe(
             val subscribeEffectFactory = SubscribeEffectFactory(
                 handshakeProvider,
                 receiveMessagesProvider,
-                eventSink,
+                subscribeEventSink,
                 retryPolicy,
                 executorService,
                 messagesConsumer,
@@ -60,7 +60,7 @@ class Subscribe(
 
             val subscribeEventEngine = SubscribeEventEngine(
                 effectSink = eventEngineConf.effectSink,
-                eventSource = eventEngineConf.eventSource
+                eventSource = eventEngineConf.subscribeEventSource
             )
             val effectDispatcher = EffectDispatcher(
                 effectFactory = subscribeEffectFactory,
@@ -70,7 +70,7 @@ class Subscribe(
             val eventEngineManager = EventEngineManager(
                 subscribeEventEngine = subscribeEventEngine,
                 effectDispatcher = effectDispatcher,
-                eventSink = eventEngineConf.eventSink
+                eventSink = eventEngineConf.subscribeEventSink
             ).apply {
                 if (pubNub.configuration.enableSubscribeBeta) {
                     start()
@@ -83,16 +83,16 @@ class Subscribe(
 
     @Synchronized
     fun subscribe(
-        channels: List<String>,
-        channelGroups: List<String>,
+        channels: Set<String>,
+        channelGroups: Set<String>,
         withPresence: Boolean,
         withTimetoken: Long = 0L,
     ) {
         throwExceptionIfChannelAndChannelGroupIsMissing(channels, channelGroups)
         addChannelsToSubscriptionData(channels, withPresence)
         addChannelGroupsToSubscriptionData(channelGroups, withPresence)
-        val channelsInLocalStorage = subscriptionData.channels.toList()
-        val channelGroupsInLocalStorage = subscriptionData.channelGroups.toList()
+        val channelsInLocalStorage = subscriptionData.channels
+        val channelGroupsInLocalStorage = subscriptionData.channelGroups
         if (withTimetoken != 0L) {
             createAndPassForHandlingSubscriptionRestoredEvent(
                 channelsInLocalStorage,
@@ -106,19 +106,19 @@ class Subscribe(
 
     @Synchronized
     fun unsubscribe(
-        channels: List<String> = emptyList(),
-        channelGroups: List<String> = emptyList()
+        channels: Set<String> = emptySet(),
+        channelGroups: Set<String> = emptySet()
     ) {
         throwExceptionIfChannelAndChannelGroupIsMissing(channels, channelGroups)
         removeChannelsFromSubscriptionData(channels)
         removeChannelGroupsFromSubscriptionData(channelGroups)
 
         if (subscriptionData.channels.size > 0 || subscriptionData.channelGroups.size > 0) {
-            val channelsInLocalStorage = subscriptionData.channels.toList()
-            val channelGroupsInLocalStorage = subscriptionData.channelGroups.toList()
+            val channelsInLocalStorage = subscriptionData.channels
+            val channelGroupsInLocalStorage = subscriptionData.channelGroups
             eventEngineManager.addEventToQueue(SubscriptionChanged(channelsInLocalStorage, channelGroupsInLocalStorage))
         } else {
-            eventEngineManager.addEventToQueue(Event.UnsubscribeAll)
+            eventEngineManager.addEventToQueue(SubscribeEvent.UnsubscribeAll)
         }
     }
 
@@ -126,7 +126,7 @@ class Subscribe(
     fun unsubscribeAll() {
         removeAllChannelsFromLocalStorage()
         removeAllChannelGroupsFromLocalStorage()
-        eventEngineManager.addEventToQueue(Event.UnsubscribeAll)
+        eventEngineManager.addEventToQueue(SubscribeEvent.UnsubscribeAll)
     }
 
     @Synchronized
@@ -140,7 +140,11 @@ class Subscribe(
     }
 
     fun disconnect() {
-        eventEngineManager.addEventToQueue(Event.Disconnect)
+        eventEngineManager.addEventToQueue(SubscribeEvent.Disconnect)
+    }
+
+    fun reconnect() {
+        eventEngineManager.addEventToQueue(SubscribeEvent.Reconnect)
     }
 
     @Synchronized
@@ -151,15 +155,15 @@ class Subscribe(
     }
 
     private fun throwExceptionIfChannelAndChannelGroupIsMissing(
-        channels: List<String>,
-        channelGroups: List<String>
+        channels: Set<String>,
+        channelGroups: Set<String>
     ) {
         if (channels.isEmpty() && channelGroups.isEmpty()) {
             throw PubNubException(PubNubError.CHANNEL_OR_CHANNEL_GROUP_MISSING)
         }
     }
 
-    private fun addChannelsToSubscriptionData(channels: List<String>, withPresence: Boolean) {
+    private fun addChannelsToSubscriptionData(channels: Set<String>, withPresence: Boolean) {
         subscriptionData.channels.addAll(channels)
         if (withPresence) {
             channels.forEach {
@@ -169,7 +173,7 @@ class Subscribe(
         }
     }
 
-    private fun addChannelGroupsToSubscriptionData(channelGroups: List<String>, withPresence: Boolean) {
+    private fun addChannelGroupsToSubscriptionData(channelGroups: Set<String>, withPresence: Boolean) {
         subscriptionData.channelGroups.addAll(channelGroups)
         if (withPresence) {
             channelGroups.forEach {
@@ -180,27 +184,27 @@ class Subscribe(
     }
 
     private fun createAndPassForHandlingSubscriptionRestoredEvent(
-        channels: List<String>,
-        channelGroups: List<String>,
+        channels: Set<String>,
+        channelGroups: Set<String>,
         withTimetoken: Long
     ) {
-        val subscriptionRestored = SubscriptionRestored(
+        val subscriptionRestoredEvent = SubscriptionRestored(
             channels,
             channelGroups,
             SubscriptionCursor(withTimetoken, "42")
         ) // todo get region from somewhere
-        eventEngineManager.addEventToQueue(subscriptionRestored)
+        eventEngineManager.addEventToQueue(subscriptionRestoredEvent)
     }
 
     private fun createAndPassForHandlingSubscriptionChangedEvent(
-        channels: List<String>,
-        channelGroups: List<String>
+        channels: Set<String>,
+        channelGroups: Set<String>
     ) {
-        val subscriptionChanged = SubscriptionChanged(channels, channelGroups)
-        eventEngineManager.addEventToQueue(subscriptionChanged)
+        val subscriptionChangedEvent = SubscriptionChanged(channels, channelGroups)
+        eventEngineManager.addEventToQueue(subscriptionChangedEvent)
     }
 
-    private fun removeChannelGroupsFromSubscriptionData(channelGroups: List<String>) {
+    private fun removeChannelGroupsFromSubscriptionData(channelGroups: Set<String>) {
         channelGroups.forEach {
             subscriptionData.channelGroups.remove(it)
             val presenceChannelGroup = "$it$PRESENCE_CHANNEL_SUFFIX"
@@ -208,7 +212,7 @@ class Subscribe(
         }
     }
 
-    private fun removeChannelsFromSubscriptionData(channels: List<String>) {
+    private fun removeChannelsFromSubscriptionData(channels: Set<String>) {
         channels.forEach {
             subscriptionData.channels.remove(it)
             val presenceChannel = "$it$PRESENCE_CHANNEL_SUFFIX"
