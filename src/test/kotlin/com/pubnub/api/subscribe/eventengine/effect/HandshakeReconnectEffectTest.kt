@@ -15,8 +15,8 @@ import java.time.Duration
 import java.util.concurrent.Executors
 
 class HandshakeReconnectEffectTest {
-    private val channels = listOf("channel1")
-    private val channelGroups = listOf("channelGroup1")
+    private val channels = setOf("channel1")
+    private val channelGroups = setOf("channelGroup1")
     private val reason = PubNubException("Unknown error")
     private val attempts = 1
     private val eventSink = TestEventSink()

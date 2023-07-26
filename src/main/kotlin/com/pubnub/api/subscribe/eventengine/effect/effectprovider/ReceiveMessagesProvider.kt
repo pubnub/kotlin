@@ -6,8 +6,8 @@ import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
 
 fun interface ReceiveMessagesProvider {
     fun getReceiveMessagesRemoteAction(
-        channels: List<String>,
-        channelGroups: List<String>,
+        channels: Set<String>,
+        channelGroups: Set<String>,
         subscriptionCursor: SubscriptionCursor
     ): RemoteAction<ReceiveMessagesResult>
 }

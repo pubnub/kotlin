@@ -303,7 +303,7 @@ class PubNub internal constructor(
         withPresence: Boolean = false,
         withTimetoken: Long = 0L
     ) = if (configuration.enableSubscribeBeta)
-        subscribe.subscribe(channels, channelGroups, withPresence, withTimetoken)
+        subscribe.subscribe(channels.toSet(), channelGroups.toSet(), withPresence, withTimetoken)
     else
         PubSub.subscribe(subscriptionManager, channels, channelGroups, withPresence, withTimetoken)
 
@@ -328,7 +328,7 @@ class PubNub internal constructor(
         channels: List<String> = emptyList(),
         channelGroups: List<String> = emptyList()
     ) = if (configuration.enableSubscribeBeta)
-        subscribe.unsubscribe(channels, channelGroups)
+        subscribe.unsubscribe(channels.toSet(), channelGroups.toSet())
     else
         PubSub.unsubscribe(subscriptionManager, channels, channelGroups)
 

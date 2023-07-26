@@ -5,10 +5,10 @@ import com.pubnub.api.eventengine.Event
 import com.pubnub.api.models.consumer.pubsub.PNEvent
 
 sealed class SubscribeEvent : Event {
-    data class SubscriptionChanged(val channels: List<String>, val channelGroups: List<String>) : SubscribeEvent()
+    data class SubscriptionChanged(val channels: Set<String>, val channelGroups: Set<String>) : SubscribeEvent()
     data class SubscriptionRestored(
-        val channels: List<String>,
-        val channelGroups: List<String>,
+        val channels: Set<String>,
+        val channelGroups: Set<String>,
         val subscriptionCursor: SubscriptionCursor
     ) : SubscribeEvent()
 

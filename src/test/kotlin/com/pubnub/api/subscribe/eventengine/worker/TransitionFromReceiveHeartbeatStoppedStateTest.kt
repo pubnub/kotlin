@@ -9,8 +9,8 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
 class TransitionFromReceiveHeartbeatStoppedStateTest {
-    private val channels = listOf("Channel1")
-    private val channelGroups = listOf("ChannelGroup1")
+    private val channels = setOf("Channel1")
+    private val channelGroups = setOf("ChannelGroup1")
     private val timeToken = 12345345452L
     private val region = "42"
     private val subscriptionCursor = SubscriptionCursor(timeToken, region)
@@ -29,7 +29,7 @@ class TransitionFromReceiveHeartbeatStoppedStateTest {
             state
         )
         assertEquals(
-            listOf(
+            setOf(
                 SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor)
             ),
             invocations
@@ -59,7 +59,7 @@ class TransitionFromReceiveHeartbeatStoppedStateTest {
 
         // then
         assertEquals(SubscribeState.Receiving(channels, channelGroups, subscriptionCursor), state)
-        assertEquals(listOf(SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor)), invocations)
+        assertEquals(setOf(SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor)), invocations)
     }
 
     @Test
@@ -72,6 +72,6 @@ class TransitionFromReceiveHeartbeatStoppedStateTest {
 
         // then
         assertEquals(SubscribeState.Receiving(channels, channelGroups, subscriptionCursor), state)
-        assertEquals(listOf(SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor)), invocations)
+        assertEquals(setOf(SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor)), invocations)
     }
 }

@@ -10,8 +10,8 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
 class TransitionFromReceiveFailedStateTest {
-    val channels = listOf("Channel1")
-    val channelGroups = listOf("ChannelGroup1")
+    val channels = setOf("Channel1")
+    val channelGroups = setOf("ChannelGroup1")
     val exception = PubNubException("Test")
     val timetoken = 12345345452L
     val region = "42"
@@ -31,7 +31,7 @@ class TransitionFromReceiveFailedStateTest {
             SubscribeState.ReceiveReconnecting(channels, channelGroups, subscriptionCursor, 0, reason), state
         )
         assertEquals(
-            listOf(
+            setOf(
                 SubscribeEffectInvocation.ReceiveReconnect(channels, channelGroups, subscriptionCursor, 0, reason)
             ),
             invocations
@@ -41,8 +41,8 @@ class TransitionFromReceiveFailedStateTest {
     @Test
     fun can_transit_from_RECEIVE_FAILED_to_RECEIVING_when_there_is_SUBSCRIPTION_CHANGED_event() {
         // given
-        val newChannels: List<String> = channels + listOf("NewChannel")
-        val newChannelGroup = channelGroups + listOf("NewChannelGroup")
+        val newChannels = channels + setOf("NewChannel")
+        val newChannelGroup = channelGroups + setOf("NewChannelGroup")
 
         // when
         val (receivingState, effectInvocations) = transition(
@@ -53,7 +53,7 @@ class TransitionFromReceiveFailedStateTest {
         // then
         assertEquals(SubscribeState.Receiving(newChannels, newChannelGroup, subscriptionCursor), receivingState)
         assertEquals(
-            listOf(SubscribeEffectInvocation.ReceiveMessages(newChannels, newChannelGroup, subscriptionCursor)),
+            setOf(SubscribeEffectInvocation.ReceiveMessages(newChannels, newChannelGroup, subscriptionCursor)),
             effectInvocations
         )
     }
@@ -68,7 +68,7 @@ class TransitionFromReceiveFailedStateTest {
         // then
         assertEquals(SubscribeState.Receiving(channels, channelGroups, subscriptionCursor), receivingState)
         assertEquals(
-            listOf(SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor)),
+            setOf(SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor)),
             effectInvocations
         )
     }
@@ -84,7 +84,7 @@ class TransitionFromReceiveFailedStateTest {
         // then
         assertEquals(SubscribeState.Receiving(channels, channelGroups, subscriptionCursor), receivingState)
         assertEquals(
-            listOf(SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor)),
+            setOf(SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor)),
             effectInvocations
         )
     }

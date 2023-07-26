@@ -28,8 +28,8 @@ class SubscribeEffectFactoryTest {
     private val subscribeEventSink = mockk<Sink<SubscribeEvent>>()
     private val policy = mockk<RetryPolicy>()
     private val executorService = mockk<ScheduledExecutorService>()
-    private val channels = listOf("channel1")
-    private val channelGroups = listOf("channelGroup1")
+    private val channels = setOf("channel1")
+    private val channelGroups = setOf("channelGroup1")
     private lateinit var subscribeEffectFactory: SubscribeEffectFactory
     private val attempts = 1
     private val reason = PubNubException("Unknown error")
@@ -70,8 +70,8 @@ class SubscribeEffectFactoryTest {
                     category = PNStatusCategory.PNConnectedCategory,
                     operation = PNOperationType.PNSubscribeOperation,
                     error = false,
-                    affectedChannels = channels,
-                    affectedChannelGroups = channelGroups
+                    affectedChannels = channels.toList(),
+                    affectedChannelGroups = channelGroups.toList()
                 )
             )
         )

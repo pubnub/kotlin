@@ -19,8 +19,8 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
 class TransitionFromHandshakingStateTest {
-    private val channels = listOf("Channel1")
-    private val channelGroups = listOf("ChannelGroup1")
+    private val channels = setOf("Channel1")
+    private val channelGroups = setOf("ChannelGroup1")
     private val timeToken = 12345345452L
     private val region = "42"
     private val subscriptionCursor = SubscriptionCursor(timeToken, region)
@@ -36,15 +36,15 @@ class TransitionFromHandshakingStateTest {
         // then
         assertEquals(SubscribeState.Receiving(channels, channelGroups, subscriptionCursor), state)
         assertEquals(
-            listOf(
+            setOf(
                 CancelHandshake,
                 EmitStatus(
                     PNStatus(
                         category = PNStatusCategory.PNConnectedCategory,
                         operation = PNOperationType.PNSubscribeOperation,
                         error = false,
-                        affectedChannels = channels,
-                        affectedChannelGroups = channelGroups
+                        affectedChannels = channels.toList(),
+                        affectedChannelGroups = channelGroups.toList()
                     )
                 ),
                 ReceiveMessages(channels, channelGroups, subscriptionCursor)
@@ -64,7 +64,7 @@ class TransitionFromHandshakingStateTest {
         // then
         assertEquals(SubscribeState.Receiving(channels, channelGroups, subscriptionCursor), state)
         assertEquals(
-            listOf(
+            setOf(
                 CancelHandshake,
                 ReceiveMessages(channels, channelGroups, subscriptionCursor)
             ),
@@ -75,8 +75,8 @@ class TransitionFromHandshakingStateTest {
     @Test
     fun can_transit_from_HANDSHAKING_to_HANDSHAKING_when_there_is_SUBSCRIPTION_CHANGED_event() {
         // given
-        val newChannels = listOf("newChannel1")
-        val newChannelGroups = listOf("newChannelGroup1")
+        val newChannels = setOf("newChannel1")
+        val newChannelGroups = setOf("newChannelGroup1")
 
         // when
         val (state, invocations) = transition(
@@ -87,7 +87,7 @@ class TransitionFromHandshakingStateTest {
         // then
         assertEquals(SubscribeState.Handshaking(newChannels, newChannelGroups), state)
         assertEquals(
-            listOf(
+            setOf(
                 CancelHandshake,
                 Handshake(newChannels, newChannelGroups)
             ),
@@ -105,7 +105,7 @@ class TransitionFromHandshakingStateTest {
         // then
         assertEquals(SubscribeState.HandshakeReconnecting(channels, channelGroups, 0, reason), state)
         assertEquals(
-            listOf(
+            setOf(
                 CancelHandshake,
                 HandshakeReconnect(channels, channelGroups, 0, reason)
             ),
@@ -123,7 +123,7 @@ class TransitionFromHandshakingStateTest {
 
         // then
         assertThat(state, instanceOf(SubscribeState.HandshakeStopped::class.java))
-        assertEquals(listOf(CancelHandshake), invocations)
+        assertEquals(setOf(CancelHandshake), invocations)
     }
 
     @Test
@@ -136,6 +136,6 @@ class TransitionFromHandshakingStateTest {
 
         // then
         assertEquals(SubscribeState.Unsubscribed, state)
-        assertEquals(listOf(CancelHandshake), invocations)
+        assertEquals(setOf(CancelHandshake), invocations)
     }
 }

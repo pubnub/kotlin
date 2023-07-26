@@ -13,8 +13,8 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
 class TransitionFromHandshakingReconnectingStateTest {
-    private val channels = listOf("Channel1")
-    private val channelGroups = listOf("ChannelGroup1")
+    private val channels = setOf("Channel1")
+    private val channelGroups = setOf("ChannelGroup1")
     private val timeToken = 12345345452L
     private val region = "42"
     private val subscriptionCursor = SubscriptionCursor(timeToken, region)
@@ -31,7 +31,7 @@ class TransitionFromHandshakingReconnectingStateTest {
         // then
         assertEquals(SubscribeState.HandshakeReconnecting(channels, channelGroups, 1, reason), state)
         assertEquals(
-            listOf(
+            setOf(
                 SubscribeEffectInvocation.CancelHandshakeReconnect,
                 SubscribeEffectInvocation.HandshakeReconnect(channels, channelGroups, 1, reason)
             ),
@@ -50,7 +50,7 @@ class TransitionFromHandshakingReconnectingStateTest {
         // then
         assertEquals(SubscribeState.Handshaking(channels, channelGroups), state)
         assertEquals(
-            listOf(
+            setOf(
                 SubscribeEffectInvocation.CancelHandshakeReconnect,
                 SubscribeEffectInvocation.Handshake(channels, channelGroups)
             ),
@@ -68,7 +68,7 @@ class TransitionFromHandshakingReconnectingStateTest {
         // then
         assertEquals(SubscribeState.HandshakeStopped(channels, channelGroups, reason), state)
         assertEquals(
-            listOf(
+            setOf(
                 SubscribeEffectInvocation.CancelHandshakeReconnect,
             ),
             invocations
@@ -86,15 +86,15 @@ class TransitionFromHandshakingReconnectingStateTest {
         // then
         assertEquals(SubscribeState.HandshakeFailed(channels, channelGroups, reason), state)
         assertEquals(
-            listOf(
+            setOf(
                 SubscribeEffectInvocation.CancelHandshakeReconnect,
                 SubscribeEffectInvocation.EmitStatus(
                     PNStatus(
                         category = PNStatusCategory.PNConnectionError,
                         operation = PNOperationType.PNSubscribeOperation,
                         error = true,
-                        affectedChannels = channels,
-                        affectedChannelGroups = channelGroups,
+                        affectedChannels = channels.toList(),
+                        affectedChannelGroups = channelGroups.toList(),
                         exception = reason
                     )
                 )
@@ -114,15 +114,15 @@ class TransitionFromHandshakingReconnectingStateTest {
         // then
         assertEquals(SubscribeState.Receiving(channels, channelGroups, subscriptionCursor), state)
         assertEquals(
-            listOf(
+            setOf(
                 SubscribeEffectInvocation.CancelHandshakeReconnect,
                 SubscribeEffectInvocation.EmitStatus(
                     PNStatus(
                         category = PNStatusCategory.PNConnectedCategory,
                         operation = PNOperationType.PNSubscribeOperation,
                         error = false,
-                        affectedChannels = channels,
-                        affectedChannelGroups = channelGroups
+                        affectedChannels = channels.toList(),
+                        affectedChannelGroups = channelGroups.toList()
                     )
                 ),
                 SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor)
@@ -142,7 +142,7 @@ class TransitionFromHandshakingReconnectingStateTest {
         // then
         assertEquals(SubscribeState.Receiving(channels, channelGroups, subscriptionCursor), state)
         assertEquals(
-            listOf(
+            setOf(
                 SubscribeEffectInvocation.CancelHandshakeReconnect,
                 SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor)
             ),
@@ -160,6 +160,6 @@ class TransitionFromHandshakingReconnectingStateTest {
 
         // then
         assertEquals(SubscribeState.Unsubscribed, state)
-        assertEquals(listOf(SubscribeEffectInvocation.CancelHandshakeReconnect), invocations)
+        assertEquals(setOf(SubscribeEffectInvocation.CancelHandshakeReconnect), invocations)
     }
 }

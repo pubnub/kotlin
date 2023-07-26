@@ -24,7 +24,7 @@ class TransitionFromHeartbeatWaitingStateTest {
         // then
         Assertions.assertEquals(PresenceState.HearbeatInactive, newState)
         Assertions.assertEquals(
-            listOf(
+            setOf(
                 PresenceEffectInvocation.CancelScheduleNextHeartbeat,
                 PresenceEffectInvocation.Leave(channels, channelGroups)
             ),
@@ -47,7 +47,7 @@ class TransitionFromHeartbeatWaitingStateTest {
         // then
         Assertions.assertEquals(PresenceState.Heartbeating(channels - channelToLeave, channelGroups - channelGroupToLeave), newState)
         Assertions.assertEquals(
-            listOf(
+            setOf(
                 PresenceEffectInvocation.CancelScheduleNextHeartbeat,
                 PresenceEffectInvocation.Leave(channelToLeave, channelGroupToLeave),
                 PresenceEffectInvocation.Heartbeat(channels - channelToLeave, channelGroups - channelGroupToLeave)
@@ -67,7 +67,7 @@ class TransitionFromHeartbeatWaitingStateTest {
         // then
         Assertions.assertEquals(PresenceState.HeartbeatStopped(channels, channelGroups), newState)
         Assertions.assertEquals(
-            listOf(
+            setOf(
                 PresenceEffectInvocation.CancelScheduleNextHeartbeat,
                 PresenceEffectInvocation.Leave(channels, channelGroups)
             ),
@@ -90,7 +90,7 @@ class TransitionFromHeartbeatWaitingStateTest {
         // then
         Assertions.assertEquals(PresenceState.Heartbeating(newChannels, newChannelGroup), newState)
         Assertions.assertEquals(
-            listOf(
+            setOf(
                 PresenceEffectInvocation.CancelScheduleNextHeartbeat,
                 PresenceEffectInvocation.Heartbeat(newChannels, newChannelGroup)
             ),
@@ -113,7 +113,7 @@ class TransitionFromHeartbeatWaitingStateTest {
         // then
         Assertions.assertEquals(PresenceState.Heartbeating(newChannels, newChannelGroup), newState)
         Assertions.assertEquals(
-            listOf(
+            setOf(
                 PresenceEffectInvocation.CancelScheduleNextHeartbeat,
                 PresenceEffectInvocation.Heartbeat(newChannels, newChannelGroup)
             ),
@@ -136,7 +136,7 @@ class TransitionFromHeartbeatWaitingStateTest {
         // then
         Assertions.assertEquals(PresenceState.Heartbeating(newChannels, newChannelGroup), newState)
         Assertions.assertEquals(
-            listOf(
+            setOf(
                 PresenceEffectInvocation.CancelScheduleNextHeartbeat,
                 PresenceEffectInvocation.Heartbeat(newChannels, newChannelGroup)
             ),

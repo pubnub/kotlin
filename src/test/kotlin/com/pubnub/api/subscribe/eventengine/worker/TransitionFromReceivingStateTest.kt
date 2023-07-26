@@ -18,8 +18,8 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
 class TransitionFromReceivingStateTest {
-    private val channels = listOf("Channel1")
-    private val channelGroups = listOf("ChannelGroup1")
+    private val channels = setOf("Channel1")
+    private val channelGroups = setOf("ChannelGroup1")
     private val timeToken = 12345345452L
     private val region = "42"
     private val subscriptionCursor = SubscriptionCursor(timeToken, region)
@@ -35,7 +35,7 @@ class TransitionFromReceivingStateTest {
         // then
         assertEquals(SubscribeState.ReceiveReconnecting(channels, channelGroups, subscriptionCursor, 0, reason), state)
         assertEquals(
-            listOf(
+            setOf(
                 SubscribeEffectInvocation.CancelReceiveMessages,
                 SubscribeEffectInvocation.ReceiveReconnect(channels, channelGroups, subscriptionCursor, 0, reason)
             ),
@@ -54,15 +54,15 @@ class TransitionFromReceivingStateTest {
         // then
         assertEquals(SubscribeState.ReceiveStopped(channels, channelGroups, subscriptionCursor), state)
         assertEquals(
-            listOf(
+            setOf(
                 SubscribeEffectInvocation.CancelReceiveMessages,
                 SubscribeEffectInvocation.EmitStatus(
                     PNStatus(
                         category = PNStatusCategory.PNDisconnectedCategory,
                         operation = PNOperationType.PNSubscribeOperation,
                         error = false,
-                        affectedChannels = channels,
-                        affectedChannelGroups = channelGroups
+                        affectedChannels = channels.toList(),
+                        affectedChannelGroups = channelGroups.toList()
                     )
                 )
             ),
@@ -82,7 +82,7 @@ class TransitionFromReceivingStateTest {
         // then
         assertEquals(SubscribeState.Receiving(channels, channelGroups, subscriptionCursor), state)
         assertEquals(
-            listOf(
+            setOf(
                 SubscribeEffectInvocation.CancelReceiveMessages,
                 SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor),
             ),
@@ -101,7 +101,7 @@ class TransitionFromReceivingStateTest {
         // then
         assertEquals(SubscribeState.Receiving(channels, channelGroups, subscriptionCursor), state)
         assertEquals(
-            listOf(
+            setOf(
                 SubscribeEffectInvocation.CancelReceiveMessages,
                 SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor),
             ),
@@ -124,7 +124,7 @@ class TransitionFromReceivingStateTest {
         // then
         assertEquals(SubscribeState.Receiving(channels, channelGroups, subscriptionCursor), state)
         assertEquals(
-            listOf(
+            setOf(
                 SubscribeEffectInvocation.CancelReceiveMessages,
                 SubscribeEffectInvocation.EmitMessages(messages),
                 SubscribeEffectInvocation.EmitStatus(
@@ -132,8 +132,8 @@ class TransitionFromReceivingStateTest {
                         category = PNStatusCategory.PNConnectedCategory,
                         operation = PNOperationType.PNSubscribeOperation,
                         error = false,
-                        affectedChannels = channels,
-                        affectedChannelGroups = channelGroups
+                        affectedChannels = channels.toList(),
+                        affectedChannelGroups = channelGroups.toList()
                     )
                 ),
                 SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor),
@@ -152,7 +152,7 @@ class TransitionFromReceivingStateTest {
 
         // then
         assertEquals(SubscribeState.Unsubscribed, state)
-        assertEquals(listOf(SubscribeEffectInvocation.CancelReceiveMessages), invocations)
+        assertEquals(setOf(SubscribeEffectInvocation.CancelReceiveMessages), invocations)
     }
 
     private fun createPnMessageResult(channel1: String): PNMessageResult {
