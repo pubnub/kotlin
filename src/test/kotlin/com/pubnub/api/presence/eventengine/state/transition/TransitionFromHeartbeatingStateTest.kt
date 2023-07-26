@@ -108,7 +108,7 @@ class TransitionFromHeartbeatingStateTest {
     }
 
     @Test
-    fun `should transit from HEARTBEATING to HEARTBEAT_WAITING and create SCHEDULE_NEXT_HEARTBEAT invocations when there is HEARTBEAT_SUCCESS event`() {
+    fun `should transit from HEARTBEATING to HEARTBEAT_COOLDOWN and create SCHEDULE_NEXT_HEARTBEAT invocations when there is HEARTBEAT_SUCCESS event`() {
         // when
         val (newState, invocations) = transition(
             PresenceState.Heartbeating(channels, channelGroups),
@@ -116,7 +116,7 @@ class TransitionFromHeartbeatingStateTest {
         )
 
         // then
-        Assertions.assertEquals(PresenceState.HeartbeatWaiting(channels, channelGroups), newState)
+        Assertions.assertEquals(PresenceState.HeartbeatCooldown(channels, channelGroups), newState)
         Assertions.assertTrue(invocations.any { it is PresenceEffectInvocation.ScheduleNextHeartbeat })
         Assertions.assertEquals(1, invocations.size)
     }
