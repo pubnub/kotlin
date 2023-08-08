@@ -19,7 +19,7 @@ class ReceiveReconnectEffectTest {
     private val subscriptionCursor = SubscriptionCursor(1337L, "1337")
     private val reason = PubNubException("Unknown error")
     private val attempts = 1
-    private val eventSink = TestEventSink()
+    private val eventSink = TestEventSink<SubscribeEvent>()
     private val retryPolicy = LinearPolicy(fixedDelay = Duration.ofMillis(10))
     private val executorService = Executors.newSingleThreadScheduledExecutor()
     private val messages: List<PNEvent> = createPNMessageResultList()
@@ -48,7 +48,7 @@ class ReceiveReconnectEffectTest {
             .untilAsserted {
                 assertEquals(
                     listOf(SubscribeEvent.ReceiveReconnectSuccess(messages, subscriptionCursor)),
-                    eventSink.subscribeEvents
+                    eventSink.events
                 )
             }
     }
@@ -73,7 +73,7 @@ class ReceiveReconnectEffectTest {
             .atMost(Durations.ONE_SECOND)
             .with()
             .pollInterval(Duration.ofMillis(20))
-            .untilAsserted { assertEquals(listOf(SubscribeEvent.ReceiveReconnectFailure(reason)), eventSink.subscribeEvents) }
+            .untilAsserted { assertEquals(listOf(SubscribeEvent.ReceiveReconnectFailure(reason)), eventSink.events) }
     }
 
     @Test
@@ -93,7 +93,7 @@ class ReceiveReconnectEffectTest {
         receiveReconnectEffect.runEffect()
 
         // then
-        assertEquals(listOf(SubscribeEvent.ReceiveReconnectGiveup(reason)), eventSink.subscribeEvents)
+        assertEquals(listOf(SubscribeEvent.ReceiveReconnectGiveup(reason)), eventSink.events)
     }
 
     @Test

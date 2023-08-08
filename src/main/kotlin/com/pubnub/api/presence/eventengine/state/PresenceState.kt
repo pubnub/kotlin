@@ -63,7 +63,7 @@ sealed class PresenceState : State<PresenceEffectInvocation, PresenceEvent, Pres
         val attempts: Int,
         val reason: PubNubException?
     ) : PresenceState() {
-        override fun onEntry(): Set<PresenceEffectInvocation> = setOf(PresenceEffectInvocation.DelayedHeartbeat())
+        override fun onEntry(): Set<PresenceEffectInvocation> = setOf(PresenceEffectInvocation.DelayedHeartbeat(channels, channelGroups, attempts, reason))
         override fun onExit(): Set<PresenceEffectInvocation> = setOf(PresenceEffectInvocation.CancelDelayedHeartbeat)
 
         override fun transition(event: PresenceEvent): Pair<PresenceState, Set<PresenceEffectInvocation>> {

@@ -12,7 +12,7 @@ import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.TimeUnit
 
 class HandshakeReconnectEffect(
-    private val remoteAction: RemoteAction<SubscriptionCursor>,
+    private val handshakeRemoteAction: RemoteAction<SubscriptionCursor>,
     private val subscribeEventSink: Sink<SubscribeEvent>,
     private val policy: RetryPolicy,
     private val executorService: ScheduledExecutorService,
@@ -41,13 +41,9 @@ class HandshakeReconnectEffect(
         }
 
         scheduled = executorService.schedule({
-            remoteAction.async { result, status ->
+            handshakeRemoteAction.async { result, status ->
                 if (status.error) {
-                    subscribeEventSink.add(
-                        SubscribeEvent.HandshakeReconnectFailure(
-                            status.exception ?: PubNubException("Unknown error")
-                        )
-                    )
+                    subscribeEventSink.add(SubscribeEvent.HandshakeReconnectFailure(status.exception ?: PubNubException("Unknown error")))
                 } else {
                     subscribeEventSink.add(SubscribeEvent.HandshakeReconnectSuccess(result!!))
                 }
@@ -61,7 +57,7 @@ class HandshakeReconnectEffect(
             return
         }
         cancelled = true
-        remoteAction.silentCancel()
+        handshakeRemoteAction.silentCancel()
         scheduled?.cancel(true)
     }
 }

@@ -8,7 +8,7 @@ import com.pubnub.api.subscribe.eventengine.event.SubscribeEvent
 import org.slf4j.LoggerFactory
 
 class ReceiveMessagesEffect(
-    private val remoteAction: RemoteAction<ReceiveMessagesResult>,
+    private val receiveMessagesRemoteAction: RemoteAction<ReceiveMessagesResult>,
     private val subscribeEventSink: Sink<SubscribeEvent>,
 ) : ManagedEffect {
     private val log = LoggerFactory.getLogger(ReceiveMessagesEffect::class.java)
@@ -16,7 +16,7 @@ class ReceiveMessagesEffect(
     override fun runEffect() {
         log.trace("Running ReceiveMessagesEffect")
 
-        remoteAction.async { result, status ->
+        receiveMessagesRemoteAction.async { result, status ->
             if (status.error) {
                 subscribeEventSink.add(
                     SubscribeEvent.ReceiveFailure(
@@ -31,6 +31,6 @@ class ReceiveMessagesEffect(
     }
 
     override fun cancel() {
-        remoteAction.silentCancel()
+        receiveMessagesRemoteAction.silentCancel()
     }
 }

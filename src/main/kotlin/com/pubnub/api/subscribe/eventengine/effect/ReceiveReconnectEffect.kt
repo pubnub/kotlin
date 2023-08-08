@@ -11,7 +11,7 @@ import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.TimeUnit
 
 class ReceiveReconnectEffect(
-    private val remoteAction: RemoteAction<ReceiveMessagesResult>,
+    private val receiveMessagesRemoteAction: RemoteAction<ReceiveMessagesResult>,
     private val subscribeEventSink: Sink<SubscribeEvent>,
     private val policy: RetryPolicy,
     private val executorService: ScheduledExecutorService,
@@ -41,7 +41,7 @@ class ReceiveReconnectEffect(
         }
 
         scheduled = executorService.schedule({
-            remoteAction.async { result, status ->
+            receiveMessagesRemoteAction.async { result, status ->
                 if (status.error) {
                     subscribeEventSink.add(
                         SubscribeEvent.ReceiveReconnectFailure(
@@ -67,7 +67,7 @@ class ReceiveReconnectEffect(
         }
         cancelled = true
 
-        remoteAction.silentCancel()
+        receiveMessagesRemoteAction.silentCancel()
         scheduled?.cancel(true)
     }
 }

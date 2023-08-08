@@ -1,5 +1,6 @@
 package com.pubnub.api.presence.eventengine.effect
 
+import com.pubnub.api.PubNubException
 import com.pubnub.api.eventengine.Cancel
 import com.pubnub.api.eventengine.EffectInvocation
 import com.pubnub.api.eventengine.EffectInvocationType
@@ -25,7 +26,12 @@ sealed class PresenceEffectInvocation(override val type: EffectInvocationType) :
 
     object CancelWait : PresenceEffectInvocation(Cancel(idToCancel = Wait::class.java.simpleName))
 
-    class DelayedHeartbeat : PresenceEffectInvocation(Managed) {
+    class DelayedHeartbeat(
+        val channels: Set<String>,
+        val channelGroups: Set<String>,
+        val attempts: Int,
+        val reason: PubNubException?
+    ) : PresenceEffectInvocation(Managed) {
         override val id: String = DelayedHeartbeat::class.java.simpleName
     }
 
