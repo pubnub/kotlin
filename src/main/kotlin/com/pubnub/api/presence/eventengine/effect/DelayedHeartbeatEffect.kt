@@ -52,7 +52,7 @@ internal class DelayedHeartbeatEffect(
 
     @Synchronized
     override fun cancel() {
-        if(cancelled){
+        if (cancelled) {
             return
         }
         cancelled = true

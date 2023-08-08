@@ -53,7 +53,7 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, SubscribeEvent, S
                 }
 
                 is SubscribeEvent.SubscriptionRestored -> {
-                    transitionTo(Receiving(event.channels, event.channelGroups, event.subscriptionCursor))  // todo check with doc
+                    transitionTo(Receiving(event.channels, event.channelGroups, event.subscriptionCursor)) // todo check with doc
                 }
                 is SubscribeEvent.HandshakeFailure -> {
                     transitionTo(HandshakeReconnecting(channels, channelGroups, 0, event.reason))

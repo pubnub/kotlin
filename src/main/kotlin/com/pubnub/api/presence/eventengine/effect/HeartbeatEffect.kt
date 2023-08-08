@@ -10,17 +10,17 @@ import org.slf4j.LoggerFactory
 class HeartbeatEffect(
     private val heartbeatRemoteAction: RemoteAction<Boolean>,
     private val presenceEventSink: Sink<PresenceEvent>
-) : Effect{
+) : Effect {
     private val log = LoggerFactory.getLogger(HeartbeatEffect::class.java)
 
     override fun runEffect() {
         log.trace("Running HeartbeatEffect")
         heartbeatRemoteAction.async { _, status ->
-            if(status.error) {
+            if (status.error) {
                 presenceEventSink.add(
-                    PresenceEvent.HeartbeatFailure( status.exception ?: PubNubException("Unknown error"))
+                    PresenceEvent.HeartbeatFailure(status.exception ?: PubNubException("Unknown error"))
                 )
-            } else{
+            } else {
                 presenceEventSink.add(
                     PresenceEvent.HeartbeatSuccess
                 )
