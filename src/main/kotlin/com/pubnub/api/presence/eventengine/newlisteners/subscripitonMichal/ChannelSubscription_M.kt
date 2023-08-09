@@ -4,7 +4,7 @@ import java.util.function.Consumer
 
 class ChannelSubscription_M(
     val channel: String,
-    override var onMessage: Consumer<String>,
+    override var onMessage: (String) -> Unit,
     withPresence: Boolean = false,
     private val onCancel: (ChannelSubscription_M) -> Unit,
 ) : Subscription {

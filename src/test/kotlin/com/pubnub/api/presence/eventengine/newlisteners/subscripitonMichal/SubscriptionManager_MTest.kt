@@ -4,7 +4,6 @@ import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
 import com.pubnub.api.UserId
 import org.junit.Test
-import java.util.function.Consumer
 
 class SubscriptionManager_MTest{
 
@@ -20,8 +19,7 @@ class SubscriptionManager_MTest{
     @Test
     fun `subscribe with one channel add onMessage handler then unsubscribe`() {
         val channel = "Channel01"
-        val myOnMessageForSub01: Consumer<String> =
-            Consumer { println("-=Handling MESSAGE for one channel: Channel01. Message: $it") } //Consumer can be replaced by (String) -> Unit
+        val myOnMessageForSub01: (String) -> Unit = { println("-=Handling MESSAGE for one channel: Channel01. Message: $it") } //Consumer can be replaced by (String) -> Unit
         val subscription = pubnub.subscribeChannel_M(channel)
         subscription.onMessage = myOnMessageForSub01
 
@@ -37,10 +35,8 @@ class SubscriptionManager_MTest{
     fun `subscribe with two channels add different onMessage to each of them then unsubscribe one`() {
         val channel01 = "Channel01"
         val channel02 = "Channel02"
-        val myOnMessageForSub01: Consumer<String> =
-            Consumer { println("-=Handling MESSAGE for one channel: Channel01. Message: $it") }
-        val myOnMessageForSub02: Consumer<String> =
-            Consumer { println("-=Handling MESSAGE for one channel: Channel02. Message: $it") }
+        val myOnMessageForSub01: (String) -> Unit = { println("-=Handling MESSAGE for one channel: Channel01. Message: $it") }
+        val myOnMessageForSub02: (String) -> Unit = { println("-=Handling MESSAGE for one channel: Channel02. Message: $it") }
         val channels = setOf(channel01, channel02)
 
         val subscriptions = pubnub.subscribeChannels_M(channels)
@@ -61,8 +57,7 @@ class SubscriptionManager_MTest{
         // given
         val channel01 = "Channel01"
         val channel02 = "Channel02"
-        val myOnMessage: Consumer<String> =
-            Consumer { println("-=Handling MESSAGE for two channels: Channel01, Channel02. Message: $it") }
+        val myOnMessage: (String) -> Unit = { println("-=Handling MESSAGE for two channels: Channel01, Channel02. Message: $it") }
         val channels = setOf(channel01, channel02)
 
         // when
@@ -82,8 +77,7 @@ class SubscriptionManager_MTest{
         // given
         val channel01 = "Channel01"
         val channel02 = "Channel02"
-        val myOnMessage: Consumer<String> =
-            Consumer { println("-=Handling MESSAGE for two channels: Channel01, Channel02. Message: $it") }
+        val myOnMessage: (String) -> Unit = { println("-=Handling MESSAGE for two channels: Channel01, Channel02. Message: $it") }
         val channels = setOf(channel01, channel02)
 
         // when
@@ -94,16 +88,15 @@ class SubscriptionManager_MTest{
         pubnub.subscriptionManger_M.simulateReceiveMessage(setOf("Channel02"))
         subscriptions.cancel()
         Thread.sleep(1000)
-        println("-=After cancel. Should not get message for channel01")
+        println("-=After cancel. Should not get message for channel01 and channel02")
         pubnub.subscriptionManger_M.simulateReceiveMessage(setOf("Channel01"))
         pubnub.subscriptionManger_M.simulateReceiveMessage(setOf("Channel02"))
     }
 
     @Test
-    fun `subscribe with one channel add onMessage to construcotr of subscription then unsubsribe`() {
+    fun `subscribe with one channel add onMessage to constructor of subscription then unsubsribe`() {
         val channel = "Channel01"
-        val myOnMessage: Consumer<String> =
-            Consumer { println("-=Handling MESSAGE for one channel: Channel01. Message: $it") }
+        val myOnMessage: (String) -> Unit = { println("-=Handling MESSAGE for one channel: Channel01. Message: $it") }
 
         val subscription = pubnub.subscribeChannel_M(channel = channel, onMessage = myOnMessage)
         pubnub.subscriptionManger_M.simulateReceiveMessage(setOf("Channel01"))
@@ -113,12 +106,11 @@ class SubscriptionManager_MTest{
     }
 
     @Test
-    fun `subscribe with two channels add onMessage to construcotr of subscription then unsubsribe one`() {
+    fun `subscribe with two channels add onMessage to constructor of subscription then unsubscribe one`() {
         val channel01 = "Channel01"
         val channel02 = "Channel02"
         val channels = setOf(channel01, channel02)
-        val myOnMessage: Consumer<String> =
-            Consumer { println("-=Handling MESSAGE for one channel: Channel01. Message: $it") }
+        val myOnMessage: (String) -> Unit = { println("-=Handling MESSAGE for one channel: Channel01. Message: $it") }
 
         val subscriptions = pubnub.subscribeChannels_M(channels = channels, onMessage = myOnMessage)
         pubnub.subscriptionManger_M.simulateReceiveMessage(setOf("Channel01"))
@@ -130,11 +122,10 @@ class SubscriptionManager_MTest{
     }
 
     @Test
-    fun `subcribe with two channels add the same onMessage to both of them then pause one then resume it`() {
+    fun `subscribe with two channels add the same onMessage to both of them then pause one then resume it`() {
         val channel01 = "Channel01"
         val channel02 = "Channel02"
-        val myOnMessage: Consumer<String> =
-            Consumer { println("-=Handling MESSAGE for two channels: Channel01, Channel02. Message: $it") }
+        val myOnMessage: (String) -> Unit = { println("-=Handling MESSAGE for two channels: Channel01, Channel02. Message: $it") }
         val channels = setOf(channel01, channel02)
 
         val subscriptions = pubnub.subscribeChannels_M(channels)
@@ -157,8 +148,7 @@ class SubscriptionManager_MTest{
     fun `subcribe with two channels add the same onMessage to both of them then pause both then resume`() {
         val channel01 = "Channel01"
         val channel02 = "Channel02"
-        val myOnMessage: Consumer<String> =
-            Consumer { println("-=Handling MESSAGE for two channels: Channel01, Channel02. Message: $it") }
+        val myOnMessage: (String) -> Unit = { println("-=Handling MESSAGE for two channels: Channel01, Channel02. Message: $it") }
         val channels = setOf(channel01, channel02)
 
         val subscriptions = pubnub.subscribeChannels_M(channels)
@@ -181,8 +171,7 @@ class SubscriptionManager_MTest{
     @Test
     fun `subscribe with one channel add onMessage globally then unsubscribe all`() {
         val channel01 = "Channel01"
-        val myGlobalOnMessage: Consumer<String> =
-            Consumer { println("-=Handling MESSAGE for one global. Message: $it") }
+        val myGlobalOnMessage: (String) -> Unit = { println("-=Handling MESSAGE for one global. Message: $it") }
 
         val subscriptions = pubnub.subscribeChannel_M(channel01)
         pubnub.onMessage = myGlobalOnMessage
@@ -201,8 +190,7 @@ class SubscriptionManager_MTest{
     fun `subscribe one channel in two subscription add onMessage globally then unsubscribe globally from one subscription`() {
         val channel01 = "Channel01"
         val channel02 = "Channel02"
-        val myGlobalOnMessage: Consumer<String> =
-            Consumer { println("-=Handling MESSAGE for for global. Message: $it") }
+        val myGlobalOnMessage: (String) -> Unit = { println("-=Handling MESSAGE for for global. Message: $it") }
 
         val subscription =
             pubnub.subscribeChannel_M(channel01) ///<--jak usuwamy channel to z pojedynczej subskrypcji nie usuwa.
@@ -223,10 +211,8 @@ class SubscriptionManager_MTest{
     fun `subscribe with two channels add onMessage globally then override onMessage for one subscriptionChannel`() {
         val channel01 = "Channel01"
         val channel02 = "Channel02"
-        val myGlobalOnMessage: Consumer<String> =
-            Consumer { println("-=Handling MESSAGE for for global. Message: $it") }
-        val myOnMessage: Consumer<String> =
-            Consumer { println("-=Handling MESSAGE for one channel: Channel01. Message: $it") }
+        val myGlobalOnMessage: (String) -> Unit = { println("-=Handling MESSAGE for for global. Message: $it") }
+        val myOnMessage: (String) -> Unit = { println("-=Handling MESSAGE for one channel: Channel01. Message: $it") }
 
         val subscription = pubnub.subscribeChannels_M(setOf(channel01, channel02))
         pubnub.onMessage = myGlobalOnMessage
@@ -245,10 +231,8 @@ class SubscriptionManager_MTest{
     fun `subscribe with two channels add onMessage globally then pause then resume globally`() {
         val channel01 = "Channel01"
         val channel02 = "Channel02"
-        val myGlobalOnMessage: Consumer<String> =
-            Consumer { println("-=Handling MESSAGE for for global. Message: $it") }
-        val myOnMessage: Consumer<String> =
-            Consumer { println("-=Handling MESSAGE for one channel: Channel01. Message: $it") }
+        val myGlobalOnMessage: (String) -> Unit = { println("-=Handling MESSAGE for for global. Message: $it") }
+        val myOnMessage: (String) -> Unit = { println("-=Handling MESSAGE for one channel: Channel01. Message: $it") }
 
         val subscriptions = pubnub.subscribeChannels_M(setOf(channel01, channel02))
         pubnub.onMessage = myGlobalOnMessage

@@ -8,7 +8,7 @@ class SubscriptionManager_M {
 
     fun addSubscriptionToGlobalistAndReturnIt(
         channels: Set<String>,
-        onMessage: Consumer<String>
+        onMessage: (String) -> Unit
     ): ChannelSubscriptionCollection {
         val channelSubscriptionCollection = ChannelSubscriptionCollection()
         channels.forEach { channel ->
@@ -24,7 +24,7 @@ class SubscriptionManager_M {
     }
 
 
-    fun addOnMessageToAllSubscriptions(onMessage: Consumer<String>) {
+    fun addOnMessageToAllSubscriptions(onMessage: (String) -> Unit) {
         allChannelSubscriptions.forEach { subscription ->
             subscription.onMessage = onMessage
         }
@@ -72,7 +72,7 @@ class SubscriptionManager_M {
             subscriptionCollectionContainingChannel.forEach { subscriptionCollection ->
                 subscriptionCollection.subscriptions.values.forEach { subscription ->
                     if (subscription.channel.equals(channel) && subscription.shouldHandleMessage) {
-                        subscription.onMessage.accept("This is receive message for channels: $channelsAsString ")
+                        subscription.onMessage("This is receive message for channels: $channelsAsString ")
                     }
                 }
             }

@@ -1,11 +1,10 @@
 package com.pubnub.api.presence.eventengine.newlisteners.subscripitonMichal
 
-import java.util.function.Consumer
 
 class ChannelSubscriptionCollection {
     internal val subscriptions: MutableMap<String, ChannelSubscription_M> = mutableMapOf()
 
-    var onMessage: Consumer<String> = Consumer { }  //todo is this ok that consumer is empty.
+    var onMessage: (String) -> Unit = { }  //todo is this ok that consumer is empty.
         set(value) {
             subscriptions.forEach { (_, subscription) ->
                 subscription.onMessage = value

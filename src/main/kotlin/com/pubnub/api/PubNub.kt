@@ -314,17 +314,17 @@ class PubNub internal constructor(
 
     val subscriptionManger_M: SubscriptionManager_M = SubscriptionManager_M()  // should be privet
 
-    fun subscribeChannel_M(channel: String,  onMessage: Consumer<String> = Consumer {  }, withPresence: Boolean = false,): ChannelSubscription_M{ // toDo handle withPresence
+    fun subscribeChannel_M(channel: String,  onMessage: (String) -> Unit = {  }, withPresence: Boolean = false,): ChannelSubscription_M{ // toDo handle withPresence
         val channelSubscription = subscriptionManger_M.addSubscriptionToGlobalistAndReturnIt(setOf(channel), onMessage).get(channel)
         return channelSubscription!!
     }
 
-    fun subscribeChannels_M(channels: Set<String>, onMessage: Consumer<String> = Consumer {  }, withPresence: Boolean = false) : ChannelSubscriptionCollection{
+    fun subscribeChannels_M(channels: Set<String>, onMessage: (String) -> Unit = {  }, withPresence: Boolean = false) : ChannelSubscriptionCollection{
         val channelSubscriptions = subscriptionManger_M.addSubscriptionToGlobalistAndReturnIt(channels, onMessage)
         return channelSubscriptions
     }
 
-    var onMessage: Consumer<String> = Consumer { }
+    var onMessage: (String) -> Unit = { }
         set(value) {
             subscriptionManger_M.addOnMessageToAllSubscriptions(value)
             field = value
