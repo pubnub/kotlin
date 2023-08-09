@@ -85,6 +85,9 @@ import com.pubnub.api.models.consumer.objects.member.PNUUIDDetailsLevel
 import com.pubnub.api.models.consumer.objects.membership.ChannelMembershipInput
 import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
 import com.pubnub.api.presence.Presence
+import com.pubnub.api.presence.eventengine.newlisteners.subscripitonMichal.ChannelSubscriptionCollection
+import com.pubnub.api.presence.eventengine.newlisteners.subscripitonMichal.ChannelSubscription_M
+import com.pubnub.api.presence.eventengine.newlisteners.subscripitonMichal.SubscriptionManager_M
 import com.pubnub.api.subscribe.Subscribe
 import com.pubnub.api.subscribe.eventengine.configuration.SubscribeEventEngineConfImpl
 import com.pubnub.api.vendor.Base64
@@ -95,6 +98,7 @@ import com.pubnub.api.workers.SubscribeMessageProcessor
 import java.io.InputStream
 import java.util.Date
 import java.util.UUID
+import java.util.function.Consumer
 
 class PubNub internal constructor(
     val configuration: PNConfiguration,
@@ -306,6 +310,41 @@ class PubNub internal constructor(
         subscribe.subscribe(channels.toSet(), channelGroups.toSet(), withPresence, withTimetoken)
     else
         PubSub.subscribe(subscriptionManager, channels, channelGroups, withPresence, withTimetoken)
+
+
+    val subscriptionManger_M: SubscriptionManager_M = SubscriptionManager_M()  // should be privet
+
+    fun subscribeChannel_M(channel: String,  onMessage: Consumer<String> = Consumer {  }, withPresence: Boolean = false,): ChannelSubscription_M{ // toDo handle withPresence
+        val channelSubscription = subscriptionManger_M.addSubscriptionToGlobalistAndReturnIt(setOf(channel), onMessage).get(channel)
+        return channelSubscription!!
+    }
+
+    fun subscribeChannels_M(channels: Set<String>, onMessage: Consumer<String> = Consumer {  }, withPresence: Boolean = false) : ChannelSubscriptionCollection{
+        val channelSubscriptions = subscriptionManger_M.addSubscriptionToGlobalistAndReturnIt(channels, onMessage)
+        return channelSubscriptions
+    }
+
+    var onMessage: Consumer<String> = Consumer { }
+        set(value) {
+            subscriptionManger_M.addOnMessageToAllSubscriptions(value)
+            field = value
+        }
+
+    fun unsubscribeAll_M(){
+        subscriptionManger_M.removeAllChannelSubscriptions()
+    }
+
+    fun unsubscribe_M(channels: Set<String>){
+        subscriptionManger_M.removeChannelFromAllSubscriptions(channels)
+    }
+
+    fun pauseOnMessage(){
+        subscriptionManger_M.pauseAllChannelSubscriptions()
+    }
+
+    fun resumeOnMessage() {
+        subscriptionManger_M.resumeAllChannelSubscriptions()
+    }
 
     /**
      * When subscribed to a single channel, this function causes the client to issue a leave from the channel
