@@ -12,7 +12,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class SubscribeEventEngineManagerTest {
-    private lateinit var objectUnderTest: EventEngineManager
+    private lateinit var objectUnderTest: SubscribeEventEngineManager
 
     val subscribeEventEngine: SubscribeEventEngine = mockk()
     val effectDispatcher: EffectDispatcher<SubscribeEffectInvocation> = mockk()
@@ -21,7 +21,7 @@ class SubscribeEventEngineManagerTest {
 
     @BeforeEach
     fun setUp() {
-        objectUnderTest = EventEngineManager(subscribeEventEngine, effectDispatcher, subscribeEventSink)
+        objectUnderTest = SubscribeEventEngineManager(subscribeEventEngine, effectDispatcher, subscribeEventSink)
     }
 
     @Test

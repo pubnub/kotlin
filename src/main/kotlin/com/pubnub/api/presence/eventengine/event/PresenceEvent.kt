@@ -16,5 +16,5 @@ sealed class PresenceEvent : Event {
     data class HeartbeatFailure(val reason: PubNubException) : PresenceEvent()
     data class HeartbeatGiveup(val reason: PubNubException) : PresenceEvent()
 
-    data class StateSet(val channels: Set<String>, val channelGroups: Set<String>) : PresenceEvent()
+    data class StateSet(val channels: Set<String>, val channelGroups: Set<String>) : PresenceEvent() // todo how to from setPresenceState operation call Presence EE
 }

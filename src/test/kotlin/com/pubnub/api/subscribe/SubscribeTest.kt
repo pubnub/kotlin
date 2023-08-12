@@ -1,6 +1,8 @@
 package com.pubnub.api.subscribe
 
-import com.pubnub.api.managers.EventEngineManager
+import com.pubnub.api.managers.PresenceEventEngineManager
+import com.pubnub.api.managers.SubscribeEventEngineManager
+import com.pubnub.api.presence.eventengine.event.PresenceEvent
 import com.pubnub.api.subscribe.eventengine.data.SubscriptionData
 import com.pubnub.api.subscribe.eventengine.event.SubscribeEvent
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
@@ -26,16 +28,20 @@ internal class SubscribeTest {
     private val channelsInSubscriptionData = mutableSetOf(CHANNEL_01, CHANNEL_02)
     private val channelGroupsInSubscriptionData = mutableSetOf(CHANNEL_GROUPS_01, CHANNEL_GROUPS_02)
     private lateinit var objectUnderTest: Subscribe
-    private val eventEngineManager: EventEngineManager = mockk()
+    private val subscribeEventEngineManager: SubscribeEventEngineManager = mockk()
+    private val presenceEventEngineManager: PresenceEventEngineManager = mockk()
     private var subscriptionData: SubscriptionData = createSubscriptionStateContainingValues()
     private val withPresence = false
     private val withTimetoken = 12345345452L
     private val subscribeEvent: CapturingSlot<SubscribeEvent> = slot()
+    private val presenceEvent: CapturingSlot<PresenceEvent> = slot()
+    private val heartbeatInterval: Int = 5
 
     @BeforeEach
     internal fun setUp() {
-        every { eventEngineManager.addEventToQueue(capture(subscribeEvent)) } returns Unit
-        objectUnderTest = Subscribe(eventEngineManager, subscriptionData)
+        every { subscribeEventEngineManager.addEventToQueue(capture(subscribeEvent)) } returns Unit
+        every { presenceEventEngineManager.addEventToQueue(capture(presenceEvent)) } returns Unit
+        objectUnderTest = Subscribe(subscribeEventEngineManager, presenceEventEngineManager, heartbeatInterval, subscriptionData)
     }
 
     @Test
@@ -45,7 +51,8 @@ internal class SubscribeTest {
 
         objectUnderTest.subscribe(setOf(channelToSubscribe), setOf(channelGroupsToSubscribe), withPresence)
 
-        verify { eventEngineManager.addEventToQueue(any()) }
+        verify { subscribeEventEngineManager.addEventToQueue(any()) }
+        verify { presenceEventEngineManager.addEventToQueue(any()) }
 
         assertEquals(
             SubscribeEvent.SubscriptionChanged(
@@ -54,6 +61,13 @@ internal class SubscribeTest {
             ),
             subscribeEvent.captured
         )
+
+        assertEquals(PresenceEvent.Joined(setOf(channelToSubscribe), setOf(channelGroupsToSubscribe)), presenceEvent.captured)
+    }
+
+    @Test
+    fun `should not add event to Presence Event queue when heartbeat interval is 0`() {
+        // TODO("Not yet implemented")
     }
 
     @Test
@@ -68,7 +82,7 @@ internal class SubscribeTest {
             withTimetoken
         )
 
-        verify { eventEngineManager.addEventToQueue(any()) }
+        verify { subscribeEventEngineManager.addEventToQueue(any()) }
         assertEquals(
             SubscribeEvent.SubscriptionRestored(
                 (channelsInSubscriptionData + channelToSubscribe),
@@ -77,6 +91,8 @@ internal class SubscribeTest {
             ),
             subscribeEvent.captured
         )
+
+        assertEquals(PresenceEvent.Joined(setOf(channelToSubscribe), setOf(channelGroupsToSubscribe)), presenceEvent.captured)
     }
 
     @Test
@@ -86,7 +102,7 @@ internal class SubscribeTest {
 
         objectUnderTest.unsubscribe(channelsToUnsubscribe, channelGroupsToUnsubscribe)
 
-        verify { eventEngineManager.addEventToQueue(any()) }
+        verify { subscribeEventEngineManager.addEventToQueue(any()) }
         assertEquals(
             SubscribeEvent.SubscriptionChanged(setOf(CHANNEL_02), setOf(CHANNEL_GROUPS_02)),
             subscribeEvent.captured
@@ -102,7 +118,7 @@ internal class SubscribeTest {
 
         objectUnderTest.unsubscribe(channelsToUnsubscribe, channelGroupsToUnsubscribe)
 
-        verify { eventEngineManager.addEventToQueue(any()) }
+        verify { subscribeEventEngineManager.addEventToQueue(any()) }
         assertEquals(SubscribeEvent.UnsubscribeAll, subscribeEvent.captured)
         assertTrue(subscriptionData.channels.size == 0)
         assertTrue(subscriptionData.channelGroups.size == 0)
@@ -113,7 +129,7 @@ internal class SubscribeTest {
 
         objectUnderTest.unsubscribeAll()
 
-        verify { eventEngineManager.addEventToQueue(any()) }
+        verify { subscribeEventEngineManager.addEventToQueue(any()) }
         assertEquals(SubscribeEvent.UnsubscribeAll, subscribeEvent.captured)
         assertTrue(subscriptionData.channels.size == 0)
         assertTrue(subscriptionData.channelGroups.size == 0)
