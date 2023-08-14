@@ -1,5 +1,0 @@
-[pubnub-kotlin](../../index.md) / [com.pubnub.api.services](../index.md) / [FilesService](index.md) / [listFiles](./list-files.md)
-
-# listFiles
-
-`@GET("/v1/files/{subKey}/channels/{channel}/files") abstract fun listFiles(@Path("subKey") subKey: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`, @Path("channel") channel: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`, @QueryMap options: `[`Map`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html)`<`[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`, `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)`>): Call<`[`ListFilesResult`](../../com.pubnub.api.models.server.files/-list-files-result/index.md)`>`

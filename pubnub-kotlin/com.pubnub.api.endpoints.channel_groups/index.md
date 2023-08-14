@@ -1,0 +1,13 @@
+//[pubnub-kotlin](../../index.md)/[com.pubnub.api.endpoints.channel_groups](index.md)
+
+# Package com.pubnub.api.endpoints.channel_groups
+
+## Types
+
+| Name | Summary |
+|---|---|
+| [AddChannelChannelGroup](-add-channel-channel-group/index.md) | [jvm]<br>class [AddChannelChannelGroup](-add-channel-channel-group/index.md) : [Endpoint](../com.pubnub.api/-endpoint/index.md)&lt;[Void](https://docs.oracle.com/javase/8/docs/api/java/lang/Void.html), [PNChannelGroupsAddChannelResult](../com.pubnub.api.models.consumer.channel_group/-p-n-channel-groups-add-channel-result/index.md)&gt; |
+| [AllChannelsChannelGroup](-all-channels-channel-group/index.md) | [jvm]<br>class [AllChannelsChannelGroup](-all-channels-channel-group/index.md) : [Endpoint](../com.pubnub.api/-endpoint/index.md)&lt;[Envelope](../com.pubnub.api.models.server/-envelope/index.md)&lt;[Map](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)&gt;&gt;, [PNChannelGroupsAllChannelsResult](../com.pubnub.api.models.consumer.channel_group/-p-n-channel-groups-all-channels-result/index.md)&gt; |
+| [DeleteChannelGroup](-delete-channel-group/index.md) | [jvm]<br>class [DeleteChannelGroup](-delete-channel-group/index.md) : [Endpoint](../com.pubnub.api/-endpoint/index.md)&lt;[Void](https://docs.oracle.com/javase/8/docs/api/java/lang/Void.html), [PNChannelGroupsDeleteGroupResult](../com.pubnub.api.models.consumer.channel_group/-p-n-channel-groups-delete-group-result/index.md)&gt; |
+| [ListAllChannelGroup](-list-all-channel-group/index.md) | [jvm]<br>class [ListAllChannelGroup](-list-all-channel-group/index.md) : [Endpoint](../com.pubnub.api/-endpoint/index.md)&lt;[Envelope](../com.pubnub.api.models.server/-envelope/index.md)&lt;[Map](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)&gt;&gt;, [PNChannelGroupsListAllResult](../com.pubnub.api.models.consumer.channel_group/-p-n-channel-groups-list-all-result/index.md)&gt; |
+| [RemoveChannelChannelGroup](-remove-channel-channel-group/index.md) | [jvm]<br>class [RemoveChannelChannelGroup](-remove-channel-channel-group/index.md) : [Endpoint](../com.pubnub.api/-endpoint/index.md)&lt;[Void](https://docs.oracle.com/javase/8/docs/api/java/lang/Void.html), [PNChannelGroupsRemoveChannelResult](../com.pubnub.api.models.consumer.channel_group/-p-n-channel-groups-remove-channel-result/index.md)&gt; |

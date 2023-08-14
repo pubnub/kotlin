@@ -1,5 +1,0 @@
-[pubnub-kotlin](../../index.md) / [com.pubnub.api.models.consumer.pubsub](../index.md) / [PubSubResult](index.md) / [channel](./channel.md)
-
-# channel
-
-`abstract val channel: `[`String`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)

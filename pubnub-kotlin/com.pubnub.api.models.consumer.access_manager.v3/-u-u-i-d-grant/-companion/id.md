@@ -1,0 +1,6 @@
+//[pubnub-kotlin](../../../../index.md)/[com.pubnub.api.models.consumer.access_manager.v3](../../index.md)/[UUIDGrant](../index.md)/[Companion](index.md)/[id](id.md)
+
+# id
+
+[jvm]\
+fun [id](id.md)(id: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), get: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) = false, update: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) = false, delete: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) = false): [UUIDGrant](../index.md)

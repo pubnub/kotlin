@@ -1,0 +1,6 @@
+//[pubnub-kotlin](../../../index.md)/[com.pubnub.api.models.consumer.files](../index.md)/[PNFileUploadResult](index.md)/[file](file.md)
+
+# file
+
+[jvm]\
+val [file](file.md): [PNFile](../-p-n-file/index.md)

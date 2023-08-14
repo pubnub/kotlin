@@ -1,5 +1,0 @@
-[pubnub-kotlin](../../index.md) / [com.pubnub.api.models.consumer.pubsub.files](../index.md) / [PNFileEventResult](index.md) / [message](./message.md)
-
-# message
-
-`val message: `[`Any`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)`?`

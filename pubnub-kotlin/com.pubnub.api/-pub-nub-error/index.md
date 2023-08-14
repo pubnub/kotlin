@@ -1,0 +1,66 @@
+//[pubnub-kotlin](../../../index.md)/[com.pubnub.api](../index.md)/[PubNubError](index.md)
+
+# PubNubError
+
+[jvm]\
+enum [PubNubError](index.md) : [Enum](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-enum/index.html)&lt;[PubNubError](index.md)&gt; 
+
+List of known PubNub errors. Observe them in [PubNubException.pubnubError](../-pub-nub-exception/pubnub-error.md) in [PNStatus.exception](../../com.pubnub.api.models.consumer/-p-n-status/exception.md).
+
+## Entries
+
+| | |
+|---|---|
+| [TIMEOUT](-t-i-m-e-o-u-t/index.md) | [jvm]<br>[TIMEOUT](-t-i-m-e-o-u-t/index.md) |
+| [CONNECT_EXCEPTION](-c-o-n-n-e-c-t_-e-x-c-e-p-t-i-o-n/index.md) | [jvm]<br>[CONNECT_EXCEPTION](-c-o-n-n-e-c-t_-e-x-c-e-p-t-i-o-n/index.md) |
+| [SECRET_KEY_MISSING](-s-e-c-r-e-t_-k-e-y_-m-i-s-s-i-n-g/index.md) | [jvm]<br>[SECRET_KEY_MISSING](-s-e-c-r-e-t_-k-e-y_-m-i-s-s-i-n-g/index.md) |
+| [JSON_ERROR](-j-s-o-n_-e-r-r-o-r/index.md) | [jvm]<br>[JSON_ERROR](-j-s-o-n_-e-r-r-o-r/index.md) |
+| [INTERNAL_ERROR](-i-n-t-e-r-n-a-l_-e-r-r-o-r/index.md) | [jvm]<br>[INTERNAL_ERROR](-i-n-t-e-r-n-a-l_-e-r-r-o-r/index.md) |
+| [PARSING_ERROR](-p-a-r-s-i-n-g_-e-r-r-o-r/index.md) | [jvm]<br>[PARSING_ERROR](-p-a-r-s-i-n-g_-e-r-r-o-r/index.md) |
+| [INVALID_ARGUMENTS](-i-n-v-a-l-i-d_-a-r-g-u-m-e-n-t-s/index.md) | [jvm]<br>[INVALID_ARGUMENTS](-i-n-v-a-l-i-d_-a-r-g-u-m-e-n-t-s/index.md) |
+| [CONNECTION_NOT_SET](-c-o-n-n-e-c-t-i-o-n_-n-o-t_-s-e-t/index.md) | [jvm]<br>[CONNECTION_NOT_SET](-c-o-n-n-e-c-t-i-o-n_-n-o-t_-s-e-t/index.md) |
+| [GROUP_MISSING](-g-r-o-u-p_-m-i-s-s-i-n-g/index.md) | [jvm]<br>[GROUP_MISSING](-g-r-o-u-p_-m-i-s-s-i-n-g/index.md) |
+| [SUBSCRIBE_KEY_MISSING](-s-u-b-s-c-r-i-b-e_-k-e-y_-m-i-s-s-i-n-g/index.md) | [jvm]<br>[SUBSCRIBE_KEY_MISSING](-s-u-b-s-c-r-i-b-e_-k-e-y_-m-i-s-s-i-n-g/index.md) |
+| [PUBLISH_KEY_MISSING](-p-u-b-l-i-s-h_-k-e-y_-m-i-s-s-i-n-g/index.md) | [jvm]<br>[PUBLISH_KEY_MISSING](-p-u-b-l-i-s-h_-k-e-y_-m-i-s-s-i-n-g/index.md) |
+| [SUBSCRIBE_TIMEOUT](-s-u-b-s-c-r-i-b-e_-t-i-m-e-o-u-t/index.md) | [jvm]<br>[SUBSCRIBE_TIMEOUT](-s-u-b-s-c-r-i-b-e_-t-i-m-e-o-u-t/index.md) |
+| [HTTP_ERROR](-h-t-t-p_-e-r-r-o-r/index.md) | [jvm]<br>[HTTP_ERROR](-h-t-t-p_-e-r-r-o-r/index.md) |
+| [MESSAGE_MISSING](-m-e-s-s-a-g-e_-m-i-s-s-i-n-g/index.md) | [jvm]<br>[MESSAGE_MISSING](-m-e-s-s-a-g-e_-m-i-s-s-i-n-g/index.md) |
+| [CHANNEL_MISSING](-c-h-a-n-n-e-l_-m-i-s-s-i-n-g/index.md) | [jvm]<br>[CHANNEL_MISSING](-c-h-a-n-n-e-l_-m-i-s-s-i-n-g/index.md) |
+| [CRYPTO_ERROR](-c-r-y-p-t-o_-e-r-r-o-r/index.md) | [jvm]<br>[CRYPTO_ERROR](-c-r-y-p-t-o_-e-r-r-o-r/index.md) |
+| [STATE_MISSING](-s-t-a-t-e_-m-i-s-s-i-n-g/index.md) | [jvm]<br>[STATE_MISSING](-s-t-a-t-e_-m-i-s-s-i-n-g/index.md) |
+| [CHANNEL_AND_GROUP_MISSING](-c-h-a-n-n-e-l_-a-n-d_-g-r-o-u-p_-m-i-s-s-i-n-g/index.md) | [jvm]<br>[CHANNEL_AND_GROUP_MISSING](-c-h-a-n-n-e-l_-a-n-d_-g-r-o-u-p_-m-i-s-s-i-n-g/index.md) |
+| [PUSH_TYPE_MISSING](-p-u-s-h_-t-y-p-e_-m-i-s-s-i-n-g/index.md) | [jvm]<br>[PUSH_TYPE_MISSING](-p-u-s-h_-t-y-p-e_-m-i-s-s-i-n-g/index.md) |
+| [DEVICE_ID_MISSING](-d-e-v-i-c-e_-i-d_-m-i-s-s-i-n-g/index.md) | [jvm]<br>[DEVICE_ID_MISSING](-d-e-v-i-c-e_-i-d_-m-i-s-s-i-n-g/index.md) |
+| [TIMETOKEN_MISSING](-t-i-m-e-t-o-k-e-n_-m-i-s-s-i-n-g/index.md) | [jvm]<br>[TIMETOKEN_MISSING](-t-i-m-e-t-o-k-e-n_-m-i-s-s-i-n-g/index.md) |
+| [CHANNELS_TIMETOKEN_MISMATCH](-c-h-a-n-n-e-l-s_-t-i-m-e-t-o-k-e-n_-m-i-s-m-a-t-c-h/index.md) | [jvm]<br>[CHANNELS_TIMETOKEN_MISMATCH](-c-h-a-n-n-e-l-s_-t-i-m-e-t-o-k-e-n_-m-i-s-m-a-t-c-h/index.md) |
+| [USER_MISSING](-u-s-e-r_-m-i-s-s-i-n-g/index.md) | [jvm]<br>[USER_MISSING](-u-s-e-r_-m-i-s-s-i-n-g/index.md) |
+| [USER_ID_MISSING](-u-s-e-r_-i-d_-m-i-s-s-i-n-g/index.md) | [jvm]<br>[USER_ID_MISSING](-u-s-e-r_-i-d_-m-i-s-s-i-n-g/index.md) |
+| [USER_NAME_MISSING](-u-s-e-r_-n-a-m-e_-m-i-s-s-i-n-g/index.md) | [jvm]<br>[USER_NAME_MISSING](-u-s-e-r_-n-a-m-e_-m-i-s-s-i-n-g/index.md) |
+| [RESOURCES_MISSING](-r-e-s-o-u-r-c-e-s_-m-i-s-s-i-n-g/index.md) | [jvm]<br>[RESOURCES_MISSING](-r-e-s-o-u-r-c-e-s_-m-i-s-s-i-n-g/index.md) |
+| [PERMISSION_MISSING](-p-e-r-m-i-s-s-i-o-n_-m-i-s-s-i-n-g/index.md) | [jvm]<br>[PERMISSION_MISSING](-p-e-r-m-i-s-s-i-o-n_-m-i-s-s-i-n-g/index.md) |
+| [INVALID_ACCESS_TOKEN](-i-n-v-a-l-i-d_-a-c-c-e-s-s_-t-o-k-e-n/index.md) | [jvm]<br>[INVALID_ACCESS_TOKEN](-i-n-v-a-l-i-d_-a-c-c-e-s-s_-t-o-k-e-n/index.md) |
+| [MESSAGE_ACTION_MISSING](-m-e-s-s-a-g-e_-a-c-t-i-o-n_-m-i-s-s-i-n-g/index.md) | [jvm]<br>[MESSAGE_ACTION_MISSING](-m-e-s-s-a-g-e_-a-c-t-i-o-n_-m-i-s-s-i-n-g/index.md) |
+| [MESSAGE_ACTION_TYPE_MISSING](-m-e-s-s-a-g-e_-a-c-t-i-o-n_-t-y-p-e_-m-i-s-s-i-n-g/index.md) | [jvm]<br>[MESSAGE_ACTION_TYPE_MISSING](-m-e-s-s-a-g-e_-a-c-t-i-o-n_-t-y-p-e_-m-i-s-s-i-n-g/index.md) |
+| [MESSAGE_ACTION_VALUE_MISSING](-m-e-s-s-a-g-e_-a-c-t-i-o-n_-v-a-l-u-e_-m-i-s-s-i-n-g/index.md) | [jvm]<br>[MESSAGE_ACTION_VALUE_MISSING](-m-e-s-s-a-g-e_-a-c-t-i-o-n_-v-a-l-u-e_-m-i-s-s-i-n-g/index.md) |
+| [MESSAGE_TIMETOKEN_MISSING](-m-e-s-s-a-g-e_-t-i-m-e-t-o-k-e-n_-m-i-s-s-i-n-g/index.md) | [jvm]<br>[MESSAGE_TIMETOKEN_MISSING](-m-e-s-s-a-g-e_-t-i-m-e-t-o-k-e-n_-m-i-s-s-i-n-g/index.md) |
+| [MESSAGE_ACTION_TIMETOKEN_MISSING](-m-e-s-s-a-g-e_-a-c-t-i-o-n_-t-i-m-e-t-o-k-e-n_-m-i-s-s-i-n-g/index.md) | [jvm]<br>[MESSAGE_ACTION_TIMETOKEN_MISSING](-m-e-s-s-a-g-e_-a-c-t-i-o-n_-t-i-m-e-t-o-k-e-n_-m-i-s-s-i-n-g/index.md) |
+| [HISTORY_MESSAGE_ACTIONS_MULTIPLE_CHANNELS](-h-i-s-t-o-r-y_-m-e-s-s-a-g-e_-a-c-t-i-o-n-s_-m-u-l-t-i-p-l-e_-c-h-a-n-n-e-l-s/index.md) | [jvm]<br>[HISTORY_MESSAGE_ACTIONS_MULTIPLE_CHANNELS](-h-i-s-t-o-r-y_-m-e-s-s-a-g-e_-a-c-t-i-o-n-s_-m-u-l-t-i-p-l-e_-c-h-a-n-n-e-l-s/index.md) |
+| [PUSH_TOPIC_MISSING](-p-u-s-h_-t-o-p-i-c_-m-i-s-s-i-n-g/index.md) | [jvm]<br>[PUSH_TOPIC_MISSING](-p-u-s-h_-t-o-p-i-c_-m-i-s-s-i-n-g/index.md) |
+| [TOKEN_MISSING](-t-o-k-e-n_-m-i-s-s-i-n-g/index.md) | [jvm]<br>[TOKEN_MISSING](-t-o-k-e-n_-m-i-s-s-i-n-g/index.md) |
+| [UUID_NULL_OR_EMPTY](-u-u-i-d_-n-u-l-l_-o-r_-e-m-p-t-y/index.md) | [jvm]<br>[UUID_NULL_OR_EMPTY](-u-u-i-d_-n-u-l-l_-o-r_-e-m-p-t-y/index.md) |
+| [USERID_NULL_OR_EMPTY](-u-s-e-r-i-d_-n-u-l-l_-o-r_-e-m-p-t-y/index.md) | [jvm]<br>[USERID_NULL_OR_EMPTY](-u-s-e-r-i-d_-n-u-l-l_-o-r_-e-m-p-t-y/index.md) |
+| [CHANNEL_OR_CHANNEL_GROUP_MISSING](-c-h-a-n-n-e-l_-o-r_-c-h-a-n-n-e-l_-g-r-o-u-p_-m-i-s-s-i-n-g/index.md) | [jvm]<br>[CHANNEL_OR_CHANNEL_GROUP_MISSING](-c-h-a-n-n-e-l_-o-r_-c-h-a-n-n-e-l_-g-r-o-u-p_-m-i-s-s-i-n-g/index.md) |
+
+## Functions
+
+| Name | Summary |
+|---|---|
+| [toString](to-string.md) | [jvm]<br>open override fun [toString](to-string.md)(): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
+
+## Properties
+
+| Name | Summary |
+|---|---|
+| [message](message.md) | [jvm]<br>val [message](message.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)<br>The error message. |
+| [name](../../com.pubnub.api.models.consumer.objects.membership/-p-n-channel-details-level/-c-h-a-n-n-e-l_-w-i-t-h_-c-u-s-t-o-m/index.md#-372974862%2FProperties%2F-1216412040) | [jvm]<br>val [name](../../com.pubnub.api.models.consumer.objects.membership/-p-n-channel-details-level/-c-h-a-n-n-e-l_-w-i-t-h_-c-u-s-t-o-m/index.md#-372974862%2FProperties%2F-1216412040): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
+| [ordinal](../../com.pubnub.api.models.consumer.objects.membership/-p-n-channel-details-level/-c-h-a-n-n-e-l_-w-i-t-h_-c-u-s-t-o-m/index.md#-739389684%2FProperties%2F-1216412040) | [jvm]<br>val [ordinal](../../com.pubnub.api.models.consumer.objects.membership/-p-n-channel-details-level/-c-h-a-n-n-e-l_-w-i-t-h_-c-u-s-t-o-m/index.md#-739389684%2FProperties%2F-1216412040): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html) |

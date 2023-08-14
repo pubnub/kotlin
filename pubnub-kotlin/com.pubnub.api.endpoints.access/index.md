@@ -1,0 +1,11 @@
+//[pubnub-kotlin](../../index.md)/[com.pubnub.api.endpoints.access](index.md)
+
+# Package com.pubnub.api.endpoints.access
+
+## Types
+
+| Name | Summary |
+|---|---|
+| [Grant](-grant/index.md) | [jvm]<br>class [Grant](-grant/index.md) : [Endpoint](../com.pubnub.api/-endpoint/index.md)&lt;[Envelope](../com.pubnub.api.models.server/-envelope/index.md)&lt;[AccessManagerGrantPayload](../com.pubnub.api.models.server.access_manager/-access-manager-grant-payload/index.md)&gt;, [PNAccessManagerGrantResult](../com.pubnub.api.models.consumer.access_manager/-p-n-access-manager-grant-result/index.md)&gt; |
+| [GrantToken](-grant-token/index.md) | [jvm]<br>class [GrantToken](-grant-token/index.md)(pubnub: [PubNub](../com.pubnub.api/-pub-nub/index.md), val ttl: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html), meta: [Any](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)?, authorizedUUID: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?, channels: [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[ChannelGrant](../com.pubnub.api.models.consumer.access_manager.v3/-channel-grant/index.md)&gt;, channelGroups: [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[ChannelGroupGrant](../com.pubnub.api.models.consumer.access_manager.v3/-channel-group-grant/index.md)&gt;, uuids: [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[UUIDGrant](../com.pubnub.api.models.consumer.access_manager.v3/-u-u-i-d-grant/index.md)&gt;) : [Endpoint](../com.pubnub.api/-endpoint/index.md)&lt;[GrantTokenResponse](../com.pubnub.api.models.server.access_manager.v3/-grant-token-response/index.md), [PNGrantTokenResult](../com.pubnub.api.models.consumer.access_manager.v3/-p-n-grant-token-result/index.md)&gt; |
+| [RevokeToken](-revoke-token/index.md) | [jvm]<br>class [RevokeToken](-revoke-token/index.md)(pubnub: [PubNub](../com.pubnub.api/-pub-nub/index.md), token: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)) : [Endpoint](../com.pubnub.api/-endpoint/index.md)&lt;[RevokeTokenResponse](../com.pubnub.api.models.server.access_manager.v3/-revoke-token-response/index.md), [Unit](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html)&gt; |
