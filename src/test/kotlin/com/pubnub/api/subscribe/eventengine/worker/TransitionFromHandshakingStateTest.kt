@@ -62,11 +62,11 @@ class TransitionFromHandshakingStateTest {
         )
 
         // then
-        assertEquals(SubscribeState.Receiving(channels, channelGroups, subscriptionCursor), state)
+        assertEquals(SubscribeState.Handshaking(channels, channelGroups, subscriptionCursor), state)
         assertEquals(
             setOf(
                 CancelHandshake,
-                ReceiveMessages(channels, channelGroups, subscriptionCursor)
+                Handshake(channels, channelGroups)
             ),
             invocations
         )
