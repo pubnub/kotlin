@@ -66,6 +66,44 @@ class EventEngineSteps(private val state: EventEngineState) {
         state.pubnub.subscribe(channels = listOf(state.channelName))
     }
 
+    @When("I subscribe with timetoken {long}")
+    fun i_subscribe_with_timetoken(timetoken: Long) {
+        state.pubnub.addListener(object : SubscribeCallback() {
+            override fun status(pubnub: PubNub, pnStatus: PNStatus) {
+                state.statusesList.add(pnStatus)
+            }
+
+            override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {
+                state.messagesList.add(pnMessageResult)
+            }
+
+            override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {
+                state.messagesList.add(pnPresenceEventResult)
+            }
+
+            override fun signal(pubnub: PubNub, pnSignalResult: PNSignalResult) {
+                state.messagesList.add(pnSignalResult)
+            }
+
+            override fun messageAction(pubnub: PubNub, pnMessageActionResult: PNMessageActionResult) {
+                state.messagesList.add(pnMessageActionResult)
+            }
+
+            override fun objects(pubnub: PubNub, objectEvent: PNObjectEventResult) {
+                state.messagesList.add(objectEvent)
+            }
+
+            override fun file(pubnub: PubNub, pnFileEventResult: PNFileEventResult) {
+                state.messagesList.add(pnFileEventResult)
+            }
+        })
+
+        state.pubnub.subscribe(
+            channels = listOf(state.channelName),
+            withTimetoken = timetoken
+        )
+    }
+
     @Then("I receive the message in my subscribe response")
     fun i_receive_the_message_in_my_subscribe_response() {
         await.pollInterval(50, TimeUnit.MILLISECONDS).atMost(500, TimeUnit.MILLISECONDS).untilAsserted {

@@ -1,3 +1,9 @@
+## v7.6.0
+August 14 2023
+
+#### Added
+- Kotlin SDK doesn't depend on Jackson library anymore. This reduces the size of required dependencies which should result in size reduction of applications that use Kotlin SDK.
+
 ## v7.5.0
 April 19 2023
 

@@ -140,11 +140,11 @@ class TransitionFromHandshakingReconnectingStateTest {
         )
 
         // then
-        assertEquals(SubscribeState.Receiving(channels, channelGroups, subscriptionCursor), state)
+        assertEquals(SubscribeState.Handshaking(channels, channelGroups, subscriptionCursor), state)
         assertEquals(
             setOf(
                 SubscribeEffectInvocation.CancelHandshakeReconnect,
-                SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor)
+                SubscribeEffectInvocation.Handshake(channels, channelGroups)
             ),
             invocations
         )
