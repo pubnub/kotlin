@@ -1,7 +1,5 @@
 package com.pubnub.api.managers
 
-import com.fasterxml.jackson.core.JsonProcessingException
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonArray
@@ -29,7 +27,6 @@ class MapperManager {
 
     private val objectMapper: Gson
     internal val converterFactory: Converter.Factory
-    private val jacksonObjectMapper = jacksonObjectMapper()
 
     init {
         val booleanAsIntAdapter = object : TypeAdapter<Boolean>() {
@@ -61,15 +58,6 @@ class MapperManager {
             .disableHtmlEscaping()
             .create()
         converterFactory = GsonConverterFactory.create(objectMapper)
-    }
-
-    @Throws(PubNubException::class)
-    fun toJsonUsingJackson(input: Any): String {
-        return try {
-            this.jacksonObjectMapper.writeValueAsString(input)
-        } catch (e: JsonProcessingException) {
-            throw PubNubException(PubNubError.JSON_ERROR).copy(errorMessage = e.message ?: PubNubError.JSON_ERROR.message)
-        }
     }
 
     fun hasField(element: JsonElement, field: String) = element.asJsonObject.has(field)

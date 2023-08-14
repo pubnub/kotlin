@@ -1,23 +1,21 @@
 package com.pubnub.api.models.consumer.access_manager.v3
 
-import com.fasterxml.jackson.annotation.JsonCreator
-import com.fasterxml.jackson.annotation.JsonProperty
 import com.pubnub.api.models.TokenBitmask
 
 data class PNToken(
-    @JsonProperty("v") val version: Int = 0,
-    @JsonProperty("t") val timestamp: Long = 0,
-    @JsonProperty("ttl") val ttl: Long = 0,
-    @JsonProperty("uuid") val authorizedUUID: String? = null,
-    @JsonProperty("res") val resources: PNTokenResources,
-    @JsonProperty("pat") val patterns: PNTokenResources,
-    @JsonProperty("meta") val meta: Any? = null
+    val version: Int = 0,
+    val timestamp: Long = 0,
+    val ttl: Long = 0,
+    val authorizedUUID: String? = null,
+    val resources: PNTokenResources,
+    val patterns: PNTokenResources,
+    val meta: Any? = null
 ) {
 
     data class PNTokenResources(
-        @JsonProperty("chan") val channels: Map<String, PNResourcePermissions> = emptyMap(),
-        @JsonProperty("grp") val channelGroups: Map<String, PNResourcePermissions> = emptyMap(),
-        @JsonProperty("uuid") val uuids: Map<String, PNResourcePermissions> = emptyMap()
+        val channels: Map<String, PNResourcePermissions> = emptyMap(),
+        val channelGroups: Map<String, PNResourcePermissions> = emptyMap(),
+        val uuids: Map<String, PNResourcePermissions> = emptyMap()
     )
 
     data class PNResourcePermissions(
@@ -30,7 +28,6 @@ data class PNToken(
         val join: Boolean = false
     ) {
 
-        @JsonCreator
         constructor(grant: Int) : this(
             grant and TokenBitmask.READ != 0,
             grant and TokenBitmask.WRITE != 0,

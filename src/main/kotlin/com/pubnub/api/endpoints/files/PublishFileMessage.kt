@@ -40,7 +40,7 @@ open class PublishFileMessage(
 
     @Throws(PubNubException::class)
     override fun doWork(queryParams: HashMap<String, String>): Call<List<Any>> {
-        val stringifiedMessage: String = pubnub.mapper.toJsonUsingJackson(FileUploadNotification(message, pnFile))
+        val stringifiedMessage: String = pubnub.mapper.toJson(FileUploadNotification(message, pnFile))
         val messageAsString = if (pubnub.configuration.cipherKey.isValid()) {
             val crypto = Crypto(pubnub.configuration.cipherKey, pubnub.configuration.useRandomInitializationVector)
             crypto.encrypt(stringifiedMessage).quoted()
@@ -48,7 +48,7 @@ open class PublishFileMessage(
             stringifiedMessage
         }
         meta?.let {
-            val stringifiedMeta: String = pubnub.mapper.toJsonUsingJackson(it)
+            val stringifiedMeta: String = pubnub.mapper.toJson(it)
             queryParams["meta"] = stringifiedMeta
         }
         shouldStore?.numericString?.let { queryParams["store"] = it }

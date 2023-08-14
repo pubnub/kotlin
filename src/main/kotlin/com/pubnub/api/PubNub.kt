@@ -105,7 +105,7 @@ class PubNub internal constructor(
 
     companion object {
         private const val TIMESTAMP_DIVIDER = 1000
-        private const val SDK_VERSION = "7.5.0"
+        private const val SDK_VERSION = "7.6.0"
         private const val MAX_SEQUENCE = 65535
 
         /**
