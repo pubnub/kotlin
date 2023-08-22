@@ -18,14 +18,14 @@ import java.time.Duration
 import java.util.concurrent.Executors
 
 class HandshakeEffectTest {
-    private val eventSink = TestEventSink()
+    private val subscribeEventSink = TestEventSink<SubscribeEvent>()
     private val subscriptionCursor = SubscriptionCursor(1337L, "1337")
     private val reason = PubNubException("Unknown error")
 
     @Test
     fun `should deliver HandshakeSuccess event when HandshakeEffect succeeded`() {
         // given
-        val handshakeEffect = HandshakeEffect(successfulRemoteAction(subscriptionCursor), eventSink)
+        val handshakeEffect = HandshakeEffect(successfulRemoteAction(subscriptionCursor), subscribeEventSink)
 
         // when
         handshakeEffect.runEffect()
@@ -36,14 +36,14 @@ class HandshakeEffectTest {
             .with()
             .pollInterval(Duration.ofMillis(20))
             .untilAsserted {
-                assertEquals(listOf(SubscribeEvent.HandshakeSuccess(subscriptionCursor)), eventSink.subscribeEvents)
+                assertEquals(listOf(SubscribeEvent.HandshakeSuccess(subscriptionCursor)), subscribeEventSink.events)
             }
     }
 
     @Test
     fun `should deliver HandshakeFailure event when HandshakeEffect failed`() {
         // given
-        val handshakeEffect = HandshakeEffect(failingRemoteAction(reason), eventSink)
+        val handshakeEffect = HandshakeEffect(failingRemoteAction(reason), subscribeEventSink)
 
         // when
         handshakeEffect.runEffect()
@@ -54,7 +54,7 @@ class HandshakeEffectTest {
             .with()
             .pollInterval(Duration.ofMillis(20))
             .untilAsserted {
-                assertEquals(listOf(SubscribeEvent.HandshakeFailure(reason)), eventSink.subscribeEvents)
+                assertEquals(listOf(SubscribeEvent.HandshakeFailure(reason)), subscribeEventSink.events)
             }
     }
 
@@ -62,7 +62,7 @@ class HandshakeEffectTest {
     fun `should cancel remoteAction when cancel effect`() {
         // given
         val remoteAction: RemoteAction<SubscriptionCursor> = spyk()
-        val handshakeEffect = HandshakeEffect(remoteAction, eventSink)
+        val handshakeEffect = HandshakeEffect(remoteAction, subscribeEventSink)
 
         // when
         handshakeEffect.cancel()
@@ -72,11 +72,11 @@ class HandshakeEffectTest {
     }
 }
 
-class TestEventSink : Sink<SubscribeEvent> {
-    val subscribeEvents = mutableListOf<SubscribeEvent>()
+class TestEventSink<T> : Sink<T> {
+    val events = mutableListOf<T>()
 
-    override fun add(item: SubscribeEvent) {
-        subscribeEvents.add(item)
+    override fun add(item: T) {
+        events.add(item)
     }
 }
 

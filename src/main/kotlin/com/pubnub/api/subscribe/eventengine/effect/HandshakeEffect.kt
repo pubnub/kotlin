@@ -8,8 +8,8 @@ import com.pubnub.api.subscribe.eventengine.event.SubscribeEvent
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
 import org.slf4j.LoggerFactory
 
-class HandshakeEffect(
-    private val remoteAction: RemoteAction<SubscriptionCursor>,
+class HandshakeEffect( // todo why this is managed effect?
+    private val handshakeRemoteAction: RemoteAction<SubscriptionCursor>,
     private val subscribeEventSink: Sink<SubscribeEvent>,
 ) : ManagedEffect {
     private val log = LoggerFactory.getLogger(HandshakeEffect::class.java)
@@ -17,7 +17,7 @@ class HandshakeEffect(
     override fun runEffect() {
         log.trace("Running HandshakeEffect")
 
-        remoteAction.async { result, status ->
+        handshakeRemoteAction.async { result, status ->
             if (status.error) {
                 subscribeEventSink.add(
                     SubscribeEvent.HandshakeFailure(
@@ -32,6 +32,6 @@ class HandshakeEffect(
     }
 
     override fun cancel() {
-        remoteAction.silentCancel()
+        handshakeRemoteAction.silentCancel()
     }
 }

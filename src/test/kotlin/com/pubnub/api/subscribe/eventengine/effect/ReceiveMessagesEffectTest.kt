@@ -18,7 +18,7 @@ import java.time.Duration
 
 class ReceiveMessagesEffectTest {
     private val subscriptionCursor = SubscriptionCursor(1337L, "1337")
-    private val eventSink = TestEventSink()
+    private val subscribeEventSink = TestEventSink<SubscribeEvent>()
     private val messages: List<PNEvent> = createPNMessageResultList()
     private val receiveMessageResult = ReceiveMessagesResult(messages, subscriptionCursor)
     private val reason = PubNubException("Test")
@@ -26,7 +26,7 @@ class ReceiveMessagesEffectTest {
     @Test
     fun `should deliver ReceiveSuccess event when ReceiveMessagesEffect succeeded `() {
         // given
-        val receiveMessagesEffect = ReceiveMessagesEffect(successfulRemoteAction(receiveMessageResult), eventSink)
+        val receiveMessagesEffect = ReceiveMessagesEffect(successfulRemoteAction(receiveMessageResult), subscribeEventSink)
 
         // when
         receiveMessagesEffect.runEffect()
@@ -36,13 +36,13 @@ class ReceiveMessagesEffectTest {
             .atMost(Durations.ONE_SECOND)
             .with()
             .pollInterval(Duration.ofMillis(20))
-            .untilAsserted { assertEquals(listOf(SubscribeEvent.ReceiveSuccess(messages, subscriptionCursor)), eventSink.subscribeEvents) }
+            .untilAsserted { assertEquals(listOf(SubscribeEvent.ReceiveSuccess(messages, subscriptionCursor)), subscribeEventSink.events) }
     }
 
     @Test
     fun `should deliver ReceiveFailure event when ReceiveMessagesEffect failed `() {
         // given
-        val receiveMessagesEffect = ReceiveMessagesEffect(failingRemoteAction(reason), eventSink)
+        val receiveMessagesEffect = ReceiveMessagesEffect(failingRemoteAction(reason), subscribeEventSink)
 
         // when
         receiveMessagesEffect.runEffect()
@@ -52,14 +52,14 @@ class ReceiveMessagesEffectTest {
             .atMost(Durations.ONE_SECOND)
             .with()
             .pollInterval(Duration.ofMillis(20))
-            .untilAsserted { assertEquals(listOf(SubscribeEvent.ReceiveFailure(reason)), eventSink.subscribeEvents) }
+            .untilAsserted { assertEquals(listOf(SubscribeEvent.ReceiveFailure(reason)), subscribeEventSink.events) }
     }
 
     @Test
     fun `should cancel remoteAction when cancel effect`() {
         // given
         val remoteAction: RemoteAction<ReceiveMessagesResult> = spyk()
-        val receiveMessagesEffect = ReceiveMessagesEffect(remoteAction, eventSink)
+        val receiveMessagesEffect = ReceiveMessagesEffect(remoteAction, subscribeEventSink)
 
         // when
         receiveMessagesEffect.cancel()
