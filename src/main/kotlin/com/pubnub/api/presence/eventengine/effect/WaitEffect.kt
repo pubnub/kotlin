@@ -3,28 +3,41 @@ package com.pubnub.api.presence.eventengine.effect
 import com.pubnub.api.eventengine.ManagedEffect
 import com.pubnub.api.eventengine.Sink
 import com.pubnub.api.presence.eventengine.event.PresenceEvent
-import java.util.Timer
-import kotlin.concurrent.timerTask
-
-private const val HEARTBEAT_INTERVAL_MULTIPLIER = 1000L
+import com.pubnub.extension.scheduleWithDelay
+import java.time.Duration
+import java.util.concurrent.Executors
+import java.util.concurrent.ScheduledExecutorService
+import java.util.concurrent.ScheduledFuture
 
 class WaitEffect( // todo handle pubnub.configuration.heartbeatInterval <= 0
-    private val heartbeatIntervalInSec: Int, // todo if the interval is 0 or less, do not start the timer
-    private val presenceEventSink: Sink<PresenceEvent>, // todo this should be check at PresenceEventEngineCreation
-    private var waitForNextHeartbeatTimer: Timer = Timer("Heartbeat Timer")
+    private val heartbeatInterval: Duration, // todo if the interval is 0 or less, do not start the timer
+    private val presenceEventSink: Sink<PresenceEvent>, // todo this should  be check at PresenceEventEngineCreation
+    private val executorService: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor()
 ) : ManagedEffect {
 
+    @Transient
+    private var cancelled: Boolean = false
+
+    @Transient
+    private var scheduled: ScheduledFuture<*>? = null
+
+    @Synchronized
     override fun runEffect() {
-        waitForNextHeartbeatTimer.schedule(
-            timerTask {
-                presenceEventSink.add(PresenceEvent.TimesUp)
-            },
-            0,
-            heartbeatIntervalInSec * HEARTBEAT_INTERVAL_MULTIPLIER // todo do we want to have it going endlessly and have "CancelWait" to cancel it
-        )
+        if (cancelled) {
+            return
+        }
+
+        scheduled = executorService.scheduleWithDelay(heartbeatInterval) {
+            presenceEventSink.add(PresenceEvent.TimesUp)
+        }
     }
 
+    @Synchronized
     override fun cancel() {
-        waitForNextHeartbeatTimer.cancel()
+        if (cancelled) {
+            return
+        }
+        scheduled?.cancel(true)
+        cancelled = true
     }
 }

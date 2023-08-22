@@ -6,10 +6,10 @@ import com.pubnub.api.eventengine.ManagedEffect
 import com.pubnub.api.eventengine.Sink
 import com.pubnub.api.presence.eventengine.event.PresenceEvent
 import com.pubnub.api.subscribe.eventengine.effect.RetryPolicy
+import com.pubnub.extension.scheduleWithDelay
 import org.slf4j.LoggerFactory
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.ScheduledFuture
-import java.util.concurrent.TimeUnit
 
 internal class DelayedHeartbeatEffect(
     private val heartbeatRemoteAction: RemoteAction<Boolean>,
@@ -39,7 +39,7 @@ internal class DelayedHeartbeatEffect(
             return
         }
 
-        scheduled = executorService.schedule({
+        scheduled = executorService.scheduleWithDelay(delay) {
             heartbeatRemoteAction.async { _, status ->
                 if (status.error) {
                     presenceEventSink.add(PresenceEvent.HeartbeatFailure(status.exception ?: PubNubException("Unknown error")))
@@ -47,7 +47,7 @@ internal class DelayedHeartbeatEffect(
                     presenceEventSink.add(PresenceEvent.HeartbeatSuccess)
                 }
             }
-        }, delay.toMillis(), TimeUnit.MILLISECONDS)
+        }
     }
 
     @Synchronized

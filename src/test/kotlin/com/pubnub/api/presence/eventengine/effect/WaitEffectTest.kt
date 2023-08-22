@@ -2,24 +2,20 @@ package com.pubnub.api.presence.eventengine.effect
 
 import com.pubnub.api.presence.eventengine.event.PresenceEvent
 import com.pubnub.api.subscribe.eventengine.effect.TestEventSink
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.verify
 import org.awaitility.Awaitility
 import org.awaitility.Durations
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.time.Duration
-import java.util.Timer
 
 class WaitEffectTest {
-    private val heartbeatIntervalInSec: Int = 1
+    private val heartbeatInterval = Duration.ofMillis(1)
     private val presenceEventSink = TestEventSink<PresenceEvent>()
 
     @Test
     fun `should deliver TimesUp event when WaitEffect finishes successfully`() {
         // given
-        val waitEffect = WaitEffect(heartbeatIntervalInSec, presenceEventSink)
+        val waitEffect = WaitEffect(heartbeatInterval, presenceEventSink)
 
         // when
         waitEffect.runEffect()
@@ -35,16 +31,42 @@ class WaitEffectTest {
     }
 
     @Test
-    fun `should cancel timer when cancel effect`() {
+    fun `should not deliver TimesUp event when cancelled on time`() {
         // given
-        val timer: Timer = mockk()
-        val waitEffect = WaitEffect(heartbeatIntervalInSec, presenceEventSink, timer)
-        every { timer.cancel() } returns Unit
+        val waitEffect = WaitEffect(Duration.ofMillis(20), presenceEventSink)
+
+        // when
+        waitEffect.runEffect()
+        waitEffect.cancel()
+
+        assertEquals(emptyList<PresenceEvent>(), presenceEventSink.events)
+
+        // then
+        Awaitility.await()
+            .during(Duration.ofMillis(200))
+            .with()
+            .pollInterval(Duration.ofMillis(20))
+            .untilAsserted {
+                assertEquals(emptyList<PresenceEvent>(), presenceEventSink.events)
+            }
+    }
+
+    @Test
+    fun `should not deliver TimesUp event when cancelled before runEffect`() {
+        // given
+        val waitEffect = WaitEffect(heartbeatInterval, presenceEventSink)
 
         // when
         waitEffect.cancel()
+        waitEffect.runEffect()
 
         // then
-        verify { timer.cancel() }
+        Awaitility.await()
+            .during(Duration.ofMillis(200))
+            .with()
+            .pollInterval(Duration.ofMillis(20))
+            .untilAsserted {
+                assertEquals(emptyList<PresenceEvent>(), presenceEventSink.events)
+            }
     }
 }
