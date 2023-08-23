@@ -12,5 +12,5 @@ typealias PresenceEventEngine = EventEngine<PresenceEffectInvocation, PresenceEv
 fun PresenceEventEngine(
     effectSink: Sink<PresenceEffectInvocation>,
     eventSource: Source<PresenceEvent>,
-    currentState: PresenceState = PresenceState.HearbeatInactive,
+    currentState: PresenceState = PresenceState.HeartbeatInactive,
 ): PresenceEventEngine = EventEngine(effectSink, eventSource, currentState)

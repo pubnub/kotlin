@@ -1,18 +1,18 @@
 package com.pubnub.api.eventengine
 
-import com.pubnub.api.presence.eventengine.effect.PresenceEffectInvocation
-import com.pubnub.api.presence.eventengine.event.PresenceEvent
-import com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectInvocation
-import com.pubnub.api.subscribe.eventengine.event.SubscribeEvent
+interface EventEngineConf<Ei : EffectInvocation, Ev : Event> {
+    val eventSink: Sink<Ev>
+    val eventSource: Source<Ev>
+    val effectSink: Sink<Ei>
+    val effectSource: Source<Ei>
+}
 
-interface EventEnginesConf {
-    val subscribeEventSink: Sink<SubscribeEvent>
-    val subscribeEventSource: Source<SubscribeEvent>
-    val subscribeEffectSink: Sink<SubscribeEffectInvocation>
-    val subscribeEffectSource: Source<SubscribeEffectInvocation>
-
-    val presenceEventSink: Sink<PresenceEvent>
-    val presenceEventSource: Source<PresenceEvent>
-    val presenceEffectSink: Sink<PresenceEffectInvocation>
-    val presenceEffectSource: Source<PresenceEffectInvocation>
+class QueueEventEngineConf<Ei : EffectInvocation, Ev : Event>(
+    queueEffectSinkSource: SinkSource<Ei> = QueueSinkSource(),
+    queueEventSinkSource: SinkSource<Ev> = QueueSinkSource()
+) : EventEngineConf<Ei, Ev> {
+    override val eventSink: Sink<Ev> = queueEventSinkSource
+    override val eventSource: Source<Ev> = queueEventSinkSource
+    override val effectSink: Sink<Ei> = queueEffectSinkSource
+    override val effectSource: Source<Ei> = queueEffectSinkSource
 }

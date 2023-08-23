@@ -6,7 +6,6 @@ import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.eventengine.EffectDispatcher
-import com.pubnub.api.eventengine.EventEnginesConf
 import com.pubnub.api.managers.ListenerManager
 import com.pubnub.api.managers.PresenceEventEngineManager
 import com.pubnub.api.managers.SubscribeEventEngineManager
@@ -16,6 +15,7 @@ import com.pubnub.api.presence.eventengine.effect.effectprovider.HeartbeatProvid
 import com.pubnub.api.presence.eventengine.effect.effectprovider.LeaveProviderImpl
 import com.pubnub.api.presence.eventengine.event.PresenceEvent
 import com.pubnub.api.subscribe.eventengine.SubscribeEventEngine
+import com.pubnub.api.subscribe.eventengine.configuration.IEventEnginesConf
 import com.pubnub.api.subscribe.eventengine.data.SubscriptionData
 import com.pubnub.api.subscribe.eventengine.effect.RetryPolicy
 import com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectFactory
@@ -41,7 +41,7 @@ class Subscribe(
             pubNub: PubNub,
             listenerManager: ListenerManager,
             retryPolicy: RetryPolicy,
-            eventEnginesConf: EventEnginesConf,
+            eventEnginesConf: IEventEnginesConf,
             messageProcessor: SubscribeMessageProcessor
         ): Subscribe {
             val subscribeEventEngineManager = createAndStartSubscribeEventEngineManager(
@@ -64,14 +64,14 @@ class Subscribe(
         private fun createAndStartSubscribeEventEngineManager(
             pubNub: PubNub,
             messageProcessor: SubscribeMessageProcessor,
-            eventEnginesConf: EventEnginesConf,
+            eventEnginesConf: IEventEnginesConf,
             retryPolicy: RetryPolicy,
             listenerManager: ListenerManager
         ): SubscribeEventEngineManager {
             val subscribeEffectFactory = SubscribeEffectFactory(
                 handshakeProvider = HandshakeProviderImpl(pubNub),
                 receiveMessagesProvider = ReceiveMessagesProviderImpl(pubNub, messageProcessor),
-                subscribeEventSink = eventEnginesConf.subscribeEventSink,
+                subscribeEventSink = eventEnginesConf.subscribe.eventSink,
                 policy = retryPolicy,
                 executorService = Executors.newSingleThreadScheduledExecutor(),
                 messagesConsumer = listenerManager,
@@ -79,18 +79,18 @@ class Subscribe(
             )
 
             val subscribeEventEngine = SubscribeEventEngine(
-                effectSink = eventEnginesConf.subscribeEffectSink,
-                eventSource = eventEnginesConf.subscribeEventSource
+                effectSink = eventEnginesConf.subscribe.effectSink,
+                eventSource = eventEnginesConf.subscribe.eventSource
             )
             val subscribeEffectDispatcher = EffectDispatcher(
                 effectFactory = subscribeEffectFactory,
-                effectSource = eventEnginesConf.subscribeEffectSource
+                effectSource = eventEnginesConf.subscribe.effectSource
             )
 
             val subscribeEventEngineManager = SubscribeEventEngineManager(
                 eventEngine = subscribeEventEngine,
                 effectDispatcher = subscribeEffectDispatcher,
-                eventSink = eventEnginesConf.subscribeEventSink
+                eventSink = eventEnginesConf.subscribe.eventSink
             ).apply {
                 if (pubNub.configuration.enableSubscribeBeta) {
                     start()
@@ -101,32 +101,32 @@ class Subscribe(
 
         private fun createAndStartPresenceEventEngineManager(
             pubNub: PubNub,
-            eventEnginesConf: EventEnginesConf,
+            eventEnginesConf: IEventEnginesConf,
             retryPolicy: RetryPolicy
         ): PresenceEventEngineManager {
             val presenceEffectFactory = PresenceEffectFactory(
                 heartbeatProvider = HeartbeatProviderImpl(pubNub),
                 leaveProvider = LeaveProviderImpl(pubNub),
-                presenceEventSink = eventEnginesConf.presenceEventSink,
+                presenceEventSink = eventEnginesConf.presence.eventSink,
                 policy = retryPolicy,
                 executorService = Executors.newSingleThreadScheduledExecutor(),
                 heartbeatIntervalInSec = pubNub.configuration.heartbeatInterval
             )
 
             val presenceEventEngine = PresenceEventEngine(
-                effectSink = eventEnginesConf.presenceEffectSink,
-                eventSource = eventEnginesConf.presenceEventSource
+                effectSink = eventEnginesConf.presence.effectSink,
+                eventSource = eventEnginesConf.presence.eventSource
             )
 
             val presenceEffectDispatcher = EffectDispatcher(
                 effectFactory = presenceEffectFactory,
-                effectSource = eventEnginesConf.presenceEffectSource
+                effectSource = eventEnginesConf.presence.effectSource
             )
 
             val presenceEventEngineManager = PresenceEventEngineManager(
                 eventEngine = presenceEventEngine,
                 effectDispatcher = presenceEffectDispatcher,
-                eventSink = eventEnginesConf.presenceEventSink
+                eventSink = eventEnginesConf.presence.eventSink
             ).apply {
                 if (pubNub.configuration.enableSubscribeBeta) {
                     start()
