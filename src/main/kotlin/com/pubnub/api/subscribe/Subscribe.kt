@@ -6,7 +6,6 @@ import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.eventengine.EffectDispatcher
-import com.pubnub.api.eventengine.Event
 import com.pubnub.api.eventengine.EventEnginesConf
 import com.pubnub.api.managers.ListenerManager
 import com.pubnub.api.managers.PresenceEventEngineManager
@@ -89,7 +88,7 @@ class Subscribe(
             )
 
             val subscribeEventEngineManager = SubscribeEventEngineManager(
-                subscribeEventEngine = subscribeEventEngine,
+                eventEngine = subscribeEventEngine,
                 effectDispatcher = subscribeEffectDispatcher,
                 eventSink = eventEnginesConf.subscribeEventSink
             ).apply {
@@ -125,7 +124,7 @@ class Subscribe(
             )
 
             val presenceEventEngineManager = PresenceEventEngineManager(
-                presenceEventEngine = presenceEventEngine,
+                eventEngine = presenceEventEngine,
                 effectDispatcher = presenceEffectDispatcher,
                 eventSink = eventEnginesConf.presenceEventSink
             ).apply {
@@ -282,7 +281,7 @@ class Subscribe(
         subscriptionData.channelGroups.clear()
     }
 
-    private fun addPresenceEventToQueueIfHeartbeatEnabled(presenceEvent: Event) {
+    private fun addPresenceEventToQueueIfHeartbeatEnabled(presenceEvent: PresenceEvent) {
         if (heartbeatInterval > 0) {
             presenceEventEngineManager.addEventToQueue(presenceEvent)
         }
