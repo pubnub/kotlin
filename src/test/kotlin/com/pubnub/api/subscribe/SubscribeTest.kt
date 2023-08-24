@@ -1,8 +1,6 @@
 package com.pubnub.api.subscribe
 
-import com.pubnub.api.managers.PresenceEventEngineManager
 import com.pubnub.api.managers.SubscribeEventEngineManager
-import com.pubnub.api.presence.eventengine.event.PresenceEvent
 import com.pubnub.api.subscribe.eventengine.data.SubscriptionData
 import com.pubnub.api.subscribe.eventengine.event.SubscribeEvent
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
@@ -29,19 +27,15 @@ internal class SubscribeTest {
     private val channelGroupsInSubscriptionData = mutableSetOf(CHANNEL_GROUPS_01, CHANNEL_GROUPS_02)
     private lateinit var objectUnderTest: Subscribe
     private val subscribeEventEngineManager: SubscribeEventEngineManager = mockk()
-    private val presenceEventEngineManager: PresenceEventEngineManager = mockk()
     private var subscriptionData: SubscriptionData = createSubscriptionStateContainingValues()
     private val withPresence = false
     private val withTimetoken = 12345345452L
     private val subscribeEvent: CapturingSlot<SubscribeEvent> = slot()
-    private val presenceEvent: CapturingSlot<PresenceEvent> = slot()
-    private val heartbeatInterval: Int = 5
 
     @BeforeEach
     internal fun setUp() {
         every { subscribeEventEngineManager.addEventToQueue(capture(subscribeEvent)) } returns Unit
-        every { presenceEventEngineManager.addEventToQueue(capture(presenceEvent)) } returns Unit
-        objectUnderTest = Subscribe(subscribeEventEngineManager, presenceEventEngineManager, heartbeatInterval, subscriptionData)
+        objectUnderTest = Subscribe(subscribeEventEngineManager, subscriptionData)
     }
 
     @Test
@@ -52,7 +46,6 @@ internal class SubscribeTest {
         objectUnderTest.subscribe(setOf(channelToSubscribe), setOf(channelGroupsToSubscribe), withPresence)
 
         verify { subscribeEventEngineManager.addEventToQueue(any()) }
-        verify { presenceEventEngineManager.addEventToQueue(any()) }
 
         assertEquals(
             SubscribeEvent.SubscriptionChanged(
@@ -61,13 +54,6 @@ internal class SubscribeTest {
             ),
             subscribeEvent.captured
         )
-
-        assertEquals(PresenceEvent.Joined(setOf(channelToSubscribe), setOf(channelGroupsToSubscribe)), presenceEvent.captured)
-    }
-
-    @Test
-    fun `should not add event to Presence Event queue when heartbeat interval is 0`() {
-        // TODO("Not yet implemented")
     }
 
     @Test
@@ -91,8 +77,6 @@ internal class SubscribeTest {
             ),
             subscribeEvent.captured
         )
-
-        assertEquals(PresenceEvent.Joined(setOf(channelToSubscribe), setOf(channelGroupsToSubscribe)), presenceEvent.captured)
     }
 
     @Test
