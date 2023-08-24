@@ -1,14 +1,13 @@
 package com.pubnub.api.presence
 
-import com.pubnub.api.PubNub
 import com.pubnub.api.eventengine.EffectDispatcher
 import com.pubnub.api.eventengine.EventEngineConf
 import com.pubnub.api.managers.PresenceEventEngineManager
 import com.pubnub.api.presence.eventengine.PresenceEventEngine
 import com.pubnub.api.presence.eventengine.effect.PresenceEffectFactory
 import com.pubnub.api.presence.eventengine.effect.PresenceEffectInvocation
-import com.pubnub.api.presence.eventengine.effect.effectprovider.HeartbeatProviderImpl
-import com.pubnub.api.presence.eventengine.effect.effectprovider.LeaveProviderImpl
+import com.pubnub.api.presence.eventengine.effect.effectprovider.HeartbeatProvider
+import com.pubnub.api.presence.eventengine.effect.effectprovider.LeaveProvider
 import com.pubnub.api.presence.eventengine.event.PresenceEvent
 import com.pubnub.api.subscribe.eventengine.effect.RetryPolicy
 import java.time.Duration
@@ -17,21 +16,24 @@ import java.util.concurrent.Executors
 interface Presence {
     companion object {
         internal fun create(
-            pubNub: PubNub,
+            heartbeatProvider: HeartbeatProvider,
+            leaveProvider: LeaveProvider,
+            heartbeatInterval: Duration,
+            enableEventEngine: Boolean,
             retryPolicy: RetryPolicy,
             eventEngineConf: EventEngineConf<PresenceEffectInvocation, PresenceEvent>,
         ): Presence {
-            if (pubNub.configuration.heartbeatInterval <= 0 || !pubNub.configuration.enableSubscribeBeta) {
+            if (heartbeatInterval <= Duration.ZERO || !enableEventEngine) {
                 return PresenceNoOp()
             }
 
             val effectFactory = PresenceEffectFactory(
-                heartbeatProvider = HeartbeatProviderImpl(pubNub),
-                leaveProvider = LeaveProviderImpl(pubNub),
+                heartbeatProvider = heartbeatProvider,
+                leaveProvider = leaveProvider,
                 presenceEventSink = eventEngineConf.eventSink,
                 policy = retryPolicy,
                 executorService = Executors.newSingleThreadScheduledExecutor(),
-                heartbeatInterval = Duration.ofSeconds(pubNub.configuration.heartbeatInterval.toLong())
+                heartbeatInterval = heartbeatInterval
             )
 
             val eventEngineManager = PresenceEventEngineManager(
@@ -70,7 +72,7 @@ interface Presence {
     fun destroy()
 }
 
-class PresenceNoOp : Presence {
+internal class PresenceNoOp : Presence {
     override fun joined(channels: Set<String>, channelGroups: Set<String>) {}
 
     override fun left(channels: Set<String>, channelGroups: Set<String>) {}
@@ -82,7 +84,7 @@ class PresenceNoOp : Presence {
     override fun destroy() {}
 }
 
-class EnabledPresence(
+internal class EnabledPresence(
     private val presenceEventEngineManager: PresenceEventEngineManager
 ) : Presence {
 

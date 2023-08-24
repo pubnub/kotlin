@@ -27,7 +27,7 @@ class EventEngine<Ei : EffectInvocation, Ev : Event, S : State<Ei, Ev, S>>(
         executorService.shutdownNow()
     }
 
-    private fun performTransitionAndEmitEffects(event: Ev) {
+    internal fun performTransitionAndEmitEffects(event: Ev) {
         val (newState, invocations) = transition(currentState, event)
         currentState = newState
         invocations.forEach { invocation -> effectSink.add(invocation) }
