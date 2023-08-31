@@ -1,6 +1,9 @@
 package com.pubnub.api.legacy.vendor
 
 import com.pubnub.api.PubNubException
+import com.pubnub.api.crypto.decodeBase64AndDecrypt
+import com.pubnub.api.crypto.encryptAndEncodeBase64
+import com.pubnub.api.crypto.legacy.StaticIvAESCBCLegacyCryptor
 import com.pubnub.api.vendor.Crypto
 import org.junit.Assert
 import org.junit.Test
@@ -21,6 +24,45 @@ class EncryptDecryptTest {
 
         // then
         Assert.assertEquals(msgToEncrypt, decryptedMsg)
+    }
+
+    @Test
+    @Throws(IOException::class, PubNubException::class)
+    fun aaaa() {
+        // given
+        val cipherKey = "enigma"
+        val msgToEncrypt = "Hello world"
+
+        // when
+        val crypto = Crypto(cipherKey)
+
+        val cryptor = StaticIvAESCBCLegacyCryptor.create(cipherKey)
+
+        // then
+        Assert.assertEquals(
+            crypto.encrypt(msgToEncrypt),
+            cryptor.encryptAndEncodeBase64(msgToEncrypt)
+        )
+    }
+
+    @Test
+    @Throws(IOException::class, PubNubException::class)
+    fun bbbb() {
+        // given
+        val cipherKey = "enigma"
+        val msgToEncrypt = "Hello world"
+
+        // when
+        val crypto = Crypto(cipherKey)
+        val encryptedMsg = crypto.encrypt(msgToEncrypt)
+
+        val cryptor = StaticIvAESCBCLegacyCryptor.create(cipherKey)
+
+        // then
+        Assert.assertEquals(
+            msgToEncrypt,
+            cryptor.decodeBase64AndDecrypt(encryptedMsg)
+        )
     }
 
     @Test
