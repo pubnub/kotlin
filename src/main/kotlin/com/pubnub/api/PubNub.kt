@@ -3,6 +3,7 @@ package com.pubnub.api
 import com.pubnub.api.builder.PubSub
 import com.pubnub.api.callbacks.Listener
 import com.pubnub.api.callbacks.SubscribeCallback
+import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.api.endpoints.DeleteMessages
 import com.pubnub.api.endpoints.FetchMessages
 import com.pubnub.api.endpoints.History
@@ -92,6 +93,8 @@ import com.pubnub.api.vendor.Crypto
 import com.pubnub.api.vendor.FileEncryptionUtil.decrypt
 import com.pubnub.api.vendor.FileEncryptionUtil.encrypt
 import com.pubnub.api.workers.SubscribeMessageProcessor
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import java.io.InputStream
 import java.util.Date
 import java.util.UUID
@@ -100,6 +103,12 @@ class PubNub internal constructor(
     val configuration: PNConfiguration,
     eventEngineConf: EventEngineConf
 ) {
+
+    private val logger: Logger = LoggerFactory.getLogger(PubNub::class.java)
+
+    init {
+        setUpCryptoModule()
+    }
 
     constructor(configuration: PNConfiguration) : this(configuration, SubscribeEventEngineConfImpl())
 
@@ -112,6 +121,16 @@ class PubNub internal constructor(
          * Generates random UUID to use. You should set a unique UUID to identify the user or the device that connects to PubNub.
          */
         fun generateUUID() = "pn-${UUID.randomUUID()}"
+    }
+
+    private fun setUpCryptoModule() {
+        val cryptoModule = configuration.cryptoModule
+        val cipherKey = configuration.cipherKey
+        if (cryptoModule != null && cipherKey.isNotBlank()) {
+            logger.debug("cipherKey and cryptoModule properties defined. Only cryptoModule will be respected.")
+        } else if (cryptoModule == null && cipherKey.isNotBlank()) {
+            configuration.cryptoModule = CryptoModule.createLegacyCryptoModule(cipherKey, configuration.useRandomInitializationVector)
+        }
     }
 
     //region Managers

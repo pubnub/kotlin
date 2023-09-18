@@ -1,5 +1,6 @@
 package com.pubnub.api
 
+import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions
 import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.enums.PNReconnectionPolicy
@@ -101,6 +102,24 @@ open class PNConfiguration(
      * If set, all communications to and from PubNub will be encrypted.
      */
     var cipherKey: String = ""
+
+    /**
+     * Should initialization vector for encrypted messages be random.
+     *
+     * Defaults to `false`.
+     */
+    var useRandomInitializationVector = true
+
+    private var isCryptoModuleAlreadySet: Boolean = false
+    var cryptoModule: CryptoModule? = null
+        set(value) {
+            if (isCryptoModuleAlreadySet) {
+                throw IllegalStateException("CryptoModule can only by set once")
+            } else {
+                field = value
+                isCryptoModuleAlreadySet = true
+            }
+        }
 
     /**
      * Custom origin if needed.
@@ -259,13 +278,6 @@ open class PNConfiguration(
      * Defaults to `true`.
      */
     var startSubscriberThread = true
-
-    /**
-     * Should initialization vector for encrypted messages be random.
-     *
-     * Defaults to `false`.
-     */
-    var useRandomInitializationVector = true
 
     /**
      * Instructs the SDK to use a proxy configuration when communicating with PubNub servers.

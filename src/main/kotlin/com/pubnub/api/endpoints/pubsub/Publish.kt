@@ -1,7 +1,6 @@
 package com.pubnub.api.endpoints.pubsub
 
 import com.pubnub.api.Endpoint
-import com.pubnub.api.PNConfiguration.Companion.isValid
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
@@ -27,7 +26,7 @@ class Publish internal constructor(
     val ttl: Int? = null
 ) : Endpoint<List<Any>, PNPublishResult>(pubnub) {
 
-    private val useEncryption: Boolean = pubnub.configuration.cipherKey.isValid()
+    private val useEncryption: Boolean = pubnub.configuration.cryptoModule != null
 
     override fun validateParams() {
         super.validateParams()
@@ -121,6 +120,9 @@ class Publish internal constructor(
                 }
         }
 
+//    val cryptoModule = pubnub.configuration.cryptoModule
+//    val encryptedMessage = cryptoModule?.encrypt(message.toByteArray())
+//    return encryptedMessage.toString()
     private fun encryptMessage(message: String): String =
         Crypto(pubnub.configuration.cipherKey, pubnub.configuration.useRandomInitializationVector)
             .encrypt(message)
