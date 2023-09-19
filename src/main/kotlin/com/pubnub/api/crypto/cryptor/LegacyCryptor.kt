@@ -5,17 +5,20 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.crypto.data.EncryptedData
 import com.pubnub.api.crypto.data.EncryptedStreamData
 import java.io.InputStream
+import java.io.SequenceInputStream
 import java.io.UnsupportedEncodingException
 import java.security.MessageDigest
 import java.security.SecureRandom
 import java.security.spec.AlgorithmParameterSpec
 import java.util.Locale
 import javax.crypto.Cipher
+import javax.crypto.CipherInputStream
 import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
 
 private const val STATIC_IV = "0123456789012345"
 private const val CIPHER_TRANSFORMATION = "AES/CBC/PKCS5Padding"
+internal val LEGACY_CRYPTOR_ID = ByteArray(4) { 0.toByte() }
 
 private const val IV_SIZE = 16
 private const val RANDOM_IV_STARTING_INDEX = 0
@@ -24,28 +27,25 @@ private const val ENCRYPTED_DATA_STARTING_INDEX = 16 // this is when useRandomIv
 
 class LegacyCryptor(val cipherKey: String, val useRandomIv: Boolean = true) : Cryptor {
     private val newKey: SecretKeySpec = createNewKey()
-    private val cipher: Cipher = Cipher.getInstance(CIPHER_TRANSFORMATION)
 
     override fun id(): ByteArray {
-        return ByteArray(4) { 0.toByte() } // it was agreed that legacy PN Cryptor will have 0 as ID
+        return LEGACY_CRYPTOR_ID // it was agreed that legacy PN Cryptor will have 0 as ID
     }
 
     override fun encrypt(data: ByteArray): EncryptedData {
         return try {
             val ivBytes: ByteArray = getIvBytesForEncryption()
-            val ivSpec: AlgorithmParameterSpec = IvParameterSpec(ivBytes)
-            cipher.init(Cipher.ENCRYPT_MODE, newKey, ivSpec)
-            val encryptedData: ByteArray = cipher.doFinal(data)
-            val finalEncryptedData: ByteArray = if (useRandomIv) {
-                ivBytes + encryptedData
+            val cipher = createInitializedCipher(ivBytes, Cipher.ENCRYPT_MODE)
+            val encrypted: ByteArray = cipher.doFinal(data)
+            if (useRandomIv) {
+                EncryptedData(
+                    data = ivBytes + encrypted
+                )
             } else {
-                encryptedData
+                EncryptedData(
+                    data = encrypted
+                )
             }
-
-            EncryptedData(
-                metadata = null,
-                data = finalEncryptedData
-            )
         } catch (e: Exception) {
             throw PubNubException(errorMessage = e.message, pubnubError = PubNubError.CRYPTO_ERROR)
         }
@@ -54,8 +54,7 @@ class LegacyCryptor(val cipherKey: String, val useRandomIv: Boolean = true) : Cr
     override fun decrypt(encryptedData: EncryptedData): ByteArray {
         return try {
             val ivBytes: ByteArray = getIvBytesForDecryption(encryptedData)
-            val ivSpec: AlgorithmParameterSpec = IvParameterSpec(ivBytes)
-            cipher.init(Cipher.DECRYPT_MODE, newKey, ivSpec)
+            val cipher = createInitializedCipher(ivBytes, Cipher.DECRYPT_MODE)
             val encryptedDataForProcessing = getEncryptedDataForProcessing(encryptedData)
             val decryptedData = cipher.doFinal(encryptedDataForProcessing)
             decryptedData
@@ -64,12 +63,35 @@ class LegacyCryptor(val cipherKey: String, val useRandomIv: Boolean = true) : Cr
         }
     }
 
-    override fun encryptStream(stream: InputStream): Result<EncryptedStreamData> {
-        TODO("Not yet implemented")
+    override fun encryptStream(stream: InputStream): EncryptedStreamData {
+        try {
+            val ivBytes: ByteArray = getIvBytesForEncryption()
+            val cipher = createInitializedCipher(ivBytes, Cipher.ENCRYPT_MODE)
+            val cipheredStream = CipherInputStream(stream, cipher)
+            return EncryptedStreamData(stream = SequenceInputStream(ivBytes.inputStream(), cipheredStream))
+        } catch (e: Exception) {
+            throw PubNubException(errorMessage = e.message, pubnubError = PubNubError.CRYPTO_ERROR)
+        }
     }
 
-    override fun decryptStream(encryptedData: EncryptedStreamData): Result<InputStream> {
-        TODO("Not yet implemented")
+    override fun decryptStream(encryptedData: EncryptedStreamData): InputStream {
+        try {
+
+            val ivBytes = ByteArray(IV_SIZE)
+            val numberOfReadBytes = encryptedData.stream.read(ivBytes)
+            if (numberOfReadBytes != IV_SIZE) {
+                throw PubNubException(
+                    errorMessage = "Could not read IV from encrypted stream",
+                    pubnubError = PubNubError.CRYPTO_ERROR
+                )
+            }
+            val cipher = createInitializedCipher(ivBytes, Cipher.DECRYPT_MODE)
+            val ivSpec: AlgorithmParameterSpec = IvParameterSpec(ivBytes)
+            cipher.init(Cipher.DECRYPT_MODE, newKey, ivSpec)
+            return CipherInputStream(encryptedData.stream, cipher)
+        } catch (e: Exception) {
+            throw PubNubException(errorMessage = e.message, pubnubError = PubNubError.CRYPTO_ERROR)
+        }
     }
 
     private fun createNewKey(): SecretKeySpec {
@@ -102,12 +124,11 @@ class LegacyCryptor(val cipherKey: String, val useRandomIv: Boolean = true) : Cr
     }
 
     private fun getIvBytesForEncryption(): ByteArray {
-        val ivBytes = if (useRandomIv) {
+        return if (useRandomIv) {
             createRandomIv()
         } else {
             STATIC_IV.toByteArray()
         }
-        return ivBytes
     }
 
     private fun createRandomIv(): ByteArray {
@@ -117,12 +138,17 @@ class LegacyCryptor(val cipherKey: String, val useRandomIv: Boolean = true) : Cr
     }
 
     private fun getIvBytesForDecryption(encryptedData: EncryptedData): ByteArray {
-        val ivBytes: ByteArray = if (useRandomIv) {
+        return if (useRandomIv) {
             encryptedData.data.sliceArray(RANDOM_IV_STARTING_INDEX..RANDOM_IV_ENDING_INDEX)
         } else {
             STATIC_IV.toByteArray()
         }
-        return ivBytes
+    }
+
+    private fun createInitializedCipher(iv: ByteArray, mode: Int): Cipher {
+        return Cipher.getInstance(CIPHER_TRANSFORMATION).also {
+            it.init(mode, newKey, IvParameterSpec(iv))
+        }
     }
 
     private fun getEncryptedDataForProcessing(encryptedData: EncryptedData): ByteArray {

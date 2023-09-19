@@ -2,6 +2,8 @@ package com.pubnub.api.crypto.cryptor
 
 import com.pubnub.api.PubNubException
 import org.slf4j.LoggerFactory
+import java.io.BufferedInputStream
+import java.io.InputStream
 
 private val SENTINEL = "PNED".toByteArray()
 private const val STARTING_INDEX_OF_ONE_BYTE_CRYPTOR_DATA_SIZE = 10
@@ -22,7 +24,48 @@ private const val MAX_VALUE_THAT_CAN_BE_STORED_ON_TWO_BYTES = 65535
 class HeaderParser {
     private val log = LoggerFactory.getLogger(HeaderParser::class.java)
 
-    fun parseDataWithHeader(data: ByteArray): ParseResult {
+    fun parseHeader(stream: BufferedInputStream): ParseResult<out InputStream> {
+        val bufferedInputStream = stream.buffered()
+        bufferedInputStream.mark(Int.MAX_VALUE) // TODO Can be calculated from spec
+        val possibleInitialHeader = ByteArray(MINIMAL_SIZE_OF_DATA_HAVING_CRYPTOR_HEADER)
+        val initiallyRead = bufferedInputStream.read(possibleInitialHeader)
+        if (!possibleInitialHeader.sliceArray(0..3).contentEquals(SENTINEL)) {
+            bufferedInputStream.reset()
+            return ParseResult.NoHeader
+        }
+
+        if (initiallyRead < MINIMAL_SIZE_OF_DATA_HAVING_CRYPTOR_HEADER) {
+            throw PubNubException(errorMessage = "Minimal size of Cryptor Data Header is: $MINIMAL_SIZE_OF_DATA_HAVING_CRYPTOR_HEADER")
+        }
+
+        validateCryptorHeaderVersion(possibleInitialHeader)
+        val cryptorId = possibleInitialHeader.sliceArray(5..8)
+        val cryptorDataSizeFirstByte = possibleInitialHeader[9].toUByte()
+
+        val cryptorData: ByteArray = if (cryptorDataSizeFirstByte == THREE_BYTES_SIZE_CRYPTOR_DATA_INDICATOR) {
+            val cryptorDataSizeBytes = bufferedInputStream.readNBytez(2)
+            val cryptorDataSize = convertTwoBytesToIntBigEndian(cryptorDataSizeBytes[0], cryptorDataSizeBytes[1])
+            bufferedInputStream.readNBytez(cryptorDataSize)
+        } else {
+            if (cryptorDataSizeFirstByte == UByte.MIN_VALUE) {
+                byteArrayOf()
+            } else {
+                bufferedInputStream.readNBytez(cryptorDataSizeFirstByte.toInt())
+            }
+        }
+        return ParseResult.Success(cryptorId, cryptorData, bufferedInputStream)
+    }
+
+    fun InputStream.readNBytez(n: Int): ByteArray {
+        val cryptorData = ByteArray(n)
+        val numberOfReadBytes = read(cryptorData)
+        if (numberOfReadBytes != n) {
+            throw PubNubException(errorMessage = "Couldn't read $n bytes")
+        }
+        return cryptorData
+    }
+
+    fun parseDataWithHeader(data: ByteArray): ParseResult<out ByteArray> {
 
         val sentinel = data.sliceArray(SENTINEL_STARTING_INDEX..SENTINEL_ENDING_INDEX)
         if (!SENTINEL.contentEquals(sentinel)) {
@@ -119,9 +162,9 @@ class HeaderParser {
     }
 }
 
-sealed class ParseResult {
-    data class Success(val cryptoId: ByteArray, val cryptorData: ByteArray, val encryptedData: ByteArray) :
-        ParseResult()
+sealed class ParseResult<T> { // toDo modify
+    data class Success<T>(val cryptoId: ByteArray, val cryptorData: ByteArray, val encryptedData: T) :
+        ParseResult<T>()
 
-    object NoHeader : ParseResult()
+    object NoHeader : ParseResult<Nothing>() // todo think about different name NoHeader
 }

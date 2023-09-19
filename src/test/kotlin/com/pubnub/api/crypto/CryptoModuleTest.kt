@@ -9,9 +9,14 @@ import org.hamcrest.CoreMatchers
 import org.hamcrest.MatcherAssert
 import org.hamcrest.Matchers.hasSize
 import org.junit.jupiter.api.Assertions.assertArrayEquals
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments
+import org.junit.jupiter.params.provider.MethodSource
 import java.io.InputStream
+import java.util.Base64
 import org.hamcrest.Matchers.`is` as iz
 
 class CryptoModuleTest {
@@ -53,7 +58,7 @@ class CryptoModuleTest {
             iz(CoreMatchers.instanceOf(AesCbcCryptor::class.java))
         )
         MatcherAssert.assertThat(
-            legacyCryptoModule.cryptorsForDecryptionOnly.get(1),
+            legacyCryptoModule.cryptorsForDecryptionOnly[1],
             iz(CoreMatchers.instanceOf(LegacyCryptor::class.java))
         )
     }
@@ -216,12 +221,55 @@ class CryptoModuleTest {
             return encryptedData.data
         }
 
-        override fun encryptStream(stream: InputStream): Result<EncryptedStreamData> {
+        override fun encryptStream(stream: InputStream): EncryptedStreamData {
             TODO("Not yet implemented")
         }
 
-        override fun decryptStream(encryptedData: EncryptedStreamData): Result<InputStream> {
+        override fun decryptStream(encryptedData: EncryptedStreamData): InputStream {
             TODO("Not yet implemented")
         }
+    }
+
+    @ParameterizedTest
+    @MethodSource("decryptStreamSource")
+    fun decryptStreamEncryptedByGo(expected: String, encryptedBase64: String, cipherKey: String) {
+        val crypto = CryptoModule.createLegacyCryptoModule(cipherKey, true)
+        val decrypted = crypto.decryptStream(Base64.getDecoder().decode(encryptedBase64).inputStream())
+        assertEquals(expected, String(decrypted.readBytes()))
+    }
+
+    @ParameterizedTest
+    @MethodSource("encryptStreamDecryptStreamSource")
+    fun encryptStreamDecryptStream(input: String, cryptoModule: CryptoModule) {
+        val encrypted = cryptoModule.encryptStream(input.byteInputStream())
+        println(Base64.getEncoder().encodeToString(cryptoModule.encryptStream(input.byteInputStream()).readBytes()))
+        val decrypted = cryptoModule.decryptStream(encrypted)
+        assertEquals(input, String(decrypted.readBytes()))
+    }
+
+    companion object {
+        @JvmStatic
+        fun decryptStreamSource(): List<Arguments> = listOf(
+            Arguments.of(
+                "Hello world encrypted with legacyModuleRandomIv",
+                "T3J9iXI87PG9YY/lhuwmGRZsJgA5y8sFLtUpdFmNgrU1IAitgAkVok6YP7lacBiVhBJSJw39lXCHOLxl2d98Bg==",
+                "myCipherKey",
+
+            ),
+            Arguments.of(
+                "Hello world encrypted with aesCbcModule",
+                "UE5FRAFBQ1JIEKzlyoyC/jB1hrjCPY7zm+X2f7skPd0LBocV74cRYdrkRQ2BPKeA22gX/98pMqvcZtFB6TCGp3Zf1M8F730nlfk=",
+                "myCipherKey"
+
+            ),
+        )
+
+        @JvmStatic
+        fun encryptStreamDecryptStreamSource(): List<Arguments> = listOf(
+            Arguments.of("Hello world1", CryptoModule.createLegacyCryptoModule("myCipherKey", true)),
+            Arguments.of("Hello world2", CryptoModule.createLegacyCryptoModule("myCipherKey", false)),
+            Arguments.of("Hello world3", CryptoModule.createAesCbcCryptoModule("myCipherKey", true)),
+            Arguments.of("Hello world4", CryptoModule.createAesCbcCryptoModule("myCipherKey", false)),
+        )
     }
 }

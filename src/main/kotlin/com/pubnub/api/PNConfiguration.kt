@@ -128,6 +128,11 @@ open class PNConfiguration(
      * If set, all communications to and from PubNub will be encrypted.
      */
     var cryptoModule: CryptoModule? = null
+        get() = field ?: if (cipherKey.isNotBlank()) {
+            log.warn("cipherKey is deprecated. Use CryptoModule instead")
+            field = CryptoModule.createLegacyCryptoModule(cipherKey = cipherKey, randomIv = useRandomInitializationVector)
+            field
+        } else null
 
     /**
      * Custom origin if needed.
