@@ -7,7 +7,7 @@ import com.pubnub.api.crypto.data.EncryptedStreamData
 import java.io.InputStream
 import java.security.MessageDigest
 import java.security.spec.AlgorithmParameterSpec
-import java.util.*
+import java.util.Random
 import javax.crypto.Cipher
 import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
@@ -36,7 +36,7 @@ class LegacyCryptor(val cipherKey: String, val useRandomIv: Boolean = true) : Cr
             EncryptedData(
                 encryptedWithIV,
                 ivBytes
-            ) //todo legacy encrypt method returns String that is Base64. How to handle this?
+            ) // todo legacy encrypt method returns String that is Base64. How to handle this?
         } catch (e: Exception) {
             throw PubNubException(errorMessage = e.message, pubnubError = PubNubError.CRYPTO_ERROR)
         }

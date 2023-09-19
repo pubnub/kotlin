@@ -19,7 +19,7 @@ class HeaderParser {
             return ParseResult.NoHeader
         }
 
-        if (data.size < MINIMAL_SIZE_OF_DATA_HAVING_CRYPTOR_HEADER) { //minimal size of Cryptor Data Header
+        if (data.size < MINIMAL_SIZE_OF_DATA_HAVING_CRYPTOR_HEADER) { // minimal size of Cryptor Data Header
             throw PubNubException(errorMessage = "Minimal size of Cryptor Data Header is: $MINIMAL_SIZE_OF_DATA_HAVING_CRYPTOR_HEADER")
         }
 
@@ -46,24 +46,15 @@ class HeaderParser {
         return ParseResult.Success(cryptoIdAsString, cryptorData, encryptedData)
     }
 
-    private fun returnSize(data: ByteArray?): Int {
-        val size: Int
-        if (data != null) {
-            return data.size
-        } else {
-            return 0
-        }
-    }
-
     fun createCryptorHeader(cryptorId: ByteArray, cryptorData: ByteArray?): ByteArray {
         val sentinel: ByteArray = SENTINEL.toByteArray(Charsets.US_ASCII)
         val cryptorHeaderVersion: Byte = getCurrentCryptoHeaderVersion()
         val cryptorDataSize: Int = cryptorData?.size ?: 0
         val finalCryptorDataSize: ByteArray =
             if (cryptorDataSize < INDICATOR_THAT_CRYPTOR_DATA_SIZE_IS_STORED_ON_2_BYTES) {
-                byteArrayOf(cryptorDataSize.toByte()) //cryptorDataSize will be stored on 1 byte
+                byteArrayOf(cryptorDataSize.toByte()) // cryptorDataSize will be stored on 1 byte
             } else if (cryptorDataSize in INDICATOR_THAT_CRYPTOR_DATA_SIZE_IS_STORED_ON_2_BYTES..65535) {
-                byteArrayOf(cryptorDataSize.toByte()) + writeNumberOnTwoBytes(cryptorDataSize) //cryptorDataSize will be stored on 3 byte
+                byteArrayOf(cryptorDataSize.toByte()) + writeNumberOnTwoBytes(cryptorDataSize) // cryptorDataSize will be stored on 3 byte
             } else {
                 throw PubNubException(errorMessage = "Something is wrong with Cryptor Data Size: $cryptorDataSize")
             }
@@ -99,12 +90,12 @@ class HeaderParser {
     }
 
     private fun validateCryptorHeaderVersion(data: ByteArray) {
-        val version = data[4] //5th byte
+        val version = data[4] // 5th byte
         val versionAsInt = convertByteValueToInt(version)
         log.trace("Cryptor header version is: $versionAsInt")
-        //check if version exist in this SDK version
+        // check if version exist in this SDK version
         CryptorHeaderVersion.fromValue(versionAsInt)
-            ?: PubNubException(errorMessage = "Cryptor version unknown. Please, update SDK")//toDo
+            ?: PubNubException(errorMessage = "Cryptor version unknown. Please, update SDK") // toDo
     }
 
     private fun convertTwoBytesToIntBigEndian(byte1: Byte, byte2: Byte): Int {
@@ -122,12 +113,11 @@ class HeaderParser {
 
     // byte is -128 to 127 to have it 0 to 255 perform unsigned conversion
     private fun convertByteValueToInt(cryptorDataSizeFirstByte: Byte): Int = cryptorDataSizeFirstByte.toInt() and 0xFF
-
 }
 
-sealed class ParseResult { //toDo modify
+sealed class ParseResult { // toDo modify
     data class Success(val cryptoId: String, val cryptorData: ByteArray, val encryptedData: ByteArray) :
         ParseResult()
 
-    object NoHeader : ParseResult() //todo think about different name NoHeader
+    object NoHeader : ParseResult() // todo think about different name NoHeader
 }

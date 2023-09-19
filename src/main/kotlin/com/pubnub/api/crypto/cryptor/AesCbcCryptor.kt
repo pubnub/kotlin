@@ -9,7 +9,8 @@ import java.io.InputStream
 import java.io.UnsupportedEncodingException
 import java.security.MessageDigest
 import java.security.spec.AlgorithmParameterSpec
-import java.util.*
+import java.util.Locale
+import java.util.Random
 import javax.crypto.Cipher
 import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
@@ -71,7 +72,7 @@ class AesCbcCryptor(val cipherKey: String) : Cryptor {
     private fun getKeyAsShaInHexBytes(cipherKey: String): ByteArray {
 
         return String(
-            hexEncode(sha256(this.cipherKey.toByteArray(Charsets.UTF_8))),
+            hexEncode(sha256(cipherKey.toByteArray(Charsets.UTF_8))),
             Charsets.UTF_8
         ).lowercase(Locale.getDefault()).toByteArray(Charsets.UTF_8)
 

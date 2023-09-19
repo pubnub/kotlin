@@ -8,10 +8,9 @@ class CryptorHeader(
     val cryptorData: ByteArray // 0-65535 bytes
 ) {
 
-    fun toByteArray(): ByteArray{
+    fun toByteArray(): ByteArray {
         return sentinel + version + cryptorId + cryptorDataSize + cryptorData
     }
-
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
