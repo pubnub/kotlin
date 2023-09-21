@@ -50,7 +50,7 @@ class HeaderParserTest {
         when (parseResult) {
             is ParseResult.NoHeader -> println("No valid header")
             is ParseResult.Success -> {
-                assertTrue(cryptorId.contentEquals(parseResult.cryptoId.toByteArray()))
+                assertTrue(cryptorId.contentEquals(parseResult.cryptoId))
                 assertTrue(cryptorData.contentEquals(parseResult.cryptorData))
                 assertTrue(dataToBeEncrypted.contentEquals(parseResult.encryptedData))
             }

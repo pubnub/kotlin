@@ -101,14 +101,31 @@ open class PNConfiguration(
     /**
      * If set, all communications to and from PubNub will be encrypted.
      */
+
+    @Deprecated(
+        level = DeprecationLevel.WARNING,
+        message = """Instead of cipherKey and useRandomInitializationVector use CryptoModule instead 
+            e.g. config.cryptoModule = CryptoModule.createLegacyCryptoModule(cipherKey = cipherKey, randomIv = true) 
+            or config.cryptoModule = CryptoModule.createAesCbcCryptoModule(cipherKey = cipherKey, randomIv = true)""",
+    )
     var cipherKey: String = ""
+    // todo add custom setter to handle situation when cipherKey is changed after CryptoModule creation
+    // jeśli user nie ustawiał cryptoModule ręcznie to pozwalamy aby zmiana cipherKey nadpisała cryptoModule
+    // jeśli user ustawił cryptoModul reczenie to nie pozwalamy aby zmiana cipherKey nadpisywałła cryptoModule
 
     /**
      * Should initialization vector for encrypted messages be random.
      *
      * Defaults to `false`.
      */
+    @Deprecated(
+        level = DeprecationLevel.WARNING,
+        message = """Instead of cipherKey and useRandomInitializationVector use CryptoModule instead 
+            e.g. config.cryptoModule = CryptoModule.createLegacyCryptoModule(cipherKey = cipherKey, randomIv = true) 
+            or config.cryptoModule = CryptoModule.createAesCbcCryptoModule(cipherKey = cipherKey, randomIv = true)""",
+    )
     var useRandomInitializationVector = true
+    // todo add custom setter to handle situation when cipherKey is changed after CryptoModule creation
 
     private var isCryptoModuleAlreadySet: Boolean = false
     var cryptoModule: CryptoModule? = null

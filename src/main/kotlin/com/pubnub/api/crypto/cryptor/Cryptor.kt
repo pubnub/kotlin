@@ -4,7 +4,7 @@ import com.pubnub.api.crypto.data.EncryptedData
 import com.pubnub.api.crypto.data.EncryptedStreamData
 import java.io.InputStream
 
-interface Cryptor { // todo is this needed?
+interface Cryptor {
     fun id(): ByteArray // Assuming 4 bytes,
     fun encrypt(data: ByteArray): EncryptedData
     fun decrypt(encryptedData: EncryptedData): ByteArray

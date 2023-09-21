@@ -133,6 +133,10 @@ class PubNub internal constructor(
         }
     }
 
+    // todo replace in subscribe, publish, files, ......
+    internal val cryptoModule: CryptoModule?
+        get() = configuration.cryptoModule
+
     //region Managers
 
     /**
