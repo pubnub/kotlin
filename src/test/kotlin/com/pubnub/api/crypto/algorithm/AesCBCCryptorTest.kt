@@ -2,8 +2,8 @@ package com.pubnub.api.crypto.algorithm
 
 import com.pubnub.api.crypto.cryptor.AesCbcCryptor
 import com.pubnub.api.crypto.data.EncryptedData
-import org.junit.Assert
 import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.assertArrayEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -25,7 +25,7 @@ class AesCBCCryptorTest {
         val decryptedMsg = objectUnderTest.decrypt(encryptedMsg)
 
         // then
-        Assert.assertTrue(msgToEncrypt.contentEquals(decryptedMsg))
+        assertArrayEquals(msgToEncrypt, decryptedMsg)
     }
 
     @Test
@@ -51,7 +51,7 @@ class AesCBCCryptorTest {
         val encrypted2 = objectUnderTest.encrypt(msgToEncrypt)
 
         // then
-        Assert.assertTrue(msgToEncrypt.contentEquals(objectUnderTest.decrypt(encrypted1)))
-        Assert.assertTrue(msgToEncrypt.contentEquals(objectUnderTest.decrypt(encrypted2)))
+        assertArrayEquals(msgToEncrypt, objectUnderTest.decrypt(encrypted1))
+        assertArrayEquals(msgToEncrypt, objectUnderTest.decrypt(encrypted2))
     }
 }

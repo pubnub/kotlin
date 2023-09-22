@@ -22,7 +22,7 @@ private const val MAX_VALUE_THAT_CAN_BE_STORED_ON_TWO_BYTES = 65535
 class HeaderParser {
     private val log = LoggerFactory.getLogger(HeaderParser::class.java)
 
-    fun parseHeader(data: ByteArray): ParseResult {
+    fun parseDataWithHeader(data: ByteArray): ParseResult {
 
         val sentinel = data.sliceArray(SENTINEL_STARTING_INDEX..SENTINEL_ENDING_INDEX)
         if (!SENTINEL.contentEquals(sentinel)) {
@@ -65,7 +65,7 @@ class HeaderParser {
             } else if (cryptorDataSize < MAX_VALUE_THAT_CAN_BE_STORED_ON_TWO_BYTES) {
                 byteArrayOf(cryptorDataSize.toByte()) + writeNumberOnTwoBytes(cryptorDataSize) // cryptorDataSize will be stored on 3 byte
             } else {
-                throw PubNubException(errorMessage = "Something is wrong with Cryptor Data Size: $cryptorDataSize")
+                throw PubNubException(errorMessage = "Cryptor Data Size is: $cryptorDataSize whereas max cryptor data size is: $MAX_VALUE_THAT_CAN_BE_STORED_ON_TWO_BYTES ")
             }
 
         val cryptorHeader =

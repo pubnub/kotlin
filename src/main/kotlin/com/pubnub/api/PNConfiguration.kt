@@ -109,9 +109,6 @@ open class PNConfiguration(
             or config.cryptoModule = CryptoModule.createAesCbcCryptoModule(cipherKey = cipherKey, randomIv = true)""",
     )
     var cipherKey: String = ""
-    // todo add custom setter to handle situation when cipherKey is changed after CryptoModule creation
-    // jeśli user nie ustawiał cryptoModule ręcznie to pozwalamy aby zmiana cipherKey nadpisała cryptoModule
-    // jeśli user ustawił cryptoModul reczenie to nie pozwalamy aby zmiana cipherKey nadpisywałła cryptoModule
 
     /**
      * Should initialization vector for encrypted messages be random.
@@ -125,18 +122,12 @@ open class PNConfiguration(
             or config.cryptoModule = CryptoModule.createAesCbcCryptoModule(cipherKey = cipherKey, randomIv = true)""",
     )
     var useRandomInitializationVector = true
-    // todo add custom setter to handle situation when cipherKey is changed after CryptoModule creation
 
-    private var isCryptoModuleAlreadySet: Boolean = false
+    /**
+     * CryptoModule is responsible for handling encryption and decryption.
+     * If set, all communications to and from PubNub will be encrypted.
+     */
     var cryptoModule: CryptoModule? = null
-        set(value) {
-            if (isCryptoModuleAlreadySet) {
-                throw IllegalStateException("CryptoModule can only by set once")
-            } else {
-                field = value
-                isCryptoModuleAlreadySet = true
-            }
-        }
 
     /**
      * Custom origin if needed.

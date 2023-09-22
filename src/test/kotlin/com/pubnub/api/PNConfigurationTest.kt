@@ -1,12 +1,8 @@
 package com.pubnub.api
 
 import com.pubnub.api.crypto.CryptoModule
-import com.pubnub.api.crypto.cryptor.AesCbcCryptor
-import com.pubnub.api.crypto.cryptor.LegacyCryptor
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
 import org.junit.Test
-import org.junit.jupiter.api.Assertions
 
 class PNConfigurationTest {
     @Suppress("DEPRECATION")
@@ -74,25 +70,9 @@ class PNConfigurationTest {
     }
 
     @Test
-    fun `should throw exception when you try to set CryptoModule more twice`() {
+    fun `unfortunately should allow to set CryptoModule more twice`() {
         val config = PNConfiguration(userId = UserId(PubNub.generateUUID()))
-        config.cryptoModule = CryptoModule.createAesCbcCryptoModule("myCipherKey", true)
-
-        val thrown = Assertions.assertThrows(
-            IllegalStateException::class.java,
-            { config.cryptoModule = CryptoModule.createAesCbcCryptoModule("myNewCipherKey", true) },
-            "IllegalStateException was expected"
-        )
-        Assertions.assertEquals("CryptoModule can only by set once", thrown.message)
-    }
-
-    @Test
-    fun `can set cryptoModule`() {
-        val config = PNConfiguration(userId = UserId(PubNub.generateUUID()))
-        config.cryptoModule = CryptoModule.createAesCbcCryptoModule("myCipherKey", true)
-        val cryptoModule = config.cryptoModule
-
-        assertTrue(cryptoModule?.primaryCryptor is AesCbcCryptor)
-        assertTrue(cryptoModule?.cryptorsForEncryptionOnly?.first() is LegacyCryptor)
+        config.cryptoModule = CryptoModule.createLegacyCryptoModule("myCipherKey", true)
+        config.cryptoModule = CryptoModule.createAesCbcCryptoModule("myCipherKey")
     }
 }

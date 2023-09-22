@@ -10,42 +10,32 @@ import com.pubnub.api.crypto.data.EncryptedData
 
 class CryptoModule internal constructor(
     internal val primaryCryptor: Cryptor,
-    internal val cryptorsForEncryptionOnly: MutableList<Cryptor> = mutableListOf(),
+    internal val cryptorsForDecryptionOnly: List<Cryptor> = listOf(),
     internal val headerParser: HeaderParser = HeaderParser()
 ) {
-
-    init {
-        setUpDecryptorsList()
-    }
-
-    constructor(primaryCryptor: Cryptor, cryptorsForEncryptionOnly: MutableList<Cryptor> = mutableListOf()) : this(
-        primaryCryptor,
-        cryptorsForEncryptionOnly,
-        HeaderParser()
-    )
 
     companion object {
         fun createLegacyCryptoModule(cipherKey: String, randomIv: Boolean = true): CryptoModule {
             return CryptoModule(
                 primaryCryptor = LegacyCryptor(cipherKey, randomIv),
-                cryptorsForEncryptionOnly = mutableListOf(AesCbcCryptor(cipherKey))
+                cryptorsForDecryptionOnly = listOf(LegacyCryptor(cipherKey, randomIv), AesCbcCryptor(cipherKey))
             )
         }
 
         fun createAesCbcCryptoModule(cipherKey: String, randomIv: Boolean = true): CryptoModule {
             return CryptoModule(
                 primaryCryptor = AesCbcCryptor(cipherKey),
-                cryptorsForEncryptionOnly = mutableListOf(LegacyCryptor(cipherKey, randomIv))
+                cryptorsForDecryptionOnly = listOf(AesCbcCryptor(cipherKey), LegacyCryptor(cipherKey, randomIv))
             )
         }
 
         fun createNewCryptoModule(
             defaultCryptor: Cryptor,
-            cryptorsForEncryptionOnly: List<Cryptor> = listOf()
+            cryptorsForDecryptionOnly: List<Cryptor> = listOf()
         ): CryptoModule {
             return CryptoModule(
                 primaryCryptor = defaultCryptor,
-                cryptorsForEncryptionOnly = cryptorsForEncryptionOnly.toMutableList()
+                cryptorsForDecryptionOnly = listOf(defaultCryptor) + cryptorsForDecryptionOnly
             )
         }
     }
@@ -62,30 +52,23 @@ class CryptoModule internal constructor(
     }
 
     fun decrypt(encryptedData: ByteArray): ByteArray {
-        val parsedHeader = headerParser.parseHeader(encryptedData)
-        val decryptedData: ByteArray = when (parsedHeader) {
+        val parsedData: ParseResult = headerParser.parseDataWithHeader(encryptedData)
+        val decryptedData: ByteArray = when (parsedData) {
             is ParseResult.NoHeader -> {
                 getDecryptedDataForLegacyCryptor(encryptedData)
             }
             is ParseResult.Success -> {
-                getDecryptedDataForCryptorWithHeader(parsedHeader)
+                getDecryptedDataForCryptorWithHeader(parsedData)
             }
         }
         return decryptedData
     }
 
-    private fun setUpDecryptorsList() {
-        cryptorsForEncryptionOnly.add(primaryCryptor)
-    }
-
     private fun primaryCryptorIsLegacyCryptor() = primaryCryptor.id().contentEquals(ByteArray(4) { 0.toByte() })
 
     private fun getDecryptedDataForLegacyCryptor(encryptedData: ByteArray): ByteArray {
-        val decryptedData: ByteArray
-        val legacyCryptor = getLegacyCryptor()
-        decryptedData = legacyCryptor?.decrypt(EncryptedData(null, encryptedData))
+        return getLegacyCryptor()?.decrypt(EncryptedData(data = encryptedData))
             ?: throw PubNubException("LegacyCryptor not available")
-        return decryptedData
     }
 
     private fun getDecryptedDataForCryptorWithHeader(parsedHeader: ParseResult.Success): ByteArray {
@@ -105,6 +88,6 @@ class CryptoModule internal constructor(
     }
 
     private fun getCryptorById(cryptorId: ByteArray): Cryptor? {
-        return cryptorsForEncryptionOnly.firstOrNull { it.id().contentEquals(cryptorId) }
+        return cryptorsForDecryptionOnly.firstOrNull { it.id().contentEquals(cryptorId) }
     }
 }

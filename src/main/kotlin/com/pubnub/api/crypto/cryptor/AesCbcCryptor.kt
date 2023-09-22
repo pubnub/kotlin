@@ -13,9 +13,11 @@ import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
 
 private const val CIPHER_TRANSFORMATION = "AES/CBC/PKCS5Padding"
+private const val RANDOM_IV_SIZE = 16
 
 class AesCbcCryptor(val cipherKey: String) : Cryptor {
-    private val keyBytes = sha256(cipherKey.toByteArray(Charsets.UTF_8))
+    private val newKey: SecretKeySpec = createNewKey()
+    private val cipher: Cipher = Cipher.getInstance(CIPHER_TRANSFORMATION)
 
     override fun id(): ByteArray {
         return byteArrayOf('A'.code.toByte(), 'C'.code.toByte(), 'R'.code.toByte(), 'H'.code.toByte())
@@ -25,8 +27,6 @@ class AesCbcCryptor(val cipherKey: String) : Cryptor {
         return try {
             val ivBytes: ByteArray = createRandomIv()
             val ivSpec: AlgorithmParameterSpec = IvParameterSpec(ivBytes)
-            val newKey: SecretKeySpec = SecretKeySpec(keyBytes, "AES")
-            val cipher: Cipher = Cipher.getInstance(CIPHER_TRANSFORMATION)
             cipher.init(Cipher.ENCRYPT_MODE, newKey, ivSpec)
             val encryptedData: ByteArray = cipher.doFinal(data)
             EncryptedData(metadata = ivBytes, data = encryptedData)
@@ -37,15 +37,13 @@ class AesCbcCryptor(val cipherKey: String) : Cryptor {
 
     override fun decrypt(encryptedData: EncryptedData): ByteArray {
         return try {
-            val ivBytes: ByteArray = getIvBytes(encryptedData.metadata)
+            val ivBytes: ByteArray = encryptedData.metadata?.takeIf { it.size == RANDOM_IV_SIZE } ?: throw PubNubException("Invalid random IV")
             val ivSpec: AlgorithmParameterSpec = IvParameterSpec(ivBytes)
-            val newKey = SecretKeySpec(keyBytes, "AES")
-            val cipher = Cipher.getInstance(CIPHER_TRANSFORMATION)
             cipher.init(Cipher.DECRYPT_MODE, newKey, ivSpec)
             val decryptedData = cipher.doFinal(encryptedData.data)
             decryptedData
         } catch (e: Exception) {
-            throw PubNubException(errorMessage = e.message, pubnubError = PubNubError.CRYPTO_ERROR)
+            throw PubNubException(errorMessage = "Decryption error", pubnubError = PubNubError.CRYPTO_ERROR)
         }
     }
 
@@ -57,18 +55,15 @@ class AesCbcCryptor(val cipherKey: String) : Cryptor {
         TODO("Not yet implemented")
     }
 
-    private fun createRandomIv(): ByteArray {
-        val ivBytes = ByteArray(16)
-        SecureRandom().nextBytes(ivBytes)
-        return ivBytes
+    private fun createNewKey(): SecretKeySpec {
+        val keyBytes = sha256(cipherKey.toByteArray(Charsets.UTF_8))
+        return SecretKeySpec(keyBytes, "AES")
     }
 
-    private fun getIvBytes(ivBytes: ByteArray?): ByteArray {
-        return if (ivBytes?.size == 16) {
-            ivBytes
-        } else {
-            throw PubNubException("Invalid random IV")
-        }
+    private fun createRandomIv(): ByteArray {
+        val ivBytes = ByteArray(RANDOM_IV_SIZE)
+        SecureRandom().nextBytes(ivBytes)
+        return ivBytes
     }
 
     private fun sha256(input: ByteArray): ByteArray {

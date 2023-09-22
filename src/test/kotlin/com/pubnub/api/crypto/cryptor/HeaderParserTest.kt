@@ -1,6 +1,9 @@
 package com.pubnub.api.crypto.cryptor
 
+import org.hamcrest.MatcherAssert.assertThat
+import org.hamcrest.Matchers.`is`
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Assertions.fail
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -13,42 +16,19 @@ class HeaderParserTest {
     }
 
     @Test
-    fun `check return type`() {
-        val dataWithCryptorHeader: ByteArray =
-            byteArrayOf(0x50, 0x4E, 0x45, 0x44, 0x01, 0x43, 0x52, 0x49, 0x56, 0x10, 0x10)
-//        val parseHeader = objectUnderTest.parseHeader(dataWithCryptorHeader)
-        println("")
-
-        println(dataWithCryptorHeader)
-    }
-
-    @Test
-    fun `can create and parse header when cryptorDataSize is 1`() {
-        val dataToBeEncrypted: ByteArray = byteArrayOf(
-            0x56,
-            0x7E,
-            0x45,
-            0x44,
-            0x01,
-            0x43,
-            0x52,
-            0x49,
-            0x56,
-            0x10,
-            0x10
-        ) // 0x56 = P 0x7E = N 0x45 = E 0x44 = D
+    fun `can create and parse data with header when cryptorDataSize is 1`() {
         val cryptorId: ByteArray =
             byteArrayOf('C'.code.toByte(), 'R'.code.toByte(), 'I'.code.toByte(), 'V'.code.toByte()) // "CRIV"
 
         val cryptorData = byteArrayOf(0x50)
-        val cryptorHeader =
-            objectUnderTest.createCryptorHeader(cryptorId, cryptorData)
+        val cryptorHeader = objectUnderTest.createCryptorHeader(cryptorId, cryptorData)
 
+        val dataToBeEncrypted = byteArrayOf('D'.code.toByte(), 'A'.code.toByte())
         val headerWithData: ByteArray = cryptorHeader + dataToBeEncrypted
-        val parseResult = objectUnderTest.parseHeader(headerWithData)
+        val parseResult = objectUnderTest.parseDataWithHeader(headerWithData)
 
         when (parseResult) {
-            is ParseResult.NoHeader -> println("No valid header")
+            is ParseResult.NoHeader -> fail("Expected header")
             is ParseResult.Success -> {
                 assertTrue(cryptorId.contentEquals(parseResult.cryptoId))
                 assertTrue(cryptorData.contentEquals(parseResult.cryptorData))
@@ -58,18 +38,40 @@ class HeaderParserTest {
     }
 
     @Test
-    fun `should return InvalidSentinel`() {
-        val cryptorHeaderWithInvalidSentinel =
-            byteArrayOf(0x56, 0x56, 0x56, 0x56, 0x01, 0x43, 0x52, 0x49, 0x56, 0x10, 0x10)
-        val parseResult = objectUnderTest.parseHeader(cryptorHeaderWithInvalidSentinel)
+    internal fun `can create and parse data with header when cryptorDataSize is 3`() {
+        val cryptorId: ByteArray =
+            byteArrayOf('C'.code.toByte(), 'R'.code.toByte(), 'I'.code.toByte(), 'V'.code.toByte()) // "CRIV"
+        val cryptorData = createByteArrayThatHas255Elements()
+        val cryptorHeader = objectUnderTest.createCryptorHeader(cryptorId, cryptorData)
+
+        val dataToBeEncrypted = byteArrayOf('D'.code.toByte(), 'A'.code.toByte())
+        val headerWithData: ByteArray = cryptorHeader + dataToBeEncrypted
+        val parseResult = objectUnderTest.parseDataWithHeader(headerWithData)
 
         when (parseResult) {
-            is ParseResult.NoHeader -> {
-                println("Should print that")
-            }
+            is ParseResult.NoHeader -> fail("Expected header")
             is ParseResult.Success -> {
-                throw Exception("Should not return Success")
+                assertTrue(cryptorId.contentEquals(parseResult.cryptoId))
+                assertTrue(cryptorData.contentEquals(parseResult.cryptorData))
+                assertTrue(dataToBeEncrypted.contentEquals(parseResult.encryptedData))
             }
         }
+    }
+
+    @Test
+    fun `should return NoHeader when there is no sentinel`() {
+        val cryptorHeaderWithInvalidSentinel =
+            byteArrayOf(0x56, 0x56, 0x56, 0x56, 0x01, 0x43, 0x52, 0x49, 0x56, 0x10, 0x10)
+        val parseResult = objectUnderTest.parseDataWithHeader(cryptorHeaderWithInvalidSentinel)
+
+        assertThat(parseResult, `is`(ParseResult.NoHeader))
+    }
+
+    private fun createByteArrayThatHas255Elements(): ByteArray {
+        var byteArray: ByteArray = byteArrayOf()
+        for (i in 1..255) {
+            byteArray += byteArrayOf(i.toByte())
+        }
+        return byteArray
     }
 }

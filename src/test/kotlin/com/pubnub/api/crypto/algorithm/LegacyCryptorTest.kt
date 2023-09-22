@@ -2,7 +2,7 @@ package com.pubnub.api.crypto.algorithm
 
 import com.pubnub.api.crypto.cryptor.LegacyCryptor
 import com.pubnub.api.crypto.data.EncryptedData
-import org.junit.Assert.assertTrue
+import org.junit.jupiter.api.Assertions.assertArrayEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Test
 
@@ -20,7 +20,7 @@ class LegacyCryptorTest {
         val decryptedMsg = cryptor.decrypt(encryptedMsg)
 
         // then
-        assertTrue(msgToEncrypt.contentEquals(decryptedMsg))
+        assertArrayEquals(msgToEncrypt, decryptedMsg)
     }
 
     @Test
@@ -35,7 +35,7 @@ class LegacyCryptorTest {
         val decryptedMsg = cryptor.decrypt(encryptedMsg)
 
         // then
-        assertTrue(msgToEncrypt.contentEquals(decryptedMsg))
+        assertArrayEquals(msgToEncrypt, decryptedMsg)
     }
 
     @Test
@@ -65,7 +65,7 @@ class LegacyCryptorTest {
         val encrypted2 = cryptor.encrypt(msgToEncrypt)
 
         // then
-        assertTrue(msgToEncrypt.contentEquals(cryptor.decrypt(encrypted1)))
-        assertTrue(msgToEncrypt.contentEquals(cryptor.decrypt(encrypted2)))
+        assertArrayEquals(msgToEncrypt, cryptor.decrypt(encrypted1))
+        assertArrayEquals(msgToEncrypt, cryptor.decrypt(encrypted2))
     }
 }

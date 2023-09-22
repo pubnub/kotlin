@@ -23,9 +23,8 @@ private const val RANDOM_IV_ENDING_INDEX = 15
 private const val ENCRYPTED_DATA_STARTING_INDEX = 16 // this is when useRandomIv = true
 
 class LegacyCryptor(val cipherKey: String, val useRandomIv: Boolean = true) : Cryptor {
-    private val keyBytes = String(hexEncode(sha256(cipherKey.toByteArray())), Charsets.UTF_8)
-        .substring(0, 32)
-        .lowercase(Locale.getDefault()).toByteArray()
+    private val newKey: SecretKeySpec = createNewKey()
+    private val cipher: Cipher = Cipher.getInstance(CIPHER_TRANSFORMATION)
 
     override fun id(): ByteArray {
         return ByteArray(4) { 0.toByte() } // it was agreed that legacy PN Cryptor will have 0 as ID
@@ -35,8 +34,6 @@ class LegacyCryptor(val cipherKey: String, val useRandomIv: Boolean = true) : Cr
         return try {
             val ivBytes: ByteArray = getIvBytesForEncryption()
             val ivSpec: AlgorithmParameterSpec = IvParameterSpec(ivBytes)
-            val newKey: SecretKeySpec = SecretKeySpec(keyBytes, "AES")
-            val cipher: Cipher = Cipher.getInstance(CIPHER_TRANSFORMATION)
             cipher.init(Cipher.ENCRYPT_MODE, newKey, ivSpec)
             val encryptedData: ByteArray = cipher.doFinal(data)
             val finalEncryptedData: ByteArray = if (useRandomIv) {
@@ -54,15 +51,12 @@ class LegacyCryptor(val cipherKey: String, val useRandomIv: Boolean = true) : Cr
         }
     }
 
-    // todo what about this: https://pubnub.slack.com/archives/C0290LTC7TQ/p1695293534875019?thread_ts=1695293398.877229&cid=C0290LTC7TQ
     override fun decrypt(encryptedData: EncryptedData): ByteArray {
         return try {
             val ivBytes: ByteArray = getIvBytesForDecryption(encryptedData)
-            val encryptedDataForProcessing = getEncryptedDataForProcessing(encryptedData)
             val ivSpec: AlgorithmParameterSpec = IvParameterSpec(ivBytes)
-            val newKey = SecretKeySpec(keyBytes, "AES")
-            val cipher = Cipher.getInstance(CIPHER_TRANSFORMATION)
             cipher.init(Cipher.DECRYPT_MODE, newKey, ivSpec)
+            val encryptedDataForProcessing = getEncryptedDataForProcessing(encryptedData)
             val decryptedData = cipher.doFinal(encryptedDataForProcessing)
             decryptedData
         } catch (e: Exception) {
@@ -76,6 +70,13 @@ class LegacyCryptor(val cipherKey: String, val useRandomIv: Boolean = true) : Cr
 
     override fun decryptStream(encryptedData: EncryptedStreamData): Result<InputStream> {
         TODO("Not yet implemented")
+    }
+
+    private fun createNewKey(): SecretKeySpec {
+        val keyBytes = String(hexEncode(sha256(cipherKey.toByteArray())), Charsets.UTF_8)
+            .substring(0, 32)
+            .lowercase(Locale.getDefault()).toByteArray()
+        return SecretKeySpec(keyBytes, "AES")
     }
 
     private fun sha256(input: ByteArray): ByteArray {
