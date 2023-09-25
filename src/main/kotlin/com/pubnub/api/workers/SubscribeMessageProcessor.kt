@@ -204,7 +204,7 @@ internal class SubscribeMessageProcessor(
     private fun processMessage(subscribeMessage: SubscribeMessage): JsonElement? {
         val input = subscribeMessage.payload
 
-        val cryptoModule = pubnub.configuration.cryptoModule ?: return input
+        val cryptoModule = pubnub.cryptoModule ?: return input
         // if we do not have a crypto module, there is no way to process the node; let's return.
 
         // if the message couldn't possibly be encrypted in the first place, there is no way to process the node;

@@ -24,12 +24,12 @@ private const val MAX_VALUE_THAT_CAN_BE_STORED_ON_TWO_BYTES = 65535
 class HeaderParser {
     private val log = LoggerFactory.getLogger(HeaderParser::class.java)
 
-    fun parseHeader(stream: BufferedInputStream): ParseResult<out InputStream> {
+    fun parseDataWithHeader(stream: BufferedInputStream): ParseResult<out InputStream> {
         val bufferedInputStream = stream.buffered()
         bufferedInputStream.mark(Int.MAX_VALUE) // TODO Can be calculated from spec
         val possibleInitialHeader = ByteArray(MINIMAL_SIZE_OF_DATA_HAVING_CRYPTOR_HEADER)
         val initiallyRead = bufferedInputStream.read(possibleInitialHeader)
-        if (!possibleInitialHeader.sliceArray(0..3).contentEquals(SENTINEL)) {
+        if (!possibleInitialHeader.sliceArray(SENTINEL_STARTING_INDEX..SENTINEL_ENDING_INDEX).contentEquals(SENTINEL)) {
             bufferedInputStream.reset()
             return ParseResult.NoHeader
         }
@@ -39,8 +39,8 @@ class HeaderParser {
         }
 
         validateCryptorHeaderVersion(possibleInitialHeader)
-        val cryptorId = possibleInitialHeader.sliceArray(5..8)
-        val cryptorDataSizeFirstByte = possibleInitialHeader[9].toUByte()
+        val cryptorId = possibleInitialHeader.sliceArray(CRYPTOR_ID_STARTING_INDEX..CRYPTOR_ID_ENDING_INDEX)
+        val cryptorDataSizeFirstByte = possibleInitialHeader[CRYPTOR_DATA_SIZE_STARTING_INDEX].toUByte()
 
         val cryptorData: ByteArray = if (cryptorDataSizeFirstByte == THREE_BYTES_SIZE_CRYPTOR_DATA_INDICATOR) {
             val cryptorDataSizeBytes = bufferedInputStream.readNBytez(2)
@@ -162,9 +162,9 @@ class HeaderParser {
     }
 }
 
-sealed class ParseResult<T> { // toDo modify
+sealed class ParseResult<T> {
     data class Success<T>(val cryptoId: ByteArray, val cryptorData: ByteArray, val encryptedData: T) :
         ParseResult<T>()
 
-    object NoHeader : ParseResult<Nothing>() // todo think about different name NoHeader
+    object NoHeader : ParseResult<Nothing>()
 }

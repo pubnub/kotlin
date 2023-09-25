@@ -9,7 +9,6 @@ import java.io.SequenceInputStream
 import java.io.UnsupportedEncodingException
 import java.security.MessageDigest
 import java.security.SecureRandom
-import java.security.spec.AlgorithmParameterSpec
 import java.util.Locale
 import javax.crypto.Cipher
 import javax.crypto.CipherInputStream
@@ -86,8 +85,6 @@ class LegacyCryptor(val cipherKey: String, val useRandomIv: Boolean = true) : Cr
                 )
             }
             val cipher = createInitializedCipher(ivBytes, Cipher.DECRYPT_MODE)
-            val ivSpec: AlgorithmParameterSpec = IvParameterSpec(ivBytes)
-            cipher.init(Cipher.DECRYPT_MODE, newKey, ivSpec)
             return CipherInputStream(encryptedData.stream, cipher)
         } catch (e: Exception) {
             throw PubNubException(errorMessage = e.message, pubnubError = PubNubError.CRYPTO_ERROR)

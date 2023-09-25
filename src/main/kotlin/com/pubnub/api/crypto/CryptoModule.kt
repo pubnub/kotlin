@@ -82,7 +82,7 @@ class CryptoModule internal constructor(
 
     fun decryptStream(encryptedData: InputStream): InputStream {
         val bufferedInputStream = encryptedData.buffered()
-        return when (val parsedHeader = headerParser.parseHeader(bufferedInputStream)) {
+        return when (val parsedHeader = headerParser.parseDataWithHeader(bufferedInputStream)) {
             ParseResult.NoHeader -> {
                 val decryptor = cryptorsForDecryptionOnly.first { it.id().contentEquals(LEGACY_CRYPTOR_ID) }
                 decryptor.decryptStream(EncryptedStreamData(stream = bufferedInputStream))

@@ -91,8 +91,6 @@ import com.pubnub.api.presence.Presence
 import com.pubnub.api.subscribe.Subscribe
 import com.pubnub.api.subscribe.eventengine.configuration.SubscribeEventEngineConfImpl
 import com.pubnub.api.workers.SubscribeMessageProcessor
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import java.io.InputStream
 import java.util.Date
 import java.util.UUID
@@ -101,12 +99,6 @@ class PubNub internal constructor(
     val configuration: PNConfiguration,
     eventEngineConf: EventEngineConf
 ) {
-
-    private val logger: Logger = LoggerFactory.getLogger(PubNub::class.java)
-
-    init {
-        setUpCryptoModule()
-    }
 
     constructor(configuration: PNConfiguration) : this(configuration, SubscribeEventEngineConfImpl())
 
@@ -121,18 +113,6 @@ class PubNub internal constructor(
         fun generateUUID() = "pn-${UUID.randomUUID()}"
     }
 
-    private fun setUpCryptoModule() {
-        val cryptoModule = configuration.cryptoModule
-        val cipherKey = configuration.cipherKey
-        if (cryptoModule != null && cipherKey.isNotBlank()) {
-            logger.debug("cipherKey and cryptoModule properties defined. Only cryptoModule will be respected.")
-        } else if (cryptoModule == null && cipherKey.isNotBlank()) {
-            configuration.cryptoModule =
-                CryptoModule.createLegacyCryptoModule(cipherKey, configuration.useRandomInitializationVector)
-        }
-    }
-
-    // todo replace in subscribe, publish, files, ......
     internal val cryptoModule: CryptoModule?
         get() = configuration.cryptoModule
 
@@ -1783,7 +1763,7 @@ class PubNub internal constructor(
         val cryptoModule = if (cipherKey != null) {
             CryptoModule.createLegacyCryptoModule(cipherKey)
         } else {
-            configuration.cryptoModule
+            cryptoModule
         }
 
         return SendFile(
@@ -1861,7 +1841,7 @@ class PubNub internal constructor(
         val cryptoModule = if (cipherKey != null) {
             CryptoModule.createLegacyCryptoModule(cipherKey)
         } else {
-            configuration.cryptoModule
+            cryptoModule
         }
 
         return DownloadFile(
@@ -2025,7 +2005,7 @@ class PubNub internal constructor(
     private fun getCryptoModuleOrThrow(cipherKey: String? = null): CryptoModule {
         return cipherKey?.let {
             CryptoModule.createLegacyCryptoModule(it, configuration.useRandomInitializationVector)
-        } ?: configuration.cryptoModule ?: throw PubNubException("Crypto module is not initialized")
+        } ?: cryptoModule ?: throw PubNubException("Crypto module is not initialized")
     }
     //endregion
 

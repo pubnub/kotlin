@@ -93,10 +93,10 @@ class Publish internal constructor(
 
     // region Message parsers
     private fun getBodyMessage(message: Any): Any =
-        pubnub.configuration.cryptoModule?.encryptString(toJson(message)) ?: message
+        pubnub.cryptoModule?.encryptString(toJson(message)) ?: message
 
     private fun getParamMessage(message: Any): String =
-        pubnub.configuration.cryptoModule?.encryptString(toJson(message))?.quoted() ?: toJson(message)
+        pubnub.cryptoModule?.encryptString(toJson(message))?.quoted() ?: toJson(message)
 
     private fun toJson(message: Any): String = pubnub.mapper.toJson(message)
     // endregion
