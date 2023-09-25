@@ -4,15 +4,30 @@ import com.pubnub.api.crypto.cryptor.LegacyCryptor
 import com.pubnub.api.crypto.data.EncryptedData
 import org.junit.jupiter.api.Assertions.assertArrayEquals
 import org.junit.jupiter.api.Assertions.assertFalse
-import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments
+import org.junit.jupiter.params.provider.MethodSource
 
 class LegacyCryptorTest {
 
-    @Test
-    fun canDecryptTextWhatIsEncryptedWithStaticIV() {
+    companion object {
+        @JvmStatic
+        fun messageToBeEncrypted(): List<Arguments> = listOf(
+            Arguments.of(""),
+            Arguments.of("Hello world"),
+            Arguments.of("Zażółć gęślą jaźń"), // Polish
+            Arguments.of("हैलो वर्ल्ड"), // Hindi
+            Arguments.of("こんにちは世界"), // Japan
+            Arguments.of("你好世界"), // Chinese
+        )
+    }
+
+    @ParameterizedTest
+    @MethodSource("messageToBeEncrypted")
+    fun canDecryptTextWhatIsEncryptedWithStaticIV(messageToBeEncrypted: String) {
         // given
         val cipherKey = "enigma"
-        val msgToEncrypt = "Hello world".toByteArray()
+        val msgToEncrypt = messageToBeEncrypted.toByteArray()
 
         // when
         val cryptor = LegacyCryptor(cipherKey = cipherKey, useRandomIv = false)
@@ -23,11 +38,12 @@ class LegacyCryptorTest {
         assertArrayEquals(msgToEncrypt, decryptedMsg)
     }
 
-    @Test
-    fun canDecryptTextWhatIsEncryptedWithRandomIV() {
+    @ParameterizedTest
+    @MethodSource("messageToBeEncrypted")
+    fun canDecryptTextWhatIsEncryptedWithRandomIV(messageToBeEncrypted: String) {
         // given
         val cipherKey = "enigma"
-        val msgToEncrypt = "Hello world".toByteArray()
+        val msgToEncrypt = messageToBeEncrypted.toByteArray()
 
         // when
         val cryptor = LegacyCryptor(cipherKey = cipherKey)
@@ -38,11 +54,12 @@ class LegacyCryptorTest {
         assertArrayEquals(msgToEncrypt, decryptedMsg)
     }
 
-    @Test
-    fun encryptingWithRandomIVTwoTimesTheSameMessageProducesDifferentOutput() {
+    @ParameterizedTest
+    @MethodSource("messageToBeEncrypted")
+    fun encryptingWithRandomIVTwoTimesTheSameMessageProducesDifferentOutput(messageToBeEncrypted: String) {
         // given
         val cipherKey = "enigma"
-        val msgToEncrypt = "Hello world".toByteArray()
+        val msgToEncrypt = messageToBeEncrypted.toByteArray()
 
         // when
         val cryptor = LegacyCryptor(cipherKey = cipherKey)
@@ -53,11 +70,12 @@ class LegacyCryptorTest {
         assertFalse(encrypted1.data.contentEquals(encrypted2.data))
     }
 
-    @Test
-    fun encryptingWithRandomIVTwoTimesDecryptedMsgIsTheSame() {
+    @ParameterizedTest
+    @MethodSource("messageToBeEncrypted")
+    fun encryptingWithRandomIVTwoTimesDecryptedMsgIsTheSame(messageToBeEncrypted: String) {
         // given
         val cipherKey = "enigma"
-        val msgToEncrypt = "Hello world".toByteArray()
+        val msgToEncrypt = messageToBeEncrypted.toByteArray()
 
         // when
         val cryptor = LegacyCryptor(cipherKey = cipherKey)

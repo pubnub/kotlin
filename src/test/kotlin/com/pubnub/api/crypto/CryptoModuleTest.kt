@@ -8,8 +8,8 @@ import com.pubnub.api.crypto.data.EncryptedStreamData
 import org.hamcrest.CoreMatchers
 import org.hamcrest.MatcherAssert
 import org.hamcrest.Matchers.hasSize
-import org.junit.Assert
 import org.junit.jupiter.api.Assertions.assertArrayEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import java.io.InputStream
 import org.hamcrest.Matchers.`is` as iz
@@ -25,14 +25,14 @@ class CryptoModuleTest {
         val legacyCryptoModule = CryptoModule.createLegacyCryptoModule(cipherKey)
 
         // then
-        Assert.assertTrue(legacyCryptoModule.primaryCryptor is LegacyCryptor)
+        assertTrue(legacyCryptoModule.primaryCryptor is LegacyCryptor)
         MatcherAssert.assertThat(legacyCryptoModule.cryptorsForDecryptionOnly, hasSize(2))
         MatcherAssert.assertThat(
-            legacyCryptoModule.cryptorsForDecryptionOnly?.first(),
+            legacyCryptoModule.cryptorsForDecryptionOnly.first(),
             iz(CoreMatchers.instanceOf(LegacyCryptor::class.java))
         )
         MatcherAssert.assertThat(
-            legacyCryptoModule.cryptorsForDecryptionOnly?.get(1),
+            legacyCryptoModule.cryptorsForDecryptionOnly[1],
             iz(CoreMatchers.instanceOf(AesCbcCryptor::class.java))
         )
     }
@@ -46,14 +46,14 @@ class CryptoModuleTest {
         val legacyCryptoModule = CryptoModule.createAesCbcCryptoModule(cipherKey)
 
         // then
-        Assert.assertTrue(legacyCryptoModule.primaryCryptor is AesCbcCryptor)
+        assertTrue(legacyCryptoModule.primaryCryptor is AesCbcCryptor)
         MatcherAssert.assertThat(legacyCryptoModule.cryptorsForDecryptionOnly, hasSize(2))
         MatcherAssert.assertThat(
-            legacyCryptoModule.cryptorsForDecryptionOnly?.first(),
+            legacyCryptoModule.cryptorsForDecryptionOnly.first(),
             iz(CoreMatchers.instanceOf(AesCbcCryptor::class.java))
         )
         MatcherAssert.assertThat(
-            legacyCryptoModule.cryptorsForDecryptionOnly?.get(1),
+            legacyCryptoModule.cryptorsForDecryptionOnly.get(1),
             iz(CoreMatchers.instanceOf(LegacyCryptor::class.java))
         )
     }
@@ -67,10 +67,10 @@ class CryptoModuleTest {
         val legacyCryptoModule = CryptoModule.createNewCryptoModule(defaultCryptor = AesCbcCryptor(cipherKey))
 
         // then
-        Assert.assertTrue(legacyCryptoModule.primaryCryptor is AesCbcCryptor)
+        assertTrue(legacyCryptoModule.primaryCryptor is AesCbcCryptor)
         MatcherAssert.assertThat(legacyCryptoModule.cryptorsForDecryptionOnly, hasSize(1))
         MatcherAssert.assertThat(
-            legacyCryptoModule.cryptorsForDecryptionOnly?.first(),
+            legacyCryptoModule.cryptorsForDecryptionOnly.first(),
             iz(CoreMatchers.instanceOf(AesCbcCryptor::class.java))
         )
     }
@@ -171,10 +171,28 @@ class CryptoModuleTest {
     }
 
     @Test
+    fun `can add the same module as a defaultCryptor and cryptorsForDecryptionOnly and have decryption working properly`() {
+        // given
+        val cipherKey = "enigma"
+        val legacyCryptor = LegacyCryptor(cipherKey)
+        val cryptoModule = CryptoModule.createNewCryptoModule(
+            defaultCryptor = legacyCryptor,
+            cryptorsForDecryptionOnly = listOf(legacyCryptor, AesCbcCryptor(cipherKey))
+        )
+        val msgToEncrypt = "Hello world".toByteArray()
+
+        // when
+        val encryptedMsg = cryptoModule.encrypt(msgToEncrypt)
+        val decryptedMsg = cryptoModule.decrypt(encryptedMsg)
+
+        // then
+        assertArrayEquals(msgToEncrypt, decryptedMsg)
+    }
+
+    @Test
     fun `can decrypt encrypted message using custom cryptor `() {
         // given
         val customCryptor = myCustomCryptor()
-        val cipherKey = "enigma"
         val msgToEncrypt = "Hello world".toByteArray()
 
         // when
