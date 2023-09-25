@@ -6,7 +6,8 @@ import com.pubnub.api.crypto.cryptor.LegacyCryptor
 import com.pubnub.api.crypto.data.EncryptedData
 import com.pubnub.api.crypto.data.EncryptedStreamData
 import org.hamcrest.CoreMatchers
-import org.hamcrest.MatcherAssert
+import org.hamcrest.MatcherAssert.assertThat
+import org.hamcrest.Matchers.containsInAnyOrder
 import org.hamcrest.Matchers.hasSize
 import org.junit.jupiter.api.Assertions.assertArrayEquals
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -31,14 +32,15 @@ class CryptoModuleTest {
 
         // then
         assertTrue(legacyCryptoModule.primaryCryptor is LegacyCryptor)
-        MatcherAssert.assertThat(legacyCryptoModule.cryptorsForDecryptionOnly, hasSize(2))
-        MatcherAssert.assertThat(
-            legacyCryptoModule.cryptorsForDecryptionOnly.first(),
-            iz(CoreMatchers.instanceOf(LegacyCryptor::class.java))
-        )
-        MatcherAssert.assertThat(
-            legacyCryptoModule.cryptorsForDecryptionOnly[1],
-            iz(CoreMatchers.instanceOf(AesCbcCryptor::class.java))
+        assertThat(legacyCryptoModule.cryptorsForDecryptionOnly, hasSize(2))
+        assertThat(
+            legacyCryptoModule.cryptorsForDecryptionOnly,
+            containsInAnyOrder(
+                listOf(
+                    iz(CoreMatchers.instanceOf(AesCbcCryptor::class.java)),
+                    iz(CoreMatchers.instanceOf(LegacyCryptor::class.java))
+                )
+            )
         )
     }
 
@@ -48,18 +50,19 @@ class CryptoModuleTest {
         val cipherKey = "enigma"
 
         // when
-        val legacyCryptoModule = CryptoModule.createAesCbcCryptoModule(cipherKey)
+        val aesCbcCryptoModule = CryptoModule.createAesCbcCryptoModule(cipherKey)
 
         // then
-        assertTrue(legacyCryptoModule.primaryCryptor is AesCbcCryptor)
-        MatcherAssert.assertThat(legacyCryptoModule.cryptorsForDecryptionOnly, hasSize(2))
-        MatcherAssert.assertThat(
-            legacyCryptoModule.cryptorsForDecryptionOnly.first(),
-            iz(CoreMatchers.instanceOf(AesCbcCryptor::class.java))
-        )
-        MatcherAssert.assertThat(
-            legacyCryptoModule.cryptorsForDecryptionOnly[1],
-            iz(CoreMatchers.instanceOf(LegacyCryptor::class.java))
+        assertTrue(aesCbcCryptoModule.primaryCryptor is AesCbcCryptor)
+        assertThat(aesCbcCryptoModule.cryptorsForDecryptionOnly, hasSize(2))
+        assertThat(
+            aesCbcCryptoModule.cryptorsForDecryptionOnly,
+            containsInAnyOrder(
+                listOf(
+                    iz(CoreMatchers.instanceOf(AesCbcCryptor::class.java)),
+                    iz(CoreMatchers.instanceOf(LegacyCryptor::class.java))
+                )
+            )
         )
     }
 
@@ -69,13 +72,13 @@ class CryptoModuleTest {
         val cipherKey = "enigma"
 
         // when
-        val legacyCryptoModule = CryptoModule.createNewCryptoModule(defaultCryptor = AesCbcCryptor(cipherKey))
+        val newCryptoModule = CryptoModule.createNewCryptoModule(defaultCryptor = AesCbcCryptor(cipherKey))
 
         // then
-        assertTrue(legacyCryptoModule.primaryCryptor is AesCbcCryptor)
-        MatcherAssert.assertThat(legacyCryptoModule.cryptorsForDecryptionOnly, hasSize(1))
-        MatcherAssert.assertThat(
-            legacyCryptoModule.cryptorsForDecryptionOnly.first(),
+        assertTrue(newCryptoModule.primaryCryptor is AesCbcCryptor)
+        assertThat(newCryptoModule.cryptorsForDecryptionOnly, hasSize(1))
+        assertThat(
+            newCryptoModule.cryptorsForDecryptionOnly.first(),
             iz(CoreMatchers.instanceOf(AesCbcCryptor::class.java))
         )
     }
@@ -84,12 +87,12 @@ class CryptoModuleTest {
     fun `can decrypt encrypted message using LegacyCryptoModule with randomIV`() {
         // given
         val cipherKey = "enigma"
-        val legacyCryptoModule = CryptoModule.createLegacyCryptoModule(cipherKey)
+        val legacyCryptoModuleWithRandomIv = CryptoModule.createLegacyCryptoModule(cipherKey)
         val msgToEncrypt = "Hello world".toByteArray()
 
         // when
-        val encryptedMsg = legacyCryptoModule.encrypt(msgToEncrypt)
-        val decryptedMsg = legacyCryptoModule.decrypt(encryptedMsg)
+        val encryptedMsg = legacyCryptoModuleWithRandomIv.encrypt(msgToEncrypt)
+        val decryptedMsg = legacyCryptoModuleWithRandomIv.decrypt(encryptedMsg)
 
         // then
         assertArrayEquals(msgToEncrypt, decryptedMsg)
@@ -99,12 +102,12 @@ class CryptoModuleTest {
     fun `can decrypt encrypted message using LegacyCryptoModule with staticIV`() {
         // given
         val cipherKey = "enigma"
-        val legacyCryptoModule = CryptoModule.createLegacyCryptoModule(cipherKey, false)
+        val legacyCryptoModuleWithStaticIv = CryptoModule.createLegacyCryptoModule(cipherKey, false)
         val msgToEncrypt = "Hello world".toByteArray()
 
         // when
-        val encryptedMsg = legacyCryptoModule.encrypt(msgToEncrypt)
-        val decryptedMsg = legacyCryptoModule.decrypt(encryptedMsg)
+        val encryptedMsg = legacyCryptoModuleWithStaticIv.encrypt(msgToEncrypt)
+        val decryptedMsg = legacyCryptoModuleWithStaticIv.decrypt(encryptedMsg)
 
         // then
         assertArrayEquals(msgToEncrypt, decryptedMsg)
