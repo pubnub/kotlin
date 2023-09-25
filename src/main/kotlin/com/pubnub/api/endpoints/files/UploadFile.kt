@@ -10,7 +10,6 @@ import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.server.files.FileUploadRequestDetails
 import com.pubnub.api.models.server.files.FormField
 import com.pubnub.api.services.S3Service
-import com.pubnub.api.vendor.FileEncryptionUtil
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
@@ -31,7 +30,6 @@ internal class UploadFile(
     private val s3Service: S3Service,
     private val fileName: String,
     private val content: ByteArray,
-    private val cipherKey: String?,
     private val key: FormField,
     private val formParams: List<FormField>,
     private val baseUrl: String
@@ -44,17 +42,9 @@ internal class UploadFile(
         addFormParamsWithKeyFirst(key, formParams, builder)
         val mediaType = getMediaType(formParams.findContentType())
 
-        val bytes = prepareBytes(content, cipherKey)
-        builder.addFormDataPart(FILE_PART_MULTIPART, fileName, bytes.toRequestBody(mediaType, 0, bytes.size))
+        builder.addFormDataPart(FILE_PART_MULTIPART, fileName, content.toRequestBody(mediaType, 0, content.size))
         return s3Service.upload(baseUrl, builder.build())
     }
-
-    private fun prepareBytes(content: ByteArray, cipherKey: String?): ByteArray =
-        if (cipherKey == null) {
-            content
-        } else {
-            FileEncryptionUtil.encryptToBytes(content, cipherKey)
-        }
 
     private fun List<FormField>.findContentType(): String? {
         return find { (key, _) ->
@@ -155,6 +145,7 @@ internal class UploadFile(
     private fun Response<*>.getCategory(): PNStatusCategory = when (code()) {
         HttpURLConnection.HTTP_UNAUTHORIZED,
         HttpURLConnection.HTTP_FORBIDDEN -> PNStatusCategory.PNAccessDeniedCategory
+
         HttpURLConnection.HTTP_BAD_REQUEST -> PNStatusCategory.PNBadRequestCategory
         else -> PNStatusCategory.PNUnknownCategory
     }
@@ -210,15 +201,12 @@ internal class UploadFile(
         fun create(
             fileName: String,
             content: ByteArray,
-            cipherKey: String?,
             fileUploadRequestDetails: FileUploadRequestDetails
         ): ExtendedRemoteAction<Unit> {
-            val effectiveCipherKey = FileEncryptionUtil.effectiveCipherKey(pubNub, cipherKey)
             return UploadFile(
                 pubNub.retrofitManager.s3Service,
                 fileName,
                 content,
-                effectiveCipherKey,
                 fileUploadRequestDetails.keyFormField, fileUploadRequestDetails.formFields,
                 fileUploadRequestDetails.url
             )

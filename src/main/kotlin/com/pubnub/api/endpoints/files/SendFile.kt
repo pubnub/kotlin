@@ -3,6 +3,8 @@ package com.pubnub.api.endpoints.files
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
+import com.pubnub.api.crypto.CryptoModule
+import com.pubnub.api.crypto.cryptor.InputStreamSeparator
 import com.pubnub.api.endpoints.remoteaction.ComposableRemoteAction
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
 import com.pubnub.api.endpoints.remoteaction.RetryingRemoteAction
@@ -30,16 +32,16 @@ class SendFile internal constructor(
     private val meta: Any? = null,
     private val ttl: Int? = null,
     private val shouldStore: Boolean? = null,
-    private val cipherKey: String? = null,
     private val fileMessagePublishRetryLimit: Int,
     private val executorService: ExecutorService,
     generateUploadUrlFactory: GenerateUploadUrl.Factory,
     publishFileMessageFactory: PublishFileMessage.Factory,
-    sendFileToS3Factory: UploadFile.Factory
+    sendFileToS3Factory: UploadFile.Factory,
+    cryptoModule: CryptoModule? = null
 ) : ExtendedRemoteAction<PNFileUploadResult> {
 
     private val sendFileMultistepAction: ExtendedRemoteAction<PNFileUploadResult> = sendFileComposedActions(
-        generateUploadUrlFactory, publishFileMessageFactory, sendFileToS3Factory, inputStream.readBytes()
+        generateUploadUrlFactory, publishFileMessageFactory, sendFileToS3Factory, inputStream, cryptoModule
     )
 
     @Throws(PubNubException::class)
@@ -81,13 +83,18 @@ class SendFile internal constructor(
         generateUploadUrlFactory: GenerateUploadUrl.Factory,
         publishFileMessageFactory: PublishFileMessage.Factory,
         sendFileToS3Factory: UploadFile.Factory,
-        content: ByteArray
+        inputStream: InputStream,
+        cryptoModule: CryptoModule?
     ): ExtendedRemoteAction<PNFileUploadResult> {
         val result = AtomicReference<FileUploadRequestDetails>()
+
+        val content = cryptoModule?.encryptStream(InputStreamSeparator(inputStream))?.use {
+            it.readBytes()
+        } ?: inputStream.readBytes()
         return ComposableRemoteAction.firstDo(generateUploadUrlFactory.create(channel, fileName)) // generateUrl
             .then { res ->
                 result.set(res)
-                sendFileToS3Factory.create(fileName, content, cipherKey, res) // upload to s3
+                sendFileToS3Factory.create(fileName, content, res) // upload to s3
             }.checkpoint().then {
                 val details = result.get()
                 RetryingRemoteAction.autoRetry(
@@ -98,7 +105,7 @@ class SendFile internal constructor(
                         message = message,
                         meta = meta,
                         ttl = ttl,
-                        shouldStore = shouldStore
+                        shouldStore = shouldStore,
                     ),
                     fileMessagePublishRetryLimit, PNOperationType.FileOperation, executorService
                 ) // publish file message

@@ -53,15 +53,15 @@ abstract class BaseTest {
     }
 
     fun initConfiguration() {
-        config = run {
-            PNConfiguration(userId = UserId("myUUID")).apply {
-                subscribeKey = "mySubscribeKey"
-                publishKey = "myPublishKey"
-                origin = wireMockServer.baseUrl().toHttpUrlOrNull()!!.run { "$host:$port" }
-                secure = false
-                logVerbosity = PNLogVerbosity.BODY
-            }
-        }
+        config = createConfiguration()
+    }
+
+    fun createConfiguration() = PNConfiguration(userId = UserId("myUUID")).apply {
+        subscribeKey = "mySubscribeKey"
+        publishKey = "myPublishKey"
+        origin = wireMockServer.baseUrl().toHttpUrlOrNull()!!.run { "$host:$port" }
+        secure = false
+        logVerbosity = PNLogVerbosity.BODY
     }
 
     fun clearConfiguration() {

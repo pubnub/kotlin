@@ -8,6 +8,6 @@ interface Cryptor {
     fun id(): ByteArray // Assuming 4 bytes,
     fun encrypt(data: ByteArray): EncryptedData
     fun decrypt(encryptedData: EncryptedData): ByteArray
-    fun encryptStream(stream: InputStream): Result<EncryptedStreamData> // todo tu zawsze jest randomIv
-    fun decryptStream(encryptedData: EncryptedStreamData): Result<InputStream> // todo tu zawsze jest randomIv
+    fun encryptStream(stream: InputStream): EncryptedStreamData
+    fun decryptStream(encryptedData: EncryptedStreamData): InputStream
 }

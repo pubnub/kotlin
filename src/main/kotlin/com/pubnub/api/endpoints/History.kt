@@ -25,7 +25,7 @@ class History internal constructor(
     val count: Int,
     val reverse: Boolean,
     val includeTimetoken: Boolean,
-    val includeMeta: Boolean
+    val includeMeta: Boolean,
 ) : Endpoint<JsonElement, PNHistoryResult>(pubnub) {
 
     internal companion object {
@@ -76,7 +76,7 @@ class History internal constructor(
                 var meta: JsonElement? = null
 
                 if (includeTimetoken || includeMeta) {
-                    message = pubnub.mapper.getField(historyEntry, "message")!!.processHistoryMessage(pubnub.configuration, pubnub.mapper)
+                    message = pubnub.mapper.getField(historyEntry, "message")!!.processHistoryMessage(pubnub.configuration.cryptoModule, pubnub.mapper)
                     if (includeTimetoken) {
                         timetoken = pubnub.mapper.elementToLong(historyEntry, "timetoken")
                     }
@@ -84,7 +84,7 @@ class History internal constructor(
                         meta = pubnub.mapper.getField(historyEntry, "meta")
                     }
                 } else {
-                    message = historyEntry.processHistoryMessage(pubnub.configuration, pubnub.mapper)
+                    message = historyEntry.processHistoryMessage(pubnub.configuration.cryptoModule, pubnub.mapper)
                 }
 
                 val historyItem = PNHistoryItemResult(

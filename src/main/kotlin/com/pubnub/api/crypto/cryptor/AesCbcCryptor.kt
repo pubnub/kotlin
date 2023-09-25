@@ -7,8 +7,8 @@ import com.pubnub.api.crypto.data.EncryptedStreamData
 import java.io.InputStream
 import java.security.MessageDigest
 import java.security.SecureRandom
-import java.security.spec.AlgorithmParameterSpec
 import javax.crypto.Cipher
+import javax.crypto.CipherInputStream
 import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
 
@@ -17,7 +17,6 @@ private const val RANDOM_IV_SIZE = 16
 
 class AesCbcCryptor(val cipherKey: String) : Cryptor {
     private val newKey: SecretKeySpec = createNewKey()
-    private val cipher: Cipher = Cipher.getInstance(CIPHER_TRANSFORMATION)
 
     override fun id(): ByteArray {
         return byteArrayOf('A'.code.toByte(), 'C'.code.toByte(), 'R'.code.toByte(), 'H'.code.toByte())
@@ -26,8 +25,7 @@ class AesCbcCryptor(val cipherKey: String) : Cryptor {
     override fun encrypt(data: ByteArray): EncryptedData {
         return try {
             val ivBytes: ByteArray = createRandomIv()
-            val ivSpec: AlgorithmParameterSpec = IvParameterSpec(ivBytes)
-            cipher.init(Cipher.ENCRYPT_MODE, newKey, ivSpec)
+            val cipher = createInitializedCipher(ivBytes, Cipher.ENCRYPT_MODE)
             val encryptedData: ByteArray = cipher.doFinal(data)
             EncryptedData(metadata = ivBytes, data = encryptedData)
         } catch (e: Exception) {
@@ -38,8 +36,7 @@ class AesCbcCryptor(val cipherKey: String) : Cryptor {
     override fun decrypt(encryptedData: EncryptedData): ByteArray {
         return try {
             val ivBytes: ByteArray = encryptedData.metadata?.takeIf { it.size == RANDOM_IV_SIZE } ?: throw PubNubException("Invalid random IV")
-            val ivSpec: AlgorithmParameterSpec = IvParameterSpec(ivBytes)
-            cipher.init(Cipher.DECRYPT_MODE, newKey, ivSpec)
+            val cipher = createInitializedCipher(ivBytes, Cipher.DECRYPT_MODE)
             val decryptedData = cipher.doFinal(encryptedData.data)
             decryptedData
         } catch (e: Exception) {
@@ -47,12 +44,35 @@ class AesCbcCryptor(val cipherKey: String) : Cryptor {
         }
     }
 
-    override fun encryptStream(stream: InputStream): Result<EncryptedStreamData> {
-        TODO("Not yet implemented")
+    override fun encryptStream(stream: InputStream): EncryptedStreamData {
+        try {
+            val ivBytes: ByteArray = createRandomIv()
+            val cipher = createInitializedCipher(ivBytes, Cipher.ENCRYPT_MODE)
+            val cipheredStream = CipherInputStream(stream, cipher)
+
+            return EncryptedStreamData(
+                metadata = ivBytes,
+                stream = cipheredStream
+            )
+        } catch (e: Exception) {
+            throw PubNubException(errorMessage = e.message, pubnubError = PubNubError.CRYPTO_ERROR)
+        }
     }
 
-    override fun decryptStream(encryptedData: EncryptedStreamData): Result<InputStream> {
-        TODO("Not yet implemented")
+    override fun decryptStream(encryptedData: EncryptedStreamData): InputStream {
+        try {
+            val ivBytes: ByteArray = encryptedData.metadata?.takeIf { it.size == RANDOM_IV_SIZE } ?: throw PubNubException("Invalid random IV")
+            val cipher = createInitializedCipher(ivBytes, Cipher.DECRYPT_MODE)
+            return CipherInputStream(encryptedData.stream, cipher)
+        } catch (e: Exception) {
+            throw PubNubException(errorMessage = e.message, pubnubError = PubNubError.CRYPTO_ERROR)
+        }
+    }
+
+    private fun createInitializedCipher(iv: ByteArray, mode: Int): Cipher {
+        return Cipher.getInstance(CIPHER_TRANSFORMATION).also {
+            it.init(mode, newKey, IvParameterSpec(iv))
+        }
     }
 
     private fun createNewKey(): SecretKeySpec {

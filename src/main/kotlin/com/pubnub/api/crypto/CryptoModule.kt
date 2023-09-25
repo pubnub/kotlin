@@ -4,9 +4,14 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.crypto.cryptor.AesCbcCryptor
 import com.pubnub.api.crypto.cryptor.Cryptor
 import com.pubnub.api.crypto.cryptor.HeaderParser
+import com.pubnub.api.crypto.cryptor.LEGACY_CRYPTOR_ID
 import com.pubnub.api.crypto.cryptor.LegacyCryptor
 import com.pubnub.api.crypto.cryptor.ParseResult
 import com.pubnub.api.crypto.data.EncryptedData
+import com.pubnub.api.crypto.data.EncryptedStreamData
+import com.pubnub.api.vendor.Base64
+import java.io.InputStream
+import java.io.SequenceInputStream
 
 class CryptoModule internal constructor(
     internal val primaryCryptor: Cryptor,
@@ -42,21 +47,22 @@ class CryptoModule internal constructor(
 
     fun encrypt(data: ByteArray): ByteArray {
         val (metadata, encryptedData) = primaryCryptor.encrypt(data)
-        val encryptionResult: ByteArray = if (primaryCryptorIsLegacyCryptor()) {
+
+        return if (primaryCryptor.id().contentEquals(LEGACY_CRYPTOR_ID)) {
             encryptedData
         } else {
             val cryptorHeader = headerParser.createCryptorHeader(primaryCryptor.id(), metadata)
             cryptorHeader + encryptedData
         }
-        return encryptionResult
     }
 
     fun decrypt(encryptedData: ByteArray): ByteArray {
-        val parsedData: ParseResult = headerParser.parseDataWithHeader(encryptedData)
+        val parsedData: ParseResult<out ByteArray> = headerParser.parseDataWithHeader(encryptedData)
         val decryptedData: ByteArray = when (parsedData) {
             is ParseResult.NoHeader -> {
                 getDecryptedDataForLegacyCryptor(encryptedData)
             }
+
             is ParseResult.Success -> {
                 getDecryptedDataForCryptorWithHeader(parsedData)
             }
@@ -64,14 +70,44 @@ class CryptoModule internal constructor(
         return decryptedData
     }
 
-    private fun primaryCryptorIsLegacyCryptor() = primaryCryptor.id().contentEquals(ByteArray(4) { 0.toByte() })
+    fun encryptStream(stream: InputStream): InputStream {
+        val (metadata, encryptedData) = primaryCryptor.encryptStream(stream)
+        return if (primaryCryptor.id().contentEquals(LEGACY_CRYPTOR_ID)) {
+            encryptedData
+        } else {
+            val cryptorHeader: ByteArray = headerParser.createCryptorHeader(primaryCryptor.id(), metadata)
+            SequenceInputStream(cryptorHeader.inputStream(), encryptedData)
+        }
+    }
+
+    fun decryptStream(encryptedData: InputStream): InputStream {
+        val bufferedInputStream = encryptedData.buffered()
+        return when (val parsedHeader = headerParser.parseHeader(bufferedInputStream)) {
+            ParseResult.NoHeader -> {
+                val decryptor = cryptorsForDecryptionOnly.first { it.id().contentEquals(LEGACY_CRYPTOR_ID) }
+                decryptor.decryptStream(EncryptedStreamData(stream = bufferedInputStream))
+            }
+
+            is ParseResult.Success -> {
+                val decryptor = cryptorsForDecryptionOnly.first {
+                    it.id().contentEquals(parsedHeader.cryptoId)
+                }
+                decryptor.decryptStream(
+                    EncryptedStreamData(
+                        metadata = parsedHeader.cryptorData,
+                        stream = parsedHeader.encryptedData
+                    )
+                )
+            }
+        }
+    }
 
     private fun getDecryptedDataForLegacyCryptor(encryptedData: ByteArray): ByteArray {
         return getLegacyCryptor()?.decrypt(EncryptedData(data = encryptedData))
             ?: throw PubNubException("LegacyCryptor not available")
     }
 
-    private fun getDecryptedDataForCryptorWithHeader(parsedHeader: ParseResult.Success): ByteArray {
+    private fun getDecryptedDataForCryptorWithHeader(parsedHeader: ParseResult.Success<out ByteArray>): ByteArray {
         val decryptedData: ByteArray
         val cryptorId = parsedHeader.cryptoId
         val cryptorData = parsedHeader.cryptorData
@@ -91,3 +127,9 @@ class CryptoModule internal constructor(
         return cryptorsForDecryptionOnly.firstOrNull { it.id().contentEquals(cryptorId) }
     }
 }
+
+internal fun CryptoModule.encryptString(inputString: String): String =
+    encrypt(inputString.toByteArray()).let { Base64.encodeToString(it, Base64.NO_WRAP) }
+
+internal fun CryptoModule.decryptString(inputString: String): String =
+    decrypt(Base64.decode(inputString, Base64.NO_WRAP)).toString(Charsets.UTF_8)

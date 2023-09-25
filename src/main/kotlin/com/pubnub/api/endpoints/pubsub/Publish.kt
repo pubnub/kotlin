@@ -1,14 +1,14 @@
 package com.pubnub.api.endpoints.pubsub
 
 import com.pubnub.api.Endpoint
-import com.pubnub.api.PNConfiguration.Companion.isValid
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
+import com.pubnub.api.crypto.encryptString
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.PNPublishResult
-import com.pubnub.api.vendor.Crypto
 import com.pubnub.extension.numericString
+import com.pubnub.extension.quoted
 import com.pubnub.extension.valueString
 import retrofit2.Call
 import retrofit2.Response
@@ -27,9 +27,6 @@ class Publish internal constructor(
     val ttl: Int? = null
 ) : Endpoint<List<Any>, PNPublishResult>(pubnub) {
 
-    // todo  private val useEncryption: Boolean = pubnub.configuration.cryptoModule != null
-    private val useEncryption: Boolean = pubnub.configuration.cipherKey.isValid()
-
     override fun validateParams() {
         super.validateParams()
         if (channel.isBlank()) throw PubNubException(PubNubError.CHANNEL_MISSING)
@@ -42,7 +39,7 @@ class Publish internal constructor(
         addQueryParams(queryParams)
 
         return if (usePost) {
-            val payload = getBodyMessage(message, useEncryption)
+            val payload = getBodyMessage(message)
 
             pubnub.retrofitManager.publishService.publishWithPost(
                 pubnub.configuration.publishKey,
@@ -53,7 +50,7 @@ class Publish internal constructor(
             )
         } else {
             // HTTP GET request
-            val stringifiedMessage = getParamMessage(message, useEncryption)
+            val stringifiedMessage = getParamMessage(message)
 
             pubnub.retrofitManager.publishService.publish(
                 pubnub.configuration.publishKey,
@@ -95,38 +92,12 @@ class Publish internal constructor(
     // endregion
 
     // region Message parsers
-    private fun getBodyMessage(message: Any, useEncryption: Boolean): Any =
-        if (useEncryption) prepareMessage(message, useEncryption)
-        else message
+    private fun getBodyMessage(message: Any): Any =
+        pubnub.configuration.cryptoModule?.encryptString(toJson(message)) ?: message
 
-    private fun getParamMessage(message: Any, useEncryption: Boolean): String =
-        prepareMessage(message, useEncryption, true)
+    private fun getParamMessage(message: Any): String =
+        pubnub.configuration.cryptoModule?.encryptString(toJson(message))?.quoted() ?: toJson(message)
 
-    /**
-     * Create stringified message from passed text and apply encryption if needed
-     *
-     * @param message any object
-     * @param useEncryption should encrypt message
-     * @param wrapEncrypted should add double quotes to escaped message
-     */
-    private fun prepareMessage(
-        message: Any,
-        useEncryption: Boolean,
-        wrapEncrypted: Boolean = false
-    ): String =
-        pubnub.mapper.toJson(message).also { json ->
-            if (useEncryption)
-                return encryptMessage(json).also { encrypted ->
-                    if (wrapEncrypted)
-                        return "\"$encrypted\""
-                }
-        }
-
-//    val cryptoModule = pubnub.configuration.cryptoModule
-//    val encryptedMessage = cryptoModule?.encrypt(message.toByteArray())
-//    return encryptedMessage.toString()
-    private fun encryptMessage(message: String): String =
-        Crypto(pubnub.configuration.cipherKey, pubnub.configuration.useRandomInitializationVector)
-            .encrypt(message)
+    private fun toJson(message: Any): String = pubnub.mapper.toJson(message)
     // endregion
 }

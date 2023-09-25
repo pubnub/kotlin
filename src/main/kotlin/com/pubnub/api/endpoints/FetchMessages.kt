@@ -28,7 +28,7 @@ class FetchMessages internal constructor(
     val includeUUID: Boolean,
     val includeMeta: Boolean,
     val includeMessageActions: Boolean,
-    val includeMessageType: Boolean,
+    val includeMessageType: Boolean
 ) : Endpoint<FetchMessagesEnvelope, PNFetchMessagesResult>(pubnub) {
 
     internal companion object {
@@ -82,7 +82,7 @@ class FetchMessages internal constructor(
         val body = input.body()!!
         val channelsMap = body.channels.mapValues { (_, value) ->
             value.map { serverMessageItem ->
-                val newMessage = serverMessageItem.message.processHistoryMessage(pubnub.configuration, pubnub.mapper)
+                val newMessage = serverMessageItem.message.processHistoryMessage(pubnub.configuration.cryptoModule, pubnub.mapper)
                 val newActions =
                     if (includeMessageActions) serverMessageItem.actions ?: mapOf() else serverMessageItem.actions
                 PNFetchMessageItem(

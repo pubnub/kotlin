@@ -4,9 +4,9 @@ import com.pubnub.api.Endpoint
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
+import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.files.PNDownloadFileResult
-import com.pubnub.api.vendor.FileEncryptionUtil
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Response
@@ -18,7 +18,7 @@ class DownloadFile(
     private val channel: String,
     private val fileName: String,
     private val fileId: String,
-    private val cipherKey: String? = null,
+    private val cryptoModule: CryptoModule? = null,
     pubNub: PubNub
 ) : Endpoint<ResponseBody, PNDownloadFileResult>(pubNub) {
 
@@ -47,9 +47,9 @@ class DownloadFile(
         if (input.body() == null) {
             throw PubNubException(PubNubError.INTERNAL_ERROR)
         }
-        val effectiveCipherKey: String? = FileEncryptionUtil.effectiveCipherKey(pubnub, cipherKey)
-        val byteStream = if (effectiveCipherKey == null) input.body()!!.byteStream()
-        else FileEncryptionUtil.decrypt(input.body()!!.byteStream(), effectiveCipherKey)
+        val bodyStream = input.body()!!.byteStream()
+        val byteStream = cryptoModule?.decryptStream(bodyStream)
+            ?: bodyStream
 
         return PNDownloadFileResult(fileName, byteStream)
     }

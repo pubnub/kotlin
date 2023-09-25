@@ -4,6 +4,8 @@ import com.pubnub.api.builder.PubSub
 import com.pubnub.api.callbacks.Listener
 import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.crypto.CryptoModule
+import com.pubnub.api.crypto.decryptString
+import com.pubnub.api.crypto.encryptString
 import com.pubnub.api.endpoints.DeleteMessages
 import com.pubnub.api.endpoints.FetchMessages
 import com.pubnub.api.endpoints.History
@@ -88,10 +90,6 @@ import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
 import com.pubnub.api.presence.Presence
 import com.pubnub.api.subscribe.Subscribe
 import com.pubnub.api.subscribe.eventengine.configuration.SubscribeEventEngineConfImpl
-import com.pubnub.api.vendor.Base64
-import com.pubnub.api.vendor.Crypto
-import com.pubnub.api.vendor.FileEncryptionUtil.decrypt
-import com.pubnub.api.vendor.FileEncryptionUtil.encrypt
 import com.pubnub.api.workers.SubscribeMessageProcessor
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -129,7 +127,8 @@ class PubNub internal constructor(
         if (cryptoModule != null && cipherKey.isNotBlank()) {
             logger.debug("cipherKey and cryptoModule properties defined. Only cryptoModule will be respected.")
         } else if (cryptoModule == null && cipherKey.isNotBlank()) {
-            configuration.cryptoModule = CryptoModule.createLegacyCryptoModule(cipherKey, configuration.useRandomInitializationVector)
+            configuration.cryptoModule =
+                CryptoModule.createLegacyCryptoModule(cipherKey, configuration.useRandomInitializationVector)
         }
     }
 
@@ -152,7 +151,13 @@ class PubNub internal constructor(
     private val tokenParser: TokenParser = TokenParser()
     private val listenerManager = ListenerManager(this)
     internal val subscriptionManager = SubscriptionManager(this, listenerManager)
-    private val subscribe = Subscribe.create(this, listenerManager, configuration.retryPolicy, eventEngineConf, SubscribeMessageProcessor(this, DuplicationManager(configuration)))
+    private val subscribe = Subscribe.create(
+        this,
+        listenerManager,
+        configuration.retryPolicy,
+        eventEngineConf,
+        SubscribeMessageProcessor(this, DuplicationManager(configuration))
+    )
 
     //endregion
 
@@ -227,6 +232,7 @@ class PubNub internal constructor(
         usePost: Boolean = false,
         replicate: Boolean = true,
         ttl: Int? = null
+
     ) = Publish(
         pubnub = this,
         channel = channel,
@@ -1743,7 +1749,7 @@ class PubNub internal constructor(
      *
      * @param channel Channel name
      * @param fileName Name of the file to send.
-     * @param inputStream Input stream with file content.
+     * @param inputStream Input stream with file content. The inputStream will be depleted after the call.
      * @param message The payload.
      *                **Warning:** It is important to note that you should not serialize JSON
      *                when sending signals/messages via PubNub.
@@ -1774,6 +1780,12 @@ class PubNub internal constructor(
         shouldStore: Boolean? = null,
         cipherKey: String? = null
     ): SendFile {
+        val cryptoModule = if (cipherKey != null) {
+            CryptoModule.createLegacyCryptoModule(cipherKey)
+        } else {
+            configuration.cryptoModule
+        }
+
         return SendFile(
             channel = channel,
             fileName = fileName,
@@ -1782,12 +1794,12 @@ class PubNub internal constructor(
             meta = meta,
             ttl = ttl,
             shouldStore = shouldStore,
-            cipherKey = cipherKey,
             executorService = retrofitManager.getTransactionClientExecutorService(),
             fileMessagePublishRetryLimit = configuration.fileMessagePublishRetryLimit,
             generateUploadUrlFactory = GenerateUploadUrl.Factory(this),
             publishFileMessageFactory = PublishFileMessage.Factory(this),
-            sendFileToS3Factory = UploadFile.Factory(this)
+            sendFileToS3Factory = UploadFile.Factory(this),
+            cryptoModule = cryptoModule
         )
     }
 
@@ -1846,12 +1858,18 @@ class PubNub internal constructor(
         fileId: String,
         cipherKey: String? = null
     ): DownloadFile {
+        val cryptoModule = if (cipherKey != null) {
+            CryptoModule.createLegacyCryptoModule(cipherKey)
+        } else {
+            configuration.cryptoModule
+        }
+
         return DownloadFile(
             pubNub = this,
             channel = channel,
             fileName = fileName,
             fileId = fileId,
-            cipherKey = cipherKey
+            cryptoModule = cryptoModule
         )
     }
 
@@ -1950,7 +1968,7 @@ class PubNub internal constructor(
      * @return String containing the decryption of `inputString` using `cipherKey`.
      * @throws PubNubException throws exception in case of failed decryption.
      */
-    fun decrypt(inputString: String): String = decrypt(inputString, configuration.cipherKey)
+    fun decrypt(inputString: String): String = decrypt(inputString, null)
 
     /**
      * Perform Cryptographic decryption of an input string using a cipher key.
@@ -1961,8 +1979,8 @@ class PubNub internal constructor(
      * @return String containing the decryption of `inputString` using `cipherKey`.
      * @throws PubNubException throws exception in case of failed decryption.
      */
-    fun decrypt(inputString: String, cipherKey: String = configuration.cipherKey): String =
-        Crypto(cipherKey, configuration.useRandomInitializationVector).decrypt(inputString, Base64.DEFAULT)
+    fun decrypt(inputString: String, cipherKey: String? = null): String =
+        getCryptoModuleOrThrow(cipherKey).decryptString(inputString)
 
     /**
      * Perform Cryptographic decryption of an input stream using provided cipher key.
@@ -1975,8 +1993,8 @@ class PubNub internal constructor(
      */
     fun decryptInputStream(
         inputStream: InputStream,
-        cipherKey: String = configuration.cipherKey
-    ): InputStream = decrypt(inputStream, cipherKey)
+        cipherKey: String? = null
+    ): InputStream = getCryptoModuleOrThrow(cipherKey).decryptStream(inputStream)
 
     /**
      * Perform Cryptographic encryption of an input string and a cipher key.
@@ -1987,8 +2005,8 @@ class PubNub internal constructor(
      * @return String containing the encryption of `inputString` using `cipherKey`.
      * @throws PubNubException Throws exception in case of failed encryption.
      */
-    fun encrypt(inputString: String, cipherKey: String = configuration.cipherKey): String =
-        Crypto(cipherKey, configuration.useRandomInitializationVector).encrypt(inputString, Base64.DEFAULT)
+    fun encrypt(inputString: String, cipherKey: String? = null): String =
+        getCryptoModuleOrThrow(cipherKey).encryptString(inputString)
 
     /**
      * Perform Cryptographic encryption of an input stream using provided cipher key.
@@ -2001,8 +2019,14 @@ class PubNub internal constructor(
      */
     fun encryptInputStream(
         inputStream: InputStream,
-        cipherKey: String = configuration.cipherKey
-    ): InputStream = encrypt(inputStream, cipherKey)
+        cipherKey: String? = null
+    ): InputStream = getCryptoModuleOrThrow(cipherKey).encryptStream(inputStream)
+
+    private fun getCryptoModuleOrThrow(cipherKey: String? = null): CryptoModule {
+        return cipherKey?.let {
+            CryptoModule.createLegacyCryptoModule(it, configuration.useRandomInitializationVector)
+        } ?: configuration.cryptoModule ?: throw PubNubException("Crypto module is not initialized")
+    }
     //endregion
 
     /**
