@@ -1,5 +1,6 @@
 package com.pubnub.api.crypto
 
+import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.crypto.cryptor.AesCbcCryptor
 import com.pubnub.api.crypto.cryptor.Cryptor
@@ -104,7 +105,10 @@ class CryptoModule internal constructor(
 
     private fun getDecryptedDataForLegacyCryptor(encryptedData: ByteArray): ByteArray {
         return getLegacyCryptor()?.decrypt(EncryptedData(data = encryptedData))
-            ?: throw PubNubException("LegacyCryptor not available")
+            ?: throw PubNubException(
+                errorMessage = "LegacyCryptor not available",
+                pubnubError = PubNubError.UNKNOWN_CRYPTOR
+            )
     }
 
     private fun getDecryptedDataForCryptorWithHeader(parsedHeader: ParseResult.Success<out ByteArray>): ByteArray {
@@ -114,7 +118,8 @@ class CryptoModule internal constructor(
         val pureEncryptedData = parsedHeader.encryptedData
         val cryptor = getCryptorById(cryptorId)
         decryptedData =
-            cryptor?.decrypt(EncryptedData(cryptorData, pureEncryptedData)) ?: throw PubNubException("No cryptor found")
+            cryptor?.decrypt(EncryptedData(cryptorData, pureEncryptedData))
+                ?: throw PubNubException(errorMessage = "No cryptor found", pubnubError = PubNubError.UNKNOWN_CRYPTOR)
         return decryptedData
     }
 
@@ -129,7 +134,7 @@ class CryptoModule internal constructor(
 }
 
 internal fun CryptoModule.encryptString(inputString: String): String =
-    encrypt(inputString.toByteArray()).let { Base64.encodeToString(it, Base64.NO_WRAP) }
+    String(Base64.encode(encrypt(inputString.toByteArray()), Base64.NO_WRAP))
 
 internal fun CryptoModule.decryptString(inputString: String): String =
     decrypt(Base64.decode(inputString, Base64.NO_WRAP)).toString(Charsets.UTF_8)

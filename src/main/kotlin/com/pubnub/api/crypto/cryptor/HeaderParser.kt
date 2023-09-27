@@ -1,5 +1,6 @@
 package com.pubnub.api.crypto.cryptor
 
+import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import org.slf4j.LoggerFactory
 import java.io.BufferedInputStream
@@ -73,7 +74,10 @@ class HeaderParser {
         }
 
         if (data.size < MINIMAL_SIZE_OF_DATA_HAVING_CRYPTOR_HEADER) {
-            throw PubNubException(errorMessage = "Minimal size of Cryptor Data Header is: $MINIMAL_SIZE_OF_DATA_HAVING_CRYPTOR_HEADER")
+            throw PubNubException(
+                errorMessage = "Minimal size of Cryptor Data Header is: $MINIMAL_SIZE_OF_DATA_HAVING_CRYPTOR_HEADER",
+                pubnubError = PubNubError.CRYPTOR_DATA_HEADER_SIZE_TO_SMALL
+            )
         }
 
         validateCryptorHeaderVersion(data)
@@ -145,7 +149,10 @@ class HeaderParser {
         log.trace("Cryptor header version is: $versionAsInt")
         // check if version exist in this SDK version
         CryptorHeaderVersion.fromValue(versionAsInt)
-            ?: PubNubException(errorMessage = "Cryptor version unknown. Please, update SDK")
+            ?: throw PubNubException(
+                errorMessage = "Cryptor header version unknown. Please, update SDK",
+                pubnubError = PubNubError.CRYPTOR_HEADER_VERSION_UNKNOWN
+            )
     }
 
     private fun convertTwoBytesToIntBigEndian(byte1: Byte, byte2: Byte): Int {

@@ -65,7 +65,7 @@ class AesCbcCryptor(val cipherKey: String) : Cryptor {
             val cipher = createInitializedCipher(ivBytes, Cipher.DECRYPT_MODE)
             return CipherInputStream(encryptedData.stream, cipher)
         } catch (e: Exception) {
-            throw PubNubException(errorMessage = e.message, pubnubError = PubNubError.CRYPTO_ERROR)
+            throw PubNubException(errorMessage = "Decryption error", pubnubError = PubNubError.CRYPTO_ERROR)
         }
     }
 

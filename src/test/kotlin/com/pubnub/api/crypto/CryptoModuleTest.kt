@@ -225,11 +225,11 @@ class CryptoModuleTest {
         }
 
         override fun encryptStream(stream: InputStream): EncryptedStreamData {
-            TODO("Not yet implemented")
+            throw NotImplementedError()
         }
 
         override fun decryptStream(encryptedData: EncryptedStreamData): InputStream {
-            TODO("Not yet implemented")
+            throw NotImplementedError()
         }
     }
 
