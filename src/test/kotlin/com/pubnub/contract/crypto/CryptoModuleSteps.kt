@@ -8,7 +8,7 @@ import com.pubnub.api.crypto.cryptor.Cryptor
 import com.pubnub.api.crypto.cryptor.LegacyCryptor
 import com.pubnub.api.vendor.Base64
 import com.pubnub.api.vendor.Crypto
-import com.pubnub.contract.RunMainCucumberTest
+import com.pubnub.contract.getFileContentAsByteArray
 import io.cucumber.java.en.Given
 import io.cucumber.java.en.Then
 import io.cucumber.java.en.When
@@ -16,12 +16,6 @@ import org.junit.jupiter.api.Assertions.assertArrayEquals
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
-import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
-import java.io.File
-import java.io.InputStream
-import java.nio.file.Path
-import java.nio.file.Paths
 
 private const val LEGACY_NEW = "legacy"
 private const val AES_CBC = "acrh"
@@ -89,12 +83,7 @@ class CryptoModuleSteps(
 
         val encryptedData: ByteArray = when (encryptionType) {
             CRYPTION_TYPE_BINARY -> cryptoModule.encrypt(notEncryptedFileContent)
-            CRYPTION_TYPE_STREAM -> {
-                val notEncryptedFileContentAsStream = ByteArrayInputStream(notEncryptedFileContent)
-                val encryptedStream: InputStream = cryptoModule.encryptStream(notEncryptedFileContentAsStream)
-                val encryptedDataAsByteArray = convertInputStreamToByteArray(encryptedStream)
-                encryptedDataAsByteArray
-            }
+            CRYPTION_TYPE_STREAM -> cryptoModule.encryptStream(notEncryptedFileContent.inputStream()).readBytes()
             else -> throw PubNubException("Invalid encryptionType type. Should be binary or stream")
         }
         cryptoModuleState.encryptedData = encryptedData
@@ -125,15 +114,12 @@ class CryptoModuleSteps(
 
         val encryptedFileContent = getFileContentAsByteArray(encryptedFile)
 
-        when (decryptionType) {
-            CRYPTION_TYPE_BINARY -> cryptoModuleState.decryptedData = cryptoModule.decrypt(encryptedFileContent)
-            CRYPTION_TYPE_STREAM -> {
-                val encryptedFileContentAsStream = ByteArrayInputStream(encryptedFileContent)
-                val decryptedStream = cryptoModule.decryptStream(encryptedFileContentAsStream)
-                cryptoModuleState.decryptedData = convertInputStreamToByteArray(decryptedStream)
-            }
+        val decryptedData: ByteArray = when (decryptionType) {
+            CRYPTION_TYPE_BINARY -> cryptoModule.decrypt(encryptedFileContent)
+            CRYPTION_TYPE_STREAM -> cryptoModule.decryptStream(encryptedFileContent.inputStream()).readBytes()
             else -> throw PubNubException("Invalid decryptionType type. Should be binary or stream")
         }
+        cryptoModuleState.decryptedData = decryptedData
     }
 
     private fun createCryptor(cryptorType: String, cipherKey: String, useRandomIv: Boolean): Cryptor {
@@ -178,29 +164,5 @@ class CryptoModuleSteps(
     fun decrypted_file_content_equal_to_the_source_file_content(sourceFileName: String) {
         val sourceFileContent = getFileContentAsByteArray(sourceFileName)
         assertArrayEquals(sourceFileContent, cryptoModuleState.decryptedData)
-    }
-
-    private fun getFileContentAsByteArray(fileName: String): ByteArray {
-        val cucumberOptions = RunMainCucumberTest.getCucumberOptions()
-        val featureFileLocation = cucumberOptions?.features?.joinToString()
-        val featureFilePath = Paths.get(featureFileLocation!!)
-        val cryptoAssetsLocation = featureFilePath.resolve("encryption/assets")
-        val fileToRead: Path = cryptoAssetsLocation.resolve(fileName)
-        return readFileAsByteArray(fileToRead.toString())
-    }
-
-    private fun readFileAsByteArray(filePath: String): ByteArray {
-        return File(filePath).inputStream().readBytes()
-    }
-
-    private fun convertInputStreamToByteArray(inputStream: InputStream): ByteArray {
-        val buffer = ByteArray(1024)
-        val byteArrayOutputStream = ByteArrayOutputStream()
-        var bytesRead: Int
-        while (inputStream.read(buffer).also { bytesRead = it } != -1) {
-            byteArrayOutputStream.write(buffer, 0, bytesRead)
-        }
-
-        return byteArrayOutputStream.toByteArray()
     }
 }

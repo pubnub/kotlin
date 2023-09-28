@@ -216,6 +216,11 @@ enum class PubNubError(private val code: Int, val message: String) {
         "Cryptor header version unknown. Please, update SDK."
     ),
 
+    CRYPTOR_HEADER_PARSE_ERROR(
+        175,
+        "Cryptor header parse error."
+    ),
+
     ;
 
     override fun toString(): String {

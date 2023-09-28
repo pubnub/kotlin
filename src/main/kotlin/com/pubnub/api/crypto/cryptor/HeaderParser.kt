@@ -36,7 +36,10 @@ class HeaderParser {
         }
 
         if (initiallyRead < MINIMAL_SIZE_OF_DATA_HAVING_CRYPTOR_HEADER) {
-            throw PubNubException(errorMessage = "Minimal size of Cryptor Data Header is: $MINIMAL_SIZE_OF_DATA_HAVING_CRYPTOR_HEADER")
+            throw PubNubException(
+                errorMessage = "Minimal size of Cryptor Data Header is: $MINIMAL_SIZE_OF_DATA_HAVING_CRYPTOR_HEADER",
+                pubnubError = PubNubError.CRYPTOR_HEADER_PARSE_ERROR
+            )
         }
 
         validateCryptorHeaderVersion(possibleInitialHeader)
@@ -75,7 +78,8 @@ class HeaderParser {
 
         if (data.size < MINIMAL_SIZE_OF_DATA_HAVING_CRYPTOR_HEADER) {
             throw PubNubException(
-                errorMessage = "Minimal size of Cryptor Data Header is: $MINIMAL_SIZE_OF_DATA_HAVING_CRYPTOR_HEADER",
+                errorMessage =
+                "Minimal size of Cryptor Data Header is: $MINIMAL_SIZE_OF_DATA_HAVING_CRYPTOR_HEADER",
                 pubnubError = PubNubError.CRYPTOR_DATA_HEADER_SIZE_TO_SMALL
             )
         }
@@ -92,7 +96,10 @@ class HeaderParser {
         )
 
         if (startingIndexOfCryptorData + cryptorDataSize > data.size) {
-            throw PubNubException(errorMessage = "Input data size: ${data.size} is to small to fit header of size $startingIndexOfCryptorData and cryptorData of size: $cryptorDataSize")
+            throw PubNubException(
+                errorMessage = "Input data size: ${data.size} is to small to fit header of size $startingIndexOfCryptorData and cryptorData of size: $cryptorDataSize",
+                pubnubError = PubNubError.CRYPTOR_HEADER_PARSE_ERROR
+            )
         }
         val cryptorData =
             data.sliceArray(startingIndexOfCryptorData until (startingIndexOfCryptorData + cryptorDataSize))
@@ -112,7 +119,10 @@ class HeaderParser {
             } else if (cryptorDataSize < MAX_VALUE_THAT_CAN_BE_STORED_ON_TWO_BYTES) {
                 byteArrayOf(cryptorDataSize.toByte()) + writeNumberOnTwoBytes(cryptorDataSize) // cryptorDataSize will be stored on 3 byte
             } else {
-                throw PubNubException(errorMessage = "Cryptor Data Size is: $cryptorDataSize whereas max cryptor data size is: $MAX_VALUE_THAT_CAN_BE_STORED_ON_TWO_BYTES ")
+                throw PubNubException(
+                    errorMessage = "Cryptor Data Size is: $cryptorDataSize whereas max cryptor data size is: $MAX_VALUE_THAT_CAN_BE_STORED_ON_TWO_BYTES",
+                    pubnubError = PubNubError.CRYPTOR_HEADER_PARSE_ERROR
+                )
             }
 
         val cryptorHeader =
