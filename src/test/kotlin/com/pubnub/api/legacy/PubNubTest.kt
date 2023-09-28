@@ -74,9 +74,4 @@ class PubNubTest : BaseTest() {
         assertEquals("7.6.0", version)
         assertTrue(timeStamp > 0)
     }
-
-    @Test
-    fun can_setUpCryptoModule() {
-        // TODO("Not yet implemented")
-    }
 }
