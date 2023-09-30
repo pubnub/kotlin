@@ -5,7 +5,6 @@ import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.api.endpoints.files.UploadFile
 import com.pubnub.api.models.server.files.FormField
 import com.pubnub.api.services.S3Service
-import com.pubnub.api.vendor.FileEncryptionUtil
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -15,11 +14,11 @@ import okhttp3.ResponseBody.Companion.toResponseBody
 import okio.Buffer
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Assert
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import retrofit2.Call
 import retrofit2.Response
 import java.io.InputStream
-import java.nio.charset.Charset
 import java.util.Scanner
 import org.hamcrest.Matchers.`is` as iz
 
@@ -110,7 +109,8 @@ class UploadFileTest : TestsWithFiles {
         val captured = mutableListOf<MultipartBody>()
         val content = "content"
         val cipher = "enigma"
-        val encrypted = CryptoModule.createLegacyCryptoModule(cipher, true).encryptStream(content.byteInputStream())
+        val cryptoModule = CryptoModule.createLegacyCryptoModule(cipher, true)
+        val encrypted = cryptoModule.encryptStream(content.byteInputStream())
         val uploadFile = UploadFile(
             s3Service,
             fileName(),
@@ -130,10 +130,10 @@ class UploadFileTest : TestsWithFiles {
         val filePart = getPart("file", capturedBody.parts)
         val buffer = Buffer()
         filePart?.body?.writeTo(buffer)
-        val decrypted = FileEncryptionUtil.decrypt(buffer.readByteArray().inputStream(), cipher).readBytes().toString(
-            Charset.defaultCharset()
-        )
-        assertThat(decrypted, iz(content))
+
+        val decrypted = cryptoModule.decryptStream(buffer.readByteArray().inputStream()).readBytes()
+        assertThat(String(decrypted), iz(content))
+        assertEquals(content, String(decrypted))
     }
 
     @Test

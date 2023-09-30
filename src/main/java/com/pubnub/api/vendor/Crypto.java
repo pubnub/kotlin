@@ -11,11 +11,10 @@ import java.security.MessageDigest;
 import java.security.spec.AlgorithmParameterSpec;
 import java.util.Random;
 
-import static com.pubnub.api.vendor.FileEncryptionUtil.CIPHER_TRANSFORMATION;
-import static com.pubnub.api.vendor.FileEncryptionUtil.ENCODING_UTF_8;
-
-
 public class Crypto {
+
+    private static final String ENCODING_UTF_8 = "UTF-8";
+    private static final String CIPHER_TRANSFORMATION = "AES/CBC/PKCS5Padding";
 
     private final boolean dynamicIV;
     byte[] keyBytes = null;

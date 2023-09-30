@@ -24,5 +24,5 @@ fun loadMember(memberName: String): PNMember = readResourceFromDataFile(memberNa
 
 fun getFileContentAsByteArray(fileName: String): ByteArray {
     val cryptoFileLocation = "${ContractTestConfig.cryptoFilesLocation}"
-    return Files.readAllBytes(Paths.get(cryptoFileLocation!!, fileName))
+    return Files.readAllBytes(Paths.get(cryptoFileLocation, fileName))
 }
