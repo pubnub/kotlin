@@ -15,6 +15,7 @@ import com.pubnub.api.PubNub
 import com.pubnub.api.UserId
 import com.pubnub.api.enums.PNLogVerbosity
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.AfterAllCallback
 import org.junit.jupiter.api.extension.BeforeAllCallback
 import org.junit.jupiter.api.extension.BeforeEachCallback
@@ -137,6 +138,11 @@ class Something {
     @BeforeEach
     fun beforeEachSomething(@PreSeededRandom random: Random) {
         this.random = random
+    }
+
+    @Test
+    fun alwaysFun() {
+        println("How fun!")
     }
 
     fun randomValue() = random.randomAlphanumericString(10)

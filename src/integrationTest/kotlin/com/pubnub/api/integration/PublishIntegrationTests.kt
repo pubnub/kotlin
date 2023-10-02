@@ -28,6 +28,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.RegisterExtension
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
@@ -36,6 +37,12 @@ import java.util.concurrent.atomic.AtomicInteger
 import org.hamcrest.core.Is.`is` as iz
 
 class PublishIntegrationTests : BaseIntegrationTest() {
+
+    companion object {
+        @RegisterExtension
+        @JvmStatic
+        val betacamExtension = BetacamExtension()
+    }
 
     @Test
     fun testPublishMessage(@BetacamOrigin origin: String) {

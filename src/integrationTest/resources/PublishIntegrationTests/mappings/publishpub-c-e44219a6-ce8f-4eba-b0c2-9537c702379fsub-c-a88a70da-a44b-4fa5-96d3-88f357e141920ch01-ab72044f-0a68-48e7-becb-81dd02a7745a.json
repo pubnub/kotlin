@@ -1,0 +1,20 @@
+{
+  "id" : "ab72044f-0a68-48e7-becb-81dd02a7745a",
+  "request" : {
+    "urlPathPattern" : "/publish/pub-c-e44219a6-ce8f-4eba-b0c2-9537c702379f/sub-c-a88a70da-a44b-4fa5-96d3-88f357e14192/0/ch/0/1",
+    "method" : "GET"
+  },
+  "response" : {
+    "status" : 200,
+    "body" : "[1,\"Sent\",\"16960085920190187\"]",
+    "headers" : {
+      "Date" : "Fri, 29 Sep 2023 17:29:52 GMT",
+      "Content-Type" : "text/javascript; charset=\"UTF-8\"",
+      "Cache-Control" : "no-cache"
+    }
+  },
+  "uuid" : "ab72044f-0a68-48e7-becb-81dd02a7745a",
+  "persistent" : true,
+  "priority" : 1,
+  "insertionIndex" : 1
+}
