@@ -21,6 +21,7 @@ private const val CRYPTOR_DATA_SIZE_STARTING_INDEX = 9
 private const val THREE_BYTES_CRYPTOR_DATA_SIZE_STARTING_INDEX = 10
 private const val THREE_BYTES_CRYPTOR_DATA_SIZE_ENDING_INDEX = 11
 private const val MAX_VALUE_THAT_CAN_BE_STORED_ON_TWO_BYTES = 65535
+private const val MINIMAL_SIZE_OF_CRYPTO_HEADER = 10
 
 class HeaderParser {
     private val log = LoggerFactory.getLogger(HeaderParser::class.java)
@@ -28,7 +29,7 @@ class HeaderParser {
     fun parseDataWithHeader(stream: BufferedInputStream): ParseResult<out InputStream> {
         val bufferedInputStream = stream.buffered()
         bufferedInputStream.mark(Int.MAX_VALUE) // TODO Can be calculated from spec
-        val possibleInitialHeader = ByteArray(MINIMAL_SIZE_OF_DATA_HAVING_CRYPTOR_HEADER)
+        val possibleInitialHeader = ByteArray(MINIMAL_SIZE_OF_CRYPTO_HEADER)
         val initiallyRead = bufferedInputStream.read(possibleInitialHeader)
         if (!possibleInitialHeader.sliceArray(SENTINEL_STARTING_INDEX..SENTINEL_ENDING_INDEX).contentEquals(SENTINEL)) {
             bufferedInputStream.reset()
@@ -70,7 +71,9 @@ class HeaderParser {
     }
 
     fun parseDataWithHeader(data: ByteArray): ParseResult<out ByteArray> {
-
+        if (data.size < SENTINEL.size) {
+            return ParseResult.NoHeader
+        }
         val sentinel = data.sliceArray(SENTINEL_STARTING_INDEX..SENTINEL_ENDING_INDEX)
         if (!SENTINEL.contentEquals(sentinel)) {
             return ParseResult.NoHeader
@@ -79,7 +82,7 @@ class HeaderParser {
         if (data.size < MINIMAL_SIZE_OF_DATA_HAVING_CRYPTOR_HEADER) {
             throw PubNubException(
                 errorMessage =
-                "Minimal size of Cryptor Data Header is: $MINIMAL_SIZE_OF_DATA_HAVING_CRYPTOR_HEADER",
+                "Minimal size of encrypted data having Cryptor Data Header is: $MINIMAL_SIZE_OF_DATA_HAVING_CRYPTOR_HEADER",
                 pubnubError = PubNubError.CRYPTOR_DATA_HEADER_SIZE_TO_SMALL
             )
         }

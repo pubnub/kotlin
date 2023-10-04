@@ -4,6 +4,7 @@ import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.crypto.data.EncryptedData
 import com.pubnub.api.crypto.data.EncryptedStreamData
+import java.io.BufferedInputStream
 import java.io.InputStream
 import java.security.MessageDigest
 import java.security.SecureRandom
@@ -23,6 +24,7 @@ class AesCbcCryptor(val cipherKey: String) : Cryptor {
     }
 
     override fun encrypt(data: ByteArray): EncryptedData {
+        validateData(data)
         return try {
             val ivBytes: ByteArray = createRandomIv()
             val cipher = createInitializedCipher(ivBytes, Cipher.ENCRYPT_MODE)
@@ -34,6 +36,7 @@ class AesCbcCryptor(val cipherKey: String) : Cryptor {
     }
 
     override fun decrypt(encryptedData: EncryptedData): ByteArray {
+        validateData(encryptedData.data)
         return try {
             val ivBytes: ByteArray = encryptedData.metadata?.takeIf { it.size == RANDOM_IV_SIZE }
                 ?: throw PubNubException(errorMessage = "Invalid random IV", pubnubError = PubNubError.CRYPTO_ERROR)
@@ -46,10 +49,11 @@ class AesCbcCryptor(val cipherKey: String) : Cryptor {
     }
 
     override fun encryptStream(stream: InputStream): EncryptedStreamData {
+        val bufferedInputStream = validateInputStreamAndReturnBuffered(stream)
         try {
             val ivBytes: ByteArray = createRandomIv()
             val cipher = createInitializedCipher(ivBytes, Cipher.ENCRYPT_MODE)
-            val cipheredStream = CipherInputStream(stream, cipher)
+            val cipheredStream = CipherInputStream(bufferedInputStream, cipher)
 
             return EncryptedStreamData(
                 metadata = ivBytes,
@@ -61,13 +65,24 @@ class AesCbcCryptor(val cipherKey: String) : Cryptor {
     }
 
     override fun decryptStream(encryptedData: EncryptedStreamData): InputStream {
+//        val bufferedInputStream = validateEncryptedSequenceInputStreamAndReturnBuffered(encryptedData.stream)
+        val bufferedInputStream = validateInputStreamAndReturnBuffered(encryptedData.stream)
         try {
             val ivBytes: ByteArray = encryptedData.metadata?.takeIf { it.size == RANDOM_IV_SIZE }
                 ?: throw PubNubException(errorMessage = "Invalid random IV", pubnubError = PubNubError.CRYPTO_ERROR)
             val cipher = createInitializedCipher(ivBytes, Cipher.DECRYPT_MODE)
-            return CipherInputStream(encryptedData.stream, cipher)
+            return CipherInputStream(bufferedInputStream, cipher)
         } catch (e: Exception) {
             throw PubNubException(errorMessage = e.message, pubnubError = PubNubError.CRYPTO_ERROR)
+        }
+    }
+
+    private fun validateData(data: ByteArray) {
+        if (data.isEmpty()) {
+            throw PubNubException(
+                errorMessage = "Encryption/Decryption of empty data not allowed.",
+                pubnubError = PubNubError.ENCRYPTION_AND_DECRYPTION_OF_EMPTY_DATA_NOT_ALLOWED
+            )
         }
     }
 
@@ -96,5 +111,21 @@ class AesCbcCryptor(val cipherKey: String) : Cryptor {
         } catch (e: java.lang.Exception) {
             throw PubNubException(errorMessage = e.message, pubnubError = PubNubError.CRYPTO_ERROR)
         }
+    }
+
+    private fun validateInputStreamAndReturnBuffered(stream: InputStream): BufferedInputStream {
+        // we use bufferedInputStream because we can read some data (from buffer) and pass them so then can be read again after reset()
+        val bufferedInputStream = stream.buffered()
+        bufferedInputStream.mark(Int.MAX_VALUE)
+        val bufferForData = ByteArray(1)
+        val totalBytesInBuffer = bufferedInputStream.read(bufferForData)
+        bufferedInputStream.reset()
+        if (totalBytesInBuffer == -1) {
+            throw PubNubException(
+                errorMessage = "Encryption/Decryption of empty data not allowed.",
+                pubnubError = PubNubError.ENCRYPTION_AND_DECRYPTION_OF_EMPTY_DATA_NOT_ALLOWED
+            )
+        }
+        return bufferedInputStream
     }
 }
