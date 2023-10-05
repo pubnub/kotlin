@@ -2,7 +2,7 @@ package com.pubnub.api.crypto.cryptor
 
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
-import com.pubnub.api.crypto.consumeNBytez
+import com.pubnub.api.crypto.readExactlyNBytez
 import org.slf4j.LoggerFactory
 import java.io.BufferedInputStream
 import java.io.InputStream
@@ -49,23 +49,23 @@ class HeaderParser {
         val cryptorDataSizeFirstByte = possibleInitialHeader[CRYPTOR_DATA_SIZE_STARTING_INDEX].toUByte()
 
         val cryptorData: ByteArray = if (cryptorDataSizeFirstByte == THREE_BYTES_SIZE_CRYPTOR_DATA_INDICATOR) {
-            val cryptorDataSizeBytes = readNBytez(bufferedInputStream, 2)
+            val cryptorDataSizeBytes = readExactlyNBytez(bufferedInputStream, 2)
             val cryptorDataSize = convertTwoBytesToIntBigEndian(cryptorDataSizeBytes[0], cryptorDataSizeBytes[1])
-            readNBytez(bufferedInputStream, cryptorDataSize)
+            readExactlyNBytez(bufferedInputStream, cryptorDataSize)
         } else {
             if (cryptorDataSizeFirstByte == UByte.MIN_VALUE) {
                 byteArrayOf()
             } else {
-                readNBytez(bufferedInputStream, cryptorDataSizeFirstByte.toInt())
+                readExactlyNBytez(bufferedInputStream, cryptorDataSizeFirstByte.toInt())
             }
         }
         return ParseResult.Success(cryptorId, cryptorData, bufferedInputStream)
     }
 
-    private fun readNBytez(
+    private fun readExactlyNBytez(
         bufferedInputStream: BufferedInputStream,
         numberOfBytesToRead: Int
-    ) = bufferedInputStream.consumeNBytez(numberOfBytesToRead) { n ->
+    ) = bufferedInputStream.readExactlyNBytez(numberOfBytesToRead) { n ->
         throw PubNubException(errorMessage = "Couldn't read $n bytes")
     }
 

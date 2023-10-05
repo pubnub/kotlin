@@ -165,7 +165,7 @@ internal fun CryptoModule.encryptString(inputString: String): String =
 internal fun CryptoModule.decryptString(inputString: String): String =
     decrypt(Base64.decode(inputString, Base64.NO_WRAP)).toString(Charsets.UTF_8)
 
-// this method read data from stream and allows to read them again
+// this method read data from stream and allows to read them again in subsequent reads without manual reset or repositioning
 internal fun BufferedInputStream.checkMinSize(size: Int, exceptionBlock: (Int) -> Unit) {
     mark(size + 1)
 
@@ -176,8 +176,7 @@ internal fun BufferedInputStream.checkMinSize(size: Int, exceptionBlock: (Int) -
     }
 }
 
-// this method read data from stream and doesn't allow to read them again
-internal fun BufferedInputStream.consumeNBytez(size: Int, exceptionBlock: (Int) -> Unit): ByteArray {
+internal fun BufferedInputStream.readExactlyNBytez(size: Int, exceptionBlock: (Int) -> Unit): ByteArray {
     val readBytes = readNBytez(size)
     if (readBytes.size < size) {
         exceptionBlock(size)
@@ -196,13 +195,4 @@ internal fun InputStream.readNBytez(len: Int): ByteArray {
         remaining -= n
     }
     return originalArray.copyOf(nread)
-}
-
-internal fun InputStream.readNBytezOLD(n: Int): ByteArray {
-    val cryptorData = ByteArray(n)
-    val numberOfReadBytes = read(cryptorData)
-    if (numberOfReadBytes != n) {
-        throw PubNubException(errorMessage = "Couldn't read $n bytes")
-    }
-    return cryptorData
 }
