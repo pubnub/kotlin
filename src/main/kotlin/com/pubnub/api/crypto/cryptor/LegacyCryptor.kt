@@ -2,10 +2,10 @@ package com.pubnub.api.crypto.cryptor
 
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
+import com.pubnub.api.crypto.checkMinSize
 import com.pubnub.api.crypto.data.EncryptedData
 import com.pubnub.api.crypto.data.EncryptedStreamData
 import java.io.BufferedInputStream
-import java.io.ByteArrayOutputStream
 import java.io.InputStream
 import java.io.SequenceInputStream
 import java.io.UnsupportedEncodingException
@@ -22,6 +22,7 @@ private const val CIPHER_TRANSFORMATION = "AES/CBC/PKCS5Padding"
 internal val LEGACY_CRYPTOR_ID = ByteArray(4) { 0.toByte() }
 
 private const val IV_SIZE = 16
+private const val SIZE_OF_ONE_BLOCK_OF_ENCRYPTED_DATA = 16
 private const val RANDOM_IV_STARTING_INDEX = 0
 private const val RANDOM_IV_ENDING_INDEX = 15
 private const val ENCRYPTED_DATA_STARTING_INDEX = 16 // this is when useRandomIv = true
@@ -79,7 +80,7 @@ class LegacyCryptor(val cipherKey: String, val useRandomIv: Boolean = true) : Cr
     }
 
     override fun decryptStream(encryptedData: EncryptedStreamData): InputStream {
-        val bufferedInputStream = validateEncryptedSequenceInputStreamAndReturnBuffered(encryptedData.stream)
+        val bufferedInputStream = validateEncryptedInputStreamAndReturnBuffered(encryptedData.stream)
         try {
             val ivBytes = ByteArray(IV_SIZE)
             val numberOfReadBytes = bufferedInputStream.read(ivBytes)
@@ -96,25 +97,9 @@ class LegacyCryptor(val cipherKey: String, val useRandomIv: Boolean = true) : Cr
         }
     }
 
-    private fun validateEncryptedSequenceInputStreamAndReturnBuffered(stream: InputStream): BufferedInputStream {
-        // we use bufferedInputStream because we can read some data (from buffer) to check if they are empty or not
-        // in case data are not empty we want to pass them so they can be read again. Method reset() allows reading data again.
+    private fun validateEncryptedInputStreamAndReturnBuffered(stream: InputStream): BufferedInputStream {
         val bufferedInputStream = stream.buffered()
-        bufferedInputStream.mark(20)
-        val minimalSizeOfStreamContainingData = IV_SIZE + 1 // in this cryptor encryptedData.stream contains IV + data
-        val bufferForData = ByteArray(minimalSizeOfStreamContainingData)
-        val byteOutputStream = ByteArrayOutputStream()
-        var totalBytesInBuffer: Int
-        // we can expect that stream in SequenceInputStream that consist of two streams one with IV one with Data if we read only one then we will not get accurate size of data
-        do {
-            totalBytesInBuffer = bufferedInputStream.read(bufferForData)
-            if (totalBytesInBuffer != -1) {
-                byteOutputStream.write(bufferForData, 0, totalBytesInBuffer)
-            }
-        } while (totalBytesInBuffer != -1 && byteOutputStream.size() < minimalSizeOfStreamContainingData) // -1 means zero bytes in buffer
-
-        bufferedInputStream.reset()
-        if (byteOutputStream.size() < minimalSizeOfStreamContainingData) {
+        bufferedInputStream.checkMinSize(IV_SIZE + SIZE_OF_ONE_BLOCK_OF_ENCRYPTED_DATA) {
             throw PubNubException(
                 errorMessage = "Encryption/Decryption of empty data not allowed.",
                 pubnubError = PubNubError.ENCRYPTION_AND_DECRYPTION_OF_EMPTY_DATA_NOT_ALLOWED
@@ -124,14 +109,8 @@ class LegacyCryptor(val cipherKey: String, val useRandomIv: Boolean = true) : Cr
     }
 
     private fun validateStreamAndReturnBuffered(stream: InputStream): BufferedInputStream {
-        // we use bufferedInputStream because we can read some data (from buffer) to check if they are empty or not
-        // in case data are not empty we want to pass them so they can be read again. Method reset() allows reading data again.
         val bufferedInputStream = stream.buffered()
-        bufferedInputStream.mark(20)
-        val bufferForData = ByteArray(1)
-        val totalBytesInBuffer = bufferedInputStream.read(bufferForData)
-        bufferedInputStream.reset()
-        if (totalBytesInBuffer == -1) { // -1 means zero bytes in buffer
+        bufferedInputStream.checkMinSize(1) {
             throw PubNubException(
                 errorMessage = "Encryption/Decryption of empty data not allowed.",
                 pubnubError = PubNubError.ENCRYPTION_AND_DECRYPTION_OF_EMPTY_DATA_NOT_ALLOWED

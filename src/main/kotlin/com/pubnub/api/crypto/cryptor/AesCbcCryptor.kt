@@ -2,6 +2,7 @@ package com.pubnub.api.crypto.cryptor
 
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
+import com.pubnub.api.crypto.checkMinSize
 import com.pubnub.api.crypto.data.EncryptedData
 import com.pubnub.api.crypto.data.EncryptedStreamData
 import java.io.BufferedInputStream
@@ -65,7 +66,6 @@ class AesCbcCryptor(val cipherKey: String) : Cryptor {
     }
 
     override fun decryptStream(encryptedData: EncryptedStreamData): InputStream {
-//        val bufferedInputStream = validateEncryptedSequenceInputStreamAndReturnBuffered(encryptedData.stream)
         val bufferedInputStream = validateInputStreamAndReturnBuffered(encryptedData.stream)
         try {
             val ivBytes: ByteArray = encryptedData.metadata?.takeIf { it.size == RANDOM_IV_SIZE }
@@ -114,13 +114,8 @@ class AesCbcCryptor(val cipherKey: String) : Cryptor {
     }
 
     private fun validateInputStreamAndReturnBuffered(stream: InputStream): BufferedInputStream {
-        // we use bufferedInputStream because we can read some data (from buffer) and pass them so then can be read again after reset()
         val bufferedInputStream = stream.buffered()
-        bufferedInputStream.mark(Int.MAX_VALUE)
-        val bufferForData = ByteArray(1)
-        val totalBytesInBuffer = bufferedInputStream.read(bufferForData)
-        bufferedInputStream.reset()
-        if (totalBytesInBuffer == -1) {
+        bufferedInputStream.checkMinSize(1) {
             throw PubNubException(
                 errorMessage = "Encryption/Decryption of empty data not allowed.",
                 pubnubError = PubNubError.ENCRYPTION_AND_DECRYPTION_OF_EMPTY_DATA_NOT_ALLOWED

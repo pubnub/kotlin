@@ -14,6 +14,7 @@ import com.pubnub.api.vendor.Base64
 import java.io.BufferedInputStream
 import java.io.InputStream
 import java.io.SequenceInputStream
+import java.lang.Integer.min
 
 class CryptoModule internal constructor(
     internal val primaryCryptor: Cryptor,
@@ -74,7 +75,7 @@ class CryptoModule internal constructor(
     }
 
     fun encryptStream(stream: InputStream): InputStream {
-        val bufferedInputStream = validateInputStreamAndReturnBuffered(stream)
+        val bufferedInputStream = validateStreamAndReturnBuffered(stream)
         val (metadata, encryptedData) = primaryCryptor.encryptStream(bufferedInputStream)
         return if (primaryCryptor.id().contentEquals(LEGACY_CRYPTOR_ID)) {
             encryptedData
@@ -85,7 +86,7 @@ class CryptoModule internal constructor(
     }
 
     fun decryptStream(encryptedData: InputStream): InputStream {
-        val bufferedInputStream = validateInputStreamAndReturnBuffered(encryptedData)
+        val bufferedInputStream = validateStreamAndReturnBuffered(encryptedData)
         return when (val parsedHeader = headerParser.parseDataWithHeader(bufferedInputStream)) {
             ParseResult.NoHeader -> {
                 val decryptor = cryptorsForDecryptionOnly.firstOrNull { it.id().contentEquals(LEGACY_CRYPTOR_ID) }
@@ -146,14 +147,9 @@ class CryptoModule internal constructor(
         }
     }
 
-    private fun validateInputStreamAndReturnBuffered(stream: InputStream): BufferedInputStream {
-        // we use bufferedInputStream because we can read some data (from buffer) and pass them so then can be read again after reset()
+    private fun validateStreamAndReturnBuffered(stream: InputStream): BufferedInputStream {
         val bufferedInputStream = stream.buffered()
-        bufferedInputStream.mark(Int.MAX_VALUE)
-        val bufferForData = ByteArray(1)
-        val totalBytesInBuffer = bufferedInputStream.read(bufferForData)
-        bufferedInputStream.reset()
-        if (totalBytesInBuffer == -1) { // -1 means zero bytes in buffer
+        bufferedInputStream.checkMinSize(1) {
             throw PubNubException(
                 errorMessage = "Encryption/Decryption of empty data not allowed.",
                 pubnubError = PubNubError.ENCRYPTION_AND_DECRYPTION_OF_EMPTY_DATA_NOT_ALLOWED
@@ -168,3 +164,45 @@ internal fun CryptoModule.encryptString(inputString: String): String =
 
 internal fun CryptoModule.decryptString(inputString: String): String =
     decrypt(Base64.decode(inputString, Base64.NO_WRAP)).toString(Charsets.UTF_8)
+
+// this method read data from stream and allows to read them again
+internal fun BufferedInputStream.checkMinSize(size: Int, exceptionBlock: (Int) -> Unit) {
+    mark(size + 1)
+
+    val readBytes = readNBytez(size)
+    reset()
+    if (readBytes.size < size) {
+        exceptionBlock(size)
+    }
+}
+
+// this method read data from stream and doesn't allow to read them again
+internal fun BufferedInputStream.consumeNBytez(size: Int, exceptionBlock: (Int) -> Unit): ByteArray {
+    val readBytes = readNBytez(size)
+    if (readBytes.size < size) {
+        exceptionBlock(size)
+    }
+    return readBytes
+}
+
+internal fun InputStream.readNBytez(len: Int): ByteArray {
+    var remaining: Int = len
+    var n: Int
+    val originalArray = ByteArray(remaining)
+    var nread = 0
+
+    while (read(originalArray, nread, min(originalArray.size - nread, remaining)).also { n = it } > 0) {
+        nread += n
+        remaining -= n
+    }
+    return originalArray.copyOf(nread)
+}
+
+internal fun InputStream.readNBytezOLD(n: Int): ByteArray {
+    val cryptorData = ByteArray(n)
+    val numberOfReadBytes = read(cryptorData)
+    if (numberOfReadBytes != n) {
+        throw PubNubException(errorMessage = "Couldn't read $n bytes")
+    }
+    return cryptorData
+}
