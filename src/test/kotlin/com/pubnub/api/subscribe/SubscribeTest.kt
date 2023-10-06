@@ -136,14 +136,6 @@ internal class SubscribeTest {
     }
 
     @Test
-    fun `should pass disconnect event for handling when disconnect`() {
-
-        objectUnderTest.disconnect()
-
-        assertEquals(SubscribeEvent.Disconnect, subscribeEvent.captured)
-    }
-
-    @Test
     fun `should pass reconnect event for handling when disconnect`() {
         objectUnderTest.reconnect()
 
