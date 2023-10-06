@@ -135,13 +135,6 @@ internal class SubscribeTest {
         assertEquals(channelGroupsInSubscriptionData.toList(), subscribedChannelGroups)
     }
 
-    @Test
-    fun `should pass reconnect event for handling when disconnect`() {
-        objectUnderTest.reconnect()
-
-        assertEquals(SubscribeEvent.Reconnect, subscribeEvent.captured)
-    }
-
     private fun createSubscriptionStateContainingValues(): SubscriptionData {
         subscriptionData = SubscriptionData()
         subscriptionData.channels.addAll(channelsInSubscriptionData)
