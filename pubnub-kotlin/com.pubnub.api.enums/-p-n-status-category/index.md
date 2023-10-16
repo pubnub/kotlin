@@ -27,7 +27,7 @@ Or in the [SubscribeCallback.status](../../com.pubnub.api.callbacks/-subscribe-c
 | [PNNotFoundCategory](-p-n-not-found-category/index.md) | [jvm]<br>[PNNotFoundCategory](-p-n-not-found-category/index.md)<br>The subscriber got a HTTP 404 from the server. |
 | [PNUnknownCategory](-p-n-unknown-category/index.md) | [jvm]<br>[PNUnknownCategory](-p-n-unknown-category/index.md)<br>The subscriber got a 4xx code from the server, other than 400, 403 and 404 |
 | [PNDisconnectedCategory](-p-n-disconnected-category/index.md) | [jvm]<br>[PNDisconnectedCategory](-p-n-disconnected-category/index.md)<br>The subscription has been stopped. |
-| [PNConnectionError](-p-n-connection-error/index.md) | [jvm]<br>[PNConnectionError](-p-n-connection-error/index.md)<br>Previously started subscribe loop did fail and at this moment client disconnected from real-time data channels. |
+| [PNConnectionError](-p-n-connection-error/index.md) | [jvm]<br>[PNConnectionError](-p-n-connection-error/index.md)<br>Previously started subscribe loop failed, and at this moment client disconnected from real-time data channels. |
 
 ## Properties
 

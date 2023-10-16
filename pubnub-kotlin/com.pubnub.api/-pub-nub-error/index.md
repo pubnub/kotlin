@@ -50,6 +50,11 @@ List of known PubNub errors. Observe them in [PubNubException.pubnubError](../-p
 | [UUID_NULL_OR_EMPTY](-u-u-i-d_-n-u-l-l_-o-r_-e-m-p-t-y/index.md) | [jvm]<br>[UUID_NULL_OR_EMPTY](-u-u-i-d_-n-u-l-l_-o-r_-e-m-p-t-y/index.md) |
 | [USERID_NULL_OR_EMPTY](-u-s-e-r-i-d_-n-u-l-l_-o-r_-e-m-p-t-y/index.md) | [jvm]<br>[USERID_NULL_OR_EMPTY](-u-s-e-r-i-d_-n-u-l-l_-o-r_-e-m-p-t-y/index.md) |
 | [CHANNEL_OR_CHANNEL_GROUP_MISSING](-c-h-a-n-n-e-l_-o-r_-c-h-a-n-n-e-l_-g-r-o-u-p_-m-i-s-s-i-n-g/index.md) | [jvm]<br>[CHANNEL_OR_CHANNEL_GROUP_MISSING](-c-h-a-n-n-e-l_-o-r_-c-h-a-n-n-e-l_-g-r-o-u-p_-m-i-s-s-i-n-g/index.md) |
+| [UNKNOWN_CRYPTOR](-u-n-k-n-o-w-n_-c-r-y-p-t-o-r/index.md) | [jvm]<br>[UNKNOWN_CRYPTOR](-u-n-k-n-o-w-n_-c-r-y-p-t-o-r/index.md) |
+| [CRYPTOR_DATA_HEADER_SIZE_TO_SMALL](-c-r-y-p-t-o-r_-d-a-t-a_-h-e-a-d-e-r_-s-i-z-e_-t-o_-s-m-a-l-l/index.md) | [jvm]<br>[CRYPTOR_DATA_HEADER_SIZE_TO_SMALL](-c-r-y-p-t-o-r_-d-a-t-a_-h-e-a-d-e-r_-s-i-z-e_-t-o_-s-m-a-l-l/index.md) |
+| [CRYPTOR_HEADER_VERSION_UNKNOWN](-c-r-y-p-t-o-r_-h-e-a-d-e-r_-v-e-r-s-i-o-n_-u-n-k-n-o-w-n/index.md) | [jvm]<br>[CRYPTOR_HEADER_VERSION_UNKNOWN](-c-r-y-p-t-o-r_-h-e-a-d-e-r_-v-e-r-s-i-o-n_-u-n-k-n-o-w-n/index.md) |
+| [CRYPTOR_HEADER_PARSE_ERROR](-c-r-y-p-t-o-r_-h-e-a-d-e-r_-p-a-r-s-e_-e-r-r-o-r/index.md) | [jvm]<br>[CRYPTOR_HEADER_PARSE_ERROR](-c-r-y-p-t-o-r_-h-e-a-d-e-r_-p-a-r-s-e_-e-r-r-o-r/index.md) |
+| [ENCRYPTION_AND_DECRYPTION_OF_EMPTY_DATA_NOT_ALLOWED](-e-n-c-r-y-p-t-i-o-n_-a-n-d_-d-e-c-r-y-p-t-i-o-n_-o-f_-e-m-p-t-y_-d-a-t-a_-n-o-t_-a-l-l-o-w-e-d/index.md) | [jvm]<br>[ENCRYPTION_AND_DECRYPTION_OF_EMPTY_DATA_NOT_ALLOWED](-e-n-c-r-y-p-t-i-o-n_-a-n-d_-d-e-c-r-y-p-t-i-o-n_-o-f_-e-m-p-t-y_-d-a-t-a_-n-o-t_-a-l-l-o-w-e-d/index.md) |
 
 ## Functions
 

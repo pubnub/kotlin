@@ -16,5 +16,7 @@ interface [Effect](index.md)
 | Name |
 |---|
 | [ManagedEffect](../-managed-effect/index.md) |
+| [HeartbeatEffect](../../com.pubnub.api.presence.eventengine.effect/-heartbeat-effect/index.md) |
+| [LeaveEffect](../../com.pubnub.api.presence.eventengine.effect/-leave-effect/index.md) |
 | [EmitMessagesEffect](../../com.pubnub.api.subscribe.eventengine.effect/-emit-messages-effect/index.md) |
 | [EmitStatusEffect](../../com.pubnub.api.subscribe.eventengine.effect/-emit-status-effect/index.md) |

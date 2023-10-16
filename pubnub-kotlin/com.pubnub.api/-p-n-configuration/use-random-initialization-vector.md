@@ -3,7 +3,7 @@
 # useRandomInitializationVector
 
 [jvm]\
-var [useRandomInitializationVector](use-random-initialization-vector.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) = true
+~~var~~ [~~useRandomInitializationVector~~](use-random-initialization-vector.md)~~:~~ [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) ~~=~~ ~~true~~
 
 Should initialization vector for encrypted messages be random.
 

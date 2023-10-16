@@ -9,6 +9,9 @@
 | [com.pubnub.api](pubnub-kotlin/com.pubnub.api/index.md) |
 | [com.pubnub.api.builder](pubnub-kotlin/com.pubnub.api.builder/index.md) |
 | [com.pubnub.api.callbacks](pubnub-kotlin/com.pubnub.api.callbacks/index.md) |
+| [com.pubnub.api.crypto](pubnub-kotlin/com.pubnub.api.crypto/index.md) |
+| [com.pubnub.api.crypto.cryptor](pubnub-kotlin/com.pubnub.api.crypto.cryptor/index.md) |
+| [com.pubnub.api.crypto.data](pubnub-kotlin/com.pubnub.api.crypto.data/index.md) |
 | [com.pubnub.api.endpoints](pubnub-kotlin/com.pubnub.api.endpoints/index.md) |
 | [com.pubnub.api.endpoints.access](pubnub-kotlin/com.pubnub.api.endpoints.access/index.md) |
 | [com.pubnub.api.endpoints.channel_groups](pubnub-kotlin/com.pubnub.api.endpoints.channel_groups/index.md) |
@@ -58,6 +61,7 @@
 | [com.pubnub.api.models.server.presence](pubnub-kotlin/com.pubnub.api.models.server.presence/index.md) |
 | [com.pubnub.api.presence](pubnub-kotlin/com.pubnub.api.presence/index.md) |
 | [com.pubnub.api.presence.eventengine.effect](pubnub-kotlin/com.pubnub.api.presence.eventengine.effect/index.md) |
+| [com.pubnub.api.presence.eventengine.effect.effectprovider](pubnub-kotlin/com.pubnub.api.presence.eventengine.effect.effectprovider/index.md) |
 | [com.pubnub.api.presence.eventengine.event](pubnub-kotlin/com.pubnub.api.presence.eventengine.event/index.md) |
 | [com.pubnub.api.presence.eventengine.state](pubnub-kotlin/com.pubnub.api.presence.eventengine.state/index.md) |
 | [com.pubnub.api.services](pubnub-kotlin/com.pubnub.api.services/index.md) |

@@ -15,7 +15,7 @@ jvm
 |---|---|
 | channel | Channel name |
 | fileName | Name of the file to send. |
-| inputStream | Input stream with file content. |
+| inputStream | Input stream with file content. The inputStream will be depleted after the call. |
 | message | The payload.     **Warning:** It is important to note that you should not serialize JSON     when sending signals/messages via PubNub.     Why? Because the serialization is done for you automatically.     Instead just pass the full object as the message payload.     PubNub takes care of everything for you. |
 | meta | Metadata object which can be used with the filtering ability. |
 | ttl | Set a per message time to live in storage.     - If `shouldStore = true`, and `ttl = 0`, the message is stored       with no expiry time.     - If `shouldStore = true` and `ttl = X` (`X` is an Integer value),       the message is stored with an expiry time of `X` hours.     - If `shouldStore = false`, the `ttl` parameter is ignored.     - If ttl isn't specified, then expiration of the message defaults       back to the expiry value for the key. |

@@ -3,6 +3,6 @@
 # cipherKey
 
 [jvm]\
-var [cipherKey](cipher-key.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
+~~var~~ [~~cipherKey~~](cipher-key.md)~~:~~ [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
 
 If set, all communications to and from PubNub will be encrypted.

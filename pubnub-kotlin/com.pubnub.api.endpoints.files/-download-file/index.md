@@ -3,7 +3,7 @@
 # DownloadFile
 
 [jvm]\
-class [DownloadFile](index.md)(channel: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), fileName: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), fileId: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), cipherKey: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? = null, pubNub: [PubNub](../../com.pubnub.api/-pub-nub/index.md)) : [Endpoint](../../com.pubnub.api/-endpoint/index.md)&lt;ResponseBody, [PNDownloadFileResult](../../com.pubnub.api.models.consumer.files/-p-n-download-file-result/index.md)&gt;
+class [DownloadFile](index.md)(channel: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), fileName: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), fileId: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), cryptoModule: [CryptoModule](../../com.pubnub.api.crypto/-crypto-module/index.md)? = null, pubNub: [PubNub](../../com.pubnub.api/-pub-nub/index.md)) : [Endpoint](../../com.pubnub.api/-endpoint/index.md)&lt;ResponseBody, [PNDownloadFileResult](../../com.pubnub.api.models.consumer.files/-p-n-download-file-result/index.md)&gt;
 
 ## See also
 
@@ -17,7 +17,7 @@ jvm
 
 | | |
 |---|---|
-| [DownloadFile](-download-file.md) | [jvm]<br>fun [DownloadFile](-download-file.md)(channel: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), fileName: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), fileId: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), cipherKey: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? = null, pubNub: [PubNub](../../com.pubnub.api/-pub-nub/index.md)) |
+| [DownloadFile](-download-file.md) | [jvm]<br>fun [DownloadFile](-download-file.md)(channel: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), fileName: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), fileId: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), cryptoModule: [CryptoModule](../../com.pubnub.api.crypto/-crypto-module/index.md)? = null, pubNub: [PubNub](../../com.pubnub.api/-pub-nub/index.md)) |
 
 ## Functions
 

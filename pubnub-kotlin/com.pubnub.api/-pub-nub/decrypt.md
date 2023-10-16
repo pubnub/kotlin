@@ -26,7 +26,7 @@ jvm
 | [com.pubnub.api.PubNubException](../-pub-nub-exception/index.md) | throws exception in case of failed decryption. |
 
 [jvm]\
-fun [decrypt](decrypt.md)(inputString: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), cipherKey: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) = configuration.cipherKey): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
+fun [decrypt](decrypt.md)(inputString: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), cipherKey: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? = null): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)
 
 Perform Cryptographic decryption of an input string using a cipher key.
 

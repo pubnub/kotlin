@@ -16,6 +16,7 @@ interface [ManagedEffect](index.md) : [Effect](../-effect/index.md)
 
 | Name |
 |---|
+| [WaitEffect](../../com.pubnub.api.presence.eventengine.effect/-wait-effect/index.md) |
 | [HandshakeEffect](../../com.pubnub.api.subscribe.eventengine.effect/-handshake-effect/index.md) |
 | [HandshakeReconnectEffect](../../com.pubnub.api.subscribe.eventengine.effect/-handshake-reconnect-effect/index.md) |
 | [ReceiveMessagesEffect](../../com.pubnub.api.subscribe.eventengine.effect/-receive-messages-effect/index.md) |

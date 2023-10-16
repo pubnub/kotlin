@@ -3,7 +3,7 @@
 # encryptInputStream
 
 [jvm]\
-fun [encryptInputStream](encrypt-input-stream.md)(inputStream: [InputStream](https://docs.oracle.com/javase/8/docs/api/java/io/InputStream.html), cipherKey: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) = configuration.cipherKey): [InputStream](https://docs.oracle.com/javase/8/docs/api/java/io/InputStream.html)
+fun [encryptInputStream](encrypt-input-stream.md)(inputStream: [InputStream](https://docs.oracle.com/javase/8/docs/api/java/io/InputStream.html), cipherKey: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? = null): [InputStream](https://docs.oracle.com/javase/8/docs/api/java/io/InputStream.html)
 
 Perform Cryptographic encryption of an input stream using provided cipher key.
 

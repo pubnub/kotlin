@@ -18,6 +18,76 @@ $dokka.location:com.pubnub.api.callbacks/SubscribeCallback/objects/#com.pubnub.a
 $dokka.location:com.pubnub.api.callbacks/SubscribeCallback/presence/#com.pubnub.api.PubNub#com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.callbacks/-subscribe-callback/presence.md
 $dokka.location:com.pubnub.api.callbacks/SubscribeCallback/signal/#com.pubnub.api.PubNub#com.pubnub.api.models.consumer.pubsub.PNSignalResult/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.callbacks/-subscribe-callback/signal.md
 $dokka.location:com.pubnub.api.callbacks/SubscribeCallback/status/#com.pubnub.api.PubNub#com.pubnub.api.models.consumer.PNStatus/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.callbacks/-subscribe-callback/status.md
+$dokka.location:com.pubnub.api.crypto.cryptor////PointingToDeclaration/pubnub-kotlin/com.pubnub.api.crypto.cryptor/index.md
+$dokka.location:com.pubnub.api.crypto.cryptor/AesCbcCryptor///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.crypto.cryptor/-aes-cbc-cryptor/index.md
+$dokka.location:com.pubnub.api.crypto.cryptor/AesCbcCryptor/AesCbcCryptor/#kotlin.String/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.crypto.cryptor/-aes-cbc-cryptor/-aes-cbc-cryptor.md
+$dokka.location:com.pubnub.api.crypto.cryptor/AesCbcCryptor/cipherKey/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.crypto.cryptor/-aes-cbc-cryptor/cipher-key.md
+$dokka.location:com.pubnub.api.crypto.cryptor/AesCbcCryptor/decrypt/#com.pubnub.api.crypto.data.EncryptedData/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.crypto.cryptor/-aes-cbc-cryptor/decrypt.md
+$dokka.location:com.pubnub.api.crypto.cryptor/AesCbcCryptor/decryptStream/#com.pubnub.api.crypto.data.EncryptedStreamData/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.crypto.cryptor/-aes-cbc-cryptor/decrypt-stream.md
+$dokka.location:com.pubnub.api.crypto.cryptor/AesCbcCryptor/encrypt/#kotlin.ByteArray/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.crypto.cryptor/-aes-cbc-cryptor/encrypt.md
+$dokka.location:com.pubnub.api.crypto.cryptor/AesCbcCryptor/encryptStream/#java.io.InputStream/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.crypto.cryptor/-aes-cbc-cryptor/encrypt-stream.md
+$dokka.location:com.pubnub.api.crypto.cryptor/AesCbcCryptor/id/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.crypto.cryptor/-aes-cbc-cryptor/id.md
+$dokka.location:com.pubnub.api.crypto.cryptor/Cryptor///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.crypto.cryptor/-cryptor/index.md
+$dokka.location:com.pubnub.api.crypto.cryptor/Cryptor/decrypt/#com.pubnub.api.crypto.data.EncryptedData/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.crypto.cryptor/-cryptor/decrypt.md
+$dokka.location:com.pubnub.api.crypto.cryptor/Cryptor/decryptStream/#com.pubnub.api.crypto.data.EncryptedStreamData/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.crypto.cryptor/-cryptor/decrypt-stream.md
+$dokka.location:com.pubnub.api.crypto.cryptor/Cryptor/encrypt/#kotlin.ByteArray/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.crypto.cryptor/-cryptor/encrypt.md
+$dokka.location:com.pubnub.api.crypto.cryptor/Cryptor/encryptStream/#java.io.InputStream/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.crypto.cryptor/-cryptor/encrypt-stream.md
+$dokka.location:com.pubnub.api.crypto.cryptor/Cryptor/id/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.crypto.cryptor/-cryptor/id.md
+$dokka.location:com.pubnub.api.crypto.cryptor/CryptorHeader///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.crypto.cryptor/-cryptor-header/index.md
+$dokka.location:com.pubnub.api.crypto.cryptor/CryptorHeader/CryptorHeader/#kotlin.ByteArray#kotlin.Byte#kotlin.ByteArray#kotlin.ByteArray#kotlin.ByteArray/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.crypto.cryptor/-cryptor-header/-cryptor-header.md
+$dokka.location:com.pubnub.api.crypto.cryptor/CryptorHeader/cryptorData/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.crypto.cryptor/-cryptor-header/cryptor-data.md
+$dokka.location:com.pubnub.api.crypto.cryptor/CryptorHeader/cryptorDataSize/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.crypto.cryptor/-cryptor-header/cryptor-data-size.md
+$dokka.location:com.pubnub.api.crypto.cryptor/CryptorHeader/cryptorId/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.crypto.cryptor/-cryptor-header/cryptor-id.md
+$dokka.location:com.pubnub.api.crypto.cryptor/CryptorHeader/equals/#kotlin.Any?/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.crypto.cryptor/-cryptor-header/equals.md
+$dokka.location:com.pubnub.api.crypto.cryptor/CryptorHeader/hashCode/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.crypto.cryptor/-cryptor-header/hash-code.md
+$dokka.location:com.pubnub.api.crypto.cryptor/CryptorHeader/sentinel/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.crypto.cryptor/-cryptor-header/sentinel.md
+$dokka.location:com.pubnub.api.crypto.cryptor/CryptorHeader/toByteArray/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.crypto.cryptor/-cryptor-header/to-byte-array.md
+$dokka.location:com.pubnub.api.crypto.cryptor/CryptorHeader/version/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.crypto.cryptor/-cryptor-header/version.md
+$dokka.location:com.pubnub.api.crypto.cryptor/CryptorHeaderVersion.Companion///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.crypto.cryptor/-cryptor-header-version/-companion/index.md
+$dokka.location:com.pubnub.api.crypto.cryptor/CryptorHeaderVersion.Companion/fromValue/#kotlin.Int/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.crypto.cryptor/-cryptor-header-version/-companion/from-value.md
+$dokka.location:com.pubnub.api.crypto.cryptor/CryptorHeaderVersion.One///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}pubnub-kotlin/com.pubnub.api.crypto.cryptor/-cryptor-header-version/-one/index.md
+$dokka.location:com.pubnub.api.crypto.cryptor/CryptorHeaderVersion///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.crypto.cryptor/-cryptor-header-version/index.md
+$dokka.location:com.pubnub.api.crypto.cryptor/CryptorHeaderVersion/value/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.crypto.cryptor/-cryptor-header-version/value.md
+$dokka.location:com.pubnub.api.crypto.cryptor/HeaderParser///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.crypto.cryptor/-header-parser/index.md
+$dokka.location:com.pubnub.api.crypto.cryptor/HeaderParser/HeaderParser/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.crypto.cryptor/-header-parser/-header-parser.md
+$dokka.location:com.pubnub.api.crypto.cryptor/HeaderParser/createCryptorHeader/#kotlin.ByteArray#kotlin.ByteArray?/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.crypto.cryptor/-header-parser/create-cryptor-header.md
+$dokka.location:com.pubnub.api.crypto.cryptor/HeaderParser/parseDataWithHeader/#java.io.BufferedInputStream/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.crypto.cryptor/-header-parser/parse-data-with-header.md
+$dokka.location:com.pubnub.api.crypto.cryptor/HeaderParser/parseDataWithHeader/#kotlin.ByteArray/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.crypto.cryptor/-header-parser/parse-data-with-header.md
+$dokka.location:com.pubnub.api.crypto.cryptor/LegacyCryptor///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.crypto.cryptor/-legacy-cryptor/index.md
+$dokka.location:com.pubnub.api.crypto.cryptor/LegacyCryptor/LegacyCryptor/#kotlin.String#kotlin.Boolean/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.crypto.cryptor/-legacy-cryptor/-legacy-cryptor.md
+$dokka.location:com.pubnub.api.crypto.cryptor/LegacyCryptor/cipherKey/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.crypto.cryptor/-legacy-cryptor/cipher-key.md
+$dokka.location:com.pubnub.api.crypto.cryptor/LegacyCryptor/decrypt/#com.pubnub.api.crypto.data.EncryptedData/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.crypto.cryptor/-legacy-cryptor/decrypt.md
+$dokka.location:com.pubnub.api.crypto.cryptor/LegacyCryptor/decryptStream/#com.pubnub.api.crypto.data.EncryptedStreamData/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.crypto.cryptor/-legacy-cryptor/decrypt-stream.md
+$dokka.location:com.pubnub.api.crypto.cryptor/LegacyCryptor/encrypt/#kotlin.ByteArray/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.crypto.cryptor/-legacy-cryptor/encrypt.md
+$dokka.location:com.pubnub.api.crypto.cryptor/LegacyCryptor/encryptStream/#java.io.InputStream/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.crypto.cryptor/-legacy-cryptor/encrypt-stream.md
+$dokka.location:com.pubnub.api.crypto.cryptor/LegacyCryptor/id/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.crypto.cryptor/-legacy-cryptor/id.md
+$dokka.location:com.pubnub.api.crypto.cryptor/LegacyCryptor/useRandomIv/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.crypto.cryptor/-legacy-cryptor/use-random-iv.md
+$dokka.location:com.pubnub.api.crypto.cryptor/ParseResult.NoHeader///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.crypto.cryptor/-parse-result/-no-header/index.md
+$dokka.location:com.pubnub.api.crypto.cryptor/ParseResult.Success///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.crypto.cryptor/-parse-result/-success/index.md
+$dokka.location:com.pubnub.api.crypto.cryptor/ParseResult.Success/Success/#kotlin.ByteArray#kotlin.ByteArray#TypeParam(bounds=[kotlin.Any?])/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.crypto.cryptor/-parse-result/-success/-success.md
+$dokka.location:com.pubnub.api.crypto.cryptor/ParseResult.Success/cryptoId/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.crypto.cryptor/-parse-result/-success/crypto-id.md
+$dokka.location:com.pubnub.api.crypto.cryptor/ParseResult.Success/cryptorData/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.crypto.cryptor/-parse-result/-success/cryptor-data.md
+$dokka.location:com.pubnub.api.crypto.cryptor/ParseResult.Success/encryptedData/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.crypto.cryptor/-parse-result/-success/encrypted-data.md
+$dokka.location:com.pubnub.api.crypto.cryptor/ParseResult///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.crypto.cryptor/-parse-result/index.md
+$dokka.location:com.pubnub.api.crypto.data////PointingToDeclaration/pubnub-kotlin/com.pubnub.api.crypto.data/index.md
+$dokka.location:com.pubnub.api.crypto.data/EncryptedData///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.crypto.data/-encrypted-data/index.md
+$dokka.location:com.pubnub.api.crypto.data/EncryptedData/EncryptedData/#kotlin.ByteArray?#kotlin.ByteArray/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.crypto.data/-encrypted-data/-encrypted-data.md
+$dokka.location:com.pubnub.api.crypto.data/EncryptedData/data/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.crypto.data/-encrypted-data/data.md
+$dokka.location:com.pubnub.api.crypto.data/EncryptedData/metadata/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.crypto.data/-encrypted-data/metadata.md
+$dokka.location:com.pubnub.api.crypto.data/EncryptedStreamData///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.crypto.data/-encrypted-stream-data/index.md
+$dokka.location:com.pubnub.api.crypto.data/EncryptedStreamData/EncryptedStreamData/#kotlin.ByteArray?#java.io.InputStream/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.crypto.data/-encrypted-stream-data/-encrypted-stream-data.md
+$dokka.location:com.pubnub.api.crypto.data/EncryptedStreamData/metadata/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.crypto.data/-encrypted-stream-data/metadata.md
+$dokka.location:com.pubnub.api.crypto.data/EncryptedStreamData/stream/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.crypto.data/-encrypted-stream-data/stream.md
+$dokka.location:com.pubnub.api.crypto////PointingToDeclaration/pubnub-kotlin/com.pubnub.api.crypto/index.md
+$dokka.location:com.pubnub.api.crypto/CryptoModule.Companion///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.crypto/-crypto-module/-companion/index.md
+$dokka.location:com.pubnub.api.crypto/CryptoModule.Companion/createAesCbcCryptoModule/#kotlin.String#kotlin.Boolean/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.crypto/-crypto-module/-companion/create-aes-cbc-crypto-module.md
+$dokka.location:com.pubnub.api.crypto/CryptoModule.Companion/createLegacyCryptoModule/#kotlin.String#kotlin.Boolean/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.crypto/-crypto-module/-companion/create-legacy-crypto-module.md
+$dokka.location:com.pubnub.api.crypto/CryptoModule.Companion/createNewCryptoModule/#com.pubnub.api.crypto.cryptor.Cryptor#kotlin.collections.List[com.pubnub.api.crypto.cryptor.Cryptor]/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.crypto/-crypto-module/-companion/create-new-crypto-module.md
+$dokka.location:com.pubnub.api.crypto/CryptoModule///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.crypto/-crypto-module/index.md
+$dokka.location:com.pubnub.api.crypto/CryptoModule/decrypt/#kotlin.ByteArray/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.crypto/-crypto-module/decrypt.md
+$dokka.location:com.pubnub.api.crypto/CryptoModule/decryptStream/#java.io.InputStream/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.crypto/-crypto-module/decrypt-stream.md
+$dokka.location:com.pubnub.api.crypto/CryptoModule/encrypt/#kotlin.ByteArray/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.crypto/-crypto-module/encrypt.md
+$dokka.location:com.pubnub.api.crypto/CryptoModule/encryptStream/#java.io.InputStream/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.crypto/-crypto-module/encrypt-stream.md
 $dokka.location:com.pubnub.api.endpoints.access////PointingToDeclaration/pubnub-kotlin/com.pubnub.api.endpoints.access/index.md
 $dokka.location:com.pubnub.api.endpoints.access/Grant///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.endpoints.access/-grant/index.md
 $dokka.location:com.pubnub.api.endpoints.access/Grant/authKeys/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.endpoints.access/-grant/auth-keys.md
@@ -58,7 +128,7 @@ $dokka.location:com.pubnub.api.endpoints.files/DeleteFile///PointingToDeclaratio
 $dokka.location:com.pubnub.api.endpoints.files/DeleteFile/DeleteFile/#kotlin.String#kotlin.String#kotlin.String#com.pubnub.api.PubNub/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.endpoints.files/-delete-file/-delete-file.md
 $dokka.location:com.pubnub.api.endpoints.files/DeleteFile/operationType/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.endpoints.files/-delete-file/operation-type.md
 $dokka.location:com.pubnub.api.endpoints.files/DownloadFile///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.endpoints.files/-download-file/index.md
-$dokka.location:com.pubnub.api.endpoints.files/DownloadFile/DownloadFile/#kotlin.String#kotlin.String#kotlin.String#kotlin.String?#com.pubnub.api.PubNub/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.endpoints.files/-download-file/-download-file.md
+$dokka.location:com.pubnub.api.endpoints.files/DownloadFile/DownloadFile/#kotlin.String#kotlin.String#kotlin.String#com.pubnub.api.crypto.CryptoModule?#com.pubnub.api.PubNub/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.endpoints.files/-download-file/-download-file.md
 $dokka.location:com.pubnub.api.endpoints.files/DownloadFile/operationType/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.endpoints.files/-download-file/operation-type.md
 $dokka.location:com.pubnub.api.endpoints.files/GetFileUrl///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.endpoints.files/-get-file-url/index.md
 $dokka.location:com.pubnub.api.endpoints.files/GetFileUrl/GetFileUrl/#kotlin.String#kotlin.String#kotlin.String#com.pubnub.api.PubNub/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.endpoints.files/-get-file-url/-get-file-url.md
@@ -1189,12 +1259,27 @@ $dokka.location:com.pubnub.api.models/TokenBitmask/MANAGE/#/PointingToDeclaratio
 $dokka.location:com.pubnub.api.models/TokenBitmask/READ/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.models/-token-bitmask/-r-e-a-d.md
 $dokka.location:com.pubnub.api.models/TokenBitmask/UPDATE/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.models/-token-bitmask/-u-p-d-a-t-e.md
 $dokka.location:com.pubnub.api.models/TokenBitmask/WRITE/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.models/-token-bitmask/-w-r-i-t-e.md
+$dokka.location:com.pubnub.api.presence.eventengine.effect.effectprovider////PointingToDeclaration/pubnub-kotlin/com.pubnub.api.presence.eventengine.effect.effectprovider/index.md
+$dokka.location:com.pubnub.api.presence.eventengine.effect.effectprovider/HeartbeatProvider///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.presence.eventengine.effect.effectprovider/-heartbeat-provider/index.md
+$dokka.location:com.pubnub.api.presence.eventengine.effect.effectprovider/HeartbeatProvider/getHeartbeatRemoteAction/#kotlin.collections.Set[kotlin.String]#kotlin.collections.Set[kotlin.String]/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.presence.eventengine.effect.effectprovider/-heartbeat-provider/get-heartbeat-remote-action.md
+$dokka.location:com.pubnub.api.presence.eventengine.effect.effectprovider/LeaveProvider///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.presence.eventengine.effect.effectprovider/-leave-provider/index.md
+$dokka.location:com.pubnub.api.presence.eventengine.effect.effectprovider/LeaveProvider/getLeaveRemoteAction/#kotlin.collections.Set[kotlin.String]#kotlin.collections.Set[kotlin.String]/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.presence.eventengine.effect.effectprovider/-leave-provider/get-leave-remote-action.md
 $dokka.location:com.pubnub.api.presence.eventengine.effect////PointingToDeclaration/pubnub-kotlin/com.pubnub.api.presence.eventengine.effect/index.md
+$dokka.location:com.pubnub.api.presence.eventengine.effect/HeartbeatEffect///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.presence.eventengine.effect/-heartbeat-effect/index.md
+$dokka.location:com.pubnub.api.presence.eventengine.effect/HeartbeatEffect/HeartbeatEffect/#com.pubnub.api.endpoints.remoteaction.RemoteAction[kotlin.Boolean]#com.pubnub.api.eventengine.Sink[com.pubnub.api.presence.eventengine.event.PresenceEvent]/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.presence.eventengine.effect/-heartbeat-effect/-heartbeat-effect.md
+$dokka.location:com.pubnub.api.presence.eventengine.effect/HeartbeatEffect/runEffect/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.presence.eventengine.effect/-heartbeat-effect/run-effect.md
+$dokka.location:com.pubnub.api.presence.eventengine.effect/LeaveEffect///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.presence.eventengine.effect/-leave-effect/index.md
+$dokka.location:com.pubnub.api.presence.eventengine.effect/LeaveEffect/LeaveEffect/#com.pubnub.api.endpoints.remoteaction.RemoteAction[kotlin.Boolean]/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.presence.eventengine.effect/-leave-effect/-leave-effect.md
+$dokka.location:com.pubnub.api.presence.eventengine.effect/LeaveEffect/runEffect/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.presence.eventengine.effect/-leave-effect/run-effect.md
 $dokka.location:com.pubnub.api.presence.eventengine.effect/PresenceEffectInvocation.CancelDelayedHeartbeat///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.presence.eventengine.effect/-presence-effect-invocation/-cancel-delayed-heartbeat/index.md
 $dokka.location:com.pubnub.api.presence.eventengine.effect/PresenceEffectInvocation.CancelWait///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.presence.eventengine.effect/-presence-effect-invocation/-cancel-wait/index.md
 $dokka.location:com.pubnub.api.presence.eventengine.effect/PresenceEffectInvocation.DelayedHeartbeat///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.presence.eventengine.effect/-presence-effect-invocation/-delayed-heartbeat/index.md
-$dokka.location:com.pubnub.api.presence.eventengine.effect/PresenceEffectInvocation.DelayedHeartbeat/DelayedHeartbeat/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.presence.eventengine.effect/-presence-effect-invocation/-delayed-heartbeat/-delayed-heartbeat.md
+$dokka.location:com.pubnub.api.presence.eventengine.effect/PresenceEffectInvocation.DelayedHeartbeat/DelayedHeartbeat/#kotlin.collections.Set[kotlin.String]#kotlin.collections.Set[kotlin.String]#kotlin.Int#com.pubnub.api.PubNubException?/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.presence.eventengine.effect/-presence-effect-invocation/-delayed-heartbeat/-delayed-heartbeat.md
+$dokka.location:com.pubnub.api.presence.eventengine.effect/PresenceEffectInvocation.DelayedHeartbeat/attempts/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.presence.eventengine.effect/-presence-effect-invocation/-delayed-heartbeat/attempts.md
+$dokka.location:com.pubnub.api.presence.eventengine.effect/PresenceEffectInvocation.DelayedHeartbeat/channelGroups/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.presence.eventengine.effect/-presence-effect-invocation/-delayed-heartbeat/channel-groups.md
+$dokka.location:com.pubnub.api.presence.eventengine.effect/PresenceEffectInvocation.DelayedHeartbeat/channels/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.presence.eventengine.effect/-presence-effect-invocation/-delayed-heartbeat/channels.md
 $dokka.location:com.pubnub.api.presence.eventengine.effect/PresenceEffectInvocation.DelayedHeartbeat/id/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.presence.eventengine.effect/-presence-effect-invocation/-delayed-heartbeat/id.md
+$dokka.location:com.pubnub.api.presence.eventengine.effect/PresenceEffectInvocation.DelayedHeartbeat/reason/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.presence.eventengine.effect/-presence-effect-invocation/-delayed-heartbeat/reason.md
 $dokka.location:com.pubnub.api.presence.eventengine.effect/PresenceEffectInvocation.Heartbeat///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.presence.eventengine.effect/-presence-effect-invocation/-heartbeat/index.md
 $dokka.location:com.pubnub.api.presence.eventengine.effect/PresenceEffectInvocation.Heartbeat/Heartbeat/#kotlin.collections.Set[kotlin.String]#kotlin.collections.Set[kotlin.String]/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.presence.eventengine.effect/-presence-effect-invocation/-heartbeat/-heartbeat.md
 $dokka.location:com.pubnub.api.presence.eventengine.effect/PresenceEffectInvocation.Heartbeat/channelGroups/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.presence.eventengine.effect/-presence-effect-invocation/-heartbeat/channel-groups.md
@@ -1209,6 +1294,10 @@ $dokka.location:com.pubnub.api.presence.eventengine.effect/PresenceEffectInvocat
 $dokka.location:com.pubnub.api.presence.eventengine.effect/PresenceEffectInvocation///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.presence.eventengine.effect/-presence-effect-invocation/index.md
 $dokka.location:com.pubnub.api.presence.eventengine.effect/PresenceEffectInvocation/id/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.presence.eventengine.effect/-presence-effect-invocation/id.md
 $dokka.location:com.pubnub.api.presence.eventengine.effect/PresenceEffectInvocation/type/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.presence.eventengine.effect/-presence-effect-invocation/type.md
+$dokka.location:com.pubnub.api.presence.eventengine.effect/WaitEffect///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.presence.eventengine.effect/-wait-effect/index.md
+$dokka.location:com.pubnub.api.presence.eventengine.effect/WaitEffect/WaitEffect/#java.time.Duration#com.pubnub.api.eventengine.Sink[com.pubnub.api.presence.eventengine.event.PresenceEvent]#java.util.concurrent.ScheduledExecutorService/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.presence.eventengine.effect/-wait-effect/-wait-effect.md
+$dokka.location:com.pubnub.api.presence.eventengine.effect/WaitEffect/cancel/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.presence.eventengine.effect/-wait-effect/cancel.md
+$dokka.location:com.pubnub.api.presence.eventengine.effect/WaitEffect/runEffect/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.presence.eventengine.effect/-wait-effect/run-effect.md
 $dokka.location:com.pubnub.api.presence.eventengine.event////PointingToDeclaration/pubnub-kotlin/com.pubnub.api.presence.eventengine.event/index.md
 $dokka.location:com.pubnub.api.presence.eventengine.event/PresenceEvent.Disconnect///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.presence.eventengine.event/-presence-event/-disconnect/index.md
 $dokka.location:com.pubnub.api.presence.eventengine.event/PresenceEvent.HeartbeatFailure///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.presence.eventengine.event/-presence-event/-heartbeat-failure/index.md
@@ -1437,19 +1526,21 @@ $dokka.location:com.pubnub.api.subscribe.eventengine.event/SubscriptionCursor/re
 $dokka.location:com.pubnub.api.subscribe.eventengine.event/SubscriptionCursor/timetoken/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.subscribe.eventengine.event/-subscription-cursor/timetoken.md
 $dokka.location:com.pubnub.api.subscribe.eventengine.state////PointingToDeclaration/pubnub-kotlin/com.pubnub.api.subscribe.eventengine.state/index.md
 $dokka.location:com.pubnub.api.subscribe.eventengine.state/SubscribeState.HandshakeFailed///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.subscribe.eventengine.state/-subscribe-state/-handshake-failed/index.md
-$dokka.location:com.pubnub.api.subscribe.eventengine.state/SubscribeState.HandshakeFailed/HandshakeFailed/#kotlin.collections.Set[kotlin.String]#kotlin.collections.Set[kotlin.String]#com.pubnub.api.PubNubException/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.subscribe.eventengine.state/-subscribe-state/-handshake-failed/-handshake-failed.md
+$dokka.location:com.pubnub.api.subscribe.eventengine.state/SubscribeState.HandshakeFailed/HandshakeFailed/#kotlin.collections.Set[kotlin.String]#kotlin.collections.Set[kotlin.String]#com.pubnub.api.PubNubException#com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor?/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.subscribe.eventengine.state/-subscribe-state/-handshake-failed/-handshake-failed.md
 $dokka.location:com.pubnub.api.subscribe.eventengine.state/SubscribeState.HandshakeFailed/channelGroups/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.subscribe.eventengine.state/-subscribe-state/-handshake-failed/channel-groups.md
 $dokka.location:com.pubnub.api.subscribe.eventengine.state/SubscribeState.HandshakeFailed/channels/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.subscribe.eventengine.state/-subscribe-state/-handshake-failed/channels.md
 $dokka.location:com.pubnub.api.subscribe.eventengine.state/SubscribeState.HandshakeFailed/reason/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.subscribe.eventengine.state/-subscribe-state/-handshake-failed/reason.md
+$dokka.location:com.pubnub.api.subscribe.eventengine.state/SubscribeState.HandshakeFailed/subscriptionCursor/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.subscribe.eventengine.state/-subscribe-state/-handshake-failed/subscription-cursor.md
 $dokka.location:com.pubnub.api.subscribe.eventengine.state/SubscribeState.HandshakeFailed/transition/#com.pubnub.api.subscribe.eventengine.event.SubscribeEvent/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.subscribe.eventengine.state/-subscribe-state/-handshake-failed/transition.md
 $dokka.location:com.pubnub.api.subscribe.eventengine.state/SubscribeState.HandshakeReconnecting///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.subscribe.eventengine.state/-subscribe-state/-handshake-reconnecting/index.md
-$dokka.location:com.pubnub.api.subscribe.eventengine.state/SubscribeState.HandshakeReconnecting/HandshakeReconnecting/#kotlin.collections.Set[kotlin.String]#kotlin.collections.Set[kotlin.String]#kotlin.Int#com.pubnub.api.PubNubException?/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.subscribe.eventengine.state/-subscribe-state/-handshake-reconnecting/-handshake-reconnecting.md
+$dokka.location:com.pubnub.api.subscribe.eventengine.state/SubscribeState.HandshakeReconnecting/HandshakeReconnecting/#kotlin.collections.Set[kotlin.String]#kotlin.collections.Set[kotlin.String]#kotlin.Int#com.pubnub.api.PubNubException?#com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor?/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.subscribe.eventengine.state/-subscribe-state/-handshake-reconnecting/-handshake-reconnecting.md
 $dokka.location:com.pubnub.api.subscribe.eventengine.state/SubscribeState.HandshakeReconnecting/attempts/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.subscribe.eventengine.state/-subscribe-state/-handshake-reconnecting/attempts.md
 $dokka.location:com.pubnub.api.subscribe.eventengine.state/SubscribeState.HandshakeReconnecting/channelGroups/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.subscribe.eventengine.state/-subscribe-state/-handshake-reconnecting/channel-groups.md
 $dokka.location:com.pubnub.api.subscribe.eventengine.state/SubscribeState.HandshakeReconnecting/channels/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.subscribe.eventengine.state/-subscribe-state/-handshake-reconnecting/channels.md
 $dokka.location:com.pubnub.api.subscribe.eventengine.state/SubscribeState.HandshakeReconnecting/onEntry/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.subscribe.eventengine.state/-subscribe-state/-handshake-reconnecting/on-entry.md
 $dokka.location:com.pubnub.api.subscribe.eventengine.state/SubscribeState.HandshakeReconnecting/onExit/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.subscribe.eventengine.state/-subscribe-state/-handshake-reconnecting/on-exit.md
 $dokka.location:com.pubnub.api.subscribe.eventengine.state/SubscribeState.HandshakeReconnecting/reason/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.subscribe.eventengine.state/-subscribe-state/-handshake-reconnecting/reason.md
+$dokka.location:com.pubnub.api.subscribe.eventengine.state/SubscribeState.HandshakeReconnecting/subscriptionCursor/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.subscribe.eventengine.state/-subscribe-state/-handshake-reconnecting/subscription-cursor.md
 $dokka.location:com.pubnub.api.subscribe.eventengine.state/SubscribeState.HandshakeReconnecting/transition/#com.pubnub.api.subscribe.eventengine.event.SubscribeEvent/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.subscribe.eventengine.state/-subscribe-state/-handshake-reconnecting/transition.md
 $dokka.location:com.pubnub.api.subscribe.eventengine.state/SubscribeState.HandshakeStopped///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.subscribe.eventengine.state/-subscribe-state/-handshake-stopped/index.md
 $dokka.location:com.pubnub.api.subscribe.eventengine.state/SubscribeState.HandshakeStopped/HandshakeStopped/#kotlin.collections.Set[kotlin.String]#kotlin.collections.Set[kotlin.String]#com.pubnub.api.PubNubException?/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.subscribe.eventengine.state/-subscribe-state/-handshake-stopped/-handshake-stopped.md
@@ -1458,11 +1549,12 @@ $dokka.location:com.pubnub.api.subscribe.eventengine.state/SubscribeState.Handsh
 $dokka.location:com.pubnub.api.subscribe.eventengine.state/SubscribeState.HandshakeStopped/reason/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.subscribe.eventengine.state/-subscribe-state/-handshake-stopped/reason.md
 $dokka.location:com.pubnub.api.subscribe.eventengine.state/SubscribeState.HandshakeStopped/transition/#com.pubnub.api.subscribe.eventengine.event.SubscribeEvent/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.subscribe.eventengine.state/-subscribe-state/-handshake-stopped/transition.md
 $dokka.location:com.pubnub.api.subscribe.eventengine.state/SubscribeState.Handshaking///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.subscribe.eventengine.state/-subscribe-state/-handshaking/index.md
-$dokka.location:com.pubnub.api.subscribe.eventengine.state/SubscribeState.Handshaking/Handshaking/#kotlin.collections.Set[kotlin.String]#kotlin.collections.Set[kotlin.String]/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.subscribe.eventengine.state/-subscribe-state/-handshaking/-handshaking.md
+$dokka.location:com.pubnub.api.subscribe.eventengine.state/SubscribeState.Handshaking/Handshaking/#kotlin.collections.Set[kotlin.String]#kotlin.collections.Set[kotlin.String]#com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor?/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.subscribe.eventengine.state/-subscribe-state/-handshaking/-handshaking.md
 $dokka.location:com.pubnub.api.subscribe.eventengine.state/SubscribeState.Handshaking/channelGroups/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.subscribe.eventengine.state/-subscribe-state/-handshaking/channel-groups.md
 $dokka.location:com.pubnub.api.subscribe.eventengine.state/SubscribeState.Handshaking/channels/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.subscribe.eventengine.state/-subscribe-state/-handshaking/channels.md
 $dokka.location:com.pubnub.api.subscribe.eventengine.state/SubscribeState.Handshaking/onEntry/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.subscribe.eventengine.state/-subscribe-state/-handshaking/on-entry.md
 $dokka.location:com.pubnub.api.subscribe.eventengine.state/SubscribeState.Handshaking/onExit/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.subscribe.eventengine.state/-subscribe-state/-handshaking/on-exit.md
+$dokka.location:com.pubnub.api.subscribe.eventengine.state/SubscribeState.Handshaking/subscriptionCursor/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.subscribe.eventengine.state/-subscribe-state/-handshaking/subscription-cursor.md
 $dokka.location:com.pubnub.api.subscribe.eventengine.state/SubscribeState.Handshaking/transition/#com.pubnub.api.subscribe.eventengine.event.SubscribeEvent/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.subscribe.eventengine.state/-subscribe-state/-handshaking/transition.md
 $dokka.location:com.pubnub.api.subscribe.eventengine.state/SubscribeState.ReceiveFailed///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.subscribe.eventengine.state/-subscribe-state/-receive-failed/index.md
 $dokka.location:com.pubnub.api.subscribe.eventengine.state/SubscribeState.ReceiveFailed/ReceiveFailed/#kotlin.collections.Set[kotlin.String]#kotlin.collections.Set[kotlin.String]#com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor#com.pubnub.api.PubNubException/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.subscribe.eventengine.state/-subscribe-state/-receive-failed/-receive-failed.md
@@ -1535,9 +1627,7 @@ $dokka.location:com.pubnub.api.vendor/Crypto/decrypt/#java.lang.String/PointingT
 $dokka.location:com.pubnub.api.vendor/Crypto/encrypt/#java.lang.String#java.lang.Integer/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.vendor/-crypto/encrypt.md
 $dokka.location:com.pubnub.api.vendor/Crypto/encrypt/#java.lang.String/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.vendor/-crypto/encrypt.md
 $dokka.location:com.pubnub.api.vendor/Crypto/hexEncode/#byte[]/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.vendor/-crypto/hex-encode.md
-$dokka.location:com.pubnub.api.vendor/Crypto/hexStringToByteArray/#java.lang.String/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.vendor/-crypto/hex-string-to-byte-array.md
 $dokka.location:com.pubnub.api.vendor/Crypto/initCiphers/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.vendor/-crypto/init-ciphers.md
-$dokka.location:com.pubnub.api.vendor/Crypto/md5/#java.lang.String/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.vendor/-crypto/md5.md
 $dokka.location:com.pubnub.api.vendor/Crypto/newCryptoError/#int#java.lang.Exception/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.vendor/-crypto/new-crypto-error.md
 $dokka.location:com.pubnub.api.vendor/Crypto/sha256/#byte[]/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.vendor/-crypto/sha256.md
 $dokka.location:com.pubnub.api.vendor/FileEncryptionUtil///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.vendor/-file-encryption-util/index.md
@@ -1564,6 +1654,7 @@ $dokka.location:com.pubnub.api/PNConfiguration/certificatePinner/#/PointingToDec
 $dokka.location:com.pubnub.api/PNConfiguration/cipherKey/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-p-n-configuration/cipher-key.md
 $dokka.location:com.pubnub.api/PNConfiguration/connectTimeout/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-p-n-configuration/connect-timeout.md
 $dokka.location:com.pubnub.api/PNConfiguration/connectionSpec/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-p-n-configuration/connection-spec.md
+$dokka.location:com.pubnub.api/PNConfiguration/cryptoModule/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-p-n-configuration/crypto-module.md
 $dokka.location:com.pubnub.api/PNConfiguration/dedupOnSubscribe/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-p-n-configuration/dedup-on-subscribe.md
 $dokka.location:com.pubnub.api/PNConfiguration/enableSubscribeBeta/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-p-n-configuration/enable-subscribe-beta.md
 $dokka.location:com.pubnub.api/PNConfiguration/fileMessagePublishRetryLimit/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-p-n-configuration/file-message-publish-retry-limit.md
@@ -1611,17 +1702,17 @@ $dokka.location:com.pubnub.api/PubNub/addMessageAction/#kotlin.String#com.pubnub
 $dokka.location:com.pubnub.api/PubNub/addPushNotificationsOnChannels/#com.pubnub.api.enums.PNPushType#kotlin.collections.List[kotlin.String]#kotlin.String#kotlin.String?#com.pubnub.api.enums.PNPushEnvironment/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub/add-push-notifications-on-channels.md
 $dokka.location:com.pubnub.api/PubNub/auditPushChannelProvisions/#com.pubnub.api.enums.PNPushType#kotlin.String#kotlin.String?#com.pubnub.api.enums.PNPushEnvironment/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub/audit-push-channel-provisions.md
 $dokka.location:com.pubnub.api/PubNub/configuration/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub/configuration.md
-$dokka.location:com.pubnub.api/PubNub/decrypt/#kotlin.String#kotlin.String/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub/decrypt.md
+$dokka.location:com.pubnub.api/PubNub/decrypt/#kotlin.String#kotlin.String?/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub/decrypt.md
 $dokka.location:com.pubnub.api/PubNub/decrypt/#kotlin.String/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub/decrypt.md
-$dokka.location:com.pubnub.api/PubNub/decryptInputStream/#java.io.InputStream#kotlin.String/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub/decrypt-input-stream.md
+$dokka.location:com.pubnub.api/PubNub/decryptInputStream/#java.io.InputStream#kotlin.String?/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub/decrypt-input-stream.md
 $dokka.location:com.pubnub.api/PubNub/deleteChannelGroup/#kotlin.String/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub/delete-channel-group.md
 $dokka.location:com.pubnub.api/PubNub/deleteFile/#kotlin.String#kotlin.String#kotlin.String/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub/delete-file.md
 $dokka.location:com.pubnub.api/PubNub/deleteMessages/#kotlin.collections.List[kotlin.String]#kotlin.Long?#kotlin.Long?/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub/delete-messages.md
 $dokka.location:com.pubnub.api/PubNub/destroy/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub/destroy.md
 $dokka.location:com.pubnub.api/PubNub/disconnect/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub/disconnect.md
 $dokka.location:com.pubnub.api/PubNub/downloadFile/#kotlin.String#kotlin.String#kotlin.String#kotlin.String?/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub/download-file.md
-$dokka.location:com.pubnub.api/PubNub/encrypt/#kotlin.String#kotlin.String/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub/encrypt.md
-$dokka.location:com.pubnub.api/PubNub/encryptInputStream/#java.io.InputStream#kotlin.String/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub/encrypt-input-stream.md
+$dokka.location:com.pubnub.api/PubNub/encrypt/#kotlin.String#kotlin.String?/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub/encrypt.md
+$dokka.location:com.pubnub.api/PubNub/encryptInputStream/#java.io.InputStream#kotlin.String?/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub/encrypt-input-stream.md
 $dokka.location:com.pubnub.api/PubNub/fetchMessages/#kotlin.collections.List[kotlin.String]#com.pubnub.api.models.consumer.PNBoundedPage#kotlin.Boolean#kotlin.Boolean#kotlin.Boolean#kotlin.Boolean/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub/fetch-messages.md
 $dokka.location:com.pubnub.api/PubNub/fetchMessages/#kotlin.collections.List[kotlin.String]#kotlin.Int#kotlin.Long?#kotlin.Long?#kotlin.Boolean#kotlin.Boolean#kotlin.Boolean/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub/fetch-messages.md
 $dokka.location:com.pubnub.api/PubNub/fire/#kotlin.String#kotlin.Any#kotlin.Any?#kotlin.Boolean#kotlin.Int?/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-pub-nub/fire.md
@@ -1688,8 +1779,12 @@ $dokka.location:com.pubnub.api/PubNubError.CHANNEL_MISSING///PointingToDeclarati
 $dokka.location:com.pubnub.api/PubNubError.CHANNEL_OR_CHANNEL_GROUP_MISSING///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}pubnub-kotlin/com.pubnub.api/-pub-nub-error/-c-h-a-n-n-e-l_-o-r_-c-h-a-n-n-e-l_-g-r-o-u-p_-m-i-s-s-i-n-g/index.md
 $dokka.location:com.pubnub.api/PubNubError.CONNECTION_NOT_SET///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}pubnub-kotlin/com.pubnub.api/-pub-nub-error/-c-o-n-n-e-c-t-i-o-n_-n-o-t_-s-e-t/index.md
 $dokka.location:com.pubnub.api/PubNubError.CONNECT_EXCEPTION///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}pubnub-kotlin/com.pubnub.api/-pub-nub-error/-c-o-n-n-e-c-t_-e-x-c-e-p-t-i-o-n/index.md
+$dokka.location:com.pubnub.api/PubNubError.CRYPTOR_DATA_HEADER_SIZE_TO_SMALL///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}pubnub-kotlin/com.pubnub.api/-pub-nub-error/-c-r-y-p-t-o-r_-d-a-t-a_-h-e-a-d-e-r_-s-i-z-e_-t-o_-s-m-a-l-l/index.md
+$dokka.location:com.pubnub.api/PubNubError.CRYPTOR_HEADER_PARSE_ERROR///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}pubnub-kotlin/com.pubnub.api/-pub-nub-error/-c-r-y-p-t-o-r_-h-e-a-d-e-r_-p-a-r-s-e_-e-r-r-o-r/index.md
+$dokka.location:com.pubnub.api/PubNubError.CRYPTOR_HEADER_VERSION_UNKNOWN///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}pubnub-kotlin/com.pubnub.api/-pub-nub-error/-c-r-y-p-t-o-r_-h-e-a-d-e-r_-v-e-r-s-i-o-n_-u-n-k-n-o-w-n/index.md
 $dokka.location:com.pubnub.api/PubNubError.CRYPTO_ERROR///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}pubnub-kotlin/com.pubnub.api/-pub-nub-error/-c-r-y-p-t-o_-e-r-r-o-r/index.md
 $dokka.location:com.pubnub.api/PubNubError.DEVICE_ID_MISSING///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}pubnub-kotlin/com.pubnub.api/-pub-nub-error/-d-e-v-i-c-e_-i-d_-m-i-s-s-i-n-g/index.md
+$dokka.location:com.pubnub.api/PubNubError.ENCRYPTION_AND_DECRYPTION_OF_EMPTY_DATA_NOT_ALLOWED///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}pubnub-kotlin/com.pubnub.api/-pub-nub-error/-e-n-c-r-y-p-t-i-o-n_-a-n-d_-d-e-c-r-y-p-t-i-o-n_-o-f_-e-m-p-t-y_-d-a-t-a_-n-o-t_-a-l-l-o-w-e-d/index.md
 $dokka.location:com.pubnub.api/PubNubError.GROUP_MISSING///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}pubnub-kotlin/com.pubnub.api/-pub-nub-error/-g-r-o-u-p_-m-i-s-s-i-n-g/index.md
 $dokka.location:com.pubnub.api/PubNubError.HISTORY_MESSAGE_ACTIONS_MULTIPLE_CHANNELS///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}pubnub-kotlin/com.pubnub.api/-pub-nub-error/-h-i-s-t-o-r-y_-m-e-s-s-a-g-e_-a-c-t-i-o-n-s_-m-u-l-t-i-p-l-e_-c-h-a-n-n-e-l-s/index.md
 $dokka.location:com.pubnub.api/PubNubError.HTTP_ERROR///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}pubnub-kotlin/com.pubnub.api/-pub-nub-error/-h-t-t-p_-e-r-r-o-r/index.md
@@ -1716,6 +1811,7 @@ $dokka.location:com.pubnub.api/PubNubError.SUBSCRIBE_TIMEOUT///PointingToDeclara
 $dokka.location:com.pubnub.api/PubNubError.TIMEOUT///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}pubnub-kotlin/com.pubnub.api/-pub-nub-error/-t-i-m-e-o-u-t/index.md
 $dokka.location:com.pubnub.api/PubNubError.TIMETOKEN_MISSING///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}pubnub-kotlin/com.pubnub.api/-pub-nub-error/-t-i-m-e-t-o-k-e-n_-m-i-s-s-i-n-g/index.md
 $dokka.location:com.pubnub.api/PubNubError.TOKEN_MISSING///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}pubnub-kotlin/com.pubnub.api/-pub-nub-error/-t-o-k-e-n_-m-i-s-s-i-n-g/index.md
+$dokka.location:com.pubnub.api/PubNubError.UNKNOWN_CRYPTOR///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}pubnub-kotlin/com.pubnub.api/-pub-nub-error/-u-n-k-n-o-w-n_-c-r-y-p-t-o-r/index.md
 $dokka.location:com.pubnub.api/PubNubError.USERID_NULL_OR_EMPTY///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}pubnub-kotlin/com.pubnub.api/-pub-nub-error/-u-s-e-r-i-d_-n-u-l-l_-o-r_-e-m-p-t-y/index.md
 $dokka.location:com.pubnub.api/PubNubError.USER_ID_MISSING///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}pubnub-kotlin/com.pubnub.api/-pub-nub-error/-u-s-e-r_-i-d_-m-i-s-s-i-n-g/index.md
 $dokka.location:com.pubnub.api/PubNubError.USER_MISSING///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}pubnub-kotlin/com.pubnub.api/-pub-nub-error/-u-s-e-r_-m-i-s-s-i-n-g/index.md
@@ -1740,9 +1836,13 @@ $dokka.location:com.pubnub.api/UserId/value/#/PointingToDeclaration/pubnub-kotl
 $dokka.location:com.pubnub.extension////PointingToDeclaration/pubnub-kotlin/com.pubnub.extension/index.md
 $dokka.location:com.pubnub.extension//limit/kotlin.Int#kotlin.Int/PointingToDeclaration/pubnub-kotlin/com.pubnub.extension/limit.md
 $dokka.location:com.pubnub.extension//nonPositiveToNull/kotlin.Int#/PointingToDeclaration/pubnub-kotlin/com.pubnub.extension/non-positive-to-null.md
+$dokka.location:com.pubnub.extension//scheduleWithDelay/java.util.concurrent.ScheduledExecutorService#java.time.Duration#kotlin.Function0[kotlin.Unit]/PointingToDeclaration/pubnub-kotlin/com.pubnub.extension/schedule-with-delay.md
 com.pubnub.api
 com.pubnub.api.builder
 com.pubnub.api.callbacks
+com.pubnub.api.crypto
+com.pubnub.api.crypto.cryptor
+com.pubnub.api.crypto.data
 com.pubnub.api.endpoints
 com.pubnub.api.endpoints.access
 com.pubnub.api.endpoints.channel_groups
@@ -1792,6 +1892,7 @@ com.pubnub.api.models.server.objects_api
 com.pubnub.api.models.server.presence
 com.pubnub.api.presence
 com.pubnub.api.presence.eventengine.effect
+com.pubnub.api.presence.eventengine.effect.effectprovider
 com.pubnub.api.presence.eventengine.event
 com.pubnub.api.presence.eventengine.state
 com.pubnub.api.services

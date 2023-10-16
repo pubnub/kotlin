@@ -3,4 +3,4 @@
 # ReceiveMessagesEffect
 
 [jvm]\
-fun [ReceiveMessagesEffect](-receive-messages-effect.md)(remoteAction: [RemoteAction](../../com.pubnub.api.endpoints.remoteaction/-remote-action/index.md)&lt;[ReceiveMessagesResult](../-receive-messages-result/index.md)&gt;, subscribeEventSink: [Sink](../../com.pubnub.api.eventengine/-sink/index.md)&lt;[SubscribeEvent](../../com.pubnub.api.subscribe.eventengine.event/-subscribe-event/index.md)&gt;)
+fun [ReceiveMessagesEffect](-receive-messages-effect.md)(receiveMessagesRemoteAction: [RemoteAction](../../com.pubnub.api.endpoints.remoteaction/-remote-action/index.md)&lt;[ReceiveMessagesResult](../-receive-messages-result/index.md)&gt;, subscribeEventSink: [Sink](../../com.pubnub.api.eventengine/-sink/index.md)&lt;[SubscribeEvent](../../com.pubnub.api.subscribe.eventengine.event/-subscribe-event/index.md)&gt;)
