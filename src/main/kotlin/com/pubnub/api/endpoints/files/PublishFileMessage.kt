@@ -1,16 +1,15 @@
 package com.pubnub.api.endpoints.files
 
 import com.pubnub.api.Endpoint
-import com.pubnub.api.PNConfiguration.Companion.isValid
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
+import com.pubnub.api.crypto.encryptString
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.files.PNBaseFile
 import com.pubnub.api.models.consumer.files.PNPublishFileMessageResult
 import com.pubnub.api.models.server.files.FileUploadNotification
-import com.pubnub.api.vendor.Crypto
 import com.pubnub.extension.numericString
 import com.pubnub.extension.quoted
 import retrofit2.Call
@@ -27,7 +26,7 @@ open class PublishFileMessage(
     private val meta: Any? = null,
     private val ttl: Int? = null,
     private val shouldStore: Boolean? = null,
-    pubNub: PubNub
+    pubNub: PubNub,
 ) : Endpoint<List<Any>, PNPublishFileMessageResult>(pubNub) {
     private val pnFile = PNBaseFile(fileId, fileName)
 
@@ -41,12 +40,7 @@ open class PublishFileMessage(
     @Throws(PubNubException::class)
     override fun doWork(queryParams: HashMap<String, String>): Call<List<Any>> {
         val stringifiedMessage: String = pubnub.mapper.toJson(FileUploadNotification(message, pnFile))
-        val messageAsString = if (pubnub.configuration.cipherKey.isValid()) {
-            val crypto = Crypto(pubnub.configuration.cipherKey, pubnub.configuration.useRandomInitializationVector)
-            crypto.encrypt(stringifiedMessage).quoted()
-        } else {
-            stringifiedMessage
-        }
+        val messageAsString = pubnub.cryptoModule?.encryptString(stringifiedMessage)?.quoted() ?: stringifiedMessage
         meta?.let {
             val stringifiedMeta: String = pubnub.mapper.toJson(it)
             queryParams["meta"] = stringifiedMeta
@@ -86,7 +80,7 @@ open class PublishFileMessage(
             message: Any? = null,
             meta: Any? = null,
             ttl: Int? = null,
-            shouldStore: Boolean? = null
+            shouldStore: Boolean? = null,
         ): ExtendedRemoteAction<PNPublishFileMessageResult> {
             return PublishFileMessage(
                 channel = channel,

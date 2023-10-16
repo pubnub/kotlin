@@ -199,7 +199,34 @@ enum class PubNubError(private val code: Int, val message: String) {
     CHANNEL_OR_CHANNEL_GROUP_MISSING(
         171,
         "Please, provide channel or channelGroup"
-    );
+    ),
+
+    UNKNOWN_CRYPTOR(
+        172,
+        "Cryptor not found."
+    ),
+
+    CRYPTOR_DATA_HEADER_SIZE_TO_SMALL(
+        173,
+        "Cryptor data size is to small."
+    ),
+
+    CRYPTOR_HEADER_VERSION_UNKNOWN(
+        174,
+        "Cryptor header version unknown. Please, update SDK."
+    ),
+
+    CRYPTOR_HEADER_PARSE_ERROR(
+        175,
+        "Cryptor header parse error."
+    ),
+
+    ENCRYPTION_AND_DECRYPTION_OF_EMPTY_DATA_NOT_ALLOWED(
+        176,
+        "Encryption of empty data not allowed."
+    ),
+
+    ;
 
     override fun toString(): String {
         return "PubNubError(name=$name, code=$code, message='$message')"

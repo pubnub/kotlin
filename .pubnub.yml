@@ -1,9 +1,9 @@
 name: kotlin
-version: 7.6.0
+version: 7.7.0
 schema: 1
 scm: github.com/pubnub/kotlin
 files:
-  - build/libs/pubnub-kotlin-7.6.0-all.jar
+  - build/libs/pubnub-kotlin-7.7.0-all.jar
 sdks:
   - 
       type: library
@@ -23,8 +23,8 @@ sdks:
             -
               distribution-type: library
               distribution-repository: maven
-              package-name: pubnub-kotlin-7.6.0
-              location: https://repo.maven.apache.org/maven2/com/pubnub/pubnub-kotlin/7.6.0/pubnub-kotlin-7.6.0.jar
+              package-name: pubnub-kotlin-7.7.0
+              location: https://repo.maven.apache.org/maven2/com/pubnub/pubnub-kotlin/7.7.0/pubnub-kotlin-7.7.0.jar
               supported-platforms:
                 supported-operating-systems:
                   Android:
@@ -121,6 +121,13 @@ sdks:
                   license-url: https://github.com/stleary/JSON-java/blob/20210307/LICENSE
                   is-required: Required
 changelog:
+  - date: 2023-10-16
+    version: v7.7.0
+    changes:
+      - type: feature
+        text: "Add crypto module that allows configure SDK to encrypt and decrypt messages."
+      - type: bug
+        text: "Improved security of crypto implementation by adding enhanced AES-CBC cryptor."
   - date: 2023-08-14
     version: v7.6.0
     changes:

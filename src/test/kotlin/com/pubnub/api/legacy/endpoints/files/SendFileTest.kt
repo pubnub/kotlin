@@ -43,7 +43,7 @@ class SendFileTest : TestsWithFiles {
             fileUploadRequestDetails
         )
 
-        every { sendFileToS3Factory.create(any(), any(), any(), any()) } returns TestRemoteAction.successful(Unit)
+        every { sendFileToS3Factory.create(any(), any(), any()) } returns TestRemoteAction.successful(Unit)
         val publishFileMessage: PublishFileMessage =
             AlwaysSuccessfulPublishFileMessage.create(
                 publishFileMessageResult
@@ -70,7 +70,7 @@ class SendFileTest : TestsWithFiles {
             fileUploadRequestDetails
         )
 
-        every { sendFileToS3Factory.create(any(), any(), any(), any()) } returns TestRemoteAction.successful(Unit)
+        every { sendFileToS3Factory.create(any(), any(), any()) } returns TestRemoteAction.successful(Unit)
         val publishFileMessage: PublishFileMessage =
             AlwaysSuccessfulPublishFileMessage.create(
                 publishFileMessageResult
@@ -101,7 +101,7 @@ class SendFileTest : TestsWithFiles {
             fileUploadRequestDetails
         )
 
-        every { sendFileToS3Factory.create(any(), any(), any(), any()) } returns TestRemoteAction.successful(Unit)
+        every { sendFileToS3Factory.create(any(), any(), any()) } returns TestRemoteAction.successful(Unit)
         val publishFileMessage: PublishFileMessage = spyk(
             FailingPublishFileMessage.create(
                 publishFileMessageResult,
@@ -138,7 +138,7 @@ class SendFileTest : TestsWithFiles {
                 fileUploadRequestDetails
             )
 
-        every { sendFileToS3Factory.create(any(), any(), any(), any()) } returns TestRemoteAction.successful(Unit)
+        every { sendFileToS3Factory.create(any(), any(), any()) } returns TestRemoteAction.successful(Unit)
         val publishFileMessage: PublishFileMessage = spyk(
             FailingPublishFileMessage.create(
                 publishFileMessageResult,

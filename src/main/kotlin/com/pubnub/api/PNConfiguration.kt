@@ -1,5 +1,6 @@
 package com.pubnub.api
 
+import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions
 import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.enums.PNReconnectionPolicy
@@ -100,7 +101,38 @@ open class PNConfiguration(
     /**
      * If set, all communications to and from PubNub will be encrypted.
      */
+
+    @Deprecated(
+        level = DeprecationLevel.WARNING,
+        message = """Instead of cipherKey and useRandomInitializationVector use CryptoModule instead 
+            e.g. config.cryptoModule = CryptoModule.createLegacyCryptoModule(cipherKey = cipherKey, randomIv = true) 
+            or config.cryptoModule = CryptoModule.createAesCbcCryptoModule(cipherKey = cipherKey, randomIv = true)""",
+    )
     var cipherKey: String = ""
+
+    /**
+     * Should initialization vector for encrypted messages be random.
+     *
+     * Defaults to `false`.
+     */
+    @Deprecated(
+        level = DeprecationLevel.WARNING,
+        message = """Instead of cipherKey and useRandomInitializationVector use CryptoModule instead 
+            e.g. config.cryptoModule = CryptoModule.createLegacyCryptoModule(cipherKey = cipherKey, randomIv = true) 
+            or config.cryptoModule = CryptoModule.createAesCbcCryptoModule(cipherKey = cipherKey, randomIv = true)""",
+    )
+    var useRandomInitializationVector = true
+
+    /**
+     * CryptoModule is responsible for handling encryption and decryption.
+     * If set, all communications to and from PubNub will be encrypted.
+     */
+    var cryptoModule: CryptoModule? = null
+        get() = field ?: if (cipherKey.isNotBlank()) {
+            log.warn("cipherKey is deprecated. Use CryptoModule instead")
+            field = CryptoModule.createLegacyCryptoModule(cipherKey = cipherKey, randomIv = useRandomInitializationVector)
+            field
+        } else null
 
     /**
      * Custom origin if needed.
@@ -259,13 +291,6 @@ open class PNConfiguration(
      * Defaults to `true`.
      */
     var startSubscriberThread = true
-
-    /**
-     * Should initialization vector for encrypted messages be random.
-     *
-     * Defaults to `false`.
-     */
-    var useRandomInitializationVector = true
 
     /**
      * Instructs the SDK to use a proxy configuration when communicating with PubNub servers.

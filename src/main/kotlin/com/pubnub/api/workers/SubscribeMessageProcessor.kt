@@ -6,6 +6,7 @@ import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PNConfiguration.Companion.isValid
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubUtil
+import com.pubnub.api.crypto.decryptString
 import com.pubnub.api.managers.DuplicationManager
 import com.pubnub.api.models.consumer.files.PNDownloadableFile
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
@@ -23,7 +24,6 @@ import com.pubnub.api.models.server.PresenceEnvelope
 import com.pubnub.api.models.server.SubscribeMessage
 import com.pubnub.api.models.server.files.FileUploadNotification
 import com.pubnub.api.services.FilesService
-import com.pubnub.api.vendor.Crypto
 import org.slf4j.LoggerFactory
 
 internal class SubscribeMessageProcessor(
@@ -190,7 +190,7 @@ internal class SubscribeMessageProcessor(
         configuration: PNConfiguration,
         url: String,
         authKey: String?,
-        timestamp: Int
+        timestamp: Int,
     ): String {
         val queryParams = mutableMapOf<String, String>()
         if (authKey != null) {
@@ -204,10 +204,8 @@ internal class SubscribeMessageProcessor(
     private fun processMessage(subscribeMessage: SubscribeMessage): JsonElement? {
         val input = subscribeMessage.payload
 
-        // if we do not have a crypto key, there is no way to process the node; let's return.
-        if (!pubnub.configuration.cipherKey.isValid()) {
-            return input
-        }
+        val cryptoModule = pubnub.cryptoModule ?: return input
+        // if we do not have a crypto module, there is no way to process the node; let's return.
 
         // if the message couldn't possibly be encrypted in the first place, there is no way to process the node;
         // let's return.
@@ -215,17 +213,13 @@ internal class SubscribeMessageProcessor(
             return input
         }
 
-        val crypto = Crypto(
-            pubnub.configuration.cipherKey, pubnub.configuration.useRandomInitializationVector
-        )
-
         val inputText = if (pubnub.mapper.isJsonObject(input!!) && pubnub.mapper.hasField(input, "pn_other")) {
             pubnub.mapper.elementToString(input, "pn_other")
         } else {
             pubnub.mapper.elementToString(input)
         }
 
-        val outputText = crypto.decrypt(inputText!!)
+        val outputText = cryptoModule.decryptString(inputText!!)
         var outputObject = pubnub.mapper.fromJson(outputText, JsonElement::class.java)
 
         if (pubnub.mapper.isJsonObject(input) && pubnub.mapper.hasField(input, "pn_other")) {

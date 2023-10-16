@@ -1,5 +1,6 @@
 package com.pubnub.api
 
+import com.pubnub.api.crypto.CryptoModule
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -66,5 +67,12 @@ class PNConfigurationTest {
         config.uuid = newUUID
 
         assertEquals(newUUID, config.userId.value)
+    }
+
+    @Test
+    fun `unfortunately should allow to set CryptoModule more twice`() {
+        val config = PNConfiguration(userId = UserId(PubNub.generateUUID()))
+        config.cryptoModule = CryptoModule.createLegacyCryptoModule("myCipherKey", true)
+        config.cryptoModule = CryptoModule.createAesCbcCryptoModule("myCipherKey")
     }
 }
