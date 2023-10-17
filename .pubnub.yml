@@ -81,7 +81,7 @@ sdks:
                 -
                   name: okhttp
                   min-version: 4.9.3
-                  location: https://repo.maven.apache.org/maven2/com/squareup/okhttp3/okhttp/3.14.9/okhttp-3.14.9.jar
+                  location: https://repo.maven.apache.org/maven2/com/squareup/okhttp3/okhttp/4.9.3/okhttp-4.9.3.jar
                   license: Apache License, Version 2.0
                   license-url: https://github.com/square/okhttp/blob/parent-3.14.9/LICENSE.txt
                   is-required: Required
@@ -95,20 +95,20 @@ sdks:
                 -
                   name: gson
                   min-version: 2.9.0
-                  location: https://repo.maven.apache.org/maven2/com/google/code/gson/gson/2.8.6/gson-2.8.6.jar
+                  location: https://repo.maven.apache.org/maven2/com/google/code/gson/gson/2.9.0/gson-2.9.0.jar
                   license: Apache License, Version 2.0
                   license-url: https://github.com/google/gson/blob/gson-parent-2.8.6/LICENSE
                   is-required: Required
                 -
                   name: json
                   min-version: "20230227"
-                  location: https://repo.maven.apache.org/maven2/org/json/json/20210307/json-20210307.jar
+                  location: https://repo.maven.apache.org/maven2/org/json/json/20230227/json-20230227.jar
                   license: Public Domain
                   license-url: https://github.com/stleary/JSON-java/blob/20210307/LICENSE
                   is-required: Required
                 -
                   name: cbor
-                  min-version: 0.9
+                  min-version: "0.9"
                   location: https://repo.maven.apache.org/maven2/co/nstant/in/cbor/0.9
                   license: The Apache Software License, Version 2.0
                   license-url: https://www.apache.org/licenses/LICENSE-2.0.txt
