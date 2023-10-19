@@ -9,7 +9,7 @@ import com.pubnub.api.subscribe.eventengine.state.SubscribeState
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
-class TransitionFromHandshakeHeartbeatStoppedStateTest {
+class TransitionFromHandshakeStoppedStateTest {
 
     private val channels = setOf("Channel1")
     private val channelGroups = setOf("ChannelGroup1")
@@ -45,7 +45,7 @@ class TransitionFromHandshakeHeartbeatStoppedStateTest {
     }
 
     @Test
-    fun can_transit_from_HANDSHAKE_STOPPED_to_HANDSHAKING_when_there_is_SUBSCRIPTION_CHANGED_event() {
+    fun can_transit_from_HANDSHAKE_STOPPED_to_HANDSHAKE_STOPPED_when_there_is_SUBSCRIPTION_CHANGED_event() {
         // when
         val (state, invocations) = transition(
             SubscribeState.HandshakeStopped(channels, channelGroups, reason),
@@ -53,12 +53,12 @@ class TransitionFromHandshakeHeartbeatStoppedStateTest {
         )
 
         // then
-        assertEquals(SubscribeState.Handshaking(channels, channelGroups), state)
-        assertEquals(setOf(SubscribeEffectInvocation.Handshake(channels, channelGroups)), invocations)
+        assertEquals(SubscribeState.HandshakeStopped(channels, channelGroups, reason = null), state)
+        assertEquals(0, invocations.size)
     }
 
     @Test
-    fun can_transit_from_HANDSHAKE_STOPPED_to_RECEIVING_when_there_is_SUBSCRIPTION_RESTORED_event() {
+    fun can_transit_from_HANDSHAKE_STOPPED_to_HANDSHAKE_STOPPED_when_there_is_SUBSCRIPTION_RESTORED_event() {
         // when
         val (state, invocations) = transition(
             SubscribeState.HandshakeStopped(channels, channelGroups, reason),
@@ -66,7 +66,7 @@ class TransitionFromHandshakeHeartbeatStoppedStateTest {
         )
 
         // then
-        assertEquals(SubscribeState.Receiving(channels, channelGroups, subscriptionCursor), state)
-        assertEquals(setOf(SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor)), invocations)
+        assertEquals(SubscribeState.HandshakeStopped(channels, channelGroups, reason = null), state)
+        assertEquals(0, invocations.size)
     }
 }

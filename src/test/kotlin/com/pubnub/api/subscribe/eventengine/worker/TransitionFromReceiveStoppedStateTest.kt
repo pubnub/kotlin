@@ -8,7 +8,7 @@ import com.pubnub.api.subscribe.eventengine.state.SubscribeState
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
-class TransitionFromReceiveHeartbeatStoppedStateTest {
+class TransitionFromReceiveStoppedStateTest {
     private val channels = setOf("Channel1")
     private val channelGroups = setOf("ChannelGroup1")
     private val timeToken = 12345345452L
@@ -50,7 +50,7 @@ class TransitionFromReceiveHeartbeatStoppedStateTest {
     }
 
     @Test
-    fun can_transit_from_RECEIVE_STOPPED_to_RECEIVING_when_there_is_SUBSCRIPTION_CHANGED_event() {
+    fun can_transit_from_RECEIVE_STOPPED_to_RECEIVE_STOPPED_when_there_is_SUBSCRIPTION_CHANGED_event() {
         // when
         val (state, invocations) = transition(
             SubscribeState.ReceiveStopped(channels, channelGroups, subscriptionCursor),
@@ -58,12 +58,12 @@ class TransitionFromReceiveHeartbeatStoppedStateTest {
         )
 
         // then
-        assertEquals(SubscribeState.Receiving(channels, channelGroups, subscriptionCursor), state)
-        assertEquals(setOf(SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor)), invocations)
+        assertEquals(SubscribeState.ReceiveStopped(channels, channelGroups, subscriptionCursor), state)
+        assertEquals(0, invocations.size)
     }
 
     @Test
-    fun can_transit_from_RECEIVE_STOPPED_to_RECEIVING_when_there_is_SUBSCRIPTION_RESTORED_event() {
+    fun can_transit_from_RECEIVE_STOPPED_to_RECEIVE_STOPPED_when_there_is_SUBSCRIPTION_RESTORED_event() {
         // when
         val (state, invocations) = transition(
             SubscribeState.ReceiveStopped(channels, channelGroups, subscriptionCursor),
@@ -71,7 +71,7 @@ class TransitionFromReceiveHeartbeatStoppedStateTest {
         )
 
         // then
-        assertEquals(SubscribeState.Receiving(channels, channelGroups, subscriptionCursor), state)
-        assertEquals(setOf(SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor)), invocations)
+        assertEquals(SubscribeState.ReceiveStopped(channels, channelGroups, subscriptionCursor), state)
+        assertEquals(0, invocations.size)
     }
 }

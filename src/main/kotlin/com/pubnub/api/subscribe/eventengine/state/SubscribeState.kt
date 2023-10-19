@@ -177,21 +177,22 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, SubscribeEvent, S
 
                 is SubscribeEvent.SubscriptionChanged -> {
                     transitionTo(
-                        Handshaking(
+                        HandshakeStopped(
                             event.channels,
-                            event.channelGroups
+                            event.channelGroups,
+                            reason = null
                         )
-                    ) // todo transition to HandshakeStopped + update channels/channelGroups list
+                    )
                 }
 
                 is SubscribeEvent.SubscriptionRestored -> {
                     transitionTo(
-                        Receiving(
+                        HandshakeStopped(
                             event.channels,
                             event.channelGroups,
-                            event.subscriptionCursor
+                            reason = null
                         )
-                    ) // todo check with doc. transitionTo Handshaking or self?
+                    )
                 }
 
                 is SubscribeEvent.UnsubscribeAll -> {
@@ -420,22 +421,22 @@ sealed class SubscribeState : State<SubscribeEffectInvocation, SubscribeEvent, S
 
                 is SubscribeEvent.SubscriptionChanged -> {
                     transitionTo(
-                        Receiving(
+                        ReceiveStopped(
                             event.channels,
                             event.channelGroups,
                             subscriptionCursor
                         )
-                    ) // todo transition to ReceiveStopped + update channels/channelGroups list
+                    )
                 }
 
                 is SubscribeEvent.SubscriptionRestored -> {
                     transitionTo(
-                        Receiving(
+                        ReceiveStopped(
                             event.channels,
                             event.channelGroups,
                             event.subscriptionCursor
                         )
-                    ) // todo check if this shouldn't go to ReceiveStopped
+                    )
                 }
 
                 is SubscribeEvent.UnsubscribeAll -> {
