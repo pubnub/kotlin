@@ -12,6 +12,7 @@ import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.core.IsInstanceOf
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.time.Duration
 import java.util.concurrent.ScheduledExecutorService
 
 class PresenceEffectFactoryTest {
@@ -22,7 +23,7 @@ class PresenceEffectFactoryTest {
     private val presenceEventSink = mockk<Sink<PresenceEvent>>()
     private val policy = mockk<RetryPolicy>()
     private val executorService = mockk<ScheduledExecutorService>()
-    private val heartbeatIntervalInSec = 10
+    private val heartbeatInterval = Duration.ofSeconds(10)
     private val channels = setOf("channel1")
     private val channelGroups = setOf("channelGroup1")
     private val heartbeatRemoteAction: RemoteAction<Boolean> = mockk()
@@ -35,7 +36,7 @@ class PresenceEffectFactoryTest {
             presenceEventSink,
             policy,
             executorService,
-            heartbeatIntervalInSec
+            heartbeatInterval
         )
     }
 

@@ -7,6 +7,7 @@ import com.pubnub.api.presence.eventengine.effect.effectprovider.HeartbeatProvid
 import com.pubnub.api.presence.eventengine.effect.effectprovider.LeaveProvider
 import com.pubnub.api.presence.eventengine.event.PresenceEvent
 import com.pubnub.api.subscribe.eventengine.effect.RetryPolicy
+import java.time.Duration
 import java.util.concurrent.ScheduledExecutorService
 
 internal class PresenceEffectFactory(
@@ -15,7 +16,7 @@ internal class PresenceEffectFactory(
     private val presenceEventSink: Sink<PresenceEvent>,
     private val policy: RetryPolicy,
     private val executorService: ScheduledExecutorService,
-    private val heartbeatIntervalInSec: Int,
+    private val heartbeatInterval: Duration,
 ) : EffectFactory<PresenceEffectInvocation> {
     override fun create(effectInvocation: PresenceEffectInvocation): Effect? {
         return when (effectInvocation) {
@@ -48,7 +49,7 @@ internal class PresenceEffectFactory(
                 LeaveEffect(leaveRemoteAction)
             }
             is PresenceEffectInvocation.Wait -> {
-                WaitEffect(heartbeatIntervalInSec, presenceEventSink)
+                WaitEffect(heartbeatInterval, presenceEventSink)
             }
 
             PresenceEffectInvocation.CancelDelayedHeartbeat,

@@ -57,7 +57,6 @@ import com.pubnub.api.endpoints.push.RemoveChannelsFromPush
 import com.pubnub.api.enums.PNPushEnvironment
 import com.pubnub.api.enums.PNPushType
 import com.pubnub.api.enums.PNReconnectionPolicy
-import com.pubnub.api.eventengine.EventEngineConf
 import com.pubnub.api.managers.BasePathManager
 import com.pubnub.api.managers.DuplicationManager
 import com.pubnub.api.managers.ListenerManager
@@ -88,19 +87,22 @@ import com.pubnub.api.models.consumer.objects.member.PNUUIDDetailsLevel
 import com.pubnub.api.models.consumer.objects.membership.ChannelMembershipInput
 import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
 import com.pubnub.api.presence.Presence
+import com.pubnub.api.presence.eventengine.effect.effectprovider.HeartbeatProviderImpl
+import com.pubnub.api.presence.eventengine.effect.effectprovider.LeaveProviderImpl
 import com.pubnub.api.subscribe.Subscribe
-import com.pubnub.api.subscribe.eventengine.configuration.SubscribeEventEngineConfImpl
+import com.pubnub.api.subscribe.eventengine.configuration.EventEnginesConf
 import com.pubnub.api.workers.SubscribeMessageProcessor
 import java.io.InputStream
+import java.time.Duration
 import java.util.Date
 import java.util.UUID
 
 class PubNub internal constructor(
     val configuration: PNConfiguration,
-    eventEngineConf: EventEngineConf
+    eventEnginesConf: EventEnginesConf
 ) {
 
-    constructor(configuration: PNConfiguration) : this(configuration, SubscribeEventEngineConfImpl())
+    constructor(configuration: PNConfiguration) : this(configuration, EventEnginesConf())
 
     companion object {
         private const val TIMESTAMP_DIVIDER = 1000
@@ -135,8 +137,17 @@ class PubNub internal constructor(
         this,
         listenerManager,
         configuration.retryPolicy,
-        eventEngineConf,
+        eventEnginesConf,
         SubscribeMessageProcessor(this, DuplicationManager(configuration))
+    )
+
+    private val presence = Presence.create(
+        heartbeatProvider = HeartbeatProviderImpl(this),
+        leaveProvider = LeaveProviderImpl(this),
+        heartbeatInterval = Duration.ofSeconds(configuration.heartbeatInterval.toLong()),
+        enableEventEngine = configuration.enableSubscribeBeta,
+        retryPolicy = configuration.retryPolicy,
+        eventEngineConf = eventEnginesConf.presence
     )
 
     //endregion
@@ -212,7 +223,6 @@ class PubNub internal constructor(
         usePost: Boolean = false,
         replicate: Boolean = true,
         ttl: Int? = null
-
     ) = Publish(
         pubnub = this,
         channel = channel,
@@ -311,10 +321,12 @@ class PubNub internal constructor(
         channelGroups: List<String> = emptyList(),
         withPresence: Boolean = false,
         withTimetoken: Long = 0L
-    ) = if (configuration.enableSubscribeBeta)
+    ) = if (configuration.enableSubscribeBeta) {
         subscribe.subscribe(channels.toSet(), channelGroups.toSet(), withPresence, withTimetoken)
-    else
+        presence.joined(channels.toSet(), channelGroups.toSet())
+    } else {
         PubSub.subscribe(subscriptionManager, channels, channelGroups, withPresence, withTimetoken)
+    }
 
     /**
      * When subscribed to a single channel, this function causes the client to issue a leave from the channel
@@ -336,19 +348,23 @@ class PubNub internal constructor(
     fun unsubscribe(
         channels: List<String> = emptyList(),
         channelGroups: List<String> = emptyList()
-    ) = if (configuration.enableSubscribeBeta)
+    ) = if (configuration.enableSubscribeBeta) {
         subscribe.unsubscribe(channels.toSet(), channelGroups.toSet())
-    else
+        presence.left(channels.toSet(), channelGroups.toSet())
+    } else {
         PubSub.unsubscribe(subscriptionManager, channels, channelGroups)
+    }
 
     /**
      * Unsubscribe from all channels and all channel groups
      */
     fun unsubscribeAll() =
-        if (configuration.enableSubscribeBeta)
+        if (configuration.enableSubscribeBeta) {
             subscribe.unsubscribeAll()
-        else
+            presence.leftAll()
+        } else {
             subscriptionManager.unsubscribeAll()
+        }
 
     /**
      * Queries the local subscribe loop for channels currently in the mix.
@@ -764,14 +780,15 @@ class PubNub internal constructor(
         channels: List<String> = emptyList(),
         channelGroups: List<String> = emptyList(),
         connected: Boolean = false
-    ) = if (configuration.enableSubscribeBeta)
-        Presence.presence(
-            channels = channels,
-            channelGroups = channelGroups,
+    ) = if (configuration.enableSubscribeBeta) {
+        presence.presence(
+            channels = channels.toSet(),
+            channelGroups = channelGroups.toSet(),
             connected = connected
         )
-    else
+    } else {
         PubSub.presence(subscriptionManager, channels, channelGroups, connected)
+    }
 
     //endregion
 
