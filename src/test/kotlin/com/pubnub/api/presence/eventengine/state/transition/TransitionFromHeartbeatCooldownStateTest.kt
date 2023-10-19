@@ -22,7 +22,7 @@ class TransitionFromHeartbeatCooldownStateTest {
         )
 
         // then
-        Assertions.assertEquals(PresenceState.HearbeatInactive, newState)
+        Assertions.assertEquals(PresenceState.HeartbeatInactive, newState)
         Assertions.assertEquals(
             setOf(
                 PresenceEffectInvocation.CancelWait,

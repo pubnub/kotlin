@@ -4,13 +4,13 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy
 import com.pubnub.api.eventengine.EffectInvocation
 import com.pubnub.api.eventengine.Event
 import com.pubnub.api.eventengine.QueueSinkSource
-import com.pubnub.api.eventengine.Sink
+import com.pubnub.api.eventengine.SinkSource
 import com.pubnub.api.eventengine.Source
 
 class TestSinkSource<T>(
     private val testSink: MutableList<Pair<String, String>>,
     private val sinkSource: QueueSinkSource<T> = QueueSinkSource()
-) : Sink<T>, Source<T> by sinkSource {
+) : SinkSource<T>, Source<T> by sinkSource {
 
     private val snakeCaseStrategy: SnakeCaseStrategy = SnakeCaseStrategy()
     override fun add(item: T) {

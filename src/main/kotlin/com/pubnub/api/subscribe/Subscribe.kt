@@ -1,20 +1,15 @@
-@file:Suppress("UNUSED_PARAMETER")
-
 package com.pubnub.api.subscribe
 
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.eventengine.EffectDispatcher
-import com.pubnub.api.eventengine.EventEngineConf
-import com.pubnub.api.eventengine.Sink
-import com.pubnub.api.managers.EventEngineManager
 import com.pubnub.api.managers.ListenerManager
+import com.pubnub.api.managers.SubscribeEventEngineManager
 import com.pubnub.api.subscribe.eventengine.SubscribeEventEngine
+import com.pubnub.api.subscribe.eventengine.configuration.EventEnginesConf
 import com.pubnub.api.subscribe.eventengine.data.SubscriptionData
-import com.pubnub.api.subscribe.eventengine.effect.MessagesConsumer
 import com.pubnub.api.subscribe.eventengine.effect.RetryPolicy
-import com.pubnub.api.subscribe.eventengine.effect.StatusConsumer
 import com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectFactory
 import com.pubnub.api.subscribe.eventengine.effect.effectprovider.HandshakeProviderImpl
 import com.pubnub.api.subscribe.eventengine.effect.effectprovider.ReceiveMessagesProviderImpl
@@ -24,60 +19,68 @@ import com.pubnub.api.subscribe.eventengine.event.SubscribeEvent.SubscriptionRes
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
 import com.pubnub.api.workers.SubscribeMessageProcessor
 import java.util.concurrent.Executors
-import java.util.concurrent.ScheduledExecutorService
 
 private const val PRESENCE_CHANNEL_SUFFIX = "-pnpres"
 
 class Subscribe(
-    private val eventEngineManager: EventEngineManager,
+    private val subscribeEventEngineManager: SubscribeEventEngineManager,
     private val subscriptionData: SubscriptionData = SubscriptionData()
 ) {
-
     companion object {
         internal fun create(
             pubNub: PubNub,
             listenerManager: ListenerManager,
             retryPolicy: RetryPolicy,
-            eventEngineConf: EventEngineConf,
+            eventEnginesConf: EventEnginesConf,
             messageProcessor: SubscribeMessageProcessor
         ): Subscribe {
-            val handshakeProvider = HandshakeProviderImpl(pubNub)
-            val receiveMessagesProvider = ReceiveMessagesProviderImpl(pubNub, messageProcessor)
-            val subscribeEventSink: Sink<SubscribeEvent> = eventEngineConf.subscribeEventSink
-            val executorService: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor()
-            val messagesConsumer: MessagesConsumer = listenerManager
-            val statusConsumer: StatusConsumer = listenerManager
-
-            val subscribeEffectFactory = SubscribeEffectFactory(
-                handshakeProvider,
-                receiveMessagesProvider,
-                subscribeEventSink,
+            val subscribeEventEngineManager = createAndStartSubscribeEventEngineManager(
+                pubNub,
+                messageProcessor,
+                eventEnginesConf,
                 retryPolicy,
-                executorService,
-                messagesConsumer,
-                statusConsumer
+                listenerManager
+            )
+
+            return Subscribe(subscribeEventEngineManager)
+        }
+
+        private fun createAndStartSubscribeEventEngineManager(
+            pubNub: PubNub,
+            messageProcessor: SubscribeMessageProcessor,
+            eventEnginesConf: EventEnginesConf,
+            retryPolicy: RetryPolicy,
+            listenerManager: ListenerManager
+        ): SubscribeEventEngineManager {
+            val subscribeEffectFactory = SubscribeEffectFactory(
+                handshakeProvider = HandshakeProviderImpl(pubNub),
+                receiveMessagesProvider = ReceiveMessagesProviderImpl(pubNub, messageProcessor),
+                subscribeEventSink = eventEnginesConf.subscribe.eventSink,
+                policy = retryPolicy,
+                executorService = Executors.newSingleThreadScheduledExecutor(),
+                messagesConsumer = listenerManager,
+                statusConsumer = listenerManager
             )
 
             val subscribeEventEngine = SubscribeEventEngine(
-                effectSink = eventEngineConf.effectSink,
-                eventSource = eventEngineConf.subscribeEventSource
+                effectSink = eventEnginesConf.subscribe.effectSink,
+                eventSource = eventEnginesConf.subscribe.eventSource
             )
-            val effectDispatcher = EffectDispatcher(
+            val subscribeEffectDispatcher = EffectDispatcher(
                 effectFactory = subscribeEffectFactory,
-                effectSource = eventEngineConf.effectSource
+                effectSource = eventEnginesConf.subscribe.effectSource
             )
 
-            val eventEngineManager = EventEngineManager(
-                subscribeEventEngine = subscribeEventEngine,
-                effectDispatcher = effectDispatcher,
-                eventSink = eventEngineConf.subscribeEventSink
+            val subscribeEventEngineManager = SubscribeEventEngineManager(
+                eventEngine = subscribeEventEngine,
+                effectDispatcher = subscribeEffectDispatcher,
+                eventSink = eventEnginesConf.subscribe.eventSink
             ).apply {
                 if (pubNub.configuration.enableSubscribeBeta) {
                     start()
                 }
             }
-
-            return Subscribe(eventEngineManager)
+            return subscribeEventEngineManager
         }
     }
 
@@ -94,13 +97,19 @@ class Subscribe(
         val channelsInLocalStorage = subscriptionData.channels
         val channelGroupsInLocalStorage = subscriptionData.channelGroups
         if (withTimetoken != 0L) {
-            createAndPassForHandlingSubscriptionRestoredEvent(
+            val subscriptionRestoredEvent = SubscriptionRestored(
                 channelsInLocalStorage,
                 channelGroupsInLocalStorage,
-                withTimetoken
+                SubscriptionCursor(withTimetoken, "42") // todo handle region should be 0 or null?
             )
+            subscribeEventEngineManager.addEventToQueue(subscriptionRestoredEvent)
         } else {
-            createAndPassForHandlingSubscriptionChangedEvent(channelsInLocalStorage, channelGroupsInLocalStorage)
+            subscribeEventEngineManager.addEventToQueue(
+                SubscriptionChanged(
+                    channelsInLocalStorage,
+                    channelGroupsInLocalStorage
+                )
+            )
         }
     }
 
@@ -116,9 +125,14 @@ class Subscribe(
         if (subscriptionData.channels.size > 0 || subscriptionData.channelGroups.size > 0) {
             val channelsInLocalStorage = subscriptionData.channels
             val channelGroupsInLocalStorage = subscriptionData.channelGroups
-            eventEngineManager.addEventToQueue(SubscriptionChanged(channelsInLocalStorage, channelGroupsInLocalStorage))
+            subscribeEventEngineManager.addEventToQueue(
+                SubscriptionChanged(
+                    channelsInLocalStorage,
+                    channelGroupsInLocalStorage
+                )
+            )
         } else {
-            eventEngineManager.addEventToQueue(SubscribeEvent.UnsubscribeAll)
+            subscribeEventEngineManager.addEventToQueue(SubscribeEvent.UnsubscribeAll)
         }
     }
 
@@ -126,7 +140,7 @@ class Subscribe(
     fun unsubscribeAll() {
         removeAllChannelsFromLocalStorage()
         removeAllChannelGroupsFromLocalStorage()
-        eventEngineManager.addEventToQueue(SubscribeEvent.UnsubscribeAll)
+        subscribeEventEngineManager.addEventToQueue(SubscribeEvent.UnsubscribeAll)
     }
 
     @Synchronized
@@ -140,18 +154,18 @@ class Subscribe(
     }
 
     fun disconnect() {
-        eventEngineManager.addEventToQueue(SubscribeEvent.Disconnect)
+        subscribeEventEngineManager.addEventToQueue(SubscribeEvent.Disconnect)
     }
 
     fun reconnect() {
-        eventEngineManager.addEventToQueue(SubscribeEvent.Reconnect)
+        subscribeEventEngineManager.addEventToQueue(SubscribeEvent.Reconnect)
     }
 
     @Synchronized
     fun destroy() {
         // todo do we want to have "force" flag?
         disconnect()
-        eventEngineManager.stop()
+        subscribeEventEngineManager.stop()
     }
 
     private fun throwExceptionIfChannelAndChannelGroupIsMissing(
@@ -181,27 +195,6 @@ class Subscribe(
                 subscriptionData.channelGroups.add(presenceChannelGroup)
             }
         }
-    }
-
-    private fun createAndPassForHandlingSubscriptionRestoredEvent(
-        channels: Set<String>,
-        channelGroups: Set<String>,
-        withTimetoken: Long
-    ) {
-        val subscriptionRestoredEvent = SubscriptionRestored(
-            channels,
-            channelGroups,
-            SubscriptionCursor(withTimetoken, "42")
-        ) // todo get region from somewhere
-        eventEngineManager.addEventToQueue(subscriptionRestoredEvent)
-    }
-
-    private fun createAndPassForHandlingSubscriptionChangedEvent(
-        channels: Set<String>,
-        channelGroups: Set<String>
-    ) {
-        val subscriptionChangedEvent = SubscriptionChanged(channels, channelGroups)
-        eventEngineManager.addEventToQueue(subscriptionChangedEvent)
     }
 
     private fun removeChannelGroupsFromSubscriptionData(channelGroups: Set<String>) {

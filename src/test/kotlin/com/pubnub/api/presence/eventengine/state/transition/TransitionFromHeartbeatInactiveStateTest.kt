@@ -7,7 +7,7 @@ import com.pubnub.api.presence.eventengine.state.PresenceState
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
-class TransitionFromHearbeatInactiveStateTest {
+class TransitionFromHeartbeatInactiveStateTest {
     val channels = setOf("Channel01")
     val channelGroups = setOf("ChannelGroup01")
 
@@ -18,7 +18,7 @@ class TransitionFromHearbeatInactiveStateTest {
         val newChannelGroup = channelGroups + setOf("NewChannelGroup")
 
         // when
-        val (newState, invocations) = transition(PresenceState.HearbeatInactive, PresenceEvent.Joined(newChannels, newChannelGroup))
+        val (newState, invocations) = transition(PresenceState.HeartbeatInactive, PresenceEvent.Joined(newChannels, newChannelGroup))
 
         // then
         assertEquals(PresenceState.Heartbeating(newChannels, newChannelGroup), newState)
@@ -28,30 +28,30 @@ class TransitionFromHearbeatInactiveStateTest {
     @Test
     fun `should not make transition from INACTIVE and create no invocation when there is LEFT event`() {
         // when
-        val (newState, invocations) = transition(PresenceState.HearbeatInactive, PresenceEvent.Left(channels, channelGroups))
+        val (newState, invocations) = transition(PresenceState.HeartbeatInactive, PresenceEvent.Left(channels, channelGroups))
 
         // then
-        assertEquals(PresenceState.HearbeatInactive, newState)
+        assertEquals(PresenceState.HeartbeatInactive, newState)
         assertEquals(emptySet<PresenceEffectInvocation>(), invocations)
     }
 
     @Test
     fun `should not make transition from INACTIVE when there is RECONNECT event and create no invocation`() {
         // when
-        val (newState, invocations) = transition(PresenceState.HearbeatInactive, PresenceEvent.Reconnect)
+        val (newState, invocations) = transition(PresenceState.HeartbeatInactive, PresenceEvent.Reconnect)
 
         // then
-        assertEquals(PresenceState.HearbeatInactive, newState)
+        assertEquals(PresenceState.HeartbeatInactive, newState)
         assertEquals(emptySet<PresenceEffectInvocation>(), invocations)
     }
 
     @Test
     fun `should not make transition from INACTIVE when there is SET_STATE event`() {
         // when
-        val (newState, invocations) = transition(PresenceState.HearbeatInactive, PresenceEvent.StateSet(channels, channelGroups))
+        val (newState, invocations) = transition(PresenceState.HeartbeatInactive, PresenceEvent.StateSet(channels, channelGroups))
 
         // then
-        assertEquals(PresenceState.HearbeatInactive, newState)
+        assertEquals(PresenceState.HeartbeatInactive, newState)
         assertEquals(emptySet<PresenceEffectInvocation>(), invocations)
     }
 }

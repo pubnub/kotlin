@@ -118,7 +118,7 @@ class EventEngineSteps(private val state: EventEngineState) {
     fun i_observe_the_following(dataTable: DataTable) {
         await.pollInterval(50, TimeUnit.MILLISECONDS).atMost(500, TimeUnit.MILLISECONDS).untilAsserted {
             val expectedNames = dataTable.asMaps().map { it["type"] to it["name"] }.toList()
-            MatcherAssert.assertThat(state.queuedElements, Matchers.`is`(expectedNames))
+            MatcherAssert.assertThat(state.subscribeQueuedElements, Matchers.`is`(expectedNames))
         }
     }
 

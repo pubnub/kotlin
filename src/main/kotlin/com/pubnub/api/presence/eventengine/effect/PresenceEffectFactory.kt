@@ -4,16 +4,19 @@ import com.pubnub.api.eventengine.Effect
 import com.pubnub.api.eventengine.EffectFactory
 import com.pubnub.api.eventengine.Sink
 import com.pubnub.api.presence.eventengine.effect.effectprovider.HeartbeatProvider
+import com.pubnub.api.presence.eventengine.effect.effectprovider.LeaveProvider
 import com.pubnub.api.presence.eventengine.event.PresenceEvent
 import com.pubnub.api.subscribe.eventengine.effect.RetryPolicy
+import java.time.Duration
 import java.util.concurrent.ScheduledExecutorService
 
 internal class PresenceEffectFactory(
     private val heartbeatProvider: HeartbeatProvider,
-    private val leaveProvider: HeartbeatProvider,
+    private val leaveProvider: LeaveProvider,
     private val presenceEventSink: Sink<PresenceEvent>,
     private val policy: RetryPolicy,
     private val executorService: ScheduledExecutorService,
+    private val heartbeatInterval: Duration,
 ) : EffectFactory<PresenceEffectInvocation> {
     override fun create(effectInvocation: PresenceEffectInvocation): Effect? {
         return when (effectInvocation) {
@@ -39,22 +42,19 @@ internal class PresenceEffectFactory(
                 )
             }
             is PresenceEffectInvocation.Leave -> {
-                val heartbeatRemoteAction = leaveProvider.getHeartbeatRemoteAction(
+                val leaveRemoteAction = leaveProvider.getLeaveRemoteAction(
                     effectInvocation.channels,
                     effectInvocation.channelGroups
                 )
-                LeaveEffect(heartbeatRemoteAction)
+                LeaveEffect(leaveRemoteAction)
             }
             is PresenceEffectInvocation.Wait -> {
-                TODO()
+                WaitEffect(heartbeatInterval, presenceEventSink)
             }
 
-            PresenceEffectInvocation.CancelDelayedHeartbeat -> {
-                TODO()
-            }
-            PresenceEffectInvocation.CancelWait -> {
-                TODO()
-            }
+            PresenceEffectInvocation.CancelDelayedHeartbeat,
+            PresenceEffectInvocation.CancelWait
+            -> null
         }
     }
 }

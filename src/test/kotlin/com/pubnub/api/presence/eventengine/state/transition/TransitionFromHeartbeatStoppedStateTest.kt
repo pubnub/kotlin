@@ -17,7 +17,7 @@ class TransitionFromHeartbeatStoppedStateTest {
         val (newState, invocations) = transition(PresenceState.HeartbeatStopped(channels, channelGroups), PresenceEvent.LeftAll)
 
         // then
-        assertEquals(PresenceState.HearbeatInactive, newState)
+        assertEquals(PresenceState.HeartbeatInactive, newState)
         assertEquals(emptySet<PresenceEffectInvocation>(), invocations)
     }
 
