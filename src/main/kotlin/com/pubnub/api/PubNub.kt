@@ -145,7 +145,7 @@ class PubNub internal constructor(
         heartbeatProvider = HeartbeatProviderImpl(this),
         leaveProvider = LeaveProviderImpl(this),
         heartbeatInterval = Duration.ofSeconds(configuration.heartbeatInterval.toLong()),
-        enableEventEngine = configuration.enableSubscribeBeta,
+        enableEventEngine = configuration.enableEventEngine,
         retryPolicy = configuration.retryPolicy,
         eventEngineConf = eventEnginesConf.presence
     )
@@ -321,7 +321,7 @@ class PubNub internal constructor(
         channelGroups: List<String> = emptyList(),
         withPresence: Boolean = false,
         withTimetoken: Long = 0L
-    ) = if (configuration.enableSubscribeBeta) {
+    ) = if (configuration.enableEventEngine) {
         subscribe.subscribe(channels.toSet(), channelGroups.toSet(), withPresence, withTimetoken)
         presence.joined(channels.toSet(), channelGroups.toSet())
     } else {
@@ -348,7 +348,7 @@ class PubNub internal constructor(
     fun unsubscribe(
         channels: List<String> = emptyList(),
         channelGroups: List<String> = emptyList()
-    ) = if (configuration.enableSubscribeBeta) {
+    ) = if (configuration.enableEventEngine) {
         subscribe.unsubscribe(channels.toSet(), channelGroups.toSet())
         presence.left(channels.toSet(), channelGroups.toSet())
     } else {
@@ -359,7 +359,7 @@ class PubNub internal constructor(
      * Unsubscribe from all channels and all channel groups
      */
     fun unsubscribeAll() =
-        if (configuration.enableSubscribeBeta) {
+        if (configuration.enableEventEngine) {
             subscribe.unsubscribeAll()
             presence.leftAll()
         } else {
@@ -372,7 +372,7 @@ class PubNub internal constructor(
      * @return A list of channels the client is currently subscribed to.
      */
     fun getSubscribedChannels() =
-        if (configuration.enableSubscribeBeta)
+        if (configuration.enableEventEngine)
             subscribe.getSubscribedChannels()
         else
             subscriptionManager.getSubscribedChannels()
@@ -383,7 +383,7 @@ class PubNub internal constructor(
      * @return A list of channel groups the client is currently subscribed to.
      */
     fun getSubscribedChannelGroups() =
-        if (configuration.enableSubscribeBeta)
+        if (configuration.enableEventEngine)
             subscribe.getSubscribedChannelGroups()
         else
             subscriptionManager.getSubscribedChannelGroups()
@@ -780,7 +780,7 @@ class PubNub internal constructor(
         channels: List<String> = emptyList(),
         channelGroups: List<String> = emptyList(),
         connected: Boolean = false
-    ) = if (configuration.enableSubscribeBeta) {
+    ) = if (configuration.enableEventEngine) {
         presence.presence(
             channels = channels.toSet(),
             channelGroups = channelGroups.toSet(),
@@ -2030,7 +2030,7 @@ class PubNub internal constructor(
      * Force the SDK to try and reach out PubNub. Monitor the results in [SubscribeCallback.status]
      */
     fun reconnect() {
-        if (configuration.enableSubscribeBeta) {
+        if (configuration.enableEventEngine) {
             // todo handle in Subscribe EE
             subscribe.reconnect()
         } else {
@@ -2044,7 +2044,7 @@ class PubNub internal constructor(
      * Monitor the results in [SubscribeCallback.status]
      */
     fun disconnect() {
-        if (configuration.enableSubscribeBeta) {
+        if (configuration.enableEventEngine) {
             subscribe.disconnect()
         } else {
             subscriptionManager.disconnect()
@@ -2055,7 +2055,7 @@ class PubNub internal constructor(
      * Frees up threads and allows for a clean exit.
      */
     fun destroy() {
-        if (configuration.enableSubscribeBeta) {
+        if (configuration.enableEventEngine) {
             subscribe.destroy()
             retrofitManager.destroy()
             // todo add presenceEventEngineDestroy
@@ -2069,7 +2069,7 @@ class PubNub internal constructor(
      * Same as [destroy] but immediately.
      */
     fun forceDestroy() {
-        if (configuration.enableSubscribeBeta) {
+        if (configuration.enableEventEngine) {
             subscribe.destroy()
             retrofitManager.destroy(true)
             // todo add presenceEventEngineDestroy

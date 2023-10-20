@@ -54,7 +54,8 @@ class RetrofitManager(val pubnub: PubNub) {
         if (!pubnub.configuration.googleAppEngineNetworking) {
             transactionClientInstance = createOkHttpClient(pubnub.configuration.nonSubscribeRequestTimeout)
             subscriptionClientInstance = createOkHttpClient(pubnub.configuration.subscribeTimeout)
-            noSignatureClientInstance = createOkHttpClient(pubnub.configuration.nonSubscribeRequestTimeout, withSignature = false)
+            noSignatureClientInstance =
+                createOkHttpClient(pubnub.configuration.nonSubscribeRequestTimeout, withSignature = false)
         }
 
         val transactionInstance = createRetrofit(transactionClientInstance)

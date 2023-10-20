@@ -11,7 +11,12 @@ import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.subscribeToBlocking
 import com.pubnub.api.unsubscribeFromBlocking
+import okhttp3.HttpUrl
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
+import okhttp3.logging.HttpLoggingInterceptor
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.util.concurrent.atomic.AtomicBoolean
@@ -125,5 +130,70 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         pubnub.unsubscribeAll()
 
         success.listen()
+    }
+
+    @Test
+    fun `when eventEngine enabled then subscribe REST call contains "ee" query parameter`() {
+        // given
+        val success = AtomicBoolean()
+        val config = getBasicPnConfiguration()
+        config.enableEventEngine = true
+        config.heartbeatInterval = 1
+        var interceptedUrl: HttpUrl? = null
+        config.httpLoggingInterceptor = HttpLoggingInterceptor {
+            if (it.startsWith("--> GET https://")) {
+                interceptedUrl = it.substringAfter("--> GET ").toHttpUrlOrNull()
+                success.set(true)
+            }
+        }.apply { level = HttpLoggingInterceptor.Level.BASIC }
+
+        val pubnub = PubNub(config)
+
+        // when
+        try {
+            pubnub.subscribe(
+                channels = listOf("a")
+            )
+
+            success.listen()
+        } finally {
+            pubnub.forceDestroy()
+        }
+
+        // then
+        assertNotNull(interceptedUrl)
+        assertTrue(interceptedUrl!!.queryParameterNames.contains("ee"))
+    }
+
+    @Test
+    fun `when eventEngine disabled then subscribe REST call doesn't contain "ee" query parameter`() {
+        // given
+        val success = AtomicBoolean()
+        val config = getBasicPnConfiguration()
+        config.enableEventEngine = false
+        var interceptedUrl: HttpUrl? = null
+        config.httpLoggingInterceptor = HttpLoggingInterceptor {
+            if (it.startsWith("--> GET https://")) {
+                interceptedUrl = it.substringAfter("--> GET ").toHttpUrlOrNull()
+                success.set(true)
+            }
+        }.apply { level = HttpLoggingInterceptor.Level.BASIC }
+
+        val pubnub = PubNub(config)
+
+        // when
+        try {
+            pubnub.subscribe(
+                channels = listOf("a")
+            )
+
+            success.listen()
+        } finally {
+            pubnub.forceDestroy()
+        }
+
+        // then
+        assertNotNull(interceptedUrl)
+        assertFalse(interceptedUrl!!.queryParameterNames.contains("ee"))
     }
 }

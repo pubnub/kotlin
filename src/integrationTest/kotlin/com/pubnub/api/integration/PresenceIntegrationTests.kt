@@ -9,12 +9,17 @@ import com.pubnub.api.await
 import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions
 import com.pubnub.api.enums.PNOperationType
+import com.pubnub.api.listen
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.subscribeToBlocking
+import okhttp3.HttpUrl
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
+import okhttp3.logging.HttpLoggingInterceptor
 import org.awaitility.Awaitility
 import org.awaitility.Durations
 import org.hamcrest.core.IsEqual
+import org.junit.Assert
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -250,5 +255,74 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
             .until {
                 subscribeSuccess.get() && heartbeatCallsCount.get() > 2
             }
+    }
+
+    @Test
+    fun `when hearbeatInterval greater than 0 and eventEngine enabled then REST call contains "ee" query parameter`() {
+        // given
+        val success = AtomicBoolean()
+        val config = getBasicPnConfiguration()
+        config.enableEventEngine = true
+        config.heartbeatInterval = 1
+        var interceptedUrl: HttpUrl? = null
+        config.httpLoggingInterceptor = HttpLoggingInterceptor {
+            if (it.startsWith("--> GET https://")) {
+                interceptedUrl = it.substringAfter("--> GET ").toHttpUrlOrNull()
+                success.set(true)
+            }
+        }.apply { level = HttpLoggingInterceptor.Level.BASIC }
+
+        val pubnub = PubNub(config)
+
+        // when
+        try {
+            pubnub.presence(
+                channels = listOf("a"),
+                connected = true
+            )
+
+            success.listen()
+        } finally {
+            pubnub.forceDestroy()
+        }
+
+        // then
+        Assert.assertNotNull(interceptedUrl)
+        assertTrue(interceptedUrl!!.queryParameterNames.contains("ee"))
+    }
+
+    @Test
+    fun `when hearbeatInterval greater than 0 and eventEngine disabled then REST call doesn't contain "ee" query parameter`() {
+
+        // given
+        val success = AtomicBoolean()
+        val config = getBasicPnConfiguration()
+        config.enableEventEngine = false
+        config.heartbeatInterval = 1
+        var interceptedUrl: HttpUrl? = null
+        config.httpLoggingInterceptor = HttpLoggingInterceptor {
+            if (it.startsWith("--> GET https://")) {
+                interceptedUrl = it.substringAfter("--> GET ").toHttpUrlOrNull()
+                success.set(true)
+            }
+        }.apply { level = HttpLoggingInterceptor.Level.BASIC }
+
+        val pubnub = PubNub(config)
+
+        // when
+        try {
+            pubnub.presence(
+                channels = listOf("a"),
+                connected = true
+            )
+
+            success.listen()
+        } finally {
+            pubnub.forceDestroy()
+        }
+
+        // then
+        Assert.assertNotNull(interceptedUrl)
+        assertFalse(interceptedUrl!!.queryParameterNames.contains("ee"))
     }
 }

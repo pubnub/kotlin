@@ -4,6 +4,7 @@ import com.pubnub.api.Endpoint
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
+import com.pubnub.api.PubNubUtil
 import com.pubnub.api.enums.PNOperationType
 import retrofit2.Call
 import retrofit2.Response
@@ -27,20 +28,12 @@ class Heartbeat internal constructor(
     }
 
     override fun doWork(queryParams: HashMap<String, String>): Call<Void> {
-        queryParams["heartbeat"] = pubnub.configuration.presenceTimeout.toString()
+        addQueryParams(queryParams)
 
-        if (channelGroups.isNotEmpty()) {
-            queryParams["channel-group"] = channelGroups.joinToString(",")
-        }
-
-        val channelsCsv =
-            if (channels.isNotEmpty())
-                channels.joinToString(",")
-            else
-                ","
-
-        state?.let {
-            queryParams["state"] = pubnub.mapper.toJson(it)
+        val channelsCsv = if (channels.isNotEmpty()) {
+            channels.joinToString(",")
+        } else {
+            ","
         }
 
         return pubnub.retrofitManager.presenceService.heartbeat(
@@ -48,6 +41,20 @@ class Heartbeat internal constructor(
             channelsCsv,
             queryParams
         )
+    }
+
+    private fun addQueryParams(queryParams: HashMap<String, String>) {
+        queryParams["heartbeat"] = pubnub.configuration.presenceTimeout.toString()
+
+        if (channelGroups.isNotEmpty()) {
+            queryParams["channel-group"] = channelGroups.joinToString(",")
+        }
+
+        state?.let {
+            queryParams["state"] = pubnub.mapper.toJson(it)
+        }
+
+        PubNubUtil.maybeAddEeQueryParam(pubnub.configuration, queryParams)
     }
 
     override fun createResponse(input: Response<Void>): Boolean? {

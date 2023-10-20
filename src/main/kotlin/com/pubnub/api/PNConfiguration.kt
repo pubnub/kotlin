@@ -26,43 +26,31 @@ import javax.net.ssl.X509ExtendedTrustManager
  * A storage for user-provided information which describe further PubNub client behaviour.
  * Configuration instance contains additional set of properties which
  * allow performing precise PubNub client configuration.
+ *
  */
 open class PNConfiguration(
-    userId: UserId,
-    enableSubscribeBeta: Boolean = false
+    var userId: UserId
 ) {
-
     @Deprecated(
         replaceWith = ReplaceWith(
-            "PNConfiguration(userId = UserId(uuid), enableSubscribeBeta = enableSubscribeBeta)",
+            "PNConfiguration(userId = UserId(uuid))",
             "com.pubnub.api.PNConfiguration"
         ),
         level = DeprecationLevel.WARNING,
-        message = "Use PNConfiguration(UserId, Boolean) instead"
+        message = "Use PNConfiguration(UserId) instead, and set the enableEventEngine property separately."
     )
-    constructor(uuid: String, enableSubscribeBeta: Boolean = false) : this(UserId(uuid), enableSubscribeBeta)
-
-    var enableSubscribeBeta: Boolean = enableSubscribeBeta
-        internal set
+    constructor(uuid: String, enableEventEngine: Boolean = false) : this(UserId(uuid)) {
+        this.enableEventEngine = enableEventEngine
+    }
 
     @Deprecated(
         level = DeprecationLevel.WARNING,
-        message = """Use UserId instead e.g. config.userId = UserId("uuid")""",
+        message = """Use UserId instead e.g. config.userId.value""",
         replaceWith = ReplaceWith("userId.value")
     )
-    @Volatile
-    var uuid: String = userId.value
-        set(value) {
-            PubNubUtil.require(value.isValid(), PubNubError.UUID_NULL_OR_EMPTY)
-            field = value
-        }
-
-    @Suppress("DEPRECATION")
-    var userId: UserId
-        get() = UserId(uuid)
-        set(value) {
-            uuid = value.value
-        }
+    var uuid: String
+        get() = userId.value
+        set(value) { userId = UserId(value) }
 
     private val log = LoggerFactory.getLogger("PNConfiguration")
 
@@ -75,6 +63,18 @@ open class PNConfiguration(
         private const val SUBSCRIBE_TIMEOUT = 310
         private const val CONNECT_TIMEOUT = 5
     }
+
+    /**
+     *  This controls whether to enable a new, experimental implementation of Subscription and Presence handling.
+     *
+     *  The current default is `false`.
+     *
+     *  This switch can help you verify the behavior of the PubNub SDK with the new engine enabled
+     *  in your app, however the change should be transparent for users.
+     *
+     *  It will default to true in a future SDK release.
+     */
+    var enableEventEngine: Boolean = false
 
     /**
      * The subscribe key from the admin panel.
