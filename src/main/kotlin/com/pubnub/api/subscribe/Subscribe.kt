@@ -76,7 +76,7 @@ class Subscribe(
                 effectDispatcher = subscribeEffectDispatcher,
                 eventSink = eventEnginesConf.subscribe.eventSink
             ).apply {
-                if (pubNub.configuration.enableSubscribeBeta) {
+                if (pubNub.configuration.enableEventEngine) {
                     start()
                 }
             }

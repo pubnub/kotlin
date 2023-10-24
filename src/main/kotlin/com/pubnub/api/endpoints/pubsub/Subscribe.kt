@@ -4,6 +4,7 @@ import com.pubnub.api.Endpoint
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
+import com.pubnub.api.PubNubUtil
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.server.SubscribeEnvelope
 import com.pubnub.api.toCsv
@@ -32,6 +33,16 @@ class Subscribe internal constructor(pubnub: PubNub) : Endpoint<SubscribeEnvelop
     override fun getAffectedChannelGroups() = channelGroups
 
     override fun doWork(queryParams: HashMap<String, String>): Call<SubscribeEnvelope> {
+        addQueryParams(queryParams)
+
+        return pubnub.retrofitManager.subscribeService.subscribe(
+            pubnub.configuration.subscribeKey,
+            channels.toCsv(),
+            queryParams
+        )
+    }
+
+    private fun addQueryParams(queryParams: HashMap<String, String>) {
         if (channelGroups.isNotEmpty()) {
             queryParams["channel-group"] = channelGroups.joinToString(",")
         }
@@ -54,11 +65,7 @@ class Subscribe internal constructor(pubnub: PubNub) : Endpoint<SubscribeEnvelop
             queryParams["state"] = pubnub.mapper.toJson(it)
         }
 
-        return pubnub.retrofitManager.subscribeService.subscribe(
-            pubnub.configuration.subscribeKey,
-            channels.toCsv(),
-            queryParams
-        )
+        PubNubUtil.maybeAddEeQueryParam(pubnub.configuration, queryParams)
     }
 
     override fun createResponse(input: Response<SubscribeEnvelope>): SubscribeEnvelope? {

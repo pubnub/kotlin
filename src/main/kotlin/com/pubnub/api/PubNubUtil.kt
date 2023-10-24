@@ -233,6 +233,12 @@ internal object PubNubUtil {
             throw PubNubException(error)
         }
     }
+
+    internal fun maybeAddEeQueryParam(configuration: PNConfiguration, queryParams: MutableMap<String, String>) {
+        if (configuration.enableEventEngine) {
+            queryParams["ee"] = ""
+        }
+    }
 }
 
 internal fun <E> List<E>.toCsv(): String {
