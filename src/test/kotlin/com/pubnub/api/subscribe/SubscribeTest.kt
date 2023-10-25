@@ -73,7 +73,7 @@ internal class SubscribeTest {
             SubscribeEvent.SubscriptionRestored(
                 (channelsInSubscriptionData + channelToSubscribe),
                 (channelGroupsInSubscriptionData + channelGroupsToSubscribe),
-                SubscriptionCursor(withTimetoken, "42") // todo magic number
+                SubscriptionCursor(withTimetoken, region = null)
             ),
             subscribeEvent.captured
         )

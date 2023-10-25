@@ -69,19 +69,31 @@ interface Presence {
         connected: Boolean = false
     )
 
+    fun reconnect()
+
+    fun disconnect()
+
     fun destroy()
 }
 
 internal class PresenceNoOp : Presence {
-    override fun joined(channels: Set<String>, channelGroups: Set<String>) {}
+    override fun joined(channels: Set<String>, channelGroups: Set<String>) = noAction()
 
-    override fun left(channels: Set<String>, channelGroups: Set<String>) {}
+    override fun left(channels: Set<String>, channelGroups: Set<String>) = noAction()
 
-    override fun leftAll() {}
+    override fun leftAll() = noAction()
 
-    override fun presence(channels: Set<String>, channelGroups: Set<String>, connected: Boolean) {}
+    override fun presence(channels: Set<String>, channelGroups: Set<String>, connected: Boolean) = noAction()
 
-    override fun destroy() {}
+    override fun reconnect() = noAction()
+
+    override fun disconnect() = noAction()
+
+    override fun destroy() = noAction()
+
+    private fun noAction() {
+        // Presence Event Engine is not initialized so no action here
+    }
 }
 
 internal class EnabledPresence(
@@ -118,7 +130,17 @@ internal class EnabledPresence(
         }
     }
 
+    override fun reconnect() {
+        presenceEventEngineManager.addEventToQueue(PresenceEvent.Reconnect)
+    }
+
+    override fun disconnect() {
+        presenceEventEngineManager.addEventToQueue(PresenceEvent.Disconnect)
+    }
+
+    @Synchronized
     override fun destroy() {
+        disconnect()
         presenceEventEngineManager.stop()
     }
 }

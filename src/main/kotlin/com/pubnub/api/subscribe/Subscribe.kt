@@ -100,7 +100,7 @@ class Subscribe(
             val subscriptionRestoredEvent = SubscriptionRestored(
                 channelsInLocalStorage,
                 channelGroupsInLocalStorage,
-                SubscriptionCursor(withTimetoken, "42") // todo handle region should be 0 or null?
+                SubscriptionCursor(withTimetoken, region = null) // we don't know region here. Subscribe response will return region.
             )
             subscribeEventEngineManager.addEventToQueue(subscriptionRestoredEvent)
         } else {
@@ -163,7 +163,6 @@ class Subscribe(
 
     @Synchronized
     fun destroy() {
-        // todo do we want to have "force" flag?
         disconnect()
         subscribeEventEngineManager.stop()
     }

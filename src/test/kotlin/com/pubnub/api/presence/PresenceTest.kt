@@ -43,7 +43,6 @@ class PresenceTest {
         }
     }
 
-    // make this test parametrized
     @ParameterizedTest
     @MethodSource("eventAndMethodProvider")
     fun `should pass correct event for each method call`(eventName: String, method: Presence.() -> Unit) {
