@@ -20,7 +20,6 @@ sealed class SubscribeEvent : Event {
     data class HandshakeFailure(val reason: PubNubException) : SubscribeEvent()
     data class HandshakeReconnectSuccess(val subscriptionCursor: SubscriptionCursor) : SubscribeEvent()
     data class HandshakeReconnectFailure(val reason: PubNubException) : SubscribeEvent()
-    object HandshakeReconnectRetry : SubscribeEvent()
     data class HandshakeReconnectGiveup(val reason: PubNubException) : SubscribeEvent()
 
     data class ReceiveSuccess(val messages: List<PNEvent>, val subscriptionCursor: SubscriptionCursor) :
@@ -31,6 +30,5 @@ sealed class SubscribeEvent : Event {
         SubscribeEvent()
 
     data class ReceiveReconnectFailure(val reason: PubNubException) : SubscribeEvent()
-    object ReceiveReconnectRetry : SubscribeEvent()
     data class ReceiveReconnectGiveup(val reason: PubNubException) : SubscribeEvent()
 }

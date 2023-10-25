@@ -18,20 +18,6 @@ class TransitionFromHandshakeFailedStateTest {
     val subscriptionCursor = SubscriptionCursor(timetoken, region)
 
     @Test
-    fun can_transit_from_HANDSHAKE_FAILED_to_HANDSHAKE_RECONNECTING_when_there_is_HANDSHAKE_RECONNECT_RETRY_event() {
-        // when
-        val (state, invocations) = transition(
-            SubscribeState.HandshakeFailed(channels, channelGroups, exception), SubscribeEvent.HandshakeReconnectRetry
-        )
-
-        // then
-        assertEquals(SubscribeState.HandshakeReconnecting(channels, channelGroups, 0, exception), state)
-        assertEquals(
-            setOf(SubscribeEffectInvocation.HandshakeReconnect(channels, channelGroups, 0, exception)), invocations
-        )
-    }
-
-    @Test
     fun can_transit_from_HANDSHAKE_FAILED_to_HANDSHAKING_when_there_is_SUBSCRIPTION_CHANGED_event() {
         // given
         val newChannels = channels + setOf("NewChannel")
