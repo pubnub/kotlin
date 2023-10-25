@@ -13,7 +13,7 @@ import com.pubnub.api.subscribe.eventengine.effect.RetryPolicy
 import java.time.Duration
 import java.util.concurrent.Executors
 
-interface Presence {
+internal interface Presence {
     companion object {
         internal fun create(
             heartbeatProvider: HeartbeatProvider,

@@ -3,7 +3,7 @@ package com.pubnub.api.eventengine
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
-class EventEngine<Ei : EffectInvocation, Ev : Event, S : State<Ei, Ev, S>>(
+internal class EventEngine<Ei : EffectInvocation, Ev : Event, S : State<Ei, Ev, S>>(
     private val effectSink: Sink<Ei>,
     private val eventSource: Source<Ev>,
     private var currentState: S,

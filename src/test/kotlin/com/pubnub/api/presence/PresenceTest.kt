@@ -17,7 +17,7 @@ import org.junit.jupiter.params.provider.Arguments.arguments
 import org.junit.jupiter.params.provider.MethodSource
 import java.time.Duration
 
-class PresenceTest {
+internal class PresenceTest {
 
     companion object {
         @JvmStatic

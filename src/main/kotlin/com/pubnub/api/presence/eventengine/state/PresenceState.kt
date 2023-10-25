@@ -7,7 +7,7 @@ import com.pubnub.api.eventengine.transitionTo
 import com.pubnub.api.presence.eventengine.effect.PresenceEffectInvocation
 import com.pubnub.api.presence.eventengine.event.PresenceEvent
 
-sealed class PresenceState : State<PresenceEffectInvocation, PresenceEvent, PresenceState> {
+internal sealed class PresenceState : State<PresenceEffectInvocation, PresenceEvent, PresenceState> {
     object HeartbeatInactive : PresenceState() {
         override fun transition(event: PresenceEvent): Pair<PresenceState, Set<PresenceEffectInvocation>> {
             return when (event) {

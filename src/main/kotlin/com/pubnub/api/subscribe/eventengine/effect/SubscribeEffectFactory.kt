@@ -12,7 +12,7 @@ import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 
-data class ReceiveMessagesResult(
+internal data class ReceiveMessagesResult(
     val messages: List<PNEvent>,
     val subscriptionCursor: SubscriptionCursor
 )

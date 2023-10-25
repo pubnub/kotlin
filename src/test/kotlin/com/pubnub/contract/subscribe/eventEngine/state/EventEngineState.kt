@@ -9,7 +9,7 @@ import com.pubnub.contract.state.World
 import com.pubnub.contract.state.WorldState
 import java.util.concurrent.CopyOnWriteArrayList
 
-fun testEventEnginesConf(
+internal fun testEventEnginesConf(
     subscribeQueuedElements: MutableList<Pair<String, String>>,
     presenceQueuedElements: MutableList<Pair<String, String>>,
 

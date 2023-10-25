@@ -7,7 +7,7 @@ import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
 import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
 
-interface MessagesConsumer {
+internal interface MessagesConsumer {
     fun announce(message: PNMessageResult)
 
     fun announce(presence: PNPresenceEventResult)

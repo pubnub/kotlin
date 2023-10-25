@@ -4,7 +4,7 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.eventengine.Event
 import com.pubnub.api.models.consumer.pubsub.PNEvent
 
-sealed class SubscribeEvent : Event {
+internal sealed class SubscribeEvent : Event {
     data class SubscriptionChanged(val channels: Set<String>, val channelGroups: Set<String>) : SubscribeEvent()
     data class SubscriptionRestored(
         val channels: Set<String>,

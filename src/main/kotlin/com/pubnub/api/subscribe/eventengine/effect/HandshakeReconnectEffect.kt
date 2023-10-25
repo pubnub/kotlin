@@ -11,7 +11,7 @@ import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.TimeUnit
 
-class HandshakeReconnectEffect(
+internal class HandshakeReconnectEffect(
     private val handshakeRemoteAction: RemoteAction<SubscriptionCursor>,
     private val subscribeEventSink: Sink<SubscribeEvent>,
     private val policy: RetryPolicy,

@@ -7,7 +7,7 @@ import com.pubnub.api.presence.eventengine.event.PresenceEvent
 import com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectInvocation
 import com.pubnub.api.subscribe.eventengine.event.SubscribeEvent
 
-class EventEnginesConf(
+internal class EventEnginesConf(
     val subscribe: EventEngineConf<SubscribeEffectInvocation, SubscribeEvent> = QueueEventEngineConf(),
     val presence: EventEngineConf<PresenceEffectInvocation, PresenceEvent> = QueueEventEngineConf()
 )

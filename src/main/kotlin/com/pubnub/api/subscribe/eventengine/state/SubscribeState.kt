@@ -11,7 +11,7 @@ import com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectInvocation
 import com.pubnub.api.subscribe.eventengine.event.SubscribeEvent
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
 
-sealed class SubscribeState : State<SubscribeEffectInvocation, SubscribeEvent, SubscribeState> {
+internal sealed class SubscribeState : State<SubscribeEffectInvocation, SubscribeEvent, SubscribeState> {
     object Unsubscribed : SubscribeState() {
         override fun transition(event: SubscribeEvent): Pair<SubscribeState, Set<SubscribeEffectInvocation>> {
             return when (event) {

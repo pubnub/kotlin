@@ -8,7 +8,7 @@ import com.pubnub.api.subscribe.eventengine.state.SubscribeState
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
-class TransitionFromUnsubscribedStateTest {
+internal class TransitionFromUnsubscribedStateTest {
     val channels = setOf("Channel1")
     val channelGroups = setOf("ChannelGroup1")
     val timeToken = 12345345452L

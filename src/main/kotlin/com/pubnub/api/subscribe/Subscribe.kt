@@ -22,7 +22,7 @@ import java.util.concurrent.Executors
 
 private const val PRESENCE_CHANNEL_SUFFIX = "-pnpres"
 
-class Subscribe(
+internal class Subscribe(
     private val subscribeEventEngineManager: SubscribeEventEngineManager,
     private val subscriptionData: SubscriptionData = SubscriptionData()
 ) {

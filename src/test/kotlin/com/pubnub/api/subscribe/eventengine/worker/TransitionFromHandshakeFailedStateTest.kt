@@ -9,7 +9,7 @@ import com.pubnub.api.subscribe.eventengine.state.SubscribeState
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
-class TransitionFromHandshakeFailedStateTest {
+internal class TransitionFromHandshakeFailedStateTest {
     val channels = setOf("Channel1")
     val channelGroups = setOf("ChannelGroup1")
     val exception = PubNubException("Test")
