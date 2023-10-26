@@ -297,7 +297,18 @@ internal sealed class SubscribeState : State<SubscribeEffectInvocation, Subscrib
                 }
 
                 is SubscribeEvent.UnsubscribeAll -> {
-                    transitionTo(Unsubscribed)
+                    transitionTo(
+                        state = Unsubscribed,
+                        SubscribeEffectInvocation.EmitStatus(
+                            PNStatus(
+                                category = PNStatusCategory.PNDisconnectedCategory,
+                                operation = PNOperationType.PNSubscribeOperation,
+                                error = false,
+                                affectedChannels = channels.toList(),
+                                affectedChannelGroups = channelGroups.toList()
+                            )
+                        )
+                    )
                 }
 
                 else -> {
@@ -377,15 +388,6 @@ internal sealed class SubscribeState : State<SubscribeEffectInvocation, Subscrib
                     transitionTo(
                         state = Receiving(channels, channelGroups, event.subscriptionCursor),
                         SubscribeEffectInvocation.EmitMessages(event.messages),
-                        SubscribeEffectInvocation.EmitStatus(
-                            PNStatus(
-                                category = PNStatusCategory.PNConnectedCategory,
-                                operation = PNOperationType.PNSubscribeOperation,
-                                error = false,
-                                affectedChannels = channels.toList(),
-                                affectedChannelGroups = channelGroups.toList()
-                            )
-                        )
                     )
                 }
 
@@ -394,7 +396,18 @@ internal sealed class SubscribeState : State<SubscribeEffectInvocation, Subscrib
                 }
 
                 is SubscribeEvent.UnsubscribeAll -> {
-                    transitionTo(Unsubscribed)
+                    transitionTo(
+                        state = Unsubscribed,
+                        SubscribeEffectInvocation.EmitStatus(
+                            PNStatus(
+                                category = PNStatusCategory.PNDisconnectedCategory,
+                                operation = PNOperationType.PNSubscribeOperation,
+                                error = false,
+                                affectedChannels = channels.toList(),
+                                affectedChannelGroups = channelGroups.toList()
+                            )
+                        )
+                    )
                 }
 
                 else -> {

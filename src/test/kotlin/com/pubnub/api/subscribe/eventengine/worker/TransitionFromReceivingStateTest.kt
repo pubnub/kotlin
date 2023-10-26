@@ -143,7 +143,21 @@ class TransitionFromReceivingStateTest {
 
         // then
         assertEquals(SubscribeState.Unsubscribed, state)
-        assertEquals(setOf(SubscribeEffectInvocation.CancelReceiveMessages), invocations)
+        assertEquals(
+            setOf(
+                SubscribeEffectInvocation.CancelReceiveMessages,
+                SubscribeEffectInvocation.EmitStatus(
+                    PNStatus(
+                        category = PNStatusCategory.PNDisconnectedCategory,
+                        operation = PNOperationType.PNSubscribeOperation,
+                        error = false,
+                        affectedChannels = channels.toList(),
+                        affectedChannelGroups = channelGroups.toList()
+                    )
+                )
+            ),
+            invocations
+        )
     }
 
     private fun createPnMessageResult(channel1: String): PNMessageResult {
