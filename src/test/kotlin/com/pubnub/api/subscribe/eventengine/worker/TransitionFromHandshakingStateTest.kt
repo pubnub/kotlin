@@ -27,10 +27,11 @@ class TransitionFromHandshakingStateTest {
     private val reason = PubNubException("test")
 
     @Test
-    fun can_transit_from_HANDSHAKING_to_RECEIVING_when_there_is_HANDSHAKE_SUCCESS_event() {
+    fun can_transit_from_HANDSHAKING_that_has_cursor_that_is_null_to_RECEIVING_when_there_is_HANDSHAKE_SUCCESS_event() {
         // when
         val (state, invocations) = transition(
-            SubscribeState.Handshaking(channels, channelGroups), SubscribeEvent.HandshakeSuccess(subscriptionCursor)
+            SubscribeState.Handshaking(channels, channelGroups, subscriptionCursor = null),
+            SubscribeEvent.HandshakeSuccess(subscriptionCursor)
         )
 
         // then
@@ -48,6 +49,40 @@ class TransitionFromHandshakingStateTest {
                     )
                 ),
                 ReceiveMessages(channels, channelGroups, subscriptionCursor)
+            ),
+            invocations
+        )
+    }
+
+    @Test
+    fun can_transit_from_HANDSHAKING_that_has_cursor_that_is_not_null_to_RECEIVING_when_there_is_HANDSHAKE_SUCCESS_event() {
+        // given
+        val regionReturnedByHandshake = "12"
+        val timeTokenForHandshake = 99945345452L
+        val subscriptionCursorForHandshaking = SubscriptionCursor(timeTokenForHandshake, null)
+        val subscriptionCursorReturnedByHandshake = SubscriptionCursor(timeToken, regionReturnedByHandshake)
+
+        // when
+        val (state, invocations) = transition(
+            SubscribeState.Handshaking(channels, channelGroups, subscriptionCursor = subscriptionCursorForHandshaking),
+            SubscribeEvent.HandshakeSuccess(subscriptionCursorReturnedByHandshake)
+        )
+
+        // then
+        assertEquals(SubscribeState.Receiving(channels, channelGroups, SubscriptionCursor(timeTokenForHandshake, regionReturnedByHandshake)), state)
+        assertEquals(
+            setOf(
+                CancelHandshake,
+                EmitStatus(
+                    PNStatus(
+                        category = PNStatusCategory.PNConnectedCategory,
+                        operation = PNOperationType.PNSubscribeOperation,
+                        error = false,
+                        affectedChannels = channels.toList(),
+                        affectedChannelGroups = channelGroups.toList()
+                    )
+                ),
+                ReceiveMessages(channels, channelGroups, SubscriptionCursor(timeTokenForHandshake, regionReturnedByHandshake))
             ),
             invocations
         )
@@ -99,11 +134,15 @@ class TransitionFromHandshakingStateTest {
     fun can_transit_from_HANDSHAKING_to_HANDSHAKING_RECONNECTING_when_there_is_HANDSHAKING_FAILURE_event() {
         // when
         val (state, invocations) = transition(
-            SubscribeState.Handshaking(channels, channelGroups), SubscribeEvent.HandshakeFailure(reason)
+            SubscribeState.Handshaking(channels, channelGroups, subscriptionCursor),
+            SubscribeEvent.HandshakeFailure(reason)
         )
 
         // then
-        assertEquals(SubscribeState.HandshakeReconnecting(channels, channelGroups, 0, reason), state)
+        assertEquals(
+            SubscribeState.HandshakeReconnecting(channels, channelGroups, 0, reason, subscriptionCursor),
+            state
+        )
         assertEquals(
             setOf(
                 CancelHandshake,

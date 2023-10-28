@@ -145,12 +145,12 @@ internal class Subscribe(
 
     @Synchronized
     fun getSubscribedChannels(): List<String> {
-        return subscriptionData.channels.toList()
+        return subscriptionData.channels.toList().filter { !it.contains(PRESENCE_CHANNEL_SUFFIX) }
     }
 
     @Synchronized
     fun getSubscribedChannelGroups(): List<String> {
-        return subscriptionData.channelGroups.toList()
+        return subscriptionData.channelGroups.toList().filter { !it.contains(PRESENCE_CHANNEL_SUFFIX) }
     }
 
     fun disconnect() {

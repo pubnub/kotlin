@@ -20,6 +20,7 @@ sealed class PNOperationType(open val queryParam: String? = null) {
     object MembershipOperation : PNOperationType("obj")
 
     object PNSubscribeOperation : PNOperationType()
+    object PNDisconnectOperation : PNOperationType()
 
     object PNPublishOperation : PublishOperation()
 

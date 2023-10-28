@@ -79,7 +79,7 @@ internal class TransitionFromReceivingReconnectingStateTest {
                 SubscribeEffectInvocation.EmitStatus(
                     PNStatus(
                         category = PNStatusCategory.PNDisconnectedCategory,
-                        operation = PNOperationType.PNSubscribeOperation,
+                        operation = PNOperationType.PNDisconnectOperation,
                         error = false,
                         affectedChannels = channels.toList(),
                         affectedChannelGroups = channelGroups.toList()
@@ -176,7 +176,7 @@ internal class TransitionFromReceivingReconnectingStateTest {
                 SubscribeEffectInvocation.EmitStatus(
                     PNStatus(
                         category = PNStatusCategory.PNDisconnectedCategory,
-                        operation = PNOperationType.PNSubscribeOperation,
+                        operation = PNOperationType.PNUnsubscribeOperation,
                         error = false,
                         affectedChannels = channels.toList(),
                         affectedChannelGroups = channelGroups.toList()
