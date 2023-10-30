@@ -1,0 +1,327 @@
+[
+  {
+    "name": "space",
+    "regular": " ",
+    "encoded": "%20"
+  },
+  {
+    "name": "double_quote",
+    "regular": "\"",
+    "encoded": "%22"
+  },
+  {
+    "name": "single_quote",
+    "regular": "'",
+    "encoded": "%27"
+  },
+  {
+    "name": "exclamation",
+    "regular": "!",
+    "encoded": "%21"
+  },
+  {
+    "name": "right_double_quotation_mark",
+    "regular": "”",
+    "encoded": "%E2%80%9D"
+  },
+  {
+    "name": "hash",
+    "regular": "#",
+    "encoded": "%23"
+  },
+  {
+    "name": "dollar_sign",
+    "regular": "$",
+    "encoded": "%24"
+  },
+  {
+    "name": "percent",
+    "regular": "%",
+    "encoded": "%25"
+  },
+  {
+    "name": "ampersand",
+    "regular": "&",
+    "encoded": "%26"
+  },
+  {
+    "name": "right_single_quotation_mark",
+    "regular": "’",
+    "encoded": "%E2%80%99"
+  },
+  {
+    "name": "left_parenthesis",
+    "regular": "(",
+    "encoded": "%28"
+  },
+  {
+    "name": "right_parenthesis",
+    "regular": ")",
+    "encoded": "%29"
+  },
+  {
+    "name": "asterisk",
+    "regular": "*",
+    "encoded": "*"
+  },
+  {
+    "name": "plus",
+    "regular": "+",
+    "encoded": "%2B"
+  },
+  {
+    "name": "comma",
+    "regular": ",",
+    "encoded": "%2C"
+  },
+  {
+    "name": "minus",
+    "regular": "-",
+    "encoded": "-"
+  },
+  {
+    "name": "full_stop",
+    "regular": ".",
+    "encoded": "."
+  },
+  {
+    "name": "slash",
+    "regular": "/",
+    "encoded": "%2F"
+  },
+  {
+    "name": "colon",
+    "regular": ":",
+    "encoded": "%3A"
+  },
+  {
+    "name": "semicolon",
+    "regular": ";",
+    "encoded": "%3B"
+  },
+  {
+    "name": "less_than",
+    "regular": "<",
+    "encoded": "%3C"
+  },
+  {
+    "name": "equal_sign",
+    "regular": "=",
+    "encoded": "%3D"
+  },
+  {
+    "name": "greater_than",
+    "regular": ">",
+    "encoded": "%3E"
+  },
+  {
+    "name": "question_mark",
+    "regular": "?",
+    "encoded": "%3F"
+  },
+  {
+    "name": "at_sign",
+    "regular": "@",
+    "encoded": "%40"
+  },
+  {
+    "name": "left_bracket",
+    "regular": "[",
+    "encoded": "%5B"
+  },
+  {
+    "name": "backslash",
+    "regular": "\\",
+    "encoded": "%5C"
+  },
+  {
+    "name": "right_bracket",
+    "regular": "]",
+    "encoded": "%5D"
+  },
+  {
+    "name": "caret",
+    "regular": "^",
+    "encoded": "%5E"
+  },
+  {
+    "name": "underscore",
+    "regular": "_",
+    "encoded": "_"
+  },
+  {
+    "name": "backtick",
+    "regular": "`",
+    "encoded": "%60"
+  },
+  {
+    "name": "left_brace",
+    "regular": "{",
+    "encoded": "%7B"
+  },
+  {
+    "name": "vertical_bar",
+    "regular": "|",
+    "encoded": "%7C"
+  },
+  {
+    "name": "right_brace",
+    "regular": "}",
+    "encoded": "%7D"
+  },
+  {
+    "name": "tilde",
+    "regular": "~",
+    "encoded": "%7E"
+  },
+  {
+    "name": "inverted_exclamation_mark",
+    "regular": "¡",
+    "encoded": "%C2%A1"
+  },
+  {
+    "name": "cent_sign",
+    "regular": "¢",
+    "encoded": "%C2%A2"
+  },
+  {
+    "name": "pound_sign",
+    "regular": "£",
+    "encoded": "%C2%A3"
+  },
+  {
+    "name": "currency_sign",
+    "regular": "¤",
+    "encoded": "%C2%A4"
+  },
+  {
+    "name": "yen_sign",
+    "regular": "¥",
+    "encoded": "%C2%A5"
+  },
+  {
+    "name": "broken_bar",
+    "regular": "¦",
+    "encoded": "%C2%A6"
+  },
+  {
+    "name": "section_sign",
+    "regular": "§",
+    "encoded": "%C2%A7"
+  },
+  {
+    "name": "diaeresis",
+    "regular": "¨",
+    "encoded": "%C2%A8"
+  },
+  {
+    "name": "copyright_sign",
+    "regular": "©",
+    "encoded": "%C2%A9"
+  },
+  {
+    "name": "feminine_ordinal_indicator",
+    "regular": "ª",
+    "encoded": "%C2%AA"
+  },
+  {
+    "name": "left-pointing_double_angle_quotation_mark",
+    "regular": "«",
+    "encoded": "%C2%AB"
+  },
+  {
+    "name": "not_sign",
+    "regular": "¬",
+    "encoded": "%C2%AC"
+  },
+  {
+    "name": "registered_sign",
+    "regular": "®",
+    "encoded": "%C2%AE"
+  },
+  {
+    "name": "macron",
+    "regular": "¯",
+    "encoded": "%C2%AF"
+  },
+  {
+    "name": "degree_sign",
+    "regular": "°",
+    "encoded": "%C2%B0"
+  },
+  {
+    "name": "plus-minus_sign",
+    "regular": "±",
+    "encoded": "%C2%B1"
+  },
+  {
+    "name": "superscript_two",
+    "regular": "²",
+    "encoded": "%C2%B2"
+  },
+  {
+    "name": "superscript_three",
+    "regular": "³",
+    "encoded": "%C2%B3"
+  },
+  {
+    "name": "acute_accent",
+    "regular": "´",
+    "encoded": "%C2%B4"
+  },
+  {
+    "name": "micro_sign",
+    "regular": "µ",
+    "encoded": "%C2%B5"
+  },
+  {
+    "name": "pilcrow_sign",
+    "regular": "¶",
+    "encoded": "%C2%B6"
+  },
+  {
+    "name": "middle_dot",
+    "regular": "·",
+    "encoded": "%C2%B7"
+  },
+  {
+    "name": "cedilla",
+    "regular": "¸",
+    "encoded": "%C2%B8"
+  },
+  {
+    "name": "superscript_one",
+    "regular": "¹",
+    "encoded": "%C2%B9"
+  },
+  {
+    "name": "masculine_ordinal_indicator",
+    "regular": "º",
+    "encoded": "%C2%BA"
+  },
+  {
+    "name": "right-pointing_double_angle_quotation_mark",
+    "regular": "»",
+    "encoded": "%C2%BB"
+  },
+  {
+    "name": "vulgar_fraction_one_quarter",
+    "regular": "¼",
+    "encoded": "%C2%BC"
+  },
+  {
+    "name": "vulgar_fraction_one_half",
+    "regular": "½",
+    "encoded": "%C2%BD"
+  },
+  {
+    "name": "vulgar_fraction_three_quarters",
+    "regular": "¾",
+    "encoded": "%C2%BE"
+  },
+  {
+    "name": "inverted_question_mark",
+    "regular": "¿",
+    "encoded": "%C2%BF"
+  }
+]
