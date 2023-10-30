@@ -1,9 +1,9 @@
 name: kotlin
-version: 7.7.0
+version: 7.7.1
 schema: 1
 scm: github.com/pubnub/kotlin
 files:
-  - build/libs/pubnub-kotlin-7.7.0-all.jar
+  - build/libs/pubnub-kotlin-7.7.1-all.jar
 sdks:
   - 
       type: library
@@ -23,8 +23,8 @@ sdks:
             -
               distribution-type: library
               distribution-repository: maven
-              package-name: pubnub-kotlin-7.7.0
-              location: https://repo.maven.apache.org/maven2/com/pubnub/pubnub-kotlin/7.7.0/pubnub-kotlin-7.7.0.jar
+              package-name: pubnub-kotlin-7.7.1
+              location: https://repo.maven.apache.org/maven2/com/pubnub/pubnub-kotlin/7.7.1/pubnub-kotlin-7.7.1.jar
               supported-platforms:
                 supported-operating-systems:
                   Android:
@@ -101,8 +101,8 @@ sdks:
                   is-required: Required
                 -
                   name: json
-                  min-version: "20230227"
-                  location: https://repo.maven.apache.org/maven2/org/json/json/20230227/json-20230227.jar
+                  min-version: "20231013"
+                  location: https://repo.maven.apache.org/maven2/org/json/json/20231013/json-20231013.jar
                   license: Public Domain
                   license-url: https://github.com/stleary/JSON-java/blob/20210307/LICENSE
                   is-required: Required
@@ -114,6 +114,13 @@ sdks:
                   license-url: https://www.apache.org/licenses/LICENSE-2.0.txt
                   is-required: Required
 changelog:
+  - date: 2023-10-30
+    version: v7.7.1
+    changes:
+      - type: bug
+        text: "Updated the JSON lib to version 20231013."
+      - type: bug
+        text: "Changed license type from MIT to PubNub Software Development Kit License."
   - date: 2023-10-16
     version: v7.7.0
     changes:
