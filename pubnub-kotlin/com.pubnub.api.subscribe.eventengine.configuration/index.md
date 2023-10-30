@@ -6,4 +6,4 @@
 
 | Name | Summary |
 |---|---|
-| [SubscribeEventEngineConfImpl](-subscribe-event-engine-conf-impl/index.md) | [jvm]<br>class [SubscribeEventEngineConfImpl](-subscribe-event-engine-conf-impl/index.md) : [EventEngineConf](../com.pubnub.api.eventengine/-event-engine-conf/index.md) |
+| [EventEnginesConf](-event-engines-conf/index.md) | [jvm]<br>class [EventEnginesConf](-event-engines-conf/index.md)(val subscribe: [EventEngineConf](../com.pubnub.api.eventengine/-event-engine-conf/index.md)&lt;[SubscribeEffectInvocation](../com.pubnub.api.subscribe.eventengine.effect/-subscribe-effect-invocation/index.md), [SubscribeEvent](../com.pubnub.api.subscribe.eventengine.event/-subscribe-event/index.md)&gt; = QueueEventEngineConf(), val presence: [EventEngineConf](../com.pubnub.api.eventengine/-event-engine-conf/index.md)&lt;[PresenceEffectInvocation](../com.pubnub.api.presence.eventengine.effect/-presence-effect-invocation/index.md), [PresenceEvent](../com.pubnub.api.presence.eventengine.event/-presence-event/index.md)&gt; = QueueEventEngineConf()) |

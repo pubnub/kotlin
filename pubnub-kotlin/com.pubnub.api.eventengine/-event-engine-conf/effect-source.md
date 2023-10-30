@@ -3,4 +3,4 @@
 # effectSource
 
 [jvm]\
-abstract val [effectSource](effect-source.md): [Source](../-source/index.md)&lt;[SubscribeEffectInvocation](../../com.pubnub.api.subscribe.eventengine.effect/-subscribe-effect-invocation/index.md)&gt;
+abstract val [effectSource](effect-source.md): [Source](../-source/index.md)&lt;[Ei](index.md)&gt;

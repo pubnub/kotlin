@@ -3,13 +3,13 @@
 # Subscribe
 
 [jvm]\
-class [Subscribe](index.md)(eventEngineManager: [EventEngineManager](../../com.pubnub.api.managers/-event-engine-manager/index.md), subscriptionData: [SubscriptionData](../../com.pubnub.api.subscribe.eventengine.data/-subscription-data/index.md) = SubscriptionData())
+class [Subscribe](index.md)(subscribeEventEngineManager: [SubscribeEventEngineManager](../../com.pubnub.api.managers/index.md#567156648%2FClasslikes%2F-1216412040), subscriptionData: [SubscriptionData](../../com.pubnub.api.subscribe.eventengine.data/-subscription-data/index.md) = SubscriptionData())
 
 ## Constructors
 
 | | |
 |---|---|
-| [Subscribe](-subscribe.md) | [jvm]<br>fun [Subscribe](-subscribe.md)(eventEngineManager: [EventEngineManager](../../com.pubnub.api.managers/-event-engine-manager/index.md), subscriptionData: [SubscriptionData](../../com.pubnub.api.subscribe.eventengine.data/-subscription-data/index.md) = SubscriptionData()) |
+| [Subscribe](-subscribe.md) | [jvm]<br>fun [Subscribe](-subscribe.md)(subscribeEventEngineManager: [SubscribeEventEngineManager](../../com.pubnub.api.managers/index.md#567156648%2FClasslikes%2F-1216412040), subscriptionData: [SubscriptionData](../../com.pubnub.api.subscribe.eventengine.data/-subscription-data/index.md) = SubscriptionData()) |
 
 ## Types
 

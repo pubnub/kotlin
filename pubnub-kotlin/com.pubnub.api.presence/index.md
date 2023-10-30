@@ -6,4 +6,4 @@
 
 | Name | Summary |
 |---|---|
-| [Presence](-presence/index.md) | [jvm]<br>object [Presence](-presence/index.md) |
+| [Presence](-presence/index.md) | [jvm]<br>interface [Presence](-presence/index.md) |

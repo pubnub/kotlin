@@ -3,4 +3,4 @@
 # onEntry
 
 [jvm]\
-open fun [onEntry](on-entry.md)(): [Set](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-set/index.html)&lt;[T](index.md)&gt;
+open fun [onEntry](on-entry.md)(): [Set](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-set/index.html)&lt;[Ei](index.md)&gt;

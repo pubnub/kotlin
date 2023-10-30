@@ -9,9 +9,9 @@ sealed class [PresenceState](index.md) : [State](../../com.pubnub.api.eventengin
 
 | Name | Summary |
 |---|---|
-| [HearbeatInactive](-hearbeat-inactive/index.md) | [jvm]<br>object [HearbeatInactive](-hearbeat-inactive/index.md) : [PresenceState](index.md) |
 | [HeartbeatCooldown](-heartbeat-cooldown/index.md) | [jvm]<br>data class [HeartbeatCooldown](-heartbeat-cooldown/index.md)(val channels: [Set](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-set/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)&gt;, val channelGroups: [Set](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-set/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)&gt;) : [PresenceState](index.md) |
 | [HeartbeatFailed](-heartbeat-failed/index.md) | [jvm]<br>data class [HeartbeatFailed](-heartbeat-failed/index.md)(val channels: [Set](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-set/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)&gt;, val channelGroups: [Set](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-set/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)&gt;, val reason: [PubNubException](../../com.pubnub.api/-pub-nub-exception/index.md)?) : [PresenceState](index.md) |
+| [HeartbeatInactive](-heartbeat-inactive/index.md) | [jvm]<br>object [HeartbeatInactive](-heartbeat-inactive/index.md) : [PresenceState](index.md) |
 | [Heartbeating](-heartbeating/index.md) | [jvm]<br>data class [Heartbeating](-heartbeating/index.md)(val channels: [Set](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-set/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)&gt;, val channelGroups: [Set](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-set/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)&gt;) : [PresenceState](index.md) |
 | [HeartbeatReconnecting](-heartbeat-reconnecting/index.md) | [jvm]<br>data class [HeartbeatReconnecting](-heartbeat-reconnecting/index.md)(val channels: [Set](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-set/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)&gt;, val channelGroups: [Set](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-set/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)&gt;, val attempts: [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html), val reason: [PubNubException](../../com.pubnub.api/-pub-nub-exception/index.md)?) : [PresenceState](index.md) |
 | [HeartbeatStopped](-heartbeat-stopped/index.md) | [jvm]<br>data class [HeartbeatStopped](-heartbeat-stopped/index.md)(val channels: [Set](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-set/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)&gt;, val channelGroups: [Set](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-set/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)&gt;) : [PresenceState](index.md) |
@@ -28,7 +28,7 @@ sealed class [PresenceState](index.md) : [State](../../com.pubnub.api.eventengin
 
 | Name |
 |---|
-| [HearbeatInactive](-hearbeat-inactive/index.md) |
+| [HeartbeatInactive](-heartbeat-inactive/index.md) |
 | [Heartbeating](-heartbeating/index.md) |
 | [HeartbeatReconnecting](-heartbeat-reconnecting/index.md) |
 | [HeartbeatStopped](-heartbeat-stopped/index.md) |

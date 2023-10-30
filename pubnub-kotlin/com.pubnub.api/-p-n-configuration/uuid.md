@@ -3,7 +3,4 @@
 # uuid
 
 [jvm]\
-
-@[Volatile](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-volatile/index.html)
-
 ~~var~~ [~~uuid~~](uuid.md)~~:~~ [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)

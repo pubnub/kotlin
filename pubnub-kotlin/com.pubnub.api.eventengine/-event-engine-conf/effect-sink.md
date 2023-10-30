@@ -3,4 +3,4 @@
 # effectSink
 
 [jvm]\
-abstract val [effectSink](effect-sink.md): [Sink](../-sink/index.md)&lt;[SubscribeEffectInvocation](../../com.pubnub.api.subscribe.eventengine.effect/-subscribe-effect-invocation/index.md)&gt;
+abstract val [effectSink](effect-sink.md): [Sink](../-sink/index.md)&lt;[Ei](index.md)&gt;

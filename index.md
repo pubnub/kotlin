@@ -60,6 +60,7 @@
 | [com.pubnub.api.models.server.objects_api](pubnub-kotlin/com.pubnub.api.models.server.objects_api/index.md) |
 | [com.pubnub.api.models.server.presence](pubnub-kotlin/com.pubnub.api.models.server.presence/index.md) |
 | [com.pubnub.api.presence](pubnub-kotlin/com.pubnub.api.presence/index.md) |
+| [com.pubnub.api.presence.eventengine](pubnub-kotlin/com.pubnub.api.presence.eventengine/index.md) |
 | [com.pubnub.api.presence.eventengine.effect](pubnub-kotlin/com.pubnub.api.presence.eventengine.effect/index.md) |
 | [com.pubnub.api.presence.eventengine.effect.effectprovider](pubnub-kotlin/com.pubnub.api.presence.eventengine.effect.effectprovider/index.md) |
 | [com.pubnub.api.presence.eventengine.event](pubnub-kotlin/com.pubnub.api.presence.eventengine.event/index.md) |

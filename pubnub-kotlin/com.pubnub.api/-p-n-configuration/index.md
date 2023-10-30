@@ -3,7 +3,7 @@
 # PNConfiguration
 
 [jvm]\
-open class [PNConfiguration](index.md)(userId: [UserId](../-user-id/index.md), enableSubscribeBeta: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) = false)
+open class [PNConfiguration](index.md)(var userId: [UserId](../-user-id/index.md))
 
 A storage for user-provided information which describe further PubNub client behaviour. Configuration instance contains additional set of properties which allow performing precise PubNub client configuration.
 
@@ -11,8 +11,8 @@ A storage for user-provided information which describe further PubNub client beh
 
 | | |
 |---|---|
-| [PNConfiguration](-p-n-configuration.md) | [jvm]<br>~~fun~~ [~~PNConfiguration~~](-p-n-configuration.md)~~(~~uuid: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), enableSubscribeBeta: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) = false~~)~~ |
-| [PNConfiguration](-p-n-configuration.md) | [jvm]<br>fun [PNConfiguration](-p-n-configuration.md)(userId: [UserId](../-user-id/index.md), enableSubscribeBeta: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) = false) |
+| [PNConfiguration](-p-n-configuration.md) | [jvm]<br>~~fun~~ [~~PNConfiguration~~](-p-n-configuration.md)~~(~~uuid: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), enableEventEngine: [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) = false~~)~~ |
+| [PNConfiguration](-p-n-configuration.md) | [jvm]<br>fun [PNConfiguration](-p-n-configuration.md)(userId: [UserId](../-user-id/index.md)) |
 
 ## Types
 
@@ -38,7 +38,7 @@ A storage for user-provided information which describe further PubNub client beh
 | [connectTimeout](connect-timeout.md) | [jvm]<br>var [connectTimeout](connect-timeout.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)<br>How long before the client gives up trying to connect with a subscribe call. |
 | [cryptoModule](crypto-module.md) | [jvm]<br>var [cryptoModule](crypto-module.md): [CryptoModule](../../com.pubnub.api.crypto/-crypto-module/index.md)? = null<br>CryptoModule is responsible for handling encryption and decryption. If set, all communications to and from PubNub will be encrypted. |
 | [dedupOnSubscribe](dedup-on-subscribe.md) | [jvm]<br>var [dedupOnSubscribe](dedup-on-subscribe.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) = false |
-| [enableSubscribeBeta](enable-subscribe-beta.md) | [jvm]<br>var [enableSubscribeBeta](enable-subscribe-beta.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) |
+| [enableEventEngine](enable-event-engine.md) | [jvm]<br>var [enableEventEngine](enable-event-engine.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) = false<br>This controls whether to enable a new, experimental implementation of Subscription and Presence handling. |
 | [fileMessagePublishRetryLimit](file-message-publish-retry-limit.md) | [jvm]<br>var [fileMessagePublishRetryLimit](file-message-publish-retry-limit.md): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html) = 5<br>How many times publishing file message should automatically retry before marking the action as failed |
 | [filterExpression](filter-expression.md) | [jvm]<br>var [filterExpression](filter-expression.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)<br>Feature to subscribe with a custom filter expression. |
 | [googleAppEngineNetworking](google-app-engine-networking.md) | [jvm]<br>var [googleAppEngineNetworking](google-app-engine-networking.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) = false<br>Enable Google App Engine networking. |
@@ -70,5 +70,5 @@ A storage for user-provided information which describe further PubNub client beh
 | [suppressLeaveEvents](suppress-leave-events.md) | [jvm]<br>var [suppressLeaveEvents](suppress-leave-events.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) = false<br>When `true` the SDK doesn't send out the leave requests. |
 | [useRandomInitializationVector](use-random-initialization-vector.md) | [jvm]<br>~~var~~ [~~useRandomInitializationVector~~](use-random-initialization-vector.md)~~:~~ [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) ~~=~~ ~~true~~<br>Should initialization vector for encrypted messages be random. |
 | [userId](user-id.md) | [jvm]<br>var [userId](user-id.md): [UserId](../-user-id/index.md) |
-| [uuid](uuid.md) | [jvm]<br>@[Volatile](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-volatile/index.html)<br>~~var~~ [~~uuid~~](uuid.md)~~:~~ [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
+| [uuid](uuid.md) | [jvm]<br>~~var~~ [~~uuid~~](uuid.md)~~:~~ [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
 | [x509ExtendedTrustManager](x509-extended-trust-manager.md) | [jvm]<br>var [x509ExtendedTrustManager](x509-extended-trust-manager.md): [X509ExtendedTrustManager](https://docs.oracle.com/javase/8/docs/api/javax/net/ssl/X509ExtendedTrustManager.html)? = null |

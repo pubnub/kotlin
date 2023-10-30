@@ -15,4 +15,4 @@ interface [Source](index.md)&lt;[T](index.md)&gt;
 
 | Name |
 |---|
-| [QueueSinkSource](../-queue-sink-source/index.md) |
+| [SinkSource](../-sink-source/index.md) |

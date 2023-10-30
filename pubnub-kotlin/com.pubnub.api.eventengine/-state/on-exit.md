@@ -3,4 +3,4 @@
 # onExit
 
 [jvm]\
-open fun [onExit](on-exit.md)(): [Set](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-set/index.html)&lt;[T](index.md)&gt;
+open fun [onExit](on-exit.md)(): [Set](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-set/index.html)&lt;[Ei](index.md)&gt;

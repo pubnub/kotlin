@@ -470,21 +470,37 @@ $dokka.location:com.pubnub.api.eventengine/EffectInvocation/id/#/PointingToDecla
 $dokka.location:com.pubnub.api.eventengine/EffectInvocation/type/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.eventengine/-effect-invocation/type.md
 $dokka.location:com.pubnub.api.eventengine/EffectInvocationType///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.eventengine/-effect-invocation-type/index.md
 $dokka.location:com.pubnub.api.eventengine/Event///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.eventengine/-event/index.md
+$dokka.location:com.pubnub.api.eventengine/EventEngine///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.eventengine/-event-engine/index.md
+$dokka.location:com.pubnub.api.eventengine/EventEngine/EventEngine/#com.pubnub.api.eventengine.Sink[TypeParam(bounds=[com.pubnub.api.eventengine.EffectInvocation])]#com.pubnub.api.eventengine.Source[TypeParam(bounds=[com.pubnub.api.eventengine.Event])]#TypeParam(bounds=[com.pubnub.api.eventengine.State[TypeParam(bounds=[com.pubnub.api.eventengine.EffectInvocation]),TypeParam(bounds=[com.pubnub.api.eventengine.Event]),^]])#java.util.concurrent.ExecutorService/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.eventengine/-event-engine/-event-engine.md
+$dokka.location:com.pubnub.api.eventengine/EventEngine/start/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.eventengine/-event-engine/start.md
+$dokka.location:com.pubnub.api.eventengine/EventEngine/stop/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.eventengine/-event-engine/stop.md
 $dokka.location:com.pubnub.api.eventengine/EventEngineConf///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.eventengine/-event-engine-conf/index.md
 $dokka.location:com.pubnub.api.eventengine/EventEngineConf/effectSink/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.eventengine/-event-engine-conf/effect-sink.md
 $dokka.location:com.pubnub.api.eventengine/EventEngineConf/effectSource/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.eventengine/-event-engine-conf/effect-source.md
-$dokka.location:com.pubnub.api.eventengine/EventEngineConf/subscribeEventSink/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.eventengine/-event-engine-conf/subscribe-event-sink.md
-$dokka.location:com.pubnub.api.eventengine/EventEngineConf/subscribeEventSource/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.eventengine/-event-engine-conf/subscribe-event-source.md
+$dokka.location:com.pubnub.api.eventengine/EventEngineConf/eventSink/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.eventengine/-event-engine-conf/event-sink.md
+$dokka.location:com.pubnub.api.eventengine/EventEngineConf/eventSource/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.eventengine/-event-engine-conf/event-source.md
+$dokka.location:com.pubnub.api.eventengine/EventEngineManager///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.eventengine/-event-engine-manager/index.md
+$dokka.location:com.pubnub.api.eventengine/EventEngineManager/EventEngineManager/#TypeParam(bounds=[com.pubnub.api.eventengine.EventEngine[TypeParam(bounds=[com.pubnub.api.eventengine.EffectInvocation]),TypeParam(bounds=[com.pubnub.api.eventengine.Event]),TypeParam(bounds=[com.pubnub.api.eventengine.State[TypeParam(bounds=[com.pubnub.api.eventengine.EffectInvocation]),TypeParam(bounds=[com.pubnub.api.eventengine.Event]),^^]])]])#com.pubnub.api.eventengine.EffectDispatcher[TypeParam(bounds=[com.pubnub.api.eventengine.EffectInvocation])]#com.pubnub.api.eventengine.Sink[TypeParam(bounds=[com.pubnub.api.eventengine.Event])]/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.eventengine/-event-engine-manager/-event-engine-manager.md
+$dokka.location:com.pubnub.api.eventengine/EventEngineManager/addEventToQueue/#TypeParam(bounds=[com.pubnub.api.eventengine.Event])/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.eventengine/-event-engine-manager/add-event-to-queue.md
+$dokka.location:com.pubnub.api.eventengine/EventEngineManager/start/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.eventengine/-event-engine-manager/start.md
+$dokka.location:com.pubnub.api.eventengine/EventEngineManager/stop/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.eventengine/-event-engine-manager/stop.md
 $dokka.location:com.pubnub.api.eventengine/Managed///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.eventengine/-managed/index.md
 $dokka.location:com.pubnub.api.eventengine/ManagedEffect///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.eventengine/-managed-effect/index.md
 $dokka.location:com.pubnub.api.eventengine/ManagedEffect/cancel/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.eventengine/-managed-effect/cancel.md
 $dokka.location:com.pubnub.api.eventengine/NonManaged///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.eventengine/-non-managed/index.md
+$dokka.location:com.pubnub.api.eventengine/QueueEventEngineConf///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.eventengine/-queue-event-engine-conf/index.md
+$dokka.location:com.pubnub.api.eventengine/QueueEventEngineConf/QueueEventEngineConf/#com.pubnub.api.eventengine.SinkSource[TypeParam(bounds=[com.pubnub.api.eventengine.EffectInvocation])]#com.pubnub.api.eventengine.SinkSource[TypeParam(bounds=[com.pubnub.api.eventengine.Event])]/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.eventengine/-queue-event-engine-conf/-queue-event-engine-conf.md
+$dokka.location:com.pubnub.api.eventengine/QueueEventEngineConf/effectSink/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.eventengine/-queue-event-engine-conf/effect-sink.md
+$dokka.location:com.pubnub.api.eventengine/QueueEventEngineConf/effectSource/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.eventengine/-queue-event-engine-conf/effect-source.md
+$dokka.location:com.pubnub.api.eventengine/QueueEventEngineConf/eventSink/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.eventengine/-queue-event-engine-conf/event-sink.md
+$dokka.location:com.pubnub.api.eventengine/QueueEventEngineConf/eventSource/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.eventengine/-queue-event-engine-conf/event-source.md
 $dokka.location:com.pubnub.api.eventengine/QueueSinkSource///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.eventengine/-queue-sink-source/index.md
 $dokka.location:com.pubnub.api.eventengine/QueueSinkSource/QueueSinkSource/#java.util.concurrent.BlockingQueue[TypeParam(bounds=[kotlin.Any?])]/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.eventengine/-queue-sink-source/-queue-sink-source.md
 $dokka.location:com.pubnub.api.eventengine/QueueSinkSource/add/#TypeParam(bounds=[kotlin.Any?])/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.eventengine/-queue-sink-source/add.md
 $dokka.location:com.pubnub.api.eventengine/QueueSinkSource/take/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.eventengine/-queue-sink-source/take.md
 $dokka.location:com.pubnub.api.eventengine/Sink///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.eventengine/-sink/index.md
 $dokka.location:com.pubnub.api.eventengine/Sink/add/#TypeParam(bounds=[kotlin.Any?])/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.eventengine/-sink/add.md
+$dokka.location:com.pubnub.api.eventengine/SinkSource///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.eventengine/-sink-source/index.md
 $dokka.location:com.pubnub.api.eventengine/Source///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.eventengine/-source/index.md
 $dokka.location:com.pubnub.api.eventengine/Source/take/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.eventengine/-source/take.md
 $dokka.location:com.pubnub.api.eventengine/State///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.eventengine/-state/index.md
@@ -497,11 +513,6 @@ $dokka.location:com.pubnub.api.interceptor/SignatureInterceptor/SignatureInterce
 $dokka.location:com.pubnub.api.interceptor/SignatureInterceptor/intercept/#okhttp3.Interceptor.Chain/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.interceptor/-signature-interceptor/intercept.md
 $dokka.location:com.pubnub.api.interceptor/SignatureInterceptor/pubnub/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.interceptor/-signature-interceptor/pubnub.md
 $dokka.location:com.pubnub.api.managers////PointingToDeclaration/pubnub-kotlin/com.pubnub.api.managers/index.md
-$dokka.location:com.pubnub.api.managers/EventEngineManager///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.managers/-event-engine-manager/index.md
-$dokka.location:com.pubnub.api.managers/EventEngineManager/EventEngineManager/#com.pubnub.api.subscribe.eventengine.SubscribeEventEngine#com.pubnub.api.eventengine.EffectDispatcher[com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectInvocation]#com.pubnub.api.eventengine.Sink[com.pubnub.api.subscribe.eventengine.event.SubscribeEvent]/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.managers/-event-engine-manager/-event-engine-manager.md
-$dokka.location:com.pubnub.api.managers/EventEngineManager/addEventToQueue/#com.pubnub.api.subscribe.eventengine.event.SubscribeEvent/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.managers/-event-engine-manager/add-event-to-queue.md
-$dokka.location:com.pubnub.api.managers/EventEngineManager/start/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.managers/-event-engine-manager/start.md
-$dokka.location:com.pubnub.api.managers/EventEngineManager/stop/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.managers/-event-engine-manager/stop.md
 $dokka.location:com.pubnub.api.managers/MapperManager///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.managers/-mapper-manager/index.md
 $dokka.location:com.pubnub.api.managers/MapperManager/MapperManager/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.managers/-mapper-manager/-mapper-manager.md
 $dokka.location:com.pubnub.api.managers/MapperManager/convertValue/#com.google.gson.JsonElement?#java.lang.Class[TypeParam(bounds=[kotlin.Any?])]/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.managers/-mapper-manager/convert-value.md
@@ -1324,8 +1335,6 @@ $dokka.location:com.pubnub.api.presence.eventengine.event/PresenceEvent.StateSet
 $dokka.location:com.pubnub.api.presence.eventengine.event/PresenceEvent.TimesUp///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.presence.eventengine.event/-presence-event/-times-up/index.md
 $dokka.location:com.pubnub.api.presence.eventengine.event/PresenceEvent///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.presence.eventengine.event/-presence-event/index.md
 $dokka.location:com.pubnub.api.presence.eventengine.state////PointingToDeclaration/pubnub-kotlin/com.pubnub.api.presence.eventengine.state/index.md
-$dokka.location:com.pubnub.api.presence.eventengine.state/PresenceState.HearbeatInactive///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.presence.eventengine.state/-presence-state/-hearbeat-inactive/index.md
-$dokka.location:com.pubnub.api.presence.eventengine.state/PresenceState.HearbeatInactive/transition/#com.pubnub.api.presence.eventengine.event.PresenceEvent/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.presence.eventengine.state/-presence-state/-hearbeat-inactive/transition.md
 $dokka.location:com.pubnub.api.presence.eventengine.state/PresenceState.HeartbeatCooldown///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.presence.eventengine.state/-presence-state/-heartbeat-cooldown/index.md
 $dokka.location:com.pubnub.api.presence.eventengine.state/PresenceState.HeartbeatCooldown/HeartbeatCooldown/#kotlin.collections.Set[kotlin.String]#kotlin.collections.Set[kotlin.String]/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.presence.eventengine.state/-presence-state/-heartbeat-cooldown/-heartbeat-cooldown.md
 $dokka.location:com.pubnub.api.presence.eventengine.state/PresenceState.HeartbeatCooldown/channelGroups/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.presence.eventengine.state/-presence-state/-heartbeat-cooldown/channel-groups.md
@@ -1339,6 +1348,8 @@ $dokka.location:com.pubnub.api.presence.eventengine.state/PresenceState.Heartbea
 $dokka.location:com.pubnub.api.presence.eventengine.state/PresenceState.HeartbeatFailed/channels/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.presence.eventengine.state/-presence-state/-heartbeat-failed/channels.md
 $dokka.location:com.pubnub.api.presence.eventengine.state/PresenceState.HeartbeatFailed/reason/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.presence.eventengine.state/-presence-state/-heartbeat-failed/reason.md
 $dokka.location:com.pubnub.api.presence.eventengine.state/PresenceState.HeartbeatFailed/transition/#com.pubnub.api.presence.eventengine.event.PresenceEvent/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.presence.eventengine.state/-presence-state/-heartbeat-failed/transition.md
+$dokka.location:com.pubnub.api.presence.eventengine.state/PresenceState.HeartbeatInactive///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.presence.eventengine.state/-presence-state/-heartbeat-inactive/index.md
+$dokka.location:com.pubnub.api.presence.eventengine.state/PresenceState.HeartbeatInactive/transition/#com.pubnub.api.presence.eventengine.event.PresenceEvent/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.presence.eventengine.state/-presence-state/-heartbeat-inactive/transition.md
 $dokka.location:com.pubnub.api.presence.eventengine.state/PresenceState.HeartbeatReconnecting///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.presence.eventengine.state/-presence-state/-heartbeat-reconnecting/index.md
 $dokka.location:com.pubnub.api.presence.eventengine.state/PresenceState.HeartbeatReconnecting/HeartbeatReconnecting/#kotlin.collections.Set[kotlin.String]#kotlin.collections.Set[kotlin.String]#kotlin.Int#com.pubnub.api.PubNubException?/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.presence.eventengine.state/-presence-state/-heartbeat-reconnecting/-heartbeat-reconnecting.md
 $dokka.location:com.pubnub.api.presence.eventengine.state/PresenceState.HeartbeatReconnecting/attempts/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.presence.eventengine.state/-presence-state/-heartbeat-reconnecting/attempts.md
@@ -1360,9 +1371,16 @@ $dokka.location:com.pubnub.api.presence.eventengine.state/PresenceState.Heartbea
 $dokka.location:com.pubnub.api.presence.eventengine.state/PresenceState.Heartbeating/onEntry/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.presence.eventengine.state/-presence-state/-heartbeating/on-entry.md
 $dokka.location:com.pubnub.api.presence.eventengine.state/PresenceState.Heartbeating/transition/#com.pubnub.api.presence.eventengine.event.PresenceEvent/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.presence.eventengine.state/-presence-state/-heartbeating/transition.md
 $dokka.location:com.pubnub.api.presence.eventengine.state/PresenceState///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.presence.eventengine.state/-presence-state/index.md
+$dokka.location:com.pubnub.api.presence.eventengine////PointingToDeclaration/pubnub-kotlin/com.pubnub.api.presence.eventengine/index.md
+$dokka.location:com.pubnub.api.presence.eventengine//PresenceEventEngine/#com.pubnub.api.eventengine.Sink[com.pubnub.api.presence.eventengine.effect.PresenceEffectInvocation]#com.pubnub.api.eventengine.Source[com.pubnub.api.presence.eventengine.event.PresenceEvent]#com.pubnub.api.presence.eventengine.state.PresenceState/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.presence.eventengine/-presence-event-engine.md
 $dokka.location:com.pubnub.api.presence////PointingToDeclaration/pubnub-kotlin/com.pubnub.api.presence/index.md
+$dokka.location:com.pubnub.api.presence/Presence.Companion///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.presence/-presence/-companion/index.md
 $dokka.location:com.pubnub.api.presence/Presence///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.presence/-presence/index.md
-$dokka.location:com.pubnub.api.presence/Presence/presence/#kotlin.collections.List[kotlin.String]#kotlin.collections.List[kotlin.String]#kotlin.Boolean/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.presence/-presence/presence.md
+$dokka.location:com.pubnub.api.presence/Presence/destroy/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.presence/-presence/destroy.md
+$dokka.location:com.pubnub.api.presence/Presence/joined/#kotlin.collections.Set[kotlin.String]#kotlin.collections.Set[kotlin.String]/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.presence/-presence/joined.md
+$dokka.location:com.pubnub.api.presence/Presence/left/#kotlin.collections.Set[kotlin.String]#kotlin.collections.Set[kotlin.String]/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.presence/-presence/left.md
+$dokka.location:com.pubnub.api.presence/Presence/leftAll/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.presence/-presence/left-all.md
+$dokka.location:com.pubnub.api.presence/Presence/presence/#kotlin.collections.Set[kotlin.String]#kotlin.collections.Set[kotlin.String]#kotlin.Boolean/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.presence/-presence/presence.md
 $dokka.location:com.pubnub.api.services////PointingToDeclaration/pubnub-kotlin/com.pubnub.api.services/index.md
 $dokka.location:com.pubnub.api.services/FilesService.Companion///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.services/-files-service/-companion/index.md
 $dokka.location:com.pubnub.api.services/FilesService.Companion/GET_FILE_URL/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.services/-files-service/-companion/-g-e-t_-f-i-l-e_-u-r-l.md
@@ -1375,12 +1393,10 @@ $dokka.location:com.pubnub.api.services/FilesService/notifyAboutFileUpload/#kotl
 $dokka.location:com.pubnub.api.services/S3Service///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.services/-s3-service/index.md
 $dokka.location:com.pubnub.api.services/S3Service/upload/#kotlin.String#okhttp3.MultipartBody/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.services/-s3-service/upload.md
 $dokka.location:com.pubnub.api.subscribe.eventengine.configuration////PointingToDeclaration/pubnub-kotlin/com.pubnub.api.subscribe.eventengine.configuration/index.md
-$dokka.location:com.pubnub.api.subscribe.eventengine.configuration/SubscribeEventEngineConfImpl///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.subscribe.eventengine.configuration/-subscribe-event-engine-conf-impl/index.md
-$dokka.location:com.pubnub.api.subscribe.eventengine.configuration/SubscribeEventEngineConfImpl/SubscribeEventEngineConfImpl/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.subscribe.eventengine.configuration/-subscribe-event-engine-conf-impl/-subscribe-event-engine-conf-impl.md
-$dokka.location:com.pubnub.api.subscribe.eventengine.configuration/SubscribeEventEngineConfImpl/effectSink/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.subscribe.eventengine.configuration/-subscribe-event-engine-conf-impl/effect-sink.md
-$dokka.location:com.pubnub.api.subscribe.eventengine.configuration/SubscribeEventEngineConfImpl/effectSource/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.subscribe.eventengine.configuration/-subscribe-event-engine-conf-impl/effect-source.md
-$dokka.location:com.pubnub.api.subscribe.eventengine.configuration/SubscribeEventEngineConfImpl/subscribeEventSink/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.subscribe.eventengine.configuration/-subscribe-event-engine-conf-impl/subscribe-event-sink.md
-$dokka.location:com.pubnub.api.subscribe.eventengine.configuration/SubscribeEventEngineConfImpl/subscribeEventSource/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.subscribe.eventengine.configuration/-subscribe-event-engine-conf-impl/subscribe-event-source.md
+$dokka.location:com.pubnub.api.subscribe.eventengine.configuration/EventEnginesConf///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.subscribe.eventengine.configuration/-event-engines-conf/index.md
+$dokka.location:com.pubnub.api.subscribe.eventengine.configuration/EventEnginesConf/EventEnginesConf/#com.pubnub.api.eventengine.EventEngineConf[com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectInvocation,com.pubnub.api.subscribe.eventengine.event.SubscribeEvent]#com.pubnub.api.eventengine.EventEngineConf[com.pubnub.api.presence.eventengine.effect.PresenceEffectInvocation,com.pubnub.api.presence.eventengine.event.PresenceEvent]/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.subscribe.eventengine.configuration/-event-engines-conf/-event-engines-conf.md
+$dokka.location:com.pubnub.api.subscribe.eventengine.configuration/EventEnginesConf/presence/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.subscribe.eventengine.configuration/-event-engines-conf/presence.md
+$dokka.location:com.pubnub.api.subscribe.eventengine.configuration/EventEnginesConf/subscribe/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.subscribe.eventengine.configuration/-event-engines-conf/subscribe.md
 $dokka.location:com.pubnub.api.subscribe.eventengine.data////PointingToDeclaration/pubnub-kotlin/com.pubnub.api.subscribe.eventengine.data/index.md
 $dokka.location:com.pubnub.api.subscribe.eventengine.data/SubscriptionData///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.subscribe.eventengine.data/-subscription-data/index.md
 $dokka.location:com.pubnub.api.subscribe.eventengine.data/SubscriptionData/SubscriptionData/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.subscribe.eventengine.data/-subscription-data/-subscription-data.md
@@ -1586,15 +1602,11 @@ $dokka.location:com.pubnub.api.subscribe.eventengine.state/SubscribeState.Unsubs
 $dokka.location:com.pubnub.api.subscribe.eventengine.state/SubscribeState.Unsubscribed/transition/#com.pubnub.api.subscribe.eventengine.event.SubscribeEvent/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.subscribe.eventengine.state/-subscribe-state/-unsubscribed/transition.md
 $dokka.location:com.pubnub.api.subscribe.eventengine.state/SubscribeState///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.subscribe.eventengine.state/-subscribe-state/index.md
 $dokka.location:com.pubnub.api.subscribe.eventengine////PointingToDeclaration/pubnub-kotlin/com.pubnub.api.subscribe.eventengine/index.md
-$dokka.location:com.pubnub.api.subscribe.eventengine/SubscribeEventEngine///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.subscribe.eventengine/-subscribe-event-engine/index.md
-$dokka.location:com.pubnub.api.subscribe.eventengine/SubscribeEventEngine/SubscribeEventEngine/#com.pubnub.api.eventengine.Sink[com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectInvocation]#com.pubnub.api.eventengine.Source[com.pubnub.api.subscribe.eventengine.event.SubscribeEvent]#com.pubnub.api.subscribe.eventengine.state.SubscribeState#java.util.concurrent.ExecutorService/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.subscribe.eventengine/-subscribe-event-engine/-subscribe-event-engine.md
-$dokka.location:com.pubnub.api.subscribe.eventengine/SubscribeEventEngine/effectSink/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.subscribe.eventengine/-subscribe-event-engine/effect-sink.md
-$dokka.location:com.pubnub.api.subscribe.eventengine/SubscribeEventEngine/start/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.subscribe.eventengine/-subscribe-event-engine/start.md
-$dokka.location:com.pubnub.api.subscribe.eventengine/SubscribeEventEngine/stop/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.subscribe.eventengine/-subscribe-event-engine/stop.md
+$dokka.location:com.pubnub.api.subscribe.eventengine//SubscribeEventEngine/#com.pubnub.api.eventengine.Sink[com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectInvocation]#com.pubnub.api.eventengine.Source[com.pubnub.api.subscribe.eventengine.event.SubscribeEvent]#com.pubnub.api.subscribe.eventengine.state.SubscribeState/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.subscribe.eventengine/-subscribe-event-engine.md
 $dokka.location:com.pubnub.api.subscribe////PointingToDeclaration/pubnub-kotlin/com.pubnub.api.subscribe/index.md
 $dokka.location:com.pubnub.api.subscribe/Subscribe.Companion///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.subscribe/-subscribe/-companion/index.md
 $dokka.location:com.pubnub.api.subscribe/Subscribe///PointingToDeclaration/pubnub-kotlin/com.pubnub.api.subscribe/-subscribe/index.md
-$dokka.location:com.pubnub.api.subscribe/Subscribe/Subscribe/#com.pubnub.api.managers.EventEngineManager#com.pubnub.api.subscribe.eventengine.data.SubscriptionData/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.subscribe/-subscribe/-subscribe.md
+$dokka.location:com.pubnub.api.subscribe/Subscribe/Subscribe/#com.pubnub.api.eventengine.EventEngineManager[com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectInvocation,com.pubnub.api.subscribe.eventengine.event.SubscribeEvent,com.pubnub.api.subscribe.eventengine.state.SubscribeState,com.pubnub.api.eventengine.EventEngine[com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectInvocation,com.pubnub.api.subscribe.eventengine.event.SubscribeEvent,com.pubnub.api.subscribe.eventengine.state.SubscribeState]]#com.pubnub.api.subscribe.eventengine.data.SubscriptionData/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.subscribe/-subscribe/-subscribe.md
 $dokka.location:com.pubnub.api.subscribe/Subscribe/destroy/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.subscribe/-subscribe/destroy.md
 $dokka.location:com.pubnub.api.subscribe/Subscribe/disconnect/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.subscribe/-subscribe/disconnect.md
 $dokka.location:com.pubnub.api.subscribe/Subscribe/getSubscribedChannelGroups/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api.subscribe/-subscribe/get-subscribed-channel-groups.md
@@ -1644,7 +1656,7 @@ $dokka.location:com.pubnub.api/Endpoint/silentCancel/#/PointingToDeclaration/pu
 $dokka.location:com.pubnub.api/Endpoint/sync/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-endpoint/sync.md
 $dokka.location:com.pubnub.api/PNConfiguration.Companion///PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-p-n-configuration/-companion/index.md
 $dokka.location:com.pubnub.api/PNConfiguration///PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-p-n-configuration/index.md
-$dokka.location:com.pubnub.api/PNConfiguration/PNConfiguration/#com.pubnub.api.UserId#kotlin.Boolean/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-p-n-configuration/-p-n-configuration.md
+$dokka.location:com.pubnub.api/PNConfiguration/PNConfiguration/#com.pubnub.api.UserId/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-p-n-configuration/-p-n-configuration.md
 $dokka.location:com.pubnub.api/PNConfiguration/PNConfiguration/#kotlin.String#kotlin.Boolean/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-p-n-configuration/-p-n-configuration.md
 $dokka.location:com.pubnub.api/PNConfiguration/addPnsdkSuffix/#kotlin.Array[kotlin.Pair[kotlin.String,kotlin.String]]/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-p-n-configuration/add-pnsdk-suffix.md
 $dokka.location:com.pubnub.api/PNConfiguration/addPnsdkSuffix/#kotlin.collections.Map[kotlin.String,kotlin.String]/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-p-n-configuration/add-pnsdk-suffix.md
@@ -1656,7 +1668,7 @@ $dokka.location:com.pubnub.api/PNConfiguration/connectTimeout/#/PointingToDeclar
 $dokka.location:com.pubnub.api/PNConfiguration/connectionSpec/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-p-n-configuration/connection-spec.md
 $dokka.location:com.pubnub.api/PNConfiguration/cryptoModule/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-p-n-configuration/crypto-module.md
 $dokka.location:com.pubnub.api/PNConfiguration/dedupOnSubscribe/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-p-n-configuration/dedup-on-subscribe.md
-$dokka.location:com.pubnub.api/PNConfiguration/enableSubscribeBeta/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-p-n-configuration/enable-subscribe-beta.md
+$dokka.location:com.pubnub.api/PNConfiguration/enableEventEngine/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-p-n-configuration/enable-event-engine.md
 $dokka.location:com.pubnub.api/PNConfiguration/fileMessagePublishRetryLimit/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-p-n-configuration/file-message-publish-retry-limit.md
 $dokka.location:com.pubnub.api/PNConfiguration/filterExpression/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-p-n-configuration/filter-expression.md
 $dokka.location:com.pubnub.api/PNConfiguration/googleAppEngineNetworking/#/PointingToDeclaration/pubnub-kotlin/com.pubnub.api/-p-n-configuration/google-app-engine-networking.md
@@ -1891,6 +1903,7 @@ com.pubnub.api.models.server.message_actions
 com.pubnub.api.models.server.objects_api
 com.pubnub.api.models.server.presence
 com.pubnub.api.presence
+com.pubnub.api.presence.eventengine
 com.pubnub.api.presence.eventengine.effect
 com.pubnub.api.presence.eventengine.effect.effectprovider
 com.pubnub.api.presence.eventengine.event

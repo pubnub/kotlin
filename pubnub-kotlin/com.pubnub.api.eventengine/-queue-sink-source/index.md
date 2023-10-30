@@ -3,7 +3,7 @@
 # QueueSinkSource
 
 [jvm]\
-class [QueueSinkSource](index.md)&lt;[T](index.md)&gt;(queue: [BlockingQueue](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/BlockingQueue.html)&lt;[T](index.md)&gt; = LinkedBlockingQueue()) : [Sink](../-sink/index.md)&lt;[T](index.md)&gt; , [Source](../-source/index.md)&lt;[T](index.md)&gt;
+class [QueueSinkSource](index.md)&lt;[T](index.md)&gt;(queue: [BlockingQueue](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/BlockingQueue.html)&lt;[T](index.md)&gt; = LinkedBlockingQueue()) : [SinkSource](../-sink-source/index.md)&lt;[T](index.md)&gt;
 
 ## Constructors
 
