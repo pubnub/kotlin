@@ -18,7 +18,6 @@ class TimeIntegrationTest : BaseIntegrationTest() {
                 assertNotNull(result!!.timetoken)
                 success.set(true)
             }
-
         success.listen()
     }
 }
