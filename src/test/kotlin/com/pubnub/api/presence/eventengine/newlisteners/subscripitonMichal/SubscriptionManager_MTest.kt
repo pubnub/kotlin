@@ -19,8 +19,10 @@ class SubscriptionManager_MTest{
     @Test
     fun `subscribe with one channel add onMessage handler then unsubscribe`() {
         val channel = "Channel01"
+        //todo val channel: Channel pubnub.createChannel("Channel01")
         val myOnMessageForSub01: (String) -> Unit = { println("-=Handling MESSAGE for one channel: Channel01. Message: $it") }
-        val subscription = pubnub.subscribeChannel_M(channel)
+        // todo rename subscribeChannel_M to channel.createSubscription() ?
+        val subscription = pubnub.subscribeChannel_M(channel) //todo na objekcie Channel nie na pubnub
         subscription.onMessage = myOnMessageForSub01
 
         pubnub.subscriptionManger_M.simulateReceiveMessage(setOf("Channel01"))
