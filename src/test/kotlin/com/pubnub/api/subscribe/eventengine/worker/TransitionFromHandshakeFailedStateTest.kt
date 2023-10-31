@@ -9,27 +9,13 @@ import com.pubnub.api.subscribe.eventengine.state.SubscribeState
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
-class TransitionFromHandshakeFailedStateTest {
+internal class TransitionFromHandshakeFailedStateTest {
     val channels = setOf("Channel1")
     val channelGroups = setOf("ChannelGroup1")
     val exception = PubNubException("Test")
     val timetoken = 12345345452L
     val region = "42"
     val subscriptionCursor = SubscriptionCursor(timetoken, region)
-
-    @Test
-    fun can_transit_from_HANDSHAKE_FAILED_to_HANDSHAKE_RECONNECTING_when_there_is_HANDSHAKE_RECONNECT_RETRY_event() {
-        // when
-        val (state, invocations) = transition(
-            SubscribeState.HandshakeFailed(channels, channelGroups, exception), SubscribeEvent.HandshakeReconnectRetry
-        )
-
-        // then
-        assertEquals(SubscribeState.HandshakeReconnecting(channels, channelGroups, 0, exception), state)
-        assertEquals(
-            setOf(SubscribeEffectInvocation.HandshakeReconnect(channels, channelGroups, 0, exception)), invocations
-        )
-    }
 
     @Test
     fun can_transit_from_HANDSHAKE_FAILED_to_HANDSHAKING_when_there_is_SUBSCRIPTION_CHANGED_event() {

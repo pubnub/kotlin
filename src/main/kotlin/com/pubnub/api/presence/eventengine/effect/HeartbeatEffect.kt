@@ -7,7 +7,7 @@ import com.pubnub.api.eventengine.Sink
 import com.pubnub.api.presence.eventengine.event.PresenceEvent
 import org.slf4j.LoggerFactory
 
-class HeartbeatEffect(
+internal class HeartbeatEffect(
     private val heartbeatRemoteAction: RemoteAction<Boolean>,
     private val presenceEventSink: Sink<PresenceEvent>
 ) : Effect {

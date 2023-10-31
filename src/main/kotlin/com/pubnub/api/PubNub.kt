@@ -749,6 +749,7 @@ class PubNub internal constructor(
         channelGroups = channelGroups,
         state = state,
         uuid = uuid
+        // todo involve EE ?
     )
 
     /**
@@ -2031,8 +2032,8 @@ class PubNub internal constructor(
      */
     fun reconnect() {
         if (configuration.enableEventEngine) {
-            // todo handle in Subscribe EE
             subscribe.reconnect()
+            presence.reconnect()
         } else {
             subscriptionManager.reconnect()
         }
@@ -2046,6 +2047,7 @@ class PubNub internal constructor(
     fun disconnect() {
         if (configuration.enableEventEngine) {
             subscribe.disconnect()
+            presence.disconnect()
         } else {
             subscriptionManager.disconnect()
         }
@@ -2057,8 +2059,8 @@ class PubNub internal constructor(
     fun destroy() {
         if (configuration.enableEventEngine) {
             subscribe.destroy()
+            presence.destroy()
             retrofitManager.destroy()
-            // todo add presenceEventEngineDestroy
         } else {
             subscriptionManager.destroy()
             retrofitManager.destroy()
@@ -2071,8 +2073,8 @@ class PubNub internal constructor(
     fun forceDestroy() {
         if (configuration.enableEventEngine) {
             subscribe.destroy()
+            presence.destroy()
             retrofitManager.destroy(true)
-            // todo add presenceEventEngineDestroy
         } else {
             subscriptionManager.destroy(true)
             retrofitManager.destroy(true)

@@ -4,7 +4,7 @@ import com.pubnub.api.endpoints.remoteaction.RemoteAction
 import com.pubnub.api.eventengine.Effect
 import org.slf4j.LoggerFactory
 
-class LeaveEffect(
+internal class LeaveEffect(
     private val leaveRemoteAction: RemoteAction<Boolean>
 ) : Effect {
     private val log = LoggerFactory.getLogger(LeaveEffect::class.java)

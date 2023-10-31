@@ -7,9 +7,9 @@ import com.pubnub.api.presence.eventengine.effect.PresenceEffectInvocation
 import com.pubnub.api.presence.eventengine.event.PresenceEvent
 import com.pubnub.api.presence.eventengine.state.PresenceState
 
-typealias PresenceEventEngine = EventEngine<PresenceEffectInvocation, PresenceEvent, PresenceState>
+internal typealias PresenceEventEngine = EventEngine<PresenceEffectInvocation, PresenceEvent, PresenceState>
 
-fun PresenceEventEngine(
+internal fun PresenceEventEngine(
     effectSink: Sink<PresenceEffectInvocation>,
     eventSource: Source<PresenceEvent>,
     currentState: PresenceState = PresenceState.HeartbeatInactive,

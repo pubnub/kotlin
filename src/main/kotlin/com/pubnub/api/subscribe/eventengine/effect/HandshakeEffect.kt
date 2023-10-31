@@ -8,7 +8,7 @@ import com.pubnub.api.subscribe.eventengine.event.SubscribeEvent
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
 import org.slf4j.LoggerFactory
 
-class HandshakeEffect( // todo why this is managed effect?
+internal class HandshakeEffect(
     private val handshakeRemoteAction: RemoteAction<SubscriptionCursor>,
     private val subscribeEventSink: Sink<SubscribeEvent>,
 ) : ManagedEffect {
@@ -22,7 +22,7 @@ class HandshakeEffect( // todo why this is managed effect?
                 subscribeEventSink.add(
                     SubscribeEvent.HandshakeFailure(
                         status.exception
-                            ?: PubNubException("Unknown error") // todo check if that can happen
+                            ?: PubNubException("Unknown error")
                     )
                 )
             } else {

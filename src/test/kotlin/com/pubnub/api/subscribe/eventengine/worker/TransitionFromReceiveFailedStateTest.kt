@@ -9,7 +9,7 @@ import com.pubnub.api.subscribe.eventengine.state.SubscribeState
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
-class TransitionFromReceiveFailedStateTest {
+internal class TransitionFromReceiveFailedStateTest {
     val channels = setOf("Channel1")
     val channelGroups = setOf("ChannelGroup1")
     val exception = PubNubException("Test")
@@ -19,27 +19,7 @@ class TransitionFromReceiveFailedStateTest {
     val reason = PubNubException("Test")
 
     @Test
-    fun can_transit_from_RECEIVE_FAILED_to_RECEIVE_RECONNECTING_when_there_is_RECEIVE_RECONNECT_RETRY_event() {
-        // when
-        val (state, invocations) = transition(
-            SubscribeState.ReceiveFailed(channels, channelGroups, subscriptionCursor, reason),
-            SubscribeEvent.ReceiveReconnectRetry
-        )
-
-        // then
-        assertEquals(
-            SubscribeState.ReceiveReconnecting(channels, channelGroups, subscriptionCursor, 0, reason), state
-        )
-        assertEquals(
-            setOf(
-                SubscribeEffectInvocation.ReceiveReconnect(channels, channelGroups, subscriptionCursor, 0, reason)
-            ),
-            invocations
-        )
-    }
-
-    @Test
-    fun can_transit_from_RECEIVE_FAILED_to_RECEIVING_when_there_is_SUBSCRIPTION_CHANGED_event() {
+    fun can_transit_from_RECEIVE_FAILED_to_HANDSHAKING_when_there_is_SUBSCRIPTION_CHANGED_event() {
         // given
         val newChannels = channels + setOf("NewChannel")
         val newChannelGroup = channelGroups + setOf("NewChannelGroup")
@@ -51,30 +31,37 @@ class TransitionFromReceiveFailedStateTest {
         )
 
         // then
-        assertEquals(SubscribeState.Receiving(newChannels, newChannelGroup, subscriptionCursor), receivingState)
+        assertEquals(SubscribeState.Handshaking(newChannels, newChannelGroup, subscriptionCursor), receivingState)
         assertEquals(
-            setOf(SubscribeEffectInvocation.ReceiveMessages(newChannels, newChannelGroup, subscriptionCursor)),
+            setOf(SubscribeEffectInvocation.Handshake(newChannels, newChannelGroup)),
             effectInvocations
         )
     }
 
     @Test
-    fun can_transit_from_RECEIVE_FAILED_to_RECEIVING_when_there_is_SUBSCRIPTION_RESTORED_event() {
+    fun can_transit_from_RECEIVE_FAILED_to_HANDSHAKING_when_there_is_SUBSCRIPTION_RESTORED_event() {
+        // given
+        val eventChannels = setOf("ChannelZ")
+        val eventChannelGroups = setOf("ChannelGroupZ")
+        val timetoken = 99945345452L
+        val region = "1"
+        val eventSubscriptionCursor = SubscriptionCursor(timetoken, region)
+
         // when
         val (receivingState, effectInvocations) = transition(
             SubscribeState.ReceiveFailed(channels, channelGroups, subscriptionCursor, reason),
-            SubscribeEvent.SubscriptionRestored(channels, channelGroups, subscriptionCursor)
+            SubscribeEvent.SubscriptionRestored(eventChannels, eventChannelGroups, eventSubscriptionCursor)
         )
         // then
-        assertEquals(SubscribeState.Receiving(channels, channelGroups, subscriptionCursor), receivingState)
+        assertEquals(SubscribeState.Handshaking(eventChannels, eventChannelGroups, eventSubscriptionCursor), receivingState)
         assertEquals(
-            setOf(SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor)),
+            setOf(SubscribeEffectInvocation.Handshake(eventChannels, eventChannelGroups)),
             effectInvocations
         )
     }
 
     @Test
-    fun can_transit_from_RECEIVE_FAILED_to_RECEIVING_when_there_is_RECONNECT_event() {
+    fun can_transit_from_RECEIVE_FAILED_to_HANDSHAKING_when_there_is_RECONNECT_event() {
         // when
         val (receivingState, effectInvocations) = transition(
             SubscribeState.ReceiveFailed(channels, channelGroups, subscriptionCursor, reason),
@@ -82,9 +69,9 @@ class TransitionFromReceiveFailedStateTest {
         )
 
         // then
-        assertEquals(SubscribeState.Receiving(channels, channelGroups, subscriptionCursor), receivingState)
+        assertEquals(SubscribeState.Handshaking(channels, channelGroups, subscriptionCursor), receivingState)
         assertEquals(
-            setOf(SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor)),
+            setOf(SubscribeEffectInvocation.Handshake(channels, channelGroups)),
             effectInvocations
         )
     }

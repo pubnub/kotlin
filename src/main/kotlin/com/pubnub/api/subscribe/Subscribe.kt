@@ -22,7 +22,7 @@ import java.util.concurrent.Executors
 
 private const val PRESENCE_CHANNEL_SUFFIX = "-pnpres"
 
-class Subscribe(
+internal class Subscribe(
     private val subscribeEventEngineManager: SubscribeEventEngineManager,
     private val subscriptionData: SubscriptionData = SubscriptionData()
 ) {
@@ -100,7 +100,7 @@ class Subscribe(
             val subscriptionRestoredEvent = SubscriptionRestored(
                 channelsInLocalStorage,
                 channelGroupsInLocalStorage,
-                SubscriptionCursor(withTimetoken, "42") // todo handle region should be 0 or null?
+                SubscriptionCursor(withTimetoken, region = null) // we don't know region here. Subscribe response will return region.
             )
             subscribeEventEngineManager.addEventToQueue(subscriptionRestoredEvent)
         } else {
@@ -145,12 +145,12 @@ class Subscribe(
 
     @Synchronized
     fun getSubscribedChannels(): List<String> {
-        return subscriptionData.channels.toList()
+        return subscriptionData.channels.toList().filter { !it.contains(PRESENCE_CHANNEL_SUFFIX) }
     }
 
     @Synchronized
     fun getSubscribedChannelGroups(): List<String> {
-        return subscriptionData.channelGroups.toList()
+        return subscriptionData.channelGroups.toList().filter { !it.contains(PRESENCE_CHANNEL_SUFFIX) }
     }
 
     fun disconnect() {
@@ -163,7 +163,6 @@ class Subscribe(
 
     @Synchronized
     fun destroy() {
-        // todo do we want to have "force" flag?
         disconnect()
         subscribeEventEngineManager.stop()
     }

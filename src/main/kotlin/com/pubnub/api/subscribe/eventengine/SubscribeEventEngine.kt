@@ -7,9 +7,9 @@ import com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectInvocation
 import com.pubnub.api.subscribe.eventengine.event.SubscribeEvent
 import com.pubnub.api.subscribe.eventengine.state.SubscribeState
 
-typealias SubscribeEventEngine = EventEngine<SubscribeEffectInvocation, SubscribeEvent, SubscribeState>
+internal typealias SubscribeEventEngine = EventEngine<SubscribeEffectInvocation, SubscribeEvent, SubscribeState>
 
-fun SubscribeEventEngine(
+internal fun SubscribeEventEngine(
     effectSink: Sink<SubscribeEffectInvocation>,
     eventSource: Source<SubscribeEvent>,
     currentState: SubscribeState = SubscribeState.Unsubscribed

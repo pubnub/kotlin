@@ -7,7 +7,7 @@ import com.pubnub.api.eventengine.QueueSinkSource
 import com.pubnub.api.eventengine.SinkSource
 import com.pubnub.api.eventengine.Source
 
-class TestSinkSource<T>(
+internal class TestSinkSource<T>(
     private val testSink: MutableList<Pair<String, String>>,
     private val sinkSource: QueueSinkSource<T> = QueueSinkSource()
 ) : SinkSource<T>, Source<T> by sinkSource {

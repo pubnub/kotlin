@@ -1,14 +1,14 @@
 package com.pubnub.api.eventengine
 
-interface EffectInvocation {
+internal interface EffectInvocation {
     val id: String
     val type: EffectInvocationType
 }
 
-sealed interface EffectInvocationType
+internal sealed interface EffectInvocationType
 
-data class Cancel(val idToCancel: String) : EffectInvocationType
+internal data class Cancel(val idToCancel: String) : EffectInvocationType
 
-object Managed : EffectInvocationType
+internal object Managed : EffectInvocationType
 
-object NonManaged : EffectInvocationType
+internal object NonManaged : EffectInvocationType

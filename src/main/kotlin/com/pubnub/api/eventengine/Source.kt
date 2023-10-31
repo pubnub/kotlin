@@ -1,5 +1,5 @@
 package com.pubnub.api.eventengine
 
-interface Source<T> {
+internal interface Source<T> {
     fun take(): T
 }

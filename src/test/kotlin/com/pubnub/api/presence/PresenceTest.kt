@@ -17,7 +17,7 @@ import org.junit.jupiter.params.provider.Arguments.arguments
 import org.junit.jupiter.params.provider.MethodSource
 import java.time.Duration
 
-class PresenceTest {
+internal class PresenceTest {
 
     companion object {
         @JvmStatic
@@ -43,7 +43,6 @@ class PresenceTest {
         }
     }
 
-    // make this test parametrized
     @ParameterizedTest
     @MethodSource("eventAndMethodProvider")
     fun `should pass correct event for each method call`(eventName: String, method: Presence.() -> Unit) {

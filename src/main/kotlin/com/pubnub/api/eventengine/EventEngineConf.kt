@@ -1,13 +1,13 @@
 package com.pubnub.api.eventengine
 
-interface EventEngineConf<Ei : EffectInvocation, Ev : Event> {
+internal interface EventEngineConf<Ei : EffectInvocation, Ev : Event> {
     val eventSink: Sink<Ev>
     val eventSource: Source<Ev>
     val effectSink: Sink<Ei>
     val effectSource: Source<Ei>
 }
 
-class QueueEventEngineConf<Ei : EffectInvocation, Ev : Event>(
+internal class QueueEventEngineConf<Ei : EffectInvocation, Ev : Event>(
     effectSinkSource: SinkSource<Ei> = QueueSinkSource(),
     eventSinkSource: SinkSource<Ev> = QueueSinkSource()
 ) : EventEngineConf<Ei, Ev> {

@@ -6,12 +6,12 @@ import org.junit.jupiter.api.Test
 
 class EventEngineTest {
 
-    object TestEffectInvocation : EffectInvocation {
+    internal object TestEffectInvocation : EffectInvocation {
         override val id: String = "id"
         override val type: EffectInvocationType = NonManaged
     }
 
-    object TestState : State<TestEffectInvocation, Event, TestState> {
+    internal object TestState : State<TestEffectInvocation, Event, TestState> {
         override fun transition(event: Event): Pair<TestState, Set<TestEffectInvocation>> {
             return transitionTo(TestState, TestEffectInvocation)
         }

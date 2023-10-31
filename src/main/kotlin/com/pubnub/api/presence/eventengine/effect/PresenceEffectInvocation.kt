@@ -7,7 +7,7 @@ import com.pubnub.api.eventengine.EffectInvocationType
 import com.pubnub.api.eventengine.Managed
 import com.pubnub.api.eventengine.NonManaged
 
-sealed class PresenceEffectInvocation(override val type: EffectInvocationType) : EffectInvocation {
+internal sealed class PresenceEffectInvocation(override val type: EffectInvocationType) : EffectInvocation {
     override val id: String = "any value for NonManged and Cancel effect"
 
     data class Heartbeat(
