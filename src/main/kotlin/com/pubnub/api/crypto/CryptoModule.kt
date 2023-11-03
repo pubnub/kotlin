@@ -16,6 +16,8 @@ import java.io.InputStream
 import java.io.SequenceInputStream
 import java.lang.Integer.min
 
+private const val SIZE_OF_CRYPTOR_ID = 4
+
 class CryptoModule internal constructor(
     internal val primaryCryptor: Cryptor,
     internal val cryptorsForDecryptionOnly: List<Cryptor> = listOf(),
@@ -49,13 +51,15 @@ class CryptoModule internal constructor(
     }
 
     fun encrypt(data: ByteArray): ByteArray {
+        val cryptorId = primaryCryptor.id()
         validateData(data)
+        validateCryptorIdSize(cryptorId)
         val (metadata, encryptedData) = primaryCryptor.encrypt(data)
 
-        return if (primaryCryptor.id().contentEquals(LEGACY_CRYPTOR_ID)) {
+        return if (cryptorId.contentEquals(LEGACY_CRYPTOR_ID)) {
             encryptedData
         } else {
-            val cryptorHeader = headerParser.createCryptorHeader(primaryCryptor.id(), metadata)
+            val cryptorHeader = headerParser.createCryptorHeader(cryptorId, metadata)
             cryptorHeader + encryptedData
         }
     }
@@ -110,8 +114,17 @@ class CryptoModule internal constructor(
         }
     }
 
+    private fun validateCryptorIdSize(cryptorId: ByteArray) {
+        if (cryptorId.size != SIZE_OF_CRYPTOR_ID) {
+            throw PubNubException(
+                errorMessage = "CryptorId should be exactly 4 bytes long",
+                pubnubError = PubNubError.UNKNOWN_CRYPTOR
+            )
+        }
+    }
+
     private fun getDecryptedDataForLegacyCryptor(encryptedData: ByteArray): ByteArray {
-        return getLegacyCryptor()?.decrypt(EncryptedData(data = encryptedData)) ?: throw PubNubException(
+        return getCryptorById(LEGACY_CRYPTOR_ID)?.decrypt(EncryptedData(data = encryptedData)) ?: throw PubNubException(
             errorMessage = "LegacyCryptor not available",
             pubnubError = PubNubError.UNKNOWN_CRYPTOR
         )
@@ -129,12 +142,8 @@ class CryptoModule internal constructor(
         return decryptedData
     }
 
-    private fun getLegacyCryptor(): Cryptor? {
-        val idOfLegacyCryptor = ByteArray(4) { 0.toByte() }
-        return getCryptorById(idOfLegacyCryptor)
-    }
-
     private fun getCryptorById(cryptorId: ByteArray): Cryptor? {
+        validateCryptorIdSize(cryptorId)
         return cryptorsForDecryptionOnly.firstOrNull { it.id().contentEquals(cryptorId) }
     }
 

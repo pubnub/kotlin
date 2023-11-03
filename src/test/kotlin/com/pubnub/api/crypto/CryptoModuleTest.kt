@@ -215,6 +215,21 @@ class CryptoModuleTest {
         assertArrayEquals(msgToEncrypt, decryptedMsg)
     }
 
+    @Test
+    fun `can decrypt encrypted message using cryptoModule with custom cryptor`() {
+        // given
+        val customCryptor = myCustomCryptor()
+        val cryptoModule = CryptoModule.createNewCryptoModule(defaultCryptor = customCryptor)
+        val msgToEncrypt = "Hello world".toByteArray()
+
+        // when
+        val encryptedMsg = cryptoModule.encrypt(msgToEncrypt)
+        val decryptedMsg = cryptoModule.decrypt(encryptedMsg)
+
+        // then
+        assertArrayEquals(msgToEncrypt, decryptedMsg)
+    }
+
     @ParameterizedTest
     @MethodSource("legacyAndAesCbcCryptors")
     fun `should throw exception when encrypting empty data`(cryptoModule: CryptoModule) {
@@ -283,6 +298,7 @@ class CryptoModuleTest {
 
     private fun myCustomCryptor() = object : Cryptor {
         override fun id(): ByteArray {
+            // Should return a ByteArray of exactly 4 bytes.
             return byteArrayOf('C'.code.toByte(), 'U'.code.toByte(), 'S'.code.toByte(), 'T'.code.toByte())
         }
 
@@ -295,11 +311,11 @@ class CryptoModuleTest {
         }
 
         override fun encryptStream(stream: InputStream): EncryptedStreamData {
-            throw NotImplementedError()
+            return EncryptedStreamData(metadata = null, stream = stream)
         }
 
         override fun decryptStream(encryptedData: EncryptedStreamData): InputStream {
-            throw NotImplementedError()
+            return encryptedData.stream
         }
     }
 
