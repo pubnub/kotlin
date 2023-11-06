@@ -5,7 +5,7 @@ import com.pubnub.api.crypto.data.EncryptedStreamData
 import java.io.InputStream
 
 interface Cryptor {
-    fun id(): ByteArray // Assuming 4 bytes,
+    fun id(): ByteArray // Should return a ByteArray of exactly 4 bytes.
     fun encrypt(data: ByteArray): EncryptedData
     fun decrypt(encryptedData: EncryptedData): ByteArray
     fun encryptStream(stream: InputStream): EncryptedStreamData
