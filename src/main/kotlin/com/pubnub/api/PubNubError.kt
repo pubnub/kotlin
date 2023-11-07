@@ -226,6 +226,11 @@ enum class PubNubError(private val code: Int, val message: String) {
         "Encryption of empty data not allowed."
     ),
 
+    CRYPTO_IS_CONFIGURED_BUT_MESSAGE_IS_NOT_ENCRYPTED(
+        177,
+        "Crypto is configured but message is not encrypted."
+    ),
+
     ;
 
     override fun toString(): String {

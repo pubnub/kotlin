@@ -1,6 +1,7 @@
 package com.pubnub.extension
 
 import com.google.gson.JsonElement
+import com.pubnub.api.PubNubError
 import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.api.crypto.decryptString
 import com.pubnub.api.managers.MapperManager
@@ -16,7 +17,6 @@ internal fun JsonElement.processHistoryMessage(
 ): Pair<JsonElement, String?> {
 
     cryptoModule ?: return Pair(this, null)
-    val error: String?
 
     val inputText = if (mapper.isJsonObject(this)) {
         // property pn_other is used when we want to send encrypted Push Notification, not whole JSON object is encrypted but only value of pn_other property
@@ -25,7 +25,7 @@ internal fun JsonElement.processHistoryMessage(
             mapper.elementToString(this, PN_OTHER)
         } else {
             // plain JSON object indicates that this is not encrypted message
-            error = logAndReturnDecryptionError()
+            val error = logAndReturnDecryptionError()
             return Pair(this, error)
         }
     } else {
@@ -36,7 +36,7 @@ internal fun JsonElement.processHistoryMessage(
     val outputText = try {
         cryptoModule.decryptString(inputText!!)
     } catch (e: Exception) {
-        error = logAndReturnDecryptionError()
+        val error = logAndReturnDecryptionError()
         return Pair(this, error)
     }
 
@@ -52,7 +52,7 @@ internal fun JsonElement.processHistoryMessage(
 }
 
 private fun logAndReturnDecryptionError(): String {
-    val errorMessage = "Crypto is configured but message is not encrypted."
+    val errorMessage = PubNubError.CRYPTO_IS_CONFIGURED_BUT_MESSAGE_IS_NOT_ENCRYPTED.message
     log.warn(errorMessage)
     return errorMessage
 }

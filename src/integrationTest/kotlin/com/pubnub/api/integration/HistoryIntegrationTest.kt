@@ -6,6 +6,7 @@ import com.pubnub.api.CommonUtils
 import com.pubnub.api.CommonUtils.emoji
 import com.pubnub.api.CommonUtils.randomChannel
 import com.pubnub.api.PubNub
+import com.pubnub.api.PubNubError
 import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.api.models.consumer.history.Action
 import com.pubnub.api.models.consumer.history.HistoryMessageType
@@ -106,7 +107,7 @@ class HistoryIntegrationTest : BaseIntegrationTest() {
                     entry = JsonPrimitive(expectedMessage),
                     timetoken = result.timetoken,
                     meta = expectedMeta,
-                    error = "Crypto is configured but message is not encrypted."
+                    error = PubNubError.CRYPTO_IS_CONFIGURED_BUT_MESSAGE_IS_NOT_ENCRYPTED.message
                 )
             )
 
@@ -247,7 +248,7 @@ class HistoryIntegrationTest : BaseIntegrationTest() {
             meta = expectedMeta,
             messageType = HistoryMessageType.Message,
             actions = emptyMap<String, Map<String, List<Action>>>(),
-            error = "Crypto is configured but message is not encrypted."
+            error = PubNubError.CRYPTO_IS_CONFIGURED_BUT_MESSAGE_IS_NOT_ENCRYPTED.message
         )
 
         val expectedChannelsResponse: Map<String, List<PNFetchMessageItem>> =
