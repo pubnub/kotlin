@@ -38,7 +38,8 @@ data class PNFetchMessageItem(
     val meta: JsonElement?,
     val timetoken: Long,
     val actions: Map<String, Map<String, List<Action>>>? = null,
-    val messageType: HistoryMessageType?
+    val messageType: HistoryMessageType?,
+    val error: String? = null
 )
 
 /**

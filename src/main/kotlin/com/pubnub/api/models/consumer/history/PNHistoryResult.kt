@@ -28,5 +28,6 @@ class PNHistoryResult internal constructor(
 data class PNHistoryItemResult(
     val entry: JsonElement,
     val timetoken: Long? = null,
-    val meta: JsonElement? = null
+    val meta: JsonElement? = null,
+    val error: String? = null
 )

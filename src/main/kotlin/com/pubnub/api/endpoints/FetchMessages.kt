@@ -82,7 +82,10 @@ class FetchMessages internal constructor(
         val body = input.body()!!
         val channelsMap = body.channels.mapValues { (_, value) ->
             value.map { serverMessageItem ->
-                val newMessage = serverMessageItem.message.processHistoryMessage(pubnub.cryptoModule, pubnub.mapper)
+                val (newMessage, error) = serverMessageItem.message.processHistoryMessage(
+                    pubnub.cryptoModule,
+                    pubnub.mapper
+                )
                 val newActions =
                     if (includeMessageActions) serverMessageItem.actions ?: mapOf() else serverMessageItem.actions
                 PNFetchMessageItem(
@@ -92,6 +95,7 @@ class FetchMessages internal constructor(
                     timetoken = serverMessageItem.timetoken,
                     actions = newActions,
                     messageType = if (includeMessageType) HistoryMessageType.of(serverMessageItem.messageType) else null,
+                    error = error
                 )
             }
         }.toMap()
