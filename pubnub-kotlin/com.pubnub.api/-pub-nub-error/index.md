@@ -55,6 +55,7 @@ List of known PubNub errors. Observe them in [PubNubException.pubnubError](../-p
 | [CRYPTOR_HEADER_VERSION_UNKNOWN](-c-r-y-p-t-o-r_-h-e-a-d-e-r_-v-e-r-s-i-o-n_-u-n-k-n-o-w-n/index.md) | [jvm]<br>[CRYPTOR_HEADER_VERSION_UNKNOWN](-c-r-y-p-t-o-r_-h-e-a-d-e-r_-v-e-r-s-i-o-n_-u-n-k-n-o-w-n/index.md) |
 | [CRYPTOR_HEADER_PARSE_ERROR](-c-r-y-p-t-o-r_-h-e-a-d-e-r_-p-a-r-s-e_-e-r-r-o-r/index.md) | [jvm]<br>[CRYPTOR_HEADER_PARSE_ERROR](-c-r-y-p-t-o-r_-h-e-a-d-e-r_-p-a-r-s-e_-e-r-r-o-r/index.md) |
 | [ENCRYPTION_AND_DECRYPTION_OF_EMPTY_DATA_NOT_ALLOWED](-e-n-c-r-y-p-t-i-o-n_-a-n-d_-d-e-c-r-y-p-t-i-o-n_-o-f_-e-m-p-t-y_-d-a-t-a_-n-o-t_-a-l-l-o-w-e-d/index.md) | [jvm]<br>[ENCRYPTION_AND_DECRYPTION_OF_EMPTY_DATA_NOT_ALLOWED](-e-n-c-r-y-p-t-i-o-n_-a-n-d_-d-e-c-r-y-p-t-i-o-n_-o-f_-e-m-p-t-y_-d-a-t-a_-n-o-t_-a-l-l-o-w-e-d/index.md) |
+| [CRYPTO_IS_CONFIGURED_BUT_MESSAGE_IS_NOT_ENCRYPTED](-c-r-y-p-t-o_-i-s_-c-o-n-f-i-g-u-r-e-d_-b-u-t_-m-e-s-s-a-g-e_-i-s_-n-o-t_-e-n-c-r-y-p-t-e-d/index.md) | [jvm]<br>[CRYPTO_IS_CONFIGURED_BUT_MESSAGE_IS_NOT_ENCRYPTED](-c-r-y-p-t-o_-i-s_-c-o-n-f-i-g-u-r-e-d_-b-u-t_-m-e-s-s-a-g-e_-i-s_-n-o-t_-e-n-c-r-y-p-t-e-d/index.md) |
 
 ## Functions
 

@@ -3,4 +3,4 @@
 # PNHistoryItemResult
 
 [jvm]\
-fun [PNHistoryItemResult](-p-n-history-item-result.md)(entry: JsonElement, timetoken: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)? = null, meta: JsonElement? = null)
+fun [PNHistoryItemResult](-p-n-history-item-result.md)(entry: JsonElement, timetoken: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)? = null, meta: JsonElement? = null, error: [PubNubError](../../com.pubnub.api/-pub-nub-error/index.md)? = null)

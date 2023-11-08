@@ -29,6 +29,7 @@ sealed class [PNOperationType](index.md)
 | [PNChannelsForGroupOperation](-p-n-channels-for-group-operation/index.md) | [jvm]<br>object [PNChannelsForGroupOperation](-p-n-channels-for-group-operation/index.md) : [PNOperationType.ChannelGroupOperation](-channel-group-operation/index.md) |
 | [PNDeleteMessageAction](-p-n-delete-message-action/index.md) | [jvm]<br>object [PNDeleteMessageAction](-p-n-delete-message-action/index.md) : [PNOperationType.MessageActionsOperation](-message-actions-operation/index.md) |
 | [PNDeleteMessagesOperation](-p-n-delete-messages-operation/index.md) | [jvm]<br>object [PNDeleteMessagesOperation](-p-n-delete-messages-operation/index.md) : [PNOperationType.HistoryOperation](-history-operation/index.md) |
+| [PNDisconnectOperation](-p-n-disconnect-operation/index.md) | [jvm]<br>object [PNDisconnectOperation](-p-n-disconnect-operation/index.md) : [PNOperationType](index.md) |
 | [PNFetchMessagesOperation](-p-n-fetch-messages-operation/index.md) | [jvm]<br>object [PNFetchMessagesOperation](-p-n-fetch-messages-operation/index.md) : [PNOperationType.HistoryOperation](-history-operation/index.md) |
 | [PNGetAllChannelsMetadataOperation](-p-n-get-all-channels-metadata-operation/index.md) | [jvm]<br>object [PNGetAllChannelsMetadataOperation](-p-n-get-all-channels-metadata-operation/index.md) : [PNOperationType.ObjectsOperation](-objects-operation/index.md) |
 | [PNGetAllUUIDMetadataOperation](-p-n-get-all-u-u-i-d-metadata-operation/index.md) | [jvm]<br>object [PNGetAllUUIDMetadataOperation](-p-n-get-all-u-u-i-d-metadata-operation/index.md) : [PNOperationType.ObjectsOperation](-objects-operation/index.md) |
@@ -101,3 +102,4 @@ sealed class [PNOperationType](index.md)
 | [UserOperation](-user-operation/index.md) |
 | [MembershipOperation](-membership-operation/index.md) |
 | [PNSubscribeOperation](-p-n-subscribe-operation/index.md) |
+| [PNDisconnectOperation](-p-n-disconnect-operation/index.md) |
