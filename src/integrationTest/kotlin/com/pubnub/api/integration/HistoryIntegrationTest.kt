@@ -5,6 +5,9 @@ import com.google.gson.JsonPrimitive
 import com.pubnub.api.CommonUtils
 import com.pubnub.api.CommonUtils.emoji
 import com.pubnub.api.CommonUtils.randomChannel
+import com.pubnub.api.PubNub
+import com.pubnub.api.PubNubError
+import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.api.models.consumer.history.Action
 import com.pubnub.api.models.consumer.history.HistoryMessageType
 import com.pubnub.api.models.consumer.history.PNFetchMessageItem
@@ -57,6 +60,56 @@ class HistoryIntegrationTest : BaseIntegrationTest() {
 
         val expectedHistoryResultChannels =
             listOf(PNHistoryItemResult(entry = expectedMessage, timetoken = result.timetoken, meta = expectedMeta))
+
+        assertEquals(expectedHistoryResultChannels, historyResult?.messages)
+    }
+
+    @Test
+    fun `when reading unencrypted message from history using pubNub with configured encryption should log error and return error in response and return unencrypted message`() {
+        val pnConfigurationWithCrypto = getBasicPnConfiguration()
+        val cipherKey = "enigma"
+        pnConfigurationWithCrypto.cryptoModule =
+            CryptoModule.createAesCbcCryptoModule(cipherKey = cipherKey, randomIv = false)
+        val pubNubWithCrypto = PubNub(pnConfigurationWithCrypto)
+
+        val channel = randomChannel()
+        val expectedMeta = JsonObject().also { it.add("thisIsMeta", JsonPrimitive("thisIsMetaValue")) }
+        val expectedMessage = "this is not encrypted message"
+
+        val result = pubnub.publish(
+            channel = channel,
+            message = expectedMessage,
+            meta = expectedMeta,
+            shouldStore = true,
+            ttl = 60
+        ).sync()!!
+
+        var historyResult: PNHistoryResult? = null
+
+        await
+            .pollInterval(Duration.ofMillis(1_000))
+            .pollDelay(Duration.ofMillis(1_000))
+            .atMost(Duration.ofMillis(10_000))
+            .untilAsserted {
+                historyResult = pubNubWithCrypto.history(
+                    channel = channel,
+                    includeMeta = true,
+                    includeTimetoken = true,
+                ).sync()
+
+                assertNotNull(historyResult)
+                assertThat(historyResult?.messages, hasSize(not(0)))
+            }
+
+        val expectedHistoryResultChannels =
+            listOf(
+                PNHistoryItemResult(
+                    entry = JsonPrimitive(expectedMessage),
+                    timetoken = result.timetoken,
+                    meta = expectedMeta,
+                    error = PubNubError.CRYPTO_IS_CONFIGURED_BUT_MESSAGE_IS_NOT_ENCRYPTED
+                )
+            )
 
         assertEquals(expectedHistoryResultChannels, historyResult?.messages)
     }
@@ -148,6 +201,65 @@ class HistoryIntegrationTest : BaseIntegrationTest() {
             ),
             fetchResultWithoutActions.channels
         )
+    }
+
+    @Test
+    fun `when fetching unencrypted message using pubNub with configured encryption should log error and return error in respone and return unencrypted message`() {
+        val pnConfigurationWithCrypto = getBasicPnConfiguration()
+        val cipherKey = "enigma"
+        pnConfigurationWithCrypto.cryptoModule =
+            CryptoModule.createLegacyCryptoModule(cipherKey = cipherKey, randomIv = true)
+        val pubNubWithCrypto = PubNub(pnConfigurationWithCrypto)
+
+        val channel = randomChannel()
+        val expectedMeta = JsonObject().also { it.add("thisIsMeta", JsonPrimitive("thisIsMetaValue")) }
+        val expectedMessage = CommonUtils.generatePayload()
+
+        val result = pubnub.publish(
+            channel = channel,
+            message = expectedMessage,
+            meta = expectedMeta,
+            shouldStore = true,
+            ttl = 60
+        ).sync()!!
+
+        var fetchResult: PNFetchMessagesResult? = null
+
+        await
+            .pollInterval(Duration.ofMillis(1_000))
+            .pollDelay(Duration.ofMillis(1_000))
+            .atMost(Duration.ofMillis(10_000))
+            .untilAsserted {
+                fetchResult = pubNubWithCrypto.fetchMessages(
+                    includeMeta = true,
+                    includeMessageActions = true,
+                    includeMessageType = true,
+                    includeUUID = true,
+                    channels = listOf(channel)
+                ).sync()
+                assertNotNull(fetchResult)
+                assertThat(fetchResult?.channels, aMapWithSize(not(0)))
+            }
+
+        val expectedItem = PNFetchMessageItem(
+            uuid = pubnub.configuration.userId.value,
+            message = expectedMessage,
+            timetoken = result.timetoken,
+            meta = expectedMeta,
+            messageType = HistoryMessageType.Message,
+            actions = emptyMap<String, Map<String, List<Action>>>(),
+            error = PubNubError.CRYPTO_IS_CONFIGURED_BUT_MESSAGE_IS_NOT_ENCRYPTED
+        )
+
+        val expectedChannelsResponse: Map<String, List<PNFetchMessageItem>> =
+            mapOf(
+                channel to listOf(
+                    expectedItem
+                )
+            )
+
+        val fetchMessageItem = fetchResult!!
+        assertEquals(expectedChannelsResponse, fetchMessageItem.channels)
     }
 
     @Test

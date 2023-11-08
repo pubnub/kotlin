@@ -1,3 +1,11 @@
+## v7.7.2
+November 08 2023
+
+#### Fixed
+- Fixed reading unencrypted history message when crypto is configured.
+
+
+
 ## v7.7.1
 October 30 2023
 
