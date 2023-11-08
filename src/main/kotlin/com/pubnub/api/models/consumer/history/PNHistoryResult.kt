@@ -2,6 +2,7 @@ package com.pubnub.api.models.consumer.history
 
 import com.google.gson.JsonElement
 import com.pubnub.api.PubNub
+import com.pubnub.api.PubNubError
 import com.pubnub.api.endpoints.History
 
 /**
@@ -29,5 +30,5 @@ data class PNHistoryItemResult(
     val entry: JsonElement,
     val timetoken: Long? = null,
     val meta: JsonElement? = null,
-    val error: String? = null
+    val error: PubNubError? = null
 )

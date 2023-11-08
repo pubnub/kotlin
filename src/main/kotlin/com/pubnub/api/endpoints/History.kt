@@ -73,7 +73,7 @@ class History internal constructor(
 
                 var timetoken: Long? = null
                 var meta: JsonElement? = null
-                val historyMessageWithError: Pair<JsonElement, String?>
+                val historyMessageWithError: Pair<JsonElement, PubNubError?>
 
                 if (includeTimetoken || includeMeta) {
                     historyMessageWithError = pubnub.mapper.getField(historyEntry, "message")!!.processHistoryMessage(pubnub.cryptoModule, pubnub.mapper)
@@ -88,7 +88,7 @@ class History internal constructor(
                 }
 
                 val message: JsonElement = historyMessageWithError.first
-                val error: String? = historyMessageWithError.second
+                val error: PubNubError? = historyMessageWithError.second
 
                 val historyItem = PNHistoryItemResult(
                     entry = message,

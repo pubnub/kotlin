@@ -14,7 +14,7 @@ private const val PN_OTHER = "pn_other"
 internal fun JsonElement.processHistoryMessage(
     cryptoModule: CryptoModule?,
     mapper: MapperManager
-): Pair<JsonElement, String?> {
+): Pair<JsonElement, PubNubError?> {
 
     cryptoModule ?: return Pair(this, null)
 
@@ -51,8 +51,8 @@ internal fun JsonElement.processHistoryMessage(
     return Pair(outputObject, null)
 }
 
-private fun logAndReturnDecryptionError(): String {
-    val errorMessage = PubNubError.CRYPTO_IS_CONFIGURED_BUT_MESSAGE_IS_NOT_ENCRYPTED.message
-    log.warn(errorMessage)
-    return errorMessage
+private fun logAndReturnDecryptionError(): PubNubError {
+    val pnError = PubNubError.CRYPTO_IS_CONFIGURED_BUT_MESSAGE_IS_NOT_ENCRYPTED
+    log.warn(pnError.message)
+    return pnError
 }

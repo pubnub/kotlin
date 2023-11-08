@@ -94,7 +94,7 @@ class JsonElementTest {
 
         // then
         assertEquals(objectUnderTest, jsonElement)
-        assertEquals("Crypto is configured but message is not encrypted.", errorMessage)
+        assertEquals("Crypto is configured but message is not encrypted.", errorMessage?.message)
     }
 
     @ParameterizedTest
@@ -134,7 +134,7 @@ class JsonElementTest {
 
         // then
         assertEquals(objectUnderTest, jsonElement)
-        assertEquals("Crypto is configured but message is not encrypted.", errorMessage)
+        assertEquals("Crypto is configured but message is not encrypted.", errorMessage?.message)
     }
 
     @ParameterizedTest

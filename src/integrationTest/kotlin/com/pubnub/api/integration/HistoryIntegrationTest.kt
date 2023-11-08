@@ -107,7 +107,7 @@ class HistoryIntegrationTest : BaseIntegrationTest() {
                     entry = JsonPrimitive(expectedMessage),
                     timetoken = result.timetoken,
                     meta = expectedMeta,
-                    error = PubNubError.CRYPTO_IS_CONFIGURED_BUT_MESSAGE_IS_NOT_ENCRYPTED.message
+                    error = PubNubError.CRYPTO_IS_CONFIGURED_BUT_MESSAGE_IS_NOT_ENCRYPTED
                 )
             )
 
@@ -248,7 +248,7 @@ class HistoryIntegrationTest : BaseIntegrationTest() {
             meta = expectedMeta,
             messageType = HistoryMessageType.Message,
             actions = emptyMap<String, Map<String, List<Action>>>(),
-            error = PubNubError.CRYPTO_IS_CONFIGURED_BUT_MESSAGE_IS_NOT_ENCRYPTED.message
+            error = PubNubError.CRYPTO_IS_CONFIGURED_BUT_MESSAGE_IS_NOT_ENCRYPTED
         )
 
         val expectedChannelsResponse: Map<String, List<PNFetchMessageItem>> =
