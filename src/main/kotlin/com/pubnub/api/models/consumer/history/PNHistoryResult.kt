@@ -25,6 +25,9 @@ class PNHistoryResult internal constructor(
  * @property timetoken Publish timetoken of the message, if requested via [History.includeTimetoken]
  * @property meta Metadata of the message, if requested via [History.includeMeta].
  * Is `null` if not requested, otherwise an empty string if requested but no associated metadata.
+ * @property error The error associated with message retrieval, if any.
+ * e.g. a message is unencrypted but PubNub instance is configured with the Crypto
+ * so PubNub can't decrypt the unencrypted message and return the message.
  */
 data class PNHistoryItemResult(
     val entry: JsonElement,

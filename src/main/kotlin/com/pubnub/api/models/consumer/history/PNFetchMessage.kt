@@ -29,9 +29,11 @@ data class PNFetchMessagesResult(
  * The key of the map is the action type. The value is another map,
  * which key is the actual value of the message action,
  * and the key being a list of actions, ie. a list of UUIDs which have posted such a message action.
- * @property messageType The message type associated with the item.
- *
  * @see [Action]
+ * @property messageType The message type associated with the item.
+ * @property error The error associated with message retrieval, if any.
+ * e.g. a message is unencrypted but PubNub instance is configured with the Crypto
+ * so PubNub can't decrypt the unencrypted message and return the message.
  */
 data class PNFetchMessageItem(
     val uuid: String?,
