@@ -1,7 +1,9 @@
 package com.pubnub.api.integration;
 
+import com.pubnub.api.PNConfiguration;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
+import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.crypto.CryptoModule;
 import com.pubnub.api.integration.util.BaseIntegrationTest;
 import com.pubnub.api.integration.util.RandomGenerator;
@@ -336,6 +338,65 @@ public class HistoryIntegrationTest extends BaseIntegrationTest {
             assertNotNull(message.getTimetoken());
             assertNotNull(message.getMeta());
             assertTrue(message.getEntry().toString().contains("_msg"));
+        }
+    }
+
+    @Test
+    public void testReadUnencryptedMessage_FromHistory_WithCrypto() throws PubNubException {
+        final String expectedCipherKey = random();
+
+        final PNConfiguration config = getBasicPnConfiguration();
+        config.setCryptoModule(CryptoModule.createLegacyCryptoModule(expectedCipherKey, true));;
+        final PubNub observer = getPubNub(config);
+
+        final String expectedChannelName = random();
+        final int expectedMessageCount = 10;
+
+        assertEquals(expectedMessageCount,
+                publishMixed(pubNub, expectedMessageCount, expectedChannelName).size());
+
+        final PNHistoryResult historyResult = observer.history()
+                .channel(expectedChannelName)
+                .includeTimetoken(true)
+                .includeMeta(true)
+                .sync();
+
+        assert historyResult != null;
+        for (PNHistoryItemResult message : historyResult.getMessages()) {
+            assertNotNull(message.getEntry());
+            assertNotNull(message.getTimetoken());
+            assertNotNull(message.getMeta());
+            assertTrue(message.getEntry().toString().contains("_msg"));
+            assertEquals(message.getError(), PubNubErrorBuilder.PNERROBJ_PNERR_CRYPTO_IS_CONFIGURED_BUT_MESSAGE_IS_NOT_ENCRYPTED);
+        }
+    }
+
+    @Test
+    public void testReadUnencryptedMessage_FetchMessages_WithCrypto() throws PubNubException {
+        final String expectedCipherKey = random();
+
+        final PubNub observer = getPubNub();
+        observer.getConfiguration().setCryptoModule(CryptoModule.createLegacyCryptoModule(expectedCipherKey, true));
+
+        final String expectedChannelName = random();
+        final int expectedMessageCount = 10;
+
+        assertEquals(expectedMessageCount,
+                publishMixed(pubNub, expectedMessageCount, expectedChannelName).size());
+
+        final PNFetchMessagesResult fetchMessagesResult = observer.fetchMessages()
+                .channels(Collections.singletonList(expectedChannelName))
+                .maximumPerChannel(25)
+                .includeMeta(true)
+                .sync();
+
+        assert fetchMessagesResult != null;
+        for (PNFetchMessageItem messageItem : fetchMessagesResult.getChannels().get(expectedChannelName)) {
+            assertNotNull(messageItem.getMessage());
+            assertNotNull(messageItem.getTimetoken());
+            assertNotNull(messageItem.getMeta());
+            assertTrue(messageItem.getMessage().toString().contains("_msg"));
+            assertEquals(messageItem.getError(), PubNubErrorBuilder.PNERROBJ_PNERR_CRYPTO_IS_CONFIGURED_BUT_MESSAGE_IS_NOT_ENCRYPTED);
         }
     }
 
