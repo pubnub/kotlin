@@ -135,7 +135,7 @@ internal sealed class SubscribeState : State<SubscribeEffectInvocation, Subscrib
 
                 is SubscribeEvent.HandshakeReconnectSuccess -> {
                     transitionTo(
-                        state = Receiving(channels, channelGroups, subscriptionCursor ?: event.subscriptionCursor),
+                        state = Receiving(channels, channelGroups, subscriptionCursor?.copy(region = event.subscriptionCursor.region) ?: event.subscriptionCursor),
                         SubscribeEffectInvocation.EmitStatus(
                             PNStatus(
                                 category = PNStatusCategory.PNConnectedCategory,
@@ -286,7 +286,7 @@ internal sealed class SubscribeState : State<SubscribeEffectInvocation, Subscrib
                 }
 
                 is SubscribeEvent.SubscriptionRestored -> {
-                    transitionTo(Receiving(event.channels, event.channelGroups, event.subscriptionCursor))
+                    transitionTo(Receiving(event.channels, event.channelGroups, SubscriptionCursor(event.subscriptionCursor.timetoken, subscriptionCursor.region)))
                 }
 
                 is SubscribeEvent.ReceiveSuccess -> {
@@ -392,7 +392,7 @@ internal sealed class SubscribeState : State<SubscribeEffectInvocation, Subscrib
                 }
 
                 is SubscribeEvent.SubscriptionRestored -> {
-                    transitionTo(Receiving(event.channels, event.channelGroups, subscriptionCursor))
+                    transitionTo(Receiving(event.channels, event.channelGroups, SubscriptionCursor(event.subscriptionCursor.timetoken, subscriptionCursor.region)))
                 }
 
                 is SubscribeEvent.UnsubscribeAll -> {

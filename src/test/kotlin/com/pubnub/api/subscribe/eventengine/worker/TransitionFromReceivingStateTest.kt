@@ -92,18 +92,25 @@ class TransitionFromReceivingStateTest {
 
     @Test
     fun can_transit_from_RECEIVING_to_RECEIVING_when_there_is_SUBSCRIPTION_RESTORED_event() {
+        // given
+        val regionStoredInStoredInReceive = "12"
+        val subscriptionCursorStoredInReceiving = SubscriptionCursor(timeToken, regionStoredInStoredInReceive)
+        val timeTokenFromSubscriptionRestored = 99945345452L
+        val subscriptionCursorStoredInSubscriptionRestored = SubscriptionCursor(timeTokenFromSubscriptionRestored, null)
+
         // when
         val (state, invocations) = transition(
-            SubscribeState.Receiving(channels, channelGroups, subscriptionCursor),
-            SubscribeEvent.SubscriptionRestored(channels, channelGroups, subscriptionCursor)
+            SubscribeState.Receiving(channels, channelGroups, subscriptionCursorStoredInReceiving),
+            SubscribeEvent.SubscriptionRestored(channels, channelGroups, subscriptionCursorStoredInSubscriptionRestored)
         )
 
         // then
-        assertEquals(SubscribeState.Receiving(channels, channelGroups, subscriptionCursor), state)
+        val expectedSubscriptionCursor = SubscriptionCursor(timeTokenFromSubscriptionRestored, regionStoredInStoredInReceive)
+        assertEquals(SubscribeState.Receiving(channels, channelGroups, expectedSubscriptionCursor), state)
         assertEquals(
             setOf(
                 SubscribeEffectInvocation.CancelReceiveMessages,
-                SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor),
+                SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, expectedSubscriptionCursor),
             ),
             invocations
         )

@@ -143,18 +143,25 @@ internal class TransitionFromReceivingReconnectingStateTest {
 
     @Test
     fun can_transit_from_RECEIVE_RECONNECTING_to_RECEIVING_when_there_is_SUBSCRIPTION_RESTORED_event() {
+        // given
+        val regionStoredInStoredInReceiveReconnecting = "12"
+        val subscriptionCursorStoredInReceiveReconnecting = SubscriptionCursor(timeToken, regionStoredInStoredInReceiveReconnecting)
+        val timeTokenFromSubscriptionRestored = 99945345452L
+        val subscriptionCursorStoredInSubscriptionRestored = SubscriptionCursor(timeTokenFromSubscriptionRestored, null)
+
         // when
         val (state, invocations) = transition(
-            SubscribeState.ReceiveReconnecting(channels, channelGroups, subscriptionCursor, 0, reason),
-            SubscribeEvent.SubscriptionRestored(channels, channelGroups, subscriptionCursor)
+            SubscribeState.ReceiveReconnecting(channels, channelGroups, subscriptionCursorStoredInReceiveReconnecting, 0, reason),
+            SubscribeEvent.SubscriptionRestored(channels, channelGroups, subscriptionCursorStoredInSubscriptionRestored)
         )
 
         // then
-        assertEquals(SubscribeState.Receiving(channels, channelGroups, subscriptionCursor), state)
+        val expectedSubscriptionCursor = SubscriptionCursor(timeTokenFromSubscriptionRestored, regionStoredInStoredInReceiveReconnecting)
+        assertEquals(SubscribeState.Receiving(channels, channelGroups, expectedSubscriptionCursor), state)
         assertEquals(
             setOf(
                 SubscribeEffectInvocation.CancelReceiveReconnect,
-                SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, subscriptionCursor),
+                SubscribeEffectInvocation.ReceiveMessages(channels, channelGroups, expectedSubscriptionCursor),
             ),
             invocations
         )
