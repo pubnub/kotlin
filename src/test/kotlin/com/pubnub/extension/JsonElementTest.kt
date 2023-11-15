@@ -90,7 +90,7 @@ class JsonElementTest {
         val mapper = MapperManager()
 
         // when
-        val (jsonElement, errorMessage) = objectUnderTest.processHistoryMessage(cryptoModule, mapper)
+        val (jsonElement, errorMessage) = objectUnderTest.tryDecryptMessage(cryptoModule, mapper)
 
         // then
         assertEquals(objectUnderTest, jsonElement)
@@ -110,7 +110,7 @@ class JsonElementTest {
         val mapper = MapperManager()
 
         // when
-        val (jsonElement, errorMessage) = objectUnderTest.processHistoryMessage(cryptoModule, mapper)
+        val (jsonElement, errorMessage) = objectUnderTest.tryDecryptMessage(cryptoModule, mapper)
 
         // then
         if (isJson) {
@@ -130,7 +130,7 @@ class JsonElementTest {
         val mapper = MapperManager()
 
         // when
-        val (jsonElement, errorMessage) = objectUnderTest.processHistoryMessage(cryptoModule, mapper)
+        val (jsonElement, errorMessage) = objectUnderTest.tryDecryptMessage(cryptoModule, mapper)
 
         // then
         assertEquals(objectUnderTest, jsonElement)
@@ -151,7 +151,7 @@ class JsonElementTest {
         val mapper = MapperManager()
 
         // when
-        val (jsonElement, errorMessage) = objectUnderTest.processHistoryMessage(cryptoModule, mapper)
+        val (jsonElement, errorMessage) = objectUnderTest.tryDecryptMessage(cryptoModule, mapper)
 
         // then
         assertEquals(message, jsonElement)

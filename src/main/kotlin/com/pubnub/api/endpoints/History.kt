@@ -8,7 +8,7 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.history.PNHistoryItemResult
 import com.pubnub.api.models.consumer.history.PNHistoryResult
-import com.pubnub.extension.processHistoryMessage
+import com.pubnub.extension.tryDecryptMessage
 import retrofit2.Call
 import retrofit2.Response
 import java.util.HashMap
@@ -76,7 +76,7 @@ class History internal constructor(
                 val historyMessageWithError: Pair<JsonElement, PubNubError?>
 
                 if (includeTimetoken || includeMeta) {
-                    historyMessageWithError = pubnub.mapper.getField(historyEntry, "message")!!.processHistoryMessage(pubnub.cryptoModule, pubnub.mapper)
+                    historyMessageWithError = pubnub.mapper.getField(historyEntry, "message")!!.tryDecryptMessage(pubnub.cryptoModule, pubnub.mapper)
                     if (includeTimetoken) {
                         timetoken = pubnub.mapper.elementToLong(historyEntry, "timetoken")
                     }
@@ -84,7 +84,7 @@ class History internal constructor(
                         meta = pubnub.mapper.getField(historyEntry, "meta")
                     }
                 } else {
-                    historyMessageWithError = historyEntry.processHistoryMessage(pubnub.cryptoModule, pubnub.mapper)
+                    historyMessageWithError = historyEntry.tryDecryptMessage(pubnub.cryptoModule, pubnub.mapper)
                 }
 
                 val message: JsonElement = historyMessageWithError.first
