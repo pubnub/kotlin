@@ -19,11 +19,28 @@ class TransitionFromHandshakeStoppedStateTest {
     private val subscriptionCursor = SubscriptionCursor(timeToken, region)
 
     @Test
+    fun can_transit_from_HANDSHAKE_STOPPED_to_HANDSHAKING_when_there_is_RECONNECT_event_with_timetoken() {
+        // given
+        val timeTokenFromReconnect = 99945345452L
+        val subscriptionCursorForReconnect = SubscriptionCursor(timeTokenFromReconnect, null)
+
+        // when
+        val (state, invocations) = transition(
+            SubscribeState.HandshakeStopped(channels, channelGroups, reason),
+            SubscribeEvent.Reconnect(subscriptionCursorForReconnect)
+        )
+
+        // then
+        assertEquals(SubscribeState.Handshaking(channels, channelGroups, subscriptionCursorForReconnect), state)
+        assertEquals(setOf(SubscribeEffectInvocation.Handshake(channels, channelGroups)), invocations)
+    }
+
+    @Test
     fun can_transit_from_HANDSHAKE_STOPPED_to_HANDSHAKING_when_there_is_RECONNECT_event() {
         // when
         val (state, invocations) = transition(
             SubscribeState.HandshakeStopped(channels, channelGroups, reason),
-            SubscribeEvent.Reconnect
+            SubscribeEvent.Reconnect()
         )
 
         // then
