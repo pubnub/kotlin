@@ -2030,9 +2030,9 @@ class PubNub internal constructor(
     /**
      * Force the SDK to try and reach out PubNub. Monitor the results in [SubscribeCallback.status]
      */
-    fun reconnect() {
+    fun reconnect(timetoken: Long = 0L) {
         if (configuration.enableEventEngine) {
-            subscribe.reconnect()
+            subscribe.reconnect(timetoken)
             presence.reconnect()
         } else {
             subscriptionManager.reconnect()

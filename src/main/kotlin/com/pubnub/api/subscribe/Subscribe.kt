@@ -100,7 +100,10 @@ internal class Subscribe(
             val subscriptionRestoredEvent = SubscriptionRestored(
                 channelsInLocalStorage,
                 channelGroupsInLocalStorage,
-                SubscriptionCursor(withTimetoken, region = null) // we don't know region here. Subscribe response will return region.
+                SubscriptionCursor(
+                    withTimetoken,
+                    region = null
+                ) // we don't know region here. Subscribe response will return region.
             )
             subscribeEventEngineManager.addEventToQueue(subscriptionRestoredEvent)
         } else {
@@ -157,8 +160,13 @@ internal class Subscribe(
         subscribeEventEngineManager.addEventToQueue(SubscribeEvent.Disconnect)
     }
 
-    fun reconnect() {
-        subscribeEventEngineManager.addEventToQueue(SubscribeEvent.Reconnect)
+    fun reconnect(timetoken: Long = 0L) {
+        val event = if (timetoken != 0L) {
+            SubscribeEvent.Reconnect(SubscriptionCursor(timetoken, region = null))
+        } else {
+            SubscribeEvent.Reconnect()
+        }
+        subscribeEventEngineManager.addEventToQueue(event)
     }
 
     @Synchronized

@@ -144,10 +144,10 @@ internal class SubscribeTest {
     }
 
     @Test
-    fun `should pass reconnect event for handling when disconnect`() {
+    fun `should pass reconnect event for handling when reconnect`() {
         objectUnderTest.reconnect()
 
-        assertEquals(SubscribeEvent.Reconnect, subscribeEvent.captured)
+        assertEquals(SubscribeEvent.Reconnect(), subscribeEvent.captured)
     }
 
     private fun createSubscriptionStateContainingValues(): SubscriptionData {

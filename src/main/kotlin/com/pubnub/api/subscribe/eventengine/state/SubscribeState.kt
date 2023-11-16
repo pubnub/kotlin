@@ -172,7 +172,7 @@ internal sealed class SubscribeState : State<SubscribeEffectInvocation, Subscrib
         override fun transition(event: SubscribeEvent): Pair<SubscribeState, Set<SubscribeEffectInvocation>> {
             return when (event) {
                 is SubscribeEvent.Reconnect -> {
-                    transitionTo(Handshaking(channels, channelGroups))
+                    transitionTo(Handshaking(channels, channelGroups, event.subscriptionCursor))
                 }
 
                 is SubscribeEvent.SubscriptionChanged -> {
@@ -228,7 +228,7 @@ internal sealed class SubscribeState : State<SubscribeEffectInvocation, Subscrib
                 }
 
                 is SubscribeEvent.Reconnect -> {
-                    transitionTo(Handshaking(channels, channelGroups))
+                    transitionTo(Handshaking(channels, channelGroups, event.subscriptionCursor))
                 }
 
                 is SubscribeEvent.UnsubscribeAll -> {
@@ -425,7 +425,7 @@ internal sealed class SubscribeState : State<SubscribeEffectInvocation, Subscrib
         override fun transition(event: SubscribeEvent): Pair<SubscribeState, Set<SubscribeEffectInvocation>> {
             return when (event) {
                 is SubscribeEvent.Reconnect -> {
-                    transitionTo(Handshaking(channels, channelGroups, subscriptionCursor))
+                    transitionTo(Handshaking(channels, channelGroups, event.subscriptionCursor ?: subscriptionCursor))
                 }
 
                 is SubscribeEvent.SubscriptionChanged -> {
@@ -468,7 +468,7 @@ internal sealed class SubscribeState : State<SubscribeEffectInvocation, Subscrib
         override fun transition(event: SubscribeEvent): Pair<SubscribeState, Set<SubscribeEffectInvocation>> {
             return when (event) {
                 is SubscribeEvent.Reconnect -> {
-                    transitionTo(Handshaking(channels, channelGroups, subscriptionCursor))
+                    transitionTo(Handshaking(channels, channelGroups, event.subscriptionCursor ?: subscriptionCursor))
                 }
 
                 is SubscribeEvent.SubscriptionChanged -> {
