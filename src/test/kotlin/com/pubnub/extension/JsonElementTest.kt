@@ -1,10 +1,13 @@
 package com.pubnub.extension
 
+import com.google.gson.Gson
+import com.google.gson.JsonArray
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.JsonPrimitive
 import com.pubnub.api.CommonUtils.generatePayload
 import com.pubnub.api.crypto.CryptoModule
+import com.pubnub.api.crypto.encryptString
 import com.pubnub.api.managers.MapperManager
 import com.pubnub.contract.gson
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -16,49 +19,58 @@ import org.junit.jupiter.params.provider.MethodSource
 class JsonElementTest {
 
     companion object {
+        val gson = Gson()
+
         @JvmStatic
         fun cryptoModuleConfiguration(): List<Arguments> {
             val cipherKey = "enigma"
             return listOf(
                 Arguments.of(
-                    "Hello world.",
+                    JsonPrimitive("Hello world."),
                     false,
                     "X/wLZqR/I+4eU7WwtKycTwy9+L9e7m2BhklK9ZQWtwI=",
                     CryptoModule.createLegacyCryptoModule(cipherKey = cipherKey, randomIv = true),
                     generatePayload()
                 ),
                 Arguments.of(
-                    "Hello world.",
+                    JsonPrimitive("Hello world."),
                     false,
                     "bk8x+ZEg+Roq8ngUo7lfFg==",
                     CryptoModule.createLegacyCryptoModule(cipherKey = cipherKey, randomIv = false),
                     generatePayload()
                 ),
                 Arguments.of(
-                    "Hello world.",
+                    JsonPrimitive("Hello world."),
                     false,
                     "UE5FRAFBQ1JIEK8FoITMdCOcG1mPQrtf31N5ZtA2MY/6QPLJ1DURjnwo",
                     CryptoModule.createAesCbcCryptoModule(cipherKey = cipherKey, randomIv = true),
                     generatePayload()
                 ),
                 Arguments.of(
-                    "{\"name\":\"joe\",\"age\":48}",
+                    gson.fromJson("{\"name\":\"joe\",\"age\":48}", JsonObject::class.java),
                     true,
                     "4vKzF7L8TWPwtnipqZZo4UGSbpjQi5mX4jkX29Rr/Cc306fe2kBLzhNm820UBQ1+",
                     CryptoModule.createLegacyCryptoModule(cipherKey = cipherKey, randomIv = true),
                     generatePayload()
                 ),
                 Arguments.of(
-                    "{\"name\":\"joe\",\"age\":48}",
+                    gson.fromJson("{\"name\":\"joe\",\"age\":48}", JsonObject::class.java),
                     true,
                     "Pjwel1wltV2CipfQrQWulh526ZdMr49BpF0Z8A5+Vms=",
                     CryptoModule.createLegacyCryptoModule(cipherKey = cipherKey, randomIv = false),
                     generatePayload()
                 ),
                 Arguments.of(
-                    "{\"name\":\"joe\",\"age\":48}",
+                    gson.fromJson("{\"name\":\"joe\",\"age\":48}", JsonObject::class.java),
                     true,
                     "UE5FRAFBQ1JIEDFd1QNYJ9lygFSiK54LohgnsVgmb1YhPS5R5px8KvtUe/NbnYBjqGnslADAgNbOtQ==",
+                    CryptoModule.createAesCbcCryptoModule(cipherKey = cipherKey, randomIv = true),
+                    generatePayload()
+                ),
+                Arguments.of(
+                    gson.fromJson("[{\"name\":\"joe\",\"age\":48}]", JsonArray::class.java),
+                    true,
+                    "UE5FRAFBQ1JIEIKCMD5/p4GpVKFOe+OR1HhF2VFIGxHxOUixt/eAd7DBAeWYfCoiS4VBAcqVyC3MuQ==",
                     CryptoModule.createAesCbcCryptoModule(cipherKey = cipherKey, randomIv = true),
                     generatePayload()
                 ),
@@ -83,8 +95,7 @@ class JsonElementTest {
         unencryptedMessage: String
     ) {
         // given
-        val message = unencryptedMessage
-        objectUnderTest = JsonPrimitive(message)
+        objectUnderTest = JsonPrimitive(unencryptedMessage)
         val cipherKey = "enigma"
         val cryptoModule = CryptoModule.createLegacyCryptoModule(cipherKey = cipherKey, randomIv = true)
         val mapper = MapperManager()
@@ -100,7 +111,7 @@ class JsonElementTest {
     @ParameterizedTest
     @MethodSource("cryptoModuleConfiguration")
     fun `when history message is encrypted string and crypto is configured should return decrypted message`(
-        message: String,
+        message: JsonElement,
         isJson: Boolean,
         encryptedMessage: String,
         cryptoModule: CryptoModule
@@ -114,19 +125,22 @@ class JsonElementTest {
 
         // then
         if (isJson) {
-            assertEquals(message, gson.toJson(jsonElement))
+            assertEquals(message, jsonElement)
         } else {
-            assertEquals(JsonPrimitive(message), jsonElement)
+            assertEquals(message, jsonElement)
         }
     }
 
-    @Test
-    fun `when history message is not encrypted JSON object and crypto is configured should log error and return error in response and return unencrypted message `() {
+    @ParameterizedTest
+    @MethodSource("cryptoModuleConfiguration")
+    fun `when history message is not encrypted JSON object and crypto is configured should log error and return error in response and return unencrypted message `(
+        message: JsonElement,
+        isJson: Boolean,
+        encryptedMessage: String,
+        cryptoModule: CryptoModule
+    ) {
         // given
-        val messageAsJsonObject = generatePayload()
-        objectUnderTest = messageAsJsonObject
-        val cipherKey = "enigma"
-        val cryptoModule = CryptoModule.createLegacyCryptoModule(cipherKey = cipherKey, randomIv = true)
+        objectUnderTest = message
         val mapper = MapperManager()
 
         // when
@@ -140,13 +154,13 @@ class JsonElementTest {
     @ParameterizedTest
     @MethodSource("cryptoModuleConfiguration")
     fun `when history message contains JSON object with pn_other property and crypto is configured should decrypt content of pn_other`(
-        message: String,
+        message: JsonElement,
         isJson: Boolean,
         encryptedMessage: String,
         cryptoModule: CryptoModule
     ) {
         // given
-        val message = generateMessageWithPNOther(encryptedMessage)
+        val message = generateMessageWithPNOther(JsonPrimitive(encryptedMessage))
         objectUnderTest = message
         val mapper = MapperManager()
 
@@ -157,9 +171,9 @@ class JsonElementTest {
         assertEquals(message, jsonElement)
     }
 
-    private fun generateMessageWithPNOther(pnOtherEncryptedValue: String): JsonObject {
+    private fun generateMessageWithPNOther(pnOtherEncryptedValue: JsonElement): JsonObject {
         return JsonObject().apply {
-            addProperty("pn_other", pnOtherEncryptedValue)
+            add("pn_other", pnOtherEncryptedValue)
         }
     }
 }
