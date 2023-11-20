@@ -7,11 +7,8 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonPrimitive
 import com.pubnub.api.CommonUtils.generatePayload
 import com.pubnub.api.crypto.CryptoModule
-import com.pubnub.api.crypto.encryptString
 import com.pubnub.api.managers.MapperManager
-import com.pubnub.contract.gson
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
