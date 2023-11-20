@@ -6,8 +6,10 @@ import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.pubnub.api.PNConfiguration;
 import com.pubnub.api.PubNub;
+import com.pubnub.api.PubNubError;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.PubNubUtil;
+import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.crypto.CryptoModule;
 import com.pubnub.api.crypto.CryptoModuleKt;
 import com.pubnub.api.managers.DuplicationManager;
@@ -69,9 +71,8 @@ public class SubscribeMessageProcessor {
         if (this.pubnub.getConfiguration().isDedupOnSubscribe()) {
             if (this.duplicationManager.isDuplicate(message)) {
                 return null;
-            } else {
-                this.duplicationManager.addEntry(message);
             }
+            this.duplicationManager.addEntry(message);
         }
 
         if (message.getChannel().endsWith("-pnpres")) {
@@ -88,7 +89,6 @@ public class SubscribeMessageProcessor {
             }
 
             JsonElement isHereNowRefresh = message.getPayload().getAsJsonObject().get("here_now_refresh");
-
             PNPresenceEventResult pnPresenceEventResult = PNPresenceEventResult.builder()
                     .event(presencePayload.getAction())
                     // deprecated
@@ -110,8 +110,22 @@ public class SubscribeMessageProcessor {
 
             return pnPresenceEventResult;
         } else {
-            JsonElement extractedMessage = processMessage(message);
-
+            JsonElement extractedMessage;
+            PubNubError error = null;
+            try {
+                if (!message.supportsEncryption()) {
+                    extractedMessage = message.getPayload();
+                } else {
+                    extractedMessage = tryDecryptMessage(message.getPayload(), pubnub.getCryptoModule(), pubnub.getMapper());
+                }
+            } catch (PubNubException e) {
+                if (e.getPubnubError() == PubNubErrorBuilder.PNERROBJ_PNERR_CRYPTO_IS_CONFIGURED_BUT_MESSAGE_IS_NOT_ENCRYPTED) {
+                    extractedMessage = message.getPayload();
+                    error = e.getPubnubError();
+                } else {
+                    throw e;
+                }
+            }
             if (extractedMessage == null) {
                 log.debug("unable to parse payload on #processIncomingMessages");
             }
@@ -129,9 +143,9 @@ public class SubscribeMessageProcessor {
                     .build();
 
             if (message.getType() == null) {
-                return new PNMessageResult(result, extractedMessage);
+                return new PNMessageResult(result, extractedMessage, error);
             } else if (message.getType() == TYPE_MESSAGE) {
-                return new PNMessageResult(result, extractedMessage);
+                return new PNMessageResult(result, extractedMessage, error);
             } else if (message.getType() == typeSignal) {
                 return new PNSignalResult(result, extractedMessage);
             } else if (message.getType() == typeObject) {
@@ -190,39 +204,40 @@ public class SubscribeMessageProcessor {
                         .jsonMessage(jsonMessage)
                         .build();
             }
-
         }
         return null;
     }
 
-    private JsonElement processMessage(SubscribeMessage subscribeMessage) throws PubNubException {
-        JsonElement input = subscribeMessage.getPayload();
-
+    public static JsonElement tryDecryptMessage(JsonElement input, CryptoModule cryptoModule, MapperManager mapper) throws PubNubException {
         // if we do not have a crypto module, there is no way to process the node; let's return.
-        CryptoModule cryptoModule = pubnub.getCryptoModule();
         if (cryptoModule == null) {
             return input;
         }
 
-        // if the message couldn't possibly be encrypted in the first place, there is no way to process the node; let's
-        // return.
-        if (!subscribeMessage.supportsEncryption()) {
-            return input;
-        }
-
-        MapperManager mapper = this.pubnub.getMapper();
         String inputText;
         String outputText;
         JsonElement outputObject;
 
-        if (mapper.isJsonObject(input) && mapper.hasField(input, PN_OTHER)) {
-            inputText = mapper.elementToString(input, PN_OTHER);
-        } else {
+        if (mapper.isJsonObject(input)) {
+            if (mapper.hasField(input, PN_OTHER)) {
+                inputText = mapper.elementToString(input, PN_OTHER);
+            } else {
+                throw logAndGetDecryptionException();
+            }
+        } else if (input.isJsonPrimitive() && input.getAsJsonPrimitive().isString()) {
+            // String may represent not encrypted string or encrypted data. We will check this when decrypting.
             inputText = mapper.elementToString(input);
+        } else {
+            // Input represents some other Json structure, such as JsonArray
+            throw logAndGetDecryptionException();
         }
 
-        outputText = CryptoModuleKt.decryptString(cryptoModule, inputText);
-        outputObject = mapper.fromJson(outputText, JsonElement.class);
+        try {
+            outputText = CryptoModuleKt.decryptString(cryptoModule, inputText);
+            outputObject = mapper.fromJson(outputText, JsonElement.class);
+        } catch (Exception e) {
+            throw logAndGetDecryptionException();
+        }
 
         // inject the decoded response into the payload
         if (mapper.isJsonObject(input) && mapper.hasField(input, PN_OTHER)) {
@@ -232,6 +247,12 @@ public class SubscribeMessageProcessor {
         }
 
         return outputObject;
+    }
+
+    private static PubNubException logAndGetDecryptionException() {
+        PubNubError error = PubNubErrorBuilder.PNERROBJ_PNERR_CRYPTO_IS_CONFIGURED_BUT_MESSAGE_IS_NOT_ENCRYPTED;
+        log.warn(error.getMessage());
+        return new PubNubException(error.getMessage(), error, null, null, 0, null, null);
     }
 
     @SuppressWarnings("RegExpRedundantEscape")
