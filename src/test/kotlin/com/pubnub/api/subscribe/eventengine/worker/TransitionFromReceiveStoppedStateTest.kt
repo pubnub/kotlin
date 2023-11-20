@@ -20,12 +20,37 @@ class TransitionFromReceiveStoppedStateTest {
         // when
         val (state, invocations) = transition(
             SubscribeState.ReceiveStopped(channels, channelGroups, subscriptionCursor),
-            SubscribeEvent.Reconnect
+            SubscribeEvent.Reconnect()
         )
 
         // then
         assertEquals(
             SubscribeState.Handshaking(channels, channelGroups, subscriptionCursor),
+            state
+        )
+        assertEquals(
+            setOf(
+                SubscribeEffectInvocation.Handshake(channels, channelGroups)
+            ),
+            invocations
+        )
+    }
+
+    @Test
+    fun can_transit_from_RECEIVE_STOPPED_to_HANDSHAKING_when_there_is_RECONNECT_event_with_reconnectCursor() {
+        // given
+        val timeTokenFromReconnect = 99945345452L
+        val subscriptionCursorForReconnect = SubscriptionCursor(timeTokenFromReconnect, null)
+
+        // when
+        val (state, invocations) = transition(
+            SubscribeState.ReceiveStopped(channels, channelGroups, subscriptionCursor),
+            SubscribeEvent.Reconnect(subscriptionCursorForReconnect)
+        )
+
+        // then
+        assertEquals(
+            SubscribeState.Handshaking(channels, channelGroups, subscriptionCursorForReconnect),
             state
         )
         assertEquals(

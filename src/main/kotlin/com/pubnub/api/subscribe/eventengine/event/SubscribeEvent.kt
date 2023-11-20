@@ -13,7 +13,7 @@ internal sealed class SubscribeEvent : Event {
     ) : SubscribeEvent()
 
     object Disconnect : SubscribeEvent()
-    object Reconnect : SubscribeEvent()
+    data class Reconnect(val subscriptionCursor: SubscriptionCursor? = null) : SubscribeEvent()
     object UnsubscribeAll : SubscribeEvent()
 
     data class HandshakeSuccess(val subscriptionCursor: SubscriptionCursor) : SubscribeEvent()

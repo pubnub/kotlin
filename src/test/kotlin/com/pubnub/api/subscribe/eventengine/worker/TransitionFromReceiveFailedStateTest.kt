@@ -62,10 +62,30 @@ internal class TransitionFromReceiveFailedStateTest {
 
     @Test
     fun can_transit_from_RECEIVE_FAILED_to_HANDSHAKING_when_there_is_RECONNECT_event() {
+        // given
+        val timeTokenFromReconnect = 99945345452L
+        val subscriptionCursorForReconnect = SubscriptionCursor(timeTokenFromReconnect, null)
+
         // when
         val (receivingState, effectInvocations) = transition(
             SubscribeState.ReceiveFailed(channels, channelGroups, subscriptionCursor, reason),
-            SubscribeEvent.Reconnect
+            SubscribeEvent.Reconnect(subscriptionCursorForReconnect)
+        )
+
+        // then
+        assertEquals(SubscribeState.Handshaking(channels, channelGroups, subscriptionCursorForReconnect), receivingState)
+        assertEquals(
+            setOf(SubscribeEffectInvocation.Handshake(channels, channelGroups)),
+            effectInvocations
+        )
+    }
+
+    @Test
+    fun can_transit_from_RECEIVE_FAILED_to_HANDSHAKING_when_there_is_RECONNECT_event_with_reconnectCursor() {
+        // when
+        val (receivingState, effectInvocations) = transition(
+            SubscribeState.ReceiveFailed(channels, channelGroups, subscriptionCursor, reason),
+            SubscribeEvent.Reconnect()
         )
 
         // then
