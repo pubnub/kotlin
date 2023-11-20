@@ -6,7 +6,6 @@ import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PNConfiguration.Companion.isValid
 import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubUtil
-import com.pubnub.api.crypto.decryptString
 import com.pubnub.api.managers.DuplicationManager
 import com.pubnub.api.models.consumer.files.PNDownloadableFile
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
@@ -24,6 +23,7 @@ import com.pubnub.api.models.server.PresenceEnvelope
 import com.pubnub.api.models.server.SubscribeMessage
 import com.pubnub.api.models.server.files.FileUploadNotification
 import com.pubnub.api.services.FilesService
+import com.pubnub.extension.tryDecryptMessage
 import org.slf4j.LoggerFactory
 
 internal class SubscribeMessageProcessor(
@@ -86,7 +86,8 @@ internal class SubscribeMessageProcessor(
                 hereNowRefresh = isHereNowRefresh != null && isHereNowRefresh.asBoolean
             )
         } else {
-            val extractedMessage = processMessage(message)
+            val (extractedMessage, error) = message.payload?.tryDecryptMessage(pubnub.cryptoModule, pubnub.mapper)
+                ?: (null to null)
 
             if (extractedMessage == null) {
                 log.debug("unable to parse payload on #processIncomingMessages")
@@ -102,11 +103,11 @@ internal class SubscribeMessageProcessor(
 
             return when (message.type) {
                 null -> {
-                    PNMessageResult(result, extractedMessage!!)
+                    PNMessageResult(result, extractedMessage!!, error)
                 }
 
                 TYPE_MESSAGE -> {
-                    PNMessageResult(result, extractedMessage!!)
+                    PNMessageResult(result, extractedMessage!!, error)
                 }
 
                 TYPE_SIGNAL -> {
@@ -199,36 +200,6 @@ internal class SubscribeMessageProcessor(
         return PubNubUtil.generateSignature(
             configuration, url, queryParams, "get", null, timestamp
         )
-    }
-
-    private fun processMessage(subscribeMessage: SubscribeMessage): JsonElement? {
-        val input = subscribeMessage.payload
-
-        val cryptoModule = pubnub.cryptoModule ?: return input
-        // if we do not have a crypto module, there is no way to process the node; let's return.
-
-        // if the message couldn't possibly be encrypted in the first place, there is no way to process the node;
-        // let's return.
-        if (!subscribeMessage.supportsEncryption()) {
-            return input
-        }
-
-        val inputText = if (pubnub.mapper.isJsonObject(input!!) && pubnub.mapper.hasField(input, "pn_other")) {
-            pubnub.mapper.elementToString(input, "pn_other")
-        } else {
-            pubnub.mapper.elementToString(input)
-        }
-
-        val outputText = cryptoModule.decryptString(inputText!!)
-        var outputObject = pubnub.mapper.fromJson(outputText, JsonElement::class.java)
-
-        if (pubnub.mapper.isJsonObject(input) && pubnub.mapper.hasField(input, "pn_other")) {
-            val objectNode = pubnub.mapper.getAsObject(input)
-            pubnub.mapper.putOnObject(objectNode, "pn_other", outputObject)
-            outputObject = objectNode
-        }
-
-        return outputObject
     }
 
     private fun getDelta(delta: JsonElement?): List<String> {

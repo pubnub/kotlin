@@ -13,7 +13,7 @@ import com.pubnub.api.models.server.FetchMessagesEnvelope
 import com.pubnub.api.toCsv
 import com.pubnub.extension.limit
 import com.pubnub.extension.nonPositiveToNull
-import com.pubnub.extension.processHistoryMessage
+import com.pubnub.extension.tryDecryptMessage
 import retrofit2.Call
 import retrofit2.Response
 import java.util.Locale
@@ -82,7 +82,7 @@ class FetchMessages internal constructor(
         val body = input.body()!!
         val channelsMap = body.channels.mapValues { (_, value) ->
             value.map { serverMessageItem ->
-                val (newMessage, error) = serverMessageItem.message.processHistoryMessage(
+                val (newMessage, error) = serverMessageItem.message.tryDecryptMessage(
                     pubnub.cryptoModule,
                     pubnub.mapper
                 )
