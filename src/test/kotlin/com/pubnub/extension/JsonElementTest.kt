@@ -5,7 +5,6 @@ import com.google.gson.JsonArray
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.JsonPrimitive
-import com.pubnub.api.CommonUtils.generatePayload
 import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.api.managers.MapperManager
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -27,49 +26,42 @@ class JsonElementTest {
                     false,
                     "X/wLZqR/I+4eU7WwtKycTwy9+L9e7m2BhklK9ZQWtwI=",
                     CryptoModule.createLegacyCryptoModule(cipherKey = cipherKey, randomIv = true),
-                    generatePayload()
                 ),
                 Arguments.of(
                     JsonPrimitive("Hello world."),
                     false,
                     "bk8x+ZEg+Roq8ngUo7lfFg==",
                     CryptoModule.createLegacyCryptoModule(cipherKey = cipherKey, randomIv = false),
-                    generatePayload()
                 ),
                 Arguments.of(
                     JsonPrimitive("Hello world."),
                     false,
                     "UE5FRAFBQ1JIEK8FoITMdCOcG1mPQrtf31N5ZtA2MY/6QPLJ1DURjnwo",
                     CryptoModule.createAesCbcCryptoModule(cipherKey = cipherKey, randomIv = true),
-                    generatePayload()
                 ),
                 Arguments.of(
                     gson.fromJson("{\"name\":\"joe\",\"age\":48}", JsonObject::class.java),
                     true,
                     "4vKzF7L8TWPwtnipqZZo4UGSbpjQi5mX4jkX29Rr/Cc306fe2kBLzhNm820UBQ1+",
                     CryptoModule.createLegacyCryptoModule(cipherKey = cipherKey, randomIv = true),
-                    generatePayload()
                 ),
                 Arguments.of(
                     gson.fromJson("{\"name\":\"joe\",\"age\":48}", JsonObject::class.java),
                     true,
                     "Pjwel1wltV2CipfQrQWulh526ZdMr49BpF0Z8A5+Vms=",
                     CryptoModule.createLegacyCryptoModule(cipherKey = cipherKey, randomIv = false),
-                    generatePayload()
                 ),
                 Arguments.of(
                     gson.fromJson("{\"name\":\"joe\",\"age\":48}", JsonObject::class.java),
                     true,
                     "UE5FRAFBQ1JIEDFd1QNYJ9lygFSiK54LohgnsVgmb1YhPS5R5px8KvtUe/NbnYBjqGnslADAgNbOtQ==",
                     CryptoModule.createAesCbcCryptoModule(cipherKey = cipherKey, randomIv = true),
-                    generatePayload()
                 ),
                 Arguments.of(
                     gson.fromJson("[{\"name\":\"joe\",\"age\":48}]", JsonArray::class.java),
                     true,
                     "UE5FRAFBQ1JIEIKCMD5/p4GpVKFOe+OR1HhF2VFIGxHxOUixt/eAd7DBAeWYfCoiS4VBAcqVyC3MuQ==",
                     CryptoModule.createAesCbcCryptoModule(cipherKey = cipherKey, randomIv = true),
-                    generatePayload()
                 ),
             )
         }
