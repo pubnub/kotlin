@@ -30,11 +30,16 @@ internal sealed class SubscribeState : State<SubscribeEffectInvocation, Subscrib
         }
     }
 
-    data class Handshaking(
-        val channels: Set<String>,
-        val channelGroups: Set<String>,
+    class Handshaking(
+        channels: Set<String>,
+        channelGroups: Set<String>,
         val subscriptionCursor: SubscriptionCursor? = null,
     ) : SubscribeState() {
+        // toSet() is a must because we want to make sure that channels is immutable, and Handshaking constructor
+        // doesn't prevent from providing "channels" that is mutable set.
+        val channels: Set<String> = channels.toSet()
+        val channelGroups: Set<String> = channelGroups.toSet()
+
         override fun onEntry() = setOf(SubscribeEffectInvocation.Handshake(channels, channelGroups))
         override fun onExit() = setOf(SubscribeEffectInvocation.CancelHandshake)
 
@@ -87,13 +92,16 @@ internal sealed class SubscribeState : State<SubscribeEffectInvocation, Subscrib
         }
     }
 
-    data class HandshakeReconnecting(
-        val channels: Set<String>,
-        val channelGroups: Set<String>,
+    class HandshakeReconnecting(
+        channels: Set<String>,
+        channelGroups: Set<String>,
         val attempts: Int,
         val reason: PubNubException?,
         val subscriptionCursor: SubscriptionCursor? = null
     ) : SubscribeState() {
+        val channels: Set<String> = channels.toSet()
+        val channelGroups: Set<String> = channelGroups.toSet()
+
         override fun onEntry() =
             setOf(SubscribeEffectInvocation.HandshakeReconnect(channels, channelGroups, attempts, reason))
 
@@ -135,7 +143,12 @@ internal sealed class SubscribeState : State<SubscribeEffectInvocation, Subscrib
 
                 is SubscribeEvent.HandshakeReconnectSuccess -> {
                     transitionTo(
-                        state = Receiving(channels, channelGroups, subscriptionCursor?.copy(region = event.subscriptionCursor.region) ?: event.subscriptionCursor),
+                        state = Receiving(
+                            channels,
+                            channelGroups,
+                            subscriptionCursor?.copy(region = event.subscriptionCursor.region)
+                                ?: event.subscriptionCursor
+                        ),
                         SubscribeEffectInvocation.EmitStatus(
                             PNStatus(
                                 category = PNStatusCategory.PNConnectedCategory,
@@ -163,11 +176,13 @@ internal sealed class SubscribeState : State<SubscribeEffectInvocation, Subscrib
         }
     }
 
-    data class HandshakeStopped(
-        val channels: Set<String>,
-        val channelGroups: Set<String>,
+    class HandshakeStopped(
+        channels: Set<String>,
+        channelGroups: Set<String>,
         val reason: PubNubException?
     ) : SubscribeState() {
+        val channels: Set<String> = channels.toSet()
+        val channelGroups: Set<String> = channelGroups.toSet()
 
         override fun transition(event: SubscribeEvent): Pair<SubscribeState, Set<SubscribeEffectInvocation>> {
             return when (event) {
@@ -206,12 +221,14 @@ internal sealed class SubscribeState : State<SubscribeEffectInvocation, Subscrib
         }
     }
 
-    data class HandshakeFailed(
-        val channels: Set<String>,
-        val channelGroups: Set<String>,
+    class HandshakeFailed(
+        channels: Set<String>,
+        channelGroups: Set<String>,
         val reason: PubNubException,
         val subscriptionCursor: SubscriptionCursor? = null
     ) : SubscribeState() {
+        val channels: Set<String> = channels.toSet()
+        val channelGroups: Set<String> = channelGroups.toSet()
 
         override fun transition(event: SubscribeEvent): Pair<SubscribeState, Set<SubscribeEffectInvocation>> {
             return when (event) {
@@ -242,11 +259,15 @@ internal sealed class SubscribeState : State<SubscribeEffectInvocation, Subscrib
         }
     }
 
-    data class Receiving(
-        private val channels: Set<String>,
-        private val channelGroups: Set<String>,
-        private val subscriptionCursor: SubscriptionCursor
+    class Receiving(
+        channels: Set<String>,
+        channelGroups: Set<String>,
+        val subscriptionCursor: SubscriptionCursor
     ) : SubscribeState() {
+
+        val channels: Set<String> = channels.toSet()
+        val channelGroups: Set<String> = channelGroups.toSet()
+
         override fun onEntry() = setOf(
             SubscribeEffectInvocation.ReceiveMessages(
                 channels, channelGroups, subscriptionCursor
@@ -286,7 +307,13 @@ internal sealed class SubscribeState : State<SubscribeEffectInvocation, Subscrib
                 }
 
                 is SubscribeEvent.SubscriptionRestored -> {
-                    transitionTo(Receiving(event.channels, event.channelGroups, SubscriptionCursor(event.subscriptionCursor.timetoken, subscriptionCursor.region)))
+                    transitionTo(
+                        Receiving(
+                            event.channels,
+                            event.channelGroups,
+                            SubscriptionCursor(event.subscriptionCursor.timetoken, subscriptionCursor.region)
+                        )
+                    )
                 }
 
                 is SubscribeEvent.ReceiveSuccess -> {
@@ -318,13 +345,16 @@ internal sealed class SubscribeState : State<SubscribeEffectInvocation, Subscrib
         }
     }
 
-    data class ReceiveReconnecting(
-        val channels: Set<String>,
-        val channelGroups: Set<String>,
+    class ReceiveReconnecting(
+        channels: Set<String>,
+        channelGroups: Set<String>,
         val subscriptionCursor: SubscriptionCursor,
         val attempts: Int,
         val reason: PubNubException?
     ) : SubscribeState() {
+        val channels: Set<String> = channels.toSet()
+        val channelGroups: Set<String> = channelGroups.toSet()
+
         override fun onEntry() =
             setOf(
                 SubscribeEffectInvocation.ReceiveReconnect(
@@ -392,7 +422,13 @@ internal sealed class SubscribeState : State<SubscribeEffectInvocation, Subscrib
                 }
 
                 is SubscribeEvent.SubscriptionRestored -> {
-                    transitionTo(Receiving(event.channels, event.channelGroups, SubscriptionCursor(event.subscriptionCursor.timetoken, subscriptionCursor.region)))
+                    transitionTo(
+                        Receiving(
+                            event.channels,
+                            event.channelGroups,
+                            SubscriptionCursor(event.subscriptionCursor.timetoken, subscriptionCursor.region)
+                        )
+                    )
                 }
 
                 is SubscribeEvent.UnsubscribeAll -> {
@@ -417,11 +453,14 @@ internal sealed class SubscribeState : State<SubscribeEffectInvocation, Subscrib
         }
     }
 
-    data class ReceiveStopped(
-        private val channels: Set<String>,
-        val channelGroups: Set<String>,
+    class ReceiveStopped(
+        channels: Set<String>,
+        channelGroups: Set<String>,
         val subscriptionCursor: SubscriptionCursor
     ) : SubscribeState() {
+        val channels: Set<String> = channels.toSet()
+        val channelGroups: Set<String> = channelGroups.toSet()
+
         override fun transition(event: SubscribeEvent): Pair<SubscribeState, Set<SubscribeEffectInvocation>> {
             return when (event) {
                 is SubscribeEvent.Reconnect -> {
@@ -459,12 +498,15 @@ internal sealed class SubscribeState : State<SubscribeEffectInvocation, Subscrib
         }
     }
 
-    data class ReceiveFailed(
-        private val channels: Set<String>,
-        val channelGroups: Set<String>,
+    class ReceiveFailed(
+        channels: Set<String>,
+        channelGroups: Set<String>,
         val subscriptionCursor: SubscriptionCursor,
         val reason: PubNubException
     ) : SubscribeState() {
+        val channels: Set<String> = channels.toSet()
+        val channelGroups: Set<String> = channelGroups.toSet()
+
         override fun transition(event: SubscribeEvent): Pair<SubscribeState, Set<SubscribeEffectInvocation>> {
             return when (event) {
                 is SubscribeEvent.Reconnect -> {

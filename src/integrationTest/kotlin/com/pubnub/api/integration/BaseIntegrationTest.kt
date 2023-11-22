@@ -44,6 +44,7 @@ abstract class BaseIntegrationTest {
         if (pnConfiguration == null) {
             pnConfiguration = getBasicPnConfiguration()
         }
+        pnConfiguration.enableEventEngine = true
         val pubNub = PubNub(pnConfiguration)
         registerGuestClient(pubNub)
         return pubNub
@@ -95,9 +96,9 @@ abstract class BaseIntegrationTest {
 
     private fun needsServer() = provideAuthKey() != null
 
-    protected open fun onBefore() {}
-    protected open fun onAfter() {}
-    protected open fun onPrePubnub() {}
+    protected open fun onBefore() = noAction()
+    protected open fun onAfter() = noAction()
+    protected open fun onPrePubnub() = noAction()
 
     protected open fun provideAuthKey(): String? = null
 
@@ -105,5 +106,9 @@ abstract class BaseIntegrationTest {
 
     fun wait(seconds: Int = 3) {
         Thread.sleep((seconds * 1_000).toLong())
+    }
+
+    private fun noAction() {
+        // No action
     }
 }
