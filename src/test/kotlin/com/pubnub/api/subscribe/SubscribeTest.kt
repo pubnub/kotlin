@@ -22,6 +22,8 @@ private const val CHANNEL_GROUPS_01 = "channelGroups01"
 private const val CHANNEL_GROUPS_02 = "channelGroups02"
 private const val CHANNEL_GROUPS_03 = "channelGroups03"
 
+private const val PNPRES = "-pnpres"
+
 internal class SubscribeTest {
     private val channelsInSubscriptionData = mutableSetOf(CHANNEL_01, CHANNEL_02)
     private val channelGroupsInSubscriptionData = mutableSetOf(CHANNEL_GROUPS_01, CHANNEL_GROUPS_02)
@@ -81,6 +83,12 @@ internal class SubscribeTest {
 
     @Test
     fun `should remove channels and channelGroups from local storage and pass SubscriptionChange event for handling when at least one channel or channelGroup left in storage`() {
+        objectUnderTest.subscribe(
+            setOf(CHANNEL_01, CHANNEL_02),
+            setOf(CHANNEL_GROUPS_01, CHANNEL_GROUPS_02),
+            withPresence = true,
+            withTimetoken
+        )
         val channelsToUnsubscribe: Set<String> = setOf(CHANNEL_01)
         val channelGroupsToUnsubscribe: Set<String> = setOf(CHANNEL_GROUPS_01)
 
@@ -88,11 +96,11 @@ internal class SubscribeTest {
 
         verify { subscribeEventEngineManager.addEventToQueue(any()) }
         assertEquals(
-            SubscribeEvent.SubscriptionChanged(setOf(CHANNEL_02), setOf(CHANNEL_GROUPS_02)),
+            SubscribeEvent.SubscriptionChanged(setOf(CHANNEL_02, "$CHANNEL_02$PNPRES"), setOf(CHANNEL_GROUPS_02, "$CHANNEL_GROUPS_02$PNPRES")),
             subscribeEvent.captured
         )
-        assertEquals(setOf(CHANNEL_02), subscriptionData.channels)
-        assertEquals(setOf(CHANNEL_GROUPS_02), subscriptionData.channelGroups)
+        assertEquals(setOf(CHANNEL_02, "$CHANNEL_02$PNPRES"), subscriptionData.channels)
+        assertEquals(setOf(CHANNEL_GROUPS_02, "$CHANNEL_GROUPS_02$PNPRES"), subscriptionData.channelGroups)
     }
 
     @Test

@@ -5,6 +5,7 @@ import com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectInvocation
 import com.pubnub.api.subscribe.eventengine.event.SubscribeEvent
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
 import com.pubnub.api.subscribe.eventengine.state.SubscribeState
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
@@ -23,7 +24,10 @@ internal class TransitionFromUnsubscribedStateTest {
         )
 
         // then
-        assertEquals(SubscribeState.Handshaking(channels, channelGroups), state)
+        Assertions.assertTrue(state is SubscribeState.Handshaking)
+        val handshaking = state as SubscribeState.Handshaking
+        assertEquals(channels, handshaking.channels)
+        assertEquals(channelGroups, handshaking.channelGroups)
         assertEquals(
             setOf(
                 SubscribeEffectInvocation.Handshake(channels, channelGroups)
@@ -40,7 +44,11 @@ internal class TransitionFromUnsubscribedStateTest {
         )
 
         // then
-        assertEquals(SubscribeState.Handshaking(channels, channelGroups, subscriptionCursor), state)
+        Assertions.assertTrue(state is SubscribeState.Handshaking)
+        val handshaking = state as SubscribeState.Handshaking
+        assertEquals(channels, handshaking.channels)
+        assertEquals(channelGroups, handshaking.channelGroups)
+        assertEquals(subscriptionCursor, handshaking.subscriptionCursor)
         assertEquals(
             setOf(
                 SubscribeEffectInvocation.Handshake(channels, channelGroups),

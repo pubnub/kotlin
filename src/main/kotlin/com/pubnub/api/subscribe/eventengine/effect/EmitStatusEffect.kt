@@ -11,7 +11,7 @@ internal class EmitStatusEffect(
     private val log = LoggerFactory.getLogger(EmitStatusEffect::class.java)
 
     override fun runEffect() {
-        log.trace("Running EmitStatusEffect")
+        log.trace("Running EmitStatusEffect: $status")
         statusConsumer.announce(status)
     }
 }

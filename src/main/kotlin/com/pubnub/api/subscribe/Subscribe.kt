@@ -94,8 +94,8 @@ internal class Subscribe(
         throwExceptionIfChannelAndChannelGroupIsMissing(channels, channelGroups)
         addChannelsToSubscriptionData(channels, withPresence)
         addChannelGroupsToSubscriptionData(channelGroups, withPresence)
-        val channelsInLocalStorage = subscriptionData.channels
-        val channelGroupsInLocalStorage = subscriptionData.channelGroups
+        val channelsInLocalStorage = subscriptionData.channels.toSet()
+        val channelGroupsInLocalStorage = subscriptionData.channelGroups.toSet()
         if (withTimetoken != 0L) {
             val subscriptionRestoredEvent = SubscriptionRestored(
                 channelsInLocalStorage,
@@ -126,8 +126,8 @@ internal class Subscribe(
         removeChannelGroupsFromSubscriptionData(channelGroups)
 
         if (subscriptionData.channels.size > 0 || subscriptionData.channelGroups.size > 0) {
-            val channelsInLocalStorage = subscriptionData.channels
-            val channelGroupsInLocalStorage = subscriptionData.channelGroups
+            val channelsInLocalStorage = subscriptionData.channels.toSet()
+            val channelGroupsInLocalStorage = subscriptionData.channelGroups.toSet()
             subscribeEventEngineManager.addEventToQueue(
                 SubscriptionChanged(
                     channelsInLocalStorage,
@@ -208,7 +208,7 @@ internal class Subscribe(
         channelGroups.forEach {
             subscriptionData.channelGroups.remove(it)
             val presenceChannelGroup = "$it$PRESENCE_CHANNEL_SUFFIX"
-            subscriptionData.channels.remove(presenceChannelGroup)
+            subscriptionData.channelGroups.remove(presenceChannelGroup)
         }
     }
 

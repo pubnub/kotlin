@@ -14,6 +14,7 @@ import com.pubnub.api.subscribe.eventengine.effect.SubscribeEffectInvocation
 import com.pubnub.api.subscribe.eventengine.event.SubscribeEvent
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
 import com.pubnub.api.subscribe.eventengine.state.SubscribeState
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
@@ -33,7 +34,14 @@ class TransitionFromReceivingStateTest {
         )
 
         // then
-        assertEquals(SubscribeState.ReceiveReconnecting(channels, channelGroups, subscriptionCursor, 0, reason), state)
+        Assertions.assertTrue(state is SubscribeState.ReceiveReconnecting)
+        state as SubscribeState.ReceiveReconnecting
+
+        assertEquals(channels, state.channels)
+        assertEquals(channelGroups, state.channelGroups)
+        assertEquals(subscriptionCursor, state.subscriptionCursor)
+        assertEquals(0, state.attempts)
+        assertEquals(reason, state.reason)
         assertEquals(
             setOf(
                 SubscribeEffectInvocation.CancelReceiveMessages,
@@ -52,7 +60,12 @@ class TransitionFromReceivingStateTest {
         )
 
         // then
-        assertEquals(SubscribeState.ReceiveStopped(channels, channelGroups, subscriptionCursor), state)
+        Assertions.assertTrue(state is SubscribeState.ReceiveStopped)
+        state as SubscribeState.ReceiveStopped
+
+        assertEquals(channels, state.channels)
+        assertEquals(channelGroups, state.channelGroups)
+        assertEquals(subscriptionCursor, state.subscriptionCursor)
         assertEquals(
             setOf(
                 SubscribeEffectInvocation.CancelReceiveMessages,
@@ -80,7 +93,12 @@ class TransitionFromReceivingStateTest {
         )
 
         // then
-        assertEquals(SubscribeState.Receiving(channels, channelGroups, subscriptionCursor), state)
+        Assertions.assertTrue(state is SubscribeState.Receiving)
+        state as SubscribeState.Receiving
+
+        assertEquals(channels, state.channels)
+        assertEquals(channelGroups, state.channelGroups)
+        assertEquals(subscriptionCursor, state.subscriptionCursor)
         assertEquals(
             setOf(
                 SubscribeEffectInvocation.CancelReceiveMessages,
@@ -106,7 +124,12 @@ class TransitionFromReceivingStateTest {
 
         // then
         val expectedSubscriptionCursor = SubscriptionCursor(timeTokenFromSubscriptionRestored, regionStoredInStoredInReceive)
-        assertEquals(SubscribeState.Receiving(channels, channelGroups, expectedSubscriptionCursor), state)
+        Assertions.assertTrue(state is SubscribeState.Receiving)
+        state as SubscribeState.Receiving
+
+        assertEquals(channels, state.channels)
+        assertEquals(channelGroups, state.channelGroups)
+        assertEquals(expectedSubscriptionCursor, state.subscriptionCursor)
         assertEquals(
             setOf(
                 SubscribeEffectInvocation.CancelReceiveMessages,
@@ -129,7 +152,12 @@ class TransitionFromReceivingStateTest {
         )
 
         // then
-        assertEquals(SubscribeState.Receiving(channels, channelGroups, subscriptionCursor), state)
+        Assertions.assertTrue(state is SubscribeState.Receiving)
+        state as SubscribeState.Receiving
+
+        assertEquals(channels, state.channels)
+        assertEquals(channelGroups, state.channelGroups)
+        assertEquals(subscriptionCursor, state.subscriptionCursor)
         assertEquals(
             setOf(
                 SubscribeEffectInvocation.CancelReceiveMessages,

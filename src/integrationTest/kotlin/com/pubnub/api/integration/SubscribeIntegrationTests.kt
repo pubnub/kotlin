@@ -5,7 +5,6 @@ import com.pubnub.api.CommonUtils.randomValue
 import com.pubnub.api.PubNub
 import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.enums.PNOperationType
-import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.listen
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
@@ -96,9 +95,8 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
 
         pubnub.addListener(object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
-                if (pnStatus.operation == PNOperationType.PNUnsubscribeOperation &&
-                    pnStatus.category == PNStatusCategory.PNAcknowledgmentCategory
-                ) {
+                // because we have one channel subscribed unsubscribing from it will cause UnsubscribeAll
+                if (pnStatus.affectedChannels.contains(expectedChannel) && pnStatus.operation == PNOperationType.PNUnsubscribeOperation) {
                     success.set(pubnub.getSubscribedChannels().none { it == expectedChannel })
                 }
             }
@@ -118,8 +116,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
 
         pubnub.addListener(object : SubscribeCallback() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
-                if (pnStatus.category == PNStatusCategory.PNAcknowledgmentCategory &&
-                    pnStatus.affectedChannels.contains(randomChannel) &&
+                if (pnStatus.affectedChannels.contains(randomChannel) &&
                     pnStatus.operation == PNOperationType.PNUnsubscribeOperation
                 ) {
                     success.set(pubnub.getSubscribedChannels().isEmpty())
