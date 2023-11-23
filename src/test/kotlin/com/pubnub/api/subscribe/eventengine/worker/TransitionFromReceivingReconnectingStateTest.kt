@@ -15,6 +15,7 @@ import com.pubnub.api.subscribe.eventengine.event.SubscribeEvent
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
 import com.pubnub.api.subscribe.eventengine.state.SubscribeState
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
 internal class TransitionFromReceivingReconnectingStateTest {
@@ -26,6 +27,24 @@ internal class TransitionFromReceivingReconnectingStateTest {
     val subscriptionCursor = SubscriptionCursor(timeToken, region)
 
     @Test
+    fun `channel and channelGroup should be immutable set`() {
+        // given
+        val channelName = "Channel01"
+        val channelGroupName = "ChannelGroup01"
+        val myMutableSetOfChannels = mutableSetOf(channelName)
+        val myMutableSetOfChannelGroups = mutableSetOf(channelGroupName)
+        val receiveReconnecting: SubscribeState.ReceiveReconnecting = SubscribeState.ReceiveReconnecting(myMutableSetOfChannels, myMutableSetOfChannelGroups, subscriptionCursor, 0, reason)
+
+        // when
+        myMutableSetOfChannels.remove(channelName)
+        myMutableSetOfChannelGroups.remove(channelGroupName)
+
+        // then
+        assertTrue(receiveReconnecting.channels.contains(channelName))
+        assertTrue(receiveReconnecting.channelGroups.contains(channelGroupName))
+    }
+
+    @Test
     fun can_transit_from_RECEIVE_RECONNECTING_to_RECEIVE_RECONNECTING_when_there_is_RECEIVE_RECONNECT_FAILURE_event() {
         // when
         val (state, invocations) = transition(
@@ -34,7 +53,13 @@ internal class TransitionFromReceivingReconnectingStateTest {
         )
 
         // then
-        assertEquals(SubscribeState.ReceiveReconnecting(channels, channelGroups, subscriptionCursor, 1, reason), state)
+        assertTrue(state is SubscribeState.ReceiveReconnecting)
+        val receiveReconnecting = state as SubscribeState.ReceiveReconnecting
+        assertEquals(channels, receiveReconnecting.channels)
+        assertEquals(channelGroups, receiveReconnecting.channelGroups)
+        assertEquals(subscriptionCursor, receiveReconnecting.subscriptionCursor)
+        assertEquals(1, receiveReconnecting.attempts)
+        assertEquals(reason, receiveReconnecting.reason)
         assertEquals(
             setOf(
                 SubscribeEffectInvocation.CancelReceiveReconnect,
@@ -53,7 +78,11 @@ internal class TransitionFromReceivingReconnectingStateTest {
         )
 
         // then
-        assertEquals(SubscribeState.Receiving(channels, channelGroups, subscriptionCursor), state)
+        assertTrue(state is SubscribeState.Receiving)
+        val handshaking = state as SubscribeState.Receiving
+        assertEquals(channels, handshaking.channels)
+        assertEquals(channelGroups, handshaking.channelGroups)
+        assertEquals(subscriptionCursor, handshaking.subscriptionCursor)
         assertEquals(
             setOf(
                 SubscribeEffectInvocation.CancelReceiveReconnect,
@@ -72,7 +101,11 @@ internal class TransitionFromReceivingReconnectingStateTest {
         )
 
         // then
-        assertEquals(SubscribeState.ReceiveStopped(channels, channelGroups, subscriptionCursor), state)
+        assertTrue(state is SubscribeState.ReceiveStopped)
+        val receiveStopped = state as SubscribeState.ReceiveStopped
+        assertEquals(channels, receiveStopped.channels)
+        assertEquals(channelGroups, receiveStopped.channelGroups)
+        assertEquals(subscriptionCursor, receiveStopped.subscriptionCursor)
         assertEquals(
             setOf(
                 SubscribeEffectInvocation.CancelReceiveReconnect,
@@ -99,7 +132,12 @@ internal class TransitionFromReceivingReconnectingStateTest {
         )
 
         // then
-        assertEquals(SubscribeState.ReceiveFailed(channels, channelGroups, subscriptionCursor, reason), state)
+        assertTrue(state is SubscribeState.ReceiveFailed)
+        val receiveFailed = state as SubscribeState.ReceiveFailed
+        assertEquals(channels, receiveFailed.channels)
+        assertEquals(channelGroups, receiveFailed.channelGroups)
+        assertEquals(subscriptionCursor, receiveFailed.subscriptionCursor)
+        assertEquals(reason, receiveFailed.reason)
         assertEquals(
             setOf(
                 SubscribeEffectInvocation.CancelReceiveReconnect,
@@ -130,7 +168,12 @@ internal class TransitionFromReceivingReconnectingStateTest {
         )
 
         // then
-        assertEquals(SubscribeState.Receiving(channels, channelGroups, subscriptionCursor), state)
+        assertTrue(state is SubscribeState.Receiving)
+        state as SubscribeState.Receiving // Smart cast
+
+        assertEquals(channels, state.channels)
+        assertEquals(channelGroups, state.channelGroups)
+        assertEquals(subscriptionCursor, state.subscriptionCursor)
         assertEquals(
             setOf(
                 SubscribeEffectInvocation.CancelReceiveReconnect,
@@ -157,7 +200,12 @@ internal class TransitionFromReceivingReconnectingStateTest {
 
         // then
         val expectedSubscriptionCursor = SubscriptionCursor(timeTokenFromSubscriptionRestored, regionStoredInStoredInReceiveReconnecting)
-        assertEquals(SubscribeState.Receiving(channels, channelGroups, expectedSubscriptionCursor), state)
+        assertTrue(state is SubscribeState.Receiving)
+        state as SubscribeState.Receiving // Safe cast
+
+        assertEquals(channels, state.channels)
+        assertEquals(channelGroups, state.channelGroups)
+        assertEquals(expectedSubscriptionCursor, state.subscriptionCursor)
         assertEquals(
             setOf(
                 SubscribeEffectInvocation.CancelReceiveReconnect,

@@ -10,14 +10,32 @@ import com.pubnub.api.subscribe.eventengine.event.SubscribeEvent
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
 import com.pubnub.api.subscribe.eventengine.state.SubscribeState
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
 class TransitionFromHandshakingReconnectingStateTest {
     private val channels = setOf("Channel1")
     private val channelGroups = setOf("ChannelGroup1")
     private val timeToken = 12345345452L
-    private val region = "42"
     private val reason = PubNubException("Test")
+
+    @Test
+    fun `channel and channelGroup should be immutable set`() {
+        // given
+        val channelName = "Channel01"
+        val channelGroupName = "ChannelGroup01"
+        val myMutableSetOfChannels = mutableSetOf(channelName)
+        val myMutableSetOfChannelGroups = mutableSetOf(channelGroupName)
+        val handshakeReconnecting: SubscribeState.HandshakeReconnecting = SubscribeState.HandshakeReconnecting(myMutableSetOfChannels, myMutableSetOfChannelGroups, 0, reason)
+
+        // when
+        myMutableSetOfChannels.remove(channelName)
+        myMutableSetOfChannelGroups.remove(channelGroupName)
+
+        // then
+        assertTrue(handshakeReconnecting.channels.contains(channelName))
+        assertTrue(handshakeReconnecting.channelGroups.contains(channelGroupName))
+    }
 
     @Test
     fun can_transit_from_HANDSHAKE_RECONNECTING_to_HANDSHAKE_RECONNECTING_when_there_is_HANDSHAKE_RECONNECT_FAILURE_event() {
@@ -28,7 +46,13 @@ class TransitionFromHandshakingReconnectingStateTest {
         )
 
         // then
-        assertEquals(SubscribeState.HandshakeReconnecting(channels, channelGroups, 1, reason), state)
+        assertTrue(state is SubscribeState.HandshakeReconnecting)
+        state as SubscribeState.HandshakeReconnecting
+
+        assertEquals(channels, state.channels)
+        assertEquals(channelGroups, state.channelGroups)
+        assertEquals(1, state.attempts)
+        assertEquals(reason, state.reason)
         assertEquals(
             setOf(
                 SubscribeEffectInvocation.CancelHandshakeReconnect,
@@ -47,7 +71,11 @@ class TransitionFromHandshakingReconnectingStateTest {
         )
 
         // then
-        assertEquals(SubscribeState.Handshaking(channels, channelGroups), state)
+        assertTrue(state is SubscribeState.Handshaking)
+        state as SubscribeState.Handshaking
+
+        assertEquals(channels, state.channels)
+        assertEquals(channelGroups, state.channelGroups)
         assertEquals(
             setOf(
                 SubscribeEffectInvocation.CancelHandshakeReconnect,
@@ -65,7 +93,12 @@ class TransitionFromHandshakingReconnectingStateTest {
         )
 
         // then
-        assertEquals(SubscribeState.HandshakeStopped(channels, channelGroups, reason), state)
+        assertTrue(state is SubscribeState.HandshakeStopped)
+        state as SubscribeState.HandshakeStopped
+
+        assertEquals(channels, state.channels)
+        assertEquals(channelGroups, state.channelGroups)
+        assertEquals(reason, state.reason)
         assertEquals(
             setOf(
                 SubscribeEffectInvocation.CancelHandshakeReconnect,
@@ -83,7 +116,12 @@ class TransitionFromHandshakingReconnectingStateTest {
         )
 
         // then
-        assertEquals(SubscribeState.HandshakeFailed(channels, channelGroups, reason), state)
+        assertTrue(state is SubscribeState.HandshakeFailed)
+        state as SubscribeState.HandshakeFailed
+
+        assertEquals(channels, state.channels)
+        assertEquals(channelGroups, state.channelGroups)
+        assertEquals(reason, state.reason)
         assertEquals(
             setOf(
                 SubscribeEffectInvocation.CancelHandshakeReconnect,
@@ -118,7 +156,12 @@ class TransitionFromHandshakingReconnectingStateTest {
 
         // then
         val expectedSubscriptionCursor = SubscriptionCursor(timeToken, regionStoredInStoredInHandshakeReconnectSuccess)
-        assertEquals(SubscribeState.Receiving(channels, channelGroups, expectedSubscriptionCursor), state)
+        assertTrue(state is SubscribeState.Receiving)
+        state as SubscribeState.Receiving
+
+        assertEquals(channels, state.channels)
+        assertEquals(channelGroups, state.channelGroups)
+        assertEquals(expectedSubscriptionCursor, state.subscriptionCursor)
         assertEquals(
             setOf(
                 SubscribeEffectInvocation.CancelHandshakeReconnect,
@@ -151,7 +194,12 @@ class TransitionFromHandshakingReconnectingStateTest {
         )
 
         // then
-        assertEquals(SubscribeState.Handshaking(channels, channelGroups, subscriptionCursorStoredInSubscriptionRestored), state)
+        assertTrue(state is SubscribeState.Handshaking)
+        state as SubscribeState.Handshaking
+
+        assertEquals(channels, state.channels)
+        assertEquals(channelGroups, state.channelGroups)
+        assertEquals(subscriptionCursorStoredInSubscriptionRestored, state.subscriptionCursor)
         assertEquals(
             setOf(
                 SubscribeEffectInvocation.CancelHandshakeReconnect,
