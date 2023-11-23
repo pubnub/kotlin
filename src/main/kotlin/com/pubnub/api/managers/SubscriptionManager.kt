@@ -20,6 +20,7 @@ import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.server.SubscribeMessage
+import com.pubnub.api.subscribe.PRESENCE_CHANNEL_SUFFIX
 import com.pubnub.api.workers.SubscribeMessageWorker
 import java.util.Timer
 import java.util.concurrent.LinkedBlockingQueue
@@ -98,11 +99,11 @@ internal class SubscriptionManager(val pubnub: PubNub, private val listenerManag
     }
 
     fun getSubscribedChannels(): List<String> {
-        return subscriptionState.subscriptionStateData(false).channels
+        return subscriptionState.subscriptionStateData(false).channels.filter { !it.endsWith(PRESENCE_CHANNEL_SUFFIX) }
     }
 
     fun getSubscribedChannelGroups(): List<String> {
-        return subscriptionState.subscriptionStateData(false).channelGroups
+        return subscriptionState.subscriptionStateData(false).channelGroups.filter { !it.endsWith(PRESENCE_CHANNEL_SUFFIX) }
     }
 
     internal fun adaptStateBuilder(stateOperation: StateOperation) {

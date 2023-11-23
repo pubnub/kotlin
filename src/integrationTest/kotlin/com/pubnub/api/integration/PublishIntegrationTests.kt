@@ -19,6 +19,8 @@ import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.subscribeToBlocking
+import com.pubnub.api.v2.SubscriptionOptions
+import com.pubnub.api.v2.receivePresenceEvents
 import org.awaitility.Awaitility
 import org.awaitility.Durations
 import org.hamcrest.Matchers
@@ -133,6 +135,50 @@ class PublishIntegrationTests : BaseIntegrationTest() {
         pubnub.subscribeToBlocking(expectedChannel)
 
         success.listen()
+    }
+
+    @Test
+    fun testEventListenerApi() {
+
+        val success = AtomicBoolean()
+        val expectedChannel = randomChannel()
+        val messagePayload = generateMessage(pubnub)
+
+        val observer = createPubNub()
+
+        pubnub.addListener(object : SubscribeCallback() {
+            override fun status(pubnub: PubNub, pnStatus: PNStatus) {
+                if (pnStatus.operation == PNOperationType.PNSubscribeOperation &&
+                    pnStatus.affectedChannels.contains(expectedChannel)
+                ) {
+                    observer.publish(
+                        message = messagePayload,
+                        channel = expectedChannel
+                    ).async { _, status ->
+                        assertFalse(status.error)
+                    }
+                }
+            }
+        })
+
+        val testChannel = pubnub.channel(expectedChannel)
+        val testSubscription = testChannel.subscription(SubscriptionOptions.Channel.receivePresenceEvents())
+        testSubscription.addListener(object : SubscribeCallback() {
+
+            override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {
+                assertEquals(expectedChannel, pnMessageResult.channel)
+                assertEquals(observer.configuration.userId.value, pnMessageResult.publisher)
+                assertEquals(messagePayload, pnMessageResult.message)
+                success.set(true)
+            }
+        })
+        testSubscription.subscribe()
+
+        success.listen()
+
+        testSubscription.unsubscribe()
+        Thread.sleep(5000)
+        assertEquals(emptyList<String>(), pubnub.getSubscribedChannels())
     }
 
     @Test

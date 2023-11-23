@@ -9,8 +9,8 @@ import com.github.tomakehurst.wiremock.client.WireMock.matching
 import com.github.tomakehurst.wiremock.client.WireMock.notFound
 import com.github.tomakehurst.wiremock.client.WireMock.stubFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlMatching
-import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching
+import com.github.tomakehurst.wiremock.matching.UrlPathPattern
 import com.google.gson.reflect.TypeToken
 import com.pubnub.api.CommonUtils.emptyJson
 import com.pubnub.api.PubNub
@@ -37,10 +37,20 @@ import java.util.concurrent.atomic.AtomicInteger
 
 class SubscriptionManagerTest : BaseTest() {
 
+    private val subscribeUrlMatcher = Regex("(/v2/subscribe/[^/]+/)(.+)(/0)")
+    private val presenceUrlMatcher = Regex("(/v2/presence/sub-key/[^/]+/channel/)(.+)(/.+)")
+
+    private fun getMatchingUrlWithChannels(url: String): UrlPathPattern {
+        // /v2/subscribe/mySubscribeKey/((ch2-pnpres|ch1-pnpres|ch2|ch1),?){4}/0
+        val matches = subscribeUrlMatcher.matchEntire(url) ?: presenceUrlMatcher.matchEntire(url) ?: throw IllegalArgumentException("Unable to match $url")
+        val channels = matches.groupValues[2].split(",")
+        return urlPathMatching("${matches.groupValues[1]}((${channels.joinToString("|")}),?){${channels.size}}${matches.groupValues[3]}")
+    }
+
     @Test
     fun testGetSubscribedChannels() {
         stubFor(
-            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -86,7 +96,7 @@ class SubscriptionManagerTest : BaseTest() {
         val gotMessages = AtomicInteger()
 
         stubFor(
-            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -146,7 +156,7 @@ class SubscriptionManagerTest : BaseTest() {
         val gotMessages = AtomicInteger()
 
         stubFor(
-            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -204,7 +214,7 @@ class SubscriptionManagerTest : BaseTest() {
     @Test
     fun testGetSubscribedChannelGroups() {
         stubFor(
-            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/,/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/,/0"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -281,7 +291,7 @@ class SubscriptionManagerTest : BaseTest() {
 
         val gotMessage = AtomicBoolean()
         stubFor(
-            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -353,7 +363,7 @@ class SubscriptionManagerTest : BaseTest() {
         val gotMessages = AtomicInteger()
 
         stubFor(
-            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
                 .withQueryParam("tt", matching("0"))
                 .willReturn(
                     aResponse().withBody(
@@ -410,7 +420,7 @@ class SubscriptionManagerTest : BaseTest() {
         )
 
         stubFor(
-            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
                 .withQueryParam("tt", matching("5"))
                 .willReturn(emptyJson())
         )
@@ -439,7 +449,7 @@ class SubscriptionManagerTest : BaseTest() {
         val gotMessages = AtomicInteger()
 
         stubFor(
-            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
                 .withQueryParam("tt", matching("0"))
                 .willReturn(
                     aResponse().withBody(
@@ -496,7 +506,7 @@ class SubscriptionManagerTest : BaseTest() {
         )
 
         stubFor(
-            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
                 .withQueryParam("tt", matching("5"))
                 .willReturn(emptyJson())
         )
@@ -525,7 +535,7 @@ class SubscriptionManagerTest : BaseTest() {
         val gotMessages = AtomicInteger()
 
         stubFor(
-            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
                 .withQueryParam("tt", matching("0"))
                 .willReturn(
                     aResponse().withBody(
@@ -601,7 +611,7 @@ class SubscriptionManagerTest : BaseTest() {
         )
 
         stubFor(
-            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
                 .withQueryParam("tt", matching("5"))
                 .willReturn(notFound())
         )
@@ -629,7 +639,7 @@ class SubscriptionManagerTest : BaseTest() {
         val gotStatus = AtomicBoolean()
 
         stubFor(
-            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -689,7 +699,7 @@ class SubscriptionManagerTest : BaseTest() {
         val gotStatus = AtomicBoolean()
 
         stubFor(
-            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -749,7 +759,7 @@ class SubscriptionManagerTest : BaseTest() {
         val gotStatus = AtomicBoolean()
 
         stubFor(
-            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -809,7 +819,7 @@ class SubscriptionManagerTest : BaseTest() {
         val gotStatus = AtomicBoolean()
 
         stubFor(
-            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -886,7 +896,7 @@ class SubscriptionManagerTest : BaseTest() {
         val gotStatus = AtomicInteger()
 
         stubFor(
-            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
                 .willReturn(
                     aResponse().withStatus(403).withBody(
                         """
@@ -937,7 +947,7 @@ class SubscriptionManagerTest : BaseTest() {
         val gotMessage = AtomicBoolean()
 
         stubFor(
-            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -1001,7 +1011,7 @@ class SubscriptionManagerTest : BaseTest() {
         val gotMessage = AtomicBoolean()
 
         stubFor(
-            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -1069,7 +1079,7 @@ class SubscriptionManagerTest : BaseTest() {
         val gotMessage = AtomicBoolean()
 
         stubFor(
-            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -1139,7 +1149,7 @@ class SubscriptionManagerTest : BaseTest() {
         val gotMessage3 = AtomicBoolean()
 
         stubFor(
-            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
                 .withQueryParam("tt", matching("0"))
                 .willReturn(
                     aResponse().withBody(
@@ -1172,7 +1182,7 @@ class SubscriptionManagerTest : BaseTest() {
                 )
         )
         stubFor(
-            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
                 .withQueryParam("tt", matching("3"))
                 .willReturn(
                     aResponse().withBody(
@@ -1205,7 +1215,7 @@ class SubscriptionManagerTest : BaseTest() {
                 )
         )
         stubFor(
-            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
                 .withQueryParam("tt", matching("10"))
                 .willReturn(
                     aResponse().withBody(
@@ -1239,7 +1249,7 @@ class SubscriptionManagerTest : BaseTest() {
         )
 
         stubFor(
-            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
                 .withQueryParam("tt", matching("20"))
                 .willReturn(emptyJson())
         )
@@ -1287,7 +1297,7 @@ class SubscriptionManagerTest : BaseTest() {
     fun testSubscribeBuilderNumber() {
         val atomic = AtomicInteger(0)
         stubFor(
-            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -1339,7 +1349,7 @@ class SubscriptionManagerTest : BaseTest() {
     fun testSubscribeBuilderWithMetadata() {
         val atomic = AtomicInteger(0)
         stubFor(
-            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -1410,7 +1420,7 @@ class SubscriptionManagerTest : BaseTest() {
         )
 
         stubFor(
-            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1/0")).willReturn(
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1/0")).willReturn(
                 aResponse().withBody(
                     """
                             {
@@ -1442,11 +1452,11 @@ class SubscriptionManagerTest : BaseTest() {
         )
 
         stubFor(
-            get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch2,ch1/heartbeat")).willReturn(emptyJson())
+            get(getMatchingUrlWithChannels("/v2/presence/sub-key/mySubscribeKey/channel/ch2,ch1/heartbeat")).willReturn(emptyJson())
         )
 
         stubFor(
-            get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch1/uuid/myUUID/data")).willReturn(emptyJson())
+            get(getMatchingUrlWithChannels("/v2/presence/sub-key/mySubscribeKey/channel/ch1/uuid/myUUID/data")).willReturn(emptyJson())
         )
 
         pubnub.configuration.presenceTimeout = 20
@@ -1502,7 +1512,7 @@ class SubscriptionManagerTest : BaseTest() {
     fun testSubscribeChannelGroupBuilder() {
         val atomic = AtomicBoolean()
         stubFor(
-            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/,/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/,/0"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -1559,7 +1569,7 @@ class SubscriptionManagerTest : BaseTest() {
     fun testSubscribeChannelGroupWithPresenceBuilder() {
         val atomic = AtomicInteger(0)
         stubFor(
-            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/,/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/,/0"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -1624,7 +1634,7 @@ class SubscriptionManagerTest : BaseTest() {
         pubnub.configuration.filterExpression = "much=filtering"
 
         stubFor(
-            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
                 .withQueryParam("uuid", matching("myUUID"))
                 .withQueryParam("pnsdk", matching("PubNub-Kotlin/.*"))
                 .withQueryParam("filter-expr", matching("much=filtering"))
@@ -1661,7 +1671,7 @@ class SubscriptionManagerTest : BaseTest() {
         )
 
         stubFor(
-            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
                 .withQueryParam("tt", matching("5"))
                 .willReturn(notFound())
         )
@@ -1687,7 +1697,7 @@ class SubscriptionManagerTest : BaseTest() {
     fun testSubscribeWithEncryption() {
         val atomic = AtomicInteger(0)
         stubFor(
-            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -1740,7 +1750,7 @@ class SubscriptionManagerTest : BaseTest() {
     fun testSubscribeWithEncryptionPNOther() {
         val atomic = AtomicInteger(0)
         stubFor(
-            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -1800,7 +1810,7 @@ class SubscriptionManagerTest : BaseTest() {
     fun testSubscribePresenceBuilder() {
         val atomic = AtomicInteger(0)
         stubFor(
-            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1,ch2-pnpres,ch1-pnpres/0"))
+            get(urlPathMatching("/v2/subscribe/mySubscribeKey/((ch2-pnpres|ch1-pnpres|ch2|ch1),?){4}/0"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -1856,7 +1866,7 @@ class SubscriptionManagerTest : BaseTest() {
     fun testSubscribePresencePayloadHereNowRefreshDeltaBuilder() {
         val atomic = AtomicInteger(0)
         stubFor(
-            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1,ch2-pnpres,ch1-pnpres/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1,ch2-pnpres,ch1-pnpres/0"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -1918,7 +1928,7 @@ class SubscriptionManagerTest : BaseTest() {
     fun testSubscribePresencePayloadJoinDeltaBuilder() {
         val atomic = AtomicInteger(0)
         stubFor(
-            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1,ch2-pnpres,ch1-pnpres/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1,ch2-pnpres,ch1-pnpres/0"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -1983,7 +1993,7 @@ class SubscriptionManagerTest : BaseTest() {
     fun testSubscribePresencePayloadLeaveDeltaBuilder() {
         val atomic = AtomicInteger(0)
         stubFor(
-            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1,ch2-pnpres,ch1-pnpres/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1,ch2-pnpres,ch1-pnpres/0"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -2048,7 +2058,7 @@ class SubscriptionManagerTest : BaseTest() {
     fun testSubscribePresencePayloadTimeoutDeltaBuilder() {
         val atomic = AtomicInteger(0)
         stubFor(
-            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1,ch2-pnpres,ch1-pnpres/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1,ch2-pnpres,ch1-pnpres/0"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -2114,7 +2124,7 @@ class SubscriptionManagerTest : BaseTest() {
     fun testSubscribePresencePayloadBuilder() {
         val atomic = AtomicInteger(0)
         stubFor(
-            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1,ch2-pnpres,ch1-pnpres/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1,ch2-pnpres,ch1-pnpres/0"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -2175,7 +2185,7 @@ class SubscriptionManagerTest : BaseTest() {
     fun testSubscribePresenceStateCallback() {
         val atomic = AtomicBoolean()
         stubFor(
-            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch10,ch10-pnpres/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch10,ch10-pnpres/0"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -2257,7 +2267,7 @@ class SubscriptionManagerTest : BaseTest() {
     fun testSubscribeRegionBuilder() {
         val atomic = AtomicBoolean()
         stubFor(
-            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1,ch2-pnpres,ch1-pnpres/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1,ch2-pnpres,ch1-pnpres/0"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -2349,7 +2359,7 @@ class SubscriptionManagerTest : BaseTest() {
         val statusReceived = AtomicBoolean()
         val messageReceived = AtomicBoolean()
         stubFor(
-            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1,ch2-pnpres,ch1-pnpres/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1,ch2-pnpres,ch1-pnpres/0"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -2381,7 +2391,7 @@ class SubscriptionManagerTest : BaseTest() {
                 )
         )
         stubFor(
-            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch2-pnpres/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch2-pnpres/0"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -2413,7 +2423,7 @@ class SubscriptionManagerTest : BaseTest() {
                 )
         )
         stubFor(
-            get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch1/leave"))
+            get(getMatchingUrlWithChannels("/v2/presence/sub-key/mySubscribeKey/channel/ch1/leave"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -2435,17 +2445,15 @@ class SubscriptionManagerTest : BaseTest() {
                     )
                 }
                 val affectedChannels = pnStatus.affectedChannels
-                if (affectedChannels.size == 1 && pnStatus.operation == PNOperationType.PNUnsubscribeOperation) {
-                    if (affectedChannels[0] == "ch1") {
-                        statusReceived.set(true)
-                    }
+                if (affectedChannels.contains("ch1") && pnStatus.operation == PNOperationType.PNUnsubscribeOperation) {
+                    statusReceived.set(true)
                 }
             }
 
             override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {
                 val requests = findAll(
                     getRequestedFor(
-                        urlMatching("/v2/subscribe/mySubscribeKey/ch2,ch2-pnpres/0.*")
+                        getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch2-pnpres/0")
                     )
                 )
                 if (requests.isNotEmpty()) {
@@ -2479,7 +2487,7 @@ class SubscriptionManagerTest : BaseTest() {
         pubnub.configuration.presenceTimeout = 20
         pubnub.configuration.heartbeatNotificationOptions = PNHeartbeatNotificationOptions.ALL
         stubFor(
-            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1,ch2-pnpres,ch1-pnpres/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1,ch2-pnpres,ch1-pnpres/0"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -2511,7 +2519,7 @@ class SubscriptionManagerTest : BaseTest() {
                 )
         )
         stubFor(
-            get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch2,ch1/heartbeat"))
+            get(getMatchingUrlWithChannels("/v2/presence/sub-key/mySubscribeKey/channel/ch2,ch1/heartbeat"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -2551,7 +2559,7 @@ class SubscriptionManagerTest : BaseTest() {
         pubnub.configuration.heartbeatNotificationOptions = PNHeartbeatNotificationOptions.ALL
 
         stubFor(
-            get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch2,ch1/heartbeat"))
+            get(getMatchingUrlWithChannels("/v2/presence/sub-key/mySubscribeKey/channel/ch2,ch1/heartbeat"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -2592,7 +2600,7 @@ class SubscriptionManagerTest : BaseTest() {
         val statusReceived = AtomicBoolean()
         pubnub.configuration.heartbeatNotificationOptions = PNHeartbeatNotificationOptions.ALL
         stubFor(
-            get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch1,ch2/leave"))
+            get(getMatchingUrlWithChannels("/v2/presence/sub-key/mySubscribeKey/channel/ch1,ch2/leave"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -2634,7 +2642,7 @@ class SubscriptionManagerTest : BaseTest() {
         pubnub.configuration.heartbeatNotificationOptions = PNHeartbeatNotificationOptions.FAILURES
 
         stubFor(
-            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1,ch2-pnpres,ch1-pnpres/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1,ch2-pnpres,ch1-pnpres/0"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -2667,12 +2675,12 @@ class SubscriptionManagerTest : BaseTest() {
         )
 
         stubFor(
-            get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch2,ch1/heartbeat"))
+            get(getMatchingUrlWithChannels("/v2/presence/sub-key/mySubscribeKey/channel/ch2,ch1/heartbeat"))
                 .willReturn(aResponse().withStatus(404).withBody("{}"))
         )
 
         stubFor(
-            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1,ch2-pnpres,ch1-pnpres/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1,ch2-pnpres,ch1-pnpres/0"))
                 .withQueryParam("tt", matching("5"))
                 .willReturn(notFound())
         )
@@ -2705,7 +2713,7 @@ class SubscriptionManagerTest : BaseTest() {
         pubnub.configuration.heartbeatNotificationOptions = PNHeartbeatNotificationOptions.ALL
 
         stubFor(
-            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1,ch2-pnpres,ch1-pnpres/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1,ch2-pnpres,ch1-pnpres/0"))
                 .withQueryParam("tt", matching("0"))
                 .willReturn(
                     aResponse().withBody(
@@ -2739,12 +2747,12 @@ class SubscriptionManagerTest : BaseTest() {
         )
 
         stubFor(
-            get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch2,ch1/heartbeat"))
+            get(getMatchingUrlWithChannels("/v2/presence/sub-key/mySubscribeKey/channel/ch2,ch1/heartbeat"))
                 .willReturn(emptyJson().withStatus(403))
         )
 
         stubFor(
-            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1,ch2-pnpres,ch1-pnpres/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1,ch2-pnpres,ch1-pnpres/0"))
                 .withQueryParam("tt", matching("5"))
                 .willReturn(notFound())
         )
@@ -2775,7 +2783,7 @@ class SubscriptionManagerTest : BaseTest() {
         pubnub.configuration.heartbeatNotificationOptions = PNHeartbeatNotificationOptions.NONE
 
         stubFor(
-            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1,ch2-pnpres,ch1-pnpres/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1,ch2-pnpres,ch1-pnpres/0"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -2832,7 +2840,7 @@ class SubscriptionManagerTest : BaseTest() {
         pubnub.configuration.heartbeatNotificationOptions = PNHeartbeatNotificationOptions.NONE
 
         stubFor(
-            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1,ch2-pnpres,ch1-pnpres/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1,ch2-pnpres,ch1-pnpres/0"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -2865,7 +2873,7 @@ class SubscriptionManagerTest : BaseTest() {
         )
 
         stubFor(
-            get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch2,ch1/heartbeat"))
+            get(getMatchingUrlWithChannels("/v2/presence/sub-key/mySubscribeKey/channel/ch2,ch1/heartbeat"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -2911,7 +2919,7 @@ class SubscriptionManagerTest : BaseTest() {
         assertEquals(0, pubnub.configuration.heartbeatInterval)
 
         stubFor(
-            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch1,ch1-pnpres/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch1,ch1-pnpres/0"))
                 .willReturn(
                     aResponse()
                         .withBody(
@@ -2929,7 +2937,7 @@ class SubscriptionManagerTest : BaseTest() {
                 )
         )
         stubFor(
-            get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch1/heartbeat"))
+            get(getMatchingUrlWithChannels("/v2/presence/sub-key/mySubscribeKey/channel/ch1/heartbeat"))
                 .willReturn(
                     aResponse()
                         .withStatus(200)
@@ -2984,7 +2992,7 @@ class SubscriptionManagerTest : BaseTest() {
         assertEquals(9, pubnub.configuration.heartbeatInterval)
 
         stubFor(
-            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch1,ch1-pnpres/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch1,ch1-pnpres/0"))
                 .willReturn(
                     aResponse()
                         .withBody(
@@ -3003,7 +3011,7 @@ class SubscriptionManagerTest : BaseTest() {
         )
 
         stubFor(
-            get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch1/heartbeat"))
+            get(getMatchingUrlWithChannels("/v2/presence/sub-key/mySubscribeKey/channel/ch1/heartbeat"))
                 .willReturn(
                     aResponse()
                         .withStatus(200)
@@ -3062,7 +3070,7 @@ class SubscriptionManagerTest : BaseTest() {
         val statusReceived = AtomicBoolean()
 
         stubFor(
-            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1,ch2-pnpres,ch1-pnpres/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1,ch2-pnpres,ch1-pnpres/0"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -3095,7 +3103,7 @@ class SubscriptionManagerTest : BaseTest() {
         )
 
         stubFor(
-            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch2-pnpres/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch2-pnpres/0"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -3128,7 +3136,7 @@ class SubscriptionManagerTest : BaseTest() {
         )
 
         stubFor(
-            get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch1/leave"))
+            get(getMatchingUrlWithChannels("/v2/presence/sub-key/mySubscribeKey/channel/ch1/leave"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -3144,7 +3152,7 @@ class SubscriptionManagerTest : BaseTest() {
         )
 
         stubFor(
-            get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/ch2/leave"))
+            get(getMatchingUrlWithChannels("/v2/presence/sub-key/mySubscribeKey/channel/ch2/leave"))
                 .willReturn(
                     aResponse().withBody(
                         """
@@ -3200,7 +3208,7 @@ class SubscriptionManagerTest : BaseTest() {
     @Test
     fun testSubscribeWithCustomTimetoken() {
         stubFor(
-            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
                 .withQueryParam("tt", equalTo("0"))
                 .willReturn(
                     aResponse().withBody(
@@ -3218,7 +3226,7 @@ class SubscriptionManagerTest : BaseTest() {
         )
 
         stubFor(
-            get(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
                 .withQueryParam("tt", equalTo("555"))
                 .willReturn(emptyJson())
         )
@@ -3233,7 +3241,7 @@ class SubscriptionManagerTest : BaseTest() {
             .pollDelay(2, TimeUnit.SECONDS)
             .until {
                 val requests = findAll(
-                    getRequestedFor(urlPathEqualTo("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
+                    getRequestedFor(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2,ch1/0"))
                         .withQueryParam("tt", equalTo("555"))
                 )
                 assertEquals(1, requests.size)

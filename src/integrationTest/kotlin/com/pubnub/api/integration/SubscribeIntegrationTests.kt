@@ -56,8 +56,8 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
 
         wait()
 
+        assertEquals(listOf(expectedChannel), pubnub.getSubscribedChannels())
         assertEquals(1, pubnub.getSubscribedChannels().size)
-        assertTrue(pubnub.getSubscribedChannels().contains(expectedChannel))
     }
 
     @Test
