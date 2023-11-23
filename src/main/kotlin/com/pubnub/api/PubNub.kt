@@ -106,7 +106,7 @@ class PubNub internal constructor(
 
     companion object {
         private const val TIMESTAMP_DIVIDER = 1000
-        private const val SDK_VERSION = "7.7.2"
+        private const val SDK_VERSION = "7.7.3"
         private const val MAX_SEQUENCE = 65535
 
         /**
@@ -2029,6 +2029,9 @@ class PubNub internal constructor(
 
     /**
      * Force the SDK to try and reach out PubNub. Monitor the results in [SubscribeCallback.status]
+     *
+     * @param timetoken optional timetoken to use for the subscription on reconnection.
+     * Only applicable when [PNConfiguration.enableEventEngine] is true, otherwise ignored
      */
     fun reconnect(timetoken: Long = 0L) {
         if (configuration.enableEventEngine) {
