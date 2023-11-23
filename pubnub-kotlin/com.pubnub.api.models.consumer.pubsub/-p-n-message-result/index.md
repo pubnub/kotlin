@@ -12,6 +12,7 @@ Wrapper around an actual message received in [SubscribeCallback.message](../../c
 | Name | Summary |
 |---|---|
 | [channel](../-pub-sub-result/channel.md) | [jvm]<br>open override val [channel](../-pub-sub-result/channel.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
+| [error](error.md) | [jvm]<br>val [error](error.md): [PubNubError](../../com.pubnub.api/-pub-nub-error/index.md)? = null |
 | [message](message.md) | [jvm]<br>open override val [message](message.md): JsonElement<br>The actual message content |
 | [publisher](../-pub-sub-result/publisher.md) | [jvm]<br>open override val [publisher](../-pub-sub-result/publisher.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? |
 | [subscription](../-pub-sub-result/subscription.md) | [jvm]<br>open override val [subscription](../-pub-sub-result/subscription.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? |
