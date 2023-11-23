@@ -50,6 +50,12 @@ abstract class BaseIntegrationTest {
         return pubNub
     }
 
+    protected fun createPubNub(config: PNConfiguration): PubNub {
+        val pubNub = PubNub(config)
+        registerGuestClient(pubNub)
+        return pubNub
+    }
+
     private fun createServer(): PubNub {
         val pubNub = PubNub(getServerPnConfiguration())
         registerGuestClient(pubNub)

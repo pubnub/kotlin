@@ -50,6 +50,9 @@ internal class SubscribeMessageWorker(
             } catch (e: InterruptedException) {
                 Thread.currentThread().interrupt()
                 log.trace("take message interrupted!", e)
+            } catch (e: Exception) {
+                // don't crash the thread on malformed messages
+                log.warn("Unexpected message processing error", e)
             }
         }
     }

@@ -1,15 +1,18 @@
 package com.pubnub.api.integration
 
 import com.google.gson.JsonObject
+import com.pubnub.api.CommonUtils
 import com.pubnub.api.CommonUtils.generateMessage
 import com.pubnub.api.CommonUtils.generatePayload
 import com.pubnub.api.CommonUtils.generatePayloadJSON
 import com.pubnub.api.CommonUtils.randomChannel
 import com.pubnub.api.CommonUtils.retry
 import com.pubnub.api.PubNub
+import com.pubnub.api.PubNubError
 import com.pubnub.api.asyncRetry
 import com.pubnub.api.await
 import com.pubnub.api.callbacks.SubscribeCallback
+import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.listen
 import com.pubnub.api.models.consumer.PNBoundedPage
@@ -18,12 +21,15 @@ import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.subscribeToBlocking
 import org.awaitility.Awaitility
 import org.awaitility.Durations
+import org.hamcrest.Matchers
 import org.hamcrest.core.IsEqual
 import org.json.JSONArray
 import org.json.JSONObject
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
 import org.junit.Test
+import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -127,6 +133,63 @@ class PublishIntegrationTests : BaseIntegrationTest() {
         pubnub.subscribeToBlocking(expectedChannel)
 
         success.listen()
+    }
+
+    @Test
+    fun testReceiveUnencryptedMessageWithCryptoEnabled() {
+        val success = AtomicInteger(0)
+        val expectedChannel = randomChannel()
+        val messagePayload = generateMessage(pubnub)
+        val sender = pubnub
+
+        val observer = createPubNub(
+            getBasicPnConfiguration().apply {
+                cryptoModule = CryptoModule.createAesCbcCryptoModule("test", false)
+            }
+        )
+
+        observer.addListener(object : SubscribeCallback() {
+            override fun status(pubnub: PubNub, pnStatus: PNStatus) {
+                if (pnStatus.operation == PNOperationType.PNSubscribeOperation &&
+                    pnStatus.affectedChannels.contains(expectedChannel)
+                ) {
+                    sender.publish(
+                        message = messagePayload,
+                        channel = expectedChannel
+                    ).async { _, status ->
+                        assertFalse(status.error)
+                        observer.publish(
+                            message = messagePayload,
+                            channel = expectedChannel
+                        ).async { _, status2 ->
+                            assertFalse(status2.error)
+                        }
+                    }
+                }
+            }
+
+            override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {
+                if (success.get() == 0) {
+                    assertEquals(expectedChannel, pnMessageResult.channel)
+                    assertEquals(sender.configuration.userId.value, pnMessageResult.publisher)
+                    assertEquals(messagePayload, pnMessageResult.message)
+                    assertEquals(PubNubError.CRYPTO_IS_CONFIGURED_BUT_MESSAGE_IS_NOT_ENCRYPTED, pnMessageResult.error)
+                    success.incrementAndGet()
+                } else if (success.get() == 1) {
+                    assertEquals(expectedChannel, pnMessageResult.channel)
+                    assertEquals(observer.configuration.userId.value, pnMessageResult.publisher)
+                    assertEquals(messagePayload, pnMessageResult.message)
+                    assertNull(pnMessageResult.error)
+                    success.incrementAndGet()
+                }
+            }
+        })
+
+        observer.subscribeToBlocking(expectedChannel)
+
+        Awaitility.await()
+            .atMost(CommonUtils.DEFAULT_LISTEN_DURATION.toLong(), TimeUnit.SECONDS)
+            .untilAtomic(success, Matchers.greaterThanOrEqualTo(2))
     }
 
     @Test
