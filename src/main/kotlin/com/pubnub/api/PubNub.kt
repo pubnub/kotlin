@@ -90,9 +90,31 @@ import com.pubnub.api.presence.Presence
 import com.pubnub.api.presence.eventengine.data.PresenceData
 import com.pubnub.api.presence.eventengine.effect.effectprovider.HeartbeatProviderImpl
 import com.pubnub.api.presence.eventengine.effect.effectprovider.LeaveProviderImpl
+import com.pubnub.api.subscribe.PRESENCE_CHANNEL_SUFFIX
 import com.pubnub.api.subscribe.Subscribe
 import com.pubnub.api.subscribe.eventengine.configuration.EventEnginesConf
+import com.pubnub.api.v2.callbacks.EventEmitter
+import com.pubnub.api.v2.callbacks.EventListener
+import com.pubnub.api.v2.callbacks.StatusEmitter
+import com.pubnub.api.v2.callbacks.StatusListener
+import com.pubnub.api.v2.entities.Channel
+import com.pubnub.api.v2.entities.ChannelGroup
+import com.pubnub.api.v2.entities.ChannelMetadata
+import com.pubnub.api.v2.entities.UserMetadata
+import com.pubnub.api.v2.subscriptions.EmptyOptions
+import com.pubnub.api.v2.subscriptions.Subscription
+import com.pubnub.api.v2.subscriptions.SubscriptionCursor
+import com.pubnub.api.v2.subscriptions.SubscriptionOptions
+import com.pubnub.api.v2.subscriptions.SubscriptionSet
 import com.pubnub.api.workers.SubscribeMessageProcessor
+import com.pubnub.internal.v2.entities.ChannelGroupImpl
+import com.pubnub.internal.v2.entities.ChannelGroupName
+import com.pubnub.internal.v2.entities.ChannelImpl
+import com.pubnub.internal.v2.entities.ChannelMetadataImpl
+import com.pubnub.internal.v2.entities.ChannelName
+import com.pubnub.internal.v2.entities.UserMetadataImpl
+import com.pubnub.internal.v2.subscription.SubscriptionImpl
+import com.pubnub.internal.v2.subscription.SubscriptionSetImpl
 import java.io.InputStream
 import java.lang.Integer.min
 import java.util.Date
@@ -104,7 +126,7 @@ import kotlin.time.Duration.Companion.seconds
 class PubNub internal constructor(
     val configuration: PNConfiguration,
     eventEnginesConf: EventEnginesConf
-) {
+) : EventEmitter, StatusEmitter {
 
     constructor(configuration: PNConfiguration) : this(configuration, EventEnginesConf())
 
@@ -138,7 +160,7 @@ class PubNub internal constructor(
     internal val telemetryManager = TelemetryManager()
     internal val tokenManager: TokenManager = TokenManager()
     private val tokenParser: TokenParser = TokenParser()
-    private val listenerManager = ListenerManager(this)
+    internal val listenerManager = ListenerManager(this)
     internal val subscriptionManager = SubscriptionManager(this, listenerManager)
     private val presenceData = PresenceData()
     private val subscribe = Subscribe.create(
@@ -313,6 +335,9 @@ class PubNub internal constructor(
     ) = Signal(pubnub = this, channel = channel, message = message)
     //endregion
 
+    private val channelSubscriptionMap = mutableMapOf<ChannelName, SubscriptionImpl>()
+    private val channelGroupSubscriptionMap = mutableMapOf<ChannelGroupName, SubscriptionImpl>()
+
     //region Subscribe
     /**
      * Causes the client to create an open TCP socket to the PubNub Real-Time Network and begin listening for messages
@@ -333,16 +358,87 @@ class PubNub internal constructor(
      * @param withPresence Also subscribe to related presence channel.
      * @param withTimetoken A timetoken to start the subscribe loop from.
      */
+    @Synchronized
     fun subscribe(
         channels: List<String> = emptyList(),
         channelGroups: List<String> = emptyList(),
         withPresence: Boolean = false,
         withTimetoken: Long = 0L
-    ) = if (configuration.enableEventEngine) {
-        subscribe.subscribe(channels.toSet(), channelGroups.toSet(), withPresence, withTimetoken)
-        presence.joined(channels.toSet(), channelGroups.toSet())
-    } else {
-        PubSub.subscribe(subscriptionManager, channels, channelGroups, withPresence, withTimetoken)
+    ) {
+        val toSubscribe = mutableSetOf<SubscriptionImpl>()
+        channels.map { ChannelName(it) }.forEach { channelName ->
+            // if we are adding a NEW subscription in this step, this var will contain it:
+            var subscription: SubscriptionImpl? = null
+            channelSubscriptionMap.computeIfAbsent(channelName) { newChannelName ->
+                val channel = ChannelImpl(this, newChannelName)
+                val options = if (withPresence) {
+                    SubscriptionOptions.receivePresenceEvents()
+                } else {
+                    EmptyOptions
+                }
+                channel.subscription(options).also { sub ->
+                    toSubscribe.add(sub)
+                    subscription = sub
+                }
+            }
+            // make sure we are also subscribed and tracking the -pnpres channel if withPresence==true
+            if (withPresence) {
+                channelSubscriptionMap.computeIfAbsent(channelName.withPresence) { presenceChannelName ->
+                    // this will either be the subscription we just created in the previous step,
+                    // or if we were already subscribed to the channel WITHOUT presence, we need to create a new one
+                    subscription ?: ChannelImpl(this, presenceChannelName).subscription().also { sub ->
+                        toSubscribe.add(sub)
+                    }
+                }
+            }
+        }
+        channelGroups.map { ChannelGroupName(it) }.forEach { channelGroupName ->
+            var subscription: SubscriptionImpl? = null
+
+            channelGroupSubscriptionMap.computeIfAbsent(channelGroupName) { newChannelGroupName ->
+                val channelGroup = ChannelGroupImpl(this, newChannelGroupName)
+                val options =
+                    if (withPresence) {
+                        SubscriptionOptions.receivePresenceEvents()
+                    } else {
+                        EmptyOptions
+                    }
+                channelGroup.subscription(options).also { sub ->
+                    toSubscribe.add(sub)
+                    subscription = sub
+                }
+            }
+            // make sure we are also subscribed and tracking the -pnpres channel if withPresence==true
+            if (withPresence) {
+                channelGroupSubscriptionMap.computeIfAbsent(channelGroupName.withPresence) { presenceGroupName ->
+                    // this will either be the subscription we just created in the previous step,
+                    // or if we were already subscribed to the channel WITHOUT presence, we need to create a new one
+                    subscription ?: ChannelGroupImpl(this, presenceGroupName).subscription().also { sub ->
+                        toSubscribe.add(sub)
+                    }
+                }
+            }
+        }
+
+        // actually subscribe to all subscriptions created in this function and added to the set
+        subscribe(*toSubscribe.toTypedArray(), cursor = SubscriptionCursor(withTimetoken))
+    }
+
+    private fun subscribeInternal(
+        channels: List<String> = emptyList(),
+        channelGroups: List<String> = emptyList(),
+        withPresence: Boolean = false,
+        withTimetoken: Long = 0L
+    ) {
+        if (configuration.enableEventEngine) {
+            subscribe.subscribe(channels.toSet(), channelGroups.toSet(), withPresence, withTimetoken)
+            presence.joined(
+                channels.filterNot { it.endsWith(PRESENCE_CHANNEL_SUFFIX) }.toSet(),
+                channelGroups.filterNot { it.endsWith(PRESENCE_CHANNEL_SUFFIX) }.toSet()
+            )
+        } else {
+            PubSub.subscribe(subscriptionManager, channels, channelGroups, withPresence, withTimetoken)
+        }
     }
 
     /**
@@ -362,26 +458,63 @@ class PubNub internal constructor(
      * @param channels Channels to subscribe/unsubscribe. Either `channel` or [channelGroups] are required.
      * @param channelGroups Channel groups to subscribe/unsubscribe. Either `channelGroups` or [channels] are required.
      */
+    @Synchronized
     fun unsubscribe(
         channels: List<String> = emptyList(),
         channelGroups: List<String> = emptyList()
-    ) = if (configuration.enableEventEngine) {
-        subscribe.unsubscribe(channels.toSet(), channelGroups.toSet())
-        presence.left(channels.toSet(), channelGroups.toSet())
-    } else {
-        PubSub.unsubscribe(subscriptionManager, channels, channelGroups)
+    ) {
+        val toUnsubscribe: MutableSet<SubscriptionImpl> = mutableSetOf()
+        channels.map { ChannelName(it) }.forEach { channelName ->
+            channelSubscriptionMap.remove(channelName)?.let { sub ->
+                toUnsubscribe.add(sub)
+            }
+            channelSubscriptionMap.remove(channelName.withPresence)?.let { sub ->
+                toUnsubscribe.add(sub)
+            }
+        }
+        channelGroups.map { ChannelGroupName(it) }.forEach { groupName ->
+            channelGroupSubscriptionMap.remove(groupName)?.let { sub ->
+                toUnsubscribe.add(sub)
+            }
+            channelGroupSubscriptionMap.remove(groupName.withPresence)?.let { sub ->
+                toUnsubscribe.add(sub)
+            }
+        }
+        unsubscribe(*toUnsubscribe.toTypedArray())
+    }
+
+    private fun unsubscribeInternal(
+        channels: List<String> = emptyList(),
+        channelGroups: List<String> = emptyList()
+    ) {
+        val channelSetWithoutPresence = channels.filter { !it.endsWith(PRESENCE_CHANNEL_SUFFIX) }.toSet()
+        val groupSetWithoutPresence = channelGroups.filter { !it.endsWith(PRESENCE_CHANNEL_SUFFIX) }.toSet()
+        if (configuration.enableEventEngine) {
+            subscribe.unsubscribe(channelSetWithoutPresence, groupSetWithoutPresence)
+            presence.left(channelSetWithoutPresence, groupSetWithoutPresence)
+        } else {
+            PubSub.unsubscribe(subscriptionManager, channelSetWithoutPresence.toList(), groupSetWithoutPresence.toList())
+        }
     }
 
     /**
      * Unsubscribe from all channels and all channel groups
      */
-    fun unsubscribeAll() =
-        if (configuration.enableEventEngine) {
-            subscribe.unsubscribeAll()
-            presence.leftAll()
-        } else {
-            subscriptionManager.unsubscribeAll()
+    @Synchronized
+    fun unsubscribeAll() {
+        synchronized(channelSubscriptions) {
+            synchronized(channelGroupSubscriptions) {
+                channelSubscriptions.clear()
+                channelGroupSubscriptions.clear()
+                if (configuration.enableEventEngine) {
+                    subscribe.unsubscribeAll()
+                    presence.leftAll()
+                } else {
+                    subscriptionManager.unsubscribeAll()
+                }
+            }
         }
+    }
 
     /**
      * Queries the local subscribe loop for channels currently in the mix.
@@ -1963,7 +2096,7 @@ class PubNub internal constructor(
     // public meth
 
     /**
-     * Add a listener.
+     * Add a legacy listener for both client status and events.
      *
      * @param listener The listener to be added.
      */
@@ -1972,12 +2105,37 @@ class PubNub internal constructor(
     }
 
     /**
+     * Add a listener for client status changes.
+     *
+     * @param listener The listener to be added.
+     */
+    override fun addListener(listener: StatusListener) {
+        listenerManager.addListener(listener)
+    }
+
+    /**
+     * Add a global listener for events in all active subscriptions.
+     *
+     * @param listener The listener to be added.
+     */
+    override fun addListener(listener: EventListener) {
+        listenerManager.addListener(listener)
+    }
+
+    /**
      * Remove a listener.
      *
      * @param listener The listener to be removed.
      */
-    fun removeListener(listener: Listener) {
+    override fun removeListener(listener: Listener) {
         listenerManager.removeListener(listener)
+    }
+
+    /**
+     * Removes all status and event listeners.
+     */
+    override fun removeAllListeners() {
+        listenerManager.removeAllListeners()
     }
 
     //region Encryption
@@ -2113,5 +2271,199 @@ class PubNub internal constructor(
 
     fun setToken(token: String?) {
         return tokenManager.setToken(token)
+    }
+
+    // begin V2
+    // public
+
+    /**
+     * Create a handle to a [Channel] that can be used to obtain a [Subscription].
+     *
+     * The function is cheap to call, and the returned object is lightweight, as it doesn't change any client or server
+     * state. It is therefore permitted to use this method whenever a representation of a channel is required.
+     *
+     * The returned [Channel] holds a reference to this [PubNub] instance internally.
+     *
+     * @param name the name of the channel to return. Supports wildcards by ending it with ".*". See more in the
+     * [documentation](https://www.pubnub.com/docs/general/channels/overview)
+     *
+     * @return a [Channel] instance representing the channel with the given [name]
+     */
+    fun channel(name: String): Channel {
+        return ChannelImpl(this, ChannelName(name))
+    }
+
+    /**
+     * Create a handle to a [ChannelGroup] that can be used to obtain a [Subscription].
+     *
+     * The function is cheap to call, and the returned object is lightweight, as it doesn't change any client or server
+     * state. It is therefore permitted to use this method whenever a representation of a channel group is required.
+     *
+     * The returned [ChannelGroup] holds a reference to this [PubNub] instance internally.
+     *
+     * @param name the name of the channel group to return. See more in the
+     * [documentation](https://www.pubnub.com/docs/general/channels/subscribe#channel-groups)
+     *
+     * @return a [ChannelGroup] instance representing the channel group with the given [name]
+     */
+    fun channelGroup(name: String): ChannelGroup {
+        return ChannelGroupImpl(this, ChannelGroupName(name))
+    }
+
+    /**
+     * Create a handle to a [ChannelMetadata] object that can be used to obtain a [Subscription] to metadata events.
+     *
+     * The function is cheap to call, and the returned object is lightweight, as it doesn't change any client or server
+     * state. It is therefore permitted to use this method whenever a representation of a metadata channel is required.
+     *
+     * The returned [ChannelMetadata] holds a reference to this [PubNub] instance internally.
+     *
+     * @param id the id of the channel metadata to return. See more in the
+     * [documentation](https://www.pubnub.com/docs/general/metadata/channel-metadata)
+     *
+     * @return a [ChannelMetadata] instance representing the channel metadata with the given [id]
+     */
+    fun channelMetadata(id: String): ChannelMetadata {
+        return ChannelMetadataImpl(this, ChannelName(id))
+    }
+
+    /**
+     * Create a handle to a [UserMetadata] object that can be used to obtain a [Subscription] to user metadata events.
+     *
+     * The function is cheap to call, and the returned object is lightweight, as it doesn't change any client or server
+     * state. It is therefore permitted to use this method whenever a representation of a user metadata is required.
+     *
+     * The returned [UserMetadata] holds a reference to this [PubNub] instance internally.
+     *
+     * @param id the id of the user. See more in the
+     * [documentation](https://www.pubnub.com/docs/general/metadata/users-metadata)
+     *
+     * @return a [UserMetadata] instance representing the channel metadata with the given [id]
+     */
+    fun userMetadata(id: String): UserMetadata {
+        return UserMetadataImpl(this, ChannelName(id))
+    }
+
+    /**
+     * Create a [SubscriptionSet] from the given [subscriptions].
+     *
+     * @param subscriptions the subscriptions that will be added to the returned [SubscriptionSet]
+     * @return a [SubscriptionSet] containing all [subscriptions]
+     */
+    fun subscriptionSetOf(subscriptions: Set<Subscription> = emptySet()): SubscriptionSet {
+        @Suppress("UNCHECKED_CAST")
+        return SubscriptionSetImpl(this, subscriptions as Set<SubscriptionImpl>)
+    }
+
+    /**
+     * Create a [SubscriptionSet] containing [Subscription] objects for the given sets of [channels] and
+     * [channelGroups].
+     *
+     * Please note that the subscriptions are not active until you call [SubscriptionSet.subscribe].
+     *
+     * This is a convenience method, and it is equal to calling [PubNub.channel] followed by [Channel.subscription] for
+     * each channel, then creating a [subscriptionSetOf] using the returned [Subscription] objects (and similarly for
+     * channel groups).
+     *
+     * @param channels the channels to create subscriptions for
+     * @param channelGroups the channel groups to create subscriptions for
+     * @param options the [SubscriptionOptions] to pass for each subscription. Refer to supported options in [Channel] and
+     * [ChannelGroup] documentation.
+     * @return a [SubscriptionSet] containing subscriptions for the given [channels] and [channelGroups]
+     */
+    fun subscriptionSetOf(
+        channels: Set<String> = emptySet(),
+        channelGroups: Set<String> = emptySet(),
+        options: SubscriptionOptions = EmptyOptions
+    ): SubscriptionSet {
+        val subscriptionSet = SubscriptionSetImpl(this)
+        channels.forEach {
+            subscriptionSet.add(channel(it).subscription(options))
+        }
+        channelGroups.forEach {
+            subscriptionSet.add(channelGroup(it).subscription(options))
+        }
+        return subscriptionSet
+    }
+
+    // internal
+    private val LOCK_CHANNELS_AND_GROUPS = Any()
+    private val channelSubscriptions = mutableMapOf<ChannelName, MutableSet<Subscription>>()
+    private val channelGroupSubscriptions = mutableMapOf<ChannelGroupName, MutableSet<Subscription>>()
+
+    internal fun subscribe(vararg subscriptions: SubscriptionImpl, cursor: SubscriptionCursor) {
+        synchronized(LOCK_CHANNELS_AND_GROUPS) {
+            val channelsToSubscribe = mutableSetOf<ChannelName>()
+            subscriptions.forEach { subscription ->
+                subscription.channels.forEach { channelName ->
+                    channelSubscriptions.computeIfAbsent(channelName) { mutableSetOf() }
+                        .also { set -> set.add(subscription) }
+                    channelsToSubscribe.add(channelName)
+                }
+            }
+            val groupsToSubscribe = mutableSetOf<ChannelGroupName>()
+            subscriptions.forEach { subscription ->
+                subscription.channelGroups.forEach { channelGroupName ->
+                    channelGroupSubscriptions.computeIfAbsent(channelGroupName) { mutableSetOf() }
+                        .also { set -> set.add(subscription) }
+                    groupsToSubscribe.add(channelGroupName)
+                }
+            }
+
+            val (channelsWithPresence, channelsNoPresence) = channelsToSubscribe.filter { !it.isPresence }.partition {
+                channelsToSubscribe.contains(it.withPresence)
+            }
+            val (groupsWithPresence, groupsNoPresence) = groupsToSubscribe.filter { !it.isPresence }.partition {
+                groupsToSubscribe.contains(it.withPresence)
+            }
+            if (channelsWithPresence.isNotEmpty() || groupsWithPresence.isNotEmpty()) {
+                subscribeInternal(
+                    channels = channelsWithPresence.map(ChannelName::id),
+                    channelGroups = groupsWithPresence.map(ChannelGroupName::id),
+                    withPresence = true,
+                    withTimetoken = cursor.timetoken
+                )
+            }
+            if (channelsNoPresence.isNotEmpty() || groupsNoPresence.isNotEmpty()) {
+                subscribeInternal(
+                    channels = channelsNoPresence.map(ChannelName::id),
+                    channelGroups = groupsNoPresence.map(ChannelGroupName::id),
+                    withPresence = false,
+                    withTimetoken = cursor.timetoken
+                )
+            }
+        }
+    }
+
+    internal fun unsubscribe(vararg subscriptions: SubscriptionImpl) {
+        synchronized(LOCK_CHANNELS_AND_GROUPS) {
+            val channelsToUnsubscribe = mutableSetOf<ChannelName>()
+            subscriptions.forEach { subscription ->
+                subscription.channels.forEach { channelName ->
+                    val set = channelSubscriptions[channelName]
+                    set?.remove(subscription)
+                    if (set != null && set.isEmpty()) { // there were mappings but there none now
+                        channelsToUnsubscribe += channelName
+                        channelSubscriptions.remove(channelName)
+                    }
+                }
+            }
+
+            val groupsToUnsubscribe = mutableSetOf<ChannelGroupName>()
+            subscriptions.forEach { subscription ->
+                subscription.channelGroups.forEach { channelGroupName ->
+                    val set = channelGroupSubscriptions[channelGroupName]
+                    set?.remove(subscription)
+                    if (set != null && set.isEmpty()) {
+                        groupsToUnsubscribe += channelGroupName
+                        channelGroupSubscriptions.remove(channelGroupName)
+                    }
+                }
+            }
+            unsubscribeInternal(
+                channels = channelsToUnsubscribe.map(ChannelName::id),
+                channelGroups = groupsToUnsubscribe.map(ChannelGroupName::id)
+            )
+        }
     }
 }

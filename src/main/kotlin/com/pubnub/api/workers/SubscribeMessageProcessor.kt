@@ -23,6 +23,7 @@ import com.pubnub.api.models.server.PresenceEnvelope
 import com.pubnub.api.models.server.SubscribeMessage
 import com.pubnub.api.models.server.files.FileUploadNotification
 import com.pubnub.api.services.FilesService
+import com.pubnub.api.subscribe.PRESENCE_CHANNEL_SUFFIX
 import com.pubnub.extension.tryDecryptMessage
 import org.slf4j.LoggerFactory
 
@@ -62,11 +63,11 @@ internal class SubscribeMessageProcessor(
             }
         }
 
-        if (message.channel.endsWith("-pnpres")) {
+        if (message.channel.endsWith(PRESENCE_CHANNEL_SUFFIX)) {
             val presencePayload = pubnub.mapper.convertValue(message.payload, PresenceEnvelope::class.java)
-            val strippedPresenceChannel = PubNubUtil.replaceLast(channel, "-pnpres", "")
+            val strippedPresenceChannel = PubNubUtil.replaceLast(channel, PRESENCE_CHANNEL_SUFFIX, "")
             val strippedPresenceSubscription = subscriptionMatch?.let {
-                PubNubUtil.replaceLast(it, "-pnpres", "")
+                PubNubUtil.replaceLast(it, PRESENCE_CHANNEL_SUFFIX, "")
             }
 
             val isHereNowRefresh = message.payload?.asJsonObject?.get("here_now_refresh")

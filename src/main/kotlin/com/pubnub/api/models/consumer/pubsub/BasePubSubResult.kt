@@ -3,9 +3,9 @@ package com.pubnub.api.models.consumer.pubsub
 import com.google.gson.JsonElement
 
 interface PubSubResult : PNEvent {
-    val channel: String
-    val subscription: String?
-    val timetoken: Long?
+    override val channel: String
+    override val subscription: String?
+    override val timetoken: Long?
     val userMetadata: JsonElement?
     val publisher: String?
 }

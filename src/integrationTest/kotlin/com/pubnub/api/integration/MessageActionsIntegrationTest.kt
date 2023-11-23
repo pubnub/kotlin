@@ -189,6 +189,7 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
                 )
             ).sync()
         }
+        Thread.sleep(1000) // Flaky test otherwise
 
         val success = AtomicBoolean()
         val count = AtomicInteger()

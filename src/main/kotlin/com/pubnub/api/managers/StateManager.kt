@@ -9,6 +9,7 @@ import com.pubnub.api.builder.SubscribeOperation
 import com.pubnub.api.builder.TimetokenRegionOperation
 import com.pubnub.api.builder.UnsubscribeOperation
 import com.pubnub.api.models.SubscriptionItem
+import com.pubnub.api.subscribe.PRESENCE_CHANNEL_SUFFIX
 
 class StateManager {
 
@@ -233,7 +234,7 @@ class StateManager {
         }
         if (includePresence) {
             for (presenceChannelGroupItem in presenceStorage.values) {
-                response.add(presenceChannelGroupItem.name + "-pnpres")
+                response.add(presenceChannelGroupItem.name + PRESENCE_CHANNEL_SUFFIX)
             }
         }
         return response

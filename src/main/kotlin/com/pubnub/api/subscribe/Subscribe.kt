@@ -21,7 +21,7 @@ import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
 import com.pubnub.api.workers.SubscribeMessageProcessor
 import java.util.concurrent.ScheduledExecutorService
 
-private const val PRESENCE_CHANNEL_SUFFIX = "-pnpres"
+internal const val PRESENCE_CHANNEL_SUFFIX = "-pnpres"
 
 internal class Subscribe(
     private val subscribeEventEngineManager: SubscribeEventEngineManager,
@@ -164,12 +164,12 @@ internal class Subscribe(
 
     @Synchronized
     fun getSubscribedChannels(): List<String> {
-        return subscriptionData.channels.toList().filter { !it.contains(PRESENCE_CHANNEL_SUFFIX) }
+        return subscriptionData.channels.toList().filter { !it.endsWith(PRESENCE_CHANNEL_SUFFIX) }
     }
 
     @Synchronized
     fun getSubscribedChannelGroups(): List<String> {
-        return subscriptionData.channelGroups.toList().filter { !it.contains(PRESENCE_CHANNEL_SUFFIX) }
+        return subscriptionData.channelGroups.toList().filter { !it.endsWith(PRESENCE_CHANNEL_SUFFIX) }
     }
 
     fun disconnect() {
