@@ -21,6 +21,7 @@ internal interface Presence {
             heartbeatInterval: Duration,
             enableEventEngine: Boolean,
             retryPolicy: RetryPolicy,
+            suppressLeaveEvents: Boolean,
             eventEngineConf: EventEngineConf<PresenceEffectInvocation, PresenceEvent>,
         ): Presence {
             if (heartbeatInterval <= Duration.ZERO || !enableEventEngine) {
@@ -33,7 +34,8 @@ internal interface Presence {
                 presenceEventSink = eventEngineConf.eventSink,
                 policy = retryPolicy,
                 executorService = Executors.newSingleThreadScheduledExecutor(),
-                heartbeatInterval = heartbeatInterval
+                heartbeatInterval = heartbeatInterval,
+                suppressLeaveEvents = suppressLeaveEvents
             )
 
             val eventEngineManager = PresenceEventEngineManager(

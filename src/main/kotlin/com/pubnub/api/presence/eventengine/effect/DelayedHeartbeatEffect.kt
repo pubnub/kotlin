@@ -12,11 +12,11 @@ import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.ScheduledFuture
 
 internal class DelayedHeartbeatEffect(
-    private val heartbeatRemoteAction: RemoteAction<Boolean>,
-    private val presenceEventSink: Sink<PresenceEvent>,
-    private val policy: RetryPolicy,
-    private val executorService: ScheduledExecutorService,
-    private val delayedHeartbeatInvocation: PresenceEffectInvocation.DelayedHeartbeat
+    val heartbeatRemoteAction: RemoteAction<Boolean>,
+    val presenceEventSink: Sink<PresenceEvent>,
+    val policy: RetryPolicy,
+    val executorService: ScheduledExecutorService,
+    val delayedHeartbeatInvocation: PresenceEffectInvocation.DelayedHeartbeat
 ) : ManagedEffect {
     private val log = LoggerFactory.getLogger(DelayedHeartbeatEffect::class.java)
 
