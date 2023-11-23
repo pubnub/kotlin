@@ -126,8 +126,8 @@ internal class Subscribe(
         removeChannelGroupsFromSubscriptionData(channelGroups)
 
         if (subscriptionData.channels.size > 0 || subscriptionData.channelGroups.size > 0) {
-            val channelsInLocalStorage = subscriptionData.channels
-            val channelGroupsInLocalStorage = subscriptionData.channelGroups
+            val channelsInLocalStorage = subscriptionData.channels.toSet()
+            val channelGroupsInLocalStorage = subscriptionData.channelGroups.toSet()
             subscribeEventEngineManager.addEventToQueue(
                 SubscriptionChanged(
                     channelsInLocalStorage,
