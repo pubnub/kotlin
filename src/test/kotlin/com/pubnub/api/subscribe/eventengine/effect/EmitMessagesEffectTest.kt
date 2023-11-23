@@ -113,7 +113,7 @@ class EmitMessagesEffectTest {
         val messagesConsumer = CreateMessagesConsumerImpl()
         val basePubSubResult = createBasePubSubResult()
         val pnMessageResult = PNMessageResult(basePubSubResult, JsonPrimitive(message))
-        val pnPresenceEventResult = PNPresenceEventResult()
+        val pnPresenceEventResult = PNPresenceEventResult(channel = "channel")
         val pnFileEventResult = createPnFileEventResult(message)
         val pnSignalResult = PNSignalResult(basePubSubResult, JsonPrimitive("604C7"))
         val pnMessageActionResult = createPnMessageActionResult(messageActionType)
