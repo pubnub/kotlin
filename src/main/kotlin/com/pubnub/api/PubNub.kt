@@ -2029,6 +2029,9 @@ class PubNub internal constructor(
 
     /**
      * Force the SDK to try and reach out PubNub. Monitor the results in [SubscribeCallback.status]
+     *
+     * @param timetoken optional timetoken to use for the subscription on reconnection.
+     * Only applicable when [PNConfiguration.enableEventEngine] is true, otherwise ignored
      */
     fun reconnect(timetoken: Long = 0L) {
         if (configuration.enableEventEngine) {
