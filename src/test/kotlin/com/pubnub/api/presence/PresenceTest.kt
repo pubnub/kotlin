@@ -87,5 +87,6 @@ internal class PresenceTest {
         eventEngineConf = eventEngineConf,
         leaveProvider = { _, _ -> successfulRemoteAction(true) },
         heartbeatProvider = { _, _ -> successfulRemoteAction(true) },
+        suppressLeaveEvents = false
     )
 }

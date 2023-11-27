@@ -8,8 +8,8 @@ import com.pubnub.api.presence.eventengine.event.PresenceEvent
 import org.slf4j.LoggerFactory
 
 internal class HeartbeatEffect(
-    private val heartbeatRemoteAction: RemoteAction<Boolean>,
-    private val presenceEventSink: Sink<PresenceEvent>
+    val heartbeatRemoteAction: RemoteAction<Boolean>,
+    val presenceEventSink: Sink<PresenceEvent>
 ) : Effect {
     private val log = LoggerFactory.getLogger(HeartbeatEffect::class.java)
 

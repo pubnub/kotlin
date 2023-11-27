@@ -17,6 +17,7 @@ internal class PresenceEffectFactory(
     private val policy: RetryPolicy,
     private val executorService: ScheduledExecutorService,
     private val heartbeatInterval: Duration,
+    private val suppressLeaveEvents: Boolean
 ) : EffectFactory<PresenceEffectInvocation> {
     override fun create(effectInvocation: PresenceEffectInvocation): Effect? {
         return when (effectInvocation) {
@@ -46,7 +47,7 @@ internal class PresenceEffectFactory(
                     effectInvocation.channels,
                     effectInvocation.channelGroups
                 )
-                LeaveEffect(leaveRemoteAction)
+                LeaveEffect(leaveRemoteAction, suppressLeaveEvents)
             }
             is PresenceEffectInvocation.Wait -> {
                 WaitEffect(heartbeatInterval, presenceEventSink)

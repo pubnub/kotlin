@@ -147,6 +147,7 @@ class PubNub internal constructor(
         heartbeatInterval = Duration.ofSeconds(configuration.heartbeatInterval.toLong()),
         enableEventEngine = configuration.enableEventEngine,
         retryPolicy = configuration.retryPolicy,
+        suppressLeaveEvents = configuration.suppressLeaveEvents,
         eventEngineConf = eventEnginesConf.presence
     )
 
