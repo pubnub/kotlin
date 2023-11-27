@@ -5,6 +5,7 @@ import com.google.gson.JsonArray
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.JsonPrimitive
+import com.pubnub.api.PubNubError
 import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.api.managers.MapperManager
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -94,7 +95,7 @@ class JsonElementTest {
 
         // then
         assertEquals(objectUnderTest, jsonElement)
-        assertEquals("Crypto is configured but message is not encrypted.", errorMessage?.message)
+        assertEquals(PubNubError.CRYPTO_IS_CONFIGURED_BUT_MESSAGE_IS_NOT_ENCRYPTED, errorMessage)
     }
 
     @ParameterizedTest
@@ -137,7 +138,7 @@ class JsonElementTest {
 
         // then
         assertEquals(objectUnderTest, jsonElement)
-        assertEquals("Crypto is configured but message is not encrypted.", errorMessage?.message)
+        assertEquals(PubNubError.CRYPTO_IS_CONFIGURED_BUT_MESSAGE_IS_NOT_ENCRYPTED, errorMessage)
     }
 
     @ParameterizedTest
