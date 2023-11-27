@@ -148,6 +148,8 @@ class PubNub internal constructor(
         enableEventEngine = configuration.enableEventEngine,
         retryPolicy = configuration.retryPolicy,
         suppressLeaveEvents = configuration.suppressLeaveEvents,
+        heartbeatNotificationOptions = configuration.heartbeatNotificationOptions,
+        listenerManager = listenerManager,
         eventEngineConf = eventEnginesConf.presence
     )
 

@@ -1,7 +1,9 @@
 package com.pubnub.api.presence
 
+import com.pubnub.api.enums.PNHeartbeatNotificationOptions
 import com.pubnub.api.eventengine.EffectDispatcher
 import com.pubnub.api.eventengine.EventEngineConf
+import com.pubnub.api.managers.ListenerManager
 import com.pubnub.api.managers.PresenceEventEngineManager
 import com.pubnub.api.presence.eventengine.PresenceEventEngine
 import com.pubnub.api.presence.eventengine.effect.PresenceEffectFactory
@@ -22,6 +24,8 @@ internal interface Presence {
             enableEventEngine: Boolean,
             retryPolicy: RetryPolicy,
             suppressLeaveEvents: Boolean,
+            heartbeatNotificationOptions: PNHeartbeatNotificationOptions,
+            listenerManager: ListenerManager,
             eventEngineConf: EventEngineConf<PresenceEffectInvocation, PresenceEvent>,
         ): Presence {
             if (heartbeatInterval <= Duration.ZERO || !enableEventEngine) {
@@ -35,7 +39,9 @@ internal interface Presence {
                 policy = retryPolicy,
                 executorService = Executors.newSingleThreadScheduledExecutor(),
                 heartbeatInterval = heartbeatInterval,
-                suppressLeaveEvents = suppressLeaveEvents
+                suppressLeaveEvents = suppressLeaveEvents,
+                heartbeatNotificationOptions = heartbeatNotificationOptions,
+                statusConsumer = listenerManager
             )
 
             val eventEngineManager = PresenceEventEngineManager(

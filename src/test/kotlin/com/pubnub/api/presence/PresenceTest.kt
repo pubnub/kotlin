@@ -1,12 +1,15 @@
 package com.pubnub.api.presence
 
+import com.pubnub.api.enums.PNHeartbeatNotificationOptions
 import com.pubnub.api.eventengine.EventEngineConf
 import com.pubnub.api.eventengine.QueueEventEngineConf
+import com.pubnub.api.managers.ListenerManager
 import com.pubnub.api.presence.eventengine.effect.PresenceEffectInvocation
 import com.pubnub.api.presence.eventengine.event.PresenceEvent
 import com.pubnub.api.subscribe.eventengine.effect.NoRetriesPolicy
 import com.pubnub.api.subscribe.eventengine.effect.successfulRemoteAction
 import com.pubnub.contract.subscribe.eventEngine.state.TestSinkSource
+import io.mockk.mockk
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers
 import org.junit.jupiter.api.Assertions
@@ -18,6 +21,7 @@ import org.junit.jupiter.params.provider.MethodSource
 import java.time.Duration
 
 internal class PresenceTest {
+    private val listenerManager: ListenerManager = mockk()
 
     companion object {
         @JvmStatic
@@ -49,7 +53,7 @@ internal class PresenceTest {
         // given
         val queuedElements = mutableListOf<Pair<String, String>>()
         val presence =
-            Presence.create(eventEngineConf = QueueEventEngineConf(eventSinkSource = TestSinkSource(queuedElements)))
+            Presence.create(listenerManager = listenerManager, eventEngineConf = QueueEventEngineConf(eventSinkSource = TestSinkSource(queuedElements)))
 
         // when
         presence.method()
@@ -61,7 +65,7 @@ internal class PresenceTest {
     @Test
     fun `create returns PresenceNoOp if event engine is disabled`() {
         // when
-        val presence = Presence.create(enableEventEngine = false)
+        val presence = Presence.create(listenerManager = listenerManager, enableEventEngine = false)
 
         // then
         assertThat(presence, Matchers.isA(PresenceNoOp::class.java))
@@ -70,15 +74,17 @@ internal class PresenceTest {
     @Test
     fun `create returns PresenceNoOp if heartbeat interval is 0`() {
         // when
-        val presence = Presence.create(heartbeatInterval = Duration.ofSeconds(0))
+        val presence = Presence.create(listenerManager = listenerManager, heartbeatInterval = Duration.ofSeconds(0))
 
         // then
         assertThat(presence, Matchers.isA(PresenceNoOp::class.java))
     }
 
     private fun Presence.Companion.create(
+        listenerManager: ListenerManager,
         heartbeatInterval: Duration = Duration.ofSeconds(3),
         enableEventEngine: Boolean = true,
+        heartbeatNotificationOptions: PNHeartbeatNotificationOptions = PNHeartbeatNotificationOptions.ALL,
         eventEngineConf: EventEngineConf<PresenceEffectInvocation, PresenceEvent> = QueueEventEngineConf()
     ) = create(
         heartbeatInterval = heartbeatInterval,
@@ -87,6 +93,8 @@ internal class PresenceTest {
         eventEngineConf = eventEngineConf,
         leaveProvider = { _, _ -> successfulRemoteAction(true) },
         heartbeatProvider = { _, _ -> successfulRemoteAction(true) },
+        heartbeatNotificationOptions = heartbeatNotificationOptions,
+        listenerManager = listenerManager,
         suppressLeaveEvents = false
     )
 }
