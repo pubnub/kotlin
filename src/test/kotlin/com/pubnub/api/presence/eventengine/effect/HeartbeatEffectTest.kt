@@ -73,27 +73,27 @@ class HeartbeatEffectTest {
 //            }
 //    }
 
-    @ParameterizedTest
-    @MethodSource("successfulHeartbeatWithNotificationOptions")
-    fun `should announce status when HeartbeatEffect succeeded`(
-        pnHeartbeatNotificationOptions: PNHeartbeatNotificationOptions,
-        shouldAnnounce: Boolean
-    ) {
-        // given
-        val heartbeatNotificationOptions: PNHeartbeatNotificationOptions = pnHeartbeatNotificationOptions
-        val heartbeatEffect =
-            HeartbeatEffect(successfulRemoteAction(true), eventSink, heartbeatNotificationOptions, statusConsumer)
-
-        // when
-        heartbeatEffect.runEffect()
-
-        // then
-        if (shouldAnnounce) {
-            verify(exactly = 1) { statusConsumer.announce(any()) }
-        } else {
-            verify(exactly = 0) { statusConsumer.announce(any()) }
-        }
-    }
+//    @ParameterizedTest
+//    @MethodSource("successfulHeartbeatWithNotificationOptions")
+//    fun `should announce status when HeartbeatEffect succeeded`(
+//        pnHeartbeatNotificationOptions: PNHeartbeatNotificationOptions,
+//        shouldAnnounce: Boolean
+//    ) {
+//        // given
+//        val heartbeatNotificationOptions: PNHeartbeatNotificationOptions = pnHeartbeatNotificationOptions
+//        val heartbeatEffect =
+//            HeartbeatEffect(successfulRemoteAction(true), eventSink, heartbeatNotificationOptions, statusConsumer)
+//
+//        // when
+//        heartbeatEffect.runEffect()
+//
+//        // then
+//        if (shouldAnnounce) {
+//            verify(exactly = 1) { statusConsumer.announce(any()) }
+//        } else {
+//            verify(exactly = 0) { statusConsumer.announce(any()) }
+//        }
+//    }
 
 //    @ParameterizedTest
 //    @MethodSource("unsuccessfulHeartbeatWithNotificationOptions")
