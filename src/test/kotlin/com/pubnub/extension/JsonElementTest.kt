@@ -8,6 +8,7 @@ import com.google.gson.JsonPrimitive
 import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.api.managers.MapperManager
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
@@ -102,10 +103,11 @@ class JsonElementTest {
         val mapper = MapperManager()
 
         // when
-        val (jsonElement, _) = objectUnderTest.tryDecryptMessage(cryptoModule, mapper)
+        val (jsonElement, errorMessage) = objectUnderTest.tryDecryptMessage(cryptoModule, mapper)
 
         // then
         assertEquals(message, jsonElement)
+        assertNull(errorMessage)
     }
 
     @ParameterizedTest
@@ -140,10 +142,11 @@ class JsonElementTest {
         val mapper = MapperManager()
 
         // when
-        val (jsonElement, _) = objectUnderTest.tryDecryptMessage(cryptoModule, mapper)
+        val (jsonElement, errorMessage) = objectUnderTest.tryDecryptMessage(cryptoModule, mapper)
 
         // then
         assertEquals(messageWithPNOther, jsonElement)
+        assertNull(errorMessage)
     }
 
     private fun generateMessageWithPNOther(pnOtherEncryptedValue: JsonElement): JsonObject {
