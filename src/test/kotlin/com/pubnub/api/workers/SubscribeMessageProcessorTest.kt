@@ -8,6 +8,7 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonPrimitive
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
+import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.UserId
 import com.pubnub.api.crypto.CryptoModule
@@ -79,6 +80,26 @@ class SubscribeMessageProcessorTest(
 
         assertThat(result, isA(PNFileEventResult::class.java))
         assertThat((result as PNFileEventResult).jsonMessage, iz(messageJson))
+    }
+
+    @Test
+    fun testProcessFileUnencryptedWithCrypto() {
+        val gson = Gson()
+        val configuration = config()
+        configuration.cryptoModule = CryptoModule.createAesCbcCryptoModule("enigma", false)
+
+        val messageProcessor = messageProcessor(configuration)
+
+        val result = messageProcessor.processIncomingPayload(
+            gson.fromJson(
+                fileMessage(messageJson.toString()),
+                SubscribeMessage::class.java
+            )
+        )
+
+        assertThat(result, isA(PNFileEventResult::class.java))
+        assertThat((result as PNFileEventResult).jsonMessage, iz(messageJson))
+        assertThat((result as PNFileEventResult).error, iz(PubNubError.CRYPTO_IS_CONFIGURED_BUT_MESSAGE_IS_NOT_ENCRYPTED))
     }
 
     @Test
