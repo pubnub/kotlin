@@ -223,11 +223,13 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
         val subscribeSuccess = AtomicBoolean()
         val expectedChannel: String = randomValue()
 
-        pubnub.configuration.heartbeatNotificationOptions = PNHeartbeatNotificationOptions.ALL
+        val pubnub = createPubNub(
+            getBasicPnConfiguration().apply {
+                heartbeatNotificationOptions = PNHeartbeatNotificationOptions.ALL
+                presenceTimeout = 20
+            }
+        )
         assertEquals(PNHeartbeatNotificationOptions.ALL, pubnub.configuration.heartbeatNotificationOptions)
-
-        pubnub.configuration.presenceTimeout = 20
-
         assertEquals(20, pubnub.configuration.presenceTimeout)
         assertEquals(9, pubnub.configuration.heartbeatInterval)
 

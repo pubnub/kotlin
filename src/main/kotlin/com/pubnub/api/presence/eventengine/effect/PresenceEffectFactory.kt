@@ -1,5 +1,6 @@
 package com.pubnub.api.presence.eventengine.effect
 
+import com.pubnub.api.enums.PNHeartbeatNotificationOptions
 import com.pubnub.api.eventengine.Effect
 import com.pubnub.api.eventengine.EffectFactory
 import com.pubnub.api.eventengine.Sink
@@ -7,6 +8,7 @@ import com.pubnub.api.presence.eventengine.effect.effectprovider.HeartbeatProvid
 import com.pubnub.api.presence.eventengine.effect.effectprovider.LeaveProvider
 import com.pubnub.api.presence.eventengine.event.PresenceEvent
 import com.pubnub.api.subscribe.eventengine.effect.RetryPolicy
+import com.pubnub.api.subscribe.eventengine.effect.StatusConsumer
 import java.time.Duration
 import java.util.concurrent.ScheduledExecutorService
 
@@ -17,7 +19,9 @@ internal class PresenceEffectFactory(
     private val policy: RetryPolicy,
     private val executorService: ScheduledExecutorService,
     private val heartbeatInterval: Duration,
-    private val suppressLeaveEvents: Boolean
+    private val suppressLeaveEvents: Boolean,
+    private val heartbeatNotificationOptions: PNHeartbeatNotificationOptions,
+    private val statusConsumer: StatusConsumer,
 ) : EffectFactory<PresenceEffectInvocation> {
     override fun create(effectInvocation: PresenceEffectInvocation): Effect? {
         return when (effectInvocation) {
@@ -26,7 +30,7 @@ internal class PresenceEffectFactory(
                     effectInvocation.channels,
                     effectInvocation.channelGroups
                 )
-                HeartbeatEffect(heartbeatRemoteAction, presenceEventSink)
+                HeartbeatEffect(heartbeatRemoteAction, presenceEventSink, heartbeatNotificationOptions, statusConsumer)
             }
 
             is PresenceEffectInvocation.DelayedHeartbeat -> {

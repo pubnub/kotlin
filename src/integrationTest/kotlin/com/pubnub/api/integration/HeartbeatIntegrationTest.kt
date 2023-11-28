@@ -35,8 +35,12 @@ class HeartbeatIntegrationTest : BaseIntegrationTest() {
             configuration.userId = UserId("observer_${System.currentTimeMillis()}")
         }
 
-        pubnub.configuration.presenceTimeout = 20
-        pubnub.configuration.heartbeatInterval = 4
+        val pubnub = createPubNub(
+            getBasicPnConfiguration().apply {
+                presenceTimeout = 20
+                heartbeatInterval = 4
+            }
+        )
 
         observer.addListener(object : SubscribeCallback() {
 

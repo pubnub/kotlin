@@ -44,7 +44,6 @@ abstract class BaseIntegrationTest {
         if (pnConfiguration == null) {
             pnConfiguration = getBasicPnConfiguration()
         }
-        pnConfiguration.enableEventEngine = true
         val pubNub = PubNub(pnConfiguration)
         registerGuestClient(pubNub)
         return pubNub
@@ -76,6 +75,7 @@ abstract class BaseIntegrationTest {
             pnConfiguration.publishKey = Keys.pamPubKey
             pnConfiguration.authKey = provideAuthKey()!!
         }
+        pnConfiguration.enableEventEngine = true
         pnConfiguration.logVerbosity = PNLogVerbosity.NONE
         pnConfiguration.httpLoggingInterceptor = createInterceptor(logger)
 
@@ -90,6 +90,7 @@ abstract class BaseIntegrationTest {
         pnConfiguration.secretKey = Keys.pamSecKey
         pnConfiguration.logVerbosity = PNLogVerbosity.NONE
         pnConfiguration.httpLoggingInterceptor = createInterceptor(logger)
+        pnConfiguration.enableEventEngine = true
 
         pnConfiguration.userId = UserId("server-${UUID.randomUUID()}")
         return pnConfiguration

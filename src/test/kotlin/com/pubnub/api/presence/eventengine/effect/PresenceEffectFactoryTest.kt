@@ -2,11 +2,13 @@ package com.pubnub.api.presence.eventengine.effect
 
 import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.remoteaction.RemoteAction
+import com.pubnub.api.enums.PNHeartbeatNotificationOptions
 import com.pubnub.api.eventengine.Sink
 import com.pubnub.api.presence.eventengine.effect.effectprovider.HeartbeatProvider
 import com.pubnub.api.presence.eventengine.effect.effectprovider.LeaveProvider
 import com.pubnub.api.presence.eventengine.event.PresenceEvent
 import com.pubnub.api.subscribe.eventengine.effect.RetryPolicy
+import com.pubnub.api.subscribe.eventengine.effect.StatusConsumer
 import io.mockk.every
 import io.mockk.mockk
 import org.hamcrest.MatcherAssert.assertThat
@@ -33,6 +35,8 @@ class PresenceEffectFactoryTest {
     private val suppressLeaveEvents = true
     private val attempts: Int = 1
     private val reason: PubNubException = mockk()
+    private val heartbeatNotificationOptions: PNHeartbeatNotificationOptions = mockk()
+    private val statusConsumer: StatusConsumer = mockk()
 
     @BeforeEach
     fun setUp() {
@@ -43,7 +47,9 @@ class PresenceEffectFactoryTest {
             policy,
             executorService,
             heartbeatInterval,
-            suppressLeaveEvents
+            suppressLeaveEvents,
+            heartbeatNotificationOptions,
+            statusConsumer
         )
     }
 
@@ -60,6 +66,8 @@ class PresenceEffectFactoryTest {
         assertThat(effect, IsInstanceOf.instanceOf(HeartbeatEffect::class.java))
         assertEquals(heartbeatRemoteAction, effect.heartbeatRemoteAction)
         assertEquals(presenceEventSink, effect.presenceEventSink)
+        assertEquals(heartbeatNotificationOptions, effect.heartbeatNotificationOptions)
+        assertEquals(statusConsumer, effect.statusConsumer)
     }
 
     @Test
