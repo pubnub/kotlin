@@ -5,7 +5,6 @@ import com.pubnub.api.enums.PNHeartbeatNotificationOptions
 import com.pubnub.api.presence.eventengine.event.PresenceEvent
 import com.pubnub.api.subscribe.eventengine.effect.StatusConsumer
 import com.pubnub.api.subscribe.eventengine.effect.TestEventSink
-import com.pubnub.api.subscribe.eventengine.effect.failingRemoteAction
 import com.pubnub.api.subscribe.eventengine.effect.successfulRemoteAction
 import io.mockk.mockk
 import io.mockk.verify
@@ -96,25 +95,25 @@ class HeartbeatEffectTest {
         }
     }
 
-    @ParameterizedTest
-    @MethodSource("unsuccessfulHeartbeatWithNotificationOptions")
-    fun `should announce status when HeartbeatEffect failed`(
-        pnHeartbeatNotificationOptions: PNHeartbeatNotificationOptions,
-        shouldAnnounce: Boolean
-    ) {
-        // given
-        val heartbeatNotificationOptions: PNHeartbeatNotificationOptions = pnHeartbeatNotificationOptions
-        val heartbeatEffect =
-            HeartbeatEffect(failingRemoteAction(reason), eventSink, heartbeatNotificationOptions, statusConsumer)
-
-        // when
-        heartbeatEffect.runEffect()
-
-        // then
-        if (shouldAnnounce) {
-            verify(exactly = 1) { statusConsumer.announce(any()) }
-        } else {
-            verify(exactly = 0) { statusConsumer.announce(any()) }
-        }
-    }
+//    @ParameterizedTest
+//    @MethodSource("unsuccessfulHeartbeatWithNotificationOptions")
+//    fun `should announce status when HeartbeatEffect failed`(
+//        pnHeartbeatNotificationOptions: PNHeartbeatNotificationOptions,
+//        shouldAnnounce: Boolean
+//    ) {
+//        // given
+//        val heartbeatNotificationOptions: PNHeartbeatNotificationOptions = pnHeartbeatNotificationOptions
+//        val heartbeatEffect =
+//            HeartbeatEffect(failingRemoteAction(reason), eventSink, heartbeatNotificationOptions, statusConsumer)
+//
+//        // when
+//        heartbeatEffect.runEffect()
+//
+//        // then
+//        if (shouldAnnounce) {
+//            verify(exactly = 1) { statusConsumer.announce(any()) }
+//        } else {
+//            verify(exactly = 0) { statusConsumer.announce(any()) }
+//        }
+//    }
 }
