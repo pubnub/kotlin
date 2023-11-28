@@ -95,32 +95,44 @@ class HeartbeatEffectTest {
         heartbeatEffect.runEffect()
 
         // then
-        if (shouldAnnounce) {
-            verify(exactly = 1) { statusConsumer.announce(any()) }
-        } else {
-            verify(exactly = 0) { statusConsumer.announce(any()) }
-        }
+        Awaitility.await()
+            .atMost(Durations.ONE_SECOND)
+            .with()
+            .pollInterval(Duration.ofMillis(20))
+            .untilAsserted {
+                if (shouldAnnounce) {
+                    verify(exactly = 1) { statusConsumer.announce(any()) }
+                } else {
+                    verify(exactly = 0) { statusConsumer.announce(any()) }
+                }
+            }
     }
 
-//    @ParameterizedTest
-//    @MethodSource("unsuccessfulHeartbeatWithNotificationOptions")
-//    fun `should announce status when HeartbeatEffect failed`(
-//        pnHeartbeatNotificationOptions: PNHeartbeatNotificationOptions,
-//        shouldAnnounce: Boolean
-//    ) {
-//        // given
-//        val heartbeatNotificationOptions: PNHeartbeatNotificationOptions = pnHeartbeatNotificationOptions
-//        val heartbeatEffect =
-//            HeartbeatEffect(failingRemoteAction(reason), eventSink, heartbeatNotificationOptions, statusConsumer)
-//
-//        // when
-//        heartbeatEffect.runEffect()
-//
-//        // then
-//        if (shouldAnnounce) {
-//            verify(exactly = 1) { statusConsumer.announce(any()) }
-//        } else {
-//            verify(exactly = 0) { statusConsumer.announce(any()) }
-//        }
-//    }
+    @ParameterizedTest
+    @MethodSource("unsuccessfulHeartbeatWithNotificationOptions")
+    fun `should announce status when HeartbeatEffect failed`(
+        pnHeartbeatNotificationOptions: PNHeartbeatNotificationOptions,
+        shouldAnnounce: Boolean
+    ) {
+        // given
+        val heartbeatNotificationOptions: PNHeartbeatNotificationOptions = pnHeartbeatNotificationOptions
+        val heartbeatEffect =
+            HeartbeatEffect(failingRemoteAction(reason), eventSink, heartbeatNotificationOptions, statusConsumer)
+
+        // when
+        heartbeatEffect.runEffect()
+
+        // then
+        Awaitility.await()
+            .atMost(Durations.ONE_SECOND)
+            .with()
+            .pollInterval(Duration.ofMillis(20))
+            .untilAsserted {
+                if (shouldAnnounce) {
+                    verify(exactly = 1) { statusConsumer.announce(any()) }
+                } else {
+                    verify(exactly = 0) { statusConsumer.announce(any()) }
+                }
+            }
+    }
 }
