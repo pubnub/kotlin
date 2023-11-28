@@ -5,12 +5,8 @@ import com.pubnub.api.enums.PNHeartbeatNotificationOptions
 import com.pubnub.api.presence.eventengine.event.PresenceEvent
 import com.pubnub.api.subscribe.eventengine.effect.StatusConsumer
 import com.pubnub.api.subscribe.eventengine.effect.TestEventSink
-import com.pubnub.api.subscribe.eventengine.effect.successfulRemoteAction
 import io.mockk.mockk
-import io.mockk.verify
-import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
-import org.junit.jupiter.params.provider.MethodSource
 
 class HeartbeatEffectTest {
     private val eventSink = TestEventSink<PresenceEvent>()
