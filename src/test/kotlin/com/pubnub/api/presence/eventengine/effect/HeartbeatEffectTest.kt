@@ -9,11 +9,14 @@ import com.pubnub.api.subscribe.eventengine.effect.failingRemoteAction
 import com.pubnub.api.subscribe.eventengine.effect.successfulRemoteAction
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
 import org.awaitility.Awaitility
 import org.awaitility.Durations
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
+import org.junit.jupiter.params.provider.MethodSource
 import java.time.Duration
 
 class HeartbeatEffectTest {
@@ -77,27 +80,27 @@ class HeartbeatEffectTest {
             }
     }
 
-//    @ParameterizedTest
-//    @MethodSource("successfulHeartbeatWithNotificationOptions")
-//    fun `should announce status when HeartbeatEffect succeeded`(
-//        pnHeartbeatNotificationOptions: PNHeartbeatNotificationOptions,
-//        shouldAnnounce: Boolean
-//    ) {
-//        // given
-//        val heartbeatNotificationOptions: PNHeartbeatNotificationOptions = pnHeartbeatNotificationOptions
-//        val heartbeatEffect =
-//            HeartbeatEffect(successfulRemoteAction(true), eventSink, heartbeatNotificationOptions, statusConsumer)
-//
-//        // when
-//        heartbeatEffect.runEffect()
-//
-//        // then
-//        if (shouldAnnounce) {
-//            verify(exactly = 1) { statusConsumer.announce(any()) }
-//        } else {
-//            verify(exactly = 0) { statusConsumer.announce(any()) }
-//        }
-//    }
+    @ParameterizedTest
+    @MethodSource("successfulHeartbeatWithNotificationOptions")
+    fun `should announce status when HeartbeatEffect succeeded`(
+        pnHeartbeatNotificationOptions: PNHeartbeatNotificationOptions,
+        shouldAnnounce: Boolean
+    ) {
+        // given
+        val heartbeatNotificationOptions: PNHeartbeatNotificationOptions = pnHeartbeatNotificationOptions
+        val heartbeatEffect =
+            HeartbeatEffect(successfulRemoteAction(true), eventSink, heartbeatNotificationOptions, statusConsumer)
+
+        // when
+        heartbeatEffect.runEffect()
+
+        // then
+        if (shouldAnnounce) {
+            verify(exactly = 1) { statusConsumer.announce(any()) }
+        } else {
+            verify(exactly = 0) { statusConsumer.announce(any()) }
+        }
+    }
 
 //    @ParameterizedTest
 //    @MethodSource("unsuccessfulHeartbeatWithNotificationOptions")
