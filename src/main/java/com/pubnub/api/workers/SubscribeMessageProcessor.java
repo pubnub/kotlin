@@ -77,7 +77,6 @@ public class SubscribeMessageProcessor {
 
         if (message.getChannel().endsWith("-pnpres")) {
             PresenceEnvelope presencePayload = mapper.convertValue(message.getPayload(), PresenceEnvelope.class);
-
             String strippedPresenceChannel = null;
             String strippedPresenceSubscription = null;
 
@@ -107,7 +106,6 @@ public class SubscribeMessageProcessor {
                     .timeout(getDelta(message.getPayload().getAsJsonObject().get("timeout")))
                     .hereNowRefresh(isHereNowRefresh != null && isHereNowRefresh.getAsBoolean())
                     .build();
-
             return pnPresenceEventResult;
         } else {
             JsonElement extractedMessage;
@@ -202,6 +200,7 @@ public class SubscribeMessageProcessor {
                         .publisher(message.getIssuingClientId())
                         .timetoken(publishMetaData.getPublishTimetoken())
                         .jsonMessage(jsonMessage)
+                        .error(error)
                         .build();
             }
         }
