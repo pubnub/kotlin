@@ -1,6 +1,7 @@
 package com.pubnub.api.models.consumer.pubsub.files
 
 import com.google.gson.JsonElement
+import com.pubnub.api.PubNubError
 import com.pubnub.api.models.consumer.files.PNDownloadableFile
 import com.pubnub.api.models.consumer.pubsub.PNEvent
 
@@ -10,5 +11,6 @@ data class PNFileEventResult(
     val publisher: String?,
     val message: Any?,
     val file: PNDownloadableFile,
-    val jsonMessage: JsonElement
+    val jsonMessage: JsonElement,
+    val error: PubNubError? = null
 ) : PNEvent
