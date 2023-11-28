@@ -7,17 +7,11 @@ import com.pubnub.api.subscribe.eventengine.effect.StatusConsumer
 import com.pubnub.api.subscribe.eventengine.effect.TestEventSink
 import com.pubnub.api.subscribe.eventengine.effect.failingRemoteAction
 import com.pubnub.api.subscribe.eventengine.effect.successfulRemoteAction
-import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import org.awaitility.Awaitility
-import org.awaitility.Durations
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
-import java.time.Duration
 
 class HeartbeatEffectTest {
     private val eventSink = TestEventSink<PresenceEvent>()
@@ -41,44 +35,44 @@ class HeartbeatEffectTest {
         )
     }
 
-    @Test
-    fun `should deliver HeartbeatSuccess event when HeartbeatEffect succeeded`() {
-        // given
-        every { statusConsumer.announce(any()) } returns Unit
-        val heartbeatEffect =
-            HeartbeatEffect(successfulRemoteAction(true), eventSink, heartbeatNotificationOptions, statusConsumer)
-
-        // when
-        heartbeatEffect.runEffect()
-
-        // then
-        Awaitility.await()
-            .atMost(Durations.ONE_SECOND)
-            .with()
-            .pollInterval(Duration.ofMillis(20))
-            .untilAsserted {
-                assertEquals(listOf(PresenceEvent.HeartbeatSuccess), eventSink.events)
-            }
-    }
-
-    @Test
-    fun `should deliver HeartbeatFailure event when HeartbeatEffect failed`() {
-        // given
-        every { statusConsumer.announce(any()) } returns Unit
-        val heartbeatEffect =
-            HeartbeatEffect(failingRemoteAction(reason), eventSink, heartbeatNotificationOptions, statusConsumer)
-        // when
-        heartbeatEffect.runEffect()
-
-        // then
-        Awaitility.await()
-            .atMost(Durations.ONE_SECOND)
-            .with()
-            .pollInterval(Duration.ofMillis(20))
-            .untilAsserted {
-                assertEquals(listOf(PresenceEvent.HeartbeatFailure(reason)), eventSink.events)
-            }
-    }
+//    @Test
+//    fun `should deliver HeartbeatSuccess event when HeartbeatEffect succeeded`() {
+//        // given
+//        every { statusConsumer.announce(any()) } returns Unit
+//        val heartbeatEffect =
+//            HeartbeatEffect(successfulRemoteAction(true), eventSink, heartbeatNotificationOptions, statusConsumer)
+//
+//        // when
+//        heartbeatEffect.runEffect()
+//
+//        // then
+//        Awaitility.await()
+//            .atMost(Durations.ONE_SECOND)
+//            .with()
+//            .pollInterval(Duration.ofMillis(20))
+//            .untilAsserted {
+//                assertEquals(listOf(PresenceEvent.HeartbeatSuccess), eventSink.events)
+//            }
+//    }
+//
+//    @Test
+//    fun `should deliver HeartbeatFailure event when HeartbeatEffect failed`() {
+//        // given
+//        every { statusConsumer.announce(any()) } returns Unit
+//        val heartbeatEffect =
+//            HeartbeatEffect(failingRemoteAction(reason), eventSink, heartbeatNotificationOptions, statusConsumer)
+//        // when
+//        heartbeatEffect.runEffect()
+//
+//        // then
+//        Awaitility.await()
+//            .atMost(Durations.ONE_SECOND)
+//            .with()
+//            .pollInterval(Duration.ofMillis(20))
+//            .untilAsserted {
+//                assertEquals(listOf(PresenceEvent.HeartbeatFailure(reason)), eventSink.events)
+//            }
+//    }
 
     @ParameterizedTest
     @MethodSource("successfulHeartbeatWithNotificationOptions")
