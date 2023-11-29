@@ -14,6 +14,24 @@ class TransitionFromHeartbeatCooldownStateTest {
     val reason = PubNubException("Test")
 
     @Test
+    fun `channel and channelGroup should be immutable set`() {
+        // given
+        val channelName = "Channel01"
+        val channelGroupName = "ChannelGroup01"
+        val myMutableSetOfChannels = mutableSetOf(channelName)
+        val myMutableSetOfChannelGroups = mutableSetOf(channelGroupName)
+        val heartbeatCooldown: PresenceState.HeartbeatCooldown = PresenceState.HeartbeatCooldown(myMutableSetOfChannels, myMutableSetOfChannelGroups)
+
+        // when
+        myMutableSetOfChannels.remove(channelName)
+        myMutableSetOfChannelGroups.remove(channelGroupName)
+
+        // then
+        Assertions.assertTrue(heartbeatCooldown.channels.contains(channelName))
+        Assertions.assertTrue(heartbeatCooldown.channelGroups.contains(channelGroupName))
+    }
+
+    @Test
     fun `should transit from HEARTBEAT_COOLDOWN to INACTIVE and create CANCEL_WAIT and LEAVE invocations when there is LEFT_ALL event`() {
         // when
         val (newState, invocations) = transition(
@@ -45,7 +63,10 @@ class TransitionFromHeartbeatCooldownStateTest {
         )
 
         // then
-        Assertions.assertEquals(PresenceState.Heartbeating(channels - channelToLeave, channelGroups - channelGroupToLeave), newState)
+        Assertions.assertTrue(newState is PresenceState.Heartbeating)
+        val heartbeating = newState as PresenceState.Heartbeating
+        Assertions.assertEquals(channels - channelToLeave, heartbeating.channels)
+        Assertions.assertEquals(channelGroups - channelGroupToLeave, heartbeating.channelGroups)
         Assertions.assertEquals(
             setOf(
                 PresenceEffectInvocation.CancelWait,
@@ -65,7 +86,10 @@ class TransitionFromHeartbeatCooldownStateTest {
         )
 
         // then
-        Assertions.assertEquals(PresenceState.HeartbeatStopped(channels, channelGroups), newState)
+        Assertions.assertTrue(newState is PresenceState.HeartbeatStopped)
+        val heartbeatStopped = newState as PresenceState.HeartbeatStopped
+        Assertions.assertEquals(channels, heartbeatStopped.channels)
+        Assertions.assertEquals(channelGroups, heartbeatStopped.channelGroups)
         Assertions.assertEquals(
             setOf(
                 PresenceEffectInvocation.CancelWait,
@@ -88,7 +112,10 @@ class TransitionFromHeartbeatCooldownStateTest {
         )
 
         // then
-        Assertions.assertEquals(PresenceState.Heartbeating(newChannels, newChannelGroup), newState)
+        Assertions.assertTrue(newState is PresenceState.Heartbeating)
+        val heartbeating = newState as PresenceState.Heartbeating
+        Assertions.assertEquals(newChannels, heartbeating.channels)
+        Assertions.assertEquals(newChannelGroup, heartbeating.channelGroups)
         Assertions.assertEquals(
             setOf(
                 PresenceEffectInvocation.CancelWait,
@@ -111,7 +138,10 @@ class TransitionFromHeartbeatCooldownStateTest {
         )
 
         // then
-        Assertions.assertEquals(PresenceState.Heartbeating(newChannels, newChannelGroup), newState)
+        Assertions.assertTrue(newState is PresenceState.Heartbeating)
+        val heartbeating = newState as PresenceState.Heartbeating
+        Assertions.assertEquals(newChannels, heartbeating.channels)
+        Assertions.assertEquals(newChannelGroup, heartbeating.channelGroups)
         Assertions.assertEquals(
             setOf(
                 PresenceEffectInvocation.CancelWait,
@@ -134,7 +164,10 @@ class TransitionFromHeartbeatCooldownStateTest {
         )
 
         // then
-        Assertions.assertEquals(PresenceState.Heartbeating(newChannels, newChannelGroup), newState)
+        Assertions.assertTrue(newState is PresenceState.Heartbeating)
+        val heartbeating = newState as PresenceState.Heartbeating
+        Assertions.assertEquals(newChannels, heartbeating.channels)
+        Assertions.assertEquals(newChannelGroup, heartbeating.channelGroups)
         Assertions.assertEquals(
             setOf(
                 PresenceEffectInvocation.CancelWait,

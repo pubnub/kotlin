@@ -14,6 +14,24 @@ class TransitionFromHeartbeatFailedStateTest {
     val reason = PubNubException("Test")
 
     @Test
+    fun `channel and channelGroup should be immutable set`() {
+        // given
+        val channelName = "Channel01"
+        val channelGroupName = "ChannelGroup01"
+        val myMutableSetOfChannels = mutableSetOf(channelName)
+        val myMutableSetOfChannelGroups = mutableSetOf(channelGroupName)
+        val heartbeatFailed: PresenceState.HeartbeatFailed = PresenceState.HeartbeatFailed(myMutableSetOfChannels, myMutableSetOfChannelGroups, reason)
+
+        // when
+        myMutableSetOfChannels.remove(channelName)
+        myMutableSetOfChannelGroups.remove(channelGroupName)
+
+        // then
+        Assertions.assertTrue(heartbeatFailed.channels.contains(channelName))
+        Assertions.assertTrue(heartbeatFailed.channelGroups.contains(channelGroupName))
+    }
+
+    @Test
     fun `should transit from HEARTBEAT_FAILED to INACTIVE and create LEAVE invocation when there is LEFT_ALL event`() {
         // when
         val (newState, invocations) = transition(
@@ -41,7 +59,10 @@ class TransitionFromHeartbeatFailedStateTest {
         )
 
         // then
-        Assertions.assertEquals(PresenceState.Heartbeating(newChannels, newChannelGroup), newState)
+        Assertions.assertTrue(newState is PresenceState.Heartbeating)
+        val heartbeating = newState as PresenceState.Heartbeating
+        Assertions.assertEquals(newChannels, heartbeating.channels)
+        Assertions.assertEquals(newChannelGroup, heartbeating.channelGroups)
         Assertions.assertEquals(
             setOf<PresenceEffectInvocation>(PresenceEffectInvocation.Heartbeat(newChannels, newChannelGroup)), invocations
         )
@@ -60,7 +81,10 @@ class TransitionFromHeartbeatFailedStateTest {
         )
 
         // then
-        Assertions.assertEquals(PresenceState.Heartbeating(newChannels, newChannelGroup), newState)
+        Assertions.assertTrue(newState is PresenceState.Heartbeating)
+        val heartbeatingState = newState as PresenceState.Heartbeating
+        Assertions.assertEquals(newChannels, heartbeatingState.channels)
+        Assertions.assertEquals(newChannelGroup, heartbeatingState.channelGroups)
         Assertions.assertEquals(
             setOf<PresenceEffectInvocation>(PresenceEffectInvocation.Heartbeat(newChannels, newChannelGroup)), invocations
         )
@@ -75,7 +99,10 @@ class TransitionFromHeartbeatFailedStateTest {
         )
 
         // then
-        Assertions.assertEquals(PresenceState.Heartbeating(channels, channelGroups), newState)
+        Assertions.assertTrue(newState is PresenceState.Heartbeating)
+        val heartbeating = newState as PresenceState.Heartbeating
+        Assertions.assertEquals(channels, heartbeating.channels)
+        Assertions.assertEquals(channelGroups, heartbeating.channelGroups)
         Assertions.assertEquals(
             setOf<PresenceEffectInvocation>(PresenceEffectInvocation.Heartbeat(channels, channelGroups)), invocations
         )
@@ -94,7 +121,10 @@ class TransitionFromHeartbeatFailedStateTest {
         )
 
         // then
-        Assertions.assertEquals(PresenceState.Heartbeating(channels - channelToLeave, channelGroups - channelGroupToLeave), newState)
+        Assertions.assertTrue(newState is PresenceState.Heartbeating)
+        val heartbeating = newState as PresenceState.Heartbeating
+        Assertions.assertEquals(channels - channelToLeave, heartbeating.channels)
+        Assertions.assertEquals(channelGroups - channelGroupToLeave, heartbeating.channelGroups)
         Assertions.assertEquals(
             setOf(PresenceEffectInvocation.Leave(channelToLeave, channelGroupToLeave), PresenceEffectInvocation.Heartbeat(channels - channelToLeave, channelGroups - channelGroupToLeave)), invocations
         )
@@ -109,7 +139,10 @@ class TransitionFromHeartbeatFailedStateTest {
         )
 
         // then
-        Assertions.assertEquals(PresenceState.HeartbeatStopped(channels, channelGroups), newState)
+        Assertions.assertTrue(newState is PresenceState.HeartbeatStopped)
+        val heartbeatStopped = newState as PresenceState.HeartbeatStopped
+        Assertions.assertEquals(channels, heartbeatStopped.channels)
+        Assertions.assertEquals(channelGroups, heartbeatStopped.channelGroups)
         Assertions.assertEquals(
             setOf(PresenceEffectInvocation.Leave(channels, channelGroups)), invocations
         )

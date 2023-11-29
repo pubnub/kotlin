@@ -4,8 +4,15 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.eventengine.Event
 
 internal sealed class PresenceEvent : Event {
-    data class Joined(val channels: Set<String>, val channelGroups: Set<String>) : PresenceEvent()
-    data class Left(val channels: Set<String>, val channelGroups: Set<String>) : PresenceEvent()
+    class Joined(channels: Set<String>, channelGroups: Set<String>) : PresenceEvent() {
+        val channels: Set<String> = channels.toSet()
+        val channelGroups: Set<String> = channelGroups.toSet()
+    }
+
+    class Left(channels: Set<String>, channelGroups: Set<String>) : PresenceEvent() {
+        val channels: Set<String> = channels.toSet()
+        val channelGroups: Set<String> = channelGroups.toSet()
+    }
 
     object Reconnect : PresenceEvent()
     object Disconnect : PresenceEvent()
