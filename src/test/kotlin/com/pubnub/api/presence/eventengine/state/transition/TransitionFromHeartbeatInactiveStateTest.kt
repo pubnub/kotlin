@@ -4,6 +4,7 @@ import com.pubnub.api.eventengine.transition
 import com.pubnub.api.presence.eventengine.effect.PresenceEffectInvocation
 import com.pubnub.api.presence.eventengine.event.PresenceEvent
 import com.pubnub.api.presence.eventengine.state.PresenceState
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
@@ -21,7 +22,10 @@ class TransitionFromHeartbeatInactiveStateTest {
         val (newState, invocations) = transition(PresenceState.HeartbeatInactive, PresenceEvent.Joined(newChannels, newChannelGroup))
 
         // then
-        assertEquals(PresenceState.Heartbeating(newChannels, newChannelGroup), newState)
+        Assertions.assertTrue(newState is PresenceState.Heartbeating)
+        val heartbeating = newState as PresenceState.Heartbeating
+        Assertions.assertEquals(newChannels, heartbeating.channels)
+        Assertions.assertEquals(newChannelGroup, heartbeating.channelGroups)
         assertEquals(setOf<PresenceEffectInvocation>(PresenceEffectInvocation.Heartbeat(newChannels, newChannelGroup)), invocations)
     }
 

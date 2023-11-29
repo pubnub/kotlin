@@ -21,10 +21,15 @@ internal sealed class PresenceState : State<PresenceEffectInvocation, PresenceEv
         }
     }
 
-    data class Heartbeating(
-        val channels: Set<String>,
-        val channelGroups: Set<String>
+    class Heartbeating(
+        channels: Set<String>,
+        channelGroups: Set<String>
     ) : PresenceState() {
+        // toSet() is a must because we want to make sure that channels is immutable, and Handshaking constructor
+        // doesn't prevent from providing "channels" that is mutable set.
+        val channels = channels.toSet()
+        val channelGroups = channelGroups.toSet()
+
         override fun onEntry(): Set<PresenceEffectInvocation> = setOf(PresenceEffectInvocation.Heartbeat(channels, channelGroups))
 
         override fun transition(event: PresenceEvent): Pair<PresenceState, Set<PresenceEffectInvocation>> {
@@ -57,12 +62,15 @@ internal sealed class PresenceState : State<PresenceEffectInvocation, PresenceEv
         }
     }
 
-    data class HeartbeatReconnecting(
-        val channels: Set<String>,
-        val channelGroups: Set<String>,
+    class HeartbeatReconnecting(
+        channels: Set<String>,
+        channelGroups: Set<String>,
         val attempts: Int,
         val reason: PubNubException?
     ) : PresenceState() {
+        val channels = channels.toSet()
+        val channelGroups = channelGroups.toSet()
+
         override fun onEntry(): Set<PresenceEffectInvocation> = setOf(PresenceEffectInvocation.DelayedHeartbeat(channels, channelGroups, attempts, reason))
         override fun onExit(): Set<PresenceEffectInvocation> = setOf(PresenceEffectInvocation.CancelDelayedHeartbeat)
 
@@ -99,10 +107,13 @@ internal sealed class PresenceState : State<PresenceEffectInvocation, PresenceEv
         }
     }
 
-    data class HeartbeatStopped(
-        val channels: Set<String>,
-        val channelGroups: Set<String>
+    class HeartbeatStopped(
+        channels: Set<String>,
+        channelGroups: Set<String>
     ) : PresenceState() {
+        val channels = channels.toSet()
+        val channelGroups = channelGroups.toSet()
+
         override fun transition(event: PresenceEvent): Pair<PresenceState, Set<PresenceEffectInvocation>> {
             return when (event) {
                 is PresenceEvent.LeftAll -> {
@@ -127,11 +138,14 @@ internal sealed class PresenceState : State<PresenceEffectInvocation, PresenceEv
         }
     }
 
-    data class HeartbeatFailed(
-        val channels: Set<String>,
-        val channelGroups: Set<String>,
+    class HeartbeatFailed(
+        channels: Set<String>,
+        channelGroups: Set<String>,
         val reason: PubNubException?
     ) : PresenceState() {
+        val channels = channels.toSet()
+        val channelGroups = channelGroups.toSet()
+
         override fun transition(event: PresenceEvent): Pair<PresenceState, Set<PresenceEffectInvocation>> {
             return when (event) {
                 is PresenceEvent.LeftAll -> {
@@ -159,10 +173,13 @@ internal sealed class PresenceState : State<PresenceEffectInvocation, PresenceEv
         }
     }
 
-    data class HeartbeatCooldown(
-        val channels: Set<String>,
-        val channelGroups: Set<String>
+    class HeartbeatCooldown(
+        channels: Set<String>,
+        channelGroups: Set<String>
     ) : PresenceState() {
+        val channels = channels.toSet()
+        val channelGroups = channelGroups.toSet()
+
         override fun onEntry(): Set<PresenceEffectInvocation> = setOf(PresenceEffectInvocation.Wait())
         override fun onExit(): Set<PresenceEffectInvocation> = setOf(PresenceEffectInvocation.CancelWait)
 
