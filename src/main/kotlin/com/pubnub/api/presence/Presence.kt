@@ -112,14 +112,14 @@ internal class EnabledPresence(
         channels: Set<String>,
         channelGroups: Set<String>,
     ) {
-        presenceEventEngineManager.addEventToQueue(PresenceEvent.Joined(channels.toSet(), channelGroups.toSet()))
+        presenceEventEngineManager.addEventToQueue(PresenceEvent.Joined(channels, channelGroups))
     }
 
     override fun left(
         channels: Set<String>,
         channelGroups: Set<String>
     ) {
-        presenceEventEngineManager.addEventToQueue(PresenceEvent.Left(channels.toSet(), channelGroups.toSet()))
+        presenceEventEngineManager.addEventToQueue(PresenceEvent.Left(channels, channelGroups))
     }
 
     override fun leftAll() {
@@ -132,9 +132,9 @@ internal class EnabledPresence(
         connected: Boolean
     ) {
         if (connected) {
-            joined(channels.toSet(), channelGroups.toSet())
+            joined(channels, channelGroups)
         } else {
-            left(channels.toSet(), channelGroups.toSet())
+            left(channels, channelGroups)
         }
     }
 

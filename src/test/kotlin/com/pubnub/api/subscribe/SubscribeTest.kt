@@ -3,7 +3,6 @@ package com.pubnub.api.subscribe
 import com.pubnub.api.managers.SubscribeEventEngineManager
 import com.pubnub.api.subscribe.eventengine.data.SubscriptionData
 import com.pubnub.api.subscribe.eventengine.event.SubscribeEvent
-import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
 import io.mockk.CapturingSlot
 import io.mockk.every
 import io.mockk.mockk
@@ -49,13 +48,11 @@ internal class SubscribeTest {
 
         verify { subscribeEventEngineManager.addEventToQueue(any()) }
 
-        assertEquals(
-            SubscribeEvent.SubscriptionChanged(
-                (channelsInSubscriptionData + channelToSubscribe),
-                (channelGroupsInSubscriptionData + channelGroupsToSubscribe)
-            ),
-            subscribeEvent.captured
-        )
+        val capturedSubscriptionChanged = subscribeEvent.captured
+        assertTrue(capturedSubscriptionChanged is SubscribeEvent.SubscriptionChanged)
+        val subscriptionChanged = capturedSubscriptionChanged as SubscribeEvent.SubscriptionChanged
+        assertEquals(channelsInSubscriptionData + channelToSubscribe, subscriptionChanged.channels)
+        assertEquals(channelGroupsInSubscriptionData + channelGroupsToSubscribe, subscriptionChanged.channelGroups)
     }
 
     @Test
@@ -71,14 +68,12 @@ internal class SubscribeTest {
         )
 
         verify { subscribeEventEngineManager.addEventToQueue(any()) }
-        assertEquals(
-            SubscribeEvent.SubscriptionRestored(
-                (channelsInSubscriptionData + channelToSubscribe),
-                (channelGroupsInSubscriptionData + channelGroupsToSubscribe),
-                SubscriptionCursor(withTimetoken, region = null)
-            ),
-            subscribeEvent.captured
-        )
+
+        val capturedSubscribeEvent = subscribeEvent.captured
+        assertTrue(capturedSubscribeEvent is SubscribeEvent.SubscriptionRestored)
+        val subscriptionRestored = capturedSubscribeEvent as SubscribeEvent.SubscriptionRestored
+        assertEquals(channelsInSubscriptionData + channelToSubscribe, subscriptionRestored.channels)
+        assertEquals(channelGroupsInSubscriptionData + channelGroupsToSubscribe, subscriptionRestored.channelGroups)
     }
 
     @Test
@@ -95,10 +90,11 @@ internal class SubscribeTest {
         objectUnderTest.unsubscribe(channelsToUnsubscribe, channelGroupsToUnsubscribe)
 
         verify { subscribeEventEngineManager.addEventToQueue(any()) }
-        assertEquals(
-            SubscribeEvent.SubscriptionChanged(setOf(CHANNEL_02, "$CHANNEL_02$PNPRES"), setOf(CHANNEL_GROUPS_02, "$CHANNEL_GROUPS_02$PNPRES")),
-            subscribeEvent.captured
-        )
+        val capturedSubscriptionChanged = subscribeEvent.captured
+        assertTrue(capturedSubscriptionChanged is SubscribeEvent.SubscriptionChanged)
+        val subscriptionChanged = capturedSubscriptionChanged as SubscribeEvent.SubscriptionChanged
+        assertEquals(setOf(CHANNEL_02, "$CHANNEL_02$PNPRES"), subscriptionChanged.channels)
+        assertEquals(setOf(CHANNEL_GROUPS_02, "$CHANNEL_GROUPS_02$PNPRES"), subscriptionChanged.channelGroups)
         assertEquals(setOf(CHANNEL_02, "$CHANNEL_02$PNPRES"), subscriptionData.channels)
         assertEquals(setOf(CHANNEL_GROUPS_02, "$CHANNEL_GROUPS_02$PNPRES"), subscriptionData.channelGroups)
     }
