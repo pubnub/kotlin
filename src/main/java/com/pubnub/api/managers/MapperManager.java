@@ -1,7 +1,5 @@
 package com.pubnub.api.managers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -29,7 +27,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class MapperManager {
 
@@ -37,8 +37,6 @@ public class MapperManager {
     private final Gson objectMapper;
     @Getter
     private final Converter.Factory converterFactory;
-
-    private final ObjectMapper jacksonObjectMapper = new ObjectMapper();
 
     public MapperManager() {
         TypeAdapter<Boolean> booleanAsIntAdapter = getBooleanTypeAdapter();
@@ -150,20 +148,16 @@ public class MapperManager {
 
     public String toJson(Object input) throws PubNubException {
         try {
-            return this.objectMapper.toJson(input);
+            if (input instanceof List && input.getClass().isAnonymousClass()) {
+                return this.objectMapper.toJson(input, List.class);
+            } else if (input instanceof Map && input.getClass().isAnonymousClass()) {
+                return this.objectMapper.toJson(input, Map.class);
+            } else if (input instanceof Set && input.getClass().isAnonymousClass()) {
+                return this.objectMapper.toJson(input, Set.class);
+            } else {
+                return this.objectMapper.toJson(input);
+            }
         } catch (JsonParseException e) {
-            throw PubNubException.builder()
-                    .pubnubError(PubNubErrorBuilder.PNERROBJ_JSON_ERROR)
-                    .errormsg(e.getMessage())
-                    .cause(e)
-                    .build();
-        }
-    }
-
-    public String toJsonUsinJackson(Object input) throws PubNubException {
-        try {
-            return this.jacksonObjectMapper.writeValueAsString(input);
-        } catch (JsonProcessingException e) {
             throw PubNubException.builder()
                     .pubnubError(PubNubErrorBuilder.PNERROBJ_JSON_ERROR)
                     .errormsg(e.getMessage())

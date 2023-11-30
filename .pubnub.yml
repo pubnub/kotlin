@@ -1,9 +1,9 @@
 name: java
-version: 6.4.3
+version: 6.4.4
 schema: 1
 scm: github.com/pubnub/java
 files:
-  - build/libs/pubnub-gson-6.4.3-all.jar
+  - build/libs/pubnub-gson-6.4.4-all.jar
 sdks:
   - 
       type: library
@@ -23,8 +23,8 @@ sdks:
             -
               distribution-type: library
               distribution-repository: maven 
-              package-name: pubnub-gson-6.4.3
-              location: https://repo.maven.apache.org/maven2/com/pubnub/pubnub-gson/6.4.3/pubnub-gson-6.4.3.jar
+              package-name: pubnub-gson-6.4.4
+              location: https://repo.maven.apache.org/maven2/com/pubnub/pubnub-gson/6.4.4/pubnub-gson-6.4.4.jar
               supported-platforms:
                 supported-operating-systems:
                   Android:
@@ -100,11 +100,11 @@ sdks:
                   license-url: https://github.com/google/gson/blob/gson-parent-2.9.0/LICENSE
                   is-required: Required
                 -
-                  name: jackson-databind
-                  min-version: 2.14.2
-                  location: https://repo.maven.apache.org/maven2/com/fasterxml/jackson/core/jackson-databind/2.14.2/jackson-databind-2.14.2.jar
-                  license: Apache License, Version 2.0
-                  license-url: hhttps://github.com/FasterXML/jackson-databind/blob/jackson-databind-2.14.2/README.md
+                  name: cbor
+                  min-version: "0.9"
+                  location: https://repo.maven.apache.org/maven2/co/nstant/in/cbor/0.9
+                  license: The Apache Software License, Version 2.0
+                  license-url: https://www.apache.org/licenses/LICENSE-2.0.txt
                   is-required: Required
                 -
                   name: json
@@ -115,6 +115,11 @@ sdks:
                   is-required: Required
 
 changelog:
+  - date: 2023-11-30
+    version: v6.4.4
+    changes:
+      - type: bug
+        text: "Bring back compatibility with Android 6+ by removing the Jackson library dependency."
   - date: 2023-11-28
     version: v6.4.3
     changes:
