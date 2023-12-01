@@ -6,6 +6,7 @@ import com.pubnub.api.eventengine.EventEngineConf
 import com.pubnub.api.managers.ListenerManager
 import com.pubnub.api.managers.PresenceEventEngineManager
 import com.pubnub.api.presence.eventengine.PresenceEventEngine
+import com.pubnub.api.presence.eventengine.data.PresenceData
 import com.pubnub.api.presence.eventengine.effect.PresenceEffectFactory
 import com.pubnub.api.presence.eventengine.effect.PresenceEffectInvocation
 import com.pubnub.api.presence.eventengine.effect.effectprovider.HeartbeatProvider
@@ -27,6 +28,7 @@ internal interface Presence {
             heartbeatNotificationOptions: PNHeartbeatNotificationOptions,
             listenerManager: ListenerManager,
             eventEngineConf: EventEngineConf<PresenceEffectInvocation, PresenceEvent>,
+            presenceData: PresenceData = PresenceData()
         ): Presence {
             if (heartbeatInterval <= Duration.ZERO || !enableEventEngine) {
                 return PresenceNoOp()
@@ -55,7 +57,7 @@ internal interface Presence {
                 )
             ).also { it.start() }
 
-            return EnabledPresence(eventEngineManager)
+            return EnabledPresence(eventEngineManager, presenceData)
         }
     }
 
@@ -105,24 +107,38 @@ internal class PresenceNoOp : Presence {
 }
 
 internal class EnabledPresence(
-    private val presenceEventEngineManager: PresenceEventEngineManager
+    private val presenceEventEngineManager: PresenceEventEngineManager,
+    private val presenceData: PresenceData = PresenceData()
 ) : Presence {
 
+    @Synchronized
     override fun joined(
         channels: Set<String>,
         channelGroups: Set<String>,
     ) {
+        addChannelsToPresenceData(channels)
+        addChannelGroupsToPresenceData(channelGroups)
         presenceEventEngineManager.addEventToQueue(PresenceEvent.Joined(channels, channelGroups))
     }
 
+    @Synchronized
     override fun left(
         channels: Set<String>,
         channelGroups: Set<String>
     ) {
-        presenceEventEngineManager.addEventToQueue(PresenceEvent.Left(channels, channelGroups))
+        removeChannelsFromPresenceData(channels)
+        removeChannelGroupsFromPresenceData(channelGroups)
+        if (presenceData.channels.size > 0 || presenceData.channelGroups.size > 0) {
+            presenceEventEngineManager.addEventToQueue(PresenceEvent.Left(channels, channelGroups))
+        } else {
+            presenceEventEngineManager.addEventToQueue(PresenceEvent.LeftAll)
+        }
     }
 
+    @Synchronized
     override fun leftAll() {
+        removeAllChannelsFromPresenceData()
+        removeAllChannelGroupsFromPresenceData()
         presenceEventEngineManager.addEventToQueue(PresenceEvent.LeftAll)
     }
 
@@ -150,5 +166,29 @@ internal class EnabledPresence(
     override fun destroy() {
         disconnect()
         presenceEventEngineManager.stop()
+    }
+
+    private fun addChannelsToPresenceData(channels: Set<String>) {
+        presenceData.channels.addAll(channels)
+    }
+
+    private fun addChannelGroupsToPresenceData(channelGroups: Set<String>) {
+        presenceData.channelGroups.addAll(channelGroups)
+    }
+
+    private fun removeChannelsFromPresenceData(channels: Set<String>) {
+        presenceData.channels.removeAll(channels)
+    }
+
+    private fun removeChannelGroupsFromPresenceData(channelGroups: Set<String>) {
+        presenceData.channelGroups.removeAll(channelGroups)
+    }
+
+    private fun removeAllChannelsFromPresenceData() {
+        presenceData.channels.clear()
+    }
+
+    private fun removeAllChannelGroupsFromPresenceData() {
+        presenceData.channelGroups.clear()
     }
 }
