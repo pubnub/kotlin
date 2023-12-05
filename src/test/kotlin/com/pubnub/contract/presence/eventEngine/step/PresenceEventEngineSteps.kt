@@ -1,16 +1,23 @@
 package com.pubnub.contract.presence.eventEngine.step
 
+import com.pubnub.api.PubNub
+import com.pubnub.api.callbacks.SubscribeCallback
+import com.pubnub.api.models.consumer.PNStatus
+import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.contract.subscribe.eventEngine.state.EventEngineState
 import io.cucumber.datatable.DataTable
 import io.cucumber.java.en.Given
 import io.cucumber.java.en.Then
 import io.cucumber.java.en.When
+import org.awaitility.Awaitility
 import org.awaitility.kotlin.await
 import org.hamcrest.CoreMatchers.hasItem
 import org.hamcrest.MatcherAssert
 import org.hamcrest.Matchers
+import org.hamcrest.core.IsEqual
 import org.junit.jupiter.api.Assertions.assertTrue
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicInteger
 
 class PresenceEventEngineSteps(private val state: EventEngineState) {
 
@@ -47,12 +54,21 @@ class PresenceEventEngineSteps(private val state: EventEngineState) {
 
     @Then("I wait for getting Presence joined events")
     fun I_wait_for_getting_Presence_joined_events() {
-        await.pollInterval(50, TimeUnit.MILLISECONDS).atMost(500, TimeUnit.MILLISECONDS).untilAsserted {
-            val expectedNames = "event" to "JOINED"
-            MatcherAssert.assertThat(state.presenceQueuedElements, hasItem(expectedNames))
-        }
-        // this is needed for:  Scenario: Joining and leaving channels
-        Thread.sleep(100)
+        val atomic = AtomicInteger(0)
+        state.pubnub.addListener(object : SubscribeCallback() {
+            override fun status(pubnub: PubNub, pnStatus: PNStatus) {
+                // do nothing
+            }
+
+            override fun presence(pubnub: PubNub, presence: PNPresenceEventResult) {
+                if (presence.event == "join" && (presence.channel == "first" || presence.channel == "second" || presence.channel == "third")) {
+                    atomic.incrementAndGet()
+                }
+            }
+        })
+
+        Awaitility.await().atMost(5, TimeUnit.SECONDS)
+            .untilAtomic(atomic, IsEqual.equalTo(3))
     }
 
     @Then("I receive an error in my heartbeat response")
