@@ -14,6 +14,7 @@ import io.mockk.mockk
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.core.IsInstanceOf
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.time.Duration
@@ -71,8 +72,32 @@ class PresenceEffectFactoryTest {
     }
 
     @Test
-    fun `should return Leave effect when getting Leave invocation`() {
+    fun `should return null when getting Leave invocation while suppressLeaveEvents is true`() {
         // given
+        val effectInvocation = PresenceEffectInvocation.Leave(channels, channelGroups)
+        every { leaveProvider.getLeaveRemoteAction(effectInvocation.channels, effectInvocation.channelGroups) } returns leaveRemoteAction
+
+        // when
+        val effect = presenceEffectFactory.create(effectInvocation)
+
+        // then
+        assertNull(effect)
+    }
+
+    @Test
+    fun `should return Leave effect when getting Leave invocation while suppressLeaveEvents is false`() {
+        // given
+        presenceEffectFactory = PresenceEffectFactory(
+            heartbeatProvider,
+            leaveProvider,
+            presenceEventSink,
+            policy,
+            executorService,
+            heartbeatInterval,
+            suppressLeaveEvents = false,
+            heartbeatNotificationOptions,
+            statusConsumer
+        )
         val effectInvocation = PresenceEffectInvocation.Leave(channels, channelGroups)
         every { leaveProvider.getLeaveRemoteAction(effectInvocation.channels, effectInvocation.channelGroups) } returns leaveRemoteAction
 
@@ -81,7 +106,6 @@ class PresenceEffectFactoryTest {
 
         // then
         assertThat(effect, IsInstanceOf.instanceOf(LeaveEffect::class.java))
-        assertEquals(suppressLeaveEvents, effect.suppressLeaveEvents)
         assertEquals(leaveRemoteAction, effect.leaveRemoteAction)
     }
 

@@ -47,11 +47,15 @@ internal class PresenceEffectFactory(
                 )
             }
             is PresenceEffectInvocation.Leave -> {
-                val leaveRemoteAction = leaveProvider.getLeaveRemoteAction(
-                    effectInvocation.channels,
-                    effectInvocation.channelGroups
-                )
-                LeaveEffect(leaveRemoteAction, suppressLeaveEvents)
+                if (!suppressLeaveEvents) {
+                    val leaveRemoteAction = leaveProvider.getLeaveRemoteAction(
+                        effectInvocation.channels,
+                        effectInvocation.channelGroups
+                    )
+                    LeaveEffect(leaveRemoteAction)
+                } else {
+                    null
+                }
             }
             is PresenceEffectInvocation.Wait -> {
                 WaitEffect(heartbeatInterval, presenceEventSink)
