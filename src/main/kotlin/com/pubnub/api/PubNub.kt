@@ -87,6 +87,7 @@ import com.pubnub.api.models.consumer.objects.member.PNUUIDDetailsLevel
 import com.pubnub.api.models.consumer.objects.membership.ChannelMembershipInput
 import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
 import com.pubnub.api.presence.Presence
+import com.pubnub.api.presence.eventengine.data.PresenceData
 import com.pubnub.api.presence.eventengine.effect.effectprovider.HeartbeatProviderImpl
 import com.pubnub.api.presence.eventengine.effect.effectprovider.LeaveProviderImpl
 import com.pubnub.api.subscribe.Subscribe
@@ -133,6 +134,7 @@ class PubNub internal constructor(
     private val tokenParser: TokenParser = TokenParser()
     private val listenerManager = ListenerManager(this)
     internal val subscriptionManager = SubscriptionManager(this, listenerManager)
+    private val presenceData = PresenceData()
     private val subscribe = Subscribe.create(
         this,
         listenerManager,
@@ -151,7 +153,8 @@ class PubNub internal constructor(
         heartbeatNotificationOptions = configuration.heartbeatNotificationOptions,
         listenerManager = listenerManager,
         eventEngineConf = eventEnginesConf.presence,
-        sendStateWithHeartbeat = configuration.sendStateWithHeartbeat,
+        presenceData = presenceData,
+        sendStateWithHeartbeat = configuration.sendStateWithHeartbeat
     )
 
     //endregion
@@ -758,7 +761,7 @@ class PubNub internal constructor(
         channelGroups = channelGroups,
         state = state,
         uuid = uuid,
-        presence = presence,
+        presenceData = presenceData,
     )
 
     /**

@@ -10,7 +10,7 @@ import com.pubnub.api.builder.StateOperation
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.presence.PNSetStateResult
 import com.pubnub.api.models.server.Envelope
-import com.pubnub.api.presence.Presence
+import com.pubnub.api.presence.eventengine.data.PresenceData
 import com.pubnub.api.toCsv
 import retrofit2.Call
 import retrofit2.Response
@@ -24,7 +24,7 @@ class SetState internal constructor(
     val channelGroups: List<String>,
     val state: Any,
     val uuid: String = pubnub.configuration.userId.value,
-    private val presence: Presence
+    private val presenceData: PresenceData
 ) : Endpoint<Envelope<JsonElement>, PNSetStateResult>(pubnub) {
 
     override fun getAffectedChannels() = channels
@@ -40,7 +40,7 @@ class SetState internal constructor(
         if (uuid == pubnub.configuration.userId.value) {
             val stateCopy = pubnub.mapper.fromJson(pubnub.mapper.toJson(state), JsonElement::class.java)
             if (pubnub.configuration.enableEventEngine) {
-                presence.setStates(channels.associateWith { stateCopy })
+                presenceData.channelStates.putAll(channels.associateWith { stateCopy })
             } else {
                 pubnub.subscriptionManager.adaptStateBuilder(
                     StateOperation(

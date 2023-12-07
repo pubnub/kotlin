@@ -93,20 +93,6 @@ internal class PresenceTest {
     }
 
     @Test
-    fun `when setState is called PresenceData is filled with state`() {
-        // given
-        val presenceData = PresenceData()
-        val state = mapOf("aaa" to "bbb")
-        val presence = Presence.create(listenerManager = listenerManager, enableEventEngine = true, presenceData = presenceData)
-
-        // when
-        presence.setStates(mapOf(CHANNEL_01 to state))
-
-        // then
-        assertThat(presenceData.channelStates, Matchers.`is`(mapOf(CHANNEL_01 to state)))
-    }
-
-    @Test
     fun `when left is called PresenceData state is cleared for relevant channels`() {
         // given
         val presenceData = PresenceData()

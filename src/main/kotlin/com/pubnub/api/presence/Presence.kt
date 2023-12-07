@@ -86,8 +86,6 @@ internal interface Presence {
 
     fun disconnect()
 
-    fun setStates(newChannelStates: Map<String, Any> = mapOf())
-
     fun destroy()
 }
 
@@ -105,8 +103,6 @@ internal class PresenceNoOp : Presence {
     override fun disconnect() = noAction()
 
     override fun destroy() = noAction()
-
-    override fun setStates(newChannelStates: Map<String, Any>) = noAction()
 
     private fun noAction() {
         // Presence Event Engine is not initialized so no action here
@@ -156,10 +152,6 @@ internal class EnabledPresence(
 
     override fun disconnect() {
         presenceEventEngineManager.addEventToQueue(PresenceEvent.Disconnect)
-    }
-
-    override fun setStates(newChannelStates: Map<String, Any>) {
-        presenceData.channelStates.putAll(newChannelStates)
     }
 
     override fun destroy() {

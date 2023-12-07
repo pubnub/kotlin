@@ -9,10 +9,8 @@ import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 import com.google.gson.JsonObject
 import com.pubnub.api.endpoints.presence.SetState
 import com.pubnub.api.legacy.BaseTest
-import com.pubnub.api.presence.Presence
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.verify
+import com.pubnub.api.presence.eventengine.data.PresenceData
+import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class StateSetEndpointEETest : BaseTest() {
@@ -24,8 +22,7 @@ class StateSetEndpointEETest : BaseTest() {
 
     @Test
     fun applyStateForChannelSetsPresenceData() {
-        val presence: Presence = mockk()
-        every { presence.setStates(any()) } returns Unit
+        val presenceData = PresenceData()
 
         stubFor(
             get(urlPathEqualTo("/v2/presence/sub-key/mySubscribeKey/channel/testChannel/uuid/myUUID/data"))
@@ -53,17 +50,16 @@ class StateSetEndpointEETest : BaseTest() {
             channelGroups = listOf(),
             state = mapOf("age" to 20),
             pubnub = pubnub,
-            presence = presence
+            presenceData = presenceData
         ).sync()
 
-        verify {
-            presence.setStates(
-                mapOf(
-                    "testChannel" to JsonObject().apply {
-                        addProperty("age", 20)
-                    }
-                )
-            )
-        }
+        assertEquals(
+            mapOf(
+                "testChannel" to JsonObject().apply {
+                    addProperty("age", 20)
+                }
+            ),
+            presenceData.channelStates
+        )
     }
 }

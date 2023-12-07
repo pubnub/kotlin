@@ -32,7 +32,11 @@ internal class PresenceEffectFactory(
                 val heartbeatRemoteAction = heartbeatProvider.getHeartbeatRemoteAction(
                     effectInvocation.channels,
                     effectInvocation.channelGroups,
-                    if (sendStateWithHeartbeat) presenceData.channelStates else null
+                    if (sendStateWithHeartbeat) {
+                        presenceData.channelStates
+                    } else {
+                        null
+                    }
                 )
                 HeartbeatEffect(heartbeatRemoteAction, presenceEventSink, heartbeatNotificationOptions, statusConsumer)
             }
@@ -41,7 +45,11 @@ internal class PresenceEffectFactory(
                 val heartbeatRemoteAction = heartbeatProvider.getHeartbeatRemoteAction(
                     effectInvocation.channels,
                     effectInvocation.channelGroups,
-                    if (sendStateWithHeartbeat) presenceData.channelStates else null
+                    if (sendStateWithHeartbeat) {
+                        presenceData.channelStates
+                    } else {
+                        null
+                    }
                 )
                 DelayedHeartbeatEffect(
                     heartbeatRemoteAction,
