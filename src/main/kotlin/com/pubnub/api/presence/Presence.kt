@@ -28,7 +28,8 @@ internal interface Presence {
             heartbeatNotificationOptions: PNHeartbeatNotificationOptions,
             listenerManager: ListenerManager,
             eventEngineConf: EventEngineConf<PresenceEffectInvocation, PresenceEvent>,
-            presenceData: PresenceData = PresenceData()
+            presenceData: PresenceData = PresenceData(),
+            sendStateWithHeartbeat: Boolean,
         ): Presence {
             if (heartbeatInterval <= Duration.ZERO || !enableEventEngine) {
                 return PresenceNoOp()
@@ -43,7 +44,9 @@ internal interface Presence {
                 heartbeatInterval = heartbeatInterval,
                 suppressLeaveEvents = suppressLeaveEvents,
                 heartbeatNotificationOptions = heartbeatNotificationOptions,
-                statusConsumer = listenerManager
+                statusConsumer = listenerManager,
+                presenceData = presenceData,
+                sendStateWithHeartbeat = sendStateWithHeartbeat,
             )
 
             val eventEngineManager = PresenceEventEngineManager(
@@ -83,6 +86,8 @@ internal interface Presence {
 
     fun disconnect()
 
+    fun setStates(newChannelStates: Map<String, Any> = mapOf())
+
     fun destroy()
 }
 
@@ -101,6 +106,8 @@ internal class PresenceNoOp : Presence {
 
     override fun destroy() = noAction()
 
+    override fun setStates(newChannelStates: Map<String, Any>) = noAction()
+
     private fun noAction() {
         // Presence Event Engine is not initialized so no action here
     }
@@ -111,34 +118,23 @@ internal class EnabledPresence(
     private val presenceData: PresenceData = PresenceData()
 ) : Presence {
 
-    @Synchronized
     override fun joined(
         channels: Set<String>,
         channelGroups: Set<String>,
     ) {
-        addChannelsToPresenceData(channels)
-        addChannelGroupsToPresenceData(channelGroups)
         presenceEventEngineManager.addEventToQueue(PresenceEvent.Joined(channels, channelGroups))
     }
 
-    @Synchronized
     override fun left(
         channels: Set<String>,
         channelGroups: Set<String>
     ) {
-        removeChannelsFromPresenceData(channels)
-        removeChannelGroupsFromPresenceData(channelGroups)
-        if (presenceData.channels.size > 0 || presenceData.channelGroups.size > 0) {
-            presenceEventEngineManager.addEventToQueue(PresenceEvent.Left(channels, channelGroups))
-        } else {
-            presenceEventEngineManager.addEventToQueue(PresenceEvent.LeftAll)
-        }
+        presenceData.channelStates.keys.removeAll(channels)
+        presenceEventEngineManager.addEventToQueue(PresenceEvent.Left(channels, channelGroups))
     }
 
-    @Synchronized
     override fun leftAll() {
-        removeAllChannelsFromPresenceData()
-        removeAllChannelGroupsFromPresenceData()
+        presenceData.channelStates.clear()
         presenceEventEngineManager.addEventToQueue(PresenceEvent.LeftAll)
     }
 
@@ -162,33 +158,12 @@ internal class EnabledPresence(
         presenceEventEngineManager.addEventToQueue(PresenceEvent.Disconnect)
     }
 
-    @Synchronized
+    override fun setStates(newChannelStates: Map<String, Any>) {
+        presenceData.channelStates.putAll(newChannelStates)
+    }
+
     override fun destroy() {
         disconnect()
         presenceEventEngineManager.stop()
-    }
-
-    private fun addChannelsToPresenceData(channels: Set<String>) {
-        presenceData.channels.addAll(channels)
-    }
-
-    private fun addChannelGroupsToPresenceData(channelGroups: Set<String>) {
-        presenceData.channelGroups.addAll(channelGroups)
-    }
-
-    private fun removeChannelsFromPresenceData(channels: Set<String>) {
-        presenceData.channels.removeAll(channels)
-    }
-
-    private fun removeChannelGroupsFromPresenceData(channelGroups: Set<String>) {
-        presenceData.channelGroups.removeAll(channelGroups)
-    }
-
-    private fun removeAllChannelsFromPresenceData() {
-        presenceData.channels.clear()
-    }
-
-    private fun removeAllChannelGroupsFromPresenceData() {
-        presenceData.channelGroups.clear()
     }
 }

@@ -4,6 +4,7 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.remoteaction.RemoteAction
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions
 import com.pubnub.api.eventengine.Sink
+import com.pubnub.api.presence.eventengine.data.PresenceData
 import com.pubnub.api.presence.eventengine.effect.effectprovider.HeartbeatProvider
 import com.pubnub.api.presence.eventengine.effect.effectprovider.LeaveProvider
 import com.pubnub.api.presence.eventengine.event.PresenceEvent
@@ -11,6 +12,7 @@ import com.pubnub.api.subscribe.eventengine.effect.RetryPolicy
 import com.pubnub.api.subscribe.eventengine.effect.StatusConsumer
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.core.IsInstanceOf
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -38,6 +40,7 @@ class PresenceEffectFactoryTest {
     private val reason: PubNubException = mockk()
     private val heartbeatNotificationOptions: PNHeartbeatNotificationOptions = mockk()
     private val statusConsumer: StatusConsumer = mockk()
+    private val presenceData = PresenceData()
 
     @BeforeEach
     fun setUp() {
@@ -50,7 +53,9 @@ class PresenceEffectFactoryTest {
             heartbeatInterval,
             suppressLeaveEvents,
             heartbeatNotificationOptions,
-            statusConsumer
+            statusConsumer,
+            presenceData,
+            true
         )
     }
 
@@ -58,7 +63,7 @@ class PresenceEffectFactoryTest {
     fun `should return Heartbeat effect when getting Heartbeat invocation`() {
         // given
         val effectInvocation = PresenceEffectInvocation.Heartbeat(channels, channelGroups)
-        every { heartbeatProvider.getHeartbeatRemoteAction(effectInvocation.channels, effectInvocation.channelGroups) } returns heartbeatRemoteAction
+        every { heartbeatProvider.getHeartbeatRemoteAction(effectInvocation.channels, effectInvocation.channelGroups, any()) } returns heartbeatRemoteAction
 
         // when
         val effect: HeartbeatEffect = presenceEffectFactory.create(effectInvocation) as HeartbeatEffect
@@ -69,6 +74,86 @@ class PresenceEffectFactoryTest {
         assertEquals(presenceEventSink, effect.presenceEventSink)
         assertEquals(heartbeatNotificationOptions, effect.heartbeatNotificationOptions)
         assertEquals(statusConsumer, effect.statusConsumer)
+    }
+
+    @Test
+    fun `should include State from PresenceData into Heartbeat effect when getting Heartbeat invocation`() {
+        // given
+        presenceData.channelStates[channels.first()] = mapOf("aaa" to "bbb")
+        val effectInvocation = PresenceEffectInvocation.Heartbeat(channels, channelGroups)
+        every { heartbeatProvider.getHeartbeatRemoteAction(effectInvocation.channels, effectInvocation.channelGroups, any()) } returns heartbeatRemoteAction
+
+        // when
+        presenceEffectFactory.create(effectInvocation)
+
+        // then
+        verify { heartbeatProvider.getHeartbeatRemoteAction(effectInvocation.channels, effectInvocation.channelGroups, presenceData.channelStates) }
+    }
+
+    @Test
+    fun `should include State from PresenceData into delayed Heartbeat effect when getting delayed Heartbeat invocation`() {
+        // given
+        presenceData.channelStates[channels.first()] = mapOf("aaa" to "bbb")
+        val effectInvocation = PresenceEffectInvocation.DelayedHeartbeat(channels, channelGroups, attempts, reason)
+        every { heartbeatProvider.getHeartbeatRemoteAction(effectInvocation.channels, effectInvocation.channelGroups, any()) } returns heartbeatRemoteAction
+
+        // when
+        presenceEffectFactory.create(effectInvocation)
+
+        // then
+        verify { heartbeatProvider.getHeartbeatRemoteAction(effectInvocation.channels, effectInvocation.channelGroups, presenceData.channelStates) }
+    }
+
+    @Test
+    fun `should not include State from PresenceData into Heartbeat when sending state is disabled`() {
+        // given
+        presenceData.channelStates[channels.first()] = mapOf("aaa" to "bbb")
+        val effectInvocation = PresenceEffectInvocation.Heartbeat(channels, channelGroups)
+        every { heartbeatProvider.getHeartbeatRemoteAction(effectInvocation.channels, effectInvocation.channelGroups, any()) } returns heartbeatRemoteAction
+
+        // when
+        PresenceEffectFactory(
+            heartbeatProvider,
+            leaveProvider,
+            presenceEventSink,
+            policy,
+            executorService,
+            heartbeatInterval,
+            suppressLeaveEvents,
+            heartbeatNotificationOptions,
+            statusConsumer,
+            presenceData,
+            false
+        ).create(effectInvocation)
+
+        // then
+        verify { heartbeatProvider.getHeartbeatRemoteAction(effectInvocation.channels, effectInvocation.channelGroups, null) }
+    }
+
+    @Test
+    fun `should not include State from PresenceData into delayed Heartbeat effect when sending state is disabled`() {
+        // given
+        presenceData.channelStates[channels.first()] = mapOf("aaa" to "bbb")
+        val effectInvocation = PresenceEffectInvocation.DelayedHeartbeat(channels, channelGroups, attempts, reason)
+        every { heartbeatProvider.getHeartbeatRemoteAction(effectInvocation.channels, effectInvocation.channelGroups, any()) } returns heartbeatRemoteAction
+
+        // when
+        PresenceEffectFactory(
+            heartbeatProvider,
+            leaveProvider,
+            presenceEventSink,
+            policy,
+            executorService,
+            heartbeatInterval,
+            suppressLeaveEvents,
+            heartbeatNotificationOptions,
+            statusConsumer,
+            presenceData,
+            false
+        ).create(effectInvocation)
+
+        // then
+        verify { heartbeatProvider.getHeartbeatRemoteAction(effectInvocation.channels, effectInvocation.channelGroups, null) }
     }
 
     @Test
@@ -96,7 +181,9 @@ class PresenceEffectFactoryTest {
             heartbeatInterval,
             suppressLeaveEvents = false,
             heartbeatNotificationOptions,
-            statusConsumer
+            statusConsumer,
+            PresenceData(),
+            true
         )
         val effectInvocation = PresenceEffectInvocation.Leave(channels, channelGroups)
         every { leaveProvider.getLeaveRemoteAction(effectInvocation.channels, effectInvocation.channelGroups) } returns leaveRemoteAction
@@ -113,7 +200,7 @@ class PresenceEffectFactoryTest {
     fun `should return DelayedHeartbeat effect when getting DelayedHeartbeat invocation`() {
         // given
         val effectInvocation = PresenceEffectInvocation.DelayedHeartbeat(channels, channelGroups, attempts, reason)
-        every { heartbeatProvider.getHeartbeatRemoteAction(effectInvocation.channels, effectInvocation.channelGroups) } returns heartbeatRemoteAction
+        every { heartbeatProvider.getHeartbeatRemoteAction(effectInvocation.channels, effectInvocation.channelGroups, any()) } returns heartbeatRemoteAction
 
         // when
         val effect: DelayedHeartbeatEffect = presenceEffectFactory.create(effectInvocation) as DelayedHeartbeatEffect

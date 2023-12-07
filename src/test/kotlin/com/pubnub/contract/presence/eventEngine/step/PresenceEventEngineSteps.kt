@@ -60,8 +60,8 @@ class PresenceEventEngineSteps(private val state: EventEngineState) {
                 // do nothing
             }
 
-            override fun presence(pubnub: PubNub, presence: PNPresenceEventResult) {
-                if (presence.event == "join" && (presence.channel == "first" || presence.channel == "second" || presence.channel == "third")) {
+            override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {
+                if (pnPresenceEventResult.event == "join" && (pnPresenceEventResult.channel == "first" || pnPresenceEventResult.channel == "second" || pnPresenceEventResult.channel == "third")) {
                     atomic.incrementAndGet()
                 }
             }

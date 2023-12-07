@@ -1,6 +1,7 @@
 package com.pubnub.api.presence.eventengine.data
 
+import java.util.concurrent.ConcurrentHashMap
+
 internal class PresenceData {
-    internal val channels: MutableSet<String> = mutableSetOf()
-    internal val channelGroups: MutableSet<String> = mutableSetOf()
+    internal val channelStates: ConcurrentHashMap<String, Any> = ConcurrentHashMap()
 }

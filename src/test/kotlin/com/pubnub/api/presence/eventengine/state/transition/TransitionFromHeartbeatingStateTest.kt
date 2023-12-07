@@ -90,6 +90,28 @@ class TransitionFromHeartbeatingStateTest {
     }
 
     @Test
+    fun `should transit from HEARTBEATING to INACTIVE and create LEAVE and HEARTBEAT invocations when there is LEFT event and no channels remain`() {
+        // given
+        val channelToLeave = channels
+        val channelGroupToLeave = channelGroups
+
+        // when
+        val (newState, invocations) = transition(
+            PresenceState.Heartbeating(channels, channelGroups),
+            PresenceEvent.Left(channelToLeave, channelGroupToLeave)
+        )
+
+        // then
+        Assertions.assertTrue(newState is PresenceState.HeartbeatInactive)
+        Assertions.assertEquals(
+            setOf(
+                PresenceEffectInvocation.Leave(channels, channelGroups),
+            ),
+            invocations
+        )
+    }
+
+    @Test
     fun `should transit from HEARTBEATING to HEARTBEATING and create LEAVE and HEARTBEAT invocations when there is LEFT event`() {
         // given
         val channelToLeave = setOf("Channel01")
@@ -112,28 +134,6 @@ class TransitionFromHeartbeatingStateTest {
                 PresenceEffectInvocation.Heartbeat(channels - channelToLeave, channelGroups - channelGroupToLeave)
             ),
             invocations
-        )
-    }
-
-    @Test
-    fun `should transit from HEARTBEATING to HEARTBEATING and create HEARTBEAT invocations when there is SET_STATE event`() {
-        // given
-        val newChannels = setOf("NewChannel")
-        val newChannelGroup = setOf("NewChannelGroup")
-
-        // when
-        val (newState, invocations) = transition(
-            PresenceState.Heartbeating(channels, channelGroups),
-            PresenceEvent.StateSet(newChannels, newChannelGroup)
-        )
-
-        // then
-        Assertions.assertTrue(newState is PresenceState.Heartbeating)
-        val heartbeating = newState as PresenceState.Heartbeating
-        Assertions.assertEquals(newChannels, heartbeating.channels)
-        Assertions.assertEquals(newChannelGroup, heartbeating.channelGroups)
-        Assertions.assertEquals(
-            setOf(PresenceEffectInvocation.Heartbeat(newChannels, newChannelGroup)), invocations
         )
     }
 

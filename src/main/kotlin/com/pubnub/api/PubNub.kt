@@ -150,7 +150,8 @@ class PubNub internal constructor(
         suppressLeaveEvents = configuration.suppressLeaveEvents,
         heartbeatNotificationOptions = configuration.heartbeatNotificationOptions,
         listenerManager = listenerManager,
-        eventEngineConf = eventEnginesConf.presence
+        eventEngineConf = eventEnginesConf.presence,
+        sendStateWithHeartbeat = configuration.sendStateWithHeartbeat,
     )
 
     //endregion
@@ -732,6 +733,11 @@ class PubNub internal constructor(
      *
      * State information is supplied as a JSON object of key/value pairs.
      *
+     * If [PNConfiguration.sendStateWithHeartbeat] is `true`, the state for channels will be saved in the PubNub
+     * client and resent with every heartbeat. In that case, it's not recommended to mix setting state
+     * through channels *and* channel groups, as state set through the channel group will be overwritten
+     * after the next heartbeat.
+     *
      * @param channels Channels to set the state to.
      * @param channelGroups Channel groups to set the state to.
      * @param state The actual state object to set.
@@ -746,13 +752,13 @@ class PubNub internal constructor(
         channelGroups: List<String> = listOf(),
         state: Any,
         uuid: String = configuration.userId.value
-    ) = SetState(
+    ): SetState = SetState(
         pubnub = this,
         channels = channels,
         channelGroups = channelGroups,
         state = state,
-        uuid = uuid
-        // todo involve EE ?
+        uuid = uuid,
+        presence = presence,
     )
 
     /**

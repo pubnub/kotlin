@@ -58,6 +58,30 @@ class TransitionFromHeartbeatReconnectingStateTest {
     }
 
     @Test
+    fun `should transit from HEARTBEAT_RECONNECTING to INACTIVE and create LEAVE and CANCEL_DELEYED_HEARTBEAT invocations when there is LEFT event and no channels remain`() {
+        // when
+        val (newState, invocations) = transition(
+            PresenceState.HeartbeatReconnecting(
+                channels,
+                channelGroups,
+                0,
+                reason
+            ),
+            PresenceEvent.Left(channels, channelGroups)
+        )
+
+        // then
+        assertTrue(newState is PresenceState.HeartbeatInactive)
+        assertEquals(
+            setOf(
+                PresenceEffectInvocation.CancelDelayedHeartbeat,
+                PresenceEffectInvocation.Leave(channels, channelGroups),
+            ),
+            invocations
+        )
+    }
+
+    @Test
     fun `should transit from HEARTBEAT_RECONNECTING to HEARTBEATING and create CANCEL_DELEYED_HEARTBEAT, LEAVE and HEARTBEAT invocations when there is LEFT event`() {
         // given
         val channelToLeave = setOf("Channel01")
@@ -143,37 +167,6 @@ class TransitionFromHeartbeatReconnectingStateTest {
             setOf(
                 PresenceEffectInvocation.CancelDelayedHeartbeat,
                 PresenceEffectInvocation.Heartbeat(channels + channelToJoin, channelGroups + channelGroupToJoin)
-            ),
-            invocations
-        )
-    }
-
-    @Test
-    fun `should transit from HEARTBEAT_RECONNECTING to HEARTBEATING and create CANCEL_DELEYED_HEARTBEAT and HEARTBEAT invocations when there is STATE_SET event`() {
-        // given
-        val newChannels = setOf("NewChannel")
-        val newChannelGroup = setOf("NewChannelGroup")
-
-        // when
-        val (newState, invocations) = transition(
-            PresenceState.HeartbeatReconnecting(
-                channels,
-                channelGroups,
-                0,
-                reason
-            ),
-            PresenceEvent.StateSet(newChannels, newChannelGroup)
-        )
-
-        // then
-        assertTrue(newState is PresenceState.Heartbeating)
-        val heartbeating = newState as PresenceState.Heartbeating
-        assertEquals(newChannels, heartbeating.channels)
-        assertEquals(newChannelGroup, heartbeating.channelGroups)
-        assertEquals(
-            setOf(
-                PresenceEffectInvocation.CancelDelayedHeartbeat,
-                PresenceEffectInvocation.Heartbeat(newChannels, newChannelGroup)
             ),
             invocations
         )

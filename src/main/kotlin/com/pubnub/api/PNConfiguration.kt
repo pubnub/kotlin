@@ -238,6 +238,20 @@ open class PNConfiguration(
     var suppressLeaveEvents = false
 
     /**
+     * When `true` the SDK will resend the last channel state that was set using [PubNub.setPresenceState]
+     * for the current [userId] with every automatic heartbeat.
+     *
+     * Applies only if [heartbeatInterval] is greater than 0 and [enableEventEngine] is true.
+     *
+     * Defaults to `true`.
+     *
+     * Please note that `sendStateWithHeartbeat` doesn't apply to state that was set on channel groups.
+     * It is recommended to disable this option if you set state for channel groups using [PubNub.setPresenceState],
+     * otherwise that state may be overwritten on the next heartbeat with individual channel states.
+     */
+    var sendStateWithHeartbeat = true
+
+    /**
      * Feature to subscribe with a custom filter expression.
      */
     var filterExpression: String = ""
