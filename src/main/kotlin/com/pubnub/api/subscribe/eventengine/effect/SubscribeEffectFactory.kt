@@ -5,6 +5,7 @@ import com.pubnub.api.eventengine.Effect
 import com.pubnub.api.eventengine.EffectFactory
 import com.pubnub.api.eventengine.Sink
 import com.pubnub.api.models.consumer.pubsub.PNEvent
+import com.pubnub.api.presence.eventengine.data.PresenceData
 import com.pubnub.api.subscribe.eventengine.effect.effectprovider.HandshakeProvider
 import com.pubnub.api.subscribe.eventengine.effect.effectprovider.ReceiveMessagesProvider
 import com.pubnub.api.subscribe.eventengine.event.SubscribeEvent
@@ -25,6 +26,8 @@ internal class SubscribeEffectFactory(
     private val executorService: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor(),
     private val messagesConsumer: MessagesConsumer,
     private val statusConsumer: StatusConsumer,
+    private val presenceData: PresenceData,
+    private val sendStateWithSubscribe: Boolean,
 ) : EffectFactory<SubscribeEffectInvocation> {
     override fun create(effectInvocation: SubscribeEffectInvocation): Effect? {
         return when (effectInvocation) {
@@ -38,7 +41,12 @@ internal class SubscribeEffectFactory(
                 val handshakeRemoteAction =
                     handshakeProvider.getHandshakeRemoteAction(
                         effectInvocation.channels,
-                        effectInvocation.channelGroups
+                        effectInvocation.channelGroups,
+                        if (sendStateWithSubscribe) {
+                            presenceData.channelStates.filter { it.key in effectInvocation.channels }
+                        } else {
+                            null
+                        }
                     )
                 HandshakeEffect(handshakeRemoteAction, subscribeEventSink)
             }
@@ -46,7 +54,12 @@ internal class SubscribeEffectFactory(
                 val handshakeRemoteAction =
                     handshakeProvider.getHandshakeRemoteAction(
                         effectInvocation.channels,
-                        effectInvocation.channelGroups
+                        effectInvocation.channelGroups,
+                        if (sendStateWithSubscribe) {
+                            presenceData.channelStates.filter { it.key in effectInvocation.channels }
+                        } else {
+                            null
+                        }
                     )
                 HandshakeReconnectEffect(
                     handshakeRemoteAction,

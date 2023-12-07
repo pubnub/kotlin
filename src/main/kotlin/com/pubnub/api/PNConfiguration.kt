@@ -252,6 +252,20 @@ open class PNConfiguration(
     var sendStateWithHeartbeat = true
 
     /**
+     * When `true` the SDK will resend the last channel state that was set using [PubNub.setPresenceState]
+     * for the current [userId] when reconnecting subscriptions (i.e. subscribe calls with timetoken == 0).
+     *
+     * Applies only if [enableEventEngine] is true.
+     *
+     * Defaults to `true`.
+     *
+     * Please note that `sendStateWithSubscribe` doesn't apply to state that was set on channel groups.
+     * It is recommended to disable this option if you set state for channel groups using [PubNub.setPresenceState],
+     * otherwise that state may be overwritten on the next subscribe reconnection with individual channel states.
+     */
+    var sendStateWithSubscribe = true
+
+    /**
      * Feature to subscribe with a custom filter expression.
      */
     var filterExpression: String = ""

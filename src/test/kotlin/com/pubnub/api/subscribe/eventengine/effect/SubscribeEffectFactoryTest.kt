@@ -7,12 +7,14 @@ import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.eventengine.ManagedEffect
 import com.pubnub.api.eventengine.Sink
 import com.pubnub.api.models.consumer.PNStatus
+import com.pubnub.api.presence.eventengine.data.PresenceData
 import com.pubnub.api.subscribe.eventengine.effect.effectprovider.HandshakeProvider
 import com.pubnub.api.subscribe.eventengine.effect.effectprovider.ReceiveMessagesProvider
 import com.pubnub.api.subscribe.eventengine.event.SubscribeEvent
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.core.IsInstanceOf.instanceOf
 import org.junit.jupiter.api.Assertions.assertNull
@@ -37,9 +39,11 @@ class SubscribeEffectFactoryTest {
     private val handshakeRemoteAction: RemoteAction<SubscriptionCursor> = mockk()
     private val receiveMessagesRemoteAction: RemoteAction<ReceiveMessagesResult> = mockk()
     private val statusConsumer = mockk<StatusConsumer>()
+    private val presenceData = PresenceData()
 
     @BeforeEach
     fun setUp() {
+        presenceData.channelStates.clear()
         subscribeEffectFactory = SubscribeEffectFactory(
             handshakeProvider,
             receiveMessageProvider,
@@ -47,7 +51,9 @@ class SubscribeEffectFactoryTest {
             policy,
             executorService,
             messagesConsumer,
-            statusConsumer
+            statusConsumer,
+            presenceData,
+            true,
         )
     }
 
@@ -87,7 +93,8 @@ class SubscribeEffectFactoryTest {
         every {
             handshakeProvider.getHandshakeRemoteAction(
                 effectInvocation.channels,
-                effectInvocation.channelGroups
+                effectInvocation.channelGroups,
+                any()
             )
         } returns handshakeRemoteAction
         // when
@@ -97,6 +104,71 @@ class SubscribeEffectFactoryTest {
         // then
         assertThat(managedEffect, instanceOf(HandshakeEffect::class.java))
         assertThat(managedEffect, instanceOf(ManagedEffect::class.java))
+    }
+
+    @Test
+    fun `should include state from PresenceData into handshake effect when getting Handshake invocation`() {
+        // given
+        presenceData.channelStates[channels.first()] = mapOf("aaa" to "bbb")
+        presenceData.channelStates["nonSubscribedChannel"] = mapOf("aaa" to "bbb")
+
+        val effectInvocation = SubscribeEffectInvocation.Handshake(channels, channelGroups)
+        every {
+            handshakeProvider.getHandshakeRemoteAction(
+                effectInvocation.channels,
+                effectInvocation.channelGroups,
+                any()
+            )
+        } returns handshakeRemoteAction
+
+        // when
+        subscribeEffectFactory.create(SubscribeEffectInvocation.Handshake(channels, channelGroups))
+
+        // then
+        verify {
+            handshakeProvider.getHandshakeRemoteAction(
+                effectInvocation.channels, effectInvocation.channelGroups, mapOf(
+                    "channel1" to mapOf(
+                        "aaa" to "bbb"
+                    )
+                )
+            )
+        }
+    }
+
+    @Test
+    fun `should not include state from PresenceData into handshake effect when sendStateWithSubscribe == false`() {
+        // given
+        subscribeEffectFactory = SubscribeEffectFactory(
+            handshakeProvider,
+            receiveMessageProvider,
+            subscribeEventSink,
+            policy,
+            executorService,
+            messagesConsumer,
+            statusConsumer,
+            presenceData,
+            false,
+        )
+        presenceData.channelStates[channels.first()] = mapOf("aaa" to "bbb")
+        val effectInvocation = SubscribeEffectInvocation.Handshake(channels, channelGroups)
+        every {
+            handshakeProvider.getHandshakeRemoteAction(
+                effectInvocation.channels,
+                effectInvocation.channelGroups,
+                any()
+            )
+        } returns handshakeRemoteAction
+
+        // when
+        subscribeEffectFactory.create(SubscribeEffectInvocation.Handshake(channels, channelGroups))
+
+        // then
+        verify {
+            handshakeProvider.getHandshakeRemoteAction(
+                effectInvocation.channels, effectInvocation.channelGroups, null
+            )
+        }
     }
 
     @Test
@@ -111,7 +183,8 @@ class SubscribeEffectFactoryTest {
         every {
             handshakeProvider.getHandshakeRemoteAction(
                 effectInvocation.channels,
-                effectInvocation.channelGroups
+                effectInvocation.channelGroups,
+                any()
             )
         } returns handshakeRemoteAction
 
@@ -128,6 +201,48 @@ class SubscribeEffectFactoryTest {
         // then
         assertThat(managedEffect, instanceOf(HandshakeReconnectEffect::class.java))
         assertThat(managedEffect, instanceOf(ManagedEffect::class.java))
+    }
+
+    @Test
+    fun `should include state from PresenceData into handshake effect when getting Handshake reconnect invocation`() {
+        // given
+        presenceData.channelStates[channels.first()] = mapOf("aaa" to "bbb")
+        presenceData.channelStates["nonSubscribedChannel"] = mapOf("aaa" to "bbb")
+
+        val effectInvocation = SubscribeEffectInvocation.HandshakeReconnect(
+            channels,
+            channelGroups,
+            attempts,
+            reason
+        )
+        every {
+            handshakeProvider.getHandshakeRemoteAction(
+                effectInvocation.channels,
+                effectInvocation.channelGroups,
+                any()
+            )
+        } returns handshakeRemoteAction
+
+        // when
+        val managedEffect = subscribeEffectFactory.create(
+            SubscribeEffectInvocation.HandshakeReconnect(
+                channels,
+                channelGroups,
+                attempts,
+                reason
+            )
+        )
+
+        // then
+        verify {
+            handshakeProvider.getHandshakeRemoteAction(
+                effectInvocation.channels, effectInvocation.channelGroups, mapOf(
+                    "channel1" to mapOf(
+                        "aaa" to "bbb"
+                    )
+                )
+            )
+        }
     }
 
     @Test

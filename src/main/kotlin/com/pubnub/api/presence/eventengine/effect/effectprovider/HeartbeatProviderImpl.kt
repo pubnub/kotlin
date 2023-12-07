@@ -14,9 +14,7 @@ internal class HeartbeatProviderImpl(val pubNub: PubNub) : HeartbeatProvider {
             pubNub,
             channels.toList(),
             channelGroups.toList(),
-            state?.filter {
-                it.key in channels
-            }
+            state
         )
     }
 }
