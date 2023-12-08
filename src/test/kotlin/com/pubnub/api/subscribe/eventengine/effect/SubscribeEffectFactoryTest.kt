@@ -127,7 +127,8 @@ class SubscribeEffectFactoryTest {
         // then
         verify {
             handshakeProvider.getHandshakeRemoteAction(
-                effectInvocation.channels, effectInvocation.channelGroups, mapOf(
+                effectInvocation.channels, effectInvocation.channelGroups,
+                mapOf(
                     "channel1" to mapOf(
                         "aaa" to "bbb"
                     )
@@ -224,7 +225,7 @@ class SubscribeEffectFactoryTest {
         } returns handshakeRemoteAction
 
         // when
-        val managedEffect = subscribeEffectFactory.create(
+        subscribeEffectFactory.create(
             SubscribeEffectInvocation.HandshakeReconnect(
                 channels,
                 channelGroups,
@@ -236,7 +237,8 @@ class SubscribeEffectFactoryTest {
         // then
         verify {
             handshakeProvider.getHandshakeRemoteAction(
-                effectInvocation.channels, effectInvocation.channelGroups, mapOf(
+                effectInvocation.channels, effectInvocation.channelGroups,
+                mapOf(
                     "channel1" to mapOf(
                         "aaa" to "bbb"
                     )
