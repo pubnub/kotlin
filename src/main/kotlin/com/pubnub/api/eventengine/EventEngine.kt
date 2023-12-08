@@ -30,7 +30,7 @@ internal class EventEngine<Ei : EffectInvocation, Ev : Event, S : State<Ei, Ev, 
     }
 
     internal fun performTransitionAndEmitEffects(event: Ev) {
-        log.trace("Curren state is: ${currentState::class.simpleName} ; ${event::class.java.name.substringAfterLast('.').substringBefore('$')} to be handled is: $event ")
+        log.trace("Current state is: ${currentState::class.simpleName} ; ${event::class.java.name.substringAfterLast('.').substringBefore('$')} to be handled is: $event ")
         val (newState, invocations) = transition(currentState, event)
         currentState = newState
         invocations.forEach { invocation -> effectSink.add(invocation) }

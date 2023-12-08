@@ -51,6 +51,25 @@ class TransitionFromHeartbeatCooldownStateTest {
     }
 
     @Test
+    fun `should transit from HEARTBEAT_COOLDOWN to INACTIVE and create CANCEL_WAIT and LEAVE invocations when there is LEFT event and no channels remain`() {
+        // when
+        val (newState, invocations) = transition(
+            PresenceState.HeartbeatCooldown(channels, channelGroups),
+            PresenceEvent.Left(channels, channelGroups)
+        )
+
+        // then
+        Assertions.assertEquals(PresenceState.HeartbeatInactive, newState)
+        Assertions.assertEquals(
+            setOf(
+                PresenceEffectInvocation.CancelWait,
+                PresenceEffectInvocation.Leave(channels, channelGroups)
+            ),
+            invocations
+        )
+    }
+
+    @Test
     fun `should transit from HEARTBEAT_COOLDOWN to HEARTBEATING and create CANCEL_WAIT, LEAVE and HEARTBEAT invocations when there is LEFT event`() {
         // given
         val channelToLeave = setOf("Channel01")

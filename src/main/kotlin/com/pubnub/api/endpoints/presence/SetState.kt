@@ -10,10 +10,10 @@ import com.pubnub.api.builder.StateOperation
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.presence.PNSetStateResult
 import com.pubnub.api.models.server.Envelope
+import com.pubnub.api.presence.eventengine.data.PresenceData
 import com.pubnub.api.toCsv
 import retrofit2.Call
 import retrofit2.Response
-import java.util.HashMap
 
 /**
  * @see [PubNub.setPresenceState]
@@ -23,7 +23,8 @@ class SetState internal constructor(
     val channels: List<String>,
     val channelGroups: List<String>,
     val state: Any,
-    val uuid: String = pubnub.configuration.userId.value
+    val uuid: String = pubnub.configuration.userId.value,
+    private val presenceData: PresenceData
 ) : Endpoint<Envelope<JsonElement>, PNSetStateResult>(pubnub) {
 
     override fun getAffectedChannels() = channels
@@ -37,13 +38,18 @@ class SetState internal constructor(
 
     override fun doWork(queryParams: HashMap<String, String>): Call<Envelope<JsonElement>> {
         if (uuid == pubnub.configuration.userId.value) {
-            pubnub.subscriptionManager.adaptStateBuilder(
-                StateOperation(
-                    state = state,
-                    channels = channels,
-                    channelGroups = channelGroups
+            val stateCopy = pubnub.mapper.fromJson(pubnub.mapper.toJson(state), JsonElement::class.java)
+            if (pubnub.configuration.enableEventEngine) {
+                presenceData.channelStates.putAll(channels.associateWith { stateCopy })
+            } else {
+                pubnub.subscriptionManager.adaptStateBuilder(
+                    StateOperation(
+                        state = stateCopy,
+                        channels = channels,
+                        channelGroups = channelGroups
+                    )
                 )
-            )
+            }
         }
 
         addQueryParams(queryParams)

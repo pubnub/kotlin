@@ -42,6 +42,19 @@ class TransitionFromHeartbeatStoppedStateTest {
     }
 
     @Test
+    fun `should transit from HEARTBEAT_STOPPED to INACTIVE when there is LEFT event and no channels remain`() {
+        // when
+        val (newState, invocations) = transition(
+            PresenceState.HeartbeatStopped(channels, channelGroups),
+            PresenceEvent.Left(channels, channelGroups)
+        )
+
+        // then
+        assertTrue(newState is PresenceState.HeartbeatInactive)
+        assertTrue(invocations.isEmpty())
+    }
+
+    @Test
     fun `should transit from HEARTBEAT_STOPPED to HEARTBEAT_STOPPED when there is JOIN event`() {
         // given
         val newChannels = channels + setOf("NewChannel")
@@ -72,23 +85,6 @@ class TransitionFromHeartbeatStoppedStateTest {
         val heartbeatStopped = newState as PresenceState.HeartbeatStopped
         assertEquals(channels - channelToLeave, heartbeatStopped.channels)
         assertEquals(channelGroups - channelGroupToLeave, heartbeatStopped.channelGroups)
-        assertEquals(emptySet<PresenceEffectInvocation>(), invocations)
-    }
-
-    @Test
-    fun `should transit from HEARTBEAT_STOPPED to HEARTBEAT_STOPPED invocation when there is SET_STATE event`() {
-        // given
-        val newChannels = setOf("NewChannel")
-        val newChannelGroup = setOf("NewChannelGroup")
-
-        // when
-        val (newState, invocations) = transition(PresenceState.HeartbeatStopped(channels, channelGroups), PresenceEvent.StateSet(newChannels, newChannelGroup))
-
-        // then
-        assertTrue(newState is PresenceState.HeartbeatStopped)
-        val heartbeatStopped = newState as PresenceState.HeartbeatStopped
-        assertEquals(newChannels, heartbeatStopped.channels)
-        assertEquals(newChannelGroup, heartbeatStopped.channelGroups)
         assertEquals(emptySet<PresenceEffectInvocation>(), invocations)
     }
 
