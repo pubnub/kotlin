@@ -33,7 +33,7 @@ internal class PresenceEffectFactory(
                     effectInvocation.channels,
                     effectInvocation.channelGroups,
                     if (sendStateWithHeartbeat) {
-                        presenceData.channelStates
+                        presenceData.channelStates.filter { it.key in effectInvocation.channels }
                     } else {
                         null
                     }
@@ -46,7 +46,7 @@ internal class PresenceEffectFactory(
                     effectInvocation.channels,
                     effectInvocation.channelGroups,
                     if (sendStateWithHeartbeat) {
-                        presenceData.channelStates
+                        presenceData.channelStates.filter { it.key in effectInvocation.channels }
                     } else {
                         null
                     }

@@ -10,13 +10,15 @@ internal class HandshakeProviderImpl(val pubNub: PubNub) : HandshakeProvider {
 
     override fun getHandshakeRemoteAction(
         channels: Set<String>,
-        channelGroups: Set<String>
+        channelGroups: Set<String>,
+        state: Map<String, Any>?,
     ): RemoteAction<SubscriptionCursor> {
         val subscribe = Subscribe(pubNub)
         subscribe.channels = channels.toList()
         subscribe.channelGroups = channelGroups.toList()
         subscribe.timetoken = 0
         subscribe.region = null
+        subscribe.state = state
         return subscribe.map { SubscriptionCursor(it.metadata.timetoken, it.metadata.region) }
     }
 }

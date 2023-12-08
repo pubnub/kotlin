@@ -140,7 +140,9 @@ class PubNub internal constructor(
         listenerManager,
         configuration.retryPolicy,
         eventEnginesConf,
-        SubscribeMessageProcessor(this, DuplicationManager(configuration))
+        SubscribeMessageProcessor(this, DuplicationManager(configuration)),
+        presenceData,
+        configuration.sendStateWithSubscribe
     )
 
     private val presence = Presence.create(
