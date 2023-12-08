@@ -14,6 +14,8 @@ import com.pubnub.api.enums.PNStatusCategory.PNTimeoutCategory
 import com.pubnub.api.enums.PNStatusCategory.PNUnexpectedDisconnectCategory
 import com.pubnub.api.enums.PNStatusCategory.PNUnknownCategory
 import com.pubnub.api.models.consumer.PNStatus
+import com.pubnub.api.policies.RequestRetryPolicy
+import okhttp3.ResponseBody.Companion.toResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -57,20 +59,62 @@ abstract class Endpoint<Input, Output> protected constructor(protected val pubnu
      */
     override fun sync(): Output? {
         validateParams()
+        println("-=begging of sync") // todo: remove
+        val response = executeRestCallWithRetryPolicy()
+        return handleResponse(response)
+    }
 
-        call = doWork(createBaseParams())
+    private fun executeRestCallWithRetryPolicy(): Response<Input> {
+        var retryNumber = 0
+        val maxRetryNumber = getRetryCount(pubnub.configuration.newRetryPolicy)
+        var response: Response<Input> = Response.error(501, "".toResponseBody())
+        println("-=Before while loop") //todo: remove
+        while (retryNumber < maxRetryNumber) {
+            println("-=calling doWork")
+            call = doWork(createBaseParams())
+            response = executeRestCall(call)
 
-        val response =
-            try {
-                call.execute()
-            } catch (e: Exception) {
-                throw PubNubException(
-                    pubnubError = PubNubError.PARSING_ERROR,
-                    errorMessage = e.toString(),
-                    affectedCall = call
-                )
+            if (!response.isSuccessful && response.raw().code == 404) { // todo change to 429
+                val delayInSec = getDelay(pubnub.configuration.newRetryPolicy)
+                Thread.sleep(delayInSec * 1000L)
+                println("-=waiting for $delayInSec seconds") // todo: remove
+
+                call = call.clone()
+                retryNumber++
+            } else {
+                break
             }
+        }
+        return response
+    }
 
+    private fun getDelay(newRetryPolicy: RequestRetryPolicy): Int {
+        return when (newRetryPolicy) {
+            is RequestRetryPolicy.None -> 0
+            is RequestRetryPolicy.Linear -> newRetryPolicy.delayInSec
+            is RequestRetryPolicy.Exponential -> newRetryPolicy.maxDelayInSec // todo: change it
+        }
+    }
+
+    private fun getRetryCount(retryPolicy: RequestRetryPolicy): Int {
+        return when (retryPolicy) {
+            is RequestRetryPolicy.None -> 0
+            is RequestRetryPolicy.Linear -> retryPolicy.maxRetryNumber
+            is RequestRetryPolicy.Exponential -> retryPolicy.maxRetryNumber
+        }
+    }
+
+    private fun executeRestCall(call: Call<Input>) = try {
+        call.execute()
+    } catch (e: Exception) {
+        throw PubNubException(
+            pubnubError = PubNubError.PARSING_ERROR,
+            errorMessage = e.toString(),
+            affectedCall = call
+        )
+    }
+
+    private fun handleResponse(response: Response<Input>): Output? {
         when {
             response.isSuccessful -> {
                 storeRequestLatency(response)
@@ -111,9 +155,9 @@ abstract class Endpoint<Input, Output> protected constructor(protected val pubnu
             return
         }
 
-        call.enqueue(object : Callback<Input> {
+        call.enqueue(object : Callback<Input> { // nie blokować na czas wywołąnia
 
-            override fun onResponse(call: Call<Input>, response: Response<Input>) {
+            override fun onResponse(call: Call<Input>, response: Response<Input>) { // szybkie
 
                 when {
                     response.isSuccessful -> {

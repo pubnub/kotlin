@@ -1,6 +1,7 @@
 package com.pubnub.api
 
 import com.pubnub.api.crypto.CryptoModule
+import com.pubnub.api.policies.RequestRetryPolicy
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -75,4 +76,38 @@ class PNConfigurationTest {
         config.cryptoModule = CryptoModule.createLegacyCryptoModule("myCipherKey", true)
         config.cryptoModule = CryptoModule.createAesCbcCryptoModule("myCipherKey")
     }
+
+    @Test
+    fun `should set delay to 3 in RequestRetryPolicy Linear when user set it lower than 3`() {
+        val config = PNConfiguration(userId = UserId(PubNub.generateUUID()))
+        config.newRetryPolicy = RequestRetryPolicy.Linear(delayInSec = 2, maxRetryNumber = 10)
+
+        assertEquals(3, (config.newRetryPolicy as RequestRetryPolicy.Linear).delayInSec)
+    }
+
+    @Test
+    fun `should set maxRetry to 10 in RequestRetryPolicy Linear when user set it above 10`() {
+        val config = PNConfiguration(userId = UserId(PubNub.generateUUID()))
+        config.newRetryPolicy = RequestRetryPolicy.Linear(delayInSec = 3, maxRetryNumber = 11)
+
+        assertEquals(10, (config.newRetryPolicy as RequestRetryPolicy.Linear).maxRetryNumber)
+    }
+
+    @Test
+    fun `should set delay to 3 in RequestRetryPolicy Exponential when user set it lower than 3`() {
+        val config = PNConfiguration(userId = UserId(PubNub.generateUUID()))
+        RequestRetryPolicy.Exponential(minDelayInSec = 2, maxDelayInSec = 10, maxRetryNumber = 10)
+        config.newRetryPolicy = RequestRetryPolicy.Exponential(minDelayInSec = 2, maxDelayInSec = 10, maxRetryNumber = 10)
+
+        assertEquals(3, (config.newRetryPolicy as RequestRetryPolicy.Exponential).minDelayInSec)
+    }
+
+    @Test
+    fun `should set maxRetry to 10 in RequestRetryPolicy Exponential when user set it above 10`() {
+        val config = PNConfiguration(userId = UserId(PubNub.generateUUID()))
+        config.newRetryPolicy = RequestRetryPolicy.Linear(3, 11)
+
+        assertEquals(10, (config.newRetryPolicy as RequestRetryPolicy.Linear).maxRetryNumber)
+    }
+
 }
