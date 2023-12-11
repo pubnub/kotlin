@@ -37,15 +37,17 @@ sealed class RequestRetryPolicy {
                 log.trace("Provided delay is less than 3.0, setting it to 3.0")
                 delay = MIN_DELAY
             }
-            val twoDecimalRandomNumber = "%.2f".format(Random.nextDouble(0.0, 3.0)).toDouble()
-            delay += twoDecimalRandomNumber
-            log.trace("Added random: $twoDecimalRandomNumber so effective retry delay is $delay")
+            val randomDelay = Random.nextDouble(0.0, 3.0)
+            delay = (delay + randomDelay).roundTo2DecimalPlaces()
+            log.trace("Added random delay so effective retry delay is $delay")
 
             if (maxRetryNumber > MAX_RETRIES) {
                 log.trace("Max retry number is greater than 10, setting it to 10")
                 maxRetryNumber = MAX_RETRIES
             }
         }
+
+        private fun Double.roundTo2DecimalPlaces() = "%.2f".format(this).toDouble()
     }
 
     /**
