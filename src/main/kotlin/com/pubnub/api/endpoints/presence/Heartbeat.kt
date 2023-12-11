@@ -31,7 +31,7 @@ class Heartbeat internal constructor(
         addQueryParams(queryParams)
 
         val channelsCsv = if (channels.isNotEmpty()) {
-            channels.filter { !it.endsWith("-pnpres") }.joinToString(",")
+            channels.joinToString(",")
         } else {
             ","
         }
@@ -47,7 +47,7 @@ class Heartbeat internal constructor(
         queryParams["heartbeat"] = pubnub.configuration.presenceTimeout.toString()
 
         if (channelGroups.isNotEmpty()) {
-            queryParams["channel-group"] = channelGroups.filter { !it.endsWith("-pnpres") }.joinToString(",")
+            queryParams["channel-group"] = channelGroups.joinToString(",")
         }
 
         state?.let {

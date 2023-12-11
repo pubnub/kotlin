@@ -28,7 +28,7 @@ class ChannelGroupImplTest {
     }
 
     @Test
-    fun subscription() {
+    fun `create subscription`() {
         val channelGrp = ChannelGroupImpl(pn, ChannelGroupName(CHANNEL_GROUP_NAME))
 
         val subscription = channelGrp.subscription()
@@ -38,7 +38,7 @@ class ChannelGroupImplTest {
     }
 
     @Test
-    fun `subscription with presence`() {
+    fun `create subscription with presence`() {
         val channelGrp = ChannelGroupImpl(pn, ChannelGroupName(CHANNEL_GROUP_NAME))
 
         val subscription = channelGrp.subscription(SubscriptionOptions.Channel.receivePresenceEvents())
@@ -48,7 +48,7 @@ class ChannelGroupImplTest {
     }
 
     @Test
-    fun `ChannelGroupName#withPresence`() {
+    fun `create ChannelGroupName-pnpres from ChannelGroupName`() {
         val name = ChannelGroupName(CHANNEL_GROUP_NAME)
 
         val nameWithPresence = name.withPresence

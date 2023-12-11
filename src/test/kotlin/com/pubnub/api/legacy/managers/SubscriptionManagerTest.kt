@@ -40,9 +40,11 @@ class SubscriptionManagerTest : BaseTest() {
     private val subscribeUrlMatcher = Regex("(/v2/subscribe/[^/]+/)(.+)(/0)")
     private val presenceUrlMatcher = Regex("(/v2/presence/sub-key/[^/]+/channel/)(.+)(/.+)")
 
+    // gets UrlPathPattern that matches the URL with channels in any order (order doesn't matter)
     private fun getMatchingUrlWithChannels(url: String): UrlPathPattern {
         // /v2/subscribe/mySubscribeKey/((ch2-pnpres|ch1-pnpres|ch2|ch1),?){4}/0
-        val matches = subscribeUrlMatcher.matchEntire(url) ?: presenceUrlMatcher.matchEntire(url) ?: throw IllegalArgumentException("Unable to match $url")
+        val matches = subscribeUrlMatcher.matchEntire(url) ?: presenceUrlMatcher.matchEntire(url)
+            ?: throw IllegalArgumentException("Unable to match $url, only /v2/subscribe/... or /v2/presence/... supported")
         val channels = matches.groupValues[2].split(",")
         return urlPathMatching("${matches.groupValues[1]}((${channels.joinToString("|")}),?){${channels.size}}${matches.groupValues[3]}")
     }
@@ -1810,7 +1812,7 @@ class SubscriptionManagerTest : BaseTest() {
     fun testSubscribePresenceBuilder() {
         val atomic = AtomicInteger(0)
         stubFor(
-            get(urlPathMatching("/v2/subscribe/mySubscribeKey/((ch2-pnpres|ch1-pnpres|ch2|ch1),?){4}/0"))
+            get(getMatchingUrlWithChannels("/v2/subscribe/mySubscribeKey/ch2-pnpres,ch1-pnpres,ch2,ch1/0"))
                 .willReturn(
                     aResponse().withBody(
                         """

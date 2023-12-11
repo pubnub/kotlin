@@ -99,11 +99,11 @@ internal class SubscriptionManager(val pubnub: PubNub, private val listenerManag
     }
 
     fun getSubscribedChannels(): List<String> {
-        return subscriptionState.subscriptionStateData(false).channels.filter { !it.endsWith(PRESENCE_CHANNEL_SUFFIX) }
+        return subscriptionState.subscriptionStateData(false).channels
     }
 
     fun getSubscribedChannelGroups(): List<String> {
-        return subscriptionState.subscriptionStateData(false).channelGroups.filter { !it.endsWith(PRESENCE_CHANNEL_SUFFIX) }
+        return subscriptionState.subscriptionStateData(false).channelGroups
     }
 
     internal fun adaptStateBuilder(stateOperation: StateOperation) {

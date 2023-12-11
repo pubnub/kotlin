@@ -28,7 +28,7 @@ class ChannelImplTest {
     }
 
     @Test
-    fun subscription() {
+    fun `create subscription`() {
         val channel = ChannelImpl(pn, ChannelName(CHANNEL_NAME))
 
         val subscription = channel.subscription()
@@ -38,7 +38,7 @@ class ChannelImplTest {
     }
 
     @Test
-    fun `subscription with presence`() {
+    fun `create subscription with presence`() {
         val channel = ChannelImpl(pn, ChannelName(CHANNEL_NAME))
 
         val subscription = channel.subscription(SubscriptionOptions.Channel.receivePresenceEvents())
@@ -48,7 +48,7 @@ class ChannelImplTest {
     }
 
     @Test
-    fun `ChannelName#withPresence`() {
+    fun `create ChannelName-pnpres from ChannelName`() {
         val name = ChannelName(CHANNEL_NAME)
 
         val nameWithPresence = name.withPresence

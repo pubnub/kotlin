@@ -177,7 +177,6 @@ class PublishIntegrationTests : BaseIntegrationTest() {
         success.listen()
 
         testSubscription.unsubscribe()
-        Thread.sleep(5000)
         assertEquals(emptyList<String>(), pubnub.getSubscribedChannels())
     }
 
