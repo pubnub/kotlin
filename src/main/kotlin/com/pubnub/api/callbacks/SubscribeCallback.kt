@@ -38,7 +38,7 @@ abstract class SubscribeCallback : Listener {
      * @param pubnub The client instance which has this listener attached.
      * @param pnStatus API operation metadata.
      */
-    open fun status(pubnub: PubNub, pnStatus: PNStatus) {}
+    abstract fun status(pubnub: PubNub, pnStatus: PNStatus)
 
     /**
      * Receive messages at subscribed channels.

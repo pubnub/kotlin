@@ -95,11 +95,11 @@ import com.pubnub.api.subscribe.Subscribe
 import com.pubnub.api.subscribe.eventengine.configuration.EventEnginesConf
 import com.pubnub.api.v2.Channel
 import com.pubnub.api.v2.ChannelGroup
+import com.pubnub.api.v2.ChannelOptions
 import com.pubnub.api.v2.Subscription
 import com.pubnub.api.v2.SubscriptionCursor
 import com.pubnub.api.v2.SubscriptionOptions
 import com.pubnub.api.v2.SubscriptionSet
-import com.pubnub.api.v2.receivePresenceEvents
 import com.pubnub.api.workers.SubscribeMessageProcessor
 import com.pubnub.internal.v2.ChannelGroupImpl
 import com.pubnub.internal.v2.ChannelGroupName
@@ -358,7 +358,7 @@ class PubNub internal constructor(
             channelSubscriptionMap.computeIfAbsent(channelName) { newChannelName ->
                 val channel = ChannelImpl(this, newChannelName)
                 val options = if (withPresence) {
-                    SubscriptionOptions.Channel.receivePresenceEvents()
+                    ChannelOptions.receivePresenceEvents()
                 } else {
                     SubscriptionOptions.Default
                 }
@@ -385,7 +385,7 @@ class PubNub internal constructor(
                 val channelGroup = ChannelGroupImpl(this, newChannelGroupName)
                 val options =
                     if (withPresence) {
-                        SubscriptionOptions.Channel.receivePresenceEvents()
+                        ChannelOptions.receivePresenceEvents()
                     } else {
                         SubscriptionOptions.Default
                     }

@@ -5,24 +5,22 @@ import com.pubnub.api.subscribe.PRESENCE_CHANNEL_SUFFIX
 import com.pubnub.api.v2.ChannelGroup
 import com.pubnub.api.v2.ChannelOptions
 import com.pubnub.api.v2.SubscriptionOptions
-import com.pubnub.api.v2.filter
 
 internal class ChannelGroupImpl(private val pubNub: PubNub, val channelGroupName: ChannelGroupName) : ChannelGroup {
 
     override val name: String = channelGroupName.id
 
     override fun subscription(options: SubscriptionOptions): SubscriptionImpl {
-        val channelOptions = options.allOptions().filterIsInstance<ChannelOptions>()
+        val channelOptions = options.allOptions.filterIsInstance<ChannelOptions>()
         val channelGroups = buildSet<ChannelGroupName> {
             add(channelGroupName)
-            if (channelOptions.filterIsInstance<ReceivePresenceEvents>()
-                .firstOrNull()?.receiveEvents == true
-            ) {
+            if (channelOptions.filterIsInstance<ReceivePresenceEvents>().isNotEmpty()) {
                 add(channelGroupName.withPresence)
             }
         }
         return SubscriptionImpl(
-            pubNub, channelGroups = channelGroups,
+            pubNub,
+            channelGroups = channelGroups,
             options = options.filter { result ->
                 return@filter channelGroups.any { it.id == result.subscription }
             }
