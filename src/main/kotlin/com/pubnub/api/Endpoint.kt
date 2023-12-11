@@ -68,17 +68,16 @@ abstract class Endpoint<Input, Output> protected constructor(protected val pubnu
         var retryNumber = 0
         val maxRetryNumber = getRetryCount(pubnub.configuration.newRetryPolicy)
         var response: Response<Input> = Response.error(501, "".toResponseBody())
-        println("-=Before while loop") //todo: remove
+        println("-=Before while loop") // todo: remove
         while (retryNumber < maxRetryNumber) {
             println("-=calling doWork")
             call = doWork(createBaseParams())
             response = executeRestCall(call)
 
-            if (!response.isSuccessful && response.raw().code == 404) { // todo change to 429
+            if (isRetryPolicySet() && !response.isSuccessful && response.raw().code == 404) { // todo change to 429
                 val delayInSec = getDelay(pubnub.configuration.newRetryPolicy)
-                Thread.sleep(delayInSec * 1000L)
+                Thread.sleep((delayInSec * 1000L).toLong())
                 println("-=waiting for $delayInSec seconds") // todo: remove
-
                 call = call.clone()
                 retryNumber++
             } else {
@@ -88,11 +87,16 @@ abstract class Endpoint<Input, Output> protected constructor(protected val pubnu
         return response
     }
 
-    private fun getDelay(newRetryPolicy: RequestRetryPolicy): Int {
-        return when (newRetryPolicy) {
-            is RequestRetryPolicy.None -> 0
-            is RequestRetryPolicy.Linear -> newRetryPolicy.delayInSec
-            is RequestRetryPolicy.Exponential -> newRetryPolicy.maxDelayInSec // todo: change it
+    private fun isRetryPolicySet(): Boolean {
+        return pubnub.configuration.newRetryPolicy is RequestRetryPolicy.Linear ||
+            pubnub.configuration.newRetryPolicy is RequestRetryPolicy.Exponential
+    }
+
+    private fun getDelay(retryPolicy: RequestRetryPolicy): Double {
+        return when (retryPolicy) {
+            is RequestRetryPolicy.None -> 0.0
+            is RequestRetryPolicy.Linear -> retryPolicy.delay
+            is RequestRetryPolicy.Exponential -> retryPolicy.maxDelayInSec.toDouble() // todo: change it
         }
     }
 

@@ -3,6 +3,7 @@ package com.pubnub.api
 import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.api.policies.RequestRetryPolicy
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class PNConfigurationTest {
@@ -82,7 +83,7 @@ class PNConfigurationTest {
         val config = PNConfiguration(userId = UserId(PubNub.generateUUID()))
         config.newRetryPolicy = RequestRetryPolicy.Linear(delayInSec = 2, maxRetryNumber = 10)
 
-        assertEquals(3, (config.newRetryPolicy as RequestRetryPolicy.Linear).delayInSec)
+        assertTrue((config.newRetryPolicy as RequestRetryPolicy.Linear).delay > 3)
     }
 
     @Test
@@ -109,5 +110,4 @@ class PNConfigurationTest {
 
         assertEquals(10, (config.newRetryPolicy as RequestRetryPolicy.Linear).maxRetryNumber)
     }
-
 }
