@@ -19,8 +19,8 @@ import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.subscribeToBlocking
-import com.pubnub.api.v2.subscriptions.SubscriptionOptions
-import com.pubnub.api.v2.receivePresenceEvents
+import com.pubnub.api.v2.callbacks.EventListener
+import com.pubnub.api.v2.subscriptions.ChannelOptions
 import org.awaitility.Awaitility
 import org.awaitility.Durations
 import org.hamcrest.Matchers
@@ -162,13 +162,13 @@ class PublishIntegrationTests : BaseIntegrationTest() {
         })
 
         val testChannel = pubnub.channel(expectedChannel)
-        val testSubscription = testChannel.subscription(SubscriptionOptions.Channel.receivePresenceEvents())
-        testSubscription.addListener(object : SubscribeCallback() {
+        val testSubscription = testChannel.subscription(ChannelOptions.receivePresenceEvents())
+        testSubscription.addListener(object : EventListener() {
 
-            override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {
-                assertEquals(expectedChannel, pnMessageResult.channel)
-                assertEquals(observer.configuration.userId.value, pnMessageResult.publisher)
-                assertEquals(messagePayload, pnMessageResult.message)
+            override fun message(pubnub: PubNub, result: PNMessageResult) {
+                assertEquals(expectedChannel, result.channel)
+                assertEquals(observer.configuration.userId.value, result.publisher)
+                assertEquals(messagePayload, result.message)
                 success.set(true)
             }
         })

@@ -8,7 +8,7 @@ import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 import com.pubnub.internal.v2.subscription.ReceivePresenceEvents
 import com.pubnub.internal.v2.subscription.SubscriptionImpl
 
-internal class ChannelImpl(private val pubNub: PubNub, val channelName: ChannelName) : Channel {
+internal class ChannelImpl(internal val pubnub: PubNub, val channelName: ChannelName) : Channel {
 
     override val name: String = channelName.id
 
@@ -21,7 +21,7 @@ internal class ChannelImpl(private val pubNub: PubNub, val channelName: ChannelN
             }
         }
         return SubscriptionImpl(
-            pubNub,
+            pubnub,
             channels = channels,
             options = options.filter { result ->
                 // simple channel name or presence channel

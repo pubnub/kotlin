@@ -1,23 +1,18 @@
-package com.pubnub.internal.v2
+package com.pubnub.internal.v2.entities
 
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
 import com.pubnub.api.UserId
 import com.pubnub.api.v2.subscriptions.ChannelOptions
-import com.pubnub.internal.v2.entities.ChannelGroupImpl
-import com.pubnub.internal.v2.entities.ChannelGroupName
-import com.pubnub.internal.v2.entities.withPresence
 import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-
-private const val CHANNEL_GROUP_NAME = "myChannelGroup"
 
 class ChannelGroupImplTest {
 
     private lateinit var pn: PubNub
+    private val CHANNEL_GROUP_NAME = "myChannelGroup"
 
     @BeforeEach
     fun setUp() {
@@ -35,8 +30,8 @@ class ChannelGroupImplTest {
 
         val subscription = channelGrp.subscription()
 
-        assertEquals(setOf(ChannelGroupName(CHANNEL_GROUP_NAME)), subscription.channelGroups)
-        assertTrue(subscription.channels.isEmpty())
+        Assertions.assertEquals(setOf(ChannelGroupName(CHANNEL_GROUP_NAME)), subscription.channelGroups)
+        Assertions.assertTrue(subscription.channels.isEmpty())
     }
 
     @Test
@@ -45,8 +40,14 @@ class ChannelGroupImplTest {
 
         val subscription = channelGrp.subscription(ChannelOptions.receivePresenceEvents())
 
-        assertEquals(setOf(ChannelGroupName(CHANNEL_GROUP_NAME), ChannelGroupName(CHANNEL_GROUP_NAME).withPresence), subscription.channelGroups)
-        assertTrue(subscription.channels.isEmpty())
+        Assertions.assertEquals(
+            setOf(
+                ChannelGroupName(CHANNEL_GROUP_NAME),
+                ChannelGroupName(CHANNEL_GROUP_NAME).withPresence
+            ),
+            subscription.channelGroups
+        )
+        Assertions.assertTrue(subscription.channels.isEmpty())
     }
 
     @Test
@@ -55,6 +56,6 @@ class ChannelGroupImplTest {
 
         val nameWithPresence = name.withPresence
 
-        assertEquals(ChannelGroupName("$CHANNEL_GROUP_NAME-pnpres"), nameWithPresence)
+        Assertions.assertEquals(ChannelGroupName("$CHANNEL_GROUP_NAME-pnpres"), nameWithPresence)
     }
 }

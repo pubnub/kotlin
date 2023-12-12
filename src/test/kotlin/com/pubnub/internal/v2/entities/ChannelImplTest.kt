@@ -1,23 +1,18 @@
-package com.pubnub.internal.v2
+package com.pubnub.internal.v2.entities
 
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
 import com.pubnub.api.UserId
 import com.pubnub.api.v2.subscriptions.ChannelOptions
-import com.pubnub.internal.v2.entities.ChannelImpl
-import com.pubnub.internal.v2.entities.ChannelName
-import com.pubnub.internal.v2.entities.withPresence
 import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-
-private const val CHANNEL_NAME = "myChannel"
 
 class ChannelImplTest {
 
     private lateinit var pn: PubNub
+    private val CHANNEL_NAME = "myChannel"
 
     @BeforeEach
     fun setUp() {
@@ -35,8 +30,8 @@ class ChannelImplTest {
 
         val subscription = channel.subscription()
 
-        assertEquals(setOf(ChannelName(CHANNEL_NAME)), subscription.channels)
-        assertTrue(subscription.channelGroups.isEmpty())
+        Assertions.assertEquals(setOf(ChannelName(CHANNEL_NAME)), subscription.channels)
+        Assertions.assertTrue(subscription.channelGroups.isEmpty())
     }
 
     @Test
@@ -45,8 +40,11 @@ class ChannelImplTest {
 
         val subscription = channel.subscription(ChannelOptions.receivePresenceEvents())
 
-        assertEquals(setOf(ChannelName(CHANNEL_NAME), ChannelName(CHANNEL_NAME).withPresence), subscription.channels)
-        assertTrue(subscription.channelGroups.isEmpty())
+        Assertions.assertEquals(
+            setOf(ChannelName(CHANNEL_NAME), ChannelName(CHANNEL_NAME).withPresence),
+            subscription.channels
+        )
+        Assertions.assertTrue(subscription.channelGroups.isEmpty())
     }
 
     @Test
@@ -55,6 +53,6 @@ class ChannelImplTest {
 
         val nameWithPresence = name.withPresence
 
-        assertEquals(ChannelName("$CHANNEL_NAME-pnpres"), nameWithPresence)
+        Assertions.assertEquals(ChannelName("$CHANNEL_NAME-pnpres"), nameWithPresence)
     }
 }

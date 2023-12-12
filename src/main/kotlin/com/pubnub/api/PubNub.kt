@@ -93,25 +93,29 @@ import com.pubnub.api.presence.eventengine.effect.effectprovider.LeaveProviderIm
 import com.pubnub.api.subscribe.PRESENCE_CHANNEL_SUFFIX
 import com.pubnub.api.subscribe.Subscribe
 import com.pubnub.api.subscribe.eventengine.configuration.EventEnginesConf
+import com.pubnub.api.v2.callbacks.StatusEmitter
+import com.pubnub.api.v2.callbacks.StatusListener
 import com.pubnub.api.v2.entities.Channel
 import com.pubnub.api.v2.entities.ChannelGroup
+import com.pubnub.api.v2.entities.ChannelMetadata
+import com.pubnub.api.v2.entities.UuidMetadata
 import com.pubnub.api.v2.subscriptions.ChannelOptions
 import com.pubnub.api.v2.subscriptions.Subscription
 import com.pubnub.api.v2.subscriptions.SubscriptionCursor
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 import com.pubnub.api.v2.subscriptions.SubscriptionSet
-import com.pubnub.api.v2.callbacks.StatusEmitter
-import com.pubnub.api.v2.callbacks.StatusListener
 import com.pubnub.api.workers.SubscribeMessageProcessor
+import com.pubnub.internal.v2.callbacks.StatusEmitterImpl
 import com.pubnub.internal.v2.entities.ChannelGroupImpl
 import com.pubnub.internal.v2.entities.ChannelGroupName
 import com.pubnub.internal.v2.entities.ChannelImpl
+import com.pubnub.internal.v2.entities.ChannelMetadataImpl
 import com.pubnub.internal.v2.entities.ChannelName
-import com.pubnub.internal.v2.callbacks.StatusEmitterImpl
-import com.pubnub.internal.v2.subscription.SubscriptionImpl
-import com.pubnub.internal.v2.subscription.SubscriptionSetImpl
+import com.pubnub.internal.v2.entities.UuidMetadataImpl
 import com.pubnub.internal.v2.entities.isPresence
 import com.pubnub.internal.v2.entities.withPresence
+import com.pubnub.internal.v2.subscription.SubscriptionImpl
+import com.pubnub.internal.v2.subscription.SubscriptionSetImpl
 import java.io.InputStream
 import java.time.Duration
 import java.util.Date
@@ -2271,11 +2275,20 @@ class PubNub internal constructor(
         return ChannelImpl(this, ChannelName(name))
     }
 
+    fun channelMetadata(id: String): ChannelMetadata {
+        return ChannelMetadataImpl(this, ChannelName(id))
+    }
+
+    fun uuidMetadata(id: String): UuidMetadata {
+        return UuidMetadataImpl(this, ChannelName(id))
+    }
+
     fun channelGroup(name: String): ChannelGroup {
         return ChannelGroupImpl(this, ChannelGroupName(name))
     }
 
     fun subscriptionSetOf(subscriptions: Set<Subscription> = emptySet()): SubscriptionSet {
+        @Suppress("UNCHECKED_CAST")
         return SubscriptionSetImpl(this, subscriptions as Set<SubscriptionImpl>)
     }
 
@@ -2375,3 +2388,15 @@ class PubNub internal constructor(
         }
     }
 }
+
+// fun ChannelMetadata.setMetadata(
+//    name: String? = null,
+//    description: String? = null,
+//    custom: Any? = null,
+//    includeCustom: Boolean = false,
+//    type: String? = null,
+//    status: String? = null
+// ): SetChannelMetadata {
+//    require(this is ChannelMetadataImpl)
+//    return this.pubnub.setChannelMetadata(this.id, name, description, custom, includeCustom, type, status)
+// }

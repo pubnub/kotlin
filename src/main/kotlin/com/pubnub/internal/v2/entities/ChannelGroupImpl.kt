@@ -8,7 +8,7 @@ import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 import com.pubnub.internal.v2.subscription.ReceivePresenceEvents
 import com.pubnub.internal.v2.subscription.SubscriptionImpl
 
-internal class ChannelGroupImpl(private val pubNub: PubNub, val channelGroupName: ChannelGroupName) : ChannelGroup {
+internal class ChannelGroupImpl(internal val pubNub: PubNub, val channelGroupName: ChannelGroupName) : ChannelGroup {
 
     override val name: String = channelGroupName.id
 
