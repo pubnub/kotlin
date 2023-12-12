@@ -19,7 +19,7 @@ import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.subscribeToBlocking
-import com.pubnub.api.v2.SubscriptionOptions
+import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 import com.pubnub.api.v2.receivePresenceEvents
 import org.awaitility.Awaitility
 import org.awaitility.Durations

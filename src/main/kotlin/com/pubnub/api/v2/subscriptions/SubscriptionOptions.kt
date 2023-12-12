@@ -1,8 +1,8 @@
-package com.pubnub.api.v2
+package com.pubnub.api.v2.subscriptions
 
 import com.pubnub.api.models.consumer.pubsub.PNEvent
-import com.pubnub.internal.v2.Filter
-import com.pubnub.internal.v2.ReceivePresenceEvents
+import com.pubnub.internal.v2.subscription.Filter
+import com.pubnub.internal.v2.subscription.ReceivePresenceEvents
 
 open class SubscriptionOptions internal constructor(
     optionsSet: Set<SubscriptionOptions> = emptySet()

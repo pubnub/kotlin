@@ -1,10 +1,12 @@
-package com.pubnub.internal.v2
+package com.pubnub.internal.v2.entities
 
 import com.pubnub.api.PubNub
 import com.pubnub.api.subscribe.PRESENCE_CHANNEL_SUFFIX
-import com.pubnub.api.v2.ChannelGroup
-import com.pubnub.api.v2.ChannelOptions
-import com.pubnub.api.v2.SubscriptionOptions
+import com.pubnub.api.v2.entities.ChannelGroup
+import com.pubnub.api.v2.subscriptions.ChannelOptions
+import com.pubnub.api.v2.subscriptions.SubscriptionOptions
+import com.pubnub.internal.v2.subscription.ReceivePresenceEvents
+import com.pubnub.internal.v2.subscription.SubscriptionImpl
 
 internal class ChannelGroupImpl(private val pubNub: PubNub, val channelGroupName: ChannelGroupName) : ChannelGroup {
 

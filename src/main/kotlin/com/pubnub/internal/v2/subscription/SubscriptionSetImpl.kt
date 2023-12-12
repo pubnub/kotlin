@@ -1,11 +1,12 @@
-package com.pubnub.internal.v2
+package com.pubnub.internal.v2.subscription
 
 import com.pubnub.api.PubNub
-import com.pubnub.api.v2.EventEmitter
-import com.pubnub.api.v2.Subscription
-import com.pubnub.api.v2.SubscriptionCursor
-import com.pubnub.api.v2.SubscriptionSet
+import com.pubnub.api.v2.callbacks.EventEmitter
+import com.pubnub.api.v2.subscriptions.Subscription
+import com.pubnub.api.v2.subscriptions.SubscriptionCursor
+import com.pubnub.api.v2.subscriptions.SubscriptionSet
 import com.pubnub.api.v2.callbacks.EventListener
+import com.pubnub.internal.v2.callbacks.EventEmitterImpl
 import java.util.concurrent.CopyOnWriteArraySet
 
 private const val ERROR_SUBSCRIPTION_WRONG_CLASS =

@@ -3,8 +3,10 @@ package com.pubnub.internal.v2
 import com.pubnub.api.PNConfiguration
 import com.pubnub.api.PubNub
 import com.pubnub.api.UserId
-import com.pubnub.api.v2.ChannelOptions
-import com.pubnub.api.v2.SubscriptionOptions
+import com.pubnub.api.v2.subscriptions.ChannelOptions
+import com.pubnub.internal.v2.entities.ChannelGroupImpl
+import com.pubnub.internal.v2.entities.ChannelGroupName
+import com.pubnub.internal.v2.entities.withPresence
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue

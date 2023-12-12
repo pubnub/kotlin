@@ -93,22 +93,25 @@ import com.pubnub.api.presence.eventengine.effect.effectprovider.LeaveProviderIm
 import com.pubnub.api.subscribe.PRESENCE_CHANNEL_SUFFIX
 import com.pubnub.api.subscribe.Subscribe
 import com.pubnub.api.subscribe.eventengine.configuration.EventEnginesConf
-import com.pubnub.api.v2.Channel
-import com.pubnub.api.v2.ChannelGroup
-import com.pubnub.api.v2.ChannelOptions
-import com.pubnub.api.v2.Subscription
-import com.pubnub.api.v2.SubscriptionCursor
-import com.pubnub.api.v2.SubscriptionOptions
-import com.pubnub.api.v2.SubscriptionSet
+import com.pubnub.api.v2.entities.Channel
+import com.pubnub.api.v2.entities.ChannelGroup
+import com.pubnub.api.v2.subscriptions.ChannelOptions
+import com.pubnub.api.v2.subscriptions.Subscription
+import com.pubnub.api.v2.subscriptions.SubscriptionCursor
+import com.pubnub.api.v2.subscriptions.SubscriptionOptions
+import com.pubnub.api.v2.subscriptions.SubscriptionSet
+import com.pubnub.api.v2.callbacks.StatusEmitter
+import com.pubnub.api.v2.callbacks.StatusListener
 import com.pubnub.api.workers.SubscribeMessageProcessor
-import com.pubnub.internal.v2.ChannelGroupImpl
-import com.pubnub.internal.v2.ChannelGroupName
-import com.pubnub.internal.v2.ChannelImpl
-import com.pubnub.internal.v2.ChannelName
-import com.pubnub.internal.v2.SubscriptionImpl
-import com.pubnub.internal.v2.SubscriptionSetImpl
-import com.pubnub.internal.v2.isPresence
-import com.pubnub.internal.v2.withPresence
+import com.pubnub.internal.v2.entities.ChannelGroupImpl
+import com.pubnub.internal.v2.entities.ChannelGroupName
+import com.pubnub.internal.v2.entities.ChannelImpl
+import com.pubnub.internal.v2.entities.ChannelName
+import com.pubnub.internal.v2.callbacks.StatusEmitterImpl
+import com.pubnub.internal.v2.subscription.SubscriptionImpl
+import com.pubnub.internal.v2.subscription.SubscriptionSetImpl
+import com.pubnub.internal.v2.entities.isPresence
+import com.pubnub.internal.v2.entities.withPresence
 import java.io.InputStream
 import java.time.Duration
 import java.util.Date
@@ -2234,7 +2237,35 @@ class PubNub internal constructor(
     }
 
     // begin V2
+
+    private val statusEmitter: StatusEmitter = StatusEmitterImpl(this)
+
     // public
+
+    /**
+     * Add a listener for status events only.
+     *
+     * @param listener The [StatusListener] to be added.
+     */
+    fun addStatusListener(listener: StatusListener) {
+        statusEmitter.addListener(listener)
+    }
+
+    /**
+     * Remove a listener for status events.
+     *
+     * @param listener The [StatusListener] to be removed.
+     */
+    fun removeStatusListener(listener: StatusListener) {
+        statusEmitter.removeListener(listener)
+    }
+
+    /**
+     * Remove all status listeners.
+     */
+    fun removeAllStatusListeners() {
+        statusEmitter.removeAllListeners()
+    }
 
     fun channel(name: String): Channel {
         return ChannelImpl(this, ChannelName(name))
