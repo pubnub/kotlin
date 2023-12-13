@@ -12,8 +12,14 @@ import com.pubnub.api.v2.callbacks.EventEmitter
  * Created subscriptions are usually inactive, and you must call [subscribe] to start receiving events.
  *
  * Remember to always [unsubscribe] when you are done with this object.
- * This class implements the [AutoCloseable] interface to help you release resources by unsubscribing and removing all listeners.
+ * This class implements the [AutoCloseable] interface to help you release resources by unsubscribing and removing all listeners
+ * when [close] is called.
  */
 abstract class Subscription internal constructor() : EventEmitter, SubscribeCapable, AutoCloseable {
+    /**
+     * Create a [SubscriptionSet] that contains both subscriptions.
+     *
+     * @param subscription the other [Subscription] to add to the [SubscriptionSet]
+     */
     abstract operator fun plus(subscription: Subscription): SubscriptionSet
 }

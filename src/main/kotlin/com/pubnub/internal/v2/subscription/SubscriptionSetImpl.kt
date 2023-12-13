@@ -18,7 +18,7 @@ private const val ERROR_WRONG_PUBNUB_INSTANCE =
 
 internal class SubscriptionSetImpl(
     private val pubnub: PubNub,
-    subscriptions: Set<SubscriptionImpl> = emptySet(),
+    initialSubscriptions: Set<SubscriptionImpl> = emptySet(),
 ) : SubscriptionSet(), EventEmitter {
 
     @get:TestOnly
@@ -27,12 +27,12 @@ internal class SubscriptionSetImpl(
     }
     private val subscriptionSet: CopyOnWriteArraySet<SubscriptionImpl> = CopyOnWriteArraySet()
 
-    override val subscriptions get() = subscriptionSet.toSet()
-
     init {
-        require(subscriptions.all { it.pubnub == pubnub }) { ERROR_WRONG_PUBNUB_INSTANCE }
-        subscriptionSet.addAll(subscriptions)
+        require(initialSubscriptions.all { it.pubnub == pubnub }) { ERROR_WRONG_PUBNUB_INSTANCE }
+        subscriptionSet.addAll(initialSubscriptions)
     }
+
+    override val subscriptions get() = subscriptionSet.toSet()
 
     override fun add(subscription: Subscription) {
         require(subscription is SubscriptionImpl) { ERROR_SUBSCRIPTION_WRONG_CLASS }
