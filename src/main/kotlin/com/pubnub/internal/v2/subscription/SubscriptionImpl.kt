@@ -24,17 +24,19 @@ internal class SubscriptionImpl(
     internal val channelGroups = channelGroups.toSet()
 
     private val filters = options.allOptions.filterIsInstance<Filter>()
-    private var deliverEventsFrom: SubscriptionCursor? = null
 
     @get:TestOnly
     internal val eventEmitter = EventEmitterImpl(pubnub, this::accepts)
+
+    // helps deliver events only after subscribe was called, starting AT LEAST with the requested cursor.timetoken
+    private var deliverEventsFrom: SubscriptionCursor? = null
 
     internal fun accepts(event: PNEvent): Boolean {
         val cursorTimetoken = deliverEventsFrom?.timetoken ?: return false
         val eventTimetoken = event.timetoken ?: return false
 
         return cursorTimetoken <= eventTimetoken &&
-                filters.all { filter -> filter.predicate(event) }
+            filters.all { filter -> filter.predicate(event) }
     }
 
     override fun plus(subscription: Subscription): SubscriptionSet {
