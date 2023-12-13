@@ -2312,7 +2312,7 @@ class PubNub internal constructor(
     private val channelSubscriptions = mutableMapOf<ChannelName, MutableSet<Subscription>>()
     private val channelGroupSubscriptions = mutableMapOf<ChannelGroupName, MutableSet<Subscription>>()
 
-    internal fun subscribe(vararg subscriptions: SubscriptionImpl, cursor: SubscriptionCursor? = null) {
+    internal fun subscribe(vararg subscriptions: SubscriptionImpl, cursor: SubscriptionCursor) {
         synchronized(LOCK_CHANNELS_AND_GROUPS) {
             val channelsToSubscribe = mutableSetOf<ChannelName>()
             subscriptions.forEach { subscription ->
@@ -2342,7 +2342,7 @@ class PubNub internal constructor(
                     channels = channelsWithPresence.map(ChannelName::id),
                     channelGroups = groupsWithPresence.map(ChannelGroupName::id),
                     withPresence = true,
-                    withTimetoken = cursor?.timetoken ?: 0
+                    withTimetoken = cursor.timetoken
                 )
             }
             if (channelsNoPresence.isNotEmpty() || groupsNoPresence.isNotEmpty()) {
@@ -2350,7 +2350,7 @@ class PubNub internal constructor(
                     channels = channelsNoPresence.map(ChannelName::id),
                     channelGroups = groupsNoPresence.map(ChannelGroupName::id),
                     withPresence = false,
-                    withTimetoken = cursor?.timetoken ?: 0
+                    withTimetoken = cursor.timetoken
                 )
             }
         }

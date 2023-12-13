@@ -116,4 +116,26 @@ class SubscriptionImplTest {
         // then
         // no exception
     }
+
+    @Test
+    fun `subscription shouldn't get events until subscribe is called`() {
+        // given
+        subscription.addListener(object : EventListener() {
+            override fun message(pubnub: PubNub, result: PNMessageResult) {
+                throw IllegalStateException("Message should not be received without subscribe call!")
+            }
+        })
+
+        // when
+        (subscription as SubscriptionImpl).eventEmitter.subscribeCallback.message(
+            pubnub,
+            PNMessageResult(
+                BasePubSubResult(channelName, null, 1000L, null, null),
+                JsonNull.INSTANCE
+            )
+        )
+
+        // then
+        // no exception
+    }
 }

@@ -5,9 +5,9 @@ import com.pubnub.api.models.consumer.PNStatus
 
 abstract class StatusListener {
     /**
-     * Receive messages at subscribed channels.
+     * Receive status updates from the PubNub client.
      *
-     * @see [PubNub.subscribe]
+     * @see [PNStatus]
      *
      * @param pubnub The client instance which has this listener attached.
      * @param status Wrapper around the actual message content.

@@ -3,7 +3,37 @@ package com.pubnub.api.v2.entities
 import com.pubnub.api.v2.subscriptions.Subscription
 import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 
-interface Channel {
+/**
+ * A representation of a PubNub channel identified by its [name].
+ *
+ * You can get a [Subscription] to this channel through [subscription].
+ *
+ * Use the [com.pubnub.api.PubNub.channel] factory method to create instances of this interface.
+ */
+interface Channel : Subscribable {
+    /**
+     * The name of this channel. Supports wildcards when ending with ".*".
+     *
+     * See more in the [documentation](https://www.pubnub.com/docs/general/channels/overview)
+     */
     val name: String
-    fun subscription(options: SubscriptionOptions = SubscriptionOptions.Default): Subscription
+
+    /**
+     * Returns a [Subscription] that can be used to subscribe to this channel.
+     *
+     * Channel subscriptions support passing [com.pubnub.api.v2.subscriptions.ChannelOptions.receivePresenceEvents] in
+     * [options] to enable receiving presence events.
+     *
+     * The default [SubscriptionOptions] such as [SubscriptionOptions.filter] can also be used to filter events
+     * delivered to the subscription.
+     *
+     * For example, to create a subscription that only listens to presence events:
+     * ```
+     * channel.subscription(ChannelOptions.receivePresenceEvents() + SubscriptionOptions.filter( { it is PNPresenceEventResult } ))
+     * ```
+     *
+     * @param options optional [SubscriptionOptions]. Also supports [com.pubnub.api.v2.subscriptions.ChannelOptions].
+     * @return an inactive [Subscription] to this channel. You must call [Subscription.subscribe] to start receiving events.
+     */
+    override fun subscription(options: SubscriptionOptions): Subscription
 }

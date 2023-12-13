@@ -22,24 +22,32 @@ internal class SubscriptionImpl(
 
     internal val channels = channels.toSet()
     internal val channelGroups = channelGroups.toSet()
+
     private val filters = options.allOptions.filterIsInstance<Filter>()
+    private var deliverEventsFrom: SubscriptionCursor? = null
 
     @get:TestOnly
     internal val eventEmitter = EventEmitterImpl(pubnub, this::accepts)
 
     internal fun accepts(event: PNEvent): Boolean {
-        return filters.all { it.predicate(event) }
+        val cursorTimetoken = deliverEventsFrom?.timetoken ?: return false
+        val eventTimetoken = event.timetoken ?: return false
+
+        return cursorTimetoken <= eventTimetoken &&
+                filters.all { filter -> filter.predicate(event) }
     }
 
     override fun plus(subscription: Subscription): SubscriptionSet {
         return pubnub.subscriptionSetOf(setOf(this, subscription))
     }
 
-    override fun subscribe(cursor: SubscriptionCursor?) {
+    override fun subscribe(cursor: SubscriptionCursor) {
+        deliverEventsFrom = cursor
         pubnub.subscribe(this, cursor = cursor)
     }
 
     override fun unsubscribe() {
+        deliverEventsFrom = null
         pubnub.unsubscribe(this)
     }
 

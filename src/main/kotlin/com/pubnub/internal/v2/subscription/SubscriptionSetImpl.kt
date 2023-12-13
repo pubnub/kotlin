@@ -49,7 +49,7 @@ internal class SubscriptionSetImpl(
         return this
     }
 
-    override fun subscribe(cursor: SubscriptionCursor?) {
+    override fun subscribe(cursor: SubscriptionCursor) {
         pubnub.subscribe(*subscriptionSet.toTypedArray(), cursor = cursor)
     }
 

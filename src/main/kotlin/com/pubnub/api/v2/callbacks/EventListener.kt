@@ -20,8 +20,9 @@ abstract class EventListener {
     open fun message(pubnub: PubNub, result: PNMessageResult) {}
 
     /**
-     * Receive presence events for channels subscribed to with presence enabled via `withPresence = true` in
-     * [PubNub.subscribe]
+     * Receive presence events for channels subscribed to with presence enabled via
+     * passing [com.pubnub.api.v2.subscriptions.ChannelOptions.receivePresenceEvents]
+     * in [com.pubnub.api.v2.entities.Channel.subscription].
      *
      * @param pubnub The client instance which has this listener attached.
      * @param result Wrapper around a presence event.
@@ -46,6 +47,19 @@ abstract class EventListener {
      */
     open fun messageAction(pubnub: PubNub, result: PNMessageActionResult) {}
 
-    open fun objects(pubnub: PubNub, objectEvent: PNObjectEventResult) {}
-    open fun file(pubnub: PubNub, pnFileEventResult: PNFileEventResult) {}
+    /**
+     * Receive channel metadata and UUID metadata events in subscribed channels.
+     *
+     * @param pubnub The client instance which has this listener attached.
+     * @param result Wrapper around the object event.
+     */
+    open fun objects(pubnub: PubNub, result: PNObjectEventResult) {}
+
+    /**
+     * Receive file events in subscribed channels.
+     *
+     * @param pubnub The client instance which has this listener attached.
+     * @param result Wrapper around the file event.
+     */
+    open fun file(pubnub: PubNub, result: PNFileEventResult) {}
 }
