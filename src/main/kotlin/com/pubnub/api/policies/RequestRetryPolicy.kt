@@ -27,19 +27,18 @@ sealed class RequestRetryPolicy {
     class Linear(
         delayInSec: Int,
         var maxRetryNumber: Int,
-        val excludedOperations: List<String>? = null // todo String --> Endpoint
+        val excludedOperations: List<RetryableEndpointName>? = null
     ) : RequestRetryPolicy() {
         private val log = LoggerFactory.getLogger(this.javaClass.simpleName + "-" + "RequestRetryPolicy")
         var delay: Double = delayInSec.toDouble()
 
         init {
             if (delay < MIN_DELAY) {
-                log.trace("Provided delay is less than 3.0, setting it to 3.0")
+                log.trace("Provided delay is less than 3, setting it to 3")
                 delay = MIN_DELAY
             }
-            val randomDelay = Random.nextDouble(0.0, 3.0)
-            delay = (delay + randomDelay).roundTo2DecimalPlaces()
-            log.trace("Added random delay so effective retry delay is $delay")
+            val randomDelay = Random.nextDouble(0.0, 1.0)
+            delay = (delay + randomDelay).roundTo3DecimalPlaces()
 
             if (maxRetryNumber > MAX_RETRIES) {
                 log.trace("Max retry number is greater than 10, setting it to 10")
@@ -47,7 +46,7 @@ sealed class RequestRetryPolicy {
             }
         }
 
-        private fun Double.roundTo2DecimalPlaces() = "%.2f".format(this).toDouble()
+        private fun Double.roundTo3DecimalPlaces() = "%.3f".format(this).toDouble()
     }
 
     /**
@@ -64,7 +63,7 @@ sealed class RequestRetryPolicy {
         var minDelayInSec: Int, // todo add random seconds between 1.0 and 3.0(with floating point)
         val maxDelayInSec: Int,
         var maxRetryNumber: Int,
-        val excludedOperations: List<String>? = null // todo String --> Endpoint
+        val excludedOperations: List<RetryableEndpointName>? = null
     ) : RequestRetryPolicy() {
         init {
             if (minDelayInSec < 3) {

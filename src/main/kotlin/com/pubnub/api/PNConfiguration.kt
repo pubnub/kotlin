@@ -395,7 +395,19 @@ open class PNConfiguration(
         }
     }
 
-//    var newRetryPolicy: RequestRetryPolicy = RequestRetryPolicy.None
-    var newRetryPolicy: RequestRetryPolicy = RequestRetryPolicy.Linear(delayInSec = 3, maxRetryNumber = 3)
+    /** todo  <--------------------------------
+     * Retry policy for requests.
+     *
+     *  Delay will very from provided value by random value.
+     *
+     * Defaults to [RequestRetryPolicy.None].
+     */
+
+    var newRetryPolicy: RequestRetryPolicy = RequestRetryPolicy.None
+//    var newRetryPolicy: RequestRetryPolicy = RequestRetryPolicy.Linear(
+//        delayInSec = 3,
+//        maxRetryNumber = 3,
+//        excludedOperations = listOf(EndpointName.SUBSCRIBE)
+//    )
 //    var newRetryPolicy: RequestRetryPolicy = RequestRetryPolicy.Exponential(minDelayInSec = 3, maxDelayInSec = 5, maxRetryNumber = 3)
 }

@@ -20,7 +20,7 @@ abstract class BaseTest {
     protected lateinit var config: PNConfiguration private set
 
     @Before
-    fun beforeEach() {
+    open fun beforeEach() {
         wireMockServer = WireMockServer(
             wireMockConfig()
                 .bindAddress("localhost")
@@ -34,7 +34,7 @@ abstract class BaseTest {
     }
 
     @After
-    fun afterEach() {
+    open fun afterEach() {
         wireMockServer.stop()
         wireMockServer.findAllUnmatchedRequests().forEach {
             println("Unmatched ${it.url}")
@@ -68,8 +68,10 @@ abstract class BaseTest {
         config = PNConfiguration(userId = UserId(PubNub.generateUUID()))
     }
 
-    fun initPubNub() {
-        if (::pubnub.isInitialized) pubnub.destroy()
-        pubnub = PubNub(config)
+    fun initPubNub(customPubNub: PubNub? = null) {
+        if (::pubnub.isInitialized) {
+            pubnub.destroy()
+        }
+        pubnub = customPubNub ?: PubNub(config)
     }
 }

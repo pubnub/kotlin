@@ -15,7 +15,9 @@ import com.pubnub.api.enums.PNStatusCategory.PNUnexpectedDisconnectCategory
 import com.pubnub.api.enums.PNStatusCategory.PNUnknownCategory
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.policies.RequestRetryPolicy
+import com.pubnub.api.policies.RetryableEndpointName
 import okhttp3.ResponseBody.Companion.toResponseBody
+import org.slf4j.LoggerFactory
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -23,6 +25,9 @@ import java.io.IOException
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
+import kotlin.random.Random
+
+private const val NUMBER_OF_REGULAR_CALLS = 1
 
 /**
  * Base class for all PubNub API operation implementations.
@@ -34,6 +39,8 @@ import java.net.UnknownHostException
 abstract class Endpoint<Input, Output> protected constructor(protected val pubnub: PubNub) :
     ExtendedRemoteAction<Output> {
 
+    private val log = LoggerFactory.getLogger(this.javaClass.simpleName)
+
     private companion object {
         private const val SERVER_RESPONSE_BAD_REQUEST = 400
         private const val SERVER_RESPONSE_FORBIDDEN = 403
@@ -41,7 +48,7 @@ abstract class Endpoint<Input, Output> protected constructor(protected val pubnu
     }
 
     private lateinit var cachedCallback: (result: Output?, status: PNStatus) -> Unit
-    private lateinit var call: Call<Input>
+    internal lateinit var call: Call<Input>
     private var silenceFailures = false
 
     /**
@@ -59,27 +66,24 @@ abstract class Endpoint<Input, Output> protected constructor(protected val pubnu
      */
     override fun sync(): Output? {
         validateParams()
-        println("-=begging of sync") // todo: remove
         val response = executeRestCallWithRetryPolicy()
         return handleResponse(response)
     }
 
     private fun executeRestCallWithRetryPolicy(): Response<Input> {
-        var retryNumber = 0
-        val maxRetryNumber = getRetryCount(pubnub.configuration.newRetryPolicy)
+        val retryPolicy: RequestRetryPolicy = pubnub.configuration.newRetryPolicy
+        var numberOfAttempts = 0
+        val maxRetryNumber = getRetryCount(retryPolicy)
         var response: Response<Input> = Response.error(501, "".toResponseBody())
-        println("-=Before while loop") // todo: remove
-        while (retryNumber < maxRetryNumber) {
-            println("-=calling doWork")
-            call = doWork(createBaseParams())
+        call = doWork(createBaseParams())
+        while (numberOfAttempts < NUMBER_OF_REGULAR_CALLS + maxRetryNumber) {
             response = executeRestCall(call)
 
-            if (isRetryPolicySet() && !response.isSuccessful && response.raw().code == 404) { // todo change to 429
-                val delayInSec = getDelay(pubnub.configuration.newRetryPolicy)
-                Thread.sleep((delayInSec * 1000L).toLong())
-                println("-=waiting for $delayInSec seconds") // todo: remove
+            if (shouldRetry(response, retryPolicy)) {
+                val effectiveDelay = getEffectiveDelay(retryPolicy)
+                Thread.sleep((effectiveDelay * 1000L).toLong())
                 call = call.clone()
-                retryNumber++
+                numberOfAttempts++
             } else {
                 break
             }
@@ -87,10 +91,37 @@ abstract class Endpoint<Input, Output> protected constructor(protected val pubnu
         return response
     }
 
-    private fun isRetryPolicySet(): Boolean {
-        return pubnub.configuration.newRetryPolicy is RequestRetryPolicy.Linear ||
-            pubnub.configuration.newRetryPolicy is RequestRetryPolicy.Exponential
+    private fun getEffectiveDelay(retryPolicy: RequestRetryPolicy): Double {
+        val randomDelay = Random.nextDouble(0.0, 2.0)
+        val delayFromRetryPolicy = getDelay(retryPolicy)
+        val effectiveDelay = (delayFromRetryPolicy + randomDelay).roundTo3DecimalPlaces()
+        log.trace("Added random delay so effective retry delay is $effectiveDelay")
+        return effectiveDelay
     }
+
+    private fun Double.roundTo3DecimalPlaces() = "%.3f".format(this).toDouble()
+
+    private fun shouldRetry(response: Response<Input>, retryPolicy: RequestRetryPolicy) =
+        !response.isSuccessful && response.raw().code == 404 && isEndpointRetryable() && isRetryPolicySetForThisRestCall(
+            retryPolicy
+        ) // todo change to 429
+
+    private fun isRetryPolicySetForThisRestCall(retryPolicy: RequestRetryPolicy): Boolean {
+        return when (val retryPolicy = retryPolicy) {
+            is RequestRetryPolicy.None -> false
+            is RequestRetryPolicy.Linear -> {
+                val excludedOperations = retryPolicy.excludedOperations
+                theEndpointIsNotExcludedFromRetryPolicy(excludedOperations) ?: false
+            }
+            is RequestRetryPolicy.Exponential -> {
+                val excludedOperations = retryPolicy.excludedOperations
+                theEndpointIsNotExcludedFromRetryPolicy(excludedOperations) ?: false
+            }
+        }
+    }
+
+    private fun theEndpointIsNotExcludedFromRetryPolicy(excludedOperations: List<RetryableEndpointName>?) =
+        excludedOperations?.contains(getEndpointName())?.not()
 
     private fun getDelay(retryPolicy: RequestRetryPolicy): Double {
         return when (retryPolicy) {
@@ -509,4 +540,6 @@ abstract class Endpoint<Input, Output> protected constructor(protected val pubnu
     protected open fun isSubKeyRequired() = true
     protected open fun isPubKeyRequired() = false
     protected open fun isAuthRequired() = true
+    protected open fun getEndpointName(): RetryableEndpointName? = null
+    protected open fun isEndpointRetryable(): Boolean = false
 }
