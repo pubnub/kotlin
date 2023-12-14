@@ -8,7 +8,7 @@ import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 import com.pubnub.internal.v2.subscription.ReceivePresenceEvents
 import com.pubnub.internal.v2.subscription.SubscriptionImpl
 
-internal class ChannelImpl(internal val pubnub: PubNub, val channelName: ChannelName) : Channel {
+internal class ChannelImpl(internal val pubnub: PubNub, private val channelName: ChannelName) : Channel {
 
     override val name: String = channelName.id
 
@@ -32,9 +32,9 @@ internal class ChannelImpl(internal val pubnub: PubNub, val channelName: Channel
                 // wildcard channels
                 if (name.endsWith(".*") &&
                     (
-                        result.subscription == name ||
-                            result.channel.startsWith(name.substringBeforeLast("*"))
-                        )
+                            result.subscription == name ||
+                                    result.channel.startsWith(name.substringBeforeLast("*"))
+                            )
                 ) {
                     return@filter true
                 }
@@ -42,6 +42,26 @@ internal class ChannelImpl(internal val pubnub: PubNub, val channelName: Channel
             }
         )
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as ChannelImpl
+
+        if (pubnub != other.pubnub) return false
+        if (name != other.name) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = pubnub.hashCode()
+        result = 31 * result + name.hashCode()
+        return result
+    }
+
+
 }
 
 @JvmInline

@@ -8,7 +8,7 @@ import com.pubnub.api.v2.subscriptions.SubscriptionOptions
 import com.pubnub.internal.v2.subscription.ReceivePresenceEvents
 import com.pubnub.internal.v2.subscription.SubscriptionImpl
 
-internal class ChannelGroupImpl(internal val pubNub: PubNub, val channelGroupName: ChannelGroupName) : ChannelGroup {
+internal class ChannelGroupImpl(internal val pubNub: PubNub, private val channelGroupName: ChannelGroupName) : ChannelGroup {
 
     override val name: String = channelGroupName.id
 
@@ -27,6 +27,24 @@ internal class ChannelGroupImpl(internal val pubNub: PubNub, val channelGroupNam
                 return@filter channelGroups.any { it.id == result.subscription }
             }
         )
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as ChannelGroupImpl
+
+        if (pubNub != other.pubNub) return false
+        if (name != other.name) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = pubNub.hashCode()
+        result = 31 * result + name.hashCode()
+        return result
     }
 }
 

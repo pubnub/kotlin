@@ -12,7 +12,7 @@ import com.pubnub.api.v2.subscriptions.SubscriptionOptions
  */
 interface Channel : Subscribable {
     /**
-     * The name of this channel. Supports wildcards when ending with ".*".
+     * The name of this channel. Supports wildcards by ending it with ".*"
      *
      * See more in the [documentation](https://www.pubnub.com/docs/general/channels/overview)
      */

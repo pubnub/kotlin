@@ -2271,8 +2271,38 @@ class PubNub internal constructor(
         statusEmitter.removeAllListeners()
     }
 
+    /**
+     * Create a [Channel] that can be used to obtain a [Subscription].
+     *
+     * The function is cheap to call, and the returned object is lightweight, as it doesn't change any client or server
+     * state. It is therefore permitted to use this method whenever a representation of a channel is required.
+     *
+     * The returned [Channel] holds a reference to this [PubNub] instance internally.
+     *
+     * @param name the name of the channel to return. Supports wildcards by ending it with ".*". See more in the
+     * [documentation](https://www.pubnub.com/docs/general/channels/overview)
+     *
+     * @return a [Channel] instance representing the channel with the given [name]
+     */
     fun channel(name: String): Channel {
         return ChannelImpl(this, ChannelName(name))
+    }
+
+    /**
+     * Create a [ChannelGroup] that can be used to obtain a [Subscription].
+     *
+     * The function is cheap to call, and the returned object is lightweight, as it doesn't change any client or server
+     * state. It is therefore permitted to use this method whenever a representation of a channel group is required.
+     *
+     * The returned [ChannelGroup] holds a reference to this [PubNub] instance internally.
+     *
+     * @param name the name of the channel group to return. See more in the
+     * [documentation](https://www.pubnub.com/docs/general/channels/subscribe#channel-groups)
+     *
+     * @return a [ChannelGroup] instance representing the channel group with the given [name]
+     */
+    fun channelGroup(name: String): ChannelGroup {
+        return ChannelGroupImpl(this, ChannelGroupName(name))
     }
 
     fun channelMetadata(id: String): ChannelMetadata {
@@ -2283,15 +2313,32 @@ class PubNub internal constructor(
         return UuidMetadataImpl(this, ChannelName(id))
     }
 
-    fun channelGroup(name: String): ChannelGroup {
-        return ChannelGroupImpl(this, ChannelGroupName(name))
-    }
-
+    /**
+     * Create a [SubscriptionSet] from the given [subscriptions].
+     *
+     * @param subscriptions the subscriptions that will be added to the returned [SubscriptionSet]
+     * @return a [SubscriptionSet] containing all [subscriptions]
+     */
     fun subscriptionSetOf(subscriptions: Set<Subscription> = emptySet()): SubscriptionSet {
         @Suppress("UNCHECKED_CAST")
         return SubscriptionSetImpl(this, subscriptions as Set<SubscriptionImpl>)
     }
 
+    /**
+     * Create a [SubscriptionSet] containing [Subscription] objects for the given sets of [channels] and
+     * [channelGroups].
+     *
+     * Please note that the subscriptions are not active until you call [SubscriptionSet.subscribe].
+     *
+     * This is the same as calling [PubNub.channel] followed by [Channel.subscription] for each channel,
+     * then creating a [subscriptionSetOf] using these [Subscription] objects (similarly for channel groups).
+     *
+     * @param channels the channels to create subscriptions for
+     * @param channelGroups the channel groups to create subscriptions for
+     * @param options the [SubscriptionOptions] to pass for each subscription. Refer to supported options in [Channel] and
+     * [ChannelGroup] documentation.
+     * @return a [SubscriptionSet] containing subscriptions for the given [channels] and [channelGroups]
+     */
     fun subscriptionSetOf(
         channels: Set<String> = emptySet(),
         channelGroups: Set<String> = emptySet(),
