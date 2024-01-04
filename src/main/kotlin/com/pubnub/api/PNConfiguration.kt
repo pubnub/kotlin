@@ -240,7 +240,7 @@ open class PNConfiguration(
     /**
      * When `true` the SDK will resend the last channel state that was set using [PubNub.setPresenceState]
      * for the current [userId] with every automatic heartbeat (if [heartbeatInterval] is greater than 0)
-     * and subscribe reconnection.
+     * and initial subscribe connection (also after e.g. loss of network).
      *
      * Applies only when [enableEventEngine] is true.
      *
@@ -248,7 +248,7 @@ open class PNConfiguration(
      *
      * Please note that `maintainPresenceState` doesn't apply to state that was set on channel groups.
      * It is recommended to disable this option if you set state for channel groups using [PubNub.setPresenceState],
-     * otherwise that state may be overwritten with individual channel states.
+     * otherwise that state may be overwritten by individual channel states.
      */
     var maintainPresenceState = true
 
