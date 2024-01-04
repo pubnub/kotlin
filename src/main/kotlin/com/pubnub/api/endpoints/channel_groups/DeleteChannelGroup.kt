@@ -6,6 +6,7 @@ import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsDeleteGroupResult
+import com.pubnub.api.policies.RetryableEndpointGroup
 import retrofit2.Call
 import retrofit2.Response
 import java.util.HashMap
@@ -38,4 +39,6 @@ class DeleteChannelGroup internal constructor(
         PNChannelGroupsDeleteGroupResult()
 
     override fun operationType() = PNOperationType.PNRemoveGroupOperation
+
+    override fun getEndpointGroupName(): RetryableEndpointGroup = RetryableEndpointGroup.CHANNEL_GROUP
 }

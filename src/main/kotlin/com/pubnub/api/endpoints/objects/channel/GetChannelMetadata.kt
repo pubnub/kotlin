@@ -7,6 +7,7 @@ import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata
 import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadataResult
 import com.pubnub.api.models.server.objects_api.EntityEnvelope
+import com.pubnub.api.policies.RetryableEndpointGroup
 import retrofit2.Call
 import retrofit2.Response
 import java.util.HashMap
@@ -38,7 +39,7 @@ class GetChannelMetadata internal constructor(
         }
     }
 
-    override fun operationType(): PNOperationType {
-        return PNOperationType.PNGetChannelMetadataOperation
-    }
+    override fun operationType(): PNOperationType = PNOperationType.PNGetChannelMetadataOperation
+
+    override fun getEndpointGroupName(): RetryableEndpointGroup = RetryableEndpointGroup.APP_CONTEXT
 }

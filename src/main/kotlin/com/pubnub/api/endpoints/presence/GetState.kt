@@ -8,6 +8,7 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.presence.PNGetStateResult
 import com.pubnub.api.models.server.Envelope
+import com.pubnub.api.policies.RetryableEndpointGroup
 import com.pubnub.api.toCsv
 import retrofit2.Call
 import retrofit2.Response
@@ -60,6 +61,8 @@ class GetState internal constructor(
     }
 
     override fun operationType() = PNOperationType.PNGetState
+
+    override fun getEndpointGroupName(): RetryableEndpointGroup = RetryableEndpointGroup.PRESENCE
 
     private fun addQueryParams(queryParams: MutableMap<String, String>) {
         if (channelGroups.isNotEmpty()) queryParams["channel-group"] = channelGroups.toCsv()

@@ -6,6 +6,7 @@ import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.presence.PNWhereNowResult
 import com.pubnub.api.models.server.Envelope
 import com.pubnub.api.models.server.presence.WhereNowPayload
+import com.pubnub.api.policies.RetryableEndpointGroup
 import retrofit2.Call
 import retrofit2.Response
 import java.util.HashMap
@@ -31,4 +32,6 @@ class WhereNow internal constructor(
         PNWhereNowResult(channels = input.body()!!.payload!!.channels)
 
     override fun operationType() = PNOperationType.PNWhereNowOperation
+
+    override fun getEndpointGroupName(): RetryableEndpointGroup = RetryableEndpointGroup.PRESENCE
 }

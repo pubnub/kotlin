@@ -8,6 +8,7 @@ import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNPushEnvironment
 import com.pubnub.api.enums.PNPushType
 import com.pubnub.api.models.consumer.push.PNPushRemoveChannelResult
+import com.pubnub.api.policies.RetryableEndpointGroup
 import com.pubnub.api.toCsv
 import retrofit2.Call
 import retrofit2.Response
@@ -59,6 +60,8 @@ class RemoveChannelsFromPush internal constructor(
         PNPushRemoveChannelResult()
 
     override fun operationType() = PNOperationType.PNRemovePushNotificationsFromChannelsOperation
+
+    override fun getEndpointGroupName(): RetryableEndpointGroup = RetryableEndpointGroup.PUSH_NOTIFICATION
 
     private fun addQueryParams(queryParams: MutableMap<String, String>) {
         queryParams["remove"] = channels.toCsv()

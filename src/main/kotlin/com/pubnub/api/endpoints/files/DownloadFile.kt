@@ -7,6 +7,7 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.files.PNDownloadFileResult
+import com.pubnub.api.policies.RetryableEndpointGroup
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Response
@@ -60,4 +61,5 @@ class DownloadFile(
     override fun isAuthRequired(): Boolean = true
     override fun isSubKeyRequired(): Boolean = true
     override fun isPubKeyRequired(): Boolean = false
+    override fun getEndpointGroupName(): RetryableEndpointGroup = RetryableEndpointGroup.FILE_PERSISTENCE
 }

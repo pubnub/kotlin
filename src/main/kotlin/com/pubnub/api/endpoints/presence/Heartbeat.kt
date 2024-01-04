@@ -6,6 +6,7 @@ import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.PubNubUtil
 import com.pubnub.api.enums.PNOperationType
+import com.pubnub.api.policies.RetryableEndpointGroup
 import retrofit2.Call
 import retrofit2.Response
 import java.util.HashMap
@@ -62,4 +63,6 @@ class Heartbeat internal constructor(
     }
 
     override fun operationType() = PNOperationType.PNHeartbeatOperation
+
+    override fun getEndpointGroupName(): RetryableEndpointGroup = RetryableEndpointGroup.PRESENCE
 }

@@ -8,6 +8,7 @@ import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNPushEnvironment
 import com.pubnub.api.enums.PNPushType
 import com.pubnub.api.models.consumer.push.PNPushRemoveAllChannelsResult
+import com.pubnub.api.policies.RetryableEndpointGroup
 import retrofit2.Call
 import retrofit2.Response
 import java.util.HashMap
@@ -54,6 +55,8 @@ class RemoveAllPushChannelsForDevice internal constructor(
         PNPushRemoveAllChannelsResult()
 
     override fun operationType() = PNOperationType.PNRemoveAllPushNotificationsOperation
+
+    override fun getEndpointGroupName(): RetryableEndpointGroup = RetryableEndpointGroup.PUSH_NOTIFICATION
 
     private fun addQueryParams(queryParams: MutableMap<String, String>) {
         if (pushType != PNPushType.APNS2) {

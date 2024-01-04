@@ -8,6 +8,7 @@ import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.objects.member.PNMember
 import com.pubnub.api.models.consumer.objects.member.PNMemberArrayResult
 import com.pubnub.api.models.server.objects_api.EntityArrayEnvelope
+import com.pubnub.api.policies.RetryableEndpointGroup
 import com.pubnub.extension.toPNMemberArrayResult
 import retrofit2.Call
 import retrofit2.Response
@@ -35,7 +36,7 @@ class GetChannelMembers internal constructor(
     override fun createResponse(input: Response<EntityArrayEnvelope<PNMember>>): PNMemberArrayResult? =
         input.toPNMemberArrayResult()
 
-    override fun operationType(): PNOperationType {
-        return PNOperationType.ObjectsOperation()
-    }
+    override fun operationType(): PNOperationType = PNOperationType.ObjectsOperation()
+
+    override fun getEndpointGroupName(): RetryableEndpointGroup = RetryableEndpointGroup.APP_CONTEXT
 }

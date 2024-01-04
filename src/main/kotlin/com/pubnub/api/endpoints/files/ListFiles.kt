@@ -8,6 +8,7 @@ import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.files.PNListFilesResult
 import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.server.files.ListFilesResult
+import com.pubnub.api.policies.RetryableEndpointGroup
 import retrofit2.Call
 import retrofit2.Response
 
@@ -69,6 +70,7 @@ class ListFiles(
     override fun isAuthRequired(): Boolean = true
     override fun isSubKeyRequired(): Boolean = true
     override fun isPubKeyRequired(): Boolean = false
+    override fun getEndpointGroupName(): RetryableEndpointGroup = RetryableEndpointGroup.FILE_PERSISTENCE
 
     companion object {
         private const val LIMIT_QUERY_PARAM = "limit"

@@ -752,7 +752,6 @@ class PubNub internal constructor(
         channelGroups = channelGroups,
         state = state,
         uuid = uuid
-        // todo involve EE ?
     )
 
     /**
