@@ -142,7 +142,7 @@ class PubNub internal constructor(
         eventEnginesConf,
         SubscribeMessageProcessor(this, DuplicationManager(configuration)),
         presenceData,
-        configuration.sendStateWithSubscribe
+        configuration.maintainPresenceState
     )
 
     private val presence = Presence.create(
@@ -156,7 +156,7 @@ class PubNub internal constructor(
         listenerManager = listenerManager,
         eventEngineConf = eventEnginesConf.presence,
         presenceData = presenceData,
-        sendStateWithHeartbeat = configuration.sendStateWithHeartbeat
+        sendStateWithHeartbeat = configuration.maintainPresenceState
     )
 
     //endregion
@@ -738,10 +738,11 @@ class PubNub internal constructor(
      *
      * State information is supplied as a JSON object of key/value pairs.
      *
-     * If [PNConfiguration.sendStateWithHeartbeat] is `true`, the state for channels will be saved in the PubNub
-     * client and resent with every heartbeat. In that case, it's not recommended to mix setting state
-     * through channels *and* channel groups, as state set through the channel group will be overwritten
-     * after the next heartbeat.
+     * If [PNConfiguration.maintainPresenceState] is `true`, and the `uuid` matches [PNConfiguration.uuid], the state
+     * for channels will be saved in the PubNub client and resent with every heartbeat and initial subscribe request.
+     * In that case, it's not recommended to mix setting state through channels *and* channel groups, as state set
+     * through the channel group will be overwritten after the next heartbeat or subscribe reconnection (e.g. after loss
+     * of network).
      *
      * @param channels Channels to set the state to.
      * @param channelGroups Channel groups to set the state to.
