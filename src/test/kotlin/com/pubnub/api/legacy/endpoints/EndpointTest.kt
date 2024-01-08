@@ -16,6 +16,7 @@ import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.listen
 import com.pubnub.api.param
+import com.pubnub.api.policies.RetryableEndpointGroup
 import okhttp3.Request
 import okio.Timeout
 import org.junit.Assert.assertEquals
@@ -313,6 +314,9 @@ class EndpointTest : BaseTest() {
         override fun isSubKeyRequired() = false
         override fun isPubKeyRequired() = false
         override fun isAuthRequired() = false
+        override fun getEndpointGroupName(): RetryableEndpointGroup {
+            TODO("Not yet implemented")
+        }
     }
 
     private fun fakeCall() = object : Call<Any> {

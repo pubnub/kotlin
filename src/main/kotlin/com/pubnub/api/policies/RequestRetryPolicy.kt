@@ -1,10 +1,11 @@
 package com.pubnub.api.policies
 
 import org.slf4j.LoggerFactory
-import kotlin.random.Random
 
-private const val MIN_DELAY = 3.0
-private const val MAX_RETRIES = 10
+private const val MIN_DELAY = 2
+private const val MAX_DELAY = 150
+private const val MAX_RETRIES_IN_LINEAR = 10
+private const val MAX_RETRIES_IN_EXPONENTIAL = 6
 
 /**
  * This sealed class represents the various retry policies for a request.
@@ -25,28 +26,22 @@ sealed class RequestRetryPolicy {
      * @property excludedOperations Operations (Endpoints) to be excluded from retry.
      */
     class Linear(
-        delayInSec: Int,
-        var maxRetryNumber: Int,
-        val excludedOperations: List<RetryableEndpointName>? = null
+        var delayInSec: Int = MIN_DELAY, // min value is 2
+        var maxRetryNumber: Int = MAX_RETRIES_IN_LINEAR, // max value is 10
+        val excludedOperations: List<RetryableEndpointGroup> = emptyList()
     ) : RequestRetryPolicy() {
         private val log = LoggerFactory.getLogger(this.javaClass.simpleName + "-" + "RequestRetryPolicy")
-        var delay: Double = delayInSec.toDouble()
 
         init {
-            if (delay < MIN_DELAY) {
-                log.trace("Provided delay is less than 3, setting it to 3")
-                delay = MIN_DELAY
+            if (delayInSec < MIN_DELAY) {
+                log.trace("Provided delay is less than $MIN_DELAY, setting it to $MIN_DELAY")
+                delayInSec = MIN_DELAY
             }
-            val randomDelay = Random.nextDouble(0.0, 1.0)
-            delay = (delay + randomDelay).roundTo3DecimalPlaces()
-
-            if (maxRetryNumber > MAX_RETRIES) {
-                log.trace("Max retry number is greater than 10, setting it to 10")
-                maxRetryNumber = MAX_RETRIES
+            if (maxRetryNumber > MAX_RETRIES_IN_LINEAR) {
+                log.trace("Provided maxRetryNumber is greater than $MAX_RETRIES_IN_LINEAR, setting it to $MAX_RETRIES_IN_LINEAR")
+                maxRetryNumber = MAX_RETRIES_IN_LINEAR
             }
         }
-
-        private fun Double.roundTo3DecimalPlaces() = "%.3f".format(this).toDouble()
     }
 
     /**
@@ -56,21 +51,37 @@ sealed class RequestRetryPolicy {
      *
      * @property minDelayInSec The minimum delay in seconds between retries. Minimum value is 3 seconds.
      * @property maxDelayInSec The maximum delay in seconds between retries.
-     * @property maxRetry The maximum number of retries allowed. Maximum value is 10.
+     * @property maxRetryNumber The maximum number of retries allowed. Maximum value is 10.
      * @property excludedOperations Operations (Endpoints) to exclude from retry.
      */
     class Exponential(
-        var minDelayInSec: Int, // todo add random seconds between 1.0 and 3.0(with floating point)
-        val maxDelayInSec: Int,
-        var maxRetryNumber: Int,
-        val excludedOperations: List<RetryableEndpointName>? = null
+        var minDelayInSec: Int = MIN_DELAY, // min value is 2
+        var maxDelayInSec: Int = MAX_DELAY, // max value is 150
+        var maxRetryNumber: Int = MAX_RETRIES_IN_EXPONENTIAL, // max value is 6
+        val excludedOperations: List<RetryableEndpointGroup> = emptyList()
     ) : RequestRetryPolicy() {
+        private val log = LoggerFactory.getLogger(this.javaClass.simpleName + "-" + "RequestRetryPolicy")
+
         init {
-            if (minDelayInSec < 3) {
-                minDelayInSec = 3
+            if (minDelayInSec < MIN_DELAY) {
+                log.trace("Provided minDelayInSec is less than $MIN_DELAY, setting it to $MIN_DELAY")
+                minDelayInSec = MIN_DELAY
             }
-            if (maxRetryNumber > 10) {
-                maxRetryNumber = 10
+            if (minDelayInSec > MAX_DELAY) {
+                log.trace("Provided minDelayInSec is greater than $MAX_DELAY, setting it to $MAX_DELAY")
+                minDelayInSec = MAX_DELAY
+            }
+            if (maxDelayInSec > MAX_DELAY) {
+                log.trace("Provided maxDelayInSec is greater than $MAX_DELAY, setting it to $MAX_DELAY")
+                maxDelayInSec = MAX_DELAY
+            }
+            if (maxDelayInSec < minDelayInSec) {
+                log.trace("Provided maxDelayInSec is less than minDelayInSec, setting it to $minDelayInSec")
+                maxDelayInSec = minDelayInSec
+            }
+            if (maxRetryNumber > MAX_RETRIES_IN_EXPONENTIAL) {
+                log.trace("Provided maxRetryNumber is greater than $MAX_RETRIES_IN_EXPONENTIAL, setting it to $MAX_RETRIES_IN_EXPONENTIAL")
+                maxRetryNumber = MAX_RETRIES_IN_EXPONENTIAL
             }
         }
     }

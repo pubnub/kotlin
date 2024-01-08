@@ -231,6 +231,11 @@ enum class PubNubError(private val code: Int, val message: String) {
         "Message decryption failed using the current crypto configuration."
     ),
 
+    RETRY_AFTER_HEADER_VALUE_CAN_NOT_BE_PARSED_TO_INT(
+        178,
+        "Retry-After header provided along with 429 error but can not be parsed to int."
+    )
+
     ;
 
     override fun toString(): String {

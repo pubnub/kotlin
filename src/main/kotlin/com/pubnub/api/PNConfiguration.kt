@@ -407,7 +407,7 @@ open class PNConfiguration(
 //    var newRetryPolicy: RequestRetryPolicy = RequestRetryPolicy.Linear(
 //        delayInSec = 3,
 //        maxRetryNumber = 3,
-//        excludedOperations = listOf(EndpointName.SUBSCRIBE)
+//        excludedOperations = listOf(RetryableEndpointGroup.SUBSCRIBE)
 //    )
-//    var newRetryPolicy: RequestRetryPolicy = RequestRetryPolicy.Exponential(minDelayInSec = 3, maxDelayInSec = 5, maxRetryNumber = 3)
+//    var newRetryPolicy: RequestRetryPolicy = RequestRetryPolicy.Exponential(minDelayInSec = 3, maxDelayInSec = 5, maxRetryNumber = 3, excludedOperations = listOf(RetryableEndpointGroup.APP_CONTEXT))
 }
