@@ -14,9 +14,9 @@ import com.pubnub.api.enums.PNStatusCategory.PNTimeoutCategory
 import com.pubnub.api.enums.PNStatusCategory.PNUnexpectedDisconnectCategory
 import com.pubnub.api.enums.PNStatusCategory.PNUnknownCategory
 import com.pubnub.api.models.consumer.PNStatus
-import com.pubnub.api.policies.RequestRetryPolicy
-import com.pubnub.api.policies.RetryableCallback
-import com.pubnub.api.policies.RetryableEndpointGroup
+import com.pubnub.api.retry.RequestRetryPolicy
+import com.pubnub.api.retry.RetryableCallback
+import com.pubnub.api.retry.RetryableEndpointGroup
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.slf4j.LoggerFactory
 import retrofit2.Call

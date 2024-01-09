@@ -11,7 +11,7 @@ import com.pubnub.api.models.consumer.access_manager.PNAccessManagerGrantResult
 import com.pubnub.api.models.consumer.access_manager.PNAccessManagerKeyData
 import com.pubnub.api.models.server.Envelope
 import com.pubnub.api.models.server.access_manager.AccessManagerGrantPayload
-import com.pubnub.api.policies.RetryableEndpointGroup
+import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.api.toCsv
 import retrofit2.Call
 import retrofit2.Response

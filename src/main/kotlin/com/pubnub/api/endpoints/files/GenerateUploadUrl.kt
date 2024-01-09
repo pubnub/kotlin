@@ -10,7 +10,7 @@ import com.pubnub.api.models.server.files.FileUploadRequestDetails
 import com.pubnub.api.models.server.files.FormField
 import com.pubnub.api.models.server.files.GenerateUploadUrlPayload
 import com.pubnub.api.models.server.files.GeneratedUploadUrlResponse
-import com.pubnub.api.policies.RetryableEndpointGroup
+import com.pubnub.api.retry.RetryableEndpointGroup
 import retrofit2.Call
 import retrofit2.Response
 

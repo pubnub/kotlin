@@ -1,4 +1,4 @@
-package com.pubnub.api.policies
+package com.pubnub.api.retry
 
 import org.slf4j.LoggerFactory
 

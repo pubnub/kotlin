@@ -9,8 +9,8 @@ import com.pubnub.api.UserId
 import com.pubnub.api.await
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.legacy.BaseTestJUnit5
-import com.pubnub.api.policies.RequestRetryPolicy
-import com.pubnub.api.policies.RetryableEndpointGroup
+import com.pubnub.api.retry.RequestRetryPolicy
+import com.pubnub.api.retry.RetryableEndpointGroup
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify

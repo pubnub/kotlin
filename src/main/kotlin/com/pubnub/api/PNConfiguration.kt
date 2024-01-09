@@ -4,7 +4,8 @@ import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions
 import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.enums.PNReconnectionPolicy
-import com.pubnub.api.policies.RequestRetryPolicy
+import com.pubnub.api.retry.RequestRetryPolicy
+import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.api.subscribe.eventengine.effect.ExponentialPolicy
 import com.pubnub.api.subscribe.eventengine.effect.LinearPolicy
 import com.pubnub.api.subscribe.eventengine.effect.NoRetriesPolicy
@@ -141,6 +142,7 @@ open class PNConfiguration(
      * Defaults to `ps.pndsn.com`
      */
     var origin: String = ""
+//    var origin: String = "psdfadfa.pndsn123adfadfafadfafdtytyt.com"
 
     /**
      * If set to `true`,  requests will be made over HTTPS.
@@ -403,11 +405,11 @@ open class PNConfiguration(
      * Defaults to [RequestRetryPolicy.None].
      */
 
-    var newRetryPolicy: RequestRetryPolicy = RequestRetryPolicy.None
-//    var newRetryPolicy: RequestRetryPolicy = RequestRetryPolicy.Linear(
-//        delayInSec = 3,
-//        maxRetryNumber = 3,
-//        excludedOperations = listOf(RetryableEndpointGroup.SUBSCRIBE)
-//    )
+//    var newRetryPolicy: RequestRetryPolicy = RequestRetryPolicy.None
+    var newRetryPolicy: RequestRetryPolicy = RequestRetryPolicy.Linear(
+        delayInSec = 3,
+        maxRetryNumber = 3,
+        excludedOperations = listOf(RetryableEndpointGroup.SUBSCRIBE)
+    )
 //    var newRetryPolicy: RequestRetryPolicy = RequestRetryPolicy.Exponential(minDelayInSec = 3, maxDelayInSec = 5, maxRetryNumber = 3, excludedOperations = listOf(RetryableEndpointGroup.APP_CONTEXT))
 }

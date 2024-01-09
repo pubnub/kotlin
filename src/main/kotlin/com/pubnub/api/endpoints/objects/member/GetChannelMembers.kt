@@ -8,7 +8,7 @@ import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.objects.member.PNMember
 import com.pubnub.api.models.consumer.objects.member.PNMemberArrayResult
 import com.pubnub.api.models.server.objects_api.EntityArrayEnvelope
-import com.pubnub.api.policies.RetryableEndpointGroup
+import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.extension.toPNMemberArrayResult
 import retrofit2.Call
 import retrofit2.Response

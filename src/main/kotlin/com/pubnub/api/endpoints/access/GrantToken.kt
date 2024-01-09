@@ -12,7 +12,7 @@ import com.pubnub.api.models.consumer.access_manager.v3.PNGrantTokenResult
 import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant
 import com.pubnub.api.models.server.access_manager.v3.GrantTokenRequestBody
 import com.pubnub.api.models.server.access_manager.v3.GrantTokenResponse
-import com.pubnub.api.policies.RetryableEndpointGroup
+import com.pubnub.api.retry.RetryableEndpointGroup
 import retrofit2.Call
 import retrofit2.Response
 

@@ -1,4 +1,4 @@
-package com.pubnub.api.policies
+package com.pubnub.api.retry
 
 import com.pubnub.api.Endpoint
 import com.pubnub.api.PubNubError

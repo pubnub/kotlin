@@ -4,7 +4,7 @@ import com.pubnub.api.Endpoint
 import com.pubnub.api.PubNub
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.PNTimeResult
-import com.pubnub.api.policies.RetryableEndpointGroup
+import com.pubnub.api.retry.RetryableEndpointGroup
 import retrofit2.Response
 
 /**

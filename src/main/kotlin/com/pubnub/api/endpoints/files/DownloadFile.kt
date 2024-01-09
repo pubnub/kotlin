@@ -7,7 +7,7 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.files.PNDownloadFileResult
-import com.pubnub.api.policies.RetryableEndpointGroup
+import com.pubnub.api.retry.RetryableEndpointGroup
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Response

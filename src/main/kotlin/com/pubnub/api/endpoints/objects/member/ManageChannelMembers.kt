@@ -12,7 +12,7 @@ import com.pubnub.api.models.server.objects_api.ChangeMemberInput
 import com.pubnub.api.models.server.objects_api.EntityArrayEnvelope
 import com.pubnub.api.models.server.objects_api.ServerMemberInput
 import com.pubnub.api.models.server.objects_api.UUIDId
-import com.pubnub.api.policies.RetryableEndpointGroup
+import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.extension.toPNMemberArrayResult
 import retrofit2.Call
 import retrofit2.Response

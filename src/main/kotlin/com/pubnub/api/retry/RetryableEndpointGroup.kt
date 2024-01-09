@@ -1,4 +1,4 @@
-package com.pubnub.api.policies
+package com.pubnub.api.retry
 
 enum class RetryableEndpointGroup {
     SUBSCRIBE, // subscribe
