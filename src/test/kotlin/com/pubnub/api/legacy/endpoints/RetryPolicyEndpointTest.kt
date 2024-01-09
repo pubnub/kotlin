@@ -6,6 +6,7 @@ import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.UserId
+import com.pubnub.api.await
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.legacy.BaseTestJUnit5
 import com.pubnub.api.policies.RequestRetryPolicy
@@ -20,8 +21,10 @@ import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.condition.EnabledIf
 import retrofit2.Call
+import retrofit2.Callback
 import retrofit2.Response
 import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 
 private const val RETRY_AFTER_HEADER_NAME = "Retry-After"
 private const val RETRY_AFTER_VALUE = "3"
@@ -90,6 +93,43 @@ class RetryPolicyEndpointTest : BaseTestJUnit5() {
         // then
         verify(exactly = 3) { mockCall.execute() }
         verify(exactly = 2) { mockCall.clone() }
+    }
+
+    @Test
+    @EnabledIf("customCondition")
+    fun `should retry async when linear retryPolicy is set and SocketTimeoutException is thrown and endpoint is not excluded from retryPolicy`() {
+        // given
+        val pubNub = PubNub(
+            PNConfiguration(userId = UserId(PubNub.generateUUID())).apply {
+                newRetryPolicy = RequestRetryPolicy.Linear(delayInSec = 2, maxRetryNumber = 2)
+            }
+        )
+        initPubNub(pubNub)
+
+        val mockCall = mockk<Call<Any>>()
+        val successfulResponse: Response<Any> = Response.success(null)
+
+        every { mockCall.enqueue(any()) } answers {
+            val callback = arg<Callback<Any>>(0)
+            callback.onFailure(mockCall, UnknownHostException())
+        } andThenAnswer {
+            val callback = arg<Callback<Any>>(0)
+            callback.onFailure(mockCall, UnknownHostException())
+        } andThenAnswer {
+            val callback = arg<Callback<Any>>(0)
+            callback.onResponse(mockCall, successfulResponse)
+        }
+        every { mockCall.clone() } returns mockCall
+
+        val endpoint = fakeEndpointToTestRetry(call = mockCall, isEndpointExcludedInRetryPolicy = false)
+        endpoint.call = mockCall
+
+        // when
+        endpoint.await { _, status ->
+            println(status)
+            verify(exactly = 3) { mockCall.enqueue(any()) }
+            verify(exactly = 2) { mockCall.clone() }
+        }
     }
 
     @Test
@@ -231,6 +271,46 @@ class RetryPolicyEndpointTest : BaseTestJUnit5() {
         // then
         verify(exactly = 3) { mockCall.execute() }
         verify(exactly = 2) { mockCall.clone() }
+    }
+
+    @Test
+    @EnabledIf("customCondition")
+    fun `should retry async when exponential retryPolicy is set and response is not successful and http error is 429 and endpoint is not excluded from retryPolicy`() {
+        // given
+        val pubNub = PubNub(
+            PNConfiguration(userId = UserId(PubNub.generateUUID())).apply {
+                newRetryPolicy = RequestRetryPolicy.Exponential(
+                    minDelayInSec = 2,
+                    maxDelayInSec = 3,
+                    maxRetryNumber = 2,
+                )
+            }
+        )
+        initPubNub(pubNub)
+
+        val mockCall = mockk<Call<Any>>()
+        val errorResponse: Response<Any> = Response.error<Any>(429, ResponseBody.create(null, ""))
+        val successfulResponse: Response<Any> = Response.success(null)
+        every { mockCall.enqueue(any()) } answers {
+            val callback = arg<Callback<Any>>(0)
+            callback.onResponse(mockCall, errorResponse)
+        } andThenAnswer {
+            val callback = arg<Callback<Any>>(0)
+            callback.onResponse(mockCall, errorResponse)
+        } andThenAnswer {
+            val callback = arg<Callback<Any>>(0)
+            callback.onResponse(mockCall, successfulResponse)
+        }
+        every { mockCall.clone() } returns mockCall
+        val endpoint = fakeEndpointToTestRetry(call = mockCall, isEndpointExcludedInRetryPolicy = false)
+        endpoint.call = mockCall
+
+        // then
+        endpoint.await { _, status ->
+            println(status)
+            verify(exactly = 3) { mockCall.enqueue(any()) }
+            verify(exactly = 2) { mockCall.clone() }
+        }
     }
 
     @Test
