@@ -142,7 +142,6 @@ open class PNConfiguration(
      * Defaults to `ps.pndsn.com`
      */
     var origin: String = ""
-//    var origin: String = "psdfadfa.pndsn123adfadfafadfafdtytyt.com"
 
     /**
      * If set to `true`,  requests will be made over HTTPS.

@@ -190,7 +190,7 @@ class SendFileTest : TestsWithFiles {
             fileMessagePublishRetryLimit = numberOfRetries
         )
     }
-    private fun getPubNubMock() :PubNub{
+    private fun getPubNubMock(): PubNub {
         val mockConfig = mockk<PNConfiguration>()
         val mockPubNub = mockk<PubNub>()
         val requestRetryPolicy = mockk<RequestRetryPolicy>()
@@ -199,8 +199,6 @@ class SendFileTest : TestsWithFiles {
 
         return mockPubNub
     }
-
-
 
     internal class FailingPublishFileMessage(
         private val result: PNPublishFileMessageResult,
@@ -244,7 +242,7 @@ class SendFileTest : TestsWithFiles {
             return result
         }
 
-         companion object {
+        companion object {
             fun create(result: PNPublishFileMessageResult, numberOfFailsBeforeSuccess: Int, pubNub: PubNub): PublishFileMessage {
                 return FailingPublishFileMessage(
                     result,

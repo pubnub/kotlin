@@ -22,14 +22,7 @@ private const val RETRY_AFTER_HEADER_NAME = "Retry-After"
 private const val RETRY_AFTER_VALUE = "3"
 private const val MILLISECONDS = 1000
 
-class RetryableRestCallerTest {
-
-    // this is used for test that execute retryPolicy and thus take more time to execute
-    private fun enableLongRunningRetryTests(): Boolean {
-        // return System.getProperty("os.name").contains("Mac OS X")
-        return true // todo change to false so that they will not run in GitHub
-    }
-
+class RetryableRestCallerTest : RetryableTestBase() {
     private fun getRetryableRestCaller(
         retryPolicy: RequestRetryPolicy,
         isEndpointRetryable: Boolean = true,
