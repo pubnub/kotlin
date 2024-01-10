@@ -1,7 +1,7 @@
 package com.pubnub.api
 
 import com.pubnub.api.crypto.CryptoModule
-import com.pubnub.api.policies.RequestRetryPolicy
+import com.pubnub.api.retry.RequestRetryPolicy
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

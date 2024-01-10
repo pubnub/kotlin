@@ -314,9 +314,8 @@ class EndpointTest : BaseTest() {
         override fun isSubKeyRequired() = false
         override fun isPubKeyRequired() = false
         override fun isAuthRequired() = false
-        override fun getEndpointGroupName(): RetryableEndpointGroup {
-            TODO("Not yet implemented")
-        }
+        override fun getEndpointGroupName(): RetryableEndpointGroup = RetryableEndpointGroup.PUBLISH
+
     }
 
     private fun fakeCall() = object : Call<Any> {
