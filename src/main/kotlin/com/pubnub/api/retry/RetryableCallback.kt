@@ -4,6 +4,9 @@ import org.slf4j.LoggerFactory
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.time.Duration
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
 import kotlin.random.Random
 
 internal abstract class RetryableCallback<T>(
@@ -14,14 +17,15 @@ internal abstract class RetryableCallback<T>(
 ) : Callback<T>, RetryableBase<T>(retryPolicy, endpointGroupName) {
     private val log = LoggerFactory.getLogger(this.javaClass.simpleName)
     private var retryCount = 0
-    private val maxRetryNumber = getRetryCount()
     private val random = Random.Default
     private var exponentialMultiplier = 0.0
+    private val executorService: ExecutorService = Executors.newSingleThreadExecutor()
 
     override fun onResponse(call: Call<T>, response: Response<T>) {
         if (shouldRetryOnResponse(response)) {
             retryOnResponseWithError(response)
         } else {
+            executorService.shutdown()
             onFinalResponse(call, response)
         }
     }
@@ -30,23 +34,24 @@ internal abstract class RetryableCallback<T>(
         if (shouldRetryOnFailure(t)) {
             retryOnFailure()
         } else {
+            executorService.shutdown()
             onFinalFailure(call, t)
         }
     }
 
     private fun shouldRetryOnResponse(response: Response<T>): Boolean {
         return !response.isSuccessful &&
-            retryCount < maxRetryNumber &&
+            retryCount < maxRetryNumberFromConfiguration &&
             isErrorCodeRetryable(response.raw().code) &&
-            isRetryPolicySetForThisRestCall() &&
+            isRetryPolicySetForThisRestCall &&
             isEndpointRetryable
     }
 
     private fun shouldRetryOnFailure(t: Throwable): Boolean {
         val exception = Exception(t)
-        return retryCount < maxRetryNumber &&
+        return retryCount < maxRetryNumberFromConfiguration &&
             isExceptionRetryable(exception) &&
-            isRetryPolicySetForThisRestCall() &&
+            isRetryPolicySetForThisRestCall &&
             isEndpointRetryable
     }
 
@@ -57,30 +62,37 @@ internal abstract class RetryableCallback<T>(
     }
 
     private fun retryOnFailure() {
-        val effectiveDelay = getDelayInMilliSecForRetryOnFailure()
+        val effectiveDelay = getDelayForRetryOnFailure()
         retry(effectiveDelay)
     }
 
     private fun retryOnResponseWithError(response: Response<T>) {
-        val effectiveDelay = getDelayInMilliSecForRetryOnResponse(response)
+        val effectiveDelay: Duration = getDelayForRetryOnResponse(response)
         retry(effectiveDelay)
     }
 
-    private fun retry(delayInMilliSec: Int) {
+    private fun retry(delay: Duration) {
         retryCount++
-        val randomDelayInMilliSec = random.nextInt(BOUND)
-        val effectiveDelay = delayInMilliSec + randomDelayInMilliSec
+        val randomDelayInMilliSec = random.nextInt(MAX_RANDOM_DELAY_IN_MILLI_SEC)
+        val effectiveDelay = delay.toMillis() + randomDelayInMilliSec
         log.trace("Added random delay so effective retry delay is $effectiveDelay")
-        Thread.sleep(effectiveDelay.toLong())
-        call.clone().enqueue(this)
+        // don't want to block the main thread in case of Android so using executor service
+        executorService.execute {
+            try {
+                Thread.sleep(effectiveDelay)
+                call.clone().enqueue(this)
+            } catch (e: InterruptedException) {
+                e.printStackTrace()
+            }
+        }
     }
 
-    private fun getDelayInMilliSecForRetryOnFailure(): Int {
-        return getDelayFromRetryPolicy() * MILLISECONDS
+    private fun getDelayForRetryOnFailure(): Duration {
+        return Duration.ofSeconds(getDelayFromRetryPolicy().toLong())
     }
 
-    private fun getDelayInMilliSecForRetryOnResponse(response: Response<T>): Int {
-        return getDelayInMilliSeconds(response)
+    private fun getDelayForRetryOnResponse(response: Response<T>): Duration {
+        return getDelayBasedOnResponse(response)
     }
 
     abstract fun onFinalResponse(call: Call<T>, response: Response<T>)

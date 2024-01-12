@@ -14,9 +14,6 @@ internal class RetryableRestCaller<T>(
     endpointGroupName: RetryableEndpointGroup,
     private val isEndpointRetryable: Boolean
 ) : RetryableBase<T>(retryPolicy, endpointGroupName) {
-    private companion object {
-        private const val NUMBER_OF_REGULAR_CALLS = 1
-    }
 
     private val log = LoggerFactory.getLogger(this.javaClass.simpleName)
     private val random = Random.Default
@@ -25,27 +22,39 @@ internal class RetryableRestCaller<T>(
     internal fun executeRestCallWithRetryPolicy(callToBeExecuted: Call<T>): Response<T> {
         call = callToBeExecuted
         var numberOfAttempts = 0
-        val maxRetryNumber = getRetryCount()
-        val maxAttempts = NUMBER_OF_REGULAR_CALLS + maxRetryNumber
         while (true) {
-            val response = executeRestCall()
-            if (!shouldRetry(response) || numberOfAttempts++ >= maxAttempts) {
-                return response
+            val (response, exception) = executeRestCall()
+            if (!shouldRetry(response) || numberOfAttempts++ >= maxRetryNumberFromConfiguration) {
+                if (response.isSuccessful || isHttpIssueRepresentedByErrorCodeNotByException(exception)) {
+                    return response
+                } else {
+                    throw exception!!
+                }
             }
-            val randomDelayInMilliSec = random.nextInt(BOUND)
-            val effectiveDelay = getDelayInMilliSeconds(response) + randomDelayInMilliSec
+            val randomDelayInMilliSec = random.nextInt(MAX_RANDOM_DELAY_IN_MILLI_SEC)
+            val effectiveDelay = getDelayBasedOnResponse(response).toMillis() + randomDelayInMilliSec
             log.trace("Added random delay so effective retry delay is $effectiveDelay")
-            Thread.sleep(effectiveDelay.toLong()) // we want to sleep here since this is synchronous call
+            Thread.sleep(effectiveDelay) // we want to sleep here on current thread since this is synchronous call
 
             call = call.clone()
         }
     }
 
-    private fun executeRestCall(): Response<T> {
+    private fun isHttpIssueRepresentedByErrorCodeNotByException(exception: Exception?) = exception == null
+
+    private fun executeRestCall(): Pair<Response<T>, Exception?> {
+        var pubNubException: Exception? = null
         try {
             return try {
-                call.execute()
+                val response = call.execute()
+                Pair(response, pubNubException)
             } catch (e: Exception) {
+                pubNubException = PubNubException(
+                    pubnubError = PubNubError.PARSING_ERROR,
+                    errorMessage = e.toString(),
+                    affectedCall = call
+                )
+
                 if (isExceptionRetryable(e)) {
                     throw PubNubRetryableException(
                         pubnubError = PubNubError.CONNECT_EXCEPTION,
@@ -53,17 +62,11 @@ internal class RetryableRestCaller<T>(
                         statusCode = SERVICE_UNAVAILABLE // all retryable exceptions internally are mapped to 503 error
                     )
                 } else {
-                    throw PubNubException(
-                        pubnubError = PubNubError.PARSING_ERROR,
-                        errorMessage = e.toString(),
-                        affectedCall = call
-                    )
+                    throw pubNubException
                 }
             }
         } catch (e: PubNubRetryableException) {
-            return Response.error(e.statusCode, e.errorMessage?.toResponseBody() ?: "".toResponseBody())
-        } catch (e: Exception) {
-            throw e
+            return Pair(Response.error(e.statusCode, e.errorMessage?.toResponseBody() ?: "".toResponseBody()), pubNubException)
         }
     }
 
@@ -74,6 +77,6 @@ internal class RetryableRestCaller<T>(
     private fun shouldRetry(response: Response<T>) =
         !response.isSuccessful &&
             isErrorCodeRetryable(response.raw().code) &&
-            isRetryPolicySetForThisRestCall() &&
+            isRetryPolicySetForThisRestCall &&
             isEndpointRetryable
 }

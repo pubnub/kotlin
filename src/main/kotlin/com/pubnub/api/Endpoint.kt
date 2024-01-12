@@ -44,7 +44,7 @@ abstract class Endpoint<Input, Output> protected constructor(protected val pubnu
     }
 
     private lateinit var cachedCallback: (result: Output?, status: PNStatus) -> Unit
-    internal lateinit var call: Call<Input>
+    private lateinit var call: Call<Input>
     private var silenceFailures = false
     private val retryableRestCaller =
         RetryableRestCaller<Input>(pubnub.configuration.newRetryPolicy, getEndpointGroupName(), isEndpointRetryable())

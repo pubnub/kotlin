@@ -193,7 +193,7 @@ class SendFileTest : TestsWithFiles {
     private fun getPubNubMock(): PubNub {
         val mockConfig = mockk<PNConfiguration>()
         val mockPubNub = mockk<PubNub>()
-        val requestRetryPolicy = mockk<RequestRetryPolicy>()
+        val requestRetryPolicy = RequestRetryPolicy.None
         every { mockPubNub.configuration } returns mockConfig
         every { mockConfig.newRetryPolicy } returns requestRetryPolicy
 
