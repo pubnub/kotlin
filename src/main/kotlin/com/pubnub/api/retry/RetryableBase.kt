@@ -102,5 +102,4 @@ internal abstract class RetryableBase<T>(
 
     private fun endpointIsNotExcludedFromRetryPolicy(excludedOperations: List<RetryableEndpointGroup>): Boolean =
         excludedOperations.contains(endpointGroupName).not()
-
 }

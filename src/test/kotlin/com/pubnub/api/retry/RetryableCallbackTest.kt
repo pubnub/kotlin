@@ -1,5 +1,6 @@
 package com.pubnub.api.retry
 
+import com.pubnub.api.listen
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -13,6 +14,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
+import java.util.concurrent.atomic.AtomicBoolean
 
 class RetryableCallbackTest : RetryableTestBase() {
     private lateinit var mockCall: Call<Any>
@@ -28,6 +30,8 @@ class RetryableCallbackTest : RetryableTestBase() {
 
     private fun getRetryableCallback(
         retryPolicy: RequestRetryPolicy = RequestRetryPolicy.None,
+        onFinalFailureFinished: AtomicBoolean = AtomicBoolean(false),
+        onFinalResponseFinished: AtomicBoolean = AtomicBoolean(false),
         endpointGroupName: RetryableEndpointGroup = RetryableEndpointGroup.MESSAGE_PERSISTENCE
     ): RetryableCallback<Any> {
         return object : RetryableCallback<Any>(
@@ -35,10 +39,12 @@ class RetryableCallbackTest : RetryableTestBase() {
         ) {
             override fun onFinalResponse(call: Call<Any>, response: Response<Any>) {
                 onFinalResponseCalled = true
+                onFinalResponseFinished.set(true)
             }
 
             override fun onFinalFailure(call: Call<Any>, t: Throwable) {
                 onFinalFailureCalled = true
+                onFinalFailureFinished.set(true)
             }
         }
     }
@@ -75,8 +81,9 @@ class RetryableCallbackTest : RetryableTestBase() {
     @EnabledIf("enableLongRunningRetryTests")
     fun `should retry when linear retryPolicy is set and SocketTimeoutException`() {
         // given
+        val success = AtomicBoolean()
         val retryableCallback =
-            getRetryableCallback(retryPolicy = RequestRetryPolicy.Linear(delayInSec = 2, maxRetryNumber = 2))
+            getRetryableCallback(retryPolicy = RequestRetryPolicy.Linear(delayInSec = 2, maxRetryNumber = 3), onFinalResponseFinished = success)
         val errorResponse: Response<Any> = Response.error<Any>(500, ResponseBody.create(null, ""))
         every { mockResponse.isSuccessful } returns false
         every { mockResponse.code() } returns 500 // Assuming 500 is a retryable error
@@ -95,10 +102,11 @@ class RetryableCallbackTest : RetryableTestBase() {
 
         // when
         retryableCallback.onResponse(mockCall, errorResponse)
+        success.listen(10)
 
         // then
-        verify(exactly = 2) { mockCall.enqueue(retryableCallback) }
-        verify(exactly = 2) { mockCall.clone() }
+        verify(exactly = 3) { mockCall.enqueue(retryableCallback) }
+        verify(exactly = 3) { mockCall.clone() }
     }
 
     @Test
@@ -110,7 +118,8 @@ class RetryableCallbackTest : RetryableTestBase() {
             maxDelayInSec = 3,
             maxRetryNumber = 2,
         )
-        val retryableCallback = getRetryableCallback(retryPolicy = retryPolicy)
+        val success = AtomicBoolean()
+        val retryableCallback = getRetryableCallback(retryPolicy = retryPolicy, onFinalResponseFinished = success)
         val errorResponse: Response<Any> = Response.error<Any>(500, ResponseBody.create(null, ""))
         every { mockResponse.isSuccessful } returns false
         every { mockResponse.code() } returns 500 // Assuming 500 is a retryable error
@@ -126,6 +135,7 @@ class RetryableCallbackTest : RetryableTestBase() {
 
         // when
         retryableCallback.onResponse(mockCall, errorResponse)
+        success.listen(10)
 
         // then
         verify(exactly = 2) { mockCall.enqueue(retryableCallback) }
@@ -140,16 +150,14 @@ class RetryableCallbackTest : RetryableTestBase() {
         val retryPolicy = RequestRetryPolicy.Exponential(
             minDelayInSec = 2,
             maxDelayInSec = 3,
-            maxRetryNumber = 3,
+            maxRetryNumber = 2,
         )
-        val retryableCallback = getRetryableCallback(retryPolicy = retryPolicy)
+        val success = AtomicBoolean()
+        val retryableCallback = getRetryableCallback(retryPolicy = retryPolicy, onFinalResponseFinished = success)
         every { mockResponse.isSuccessful } returns false
         every { mockResponse.code() } returns 500 // Assuming 500 is a retryable error
         val successfulResponse: Response<Any> = Response.success(null)
         every { mockCall.enqueue(any()) } answers {
-            val callback = arg<Callback<Any>>(0)
-            callback.onFailure(mockCall, SocketTimeoutException())
-        } andThenAnswer {
             val callback = arg<Callback<Any>>(0)
             callback.onFailure(mockCall, SocketTimeoutException())
         } andThenAnswer {
@@ -160,10 +168,11 @@ class RetryableCallbackTest : RetryableTestBase() {
 
         // when
         retryableCallback.onFailure(mockCall, SocketTimeoutException())
+        success.listen(10)
 
         // then
-        verify(exactly = 3) { mockCall.enqueue(retryableCallback) }
-        verify(exactly = 3) { mockCall.clone() }
+        verify(exactly = 2) { mockCall.enqueue(retryableCallback) }
+        verify(exactly = 2) { mockCall.clone() }
         assertTrue(onFinalResponseCalled)
     }
 
@@ -174,9 +183,10 @@ class RetryableCallbackTest : RetryableTestBase() {
         val retryPolicy = RequestRetryPolicy.Exponential(
             minDelayInSec = 2,
             maxDelayInSec = 3,
-            maxRetryNumber = 3,
+            maxRetryNumber = 2,
         )
-        val retryableCallback = getRetryableCallback(retryPolicy = retryPolicy)
+        val success = AtomicBoolean()
+        val retryableCallback = getRetryableCallback(retryPolicy = retryPolicy, onFinalFailureFinished = success)
         every { mockResponse.isSuccessful } returns false
         every { mockResponse.code() } returns 500 // Assuming 500 is a retryable error
         every { mockCall.enqueue(any()) } answers {
@@ -193,10 +203,11 @@ class RetryableCallbackTest : RetryableTestBase() {
 
         // when
         retryableCallback.onFailure(mockCall, UnknownHostException())
+        success.listen(10)
 
         // then
-        verify(exactly = 3) { mockCall.enqueue(retryableCallback) }
-        verify(exactly = 3) { mockCall.clone() }
+        verify(exactly = 2) { mockCall.enqueue(retryableCallback) }
+        verify(exactly = 2) { mockCall.clone() }
         assertTrue(onFinalFailureCalled)
     }
 }

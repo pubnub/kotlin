@@ -1,5 +1,7 @@
 package com.pubnub.api.retry
 
+import com.pubnub.api.PubNubError
+import com.pubnub.api.PubNubException
 import com.pubnub.api.models.server.FetchMessagesEnvelope
 import io.mockk.every
 import io.mockk.mockk
@@ -7,6 +9,7 @@ import io.mockk.verify
 import okhttp3.ResponseBody
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.condition.EnabledIf
@@ -292,7 +295,7 @@ class RetryableRestCallerTest : RetryableTestBase() {
     @EnabledIf("enableLongRunningRetryTests")
     fun `should retry successfully when linear retryPolicy is set and response is not successful and http error is 500 and endpoint is not excluded from retryPolicy`() {
         // given
-        val retryPolicy = RequestRetryPolicy.Linear(delayInSec = 2, maxRetryNumber = 2)
+        val retryPolicy = RequestRetryPolicy.Linear(delayInSec = 2, maxRetryNumber = 3)
         val retryableRestCaller = getRetryableRestCaller(retryPolicy = retryPolicy)
         val mockCall = mockk<Call<FetchMessagesEnvelope>>()
         val errorResponse: Response<FetchMessagesEnvelope> =
@@ -325,15 +328,15 @@ class RetryableRestCallerTest : RetryableTestBase() {
         val errorResponse: Response<FetchMessagesEnvelope> =
             Response.error(500, ResponseBody.create(null, ""))
         val successfulResponse: Response<FetchMessagesEnvelope> = Response.success(null)
-        every { mockCall.execute() } returns errorResponse andThen errorResponse andThen errorResponse andThen successfulResponse
+        every { mockCall.execute() } returns errorResponse andThen errorResponse andThen successfulResponse
         every { mockCall.clone() } returns mockCall
 
         // when
         val response1 = retryableRestCaller.executeRestCallWithRetryPolicy(mockCall)
 
         // then
-        verify(exactly = 3) { mockCall.clone() }
-        verify(exactly = 4) { mockCall.execute() }
+        verify(exactly = 2) { mockCall.clone() }
+        verify(exactly = 3) { mockCall.execute() }
         assertTrue(response1.isSuccessful)
     }
 
@@ -359,7 +362,7 @@ class RetryableRestCallerTest : RetryableTestBase() {
 
     @Test
     @EnabledIf("enableLongRunningRetryTests")
-    fun `should retry and fail when linear retryPolicy is set and UnknownHostException is thrown`() {
+    fun `should retry and throw exception when linear retryPolicy is set and UnknownHostException is thrown`() {
         // given
         val retryPolicy = RequestRetryPolicy.Linear(delayInSec = 2, maxRetryNumber = 2)
         val retryableRestCaller = getRetryableRestCaller(retryPolicy = retryPolicy)
@@ -368,11 +371,14 @@ class RetryableRestCallerTest : RetryableTestBase() {
         every { mockCall.clone() } returns mockCall
 
         // when
-        val response1 = retryableRestCaller.executeRestCallWithRetryPolicy(mockCall)
+        val exception = assertThrows(PubNubException::class.java) {
+            retryableRestCaller.executeRestCallWithRetryPolicy(mockCall)
+        }
 
         // then
-        verify(exactly = 3) { mockCall.clone() }
-        verify(exactly = 4) { mockCall.execute() }
-        assertFalse(response1.isSuccessful)
+        verify(exactly = 2) { mockCall.clone() }
+        verify(exactly = 3) { mockCall.execute() }
+        assertEquals("java.net.UnknownHostException", exception.errorMessage)
+        assertEquals(PubNubError.PARSING_ERROR, exception.pubnubError)
     }
 }
