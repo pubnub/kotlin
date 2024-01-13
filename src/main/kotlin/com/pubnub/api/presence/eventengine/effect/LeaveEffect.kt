@@ -6,17 +6,14 @@ import org.slf4j.LoggerFactory
 
 internal class LeaveEffect(
     val leaveRemoteAction: RemoteAction<Boolean>,
-    val suppressLeaveEvents: Boolean
 ) : Effect {
     private val log = LoggerFactory.getLogger(LeaveEffect::class.java)
 
     override fun runEffect() {
-        log.trace("Running LeaveEffect; suppressLeaveEvents: $suppressLeaveEvents")
-        if (!suppressLeaveEvents) {
-            leaveRemoteAction.async { _, status ->
-                if (status.error) {
-                    log.error("LeaveEffect failed", status.exception)
-                }
+        log.trace("Running LeaveEffect")
+        leaveRemoteAction.async { _, status ->
+            if (status.error) {
+                log.error("LeaveEffect failed", status.exception)
             }
         }
     }

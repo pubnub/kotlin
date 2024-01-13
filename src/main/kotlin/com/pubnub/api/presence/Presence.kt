@@ -6,6 +6,7 @@ import com.pubnub.api.eventengine.EventEngineConf
 import com.pubnub.api.managers.ListenerManager
 import com.pubnub.api.managers.PresenceEventEngineManager
 import com.pubnub.api.presence.eventengine.PresenceEventEngine
+import com.pubnub.api.presence.eventengine.data.PresenceData
 import com.pubnub.api.presence.eventengine.effect.PresenceEffectFactory
 import com.pubnub.api.presence.eventengine.effect.PresenceEffectInvocation
 import com.pubnub.api.presence.eventengine.effect.effectprovider.HeartbeatProvider
@@ -27,6 +28,8 @@ internal interface Presence {
             heartbeatNotificationOptions: PNHeartbeatNotificationOptions,
             listenerManager: ListenerManager,
             eventEngineConf: EventEngineConf<PresenceEffectInvocation, PresenceEvent>,
+            presenceData: PresenceData = PresenceData(),
+            sendStateWithHeartbeat: Boolean,
         ): Presence {
             if (heartbeatInterval <= Duration.ZERO || !enableEventEngine) {
                 return PresenceNoOp()
@@ -41,7 +44,9 @@ internal interface Presence {
                 heartbeatInterval = heartbeatInterval,
                 suppressLeaveEvents = suppressLeaveEvents,
                 heartbeatNotificationOptions = heartbeatNotificationOptions,
-                statusConsumer = listenerManager
+                statusConsumer = listenerManager,
+                presenceData = presenceData,
+                sendStateWithHeartbeat = sendStateWithHeartbeat,
             )
 
             val eventEngineManager = PresenceEventEngineManager(
@@ -55,7 +60,7 @@ internal interface Presence {
                 )
             ).also { it.start() }
 
-            return EnabledPresence(eventEngineManager)
+            return EnabledPresence(eventEngineManager, presenceData)
         }
     }
 
@@ -105,7 +110,8 @@ internal class PresenceNoOp : Presence {
 }
 
 internal class EnabledPresence(
-    private val presenceEventEngineManager: PresenceEventEngineManager
+    private val presenceEventEngineManager: PresenceEventEngineManager,
+    private val presenceData: PresenceData = PresenceData()
 ) : Presence {
 
     override fun joined(
@@ -119,10 +125,12 @@ internal class EnabledPresence(
         channels: Set<String>,
         channelGroups: Set<String>
     ) {
+        presenceData.channelStates.keys.removeAll(channels)
         presenceEventEngineManager.addEventToQueue(PresenceEvent.Left(channels, channelGroups))
     }
 
     override fun leftAll() {
+        presenceData.channelStates.clear()
         presenceEventEngineManager.addEventToQueue(PresenceEvent.LeftAll)
     }
 
@@ -146,7 +154,6 @@ internal class EnabledPresence(
         presenceEventEngineManager.addEventToQueue(PresenceEvent.Disconnect)
     }
 
-    @Synchronized
     override fun destroy() {
         disconnect()
         presenceEventEngineManager.stop()

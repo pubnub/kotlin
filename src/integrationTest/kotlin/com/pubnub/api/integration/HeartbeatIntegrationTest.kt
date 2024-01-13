@@ -13,7 +13,8 @@ import org.awaitility.Durations
 import org.hamcrest.core.IsEqual
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
-import org.junit.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
@@ -26,8 +27,12 @@ class HeartbeatIntegrationTest : BaseIntegrationTest() {
         expectedChannel = randomChannel()
     }
 
-    @Test
-    fun testStateWithHeartbeat() {
+    /**
+     * Please note this test doesn't actually test sending state with the Heartbeat REST call
+     */
+    @ParameterizedTest
+    @ValueSource(booleans = [true, false])
+    fun testStateWithHeartbeat(enableEE: Boolean) {
         val hits = AtomicInteger()
         val expectedStatePayload = generatePayload()
 
@@ -39,6 +44,7 @@ class HeartbeatIntegrationTest : BaseIntegrationTest() {
             getBasicPnConfiguration().apply {
                 presenceTimeout = 20
                 heartbeatInterval = 4
+                enableEventEngine = enableEE
             }
         )
 

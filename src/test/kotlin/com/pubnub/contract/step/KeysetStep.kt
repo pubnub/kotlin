@@ -44,4 +44,9 @@ class KeysetStep(private val world: World) {
         i_have_a_keyset_with_access_manager_enabled_without_secret_key()
         world.configuration.enableEventEngine = true
     }
+
+    @Given("the demo keyset with Presence EE enabled")
+    fun the_demo_keyset_with_Presence_EE_enabled() {
+        the_demo_keyset_with_event_engine_enabled()
+    }
 }

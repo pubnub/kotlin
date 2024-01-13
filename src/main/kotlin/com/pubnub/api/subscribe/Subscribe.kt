@@ -6,6 +6,7 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.eventengine.EffectDispatcher
 import com.pubnub.api.managers.ListenerManager
 import com.pubnub.api.managers.SubscribeEventEngineManager
+import com.pubnub.api.presence.eventengine.data.PresenceData
 import com.pubnub.api.subscribe.eventengine.SubscribeEventEngine
 import com.pubnub.api.subscribe.eventengine.configuration.EventEnginesConf
 import com.pubnub.api.subscribe.eventengine.data.SubscriptionData
@@ -32,14 +33,18 @@ internal class Subscribe(
             listenerManager: ListenerManager,
             retryPolicy: RetryPolicy,
             eventEnginesConf: EventEnginesConf,
-            messageProcessor: SubscribeMessageProcessor
+            messageProcessor: SubscribeMessageProcessor,
+            presenceData: PresenceData,
+            sendStateWithSubscribe: Boolean,
         ): Subscribe {
             val subscribeEventEngineManager = createAndStartSubscribeEventEngineManager(
                 pubNub,
                 messageProcessor,
                 eventEnginesConf,
                 retryPolicy,
-                listenerManager
+                listenerManager,
+                presenceData,
+                sendStateWithSubscribe = sendStateWithSubscribe,
             )
 
             return Subscribe(subscribeEventEngineManager)
@@ -50,7 +55,9 @@ internal class Subscribe(
             messageProcessor: SubscribeMessageProcessor,
             eventEnginesConf: EventEnginesConf,
             retryPolicy: RetryPolicy,
-            listenerManager: ListenerManager
+            listenerManager: ListenerManager,
+            presenceData: PresenceData,
+            sendStateWithSubscribe: Boolean,
         ): SubscribeEventEngineManager {
             val subscribeEffectFactory = SubscribeEffectFactory(
                 handshakeProvider = HandshakeProviderImpl(pubNub),
@@ -59,7 +66,9 @@ internal class Subscribe(
                 policy = retryPolicy,
                 executorService = Executors.newSingleThreadScheduledExecutor(),
                 messagesConsumer = listenerManager,
-                statusConsumer = listenerManager
+                statusConsumer = listenerManager,
+                presenceData = presenceData,
+                sendStateWithSubscribe = sendStateWithSubscribe,
             )
 
             val subscribeEventEngine = SubscribeEventEngine(

@@ -4,6 +4,7 @@ import com.pubnub.api.enums.PNHeartbeatNotificationOptions
 import com.pubnub.api.eventengine.EventEngineConf
 import com.pubnub.api.eventengine.QueueEventEngineConf
 import com.pubnub.api.managers.ListenerManager
+import com.pubnub.api.presence.eventengine.data.PresenceData
 import com.pubnub.api.presence.eventengine.effect.PresenceEffectInvocation
 import com.pubnub.api.presence.eventengine.event.PresenceEvent
 import com.pubnub.api.subscribe.eventengine.effect.NoRetriesPolicy
@@ -20,6 +21,12 @@ import org.junit.jupiter.params.provider.Arguments.arguments
 import org.junit.jupiter.params.provider.MethodSource
 import java.time.Duration
 
+private const val CHANNEL_01 = "channel01"
+private const val CHANNEL_02 = "channel02"
+
+private const val CHANNEL_GROUPS_01 = "channelGroups01"
+private const val CHANNEL_GROUPS_02 = "channelGroups02"
+
 internal class PresenceTest {
     private val listenerManager: ListenerManager = mockk()
 
@@ -29,18 +36,18 @@ internal class PresenceTest {
             return listOf(
                 arguments(
                     "JOINED",
-                    { presence: Presence -> presence.joined(setOf("Channel01"), setOf("ChannelGroup01")) }
+                    { presence: Presence -> presence.joined(setOf(CHANNEL_01), setOf(CHANNEL_GROUPS_01)) }
                 ),
-                arguments("LEFT", { presence: Presence -> presence.left(setOf("Channel01"), setOf("ChannelGroup01")) }),
+                arguments("LEFT", { presence: Presence -> presence.left(setOf(CHANNEL_01), setOf(CHANNEL_GROUPS_01)) }),
                 arguments("LEFT_ALL", { presence: Presence -> presence.leftAll() }),
                 arguments("JOINED", { presence: Presence ->
                     presence.presence(
-                        setOf("Channel01"), setOf("ChannelGroup01"), connected = true
+                        setOf(CHANNEL_01), setOf(CHANNEL_GROUPS_01), connected = true
                     )
                 }),
                 arguments("LEFT", { presence: Presence ->
                     presence.presence(
-                        setOf("Channel01"), setOf("ChannelGroup01"), connected = false
+                        setOf(CHANNEL_01), setOf(CHANNEL_GROUPS_01), connected = false
                     )
                 })
             )
@@ -52,8 +59,13 @@ internal class PresenceTest {
     fun `should pass correct event for each method call`(eventName: String, method: Presence.() -> Unit) {
         // given
         val queuedElements = mutableListOf<Pair<String, String>>()
+        val presenceData = PresenceData()
         val presence =
-            Presence.create(listenerManager = listenerManager, eventEngineConf = QueueEventEngineConf(eventSinkSource = TestSinkSource(queuedElements)))
+            Presence.create(
+                listenerManager = listenerManager,
+                eventEngineConf = QueueEventEngineConf(eventSinkSource = TestSinkSource(queuedElements)),
+                presenceData = presenceData
+            )
 
         // when
         presence.method()
@@ -80,21 +92,56 @@ internal class PresenceTest {
         assertThat(presence, Matchers.isA(PresenceNoOp::class.java))
     }
 
+    @Test
+    fun `when left is called PresenceData state is cleared for relevant channels`() {
+        // given
+        val presenceData = PresenceData()
+        val state = mapOf("aaa" to "bbb")
+        presenceData.channelStates[CHANNEL_01] = state
+        presenceData.channelStates[CHANNEL_02] = state
+        val presence = Presence.create(listenerManager = listenerManager, enableEventEngine = true, presenceData = presenceData)
+
+        // when
+        presence.left(setOf(CHANNEL_02))
+
+        // then
+        assertThat(presenceData.channelStates, Matchers.`is`(mapOf(CHANNEL_01 to state)))
+    }
+
+    @Test
+    fun `when leftAll is called PresenceData state is cleared for all channels`() {
+        // given
+        val presenceData = PresenceData()
+        val state = mapOf("aaa" to "bbb")
+        presenceData.channelStates[CHANNEL_01] = state
+        presenceData.channelStates[CHANNEL_02] = state
+        val presence = Presence.create(listenerManager = listenerManager, enableEventEngine = true, presenceData = presenceData)
+
+        // when
+        presence.leftAll()
+
+        // then
+        assertThat(presenceData.channelStates, Matchers.anEmptyMap())
+    }
+
     private fun Presence.Companion.create(
         listenerManager: ListenerManager,
         heartbeatInterval: Duration = Duration.ofSeconds(3),
         enableEventEngine: Boolean = true,
         heartbeatNotificationOptions: PNHeartbeatNotificationOptions = PNHeartbeatNotificationOptions.ALL,
-        eventEngineConf: EventEngineConf<PresenceEffectInvocation, PresenceEvent> = QueueEventEngineConf()
+        eventEngineConf: EventEngineConf<PresenceEffectInvocation, PresenceEvent> = QueueEventEngineConf(),
+        presenceData: PresenceData = PresenceData()
     ) = create(
-        heartbeatInterval = heartbeatInterval,
-        retryPolicy = NoRetriesPolicy,
-        enableEventEngine = enableEventEngine,
-        eventEngineConf = eventEngineConf,
+        heartbeatProvider = { _, _, _ -> successfulRemoteAction(true) },
         leaveProvider = { _, _ -> successfulRemoteAction(true) },
-        heartbeatProvider = { _, _ -> successfulRemoteAction(true) },
+        heartbeatInterval = heartbeatInterval,
+        enableEventEngine = enableEventEngine,
+        retryPolicy = NoRetriesPolicy,
+        suppressLeaveEvents = false,
         heartbeatNotificationOptions = heartbeatNotificationOptions,
         listenerManager = listenerManager,
-        suppressLeaveEvents = false
+        eventEngineConf = eventEngineConf,
+        presenceData = presenceData,
+        sendStateWithHeartbeat = true
     )
 }

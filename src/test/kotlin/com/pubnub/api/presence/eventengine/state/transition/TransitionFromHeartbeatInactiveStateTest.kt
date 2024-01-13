@@ -48,14 +48,4 @@ class TransitionFromHeartbeatInactiveStateTest {
         assertEquals(PresenceState.HeartbeatInactive, newState)
         assertEquals(emptySet<PresenceEffectInvocation>(), invocations)
     }
-
-    @Test
-    fun `should not make transition from INACTIVE when there is SET_STATE event`() {
-        // when
-        val (newState, invocations) = transition(PresenceState.HeartbeatInactive, PresenceEvent.StateSet(channels, channelGroups))
-
-        // then
-        assertEquals(PresenceState.HeartbeatInactive, newState)
-        assertEquals(emptySet<PresenceEffectInvocation>(), invocations)
-    }
 }

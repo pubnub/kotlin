@@ -134,8 +134,16 @@ class MapperManager {
     }
 
     fun toJson(input: Any?): String {
-        return try {
-            this.objectMapper.toJson(input)
+        try {
+            return if (input is List<*> && input.javaClass.isAnonymousClass) {
+                objectMapper.toJson(input, List::class.java)
+            } else if (input is Map<*, *> && input.javaClass.isAnonymousClass) {
+                objectMapper.toJson(input, Map::class.java)
+            } else if (input is Set<*> && input.javaClass.isAnonymousClass) {
+                objectMapper.toJson(input, Set::class.java)
+            } else {
+                objectMapper.toJson(input)
+            }
         } catch (e: JsonParseException) {
             throw PubNubException(
                 pubnubError = PubNubError.JSON_ERROR,

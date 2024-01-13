@@ -13,23 +13,9 @@ class LeaveEffectTest {
     private val leaveRemoteAction: RemoteAction<Boolean> = mockk()
 
     @Test
-    fun `when suppressLeaveEvents is true should not call leaveRemoteAction`() {
+    fun `when runEffect is executed should call leaveRemoteAction`() {
         // given
-        val suppressLeaveEvents = true
-        val leaveEffect = LeaveEffect(leaveRemoteAction, suppressLeaveEvents)
-
-        // when
-        leaveEffect.runEffect()
-
-        // then
-        verify(exactly = 0) { leaveRemoteAction.async { _, _ -> } }
-    }
-
-    @Test
-    fun `when suppressLeaveEvents is false should call leaveRemoteAction`() {
-        // given
-        val suppressLeaveEvents = false
-        val leaveEffect = LeaveEffect(leaveRemoteAction, suppressLeaveEvents)
+        val leaveEffect = LeaveEffect(leaveRemoteAction)
         every { leaveRemoteAction.async(any()) } just Runs
 
         // when

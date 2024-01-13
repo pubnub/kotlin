@@ -87,6 +87,7 @@ import com.pubnub.api.models.consumer.objects.member.PNUUIDDetailsLevel
 import com.pubnub.api.models.consumer.objects.membership.ChannelMembershipInput
 import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
 import com.pubnub.api.presence.Presence
+import com.pubnub.api.presence.eventengine.data.PresenceData
 import com.pubnub.api.presence.eventengine.effect.effectprovider.HeartbeatProviderImpl
 import com.pubnub.api.presence.eventengine.effect.effectprovider.LeaveProviderImpl
 import com.pubnub.api.subscribe.Subscribe
@@ -133,12 +134,15 @@ class PubNub internal constructor(
     private val tokenParser: TokenParser = TokenParser()
     private val listenerManager = ListenerManager(this)
     internal val subscriptionManager = SubscriptionManager(this, listenerManager)
+    private val presenceData = PresenceData()
     private val subscribe = Subscribe.create(
         this,
         listenerManager,
         configuration.retryPolicy,
         eventEnginesConf,
-        SubscribeMessageProcessor(this, DuplicationManager(configuration))
+        SubscribeMessageProcessor(this, DuplicationManager(configuration)),
+        presenceData,
+        configuration.maintainPresenceState
     )
 
     private val presence = Presence.create(
@@ -150,7 +154,9 @@ class PubNub internal constructor(
         suppressLeaveEvents = configuration.suppressLeaveEvents,
         heartbeatNotificationOptions = configuration.heartbeatNotificationOptions,
         listenerManager = listenerManager,
-        eventEngineConf = eventEnginesConf.presence
+        eventEngineConf = eventEnginesConf.presence,
+        presenceData = presenceData,
+        sendStateWithHeartbeat = configuration.maintainPresenceState
     )
 
     //endregion
@@ -732,6 +738,12 @@ class PubNub internal constructor(
      *
      * State information is supplied as a JSON object of key/value pairs.
      *
+     * If [PNConfiguration.maintainPresenceState] is `true`, and the `uuid` matches [PNConfiguration.uuid], the state
+     * for channels will be saved in the PubNub client and resent with every heartbeat and initial subscribe request.
+     * In that case, it's not recommended to mix setting state through channels *and* channel groups, as state set
+     * through the channel group will be overwritten after the next heartbeat or subscribe reconnection (e.g. after loss
+     * of network).
+     *
      * @param channels Channels to set the state to.
      * @param channelGroups Channel groups to set the state to.
      * @param state The actual state object to set.
@@ -746,12 +758,13 @@ class PubNub internal constructor(
         channelGroups: List<String> = listOf(),
         state: Any,
         uuid: String = configuration.userId.value
-    ) = SetState(
+    ): SetState = SetState(
         pubnub = this,
         channels = channels,
         channelGroups = channelGroups,
         state = state,
-        uuid = uuid
+        uuid = uuid,
+        presenceData = presenceData,
     )
 
     /**
