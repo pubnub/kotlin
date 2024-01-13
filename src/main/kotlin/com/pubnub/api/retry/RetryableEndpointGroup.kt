@@ -1,49 +1,60 @@
 package com.pubnub.api.retry
 
 import com.pubnub.api.PubNub
-import com.pubnub.api.retry.RetryableEndpointGroup.ACCESS_MANAGER
-import com.pubnub.api.retry.RetryableEndpointGroup.APP_CONTEXT
-import com.pubnub.api.retry.RetryableEndpointGroup.CHANNEL_GROUP
-import com.pubnub.api.retry.RetryableEndpointGroup.FILE_PERSISTENCE
-import com.pubnub.api.retry.RetryableEndpointGroup.MESSAGE_PERSISTENCE
-import com.pubnub.api.retry.RetryableEndpointGroup.MESSAGE_REACTION
-import com.pubnub.api.retry.RetryableEndpointGroup.PRESENCE
-import com.pubnub.api.retry.RetryableEndpointGroup.PUBLISH
-import com.pubnub.api.retry.RetryableEndpointGroup.PUSH_NOTIFICATION
-import com.pubnub.api.retry.RetryableEndpointGroup.SUBSCRIBE
 
 /**
  * Enum representing various retryable endpoint groups.
- *
- * @property SUBSCRIBE Group for [PubNub.subscribe] operations.
- * @property PUBLISH Group for publish operations including [PubNub.publish], [PubNub.publishFileMessage], [PubNub.signal], [PubNub.fire].
- * @property PRESENCE Group for presence operations like [PubNub.getPresenceState], [PubNub.setPresenceState],
- *   [PubNub.hereNow], [PubNub.whereNow], [PubNub.presence] (Heartbeat), and Leave.
- * @property FILE_PERSISTENCE Group for file persistence operations including [PubNub.getFileUrl], [PubNub.deleteFile],
- *   [PubNub.listFiles], [PubNub.downloadFile], and [PubNub.sendFile].
- * @property MESSAGE_PERSISTENCE Group for message persistence operations such as [PubNub.fetchMessages],
- *   [PubNub.deleteMessages], [PubNub.messageCounts], and [PubNub.time].
- * @property CHANNEL_GROUP Group for channel group operations including [PubNub.listAllChannelGroups], [PubNub.deleteChannelGroup],
- *   [PubNub.removeChannelsFromChannelGroup], [PubNub.listChannelsForChannelGroup], and [PubNub.addChannelsToChannelGroup].
- * @property PUSH_NOTIFICATION Group for push notification operations like [PubNub.removeAllPushNotificationsFromDeviceWithPushToken],
- *   [PubNub.addPushNotificationsOnChannels], [PubNub.auditPushChannelProvisions], [PubNub.removePushNotificationsFromChannels],
- * @property APP_CONTEXT Group for application context operations including [PubNub.getAllUUIDMetadata], [PubNub.getUUIDMetadata],
- *   [PubNub.setUUIDMetadata], [PubNub.removeUUIDMetadata], [PubNub.getAllChannelMetadata], [PubNub.getChannelMetadata],
- *   [PubNub.removeChannelMetadata], [PubNub.setChannelMetadata], [PubNub.getChannelMembers], [PubNub.manageChannelMembers],
- *   [PubNub.getMemberships], and [PubNub.manageMemberships].
- * @property MESSAGE_REACTION Group for message reaction operations such as [PubNub.addMessageAction], [PubNub.getMessageActions], [PubNub.removeMessageAction].
- * @property ACCESS_MANAGER Group for access management operations including [PubNub.grant], [PubNub.grantToken], [PubNub.revokeToken].
+ * Each enum constant denotes a specific category of operations
+ * that can be retried under certain conditions.
  */
-
 enum class RetryableEndpointGroup {
+    /**
+     * Represents operation related to subscribing like [PubNub.subscribe]
+     */
     SUBSCRIBE,
+    /**
+     * Represents the group of operations related to publishing like [PubNub.publish], [PubNub.publishFileMessage], [PubNub.signal], [PubNub.fire]
+     */
     PUBLISH,
+    /**
+     * Represents the group of operations related to presence like [PubNub.getPresenceState], [PubNub.setPresenceState],
+     *   [PubNub.hereNow], [PubNub.whereNow], [PubNub.presence] (Heartbeat), and Leave.
+     */
     PRESENCE,
+    /**
+     * Represents the group of operations related to file persistence like [PubNub.getFileUrl], [PubNub.deleteFile],
+     *   [PubNub.listFiles], [PubNub.downloadFile], and [PubNub.sendFile].
+     */
     FILE_PERSISTENCE,
+    /**
+     * Represents the group of operations related to message persistence like [PubNub.fetchMessages],
+     *   [PubNub.deleteMessages], [PubNub.messageCounts], and [PubNub.time].
+     */
     MESSAGE_PERSISTENCE,
+    /**
+     * Represents the group of operations on channel group like  [PubNub.listAllChannelGroups], [PubNub.deleteChannelGroup],
+     *   [PubNub.removeChannelsFromChannelGroup], [PubNub.listChannelsForChannelGroup], and [PubNub.addChannelsToChannelGroup]
+     */
     CHANNEL_GROUP,
+    /**
+     * Represents the group of operations related to push notification like [PubNub.removeAllPushNotificationsFromDeviceWithPushToken],
+     *   [PubNub.addPushNotificationsOnChannels], [PubNub.auditPushChannelProvisions] and [PubNub.removePushNotificationsFromChannels]
+     */
     PUSH_NOTIFICATION,
+    /**
+     * Represents the group of operations related to application context like [PubNub.getAllUUIDMetadata], [PubNub.getUUIDMetadata],
+     *   [PubNub.setUUIDMetadata], [PubNub.removeUUIDMetadata], [PubNub.getAllChannelMetadata], [PubNub.getChannelMetadata],
+     *   [PubNub.removeChannelMetadata], [PubNub.setChannelMetadata], [PubNub.getChannelMembers], [PubNub.manageChannelMembers],
+     *   [PubNub.getMemberships], and [PubNub.manageMemberships]
+     */
     APP_CONTEXT,
+    /**
+     * Represents the group of operations related to message reaction like [PubNub.addMessageAction],
+     *   [PubNub.getMessageActions] and [PubNub.removeMessageAction]
+     */
     MESSAGE_REACTION,
+    /**
+     * Represents the group of operations related to access management like [PubNub.grant], [PubNub.grantToken], [PubNub.revokeToken]
+     */
     ACCESS_MANAGER,
 }

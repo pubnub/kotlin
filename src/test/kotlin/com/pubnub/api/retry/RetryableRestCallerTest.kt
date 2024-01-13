@@ -14,6 +14,7 @@ import retrofit2.Call
 import retrofit2.Response
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
+import kotlin.time.Duration
 
 private const val RETRY_AFTER_HEADER_NAME = "Retry-After"
 private const val RETRY_AFTER_VALUE = "3"
@@ -38,10 +39,10 @@ class RetryableRestCallerTest : RetryableTestBase() {
         every { response.headers()[RETRY_AFTER_HEADER_NAME] } returns RETRY_AFTER_VALUE
 
         // when
-        val delay = retryableRestCaller.getDelayBasedOnResponse(response)
+        val delay: Duration = retryableRestCaller.getDelayBasedOnResponse(response)
 
         // then
-        assertEquals(RETRY_AFTER_VALUE.toLong(), delay.seconds)
+        assertEquals(RETRY_AFTER_VALUE.toLong(), delay.inWholeSeconds)
     }
 
     @Test
@@ -58,7 +59,7 @@ class RetryableRestCallerTest : RetryableTestBase() {
         val delay = retryableRestCaller.getDelayBasedOnResponse(response)
 
         // then
-        assertEquals(delayInSec.toLong(), delay.seconds)
+        assertEquals(delayInSec.toLong(), delay.inWholeSeconds)
     }
 
     @Test
@@ -75,7 +76,7 @@ class RetryableRestCallerTest : RetryableTestBase() {
         val delay = retryableRestCaller.getDelayBasedOnResponse(response)
 
         // then
-        assertEquals(delayInSec.toLong(), delay.seconds)
+        assertEquals(delayInSec.toLong(), delay.inWholeSeconds)
     }
 
     @Test
@@ -93,7 +94,7 @@ class RetryableRestCallerTest : RetryableTestBase() {
         val delay = retryableRestCaller.getDelayBasedOnResponse(response)
 
         // then
-        assertEquals(delayInSec.toLong(), delay.seconds)
+        assertEquals(delayInSec.toLong(), delay.inWholeSeconds)
     }
 
     @Test

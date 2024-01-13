@@ -4,10 +4,11 @@ import org.slf4j.LoggerFactory
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.time.Duration
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import kotlin.random.Random
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
 
 internal abstract class RetryableCallback<T>(
     retryPolicy: RequestRetryPolicy,
@@ -73,13 +74,13 @@ internal abstract class RetryableCallback<T>(
 
     private fun retry(delay: Duration) {
         retryCount++
-        val randomDelayInMilliSec = random.nextInt(MAX_RANDOM_DELAY_IN_MILLI_SEC)
-        val effectiveDelay = delay.toMillis() + randomDelayInMilliSec
-        log.trace("Added random delay so effective retry delay is $effectiveDelay")
+        val randomDelayInMillis = random.nextInt(MAX_RANDOM_DELAY_IN_MILLIS)
+        val effectiveDelayInMillis = delay.inWholeMilliseconds + randomDelayInMillis
+        log.trace("Added random delay so effective retry delay is $effectiveDelayInMillis")
         // don't want to block the main thread in case of Android so using executor service
         executorService.execute {
             try {
-                Thread.sleep(effectiveDelay)
+                Thread.sleep(effectiveDelayInMillis)
                 call.clone().enqueue(this)
             } catch (e: InterruptedException) {
                 e.printStackTrace()
@@ -88,7 +89,7 @@ internal abstract class RetryableCallback<T>(
     }
 
     private fun getDelayForRetryOnFailure(): Duration {
-        return Duration.ofSeconds(getDelayFromRetryPolicy().toLong())
+        return getDelayFromRetryPolicy().seconds
     }
 
     private fun getDelayForRetryOnResponse(response: Response<T>): Duration {

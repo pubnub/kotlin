@@ -25,22 +25,22 @@ internal class RetryableRestCaller<T>(
         while (true) {
             val (response, exception) = executeRestCall()
             if (!shouldRetry(response) || numberOfAttempts++ >= maxRetryNumberFromConfiguration) {
-                if (response.isSuccessful || isHttpIssueRepresentedByErrorCodeNotByException(exception)) {
+                // http issue can be represented by error code inside unsuccessful response or by exception
+                // if it is represented by error code then we want to pass response for further processing
+                if (response.isSuccessful || exception == null) {
                     return response
                 } else {
-                    throw exception!!
+                    throw exception
                 }
             }
-            val randomDelayInMilliSec = random.nextInt(MAX_RANDOM_DELAY_IN_MILLI_SEC)
-            val effectiveDelay = getDelayBasedOnResponse(response).toMillis() + randomDelayInMilliSec
-            log.trace("Added random delay so effective retry delay is $effectiveDelay")
-            Thread.sleep(effectiveDelay) // we want to sleep here on current thread since this is synchronous call
+            val randomDelayInMillis = random.nextInt(MAX_RANDOM_DELAY_IN_MILLIS)
+            val effectiveDelayInMillis = getDelayBasedOnResponse(response).inWholeMilliseconds + randomDelayInMillis
+            log.trace("Added random delay so effective retry delay is $effectiveDelayInMillis")
+            Thread.sleep(effectiveDelayInMillis) // we want to sleep here on current thread since this is synchronous call
 
             call = call.clone()
         }
     }
-
-    private fun isHttpIssueRepresentedByErrorCodeNotByException(exception: Exception?) = exception == null
 
     private fun executeRestCall(): Pair<Response<T>, Exception?> {
         var pubNubException: Exception? = null

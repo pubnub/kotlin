@@ -5,9 +5,10 @@ import java.io.IOException
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
-import java.time.Duration
 import javax.net.ssl.SSLHandshakeException
 import kotlin.math.pow
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
 
 internal abstract class RetryableBase<T>(
     private val retryPolicy: RequestRetryPolicy,
@@ -15,7 +16,7 @@ internal abstract class RetryableBase<T>(
 ) {
 
     companion object {
-        const val MAX_RANDOM_DELAY_IN_MILLI_SEC = 1000 // random delay should be between 0 and 1000 milliseconds
+        const val MAX_RANDOM_DELAY_IN_MILLIS = 1000 // random delay should be between 0 and 1000 milliseconds
         private const val TOO_MANY_REQUESTS = 429
         const val SERVICE_UNAVAILABLE = 503
         private const val RETRY_AFTER_HEADER_NAME = "Retry-After"
@@ -58,7 +59,7 @@ internal abstract class RetryableBase<T>(
         val effectiveDelay: Duration = if (response.raw().code == TOO_MANY_REQUESTS) {
             calculateDelayForTooManyRequestError(response)
         } else {
-            Duration.ofSeconds(getDelayFromRetryPolicy().toLong())
+            getDelayFromRetryPolicy().seconds
         }
         return effectiveDelay
     }
@@ -91,10 +92,10 @@ internal abstract class RetryableBase<T>(
 
         return when {
             delayInSeconds != null && delayInSeconds > 0 -> {
-                Duration.ofSeconds(delayInSeconds.toLong())
+                delayInSeconds.seconds
             }
             else -> {
-                Duration.ofSeconds(getDelayFromRetryPolicy().toLong())
+                getDelayFromRetryPolicy().seconds
             }
         }
     }
@@ -102,7 +103,4 @@ internal abstract class RetryableBase<T>(
     private fun endpointIsNotExcludedFromRetryPolicy(excludedOperations: List<RetryableEndpointGroup>): Boolean =
         excludedOperations.contains(endpointGroupName).not()
 
-    private fun isNumeric(string: String?): Boolean {
-        return string?.toIntOrNull() != null
-    }
 }
