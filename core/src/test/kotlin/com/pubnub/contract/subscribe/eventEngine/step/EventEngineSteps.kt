@@ -1,7 +1,7 @@
 package com.pubnub.contract.subscribe.eventEngine.step
 
-import com.pubnub.api.PubNub
-import com.pubnub.api.callbacks.SubscribeCallback
+import com.pubnub.internal.PubNub
+import com.pubnub.internal.callbacks.SubscribeCallback
 import com.pubnub.api.enums.PNReconnectionPolicy
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
@@ -9,8 +9,8 @@ import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult
 import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
-import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
 import com.pubnub.contract.subscribe.eventEngine.state.EventEngineState
+import com.pubnub.internal.models.consumer.pubsub.objects.PNObjectEventResult
 import io.cucumber.datatable.DataTable
 import io.cucumber.java.en.Given
 import io.cucumber.java.en.Then
@@ -33,7 +33,7 @@ class EventEngineSteps(private val state: EventEngineState) {
 
     @When("I subscribe")
     fun i_subscribe() {
-        state.pubnub.addListener(object : SubscribeCallback() {
+        state.pubnub.addListener(object : SubscribeCallback<PubNub>() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
                 state.statusesList.add(pnStatus)
             }
@@ -68,7 +68,7 @@ class EventEngineSteps(private val state: EventEngineState) {
 
     @When("I subscribe with timetoken {long}")
     fun i_subscribe_with_timetoken(timetoken: Long) {
-        state.pubnub.addListener(object : SubscribeCallback() {
+        state.pubnub.addListener(object : SubscribeCallback<PubNub>() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
                 state.statusesList.add(pnStatus)
             }

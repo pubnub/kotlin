@@ -1,6 +1,6 @@
 package com.pubnub.api.models.consumer.channel_group
 
-import com.pubnub.api.PubNub
+import com.pubnub.internal.PubNub
 
 /**
  * Result of the [PubNub.addChannelsToChannelGroup] operation.

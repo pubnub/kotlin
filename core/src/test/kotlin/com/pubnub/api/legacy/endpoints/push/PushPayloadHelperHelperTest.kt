@@ -2,12 +2,12 @@ package com.pubnub.api.legacy.endpoints.push
 
 import com.pubnub.api.enums.PNPushEnvironment
 import com.pubnub.api.legacy.BaseTest
-import com.pubnub.api.models.consumer.push.payload.PushPayloadHelper
-import com.pubnub.api.models.consumer.push.payload.PushPayloadHelper.APNSPayload
-import com.pubnub.api.models.consumer.push.payload.PushPayloadHelper.APNSPayload.APNS2Configuration
-import com.pubnub.api.models.consumer.push.payload.PushPayloadHelper.APNSPayload.APS
-import com.pubnub.api.models.consumer.push.payload.PushPayloadHelper.FCMPayload
-import com.pubnub.api.models.consumer.push.payload.PushPayloadHelper.MPNSPayload
+import com.pubnub.internal.models.consumer.push.payload.PushPayloadHelper
+import com.pubnub.internal.models.consumer.push.payload.PushPayloadHelper.APNSPayload
+import com.pubnub.internal.models.consumer.push.payload.PushPayloadHelper.APNSPayload.APNS2Configuration
+import com.pubnub.internal.models.consumer.push.payload.PushPayloadHelper.APNSPayload.APS
+import com.pubnub.internal.models.consumer.push.payload.PushPayloadHelper.FCMPayload
+import com.pubnub.internal.models.consumer.push.payload.PushPayloadHelper.MPNSPayload
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull

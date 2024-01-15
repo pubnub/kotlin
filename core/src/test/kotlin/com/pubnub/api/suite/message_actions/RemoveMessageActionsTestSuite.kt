@@ -2,7 +2,7 @@ package com.pubnub.api.suite.message_actions
 
 import com.github.tomakehurst.wiremock.client.WireMock.delete
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
-import com.pubnub.api.endpoints.message_actions.RemoveMessageAction
+import com.pubnub.internal.endpoints.message_actions.RemoveMessageAction
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.message_actions.PNRemoveMessageActionResult
 import com.pubnub.api.suite.AUTH

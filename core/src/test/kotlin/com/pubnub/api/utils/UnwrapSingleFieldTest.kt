@@ -3,6 +3,7 @@ package com.pubnub.api.utils
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonSyntaxException
 import com.google.gson.annotations.JsonAdapter
+import com.pubnub.internal.utils.UnwrapSingleField
 import org.junit.Assert
 import org.junit.Assert.assertEquals
 import org.junit.Test

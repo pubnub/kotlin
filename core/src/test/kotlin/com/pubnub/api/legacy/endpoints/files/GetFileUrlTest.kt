@@ -1,7 +1,7 @@
 package com.pubnub.api.legacy.endpoints.files
 
-import com.pubnub.api.PNConfiguration
-import com.pubnub.api.PubNub
+import com.pubnub.internal.PNConfiguration
+import com.pubnub.internal.PubNub
 import com.pubnub.api.PubNubException
 import com.pubnub.api.UserId
 import okhttp3.HttpUrl.Companion.toHttpUrl

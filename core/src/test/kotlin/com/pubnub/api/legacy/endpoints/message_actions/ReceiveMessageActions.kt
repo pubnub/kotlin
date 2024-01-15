@@ -5,8 +5,8 @@ import com.github.tomakehurst.wiremock.client.WireMock.get
 import com.github.tomakehurst.wiremock.client.WireMock.stubFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 import com.pubnub.api.CommonUtils.failTest
-import com.pubnub.api.PubNub
-import com.pubnub.api.callbacks.SubscribeCallback
+import com.pubnub.internal.PubNub
+import com.pubnub.internal.callbacks.SubscribeCallback
 import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.listen
 import com.pubnub.api.models.consumer.PNStatus
@@ -66,7 +66,7 @@ class ReceiveMessageActions : BaseTest() {
 
         val success = AtomicBoolean()
 
-        pubnub.addListener(object : SubscribeCallback() {
+        pubnub.addListener(object : SubscribeCallback<PubNub>() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
             }
 
@@ -169,7 +169,7 @@ class ReceiveMessageActions : BaseTest() {
         val count = AtomicInteger()
         val success = AtomicBoolean()
 
-        pubnub.addListener(object : SubscribeCallback() {
+        pubnub.addListener(object : SubscribeCallback<PubNub>() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
             }
 

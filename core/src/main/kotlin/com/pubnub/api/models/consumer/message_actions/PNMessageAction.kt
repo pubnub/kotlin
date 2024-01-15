@@ -13,11 +13,14 @@ package com.pubnub.api.models.consumer.message_actions
  * @property value Message action's value.
  * @property messageTimetoken Timestamp when the actual message was created the message action belongs to.
  */
+
 open class PNMessageAction(
-    val type: String,
-    val value: String,
-    val messageTimetoken: Long
+    @JvmField var type: String,
+    @JvmField var value: String,
+    @JvmField var messageTimetoken: Long
 ) {
+
+    constructor() : this ("", "", 0L)
 
     internal constructor(pnMessageAction: PNMessageAction) : this(
         pnMessageAction.type,
@@ -31,12 +34,55 @@ open class PNMessageAction(
     /**
      * Message action's author.
      */
-    var uuid: String? = null
-        private set
+    @JvmField var uuid: String? = null
 
     /**
      * Timestamp when the message action was created.
      */
-    var actionTimetoken: Long? = null
-        private set
+    @JvmField var actionTimetoken: Long? = null
+
+    fun setType(type: String): PNMessageAction {
+        this.type = type
+        return this
+    }
+
+    fun setValue(value: String): PNMessageAction {
+        this.value = value
+        return this
+    }
+
+    fun setMessageTimetoken(messageTimetoken: Long): PNMessageAction {
+        this.messageTimetoken = messageTimetoken
+        return this
+    }
+
+    fun setUuid(uuid: String): PNMessageAction {
+        this.uuid = uuid
+        return this
+    }
+
+    fun setActionTimetoken(actionTimetoken: Long): PNMessageAction {
+        this.actionTimetoken = actionTimetoken
+        return this
+    }
+
+    fun getType(): String {
+        return this.type
+    }
+
+    fun getValue(): String {
+        return this.value
+    }
+
+    fun getMessageTimetoken(): Long? {
+        return this.messageTimetoken
+    }
+
+    fun getUuid(): String? {
+        return this.uuid
+    }
+
+    fun getActionTimetoken(): Long? {
+        return this.actionTimetoken
+    }
 }

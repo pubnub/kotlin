@@ -6,6 +6,7 @@ import com.google.gson.JsonObject
 import com.google.gson.reflect.TypeToken
 import com.pubnub.api.models.consumer.PNPublishResult
 import com.pubnub.api.models.consumer.PNStatus
+import com.pubnub.internal.PubNub
 import okhttp3.logging.HttpLoggingInterceptor
 import org.awaitility.Awaitility
 import org.awaitility.Durations

@@ -1,6 +1,7 @@
 package com.pubnub.api.retry
 
 import com.pubnub.api.listen
+import com.pubnub.internal.retry.RetryableCallback
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify

@@ -7,10 +7,10 @@ import com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.stubFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlMatching
 import com.pubnub.api.CommonUtils.assertPnException
-import com.pubnub.api.PubNub
+import com.pubnub.internal.PubNub
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
-import com.pubnub.api.callbacks.SubscribeCallback
+import com.pubnub.internal.callbacks.SubscribeCallback
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.listen
@@ -138,7 +138,7 @@ class SignalTest : BaseTest() {
 
         val success = AtomicBoolean()
 
-        pubnub.addListener(object : SubscribeCallback() {
+        pubnub.addListener(object : SubscribeCallback<PubNub>() {
             override fun signal(pubnub: PubNub, pnSignalResult: PNSignalResult) {
                 assertEquals("coolChannel", pnSignalResult.channel)
                 assertEquals("hello", pnSignalResult.message.asString)

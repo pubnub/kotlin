@@ -1,7 +1,7 @@
 package com.pubnub.api.models.consumer.presence
 
 import com.google.gson.JsonElement
-import com.pubnub.api.PubNub
+import com.pubnub.internal.PubNub
 
 /**
  * Result of the [PubNub.getPresenceState] operation.

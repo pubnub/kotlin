@@ -1,8 +1,8 @@
 package com.pubnub.api.models.consumer.pubsub
 
 import com.google.gson.JsonElement
-import com.pubnub.api.PubNub
-import com.pubnub.api.callbacks.SubscribeCallback
+import com.pubnub.internal.PubNub
+import com.pubnub.internal.callbacks.SubscribeCallback
 
 /**
  * Wrapper around a presence event received in [SubscribeCallback.presence].

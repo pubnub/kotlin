@@ -3,7 +3,7 @@ package com.pubnub.api.suite.message_actions
 import com.github.tomakehurst.wiremock.client.WireMock.equalToJson
 import com.github.tomakehurst.wiremock.client.WireMock.post
 import com.github.tomakehurst.wiremock.client.WireMock.urlMatching
-import com.pubnub.api.endpoints.message_actions.AddMessageAction
+import com.pubnub.internal.endpoints.message_actions.AddMessageAction
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.message_actions.PNAddMessageActionResult
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction

@@ -1,9 +1,9 @@
 package com.pubnub.contract.access.step
 
 import com.pubnub.api.PubNubException
-import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant
-import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant
-import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant
+import com.pubnub.internal.models.consumer.access_manager.v3.ChannelGrant
+import com.pubnub.internal.models.consumer.access_manager.v3.ChannelGroupGrant
+import com.pubnub.internal.models.consumer.access_manager.v3.UUIDGrant
 import com.pubnub.contract.access.state.GrantTokenState
 import com.pubnub.contract.state.World
 import io.cucumber.java.en.When

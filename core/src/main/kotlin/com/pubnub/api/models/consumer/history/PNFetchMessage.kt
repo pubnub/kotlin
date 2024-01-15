@@ -1,10 +1,10 @@
 package com.pubnub.api.models.consumer.history
 
 import com.google.gson.JsonElement
-import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubError
-import com.pubnub.api.endpoints.FetchMessages
 import com.pubnub.api.models.consumer.PNBoundedPage
+import com.pubnub.internal.PubNub
+import com.pubnub.internal.endpoints.FetchMessages
 
 /**
  * Result of the [PubNub.fetchMessages] operation.
@@ -39,11 +39,14 @@ data class PNFetchMessageItem(
     val uuid: String?,
     val message: JsonElement,
     val meta: JsonElement?,
-    val timetoken: Long,
+    val timetoken: Long?,
     val actions: Map<String, Map<String, List<Action>>>? = null,
     val messageType: HistoryMessageType?,
     val error: PubNubError? = null
-)
+) {
+    // for compatibility with legacy Java SDK
+    class Action(uuid: String, actionTimetoken: String) : com.pubnub.api.models.consumer.history.Action(uuid, actionTimetoken)
+}
 
 /**
  * Encapsulates a message action in terms of batch history.
@@ -51,7 +54,23 @@ data class PNFetchMessageItem(
  * @property uuid The UUID of the publisher.
  * @property actionTimetoken The publish timetoken of the message action.
  */
-data class Action(
+open class Action(
     val uuid: String,
     val actionTimetoken: String
-)
+) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Action) return false
+
+        if (uuid != other.uuid) return false
+        if (actionTimetoken != other.actionTimetoken) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = uuid.hashCode()
+        result = 31 * result + actionTimetoken.hashCode()
+        return result
+    }
+}

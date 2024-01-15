@@ -6,13 +6,15 @@ import com.pubnub.api.models.consumer.PNStatus
 
 interface ExtendedRemoteAction<Output> : RemoteAction<Output> {
     fun operationType(): PNOperationType
-    fun retry()
+    override fun retry()
 }
 
 interface RemoteAction<Output> : Cancelable {
     @Throws(PubNubException::class)
     fun sync(): Output?
     fun async(callback: (result: Output?, status: PNStatus) -> Unit)
+    fun retry()
+    override fun silentCancel()
 }
 
 interface Cancelable {

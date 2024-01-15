@@ -1,7 +1,5 @@
 package com.pubnub.api.retry
 
-import com.pubnub.api.PubNub
-
 /**
  * Enum representing various retryable endpoint groups.
  * Each enum constant denotes a specific category of operations

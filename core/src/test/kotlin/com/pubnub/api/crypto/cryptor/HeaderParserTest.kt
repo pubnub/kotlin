@@ -3,6 +3,8 @@ package com.pubnub.api.crypto.cryptor
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.crypto.CryptoModule
+import com.pubnub.internal.crypto.cryptor.HeaderParser
+import com.pubnub.internal.crypto.cryptor.ParseResult
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.`is`
 import org.junit.jupiter.api.Assertions.assertEquals

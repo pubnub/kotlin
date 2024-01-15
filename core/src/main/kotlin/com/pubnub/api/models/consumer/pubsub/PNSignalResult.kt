@@ -1,7 +1,7 @@
 package com.pubnub.api.models.consumer.pubsub
 
 import com.google.gson.JsonElement
-import com.pubnub.api.callbacks.SubscribeCallback
+import com.pubnub.internal.callbacks.SubscribeCallback
 
 /**
  * Wrapper around a signal received in [SubscribeCallback.signal].

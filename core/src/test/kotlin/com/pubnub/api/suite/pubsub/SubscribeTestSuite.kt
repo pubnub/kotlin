@@ -4,9 +4,9 @@ import com.github.tomakehurst.wiremock.client.WireMock.absent
 import com.github.tomakehurst.wiremock.client.WireMock.equalTo
 import com.github.tomakehurst.wiremock.client.WireMock.get
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
-import com.pubnub.api.endpoints.pubsub.Subscribe
+import com.pubnub.internal.endpoints.pubsub.Subscribe
 import com.pubnub.api.enums.PNOperationType
-import com.pubnub.api.models.server.SubscribeEnvelope
+import com.pubnub.internal.models.server.SubscribeEnvelope
 import com.pubnub.api.suite.AUTH
 import com.pubnub.api.suite.EndpointTestSuite
 import com.pubnub.api.suite.SUB

@@ -3,12 +3,12 @@ package com.pubnub.contract.crypto
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.crypto.CryptoModule
-import com.pubnub.api.crypto.cryptor.AesCbcCryptor
+import com.pubnub.internal.crypto.cryptor.AesCbcCryptor
 import com.pubnub.api.crypto.cryptor.Cryptor
-import com.pubnub.api.crypto.cryptor.LegacyCryptor
-import com.pubnub.api.vendor.Base64
-import com.pubnub.api.vendor.Crypto
-import com.pubnub.api.vendor.FileEncryptionUtil
+import com.pubnub.internal.crypto.cryptor.LegacyCryptor
+import com.pubnub.internal.vendor.Base64
+import com.pubnub.internal.vendor.Crypto
+import com.pubnub.internal.vendor.FileEncryptionUtil
 import com.pubnub.contract.getFileContentAsByteArray
 import io.cucumber.java.en.Given
 import io.cucumber.java.en.Then

@@ -1,11 +1,11 @@
-package com.pubnub.api.endpoints.pubsub
+package com.pubnub.internal.endpoints.pubsub
 
-import com.pubnub.api.PNConfiguration
-import com.pubnub.api.PubNub
 import com.pubnub.api.UserId
 import com.pubnub.api.crypto.CryptoModule
-import com.pubnub.api.managers.RetrofitManager
-import com.pubnub.api.services.PublishService
+import com.pubnub.internal.PNConfiguration
+import com.pubnub.internal.PubNub
+import com.pubnub.internal.managers.RetrofitManager
+import com.pubnub.internal.services.PublishService
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot

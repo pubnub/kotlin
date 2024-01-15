@@ -11,9 +11,9 @@ import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 import com.pubnub.api.CommonUtils.assertPnException
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
-import com.pubnub.api.endpoints.pubsub.Subscribe
+import com.pubnub.internal.endpoints.pubsub.Subscribe
 import com.pubnub.api.legacy.BaseTest
-import com.pubnub.api.models.server.SubscribeMessage
+import com.pubnub.internal.models.server.SubscribeMessage
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test

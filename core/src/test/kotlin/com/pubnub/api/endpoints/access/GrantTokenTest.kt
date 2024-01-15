@@ -1,16 +1,16 @@
-package com.pubnub.api.endpoints.access
+package com.pubnub.internal.endpoints.access
 
-import com.pubnub.api.PNConfiguration
-import com.pubnub.api.PubNub
-import com.pubnub.api.SpaceId
 import com.pubnub.api.UserId
-import com.pubnub.api.managers.RetrofitManager
-import com.pubnub.api.models.consumer.access_manager.sum.SpacePermissions
 import com.pubnub.api.models.consumer.access_manager.v3.PNGrantTokenResult
-import com.pubnub.api.models.server.access_manager.v3.GrantTokenData
-import com.pubnub.api.models.server.access_manager.v3.GrantTokenRequestBody
-import com.pubnub.api.models.server.access_manager.v3.GrantTokenResponse
-import com.pubnub.api.services.AccessManagerService
+import com.pubnub.internal.PNConfiguration
+import com.pubnub.internal.PubNub
+import com.pubnub.internal.SpaceId
+import com.pubnub.internal.managers.RetrofitManager
+import com.pubnub.internal.models.consumer.access_manager.sum.SpacePermissions
+import com.pubnub.internal.models.server.access_manager.v3.GrantTokenData
+import com.pubnub.internal.models.server.access_manager.v3.GrantTokenRequestBody
+import com.pubnub.internal.models.server.access_manager.v3.GrantTokenResponse
+import com.pubnub.internal.services.AccessManagerService
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK

@@ -1,7 +1,7 @@
 package com.pubnub.contract.presence.eventEngine.step
 
-import com.pubnub.api.PubNub
-import com.pubnub.api.callbacks.SubscribeCallback
+import com.pubnub.internal.PubNub
+import com.pubnub.internal.callbacks.SubscribeCallback
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.contract.subscribe.eventEngine.state.EventEngineState
@@ -55,7 +55,7 @@ class PresenceEventEngineSteps(private val state: EventEngineState) {
     @Then("I wait for getting Presence joined events")
     fun I_wait_for_getting_Presence_joined_events() {
         val atomic = AtomicInteger(0)
-        state.pubnub.addListener(object : SubscribeCallback() {
+        state.pubnub.addListener(object : SubscribeCallback<PubNub>() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
                 // do nothing
             }

@@ -1,6 +1,7 @@
 package com.pubnub.api
 
-import com.pubnub.api.PNConfiguration.Companion.isValid
+import com.pubnub.internal.PNConfiguration.Companion.isValid
+import com.pubnub.internal.PubNubUtil
 
 data class UserId(val value: String) {
     init {

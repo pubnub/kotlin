@@ -1,10 +1,10 @@
 package com.pubnub.contract.subscribe.eventEngine.state
 
-import com.pubnub.api.PubNub
-import com.pubnub.api.eventengine.QueueEventEngineConf
+import com.pubnub.internal.PubNub
+import com.pubnub.internal.eventengine.QueueEventEngineConf
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNEvent
-import com.pubnub.api.subscribe.eventengine.configuration.EventEnginesConf
+import com.pubnub.internal.subscribe.eventengine.configuration.EventEnginesConf
 import com.pubnub.contract.state.World
 import com.pubnub.contract.state.WorldState
 import java.util.concurrent.CopyOnWriteArrayList

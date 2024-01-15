@@ -14,7 +14,7 @@ import com.pubnub.api.CommonUtils.assertPnException
 import com.pubnub.api.CommonUtils.emptyJson
 import com.pubnub.api.CommonUtils.failTest
 import com.pubnub.api.CommonUtils.getSpecialCharsMap
-import com.pubnub.api.Endpoint
+import com.pubnub.internal.Endpoint
 import com.pubnub.api.PubNubError
 import com.pubnub.api.await
 import com.pubnub.api.encodedParam

@@ -7,7 +7,8 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonPrimitive
 import com.pubnub.api.PubNubError
 import com.pubnub.api.crypto.CryptoModule
-import com.pubnub.api.managers.MapperManager
+import com.pubnub.internal.extension.tryDecryptMessage
+import com.pubnub.internal.managers.MapperManager
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.params.ParameterizedTest

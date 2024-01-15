@@ -1,7 +1,7 @@
 package com.pubnub.api.legacy.managers
 
 import com.pubnub.api.legacy.BaseTest
-import com.pubnub.api.managers.PublishSequenceManager
+import com.pubnub.internal.managers.PublishSequenceManager
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

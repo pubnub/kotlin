@@ -15,7 +15,7 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.SignatureUtils.decomposeAndVerifySignature
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.legacy.BaseTest
-import com.pubnub.api.models.consumer.access_manager.PNAccessManagerKeyData
+import com.pubnub.internal.models.consumer.access_manager.PNAccessManagerKeyData
 import org.awaitility.Awaitility
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse

@@ -6,7 +6,7 @@ import com.github.tomakehurst.wiremock.client.WireMock.get
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 import com.google.gson.JsonObject
 import com.pubnub.api.PubNubError
-import com.pubnub.api.endpoints.FetchMessages
+import com.pubnub.internal.endpoints.FetchMessages
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.models.consumer.PNStatus
@@ -43,7 +43,7 @@ class FetchMessagesMetaActionsTestSuite : EndpointTestSuite<FetchMessages, PNFet
             JsonObject().apply { addProperty("color", "red") },
             result.channels["ch1"]!![0].meta
         )
-        assertEquals(100, result.channels["ch1"]!![0].timetoken)
+        assertEquals(100L, result.channels["ch1"]!![0].timetoken)
 
         val actions = result.channels["ch1"]!![0].actions
         assertEquals(1, actions!!.keys.size)

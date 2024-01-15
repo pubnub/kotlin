@@ -2,7 +2,8 @@ package com.pubnub.api.retry
 
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
-import com.pubnub.api.models.server.FetchMessagesEnvelope
+import com.pubnub.internal.models.server.FetchMessagesEnvelope
+import com.pubnub.internal.retry.RetryableRestCaller
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify

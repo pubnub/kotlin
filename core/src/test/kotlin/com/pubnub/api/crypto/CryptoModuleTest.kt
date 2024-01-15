@@ -2,11 +2,11 @@ package com.pubnub.api.crypto
 
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
-import com.pubnub.api.crypto.cryptor.AesCbcCryptor
 import com.pubnub.api.crypto.cryptor.Cryptor
-import com.pubnub.api.crypto.cryptor.LegacyCryptor
 import com.pubnub.api.crypto.data.EncryptedData
 import com.pubnub.api.crypto.data.EncryptedStreamData
+import com.pubnub.internal.crypto.cryptor.AesCbcCryptor
+import com.pubnub.internal.crypto.cryptor.LegacyCryptor
 import org.hamcrest.CoreMatchers
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.containsInAnyOrder

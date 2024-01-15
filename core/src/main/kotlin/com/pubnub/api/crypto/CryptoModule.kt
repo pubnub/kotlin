@@ -2,15 +2,14 @@ package com.pubnub.api.crypto
 
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
-import com.pubnub.api.crypto.cryptor.AesCbcCryptor
 import com.pubnub.api.crypto.cryptor.Cryptor
-import com.pubnub.api.crypto.cryptor.HeaderParser
-import com.pubnub.api.crypto.cryptor.LEGACY_CRYPTOR_ID
-import com.pubnub.api.crypto.cryptor.LegacyCryptor
-import com.pubnub.api.crypto.cryptor.ParseResult
 import com.pubnub.api.crypto.data.EncryptedData
 import com.pubnub.api.crypto.data.EncryptedStreamData
-import com.pubnub.api.vendor.Base64
+import com.pubnub.internal.crypto.cryptor.AesCbcCryptor
+import com.pubnub.internal.crypto.cryptor.HeaderParser
+import com.pubnub.internal.crypto.cryptor.LEGACY_CRYPTOR_ID
+import com.pubnub.internal.crypto.cryptor.LegacyCryptor
+import com.pubnub.internal.crypto.cryptor.ParseResult
 import java.io.BufferedInputStream
 import java.io.InputStream
 import java.io.SequenceInputStream
@@ -18,13 +17,16 @@ import java.lang.Integer.min
 
 private const val SIZE_OF_CRYPTOR_ID = 4
 
-class CryptoModule internal constructor(
+class CryptoModule private constructor(
+    @get:JvmSynthetic
     internal val primaryCryptor: Cryptor,
+    @get:JvmSynthetic
     internal val cryptorsForDecryptionOnly: List<Cryptor> = listOf(),
-    internal val headerParser: HeaderParser = HeaderParser()
+    private val headerParser: HeaderParser = HeaderParser()
 ) {
 
     companion object {
+        @JvmStatic
         fun createLegacyCryptoModule(cipherKey: String, randomIv: Boolean = true): CryptoModule {
             return CryptoModule(
                 primaryCryptor = LegacyCryptor(cipherKey, randomIv),
@@ -32,6 +34,7 @@ class CryptoModule internal constructor(
             )
         }
 
+        @JvmStatic
         fun createAesCbcCryptoModule(cipherKey: String, randomIv: Boolean = true): CryptoModule {
             return CryptoModule(
                 primaryCryptor = AesCbcCryptor(cipherKey),
@@ -39,6 +42,7 @@ class CryptoModule internal constructor(
             )
         }
 
+        @JvmStatic
         fun createNewCryptoModule(
             defaultCryptor: Cryptor,
             cryptorsForDecryptionOnly: List<Cryptor> = listOf()
@@ -169,10 +173,10 @@ class CryptoModule internal constructor(
 }
 
 internal fun CryptoModule.encryptString(inputString: String): String =
-    String(Base64.encode(encrypt(inputString.toByteArray()), Base64.NO_WRAP))
+    String(com.pubnub.internal.vendor.Base64.encode(encrypt(inputString.toByteArray()), com.pubnub.internal.vendor.Base64.NO_WRAP))
 
 internal fun CryptoModule.decryptString(inputString: String): String =
-    decrypt(Base64.decode(inputString, Base64.NO_WRAP)).toString(Charsets.UTF_8)
+    decrypt(com.pubnub.internal.vendor.Base64.decode(inputString, com.pubnub.internal.vendor.Base64.NO_WRAP)).toString(Charsets.UTF_8)
 
 // this method read data from stream and allows to read them again in subsequent reads without manual reset or repositioning
 internal fun BufferedInputStream.checkMinSize(size: Int, exceptionBlock: (Int) -> Unit) {

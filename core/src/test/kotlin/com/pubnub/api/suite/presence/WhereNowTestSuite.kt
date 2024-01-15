@@ -2,9 +2,9 @@ package com.pubnub.api.suite.presence
 
 import com.github.tomakehurst.wiremock.client.WireMock.get
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
-import com.pubnub.api.endpoints.presence.WhereNow
+import com.pubnub.internal.endpoints.presence.WhereNow
 import com.pubnub.api.enums.PNOperationType
-import com.pubnub.api.models.consumer.presence.PNWhereNowResult
+import com.pubnub.internal.models.consumer.presence.PNWhereNowResult
 import com.pubnub.api.suite.AUTH
 import com.pubnub.api.suite.EndpointTestSuite
 import com.pubnub.api.suite.SUB

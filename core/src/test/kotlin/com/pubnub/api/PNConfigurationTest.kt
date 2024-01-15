@@ -2,6 +2,8 @@ package com.pubnub.api
 
 import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.api.retry.RequestRetryPolicy
+import com.pubnub.internal.PNConfiguration
+import com.pubnub.internal.PubNub
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

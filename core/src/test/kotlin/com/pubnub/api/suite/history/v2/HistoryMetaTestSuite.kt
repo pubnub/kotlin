@@ -7,7 +7,7 @@ import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.pubnub.api.PubNubError
-import com.pubnub.api.endpoints.History
+import com.pubnub.internal.endpoints.History
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.history.PNHistoryResult

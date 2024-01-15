@@ -1,7 +1,5 @@
 package com.pubnub.api.enums
 
-import com.pubnub.api.callbacks.SubscribeCallback
-
 enum class PNHeartbeatNotificationOptions {
 
     /**

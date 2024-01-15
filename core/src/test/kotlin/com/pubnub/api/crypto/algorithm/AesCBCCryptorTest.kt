@@ -2,9 +2,9 @@ package com.pubnub.api.crypto.algorithm
 
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
-import com.pubnub.api.crypto.cryptor.AesCbcCryptor
 import com.pubnub.api.crypto.data.EncryptedData
 import com.pubnub.api.crypto.data.EncryptedStreamData
+import com.pubnub.internal.crypto.cryptor.AesCbcCryptor
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertArrayEquals
 import org.junit.jupiter.api.Assertions.assertEquals

@@ -6,6 +6,7 @@ enum class PNPushType(s: String) {
 
     APNS("apns"),
     MPNS("mpns"),
+    GCM("gcm"),
     FCM("gcm"),
     APNS2("apns2");
 
@@ -13,5 +14,9 @@ enum class PNPushType(s: String) {
 
     fun toParamString(): String {
         return value.lowercase(Locale.US)
+    }
+
+    override fun toString(): String {
+        return value
     }
 }

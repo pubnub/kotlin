@@ -4,6 +4,7 @@ import com.google.gson.GsonBuilder
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonSyntaxException
 import com.google.gson.annotations.JsonAdapter
+import com.pubnub.internal.utils.PolymorphicDeserializer
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test

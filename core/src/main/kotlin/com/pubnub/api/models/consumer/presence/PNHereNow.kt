@@ -1,8 +1,8 @@
 package com.pubnub.api.models.consumer.presence
 
 import com.google.gson.JsonElement
-import com.pubnub.api.PubNub
-import com.pubnub.api.endpoints.presence.HereNow
+import com.pubnub.internal.PubNub
+import com.pubnub.internal.endpoints.presence.HereNow
 
 /**
  * Result of the [PubNub.hereNow] operation.
