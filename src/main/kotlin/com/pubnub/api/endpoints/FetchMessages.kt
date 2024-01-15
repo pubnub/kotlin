@@ -10,6 +10,7 @@ import com.pubnub.api.models.consumer.history.HistoryMessageType
 import com.pubnub.api.models.consumer.history.PNFetchMessageItem
 import com.pubnub.api.models.consumer.history.PNFetchMessagesResult
 import com.pubnub.api.models.server.FetchMessagesEnvelope
+import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.api.toCsv
 import com.pubnub.extension.limit
 import com.pubnub.extension.nonPositiveToNull
@@ -107,6 +108,8 @@ class FetchMessages internal constructor(
     }
 
     override fun operationType() = PNOperationType.PNFetchMessagesOperation
+
+    override fun getEndpointGroupName(): RetryableEndpointGroup = RetryableEndpointGroup.MESSAGE_PERSISTENCE
 
     private fun addQueryParams(queryParams: MutableMap<String, String>) {
         queryParams["max"] = effectiveMax(page.limit, includeMessageActions, channels.size).toString()

@@ -9,6 +9,7 @@ import com.pubnub.api.models.consumer.objects.PNPage
 import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata
 import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadataArrayResult
 import com.pubnub.api.models.server.objects_api.EntityArrayEnvelope
+import com.pubnub.api.retry.RetryableEndpointGroup
 import retrofit2.Call
 import retrofit2.Response
 
@@ -42,7 +43,7 @@ class GetAllChannelMetadata internal constructor(
         }
     }
 
-    override fun operationType(): PNOperationType {
-        return PNOperationType.PNGetAllChannelsMetadataOperation
-    }
+    override fun operationType(): PNOperationType = PNOperationType.PNGetAllChannelsMetadataOperation
+
+    override fun getEndpointGroupName(): RetryableEndpointGroup = RetryableEndpointGroup.APP_CONTEXT
 }

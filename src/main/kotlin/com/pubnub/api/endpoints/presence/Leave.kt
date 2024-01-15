@@ -6,6 +6,7 @@ import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.PubNubUtil
 import com.pubnub.api.enums.PNOperationType
+import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.api.toCsv
 import retrofit2.Call
 import retrofit2.Response
@@ -43,4 +44,6 @@ class Leave internal constructor(pubnub: PubNub) : Endpoint<Void, Boolean>(pubnu
     override fun createResponse(input: Response<Void>) = true
 
     override fun operationType() = PNOperationType.PNUnsubscribeOperation
+
+    override fun getEndpointGroupName(): RetryableEndpointGroup = RetryableEndpointGroup.PRESENCE
 }

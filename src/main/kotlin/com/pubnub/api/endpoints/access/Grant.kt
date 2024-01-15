@@ -11,6 +11,7 @@ import com.pubnub.api.models.consumer.access_manager.PNAccessManagerGrantResult
 import com.pubnub.api.models.consumer.access_manager.PNAccessManagerKeyData
 import com.pubnub.api.models.server.Envelope
 import com.pubnub.api.models.server.access_manager.AccessManagerGrantPayload
+import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.api.toCsv
 import retrofit2.Call
 import retrofit2.Response
@@ -88,6 +89,8 @@ class Grant internal constructor(
     override fun operationType() = PNOperationType.PNAccessManagerGrant
 
     override fun isAuthRequired() = false
+
+    override fun getEndpointGroupName(): RetryableEndpointGroup = RetryableEndpointGroup.ACCESS_MANAGER
 
     private fun createKeyMap(input: JsonElement): Map<String, PNAccessManagerKeyData> {
         val result: MutableMap<String, PNAccessManagerKeyData> =

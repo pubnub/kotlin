@@ -5,6 +5,7 @@ import com.pubnub.api.PubNub
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.objects.PNRemoveMetadataResult
 import com.pubnub.api.models.server.objects_api.EntityEnvelope
+import com.pubnub.api.retry.RetryableEndpointGroup
 import retrofit2.Call
 import retrofit2.Response
 
@@ -24,7 +25,7 @@ class RemoveChannelMetadata(
         return input.body()?.let { PNRemoveMetadataResult(it.status) }
     }
 
-    override fun operationType(): PNOperationType {
-        return PNOperationType.PNRemoveChannelMetadataOperation
-    }
+    override fun operationType(): PNOperationType = PNOperationType.PNRemoveChannelMetadataOperation
+
+    override fun getEndpointGroupName(): RetryableEndpointGroup = RetryableEndpointGroup.APP_CONTEXT
 }

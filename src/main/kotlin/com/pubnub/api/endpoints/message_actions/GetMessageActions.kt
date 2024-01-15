@@ -7,6 +7,7 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.message_actions.PNGetMessageActionsResult
+import com.pubnub.api.retry.RetryableEndpointGroup
 import retrofit2.Call
 import retrofit2.Response
 import java.util.HashMap
@@ -47,6 +48,8 @@ class GetMessageActions internal constructor(
         )
 
     override fun operationType() = PNOperationType.PNGetMessageActions
+
+    override fun getEndpointGroupName(): RetryableEndpointGroup = RetryableEndpointGroup.MESSAGE_REACTION
 
     private fun addQueryParams(queryParams: MutableMap<String, String>) {
         page.start?.run { queryParams["start"] = this.toString().lowercase(Locale.getDefault()) }

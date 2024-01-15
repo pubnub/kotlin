@@ -7,6 +7,7 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.PubNubUtil
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.server.SubscribeEnvelope
+import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.api.toCsv
 import retrofit2.Call
 import retrofit2.Response
@@ -73,4 +74,6 @@ class Subscribe internal constructor(pubnub: PubNub) : Endpoint<SubscribeEnvelop
     }
 
     override fun operationType() = PNOperationType.PNSubscribeOperation
+
+    override fun getEndpointGroupName(): RetryableEndpointGroup = RetryableEndpointGroup.SUBSCRIBE
 }

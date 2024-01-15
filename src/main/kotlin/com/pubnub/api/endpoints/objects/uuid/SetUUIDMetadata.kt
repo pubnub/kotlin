@@ -8,6 +8,7 @@ import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadataResult
 import com.pubnub.api.models.server.objects_api.EntityEnvelope
 import com.pubnub.api.models.server.objects_api.UUIDMetadataInput
+import com.pubnub.api.retry.RetryableEndpointGroup
 import retrofit2.Call
 import retrofit2.Response
 import java.util.HashMap
@@ -58,4 +59,6 @@ class SetUUIDMetadata internal constructor(
     override fun operationType(): PNOperationType {
         return PNOperationType.PNSetUUIDMetadataOperation
     }
+
+    override fun getEndpointGroupName(): RetryableEndpointGroup = RetryableEndpointGroup.APP_CONTEXT
 }

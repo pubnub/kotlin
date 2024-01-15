@@ -8,6 +8,7 @@ import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNPushEnvironment
 import com.pubnub.api.enums.PNPushType
 import com.pubnub.api.models.consumer.push.PNPushListProvisionsResult
+import com.pubnub.api.retry.RetryableEndpointGroup
 import retrofit2.Call
 import retrofit2.Response
 import java.util.HashMap
@@ -64,4 +65,6 @@ class ListPushProvisions internal constructor(
         queryParams["environment"] = environment.name.lowercase(Locale.getDefault())
         topic?.run { queryParams["topic"] = this }
     }
+
+    override fun getEndpointGroupName(): RetryableEndpointGroup = RetryableEndpointGroup.PUSH_NOTIFICATION
 }

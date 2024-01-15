@@ -4,6 +4,7 @@ import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions
 import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.enums.PNReconnectionPolicy
+import com.pubnub.api.retry.RequestRetryPolicy
 import com.pubnub.api.subscribe.eventengine.effect.ExponentialPolicy
 import com.pubnub.api.subscribe.eventengine.effect.LinearPolicy
 import com.pubnub.api.subscribe.eventengine.effect.NoRetriesPolicy
@@ -394,4 +395,14 @@ open class PNConfiguration(
             PNReconnectionPolicy.EXPONENTIAL -> ExponentialPolicy(maxRetries = maximumReconnectionRetries)
         }
     }
+
+    /** todo  <--------------------------------
+     * Retry policy for requests.
+     *
+     *  Delay will very from provided value by random value.
+     *
+     * Defaults to [RequestRetryPolicy.None].
+     */
+
+    internal var newRetryPolicy: RequestRetryPolicy = RequestRetryPolicy.None
 }

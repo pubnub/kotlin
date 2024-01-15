@@ -6,6 +6,7 @@ import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsRemoveChannelResult
+import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.api.toCsv
 import retrofit2.Call
 import retrofit2.Response
@@ -52,4 +53,6 @@ class RemoveChannelChannelGroup internal constructor(
             queryParams["remove"] = channels.toCsv()
         }
     }
+
+    override fun getEndpointGroupName(): RetryableEndpointGroup = RetryableEndpointGroup.CHANNEL_GROUP
 }

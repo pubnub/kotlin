@@ -7,6 +7,7 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.crypto.encryptString
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.PNPublishResult
+import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.extension.numericString
 import com.pubnub.extension.quoted
 import com.pubnub.extension.valueString
@@ -70,6 +71,8 @@ class Publish internal constructor(
     override fun operationType() = PNOperationType.PNPublishOperation
 
     override fun isPubKeyRequired() = true
+
+    override fun getEndpointGroupName(): RetryableEndpointGroup = RetryableEndpointGroup.PUBLISH
 
     // region Parameters
     /**

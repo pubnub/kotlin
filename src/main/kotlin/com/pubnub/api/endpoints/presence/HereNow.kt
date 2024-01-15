@@ -8,10 +8,10 @@ import com.pubnub.api.models.consumer.presence.PNHereNowChannelData
 import com.pubnub.api.models.consumer.presence.PNHereNowOccupantData
 import com.pubnub.api.models.consumer.presence.PNHereNowResult
 import com.pubnub.api.models.server.Envelope
+import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.api.toCsv
 import retrofit2.Call
 import retrofit2.Response
-import java.util.HashMap
 
 /**
  * @see [PubNub.hereNow]
@@ -55,6 +55,8 @@ class HereNow internal constructor(
     }
 
     override fun operationType() = PNOperationType.PNHereNowOperation
+
+    override fun getEndpointGroupName(): RetryableEndpointGroup = RetryableEndpointGroup.PRESENCE
 
     private fun parseSingleChannelResponse(input: Envelope<JsonElement>): PNHereNowResult {
         val pnHereNowResult = PNHereNowResult(

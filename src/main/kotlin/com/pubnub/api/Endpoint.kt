@@ -14,8 +14,11 @@ import com.pubnub.api.enums.PNStatusCategory.PNTimeoutCategory
 import com.pubnub.api.enums.PNStatusCategory.PNUnexpectedDisconnectCategory
 import com.pubnub.api.enums.PNStatusCategory.PNUnknownCategory
 import com.pubnub.api.models.consumer.PNStatus
+import com.pubnub.api.retry.RetryableCallback
+import com.pubnub.api.retry.RetryableEndpointGroup
+import com.pubnub.api.retry.RetryableRestCaller
+import org.slf4j.LoggerFactory
 import retrofit2.Call
-import retrofit2.Callback
 import retrofit2.Response
 import java.io.IOException
 import java.net.ConnectException
@@ -32,7 +35,9 @@ import java.net.UnknownHostException
 abstract class Endpoint<Input, Output> protected constructor(protected val pubnub: PubNub) :
     ExtendedRemoteAction<Output> {
 
-    private companion object {
+    private val log = LoggerFactory.getLogger(this.javaClass.simpleName)
+
+    internal companion object {
         private const val SERVER_RESPONSE_BAD_REQUEST = 400
         private const val SERVER_RESPONSE_FORBIDDEN = 403
         private const val SERVER_RESPONSE_NOT_FOUND = 404
@@ -41,6 +46,8 @@ abstract class Endpoint<Input, Output> protected constructor(protected val pubnu
     private lateinit var cachedCallback: (result: Output?, status: PNStatus) -> Unit
     private lateinit var call: Call<Input>
     private var silenceFailures = false
+    private val retryableRestCaller =
+        RetryableRestCaller<Input>(pubnub.configuration.newRetryPolicy, getEndpointGroupName(), isEndpointRetryable())
 
     /**
      * Key-value object to pass with every PubNub API operation. Used for debugging purposes.
@@ -57,20 +64,12 @@ abstract class Endpoint<Input, Output> protected constructor(protected val pubnu
      */
     override fun sync(): Output? {
         validateParams()
-
         call = doWork(createBaseParams())
+        val response = retryableRestCaller.executeRestCallWithRetryPolicy(call)
+        return handleResponse(response)
+    }
 
-        val response =
-            try {
-                call.execute()
-            } catch (e: Exception) {
-                throw PubNubException(
-                    pubnubError = PubNubError.PARSING_ERROR,
-                    errorMessage = e.toString(),
-                    affectedCall = call
-                )
-            }
-
+    private fun handleResponse(response: Response<Input>): Output? {
         when {
             response.isSuccessful -> {
                 storeRequestLatency(response)
@@ -111,98 +110,100 @@ abstract class Endpoint<Input, Output> protected constructor(protected val pubnu
             return
         }
 
-        call.enqueue(object : Callback<Input> {
-
-            override fun onResponse(call: Call<Input>, response: Response<Input>) {
-
-                when {
-                    response.isSuccessful -> {
-                        // query params
-                        storeRequestLatency(response)
-                        try {
-                            Triple(PNAcknowledgmentCategory, checkAndCreateResponse(response), null)
-                        } catch (e: PubNubException) {
-                            Triple(PNMalformedResponseCategory, null, e)
-                        }.let {
-                            callback.invoke(
-                                it.second,
-                                createStatusResponse(
-                                    category = it.first,
-                                    response = response,
-                                    exception = it.third
+        call.enqueue(object : RetryableCallback<Input>(
+            call = call,
+            retryPolicy = pubnub.configuration.newRetryPolicy,
+            endpointGroupName = getEndpointGroupName(),
+            isEndpointRetryable = isEndpointRetryable()
+        ) {
+                override fun onFinalResponse(call: Call<Input>, response: Response<Input>) {
+                    when {
+                        response.isSuccessful -> {
+                            // query params
+                            storeRequestLatency(response)
+                            try {
+                                Triple(PNAcknowledgmentCategory, checkAndCreateResponse(response), null)
+                            } catch (e: PubNubException) {
+                                Triple(PNMalformedResponseCategory, null, e)
+                            }.let {
+                                callback.invoke(
+                                    it.second,
+                                    createStatusResponse(
+                                        category = it.first,
+                                        response = response,
+                                        exception = it.third
+                                    )
                                 )
-                            )
-                        }
-                    }
-                    else -> {
-                        val (errorString, errorJson) = extractErrorBody(response)
-
-                        val exception = PubNubException(
-                            pubnubError = PubNubError.HTTP_ERROR,
-                            errorMessage = errorString,
-                            jso = errorJson.toString(),
-                            statusCode = response.code(),
-                            affectedCall = call
-                        )
-
-                        val pnStatusCategory = when (response.code()) {
-                            SERVER_RESPONSE_FORBIDDEN -> PNAccessDeniedCategory
-                            SERVER_RESPONSE_BAD_REQUEST -> PNBadRequestCategory
-                            SERVER_RESPONSE_NOT_FOUND -> PNNotFoundCategory
-                            else -> PNUnknownCategory
-                        }
-
-                        callback.invoke(
-                            null,
-                            createStatusResponse(
-                                category = pnStatusCategory,
-                                response = response,
-                                exception = exception,
-                                errorBody = errorJson
-                            )
-                        )
-                        return
-                    }
-                }
-            }
-
-            override fun onFailure(call: Call<Input>, t: Throwable) {
-
-                if (silenceFailures)
-                    return
-
-                val (error: PubNubError, category: PNStatusCategory) =
-                    when (t) {
-                        is UnknownHostException -> {
-                            PubNubError.CONNECTION_NOT_SET to PNUnexpectedDisconnectCategory
-                        }
-                        is ConnectException -> {
-                            PubNubError.CONNECT_EXCEPTION to PNUnexpectedDisconnectCategory
-                        }
-                        is SocketTimeoutException -> {
-                            PubNubError.SUBSCRIBE_TIMEOUT to PNTimeoutCategory
-                        }
-                        is IOException -> {
-                            PubNubError.PARSING_ERROR to PNMalformedResponseCategory
-                        }
-                        is IllegalStateException -> {
-                            PubNubError.PARSING_ERROR to PNMalformedResponseCategory
+                            }
                         }
                         else -> {
-                            PubNubError.HTTP_ERROR to if (call.isCanceled) PNCancelledCategory else PNBadRequestCategory
+                            val (errorString, errorJson) = extractErrorBody(response)
+
+                            val exception = PubNubException(
+                                pubnubError = PubNubError.HTTP_ERROR,
+                                errorMessage = errorString,
+                                jso = errorJson.toString(),
+                                statusCode = response.code(),
+                                affectedCall = call
+                            )
+
+                            val pnStatusCategory = when (response.code()) {
+                                SERVER_RESPONSE_FORBIDDEN -> PNAccessDeniedCategory
+                                SERVER_RESPONSE_BAD_REQUEST -> PNBadRequestCategory
+                                SERVER_RESPONSE_NOT_FOUND -> PNNotFoundCategory
+                                else -> PNUnknownCategory
+                            }
+
+                            callback.invoke(
+                                null,
+                                createStatusResponse(
+                                    category = pnStatusCategory,
+                                    response = response,
+                                    exception = exception,
+                                    errorBody = errorJson
+                                )
+                            )
+                            return
                         }
                     }
+                }
 
-                val pubnubException = PubNubException(errorMessage = t.toString(), pubnubError = error)
-                callback.invoke(
-                    null,
-                    createStatusResponse(
-                        category = category,
-                        exception = pubnubException
+                override fun onFinalFailure(call: Call<Input>, t: Throwable) {
+                    if (silenceFailures)
+                        return
+
+                    val (error: PubNubError, category: PNStatusCategory) =
+                        when (t) {
+                            is UnknownHostException -> {
+                                PubNubError.CONNECTION_NOT_SET to PNUnexpectedDisconnectCategory
+                            }
+                            is ConnectException -> {
+                                PubNubError.CONNECT_EXCEPTION to PNUnexpectedDisconnectCategory
+                            }
+                            is SocketTimeoutException -> {
+                                PubNubError.SUBSCRIBE_TIMEOUT to PNTimeoutCategory
+                            }
+                            is IOException -> {
+                                PubNubError.PARSING_ERROR to PNMalformedResponseCategory
+                            }
+                            is IllegalStateException -> {
+                                PubNubError.PARSING_ERROR to PNMalformedResponseCategory
+                            }
+                            else -> {
+                                PubNubError.HTTP_ERROR to if (call.isCanceled) PNCancelledCategory else PNBadRequestCategory
+                            }
+                        }
+
+                    val pubnubException = PubNubException(errorMessage = t.toString(), pubnubError = error)
+                    callback.invoke(
+                        null,
+                        createStatusResponse(
+                            category = category,
+                            exception = pubnubException
+                        )
                     )
-                )
-            }
-        })
+                }
+            })
     }
 
     private fun storeRequestLatency(response: Response<Input>) {
@@ -461,4 +462,6 @@ abstract class Endpoint<Input, Output> protected constructor(protected val pubnu
     protected open fun isSubKeyRequired() = true
     protected open fun isPubKeyRequired() = false
     protected open fun isAuthRequired() = true
+    protected abstract fun getEndpointGroupName(): RetryableEndpointGroup
+    protected open fun isEndpointRetryable(): Boolean = true
 }

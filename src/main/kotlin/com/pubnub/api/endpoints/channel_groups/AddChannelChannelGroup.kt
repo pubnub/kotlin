@@ -6,6 +6,7 @@ import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsAddChannelResult
+import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.api.toCsv
 import retrofit2.Call
 import retrofit2.Response
@@ -45,6 +46,8 @@ class AddChannelChannelGroup internal constructor(
         PNChannelGroupsAddChannelResult()
 
     override fun operationType() = PNOperationType.PNAddChannelsToGroupOperation
+
+    override fun getEndpointGroupName(): RetryableEndpointGroup = RetryableEndpointGroup.CHANNEL_GROUP
 
     private fun addQueryParams(queryParams: MutableMap<String, String>) {
         if (channels.isNotEmpty()) {

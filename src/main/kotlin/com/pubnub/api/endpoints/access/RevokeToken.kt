@@ -7,6 +7,7 @@ import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.server.access_manager.v3.RevokeTokenResponse
+import com.pubnub.api.retry.RetryableEndpointGroup
 import retrofit2.Call
 import retrofit2.Response
 import java.net.URLEncoder
@@ -35,6 +36,7 @@ class RevokeToken(
 
     override fun operationType(): PNOperationType = PNOperationType.PNAccessManagerRevokeToken
     override fun isAuthRequired(): Boolean = false
+    override fun getEndpointGroupName(): RetryableEndpointGroup = RetryableEndpointGroup.ACCESS_MANAGER
 
     private fun repairEncoding(token: String): String {
         return URLEncoder.encode(token, "utf-8").replace("+", "%20")

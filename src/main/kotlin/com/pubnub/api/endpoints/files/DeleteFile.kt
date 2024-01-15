@@ -6,6 +6,7 @@ import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.files.PNDeleteFileResult
+import com.pubnub.api.retry.RetryableEndpointGroup
 import retrofit2.Call
 import retrofit2.Response
 
@@ -48,4 +49,5 @@ class DeleteFile(
     override fun isAuthRequired(): Boolean = true
     override fun isSubKeyRequired(): Boolean = true
     override fun isPubKeyRequired(): Boolean = false
+    override fun getEndpointGroupName(): RetryableEndpointGroup = RetryableEndpointGroup.FILE_PERSISTENCE
 }

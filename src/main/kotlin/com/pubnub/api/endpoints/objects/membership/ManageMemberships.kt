@@ -12,6 +12,7 @@ import com.pubnub.api.models.server.objects_api.ChangeMembershipInput
 import com.pubnub.api.models.server.objects_api.ChannelId
 import com.pubnub.api.models.server.objects_api.EntityArrayEnvelope
 import com.pubnub.api.models.server.objects_api.ServerMembershipInput
+import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.extension.toPNChannelMembershipArrayResult
 import retrofit2.Call
 import retrofit2.Response
@@ -52,4 +53,6 @@ class ManageMemberships internal constructor(
         input.toPNChannelMembershipArrayResult()
 
     override fun operationType(): PNOperationType = PNOperationType.ObjectsOperation()
+
+    override fun getEndpointGroupName(): RetryableEndpointGroup = RetryableEndpointGroup.APP_CONTEXT
 }

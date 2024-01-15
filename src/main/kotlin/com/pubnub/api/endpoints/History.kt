@@ -8,6 +8,7 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.history.PNHistoryItemResult
 import com.pubnub.api.models.consumer.history.PNHistoryResult
+import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.extension.tryDecryptMessage
 import retrofit2.Call
 import retrofit2.Response
@@ -110,6 +111,8 @@ class History internal constructor(
     }
 
     override fun operationType() = PNOperationType.PNHistoryOperation
+
+    override fun getEndpointGroupName(): RetryableEndpointGroup = RetryableEndpointGroup.MESSAGE_PERSISTENCE
 
     private fun addQueryParams(queryParams: MutableMap<String, String>) {
         queryParams["reverse"] = reverse.toString()
