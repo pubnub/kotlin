@@ -65,4 +65,7 @@ class Heartbeat internal constructor(
     override fun operationType() = PNOperationType.PNHeartbeatOperation
 
     override fun getEndpointGroupName(): RetryableEndpointGroup = RetryableEndpointGroup.PRESENCE
+
+    // it is excluded here because EE has dedicated logic for retry on Subscribe and Heartbeat
+    override fun isEndpointRetryable(): Boolean = false
 }

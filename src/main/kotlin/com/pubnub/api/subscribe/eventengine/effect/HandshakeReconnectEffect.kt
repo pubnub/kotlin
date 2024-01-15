@@ -41,6 +41,7 @@ internal class HandshakeReconnectEffect(
         }
 
         scheduled = executorService.schedule({
+            println("-=HandshakeReconnectEffect") // todo remove
             handshakeRemoteAction.async { result, status ->
                 if (status.error) {
                     subscribeEventSink.add(SubscribeEvent.HandshakeReconnectFailure(status.exception ?: PubNubException("Unknown error")))
@@ -60,4 +61,11 @@ internal class HandshakeReconnectEffect(
         handshakeRemoteAction.silentCancel()
         scheduled?.cancel(true)
     }
+
+//    private fun nextDelay(attempt: Int): Duration? {
+//        if (attempt >= maxRetries) {
+//            return null
+//        }
+//        return computeDelay(attempt)
+//    }
 }

@@ -10,12 +10,12 @@ private const val MAX_RETRIES_IN_EXPONENTIAL = 6
 /**
  * This sealed class represents the various retry policies for a request.
  */
-sealed class RequestRetryPolicy {
+sealed class RetryConfiguration {
 
     /**
      * None represents no retry policy in a network request
      */
-    object None : RequestRetryPolicy()
+    object None : RetryConfiguration()
 
     /**
      * This data class represents a linear retry policy for network requests with a delay between retries,
@@ -29,7 +29,7 @@ sealed class RequestRetryPolicy {
         var delayInSec: Int = MIN_DELAY, // min value is 2
         var maxRetryNumber: Int = MAX_RETRIES_IN_LINEAR, // max value is 10
         val excludedOperations: List<RetryableEndpointGroup> = emptyList()
-    ) : RequestRetryPolicy() {
+    ) : RetryConfiguration() {
         private val log = LoggerFactory.getLogger(this.javaClass.simpleName + "-" + "RequestRetryPolicy")
 
         init {
@@ -59,7 +59,7 @@ sealed class RequestRetryPolicy {
         var maxDelayInSec: Int = MAX_DELAY, // max value is 150
         var maxRetryNumber: Int = MAX_RETRIES_IN_EXPONENTIAL, // max value is 6
         val excludedOperations: List<RetryableEndpointGroup> = emptyList()
-    ) : RequestRetryPolicy() {
+    ) : RetryConfiguration() {
         private val log = LoggerFactory.getLogger(this.javaClass.simpleName + "-" + "RequestRetryPolicy")
 
         init {

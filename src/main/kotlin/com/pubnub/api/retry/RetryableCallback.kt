@@ -11,11 +11,11 @@ import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
 internal abstract class RetryableCallback<T>(
-    retryPolicy: RequestRetryPolicy,
+    retryConfiguration: RetryConfiguration,
     endpointGroupName: RetryableEndpointGroup,
     private val call: Call<T>,
     private val isEndpointRetryable: Boolean
-) : Callback<T>, RetryableBase<T>(retryPolicy, endpointGroupName) {
+) : Callback<T>, RetryableBase<T>(retryConfiguration, endpointGroupName) {
     private val log = LoggerFactory.getLogger(this.javaClass.simpleName)
     private var retryCount = 0
     private val random = Random.Default
@@ -44,7 +44,7 @@ internal abstract class RetryableCallback<T>(
         return !response.isSuccessful &&
             retryCount < maxRetryNumberFromConfiguration &&
             isErrorCodeRetryable(response.raw().code) &&
-            isRetryPolicySetForThisRestCall &&
+            isRetryConfSetForThisRestCall &&
             isEndpointRetryable
     }
 
@@ -52,7 +52,7 @@ internal abstract class RetryableCallback<T>(
         val exception = Exception(t)
         return retryCount < maxRetryNumberFromConfiguration &&
             isExceptionRetryable(exception) &&
-            isRetryPolicySetForThisRestCall &&
+            isRetryConfSetForThisRestCall &&
             isEndpointRetryable
     }
 
@@ -89,7 +89,7 @@ internal abstract class RetryableCallback<T>(
     }
 
     private fun getDelayForRetryOnFailure(): Duration {
-        return getDelayFromRetryPolicy().seconds
+        return getDelayFromRetryConfiguration().seconds
     }
 
     private fun getDelayForRetryOnResponse(response: Response<T>): Duration {

@@ -76,4 +76,7 @@ class Subscribe internal constructor(pubnub: PubNub) : Endpoint<SubscribeEnvelop
     override fun operationType() = PNOperationType.PNSubscribeOperation
 
     override fun getEndpointGroupName(): RetryableEndpointGroup = RetryableEndpointGroup.SUBSCRIBE
+
+    // it is excluded here because EE has dedicated logic for retry on Subscribe and Heartbeat
+    override fun isEndpointRetryable(): Boolean = false
 }

@@ -11,7 +11,7 @@ import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
 internal abstract class RetryableBase<T>(
-    private val retryPolicy: RequestRetryPolicy,
+    private val retryConfiguration: RetryConfiguration,
     private val endpointGroupName: RetryableEndpointGroup
 ) {
 
@@ -42,15 +42,15 @@ internal abstract class RetryableBase<T>(
 
     private var exponentialMultiplier = 0.0
 
-    internal val isRetryPolicySetForThisRestCall = when (retryPolicy) {
-        is RequestRetryPolicy.None -> false
+    internal val isRetryConfSetForThisRestCall = when (retryConfiguration) {
+        is RetryConfiguration.None -> false
 
-        is RequestRetryPolicy.Linear -> {
-            val excludedOperations = retryPolicy.excludedOperations
+        is RetryConfiguration.Linear -> {
+            val excludedOperations = retryConfiguration.excludedOperations
             endpointIsNotExcludedFromRetryPolicy(excludedOperations)
         }
-        is RequestRetryPolicy.Exponential -> {
-            val excludedOperations = retryPolicy.excludedOperations
+        is RetryConfiguration.Exponential -> {
+            val excludedOperations = retryConfiguration.excludedOperations
             endpointIsNotExcludedFromRetryPolicy(excludedOperations)
         }
     }
@@ -59,27 +59,27 @@ internal abstract class RetryableBase<T>(
         val effectiveDelay: Duration = if (response.raw().code == TOO_MANY_REQUESTS) {
             calculateDelayForTooManyRequestError(response)
         } else {
-            getDelayFromRetryPolicy().seconds
+            getDelayFromRetryConfiguration().seconds
         }
         return effectiveDelay
     }
 
-    internal fun getDelayFromRetryPolicy(): Int {
-        return when (retryPolicy) {
-            is RequestRetryPolicy.None -> 0
-            is RequestRetryPolicy.Linear -> retryPolicy.delayInSec
-            is RequestRetryPolicy.Exponential -> {
-                val delay: Int = (retryPolicy.minDelayInSec * 2.0.pow(exponentialMultiplier)).toInt()
+    internal fun getDelayFromRetryConfiguration(): Int {
+        return when (retryConfiguration) {
+            is RetryConfiguration.None -> 0
+            is RetryConfiguration.Linear -> retryConfiguration.delayInSec
+            is RetryConfiguration.Exponential -> {
+                val delay: Int = (retryConfiguration.minDelayInSec * 2.0.pow(exponentialMultiplier)).toInt()
                 exponentialMultiplier++
-                minOf(delay, retryPolicy.maxDelayInSec)
+                minOf(delay, retryConfiguration.maxDelayInSec)
             }
         }
     }
 
-    protected val maxRetryNumberFromConfiguration: Int = when (retryPolicy) {
-        is RequestRetryPolicy.None -> 0
-        is RequestRetryPolicy.Linear -> retryPolicy.maxRetryNumber
-        is RequestRetryPolicy.Exponential -> retryPolicy.maxRetryNumber
+    protected val maxRetryNumberFromConfiguration: Int = when (retryConfiguration) {
+        is RetryConfiguration.None -> 0
+        is RetryConfiguration.Linear -> retryConfiguration.maxRetryNumber
+        is RetryConfiguration.Exponential -> retryConfiguration.maxRetryNumber
     }
 
     internal fun isErrorCodeRetryable(errorCode: Int) = retryableStatusCodes.containsKey(errorCode)
@@ -95,7 +95,7 @@ internal abstract class RetryableBase<T>(
                 delayInSeconds.seconds
             }
             else -> {
-                getDelayFromRetryPolicy().seconds
+                getDelayFromRetryConfiguration().seconds
             }
         }
     }

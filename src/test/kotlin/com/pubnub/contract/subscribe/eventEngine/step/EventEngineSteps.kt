@@ -19,14 +19,14 @@ import org.awaitility.kotlin.await
 import org.hamcrest.CoreMatchers
 import org.hamcrest.MatcherAssert
 import org.hamcrest.Matchers
-import java.time.Duration
+// import java.time.Duration
 import java.util.concurrent.TimeUnit
 
 class EventEngineSteps(private val state: EventEngineState) {
 
     @Given("a linear reconnection policy with {int} retries")
     fun a_linear_reconnection_policy_with_retries(maxRetries: Int) {
-        state.configuration.linearReconnectionDelay = Duration.ofMillis(1)
+//        state.configuration.linearReconnectionDelay = Duration.ofMillis(1) // todo modify
         state.configuration.reconnectionPolicy = PNReconnectionPolicy.LINEAR
         state.configuration.maximumReconnectionRetries = maxRetries
     }

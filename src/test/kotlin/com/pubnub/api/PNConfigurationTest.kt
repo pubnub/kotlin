@@ -1,7 +1,7 @@
 package com.pubnub.api
 
 import com.pubnub.api.crypto.CryptoModule
-import com.pubnub.api.retry.RequestRetryPolicy
+import com.pubnub.api.retry.RetryConfiguration
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -78,42 +78,42 @@ class PNConfigurationTest {
     }
 
     @Test
-    fun `should set delay to 3 in RequestRetryPolicy Linear when user set it lower than 3`() {
+    fun `should set delay to 3 in RetryConfiguration Linear when user set it lower than 3`() {
         val config = PNConfiguration(userId = UserId(PubNub.generateUUID()))
-        config.newRetryPolicy = RequestRetryPolicy.Linear(delayInSec = 1, maxRetryNumber = 10)
+        config.retryConfiguration = RetryConfiguration.Linear(delayInSec = 1, maxRetryNumber = 10)
 
-        assertEquals(2, (config.newRetryPolicy as RequestRetryPolicy.Linear).delayInSec)
+        assertEquals(2, (config.retryConfiguration as RetryConfiguration.Linear).delayInSec)
     }
 
     @Test
-    fun `should set maxRetry to 10 in RequestRetryPolicy Linear when user set it above 10`() {
+    fun `should set maxRetry to 10 in RetryConfiguration Linear when user set it above 10`() {
         val config = PNConfiguration(userId = UserId(PubNub.generateUUID()))
-        config.newRetryPolicy = RequestRetryPolicy.Linear(delayInSec = 3, maxRetryNumber = 11)
+        config.retryConfiguration = RetryConfiguration.Linear(delayInSec = 3, maxRetryNumber = 11)
 
-        assertEquals(10, (config.newRetryPolicy as RequestRetryPolicy.Linear).maxRetryNumber)
+        assertEquals(10, (config.retryConfiguration as RetryConfiguration.Linear).maxRetryNumber)
     }
 
     @Test
-    fun `should set minDelayInSec to 2 in RequestRetryPolicy Exponential when user set it lower than 2`() {
+    fun `should set minDelayInSec to 2 in RetryConfiguration Exponential when user set it lower than 2`() {
         val config = PNConfiguration(userId = UserId(PubNub.generateUUID()))
-        config.newRetryPolicy = RequestRetryPolicy.Exponential(minDelayInSec = 1, maxDelayInSec = 10, maxRetryNumber = 10)
+        config.retryConfiguration = RetryConfiguration.Exponential(minDelayInSec = 1, maxDelayInSec = 10, maxRetryNumber = 10)
 
-        assertEquals(2, (config.newRetryPolicy as RequestRetryPolicy.Exponential).minDelayInSec)
+        assertEquals(2, (config.retryConfiguration as RetryConfiguration.Exponential).minDelayInSec)
     }
 
     @Test
-    fun `should set maxRetry to 6 in RequestRetryPolicy Exponential when user set it above 6`() {
+    fun `should set maxRetry to 6 in RetryConfiguration Exponential when user set it above 6`() {
         val config = PNConfiguration(userId = UserId(PubNub.generateUUID()))
-        config.newRetryPolicy = RequestRetryPolicy.Exponential(minDelayInSec = 5, maxDelayInSec = 10, maxRetryNumber = 10)
+        config.retryConfiguration = RetryConfiguration.Exponential(minDelayInSec = 5, maxDelayInSec = 10, maxRetryNumber = 10)
 
-        assertEquals(6, (config.newRetryPolicy as RequestRetryPolicy.Exponential).maxRetryNumber)
+        assertEquals(6, (config.retryConfiguration as RetryConfiguration.Exponential).maxRetryNumber)
     }
 
     @Test
-    fun `should set maxDelayInSec to 150 in RequestRetryPolicy Exponential when user set it above 150`() {
+    fun `should set maxDelayInSec to 150 in RetryConfiguration Exponential when user set it above 150`() {
         val config = PNConfiguration(userId = UserId(PubNub.generateUUID()))
-        config.newRetryPolicy = RequestRetryPolicy.Exponential(minDelayInSec = 5, maxDelayInSec = 10, maxRetryNumber = 10)
+        config.retryConfiguration = RetryConfiguration.Exponential(minDelayInSec = 5, maxDelayInSec = 10, maxRetryNumber = 10)
 
-        assertEquals(6, (config.newRetryPolicy as RequestRetryPolicy.Exponential).maxRetryNumber)
+        assertEquals(6, (config.retryConfiguration as RetryConfiguration.Exponential).maxRetryNumber)
     }
 }

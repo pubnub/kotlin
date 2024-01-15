@@ -4,7 +4,7 @@ import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions
 import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.api.enums.PNReconnectionPolicy
-import com.pubnub.api.retry.RequestRetryPolicy
+import com.pubnub.api.retry.RetryConfiguration
 import com.pubnub.api.subscribe.eventengine.effect.ExponentialPolicy
 import com.pubnub.api.subscribe.eventengine.effect.LinearPolicy
 import com.pubnub.api.subscribe.eventengine.effect.NoRetriesPolicy
@@ -51,7 +51,9 @@ open class PNConfiguration(
     )
     var uuid: String
         get() = userId.value
-        set(value) { userId = UserId(value) }
+        set(value) {
+            userId = UserId(value)
+        }
 
     private val log = LoggerFactory.getLogger("PNConfiguration")
 
@@ -131,7 +133,8 @@ open class PNConfiguration(
     var cryptoModule: CryptoModule? = null
         get() = field ?: if (cipherKey.isNotBlank()) {
             log.warn("cipherKey is deprecated. Use CryptoModule instead")
-            field = CryptoModule.createLegacyCryptoModule(cipherKey = cipherKey, randomIv = useRandomInitializationVector)
+            field =
+                CryptoModule.createLegacyCryptoModule(cipherKey = cipherKey, randomIv = useRandomInitializationVector)
             field
         } else null
 
@@ -141,6 +144,7 @@ open class PNConfiguration(
      * Defaults to `ps.pndsn.com`
      */
     var origin: String = ""
+//    var origin: String = "ps.pndsndfadfadfadfadkfjkqehrkjqhrqkehr.com"//todo remove
 
     /**
      * If set to `true`,  requests will be made over HTTPS.
@@ -170,6 +174,13 @@ open class PNConfiguration(
      *
      * Defaults to [PNReconnectionPolicy.NONE].
      */
+    // todo finish message
+    @Deprecated(
+        level = DeprecationLevel.WARNING,
+        message = """Instead of reconnectionPolicy and maximumReconnectionRetries use retryConfiguration 
+            e.g. config.retryConfiguration = RetryConfiguration.Linear(delayInSec = 3, maxRetryNumber = 5) 
+            or config.cryptoModule = RetryConfiguration.Exponential(minDelayInSec = 3, maxDelayInSec = 10, maxRetryNumber = 5)""",
+    )
     var reconnectionPolicy = PNReconnectionPolicy.NONE
 
     /**
@@ -278,9 +289,14 @@ open class PNConfiguration(
      *
      * The default value is `-1` which means unlimited retries.
      */
+    // todo finish message
+    @Deprecated(
+        level = DeprecationLevel.WARNING,
+        message = """Instead of reconnectionPolicy and maximumReconnectionRetries use retryConfiguration 
+            e.g. config.retryConfiguration = RetryConfiguration.Linear(delayInSec = 3, maxRetryNumber = 5) 
+            or config.cryptoModule = RetryConfiguration.Exponential(minDelayInSec = 3, maxDelayInSec = 10, maxRetryNumber = 5)""",
+    )
     var maximumReconnectionRetries = -1
-
-    internal var linearReconnectionDelay = Duration.ofSeconds(3)
 
     /**
      * @see [okhttp3.Dispatcher.setMaxRequestsPerHost]
@@ -389,20 +405,47 @@ open class PNConfiguration(
             PNReconnectionPolicy.NONE -> NoRetriesPolicy
             PNReconnectionPolicy.LINEAR -> LinearPolicy(
                 maxRetries = maximumReconnectionRetries,
-                fixedDelay = linearReconnectionDelay
+                fixedDelay = Duration.ofSeconds(3)
             )
 
             PNReconnectionPolicy.EXPONENTIAL -> ExponentialPolicy(maxRetries = maximumReconnectionRetries)
         }
     }
 
-    /** todo  <--------------------------------
-     * Retry policy for requests.
+    /**
+     * Retry configuration for requests.
+     *  Defaults to [RetryConfiguration.None].
      *
-     *  Delay will very from provided value by random value.
+     *  Use [RetryConfiguration.Linear] to set retry with linear delay interval
+     *  Use [RetryConfiguration.Exponential] to set retry with exponential delay interval
+     *  Delay will vary from provided value by random value.
      *
-     * Defaults to [RequestRetryPolicy.None].
      */
+    var retryConfiguration: RetryConfiguration = RetryConfiguration.None
 
-    internal var newRetryPolicy: RequestRetryPolicy = RequestRetryPolicy.None
+    internal val retryConfForOldSubscribeLoop: RetryConfiguration by lazy {
+        if (retryConfiguration != RetryConfiguration.None) {
+            retryConfiguration
+        } else {
+            val defaultRetryNumberForLinear = 10
+            val defaultRetryNumberForExponential = 6
+            when (reconnectionPolicy) {
+                PNReconnectionPolicy.NONE -> RetryConfiguration.None
+                PNReconnectionPolicy.LINEAR -> RetryConfiguration.Linear(
+                    maxRetryNumber = calculateMaximumReconnectionRetries(defaultRetryNumberForLinear),
+                )
+                PNReconnectionPolicy.EXPONENTIAL -> RetryConfiguration.Exponential(
+                    maxRetryNumber = calculateMaximumReconnectionRetries(defaultRetryNumberForExponential),
+                )
+            }
+        }
+    }
+
+    private fun calculateMaximumReconnectionRetries(maxRetryNumber: Int): Int {
+        return when {
+            maximumReconnectionRetries <= -1 -> maxRetryNumber
+            maximumReconnectionRetries > maxRetryNumber -> maxRetryNumber
+            else -> maximumReconnectionRetries
+        }
+    }
 }

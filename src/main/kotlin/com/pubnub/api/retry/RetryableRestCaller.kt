@@ -10,7 +10,7 @@ import retrofit2.Response
 import kotlin.random.Random
 
 internal class RetryableRestCaller<T>(
-    retryPolicy: RequestRetryPolicy,
+    retryPolicy: RetryConfiguration,
     endpointGroupName: RetryableEndpointGroup,
     private val isEndpointRetryable: Boolean
 ) : RetryableBase<T>(retryPolicy, endpointGroupName) {
@@ -19,7 +19,7 @@ internal class RetryableRestCaller<T>(
     private val random = Random.Default
     internal lateinit var call: Call<T>
 
-    internal fun executeRestCallWithRetryPolicy(callToBeExecuted: Call<T>): Response<T> {
+    internal fun executeRestCallWithRetryConf(callToBeExecuted: Call<T>): Response<T> {
         call = callToBeExecuted
         var numberOfAttempts = 0
         while (true) {
@@ -77,6 +77,6 @@ internal class RetryableRestCaller<T>(
     private fun shouldRetry(response: Response<T>) =
         !response.isSuccessful &&
             isErrorCodeRetryable(response.raw().code) &&
-            isRetryPolicySetForThisRestCall &&
+            isRetryConfSetForThisRestCall &&
             isEndpointRetryable
 }

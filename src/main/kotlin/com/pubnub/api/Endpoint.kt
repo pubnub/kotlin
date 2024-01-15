@@ -47,7 +47,7 @@ abstract class Endpoint<Input, Output> protected constructor(protected val pubnu
     private lateinit var call: Call<Input>
     private var silenceFailures = false
     private val retryableRestCaller =
-        RetryableRestCaller<Input>(pubnub.configuration.newRetryPolicy, getEndpointGroupName(), isEndpointRetryable())
+        RetryableRestCaller<Input>(pubnub.configuration.retryConfiguration, getEndpointGroupName(), isEndpointRetryable())
 
     /**
      * Key-value object to pass with every PubNub API operation. Used for debugging purposes.
@@ -65,7 +65,7 @@ abstract class Endpoint<Input, Output> protected constructor(protected val pubnu
     override fun sync(): Output? {
         validateParams()
         call = doWork(createBaseParams())
-        val response = retryableRestCaller.executeRestCallWithRetryPolicy(call)
+        val response = retryableRestCaller.executeRestCallWithRetryConf(call)
         return handleResponse(response)
     }
 
@@ -112,7 +112,7 @@ abstract class Endpoint<Input, Output> protected constructor(protected val pubnu
 
         call.enqueue(object : RetryableCallback<Input>(
             call = call,
-            retryPolicy = pubnub.configuration.newRetryPolicy,
+            retryConfiguration = pubnub.configuration.retryConfiguration,
             endpointGroupName = getEndpointGroupName(),
             isEndpointRetryable = isEndpointRetryable()
         ) {
