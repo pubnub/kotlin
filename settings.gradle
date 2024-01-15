@@ -5,4 +5,5 @@ pluginManagement {
     }
 }
 
-rootProject.name = 'pubnub-kotlin'
+rootProject.name = 'pubnub'
+include(":core")
