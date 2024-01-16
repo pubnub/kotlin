@@ -12,17 +12,17 @@ import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.condition.EnabledIf
 import retrofit2.Call
 import retrofit2.Response
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 import kotlin.time.Duration
+import kotlin.time.Duration.Companion.milliseconds
 
 private const val RETRY_AFTER_HEADER_NAME = "Retry-After"
 private const val RETRY_AFTER_VALUE = "3"
 
-class RetryableRestCallerTest : RetryableTestBase() {
+class RetryableRestCallerTest {
     private fun getRetryableRestCaller(
         retryConfiguration: RetryConfiguration,
         isEndpointRetryable: Boolean = true,
@@ -118,10 +118,10 @@ class RetryableRestCallerTest : RetryableTestBase() {
         val delayFromRetryConfiguration04 = retryableRestCaller.getDelayFromRetryConfiguration()
 
         // then
-        assertEquals(2, delayFromRetryConfiguration01)
-        assertEquals(4, delayFromRetryConfiguration02)
-        assertEquals(7, delayFromRetryConfiguration03)
-        assertEquals(7, delayFromRetryConfiguration04)
+        assertEquals(2, delayFromRetryConfiguration01.inWholeSeconds)
+        assertEquals(4, delayFromRetryConfiguration02.inWholeSeconds)
+        assertEquals(7, delayFromRetryConfiguration03.inWholeSeconds)
+        assertEquals(7, delayFromRetryConfiguration04.inWholeSeconds)
     }
 
     @Test
@@ -292,10 +292,9 @@ class RetryableRestCallerTest : RetryableTestBase() {
     }
 
     @Test
-    @EnabledIf("enableLongRunningRetryTests")
     fun `should retry successfully when linear retryConfiguration is set and response is not successful and http error is 500 and endpoint is not excluded from retryConfiguration`() {
         // given
-        val retryConfiguration = RetryConfiguration.Linear(delayInSec = 2, maxRetryNumber = 3)
+        val retryConfiguration = RetryConfiguration.Linear(delayInSec = 10.milliseconds, maxRetryNumber = 3, isInternal = true)
         val retryableRestCaller = getRetryableRestCaller(retryConfiguration = retryConfiguration)
         val mockCall = mockk<Call<FetchMessagesEnvelope>>()
         val errorResponse: Response<FetchMessagesEnvelope> =
@@ -314,14 +313,14 @@ class RetryableRestCallerTest : RetryableTestBase() {
     }
 
     @Test
-    @EnabledIf("enableLongRunningRetryTests")
     fun `should retry successfully when exponential retryConfiguration is set and response is not successful and http error is 500 and endpoint is not excluded from retryConfiguration`() {
         // given
         val retryConfiguration = RetryConfiguration.Exponential(
-            minDelayInSec = 2,
-            maxDelayInSec = 3,
+            minDelayInSec = 10.milliseconds,
+            maxDelayInSec = 15.milliseconds,
             maxRetryNumber = 2,
-            excludedOperations = emptyList()
+            excludedOperations = emptyList(),
+            isInternal = true
         )
         val retryableRestCaller = getRetryableRestCaller(retryConfiguration = retryConfiguration)
         val mockCall = mockk<Call<FetchMessagesEnvelope>>()
@@ -341,10 +340,9 @@ class RetryableRestCallerTest : RetryableTestBase() {
     }
 
     @Test
-    @EnabledIf("enableLongRunningRetryTests")
     fun `should retry successfully when linear retryConfiguration is set and SocketTimeoutException is thrown`() {
         // given
-        val retryConfiguration = RetryConfiguration.Linear(delayInSec = 2, maxRetryNumber = 2)
+        val retryConfiguration = RetryConfiguration.Linear(delayInSec = 10.milliseconds, maxRetryNumber = 2, isInternal = true)
         val retryableRestCaller = getRetryableRestCaller(retryConfiguration = retryConfiguration)
         val mockCall = mockk<Call<FetchMessagesEnvelope>>()
         val successfulResponse: Response<FetchMessagesEnvelope> = Response.success(null)
@@ -361,10 +359,9 @@ class RetryableRestCallerTest : RetryableTestBase() {
     }
 
     @Test
-    @EnabledIf("enableLongRunningRetryTests")
     fun `should retry and throw exception when linear retryConfiguration is set and UnknownHostException is thrown`() {
         // given
-        val retryConfiguration = RetryConfiguration.Linear(delayInSec = 2, maxRetryNumber = 2)
+        val retryConfiguration = RetryConfiguration.Linear(delayInSec = 10.milliseconds, maxRetryNumber = 2, isInternal = true)
         val retryableRestCaller = getRetryableRestCaller(retryConfiguration = retryConfiguration)
         val mockCall = mockk<Call<FetchMessagesEnvelope>>()
         every { mockCall.execute() } throws UnknownHostException() andThenThrows UnknownHostException() andThenThrows UnknownHostException()

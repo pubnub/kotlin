@@ -6,9 +6,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-import kotlin.random.Random
 import kotlin.time.Duration
-import kotlin.time.Duration.Companion.seconds
 
 internal abstract class RetryableCallback<T>(
     retryConfiguration: RetryConfiguration,
@@ -18,7 +16,6 @@ internal abstract class RetryableCallback<T>(
 ) : Callback<T>, RetryableBase<T>(retryConfiguration, endpointGroupName) {
     private val log = LoggerFactory.getLogger(this.javaClass.simpleName)
     private var retryCount = 0
-    private val random = Random.Default
     private var exponentialMultiplier = 0.0
     private val executorService: ExecutorService = Executors.newSingleThreadExecutor()
 
@@ -89,7 +86,7 @@ internal abstract class RetryableCallback<T>(
     }
 
     private fun getDelayForRetryOnFailure(): Duration {
-        return getDelayFromRetryConfiguration().seconds
+        return getDelayFromRetryConfiguration()
     }
 
     private fun getDelayForRetryOnResponse(response: Response<T>): Duration {

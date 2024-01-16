@@ -8,6 +8,7 @@ import com.pubnub.api.eventengine.ManagedEffect
 import com.pubnub.api.eventengine.Sink
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.presence.eventengine.data.PresenceData
+import com.pubnub.api.retry.RetryConfiguration
 import com.pubnub.api.subscribe.eventengine.effect.effectprovider.HandshakeProvider
 import com.pubnub.api.subscribe.eventengine.effect.effectprovider.ReceiveMessagesProvider
 import com.pubnub.api.subscribe.eventengine.event.SubscribeEvent
@@ -28,7 +29,7 @@ class SubscribeEffectFactoryTest {
     private val receiveMessageProvider = mockk<ReceiveMessagesProvider>()
     private val messagesConsumer = mockk<MessagesConsumer>()
     private val subscribeEventSink = mockk<Sink<SubscribeEvent>>()
-    private val policy = mockk<RetryPolicy>()
+    private val retryConfiguration = RetryConfiguration.Linear()
     private val executorService = mockk<ScheduledExecutorService>()
     private val channels = setOf("channel1")
     private val channelGroups = setOf("channelGroup1")
@@ -48,7 +49,7 @@ class SubscribeEffectFactoryTest {
             handshakeProvider,
             receiveMessageProvider,
             subscribeEventSink,
-            policy,
+            retryConfiguration,
             executorService,
             messagesConsumer,
             statusConsumer,
@@ -144,7 +145,7 @@ class SubscribeEffectFactoryTest {
             handshakeProvider,
             receiveMessageProvider,
             subscribeEventSink,
-            policy,
+            retryConfiguration,
             executorService,
             messagesConsumer,
             statusConsumer,

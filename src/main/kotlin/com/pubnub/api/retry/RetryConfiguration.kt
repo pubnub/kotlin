@@ -1,6 +1,8 @@
 package com.pubnub.api.retry
 
 import org.slf4j.LoggerFactory
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
 
 private const val MIN_DELAY = 2
 private const val MAX_DELAY = 150
@@ -23,23 +25,32 @@ sealed class RetryConfiguration {
      *
      * @property delayInSec The delay in seconds between retries. Minimum value is 3 seconds.
      * @property maxRetryNumber The maximum number of retries allowed. Maximum value is 10.
-     * @property excludedOperations Operations (Endpoints) to be excluded from retry.
+     * @property excludedOperations List of [RetryableEndpointGroup] to be excluded from retry.
      */
-    class Linear(
-        var delayInSec: Int = MIN_DELAY, // min value is 2
-        var maxRetryNumber: Int = MAX_RETRIES_IN_LINEAR, // max value is 10
-        val excludedOperations: List<RetryableEndpointGroup> = emptyList()
+    class Linear internal constructor(
+        var delayInSec: Duration = MIN_DELAY.seconds,
+        var maxRetryNumber: Int = MAX_RETRIES_IN_LINEAR,
+        val excludedOperations: List<RetryableEndpointGroup> = emptyList(),
+        isInternal: Boolean = false
     ) : RetryConfiguration() {
-        private val log = LoggerFactory.getLogger(this.javaClass.simpleName + "-" + "RequestRetryPolicy")
+        private val log = LoggerFactory.getLogger(this.javaClass.simpleName + "-" + "RetryConfiguration")
+
+        constructor(
+            delayInSec: Int = MIN_DELAY, // min value is 2
+            maxRetryNumber: Int = MAX_RETRIES_IN_LINEAR, // max value is 10
+            excludedOperations: List<RetryableEndpointGroup> = emptyList(),
+        ) : this(delayInSec.seconds, maxRetryNumber, excludedOperations, false)
 
         init {
-            if (delayInSec < MIN_DELAY) {
-                log.trace("Provided delay is less than $MIN_DELAY, setting it to $MIN_DELAY")
-                delayInSec = MIN_DELAY
-            }
-            if (maxRetryNumber > MAX_RETRIES_IN_LINEAR) {
-                log.trace("Provided maxRetryNumber is greater than $MAX_RETRIES_IN_LINEAR, setting it to $MAX_RETRIES_IN_LINEAR")
-                maxRetryNumber = MAX_RETRIES_IN_LINEAR
+            if (!isInternal) {
+                if (delayInSec < MIN_DELAY.seconds) {
+                    log.trace("Provided delay is less than $MIN_DELAY, setting it to $MIN_DELAY")
+                    delayInSec = MIN_DELAY.seconds
+                }
+                if (maxRetryNumber > MAX_RETRIES_IN_LINEAR) {
+                    log.trace("Provided maxRetryNumber is greater than $MAX_RETRIES_IN_LINEAR, setting it to $MAX_RETRIES_IN_LINEAR")
+                    maxRetryNumber = MAX_RETRIES_IN_LINEAR
+                }
             }
         }
     }
@@ -52,36 +63,46 @@ sealed class RetryConfiguration {
      * @property minDelayInSec The minimum delay in seconds between retries. Minimum value is 3 seconds.
      * @property maxDelayInSec The maximum delay in seconds between retries.
      * @property maxRetryNumber The maximum number of retries allowed. Maximum value is 10.
-     * @property excludedOperations Operations (Endpoints) to exclude from retry.
+     * @property excludedOperations List of [RetryableEndpointGroup] to be excluded from retry.
      */
-    class Exponential(
-        var minDelayInSec: Int = MIN_DELAY, // min value is 2
-        var maxDelayInSec: Int = MAX_DELAY, // max value is 150
+    class Exponential internal constructor(
+        var minDelayInSec: Duration = MIN_DELAY.seconds, // min value is 2
+        var maxDelayInSec: Duration = MAX_DELAY.seconds, // max value is 150
         var maxRetryNumber: Int = MAX_RETRIES_IN_EXPONENTIAL, // max value is 6
-        val excludedOperations: List<RetryableEndpointGroup> = emptyList()
+        val excludedOperations: List<RetryableEndpointGroup> = emptyList(),
+        isInternal: Boolean = false
     ) : RetryConfiguration() {
-        private val log = LoggerFactory.getLogger(this.javaClass.simpleName + "-" + "RequestRetryPolicy")
+        private val log = LoggerFactory.getLogger(this.javaClass.simpleName + "-" + "RetryConfiguration")
+
+        constructor(
+            minDelayInSec: Int = MIN_DELAY, // min value is 2
+            maxDelayInSec: Int = MAX_DELAY, // max value is 150
+            maxRetryNumber: Int = MAX_RETRIES_IN_EXPONENTIAL, // max value is 6
+            excludedOperations: List<RetryableEndpointGroup> = emptyList(),
+        ) : this(minDelayInSec.seconds, maxDelayInSec.seconds, maxRetryNumber, excludedOperations, false)
 
         init {
-            if (minDelayInSec < MIN_DELAY) {
-                log.trace("Provided minDelayInSec is less than $MIN_DELAY, setting it to $MIN_DELAY")
-                minDelayInSec = MIN_DELAY
-            }
-            if (minDelayInSec > MAX_DELAY) {
-                log.trace("Provided minDelayInSec is greater than $MAX_DELAY, setting it to $MAX_DELAY")
-                minDelayInSec = MAX_DELAY
-            }
-            if (maxDelayInSec > MAX_DELAY) {
-                log.trace("Provided maxDelayInSec is greater than $MAX_DELAY, setting it to $MAX_DELAY")
-                maxDelayInSec = MAX_DELAY
-            }
-            if (maxDelayInSec < minDelayInSec) {
-                log.trace("Provided maxDelayInSec is less than minDelayInSec, setting it to $minDelayInSec")
-                maxDelayInSec = minDelayInSec
-            }
-            if (maxRetryNumber > MAX_RETRIES_IN_EXPONENTIAL) {
-                log.trace("Provided maxRetryNumber is greater than $MAX_RETRIES_IN_EXPONENTIAL, setting it to $MAX_RETRIES_IN_EXPONENTIAL")
-                maxRetryNumber = MAX_RETRIES_IN_EXPONENTIAL
+            if (!isInternal) {
+                if (minDelayInSec < MIN_DELAY.seconds) {
+                    log.trace("Provided minDelayInSec is less than $MIN_DELAY, setting it to $MIN_DELAY")
+                    minDelayInSec = MIN_DELAY.seconds
+                }
+                if (minDelayInSec > MAX_DELAY.seconds) {
+                    log.trace("Provided minDelayInSec is greater than $MAX_DELAY, setting it to $MAX_DELAY")
+                    minDelayInSec = MAX_DELAY.seconds
+                }
+                if (maxDelayInSec > MAX_DELAY.seconds) {
+                    log.trace("Provided maxDelayInSec is greater than $MAX_DELAY, setting it to $MAX_DELAY")
+                    maxDelayInSec = MAX_DELAY.seconds
+                }
+                if (maxDelayInSec < minDelayInSec) {
+                    log.trace("Provided maxDelayInSec is less than minDelayInSec, setting it to $minDelayInSec")
+                    maxDelayInSec = minDelayInSec
+                }
+                if (maxRetryNumber > MAX_RETRIES_IN_EXPONENTIAL) {
+                    log.trace("Provided maxRetryNumber is greater than $MAX_RETRIES_IN_EXPONENTIAL, setting it to $MAX_RETRIES_IN_EXPONENTIAL")
+                    maxRetryNumber = MAX_RETRIES_IN_EXPONENTIAL
+                }
             }
         }
     }

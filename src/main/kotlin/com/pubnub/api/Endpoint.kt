@@ -144,7 +144,8 @@ abstract class Endpoint<Input, Output> protected constructor(protected val pubnu
                                 errorMessage = errorString,
                                 jso = errorJson.toString(),
                                 statusCode = response.code(),
-                                affectedCall = call
+                                affectedCall = call,
+                                retryAfterHeaderValue = response.headers()[RETRY_AFTER_HEADER_NAME]?.toIntOrNull()
                             )
 
                             val pnStatusCategory = when (response.code()) {

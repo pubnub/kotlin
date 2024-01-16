@@ -4,10 +4,10 @@ import com.pubnub.api.eventengine.ManagedEffect
 import com.pubnub.api.eventengine.Sink
 import com.pubnub.api.presence.eventengine.event.PresenceEvent
 import com.pubnub.extension.scheduleWithDelay
-import java.time.Duration
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.ScheduledFuture
+import kotlin.time.Duration
 
 internal class WaitEffect(
     private val heartbeatInterval: Duration,

@@ -7,16 +7,14 @@ import okhttp3.ResponseBody.Companion.toResponseBody
 import org.slf4j.LoggerFactory
 import retrofit2.Call
 import retrofit2.Response
-import kotlin.random.Random
 
 internal class RetryableRestCaller<T>(
-    retryPolicy: RetryConfiguration,
+    retryConfiguration: RetryConfiguration,
     endpointGroupName: RetryableEndpointGroup,
     private val isEndpointRetryable: Boolean
-) : RetryableBase<T>(retryPolicy, endpointGroupName) {
+) : RetryableBase<T>(retryConfiguration, endpointGroupName) {
 
     private val log = LoggerFactory.getLogger(this.javaClass.simpleName)
-    private val random = Random.Default
     internal lateinit var call: Call<T>
 
     internal fun executeRestCallWithRetryConf(callToBeExecuted: Call<T>): Response<T> {

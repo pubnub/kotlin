@@ -12,9 +12,9 @@ import com.pubnub.api.presence.eventengine.effect.PresenceEffectInvocation
 import com.pubnub.api.presence.eventengine.effect.effectprovider.HeartbeatProvider
 import com.pubnub.api.presence.eventengine.effect.effectprovider.LeaveProvider
 import com.pubnub.api.presence.eventengine.event.PresenceEvent
-import com.pubnub.api.subscribe.eventengine.effect.RetryPolicy
-import java.time.Duration
+import com.pubnub.api.retry.RetryConfiguration
 import java.util.concurrent.Executors
+import kotlin.time.Duration
 
 internal interface Presence {
     companion object {
@@ -23,7 +23,7 @@ internal interface Presence {
             leaveProvider: LeaveProvider,
             heartbeatInterval: Duration,
             enableEventEngine: Boolean,
-            retryPolicy: RetryPolicy,
+            retryConfiguration: RetryConfiguration,
             suppressLeaveEvents: Boolean,
             heartbeatNotificationOptions: PNHeartbeatNotificationOptions,
             listenerManager: ListenerManager,
@@ -39,7 +39,7 @@ internal interface Presence {
                 heartbeatProvider = heartbeatProvider,
                 leaveProvider = leaveProvider,
                 presenceEventSink = eventEngineConf.eventSink,
-                policy = retryPolicy,
+                retryConfiguration = retryConfiguration,
                 executorService = Executors.newSingleThreadScheduledExecutor(),
                 heartbeatInterval = heartbeatInterval,
                 suppressLeaveEvents = suppressLeaveEvents,

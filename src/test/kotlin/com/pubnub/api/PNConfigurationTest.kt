@@ -82,7 +82,7 @@ class PNConfigurationTest {
         val config = PNConfiguration(userId = UserId(PubNub.generateUUID()))
         config.retryConfiguration = RetryConfiguration.Linear(delayInSec = 1, maxRetryNumber = 10)
 
-        assertEquals(2, (config.retryConfiguration as RetryConfiguration.Linear).delayInSec)
+        assertEquals(2, (config.retryConfiguration as RetryConfiguration.Linear).delayInSec.inWholeSeconds)
     }
 
     @Test
@@ -98,7 +98,7 @@ class PNConfigurationTest {
         val config = PNConfiguration(userId = UserId(PubNub.generateUUID()))
         config.retryConfiguration = RetryConfiguration.Exponential(minDelayInSec = 1, maxDelayInSec = 10, maxRetryNumber = 10)
 
-        assertEquals(2, (config.retryConfiguration as RetryConfiguration.Exponential).minDelayInSec)
+        assertEquals(2, (config.retryConfiguration as RetryConfiguration.Exponential).minDelayInSec.inWholeSeconds)
     }
 
     @Test
