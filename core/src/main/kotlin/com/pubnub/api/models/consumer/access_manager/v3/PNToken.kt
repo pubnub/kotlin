@@ -27,6 +27,14 @@ data class PNToken(
         val update: Boolean = false,
         val join: Boolean = false
     ) {
+        val isRead: Boolean get() = read
+        val isWrite: Boolean get() = write
+        val isManage: Boolean get() = manage
+        val isDelete: Boolean get() = delete
+        val isGet: Boolean get() = get
+        val isUpdate: Boolean get() = update
+        val isJoin: Boolean get() = join
+
 
         constructor(grant: Int) : this(
             grant and TokenBitmask.READ != 0,

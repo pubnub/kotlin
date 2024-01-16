@@ -1,47 +1,30 @@
 package com.pubnub.api.endpoints.objects_api.uuid;
 
-import com.google.gson.JsonElement;
-import com.pubnub.api.PubNub;
-import com.pubnub.api.PubNubException;
-import com.pubnub.api.endpoints.objects_api.CompositeParameterEnricher;
-import com.pubnub.api.endpoints.objects_api.UUIDEndpoint;
-import com.pubnub.api.enums.PNOperationType;
-import com.pubnub.api.managers.RetrofitManager;
-import com.pubnub.api.managers.TelemetryManager;
-import com.pubnub.api.managers.token_manager.TokenManager;
+import com.pubnub.api.endpoints.Endpoint;
+import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
+import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.models.consumer.objects_api.uuid.PNRemoveUUIDMetadataResult;
-import com.pubnub.api.models.server.objects_api.EntityEnvelope;
-import retrofit2.Call;
-import retrofit2.Response;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
-import java.util.Collections;
-import java.util.Map;
+@Accessors(chain = true, fluent = true)
+public class RemoveUUIDMetadata extends Endpoint<PNRemoveUUIDMetadataResult> {
 
-public class RemoveUUIDMetadata extends UUIDEndpoint<RemoveUUIDMetadata, EntityEnvelope<JsonElement>, PNRemoveUUIDMetadataResult> {
+    @Setter
+    private String uuid;
 
-    public RemoveUUIDMetadata(final PubNub pubnubInstance,
-                              final TelemetryManager telemetry,
-                              final RetrofitManager retrofitInstance,
-                              TokenManager tokenManager) {
-        super(pubnubInstance, telemetry, retrofitInstance, CompositeParameterEnricher.createDefault(true, true), tokenManager);
+    public RemoveUUIDMetadata(final com.pubnub.internal.PubNub pubnub) {
+        super(pubnub);
     }
 
     @Override
-    protected Call<EntityEnvelope<JsonElement>> executeCommand(final Map<String, String> effectiveParams)
-            throws PubNubException {
-        return getRetrofit()
-                .getUuidMetadataService()
-                .deleteUUIDMetadata(getPubnub().getConfiguration().getSubscribeKey(), effectiveUuid(), Collections.emptyMap());
-    }
-
-    @Override
-    protected PNRemoveUUIDMetadataResult createResponse(Response<EntityEnvelope<JsonElement>> input)
-            throws PubNubException {
-        return new PNRemoveUUIDMetadataResult(input.body());
-    }
-
-    @Override
-    protected PNOperationType getOperationType() {
-        return PNOperationType.PNRemoveUuidMetadataOperation;
+    protected ExtendedRemoteAction<PNRemoveUUIDMetadataResult> createAction() {
+        return new MappingRemoteAction<>(
+                pubnub.removeUUIDMetadata(uuid),
+                result -> new PNRemoveUUIDMetadataResult(
+                        result.getStatus(),
+                        null
+                )
+        );
     }
 }

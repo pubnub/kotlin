@@ -1,7 +1,5 @@
 package com.pubnub.api.models.consumer.objects_api.member;
 
-import com.google.gson.annotations.JsonAdapter;
-import com.pubnub.api.models.consumer.objects_api.util.CustomPayloadJsonInterceptor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -51,7 +49,6 @@ public abstract class PNUUID {
     @EqualsAndHashCode(callSuper = true)
     @ToString
     public static class UUIDWithCustom extends PNUUID {
-        @JsonAdapter(CustomPayloadJsonInterceptor.class)
         private final Object custom;
 
         private UUIDWithCustom(UUIDId uuid, Object custom, String status) {

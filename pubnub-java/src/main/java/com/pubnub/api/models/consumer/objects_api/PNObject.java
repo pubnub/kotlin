@@ -1,7 +1,5 @@
 package com.pubnub.api.models.consumer.objects_api;
 
-import com.google.gson.annotations.JsonAdapter;
-import com.pubnub.api.models.consumer.objects_api.util.CustomPayloadJsonInterceptor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,11 +15,13 @@ public class PNObject {
     @EqualsAndHashCode.Include
     protected String id;
 
-    @JsonAdapter(CustomPayloadJsonInterceptor.class)
     @Setter
     protected Object custom;
 
+    @Setter
     protected String updated;
+
+    @Setter
     protected String eTag;
 
     protected PNObject(String id) {
@@ -31,3 +31,5 @@ public class PNObject {
     protected PNObject() {
     }
 }
+
+

@@ -2,7 +2,6 @@ package com.pubnub.api.integration;
 
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
-import com.pubnub.api.callbacks.PNCallback;
 import com.pubnub.api.callbacks.SubscribeCallback;
 import com.pubnub.api.enums.PNStatusCategory;
 import com.pubnub.api.integration.util.BaseIntegrationTest;
@@ -20,7 +19,6 @@ import com.pubnub.api.models.consumer.pubsub.PNSignalResult;
 import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult;
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -107,6 +105,8 @@ public class FilesIntegrationTests extends BaseIntegrationTest {
             }
         }
         Assert.assertTrue(fileFoundOnList);
+
+        pause(2);
 
         PNDownloadFileResult downloadResult = pubNub
                 .downloadFile()

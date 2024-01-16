@@ -3,7 +3,10 @@ package com.pubnub.contract.step
 import com.pubnub.contract.state.World
 import io.cucumber.java.en.Then
 import org.json.JSONObject
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 
 
 class ThenSteps(private val world: World) {

@@ -1,26 +1,11 @@
 package com.pubnub.contract
 
-import com.pubnub.api.PNConfiguration
-import com.pubnub.api.PubNub
-import com.pubnub.api.callbacks.SubscribeCallback
-import com.pubnub.api.enums.PNLogVerbosity
-import com.pubnub.api.models.consumer.PNStatus
-import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant
-import com.pubnub.api.models.consumer.objects_api.channel.PNChannelMetadataResult
-import com.pubnub.api.models.consumer.objects_api.membership.PNMembershipResult
-import com.pubnub.api.models.consumer.objects_api.uuid.PNUUIDMetadataResult
-import com.pubnub.api.models.consumer.pubsub.PNMessageResult
-import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
-import com.pubnub.api.models.consumer.pubsub.PNSignalResult
-import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
-import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
 import io.cucumber.java.After
 import io.cucumber.java.Before
 import io.cucumber.java.Scenario
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.junit.Assert.fail
-import org.junit.Test
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 

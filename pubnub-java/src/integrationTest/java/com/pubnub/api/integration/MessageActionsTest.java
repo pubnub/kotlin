@@ -230,6 +230,8 @@ public class MessageActionsTest extends BaseIntegrationTest {
                     .sync();
         }
 
+        pause(1); // otherwise last message action is not delivered in response and test is flaky
+
         final AtomicBoolean success = new AtomicBoolean();
         final AtomicInteger count = new AtomicInteger(0);
 
@@ -706,7 +708,7 @@ public class MessageActionsTest extends BaseIntegrationTest {
                 )
                 .async((result, status) -> {
                     assertTrue(status.isError());
-                    assertEquals(409, status.getStatusCode());
+                    assertEquals(409, status.getStatusCode().intValue());
                     success.set(true);
 
                 });

@@ -2,17 +2,171 @@ package com.pubnub.api.callbacks;
 
 import com.pubnub.api.PubNub;
 import com.pubnub.api.models.consumer.PNStatus;
+import com.pubnub.api.models.consumer.objects_api.channel.PNChannelMetadata;
 import com.pubnub.api.models.consumer.objects_api.channel.PNChannelMetadataResult;
+import com.pubnub.api.models.consumer.objects_api.membership.PNMembership;
 import com.pubnub.api.models.consumer.objects_api.membership.PNMembershipResult;
+import com.pubnub.api.models.consumer.objects_api.uuid.PNUUIDMetadata;
 import com.pubnub.api.models.consumer.objects_api.uuid.PNUUIDMetadataResult;
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult;
 import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult;
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult;
+import com.pubnub.internal.models.consumer.pubsub.objects.PNDeleteChannelMetadataEventMessage;
+import com.pubnub.internal.models.consumer.pubsub.objects.PNDeleteMembershipEventMessage;
+import com.pubnub.internal.models.consumer.pubsub.objects.PNDeleteUUIDMetadataEventMessage;
+import com.pubnub.internal.models.consumer.pubsub.objects.PNObjectEventMessage;
+import com.pubnub.internal.models.consumer.pubsub.objects.PNObjectEventResult;
+import com.pubnub.internal.models.consumer.pubsub.objects.PNSetChannelMetadataEventMessage;
+import com.pubnub.internal.models.consumer.pubsub.objects.PNSetMembershipEvent;
+import com.pubnub.internal.models.consumer.pubsub.objects.PNSetMembershipEventMessage;
+import com.pubnub.internal.models.consumer.pubsub.objects.PNSetUUIDMetadataEventMessage;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class SubscribeCallback {
+public abstract class SubscribeCallback extends com.pubnub.internal.callbacks.SubscribeCallback<PubNub> {
+
+    @Override
+    public final void objects(@NotNull PubNub pubnub, @NotNull PNObjectEventResult objectEvent) {
+        PNObjectEventMessage message = objectEvent.getExtractedMessage();
+        if (message instanceof PNDeleteMembershipEventMessage) {
+            PNMembershipResult result = getDeleteMembershipResult(objectEvent, (PNDeleteMembershipEventMessage) message);
+            membership(pubnub, result);
+        } else if (message instanceof PNSetMembershipEventMessage) {
+            PNMembershipResult result = getSetMembershipResult(objectEvent, (PNSetMembershipEventMessage) message);
+            membership(pubnub, result);
+        } else if (message instanceof PNDeleteChannelMetadataEventMessage) {
+            PNChannelMetadataResult result = getDeleteChannelMetadataResult(objectEvent, (PNDeleteChannelMetadataEventMessage) message);
+            channel(pubnub, result);
+        } else if (message instanceof PNSetChannelMetadataEventMessage) {
+            PNChannelMetadataResult result = getSetChannelMetadataResult(objectEvent, (PNSetChannelMetadataEventMessage) message);
+            channel(pubnub, result);
+        } else if (message instanceof PNDeleteUUIDMetadataEventMessage) {
+            PNUUIDMetadataResult result = getDeleteUuidMetadataResult(objectEvent, (PNDeleteUUIDMetadataEventMessage) message);
+            uuid(pubnub, result);
+        } else if (message instanceof PNSetUUIDMetadataEventMessage) {
+            PNUUIDMetadataResult result = getSetUuidMetadataResult(objectEvent, (PNSetUUIDMetadataEventMessage) message);
+            uuid(pubnub, result);
+        }
+    }
+
+    @NotNull
+    private static PNUUIDMetadataResult getSetUuidMetadataResult(PNObjectEventResult objectEvent, PNSetUUIDMetadataEventMessage message) {
+        com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata data = message.getData();
+        PNUUIDMetadata newData = new PNUUIDMetadata(
+                data.getId(), data.getName()
+        );
+        newData.setType(data.getType());
+        newData.setStatus(data.getStatus());
+        newData.setCustom(data.getCustom());
+        newData.setUpdated(data.getUpdated());
+        newData.setETag(data.getETag());
+        newData.setEmail(data.getEmail());
+        newData.setExternalId(data.getExternalId());
+        newData.setProfileUrl(data.getProfileUrl());
+        return new PNUUIDMetadataResult(
+                message.getEvent(),
+                newData,
+                objectEvent.getChannel(),
+                objectEvent.getSubscription(),
+                objectEvent.getTimetoken(),
+                objectEvent.getUserMetadata(),
+                objectEvent.getPublisher()
+        );
+    }
+
+    @NotNull
+    private static PNUUIDMetadataResult getDeleteUuidMetadataResult(PNObjectEventResult objectEvent, PNDeleteUUIDMetadataEventMessage message) {
+        return new PNUUIDMetadataResult(
+                message.getEvent(),
+                new PNUUIDMetadata(
+                        message.getUuid(), null
+                ),
+                objectEvent.getChannel(),
+                objectEvent.getSubscription(),
+                objectEvent.getTimetoken(),
+                objectEvent.getUserMetadata(),
+                objectEvent.getPublisher()
+        );
+    }
+
+    @NotNull
+    private static PNChannelMetadataResult getSetChannelMetadataResult(PNObjectEventResult objectEvent, PNSetChannelMetadataEventMessage message) {
+        com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata data = message.getData();
+        PNChannelMetadata newData = new PNChannelMetadata(
+                data.getId(), data.getName(), data.getDescription()
+        );
+        newData.setType(data.getType());
+        newData.setStatus(data.getStatus());
+        newData.setCustom(data.getCustom());
+        newData.setUpdated(data.getUpdated());
+        newData.setETag(data.getETag());
+        return new PNChannelMetadataResult(
+                message.getEvent(),
+                objectEvent.getChannel(),
+                objectEvent.getSubscription(),
+                objectEvent.getTimetoken(),
+                objectEvent.getUserMetadata(),
+                objectEvent.getPublisher(),
+                newData
+        );
+    }
+
+    @NotNull
+    private static PNChannelMetadataResult getDeleteChannelMetadataResult(PNObjectEventResult objectEvent, PNDeleteChannelMetadataEventMessage message) {
+        return new PNChannelMetadataResult(
+                message.getEvent(),
+                objectEvent.getChannel(),
+                objectEvent.getSubscription(),
+                objectEvent.getTimetoken(),
+                objectEvent.getUserMetadata(),
+                objectEvent.getPublisher(),
+                new PNChannelMetadata(
+                        message.getChannel(), null
+                )
+        );
+    }
+
+    @NotNull
+    private static PNMembershipResult getDeleteMembershipResult(@NotNull PNObjectEventResult objectEvent, PNDeleteMembershipEventMessage message) {
+        PNMembership membership = new PNMembership(
+                new PNChannelMetadata(message.getData().getChannelId(), null)
+        );
+        membership.setUuid(message.getData().getUuid());
+        membership.setCustom(message);
+        return new PNMembershipResult(
+                message.getEvent(),
+                membership,
+                objectEvent.getChannel(),
+                objectEvent.getSubscription(),
+                objectEvent.getTimetoken(),
+                objectEvent.getUserMetadata(),
+                objectEvent.getPublisher()
+        );
+    }
+
+    @NotNull
+    private static PNMembershipResult getSetMembershipResult(@NotNull PNObjectEventResult objectEvent, PNSetMembershipEventMessage message) {
+        PNSetMembershipEvent data = message.getData();
+        PNMembership membership = new PNMembership(
+                new PNChannelMetadata(data.getChannel(), null)
+        );
+        membership.setUuid(data.getUuid());
+        membership.setCustom(data.getCustom());
+        membership.setStatus(data.getStatus());
+        membership.setUpdated(data.getUpdated());
+        membership.setETag(data.getETag());
+        return new PNMembershipResult(
+                message.getEvent(),
+                membership,
+                objectEvent.getChannel(),
+                objectEvent.getSubscription(),
+                objectEvent.getTimetoken(),
+                objectEvent.getUserMetadata(),
+                objectEvent.getPublisher()
+        );
+    }
+
     public abstract void status(@NotNull PubNub pubnub, @NotNull PNStatus pnStatus);
 
     public abstract void message(@NotNull PubNub pubnub, @NotNull PNMessageResult pnMessageResult);

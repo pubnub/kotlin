@@ -1,87 +1,49 @@
 package com.pubnub.api.endpoints.objects_api.memberships;
 
-import com.pubnub.api.PubNub;
-import com.pubnub.api.PubNubException;
-import com.pubnub.api.endpoints.objects_api.CompositeParameterEnricher;
-import com.pubnub.api.endpoints.objects_api.UUIDEndpoint;
-import com.pubnub.api.endpoints.objects_api.utils.Include.ChannelIncludeAware;
-import com.pubnub.api.endpoints.objects_api.utils.Include.CustomIncludeAware;
-import com.pubnub.api.endpoints.objects_api.utils.Include.HavingChannelInclude;
-import com.pubnub.api.endpoints.objects_api.utils.Include.HavingCustomInclude;
-import com.pubnub.api.endpoints.objects_api.utils.ListCapabilities.HavingListCapabilites;
-import com.pubnub.api.endpoints.objects_api.utils.ListCapabilities.ListCapabilitiesAware;
-import com.pubnub.api.enums.PNOperationType;
-import com.pubnub.api.managers.RetrofitManager;
-import com.pubnub.api.managers.TelemetryManager;
-import com.pubnub.api.managers.token_manager.TokenManager;
+import com.pubnub.api.endpoints.Endpoint;
+import com.pubnub.api.endpoints.objects_api.utils.Include;
+import com.pubnub.api.endpoints.objects_api.utils.PNSortKey;
+import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
+import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
+import com.pubnub.api.models.consumer.objects.PNPage;
 import com.pubnub.api.models.consumer.objects_api.membership.PNGetMembershipsResult;
-import com.pubnub.api.models.consumer.objects_api.membership.PNMembership;
-import com.pubnub.api.models.server.objects_api.EntityArrayEnvelope;
-import retrofit2.Call;
-import retrofit2.Response;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
-import java.util.Map;
+import java.util.Collection;
+import java.util.Collections;
 
-public abstract class GetMemberships extends UUIDEndpoint<GetMemberships, EntityArrayEnvelope<PNMembership>, PNGetMembershipsResult>
-        implements CustomIncludeAware<GetMemberships>, ChannelIncludeAware<GetMemberships>,
-        ListCapabilitiesAware<GetMemberships> {
+@Setter
+@Accessors(chain = true, fluent = true)
+public class GetMemberships extends Endpoint<PNGetMembershipsResult> {
 
-    public GetMemberships(final PubNub pubnubInstance,
-                          final TelemetryManager telemetry,
-                          final RetrofitManager retrofitInstance,
-                          final CompositeParameterEnricher compositeParameterEnricher,
-                          final TokenManager tokenManager) {
-        super(pubnubInstance, telemetry, retrofitInstance, compositeParameterEnricher, tokenManager);
-    }
+    private String uuid;
+    private Integer limit;
+    private PNPage page;
+    private String filter;
+    private Collection<PNSortKey> sort = Collections.emptyList();
+    private boolean includeTotalCount;
+    private boolean includeCustom;
+    private Include.PNChannelDetailsLevel includeChannel;
 
-    public static GetMemberships create(final PubNub pubnubInstance,
-                                        final TelemetryManager telemetry,
-                                        final RetrofitManager retrofitInstance,
-                                        final TokenManager tokenManager) {
-        final CompositeParameterEnricher compositeParameterEnricher = CompositeParameterEnricher.createDefault(true, false);
-        return new GetMembershipsCommand(pubnubInstance, telemetry, retrofitInstance, compositeParameterEnricher,
-                tokenManager);
-    }
-}
-
-final class GetMembershipsCommand extends GetMemberships
-        implements HavingCustomInclude<GetMemberships>, HavingChannelInclude<GetMemberships>,
-        HavingListCapabilites<GetMemberships> {
-    GetMembershipsCommand(final PubNub pubnubInstance,
-                          final TelemetryManager telemetry,
-                          final RetrofitManager retrofitInstance,
-                          final CompositeParameterEnricher compositeParameterEnricher,
-                          final TokenManager tokenManager) {
-        super(pubnubInstance, telemetry, retrofitInstance, compositeParameterEnricher, tokenManager);
+    public GetMemberships(com.pubnub.internal.PubNub pubnub) {
+        super(pubnub);
     }
 
     @Override
-    protected Call<EntityArrayEnvelope<PNMembership>> executeCommand(final Map<String, String> effectiveParams)
-            throws PubNubException {
-        return getRetrofit()
-                .getUuidMetadataService()
-                .getMemberships(getPubnub().getConfiguration().getSubscribeKey(), effectiveUuid(), effectiveParams);
-
-    }
-
-    @Override
-    protected PNGetMembershipsResult createResponse(Response<EntityArrayEnvelope<PNMembership>> input)
-            throws PubNubException {
-        if (input.body() != null) {
-            return new PNGetMembershipsResult(input.body());
-        } else {
-            return new PNGetMembershipsResult();
-        }
-    }
-
-    @Override
-    protected PNOperationType getOperationType() {
-        return PNOperationType.PNGetMembershipsOperation;
-    }
-
-    @Override
-    public CompositeParameterEnricher getCompositeParameterEnricher() {
-        return super.getCompositeParameterEnricher();
+    protected ExtendedRemoteAction<PNGetMembershipsResult> createAction() {
+        return new MappingRemoteAction<>(
+                pubnub.getMemberships(
+                        uuid,
+                        limit,
+                        page,
+                        filter,
+                        SetMemberships.toInternal(sort),
+                        includeTotalCount,
+                        includeCustom,
+                        SetMemberships.toInternal(includeChannel)
+                ),
+                PNGetMembershipsResult::from);
     }
 }
 

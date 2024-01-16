@@ -9,12 +9,11 @@ import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant;
 import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant;
 
 import java.util.List;
-import java.util.Map;
 
 public class GrantTokenBuilder extends AbstractGrantTokenBuilder<GrantTokenBuilder> {
 
-    public GrantTokenBuilder(GrantToken grantToken) {
-        super(grantToken);
+    public GrantTokenBuilder(com.pubnub.internal.PubNub pubnub, GrantToken grantToken) {
+        super(pubnub, grantToken);
     }
 
     /**
@@ -34,36 +33,30 @@ public class GrantTokenBuilder extends AbstractGrantTokenBuilder<GrantTokenBuild
     }
 
     public GrantTokenObjectsBuilder channels(List<ChannelGrant> channels) {
-        return new GrantTokenObjectsBuilder(grantToken).channels(channels);
+        return new GrantTokenObjectsBuilder(pubnub, grantToken).channels(channels);
     }
 
     public GrantTokenObjectsBuilder channelGroups(List<ChannelGroupGrant> channelGroups) {
-        return new GrantTokenObjectsBuilder(grantToken).channelGroups(channelGroups);
+        return new GrantTokenObjectsBuilder(pubnub, grantToken).channelGroups(channelGroups);
     }
 
     public GrantTokenObjectsBuilder uuids(List<UUIDGrant> uuids) {
-        return new GrantTokenObjectsBuilder(grantToken).uuids(uuids);
+        return new GrantTokenObjectsBuilder(pubnub, grantToken).uuids(uuids);
     }
 
     public GrantTokenObjectsBuilder authorizedUUID(String authorizedUUID) {
-        return new GrantTokenObjectsBuilder(grantToken).authorizedUUID(authorizedUUID);
+        return new GrantTokenObjectsBuilder(pubnub, grantToken).authorizedUUID(authorizedUUID);
     }
 
     public GrantTokenEntitiesBuilder authorizedUserId(UserId userId) {
-        return new GrantTokenEntitiesBuilder(grantToken).authorizedUserId(userId);
+        return new GrantTokenEntitiesBuilder(pubnub, grantToken).authorizedUserId(userId);
     }
 
     public GrantTokenEntitiesBuilder spacesPermissions(List<SpacePermissions> spacesPermissions) {
-        return new GrantTokenEntitiesBuilder(grantToken).spacesPermissions(spacesPermissions);
+        return new GrantTokenEntitiesBuilder(pubnub, grantToken).spacesPermissions(spacesPermissions);
     }
 
     public GrantTokenEntitiesBuilder usersPermissions(List<UserPermissions> usersPermissions) {
-        return new GrantTokenEntitiesBuilder(grantToken).usersPermissions(usersPermissions);
-    }
-
-    @Override
-    public GrantTokenBuilder queryParam(Map<String, String> queryParam) {
-        grantToken.queryParam(queryParam);
-        return this;
+        return new GrantTokenEntitiesBuilder(pubnub, grantToken).usersPermissions(usersPermissions);
     }
 }

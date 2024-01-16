@@ -1,7 +1,8 @@
 package com.pubnub.contract.objectV2.members.steps
 
 import com.pubnub.api.endpoints.objects_api.utils.Include
-import com.pubnub.api.models.consumer.objects_api.member.*
+import com.pubnub.api.models.consumer.objects_api.member.PNMembers
+import com.pubnub.api.models.consumer.objects_api.member.PNUUID
 import com.pubnub.contract.objectV2.members.state.ChannelMembersState
 import com.pubnub.contract.state.World
 import io.cucumber.java.en.When

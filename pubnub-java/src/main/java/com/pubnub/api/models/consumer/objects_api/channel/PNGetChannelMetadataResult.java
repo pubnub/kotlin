@@ -1,6 +1,6 @@
 package com.pubnub.api.models.consumer.objects_api.channel;
 
-import com.pubnub.api.models.server.objects_api.EntityEnvelope;
+import com.pubnub.api.models.consumer.objects_api.EntityEnvelope;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -9,8 +9,8 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 public class PNGetChannelMetadataResult extends EntityEnvelope<PNChannelMetadata> {
-    public PNGetChannelMetadataResult(final EntityEnvelope<PNChannelMetadata> envelope) {
-        this.status = envelope.getStatus();
-        this.data = envelope.getData();
+    public PNGetChannelMetadataResult(int status, PNChannelMetadata data) {
+        this.status = status;
+        this.data = data;
     }
 }

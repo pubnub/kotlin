@@ -1,13 +1,20 @@
+buildscript {
+    dependencies {
+        classpath ("com.github.siom79.japicmp:japicmp:0.18.2") {
+            force = true
+        }
+    }
+}
 plugins {
-    id 'org.jetbrains.kotlin.jvm' version '1.7.20'
+    id 'org.jetbrains.kotlin.jvm'
     id 'io.franzbecker.gradle-lombok' version '5.0.0'
-    id 'com.github.johnrengelman.shadow' version '4.0.2'
-    id 'com.github.ben-manes.versions' version '0.20.0'
     id "com.vanniktech.maven.publish" version '0.22.0'
     id 'java-library'
     id 'jacoco'
     id 'checkstyle'
+    id 'me.champeau.gradle.japicmp' version '0.4.2'
 }
+
 group = 'com.pubnub'
 
 version = '6.4.5'
@@ -17,35 +24,23 @@ description = """"""
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-
-configurations.all {
-}
-
 lombok {
     version = "1.18.30"
 }
 
-repositories {
-    mavenCentral()
-    maven {
-        url "https://plugins.gradle.org/m2/"
-    }
-}
-
 sourceSets {
     integrationTest {
-        compileClasspath += sourceSets.test.runtimeClasspath
-        runtimeClasspath += sourceSets.test.runtimeClasspath
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
     }
 }
 
 configurations {
-    allTest
-    integrationTestImplementation { extendsFrom allTest }
-    testImplementation { extendsFrom allTest }
+    integrationTestImplementation.extendsFrom(testImplementation)
 }
 
 dependencies {
+    implementation(project(":core"))
     implementation group: 'com.squareup.retrofit2', name: 'retrofit', version: '2.6.2'
     api group: 'com.squareup.okhttp3', name: 'logging-interceptor', version: '4.10.0'
 
@@ -61,7 +56,6 @@ dependencies {
 
     implementation 'org.jetbrains:annotations:23.0.0'
 
-    testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.3.3'
     testImplementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.9'
     testImplementation group: 'ch.qos.logback', name: 'logback-core', version: '1.2.9'
     testImplementation group: 'org.hamcrest', name: 'hamcrest-all', version: '1.3'
@@ -69,7 +63,7 @@ dependencies {
     testImplementation group: 'com.github.tomakehurst', name: 'wiremock', version: '2.27.2'
     testImplementation group: 'org.awaitility', name: 'awaitility', version: '4.0.1'
     testImplementation group: 'org.mockito', name: 'mockito-core', version: '4.8.1'
-    integrationTestImplementation group: 'org.aeonbits.owner', name: 'owner', version: '1.0.8'
+
     implementation group: 'org.json', name: 'json', version: '20231013'
     testImplementation group: 'io.cucumber', name: 'cucumber-java', version: '6.10.4'
     testImplementation group: 'io.cucumber', name: 'cucumber-junit', version: '6.10.4'
@@ -78,10 +72,11 @@ dependencies {
     testImplementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     testImplementation 'org.junit.jupiter:junit-jupiter:5.8.2'
     testImplementation 'org.junit.vintage:junit-vintage-engine:5.8.2'
-}
 
-jacoco {
-    toolVersion = "0.8.11"
+    testImplementation group: 'org.awaitility', name: 'awaitility', version: '4.0.1'
+
+    integrationTestImplementation group: 'org.aeonbits.owner', name: 'owner', version: '1.0.8'
+    integrationTestImplementation(project(":core"))
 }
 
 jacocoTestReport {
@@ -148,5 +143,86 @@ test {
 }
 
 
-build.finalizedBy(shadowJar)
 build.dependsOn compileIntegrationTestJava
+
+def notApplicableAnymore = [
+        "com.pubnub.api.builder.dto.SubscribeOperation",
+        "com.pubnub.api.crypto.cryptor.AesCbcCryptor",
+        "com.pubnub.api.crypto.cryptor.AesCbcCryptorKt",
+        "com.pubnub.api.endpoints.remoteaction.RemoteActionFactory",
+        "com.pubnub.api.managers.*",
+        "com.pubnub.api.workers.SubscribeMessageProcessor",
+        "com.pubnub.api.workers.SubscribeMessageWorker",
+        "com.pubnub.api.services.*",
+        "com.pubnub.api.endpoints.objects_api.utils.Include*",
+        "com.pubnub.api.endpoints.objects_api.utils.Filter*",
+        "com.pubnub.api.endpoints.objects_api.utils.Limiter*",
+        "com.pubnub.api.endpoints.objects_api.utils.HavingCompositeParameterEnricher",
+        "com.pubnub.api.endpoints.objects_api.utils.Pager*",
+        "com.pubnub.api.endpoints.objects_api.utils.Sorter*",
+        "com.pubnub.api.endpoints.objects_api.utils.TotalCounter*",
+
+
+]
+
+def differencesNotImportant = [
+        "com.pubnub.api.builder.PubSubBuilder", // constructor
+        "com.pubnub.api.builder.PresenceBuilder", // constructor
+        "com.pubnub.api.builder.SubscribeBuilder", // constructor
+        "com.pubnub.api.builder.UnsubscribeBuilder", // constructor
+        "com.pubnub.api.crypto.CryptoModule", // constructor, internal methods
+        "com.pubnub.api.crypto.CryptoModule", // constructor, internal methods
+        "com.pubnub.api.crypto.cryptor.InputStreamSeparator", // internal class
+        "com.pubnub.api.endpoints.DeleteMessages", // constructor
+        "com.pubnub.api.models.consumer.files.PNDownloadFileResult", // final
+        "com.pubnub.api.models.consumer.files.PNDeleteFileResult", // final
+]
+
+def shouldHaveBeenInternal = [
+        "com.pubnub.api.crypto.cryptor.HeaderParser",
+        "com.pubnub.api.crypto.cryptor.HeaderParserKt",
+        "com.pubnub.api.crypto.cryptor.CryptorHeader",
+        "com.pubnub.api.crypto.cryptor.CryptorHeaderVersion",
+        "com.pubnub.api.crypto.cryptor.CryptorHeaderVersion\$Companion",
+        "com.pubnub.api.crypto.cryptor.LegacyCryptor",
+        "com.pubnub.api.crypto.cryptor.LegacyCryptorKt",
+        "com.pubnub.api.crypto.cryptor.ParseResult",
+        "com.pubnub.internal.*",
+]
+
+def checkedForNow = [
+
+]
+
+tasks.register("japicmp", me.champeau.gradle.japicmp.JapicmpTask) {
+    oldClasspath.from(files('/Users/wojciech.kalicinski/projects/pubnub-java/build/libs/pubnub-gson-6.4.4.jar'))
+    newClasspath.from(tasks.named('jar'), "../pubnub-kotlin-core/build/libs/pubnub-kotlin-core-7.7.4.jar")
+    onlyModified = false
+    failOnModification = false
+    htmlOutputFile = layout.buildDirectory.file("reports/japi.html")
+    ignoreMissingClasses = true
+    classExcludes = notApplicableAnymore + differencesNotImportant + checkedForNow + shouldHaveBeenInternal
+    methodExcludes = [
+            "*#component1()",
+            "*#component2()",
+            "*#component3()",
+            "*#component4()",
+            "*#component5()",
+            "*#component6()",
+            "*#component7()",
+            "*#copy(*)",
+            "*#copy(*,*)",
+            "*#copy(*,*,*)",
+            "*#copy(*,*,*,*)",
+            "*#copy(*,*,*,*,*)",
+            "*#copy(*,*,*,*,*,*)",
+            "*#copy(*,*,*,*,*,*,*)",
+    ]
+    compatibilityChangeExcludes = ["METHOD_NOW_FINAL", "CONSTRUCTOR_REMOVED"]
+}
+
+tasks.register("mergeKotlinJars", org.gradle.jvm.tasks.Jar) {
+    dependsOn(jar)
+    from(zipTree("/Users/wojciech.kalicinski/projects/pubnub-kotlin-copy/pubnub-java/build/libs/pubnub-java-6.3.6.jar"), zipTree("/Users/wojciech.kalicinski/projects/pubnub-kotlin-copy/pubnub-kotlin-core/build/libs/pubnub-kotlin-core-7.7.4.jar"))
+    setArchiveFileName("combined.jar")
+}

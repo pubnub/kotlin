@@ -1,111 +1,122 @@
 package com.pubnub.api.endpoints.objects_api.memberships;
 
-import com.pubnub.api.PubNub;
-import com.pubnub.api.PubNubException;
-import com.pubnub.api.endpoints.objects_api.CompositeParameterEnricher;
-import com.pubnub.api.endpoints.objects_api.UUIDEndpoint;
-import com.pubnub.api.endpoints.objects_api.utils.Include.ChannelIncludeAware;
-import com.pubnub.api.endpoints.objects_api.utils.Include.CustomIncludeAware;
-import com.pubnub.api.endpoints.objects_api.utils.Include.HavingChannelInclude;
-import com.pubnub.api.endpoints.objects_api.utils.Include.HavingCustomInclude;
-import com.pubnub.api.endpoints.objects_api.utils.ListCapabilities.HavingListCapabilites;
-import com.pubnub.api.endpoints.objects_api.utils.ListCapabilities.ListCapabilitiesAware;
-import com.pubnub.api.endpoints.objects_api.utils.ObjectsBuilderSteps;
-import com.pubnub.api.enums.PNOperationType;
-import com.pubnub.api.managers.RetrofitManager;
-import com.pubnub.api.managers.TelemetryManager;
-import com.pubnub.api.managers.token_manager.TokenManager;
-import com.pubnub.api.models.consumer.objects_api.membership.PNSetMembershipResult;
+import com.pubnub.api.endpoints.Endpoint;
+import com.pubnub.api.endpoints.objects_api.utils.Include;
+import com.pubnub.api.endpoints.objects_api.utils.PNSortKey;
+import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
+import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
+import com.pubnub.api.models.consumer.objects.PNPage;
 import com.pubnub.api.models.consumer.objects_api.membership.PNChannelMembership;
-import com.pubnub.api.models.consumer.objects_api.membership.PNMembership;
-import com.pubnub.api.models.server.objects_api.PatchMembershipPayload;
-import com.pubnub.api.models.server.objects_api.EntityArrayEnvelope;
+import com.pubnub.api.models.consumer.objects_api.membership.PNSetMembershipResult;
+import com.pubnub.internal.models.consumer.objects.PNMembershipKey;
+import com.pubnub.internal.models.consumer.objects.membership.ChannelMembershipInput;
+import com.pubnub.internal.models.consumer.objects.membership.PNChannelMembership.Partial;
 import lombok.AllArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
-import retrofit2.Call;
-import retrofit2.Response;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Map;
+import java.util.List;
 
-public abstract class SetMemberships extends UUIDEndpoint<SetMemberships, EntityArrayEnvelope<PNMembership>, PNSetMembershipResult>
-        implements CustomIncludeAware<SetMemberships>, ChannelIncludeAware<SetMemberships>,
-        ListCapabilitiesAware<SetMemberships> {
-    SetMemberships(final PubNub pubnubInstance,
-                   final TelemetryManager telemetry,
-                   final RetrofitManager retrofitInstance,
-                   final CompositeParameterEnricher compositeParameterEnricher,
-                   final TokenManager tokenManager) {
-        super(pubnubInstance, telemetry, retrofitInstance, compositeParameterEnricher, tokenManager);
+@Setter
+@Accessors(chain = true, fluent = true)
+public class SetMemberships extends Endpoint<PNSetMembershipResult> {
+    private final Collection<PNChannelMembership> channels;
+    private String uuid;
+    private Integer limit;
+    private PNPage page;
+    private String filter;
+    private Collection<PNSortKey> sort = Collections.emptyList();
+    private boolean includeTotalCount;
+    private boolean includeCustom;
+    private Include.PNChannelDetailsLevel includeChannel;
+
+    public SetMemberships(@NotNull Collection<PNChannelMembership> channelMemberships, final com.pubnub.internal.PubNub pubnubInstance) {
+        super(pubnubInstance);
+        this.channels = channelMemberships;
     }
 
-    public static  Builder builder(final PubNub pubnubInstance,
-                                   final TelemetryManager telemetry,
-                                   final RetrofitManager retrofitInstance,
-                                   final TokenManager tokenManager) {
-        return new Builder(pubnubInstance, telemetry, retrofitInstance, tokenManager);
+    @Override
+    protected ExtendedRemoteAction<PNSetMembershipResult> createAction() {
+        ArrayList<ChannelMembershipInput> channelList = new ArrayList<>(channels.size());
+        for (PNChannelMembership channel : channels) {
+            channelList.add(new Partial(
+                    channel.getChannel().getId(),
+                    (channel instanceof PNChannelMembership.ChannelWithCustom)
+                            ? ((PNChannelMembership.ChannelWithCustom) channel).getCustom()
+                            : null,
+                    null
+            ));
+        }
+        return new MappingRemoteAction<>(
+                pubnub.setMemberships(
+                        channelList,
+                        uuid,
+                        limit,
+                        page,
+                        filter,
+                        toInternal(sort),
+                        includeTotalCount,
+                        includeCustom,
+                        toInternal(includeChannel)
+                ),
+                PNSetMembershipResult::from
+        );
+    }
+
+    public static Builder builder(final com.pubnub.internal.PubNub pubnubInstance) {
+        return new Builder(pubnubInstance);
     }
 
     @AllArgsConstructor
-    public static class Builder implements ObjectsBuilderSteps.ChannelMembershipsStep<SetMemberships> {
-        private final PubNub pubnubInstance;
-        private final TelemetryManager telemetry;
-        private final RetrofitManager retrofitInstance;
-        private final TokenManager tokenManager;
+    public static class Builder {
+        private final com.pubnub.internal.PubNub pubnubInstance;
 
-        @Override
         public SetMemberships channelMemberships(@NotNull final Collection<PNChannelMembership> channelMemberships) {
-            final CompositeParameterEnricher compositeParameterEnricher = CompositeParameterEnricher.createDefault(true, false);
-            return new SetMembershipsCommand(channelMemberships, pubnubInstance, telemetry, retrofitInstance, compositeParameterEnricher,
-                    tokenManager);
-        }
-    }
-}
-
-final class SetMembershipsCommand extends SetMemberships implements HavingCustomInclude<SetMemberships>,
-        HavingChannelInclude<SetMemberships>,
-        HavingListCapabilites<SetMemberships> {
-    private final Collection<PNChannelMembership> channelMemberships;
-
-    SetMembershipsCommand(final Collection<PNChannelMembership> channelMemberships,
-                          final PubNub pubNub,
-                          final TelemetryManager telemetryManager,
-                          final RetrofitManager retrofitManager,
-                          final CompositeParameterEnricher compositeParameterEnricher,
-                          final TokenManager tokenManager) {
-        super(pubNub, telemetryManager, retrofitManager, compositeParameterEnricher, tokenManager);
-        this.channelMemberships = channelMemberships;
-    }
-
-    @Override
-    protected Call<EntityArrayEnvelope<PNMembership>> executeCommand(final Map<String, String> effectiveParams)
-            throws PubNubException {
-        final PatchMembershipPayload patchMembershipBody = new PatchMembershipPayload(channelMemberships,
-                Collections.emptyList());
-        return getRetrofit()
-                .getUuidMetadataService()
-                .patchMembership(getPubnub().getConfiguration().getSubscribeKey(), effectiveUuid(), patchMembershipBody,
-                        effectiveParams);
-    }
-
-    @Override
-    protected PNSetMembershipResult createResponse(Response<EntityArrayEnvelope<PNMembership>> input)
-            throws PubNubException {
-        if (input.body() != null) {
-            return new PNSetMembershipResult(input.body());
-        } else {
-            return new PNSetMembershipResult();
+            return new SetMemberships(channelMemberships, pubnubInstance);
         }
     }
 
-    @Override
-    protected PNOperationType getOperationType() {
-        return PNOperationType.PNSetMembershipsOperation;
+    @Nullable
+    static com.pubnub.internal.models.consumer.objects.membership.PNChannelDetailsLevel toInternal(@Nullable Include.PNChannelDetailsLevel detailLevel) {
+        if (detailLevel == null) {
+            return null;
+        }
+        switch (detailLevel) {
+            case CHANNEL:
+                return com.pubnub.internal.models.consumer.objects.membership.PNChannelDetailsLevel.CHANNEL;
+            case CHANNEL_WITH_CUSTOM:
+                return com.pubnub.internal.models.consumer.objects.membership.PNChannelDetailsLevel.CHANNEL_WITH_CUSTOM;
+            default:
+                throw new IllegalStateException("Unknown detail level: " + detailLevel);
+        }
     }
 
-    @Override
-    public CompositeParameterEnricher getCompositeParameterEnricher() {
-        return super.getCompositeParameterEnricher();
+    static Collection<? extends com.pubnub.internal.models.consumer.objects.PNSortKey<PNMembershipKey>> toInternal(Collection<PNSortKey> sort) {
+        List<com.pubnub.internal.models.consumer.objects.PNSortKey<PNMembershipKey>> list = new ArrayList<>(sort.size());
+        for (PNSortKey pnSortKey : sort) {
+            PNMembershipKey key = null;
+            switch (pnSortKey.getKey()) {
+                case ID:
+                    key = PNMembershipKey.CHANNEL_ID;
+                    break;
+                case NAME:
+                    key = PNMembershipKey.CHANNEL_NAME;
+                    break;
+                case UPDATED:
+                    key = PNMembershipKey.CHANNEL_UPDATED;
+                    break;
+            }
+            if (pnSortKey.getDir().equals(PNSortKey.Dir.ASC)) {
+                list.add(new com.pubnub.internal.models.consumer.objects.PNSortKey.PNAsc<>(key));
+            } else {
+                list.add(new com.pubnub.internal.models.consumer.objects.PNSortKey.PNDesc<>(key));
+            }
+        }
+        return list;
     }
 }

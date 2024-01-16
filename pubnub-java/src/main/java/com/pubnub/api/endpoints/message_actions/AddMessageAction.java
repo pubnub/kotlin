@@ -1,109 +1,50 @@
 package com.pubnub.api.endpoints.message_actions;
 
-import com.google.gson.JsonObject;
-import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
-import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.Endpoint;
-import com.pubnub.api.enums.PNOperationType;
-import com.pubnub.api.managers.RetrofitManager;
-import com.pubnub.api.managers.TelemetryManager;
-import com.pubnub.api.managers.token_manager.TokenManager;
 import com.pubnub.api.models.consumer.message_actions.PNAddMessageActionResult;
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction;
-import com.pubnub.api.models.server.objects_api.EntityEnvelope;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import retrofit2.Call;
-import retrofit2.Response;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import static com.pubnub.api.builder.PubNubErrorBuilder.PNERROBJ_CHANNEL_MISSING;
+import static com.pubnub.api.builder.PubNubErrorBuilder.PNERROBJ_MESSAGE_ACTION_MISSING;
+import static com.pubnub.api.builder.PubNubErrorBuilder.PNERROBJ_MESSAGE_ACTION_TYPE_MISSING;
+import static com.pubnub.api.builder.PubNubErrorBuilder.PNERROBJ_MESSAGE_ACTION_VALUE_MISSING;
+import static com.pubnub.api.builder.PubNubErrorBuilder.PNERROBJ_MESSAGE_TIMETOKEN_MISSING;
 
+@Setter
 @Accessors(chain = true, fluent = true)
-public class AddMessageAction extends Endpoint<EntityEnvelope<PNMessageAction>, PNAddMessageActionResult> {
+public class AddMessageAction extends Endpoint<PNAddMessageActionResult> {
 
-    @Setter
     private String channel;
-
-    @Setter
     private PNMessageAction messageAction;
 
-    public AddMessageAction(PubNub pubnubInstance,
-                            TelemetryManager telemetry,
-                            RetrofitManager retrofitInstance,
-                            TokenManager tokenManager) {
-        super(pubnubInstance, telemetry, retrofitInstance, tokenManager);
+    public AddMessageAction(com.pubnub.internal.PubNub pubnub) {
+        super(pubnub);
     }
 
     @Override
-    protected List<String> getAffectedChannels() {
-        return Collections.singletonList(channel);
-    }
-
-    @Override
-    protected List<String> getAffectedChannelGroups() {
-        return null;
+    protected com.pubnub.internal.Endpoint<?, PNAddMessageActionResult> createAction() {
+        return pubnub.addMessageAction(channel, messageAction);
     }
 
     @Override
     protected void validateParams() throws PubNubException {
         if (channel == null || channel.isEmpty()) {
-            throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_CHANNEL_MISSING).build();
+            throw new PubNubException(PNERROBJ_CHANNEL_MISSING);
         }
         if (messageAction == null) {
-            throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_MESSAGE_ACTION_MISSING).build();
+            throw new PubNubException(PNERROBJ_MESSAGE_ACTION_MISSING);
         }
-        if (messageAction.getMessageTimetoken() == null) {
-            throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_MESSAGE_TIMETOKEN_MISSING).build();
+        if (messageAction.getMessageTimetoken() == 0) {
+            throw new PubNubException(PNERROBJ_MESSAGE_TIMETOKEN_MISSING);
         }
-        if (messageAction.getType() == null || messageAction.getType().isEmpty()) {
-            throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_MESSAGE_ACTION_TYPE_MISSING)
-                    .build();
+        if (messageAction.getType().isEmpty()) {
+            throw new PubNubException(PNERROBJ_MESSAGE_ACTION_TYPE_MISSING);
         }
         if (messageAction.getValue() == null || messageAction.getValue().isEmpty()) {
-            throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_MESSAGE_ACTION_VALUE_MISSING)
-                    .build();
+            throw new PubNubException(PNERROBJ_MESSAGE_ACTION_VALUE_MISSING);
         }
-        if (this.getPubnub().getConfiguration().getSubscribeKey() == null
-                || this.getPubnub().getConfiguration().getSubscribeKey().isEmpty()) {
-            throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_SUBSCRIBE_KEY_MISSING).build();
-        }
-    }
-
-    @Override
-    protected Call<EntityEnvelope<PNMessageAction>> doWork(Map<String, String> params) {
-
-        params.putAll(encodeParams(params));
-
-        JsonObject body = new JsonObject();
-        body.addProperty("type", messageAction.getType());
-        body.addProperty("value", messageAction.getValue());
-
-        return this.getRetrofit()
-                .getMessageActionService()
-                .addMessageAction(this.getPubnub().getConfiguration().getSubscribeKey(), channel,
-                        Long.toString(messageAction.getMessageTimetoken()).toLowerCase(), body, params);
-    }
-
-    @Override
-    protected PNAddMessageActionResult createResponse(Response<EntityEnvelope<PNMessageAction>> input)
-            throws PubNubException {
-        PNAddMessageActionResult.PNAddMessageActionResultBuilder builder = PNAddMessageActionResult.builder();
-        if (input.body() != null) {
-            builder.pnMessageAction(input.body().getData());
-        }
-        return builder.build();
-    }
-
-    @Override
-    protected PNOperationType getOperationType() {
-        return PNOperationType.PNAddMessageAction;
-    }
-
-    @Override
-    protected boolean isAuthRequired() {
-        return true;
     }
 }

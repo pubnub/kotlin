@@ -3,7 +3,7 @@ package com.pubnub.api.endpoints.files.requiredparambuilder;
 import com.pubnub.api.endpoints.BuilderSteps.ChannelStep;
 import com.pubnub.api.endpoints.files.requiredparambuilder.FilesBuilderSteps.FileIdStep;
 import com.pubnub.api.endpoints.files.requiredparambuilder.FilesBuilderSteps.FileNameStep;
-import com.pubnub.api.endpoints.remoteaction.PNFunction3;
+import kotlin.jvm.functions.Function3;
 
 public abstract class ChannelFileNameFileIdBuilder<T> implements
         ChannelStep<FileNameStep<FileIdStep<T>>> {
@@ -14,7 +14,7 @@ public abstract class ChannelFileNameFileIdBuilder<T> implements
         this.builder = builder;
     }
 
-    public static <T> ChannelStep<FileNameStep<FileIdStep<T>>> create(PNFunction3<String, String, String, T> lastStep) {
+    public static <T> ChannelStep<FileNameStep<FileIdStep<T>>> create(Function3<String, String, String, T> lastStep) {
         return new InnerBuilder<>(lastStep);
     }
 
@@ -27,11 +27,11 @@ public abstract class ChannelFileNameFileIdBuilder<T> implements
             ChannelStep<FileNameStep<FileIdStep<T>>>,
             FileNameStep<FileIdStep<T>>,
             FileIdStep<T> {
-        private final PNFunction3<String, String, String, T> lastStep;
+        private final Function3<String, String, String, T> lastStep;
         private String channelValue;
         private String fileNameValue;
 
-        private InnerBuilder(PNFunction3<String, String, String, T> lastStep) {
+        private InnerBuilder(Function3<String, String, String, T> lastStep) {
             this.lastStep = lastStep;
         }
 

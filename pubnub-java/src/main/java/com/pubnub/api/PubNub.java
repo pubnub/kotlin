@@ -1,12 +1,9 @@
 package com.pubnub.api;
 
 import com.pubnub.api.builder.PresenceBuilder;
-import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.builder.SubscribeBuilder;
 import com.pubnub.api.builder.UnsubscribeBuilder;
 import com.pubnub.api.callbacks.SubscribeCallback;
-import com.pubnub.api.crypto.CryptoModule;
-import com.pubnub.api.crypto.CryptoModuleKt;
 import com.pubnub.api.endpoints.DeleteMessages;
 import com.pubnub.api.endpoints.FetchMessages;
 import com.pubnub.api.endpoints.History;
@@ -56,104 +53,77 @@ import com.pubnub.api.endpoints.push.AddChannelsToPush;
 import com.pubnub.api.endpoints.push.ListPushProvisions;
 import com.pubnub.api.endpoints.push.RemoveAllPushChannelsForDevice;
 import com.pubnub.api.endpoints.push.RemoveChannelsFromPush;
-import com.pubnub.api.managers.BasePathManager;
-import com.pubnub.api.managers.DelayedReconnectionManager;
-import com.pubnub.api.managers.DuplicationManager;
-import com.pubnub.api.managers.ListenerManager;
-import com.pubnub.api.managers.MapperManager;
-import com.pubnub.api.managers.PublishSequenceManager;
-import com.pubnub.api.managers.ReconnectionManager;
-import com.pubnub.api.managers.RetrofitManager;
-import com.pubnub.api.managers.StateManager;
-import com.pubnub.api.managers.SubscriptionManager;
-import com.pubnub.api.managers.TelemetryManager;
-import com.pubnub.api.managers.token_manager.TokenManager;
-import com.pubnub.api.managers.token_manager.TokenParser;
+import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.access_manager.v3.PNToken;
-import lombok.Getter;
+import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
+import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
+import com.pubnub.api.models.consumer.pubsub.PNSignalResult;
+import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult;
+import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult;
+import com.pubnub.internal.managers.ListenerManager;
+import com.pubnub.internal.models.consumer.pubsub.objects.PNObjectEventResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.InputStream;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-
 public class PubNub {
 
-    @Getter
-    private @NotNull PNConfiguration configuration;
+    private final com.pubnub.internal.PubNub pubnubImpl;
+    private final com.pubnub.api.PNConfiguration config;
+    private final ListenerManager<PubNub> listenerManager = new ListenerManager<>(this);
 
-    @Getter
-    private @NotNull MapperManager mapper;
+    PubNub(@NotNull com.pubnub.api.PNConfiguration initialConfig, @NotNull com.pubnub.internal.PubNub pubnubImpl) {
+        this.config = initialConfig;
+        this.pubnubImpl = pubnubImpl;
+        com.pubnub.internal.callbacks.SubscribeCallback<com.pubnub.internal.PubNub> listener = new com.pubnub.internal.callbacks.SubscribeCallback<com.pubnub.internal.PubNub>() {
+            @Override
+            public void status(com.pubnub.internal.PubNub pubnub, @NotNull PNStatus pnStatus) {
+                listenerManager.announce(pnStatus);
+            }
 
-    private String instanceId;
+            @Override
+            public void message(com.pubnub.internal.PubNub pubnub, @NotNull PNMessageResult pnMessageResult) {
+                listenerManager.announce(pnMessageResult);
+            }
 
-    private SubscriptionManager subscriptionManager;
+            @Override
+            public void presence(com.pubnub.internal.PubNub pubnub, @NotNull PNPresenceEventResult pnPresenceEventResult) {
+                listenerManager.announce(pnPresenceEventResult);
+            }
 
-    private BasePathManager basePathManager;
+            @Override
+            public void signal(com.pubnub.internal.PubNub pubnub, @NotNull PNSignalResult pnSignalResult) {
+                listenerManager.announce(pnSignalResult);
+            }
 
-    private PublishSequenceManager publishSequenceManager;
+            @Override
+            public void messageAction(com.pubnub.internal.PubNub pubnub, @NotNull PNMessageActionResult pnMessageActionResult) {
+                listenerManager.announce(pnMessageActionResult);
+            }
 
-    private TelemetryManager telemetryManager;
+            @Override
+            public void objects(com.pubnub.internal.PubNub pubnub, @NotNull PNObjectEventResult objectEvent) {
+                listenerManager.announce(objectEvent);
+            }
 
-    private RetrofitManager retrofitManager;
-
-    private final TokenParser tokenParser;
-
-    private static final int TIMESTAMP_DIVIDER = 1000;
-    private static final int MAX_SEQUENCE = 65535;
-
-    private static final String SDK_VERSION = "6.4.5";
-    private final ListenerManager listenerManager;
-    private final StateManager stateManager;
-
-    private final TokenManager tokenManager;
-
-    public CryptoModule getCryptoModule() {
-        return configuration.getCryptoModule();
+            @Override
+            public void file(com.pubnub.internal.PubNub pubnub, @NotNull PNFileEventResult pnFileEventResult) {
+                listenerManager.announce(pnFileEventResult);
+            }
+        };
+        pubnubImpl.addListener(listener);
     }
 
-    public PubNub(@NotNull PNConfiguration initialConfig) {
-        this.configuration = initialConfig;
-        this.mapper = new MapperManager();
-        this.telemetryManager = new TelemetryManager();
-        this.basePathManager = new BasePathManager(initialConfig);
-        this.listenerManager = new ListenerManager(this);
-        this.retrofitManager = new RetrofitManager(this);
-        this.stateManager = new StateManager(this.configuration);
-        this.tokenManager = new TokenManager();
-        final ReconnectionManager reconnectionManager = new ReconnectionManager(this);
-        final DelayedReconnectionManager delayedReconnectionManager = new DelayedReconnectionManager(this);
-        final DuplicationManager duplicationManager = new DuplicationManager(this.configuration);
-        this.subscriptionManager = new SubscriptionManager(this,
-                retrofitManager,
-                this.telemetryManager,
-                stateManager,
-                listenerManager,
-                reconnectionManager,
-                delayedReconnectionManager,
-                duplicationManager,
-                tokenManager);
-        this.publishSequenceManager = new PublishSequenceManager(MAX_SEQUENCE);
-        this.tokenParser = new TokenParser();
-        instanceId = UUID.randomUUID().toString();
+    public PubNub(@NotNull com.pubnub.api.PNConfiguration initialConfig) {
+        this(initialConfig, new com.pubnub.internal.PubNub(initialConfig.getInternalConfig()));
     }
 
-    /**
-     * @deprecated
-     */
-    @NotNull
-    public static String generateUUID() {
-        return "pn-" + UUID.randomUUID();
+    public @NotNull PNConfiguration getConfiguration() {
+        return config;
     }
-
-    @NotNull
-    public String getBaseUrl() {
-        return this.basePathManager.getBasePath();
-    }
-
 
     public void addListener(@NotNull SubscribeCallback listener) {
         listenerManager.addListener(listener);
@@ -165,81 +135,81 @@ public class PubNub {
 
     @NotNull
     public SubscribeBuilder subscribe() {
-        return new SubscribeBuilder(this.subscriptionManager);
+        return new SubscribeBuilder(pubnubImpl);
     }
 
     @NotNull
     public UnsubscribeBuilder unsubscribe() {
-        return new UnsubscribeBuilder(this.subscriptionManager);
+        return new UnsubscribeBuilder(pubnubImpl);
     }
 
     @NotNull
     public PresenceBuilder presence() {
-        return new PresenceBuilder(this.subscriptionManager);
+        return new PresenceBuilder(pubnubImpl);
     }
 
     // start push
 
     @NotNull
     public AddChannelsToPush addPushNotificationsOnChannels() {
-        return new AddChannelsToPush(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
+        return new AddChannelsToPush(pubnubImpl);
     }
 
     @NotNull
     public RemoveChannelsFromPush removePushNotificationsFromChannels() {
-        return new RemoveChannelsFromPush(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
+        return new RemoveChannelsFromPush(pubnubImpl);
     }
 
     @NotNull
     public RemoveAllPushChannelsForDevice removeAllPushNotificationsFromDeviceWithPushToken() {
-        return new RemoveAllPushChannelsForDevice(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
+        return new RemoveAllPushChannelsForDevice(pubnubImpl);
     }
 
     @NotNull
     public ListPushProvisions auditPushChannelProvisions() {
-        return new ListPushProvisions(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
+        return new ListPushProvisions(pubnubImpl);
     }
 
     // end push
 
     @NotNull
     public WhereNow whereNow() {
-        return new WhereNow(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
+        return new WhereNow(pubnubImpl);
     }
 
     @NotNull
     public HereNow hereNow() {
-        return new HereNow(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
+        return new HereNow(pubnubImpl);
     }
 
     @NotNull
     public Time time() {
-        return new Time(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
+        return new Time(pubnubImpl);
     }
 
     @NotNull
     public History history() {
-        return new History(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
+        return new History(pubnubImpl);
     }
 
     @NotNull
     public FetchMessages fetchMessages() {
-        return new FetchMessages(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
+        return new FetchMessages(pubnubImpl);
     }
 
     @NotNull
     public DeleteMessages deleteMessages() {
-        return new DeleteMessages(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
+        return new DeleteMessages(pubnubImpl);
     }
 
     @NotNull
     public MessageCounts messageCounts() {
-        return new MessageCounts(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
+        return new MessageCounts(pubnubImpl);
     }
 
     @NotNull
     public Grant grant() {
-        return new Grant(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
+        return new Grant(pubnubImpl);
     }
 
     /**
@@ -247,142 +217,136 @@ public class PubNub {
      */
     @NotNull
     public GrantTokenBuilder grantToken() {
-        return new GrantTokenBuilder(new GrantToken(this, this.telemetryManager, this.retrofitManager, this.tokenManager));
+        return new GrantTokenBuilder(pubnubImpl, new GrantToken(pubnubImpl));
     }
 
     @NotNull
     @SuppressWarnings("deprecation")
     public GrantTokenBuilder grantToken(Integer ttl) {
-        return new GrantTokenBuilder(new GrantToken(this, this.telemetryManager, this.retrofitManager, this.tokenManager)).ttl(ttl);
+        return new GrantTokenBuilder(pubnubImpl, new GrantToken(pubnubImpl).ttl(ttl));
     }
 
     @NotNull
     public RevokeToken revokeToken() {
-        return new RevokeToken(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
+        return new RevokeToken(pubnubImpl);
     }
 
     @NotNull
     public GetState getPresenceState() {
-        return new GetState(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
+        return new GetState(pubnubImpl);
     }
 
     @NotNull
     public SetState setPresenceState() {
-        return new SetState(this, subscriptionManager, this.telemetryManager, this.retrofitManager, tokenManager);
+        return new SetState(pubnubImpl);
     }
 
     @NotNull
     public Publish publish() {
-        return new Publish(this, publishSequenceManager, this.telemetryManager, this.retrofitManager, this.tokenManager);
+        return new Publish(pubnubImpl);
     }
 
     @NotNull
     public Signal signal() {
-        return new Signal(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
+        return new Signal(pubnubImpl);
     }
 
     @NotNull
     public ListAllChannelGroup listAllChannelGroups() {
-        return new ListAllChannelGroup(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
+        return new ListAllChannelGroup(pubnubImpl);
     }
 
     @NotNull
     public AllChannelsChannelGroup listChannelsForChannelGroup() {
-        return new AllChannelsChannelGroup(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
+        return new AllChannelsChannelGroup(pubnubImpl);
     }
 
     @NotNull
     public AddChannelChannelGroup addChannelsToChannelGroup() {
-        return new AddChannelChannelGroup(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
+        return new AddChannelChannelGroup(pubnubImpl);
     }
 
     @NotNull
     public RemoveChannelChannelGroup removeChannelsFromChannelGroup() {
-        return new RemoveChannelChannelGroup(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
+        return new RemoveChannelChannelGroup(pubnubImpl);
     }
 
     @NotNull
     public DeleteChannelGroup deleteChannelGroup() {
-        return new DeleteChannelGroup(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
+        return new DeleteChannelGroup(pubnubImpl);
     }
 
     // Start Objects API
 
     public SetUUIDMetadata setUUIDMetadata() {
-        return SetUUIDMetadata.create(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
+        return new SetUUIDMetadata(pubnubImpl);
     }
 
     @NotNull
     public GetAllUUIDMetadata getAllUUIDMetadata() {
-        return GetAllUUIDMetadata.create(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
+        return new GetAllUUIDMetadata(pubnubImpl);
     }
 
     @NotNull
     public GetUUIDMetadata getUUIDMetadata() {
-        return GetUUIDMetadata.create(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
+        return new GetUUIDMetadata(pubnubImpl);
     }
 
     @NotNull
     public RemoveUUIDMetadata removeUUIDMetadata() {
-        return new RemoveUUIDMetadata(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
+        return new RemoveUUIDMetadata(pubnubImpl);
     }
 
     public SetChannelMetadata.Builder setChannelMetadata() {
-        return SetChannelMetadata.builder(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
+        return SetChannelMetadata.builder(pubnubImpl);
     }
 
     @NotNull
     public GetAllChannelsMetadata getAllChannelsMetadata() {
-        return GetAllChannelsMetadata.create(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
+        return new GetAllChannelsMetadata(pubnubImpl);
     }
 
     @NotNull
     public GetChannelMetadata.Builder getChannelMetadata() {
-        return GetChannelMetadata.builder(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
+        return GetChannelMetadata.builder(pubnubImpl);
     }
 
     public RemoveChannelMetadata.Builder removeChannelMetadata() {
-        return RemoveChannelMetadata.builder(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
+        return RemoveChannelMetadata.builder(pubnubImpl);
     }
 
     @NotNull
     public GetMemberships getMemberships() {
-        return GetMemberships.create(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
+        return new GetMemberships(pubnubImpl);
     }
 
     @NotNull
     public SetMemberships.Builder setMemberships() {
-        return SetMemberships.builder(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
+        return SetMemberships.builder(pubnubImpl);
     }
 
-    @NotNull
     public RemoveMemberships.Builder removeMemberships() {
-        return RemoveMemberships.builder(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
+        return RemoveMemberships.builder(pubnubImpl);
     }
 
-    @NotNull
     public ManageMemberships.Builder manageMemberships() {
-        return ManageMemberships.builder(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
+        return ManageMemberships.builder(pubnubImpl);
     }
 
-    @NotNull
     public GetChannelMembers.Builder getChannelMembers() {
-        return GetChannelMembers.builder(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
+        return GetChannelMembers.builder(pubnubImpl);
     }
 
-    @NotNull
     public SetChannelMembers.Builder setChannelMembers() {
-        return SetChannelMembers.builder(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
+        return SetChannelMembers.builder(pubnubImpl);
     }
 
-    @NotNull
     public RemoveChannelMembers.Builder removeChannelMembers() {
-        return RemoveChannelMembers.builder(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
+        return RemoveChannelMembers.builder(pubnubImpl);
     }
 
-    @NotNull
     public ManageChannelMembers.Builder manageChannelMembers() {
-        return ManageChannelMembers.builder(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
+        return ManageChannelMembers.builder(pubnubImpl);
     }
 
     // End Objects API
@@ -391,60 +355,43 @@ public class PubNub {
 
     @NotNull
     public AddMessageAction addMessageAction() {
-        return new AddMessageAction(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
+        return new AddMessageAction(pubnubImpl);
     }
 
     @NotNull
     public GetMessageActions getMessageActions() {
-        return new GetMessageActions(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
+        return new GetMessageActions(pubnubImpl);
     }
 
     @NotNull
     public RemoveMessageAction removeMessageAction() {
-        return new RemoveMessageAction(this, this.telemetryManager, this.retrofitManager, this.tokenManager);
+        return new RemoveMessageAction(pubnubImpl);
     }
 
     // End Message Actions API
 
-    @NotNull
     public SendFile.Builder sendFile() {
-        return SendFile.builder(this, telemetryManager, retrofitManager, tokenManager);
+        return SendFile.builder(pubnubImpl);
     }
 
     public ListFiles.Builder listFiles() {
-        return new ListFiles.Builder(this, telemetryManager, retrofitManager, tokenManager);
+        return new ListFiles.Builder(pubnubImpl);
     }
 
     public GetFileUrl.Builder getFileUrl() {
-        return GetFileUrl.builder(
-                this,
-                telemetryManager,
-                retrofitManager,
-                tokenManager);
+        return GetFileUrl.builder(pubnubImpl);
     }
 
     public DownloadFile.Builder downloadFile() {
-        return DownloadFile.builder(
-                this,
-                telemetryManager,
-                retrofitManager,
-                tokenManager);
+        return DownloadFile.builder(pubnubImpl);
     }
 
     public DeleteFile.Builder deleteFile() {
-        return DeleteFile.builder(
-                this,
-                telemetryManager,
-                retrofitManager,
-                tokenManager);
+        return DeleteFile.builder(pubnubImpl);
     }
 
     public PublishFileMessage.Builder publishFileMessage() {
-        return PublishFileMessage.builder(
-                this,
-                telemetryManager,
-                retrofitManager,
-                tokenManager);
+        return PublishFileMessage.builder(pubnubImpl);
     }
 
     // public methods
@@ -457,10 +404,7 @@ public class PubNub {
      */
     @Nullable
     public String decrypt(String inputString) throws PubNubException {
-        if (inputString == null) {
-            throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_INVALID_ARGUMENTS).build();
-        }
-        return decrypt(inputString, null);
+        return decrypt(inputString, pubnubImpl.getConfiguration().getCipherKey());
     }
 
     /**
@@ -473,36 +417,15 @@ public class PubNub {
      */
     @Nullable
     public String decrypt(String inputString, String cipherKey) throws PubNubException {
-        if (inputString == null) {
-            throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_INVALID_ARGUMENTS).build();
-        }
-        CryptoModule cryptoModule = getCryptoModuleOrThrow(cipherKey);
-
-        return CryptoModuleKt.decryptString(cryptoModule, inputString);
-    }
-
-    private CryptoModule getCryptoModuleOrThrow(String cipherKey) throws PubNubException {
-        CryptoModule effectiveCryptoModule;
-        if (cipherKey != null) {
-            effectiveCryptoModule = CryptoModule.createLegacyCryptoModule(cipherKey, this.getConfiguration().isUseRandomInitializationVector());
-        } else {
-            CryptoModule cryptoModule = getCryptoModule();
-            if (cryptoModule != null) {
-                effectiveCryptoModule = cryptoModule;
-            } else {
-                throw PubNubException.builder().errormsg("Crypto module is not initialized").build();
-            }
-        }
-        return effectiveCryptoModule;
+        return pubnubImpl.decrypt(inputString, cipherKey);
     }
 
     public InputStream decryptInputStream(InputStream inputStream) throws PubNubException {
-        return decryptInputStream(inputStream, null);
+        return decryptInputStream(inputStream, pubnubImpl.getConfiguration().getCipherKey());
     }
 
     public InputStream decryptInputStream(InputStream inputStream, String cipherKey) throws PubNubException {
-        CryptoModule cryptoModule = getCryptoModuleOrThrow(cipherKey);
-        return cryptoModule.decryptStream(inputStream);
+        return pubnubImpl.decryptInputStream(inputStream, cipherKey);
     }
 
     /**
@@ -512,12 +435,8 @@ public class PubNub {
      * @return String containing the encryption of inputString using cipherKey
      */
     @Nullable
-    public String encrypt(String inputString) throws PubNubException {
-        if (inputString == null) {
-            throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_INVALID_ARGUMENTS).build();
-        }
-
-        return encrypt(inputString, null);
+    public String encrypt(@NotNull String inputString) throws PubNubException {
+        return encrypt(inputString, pubnubImpl.getConfiguration().getCipherKey());
     }
 
     /**
@@ -530,33 +449,28 @@ public class PubNub {
      */
     @Nullable
     public String encrypt(String inputString, String cipherKey) throws PubNubException {
-        if (inputString == null) {
-            throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_INVALID_ARGUMENTS).build();
-        }
-
-        CryptoModule cryptoModule = getCryptoModuleOrThrow(cipherKey);
-        return CryptoModuleKt.encryptString(cryptoModule, inputString);
+        return pubnubImpl.encrypt(inputString, cipherKey);
     }
 
     public InputStream encryptInputStream(InputStream inputStream) throws PubNubException {
-        return encryptInputStream(inputStream, null);
+        return encryptInputStream(inputStream, pubnubImpl.getConfiguration().getCipherKey());
     }
 
     public InputStream encryptInputStream(InputStream inputStream, String cipherKey) throws PubNubException {
-        CryptoModule cryptoModule = getCryptoModuleOrThrow(cipherKey);
-        return cryptoModule.encryptStream(inputStream);
+        return pubnubImpl.encryptInputStream(inputStream, cipherKey);
     }
 
-    public int getTimestamp() {
-        return (int) ((new Date().getTime()) / TIMESTAMP_DIVIDER);
-    }
+//    TODO bring back?
+//    public int getTimestamp() {
+//        return (int) ((new Date().getTime()) / TIMESTAMP_DIVIDER);
+//    }
 
     /**
      * @return instance uuid.
      */
     @NotNull
     public String getInstanceId() {
-        return instanceId;
+        return pubnubImpl.getInstanceId();
     }
 
     /**
@@ -572,54 +486,35 @@ public class PubNub {
      */
     @NotNull
     public String getVersion() {
-        return SDK_VERSION;
-    }
-
-    /**
-     * Stop the SDK and terminate all listeners.
-     */
-    @Deprecated
-    public void stop() {
-        subscriptionManager.stop();
+        return pubnubImpl.getVersion();
     }
 
     /**
      * Destroy the SDK to cancel all ongoing requests and stop heartbeat timer.
      */
     public void destroy() {
-        try {
-            subscriptionManager.destroy(false);
-            retrofitManager.destroy(false);
-        } catch (Exception error) {
-            //
-        }
+        pubnubImpl.destroy();
     }
 
     /**
      * Force destroy the SDK to evict the connection pools and close executors.
      */
     public void forceDestroy() {
-        try {
-            subscriptionManager.destroy(true);
-            retrofitManager.destroy(true);
-            telemetryManager.stopCleanUpTimer();
-        } catch (Exception error) {
-            //
-        }
+        pubnubImpl.forceDestroy();
     }
 
     /**
      * Perform a Reconnect to the network
      */
     public void reconnect() {
-        subscriptionManager.reconnect();
+        pubnubImpl.reconnect(0L);
     }
 
     /**
      * Perform a disconnect from the listeners
      */
     public void disconnect() {
-        subscriptionManager.disconnect();
+        pubnubImpl.disconnect();
     }
 
     @NotNull
@@ -629,23 +524,28 @@ public class PubNub {
 
     @NotNull
     public List<String> getSubscribedChannels() {
-        return stateManager.subscriptionStateData(false).getChannels();
+        return pubnubImpl.getSubscribedChannels();
     }
 
     @NotNull
     public List<String> getSubscribedChannelGroups() {
-        return this.stateManager.subscriptionStateData(false).getChannelGroups();
+        return pubnubImpl.getSubscribedChannelGroups();
     }
 
     public void unsubscribeAll() {
-        subscriptionManager.unsubscribeAll();
+        pubnubImpl.unsubscribeAll();
     }
 
     public PNToken parseToken(String token) throws PubNubException {
-        return tokenParser.unwrapToken(token);
+        return pubnubImpl.parseToken(token);
     }
 
     public void setToken(String token) {
-        tokenManager.setToken(token);
+        pubnubImpl.setToken(token);
     }
+
+    public int getTimestamp() {
+        return pubnubImpl.timestamp$core();
+    }
+
 }

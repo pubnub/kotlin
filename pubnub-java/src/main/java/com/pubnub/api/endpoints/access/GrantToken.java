@@ -1,33 +1,19 @@
 package com.pubnub.api.endpoints.access;
 
-import com.google.gson.JsonObject;
-import com.pubnub.api.PubNub;
-import com.pubnub.api.PubNubException;
-import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.endpoints.Endpoint;
-import com.pubnub.api.enums.PNOperationType;
-import com.pubnub.api.managers.RetrofitManager;
-import com.pubnub.api.managers.TelemetryManager;
-import com.pubnub.api.managers.token_manager.TokenManager;
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant;
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant;
 import com.pubnub.api.models.consumer.access_manager.v3.PNGrantTokenResult;
 import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant;
-import com.pubnub.api.models.server.access_manager.v3.GrantTokenRequestBody;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import retrofit2.Call;
-import retrofit2.Response;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-
-import static com.pubnub.api.PubNubUtil.isNullOrEmpty;
 
 @Accessors(chain = true, fluent = true)
-public class GrantToken extends Endpoint<JsonObject, PNGrantTokenResult> {
+public class GrantToken extends Endpoint<PNGrantTokenResult> {
 
     @Setter
     private Integer ttl;
@@ -42,91 +28,105 @@ public class GrantToken extends Endpoint<JsonObject, PNGrantTokenResult> {
     @Setter
     private List<UUIDGrant> uuids = Collections.emptyList();
 
-    public GrantToken(PubNub pubnub,
-                      TelemetryManager telemetryManager,
-                      RetrofitManager retrofit,
-                      TokenManager tokenManager) {
-        super(pubnub, telemetryManager, retrofit, tokenManager);
+    public GrantToken(com.pubnub.internal.PubNub pubnub) {
+        super(pubnub);
     }
 
     @Override
-    protected List<String> getAffectedChannels() {
-        final ArrayList<String> affectedChannels = new ArrayList<>();
-        for (ChannelGrant channelGrant : channels) {
-            affectedChannels.add(channelGrant.getId());
-        }
-        return affectedChannels;
+    protected com.pubnub.internal.Endpoint<?, PNGrantTokenResult> createAction() {
+        return pubnub.grantToken(
+                ttl,
+                meta,
+                authorizedUUID,
+                toInternalChannels(channels),
+                toInternalChannelGroups(channelGroups),
+                toInternalUuids(uuids)
+        );
     }
 
-    @Override
-    protected List<String> getAffectedChannelGroups() {
-        final ArrayList<String> affectedChannelGroups = new ArrayList<>();
-        for (ChannelGroupGrant channelGroupGrant : channelGroups) {
-            affectedChannelGroups.add(channelGroupGrant.getId());
+    private List<? extends com.pubnub.internal.models.consumer.access_manager.v3.ChannelGrant> toInternalChannels(List<ChannelGrant> channels) {
+        ArrayList<com.pubnub.internal.models.consumer.access_manager.v3.ChannelGrant> list = new ArrayList<>(channels.size());
+        for (ChannelGrant channel : channels) {
+            list.add(toInternal(channel));
         }
-        return affectedChannelGroups;
+        return list;
     }
 
-    @Override
-    protected void validateParams() throws PubNubException {
-        if (this.getPubnub().getConfiguration().getSecretKey() == null || this.getPubnub()
-                .getConfiguration()
-                .getSecretKey()
-                .isEmpty()) {
-            throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_SECRET_KEY_MISSING).build();
+    private List<? extends com.pubnub.internal.models.consumer.access_manager.v3.ChannelGroupGrant> toInternalChannelGroups(List<ChannelGroupGrant> channels) {
+        ArrayList<com.pubnub.internal.models.consumer.access_manager.v3.ChannelGroupGrant> list = new ArrayList<>(channels.size());
+        for (ChannelGroupGrant channel : channels) {
+            list.add(toInternal(channel));
         }
-        if (this.getPubnub().getConfiguration().getSubscribeKey() == null || this.getPubnub()
-                .getConfiguration()
-                .getSubscribeKey()
-                .isEmpty()) {
-            throw PubNubException.builder().pubnubError(PubNubErrorBuilder.PNERROBJ_SUBSCRIBE_KEY_MISSING).build();
+        return list;
+    }
+
+    private List<? extends com.pubnub.internal.models.consumer.access_manager.v3.UUIDGrant> toInternalUuids(List<UUIDGrant> uuids) {
+        ArrayList<com.pubnub.internal.models.consumer.access_manager.v3.UUIDGrant> list = new ArrayList<>(uuids.size());
+        for (UUIDGrant uuid : uuids) {
+            list.add(toInternal(uuid));
         }
-        if (isNullOrEmpty(channels)
-                && isNullOrEmpty(channelGroups)
-                && isNullOrEmpty(uuids)) {
-            throw PubNubException.builder()
-                    .pubnubError(PubNubErrorBuilder.PNERROBJ_RESOURCES_MISSING)
-                    .build();
-        }
-        if (this.ttl == null) {
-            throw PubNubException.builder()
-                    .pubnubError(PubNubErrorBuilder.PNERROBJ_TTL_MISSING)
-                    .build();
+        return list;
+    }
+
+    static com.pubnub.internal.models.consumer.access_manager.v3.ChannelGrant toInternal(ChannelGrant grant) {
+        if (grant.isPatternResource()) {
+            return com.pubnub.internal.models.consumer.access_manager.v3.ChannelGrant.Companion.pattern(
+                    grant.getId(),
+                    grant.isRead(),
+                    grant.isWrite(),
+                    grant.isManage(),
+                    grant.isDelete(),
+                    grant.isCreate(),
+                    grant.isGet(),
+                    grant.isJoin(),
+                    grant.isUpdate()
+            );
+        } else {
+            return com.pubnub.internal.models.consumer.access_manager.v3.ChannelGrant.Companion.name(
+                    grant.getId(),
+                    grant.isRead(),
+                    grant.isWrite(),
+                    grant.isManage(),
+                    grant.isDelete(),
+                    grant.isCreate(),
+                    grant.isGet(),
+                    grant.isJoin(),
+                    grant.isUpdate()
+            );
         }
     }
 
-    @Override
-    protected Call<JsonObject> doWork(Map<String, String> queryParams) throws PubNubException {
-        GrantTokenRequestBody requestBody = GrantTokenRequestBody.builder()
-                .ttl(ttl)
-                .channels(channels)
-                .groups(channelGroups)
-                .uuids(uuids)
-                .meta(meta)
-                .uuid(authorizedUUID)
-                .build();
-
-        return this.getRetrofit()
-                .getAccessManagerService()
-                .grantToken(this.getPubnub().getConfiguration().getSubscribeKey(), requestBody, queryParams);
-    }
-
-    @Override
-    protected PNGrantTokenResult createResponse(Response<JsonObject> input) throws PubNubException {
-        if (input.body() == null) {
-            return null;
+    static com.pubnub.internal.models.consumer.access_manager.v3.ChannelGroupGrant toInternal(ChannelGroupGrant grant) {
+        if (grant.isPatternResource()) {
+            return com.pubnub.internal.models.consumer.access_manager.v3.ChannelGroupGrant.Companion.pattern(
+                    grant.getId(),
+                    grant.isRead(),
+                    grant.isManage()
+            );
+        } else {
+            return com.pubnub.internal.models.consumer.access_manager.v3.ChannelGroupGrant.Companion.id(
+                    grant.getId(),
+                    grant.isRead(),
+                    grant.isManage()
+            );
         }
-
-        return new PNGrantTokenResult(input.body().getAsJsonObject("data").get("token").getAsString());
     }
 
-    @Override
-    protected PNOperationType getOperationType() {
-        return PNOperationType.PNAccessManagerGrantToken;
-    }
-
-    @Override
-    protected boolean isAuthRequired() {
-        return false;
+    static com.pubnub.internal.models.consumer.access_manager.v3.UUIDGrant toInternal(UUIDGrant grant) {
+        if (grant.isPatternResource()) {
+            return com.pubnub.internal.models.consumer.access_manager.v3.UUIDGrant.Companion.pattern(
+                    grant.getId(),
+                    grant.isGet(),
+                    grant.isUpdate(),
+                    grant.isDelete()
+            );
+        } else {
+            return com.pubnub.internal.models.consumer.access_manager.v3.UUIDGrant.Companion.id(
+                    grant.getId(),
+                    grant.isGet(),
+                    grant.isUpdate(),
+                    grant.isDelete()
+            );
+        }
     }
 }

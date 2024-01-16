@@ -8,7 +8,6 @@ import com.pubnub.api.crypto.CryptoModule;
 import com.pubnub.api.integration.util.BaseIntegrationTest;
 import com.pubnub.api.integration.util.RandomGenerator;
 import com.pubnub.api.models.consumer.PNPublishResult;
-import com.pubnub.api.models.consumer.history.HistoryMessageType;
 import com.pubnub.api.models.consumer.history.PNFetchMessageItem;
 import com.pubnub.api.models.consumer.history.PNFetchMessagesResult;
 import com.pubnub.api.models.consumer.history.PNHistoryItemResult;

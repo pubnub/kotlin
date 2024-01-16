@@ -6,7 +6,7 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.UserId
 import com.pubnub.api.enums.PNLogVerbosity
 import com.pubnub.contract.CONTRACT_TEST_CONFIG
-import java.util.*
+import java.util.UUID
 
 class World {
     val configuration: PNConfiguration by lazy { PNConfiguration(UserId("pn-" + UUID.randomUUID())).apply {

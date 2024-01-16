@@ -100,8 +100,8 @@ import java.time.Duration
 import java.util.Date
 import java.util.UUID
 
-class PubNub internal constructor(
-    val configuration: PNConfiguration,
+open class PubNub internal constructor(
+    open val configuration: PNConfiguration,
     eventEnginesConf: EventEnginesConf
 ) {
 
@@ -120,6 +120,7 @@ class PubNub internal constructor(
 
     internal val cryptoModule: CryptoModule?
         get() = configuration.cryptoModule
+
 
     //region Managers
 
@@ -599,7 +600,7 @@ class PubNub internal constructor(
         level = DeprecationLevel.WARNING,
         message = "Use fetchMessages(String, PNBoundedPage, Boolean, Boolean, Boolean) instead"
     )
-    fun fetchMessages(
+    open fun fetchMessages(
         channels: List<String>,
         maximumPerChannel: Int = 0,
         start: Long? = null,
@@ -1961,7 +1962,7 @@ class PubNub internal constructor(
      *
      * @param listener The listener to be added.
      */
-    fun addListener(listener: SubscribeCallback<PubNub>) {
+    open fun addListener(listener: SubscribeCallback<PubNub>) {
         listenerManager.addListener(listener)
     }
 

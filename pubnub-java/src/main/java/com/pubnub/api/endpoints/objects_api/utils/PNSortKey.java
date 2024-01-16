@@ -6,7 +6,7 @@ import lombok.Getter;
 import static com.pubnub.api.endpoints.objects_api.utils.PNSortKey.Dir.ASC;
 import static com.pubnub.api.endpoints.objects_api.utils.PNSortKey.Dir.DESC;
 
-public class PNSortKey {
+final public class PNSortKey {
     public enum Dir {
         ASC("asc"), DESC("desc");
 
@@ -29,10 +29,10 @@ public class PNSortKey {
         }
     }
 
-    @Getter(AccessLevel.PACKAGE)
+    @Getter
     private final Dir dir;
 
-    @Getter(AccessLevel.PACKAGE)
+    @Getter
     private final Key key;
 
     private PNSortKey(Key key, Dir dir) {

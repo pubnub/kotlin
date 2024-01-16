@@ -1,119 +1,79 @@
 package com.pubnub.api.endpoints.objects_api.members;
 
-import com.pubnub.api.PubNub;
-import com.pubnub.api.PubNubException;
 import com.pubnub.api.endpoints.BuilderSteps;
-import com.pubnub.api.endpoints.objects_api.ChannelEnpoint;
-import com.pubnub.api.endpoints.objects_api.CompositeParameterEnricher;
-import com.pubnub.api.endpoints.objects_api.utils.Include.CustomIncludeAware;
-import com.pubnub.api.endpoints.objects_api.utils.Include.HavingCustomInclude;
-import com.pubnub.api.endpoints.objects_api.utils.Include.HavingUUIDInclude;
-import com.pubnub.api.endpoints.objects_api.utils.Include.UUIDIncludeAware;
-import com.pubnub.api.endpoints.objects_api.utils.ListCapabilities.HavingListCapabilites;
-import com.pubnub.api.endpoints.objects_api.utils.ListCapabilities.ListCapabilitiesAware;
+import com.pubnub.api.endpoints.Endpoint;
+import com.pubnub.api.endpoints.objects_api.utils.Include;
 import com.pubnub.api.endpoints.objects_api.utils.ObjectsBuilderSteps;
-import com.pubnub.api.enums.PNOperationType;
-import com.pubnub.api.managers.RetrofitManager;
-import com.pubnub.api.managers.TelemetryManager;
-import com.pubnub.api.managers.token_manager.TokenManager;
-import com.pubnub.api.models.consumer.objects_api.member.PNMembers;
+import com.pubnub.api.endpoints.objects_api.utils.PNSortKey;
+import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
+import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
+import com.pubnub.api.models.consumer.objects.PNPage;
 import com.pubnub.api.models.consumer.objects_api.member.PNRemoveChannelMembersResult;
 import com.pubnub.api.models.consumer.objects_api.member.PNUUID;
-import com.pubnub.api.models.server.objects_api.PatchMemberPayload;
-import com.pubnub.api.models.server.objects_api.EntityArrayEnvelope;
 import lombok.AllArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
-import retrofit2.Call;
-import retrofit2.Response;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Map;
+import java.util.List;
 
-public abstract class RemoveChannelMembers extends ChannelEnpoint<EntityArrayEnvelope<PNMembers>, PNRemoveChannelMembersResult>
-        implements CustomIncludeAware<RemoveChannelMembers>, UUIDIncludeAware<RemoveChannelMembers>, ListCapabilitiesAware<RemoveChannelMembers> {
+@Setter
+@Accessors(chain = true, fluent = true)
+public class RemoveChannelMembers extends Endpoint<PNRemoveChannelMembersResult> {
 
-    RemoveChannelMembers(final String channel,
-                         final PubNub pubnubInstance,
-                         final TelemetryManager telemetry,
-                         final RetrofitManager retrofitInstance,
-                         final CompositeParameterEnricher compositeParameterEnricher,
-                         final TokenManager tokenManager) {
-        super(channel, pubnubInstance, telemetry, retrofitInstance, compositeParameterEnricher, tokenManager);
+    private Integer limit = null;
+    private PNPage page;
+    private String filter;
+    private Collection<PNSortKey> sort = Collections.emptyList();
+    private boolean includeTotalCount;
+    private boolean includeCustom;
+    private final String channel;
+    private final List<String> uuids;
+    private Include.PNUUIDDetailsLevel includeUUID;
+
+    public RemoveChannelMembers(String channel, Collection<PNUUID> uuids, final com.pubnub.internal.PubNub pubnubInstance) {
+        super(pubnubInstance);
+        this.channel = channel;
+        this.uuids = new ArrayList<>(uuids.size());
+        for (PNUUID uuid : uuids) {
+            this.uuids.add(uuid.getUuid().getId());
+        }
     }
 
-    public static Builder builder(final PubNub pubnubInstance,
-                                  final TelemetryManager telemetry,
-                                  final RetrofitManager retrofitInstance,
-                                  final TokenManager tokenManager) {
-        return new Builder(pubnubInstance, telemetry, retrofitInstance, tokenManager);
+    @Override
+    protected ExtendedRemoteAction<PNRemoveChannelMembersResult> createAction() {
+        return new MappingRemoteAction<>(pubnub.removeChannelMembers(
+                channel,
+                uuids,
+                limit,
+                page,
+                filter,
+                SetChannelMembers.toInternal(sort),
+                includeTotalCount,
+                includeCustom,
+                SetChannelMembers.toInternal(includeUUID)
+        ), PNRemoveChannelMembersResult::from);
+    }
+
+    public static Builder builder(final com.pubnub.internal.PubNub pubnubInstance) {
+        return new Builder(pubnubInstance);
     }
 
     @AllArgsConstructor
     public static class Builder implements BuilderSteps.ChannelStep<ObjectsBuilderSteps.UUIDsStep<RemoveChannelMembers>> {
-        private final PubNub pubnubInstance;
-        private final TelemetryManager telemetry;
-        private final RetrofitManager retrofitInstance;
-        private final TokenManager tokenManager;
+        private final com.pubnub.internal.PubNub pubnubInstance;
 
         @Override
         public ObjectsBuilderSteps.UUIDsStep<RemoveChannelMembers> channel(final String channel) {
             return new ObjectsBuilderSteps.UUIDsStep<RemoveChannelMembers>() {
                 @Override
                 public RemoveChannelMembers uuids(@NotNull final Collection<PNUUID> uuids) {
-                    final CompositeParameterEnricher compositeParameterEnricher = CompositeParameterEnricher.createDefault(true, false);
-                    return new RemoveChannelMembersCommand(channel, uuids, pubnubInstance, telemetry, retrofitInstance, compositeParameterEnricher, tokenManager);
+                    return new RemoveChannelMembers(channel, uuids, pubnubInstance);
                 }
             };
         }
-    }
-}
-
-final class RemoveChannelMembersCommand extends RemoveChannelMembers implements
-        HavingCustomInclude<RemoveChannelMembers>,
-        HavingUUIDInclude<RemoveChannelMembers>,
-        HavingListCapabilites<RemoveChannelMembers> {
-    private final Collection<PNUUID> uuids;
-
-    RemoveChannelMembersCommand(final String channel,
-                                final Collection<PNUUID> uuids,
-                                final PubNub pubNub,
-                                final TelemetryManager telemetryManager,
-                                final RetrofitManager retrofitManager,
-                                final CompositeParameterEnricher compositeParameterEnricher,
-                                TokenManager tokenManager) {
-        super(channel, pubNub, telemetryManager, retrofitManager, compositeParameterEnricher, tokenManager);
-        this.uuids = uuids;
-    }
-
-    @Override
-    protected Call<EntityArrayEnvelope<PNMembers>> executeCommand(final Map<String, String> effectiveParams)
-            throws PubNubException {
-        final PatchMemberPayload patchMemberBody = new PatchMemberPayload(Collections.emptyList(), uuids);
-
-        return getRetrofit()
-                .getChannelMetadataService()
-                .patchMembers(getPubnub().getConfiguration().getSubscribeKey(), channel, patchMemberBody,
-                        effectiveParams);
-    }
-
-    @Override
-    protected PNRemoveChannelMembersResult createResponse(Response<EntityArrayEnvelope<PNMembers>> input)
-            throws PubNubException {
-        if (input.body() != null) {
-            return new PNRemoveChannelMembersResult(input.body());
-        } else {
-            return new PNRemoveChannelMembersResult();
-        }
-    }
-
-    @Override
-    protected PNOperationType getOperationType() {
-        return PNOperationType.PNRemoveChannelMembersOperation;
-    }
-
-    @Override
-    public CompositeParameterEnricher getCompositeParameterEnricher() {
-        return super.getCompositeParameterEnricher();
     }
 }

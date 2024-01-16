@@ -5,7 +5,7 @@ import com.pubnub.contract.objectV2.uuidmetadata.step.loadChannelMembership
 import io.cucumber.java.en.Then
 import org.hamcrest.CoreMatchers.hasItem
 import org.hamcrest.CoreMatchers.not
-import org.hamcrest.MatcherAssert.*
+import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers
 
 class ThenSteps(

@@ -1,7 +1,6 @@
 package com.pubnub.api.builder;
 
 
-import com.pubnub.api.managers.SubscriptionManager;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,10 +20,10 @@ public abstract class PubSubBuilder {
 
     @Getter(AccessLevel.PROTECTED)
     @Setter(AccessLevel.PROTECTED)
-    private SubscriptionManager subscriptionManager;
+    private com.pubnub.internal.PubNub pubnub;
 
-    public PubSubBuilder(SubscriptionManager subscriptionManagerInstance) {
-        this.subscriptionManager = subscriptionManagerInstance;
+    public PubSubBuilder(com.pubnub.internal.PubNub pubnub) {
+        this.pubnub = pubnub;
         this.channelSubscriptions = new ArrayList<>();
         this.channelGroupSubscriptions = new ArrayList<>();
     }

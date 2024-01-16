@@ -1,8 +1,10 @@
 package com.pubnub.api.models.consumer.objects_api.membership;
 
-import com.google.gson.annotations.JsonAdapter;
-import com.pubnub.api.models.consumer.objects_api.util.CustomPayloadJsonInterceptor;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -38,7 +40,6 @@ public abstract class PNChannelMembership {
     @Getter
     @EqualsAndHashCode(callSuper = true)
     public static class ChannelWithCustom extends PNChannelMembership {
-        @JsonAdapter(CustomPayloadJsonInterceptor.class)
         private final Object custom;
 
         ChannelWithCustom(@NonNull final ChannelId channelId, @NonNull Object custom) {

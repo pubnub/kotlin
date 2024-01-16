@@ -23,6 +23,13 @@ data class PubNubException(
         errorMessage = pubnubError.message,
         pubnubError = pubnubError
     )
+
+    @Deprecated(
+        message = "For legacy Java SDK compatibility. Use `errorMessage` instead.",
+        replaceWith = ReplaceWith("errorMessage"),
+        DeprecationLevel.WARNING
+    )
+    val errormsg get() = errorMessage
 }
 
 internal data class PubNubRetryableException(

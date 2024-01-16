@@ -29,4 +29,15 @@ public class PNAccessManagerKeyData {
     @SerializedName("j")
     private boolean joinEnabled;
 
+    static PNAccessManagerKeyData from(com.pubnub.internal.models.consumer.access_manager.PNAccessManagerKeyData data) {
+        return PNAccessManagerKeyData.builder()
+                .readEnabled(data.getReadEnabled())
+                .writeEnabled(data.getWriteEnabled())
+                .manageEnabled(data.getManageEnabled())
+                .deleteEnabled(data.getDeleteEnabled())
+                .getEnabled(data.getGetEnabled())
+                .updateEnabled(data.getUpdateEnabled())
+                .joinEnabled(data.getJoinEnabled())
+                .build();
+    }
 }

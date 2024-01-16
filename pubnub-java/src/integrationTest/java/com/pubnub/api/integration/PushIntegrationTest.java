@@ -7,10 +7,16 @@ import com.pubnub.api.integration.util.BaseIntegrationTest;
 import com.pubnub.api.models.consumer.push.PNPushListProvisionsResult;
 import org.junit.Test;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
+import java.util.UUID;
 
 import static com.pubnub.api.integration.util.RandomGenerator.randomNumber;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class PushIntegrationTest extends BaseIntegrationTest {
 

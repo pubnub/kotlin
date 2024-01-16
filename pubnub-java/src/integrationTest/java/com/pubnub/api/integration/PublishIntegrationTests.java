@@ -4,13 +4,14 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.pubnub.api.PNConfiguration;
 import com.pubnub.api.PubNub;
-import com.pubnub.api.PubNubError;
 import com.pubnub.api.PubNubException;
 import com.pubnub.api.builder.PubNubErrorBuilder;
+import com.pubnub.api.callbacks.PNCallback;
 import com.pubnub.api.callbacks.SubscribeCallback;
 import com.pubnub.api.crypto.CryptoModule;
 import com.pubnub.api.enums.PNOperationType;
 import com.pubnub.api.integration.util.BaseIntegrationTest;
+import com.pubnub.api.models.consumer.PNPublishResult;
 import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.history.PNFetchMessagesResult;
 import com.pubnub.api.models.consumer.history.PNHistoryResult;
@@ -41,7 +42,6 @@ import static com.pubnub.api.integration.util.Utils.randomChannel;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThrows;
 
 public class PublishIntegrationTests extends BaseIntegrationTest {
 
@@ -77,16 +77,16 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
     public void testPublishMessageHistory() throws PubNubException {
         final AtomicBoolean success = new AtomicBoolean();
         final String expectedChannel = randomChannel();
-        final JSONObject messagePayload = new JSONObject();
+        final JsonObject messagePayload = new JsonObject();
 
         try {
-            messagePayload.put("name", "joe");
-            messagePayload.put("age", 48);
+            messagePayload.addProperty("name", "joe");
+            messagePayload.addProperty("age", 48);
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        final JsonObject whatToExpect = pubNub.getMapper().convertValue(messagePayload, JsonObject.class);
+        final JsonObject whatToExpect = messagePayload;
 
         pubNub.publish()
                 .channel(expectedChannel)
@@ -163,7 +163,7 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
                         observer.publish()
                                 .message(messagePayload)
                                 .channel(expectedChannel)
-                                .async((result, status1) -> assertFalse(status1.isError()));
+                                .async((PNCallback<PNPublishResult>) (result, status1) -> assertFalse(status1.isError()));
                     }
                 }
             }
@@ -245,7 +245,7 @@ public class PublishIntegrationTests extends BaseIntegrationTest {
                                     observer.publish()
                                             .message(messagePayload)
                                             .channel(expectedChannel)
-                                            .async((result2, status2) -> assertFalse(status2.isError()));
+                                            .async((PNCallback<PNPublishResult>) (result2, status2) -> assertFalse(status2.isError()));
                                 });
                     }
                 }

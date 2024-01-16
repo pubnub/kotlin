@@ -1,7 +1,5 @@
 package com.pubnub.api.builder;
 
-import com.pubnub.api.builder.dto.SubscribeOperation;
-import com.pubnub.api.managers.SubscriptionManager;
 import lombok.AccessLevel;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -22,10 +20,10 @@ public class SubscribeBuilder extends PubSubBuilder {
      * Allow users to subscribe with a custom timetoken.
      */
     @Setter(AccessLevel.NONE)
-    private Long timetoken;
+    private Long timetoken = 0L;
 
-    public SubscribeBuilder(SubscriptionManager subscriptionManager) {
-        super(subscriptionManager);
+    public SubscribeBuilder(com.pubnub.internal.PubNub pubnub) {
+        super(pubnub);
     }
 
     public SubscribeBuilder withPresence() {
@@ -39,14 +37,12 @@ public class SubscribeBuilder extends PubSubBuilder {
     }
 
     public void execute() {
-        SubscribeOperation subscribeOperation = SubscribeOperation.builder()
-                .channels(this.getChannelSubscriptions())
-                .channelGroups(this.getChannelGroupSubscriptions())
-                .timetoken(timetoken)
-                .presenceEnabled(presenceEnabled)
-                .build();
-
-        this.getSubscriptionManager().adaptSubscribeBuilder(subscribeOperation);
+        this.getPubnub().subscribe(
+                this.getChannelSubscriptions(),
+                this.getChannelGroupSubscriptions(),
+                /* withPresence = */ presenceEnabled,
+                /* withTimetoken = */ timetoken
+        );
     }
 
     public SubscribeBuilder channels(List<String> channels) {

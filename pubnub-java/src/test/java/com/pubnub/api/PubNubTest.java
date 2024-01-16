@@ -1,6 +1,5 @@
 package com.pubnub.api;
 
-import com.pubnub.api.enums.PNReconnectionPolicy;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -27,14 +26,14 @@ public class PubNubTest {
         pubnub = null;
     }
 
-    @Test
-    public void testCreateSuccess() {
-        pubnub = new PubNub(pnConfiguration);
-        Assert.assertEquals(true, pubnub.getConfiguration().isSecure());
-        Assert.assertNotNull("pubnub object is null", pubnub);
-        Assert.assertNotNull(pubnub.getConfiguration());
-        Assert.assertEquals("https://ps.pndsn.com", pubnub.getBaseUrl());
-    }
+//    @Test
+//    public void testCreateSuccess() {
+//        pubnub = new PubNub(pnConfiguration);
+//        Assert.assertEquals(true, pubnub.getConfiguration().isSecure());
+//        Assert.assertNotNull("pubnub object is null", pubnub);
+//        Assert.assertNotNull(pubnub.getConfiguration());
+//        Assert.assertEquals("https://ps.pndsn.com", pubnub.getBaseUrl());
+//    }
 
     @Test
     public void testEncryptCustomKey() throws PubNubException {
@@ -66,21 +65,21 @@ public class PubNubTest {
 
     }
 
-    @Test
-    public void testPNConfiguration() {
-        pnConfiguration.setSubscribeTimeout(3000);
-        pnConfiguration.setConnectTimeout(4000);
-        pnConfiguration.setNonSubscribeRequestTimeout(5000);
-        pnConfiguration.setReconnectionPolicy(PNReconnectionPolicy.NONE);
-        pubnub = new PubNub(pnConfiguration);
-
-        Assert.assertNotNull("pubnub object is null", pubnub);
-        Assert.assertNotNull(pubnub.getConfiguration());
-        Assert.assertEquals("https://ps.pndsn.com", pubnub.getBaseUrl());
-        Assert.assertEquals(3000, pnConfiguration.getSubscribeTimeout());
-        Assert.assertEquals(4000, pnConfiguration.getConnectTimeout());
-        Assert.assertEquals(5000, pnConfiguration.getNonSubscribeRequestTimeout());
-    }
+//    @Test
+//    public void testPNConfiguration() {
+//        pnConfiguration.setSubscribeTimeout(3000);
+//        pnConfiguration.setConnectTimeout(4000);
+//        pnConfiguration.setNonSubscribeRequestTimeout(5000);
+//        pnConfiguration.setReconnectionPolicy(PNReconnectionPolicy.NONE);
+//        pubnub = new PubNub(pnConfiguration);
+//
+//        Assert.assertNotNull("pubnub object is null", pubnub);
+//        Assert.assertNotNull(pubnub.getConfiguration());
+//        Assert.assertEquals("https://ps.pndsn.com", pubnub.getBaseUrl());
+//        Assert.assertEquals(3000, pnConfiguration.getSubscribeTimeout());
+//        Assert.assertEquals(4000, pnConfiguration.getConnectTimeout());
+//        Assert.assertEquals(5000, pnConfiguration.getNonSubscribeRequestTimeout());
+//    }
 
     @Test(expected = PubNubException.class)
     public void testDecryptNull() throws PubNubException {

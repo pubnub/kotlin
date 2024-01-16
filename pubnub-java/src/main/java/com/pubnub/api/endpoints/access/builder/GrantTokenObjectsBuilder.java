@@ -6,12 +6,11 @@ import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant;
 import com.pubnub.api.models.consumer.access_manager.v3.UUIDGrant;
 
 import java.util.List;
-import java.util.Map;
 
 public class GrantTokenObjectsBuilder extends AbstractGrantTokenBuilder<GrantTokenObjectsBuilder> {
 
-    public GrantTokenObjectsBuilder(GrantToken grantToken) {
-        super(grantToken);
+    public GrantTokenObjectsBuilder(com.pubnub.internal.PubNub pubnub, GrantToken grantToken) {
+        super(pubnub, grantToken);
     }
 
     /**
@@ -46,12 +45,6 @@ public class GrantTokenObjectsBuilder extends AbstractGrantTokenBuilder<GrantTok
 
     public GrantTokenObjectsBuilder authorizedUUID(String authorizedUUID) {
         grantToken.authorizedUUID(authorizedUUID);
-        return this;
-    }
-
-    @Override
-    public GrantTokenObjectsBuilder queryParam(Map queryParam) {
-        grantToken.queryParam(queryParam);
         return this;
     }
 }

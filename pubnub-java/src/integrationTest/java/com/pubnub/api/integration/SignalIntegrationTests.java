@@ -1,8 +1,10 @@
 package com.pubnub.api.integration;
 
 import com.google.gson.Gson;
+import com.pubnub.api.PNConfiguration;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.PubNubException;
+import com.pubnub.api.UserId;
 import com.pubnub.api.builder.PubNubErrorBuilder;
 import com.pubnub.api.callbacks.SubscribeCallback;
 import com.pubnub.api.enums.PNOperationType;
@@ -181,9 +183,10 @@ public class SignalIntegrationTests extends BaseIntegrationTest {
     @Test
     public void testPublishSignalMessageSyncWithoutSubKey() {
         try {
-            pubNub.getConfiguration().setSubscribeKey(null);
+//            pubNub.getConfiguration().setSubscribeKey(null);
+            PubNub pubNub1 = new PubNub(new PNConfiguration(new UserId(random())));
 
-            pubNub.signal()
+            pubNub1.signal()
                     .channel(randomChannel())
                     .message(random())
                     .sync();

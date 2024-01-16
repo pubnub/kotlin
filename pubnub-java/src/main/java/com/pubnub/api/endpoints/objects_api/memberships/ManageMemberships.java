@@ -1,73 +1,90 @@
 package com.pubnub.api.endpoints.objects_api.memberships;
 
-import com.pubnub.api.PubNub;
-import com.pubnub.api.PubNubException;
-import com.pubnub.api.endpoints.objects_api.CompositeParameterEnricher;
-import com.pubnub.api.endpoints.objects_api.UUIDEndpoint;
-import com.pubnub.api.endpoints.objects_api.utils.Include.ChannelIncludeAware;
-import com.pubnub.api.endpoints.objects_api.utils.Include.CustomIncludeAware;
-import com.pubnub.api.endpoints.objects_api.utils.Include.HavingChannelInclude;
-import com.pubnub.api.endpoints.objects_api.utils.Include.HavingCustomInclude;
-import com.pubnub.api.endpoints.objects_api.utils.ListCapabilities.HavingListCapabilites;
-import com.pubnub.api.endpoints.objects_api.utils.ListCapabilities.ListCapabilitiesAware;
+import com.pubnub.api.endpoints.Endpoint;
+import com.pubnub.api.endpoints.objects_api.utils.Include;
 import com.pubnub.api.endpoints.objects_api.utils.ObjectsBuilderSteps;
-import com.pubnub.api.enums.PNOperationType;
-import com.pubnub.api.managers.RetrofitManager;
-import com.pubnub.api.managers.TelemetryManager;
-import com.pubnub.api.managers.token_manager.TokenManager;
+import com.pubnub.api.endpoints.objects_api.utils.PNSortKey;
+import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
+import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
+import com.pubnub.api.models.consumer.objects.PNPage;
 import com.pubnub.api.models.consumer.objects_api.membership.PNChannelMembership;
 import com.pubnub.api.models.consumer.objects_api.membership.PNManageMembershipResult;
-import com.pubnub.api.models.consumer.objects_api.membership.PNMembership;
-import com.pubnub.api.models.server.objects_api.PatchMembershipPayload;
-import com.pubnub.api.models.server.objects_api.EntityArrayEnvelope;
+import com.pubnub.internal.models.consumer.objects.membership.ChannelMembershipInput;
 import lombok.AllArgsConstructor;
-import retrofit2.Call;
-import retrofit2.Response;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Map;
 
-public abstract class ManageMemberships extends UUIDEndpoint<ManageMemberships, EntityArrayEnvelope<PNMembership>, PNManageMembershipResult>
-        implements CustomIncludeAware<ManageMemberships>, ChannelIncludeAware<ManageMemberships>,
-        ListCapabilitiesAware<ManageMemberships> {
+@Setter
+@Accessors(chain = true, fluent = true)
+public class ManageMemberships extends Endpoint<PNManageMembershipResult> {
+    private Collection<PNChannelMembership> set = Collections.emptySet();
+    private Collection<PNChannelMembership> remove = Collections.emptySet();;
+    private String uuid;
+    private Integer limit;
+    private PNPage page;
+    private String filter;
+    private Collection<PNSortKey> sort = Collections.emptyList();
+    private boolean includeTotalCount;
+    private boolean includeCustom;
+    private Include.PNChannelDetailsLevel includeChannel;
 
-    ManageMemberships(final PubNub pubnubInstance,
-                      final TelemetryManager telemetry,
-                      final RetrofitManager retrofitInstance,
-                      final CompositeParameterEnricher compositeParameterEnricher,
-                      final TokenManager tokenManager) {
-        super(pubnubInstance, telemetry, retrofitInstance, compositeParameterEnricher, tokenManager);
+    public ManageMemberships(Collection<PNChannelMembership> channelsToSet, Collection<PNChannelMembership> channelsToRemove, final com.pubnub.internal.PubNub pubnubInstance) {
+        super(pubnubInstance);
     }
 
-    public static Builder builder(final PubNub pubnubInstance,
-                                  final TelemetryManager telemetry,
-                                  final RetrofitManager retrofitInstance,
-                                  final TokenManager tokenManager) {
-        return new Builder(pubnubInstance, telemetry, retrofitInstance, tokenManager);
+    @Override
+    protected ExtendedRemoteAction<PNManageMembershipResult> createAction() {
+        ArrayList<ChannelMembershipInput> toSet = new ArrayList<>(set.size());
+        for (PNChannelMembership channel : set) {
+            toSet.add(new com.pubnub.internal.models.consumer.objects.membership.PNChannelMembership.Partial(
+                    channel.getChannel().getId(),
+                    (channel instanceof PNChannelMembership.ChannelWithCustom)
+                            ? ((PNChannelMembership.ChannelWithCustom) channel).getCustom()
+                            : null,
+                    null
+            ));
+        }
+        ArrayList<String> toRemove = new ArrayList<>(remove.size());
+        for (PNChannelMembership channel : remove) {
+            toRemove.add(channel.getChannel().getId());
+        }
+
+        return new MappingRemoteAction<>(
+                pubnub.manageMemberships(
+                        toSet,
+                        toRemove,
+                        uuid,
+                        limit,
+                        page,
+                        filter,
+                        SetMemberships.toInternal(sort),
+                        includeTotalCount,
+                        includeCustom,
+                        SetMemberships.toInternal(includeChannel)
+                ),
+                PNManageMembershipResult::from);
+    }
+
+    public static Builder builder(final com.pubnub.internal.PubNub pubnubInstance) {
+        return new Builder(pubnubInstance);
     }
 
     @AllArgsConstructor
     public static class Builder implements ObjectsBuilderSteps.RemoveOrSetStep<ManageMemberships, PNChannelMembership> {
-        private final PubNub pubnubInstance;
-        private final TelemetryManager telemetry;
-        private final RetrofitManager retrofitInstance;
-        private final TokenManager tokenManager;
+        private final com.pubnub.internal.PubNub pubnubInstance;
 
         @Override
         public RemoveStep<ManageMemberships, PNChannelMembership> set(final Collection<PNChannelMembership> channelsToSet) {
             return new RemoveStep<ManageMemberships, PNChannelMembership>() {
                 @Override
                 public ManageMemberships remove(final Collection<PNChannelMembership> channelsToRemove) {
-                    final CompositeParameterEnricher compositeParameterEnricher = CompositeParameterEnricher
-                            .createDefault(true, false);
-                    return new ManageMembershipsCommand(channelsToSet,
+                    return new ManageMemberships(channelsToSet,
                             channelsToRemove,
-                            pubnubInstance,
-                            telemetry,
-                            retrofitInstance,
-                            compositeParameterEnricher,
-                            tokenManager);
+                            pubnubInstance);
                 }
             };
         }
@@ -77,69 +94,11 @@ public abstract class ManageMemberships extends UUIDEndpoint<ManageMemberships, 
             return new SetStep<ManageMemberships, PNChannelMembership>() {
                 @Override
                 public ManageMemberships set(final Collection<PNChannelMembership> channelsToSet) {
-                    final CompositeParameterEnricher compositeParameterEnricher = CompositeParameterEnricher
-                            .createDefault(true, false);
-                    return new ManageMembershipsCommand(channelsToSet,
+                    return new ManageMemberships(channelsToSet,
                             channelsToRemove,
-                            pubnubInstance,
-                            telemetry,
-                            retrofitInstance,
-                            compositeParameterEnricher,
-                            tokenManager);
+                            pubnubInstance);
                 }
             };
         }
     }
 }
-
-final class ManageMembershipsCommand extends ManageMemberships implements
-        HavingCustomInclude<ManageMemberships>,
-        HavingChannelInclude<ManageMemberships>,
-        HavingListCapabilites<ManageMemberships> {
-    private final Collection<PNChannelMembership> channelsToSet;
-    private final Collection<PNChannelMembership> channelsToRemove;
-
-    ManageMembershipsCommand(final Collection<PNChannelMembership> channelsToSet,
-                             final Collection<PNChannelMembership> channelsToRemove,
-                             final PubNub pubnubInstance,
-                             final TelemetryManager telemetry,
-                             final RetrofitManager retrofitInstance,
-                             final CompositeParameterEnricher compositeParameterEnricher,
-                             final TokenManager tokenManager) {
-        super(pubnubInstance, telemetry, retrofitInstance, compositeParameterEnricher, tokenManager);
-        this.channelsToSet = channelsToSet;
-        this.channelsToRemove = channelsToRemove;
-    }
-
-    @Override
-    protected Call<EntityArrayEnvelope<PNMembership>> executeCommand(final Map<String, String> effectiveParams) throws PubNubException {
-        final PatchMembershipPayload patchMembershipBody = new PatchMembershipPayload(
-                (channelsToSet != null) ? channelsToSet : Collections.emptyList(),
-                (channelsToRemove != null) ? channelsToRemove : Collections.emptyList());
-
-        return getRetrofit()
-                .getUuidMetadataService()
-                .patchMembership(getPubnub().getConfiguration().getSubscribeKey(), effectiveUuid(), patchMembershipBody,
-                        effectiveParams);
-    }
-
-    @Override
-    protected PNManageMembershipResult createResponse(final Response<EntityArrayEnvelope<PNMembership>> input) throws PubNubException {
-        if (input.body() != null) {
-            return new PNManageMembershipResult(input.body());
-        } else {
-            return new PNManageMembershipResult();
-        }
-    }
-
-    @Override
-    protected PNOperationType getOperationType() {
-        return PNOperationType.PNManageMembershipsOperation;
-    }
-
-    @Override
-    public CompositeParameterEnricher getCompositeParameterEnricher() {
-        return super.getCompositeParameterEnricher();
-    }
-}
-

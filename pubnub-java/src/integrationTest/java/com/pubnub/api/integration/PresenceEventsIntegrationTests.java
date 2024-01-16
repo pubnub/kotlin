@@ -15,7 +15,6 @@ import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult;
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult;
 import org.awaitility.Awaitility;
 import org.jetbrains.annotations.NotNull;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Collections;
@@ -90,7 +89,6 @@ public class PresenceEventsIntegrationTests extends BaseIntegrationTest {
     }
 
     @Test
-    @Ignore
     public void testLeaveChannel() {
         final AtomicBoolean success = new AtomicBoolean(false);
         final String channel = randomChannel();

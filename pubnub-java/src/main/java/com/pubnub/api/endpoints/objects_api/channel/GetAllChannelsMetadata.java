@@ -1,82 +1,74 @@
 package com.pubnub.api.endpoints.objects_api.channel;
 
-import com.pubnub.api.PubNub;
-import com.pubnub.api.PubNubException;
-import com.pubnub.api.endpoints.objects_api.CompositeParameterEnricher;
-import com.pubnub.api.endpoints.objects_api.ObjectApiEndpoint;
-import com.pubnub.api.endpoints.objects_api.utils.Include.CustomIncludeAware;
-import com.pubnub.api.endpoints.objects_api.utils.Include.HavingCustomInclude;
-import com.pubnub.api.endpoints.objects_api.utils.ListCapabilities.HavingListCapabilites;
-import com.pubnub.api.endpoints.objects_api.utils.ListCapabilities.ListCapabilitiesAware;
-import com.pubnub.api.enums.PNOperationType;
-import com.pubnub.api.managers.RetrofitManager;
-import com.pubnub.api.managers.TelemetryManager;
-import com.pubnub.api.managers.token_manager.TokenManager;
-import com.pubnub.api.models.consumer.objects_api.channel.PNChannelMetadata;
+import com.pubnub.api.endpoints.Endpoint;
+import com.pubnub.api.endpoints.objects_api.utils.PNSortKey;
+import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction;
+import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
+import com.pubnub.api.models.consumer.objects.PNPage;
 import com.pubnub.api.models.consumer.objects_api.channel.PNGetAllChannelsMetadataResult;
-import com.pubnub.api.models.server.objects_api.EntityArrayEnvelope;
-import retrofit2.Call;
-import retrofit2.Response;
+import com.pubnub.internal.models.consumer.objects.PNKey;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
-public abstract class GetAllChannelsMetadata
-        extends ObjectApiEndpoint<EntityArrayEnvelope<PNChannelMetadata>, PNGetAllChannelsMetadataResult>
-        implements CustomIncludeAware<GetAllChannelsMetadata>, ListCapabilitiesAware<GetAllChannelsMetadata> {
-    GetAllChannelsMetadata(final PubNub pubnubInstance,
-                           final TelemetryManager telemetry,
-                           final RetrofitManager retrofitInstance,
-                           final CompositeParameterEnricher compositeParameterEnricher,
-                           final TokenManager tokenManager) {
-        super(pubnubInstance, telemetry, retrofitInstance, compositeParameterEnricher, tokenManager);
-    }
+@Accessors(chain = true, fluent = true)
+public class GetAllChannelsMetadata
+        extends Endpoint<PNGetAllChannelsMetadataResult> {
 
-    public static GetAllChannelsMetadata create(final PubNub pubnubInstance,
-                                                final TelemetryManager telemetry,
-                                                final RetrofitManager retrofitInstance,
-                                                final TokenManager tokenManager) {
-        final CompositeParameterEnricher compositeParameterEnricher = CompositeParameterEnricher.createDefault(true, true);
-        return new GetAllChannelsMetadataCommand(pubnubInstance, telemetry, retrofitInstance,
-                compositeParameterEnricher, tokenManager);
-    }
-}
+    @Setter
+    private Integer limit = null;
+    @Setter
+    private PNPage page;
+    @Setter
+    private String filter;
+    @Setter
+    private Collection<PNSortKey> sort = Collections.emptyList();
+    @Setter
+    private boolean includeTotalCount;
+    @Setter
+    private boolean includeCustom;
 
-final class GetAllChannelsMetadataCommand extends GetAllChannelsMetadata implements
-        HavingCustomInclude<GetAllChannelsMetadata>,
-        HavingListCapabilites<GetAllChannelsMetadata> {
-    GetAllChannelsMetadataCommand(final PubNub pubnubInstance,
-                                  final TelemetryManager telemetry,
-                                  final RetrofitManager retrofitInstance,
-                                  final CompositeParameterEnricher compositeParameterEnricher,
-                                  final TokenManager tokenManager) {
-        super(pubnubInstance, telemetry, retrofitInstance, compositeParameterEnricher, tokenManager);
+    public GetAllChannelsMetadata(final com.pubnub.internal.PubNub pubnubInstance) {
+        super(pubnubInstance);
     }
 
     @Override
-    protected Call<EntityArrayEnvelope<PNChannelMetadata>> executeCommand(final Map<String, String> effectiveParams)
-            throws PubNubException {
-        return getRetrofit()
-                .getChannelMetadataService()
-                .getChannelMetadata(getPubnub().getConfiguration().getSubscribeKey(), effectiveParams);
+    protected ExtendedRemoteAction<PNGetAllChannelsMetadataResult> createAction() {
+        return new MappingRemoteAction<>(pubnub.getAllChannelMetadata(
+                limit,
+                page,
+                filter,
+                toInternal(sort),
+                includeTotalCount,
+                includeCustom
+        ), PNGetAllChannelsMetadataResult::from);
     }
 
-    @Override
-    protected PNGetAllChannelsMetadataResult createResponse(Response<EntityArrayEnvelope<PNChannelMetadata>> input)
-            throws PubNubException {
-        if (input.body() != null) {
-            return new PNGetAllChannelsMetadataResult(input.body());
-        } else {
-            return new PNGetAllChannelsMetadataResult();
+    public static Collection<? extends com.pubnub.internal.models.consumer.objects.PNSortKey<PNKey>> toInternal(Collection<PNSortKey> sort) {
+        List<com.pubnub.internal.models.consumer.objects.PNSortKey<PNKey>> list = new ArrayList<>(sort.size());
+        for (PNSortKey pnSortKey : sort) {
+            PNKey key = null;
+            switch (pnSortKey.getKey()) {
+                case ID:
+                    key = PNKey.ID;
+                    break;
+                case NAME:
+                    key = PNKey.NAME;
+                    break;
+                case UPDATED:
+                    key = PNKey.UPDATED;
+                    break;
+            }
+            if (pnSortKey.getDir().equals(PNSortKey.Dir.ASC)) {
+                list.add(new com.pubnub.internal.models.consumer.objects.PNSortKey.PNAsc<>(key));
+            } else {
+                list.add(new com.pubnub.internal.models.consumer.objects.PNSortKey.PNDesc<>(key));
+            }
         }
-    }
-
-    @Override
-    protected PNOperationType getOperationType() {
-        return PNOperationType.PNGetAllChannelsMetadataOperation;
-    }
-
-    @Override
-    public CompositeParameterEnricher getCompositeParameterEnricher() {
-        return super.getCompositeParameterEnricher();
+        return list;
     }
 }

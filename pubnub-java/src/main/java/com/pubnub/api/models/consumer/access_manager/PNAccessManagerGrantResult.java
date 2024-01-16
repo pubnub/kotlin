@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Builder
@@ -22,4 +23,28 @@ public class PNAccessManagerGrantResult {
     private Map<String, Map<String, PNAccessManagerKeyData>> channelGroups;
 
     private Map<String, Map<String, PNAccessManagerKeyData>> uuids;
+
+    public static PNAccessManagerGrantResult from(com.pubnub.internal.models.consumer.access_manager.PNAccessManagerGrantResult data) {
+
+        return PNAccessManagerGrantResult.builder()
+                .level(data.getLevel())
+                .ttl(data.getTtl())
+                .subscribeKey(data.getSubscribeKey())
+                .channels(from(data.getChannels()))
+                .channelGroups(from(data.getChannelGroups()))
+                // TODO why no uuids in Kotlin? where do we get them from?
+                .build();
+    }
+
+    private static Map<String, Map<String, PNAccessManagerKeyData>> from(Map<String, Map<String, com.pubnub.internal.models.consumer.access_manager.PNAccessManagerKeyData>> data) {
+        Map<String, Map<String, PNAccessManagerKeyData>> newMap = new HashMap<>(data.size());
+        for (Map.Entry<String, Map<String, com.pubnub.internal.models.consumer.access_manager.PNAccessManagerKeyData>> stringMapEntry : data.entrySet()) {
+            Map<String, PNAccessManagerKeyData> innerMap = new HashMap<>(stringMapEntry.getValue().size());
+            for (Map.Entry<String, com.pubnub.internal.models.consumer.access_manager.PNAccessManagerKeyData> innerEntry : stringMapEntry.getValue().entrySet()) {
+                innerMap.put(innerEntry.getKey(), PNAccessManagerKeyData.from(innerEntry.getValue()));
+            }
+            newMap.put(stringMapEntry.getKey(), innerMap);
+        }
+        return newMap;
+    }
 }
