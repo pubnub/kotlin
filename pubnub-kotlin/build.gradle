@@ -1,0 +1,145 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
+    id 'java-library'
+    id 'java-test-fixtures'
+    id "org.jlleitschuh.gradle.ktlint" version "11.0.0"
+    id "jacoco"
+    id 'org.jetbrains.dokka' version '1.7.10'
+    id 'org.unbroken-dome.test-sets' version '4.0.0'
+    id "com.github.ben-manes.versions" version '0.42.0'
+    id "com.vanniktech.maven.publish" version '0.22.0'
+    id 'me.champeau.gradle.japicmp' version '0.4.2'
+}
+
+sourceSets {
+    integrationTest {
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
+    }
+}
+
+configurations {
+    integrationTestImplementation.extendsFrom(testImplementation)
+}
+
+test {
+    failFast = true
+    exclude '**/contract/*.class'
+    useJUnitPlatform()
+}
+
+ktlint {
+    outputToConsole = true
+    verbose = true
+    additionalEditorconfigFile = file("check/.editorconfig")
+    kotlinScriptAdditionalPaths {
+        include fileTree("src/integrationTest/")
+        include fileTree("src/testFixtures/")
+    }
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+
+compileKotlin.finalizedBy(task("compileIntegrationTest"))
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+dependencies {
+    api project(":core")
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+
+    implementation "com.squareup.retrofit2:retrofit:2.9.0"
+    implementation "com.squareup.retrofit2:converter-gson:2.9.0"
+
+    api 'org.json:json:20231013'
+
+    implementation "org.slf4j:slf4j-api:1.7.30"
+
+    api 'com.squareup.okhttp3:logging-interceptor:4.9.3'
+    api 'com.google.code.gson:gson:2.9.0'
+    implementation 'co.nstant.in:cbor:0.9'
+
+    testImplementation "com.github.tomakehurst:wiremock:2.27.2"
+    testFixturesImplementation "com.github.tomakehurst:wiremock:2.27.2"
+
+    testImplementation "ch.qos.logback:logback-classic:1.2.11"
+    testImplementation "ch.qos.logback:logback-core:1.2.11"
+    testImplementation "org.json:json:20231013"
+
+    testImplementation group: 'io.cucumber', name: 'cucumber-java', version: '6.10.4'
+    testImplementation group: 'io.cucumber', name: 'cucumber-junit', version: '6.10.4'
+    testImplementation group: 'io.cucumber', name: 'cucumber-picocontainer', version: '6.10.4'
+    testImplementation 'com.fasterxml.jackson.core:jackson-databind:2.14.2'
+
+    testImplementation "org.awaitility:awaitility-kotlin:4.0.3"
+    testFixturesImplementation "org.awaitility:awaitility-kotlin:4.0.3"
+    testImplementation "junit:junit:4.13.2"
+    testFixturesImplementation "junit:junit:4.13.2"
+    testImplementation "org.junit.jupiter:junit-jupiter-engine:5.8.2"
+    testImplementation "org.junit.vintage:junit-vintage-engine:5.8.2"
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.8.2'
+    testImplementation "io.mockk:mockk:1.11.0"
+    testImplementation "org.aeonbits.owner:owner:1.0.12"
+    testFixturesImplementation "org.aeonbits.owner:owner:1.0.12"
+}
+
+shadowJar {
+    classifier = "all"
+    dependencies {
+        exclude(dependency('org.jetbrains.kotlin:.*'))
+    }
+    dependencies {
+        exclude(dependency('org.jetbrains:annotations:.*'))
+    }
+}
+
+task cucumber(type: Test) {
+    systemProperty "cucumber.filter.tags", System.getProperty("cucumber.filter.tags")
+    systemProperty "cucumber.features", System.getProperty("cucumber.features")
+    systemProperty "cucumber.plugins", System.getProperty("cucumber.plugins")
+}
+
+
+dokkaGfm {
+    dokkaSourceSets {
+        configureEach {
+            skipEmptyPackages.set(true)
+        }
+    }
+}
+
+sourceSets {
+    test {
+        resources {
+            srcDir 'src/testFixtures/resources'
+        }
+    }
+    integrationTest {
+        resources {
+            srcDir 'src/testFixtures/resources'
+        }
+    }
+}
+
+build.finalizedBy(dokkaGfm, shadowJar)
+tasks.register("japicmp", me.champeau.gradle.japicmp.JapicmpTask) {
+    oldClasspath.from(files('/Users/wojciech.kalicinski/projects/pubnub-kotlin/build/libs/pubnub-kotlin-7.7.5.jar'))
+    newClasspath.from(tasks.named('jar'), "../pubnub-kotlin-core/build/libs/pubnub-kotlin-core-7.7.4.jar")
+    onlyModified = false
+    failOnModification = false
+    htmlOutputFile = layout.buildDirectory.file("reports/japi.html")
+    ignoreMissingClasses = true
+    classExcludes = ["com.pubnub.internal.*"]
+}
+
+tasks.register("mergeKotlinJars", org.gradle.jvm.tasks.Jar) {
+    from(zipTree("/Users/wojciech.kalicinski/projects/pubnub-kotlin-copy/pubnub-kotlin/build/libs/pubnub-kotlin-7.7.4.jar"), zipTree("/Users/wojciech.kalicinski/projects/pubnub-kotlin-copy/pubnub-kotlin-core/build/libs/pubnub-kotlin-core-7.7.4.jar"))
+    setArchiveFileName("combined.jar")
+}
