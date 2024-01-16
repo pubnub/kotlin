@@ -172,7 +172,7 @@ open class PNConfiguration(
         level = DeprecationLevel.WARNING,
         message = """Instead of reconnectionPolicy and maximumReconnectionRetries use retryConfiguration 
             e.g. config.retryConfiguration = RetryConfiguration.Linear(delayInSec = 3, maxRetryNumber = 5) 
-            or config.cryptoModule = RetryConfiguration.Exponential(minDelayInSec = 3, maxDelayInSec = 10, maxRetryNumber = 5)""",
+            or config.retryConfiguration = RetryConfiguration.Exponential(minDelayInSec = 3, maxDelayInSec = 10, maxRetryNumber = 5)""",
     )
     var reconnectionPolicy = PNReconnectionPolicy.NONE
 
@@ -286,7 +286,7 @@ open class PNConfiguration(
         level = DeprecationLevel.WARNING,
         message = """Instead of reconnectionPolicy and maximumReconnectionRetries use retryConfiguration 
             e.g. config.retryConfiguration = RetryConfiguration.Linear(delayInSec = 3, maxRetryNumber = 5) 
-            or config.cryptoModule = RetryConfiguration.Exponential(minDelayInSec = 3, maxDelayInSec = 10, maxRetryNumber = 5)""",
+            or config.retryConfiguration = RetryConfiguration.Exponential(minDelayInSec = 3, maxDelayInSec = 10, maxRetryNumber = 5)""",
     )
     var maximumReconnectionRetries = -1
 

@@ -201,7 +201,7 @@ class RetryableRestCallerTest {
         every { mockCall.execute() } returns successfulResponse
 
         // when
-        val response = retryableRestCaller.executeRestCallWithRetryConf(mockCall)
+        val response = retryableRestCaller.execute(mockCall)
 
         // then
         verify(exactly = 0) { mockCall.clone() }
@@ -219,7 +219,7 @@ class RetryableRestCallerTest {
         every { mockCall.execute() } returns errorResponse
 
         // when
-        val response = retryableRestCaller.executeRestCallWithRetryConf(mockCall)
+        val response = retryableRestCaller.execute(mockCall)
 
         // then
         verify(exactly = 0) { mockCall.clone() }
@@ -238,7 +238,7 @@ class RetryableRestCallerTest {
         every { mockCall.execute() } returns errorResponse
 
         // when
-        val response1 = retryableRestCaller.executeRestCallWithRetryConf(mockCall)
+        val response1 = retryableRestCaller.execute(mockCall)
 
         // then
         verify(exactly = 0) { mockCall.clone() }
@@ -261,7 +261,7 @@ class RetryableRestCallerTest {
         every { mockCall.execute() } returns errorResponse
 
         // when
-        val response1 = retryableRestCaller.executeRestCallWithRetryConf(mockCall)
+        val response1 = retryableRestCaller.execute(mockCall)
 
         // then
         verify(exactly = 0) { mockCall.clone() }
@@ -283,7 +283,7 @@ class RetryableRestCallerTest {
         every { mockCall.execute() } returns errorResponse
 
         // when
-        val response1 = retryableRestCaller.executeRestCallWithRetryConf(mockCall)
+        val response1 = retryableRestCaller.execute(mockCall)
 
         // then
         verify(exactly = 0) { mockCall.clone() }
@@ -304,7 +304,7 @@ class RetryableRestCallerTest {
         every { mockCall.clone() } returns mockCall
 
         // when
-        val response1 = retryableRestCaller.executeRestCallWithRetryConf(mockCall)
+        val response1 = retryableRestCaller.execute(mockCall)
 
         // then
         verify(exactly = 3) { mockCall.clone() }
@@ -331,7 +331,7 @@ class RetryableRestCallerTest {
         every { mockCall.clone() } returns mockCall
 
         // when
-        val response1 = retryableRestCaller.executeRestCallWithRetryConf(mockCall)
+        val response1 = retryableRestCaller.execute(mockCall)
 
         // then
         verify(exactly = 2) { mockCall.clone() }
@@ -350,7 +350,7 @@ class RetryableRestCallerTest {
         every { mockCall.clone() } returns mockCall
 
         // when
-        val response1 = retryableRestCaller.executeRestCallWithRetryConf(mockCall)
+        val response1 = retryableRestCaller.execute(mockCall)
 
         // then
         verify(exactly = 2) { mockCall.clone() }
@@ -369,7 +369,7 @@ class RetryableRestCallerTest {
 
         // when
         val exception = assertThrows(PubNubException::class.java) {
-            retryableRestCaller.executeRestCallWithRetryConf(mockCall)
+            retryableRestCaller.execute(mockCall)
         }
 
         // then

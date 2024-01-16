@@ -80,10 +80,9 @@ internal abstract class RetryableBase<T>(
             is RetryConfiguration.None -> 0.seconds
             is RetryConfiguration.Linear -> retryConfiguration.delayInSec
             is RetryConfiguration.Exponential -> {
-                val delay: Int = (retryConfiguration.minDelayInSec.inWholeSeconds * 2.0.pow(exponentialMultiplier)).toInt()
+                val delay: Duration = retryConfiguration.minDelayInSec * 2.0.pow(exponentialMultiplier)
                 exponentialMultiplier++
-                val maxDelay = retryConfiguration.maxDelayInSec.inWholeSeconds.toInt()
-                minOf(delay, maxDelay).seconds
+                minOf(delay, retryConfiguration.maxDelayInSec)
             }
         }
     }

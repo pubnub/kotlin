@@ -60,7 +60,7 @@ internal abstract class RetryableCallback<T>(
     }
 
     private fun retryOnFailure() {
-        val effectiveDelay = getDelayForRetryOnFailure()
+        val effectiveDelay = getDelayFromRetryConfiguration()
         retry(effectiveDelay)
     }
 
@@ -83,10 +83,6 @@ internal abstract class RetryableCallback<T>(
                 e.printStackTrace()
             }
         }
-    }
-
-    private fun getDelayForRetryOnFailure(): Duration {
-        return getDelayFromRetryConfiguration()
     }
 
     private fun getDelayForRetryOnResponse(response: Response<T>): Duration {

@@ -83,25 +83,16 @@ sealed class RetryConfiguration {
 
         init {
             if (!isInternal) {
-                if (minDelayInSec < MIN_DELAY.seconds) {
-                    log.trace("Provided minDelayInSec is less than $MIN_DELAY, setting it to $MIN_DELAY")
-                    minDelayInSec = MIN_DELAY.seconds
-                }
-                if (minDelayInSec > MAX_DELAY.seconds) {
-                    log.trace("Provided minDelayInSec is greater than $MAX_DELAY, setting it to $MAX_DELAY")
-                    minDelayInSec = MAX_DELAY.seconds
-                }
-                if (maxDelayInSec > MAX_DELAY.seconds) {
-                    log.trace("Provided maxDelayInSec is greater than $MAX_DELAY, setting it to $MAX_DELAY")
-                    maxDelayInSec = MAX_DELAY.seconds
-                }
-                if (maxDelayInSec < minDelayInSec) {
-                    log.trace("Provided maxDelayInSec is less than minDelayInSec, setting it to $minDelayInSec")
-                    maxDelayInSec = minDelayInSec
-                }
-                if (maxRetryNumber > MAX_RETRIES_IN_EXPONENTIAL) {
-                    log.trace("Provided maxRetryNumber is greater than $MAX_RETRIES_IN_EXPONENTIAL, setting it to $MAX_RETRIES_IN_EXPONENTIAL")
-                    maxRetryNumber = MAX_RETRIES_IN_EXPONENTIAL
+                val originalMinDelayInSec = minDelayInSec
+                val originalMaxDelayInSec = maxDelayInSec
+                val originalMaxRetryNumber = maxRetryNumber
+
+                minDelayInSec = minDelayInSec.coerceIn(MIN_DELAY.seconds, MAX_DELAY.seconds)
+                maxDelayInSec = maxDelayInSec.coerceAtLeast(minDelayInSec).coerceAtMost(MAX_DELAY.seconds)
+                maxRetryNumber = maxRetryNumber.coerceAtMost(MAX_RETRIES_IN_EXPONENTIAL)
+
+                if (minDelayInSec != originalMinDelayInSec || maxDelayInSec != originalMaxDelayInSec || maxRetryNumber != originalMaxRetryNumber) {
+                    log.trace("Adjusted values: minDelayInSec=$minDelayInSec, maxDelayInSec=$maxDelayInSec, maxRetryNumber=$maxRetryNumber")
                 }
             }
         }

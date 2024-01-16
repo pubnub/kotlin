@@ -65,7 +65,7 @@ abstract class Endpoint<Input, Output> protected constructor(protected val pubnu
     override fun sync(): Output? {
         validateParams()
         call = doWork(createBaseParams())
-        val response = retryableRestCaller.executeRestCallWithRetryConf(call)
+        val response = retryableRestCaller.execute(call)
         return handleResponse(response)
     }
 

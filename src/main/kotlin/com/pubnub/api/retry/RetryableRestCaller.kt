@@ -17,7 +17,7 @@ internal class RetryableRestCaller<T>(
     private val log = LoggerFactory.getLogger(this.javaClass.simpleName)
     internal lateinit var call: Call<T>
 
-    internal fun executeRestCallWithRetryConf(callToBeExecuted: Call<T>): Response<T> {
+    internal fun execute(callToBeExecuted: Call<T>): Response<T> {
         call = callToBeExecuted
         var numberOfAttempts = 0
         while (true) {
