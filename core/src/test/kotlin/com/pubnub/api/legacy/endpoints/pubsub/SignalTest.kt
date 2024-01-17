@@ -7,10 +7,8 @@ import com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.stubFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlMatching
 import com.pubnub.api.CommonUtils.assertPnException
-import com.pubnub.internal.PubNub
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
-import com.pubnub.internal.callbacks.SubscribeCallback
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.listen
@@ -19,6 +17,8 @@ import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
+import com.pubnub.internal.PubNub
+import com.pubnub.internal.callbacks.SubscribeCallback
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse

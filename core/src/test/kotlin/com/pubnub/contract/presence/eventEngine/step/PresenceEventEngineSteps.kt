@@ -1,10 +1,10 @@
 package com.pubnub.contract.presence.eventEngine.step
 
-import com.pubnub.internal.PubNub
-import com.pubnub.internal.callbacks.SubscribeCallback
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.contract.subscribe.eventEngine.state.EventEngineState
+import com.pubnub.internal.PubNub
+import com.pubnub.internal.callbacks.SubscribeCallback
 import io.cucumber.datatable.DataTable
 import io.cucumber.java.en.Given
 import io.cucumber.java.en.Then

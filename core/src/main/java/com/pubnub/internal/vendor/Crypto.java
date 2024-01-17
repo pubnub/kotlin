@@ -77,6 +77,7 @@ public class Crypto {
                 PubNubError.CRYPTO_ERROR,
                 null,
                 0,
+                null,
                 null
         );
     }

@@ -2,9 +2,9 @@ package com.pubnub.contract
 
 import com.google.gson.Gson
 import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata
+import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
 import com.pubnub.internal.models.consumer.objects.member.PNMember
 import com.pubnub.internal.models.consumer.objects.membership.PNChannelMembership
-import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Paths

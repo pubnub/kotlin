@@ -2,10 +2,10 @@ package com.pubnub.api.suite
 
 import com.github.tomakehurst.wiremock.client.WireMock.get
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
-import com.pubnub.internal.endpoints.Time
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.PNTimeResult
+import com.pubnub.internal.endpoints.Time
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull

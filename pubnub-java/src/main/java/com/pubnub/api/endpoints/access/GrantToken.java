@@ -3,7 +3,6 @@ package com.pubnub.api.endpoints.access;
 import com.pubnub.api.Endpoint;
 import com.pubnub.api.endpoints.ValidatingEndpoint;
 import com.pubnub.api.endpoints.remoteaction.IdentityMappingEndpoint;
-import com.pubnub.api.endpoints.remoteaction.MappingRemoteActionKt;
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGrant;
 import com.pubnub.api.models.consumer.access_manager.v3.ChannelGroupGrant;
 import com.pubnub.api.models.consumer.access_manager.v3.PNGrantTokenResult;

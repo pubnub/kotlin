@@ -5,9 +5,11 @@ import com.pubnub.api.CommonUtils.randomValue
 import com.pubnub.api.PubNub
 import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.enums.PNOperationType
+import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.listen
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
+import com.pubnub.api.retry.RetryConfiguration
 import com.pubnub.api.subscribeToBlocking
 import com.pubnub.api.unsubscribeFromBlocking
 import okhttp3.HttpUrl
@@ -80,6 +82,34 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         guestClient.publish(
             channel = "my.test",
             message = expectedMessage
+        ).sync()!!
+
+        success.listen()
+    }
+
+    @Test
+    fun testSubscribeWithFilterExpression() {
+        val success = AtomicBoolean()
+
+        val expectedMessage = randomValue()
+
+        val metaParameter = "color"
+        pubnub.configuration.filterExpression = "$metaParameter LIKE 'blue*'"
+        pubnub.subscribeToBlocking("my.*")
+
+        pubnub.addListener(object : SubscribeCallback() {
+            override fun status(pubnub: PubNub, pnStatus: PNStatus) {}
+
+            override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {
+                assertEquals(expectedMessage, pnMessageResult.message.asString)
+                success.set(true)
+            }
+        })
+        val meta: MutableMap<String, Any> = HashMap<String, Any>().apply { put("$metaParameter", "blue12367") }
+        guestClient.publish(
+            channel = "my.test",
+            message = expectedMessage,
+            meta = meta
         ).sync()!!
 
         success.listen()
@@ -192,5 +222,30 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
         // then
         assertNotNull(interceptedUrl)
         assertFalse(interceptedUrl!!.queryParameterNames.contains("ee"))
+    }
+
+    @Test
+    fun `when retryConfiguration is defined should get proper status`() {
+        val success = AtomicBoolean()
+
+        guestClient = createPubNub(
+            getBasicPnConfiguration().apply {
+                val notExistingUri = "ps.pndsn_notExisting_URI.com" // we want to trigger UnknownHostException to initiate retry
+                origin = notExistingUri
+                retryConfiguration = RetryConfiguration.Linear(delayInSec = 1, maxRetryNumber = 2)
+                enableEventEngine = true
+            }
+        )
+
+        guestClient.subscribeToBlocking("my.*")
+
+        guestClient.addListener(object : SubscribeCallback() {
+            override fun status(pubnub: PubNub, pnStatus: PNStatus) {
+                assertEquals(PNStatusCategory.PNConnectionError, pnStatus.category)
+                success.set(true)
+            }
+        })
+
+        success.listen(10)
     }
 }

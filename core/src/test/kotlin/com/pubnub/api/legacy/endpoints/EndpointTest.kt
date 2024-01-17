@@ -7,8 +7,6 @@ import com.github.tomakehurst.wiremock.client.WireMock.stubFor
 import com.github.tomakehurst.wiremock.matching.UrlPattern
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
-import com.pubnub.internal.Endpoint
-import com.pubnub.internal.PNConfiguration
 import com.pubnub.api.UserId
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
@@ -16,6 +14,8 @@ import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.listen
 import com.pubnub.api.param
 import com.pubnub.api.retry.RetryableEndpointGroup
+import com.pubnub.internal.Endpoint
+import com.pubnub.internal.PNConfiguration
 import com.pubnub.internal.PubNub
 import okhttp3.Request
 import okio.Timeout
@@ -28,7 +28,6 @@ import org.junit.Test
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.HashMap
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 

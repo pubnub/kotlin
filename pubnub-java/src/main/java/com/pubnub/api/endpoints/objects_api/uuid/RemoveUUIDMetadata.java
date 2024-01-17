@@ -3,7 +3,6 @@ package com.pubnub.api.endpoints.objects_api.uuid;
 import com.pubnub.api.Endpoint;
 import com.pubnub.api.endpoints.ValidatingEndpoint;
 import com.pubnub.api.endpoints.remoteaction.MappingEndpoint;
-import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.models.consumer.objects_api.uuid.PNRemoveUUIDMetadataResult;
 import lombok.Setter;
 import lombok.experimental.Accessors;

@@ -7,8 +7,8 @@ import com.github.tomakehurst.wiremock.client.WireMock.matching
 import com.github.tomakehurst.wiremock.client.WireMock.stubFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 import com.google.gson.JsonObject
-import com.pubnub.internal.endpoints.presence.SetState
 import com.pubnub.api.legacy.BaseTest
+import com.pubnub.internal.endpoints.presence.SetState
 import com.pubnub.internal.presence.eventengine.data.PresenceData
 import org.junit.Assert.assertEquals
 import org.junit.Test

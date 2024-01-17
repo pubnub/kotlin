@@ -2,7 +2,6 @@ package com.pubnub.internal.models.server.history
 
 import com.google.gson.JsonElement
 import com.google.gson.annotations.SerializedName
-import com.pubnub.api.models.consumer.history.Action
 import com.pubnub.api.models.consumer.history.PNFetchMessageItem
 
 data class ServerFetchMessageItem(

@@ -5,8 +5,6 @@ import com.github.tomakehurst.wiremock.client.WireMock.get
 import com.github.tomakehurst.wiremock.client.WireMock.stubFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 import com.pubnub.api.CommonUtils.failTest
-import com.pubnub.internal.PubNub
-import com.pubnub.internal.callbacks.SubscribeCallback
 import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.listen
 import com.pubnub.api.models.consumer.PNStatus
@@ -14,6 +12,8 @@ import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
+import com.pubnub.internal.PubNub
+import com.pubnub.internal.callbacks.SubscribeCallback
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import java.util.concurrent.atomic.AtomicBoolean

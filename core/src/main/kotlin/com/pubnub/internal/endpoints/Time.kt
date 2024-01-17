@@ -9,7 +9,7 @@ import retrofit2.Response
 /**
  * @see [PubNub.time]
  */
-class Time internal constructor(pubnub: PubNub) :
+class Time internal constructor(pubnub: PubNub, private val excludeFromRetry: Boolean = false) :
     com.pubnub.internal.Endpoint<List<Long>, PNTimeResult>(pubnub),
     ITime {
 
@@ -29,4 +29,7 @@ class Time internal constructor(pubnub: PubNub) :
     override fun isAuthRequired() = false
     override fun isSubKeyRequired() = false
     override fun getEndpointGroupName(): RetryableEndpointGroup = RetryableEndpointGroup.MESSAGE_PERSISTENCE
+
+    // it is excluded here because retry in old subscribeLoop uses it to check connectivity
+    override fun isEndpointRetryable(): Boolean = !excludeFromRetry
 }

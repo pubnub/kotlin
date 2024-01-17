@@ -1,9 +1,10 @@
 package com.pubnub.api.legacy.endpoints.files
 
-import com.pubnub.internal.PNConfiguration
-import com.pubnub.internal.PubNub
 import com.pubnub.api.PubNubException
 import com.pubnub.api.UserId
+import com.pubnub.api.retry.RetryConfiguration
+import com.pubnub.internal.PNConfiguration
+import com.pubnub.internal.PubNub
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers
@@ -101,6 +102,7 @@ class GetFileUrlTest {
         val config = PNConfiguration(userId = UserId(PubNub.generateUUID()))
         config.publishKey = "pk"
         config.subscribeKey = "sk"
+        config.retryConfiguration = RetryConfiguration.Linear(delayInSec = 4, maxRetryNumber = 3)
         return config
     }
 

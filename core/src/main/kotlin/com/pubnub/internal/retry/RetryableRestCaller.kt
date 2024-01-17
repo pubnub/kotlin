@@ -3,25 +3,23 @@ package com.pubnub.internal.retry
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
 import com.pubnub.api.PubNubRetryableException
-import com.pubnub.api.retry.RequestRetryPolicy
+import com.pubnub.api.retry.RetryConfiguration
 import com.pubnub.api.retry.RetryableEndpointGroup
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.slf4j.LoggerFactory
 import retrofit2.Call
 import retrofit2.Response
-import kotlin.random.Random
 
 internal class RetryableRestCaller<T>(
-    retryPolicy: RequestRetryPolicy,
+    retryConfiguration: RetryConfiguration,
     endpointGroupName: RetryableEndpointGroup,
     private val isEndpointRetryable: Boolean
-) : RetryableBase<T>(retryPolicy, endpointGroupName) {
+) : RetryableBase<T>(retryConfiguration, endpointGroupName) {
 
     private val log = LoggerFactory.getLogger(this.javaClass.simpleName)
-    private val random = Random.Default
     internal lateinit var call: Call<T>
 
-    internal fun executeRestCallWithRetryPolicy(callToBeExecuted: Call<T>): Response<T> {
+    internal fun execute(callToBeExecuted: Call<T>): Response<T> {
         call = callToBeExecuted
         var numberOfAttempts = 0
         while (true) {
@@ -79,6 +77,6 @@ internal class RetryableRestCaller<T>(
     private fun shouldRetry(response: Response<T>) =
         !response.isSuccessful &&
             isErrorCodeRetryable(response.raw().code) &&
-            isRetryPolicySetForThisRestCall &&
+            isRetryConfSetForThisRestCall &&
             isEndpointRetryable
 }

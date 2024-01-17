@@ -16,7 +16,8 @@ data class PubNubException(
     val pubnubError: PubNubError? = null,
     val jso: String? = null,
     val statusCode: Int = 0,
-    val affectedCall: Call<*>? = null
+    val affectedCall: Call<*>? = null,
+    val retryAfterHeaderValue: Int? = null
 ) : Exception(errorMessage) {
 
     internal constructor(pubnubError: PubNubError) : this(

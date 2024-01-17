@@ -2,9 +2,9 @@ package com.pubnub.internal.subscribe.eventengine.worker
 
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
-import com.pubnub.internal.eventengine.transition
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNEvent
+import com.pubnub.internal.eventengine.transition
 import com.pubnub.internal.subscribe.eventengine.effect.SubscribeEffectInvocation
 import com.pubnub.internal.subscribe.eventengine.event.SubscribeEvent
 import com.pubnub.internal.subscribe.eventengine.event.SubscriptionCursor

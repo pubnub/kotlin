@@ -9,15 +9,15 @@ import okhttp3.ResponseBody
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.condition.EnabledIf
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 import java.util.concurrent.atomic.AtomicBoolean
+import kotlin.time.Duration.Companion.milliseconds
 
-class RetryableCallbackTest : RetryableTestBase() {
+class RetryableCallbackTest {
     private lateinit var mockCall: Call<Any>
     private lateinit var mockResponse: Response<Any>
     private var onFinalResponseCalled = false
@@ -30,13 +30,13 @@ class RetryableCallbackTest : RetryableTestBase() {
     }
 
     private fun getRetryableCallback(
-        retryPolicy: RequestRetryPolicy = RequestRetryPolicy.None,
+        retryConfiguration: RetryConfiguration = RetryConfiguration.None,
         onFinalFailureFinished: AtomicBoolean = AtomicBoolean(false),
         onFinalResponseFinished: AtomicBoolean = AtomicBoolean(false),
         endpointGroupName: RetryableEndpointGroup = RetryableEndpointGroup.MESSAGE_PERSISTENCE
     ): RetryableCallback<Any> {
         return object : RetryableCallback<Any>(
-            retryPolicy, endpointGroupName, mockCall, isEndpointRetryable = true
+            retryConfiguration, endpointGroupName, mockCall, isEndpointRetryable = true
         ) {
             override fun onFinalResponse(call: Call<Any>, response: Response<Any>) {
                 onFinalResponseCalled = true
@@ -64,7 +64,7 @@ class RetryableCallbackTest : RetryableTestBase() {
     }
 
     @Test
-    fun `should not retry when response is not successful and retryPolicy not defined`() {
+    fun `should not retry when response is not successful and retryConfiguration not defined`() {
         // given
         val retryableCallback = getRetryableCallback()
         val errorResponse: Response<Any> = Response.error<Any>(500, ResponseBody.create(null, ""))
@@ -79,12 +79,11 @@ class RetryableCallbackTest : RetryableTestBase() {
     }
 
     @Test
-    @EnabledIf("enableLongRunningRetryTests")
-    fun `should retry when linear retryPolicy is set and SocketTimeoutException`() {
+    fun `should retry when linear retryConfiguration is set and SocketTimeoutException`() {
         // given
         val success = AtomicBoolean()
         val retryableCallback =
-            getRetryableCallback(retryPolicy = RequestRetryPolicy.Linear(delayInSec = 2, maxRetryNumber = 3), onFinalResponseFinished = success)
+            getRetryableCallback(retryConfiguration = RetryConfiguration.Linear(delayInSec = 10.milliseconds, maxRetryNumber = 3, isInternal = true), onFinalResponseFinished = success)
         val errorResponse: Response<Any> = Response.error<Any>(500, ResponseBody.create(null, ""))
         every { mockResponse.isSuccessful } returns false
         every { mockResponse.code() } returns 500 // Assuming 500 is a retryable error
@@ -111,16 +110,16 @@ class RetryableCallbackTest : RetryableTestBase() {
     }
 
     @Test
-    @EnabledIf("enableLongRunningRetryTests")
-    fun `should retry onResponse when exponential retryPolicy is set and retryable error 500 occurs`() {
+    fun `should retry onResponse when exponential retryConfiguration is set and retryable error 500 occurs`() {
         // given
-        val retryPolicy = RequestRetryPolicy.Exponential(
-            minDelayInSec = 2,
-            maxDelayInSec = 3,
+        val retryConfiguration = RetryConfiguration.Exponential(
+            minDelayInSec = 10.milliseconds,
+            maxDelayInSec = 15.milliseconds,
             maxRetryNumber = 2,
+            isInternal = true
         )
         val success = AtomicBoolean()
-        val retryableCallback = getRetryableCallback(retryPolicy = retryPolicy, onFinalResponseFinished = success)
+        val retryableCallback = getRetryableCallback(retryConfiguration = retryConfiguration, onFinalResponseFinished = success)
         val errorResponse: Response<Any> = Response.error<Any>(500, ResponseBody.create(null, ""))
         every { mockResponse.isSuccessful } returns false
         every { mockResponse.code() } returns 500 // Assuming 500 is a retryable error
@@ -145,16 +144,16 @@ class RetryableCallbackTest : RetryableTestBase() {
     }
 
     @Test
-    @EnabledIf("enableLongRunningRetryTests")
-    fun `should retry onFailure when exponential retryPolicy is set and SocketTimeoutException`() {
+    fun `should retry onFailure when exponential retryConfiguration is set and SocketTimeoutException`() {
         // given
-        val retryPolicy = RequestRetryPolicy.Exponential(
-            minDelayInSec = 2,
-            maxDelayInSec = 3,
+        val retryConfiguration = RetryConfiguration.Exponential(
+            minDelayInSec = 10.milliseconds,
+            maxDelayInSec = 15.milliseconds,
             maxRetryNumber = 2,
+            isInternal = true
         )
         val success = AtomicBoolean()
-        val retryableCallback = getRetryableCallback(retryPolicy = retryPolicy, onFinalResponseFinished = success)
+        val retryableCallback = getRetryableCallback(retryConfiguration = retryConfiguration, onFinalResponseFinished = success)
         every { mockResponse.isSuccessful } returns false
         every { mockResponse.code() } returns 500 // Assuming 500 is a retryable error
         val successfulResponse: Response<Any> = Response.success(null)
@@ -178,16 +177,16 @@ class RetryableCallbackTest : RetryableTestBase() {
     }
 
     @Test
-    @EnabledIf("enableLongRunningRetryTests")
-    fun `should retry onFailure and fail when exponential retryPolicy is set and UnknownHostException`() {
+    fun `should retry onFailure and fail when exponential retryConfiguration is set and UnknownHostException`() {
         // given
-        val retryPolicy = RequestRetryPolicy.Exponential(
-            minDelayInSec = 2,
-            maxDelayInSec = 3,
+        val retryConfiguration = RetryConfiguration.Exponential(
+            minDelayInSec = 10.milliseconds,
+            maxDelayInSec = 15.milliseconds,
             maxRetryNumber = 2,
+            isInternal = true
         )
         val success = AtomicBoolean()
-        val retryableCallback = getRetryableCallback(retryPolicy = retryPolicy, onFinalFailureFinished = success)
+        val retryableCallback = getRetryableCallback(retryConfiguration = retryConfiguration, onFinalFailureFinished = success)
         every { mockResponse.isSuccessful } returns false
         every { mockResponse.code() } returns 500 // Assuming 500 is a retryable error
         every { mockCall.enqueue(any()) } answers {

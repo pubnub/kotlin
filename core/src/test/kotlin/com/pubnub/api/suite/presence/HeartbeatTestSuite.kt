@@ -4,11 +4,11 @@ import com.github.tomakehurst.wiremock.client.MappingBuilder
 import com.github.tomakehurst.wiremock.client.WireMock.equalTo
 import com.github.tomakehurst.wiremock.client.WireMock.get
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
-import com.pubnub.internal.endpoints.presence.Heartbeat
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.suite.AUTH
 import com.pubnub.api.suite.EndpointTestSuite
 import com.pubnub.api.suite.SUB
+import com.pubnub.internal.endpoints.presence.Heartbeat
 import org.junit.Assert.assertTrue
 
 class HeartbeatTestSuite : EndpointTestSuite<Heartbeat, Boolean>() {

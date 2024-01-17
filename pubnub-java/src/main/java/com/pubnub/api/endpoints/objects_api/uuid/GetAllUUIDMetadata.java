@@ -4,7 +4,6 @@ import com.pubnub.api.Endpoint;
 import com.pubnub.api.endpoints.ValidatingEndpoint;
 import com.pubnub.api.endpoints.objects_api.utils.PNSortKey;
 import com.pubnub.api.endpoints.remoteaction.MappingEndpoint;
-import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.models.consumer.objects.PNPage;
 import com.pubnub.api.models.consumer.objects_api.uuid.PNGetAllUUIDMetadataResult;
 import lombok.Setter;

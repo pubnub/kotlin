@@ -10,8 +10,8 @@ import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 import com.pubnub.api.CommonUtils.assertPnException
 import com.pubnub.api.CommonUtils.failTest
 import com.pubnub.api.PubNubError
-import com.pubnub.internal.endpoints.presence.Heartbeat
 import com.pubnub.api.legacy.BaseTest
+import com.pubnub.internal.endpoints.presence.Heartbeat
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

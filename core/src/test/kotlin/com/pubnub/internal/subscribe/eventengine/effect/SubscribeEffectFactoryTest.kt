@@ -4,9 +4,10 @@ import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.remoteaction.RemoteAction
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
+import com.pubnub.api.models.consumer.PNStatus
+import com.pubnub.api.retry.RetryConfiguration
 import com.pubnub.internal.eventengine.ManagedEffect
 import com.pubnub.internal.eventengine.Sink
-import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.internal.presence.eventengine.data.PresenceData
 import com.pubnub.internal.subscribe.eventengine.effect.effectprovider.HandshakeProvider
 import com.pubnub.internal.subscribe.eventengine.effect.effectprovider.ReceiveMessagesProvider
@@ -28,7 +29,7 @@ class SubscribeEffectFactoryTest {
     private val receiveMessageProvider = mockk<ReceiveMessagesProvider>()
     private val messagesConsumer = mockk<MessagesConsumer>()
     private val subscribeEventSink = mockk<Sink<SubscribeEvent>>()
-    private val policy = mockk<RetryPolicy>()
+    private val retryConfiguration = RetryConfiguration.Linear()
     private val executorService = mockk<ScheduledExecutorService>()
     private val channels = setOf("channel1")
     private val channelGroups = setOf("channelGroup1")
@@ -48,7 +49,7 @@ class SubscribeEffectFactoryTest {
             handshakeProvider,
             receiveMessageProvider,
             subscribeEventSink,
-            policy,
+            retryConfiguration,
             executorService,
             messagesConsumer,
             statusConsumer,
@@ -144,7 +145,7 @@ class SubscribeEffectFactoryTest {
             handshakeProvider,
             receiveMessageProvider,
             subscribeEventSink,
-            policy,
+            retryConfiguration,
             executorService,
             messagesConsumer,
             statusConsumer,

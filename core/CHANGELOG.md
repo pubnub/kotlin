@@ -1,3 +1,9 @@
+## v7.8.0
+January 17 2024
+
+#### Added
+- Added `enableEventEngine`, `retryConfiguration` and `maintainPresenceState` configuration flags.
+
 ## v7.7.4
 November 28 2023
 

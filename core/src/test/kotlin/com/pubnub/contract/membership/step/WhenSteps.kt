@@ -1,9 +1,9 @@
 package com.pubnub.contract.membership.step
 
-import com.pubnub.internal.models.consumer.objects.membership.PNChannelDetailsLevel
-import com.pubnub.internal.models.consumer.objects.membership.PNChannelMembership
 import com.pubnub.contract.state.World
 import com.pubnub.contract.uuidmetadata.state.MembershipState
+import com.pubnub.internal.models.consumer.objects.membership.PNChannelDetailsLevel
+import com.pubnub.internal.models.consumer.objects.membership.PNChannelMembership
 import io.cucumber.java.en.When
 
 class WhenSteps(

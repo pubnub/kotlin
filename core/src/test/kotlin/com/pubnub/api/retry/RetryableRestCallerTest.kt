@@ -13,30 +13,30 @@ import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.condition.EnabledIf
 import retrofit2.Call
 import retrofit2.Response
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 import kotlin.time.Duration
+import kotlin.time.Duration.Companion.milliseconds
 
 private const val RETRY_AFTER_HEADER_NAME = "Retry-After"
 private const val RETRY_AFTER_VALUE = "3"
 
-class RetryableRestCallerTest : RetryableTestBase() {
+class RetryableRestCallerTest {
     private fun getRetryableRestCaller(
-        retryPolicy: RequestRetryPolicy,
+        retryConfiguration: RetryConfiguration,
         isEndpointRetryable: Boolean = true,
         endpointGroupName: RetryableEndpointGroup = RetryableEndpointGroup.MESSAGE_PERSISTENCE
     ): RetryableRestCaller<FetchMessagesEnvelope> {
-        return RetryableRestCaller(retryPolicy, endpointGroupName, isEndpointRetryable)
+        return RetryableRestCaller(retryConfiguration, endpointGroupName, isEndpointRetryable)
     }
 
     @Test
-    fun `should use Retry-after header from 429 error when value available and linear retryPolicy is set`() {
+    fun `should use Retry-after header from 429 error when value available and linear retryConfiguration is set`() {
         // given
-        val retryPolicy = RequestRetryPolicy.Linear(delayInSec = 2, maxRetryNumber = 2)
-        val retryableRestCaller = getRetryableRestCaller(retryPolicy)
+        val retryConfiguration = RetryConfiguration.Linear(delayInSec = 2, maxRetryNumber = 2)
+        val retryableRestCaller = getRetryableRestCaller(retryConfiguration)
 
         val response = mockk<Response<FetchMessagesEnvelope>>()
         every { response.raw().code } returns 429
@@ -50,11 +50,11 @@ class RetryableRestCallerTest : RetryableTestBase() {
     }
 
     @Test
-    fun `should use delay from retryPolicy when value of Retry-after header from 429 error is null and linear retryPolicy is set`() {
+    fun `should use delay from retryConfiguration when value of Retry-after header from 429 error is null and linear retryConfiguration is set`() {
         // given
         val delayInSec = 2
-        val retryPolicy = RequestRetryPolicy.Linear(delayInSec = delayInSec, maxRetryNumber = 2)
-        val retryableRestCaller = getRetryableRestCaller(retryPolicy)
+        val retryConfiguration = RetryConfiguration.Linear(delayInSec = delayInSec, maxRetryNumber = 2)
+        val retryableRestCaller = getRetryableRestCaller(retryConfiguration)
 
         val response = mockk<Response<FetchMessagesEnvelope>>()
         every { response.raw().code } returns 429
@@ -67,11 +67,11 @@ class RetryableRestCallerTest : RetryableTestBase() {
     }
 
     @Test
-    fun `should use delay from retryPolicy when error is nt 429 and linear retryPolicy is set`() {
+    fun `should use delay from retryConfiguration when error is nt 429 and linear retryConfiguration is set`() {
         // given
         val delayInSec = 2
-        val retryPolicy = RequestRetryPolicy.Linear(delayInSec = delayInSec, maxRetryNumber = 2)
-        val retryableRestCaller = getRetryableRestCaller(retryPolicy)
+        val retryConfiguration = RetryConfiguration.Linear(delayInSec = delayInSec, maxRetryNumber = 2)
+        val retryableRestCaller = getRetryableRestCaller(retryConfiguration)
 
         val response = mockk<Response<FetchMessagesEnvelope>>()
         every { response.raw().code } returns 500
@@ -84,11 +84,11 @@ class RetryableRestCallerTest : RetryableTestBase() {
     }
 
     @Test
-    fun `should use delay from retryPolicy when value of Retry-after header from 429 error can not be parsed to int and linear retryPolicy is set`() {
+    fun `should use delay from retryConfiguration when value of Retry-after header from 429 error can not be parsed to int and linear retryConfiguration is set`() {
         // given
         val delayInSec = 2
-        val retryPolicy = RequestRetryPolicy.Linear(delayInSec = delayInSec, maxRetryNumber = 2)
-        val retryableRestCaller = getRetryableRestCaller(retryPolicy)
+        val retryConfiguration = RetryConfiguration.Linear(delayInSec = delayInSec, maxRetryNumber = 2)
+        val retryableRestCaller = getRetryableRestCaller(retryConfiguration)
 
         val response = mockk<Response<FetchMessagesEnvelope>>()
         every { response.raw().code } returns 429
@@ -102,107 +102,107 @@ class RetryableRestCallerTest : RetryableTestBase() {
     }
 
     @Test
-    fun `should calculate delay in exponential manner when exponential retryPolicy is set`() {
+    fun `should calculate delay in exponential manner when exponential retryConfiguration is set`() {
         // given
-        val retryPolicy = RequestRetryPolicy.Exponential(
+        val retryConfiguration = RetryConfiguration.Exponential(
             minDelayInSec = 2,
             maxDelayInSec = 7,
             maxRetryNumber = 2,
             excludedOperations = emptyList()
         )
-        val retryableRestCaller = getRetryableRestCaller(retryPolicy)
+        val retryableRestCaller = getRetryableRestCaller(retryConfiguration)
 
         // when
-        val delayFromRetryPolicy01 = retryableRestCaller.getDelayFromRetryPolicy()
-        val delayFromRetryPolicy02 = retryableRestCaller.getDelayFromRetryPolicy()
-        val delayFromRetryPolicy03 = retryableRestCaller.getDelayFromRetryPolicy()
-        val delayFromRetryPolicy04 = retryableRestCaller.getDelayFromRetryPolicy()
+        val delayFromRetryConfiguration01 = retryableRestCaller.getDelayFromRetryConfiguration()
+        val delayFromRetryConfiguration02 = retryableRestCaller.getDelayFromRetryConfiguration()
+        val delayFromRetryConfiguration03 = retryableRestCaller.getDelayFromRetryConfiguration()
+        val delayFromRetryConfiguration04 = retryableRestCaller.getDelayFromRetryConfiguration()
 
         // then
-        assertEquals(2, delayFromRetryPolicy01)
-        assertEquals(4, delayFromRetryPolicy02)
-        assertEquals(7, delayFromRetryPolicy03)
-        assertEquals(7, delayFromRetryPolicy04)
+        assertEquals(2, delayFromRetryConfiguration01.inWholeSeconds)
+        assertEquals(4, delayFromRetryConfiguration02.inWholeSeconds)
+        assertEquals(7, delayFromRetryConfiguration03.inWholeSeconds)
+        assertEquals(7, delayFromRetryConfiguration04.inWholeSeconds)
     }
 
     @Test
-    fun `when retryPolicy is None then each restCall is excluded from retry`() {
+    fun `when retryConfiguration is None then each restCall is excluded from retry`() {
         // given
-        val retryPolicy = RequestRetryPolicy.None
-        val retryableRestCaller = getRetryableRestCaller(retryPolicy)
+        val retryConfiguration = RetryConfiguration.None
+        val retryableRestCaller = getRetryableRestCaller(retryConfiguration)
 
         // when
-        val retryPolicySetForThisRestCall =
-            retryableRestCaller.isRetryPolicySetForThisRestCall
+        val retryConfigurationSetForThisRestCall =
+            retryableRestCaller.isRetryConfSetForThisRestCall
 
         // then
-        assertFalse(retryPolicySetForThisRestCall)
+        assertFalse(retryConfigurationSetForThisRestCall)
     }
 
     @Test
-    fun `when retryPolicy is Linear and endpoint belong to RetryableEndpointGroup that is excluded from retryPolicy then restCall is excluded from retry`() {
+    fun `when retryConfiguration is Linear and endpoint belong to RetryableEndpointGroup that is excluded from retryConfiguration then restCall is excluded from retry`() {
         // given
-        val retryPolicy = RequestRetryPolicy.Linear(
+        val retryConfiguration = RetryConfiguration.Linear(
             delayInSec = 2,
             maxRetryNumber = 2,
             excludedOperations = listOf(RetryableEndpointGroup.MESSAGE_PERSISTENCE)
         )
-        val retryableRestCaller = getRetryableRestCaller(retryPolicy)
+        val retryableRestCaller = getRetryableRestCaller(retryConfiguration)
 
         // when
-        val retryPolicySetForThisRestCall = retryableRestCaller.isRetryPolicySetForThisRestCall
+        val retryConfigurationSetForThisRestCall = retryableRestCaller.isRetryConfSetForThisRestCall
 
         // then
-        assertFalse(retryPolicySetForThisRestCall)
+        assertFalse(retryConfigurationSetForThisRestCall)
     }
 
     @Test
-    fun `when retryPolicy is Exponential and endpoint belong to RetryableEndpointGroup that is excluded from retryPolicy then restCall is excluded from retry`() {
+    fun `when retryConfiguration is Exponential and endpoint belong to RetryableEndpointGroup that is excluded from retryConfiguration then restCall is excluded from retry`() {
         // given
-        val retryPolicy = RequestRetryPolicy.Exponential(
+        val retryConfiguration = RetryConfiguration.Exponential(
             minDelayInSec = 2,
             maxDelayInSec = 7,
             maxRetryNumber = 2,
             excludedOperations = listOf(RetryableEndpointGroup.MESSAGE_PERSISTENCE)
         )
-        val retryableRestCaller = getRetryableRestCaller(retryPolicy)
+        val retryableRestCaller = getRetryableRestCaller(retryConfiguration)
 
         // when
-        val retryPolicySetForThisRestCall = retryableRestCaller.isRetryPolicySetForThisRestCall
+        val retryConfigurationSetForThisRestCall = retryableRestCaller.isRetryConfSetForThisRestCall
 
         // then
-        assertFalse(retryPolicySetForThisRestCall)
+        assertFalse(retryConfigurationSetForThisRestCall)
     }
 
     @Test
-    fun `when retryPolicy is Exponential and endpoint belong to RetryableEndpointGroup that is not excluded from retryPolicy then restCall is retryable`() {
+    fun `when retryConfiguration is Exponential and endpoint belong to RetryableEndpointGroup that is not excluded from retryConfiguration then restCall is retryable`() {
         // given
-        val retryPolicy = RequestRetryPolicy.Exponential(
+        val retryConfiguration = RetryConfiguration.Exponential(
             minDelayInSec = 2,
             maxDelayInSec = 7,
             maxRetryNumber = 2,
             excludedOperations = listOf()
         )
-        val retryableRestCaller = getRetryableRestCaller(retryPolicy)
+        val retryableRestCaller = getRetryableRestCaller(retryConfiguration)
 
         // when
-        val retryPolicySetForThisRestCall = retryableRestCaller.isRetryPolicySetForThisRestCall
+        val retryConfigurationSetForThisRestCall = retryableRestCaller.isRetryConfSetForThisRestCall
 
         // then
-        assertTrue(retryPolicySetForThisRestCall)
+        assertTrue(retryConfigurationSetForThisRestCall)
     }
 
     @Test
     fun `should execute rest call once when first attempt successful`() {
         // given
-        val retryPolicy = RequestRetryPolicy.Linear(delayInSec = 2, maxRetryNumber = 2)
-        val retryableRestCaller = getRetryableRestCaller(retryPolicy)
+        val retryConfiguration = RetryConfiguration.Linear(delayInSec = 2, maxRetryNumber = 2)
+        val retryableRestCaller = getRetryableRestCaller(retryConfiguration)
         val mockCall = mockk<Call<FetchMessagesEnvelope>>()
         val successfulResponse: Response<FetchMessagesEnvelope> = Response.success(null)
         every { mockCall.execute() } returns successfulResponse
 
         // when
-        val response = retryableRestCaller.executeRestCallWithRetryPolicy(mockCall)
+        val response = retryableRestCaller.execute(mockCall)
 
         // then
         verify(exactly = 0) { mockCall.clone() }
@@ -211,16 +211,16 @@ class RetryableRestCallerTest : RetryableTestBase() {
     }
 
     @Test
-    fun `should return unsuccessful response when first attempt failed and retryPolicy not set`() {
+    fun `should return unsuccessful response when first attempt failed and retryConfiguration not set`() {
         // given
-        val retryPolicy = RequestRetryPolicy.None
-        val retryableRestCaller = getRetryableRestCaller(retryPolicy)
+        val retryConfiguration = RetryConfiguration.None
+        val retryableRestCaller = getRetryableRestCaller(retryConfiguration)
         val mockCall = mockk<Call<FetchMessagesEnvelope>>()
         val errorResponse: Response<FetchMessagesEnvelope> = Response.error(429, ResponseBody.create(null, ""))
         every { mockCall.execute() } returns errorResponse
 
         // when
-        val response = retryableRestCaller.executeRestCallWithRetryPolicy(mockCall)
+        val response = retryableRestCaller.execute(mockCall)
 
         // then
         verify(exactly = 0) { mockCall.clone() }
@@ -229,17 +229,17 @@ class RetryableRestCallerTest : RetryableTestBase() {
     }
 
     @Test
-    fun `should return unsuccessful response when first attempt failed and retryPolicy set and error code is not retryable`() {
+    fun `should return unsuccessful response when first attempt failed and retryConfiguration set and error code is not retryable`() {
         // given
-        val retryPolicy = RequestRetryPolicy.Linear(delayInSec = 2, maxRetryNumber = 2)
-        val retryableRestCaller = getRetryableRestCaller(retryPolicy)
+        val retryConfiguration = RetryConfiguration.Linear(delayInSec = 2, maxRetryNumber = 2)
+        val retryableRestCaller = getRetryableRestCaller(retryConfiguration)
         val errorResponse: Response<FetchMessagesEnvelope> = Response.error(404, ResponseBody.create(null, ""))
         val mockCall = mockk<Call<FetchMessagesEnvelope>>()
 
         every { mockCall.execute() } returns errorResponse
 
         // when
-        val response1 = retryableRestCaller.executeRestCallWithRetryPolicy(mockCall)
+        val response1 = retryableRestCaller.execute(mockCall)
 
         // then
         verify(exactly = 0) { mockCall.clone() }
@@ -248,21 +248,21 @@ class RetryableRestCallerTest : RetryableTestBase() {
     }
 
     @Test
-    fun `should return unsuccessful response when first attempt failed and endpoint excluded from retryPolicy`() {
+    fun `should return unsuccessful response when first attempt failed and endpoint excluded from retryConfiguration`() {
         // given
-        val retryPolicy = RequestRetryPolicy.Linear(
+        val retryConfiguration = RetryConfiguration.Linear(
             delayInSec = 2,
             maxRetryNumber = 2,
             excludedOperations = listOf(RetryableEndpointGroup.MESSAGE_PERSISTENCE)
         )
-        val retryableRestCaller = getRetryableRestCaller(retryPolicy)
+        val retryableRestCaller = getRetryableRestCaller(retryConfiguration)
         val errorResponse: Response<FetchMessagesEnvelope> = Response.error(500, ResponseBody.create(null, ""))
         val mockCall = mockk<Call<FetchMessagesEnvelope>>()
 
         every { mockCall.execute() } returns errorResponse
 
         // when
-        val response1 = retryableRestCaller.executeRestCallWithRetryPolicy(mockCall)
+        val response1 = retryableRestCaller.execute(mockCall)
 
         // then
         verify(exactly = 0) { mockCall.clone() }
@@ -273,18 +273,18 @@ class RetryableRestCallerTest : RetryableTestBase() {
     @Test
     fun `should return unsuccessful response when first attempt failed and endpoint is not retryable`() {
         // given
-        val retryPolicy = RequestRetryPolicy.Linear(
+        val retryConfiguration = RetryConfiguration.Linear(
             delayInSec = 2,
             maxRetryNumber = 2,
             excludedOperations = listOf(RetryableEndpointGroup.MESSAGE_PERSISTENCE)
         )
-        val retryableRestCaller = getRetryableRestCaller(retryPolicy = retryPolicy, isEndpointRetryable = false)
+        val retryableRestCaller = getRetryableRestCaller(retryConfiguration = retryConfiguration, isEndpointRetryable = false)
         val errorResponse: Response<FetchMessagesEnvelope> = Response.error(500, ResponseBody.create(null, ""))
         val mockCall = mockk<Call<FetchMessagesEnvelope>>()
         every { mockCall.execute() } returns errorResponse
 
         // when
-        val response1 = retryableRestCaller.executeRestCallWithRetryPolicy(mockCall)
+        val response1 = retryableRestCaller.execute(mockCall)
 
         // then
         verify(exactly = 0) { mockCall.clone() }
@@ -293,11 +293,10 @@ class RetryableRestCallerTest : RetryableTestBase() {
     }
 
     @Test
-    @EnabledIf("enableLongRunningRetryTests")
-    fun `should retry successfully when linear retryPolicy is set and response is not successful and http error is 500 and endpoint is not excluded from retryPolicy`() {
+    fun `should retry successfully when linear retryConfiguration is set and response is not successful and http error is 500 and endpoint is not excluded from retryConfiguration`() {
         // given
-        val retryPolicy = RequestRetryPolicy.Linear(delayInSec = 2, maxRetryNumber = 3)
-        val retryableRestCaller = getRetryableRestCaller(retryPolicy = retryPolicy)
+        val retryConfiguration = RetryConfiguration.Linear(delayInSec = 10.milliseconds, maxRetryNumber = 3, isInternal = true)
+        val retryableRestCaller = getRetryableRestCaller(retryConfiguration = retryConfiguration)
         val mockCall = mockk<Call<FetchMessagesEnvelope>>()
         val errorResponse: Response<FetchMessagesEnvelope> =
             Response.error<FetchMessagesEnvelope>(500, ResponseBody.create(null, ""))
@@ -306,7 +305,7 @@ class RetryableRestCallerTest : RetryableTestBase() {
         every { mockCall.clone() } returns mockCall
 
         // when
-        val response1 = retryableRestCaller.executeRestCallWithRetryPolicy(mockCall)
+        val response1 = retryableRestCaller.execute(mockCall)
 
         // then
         verify(exactly = 3) { mockCall.clone() }
@@ -315,16 +314,16 @@ class RetryableRestCallerTest : RetryableTestBase() {
     }
 
     @Test
-    @EnabledIf("enableLongRunningRetryTests")
-    fun `should retry successfully when exponential retryPolicy is set and response is not successful and http error is 500 and endpoint is not excluded from retryPolicy`() {
+    fun `should retry successfully when exponential retryConfiguration is set and response is not successful and http error is 500 and endpoint is not excluded from retryConfiguration`() {
         // given
-        val retryPolicy = RequestRetryPolicy.Exponential(
-            minDelayInSec = 2,
-            maxDelayInSec = 3,
+        val retryConfiguration = RetryConfiguration.Exponential(
+            minDelayInSec = 10.milliseconds,
+            maxDelayInSec = 15.milliseconds,
             maxRetryNumber = 2,
-            excludedOperations = emptyList()
+            excludedOperations = emptyList(),
+            isInternal = true
         )
-        val retryableRestCaller = getRetryableRestCaller(retryPolicy = retryPolicy)
+        val retryableRestCaller = getRetryableRestCaller(retryConfiguration = retryConfiguration)
         val mockCall = mockk<Call<FetchMessagesEnvelope>>()
         val errorResponse: Response<FetchMessagesEnvelope> =
             Response.error(500, ResponseBody.create(null, ""))
@@ -333,7 +332,7 @@ class RetryableRestCallerTest : RetryableTestBase() {
         every { mockCall.clone() } returns mockCall
 
         // when
-        val response1 = retryableRestCaller.executeRestCallWithRetryPolicy(mockCall)
+        val response1 = retryableRestCaller.execute(mockCall)
 
         // then
         verify(exactly = 2) { mockCall.clone() }
@@ -342,18 +341,17 @@ class RetryableRestCallerTest : RetryableTestBase() {
     }
 
     @Test
-    @EnabledIf("enableLongRunningRetryTests")
-    fun `should retry successfully when linear retryPolicy is set and SocketTimeoutException is thrown`() {
+    fun `should retry successfully when linear retryConfiguration is set and SocketTimeoutException is thrown`() {
         // given
-        val retryPolicy = RequestRetryPolicy.Linear(delayInSec = 2, maxRetryNumber = 2)
-        val retryableRestCaller = getRetryableRestCaller(retryPolicy = retryPolicy)
+        val retryConfiguration = RetryConfiguration.Linear(delayInSec = 10.milliseconds, maxRetryNumber = 2, isInternal = true)
+        val retryableRestCaller = getRetryableRestCaller(retryConfiguration = retryConfiguration)
         val mockCall = mockk<Call<FetchMessagesEnvelope>>()
         val successfulResponse: Response<FetchMessagesEnvelope> = Response.success(null)
         every { mockCall.execute() } throws SocketTimeoutException() andThenThrows SocketTimeoutException() andThen successfulResponse
         every { mockCall.clone() } returns mockCall
 
         // when
-        val response1 = retryableRestCaller.executeRestCallWithRetryPolicy(mockCall)
+        val response1 = retryableRestCaller.execute(mockCall)
 
         // then
         verify(exactly = 2) { mockCall.clone() }
@@ -362,18 +360,17 @@ class RetryableRestCallerTest : RetryableTestBase() {
     }
 
     @Test
-    @EnabledIf("enableLongRunningRetryTests")
-    fun `should retry and throw exception when linear retryPolicy is set and UnknownHostException is thrown`() {
+    fun `should retry and throw exception when linear retryConfiguration is set and UnknownHostException is thrown`() {
         // given
-        val retryPolicy = RequestRetryPolicy.Linear(delayInSec = 2, maxRetryNumber = 2)
-        val retryableRestCaller = getRetryableRestCaller(retryPolicy = retryPolicy)
+        val retryConfiguration = RetryConfiguration.Linear(delayInSec = 10.milliseconds, maxRetryNumber = 2, isInternal = true)
+        val retryableRestCaller = getRetryableRestCaller(retryConfiguration = retryConfiguration)
         val mockCall = mockk<Call<FetchMessagesEnvelope>>()
         every { mockCall.execute() } throws UnknownHostException() andThenThrows UnknownHostException() andThenThrows UnknownHostException()
         every { mockCall.clone() } returns mockCall
 
         // when
         val exception = assertThrows(PubNubException::class.java) {
-            retryableRestCaller.executeRestCallWithRetryPolicy(mockCall)
+            retryableRestCaller.execute(mockCall)
         }
 
         // then

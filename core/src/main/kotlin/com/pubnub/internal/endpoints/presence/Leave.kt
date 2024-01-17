@@ -9,7 +9,6 @@ import com.pubnub.internal.PubNubUtil
 import com.pubnub.internal.toCsv
 import retrofit2.Call
 import retrofit2.Response
-import java.util.HashMap
 
 class Leave internal constructor(pubnub: PubNub) : com.pubnub.internal.Endpoint<Void, Boolean>(pubnub) {
 

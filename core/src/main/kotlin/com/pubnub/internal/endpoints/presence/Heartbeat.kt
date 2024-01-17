@@ -8,7 +8,6 @@ import com.pubnub.internal.PubNub
 import com.pubnub.internal.PubNubUtil
 import retrofit2.Call
 import retrofit2.Response
-import java.util.HashMap
 
 class Heartbeat internal constructor(
     pubnub: PubNub,
@@ -64,4 +63,7 @@ class Heartbeat internal constructor(
     override fun operationType() = PNOperationType.PNHeartbeatOperation
 
     override fun getEndpointGroupName(): RetryableEndpointGroup = RetryableEndpointGroup.PRESENCE
+
+    // it is excluded here because EE has dedicated logic for retry on Subscribe and Heartbeat
+    override fun isEndpointRetryable(): Boolean = false
 }

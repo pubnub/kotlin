@@ -10,7 +10,6 @@ import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.PubNub
 import retrofit2.Call
 import retrofit2.Response
-import java.util.HashMap
 import java.util.Locale
 
 /**

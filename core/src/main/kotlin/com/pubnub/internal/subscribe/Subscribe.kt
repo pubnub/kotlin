@@ -2,6 +2,7 @@ package com.pubnub.internal.subscribe
 
 import com.pubnub.api.PubNubError
 import com.pubnub.api.PubNubException
+import com.pubnub.api.retry.RetryConfiguration
 import com.pubnub.internal.PubNub
 import com.pubnub.internal.eventengine.EffectDispatcher
 import com.pubnub.internal.managers.ListenerManager
@@ -10,7 +11,6 @@ import com.pubnub.internal.presence.eventengine.data.PresenceData
 import com.pubnub.internal.subscribe.eventengine.SubscribeEventEngine
 import com.pubnub.internal.subscribe.eventengine.configuration.EventEnginesConf
 import com.pubnub.internal.subscribe.eventengine.data.SubscriptionData
-import com.pubnub.internal.subscribe.eventengine.effect.RetryPolicy
 import com.pubnub.internal.subscribe.eventengine.effect.SubscribeEffectFactory
 import com.pubnub.internal.subscribe.eventengine.effect.effectprovider.HandshakeProviderImpl
 import com.pubnub.internal.subscribe.eventengine.effect.effectprovider.ReceiveMessagesProviderImpl
@@ -31,7 +31,7 @@ internal class Subscribe(
         internal fun create(
             pubNub: PubNub,
             listenerManager: ListenerManager<PubNub>,
-            retryPolicy: RetryPolicy,
+            retryConfiguration: RetryConfiguration,
             eventEnginesConf: EventEnginesConf,
             messageProcessor: SubscribeMessageProcessor,
             presenceData: PresenceData,
@@ -41,7 +41,7 @@ internal class Subscribe(
                 pubNub,
                 messageProcessor,
                 eventEnginesConf,
-                retryPolicy,
+                retryConfiguration,
                 listenerManager,
                 presenceData,
                 sendStateWithSubscribe = sendStateWithSubscribe,
@@ -54,7 +54,7 @@ internal class Subscribe(
             pubNub: PubNub,
             messageProcessor: SubscribeMessageProcessor,
             eventEnginesConf: EventEnginesConf,
-            retryPolicy: RetryPolicy,
+            retryConfiguration: RetryConfiguration,
             listenerManager: ListenerManager<PubNub>,
             presenceData: PresenceData,
             sendStateWithSubscribe: Boolean,
@@ -63,7 +63,7 @@ internal class Subscribe(
                 handshakeProvider = HandshakeProviderImpl(pubNub),
                 receiveMessagesProvider = ReceiveMessagesProviderImpl(pubNub, messageProcessor),
                 subscribeEventSink = eventEnginesConf.subscribe.eventSink,
-                policy = retryPolicy,
+                retryConfiguration = retryConfiguration,
                 executorService = Executors.newSingleThreadScheduledExecutor(),
                 messagesConsumer = listenerManager,
                 statusConsumer = listenerManager,

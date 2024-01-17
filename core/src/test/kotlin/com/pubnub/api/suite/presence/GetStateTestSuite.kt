@@ -5,13 +5,13 @@ import com.github.tomakehurst.wiremock.client.WireMock.get
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 import com.google.gson.JsonNull
 import com.google.gson.JsonObject
-import com.pubnub.internal.endpoints.presence.GetState
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.presence.PNGetStateResult
 import com.pubnub.api.suite.AUTH
 import com.pubnub.api.suite.EndpointTestSuite
 import com.pubnub.api.suite.OptionalScenario
 import com.pubnub.api.suite.SUB
+import com.pubnub.internal.endpoints.presence.GetState
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 

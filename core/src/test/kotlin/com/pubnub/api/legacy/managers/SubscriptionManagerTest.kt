@@ -13,9 +13,6 @@ import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching
 import com.google.gson.reflect.TypeToken
 import com.pubnub.api.CommonUtils.emptyJson
-import com.pubnub.internal.PubNub
-import com.pubnub.internal.PubNubUtil
-import com.pubnub.internal.callbacks.SubscribeCallback
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
@@ -23,6 +20,9 @@ import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
+import com.pubnub.internal.PubNub
+import com.pubnub.internal.PubNubUtil
+import com.pubnub.internal.callbacks.SubscribeCallback
 import com.pubnub.internal.toCsv
 import org.awaitility.Awaitility
 import org.hamcrest.Matchers

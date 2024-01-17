@@ -4,7 +4,6 @@ import com.pubnub.api.Endpoint;
 import com.pubnub.api.endpoints.BuilderSteps;
 import com.pubnub.api.endpoints.ValidatingEndpoint;
 import com.pubnub.api.endpoints.remoteaction.MappingEndpoint;
-import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction;
 import com.pubnub.api.models.consumer.objects_api.channel.PNChannelMetadata;
 import com.pubnub.api.models.consumer.objects_api.channel.PNSetChannelMetadataResult;
 import lombok.AllArgsConstructor;

@@ -1,16 +1,16 @@
 package com.pubnub.internal.presence
 
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions
+import com.pubnub.api.retry.RetryConfiguration
+import com.pubnub.contract.subscribe.eventEngine.state.TestSinkSource
+import com.pubnub.internal.PubNub
 import com.pubnub.internal.eventengine.EventEngineConf
 import com.pubnub.internal.eventengine.QueueEventEngineConf
 import com.pubnub.internal.managers.ListenerManager
 import com.pubnub.internal.presence.eventengine.data.PresenceData
 import com.pubnub.internal.presence.eventengine.effect.PresenceEffectInvocation
 import com.pubnub.internal.presence.eventengine.event.PresenceEvent
-import com.pubnub.internal.subscribe.eventengine.effect.NoRetriesPolicy
 import com.pubnub.internal.subscribe.eventengine.effect.successfulRemoteAction
-import com.pubnub.contract.subscribe.eventEngine.state.TestSinkSource
-import com.pubnub.internal.PubNub
 import io.mockk.mockk
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers
@@ -20,13 +20,13 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.Arguments.arguments
 import org.junit.jupiter.params.provider.MethodSource
-import java.time.Duration
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
 
 private const val CHANNEL_01 = "channel01"
 private const val CHANNEL_02 = "channel02"
 
 private const val CHANNEL_GROUPS_01 = "channelGroups01"
-private const val CHANNEL_GROUPS_02 = "channelGroups02"
 
 internal class PresenceTest {
     private val listenerManager: ListenerManager<PubNub> = mockk()
@@ -87,7 +87,7 @@ internal class PresenceTest {
     @Test
     fun `create returns PresenceNoOp if heartbeat interval is 0`() {
         // when
-        val presence = Presence.create(listenerManager = listenerManager, heartbeatInterval = Duration.ofSeconds(0))
+        val presence = Presence.create(listenerManager = listenerManager, heartbeatInterval = 0.seconds)
 
         // then
         assertThat(presence, Matchers.isA(PresenceNoOp::class.java))
@@ -127,7 +127,7 @@ internal class PresenceTest {
 
     private fun Presence.Companion.create(
         listenerManager: ListenerManager<PubNub>,
-        heartbeatInterval: Duration = Duration.ofSeconds(3),
+        heartbeatInterval: Duration = 3.seconds,
         enableEventEngine: Boolean = true,
         heartbeatNotificationOptions: PNHeartbeatNotificationOptions = PNHeartbeatNotificationOptions.ALL,
         eventEngineConf: EventEngineConf<PresenceEffectInvocation, PresenceEvent> = QueueEventEngineConf(),
@@ -137,7 +137,7 @@ internal class PresenceTest {
         leaveProvider = { _, _ -> successfulRemoteAction(true) },
         heartbeatInterval = heartbeatInterval,
         enableEventEngine = enableEventEngine,
-        retryPolicy = NoRetriesPolicy,
+        retryConfiguration = RetryConfiguration.None,
         suppressLeaveEvents = false,
         heartbeatNotificationOptions = heartbeatNotificationOptions,
         listenerManager = listenerManager,

@@ -1,6 +1,7 @@
 package com.pubnub.internal.presence.eventengine.effect
 
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions
+import com.pubnub.api.retry.RetryConfiguration
 import com.pubnub.internal.eventengine.Effect
 import com.pubnub.internal.eventengine.EffectFactory
 import com.pubnub.internal.eventengine.Sink
@@ -8,16 +9,15 @@ import com.pubnub.internal.presence.eventengine.data.PresenceData
 import com.pubnub.internal.presence.eventengine.effect.effectprovider.HeartbeatProvider
 import com.pubnub.internal.presence.eventengine.effect.effectprovider.LeaveProvider
 import com.pubnub.internal.presence.eventengine.event.PresenceEvent
-import com.pubnub.internal.subscribe.eventengine.effect.RetryPolicy
 import com.pubnub.internal.subscribe.eventengine.effect.StatusConsumer
-import java.time.Duration
 import java.util.concurrent.ScheduledExecutorService
+import kotlin.time.Duration
 
 internal class PresenceEffectFactory(
     private val heartbeatProvider: HeartbeatProvider,
     private val leaveProvider: LeaveProvider,
     private val presenceEventSink: Sink<PresenceEvent>,
-    private val policy: RetryPolicy,
+    private val retryConfiguration: RetryConfiguration,
     private val executorService: ScheduledExecutorService,
     private val heartbeatInterval: Duration,
     private val suppressLeaveEvents: Boolean,
@@ -54,9 +54,10 @@ internal class PresenceEffectFactory(
                 DelayedHeartbeatEffect(
                     heartbeatRemoteAction,
                     presenceEventSink,
-                    policy,
+                    retryConfiguration,
                     executorService,
-                    effectInvocation
+                    effectInvocation.attempts,
+                    effectInvocation.reason
                 )
             }
             is PresenceEffectInvocation.Leave -> {

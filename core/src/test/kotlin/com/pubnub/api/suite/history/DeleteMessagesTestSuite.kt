@@ -4,12 +4,12 @@ import com.github.tomakehurst.wiremock.client.MappingBuilder
 import com.github.tomakehurst.wiremock.client.WireMock.absent
 import com.github.tomakehurst.wiremock.client.WireMock.delete
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
-import com.pubnub.internal.endpoints.DeleteMessages
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.history.PNDeleteMessagesResult
 import com.pubnub.api.suite.AUTH
 import com.pubnub.api.suite.EndpointTestSuite
 import com.pubnub.api.suite.SUB
+import com.pubnub.internal.endpoints.DeleteMessages
 
 class DeleteMessagesTestSuite : EndpointTestSuite<DeleteMessages, PNDeleteMessagesResult>() {
 

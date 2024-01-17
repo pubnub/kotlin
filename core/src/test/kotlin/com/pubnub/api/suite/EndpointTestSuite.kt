@@ -14,7 +14,6 @@ import com.pubnub.api.CommonUtils.assertPnException
 import com.pubnub.api.CommonUtils.emptyJson
 import com.pubnub.api.CommonUtils.failTest
 import com.pubnub.api.CommonUtils.getSpecialCharsMap
-import com.pubnub.internal.Endpoint
 import com.pubnub.api.PubNubError
 import com.pubnub.api.await
 import com.pubnub.api.encodedParam
@@ -23,6 +22,7 @@ import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.legacy.BaseTest
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.param
+import com.pubnub.internal.Endpoint
 import org.awaitility.Awaitility
 import org.awaitility.Durations
 import org.junit.Assert.assertEquals

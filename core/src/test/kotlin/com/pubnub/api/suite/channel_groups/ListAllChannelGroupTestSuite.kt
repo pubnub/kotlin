@@ -3,7 +3,6 @@ package com.pubnub.api.suite.channel_groups
 import com.github.tomakehurst.wiremock.client.MappingBuilder
 import com.github.tomakehurst.wiremock.client.WireMock.get
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
-import com.pubnub.internal.endpoints.channel_groups.ListAllChannelGroup
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.channel_group.PNChannelGroupsListAllResult
@@ -12,6 +11,7 @@ import com.pubnub.api.suite.EndpointTestSuite
 import com.pubnub.api.suite.OptionalScenario
 import com.pubnub.api.suite.Result
 import com.pubnub.api.suite.SUB
+import com.pubnub.internal.endpoints.channel_groups.ListAllChannelGroup
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue

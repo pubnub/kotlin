@@ -1,7 +1,7 @@
 package com.pubnub.contract.member.state
 
-import com.pubnub.internal.models.consumer.objects.member.PNMember
 import com.pubnub.contract.channelmetadata.state.ChannelMetadataState
+import com.pubnub.internal.models.consumer.objects.member.PNMember
 
 class MemberState(
     private val channelMetadataState: ChannelMetadataState

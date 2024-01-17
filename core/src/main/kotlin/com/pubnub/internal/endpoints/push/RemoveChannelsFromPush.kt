@@ -11,7 +11,6 @@ import com.pubnub.internal.PubNub
 import com.pubnub.internal.toCsv
 import retrofit2.Call
 import retrofit2.Response
-import java.util.HashMap
 import java.util.Locale
 
 /**

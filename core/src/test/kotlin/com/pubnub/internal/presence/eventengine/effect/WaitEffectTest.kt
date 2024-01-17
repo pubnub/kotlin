@@ -6,10 +6,10 @@ import org.awaitility.Awaitility
 import org.awaitility.Durations
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import java.time.Duration
+import kotlin.time.Duration.Companion.milliseconds
 
 class WaitEffectTest {
-    private val heartbeatInterval = Duration.ofMillis(1)
+    private val heartbeatInterval = 1.milliseconds
     private val presenceEventSink = TestEventSink<PresenceEvent>()
 
     @Test
@@ -24,7 +24,7 @@ class WaitEffectTest {
         Awaitility.await()
             .atMost(Durations.ONE_SECOND)
             .with()
-            .pollInterval(Duration.ofMillis(20))
+            .pollInterval(java.time.Duration.ofMillis(20))
             .untilAsserted {
                 assertEquals(listOf(PresenceEvent.TimesUp), presenceEventSink.events)
             }
@@ -33,7 +33,7 @@ class WaitEffectTest {
     @Test
     fun `should not deliver TimesUp event when cancelled on time`() {
         // given
-        val waitEffect = WaitEffect(Duration.ofMillis(20), presenceEventSink)
+        val waitEffect = WaitEffect(20.milliseconds, presenceEventSink)
 
         // when
         waitEffect.runEffect()
@@ -43,9 +43,9 @@ class WaitEffectTest {
 
         // then
         Awaitility.await()
-            .during(Duration.ofMillis(200))
+            .during(java.time.Duration.ofMillis(200))
             .with()
-            .pollInterval(Duration.ofMillis(20))
+            .pollInterval(java.time.Duration.ofMillis(20))
             .untilAsserted {
                 assertEquals(emptyList<PresenceEvent>(), presenceEventSink.events)
             }
@@ -62,9 +62,9 @@ class WaitEffectTest {
 
         // then
         Awaitility.await()
-            .during(Duration.ofMillis(200))
+            .during(java.time.Duration.ofMillis(200))
             .with()
-            .pollInterval(Duration.ofMillis(20))
+            .pollInterval(java.time.Duration.ofMillis(20))
             .untilAsserted {
                 assertEquals(emptyList<PresenceEvent>(), presenceEventSink.events)
             }

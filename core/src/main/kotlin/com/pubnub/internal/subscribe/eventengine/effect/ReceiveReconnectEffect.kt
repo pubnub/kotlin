@@ -2,22 +2,26 @@ package com.pubnub.internal.subscribe.eventengine.effect
 
 import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.remoteaction.RemoteAction
+import com.pubnub.api.retry.RetryConfiguration
+import com.pubnub.api.retry.RetryableEndpointGroup
 import com.pubnub.internal.eventengine.ManagedEffect
 import com.pubnub.internal.eventengine.Sink
+import com.pubnub.internal.extension.scheduleWithDelay
+import com.pubnub.internal.models.server.SubscribeEnvelope
+import com.pubnub.internal.retry.RetryableBase
 import com.pubnub.internal.subscribe.eventengine.event.SubscribeEvent
 import org.slf4j.LoggerFactory
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.ScheduledFuture
-import java.util.concurrent.TimeUnit
 
 internal class ReceiveReconnectEffect(
     private val receiveMessagesRemoteAction: RemoteAction<ReceiveMessagesResult>,
     private val subscribeEventSink: Sink<SubscribeEvent>,
-    private val policy: RetryPolicy,
+    retryConfiguration: RetryConfiguration,
     private val executorService: ScheduledExecutorService,
     private val attempts: Int,
     private val reason: PubNubException?
-) : ManagedEffect {
+) : ManagedEffect, RetryableBase<SubscribeEnvelope>(retryConfiguration, RetryableEndpointGroup.SUBSCRIBE) {
     private val log = LoggerFactory.getLogger(ReceiveReconnectEffect::class.java)
 
     @Transient
@@ -34,13 +38,13 @@ internal class ReceiveReconnectEffect(
             return
         }
 
-        val delay = policy.nextDelay(attempts)
-        if (delay == null) {
+        if (!shouldRetry(attempts)) {
             subscribeEventSink.add(SubscribeEvent.ReceiveReconnectGiveup(reason ?: PubNubException("Unknown error")))
             return
         }
 
-        scheduled = executorService.schedule({
+        val effectiveDelay = getEffectiveDelay(statusCode = reason?.statusCode ?: 0, retryAfterHeaderValue = reason?.retryAfterHeaderValue ?: 0)
+        scheduled = executorService.scheduleWithDelay(effectiveDelay) {
             receiveMessagesRemoteAction.async { result, status ->
                 if (status.error) {
                     subscribeEventSink.add(
@@ -57,7 +61,7 @@ internal class ReceiveReconnectEffect(
                     )
                 }
             }
-        }, delay.toMillis(), TimeUnit.MILLISECONDS)
+        }
     }
 
     @Synchronized

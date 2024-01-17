@@ -10,7 +10,6 @@ import com.pubnub.internal.models.server.SubscribeEnvelope
 import com.pubnub.internal.toCsv
 import retrofit2.Call
 import retrofit2.Response
-import java.util.HashMap
 
 class Subscribe internal constructor(pubnub: PubNub) : com.pubnub.internal.Endpoint<SubscribeEnvelope, SubscribeEnvelope>(pubnub) {
 
@@ -75,4 +74,7 @@ class Subscribe internal constructor(pubnub: PubNub) : com.pubnub.internal.Endpo
     override fun operationType() = PNOperationType.PNSubscribeOperation
 
     override fun getEndpointGroupName(): RetryableEndpointGroup = RetryableEndpointGroup.SUBSCRIBE
+
+    // it is excluded here because EE has dedicated logic for retry on Subscribe and Heartbeat
+    override fun isEndpointRetryable(): Boolean = false
 }

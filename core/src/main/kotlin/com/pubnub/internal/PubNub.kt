@@ -96,9 +96,9 @@ import com.pubnub.internal.subscribe.Subscribe
 import com.pubnub.internal.subscribe.eventengine.configuration.EventEnginesConf
 import com.pubnub.internal.workers.SubscribeMessageProcessor
 import java.io.InputStream
-import java.time.Duration
 import java.util.Date
 import java.util.UUID
+import kotlin.time.Duration.Companion.seconds
 
 open class PubNub internal constructor(
     open val configuration: PNConfiguration,
@@ -109,7 +109,7 @@ open class PubNub internal constructor(
 
     companion object {
         private const val TIMESTAMP_DIVIDER = 1000
-        private const val SDK_VERSION = "7.7.4"
+        private const val SDK_VERSION = "7.8.0"
         private const val MAX_SEQUENCE = 65535
 
         /**
@@ -141,7 +141,7 @@ open class PubNub internal constructor(
     private val subscribe = Subscribe.create(
         this,
         listenerManager,
-        configuration.retryPolicy,
+        configuration.retryConfiguration,
         eventEnginesConf,
         SubscribeMessageProcessor(this, DuplicationManager(configuration)),
         presenceData,
@@ -151,9 +151,9 @@ open class PubNub internal constructor(
     private val presence = Presence.create(
         heartbeatProvider = HeartbeatProviderImpl(this),
         leaveProvider = LeaveProviderImpl(this),
-        heartbeatInterval = Duration.ofSeconds(configuration.heartbeatInterval.toLong()),
+        heartbeatInterval = configuration.heartbeatInterval.seconds,
         enableEventEngine = configuration.enableEventEngine,
-        retryPolicy = configuration.retryPolicy,
+        retryConfiguration = configuration.retryConfiguration,
         suppressLeaveEvents = configuration.suppressLeaveEvents,
         heartbeatNotificationOptions = configuration.heartbeatNotificationOptions,
         listenerManager = listenerManager,

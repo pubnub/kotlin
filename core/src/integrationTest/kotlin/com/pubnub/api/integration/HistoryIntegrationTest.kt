@@ -5,7 +5,6 @@ import com.google.gson.JsonPrimitive
 import com.pubnub.api.CommonUtils
 import com.pubnub.api.CommonUtils.emoji
 import com.pubnub.api.CommonUtils.randomChannel
-import com.pubnub.internal.PubNub
 import com.pubnub.api.PubNubError
 import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.api.models.consumer.history.Action
@@ -15,6 +14,7 @@ import com.pubnub.api.models.consumer.history.PNFetchMessagesResult
 import com.pubnub.api.models.consumer.history.PNHistoryItemResult
 import com.pubnub.api.models.consumer.history.PNHistoryResult
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
+import com.pubnub.internal.PubNub
 import org.awaitility.kotlin.await
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.aMapWithSize

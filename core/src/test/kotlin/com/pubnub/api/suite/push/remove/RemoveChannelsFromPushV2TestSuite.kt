@@ -4,13 +4,13 @@ import com.github.tomakehurst.wiremock.client.WireMock.absent
 import com.github.tomakehurst.wiremock.client.WireMock.equalTo
 import com.github.tomakehurst.wiremock.client.WireMock.get
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
-import com.pubnub.internal.endpoints.push.RemoveChannelsFromPush
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNPushType
 import com.pubnub.api.models.consumer.push.PNPushRemoveChannelResult
 import com.pubnub.api.suite.AUTH
 import com.pubnub.api.suite.EndpointTestSuite
 import com.pubnub.api.suite.SUB
+import com.pubnub.internal.endpoints.push.RemoveChannelsFromPush
 
 class RemoveChannelsFromPushV2TestSuite : EndpointTestSuite<RemoveChannelsFromPush, PNPushRemoveChannelResult>() {
 
