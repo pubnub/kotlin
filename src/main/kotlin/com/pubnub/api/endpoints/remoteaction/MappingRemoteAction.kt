@@ -20,7 +20,9 @@ class MappingRemoteAction<T, U>(private val remoteAction: ExtendedRemoteAction<T
     }
 
     override fun async(callback: (result: U?, status: PNStatus) -> Unit) {
-        remoteAction.async { r, s -> callback(r?.let(function), s) }
+        remoteAction.async { r, s ->
+            callback(r?.let(function), s)
+        }
     }
 }
 

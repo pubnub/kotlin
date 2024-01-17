@@ -16,7 +16,7 @@ import com.pubnub.api.models.consumer.files.PNFileUploadResult
 import com.pubnub.api.models.consumer.files.PNPublishFileMessageResult
 import com.pubnub.api.models.server.files.FileUploadRequestDetails
 import com.pubnub.api.models.server.files.FormField
-import com.pubnub.api.retry.RequestRetryPolicy
+import com.pubnub.api.retry.RetryConfiguration
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.spyk
@@ -193,9 +193,9 @@ class SendFileTest : TestsWithFiles {
     private fun getPubNubMock(): PubNub {
         val mockConfig = mockk<PNConfiguration>()
         val mockPubNub = mockk<PubNub>()
-        val requestRetryPolicy = RequestRetryPolicy.None
+        val retryConfiguration = RetryConfiguration.None
         every { mockPubNub.configuration } returns mockConfig
-        every { mockConfig.newRetryPolicy } returns requestRetryPolicy
+        every { mockConfig.retryConfiguration } returns retryConfiguration
 
         return mockPubNub
     }

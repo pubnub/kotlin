@@ -94,9 +94,9 @@ import com.pubnub.api.subscribe.Subscribe
 import com.pubnub.api.subscribe.eventengine.configuration.EventEnginesConf
 import com.pubnub.api.workers.SubscribeMessageProcessor
 import java.io.InputStream
-import java.time.Duration
 import java.util.Date
 import java.util.UUID
+import kotlin.time.Duration.Companion.seconds
 
 class PubNub internal constructor(
     val configuration: PNConfiguration,
@@ -138,7 +138,7 @@ class PubNub internal constructor(
     private val subscribe = Subscribe.create(
         this,
         listenerManager,
-        configuration.retryPolicy,
+        configuration.retryConfiguration,
         eventEnginesConf,
         SubscribeMessageProcessor(this, DuplicationManager(configuration)),
         presenceData,
@@ -148,9 +148,9 @@ class PubNub internal constructor(
     private val presence = Presence.create(
         heartbeatProvider = HeartbeatProviderImpl(this),
         leaveProvider = LeaveProviderImpl(this),
-        heartbeatInterval = Duration.ofSeconds(configuration.heartbeatInterval.toLong()),
+        heartbeatInterval = configuration.heartbeatInterval.seconds,
         enableEventEngine = configuration.enableEventEngine,
-        retryPolicy = configuration.retryPolicy,
+        retryConfiguration = configuration.retryConfiguration,
         suppressLeaveEvents = configuration.suppressLeaveEvents,
         heartbeatNotificationOptions = configuration.heartbeatNotificationOptions,
         listenerManager = listenerManager,

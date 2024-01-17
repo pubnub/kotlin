@@ -6,6 +6,7 @@ import com.pubnub.api.eventengine.EffectFactory
 import com.pubnub.api.eventengine.Sink
 import com.pubnub.api.models.consumer.pubsub.PNEvent
 import com.pubnub.api.presence.eventengine.data.PresenceData
+import com.pubnub.api.retry.RetryConfiguration
 import com.pubnub.api.subscribe.eventengine.effect.effectprovider.HandshakeProvider
 import com.pubnub.api.subscribe.eventengine.effect.effectprovider.ReceiveMessagesProvider
 import com.pubnub.api.subscribe.eventengine.event.SubscribeEvent
@@ -22,7 +23,7 @@ internal class SubscribeEffectFactory(
     private val handshakeProvider: HandshakeProvider,
     private val receiveMessagesProvider: ReceiveMessagesProvider,
     private val subscribeEventSink: Sink<SubscribeEvent>,
-    private val policy: RetryPolicy,
+    private val retryConfiguration: RetryConfiguration,
     private val executorService: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor(),
     private val messagesConsumer: MessagesConsumer,
     private val statusConsumer: StatusConsumer,
@@ -64,9 +65,10 @@ internal class SubscribeEffectFactory(
                 HandshakeReconnectEffect(
                     handshakeRemoteAction,
                     subscribeEventSink,
-                    policy,
+                    retryConfiguration,
                     executorService,
-                    effectInvocation
+                    effectInvocation.attempts,
+                    effectInvocation.reason
                 )
             }
             is SubscribeEffectInvocation.ReceiveMessages -> {
@@ -88,7 +90,7 @@ internal class SubscribeEffectFactory(
                 ReceiveReconnectEffect(
                     receiveMessagesRemoteAction,
                     subscribeEventSink,
-                    policy,
+                    retryConfiguration,
                     executorService,
                     effectInvocation.attempts,
                     effectInvocation.reason

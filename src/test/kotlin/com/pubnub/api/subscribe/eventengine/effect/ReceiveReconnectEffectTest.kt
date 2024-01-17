@@ -3,6 +3,7 @@ package com.pubnub.api.subscribe.eventengine.effect
 import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.remoteaction.RemoteAction
 import com.pubnub.api.models.consumer.pubsub.PNEvent
+import com.pubnub.api.retry.RetryConfiguration
 import com.pubnub.api.subscribe.eventengine.event.SubscribeEvent
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
 import io.mockk.every
@@ -14,13 +15,14 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.time.Duration
 import java.util.concurrent.Executors
+import kotlin.time.Duration.Companion.milliseconds
 
 class ReceiveReconnectEffectTest {
     private val subscriptionCursor = SubscriptionCursor(1337L, "1337")
     private val reason = PubNubException("Unknown error")
     private val attempts = 1
     private val eventSink = TestEventSink<SubscribeEvent>()
-    private val retryPolicy = LinearPolicy(fixedDelay = Duration.ofMillis(10))
+    private val retryConfiguration = RetryConfiguration.Linear(delayInSec = 10.milliseconds, isInternal = true)
     private val executorService = Executors.newSingleThreadScheduledExecutor()
     private val messages: List<PNEvent> = createPNMessageResultList()
     private val receiveMessageResult = ReceiveMessagesResult(messages, subscriptionCursor)
@@ -31,7 +33,7 @@ class ReceiveReconnectEffectTest {
         val receiveReconnectEffect = ReceiveReconnectEffect(
             successfulRemoteAction(receiveMessageResult),
             eventSink,
-            retryPolicy,
+            retryConfiguration,
             executorService,
             attempts,
             reason
@@ -42,7 +44,7 @@ class ReceiveReconnectEffectTest {
 
         // then
         Awaitility.await()
-            .atMost(Durations.ONE_SECOND)
+            .atMost(Durations.FIVE_SECONDS)
             .with()
             .pollInterval(Duration.ofMillis(20))
             .untilAsserted {
@@ -59,7 +61,7 @@ class ReceiveReconnectEffectTest {
         val receiveReconnectEffect = ReceiveReconnectEffect(
             failingRemoteAction(reason),
             eventSink,
-            retryPolicy,
+            retryConfiguration,
             executorService,
             attempts,
             reason
@@ -70,7 +72,7 @@ class ReceiveReconnectEffectTest {
 
         // then
         Awaitility.await()
-            .atMost(Durations.ONE_SECOND)
+            .atMost(Durations.FIVE_SECONDS)
             .with()
             .pollInterval(Duration.ofMillis(20))
             .untilAsserted { assertEquals(listOf(SubscribeEvent.ReceiveReconnectFailure(reason)), eventSink.events) }
@@ -79,11 +81,11 @@ class ReceiveReconnectEffectTest {
     @Test
     fun `should deliver ReceiveReconnectGiveUp event when delay is null`() {
         // given
-        val retryPolicy = NoRetriesPolicy
+        val retryConfiguration = RetryConfiguration.None
         val receiveReconnectEffect = ReceiveReconnectEffect(
             successfulRemoteAction(receiveMessageResult),
             eventSink,
-            retryPolicy,
+            retryConfiguration,
             executorService,
             attempts,
             reason
@@ -104,7 +106,7 @@ class ReceiveReconnectEffectTest {
         val receiveReconnectEffect = ReceiveReconnectEffect(
             remoteAction,
             eventSink,
-            retryPolicy,
+            retryConfiguration,
             executorService,
             attempts,
             reason

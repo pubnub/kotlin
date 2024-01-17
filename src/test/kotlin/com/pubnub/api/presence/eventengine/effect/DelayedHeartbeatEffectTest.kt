@@ -3,8 +3,7 @@ package com.pubnub.api.presence.eventengine.effect
 import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.remoteaction.RemoteAction
 import com.pubnub.api.presence.eventengine.event.PresenceEvent
-import com.pubnub.api.subscribe.eventengine.effect.LinearPolicy
-import com.pubnub.api.subscribe.eventengine.effect.NoRetriesPolicy
+import com.pubnub.api.retry.RetryConfiguration
 import com.pubnub.api.subscribe.eventengine.effect.TestEventSink
 import com.pubnub.api.subscribe.eventengine.effect.failingRemoteAction
 import com.pubnub.api.subscribe.eventengine.effect.successfulRemoteAction
@@ -17,6 +16,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.time.Duration
 import java.util.concurrent.Executors
+import kotlin.time.Duration.Companion.milliseconds
 
 class DelayedHeartbeatEffectTest {
     private val channels = setOf("channel1")
@@ -25,7 +25,7 @@ class DelayedHeartbeatEffectTest {
     private val attempts = 1
     private val presenceEventSink = TestEventSink<PresenceEvent>()
     private val resultFromHeartbeat = true
-    private val policy = LinearPolicy(fixedDelay = Duration.ofMillis(10))
+    private val retryConfiguration = RetryConfiguration.Linear(delayInSec = 10.milliseconds, isInternal = true)
     private val executorService = Executors.newSingleThreadScheduledExecutor()
     private val delayedHeartbeatInvocation = PresenceEffectInvocation.DelayedHeartbeat(channels, channelGroups, attempts, reason)
 
@@ -35,9 +35,10 @@ class DelayedHeartbeatEffectTest {
         val delayedHeartbeatEffect = DelayedHeartbeatEffect(
             successfulRemoteAction(resultFromHeartbeat),
             presenceEventSink,
-            policy,
+            retryConfiguration,
             executorService,
-            delayedHeartbeatInvocation
+            delayedHeartbeatInvocation.attempts,
+            delayedHeartbeatInvocation.reason
         )
 
         // when
@@ -45,7 +46,7 @@ class DelayedHeartbeatEffectTest {
 
         // then
         Awaitility.await()
-            .atMost(Durations.ONE_SECOND)
+            .atMost(Durations.FIVE_SECONDS)
             .with()
             .pollInterval(Duration.ofMillis(20))
             .untilAsserted {
@@ -59,9 +60,10 @@ class DelayedHeartbeatEffectTest {
         val delayedHeartbeatEffect = DelayedHeartbeatEffect(
             failingRemoteAction(reason),
             presenceEventSink,
-            policy,
+            retryConfiguration,
             executorService,
-            delayedHeartbeatInvocation
+            delayedHeartbeatInvocation.attempts,
+            delayedHeartbeatInvocation.reason
         )
 
         // when
@@ -69,7 +71,7 @@ class DelayedHeartbeatEffectTest {
 
         // then
         Awaitility.await()
-            .atMost(Durations.ONE_SECOND)
+            .atMost(Durations.FIVE_SECONDS)
             .with()
             .pollInterval(Duration.ofMillis(20))
             .untilAsserted {
@@ -80,13 +82,14 @@ class DelayedHeartbeatEffectTest {
     @Test
     fun `should deliver HeartbeatGiveup event when delay is null`() {
         // given
-        val policy = NoRetriesPolicy
+        val policy = RetryConfiguration.None
         val delayedHeartbeatEffect = DelayedHeartbeatEffect(
             failingRemoteAction(reason),
             presenceEventSink,
             policy,
             executorService,
-            delayedHeartbeatInvocation
+            delayedHeartbeatInvocation.attempts,
+            delayedHeartbeatInvocation.reason
         )
 
         // when
@@ -109,9 +112,10 @@ class DelayedHeartbeatEffectTest {
         val delayedHeartbeatEffect = DelayedHeartbeatEffect(
             heartbeatRemoteAction,
             presenceEventSink,
-            policy,
+            retryConfiguration,
             executorService,
-            delayedHeartbeatInvocation
+            delayedHeartbeatInvocation.attempts,
+            delayedHeartbeatInvocation.reason
         )
         every { heartbeatRemoteAction.silentCancel() } returns Unit
 

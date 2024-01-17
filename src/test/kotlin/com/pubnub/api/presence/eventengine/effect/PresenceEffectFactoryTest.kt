@@ -8,7 +8,7 @@ import com.pubnub.api.presence.eventengine.data.PresenceData
 import com.pubnub.api.presence.eventengine.effect.effectprovider.HeartbeatProvider
 import com.pubnub.api.presence.eventengine.effect.effectprovider.LeaveProvider
 import com.pubnub.api.presence.eventengine.event.PresenceEvent
-import com.pubnub.api.subscribe.eventengine.effect.RetryPolicy
+import com.pubnub.api.retry.RetryConfiguration
 import com.pubnub.api.subscribe.eventengine.effect.StatusConsumer
 import io.mockk.every
 import io.mockk.mockk
@@ -19,8 +19,8 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import java.time.Duration
 import java.util.concurrent.ScheduledExecutorService
+import kotlin.time.Duration.Companion.seconds
 
 class PresenceEffectFactoryTest {
     private lateinit var presenceEffectFactory: PresenceEffectFactory
@@ -28,9 +28,9 @@ class PresenceEffectFactoryTest {
     private val heartbeatProvider = mockk<HeartbeatProvider>()
     private val leaveProvider = mockk<LeaveProvider>()
     private val presenceEventSink = mockk<Sink<PresenceEvent>>()
-    private val policy = mockk<RetryPolicy>()
+    private val retryConfiguration = RetryConfiguration.None
     private val executorService = mockk<ScheduledExecutorService>()
-    private val heartbeatInterval = Duration.ofSeconds(10)
+    private val heartbeatInterval = 10.seconds
     private val channels = setOf("channel1")
     private val channelGroups = setOf("channelGroup1")
     private val heartbeatRemoteAction: RemoteAction<Boolean> = mockk()
@@ -49,7 +49,7 @@ class PresenceEffectFactoryTest {
             heartbeatProvider,
             leaveProvider,
             presenceEventSink,
-            policy,
+            retryConfiguration,
             executorService,
             heartbeatInterval,
             suppressLeaveEvents,
@@ -165,7 +165,7 @@ class PresenceEffectFactoryTest {
             heartbeatProvider,
             leaveProvider,
             presenceEventSink,
-            policy,
+            retryConfiguration,
             executorService,
             heartbeatInterval,
             suppressLeaveEvents,
@@ -204,7 +204,7 @@ class PresenceEffectFactoryTest {
             heartbeatProvider,
             leaveProvider,
             presenceEventSink,
-            policy,
+            retryConfiguration,
             executorService,
             heartbeatInterval,
             suppressLeaveEvents,
@@ -249,7 +249,7 @@ class PresenceEffectFactoryTest {
             heartbeatProvider,
             leaveProvider,
             presenceEventSink,
-            policy,
+            retryConfiguration,
             executorService,
             heartbeatInterval,
             suppressLeaveEvents = false,
@@ -293,8 +293,8 @@ class PresenceEffectFactoryTest {
         assertThat(effect, IsInstanceOf.instanceOf(DelayedHeartbeatEffect::class.java))
         assertEquals(heartbeatRemoteAction, effect.heartbeatRemoteAction)
         assertEquals(presenceEventSink, effect.presenceEventSink)
-        assertEquals(policy, effect.policy)
-        assertEquals(attempts, effect.delayedHeartbeatInvocation.attempts)
-        assertEquals(reason, effect.delayedHeartbeatInvocation.reason)
+        assertEquals(retryConfiguration, effect.retryConfiguration)
+        assertEquals(attempts, effect.attempts)
+        assertEquals(reason, effect.reason)
     }
 }

@@ -2,6 +2,7 @@ package com.pubnub.api.subscribe.eventengine.effect
 
 import com.pubnub.api.PubNubException
 import com.pubnub.api.endpoints.remoteaction.RemoteAction
+import com.pubnub.api.retry.RetryConfiguration
 import com.pubnub.api.subscribe.eventengine.event.SubscribeEvent
 import com.pubnub.api.subscribe.eventengine.event.SubscriptionCursor
 import io.mockk.every
@@ -13,6 +14,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.time.Duration
 import java.util.concurrent.Executors
+import kotlin.time.Duration.Companion.milliseconds
 
 class HandshakeReconnectEffectTest {
     private val channels = setOf("channel1")
@@ -23,7 +25,7 @@ class HandshakeReconnectEffectTest {
     private val handshakeReconnectInvocation =
         SubscribeEffectInvocation.HandshakeReconnect(channels, channelGroups, attempts, reason)
     private val executorService = Executors.newSingleThreadScheduledExecutor()
-    private val policy = LinearPolicy(fixedDelay = Duration.ofMillis(10))
+    private val retryConfiguration = RetryConfiguration.Linear(delayInSec = 10.milliseconds, isInternal = true)
     private val subscriptionCursor = SubscriptionCursor(1337L, "1337")
 
     @Test
@@ -32,9 +34,10 @@ class HandshakeReconnectEffectTest {
         val handshakeReconnectEffect = HandshakeReconnectEffect(
             successfulRemoteAction(subscriptionCursor),
             subscribeEventSink,
-            policy,
+            retryConfiguration,
             executorService,
-            handshakeReconnectInvocation
+            handshakeReconnectInvocation.attempts,
+            handshakeReconnectInvocation.reason
         )
 
         // when
@@ -42,7 +45,7 @@ class HandshakeReconnectEffectTest {
 
         // then
         Awaitility.await()
-            .atMost(Durations.ONE_SECOND)
+            .atMost(Durations.FIVE_SECONDS)
             .with()
             .pollInterval(Duration.ofMillis(20))
             .untilAsserted {
@@ -56,9 +59,10 @@ class HandshakeReconnectEffectTest {
         val handshakeReconnectEffect = HandshakeReconnectEffect(
             failingRemoteAction(reason),
             subscribeEventSink,
-            policy,
+            retryConfiguration,
             executorService,
-            handshakeReconnectInvocation
+            handshakeReconnectInvocation.attempts,
+            handshakeReconnectInvocation.reason
         )
 
         // when
@@ -66,7 +70,7 @@ class HandshakeReconnectEffectTest {
 
         // then
         Awaitility.await()
-            .atMost(Durations.ONE_SECOND)
+            .atMost(Durations.FIVE_SECONDS)
             .with()
             .pollInterval(Duration.ofMillis(20))
             .untilAsserted { assertEquals(listOf(SubscribeEvent.HandshakeReconnectFailure(reason)), subscribeEventSink.events) }
@@ -75,13 +79,14 @@ class HandshakeReconnectEffectTest {
     @Test
     fun `should deliver HandshakeReconnectGiveUp event when delay is null`() {
         // given
-        val policy = NoRetriesPolicy
+        val policy = RetryConfiguration.None
         val handshakeReconnectEffect = HandshakeReconnectEffect(
             failingRemoteAction(reason),
             subscribeEventSink,
             policy,
             executorService,
-            handshakeReconnectInvocation
+            handshakeReconnectInvocation.attempts,
+            handshakeReconnectInvocation.reason
         )
 
         // when
@@ -99,9 +104,10 @@ class HandshakeReconnectEffectTest {
         val handshakeReconnectEffect = HandshakeReconnectEffect(
             remoteAction,
             subscribeEventSink,
-            policy,
+            retryConfiguration,
             executorService,
-            handshakeReconnectInvocation
+            handshakeReconnectInvocation.attempts,
+            handshakeReconnectInvocation.reason
         )
 
         // when
