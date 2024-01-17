@@ -140,6 +140,6 @@ tasks.register("japicmp", me.champeau.gradle.japicmp.JapicmpTask) {
 }
 
 tasks.register("mergeKotlinJars", org.gradle.jvm.tasks.Jar) {
-    from(zipTree("/Users/wojciech.kalicinski/projects/pubnub-kotlin-copy/pubnub-kotlin/build/libs/pubnub-kotlin-7.7.4.jar"), zipTree("/Users/wojciech.kalicinski/projects/pubnub-kotlin-copy/pubnub-kotlin-core/build/libs/pubnub-kotlin-core-7.7.4.jar"))
+    from(zipTree("$rootDir/pubnub-kotlin/build/libs/pubnub-kotlin.jar"), zipTree("$rootDir/core/build/libs/core-7.7.4.jar"))
     setArchiveFileName("combined.jar")
 }

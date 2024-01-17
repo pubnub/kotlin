@@ -2,14 +2,14 @@ package com.pubnub.api.integration
 
 import com.pubnub.api.CommonUtils.randomChannel
 import com.pubnub.api.CommonUtils.randomValue
-import com.pubnub.api.PubNub
-import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.listen
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.subscribeToBlocking
 import com.pubnub.api.unsubscribeFromBlocking
+import com.pubnub.internal.PubNub
+import com.pubnub.internal.callbacks.SubscribeCallback
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.logging.HttpLoggingInterceptor
@@ -68,7 +68,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
 
         pubnub.subscribeToBlocking("my.*")
 
-        pubnub.addListener(object : SubscribeCallback() {
+        pubnub.addListener(object : SubscribeCallback<PubNub>() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {}
 
             override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {
@@ -93,7 +93,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
 
         pubnub.subscribeToBlocking(expectedChannel)
 
-        pubnub.addListener(object : SubscribeCallback() {
+        pubnub.addListener(object : SubscribeCallback<PubNub>() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
                 // because we have one channel subscribed unsubscribing from it will cause UnsubscribeAll
                 if (pnStatus.affectedChannels.contains(expectedChannel) && pnStatus.operation == PNOperationType.PNUnsubscribeOperation) {
@@ -114,7 +114,7 @@ class SubscribeIntegrationTests : BaseIntegrationTest() {
 
         pubnub.subscribeToBlocking(randomChannel)
 
-        pubnub.addListener(object : SubscribeCallback() {
+        pubnub.addListener(object : SubscribeCallback<PubNub>() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
                 if (pnStatus.affectedChannels.contains(randomChannel) &&
                     pnStatus.operation == PNOperationType.PNUnsubscribeOperation

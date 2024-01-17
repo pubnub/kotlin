@@ -1,17 +1,17 @@
 package com.pubnub.api.integration
 
 import com.pubnub.api.CommonUtils.randomValue
-import com.pubnub.api.PubNub
-import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.objects.channel.PNChannelMetadata
-import com.pubnub.api.models.consumer.objects.member.PNMember
-import com.pubnub.api.models.consumer.objects.member.PNUUIDDetailsLevel
-import com.pubnub.api.models.consumer.objects.membership.PNChannelDetailsLevel
-import com.pubnub.api.models.consumer.objects.membership.PNChannelMembership
 import com.pubnub.api.models.consumer.objects.uuid.PNUUIDMetadata
-import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
 import com.pubnub.api.subscribeToBlocking
+import com.pubnub.internal.PubNub
+import com.pubnub.internal.callbacks.SubscribeCallback
+import com.pubnub.internal.models.consumer.objects.member.PNMember
+import com.pubnub.internal.models.consumer.objects.member.PNUUIDDetailsLevel
+import com.pubnub.internal.models.consumer.objects.membership.PNChannelDetailsLevel
+import com.pubnub.internal.models.consumer.objects.membership.PNChannelMembership
+import com.pubnub.internal.models.consumer.pubsub.objects.PNObjectEventResult
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.containsInAnyOrder
 import org.hamcrest.Matchers.not
@@ -130,7 +130,7 @@ class ObjectsIntegrationTest : BaseIntegrationTest() {
         )
 
         pubnub.addListener(
-            listener = object : SubscribeCallback() {
+            listener = object : SubscribeCallback<PubNub>() {
                 override fun status(pubnub: PubNub, pnStatus: PNStatus) {}
 
                 override fun objects(pubnub: PubNub, objectEvent: PNObjectEventResult) {

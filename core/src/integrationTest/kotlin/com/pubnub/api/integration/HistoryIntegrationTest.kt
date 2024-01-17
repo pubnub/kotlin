@@ -5,7 +5,7 @@ import com.google.gson.JsonPrimitive
 import com.pubnub.api.CommonUtils
 import com.pubnub.api.CommonUtils.emoji
 import com.pubnub.api.CommonUtils.randomChannel
-import com.pubnub.api.PubNub
+import com.pubnub.internal.PubNub
 import com.pubnub.api.PubNubError
 import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.api.models.consumer.history.Action

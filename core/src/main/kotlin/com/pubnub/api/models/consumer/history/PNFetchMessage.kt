@@ -3,6 +3,7 @@ package com.pubnub.api.models.consumer.history
 import com.google.gson.JsonElement
 import com.pubnub.api.PubNubError
 import com.pubnub.api.models.consumer.PNBoundedPage
+import com.pubnub.api.models.consumer.history.PNFetchMessageItem.Action
 import com.pubnub.internal.PubNub
 import com.pubnub.internal.endpoints.FetchMessages
 
@@ -40,7 +41,7 @@ data class PNFetchMessageItem(
     val message: JsonElement,
     val meta: JsonElement?,
     val timetoken: Long?,
-    val actions: Map<String, Map<String, List<Action>>>? = null,
+    val actions: Map<String, Map<String, List<com.pubnub.api.models.consumer.history.Action>>>? = null,
     val messageType: HistoryMessageType?,
     val error: PubNubError? = null
 ) {

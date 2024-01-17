@@ -4,14 +4,14 @@ import com.google.gson.Gson
 import com.pubnub.api.CommonUtils.assertPnException
 import com.pubnub.api.CommonUtils.randomChannel
 import com.pubnub.api.CommonUtils.randomValue
-import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubError
 import com.pubnub.api.await
-import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.listen
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult
+import com.pubnub.internal.PubNub
+import com.pubnub.internal.callbacks.SubscribeCallback
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
@@ -55,7 +55,7 @@ class SignalIntegrationTests : BaseIntegrationTest() {
 
         val observerClient = createPubNub()
 
-        observerClient.addListener(object : SubscribeCallback() {
+        observerClient.addListener(object : SubscribeCallback<PubNub>() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
                 if (pnStatus.operation == PNOperationType.PNSubscribeOperation &&
                     pnStatus.affectedChannels.contains(expectedChannel)

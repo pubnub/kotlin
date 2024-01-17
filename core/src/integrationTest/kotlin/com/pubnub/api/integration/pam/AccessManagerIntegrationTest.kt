@@ -8,9 +8,7 @@ import com.pubnub.api.CommonUtils.randomChannel
 import com.pubnub.api.CommonUtils.randomValue
 import com.pubnub.api.CommonUtils.retry
 import com.pubnub.api.CommonUtils.unicode
-import com.pubnub.api.PubNub
 import com.pubnub.api.asyncRetry
-import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.integration.BaseIntegrationTest
@@ -20,6 +18,8 @@ import com.pubnub.api.models.consumer.message_actions.PNAddMessageActionResult
 import com.pubnub.api.models.consumer.message_actions.PNMessageAction
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.retryForbidden
+import com.pubnub.internal.PubNub
+import com.pubnub.internal.callbacks.SubscribeCallback
 import org.awaitility.Awaitility
 import org.awaitility.Durations
 import org.junit.Assert.assertEquals
@@ -330,7 +330,7 @@ abstract class AccessManagerIntegrationTest() : BaseIntegrationTest() {
     fun testPresenceWithPermission() {
         val success = AtomicBoolean()
 
-        pubnubToTest.addListener(object : SubscribeCallback() {
+        pubnubToTest.addListener(object : SubscribeCallback<PubNub>() {
 
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
                 if (pnStatus.category == PNStatusCategory.PNConnectedCategory &&

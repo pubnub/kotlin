@@ -9,12 +9,9 @@ import com.pubnub.api.CommonUtils.publishMixed
 import com.pubnub.api.CommonUtils.randomChannel
 import com.pubnub.api.CommonUtils.randomValue
 import com.pubnub.api.CommonUtils.unicode
-import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubError
 import com.pubnub.api.asyncRetry
 import com.pubnub.api.await
-import com.pubnub.api.callbacks.SubscribeCallback
-import com.pubnub.api.endpoints.message_actions.GetMessageActions
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.listen
@@ -29,6 +26,9 @@ import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
+import com.pubnub.internal.PubNub
+import com.pubnub.internal.callbacks.SubscribeCallback
+import com.pubnub.internal.endpoints.message_actions.GetMessageActions
 import org.awaitility.Awaitility
 import org.awaitility.Durations
 import org.hamcrest.core.IsEqual
@@ -429,7 +429,7 @@ class MessageActionsIntegrationTest : BaseIntegrationTest() {
 
         val actionsCount = AtomicInteger()
 
-        pubnub.addListener(object : SubscribeCallback() {
+        pubnub.addListener(object : SubscribeCallback<PubNub>() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
                 if (pnStatus.category == PNStatusCategory.PNConnectedCategory) {
                     if (pnStatus.operation == PNOperationType.PNSubscribeOperation) {

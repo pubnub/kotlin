@@ -7,11 +7,9 @@ import com.pubnub.api.CommonUtils.generatePayload
 import com.pubnub.api.CommonUtils.generatePayloadJSON
 import com.pubnub.api.CommonUtils.randomChannel
 import com.pubnub.api.CommonUtils.retry
-import com.pubnub.api.PubNub
 import com.pubnub.api.PubNubError
 import com.pubnub.api.asyncRetry
 import com.pubnub.api.await
-import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.crypto.CryptoModule
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.listen
@@ -19,6 +17,8 @@ import com.pubnub.api.models.consumer.PNBoundedPage
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.subscribeToBlocking
+import com.pubnub.internal.PubNub
+import com.pubnub.internal.callbacks.SubscribeCallback
 import org.awaitility.Awaitility
 import org.awaitility.Durations
 import org.hamcrest.Matchers
@@ -108,7 +108,7 @@ class PublishIntegrationTests : BaseIntegrationTest() {
 
         val observer = createPubNub()
 
-        pubnub.addListener(object : SubscribeCallback() {
+        pubnub.addListener(object : SubscribeCallback<PubNub>() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
                 if (pnStatus.operation == PNOperationType.PNSubscribeOperation &&
                     pnStatus.affectedChannels.contains(expectedChannel)
@@ -148,7 +148,7 @@ class PublishIntegrationTests : BaseIntegrationTest() {
             }
         )
 
-        observer.addListener(object : SubscribeCallback() {
+        observer.addListener(object : SubscribeCallback<PubNub>() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
                 if (pnStatus.operation == PNOperationType.PNSubscribeOperation &&
                     pnStatus.affectedChannels.contains(expectedChannel)
@@ -250,7 +250,7 @@ class PublishIntegrationTests : BaseIntegrationTest() {
         val expectedPayload = generatePayloadJSON()
         val success = AtomicBoolean()
 
-        pubnub.addListener(object : SubscribeCallback() {
+        pubnub.addListener(object : SubscribeCallback<PubNub>() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {}
             override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {
                 success.set(expectedPayload.toString() == JSONObject(pnMessageResult.message.toString()).toString())
@@ -273,7 +273,7 @@ class PublishIntegrationTests : BaseIntegrationTest() {
         val expectedPayload = generatePayloadJSON()
         val success = AtomicBoolean()
 
-        pubnub.addListener(object : SubscribeCallback() {
+        pubnub.addListener(object : SubscribeCallback<PubNub>() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {}
             override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {
                 success.set(expectedPayload.toString() == JSONObject(pnMessageResult.message.toString()).toString())
@@ -351,7 +351,7 @@ class PublishIntegrationTests : BaseIntegrationTest() {
 
         val success = AtomicBoolean()
 
-        pubnub.addListener(object : SubscribeCallback() {
+        pubnub.addListener(object : SubscribeCallback<PubNub>() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {}
             override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {
                 success.set(expectedPayload.toString() == JSONArray(pnMessageResult.message.toString()).toString())
@@ -377,7 +377,7 @@ class PublishIntegrationTests : BaseIntegrationTest() {
 
         val success = AtomicBoolean()
 
-        pubnub.addListener(object : SubscribeCallback() {
+        pubnub.addListener(object : SubscribeCallback<PubNub>() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {}
             override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {
                 success.set(expectedPayload.toString() == JSONArray(pnMessageResult.message.toString()).toString())
@@ -410,7 +410,7 @@ class PublishIntegrationTests : BaseIntegrationTest() {
 
         val count = AtomicInteger()
 
-        pubnub.addListener(object : SubscribeCallback() {
+        pubnub.addListener(object : SubscribeCallback<PubNub>() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {}
             override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {
                 assertEquals(

@@ -3,8 +3,6 @@ package com.pubnub.api.integration
 import com.pubnub.api.CommonUtils
 import com.pubnub.api.CommonUtils.generatePayload
 import com.pubnub.api.CommonUtils.randomChannel
-import com.pubnub.api.PubNub
-import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.listen
@@ -12,6 +10,8 @@ import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.subscribeToBlocking
 import com.pubnub.api.unsubscribeFromBlocking
+import com.pubnub.internal.PubNub
+import com.pubnub.internal.callbacks.SubscribeCallback
 import org.awaitility.Awaitility
 import org.awaitility.Durations
 import org.hamcrest.core.IsEqual
@@ -33,7 +33,7 @@ class PresenceEventsIntegrationTests : BaseIntegrationTest() {
         val success = AtomicBoolean()
         val expectedChannel = randomChannel()
 
-        pubnub.addListener(object : SubscribeCallback() {
+        pubnub.addListener(object : SubscribeCallback<PubNub>() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {}
 
             override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {
@@ -56,7 +56,7 @@ class PresenceEventsIntegrationTests : BaseIntegrationTest() {
         pubnub.subscribeToBlocking(expectedChannel)
         guest.subscribeToBlocking(expectedChannel)
 
-        pubnub.addListener(object : SubscribeCallback() {
+        pubnub.addListener(object : SubscribeCallback<PubNub>() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {}
 
             override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {
@@ -94,7 +94,7 @@ class PresenceEventsIntegrationTests : BaseIntegrationTest() {
         pubnub.configuration.presenceTimeout = expectedTimeout
         pubnub.configuration.heartbeatInterval = 0
 
-        pubnub.addListener(object : SubscribeCallback() {
+        pubnub.addListener(object : SubscribeCallback<PubNub>() {
 
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
                 //
@@ -134,7 +134,7 @@ class PresenceEventsIntegrationTests : BaseIntegrationTest() {
 
         pubnub.subscribeToBlocking(expectedChannel)
 
-        pubnub.addListener(object : SubscribeCallback() {
+        pubnub.addListener(object : SubscribeCallback<PubNub>() {
 
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {}
 

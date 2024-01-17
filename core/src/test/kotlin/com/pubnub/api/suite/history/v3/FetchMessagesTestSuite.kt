@@ -6,7 +6,6 @@ import com.github.tomakehurst.wiremock.client.WireMock.equalTo
 import com.github.tomakehurst.wiremock.client.WireMock.get
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 import com.pubnub.api.PubNubError
-import com.pubnub.internal.endpoints.FetchMessages
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.models.consumer.PNStatus
@@ -16,6 +15,7 @@ import com.pubnub.api.suite.EndpointTestSuite
 import com.pubnub.api.suite.OptionalScenario
 import com.pubnub.api.suite.Result
 import com.pubnub.api.suite.SUB
+import com.pubnub.internal.endpoints.FetchMessages
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
@@ -37,7 +37,7 @@ class FetchMessagesTestSuite : EndpointTestSuite<FetchMessages, PNFetchMessagesR
         assertEquals(1, result.channels.size)
         assertTrue(result.channels.containsKey("ch1"))
         assertEquals("hello", result.channels["ch1"]!![0].message.asString)
-        assertEquals(100, result.channels["ch1"]!![0].timetoken)
+        assertEquals(100L, result.channels["ch1"]!![0].timetoken)
         assertNull(result.channels["ch1"]!![0].meta)
     }
 

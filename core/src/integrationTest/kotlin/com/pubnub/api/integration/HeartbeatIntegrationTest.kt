@@ -2,12 +2,12 @@ package com.pubnub.api.integration
 
 import com.pubnub.api.CommonUtils.generatePayload
 import com.pubnub.api.CommonUtils.randomChannel
-import com.pubnub.api.PubNub
 import com.pubnub.api.UserId
-import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
+import com.pubnub.internal.PubNub
+import com.pubnub.internal.callbacks.SubscribeCallback
 import org.awaitility.Awaitility
 import org.awaitility.Durations
 import org.hamcrest.core.IsEqual
@@ -48,7 +48,7 @@ class HeartbeatIntegrationTest : BaseIntegrationTest() {
             }
         )
 
-        observer.addListener(object : SubscribeCallback() {
+        observer.addListener(object : SubscribeCallback<PubNub>() {
 
             override fun status(p: PubNub, pnStatus: PNStatus) {
                 if (pnStatus.operation == PNOperationType.PNSubscribeOperation &&

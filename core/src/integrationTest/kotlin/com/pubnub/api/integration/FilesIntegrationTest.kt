@@ -1,8 +1,6 @@
 package com.pubnub.api.integration
 
 import com.pubnub.api.CommonUtils.randomChannel
-import com.pubnub.api.PubNub
-import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.enums.PNStatusCategory
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.files.PNFileUploadResult
@@ -11,7 +9,9 @@ import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.models.consumer.pubsub.PNSignalResult
 import com.pubnub.api.models.consumer.pubsub.files.PNFileEventResult
 import com.pubnub.api.models.consumer.pubsub.message_actions.PNMessageActionResult
-import com.pubnub.api.models.consumer.pubsub.objects.PNObjectEventResult
+import com.pubnub.internal.PubNub
+import com.pubnub.internal.callbacks.SubscribeCallback
+import com.pubnub.internal.models.consumer.pubsub.objects.PNObjectEventResult
 import org.junit.Assert
 import org.junit.Test
 import java.io.ByteArrayInputStream
@@ -141,7 +141,7 @@ class FilesIntegrationTest : BaseIntegrationTest() {
         Scanner(inputStream).useDelimiter("\\A").use { s -> return if (s.hasNext()) s.next() else "" }
     }
 
-    private abstract class LimitedListener : SubscribeCallback() {
+    private abstract class LimitedListener : SubscribeCallback<PubNub>() {
         override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {}
         override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {}
         override fun signal(pubnub: PubNub, pnSignalResult: PNSignalResult) {}

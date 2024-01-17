@@ -1,6 +1,6 @@
 package com.pubnub.api.endpoints.objects.uuid
 
-import com.pubnub.api.DelegatingEndpoint
+import com.pubnub.internal.DelegatingEndpoint
 import com.pubnub.api.PubNub
 import com.pubnub.api.endpoints.remoteaction.ExtendedRemoteAction
 import com.pubnub.api.endpoints.remoteaction.MappingRemoteAction

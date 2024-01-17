@@ -3,16 +3,16 @@ package com.pubnub.api.integration
 import com.pubnub.api.CommonUtils.generatePayload
 import com.pubnub.api.CommonUtils.randomChannel
 import com.pubnub.api.CommonUtils.randomValue
-import com.pubnub.api.PubNub
 import com.pubnub.api.asyncRetry
 import com.pubnub.api.await
-import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.enums.PNHeartbeatNotificationOptions
 import com.pubnub.api.enums.PNOperationType
 import com.pubnub.api.listen
 import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import com.pubnub.api.subscribeToBlocking
+import com.pubnub.internal.PubNub
+import com.pubnub.internal.callbacks.SubscribeCallback
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.logging.HttpLoggingInterceptor
@@ -136,7 +136,7 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
         val expectedStatePayload = generatePayload()
         val expectedChannel = randomChannel()
 
-        pubnub.addListener(object : SubscribeCallback() {
+        pubnub.addListener(object : SubscribeCallback<PubNub>() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {}
             override fun presence(pubnub: PubNub, pnPresenceEventResult: PNPresenceEventResult) {
                 if (pnPresenceEventResult.event == "state-change" &&
@@ -191,7 +191,7 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
         assertEquals(20, pubnub.configuration.presenceTimeout)
         assertEquals(0, pubnub.configuration.heartbeatInterval)
 
-        pubnub.addListener(object : SubscribeCallback() {
+        pubnub.addListener(object : SubscribeCallback<PubNub>() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
                 if (!pnStatus.error && pnStatus.affectedChannels.contains(expectedChannel)) {
                     if (pnStatus.operation == PNOperationType.PNSubscribeOperation) {
@@ -233,7 +233,7 @@ class PresenceIntegrationTests : BaseIntegrationTest() {
         assertEquals(20, pubnub.configuration.presenceTimeout)
         assertEquals(9, pubnub.configuration.heartbeatInterval)
 
-        pubnub.addListener(object : SubscribeCallback() {
+        pubnub.addListener(object : SubscribeCallback<PubNub>() {
             override fun status(pubnub: PubNub, pnStatus: PNStatus) {
                 println(pnStatus.operation)
                 if (!pnStatus.error && pnStatus.affectedChannels.contains(expectedChannel)) {
